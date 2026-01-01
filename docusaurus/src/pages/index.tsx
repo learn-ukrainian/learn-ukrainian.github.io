@@ -78,7 +78,7 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         From absolute beginner to native-level proficiency.
-        634 modules aligned with CEFR and Ukrainian State Standards.
+        618 modules aligned with CEFR and Ukrainian State Standards.
       </>
     ),
   },
@@ -176,7 +176,7 @@ export default function Home(): ReactNode {
                 level="C1"
                 name="Advanced"
                 description="Academic focus, stylistics, folk culture, literature"
-                modules={182}
+                modules={196}
                 color="#7B1FA2"
               />
               <LevelCard

@@ -1,0 +1,48 @@
+module: 30-prepositions-iii
+level: A1
+version: '2.0'
+items:
+  - lemma: аеропорт
+    ipa: /ɑɛrɔˈpɔrt/
+    translation: airport
+    pos: noun
+    gender: m
+  - lemma: ліворуч
+    ipa: /lʲiˈvɔrut͡ʃ/
+    translation: to the left
+    pos: adv
+  - lemma: напрямок
+    ipa: /ˈnɑprʲɑmɔk/
+    translation: direction
+    pos: noun
+    gender: m
+  - lemma: покласти
+    ipa: /pɔˈklɑstɪ/
+    translation: to put
+    pos: verb
+  - lemma: Польща
+    ipa: /ˈpɔlʲʃt͡ʃɑ/
+    translation: Poland
+    pos: propn
+    gender: f
+  - lemma: пройти
+    ipa: /prɔjˈtɪ/
+    translation: to pass/go through
+    pos: verb
+  - lemma: супер
+    ipa: /ˈsupɛr/
+    translation: super
+    pos: other
+  - lemma: сюди
+    ipa: /sʲuˈdɪ/
+    translation: here (directional)
+    pos: adv
+  - lemma: татко
+    ipa: /ˈtɑtkɔ/
+    translation: dad (affectionate)
+    pos: noun
+    gender: m
+  - lemma: туди
+    ipa: /tuˈdɪ/
+    translation: there (directional)
+    pos: adv

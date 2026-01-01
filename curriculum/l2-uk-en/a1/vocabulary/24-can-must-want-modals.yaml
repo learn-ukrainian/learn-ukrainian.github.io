@@ -1,0 +1,226 @@
+module: 24-can-must-want-modals
+level: A1
+version: '2.0'
+items:
+  - lemma: бігти
+    ipa: /ˈbiɦtɪ/
+    translation: to run
+    pos: verb
+  - lemma: варто
+    ipa: /ˈvɑrtɔ/
+    translation: worth
+    pos: adv
+  - lemma: вдаватися
+    ipa: /vdɑˈvɑtɪsʲɑ/
+    translation: to succeed
+    pos: verb
+  - lemma: вміти
+    ipa: /ˈvmitɪ/
+    translation: to know how
+    pos: verb
+  - lemma: водити
+    ipa: /vɔˈdɪtɪ/
+    translation: to drive
+    pos: verb
+  - lemma: впевнений
+    ipa: /ˈvpɛvnɛnɪj/
+    translation: certain/sure
+    pos: adj
+    gender: m
+  - lemma: встигати
+    ipa: /vstɪˈɦɑtɪ/
+    translation: to be in time
+    pos: verb
+  - lemma: входити
+    ipa: /vxɔˈdɪtɪ/
+    translation: to enter
+    pos: verb
+  - lemma: відкрити
+    ipa: /vidˈkrɪtɪ/
+    translation: to open
+    pos: verb
+  - lemma: відповісти
+    ipa: /vidpɔˈvistɪ/
+    translation: to answer
+    pos: verb
+  - lemma: відпочити
+    ipa: /vidpɔˈt͡ʃɪtɪ/
+    translation: to rest
+    pos: verb
+  - lemma: готовий
+    ipa: /ɦɔˈtɔvɪj/
+    translation: ready
+    pos: adj
+    gender: m
+  - lemma: граматика
+    ipa: /ɦrɑˈmɑtɪkɑ/
+    translation: grammar
+    pos: noun
+    gender: f
+  - lemma: гітара
+    ipa: /ɦiˈtɑrɑ/
+    translation: guitar
+    pos: noun
+    gender: f
+  - lemma: дозволити
+    ipa: /dɔzˈvɔlɪtɪ/
+    translation: to allow
+    pos: verb
+  - lemma: діалект
+    ipa: /diɑˈlɛkt/
+    translation: dialect
+    pos: noun
+    gender: m
+  - lemma: заборонити
+    ipa: /zɑbɔrɔˈnɪtɪ/
+    translation: to forbid
+    pos: verb
+  - lemma: закінчити
+    ipa: /zɑˈkint͡ʃɪtɪ/
+    translation: to finish
+    pos: verb
+  - lemma: залишитися
+    ipa: /zɑlɪˈʃɪtɪsʲɑ/
+    translation: to stay/remain
+    pos: verb
+  - lemma: згодний
+    ipa: /ˈzɦɔdnɪj/
+    translation: agreeing
+    pos: adj
+    gender: m
+  - lemma: здатний
+    ipa: /ˈzdɑtnɪj/
+    translation: capable
+    pos: adj
+    gender: m
+  - lemma: історія
+    ipa: /isˈtɔrijɑ/
+    translation: history/story
+    pos: noun
+    gender: f
+  - lemma: краще
+    ipa: /ˈkrɑʃt͡ʃɛ/
+    translation: better
+    pos: adv
+  - lemma: мусити
+    ipa: /ˈmusɪtɪ/
+    translation: to have to
+    pos: verb
+  - lemma: міф
+    ipa: /mif/
+    translation: myth
+    pos: noun
+    gender: m
+  - lemma: навчити
+    ipa: /nɑwˈt͡ʃɪtɪ/
+    translation: to teach
+    pos: verb
+  - lemma: намагатися
+    ipa: /nɑmɑˈɦɑtɪsʲɑ/
+    translation: to try
+    pos: verb
+  - lemma: необхідно
+    ipa: /nɛɔbˈxidnɔ/
+    translation: necessary
+    pos: adv
+  - lemma: неправда
+    ipa: /nɛˈprɑvdɑ/
+    translation: untruth
+    pos: noun
+    gender: f
+  - lemma: палити
+    ipa: /pɑˈlɪtɪ/
+    translation: to smoke
+    pos: verb
+  - lemma: певний
+    ipa: /ˈpɛvnɪj/
+    translation: certain
+    pos: adj
+    gender: m
+  - lemma: плавати
+    ipa: /ˈplɑvɑtɪ/
+    translation: to swim
+    pos: verb
+  - lemma: повинний
+    ipa: /pɔˈvɪnːɪj/
+    translation: obliged
+    pos: adj
+    gender: m
+  - lemma: подивитися
+    ipa: /pɔdɪˈvɪtɪsʲɑ/
+    translation: to look
+    pos: verb
+  - lemma: потрібно
+    ipa: /pɔˈtribnɔ/
+    translation: necessary
+    pos: adv
+  - lemma: почекати
+    ipa: /pɔt͡ʃɛˈkɑtɪ/
+    translation: to wait
+    pos: verb
+  - lemma: пробувати
+    ipa: /ˈprɔbuvɑtɪ/
+    translation: to try
+    pos: verb
+  - lemma: проект
+    ipa: /prɔˈjɛkt/
+    translation: project
+    pos: noun
+    gender: m
+  - lemma: піаніно
+    ipa: /piɑˈninɔ/
+    translation: piano
+    pos: noun
+    gender: n
+  - lemma: пірнати
+    ipa: /pirˈnɑtɪ/
+    translation: to dive
+    pos: verb
+  - lemma: рішення
+    ipa: /ˈriʃɛnʲːɑ/
+    translation: decision
+    pos: noun
+    gender: n
+  - lemma: сам
+    ipa: /sɑm/
+    translation: alone/self
+    pos: other
+    gender: m
+  - lemma: сказати
+    ipa: /skɑˈzɑtɪ/
+    translation: to say
+    pos: verb
+  - lemma: слід
+    ipa: /slid/
+    translation: should
+    pos: adv
+  - lemma: старатися
+    ipa: /stɑˈrɑtɪsʲɑ/
+    translation: to try hard
+    pos: verb
+  - lemma: сідати
+    ipa: /siˈdɑtɪ/
+    translation: to sit down
+    pos: verb
+  - lemma: сісти
+    ipa: /ˈsistɪ/
+    translation: to sit down (perf)
+    pos: verb
+  - lemma: увійти
+    ipa: /uvijˈtɪ/
+    translation: to enter
+    pos: verb
+  - lemma: факт
+    ipa: /fɑkt/
+    translation: fact
+    pos: noun
+    gender: m
+  - lemma: фотографувати
+    ipa: /fɔtɔhrɑfuˈvɑtɪ/
+    translation: to photograph
+    pos: verb
+  - lemma: холодний
+    ipa: /xɔˈlɔdnɪj/
+    translation: cold
+    pos: adj
+    gender: m

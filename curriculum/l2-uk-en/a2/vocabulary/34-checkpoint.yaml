@@ -1,0 +1,117 @@
+module: 34-checkpoint
+level: A2
+version: '2.0'
+items:
+- lemma: боляче
+  ipa: ˈbɔlʲɐt͡ʃe
+  translation: painful (adv)
+  pos: adv
+- lemma: вести
+  ipa: vesˈtɪ
+  translation: to lead (imp)
+  pos: verb
+- lemma: вказувати
+  ipa: ˈvkɑzuʋɐte
+  translation: to indicate
+  pos: verb
+- lemma: втома
+  ipa: ˈvtɔmɐ
+  translation: fatigue
+  pos: noun
+  gender: f
+- lemma: гід
+  ipa: ɦid
+  translation: guide
+  pos: noun
+  gender: m
+- lemma: гіда
+  ipa: ˈɦidɐ
+  translation: guide (gen)
+  pos: noun
+  gender: m
+- lemma: допуск
+  ipa: ˈdɔpusk
+  translation: admission; tolerance
+  pos: noun
+  gender: m
+- lemma: досвідчений
+  ipa: doˈsʲvʲidt͡ʃenɪj
+  translation: experienced
+  pos: adj
+  gender: m
+- lemma: здати
+  ipa: ˈzdɑte
+  translation: to pass (exam); hand over
+  pos: verb
+- lemma: змінитися
+  ipa: zmʲiˈnɪtɪsʲɐ
+  translation: to change (perf)
+  pos: verb
+  gender: f
+- lemma: зустріти
+  ipa: zuˈstrʲite
+  translation: to meet (perf)
+  pos: verb
+  gender: m
+- lemma: зібратися
+  ipa: zʲiˈbrɑtɪsʲɐ
+  translation: to gather/assemble (perf)
+  pos: verb
+- lemma: контраст
+  ipa: konˈtrɑst
+  translation: contrast
+  pos: noun
+  gender: m
+- lemma: кінцевий
+  ipa: kʲinˈt͡sɛʋɪj
+  translation: final
+  pos: adj
+  gender: m
+- lemma: легеня
+  ipa: leˈhɛnʲɐ
+  translation: lung
+  pos: noun
+  gender: f
+- lemma: мета
+  ipa: meˈtɑ
+  translation: goal; aim
+  pos: noun
+  gender: f
+- lemma: необхідний
+  ipa: neobˈxʲidnɪj
+  translation: necessary
+  pos: adj
+  gender: m
+- lemma: обговорити
+  ipa: obhoˈvɔrɪte
+  translation: to discuss (perf)
+  pos: verb
+- lemma: подкаст
+  ipa: podˈkɑst
+  translation: podcast
+  pos: noun
+  gender: m
+- lemma: послідовність
+  ipa: posʲlʲiˈdɔʋnʲisʲtʲ
+  translation: sequence
+  pos: noun
+  gender: f
+- lemma: похід
+  ipa: poˈxʲid
+  translation: hike; campaign
+  pos: noun
+  gender: m
+- lemma: прийняти
+  ipa: prɪjˈnʲɑte
+  translation: to accept (perf)
+  pos: verb
+  gender: m
+- lemma: продовжити
+  ipa: proˈdɔu̯ʒɪte
+  translation: to continue (perf)
+  pos: verb
+- lemma: скрипка
+  ipa: ˈskrɪpkɐ
+  translation: violin
+  pos: noun
+  gender: f

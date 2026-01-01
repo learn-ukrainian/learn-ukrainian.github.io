@@ -1,34 +1,3 @@
----
-module: b1-51
-title: "Контрольна точка: Просунута граматика"
-subtitle: "Advanced Grammar Phase Checkpoint"
-version: "1.0"
-phase: "B1.4 Advanced Grammar Checkpoint"
-focus: checkpoint
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - checkpoint
-  - integration
-  - participles
-  - passive
-  - diminutives
-  - numerals
-grammar:
-  - "Integration of M42-M50"
-  - "Comprehensive review and testing"
-objectives:
-  - "Learner can demonstrate mastery of advanced grammar forms"
-  - "Learner can integrate knowledge from M42-M50"
-  - "Learner can form and use adverbial and passive participles"
-  - "Learner can use diminutives with appropriate nuance"
-  - "Learner can use collective numerals and fractions"
-  - "Learner can self-assess readiness for Vocabulary Expansion phase"
-vocabulary_count: 40
-vocab_count: 45
----
-
 # Контрольна точка: Просунута граматика
 
 > 🎯 **Чому це важливо?**

@@ -1,5 +1,5 @@
 # Audit Report: 86-b1-capstone.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TBL" | **Target:** 1000
+**Phase:** B1.8 | **Level:** B1 | **Pedagogy:** TBL | **Target:** 1000
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -10,11 +10,11 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/15
+- **Vocab:** ⚠️ 10 < 15 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 95.9% (target 85-100% (B1.7-8 Ukraine))
+- **Immersion:** 🇺🇦 98.3% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 98% (grammar)
 - **Grammar:** ✅ Validated (12/56 confirmed)
 
@@ -37,16 +37,10 @@
 | proverbs | 6 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **98.2%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Вступ** | ⚪️ | 59 | Skipped |
+| **Intro/Narrative** | ✅ | 59 | Included in Core |
 | **Структура підсумкового модуля** | ⚪️ | 11 | Skipped |
 | **Завдання 1: Читання** | ✅ | 301 | Included in Core |
 | **Завдання 2: Письмо** | ⚪️ | 117 | Skipped |
@@ -61,17 +55,3 @@
 | **Наступний крок: Рівень B2** | ⚪️ | 22 | Skipped |
 | **Слова підтримки** | ⚪️ | 76 | Skipped |
 | **Додаткові ресурси** | ⚪️ | 59 | Skipped |
-| **Вправи** | ⚪️ | 0 | Skipped |
-| **quiz: Підсумковий тест на розуміння тексту** | ⚪️ | 0 | Skipped (using YAML) |
-| **fill-in: Вид дієслова у контексті** | ⚪️ | 0 | Skipped (using YAML) |
-| **error-correction: Граматичні помилки B1** | ⚪️ | 0 | Skipped (using YAML) |
-| **match-up: Сполучники та типи речень** | ⚪️ | 0 | Skipped (using YAML) |
-| **cloze: Комплексний текст B1** | ⚪️ | 0 | Skipped (using YAML) |
-| **group-sort: Лексичні домени B1** | ⚪️ | 0 | Skipped (using YAML) |
-| **unjumble: Складні речення B1** | ⚪️ | 0 | Skipped (using YAML) |
-| **translate: Комплексний переклад B1** | ⚪️ | 0 | Skipped (using YAML) |
-| **true-false: Самооцінка B1** | ⚪️ | 0 | Skipped (using YAML) |
-| **dialogue-reorder: Розмова про рівень B1** | ⚪️ | 0 | Skipped (using YAML) |
-| **mark-the-words: Знайдіть дієприкметники** | ⚪️ | 0 | Skipped (using YAML) |
-| **select: Правильні відповіді про B1** | ⚪️ | 0 | Skipped (using YAML) |
-| **Словник** | ⚪️ | 0 | Skipped |

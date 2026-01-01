@@ -14,6 +14,7 @@ Generate activities in YAML format, separate from the prose content.
 6. **DO NOT** use md_to_yaml.py converter - write YAML directly!
 
 **Why direct YAML?**
+
 - ✅ **Faster** - No MD→YAML conversion step
 - ✅ **No format errors** - Direct control over structure
 - ✅ **Better quality** - Explicit syntax, no parsing ambiguity
@@ -23,13 +24,14 @@ Generate activities in YAML format, separate from the prose content.
 
 **Before writing activities, study 1-2 similar existing modules:**
 
-| Level | Module Type | Reference Examples | Look For |
-|-------|-------------|-------------------|----------|
-| B1 | Grammar | M06-10 (Aspect) | Activity variety, sequencing, quiz prompts |
-| B1 | Vocabulary | M52-53 | YAML format, cloze passage structure |
-| A2 | All types | M01-10 | Activity patterns, engagement integration |
+| Level | Module Type | Reference Examples | Look For                                   |
+| ----- | ----------- | ------------------ | ------------------------------------------ |
+| B1    | Grammar     | M06-10 (Aspect)    | Activity variety, sequencing, quiz prompts |
+| B1    | Vocabulary  | M52-53             | YAML format, cloze passage structure       |
+| A2    | All types   | M01-10             | Activity patterns, engagement integration  |
 
 **Pattern extraction steps:**
+
 1. Read the `.md` file for activity section structure
 2. Read the `.activities.yaml` file (if exists) for YAML patterns
 3. Note: quiz question length, fill-in sentence structure, error types
@@ -40,6 +42,7 @@ Generate activities in YAML format, separate from the prose content.
 ## Output Files
 
 For each module, create:
+
 ```
 curriculum/l2-uk-en/{level}/
 ├── {num}-{slug}.md                    # Prose only (no activities)
@@ -48,22 +51,22 @@ curriculum/l2-uk-en/{level}/
 
 ## Migrating Existing Embedded Activities
 
-**If `.md` has embedded activities, migrate them to YAML:**
+**If MIGRATING an old module that has embedded activities:**
 
-| Old Format | Extract | Put in YAML |
-|------------|---------|-------------|
-| `## quiz:` questions | Keep exact questions + options | `items[].question`, `items[].options` |
-| `## match-up:` table rows | Keep all pairs | `pairs[].left`, `pairs[].right` |
-| `## fill-in:` sentences | Keep sentences + answers | `items[].sentence`, `items[].answer` |
-| `## true-false:` statements | Keep statements + T/F | `items[].statement`, `items[].correct` |
-| `## group-sort:` categories | Keep groups + items | `groups[].name`, `groups[].items` |
-| `## unjumble:` scrambled | Keep scrambled + answer | `items[].scrambled`, `items[].answer` |
+| Old Format                                          | Extract                                 | Put in YAML                               |
+| --------------------------------------------------- | --------------------------------------- | ----------------------------------------- |
+| `## quiz:` questions                                | Keep exact questions + options          | `items[].question`, `items[].options`     |
+| `## match-up:` table rows                           | Keep all pairs                          | `pairs[].left`, `pairs[].right`           |
+| `## fill-in:` sentences                             | Keep sentences + answers                | `items[].sentence`, `items[].answer`      |
+| `## true-false:` statements                         | Keep statements + T/F                   | `items[].statement`, `items[].correct`    |
+| `## group-sort:` categories                         | Keep groups + items                     | `groups[].name`, `groups[].items`         |
+| `## unjumble:` scrambled                            | Keep scrambled + answer                 | `items[].scrambled`, `items[].answer`     |
 | `## cloze:` passage with `[___:1]` blanks + options | Convert `[___:N]` → `{ans\|opt1\|opt2}` | `passage` with inline `{ans\|opt1\|opt2}` |
-| `## error-correction:` | Keep sentence + error + fix | `items[].sentence/error/answer` |
-| `## mark-the-words:` | Keep text + targets | `text` with `*marked*` words |
-| `## dialogue-reorder:` | Keep lines + speakers | `lines[].order/speaker/text` |
-| `## select:` questions | Keep questions + all options | `items[].question`, `items[].options` |
-| `## translate:` sentences | Keep source + options | `items[].source`, `items[].options` |
+| `## error-correction:`                              | Keep sentence + error + fix             | `items[].sentence/error/answer`           |
+| `## mark-the-words:`                                | Keep text + targets                     | `text` with `*marked*` words              |
+| `## dialogue-reorder:`                              | Keep lines + speakers                   | `lines[].order/speaker/text`              |
+| `## select:` questions                              | Keep questions + all options            | `items[].question`, `items[].options`     |
+| `## translate:` sentences                           | Keep source + options                   | `items[].source`, `items[].options`       |
 
 **CRITICAL - Cloze Format:**
 
@@ -71,11 +74,13 @@ The MD format for cloze activities MUST use **numbered blanks** with option list
 
 ```markdown
 ## cloze: Title
+
 > Instructions
 
 Passage with [___:1] blank and [___:2] another blank.
 
 1. opt1 | opt2 | opt3 | opt4
+
    > [!answer] correct_answer
 
 2. opt1 | opt2 | opt3 | opt4
@@ -89,6 +94,7 @@ See `docs/ACTIVITY-MARKDOWN-REFERENCE.md` for complete cloze syntax.
 ---
 
 **Then:**
+
 1. Add missing explanations (required for quiz, error-correction)
 2. Add items if below minimum count
 3. Add activity types if below level variety requirement
@@ -97,33 +103,33 @@ See `docs/ACTIVITY-MARKDOWN-REFERENCE.md` for complete cloze syntax.
 ## Activity Count Requirements (Relaxed)
 
 | Level | Target | WARN | FAIL | Items/Activity | Types |
-|-------|--------|------|------|----------------|-------|
-| A1 | 8+ | <8 | <6 | 12+ | 4+ |
-| A2 | 10+ | <10 | <8 | 12+ | 5+ |
-| B1 | 12+ | <12 | <8 | 14+ | 5+ |
-| B2 | 14+ | <14 | <10 | 16+ | 5+ |
-| C1 | 16+ | <16 | <12 | 18+ | 5+ |
-| C2 | 16+ | <16 | <12 | 18+ | 5+ |
+| ----- | ------ | ---- | ---- | -------------- | ----- |
+| A1    | 8+     | <8   | <6   | 12+            | 4+    |
+| A2    | 10+    | <10  | <8   | 12+            | 5+    |
+| B1    | 12+    | <12  | <8   | 14+            | 5+    |
+| B2    | 14+    | <14  | <10  | 16+            | 5+    |
+| C1    | 16+    | <16  | <12  | 18+            | 5+    |
+| C2    | 16+    | <16  | <12  | 18+            | 5+    |
 
 **WARN** = Passes with warning. **FAIL** = Blocks approval.
 
 ## Activity Matrix by Level
 
-| Activity | A1 | A2 | B1 | B2 | C1 | C2 |
-|----------|----|----|----|----|----|----|
-| fill-in | 2+ | 2+ | 2+ | 3+ | 2+ | 2+ |
-| match-up | 2+ | 1+ | 1+ | 1+ | 1+ | 1+ |
-| quiz | 1+ | 1+ | 1+ | 1+ | 1+ | 1+ |
-| true-false | 1+ | 1+ | 1+ | 1+ | - | - |
-| group-sort | 1+ | 1+ | 1+ | 1+ | 1+ | 1+ |
-| anagram | 2+ (M01-10) | - | - | - | - | - |
-| unjumble | 2+ (M11+) | 2+ | 2+ | 2+ | 2+ | 2+ |
-| error-correction | - | 1+ | 2+ | 2+ | 3+ | 3+ |
-| cloze | - | 1+ | 1+ | 1+ | 3+ | 3+ |
-| mark-the-words | - | 1+ | 1+ | 1+ | - | - |
-| dialogue-reorder | - | 1+ | 1+ | 1+ | 1+ | - |
-| select | - | opt | 1+ | 1+ | 1+ | 1+ |
-| translate | - | opt | 1+ | 1+ | 2+ | 2+ |
+| Activity         | A1          | A2  | B1  | B2  | C1  | C2  |
+| ---------------- | ----------- | --- | --- | --- | --- | --- |
+| fill-in          | 2+          | 2+  | 2+  | 3+  | 2+  | 2+  |
+| match-up         | 2+          | 1+  | 1+  | 1+  | 1+  | 1+  |
+| quiz             | 1+          | 1+  | 1+  | 1+  | 1+  | 1+  |
+| true-false       | 1+          | 1+  | 1+  | 1+  | -   | -   |
+| group-sort       | 1+          | 1+  | 1+  | 1+  | 1+  | 1+  |
+| anagram          | 2+ (M01-10) | -   | -   | -   | -   | -   |
+| unjumble         | 2+ (M11+)   | 2+  | 2+  | 2+  | 2+  | 2+  |
+| error-correction | -           | 1+  | 2+  | 2+  | 3+  | 3+  |
+| cloze            | -           | 1+  | 1+  | 1+  | 3+  | 3+  |
+| mark-the-words   | -           | 1+  | 1+  | 1+  | -   | -   |
+| dialogue-reorder | -           | 1+  | 1+  | 1+  | 1+  | -   |
+| select           | -           | opt | 1+  | 1+  | 1+  | 1+  |
+| translate        | -           | opt | 1+  | 1+  | 2+  | 2+  |
 
 ## YAML Format Reference
 
@@ -317,6 +323,7 @@ See `docs/ACTIVITY-MARKDOWN-REFERENCE.md` for complete cloze syntax.
 When a string contains special characters, quote it properly:
 
 1. **Quoted speech in cloze/mark-the-words** → use Ukrainian guillemets `«»`, NOT escaped quotes:
+
    ```yaml
    # ✅ CORRECT - guillemets work in MDX/JSX
    passage: "Викладач сказав: «{Не забувай} читати щодня!»"
@@ -325,28 +332,33 @@ When a string contains special characters, quote it properly:
    # ❌ WRONG - escaped quotes break MDX compilation
    passage: "Викладач сказав: \"{Не забувай} читати щодня!\""
    ```
+
    **Why:** Cloze `passage` and mark-the-words `text` become JSX attributes. Escaped `\"` causes "Unexpected character" errors during MDX build.
 
 2. **Strings with embedded quotes (other fields)** → wrap in single quotes, double internal quotes:
+
    ```yaml
    explanation: '"Думка" means opinion.'
    statement: '"Рішення" та "розв''язання" — різні слова.'
    ```
 
 3. **Strings with colons** → wrap in quotes:
+
    ```yaml
    explanation: 'Правильно: так і ні.'
    ```
 
 4. **Strings with apostrophes** → double the apostrophe inside single quotes:
+
    ```yaml
    statement: 'Слово "розв''язання" має інше значення.'
    ```
 
 5. **Numeric option values** → quote as strings:
+
    ```yaml
    # ✅ CORRECT
-   - text: "5"
+   - text: '5'
      correct: false
 
    # ❌ WRONG - causes 'int' object has no attribute 'replace'
@@ -359,11 +371,13 @@ When a string contains special characters, quote it properly:
 Flow: Easy → Medium → Hard
 
 ### A1
+
 ```
 match-up → group-sort → quiz → true-false → fill-in → anagram/unjumble
 ```
 
 ### A2-B1
+
 ```
 [recognition] mark-the-words → match-up → group-sort
 [discrimination] quiz → true-false → select
@@ -372,6 +386,7 @@ match-up → group-sort → quiz → true-false → fill-in → anagram/unjumble
 ```
 
 ### B2-C2
+
 ```
 [discrimination] select (nuanced)
 [controlled] fill-in → cloze → error-correction ×2-3
@@ -381,6 +396,7 @@ match-up → group-sort → quiz → true-false → fill-in → anagram/unjumble
 ## Vocabulary Constraint (CRITICAL)
 
 Activities MUST use ONLY:
+
 1. Words from the current module's vocabulary table
 2. Words from prior modules (cumulative vocabulary)
 3. Common function words (я, ти, він, це, і, а, але, etc.)
@@ -408,13 +424,13 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/{level}/{file}.md
 - [ ] Proper sequencing (easy → hard)
 - [ ] Valid YAML syntax (run validator)
 - [ ] All answers are correct
-- [ ] Uses ONLY vocabulary from table + prior modules
+- [ ] Uses ONLY vocabulary from YAML + prior modules
 - [ ] Strings with quotes/colons properly escaped
 
 ## DO NOT
 
-- Embed activities in the markdown file
-- Use vocabulary not in table or prior modules
+- Embed activities in the `.md` file
+- Use vocabulary not in YAML or prior modules
 - Write fewer than required activities
 - Create activities with fewer than minimum items
 - Leave quotes/colons unescaped in YAML strings

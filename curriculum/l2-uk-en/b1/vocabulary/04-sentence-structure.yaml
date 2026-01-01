@@ -1,0 +1,19 @@
+module: 04-sentence-structure
+level: B1
+version: '2.0'
+items:
+- lemma: перерахування
+  ipa: /pɛrɛraxuˈvanʲːa/
+  translation: enumeration
+  pos: noun
+  gender: n
+- lemma: сурядність
+  ipa: /suˈrʲadʲnʲisʲtʲ/
+  translation: coordination
+  pos: noun
+  gender: f
+- lemma: тире
+  ipa: /tɪˈrɛ/
+  translation: dash
+  pos: noun
+  gender: n

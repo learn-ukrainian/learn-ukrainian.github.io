@@ -1,0 +1,26 @@
+module: b2-04
+title: Рефлексивний пасив з -ся
+subtitle: Процесний пасив
+version: '1.0'
+phase: B2.1a [Grammar & Register]
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - grammar
+  - passive
+  - reflexive
+register: науковий
+grammar:
+  - Рефлексивний пасив з -ся/-сь
+  - Процесний акцент пасиву
+  - Агент з орудним відмінком
+  - Науково-технічне використання
+objectives:
+  - Розпізнавати та утворювати рефлексивний пасив з -ся/-сь
+  - Використовувати -ся пасив для опису процесів
+  - Виражати агента дії орудним відмінком
+  - Розрізняти -ся пасив та інші пасивні форми за функцією
+vocabulary_count: 25
+vocab_count: 190
+slug: 04-reflexive-passive

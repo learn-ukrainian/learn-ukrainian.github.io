@@ -1,0 +1,226 @@
+module: 10-checkpoint-passive-voice
+level: B2
+version: '2.0'
+items:
+  - lemma: абзаця
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: аналога
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: архаїчний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: архаїчність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: витіснити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: відправлений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: громадськість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: допоміжний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: енергоефективність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: енергоспоживання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: журналістика
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: згадуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: зон
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: зупинитися
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: компетенція
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: конкретизація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: лексикалізація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: лексикалізований
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: лексикалізуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: модул
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: навпаки
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: найдоречніший
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: невимушено
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: непрямий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: об'єкт
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: пакунок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: повноваження
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: попит
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: працююча
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: проголосувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: прогресивний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: продуктивний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: продуктивність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: регламентувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розпізнавання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: розрізнення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: скорочення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: споживання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: суворо
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: узгоджувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: успішно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: фаза
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: шанс
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: імплементація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: інтеграційний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: інфінітивний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: їдучий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f

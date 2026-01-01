@@ -1,28 +1,3 @@
----
-module: a2-42
-title: Word Formation Mastery
-subtitle: "Checkpoint & New Roots"
-version: "1.0"
-phase: "A2.4"
-pedagogy: "Review/Inquiry"
-duration: "60 min"
-transliteration: none
-tags:
-  - checkpoint
-  - roots
-  - vocabulary
-  - review
-grammar:
-  - root families (мов, слух, дум, рід)
-  - review of prefixes and suffixes
-objectives:
-  - "Learner can express thoughts (dum), speech (mov), and hearing (slukh)"
-  - "Learner can synthesize knowledge of prefixes, suffixes, and roots"
-  - "Learner completes the Word Formation phase"
-vocabulary_count: 48
-vocab_count: 62
----
-
 ## Warm-up
 
 Ласкаво просимо до фінального етапу "Фабрики Слів".

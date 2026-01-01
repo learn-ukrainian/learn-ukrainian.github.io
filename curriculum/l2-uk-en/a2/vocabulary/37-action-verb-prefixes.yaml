@@ -1,0 +1,328 @@
+module: 37-action-verb-prefixes
+level: A2
+version: '2.0'
+items:
+- lemma: борг
+  ipa: bɔrɦ
+  translation: debt
+  pos: noun
+  gender: m
+- lemma: видалити
+  ipa: vɪˈdɑlɪte
+  translation: to remove (perf)
+  pos: verb
+  gender: m
+- lemma: видати
+  ipa: ˈvɪdɐte
+  translation: to issue/publish (perf)
+  pos: verb
+- lemma: вимикати
+  ipa: vɪmɪˈkɑte
+  translation: to turn off (imp)
+  pos: verb
+- lemma: вимкнути
+  ipa: ˈvɪmknute
+  translation: to turn off (perf)
+  pos: verb
+  gender: m
+- lemma: винести
+  ipa: ˈvɪneste
+  translation: to carry out (perf)
+  pos: verb
+  gender: m
+- lemma: вмикати
+  ipa: vmɪˈkɑte
+  translation: to turn on (imp)
+  pos: verb
+- lemma: від'єднати
+  ipa: vidjedˈnɑte
+  translation: to disconnect (perf)
+  pos: verb
+- lemma: відговорити
+  ipa: vidhoˈvɔrɪte
+  translation: to dissuade
+  pos: verb
+- lemma: віддати
+  ipa: vidˈdɑte
+  translation: to give back (perf)
+  pos: verb
+- lemma: відомий
+  ipa: viˈdɔmɪj
+  translation: known; famous
+  pos: adj
+  gender: m
+- lemma: відрізати
+  ipa: vidˈrʲizɐte
+  translation: to cut off (perf)
+  pos: verb
+- lemma: відчинити
+  ipa: vidt͡ʃɪˈnɪte
+  translation: to open (perf)
+  pos: verb
+- lemma: довестися
+  ipa: doveˈstɪsʲɐ
+  translation: to have to (impersonal)
+  pos: verb
+  gender: n
+- lemma: докупити
+  ipa: dokuˈpɪte
+  translation: to buy more (perf)
+  pos: verb
+- lemma: дописати
+  ipa: dopɪˈsɑte
+  translation: to finish writing (perf)
+  pos: verb
+- lemma: дочитати
+  ipa: dot͡ʃɪˈtɑte
+  translation: to finish reading (perf)
+  pos: verb
+- lemma: доїсти
+  ipa: doˈjiste
+  translation: to finish eating (perf)
+  pos: other
+- lemma: жах
+  ipa: ʒɑx
+  translation: horror
+  pos: noun
+  gender: m
+- lemma: з'єднати
+  ipa: zjɛdˈnɑte
+  translation: to connect (perf)
+  pos: verb
+- lemma: заговорити
+  ipa: zɐhoˈvɔrɪte
+  translation: to start speaking (perf)
+  pos: verb
+  gender: m
+- lemma: загулятися
+  ipa: zɐhuˈlʲɑtɪsʲɐ
+  translation: to lose track of time (perf)
+  pos: verb
+- lemma: записати
+  ipa: zɐpɪˈsɑte
+  translation: to record/write down (perf)
+  pos: verb
+- lemma: заплющити
+  ipa: zɐˈplʲuʃt͡ʃɪte
+  translation: to close eyes (perf)
+  pos: verb
+- lemma: запрацюватися
+  ipa: zɐprɐt͡sʲuˈʋɑtɪsʲɐ
+  translation: to overwork (perf)
+  pos: verb
+- lemma: засидітися
+  ipa: zɐsɪˈdʲitɪsʲɐ
+  translation: to sit too long (perf)
+  pos: verb
+- lemma: заховати
+  ipa: zɐxoˈʋɑte
+  translation: to hide (perf)
+  pos: verb
+- lemma: зачинити
+  ipa: zɐt͡ʃɪˈnɪte
+  translation: to close (perf)
+  pos: verb
+- lemma: згорнути
+  ipa: zhorˈnute
+  translation: to fold/minimize (perf)
+  pos: verb
+- lemma: злякатися
+  ipa: zlʲɐˈkɑtɪsʲɐ
+  translation: to get scared (perf)
+  pos: verb
+  gender: m
+- lemma: кнопка
+  ipa: ˈknɔpkɐ
+  translation: button
+  pos: noun
+  gender: f
+- lemma: копія
+  ipa: ˈkɔpʲijɐ
+  translation: copy
+  pos: noun
+  gender: f
+- lemma: меблий
+  ipa: mebˈlɪj
+  translation: furniture (adj typo? меблевий?)
+  pos: noun
+  gender: m
+- lemma: наговорити
+  ipa: nɐhoˈvɔrɪte
+  translation: to say a lot (perf)
+  pos: verb
+- lemma: наклеїт
+  ipa: nɐˈklejite
+  translation: stick! (imperative typo)
+  pos: noun
+  gender: m
+- lemma: накрити
+  ipa: nɐˈkrɪte
+  translation: to cover (perf)
+  pos: verb
+- lemma: наробити
+  ipa: nɐroˈbɪte
+  translation: to make a mess/a lot of (perf)
+  pos: verb
+  gender: m
+- lemma: натиснути
+  ipa: nɐˈtɪsnute
+  translation: to press (perf)
+  pos: verb
+  gender: m
+- lemma: натхненно
+  ipa: nɐtˈxnɛnːo
+  translation: feel inspired
+  pos: adv
+- lemma: наїстися
+  ipa: nɐˈjistɪsʲɐ
+  translation: to eat one's fill (perf)
+  pos: verb
+- lemma: ноутбук
+  ipa: noutˈbuk
+  translation: laptop
+  pos: noun
+  gender: m
+- lemma: останній
+  ipa: osˈtɑnʲːij
+  translation: last
+  pos: adj
+  gender: f
+- lemma: перевернути
+  ipa: pereverˈnute
+  translation: to flip over (perf)
+  pos: verb
+  gender: m
+- lemma: переверти
+  ipa: pereˈvɛrte
+  translation: to flip over (typo)
+  pos: verb
+- lemma: передати
+  ipa: pereˈdɑte
+  translation: to pass/transmit (perf)
+  pos: verb
+- lemma: перемити
+  ipa: pereˈmɪte
+  translation: to rewash/wash all (perf)
+  pos: verb
+- lemma: перести
+  ipa: pereˈstɪ
+  translation: to stop/cease?
+  pos: verb
+- lemma: подати
+  ipa: poˈdɑte
+  translation: to submit/serve (perf)
+  pos: verb
+- lemma: полиця
+  ipa: poˈlɪt͡sʲɐ
+  translation: shelf
+  pos: noun
+  gender: f
+- lemma: помилитися
+  ipa: pomɪˈlɪtɪsʲɐ
+  translation: to mistake (perf)
+  pos: verb
+  gender: m
+- lemma: пописати
+  ipa: popɪˈsɑte
+  translation: to write for a while (perf)
+  pos: verb
+- lemma: пофарбувати
+  ipa: pofɐrbuˈʋɑte
+  translation: to paint (perf)
+  pos: verb
+  gender: m
+- lemma: прибити
+  ipa: prɪˈbɪte
+  translation: to nail (perf)
+  pos: verb
+  gender: m
+- lemma: приєднати
+  ipa: prɪjedˈnɑte
+  translation: to attach/join (perf)
+  pos: verb
+- lemma: провести
+  ipa: proˈvɛste
+  translation: to conduct/spend time (perf)
+  pos: verb
+- lemma: підговорити
+  ipa: pidhoˈvɔrɪte
+  translation: to persuade (secretly)
+  pos: verb
+- lemma: редактор
+  ipa: reˈdɑktor
+  translation: editor
+  pos: noun
+  gender: m
+- lemma: роз'єднати
+  ipa: rozjejˈnɑte
+  translation: to disconnect (perf)
+  pos: verb
+- lemma: роздати
+  ipa: rozˈdɑte
+  translation: to distribute (perf)
+  pos: verb
+- lemma: роздрукувати
+  ipa: rozdrukuˈʋɑte
+  translation: to print (perf)
+  pos: verb
+  gender: m
+- lemma: розділ
+  ipa: rozˈdʲil
+  translation: chapter/section
+  pos: noun
+  gender: m
+- lemma: розкрити
+  ipa: rozˈkrɪte
+  translation: to reveal/open (perf)
+  pos: verb
+- lemma: розплющити
+  ipa: rozˈplʲuʃt͡ʃɪte
+  translation: to open eyes (perf)
+  pos: verb
+- lemma: секрет
+  ipa: seˈkrɛt
+  translation: secret
+  pos: noun
+  gender: m
+- lemma: серветка
+  ipa: serˈvɛtkɐ
+  translation: napkin
+  pos: noun
+  gender: f
+- lemma: сторінка
+  ipa: stoˈrʲinkɐ
+  translation: page
+  pos: noun
+  gender: f
+- lemma: стільки
+  ipa: ˈstʲilʲkɪ
+  translation: so much/many
+  pos: adv
+- lemma: усе
+  ipa: uˈsɛ
+  translation: everything
+  pos: pron
+  gender: n
+- lemma: усти
+  ipa: uˈstɪ
+  translation: lips (typo вуста?)
+  pos: verb
+- lemma: шедевр
+  ipa: ʃeˈdɛu̯r
+  translation: masterpiece
+  pos: noun
+  gender: m
+- lemma: шпалер
+  ipa: ʃpɐˈlɛr
+  translation: wallpaper (gen?)
+  pos: noun
+  gender: f
+- lemma: шума
+  ipa: ˈʃumɐ
+  translation: noise (gen?)
+  pos: noun
+  gender: m
+- lemma: єднати
+  ipa: jɛdˈnɑte
+  translation: to unite (imp)
+  pos: verb

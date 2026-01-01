@@ -1,27 +1,3 @@
----
-module: b1-26
-title: "Підрядні означальні: який"
-subtitle: "Relative Clauses with який"
-version: "1.0"
-phase: "B1.3a Complex Sentences"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - relative-clauses
-  - complex-sentences
-grammar:
-  - "який/яка/яке/які in all cases"
-  - "Agreement with antecedent and role in clause"
-objectives:
-  - "Learner understands який agreement patterns"
-  - "Learner can use який in all seven cases"
-  - "Learner can combine sentences using який"
-vocabulary_count: 25
-vocab_count: 58
----
-
 # Підрядні означальні: який
 
 > 🎯 **Чому це важливо?**
@@ -351,7 +327,5 @@ vocab_count: 58
 > - 🎧 [Ukrainian Grammar Podcast](https://www.youtube.com/results?search_query=ukrainian+grammar+podcast) — подкаст уроки для аудіального навчання
 
 ---
-
-
 
 ---

@@ -1,31 +1,3 @@
----
-module: b2-49
-title: "Соматичні фразеологізми: Голова та обличчя"
-subtitle: "Idioms about Head and Face"
-version: "1.0"
-phase: "B2.2 [Phraseology & Synonymy]"
-pedagogy: "CBI"
-duration: 90
-transliteration: none
-immersion: 100
-tags:
-  - phraseology
-  - somatic
-  - idioms
-  - head
-  - face
-grammar:
-  - "Fixed expressions (фразеологічні одиниці)"
-  - "Idiom structure and variation"
-objectives:
-  - "Learner can recognize and interpret 8 core Ukrainian somatic idioms about head and face"
-  - "Learner can distinguish literal vs figurative meanings of body-related idioms"
-  - "Learner can use head/face idioms appropriately in context with correct register"
-vocabulary_count: 30
-register: "varies"
-vocab_count: 80
----
-
 # Соматичні фразеологізми: Голова та обличчя
 
 > 🎯 **Чому це важливо?**

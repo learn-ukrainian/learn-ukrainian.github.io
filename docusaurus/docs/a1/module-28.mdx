@@ -20,8 +20,6 @@ import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 
 
-# Description: Adverbs
-
 ## Warm-up
 
 > 💡 **Як він це робить? (How Does He Do It?)**
@@ -32,16 +30,16 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 >
 > These are **adverbs** — they describe HOW someone does something!
 
-
-
 ---
 
 ## Grammar
+
 ## How to Form Adverbs
 
 :::tip[Спостереження (Pattern Discovery)]
 
 Look at these pairs:
+
 - **гарний** хлопець (handsome boy) → Він **гарно** танцює. (He dances beautifully.)
 - **швидкий** потяг (fast train) → Він **швидко** їздить. (He rides fast.)
 - **тихий** голос (quiet voice) → Вона **тихо** говорить. (She speaks quietly.)
@@ -53,22 +51,22 @@ Formula: Take the adjective stem + add **-о** (or **-е** for soft stems)
 
 ### The Formula
 
-| Adjective (m) | Meaning | Adverb | Meaning |
-|---------------|---------|--------|---------|
-| гарний | beautiful | гарно | beautifully |
-| швидкий | fast | швидко | fast, quickly |
-| повільний | slow | повільно | slowly |
-| тихий | quiet | тихо | quietly |
-| голосний | loud | голосно | loudly |
+| Adjective (m) | Meaning   | Adverb   | Meaning       |
+| ------------- | --------- | -------- | ------------- |
+| гарний        | beautiful | гарно    | beautifully   |
+| швидкий       | fast      | швидко   | fast, quickly |
+| повільний     | slow      | повільно | slowly        |
+| тихий         | quiet     | тихо     | quietly       |
+| голосний      | loud      | голосно  | loudly        |
 
 ### Irregular Adverbs
 
 Some adverbs are special:
 
-| Adjective | Expected | Actual Adverb |
-|-----------|----------|---------------|
-| хороший (good) | *хорошо* | **добре** (well) |
-| поганий (bad) | *поганно* | **погано** (badly) |
+| Adjective      | Expected  | Actual Adverb      |
+| -------------- | --------- | ------------------ |
+| хороший (good) | _хорошо_  | **добре** (well)   |
+| поганий (bad)  | _поганно_ | **погано** (badly) |
 
 ---
 
@@ -100,12 +98,12 @@ From ALWAYS to NEVER:
 
 ## Degree Adverbs: How Much?
 
-| Adverb | Meaning | Example |
-|--------|---------|---------|
-| дуже | very | Він **дуже** гарно малює. (He draws very beautifully.) |
-| занадто | too (much) | Це **занадто** дорого. (This is too expensive.) |
-| трохи | a little | Вона **трохи** втомилась. (She got a little tired.) |
-| зовсім | completely | Він **зовсім** не розуміє. (He completely doesn't understand.) |
+| Adverb  | Meaning    | Example                                                        |
+| ------- | ---------- | -------------------------------------------------------------- |
+| дуже    | very       | Він **дуже** гарно малює. (He draws very beautifully.)         |
+| занадто | too (much) | Це **занадто** дорого. (This is too expensive.)                |
+| трохи   | a little   | Вона **трохи** втомилась. (She got a little tired.)            |
+| зовсім  | completely | Він **зовсім** не розуміє. (He completely doesn't understand.) |
 
 ---
 
@@ -117,8 +115,9 @@ From ALWAYS to NEVER:
 - Олена **гарно** співає. (Olena sings beautifully.)
 - Тарас **погано** танцює. (Taras dances badly.)
 - Бабуся **смачно** готує. (Grandma cooks deliciously.)
-- Діти **голосно** грають. (The children play loudly.)
 - Він **тихо** читає. (He reads quietly.)
+- Діти **голосно** грають. (The children play loudly.)
+- Він **зовсім** не розуміє. (He completely doesn't understand.)
 :::
 
 
@@ -269,8 +268,103 @@ Notice: We use ADVERBS, not adjectives, to answer "Як справи?"
 
 ---
 
-## 📋 Summary
 
+
+## 🎯 Activities
+
+### Adjective → Adverb
+
+<MatchUp
+  title="Adjective → Adverb"
+  pairs={JSON.parse(`[{"left": "- гарний", "right": "гарно"}, {"left": "- швидкий", "right": "швидко"}, {"left": "- повільний", "right": "повільно"}, {"left": "- тихий", "right": "тихо"}, {"left": "- голосний", "right": "голосно"}, {"left": "- веселий", "right": "весело"}, {"left": "- сумний", "right": "сумно"}, {"left": "- легкий", "right": "легко"}, {"left": "- важкий", "right": "важко"}, {"left": "- чесний", "right": "чесно"}, {"left": "- ввічливий", "right": "ввічливо"}, {"left": "- серйозний", "right": "серйозно"}]`)}
+/>
+
+### Frequency Scale
+
+<GroupSort
+  title="Frequency Scale"
+  groups={JSON.parse(`{"Always / Often (75-100%)": ["завжди", "часто", "постійно", "дуже часто"], "Usually / Sometimes (25-60%)": ["зазвичай", "іноді", "деколи", "час від часу"], "Rarely / Never (0-10%)": ["рідко", "майже ніколи", "зовсім не часто", "ніколи", "--"]}`)}
+/>
+
+### Type of Adverb
+
+<GroupSort
+  title="Type of Adverb"
+  groups={JSON.parse(`{"Manner (How?)": ["гарно", "погано", "швидко", "повільно"], "Frequency (How often?)": ["завжди", "часто", "іноді", "рідко"], "Degree (How much?)": ["дуже", "занадто", "трохи", "зовсім", "--"]}`)}
+/>
+
+### Як ти це робиш? (How Do You Do It?)
+
+<FillIn
+  title="Як ти це робиш? (How Do You Do It?)"
+  items={JSON.parse(`[{"sentence": "Вона співає дуже ___.", "answer": "гарно", "options": ["гарно", "гарний", "гарна", "гарне"]}, {"sentence": "Він говорить дуже ___.", "answer": "тихо", "options": ["тихо", "тихий", "тиха", "тихе"]}, {"sentence": "Бабуся готує дуже ___.", "answer": "смачно", "options": ["смачно", "смачний", "смачна", "смачне"]}, {"sentence": "Діти грають дуже ___.", "answer": "голосно", "options": ["голосно", "голосний", "голосна", "голосне"]}, {"sentence": "Він біжить дуже ___.", "answer": "швидко", "options": ["швидко", "швидкий", "швидка", "швидке"]}, {"sentence": "Вона читає дуже ___.", "answer": "повільно", "options": ["повільно", "повільний", "повільна", "повільне"]}, {"sentence": "Я розумію це ___.", "answer": "добре", "options": ["добре", "добрий", "добра", "добро"]}, {"sentence": "Він танцює дуже ___.", "answer": "погано", "options": ["погано", "поганий", "погана", "погане"]}, {"sentence": "Вона працює дуже ___.", "answer": "важко", "options": ["важко", "важкий", "важка", "важке"]}, {"sentence": "Він говорить ___.", "answer": "чесно", "options": ["чесно", "чесний", "чесна", "чесне"]}, {"sentence": "Вона відповідає ___.", "answer": "ввічливо", "options": ["ввічливо", "ввічливий", "ввічлива", "ввічливе"]}, {"sentence": "Він жартує ___.", "answer": "весело", "options": ["весело", "веселий", "весела", "веселе"]}]`)}
+/>
+
+### Як часто? (How Often?)
+
+<FillIn
+  title="Як часто? (How Often?)"
+  items={JSON.parse(`[{"sentence": "Я ___ снідаю о сьомій.", "answer": "завжди", "options": ["завжди", "ніколи", "рідко", "погано"]}, {"sentence": "Вона ___ читає книжки.", "answer": "часто", "options": ["часто", "ніколи", "швидко", "добре"]}, {"sentence": "Ми ___ їмо в ресторані.", "answer": "іноді", "options": ["іноді", "завжди", "добре", "смачно"]}, {"sentence": "Він ___ запізнюється.", "answer": "рідко", "options": ["рідко", "завжди", "часто", "швидко"]}, {"sentence": "Вона ___ не п'є каву.", "answer": "ніколи", "options": ["ніколи", "завжди", "часто", "дуже"]}, {"sentence": "Ми ___ гуляємо в парку.", "answer": "зазвичай", "options": ["зазвичай", "ніколи", "погано", "важко"]}, {"sentence": "Він ___ обідає о першій.", "answer": "завжди", "options": ["завжди", "ніколи", "рідко", "легко"]}, {"sentence": "Вона ___ працює вдома.", "answer": "часто", "options": ["часто", "ніколи", "рідко", "повільно"]}, {"sentence": "Вони ___ дивляться телевізор.", "answer": "рідко", "options": ["рідко", "завжди", "ніколи", "голосно"]}, {"sentence": "Я ___ приходжу о дев'ятій.", "answer": "зазвичай", "options": ["зазвичай", "ніколи", "рідко", "тихо"]}, {"sentence": "Він ___ не курить.", "answer": "ніколи", "options": ["ніколи", "завжди", "іноді", "дуже"]}, {"sentence": "Ми ___ їмо вдома.", "answer": "зазвичай", "options": ["зазвичай", "ніколи", "рідко", "весело"]}]`)}
+/>
+
+### Adverb or Adjective?
+
+<Quiz
+  title="Adverb or Adjective?"
+  questions={JSON.parse(`[{"question": "Does the sentence \\\"Він ___ хлопець\\\" require an adjective or adverb?", "options": [{"text": "добрий (adjective)", "correct": true}, {"text": "добре (adverb)", "correct": false}, {"text": "добро", "correct": false}, {"text": "добра", "correct": false}]}, {"question": "Which form is correct for \\\"Він говорить ___\\\" in English?", "options": [{"text": "добре (adverb)", "correct": true}, {"text": "добрий (adjective)", "correct": false}, {"text": "добра", "correct": false}, {"text": "добро", "correct": false}]}, {"question": "How should you describe \\\"Це ___ машина\\\" using masculine/feminine forms?", "options": [{"text": "швидка (adjective)", "correct": true}, {"text": "швидко (adverb)", "correct": false}, {"text": "швидкий", "correct": false}, {"text": "швидке", "correct": false}]}, {"question": "What is the correct form for \\\"Вона біжить ___\\\" here?", "options": [{"text": "швидко (adverb)", "correct": true}, {"text": "швидка (adjective)", "correct": false}, {"text": "швидкий", "correct": false}, {"text": "швидке", "correct": false}]}, {"question": "Which word correctly completes \\\"У неї ___ голос\\\" in Ukrainian?", "options": [{"text": "тихий (adjective)", "correct": true}, {"text": "тихо (adverb)", "correct": false}, {"text": "тиха", "correct": false}, {"text": "тихе", "correct": false}]}, {"question": "How should you accurately translate \\\"He speaks quietly\\\" into Ukrainian?", "options": [{"text": "тихо (adverb)", "correct": true}, {"text": "тихий (adjective)", "correct": false}, {"text": "тиха", "correct": false}, {"text": "тихе", "correct": false}]}, {"question": "What is the right adjective for \\\"Вона ___ людина\\\" here?", "options": [{"text": "весела (adjective)", "correct": true}, {"text": "весело (adverb)", "correct": false}, {"text": "веселий", "correct": false}, {"text": "веселе", "correct": false}]}, {"question": "Which form correctly represents \\\"The children sing loudly\\\"?", "options": [{"text": "голосно (adverb)", "correct": true}, {"text": "голосний (adjective)", "correct": false}, {"text": "голосна", "correct": false}, {"text": "голосне", "correct": false}]}]`)}
+/>
+
+### Frequency Meaning
+
+<Quiz
+  title="Frequency Meaning"
+  questions={JSON.parse(`[{"question": "What is the English translation of \\\"Завжди\\\"?", "options": [{"text": "Always", "correct": true}, {"text": "Sometimes", "correct": false}, {"text": "Never", "correct": false}, {"text": "Rarely", "correct": false}]}, {"question": "Which English word represents the adverb \\\"Часто\\\"?", "options": [{"text": "Often", "correct": true}, {"text": "Never", "correct": false}, {"text": "Rarely", "correct": false}, {"text": "Always", "correct": false}]}, {"question": "How do you translate \\\"Іноді\\\" into English?", "options": [{"text": "Sometimes", "correct": true}, {"text": "Always", "correct": false}, {"text": "Never", "correct": false}, {"text": "Often", "correct": false}]}, {"question": "What is the meaning of \\\"Рідко\\\" in English?", "options": [{"text": "Rarely", "correct": true}, {"text": "Always", "correct": false}, {"text": "Often", "correct": false}, {"text": "Never", "correct": false}]}, {"question": "Which English term matches \\\"Ніколи\\\"?", "options": [{"text": "Never", "correct": true}, {"text": "Sometimes", "correct": false}, {"text": "Often", "correct": false}, {"text": "Always", "correct": false}]}, {"question": "How is \\\"Зазвичай\\\" translated into English?", "options": [{"text": "Usually", "correct": true}, {"text": "Never", "correct": false}, {"text": "Rarely", "correct": false}, {"text": "Sometimes", "correct": false}]}, {"question": "What is the English meaning of \\\"Дуже\\\"?", "options": [{"text": "Very", "correct": true}, {"text": "Sometimes", "correct": false}, {"text": "Never", "correct": false}, {"text": "Rarely", "correct": false}]}, {"question": "Which phrase translates the word \\\"Трохи\\\" into English?", "options": [{"text": "A little", "correct": true}, {"text": "Very much", "correct": false}, {"text": "Never", "correct": false}, {"text": "Always", "correct": false}]}]`)}
+/>
+
+### Describing Actions
+
+<Unjumble
+  title="Describing Actions"
+  items={JSON.parse(`[{"jumbled": "", "answer": "Він швидко бігає"}, {"jumbled": "", "answer": "Вона добре співає"}, {"jumbled": "", "answer": "Я читаю повільно"}, {"jumbled": "", "answer": "Ми часто гуляємо"}, {"jumbled": "", "answer": "Я завжди снідаю вранці"}, {"jumbled": "", "answer": "Він ніколи не курить"}, {"jumbled": "", "answer": "Діти голосно грають"}, {"jumbled": "", "answer": "Вона тихо говорить"}, {"jumbled": "", "answer": "Як справи? Добре"}, {"jumbled": "", "answer": "Ми іноді їмо піцу"}, {"jumbled": "", "answer": "Я рідко дивлюсь телевізор"}, {"jumbled": "", "answer": "Вони весело танцюють"}]`)}
+/>
+
+### Adverb Rules
+
+<TrueFalse
+  title="Adverb Rules"
+  items={JSON.parse(`[{"statement": "Adverbs describe verbs (actions).", "isTrue": true, "explanation": ""}, {"statement": "Adverbs describe nouns.", "isTrue": false, "explanation": "Incorrect! that's adjectives"}, {"statement": "Most adverbs end in -о.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Добрий\\\" is an adverb.", "isTrue": false, "explanation": "Incorrect! it's an adjective"}, {"statement": "\\\"Добре\\\" is an adverb.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Ніколи\\\" doesn't need \\\"не\\\" before the verb.", "isTrue": false, "explanation": "Incorrect! you need two negatives"}, {"statement": "\\\"Завжди\\\" means \\\"always\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Дуже\\\" can modify adverbs (дуже добре).", "isTrue": true, "explanation": ""}, {"statement": "\\\"Швидкий\\\" describes how you do something.", "isTrue": false, "explanation": "Incorrect! it's an adjective"}, {"statement": "\\\"Швидко\\\" describes how you do something.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Як справи?\\\" — \\\"Добрий!\\\".", "isTrue": false, "explanation": "Incorrect! should be \\\"Добре!\\\""}, {"statement": "\\\"Як справи?\\\" — \\\"Добре!\\\".", "isTrue": true, "explanation": ""}]`)}
+/>
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| алкоголь | /ɑlkɔˈɦɔlʲ/ | alcohol | noun | ч |  |
+| бувати | /buˈvɑtɪ/ | to happen/be usually | verb |  |  |
+| бігати | /ˈbiɦɑtɪ/ | to run | verb |  |  |
+| весело | /ˈvɛsɛlɔ/ | cheerfully | adv |  |  |
+| високо | /ˈvɪsɔkɔ/ | high | adv |  |  |
+| втомитися | /vtɔˈmɪtɪsʲɑ/ | to get tired | verb |  |  |
+| відповідь | /ˈvidpɔvidʲ/ | answer | noun | ж |  |
+| гарно | /ˈɦɑrnɔ/ | beautifully/nicely | adv |  |  |
+| голос | /ˈɦɔlɔs/ | voice | noun | ч |  |
+| голосний | /ɦɔlɔsˈnɪj/ | loud | adj | ч |  |
+| голосно | /ˈɦɔlɔsnɔ/ | loudly | adv |  |  |
+| занадто | /zɑˈnɑdtɔ/ | too/too much | adv |  |  |
+| зовсім | /ˈzɔwsim/ | completely/at all | adv |  |  |
+| козак | /kɔˈzɑk/ | Cossack | noun | ч |  |
+| курити | /kuˈrɪtɪ/ | to smoke | verb |  |  |
+| молодець | /mɔlɔˈdɛt͡sʲ/ | well done/good job | noun | ч |  |
+| повільно | /pɔˈvilʲnɔ/ | slowly | adv |  |  |
+| погано | /pɔˈhɑnɔ/ | badly | adv |  |  |
+| потяг | /ˈpɔtʲɑɦ/ | train | noun | ч |  |
+| трохи | /ˈtrɔxɪ/ | a little | adv |  |  |
+| хороший | /xɔˈrɔʃɪj/ | good | adj | ч |  |
+| частота | /t͡ʃɑstɔˈtɑ/ | frequency | noun | ж |  |
+| частотність | /t͡ʃɑsˈtɔtnisʲtʲ/ | frequency | noun | ж |  |
+| шкала | /ʃkɑˈlɑ/ | scale | noun | ж |  |
+
+## 📋 Summary
 
 ## 📋 Summary
 
@@ -281,382 +375,9 @@ Notice: We use ADVERBS, not adjectives, to answer "Як справи?"
 :::info[External Resources]
 
 **Media:**
+
 - [Adjectives and Adverbs](https://www.ukrainianlessons.com/adjectives-and-adverbs/) — Comprehensive guide
 - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/adverbs
 - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
 :::
 
-
-## 🎯 Activities
-
-### Adjective → Adverb
-
-<MatchUp pairs={[
-  { left: `гарний`, right: `гарно` },
-  { left: `швидкий`, right: `швидко` },
-  { left: `повільний`, right: `повільно` },
-  { left: `тихий`, right: `тихо` },
-  { left: `голосний`, right: `голосно` },
-  { left: `веселий`, right: `весело` },
-  { left: `сумний`, right: `сумно` },
-  { left: `легкий`, right: `легко` },
-  { left: `важкий`, right: `важко` },
-  { left: `чесний`, right: `чесно` },
-  { left: `ввічливий`, right: `ввічливо` },
-  { left: `серйозний`, right: `серйозно` }
-]} />
-
-### Frequency Scale
-
-<GroupSort groups={{
-  "Always / Often (75-100%)": ["завжди", "часто", "постійно", "дуже часто"],
-  "Usually / Sometimes (25-60%)": ["зазвичай", "іноді", "деколи", "час від часу"],
-  "Rarely / Never (0-10%)": ["рідко", "майже ніколи", "зовсім не часто", "ніколи"]
-}} />
-
-### Type of Adverb
-
-<GroupSort groups={{
-  "Manner (How?)": ["гарно", "погано", "швидко", "повільно"],
-  "Frequency (How often?)": ["завжди", "часто", "іноді", "рідко"],
-  "Degree (How much?)": ["дуже", "занадто", "трохи", "зовсім"]
-}} />
-
-### Як ти це робиш? (How Do You Do It?)
-
-<FillIn items={[
-  {
-    sentence: `Вона співає дуже ___.`,
-    answer: `гарно`,
-    options: [`гарно`, `гарний`, `гарна`, `гарне`]
-  },  {
-    sentence: `Він говорить дуже ___.`,
-    answer: `тихо`,
-    options: [`тихо`, `тихий`, `тиха`, `тихе`]
-  },  {
-    sentence: `Бабуся готує дуже ___.`,
-    answer: `смачно`,
-    options: [`смачно`, `смачний`, `смачна`, `смачне`]
-  },  {
-    sentence: `Діти грають дуже ___.`,
-    answer: `голосно`,
-    options: [`голосно`, `голосний`, `голосна`, `голосне`]
-  },  {
-    sentence: `Він біжить дуже ___.`,
-    answer: `швидко`,
-    options: [`швидко`, `швидкий`, `швидка`, `швидке`]
-  },  {
-    sentence: `Вона читає дуже ___.`,
-    answer: `повільно`,
-    options: [`повільно`, `повільний`, `повільна`, `повільне`]
-  },  {
-    sentence: `Я розумію це ___.`,
-    answer: `добре`,
-    options: [`добре`, `добрий`, `добра`, `добро`]
-  },  {
-    sentence: `Він танцює дуже ___.`,
-    answer: `погано`,
-    options: [`погано`, `поганий`, `погана`, `погане`]
-  },  {
-    sentence: `Вона працює дуже ___.`,
-    answer: `важко`,
-    options: [`важко`, `важкий`, `важка`, `важке`]
-  },  {
-    sentence: `Він говорить ___.`,
-    answer: `чесно`,
-    options: [`чесно`, `чесний`, `чесна`, `чесне`]
-  },  {
-    sentence: `Вона відповідає ___.`,
-    answer: `ввічливо`,
-    options: [`ввічливо`, `ввічливий`, `ввічлива`, `ввічливе`]
-  },  {
-    sentence: `Він жартує ___.`,
-    answer: `весело`,
-    options: [`весело`, `веселий`, `весела`, `веселе`]
-  }
-]} />
-
-### Як часто? (How Often?)
-
-<FillIn items={[
-  {
-    sentence: `Я ___ снідаю о сьомій.`,
-    answer: `завжди`,
-    options: [`завжди`, `ніколи`, `рідко`, `погано`]
-  },  {
-    sentence: `Вона ___ читає книжки.`,
-    answer: `часто`,
-    options: [`часто`, `ніколи`, `швидко`, `добре`]
-  },  {
-    sentence: `Ми ___ їмо в ресторані.`,
-    answer: `іноді`,
-    options: [`іноді`, `завжди`, `добре`, `смачно`]
-  },  {
-    sentence: `Він ___ запізнюється.`,
-    answer: `рідко`,
-    options: [`рідко`, `завжди`, `часто`, `швидко`]
-  },  {
-    sentence: `Вона ___ не п'є каву.`,
-    answer: `ніколи`,
-    options: [`ніколи`, `завжди`, `часто`, `дуже`]
-  },  {
-    sentence: `Ми ___ гуляємо в парку.`,
-    answer: `зазвичай`,
-    options: [`зазвичай`, `ніколи`, `погано`, `важко`]
-  },  {
-    sentence: `Він ___ обідає о першій.`,
-    answer: `завжди`,
-    options: [`завжди`, `ніколи`, `рідко`, `легко`]
-  },  {
-    sentence: `Вона ___ працює вдома.`,
-    answer: `часто`,
-    options: [`часто`, `ніколи`, `рідко`, `повільно`]
-  },  {
-    sentence: `Вони ___ дивляться телевізор.`,
-    answer: `рідко`,
-    options: [`рідко`, `завжди`, `ніколи`, `голосно`]
-  },  {
-    sentence: `Я ___ приходжу о дев'ятій.`,
-    answer: `зазвичай`,
-    options: [`зазвичай`, `ніколи`, `рідко`, `тихо`]
-  },  {
-    sentence: `Він ___ не курить.`,
-    answer: `ніколи`,
-    options: [`ніколи`, `завжди`, `іноді`, `дуже`]
-  },  {
-    sentence: `Ми ___ їмо вдома.`,
-    answer: `зазвичай`,
-    options: [`зазвичай`, `ніколи`, `рідко`, `весело`]
-  }
-]} />
-
-### Adverb or Adjective?
-
-<Quiz questions={[
-  {
-    question: `Does the sentence \"Він ___ хлопець\" require an adjective or adverb?`,
-    options: [
-      { text: `добрий (adjective)`, correct: true },
-      { text: `добре (adverb)`, correct: false },
-      { text: `добро`, correct: false },
-      { text: `добра`, correct: false }
-    ]
-  },  {
-    question: `Which form is correct for \"Він говорить ___\" in English?`,
-    options: [
-      { text: `добре (adverb)`, correct: true },
-      { text: `добрий (adjective)`, correct: false },
-      { text: `добра`, correct: false },
-      { text: `добро`, correct: false }
-    ]
-  },  {
-    question: `How should you describe \"Це ___ машина\" using masculine/feminine forms?`,
-    options: [
-      { text: `швидка (adjective)`, correct: true },
-      { text: `швидко (adverb)`, correct: false },
-      { text: `швидкий`, correct: false },
-      { text: `швидке`, correct: false }
-    ]
-  },  {
-    question: `What is the correct form for \"Вона біжить ___\" here?`,
-    options: [
-      { text: `швидко (adverb)`, correct: true },
-      { text: `швидка (adjective)`, correct: false },
-      { text: `швидкий`, correct: false },
-      { text: `швидке`, correct: false }
-    ]
-  },  {
-    question: `Which word correctly completes \"У неї ___ голос\" in Ukrainian?`,
-    options: [
-      { text: `тихий (adjective)`, correct: true },
-      { text: `тихо (adverb)`, correct: false },
-      { text: `тиха`, correct: false },
-      { text: `тихе`, correct: false }
-    ]
-  },  {
-    question: `How should you accurately translate \"He speaks quietly\" into Ukrainian?`,
-    options: [
-      { text: `тихо (adverb)`, correct: true },
-      { text: `тихий (adjective)`, correct: false },
-      { text: `тиха`, correct: false },
-      { text: `тихе`, correct: false }
-    ]
-  },  {
-    question: `What is the right adjective for \"Вона ___ людина\" here?`,
-    options: [
-      { text: `весела (adjective)`, correct: true },
-      { text: `весело (adverb)`, correct: false },
-      { text: `веселий`, correct: false },
-      { text: `веселе`, correct: false }
-    ]
-  },  {
-    question: `Which form correctly represents \"The children sing loudly\"?`,
-    options: [
-      { text: `голосно (adverb)`, correct: true },
-      { text: `голосний (adjective)`, correct: false },
-      { text: `голосна`, correct: false },
-      { text: `голосне`, correct: false }
-    ]
-  }
-]} />
-
-### Frequency Meaning
-
-<Quiz questions={[
-  {
-    question: `What is the English translation of \"Завжди\"?`,
-    options: [
-      { text: `Always`, correct: true },
-      { text: `Sometimes`, correct: false },
-      { text: `Never`, correct: false },
-      { text: `Rarely`, correct: false }
-    ]
-  },  {
-    question: `Which English word represents the adverb \"Часто\"?`,
-    options: [
-      { text: `Often`, correct: true },
-      { text: `Never`, correct: false },
-      { text: `Rarely`, correct: false },
-      { text: `Always`, correct: false }
-    ]
-  },  {
-    question: `How do you translate \"Іноді\" into English?`,
-    options: [
-      { text: `Sometimes`, correct: true },
-      { text: `Always`, correct: false },
-      { text: `Never`, correct: false },
-      { text: `Often`, correct: false }
-    ]
-  },  {
-    question: `What is the meaning of \"Рідко\" in English?`,
-    options: [
-      { text: `Rarely`, correct: true },
-      { text: `Always`, correct: false },
-      { text: `Often`, correct: false },
-      { text: `Never`, correct: false }
-    ]
-  },  {
-    question: `Which English term matches \"Ніколи\"?`,
-    options: [
-      { text: `Never`, correct: true },
-      { text: `Sometimes`, correct: false },
-      { text: `Often`, correct: false },
-      { text: `Always`, correct: false }
-    ]
-  },  {
-    question: `How is \"Зазвичай\" translated into English?`,
-    options: [
-      { text: `Usually`, correct: true },
-      { text: `Never`, correct: false },
-      { text: `Rarely`, correct: false },
-      { text: `Sometimes`, correct: false }
-    ]
-  },  {
-    question: `What is the English meaning of \"Дуже\"?`,
-    options: [
-      { text: `Very`, correct: true },
-      { text: `Sometimes`, correct: false },
-      { text: `Never`, correct: false },
-      { text: `Rarely`, correct: false }
-    ]
-  },  {
-    question: `Which phrase translates the word \"Трохи\" into English?`,
-    options: [
-      { text: `A little`, correct: true },
-      { text: `Very much`, correct: false },
-      { text: `Never`, correct: false },
-      { text: `Always`, correct: false }
-    ]
-  }
-]} />
-
-### Describing Actions
-
-<Unjumble items={[
-  { jumbled: `швидко / бігає / він`, answer: `Він швидко бігає` },
-  { jumbled: `добре / вона / співає`, answer: `Вона добре співає` },
-  { jumbled: `читаю / я / повільно`, answer: `Я читаю повільно` },
-  { jumbled: `часто / ми / гуляємо`, answer: `Ми часто гуляємо` },
-  { jumbled: `завжди / снідаю / я / вранці`, answer: `Я завжди снідаю вранці` },
-  { jumbled: `не / він / курить / ніколи`, answer: `Він ніколи не курить` },
-  { jumbled: `голосно / діти / грають`, answer: `Діти голосно грають` },
-  { jumbled: `тихо / вона / говорить`, answer: `Вона тихо говорить` },
-  { jumbled: `добре / справи / як`, answer: `Як справи? Добре` },
-  { jumbled: `іноді / ми / піцу / їмо`, answer: `Ми іноді їмо піцу` },
-  { jumbled: `рідко / телевізор / дивлюсь / я`, answer: `Я рідко дивлюсь телевізор` },
-  { jumbled: `весело / вони / танцюють`, answer: `Вони весело танцюють` }
-]} />
-
-### Adverb Rules
-
-<TrueFalse items={[
-  {
-    statement: `Adverbs describe verbs (actions).`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `Adverbs describe nouns.`,
-    isTrue: false,
-    explanation: `Incorrect! that's adjectives`
-  },  {
-    statement: `Most adverbs end in -о.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Добрий\" is an adverb.`,
-    isTrue: false,
-    explanation: `Incorrect! it's an adjective`
-  },  {
-    statement: `\"Добре\" is an adverb.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Ніколи\" doesn't need \"не\" before the verb.`,
-    isTrue: false,
-    explanation: `Incorrect! you need two negatives`
-  },  {
-    statement: `\"Завжди\" means \"always\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Дуже\" can modify adverbs (дуже добре).`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Швидкий\" describes how you do something.`,
-    isTrue: false,
-    explanation: `Incorrect! it's an adjective`
-  },  {
-    statement: `\"Швидко\" describes how you do something.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Як справи?\" — \"Добрий!\".`,
-    isTrue: false,
-    explanation: `Incorrect! should be \"Добре!\"`
-  },  {
-    statement: `\"Як справи?\" — \"Добре!\".`,
-    isTrue: true,
-    explanation: ``
-  }
-]} />
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| гарно | /ˈɦɑrnɔ/ | beautifully | adv | — | from гарний |
-| погано | /pɔˈɦɑnɔ/ | badly | adv | — | from поганий |
-| цікаво | /t͡sʲiˈkɑvɔ/ | interestingly | adv | — | from цікавий |
-| нудно | /ˈnudnɔ/ | boringly | adv | — | from нудний |
-| важко | /ˈvɑʒkɔ/ | with difficulty | adv | — | from важкий |
-| легко | /ˈlɛɦkɔ/ | easily | adv | — | from легкий |
-| весело | /ˈvɛsɛlɔ/ | merrily | adv | — | from веселий |
-| сумно | /ˈsumnɔ/ | sadly | adv | — | from сумний |
-| серйозно | /sɛrˈjɔznɔ/ | seriously | adv | — | from серйозний |
-| жартома | /ʒɑrtɔˈmɑ/ | jokingly | adv | — | irregular |
-| ввічливо | /ˈvvit͡ʃlɪvɔ/ | politely | adv | — | from ввічливий |
-| чесно | /ˈt͡ʃɛsnɔ/ | honestly | adv | — | from чесний |
-| трохи | /ˈtrɔxɪ/ | a little | adv | — | degree |
-| занадто | /zɑˈnɑdtɔ/ | too (much) | adv | — | degree |
-
----

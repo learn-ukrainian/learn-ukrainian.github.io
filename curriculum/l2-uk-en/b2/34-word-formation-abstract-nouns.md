@@ -1,31 +1,3 @@
----
-module: b2-34
-title: "Словотворення: абстрактні іменники"
-subtitle: "Word Formation - Abstract Nouns"
-version: "1.0"
-phase: "B2.1c [Register & Word Formation]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - word-formation
-  - abstract-nouns
-  - derivation
-grammar:
-  - "Суфікс -ння/-ення для позначення дії чи процесу"
-  - "Суфікс -ість для позначення властивості чи якості"
-  - "Суфікси -ок, -ка для позначення результату дії"
-objectives:
-  - "Learner can form abstract nouns from verbs using -ння/-ення suffix"
-  - "Learner can form abstract nouns from adjectives using -ість suffix"
-  - "Learner can identify word formation patterns in authentic texts"
-  - "Learner can use abstract nouns appropriately in academic and formal registers"
-vocabulary_count: 25
-register: "науковий"
-vocab_count: 58
----
-
 # Словотворення: абстрактні іменники
 
 > Чому це важливо?

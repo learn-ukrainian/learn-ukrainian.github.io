@@ -1,6 +1,15 @@
 # Audit Report: 03-reading-grammar-rules.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "PPP" | **Target:** 1200
+**Phase:** B1.0 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): використовується, корінь, таким, тобто, виняток...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 2358/1200 (>2200 may be too long)
@@ -10,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 39/20
+- **Vocab:** ⚠️ 13 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,16 +46,10 @@
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.1%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (16 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Читаємо граматичні правила** | ⚪️ | 58 | Skipped |
+| **Intro/Narrative** | ✅ | 58 | Included in Core |
 | **Presentation** | ✅ | 184 | Included in Core |
 | **Explanation Patterns: Пояснювальні конструкції** | ✅ | 181 | Included in Core |
 | **Instruction Patterns: Інструкції** | ✅ | 154 | Included in Core |
@@ -57,4 +60,3 @@
 | **Practice** | ⚪️ | 408 | Skipped |
 | **Mini-Dialogues** | ✅ | 337 | Included in Core |
 | **Підсумок** | ✅ | 400 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

@@ -1,31 +1,3 @@
----
-module: b2-41
-title: "Видові нюанси I: Вторинна імперфективація"
-subtitle: "Secondary Imperfectivization - Deriving Imperfective from Perfective"
-version: "1.0"
-phase: "B2.2 [Phraseology & Synonymy]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - aspect
-  - verb-formation
-  - imperfectivization
-grammar:
-  - "Secondary imperfectivization (вторинна імперфективація)"
-  - "Suffix patterns: -ува-/-юва-, -ва-, -а-/-я-"
-  - "Vowel alternation in roots"
-  - "Aspectual pairs with prefixes"
-objectives:
-  - "Learner can identify secondary imperfective forms derived from perfective verbs"
-  - "Learner can apply correct suffixation patterns for imperfectivization"
-  - "Learner can distinguish iterative and process meanings of secondary imperfectives"
-  - "Learner can use secondary imperfectives appropriately in context"
-vocabulary_count: 35
-vocab_count: 48
----
-
 # Видові нюанси I: Вторинна імперфективація
 
 > Чому це важливо?

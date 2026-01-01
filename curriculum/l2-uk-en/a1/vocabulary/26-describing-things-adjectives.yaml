@@ -1,0 +1,208 @@
+module: 26-describing-things-adjectives
+level: A1
+version: '2.0'
+items:
+  - lemma: важкий
+    ipa: /vɑʒˈkɪj/
+    translation: heavy/difficult
+    pos: adj
+    gender: m
+  - lemma: важливий
+    ipa: /vɑʒˈlɪvɪj/
+    translation: important
+    pos: adj
+    gender: m
+  - lemma: веселий
+    ipa: /vɛˈsɛlɪj/
+    translation: cheerful/fun
+    pos: adj
+    gender: m
+  - lemma: вимір
+    ipa: /ˈvɪmir/
+    translation: dimension
+    pos: noun
+    gender: m
+  - lemma: високий
+    ipa: /vɪˈsɔkɪj/
+    translation: tall/high
+    pos: adj
+    gender: m
+  - lemma: вузький
+    ipa: /vuzʲˈkɪj/
+    translation: narrow
+    pos: adj
+    gender: m
+  - lemma: давній
+    ipa: /ˈdɑvnʲij/
+    translation: ancient/old
+    pos: adj
+    gender: m
+  - lemma: далі
+    ipa: /ˈdɑli/
+    translation: further
+    pos: adv
+  - lemma: дешевий
+    ipa: /dɛˈʃɛvɪj/
+    translation: cheap
+    pos: adj
+    gender: m
+  - lemma: жіночий
+    ipa: /ʒiˈnɔt͡ʃɪj/
+    translation: feminine
+    pos: adj
+    gender: m
+  - lemma: змінюватися
+    ipa: /zmiˈnʲuvɑtɪsʲɑ/
+    translation: to change
+    pos: verb
+  - lemma: колір
+    ipa: /ˈkɔlʲir/
+    translation: color
+    pos: noun
+    gender: m
+  - lemma: корисно
+    ipa: /ˈkɔrɪsnɔ/
+    translation: usefully
+    pos: adv
+  - lemma: короткий
+    ipa: /kɔˈrɔtkɪj/
+    translation: short
+    pos: adj
+    gender: m
+  - lemma: легкий
+    ipa: /lɛxˈkɪj/
+    translation: light/easy
+    pos: adj
+    gender: m
+  - lemma: мелодійний
+    ipa: /mɛlɔˈdijnɪj/
+    translation: melodious
+    pos: adj
+    gender: m
+  - lemma: небо
+    ipa: /ˈnɛbɔ/
+    translation: sky
+    pos: noun
+    gender: n
+  - lemma: нудний
+    ipa: /nudˈnɪj/
+    translation: boring
+    pos: adj
+    gender: m
+  - lemma: однаковий
+    ipa: /ɔdˈnɑkɔvɪj/
+    translation: identical/same
+    pos: adj
+    gender: m
+  - lemma: одяг
+    ipa: /ˈɔdʲɑh/
+    translation: clothing
+    pos: noun
+    gender: m
+  - lemma: означати
+    ipa: /ɔznɑˈt͡ʃɑtɪ/
+    translation: to mean
+    pos: verb
+  - lemma: опис
+    ipa: /ˈɔpɪs/
+    translation: description
+    pos: noun
+    gender: m
+  - lemma: описувати
+    ipa: /ɔˈpɪsuvɑtɪ/
+    translation: to describe
+    pos: verb
+  - lemma: повільний
+    ipa: /pɔˈvilʲnɪj/
+    translation: slow
+    pos: adj
+    gender: m
+  - lemma: поганий
+    ipa: /pɔˈhɑnɪj/
+    translation: bad
+    pos: adj
+    gender: m
+  - lemma: правило
+    ipa: /ˈprɑvɪlɔ/
+    translation: rule
+    pos: noun
+    gender: n
+  - lemma: предмет
+    ipa: /prɛdˈmɛt/
+    translation: subject/object
+    pos: noun
+    gender: m
+  - lemma: прикметник
+    ipa: /prɪkˈmɛtnɪk/
+    translation: adjective
+    pos: noun
+    gender: m
+  - lemma: підказка
+    ipa: /pidˈkɑzkɑ/
+    translation: hint/clue
+    pos: noun
+    gender: f
+  - lemma: раз
+    ipa: /rɑz/
+    translation: time/once
+    pos: noun
+    gender: m
+  - lemma: розказати
+    ipa: /rɔzkɑˈzɑtɪ/
+    translation: to tell
+    pos: verb
+  - lemma: розмір
+    ipa: /ˈrɔzmir/
+    translation: size
+    pos: noun
+    gender: m
+  - lemma: розумний
+    ipa: /rɔˈzumnɪj/
+    translation: smart
+    pos: adj
+    gender: m
+  - lemma: різний
+    ipa: /ˈriznɪj/
+    translation: different
+    pos: adj
+    gender: m
+  - lemma: річ
+    ipa: /rit͡ʃ/
+    translation: thing
+    pos: noun
+    gender: f
+  - lemma: сильний
+    ipa: /ˈsɪlʲnɪj/
+    translation: strong
+    pos: adj
+    gender: m
+  - lemma: сорочка
+    ipa: /sɔˈrɔt͡ʃkɑ/
+    translation: shirt
+    pos: noun
+    gender: f
+  - lemma: узгодження
+    ipa: /uzˈɦɔdʒɛnʲːɑ/
+    translation: agreement
+    pos: noun
+    gender: n
+  - lemma: форма
+    ipa: /ˈfɔrmɑ/
+    translation: form
+    pos: noun
+    gender: f
+  - lemma: характер
+    ipa: /xɑˈrɑktɛr/
+    translation: character
+    pos: noun
+    gender: m
+  - lemma: широкий
+    ipa: /ʃɪˈrɔkɪj/
+    translation: wide
+    pos: adj
+    gender: m
+  - lemma: іменник
+    ipa: /iˈmɛnːɪk/
+    translation: noun
+    pos: noun
+    gender: m

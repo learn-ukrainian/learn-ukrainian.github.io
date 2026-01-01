@@ -1,28 +1,3 @@
----
-module: b1-06
-title: "Вид дієслова: повна система"
-subtitle: "Perfective vs Imperfective - The complete picture"
-version: "1.0"
-phase: "B1.1 Aspect"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - aspect
-  - verbs
-grammar:
-  - "Perfective vs Imperfective aspect - complete overview"
-  - "Aspect selection based on context"
-  - "Process vs result vs repetition"
-objectives:
-  - "Learner understands the complete aspectual system"
-  - "Learner can identify aspect from context clues"
-  - "Learner can choose appropriate aspect for different situations"
-vocabulary_count: 25
-vocab_count: 65
----
-
 # Вид дієслова: повна система
 
 > 🎯 **Чому це важливо?**

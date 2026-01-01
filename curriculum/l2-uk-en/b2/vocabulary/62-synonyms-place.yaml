@@ -1,0 +1,271 @@
+module: 62-synonyms-place
+level: B2
+version: '2.0'
+items:
+  - lemma: безмежність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: безпосередній
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: безцінний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: вдалині
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: висотній
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: вказування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: всюдити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: вшанування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: відвойовувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: віддаленість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: відчутний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: візій
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: віртуальний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: галас
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: ген
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: географ
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: геометрія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: гніздечко
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: гористий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: далечний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: дбайливо
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: дистанційний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: діагонально
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: жест
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: затишка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: звідкись
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: згуртованість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: здалеку
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: зручніший
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: кіберпростір
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: лабіринт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: логістик
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: локація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: миколаєва
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: місток
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: навігація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: найзагальніший
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: народжувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: неозорість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: обрій
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: орієнтація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: орієнтування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: охоплення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: паралельно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: перпендикулярно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: планета
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: покращений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: рекреаційний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: розташовуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: рівнинний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: статика
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: сусідство
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: тутечко
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: тутешній
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: тутешність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: шепотати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: інклюзивний
+    ipa: ''
+    translation: ''
+    pos: adj

@@ -1,0 +1,199 @@
+module: 12-the-accusative-ii-people
+level: A1
+version: '2.0'
+items:
+  - lemma: андрій
+    ipa: /ɑnˈdrij/
+    translation: Andriy
+    pos: propn
+    gender: m
+  - lemma: бібліотека
+    ipa: /biblʲiɔˈtɛkɑ/
+    translation: library
+    pos: noun
+    gender: f
+  - lemma: вибачити
+    ipa: /vɪˈbɑt͡ʃɪtɪ/
+    translation: to forgive/excuse
+    pos: verb
+  - lemma: водій
+    ipa: /vɔˈdij/
+    translation: driver
+    pos: noun
+    gender: m
+  - lemma: возити
+    ipa: /vɔˈzɪtɪ/
+    translation: to drive/transport
+    pos: verb
+  - lemma: вулиця
+    ipa: /ˈvulɪt͡sʲɑ/
+    translation: street
+    pos: noun
+    gender: f
+  - lemma: вчитель
+    ipa: /ˈwt͡ʃɪtɛlʲ/
+    translation: teacher (m)
+    pos: noun
+    gender: m
+  - lemma: вчителька
+    ipa: /ˈwt͡ʃɪtɛlʲkɑ/
+    translation: teacher (f)
+    pos: noun
+    gender: f
+  - lemma: гість
+    ipa: /ɦisʲtʲ/
+    translation: guest
+    pos: noun
+    gender: m
+  - lemma: директор
+    ipa: /dɪˈrɛktɔr/
+    translation: director
+    pos: noun
+    gender: m
+  - lemma: директорка
+    ipa: /dɪˈrɛktɔrkɑ/
+    translation: director (f)
+    pos: noun
+    gender: f
+  - lemma: додому
+    ipa: /dɔˈdɔmu/
+    translation: homewards
+    pos: adv
+  - lemma: дошка
+    ipa: /ˈdɔʃkɑ/
+    translation: board/blackboard
+    pos: noun
+    gender: f
+  - lemma: дружина
+    ipa: /druˈʒɪnɑ/
+    translation: wife
+    pos: noun
+    gender: f
+  - lemma: дідусь
+    ipa: /diˈdusʲ/
+    translation: grandpa
+    pos: noun
+    gender: m
+  - lemma: замовити
+    ipa: /zɑˈmɔvɪtɪ/
+    translation: to order
+    pos: verb
+  - lemma: його
+    ipa: /jɔˈɦɔ/
+    translation: his/him
+    pos: pron
+  - lemma: кожний
+    ipa: /ˈkɔʒnɪj/
+    translation: every/each
+    pos: pron
+    gender: m
+  - lemma: колега
+    ipa: /kɔˈlɛɦɑ/
+    translation: colleague
+    pos: noun
+    gender: m
+  - lemma: коридор
+    ipa: /kɔrɪˈdɔr/
+    translation: corridor
+    pos: noun
+    gender: m
+  - lemma: може
+    ipa: /ˈmɔʒɛ/
+    translation: maybe
+    pos: adv
+  - lemma: офіціант
+    ipa: /ɔfit͡sʲiˈɑnt/
+    translation: waiter
+    pos: noun
+    gender: m
+  - lemma: пасажир
+    ipa: /pɑsɑˈʒɪr/
+    translation: passenger
+    pos: noun
+    gender: m
+  - lemma: питати
+    ipa: /pɪˈtɑtɪ/
+    translation: to ask
+    pos: verb
+  - lemma: практикувати
+    ipa: /prɑktɪkuˈvɑtɪ/
+    translation: to practice
+    pos: verb
+  - lemma: привітний
+    ipa: /prɪˈvitnɪj/
+    translation: friendly/welcoming
+    pos: adj
+    gender: m
+  - lemma: разом
+    ipa: /ˈrɑzɔm/
+    translation: together
+    pos: adv
+  - lemma: спізнюватися
+    ipa: /spizɲuˈvɑtɪsʲɑ/
+    translation: to be late
+    pos: verb
+  - lemma: суддя
+    ipa: /sudˈdʲɑ/
+    translation: judge
+    pos: noun
+    gender: m
+  - lemma: сусід
+    ipa: /suˈsid/
+    translation: neighbor (m)
+    pos: noun
+    gender: m
+  - lemma: сусідка
+    ipa: /suˈsidkɑ/
+    translation: neighbor (f)
+    pos: noun
+    gender: f
+  - lemma: сідати
+    ipa: /siˈdɑtɪ/
+    translation: to sit down
+    pos: verb
+  - lemma: тато
+    ipa: /ˈtɑtɔ/
+    translation: dad
+    pos: noun
+    gender: m
+  - lemma: тепер
+    ipa: /tɛˈpɛr/
+    translation: now
+    pos: adv
+  - lemma: учениця
+    ipa: /ut͡ʃɛˈnɪt͡sʲɑ/
+    translation: student (school, f)
+    pos: noun
+    gender: f
+  - lemma: учень
+    ipa: /ˈut͡ʃɛnʲ/
+    translation: student (school, m)
+    pos: noun
+    gender: m
+  - lemma: хтось
+    ipa: /xtɔsʲ/
+    translation: someone
+    pos: pron
+  - lemma: цікаво
+    ipa: /t͡sʲiˈkɑvɔ/
+    translation: interestingly
+    pos: adv
+  - lemma: чудовий
+    ipa: /t͡ʃuˈdɔvɪj/
+    translation: wonderful
+    pos: adj
+    gender: m
+  - lemma: школа
+    ipa: /ˈʃkɔlɑ/
+    translation: school
+    pos: noun
+    gender: f
+  - lemma: шукати
+    ipa: /ʃuˈkɑtɪ/
+    translation: to look for
+    pos: verb
+  - lemma: ідея
+    ipa: /iˈdɛjɑ/
+    translation: idea
+    pos: noun
+    gender: f

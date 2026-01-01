@@ -1,0 +1,366 @@
+module: 37-word-formation-adverbs-integration
+level: B2
+version: '2.0'
+items:
+  - lemma: аугментатив
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: аугментатива
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: будиночок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вертеп
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вистояти
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: n
+  - lemma: вказівний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: вовк
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вовчище
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: вітерець
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вітрищий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: гостювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: двір
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: демінутив
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: демінутива
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: демінутивний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: дме
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: донечко
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: донечонький
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: житися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: замерзати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: зарплатко
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: збільшувальний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: звикнути
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: зло
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: зірочка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: калинівка
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: кликати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: колядка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: ласкавість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: літ
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: метушливий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: михайлик
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: морозець
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: морозище
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: морозищий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: наздогнати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: несхвально
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: носище
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: ніженька
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: ніженький
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: оленк
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: ому
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: опалення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: очок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: петрівка
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: плач
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: повалити
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: n
+  - lemma: поновий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: поукраїнський
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: практикуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: прекрасно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: прикм
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: прудкий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: роботка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: рідкий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: серденько
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: синочок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: спатися
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: n
+  - lemma: страшний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: сусідній
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: ськи
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: сіква
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: теплота
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: точніше
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: узагальнити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: українськ
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: хлопчинка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: хлопчичок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: холодище
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: холодищий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: холодок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: ціка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: чик
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: швидо
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: інколи
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: іронічно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: іронія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f

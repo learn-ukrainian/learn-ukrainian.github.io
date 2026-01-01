@@ -1,0 +1,23 @@
+module: b1-31
+title: 'Умовні речення: реальна умова (якщо)'
+subtitle: Real Conditionals - If Clauses
+version: '1.0'
+phase: B1.3a Complex Sentences
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - grammar
+  - conditionals
+  - complex-sentences
+  - yakshcho
+grammar:
+  - Real conditional constructions with якщо
+  - Tense sequences in conditional sentences
+objectives:
+  - Learner understands real conditional constructions
+  - Learner can form conditional sentences with якщо
+  - Learner can use correct tense sequences in conditionals
+vocabulary_count: 25
+vocab_count: 11
+slug: 31-conditionals-real-yakshcho

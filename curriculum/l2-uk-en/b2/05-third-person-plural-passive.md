@@ -1,34 +1,3 @@
----
-module: b2-05
-title: "Третя особа множини як пасив"
-subtitle: "Розмовна безособова конструкція"
-version: "1.0"
-phase: "B2.1a [Grammar & Register]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - passive
-  - colloquial
-  - register
-grammar:
-  - "3rd person plural as impersonal passive"
-  - "Dative recipient construction"
-  - "Register awareness: colloquial vs formal passive"
-objectives:
-  - "Розпізнавати безособові конструкції з 3-ю особою множини в розмовному мовленні"
-  - "Використовувати 3-ю особу множини для передачі пасивного значення"
-  - "Розрізняти регістрове використання різних пасивних конструкцій"
-  - "Трансформувати формальні пасивні речення в розмовні та навпаки"
-vocabulary_count: 25
-resources:
-  - type: "article"
-    title: "Пасивні конструкції в українській мові"
-    url: "https://r2u.org.ua/grammar/passive"
-vocab_count: 37
----
-
 # Третя особа множини як пасив
 
 > **Чому це важливо?**

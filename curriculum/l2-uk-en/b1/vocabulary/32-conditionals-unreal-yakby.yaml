@@ -1,0 +1,121 @@
+module: 32-conditionals-unreal-yakby
+level: B1
+version: '2.0'
+items:
+- lemma: аналітично
+  ipa: /analʲiˈtɪt͡ʃnɔ/
+  translation: analytically
+  pos: adv
+- lemma: бажальний
+  ipa: /baˈʒalʲnɪj/
+  translation: optative
+  pos: adj
+  gender: m
+- lemma: беркуті
+  ipa: /ˈbɛrkutʲi/
+  translation: Berkut (loc.)
+  pos: propn
+  gender: m
+- lemma: бы
+  ipa: /bɨ/
+  translation: would (Rus.)
+  pos: other
+- lemma: гравка
+  ipa: /ˈhrau̯ka/
+  translation: player (typo)
+  pos: noun
+  gender: m
+- lemma: жалкувати
+  ipa: /ʒalkuˈvatɪ/
+  translation: to regret
+  pos: verb
+- lemma: захарі
+  ipa: /zaˈxarʲi/
+  translation: Zakhar (loc.)
+  pos: propn
+  gender: m
+- lemma: зволікання
+  ipa: /zvɔlʲiˈkanʲːa/
+  translation: delay
+  pos: noun
+  gender: n
+- lemma: зразу
+  ipa: /ˈzrazu/
+  translation: at once
+  pos: adv
+- lemma: кайдашевий
+  ipa: /kajdaˈʃɛvɪj/
+  translation: Kaydash (adj)
+  pos: adj
+  gender: f
+- lemma: кондиціонал
+  ipa: /kɔndɪt͡sʲiɔˈnal/
+  translation: conditional
+  pos: noun
+  gender: m
+- lemma: криленя
+  ipa: /krɪlɛˈnʲa/
+  translation: little wing
+  pos: noun
+  gender: f
+- lemma: кінцівка
+  ipa: /kʲinˈt͡sʲiu̯ka/
+  translation: ending
+  pos: noun
+  gender: f
+- lemma: логічніший
+  ipa: /lɔˈhʲit͡ʃnʲiʃɪj/
+  translation: more logical
+  pos: adj
+  gender: m
+- lemma: найпоширеніше
+  ipa: /najpɔˈʃɪrɛnʲiʃɛ/
+  translation: most common
+  pos: adv
+- lemma: нереальність
+  ipa: /nɛrɛˈalʲnʲisʲtʲ/
+  translation: unreality
+  pos: noun
+  gender: f
+- lemma: оптативний
+  ipa: /ɔptaˈtɪvnɪj/
+  translation: optative
+  pos: adj
+  gender: m
+- lemma: психотерапій
+  ipa: /psɪxɔtɛraˈpij/
+  translation: psychotherapies (gen. pl.)
+  pos: noun
+  gender: f
+- lemma: розмежування
+  ipa: /rɔzmɛʒuˈvanʲːa/
+  translation: demarcation
+  pos: noun
+  gender: n
+- lemma: ролевий
+  ipa: /rɔlɛˈvɪj/
+  translation: role (adj)
+  pos: adj
+- lemma: старанніше
+  ipa: /staˈranʲːiʃɛ/
+  translation: more diligently
+  pos: adv
+- lemma: травматичний
+  ipa: /trau̯maˈtɪt͡ʃnɪj/
+  translation: traumatic
+  pos: adj
+- lemma: хворій
+  ipa: /xvɔˈrʲij/
+  translation: be sick (imp.)
+  pos: adj
+  gender: f
+- lemma: щастивіший
+  ipa: /ʃt͡ʃastɪˈviʃɪj/
+  translation: happier (typo)
+  pos: adj
+  gender: f
+- lemma: ґеральт
+  ipa: /ˈgɛralʲt/
+  translation: Geralt
+  pos: propn
+  gender: m

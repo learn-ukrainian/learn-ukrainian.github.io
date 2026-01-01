@@ -1,26 +1,3 @@
----
-module: b1-82
-title: "Новини - як читати"
-subtitle: "News Reading Strategies"
-version: "1.0"
-phase: "B1.8"
-pedagogy: "PPP"
-focus: "skills"
-duration: 75
-transliteration: "none"
-tags: ["skills", "reading", "news", "media-literacy"]
-grammar: []
-objectives:
-  - "Learner can apply news reading strategies to authentic Ukrainian texts"
-  - "Learner can identify headlines, leads, and main points in news articles"
-  - "Learner can distinguish fact from opinion in Ukrainian news"
-  - "Learner is prepared for autonomous news reading at B2"
-vocabulary_count: 20
-word_target: 1500
-immersion_target: 100
-vocab_count: 51
----
-
 # Вступ
 
 Чи читаєте ви новини українською мовою? Чи вмієте ви швидко знаходити головну інформацію в статті? Читання новин українською — це ключовий навик для рівня B2 та для повсякденного життя. Щодня в Україні публікуються сотні статей, і вміння читати їх ефективно економить ваш час та допомагає бути в курсі подій.

@@ -1,0 +1,24 @@
+module: a1-12
+title: 'The Accusative II: People'
+subtitle: Animate Nouns and the Genitive Connection
+version: '1.0'
+phase: A1.2
+pedagogy: PPP
+duration: 60 min
+transliteration: vocab-only
+tags:
+  - accusative
+  - cases
+  - animate
+  - people
+  - grammar
+grammar:
+  - accusative-animate
+  - genitive-accusative-connection
+objectives:
+  - Learner can use accusative case for animate nouns (people/animals)
+  - Learner can distinguish between animate and inanimate accusative
+  - Learner can identify when accusative = genitive
+vocabulary_count: 20
+vocab_count: 45
+slug: 12-the-accusative-ii-people

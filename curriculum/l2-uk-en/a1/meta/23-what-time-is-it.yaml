@@ -1,0 +1,27 @@
+module: a1-23
+title: What Time Is It?
+subtitle: Telling Time, Days, and Months
+version: '1.0'
+phase: A1.3 - Consolidation
+pedagogy: PPP
+duration: 60 min
+transliteration: first-occurrence
+tags:
+  - time
+  - clock
+  - days-of-week
+  - months
+  - calendar
+grammar:
+  - Clock time expressions (Котра година?)
+  - Time prepositions (о, до, після, перед, з...до)
+  - Days of the week
+  - Months of the year
+objectives:
+  - Learner can ask and tell the time
+  - Learner can name all days of the week
+  - Learner can name all months of the year
+  - Learner can use time prepositions correctly
+vocabulary_count: 40
+vocab_count: 62
+slug: 23-what-time-is-it

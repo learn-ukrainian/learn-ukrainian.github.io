@@ -582,4 +582,70 @@
     на заводі.'
 - type: translate
   title: English to Ukrainian
-  items: []
+  items:
+  - source: He was a student.
+    options:
+    - text: Він був студентом.
+      correct: true
+    - text: Він був студент.
+      correct: false
+    - text: Він була студентом.
+      correct: false
+    - text: Він буде студентом.
+      correct: false
+    explanation: "Past 'був' + Instrumental 'студентом'."
+  - source: She became a teacher.
+    options:
+    - text: Вона стала вчителькою.
+      correct: true
+    - text: Вона стала вчителька.
+      correct: false
+    - text: Вона став вчителькою.
+      correct: false
+    - text: Вона була вчителькою.
+      correct: false
+    explanation: "'Стала' (became) + Instrumental 'вчителькою'."
+  - source: I work as a programmer.
+    options:
+    - text: Я працюю програмістом.
+      correct: true
+    - text: Я працюю програміст.
+      correct: false
+    - text: Я працюю з програмістом.
+      correct: false
+    - text: Я працюю програмісту.
+      correct: false
+    explanation: "'Працювати' (to work) + Instrumental 'програмістом'."
+  - source: He will be an engineer.
+    options:
+    - text: Він буде інженером.
+      correct: true
+    - text: Він буде інженер.
+      correct: false
+    - text: Він був інженером.
+      correct: false
+    - text: Він хоче бути інженером.
+      correct: false
+    explanation: "Future 'буде' + Instrumental 'інженером'."
+  - source: They became friends.
+    options:
+    - text: Вони стали друзями.
+      correct: true
+    - text: Вони стали друзі.
+      correct: false
+    - text: Вони були друзями.
+      correct: false
+    - text: Вони стануть друзями.
+      correct: false
+    explanation: Plural 'стали' + Instrumental plural 'друзями'.
+  - source: She works as a journalist.
+    options:
+    - text: Вона працює журналісткою.
+      correct: true
+    - text: Вона працює журналістка.
+      correct: false
+    - text: Вона працює журналістку.
+      correct: false
+    - text: Вона працює журналісткі.
+      correct: false
+    explanation: Feminine 'журналістка' in Instrumental 'журналісткою'.

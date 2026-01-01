@@ -1,28 +1,3 @@
----
-module: b1-64
-title: "Емоції: глибоке занурення"
-subtitle: "Emotions: Deep Dive"
-version: "1.0"
-phase: "B1.6 Vocabulary Expansion II"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "emotional vocabulary collocations"
-  - "register differences in emotional expression"
-tags:
-  - vocabulary
-  - emotions
-  - psychology
-objectives:
-  - "Learner can use 30 emotional vocabulary words in context"
-  - "Learner can distinguish between synonymous emotion words"
-  - "Learner can form natural collocations with emotional vocabulary"
-vocabulary_count: 35
-vocab_count: 80
----
-
 # Емоції: глибоке занурення
 
 > 🎯 **Чому це важливо?**

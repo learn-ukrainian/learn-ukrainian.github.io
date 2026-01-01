@@ -1,0 +1,631 @@
+module: 05-the-instrumental-ii-means-and-tools
+level: A2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/05-the-instrumental-ii-means-and-tools.md
+generated: '2025-12-31T23:14:52.176664'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 6
+  fill-in: 12
+  cloze: 1
+  unjumble: 6
+  quiz: 12
+  true-false: 12
+total_items: 49
+item_count: 49
+sample_percent: null
+items:
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Я їду на роботу з автобусом.
+  error: з автобусом
+  answer: автобусом
+  sentence_corrected: Я їду на роботу автобусом.
+  options:
+  - з автобусом
+  - автобусом
+  - автобус
+  - на автобус
+  original_explanation: For means of transport, use bare Instrumental WITHOUT preposition.
+    "By bus" = автобусом, not з автобусом.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Вона пише листа з ручкою.
+  error: з ручкою
+  answer: ручкою
+  sentence_corrected: Вона пише листа ручкою.
+  options:
+  - з ручкою
+  - ручкою
+  - ручка
+  - ручку
+  original_explanation: For tools, use bare Instrumental WITHOUT preposition. "With
+    a pen" = ручкою, not з ручкою.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Він ріже хліб з ніж.
+  error: з ніж
+  answer: ножем
+  sentence_corrected: Він ріже хліб ножем.
+  options:
+  - з ніж
+  - ножем
+  - ніж
+  - ножа
+  original_explanation: 'Tools use bare Instrumental: ніж → ножем. No preposition
+    needed, and the noun must be in Instrumental case.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Ми їмо суп ложка.
+  error: ложка
+  answer: ложкою
+  sentence_corrected: Ми їмо суп ложкою.
+  options:
+  - ложка
+  - ложкою
+  - ложки
+  - ложку
+  original_explanation: 'Tools require Instrumental case. Feminine nouns ending in
+    -а take -ою: ложка → ложкою.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Вона летить до Парижа з літаком.
+  error: з літаком
+  answer: літаком
+  sentence_corrected: Вона летить до Парижа літаком.
+  options:
+  - з літаком
+  - літаком
+  - літак
+  - літака
+  original_explanation: For means of transport, use bare Instrumental WITHOUT preposition.
+    "By plane" = літаком, not з літаком.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Він говорить тихим з голосом.
+  error: з голосом
+  answer: голосом
+  sentence_corrected: Він говорить тихим голосом.
+  options:
+  - з голосом
+  - голосом
+  - голос
+  - голосу
+  original_explanation: Manner expressions use bare Instrumental. "In a quiet voice"
+    = тихим голосом, not з голосом.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Without Preposition
+  sentence_template: Ми їдемо в аеропорт ___.
+  answer: таксі
+  complete_sentence: Ми їдемо в аеропорт таксі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Without Preposition
+  sentence_template: Вона пише листа ___.
+  answer: ручкою
+  complete_sentence: Вона пише листа ручкою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Without Preposition
+  sentence_template: Він ріже хліб ___.
+  answer: ножем
+  complete_sentence: Він ріже хліб ножем.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Without Preposition
+  sentence_template: Ми їмо суп ___.
+  answer: ложкою
+  complete_sentence: Ми їмо суп ложкою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Without Preposition
+  sentence_template: Вона летить до Парижа ___.
+  answer: літаком
+  complete_sentence: Вона летить до Парижа літаком.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Without Preposition
+  sentence_template: Він говорить тихим ___.
+  answer: голосом
+  complete_sentence: Він говорить тихим голосом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Without Preposition
+  sentence_template: Я працюю ___ щодня.
+  answer: комп'ютером
+  complete_sentence: Я працюю комп'ютером щодня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Without Preposition
+  sentence_template: Діти малюють ___.
+  answer: олівцем
+  complete_sentence: Діти малюють олівцем.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Without Preposition
+  sentence_template: Вона махає ___.
+  answer: рукою
+  complete_sentence: Вона махає рукою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Without Preposition
+  sentence_template: Ми їдемо в центр ___.
+  answer: трамваєм
+  complete_sentence: Ми їдемо в центр трамваєм.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Without Preposition
+  sentence_template: Я надсилаю документи ___.
+  answer: електронною поштою
+  complete_sentence: Я надсилаю документи електронною поштою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Without Preposition
+  sentence_template: Вона киває ___.
+  answer: головою
+  complete_sentence: Вона киває головою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Complete the Story
+  passage_template: 'Вранці я йду на зупинку і їду {ножем|з ножем|ніж} на роботу.
+    На роботі працюю {ножицями|з ножицями|ножиці} цілий день. Пишу листи {ложкою|з
+    ложкою|ложка} і надсилаю їх {виделкою|з виделкою|виделка}. Увечері їду додому
+    {голосом|з голосом|голос} — це швидше. Вдома розмовляю {велосипедом|з велосипедом|велосипед}
+    з родиною.
+
+    ---
+
+    На кухні мама готує обід. Вона ріже м''ясо {ножем|з ножем|ніж}. Салат ріже {ножицями|з
+    ножицями|ножиці}. Потім ми сідаємо за стіл і їмо: суп {ложкою|з ложкою|ложка},
+    а другу страву {виделкою|з виделкою|виделка}. Тато розповідає історію тихим {голосом|з
+    голосом|голос}. Після обіду брат їде на тренування {велосипедом|з велосипедом|велосипед}.'
+  blanks:
+  - answer: ніж
+    options:
+    - ножем
+    - з ножем
+  - answer: ножиці
+    options:
+    - ножицями
+    - з ножицями
+  - answer: ложка
+    options:
+    - ложкою
+    - з ложкою
+  - answer: виделка
+    options:
+    - виделкою
+    - з виделкою
+  - answer: голос
+    options:
+    - голосом
+    - з голосом
+  - answer: велосипед
+    options:
+    - велосипедом
+    - з велосипедом
+  - answer: ніж
+    options:
+    - ножем
+    - з ножем
+  - answer: ножиці
+    options:
+    - ножицями
+    - з ножицями
+  - answer: ложка
+    options:
+    - ложкою
+    - з ложкою
+  - answer: виделка
+    options:
+    - виделкою
+    - з виделкою
+  - answer: голос
+    options:
+    - голосом
+    - з голосом
+  - answer: велосипед
+    options:
+    - велосипедом
+    - з велосипедом
+  blank_count: 12
+  complete_passage: 'Вранці я йду на зупинку і їду ніж на роботу. На роботі працюю
+    ножиці цілий день. Пишу листи ложка і надсилаю їх виделка. Увечері їду додому
+    голос — це швидше. Вдома розмовляю велосипед з родиною.
+
+    ---
+
+    На кухні мама готує обід. Вона ріже м''ясо ніж. Салат ріже ножиці. Потім ми сідаємо
+    за стіл і їмо: суп ложка, а другу страву виделка. Тато розповідає історію тихим
+    голос. Після обіду брат їде на тренування велосипед.'
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Instrumental Sentences
+  jumbled_words: []
+  answer: Вона щодня вранці швидко їде до центру трамваєм
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Instrumental Sentences
+  jumbled_words: []
+  answer: Вона кожного тижня пише листа своїй бабусі ручкою
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Instrumental Sentences
+  jumbled_words: []
+  answer: Він кожного ранку ріже хліб ножем на кухні
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Instrumental Sentences
+  jumbled_words: []
+  answer: Ми кожного дня на обід їмо суп ложкою
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Instrumental Sentences
+  jumbled_words: []
+  answer: Вона вперше цього тижня летить до Парижа літаком
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Instrumental Sentences
+  jumbled_words: []
+  answer: Він завжди ввічливо говорить тихим голосом у бібліотеці
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Uses
+  question: When you want to say "by bus" in Ukrainian, which form correctly expresses
+    the means of transport?
+  options:
+  - '{''text'': ''з автобусом'', ''correct'': False}'
+  - '{''text'': ''автобусом'', ''correct'': True}'
+  - '{''text'': ''на автобус'', ''correct'': False}'
+  - '{''text'': ''автобуса'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Uses
+  question: When expressing that someone writes with a pen, which Ukrainian sentence
+    is grammatically correct?
+  options:
+  - '{''text'': ''Я пишу ручкою.'', ''correct'': True}'
+  - '{''text'': ''Я пишу з ручкою.'', ''correct'': False}'
+  - '{''text'': ''Я пишу ручка.'', ''correct'': False}'
+  - '{''text'': ''Я пишу ручку.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Uses
+  question: In Ukrainian grammar, when do we use the Instrumental case WITHOUT a preposition
+    (bare Instrumental)?
+  options:
+  - '{''text'': ''Для засобу пересування та інструментів'', ''correct'': True}'
+  - '{''text'': ''Для супроводу (з ким?)'', ''correct'': False}'
+  - '{''text'': ''Для місця (де?)'', ''correct'': False}'
+  - '{''text'': ''Для часу (коли?)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Uses
+  question: When expressing that someone cuts bread with a knife, which form is correct
+    for "with a knife"?
+  options:
+  - '{''text'': ''ножем'', ''correct'': True}'
+  - '{''text'': ''з ножем'', ''correct'': False}'
+  - '{''text'': ''ножа'', ''correct'': False}'
+  - '{''text'': ''ніж'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Uses
+  question: When someone speaks quietly, which Ukrainian sentence correctly expresses
+    "in a quiet voice"?
+  options:
+  - '{''text'': ''Він говорить тихим голосом.'', ''correct'': True}'
+  - '{''text'': ''Він говорить з тихим голосом.'', ''correct'': False}'
+  - '{''text'': ''Він говорить тихий голос.'', ''correct'': False}'
+  - '{''text'': ''Він говорить тихого голосу.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Uses
+  question: When expressing "by train" in Ukrainian, which form correctly shows the
+    means of transport?
+  options:
+  - '{''text'': ''поїздом'', ''correct'': True}'
+  - '{''text'': ''з поїздом'', ''correct'': False}'
+  - '{''text'': ''на поїзд'', ''correct'': False}'
+  - '{''text'': ''поїзда'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Uses
+  question: The Ukrainian word "метро" in the Instrumental case for "by metro" takes
+    which form?
+  options:
+  - '{''text'': ''не змінюється'', ''correct'': True}'
+  - '{''text'': ''стає "метром"'', ''correct'': False}'
+  - '{''text'': ''стає "метрою"'', ''correct'': False}'
+  - '{''text'': ''стає "метри"'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Uses
+  question: When expressing seeing "with eyes" in Ukrainian, which irregular Instrumental
+    form is correct?
+  options:
+  - '{''text'': ''очима'', ''correct'': True}'
+  - '{''text'': ''очами'', ''correct'': False}'
+  - '{''text'': ''з очами'', ''correct'': False}'
+  - '{''text'': ''очей'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Uses
+  question: When expressing that someone cuts bread with a knife, which Ukrainian
+    sentence is correct?
+  options:
+  - '{''text'': ''Вона ріже хліб ножем.'', ''correct'': True}'
+  - '{''text'': ''Вона ріже хліб з ножем.'', ''correct'': False}'
+  - '{''text'': ''Вона ріже хліб ніж.'', ''correct'': False}'
+  - '{''text'': ''Вона ріже хліб ножа.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Uses
+  question: When expressing "by email" in Ukrainian, which Instrumental form is correct?
+  options:
+  - '{''text'': ''електронною поштою'', ''correct'': True}'
+  - '{''text'': ''з електронною поштою'', ''correct'': False}'
+  - '{''text'': ''електронна пошта'', ''correct'': False}'
+  - '{''text'': ''електронної пошти'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Uses
+  question: When using "scissors" in Ukrainian, which Instrumental form of "ножиці"
+    is correct?
+  options:
+  - '{''text'': ''ножицями'', ''correct'': True}'
+  - '{''text'': ''ножицею'', ''correct'': False}'
+  - '{''text'': ''ножицям'', ''correct'': False}'
+  - '{''text'': ''ножиць'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Uses
+  question: When expressing "in a whisper" in Ukrainian, which form is correct?
+  options:
+  - '{''text'': ''пошепки'', ''correct'': True}'
+  - '{''text'': ''з пошепки'', ''correct'': False}'
+  - '{''text'': ''пошепкою'', ''correct'': False}'
+  - '{''text'': ''пошепку'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: For means of transport, we use "з + Instrumental."
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: '"Метро" and "таксі" don''t change form in the instrumental.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: '"Очима" is the instrumental of "очі."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: We always use a preposition with the instrumental case.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: '"Ручкою" means "with a pen" (tool).'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: '"Їхати автобусом" and "їхати на автобусі" mean the same thing.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: Body parts can be used in the instrumental to describe actions.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: '"Голосом" is used to express manner of speaking.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: '"Ножиці" has a singular form.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: '"Електронною поштою" means "by email."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: For accompaniment, we use bare instrumental.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: '"Пошепки" is an adverb, not a noun in instrumental.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

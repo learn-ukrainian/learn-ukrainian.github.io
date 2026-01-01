@@ -1,0 +1,65 @@
+module: 40-reported-questions-commands
+level: B1
+version: '2.0'
+items:
+- lemma: авторитетно
+  ipa: /autɔrɪˈtɛtnɔ/
+  translation: authoritatively
+  pos: adv
+- lemma: допитуватися
+  ipa: /dɔˈpɪtuvatɪsʲa/
+  translation: to interrogate
+  pos: verb
+- lemma: звітування
+  ipa: /zviˈtuvanʲːa/
+  translation: reporting
+  pos: noun
+  gender: n
+- lemma: мелодійніший
+  ipa: /mɛlɔˈdʲijnʲiʃɪj/
+  translation: more melodious
+  pos: adj
+  gender: n
+- lemma: непряме
+  ipa: /nɛprʲaˈmɛ/
+  translation: indirect
+  pos: noun
+  gender: n
+- lemma: пересказ
+  ipa: /pɛrɛˈskaz/
+  translation: retelling
+  pos: noun
+  gender: m
+- lemma: понаднормово
+  ipa: /pɔnadnɔrˈmɔvɔ/
+  translation: overtime
+  pos: adv
+- lemma: поцікавитися
+  ipa: /pɔt͡sʲiˈkavɪtɪsʲa/
+  translation: to inquire
+  pos: verb
+  gender: m
+- lemma: привоз
+  ipa: /prɪˈvɔz/
+  translation: Privoz (market)
+  pos: propn
+  gender: m
+- lemma: пряме
+  ipa: /prʲaˈmɛ/
+  translation: direct
+  pos: noun
+  gender: n
+- lemma: підходящий
+  ipa: /pidxɔˈdʲaʃt͡ʃɪj/
+  translation: suitable (Surzhyk)
+  pos: adj
+  gender: n
+- lemma: умовляти
+  ipa: /umɔu̯ˈlʲatɪ/
+  translation: to persuade
+  pos: verb
+- lemma: інвертований
+  ipa: /invɛrˈtɔvanɪj/
+  translation: inverted
+  pos: noun
+  gender: m

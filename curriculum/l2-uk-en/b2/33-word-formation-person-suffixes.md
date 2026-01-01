@@ -1,31 +1,3 @@
----
-module: b2-33
-title: "Словотворення: суфікси на позначення осіб"
-subtitle: "Word Formation - Person Suffixes"
-version: "1.0"
-phase: "B2.1c [Register & Word Formation]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - word-formation
-  - person-nouns
-  - derivation
-grammar:
-  - "Суфікс -ар/-яр для позначення професії чи діяльності"
-  - "Суфікс -ач для позначення виконавця дії"
-  - "Суфікс -ник для позначення роду занять"
-objectives:
-  - "Learner can form person nouns from other words using -ар/-яр suffix"
-  - "Learner can form agent nouns from verbs using -ач suffix"
-  - "Learner can form person nouns using -ник suffix for roles and occupations"
-  - "Learner can identify word formation patterns for person nouns in authentic texts"
-vocabulary_count: 25
-register: "науковий"
-vocab_count: 51
----
-
 # Словотворення: суфікси на позначення осіб
 
 > Чому це важливо?

@@ -1,22 +1,3 @@
----
-module: a2-51
-title: Education & Learning
-subtitle: "Studying in Ukrainian"
-version: "1.0"
-phase: "A2"
-pedagogy: "Narrative"
-duration: 60
-transliteration: none
-tags: ["vocabulary", "education", "school", "university"]
-grammar: ["verb-aspect-introduction", "locative-places"]
-objectives:
-  - Talk about school: урок, клас, вчитель
-  - Discuss university life: лекція, іспит, студент
-  - Differentiate study verbs: вчитися, вивчати
-  - Describe learning materials: підручник, зошит
-vocab_count: 28
----
-
 # Education & Learning
 
 ## Warm-up

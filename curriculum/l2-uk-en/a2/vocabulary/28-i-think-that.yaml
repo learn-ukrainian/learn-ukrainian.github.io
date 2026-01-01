@@ -1,0 +1,160 @@
+module: 28-i-think-that
+level: A2
+version: '2.0'
+items:
+- lemma: абсолютно
+  ipa: ɐbsoˈlʲutno
+  translation: absolutely
+  pos: adv
+- lemma: альтернатива
+  ipa: ɐlʲternɐˈtɪʋɐ
+  translation: alternative
+  pos: noun
+  gender: f
+- lemma: архітектура
+  ipa: ɐrxitekˈturɐ
+  translation: architecture
+  pos: noun
+  gender: f
+- lemma: безумовно
+  ipa: bezumˈɔʋno
+  translation: unconditionally; certainly
+  pos: adv
+- lemma: варшава
+  ipa: vɐrˈʃɑʋɐ
+  translation: Warsaw
+  pos: propn
+  gender: f
+- lemma: вважати
+  ipa: vvɐˈʒɑte
+  translation: to consider/think
+  pos: verb
+- lemma: гадати
+  ipa: hɐˈdɑte
+  translation: to think/guess
+  pos: verb
+- lemma: дух
+  ipa: dux
+  translation: spirit
+  pos: noun
+  gender: m
+- lemma: експерт
+  ipa: ekˈspɛrt
+  translation: expert
+  pos: noun
+  gender: m
+- lemma: затишніший
+  ipa: zɐˈtɪʃnʲiʃɪj
+  translation: cozier
+  pos: adj
+  gender: n
+- lemma: зберігати
+  ipa: zberiˈhɑte
+  translation: to keep/save
+  pos: verb
+- lemma: зір
+  ipa: zʲir
+  translation: sight; vision
+  pos: noun
+  gender: m
+- lemma: кухонний
+  ipa: kuˈxɔnːɪj
+  translation: kitchen (adj)
+  pos: adj
+  gender: f
+- lemma: максиме
+  ipa: mɐkˈsɪme
+  translation: Maksym (voc)
+  pos: propn
+  gender: m
+- lemma: милозвучний
+  ipa: mɪloˈzʋut͡ʃnɪj
+  translation: euphonious
+  pos: adj
+  gender: f
+- lemma: навряд
+  ipa: nɐu̯ˈrʲɑd
+  translation: hardly
+  pos: adv
+- lemma: напевно
+  ipa: nɐˈpɛu̯no
+  translation: probably
+  pos: adv
+- lemma: очевидно
+  ipa: ot͡ʃeˈvɪdno
+  translation: obviously
+  pos: adv
+- lemma: погляд
+  ipa: ˈpɔhlʲɐd
+  translation: view; look
+  pos: noun
+  gender: m
+- lemma: погоджуватися
+  ipa: poˈhɔdʒuʋɐtɪsʲɐ
+  translation: to agree
+  pos: verb
+- lemma: помилятися
+  ipa: pomɪˈlʲɑtɪsʲɐ
+  translation: to make a mistake
+  pos: verb
+- lemma: потенціал
+  ipa: potent͡sʲiˈɑl
+  translation: potential
+  pos: noun
+  gender: m
+- lemma: рація
+  ipa: ˈrɑt͡sʲijɐ
+  translation: right; reason (mати рацію)
+  pos: noun
+  gender: f
+- lemma: реклама
+  ipa: reˈklɑmɐ
+  translation: advertisement
+  pos: noun
+  gender: f
+- lemma: ризикнути
+  ipa: rɪzɪkˈnute
+  translation: to risk (perf)
+  pos: verb
+- lemma: смачніший
+  ipa: smɐt͡ʃˈnʲiʃɪj
+  translation: tastier
+  pos: adj
+  gender: n
+- lemma: такий
+  ipa: tɐˈkɪj
+  translation: such
+  pos: other
+- lemma: точка
+  ipa: ˈtɔt͡ʃkɐ
+  translation: point
+  pos: noun
+  gender: f
+- lemma: туристичний
+  ipa: turɪsˈtɪt͡ʃnɪj
+  translation: tourist (adj)
+  pos: adj
+  gender: n
+- lemma: філософія
+  ipa: fʲiloˈsɔfʲijɐ
+  translation: philosophy
+  pos: noun
+  gender: f
+- lemma: цифра
+  ipa: ˈt͡sɪfrɐ
+  translation: digit
+  pos: noun
+  gender: f
+- lemma: цілком
+  ipa: t͡sʲilˈkɔm
+  translation: entirely
+  pos: adv
+- lemma: івано
+  ipa: iˈʋɑno
+  translation: Ivas? (typo)
+  pos: other
+- lemma: ігоре
+  ipa: ˈiɦore
+  translation: Ihor (voc)
+  pos: propn
+  gender: m

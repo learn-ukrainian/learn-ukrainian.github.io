@@ -1,32 +1,3 @@
----
-module: b2-13
-title: "Емфаза та інверсія"
-subtitle: "Порядок слів для стилістичного впливу"
-version: "1.0"
-phase: "B2.1b [Participles & Register]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - syntax
-  - word-order
-  - emphasis
-  - stylistics
-grammar:
-  - "Нейтральний та емфатичний порядок слів"
-  - "Тема-рема структура речення"
-  - "Інверсія для стилістичного ефекту"
-  - "Виділення елементів речення"
-objectives:
-  - "Learner can distinguish neutral and emphatic word order"
-  - "Learner can apply theme-rheme structure in sentence construction"
-  - "Learner can use inversion for stylistic impact"
-  - "Learner can identify emphasized elements in written and spoken Ukrainian"
-vocabulary_count: 25
-vocab_count: 75
----
-
 # Емфаза та інверсія
 
 > Чому це важливо?

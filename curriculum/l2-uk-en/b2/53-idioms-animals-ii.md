@@ -1,32 +1,3 @@
----
-module: b2-53
-title: "Фразеологізми: Тварини II (Птахи, Риби, Комахи)"
-phase: "B2.2 [Phraseology & Synonymy]"
-pedagogy: "CBI"
-register: "varies"
-duration: 60
-transliteration: "none"
-tags:
-  - phraseology
-  - animals
-  - idioms
-  - birds
-  - fish
-  - insects
-grammar:
-  - "Fixed expressions"
-  - "Idiom structure and variation"
-vocabulary_focus:
-vocab_count: 81
-  - "Phraseological units"
-  - "Semantic nuance"
-objectives:
-  - "Вивчити 8 ключових фразеологізмів про птахів, риб та комах"
-  - "Розуміти значення метафор перебільшення та неуважності"
-  - "Вміти вживати ідіоми про стихії (вода, повітря) у переносному значенні"
-vocabulary_count: 36
----
-
 # Фразеологізми: Тварини II (Птахи, Риби, Комахи)
 
 > 🎯 **Чому це важливо?**

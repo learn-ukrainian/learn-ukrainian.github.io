@@ -1,27 +1,3 @@
----
-module: b1-37
-title: "Часові підрядні речення"
-subtitle: "Temporal Clauses Deep Dive"
-version: "1.0"
-phase: "B1.3b Complex Sentences"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - complex-sentences
-  - temporal-clauses
-grammar:
-  - "Temporal clause constructions with коли, після того як, поки"
-  - "Sequence of events with перш ніж, як тільки"
-objectives:
-  - "Learner can express часові відношення using various temporal connectors"
-  - "Learner can sequence events using appropriate temporal markers"
-  - "Learner can distinguish simultaneous vs sequential actions"
-vocabulary_count: 25
-vocab_count: 36
----
-
 > [!motivation]
 > Коли це сталося? Що було раніше, а що потім? Часові сполучники — це хронологічна карта вашого мовлення українською мовою. Вони дозволяють будувати складні наративи, описувати послідовність подій і точно передавати часові відношення між діями. Без них неможливо розповісти цікаву історію чи пояснити складний процес. Опануйте ці конструкції — і ваші розповіді стануть чіткими, логічними та захопливими для слухачів!
 

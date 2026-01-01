@@ -1,0 +1,22 @@
+module: a2-48
+title: Work & Professions
+subtitle: Building a Career in Ukrainian
+version: '1.0'
+phase: A2
+pedagogy: Narrative
+duration: 60
+transliteration: none
+tags:
+  - vocabulary
+  - work
+  - professions
+  - business
+grammar:
+  - noun-gender-professions
+objectives:
+  - Name common professions: лікар, вчитель, інженер
+  - Describe workplaces: офіс, школа, лікарня
+  - Discuss career and salary
+  - Use verbs for work activities
+vocab_count: 42
+slug: 48-work-professions

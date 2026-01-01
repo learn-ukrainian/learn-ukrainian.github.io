@@ -34,11 +34,13 @@ For each module in range:
 ```
 
 **Why subagents?**
+
 - Each module gets full context capacity
 - Failure in one doesn't pollute the next
 - Prevents context exhaustion on large batches
 
 **Example batch execution:**
+
 ```
 /module-create b1 2-5
 
@@ -63,11 +65,13 @@ ls curriculum/l2-uk-en/{LEVEL}/*{MODULE_NUM}*.md 2>/dev/null
 ```
 
 **If module EXISTS (migration mode):**
+
 - Skip stages 1-2 (content already exists)
 - Run stage 3: Create `.activities.yaml` from existing embedded activities
 - Run stage 4: Audit + pipeline
 
 **If module DOES NOT exist (creation mode):**
+
 - Run all stages 1-4
 
 ---
@@ -85,6 +89,7 @@ ls curriculum/l2-uk-en/{LEVEL}/*{MODULE_NUM}*.md 2>/dev/null
 5. **DO NOT** use md_to_yaml.py converter - write YAML directly
 
 **Why recreate vs convert?**
+
 - ✅ **50% faster** - M22 took 8 minutes vs 36 minutes average for MD conversion
 - ✅ **Zero format errors** - Direct control over structure
 - ✅ **Better quality** - Fresh activities with correct complexity
@@ -107,23 +112,31 @@ Stage 1 → Stage 2 → Stage 3 → Stage 4 (review/fix loop) → OUTPUT
 ### Pipeline
 
 **Stage 1: Skeleton**
+
 1. Read curriculum plan
 2. **Read appropriate template** (see template selection in `/module-stage-1`)
 3. Extract module section (title, vocabulary, grammar scope)
 4. Read `docs/MARKDOWN-FORMAT.md` for strict syntax requirements
-5. Create file with frontmatter + headers + vocabulary table **following template structure**
+5. Create logic:
+   - `meta/{slug}.yaml`: Metadata (Frontmatter)
+   - `vocabulary/{slug}.yaml`: Structured vocabulary
+   - `module.md`: Pure content (No frontmatter, No vocab table)
 
 **Stage 2: Content**
+
 1. Load skeleton from Stage 1
-2. Write rich instructional content
+2. Write rich instructional content in `module.md`
 3. Verify word count, examples, engagement boxes
 
 **Stage 3: Activities**
+
 1. Load content from Stage 2
 2. Generate activities using vocabulary
-3. Verify counts, types, syntax
+3. Write to `activities/{slug}.yaml` directly
+4. Verify counts, types, syntax
 
 **Stage 4: Review & Fix**
+
 1. Run audit: `.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/{LEVEL}/module-{MODULE_NUM}.md`
 2. Fix violations until PASS
 3. Run content review: `/review-content l2-uk-en {LEVEL} {MODULE_NUM}`
@@ -142,15 +155,15 @@ Stage 1 → Stage 2 → Stage 3 → Stage 4 (review/fix loop) → OUTPUT
 
 Select the appropriate architect skill based on module type:
 
-| Module Type | Skill | When to Use |
-|-------------|-------|-------------|
-| Grammar (B1-B2) | `grammar-module-architect` | Aspect, motion verbs, participles, passive voice |
-| Vocabulary (B1) | `vocab-module-architect` | Abstract concepts, collocations, synonymy |
-| Cultural (B1-C1) | `cultural-module-architect` | Regions, music, cinema, folk culture |
-| History/Biography (B2-C1) | `history-module-architect` | Ukrainian history, historical figures |
-| Integration (B1-B2) | `integration-module-architect` | Level-end review and consolidation |
-| Checkpoint (All) | `checkpoint` | Phase-end assessment modules |
-| Literature (LIT) | `literature-module-architect` | Post-C1 Ukrainian literature track |
+| Module Type               | Skill                          | When to Use                                      |
+| ------------------------- | ------------------------------ | ------------------------------------------------ |
+| Grammar (B1-B2)           | `grammar-module-architect`     | Aspect, motion verbs, participles, passive voice |
+| Vocabulary (B1)           | `vocab-module-architect`       | Abstract concepts, collocations, synonymy        |
+| Cultural (B1-C1)          | `cultural-module-architect`    | Regions, music, cinema, folk culture             |
+| History/Biography (B2-C1) | `history-module-architect`     | Ukrainian history, historical figures            |
+| Integration (B1-B2)       | `integration-module-architect` | Level-end review and consolidation               |
+| Checkpoint (All)          | `checkpoint`                   | Phase-end assessment modules                     |
+| Literature (LIT)          | `literature-module-architect`  | Post-C1 Ukrainian literature track               |
 
 These skills provide focus-area pedagogical guidance beyond the template structure.
 
@@ -167,6 +180,7 @@ This gives you ONLY the vocabulary and grammar scope for your specific module (~
 ### Pre-flight Checklist
 
 Before writing, confirm from quick-ref:
+
 - [ ] All frontmatter fields ready (copy template)
 - [ ] Vocabulary list from curriculum plan
 - [ ] Activity count + types match level requirements
@@ -178,10 +192,12 @@ Before writing, confirm from quick-ref:
 ### ⚠️ CRITICAL CONSTRAINTS (Apply DURING Writing, Not After)
 
 **Quiz Prompts:**
+
 - Each quiz question prompt MUST be **12-20 words** (audit fails below 12)
 - Count words BEFORE writing each question
 
 **100% Ukrainian Immersion (B1+):**
+
 - **FORBIDDEN:** English annotations in parentheses e.g. `(Before)`, `(While...)`, `(As soon as)`
 - **ALLOWED:** English ONLY in vocabulary table translations
 - All grammar explanations must be in Ukrainian with Ukrainian examples
@@ -189,6 +205,7 @@ Before writing, confirm from quick-ref:
 **Ukrainian Grammar Validation (MANDATORY):**
 
 Validate ALL Ukrainian text against these sources:
+
 - ✅ **Словник.UA** (slovnyk.ua) - standard spelling
 - ✅ **Словарь Грінченка** - authentic Ukrainian forms
 - ✅ **Антоненко-Давидович "Як ми говоримо"** - Russianisms guide
@@ -217,6 +234,7 @@ Validate ALL Ukrainian text against these sources:
 ### Stage Instructions (if needed)
 
 Only read stage docs for complex cases:
+
 - `claude_extensions/stages/stage-1-skeleton.md`
 - `claude_extensions/stages/stage-2-content.md`
 - `claude_extensions/stages/stage-3-activities.md`
@@ -225,6 +243,7 @@ Only read stage docs for complex cases:
 ### Output
 
 On completion:
+
 - Module file: `curriculum/l2-uk-en/{level}/{num}-{slug}.md`
 - MDX: `docusaurus/docs/{level}/module-{num}.mdx`
 - JSON: `output/json/l2-uk-en/{level}/module-{num}.json`
@@ -232,6 +251,7 @@ On completion:
 Status: APPROVED (pipeline passes) or NEEDS MANUAL REVIEW
 
 **Pipeline validates:**
+
 - Lint (MD format)
 - Generate (MD → MDX)
 - Validate MDX (no content loss)

@@ -1,0 +1,777 @@
+module: 109-rozstriliane-vidrodzennia-mekhanizm
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/109-rozstriliane-vidrodzennia-mekhanizm.md
+generated: '2026-01-01T20:16:44.986563'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 16
+  cloze: 1
+  unjumble: 8
+  quiz: 16
+  true-false: 8
+total_items: 57
+item_count: 57
+sample_percent: null
+items:
+- activity: error-correction
+  title: 'Виправлення помилок: Історичний текст'
+  sentence_with_error: НКВС мав абсолютна влада над в'язнями.
+  error: абсолютна
+  answer: абсолютну
+  sentence_corrected: НКВС мав абсолютну влада над в'язнями.
+  options:
+  - абсолютна
+  - абсолютну
+  - абсолютної
+  - абсолютною
+  original_explanation: '«Мав що?» — знахідний відмінок жіночого роду: абсолютну владу.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: 'Виправлення помилок: Історичний текст'
+  sentence_with_error: Трійка розглядала десятки справ за одне засідання.
+  error: засідання
+  answer: засідання
+  sentence_corrected: Трійка розглядала десятки справ за одне засідання.
+  options:
+  - засідання
+  - засіданні
+  - засіданню
+  - засіданням
+  original_explanation: 'Правильно: «за одне засідання» — знахідний відмінок. Це речення
+    без помилки.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: 'Виправлення помилок: Історичний текст'
+  sentence_with_error: Арешти проводилися у нічний час.
+  error: нічний
+  answer: нічний
+  sentence_corrected: Арешти проводилися у нічний час.
+  options:
+  - нічний
+  - нічного
+  - нічному
+  - нічним
+  original_explanation: 'Правильно: «у нічний час» — знахідний відмінок. Речення без
+    помилки.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: 'Виправлення помилок: Історичний текст'
+  sentence_with_error: Засуджених етапували до Соловки на Білому морі.
+  error: Соловки
+  answer: Соловків
+  sentence_corrected: Засуджених етапували до Соловків на Білому морі.
+  options:
+  - Соловки
+  - Соловків
+  - Соловках
+  - Соловками
+  original_explanation: '«До чого?» — родовий відмінок: до Соловків.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: 'Виправлення помилок: Історичний текст'
+  sentence_with_error: Слідчі фабрикували справа проти інтелігенції.
+  error: справа
+  answer: справи
+  sentence_corrected: Слідчі фабрикували справи проти інтелігенції.
+  options:
+  - справа
+  - справи
+  - справу
+  - справою
+  original_explanation: '«Фабрикували що?» — знахідний відмінок множини: справи.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: 'Виправлення помилок: Історичний текст'
+  sentence_with_error: Курбас організовував вистава для в'язнів.
+  error: вистава
+  answer: вистави
+  sentence_corrected: Курбас організовував вистави для в'язнів.
+  options:
+  - вистава
+  - вистави
+  - виставу
+  - виставою
+  original_explanation: '«Організовував що?» — знахідний відмінок множини: вистави.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: 'Виправлення помилок: Історичний текст'
+  sentence_with_error: Юрій Дмитрієв відкрив урочища Сандармох.
+  error: урочища
+  answer: урочище
+  sentence_corrected: Юрій Дмитрієв відкрив урочище Сандармох.
+  options:
+  - урочища
+  - урочище
+  - урочищі
+  - урочищем
+  original_explanation: '«Відкрив що?» — знахідний відмінок однини: урочище.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: 'Виправлення помилок: Історичний текст'
+  sentence_with_error: Родинам не повідомляли правда про розстріли.
+  error: правда
+  answer: правди
+  sentence_corrected: Родинам не повідомляли правди про розстріли.
+  options:
+  - правда
+  - правди
+  - правду
+  - правдою
+  original_explanation: '«Не повідомляли чого?» — родовий відмінок з запереченням:
+    правди.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика терору
+  sentence_template: НКВС — центральний орган [___] в СРСР.
+  answer: терору
+  complete_sentence: НКВС — центральний орган [терору] в СРСР.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика терору
+  sentence_template: «Особливі трійки» були [___] органами.
+  answer: позасудовими
+  complete_sentence: «Особливі трійки» були [позасудовими] органами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика терору
+  sentence_template: Наказ № 00447 встановлював [___] на репресії.
+  answer: ліміти
+  complete_sentence: Наказ № 00447 встановлював [ліміти] на репресії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика терору
+  sentence_template: Соловки — це острівний [___] на Білому морі.
+  answer: табір
+  complete_sentence: Соловки — це острівний [табір] на Білому морі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика терору
+  sentence_template: Сандармох — місце масових [___] української інтелігенції.
+  answer: розстрілів
+  complete_sentence: Сандармох — місце масових [розстрілів] української інтелігенції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика терору
+  sentence_template: Після смерті Сталіна почалася часткова [___] жертв.
+  answer: реабілітація
+  complete_sentence: Після смерті Сталіна почалася часткова [реабілітація] жертв.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика терору
+  sentence_template: «Чорний ворон» — це назва [___] для арештів.
+  answer: автомобіля
+  complete_sentence: «Чорний ворон» — це назва [автомобіля] для арештів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика терору
+  sentence_template: Слідчі [___] справи, вибиваючи зізнання катуваннями.
+  answer: фабрикували
+  complete_sentence: Слідчі [фабрикували] справи, вибиваючи зізнання катуваннями.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хронологія терору
+  sentence_template: Наказ НКВС № 00447 був виданий [___] липня 1937 року.
+  answer: '30'
+  complete_sentence: Наказ НКВС № 00447 був виданий [30] липня 1937 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хронологія терору
+  sentence_template: Масовий розстріл українських інтелектуалів відбувся [___] листопада
+    1937 року.
+  answer: '3'
+  complete_sentence: Масовий розстріл українських інтелектуалів відбувся [3] листопада
+    1937 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хронологія терору
+  sentence_template: Юрій Дмитрієв відкрив Сандармох у [___] році.
+  answer: '1997'
+  complete_sentence: Юрій Дмитрієв відкрив Сандармох у [1997] році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хронологія терору
+  sentence_template: Соловецький табір діяв з [___] по 1939 рік.
+  answer: '1923'
+  complete_sentence: Соловецький табір діяв з [1923] по 1939 рік.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хронологія терору
+  sentence_template: Для УРСР ліміт «першої категорії» становив [___] осіб.
+  answer: 28 800
+  complete_sentence: Для УРСР ліміт «першої категорії» становив [28 800] осіб.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хронологія терору
+  sentence_template: У Сандармосі загинули понад [___] осіб.
+  answer: 9 000
+  complete_sentence: У Сандармосі загинули понад [9 000] осіб.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хронологія терору
+  sentence_template: Микола Зеров загинув у віці [___] років.
+  answer: '47'
+  complete_sentence: Микола Зеров загинув у віці [47] років.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хронологія терору
+  sentence_template: Валер'ян Підмогильний загинув наймолодшим — у [___] років.
+  answer: '36'
+  complete_sentence: Валер'ян Підмогильний загинув наймолодшим — у [36] років.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Механізм терору
+  passage_template: 'Великий терор {1937|1939|1941}–{1938|1940|1942} років був {спланованою|випадковою|спонтанною}
+    операцією. Центральним органом терору був {НКВС|КДБ|СБУ}. Наказ № {00447|1917|1991}
+    встановлював {ліміти|заборони|пільги} на репресії для кожного регіону.
+
+
+    «Особливі {трійки|суди|комісії}» виносили вироки за {кілька хвилин|місяці|роки}.
+    Засуджений {не був|був|міг бути} присутнім. {Адвокат|Прокурор|Суддя} не допускався.
+    Апеляція була {неможливою|обов''язковою|добровільною}.
+
+
+    Соловецький табір діяв на островах у {Білому|Чорному|Азовському} морі. В''язні
+    помирали від {голоду|комфорту|нудьги}. {3|13|23} листопада {1937|1947|1957} року
+    в {Сандармосі|Соловках|Києві} розстріляли групу українських інтелектуалів.
+
+
+    Юрій {Дмитрієв|Порошенко|Зеленський} відкрив Сандармох у {1997|1987|2007} році.
+    Сьогодні він — {політв''язень|президент|депутат} Росії.
+
+    '
+  blanks:
+  - answer: '1941'
+    options:
+    - '1937'
+    - '1939'
+  - answer: '1942'
+    options:
+    - '1938'
+    - '1940'
+  - answer: спонтанною
+    options:
+    - спланованою
+    - випадковою
+  - answer: СБУ
+    options:
+    - НКВС
+    - КДБ
+  - answer: '1991'
+    options:
+    - '00447'
+    - '1917'
+  - answer: пільги
+    options:
+    - ліміти
+    - заборони
+  - answer: комісії
+    options:
+    - трійки
+    - суди
+  - answer: роки
+    options:
+    - кілька хвилин
+    - місяці
+  - answer: міг бути
+    options:
+    - не був
+    - був
+  - answer: Суддя
+    options:
+    - Адвокат
+    - Прокурор
+  - answer: добровільною
+    options:
+    - неможливою
+    - обов'язковою
+  - answer: Азовському
+    options:
+    - Білому
+    - Чорному
+  - answer: нудьги
+    options:
+    - голоду
+    - комфорту
+  - answer: '23'
+    options:
+    - '3'
+    - '13'
+  - answer: '1957'
+    options:
+    - '1937'
+    - '1947'
+  - answer: Києві
+    options:
+    - Сандармосі
+    - Соловках
+  - answer: Зеленський
+    options:
+    - Дмитрієв
+    - Порошенко
+  - answer: '2007'
+    options:
+    - '1997'
+    - '1987'
+  - answer: депутат
+    options:
+    - політв'язень
+    - президент
+  blank_count: 19
+  complete_passage: 'Великий терор 1941–1942 років був спонтанною операцією. Центральним
+    органом терору був СБУ. Наказ № 1991 встановлював пільги на репресії для кожного
+    регіону.
+
+
+    «Особливі комісії» виносили вироки за роки. Засуджений міг бути присутнім. Суддя
+    не допускався. Апеляція була добровільною.
+
+
+    Соловецький табір діяв на островах у Азовському морі. В''язні помирали від нудьги.
+    23 листопада 1957 року в Києві розстріляли групу українських інтелектуалів.
+
+
+    Юрій Зеленський відкрив Сандармох у 2007 році. Сьогодні він — депутат Росії.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення речень
+  jumbled_words: терору / НКВС / центральним / був / органом
+  answer: НКВС був центральним органом терору.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення речень
+  jumbled_words: вироки / трійки / за / особливі / виносили / хвилини / кілька
+  answer: Особливі трійки виносили вироки за кілька хвилин.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення речень
+  jumbled_words: у / проводилися / нічний / арешти / час
+  answer: Арешти проводилися у нічний час.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення речень
+  jumbled_words: вбивства / система / лімітів / на / перетворювала / статистику
+  answer: Система лімітів перетворювала вбивства на статистику.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення речень
+  jumbled_words: знищення / приховувала / радянська / влада / докази
+  answer: Радянська влада приховувала докази знищення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення речень
+  jumbled_words: 3 / 1937 / листопада / інтелектуалів / розстріляли / українських
+    / року
+  answer: 3 листопада 1937 року розстріляли українських інтелектуалів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення речень
+  jumbled_words: Сандармох / 1997 / Юрій / відкрив / року / Дмитрієв / у
+  answer: Юрій Дмитрієв відкрив Сандармох у 1997 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення речень
+  jumbled_words: спротиву / акт / творчість / була / духовного
+  answer: Творчість була актом духовного спротиву.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння механізму терору
+  question: Що таке «особлива трійка» згідно з текстом?
+  options:
+  - '{''text'': ''Судовий орган з трьох суддів'', ''correct'': False}'
+  - '{''text'': ''Позасудовий орган, що виносив вироки за кілька хвилин'', ''correct'':
+    True}'
+  - '{''text'': ''Група адвокатів'', ''correct'': False}'
+  - '{''text'': ''Комітет з реабілітації'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння механізму терору
+  question: Як у тексті описано систему «лімітів»?
+  options:
+  - '{''text'': ''Обмеження на кількість суддів'', ''correct'': False}'
+  - '{''text'': ''Встановлені Москвою кількості людей для розстрілу та таборів'',
+    ''correct'': True}'
+  - '{''text'': ''Фінансові обмеження'', ''correct'': False}'
+  - '{''text'': ''Ліміти на публікації'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння механізму терору
+  question: Що означала фраза «10 років без права листування»?
+  options:
+  - '{''text'': "В''язень міг писати листи", ''correct'': False}'
+  - '{''text'': ''Евфемізм для розстрілу'', ''correct'': True}'
+  - '{''text'': ''Реальний термін у таборі'', ''correct'': False}'
+  - '{''text'': ''Заборона читати газети'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння механізму терору
+  question: Де відбувалися масові розстріли українських інтелектуалів у 1937 році?
+  options:
+  - '{''text'': ''Бабин Яр'', ''correct'': False}'
+  - '{''text'': ''Сандармох'', ''correct'': True}'
+  - '{''text'': ''Биківня'', ''correct'': False}'
+  - '{''text'': ''Соловки'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння механізму терору
+  question: Хто з перелічених був серед розстріляних 3 листопада 1937 року?
+  options:
+  - '{''text'': ''Микола Хвильовий'', ''correct'': False}'
+  - '{''text'': ''Лесь Курбас'', ''correct'': True}'
+  - '{''text'': ''Павло Тичина'', ''correct'': False}'
+  - '{''text'': ''Максим Рильський'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння механізму терору
+  question: Хто відкрив місце масових поховань у Сандармосі?
+  options:
+  - '{''text'': ''Радянська влада'', ''correct'': False}'
+  - '{''text'': ''Юрій Дмитрієв'', ''correct'': True}'
+  - '{''text'': ''НКВС'', ''correct'': False}'
+  - '{''text'': ''Невідомо'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння механізму терору
+  question: Чому українці становили непропорційну кількість жертв терору?
+  options:
+  - '{''text'': ''Це випадковість'', ''correct'': False}'
+  - '{''text'': ''Терор був цілеспрямовано спрямований проти української інтелігенції'',
+    ''correct'': True}'
+  - '{''text'': ''Українців було найбільше в СРСР'', ''correct'': False}'
+  - '{''text'': ''Українці підтримували терор'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння механізму терору
+  question: Що робили українські інтелектуали на Соловках?
+  options:
+  - '{''text'': ''Співпрацювали з НКВС'', ''correct'': False}'
+  - '{''text'': ''Продовжували творчість як акт духовного спротиву'', ''correct'':
+    True}'
+  - '{''text'': ''Відмовлялися від своїх ідей'', ''correct'': False}'
+  - '{''text'': ''Планували втечу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика в історичних реченнях
+  question: Трійка виносила _____ за кілька хвилин.
+  options:
+  - '{''text'': ''вирок'', ''correct'': False}'
+  - '{''text'': ''вироки'', ''correct'': True}'
+  - '{''text'': ''вирокам'', ''correct'': False}'
+  - '{''text'': ''вироках'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика в історичних реченнях
+  question: Засуджених етапували до _____ на Білому морі.
+  options:
+  - '{''text'': ''Соловки'', ''correct'': False}'
+  - '{''text'': ''Соловків'', ''correct'': True}'
+  - '{''text'': ''Соловках'', ''correct'': False}'
+  - '{''text'': ''Соловками'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика в історичних реченнях
+  question: НКВС мав абсолютну _____ над в'язнями.
+  options:
+  - '{''text'': ''влада'', ''correct'': False}'
+  - '{''text'': ''владу'', ''correct'': True}'
+  - '{''text'': ''влади'', ''correct'': False}'
+  - '{''text'': ''владою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика в історичних реченнях
+  question: Родинам не повідомляли правди про _____ близьких.
+  options:
+  - '{''text'': ''доля'', ''correct'': False}'
+  - '{''text'': ''долю'', ''correct'': True}'
+  - '{''text'': ''долі'', ''correct'': False}'
+  - '{''text'': ''долею'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика в історичних реченнях
+  question: Слідчі вибивали _____ катуваннями.
+  options:
+  - '{''text'': ''зізнання'', ''correct'': True}'
+  - '{''text'': ''зізнанню'', ''correct'': False}'
+  - '{''text'': ''зізнанням'', ''correct'': False}'
+  - '{''text'': ''зізнанні'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика в історичних реченнях
+  question: Юрій Дмитрієв відкрив _____ Сандармох.
+  options:
+  - '{''text'': ''урочище'', ''correct'': True}'
+  - '{''text'': ''урочища'', ''correct'': False}'
+  - '{''text'': ''урочищі'', ''correct'': False}'
+  - '{''text'': ''урочищем'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика в історичних реченнях
+  question: Курбас організовував _____ для в'язнів.
+  options:
+  - '{''text'': ''вистава'', ''correct'': False}'
+  - '{''text'': ''вистави'', ''correct'': True}'
+  - '{''text'': ''виставам'', ''correct'': False}'
+  - '{''text'': ''виставах'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика в історичних реченнях
+  question: Терор був спрямований проти українського _____.
+  options:
+  - '{''text'': ''народ'', ''correct'': False}'
+  - '{''text'': ''народу'', ''correct'': True}'
+  - '{''text'': ''народом'', ''correct'': False}'
+  - '{''text'': ''народі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірка знань
+  statement: Великий терор 1937–1938 років був стихійним насильством.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірка знань
+  statement: Трійка давала засудженому можливість апеляції.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірка знань
+  statement: Українці становили 36% розстріляних, хоча були 22% населення СРСР.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірка знань
+  statement: Юрій Дмитрієв відкрив Сандармох у 1997 році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірка знань
+  statement: Микола Зеров був розстріляний у Києві.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірка знань
+  statement: Арешти проводилися вдень, публічно.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірка знань
+  statement: Россія сьогодні протидіє музеєфікації місць терору.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірка знань
+  statement: Курбас організовував театральні вистави навіть у Соловецькому таборі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

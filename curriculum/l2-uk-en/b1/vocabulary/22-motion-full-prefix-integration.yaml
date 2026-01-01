@@ -1,0 +1,137 @@
+module: 22-motion-full-prefix-integration
+level: B1
+version: '2.0'
+items:
+- lemma: автовокзал
+  ipa: /autɔvɔkˈzal/
+  translation: bus station
+  pos: noun
+  gender: m
+- lemma: антон
+  ipa: /anˈtɔn/
+  translation: Anton
+  pos: propn
+  gender: m
+- lemma: аудіо
+  ipa: /ˈaudʲiɔ/
+  translation: audio
+  pos: other
+- lemma: вибути
+  ipa: /vɪˈbutɪ/
+  translation: to drop out
+  pos: verb
+- lemma: виглянути
+  ipa: /vɪˈhlʲanutɪ/
+  translation: to look out
+  pos: verb
+  gender: n
+- lemma: вилітати
+  ipa: /vɪlʲiˈtatɪ/
+  translation: to fly out
+  pos: verb
+- lemma: входини
+  ipa: /ˈvxɔdɪnɪ/
+  translation: housewarming
+  pos: noun
+  gender: m
+- lemma: відбуття
+  ipa: /vidbutʲˈtʲa/
+  translation: departure
+  pos: noun
+  gender: n
+- lemma: віддалити
+  ipa: /vidːaˈlɪtɪ/
+  translation: to distance
+  pos: verb
+- lemma: заглиблення
+  ipa: /zaˈhlɪblɛnʲːa/
+  translation: deepening
+  pos: noun
+  gender: n
+- lemma: загублений
+  ipa: /zaˈhublɛnɪj/
+  translation: lost
+  pos: adj
+  gender: m
+- lemma: згубити
+  ipa: /zhuˈbɪtɪ/
+  translation: to lose
+  pos: verb
+  gender: m
+- lemma: лего
+  ipa: /ˈlɛhɔ/
+  translation: Lego
+  pos: propn
+  gender: m
+- lemma: лнестія
+  ipa: /lnɛsˈtʲija/
+  translation: ??? (typo)
+  pos: noun
+  gender: m
+- lemma: макдональдза
+  ipa: /makˈdɔnalʲdza/
+  translation: McDonald's (gen.)
+  pos: propn
+  gender: m
+- lemma: множити
+  ipa: /ˈmnɔʒɪtɪ/
+  translation: to multiply
+  pos: verb
+- lemma: оглядовий
+  ipa: /ɔhlʲaˈdɔvɪj/
+  translation: sightseeing
+  pos: adj
+  gender: m
+- lemma: однонаправлений
+  ipa: /ɔdnɔnaprau̯ˈlɛnɪj/
+  translation: unidirectional
+  pos: adj
+- lemma: океана
+  ipa: /ɔkɛˈana/
+  translation: ocean (gen.)
+  pos: propn
+  gender: m
+- lemma: покриття
+  ipa: /pɔkrɪtʲˈtʲa/
+  translation: coverage
+  pos: noun
+  gender: n
+- lemma: протікати
+  ipa: /prɔtʲiˈkatɪ/
+  translation: to flow
+  pos: verb
+- lemma: пі
+  ipa: /pi/
+  translation: Pi
+  pos: other
+- lemma: розсердитися
+  ipa: /rɔzˈsɛrdɪtɪsʲa/
+  translation: to get angry
+  pos: verb
+- lemma: різнонапавлений
+  ipa: /rʲiznɔnapau̯ˈlɛnɪj/
+  translation: multidirectional (typo)
+  pos: adj
+- lemma: стартя
+  ipa: /ˈstartʲa/
+  translation: ??? (typo)
+  pos: noun
+  gender: m
+- lemma: трускавець
+  ipa: /truskaˈvɛt͡sʲ/
+  translation: Truskavets
+  pos: propn
+  gender: m
+- lemma: фразовий
+  ipa: /ˈfrazɔvɪj/
+  translation: phrasal
+  pos: adj
+- lemma: фігуральний
+  ipa: /fʲihuˈralʲnɪj/
+  translation: figurative
+  pos: adj
+- lemma: ізсередина
+  ipa: /izsɛˈrɛdɪna/
+  translation: from inside (typo)
+  pos: noun
+  gender: m

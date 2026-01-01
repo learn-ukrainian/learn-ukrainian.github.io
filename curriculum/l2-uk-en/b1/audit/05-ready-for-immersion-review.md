@@ -1,6 +1,15 @@
 # Audit Report: 05-ready-for-immersion.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1200
+**Phase:** B1.0 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1200
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): синтаксис, правило, система, поняття, наголос...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1653/1200
@@ -10,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 48/20
+- **Vocab:** ⚠️ 4 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,20 +46,13 @@
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **97.9%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (25 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Готові до занурення** | ✅ | 141 | Included in Core |
+| **Intro/Narrative** | ✅ | 141 | Included in Core |
 | **Діагностика** | ✅ | 208 | Included in Core |
 | **Аналіз** | ✅ | 353 | Included in Core |
 | **Поглиблення** | ⚪️ | 220 | Skipped |
 | **Практика** | ⚪️ | 211 | Skipped |
 | **Mini-Dialogues** | ✅ | 261 | Included in Core |
 | **Підсумок** | ✅ | 259 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

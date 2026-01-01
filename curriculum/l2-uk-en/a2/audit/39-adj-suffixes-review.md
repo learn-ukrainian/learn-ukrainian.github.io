@@ -1,26 +1,43 @@
 # Audit Report: 39-adj-suffixes.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "Inquiry" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[GRAMMAR]** Participle used before B1: 'лежачий'
+  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
+- **[GRAMMAR]** Participle used before B1: 'лежачий'
+  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
+- **[GRAMMAR]** Participle used before B1: 'лежачий'
+  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
+
+## Recommendation
+**📝 UPDATE** (severity 35/100)
+
+- Borderline case (severity 35/100)
+- 3 pedagogical violations (minor)
+- 3 grammar-level violations (fundamental)
+- Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1670/1000
+- **Words:** ✅ 1775/1000
 - **Activities:** ✅ 10/10
-- **Density:** ✅ All > 12
+- **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 26/1
+- **Vocab:** ✅ 115/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 51.4% (target 40-55% (A2.2))
+- **Pedagogy:** ❌ 3 violations
+- **Immersion:** ❌ 35.2% LOW (target 40-55% (A2.2))
+- **Grammar:** ⏳ Pending validation
 
-## MDX VALIDATION
-✅ No issues found
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Suffix Match | match-up | 1 | 8 | Add 7 more items |
 
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -31,7 +48,7 @@
 | **Machine 1: The Generalist (-н-ий)** | ⚪️ | 10 | Skipped |
 | **Machine 2: The Relationship (-ов-ий)** | ⚪️ | 8 | Skipped |
 | **Machine 3: The Origin (-ськ-ий)** | ⚪️ | 58 | Skipped |
-| **Deep Dive: Living Adjectives (The Active State)** | ✅ | 53 | Included in Core |
+| **Deep Dive: Living Adjectives (The Active State)** | ✅ | 94 | Included in Core |
 | **Deep Dive: The Diminutive (-еньк)** | ✅ | 57 | Included in Core |
 | **Story Time: The Professor** | ✅ | 109 | Included in Core |
 | **Story Time Part 2: The Map** | ✅ | 67 | Included in Core |
@@ -41,17 +58,6 @@
 | **Monologue: The Artist** | ⚪️ | 52 | Skipped |
 | **Dialogue: At the Hotel** | ✅ | 58 | Included in Core |
 | **Dialogue: Describing People** | ✅ | 59 | Included in Core |
-| **English theory** | ⚪️ | 557 | Skipped |
+| **English theory** | ⚪️ | 621 | Skipped |
 | **Summary** | ✅ | 69 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Suffix Match** | 🎮 | 8 | Activity (8 items, min 8) |
-| **group-sort: Adjective Sorter** | 🎮 | 18 | Activity (18 items, min 12) |
-| **fill-in: Noun to Adjective** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Gender Match** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Opposites** | 🎮 | 8 | Activity (8 items, min 8) |
-| **unjumble: Scientific Talk** | 🎮 | 6 | Activity (6 items, min 6) |
-| **fill-in: City Vibes** | 🎮 | 8 | Activity (8 items, min 8) |
-| **quiz: Logic Check** | 🎮 | 8 | Activity (8 items, min 8) |
-| **cloze: The Professor's Day** | 🎮 | 12 | Activity (12 items, min 12) |
-| **error-correction: Wrong Suffix** | 🎮 | 6 | Activity (6 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

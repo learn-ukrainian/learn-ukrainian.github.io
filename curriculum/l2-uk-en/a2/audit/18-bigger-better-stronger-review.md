@@ -1,26 +1,39 @@
 # Audit Report: 18-bigger-better-stronger.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 35/100)
+
+- Borderline case (severity 35/100)
+- 1 pedagogical violations (minor)
+- Immersion 12% off target
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1115/1000
 - **Activities:** ✅ 10/10
-- **Density:** ✅ All > 12
+- **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 21/1
+- **Vocab:** ✅ 37/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 42.3% (target 35-50% (A2.1))
+- **Immersion:** ❌ 23.3% LOW (target 35-50% (A2.1))
+- **Grammar:** ⏳ Pending validation
 
-## MDX VALIDATION
-✅ No issues found
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| English to Ukrainian | translate | 0 | 6 | Add 6 more items |
 
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -38,15 +51,4 @@
 | **Summary** | ✅ | 0 | Included in Core |
 | **What You Learned** | ⚪️ | 236 | Skipped |
 | **Need More Practice?** | ⚪️ | 30 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Comparative Forms** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Form the Comparative** | 🎮 | 12 | Activity (12 items, min 8) |
-| **quiz: Comparatives** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Regular vs Irregular** | 🎮 | 12 | Activity (12 items, min 12) |
-| **unjumble: Comparison Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
-| **error-correction: Fix the Comparative** | 🎮 | 6 | Activity (6 items, min 6) |
-| **cloze: Comparisons in Context** | 🎮 | 12 | Activity (12 items, min 12) |
-| **dialogue-reorder: Shopping Comparisons** | 🎮 | 12 | Activity (12 items, min 4) |
-| **mark-the-words: Find Comparatives** | 🎮 | 10 | Activity (10 items, min 6) |
-| **translate: English to Ukrainian** | 🎮 | 36 | Activity (36 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

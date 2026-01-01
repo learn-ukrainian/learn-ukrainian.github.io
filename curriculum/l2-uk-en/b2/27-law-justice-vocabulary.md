@@ -1,30 +1,3 @@
----
-module: b2-27
-title: "Право та юстиція"
-subtitle: "Мова закону і справедливості"
-version: "1.0"
-phase: "B2"
-pedagogy: "CLIL"
-duration: 90
-transliteration: "none"
-tags:
-  - vocabulary
-  - domain-specific
-  - law
-  - justice
-  - register
-grammar:
-  - "legal-terminology"
-  - "official-register"
-  - "passive-constructions"
-objectives:
-  - "Учень може розуміти юридичні тексти та новини про судові справи"
-  - "Учень може використовувати базову юридичну термінологію в обговореннях"
-  - "Учень може розрізняти типи судів та судових процесів в Україні"
-vocabulary_count: 35
-vocab_count: 100
----
-
 # Право та юстиція
 
 > Чому це важливо?

@@ -1,22 +1,3 @@
----
-module: a2-56
-title: A2 Grammar Review
-subtitle: 'Mastering the Rules'
-version: '1.0'
-phase: 'A2'
-pedagogy: 'Review'
-duration: 60
-transliteration: none
-tags: ['review', 'grammar', 'cases', 'syntax']
-grammar: ['review-cases', 'review-aspect', 'complex-sentences']
-objectives:
-  - Consolidate understanding of all 7 cases
-  - Master Perfective vs Imperfective aspect
-  - Build complex sentences with connectors
-  - Fix common grammatical errors
-vocab_count: 34
----
-
 ## Warm-up: Knowledge Check
 
 **Congratulations! You are almost at the finish line of the A2 level.**

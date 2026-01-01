@@ -1,0 +1,220 @@
+module: 45-home-and-furniture
+level: A2
+version: '2.0'
+items:
+- lemma: брудний
+  ipa: brudˈnɪj
+  translation: dirty
+  pos: adj
+  gender: m
+- lemma: ванний
+  ipa: ˈvɑnːɪj
+  translation: bath (adj)
+  pos: adj
+  gender: f
+- lemma: ванній
+  ipa: ˈvɑnːij
+  translation: bath (loc)
+  pos: adj
+  gender: f
+- lemma: вирощувати
+  ipa: vɪˈrɔʃt͡ʃuʋɐte
+  translation: to grow/cultivate
+  pos: verb
+- lemma: витирати
+  ipa: vɪtɪˈrɑte
+  translation: to wipe (imp)
+  pos: verb
+- lemma: вчятися
+  ipa: vt͡ʃʲɑˈtɪsʲɐ
+  translation: to study (typo вчитися)
+  pos: verb
+- lemma: город
+  ipa: hoˈrɔd
+  translation: vegetable garden
+  pos: noun
+  gender: m
+- lemma: гігієна
+  ipa: hihiˈjɛnɐ
+  translation: hygiene
+  pos: noun
+  gender: f
+- lemma: дач
+  ipa: dɑt͡ʃ
+  translation: dachas (gen pl)
+  pos: noun
+  gender: f
+- lemma: дача
+  ipa: ˈdɑt͡ʃɐ
+  translation: dacha/summer house
+  pos: noun
+  gender: f
+- lemma: заміський
+  ipa: zɐmʲisʲˈkɪj
+  translation: suburban
+  pos: adj
+  gender: m
+- lemma: запрошувати
+  ipa: zɐˈprɔʃuʋɐte
+  translation: to invite (imp)
+  pos: verb
+- lemma: застеляти
+  ipa: zɐsteˈlʲɑte
+  translation: to make bed (imp)
+  pos: verb
+- lemma: затишний
+  ipa: ˈzɑtɪʃnɪj
+  translation: cozy
+  pos: adj
+  gender: f
+- lemma: затишок
+  ipa: ˈzɑtɪʃok
+  translation: comfort/coziness
+  pos: noun
+  gender: m
+- lemma: зітхати
+  ipa: zitˈxɑte
+  translation: to sigh (imp)
+  pos: verb
+- lemma: катерина
+  ipa: kɐteˈrɪnɐ
+  translation: Kateryna
+  pos: propn
+  gender: f
+- lemma: комод
+  ipa: koˈmɔd
+  translation: chest of drawers
+  pos: noun
+  gender: m
+- lemma: комора
+  ipa: koˈmɔrɐ
+  translation: pantry
+  pos: noun
+  gender: f
+- lemma: максити
+  ipa: mɐkˈsɪtɪ
+  translation: maximize? (typo)
+  pos: verb
+- lemma: меблі
+  ipa: ˈmɛblʲi
+  translation: furniture
+  pos: noun
+  gender: m
+- lemma: найважливіше
+  ipa: nɑjʋɐʒlɪˈʋiʃe
+  translation: most importantly
+  pos: noun
+  gender: n
+- lemma: новосілля
+  ipa: novoˈsʲilʲːɐ
+  translation: housewarming
+  pos: noun
+  gender: m
+- lemma: оглядати
+  ipa: ohlʲɐˈdɑte
+  translation: to inspect/view
+  pos: verb
+- lemma: особливо
+  ipa: osoˈblɪʋo
+  translation: especially
+  pos: adv
+- lemma: переїжджати
+  ipa: perejiʒˈdʒɑte
+  translation: to move (house) (imp)
+  pos: verb
+- lemma: переїзд
+  ipa: pereˈjizd
+  translation: move/relocation
+  pos: noun
+  gender: m
+- lemma: пилососити
+  ipa: pɪloˈsɔsɪte
+  translation: to vacuum
+  pos: verb
+- lemma: попрацювати
+  ipa: poprɐt͡sʲuˈʋɑte
+  translation: to work for a while (perf)
+  pos: verb
+  gender: m
+- lemma: посуд
+  ipa: ˈpɔsud
+  translation: dishes
+  pos: noun
+  gender: m
+- lemma: посудомийка
+  ipa: posudoˈmɪjkɐ
+  translation: dishwasher
+  pos: noun
+  gender: f
+- lemma: пральний
+  ipa: ˈprɑlʲnɪj
+  translation: washing (adj)
+  pos: adj
+  gender: f
+- lemma: прибирання
+  ipa: prɪbɪˈrɑnʲːɐ
+  translation: cleaning
+  pos: noun
+  gender: n
+- lemma: прилад
+  ipa: ˈprɪlɑd
+  translation: appliance/device
+  pos: noun
+  gender: m
+- lemma: раковин
+  ipa: ˈrɑkoʋɪn
+  translation: sink (gen pl? or typo раковина)
+  pos: noun
+  gender: f
+- lemma: раковина
+  ipa: ˈrɑkoʋɪnɐ
+  translation: sink
+  pos: noun
+  gender: f
+- lemma: синка
+  ipa: ˈsɪnkɐ
+  translation: son (gen? diminutive?) or ham?
+  pos: noun
+  gender: f
+- lemma: сон
+  ipa: sɔn
+  translation: dream/sleep
+  pos: noun
+  gender: m
+- lemma: стомитися
+  ipa: stoˈmɪtɪsʲɐ
+  translation: to get tired (perf)
+  pos: verb
+  gender: m
+- lemma: тумбочка
+  ipa: ˈtumbot͡ʃkɐ
+  translation: nightstand
+  pos: noun
+  gender: f
+- lemma: усміхатися
+  ipa: usmʲiˈxɑtɪsʲɐ
+  translation: to smile
+  pos: verb
+- lemma: фортеця
+  ipa: forˈtɛt͡sʲɐ
+  translation: fortress
+  pos: noun
+  gender: f
+- lemma: фух
+  ipa: fux
+  translation: phew
+  pos: other
+- lemma: чистити
+  ipa: ˈt͡ʃɪstɪte
+  translation: to clean (imp)
+  pos: verb
+- lemma: чисток
+  ipa: t͡ʃɪsˈtɔk
+  translation: cleanings (gen pl?)
+  pos: noun
+  gender: f
+- lemma: штора
+  ipa: ˈʃtɔrɐ
+  translation: curtain
+  pos: noun
+  gender: f

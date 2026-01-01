@@ -1,28 +1,3 @@
----
-module: b2-56
-title: "Синоніми: Розмір і Масштаб"
-subtitle: "Synonyms - Size and Scale"
-version: "1.0"
-phase: "B2.2 [Phraseology & Synonymy]"
-pedagogy: "CBI"
-duration: 90
-transliteration: none
-immersion: 100
-tags:
-  - vocabulary
-  - synonyms
-  - size
-grammar:
-  - "Nuances in size adjectives"
-  - "Intensifiers and scale"
-objectives:
-  - "Учень може розрізняти відтінки значень синонімів на позначення розміру"
-  - "Учень вміє вживати лексику масштабу в публіцистичному та художньому регістрах"
-vocabulary_count: 35
-register: "публіцистичний"
-vocab_count: 77
----
-
 # Синоніми: Розмір і Масштаб
 
 > 🎯 **Чому це важливо?**

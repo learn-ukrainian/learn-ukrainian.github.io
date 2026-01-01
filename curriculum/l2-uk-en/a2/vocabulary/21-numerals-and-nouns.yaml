@@ -1,0 +1,106 @@
+module: 21-numerals-and-nouns
+level: A2
+version: '2.0'
+items:
+- lemma: автор
+  ipa: ˈɑu̯tor
+  translation: author
+  pos: noun
+  gender: m
+- lemma: груша
+  ipa: ˈhruʃɐ
+  translation: pear
+  pos: noun
+  gender: f
+- lemma: детектив
+  ipa: detekˈtɪʋ
+  translation: detective
+  pos: noun
+  gender: m
+- lemma: диня
+  ipa: ˈdɪnʲɐ
+  translation: melon
+  pos: noun
+  gender: f
+- lemma: зона
+  ipa: ˈzɔnɐ
+  translation: zone
+  pos: noun
+  gender: f
+- lemma: компота
+  ipa: komˈpɔtɐ
+  translation: compote (gen)
+  pos: noun
+  gender: m
+- lemma: комікс
+  ipa: ˈkɔmʲiks
+  translation: comic book
+  pos: noun
+  gender: m
+- lemma: котлета
+  ipa: kotˈlɛtɐ
+  translation: cutlet; mental
+  pos: noun
+  gender: m
+- lemma: логічний
+  ipa: loˈɦʲit͡ʃnɪj
+  translation: logical
+  pos: adj
+- lemma: миска
+  ipa: ˈmɪskɐ
+  translation: bowl
+  pos: noun
+  gender: f
+- lemma: морква
+  ipa: ˈmɔrkʋɐ
+  translation: carrot
+  pos: noun
+  gender: f
+- lemma: огірка
+  ipa: oˈhʲirkɐ
+  translation: cucumber (gen)
+  pos: noun
+  gender: m
+- lemma: порахувати
+  ipa: porɐxuˈʋɑte
+  translation: to count (perf)
+  pos: verb
+  gender: m
+- lemma: порція
+  ipa: ˈpɔrt͡sʲijɐ
+  translation: portion
+  pos: noun
+  gender: f
+- lemma: піріжка
+  ipa: pʲiˈrʲiʒkɐ
+  translation: pie/patty (gen/typo?)
+  pos: noun
+  gender: m
+- lemma: роман
+  ipa: roˈmɑn
+  translation: novel
+  pos: noun
+  gender: m
+- lemma: сить
+  ipa: sʲitʲ
+  translation: satiety? (typo?)
+  pos: noun
+  gender: m
+- lemma: складний
+  ipa: sklɐdˈnɪj
+  translation: complex; difficult
+  pos: adj
+- lemma: цінність
+  ipa: ˈt͡sʲinʲːisʲtʲ
+  translation: value
+  pos: noun
+  gender: f
+- lemma: числівник
+  ipa: t͡ʃɪsˈlʲiʋnɪk
+  translation: numeral
+  pos: noun
+  gender: m
+- lemma: якийсь
+  ipa: jɐˈkɪjsʲ
+  translation: some; a certain
+  pos: other

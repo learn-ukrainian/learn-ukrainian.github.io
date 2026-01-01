@@ -1,34 +1,3 @@
----
-module: b2-83
-title: "Синтез: Витоки"
-subtitle: "Від Трипілля до Речі Посполитої — Безперервність народу"
-version: "1.0"
-phase: "B2.3a [Ukrainian History] Synthesis"
-pedagogy: "CBI"
-register: "публіцистичний"
-duration: 90
-transliteration: "none"
-tags:
-  - history
-  - synthesis
-  - checkpoint
-  - trypillia
-  - kyivan-rus
-  - mongol-invasion
-  - galicia-volhynia
-  - lithuania
-  - commonwealth
-grammar:
-  - "Historical narrative synthesis"
-  - "Argumentative writing structures"
-objectives:
-  - "Learner can synthesize historical themes across eras from Trypillia to Commonwealth"
-  - "Learner can construct historical arguments with evidence from primary sources"
-  - "Learner can identify continuities in Ukrainian history and deconstruct colonial myths"
-vocabulary_count: 35
-vocab_count: 44
----
-
 # Синтез: Витоки
 
 > 🎯 **Чому це важливо?**

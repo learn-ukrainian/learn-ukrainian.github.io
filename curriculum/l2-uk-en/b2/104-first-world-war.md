@@ -1,27 +1,3 @@
----
-id: 104-first-world-war
-title: "Перша світова війна: Брат проти брата"
-description: "Українці у Першій світовій війні. Трагедія розділеного народу та народження військової еліти (Січових Стрільців)."
-slug: "first-world-war"
-focus: "history"
-pedagogy: "CBI"
-duration: "45 min"
-transliteration: none
-vocabulary_count: 25
-tags:
-  - "history"
-  - "war"
-  - "USS"
-grammar:
-  - "Military Vocabulary"
-  - "Past Tense in Narrative"
-objectives:
-  - "Зрозуміти трагедію розділеного народу"
-  - "Вивчити історію Легіону УСС"
-  - "Опанувати військову лексику"
-vocab_count: 84
----
-
 # Перша світова війна: Брат проти брата
 
 ## Цілі уроку

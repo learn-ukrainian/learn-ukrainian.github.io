@@ -1,6 +1,15 @@
 # Audit Report: 09-aspect-future.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
+**Phase:** B1.1 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): напевно, сподіваюся, вирішив, часом, мабуть...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1856/1500
@@ -10,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 29/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,16 +46,10 @@
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.8%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Вид у майбутньому часі** | ⚪️ | 9 | Skipped |
+| **Intro/Narrative** | ✅ | 9 | Included in Core |
 | **Тест** | ⚪️ | 166 | Skipped |
 | **Пояснення** | ⚪️ | 0 | Skipped |
 | **Три форми майбутнього часу** | ⚪️ | 65 | Skipped |
@@ -66,4 +69,3 @@
 | **Коли що використовувати** | ⚪️ | 0 | Skipped |
 | **Практична порада** | ⚪️ | 24 | Skipped |
 | **Самоперевірка** | ⚪️ | 244 | Skipped |
-| **Словник** | ⚪️ | 0 | Skipped |

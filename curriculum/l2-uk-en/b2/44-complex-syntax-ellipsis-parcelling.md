@@ -1,31 +1,3 @@
----
-module: b2-44
-title: "Складний синтаксис: еліпсис і парцеляція"
-subtitle: "Omitted words and stylistic fragmentation"
-version: "1.0"
-phase: "B2.2 [Phraseology & Synonymy]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - syntax
-  - stylistics
-  - literature
-grammar:
-  - "Ellipsis (еліпсис/пропуск) - omission of understood words"
-  - "Parcelling (парцеляція) - stylistic fragmentation with periods"
-  - "Expressive syntax in literature and speech"
-objectives:
-  - "Learner can recognize elliptical constructions in authentic Ukrainian texts"
-  - "Learner can produce parcelled sentences for stylistic effect"
-  - "Learner can recover omitted elements in elliptical speech"
-  - "Learner can transform standard sentences using parcelling"
-vocabulary_count: 36
-register: "художній"
-vocab_count: 51
----
-
 # Складний синтаксис: еліпсис і парцеляція
 
 > 🎯 **Чому це важливо?**

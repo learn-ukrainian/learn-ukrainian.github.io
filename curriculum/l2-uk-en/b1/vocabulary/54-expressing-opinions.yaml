@@ -1,0 +1,73 @@
+module: 54-expressing-opinions
+level: B1
+version: '2.0'
+items:
+- lemma: важливіше
+  ipa: /vaʒlɪˈvʲiʃɛ/
+  translation: more important
+  pos: adv
+- lemma: дискусії
+  ipa: /dɪsˈkusʲiji/
+  translation: discussions
+  pos: noun
+  gender: f
+- lemma: діти
+  ipa: /ˈdʲitɪ/
+  translation: children
+  pos: verb
+- lemma: кво
+  ipa: /kvɔ/
+  translation: quo
+  pos: noun
+  gender: m
+- lemma: найменш
+  ipa: /najˈmɛnʃ/
+  translation: least
+  pos: adv
+- lemma: найскладніше
+  ipa: /najskladˈnʲiʃɛ/
+  translation: most difficult
+  pos: noun
+  gender: n
+- lemma: найслабше
+  ipa: /najˈslabʃɛ/
+  translation: weakest
+  pos: noun
+  gender: n
+- lemma: неввічливість
+  ipa: /nɛu̯ˈvʲit͡ʃlɪvisʲtʲ/
+  translation: impoliteness
+  pos: noun
+  gender: f
+- lemma: незгода
+  ipa: /nɛzˈhɔda/
+  translation: disagreement
+  pos: noun
+  gender: f
+- lemma: незгід
+  ipa: /nɛzˈhid/
+  translation: disagreements (gen.)
+  pos: noun
+  gender: f
+- lemma: педагога
+  ipa: /pɛdaˈhɔha/
+  translation: pedagogue (gen.)
+  pos: noun
+  gender: m
+- lemma: персоналізувати
+  ipa: /pɛrsɔnalʲizuˈvatɪ/
+  translation: to personalize
+  pos: verb
+- lemma: сада
+  ipa: /ˈsada/
+  translation: garden (gen.)
+  pos: propn
+  gender: m
+- lemma: схвалювати
+  ipa: /sxvaˈlʲuvatɪ/
+  translation: to approve
+  pos: verb
+- lemma: формальніше
+  ipa: /fɔrˈmalʲnʲiʃɛ/
+  translation: more formally
+  pos: adv

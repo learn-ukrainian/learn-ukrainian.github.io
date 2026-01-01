@@ -1,26 +1,3 @@
----
-module: b1-52
-title: "Абстрактні концепції: ідеї та думки"
-subtitle: "Abstract Concepts: Ideas and Thoughts"
-version: "1.0"
-phase: "B1.5 Vocabulary Expansion I"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "noun collocations with abstract vocabulary"
-tags:
-  - vocabulary
-  - abstract
-objectives:
-  - "Learner can use 35 abstract concept words in context"
-  - "Learner can distinguish between ідея/думка/концепція/теорія"
-  - "Learner can form natural collocations with abstract nouns"
-vocabulary_count: 35
-vocab_count: 63
----
-
 # Абстрактні концепції: ідеї та думки
 
 > 🎯 **Чому це важливо?**

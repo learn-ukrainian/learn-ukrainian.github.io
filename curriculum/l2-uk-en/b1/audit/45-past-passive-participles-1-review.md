@@ -1,6 +1,15 @@
 # Audit Report: 45-past-passive-participles-1.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
+**Phase:** B1.4 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): відкритий, прочитаний, забутий, сказаний, улюблений...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 1473/1500 (27 short)
@@ -10,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 59/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,16 +46,10 @@
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.2%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Пасивні дієприкметники минулого часу** | ⚪️ | 63 | Skipped |
+| **Intro/Narrative** | ✅ | 63 | Included in Core |
 | **Діагностика** | ✅ | 79 | Included in Core |
 | **Теоретичне пояснення** | ⚪️ | 391 | Skipped |
 | **Практика** | ⚪️ | 173 | Skipped |
@@ -56,4 +59,3 @@
 | **Порівняння з активними конструкціями** | ⚪️ | 29 | Skipped |
 | **Практичні поради для запам'ятовування** | ⚪️ | 152 | Skipped |
 | **Підсумок** | ✅ | 59 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

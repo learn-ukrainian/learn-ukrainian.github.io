@@ -1,27 +1,3 @@
----
-module: b1-14
-title: "Інтеграція виду: практика"
-subtitle: "Aspect Integration Practice"
-version: "2.0"
-phase: "B1.1 Aspect"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - aspect
-  - integration
-grammar:
-  - "All aspect contexts combined"
-  - "Temporal connectors with aspect"
-objectives:
-  - "Learner can integrate all aspect knowledge in narratives"
-  - "Learner can use temporal connectors with correct aspect"
-  - "Learner can mix aspects naturally in complex texts"
-vocabulary_count: 25
-vocab_count: 69
----
-
 # Інтеграція виду: практика
 
 > 🎯 **Чому це важливо?**

@@ -1,0 +1,222 @@
+module: 24-motion-practice-integration
+level: B1
+version: '2.0'
+items:
+- lemma: автоматизм
+  ipa: /autɔmaˈtɪzm/
+  translation: automatism
+  pos: noun
+  gender: m
+- lemma: автострад
+  ipa: /autɔˈstrad/
+  translation: highways (gen. pl.)
+  pos: noun
+  gender: f
+- lemma: автострада
+  ipa: /autɔˈstrada/
+  translation: highway
+  pos: noun
+  gender: f
+- lemma: блимнути
+  ipa: /ˈblɪmnutɪ/
+  translation: to blink
+  pos: verb
+- lemma: бориспіль
+  ipa: /bɔˈrɪspilʲ/
+  translation: Boryspil
+  pos: propn
+  gender: m
+- lemma: біббліотека
+  ipa: /biblʲiɔˈtɛka/
+  translation: library (typo)
+  pos: noun
+  gender: f
+- lemma: варійка
+  ipa: /vaˈrʲijka/
+  translation: emergency lights (typo)
+  pos: noun
+  gender: f
+- lemma: водіння
+  ipa: /vɔˈdʲinʲːa/
+  translation: driving
+  pos: noun
+  gender: n
+- lemma: галактика
+  ipa: /haˈlaktɪka/
+  translation: galaxy
+  pos: noun
+  gender: f
+- lemma: грунтівка
+  ipa: /hrunˈtʲiu̯ka/
+  translation: dirt road
+  pos: noun
+  gender: f
+- lemma: давшати
+  ipa: /dau̯ˈʃatɪ/
+  translation: to lengthen (typo)
+  pos: verb
+- lemma: дальній
+  ipa: /ˈdalʲnʲij/
+  translation: long-distance
+  pos: adj
+  gender: n
+- lemma: дублювати
+  ipa: /dublʲuˈvatɪ/
+  translation: to duplicate
+  pos: verb
+- lemma: залізничний
+  ipa: /zalʲizˈnɪt͡ʃnɪj/
+  translation: railway (adj)
+  pos: adj
+  gender: m
+- lemma: командний
+  ipa: /kɔˈmandnɪj/
+  translation: command (adj)
+  pos: adj
+  gender: m
+- lemma: компас
+  ipa: /ˈkɔmpas/
+  translation: compass
+  pos: noun
+  gender: m
+- lemma: кінетичний
+  ipa: /kʲinɛˈtɪt͡ʃnɪj/
+  translation: kinetic
+  pos: adj
+  gender: f
+- lemma: лайфхак
+  ipa: /lajfˈxak/
+  translation: lifehack
+  pos: propn
+  gender: m
+- lemma: лізити
+  ipa: /ˈlʲizɪtɪ/
+  translation: to climb (typo)
+  pos: verb
+- lemma: матриця
+  ipa: /ˈmatrɪt͡sʲa/
+  translation: matrix
+  pos: noun
+  gender: f
+- lemma: мерзнути
+  ipa: /ˈmɛrznutɪ/
+  translation: to freeze
+  pos: verb
+- lemma: молекула
+  ipa: /mɔˈlɛkula/
+  translation: molecule
+  pos: noun
+  gender: f
+- lemma: міжміський
+  ipa: /mʲiʒmʲisʲˈkɪj/
+  translation: intercity
+  pos: adj
+  gender: n
+- lemma: мікроавтобус
+  ipa: /mikrɔau̯ˈtɔbus/
+  translation: minibus
+  pos: noun
+  gender: m
+- lemma: навігаційний
+  ipa: /navihaˈt͡sʲijnɪj/
+  translation: navigation (adj)
+  pos: adj
+  gender: f
+- lemma: найти
+  ipa: /najˈtɪ/
+  translation: to find
+  pos: verb
+  gender: f
+- lemma: намистина
+  ipa: /namɪsˈtɪna/
+  translation: bead
+  pos: noun
+  gender: f
+- lemma: нанизувати
+  ipa: /naˈnɪzuvatɪ/
+  translation: to string
+  pos: verb
+- lemma: об'їжджати
+  ipa: /ɔbjiʒˈdʒatɪ/
+  translation: to drive around
+  pos: verb
+- lemma: одіссея
+  ipa: /ɔdiˈsɛja/
+  translation: odyssey
+  pos: noun
+  gender: f
+- lemma: пхатися
+  ipa: /ˈpxatɪsʲa/
+  translation: to push oneself
+  pos: verb
+- lemma: пікнік
+  ipa: /pikˈnʲik/
+  translation: picnic
+  pos: noun
+  gender: m
+- lemma: ровесник
+  ipa: /rɔˈvɛsnɪk/
+  translation: peer
+  pos: noun
+  gender: m
+- lemma: розклати
+  ipa: /rɔzˈklatɪ/
+  translation: to lay out (typo)
+  pos: verb
+- lemma: сеньйор
+  ipa: /sɛnʲˈjɔr/
+  translation: senior
+  pos: noun
+  gender: m
+- lemma: соватися
+  ipa: /ˈsɔvatɪsʲa/
+  translation: to fidget
+  pos: verb
+- lemma: старт
+  ipa: /start/
+  translation: start
+  pos: noun
+  gender: m
+- lemma: стрімко
+  ipa: /ˈstrʲimkɔ/
+  translation: rapidly
+  pos: adv
+- lemma: таксиста
+  ipa: /takˈsɪsta/
+  translation: taxi driver (gen.)
+  pos: noun
+  gender: m
+- lemma: трамвая
+  ipa: /tramˈvaja/
+  translation: tram (gen.)
+  pos: noun
+  gender: m
+- lemma: трасі
+  ipa: /ˈtrasʲi/
+  translation: highway (loc.)
+  pos: noun
+  gender: m
+- lemma: трясти
+  ipa: /trʲasˈtɪ/
+  translation: to shake
+  pos: verb
+- lemma: тріада
+  ipa: /triˈada/
+  translation: triad
+  pos: noun
+  gender: f
+- lemma: чоп
+  ipa: /t͡ʃɔp/
+  translation: Chop/plug
+  pos: propn
+  gender: m
+- lemma: чумацький
+  ipa: /t͡ʃuˈmat͡sʲkɪj/
+  translation: Chumak (adj)
+  pos: adj
+  gender: m
+- lemma: шосе
+  ipa: /ʃɔˈsɛ/
+  translation: highway
+  pos: noun
+  gender: n

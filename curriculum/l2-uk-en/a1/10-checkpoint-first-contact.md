@@ -1,37 +1,3 @@
----
-module: a1-10
-title: 'Checkpoint - First Contact'
-subtitle: 'Can you do the А1.1 skills?'
-version: '2.0'
-phase: 'A1.1'
-focus: checkpoint
-pedagogy: 'Review'
-duration: '45 min'
-transliteration: 'full'
-tags:
-  - checkpoint
-  - review
-  - alphabet
-  - gender
-  - verbs
-  - questions
-  - food
-grammar:
-  - 'Cyrillic alphabet (all 33 letters)'
-  - 'Noun gender (masculine, feminine, neuter)'
-  - 'Present tense Class I (-ати) and Class II (-ити)'
-  - 'Question formation (чи, що, хто, де)'
-  - 'Negation (не)'
-objectives:
-  - 'Demonstrate Cyrillic reading fluency'
-  - 'Identify noun gender by word ending'
-  - 'Conjugate Class I and II verbs correctly'
-  - 'Form questions using question words'
-  - 'Use food vocabulary in practical contexts'
-vocabulary_count: 20
-vocab_count: 20
----
-
 # Checkpoint - First Contact
 
 **Вітаємо!** (vitayemo) You've completed nine modules of Ukrainian. Now let's check: **can you DO the skills?**
@@ -332,24 +298,3 @@ Fill in the customer's responses:
 > - Verbs → Modules 6-8
 > - Questions → Module 7
 > - Food → Module 9
-
-# Vocabulary
-
-| Word       | IPA           | English        | POS  | Gender | Note |
-| ---------- | ------------- | -------------- | ---- | ------ | ---- |
-| американо  | /ɑmɛrɪˈkɑnɔ/  | americano      | noun | с      |      |
-| бажати     | /bɑˈʒɑtɪ/     | to wish/desire | verb | -      |      |
-| газета     | /ɦɑˈzɛtɑ/     | newspaper      | noun | ж      |      |
-| година     | /ɦɔˈdɪnɑ/     | hour/o'clock   | noun | ж      |      |
-| домашній   | /dɔˈmɑʃnʲij/  | home/homemade  | adj  | ч      |      |
-| жити       | /dɔˈmɑʃnʲij/  | to live        | verb | -      |      |
-| журнал     | /ʒʊrˈnɑl/     | magazine       | noun | ч      |      |
-| завдання   | /zɑwˈdɑnʲːɑ/  | task/homework  | noun | с      |      |
-| зелений    | /zɛˈlɛnɪj/    | green          | adj  | ч      |      |
-| лате       | /ˈlɑtɛ/       | latte          | noun | с      |      |
-| меню       | /mɛˈnʲu/      | menu           | noun | с      |      |
-| перевірити | /pɛrɛˈvirɪtɪ/ | to check       | verb | -      |      |
-| чорний     | /ˈt͡ʃɔrnɪj/    | black          | adj  | ч      |      |
-| швидко     | /ˈʃvɪdkɔ/     | fast/quickly   | adv  | -      |      |
-| ще         | /ʃt͡ʃɛ/        | more/yet/still | adv  | -      |      |
-| щось       | /ʃt͡ʃɔsʲ/      | something      | pron | с      |      |

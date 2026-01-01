@@ -1,0 +1,384 @@
+module: 34-word-formation-abstract-nouns
+level: B2
+version: '2.0'
+items:
+  - lemma: ація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: багаторічний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: безнадія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: вдосконалення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: вивчання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: визначання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: виробляння
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: вирощування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: впливання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: втілення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: вчення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: вчительство
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: вчительський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: відповідальн
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: гартувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: горд
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: гордість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: гостинн
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: готува
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: готування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: добро
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: документально
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: дослідницький
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: досягання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: драч
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: екзамень
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: забарвлюва
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: забарвлювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: засвоєння
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: збагачення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: здатн
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: здобуток
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: зусилля
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: класика
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: конкурентоспроможність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: концентрація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: корелювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: ліричний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: можлив
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: мотивувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: навчий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: найбагатший
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: неоцінений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: неоцінний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: обережність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: оптимальний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: освітянин
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: освічени
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: очищати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: педагог
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: перекладання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: переоцінити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: печаль
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: писар
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: писемність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: погордит
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: погордіння
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: подвійний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: подібність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: показ
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: показування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: похідний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: пояснювання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: прибутковість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: публікация
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: публікува
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: публікування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: пітьма
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: розірвання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: різність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: самодисципліна
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: списати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: створювання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: страждання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: хода
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: ходіння
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: шістдесятник
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: юваський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: інтелектуальний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m

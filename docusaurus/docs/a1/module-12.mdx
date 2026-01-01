@@ -20,21 +20,16 @@ import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 
 
-# The Accusative II: People
-
 ## Warm-up
 
 In Module 11, you learned the accusative case for things: я бачу **книгу**, я читаю **газету**. But what about people? Can you say "я бачу студент"? Not quite! When the direct object is a person or animal (we call these **animate nouns**), Ukrainian has a special rule.
 
 Compare these two sentences:
+
 - Я бачу **стіл**. (I see a table.) — inanimate, no change
 - Я бачу **студента**. (I see a student.) — animate, changes to -а!
 
 Why? Because Ukrainian wants to clearly mark **who** you're seeing, not just **what**. This is the animate-inanimate distinction, and it's your key to sounding natural.
-
-
-
-
 
 ## Presentation
 
@@ -45,17 +40,18 @@ Here's the pattern that will save you hours of confusion:
 > **For masculine animate nouns, accusative case = genitive case.**
 
 This means:
+
 - If it's **alive** (person, animal): add **-а** or **-я**
 - If it's **not alive** (object, thing): no change
 
 **Masculine Animate Nouns (People):**
 
-| Nominative (who?) | Accusative (whom?) | Example |
-|-------------------|-------------------|---------|
-| студент | студент**а** | Я бачу **студента**. |
-| друг | друг**а** | Вона знає мого **друга**. |
-| лікар | лікар**а** | Ми чекаємо **лікаря**. |
-| водій | водій**я** | Я бачу **водія**. |
+| Nominative (who?) | Accusative (whom?) | Example                   |
+| ----------------- | ------------------ | ------------------------- |
+| студент           | студент**а**       | Я бачу **студента**.      |
+| друг              | друг**а**          | Вона знає мого **друга**. |
+| лікар             | лікар**а**         | Ми чекаємо **лікаря**.    |
+| водій             | водій**я**         | Я бачу **водія**.         |
 
 > 💡 **Did You Know?**
 >
@@ -67,31 +63,31 @@ This means:
 
 Some masculine nouns already end in -а (like **тато**, **дідусь**, **суддя**). For these, the accusative is **-у**:
 
-| Nominative | Accusative | Example |
-|------------|-----------|---------|
-| тато | тат**у** | Я люблю **тата**. (I love dad.) |
-| дідусь | дідус**я** | Вона бачить **дідуся**. (She sees grandpa.) |
+| Nominative | Accusative | Example                                     |
+| ---------- | ---------- | ------------------------------------------- |
+| тато       | тат**у**   | Я люблю **тата**. (I love dad.)             |
+| дідусь     | дідус**я** | Вона бачить **дідуся**. (She sees grandpa.) |
 
 ### Feminine Animate Nouns — No Change!
 
 Here's the good news: **feminine animate nouns work exactly like feminine inanimate nouns**. They follow the regular -а → -у pattern:
 
-| Nominative | Accusative | Example |
-|------------|-----------|---------|
-| подруга | подругу | Я бачу **подругу**. |
-| студентка | студентку | Ми знаємо **студентку**. |
-| лікарка | лікарку | Він чекає **лікарку**. |
+| Nominative | Accusative | Example                  |
+| ---------- | ---------- | ------------------------ |
+| подруга    | подругу    | Я бачу **подругу**.      |
+| студентка  | студентку  | Ми знаємо **студентку**. |
+| лікарка    | лікарку    | Він чекає **лікарку**.   |
 
 So you already know how to handle feminine animate nouns from Module 11!
 
 ### Summary Table: Animate vs Inanimate
 
-| Gender | Type | Nominative | Accusative | Example |
-|--------|------|-----------|-----------|---------|
-| **Masculine** | Inanimate | стіл | стіл | Я бачу **стіл**. |
-| **Masculine** | Animate | студент | студент**а** | Я бачу **студента**. |
-| **Feminine** | Inanimate | книга | книг**у** | Я бачу **книгу**. |
-| **Feminine** | Animate | студентка | студентк**у** | Я бачу **студентку**. |
+| Gender        | Type      | Nominative | Accusative    | Example               |
+| ------------- | --------- | ---------- | ------------- | --------------------- |
+| **Masculine** | Inanimate | стіл       | стіл          | Я бачу **стіл**.      |
+| **Masculine** | Animate   | студент    | студент**а**  | Я бачу **студента**.  |
+| **Feminine**  | Inanimate | книга      | книг**у**     | Я бачу **книгу**.     |
+| **Feminine**  | Animate   | студентка  | студентк**у** | Я бачу **студентку**. |
 
 ## Practice
 
@@ -226,11 +222,119 @@ These verbs typically take **people** as objects (accusative case):
 
 ---
 
+
+
+## 🎯 Activities
+
+### People in Your Life
+
+<MatchUp
+  title="People in Your Life"
+  pairs={JSON.parse(`[{"left": "мама", "right": "mother"}, {"left": "тато", "right": "father"}, {"left": "брат", "right": "brother"}, {"left": "сестра", "right": "sister"}, {"left": "син", "right": "son"}, {"left": "донька", "right": "daughter"}, {"left": "дідусь", "right": "grandfather"}, {"left": "бабуся", "right": "grandmother"}]`)}
+/>
+
+### Animate vs Inanimate
+
+<GroupSort
+  title="Animate vs Inanimate"
+  groups={JSON.parse(`{"Animate (Who? - Хто?)": ["хлопчик", "дівчинка", "студент", "вчитель", "батько", "мати"], "Inanimate (What? - Що?)": ["стіл", "книга", "вікно", "паспорт", "квиток", "поїзд"]}`)}
+/>
+
+### Accusative Endings
+
+<Quiz
+  title="Accusative Endings"
+  questions={JSON.parse(`[{"question": "Which form is correct for \\\"I see a female friend\\\"?", "options": [{"text": "подругу", "correct": true}, {"text": "подруга", "correct": false}, {"text": "подруги", "correct": false}, {"text": "подрузі", "correct": false}]}, {"question": "Which form is correct for \\\"I see a brother\\\"?", "options": [{"text": "брат", "correct": false}, {"text": "брата", "correct": true}, {"text": "брату", "correct": false}, {"text": "братом", "correct": false}]}, {"question": "Which form is correct for \\\"I see a mother\\\"?", "options": [{"text": "мама", "correct": false}, {"text": "маму", "correct": true}, {"text": "мами", "correct": false}, {"text": "мамі", "correct": false}]}, {"question": "Which form is correct for \\\"I see a father\\\"?", "options": [{"text": "тато", "correct": false}, {"text": "тата", "correct": true}, {"text": "тату", "correct": false}, {"text": "тата (again)", "correct": false}]}, {"question": "Which form is correct for \\\"I see an uncle\\\"?", "options": [{"text": "дядько", "correct": false}, {"text": "дядька", "correct": true}, {"text": "дядьку", "correct": false}, {"text": "дядьком", "correct": false}]}, {"question": "Which form is correct for \\\"I see a teacher\\\"?", "options": [{"text": "вчитель", "correct": false}, {"text": "вчителя", "correct": true}, {"text": "вчителю", "correct": false}, {"text": "вчителем", "correct": false}]}, {"question": "Which form is correct for \\\"I see a sister\\\"?", "options": [{"text": "сестра", "correct": false}, {"text": "сестру", "correct": true}, {"text": "сестри", "correct": false}, {"text": "сестрі", "correct": false}]}, {"question": "Which form is correct for \\\"I see a son\\\"?", "options": [{"text": "син", "correct": false}, {"text": "сина", "correct": true}, {"text": "сину", "correct": false}, {"text": "сином", "correct": false}]}, {"question": "Which form is correct for \\\"I see a daughter\\\"?", "options": [{"text": "донька", "correct": false}, {"text": "доньку", "correct": true}, {"text": "доньки", "correct": false}, {"text": "доньці", "correct": false}]}, {"question": "Which form is correct for \\\"I see a grandfather\\\"?", "options": [{"text": "дідусь", "correct": false}, {"text": "дідуся", "correct": true}, {"text": "дідусю", "correct": false}, {"text": "дідусем", "correct": false}]}, {"question": "Which form is correct for \\\"I see a grandmother\\\"?", "options": [{"text": "бабуся", "correct": false}, {"text": "бабусю", "correct": true}, {"text": "бабусі", "correct": false}, {"text": "бабусьою", "correct": false}]}, {"question": "Which form is correct for \\\"I see a friend\\\" (male)?", "options": [{"text": "друг", "correct": false}, {"text": "друга", "correct": true}, {"text": "другу", "correct": false}, {"text": "другом", "correct": false}]}]`)}
+/>
+
+### Animate Accusative Rules
+
+<TrueFalse
+  title="Animate Accusative Rules"
+  items={JSON.parse(`[{"statement": "Masculine animate nouns in accusative case end in -а or -я.", "isTrue": true, "explanation": "Correct! Animate accusative = genitive for masculine nouns."}, {"statement": "Feminine animate nouns have special accusative endings.", "isTrue": false, "explanation": "Incorrect! Feminine animate nouns use the same -у/-ю pattern as inanimate nouns."}, {"statement": "\\\"Я бачу студента\\\" is correct.", "isTrue": true, "explanation": "Correct! Animate masculine: студент → студента."}, {"statement": "\\\"Я знаю лікар\\\" is correct.", "isTrue": false, "explanation": "Incorrect! Should be \\\"лікаря\\\" (animate accusative)."}, {"statement": "\\\"Вона чекає подругу\\\" is correct.", "isTrue": true, "explanation": "Correct! Feminine accusative: подруга → подругу."}, {"statement": "Inanimate masculine nouns change in accusative case.", "isTrue": false, "explanation": "Incorrect! Inanimate masculine nouns stay the same (стіл → стіл)."}, {"statement": "The animate-inanimate distinction only affects masculine nouns.", "isTrue": true, "explanation": "Correct! Feminine nouns follow the same pattern regardless of animacy."}, {"statement": "\\\"Він бачить водія\\\" is correct.", "isTrue": true, "explanation": "Correct! Animate masculine: водій → водія."}, {"statement": "\\\"Ми чекаємо вчитель\\\" is correct.", "isTrue": false, "explanation": "Incorrect! Should be \\\"вчителя\\\" (animate accusative)."}, {"statement": "Accusative = genitive for masculine animate nouns.", "isTrue": true, "explanation": "Correct! This is the key rule for animate objects."}, {"statement": "\\\"Я люблю директор\\\" is correct.", "isTrue": false, "explanation": "Incorrect! Should be \\\"директора\\\" (animate accusative)."}, {"statement": "\\\"Ти знаєш мою сусідку\\\" is correct.", "isTrue": true, "explanation": "Correct! Feminine accusative: сусідка → сусідку."}]`)}
+/>
+
+### Complete with Animate Accusative
+
+<FillIn
+  title="Complete with Animate Accusative"
+  items={JSON.parse(`[{"sentence": "Я бачу ___ у магазині.", "answer": "колегу", "options": ["колега", "колегу", "колеги", "колезі"]}, {"sentence": "Вона знає цього ___.", "answer": "студента", "options": ["студент", "студента", "студенту", "студенті"]}, {"sentence": "Ми чекаємо ___.", "answer": "лікаря", "options": ["лікар", "лікаря", "лікару", "лікарі"]}, {"sentence": "Ти бачиш мою ___?", "answer": "подругу", "options": ["подруга", "подругу", "подруги", "подрузі"]}, {"sentence": "Він любить свою ___.", "answer": "вчительку", "options": ["вчителька", "вчительку", "вчительки", "вчительці"]}, {"sentence": "Я шукаю ___.", "answer": "водія", "options": ["водій", "водія", "водію", "водієві"]}, {"sentence": "Вона бачить нашого ___.", "answer": "сусіда", "options": ["сусід", "сусіда", "сусіду", "сусідові"]}, {"sentence": "Ми знаємо цього ___.", "answer": "директора", "options": ["директор", "директора", "директору", "директорі"]}, {"sentence": "Ти чекаєш ___?", "answer": "офіціанта", "options": ["офіціант", "офіціанта", "офіціанту", "офіціанті"]}, {"sentence": "Він бачить ___ на вулиці.", "answer": "пасажира", "options": ["пасажир", "пасажира", "пасажиру", "пасажирі"]}, {"sentence": "Я люблю свого ___.", "answer": "друга", "options": ["друг", "друга", "другу", "другові"]}, {"sentence": "Вона знає цю ___.", "answer": "студентку", "options": ["студентка", "студентку", "студентки", "студентці"]}, {"sentence": "Ми бачимо ___.", "answer": "гостя", "options": ["гість", "гостя", "гостю", "гості"]}, {"sentence": "Ти чекаєш свою ___?", "answer": "сусідку", "options": ["сусідка", "сусідку", "сусідки", "сусідці"]}]`)}
+/>
+
+### Sentences in Context
+
+<FillIn
+  title="Sentences in Context"
+  items={JSON.parse(`[{"sentence": "У кав'ярні я бачу ___.", "answer": "офіціанта", "options": ["офіціант", "офіціанта", "офіціанту", "офіціанті"]}, {"sentence": "Вона знає мого ___ з університету.", "answer": "друга", "options": ["друг", "друга", "другу", "другові"]}, {"sentence": "Ми чекаємо ___ біля школи.", "answer": "вчителя", "options": ["вчитель", "вчителя", "вчителю", "вчителеві"]}, {"sentence": "Ти бачиш ___ на зупинці?", "answer": "водія", "options": ["водій", "водія", "водію", "водієві"]}, {"sentence": "Він любить свою ___.", "answer": "лікарку", "options": ["лікарка", "лікарку", "лікарки", "лікарці"]}, {"sentence": "Я шукаю свого ___.", "answer": "колегу", "options": ["колега", "колегу", "колеги", "колезі"]}, {"sentence": "Вона бачить ___ у магазині.", "answer": "продавця", "options": ["продавець", "продавця", "продавцю", "продавцеві"]}, {"sentence": "Ми знаємо цього ___.", "answer": "менеджера", "options": ["менеджер", "менеджера", "менеджеру", "менеджерові"]}, {"sentence": "Ти чекаєш свою ___?", "answer": "подругу", "options": ["подруга", "подругу", "подруги", "подрузі"]}, {"sentence": "Він бачить ___ біля метро.", "answer": "пасажира", "options": ["пасажир", "пасажира", "пасажиру", "пасажирі"]}, {"sentence": "Я люблю нашого ___.", "answer": "директора", "options": ["директор", "директора", "директору", "директорі"]}, {"sentence": "Вона знає цього ___?", "answer": "гостя", "options": ["гість", "гостя", "гостю", "гості"]}]`)}
+/>
+
+### Sentences with Animate Objects
+
+<Quiz
+  title="Sentences with Animate Objects"
+  questions={JSON.parse(`[{"question": "Correct sentence order for: \\\"I see the student...\\\"", "options": [{"text": "Я бачу студента у бібліотеці", "correct": true}, {"text": "бачу Я студента у бібліотеці", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"She knows my friend well.\\\"", "options": [{"text": "Вона добре знає мого друга", "correct": true}, {"text": "добре Вона знає мого друга", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"We're waiting for the...\\\"", "options": [{"text": "Ми чекаємо лікаря у лікарні", "correct": true}, {"text": "чекаємо Ми лікаря у лікарні", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"Do you see the...\\\"", "options": [{"text": "Ти бачиш офіціанта там", "correct": true}, {"text": "бачиш Ти офіціанта там", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"He loves his teacher.\\\"", "options": [{"text": "Він любить свою вчительку", "correct": true}, {"text": "любить Він свою вчительку", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"I'm looking for our driver.\\\"", "options": [{"text": "Я шукаю нашого водія", "correct": true}, {"text": "шукаю Я нашого водія", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"We know this director.\\\"", "options": [{"text": "Ми знаємо цього директора", "correct": true}, {"text": "знаємо Ми цього директора", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"She sees the neighbor...\\\"", "options": [{"text": "Вона бачить сусіда кожного ранку", "correct": true}, {"text": "бачить Вона сусіда кожного ранку", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"Are you waiting for...\\\"", "options": [{"text": "Ти чекаєш свою подругу", "correct": true}, {"text": "чекаєш Ти свою подругу", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"I love my colleague.\\\"", "options": [{"text": "Я люблю мого колегу", "correct": true}, {"text": "люблю Я мого колегу", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"We see the passenger...\\\"", "options": [{"text": "Ми бачимо пасажира біля метро", "correct": true}, {"text": "бачимо Ми пасажира біля метро", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"He knows this student...\\\"", "options": [{"text": "Він знає цю студентку з школи", "correct": true}, {"text": "знає Він цю студентку з школи", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}]`)}
+/>
+
+### More Complex Sentence Order
+
+<Quiz
+  title="More Complex Sentence Order"
+  questions={JSON.parse(`[{"question": "Correct sentence order for: \\\"I see my friend...\\\"", "options": [{"text": "Я бачу мого друга та його подругу", "correct": true}, {"text": "бачу Я мого друга та його подругу", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"We're waiting for our...\\\"", "options": [{"text": "Ми чекаємо нашого вчителя біля університету", "correct": true}, {"text": "чекаємо Ми нашого вчителя біля університету", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"She knows this...\\\"", "options": [{"text": "Вона знає цього студента у групі", "correct": true}, {"text": "знає Вона цього студента у групі", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"Do you see that...\\\"", "options": [{"text": "Ти бачиш того лікаря там", "correct": true}, {"text": "бачиш Ти того лікаря там", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"He really loves his neighbor.\\\"", "options": [{"text": "Він дуже любить свою сусідку", "correct": true}, {"text": "дуже Він любить свою сусідку", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"I'm looking for our...\\\"", "options": [{"text": "Я шукаю нашого директора і менеджера", "correct": true}, {"text": "шукаю Я нашого директора і менеджера", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"We know this driver well.\\\"", "options": [{"text": "Ми добре знаємо цього водія", "correct": true}, {"text": "добре Ми знаємо цього водія", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}, {"question": "Correct sentence order for: \\\"She sees the waiter...\\\"", "options": [{"text": "Вона бачить офіціанта та офіціантку", "correct": true}, {"text": "бачить Вона офіціанта та офіціантку", "correct": false}, {"text": "Incorrect order for this sentence", "correct": false}]}]`)}
+/>
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| андрій | /ɑnˈdrij/ | Andriy | name | ч |  |
+| бібліотека | /biblʲiɔˈtɛkɑ/ | library | noun | ж |  |
+| вибачити | /vɪˈbɑt͡ʃɪtɪ/ | to forgive/excuse | verb |  |  |
+| водій | /vɔˈdij/ | driver | noun | ч |  |
+| возити | /vɔˈzɪtɪ/ | to drive/transport | verb |  |  |
+| вулиця | /ˈvulɪt͡sʲɑ/ | street | noun | ж |  |
+| вчитель | /ˈwt͡ʃɪtɛlʲ/ | teacher (m) | noun | ч |  |
+| вчителька | /ˈwt͡ʃɪtɛlʲkɑ/ | teacher (f) | noun | ж |  |
+| гість | /ɦisʲtʲ/ | guest | noun | ч |  |
+| директор | /dɪˈrɛktɔr/ | director | noun | ч |  |
+| директорка | /dɪˈrɛktɔrkɑ/ | director (f) | noun | ж |  |
+| додому | /dɔˈdɔmu/ | homewards | adv |  |  |
+| дошка | /ˈdɔʃkɑ/ | board/blackboard | noun | ж |  |
+| дружина | /druˈʒɪnɑ/ | wife | noun | ж |  |
+| дідусь | /diˈdusʲ/ | grandpa | noun | ч |  |
+| замовити | /zɑˈmɔvɪtɪ/ | to order | verb |  |  |
+| його | /jɔˈɦɔ/ | his/him | pron |  |  |
+| кожний | /ˈkɔʒnɪj/ | every/each | pron | ч |  |
+| колега | /kɔˈlɛɦɑ/ | colleague | noun | ч |  |
+| коридор | /kɔrɪˈdɔr/ | corridor | noun | ч |  |
+| може | /ˈmɔʒɛ/ | maybe | adv |  |  |
+| офіціант | /ɔfit͡sʲiˈɑnt/ | waiter | noun | ч |  |
+| пасажир | /pɑsɑˈʒɪr/ | passenger | noun | ч |  |
+| питати | /pɪˈtɑtɪ/ | to ask | verb |  |  |
+| практикувати | /prɑktɪkuˈvɑtɪ/ | to practice | verb |  |  |
+| привітний | /prɪˈvitnɪj/ | friendly/welcoming | adj | ч |  |
+| разом | /ˈrɑzɔm/ | together | adv |  |  |
+| спізнюватися | /spizɲuˈvɑtɪsʲɑ/ | to be late | verb |  |  |
+| суддя | /sudˈdʲɑ/ | judge | noun | ч |  |
+| сусід | /suˈsid/ | neighbor (m) | noun | ч |  |
+| сусідка | /suˈsidkɑ/ | neighbor (f) | noun | ж |  |
+| сідати | /siˈdɑtɪ/ | to sit down | verb |  |  |
+| тато | /ˈtɑtɔ/ | dad | noun | ч |  |
+| тепер | /tɛˈpɛr/ | now | adv |  |  |
+| учениця | /ut͡ʃɛˈnɪt͡sʲɑ/ | student (school, f) | noun | ж |  |
+| учень | /ˈut͡ʃɛnʲ/ | student (school, m) | noun | ч |  |
+| хтось | /xtɔsʲ/ | someone | pron |  |  |
+| цікаво | /t͡sʲiˈkɑvɔ/ | interestingly | adv |  |  |
+| чудовий | /t͡ʃuˈdɔvɪj/ | wonderful | adj | ч |  |
+| школа | /ˈʃkɔlɑ/ | school | noun | ж |  |
+| шукати | /ʃuˈkɑtɪ/ | to look for | verb |  |  |
+| ідея | /iˈdɛjɑ/ | idea | noun | ж |  |
+
 ## 📋 Summary
 
 In this module, you learned the **animate accusative** — how Ukrainian marks people and animals as direct objects.
 
 **Key Rules:**
+
 1. **Masculine animate nouns** → accusative = genitive (add **-а/-я**)
    - студент → **студента**
    - друг → **друга**
@@ -242,6 +346,7 @@ In this module, you learned the **animate accusative** — how Ukrainian marks p
 **Why it matters:** This distinction helps Ukrainian clearly mark **who** is affected by an action, making sentences precise and unambiguous.
 
 **You can now:**
+
 - Say "I see the doctor" — Я бачу **лікаря**.
 - Say "She knows my friend" — Вона знає **мою подругу**.
 - Distinguish between people and things in the accusative case.
@@ -252,7 +357,6 @@ In this module, you learned the **animate accusative** — how Ukrainian marks p
 
 **YouTube:** [Practice #Ukrainian Accusative Case with me! (with nouns, pronouns and adjectives)](https://www.youtube.com/watch?v=BYBWx6ds8Fk) — Let's Learn Ukrainian
 
-
 **Grammar Guide:** [Accusative Case](https://www.ukrainianlessons.com/accusativecase/) — Animate vs inanimate distinction explained
 
 **Pronouns:** [Personal Pronouns Declension](https://www.ukrainianlessons.com/ukrainian-personal-pronouns/) — See мене, тебе, його in accusative
@@ -260,469 +364,3 @@ In this module, you learned the **animate accusative** — how Ukrainian marks p
 **Podcast:** [ULP 1-33 | Books + Accusative of People](https://www.ukrainianlessons.com/episode33/) — Practice accusative with animate nouns
 :::
 
-
-## 🎯 Activities
-
-### People in Your Life
-
-<MatchUp pairs={[
-  { left: `мама`, right: `mother` },
-  { left: `тато`, right: `father` },
-  { left: `брат`, right: `brother` },
-  { left: `сестра`, right: `sister` },
-  { left: `син`, right: `son` },
-  { left: `донька`, right: `daughter` },
-  { left: `дідусь`, right: `grandfather` },
-  { left: `бабуся`, right: `grandmother` }
-]} />
-
-### Animate vs Inanimate
-
-<GroupSort groups={{
-  "Animate (Who? - Хто?)": ["хлопчик", "дівчинка", "студент", "вчитель", "батько", "мати"],
-  "Inanimate (What? - Що?)": ["стіл", "книга", "вікно", "паспорт", "квиток", "поїзд"]
-}} />
-
-### Accusative Endings
-
-<Quiz questions={[
-  {
-    question: `Which form is correct for \"I see a female friend\"?`,
-    options: [
-      { text: `подругу`, correct: true },
-      { text: `подруга`, correct: false },
-      { text: `подруги`, correct: false },
-      { text: `подрузі`, correct: false }
-    ]
-  },  {
-    question: `Which form is correct for \"I see a brother\"?`,
-    options: [
-      { text: `брат`, correct: false },
-      { text: `брата`, correct: true },
-      { text: `брату`, correct: false },
-      { text: `братом`, correct: false }
-    ]
-  },  {
-    question: `Which form is correct for \"I see a mother\"?`,
-    options: [
-      { text: `мама`, correct: false },
-      { text: `маму`, correct: true },
-      { text: `мами`, correct: false },
-      { text: `мамі`, correct: false }
-    ]
-  },  {
-    question: `Which form is correct for \"I see a father\"?`,
-    options: [
-      { text: `тато`, correct: false },
-      { text: `тата`, correct: true },
-      { text: `тату`, correct: false },
-      { text: `тата (again)`, correct: false }
-    ]
-  },  {
-    question: `Which form is correct for \"I see an uncle\"?`,
-    options: [
-      { text: `дядько`, correct: false },
-      { text: `дядька`, correct: true },
-      { text: `дядьку`, correct: false },
-      { text: `дядьком`, correct: false }
-    ]
-  },  {
-    question: `Which form is correct for \"I see a teacher\"?`,
-    options: [
-      { text: `вчитель`, correct: false },
-      { text: `вчителя`, correct: true },
-      { text: `вчителю`, correct: false },
-      { text: `вчителем`, correct: false }
-    ]
-  },  {
-    question: `Which form is correct for \"I see a sister\"?`,
-    options: [
-      { text: `сестра`, correct: false },
-      { text: `сестру`, correct: true },
-      { text: `сестри`, correct: false },
-      { text: `сестрі`, correct: false }
-    ]
-  },  {
-    question: `Which form is correct for \"I see a son\"?`,
-    options: [
-      { text: `син`, correct: false },
-      { text: `сина`, correct: true },
-      { text: `сину`, correct: false },
-      { text: `сином`, correct: false }
-    ]
-  },  {
-    question: `Which form is correct for \"I see a daughter\"?`,
-    options: [
-      { text: `донька`, correct: false },
-      { text: `доньку`, correct: true },
-      { text: `доньки`, correct: false },
-      { text: `доньці`, correct: false }
-    ]
-  },  {
-    question: `Which form is correct for \"I see a grandfather\"?`,
-    options: [
-      { text: `дідусь`, correct: false },
-      { text: `дідуся`, correct: true },
-      { text: `дідусю`, correct: false },
-      { text: `дідусем`, correct: false }
-    ]
-  },  {
-    question: `Which form is correct for \"I see a grandmother\"?`,
-    options: [
-      { text: `бабуся`, correct: false },
-      { text: `бабусю`, correct: true },
-      { text: `бабусі`, correct: false },
-      { text: `бабусьою`, correct: false }
-    ]
-  },  {
-    question: `Which form is correct for \"I see a friend\" (male)?`,
-    options: [
-      { text: `друг`, correct: false },
-      { text: `друга`, correct: true },
-      { text: `другу`, correct: false },
-      { text: `другом`, correct: false }
-    ]
-  }
-]} />
-
-### Animate Accusative Rules
-
-<TrueFalse items={[
-  {
-    statement: `Masculine animate nouns in accusative case end in -а or -я.`,
-    isTrue: true,
-    explanation: `Correct! Animate accusative = genitive for masculine nouns.`
-  },  {
-    statement: `Feminine animate nouns have special accusative endings.`,
-    isTrue: false,
-    explanation: `Incorrect! Feminine animate nouns use the same -у/-ю pattern as inanimate nouns.`
-  },  {
-    statement: `\"Я бачу студента\" is correct.`,
-    isTrue: true,
-    explanation: `Correct! Animate masculine: студент → студента.`
-  },  {
-    statement: `\"Я знаю лікар\" is correct.`,
-    isTrue: false,
-    explanation: `Incorrect! Should be \"лікаря\" (animate accusative).`
-  },  {
-    statement: `\"Вона чекає подругу\" is correct.`,
-    isTrue: true,
-    explanation: `Correct! Feminine accusative: подруга → подругу.`
-  },  {
-    statement: `Inanimate masculine nouns change in accusative case.`,
-    isTrue: false,
-    explanation: `Incorrect! Inanimate masculine nouns stay the same (стіл → стіл).`
-  },  {
-    statement: `The animate-inanimate distinction only affects masculine nouns.`,
-    isTrue: true,
-    explanation: `Correct! Feminine nouns follow the same pattern regardless of animacy.`
-  },  {
-    statement: `\"Він бачить водія\" is correct.`,
-    isTrue: true,
-    explanation: `Correct! Animate masculine: водій → водія.`
-  },  {
-    statement: `\"Ми чекаємо вчитель\" is correct.`,
-    isTrue: false,
-    explanation: `Incorrect! Should be \"вчителя\" (animate accusative).`
-  },  {
-    statement: `Accusative = genitive for masculine animate nouns.`,
-    isTrue: true,
-    explanation: `Correct! This is the key rule for animate objects.`
-  },  {
-    statement: `\"Я люблю директор\" is correct.`,
-    isTrue: false,
-    explanation: `Incorrect! Should be \"директора\" (animate accusative).`
-  },  {
-    statement: `\"Ти знаєш мою сусідку\" is correct.`,
-    isTrue: true,
-    explanation: `Correct! Feminine accusative: сусідка → сусідку.`
-  }
-]} />
-
-### Complete with Animate Accusative
-
-<FillIn items={[
-  {
-    sentence: `Я бачу ___ у магазині.`,
-    answer: `колегу`,
-    options: [`колега`, `колегу`, `колеги`, `колезі`]
-  },  {
-    sentence: `Вона знає цього ___.`,
-    answer: `студента`,
-    options: [`студент`, `студента`, `студенту`, `студенті`]
-  },  {
-    sentence: `Ми чекаємо ___.`,
-    answer: `лікаря`,
-    options: [`лікар`, `лікаря`, `лікару`, `лікарі`]
-  },  {
-    sentence: `Ти бачиш мою ___?`,
-    answer: `подругу`,
-    options: [`подруга`, `подругу`, `подруги`, `подрузі`]
-  },  {
-    sentence: `Він любить свою ___.`,
-    answer: `вчительку`,
-    options: [`вчителька`, `вчительку`, `вчительки`, `вчительці`]
-  },  {
-    sentence: `Я шукаю ___.`,
-    answer: `водія`,
-    options: [`водій`, `водія`, `водію`, `водієві`]
-  },  {
-    sentence: `Вона бачить нашого ___.`,
-    answer: `сусіда`,
-    options: [`сусід`, `сусіда`, `сусіду`, `сусідові`]
-  },  {
-    sentence: `Ми знаємо цього ___.`,
-    answer: `директора`,
-    options: [`директор`, `директора`, `директору`, `директорі`]
-  },  {
-    sentence: `Ти чекаєш ___?`,
-    answer: `офіціанта`,
-    options: [`офіціант`, `офіціанта`, `офіціанту`, `офіціанті`]
-  },  {
-    sentence: `Він бачить ___ на вулиці.`,
-    answer: `пасажира`,
-    options: [`пасажир`, `пасажира`, `пасажиру`, `пасажирі`]
-  },  {
-    sentence: `Я люблю свого ___.`,
-    answer: `друга`,
-    options: [`друг`, `друга`, `другу`, `другові`]
-  },  {
-    sentence: `Вона знає цю ___.`,
-    answer: `студентку`,
-    options: [`студентка`, `студентку`, `студентки`, `студентці`]
-  },  {
-    sentence: `Ми бачимо ___.`,
-    answer: `гостя`,
-    options: [`гість`, `гостя`, `гостю`, `гості`]
-  },  {
-    sentence: `Ти чекаєш свою ___?`,
-    answer: `сусідку`,
-    options: [`сусідка`, `сусідку`, `сусідки`, `сусідці`]
-  }
-]} />
-
-### Sentences in Context
-
-<FillIn items={[
-  {
-    sentence: `У кав'ярні я бачу ___.`,
-    answer: `офіціанта`,
-    options: [`офіціант`, `офіціанта`, `офіціанту`, `офіціанті`]
-  },  {
-    sentence: `Вона знає мого ___ з університету.`,
-    answer: `друга`,
-    options: [`друг`, `друга`, `другу`, `другові`]
-  },  {
-    sentence: `Ми чекаємо ___ біля школи.`,
-    answer: `вчителя`,
-    options: [`вчитель`, `вчителя`, `вчителю`, `вчителеві`]
-  },  {
-    sentence: `Ти бачиш ___ на зупинці?`,
-    answer: `водія`,
-    options: [`водій`, `водія`, `водію`, `водієві`]
-  },  {
-    sentence: `Він любить свою ___.`,
-    answer: `лікарку`,
-    options: [`лікарка`, `лікарку`, `лікарки`, `лікарці`]
-  },  {
-    sentence: `Я шукаю свого ___.`,
-    answer: `колегу`,
-    options: [`колега`, `колегу`, `колеги`, `колезі`]
-  },  {
-    sentence: `Вона бачить ___ у магазині.`,
-    answer: `продавця`,
-    options: [`продавець`, `продавця`, `продавцю`, `продавцеві`]
-  },  {
-    sentence: `Ми знаємо цього ___.`,
-    answer: `менеджера`,
-    options: [`менеджер`, `менеджера`, `менеджеру`, `менеджерові`]
-  },  {
-    sentence: `Ти чекаєш свою ___?`,
-    answer: `подругу`,
-    options: [`подруга`, `подругу`, `подруги`, `подрузі`]
-  },  {
-    sentence: `Він бачить ___ біля метро.`,
-    answer: `пасажира`,
-    options: [`пасажир`, `пасажира`, `пасажиру`, `пасажирі`]
-  },  {
-    sentence: `Я люблю нашого ___.`,
-    answer: `директора`,
-    options: [`директор`, `директора`, `директору`, `директорі`]
-  },  {
-    sentence: `Вона знає цього ___?`,
-    answer: `гостя`,
-    options: [`гість`, `гостя`, `гостю`, `гості`]
-  }
-]} />
-
-### Sentences with Animate Objects
-
-<Quiz questions={[
-  {
-    question: `Correct sentence order for: \"I see the student...\"`,
-    options: [
-      { text: `Я бачу студента у бібліотеці`, correct: true },
-      { text: `бачу Я студента у бібліотеці`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"She knows my friend well.\"`,
-    options: [
-      { text: `Вона добре знає мого друга`, correct: true },
-      { text: `добре Вона знає мого друга`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"We're waiting for the...\"`,
-    options: [
-      { text: `Ми чекаємо лікаря у лікарні`, correct: true },
-      { text: `чекаємо Ми лікаря у лікарні`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"Do you see the...\"`,
-    options: [
-      { text: `Ти бачиш офіціанта там`, correct: true },
-      { text: `бачиш Ти офіціанта там`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"He loves his teacher.\"`,
-    options: [
-      { text: `Він любить свою вчительку`, correct: true },
-      { text: `любить Він свою вчительку`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"I'm looking for our driver.\"`,
-    options: [
-      { text: `Я шукаю нашого водія`, correct: true },
-      { text: `шукаю Я нашого водія`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"We know this director.\"`,
-    options: [
-      { text: `Ми знаємо цього директора`, correct: true },
-      { text: `знаємо Ми цього директора`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"She sees the neighbor...\"`,
-    options: [
-      { text: `Вона бачить сусіда кожного ранку`, correct: true },
-      { text: `бачить Вона сусіда кожного ранку`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"Are you waiting for...\"`,
-    options: [
-      { text: `Ти чекаєш свою подругу`, correct: true },
-      { text: `чекаєш Ти свою подругу`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"I love my colleague.\"`,
-    options: [
-      { text: `Я люблю мого колегу`, correct: true },
-      { text: `люблю Я мого колегу`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"We see the passenger...\"`,
-    options: [
-      { text: `Ми бачимо пасажира біля метро`, correct: true },
-      { text: `бачимо Ми пасажира біля метро`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"He knows this student...\"`,
-    options: [
-      { text: `Він знає цю студентку з школи`, correct: true },
-      { text: `знає Він цю студентку з школи`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  }
-]} />
-
-### More Complex Sentence Order
-
-<Quiz questions={[
-  {
-    question: `Correct sentence order for: \"I see my friend...\"`,
-    options: [
-      { text: `Я бачу мого друга та його подругу`, correct: true },
-      { text: `бачу Я мого друга та його подругу`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"We're waiting for our...\"`,
-    options: [
-      { text: `Ми чекаємо нашого вчителя біля університету`, correct: true },
-      { text: `чекаємо Ми нашого вчителя біля університету`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"She knows this...\"`,
-    options: [
-      { text: `Вона знає цього студента у групі`, correct: true },
-      { text: `знає Вона цього студента у групі`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"Do you see that...\"`,
-    options: [
-      { text: `Ти бачиш того лікаря там`, correct: true },
-      { text: `бачиш Ти того лікаря там`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"He really loves his neighbor.\"`,
-    options: [
-      { text: `Він дуже любить свою сусідку`, correct: true },
-      { text: `дуже Він любить свою сусідку`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"I'm looking for our...\"`,
-    options: [
-      { text: `Я шукаю нашого директора і менеджера`, correct: true },
-      { text: `шукаю Я нашого директора і менеджера`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"We know this driver well.\"`,
-    options: [
-      { text: `Ми добре знаємо цього водія`, correct: true },
-      { text: `добре Ми знаємо цього водія`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  },  {
-    question: `Correct sentence order for: \"She sees the waiter...\"`,
-    options: [
-      { text: `Вона бачить офіціанта та офіціантку`, correct: true },
-      { text: `бачить Вона офіціанта та офіціантку`, correct: false },
-      { text: `Incorrect order for this sentence`, correct: false }
-    ]
-  }
-]} />
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| колега | /koˈlɛɦɑ/ | colleague | noun | m/f | animate |
-| сусід | /suˈsid/ | neighbor (male) | noun | m | animate |
-| сусідка | /suˈsidkɑ/ | neighbor (female) | noun | f | animate |
-| вчитель | /wtʃɪˈtɛlʲ/ | teacher (male) | noun | m | animate |
-| вчителька | /wtʃɪˈtɛlʲkɑ/ | teacher (female) | noun | f | animate |
-| офіціант | /ofit͡sɪˈɑnt/ | waiter | noun | m | animate |
-| офіціантка | /ofit͡sɪˈɑntkɑ/ | waitress | noun | f | animate |
-| продавець | /prodɑˈvɛt͡sʲ/ | salesperson (male) | noun | m | animate |
-| продавчиня | /prodɑvˈt͡ʃɪnʲɑ/ | salesperson (female) | noun | f | animate |
-| водій | /voˈdij/ | driver | noun | m | animate |
-| пасажир | /pɑsɑˈʒɪr/ | passenger | noun | m | animate |
-| гість | /histʲ/ | guest | noun | m | animate |
-| директор | /dɪˈrɛktor/ | director | noun | m | animate |
-| менеджер | /mɛˈnɛd͡ʒɛr/ | manager | noun | m | animate |
-
----

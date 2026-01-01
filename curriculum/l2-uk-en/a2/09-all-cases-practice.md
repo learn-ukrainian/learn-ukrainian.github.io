@@ -1,30 +1,3 @@
----
-module: a2-09
-title: 'All Cases Practice'
-subtitle: 'Integrating All 7 Ukrainian Cases'
-version: '1.0'
-phase: 'A2.1'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: none
-tags:
-  - grammar
-  - cases
-  - practice
-  - review
-grammar:
-  - 7-case integration
-  - case recognition
-  - case selection
-objectives:
-  - 'Learner can identify all 7 Ukrainian cases'
-  - 'Learner can choose the correct case for each context'
-  - 'Learner can transform nouns through different cases'
-  - 'Learner can use cases in connected speech'
-vocabulary_count: 25
-vocab_count: 51
----
-
 ## Розминка
 
 Congratulations — you've now learned all seven Ukrainian cases! This is a major milestone in your Ukrainian journey. У цьому модулі ми об’єднаємо все разом для комплексної практики.

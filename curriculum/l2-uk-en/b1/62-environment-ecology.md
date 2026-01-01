@@ -1,27 +1,3 @@
----
-module: b1-62
-title: "Довкілля та екологія"
-subtitle: "Environment & Ecology"
-version: "1.0"
-phase: "B1.6 Vocabulary Expansion II"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "environmental vocabulary collocations"
-tags:
-  - vocabulary
-  - environment
-  - ecology
-objectives:
-  - "Learner can use 35 environmental vocabulary words in context"
-  - "Learner can discuss environmental issues using appropriate collocations"
-  - "Learner can distinguish between related terms (довкілля/навколишнє середовище/природа)"
-vocabulary_count: 35
-vocab_count: 113
----
-
 # Довкілля та екологія
 
 > 🎯 **Чому це важливо?**

@@ -1,0 +1,108 @@
+module: 71-emotional-intelligence
+level: B1
+version: '2.0'
+items:
+- lemma: анно
+  ipa: /ˈanːɔ/
+  translation: Anna (voc.)
+  pos: propn
+  gender: f
+- lemma: виправитися
+  ipa: /vɪpravɪˈtɪsʲa/
+  translation: to correct oneself
+  pos: verb
+- lemma: відвертість
+  ipa: /vidˈvɛrtʲisʲtʲ/
+  translation: frankness
+  pos: noun
+  gender: f
+- lemma: відсторонений
+  ipa: /vidstɔˈrɔnɛnɪj/
+  translation: detached
+  pos: adj
+  gender: m
+- lemma: елементарний
+  ipa: /ɛlɛmɛnˈtarnɪj/
+  translation: elementary
+  pos: adj
+  gender: f
+- lemma: заохочення
+  ipa: /zaɔˈxɔt͡ʃɛnʲːa/
+  translation: encouragement
+  pos: noun
+  gender: n
+- lemma: засудження
+  ipa: /zaˈsudʒɛnʲːa/
+  translation: condemnation
+  pos: noun
+  gender: n
+- lemma: зашкодити
+  ipa: /zaˈʃkɔdɪtɪ/
+  translation: to harm
+  pos: verb
+- lemma: міжособистісний
+  ipa: /mʲiʒɔsɔˈbɪstʲisnɪj/
+  translation: interpersonal
+  pos: adj
+- lemma: надалі
+  ipa: /naˈdalʲi/
+  translation: further/in future
+  pos: adv
+- lemma: нарікати
+  ipa: /narʲiˈkatɪ/
+  translation: to complain
+  pos: verb
+- lemma: недбалість
+  ipa: /nɛdˈbalʲisʲtʲ/
+  translation: negligence
+  pos: noun
+  gender: f
+- lemma: ображати
+  ipa: /ɔbraˈʒatɪ/
+  translation: to offend
+  pos: verb
+- lemma: перегнути
+  ipa: /pɛrɛhˈnutɪ/
+  translation: to bend too far
+  pos: verb
+  gender: m
+- lemma: порядність
+  ipa: /pɔˈrʲadnʲisʲtʲ/
+  translation: decency
+  pos: noun
+  gender: f
+- lemma: правдивий
+  ipa: /prau̯ˈdɪvɪj/
+  translation: truthful
+  pos: adj
+  gender: m
+- lemma: природжений
+  ipa: /prɪˈrɔdʒɛnɪj/
+  translation: innate
+  pos: adj
+  gender: m
+- lemma: пробачення
+  ipa: /prɔˈbat͡ʃɛnʲːa/
+  translation: forgiveness
+  pos: noun
+  gender: n
+- lemma: ройз
+  ipa: /rɔjz/
+  translation: Royz
+  pos: propn
+  gender: f
+- lemma: сина
+  ipa: /ˈsɪna/
+  translation: son (gen.)
+  pos: propn
+  gender: f
+- lemma: тактовність
+  ipa: /takˈtɔu̯nʲisʲtʲ/
+  translation: tact
+  pos: noun
+  gender: f
+- lemma: терпимість
+  ipa: /tɛrˈpɪmʲisʲtʲ/
+  translation: tolerance
+  pos: noun
+  gender: f

@@ -1,0 +1,184 @@
+module: 42-adverbial-participles-imperfective
+level: B1
+version: '2.0'
+items:
+- lemma: арія
+  ipa: /ˈarʲija/
+  translation: aria
+  pos: noun
+  gender: f
+- lemma: ача
+  ipa: /ˈat͡ʃa/
+  translation: suffix -acha
+  pos: noun
+  gender: f
+- lemma: борка
+  ipa: /ˈbɔrka/
+  translation: ??? (typo)
+  pos: noun
+  gender: m
+- lemma: біж
+  ipa: /biʒ/
+  translation: run (root)
+  pos: noun
+  gender: m
+- lemma: біжач
+  ipa: /ˈbiʒat͡ʃ/
+  translation: running (typo)
+  pos: noun
+  gender: f
+- lemma: вед
+  ipa: /vɛd/
+  translation: lead (root)
+  pos: other
+- lemma: визначитися
+  ipa: /vɪznaˈt͡ʃɪtɪsʲa/
+  translation: to decide
+  pos: verb
+- lemma: виписувати
+  ipa: /vɪˈpɪsuvatɪ/
+  translation: to write out
+  pos: verb
+- lemma: відволікати
+  ipa: /vidvɔlʲiˈkatɪ/
+  translation: to distract
+  pos: verb
+- lemma: дієприслівниковий
+  ipa: /dʲijɛprɪslʲiu̯nɪˈkɔvɪj/
+  translation: adverbial participle (adj)
+  pos: adj
+  gender: f
+- lemma: жд
+  ipa: /ʒd/
+  translation: wait (root)
+  pos: other
+- lemma: засмутитися
+  ipa: /zasmuˈtɪtɪsʲa/
+  translation: to get upset
+  pos: verb
+  gender: m
+- lemma: йд
+  ipa: /jd/
+  translation: go (root)
+  pos: other
+- lemma: компактний
+  ipa: /kɔmˈpaktnɪj/
+  translation: compact
+  pos: adj
+  gender: n
+- lemma: леж
+  ipa: /lɛʒ/
+  translation: lie (root)
+  pos: other
+- lemma: марширувати
+  ipa: /marʃɪruˈvatɪ/
+  translation: to march
+  pos: verb
+- lemma: місити
+  ipa: /mʲiˈsɪtɪ/
+  translation: to knead
+  pos: verb
+- lemma: незвично
+  ipa: /nɛˈzvɪt͡ʃnɔ/
+  translation: unusually
+  pos: adv
+- lemma: незмінюваний
+  ipa: /nɛzˈmʲinʲuvanɪj/
+  translation: immutable
+  pos: adj
+  gender: f
+- lemma: незмінюваність
+  ipa: /nɛzˈmʲinʲuvanʲisʲtʲ/
+  translation: immutability
+  pos: noun
+  gender: f
+- lemma: неперервність
+  ipa: /nɛpɛˈrɛrvnʲisʲtʲ/
+  translation: continuity
+  pos: noun
+  gender: f
+- lemma: нес
+  ipa: /nɛs/
+  translation: carry (root)
+  pos: other
+- lemma: пиття
+  ipa: /pɪtʲˈtʲa/
+  translation: drinking
+  pos: noun
+  gender: n
+- lemma: плавність
+  ipa: /ˈplau̯nʲisʲtʲ/
+  translation: smoothness
+  pos: noun
+  gender: f
+- lemma: попкорн
+  ipa: /pɔpˈkɔrn/
+  translation: popcorn
+  pos: noun
+  gender: m
+- lemma: приголосна
+  ipa: /prɪˈhɔlɔsna/
+  translation: consonant
+  pos: noun
+  gender: f
+- lemma: прошача
+  ipa: /prɔˈʃat͡ʃa/
+  translation: asking (typo)
+  pos: noun
+  gender: m
+- lemma: радіватися
+  ipa: /radiˈvatɪsʲa/
+  translation: to rejoice (typo)
+  pos: verb
+- lemma: сид
+  ipa: /sɪd/
+  translation: sit (root)
+  pos: other
+- lemma: слуха
+  ipa: /ˈsluxa/
+  translation: listens
+  pos: noun
+  gender: f
+- lemma: сонця
+  ipa: /ˈsɔnt͡sʲa/
+  translation: sun (gen.)
+  pos: noun
+  gender: n
+- lemma: спача
+  ipa: /ˈspat͡ʃa/
+  translation: sleeping (typo)
+  pos: noun
+  gender: f
+- lemma: сплячий
+  ipa: /ˈsplʲat͡ʃɪj/
+  translation: sleeping
+  pos: adj
+  gender: m
+- lemma: учи
+  ipa: /uˈt͡ʃɪ/
+  translation: teach (imp.)
+  pos: other
+- lemma: чита
+  ipa: /t͡ʃɪˈta/
+  translation: reads
+  pos: other
+- lemma: юти
+  ipa: /ˈjutɪ/
+  translation: suffix?
+  pos: verb
+- lemma: ючи
+  ipa: /ˈjut͡ʃɪ/
+  translation: suffix -yuchy
+  pos: other
+- lemma: ячи
+  ipa: /ˈjat͡ʃɪ/
+  translation: suffix -yachy
+  pos: other
+- lemma: їд
+  ipa: /jid/
+  translation: eat (root)
+  pos: other
+- lemma: їздіти
+  ipa: /jizˈdʲitɪ/
+  translation: to ride (typo)
+  pos: verb

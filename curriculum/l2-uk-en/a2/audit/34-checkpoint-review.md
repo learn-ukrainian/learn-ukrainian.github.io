@@ -1,15 +1,17 @@
 # Audit Report: 34-checkpoint.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "Consolidation" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: рід
+- **[GRAMMAR]** Participle used before B1: 'досвідчений'
+  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: дієслово, середній, рід
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
 **📝 UPDATE** (severity 10/100)
 
-- 1 pedagogical violations (minor)
+- 2 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1054/1000
@@ -19,17 +21,12 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 8/1
+- **Vocab:** ✅ 24/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 62.2% (checkpoint - no gate)
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
+- **Pedagogy:** ❌ 1 violations
+- **Immersion:** 🇺🇦 35.7% (checkpoint - no gate)
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -43,16 +40,4 @@
 | **Integration Challenge: The Difficult Journey** | ⚪️ | 137 | Skipped |
 | **Conclusion of this Block** | ⚪️ | 137 | Skipped |
 | **Need More Practice?** | ⚪️ | 22 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Logic Pairing (Concept: Semantic Pairing)** | 🎮 | 11 | Activity (11 items, min 8) |
-| **fill-in: Synthesis Challenge (Concept: Contextual Selection)** | 🎮 | 8 | Activity (8 items, min 6) |
-| **quiz: Checkpoint Master (Concept: Logical Deduction)** | 🎮 | 8 | Activity (8 items, min 8) |
-| **unjumble: Constructing Complexity (Concept: Syntax Integrity)** | 🎮 | 6 | Activity (6 items, min 6) |
-| **group-sort: Connector Sorter | Логічне сортування** | 🎮 | 21 | Activity (21 items, min 12) |
-| **true-false: Checkpoint Quiz (Concept: Concept Validation)** | 🎮 | 8 | Activity (8 items, min 8) |
-| **cloze: The Recovery (Concept: Contextual Application)** | 🎮 | 14 | Activity (14 items, min 12) |
-| **dialogue-reorder: The Medical Report (Concept: Narrative Coherence)** | 🎮 | 12 | Activity (12 items, min 4) |
-| **mark-the-words: Find the Logic (Concept: Pattern Recognition)** | 🎮 | 7 | Activity (7 items, min 6) |
-| **error-correction: Logic Refinement (Concept: Critical Proofreading)** | 🎮 | 6 | Activity (6 items, min 6) |
-| **translate: English to Ukrainian (Concept: Cross-Linguistic Transfer)** | 🎮 | 6 | Activity (6 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

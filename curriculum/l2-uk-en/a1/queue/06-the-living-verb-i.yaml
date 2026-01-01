@@ -1,0 +1,452 @@
+module: 06-the-living-verb-i
+level: A1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/06-the-living-verb-i.md
+generated: '2026-01-01T17:33:19.307135'
+scope: fill-in, quiz, true-false, unjumble
+activity_counts:
+  fill-in: 12
+  unjumble: 8
+  quiz: 12
+  true-false: 12
+total_items: 44
+item_count: 44
+sample_percent: null
+items:
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Я ___ книгу.
+  answer: читаю
+  complete_sentence: Я читаю книгу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Ти ___ у Києві?
+  answer: працюєш
+  complete_sentence: Ти працюєш у Києві?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Вона ___ в парку.
+  answer: гуляє
+  complete_sentence: Вона гуляє в парку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Ми ___ пісню.
+  answer: співаємо
+  complete_sentence: Ми співаємо пісню.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Ви ___ українською?
+  answer: читаєте
+  complete_sentence: Ви читаєте українською?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Скажіть, що вони роблять? Вони ___ про Україну.
+  answer: думають
+  complete_sentence: Скажіть, що вони роблять? Вони думають про Україну.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Я ___ музику.
+  answer: слухаю
+  complete_sentence: Я слухаю музику.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Ти ___ друга?
+  answer: чекаєш
+  complete_sentence: Ти чекаєш друга?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Він ___ картину.
+  answer: малює
+  complete_sentence: Він малює картину.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Скажіть, що ми робимо? Ми ___ о дванадцятій.
+  answer: обідаємо
+  complete_sentence: Скажіть, що ми робимо? Ми обідаємо о дванадцятій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Ви ___ роботу о дев'ятій.
+  answer: починаєте
+  complete_sentence: Ви починаєте роботу о дев'ятій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Вони ___ після роботи.
+  answer: відпочивають
+  complete_sentence: Вони відпочивають після роботи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Build Verb Sentences
+  jumbled_words: []
+  answer: Я читаю книгу
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Build Verb Sentences
+  jumbled_words: []
+  answer: Він працює добре
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Build Verb Sentences
+  jumbled_words: []
+  answer: Вона співає українською
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Build Verb Sentences
+  jumbled_words: []
+  answer: Ми граємо футбол
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Build Verb Sentences
+  jumbled_words: []
+  answer: Ви слухаєте музику
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Build Verb Sentences
+  jumbled_words: []
+  answer: Вони думають багато
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Build Verb Sentences
+  jumbled_words: []
+  answer: Ти пишеш листа
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Build Verb Sentences
+  jumbled_words: []
+  answer: Вона співає пісню
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Conjugation Recognition
+  question: Which form means "I read"?
+  options:
+  - '{''text'': ''читаю'', ''correct'': False}'
+  - '{''text'': ''читаю'', ''correct'': True}'
+  - '{''text'': ''читаєш'', ''correct'': False}'
+  - '{''text'': ''читають'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Conjugation Recognition
+  question: What does "ти пишеш" mean?
+  options:
+  - '{''text'': ''I write'', ''correct'': False}'
+  - '{''text'': ''you write'', ''correct'': True}'
+  - '{''text'': ''he writes'', ''correct'': False}'
+  - '{''text'': ''they write'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Conjugation Recognition
+  question: Which verb ending implies the pronouns "we"?
+  options:
+  - '{''text'': ''-ю'', ''correct'': False}'
+  - '{''text'': ''-єш'', ''correct'': False}'
+  - '{''text'': ''-є'', ''correct'': False}'
+  - '{''text'': ''-ємо'', ''correct'': True}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Conjugation Recognition
+  question: What is the infinitive of "працюю"?
+  options:
+  - '{''text'': ''працюти'', ''correct'': False}'
+  - '{''text'': ''працювати'', ''correct'': True}'
+  - '{''text'': ''працюєти'', ''correct'': False}'
+  - '{''text'': ''працю'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Conjugation Recognition
+  question: Which verb means "to rest"?
+  options:
+  - '{''text'': ''працювати'', ''correct'': False}'
+  - '{''text'': ''гуляти'', ''correct'': False}'
+  - '{''text'': ''відпочивати'', ''correct'': True}'
+  - '{''text'': ''чекати'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Conjugation Recognition
+  question: What does the phrase "Вони читають" mean?
+  options:
+  - '{''text'': ''I read'', ''correct'': False}'
+  - '{''text'': ''you read'', ''correct'': False}'
+  - '{''text'': ''we read'', ''correct'': False}'
+  - '{''text'': ''they read'', ''correct'': True}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Conjugation Recognition
+  question: Which form is used for "він" (he)?
+  options:
+  - '{''text'': ''читаю'', ''correct'': False}'
+  - '{''text'': ''читаєш'', ''correct'': False}'
+  - '{''text'': ''читає'', ''correct'': True}'
+  - '{''text'': ''читають'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Conjugation Recognition
+  question: What does "ми граємо" mean?
+  options:
+  - '{''text'': ''I play'', ''correct'': False}'
+  - '{''text'': ''you play'', ''correct'': False}'
+  - '{''text'': ''we play'', ''correct'': True}'
+  - '{''text'': ''they play'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Conjugation Recognition
+  question: Which verb means "to sing"?
+  options:
+  - '{''text'': ''грати'', ''correct'': False}'
+  - '{''text'': ''співати'', ''correct'': True}'
+  - '{''text'': ''танцювати'', ''correct'': False}'
+  - '{''text'': ''малювати'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Conjugation Recognition
+  question: What is the meaning of "Ви знаєте"?
+  options:
+  - '{''text'': ''I know'', ''correct'': False}'
+  - '{''text'': ''you know (informal)'', ''correct'': False}'
+  - '{''text'': ''you know (formal/plural)'', ''correct'': True}'
+  - '{''text'': ''they know'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Conjugation Recognition
+  question: Which ending is used for "ти" (you, informal)?
+  options:
+  - '{''text'': ''-ю'', ''correct'': False}'
+  - '{''text'': ''-єш'', ''correct'': True}'
+  - '{''text'': ''-є'', ''correct'': False}'
+  - '{''text'': ''-ють'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Conjugation Recognition
+  question: What is the stem of "писати"?
+  options:
+  - '{''text'': ''писа-'', ''correct'': False}'
+  - '{''text'': ''пиш-'', ''correct'': True}'
+  - '{''text'': ''пис-'', ''correct'': False}'
+  - '{''text'': ''писат-'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Verb Rules
+  statement: Class I verbs end in -ати or -яти in the infinitive.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Verb Rules
+  statement: The ending -ю is used for "ти" (you).
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Verb Rules
+  statement: You can often drop the pronoun in Ukrainian because the verb ending shows
+    who's acting.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Verb Rules
+  statement: '"Писати" keeps the stem "писа-" in all forms.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Verb Rules
+  statement: The ending -ють is used for "вони" (they).
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Verb Rules
+  statement: '"Ми читаєте" is the correct form for "we read".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Verb Rules
+  statement: Verbs like читати, писати, працювати all follow the same conjugation
+    pattern.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Verb Rules
+  statement: Class I verbs use the ending -ить for третя особа (він/вона).
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Verb Rules
+  statement: '"Снідати", "обідати", "вечеряти" are all Class I verbs related to meals.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Verb Rules
+  statement: The stem of "грати" is "гра-".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Verb Rules
+  statement: '"Співати" means "to sing".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Verb Rules
+  statement: You must always use a pronoun with Ukrainian verbs.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

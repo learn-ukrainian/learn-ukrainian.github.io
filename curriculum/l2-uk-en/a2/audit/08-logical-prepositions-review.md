@@ -10,17 +10,12 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 4/1
+- **Vocab:** ✅ 26/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 43.8% (target 35-50% (A2.1))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
+- **Immersion:** 🇺🇦 37.6% (target 35-50% (A2.1))
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -51,17 +46,4 @@
 | **Dialogue: About a Book** | ✅ | 89 | Included in Core |
 | **Summary** | ✅ | 31 | Included in Core |
 | **Need More Practice?** | ⚪️ | 43 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Preposition Meaning** | 🎮 | 8 | Activity (8 items, min 8) |
-| **group-sort: Case Requirements** | 🎮 | 13 | Activity (13 items, min 12) |
-| **fill-in: Complete the Sentence** | 🎮 | 8 | Activity (8 items, min 8) |
-| **quiz: Logical Prepositions** | 🎮 | 8 | Activity (8 items, min 8) |
-| **cloze: Story Gaps** | 🎮 | 12 | Activity (12 items, min 12) |
-| **unjumble: Logical Sentences** | 🎮 | 8 | Activity (8 items, min 6) |
-| **error-correction: Wrong Preposition** | 🎮 | 6 | Activity (6 items, min 6) |
-| **true-false: Preposition Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **translate: English to Ukrainian** | 🎮 | 36 | Activity (36 items, min 6) |
-| **match-up: Contrast Pairs** | 🎮 | 8 | Activity (8 items, min 8) |
-| **cloze: Pharmacy Dialogue** | 🎮 | 12 | Activity (12 items, min 12) |
-| **match-up: Case Endings** | 🎮 | 8 | Activity (8 items, min 8) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

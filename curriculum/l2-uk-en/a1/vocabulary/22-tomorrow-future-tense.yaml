@@ -1,0 +1,212 @@
+module: 22-tomorrow-future-tense
+level: A1
+version: '2.0'
+items:
+  - lemma: більше
+    ipa: /ˈbilʲʃɛ/
+    translation: more
+    pos: adv
+  - lemma: весна
+    ipa: /vɛsˈnɑ/
+    translation: spring
+    pos: noun
+    gender: f
+  - lemma: вирішити
+    ipa: /vɪˈriʃɪtɪ/
+    translation: to decide
+    pos: verb
+  - lemma: впевненість
+    ipa: /ˈvpɛvnɛnisʲtʲ/
+    translation: certainty
+    pos: noun
+    gender: f
+  - lemma: вчасно
+    ipa: /ˈvt͡ʃɑsnɔ/
+    translation: on time
+    pos: adv
+  - lemma: відвідати
+    ipa: /vidˈvidɑtɪ/
+    translation: to visit
+    pos: verb
+  - lemma: довідка
+    ipa: /ˈdɔvidkɑ/
+    translation: reference/certificate
+    pos: noun
+    gender: f
+  - lemma: допомогти
+    ipa: /dɔpɔmɔɦˈtɪ/
+    translation: to help
+    pos: verb
+  - lemma: дієслово
+    ipa: /dijɛˈslɔvɔ/
+    translation: verb
+    pos: noun
+    gender: n
+  - lemma: запізнюватися
+    ipa: /zɑˈpiznʲuvɑtɪsʲɑ/
+    translation: to be late
+    pos: verb
+  - lemma: зателефонувати
+    ipa: /zɑtɛlɛfɔnuˈvɑtɪ/
+    translation: to call (phone)
+    pos: verb
+  - lemma: збиратися
+    ipa: /zbɪˈrɑtɪsʲɑ/
+    translation: to gather/intend
+    pos: verb
+  - lemma: згодом
+    ipa: /ˈzɦɔdɔm/
+    translation: eventually
+    pos: adv
+  - lemma: змогти
+    ipa: /zmɔɦˈtɪ/
+    translation: to be able
+    pos: verb
+  - lemma: зрозуміти
+    ipa: /zrɔzuˈmitɪ/
+    translation: to understand
+    pos: verb
+  - lemma: інфінітив
+    ipa: /infiniˈtɪv/
+    translation: infinitive
+    pos: noun
+    gender: m
+  - lemma: котрий
+    ipa: /kɔtˈrɪj/
+    translation: which
+    pos: adj
+    gender: m
+  - lemma: курс
+    ipa: /kurs/
+    translation: course
+    pos: noun
+    gender: m
+  - lemma: кіно
+    ipa: /kiˈnɔ/
+    translation: cinema
+    pos: noun
+    gender: n
+  - lemma: майбутнє
+    ipa: /mɑjˈbutnʲɛ/
+    translation: future
+    pos: noun
+    gender: n
+  - lemma: мрія
+    ipa: /ˈmrijɑ/
+    translation: dream
+    pos: noun
+    gender: f
+  - lemma: мріяти
+    ipa: /ˈmrijɑtɪ/
+    translation: to dream
+    pos: verb
+  - lemma: надія
+    ipa: /nɑˈdijɑ/
+    translation: hope
+    pos: noun
+    gender: f
+  - lemma: намір
+    ipa: /ˈnɑmir/
+    translation: intention
+    pos: noun
+    gender: m
+  - lemma: обіцяти
+    ipa: /ɔbiˈt͡sʲɑtɪ/
+    translation: to promise
+    pos: verb
+  - lemma: одружитися
+    ipa: /ɔdruˈʒɪtɪsʲɑ/
+    translation: to marry
+    pos: verb
+  - lemma: особа
+    ipa: /ɔˈsɔbɑ/
+    translation: person
+    pos: noun
+    gender: f
+  - lemma: планування
+    ipa: /plɑnuˈvɑnʲːɑ/
+    translation: planning
+    pos: noun
+    gender: n
+  - lemma: планувати
+    ipa: /plɑnuˈvɑtɪ/
+    translation: to plan
+    pos: verb
+  - lemma: побачити
+    ipa: /pɔˈbɑt͡ʃɪtɪ/
+    translation: to see
+    pos: verb
+  - lemma: побачитися
+    ipa: /pɔˈbɑt͡ʃɪtɪsʲɑ/
+    translation: to see each other
+    pos: verb
+  - lemma: погода
+    ipa: /pɔˈhɔdɑ/
+    translation: weather
+    pos: noun
+    gender: f
+  - lemma: подзвонити
+    ipa: /pɔdzvɔˈnɪtɪ/
+    translation: to call
+    pos: verb
+  - lemma: постаратися
+    ipa: /pɔstɑˈrɑtɪsʲɑ/
+    translation: to try hard
+    pos: verb
+  - lemma: почати
+    ipa: /pɔˈt͡ʃɑtɪ/
+    translation: to start
+    pos: verb
+  - lemma: прибирати
+    ipa: /prɪbɪˈrɑtɪ/
+    translation: to clean
+    pos: verb
+  - lemma: приклад
+    ipa: /ˈprɪklɑd/
+    translation: example
+    pos: noun
+    gender: m
+  - lemma: прислівник
+    ipa: /prɪˈslivnɪk/
+    translation: adverb
+    pos: noun
+    gender: m
+  - lemma: пізніше
+    ipa: /pizˈniʃɛ/
+    translation: later
+    pos: adv
+  - lemma: післязавтра
+    ipa: /pislʲɑˈzɑwtrɑ/
+    translation: day after tomorrow
+    pos: adv
+  - lemma: рівень
+    ipa: /ˈrivɛnʲ/
+    translation: level
+    pos: noun
+    gender: m
+  - lemma: святкувати
+    ipa: /svjɑtkuˈvɑtɪ/
+    translation: to celebrate
+    pos: verb
+  - lemma: скоро
+    ipa: /ˈskɔrɔ/
+    translation: soon
+    pos: adv
+  - lemma: сподіватися
+    ipa: /spɔdiˈvɑtɪsʲɑ/
+    translation: to hope
+    pos: verb
+  - lemma: стати
+    ipa: /ˈstɑtɪ/
+    translation: to become
+    pos: verb
+  - lemma: японський
+    ipa: /jɑˈpɔnsʲkɪj/
+    translation: Japanese
+    pos: adj
+    gender: m
+  - lemma: японія
+    ipa: /jɑˈpɔnijɑ/
+    translation: Japan
+    pos: propn
+    gender: f

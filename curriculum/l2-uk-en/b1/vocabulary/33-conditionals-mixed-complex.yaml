@@ -1,0 +1,81 @@
+module: 33-conditionals-mixed-complex
+level: B1
+version: '2.0'
+items:
+- lemma: вивчитися
+  ipa: /ˈvɪu̯t͡ʃɪtɪsʲa/
+  translation: to learn
+  pos: verb
+  gender: m
+- lemma: думковий
+  ipa: /dumˈkɔvɪj/
+  translation: mental
+  pos: adj
+- lemma: ланжерон
+  ipa: /lanʒɛˈrɔn/
+  translation: Lanzheron
+  pos: propn
+  gender: m
+- lemma: ланцюговий
+  ipa: /lant͡sʲuˈhɔvɪj/
+  translation: chain (adj)
+  pos: adj
+- lemma: майб
+  ipa: /majb/
+  translation: future (abbr)
+  pos: noun
+  gender: m
+- lemma: механіка
+  ipa: /mɛˈxanʲika/
+  translation: mechanics
+  pos: noun
+  gender: f
+- lemma: моделювати
+  ipa: /mɔdɛlʲuˈvatɪ/
+  translation: to model
+  pos: verb
+- lemma: мріянь
+  ipa: /ˈmrʲijanʲ/
+  translation: dreams (gen. pl.)
+  pos: noun
+  gender: f
+- lemma: осмислити
+  ipa: /ɔˈsmɪslɪtɪ/
+  translation: to comprehend
+  pos: verb
+- lemma: особистісний
+  ipa: /ɔsɔˈbɪstʲisnɪj/
+  translation: personal
+  pos: adj
+- lemma: пократи
+  ipa: /pɔˈkratɪ/
+  translation: to cover (typo)
+  pos: verb
+- lemma: пропусти
+  ipa: /prɔpuˈstɪ/
+  translation: skip (imp.)
+  pos: verb
+- lemma: руминація
+  ipa: /rumʲiˈnat͡sʲija/
+  translation: rumination
+  pos: noun
+  gender: f
+- lemma: сміливіший
+  ipa: /smʲilɪˈvʲiʃɪj/
+  translation: braver
+  pos: adj
+  gender: m
+- lemma: старанній
+  ipa: /staˈranʲːɪj/
+  translation: diligent
+  pos: adj
+- lemma: теп
+  ipa: /tɛp/
+  translation: present (abbr)
+  pos: noun
+  gender: m
+- lemma: теперішнє
+  ipa: /tɛˈpɛrʲiʃnʲɛ/
+  translation: present (tense)
+  pos: noun
+  gender: n

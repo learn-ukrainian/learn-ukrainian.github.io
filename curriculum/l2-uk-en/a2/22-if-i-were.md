@@ -1,29 +1,3 @@
----
-module: a2-22
-title: "If I Were..."
-subtitle: "Conditional Mood"
-version: "1.0"
-phase: "A2.2"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - grammar
-  - conditional
-  - hypothetical
-grammar:
-  - conditional mood formation
-  - real vs unreal conditions
-  - якби and якщо
-objectives:
-  - "Learner can form conditional sentences"
-  - "Learner understands real vs unreal conditions"
-  - "Learner can express wishes and hypotheticals"
-  - "Learner can use якби correctly"
-vocabulary_count: 25
-vocab_count: 17
----
-
 # Summary
 
 ## Warm-up

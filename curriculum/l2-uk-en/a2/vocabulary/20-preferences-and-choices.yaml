@@ -1,0 +1,100 @@
+module: 20-preferences-and-choices
+level: A2
+version: '2.0'
+items:
+- lemma: активний
+  ipa: ɐkˈtɪʋnɪj
+  translation: active
+  pos: adj
+  gender: m
+- lemma: важче
+  ipa: ˈʋɑʒt͡ʃe
+  translation: harder; heavier
+  pos: adv
+- lemma: вибрати
+  ipa: ˈʋɪbrɐte
+  translation: to choose (perf)
+  pos: verb
+  gender: m
+- lemma: висловлювати
+  ipa: ʋɪˈslɔʋlʲuʋɐte
+  translation: to express
+  pos: verb
+- lemma: вподобання
+  ipa: ʋpodɔˈbɑnʲːɐ
+  translation: preference
+  pos: noun
+  gender: n
+- lemma: відпочинок
+  ipa: ʋidpoˈt͡ʃɪnok
+  translation: rest; vacation
+  pos: noun
+  gender: m
+- lemma: гарячіший
+  ipa: hɐrʲɐˈt͡ʃiʃɪj
+  translation: hotter
+  pos: adj
+  gender: m
+- lemma: голодний
+  ipa: hoˈlɔdnɪj
+  translation: hungry
+  pos: adj
+  gender: m
+- lemma: гірше
+  ipa: ˈhirʃe
+  translation: worse (adv)
+  pos: adv
+- lemma: ефективніше
+  ipa: efekˈtɪʋnʲiʃe
+  translation: more effectively
+  pos: adv
+- lemma: затишніше
+  ipa: zɐˈtɪʃnʲiʃe
+  translation: cozier
+  pos: adv
+- lemma: корисніший
+  ipa: koˈrɪsnʲiʃɪj
+  translation: more useful
+  pos: adj
+  gender: n
+- lemma: нудніший
+  ipa: nudˈnʲiʃɪj
+  translation: more boring
+  pos: adj
+  gender: n
+- lemma: порадити
+  ipa: poˈrɑdɪte
+  translation: to advise (perf)
+  pos: verb
+- lemma: практичніше
+  ipa: prɐkˈtɪt͡ʃnʲiʃe
+  translation: more practically
+  pos: adv
+- lemma: суша
+  ipa: ˈsuʃɐ
+  translation: sushi
+  pos: noun
+  gender: f
+- lemma: траторія
+  ipa: trɐˈtɔrʲijɐ
+  translation: trattoria
+  pos: propn
+  gender: f
+- lemma: цікавіше
+  ipa: t͡sʲikɐˈʋiʃe
+  translation: more interesting (adv)
+  pos: adv
+- lemma: чесно
+  ipa: ˈt͡ʃɛsno
+  translation: honestly
+  pos: adv
+- lemma: шкідливіший
+  ipa: ʃkʲidˈlɪʋiʃɪj
+  translation: more harmful
+  pos: adj
+  gender: n
+- lemma: італійський
+  ipa: itɐˈlʲijsʲkɪj
+  translation: Italian
+  pos: adj
+  gender: m

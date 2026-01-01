@@ -588,4 +588,70 @@
     *Друже*(correct)! Давай підемо в *кіно*(correct)! Я маю *квитки*(correct). Після *фільму*(correct) можемо поїсти *піци*(correct).'
 - type: translate
   title: English to Ukrainian
-  items: []
+  items:
+  - source: I see mom.
+    options:
+    - text: Я бачу маму.
+      correct: true
+    - text: Я бачу мама.
+      correct: false
+    - text: Я бачу мамі.
+      correct: false
+    - text: Я бачу мамою.
+      correct: false
+    explanation: "Direct object 'Who?' → Accusative 'маму'."
+  - source: There is no time.
+    options:
+    - text: Немає часу.
+      correct: true
+    - text: Немає час.
+      correct: false
+    - text: Немає часом.
+      correct: false
+    - text: Немає часі.
+      correct: false
+    explanation: "Absence 'Немає' → Genitive 'часу'."
+  - source: Give a book to a friend.
+    options:
+    - text: Дати книгу другові.
+      correct: true
+    - text: Дати книгу друг.
+      correct: false
+    - text: Дати книгу друга.
+      correct: false
+    - text: Дати книгу другом.
+      correct: false
+    explanation: "Recipient 'To whom?' → Dative 'другові'."
+  - source: The book is on the table.
+    options:
+    - text: Книга на столі.
+      correct: true
+    - text: Книга на стіл.
+      correct: false
+    - text: Книга на столом.
+      correct: false
+    - text: Книга на стола.
+      correct: false
+    explanation: "Location 'Where?' → Locative 'на столі'."
+  - source: I write with a pen.
+    options:
+    - text: Я пишу ручкою.
+      correct: true
+    - text: Я пишу ручка.
+      correct: false
+    - text: Я пишу ручки.
+      correct: false
+    - text: Я пишу ручці.
+      correct: false
+    explanation: "Means/Tool 'With what?' → Instrumental 'ручкою'."
+  - source: Friend, hello!
+    options:
+    - text: Друже, привіт!
+      correct: true
+    - text: Друг, привіт!
+      correct: false
+    - text: Друга, привіт!
+      correct: false
+    - text: Другом, привіт!
+      correct: false
+    explanation: "Direct address → Vocative 'друже'."

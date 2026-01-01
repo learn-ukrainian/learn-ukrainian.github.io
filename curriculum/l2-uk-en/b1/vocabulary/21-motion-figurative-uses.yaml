@@ -1,0 +1,122 @@
+module: 21-motion-figurative-uses
+level: B1
+version: '2.0'
+items:
+- lemma: безвихідь
+  ipa: /bɛzˈvɪxidʲ/
+  translation: dead end
+  pos: noun
+  gender: f
+- lemma: вичерпність
+  ipa: /vɪˈt͡ʃɛrpnʲisʲtʲ/
+  translation: exhaustiveness
+  pos: noun
+  gender: f
+- lemma: відповідально
+  ipa: /vidpɔviˈdalʲnɔ/
+  translation: responsibly
+  pos: adv
+- lemma: глухий
+  ipa: /hluˈxɪj/
+  translation: deaf/dead (end)
+  pos: adj
+  gender: m
+- lemma: довітися
+  ipa: /dɔˈvʲitɪsʲa/
+  translation: to find out (typo)
+  pos: verb
+- lemma: ембодімент
+  ipa: /ɛmˈbɔdʲimɛnt/
+  translation: embodiment
+  pos: noun
+  gender: m
+- lemma: загадок
+  ipa: /zaˈhadɔk/
+  translation: riddles (gen. pl.)
+  pos: noun
+  gender: f
+- lemma: заспокоюватися
+  ipa: /zaspɔˈkɔjuvatɪsʲa/
+  translation: to calm down
+  pos: verb
+- lemma: застарілість
+  ipa: /zastaˈrʲilʲisʲtʲ/
+  translation: obsolescence
+  pos: noun
+  gender: f
+- lemma: зблизити
+  ipa: /ˈzblɪzɪtɪ/
+  translation: to bring closer
+  pos: verb
+- lemma: капелюх
+  ipa: /kapɛˈlʲux/
+  translation: hat
+  pos: noun
+  gender: m
+- lemma: крайнощ
+  ipa: /ˈkrajnɔʃt͡ʃ/
+  translation: extreme
+  pos: noun
+  gender: m
+- lemma: маневрування
+  ipa: /manɛvruˈvanʲːa/
+  translation: maneuvering
+  pos: noun
+  gender: n
+- lemma: милозвучність
+  ipa: /mɪlɔzˈvut͡ʃnʲisʲtʲ/
+  translation: euphony
+  pos: noun
+  gender: f
+- lemma: наближатися
+  ipa: /nablɪˈʒatɪsʲa/
+  translation: to approach
+  pos: verb
+- lemma: напрол
+  ipa: /naˈprɔl/
+  translation: ahead (typo)
+  pos: noun
+  gender: m
+- lemma: непритомність
+  ipa: /nɛprɪˈtɔmnʲisʲtʲ/
+  translation: unconsciousness
+  pos: noun
+  gender: f
+- lemma: обійтися
+  ipa: /ɔbijˈtɪsʲa/
+  translation: to manage without
+  pos: verb
+- lemma: переповнювати
+  ipa: /pɛrɛˈpɔu̯nʲuvatɪ/
+  translation: to overwhelm
+  pos: verb
+- lemma: перетин
+  ipa: /pɛˈrɛtɪn/
+  translation: intersection
+  pos: noun
+  gender: m
+- lemma: подвиг
+  ipa: /ˈpɔdvɪh/
+  translation: feat
+  pos: noun
+  gender: m
+- lemma: розбір
+  ipa: /rɔzˈbir/
+  translation: analysis
+  pos: noun
+  gender: m
+- lemma: розвиненість
+  ipa: /rɔzˈvɪnɛnʲisʲtʲ/
+  translation: development
+  pos: noun
+  gender: f
+- lemma: розгалужений
+  ipa: /rɔzhaˈluʒɛnɪj/
+  translation: branched
+  pos: adj
+  gender: f
+- lemma: тяма
+  ipa: /ˈtʲama/
+  translation: wits
+  pos: noun
+  gender: f

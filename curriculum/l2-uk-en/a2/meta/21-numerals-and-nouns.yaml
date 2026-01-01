@@ -1,0 +1,23 @@
+module: a2-21
+title: Numerals & Nouns
+subtitle: 'One, Two, Many: The Agreement Puzzle'
+version: '1.0'
+phase: A2.3
+pedagogy: PPP
+duration: 60 min
+transliteration: none
+tags:
+  - numerals
+  - nouns
+  - agreement
+  - grammar
+grammar:
+  - numeral-noun agreement (1, 2-4, 5+)
+  - case requirements for numerals
+objectives:
+  - Learner can use nouns correctly after 1, 2-4, and 5+
+  - Learner can count objects using correct forms
+  - Learner can use numerals in shopping contexts
+vocabulary_count: 30
+vocab_count: 21
+slug: 21-numerals-and-nouns

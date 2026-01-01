@@ -1,32 +1,3 @@
----
-module: a2-06
-title: 'Being and Becoming'
-subtitle: 'Professions and States with Instrumental'
-version: '1.0'
-phase: 'A2.1'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: none
-tags:
-  - grammar
-  - cases
-  - instrumental
-  - professions
-  - бути
-  - стати
-grammar:
-  - instrumental with бути
-  - instrumental with стати
-  - instrumental with працювати
-objectives:
-  - 'Learner can use instrumental to express profession with бути'
-  - 'Learner can use instrumental to describe becoming something with стати'
-  - 'Learner can use instrumental to express working as with працювати'
-  - 'Learner can distinguish present (no copula) from past/future (бути + Instr)'
-vocabulary_count: 27
-vocab_count: 37
----
-
 ## Warm-up
 
 In previous modules, you learned about the instrumental case: with the preposition **з** for accompaniment and without a preposition for transport and tools. Now it's time to discover another important use of the instrumental case — with the verbs **бути** (to be), **стати** (to become), and **працювати** (to work as)!

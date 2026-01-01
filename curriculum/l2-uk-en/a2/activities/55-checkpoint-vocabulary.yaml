@@ -420,4 +420,16 @@
     У мене болить *голова*(correct) і *горло*(correct). Де тут *аптека*(correct)?'
 - type: translate
   title: English to Ukrainian
-  items: []
+  items:
+  - english: I wake up at 7:00.
+    ukrainian: Я прокидаюся о сьомій годині.
+  - english: He works as a programmer.
+    ukrainian: Він працює програмістом.
+  - english: My head hurts.
+    ukrainian: У мене болить голова.
+  - english: I want to buy a ticket.
+    ukrainian: Я хочу купити квиток.
+  - english: She studies at the university.
+    ukrainian: Вона вчиться в університеті.
+  - english: Can I pay by card?
+    ukrainian: Можна заплатити карткою?

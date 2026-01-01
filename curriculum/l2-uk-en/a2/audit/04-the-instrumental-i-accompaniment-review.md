@@ -1,26 +1,30 @@
 # Audit Report: 04-the-instrumental-i-accompaniment.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Phase:** A2 | **Level:** A2 | **Pedagogy:** 'PPP' | **Target:** 1000
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, знахідний, кличний, називний, час
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1849/1000
+- **Words:** ✅ 1758/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/1
+- **Vocab:** ✅ 52/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 42.3% (target 35-50% (A2.1))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
+- **Immersion:** 🇺🇦 43.1% (target 35-50% (A2.1))
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -28,11 +32,11 @@
 | **Introduction** | ✅ | 155 | Included in Core |
 | **Warm-up** | ✅ | 90 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
-| **The Instrumental Question: Ким? Чим?** | ⚪️ | 106 | Skipped |
-| **Masculine Instrumental Endings** | ⚪️ | 188 | Skipped |
-| **Feminine Instrumental Endings** | ⚪️ | 120 | Skipped |
+| **Питання орудного відмінка: Ким? Чим? (The Instrumental Question)** | ⚪️ | 78 | Skipped |
+| **Закінчення чоловічого роду в орудному відмінку (Masculine Instrumental Endings)** | ⚪️ | 167 | Skipped |
+| **Закінчення жіночого роду в орудному відмінку (Feminine Instrumental Endings)** | ⚪️ | 123 | Skipped |
 | **Neuter Instrumental Endings** | ⚪️ | 60 | Skipped |
-| **Plural Instrumental Endings** | ⚪️ | 164 | Skipped |
+| **Орудний відмінок у множині (Plural Instrumental Endings)** | ⚪️ | 118 | Skipped |
 | **Cultural Insight** | ✅ | 35 | Included in Core |
 | **З/Із/Зі — The Preposition Variants** | ⚪️ | 134 | Skipped |
 | **Social Life with Instrumental** | ⚪️ | 75 | Skipped |
@@ -43,17 +47,5 @@
 | **Mini-Dialogues** | ✅ | 161 | Included in Core |
 | **Reading Practice: Вечірка-сюрприз** | ✅ | 208 | Included in Core |
 | **Підсумок** | ✅ | 133 | Included in Core |
-| **Need More Practice?** | ⚪️ | 30 | Skipped |
-| **Activities** | ➖ | 64 | Excluded Type |
-| **match-up: Nominative to Instrumental** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Instrumental Endings** | 🎮 | 12 | Activity (12 items, min 8) |
-| **quiz: Instrumental Forms** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: Instrumental Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Gender by Instrumental Ending** | 🎮 | 15 | Activity (15 items, min 12) |
-| **unjumble: Instrumental Sentences** | 🎮 | 6 | Activity (6 items, min 6) |
-| **error-correction: Fix the Instrumental** | 🎮 | 6 | Activity (6 items, min 6) |
-| **cloze: Complete the Story** | 🎮 | 12 | Activity (12 items, min 12) |
-| **dialogue-reorder: Meeting Someone New** | 🎮 | 13 | Activity (13 items, min 4) |
-| **mark-the-words: Find Instrumental Forms** | 🎮 | 19 | Activity (19 items, min 6) |
-| **translate: English to Ukrainian** | 🎮 | 36 | Activity (36 items, min 6) |
+| **Need More Practice?** | ⚪️ | 31 | Skipped |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

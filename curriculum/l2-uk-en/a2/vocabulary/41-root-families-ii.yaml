@@ -1,0 +1,200 @@
+module: 41-root-families-ii
+level: A2
+version: '2.0'
+items:
+- lemma: беззаперечний
+  ipa: bezzɐpeˈrɛt͡ʃnɪj
+  translation: undisputable
+  pos: adj
+  gender: m
+- lemma: внутрішній
+  ipa: ˈvnutrʲiʃnʲij
+  translation: internal
+  pos: adj
+  gender: n
+- lemma: глял
+  ipa: hlʲɐl
+  translation: looked (typo?)
+  pos: other
+- lemma: говоріння
+  ipa: hoˈʋoˈrʲinʲːɐ
+  translation: speaking
+  pos: noun
+  gender: n
+- lemma: дивл
+  ipa: dɪvl
+  translation: look (root)
+  pos: other
+- lemma: думл
+  ipa: duml
+  translation: think (root)
+  pos: other
+- lemma: думла
+  ipa: ˈdumlɐ
+  translation: thought (root)
+  pos: noun
+  gender: m
+- lemma: ення
+  ipa: ɛnʲːɐ
+  translation: suffix -ennya
+  pos: noun
+  gender: n
+- lemma: заздалегідь
+  ipa: zɐzdɐleˈhʲidʲ
+  translation: in advance
+  pos: adv
+- lemma: записувати
+  ipa: zɐˈpɪsuʋɐte
+  translation: to record (imp)
+  pos: verb
+- lemma: кореня
+  ipa: ˈkɔrenʲɐ
+  translation: root (gen)
+  pos: noun
+  gender: m
+- lemma: корінь
+  ipa: ˈkɔrʲinʲ
+  translation: root
+  pos: noun
+  gender: m
+- lemma: логіка
+  ipa: ˈlɔhʲikɐ
+  translation: logic
+  pos: noun
+  gender: f
+- lemma: лінгвістика
+  ipa: lʲinɡˈvʲistɪkɐ
+  translation: linguistics
+  pos: noun
+  gender: f
+- lemma: мов
+  ipa: mɔu̯
+  translation: language/speak (root)
+  pos: other
+- lemma: мовч
+  ipa: mɔu̯t͡ʃ
+  translation: silent (root)
+  pos: noun
+  gender: m
+- lemma: мовчазний
+  ipa: moʋt͡ʃɐzˈnɪj
+  translation: silent (adj)
+  pos: adj
+  gender: m
+- lemma: мовчання
+  ipa: moʋˈt͡ʃɑnʲːɐ
+  translation: silence
+  pos: noun
+  gender: n
+- lemma: обговорення
+  ipa: obhoˈvɔrenʲːɐ
+  translation: discussion
+  pos: noun
+  gender: n
+- lemma: пасивний
+  ipa: pɐˈsɪʋnɪj
+  translation: passive
+  pos: adj
+  gender: n
+- lemma: послуха
+  ipa: poˈsluxɐ
+  translation: obedience?
+  pos: noun
+  gender: m
+- lemma: посміхнутися
+  ipa: posmʲixˈnutɪsʲɐ
+  translation: to smile (perf)
+  pos: verb
+  gender: f
+- lemma: пташок
+  ipa: ˈptɑʃok
+  translation: birds (gen pl)
+  pos: noun
+  gender: f
+- lemma: радіослухач
+  ipa: rɐdʲiosluˈxɑt͡ʃ
+  translation: radio listener
+  pos: noun
+  gender: m
+- lemma: роздум
+  ipa: ˈrɔzdum
+  translation: reflection/thought
+  pos: noun
+  gender: m
+- lemma: романтичний
+  ipa: romɐnˈtɪt͡ʃnɪj
+  translation: romantic
+  pos: adj
+  gender: n
+- lemma: символ
+  ipa: ˈsɪmvol
+  translation: symbol
+  pos: noun
+  gender: m
+- lemma: словотвір
+  ipa: slovoˈtvʲir
+  translation: word formation
+  pos: noun
+  gender: m
+- lemma: слух
+  ipa: slux
+  translation: hearing
+  pos: noun
+  gender: m
+- lemma: слухання
+  ipa: ˈsluxɐnʲːɐ
+  translation: listening
+  pos: noun
+  gender: n
+- lemma: слухач
+  ipa: sluˈxɑt͡ʃ
+  translation: listener
+  pos: noun
+  gender: m
+- lemma: спокій
+  ipa: ˈspɔkʲij
+  translation: calm/peace
+  pos: noun
+  gender: m
+- lemma: сприйняття
+  ipa: sprɪjnʲɐtˈtʲɑ
+  translation: perception
+  pos: noun
+  gender: n
+- lemma: суфікс
+  ipa: ˈsufiks
+  translation: suffix
+  pos: noun
+  gender: m
+- lemma: тиша
+  ipa: ˈtɪʃɐ
+  translation: silence
+  pos: noun
+  gender: f
+- lemma: уважно
+  ipa: uˈʋɑʒno
+  translation: attentively
+  pos: adv
+- lemma: художній
+  ipa: xuˈdɔʒnʲij
+  translation: artistic
+  pos: adj
+  gender: n
+- lemma: чуй
+  ipa: t͡ʃuj
+  translation: hear/feel (root)
+  pos: other
+- lemma: чут
+  ipa: t͡ʃut
+  translation: hear (root)
+  pos: other
+- lemma: чуття
+  ipa: t͡ʃutˈtʲɑ
+  translation: sense/feeling
+  pos: noun
+  gender: n
+- lemma: ідентичність
+  ipa: idenˈtɪt͡ʃnʲisʲtʲ
+  translation: identity
+  pos: noun
+  gender: f

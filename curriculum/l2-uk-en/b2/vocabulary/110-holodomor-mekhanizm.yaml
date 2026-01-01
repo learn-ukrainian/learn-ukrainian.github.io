@@ -1,0 +1,330 @@
+module: 110-holodomor-mekhanizm
+level: B2
+version: '2.0'
+items:
+  - lemma: амністія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: антирадянський
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: балтія
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: валлійський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: вальтер
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: вилучення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: виростити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: виселення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: вкп
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вноситися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: воша
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: врятування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: гарет
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: гарета
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: гас
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: геноцидний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: голодуючий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: голодуючі
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: депортовати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: джонс
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: джонсу
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: директив
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: директива
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: дошок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: дюрант
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: етнічно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: заготівельник
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: запобігти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: зараження
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: засекретити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: здутий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: колгоспний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: колективізація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: колосок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: кооперація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: криміналізація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: кубані
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: куркул
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: куркуль
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: куркульство
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: молотов
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: найжорстокіше
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: насіння
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: обмолочений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: обпудити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: опиратися
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: посух
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: продовольчий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: пулітцерівський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: раєма
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: рнк
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: роздутий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: розкрадання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: розкуркулення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: рятуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: саботаж
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: села
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: n
+  - lemma: сірник
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: телеграма
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: трудящі
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: уклад
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: усякий
+    ipa: ''
+    translation: ''
+    pos: other
+    gender: m
+  - lemma: фальсифікувати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: хлібозаготівль
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: хлібозаготівля
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: цвк
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: цк
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: шолохов
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m

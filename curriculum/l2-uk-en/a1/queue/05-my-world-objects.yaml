@@ -1,0 +1,507 @@
+module: 05-my-world-objects
+level: A1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/05-my-world-objects.md
+generated: '2026-01-01T17:33:19.254191'
+scope: fill-in, quiz, true-false
+activity_counts:
+  fill-in: 24
+  quiz: 12
+  true-false: 12
+total_items: 48
+item_count: 48
+sample_percent: null
+items:
+- activity: fill-in
+  title: Complete with Demonstratives
+  sentence_template: ___ ніж (this knife)
+  answer: Цей
+  complete_sentence: Цей ніж (this knife)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Demonstratives
+  sentence_template: ___ ложка (this spoon)
+  answer: Ця
+  complete_sentence: Ця ложка (this spoon)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Demonstratives
+  sentence_template: ___ вікно (that window)
+  answer: Те
+  complete_sentence: Те вікно (that window)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Demonstratives
+  sentence_template: ___ сумка (this bag)
+  answer: Ця
+  complete_sentence: Ця сумка (this bag)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Demonstratives
+  sentence_template: ___ телефон (that phone)
+  answer: Той
+  complete_sentence: Той телефон (that phone)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Demonstratives
+  sentence_template: ___ стілець (this chair)
+  answer: Цей
+  complete_sentence: Цей стілець (this chair)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Demonstratives
+  sentence_template: ___ крісло (that armchair)
+  answer: Те
+  complete_sentence: Те крісло (that armchair)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Demonstratives
+  sentence_template: ___ ключі (these keys)
+  answer: Ці
+  complete_sentence: Ці ключі (these keys)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Demonstratives
+  sentence_template: ___ шафа (that wardrobe)
+  answer: Та
+  complete_sentence: Та шафа (that wardrobe)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Demonstratives
+  sentence_template: ___ лампа (this lamp)
+  answer: Ця
+  complete_sentence: Ця лампа (this lamp)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Demonstratives
+  sentence_template: ___ холодильник (this refrigerator)
+  answer: Цей
+  complete_sentence: Цей холодильник (this refrigerator)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Demonstratives
+  sentence_template: ___ двері (those doors)
+  answer: Ті
+  complete_sentence: Ті двері (those doors)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Dialogue
+  sentence_template: — Що ___? — ___ ніж. (What is this? This is a knife.)
+  answer: це | Це
+  complete_sentence: — Що це | Це? — це | Це ніж. (What is this? This is a knife.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Dialogue
+  sentence_template: — ___ чашка твоя? — Так, моя. (Is this cup yours? Yes, mine.)
+  answer: Ця
+  complete_sentence: — Ця чашка твоя? — Так, моя. (Is this cup yours? Yes, mine.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Dialogue
+  sentence_template: — Де мій телефон? — ___ телефон на столі. (Where is my phone?
+    That phone is on the table.)
+  answer: Той
+  complete_sentence: — Де мій телефон? — Той телефон на столі. (Where is my phone?
+    That phone is on the table.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Dialogue
+  sentence_template: — ___ ключі? — Так, ці ключі. (These keys? Yes, these keys.)
+  answer: Ці
+  complete_sentence: — Ці ключі? — Так, ці ключі. (These keys? Yes, these keys.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Dialogue
+  sentence_template: — ___ вікно велике! — Так, дуже велике. (That window is big!
+    Yes, very big.)
+  answer: Те
+  complete_sentence: — Те вікно велике! — Так, дуже велике. (That window is big! Yes,
+    very big.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Dialogue
+  sentence_template: — ___ сумка нова? — Ні, стара. (Is this bag new? No, old.)
+  answer: Ця
+  complete_sentence: — Ця сумка нова? — Ні, стара. (Is this bag new? No, old.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Dialogue
+  sentence_template: — ___ стілець гарний? — Так, дуже гарний. (Is this chair nice?
+    Yes, very nice.)
+  answer: Цей
+  complete_sentence: — Цей стілець гарний? — Так, дуже гарний. (Is this chair nice?
+    Yes, very nice.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Dialogue
+  sentence_template: — Де ___ картина? — Вона на стіні. (Where is that painting? It
+    is on the wall.)
+  answer: Та
+  complete_sentence: — Де Та картина? — Вона на стіні. (Where is that painting? It
+    is on the wall.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Dialogue
+  sentence_template: — ___ лампа не працює. — Так, зламана. (This lamp doesn't work.
+    Yes, broken.)
+  answer: Ця
+  complete_sentence: — Ця лампа не працює. — Так, зламана. (This lamp doesn't work.
+    Yes, broken.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Dialogue
+  sentence_template: — ___ годинник новий? — Так, новий. (Is that clock new? Yes,
+    new.)
+  answer: Той
+  complete_sentence: — Той годинник новий? — Так, новий. (Is that clock new? Yes,
+    new.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Dialogue
+  sentence_template: — Де ___ двері? — Там. (Where are those doors? There.)
+  answer: ті
+  complete_sentence: — Де ті двері? — Там. (Where are those doors? There.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Dialogue
+  sentence_template: — ___ дзеркало дуже гарне! — Дякую! (This mirror is very nice!
+    Thank you!)
+  answer: Це
+  complete_sentence: — Це дзеркало дуже гарне! — Дякую! (This mirror is very nice!
+    Thank you!)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Choose the Correct Demonstrative
+  question: ___ телефон (this phone, masculine)
+  options:
+  - '{''text'': ''цей'', ''correct'': True}'
+  - '{''text'': ''ця'', ''correct'': False}'
+  - '{''text'': ''це'', ''correct'': False}'
+  - '{''text'': ''ці'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Choose the Correct Demonstrative
+  question: ___ чашка (this cup, feminine)
+  options:
+  - '{''text'': ''цей'', ''correct'': False}'
+  - '{''text'': ''ця'', ''correct'': True}'
+  - '{''text'': ''це'', ''correct'': False}'
+  - '{''text'': ''ці'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Choose the Correct Demonstrative
+  question: ___ вікно (this window, neuter)
+  options:
+  - '{''text'': ''цей'', ''correct'': False}'
+  - '{''text'': ''ця'', ''correct'': False}'
+  - '{''text'': ''це'', ''correct'': True}'
+  - '{''text'': ''ці'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Choose the Correct Demonstrative
+  question: ___ ключі (these keys, plural)
+  options:
+  - '{''text'': ''цей'', ''correct'': False}'
+  - '{''text'': ''ця'', ''correct'': False}'
+  - '{''text'': ''це'', ''correct'': False}'
+  - '{''text'': ''ці'', ''correct'': True}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Choose the Correct Demonstrative
+  question: ___ диван (that couch, masculine)
+  options:
+  - '{''text'': ''той'', ''correct'': True}'
+  - '{''text'': ''та'', ''correct'': False}'
+  - '{''text'': ''те'', ''correct'': False}'
+  - '{''text'': ''ті'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Choose the Correct Demonstrative
+  question: ___ шафа (that wardrobe, feminine)
+  options:
+  - '{''text'': ''той'', ''correct'': False}'
+  - '{''text'': ''та'', ''correct'': True}'
+  - '{''text'': ''те'', ''correct'': False}'
+  - '{''text'': ''ті'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Choose the Correct Demonstrative
+  question: ___ крісло (that armchair, neuter)
+  options:
+  - '{''text'': ''той'', ''correct'': False}'
+  - '{''text'': ''та'', ''correct'': False}'
+  - '{''text'': ''те'', ''correct'': True}'
+  - '{''text'': ''ті'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Choose the Correct Demonstrative
+  question: ___ двері (those doors, plural)
+  options:
+  - '{''text'': ''той'', ''correct'': False}'
+  - '{''text'': ''та'', ''correct'': False}'
+  - '{''text'': ''те'', ''correct'': False}'
+  - '{''text'': ''ті'', ''correct'': True}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Choose the Correct Demonstrative
+  question: ___ лампа (this lamp, feminine)
+  options:
+  - '{''text'': ''цей'', ''correct'': False}'
+  - '{''text'': ''ця'', ''correct'': True}'
+  - '{''text'': ''це'', ''correct'': False}'
+  - '{''text'': ''ці'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Choose the Correct Demonstrative
+  question: ___ пилосос (that vacuum cleaner, masculine)
+  options:
+  - '{''text'': ''той'', ''correct'': True}'
+  - '{''text'': ''та'', ''correct'': False}'
+  - '{''text'': ''те'', ''correct'': False}'
+  - '{''text'': ''ті'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Choose the Correct Demonstrative
+  question: ___ дзеркало (this mirror, neuter)
+  options:
+  - '{''text'': ''цей'', ''correct'': False}'
+  - '{''text'': ''ця'', ''correct'': False}'
+  - '{''text'': ''це'', ''correct'': True}'
+  - '{''text'': ''ці'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Choose the Correct Demonstrative
+  question: ___ картини (those paintings, plural)
+  options:
+  - '{''text'': ''той'', ''correct'': False}'
+  - '{''text'': ''та'', ''correct'': False}'
+  - '{''text'': ''те'', ''correct'': False}'
+  - '{''text'': ''ті'', ''correct'': True}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Demonstrative Agreement
+  statement: '"Цей" is used with masculine singular nouns.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Demonstrative Agreement
+  statement: '"Ця" is used with feminine singular nouns.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Demonstrative Agreement
+  statement: '"Це" is used with masculine singular nouns.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Demonstrative Agreement
+  statement: '"Ці" is used with all plural nouns regardless of gender.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Demonstrative Agreement
+  statement: '"Той" is used with feminine singular nouns.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Demonstrative Agreement
+  statement: '"Та" is used with feminine singular nouns.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Demonstrative Agreement
+  statement: '"Те" is used with neuter singular nouns.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Demonstrative Agreement
+  statement: '"Ті" is used with all plural nouns.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Demonstrative Agreement
+  statement: '"Це" can only mean "this" (neuter).'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Demonstrative Agreement
+  statement: Demonstratives must agree with the gender of the noun.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Demonstrative Agreement
+  statement: Most objects ending in -а or -я are feminine.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Demonstrative Agreement
+  statement: Most objects ending in consonants are masculine.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

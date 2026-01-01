@@ -1,28 +1,3 @@
----
-module: b1-30
-title: "Підрядні речення мети: щоб + минула форма"
-subtitle: "Purpose Clauses - Different Subjects"
-version: "1.0"
-phase: "B1.3a Complex Sentences"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - purpose-clauses
-  - complex-sentences
-  - subjunctive
-grammar:
-  - "щоб + past form for different-subject purpose clauses"
-  - "Subject agreement in subordinate clauses"
-objectives:
-  - "Learner understands when to use щоб + past form"
-  - "Learner can form different-subject purpose clauses"
-  - "Learner can correctly agree verb forms with subjects"
-vocabulary_count: 25
-vocab_count: 68
----
-
 > [!motivation]
 > Коли ви хочете, щоб **хтось інший** щось зробив — потрібна особлива конструкція. Не можна сказати «Я хочу ти прийти» — це звучить дивно. Українська має елегантне рішення: **щоб + минула форма**. Ця конструкція — ключ до вираження бажань, прохань, наказів і порад щодо дій інших людей. Без цієї конструкції неможливо говорити про те, чого ви очікуєте від інших.
 
@@ -373,7 +348,5 @@ vocab_count: 68
 > - 🎧 [Ukrainian Lessons Podcast](https://ukrainianlessons.com/) — подкаст для вивчення
 
 ---
-
-
 
 ---

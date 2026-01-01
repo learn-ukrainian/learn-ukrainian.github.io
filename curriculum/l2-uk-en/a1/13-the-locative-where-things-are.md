@@ -1,29 +1,3 @@
----
-module: a1-13
-title: 'The Locative - Where Things Are'
-subtitle: 'Finding Your Way Around Ukrainian Spaces'
-version: '1.0'
-phase: 'A1.2'
-pedagogy: 'PPP'
-objectives:
-  - "Learner can ask and answer 'Where is X?' using locative case"
-  - 'Learner can distinguish between в/у and на prepositions'
-  - 'Learner can describe locations of people and objects'
-  - 'Learner can name common places in Ukrainian'
-vocabulary_count: 30
-duration: 60
-transliteration: 'vocabulary'
-tags:
-  - grammar
-  - locative-case
-  - places
-  - prepositions
-grammar:
-  - locative-case
-  - prepositions-v-u-na
-vocab_count: 36
----
-
 # The Locative - Where Things Are
 
 ## Warm-up
@@ -296,42 +270,3 @@ Next up: You'll learn possessive pronouns (мій, твій, його...) so you
 > **Podcast:** [ULP 2-67 | Telling Time + Locative](https://www.ukrainianlessons.com/episode67/) — Locative case with ordinal numbers
 >
 > **Prepositions:** [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Which preposition uses which case
-
-# Vocabulary
-
-| Word     | IPA            | English           | POS  | Gender | Note |
-| -------- | -------------- | ----------------- | ---- | ------ | ---- |
-| аптека   | /ɑpˈtɛkɑ/      | pharmacy          | noun | ж      |      |
-| артефакт | /ɑrtɛˈfɑkt/    | artifact          | noun | ч      |      |
-| балкон   | /bɑlˈkɔn/      | balcony           | noun | ч      |      |
-| великий  | /vɛˈlɪkɪj/     | big/large         | adj  | ч      |      |
-| вибачити | /vɪˈbɑt͡ʃɪtɪ/   | to forgive/excuse | verb | -      |      |
-| волинь   | /vɔˈlɪnʲ/      | Volyn (region)    | name | ж      |      |
-| все      | /wsɛ/          | everything        | pron | с      |      |
-| готель   | /ɦɔˈtɛlʲ/      | hotel             | noun | ч      |      |
-| екран    | /ɛˈkrɑn/       | screen            | noun | ч      |      |
-| забувати | /zɑbuˈvɑtɪ/    | to forget (imp)   | verb | -      |      |
-| зал      | /zɑl/          | hall              | noun | ч      |      |
-| зараз    | /ˈzɑrɑz/       | now               | adv  | -      |      |
-| зона     | /ˈzɔnɑ/        | zone              | noun | ж      |      |
-| зупинка  | /zuˈpɪnkɑ/     | stop (bus/tram)   | noun | ж      |      |
-| зустріч  | /ˈzustrit͡ʃ/    | meeting           | noun | ж      |      |
-| кавказ   | /kɑwˈkɑz/      | Caucasus          | name | ч      |      |
-| концерт  | /kɔnˈt͡sɛrt/    | concert           | noun | ч      |      |
-| кіт      | /kit/          | cat               | noun | ч      |      |
-| музей    | /muˈzɛj/       | museum            | noun | ч      |      |
-| місце    | /ˈmisʲt͡sʲɛ/    | place/seat        | noun | с      |      |
-| місцевий | /misʲˈt͡sʲɛvɪj/ | local             | adj  | ч      |      |
-| одеса    | /ɔˈdɛsɑ/       | Odesa             | name | ж      |      |
-| офіс     | /ˈɔfis/        | office            | noun | ч      |      |
-| площа    | /ˈplɔʃt͡ʃɑ/     | square            | noun | ж      |      |
-| пляж     | /plʲɑʒ/        | beach             | noun | ч      |      |
-| поверх   | /ˈpɔvɛrx/      | floor/story       | noun | ч      |      |
-| ринок    | /ˈrɪnɔk/       | market/Rynok Sq   | noun | ч      |      |
-| склад    | /sklɑd/        | warehouse/store   | noun | ч      |      |
-| театр    | /tɛˈɑtr/       | theater           | noun | ч      |      |
-| третій   | /ˈtrɛtʲij/     | third             | num  | ч      |      |
-| україна  | /ʊkrɑˈjinɑ/    | Ukraine           | name | ж      |      |
-| урок     | /uˈrɔk/        | lesson            | noun | ч      |      |
-| хрещатик | /xrɛˈʃt͡ʃɑtɪk/  | Khreshchatyk      | name | ч      |      |
-| шевченко | /ʃɛwˈt͡ʃɛnkɔ/   | Shevchenko        | name | ч      |      |

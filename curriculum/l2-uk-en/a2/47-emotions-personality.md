@@ -1,22 +1,3 @@
----
-module: a2-47
-title: 'Emotions & Personality'
-subtitle: 'Describing feelings and character traits'
-version: '1.0'
-phase: 'A2'
-pedagogy: 'PPP'
-duration: 60
-transliteration: none
-tags: ['vocabulary', 'emotions', 'personality', 'adjectives']
-grammar: ['adjective-agreement', 'instrumental-with-бути']
-objectives:
-  - 'Learner can describe basic emotions in Ukrainian'
-  - 'Learner can describe personality traits using appropriate adjectives'
-  - 'Learner can express emotional states using бути + instrumental'
-vocabulary_count: 30
-vocab_count: 64
----
-
 # Emotions & Personality
 
 ## Розминка (Warm-up)

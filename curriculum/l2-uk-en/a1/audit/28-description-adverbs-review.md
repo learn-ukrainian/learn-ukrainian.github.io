@@ -1,20 +1,30 @@
 # Audit Report: 28-description-adverbs.md
-**Phase:** A1 | **Level:** A1 | **Pedagogy:** "PPP" | **Target:** 750
+**Phase:** A1.3 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): важко, іноді, тихо, смачно, нудно...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
-- **Words:** ✅ 873/750
+- **Words:** ✅ 885/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 14/1
+- **Vocab:** ✅ 24/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 40.5% (target 35-55% (M28))
+- **Immersion:** 🇺🇦 38.0% (target 35-55% (M28))
+- **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -25,22 +35,12 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Description: Adverbs** | ⚪️ | 0 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 58 | Included in Core |
-| **Grammar** | ⚪️ | 76 | Skipped |
+| **Grammar** | ⚪️ | 0 | Skipped |
+| **How to Form Adverbs** | ⚪️ | 77 | Skipped |
 | **Frequency Adverbs: How Often?** | ⚪️ | 120 | Skipped |
 | **Degree Adverbs: How Much?** | ⚪️ | 0 | Skipped |
-| **Examples in Context** | ✅ | 175 | Included in Core |
+| **Examples in Context** | ✅ | 185 | Included in Core |
 | **Dialogues** | ✅ | 363 | Included in Core |
-| **Summary** | ✅ | 81 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Adjective → Adverb** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Frequency Scale** | 🎮 | 12 | Activity (12 items, min 12) |
-| **group-sort: Type of Adverb** | 🎮 | 12 | Activity (12 items, min 12) |
-| **fill-in: Як ти це робиш? (How Do You Do It?)** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Як часто? (How Often?)** | 🎮 | 12 | Activity (12 items, min 8) |
-| **quiz: Adverb or Adjective?** | 🎮 | 8 | Activity (8 items, min 8) |
-| **quiz: Frequency Meaning** | 🎮 | 8 | Activity (8 items, min 8) |
-| **unjumble: Describing Actions** | 🎮 | 12 | Activity (12 items, min 6) |
-| **true-false: Adverb Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Summary** | ✅ | 82 | Included in Core |

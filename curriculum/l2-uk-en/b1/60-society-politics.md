@@ -1,28 +1,3 @@
----
-module: b1-60
-title: "Суспільство та політика"
-subtitle: "Society & Politics"
-version: "1.0"
-phase: "B1.5 Vocabulary Expansion I"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "noun collocations with civic vocabulary"
-  - "political discourse patterns"
-tags:
-  - vocabulary
-  - society
-  - politics
-objectives:
-  - "Learner can use 30 civic and political vocabulary words in context"
-  - "Learner can discuss democratic processes and institutions"
-  - "Learner can form natural collocations with political vocabulary"
-vocabulary_count: 35
-vocab_count: 53
----
-
 # Суспільство та політика
 
 > 🎯 **Чому це важливо?**

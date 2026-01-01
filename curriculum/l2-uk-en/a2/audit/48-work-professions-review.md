@@ -1,6 +1,15 @@
 # Audit Report: 48-work-professions.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "Narrative" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[GRAMMAR]** Participle used before B1: 'працьовитий'
+  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1138/1000
@@ -10,17 +19,12 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 11/1
+- **Vocab:** ✅ 42/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 59.3% (target 50-60% (A2.3))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
+- **Pedagogy:** ❌ 1 violations
+- **Immersion:** 🇺🇦 58.0% (target 50-60% (A2.3))
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -30,16 +34,4 @@
 | **Presentation** | ✅ | 432 | Included in Core |
 | **Practice** | ⚪️ | 507 | Skipped |
 | **Summary** | ✅ | 82 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **quiz: Profession Quiz** | 🎮 | 8 | Activity (8 items, min 8) |
-| **match-up: Profession Match-up** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Fill in the Blanks** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: True or False** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Category Sort** | 🎮 | 15 | Activity (15 items, min 12) |
-| **unjumble: Unjumble Sentences** | 🎮 | 8 | Activity (8 items, min 6) |
-| **error-correction: Fix the Mistakes** | 🎮 | 12 | Activity (12 items, min 6) |
-| **cloze: Career Ladder** | 🎮 | 12 | Activity (12 items, min 12) |
-| **dialogue-reorder: Interview Dialogue** | 🎮 | 12 | Activity (12 items, min 4) |
-| **mark-the-words: Profession Search** | 🎮 | 10 | Activity (10 items, min 6) |
-| **select: Choose the Correct Word** | 🎮 | 12 | Activity (12 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

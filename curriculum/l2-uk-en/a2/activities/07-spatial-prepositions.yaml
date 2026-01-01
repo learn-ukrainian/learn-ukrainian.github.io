@@ -576,4 +576,70 @@
     Лист *від друга*(correct). Подарунок *для сестри*(correct). Кава *без цукру*(correct). Розмова *про майбутнє*(correct).'
 - type: translate
   title: English to Ukrainian
-  items: []
+  items:
+  - source: I am going to school.
+    options:
+    - text: Я йду до школи.
+      correct: true
+    - text: Я йду в школі.
+      correct: false
+    - text: Я йду на школі.
+      correct: false
+    - text: Я йду до школа.
+      correct: false
+    explanation: "'До' + Genitive 'школи'."
+  - source: Coffee without sugar.
+    options:
+    - text: Кава без цукру.
+      correct: true
+    - text: Кава без цукор.
+      correct: false
+    - text: Кава без цукром.
+      correct: false
+    - text: Кава без цукрі.
+      correct: false
+    explanation: "'Без' + Genitive 'цукру'."
+  - source: The lamp is above the table.
+    options:
+    - text: Лампа над столом.
+      correct: true
+    - text: Лампа на столі.
+      correct: false
+    - text: Лампа під столом.
+      correct: false
+    - text: Лампа над столі.
+      correct: false
+    explanation: "'Над' + Instrumental 'столом'."
+  - source: A gift for mom.
+    options:
+    - text: Подарунок для мами.
+      correct: true
+    - text: Подарунок для мама.
+      correct: false
+    - text: Подарунок до мами.
+      correct: false
+    - text: Подарунок від мами.
+      correct: false
+    explanation: "'Для' + Genitive 'мами'."
+  - source: They are talking about me.
+    options:
+    - text: Вони говорять про мене.
+      correct: true
+    - text: Вони говорять про я.
+      correct: false
+    - text: Вони говорять про мені.
+      correct: false
+    - text: Вони говорять про мною.
+      correct: false
+    explanation: "'Про' + Accusative 'мене'."
+  - source: The cat is under the table.
+    options:
+    - text: Кіт під столом.
+      correct: true
+    - text: Кіт під стіл.
+      correct: false
+    - text: Кіт на столі.
+      correct: false
+    - text: Кіт під столі.
+      correct: false
+    explanation: "Location 'Де?' + 'під' + Instrumental 'столом'."

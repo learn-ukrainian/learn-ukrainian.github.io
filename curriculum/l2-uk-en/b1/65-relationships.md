@@ -1,29 +1,3 @@
----
-module: b1-65
-title: "Стосунки та зв'язки"
-subtitle: "Relationships and Connections"
-version: "1.0"
-phase: "B1.6 Vocabulary Expansion II"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "noun collocations with relationship vocabulary"
-  - "verb patterns with emotional states"
-tags:
-  - vocabulary
-  - relationships
-  - social
-objectives:
-  - "Learner can use 25 relationship vocabulary words in context"
-  - "Learner can distinguish between стосунки/відносини/зв'язок"
-  - "Learner can form natural collocations with relationship nouns"
-  - "Learner can discuss Ukrainian cultural traditions related to relationships"
-vocabulary_count: 37
-vocab_count: 61
----
-
 # Стосунки та зв'язки
 
 > 🎯 **Чому це важливо?**

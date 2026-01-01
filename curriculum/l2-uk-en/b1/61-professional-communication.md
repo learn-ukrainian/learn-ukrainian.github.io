@@ -1,27 +1,3 @@
----
-module: b1-61
-title: "Професійна комунікація"
-subtitle: "Professional Communication"
-version: "1.0"
-phase: "B1.5 Vocabulary Expansion I"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "professional vocabulary collocations"
-tags:
-  - vocabulary
-  - professional
-  - workplace
-objectives:
-  - "Learner can use 30 professional communication words in context"
-  - "Learner can distinguish between formal and informal workplace vocabulary"
-  - "Learner can form natural collocations with professional nouns and verbs"
-vocabulary_count: 35
-vocab_count: 39
----
-
 # Професійна комунікація
 
 > 🎯 **Чому це важливо?**

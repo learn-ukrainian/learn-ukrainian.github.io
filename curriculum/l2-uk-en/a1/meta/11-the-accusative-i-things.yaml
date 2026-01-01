@@ -1,0 +1,24 @@
+module: a1-11
+title: The Accusative I - Things
+subtitle: Making Direct Objects Work
+version: '1.0'
+phase: A1.2 Navigation
+pedagogy: PPP
+duration: 60
+transliteration: vocab
+tags:
+  - grammar
+  - accusative
+  - cases
+  - direct-objects
+grammar:
+  - Accusative case (inanimate nouns)
+  - Feminine -а → -у
+  - Masculine/Neuter no change
+objectives:
+  - Learner can form accusative case for inanimate nouns
+  - Learner can use accusative after verbs like бачити, брати, мати
+  - Learner can distinguish between nominative and accusative forms
+vocabulary_count: 25
+vocab_count: 33
+slug: 11-the-accusative-i-things

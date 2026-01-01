@@ -1,31 +1,3 @@
----
-module: b2-29
-title: "Інтеграційна практика B2.1"
-subtitle: "B2.1 Integration Practice"
-version: "1.0"
-phase: "B2.1c [Register & Domain Vocab]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - integration
-  - review
-  - passive-voice
-  - participles
-  - register
-  - multi-clause
-grammar:
-  - "All B2.1 grammar: passive voice, participles, register, complex sentences"
-  - "Cross-skill application in authentic contexts"
-objectives:
-  - "Учень може застосовувати всі граматичні структури B2.1 в інтегрованих контекстах"
-  - "Учень може трансформувати тексти між різними регістрами"
-  - "Учень може аналізувати складні тексти на граматичні особливості"
-vocabulary_count: 28
-register: "varies"
-vocab_count: 54
----
-
 # Інтеграційна практика B2.1
 
 > 🎯 **Чому це важливо?**

@@ -1,0 +1,25 @@
+module: b2-100
+title: Шевченко і пробудження
+subtitle: 'Життя та творчість Тараса Шевченка: від кріпацтва до національного пророка'
+version: '1.0'
+focus: history
+phase: B2.3b
+pedagogy: CBI
+duration: 90
+transliteration: none
+register: публіцистичний
+tags:
+  - history
+  - biography
+  - topic:shevchenko
+  - topic:national-awakening
+grammar:
+  - Дієприкметникові звороти в біографічних текстах
+  - Цитати та пряма мова в історичному наративі
+objectives:
+  - Проаналізувати життєвий шлях Тараса Шевченка як відображення долі України
+  - Зрозуміти роль Кирило-Мефодіївського братства у формуванні політичної думки
+  - Вивчити ключові концепції шевченкового 'Заповіту' та поеми 'Кавказ'
+vocabulary_count: 25
+vocab_count: 153
+slug: 100-shevchenko-awakening

@@ -1,0 +1,233 @@
+module: 73-regions-east
+level: B1
+version: '2.0'
+items:
+- lemma: аерокосмічний
+  ipa: /aɛrɔkɔsˈmʲit͡ʃnɪj/
+  translation: aerospace
+  pos: adj
+  gender: f
+- lemma: арен
+  ipa: /aˈrɛn/
+  translation: arenas (gen.)
+  pos: noun
+  gender: f
+- lemma: атлетиця
+  ipa: /atlɛˈtɪt͡sʲa/
+  translation: athlete (fem.)
+  pos: noun
+  gender: f
+- lemma: бубка
+  ipa: /ˈbubka/
+  translation: Bubka
+  pos: propn
+  gender: m
+- lemma: вуглевидобуток
+  ipa: /vuhlɛvɪdɔˈbutɔk/
+  translation: coal mining
+  pos: noun
+  gender: m
+- lemma: вугільний
+  ipa: /vuˈhilʲnɪj/
+  translation: coal (adj)
+  pos: adj
+  gender: m
+- lemma: дванадця
+  ipa: /dvaˈnadet͡sʲa/
+  translation: twelve (trunc)
+  pos: other
+- lemma: донбаський
+  ipa: /dɔnˈbasʲkɪj/
+  translation: Donbas (adj)
+  pos: adj
+  gender: f
+- lemma: донецьк
+  ipa: /dɔˈnɛt͡sʲk/
+  translation: Donetsk
+  pos: propn
+  gender: m
+- lemma: енеїда
+  ipa: /ɛnɛˈjida/
+  translation: Eneida
+  pos: noun
+  gender: f
+- lemma: жердина
+  ipa: /ʒɛrˈdɪna/
+  translation: pole
+  pos: noun
+  gender: f
+- lemma: заселення
+  ipa: /zaˈsɛlɛnʲːa/
+  translation: settlement
+  pos: noun
+  gender: n
+- lemma: каразін
+  ipa: /kaˈrazʲin/
+  translation: Karazin
+  pos: propn
+  gender: m
+- lemma: каразінський
+  ipa: /karaˈzʲinsʲkɪj/
+  translation: Karazin (adj)
+  pos: adj
+  gender: m
+- lemma: комбінат
+  ipa: /kɔmbʲiˈnat/
+  translation: combine
+  pos: noun
+  gender: m
+- lemma: кубка
+  ipa: /ˈkubka/
+  translation: cup (gen.)
+  pos: noun
+  gender: m
+- lemma: ланда
+  ipa: /ˈlanda/
+  translation: Landa
+  pos: propn
+  gender: m
+- lemma: луганськ
+  ipa: /luˈhansʲk/
+  translation: Luhansk
+  pos: propn
+  gender: m
+- lemma: луганська
+  ipa: /luˈhansʲka/
+  translation: Luhansk (adj)
+  pos: propn
+  gender: m
+- lemma: луганщина
+  ipa: /luˈhanʃt͡ʃɪna/
+  translation: Luhansk region
+  pos: propn
+  gender: f
+- lemma: металургійний
+  ipa: /mɛtalurˈhʲijnɪj/
+  translation: metallurgical
+  pos: adj
+  gender: m
+- lemma: металіст
+  ipa: /mɛtaˈlʲist/
+  translation: Metalist
+  pos: propn
+  gender: m
+- lemma: мечников
+  ipa: /ˈmɛt͡ʃnɪkɔu̯/
+  translation: Mechnikov
+  pos: propn
+  gender: m
+- lemma: мішаний
+  ipa: /ˈmʲiʃanɪj/
+  translation: mixed
+  pos: adj
+  gender: m
+- lemma: найгустіший
+  ipa: /najhuˈstʲiʃɪj/
+  translation: densest
+  pos: adj
+- lemma: остроградський
+  ipa: /ɔstrɔˈhradsʲkɪj/
+  translation: Ostrohradskyi
+  pos: propn
+  gender: m
+- lemma: переселятися
+  ipa: /pɛrɛsɛˈlʲatɪsʲa/
+  translation: to resettle
+  pos: verb
+- lemma: покровський
+  ipa: /pɔˈkrɔu̯sʲkɪj/
+  translation: Pokrovsk (adj)
+  pos: adj
+  gender: m
+- lemma: портовий
+  ipa: /pɔrtɔˈvɪj/
+  translation: port (adj)
+  pos: adj
+- lemma: прокат
+  ipa: /prɔˈkat/
+  translation: rental
+  pos: noun
+  gender: m
+- lemma: слобода
+  ipa: /slɔbɔˈda/
+  translation: sloboda
+  pos: noun
+  gender: f
+- lemma: слобожан
+  ipa: /slɔbɔˈʒan/
+  translation: Slobozhanians (gen.)
+  pos: noun
+  gender: m
+- lemma: слобожанський
+  ipa: /slɔbɔˈʒansʲkɪj/
+  translation: Slobozhanskyi
+  pos: adj
+- lemma: слобідський
+  ipa: /slɔbidˈsʲkɪj/
+  translation: Slobidskyi
+  pos: adj
+- lemma: східноукраїнський
+  ipa: /sxidnɔukraˈjinsʲkɪj/
+  translation: East Ukrainian
+  pos: adj
+  gender: n
+- lemma: уєфа
+  ipa: /u jɛ fa/
+  translation: UEFA
+  pos: propn
+  gender: f
+- lemma: фк
+  ipa: /ɛf ka/
+  translation: FC
+  pos: noun
+  gender: m
+- lemma: футболь
+  ipa: /futˈbɔlʲ/
+  translation: football (trunc)
+  pos: noun
+  gender: m
+- lemma: фізик
+  ipa: /ˈfʲizɪk/
+  translation: physicist
+  pos: noun
+  gender: m
+- lemma: хока
+  ipa: /ˈxɔka/
+  translation: hockey (trunc)
+  pos: noun
+  gender: m
+- lemma: хокейний
+  ipa: /xɔˈkɛjnɪj/
+  translation: hockey (adj)
+  pos: adj
+  gender: m
+- lemma: шахта
+  ipa: /ˈʃaxta/
+  translation: mine
+  pos: noun
+  gender: f
+- lemma: шахтар
+  ipa: /ʃaxˈtar/
+  translation: miner
+  pos: propn
+  gender: m
+- lemma: шахтарський
+  ipa: /ʃaxˈtarsʲkɪj/
+  translation: miner's
+  pos: adj
+  gender: f
+- lemma: юз
+  ipa: /juz/
+  translation: Hughes
+  pos: propn
+  gender: m
+- lemma: юзівка
+  ipa: /ˈjuziu̯ka/
+  translation: Yuzivka
+  pos: propn
+  gender: f
+- lemma: єврей
+  ipa: /jɛu̯ˈrɛj/
+  translation: Jew
+  pos: noun
+  gender: m

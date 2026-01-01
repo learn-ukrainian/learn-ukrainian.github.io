@@ -1,0 +1,516 @@
+module: 32-numeral-declension-compound-numbers
+level: B2
+version: '2.0'
+items:
+  - lemma: амбітно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: армія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: божога
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: бухгалтерія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: вигаданий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: висловитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: вольт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: вольта
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: восьмеро
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: восьмисот
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: восьмист
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вояк
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: відмінювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: вісьма
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: вісьмаст
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вісімдесятьий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: вісімдесятьм
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: вісімдесятьма
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: вісімсот
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: групувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: двомаст
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: двомет
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: двохсот
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: двохст
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: двохста
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: десятих
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: десятковий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: диктування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: доброволець
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: дробовий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: дріб
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: еквівалентно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: заборгованість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: залишок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: заощадити
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: записуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: запланувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: запобігати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: зачина
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: збігатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: зовнішньоторговельний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: зручність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: кирилиця
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: кириличний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: комбінування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: купюр
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: купюра
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: літа
+    ipa: ''
+    translation: ''
+    pos: noun
+  - lemma: маса
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: минулорічний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: млрд
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: налічувати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: непарний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: непорозуміння
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: несправедливість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: оборота
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: округлювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: парний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: переяславський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: питомий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: подорожчати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: позначатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: посідати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: претендент
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: прискорюватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: пропорція
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: підробка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: підробок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: раза
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: рейтинг
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: реєстровий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: семисот
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: семист
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: складніше
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: сорока
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: сот
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: сотих
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: сплатити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: споживчий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: спрощений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: спрощувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: спрощуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: статистиця
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: стом
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: сьомаст
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: сімдесять
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: сімсот
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: сіо
+    ipa: ''
+    translation: ''
+    pos: other
+    gender: f
+  - lemma: тисячоліття
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: трильйон
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: триста
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: трьомаст
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: трьомст
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: трьохсот
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: трьохст
+    ipa: ''
+    translation: ''
+    pos: noun
+  - lemma: утворений
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: хі
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: цельсієм
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: числення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: чотириста
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: чотирмаст
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: чотирьомест
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: чотирьохест
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: чотирьохсот
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: шестисот
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: шестист
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: шістдесять
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: шістдесятьма
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: шістсот
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: шістьмаст
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: ініціатива
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f

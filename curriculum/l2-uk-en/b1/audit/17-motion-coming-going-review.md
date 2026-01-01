@@ -1,6 +1,15 @@
 # Audit Report: 17-motion-coming-going.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
+**Phase:** B1.2 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): привезти, ввести, вхід, вилетіти, виїхати...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1697/1500
@@ -37,19 +46,12 @@
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.5%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Рух: Прибуття та вихід** | ⚪️ | 157 | Skipped |
+| **Intro/Narrative** | ✅ | 157 | Included in Core |
 | **Тест** | ⚪️ | 104 | Skipped |
 | **Пояснення** | ⚪️ | 463 | Skipped |
 | **Практика** | ⚪️ | 536 | Skipped |
 | **Діалоги** | ✅ | 282 | Included in Core |
 | **Підсумок** | ✅ | 155 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

@@ -1,0 +1,153 @@
+module: 43-checkpoint-word-formation
+level: A2
+version: '2.0'
+items:
+- lemma: важлив
+  ipa: vɐʒˈlɪv
+  translation: important (root)
+  pos: other
+- lemma: важливість
+  ipa: vɐʒˈlɪvʲisʲtʲ
+  translation: importance
+  pos: noun
+  gender: f
+- lemma: вбачати
+  ipa: vbɐˈt͡ʃɑte
+  translation: to see/perceive
+  pos: verb
+- lemma: вч
+  ipa: vt͡ʃ
+  translation: teach/learn (root)
+  pos: noun
+  gender: m
+- lemma: відійти
+  ipa: vidijˈtɪ
+  translation: to move away (perf)
+  pos: verb
+- lemma: глядач
+  ipa: hlʲɐˈdɑt͡ʃ
+  translation: spectator/viewer
+  pos: noun
+  gender: m
+- lemma: доброта
+  ipa: dobroˈtɑ
+  translation: kindness
+  pos: noun
+  gender: f
+- lemma: жи
+  ipa: ʒɪ
+  translation: life (root)
+  pos: other
+- lemma: зна
+  ipa: znɑ
+  translation: know (root)
+  pos: other
+- lemma: красивість
+  ipa: krɐsɪˈvʲistʲ
+  translation: beauty?
+  pos: noun
+  gender: f
+- lemma: люб
+  ipa: lʲub
+  translation: love (root)
+  pos: other
+- lemma: лінгвістичний
+  ipa: lʲinɡvisˈtɪt͡ʃnɪj
+  translation: linguistic
+  pos: adj
+  gender: m
+- lemma: малювання
+  ipa: mɐlʲuˈʋɑnʲːɐ
+  translation: drawing
+  pos: noun
+  gender: n
+- lemma: мен
+  ipa: mɛn
+  translation: exchange/change (root)
+  pos: other
+- lemma: наклеїти
+  ipa: nɐˈklejite
+  translation: to stick on (perf)
+  pos: verb
+- lemma: неможливо
+  ipa: nemoʒˈlɪʋo
+  translation: impossible
+  pos: adv
+- lemma: ння
+  ipa: nʲːɐ
+  translation: suffix -nnya
+  pos: other
+- lemma: передбачити
+  ipa: peredˈbɑt͡ʃɪte
+  translation: to foresee (perf)
+  pos: verb
+- lemma: послухати
+  ipa: poˈsluxɐte
+  translation: to listen (perf)
+  pos: verb
+- lemma: проживати
+  ipa: proʒɪˈʋɑte
+  translation: to reside
+  pos: verb
+- lemma: підручник
+  ipa: pidˈrut͡ʃnɪk
+  translation: textbook
+  pos: noun
+  gender: m
+- lemma: пізнання
+  ipa: piznɐnʲˈnʲɑ
+  translation: cognition/knowledge
+  pos: noun
+  gender: n
+- lemma: роб
+  ipa: rɔb
+  translation: work/do (root)
+  pos: other
+- lemma: робітник
+  ipa: robitˈnɪk
+  translation: worker
+  pos: noun
+  gender: m
+- lemma: розійтися
+  ipa: rozijˈtɪsʲɐ
+  translation: to disperse/part
+  pos: verb
+- lemma: руч
+  ipa: rut͡ʃ
+  translation: hand (root)
+  pos: noun
+  gender: m
+- lemma: сильність
+  ipa: ˈsɪlʲnʲisʲtʲ
+  translation: strength
+  pos: noun
+  gender: f
+- lemma: спово
+  ipa: spovo
+  translation: word (typo слово?)
+  pos: noun
+  gender: m
+- lemma: споріднений
+  ipa: spoˈrʲidnenɪj
+  translation: related/kindred
+  pos: adj
+- lemma: україн
+  ipa: ukrɐˈjin
+  translation: Ukraine (root)
+  pos: propn
+  gender: m
+- lemma: учитель
+  ipa: uˈt͡ʃɪtelʲ
+  translation: teacher
+  pos: noun
+  gender: m
+- lemma: європейський
+  ipa: jeu̯roˈpɛjsʲkɪj
+  translation: European
+  pos: adj
+  gender: m
+- lemma: інсайт
+  ipa: inˈsɑjt
+  translation: insight
+  pos: noun
+  gender: m

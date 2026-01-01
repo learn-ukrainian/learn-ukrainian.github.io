@@ -1,6 +1,15 @@
 # Audit Report: 08-aspect-past-result-process.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
+**Phase:** B1.1 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): довго, протягом, досі, нарешті, хвилину...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 2213/1500
@@ -10,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 13/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 34/25
+- **Vocab:** ⚠️ 24 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,19 +46,12 @@
 | proverbs | 7 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **98.9%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Вид у минулому: результат vs процес** | ⚪️ | 61 | Skipped |
+| **Intro/Narrative** | ✅ | 61 | Included in Core |
 | **Тест** | ⚪️ | 128 | Skipped |
 | **Пояснення** | ⚪️ | 974 | Skipped |
 | **Практика** | ⚪️ | 477 | Skipped |
 | **Діалоги** | ✅ | 341 | Included in Core |
 | **Підсумок** | ✅ | 232 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

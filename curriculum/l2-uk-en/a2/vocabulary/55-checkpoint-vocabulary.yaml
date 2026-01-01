@@ -1,0 +1,24 @@
+module: 55-checkpoint-vocabulary
+level: A2
+version: '2.0'
+items:
+- lemma: горище
+  ipa: /hoˈrɪʃt͡ʃe/
+  translation: attic
+  pos: noun
+  gender: n
+- lemma: застудитися
+  ipa: /zɐstuˈdɪtɪsʲɐ/
+  translation: to catch a cold
+  pos: verb
+  gender: m
+- lemma: світлиця
+  ipa: /sʲvitˈlɪt͡sʲɐ/
+  translation: best room; parlor
+  pos: noun
+  gender: f
+- lemma: щоденний
+  ipa: /ʃt͡ʃoˈdɛnːɪj/
+  translation: daily
+  pos: adj
+  gender: n

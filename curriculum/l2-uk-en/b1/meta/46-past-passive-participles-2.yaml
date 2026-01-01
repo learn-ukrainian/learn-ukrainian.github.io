@@ -1,0 +1,23 @@
+module: b1-46
+title: 'Пасивні дієприкметники: коротка форма'
+subtitle: Past Passive Participles II - Short Forms
+version: '1.0'
+phase: B1.4 Advanced Grammar
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - grammar
+  - participles
+  - passive
+  - impersonal
+grammar:
+  - Коротка форма пасивних дієприкметників (-но/-то)
+  - Безособові пасивні конструкції
+objectives:
+  - Учень може утворювати коротку форму пасивних дієприкметників
+  - Учень може використовувати безособові пасивні конструкції
+  - Учень розуміє різницю між повною та короткою формами
+vocabulary_count: 25
+vocab_count: 24
+slug: 46-past-passive-participles-2

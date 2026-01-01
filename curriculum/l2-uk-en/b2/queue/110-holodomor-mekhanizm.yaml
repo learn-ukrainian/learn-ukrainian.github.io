@@ -1,0 +1,884 @@
+module: 110-holodomor-mekhanizm
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/110-holodomor-mekhanizm.md
+generated: '2026-01-01T20:13:24.309210'
+scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 16
+  cloze: 1
+  unjumble: 8
+  quiz: 16
+  translate: 8
+  true-false: 8
+total_items: 65
+item_count: 65
+sample_percent: null
+items:
+- activity: error-correction
+  title: 'Історичні факти: виправлення помилок'
+  sentence_with_error: Голодомор відбувся в 1942–1943 роках.
+  error: 1942–1943
+  answer: 1932–1933
+  sentence_corrected: Голодомор відбувся в 1932–1933 роках.
+  options:
+  - 1932–1933
+  - 1922–1923
+  - 1952–1953
+  - 1942–1943
+  original_explanation: Голодомор відбувся в 1932–1933 роках.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: 'Історичні факти: виправлення помилок'
+  sentence_with_error: За різними оцінками, під час Голодомору загинуло близько 100
+    тисяч українців.
+  error: 100 тисяч
+  answer: від 4 до 10 мільйонів
+  sentence_corrected: За різними оцінками, під час Голодомору загинуло близько від
+    4 до 10 мільйонів українців.
+  options:
+  - від 4 до 10 мільйонів
+  - 100 тисяч
+  - 50 тисяч
+  - 1 мільйон
+  original_explanation: Загинуло від 4 до 10 мільйонів українців.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: 'Історичні факти: виправлення помилок'
+  sentence_with_error: «Закон про п'ять колосків» передбачав штраф за збирання зерна.
+  error: штраф
+  answer: розстріл або табори
+  sentence_corrected: «Закон про п'ять колосків» передбачав розстріл або табори за
+    збирання зерна.
+  options:
+  - розстріл або табори
+  - штраф
+  - попередження
+  - виселення
+  original_explanation: Закон передбачав розстріл або мінімум 10 років таборів.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: 'Історичні факти: виправлення помилок'
+  sentence_with_error: Гарет Джонс був американським журналістом.
+  error: американським
+  answer: валлійським
+  sentence_corrected: Гарет Джонс був валлійським журналістом.
+  options:
+  - валлійським
+  - американським
+  - російським
+  - польським
+  original_explanation: Гарет Джонс був валлійським журналістом.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: 'Історичні факти: виправлення помилок'
+  sentence_with_error: Вальтер Дюранті говорив правду про голод в Україні.
+  error: говорив правду
+  answer: заперечував голод
+  sentence_corrected: Вальтер Дюранті заперечував голод про голод в Україні.
+  options:
+  - заперечував голод
+  - говорив правду
+  - рятував людей
+  - допомагав селянам
+  original_explanation: Дюранті свідомо заперечував голод.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: 'Історичні факти: виправлення помилок'
+  sentence_with_error: Селяни могли вільно покидати свої села під час Голодомору.
+  error: вільно покидати
+  answer: не могли покидати без паспортів
+  sentence_corrected: Селяни могли не могли покидати без паспортів свої села під час
+    Голодомору.
+  options:
+  - не могли покидати без паспортів
+  - вільно покидати
+  - їхати за кордон
+  - отримати допомогу
+  original_explanation: Селяни не мали паспортів, тому не могли покидати села.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: 'Історичні факти: виправлення помилок'
+  sentence_with_error: Росія офіційно визнала Голодомор геноцидом.
+  error: визнала
+  answer: заперечує
+  sentence_corrected: Росія офіційно заперечує Голодомор геноцидом.
+  options:
+  - заперечує
+  - визнала
+  - вибачилася
+  - засудила
+  original_explanation: Росія до сьогодні заперечує геноцидний характер Голодомору.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: 'Історичні факти: виправлення помилок'
+  sentence_with_error: Колективізація почалася в 1939 році.
+  error: '1939'
+  answer: '1929'
+  sentence_corrected: Колективізація почалася в 1929 році.
+  options:
+  - '1929'
+  - '1939'
+  - '1919'
+  - '1949'
+  original_explanation: Колективізація почалася в 1929 році.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика Голодомору
+  sentence_template: Голодомор 1932–1933 років — це [___] українського народу.
+  answer: геноцид
+  complete_sentence: Голодомор 1932–1933 років — це [геноцид] українського народу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика Голодомору
+  sentence_template: Примусове об'єднання селянських господарств називалося [___].
+  answer: колективізацією
+  complete_sentence: Примусове об'єднання селянських господарств називалося [колективізацією].
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика Голодомору
+  sentence_template: Працьовитих селян оголошували «[___]» і репресували.
+  answer: куркулями
+  complete_sentence: Працьовитих селян оголошували «[куркулями]» і репресували.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика Голодомору
+  sentence_template: Закон про охорону майна народ назвав «Законом про п'ять [___]».
+  answer: колосків
+  complete_sentence: Закон про охорону майна народ назвав «Законом про п'ять [колосків]».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика Голодомору
+  sentence_template: Селяни не могли покидати села, бо не мали [___].
+  answer: паспортів
+  complete_sentence: Селяни не могли покидати села, бо не мали [паспортів].
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика Голодомору
+  sentence_template: Гарет Джонс опублікував [___] про голод в Україні.
+  answer: правду
+  complete_sentence: Гарет Джонс опублікував [правду] про голод в Україні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика Голодомору
+  sentence_template: Радянська влада [___] статистику смертей.
+  answer: фальсифікувала
+  complete_sentence: Радянська влада [фальсифікувала] статистику смертей.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика Голодомору
+  sentence_template: Село, внесене до «чорної дошки», отримувало колективне [___].
+  answer: покарання
+  complete_sentence: Село, внесене до «чорної дошки», отримувало колективне [покарання].
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дати та числа Голодомору
+  sentence_template: Голодомор відбувся в [___] роках.
+  answer: 1932–1933
+  complete_sentence: Голодомор відбувся в [1932–1933] роках.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дати та числа Голодомору
+  sentence_template: Колективізація почалася в [___] році.
+  answer: '1929'
+  complete_sentence: Колективізація почалася в [1929] році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дати та числа Голодомору
+  sentence_template: «Закон про п'ять колосків» прийнято [___] серпня 1932 року.
+  answer: '7'
+  complete_sentence: «Закон про п'ять колосків» прийнято [7] серпня 1932 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дати та числа Голодомору
+  sentence_template: З України було депортовано понад [___] осіб.
+  answer: 850 000
+  complete_sentence: З України було депортовано понад [850 000] осіб.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дати та числа Голодомору
+  sentence_template: За перші 5 місяців дії закону засуджено понад [___] осіб.
+  answer: 55 000
+  complete_sentence: За перші 5 місяців дії закону засуджено понад [55 000] осіб.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дати та числа Голодомору
+  sentence_template: Директиву про заборону виїзду підписано [___] січня 1933 року.
+  answer: '22'
+  complete_sentence: Директиву про заборону виїзду підписано [22] січня 1933 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дати та числа Голодомору
+  sentence_template: Станом на 2024 рік Голодомор визнали понад [___] країн.
+  answer: '30'
+  complete_sentence: Станом на 2024 рік Голодомор визнали понад [30] країн.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дати та числа Голодомору
+  sentence_template: Гарет Джонс загинув у [___] році.
+  answer: '1935'
+  complete_sentence: Гарет Джонс загинув у [1935] році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Механізм Голодомору
+  passage_template: 'Голодомор відбувся у {1932|1922|1942}–{1933|1923|1943} роках.
+    Сталінський режим використав {голод|війну|хвороби} як зброю масового знищення.
+    {Колективізація|Демократизація|Приватизація} знищила традиційне селянство.
+
+
+    Працьовитих селян називали «{куркулями|героями|друзями}». Понад {850 000|100 000|1
+    000} осіб було депортовано з України. Держава вилучала {зерно|гроші|книги} за
+    системою хлібозаготівель.
+
+
+    Село, що не виконувало план, потрапляло до «{чорної|білої|червоної} дошки». «Закон
+    про {п''ять|десять|сто} колосків» криміналізував збирання зерна. За перші 5 місяців
+    засудили понад {55 000|5 000|500} осіб.
+
+
+    Селяни не мали {паспортів|грошей|бажання}, тому не могли покинути села. Україну
+    перетворили на {в''язницю|рай|курорт} під відкритим небом.
+
+
+    Журналіст Вальтер {Дюранті|Джонс|Сміт} заперечував голод. Валлієць Гарет {Джонс|Дюранті|Сміт}
+    сказав правду. Станом на 2024 рік понад {30|5|100} країн визнали Голодомор {геноцидом|святом|успіхом}.
+
+    '
+  blanks:
+  - answer: '1942'
+    options:
+    - '1932'
+    - '1922'
+  - answer: '1943'
+    options:
+    - '1933'
+    - '1923'
+  - answer: хвороби
+    options:
+    - голод
+    - війну
+  - answer: Приватизація
+    options:
+    - Колективізація
+    - Демократизація
+  - answer: друзями
+    options:
+    - куркулями
+    - героями
+  - answer: 1 000
+    options:
+    - 850 000
+    - 100 000
+  - answer: книги
+    options:
+    - зерно
+    - гроші
+  - answer: червоної
+    options:
+    - чорної
+    - білої
+  - answer: сто
+    options:
+    - п'ять
+    - десять
+  - answer: '500'
+    options:
+    - 55 000
+    - 5 000
+  - answer: бажання
+    options:
+    - паспортів
+    - грошей
+  - answer: курорт
+    options:
+    - в'язницю
+    - рай
+  - answer: Сміт
+    options:
+    - Дюранті
+    - Джонс
+  - answer: Сміт
+    options:
+    - Джонс
+    - Дюранті
+  - answer: '100'
+    options:
+    - '30'
+    - '5'
+  - answer: успіхом
+    options:
+    - геноцидом
+    - святом
+  blank_count: 16
+  complete_passage: 'Голодомор відбувся у 1942–1943 роках. Сталінський режим використав
+    хвороби як зброю масового знищення. Приватизація знищила традиційне селянство.
+
+
+    Працьовитих селян називали «друзями». Понад 1 000 осіб було депортовано з України.
+    Держава вилучала книги за системою хлібозаготівель.
+
+
+    Село, що не виконувало план, потрапляло до «червоної дошки». «Закон про сто колосків»
+    криміналізував збирання зерна. За перші 5 місяців засудили понад 500 осіб.
+
+
+    Селяни не мали бажання, тому не могли покинути села. Україну перетворили на курорт
+    під відкритим небом.
+
+
+    Журналіст Вальтер Сміт заперечував голод. Валлієць Гарет Сміт сказав правду. Станом
+    на 2024 рік понад 100 країн визнали Голодомор успіхом.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення речень
+  jumbled_words: []
+  answer: Голодомор був геноцидом українського народу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення речень
+  jumbled_words: []
+  answer: Голод був штучно створеним.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення речень
+  jumbled_words: []
+  answer: Мільйони людей загинули від голоду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення речень
+  jumbled_words: []
+  answer: Селяни не могли покидати свої села.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення речень
+  jumbled_words: []
+  answer: Гарет Джонс сказав правду про голод.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення речень
+  jumbled_words: []
+  answer: Колективізація знищила традиційне селянство.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення речень
+  jumbled_words: []
+  answer: Працьовитих селян називали куркулями.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення речень
+  jumbled_words: []
+  answer: Селяни вилучали зерно для здачі державі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння механізму Голодомору
+  question: Що таке колективізація згідно з текстом?
+  options:
+  - '{''text'': "Добровільне об''єднання селян", ''correct'': False}'
+  - '{''text'': "Насильницьке об''єднання селянських господарств у колгоспи", ''correct'':
+    True}'
+  - '{''text'': ''Роздача землі селянам'', ''correct'': False}'
+  - '{''text'': ''Міжнародна допомога'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння механізму Голодомору
+  question: Що таке «чорна дошка» згідно з текстом?
+  options:
+  - '{''text'': ''Шкільна дошка'', ''correct'': False}'
+  - '{''text'': ''Список сіл під колективним покаранням'', ''correct'': True}'
+  - '{''text'': ''Нагорода для кращих працівників'', ''correct'': False}'
+  - '{''text'': ''Назва газети'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння механізму Голодомору
+  question: Як народ назвав «Закон про п'ять колосків»?
+  options:
+  - '{''text'': ''Закон про свободу'', ''correct'': False}'
+  - '{''text'': ''Закон проти виживання'', ''correct'': True}'
+  - '{''text'': ''Закон про захист селян'', ''correct'': False}'
+  - '{''text'': ''Демократичний закон'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння механізму Голодомору
+  question: Чому селяни не могли покидати свої села?
+  options:
+  - '{''text'': ''Вони не хотіли'', ''correct'': False}'
+  - '{''text'': ''Вони не мали паспортів і документів'', ''correct'': True}'
+  - '{''text'': ''Дороги були зруйновані'', ''correct'': False}'
+  - '{''text'': ''Їм допомагали на місці'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння механізму Голодомору
+  question: Хто такий Гарет Джонс?
+  options:
+  - '{''text'': ''Радянський журналіст'', ''correct'': False}'
+  - '{''text'': ''Валлійський журналіст, який розповів правду про Голодомор'', ''correct'':
+    True}'
+  - '{''text'': ''Член НКВС'', ''correct'': False}'
+  - '{''text'': ''Партійний чиновник'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння механізму Голодомору
+  question: Скільки осіб було засуджено за «Законом про п'ять колосків» за перші 5
+    місяців?
+  options:
+  - '{''text'': ''Понад 55 000 осіб'', ''correct'': True}'
+  - '{''text'': ''100 осіб'', ''correct'': False}'
+  - '{''text'': ''1 000 осіб'', ''correct'': False}'
+  - '{''text'': ''10 осіб'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння механізму Голодомору
+  question: Хто такий Вальтер Дюранті?
+  options:
+  - '{''text'': ''Журналіст, який говорив правду про голод'', ''correct'': False}'
+  - '{''text'': ''Журналіст NYT, який заперечував голод'', ''correct'': True}'
+  - '{''text'': ''Український письменник'', ''correct'': False}'
+  - '{''text'': ''Радянський чиновник'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння механізму Голодомору
+  question: Скільки країн визнали Голодомор геноцидом станом на 2024 рік?
+  options:
+  - '{''text'': ''Понад 30 країн'', ''correct'': True}'
+  - '{''text'': ''5 країн'', ''correct'': False}'
+  - '{''text'': ''Жодна'', ''correct'': False}'
+  - '{''text'': ''Усі країни світу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика в історичних реченнях
+  question: Голодомор був _____ українського народу.
+  options:
+  - '{''text'': ''геноцид'', ''correct'': False}'
+  - '{''text'': ''геноцидом'', ''correct'': True}'
+  - '{''text'': ''геноциду'', ''correct'': False}'
+  - '{''text'': ''геноциді'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика в історичних реченнях
+  question: Мільйони людей загинули від штучно створеного _____.
+  options:
+  - '{''text'': ''голод'', ''correct'': False}'
+  - '{''text'': ''голоду'', ''correct'': True}'
+  - '{''text'': ''голодом'', ''correct'': False}'
+  - '{''text'': ''голоді'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика в історичних реченнях
+  question: Селян примушували здавати _____ державі.
+  options:
+  - '{''text'': ''зерно'', ''correct'': True}'
+  - '{''text'': ''зерна'', ''correct'': False}'
+  - '{''text'': ''зерном'', ''correct'': False}'
+  - '{''text'': ''зерні'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика в історичних реченнях
+  question: Куркулів депортували до _____ та Казахстану.
+  options:
+  - '{''text'': ''Сибір'', ''correct'': False}'
+  - '{''text'': ''Сибіру'', ''correct'': True}'
+  - '{''text'': ''Сибіром'', ''correct'': False}'
+  - '{''text'': ''Сибірі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика в історичних реченнях
+  question: Гарет Джонс опублікував _____ про голод.
+  options:
+  - '{''text'': ''правда'', ''correct'': False}'
+  - '{''text'': ''правду'', ''correct'': True}'
+  - '{''text'': ''правди'', ''correct'': False}'
+  - '{''text'': ''правдою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика в історичних реченнях
+  question: Росія досі заперечує геноцидний характер _____.
+  options:
+  - '{''text'': ''Голодомор'', ''correct'': False}'
+  - '{''text'': ''Голодомору'', ''correct'': True}'
+  - '{''text'': ''Голодоморі'', ''correct'': False}'
+  - '{''text'': ''Голодомором'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика в історичних реченнях
+  question: Закон діяв аж до _____ року.
+  options:
+  - '{''text'': ''1947'', ''correct'': True}'
+  - '{''text'': ''1947-ого'', ''correct'': False}'
+  - '{''text'': ''1947-ому'', ''correct'': False}'
+  - '{''text'': ''1947-им'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика в історичних реченнях
+  question: Перепис показав зникнення _____ українців.
+  options:
+  - '{''text'': ''мільйони'', ''correct'': False}'
+  - '{''text'': ''мільйонів'', ''correct'': True}'
+  - '{''text'': ''мільйонами'', ''correct'': False}'
+  - '{''text'': ''мільйонах'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад ключових понять
+  source_sentence: Голодомор — це геноцид.
+  answer: ''
+  options:
+  - '{''text'': ''Holodomor is genocide.'', ''correct'': True}'
+  - '{''text'': ''Holodomor is famine.'', ''correct'': False}'
+  - '{''text'': ''Holodomor is revolution.'', ''correct'': False}'
+  - '{''text'': ''Holodomor is liberation.'', ''correct'': False}'
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад ключових понять
+  source_sentence: Селяни не мали паспортів.
+  answer: ''
+  options:
+  - '{''text'': "Peasants didn''t have passports.", ''correct'': True}'
+  - '{''text'': ''Peasants had many passports.'', ''correct'': False}'
+  - '{''text'': ''Peasants bought passports.'', ''correct'': False}'
+  - '{''text'': ''Peasants sold passports.'', ''correct'': False}'
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад ключових понять
+  source_sentence: Куркулів депортували до Сибіру.
+  answer: ''
+  options:
+  - '{''text'': ''Kulaks were deported to Siberia.'', ''correct'': True}'
+  - '{''text'': ''Kulaks moved to Siberia.'', ''correct'': False}'
+  - '{''text'': ''Kulaks traveled to Siberia.'', ''correct'': False}'
+  - '{''text'': ''Kulaks returned from Siberia.'', ''correct'': False}'
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад ключових понять
+  source_sentence: Закон криміналізував виживання.
+  answer: ''
+  options:
+  - '{''text'': ''The law criminalized survival.'', ''correct'': True}'
+  - '{''text'': ''The law protected survival.'', ''correct'': False}'
+  - '{''text'': ''The law promoted survival.'', ''correct'': False}'
+  - '{''text'': ''The law ignored survival.'', ''correct'': False}'
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад ключових понять
+  source_sentence: Влада фальсифікувала статистику.
+  answer: ''
+  options:
+  - '{''text'': ''The authorities falsified statistics.'', ''correct'': True}'
+  - '{''text'': ''The authorities published statistics.'', ''correct'': False}'
+  - '{''text'': ''The authorities studied statistics.'', ''correct'': False}'
+  - '{''text'': ''The authorities shared statistics.'', ''correct'': False}'
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад ключових понять
+  source_sentence: Перепис був засекречений.
+  answer: ''
+  options:
+  - '{''text'': ''The census was classified.'', ''correct'': True}'
+  - '{''text'': ''The census was published.'', ''correct'': False}'
+  - '{''text'': ''The census was accurate.'', ''correct'': False}'
+  - '{''text'': ''The census was celebrated.'', ''correct'': False}'
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад ключових понять
+  source_sentence: Україну перетворили на в'язницю.
+  answer: ''
+  options:
+  - '{''text'': ''Ukraine was turned into a prison.'', ''correct'': True}'
+  - '{''text'': ''Ukraine was turned into paradise.'', ''correct'': False}'
+  - '{''text'': ''Ukraine was set free.'', ''correct'': False}'
+  - '{''text'': ''Ukraine was modernized.'', ''correct'': False}'
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад ключових понять
+  source_sentence: Понад 30 країн визнали Голодомор геноцидом.
+  answer: ''
+  options:
+  - '{''text'': ''Over 30 countries recognized Holodomor as genocide.'', ''correct'':
+    True}'
+  - '{''text'': ''30 countries denied Holodomor.'', ''correct'': False}'
+  - '{''text'': ''All countries recognized Holodomor.'', ''correct'': False}'
+  - '{''text'': ''No country recognized Holodomor.'', ''correct'': False}'
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірка знань
+  statement: Голодомор був природною катастрофою, викликаною посухою.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірка знань
+  statement: Куркулями називали успішних працьовитих селян.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірка знань
+  statement: «Закон про п'ять колосків» передбачав м'яке покарання.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірка знань
+  statement: Селяни могли вільно покидати села під час голоду.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірка знань
+  statement: Перепис 1937 року був засекречений через зниклі мільйони.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірка знань
+  statement: Гарет Джонс отримав нагороду від СРСР за свої репортажі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірка знань
+  statement: Росія офіційно визнала Голодомор геноцидом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірка знань
+  statement: За різними оцінками, загинуло від 4 до 10 мільйонів українців.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

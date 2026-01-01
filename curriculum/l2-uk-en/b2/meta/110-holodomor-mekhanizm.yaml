@@ -1,0 +1,26 @@
+module: b2-110
+title: 'Голодомор I: Механізм'
+subtitle: 'Holodomor I: Mechanism'
+version: '1.0'
+phase: B2.3c [Trauma & Resistance]
+pedagogy: CBI
+duration: 90
+transliteration: none
+immersion: 100
+tags:
+  - history
+  - decolonization
+  - 1930s
+  - holodomor
+  - genocide
+grammar:
+  - Passive constructions
+  - Impersonal sentences
+objectives:
+  - Учень розуміє механізми організації Голодомору 1932–1933 років
+  - Учень може аналізувати роль колективізації та «закону про п'ять колосків»
+  - Учень розпізнає Голодомор як геноцид українського народу
+vocabulary_count: 25
+register: публіцистичний
+vocab_count: 68
+slug: 110-holodomor-mekhanizm

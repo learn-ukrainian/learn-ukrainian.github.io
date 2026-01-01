@@ -1,0 +1,63 @@
+module: 27-relative-clauses-de-kudy-zvidky
+level: B1
+version: '2.0'
+items:
+- lemma: деінде
+  ipa: /dɛˈindɛ/
+  translation: elsewhere
+  pos: adv
+- lemma: звідусіль
+  ipa: /zviduˈsʲilʲ/
+  translation: from everywhere
+  pos: adv
+- lemma: летити
+  ipa: /lɛˈtɪtɪ/
+  translation: to fly (typo)
+  pos: verb
+- lemma: місцезнаходження
+  ipa: /mʲist͡sɛznaˈxɔdʒɛnʲːa/
+  translation: location
+  pos: noun
+  gender: n
+- lemma: небути
+  ipa: /nɛbuˈtɪ/
+  translation: not to be (typo)
+  pos: verb
+- lemma: поставка
+  ipa: /pɔˈstau̯ka/
+  translation: supply
+  pos: noun
+  gender: f
+- lemma: правильне
+  ipa: /ˈpravɪlʲnɛ/
+  translation: correct
+  pos: noun
+  gender: n
+- lemma: прикарпаття
+  ipa: /prɪkarˈpatʲːa/
+  translation: Prykarpattia
+  pos: propn
+  gender: n
+- lemma: родовід
+  ipa: /rɔdɔˈvid/
+  translation: lineage
+  pos: noun
+  gender: m
+- lemma: статично
+  ipa: /staˈtɪt͡ʃnɔ/
+  translation: statically
+  pos: adv
+- lemma: тухольце
+  ipa: /tuˈxɔlʲt͡sɛ/
+  translation: Tukholtsi
+  pos: noun
+  gender: m
+- lemma: узагальнюючий
+  ipa: /uzaˈhalʲnʲujut͡ʃɪj/
+  translation: generalizing
+  pos: adj
+  gender: m
+- lemma: чутно
+  ipa: /ˈt͡ʃutnɔ/
+  translation: audible
+  pos: adv

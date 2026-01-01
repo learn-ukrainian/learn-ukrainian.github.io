@@ -1,33 +1,3 @@
----
-module: a1-19
-title: 'At the Café'
-subtitle: 'Ordering Food and Drinks in Ukrainian'
-version: '1.0'
-phase: 'A1.2'
-pedagogy: 'PPP'
-duration: 60
-transliteration: 'vocab-only'
-tags:
-  - functional
-  - café
-  - ordering
-  - restaurant
-  - food
-  - drinks
-  - politeness
-grammar:
-  - 'Functional integration of Accusative, Genitive, and Locative cases'
-  - 'Polite imperative forms (принесіть, візьміть)'
-  - 'Future tense (візьму from взяти)'
-objectives:
-  - 'Learner can order food and drinks at a café'
-  - 'Learner can ask for recommendations'
-  - 'Learner can request the bill'
-  - 'Learner can use functional phrases with Accusative, Genitive, and Locative cases'
-vocabulary_count: 24
-vocab_count: 24
----
-
 # At the Café
 
 ## Warm-up
@@ -276,32 +246,3 @@ Tipping is becoming more common in Ukraine, especially in cities. 10% is standar
 > **Podcast:** [ULP 1-12 | Ordering Food](https://www.ukrainianlessons.com/episode12/) — Restaurant ordering + culture tips
 >
 > **Podcast:** [FMU 1-16 | Order at Restaurant](https://www.ukrainianlessons.com/fmu16/) — Full restaurant dialogue
-
-# Vocabulary
-
-| Word            | IPA                | English         | POS  | Gender | Note |
-| --------------- | ------------------ | --------------- | ---- | ------ | ---- |
-| ввічливо        | /ˈvvit͡ʃlɪvɔ/       | politely        | adv  | -      |      |
-| достатньо       | /dɔˈstɑtnʲɔ/       | enough          | adv  | -      |      |
-| запитати        | /zɑpɪˈtɑtɪ/        | to ask          | verb | -      |      |
-| звісно          | /ˈzvisnɔ/          | of course       | adv  | -      |      |
-| кавовий         | /kɑˈvɔvɪj/         | coffee (adj)    | adj  | ч      |      |
-| круасан         | /kruɑˈsɑn/         | croissant       | noun | ч      |      |
-| медівник        | /mɛdiwˈnɪk/        | honey cake      | noun | ч      |      |
-| найкращий       | /nɑjˈkrɑʃt͡ʃɪj/     | best            | adj  | ч      |      |
-| наполеон        | /nɑpɔlɛˈɔn/        | Napoleon (cake) | noun | ч      |      |
-| обслуговування  | /ɔbsluˈɦɔvuvɑnʲːɑ/ | service         | noun | с      |      |
-| окремий         | /ɔˈkrɛmɪj/         | separate        | adj  | ч      |      |
-| попросити       | /pɔprɔˈsɪtɪ/       | to ask/request  | verb | -      |      |
-| порекомендувати | /pɔrɛkɔmɛnduˈvɑtɪ/ | to recommend    | verb | -      |      |
-| проводити       | /prɔˈvɔdɪtɪ/       | to spend (time) | verb | -      |      |
-| рекомендація    | /rɛkɔmɛnˈdɑt͡sʲijɑ/ | recommendation  | noun | ж      |      |
-| решта           | /ˈrɛʃtɑ/           | change          | noun | ж      |      |
-| спробувати      | /sprɔˈbuvɑtɪ/      | to try          | verb | -      |      |
-| столик          | /ˈstɔlɪk/          | small table     | noun | ч      |      |
-| торт            | /tɔrt/             | cake            | noun | ч      |      |
-| треба           | /ˈtrɛbɑ/           | necessary/need  | adv  | -      |      |
-| хвилинка        | /xvɪˈlɪnkɑ/        | minute          | noun | ж      |      |
-| частина         | /t͡ʃɑˈstɪnɑ/        | part            | noun | ж      |      |
-| чудово          | /t͡ʃuˈdɔvɔ/         | wonderfully     | adv  | -      |      |
-| який            | /jɑˈkɪj/           | other           | ч    |        |

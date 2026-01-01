@@ -1,0 +1,152 @@
+module: 27-colors-and-clothing
+level: A1
+version: '2.0'
+items:
+  - lemma: білий
+    ipa: /ˈbilɪj/
+    translation: white
+    pos: adj
+    gender: m
+  - lemma: блакитний
+    ipa: /blɑˈkɪtnɪj/
+    translation: light blue
+    pos: adj
+    gender: m
+  - lemma: взуття
+    ipa: /vzuˈtʲːɑ/
+    translation: footwear
+    pos: noun
+    gender: n
+  - lemma: вишиванка
+    ipa: /vɪʃɪˈvɑnkɑ/
+    translation: embroidered shirt
+    pos: noun
+    gender: f
+  - lemma: жовтий
+    ipa: /ˈʒɔwtɪj/
+    translation: yellow
+    pos: adj
+    gender: m
+  - lemma: забутий
+    ipa: /zɑˈbutɪj/
+    translation: forgotten
+    pos: adj
+    gender: m
+  - lemma: класно
+    ipa: /ˈklɑsnɔ/
+    translation: cool/great
+    pos: adv
+  - lemma: коричневий
+    ipa: /kɔˈrɪt͡ʃnɛvɪj/
+    translation: brown
+    pos: adj
+    gender: m
+  - lemma: красиво
+    ipa: /krɑˈsɪvɔ/
+    translation: beautifully
+    pos: adv
+  - lemma: кросівки
+    ipa: /krɔˈsivkɪ/
+    translation: sneakers (pl)
+    pos: noun
+    gender: pl
+  - lemma: куртка
+    ipa: /ˈkurtkɑ/
+    translation: jacket
+    pos: noun
+    gender: f
+  - lemma: навколо
+    ipa: /nɑwˈkɔlɔ/
+    translation: around
+    pos: adv
+  - lemma: описати
+    ipa: /ɔpɪˈsɑtɪ/
+    translation: to describe
+    pos: verb
+  - lemma: пальто
+    ipa: /pɑlʲˈtɔ/
+    translation: coat
+    pos: noun
+    gender: n
+  - lemma: подобатися
+    ipa: /pɔˈdɔbɑtɪsʲɑ/
+    translation: to like
+    pos: verb
+  - lemma: поєднання
+    ipa: /pɔjɛdˈnɑnʲːɑ/
+    translation: combination
+    pos: noun
+    gender: n
+  - lemma: предок
+    ipa: /ˈprɛdɔk/
+    translation: ancestor
+    pos: noun
+    gender: m
+  - lemma: светр
+    ipa: /svɛtr/
+    translation: sweater
+    pos: noun
+    gender: m
+  - lemma: світлий
+    ipa: /ˈsvitlɪj/
+    translation: light/bright
+    pos: adj
+    gender: m
+  - lemma: світло-
+    ipa: /ˈsvitlɔ/
+    translation: light-
+    pos: adj
+  - lemma: сіро-
+    ipa: /ˈsirɔ/
+    translation: gray-
+    pos: adj
+  - lemma: сніг
+    ipa: /snih/
+    translation: snow
+    pos: noun
+    gender: m
+  - lemma: сукня
+    ipa: /ˈsuknʲɑ/
+    translation: dress
+    pos: noun
+    gender: f
+  - lemma: темний
+    ipa: /ˈtɛmnɪj/
+    translation: dark
+    pos: adj
+    gender: m
+  - lemma: тіні
+    ipa: /ˈtinʲi/
+    translation: shadows
+    pos: noun
+    gender: f
+  - lemma: трава
+    ipa: /trɑˈvɑ/
+    translation: grass
+    pos: noun
+    gender: f
+  - lemma: футболка
+    ipa: /futˈbɔlkɑ/
+    translation: t-shirt
+    pos: noun
+    gender: f
+  - lemma: черевики
+    ipa: /t͡ʃɛrɛˈvɪkɪ/
+    translation: boots/shoes (pl)
+    pos: noun
+    gender: pl
+  - lemma: шорти
+    ipa: /ˈʃɔrtɪ/
+    translation: shorts (pl)
+    pos: noun
+    gender: pl
+  - lemma: штани
+    ipa: /ʃtɑˈnɪ/
+    translation: pants (pl)
+    pos: noun
+    gender: pl
+  - lemma: яскравий
+    ipa: /jɑsˈkrɑvɪj/
+    translation: bright
+    pos: adj
+    gender: m

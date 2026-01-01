@@ -1,5 +1,5 @@
 # Audit Report: 12-aspect-pairs-essential-40.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
+**Phase:** B1.1 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -10,7 +10,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 80/25
+- **Vocab:** ⚠️ 19 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,19 +37,12 @@
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.6%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Видові пари: 40 найважливіших** | ⚪️ | 43 | Skipped |
+| **Intro/Narrative** | ✅ | 43 | Included in Core |
 | **Тест** | ⚪️ | 138 | Skipped |
 | **Пояснення** | ⚪️ | 501 | Skipped |
 | **Практика** | ⚪️ | 345 | Skipped |
 | **Діалоги** | ✅ | 288 | Included in Core |
 | **Підсумок** | ✅ | 212 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

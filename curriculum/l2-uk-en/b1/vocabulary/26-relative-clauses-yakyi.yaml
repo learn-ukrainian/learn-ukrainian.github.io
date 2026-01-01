@@ -1,0 +1,51 @@
+module: 26-relative-clauses-yakyi
+level: B1
+version: '2.0'
+items:
+- lemma: антецедент
+  ipa: /antɛt͡sɛˈdɛnt/
+  translation: antecedent
+  pos: noun
+  gender: m
+- lemma: аудіальний
+  ipa: /audʲiˈalʲnɪj/
+  translation: auditory
+  pos: adj
+  gender: n
+- lemma: впіймати
+  ipa: /u̯pijˈmatɪ/
+  translation: to catch
+  pos: verb
+- lemma: відеоігр
+  ipa: /vidɛɔˈihr/
+  translation: video games (gen. pl.)
+  pos: noun
+  gender: m
+- lemma: діаспор
+  ipa: /dʲiˈaspɔr/
+  translation: diasporas (gen. pl.)
+  pos: noun
+  gender: f
+- lemma: захопливий
+  ipa: /zaxɔˈplɪvɪj/
+  translation: exciting
+  pos: adj
+  gender: m
+- lemma: настя
+  ipa: /ˈnastʲa/
+  translation: Nastya
+  pos: propn
+  gender: f
+- lemma: об'єднувати
+  ipa: /ɔbˈjɛdnuvatɪ/
+  translation: to unite
+  pos: verb
+- lemma: схований
+  ipa: /ˈsxɔvanɪj/
+  translation: hidden
+  pos: adj
+- lemma: індоєвропейський
+  ipa: /indɔjɛurɔˈpɛjsʲkɪj/
+  translation: Indo-European
+  pos: adj
+  gender: m

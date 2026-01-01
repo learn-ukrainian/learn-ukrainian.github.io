@@ -1,0 +1,24 @@
+module: b1-49
+title: 'Числівники: збірні та дроби'
+subtitle: Numerals - Collectives and Fractions
+version: '1.0'
+phase: B1.4 Advanced Grammar
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - grammar
+  - numerals
+  - collectives
+  - fractions
+grammar:
+  - Збірні числівники (двоє, троє, четверо)
+  - Дробові числівники (половина, третина, чверть)
+  - Вживання збірних з різними типами іменників
+objectives:
+  - Учень може використовувати збірні числівники
+  - Учень розуміє, коли вживати збірні замість кількісних
+  - Учень може оперувати дробами та відсотками
+vocabulary_count: 35
+vocab_count: 34
+slug: 49-numerals-collectives-fractions

@@ -1,0 +1,178 @@
+module: 32-my-family
+level: A1
+version: '2.0'
+items:
+  - lemma: батьки
+    ipa: /bɑtʲˈkɪ/
+    translation: parents
+    pos: noun
+    gender: pl
+  - lemma: батько
+    ipa: /ˈbɑtʲkɔ/
+    translation: father
+    pos: noun
+    gender: m
+  - lemma: Бог
+    ipa: /bɔh/
+    translation: God
+    pos: noun
+    gender: m
+  - lemma: брат
+    ipa: /brɑt/
+    translation: brother
+    pos: noun
+    gender: m
+  - lemma: вдова
+    ipa: /vdɔˈvɑ/
+    translation: widow
+    pos: noun
+    gender: f
+  - lemma: вдівець
+    ipa: /vdiˈvɛt͡sʲ/
+    translation: widower
+    pos: noun
+    gender: m
+  - lemma: Великдень
+    ipa: /vɛˈlɪkdɛnʲ/
+    translation: Easter
+    pos: propn
+    gender: m
+  - lemma: Ганна
+    ipa: /ˈɦɑnːɑ/
+    translation: Hanna
+    pos: propn
+    gender: f
+  - lemma: двоюрідний
+    ipa: /dvɔˈjuridnɪj/
+    translation: cousin (adj)
+    pos: adj
+    gender: m
+  - lemma: двоє
+    ipa: /ˈdvɔjɛ/
+    translation: two (collective)
+    pos: num
+  - lemma: дядько
+    ipa: /ˈdʲɑdʲkɔ/
+    translation: uncle
+    pos: noun
+    gender: m
+  - lemma: єдиний
+    ipa: /jɛˈdɪnɪj/
+    translation: only
+    pos: adj
+    gender: m
+  - lemma: Іван
+    ipa: /iˈvɑn/
+    translation: Ivan
+    pos: propn
+    gender: m
+  - lemma: кличний
+    ipa: /ˈklɪt͡ʃnɪj/
+    translation: vocative
+    pos: adj
+    gender: m
+  - lemma: мама
+    ipa: /ˈmɑmɑ/
+    translation: mom
+    pos: noun
+    gender: f
+  - lemma: молодший
+    ipa: /mɔˈlɔdʃɪj/
+    translation: younger
+    pos: adj
+    gender: m
+  - lemma: наречена
+    ipa: /nɑrɛˈt͡ʃɛnɑ/
+    translation: fiancée
+    pos: noun
+    gender: f
+  - lemma: наречений
+    ipa: /nɑrɛˈt͡ʃɛnɪj/
+    translation: fiancé
+    pos: noun
+    gender: m
+  - lemma: неодружений
+    ipa: /nɛɔdˈruʒɛnɪj/
+    translation: unmarried
+    pos: adj
+    gender: m
+  - lemma: одружений
+    ipa: /ɔdˈruʒɛnɪj/
+    translation: married
+    pos: adj
+    gender: m
+  - lemma: Оксана
+    ipa: /ɔkˈsɑnɑ/
+    translation: Oksana
+    pos: propn
+    gender: f
+  - lemma: пан
+    ipa: /pɑn/
+    translation: Mr/Sir
+    pos: noun
+    gender: m
+  - lemma: Петро
+    ipa: /pɛtˈrɔ/
+    translation: Petro
+    pos: propn
+    gender: m
+  - lemma: родина
+    ipa: /rɔˈdɪnɑ/
+    translation: family
+    pos: noun
+    gender: f
+  - lemma: родич
+    ipa: /ˈrɔdɪt͡ʃ/
+    translation: relative
+    pos: noun
+    gender: m
+  - lemma: розлучений
+    ipa: /rɔzˈlut͡ʃɛnɪj/
+    translation: divorced
+    pos: adj
+    gender: m
+  - lemma: святий
+    ipa: /svʲɑˈtɪj/
+    translation: holy/saint
+    pos: adj
+    gender: m
+  - lemma: середній
+    ipa: /sɛˈrɛdnʲij/
+    translation: middle
+    pos: adj
+    gender: m
+  - lemma: сестра
+    ipa: /sɛsˈtrɑ/
+    translation: sister
+    pos: noun
+    gender: f
+  - lemma: сімейний
+    ipa: /siˈmɛjnɪj/
+    translation: family (adj)
+    pos: adj
+    gender: m
+  - lemma: старший
+    ipa: /ˈstɑrʃɪj/
+    translation: older
+    pos: adj
+    gender: m
+  - lemma: стосунок
+    ipa: /stɔˈsunɔk/
+    translation: relationship
+    pos: noun
+    gender: m
+  - lemma: тато
+    ipa: /ˈtɑtɔ/
+    translation: dad
+    pos: noun
+    gender: m
+  - lemma: традиція
+    ipa: /trɑˈdɪt͡sʲijɑ/
+    translation: tradition
+    pos: noun
+    gender: f
+  - lemma: тітка
+    ipa: /ˈtitkɑ/
+    translation: aunt
+    pos: noun
+    gender: f

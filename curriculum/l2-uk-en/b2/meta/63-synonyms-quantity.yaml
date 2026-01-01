@@ -1,0 +1,27 @@
+module: b2-63
+title: 'Синоніми: Кількість та Міра'
+subtitle: Synonyms - Quantity and Measure
+version: '1.0'
+phase: B2.2 [Phraseology & Synonymy]
+pedagogy: CBI
+duration: 90
+transliteration: none
+immersion: 100
+tags:
+  - vocabulary
+  - synonyms
+  - quantity
+grammar:
+  - Adverbs of quantity
+  - Nouns for collective amounts
+objectives:
+  - Учень може розрізняти відтінки значень синонімів на позначення великої та малої
+    кількості
+  - Учень вміє використовувати професійну лексику для опису обсягів та масштабів у
+    звітах та статтях
+  - Учень розуміє стилістичну різницю між розмовними та офіційними словами на позначення
+    міри
+vocabulary_count: 35
+register: публіцистичний
+vocab_count: 60
+slug: 63-synonyms-quantity

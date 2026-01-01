@@ -1,29 +1,3 @@
----
-module: a2-12
-title: "Aspect Introduction"
-subtitle: "Understanding Perfective and Imperfective Verbs"
-version: "1.0"
-phase: "A2.2"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - grammar
-  - aspect
-  - verbs
-grammar:
-  - perfective vs imperfective concept
-  - aspect pairs
-  - basic usage patterns
-objectives:
-  - "Learner understands the concept of verbal aspect"
-  - "Learner can identify perfective and imperfective verbs"
-  - "Learner knows basic aspect pairs"
-  - "Learner can choose aspect based on meaning"
-vocabulary_count: 25
-vocab_count: 14
----
-
 ## Warm-up
 
 **Ласкаво просимо!** Сьогодні ви дізнаєтесь про аспект — одну з найважливіших тем української граматики.

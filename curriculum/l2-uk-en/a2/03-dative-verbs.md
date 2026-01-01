@@ -1,30 +1,3 @@
----
-module: a2-03
-title: 'Dative Verbs'
-subtitle: 'Helping, Thanking, and Believing'
-version: '1.0'
-phase: 'A2.1'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: none
-tags:
-  - grammar
-  - verbs
-  - dative
-  - case government
-grammar:
-  - verbs with dative
-  - dative-only verbs
-  - dative + accusative verbs
-objectives:
-  - 'Learner can identify verbs that require only dative objects'
-  - 'Learner can use verbs with dative + accusative objects'
-  - 'Learner can distinguish between dative-only and dative+accusative verbs'
-  - 'Learner can express feelings and states using dative constructions'
-vocabulary_count: 28
-vocab_count: 65
----
-
 ## Introduction
 
 In this module, you'll discover which Ukrainian verbs require the Dative case — these are verbs of helping, thanking, believing, and trusting. Understanding verb "case government" (which case a verb requires) is essential for speaking Ukrainian correctly.

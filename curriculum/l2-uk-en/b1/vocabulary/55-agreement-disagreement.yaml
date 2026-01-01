@@ -1,0 +1,88 @@
+module: 55-agreement-disagreement
+level: B1
+version: '2.0'
+items:
+- lemma: ветерано
+  ipa: /vɛtɛˈranɔ/
+  translation: veteran (voc.)
+  pos: propn
+  gender: f
+- lemma: вишикуваний
+  ipa: /vɪˈʃɪkuvanɪj/
+  translation: lined up
+  pos: adj
+- lemma: дискурсний
+  ipa: /dɪsˈkursnɪj/
+  translation: discourse (adj)
+  pos: adj
+- lemma: дискутувати
+  ipa: /dɪskutuˈvatɪ/
+  translation: to discuss
+  pos: verb
+- lemma: дійсність
+  ipa: /ˈdʲijsnʲisʲtʲ/
+  translation: reality
+  pos: noun
+  gender: f
+- lemma: зменшити
+  ipa: /ˈzmɛnʃɪtɪ/
+  translation: to decrease
+  pos: verb
+  gender: m
+- lemma: консенсус
+  ipa: /kɔnˈsɛnsus/
+  translation: consensus
+  pos: noun
+  gender: m
+- lemma: модератор
+  ipa: /mɔdɛˈratɔr/
+  translation: moderator
+  pos: noun
+  gender: m
+- lemma: мудріше
+  ipa: /muˈdrʲiʃɛ/
+  translation: wiser
+  pos: adv
+- lemma: міняти
+  ipa: /mʲiˈnʲatɪ/
+  translation: to change
+  pos: verb
+- lemma: найсильніше
+  ipa: /najsɪlʲˈnʲiʃɛ/
+  translation: strongest
+  pos: noun
+  gender: n
+- lemma: неправий
+  ipa: /nɛpraˈvɪj/
+  translation: wrong
+  pos: adj
+  gender: m
+- lemma: пластиковий
+  ipa: /ˈplastɪkɔvɪj/
+  translation: plastic (adj)
+  pos: adj
+- lemma: радах
+  ipa: /ˈradax/
+  translation: councils (loc.)
+  pos: noun
+  gender: m
+- lemma: спецефект
+  ipa: /spɛt͡sɛˈfɛkt/
+  translation: special effect
+  pos: noun
+  gender: m
+- lemma: телерекл
+  ipa: /tɛlɛrɛkl/
+  translation: TV ad (trunc)
+  pos: noun
+  gender: f
+- lemma: шій
+  ipa: /ʃij/
+  translation: suffix?
+  pos: noun
+  gender: m
+- lemma: ірландія
+  ipa: /irˈlandʲija/
+  translation: Ireland
+  pos: propn
+  gender: f

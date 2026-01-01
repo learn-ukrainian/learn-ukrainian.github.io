@@ -3,24 +3,19 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1342/1000
+- **Words:** ✅ 1446/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/1
+- **Vocab:** ✅ 75/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 52.3% (target 50-60% (A2.3))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
+- **Immersion:** 🇺🇦 50.7% (target 50-60% (A2.3))
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -30,7 +25,7 @@
 | **Family 1: Speech - МОВ** | ⚪️ | 35 | Skipped |
 | **Family 2: Hearing - СЛУХ** | ⚪️ | 14 | Skipped |
 | **Family 3: ДУМ** | ⚪️ | 11 | Skipped |
-| **Family 4: Kin/Nature - РІД** | ⚪️ | 26 | Skipped |
+| **Family 4: Kin/Nature - РІД** | ⚪️ | 33 | Skipped |
 | **Deep Dive: The Logic of Obedience** | ✅ | 89 | Included in Core |
 | **Family 5: World & Light - СВІТ** | ⚪️ | 43 | Skipped |
 | **Family 6: Earth & Place - ЗЕМ | МІСТ** | ⚪️ | 80 | Skipped |
@@ -47,17 +42,6 @@
 | **Dialogue: The Order** | ✅ | 38 | Included in Core |
 | **Dialogue: The Idea** | ✅ | 44 | Included in Core |
 | **Dialogue: The Look** | ✅ | 40 | Included in Core |
-| **Dialogue: The Interview** | ✅ | 107 | Included in Core |
+| **Dialogue: The Interview** | ✅ | 204 | Included in Core |
 | **Summary** | ✅ | 246 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Root Match** | 🎮 | 8 | Activity (8 items, min 8) |
-| **group-sort: Family Tree** | 🎮 | 18 | Activity (18 items, min 12) |
-| **fill-in: Logic Puzzle** | 🎮 | 8 | Activity (8 items, min 8) |
-| **unjumble: High Sentences** | 🎮 | 6 | Activity (6 items, min 6) |
-| **quiz: Formation Check** | 🎮 | 8 | Activity (8 items, min 8) |
-| **cloze: The Conference** | 🎮 | 12 | Activity (12 items, min 12) |
-| **error-correction: Wrong Logic** | 🎮 | 6 | Activity (6 items, min 6) |
-| **match-up: Opposites** | 🎮 | 8 | Activity (8 items, min 8) |
-| **group-sort: Parts of Speech** | 🎮 | 15 | Activity (15 items, min 12) |
-| **match-up: Definitions II** | 🎮 | 8 | Activity (8 items, min 8) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

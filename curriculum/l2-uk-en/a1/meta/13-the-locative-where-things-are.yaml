@@ -1,0 +1,24 @@
+module: a1-13
+title: The Locative - Where Things Are
+subtitle: Finding Your Way Around Ukrainian Spaces
+version: '1.0'
+phase: A1.2
+pedagogy: PPP
+objectives:
+  - Learner can ask and answer 'Where is X?' using locative case
+  - Learner can distinguish between в/у and на prepositions
+  - Learner can describe locations of people and objects
+  - Learner can name common places in Ukrainian
+vocabulary_count: 30
+duration: 60
+transliteration: vocabulary
+tags:
+  - grammar
+  - locative-case
+  - places
+  - prepositions
+grammar:
+  - locative-case
+  - prepositions-v-u-na
+vocab_count: 36
+slug: 13-the-locative-where-things-are

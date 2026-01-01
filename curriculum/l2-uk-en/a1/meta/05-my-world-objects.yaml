@@ -1,0 +1,25 @@
+module: a1-05
+title: 'My World: Objects'
+subtitle: Pointing to Things with Demonstratives
+version: '1.0'
+phase: A1.1
+pedagogy: PPP
+duration: 60 min
+transliteration: full
+tags:
+  - demonstratives
+  - household-objects
+  - gender-agreement
+  - pointing
+grammar:
+  - demonstratives цей/ця/це/ці
+  - demonstratives той/та/те/ті
+  - gender agreement with demonstratives
+objectives:
+  - Learner can use цей/ця/це/ці to point to objects near them
+  - Learner can use той/та/те/ті to point to objects far from them
+  - Learner can match demonstrative gender with noun gender
+  - Learner can name 40 common household and everyday objects
+vocabulary_count: 40
+vocab_count: 42
+slug: 05-my-world-objects

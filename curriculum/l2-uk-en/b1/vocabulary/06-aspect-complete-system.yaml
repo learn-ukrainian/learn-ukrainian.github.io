@@ -1,0 +1,36 @@
+module: 06-aspect-complete-system
+level: B1
+version: '2.0'
+items:
+- lemma: граматика
+  ipa: /ɦraˈmatɪka/
+  translation: grammar
+  pos: noun
+  gender: f
+- lemma: дослівно
+  ipa: /dɔˈslʲiu̯nɔ/
+  translation: literally
+  pos: adv
+- lemma: задати
+  ipa: /zaˈdatɪ/
+  translation: to ask
+  pos: verb
+- lemma: одноразово
+  ipa: /ɔdnɔraˈzɔvɔ/
+  translation: once
+  pos: adv
+- lemma: одноразовість
+  ipa: /ɔdnɔraˈzɔvisʲtʲ/
+  translation: singularity
+  pos: noun
+  gender: f
+- lemma: привітатися
+  ipa: /prɪviˈtatɪsʲa/
+  translation: to greet
+  pos: verb
+  gender: m
+- lemma: упасти
+  ipa: /uˈpastɪ/
+  translation: to fall
+  pos: verb
+  gender: f

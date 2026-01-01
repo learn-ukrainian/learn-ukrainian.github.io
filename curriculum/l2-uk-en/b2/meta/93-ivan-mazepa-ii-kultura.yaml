@@ -1,0 +1,27 @@
+module: b2-93
+title: 'Іван Мазепа II: освіта і культура'
+phase: B2.3b [Українська історія]
+focus: history
+pedagogy: CBI
+register: публіцистичний
+duration: 90
+transliteration: none
+tags:
+  - history
+  - cossack-era
+  - mazepa
+  - baroque
+  - culture
+  - education
+grammar:
+  - Історичний наратив
+  - Культурна термінологія
+vocabulary_focus: null
+vocab_count: 117 - "Архітектурна та мистецька лексика" - "Освітня термінологія"
+objectives:
+  - Учень може описати культурну спадщину Івана Мазепи
+  - Учень може пояснити особливості мазепинського бароко
+  - Учень може охарактеризувати роль Києво-Могилянської академії в культурному відродженні
+  - Учень може аналізувати Мазепу як мецената та покровителя мистецтв
+vocabulary_count: 35
+slug: 93-ivan-mazepa-ii-kultura

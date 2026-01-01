@@ -1,6 +1,15 @@
 # Audit Report: 20-motion-approaching-departing.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
+**Phase:** B1.2 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): відійти, донести, підійти, доїхати, відстань...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1979/1500
@@ -10,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 28/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,20 +46,13 @@
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.1%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Рух: наближення і віддалення** | ⚪️ | 62 | Skipped |
+| **Intro/Narrative** | ✅ | 62 | Included in Core |
 | **Діагностика** | ✅ | 130 | Included in Core |
 | **Аналіз** | ✅ | 489 | Included in Core |
 | **Поглиблення** | ⚪️ | 408 | Skipped |
 | **Практика** | ⚪️ | 199 | Skipped |
 | **Діалоги** | ✅ | 444 | Included in Core |
 | **Підсумок** | ✅ | 247 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

@@ -1,30 +1,3 @@
----
-module: a1-33
-title: 'Holidays & Traditions'
-subtitle: 'Свята і традиції'
-version: '1.0'
-phase: 'A1.3 - Consolidation'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: 'first-occurrence'
-tags:
-  - holidays
-  - traditions
-  - greetings
-  - celebrations
-grammar:
-  - Holiday greetings
-  - Date expressions (Genitive)
-  - Wish expressions
-objectives:
-  - 'Learner can name major Ukrainian holidays'
-  - 'Learner can give holiday greetings'
-  - 'Learner can talk about birthday celebrations'
-  - 'Learner can express wishes'
-vocabulary_count: 30
-vocab_count: 27
----
-
 # Holidays & Traditions
 
 ## Warm-up
@@ -207,36 +180,3 @@ vocab_count: 27
 > - [Greetings for Every Occasion](https://www.ukrainianlessons.com/greetings/) — Holiday phrases
 > - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/holidays
 > - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
-
-# Vocabulary
-
-| Word        | IPA              | English                  | POS   | Gender | Note                    |
-| ----------- | ---------------- | ------------------------ | ----- | ------ | ----------------------- |
-| березень    | /ˈbɛrɛzɛnʲ/      | March                    | noun  | ч      |                         |
-| Великдень   | /vɛˈlɪkdɛnʲ/     | Easter                   | name  | ч      |                         |
-| весілля     | /vɛˈsilʲːɑ/      | wedding                  | noun  | с      |                         |
-| вечірка     | /vɛˈt͡ʃirkɑ/      | party                    | noun  | ж      |                         |
-| дарувати    | /dɑruˈvɑtɪ/      | to give (gift)           | verb  | -      |                         |
-| двадцятий   | /dvɑdˈt͡sʲɑtɪj/   | twentieth                | adj   | ч      |                         |
-| день        | /dɛnʲ/           | day                      | noun  | ч      |                         |
-| здійснитися | /zdijsˈnɪtɪsʲɑ/  | to come true             | verb  | -      |                         |
-| кутя        | /kuˈtʲɑ/         | kutia (dish)             | noun  | ж      |                         |
-| многая      | /ˈmnɔɦɑjɑ/       | many (archaic)           | adj   | ж      | In 'Многая літа'        |
-| нехай       | /nɛˈxɑj/         | let/may                  | other | -      |                         |
-| отримати    | /ɔtˈrɪmɑtɪ/      | to receive               | verb  | -      |                         |
-| паска       | /ˈpɑskɑ/         | Easter bread             | noun  | ж      |                         |
-| писанка     | /ˈpi.sɑn.kɑ/     | pysanka (egg)            | noun  | ж      |                         |
-| побажання   | /pɔbɑˈʒɑnʲːɑ/    | wish                     | noun  | с      |                         |
-| привітання  | /prɪviˈtɑnʲːɑ/   | greeting                 | noun  | с      |                         |
-| радість     | /ˈrɑdisʲtʲ/      | joy                      | noun  | ж      |                         |
-| святий      | /svʲɑˈtɪj/       | holy                     | adj   | ч      |                         |
-| свято       | /ˈsvjɑtɔ/        | holiday                  | noun  | с      |                         |
-| Святвечір   | /sʲvjɑtˈvɛt͡ʃir/  | Christmas Eve            | noun  | ч      |                         |
-| святкування | /svjɑtkuˈvɑnʲːɑ/ | celebration              | noun  | с      |                         |
-| успіх       | /ˈuspix/         | success                  | noun  | ч      |                         |
-| хай         | /xɑj/            | let/may                  | other | -      |                         |
-| Христовий   | /xrɪsˈtɔvɪj/     | Christ's                 | adj   | ч      |                         |
-| щасливий    | /ʃt͡ʃɑsˈlɪvɪj/    | happy                    | adj   | ч      |                         |
-| щастити     | /ʃt͡ʃɑsˈtɪtɪ/     | to contain luck/be lucky | verb  | -      | Impersonal: Хай щастить |
-| щастя       | /ˈʃt͡ʃɑsʲtʲɑ/     | happiness                | noun  | с      |                         |
-| щирий       | /ˈʃt͡ʃɪrɪj/       | sincere                  | adj   | ч      |                         |

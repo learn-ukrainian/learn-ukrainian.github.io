@@ -1,26 +1,30 @@
 # Audit Report: 07-spatial-prepositions.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
+**Phase:** A2 | **Level:** A2 | **Pedagogy:** 'PPP' | **Target:** 1000
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: знахідний, відмінок, місцевий
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
-- **Words:** ✅ 1261/1000
+- **Words:** ✅ 1256/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 8/1
+- **Vocab:** ✅ 22/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 38.6% (target 35-50% (A2.1))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
+- **Immersion:** 🇺🇦 39.3% (target 35-50% (A2.1))
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -29,7 +33,7 @@
 | **Presentation** | ✅ | 0 | Included in Core |
 | **The Preposition-Case Connection** | ⚪️ | 87 | Skipped |
 | **Motion vs. Location: The Core Distinction** | ✅ | 77 | Included in Core |
-| **Prepositions by Case** | ⚪️ | 147 | Skipped |
+| **Prepositions by Case** | ⚪️ | 141 | Skipped |
 | **The в/у Alternation** | ⚪️ | 134 | Skipped |
 | **Cultural Insight** | ✅ | 0 | Included in Core |
 | **Prepositions in Ukrainian Addresses** | ⚪️ | 30 | Skipped |
@@ -41,17 +45,5 @@
 | **Summary** | ✅ | 0 | Included in Core |
 | **Що ви вивчили** | ⚪️ | 71 | Skipped |
 | **Key Takeaways** | ⚪️ | 79 | Skipped |
-| **Need More Practice?** | ⚪️ | 29 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Preposition Meanings** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Choose the Correct Preposition** | 🎮 | 12 | Activity (12 items, min 8) |
-| **quiz: Motion or Location?** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: Preposition Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Prepositions by Case** | 🎮 | 12 | Activity (12 items, min 12) |
-| **unjumble: Preposition Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
-| **error-correction: Fix the Case** | 🎮 | 12 | Activity (12 items, min 6) |
-| **cloze: Complete the Story** | 🎮 | 12 | Activity (12 items, min 12) |
-| **dialogue-reorder: Asking for Directions** | 🎮 | 12 | Activity (12 items, min 4) |
-| **mark-the-words: Find Preposition + Case** | 🎮 | 12 | Activity (12 items, min 6) |
-| **translate: English to Ukrainian** | 🎮 | 36 | Activity (36 items, min 6) |
+| **Need More Practice?** | ⚪️ | 30 | Skipped |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

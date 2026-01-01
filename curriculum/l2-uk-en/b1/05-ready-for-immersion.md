@@ -1,32 +1,3 @@
----
-module: b1-05
-title: "Готові до занурення"
-subtitle: "Metalanguage mastery checkpoint"
-version: "1.0"
-phase: "B1.0 Bridge"
-pedagogy: "TTT"
-duration: 75
-transliteration: none
-tags:
-  - grammar
-  - metalanguage
-  - checkpoint
-  - bridge
-grammar:
-  - "Integration of all metalanguage from M01-04"
-  - "Reading grammar in Ukrainian"
-  - "Comprehension test"
-objectives:
-  - "Learner can read and understand grammar explanations in Ukrainian"
-  - "Learner can answer questions about grammar rules in Ukrainian"
-  - "Learner can demonstrate metalanguage mastery for full immersion"
-  - "Learner can use negation and verb form terminology"
-  - "Learner can understand activity instruction verbs"
-  - "Learner can apply analytical terms and style/register concepts"
-vocabulary_count: 44
-vocab_count: 21
----
-
 # Готові до занурення
 
 > 🎯 **Why This Module Matters**

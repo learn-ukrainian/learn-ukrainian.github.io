@@ -1,0 +1,25 @@
+module: a1-06
+title: The Living Verb I
+subtitle: Present Tense Class I (-ати/-яті)
+version: '1.0'
+phase: A1.1
+pedagogy: PPP
+duration: 60
+transliteration: full
+tags:
+  - verbs
+  - conjugation
+  - class-i
+  - present-tense
+  - actions
+grammar:
+  - present-tense-class-i
+  - verb-conjugation
+  - personal-endings
+objectives:
+  - Learner can conjugate Class I verbs in present tense
+  - Learner can form basic action statements
+  - Learner can describe daily activities using -ati verbs
+vocabulary_count: 25
+vocab_count: 63
+slug: 06-the-living-verb-i

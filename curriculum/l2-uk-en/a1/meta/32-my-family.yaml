@@ -1,0 +1,24 @@
+module: a1-32
+title: My Family
+subtitle: Родина
+version: '1.0'
+phase: A1.3 - Consolidation
+pedagogy: PPP
+duration: 60 min
+transliteration: first-occurrence
+tags:
+  - family
+  - relationships
+  - possessives
+grammar:
+  - Family vocabulary
+  - Possessives with family members
+  - Genitive for relationships
+objectives:
+  - Learner can name family members
+  - Learner can describe family relationships
+  - Learner can talk about their own family
+  - Learner can use possessives with family terms
+vocabulary_count: 35
+vocab_count: 39
+slug: 32-my-family

@@ -1,28 +1,3 @@
----
-module: b1-54
-title: "Вираження думок та поглядів"
-subtitle: "Expressing Opinions"
-version: "1.0"
-phase: "B1.5 Vocabulary Expansion I"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "opinion verb constructions"
-  - "opinion phrase patterns"
-tags:
-  - vocabulary
-  - opinions
-  - discourse
-objectives:
-  - "Learner can express personal opinions using various constructions"
-  - "Learner can distinguish between strong and weak opinion expressions"
-  - "Learner can use appropriate opinion phrases in formal and informal contexts"
-vocabulary_count: 35
-vocab_count: 53
----
-
 # Вираження думок та поглядів
 
 > 🎯 **Чому це важливо?**

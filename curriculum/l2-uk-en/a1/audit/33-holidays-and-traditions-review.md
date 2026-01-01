@@ -1,20 +1,30 @@
 # Audit Report: 33-holidays-and-traditions.md
-**Phase:** A1 | **Level:** A1 | **Pedagogy:** "PPP" | **Target:** 750
+**Phase:** A1.3 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): традиція, музика, гості, різдво, торт...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
-- **Words:** ✅ 829/750
+- **Words:** ✅ 831/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 26/1
+- **Vocab:** ✅ 28/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 42.9% (target 35-55% (M33))
+- **Immersion:** 🇺🇦 35.8% (target 35-55% (M33))
+- **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -25,22 +35,12 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Holidays & Traditions** | ⚪️ | 0 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 55 | Included in Core |
-| **Grammar** | ⚪️ | 53 | Skipped |
+| **Grammar** | ⚪️ | 0 | Skipped |
+| **Holiday Greetings** | ⚪️ | 54 | Skipped |
 | **Making Wishes** | ⚪️ | 7 | Skipped |
 | **When Is Your Birthday?** | ⚪️ | 12 | Skipped |
 | **Examples in Context** | ✅ | 186 | Included in Core |
 | **Dialogues** | ✅ | 443 | Included in Core |
-| **Summary** | ✅ | 73 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Holidays and Greetings** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Celebration Vocabulary** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Holidays by Season** | 🎮 | 12 | Activity (12 items, min 12) |
-| **group-sort: Holiday Activities** | 🎮 | 12 | Activity (12 items, min 12) |
-| **fill-in: Привітання (Greetings)** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Святкування (Celebrating)** | 🎮 | 12 | Activity (12 items, min 8) |
-| **quiz: Holiday Knowledge** | 🎮 | 8 | Activity (8 items, min 8) |
-| **unjumble: Holiday Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
-| **true-false: Holiday Facts** | 🎮 | 12 | Activity (12 items, min 8) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Summary** | ✅ | 74 | Included in Core |

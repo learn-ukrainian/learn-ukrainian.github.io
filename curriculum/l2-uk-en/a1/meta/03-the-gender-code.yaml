@@ -1,0 +1,23 @@
+module: a1-03
+title: The Gender Code
+subtitle: Unlocking Ukrainian Gender Patterns
+version: '1.0'
+phase: A1.1
+pedagogy: PPP
+duration: 60
+transliteration: full
+tags:
+  - grammar
+  - gender
+  - declension
+  - noun-patterns
+grammar:
+  - noun-gender-m-f-n
+  - declension-families-4
+objectives:
+  - Learner can identify the gender of Ukrainian nouns by their ending
+  - Learner can categorize nouns into the 4 declension families
+  - 'Learner can recognize gender patterns: consonant (m), -а/-я (f), -о/-е (n)'
+vocabulary_count: 36
+vocab_count: 60
+slug: 03-the-gender-code

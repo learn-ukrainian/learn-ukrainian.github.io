@@ -1,28 +1,3 @@
----
-module: b1-69
-title: "Синоніми II: дієслова мовлення"
-subtitle: "Synonymy II: Speaking Verbs"
-version: "1.0"
-phase: "B1.6 Vocabulary Expansion II"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "verb collocations with speaking vocabulary"
-  - "register differentiation in reporting verbs"
-tags:
-  - vocabulary
-  - synonymy
-  - speaking-verbs
-objectives:
-  - "Learner can distinguish between казати/говорити/розповідати/повідомляти"
-  - "Learner can use 20 speaking verbs with appropriate collocations"
-  - "Learner can select verbs by register (formal vs informal)"
-vocabulary_count: 35
-vocab_count: 48
----
-
 # Синоніми II: дієслова мовлення
 
 > 🎯 **Чому це важливо?**

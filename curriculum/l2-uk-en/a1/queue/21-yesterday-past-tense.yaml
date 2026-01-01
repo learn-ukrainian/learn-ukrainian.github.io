@@ -1,0 +1,512 @@
+module: 21-yesterday-past-tense
+level: A1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/21-yesterday-past-tense.md
+generated: '2026-01-01T17:33:20.539256'
+scope: fill-in, quiz, true-false, unjumble
+activity_counts:
+  fill-in: 18
+  unjumble: 6
+  quiz: 16
+  true-false: 8
+total_items: 48
+item_count: 48
+sample_percent: null
+items:
+- activity: fill-in
+  title: Complete with Past Tense
+  sentence_template: Вчора він ___ книгу.
+  answer: читав
+  complete_sentence: Вчора він читав книгу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Past Tense
+  sentence_template: Вона ___ по телефону вчора.
+  answer: говорила
+  complete_sentence: Вона говорила по телефону вчора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Past Tense
+  sentence_template: Ми ___ українською вчора.
+  answer: говорили
+  complete_sentence: Ми говорили українською вчора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Past Tense
+  sentence_template: Колись тут ___ школа.
+  answer: була
+  complete_sentence: Колись тут була школа.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Past Tense
+  sentence_template: Він ___ музику весь вечір.
+  answer: слухав
+  complete_sentence: Він слухав музику весь вечір.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Past Tense
+  sentence_template: Вона ___ листи весь день.
+  answer: писала
+  complete_sentence: Вона писала листи весь день.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Past Tense
+  sentence_template: Вони ___ в Україні минулого року.
+  answer: були
+  complete_sentence: Вони були в Україні минулого року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Past Tense
+  sentence_template: Я ___ каву вранці. (male speaker)
+  answer: пив
+  complete_sentence: Я пив каву вранці. (male speaker)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Past Tense
+  sentence_template: Давно він ___ тут.
+  answer: жив
+  complete_sentence: Давно він жив тут.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Past Tense
+  sentence_template: Позавчора вона ___ фільм.
+  answer: дивилася
+  complete_sentence: Позавчора вона дивилася фільм.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Past Tense
+  sentence_template: Він (читати) ___ газету.
+  answer: читав
+  complete_sentence: Він (читати) читав газету.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Past Tense
+  sentence_template: Вона (говорити) ___ по телефону.
+  answer: говорила
+  complete_sentence: Вона (говорити) говорила по телефону.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Past Tense
+  sentence_template: Воно (бути) ___ тут.
+  answer: було
+  complete_sentence: Воно (бути) було тут.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Past Tense
+  sentence_template: Вони (працювати) ___ весь день.
+  answer: працювали
+  complete_sentence: Вони (працювати) працювали весь день.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Past Tense
+  sentence_template: Я (слухати) ___ музику. (female speaker)
+  answer: слухала
+  complete_sentence: Я (слухати) слухала музику. (female speaker)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Past Tense
+  sentence_template: Ти (дивитися) ___ фільм? (asking a male)
+  answer: дивився
+  complete_sentence: Ти (дивитися) дивився фільм? (asking a male)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Past Tense
+  sentence_template: Він (їсти) ___ сніданок.
+  answer: їв
+  complete_sentence: Він (їсти) їв сніданок.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Past Tense
+  sentence_template: Вона (пити) ___ каву.
+  answer: пила
+  complete_sentence: Вона (пити) пила каву.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Build Past Tense Sentences
+  jumbled_words: []
+  answer: Я працював вчора
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Build Past Tense Sentences
+  jumbled_words: []
+  answer: Вона читала книгу
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Build Past Tense Sentences
+  jumbled_words: []
+  answer: Ми були в Україні минулого року
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Build Past Tense Sentences
+  jumbled_words: []
+  answer: Він жив тут давно
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Build Past Tense Sentences
+  jumbled_words: []
+  answer: Я слухав музику вчора
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Build Past Tense Sentences
+  jumbled_words: []
+  answer: Вона говорила по телефону
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Past Tense
+  question: How do you form the past tense in Ukrainian?
+  options:
+  - '{''text'': ''Add -ю to the infinitive'', ''correct'': False}'
+  - '{''text'': ''Remove -ти and add -в/-ла/-ло/-ли'', ''correct'': True}'
+  - '{''text'': ''Change the first letter'', ''correct'': False}'
+  - '{''text'': ''Add will before the verb'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Past Tense
+  question: Which ending does a male speaker use for "I worked"?
+  options:
+  - '{''text'': ''Я працював'', ''correct'': True}'
+  - '{''text'': ''Я працювала'', ''correct'': False}'
+  - '{''text'': ''Я працювало'', ''correct'': False}'
+  - '{''text'': ''Я працювали'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Past Tense
+  question: What doesaccurately the word "вчора" mean in English?
+  options:
+  - '{''text'': ''Tomorrow'', ''correct'': False}'
+  - '{''text'': ''Yesterday'', ''correct'': True}'
+  - '{''text'': ''Today'', ''correct'': False}'
+  - '{''text'': ''Last week'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Past Tense
+  question: Which is the correct past tense of "їсти" (to eat) for "він"?
+  options:
+  - '{''text'': ''їстив'', ''correct'': False}'
+  - '{''text'': ''їтив'', ''correct'': False}'
+  - '{''text'': ''їв'', ''correct'': True}'
+  - '{''text'': ''їїв'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Past Tense
+  question: How do you say accurately "She was reading" in Ukrainian?
+  options:
+  - '{''text'': ''Вона читав'', ''correct'': False}'
+  - '{''text'': ''Вона читала'', ''correct'': True}'
+  - '{''text'': ''Вона читало'', ''correct'': False}'
+  - '{''text'': ''Вона читати'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Past Tense
+  question: What does precisely the word "колись" mean in English?
+  options:
+  - '{''text'': ''Never'', ''correct'': False}'
+  - '{''text'': ''Always'', ''correct'': False}'
+  - '{''text'': ''Once, sometime'', ''correct'': True}'
+  - '{''text'': ''Every day'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Past Tense
+  question: Which verb changes its stem in past tense?
+  options:
+  - '{''text'': ''читати → читав'', ''correct'': False}'
+  - '{''text'': ''працювати → працював'', ''correct'': False}'
+  - '{''text'': ''їсти → їв'', ''correct'': True}'
+  - '{''text'': ''говорити → говорив'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Past Tense
+  question: How do you accurately say "We were" in Ukrainian?
+  options:
+  - '{''text'': ''Ми був'', ''correct'': False}'
+  - '{''text'': ''Ми була'', ''correct'': False}'
+  - '{''text'': ''Ми було'', ''correct'': False}'
+  - '{''text'': ''Ми були'', ''correct'': True}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Time Expressions
+  question: What does accurately "минулого місяця" mean in English?
+  options:
+  - '{''text'': ''Next month'', ''correct'': False}'
+  - '{''text'': ''This month'', ''correct'': False}'
+  - '{''text'': ''Last month'', ''correct'': True}'
+  - '{''text'': ''Every month'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Time Expressions
+  question: Which word means accurately "recently" in the Ukrainian language?
+  options:
+  - '{''text'': ''давно'', ''correct'': False}'
+  - '{''text'': ''недавно'', ''correct'': True}'
+  - '{''text'': ''раніше'', ''correct'': False}'
+  - '{''text'': ''колись'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Time Expressions
+  question: What does accurately "Позавчора" refer to in English?
+  options:
+  - '{''text'': ''Tomorrow'', ''correct'': False}'
+  - '{''text'': ''Yesterday'', ''correct'': False}'
+  - '{''text'': ''Day before yesterday'', ''correct'': True}'
+  - '{''text'': ''Last week'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Time Expressions
+  question: Which word means accurately "long ago" in Ukrainian today?
+  options:
+  - '{''text'': ''давно'', ''correct'': True}'
+  - '{''text'': ''недавно'', ''correct'': False}'
+  - '{''text'': ''завтра'', ''correct'': False}'
+  - '{''text'': ''зараз'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Time Expressions
+  question: What does the word "раніше" accurately mean today?
+  options:
+  - '{''text'': ''Tomorrow'', ''correct'': False}'
+  - '{''text'': ''Now'', ''correct'': False}'
+  - '{''text'': ''Earlier, before'', ''correct'': True}'
+  - '{''text'': ''Always'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Time Expressions
+  question: What does accurately "Минулого року" mean in English?
+  options:
+  - '{''text'': ''This year'', ''correct'': False}'
+  - '{''text'': ''Next year'', ''correct'': False}'
+  - '{''text'': ''Last year'', ''correct'': True}'
+  - '{''text'': ''Every year'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Time Expressions
+  question: What does the word "колись" accurately mean today?
+  options:
+  - '{''text'': ''Never'', ''correct'': False}'
+  - '{''text'': ''Always'', ''correct'': False}'
+  - '{''text'': ''Once, sometime'', ''correct'': True}'
+  - '{''text'': ''Often'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Time Expressions
+  question: What does "Минулого тижня" accurately mean in English?
+  options:
+  - '{''text'': ''This week'', ''correct'': False}'
+  - '{''text'': ''Next week'', ''correct'': False}'
+  - '{''text'': ''Last week'', ''correct'': True}'
+  - '{''text'': ''Every week'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Past Tense Facts
+  statement: The past tense ending -в is used for masculine subjects.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Past Tense Facts
+  statement: '"Вона працював" is grammatically correct.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Past Tense Facts
+  statement: '"Вчора" means "tomorrow."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Past Tense Facts
+  statement: The past tense of "бути" for feminine is "була."
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Past Tense Facts
+  statement: The verb "їсти" becomes "їв" in masculine past tense.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Past Tense Facts
+  statement: '"Ми" uses the -ли ending in past tense.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Past Tense Facts
+  statement: '"Давно" means "recently."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Past Tense Facts
+  statement: The neuter past tense ending is -ло.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

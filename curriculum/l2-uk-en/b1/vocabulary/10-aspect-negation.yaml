@@ -1,0 +1,92 @@
+module: 10-aspect-negation
+level: B1
+version: '2.0'
+items:
+- lemma: '''не'''
+  ipa: /nɛ/
+  translation: not
+  pos: other
+- lemma: адрега
+  ipa: /aˈdrɛɦa/
+  translation: address (typo)
+  pos: noun
+  gender: m
+- lemma: вигуляти
+  ipa: /vɪɦuˈlʲatɪ/
+  translation: to walk (dog)
+  pos: verb
+- lemma: впусти
+  ipa: /vpuˈstɪ/
+  translation: let in
+  pos: verb
+- lemma: губитися
+  ipa: /ɦuˈbɪtɪsʲa/
+  translation: to get lost
+  pos: verb
+  gender: m
+- lemma: дій
+  ipa: /dʲij/
+  translation: actions
+  pos: noun
+  gender: f
+- lemma: загальне
+  ipa: /zaˈɦalʲnɛ/
+  translation: general
+  pos: noun
+  gender: n
+- lemma: заспокоєння
+  ipa: /zaspɔˈkɔjenʲːa/
+  translation: reassurance
+  pos: noun
+  gender: n
+- lemma: кінофестиваль
+  ipa: /kʲinɔfɛstɪˈvalʲ/
+  translation: film festival
+  pos: noun
+  gender: m
+- lemma: млинка
+  ipa: /ˈmlɪnka/
+  translation: pancake (dim.)
+  pos: noun
+  gender: m
+- lemma: нерозуміння
+  ipa: /nɛrɔzuˈmʲinʲːa/
+  translation: misunderstanding
+  pos: noun
+  gender: n
+- lemma: паркувати
+  ipa: /parkuˈvatɪ/
+  translation: to park
+  pos: verb
+- lemma: передзвони
+  ipa: /pɛrɛdzvɔˈnɪ/
+  translation: call back
+  pos: verb
+- lemma: плануюмій
+  ipa: /planujuˈmʲij/
+  translation: I plan my (typo)
+  pos: noun
+  gender: m
+- lemma: припинений
+  ipa: /prɪˈpɪnɛnɪj/
+  translation: ceased
+  pos: adj
+  gender: f
+- lemma: пристебнутися
+  ipa: /prɪstɛbˈnutɪsʲa/
+  translation: to buckle up
+  pos: verb
+- lemma: спойлер
+  ipa: /ˈspɔjlɛr/
+  translation: spoiler
+  pos: noun
+  gender: m
+- lemma: ствердження
+  ipa: /stvɛrˈdʒɛnʲːa/
+  translation: affirmation
+  pos: noun
+  gender: n
+- lemma: імплікувати
+  ipa: /implʲikuˈvatɪ/
+  translation: to imply
+  pos: verb

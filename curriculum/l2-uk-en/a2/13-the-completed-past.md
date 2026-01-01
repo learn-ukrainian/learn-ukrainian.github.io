@@ -1,30 +1,3 @@
----
-module: a2-13
-title: "The Completed Past"
-subtitle: "Perfective Verbs in Past Tense"
-version: "1.0"
-phase: "A2.2"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - grammar
-  - aspect
-  - past-tense
-  - perfective
-grammar:
-  - perfective past tense
-  - completion vs process
-  - aspect choice in past
-objectives:
-  - "Learner can conjugate perfective verbs in past tense"
-  - "Learner understands when to use perfective past"
-  - "Learner can express completed actions"
-  - "Learner can distinguish process from result in past"
-vocabulary_count: 20
-vocab_count: 8
----
-
 ## Warm-up
 
 **Тепер, коли ви розумієте аспект, давайте навчимося використовувати доконаний вид у минулому часі!**

@@ -1,0 +1,215 @@
+module: 44-active-participles-phrases
+level: B1
+version: '2.0'
+items:
+- lemma: антоненка
+  ipa: /antɔˈnɛnka/
+  translation: Antonenko
+  pos: propn
+  gender: m
+- lemma: бажаючий
+  ipa: /baˈʒajut͡ʃɪj/
+  translation: willing
+  pos: adj
+- lemma: бувший
+  ipa: /ˈbuu̯ʃɪj/
+  translation: former (Surzhyk)
+  pos: adj
+  gender: m
+- lemma: біднійший
+  ipa: /bidˈnʲijʃɪj/
+  translation: poorer (typo)
+  pos: adj
+  gender: f
+- lemma: вкривати
+  ipa: /ukrɪˈvatɪ/
+  translation: to cover
+  pos: verb
+- lemma: впливаючий
+  ipa: /uplɪˈvajut͡ʃɪj/
+  translation: influencing
+  pos: adj
+- lemma: відбуваючийся
+  ipa: /vidbuˈvajut͡ʃɪjsʲa/
+  translation: happening (Surzhyk)
+  pos: adj
+- lemma: відбуваючіся
+  ipa: /vidbuˈvajut͡ʃisʲa/
+  translation: happening (typo)
+  pos: noun
+  gender: n
+- lemma: відвідуючий
+  ipa: /vidˈvidujut͡ʃɪj/
+  translation: visiting
+  pos: adj
+- lemma: відповідаючий
+  ipa: /vidpɔviˈdajut͡ʃɪj/
+  translation: answering
+  pos: adj
+- lemma: доказуючий
+  ipa: /dɔˈkazujut͡ʃɪj/
+  translation: proving
+  pos: adj
+- lemma: забруднений
+  ipa: /zaˈbrudnɛnɪj/
+  translation: polluted
+  pos: adj
+  gender: n
+- lemma: загорілий
+  ipa: /zahɔˈrʲilɪj/
+  translation: tanned
+  pos: adj
+  gender: m
+- lemma: загоріти
+  ipa: /zahɔˈrʲitɪ/
+  translation: to get a tan
+  pos: verb
+- lemma: замерзлий
+  ipa: /zaˈmɛrzlɪj/
+  translation: frozen
+  pos: adj
+  gender: m
+- lemma: замерзнути
+  ipa: /zaˈmɛrznutɪ/
+  translation: to freeze
+  pos: verb
+- lemma: збіжний
+  ipa: /ˈzbʲiʒnɪj/
+  translation: convergent
+  pos: adj
+  gender: m
+- lemma: змоклий
+  ipa: /ˈzmɔklɪj/
+  translation: soaked
+  pos: adj
+  gender: m
+- lemma: калькований
+  ipa: /kalʲˈkɔvanɪj/
+  translation: calqued
+  pos: adj
+  gender: m
+- lemma: канцелярит
+  ipa: /kant͡sɛlʲaˈrɪt/
+  translation: officialese
+  pos: noun
+  gender: m
+- lemma: корекція
+  ipa: /kɔˈrɛkt͡sʲija/
+  translation: correction
+  pos: noun
+  gender: f
+- lemma: корист
+  ipa: /ˈkɔrɪst/
+  translation: benefit (trunc)
+  pos: noun
+  gender: f
+- lemma: маючий
+  ipa: /ˈmajut͡ʃɪj/
+  translation: having (Surzhyk)
+  pos: adj
+  gender: f
+- lemma: обіцяючий
+  ipa: /ɔbiˈt͡sʲajut͡ʃɪj/
+  translation: promising
+  pos: adj
+- lemma: опадати
+  ipa: /ɔpaˈdatɪ/
+  translation: to fall off
+  pos: verb
+- lemma: опадаючий
+  ipa: /ɔpaˈdajut͡ʃɪj/
+  translation: falling
+  pos: adj
+- lemma: опалий
+  ipa: /ɔˈpalɪj/
+  translation: fallen
+  pos: adj
+  gender: n
+- lemma: охоча
+  ipa: /ɔˈxɔt͡ʃa/
+  translation: willing (fem.)
+  pos: noun
+  gender: m
+- lemma: плащ
+  ipa: /plaʃt͡ʃ/
+  translation: raincoat
+  pos: noun
+  gender: m
+- lemma: пожовклий
+  ipa: /pɔˈʒɔu̯klɪj/
+  translation: yellowed
+  pos: adj
+  gender: m
+- lemma: пожовкний
+  ipa: /pɔˈʒɔu̯knɪj/
+  translation: yellowed (typo)
+  pos: adj
+  gender: f
+- lemma: посивілий
+  ipa: /pɔsɪˈvʲilɪj/
+  translation: gray-haired
+  pos: adj
+  gender: m
+- lemma: посивіти
+  ipa: /pɔsɪˈvʲitɪ/
+  translation: to go gray
+  pos: verb
+  gender: m
+- lemma: потребуючий
+  ipa: /pɔtrɛˈbujut͡ʃɪj/
+  translation: needy
+  pos: adj
+- lemma: прибулий
+  ipa: /prɪˈbulɪj/
+  translation: newcomer
+  pos: adj
+  gender: m
+- lemma: причастність
+  ipa: /prɪˈt͡ʃastnʲisʲtʲ/
+  translation: involvement (typo)
+  pos: noun
+  gender: f
+- lemma: приємніший
+  ipa: /prɪˈjɛmnʲiʃɪj/
+  translation: more pleasant
+  pos: adj
+  gender: m
+- lemma: проживаючь
+  ipa: /prɔʒɪˈvajut͡ʃʲ/
+  translation: residing (typo)
+  pos: noun
+  gender: m
+- lemma: пуризм
+  ipa: /puˈrɪzm/
+  translation: purism
+  pos: noun
+  gender: m
+- lemma: пільга
+  ipa: /ˈpʲilʲha/
+  translation: benefit
+  pos: noun
+  gender: f
+- lemma: регламент
+  ipa: /rɛhˈlamɛnt/
+  translation: regulations
+  pos: noun
+  gender: m
+- lemma: слідуючий
+  ipa: /ˈslʲidujut͡ʃɪj/
+  translation: next (Surzhyk)
+  pos: adj
+- lemma: спотворений
+  ipa: /spɔˈtvɔrɛnɪj/
+  translation: distorted
+  pos: adj
+  gender: m
+- lemma: співаючий
+  ipa: /spiˈvajut͡ʃɪj/
+  translation: singing
+  pos: adj
+  gender: m
+- lemma: співпадаючий
+  ipa: /spiu̯paˈdajut͡ʃɪj/
+  translation: coinciding (Surzhyk)
+  pos: adj
+  gender: m

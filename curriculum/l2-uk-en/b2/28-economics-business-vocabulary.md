@@ -1,30 +1,3 @@
----
-module: b2-28
-title: "Економічна лексика: говоримо про бізнес"
-subtitle: "Economics & Business Vocabulary"
-version: "1.0"
-phase: "B2.1c [Register & Domain Vocab]"
-pedagogy: "CLIL"
-duration: 90
-transliteration: "none"
-tags:
-  - vocabulary
-  - economics
-  - business
-  - register
-grammar:
-  - "Economic terminology and register"
-  - "Business communication conventions"
-  - "Financial news reading strategies"
-objectives:
-  - "Учень може читати та розуміти економічні новини українською мовою"
-  - "Учень може аналізувати економічні показники та їх значення"
-  - "Учень може обговорювати економічну ситуацію в Україні, використовуючи спеціалізовану лексику"
-vocabulary_count: 35
-register: "науковий"
-vocab_count: 78
----
-
 # Економічна лексика: говоримо про бізнес
 
 > 🎯 **Чому це важливо?**

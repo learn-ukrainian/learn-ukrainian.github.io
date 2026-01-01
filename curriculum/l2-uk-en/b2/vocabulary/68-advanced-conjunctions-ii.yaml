@@ -1,0 +1,240 @@
+module: 68-advanced-conjunctions-ii
+level: B2
+version: '2.0'
+items:
+  - lemma: активніший
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: буря
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: вжитий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: взаємозамінний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: ворскла
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: впорядкування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: вщухнути
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: відбудовуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: відколи
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: відлік
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: відтоді
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: гіпотез
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: гіпотетичний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: гіпотетичність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: дотепер
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: епіс
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: контрфактичний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: літописець
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: надити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: напружений
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: невпізнання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: нездійснене
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: неоднозначність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: облетіти
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: опановувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: осінний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: паралельність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: передбачливість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: подорожей
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: поселитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: прискоритися
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: n
+  - lemma: прогніз
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: прораховувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: підготовчий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: підрядник
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: рамок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: ретроспектив
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: роздумувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розмірковувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розпал
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: розпланувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розставити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: самоврядування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: сорочинець
+    ipa: ''
+    translation: ''
+    pos: propn
+  - lemma: співвіднітися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: стратегічно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: сутеніти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: транш
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: траса
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: урізноманітнення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: хронологія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f

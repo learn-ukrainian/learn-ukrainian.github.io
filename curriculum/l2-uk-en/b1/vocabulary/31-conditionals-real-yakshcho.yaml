@@ -1,0 +1,54 @@
+module: 31-conditionals-real-yakshcho
+level: B1
+version: '2.0'
+items:
+- lemma: адаптований
+  ipa: /adapˈtɔvanɪj/
+  translation: adapted
+  pos: adj
+  gender: n
+- lemma: випаровуватися
+  ipa: /vɪparɔˈvuvatɪsʲa/
+  translation: to evaporate
+  pos: verb
+- lemma: дзвон
+  ipa: /dzvɔn/
+  translation: bell
+  pos: noun
+  gender: m
+- lemma: зателефонуй
+  ipa: /zatɛlɛfɔˈnuj/
+  translation: call (imp.)
+  pos: other
+- lemma: кипити
+  ipa: /kɪˈpɪtɪ/
+  translation: to boil (typo)
+  pos: verb
+- lemma: магомет
+  ipa: /mahɔˈmɛt/
+  translation: Mahomet
+  pos: propn
+  gender: m
+- lemma: нереально
+  ipa: /nɛrɛˈalʲnɔ/
+  translation: unrealistically
+  pos: adv
+- lemma: поліпшитися
+  ipa: /pɔˈlʲipʃɪtɪsʲa/
+  translation: to improve
+  pos: verb
+- lemma: прогноза
+  ipa: /prɔhˈnɔza/
+  translation: forecast
+  pos: noun
+  gender: m
+- lemma: пропалий
+  ipa: /prɔˈpalɪj/
+  translation: lost
+  pos: adj
+  gender: f
+- lemma: ща
+  ipa: /ʃt͡ʃa/
+  translation: what (slang)
+  pos: propn
+  gender: f

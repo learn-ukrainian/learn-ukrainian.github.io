@@ -1,46 +1,30 @@
 # Audit Report: 55-checkpoint-vocabulary.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "Review" | **Target:** 1000
+**Phase:** A2 | **Level:** A2 | **Pedagogy:** 'Review' | **Target:** 1000
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1019/1000
+- **Words:** ✅ 1023/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 1/1
+- **Vocab:** ✅ 4/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 46.5% (checkpoint - no gate)
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
+- **Immersion:** 🇺🇦 38.4% (checkpoint - no gate)
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Checkpoint - A2 Final Review** | ➖ | 59 | Excluded Type |
 | **Skill 1: Daily Life** | ⚪️ | 239 | Skipped |
-| **Skill 2: Work & Education** | ⚪️ | 194 | Skipped |
-| **Skill 3: Health & Body** | ⚪️ | 190 | Skipped |
+| **Skill 2: Work & Education** | ⚪️ | 195 | Skipped |
+| **Skill 3: Health & Body** | ⚪️ | 193 | Skipped |
 | **Skill 4: Shopping & Travel** | ⚪️ | 160 | Skipped |
 | **Integration Challenge** | ⚪️ | 119 | Skipped |
 | **Summary** | ✅ | 58 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Vocabulary Categories** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Vocabulary Test** | 🎮 | 12 | Activity (12 items, min 8) |
-| **quiz: A2 Vocabulary Quiz** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Vocabulary Domains** | 🎮 | 16 | Activity (16 items, min 12) |
-| **true-false: Vocabulary Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **cloze: A Day in Life** | 🎮 | 12 | Activity (12 items, min 12) |
-| **dialogue-reorder: At the Store** | 🎮 | 12 | Activity (12 items, min 4) |
-| **unjumble: Daily Routines** | 🎮 | 6 | Activity (6 items, min 6) |
-| **mark-the-words: Find the Vocabulary** | 🎮 | 10 | Activity (10 items, min 6) |
-| **translate: English to Ukrainian** | 🎮 | 24 | Activity (24 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

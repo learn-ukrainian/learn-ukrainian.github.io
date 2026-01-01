@@ -1,0 +1,111 @@
+module: 11-aspect-in-imperatives
+level: B1
+version: '2.0'
+items:
+- lemma: бюрократичність
+  ipa: /bʲurɔkraˈtɪt͡ʃnʲisʲtʲ/
+  translation: bureaucracy
+  pos: noun
+  gender: f
+- lemma: дамати
+  ipa: /daˈmatɪ/
+  translation: to give (typo)
+  pos: verb
+- lemma: загорнути
+  ipa: /zahɔrˈnutɪ/
+  translation: to wrap
+  pos: verb
+- lemma: закрий
+  ipa: /zaˈkrɪj/
+  translation: close (imp.)
+  pos: verb
+- lemma: змалка
+  ipa: /ˈzmalka/
+  translation: from childhood
+  pos: noun
+  gender: f
+- lemma: змішаний
+  ipa: /ˈzmʲiʃanɪj/
+  translation: mixed
+  pos: adj
+  gender: m
+- lemma: команд
+  ipa: /kɔˈmand/
+  translation: commands (gen. pl.)
+  pos: noun
+  gender: f
+- lemma: найсвіжіший
+  ipa: /najsvʲiˈʒiʃɪj/
+  translation: freshest
+  pos: adj
+- lemma: п'ятій
+  ipa: /ˈpʲjatʲij/
+  translation: fifth (loc.)
+  pos: other
+- lemma: подвоювати
+  ipa: /pɔdˈvɔjuvatɪ/
+  translation: to double
+  pos: verb
+- lemma: понеділка
+  ipa: /pɔnɛˈdʲilka/
+  translation: Monday (gen.)
+  pos: noun
+  gender: m
+- lemma: привітно
+  ipa: /prɪˈvʲitnɔ/
+  translation: friendly
+  pos: adv
+- lemma: пригодитися
+  ipa: /prɪɦɔˈdɪtɪsʲa/
+  translation: to come in handy
+  pos: verb
+- lemma: ріж
+  ipa: /rʲiʒ/
+  translation: cut (imp.)
+  pos: noun
+  gender: m
+- lemma: старість
+  ipa: /ˈstarʲisʲtʲ/
+  translation: old age
+  pos: noun
+  gender: f
+- lemma: стверджувальний
+  ipa: /stvɛrˈdʒuvalʲnɪj/
+  translation: affirmative
+  pos: adj
+- lemma: телефонування
+  ipa: /tɛlɛfɔnuˈvanʲːa/
+  translation: calling
+  pos: noun
+  gender: n
+- lemma: телефонуй
+  ipa: /tɛlɛfɔˈnuj/
+  translation: call (imp.)
+  pos: other
+- lemma: узгодженість
+  ipa: /uzˈɦɔdʒɛnʲisʲtʲ/
+  translation: consistency
+  pos: noun
+  gender: f
+- lemma: укятися
+  ipa: /ukˈjatɪsʲa/
+  translation: ??? (typo)
+  pos: verb
+- lemma: учис
+  ipa: /uˈt͡ʃɪs/
+  translation: learn (typo?)
+  pos: noun
+  gender: f
+- lemma: фокус
+  ipa: /ˈfɔkus/
+  translation: focus/trick
+  pos: noun
+  gender: m
+- lemma: щотижневий
+  ipa: /ʃt͡ʃɔtɪʒˈnɛvɪj/
+  translation: weekly
+  pos: adj
+- lemma: інструктувати
+  ipa: /instruktuˈvatɪ/
+  translation: to instruct
+  pos: verb

@@ -1,30 +1,3 @@
----
-module: a2-55
-title: 'Checkpoint - Vocabulary Expansion'
-subtitle: 'Review of Modules 44-54'
-version: '2.0'
-phase: 'A2.5'
-focus: checkpoint
-pedagogy: 'Review'
-duration: '60 min'
-transliteration: none
-tags:
-  - review
-  - checkpoint
-  - vocabulary
-  - assessment
-grammar:
-  - case review
-  - reflexive verbs
-  - impersonal constructions
-objectives:
-  - 'Learner can use daily life vocabulary fluently'
-  - 'Learner can integrate health, shopping, and work vocabulary'
-  - 'Learner can recall key verbs and nouns'
-vocabulary_count: 25
-vocab_count: 4
----
-
 # Checkpoint - A2 Final Review
 
 **Вітаємо!** Ви закінчили A2! This checkpoint reviews all vocabulary from Modules 44-54.

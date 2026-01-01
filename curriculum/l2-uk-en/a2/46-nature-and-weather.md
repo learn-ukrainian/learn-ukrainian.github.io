@@ -1,28 +1,3 @@
----
-module: a2-46
-title: 'Nature & Weather'
-subtitle: 'Environment and Climate Vocabulary'
-version: '2.0'
-phase: 'A2.5'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: none
-tags:
-  - vocabulary
-  - nature
-  - weather
-  - environment
-grammar:
-  - thematic vocabulary
-  - weather expressions
-objectives:
-  - 'Learner knows nature and weather vocabulary'
-  - 'Learner can describe weather and environment'
-  - 'Learner can discuss seasons and climate'
-vocabulary_count: 30
-vocab_count: 54
----
-
 # Nature & Weather
 
 ## Warm-up

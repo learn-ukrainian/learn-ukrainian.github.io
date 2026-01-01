@@ -1,0 +1,859 @@
+module: 04-reflexive-passive
+level: B2
+version: '2.0'
+items:
+- lemma: автоматизований
+  ipa: /ɐwtomɐtɪˈzowɐnɪj/
+  translation: automated
+  pos: adj
+- lemma: автоматичний
+  ipa: /ɐwtomɐˈtɪtʃnɪj/
+  translation: automatic
+  pos: adj
+  gender: f
+- lemma: академія
+  ipa: /ɐkɐˈdɛmʲijɐ/
+  translation: academy
+  pos: noun
+  gender: f
+- lemma: акумуляторний
+  ipa: /ɐkumulʲɐˈtornɪj/
+  translation: battery (adj)
+  pos: adj
+- lemma: акцентувати
+  ipa: /ɐkt͡sɛntuˈwɑtɪ/
+  translation: to emphasize
+  pos: verb
+- lemma: аналізувати
+  ipa: /ɐnɐlʲizuˈwɑtɪ/
+  translation: to analyze
+  pos: verb
+- lemma: база
+  ipa: /ˈbɑzɐ/
+  translation: base, database
+  pos: noun
+  gender: f
+- lemma: бездіяльність
+  ipa: /bɛzˈdʲijɐlʲn̪ʲisʲtʲ/
+  translation: inaction
+  pos: noun
+  gender: f
+- lemma: блокуватися
+  ipa: /blokuˈwɑtɪsʲɐ/
+  translation: to be blocked
+  pos: verb
+- lemma: варіант
+  ipa: /wɐˈrʲiɐnt/
+  translation: variant, option
+  pos: noun
+  gender: m
+- lemma: вдосконалюватися
+  ipa: /wdoskonɐˈlʲuwɐtɪsʲɐ/
+  translation: to improve (refl)
+  pos: verb
+- lemma: верстат
+  ipa: /wɛrˈstɑt/
+  translation: machine, lathe
+  pos: noun
+  gender: m
+- lemma: вестися
+  ipa: /wɛsˈtɪsʲɐ/
+  translation: to be conducted
+  pos: verb
+- lemma: вивчатися
+  ipa: /wɪwˈtʃɑtɪsʲɐ/
+  translation: to be studied
+  pos: verb
+- lemma: виготовлятися
+  ipa: /wɪɦotowˈlʲɐtɪsʲɐ/
+  translation: to be manufactured
+  pos: verb
+- lemma: визнаватися
+  ipa: /wɪznɐˈwɑtɪsʲɐ/
+  translation: to be recognized
+  pos: verb
+- lemma: виклад
+  ipa: /ˈwɪklɑd/
+  translation: presentation
+  pos: noun
+  gender: m
+- lemma: виправлення
+  ipa: /wɪˈprɑwlɛnʲːɐ/
+  translation: correction
+  pos: noun
+  gender: n
+- lemma: випускатися
+  ipa: /wɪpusˈkɑtɪsʲɐ/
+  translation: to be produced
+  pos: verb
+- lemma: виробляти
+  ipa: /wɪrobˈlʲɐtɪ/
+  translation: to produce
+  pos: verb
+- lemma: вироблятися
+  ipa: /wɪrobˈlʲɐtɪsʲɐ/
+  translation: to be produced
+  pos: verb
+- lemma: виробник
+  ipa: /wɪˈrobnɪk/
+  translation: producer
+  pos: noun
+  gender: m
+- lemma: виробництво
+  ipa: /wɪˈrobn̪ɪt͡stwo/
+  translation: production
+  pos: noun
+  gender: n
+- lemma: виробничий
+  ipa: /wɪrobˈnɪtʃɪj/
+  translation: production (adj)
+  pos: adj
+  gender: m
+- lemma: вирішений
+  ipa: /wɪˈrʲiʃɛnɪj/
+  translation: solved
+  pos: adj
+  gender: f
+- lemma: виявлятися
+  ipa: /wɪjɐwˈlʲɐtɪsʲɐ/
+  translation: to turn out
+  pos: verb
+- lemma: вмикатися
+  ipa: /wmɪˈkɑtɪsʲɐ/
+  translation: to turn on (refl)
+  pos: verb
+- lemma: впроваджуватися
+  ipa: /wprowɐˈdʒuwɐtɪsʲɐ/
+  translation: to be implemented
+  pos: verb
+- lemma: встановлюватися
+  ipa: /wstɐnowˈlʲuwɐtɪsʲɐ/
+  translation: to be established
+  pos: verb
+- lemma: відновлюваний
+  ipa: /widnowˈlʲuwɐnɪj/
+  translation: renewable
+  pos: adj
+  gender: f
+- lemma: відправка
+  ipa: /widˈprɑwkɐ/
+  translation: dispatch, shipment
+  pos: noun
+  gender: f
+- lemma: відпрацьований
+  ipa: /widprɐˈt͡sʲowɐnɪj/
+  translation: used, worked out
+  pos: adj
+- lemma: вітровий
+  ipa: /wʲitroˈwɪj/
+  translation: wind (adj)
+  pos: adj
+- lemma: вітчизняний
+  ipa: /wʲittʃɪzˈnʲɐnɪj/
+  translation: domestic, native
+  pos: adj
+- lemma: громадський
+  ipa: /ɦromɐdˈsʲkɪj/
+  translation: public, civic
+  pos: adj
+  gender: n
+- lemma: громадянин
+  ipa: /ɦromɐˈdʲɐnɪn/
+  translation: citizen
+  pos: noun
+  gender: m
+- lemma: десяток
+  ipa: /dɛˈsʲɐtok/
+  translation: dozen, ten
+  pos: noun
+  gender: m
+- lemma: джерело
+  ipa: /dʒɛˈrɛlo/
+  translation: source
+  pos: noun
+  gender: n
+- lemma: дискусія
+  ipa: /dɪsˈkusʲijɐ/
+  translation: discussion
+  pos: noun
+  gender: f
+- lemma: дмати
+  ipa: /dˈmɑtɪ/
+  translation: to blow
+  pos: verb
+- lemma: довкілля
+  ipa: /dowˈkʲilʲːɐ/
+  translation: environment
+  pos: noun
+  gender: n
+- lemma: документація
+  ipa: /dokumɛntɐˈt͡sʲijɐ/
+  translation: documentation
+  pos: noun
+  gender: f
+- lemma: доставка
+  ipa: /dosˈtɑwkɐ/
+  translation: delivery
+  pos: noun
+  gender: f
+- lemma: доставлятися
+  ipa: /dostɐwˈlʲɐtɪsʲɐ/
+  translation: to be delivered
+  pos: verb
+- lemma: досягатися
+  ipa: /dosʲɐˈɦɑtɪsʲɐ/
+  translation: to be achieved
+  pos: verb
+- lemma: друкуватися
+  ipa: /drukuˈwɑtɪsʲɐ/
+  translation: to be printed
+  pos: verb
+- lemma: дієслівний
+  ipa: /dʲijɛˈslʲiwnɪj/
+  translation: verbal (adj)
+  pos: adj
+- lemma: екологічний
+  ipa: /ɛkoloˈɦʲitʃnɪj/
+  translation: ecological
+  pos: adj
+  gender: f
+- lemma: електроенергія
+  ipa: /ɛlɛktroɛˈnɛrɦʲijɐ/
+  translation: electricity
+  pos: noun
+  gender: f
+- lemma: електромобіль
+  ipa: /ɛlɛktromoˈbʲilʲ/
+  translation: electric car
+  pos: noun
+  gender: m
+- lemma: електростанція
+  ipa: /ɛlɛktrostɐnˈt͡sʲijɐ/
+  translation: power plant
+  pos: noun
+  gender: f
+- lemma: енергетика
+  ipa: /ɛnɛrˈɦɛtɪkɐ/
+  translation: energy sector
+  pos: noun
+  gender: f
+- lemma: епізод
+  ipa: /ɛˈpʲizod/
+  translation: episode
+  pos: noun
+  gender: m
+- lemma: ефективність
+  ipa: /ɛfɛktɪwˈn̪ʲisʲtʲ/
+  translation: efficiency
+  pos: noun
+  gender: f
+- lemma: живлення
+  ipa: /ʒɪwˈlɛnʲːɐ/
+  translation: power supply
+  pos: noun
+  gender: n
+- lemma: забезпечення
+  ipa: /zɐbɛzˈpɛtʃɛnʲːɐ/
+  translation: provision, software
+  pos: noun
+  gender: n
+- lemma: забезпечуватися
+  ipa: /zɐbɛzpɛˈtʃuwɐtɪsʲɐ/
+  translation: to be provided
+  pos: verb
+- lemma: завантажуватися
+  ipa: /zɐwɐntɐˈʒuwɐtɪsʲɐ/
+  translation: to be loaded
+  pos: verb
+- lemma: загроза
+  ipa: /zɐˈɦrozɐ/
+  translation: threat
+  pos: noun
+  gender: f
+- lemma: заклад
+  ipa: /ˈzɑklɑd/
+  translation: institution
+  pos: noun
+  gender: m
+- lemma: замінюватися
+  ipa: /zɐmʲiˈnʲuwɐtɪsʲɐ/
+  translation: to be replaced
+  pos: verb
+- lemma: запоріжжя
+  ipa: /zɐpoˈrʲiʒːɐ/
+  translation: Zaporizhzhia
+  pos: propn
+  gender: m
+- lemma: застосовуватися
+  ipa: /zɐstosoˈwuwɐtɪsʲɐ/
+  translation: to be applied
+  pos: verb
+- lemma: застосувати
+  ipa: /zɐstosuˈwɑtɪ/
+  translation: to apply
+  pos: verb
+- lemma: захист
+  ipa: /ˈzɑxɪst/
+  translation: protection
+  pos: noun
+  gender: m
+- lemma: захищатися
+  ipa: /zɐxɪˈʃtʃɑtɪsʲɐ/
+  translation: to be protected
+  pos: verb
+- lemma: захищений
+  ipa: /zɐˈxɪʃtʃɛnɪj/
+  translation: protected
+  pos: adj
+- lemma: заявка
+  ipa: /zɐˈjɑwkɐ/
+  translation: application
+  pos: noun
+  gender: f
+- lemma: збори
+  ipa: /ˈzborɪ/
+  translation: assembly, meeting
+  pos: noun
+- lemma: звичай
+  ipa: /ˈzwɪtʃɑj/
+  translation: custom
+  pos: noun
+  gender: m
+- lemma: колегіально
+  ipa: /kolɛɦʲiˈɑlʲno/
+  translation: collegially
+  pos: adv
+- lemma: компанії
+  ipa: /kompɐˈnʲiji/
+  translation: company (gen)
+  pos: noun
+  gender: f
+- lemma: контролюватися
+  ipa: /kontrolʲuˈwɑtɪsʲɐ/
+  translation: to be controlled
+  pos: verb
+- lemma: користувач
+  ipa: /korɪstuˈwɑtʃ/
+  translation: user
+  pos: noun
+  gender: m
+- lemma: критично
+  ipa: /krɪˈtɪtʃno/
+  translation: critically
+  pos: adv
+- lemma: кількісний
+  ipa: /kʲilʲˈkʲisnɪj/
+  translation: quantitative
+  pos: adj
+- lemma: матися
+  ipa: /ˈmɑtɪsʲɐ/
+  translation: to be had
+  pos: verb
+- lemma: метал
+  ipa: /mɛˈtɑl/
+  translation: metal
+  pos: noun
+  gender: m
+- lemma: митися
+  ipa: /ˈmɪtɪsʲɐ/
+  translation: to wash (refl)
+  pos: verb
+- lemma: миється
+  ipa: /ˈmɪjɛtʲsʲɐ/
+  translation: washes (refl)
+  pos: noun
+  gender: f
+- lemma: множа
+  ipa: /ˈmnoʒɐ/
+  translation: plural (variant)
+  pos: noun
+  gender: m
+- lemma: мовний
+  ipa: /ˈmownɪj/
+  translation: linguistic
+  pos: adj
+- lemma: наголос
+  ipa: /nɐˈɦolos/
+  translation: stress, emphasis
+  pos: noun
+  gender: m
+- lemma: надаватися
+  ipa: /nɐdɐˈwɑtɪsʲɐ/
+  translation: to be provided
+  pos: verb
+- lemma: надлишка
+  ipa: /nɐdˈlɪʃkɐ/
+  translation: surplus (gen)
+  pos: noun
+  gender: m
+- lemma: налаштування
+  ipa: /nɐlɐʃtuˈwɑnʲːɐ/
+  translation: settings
+  pos: noun
+  gender: n
+- lemma: наслідковий
+  ipa: /nɐˈslʲidkowɪj/
+  translation: consequential
+  pos: adj
+- lemma: незавершений
+  ipa: /nɛzɐˈwɛrʃɛnɪj/
+  translation: unfinished
+  pos: adj
+  gender: f
+- lemma: незалежний
+  ipa: /nɛzɐˈlɛʒnɪj/
+  translation: independent
+  pos: adj
+- lemma: нормативний
+  ipa: /normɐˈtɪwnɪj/
+  translation: normative
+  pos: adj
+- lemma: обговорюватися
+  ipa: /obɦowoˈrʲuwɐtɪsʲɐ/
+  translation: to be discussed
+  pos: verb
+- lemma: обиратися
+  ipa: /obɪˈrɑtɪsʲɐ/
+  translation: to be elected
+  pos: verb
+- lemma: обмежений
+  ipa: /obˈmɛʒɛnɪj/
+  translation: limited
+  pos: adj
+  gender: f
+- lemma: обмеження
+  ipa: /obˈmɛʒɛnʲːɐ/
+  translation: restriction
+  pos: noun
+  gender: n
+- lemma: оброблятися
+  ipa: /obrobˈlʲɐtɪsʲɐ/
+  translation: to be processed
+  pos: verb
+- lemma: обґрунтовуватися
+  ipa: /obɡruntoˈwuwɐtɪsʲɐ/
+  translation: to be justified
+  pos: verb
+- lemma: обґрунтувати
+  ipa: /obɡruntuˈwɑtɪ/
+  translation: to justify
+  pos: verb
+- lemma: оголошуватися
+  ipa: /oɦoloˈʃuwɐtɪsʲɐ/
+  translation: to be announced
+  pos: verb
+- lemma: одноразовий
+  ipa: /odnoˈrɑzowɪj/
+  translation: disposable
+  pos: adj
+  gender: f
+- lemma: одноразівий
+  ipa: /odnoˈrɑzʲiwɪj/
+  translation: disposable (variant)
+  pos: adj
+  gender: f
+- lemma: оновлюватися
+  ipa: /onowˈlʲuwɐtɪsʲɐ/
+  translation: to be updated
+  pos: verb
+- lemma: описуватися
+  ipa: /opɪˈsuwɐtɪsʲɐ/
+  translation: to be described
+  pos: verb
+- lemma: опускатися
+  ipa: /opusˈkɑtɪsʲɐ/
+  translation: to descend
+  pos: verb
+- lemma: опустити
+  ipa: /opusˈtɪtɪ/
+  translation: to lower
+  pos: verb
+- lemma: організація
+  ipa: /orɦɐnʲizɐˈt͡sʲijɐ/
+  translation: organization
+  pos: noun
+  gender: f
+- lemma: організовуватися
+  ipa: /orɦɐnʲizoˈwuwɐtɪsʲɐ/
+  translation: to be organized
+  pos: verb
+- lemma: очікуватися
+  ipa: /otʃʲikuˈwɑtɪsʲɐ/
+  translation: to be expected
+  pos: verb
+- lemma: панель
+  ipa: /pɐˈnɛlʲ/
+  translation: panel
+  pos: noun
+  gender: f
+- lemma: пасиво
+  ipa: /ˈpɑsɪwo/
+  translation: passively
+  pos: noun
+  gender: m
+- lemma: переговори
+  ipa: /pɛrɛˈɦoworɪ/
+  translation: negotiations
+  pos: noun
+- lemma: перемовини
+  ipa: /pɛrɛmoˈwɪnɪ/
+  translation: negotiations
+  pos: noun
+  gender: f
+- lemma: переробка
+  ipa: /pɛrɛˈrobkɐ/
+  translation: processing
+  pos: noun
+  gender: f
+- lemma: перероблятися
+  ipa: /pɛrɛrobˈlʲɐtɪsʲɐ/
+  translation: to be processed
+  pos: verb
+- lemma: перефразувати
+  ipa: /pɛrɛfrɐzuˈwɑtɪ/
+  translation: to paraphrase
+  pos: verb
+- lemma: пластик
+  ipa: /ˈplɑstɪk/
+  translation: plastic
+  pos: noun
+  gender: m
+- lemma: плутанина
+  ipa: /plutɐˈnɪnɐ/
+  translation: confusion
+  pos: noun
+  gender: f
+- lemma: плутати
+  ipa: /pluˈtɑtɪ/
+  translation: to confuse
+  pos: verb
+- lemma: повторюваний
+  ipa: /powtoˈrʲuwɐnɪj/
+  translation: repeated
+  pos: adj
+  gender: f
+- lemma: подаватися
+  ipa: /podɐˈwɑtɪsʲɐ/
+  translation: to be submitted
+  pos: verb
+- lemma: показник
+  ipa: /poˈkɑznɪk/
+  translation: indicator
+  pos: noun
+  gender: m
+- lemma: покращуватися
+  ipa: /pokrɐˈʃuwɐtɪsʲɐ/
+  translation: to improve
+  pos: verb
+- lemma: порівнюватися
+  ipa: /poˈrʲiwnʲuwɐtɪsʲɐ/
+  translation: to be compared
+  pos: verb
+- lemma: порівняно
+  ipa: /poˈrʲiwnʲɐno/
+  translation: comparatively
+  pos: adv
+- lemma: поступовий
+  ipa: /postuˈpowɪj/
+  translation: gradual
+  pos: adj
+  gender: m
+- lemma: поступово
+  ipa: /postuˈpowo/
+  translation: gradually
+  pos: adv
+- lemma: потенційний
+  ipa: /potɛnˈt͡sʲijnɪj/
+  translation: potential
+  pos: adj
+- lemma: поточний
+  ipa: /poˈtotʃnɪj/
+  translation: current
+  pos: adj
+- lemma: потужність
+  ipa: /poˈtuʒn̪ʲisʲtʲ/
+  translation: power, capacity
+  pos: noun
+  gender: f
+- lemma: приблизно
+  ipa: /prɪˈblɪzno/
+  translation: approximately
+  pos: adv
+- lemma: приголосне
+  ipa: /prɪˈɦolosnɛ/
+  translation: consonant (neuter)
+  pos: noun
+  gender: m
+- lemma: принтер
+  ipa: /ˈprɪntɛr/
+  translation: printer
+  pos: noun
+  gender: m
+- lemma: припинення
+  ipa: /prɪpɪˈnɛnʲːɐ/
+  translation: termination
+  pos: noun
+  gender: n
+- lemma: причинний
+  ipa: /prɪˈtʃɪn̪n̪ɪj/
+  translation: causal
+  pos: adj
+- lemma: програмний
+  ipa: /proˈɦrɑmnɪj/
+  translation: software (adj)
+  pos: adj
+  gender: n
+- lemma: продаватися
+  ipa: /prodɐˈwɑtɪsʲɐ/
+  translation: to be sold
+  pos: verb
+- lemma: продовжуватися
+  ipa: /prodowˈʒuwɐtɪsʲɐ/
+  translation: to continue
+  pos: verb
+- lemma: продукція
+  ipa: /proˈdukt͡sʲijɐ/
+  translation: products
+  pos: noun
+  gender: f
+- lemma: проміжний
+  ipa: /proˈmʲiʒnɪj/
+  translation: intermediate
+  pos: adj
+- lemma: професоре
+  ipa: /proˈfɛsorɛ/
+  translation: professor (voc)
+  pos: noun
+  gender: m
+- lemma: процедура
+  ipa: /proˈt͡sɛdurɐ/
+  translation: procedure
+  pos: noun
+  gender: f
+- lemma: проєктуватися
+  ipa: /projɛktuˈwɑtɪsʲɐ/
+  translation: to be designed
+  pos: verb
+- lemma: публікуватися
+  ipa: /publʲikuˈwɑtɪsʲɐ/
+  translation: to be published
+  pos: verb
+- lemma: підготувати
+  ipa: /pʲidɦotuˈwɑtɪ/
+  translation: to prepare
+  pos: verb
+- lemma: підкреслення
+  ipa: /pʲidˈkrɛslɛnʲːɐ/
+  translation: emphasis
+  pos: noun
+  gender: n
+- lemma: підприємство
+  ipa: /pʲidprɪˈjɛmstʰwo/
+  translation: enterprise
+  pos: noun
+  gender: n
+- lemma: підтримка
+  ipa: /pʲidˈtrɪmkɐ/
+  translation: support
+  pos: noun
+  gender: f
+- lemma: підхід
+  ipa: /pʲidˈxʲid/
+  translation: approach
+  pos: noun
+  gender: m
+- lemma: пілотний
+  ipa: /pʲiˈlotn̪ɪj/
+  translation: pilot (adj)
+  pos: adj
+- lemma: регресія
+  ipa: /rɛˈɦrɛsʲijɐ/
+  translation: regression
+  pos: noun
+  gender: f
+- lemma: регулярний
+  ipa: /rɛɦuˈlʲɐrnɪj/
+  translation: regular
+  pos: adj
+  gender: m
+- lemma: регулярно
+  ipa: /rɛɦuˈlʲɐrno/
+  translation: regularly
+  pos: adv
+- lemma: регулярність
+  ipa: /rɛɦulʲɐrˈn̪ʲisʲtʲ/
+  translation: regularity
+  pos: noun
+  gender: f
+- lemma: редагуватися
+  ipa: /rɛdɐɦuˈwɑtɪsʲɐ/
+  translation: to be edited
+  pos: verb
+- lemma: режим
+  ipa: /rɛˈʒɪm/
+  translation: mode, regime
+  pos: noun
+  gender: m
+- lemma: резервуватися
+  ipa: /rɛzɛrwuˈwɑtɪsʲɐ/
+  translation: to be reserved
+  pos: verb
+- lemma: рефлексивний
+  ipa: /rɛflɛkˈsɪwnɪj/
+  translation: reflexive
+  pos: adj
+  gender: m
+- lemma: рецензуватися
+  ipa: /rɛt͡sɛnzuˈwɑtɪsʲɐ/
+  translation: to be reviewed
+  pos: verb
+- lemma: розглядатися
+  ipa: /rozɦlʲɐˈdɑtɪsʲɐ/
+  translation: to be considered
+  pos: verb
+- lemma: розклад
+  ipa: /ˈrozklɑd/
+  translation: schedule
+  pos: noun
+  gender: m
+- lemma: розподіл
+  ipa: /rozˈpodʲil/
+  translation: distribution
+  pos: noun
+  gender: m
+- lemma: розроблятися
+  ipa: /rozrobˈlʲɐtɪsʲɐ/
+  translation: to be developed
+  pos: verb
+- lemma: розробник
+  ipa: /rozˈrobnɪk/
+  translation: developer
+  pos: noun
+  gender: m
+- lemma: розрізнити
+  ipa: /rozˈrʲiznɪtɪ/
+  translation: to distinguish
+  pos: verb
+- lemma: сей
+  ipa: /sɛj/
+  translation: this (archaic)
+  pos: other
+  gender: m
+- lemma: сервер
+  ipa: /ˈsɛrwɛr/
+  translation: server
+  pos: noun
+  gender: m
+- lemma: сировина
+  ipa: /sɪroˈwɪnɐ/
+  translation: raw materials
+  pos: noun
+  gender: f
+- lemma: скористатися
+  ipa: /skorɪsˈtɑtɪsʲɐ/
+  translation: to use
+  pos: verb
+- lemma: спеціальний
+  ipa: /spɛt͡sʲiˈɑlʲnɪj/
+  translation: special
+  pos: adj
+  gender: n
+- lemma: споживач
+  ipa: /spoʒɪˈwɑtʃ/
+  translation: consumer
+  pos: noun
+  gender: m
+- lemma: спільно
+  ipa: /ˈspʲilʲno/
+  translation: jointly
+  pos: adv
+- lemma: статистичний
+  ipa: /stɐtɪsˈtɪtʃnɪj/
+  translation: statistical
+  pos: adj
+- lemma: степовий
+  ipa: /stɛpoˈwɪj/
+  translation: steppe (adj)
+  pos: adj
+- lemma: сягати
+  ipa: /sʲɐˈɦɑtɪ/
+  translation: to reach
+  pos: verb
+- lemma: тариф
+  ipa: /tɐˈrɪf/
+  translation: tariff
+  pos: noun
+  gender: m
+- lemma: темпа
+  ipa: /ˈtɛmpɐ/
+  translation: tempo (gen)
+  pos: noun
+  gender: m
+- lemma: тенденція
+  ipa: /tɛnˈdɛnt͡sʲijɐ/
+  translation: tendency
+  pos: noun
+  gender: f
+- lemma: теоретичний
+  ipa: /tɛorɛˈtɪtʃnɪj/
+  translation: theoretical
+  pos: adj
+  gender: f
+- lemma: територія
+  ipa: /tɛrɪˈtorʲijɐ/
+  translation: territory
+  pos: noun
+  gender: f
+- lemma: транслюватися
+  ipa: /trɐnslʲuˈwɑtɪsʲɐ/
+  translation: to be broadcast
+  pos: verb
+- lemma: турбіна
+  ipa: /turˈbʲinɐ/
+  translation: turbine
+  pos: noun
+  gender: f
+- lemma: утилізація
+  ipa: /utɪlʲizɐˈt͡sʲijɐ/
+  translation: disposal, recycling
+  pos: noun
+  gender: f
+- lemma: формулюватися
+  ipa: /formulʲuˈwɑtɪsʲɐ/
+  translation: to be formulated
+  pos: verb
+- lemma: фінансуватися
+  ipa: /fʲinɐnsuˈwɑtɪsʲɐ/
+  translation: to be financed
+  pos: verb
+- lemma: цитуватися
+  ipa: /t͡sɪtuˈwɑtɪsʲɐ/
+  translation: to be quoted
+  pos: verb
+- lemma: частіший
+  ipa: /tʃɐsˈtʲiʃɪj/
+  translation: more frequent
+  pos: adj
+  gender: m
+- lemma: чпу
+  ipa: /tʃɛpɛˈu/
+  translation: CNC (abbr)
+  pos: noun
+  gender: n
+- lemma: щоденно
+  ipa: /ʃtʃoˈdɛn̪no/
+  translation: daily
+  pos: adv
+- lemma: щомісяця
+  ipa: /ʃtʃoˈmʲisʲɐt͡sʲɐ/
+  translation: monthly
+  pos: adv
+- lemma: явищ
+  ipa: /ˈjɑwɪʃtʃ/
+  translation: phenomena (gen pl)
+  pos: noun
+  gender: n
+- lemma: якісний
+  ipa: /jɐˈkʲisnɪj/
+  translation: qualitative
+  pos: adj

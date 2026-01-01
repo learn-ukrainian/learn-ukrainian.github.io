@@ -1,28 +1,3 @@
----
-module: b1-28
-title: "Підрядні означальні: коли, що"
-subtitle: "Time and Fact Relative Clauses"
-version: "1.0"
-phase: "B1.3a Complex Sentences"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - relative-clauses
-  - complex-sentences
-  - time-expressions
-grammar:
-  - "Time relatives with коли"
-  - "Fact relatives with що as relative pronoun"
-objectives:
-  - "Learner can form time relative clauses with коли"
-  - "Learner can use що as a relative pronoun for facts"
-  - "Learner can distinguish relative що from conjunction що"
-vocabulary_count: 26
-vocab_count: 60
----
-
 # Підрядні означальні: коли, що
 
 > 🎯 **Чому це важливо?**
@@ -382,7 +357,5 @@ vocab_count: 60
 > - 🎧 [Ukrainian Grammar](https://www.youtube.com/results?search_query=ukrainian+grammar) — подкаст уроки
 
 ---
-
-
 
 ---

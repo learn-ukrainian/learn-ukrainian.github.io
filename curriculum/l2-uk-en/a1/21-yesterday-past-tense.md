@@ -1,30 +1,3 @@
----
-module: a1-21
-title: 'Yesterday - Past Tense'
-subtitle: 'Talking About What Happened'
-version: '1.0'
-phase: 'A1.3 - Consolidation'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: 'first-occurrence'
-tags:
-  - past-tense
-  - l-participle
-  - time-expressions
-  - verbs
-grammar:
-  - Past tense formation with L-participle
-  - Gender agreement in past tense (-в/-ла/-ло/-ли)
-  - Time expressions for past events
-objectives:
-  - 'Learner can form past tense using L-participle'
-  - 'Learner can use correct gender ending (-в/-ла/-ло/-ли)'
-  - 'Learner can describe past events using time expressions'
-  - 'Learner can talk about what they did yesterday'
-vocabulary_count: 25
-vocab_count: 49
----
-
 # Yesterday - Past Tense
 
 ## Warm-up
@@ -272,48 +245,3 @@ Translation:
 > **Grammar Guide:** [Ukrainian Past Tense](https://www.ukrainianlessons.com/grammar-past-tense/) — Ukrainian Lessons
 >
 > **Practice:** [Past Tense Exercises](https://ukrainianlanguage.uk/exercise-past-tense/) — Ukrainian Language
-
-# Vocabulary
-
-| Word         | IPA             | English              | POS   | Gender | Note |
-| ------------ | --------------- | -------------------- | ----- | ------ | ---- |
-| бабусин      | /bɑˈbusɪn/      | grandmother's        | adj   | ч      |      |
-| вау          | /vɑu/           | wow                  | other | -      |      |
-| вивчити      | /ˈvɪvt͡ʃɪtɪ/     | to learn             | verb  | -      |      |
-| вираз        | /ˈvɪrɑz/        | expression           | noun  | ч      |      |
-| вихідний     | /vɪxiˈdnɪj/     | weekend/day off      | noun  | ч      |      |
-| відповідати  | /vidpɔviˈdɑtɪ/  | to answer            | verb  | -      |      |
-| давно        | /dɑwˈnɔ/        | long ago             | adv   | -      |      |
-| дієслово     | /dijɛˈslɔvɔ/    | verb                 | noun  | с      |      |
-| закінчення   | /zɑˈkint͡ʃɛnʲːɑ/ | ending               | noun  | с      |      |
-| знайти       | /znɑjˈtɪ/       | to find              | verb  | -      |      |
-| зустрітися   | /zustˈritɪsʲɑ/  | to meet              | verb  | -      |      |
-| колись       | /kɔˈlɪsʲ/       | once/sometime        | adv   | -      |      |
-| круто        | /ˈkrutɔ/        | cool                 | adv   | -      |      |
-| майбутній    | /mɑjˈbutnʲij/   | future               | adj   | ч      |      |
-| минуле       | /mɪˈnulɛ/       | past                 | noun  | с      |      |
-| минулий      | /mɪˈnulɪj/      | past                 | adj   | ч      |      |
-| молодий      | /mɔlɔˈdɪj/      | young                | adj   | ч      |      |
-| наступний    | /nɑˈstupnɪj/    | next                 | adj   | ч      |      |
-| недавно      | /nɛˈdɑwnɔ/      | recently             | adv   | -      |      |
-| неправильний | /nɛˈprɑvɪlʲnɪj/ | irregular            | adj   | ч      |      |
-| новина       | /nɔvɪˈnɑ/       | news                 | noun  | ж      |      |
-| нудно        | /ˈnudnɔ/        | boring               | adv   | -      |      |
-| онук         | /ɔˈnuk/         | grandson             | noun  | ч      |      |
-| основа       | /ɔsˈnɔvɑ/       | stem                 | noun  | ж      |      |
-| план         | /plɑn/          | plan                 | noun  | ч      |      |
-| позавчора    | /pɔzɑwˈt͡ʃɔrɑ/   | day before yesterday | adv   | -      |      |
-| понеділок    | /pɔnɛˈdilɔk/    | Monday               | noun  | ч      |      |
-| поїхати      | /pɔˈjixɑtɪ/     | to go (by vehicle)   | verb  | -      |      |
-| працювати    | /prɑt͡sʲuˈvɑtɪ/  | to work              | verb  | -      |      |
-| прийти       | /prɪjˈtɪ/       | to come              | verb  | -      |      |
-| приїхати     | /prɪˈjixɑtɪ/    | to arrive            | verb  | -      |      |
-| піти         | /piˈtɪ/         | to go (on foot)      | verb  | -      |      |
-| раніше       | /rɑˈniʃɛ/       | earlier              | adv   | -      |      |
-| рута         | /ˈrutɑ/         | rue (flower)         | noun  | ж      |      |
-| рід          | /rid/           | gender               | noun  | ч      |      |
-| сад          | /sɑd/           | garden               | noun  | ч      |      |
-| тиждень      | /ˈtɪʒdɛnʲ/      | week                 | noun  | ч      |      |
-| тихо         | /ˈtɪxɔ/         | quietly              | adv   | -      |      |
-| утворення    | /utˈvɔrɛnʲːɑ/   | formation            | noun  | с      |      |
-| часовий      | /t͡ʃɑsɔˈvɪj/     | temporal/time        | adj   | ч      |      |

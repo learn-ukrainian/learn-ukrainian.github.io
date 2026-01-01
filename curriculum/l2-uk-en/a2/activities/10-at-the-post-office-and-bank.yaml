@@ -603,4 +603,70 @@
     Напишіть *адресу*(correct) на *конверті*(correct). Покажіть *паспорт*(correct). Скільки коштує *марка*(correct)?'
 - type: translate
   title: English to Ukrainian
-  items: []
+  items:
+  - source: I want to send a letter.
+    options:
+    - text: Я хочу відправити листа.
+      correct: true
+    - text: Я хочу відправити лист.
+      correct: false
+    - text: Я хочу відправити листом.
+      correct: false
+    - text: Я хочу відправити листі.
+      correct: false
+    explanation: "Direct object 'Who/What?' → Accusative 'листа/лист'."
+  - source: I need to withdraw money.
+    options:
+    - text: Мені потрібно зняти гроші.
+      correct: true
+    - text: Мені потрібно зняти грошей.
+      correct: false
+    - text: Мені потрібно зняти грошам.
+      correct: false
+    - text: Мені потрібно зняти грошима.
+      correct: false
+    explanation: "Direct object → Accusative 'гроші'."
+  - source: How much is a stamp?
+    options:
+    - text: Скільки коштує марка?
+      correct: true
+    - text: Скільки коштує марку?
+      correct: false
+    - text: Скільки коштує марки?
+      correct: false
+    - text: Скільки коштує маркою?
+      correct: false
+    explanation: "Subject 'What?' → Nominative 'марка'."
+  - source: Pay by card.
+    options:
+    - text: Платити карткою.
+      correct: true
+    - text: Платити картка.
+      correct: false
+    - text: Платити картку.
+      correct: false
+    - text: Платити картки.
+      correct: false
+    explanation: "Means of payment → Instrumental 'карткою'."
+  - source: A package from Ukraine.
+    options:
+    - text: Посилка з України.
+      correct: true
+    - text: Посилка з Україна.
+      correct: false
+    - text: Посилка з Україну.
+      correct: false
+    - text: Посилка з Україні.
+      correct: false
+    explanation: "'З' (from) → Genitive 'України'."
+  - source: I want to exchange dollars.
+    options:
+    - text: Я хочу обміняти долари.
+      correct: true
+    - text: Я хочу обміняти доларів.
+      correct: false
+    - text: Я хочу обміняти доларам.
+      correct: false
+    - text: Я хочу обміняти доларами.
+      correct: false
+    explanation: "Direct object → Accusative plural 'долари'."

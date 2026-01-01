@@ -1,0 +1,506 @@
+module: 57-final-review
+level: A2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/57-final-review.md
+generated: '2025-12-31T23:57:08.606523'
+scope: fill-in, quiz, true-false, unjumble
+activity_counts:
+  fill-in: 12
+  unjumble: 12
+  quiz: 16
+  true-false: 8
+total_items: 48
+item_count: 48
+sample_percent: null
+items:
+- activity: fill-in
+  title: Grammar Final Test
+  sentence_template: Я зараз живу в ____. (Ukraine)
+  answer: Україні
+  complete_sentence: Я зараз живу в Україні_. (Ukraine)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Grammar Final Test
+  sentence_template: Я вранці ніколи не п'ю ____. (coffee)
+  answer: кави
+  complete_sentence: Я вранці ніколи не п'ю кави_. (coffee)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Grammar Final Test
+  sentence_template: Я зараз йду в ____. (shop)
+  answer: магазин
+  complete_sentence: Я зараз йду в магазин_. (shop)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Grammar Final Test
+  sentence_template: Я часто розмовляю з ____. (friend)
+  answer: другом
+  complete_sentence: Я часто розмовляю з другом_. (friend)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Grammar Final Test
+  sentence_template: Мені терміново потрібна ____. (help)
+  answer: допомога
+  complete_sentence: Мені терміново потрібна допомога_. (help)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Grammar Final Test
+  sentence_template: Дай мені будь ласка ____. (pen)
+  answer: ручку
+  complete_sentence: Дай мені будь ласка ручку_. (pen)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Grammar Final Test
+  sentence_template: У мене, на жаль, немає ____. (sister)
+  answer: сестри
+  complete_sentence: У мене, на жаль, немає сестри_. (sister)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Grammar Final Test
+  sentence_template: Я люблю писати ____. (pencil)
+  answer: олівцем
+  complete_sentence: Я люблю писати олівцем_. (pencil)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Grammar Final Test
+  sentence_template: Вчора ми були в ____. (cinema)
+  answer: кіно
+  complete_sentence: Вчора ми були в кіно_. (cinema)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Grammar Final Test
+  sentence_template: Він став успішним ____. (director)
+  answer: директором
+  complete_sentence: Він став успішним директором_. (director)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Grammar Final Test
+  sentence_template: Я дуже дякую ____. (you)
+  answer: вам
+  complete_sentence: Я дуже дякую вам_. (you)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Grammar Final Test
+  sentence_template: Наша машина стоїть біля ____. (house)
+  answer: будинку
+  complete_sentence: Наша машина стоїть біля будинку_. (house)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Final Sentences
+  jumbled_words: []
+  answer: Я ніколи в житті не забуду цей чудовий день
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Final Sentences
+  jumbled_words: []
+  answer: Ми дуже хочемо жити у вільній та красивій країні
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Final Sentences
+  jumbled_words: []
+  answer: Ти любиш читати цікаві українські історичні книги
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Final Sentences
+  jumbled_words: []
+  answer: Вчора ввечері я був на чудовому рок концерті
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Final Sentences
+  jumbled_words: []
+  answer: Завтра зранку ми поїдемо відпочивати на дачу
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Final Sentences
+  jumbled_words: []
+  answer: Ця молода дівчина дуже гарно і голосно співає
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Final Sentences
+  jumbled_words: []
+  answer: Я зараз шукаю нову цікаву роботу в офісі
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Final Sentences
+  jumbled_words: []
+  answer: Де ти купив ці нові білі кросівки
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Final Sentences
+  jumbled_words: []
+  answer: Мені треба більше практикувати українську мову з друзями
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Final Sentences
+  jumbled_words: []
+  answer: У нас є великі плани на наступний рік
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Final Sentences
+  jumbled_words: []
+  answer: Наше життя це завжди найцікавіша та найдовша у світі подорож
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Final Sentences
+  jumbled_words: []
+  answer: На мою власну думку все обов'язково буде дуже добре вже скоро
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Reading Comprehension (Text 1)
+  question: Де саме географічно знаходяться гори Карпати на території сучасної України?
+  options:
+  - '{''text'': ''На заході країни'', ''correct'': True}'
+  - '{''text'': ''На півдні країни'', ''correct'': False}'
+  - '{''text'': ''На сході країни'', ''correct'': False}'
+  - '{''text'': ''На півночі країни'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Reading Comprehension (Text 1)
+  question: Скільки приблизно років місту Києву згідно з інформацією у тексті?
+  options:
+  - '{''text'': ''Понад 1500 років'', ''correct'': True}'
+  - '{''text'': ''Рівно 100 років'', ''correct'': False}'
+  - '{''text'': ''Майже 500 років'', ''correct'': False}'
+  - '{''text'': ''Лише 50 років'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Reading Comprehension (Text 1)
+  question: Яка саме велика річка ділить місто Київ на дві рівні частини?
+  options:
+  - '{''text'': ''Річка Дніпро'', ''correct'': True}'
+  - '{''text'': ''Річка Дунай'', ''correct'': False}'
+  - '{''text'': ''Річка Темза'', ''correct'': False}'
+  - '{''text'': ''Річка Тиса'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Reading Comprehension (Text 1)
+  question: Що зазвичай роблять люди на березі Чорного моря влітку?
+  options:
+  - '{''text'': ''Відпочивають і плавають'', ''correct'': True}'
+  - '{''text'': ''Багато працюють'', ''correct'': False}'
+  - '{''text'': ''Цілий день сплять'', ''correct'': False}'
+  - '{''text'': ''Катаються на лижах'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Reading Comprehension (Text 1)
+  question: Які саме дві українські страви були названі нашими кулінарними символами?
+  options:
+  - '{''text'': ''Борщ і вареники'', ''correct'': True}'
+  - '{''text'': ''Піца і паста'', ''correct'': False}'
+  - '{''text'': ''Суші і роли'', ''correct'': False}'
+  - '{''text'': ''Гамбургер і картопля'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Reading Comprehension (Text 1)
+  question: Чого найбільше хочуть українці для своєї рідної країни прямо зараз?
+  options:
+  - '{''text'': ''Жити в мирі'', ''correct'': True}'
+  - '{''text'': ''Жити на Марсі'', ''correct'': False}'
+  - '{''text'': ''Багато спати'', ''correct'': False}'
+  - '{''text'': ''Купити машину'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Reading Comprehension (Text 1)
+  question: Як офіційно називається найвища гора на всій нинішній території України?
+  options:
+  - '{''text'': ''Гора Говерла'', ''correct'': True}'
+  - '{''text'': ''Гора Еверест'', ''correct'': False}'
+  - '{''text'': ''Гора Монблан'', ''correct'': False}'
+  - '{''text'': ''Гора Кіліманджаро'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Reading Comprehension (Text 1)
+  question: Де українці найчастіше відпочивають під час своєї щорічної літньої відпустки?
+  options:
+  - '{''text'': ''На Чорному морі'', ''correct'': True}'
+  - '{''text'': ''В Антарктиді'', ''correct'': False}'
+  - '{''text'': ''В бібліотеці'', ''correct'': False}'
+  - '{''text'': ''В офісі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Reading Comprehension (Text 2 & 3)
+  question: В якому саме великому українському місті зараз живе студентка Оксана?
+  options:
+  - '{''text'': ''В місті Одеса'', ''correct'': True}'
+  - '{''text'': ''В місті Київ'', ''correct'': False}'
+  - '{''text'': ''В місті Львів'', ''correct'': False}'
+  - '{''text'': ''В місті Харків'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Reading Comprehension (Text 2 & 3)
+  question: Ким саме планує успішно працювати Оксана після закінчення свого університету?
+  options:
+  - '{''text'': ''Лікарем'', ''correct'': True}'
+  - '{''text'': ''Вчителем'', ''correct'': False}'
+  - '{''text'': ''Інженером'', ''correct'': False}'
+  - '{''text'': ''Програмістом'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Reading Comprehension (Text 2 & 3)
+  question: Що саме робить Оксана кожного ранку для отримання бадьорої енергії?
+  options:
+  - '{''text'': ''Бігає біля моря'', ''correct'': True}'
+  - '{''text'': ''Довго спить'', ''correct'': False}'
+  - '{''text'': ''Багато їсть'', ''correct'': False}'
+  - '{''text'': ''Дивиться телевізор'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Reading Comprehension (Text 2 & 3)
+  question: В яке саме велике місто світу Оксана дуже мріє поїхати?
+  options:
+  - '{''text'': ''В Лондон'', ''correct'': True}'
+  - '{''text'': ''В Париж'', ''correct'': False}'
+  - '{''text'': ''В Нью-Йорк'', ''correct'': False}'
+  - '{''text'': ''В Токіо'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Reading Comprehension (Text 2 & 3)
+  question: Чому саме Оксана завжди буде з великим задоволенням повертатися в Одесу?
+  options:
+  - '{''text'': ''Це її рідне місто'', ''correct'': True}'
+  - '{''text'': ''Вона любить піцу'', ''correct'': False}'
+  - '{''text'': ''Там завжди тепло'', ''correct'': False}'
+  - '{''text'': ''Там дешево'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Reading Comprehension (Text 2 & 3)
+  question: Куди саме поїхав Микола з найкращими друзями під час літньої відпустки?
+  options:
+  - '{''text'': ''В гори Карпати'', ''correct'': True}'
+  - '{''text'': ''На Чорне море'', ''correct'': False}'
+  - '{''text'': ''В маленьке село'', ''correct'': False}'
+  - '{''text'': ''В іншу країну'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Reading Comprehension (Text 2 & 3)
+  question: Що саме робив Микола пізно увечері біля теплого вогню з друзями?
+  options:
+  - '{''text'': ''Грав на гітарі'', ''correct'': True}'
+  - '{''text'': ''Міцно спав'', ''correct'': False}'
+  - '{''text'': ''Багато працював'', ''correct'': False}'
+  - '{''text'': ''Читав книгу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Reading Comprehension (Text 2 & 3)
+  question: Що саме їли Микола і його близькі друзі в горах біля вогню?
+  options:
+  - '{''text'': ''Туристичну кашу'', ''correct'': True}'
+  - '{''text'': ''Японські суші'', ''correct'': False}'
+  - '{''text'': ''Італійську піцу'', ''correct'': False}'
+  - '{''text'': ''Французький суп'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Listening Check
+  statement: Марк приїхав у Львів саме у відпустку, щоб трохи відпочити.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Listening Check
+  statement: Марк зараз відкриває свій власний новий офіс у місті Львові.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Listening Check
+  statement: Аліна сказала Марку, що вона дуже скоро виходить заміж.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Listening Check
+  statement: Ігор був раніше суворим босом Марка на їхній попередній роботі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Listening Check
+  statement: Весілля Аліни та Ігоря заплановане саме на теплий місяць червень.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Listening Check
+  statement: Марк сказав, що він точно не зможе прийти на весілля.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Listening Check
+  statement: Марк тепер має свою власну успішну ІТ-компанію в Україні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Listening Check
+  statement: Аліна та Ігор вперше зустрілися, коли вчилися разом в університеті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

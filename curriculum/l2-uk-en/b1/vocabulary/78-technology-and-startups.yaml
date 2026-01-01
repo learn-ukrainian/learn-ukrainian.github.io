@@ -1,0 +1,111 @@
+module: 78-technology-and-startups
+level: B1
+version: '2.0'
+items:
+- lemma: аутсорсинг
+  ipa: /autˈsɔrsɪnɡ/
+  translation: outsourcing
+  pos: noun
+  gender: m
+- lemma: венчурний
+  ipa: /vɛnˈt͡ʃurnɪj/
+  translation: venture (adj)
+  pos: adj
+- lemma: водійський
+  ipa: /vɔˈdʲijsʲkɪj/
+  translation: driver's
+  pos: adj
+  gender: n
+- lemma: віддатити
+  ipa: /vidːaˈtɪtɪ/
+  translation: ??? (typo)
+  pos: verb
+- lemma: галузз
+  ipa: /haˈluzː/
+  translation: branch (instr. typo)
+  pos: noun
+  gender: f
+- lemma: експортуватися
+  ipa: /ɛkspɔrtuˈvatɪsʲa/
+  translation: to be exported
+  pos: verb
+- lemma: естоній
+  ipa: /ɛˈstɔnʲij/
+  translation: Estonias (gen.)
+  pos: propn
+  gender: f
+- lemma: литвин
+  ipa: /lɪtˈvɪn/
+  translation: Lytvyn
+  pos: propn
+  gender: m
+- lemma: мінцифр
+  ipa: /minˈt͡sɪfr/
+  translation: Ministry of Digital (abbr)
+  pos: noun
+  gender: f
+- lemma: наймолодший
+  ipa: /najmɔˈlɔdʃɪj/
+  translation: youngest
+  pos: adj
+- lemma: переговорний
+  ipa: /pɛrɛhɔˈvɔrnɪj/
+  translation: negotiation (adj)
+  pos: adj
+- lemma: перспективно
+  ipa: /pɛrspɛkˈtɪvnɔ/
+  translation: promisingly
+  pos: adv
+- lemma: платник
+  ipa: /platˈnɪk/
+  translation: payer
+  pos: noun
+  gender: m
+- lemma: посвідчення
+  ipa: /pɔsˈvidt͡ʃɛnʲːa/
+  translation: license
+  pos: noun
+  gender: n
+- lemma: радіоелектронік
+  ipa: /radʲiɔɛlɛkˈtrɔnʲik/
+  translation: radio electronics (gen.)
+  pos: noun
+  gender: f
+- lemma: реєструвати
+  ipa: /rɛjɛstruˈvatɪ/
+  translation: to register
+  pos: verb
+- lemma: свідоцтво
+  ipa: /sviˈdɔt͡stvɔ/
+  translation: certificate
+  pos: noun
+  gender: n
+- lemma: сертифікований
+  ipa: /sɛrtɪfiˈkɔvanɪj/
+  translation: certified
+  pos: adj
+- lemma: співзасновник
+  ipa: /spiu̯zaˈsnɔu̯nɪk/
+  translation: co-founder
+  pos: noun
+  gender: m
+- lemma: фрілансер
+  ipa: /friˈlansɛr/
+  translation: freelancer
+  pos: noun
+  gender: m
+- lemma: фінтя
+  ipa: /fʲinˈtʲa/
+  translation: fintech (typo)
+  pos: propn
+  gender: m
+- lemma: ідентифікаційний
+  ipa: /idɛntɪfikaˈt͡sʲijnɪj/
+  translation: identification
+  pos: adj
+  gender: m
+- lemma: іпн
+  ipa: /i pɛ ɛn/
+  translation: TIN
+  pos: noun
+  gender: m

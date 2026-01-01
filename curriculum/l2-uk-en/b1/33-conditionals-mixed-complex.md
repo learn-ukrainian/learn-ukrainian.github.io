@@ -1,29 +1,3 @@
----
-module: b1-33
-title: "Умовні речення: змішані та складні умови"
-subtitle: "Mixed and Complex Conditionals"
-version: "1.0"
-phase: "B1.3a Complex Sentences"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - conditionals
-  - complex-sentences
-  - mixed-conditionals
-grammar:
-  - "Mixed conditional constructions"
-  - "Chained conditionals"
-  - "Complex condition-consequence relationships"
-objectives:
-  - "Learner understands mixed conditional types"
-  - "Learner can combine real and unreal conditions"
-  - "Learner can form chained conditional sentences"
-vocabulary_count: 25
-vocab_count: 53
----
-
 > [!motivation]
 > Життя рідко буває простим. Іноді наслідок минулої помилки відчувається сьогодні. Іноді теперішня риса характеру пояснює, чому щось не сталося в минулому. Такі складні зв'язки вимагають **змішаних умов** — конструкцій, де час умови й наслідку не збігаються. Це вершина граматики умовних речень, і вона дасть вам справжню свободу вираження думок.
 

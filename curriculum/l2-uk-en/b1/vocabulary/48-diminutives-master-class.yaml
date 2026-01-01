@@ -1,0 +1,562 @@
+module: 48-diminutives-master-class
+level: B1
+version: '2.0'
+items:
+- lemma: бабунечко
+  ipa: /baˈbunɛt͡ʃkɔ/
+  translation: granny (voc.)
+  pos: noun
+  gender: f
+- lemma: бабуня
+  ipa: /baˈbunʲa/
+  translation: granny
+  pos: noun
+  gender: f
+- lemma: бабця
+  ipa: /ˈbabt͡sʲa/
+  translation: grandma
+  pos: noun
+  gender: f
+- lemma: батонько
+  ipa: /baˈtɔnʲkɔ/
+  translation: father (dim.)
+  pos: noun
+  gender: m
+- lemma: близенько
+  ipa: /blɪˈzɛnʲkɔ/
+  translation: close (dim.)
+  pos: adv
+- lemma: братика
+  ipa: /ˈbratɪka/
+  translation: brother (dim. gen.)
+  pos: noun
+  gender: f
+- lemma: братко
+  ipa: /ˈbratkɔ/
+  translation: brother (voc.)
+  pos: noun
+  gender: m
+- lemma: ввічливіше
+  ipa: /vˈvʲit͡ʃlɪvʲiʃɛ/
+  translation: more politely
+  pos: adv
+- lemma: виночко
+  ipa: /vɪˈnɔt͡ʃkɔ/
+  translation: wine (dim.)
+  pos: noun
+  gender: n
+- lemma: водичка
+  ipa: /vɔˈdɪt͡ʃka/
+  translation: water (dim.)
+  pos: noun
+  gender: f
+- lemma: водка
+  ipa: /ˈvɔdka/
+  translation: vodka (Rus.)
+  pos: noun
+  gender: f
+- lemma: гарнесенький
+  ipa: /harˈnɛsɛnʲkɪj/
+  translation: nice (dim.)
+  pos: adj
+  gender: m
+- lemma: денечок
+  ipa: /dɛˈnɛt͡ʃɔk/
+  translation: day (dim.)
+  pos: noun
+  gender: m
+- lemma: директорик
+  ipa: /dɪrɛkˈtɔrɪk/
+  translation: director (dim.)
+  pos: noun
+  gender: m
+- lemma: договорчик
+  ipa: /dɔhɔˈvɔrt͡ʃɪk/
+  translation: contract (dim.)
+  pos: noun
+  gender: m
+- lemma: документик
+  ipa: /dɔkuˈmɛntɪk/
+  translation: document (dim.)
+  pos: noun
+  gender: m
+- lemma: доленька
+  ipa: /ˈdɔlɛnʲka/
+  translation: fate (dim.)
+  pos: noun
+  gender: f
+- lemma: доненький
+  ipa: /dɔˈnɛnʲkɪj/
+  translation: daughter (dim.)
+  pos: adj
+  gender: f
+- lemma: дрібничка
+  ipa: /dribˈnɪt͡ʃka/
+  translation: trifle (dim.)
+  pos: noun
+  gender: f
+- lemma: дідуньо
+  ipa: /diˈdunʲɔ/
+  translation: grandpa (dim.)
+  pos: noun
+  gender: m
+- lemma: еклерчик
+  ipa: /ɛˈklɛrt͡ʃɪk/
+  translation: eclair (dim.)
+  pos: noun
+  gender: m
+- lemma: есенький
+  ipa: /ˈɛsɛnʲkɪj/
+  translation: suffix -esenkyi
+  pos: adj
+  gender: m
+- lemma: естрадний
+  ipa: /ɛˈstradnɪj/
+  translation: pop (adj)
+  pos: adj
+  gender: f
+- lemma: ечк
+  ipa: /ɛt͡ʃk/
+  translation: suffix -echk
+  pos: other
+- lemma: задачок
+  ipa: /zaˈdat͡ʃɔk/
+  translation: tasks (dim. gen.)
+  pos: noun
+  gender: f
+- lemma: зайчик
+  ipa: /ˈzajt͡ʃɪk/
+  translation: bunny
+  pos: noun
+  gender: f
+- lemma: закоханий
+  ipa: /zaˈkɔxanɪj/
+  translation: in love
+  pos: adj
+- lemma: кавка
+  ipa: /ˈkau̯ka/
+  translation: coffee (dim.)
+  pos: noun
+  gender: f
+- lemma: кароль
+  ipa: /kaˈrɔlʲ/
+  translation: Karol
+  pos: propn
+  gender: f
+- lemma: катастрофка
+  ipa: /kataˈstrɔfka/
+  translation: catastrophe (dim.)
+  pos: noun
+  gender: f
+- lemma: кашка
+  ipa: /ˈkaʃka/
+  translation: porridge (dim.)
+  pos: noun
+  gender: f
+- lemma: клієнтик
+  ipa: /klʲiˈjɛntɪk/
+  translation: client (dim.)
+  pos: noun
+  gender: m
+- lemma: котик
+  ipa: /ˈkɔtɪk/
+  translation: kitty
+  pos: propn
+  gender: f
+- lemma: коток
+  ipa: /kɔˈtɔk/
+  translation: cat (dim.)
+  pos: noun
+  gender: m
+- lemma: котятко
+  ipa: /kɔˈtʲatkɔ/
+  translation: kitten
+  pos: noun
+  gender: n
+- lemma: круасанчик
+  ipa: /kruaˈsant͡ʃɪk/
+  translation: croissant (dim.)
+  pos: noun
+  gender: m
+- lemma: кілограмчик
+  ipa: /kʲilɔˈhramt͡ʃɪk/
+  translation: kilogram (dim.)
+  pos: noun
+  gender: m
+- lemma: ліжечко
+  ipa: /lʲiˈʒɛt͡ʃkɔ/
+  translation: bed (dim.)
+  pos: noun
+  gender: n
+- lemma: малесенький
+  ipa: /maˈlɛsɛnʲkɪj/
+  translation: tiny
+  pos: adj
+  gender: m
+- lemma: малесесенький
+  ipa: /malɛˈsɛsɛnʲkɪj/
+  translation: teeny-tiny
+  pos: adj
+  gender: m
+- lemma: мамин
+  ipa: /ˈmamɪn/
+  translation: mom's
+  pos: adj
+  gender: f
+- lemma: мамка
+  ipa: /ˈmamka/
+  translation: mom (dim.)
+  pos: noun
+  gender: m
+- lemma: мамонька
+  ipa: /ˈmamɔnʲka/
+  translation: mommy
+  pos: noun
+  gender: f
+- lemma: масельце
+  ipa: /maˈsɛlʲt͡sɛ/
+  translation: butter (dim.)
+  pos: noun
+  gender: f
+- lemma: матонький
+  ipa: /maˈtɔnʲkɪj/
+  translation: mother (typo)
+  pos: adj
+  gender: f
+- lemma: машинка
+  ipa: /maˈʃɪnka/
+  translation: car (dim.)
+  pos: noun
+  gender: f
+- lemma: молочка
+  ipa: /mɔlɔˈt͡ʃka/
+  translation: milk (dim. gen.)
+  pos: noun
+  gender: f
+- lemma: молочко
+  ipa: /mɔlɔt͡ʃˈkɔ/
+  translation: milk (dim.)
+  pos: noun
+  gender: n
+- lemma: морквичка
+  ipa: /mɔrkˈvɪt͡ʃka/
+  translation: carrot (dim.)
+  pos: noun
+  gender: f
+- lemma: морквочка
+  ipa: /mɔrkˈvɔt͡ʃka/
+  translation: carrot (dim.)
+  pos: noun
+  gender: f
+- lemma: незадоволений
+  ipa: /nɛzadɔˈvɔlɛnɪj/
+  translation: dissatisfied
+  pos: adj
+  gender: m
+- lemma: ножик
+  ipa: /ˈnɔʒɪk/
+  translation: knife (dim.)
+  pos: noun
+  gender: m
+- lemma: ніжка
+  ipa: /ˈnʲiʒka/
+  translation: leg (dim.)
+  pos: noun
+  gender: f
+- lemma: ніченький
+  ipa: /ˈnʲit͡ʃɛnʲkɪj/
+  translation: night (dim.)
+  pos: adj
+  gender: f
+- lemma: нічка
+  ipa: /ˈnʲit͡ʃka/
+  translation: night (dim.)
+  pos: noun
+  gender: f
+- lemma: образливо
+  ipa: /ɔˈbrazlɪvɔ/
+  translation: offensively
+  pos: adv
+- lemma: огірочка
+  ipa: /ɔhiˈrɔt͡ʃka/
+  translation: cucumber (dim.)
+  pos: noun
+  gender: m
+- lemma: оньк
+  ipa: /ɔnʲk/
+  translation: suffix -onk
+  pos: other
+- lemma: павличка
+  ipa: /paˈvlɪt͡ʃka/
+  translation: Pavlychko (gen.)
+  pos: propn
+  gender: m
+- lemma: пародія
+  ipa: /paˈrɔdʲija/
+  translation: parody
+  pos: noun
+  gender: f
+- lemma: песик
+  ipa: /ˈpɛsɪk/
+  translation: doggy
+  pos: noun
+  gender: m
+- lemma: пестливо
+  ipa: /pɛstˈlɪvɔ/
+  translation: affectionately
+  pos: adv
+- lemma: плакал
+  ipa: /ˈplakal/
+  translation: cried (Rus.)
+  pos: propn
+  gender: f
+- lemma: погадити
+  ipa: /pɔˈhadɪtɪ/
+  translation: ??? (typo)
+  pos: verb
+- lemma: позначити
+  ipa: /pɔzˈnat͡ʃɪtɪ/
+  translation: to mark
+  pos: verb
+- lemma: помідорчик
+  ipa: /pɔmʲiˈdɔrt͡ʃɪk/
+  translation: tomato (dim.)
+  pos: noun
+  gender: m
+- lemma: потрійний
+  ipa: /pɔˈtrʲijnɪj/
+  translation: triple
+  pos: adj
+- lemma: пошукати
+  ipa: /pɔʃuˈkatɪ/
+  translation: to look for
+  pos: verb
+- lemma: привітніший
+  ipa: /prɪˈvʲitnʲiʃɪj/
+  translation: friendlier
+  pos: adj
+  gender: m
+- lemma: проблемка
+  ipa: /prɔˈblɛmka/
+  translation: problem (dim.)
+  pos: noun
+  gender: f
+- lemma: проектик
+  ipa: /prɔˈɛktɪk/
+  translation: project (dim.)
+  pos: noun
+  gender: m
+- lemma: півкіло
+  ipa: /piu̯kʲiˈlɔ/
+  translation: half a kilo
+  pos: noun
+  gender: n
+- lemma: рідненький
+  ipa: /ridˈnɛnʲkɪj/
+  translation: dear (dim.)
+  pos: adj
+  gender: m
+- lemma: салатик
+  ipa: /saˈlatɪk/
+  translation: salad (dim.)
+  pos: noun
+  gender: m
+- lemma: свіженька
+  ipa: /sviˈʒɛnʲka/
+  translation: fresh (dim.)
+  pos: noun
+  gender: m
+- lemma: сентиментальний
+  ipa: /sɛntɪmɛnˈtalʲnɪj/
+  translation: sentimental
+  pos: adj
+  gender: m
+- lemma: сентиментально
+  ipa: /sɛntɪmɛnˈtalʲnɔ/
+  translation: sentimentally
+  pos: adv
+- lemma: сердечко
+  ipa: /sɛrˈdɛt͡ʃkɔ/
+  translation: heart (dim.)
+  pos: noun
+  gender: n
+- lemma: сестриця
+  ipa: /sɛˈstrɪt͡sʲa/
+  translation: sister (dim.)
+  pos: noun
+  gender: f
+- lemma: сестронький
+  ipa: /sɛˈstrɔnʲkɪj/
+  translation: sister (dim.)
+  pos: adj
+  gender: f
+- lemma: синок
+  ipa: /sɪˈnɔk/
+  translation: son (dim.)
+  pos: noun
+  gender: m
+- lemma: синонька
+  ipa: /sɪˈnɔnʲka/
+  translation: son (dim.)
+  pos: noun
+  gender: f
+- lemma: синочка
+  ipa: /sɪˈnɔt͡ʃka/
+  translation: son (dim. gen.)
+  pos: noun
+  gender: f
+- lemma: сирк
+  ipa: /sɪrk/
+  translation: cheese (dim.?)
+  pos: noun
+  gender: f
+- lemma: словацький
+  ipa: /slɔˈvat͡sʲkɪj/
+  translation: Slovak
+  pos: adj
+  gender: m
+- lemma: смачненький
+  ipa: /smat͡ʃˈnɛnʲkɪj/
+  translation: tasty (dim.)
+  pos: propn
+  gender: m
+- lemma: сніданочок
+  ipa: /snʲiˈdanɔt͡ʃɔk/
+  translation: breakfast (dim.)
+  pos: noun
+  gender: m
+- lemma: солодко
+  ipa: /ˈsɔlɔdkɔ/
+  translation: sweetly
+  pos: adv
+- lemma: спеціалістка
+  ipa: /spɛt͡sʲiaˈlʲistka/
+  translation: specialist (fem.)
+  pos: noun
+  gender: f
+- lemma: спробою
+  ipa: /ˈsprɔbɔju/
+  translation: attempt (instr.)
+  pos: adv
+- lemma: татко
+  ipa: /ˈtatkɔ/
+  translation: daddy
+  pos: noun
+  gender: m
+- lemma: таточко
+  ipa: /taˈtɔt͡ʃkɔ/
+  translation: daddy
+  pos: noun
+  gender: m
+- lemma: таточок
+  ipa: /taˈtɔt͡ʃɔk/
+  translation: daddy
+  pos: noun
+  gender: m
+- lemma: татусь
+  ipa: /taˈtusʲ/
+  translation: daddy
+  pos: noun
+  gender: m
+- lemma: тепленько
+  ipa: /tɛˈplɛnʲkɔ/
+  translation: warmly (dim.)
+  pos: adv
+- lemma: тихенький
+  ipa: /tɪˈxɛnʲkɪj/
+  translation: quiet (dim.)
+  pos: adj
+  gender: m
+- lemma: тихесенько
+  ipa: /tɪˈxɛsɛnʲkɔ/
+  translation: quietly (dim.)
+  pos: adv
+- lemma: тостик
+  ipa: /ˈtɔstɪk/
+  translation: toast (dim.)
+  pos: noun
+  gender: m
+- lemma: трошки
+  ipa: /ˈtrɔʃkɪ/
+  translation: a little
+  pos: noun
+  gender: f
+- lemma: трішечки
+  ipa: /ˈtrʲiʃɛt͡ʃkɪ/
+  translation: a tiny bit
+  pos: noun
+  gender: f
+- lemma: туфелька
+  ipa: /tuˈfɛlʲka/
+  translation: shoe (dim.)
+  pos: noun
+  gender: f
+- lemma: тіна
+  ipa: /ˈtʲina/
+  translation: Tina
+  pos: propn
+  gender: f
+- lemma: тістечко
+  ipa: /ˈtʲistɛt͡ʃkɔ/
+  translation: pastry
+  pos: noun
+  gender: n
+- lemma: файнесенько
+  ipa: /fajˈnɛsɛnʲkɔ/
+  translation: nicely (dim.)
+  pos: adv
+- lemma: хлібчик
+  ipa: /ˈxlʲibt͡ʃɪk/
+  translation: bread (dim.)
+  pos: noun
+  gender: m
+- lemma: хрусткий
+  ipa: /xrustˈkɪj/
+  translation: crunchy
+  pos: adj
+- lemma: цьо
+  ipa: /t͡sʲɔ/
+  translation: kiss (slang)
+  pos: adv
+- lemma: чайок
+  ipa: /t͡ʃaˈjɔk/
+  translation: tea (dim.)
+  pos: noun
+  gender: m
+- lemma: червоненький
+  ipa: /t͡ʃɛrvɔˈnɛnʲkɪj/
+  translation: red (dim.)
+  pos: adj
+- lemma: шафка
+  ipa: /ˈʃafka/
+  translation: locker (dim.)
+  pos: noun
+  gender: f
+- lemma: швиденько
+  ipa: /ʃvɪˈdɛnʲkɔ/
+  translation: quickly (dim.)
+  pos: adv
+- lemma: шкарпеточка
+  ipa: /ʃkarˈpɛtɔt͡ʃka/
+  translation: sock (dim.)
+  pos: noun
+  gender: f
+- lemma: юсінький
+  ipa: /ˈjusʲinʲkɪj/
+  translation: suffix -yusinkyi
+  pos: adj
+  gender: m
+- lemma: яблучка
+  ipa: /ˈjablut͡ʃka/
+  translation: apples (dim.)
+  pos: noun
+  gender: n
+- lemma: ятко
+  ipa: /ˈjatkɔ/
+  translation: suffix?
+  pos: other
+- lemma: яєчня
+  ipa: /jaˈjɛt͡ʃnʲa/
+  translation: scrambled eggs
+  pos: noun
+  gender: f

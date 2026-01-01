@@ -1,6 +1,15 @@
 # Audit Report: 44-active-participles-phrases.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
+**Phase:** B1.4 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): працюючий, відсталий, колишній, дорослий, оточуючий...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 1474/1500 (26 short)
@@ -10,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 36/25
+- **Vocab:** ✅ 45/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,19 +46,12 @@
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.8%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Активні дієприкметники та їхній стиль** | ⚪️ | 65 | Skipped |
+| **Intro/Narrative** | ✅ | 65 | Included in Core |
 | **Діагностика** | ✅ | 90 | Included in Core |
 | **Теоретичне пояснення** | ⚪️ | 833 | Skipped |
 | **Практика** | ⚪️ | 198 | Skipped |
 | **Приклади використання** | ⚪️ | 231 | Skipped |
 | **Підсумок** | ✅ | 57 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

@@ -1,0 +1,187 @@
+module: 18-motion-passing-crossing
+level: B1
+version: '2.0'
+items:
+- lemma: аудіювання
+  ipa: /audijuˈvanʲːa/
+  translation: listening comprehension
+  pos: noun
+  gender: n
+- lemma: безпечніше
+  ipa: /bɛzˈpɛt͡ʃnʲiʃɛ/
+  translation: safer
+  pos: adv
+- lemma: боковий
+  ipa: /bɔkɔˈvɪj/
+  translation: side/lateral
+  pos: adj
+- lemma: будівельний
+  ipa: /budiˈvɛlʲnɪj/
+  translation: construction (adj)
+  pos: adj
+  gender: m
+- lemma: виходження
+  ipa: /vɪˈxɔdʒɛnʲːa/
+  translation: going out
+  pos: noun
+  gender: n
+- lemma: водійва
+  ipa: /vɔdijˈva/
+  translation: driving? (typo)
+  pos: noun
+  gender: m
+- lemma: гроз
+  ipa: /ɦrɔz/
+  translation: storms (gen. pl.)
+  pos: noun
+  gender: f
+- lemma: довкола
+  ipa: /dɔu̯ˈkɔla/
+  translation: around
+  pos: adv
+- lemma: дуза
+  ipa: /ˈduza/
+  translation: nozzle? (typo)
+  pos: noun
+  gender: f
+- lemma: контейнер
+  ipa: /kɔnˈtɛjnɛr/
+  translation: container
+  pos: noun
+  gender: m
+- lemma: крос
+  ipa: /krɔs/
+  translation: cross-country race
+  pos: noun
+  gender: m
+- lemma: круговий
+  ipa: /kruhɔˈvɪj/
+  translation: circular
+  pos: adj
+  gender: m
+- lemma: кур'єр
+  ipa: /kurˈjɛr/
+  translation: courier
+  pos: propn
+  gender: m
+- lemma: мимо
+  ipa: /ˈmɪmɔ/
+  translation: past/by
+  pos: noun
+  gender: n
+- lemma: намочити
+  ipa: /namɔˈt͡ʃɪtɪ/
+  translation: to wet
+  pos: verb
+- lemma: обвезти
+  ipa: /ɔbvɛzˈtɪ/
+  translation: to drive around
+  pos: verb
+- lemma: обвести
+  ipa: /ɔbvɛsˈtɪ/
+  translation: to outline
+  pos: verb
+- lemma: обводити
+  ipa: /ɔbˈvɔdɪtɪ/
+  translation: to outline
+  pos: verb
+- lemma: облітати
+  ipa: /ɔblʲiˈtatɪ/
+  translation: to fly around
+  pos: verb
+- lemma: обнести
+  ipa: /ɔbnɛsˈtɪ/
+  translation: to fence/carry around
+  pos: verb
+- lemma: обносити
+  ipa: /ɔbˈnɔsɪtɪ/
+  translation: to carry around
+  pos: verb
+- lemma: обхід
+  ipa: /ɔbˈxid/
+  translation: detour
+  pos: noun
+  gender: m
+- lemma: окружній
+  ipa: /ɔkruʒˈnʲij/
+  translation: district (adj)
+  pos: adj
+  gender: f
+- lemma: перевести
+  ipa: /pɛrɛvɛsˈtɪ/
+  translation: to translate/transfer
+  pos: verb
+- lemma: переводити
+  ipa: /pɛrɛˈvɔdɪtɪ/
+  translation: to translate/transfer
+  pos: verb
+- lemma: перелетіти
+  ipa: /pɛrɛlɛˈtʲitɪ/
+  translation: to fly over
+  pos: verb
+- lemma: перелітати
+  ipa: /pɛrɛlʲiˈtatɪ/
+  translation: to fly over
+  pos: verb
+- lemma: перетинання
+  ipa: /pɛrɛtɪˈnanʲːa/
+  translation: crossing
+  pos: noun
+  gender: n
+- lemma: переїсти
+  ipa: /pɛrɛˈjistɪ/
+  translation: to overeat
+  pos: verb
+- lemma: перовий
+  ipa: /pɛrɔˈvɪj/
+  translation: feather/pen (adj)
+  pos: adj
+- lemma: провезти
+  ipa: /prɔvɛzˈtɪ/
+  translation: to transport through
+  pos: verb
+- lemma: проживання
+  ipa: /prɔʒɪˈvanʲːa/
+  translation: residence
+  pos: noun
+  gender: n
+- lemma: пролітати
+  ipa: /prɔlʲiˈtatɪ/
+  translation: to fly past
+  pos: verb
+- lemma: проминути
+  ipa: /prɔmɪˈnutɪ/
+  translation: to pass by
+  pos: verb
+- lemma: пронести
+  ipa: /prɔnɛsˈtɪ/
+  translation: to carry past
+  pos: verb
+- lemma: проносити
+  ipa: /prɔˈnɔsɪtɪ/
+  translation: to carry past
+  pos: verb
+- lemma: проходження
+  ipa: /prɔˈxɔdʒɛnʲːa/
+  translation: passing
+  pos: noun
+  gender: n
+- lemma: піший
+  ipa: /ˈpiʃɪj/
+  translation: pedestrian (adj)
+  pos: adj
+- lemma: світлофір
+  ipa: /svitlɔˈfir/
+  translation: traffic light (typo)
+  pos: noun
+  gender: m
+- lemma: софіївський
+  ipa: /sɔˈfijiu̯sʲkɪj/
+  translation: Sofiivskyi
+  pos: adj
+  gender: f
+- lemma: цирк
+  ipa: /t͡sɪrk/
+  translation: circus
+  pos: noun
+  gender: m

@@ -1,0 +1,79 @@
+module: 29-purpose-shchob-infinitive
+level: B1
+version: '2.0'
+items:
+- lemma: виспатися
+  ipa: /ˈvɪspatɪsʲa/
+  translation: to get enough sleep
+  pos: verb
+- lemma: допізна
+  ipa: /dɔˈpizna/
+  translation: until late
+  pos: adv
+- lemma: допізний
+  ipa: /dɔˈpiznɪj/
+  translation: late (typo?)
+  pos: adj
+  gender: f
+- lemma: задля
+  ipa: /ˈzadlʲa/
+  translation: for the sake of
+  pos: other
+- lemma: конференц
+  ipa: /kɔnfɛˈrɛnt͡s/
+  translation: conference (trunc)
+  pos: noun
+  gender: m
+- lemma: кіборга
+  ipa: /kiˈbɔrha/
+  translation: cyborg (gen.)
+  pos: noun
+  gender: m
+- lemma: набратися
+  ipa: /naˈbratɪsʲa/
+  translation: to accumulate
+  pos: verb
+- lemma: найпростіший
+  ipa: /najprɔˈstʲiʃɪj/
+  translation: simplest
+  pos: adj
+  gender: m
+- lemma: патріотичний
+  ipa: /patrʲiɔˈtɪt͡ʃnɪj/
+  translation: patriotic
+  pos: adj
+- lemma: перезавантажитися
+  ipa: /pɛrɛzavanˈtaʒɪtɪsʲa/
+  translation: to reboot
+  pos: verb
+- lemma: прогулятися
+  ipa: /prɔhuˈlʲatɪsʲa/
+  translation: to take a walk
+  pos: verb
+- lemma: риториця
+  ipa: /rɪtɔˈrɪt͡sʲa/
+  translation: rhetoric (typo?)
+  pos: noun
+  gender: f
+- lemma: розбагатіти
+  ipa: /rɔzbahatʲˈitɪ/
+  translation: to get rich
+  pos: verb
+- lemma: розслабитися
+  ipa: /rɔzˈslabɪtɪsʲa/
+  translation: to relax
+  pos: verb
+- lemma: розташовувати
+  ipa: /rɔztaˈʃɔvuvatɪ/
+  translation: to locate
+  pos: verb
+- lemma: спроститися
+  ipa: /sprɔˈstɪtɪsʲa/
+  translation: to simplify
+  pos: verb
+  gender: f
+- lemma: унікальне
+  ipa: /unʲiˈkalʲnɛ/
+  translation: unique
+  pos: noun
+  gender: n

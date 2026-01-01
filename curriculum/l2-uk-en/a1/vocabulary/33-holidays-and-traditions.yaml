@@ -1,0 +1,138 @@
+module: 33-holidays-and-traditions
+level: A1
+version: '2.0'
+items:
+  - lemma: березень
+    ipa: /ˈbɛrɛzɛnʲ/
+    translation: March
+    pos: noun
+    gender: m
+  - lemma: Великдень
+    ipa: /vɛˈlɪkdɛnʲ/
+    translation: Easter
+    pos: propn
+    gender: m
+  - lemma: весілля
+    ipa: /vɛˈsilʲːɑ/
+    translation: wedding
+    pos: noun
+    gender: n
+  - lemma: вечірка
+    ipa: /vɛˈt͡ʃirkɑ/
+    translation: party
+    pos: noun
+    gender: f
+  - lemma: дарувати
+    ipa: /dɑruˈvɑtɪ/
+    translation: to give (gift)
+    pos: verb
+  - lemma: двадцятий
+    ipa: /dvɑdˈt͡sʲɑtɪj/
+    translation: twentieth
+    pos: adj
+    gender: m
+  - lemma: день
+    ipa: /dɛnʲ/
+    translation: day
+    pos: noun
+    gender: m
+  - lemma: здійснитися
+    ipa: /zdijsˈnɪtɪsʲɑ/
+    translation: to come true
+    pos: verb
+  - lemma: кутя
+    ipa: /kuˈtʲɑ/
+    translation: kutia (dish)
+    pos: noun
+    gender: f
+  - lemma: многая
+    ipa: /ˈmnɔɦɑjɑ/
+    translation: many (archaic)
+    pos: adj
+    gender: f
+  - lemma: нехай
+    ipa: /nɛˈxɑj/
+    translation: let/may
+    pos: other
+  - lemma: отримати
+    ipa: /ɔtˈrɪmɑtɪ/
+    translation: to receive
+    pos: verb
+  - lemma: паска
+    ipa: /ˈpɑskɑ/
+    translation: Easter bread
+    pos: noun
+    gender: f
+  - lemma: писанка
+    ipa: /ˈpi.sɑn.kɑ/
+    translation: pysanka (egg)
+    pos: noun
+    gender: f
+  - lemma: побажання
+    ipa: /pɔbɑˈʒɑnʲːɑ/
+    translation: wish
+    pos: noun
+    gender: n
+  - lemma: привітання
+    ipa: /prɪviˈtɑnʲːɑ/
+    translation: greeting
+    pos: noun
+    gender: n
+  - lemma: радість
+    ipa: /ˈrɑdisʲtʲ/
+    translation: joy
+    pos: noun
+    gender: f
+  - lemma: святий
+    ipa: /svʲɑˈtɪj/
+    translation: holy
+    pos: adj
+    gender: m
+  - lemma: свято
+    ipa: /ˈsvjɑtɔ/
+    translation: holiday
+    pos: noun
+    gender: n
+  - lemma: Святвечір
+    ipa: /sʲvjɑtˈvɛt͡ʃir/
+    translation: Christmas Eve
+    pos: noun
+    gender: m
+  - lemma: святкування
+    ipa: /svjɑtkuˈvɑnʲːɑ/
+    translation: celebration
+    pos: noun
+    gender: n
+  - lemma: успіх
+    ipa: /ˈuspix/
+    translation: success
+    pos: noun
+    gender: m
+  - lemma: хай
+    ipa: /xɑj/
+    translation: let/may
+    pos: other
+  - lemma: Христовий
+    ipa: /xrɪsˈtɔvɪj/
+    translation: Christ's
+    pos: adj
+    gender: m
+  - lemma: щасливий
+    ipa: /ʃt͡ʃɑsˈlɪvɪj/
+    translation: happy
+    pos: adj
+    gender: m
+  - lemma: щастити
+    ipa: /ʃt͡ʃɑsˈtɪtɪ/
+    translation: to contain luck/be lucky
+    pos: verb
+  - lemma: щастя
+    ipa: /ˈʃt͡ʃɑsʲtʲɑ/
+    translation: happiness
+    pos: noun
+    gender: n
+  - lemma: щирий
+    ipa: /ˈʃt͡ʃɪrɪj/
+    translation: sincere
+    pos: adj
+    gender: m

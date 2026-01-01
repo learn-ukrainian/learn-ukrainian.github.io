@@ -1,0 +1,40 @@
+module: 13-the-completed-past
+level: A2
+version: '2.0'
+items:
+  - lemma: закінчений
+    ipa: zɐˈkint͡ʃenɪj
+    translation: finished; completed
+    pos: adj
+    gender: m
+  - lemma: несподівано
+    ipa: nɛspoˈdiʋɐno
+    translation: unexpectedly
+    pos: adv
+  - lemma: побудувати
+    ipa: pobuduˈʋɑte
+    translation: to build (perf)
+    pos: verb
+  - lemma: світогляд
+    ipa: sʋitoˈɦlʲɑd
+    translation: worldview
+    pos: noun
+    gender: m
+  - lemma: стаття
+    ipa: stɐˈtʲːɑ
+    translation: article
+    pos: noun
+    gender: f
+  - lemma: цікавитися
+    ipa: t͡siˈkɑʋɪtɪsʲɐ
+    translation: to be interested in
+    pos: verb
+  - lemma: чіткий
+    ipa: t͡ʃitˈkɪj
+    translation: clear; distinct
+    pos: adj
+    gender: m
+  - lemma: чітко
+    ipa: ˈt͡ʃitko
+    translation: clearly
+    pos: adv

@@ -512,42 +512,42 @@ Don't forget the comma!
 
 <ErrorCorrection>
   <ErrorCorrectionItem
-    sentence={`Я тут, **але** я хочу допомогти. (Logic error: I am here BECAUSE I want to help)`}
+    sentence={`Я тут, але я хочу допомогти.`}
     errorWord={`але`}
     correctForm={`тому що`}
     options={[`тому що`, `але`]}
     explanation={`This is a reason, not a contrast.`}
   />
   <ErrorCorrectionItem
-    sentence={`**Хоча** йде дощ, я не взяв парасольку. (Correct logic: Even though it rains, I didn't take umbrella - wait, no. \"Oskilky\" - Since it rains, I TOOK. \"Khocha\" - Although it rains, I DIDN'T. Actually this sentence makes sense grammatically but let's assume the user meant \"Therefore\". Let's try a clearer error).`}
+    sentence={`Хоча йде дощ, я не взяв парасольку. (Correct logic: Even though it rains, I didn't take umbrella - wait, no. \"Oskilky\" - Since it rains, I TOOK. \"Khocha\" - Although it rains, I DIDN'T. Actually this sentence makes sense grammatically but let's assume the user meant \"Therefore\". Let's try a clearer error).`}
     errorWord={`тому що`}
     correctForm={`але`}
     options={[`але`, `тому що`]}
     explanation={`Wealth usually doesn't cause unhappiness directly here; it's a contrast. \"Rich BUT unhappy\".`}
   />
   <ErrorCorrectionItem
-    sentence={`Ми виграли **через** нашому тренеру. (Positive result requires Thanks To)`}
+    sentence={`Ми виграли через нашому тренеру.`}
     errorWord={`через`}
     correctForm={`завдяки`}
     options={[`завдяки`, `через`]}
     explanation={`\"Завдяки\" is for positive outcomes (Thanks to). \"Через\" is neutral/negative. Plus case agreement (Dat vs Acc/Gen), but focus on meaning.`}
   />
   <ErrorCorrectionItem
-    sentence={`**Бо** ти не хочеш, не роби. (Start of sentence/Logical premise)`}
+    sentence={`Бо ти не хочеш, не роби.`}
     errorWord={`Бо`}
     correctForm={`Оскільки`}
     options={[`Оскільки`, `Бо`]}
     explanation={`\"Бо\" rarely starts a formal logical sentence. \"Оскільки\" (Since) is better.`}
   />
   <ErrorCorrectionItem
-    sentence={`Квартира мала, **тому що** дешева. (Constraint/Positive balance)`}
+    sentence={`Квартира мала, тому що дешева.`}
     errorWord={`тому що`}
     correctForm={`зате`}
     options={[`зате`, `тому що`]}
     explanation={`Small is bad, cheap is good. This is a balance: \"Small, BUT cheap\".`}
   />
   <ErrorCorrectionItem
-    sentence={`Я запізнився **завдяки** заторам (traffic jams).`}
+    sentence={`Я запізнився завдяки заторам (traffic jams).`}
     errorWord={`завдяки`}
     correctForm={`через`}
     options={[`через`, `завдяки`]}
@@ -635,26 +635,125 @@ Don't forget the comma!
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| тому що | /tɔˈmu ʃt͡ʃɔ/ | because | conj | — | standard |
-| бо | /bɔ/ | because | conj | — | colloquial |
-| оскільки | /ɔsˈkilʲkɪ/ | since | conj | — | logical |
-| через те що | /ˈt͡ʃɛrɛz tɛ ʃt͡ʃɔ/ | due to the fact that | phrase | — | formal |
-| завдяки тому що | /zɑʋdʲɑˈkɪ tɔˈmu ʃt͡ʃɔ/ | thanks to the fact that | phrase | — | positive |
-| хоча | /xɔˈt͡ʃɑ/ | although | conj | — | contrast |
-| незважаючи на те що | /nɛzʋɑˈʒɑjut͡ʃɪ nɑ tɛ ʃt͡ʃɔ/ | despite the fact that | phrase | — | strong contrast |
-| проте | /prɔˈtɛ/ | however | conj | — | formal contrast |
-| однак | /ɔdˈnɑk/ | however | conj | — | formal contrast |
-| але | /ɑˈlɛ/ | but | conj | — | simple contrast |
-| зате | /zɑˈtɛ/ | but (on the plus side) | conj | — | balance |
-| все-таки | /ˈʋsɛ tɑkɪ/ | still, after all | particle | — | persistence |
-| все ж таки | /ˈʋsɛ ʒ tɑkɪ/ | still, after all | particle | — | persistence |
-| попри те що | /ˈpɔprɪ tɛ ʃt͡ʃɔ/ | in spite of the fact that | phrase | — | formal |
-| хоч і | /xɔt͡ʃ i/ | even though | conj | — | emphasis |
-| хай | /xɑj/ | let, may | particle | — | wish/command |
-| нехай | /nɛˈxɑj/ | let, may | particle | — | wish/command |
-| хоч би | /xɔt͡ʃ bɪ/ | if only | particle | — | wish |
-| дарма що | /dɑrˈmɑ ʃt͡ʃɔ/ | even though | conj | — | literary |
-| якби не | /jɑkˈbɪ nɛ/ | if it weren't for | phrase | — | conditional |
-| наслідок | /ˈnɑsʲlidɔk/ | consequence | noun | m | logic |
-| сперечатися | /spɛrɛˈt͡ʃɑtɪsʲɑ/ | to argue, debate | verb | — | action |
+| --- | --- | --- | --- | --- | --- |
+| абсолютно |  |  | adv | - |  |
+| амбітний |  |  | adj | ч |  |
+| бензин |  |  | noun | ч |  |
+| блищити |  |  | verb | - |  |
+| бувати |  |  | verb | - |  |
+| будь-ити |  |  | pron | с |  |
+| важливіший |  |  | adj | ч |  |
+| вартий |  |  | adj | ч |  |
+| вдень |  |  | adv | - |  |
+| вдячність |  |  | noun | ж |  |
+| вживати |  |  | verb | - |  |
+| виділення |  |  | noun | с |  |
+| використання |  |  | noun | с |  |
+| виникнути |  |  | verb | - |  |
+| вираження |  |  | noun | с |  |
+| водночас |  |  | adv | - |  |
+| впорядкувати |  |  | verb | - |  |
+| все-таки |  |  | part | - |  |
+| втомлений |  |  | adj | ч |  |
+| втомлюватися |  |  | verb | - |  |
+| втратити |  |  | verb | - |  |
+| вірус |  |  | noun | ч |  |
+| голодний |  |  | adj | ч |  |
+| гіпотетичний |  |  | adj | ж |  |
+| дарма |  |  | noun | ж |  |
+| дозвіл |  |  | noun | ч |  |
+| досягнути |  |  | verb | - |  |
+| енергійний |  |  | adj | ч |  |
+| ефект |  |  | noun | ч |  |
+| живий |  |  | adj | - |  |
+| завдяки |  |  | prep | - |  |
+| заперечення |  |  | noun | с |  |
+| запитання |  |  | noun | с |  |
+| зате |  |  | conj | - |  |
+| затишний |  |  | adj | ж |  |
+| затор |  |  | noun | ч |  |
+| захворівати |  |  | verb | - |  |
+| захворіти |  |  | verb | ч |  |
+| захотіти |  |  | verb | ч |  |
+| звичайний |  |  | adj | с |  |
+| змогти |  |  | verb | - |  |
+| змокнути |  |  | verb | - |  |
+| зміна |  |  | noun | ж |  |
+| кататися |  |  | verb | - |  |
+| категоричний |  |  | adj | с |  |
+| книжний |  |  | adj | ч |  |
+| кома |  |  | noun | ж |  |
+| комфорт |  |  | noun | ч |  |
+| конструкція |  |  | noun | ж |  |
+| контраст |  |  | noun | ч |  |
+| красномовство |  |  | noun | с |  |
+| лижа |  |  | noun | ч |  |
+| лінивий |  |  | adj | ч |  |
+| літературний |  |  | adj | ч |  |
+| мабуть |  |  | adv | - |  |
+| матеріал |  |  | noun | ч |  |
+| мокрий |  |  | adj | ч |  |
+| мінуса |  |  | noun | ч |  |
+| нагод |  |  | noun | ж |  |
+| наказ |  |  | noun | ч |  |
+| наприкінці |  |  | adv | - |  |
+| наслідок |  |  | noun | ч |  |
+| незважаючи |  |  | verb | - |  |
+| нещасливий |  |  | adj | ч |  |
+| окличний |  |  | adj | ч |  |
+| оптиміст |  |  | noun | ч |  |
+| оскільки |  |  | conj | - |  |
+| отриманий |  |  | adj | ч |  |
+| офіційний |  |  | adj | ч |  |
+| парасолька |  |  | noun | ж |  |
+| певний |  |  | adj | - |  |
+| перекласти |  |  | verb | - |  |
+| переконати |  |  | verb | - |  |
+| перемогти |  |  | verb | - |  |
+| песиміст |  |  | noun | ч |  |
+| по-твоєму |  |  | adv | - |  |
+| повітря |  |  | noun | с |  |
+| подзвонити |  |  | verb | ч |  |
+| подія |  |  | noun | ж |  |
+| позитивний |  |  | adj | ж |  |
+| позитий |  |  | adj | ж |  |
+| послідовність |  |  | noun | ж |  |
+| поступка |  |  | noun | ж |  |
+| початок |  |  | noun | ч |  |
+| почнати |  |  | verb | - |  |
+| почуття |  |  | noun | с |  |
+| пояснення |  |  | noun | с |  |
+| правий |  |  | adj | ч |  |
+| програти |  |  | verb | - |  |
+| проспати |  |  | verb | ч |  |
+| проходження |  |  | noun | с |  |
+| прямий |  |  | adj | ж |  |
+| підкреслити |  |  | verb | - |  |
+| реаліст |  |  | noun | ч |  |
+| ремонт |  |  | noun | ч |  |
+| розмовний |  |  | adj | ч |  |
+| розповідь |  |  | noun | ж |  |
+| свіжий |  |  | adj | с |  |
+| сильніший |  |  | adj | ч |  |
+| синонім |  |  | noun | ч |  |
+| скаратися |  |  | verb | - |  |
+| скаржитися |  |  | verb | - |  |
+| сльоза |  |  | noun | ж |  |
+| сміятися |  |  | verb | - |  |
+| специфічний |  |  | adj | ч |  |
+| сполучник |  |  | noun | ч |  |
+| спізнюватися |  |  | verb | - |  |
+| ставити |  |  | verb | - |  |
+| ставитися |  |  | verb | - |  |
+| сторона |  |  | noun | ж |  |
+| строгий |  |  | adj | ч |  |
+| суперечка |  |  | noun | ж |  |
+| сухий |  |  | adj | ж |  |
+| таки |  |  | part | - |  |
+| текст |  |  | noun | ч |  |
+| тренер |  |  | noun | ч |  |
+| тренування |  |  | noun | с |  |
+| усередині |  |  | prep | - |  |
+| успішно |  |  | adv | - |  |
+| хвилюватися |  |  | verb | ч |  |
+| хоч |  |  | conj | - |  |

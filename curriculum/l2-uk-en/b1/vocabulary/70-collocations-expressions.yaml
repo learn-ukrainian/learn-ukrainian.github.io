@@ -1,0 +1,45 @@
+module: 70-collocations-expressions
+level: B1
+version: '2.0'
+items:
+- lemma: врегулювання
+  ipa: /vrɛhulʲuˈvanʲːa/
+  translation: settlement
+  pos: noun
+  gender: n
+- lemma: докладати
+  ipa: /dɔklaˈdatɪ/
+  translation: to apply/make effort
+  pos: verb
+- lemma: колокації
+  ipa: /kɔlɔˈkat͡sʲiji/
+  translation: collocations
+  pos: noun
+  gender: m
+- lemma: налагоджувати
+  ipa: /nalahɔˈdʒuvatɪ/
+  translation: to adjust
+  pos: verb
+- lemma: наступне
+  ipa: /naˈstupnɛ/
+  translation: next
+  pos: noun
+  gender: n
+- lemma: нехтувати
+  ipa: /ˈnɛxtuvatɪ/
+  translation: to neglect
+  pos: verb
+- lemma: підіймати
+  ipa: /pidijˈmatɪ/
+  translation: to raise
+  pos: verb
+- lemma: росіянізм
+  ipa: /rɔsʲijaˈnʲizm/
+  translation: Russism
+  pos: noun
+  gender: m
+- lemma: укртех
+  ipa: /ukrˈtɛx/
+  translation: Ukrtech (abbr)
+  pos: propn
+  gender: m

@@ -1,0 +1,65 @@
+module: 07-aspect-past-single-repeated
+level: B1
+version: '2.0'
+items:
+- lemma: докладний
+  ipa: /dɔˈkladnɪj/
+  translation: detailed
+  pos: adj
+  gender: f
+- lemma: еспресо
+  ipa: /ɛsˈprɛsɔ/
+  translation: espresso
+  pos: noun
+  gender: n
+- lemma: знайомитися
+  ipa: /znajɔˈmɪtɪsʲa/
+  translation: to get acquainted
+  pos: verb
+  gender: m
+- lemma: однораз
+  ipa: /ɔdnɔˈraz/
+  translation: once
+  pos: adj
+- lemma: поверталати
+  ipa: /pɔvɛrˈtaɫatɪ/
+  translation: to return (typo)
+  pos: verb
+  gender: f
+- lemma: повторюваність
+  ipa: /pɔu̯ˈtɔrʲuvanʲisʲtʲ/
+  translation: repetition
+  pos: noun
+  gender: f
+- lemma: поділитися
+  ipa: /pɔdiˈlɪtɪsʲa/
+  translation: to share
+  pos: verb
+- lemma: посварити
+  ipa: /pɔsvaˈrɪtɪ/
+  translation: to quarrel
+  pos: verb
+  gender: f
+- lemma: промок
+  ipa: /prɔˈmɔk/
+  translation: got wet
+  pos: noun
+  gender: m
+- lemma: підкреслюватися
+  ipa: /pidˈkrɛslʲuvatɪsʲa/
+  translation: to be emphasized
+  pos: verb
+- lemma: цікавинка
+  ipa: /t͡sʲiˈkavɪnka/
+  translation: interesting detail
+  pos: noun
+  gender: f
+- lemma: щовихідний
+  ipa: /ʃt͡ʃɔvɪxidˈnɪj/
+  translation: every weekend
+  pos: adj
+- lemma: юлія
+  ipa: /ˈjulʲija/
+  translation: Julia
+  pos: propn
+  gender: f

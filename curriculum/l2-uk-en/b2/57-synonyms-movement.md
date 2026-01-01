@@ -1,28 +1,3 @@
----
-module: b2-57
-title: "Синоніми: Рух і Пересування"
-subtitle: "Synonyms - Movement"
-version: "1.0"
-phase: "B2.2 [Phraseology & Synonymy]"
-pedagogy: "CBI"
-duration: 90
-transliteration: none
-immersion: 100
-tags:
-  - vocabulary
-  - synonyms
-  - movement
-grammar:
-  - "Nuances in verbs of motion"
-  - "Manner of movement and adverbs"
-objectives:
-  - "Учень може розрізняти відтінки значень дієслів на позначення руху"
-  - "Учень вміє вживати лексику пересування для створення динамічних описів у художньому та публіцистичному стилях"
-vocabulary_count: 35
-register: "художній"
-vocab_count: 95
----
-
 # Синоніми: Рух і Пересування
 
 > 🎯 **Чому це важливо?**

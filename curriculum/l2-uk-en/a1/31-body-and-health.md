@@ -1,29 +1,3 @@
----
-module: a1-31
-title: 'Body & Health'
-subtitle: "At the Doctor's"
-version: '1.0'
-phase: 'A1.3 - Consolidation'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: 'first-occurrence'
-tags:
-  - body
-  - health
-  - doctor
-  - pharmacy
-grammar:
-  - Pain expressions (Болить + body part)
-  - Health vocabulary
-objectives:
-  - 'Learner can name body parts'
-  - 'Learner can describe symptoms (what hurts)'
-  - "Learner can communicate at the doctor's office"
-  - 'Learner can ask for medicine at a pharmacy'
-vocabulary_count: 30
-vocab_count: 35
----
-
 # Body & Health
 
 ## Warm-up
@@ -223,39 +197,3 @@ In this module, you learned:
 > - [Body Parts Vocabulary](https://www.ukrainianlessons.com/vocabulary-body/) — Complete body vocabulary
 > - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/health
 > - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
-
-# Vocabulary
-
-| Word        | IPA             | English             | POS   | Gender | Note |
-| ----------- | --------------- | ------------------- | ----- | ------ | ---- |
-| алло        | /ɑˈlɔ/          | hello (phone)       | other | -      |      |
-| біль        | /bilʲ/          | pain                | noun  | ч      |      |
-| боліти      | /bɔˈlitɪ/       | to hurt             | verb  | -      |      |
-| викликати   | /vɪˈklɪkɑtɪ/    | to call (doctor)    | verb  | -      |      |
-| вухо        | /ˈvuxɔ/         | ear                 | noun  | с      |      |
-| головний    | /ɦɔlɔvˈnɪj/     | main/head           | adj   | ч      |      |
-| горло       | /ˈɦɔrlɔ/        | throat              | noun  | с      |      |
-| живіт       | /ʒɪˈvit/        | stomach             | noun  | ч      |      |
-| застуда     | /zɑsˈtudɑ/      | cold (illness)      | noun  | ж      |      |
-| кашель      | /ˈkɑʃɛlʲ/       | cough               | noun  | ч      |      |
-| лікарня     | /liˈkɑrnʲɑ/     | hospital            | noun  | ж      |      |
-| мед         | /mɛd/           | honey               | noun  | ч      |      |
-| медицина    | /mɛdɪˈt͡sɪnɑ/    | medicine            | noun  | ж      |      |
-| народний    | /nɑˈrɔdnɪj/     | folk/national       | adj   | ч      |      |
-| нежить      | /ˈnɛʒɪtʲ/       | runny nose          | noun  | ч      |      |
-| нога        | /nɔˈɦɑ/         | leg                 | noun  | ж      |      |
-| потрібний   | /pɔˈtribnɪj/    | needed/necessary    | adj   | ч      |      |
-| почуватися  | /pɔt͡ʃuˈvɑtɪsʲɑ/ | to feel             | verb  | -      |      |
-| результат   | /rɛzulʲˈtɑt/    | result              | noun  | ч      |      |
-| рецепт      | /rɛˈt͡sɛpt/      | prescription/recipe | noun  | ч      |      |
-| рука        | /ruˈkɑ/         | hand/arm            | noun  | ж      |      |
-| себе        | /ˈsɛbɛ/         | self                | pron  | -      |      |
-| серце       | /ˈsɛrt͡sɛ/       | heart               | noun  | с      |      |
-| симптом     | /sɪmpˈtɔm/      | symptom             | noun  | ч      |      |
-| сироп       | /sɪˈrɔp/        | syrup               | noun  | ч      |      |
-| спина       | /spɪˈnɑ/        | back                | noun  | ж      |      |
-| статися     | /ˈstɑtɪsʲɑ/     | to happen           | verb  | -      |      |
-| таблетка    | /tɑbˈlɛtkɑ/     | pill/tablet         | noun  | ж      |      |
-| температура | /tɛmpɛrɑˈturɑ/  | temperature/fever   | noun  | ж      |      |
-| тіло        | /ˈtilɔ/         | body                | noun  | с      |      |
-| хворий      | /ˈxvɔrɪj/       | sick                | adj   | ч      |      |

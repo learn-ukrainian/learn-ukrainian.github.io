@@ -1,6 +1,15 @@
 # Audit Report: 08-the-living-verb-ii.md
-**Phase:** A1 | **Level:** A1 | **Pedagogy:** "PPP" | **Target:** 500
+**Phase:** A1.1 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 500
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): пам'ятати, купувати, летіти, пити, просити...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 990/500
@@ -10,11 +19,12 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 24/1
+- **Vocab:** ✅ 22/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 31.7% (target 15-35% (M08))
+- **Immersion:** 🇺🇦 21.4% (target 15-35% (M08))
+- **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -25,20 +35,10 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **The Living Verb II** | ⚪️ | 0 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 56 | Included in Core |
 | **Presentation** | ✅ | 328 | Included in Core |
-| **Practice** | ⚪️ | 226 | Skipped |
+| **Practice** | ⚪️ | 227 | Skipped |
 | **Production** | ➖ | 54 | Excluded Type |
 | **Cultural Insight** | ✅ | 191 | Included in Core |
-| **Summary** | ✅ | 135 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **quiz: Class II or Class I?** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Verbs and Actions** | 🎮 | 9 | Activity (9 items, min 8) |
-| **fill-in: Conjugate the Verb** | 🎮 | 12 | Activity (12 items, min 8) |
-| **anagram: Build the Verb** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: Grammar Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Verb Types** | 🎮 | 12 | Activity (12 items, min 12) |
-| **fill-in: Complete the Dialogue** | 🎮 | 13 | Activity (13 items, min 8) |
-| **quiz: Choose the Right Verb** | 🎮 | 12 | Activity (12 items, min 8) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Summary** | ✅ | 134 | Included in Core |

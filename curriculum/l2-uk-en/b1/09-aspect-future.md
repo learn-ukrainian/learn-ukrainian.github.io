@@ -1,31 +1,3 @@
----
-module: b1-09
-title: "Вид у майбутньому часі"
-subtitle: "Aspect in Future: Three Ways to Express Future Actions"
-version: "1.0"
-phase: "B1.1 Aspect"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - aspect
-  - future-tense
-  - verb-conjugation
-grammar:
-  - "Compound future: буду + infinitive"
-  - "Synthetic future forms (-тиму/-тимеш/-тиме)"
-  - "Perfective future (simple future)"
-  - "Future aspect selection patterns"
-objectives:
-  - "Learner can form all three types of future constructions"
-  - "Learner understands when to use compound vs synthetic imperfective future"
-  - "Learner can select appropriate aspect for future actions"
-  - "Learner recognizes stylistic differences between future forms"
-vocabulary_count: 25
-vocab_count: 102
----
-
 # Вид у майбутньому часі
 
 **Aspect in Future: Three Ways to Express Future Actions**

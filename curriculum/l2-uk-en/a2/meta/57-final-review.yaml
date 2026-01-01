@@ -1,0 +1,23 @@
+module: a2-57
+title: A2 Final Review (Skills)
+subtitle: Ready for the Next Level
+version: '1.0'
+phase: A2
+pedagogy: Simulated Immersion
+duration: 60
+transliteration: none
+tags:
+  - review
+  - skills
+  - reading
+  - writing
+  - listening
+grammar:
+  - review-skills
+objectives:
+  - Demonstrate reading comprehension of longer texts
+  - Write a short autobiography
+  - Understand complex dialogues about future plans
+  - Confirm A2 proficiency
+vocab_count: 46
+slug: 57-final-review

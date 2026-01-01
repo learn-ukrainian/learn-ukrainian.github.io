@@ -1,27 +1,3 @@
----
-module: b1-17
-title: "Рух: Прибуття та вихід"
-subtitle: "Motion - Coming & Going"
-version: "2.0"
-phase: "B1.2 Motion"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - motion
-  - prefixes
-grammar:
-  - "Prefixes при-, ви-, в-/у- with motion verbs"
-  - "Arrival, exit, and entry semantics"
-objectives:
-  - "Learner can form motion verbs with при-, ви-, в-/у- prefixes"
-  - "Learner can choose correct prefix for arrival, exit, or entry"
-  - "Learner can use prefixed motion verbs in sentences"
-vocabulary_count: 25
-vocab_count: 70
----
-
 # Рух: Прибуття та вихід
 
 > 🎯 **Чому це важливо?**

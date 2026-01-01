@@ -1,0 +1,784 @@
+module: 21-register-technical-scientific
+level: B2
+version: '2.0'
+items:
+  - lemma: абревіатура
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: авторизований
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: адаптер
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: акронім
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: активація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: активувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: активуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: акумулятор
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: англомовний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: апарат
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: арабський
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: багаторазовий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: баз
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: бездротовий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: безперервний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: блимати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: браузер
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: веб
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: веба
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вентиляція
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: вимірювання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: виникнення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: вологість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: воткна
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: відміряти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: відносний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: відображатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: відріж
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: відріжти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: відстань
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: галузевий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: гарантовано
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: глючати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: горизонтальний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: гц
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: гігабайт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: датчик
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: девайс
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: диск
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: дп
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: дсту
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: експлуатація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: електромережа
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: жаргон
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: жорсткий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: завантаження
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: заводський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: загальновідомий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: задній
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: запозичений
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: запрацювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: запуск
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: запускатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: запуститися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: заряд
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: заряджати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: засвічуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: збой
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: збій
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: збільшити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: згадування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: здійснювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: здійснюватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: зеніт
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: зменти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: кабель
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: кажувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: калібрування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: качати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: кб
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: квт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: київстар
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: клацнути
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: комплектація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: конденсація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: конфігурація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: користування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: космічний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: кіловат
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: ліміт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: макс
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: мгц
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: мегагерц
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: мережевий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: надійність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: найрозвиненіший
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: налаштований
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: налаштовувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: несправність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: нумерація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: нумерований
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: ово
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: одночасний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: орбіта
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: ос
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: паніль
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: параметр
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: первинний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: перезавантажити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: перезаванте
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: перезапускатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: перезапучити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: перекладати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: перемикач
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: персональний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: періодик
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: пз
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: пк
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: поверхня
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: повторно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: політехніка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: помаранчевий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: попередньо
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: пошкодити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: протестувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: пуска
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: південний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: підвитити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: підклювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: підключатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: підключений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: підключення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: підпункт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: піктограм
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: ракетоносія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: ретельний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: робіти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розбирати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розетка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: розпочинатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розшифровка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: рівній
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: світитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: сергія
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: сигнал
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: складність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: см
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: специфікація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: споживаний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: стабільно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: стандартизованість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: структурний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: структурурути
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: супутник
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: січ
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: табличка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: термінологічний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: тестування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: увімкнення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: увімкнути
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: уніфікований
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: усунення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: файл
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: файловий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: функціонування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: частот
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: шифрування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: шнур
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: шоб
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: штука
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: щоночі
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: іконець
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: інженерний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: інтерфейс
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: інтерфейсний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: ініціалізація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: іт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f

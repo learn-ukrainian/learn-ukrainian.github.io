@@ -1,28 +1,3 @@
----
-module: a2-28
-title: I Think That...
-subtitle: "Expressing Opinions and Beliefs"
-version: "1.0"
-phase: "A2.3"
-pedagogy: "Communicative"
-duration: "60 min"
-transliteration: none
-tags:
-  - opinions
-  - thoughts
-  - agreement
-grammar:
-  - opinion verbs
-  - that-clauses
-  - agreement forms
-objectives:
-  - "Learner can express simple opinions"
-  - "Learner can agree and disagree politely"
-  - "Learner understands the contrast between думати and вважати"
-vocabulary_count: 25
-vocab_count: 29
----
-
 # Summary
 
 ## Warm-up

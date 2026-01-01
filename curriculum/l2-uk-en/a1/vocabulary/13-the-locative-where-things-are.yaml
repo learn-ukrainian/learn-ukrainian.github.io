@@ -1,0 +1,171 @@
+module: 13-the-locative-where-things-are
+level: A1
+version: '2.0'
+items:
+  - lemma: аптека
+    ipa: /ɑpˈtɛkɑ/
+    translation: pharmacy
+    pos: noun
+    gender: f
+  - lemma: артефакт
+    ipa: /ɑrtɛˈfɑkt/
+    translation: artifact
+    pos: noun
+    gender: m
+  - lemma: балкон
+    ipa: /bɑlˈkɔn/
+    translation: balcony
+    pos: noun
+    gender: m
+  - lemma: великий
+    ipa: /vɛˈlɪkɪj/
+    translation: big/large
+    pos: adj
+    gender: m
+  - lemma: вибачити
+    ipa: /vɪˈbɑt͡ʃɪtɪ/
+    translation: to forgive/excuse
+    pos: verb
+  - lemma: волинь
+    ipa: /vɔˈlɪnʲ/
+    translation: Volyn (region)
+    pos: propn
+    gender: f
+  - lemma: все
+    ipa: /wsɛ/
+    translation: everything
+    pos: pron
+    gender: n
+  - lemma: готель
+    ipa: /ɦɔˈtɛlʲ/
+    translation: hotel
+    pos: noun
+    gender: m
+  - lemma: екран
+    ipa: /ɛˈkrɑn/
+    translation: screen
+    pos: noun
+    gender: m
+  - lemma: забувати
+    ipa: /zɑbuˈvɑtɪ/
+    translation: to forget (imp)
+    pos: verb
+  - lemma: зал
+    ipa: /zɑl/
+    translation: hall
+    pos: noun
+    gender: m
+  - lemma: зараз
+    ipa: /ˈzɑrɑz/
+    translation: now
+    pos: adv
+  - lemma: зона
+    ipa: /ˈzɔnɑ/
+    translation: zone
+    pos: noun
+    gender: f
+  - lemma: зупинка
+    ipa: /zuˈpɪnkɑ/
+    translation: stop (bus/tram)
+    pos: noun
+    gender: f
+  - lemma: зустріч
+    ipa: /ˈzustrit͡ʃ/
+    translation: meeting
+    pos: noun
+    gender: f
+  - lemma: кавказ
+    ipa: /kɑwˈkɑz/
+    translation: Caucasus
+    pos: propn
+    gender: m
+  - lemma: концерт
+    ipa: /kɔnˈt͡sɛrt/
+    translation: concert
+    pos: noun
+    gender: m
+  - lemma: кіт
+    ipa: /kit/
+    translation: cat
+    pos: noun
+    gender: m
+  - lemma: музей
+    ipa: /muˈzɛj/
+    translation: museum
+    pos: noun
+    gender: m
+  - lemma: місце
+    ipa: /ˈmisʲt͡sʲɛ/
+    translation: place/seat
+    pos: noun
+    gender: n
+  - lemma: місцевий
+    ipa: /misʲˈt͡sʲɛvɪj/
+    translation: local
+    pos: adj
+    gender: m
+  - lemma: одеса
+    ipa: /ɔˈdɛsɑ/
+    translation: Odesa
+    pos: propn
+    gender: f
+  - lemma: офіс
+    ipa: /ˈɔfis/
+    translation: office
+    pos: noun
+    gender: m
+  - lemma: площа
+    ipa: /ˈplɔʃt͡ʃɑ/
+    translation: square
+    pos: noun
+    gender: f
+  - lemma: пляж
+    ipa: /plʲɑʒ/
+    translation: beach
+    pos: noun
+    gender: m
+  - lemma: поверх
+    ipa: /ˈpɔvɛrx/
+    translation: floor/story
+    pos: noun
+    gender: m
+  - lemma: ринок
+    ipa: /ˈrɪnɔk/
+    translation: market/Rynok Sq
+    pos: noun
+    gender: m
+  - lemma: склад
+    ipa: /sklɑd/
+    translation: warehouse/store
+    pos: noun
+    gender: m
+  - lemma: театр
+    ipa: /tɛˈɑtr/
+    translation: theater
+    pos: noun
+    gender: m
+  - lemma: третій
+    ipa: /ˈtrɛtʲij/
+    translation: third
+    pos: num
+    gender: m
+  - lemma: україна
+    ipa: /ʊkrɑˈjinɑ/
+    translation: Ukraine
+    pos: propn
+    gender: f
+  - lemma: урок
+    ipa: /uˈrɔk/
+    translation: lesson
+    pos: noun
+    gender: m
+  - lemma: хрещатик
+    ipa: /xrɛˈʃt͡ʃɑtɪk/
+    translation: Khreshchatyk
+    pos: propn
+    gender: m
+  - lemma: шевченко
+    ipa: /ʃɛwˈt͡ʃɛnkɔ/
+    translation: Shevchenko
+    pos: propn
+    gender: m

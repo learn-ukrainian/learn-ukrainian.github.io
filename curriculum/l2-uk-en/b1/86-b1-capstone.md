@@ -1,23 +1,3 @@
----
-module: b1-86
-title: "Підсумковий модуль B1"
-subtitle: "Comprehensive B1 Assessment"
-version: "1.0"
-phase: "B1.8"
-pedagogy: "TBL"
-duration: 90
-transliteration: "none"
-tags: ["capstone", "assessment", "integration", "b2-preparation"]
-grammar: ["aspect-review", "motion-verbs-review", "complex-sentences-review", "participles-review"]
-objectives:
-  - "Learner can demonstrate comprehensive B1 mastery across all skills"
-  - "Learner can produce extended written discourse (250+ words)"
-  - "Learner can comprehend authentic Ukrainian texts"
-  - "Learner is ready to begin B2 level"
-vocabulary_count: 35
-vocab_count: 19
----
-
 # Вступ
 
 Вітаємо вас на фінальному етапі рівня B1! Цей підсумковий модуль — ваша остання зупинка перед рівнем B2. Тут ви продемонструєте все, що вивчили: граматику, лексику, читання, письмо та розуміння на слух.

@@ -1,0 +1,23 @@
+module: 05-ready-for-immersion
+level: B1
+version: '2.0'
+items:
+- lemma: дієвідмінювання
+  ipa: /dʲijɛvidˈmʲinʲuvanʲːa/
+  translation: conjugation (process)
+  pos: noun
+  gender: n
+- lemma: словозміна
+  ipa: /slɔvɔˈzmʲina/
+  translation: inflection
+  pos: noun
+  gender: m
+- lemma: усюди
+  ipa: /uˈsʲudɪ/
+  translation: everywhere
+  pos: adv
+- lemma: фонетик
+  ipa: /fɔˈnɛtɪk/
+  translation: phonetician
+  pos: noun
+  gender: f

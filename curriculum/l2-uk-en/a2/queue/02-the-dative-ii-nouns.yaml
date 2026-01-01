@@ -1,0 +1,632 @@
+module: 02-the-dative-ii-nouns
+level: A2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/02-the-dative-ii-nouns.md
+generated: '2025-12-31T23:07:51.894635'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 6
+  fill-in: 12
+  cloze: 1
+  unjumble: 6
+  quiz: 12
+  true-false: 12
+total_items: 49
+item_count: 49
+sample_percent: null
+items:
+- activity: error-correction
+  title: Fix the Dative
+  sentence_with_error: Я допомагаю мама з обідом.
+  error: мама
+  answer: мамі
+  sentence_corrected: Я допомагаю мамі з обідом.
+  options:
+  - мама
+  - мамі
+  - маму
+  - мамою
+  original_explanation: 'The verb «допомагати» requires Dative. Feminine nouns ending
+    in -а take -і: мама → мамі.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Dative
+  sentence_with_error: Він телефонує друг кожного дня.
+  error: друг
+  answer: другові
+  sentence_corrected: Він телефонує другові кожного дня.
+  options:
+  - друг
+  - другові
+  - друга
+  - другом
+  original_explanation: 'The verb «телефонувати» requires Dative. Masculine nouns
+    take -ові/-еві: друг → другові.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Dative
+  sentence_with_error: Ми пишемо лист бабуся.
+  error: бабуся
+  answer: бабусі
+  sentence_corrected: Ми пишемо лист бабусі.
+  options:
+  - бабуся
+  - бабусі
+  - бабусю
+  - бабусею
+  original_explanation: 'The verb «писати» requires Dative for recipients. Feminine
+    -я nouns take -і: бабуся → бабусі.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Dative
+  sentence_with_error: Вона показує фото сестра.
+  error: сестра
+  answer: сестрі
+  sentence_corrected: Вона показує фото сестрі.
+  options:
+  - сестра
+  - сестрі
+  - сестру
+  - сестрою
+  original_explanation: 'The verb «показувати» requires Dative for recipients. Feminine
+    -а nouns take -і: сестра → сестрі.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Dative
+  sentence_with_error: Батько дарує подарунок дочка.
+  error: дочка
+  answer: доньці
+  sentence_corrected: Батько дарує подарунок доньці.
+  options:
+  - дочка
+  - доньці
+  - дочку
+  - дочкою
+  original_explanation: 'The verb «дарувати» requires Dative. Дочка has stem change:
+    дочка → доньці (к→ц before -і).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Dative
+  sentence_with_error: Лікар пояснює все пацієнт.
+  error: пацієнт
+  answer: пацієнтові
+  sentence_corrected: Лікар пояснює все пацієнтові.
+  options:
+  - пацієнт
+  - пацієнтові
+  - пацієнта
+  - пацієнтом
+  original_explanation: 'The verb «пояснювати» requires Dative. Masculine nouns take
+    -ові: пацієнт → пацієнтові.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Dative Noun Forms
+  sentence_template: Він допомагає ___.
+  answer: мамі
+  complete_sentence: Він допомагає мамі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Dative Noun Forms
+  sentence_template: Я пишу листа ___.
+  answer: другові
+  complete_sentence: Я пишу листа другові.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Dative Noun Forms
+  sentence_template: Вона телефонує ___ щодня.
+  answer: сестрі
+  complete_sentence: Вона телефонує сестрі щодня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Dative Noun Forms
+  sentence_template: Ми надсилаємо посилку ___.
+  answer: бабусі
+  complete_sentence: Ми надсилаємо посилку бабусі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Dative Noun Forms
+  sentence_template: Батько дарує квіти ___.
+  answer: мамі
+  complete_sentence: Батько дарує квіти мамі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Dative Noun Forms
+  sentence_template: Лікар пояснює діагноз ___.
+  answer: пацієнтові
+  complete_sentence: Лікар пояснює діагноз пацієнтові.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Dative Noun Forms
+  sentence_template: Вчитель показує карту ___.
+  answer: учням
+  complete_sentence: Вчитель показує карту учням.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Dative Noun Forms
+  sentence_template: Я довіряю ___.
+  answer: другові
+  complete_sentence: Я довіряю другові.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Dative Noun Forms
+  sentence_template: Це не підходить ___.
+  answer: вчителеві
+  complete_sentence: Це не підходить вчителеві.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Dative Noun Forms
+  sentence_template: Мама готує сніданок ___.
+  answer: дітям
+  complete_sentence: Мама готує сніданок дітям.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Dative Noun Forms
+  sentence_template: Він дарує книгу ___.
+  answer: сестрі
+  complete_sentence: Він дарує книгу сестрі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Dative Noun Forms
+  sentence_template: Я раджу це ___.
+  answer: подрузі
+  complete_sentence: Я раджу це подрузі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Complete the Dialogue
+  passage_template: 'Олег: Кому ти {Собі|Кому|Тобі} листа? Марія: Я пишу {собі|мені|тобі}.
+    У неї день народження. Олег: О, а що ти їй {подобається|подобаєтесь|подобатися}?
+    Марія: Я {подобається|подобаюсь|подобаємось} їй теплий шарф. Він {принесу|приношу|приносити}
+    моїй бабусі. Олег: Гарна ідея! Я теж хочу надіслати щось {довіряєте|вірите|допомагаєте}.
+
+    ---
+
+    У кафе. Офіціант: {Собі|Кому|Тобі} ви замовляєте каву? Клієнт: Ні, я замовляю
+    каву {собі|мені|тобі}. Офіціант: А що {подобається|подобаєтесь|подобатися} вашій
+    подрузі? Клієнт: Їй {подобається|подобаюсь|подобаємось} чай з лимоном. Офіціант:
+    Добре! Я {принесу|приношу|приносити} вам замовлення. Дякую, що {довіряєте|вірите|допомагаєте}
+    нашому кафе!'
+  blanks:
+  - answer: Тобі
+    options:
+    - Собі
+    - Кому
+  - answer: тобі
+    options:
+    - собі
+    - мені
+  - answer: подобатися
+    options:
+    - подобається
+    - подобаєтесь
+  - answer: подобаємось
+    options:
+    - подобається
+    - подобаюсь
+  - answer: приносити
+    options:
+    - принесу
+    - приношу
+  - answer: допомагаєте
+    options:
+    - довіряєте
+    - вірите
+  - answer: Тобі
+    options:
+    - Собі
+    - Кому
+  - answer: тобі
+    options:
+    - собі
+    - мені
+  - answer: подобатися
+    options:
+    - подобається
+    - подобаєтесь
+  - answer: подобаємось
+    options:
+    - подобається
+    - подобаюсь
+  - answer: приносити
+    options:
+    - принесу
+    - приношу
+  - answer: допомагаєте
+    options:
+    - довіряєте
+    - вірите
+  blank_count: 12
+  complete_passage: 'Олег: Кому ти Тобі листа? Марія: Я пишу тобі. У неї день народження.
+    Олег: О, а що ти їй подобатися? Марія: Я подобаємось їй теплий шарф. Він приносити
+    моїй бабусі. Олег: Гарна ідея! Я теж хочу надіслати щось допомагаєте.
+
+    ---
+
+    У кафе. Офіціант: Тобі ви замовляєте каву? Клієнт: Ні, я замовляю каву тобі. Офіціант:
+    А що подобатися вашій подрузі? Клієнт: Їй подобаємось чай з лимоном. Офіціант:
+    Добре! Я приносити вам замовлення. Дякую, що допомагаєте нашому кафе!'
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Dative Sentences
+  jumbled_words: []
+  answer: Я сьогодні даю книгу другові в новому магазині
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Dative Sentences
+  jumbled_words: []
+  answer: Вона щодня завжди телефонує мамі ввечері після роботи
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Dative Sentences
+  jumbled_words: []
+  answer: Ми кожного тижня пишемо листа бабусі з Канади
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Dative Sentences
+  jumbled_words: []
+  answer: Він кожного дня допомагає сестрі з уроками вдома
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Dative Sentences
+  jumbled_words: []
+  answer: Батько щороку дарує квіти мамі на день народження
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Dative Sentences
+  jumbled_words: []
+  answer: Лікар дуже детально пояснює діагноз пацієнтові в кабінеті
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Dative or Not?
+  question: Коли ви хочете дати книгу другові, яке речення граматично правильне в
+    українській мові?
+  options:
+  - '{''text'': ''Я даю книгу друг.'', ''correct'': False}'
+  - '{''text'': ''Я даю книгу другові.'', ''correct'': True}'
+  - '{''text'': ''Я даю книгу друга.'', ''correct'': False}'
+  - '{''text'': ''Я даю книгу другом.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Dative or Not?
+  question: Якщо дівчина телефонує своїй мамі щодня, яке речення правильне в українській
+    мові?
+  options:
+  - '{''text'': ''Вона телефонує мама.'', ''correct'': False}'
+  - '{''text'': ''Вона телефонує маму.'', ''correct'': False}'
+  - '{''text'': ''Вона телефонує мамі.'', ''correct'': True}'
+  - '{''text'': ''Вона телефонує мамою.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Dative or Not?
+  question: Коли ми пишемо листи батькам у Канаду, яка форма іменника правильна?
+  options:
+  - '{''text'': ''Ми пишемо батькам.'', ''correct'': True}'
+  - '{''text'': ''Ми пишемо батьки.'', ''correct'': False}'
+  - '{''text'': ''Ми пишемо батьків.'', ''correct'': False}'
+  - '{''text'': ''Ми пишемо батьками.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Dative or Not?
+  question: Якщо ви хочете сказати "She helps her sister" українською, яке речення
+    правильне?
+  options:
+  - '{''text'': ''Вона допомагає сестра.'', ''correct'': False}'
+  - '{''text'': ''Вона допомагає сестру.'', ''correct'': False}'
+  - '{''text'': ''Вона допомагає сестрі.'', ''correct'': True}'
+  - '{''text'': ''Вона допомагає сестрою.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Dative or Not?
+  question: Коли ви хочете сказати "to the city" українською, яка форма давального
+    відмінка правильна?
+  options:
+  - '{''text'': ''місто'', ''correct'': False}'
+  - '{''text'': ''місту'', ''correct'': True}'
+  - '{''text'': ''міста'', ''correct'': False}'
+  - '{''text'': ''містом'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Dative or Not?
+  question: Якщо ви хочете висловити довіру другові, як сказати "I believe my friend"
+    українською?
+  options:
+  - '{''text'': ''Я вірю друг.'', ''correct'': False}'
+  - '{''text'': ''Я вірю другові.'', ''correct'': True}'
+  - '{''text'': ''Я вірю друга.'', ''correct'': False}'
+  - '{''text'': ''Я вірю другом.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Dative or Not?
+  question: Коли вчитель показує фото своїм учням, яке речення граматично правильне
+    в українській мові?
+  options:
+  - '{''text'': ''Він показує фото вчителеві.'', ''correct'': True}'
+  - '{''text'': ''Він показує фото вчитель.'', ''correct'': False}'
+  - '{''text'': ''Він показує фото вчителя.'', ''correct'': False}'
+  - '{''text'': ''Він показує фото вчителем.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Dative or Not?
+  question: Якщо ви хочете сказати "They write to their parents" українською, яка
+    форма правильна?
+  options:
+  - '{''text'': ''Вони пишуть батьки.'', ''correct'': False}'
+  - '{''text'': ''Вони пишуть батьків.'', ''correct'': False}'
+  - '{''text'': ''Вони пишуть батькам.'', ''correct'': True}'
+  - '{''text'': ''Вони пишуть батьками.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Dative or Not?
+  question: Коли жіночий іменник "подруга" стоїть у давальному відмінку, яка форма
+    правильна з урахуванням чергування?
+  options:
+  - '{''text'': ''подругі'', ''correct'': False}'
+  - '{''text'': ''подрузі'', ''correct'': True}'
+  - '{''text'': ''подругу'', ''correct'': False}'
+  - '{''text'': ''подругою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Dative or Not?
+  question: Якщо лікар пояснює діагноз пацієнтові в кабінеті, як це сказати правильно
+    українською?
+  options:
+  - '{''text'': ''Лікар пояснює пацієнт.'', ''correct'': False}'
+  - '{''text'': ''Лікар пояснює пацієнта.'', ''correct'': False}'
+  - '{''text'': ''Лікар пояснює пацієнтові.'', ''correct'': True}'
+  - '{''text'': ''Лікар пояснює пацієнтом.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Dative or Not?
+  question: Коли ви хочете утворити давальний відмінок від слова "донька", яка форма
+    правильна з чергуванням?
+  options:
+  - '{''text'': ''доньки'', ''correct'': False}'
+  - '{''text'': ''доньку'', ''correct'': False}'
+  - '{''text'': ''доньці'', ''correct'': True}'
+  - '{''text'': ''донькою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Dative or Not?
+  question: Коли щось личить вашому імені або підходить до нього, яке речення граматично
+    правильне?
+  options:
+  - '{''text'': ''Це личить твоєму імені.'', ''correct'': True}'
+  - '{''text'': "Це личить твоє ім''я.", ''correct'': False}'
+  - '{''text'': ''Це личить твоєго імені.'', ''correct'': False}'
+  - '{''text'': ''Це личить твоїм іменем.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Dative Rules
+  statement: The dative ending for masculine nouns is always -ові.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Dative Rules
+  statement: Feminine nouns ending in -а take -і in the dative.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Dative Rules
+  statement: The consonant г changes to з before the dative ending -і.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Dative Rules
+  statement: Neuter nouns take -і in the dative case.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Dative Rules
+  statement: All genders take -ам/-ям in the plural dative.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Dative Rules
+  statement: The verb "допомагати" requires the accusative case.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Dative Rules
+  statement: '"Другові" and "другу" are both correct dative forms.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Dative Rules
+  statement: The consonant к changes to ц before -і in feminine nouns.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Dative Rules
+  statement: '"Батькам" is the dative plural of "батько".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Dative Rules
+  statement: The verb "писати" always requires accusative.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Dative Rules
+  statement: '"Вчителеві" is the dative form of "вчитель".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Dative Rules
+  statement: Neuter nouns ending in -я like "ім'я" have regular dative forms.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

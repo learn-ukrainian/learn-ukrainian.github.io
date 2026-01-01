@@ -1513,15 +1513,24 @@ def process_dialogues(content: str) -> str:
 # MDX GENERATOR
 # =============================================================================
 
-def generate_mdx(md_content: str, module_num: int, yaml_activities: list[dict] | None = None) -> str:
+def generate_mdx(md_content: str, module_num: int, yaml_activities: list[dict] | None = None, meta_data: dict | None = None, vocab_items: list[dict] | None = None) -> str:
     """Convert markdown content to MDX.
 
     Args:
         md_content: Markdown content
         module_num: Module number for sidebar
         yaml_activities: Optional list of activities from YAML file (takes precedence over embedded)
+        meta_data: Optional metadata from YAML (replaces frontmatter)
+        vocab_items: Optional vocab list from YAML
     """
-    fm, body = parse_frontmatter(md_content)
+    if meta_data:
+        fm = meta_data
+        body = md_content # MD file is already stripped if meta exists (usually)
+        # But if we are transitioning, MD might still have FM. 
+        # parse_frontmatter splits it regardless.
+        _, body = parse_frontmatter(md_content)
+    else:
+        fm, body = parse_frontmatter(md_content)
 
     # Component imports
     imports = """import Quiz from '@site/src/components/Quiz';
@@ -1546,6 +1555,16 @@ title: "{escape_jsx(fm.get('title', 'Untitled'))}"
 description: "{escape_jsx(fm.get('subtitle', ''))}"
 ---
 '''
+
+    # Inject Vocabulary Table if present
+    if vocab_items:
+        vocab_md = _vocab_items_to_markdown(vocab_items)
+        # Inject before Summary or at end
+        inject_match = re.search(r'\n(#{1,2}\s+(?:Summary|Підсумок))', body)
+        if inject_match:
+             body = body[:inject_match.start()] + '\n\n' + vocab_md + '\n' + body[inject_match.start():]
+        else:
+             body = body + '\n\n' + vocab_md
 
     # Process activities
     if yaml_activities:
@@ -1599,6 +1618,28 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
 # MAIN
 # =============================================================================
 
+def _vocab_items_to_markdown(items: list[dict]) -> str:
+    lines = [
+        "## Vocabulary",
+        "",
+        "| Word | IPA | English | POS | Gender | Note |",
+        "| --- | --- | --- | --- | --- | --- |"
+    ]
+    for item in items:
+        # Map gender m/f/n -> ч/ж/с
+        g_map = {'m': 'ч', 'f': 'ж', 'n': 'с', 'pl': 'pl', '-': '-', '': ''}
+        raw_g = item.get('gender', '')
+        g_val = g_map.get(raw_g, raw_g)
+        
+        # Map POS propn -> name
+        raw_p = item.get('pos', '')
+        p_val = 'name' if raw_p == 'propn' else raw_p
+        
+        line = f"| {item.get('lemma')} | {item.get('ipa','')} | {item.get('translation','')} | {p_val} | {g_val} | {item.get('usage','')} |"
+        lines.append(line)
+        
+    return '\n'.join(lines)
+
 def main():
     args = sys.argv[1:]
 
@@ -1649,6 +1690,22 @@ def main():
 
             # Read and convert
             md_content = md_file.read_text(encoding='utf-8')
+            
+            # Load META (YAML Architecture)
+            meta_file = md_file.parent / 'meta' / (md_file.stem + '.yaml')
+            meta_data = None
+            if meta_file.exists():
+                with open(meta_file, 'r', encoding='utf-8') as f:
+                    meta_data = yaml.safe_load(f)
+                    
+            # Load VOCABULARY (YAML Architecture)
+            vocab_file = md_file.parent / 'vocabulary' / (md_file.stem + '.yaml')
+            vocab_items = None
+            if vocab_file.exists():
+                with open(vocab_file, 'r', encoding='utf-8') as f:
+                    v_data = yaml.safe_load(f)
+                    if v_data and 'items' in v_data:
+                        vocab_items = v_data['items']
 
             # Check for YAML activities file
             # New structure: activities/{module}.yaml
@@ -1660,7 +1717,7 @@ def main():
             if yaml_activities:
                 print(f'    📋 Loading {len(yaml_activities)} activities from YAML')
 
-            mdx_content = generate_mdx(md_content, module_num, yaml_activities)
+            mdx_content = generate_mdx(md_content, module_num, yaml_activities, meta_data, vocab_items)
 
             # Write output
             output_file = output_dir / f'module-{str(module_num).zfill(2)}.mdx'

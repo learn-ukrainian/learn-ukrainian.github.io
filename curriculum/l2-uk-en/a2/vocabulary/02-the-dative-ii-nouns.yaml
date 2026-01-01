@@ -1,0 +1,383 @@
+module: 02-the-dative-ii-nouns
+level: A2
+version: '2.0'
+items:
+  - lemma: ам
+    ipa: ɑm
+    translation: ending (dative pl)
+    pos: noun
+    gender: m
+  - lemma: бабусі
+    ipa: bɐˈbusʲi
+    translation: grandmother (dative)
+    pos: noun
+    gender: f
+  - lemma: братова
+    ipa: brɐˈtɔʋɐ
+    translation: brother's
+    pos: propn
+    gender: m
+  - lemma: більш
+    ipa: bilʲʃ
+    translation: more
+    pos: adv
+  - lemma: важливо
+    ipa: ʋɐʒˈlɪʋo
+    translation: importantly; it is important
+    pos: adv
+  - lemma: вибачати
+    ipa: vɪbɐˈt͡ʃɑte
+    translation: to forgive
+    pos: verb
+  - lemma: викладач
+    ipa: vɪklɐˈdɑt͡ʃ
+    translation: teacher; lecturer
+    pos: noun
+    gender: m
+  - lemma: відбуватися
+    ipa: vidbuˈʋɑtɪsʲɐ
+    translation: to happen; to take place
+    pos: verb
+  - lemma: віддавати
+    ipa: vidːɐˈʋɑte
+    translation: to give back
+    pos: verb
+  - lemma: вірити
+    ipa: ˈvirɪte
+    translation: to believe
+    pos: verb
+  - lemma: герой
+    ipa: ɦeˈrɔi̯
+    translation: hero
+    pos: noun
+    gender: m
+  - lemma: господиня
+    ipa: hospoˈdɪnʲɐ
+    translation: hostess; housewife
+    pos: noun
+    gender: f
+  - lemma: граматично
+    ipa: ɦrɐmɐˈtɪt͡ʃno
+    translation: grammatically
+    pos: adv
+  - lemma: деякий
+    ipa: ˈdɛjɐkei̯
+    translation: some; certain
+    pos: other
+  - lemma: довго
+    ipa: ˈdɔu̯ɦo
+    translation: long (time)
+    pos: adv
+  - lemma: довіряти
+    ipa: doʋiˈrʲɑte
+    translation: to trust
+    pos: verb
+  - lemma: дозвіл
+    ipa: ˈdɔzʋil
+    translation: permission
+    pos: noun
+    gender: m
+  - lemma: донець
+    ipa: doˈnɛt͡sʲ
+    translation: Donets (river)
+    pos: noun
+    gender: f
+  - lemma: донька
+    ipa: ˈdɔnʲkɐ
+    translation: daughter
+    pos: noun
+    gender: f
+  - lemma: еві
+    ipa: ˈɛʋi
+    translation: ending (dative sg)
+    pos: other
+  - lemma: забруднення
+    ipa: zɐˈbrudnʲenʲːɐ
+    translation: pollution
+    pos: noun
+    gender: n
+  - lemma: звучати
+    ipa: zʋuˈt͡ʃɑte
+    translation: to sound
+    pos: verb
+  - lemma: зміна
+    ipa: ˈzminɐ
+    translation: change
+    pos: noun
+    gender: f
+  - lemma: канада
+    ipa: kɐˈnɑdɐ
+    translation: Canada
+    pos: propn
+    gender: f
+  - lemma: канади
+    ipa: kɐˈnɑde
+    translation: Canada (genitive)
+    pos: propn
+    gender: f
+  - lemma: кеві
+    ipa: ˈkɛʋi
+    translation: Kevin (dative?)
+    pos: propn
+    gender: m
+  - lemma: колезо
+    ipa: ˈkɔlezo
+    translation: wheel (typo? колесо)
+    pos: noun
+    gender: m
+  - lemma: контекст
+    ipa: konˈtɛkst
+    translation: context
+    pos: noun
+    gender: m
+  - lemma: котова
+    ipa: koˈtɔʋɐ
+    translation: cat's
+    pos: noun
+    gender: m
+  - lemma: котовий
+    ipa: koˈtɔʋei̯
+    translation: cat's
+    pos: adj
+  - lemma: личати
+    ipa: lɪˈt͡ʃɑte
+    translation: to suit; to become (archaic/dialect? пасувати is std)
+    pos: verb
+  - lemma: лише
+    ipa: lɪˈʃɛ
+    translation: only
+    pos: other
+  - lemma: літературний
+    ipa: lʲiterɐˈturnei̯
+    translation: literary
+    pos: adj
+    gender: m
+  - lemma: математика
+    ipa: mɐteˈmɑtɪkɐ
+    translation: mathematics
+    pos: noun
+    gender: f
+  - lemma: мелодійніше
+    ipa: melodiˈjnʲiʃe
+    translation: more melodiously
+    pos: adv
+  - lemma: множина
+    ipa: mnoʒɪˈnɑ
+    translation: plural
+    pos: noun
+    gender: f
+  - lemma: мовлення
+    ipa: ˈmɔu̯lenʲːɐ
+    translation: speech
+    pos: noun
+    gender: n
+  - lemma: можливий
+    ipa: moʒˈlɪʋei̯
+    translation: possible
+    pos: adj
+  - lemma: надсилати
+    ipa: nɐdsɪˈlɑte
+    translation: to send
+    pos: verb
+  - lemma: неформальний
+    ipa: neforˈmɑlʲnei̯
+    translation: informal
+    pos: adj
+  - lemma: обидва
+    ipa: ˈɔbɪdʋɐ
+    translation: both
+    pos: other
+    gender: f
+  - lemma: обрати
+    ipa: obˈrɑte
+    translation: to choose
+    pos: verb
+  - lemma: ові
+    ipa: ˈɔʋi
+    translation: ending (dative sg)
+    pos: other
+  - lemma: однина
+    ipa: odnɪˈnɑ
+    translation: singular
+    pos: noun
+    gender: f
+  - lemma: оленко
+    ipa: oˈlɛnko
+    translation: Olenka (vocative)
+    pos: propn
+    gender: f
+  - lemma: офіційно
+    ipa: ofiˈt͡sʲijno
+    translation: officially
+    pos: adv
+  - lemma: пані
+    ipa: ˈpɑni
+    translation: Mrs.; Lady
+    pos: propn
+    gender: f
+  - lemma: пацієнт
+    ipa: pɐt͡sʲiˈjɛnt
+    translation: patient
+    pos: noun
+    gender: m
+  - lemma: перевага
+    ipa: pereˈʋɑɦɐ
+    translation: advantage; preference
+    pos: noun
+    gender: f
+  - lemma: передбачуваний
+    ipa: peredˈbɑt͡ʃuʋɐnei̯
+    translation: predictable
+    pos: adj
+  - lemma: письмовий
+    ipa: pɪsʲˈmɔʋei̯
+    translation: written
+    pos: adj
+    gender: m
+  - lemma: повсякденний
+    ipa: pou̯sʲɐkˈdɛnːei̯
+    translation: everyday
+    pos: adj
+    gender: n
+  - lemma: повідомлення
+    ipa: poʋiˈdɔmlenʲːɐ
+    translation: message
+    pos: noun
+    gender: n
+  - lemma: подрузі
+    ipa: poˈdruzʲi
+    translation: friend (female, dative)
+    pos: other
+  - lemma: правильний
+    ipa: ˈprɑʋɪlʲnei̯
+    translation: correct; right
+    pos: adj
+  - lemma: приголосний
+    ipa: ˈprɪɦolosnei̯
+    translation: consonant
+    pos: adj
+    gender: m
+  - lemma: приголосній
+    ipa: ˈprɪɦolosnʲij
+    translation: consonant (locative?)
+    pos: noun
+    gender: m
+  - lemma: пропустити
+    ipa: propusˈtɪte
+    translation: to miss
+    pos: verb
+    gender: f
+  - lemma: простіший
+    ipa: prosˈtiʃei̯
+    translation: simpler
+    pos: adj
+  - lemma: проте
+    ipa: proˈtɛ
+    translation: however
+    pos: other
+  - lemma: радити
+    ipa: ˈrɑdɪte
+    translation: to advise
+    pos: verb
+  - lemma: розмовний
+    ipa: rozˈmɔu̯nei̯
+    translation: colloquial; conversational
+    pos: adj
+    gender: f
+  - lemma: розмовно
+    ipa: rozˈmɔu̯no
+    translation: colloquially
+    pos: adv
+  - lemma: свекрус
+    ipa: sʋekˈrus
+    translation: mother-in-law (typo? свекруха)
+    pos: noun
+    gender: f
+  - lemma: свекрухий
+    ipa: sʋekruˈxɪi̯
+    translation: mother-in-law's
+    pos: adj
+    gender: f
+  - lemma: сетрі
+    ipa: ˈsɛtri
+    translation: sister (dative - typo? сестрі)
+    pos: noun
+    gender: m
+  - lemma: спілкуватися
+    ipa: spilkuˈʋɑtɪsʲɐ
+    translation: to communicate
+    pos: verb
+  - lemma: суворий
+    ipa: suˈʋɔrei̯
+    translation: strict; severe
+    pos: adj
+    gender: m
+  - lemma: сумувати
+    ipa: sumuˈʋɑte
+    translation: to miss; to be sad
+    pos: verb
+  - lemma: твердий
+    ipa: tʋerˈdei̯
+    translation: hard
+    pos: adj
+    gender: m
+  - lemma: тип
+    ipa: tɪp
+    translation: type
+    pos: noun
+    gender: m
+  - lemma: торонто
+    ipa: toˈrɔnto
+    translation: Toronto
+    pos: propn
+    gender: n
+  - lemma: уряд
+    ipa: ˈurʲɐd
+    translation: government
+    pos: noun
+    gender: m
+  - lemma: учня
+    ipa: ˈut͡ʃnʲɐ
+    translation: student (genitive)
+    pos: noun
+    gender: m
+  - lemma: фотографія
+    ipa: fotoˈɦrɑfijɐ
+    translation: photograph
+    pos: noun
+    gender: f
+  - lemma: цукерка
+    ipa: t͡suˈkɛrkɐ
+    translation: candy
+    pos: noun
+    gender: f
+  - lemma: цілувати
+    ipa: t͡sʲiluˈʋɑte
+    translation: to kiss
+    pos: verb
+  - lemma: чергування
+    ipa: t͡ʃerɦuˈʋɑnʲːɐ
+    translation: alternation
+    pos: noun
+    gender: n
+  - lemma: чоловічий
+    ipa: t͡ʃoloˈʋit͡ʃei̯
+    translation: masculine; male
+    pos: adj
+    gender: m
+  - lemma: шкодити
+    ipa: ˈʃkɔdɪte
+    translation: to harm
+    pos: verb
+  - lemma: щотижня
+    ipa: ʃt͡ʃoˈtɪʒnʲɐ
+    translation: weekly
+    pos: adv
+  - lemma: ям
+    ipa: jɑm
+    translation: pits (genitive pl) or ending
+    pos: other
+  - lemma: із
+    ipa: iz
+    translation: from; with
+    pos: other

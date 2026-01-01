@@ -1,0 +1,26 @@
+module: b2-62
+title: 'Синоніми: Місце та Простір'
+subtitle: Synonyms - Place and Space
+version: '1.0'
+phase: B2.2 [Phraseology & Synonymy]
+pedagogy: CBI
+duration: 90
+transliteration: none
+immersion: 100
+tags:
+  - vocabulary
+  - synonyms
+  - place
+grammar:
+  - Adverbs of place
+  - Locative prepositions and distance
+objectives:
+  - Учень може розрізняти відтінки значень синонімів на позначення місця (тут, тутечки,
+    на цьому місці)
+  - Учень вміє використовувати лексику простору для опису географічних та міських
+    локацій
+  - Учень розуміє різницю між статичним положенням та напрямком руху
+vocabulary_count: 30
+register: публіцистичний
+vocab_count: 57
+slug: 62-synonyms-place

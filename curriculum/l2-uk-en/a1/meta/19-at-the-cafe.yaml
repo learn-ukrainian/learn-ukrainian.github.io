@@ -1,0 +1,28 @@
+module: a1-19
+title: At the Café
+subtitle: Ordering Food and Drinks in Ukrainian
+version: '1.0'
+phase: A1.2
+pedagogy: PPP
+duration: 60
+transliteration: vocab-only
+tags:
+  - functional
+  - café
+  - ordering
+  - restaurant
+  - food
+  - drinks
+  - politeness
+grammar:
+  - Functional integration of Accusative, Genitive, and Locative cases
+  - Polite imperative forms (принесіть, візьміть)
+  - Future tense (візьму from взяти)
+objectives:
+  - Learner can order food and drinks at a café
+  - Learner can ask for recommendations
+  - Learner can request the bill
+  - Learner can use functional phrases with Accusative, Genitive, and Locative cases
+vocabulary_count: 24
+vocab_count: 24
+slug: 19-at-the-cafe

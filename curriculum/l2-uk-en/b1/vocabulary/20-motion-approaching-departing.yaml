@@ -1,0 +1,134 @@
+module: 20-motion-approaching-departing
+level: B1
+version: '2.0'
+items:
+- lemma: айвазовський
+  ipa: /ajvaˈzɔu̯sʲkɪj/
+  translation: Aivazovsky
+  pos: propn
+  gender: m
+- lemma: апострофа
+  ipa: /aˈpɔstrɔfa/
+  translation: apostrophe (gen.)
+  pos: noun
+  gender: m
+- lemma: вантажник
+  ipa: /vanˈtaʒnɪk/
+  translation: loader
+  pos: noun
+  gender: m
+- lemma: ветеринар
+  ipa: /vɛtɛrɪˈnar/
+  translation: veterinarian
+  pos: noun
+  gender: m
+- lemma: від'їхати
+  ipa: /vidˈjixatɪ/
+  translation: to drive away
+  pos: verb
+- lemma: віддалятися
+  ipa: /vidːaˈlʲatɪsʲa/
+  translation: to move away
+  pos: verb
+- lemma: відлітати
+  ipa: /vidlʲiˈtatɪ/
+  translation: to fly away
+  pos: verb
+- lemma: віднести
+  ipa: /vidnɛsˈtɪ/
+  translation: to take away
+  pos: verb
+- lemma: диспетчер
+  ipa: /dɪsˈpɛt͡ʃɛr/
+  translation: dispatcher
+  pos: noun
+  gender: m
+- lemma: довезти
+  ipa: /dɔvɛzˈtɪ/
+  translation: to drive to
+  pos: verb
+- lemma: доніс
+  ipa: /dɔˈnʲis/
+  translation: carried to
+  pos: noun
+  gender: m
+- lemma: качок
+  ipa: /kaˈt͡ʃɔk/
+  translation: jock (slang)
+  pos: noun
+  gender: f
+- lemma: конструктор
+  ipa: /kɔnˈstruktɔr/
+  translation: constructor
+  pos: noun
+  gender: m
+- lemma: листоноша
+  ipa: /lɪstɔˈnɔʃa/
+  translation: postman
+  pos: noun
+  gender: m
+- lemma: меблевий
+  ipa: /mɛbˈlɛvɪj/
+  translation: furniture (adj)
+  pos: adj
+  gender: f
+- lemma: неуспішний
+  ipa: /nɛuˈspʲiʃnɪj/
+  translation: unsuccessful
+  pos: adj
+  gender: f
+- lemma: передзвонити
+  ipa: /pɛrɛdzvɔˈnɪtɪ/
+  translation: to call back
+  pos: verb
+- lemma: пробок
+  ipa: /ˈprɔbɔk/
+  translation: traffic jams (gen. pl.)
+  pos: noun
+  gender: f
+- lemma: під'їсти
+  ipa: /pidˈjistɪ/
+  translation: to eat a little
+  pos: verb
+- lemma: підвести
+  ipa: /pidvɛsˈtɪ/
+  translation: to let down
+  pos: verb
+- lemma: підвіз
+  ipa: /pidˈviz/
+  translation: gave a lift
+  pos: noun
+  gender: m
+- lemma: підйти
+  ipa: /piˈdjtɪ/
+  translation: to approach (typo)
+  pos: verb
+- lemma: піднести
+  ipa: /pidnɛsˈtɪ/
+  translation: to lift
+  pos: verb
+- lemma: підїхати
+  ipa: /pidˈjixatɪ/
+  translation: to drive up (typo)
+  pos: verb
+  gender: m
+- lemma: рецепція
+  ipa: /rɛˈt͡sɛpt͡sʲija/
+  translation: reception
+  pos: noun
+  gender: f
+- lemma: стійка
+  ipa: /ˈstijka/
+  translation: counter
+  pos: noun
+  gender: f
+- lemma: турбулентність
+  ipa: /turbuˈlɛntnʲisʲtʲ/
+  translation: turbulence
+  pos: noun
+  gender: f
+- lemma: хірургічний
+  ipa: /xirurˈhʲit͡ʃnɪj/
+  translation: surgical
+  pos: adj
+  gender: f

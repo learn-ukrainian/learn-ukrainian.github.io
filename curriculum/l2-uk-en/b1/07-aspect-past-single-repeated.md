@@ -1,30 +1,3 @@
----
-module: b1-07
-title: "Вид у минулому: одного разу vs щодня"
-subtitle: "Aspect in Past: Single vs Repeated Actions"
-version: "1.0"
-phase: "B1.1 Aspect"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - aspect
-  - past-tense
-  - adverbs
-grammar:
-  - "Aspect selection with time markers"
-  - "Single events vs habitual actions"
-  - "Frequency adverbs and aspect"
-objectives:
-  - "Learner can distinguish single from repeated past actions"
-  - "Learner can select correct aspect based on time markers"
-  - "Learner understands how frequency affects aspect choice"
-  - "Learner can transform between single and habitual narratives"
-vocabulary_count: 25
-vocab_count: 44
----
-
 # Вид у минулому: одного разу vs щодня
 
 > 🎯 **Чому це важливо?**

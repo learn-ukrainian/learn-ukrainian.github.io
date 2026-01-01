@@ -1,0 +1,140 @@
+module: 30-purpose-shchob-past-form
+level: B1
+version: '2.0'
+items:
+- lemma: ала
+  ipa: /ˈala/
+  translation: Ala
+  pos: propn
+  gender: f
+- lemma: бажане
+  ipa: /baˈʒanɛ/
+  translation: desired
+  pos: noun
+  gender: n
+- lemma: бажано
+  ipa: /baˈʒanɔ/
+  translation: desirable
+  pos: adv
+- lemma: благати
+  ipa: /blaˈhatɪ/
+  translation: to beg
+  pos: verb
+- lemma: виключити
+  ipa: /ˈvɪklʲut͡ʃɪtɪ/
+  translation: to turn off
+  pos: verb
+- lemma: відділятися
+  ipa: /vidːiˈlʲatɪsʲa/
+  translation: to separate
+  pos: verb
+- lemma: відьмако
+  ipa: /vidʲˈmakɔ/
+  translation: Witcher (voc.)
+  pos: noun
+  gender: m
+- lemma: добитися
+  ipa: /dɔˈbɪtɪsʲa/
+  translation: to achieve
+  pos: verb
+- lemma: домагтися
+  ipa: /dɔmahˈtɪsʲa/
+  translation: to achieve
+  pos: verb
+  gender: m
+- lemma: закріплення
+  ipa: /zaˈkriplɛnʲːa/
+  translation: consolidation
+  pos: noun
+  gender: n
+- lemma: квестовий
+  ipa: /ˈkvɛstɔvɪj/
+  translation: quest (adj)
+  pos: adj
+- lemma: кон'юнктива
+  ipa: /kɔnjunˈktɪva/
+  translation: conjunctiva
+  pos: noun
+  gender: m
+- lemma: можливе
+  ipa: /mɔʒˈlɪvɛ/
+  translation: possible
+  pos: noun
+  gender: m
+- lemma: невпевнений
+  ipa: /nɛu̯ˈpɛu̯nɛnɪj/
+  translation: uncertain
+  pos: adj
+- lemma: олю
+  ipa: /ˈɔlʲu/
+  translation: Olya (voc.)
+  pos: propn
+  gender: f
+- lemma: паралеле
+  ipa: /paraˈlɛlɛ/
+  translation: parallel (typo?)
+  pos: noun
+  gender: f
+- lemma: побажати
+  ipa: /pɔbaˈʒatɪ/
+  translation: to wish
+  pos: verb
+- lemma: попрости
+  ipa: /pɔprɔˈstɪ/
+  translation: to ask (typo)
+  pos: verb
+- lemma: пропилососити
+  ipa: /prɔpɪlɔˈsɔsɪtɪ/
+  translation: to vacuum
+  pos: verb
+  gender: m
+- lemma: прошедшее
+  ipa: /prɔˈʃɛdʃɛje/
+  translation: past (Rus.)
+  pos: other
+- lemma: розкуповувати
+  ipa: /rɔzkuˈpɔvuvatɪ/
+  translation: to buy out
+  pos: verb
+- lemma: смажений
+  ipa: /ˈsmaʒɛnɪj/
+  translation: fried
+  pos: adj
+  gender: n
+- lemma: справедливо
+  ipa: /spravɛdˈlɪvɔ/
+  translation: fairly
+  pos: adv
+- lemma: тост
+  ipa: /tɔst/
+  translation: toast
+  pos: noun
+  gender: f
+- lemma: чол
+  ipa: /t͡ʃɔl/
+  translation: m. (masc.)
+  pos: noun
+  gender: m
+- lemma: чтобы
+  ipa: /ˈt͡ʃtɔbɨ/
+  translation: in order to (Rus.)
+  pos: other
+- lemma: чудовисько
+  ipa: /t͡ʃuˈdɔvɪsʲkɔ/
+  translation: monster
+  pos: noun
+  gender: n
+- lemma: шипіт
+  ipa: /ˈʃɪpit/
+  translation: whisper
+  pos: propn
+  gender: m
+- lemma: щасливо
+  ipa: /ʃt͡ʃasˈlɪvɔ/
+  translation: happily
+  pos: adv
+- lemma: ірреаліс
+  ipa: /irːɛˈalʲis/
+  translation: irrealis
+  pos: noun
+  gender: m

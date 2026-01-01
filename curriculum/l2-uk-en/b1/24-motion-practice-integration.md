@@ -1,30 +1,3 @@
----
-module: b1-24
-title: "Дієслова руху: практика та інтеграція"
-subtitle: "Motion verbs: practice and integration"
-version: "2.0"
-phase: "B1.2 Motion"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - motion-verbs
-  - integration
-  - practice
-  - prepositions
-grammar:
-  - "Integration of pure and prefixed motion verbs"
-  - "Prepositions governing motion (в, на, до, через, повз)"
-  - "Figurative idioms with motion verbs"
-objectives:
-  - "Master complex travel narratives"
-  - "Correctly use prepositions with specific motion prefixes"
-  - "Understand and use high-frequency motion idioms"
-vocabulary_count: 34
-vocab_count: 88
----
-
 # Дієслова руху: практика та інтеграція
 
 > 🎯 **Чому це важливо?**
@@ -270,7 +243,5 @@ vocab_count: 88
 > - 📖 [Фразеологізми про рух](http://lcorp.ulif.org.ua/dictua/) — словник сталих виразів.
 
 ---
-
-
 
 ---

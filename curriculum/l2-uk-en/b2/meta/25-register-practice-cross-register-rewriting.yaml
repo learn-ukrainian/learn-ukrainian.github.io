@@ -1,0 +1,24 @@
+module: b2-25
+title: 'Регістрова практика: Перенесення тексту між стилями'
+subtitle: Один зміст — п'ять голосів
+version: '1.0'
+phase: B2
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - grammar
+  - register
+  - transformation
+  - cross-register
+grammar:
+  - register-transformation
+  - style-adaptation
+  - cross-register-writing
+objectives:
+  - Учень може переписати текст з одного функціонального стилю в інший
+  - Учень може обирати мовні засоби відповідно до регістру
+  - Учень може визначати, які елементи тексту потребують адаптації при зміні стилю
+vocabulary_count: 30
+vocab_count: 128
+slug: 25-register-practice-cross-register-rewriting

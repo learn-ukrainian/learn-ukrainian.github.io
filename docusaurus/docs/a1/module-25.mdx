@@ -20,8 +20,6 @@ import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 
 
-# My Day — A Typical Routine
-
 > 🕰️ **Мій типовий день**
 >
 > **Ранок (Morning)**
@@ -189,6 +187,7 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 > 💡 **Reflexive Pattern**
 >
 > Many daily activities are reflexive because you do them TO YOURSELF:
+>
 > - вмивати (wash something) → вмиватися (wash yourself)
 > - одягати (dress someone) → одягатися (dress yourself)
 > - готувати (prepare something) → готуватися (prepare yourself)
@@ -202,6 +201,94 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 > Remember: Use **-сь** after vowels (я вмиваю**сь**), and **-ся** after consonants (ми вмиваємо**ся**). In spoken Ukrainian, many people use -ся everywhere — both are acceptable!
 
 ---
+
+
+
+## 🎯 Activities
+
+### Daily Actions
+
+<MatchUp
+  title="Daily Actions"
+  pairs={JSON.parse(`[{"left": "- прокидатися", "right": "to wake up"}, {"left": "- вмиватися", "right": "to wash (face)"}, {"left": "- одягатися", "right": "to get dressed"}, {"left": "- снідати", "right": "to have breakfast"}, {"left": "- виходити", "right": "to go out, leave"}, {"left": "- працювати", "right": "to work"}, {"left": "- обідати", "right": "to have lunch"}, {"left": "- повертатися", "right": "to return"}, {"left": "- вечеряти", "right": "to have dinner"}, {"left": "- відпочивати", "right": "to rest"}, {"left": "- лягати спати", "right": "to go to bed"}, {"left": "- засинати", "right": "to fall asleep"}]`)}
+/>
+
+### When Do We Do This?
+
+<GroupSort
+  title="When Do We Do This?"
+  groups={JSON.parse(`{"Morning (Ранок)": ["прокидатися", "вмиватися", "одягатися", "снідати"], "Day (День)": ["працювати", "обідати", "їхати"], "Evening (Вечір)": ["повертатися", "вечеряти", "відпочивати", "гуляти", "лягати спати", "--"]}`)}
+/>
+
+### Reflexive Verb Forms
+
+<FillIn
+  title="Reflexive Verb Forms"
+  items={JSON.parse(`[{"sentence": "Я ___ о сьомій ранку.", "answer": "прокидаюся", "options": ["прокидаюся", "прокидаєшся", "прокидається", "прокидаються"]}, {"sentence": "Вона ___ швидко.", "answer": "одягається", "options": ["одягається", "одягаюся", "одягаєшся", "одягаються"]}, {"sentence": "Ми ___ разом.", "answer": "вмиваємося", "options": ["вмиваємося", "вмиваюся", "вмивається", "вмиваються"]}, {"sentence": "Ти ___ рано?", "answer": "прокидаєшся", "options": ["прокидаєшся", "прокидаюся", "прокидається", "прокидаємося"]}, {"sentence": "Вони ___ додому о шостій.", "answer": "повертаються", "options": ["повертаються", "повертаюся", "повертається", "повертаємося"]}, {"sentence": "Він ___ кожного ранку.", "answer": "голиться", "options": ["голиться", "голюся", "голишся", "голяться"]}, {"sentence": "Ви ___ тепло?", "answer": "одягаєтеся", "options": ["одягаєтеся", "одягаюся", "одягається", "одягаємося"]}, {"sentence": "Я ___ телевізор увечері.", "answer": "дивлюся", "options": ["дивлюся", "дивишся", "дивиться", "дивляться"]}]`)}
+/>
+
+### Sequence Words
+
+<FillIn
+  title="Sequence Words"
+  items={JSON.parse(`[{"sentence": "___ я прокидаюся. Потім я вмиваюся.", "answer": "Спочатку", "options": ["Спочатку", "Потім", "Нарешті", "Після того"]}, {"sentence": "Спочатку я снідаю. ___ я виходжу.", "answer": "Потім", "options": ["Потім", "Спочатку", "Завжди", "Ніколи"]}, {"sentence": "Я працюю весь день. ___ я повертаюся додому.", "answer": "Нарешті", "options": ["Нарешті", "Спочатку", "Зазвичай", "Щодня"]}, {"sentence": "Я вмиваюся. ___ я одягаюся.", "answer": "Після того", "options": ["Після того", "Спочатку", "Нарешті", "Ніколи"]}, {"sentence": "Я ___ снідаю о восьмій.", "answer": "зазвичай", "options": ["зазвичай", "спочатку", "нарешті", "потім"]}, {"sentence": "Він ___ не запізнюється.", "answer": "ніколи", "options": ["ніколи", "завжди", "спочатку", "нарешті"]}, {"sentence": "Я читаю ___.", "answer": "щодня", "options": ["щодня", "потім", "спочатку", "нарешті"]}, {"sentence": "Вона ___ встає рано.", "answer": "завжди", "options": ["завжди", "потім", "спочатку", "нарешті"]}]`)}
+/>
+
+### Daily Routine
+
+<Quiz
+  title="Daily Routine"
+  questions={JSON.parse(`[{"question": "Which translation is correct for \\\"Я прокидаюся о сьомій\\\"?", "options": [{"text": "I wake up at seven.", "correct": true}, {"text": "I go to bed at seven.", "correct": false}, {"text": "I work at seven.", "correct": false}, {"text": "I eat at seven.", "correct": false}]}, {"question": "How do you accurately translate \\\"Спочатку я вмиваюся\\\"?", "options": [{"text": "First I wash my face.", "correct": true}, {"text": "Then I wash my face.", "correct": false}, {"text": "Finally I wash my face.", "correct": false}, {"text": "Never I wash my face.", "correct": false}]}, {"question": "What is the meaning of \\\"Вона завжди снідає\\\"?", "options": [{"text": "She always has breakfast.", "correct": true}, {"text": "She never has breakfast.", "correct": false}, {"text": "She sometimes has breakfast.", "correct": false}, {"text": "She first has breakfast.", "correct": false}]}, {"question": "How do you translate \\\"Вони повертаються додому\\\"?", "options": [{"text": "They return home.", "correct": true}, {"text": "They leave home.", "correct": false}, {"text": "They work at home.", "correct": false}, {"text": "They sleep at home.", "correct": false}]}, {"question": "Which English sentence means \\\"Він одягається швидко\\\"?", "options": [{"text": "He gets dressed quickly.", "correct": true}, {"text": "He undresses quickly.", "correct": false}, {"text": "He eats quickly.", "correct": false}, {"text": "He works quickly.", "correct": false}]}, {"question": "How do you translate \\\"Ми обідаємо опівдні\\\"?", "options": [{"text": "We have lunch at noon.", "correct": true}, {"text": "We have breakfast at noon.", "correct": false}, {"text": "We have dinner at noon.", "correct": false}, {"text": "We work at noon.", "correct": false}]}, {"question": "Which translation is right for \\\"Я лягаю спати о десятій\\\"?", "options": [{"text": "I go to bed at ten.", "correct": true}, {"text": "I wake up at ten.", "correct": false}, {"text": "I eat at ten.", "correct": false}, {"text": "I work at ten.", "correct": false}]}, {"question": "What is the correct translation of \\\"Нарешті я відпочиваю\\\"?", "options": [{"text": "Finally I rest.", "correct": true}, {"text": "First I rest.", "correct": false}, {"text": "Then I rest.", "correct": false}, {"text": "Never I rest.", "correct": false}]}]`)}
+/>
+
+### Reflexive Understanding
+
+<Quiz
+  title="Reflexive Understanding"
+  questions={JSON.parse(`[{"question": "Which of these common verbs is a reflexive verb?", "options": [{"text": "вмиватися", "correct": true}, {"text": "читати", "correct": false}, {"text": "їсти", "correct": false}, {"text": "працювати", "correct": false}]}, {"question": "What does the suffix \\\"-ся\\\" specifically indicate in verbs?", "options": [{"text": "The action is done to oneself", "correct": true}, {"text": "The action is past tense", "correct": false}, {"text": "The action is future", "correct": false}, {"text": "The action is negative", "correct": false}]}, {"question": "What does the phrase \\\"Я одягаюся\\\" actually mean?", "options": [{"text": "I get dressed (myself)", "correct": true}, {"text": "I dress someone else", "correct": false}, {"text": "I undress", "correct": false}, {"text": "I buy clothes", "correct": false}]}, {"question": "When exactly do we use \\\"-сь\\\" instead of \\\"-ся\\\"?", "options": [{"text": "After vowels (я вмиваюсь)", "correct": true}, {"text": "After consonants", "correct": false}, {"text": "In past tense", "correct": false}, {"text": "In future tense", "correct": false}]}, {"question": "Which verb listed below is NOT a reflexive verb?", "options": [{"text": "снідати", "correct": true}, {"text": "прокидатися", "correct": false}, {"text": "одягатися", "correct": false}, {"text": "повертатися", "correct": false}]}, {"question": "What does the sentence \\\"Вона повертається\\\" correctly mean?", "options": [{"text": "She returns", "correct": true}, {"text": "She turns someone", "correct": false}, {"text": "She leaves", "correct": false}, {"text": "She works", "correct": false}]}, {"question": "What is the meaning of the verb \\\"Голитися\\\"?", "options": [{"text": "To shave (oneself)", "correct": true}, {"text": "To shave someone else", "correct": false}, {"text": "To cut hair", "correct": false}, {"text": "To wash", "correct": false}]}, {"question": "Which reflexive ending is correct: \\\"ми вмиваємо___\\\"?", "options": [{"text": "-ся (after consonant)", "correct": true}, {"text": "-сь (after vowel)", "correct": false}, {"text": "No ending needed", "correct": false}, {"text": "-ти", "correct": false}]}]`)}
+/>
+
+### Daily Routine
+
+<Unjumble
+  title="Daily Routine"
+  items={JSON.parse(`[{"jumbled": "", "answer": "Я прокидаюся о сьомій ранку"}, {"jumbled": "", "answer": "Спочатку я вмиваюся"}, {"jumbled": "", "answer": "Потім я снідаю і виходжу"}, {"jumbled": "", "answer": "Вона повертається додому о шостій"}, {"jumbled": "", "answer": "Він ніколи не запізнюється"}, {"jumbled": "", "answer": "Зазвичай ми дивимося телевізор"}]`)}
+/>
+
+### Daily Routine Facts
+
+<TrueFalse
+  title="Daily Routine Facts"
+  items={JSON.parse(`[{"statement": "\\\"Прокидатися\\\" is a reflexive verb.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Снідати\\\" is a reflexive verb.", "isTrue": false, "explanation": "Incorrect! it's not reflexive"}, {"statement": "\\\"Спочатку\\\" means \\\"first\\\" or \\\"at first\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Нарешті\\\" means \\\"never\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\"finally\\\""}, {"statement": "\\\"-Ся\\\" is added to show an action done to oneself.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Щодня\\\" means \\\"sometimes\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\"every day\\\""}, {"statement": "\\\"Зазвичай\\\" means \\\"usually\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Повертатися\\\" means \\\"to leave\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\"to return\\\""}, {"statement": "\\\"Засинати\\\" means \\\"to fall asleep\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Виходити\\\" means \\\"to enter\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\"to go out\\\""}, {"statement": "\\\"Звичка\\\" means \\\"habit\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Завжди\\\" means \\\"never\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\"always\\\""}]`)}
+/>
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| бігати | /ˈbiɦɑtɪ/ | to run | verb |  |  |
+| ввечері | /vˈvɛt͡ʃɛri/ | in the evening | adv |  |  |
+| виходити | /vɪˈxɔdɪtɪ/ | to go out | verb |  |  |
+| вмиватися | /vmɪˈvɑtɪsʲɑ/ | to wash oneself | verb |  |  |
+| вставати | /fstɑˈvɑtɪ/ | to get up | verb |  |  |
+| голитися | /ɦɔˈlɪtɪsʲɑ/ | to shave | verb |  |  |
+| десята | /dɛˈsʲɑtɑ/ | tenth (hour) | adj | ж |  |
+| засинати | /zɑsɪˈnɑtɪ/ | to fall asleep | verb |  |  |
+| зуб | /zub/ | tooth | noun | ч |  |
+| лягати | /lʲɑˈɦɑtɪ/ | to lie down | verb |  |  |
+| нарешті | /nɑˈrɛʃti/ | finally | adv |  |  |
+| одягатися | /ɔdʲɑˈɦɑtɪsʲɑ/ | to dress oneself | verb |  |  |
+| опівдні | /ɔˈpivdni/ | at noon | adv |  |  |
+| повертатися | /pɔvɛrˈtɑtɪsʲɑ/ | to return | verb |  |  |
+| прокидатися | /prɔkɪˈdɑtɪsʲɑ/ | to wake up | verb |  |  |
+| розпорядок | /rɔzpɔˈrʲɑdɔk/ | schedule | noun | ч |  |
+| спочатку | /spɔˈt͡ʃɑtku/ | at first | adv |  |  |
+| сьома | /ˈsʲɔmɑ/ | seventh (hour) | adj | ж |  |
+| телевізор | /tɛlɛˈvizɔr/ | television | noun | ч |  |
+| типовий | /tɪˈpɔvɪj/ | typical | adj | ч |  |
+| увечері | /uˈvɛt͡ʃɛri/ | in the evening | adv |  |  |
+| чистити | /ˈt͡ʃɪstɪtɪ/ | to clean | verb |  |  |
+| шоста | /ˈʃɔstɑ/ | sixth (hour) | adj | ж |  |
 
 ## 📋 Summary
 
@@ -226,336 +313,3 @@ In this module, you learned:
 **Reading:** [Daily Routine Text](https://ukrainianlanguage.uk/exercise-daily-routine/) — Ukrainian Language
 :::
 
-
-## 🎯 Activities
-
-### Daily Actions
-
-<MatchUp pairs={[
-  { left: `прокидатися`, right: `to wake up` },
-  { left: `вмиватися`, right: `to wash (face)` },
-  { left: `одягатися`, right: `to get dressed` },
-  { left: `снідати`, right: `to have breakfast` },
-  { left: `виходити`, right: `to go out, leave` },
-  { left: `працювати`, right: `to work` },
-  { left: `обідати`, right: `to have lunch` },
-  { left: `повертатися`, right: `to return` },
-  { left: `вечеряти`, right: `to have dinner` },
-  { left: `відпочивати`, right: `to rest` },
-  { left: `лягати спати`, right: `to go to bed` },
-  { left: `засинати`, right: `to fall asleep` }
-]} />
-
-### When Do We Do This?
-
-<GroupSort groups={{
-  "Morning (Ранок)": ["прокидатися", "вмиватися", "одягатися", "снідати"],
-  "Day (День)": ["працювати", "обідати", "їхати"],
-  "Evening (Вечір)": ["повертатися", "вечеряти", "відпочивати", "гуляти", "лягати спати"]
-}} />
-
-### Reflexive Verb Forms
-
-<FillIn items={[
-  {
-    sentence: `Я ___ о сьомій ранку.`,
-    answer: `прокидаюся`,
-    options: [`прокидаюся`, `прокидаєшся`, `прокидається`, `прокидаються`]
-  },  {
-    sentence: `Вона ___ швидко.`,
-    answer: `одягається`,
-    options: [`одягається`, `одягаюся`, `одягаєшся`, `одягаються`]
-  },  {
-    sentence: `Ми ___ разом.`,
-    answer: `вмиваємося`,
-    options: [`вмиваємося`, `вмиваюся`, `вмивається`, `вмиваються`]
-  },  {
-    sentence: `Ти ___ рано?`,
-    answer: `прокидаєшся`,
-    options: [`прокидаєшся`, `прокидаюся`, `прокидається`, `прокидаємося`]
-  },  {
-    sentence: `Вони ___ додому о шостій.`,
-    answer: `повертаються`,
-    options: [`повертаються`, `повертаюся`, `повертається`, `повертаємося`]
-  },  {
-    sentence: `Він ___ кожного ранку.`,
-    answer: `голиться`,
-    options: [`голиться`, `голюся`, `голишся`, `голяться`]
-  },  {
-    sentence: `Ви ___ тепло?`,
-    answer: `одягаєтеся`,
-    options: [`одягаєтеся`, `одягаюся`, `одягається`, `одягаємося`]
-  },  {
-    sentence: `Я ___ телевізор увечері.`,
-    answer: `дивлюся`,
-    options: [`дивлюся`, `дивишся`, `дивиться`, `дивляться`]
-  }
-]} />
-
-### Sequence Words
-
-<FillIn items={[
-  {
-    sentence: `___ я прокидаюся. Потім я вмиваюся.`,
-    answer: `Спочатку`,
-    options: [`Спочатку`, `Потім`, `Нарешті`, `Після того`]
-  },  {
-    sentence: `Спочатку я снідаю. ___ я виходжу.`,
-    answer: `Потім`,
-    options: [`Потім`, `Спочатку`, `Завжди`, `Ніколи`]
-  },  {
-    sentence: `Я працюю весь день. ___ я повертаюся додому.`,
-    answer: `Нарешті`,
-    options: [`Нарешті`, `Спочатку`, `Зазвичай`, `Щодня`]
-  },  {
-    sentence: `Я вмиваюся. ___ я одягаюся.`,
-    answer: `Після того`,
-    options: [`Після того`, `Спочатку`, `Нарешті`, `Ніколи`]
-  },  {
-    sentence: `Я ___ снідаю о восьмій.`,
-    answer: `зазвичай`,
-    options: [`зазвичай`, `спочатку`, `нарешті`, `потім`]
-  },  {
-    sentence: `Він ___ не запізнюється.`,
-    answer: `ніколи`,
-    options: [`ніколи`, `завжди`, `спочатку`, `нарешті`]
-  },  {
-    sentence: `Я читаю ___.`,
-    answer: `щодня`,
-    options: [`щодня`, `потім`, `спочатку`, `нарешті`]
-  },  {
-    sentence: `Вона ___ встає рано.`,
-    answer: `завжди`,
-    options: [`завжди`, `потім`, `спочатку`, `нарешті`]
-  }
-]} />
-
-### Daily Routine
-
-<Quiz questions={[
-  {
-    question: `Which translation is correct for \"Я прокидаюся о сьомій\"?`,
-    options: [
-      { text: `I wake up at seven.`, correct: true },
-      { text: `I go to bed at seven.`, correct: false },
-      { text: `I work at seven.`, correct: false },
-      { text: `I eat at seven.`, correct: false }
-    ]
-  },  {
-    question: `How do you accurately translate \"Спочатку я вмиваюся\"?`,
-    options: [
-      { text: `First I wash my face.`, correct: true },
-      { text: `Then I wash my face.`, correct: false },
-      { text: `Finally I wash my face.`, correct: false },
-      { text: `Never I wash my face.`, correct: false }
-    ]
-  },  {
-    question: `What is the meaning of \"Вона завжди снідає\"?`,
-    options: [
-      { text: `She always has breakfast.`, correct: true },
-      { text: `She never has breakfast.`, correct: false },
-      { text: `She sometimes has breakfast.`, correct: false },
-      { text: `She first has breakfast.`, correct: false }
-    ]
-  },  {
-    question: `How do you translate \"Вони повертаються додому\"?`,
-    options: [
-      { text: `They return home.`, correct: true },
-      { text: `They leave home.`, correct: false },
-      { text: `They work at home.`, correct: false },
-      { text: `They sleep at home.`, correct: false }
-    ]
-  },  {
-    question: `Which English sentence means \"Він одягається швидко\"?`,
-    options: [
-      { text: `He gets dressed quickly.`, correct: true },
-      { text: `He undresses quickly.`, correct: false },
-      { text: `He eats quickly.`, correct: false },
-      { text: `He works quickly.`, correct: false }
-    ]
-  },  {
-    question: `How do you translate \"Ми обідаємо опівдні\"?`,
-    options: [
-      { text: `We have lunch at noon.`, correct: true },
-      { text: `We have breakfast at noon.`, correct: false },
-      { text: `We have dinner at noon.`, correct: false },
-      { text: `We work at noon.`, correct: false }
-    ]
-  },  {
-    question: `Which translation is right for \"Я лягаю спати о десятій\"?`,
-    options: [
-      { text: `I go to bed at ten.`, correct: true },
-      { text: `I wake up at ten.`, correct: false },
-      { text: `I eat at ten.`, correct: false },
-      { text: `I work at ten.`, correct: false }
-    ]
-  },  {
-    question: `What is the correct translation of \"Нарешті я відпочиваю\"?`,
-    options: [
-      { text: `Finally I rest.`, correct: true },
-      { text: `First I rest.`, correct: false },
-      { text: `Then I rest.`, correct: false },
-      { text: `Never I rest.`, correct: false }
-    ]
-  }
-]} />
-
-### Reflexive Understanding
-
-<Quiz questions={[
-  {
-    question: `Which of these common verbs is a reflexive verb?`,
-    options: [
-      { text: `вмиватися`, correct: true },
-      { text: `читати`, correct: false },
-      { text: `їсти`, correct: false },
-      { text: `працювати`, correct: false }
-    ]
-  },  {
-    question: `What does the suffix \"-ся\" specifically indicate in verbs?`,
-    options: [
-      { text: `The action is done to oneself`, correct: true },
-      { text: `The action is past tense`, correct: false },
-      { text: `The action is future`, correct: false },
-      { text: `The action is negative`, correct: false }
-    ]
-  },  {
-    question: `What does the phrase \"Я одягаюся\" actually mean?`,
-    options: [
-      { text: `I get dressed (myself)`, correct: true },
-      { text: `I dress someone else`, correct: false },
-      { text: `I undress`, correct: false },
-      { text: `I buy clothes`, correct: false }
-    ]
-  },  {
-    question: `When exactly do we use \"-сь\" instead of \"-ся\"?`,
-    options: [
-      { text: `After vowels (я вмиваюсь)`, correct: true },
-      { text: `After consonants`, correct: false },
-      { text: `In past tense`, correct: false },
-      { text: `In future tense`, correct: false }
-    ]
-  },  {
-    question: `Which verb listed below is NOT a reflexive verb?`,
-    options: [
-      { text: `снідати`, correct: true },
-      { text: `прокидатися`, correct: false },
-      { text: `одягатися`, correct: false },
-      { text: `повертатися`, correct: false }
-    ]
-  },  {
-    question: `What does the sentence \"Вона повертається\" correctly mean?`,
-    options: [
-      { text: `She returns`, correct: true },
-      { text: `She turns someone`, correct: false },
-      { text: `She leaves`, correct: false },
-      { text: `She works`, correct: false }
-    ]
-  },  {
-    question: `What is the meaning of the verb \"Голитися\"?`,
-    options: [
-      { text: `To shave (oneself)`, correct: true },
-      { text: `To shave someone else`, correct: false },
-      { text: `To cut hair`, correct: false },
-      { text: `To wash`, correct: false }
-    ]
-  },  {
-    question: `Which reflexive ending is correct: \"ми вмиваємо___\"?`,
-    options: [
-      { text: `-ся (after consonant)`, correct: true },
-      { text: `-сь (after vowel)`, correct: false },
-      { text: `No ending needed`, correct: false },
-      { text: `-ти`, correct: false }
-    ]
-  }
-]} />
-
-### Daily Routine
-
-<Unjumble items={[
-  { jumbled: `прокидаюся / я / о сьомій / ранку`, answer: `Я прокидаюся о сьомій ранку` },
-  { jumbled: `вмиваюся / спочатку / я`, answer: `Спочатку я вмиваюся` },
-  { jumbled: `снідаю / потім / я / і / виходжу`, answer: `Потім я снідаю і виходжу` },
-  { jumbled: `повертається / вона / о шостій / додому`, answer: `Вона повертається додому о шостій` },
-  { jumbled: `ніколи / він / не / запізнюється`, answer: `Він ніколи не запізнюється` },
-  { jumbled: `зазвичай / ми / телевізор / дивимося`, answer: `Зазвичай ми дивимося телевізор` }
-]} />
-
-### Daily Routine Facts
-
-<TrueFalse items={[
-  {
-    statement: `\"Прокидатися\" is a reflexive verb.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Снідати\" is a reflexive verb.`,
-    isTrue: false,
-    explanation: `Incorrect! it's not reflexive`
-  },  {
-    statement: `\"Спочатку\" means \"first\" or \"at first\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Нарешті\" means \"never\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"finally\"`
-  },  {
-    statement: `\"-Ся\" is added to show an action done to oneself.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Щодня\" means \"sometimes\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"every day\"`
-  },  {
-    statement: `\"Зазвичай\" means \"usually\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Повертатися\" means \"to leave\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"to return\"`
-  },  {
-    statement: `\"Засинати\" means \"to fall asleep\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Виходити\" means \"to enter\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"to go out\"`
-  },  {
-    statement: `\"Звичка\" means \"habit\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Завжди\" means \"never\".`,
-    isTrue: false,
-    explanation: `Incorrect! it means \"always\"`
-  }
-]} />
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| прокидатися | /prɔkɪˈdɑtɪsʲɑ/ | to wake up | verb | - | reflexive |
-| вставати | /vstɑˈvɑtɪ/ | to get up | verb | - | Class I |
-| вмиватися | /vmɪˈvɑtɪsʲɑ/ | to wash (face) | verb | - | reflexive |
-| чистити зуби | /ˈt͡ʃɪstɪtɪ ˈzubɪ/ | to brush teeth | phrase | - | - |
-| голитися | /ɦɔˈlɪtɪsʲɑ/ | to shave | verb | - | reflexive |
-| одягатися | /ɔdʲɑˈɦɑtɪsʲɑ/ | to get dressed | verb | - | reflexive |
-| виходити | /vɪˈxɔdɪtɪ/ | to go out, leave | verb | - | Class II |
-| їхати | /ˈjixɑtɪ/ | to go (by transport) | verb | - | Class I |
-| приходити | /prɪˈxɔdɪtɪ/ | to arrive, come | verb | - | Class II |
-| повертатися | /pɔvɛrˈtɑtɪsʲɑ/ | to return | verb | - | reflexive |
-| дивитися телевізор | /dɪˈvɪtɪsʲɑ tɛlɛˈvizɔr/ | to watch TV | phrase | - | reflexive |
-| лягати спати | /lʲɑˈɦɑtɪ ˈspɑtɪ/ | to go to bed | phrase | - | - |
-| засинати | /zɑsɪˈnɑtɪ/ | to fall asleep | verb | - | Class I |
-| розпорядок | /rɔzpɔˈrʲɑdɔk/ | schedule, routine | noun | m | - |
-| звичка | /ˈzvɪt͡ʃkɑ/ | habit | noun | f | - |
-| зазвичай | /zɑzvɪˈt͡ʃɑj/ | usually | adv | - | - |
-| спочатку | /spɔˈt͡ʃɑtku/ | first, at first | adv | - | - |
-| після того | /ˈpislʲɑ ˈtɔɦɔ/ | after that | phrase | - | - |
-| нарешті | /nɑˈrɛʃtʲi/ | finally | adv | - | - |
-
----

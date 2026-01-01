@@ -1,27 +1,3 @@
----
-module: b1-56
-title: "Дискурсивні маркери: базові конектори"
-subtitle: "Discourse Markers: Basic Connectors"
-version: "1.0"
-phase: "B1.5 Vocabulary Expansion I"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "text cohesion with discourse markers"
-tags:
-  - vocabulary
-  - discourse
-  - connectors
-objectives:
-  - "Learner can use 25 basic discourse markers in context"
-  - "Learner can distinguish between contrasting, causal, and exemplifying connectors"
-  - "Learner can produce cohesive text using appropriate connectors"
-vocabulary_count: 35
-vocab_count: 52
----
-
 # Дискурсивні маркери: базові конектори
 
 > 🎯 **Чому це важливо?**

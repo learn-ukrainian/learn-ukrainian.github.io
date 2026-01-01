@@ -1,28 +1,3 @@
----
-module: b1-31
-title: "Умовні речення: реальна умова (якщо)"
-subtitle: "Real Conditionals - If Clauses"
-version: "1.0"
-phase: "B1.3a Complex Sentences"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - conditionals
-  - complex-sentences
-  - yakshcho
-grammar:
-  - "Real conditional constructions with якщо"
-  - "Tense sequences in conditional sentences"
-objectives:
-  - "Learner understands real conditional constructions"
-  - "Learner can form conditional sentences with якщо"
-  - "Learner can use correct tense sequences in conditionals"
-vocabulary_count: 25
-vocab_count: 36
----
-
 > [!motivation]
 > Умовні речення — це серце логічного мислення. Коли ви говорите «якщо... то...», ви показуєте зв'язок між причиною і наслідком. Без цієї конструкції неможливо обговорювати плани, давати поради, робити прогнози чи аналізувати ситуації. Українська мова має багату систему умовних речень. У цьому модулі ми зосередимося на **реальних умовах** — тих, що можуть справді статися. Опанувавши цю важливу тему, ви зможете впевнено формулювати плани на майбутнє. Також ви навчитеся давати поради друзям і колегам, обговорювати можливі сценарії розвитку подій та аналізувати різноманітні гіпотетичні ситуації в повсякденному спілкуванні.
 

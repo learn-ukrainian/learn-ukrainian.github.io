@@ -1,37 +1,3 @@
----
-module: a1-20
-title: 'Checkpoint - Navigation'
-subtitle: 'Can you do the A1.2 skills?'
-version: '2.0'
-phase: 'A1.2'
-focus: checkpoint
-pedagogy: 'Review'
-duration: '60 min'
-transliteration: 'vocab-only'
-tags:
-  - checkpoint
-  - review
-  - accusative
-  - locative
-  - genitive
-  - possessives
-  - navigation
-  - restaurant
-grammar:
-  - 'Accusative case (inanimate + animate)'
-  - 'Locative case with у/в and на'
-  - 'Genitive case (absence, quantities)'
-  - 'Possessive pronouns (all forms)'
-objectives:
-  - 'Demonstrate accusative case usage for direct objects'
-  - 'Use locative case correctly for location expressions'
-  - 'Apply genitive case for absence and quantities'
-  - 'Match possessive pronouns to noun gender'
-  - 'Navigate practical scenarios: directions, shopping, cafés'
-vocabulary_count: 20
-vocab_count: 9
----
-
 # Checkpoint - Navigation
 
 **Вітаємо!** (vitayemo) You've completed Phase A1.2 — Navigation! Now let's check: **can you DO the skills?**
@@ -378,16 +344,3 @@ Fill in the gaps:
 > - Genitive → Module 16
 > - Numbers → Module 17
 > - Shopping/Café → Modules 18-19
-
-# Vocabulary
-
-| Word      | IPA           | English              | POS   | Gender | Note |
-| --------- | ------------- | -------------------- | ----- | ------ | ---- |
-| вчора     | /ˈvt͡ʃɔrɑ/     | yesterday            | adv   | -      |      |
-| ж         | /ʒɛ/          | (particle, emphasis) | other | -      |      |
-| красивий  | /krɑˈsɪvɪj/   | beautiful            | adj   | ч      |      |
-| маленький | /mɑˈlɛnʲkɪj/  | small                | adj   | ч      |      |
-| оксана    | /ɔkˈsɑnɑ/     | Oksana               | name  | ж      |      |
-| праворуч  | /prɑˈvɔrut͡ʃ/  | to the right         | adv   | -      |      |
-| тому      | /tɔˈmu/       | therefore/back       | adv   | -      |      |
-| улюблений | /uˈlʲublɛnɪj/ | favorite             | adj   | ч      |      |

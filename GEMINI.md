@@ -1,7 +1,9 @@
 # GEMINI.md - Gemini Agent Context & Memory
 
 ## Project Overview
+
 **Learn Ukrainian** is a language content factory generating Ukrainian language learning curricula.
+
 - **Target**: Ukrainian for English speakers (l2-uk-en).
 - **Philosophy**: "Theory-First, Content-Driven".
 - **Structure**: 6 Levels (A1, A2, B1, B2, C1, C2) aligned with Ukrainian State Standard 2024.
@@ -9,57 +11,62 @@
 ## Gemini Memory Context
 
 ### Strategic Decisions
+
 - **Pedagogy**:
-    - **A1-A2**: PPP (Present-Practice-Produce). Focus on clarity and building blocks.
-    - **B1+ Grammar**: TTT (Test-Teach-Test). Guided discovery from context.
-    - **B1+ Vocabulary/History**: **Narrative Arcs**. Vocabulary embedded in compelling stories (Content-Based Instruction).
+  - **A1-A2**: PPP (Present-Practice-Produce). Focus on clarity and building blocks.
+  - **B1+ Grammar**: TTT (Test-Teach-Test). Guided discovery from context.
+  - **B1+ Vocabulary/History**: **Narrative Arcs**. Vocabulary embedded in compelling stories (Content-Based Instruction).
 - **Richness**:
-    - "Content is King". Long, authentic texts are the primary driver of learning from B2+.
-    - **Audio**: Mandatory for all new vocabulary and key examples.
-    - **Phonetics**: IPA for all new vocabulary.
-    - **Culture**: Integration of folklore, history, and decolonization lens.
-    - **Phraseology**: Proverbs and idioms integrated from B1+.
+  - "Content is King". Long, authentic texts are the primary driver of learning from B2+.
+  - **Audio**: Mandatory for all new vocabulary and key examples.
+  - **Phonetics**: IPA for all new vocabulary.
+  - **Culture**: Integration of folklore, history, and decolonization lens.
+  - **Phraseology**: Proverbs and idioms integrated from B1+.
 - **Production Support**:
-    - **Model Answers**: Mandatory for all writing/speaking production tasks (B2+) using `> [!model-answer]`.
-    - **Activity Density**: 8+ activities per module, 12+ items per activity.
-    - **Graduated Immersion (A1)**: M01-M10 (Tier 1) allow 1.5 ratio; M11-M24 (Tier 2) allow 0.8; M25+ (Tier 3) strict 0.4.
+  - **Model Answers**: Mandatory for all writing/speaking production tasks (B2+) using `> [!model-answer]`.
+  - **Activity Density**: 8+ activities per module, 12+ items per activity.
+  - **Graduated Immersion (A1)**: M01-M10 (Tier 1) allow 1.5 ratio; M11-M24 (Tier 2) allow 0.8; M25+ (Tier 3) strict 0.4.
 
 ### Vocabulary Targets (Verified Dec 2025)
-| Level | Modules | Module Target | Cumulative Target | Note |
-|-------|---------|---------------|-------------------|------|
-| **A1** | 34 | ~25 words | ~850 | Deduplicated (Introduced Once) |
-| **A2** | 57 | ~25 words | ~1,800 | Deduplicated (Cumulative) |
-| **B1** | 86 | ~30-40 words | ~3,300 | Narrative-driven expansion |
-| **B2** | 145 | ~24 words | ~6,780 | Specialized domains |
-| **C1** | 182 | ~24 words | ~10,300 | Academic/Literary |
-| **C2** | 100 | ~25 words | ~12,280 | Native mastery |
+
+| Level  | Modules | Module Target | Cumulative Target | Note                           |
+| ------ | ------- | ------------- | ----------------- | ------------------------------ |
+| **A1** | 34      | ~25 words     | ~850              | Deduplicated (Introduced Once) |
+| **A2** | 57      | ~25 words     | ~1,800            | Deduplicated (Cumulative)      |
+| **B1** | 86      | ~30-40 words  | ~3,300            | Narrative-driven expansion     |
+| **B2** | 145     | ~24 words     | ~6,780            | Specialized domains            |
+| **C1** | 182     | ~24 words     | ~10,300           | Academic/Literary              |
+| **C2** | 100     | ~25 words     | ~12,280           | Native mastery                 |
 
 ### User Preferences
+
 - **User**: Krisztian (Hungarian native).
 - **Grammar Preference**: "Declension Group" (structural) approach over simple ending rules.
 - **Goal**: Theory-first curriculum; Vibe app is a secondary practice tool.
 
 ## Work Status
+
 - **A1 (01-34)**:
-    - Curriculum Plan: ✅ Updated & Aligned.
-    - Status: **COMPLETE**.
+  - Curriculum Plan: ✅ Updated & Aligned.
+  - Status: **COMPLETE**.
 - **A2 (01-57)**:
-    - Curriculum Plan: ✅ Updated & Aligned.
-    - Status: **COMPLETE**.
+  - Curriculum Plan: ✅ Updated & Aligned.
+  - Status: **COMPLETE**.
 - **B1 (01-86)**:
-    - Curriculum Plan: ✅ Updated & Aligned (TTT/Narrative strategy).
-    - Status: **CONTENT DRAFTED** (Modules 01-86 exist; in validation/review phase).
+  - Curriculum Plan: ✅ Updated & Aligned (TTT/Narrative strategy).
+  - Status: **CONTENT DRAFTED** (Modules 01-86 exist; in validation/review phase).
 - **B2 (01-145)**:
-    - Curriculum Plan: ✅ Updated & Aligned (CBI strategy).
-    - Status: **PLANNED** (Major expansion Dec 2025).
+  - Curriculum Plan: ✅ Updated & Aligned (CBI strategy).
+  - Status: **PLANNED** (Major expansion Dec 2025).
 - **C1 (01-182)**:
-    - Curriculum Plan: ✅ Updated & Aligned (Immersion & Analysis).
-    - Status: **PLANNED** (Arts & Biographies expansion Dec 2025).
+  - Curriculum Plan: ✅ Updated & Aligned (Immersion & Analysis).
+  - Status: **PLANNED** (Arts & Biographies expansion Dec 2025).
 - **C2 (01-100)**:
-    - Curriculum Plan: ✅ Updated & Aligned (Stylistic Perfection).
-    - Status: **PLANNED**.
+  - Curriculum Plan: ✅ Updated & Aligned (Stylistic Perfection).
+  - Status: **PLANNED**.
 
 ## Critical Workflow Rules (Gemini)
+
 0. **Use Mandatory Templates (CRITICAL)**: Every module MUST follow the structural guide in `docs/l2-uk-en/templates/` corresponding to its type (e.g., `b1-grammar-module-template.md`). The template defines the mandatory sections and layout.
 1. **Read Specs First**: Always read `{LEVEL}-CURRICULUM-PLAN.md` and `MODULE-RICHNESS-GUIDELINES-v2.md` before generating.
 2. **Audit Immediately**: After generating content, use `wc -w` (or equivalent logic) to verify Instructional Core word counts.
@@ -76,8 +83,10 @@
    - **Anti-Russian propaganda**: Actively counter common lies about Ukrainian language/culture/history.
 9. **Issue Tracking**: Use GitHub Issues for all task tracking. DO NOT use `docs/issues/` (folder has been deprecated and removed). Use `gh issue create` and `gh issue list`.
 10. **Workflow/Command Loading**: When user types `/slash-command`, load from `claude_extensions/commands/slash-command.md` (tracked in Git). NEVER load from `.agent/workflows/` (gitignored, not source of truth).
+11. **Virtual Environment**: Always run Python scripts in the virtual environment. Use `.venv/bin/python3` or `source .venv/bin/activate`. Never use system Python.
 
 ## File Structure Reference
+
 - **Curriculum Plans**: `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md`
 - **Guidelines**: `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
 - **Module Templates**: `docs/l2-uk-en/templates/`

@@ -1,0 +1,783 @@
+module: 06-being-and-becoming
+level: A2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/06-being-and-becoming.md
+generated: '2025-12-31T23:16:26.990746'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 12
+  fill-in: 12
+  cloze: 1
+  unjumble: 12
+  quiz: 12
+  true-false: 12
+total_items: 61
+item_count: 61
+sample_percent: null
+items:
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Він був студент.
+  error: студент
+  answer: студентом
+  sentence_corrected: Він був студентом.
+  options:
+  - студент
+  - студентом
+  - студента
+  - студенту
+  original_explanation: After "був" (was), professions take the instrumental case.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Вона стала вчителька.
+  error: вчителька
+  answer: вчителькою
+  sentence_corrected: Вона стала вчителькою.
+  options:
+  - вчителька
+  - вчителькою
+  - вчительку
+  - вчительки
+  original_explanation: '"Стати" always requires the instrumental case.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Я працюю програміст.
+  error: програміст
+  answer: програмістом
+  sentence_corrected: Я працюю програмістом.
+  options:
+  - програміст
+  - програмістом
+  - програміста
+  - програмісту
+  original_explanation: '"Працювати" + profession requires instrumental.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Він буде лікар.
+  error: лікар
+  answer: лікарем
+  sentence_corrected: Він буде лікарем.
+  options:
+  - лікар
+  - лікарем
+  - лікаря
+  - лікарю
+  original_explanation: Future "буде" + profession requires instrumental.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Вона хоче стати журналістка.
+  error: журналістка
+  answer: журналісткою
+  sentence_corrected: Вона хоче стати журналісткою.
+  options:
+  - журналістка
+  - журналісткою
+  - журналістку
+  - журналістки
+  original_explanation: '"Стати" always requires the instrumental case.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Ми були друзі.
+  error: друзі
+  answer: друзями
+  sentence_corrected: Ми були друзями.
+  options:
+  - друзі
+  - друзями
+  - друзів
+  - друзям
+  original_explanation: Past "були" requires instrumental plural.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Він стала інженером.
+  error: стала
+  answer: став
+  sentence_corrected: Він став інженером.
+  options:
+  - стала
+  - став
+  - стало
+  - стали
+  original_explanation: '"Він" (he) requires masculine past form "став."'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Вона працює лікар.
+  error: лікар
+  answer: лікаркою
+  sentence_corrected: Вона працює лікаркою.
+  options:
+  - лікар
+  - лікаркою
+  - лікарку
+  - лікарки
+  original_explanation: Use feminine "лікарка" for woman + instrumental.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Він був директор школи.
+  error: директор
+  answer: директором
+  sentence_corrected: Він був директором школи.
+  options:
+  - директор
+  - директором
+  - директора
+  - директору
+  original_explanation: Past "був" requires the instrumental case.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Вона буде письменник.
+  error: письменник
+  answer: письменницею
+  sentence_corrected: Вона буде письменницею.
+  options:
+  - письменник
+  - письменницею
+  - письменницю
+  - письменниці
+  original_explanation: Use feminine "письменниця" for woman + instrumental.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Він мріє стати актор.
+  error: актор
+  answer: актором
+  sentence_corrected: Він мріє стати актором.
+  options:
+  - актор
+  - актором
+  - актора
+  - актору
+  original_explanation: '"Стати" always requires the instrumental case.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Ми станемо інженери.
+  error: інженери
+  answer: інженерами
+  sentence_corrected: Ми станемо інженерами.
+  options:
+  - інженери
+  - інженерами
+  - інженерів
+  - інженерам
+  original_explanation: Future of "стати" requires instrumental plural.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Бути/Стати + Instrumental
+  sentence_template: Він раніше був ___.
+  answer: студентом
+  complete_sentence: Він раніше був студентом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Бути/Стати + Instrumental
+  sentence_template: Вона хоче стати ___.
+  answer: лікаркою
+  complete_sentence: Вона хоче стати лікаркою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Бути/Стати + Instrumental
+  sentence_template: Ми будемо ___.
+  answer: друзями
+  complete_sentence: Ми будемо друзями.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Бути/Стати + Instrumental
+  sentence_template: Він працює ___.
+  answer: програмістом
+  complete_sentence: Він працює програмістом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Бути/Стати + Instrumental
+  sentence_template: Вона стала ___.
+  answer: вчителькою
+  complete_sentence: Вона стала вчителькою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Бути/Стати + Instrumental
+  sentence_template: Він був ___.
+  answer: директором
+  complete_sentence: Він був директором.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Бути/Стати + Instrumental
+  sentence_template: Вона буде ___.
+  answer: журналісткою
+  complete_sentence: Вона буде журналісткою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Бути/Стати + Instrumental
+  sentence_template: Він мріє стати ___.
+  answer: письменником
+  complete_sentence: Він мріє стати письменником.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Бути/Стати + Instrumental
+  sentence_template: Вона працює ___.
+  answer: секретаркою
+  complete_sentence: Вона працює секретаркою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Бути/Стати + Instrumental
+  sentence_template: Ми були ___.
+  answer: студентами
+  complete_sentence: Ми були студентами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Бути/Стати + Instrumental
+  sentence_template: Він хоче стати ___.
+  answer: інженером
+  complete_sentence: Він хоче стати інженером.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Бути/Стати + Instrumental
+  sentence_template: Вона була ___.
+  answer: акторкою
+  complete_sentence: Вона була акторкою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Complete the Story
+  passage_template: 'Мій друг Андрій раніше {працювала журналісткою|працювала журналістка|працювала
+    журналістку}. Він вчився в університеті п''ять років. Після університету він {стала
+    письменницею|стала письменниця|стала письменницю}. Зараз він {відома письменниця|відома
+    журналістка|відома акторка} у великій лікарні. Він каже, що завжди мріяв {стала
+    письменницею|стала журналісткою|працює письменницею}. Його дружина Катя {працює
+    інженером|працює інженер|працює інженера} у школі. Вона {був студентом|був студент|був
+    студента} після педагогічного університету.
+
+    ---
+
+    Моя сестра Оксана {працювала журналісткою|працювала журналістка|працювала журналістку}
+    в журналі п''ять років. Потім вона {стала письменницею|стала письменниця|стала
+    письменницю}. Тепер вона {відома письменниця|відома журналістка|відома акторка}
+    і пише книги. Я пишаюся, що моя сестра {стала письменницею|стала журналісткою|працює
+    письменницею}! Її чоловік Борис {працює інженером|працює інженер|працює інженера}
+    на заводі. Раніше він {був студентом|був студент|був студента} у технікумі.'
+  blanks:
+  - answer: працювала журналістку
+    options:
+    - працювала журналісткою
+    - працювала журналістка
+  - answer: стала письменницю
+    options:
+    - стала письменницею
+    - стала письменниця
+  - answer: відома акторка
+    options:
+    - відома письменниця
+    - відома журналістка
+  - answer: працює письменницею
+    options:
+    - стала письменницею
+    - стала журналісткою
+  - answer: працює інженера
+    options:
+    - працює інженером
+    - працює інженер
+  - answer: був студента
+    options:
+    - був студентом
+    - був студент
+  - answer: працювала журналістку
+    options:
+    - працювала журналісткою
+    - працювала журналістка
+  - answer: стала письменницю
+    options:
+    - стала письменницею
+    - стала письменниця
+  - answer: відома акторка
+    options:
+    - відома письменниця
+    - відома журналістка
+  - answer: працює письменницею
+    options:
+    - стала письменницею
+    - стала журналісткою
+  - answer: працює інженера
+    options:
+    - працює інженером
+    - працює інженер
+  - answer: був студента
+    options:
+    - був студентом
+    - був студент
+  blank_count: 12
+  complete_passage: 'Мій друг Андрій раніше працювала журналістку. Він вчився в університеті
+    п''ять років. Після університету він стала письменницю. Зараз він відома акторка
+    у великій лікарні. Він каже, що завжди мріяв працює письменницею. Його дружина
+    Катя працює інженера у школі. Вона був студента після педагогічного університету.
+
+    ---
+
+    Моя сестра Оксана працювала журналістку в журналі п''ять років. Потім вона стала
+    письменницю. Тепер вона відома акторка і пише книги. Я пишаюся, що моя сестра
+    працює письменницею! Її чоловік Борис працює інженера на заводі. Раніше він був
+    студента у технікумі.'
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Profession Sentences
+  jumbled_words: []
+  answer: Він раніше був студентом медичного університету у Києві
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Profession Sentences
+  jumbled_words: []
+  answer: Вона стала вчителькою у сільській школі після університету
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Profession Sentences
+  jumbled_words: []
+  answer: Я вже працюю програмістом у великій IT компанії
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Profession Sentences
+  jumbled_words: []
+  answer: Він хоче стати лікарем після закінчення медичного університету
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Profession Sentences
+  jumbled_words: []
+  answer: Вона буде відомою журналісткою і працюватиме на телебаченні
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Profession Sentences
+  jumbled_words: []
+  answer: Ми були друзями багато років ще зі школи
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Profession Sentences
+  jumbled_words: []
+  answer: Ким ти хочеш працювати після закінчення нашого університету
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Profession Sentences
+  jumbled_words: []
+  answer: Він мріє стати відомим письменником і написати книгу
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Profession Sentences
+  jumbled_words: []
+  answer: Вона працювала секретаркою у великій компанії п'ять років
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Profession Sentences
+  jumbled_words: []
+  answer: Вони стануть інженерами після закінчення політехнічного інституту
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Profession Sentences
+  jumbled_words: []
+  answer: Він був директором цієї школи більше двадцять років
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Profession Sentences
+  jumbled_words: []
+  answer: Вона хотіла стати відомою акторкою в київському театрі
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: When to Use Instrumental
+  question: When expressing that someone was a student in the past, which Ukrainian
+    sentence is grammatically correct?
+  options:
+  - '{''text'': ''Він був студентом.'', ''correct'': True}'
+  - '{''text'': ''Він був студент.'', ''correct'': False}'
+  - '{''text'': ''Він був студента.'', ''correct'': False}'
+  - '{''text'': ''Він був студенту.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: When to Use Instrumental
+  question: When you want to say "She became a teacher" in Ukrainian, which sentence
+    uses the correct form?
+  options:
+  - '{''text'': ''Вона стала вчителькою.'', ''correct'': True}'
+  - '{''text'': ''Вона стала вчителька.'', ''correct'': False}'
+  - '{''text'': ''Вона стала вчительку.'', ''correct'': False}'
+  - '{''text'': ''Вона стала вчительці.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: When to Use Instrumental
+  question: In Ukrainian grammar, when do we use the Instrumental case with the verb
+    "бути" (to be)?
+  options:
+  - '{''text'': ''У минулому та майбутньому часі'', ''correct'': True}'
+  - '{''text'': ''У теперішньому часі'', ''correct'': False}'
+  - '{''text'': ''Ніколи'', ''correct'': False}'
+  - '{''text'': ''Тільки у питаннях'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: When to Use Instrumental
+  question: When expressing that someone works as a programmer in Ukrainian, which
+    sentence is correct?
+  options:
+  - '{''text'': ''Я працюю програмістом.'', ''correct'': True}'
+  - '{''text'': ''Я працюю програміст.'', ''correct'': False}'
+  - '{''text'': ''Я працюю програміста.'', ''correct'': False}'
+  - '{''text'': ''Я працюю програмісту.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: When to Use Instrumental
+  question: When expressing a profession in present tense in Ukrainian, which sentence
+    structure is grammatically correct?
+  options:
+  - '{''text'': ''Він лікар.'', ''correct'': True}'
+  - '{''text'': ''Він є лікарем.'', ''correct'': False}'
+  - '{''text'': ''Він лікарем.'', ''correct'': False}'
+  - '{''text'': ''Він є лікар.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: When to Use Instrumental
+  question: When asking someone about their profession in Ukrainian, which question
+    is grammatically correct?
+  options:
+  - '{''text'': ''Ким ти працюєш?'', ''correct'': True}'
+  - '{''text'': ''Що ти працюєш?'', ''correct'': False}'
+  - '{''text'': ''Хто ти працюєш?'', ''correct'': False}'
+  - '{''text'': ''Який ти працюєш?'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: When to Use Instrumental
+  question: When expressing that someone will be an engineer in the future, which
+    sentence is correct?
+  options:
+  - '{''text'': ''Він буде інженером.'', ''correct'': True}'
+  - '{''text'': ''Він буде інженер.'', ''correct'': False}'
+  - '{''text'': ''Він буде інженера.'', ''correct'': False}'
+  - '{''text'': ''Він буде інженеру.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: When to Use Instrumental
+  question: In Ukrainian grammar, which grammatical case does the verb "стати" (to
+    become) always require?
+  options:
+  - '{''text'': ''Орудного'', ''correct'': True}'
+  - '{''text'': ''Знахідного'', ''correct'': False}'
+  - '{''text'': ''Називного'', ''correct'': False}'
+  - '{''text'': ''Родового'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: When to Use Instrumental
+  question: When expressing "We were friends" in Ukrainian, which sentence uses the
+    correct Instrumental plural form?
+  options:
+  - '{''text'': ''Ми були друзями.'', ''correct'': True}'
+  - '{''text'': ''Ми були друзі.'', ''correct'': False}'
+  - '{''text'': ''Ми були друзів.'', ''correct'': False}'
+  - '{''text'': ''Ми були друзям.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: When to Use Instrumental
+  question: When forming the feminine form of the profession "програміст" in Ukrainian,
+    which ending is correct?
+  options:
+  - '{''text'': ''програмістка'', ''correct'': True}'
+  - '{''text'': ''програмістиця'', ''correct'': False}'
+  - '{''text'': ''програмістеса'', ''correct'': False}'
+  - '{''text'': ''програмістиня'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: When to Use Instrumental
+  question: When expressing that a woman works as a journalist in Ukrainian, which
+    sentence is correct?
+  options:
+  - '{''text'': ''Вона працює журналісткою.'', ''correct'': True}'
+  - '{''text'': ''Вона працює журналістка.'', ''correct'': False}'
+  - '{''text'': ''Вона працює журналістку.'', ''correct'': False}'
+  - '{''text'': ''Вона працює журналісткі.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: When to Use Instrumental
+  question: When expressing "He wants to become a doctor" in Ukrainian, which sentence
+    is grammatically correct?
+  options:
+  - '{''text'': ''Він хоче стати лікарем.'', ''correct'': True}'
+  - '{''text'': ''Він хоче стати лікар.'', ''correct'': False}'
+  - '{''text'': ''Він хоче стати лікаря.'', ''correct'': False}'
+  - '{''text'': ''Він хоче стати лікарю.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental with Professions
+  statement: In present tense, we usually don't use "бути" for professions.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental with Professions
+  statement: '"Стати" takes the nominative case.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental with Professions
+  statement: '"Працювати + Instrumental" expresses "to work as."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental with Professions
+  statement: '"Він є лікар" is the standard way to say "He is a doctor."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental with Professions
+  statement: Feminine profession forms like "лікарка" are grammatically correct.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental with Professions
+  statement: '"Був/була + Instrumental" is used for past tense.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental with Professions
+  statement: '"Ким?" is the nominative of "хто."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental with Professions
+  statement: '"Він буде інженером" means "He will be an engineer."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental with Professions
+  statement: '"Вона лікаром" is a complete sentence in present tense.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental with Professions
+  statement: '"Залишатися" can also take instrumental.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental with Professions
+  statement: '"Служити" takes instrumental for role.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental with Professions
+  statement: The feminine of "письменник" is "письменниця."
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

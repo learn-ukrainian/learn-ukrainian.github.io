@@ -1,0 +1,26 @@
+module: b2-01
+title: 'Пасивний стан: повна система'
+subtitle: Чотири форми пасивного стану в українській мові
+version: '1.0'
+phase: B2.1a [Grammar & Register]
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - grammar
+  - passive-voice
+  - register
+grammar:
+  - Past passive participles (-ний/-тий)
+  - Impersonal constructions (-но/-то)
+  - Reflexive passive (-ся)
+  - 3rd person plural passive
+  - Register-appropriate passive selection
+objectives:
+  - Learner can recognize and distinguish all 4 Ukrainian passive voice forms
+  - Learner can identify the appropriate register for each passive construction
+  - Learner can transform active sentences into passive using the correct form
+  - Learner can choose the register-appropriate passive in context
+vocabulary_count: 25
+vocab_count: 241
+slug: 01-passive-voice-system

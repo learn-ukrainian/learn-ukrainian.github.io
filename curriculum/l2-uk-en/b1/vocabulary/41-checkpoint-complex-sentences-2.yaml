@@ -1,0 +1,27 @@
+module: 41-checkpoint-complex-sentences-2
+level: B1
+version: '2.0'
+items:
+- lemma: димінутив
+  ipa: /dɪmʲinuˈtɪu̯/
+  translation: diminutive
+  pos: noun
+  gender: m
+- lemma: наполягти
+  ipa: /napɔlʲaˈhtɪ/
+  translation: to insist
+  pos: verb
+- lemma: одужання
+  ipa: /ɔˈduʒanʲːa/
+  translation: recovery
+  pos: noun
+  gender: n
+- lemma: підводити
+  ipa: /pidˈvɔdɪtɪ/
+  translation: to summarize
+  pos: verb
+- lemma: юриспруденція
+  ipa: /jurɪspruˈdɛnt͡sʲija/
+  translation: jurisprudence
+  pos: noun
+  gender: f

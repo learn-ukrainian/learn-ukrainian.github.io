@@ -1,0 +1,314 @@
+module: 64-synonyms-action
+level: B2
+version: '2.0'
+items:
+  - lemma: алгорит
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: асортимент
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: буга
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: вихопити
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: вихоплювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: втілений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: втілити
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: вхопити
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: відбудовувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: генія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: докладання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: досконало
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: енергетичний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: забирання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: злагоджений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: злагоджено
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: кадр
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: кодити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: конструкторський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: координація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: легітимність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: лупати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: майбутні
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: меседж
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: модернізувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: модулювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: найвіддаленіший
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: наставати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: нащадок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: незабутній
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: обстріл
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: оточуючий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: переможний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: перформанс
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: поклик
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: просувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: піклуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: реалізовувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: режисувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: результативний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: результативність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: реформувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розбудова
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: рутина
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: різкість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: самовіддано
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: свідий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: силовий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: спланований
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: спонукати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: спостерігач
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: справляти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: спритно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: суб'єктність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: твар
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: транслювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: удосконалювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: учинити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: філігранно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: хапата
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: хапати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: ціннісний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: чернігів
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: чиний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: шахра
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: ювелірно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: ініціатив
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f

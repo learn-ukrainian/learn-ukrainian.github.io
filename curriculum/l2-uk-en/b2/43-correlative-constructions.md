@@ -1,33 +1,3 @@
----
-module: b2-43
-title: "Співвідносні конструкції"
-subtitle: "Paired Demonstrative and Relative Words"
-version: "1.0"
-phase: "B2.2 [Phraseology & Synonymy]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - syntax
-  - correlatives
-  - complex-sentences
-grammar:
-  - "Співвідносні (корелятивні) конструкції з вказівними та відносними словами"
-  - "Парні конструкції: той...хто, те...що, такий...який"
-  - "Просторові корелятиви: там...де, туди...куди, звідти...звідки"
-  - "Часові корелятиви: тоді...коли, доти...поки"
-  - "Кількісні корелятиви: стільки...скільки, настільки...наскільки"
-objectives:
-  - "Learner can construct complex sentences using correlative pairs"
-  - "Learner can distinguish between different types of correlative constructions"
-  - "Learner can correctly punctuate sentences with correlative words"
-  - "Learner can combine simple sentences using appropriate correlative pairs"
-vocabulary_count: 36
-register: "науковий"
-vocab_count: 30
----
-
 # Співвідносні конструкції
 
 > 🎯 **Чому це важливо?**

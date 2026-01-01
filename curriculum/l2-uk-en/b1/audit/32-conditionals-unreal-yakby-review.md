@@ -1,6 +1,15 @@
 # Audit Report: 32-conditionals-unreal-yakby.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
+**Phase:** B1.3a | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): шкода, ідеалі, принципі, теоретично, якби...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1650/1500
@@ -37,12 +46,6 @@
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.7%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -52,4 +55,3 @@
 | **Практика** | ⚪️ | 248 | Skipped |
 | **Діалоги** | ✅ | 362 | Included in Core |
 | **Підсумок** | ✅ | 194 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

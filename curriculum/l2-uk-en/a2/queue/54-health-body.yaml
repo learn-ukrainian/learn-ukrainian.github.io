@@ -1,0 +1,782 @@
+module: 54-health-body
+level: A2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/54-health-body.md
+generated: '2025-12-31T23:54:15.510151'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 12
+  fill-in: 12
+  cloze: 1
+  unjumble: 12
+  quiz: 12
+  true-false: 12
+total_items: 61
+item_count: 61
+sample_percent: null
+items:
+- activity: error-correction
+  title: Grammar Clinic
+  sentence_with_error: Я болю голову.
+  error: Я болю голову
+  answer: У мене болить голова
+  sentence_corrected: У мене болить голова.
+  options:
+  - У мене болить голова
+  - Я маю біль голови
+  - Голова болить мене
+  original_explanation: 'Standard phrase: У мене болить + Nom.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Grammar Clinic
+  sentence_with_error: У мене болить зуби.
+  error: болить
+  answer: болять
+  sentence_corrected: У мене болять зуби.
+  options:
+  - болять
+  - болить
+  - болів
+  - боліли
+  original_explanation: 'Plural subject (зуби): болять.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Grammar Clinic
+  sentence_with_error: Я треба ліки.
+  error: Я
+  answer: Мені
+  sentence_corrected: Мені треба ліки.
+  options:
+  - Мені
+  - Я
+  - Мене
+  - Мною
+  original_explanation: 'Dative subject for need: Мені треба.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Grammar Clinic
+  sentence_with_error: Він має температура.
+  error: температура
+  answer: температуру
+  sentence_corrected: Він має температуру.
+  options:
+  - температуру
+  - температура
+  - температури
+  - температурою
+  original_explanation: 'Accusative object: має (що?) температуру. OR better: У нього
+    температура. But focusing on case error here.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Grammar Clinic
+  sentence_with_error: Це таблетка для голову.
+  error: для
+  answer: від
+  sentence_corrected: Це таблетка від голову.
+  options:
+  - від
+  - для
+  - з
+  - про
+  original_explanation: 'Pills "from" pain: від голови. "Для" means "for benefit of".
+    A pill *for benefit of* a headache sounds wrong.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Grammar Clinic
+  sentence_with_error: Лікар дав рецепта.
+  error: рецепта
+  answer: рецепт
+  sentence_corrected: Лікар дав рецепт.
+  options:
+  - рецепт
+  - рецепта
+  - рецепту
+  - рецептом
+  original_explanation: 'Accusative inanimate: рецепт.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Grammar Clinic
+  sentence_with_error: Мені болить нога.
+  error: Мені
+  answer: У мене
+  sentence_corrected: У мене болить нога.
+  options:
+  - У мене
+  - Мені
+  - Я
+  - Мене
+  original_explanation: '"Мені болить" is dialect/colloquial. Standard: "У мене болить".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Grammar Clinic
+  sentence_with_error: Я пішов в аптека.
+  error: аптека
+  answer: аптеку
+  sentence_corrected: Я пішов в аптеку.
+  options:
+  - аптеку
+  - аптека
+  - аптеці
+  - аптекою
+  original_explanation: 'Direction (Accusative): в аптеку.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Grammar Clinic
+  sentence_with_error: У мене немає кашель.
+  error: кашель
+  answer: кашлю
+  sentence_corrected: У мене немає кашлю.
+  options:
+  - кашлю
+  - кашель
+  - кашля
+  - кашлем
+  original_explanation: 'Genitive negation: немає кашлю.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Grammar Clinic
+  sentence_with_error: Мої очі блакитний.
+  error: блакитний
+  answer: блакитні
+  sentence_corrected: Мої очі блакитні.
+  options:
+  - блакитні
+  - блакитний
+  - блакитна
+  - блакитне
+  original_explanation: Plural adjective.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Grammar Clinic
+  sentence_with_error: Вона зламала рука.
+  error: рука
+  answer: руку
+  sentence_corrected: Вона зламала руку.
+  options:
+  - руку
+  - рука
+  - руки
+  - рукою
+  original_explanation: 'Accusative: руку.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Grammar Clinic
+  sentence_with_error: Будьте здоровий! (to plural/polite)
+  error: здоровий
+  answer: здорові
+  sentence_corrected: Будьте здорові! (to plural/polite)
+  options:
+  - здорові
+  - здоровий
+  - здорова
+  - здорове
+  original_explanation: 'Plural/Formal: Будьте здорові.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: My Symptoms
+  sentence_template: У мене болить ____. (head)
+  answer: голова
+  complete_sentence: У мене болить голова_. (head)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: My Symptoms
+  sentence_template: У нього висока ____. (temperature)
+  answer: температура
+  complete_sentence: У нього висока температура_. (temperature)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: My Symptoms
+  sentence_template: Мені треба купити ____. (medicine)
+  answer: ліки
+  complete_sentence: Мені треба купити ліки_. (medicine)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: My Symptoms
+  sentence_template: У неї болить ____. (tooth)
+  answer: зуб
+  complete_sentence: У неї болить зуб_. (tooth)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: My Symptoms
+  sentence_template: Викличіть ____! (doctor - Acc)
+  answer: лікаря
+  complete_sentence: Викличіть лікаря_! (doctor - Acc)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: My Symptoms
+  sentence_template: Я п'ю ____. (pills)
+  answer: таблетки
+  complete_sentence: Я п'ю таблетки_. (pills)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: My Symptoms
+  sentence_template: У мене сильний ____. (cough)
+  answer: кашель
+  complete_sentence: У мене сильний кашель_. (cough)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: My Symptoms
+  sentence_template: Болять ____. (eyes)
+  answer: очі
+  complete_sentence: Болять очі_. (eyes)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: My Symptoms
+  sentence_template: Це ____ від грипу. (medicine/cure)
+  answer: ліки
+  complete_sentence: Це ліки_ від грипу. (medicine/cure)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: My Symptoms
+  sentence_template: Де тут ____? (pharmacy)
+  answer: аптека
+  complete_sentence: Де тут аптека_? (pharmacy)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: My Symptoms
+  sentence_template: Лікар дав ____. (prescription)
+  answer: рецепт
+  complete_sentence: Лікар дав рецепт_. (prescription)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: My Symptoms
+  sentence_template: У мене болить ____. (back)
+  answer: спина
+  complete_sentence: У мене болить спина_. (back)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Call the Doctor
+  passage_template: '— Алло, це {швидка|піца|таксі}? Так, оператор слухає. Що сталося?
+
+    — Моєму чоловіку {погано|добре|весело}. У нього сильний {біль|сміх|сон} в грудях
+    і важко дихати.
+
+    — Яка у нього {температура|машина|зарплата}? Нормальна.
+
+    — Скажіть адресу. Вулиця Садова, 5. Чекайте, {бригада|погода|вода} виїхала.
+
+    — Дякую, ми чекаємо {лікаря|поштаря|кухаря}.
+
+    Лікар приїхав через 10 {хвилин|годин|днів}. Він послухав {серце|ногу|руку} і поміряв
+    {тиск|зріст|вагу}.
+
+    — Це не {інфаркт|грип|спорт}, — сказав лікар. — Це просто стрес.
+
+    — Які {ліки|цукерки|фрукти} треба приймати?
+
+    — Ось цей {рецепт|квиток|чек}. Відпочивайте.'
+  blanks:
+  - answer: таксі
+    options:
+    - швидка
+    - піца
+  - answer: весело
+    options:
+    - погано
+    - добре
+  - answer: сон
+    options:
+    - біль
+    - сміх
+  - answer: зарплата
+    options:
+    - температура
+    - машина
+  - answer: вода
+    options:
+    - бригада
+    - погода
+  - answer: кухаря
+    options:
+    - лікаря
+    - поштаря
+  - answer: днів
+    options:
+    - хвилин
+    - годин
+  - answer: руку
+    options:
+    - серце
+    - ногу
+  - answer: вагу
+    options:
+    - тиск
+    - зріст
+  - answer: спорт
+    options:
+    - інфаркт
+    - грип
+  - answer: фрукти
+    options:
+    - ліки
+    - цукерки
+  - answer: чек
+    options:
+    - рецепт
+    - квиток
+  blank_count: 12
+  complete_passage: '— Алло, це таксі? Так, оператор слухає. Що сталося?
+
+    — Моєму чоловіку весело. У нього сильний сон в грудях і важко дихати.
+
+    — Яка у нього зарплата? Нормальна.
+
+    — Скажіть адресу. Вулиця Садова, 5. Чекайте, вода виїхала.
+
+    — Дякую, ми чекаємо кухаря.
+
+    Лікар приїхав через 10 днів. Він послухав руку і поміряв вагу.
+
+    — Це не спорт, — сказав лікар. — Це просто стрес.
+
+    — Які фрукти треба приймати?
+
+    — Ось цей чек. Відпочивайте.'
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Health Sentences
+  jumbled_words: []
+  answer: У мене сьогодні зранку дуже сильно болить голова
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Health Sentences
+  jumbled_words: []
+  answer: Будь ласка терміново викличіть сюди когось із лікарів
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Health Sentences
+  jumbled_words: []
+  answer: Я хочу купити в аптеці якісні та ефективні ліки
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Health Sentences
+  jumbled_words: []
+  answer: У вас сьогодні є висока температура чи ні
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Health Sentences
+  jumbled_words: []
+  answer: Пийте багато теплої води з лимоном щодня
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Health Sentences
+  jumbled_words: []
+  answer: Де знаходиться найближча цілодобова аптека у цьому районі
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Health Sentences
+  jumbled_words: []
+  answer: Мені терміново треба піти до хорошого стоматолога
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Health Sentences
+  jumbled_words: []
+  answer: Як ви себе сьогодні почуваєте після ліків
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Health Sentences
+  jumbled_words: []
+  answer: Активний спорт завжди дуже корисний для вашого здоров'я
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Health Sentences
+  jumbled_words: []
+  answer: Я бажаю вам міцного здоров'я та довгого життя
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Health Sentences
+  jumbled_words: []
+  answer: Ця маленька біла таблетка допомагає від голови
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Health Sentences
+  jumbled_words: []
+  answer: Скажіть будь ласка ви вже повністю одужали
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Health Quiz
+  question: Що найкраще зробити, якщо у вас висока температура і ви погано себе почуваєте?
+  options:
+  - '{''text'': ''Викликати лікаря і залишитися вдома'', ''correct'': True}'
+  - '{''text'': ''Піти на дискотеку'', ''correct'': False}'
+  - '{''text'': ''Їсти морозиво'', ''correct'': False}'
+  - '{''text'': ''Піти плавати'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Health Quiz
+  question: Який номер екстреної медичної допомоги "Швидка" потрібно набирати в Україні?
+  options:
+  - '{''text'': ''103'', ''correct'': True}'
+  - '{''text'': ''911'', ''correct'': False}'
+  - '{''text'': ''101'', ''correct'': False}'
+  - '{''text'': ''104'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Health Quiz
+  question: Який відмінок потрібен у фразі "У мене болить голова"?
+  options:
+  - '{''text'': ''Називний (голова)'', ''correct'': True}'
+  - '{''text'': ''Знахідний'', ''correct'': False}'
+  - '{''text'': ''Орудний'', ''correct'': False}'
+  - '{''text'': ''Давальний'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Health Quiz
+  question: Чим відома лікувальна мінеральна вода "Нафтуся" з курорту Трускавець в
+    Україні?
+  options:
+  - '{''text'': ''Лікувальними властивостями'', ''correct'': True}'
+  - '{''text'': ''Солодким смаком'', ''correct'': False}'
+  - '{''text'': ''Високою ціною'', ''correct'': False}'
+  - '{''text'': ''Червоним кольором'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Health Quiz
+  question: Що продають в аптеці для лікування різних хвороб?
+  options:
+  - '{''text'': ''Ліки'', ''correct'': True}'
+  - '{''text'': ''Хліб'', ''correct'': False}'
+  - '{''text'': ''Одяг'', ''correct'': False}'
+  - '{''text'': ''Меблі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Health Quiz
+  question: Як правильно сказати "I have a headache" українською?
+  options:
+  - '{''text'': ''У мене болить голова'', ''correct'': True}'
+  - '{''text'': ''Я болю голову'', ''correct'': False}'
+  - '{''text'': ''Мені голова'', ''correct'': False}'
+  - '{''text'': ''Я маю головний біль'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Health Quiz
+  question: Що треба робити щодня, щоб бути здоровим і мати гарне самопочуття?
+  options:
+  - '{''text'': ''Займатися спортом і добре харчуватися'', ''correct'': True}'
+  - '{''text'': ''Багато спати і нічого не робити'', ''correct'': False}'
+  - '{''text'': ''Їсти тільки солодке'', ''correct'': False}'
+  - '{''text'': ''Не ходити до лікаря'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Health Quiz
+  question: Який лікар лікує зуби і допомагає з проблемами в роті?
+  options:
+  - '{''text'': ''Стоматолог'', ''correct'': True}'
+  - '{''text'': ''Кардіолог'', ''correct'': False}'
+  - '{''text'': ''Окуліст'', ''correct'': False}'
+  - '{''text'': ''Терапевт'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Health Quiz
+  question: Що означає українське слово "одужати" в контексті здоров'я?
+  options:
+  - '{''text'': ''Стати здоровим після хвороби'', ''correct'': True}'
+  - '{''text'': ''Захворіти'', ''correct'': False}'
+  - '{''text'': ''Піти до лікаря'', ''correct'': False}'
+  - '{''text'': ''Купити ліки'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Health Quiz
+  question: Де можна купити ліки цілодобово в будь-який час дня і ночі?
+  options:
+  - '{''text'': ''У цілодобовій аптеці'', ''correct'': True}'
+  - '{''text'': ''У магазині'', ''correct'': False}'
+  - '{''text'': ''У школі'', ''correct'': False}'
+  - '{''text'': ''У парку'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Health Quiz
+  question: Яка важлива частина тіла б'ється в грудях і качає кров?
+  options:
+  - '{''text'': ''Серце'', ''correct'': True}'
+  - '{''text'': ''Печінка'', ''correct'': False}'
+  - '{''text'': ''Легені'', ''correct'': False}'
+  - '{''text'': ''Шлунок'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Health Quiz
+  question: Що робить лікар, коли слухає пацієнта за допомогою спеціального приладу?
+  options:
+  - '{''text'': ''Перевіряє серце і легені'', ''correct'': True}'
+  - '{''text'': ''Готує їжу'', ''correct'': False}'
+  - '{''text'': ''Співає пісні'', ''correct'': False}'
+  - '{''text'': ''Грає на гітарі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Medical Beliefs
+  statement: Tea with lemon and honey is popular for colds.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Medical Beliefs
+  statement: You buy bread in "аптека".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Medical Beliefs
+  statement: '"Швидка" means fast.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Medical Beliefs
+  statement: Truskavets is a ski resort.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Medical Beliefs
+  statement: '"Мені погано" means "I feel bad".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Medical Beliefs
+  statement: If your head hurts, you say "Я болю голову".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Medical Beliefs
+  statement: '"Одужуйте" is an insult.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Medical Beliefs
+  statement: 36.6 is a normal temperature.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Medical Beliefs
+  statement: '"Грип" is dangerous.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Medical Beliefs
+  statement: Cats can cure diseases.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Medical Beliefs
+  statement: You need a recipe to cook soup, and a "рецепт" to buy strong pills.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Medical Beliefs
+  statement: '"Серце" is on the right side.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

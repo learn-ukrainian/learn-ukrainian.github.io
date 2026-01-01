@@ -1,22 +1,3 @@
----
-module: a2-50
-title: Hobbies & Leisure
-subtitle: 'Free Time in Ukrainian'
-version: '1.0'
-phase: 'A2'
-pedagogy: 'Narrative'
-duration: 60
-transliteration: none
-tags: ['vocabulary', 'hobbies', 'travel', 'entertainment']
-grammar: ['verb-conjugation-imperative', 'accusative-activities']
-objectives:
-  - Discuss hobbies: малювати, співати, танцювати
-  - Talk about travel: подорожувати, відвідувати
-  - Describe entertainment: кіно, театр, концерт
-  - Plan free time
-vocab_count: 41
----
-
 # Hobbies & Leisure
 
 ## Warm-up

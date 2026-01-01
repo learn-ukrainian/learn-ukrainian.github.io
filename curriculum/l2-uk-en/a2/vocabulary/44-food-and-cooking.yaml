@@ -1,0 +1,339 @@
+module: 44-food-and-cooking
+level: A2
+version: '2.0'
+items:
+- lemma: борошно
+  ipa: boˈrɔʃno
+  translation: flour
+  pos: noun
+  gender: n
+- lemma: бутерброд
+  ipa: buterˈbrɔd
+  translation: sandwich
+  pos: noun
+  gender: m
+- lemma: вара
+  ipa: ˈvɑrɐ
+  translation: cooking/brew (typo?)
+  pos: noun
+  gender: m
+- lemma: варати
+  ipa: vɐˈrɑte
+  translation: to cook (typo варити)
+  pos: verb
+- lemma: варитися
+  ipa: vɐˈrɪtɪsʲɐ
+  translation: to be cooked (imp)
+  pos: verb
+- lemma: визнати
+  ipa: ˈvɪznɐte
+  translation: to admit/recognize (perf)
+  pos: verb
+  gender: f
+- lemma: виймати
+  ipa: vɪjˈmɑte
+  translation: to take out (imp)
+  pos: verb
+- lemma: виміс
+  ipa: vɪˈmʲis
+  translation: kneading (typo вимісити?)
+  pos: noun
+  gender: m
+- lemma: виріжти
+  ipa: vɪˈrʲiʒtɪ
+  translation: cut out (imperative typo)
+  pos: verb
+- lemma: внучка
+  ipa: ˈvnut͡ʃkɐ
+  translation: granddaughter
+  pos: noun
+  gender: f
+- lemma: вогонь
+  ipa: voˈhɔnʲ
+  translation: fire
+  pos: noun
+  gender: m
+- lemma: гладкий
+  ipa: hlɐdˈkɪj
+  translation: smooth/fat
+  pos: adj
+  gender: m
+- lemma: голубець
+  ipa: holuˈbɛt͡sʲ
+  translation: cabbage roll
+  pos: noun
+  gender: m
+- lemma: гіркий
+  ipa: hʲirˈkɪj
+  translation: bitter
+  pos: adj
+  gender: m
+- lemma: духовець
+  ipa: duxoˈvɛt͡sʲ
+  translation: oven (typo духовка?)
+  pos: noun
+  gender: f
+- lemma: духовка
+  ipa: duˈxɔu̯kɐ
+  translation: oven
+  pos: noun
+  gender: f
+- lemma: еластичний
+  ipa: elɐsˈtɪt͡ʃnɪj
+  translation: elastic
+  pos: adj
+  gender: m
+- lemma: задоволення
+  ipa: zɐdoˈvɔlenʲːɐ
+  translation: pleasure
+  pos: noun
+  gender: n
+- lemma: закуска
+  ipa: zɐˈkuskɐ
+  translation: appetizer
+  pos: noun
+  gender: f
+- lemma: замішувати
+  ipa: zɐˈmʲiʃuʋɐte
+  translation: to knead/mix (imp)
+  pos: verb
+- lemma: запікати
+  ipa: zɐpiˈkɑte
+  translation: to bake (imp)
+  pos: verb
+- lemma: зліп
+  ipa: zlʲip
+  translation: mold (typo зліпити?)
+  pos: noun
+  gender: m
+- lemma: змішати
+  ipa: zmʲiˈʃɑte
+  translation: to mix (perf)
+  pos: verb
+- lemma: золотистий
+  ipa: zoloˈtɪstɪj
+  translation: golden
+  pos: adj
+  gender: m
+- lemma: каструль
+  ipa: kɐsˈtrulʲ
+  translation: pot (gen pl? typo каструля)
+  pos: noun
+  gender: f
+- lemma: кружечка
+  ipa: kruˈʒɛt͡ʃkɐ
+  translation: mug (diminutive)
+  pos: noun
+  gender: f
+- lemma: кубик
+  ipa: ˈkubɪk
+  translation: cube
+  pos: noun
+  gender: f
+- lemma: кухарка
+  ipa: kuˈxɑrkɐ
+  translation: cook (female)
+  pos: noun
+  gender: f
+- lemma: легший
+  ipa: ˈlɛhʃɪj
+  translation: easier/lighter
+  pos: adj
+  gender: f
+- lemma: ліпити
+  ipa: lʲiˈpɪte
+  translation: to mold/sculpt (imp)
+  pos: verb
+- lemma: морквина
+  ipa: morkˈvɪnɐ
+  translation: carrot
+  pos: noun
+  gender: f
+- lemma: наріж
+  ipa: nɐˈrʲiʒ
+  translation: cut (imperative)
+  pos: noun
+  gender: m
+- lemma: наріжти
+  ipa: nɐˈrʲiʒtɪ
+  translation: cut (imperative typo)
+  pos: verb
+  gender: m
+- lemma: наріжчя
+  ipa: nɐˈrʲiʒt͡ʃːɐ
+  translation: cornerstone?
+  pos: noun
+  gender: m
+- lemma: нарізати
+  ipa: nɐˈrʲizɐte
+  translation: to cut/slice
+  pos: verb
+- lemma: нарізьти
+  ipa: nɐˈrʲizʲtɪ
+  translation: cut (typo)
+  pos: verb
+- lemma: насичений
+  ipa: nɐˈsɪt͡ʃenɪj
+  translation: saturated/rich
+  pos: adj
+  gender: m
+- lemma: начинка
+  ipa: ˈnɑt͡ʃɪnkɐ
+  translation: filling
+  pos: noun
+  gender: f
+- lemma: нематеріальний
+  ipa: nemɐterʲiˈɑlʲnɪj
+  translation: intangible
+  pos: adj
+  gender: f
+- lemma: непросто
+  ipa: neˈprɔsto
+  translation: not easy
+  pos: adv
+- lemma: обладнання
+  ipa: obˈlɑdnɐnʲːɐ
+  translation: equipment
+  pos: noun
+  gender: n
+- lemma: пе
+  ipa: pɛ
+  translation: PE?
+  pos: verb
+- lemma: пекти
+  ipa: pekˈtɪ
+  translation: to bake (imp)
+  pos: noun
+  gender: m
+- lemma: передасти
+  ipa: peredɐˈstɪ
+  translation: to pass/transmit (old form typo?)
+  pos: verb
+- lemma: перекус
+  ipa: pereˈkus
+  translation: snack
+  pos: noun
+  gender: m
+- lemma: перше
+  ipa: ˈpɛrʃe
+  translation: first course
+  pos: adv
+- lemma: печив
+  ipa: peˈt͡ʃɪu̯
+  translation: cookies (gen pl?)
+  pos: noun
+  gender: n
+- lemma: пиріг
+  ipa: pɪˈrʲih
+  translation: pie
+  pos: noun
+  gender: m
+- lemma: подавати
+  ipa: podɐˈʋɑte
+  translation: to serve (imp)
+  pos: verb
+- lemma: постати
+  ipa: poˈstɑte
+  translation: to arise/appear (perf)
+  pos: verb
+  gender: m
+- lemma: прийом
+  ipa: prɪˈjɔm
+  translation: reception/meal
+  pos: noun
+  gender: m
+- lemma: розкачати
+  ipa: rozkɐˈt͡ʃɑte
+  translation: to roll out (dough) (perf)
+  pos: verb
+- lemma: розпочніти
+  ipa: rozpot͡ʃˈnʲite
+  translation: to start (imperative typo?)
+  pos: verb
+- lemma: розігріти
+  ipa: roziˈhrʲite
+  translation: to warm up (perf)
+  pos: verb
+- lemma: смаж
+  ipa: smɑʒ
+  translation: fry (imperative)
+  pos: noun
+  gender: m
+- lemma: смажити
+  ipa: ˈsmɑʒɪte
+  translation: to fry (imp)
+  pos: verb
+- lemma: смазати
+  ipa: ˈsmɑzɐte
+  translation: to grease (perf/surzhyk?)
+  pos: verb
+- lemma: смати
+  ipa: ˈsmɑte
+  translation: fry (typo?)
+  pos: verb
+- lemma: сметана
+  ipa: smeˈtɑnɐ
+  translation: sour cream
+  pos: noun
+  gender: f
+- lemma: солоний
+  ipa: soˈlɔnɪj
+  translation: salty
+  pos: adj
+  gender: m
+- lemma: спливати
+  ipa: splɪˈʋɑte
+  translation: to flow away/expire
+  pos: verb
+- lemma: техніка
+  ipa: ˈtɛxnʲikɐ
+  translation: technique/appliances
+  pos: noun
+  gender: f
+- lemma: тушкування
+  ipa: tuʃkuˈʋɑnʲːɐ
+  translation: stewing
+  pos: noun
+  gender: n
+- lemma: тушкувати
+  ipa: tuʃkuˈʋɑte
+  translation: to stew (imp)
+  pos: verb
+- lemma: тісто
+  ipa: ˈtʲisto
+  translation: dough
+  pos: noun
+  gender: n
+- lemma: увімкти
+  ipa: uˈvʲimktɪ
+  translation: to turn on (typo увімкнути)
+  pos: verb
+- lemma: уміти
+  ipa: uˈmʲite
+  translation: to be able to
+  pos: verb
+- lemma: чайник
+  ipa: ˈt͡ʃɑjnɪk
+  translation: kettle
+  pos: noun
+  gender: m
+- lemma: часник
+  ipa: t͡ʃɐsˈnɪk
+  translation: garlic
+  pos: noun
+  gender: m
+- lemma: честь
+  ipa: t͡ʃɛsʲtʲ
+  translation: honor
+  pos: noun
+  gender: f
+- lemma: юнеско
+  ipa: juˈnɛsko
+  translation: UNESCO
+  pos: propn
+  gender: f
+- lemma: інструкція
+  ipa: inˈstrukt͡sʲijɐ
+  translation: instruction
+  pos: noun
+  gender: f

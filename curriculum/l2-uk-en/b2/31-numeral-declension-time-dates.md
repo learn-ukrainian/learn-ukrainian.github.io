@@ -1,31 +1,3 @@
----
-module: b2-31
-title: "Відмінювання числівників І: Час і дати"
-subtitle: "Numeral Declension I: Time & Dates"
-version: "1.0"
-phase: "B2.1c"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-immersion: 100
-tags:
-  - grammar
-  - numerals
-  - time
-  - dates
-grammar:
-  - "Порядкові числівники в часових виразах"
-  - "Відмінювання числівників при датах"
-  - "Родовий відмінок місяців"
-objectives:
-  - "Learner can tell the time using formal and informal expressions"
-  - "Learner can state and understand dates in all required cases"
-  - "Learner can use months in genitive and prepositional cases correctly"
-vocabulary_count: 25
-register: "нейтральний"
-vocab_count: 30
----
-
 # Відмінювання числівників І: Час і дати
 
 > 🎯 **Чому це важливо?**

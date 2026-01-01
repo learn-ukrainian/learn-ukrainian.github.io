@@ -1,6 +1,15 @@
 # Audit Report: 23-motion-patterns-other-verbs.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
+**Phase:** B1.2 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): виконувати, заплакати, приготувати, замовкнути, заговорити...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1615/1500
@@ -10,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 31/25
+- **Vocab:** ✅ 46/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,19 +46,12 @@
 | proverbs | 4 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.2%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Префікси руху в інших дієсловах** | ⚪️ | 64 | Skipped |
+| **Intro/Narrative** | ✅ | 64 | Included in Core |
 | **Тест** | ⚪️ | 85 | Skipped |
 | **Пояснення** | ⚪️ | 889 | Skipped |
 | **Практика** | ⚪️ | 124 | Skipped |
 | **Діалоги** | ✅ | 222 | Included in Core |
 | **Підсумок** | ✅ | 231 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

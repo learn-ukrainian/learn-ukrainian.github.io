@@ -1,0 +1,203 @@
+module: 06-being-and-becoming
+level: A2
+version: '2.0'
+items:
+  - lemma: акторка
+    ipa: ɐkˈtɔrkɐ
+    translation: actress
+    pos: noun
+    gender: f
+  - lemma: був
+    ipa: buu̯
+    translation: was
+    pos: propn
+    gender: m
+  - lemma: геніальний
+    ipa: ɦeniˈɑlʲnei̯
+    translation: genius; brilliant
+    pos: adj
+    gender: f
+  - lemma: журналіст
+    ipa: ʒurnɐˈlʲist
+    translation: journalist
+    pos: noun
+    gender: m
+  - lemma: журналістка
+    ipa: ʒurnɐˈlʲistkɐ
+    translation: journalist (female)
+    pos: noun
+    gender: f
+  - lemma: завод
+    ipa: zɐˈʋɔd
+    translation: factory
+    pos: noun
+    gender: m
+  - lemma: залежати
+    ipa: zɐˈlɛʒɐte
+    translation: to depend
+    pos: verb
+  - lemma: залишатися
+    ipa: zɐlɪˈʃɑtɪsʲɐ
+    translation: to remain; to stay
+    pos: verb
+  - lemma: змінити
+    ipa: zmiˈnɪte
+    translation: to change
+    pos: verb
+  - lemma: компанія
+    ipa: komˈpɑnʲijɐ
+    translation: company
+    pos: noun
+    gender: f
+  - lemma: корольов
+    ipa: koroˈlʲɔu̯
+    translation: Korolyov
+    pos: propn
+    gender: m
+  - lemma: крушельницька
+    ipa: kruʃelʲˈnɪt͡sʲkɐ
+    translation: Krushelnytska
+    pos: propn
+    gender: f
+  - lemma: кріпак
+    ipa: kriˈpɑk
+    translation: serf
+    pos: noun
+    gender: m
+  - lemma: музикант
+    ipa: muzɪˈkɑnt
+    translation: musician
+    pos: noun
+    gender: m
+  - lemma: написати
+    ipa: nɐpɪˈsɑte
+    translation: to write
+    pos: verb
+    gender: f
+  - lemma: оповідач
+    ipa: opoʋiˈdɑt͡ʃ
+    translation: narrator
+    pos: noun
+    gender: m
+  - lemma: особливість
+    ipa: osobˈlɪʋisʲtʲ
+    translation: feature; peculiarity
+    pos: noun
+    gender: f
+  - lemma: письменник
+    ipa: pɪsʲˈmɛnːɪk
+    translation: writer
+    pos: noun
+    gender: m
+  - lemma: письменниця
+    ipa: pɪsʲˈmɛnːɪt͡sʲɐ
+    translation: writer (female)
+    pos: noun
+    gender: f
+  - lemma: поет
+    ipa: poˈɛt
+    translation: poet
+    pos: noun
+    gender: m
+  - lemma: політехнічний
+    ipa: polʲitexˈnʲit͡ʃnei̯
+    translation: polytechnic
+    pos: adj
+    gender: m
+  - lemma: програміст
+    ipa: proɦrɐˈmist
+    translation: programmer
+    pos: noun
+    gender: m
+  - lemma: програмістка
+    ipa: proɦrɐˈmistkɐ
+    translation: programmer (female)
+    pos: noun
+    gender: f
+  - lemma: пропускатися
+    ipa: propusˈkɑtɪsʲɐ
+    translation: to occur? (rare context, maybe typo for припускатися?)
+    pos: verb
+  - lemma: просто
+    ipa: ˈprɔsto
+    translation: simply; just
+    pos: other
+  - lemma: професія
+    ipa: proˈfɛsʲijɐ
+    translation: profession
+    pos: noun
+    gender: f
+  - lemma: підмета
+    ipa: ˈpidmetɐ
+    translation: subject (genitive)
+    pos: noun
+    gender: m
+  - lemma: сергій
+    ipa: serˈɦij
+    translation: Serhiy
+    pos: propn
+    gender: m
+  - lemma: служити
+    ipa: sluˈʒɪte
+    translation: to serve
+    pos: verb
+  - lemma: солдат
+    ipa: solˈdɑt
+    translation: soldier
+    pos: noun
+    gender: m
+  - lemma: соломія
+    ipa: soloˈmijɐ
+    translation: Solomiya
+    pos: propn
+    gender: f
+  - lemma: співачка
+    ipa: spiˈʋɑt͡ʃkɐ
+    translation: singer
+    pos: noun
+    gender: f
+  - lemma: співбесіда
+    ipa: spiu̯ˈbɛsʲidɐ
+    translation: interview
+    pos: noun
+    gender: m
+  - lemma: сікорський
+    ipa: sʲiˈkɔrsʲkei̯
+    translation: Sikorsky
+    pos: propn
+    gender: m
+  - lemma: творчий
+    ipa: ˈtʋɔrt͡ʃei̯
+    translation: creative
+    pos: adj
+    gender: f
+  - lemma: юрист
+    ipa: juˈrɪst
+    translation: lawyer
+    pos: noun
+    gender: m
+  - lemma: юристка
+    ipa: juˈrɪstkɐ
+    translation: lawyer (female)
+    pos: noun
+    gender: f
+  - lemma: ігор
+    ipa: ˈiɦor
+    translation: Ihor
+    pos: propn
+    gender: m
+  - lemma: інженер
+    ipa: inʒeˈnɛr
+    translation: engineer
+    pos: noun
+    gender: m
+  - lemma: інженерка
+    ipa: inʒeˈnɛrkɐ
+    translation: engineer (female)
+    pos: noun
+    gender: f
+  - lemma: інститут
+    ipa: instɪˈtut
+    translation: institute
+    pos: noun
+    gender: m

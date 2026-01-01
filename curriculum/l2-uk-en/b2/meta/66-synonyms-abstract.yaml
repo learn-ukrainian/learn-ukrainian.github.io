@@ -1,0 +1,26 @@
+module: b2-66
+title: 'Синоніми: Абстрактні Поняття та Ідеї'
+subtitle: Synonyms - Abstract Concepts and Ideas
+version: '1.0'
+phase: B2.2 [Phraseology & Synonymy]
+pedagogy: CBI
+duration: 90
+transliteration: none
+immersion: 100
+tags:
+  - vocabulary
+  - synonyms
+  - abstract
+grammar:
+  - Nuances in abstract nouns
+  - Collocations with idea/thought
+objectives:
+  - Учень може розрізняти відтінки значень між синонімами на позначення інтелектуальної
+    діяльності (думка, ідея, погляд)
+  - Учень вміє використовувати академічну лексику для опису наукових концепцій та
+    теорій
+  - Учень розуміє різницю між гіпотезою, припущенням та переконанням
+vocabulary_count: 35
+register: науковий
+vocab_count: 87
+slug: 66-synonyms-abstract

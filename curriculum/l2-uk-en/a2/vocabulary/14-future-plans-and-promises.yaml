@@ -1,0 +1,40 @@
+module: 14-future-plans-and-promises
+level: A2
+version: '2.0'
+items:
+  - lemma: вивчити
+    ipa: ˈvɪu̯t͡ʃɪte
+    translation: to learn (perf)
+    pos: verb
+  - lemma: відповідальність
+    ipa: vidpoʋiˈdɑlʲnisʲtʲ
+    translation: responsibility
+    pos: noun
+    gender: f
+  - lemma: змінитися
+    ipa: zmiˈnɪtɪsʲɐ
+    translation: to change (oneself)
+    pos: verb
+  - lemma: значити
+    ipa: ˈznɑt͡ʃɪte
+    translation: to mean
+    pos: verb
+  - lemma: мудрість
+    ipa: ˈmudrisʲtʲ
+    translation: wisdom
+    pos: noun
+    gender: f
+  - lemma: нагадувати
+    ipa: nɐˈɦɑduʋɐte
+    translation: to remind
+    pos: verb
+  - lemma: обіцянка
+    ipa: obiˈt͡sʲɑnkɐ
+    translation: promise
+    pos: noun
+    gender: f
+  - lemma: він
+    ipa: vin
+    translation: he
+    pos: pron
+    gender: m

@@ -1,0 +1,284 @@
+module: 63-synonyms-quantity
+level: B2
+version: '2.0'
+items:
+  - lemma: астрономічний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: багатоманітність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: біт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вагомість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: вистачити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: вишиванок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: влаштований
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: внеска
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: гат
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: гати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: глиняний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: грамотність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: граничний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: гребль
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: декілька
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: докласти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: достатність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: енергоресурс
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: заватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: загатити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: київська
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: купа
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: малість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: медикамент
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: мізер
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: найяскравіший
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: наявний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: необмежений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: неосяжний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: неправота
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: новітній
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: нікчемно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: обчислення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: ощадливий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: перебільшити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: переданий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: переконаність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: перелічуваний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: перетворення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: перетворюватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: покращити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: потрапляти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: применшити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: протота
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: підписник
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: розма
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: розсипати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: n
+  - lemma: самореалізація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: сервера
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: силенний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: стежити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: стримано
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: терабайтний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: трафік
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: хаотичність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: чаша
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: чималий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: явно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: ярмаркування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: інгредієнт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m

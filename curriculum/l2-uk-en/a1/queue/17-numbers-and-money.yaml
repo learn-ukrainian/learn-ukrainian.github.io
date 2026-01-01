@@ -1,0 +1,788 @@
+module: 17-numbers-and-money
+level: A1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/17-numbers-and-money.md
+generated: '2026-01-01T17:33:20.233986'
+scope: fill-in, quiz, true-false
+activity_counts:
+  fill-in: 20
+  quiz: 36
+  true-false: 12
+total_items: 68
+item_count: 68
+sample_percent: null
+items:
+- activity: fill-in
+  title: Complete with Numbers
+  sentence_template: У мене ___ гривень. (I have ___ hryvnias.) [10]
+  answer: десять
+  complete_sentence: У мене десять гривень. (I have десять hryvnias.) [10]
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Numbers
+  sentence_template: Це коштує ___ гривень. (This costs ___ hryvnias.) [50]
+  answer: п'ятдесят
+  complete_sentence: Це коштує п'ятдесят гривень. (This costs п'ятдесят hryvnias.)
+    [50]
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Numbers
+  sentence_template: Вона має ___ років. (She is ___ years old.) [23]
+  answer: двадцять три
+  complete_sentence: Вона має двадцять три років. (She is двадцять три years old.)
+    [23]
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Numbers
+  sentence_template: Автобус номер ___. (Bus number ___.) [40]
+  answer: сорок
+  complete_sentence: Автобус номер сорок. (Bus number сорок.) [40]
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Numbers
+  sentence_template: ___ студентів у класі. (___ students in the class.) [15]
+  answer: П'ятнадцять
+  complete_sentence: П'ятнадцять студентів у класі. (П'ятнадцять students in the class.)
+    [15]
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Numbers
+  sentence_template: Хліб коштує ___ гривень. (Bread costs ___ hryvnias.) [8]
+  answer: вісім
+  complete_sentence: Хліб коштує вісім гривень. (Bread costs вісім hryvnias.) [8]
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Numbers
+  sentence_template: Я маю ___ рік. (I am ___ years old.) [21]
+  answer: двадцять один
+  complete_sentence: Я маю двадцять один рік. (I am двадцять один years old.) [21]
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Numbers
+  sentence_template: Це коштує ___ гривень. (This costs ___ hryvnias.) [100]
+  answer: сто
+  complete_sentence: Це коштує сто гривень. (This costs сто hryvnias.) [100]
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Numbers
+  sentence_template: У мене є ___ копійок. (I have ___ kopecks.) [75]
+  answer: сімдесят п'ять
+  complete_sentence: У мене є сімдесят п'ять копійок. (I have сімдесят п'ять kopecks.)
+    [75]
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Numbers
+  sentence_template: Каса номер ___. (Cashier number ___.) [7]
+  answer: сім
+  complete_sentence: Каса номер сім. (Cashier number сім.) [7]
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Numbers
+  sentence_template: ___ книг на столі. (___ books on the table.) [12]
+  answer: Дванадцять
+  complete_sentence: Дванадцять книг на столі. (Дванадцять books on the table.) [12]
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Numbers
+  sentence_template: Молоко коштує ___ гривень. (Milk costs ___ hryvnias.) [20]
+  answer: двадцять
+  complete_sentence: Молоко коштує двадцять гривень. (Milk costs двадцять hryvnias.)
+    [20]
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Dialogue
+  sentence_template: Доброго дня! Що ___? (Good afternoon! What ___ you want?)
+  answer: бажаєте
+  complete_sentence: Доброго дня! Що бажаєте? (Good afternoon! What бажаєте you want?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Dialogue
+  sentence_template: ___ коштує молоко? (___ does milk cost?)
+  answer: Скільки
+  complete_sentence: Скільки коштує молоко? (Скільки does milk cost?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Dialogue
+  sentence_template: Двадцять ___. (Twenty ___.)
+  answer: гривень
+  complete_sentence: Двадцять гривень. (Twenty гривень.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Dialogue
+  sentence_template: Добре. Одне молоко, ___ ласка. (Okay. One milk, ___.)
+  answer: будь
+  complete_sentence: Добре. Одне молоко, будь ласка. (Okay. One milk, будь.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Dialogue
+  sentence_template: Можна платити ___? (Can I pay by ___?)
+  answer: карткою
+  complete_sentence: Можна платити карткою? (Can I pay by карткою?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Dialogue
+  sentence_template: Так, звичайно. ___! (Yes, of course. ___!)
+  answer: Дякую
+  complete_sentence: Так, звичайно. Дякую! (Yes, of course. Дякую!)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Dialogue
+  sentence_template: Ось ваше молоко. ___ гривень, будь ласка. (Here's your milk.
+    ___ hryvnias, please.)
+  answer: Двадцять
+  complete_sentence: Ось ваше молоко. Двадцять гривень, будь ласка. (Here's your milk.
+    Двадцять hryvnias, please.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Dialogue
+  sentence_template: У вас є ___? (Do you have ___?)
+  answer: гроші
+  complete_sentence: У вас є гроші? (Do you have гроші?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Number Grammar
+  question: How do you accurately say exactly "one hryvnia"?
+  options:
+  - '{''text'': ''одна гривня'', ''correct'': True}'
+  - '{''text'': ''один гривень'', ''correct'': False}'
+  - '{''text'': ''одне гривня'', ''correct'': False}'
+  - '{''text'': ''одні гривні'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Number Grammar
+  question: How do you say "two hryvnias"?
+  options:
+  - '{''text'': ''два гривні'', ''correct'': False}'
+  - '{''text'': ''дві гривні'', ''correct'': True}'
+  - '{''text'': ''два гривня'', ''correct'': False}'
+  - '{''text'': ''дві гривень'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Number Grammar
+  question: How do you say "five hryvnias"?
+  options:
+  - '{''text'': "п''ять гривні", ''correct'': False}'
+  - '{''text'': "п''ять гривня", ''correct'': False}'
+  - '{''text'': "п''ять гривень", ''correct'': True}'
+  - '{''text'': "п''яти гривень", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Number Grammar
+  question: What does "Скільки коштує?" accurately mean in English?
+  options:
+  - '{''text'': ''How many do you have?'', ''correct'': False}'
+  - '{''text'': ''How much does it cost?'', ''correct'': True}'
+  - '{''text'': ''Where is it?'', ''correct'': False}'
+  - '{''text'': ''What is this?'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Number Grammar
+  question: Which number has accurately a gender distinction?
+  options:
+  - '{''text'': ''один (only)'', ''correct'': False}'
+  - '{''text'': ''два/дві'', ''correct'': True}'
+  - '{''text'': ''три'', ''correct'': False}'
+  - '{''text'': ''всі вище (all above)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Number Grammar
+  question: What is the genitive plural of the word "студент"?
+  options:
+  - '{''text'': ''студенти'', ''correct'': False}'
+  - '{''text'': ''студента'', ''correct'': False}'
+  - '{''text'': ''студентів'', ''correct'': True}'
+  - '{''text'': ''студентам'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Number Grammar
+  question: How do you say exactly "expensive" in Ukrainian?
+  options:
+  - '{''text'': ''дешево'', ''correct'': False}'
+  - '{''text'': ''дорого'', ''correct'': True}'
+  - '{''text'': ''знижка'', ''correct'': False}'
+  - '{''text'': ''ціна'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Number Grammar
+  question: What does exactly the Ukrainian word "готівка" mean?
+  options:
+  - '{''text'': ''card'', ''correct'': False}'
+  - '{''text'': ''cash'', ''correct'': True}'
+  - '{''text'': ''discount'', ''correct'': False}'
+  - '{''text'': ''receipt'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Number Grammar
+  question: 'Which is the correct pattern for the number: п''ятдесят?'
+  options:
+  - '{''text'': ''50'', ''correct'': True}'
+  - '{''text'': ''15'', ''correct'': False}'
+  - '{''text'': ''5'', ''correct'': False}'
+  - '{''text'': ''500'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Number Grammar
+  question: What case do numbers five and above require exactly?
+  options:
+  - '{''text'': ''nominative'', ''correct'': False}'
+  - '{''text'': ''accusative'', ''correct'': False}'
+  - '{''text'': ''genitive plural'', ''correct'': True}'
+  - '{''text'': ''locative'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Number Grammar
+  question: How do you accurately say exactly "twenty-three"?
+  options:
+  - '{''text'': ''двадцять і три'', ''correct'': False}'
+  - '{''text'': ''двадцять три'', ''correct'': True}'
+  - '{''text'': ''тридцять два'', ''correct'': False}'
+  - '{''text'': ''три двадцять'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Number Grammar
+  question: What is the Ukrainian currency accurately called?
+  options:
+  - '{''text'': ''карбованець'', ''correct'': False}'
+  - '{''text'': ''гривня'', ''correct'': True}'
+  - '{''text'': ''рубль'', ''correct'': False}'
+  - '{''text'': ''копійка'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "How much does bread cost?"'
+  options:
+  - '{''text'': ''Скільки коштує хліб'', ''correct'': True}'
+  - '{''text'': ''коштує Скільки хліб'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "This costs ten hryvnias."'
+  options:
+  - '{''text'': ''Це коштує десять гривень'', ''correct'': True}'
+  - '{''text'': ''коштує Це десять гривень'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "I have money."'
+  options:
+  - '{''text'': ''У мене є гроші'', ''correct'': True}'
+  - '{''text'': ''мене У є гроші'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "That''s expensive!"'
+  options:
+  - '{''text'': ''Це дорого'', ''correct'': True}'
+  - '{''text'': ''дорого Це'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "This is very cheap."'
+  options:
+  - '{''text'': ''Це дуже дешево'', ''correct'': True}'
+  - '{''text'': ''дуже Це дешево'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "Where is the cashier?"'
+  options:
+  - '{''text'': ''Де каса'', ''correct'': True}'
+  - '{''text'': ''каса Де'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "Can I pay by card?"'
+  options:
+  - '{''text'': ''Можна платити карткою'', ''correct'': True}'
+  - '{''text'': ''платити Можна карткою'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "Five costs twenty hryvnias."'
+  options:
+  - '{''text'': "П''ять коштує двадцять гривень", ''correct'': True}'
+  - '{''text'': "коштує П''ять двадцять гривень", ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "One coffee, please."'
+  options:
+  - '{''text'': ''Одна кава, будь ласка'', ''correct'': True}'
+  - '{''text'': ''кава, Одна будь ласка'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "Fifteen students in the class."'
+  options:
+  - '{''text'': "П''ятнадцять студентів у класі", ''correct'': True}'
+  - '{''text'': "студентів П''ятнадцять у класі", ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "Two hryvnias - change."'
+  options:
+  - '{''text'': ''Дві гривні - решта'', ''correct'': True}'
+  - '{''text'': ''гривні Дві - решта'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "Total one hundred hryvnias."'
+  options:
+  - '{''text'': ''Всього сто гривень'', ''correct'': True}'
+  - '{''text'': ''сто Всього гривень'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Currency and Numbers
+  question: How do you accurately say "Twenty hryvnias"?
+  options:
+  - '{''text'': ''двадцять гривень'', ''correct'': True}'
+  - '{''text'': ''двадцять гривні'', ''correct'': False}'
+  - '{''text'': ''двадцять гривня'', ''correct'': False}'
+  - '{''text'': ''гривень двадцять'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Currency and Numbers
+  question: Which number is accurately "сорок"?
+  options:
+  - '{''text'': ''40'', ''correct'': True}'
+  - '{''text'': ''50'', ''correct'': False}'
+  - '{''text'': ''60'', ''correct'': False}'
+  - '{''text'': ''30'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Currency and Numbers
+  question: How do you say "Forty-five hryvnias"?
+  options:
+  - '{''text'': ''сорок п’ять гривень'', ''correct'': True}'
+  - '{''text'': ''сорок п’ять гривні'', ''correct'': False}'
+  - '{''text'': ''сорок п’ять гривня'', ''correct'': False}'
+  - '{''text'': "п''ятдесят гривень", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Currency and Numbers
+  question: How do you accurately say "one hryvnia"?
+  options:
+  - '{''text'': ''одна гривня'', ''correct'': True}'
+  - '{''text'': ''один гривня'', ''correct'': False}'
+  - '{''text'': ''одно гривня'', ''correct'': False}'
+  - '{''text'': ''одне гривня'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Currency and Numbers
+  question: How do you accurately say "Two hryvnias"?
+  options:
+  - '{''text'': ''дві гривні'', ''correct'': True}'
+  - '{''text'': ''два гривні'', ''correct'': False}'
+  - '{''text'': ''дві гривень'', ''correct'': False}'
+  - '{''text'': ''два гривня'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Currency and Numbers
+  question: Which word means accurately "receipt"?
+  options:
+  - '{''text'': ''чек'', ''correct'': True}'
+  - '{''text'': ''ціна'', ''correct'': False}'
+  - '{''text'': ''гроші'', ''correct'': False}'
+  - '{''text'': ''решта'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Currency and Numbers
+  question: How do you say "Ninety" in Ukrainian?
+  options:
+  - '{''text'': ''дев’яносто'', ''correct'': True}'
+  - '{''text'': ''вісімдесят'', ''correct'': False}'
+  - '{''text'': ''сімдесят'', ''correct'': False}'
+  - '{''text'': ''сто'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Currency and Numbers
+  question: Which phrase means accurately "By card"?
+  options:
+  - '{''text'': ''карткою'', ''correct'': True}'
+  - '{''text'': ''готівкою'', ''correct'': False}'
+  - '{''text'': ''грошима'', ''correct'': False}'
+  - '{''text'': ''чеком'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Currency and Numbers
+  question: How do you say "Cash" in Ukrainian?
+  options:
+  - '{''text'': ''готівка'', ''correct'': True}'
+  - '{''text'': ''картка'', ''correct'': False}'
+  - '{''text'': ''чек'', ''correct'': False}'
+  - '{''text'': ''решта'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Currency and Numbers
+  question: How do you accurately say "sixty" in Ukrainian?
+  options:
+  - '{''text'': ''шістдесят'', ''correct'': True}'
+  - '{''text'': ''п’ятдесят'', ''correct'': False}'
+  - '{''text'': ''сімдесят'', ''correct'': False}'
+  - '{''text'': ''сорок'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Currency and Numbers
+  question: What is the meaning of accurately "решта"?
+  options:
+  - '{''text'': ''change'', ''correct'': True}'
+  - '{''text'': ''price'', ''correct'': False}'
+  - '{''text'': ''receipt'', ''correct'': False}'
+  - '{''text'': ''money'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Currency and Numbers
+  question: How do you say "Fifty" in Ukrainian?
+  options:
+  - '{''text'': ''п’ятдесят'', ''correct'': True}'
+  - '{''text'': ''шістдесят'', ''correct'': False}'
+  - '{''text'': ''сорок'', ''correct'': False}'
+  - '{''text'': ''тридцять'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Money Facts
+  statement: The Ukrainian currency is called гривня.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Money Facts
+  statement: Numbers 2-4 use genitive plural forms.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Money Facts
+  statement: The number 2 has different forms for different genders.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Money Facts
+  statement: '"Дорого" means "cheap."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Money Facts
+  statement: The hryvnia symbol is ₴.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Money Facts
+  statement: Bargaining is not common in Ukrainian supermarkets.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Money Facts
+  statement: '"Готівка" means "card."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Money Facts
+  statement: The word "гривня" dates back to Kyivan Rus'.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Money Facts
+  statement: Numbers 5-20 use nominative case.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Money Facts
+  statement: '"Скільки коштує?" is the phrase for asking prices.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Money Facts
+  statement: One hundred is "дев'яносто."
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Money Facts
+  statement: Ukrainian banknotes feature historical figures.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -1,35 +1,3 @@
----
-module: b1-84
-title: "Інтеграція граматики B1"
-subtitle: "B1 Grammar Integration"
-version: "1.0"
-phase: "B1.8 Integration"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - integration
-  - review
-  - aspect
-  - motion-verbs
-  - complex-sentences
-  - participles
-grammar:
-  - "Aspect (all contexts)"
-  - "Motion verbs with prefixes"
-  - "Complex sentences (all types)"
-  - "Participles (adverbial and passive)"
-  - "Advanced structures"
-objectives:
-  - "Learner demonstrates mastery of all B1 grammar"
-  - "Learner applies grammar in integrated contexts"
-  - "Learner identifies and corrects grammar errors"
-  - "Learner is prepared for B2 grammar challenges"
-vocabulary_count: 35
-vocab_count: 18
----
-
 # Інтеграція граматики B1
 
 > 🎯 **Чому це важливо?**

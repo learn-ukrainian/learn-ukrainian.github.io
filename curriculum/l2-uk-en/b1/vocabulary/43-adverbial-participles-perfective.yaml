@@ -1,0 +1,80 @@
+module: 43-adverbial-participles-perfective
+level: B1
+version: '2.0'
+items:
+- lemma: взя
+  ipa: /vzʲa/
+  translation: take (root)
+  pos: other
+- lemma: вийш
+  ipa: /vɪjʃ/
+  translation: go out (root)
+  pos: other
+- lemma: вставлятися
+  ipa: /ustau̯ˈlʲatɪsʲa/
+  translation: to be inserted
+  pos: verb
+- lemma: вша
+  ipa: /u̯ʃa/
+  translation: suffix -vsha
+  pos: noun
+  gender: m
+- lemma: вши
+  ipa: /u̯ʃɪ/
+  translation: suffix -vshy
+  pos: adv
+- lemma: забарвленість
+  ipa: /zaˈbaru̯lɛnʲisʲtʲ/
+  translation: tint
+  pos: noun
+  gender: f
+- lemma: закодований
+  ipa: /zakɔˈdɔvanɪj/
+  translation: encoded
+  pos: adj
+  gender: f
+- lemma: овша
+  ipa: /ˈɔu̯ʃa/
+  translation: suffix -ovsha
+  pos: noun
+  gender: m
+- lemma: поча
+  ipa: /pɔˈt͡ʃa/
+  translation: start (root)
+  pos: adv
+- lemma: почу
+  ipa: /pɔˈt͡ʃu/
+  translation: hear (root)
+  pos: other
+- lemma: прийш
+  ipa: /prɪjʃ/
+  translation: come (root)
+  pos: other
+- lemma: прити
+  ipa: /ˈprɪtɪ/
+  translation: to come (typo)
+  pos: verb
+- lemma: приїха
+  ipa: /prɪˈjixa/
+  translation: arrive (root)
+  pos: noun
+  gender: m
+- lemma: прочити
+  ipa: /prɔt͡ʃɪˈtɪ/
+  translation: to read (typo)
+  pos: verb
+- lemma: реєстраційний
+  ipa: /rɛjɛstraˈt͡sʲijnɪj/
+  translation: registration (adj)
+  pos: adj
+  gender: m
+- lemma: ритмічність
+  ipa: /rɪtˈmʲit͡ʃnʲisʲtʲ/
+  translation: rhythmicity
+  pos: noun
+  gender: f
+- lemma: сказа
+  ipa: /skaˈza/
+  translation: say (root)
+  pos: noun
+  gender: f

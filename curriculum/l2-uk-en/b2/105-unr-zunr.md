@@ -1,28 +1,3 @@
----
-id: 105-unr-zunr
-title: "УНР і ЗУНР: Мрія про Соборність"
-description: "Українська Революція 1917–1921 років. Створення УНР, Акт Злуки та трагічна боротьба за державність."
-slug: "unr-zunr"
-focus: "history"
-pedagogy: "CBI"
-duration: "45 min"
-transliteration: none
-vocabulary_count: 35
-tags:
-  - "history"
-  - "revolution"
-  - "independence"
-grammar:
-  - "Political Vocabulary"
-  - "Passive Voice (Revision)"
-objectives:
-  - "Зрозуміти етапи Української революції 1917–1921 років"
-  - "Вивчити зміст Чотирьох Універсалів"
-  - "Дізнатися про Акт Злуки та його значення"
-  - "Проаналізувати причини поразки визвольних змагань"
-vocab_count: 59
----
-
 # УНР і ЗУНР: Мрія про Соборність
 
 ## 1917: Весна народів

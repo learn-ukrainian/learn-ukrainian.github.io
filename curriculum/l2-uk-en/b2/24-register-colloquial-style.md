@@ -1,30 +1,3 @@
----
-module: b2-24
-title: "Розмовний стиль"
-subtitle: "Ну, типу, як говорити по-справжньому"
-version: "1.0"
-phase: "B2.1b [Grammar Completion]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - register
-  - colloquial-style
-grammar:
-  - "Shortened word forms: тел, комп, інфа"
-  - "Particles: ж/же, бо, таки"
-  - "Наповнювачі: типу, ну, от, та"
-  - "Informal interjections: ого, класно, жесть"
-objectives:
-  - "Учень може розпізнавати маркери розмовного стилю в українській мові"
-  - "Учень може трансформувати формальний текст у неформальний і навпаки"
-  - "Учень може правильно використовувати частки ж/же, бо, таки для емфази"
-  - "Учень може вживати скорочені форми слів та сленг доречно"
-vocabulary_count: 27
-vocab_count: 49
----
-
 # Розмовний стиль
 
 > Чому це важливо?

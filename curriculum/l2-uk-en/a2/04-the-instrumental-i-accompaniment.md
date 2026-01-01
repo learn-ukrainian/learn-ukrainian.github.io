@@ -1,30 +1,3 @@
----
-module: a2-04
-title: 'The Instrumental I — Accompaniment'
-subtitle: 'With Friends and Family'
-version: '1.0'
-phase: 'A2.1'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: none
-tags:
-  - grammar
-  - cases
-  - instrumental
-  - prepositions
-grammar:
-  - instrumental case endings
-  - preposition з/із/зі
-  - accompaniment
-objectives:
-  - 'Learner can form instrumental case endings for all genders'
-  - 'Learner can use the preposition з/із/зі with instrumental'
-  - 'Learner can express accompaniment (with someone/something)'
-  - 'Learner can use instrumental for social activities'
-vocabulary_count: 35
-vocab_count: 47
----
-
 ## Introduction
 
 In this module, you'll learn the Instrumental case — the seventh and final case in Ukrainian. While the Instrumental has several functions, this module focuses on its most common use at A2 level: expressing **accompaniment** (with whom or with what you do something).

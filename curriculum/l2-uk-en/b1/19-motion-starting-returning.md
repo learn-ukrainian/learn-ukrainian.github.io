@@ -1,27 +1,3 @@
----
-module: b1-19
-title: "Рух: початок і повернення"
-subtitle: "Motion - Starting & Returning"
-version: "1.0"
-phase: "B1.2 Motion"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - motion-verbs
-  - prefixes
-grammar:
-  - "Prefixes по-, за-, роз-"
-  - "Starting, stopping by, dispersing patterns"
-objectives:
-  - "Learner can use по- for starting movement"
-  - "Learner can use за- for stopping by"
-  - "Learner can use роз- for dispersing"
-vocabulary_count: 25
-vocab_count: 73
----
-
 # Рух: початок і повернення
 
 > 🎯 **Чому це важливо?**

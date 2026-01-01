@@ -1,28 +1,3 @@
----
-module: a2-26
-title: Because and Although
-subtitle: "Explaining Why and Why Not"
-version: "1.0"
-phase: "A2.3"
-pedagogy: "Complex Sentences"
-duration: "60 min"
-transliteration: none
-tags:
-  - connectors
-  - reasoning
-  - debating
-grammar:
-  - causal clauses
-  - concessive clauses
-  - sentence structure
-objectives:
-  - "Learner can explain reasons (Because...)"
-  - "Learner can express contrast (Although...)"
-  - "Learner can link complex ideas"
-vocabulary_count: 25
-vocab_count: 34
----
-
 # Summary
 
 ## Warm-up

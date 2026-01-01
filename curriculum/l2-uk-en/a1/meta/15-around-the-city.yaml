@@ -1,0 +1,27 @@
+module: a1-15
+title: Around the City
+subtitle: Navigating urban spaces with confidence
+version: '1.0'
+phase: A1.2 - Navigation
+pedagogy: PPP
+duration: 60 min
+transliteration: vocabulary-only
+tags:
+  - navigation
+  - directions
+  - city
+  - locative-case
+  - transport
+grammar:
+  - Locative case in context
+  - Directional expressions
+  - Instrumental case with transport
+  - Prepositions of location (біля, навпроти, за, перед, між)
+objectives:
+  - Navigate using directional vocabulary (прямо, наліво, направо)
+  - Use locative case for city locations in context
+  - Ask and answer 'Де...?' and 'Як дістатися до...?' questions
+  - Name common urban infrastructure and transport methods
+vocabulary_count: 40
+vocab_count: 90
+slug: 15-around-the-city

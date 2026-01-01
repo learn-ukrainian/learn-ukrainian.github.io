@@ -1,6 +1,15 @@
 # Audit Report: 11-aspect-in-imperatives.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
+**Phase:** B1.1 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): прошу, негайно, голосно, спокійно, терпляче...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1511/1500
@@ -10,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 26/25
+- **Vocab:** ⚠️ 24 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,19 +46,12 @@
 | proverbs | 2 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.9%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Вид у наказовому способі** | ⚪️ | 55 | Skipped |
+| **Intro/Narrative** | ✅ | 55 | Included in Core |
 | **Тест** | ⚪️ | 154 | Skipped |
 | **Пояснення** | ⚪️ | 352 | Skipped |
 | **Практика** | ⚪️ | 402 | Skipped |
 | **Діалоги** | ✅ | 366 | Included in Core |
 | **Підсумок** | ✅ | 182 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

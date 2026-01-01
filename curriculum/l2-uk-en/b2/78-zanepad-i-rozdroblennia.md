@@ -1,35 +1,3 @@
----
-module: b2-78
-title: "Занепад і роздроблення — Кінець єдності Русі"
-subtitle: "Любецький з'їзд, князівські усобиці, Повчання Мономаха"
-version: "1.0"
-phase: "B2.3a [Ukrainian History]"
-pedagogy: "CBI"
-duration: 90
-transliteration: "none"
-tags:
-  - history
-  - medieval
-  - liubech-congress
-  - civil-wars
-  - monomakh-testament
-register: "публіцистичний"
-grammar:
-  - "Historical narrative tenses"
-  - "Passive voice in historical writing"
-vocabulary_focus:
-vocab_count: 105
-  - "Historical terminology"
-  - "Political and military vocabulary"
-  - "Legal and dynastic vocabulary"
-objectives:
-  - "Learner can understand and discuss the fragmentation of Kyivan Rus in Ukrainian"
-  - "Learner can analyze primary sources related to the Congress of Liubech and Monomakh's Testament"
-  - "Learner can recognize causes and consequences of political fragmentation"
-  - "Learner can use era-specific vocabulary in historical discourse"
-vocabulary_count: 35
----
-
 # Занепад і роздроблення — Кінець єдності Русі
 
 > 🎯 **Чому це важливо?**

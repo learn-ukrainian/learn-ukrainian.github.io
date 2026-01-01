@@ -1,0 +1,26 @@
+module: b2-38
+title: Односкладні речення
+subtitle: One-member Sentences
+version: '1.0'
+phase: B2.1c [Register & Domain Vocab]
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - grammar
+  - syntax
+  - sentence-structure
+  - stylistics
+grammar:
+  - Означено-особові речення
+  - Неозначено-особові речення
+  - Безособові речення
+  - Номінативні речення
+objectives:
+  - Learner can identify and classify four types of one-member sentences
+  - Learner can use one-member sentences for stylistic effect
+  - Learner can transform two-member sentences into one-member structures
+  - Learner understands the expressive functions of one-member sentences
+vocabulary_count: 25
+vocab_count: 82
+slug: 38-one-member-sentences

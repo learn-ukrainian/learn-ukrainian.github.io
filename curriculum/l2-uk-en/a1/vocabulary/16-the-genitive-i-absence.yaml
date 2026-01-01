@@ -1,0 +1,211 @@
+module: 16-the-genitive-i-absence
+level: A1
+version: '2.0'
+items:
+  - lemma: бессарабський
+    ipa: /bɛsɑˈrɑbsʲkɪj/
+    translation: Bessarabian
+    pos: adj
+    gender: m
+  - lemma: важко
+    ipa: /ˈvɑʒkɔ/
+    translation: difficultly/hard
+    pos: adv
+  - lemma: вибір
+    ipa: /ˈvɪbir/
+    translation: choice
+    pos: noun
+    gender: m
+  - lemma: використовувати
+    ipa: /vɪkɔrɪˈstɔvuvɑtɪ/
+    translation: to use
+    pos: verb
+  - lemma: виражати
+    ipa: /vɪrɑˈʒɑtɪ/
+    translation: to express
+    pos: verb
+  - lemma: відсутність
+    ipa: /vidˈsutnisʲtʲ/
+    translation: absence
+    pos: noun
+    gender: f
+  - lemma: гостинний
+    ipa: /ɦɔˈstɪnnɪj/
+    translation: hospitable
+    pos: adj
+    gender: m
+  - lemma: гривня
+    ipa: /ˈɦrɪvnʲɑ/
+    translation: hryvnia
+    pos: noun
+    gender: f
+  - lemma: довгий
+    ipa: /ˈdɔwɦɪj/
+    translation: long
+    pos: adj
+    gender: m
+  - lemma: жаль
+    ipa: /ʒɑlʲ/
+    translation: pity/regret
+    pos: noun
+    gender: m
+  - lemma: завтра
+    ipa: /ˈzɑwtrɑ/
+    translation: tomorrow
+    pos: adv
+  - lemma: зайнятий
+    ipa: /ˈzɑjnʲɑtɪj/
+    translation: busy
+    pos: adj
+    gender: m
+  - lemma: знання
+    ipa: /znɑnˈnʲɑ/
+    translation: knowledge
+    pos: noun
+    gender: n
+  - lemma: зрозуміло
+    ipa: /zrɔzuˈmilɔ/
+    translation: understood/clear
+    pos: adv
+  - lemma: інформація
+    ipa: /infɔrˈmɑt͡sʲijɑ/
+    translation: information
+    pos: noun
+    gender: f
+  - lemma: київський
+    ipa: /ˈkɪjiwsʲkɪj/
+    translation: Kyiv (adj)
+    pos: adj
+    gender: m
+  - lemma: культура
+    ipa: /kulʲˈturɑ/
+    translation: culture
+    pos: noun
+    gender: f
+  - lemma: лекція
+    ipa: /ˈlɛkt͡sʲijɑ/
+    translation: lecture
+    pos: noun
+    gender: f
+  - lemma: мешканець
+    ipa: /ˈmɛʃkɑnɛt͡sʲ/
+    translation: resident
+    pos: noun
+    gender: m
+  - lemma: можливість
+    ipa: /mɔʒˈlɪvisʲtʲ/
+    translation: possibility
+    pos: noun
+    gender: f
+  - lemma: мусити
+    ipa: /ˈmusɪtɪ/
+    translation: to have to
+    pos: verb
+  - lemma: олівець
+    ipa: /ɔliˈvɛt͡sʲ/
+    translation: pencil
+    pos: noun
+    gender: m
+  - lemma: покупець
+    ipa: /pɔkuˈpɛt͡sʲ/
+    translation: buyer
+    pos: noun
+    gender: m
+  - lemma: почути
+    ipa: /pɔˈt͡ʃutɪ/
+    translation: to hear (perf)
+    pos: verb
+  - lemma: поширений
+    ipa: /pɔˈʃɪrɛnɪj/
+    translation: widespread
+    pos: adj
+    gender: m
+  - lemma: причина
+    ipa: /prɪˈt͡ʃɪnɑ/
+    translation: reason
+    pos: noun
+    gender: f
+  - lemma: проблема
+    ipa: /prɔˈblɛmɑ/
+    translation: problem
+    pos: noun
+    gender: f
+  - lemma: прохання
+    ipa: /prɔˈxɑnʲːɑ/
+    translation: request
+    pos: noun
+    gender: n
+  - lemma: підсумок
+    ipa: /ˈpidsumɔk/
+    translation: summary
+    pos: noun
+    gender: m
+  - lemma: родовий
+    ipa: /rɔdɔˈvɪj/
+    translation: genitive
+    pos: adj
+    gender: m
+  - lemma: розмова
+    ipa: /rɔzˈmɔvɑ/
+    translation: conversation
+    pos: noun
+    gender: f
+  - lemma: ручка
+    ipa: /ˈrut͡ʃkɑ/
+    translation: pen
+    pos: noun
+    gender: f
+  - lemma: різниця
+    ipa: /rizˈnɪt͡sʲɑ/
+    translation: difference
+    pos: noun
+    gender: f
+  - lemma: сенс
+    ipa: /sɛns/
+    translation: sense/meaning
+    pos: noun
+    gender: m
+  - lemma: сила
+    ipa: /ˈsɪlɑ/
+    translation: strength
+    pos: noun
+    gender: f
+  - lemma: спогад
+    ipa: /ˈspɔɦɑd/
+    translation: memory
+    pos: noun
+    gender: m
+  - lemma: сто
+    ipa: /stɔ/
+    translation: hundred
+    pos: num
+  - lemma: студентський
+    ipa: /stuˈdɛnt͡sʲkɪj/
+    translation: student (adj)
+    pos: adj
+    gender: m
+  - lemma: теплий
+    ipa: /ˈtɛplɪj/
+    translation: warm
+    pos: adj
+    gender: m
+  - lemma: терпіння
+    ipa: /tɛrˈpinʲːɑ/
+    translation: patience
+    pos: noun
+    gender: n
+  - lemma: університетський
+    ipa: /univɛrsɪˈtɛtsʲkɪj/
+    translation: university (adj)
+    pos: adj
+    gender: m
+  - lemma: фраза
+    ipa: /ˈfrɑzɑ/
+    translation: phrase
+    pos: noun
+    gender: f
+  - lemma: шаблон
+    ipa: /ʃɑˈblɔn/
+    translation: pattern/template
+    pos: noun
+    gender: m

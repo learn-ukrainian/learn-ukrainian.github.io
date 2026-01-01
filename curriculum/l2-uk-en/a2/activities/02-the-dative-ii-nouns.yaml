@@ -460,4 +460,70 @@
     *дітям*(correct). Ми телефонуємо *друзям*(correct) щотижня. Він дарує *подарунок*(wrong) *мамі*(correct).'
 - type: translate
   title: English to Ukrainian
-  items: []
+  items:
+  - source: I am writing a letter to my mother.
+    options:
+    - text: Я пишу листа мамі.
+      correct: true
+    - text: Я пишу листа маму.
+      correct: false
+    - text: Я пишу листа мамою.
+      correct: false
+    - text: Я пишу листа мама.
+      correct: false
+    explanation: Dative мамі (feminine -а → -і).
+  - source: He helps his friend.
+    options:
+    - text: Він допомагає другу.
+      correct: true
+    - text: Він допомагає друга.
+      correct: false
+    - text: Він допомагає другом.
+      correct: false
+    - text: Він допомагає друг.
+      correct: false
+    explanation: Dative другу/другові (masculine).
+  - source: We are sending a parcel to our grandparents.
+    options:
+    - text: Ми надсилаємо посилку бабусі і дідусеві.
+      correct: true
+    - text: Ми надсилаємо посилку бабуся і дідусь.
+      correct: false
+    - text: Ми надсилаємо посилку бабусю і дідуся.
+      correct: false
+    - text: Ми надсилаємо посилку бабусі і дідуся.
+      correct: false
+    explanation: Dative бабусі and дідусеві.
+  - source: The teacher explains the lesson to the students.
+    options:
+    - text: Вчитель пояснює урок учням.
+      correct: true
+    - text: Вчитель пояснює урок учні.
+      correct: false
+    - text: Вчитель пояснює урок учнів.
+      correct: false
+    - text: Вчитель пояснює урок учнями.
+      correct: false
+    explanation: Dative plural учням.
+  - source: Do you trust this doctor?
+    options:
+    - text: Ви довіряєте цьому лікареві?
+      correct: true
+    - text: Ви довіряєте цей лікар?
+      correct: false
+    - text: Ви довіряєте цього лікаря?
+      correct: false
+    - text: Ви довіряєте цим лікарем?
+      correct: false
+    explanation: Dative лікареві.
+  - source: She gives flowers to her sister.
+    options:
+    - text: Вона дарує квіти сестрі.
+      correct: true
+    - text: Вона дарує квіти сестру.
+      correct: false
+    - text: Вона дарує квіти сестра.
+      correct: false
+    - text: Вона дарує квіти сестрою.
+      correct: false
+    explanation: Dative сестрі.

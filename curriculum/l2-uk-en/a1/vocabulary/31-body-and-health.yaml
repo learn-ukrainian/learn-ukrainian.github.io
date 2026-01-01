@@ -1,0 +1,153 @@
+module: 31-body-and-health
+level: A1
+version: '2.0'
+items:
+  - lemma: алло
+    ipa: /ɑˈlɔ/
+    translation: hello (phone)
+    pos: other
+  - lemma: біль
+    ipa: /bilʲ/
+    translation: pain
+    pos: noun
+    gender: m
+  - lemma: боліти
+    ipa: /bɔˈlitɪ/
+    translation: to hurt
+    pos: verb
+  - lemma: викликати
+    ipa: /vɪˈklɪkɑtɪ/
+    translation: to call (doctor)
+    pos: verb
+  - lemma: вухо
+    ipa: /ˈvuxɔ/
+    translation: ear
+    pos: noun
+    gender: n
+  - lemma: головний
+    ipa: /ɦɔlɔvˈnɪj/
+    translation: main/head
+    pos: adj
+    gender: m
+  - lemma: горло
+    ipa: /ˈɦɔrlɔ/
+    translation: throat
+    pos: noun
+    gender: n
+  - lemma: живіт
+    ipa: /ʒɪˈvit/
+    translation: stomach
+    pos: noun
+    gender: m
+  - lemma: застуда
+    ipa: /zɑsˈtudɑ/
+    translation: cold (illness)
+    pos: noun
+    gender: f
+  - lemma: кашель
+    ipa: /ˈkɑʃɛlʲ/
+    translation: cough
+    pos: noun
+    gender: m
+  - lemma: лікарня
+    ipa: /liˈkɑrnʲɑ/
+    translation: hospital
+    pos: noun
+    gender: f
+  - lemma: мед
+    ipa: /mɛd/
+    translation: honey
+    pos: noun
+    gender: m
+  - lemma: медицина
+    ipa: /mɛdɪˈt͡sɪnɑ/
+    translation: medicine
+    pos: noun
+    gender: f
+  - lemma: народний
+    ipa: /nɑˈrɔdnɪj/
+    translation: folk/national
+    pos: adj
+    gender: m
+  - lemma: нежить
+    ipa: /ˈnɛʒɪtʲ/
+    translation: runny nose
+    pos: noun
+    gender: m
+  - lemma: нога
+    ipa: /nɔˈɦɑ/
+    translation: leg
+    pos: noun
+    gender: f
+  - lemma: потрібний
+    ipa: /pɔˈtribnɪj/
+    translation: needed/necessary
+    pos: adj
+    gender: m
+  - lemma: почуватися
+    ipa: /pɔt͡ʃuˈvɑtɪsʲɑ/
+    translation: to feel
+    pos: verb
+  - lemma: результат
+    ipa: /rɛzulʲˈtɑt/
+    translation: result
+    pos: noun
+    gender: m
+  - lemma: рецепт
+    ipa: /rɛˈt͡sɛpt/
+    translation: prescription/recipe
+    pos: noun
+    gender: m
+  - lemma: рука
+    ipa: /ruˈkɑ/
+    translation: hand/arm
+    pos: noun
+    gender: f
+  - lemma: себе
+    ipa: /ˈsɛbɛ/
+    translation: self
+    pos: pron
+  - lemma: серце
+    ipa: /ˈsɛrt͡sɛ/
+    translation: heart
+    pos: noun
+    gender: n
+  - lemma: симптом
+    ipa: /sɪmpˈtɔm/
+    translation: symptom
+    pos: noun
+    gender: m
+  - lemma: сироп
+    ipa: /sɪˈrɔp/
+    translation: syrup
+    pos: noun
+    gender: m
+  - lemma: спина
+    ipa: /spɪˈnɑ/
+    translation: back
+    pos: noun
+    gender: f
+  - lemma: статися
+    ipa: /ˈstɑtɪsʲɑ/
+    translation: to happen
+    pos: verb
+  - lemma: таблетка
+    ipa: /tɑbˈlɛtkɑ/
+    translation: pill/tablet
+    pos: noun
+    gender: f
+  - lemma: температура
+    ipa: /tɛmpɛrɑˈturɑ/
+    translation: temperature/fever
+    pos: noun
+    gender: f
+  - lemma: тіло
+    ipa: /ˈtilɔ/
+    translation: body
+    pos: noun
+    gender: n
+  - lemma: хворий
+    ipa: /ˈxvɔrɪj/
+    translation: sick
+    pos: adj
+    gender: m

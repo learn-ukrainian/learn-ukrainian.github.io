@@ -1,0 +1,46 @@
+module: 02-language-about-verbs
+level: B1
+version: '2.0'
+items:
+- lemma: дракон
+  ipa: /draˈkɔn/
+  translation: dragon
+  pos: noun
+  gender: m
+- lemma: дієвідміна
+  ipa: /dʲijɛvidˈmʲina/
+  translation: conjugation
+  pos: noun
+  gender: f
+- lemma: майч
+  ipa: /majt͡ʃ/
+  translation: Fut. (Future Tense)
+  pos: propn
+  gender: m
+- lemma: мч
+  ipa: /ɛm t͡ʃɛ/
+  translation: Past (Past Tense)
+  pos: noun
+  gender: m
+- lemma: однократний
+  ipa: /ɔdnɔˈkratnɪj/
+  translation: semelfactive
+  pos: adj
+  gender: m
+- lemma: піймати
+  ipa: /pʲijˈmatɪ/
+  translation: to catch
+  pos: verb
+- lemma: скоросити
+  ipa: /skɔrɔˈsɪtɪ/
+  translation: to shorten (typo?)
+  pos: verb
+- lemma: слабіти
+  ipa: /slaˈbʲitɪ/
+  translation: to weaken
+  pos: verb
+- lemma: тч
+  ipa: /tɛ t͡ʃɛ/
+  translation: Pres. (Present Tense)
+  pos: noun
+  gender: m

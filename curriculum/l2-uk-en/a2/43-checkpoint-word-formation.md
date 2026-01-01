@@ -1,31 +1,3 @@
----
-module: a2-43
-title: "Checkpoint - Word Formation"
-subtitle: "Review of Modules 37-42"
-version: "2.0"
-phase: "A2.4"
-focus: checkpoint
-pedagogy: "Review"
-duration: "60 min"
-transliteration: none
-tags:
-  - review
-  - checkpoint
-  - assessment
-grammar:
-  - motion prefixes
-  - action prefixes
-  - noun suffixes
-  - adjective suffixes
-  - root families
-objectives:
-  - "Learner demonstrates mastery of word formation"
-  - "Learner can analyze word components"
-  - "Learner can derive new words from roots"
-vocabulary_count: 25
-vocab_count: 33
----
-
 # Checkpoint - Word Formation
 
 **Вітаємо!** Ви вивчили словотвір! Word formation is one of the most powerful tools in Ukrainian.

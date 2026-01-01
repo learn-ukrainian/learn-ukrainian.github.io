@@ -1,6 +1,17 @@
 # Audit Report: 44-food-and-cooking.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[GRAMMAR]** Participle used before B1: 'насичений'
+  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, відмінок
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 2 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1182/1000
@@ -10,17 +21,12 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 19/1
+- **Vocab:** ✅ 72/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 53.2% (target 50-60% (A2.3))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
+- **Pedagogy:** ❌ 1 violations
+- **Immersion:** ❌ 48.4% LOW (target 50-60% (A2.3))
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -37,15 +43,4 @@
 | **Recipe Imperatives** | ⚪️ | 67 | Skipped |
 | **Useful Phrases** | ⚪️ | 114 | Skipped |
 | **Summary** | ✅ | 181 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Kitchen Words** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Cooking Methods** | 🎮 | 8 | Activity (8 items, min 8) |
-| **cloze: Recipe Story** | 🎮 | 12 | Activity (12 items, min 12) |
-| **quiz: Food & Cooking** | 🎮 | 8 | Activity (8 items, min 8) |
-| **unjumble: Cooking Sentences** | 🎮 | 8 | Activity (8 items, min 6) |
-| **error-correction: Kitchen Mistakes** | 🎮 | 6 | Activity (6 items, min 6) |
-| **match-up: Meals & Times** | 🎮 | 8 | Activity (8 items, min 8) |
-| **group-sort: Kitchen Categories** | 🎮 | 16 | Activity (16 items, min 12) |
-| **true-false: Kitchen Facts** | 🎮 | 12 | Activity (12 items, min 8) |
-| **translate: Food Words** | 🎮 | 8 | Activity (8 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

@@ -1,0 +1,26 @@
+module: b2-11
+title: Багатоскладні речення
+subtitle: Складносурядні та складнопідрядні речення з кількома підрядними
+version: '1.0'
+phase: B2.1b [Participles & Register]
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - grammar
+  - syntax
+  - punctuation
+  - complex-sentences
+grammar:
+  - Складносурядні речення зі сполучниками і, а, але, або
+  - Складнопідрядні речення з кількома підрядними
+  - Вкладені підрядні речення
+  - Пунктуація у багатоскладних реченнях
+objectives:
+  - Learner can construct complex sentences with multiple subordinate clauses
+  - Learner can correctly punctuate multi-clause sentences
+  - Learner can identify and analyze the structure of complex sentences
+  - Learner can combine simple sentences into complex multi-clause structures
+vocabulary_count: 25
+vocab_count: 112
+slug: 11-multi-clause-sentences

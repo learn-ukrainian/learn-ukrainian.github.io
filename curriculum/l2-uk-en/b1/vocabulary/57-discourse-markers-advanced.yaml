@@ -1,0 +1,73 @@
+module: 57-discourse-markers-advanced
+level: B1
+version: '2.0'
+items:
+- lemma: безкоштовній
+  ipa: /bɛzkɔʃˈtɔu̯nʲij/
+  translation: free (loc.)
+  pos: adj
+- lemma: виплатити
+  ipa: /ˈvɪplatɪtɪ/
+  translation: to pay out
+  pos: verb
+  gender: f
+- lemma: втричі
+  ipa: /ˈvtrɪt͡ʃʲi/
+  translation: three times
+  pos: adv
+- lemma: громадське
+  ipa: /hrɔˈmadsʲkɛ/
+  translation: public
+  pos: noun
+  gender: n
+- lemma: зупинути
+  ipa: /zupɪˈnutɪ/
+  translation: to stop (typo)
+  pos: verb
+- lemma: найрозумніший
+  ipa: /najrɔˈzumnʲiʃɪj/
+  translation: smartest
+  pos: adj
+  gender: m
+- lemma: насамкінець
+  ipa: /nasamkʲiˈnɛt͡sʲ/
+  translation: in the end
+  pos: adv
+- lemma: пандемія
+  ipa: /pandɛˈmʲija/
+  translation: pandemic
+  pos: noun
+  gender: f
+- lemma: передус
+  ipa: /pɛrɛˈdus/
+  translation: above all (trunc)
+  pos: noun
+  gender: f
+- lemma: перенавчання
+  ipa: /pɛrɛnau̯ˈt͡ʃanʲːa/
+  translation: retraining
+  pos: noun
+  gender: n
+- lemma: першочерговість
+  ipa: /pɛrʃɔt͡ʃɛrˈhɔvisʲtʲ/
+  translation: priority
+  pos: noun
+  gender: f
+- lemma: позитивне
+  ipa: /pɔzɪˈtɪvnɛ/
+  translation: positive
+  pos: noun
+  gender: n
+- lemma: пропонуватися
+  ipa: /prɔpɔnuˈvatɪsʲa/
+  translation: to be suggested
+  pos: verb
+- lemma: ріст
+  ipa: /rist/
+  translation: growth
+  pos: noun
+  gender: m
+- lemma: самперед
+  ipa: /samˈpɛrɛd/
+  translation: first of all (typo)
+  pos: other

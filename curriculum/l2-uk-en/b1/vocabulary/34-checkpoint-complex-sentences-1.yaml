@@ -1,0 +1,36 @@
+module: 34-checkpoint-complex-sentences-1
+level: B1
+version: '2.0'
+items:
+- lemma: вільніше
+  ipa: /vʲilʲˈnʲiʃɛ/
+  translation: freer
+  pos: adv
+- lemma: знаходження
+  ipa: /znaˈxɔdʒɛnʲːa/
+  translation: location
+  pos: noun
+  gender: n
+- lemma: который
+  ipa: /kaˈtorɨj/
+  translation: which (Rus.)
+  pos: other
+- lemma: кіото
+  ipa: /kiˈɔtɔ/
+  translation: Kyoto
+  pos: propn
+  gender: n
+- lemma: обмеженіший
+  ipa: /ɔbˈmɛʒɛnʲiʃɪj/
+  translation: more limited
+  pos: adj
+- lemma: токіо
+  ipa: /ˈtɔkʲiɔ/
+  translation: Tokyo
+  pos: propn
+  gender: n
+- lemma: фудзі
+  ipa: /ˈfudzi/
+  translation: Fuji
+  pos: propn
+  gender: f

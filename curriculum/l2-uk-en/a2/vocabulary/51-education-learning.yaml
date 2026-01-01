@@ -1,0 +1,141 @@
+module: 51-education-learning
+level: A2
+version: '2.0'
+items:
+- lemma: айтішник
+  ipa: ɐjˈtʲiʃnɪk
+  translation: IT specialist (coll.)
+  pos: noun
+  gender: m
+- lemma: вальс
+  ipa: vɐlʲs
+  translation: waltz
+  pos: noun
+  gender: m
+- lemma: випускний
+  ipa: vɪpusˈknɪj
+  translation: prom/graduation
+  pos: adj
+  gender: m
+- lemma: вступати
+  ipa: vstuˈpɑte
+  translation: to enter (university)
+  pos: verb
+- lemma: гуртожиток
+  ipa: hurˈtɔʒɪtok
+  translation: dormitory
+  pos: noun
+  gender: m
+- lemma: дзвоник
+  ipa: ˈdzvɔnɪk
+  translation: bell
+  pos: noun
+  gender: m
+- lemma: диплом
+  ipa: dɪˈplɔm
+  translation: diploma
+  pos: noun
+  gender: m
+- lemma: задовільно
+  ipa: zɐdoˈvʲilʲno
+  translation: satisfactorily
+  pos: adv
+- lemma: залік
+  ipa: ˈzɑlʲik
+  translation: pass/fail exam
+  pos: noun
+  gender: m
+- lemma: карлос
+  ipa: ˈkɑrlos
+  translation: Carlos
+  pos: propn
+  gender: m
+- lemma: навчатися
+  ipa: nɐu̯ˈt͡ʃɑtɪsʲɐ
+  translation: to study
+  pos: verb
+- lemma: найбільше
+  ipa: nɑjˈbʲilʲʃe
+  translation: most
+  pos: adv
+- lemma: наклейк
+  ipa: nɐˈklɛjkɐ
+  translation: sticker (gen pl? typo наклейка)
+  pos: noun
+  gender: f
+- lemma: незадовільно
+  ipa: nezɐdoˈvʲilʲno
+  translation: unsatisfactorily
+  pos: adv
+- lemma: нести
+  ipa: neˈstɪ
+  translation: to carry (imp)
+  pos: verb
+- lemma: парта
+  ipa: ˈpɑrtɐ
+  translation: desk (school)
+  pos: noun
+  gender: f
+- lemma: початковий
+  ipa: pot͡ʃɐtˈkɔʋɪj
+  translation: initial/elementary
+  pos: adj
+  gender: f
+- lemma: профільний
+  ipa: ˈprɔfʲilʲnɪj
+  translation: specialized (adj)
+  pos: adj
+  gender: f
+- lemma: піцерія
+  ipa: pʲit͡seˈrʲijɐ
+  translation: pizzeria
+  pos: noun
+  gender: f
+- lemma: семінар
+  ipa: semʲiˈnɑr
+  translation: seminar
+  pos: noun
+  gender: m
+- lemma: сесія
+  ipa: ˈsɛsʲijɐ
+  translation: session/exams
+  pos: noun
+  gender: f
+- lemma: скласти
+  ipa: ˈsklɑste
+  translation: to pass (exam); assemble
+  pos: verb
+- lemma: старанний
+  ipa: stɐˈrɑnːɪj
+  translation: diligent
+  pos: adj
+  gender: m
+- lemma: сходити
+  ipa: sxoˈdɪte
+  translation: to go/descend
+  pos: verb
+- lemma: факультет
+  ipa: fɐkulʲˈtɛt
+  translation: faculty
+  pos: noun
+  gender: m
+- lemma: школярка
+  ipa: ʃkoˈlʲɑrkɐ
+  translation: schoolgirl
+  pos: noun
+  gender: f
+- lemma: юридичний
+  ipa: jurɪˈdɪt͡ʃnɪj
+  translation: legal/juridical
+  pos: adj
+  gender: m
+- lemma: іспанський
+  ipa: isˈpɑnsʲkɪj
+  translation: Spanish
+  pos: adj
+  gender: f
+- lemma: іспанія
+  ipa: isˈpɑnʲijɐ
+  translation: Spain
+  pos: propn
+  gender: f

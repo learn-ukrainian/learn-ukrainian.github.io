@@ -1,26 +1,44 @@
 # Audit Report: 23-smart-shopping.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## LINT ERRORS
+- ❌ Line 233: Empty Header detected (Lonely '#'). Remove or add title.
+
+## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
+  - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): шукати, ціна, радити, вигідний, якість...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 40/100)
+
+- Borderline case (severity 40/100)
+- 2 pedagogical violations (minor)
+- Immersion 18% off target
+- Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1324/1000
+- **Words:** ✅ 1242/1000
 - **Activities:** ✅ 11/10
-- **Density:** ✅ All > 12
+- **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 15/1
+- **Vocab:** ✅ 18/1
 - **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 54.8% (target 40-55% (A2.2))
+- **Lint:** ❌ 1 Format Errors
+- **Pedagogy:** ❌ 1 violations
+- **Immersion:** ❌ 22.1% LOW (target 40-55% (A2.2))
+- **Grammar:** ⏳ Pending validation
 
-## MDX VALIDATION
-✅ No issues found
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| English to Ukrainian | translate | 0 | 6 | Add 6 more items |
 
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -37,19 +55,5 @@
 | **The Soul of the "Bazar"** | ⚪️ | 207 | Skipped |
 | **Shopping for Clothes vs. Food** | ⚪️ | 29 | Skipped |
 | **Practice** | ⚪️ | 0 | Skipped |
-| **Practice Dialogues** | ✅ | 151 | Included in Core |
-| **Summary Table** | ✅ | 0 | Included in Core |
-| **What You Learned** | ⚪️ | 119 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Shopping Vocabulary** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Shopping Phrases** | 🎮 | 12 | Activity (12 items, min 8) |
-| **quiz: Smart Shopping** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: Shopping Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Positive vs Negative Shopping Responses** | 🎮 | 12 | Activity (12 items, min 12) |
-| **unjumble: Shopping Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
-| **error-correction: Shopping Phrases** | 🎮 | 6 | Activity (6 items, min 6) |
-| **cloze: Shopping Dialogue at the Center** | 🎮 | 12 | Activity (12 items, min 12) |
-| **dialogue-reorder: Phone Shopping** | 🎮 | 12 | Activity (12 items, min 4) |
-| **mark-the-words: Find Comparison Words** | 🎮 | 9 | Activity (9 items, min 6) |
-| **translate: English to Ukrainian** | 🎮 | 36 | Activity (36 items, min 6) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Practice Dialogues** | ✅ | 188 | Included in Core |
+| **# Vocabulary** | ➖ | 0 | Excluded Type |

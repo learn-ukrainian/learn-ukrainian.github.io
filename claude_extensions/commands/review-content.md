@@ -40,11 +40,13 @@ For each module in range:
 ```
 
 **Why subagents?**
+
 - Each module gets full context capacity
 - Content review requires reading full module + templates
 - Prevents context exhaustion on large batches
 
 **Example batch execution:**
+
 ```
 /review-content b1 2-5
 
@@ -65,6 +67,7 @@ Summary: 2/4 perfect, 2/4 need fixes
 Parse arguments: $ARGUMENTS
 
 **Step 1: Determine Scope**
+
 - If only LEVEL provided: Use batch mode (subagent per module)
 - If LEVEL + NUMBER: Review single module directly
 - If LEVEL + RANGE (e.g., "10-20"): Use batch mode (subagent per module)
@@ -73,15 +76,17 @@ Parse arguments: $ARGUMENTS
 **Step 2: For Each Module (Single Mode Only)**
 
 ### Extract Content
+
 1. Read the module file
 2. Extract lesson content (everything BEFORE `## Activities` or `## Вправи`)
    - Include: Summary, all instructional sections, examples, engagement boxes
-   - Exclude: Frontmatter, Activities, Vocabulary, Self-Assessment
+   - Exclude: Activities, Self-Assessment (vocab/meta are in sidecars)
 3. Extract metadata (title, level, module number, topic)
 
 ### Locate Activities (YAML-Mandatory Check)
 
 **New Logic (STRICT ENFORCEMENT):**
+
 1. **Check for YAML file** (`activities/{module-slug}.yaml`).
 2. **REGARDLESS of identical YAML content**, you MUST scan the Markdown file for forbidden activity headers:
    - `## quiz`
@@ -101,20 +106,24 @@ Parse arguments: $ARGUMENTS
    - `## Вправи`
 
 **Scenario A (CRITICAL: Duplicate Activities):**
-- **Condition:** YAML exists AND *any* of the above headers exist in the Markdown.
+
+- **Condition:** YAML exists AND _any_ of the above headers exist in the Markdown.
 - **Verdict:** ⚠️ **DUPLICATE DETECTED**
 - **Action:** You MUST flag this as "Duplicate Activities".
 - **Required Fix:** "Remove inline activities from Markdown (keep Vocabulary)" (Safe Fix).
 
 **Scenario B (Legacy: Only Inline exists):**
+
 - **Flag:** "Legacy Format"
 - **Action Item:** "Migrate activities to YAML" (High Priority).
 - **Note:** This is a blocking issue for finalization.
 
 **Scenario C (Correct: Only YAML exists):**
+
 - **Status:** ✅ PASS (Proceed to evaluate YAML content).
 
 **Scenario D (Missing: Neither exists):**
+
 - **Status:** ❌ FAIL (Missing activities).
 
 **YAML Activity File Structure:**
@@ -122,12 +131,13 @@ For the **COMPLETE** schema of all 12+ activity types (quiz, match-up, fill-in, 
 `docs/l2-uk-en/YAML-ACTIVITY-WORKFLOW.md`
 
 **Partial Example (Quiz only):**
+
 ```yaml
 module: 11-aspect-in-imperatives
 level: B1
 activities:
   - type: quiz
-    title: "Вибір аспекту"
+    title: 'Вибір аспекту'
     items:
 # ... (see YAML-ACTIVITY-WORKFLOW.md for full syntax)
 ```
@@ -139,6 +149,7 @@ activities:
 Before scoring, verify the module follows the appropriate template:
 
 **Template Selection by Level and Type:**
+
 - **B1 M01-05 (Metalanguage):** `docs/l2-uk-en/templates/b1-metalanguage-module-template.md`
 - **B1 M06-51 (Grammar):** `docs/l2-uk-en/templates/b1-grammar-module-template.md`
 - **B1 Checkpoints (M15, M25, M34, M41, M51 — grammar phases only):** `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
@@ -152,19 +163,20 @@ Before scoring, verify the module follows the appropriate template:
 
 **Use Module Architect Skills for Focus-Area Review:**
 
-| Module Type | Skill | Review Focus |
-|-------------|-------|--------------|
-| Grammar (B1-B2) | `grammar-module-architect` | TTT pedagogy, aspect/motion verb teaching |
-| Vocabulary (B1) | `vocab-module-architect` | Collocations, synonymy, register |
-| Cultural (B1-C1) | `cultural-module-architect` | Authentic materials, regional balance |
-| History/Biography (B2-C1) | `history-module-architect` | Decolonization, primary sources |
-| Integration (B1-B2) | `integration-module-architect` | Skill coverage, no new content |
-| Checkpoint (All) | `checkpoint` | All skill groups tested, 16+ activities |
-| Literature (LIT) | `literature-module-architect` | 100% immersion, essays not drills |
+| Module Type               | Skill                          | Review Focus                              |
+| ------------------------- | ------------------------------ | ----------------------------------------- |
+| Grammar (B1-B2)           | `grammar-module-architect`     | TTT pedagogy, aspect/motion verb teaching |
+| Vocabulary (B1)           | `vocab-module-architect`       | Collocations, synonymy, register          |
+| Cultural (B1-C1)          | `cultural-module-architect`    | Authentic materials, regional balance     |
+| History/Biography (B2-C1) | `history-module-architect`     | Decolonization, primary sources           |
+| Integration (B1-B2)       | `integration-module-architect` | Skill coverage, no new content            |
+| Checkpoint (All)          | `checkpoint`                   | All skill groups tested, 16+ activities   |
+| Literature (LIT)          | `literature-module-architect`  | 100% immersion, essays not drills         |
 
 **Ukrainian Grammar Validation (MANDATORY):**
 
 Validate ALL Ukrainian text against these sources:
+
 - ✅ **Словник.UA** (slovnyk.ua) - standard spelling
 - ✅ **Словарь Грінченка** - authentic Ukrainian forms
 - ✅ **Антоненко-Давидович "Як ми говоримо"** - Russianisms guide
@@ -190,6 +202,7 @@ Validate ALL Ukrainian text against these sources:
 | дивитися вперед | чекати з нетерпінням |
 
 **Verify:**
+
 - [ ] Module structure matches template sections
 - [ ] Word count meets template minimum (core prose only, excludes vocabulary/activities/tables)
 - [ ] Activity count and types match template requirements
@@ -202,18 +215,21 @@ Validate ALL Ukrainian text against these sources:
 Score each criterion 1-5:
 
 **1. Coherence**
+
 - Logical organization and flow
 - Clear transitions between sections
 - Progressive difficulty (simple → complex)
 - Consistent terminology
 
 **2. Relevance**
+
 - Content matches module title
 - Examples relate to topic
 - Grammar focus appropriate for level
 - Vocabulary used matches topic
 
 **3. Educational Value**
+
 - Clear, sufficient explanations
 - Varied, meaningful examples
 - Inductive discovery patterns (observe-first)
@@ -221,6 +237,7 @@ Score each criterion 1-5:
 - Engagement boxes add value (not filler)
 
 **4. Language Quality**
+
 - Clear, professional writing
 - No excessive repetition (same structure ≥5 times = flag)
 - Grammatically correct Ukrainian (validate against Словник.UA, Грінченка, Антоненко-Давидович)
@@ -230,12 +247,14 @@ Score each criterion 1-5:
 - **No Calques:** Auto-fail: робити сенс→мати сенс, брати місце→відбуватися
 
 **5. Pedagogical Correctness**
+
 - **Sequence:** Does it teach A before B? (e.g., specific letters before reading words)
 - **Scaffolding:** clear step-by-step instructions?
 - **Cognitive Load:** Is it too much at once?
 - **Accuracy:** Are grammar rules explained correctly?
 
 **6. Natural Immersion (Mixed Language Check)**
+
 - **Natural Flow:** Mixing must feel intentional (e.g., "In Ukrainian, we say **так** for yes"), NOT forced.
 - **Syntactic Integrity:** Do NOT break English syntax just to insert a Ukrainian word (e.g., "The **хлопець** goes to the **школа**" -> BAD).
 - **No "Denglish":** Sentences should generally be fully English (explanation) or fully Ukrainian (example), with specific exceptions for target vocabulary insertion in clear contexts.
@@ -244,6 +263,7 @@ Score each criterion 1-5:
 
 **7. Word Salad Check**
 Flag if ANY true:
+
 - Same sentence pattern repeated 5+ times
 - Generic filler without substance
 - Contradictory explanations
@@ -253,18 +273,21 @@ Flag if ANY true:
 **8. Activity Quality** (Critical Check)
 
 Review ALL activities from the appropriate source:
+
 - **YAML file** (if `activities/{module-slug}.yaml` exists): Structured format, check YAML validity
 - **MD file** (legacy): Check embedded activity sections after `## Activities` or `## Вправи`
 
 For each activity, check:
 
 **8a. Structural Integrity**
+
 - No duplicate items (same question appears twice)
 - No mixed activity types (e.g., `[!error]` syntax inside a `fill-in` activity)
 - Correct callout format for activity type (see `docs/ACTIVITY-MARKDOWN-REFERENCE.md`)
 - Item count matches level requirements
 
 **8b. Answer Validity**
+
 - **Single-answer activities:** Only ONE correct answer exists linguistically
   - Flag: "читати → прочитати" when "почитати" is also valid perfective
   - Flag: Fill-in where multiple grammatical options work
@@ -272,12 +295,14 @@ For each activity, check:
 - **Error-correction:** The "error" is genuinely wrong, not just stylistic
 
 **8c. Linguistic Accuracy**
+
 - Ukrainian spelling is correct
 - Grammar forms are correct (case endings, verb conjugations)
 - Distractors are plausible but genuinely wrong (not trick questions)
 - No Russisms in options or answers
 
 **8d. Pedagogical Alignment**
+
 - Activity tests what was TAUGHT in this module (not future content)
 - Difficulty matches level (A1 activities shouldn't require case knowledge untaught)
 - Activity type suits the learning goal:
@@ -287,6 +312,7 @@ For each activity, check:
 - Clear, unambiguous instructions
 
 **8e. External Resources**
+
 - YouTube videos are relevant to module topic
 - URLs are valid and accessible
 - Resources match level (A1 shouldn't link C1 content)
@@ -294,6 +320,7 @@ For each activity, check:
 - Blog/article links are from reputable Ukrainian learning sources
 
 **Activity Red Flags (Auto-fail):**
+
 - ❌ **Spoiler Hints:** The hint gives away the answer (e.g., `Answer: cat`, `Hint: It is a c_t`).
 - ❌ **Nonsense Options:** Distractors are illogical or obviously wrong without linguistic knowledge (e.g., `Select: Apple`, Options: `Apple`, `Car`, `Moon`, `Sock` - too easy).
 - ❌ Multiple valid answers but only one accepted
@@ -305,10 +332,11 @@ For each activity, check:
 
 **9. Red Flags (Auto-fail)**
 Flag if:
+
 - **Forced Mixing:** "I want to **їсти** the **яблуко**." (Syntactic breakage)
 - **Undefined Terms:** Using concepts not yet taught.
 - **False Friends:** Using high-level grammar (cases) in A1 without explanation.
-- **Russianisms/Surzhik:** Any detection of mixed Ukrainian-Russian forms (unless explicitly teaching *about* Surzhik).
+- **Russianisms/Surzhik:** Any detection of mixed Ukrainian-Russian forms (unless explicitly teaching _about_ Surzhik).
 - **Inline Activities:** Activities defined in Markdown (Scenario B) instead of YAML. (Exception: If actively migrating).
 
 **10. Content Richness Quality (B1+ Critical)**
@@ -318,6 +346,7 @@ This is not about counts. This is about whether the content is ALIVE or DEAD.
 **10a. Engagement Quality**
 
 ❌ **DRY (robot wrote this):**
+
 ```markdown
 Доконаний вид показує завершену дію.
 Недоконаний вид показує незавершену дію.
@@ -325,6 +354,7 @@ This is not about counts. This is about whether the content is ALIVE or DEAD.
 ```
 
 ✅ **RICH (learner will remember this):**
+
 ```markdown
 Уявіть: ви читаєте книгу весь вечір — це процес, недоконаний вид.
 Але ось ви закрили книгу — готово! Результат. Доконаний вид.
@@ -341,6 +371,7 @@ This is not about counts. This is about whether the content is ALIVE or DEAD.
 Count unique sentence starters in each section. If >50% of sentences start the same way, flag as DRY.
 
 ❌ DRY pattern:
+
 ```markdown
 Доконаний вид означає...
 Доконаний вид використовується...
@@ -349,6 +380,7 @@ Count unique sentence starters in each section. If >50% of sentences start the s
 ```
 
 ✅ RICH pattern:
+
 ```markdown
 Коли дія завершена — це доконаний вид.
 Українці кажуть «я прочитав книгу», бо книга закінчена.
@@ -359,6 +391,7 @@ Count unique sentence starters in each section. If >50% of sentences start the s
 **10c. Emotional Hooks**
 
 Each major section needs at least one of:
+
 - Metaphor or analogy (як фальшива нота, як різниця між X і Y)
 - Real-world scenario (уявіть: ви на співбесіді...)
 - Cultural connection (українці кажуть так, бо...)
@@ -371,6 +404,7 @@ Each major section needs at least one of:
 **10d. Cultural Depth (B1+)**
 
 Each module should include:
+
 - [ ] At least 1 named Ukrainian place (Львів, Карпати, Дніпро)
 - [ ] At least 1 cultural reference (traditional, historical, or contemporary)
 - [ ] Real-world context showing WHY this grammar/vocab matters
@@ -381,11 +415,13 @@ Each module should include:
 **10e. Proverbs & Idioms (B1+ Grammar Modules)**
 
 Each grammar module should include 1-2 proverbs or idioms that:
+
 - Naturally demonstrate the grammar point
 - Are woven into content, not just listed
 - Have cultural context explained
 
 Example for aspect:
+
 ```markdown
 Українці кажуть: «Не кажи гоп, поки не перескочиш».
 Зверніть увагу: **перескочиш** — доконаний вид.
@@ -396,13 +432,13 @@ Example for aspect:
 
 For each section, score:
 
-| Criterion | 0 | 1 | 2 |
-|-----------|---|---|---|
-| Engagement | Textbook voice | Some personality | Conversational, memorable |
-| Variety | Repetitive starters | Mixed | Varied, rhythmic |
-| Hooks | None | 1-2 | 3+ per section |
-| Cultural depth | Generic examples | Some specifics | Rich, placed content |
-| Proverbs/idioms | None | 1 (forced) | 1-2 (natural) |
+| Criterion       | 0                   | 1                | 2                         |
+| --------------- | ------------------- | ---------------- | ------------------------- |
+| Engagement      | Textbook voice      | Some personality | Conversational, memorable |
+| Variety         | Repetitive starters | Mixed            | Varied, rhythmic          |
+| Hooks           | None                | 1-2              | 3+ per section            |
+| Cultural depth  | Generic examples    | Some specifics   | Rich, placed content      |
+| Proverbs/idioms | None                | 1 (forced)       | 1-2 (natural)             |
 
 **Total 0-4:** ❌ REWRITE section
 **Total 5-7:** ⚠️ ENRICH section
@@ -412,15 +448,15 @@ For each section, score:
 
 Flag content as DRY if ANY of these are true:
 
-| Flag | Pattern | Excluded Module Types |
-|------|---------|----------------------|
-| TEXTBOOK_VOICE | No questions, metaphors, or emotional hooks in 300+ words | — |
-| REPETITIVE | Same sentence structure >5 times in section | — |
-| GENERIC_EXAMPLES | No named people, places, or specific scenarios | — |
-| LIST_DUMP | Explanation is just a list without narrative flow | — |
-| NO_CULTURAL_ANCHOR | Grammar taught without Ukrainian cultural context | — |
-| ENGAGEMENT_BOX_FILLER | 💡 boxes just restate what was already said | — |
-| WALL_OF_TEXT | >500 words without engagement box, example block, or dialogue | History, Biography, Literature modules |
+| Flag                  | Pattern                                                       | Excluded Module Types                  |
+| --------------------- | ------------------------------------------------------------- | -------------------------------------- |
+| TEXTBOOK_VOICE        | No questions, metaphors, or emotional hooks in 300+ words     | —                                      |
+| REPETITIVE            | Same sentence structure >5 times in section                   | —                                      |
+| GENERIC_EXAMPLES      | No named people, places, or specific scenarios                | —                                      |
+| LIST_DUMP             | Explanation is just a list without narrative flow             | —                                      |
+| NO_CULTURAL_ANCHOR    | Grammar taught without Ukrainian cultural context             | —                                      |
+| ENGAGEMENT_BOX_FILLER | 💡 boxes just restate what was already said                   | —                                      |
+| WALL_OF_TEXT          | >500 words without engagement box, example block, or dialogue | History, Biography, Literature modules |
 
 **If 2+ dryness flags: Section needs REWRITE, not just fix.**
 
@@ -445,6 +481,7 @@ For each module, output:
 For each module with action items, categorize fixes:
 
 **Safe Fixes (Auto-apply):**
+
 - **Remove Duplicate Activities:** If YAML exists (Scenario A), DELETE the inline activities section from the Markdown file.
 - Remove leftover editing notes/meta-commentary
 - Fix typos and repetition errors
@@ -453,12 +490,14 @@ For each module with action items, categorize fixes:
 - Clean up formatting artifacts
 
 **Risky Fixes (Report only):**
+
 - Structural changes
 - Rewriting sections for clarity
 - Changing word count significantly
 - Subjective improvements
 
 For safe fixes:
+
 1. Apply the fix to the module file.
 2. **If removing activities:** Verify YAML file exists and is valid first.
 3. Run `.venv/bin/python scripts/audit_module.py {file_path}` to verify still passes.
@@ -583,13 +622,13 @@ After reviewing all modules in scope:
 
 ## Scoring Scale
 
-| Score | Rating | Meaning |
-|-------|--------|---------|
-| 5 | Excellent | No issues, exemplary quality |
-| 4 | Good | Minor issues, overall strong |
-| 3 | Acceptable | Several issues, needs improvement |
-| 2 | Poor | Major issues, requires significant rework |
-| 1 | Critical | Fundamental flaws, complete rewrite |
+| Score | Rating     | Meaning                                   |
+| ----- | ---------- | ----------------------------------------- |
+| 5     | Excellent  | No issues, exemplary quality              |
+| 4     | Good       | Minor issues, overall strong              |
+| 3     | Acceptable | Several issues, needs improvement         |
+| 2     | Poor       | Major issues, requires significant rework |
+| 1     | Critical   | Fundamental flaws, complete rewrite       |
 
 ## Example Usage
 
@@ -615,6 +654,7 @@ After reviewing all modules in scope:
 - **Full level (80 modules):** ~40 minutes
 
 For large batches, the command will show progress:
+
 ```
 Reviewing A1...
 [1/34] Module 01... ✅ PASS (4.5/5)
@@ -625,6 +665,7 @@ Reviewing A1...
 ## What Gets Checked
 
 ✅ **Checked:**
+
 - Lesson content (instructional text)
 - Examples and explanations
 - Engagement boxes
@@ -635,8 +676,9 @@ Reviewing A1...
 - **External resources** (relevance, accessibility)
 
 ❌ **Not Checked:**
-- Vocabulary tables (separate audit)
-- Frontmatter metadata
+
+- Vocabulary YAML (separate audit)
+- Metadata YAML (separate audit)
 - Self-assessment sections
 
 ## Important Notes
@@ -653,6 +695,7 @@ Reviewing A1...
 ## Red Flags (Auto-fail)
 
 These trigger automatic REWRITE recommendation:
+
 - ❌ **Template compliance failure:** Module doesn't follow appropriate template structure
 - ❌ Word salad detected
 - ❌ Overall score < 2/5
@@ -671,40 +714,51 @@ These trigger automatic REWRITE recommendation:
 ## Common Activity Issues (Examples)
 
 ### Issue 1: Multiple Valid Answers
+
 ```markdown
 ## fill-in: Transform to Perfective
+
 1. читати → [___]
    > [!answer] прочитати
    > [!options] прочитати | читати | почитати
 ```
+
 **Problem:** "почитати" is ALSO a valid perfective (means "to read for a while"). Activity wrongly treats it as incorrect.
 **Fix:** Rephrase to "Give the COMPLETIVE perfective" or add note "result-focused form".
 
 ### Issue 2: Mixed Activity Syntax
+
 ```markdown
 ## fill-in: Transform to Perfective
-7. говорити | ___ (suppletive pair)
+
+7. говорити | \_\_\_ (suppletive pair)
    > [!error] suppletive pair
    > [!answer] сказати
    > [!explanation] Говорити/сказати use different roots.
 ```
+
 **Problem:** `[!error]` and `[!explanation]` are error-correction syntax, not fill-in syntax.
 **Fix:** Use only `[!answer]` and `[!options]` for fill-in activities.
 
 ### Issue 3: Duplicate Items
+
 ```markdown
 7. розуміти → [___]
 8. готувати → [___]
-7. розуміти → [___]  ← DUPLICATE
-8. готувати → [___]  ← DUPLICATE
+9. розуміти → [___] ← DUPLICATE
+10. готувати → [___] ← DUPLICATE
 ```
+
 **Problem:** Items 7-8 appear twice (copy-paste error).
 **Fix:** Remove duplicates.
 
 ### Issue 4: Unrelated External Resources
+
 ```markdown
 > [!resources]
-> - [Cat Videos Compilation](https://youtube.com/...)  ← UNRELATED
+>
+> - [Cat Videos Compilation](https://youtube.com/...) ← UNRELATED
 ```
+
 **Problem:** Resource has nothing to do with Ukrainian learning.
 **Fix:** Replace with relevant Ukrainian learning content or remove.

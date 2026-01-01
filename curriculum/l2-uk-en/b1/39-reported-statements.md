@@ -1,28 +1,3 @@
----
-module: b1-39
-title: "Непряма мова: твердження"
-subtitle: "Reported Statements"
-version: "1.0"
-phase: "B1.3b Complex Sentences"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - reported-speech
-  - indirect-speech
-  - statements
-grammar:
-  - "Converting direct speech to indirect speech"
-  - "Він сказав, що... constructions"
-objectives:
-  - "Learner can report what someone said using indirect speech"
-  - "Learner can apply tense backshift in reported statements"
-  - "Learner can use appropriate reporting verbs"
-vocabulary_count: 25
-vocab_count: 56
----
-
 > [!motivation]
 > «Він сказав, що прийде завтра.» Як передати чужі слова? Непряма мова — це фундаментальна навичка для переказу розмов, написання звітів, підсумовування інформації та цитування джерел в академічних текстах. Опанувавши непряму мову, ви зможете точно передавати думки інших людей без спотворення змісту! Це критично важливо для журналістики, наукового письма та повсякденного спілкування.
 

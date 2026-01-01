@@ -1,0 +1,114 @@
+module: 46-past-passive-participles-2
+level: B1
+version: '2.0'
+items:
+- lemma: адресований
+  ipa: /adrɛˈsɔvanɪj/
+  translation: addressed
+  pos: adj
+  gender: f
+- lemma: банка
+  ipa: /ˈbanka/
+  translation: jar
+  pos: noun
+  gender: f
+- lemma: бригадир
+  ipa: /brɪhaˈdɪr/
+  translation: foreman
+  pos: noun
+  gender: m
+- lemma: гардероб
+  ipa: /hardɛˈrɔb/
+  translation: cloakroom
+  pos: noun
+  gender: m
+- lemma: гельмер
+  ipa: /ˈhɛlʲmɛr/
+  translation: Helmer
+  pos: propn
+  gender: m
+- lemma: глядачка
+  ipa: /hlʲaˈdat͡ʃka/
+  translation: spectator
+  pos: propn
+  gender: m
+- lemma: дистанціюватися
+  ipa: /dɪstant͡sʲijuˈvatɪsʲa/
+  translation: to distance oneself
+  pos: verb
+- lemma: додатково
+  ipa: /dɔdatˈkɔvɔ/
+  translation: additionally
+  pos: adv
+- lemma: евакуюватися
+  ipa: /ɛvakujuˈvatɪsʲa/
+  translation: to evacuate
+  pos: verb
+- lemma: зачинути
+  ipa: /zat͡ʃɪˈnutɪ/
+  translation: to close (typo)
+  pos: verb
+- lemma: кореспондентка
+  ipa: /kɔrɛspɔnˈdɛntka/
+  translation: correspondent
+  pos: noun
+  gender: f
+- lemma: короткій
+  ipa: /kɔˈrɔtkʲij/
+  translation: short (loc.)
+  pos: adj
+  gender: f
+- lemma: монтаж
+  ipa: /mɔnˈtaʒ/
+  translation: montage
+  pos: noun
+  gender: m
+- lemma: озвучити
+  ipa: /ɔzˈvut͡ʃɪtɪ/
+  translation: to voice
+  pos: verb
+- lemma: перескладання
+  ipa: /pɛrɛsklaˈdanʲːa/
+  translation: retaking
+  pos: noun
+  gender: n
+- lemma: погоджувати
+  ipa: /pɔˈhɔdʒuvatɪ/
+  translation: to coordinate
+  pos: verb
+- lemma: постановка
+  ipa: /pɔstaˈnɔu̯ka/
+  translation: staging
+  pos: noun
+  gender: f
+- lemma: працівниця
+  ipa: /prat͡sʲiu̯ˈnɪt͡sʲa/
+  translation: worker
+  pos: noun
+  gender: f
+- lemma: припинути
+  ipa: /prɪpɪˈnutɪ/
+  translation: to stop
+  pos: verb
+- lemma: програмка
+  ipa: /prɔˈhramka/
+  translation: program (dim.)
+  pos: noun
+  gender: f
+- lemma: прокласти
+  ipa: /prɔˈklastɪ/
+  translation: to pave
+  pos: verb
+- lemma: розмістити
+  ipa: /rɔzmʲisˈtɪtɪ/
+  translation: to place
+  pos: verb
+- lemma: фельнер
+  ipa: /ˈfɛlʲnɛr/
+  translation: Fellner
+  pos: propn
+  gender: m
+- lemma: цнапах
+  ipa: /ˈt͡snapax/
+  translation: admin centers (loc.)
+  pos: propn

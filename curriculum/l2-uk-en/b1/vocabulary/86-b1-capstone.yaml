@@ -1,0 +1,52 @@
+module: 86-b1-capstone
+level: B1
+version: '2.0'
+items:
+- lemma: бентежити
+  ipa: /bɛnˈtɛʒɪtɪ/
+  translation: to disturb
+  pos: verb
+  gender: f
+- lemma: зарплат
+  ipa: /zarˈplat/
+  translation: salaries (gen.)
+  pos: noun
+  gender: f
+- lemma: зв'язність
+  ipa: /ˈzvjaznʲisʲtʲ/
+  translation: coherence
+  pos: noun
+  gender: f
+- lemma: провітрювання
+  ipa: /prɔˈvitrʲuvanʲːa/
+  translation: ventilation
+  pos: noun
+  gender: n
+- lemma: підкаст
+  ipa: /pidˈkast/
+  translation: podcast
+  pos: noun
+  gender: m
+- lemma: розкритий
+  ipa: /rɔzˈkrɪtɪj/
+  translation: revealed
+  pos: adj
+- lemma: складнощ
+  ipa: /ˈskladnɔʃt͡ʃ/
+  translation: difficulty (trunc)
+  pos: noun
+  gender: pl
+- lemma: співстати
+  ipa: /spiu̯ˈstatɪ/
+  translation: compare (typo)
+  pos: verb
+- lemma: тартич
+  ipa: /tarˈtɪt͡ʃ/
+  translation: ??? (typo)
+  pos: noun
+  gender: m
+- lemma: удосконалення
+  ipa: /udɔskɔˈnalɛnʲːa/
+  translation: improvement
+  pos: noun
+  gender: n

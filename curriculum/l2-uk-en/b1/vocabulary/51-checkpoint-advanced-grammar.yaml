@@ -1,0 +1,135 @@
+module: 51-checkpoint-advanced-grammar
+level: B1
+version: '2.0'
+items:
+- lemma: бутербродик
+  ipa: /butɛrˈbrɔdɪk/
+  translation: sandwich (dim.)
+  pos: noun
+  gender: m
+- lemma: вшись
+  ipa: /u̯ʃɪsʲ/
+  translation: suffix -vshys
+  pos: other
+- lemma: граючий
+  ipa: /ˈhrajut͡ʃɪj/
+  translation: playing
+  pos: adj
+- lemma: дискусійний
+  ipa: /dɪskuˈsʲijnɪj/
+  translation: controversial
+  pos: adj
+  gender: f
+- lemma: дієприкм
+  ipa: /dʲijɛprɪˈkm/
+  translation: participle (abbr)
+  pos: noun
+  gender: m
+- lemma: задуматися
+  ipa: /zaˈdumatɪsʲa/
+  translation: to ponder
+  pos: verb
+- lemma: запакувати
+  ipa: /zapakuˈvatɪ/
+  translation: to pack
+  pos: verb
+- lemma: затінений
+  ipa: /zaˈtʲinɛnɪj/
+  translation: shaded
+  pos: adj
+  gender: f
+- lemma: змарнілий
+  ipa: /zmarˈnʲilɪj/
+  translation: haggard
+  pos: adj
+  gender: m
+- lemma: кавочка
+  ipa: /ˈkavɔt͡ʃka/
+  translation: coffee (dim.)
+  pos: noun
+  gender: f
+- lemma: каталожок
+  ipa: /kataˈlɔʒɔk/
+  translation: catalog (dim.)
+  pos: noun
+  gender: m
+- lemma: мамочка
+  ipa: /ˈmamɔt͡ʃka/
+  translation: mommy
+  pos: noun
+  gender: f
+- lemma: мутити
+  ipa: /muˈtɪtɪ/
+  translation: to stir/muddle
+  pos: verb
+- lemma: освітлений
+  ipa: /ɔˈsvitlɛnɪj/
+  translation: lit
+  pos: adj
+  gender: f
+- lemma: печивечко
+  ipa: /pɛˈt͡ʃɪvɛt͡ʃkɔ/
+  translation: cookie (dim.)
+  pos: noun
+  gender: n
+- lemma: побачень
+  ipa: /pɔˈbat͡ʃɛnʲ/
+  translation: dates (gen.)
+  pos: noun
+  gender: n
+- lemma: побуджений
+  ipa: /pɔˈbudʒɛnɪj/
+  translation: awakened
+  pos: adj
+  gender: m
+- lemma: побудити
+  ipa: /pɔbuˈdɪtɪ/
+  translation: to wake
+  pos: verb
+- lemma: посмутнілий
+  ipa: /pɔsmutˈnʲilɪj/
+  translation: saddened
+  pos: adj
+  gender: m
+- lemma: продавчиня
+  ipa: /prɔdau̯ˈt͡ʃɪnʲa/
+  translation: saleswoman
+  pos: noun
+  gender: f
+- lemma: просунутий
+  ipa: /prɔˈsunutɪj/
+  translation: advanced
+  pos: adj
+  gender: f
+- lemma: ревати
+  ipa: /rɛˈvatɪ/
+  translation: to roar (typo)
+  pos: verb
+- lemma: реготати
+  ipa: /rɛhɔˈtatɪ/
+  translation: to laugh loudly
+  pos: verb
+- lemma: таця
+  ipa: /ˈtat͡sʲa/
+  translation: tray
+  pos: noun
+  gender: f
+- lemma: усміха
+  ipa: /uˈsmʲixa/
+  translation: smiles
+  pos: noun
+  gender: m
+- lemma: хатинка
+  ipa: /xaˈtɪnka/
+  translation: hut (dim.)
+  pos: noun
+  gender: f
+- lemma: яблучко
+  ipa: /ˈjablut͡ʃkɔ/
+  translation: apple (dim.)
+  pos: noun
+  gender: n
+- lemma: яч
+  ipa: /jat͡ʃ/
+  translation: suffix -yach
+  pos: propn

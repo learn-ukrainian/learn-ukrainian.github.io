@@ -1,29 +1,3 @@
----
-module: a2-19
-title: "The Best, The Worst"
-subtitle: "Superlative Adjectives"
-version: "1.0"
-phase: "A2.2"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - grammar
-  - adjectives
-  - superlatives
-grammar:
-  - superlative formation
-  - irregular superlatives
-  - absolute superlative
-objectives:
-  - "Learner can form superlative adjectives"
-  - "Learner knows irregular superlatives"
-  - "Learner can express 'the most' and 'the best'"
-  - "Learner can use intensifiers"
-vocabulary_count: 25
-vocab_count: 45
----
-
 ## Warm-up
 
 Now that you can make comparisons (bigger, better), let's go to the extreme! This module covers superlatives — how to say "the biggest," "the best," "the most interesting." You'll also learn intensifiers to emphasize adjectives.

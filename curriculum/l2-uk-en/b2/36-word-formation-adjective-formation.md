@@ -1,31 +1,3 @@
----
-module: b2-36
-title: "Словотворення: прикметники"
-subtitle: "Творення прикметників від іменників та складні прикметники"
-version: "1.0"
-phase: "B2.1b [Grammar Completion]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - word-formation
-  - adjectives
-  - derivation
-grammar:
-  - "Суфікс -ський/-цький (належність, походження)"
-  - "Суфікс -ний/-альний (якість, відношення)"
-  - "Складні прикметники (колір, зовнішність, сфера)"
-objectives:
-  - "Learner can form adjectives from nouns using Ukrainian suffixes"
-  - "Learner can distinguish between -ський/-цький and -ний/-альний patterns"
-  - "Learner can form and use compound adjectives correctly"
-  - "Learner can recognize word formation patterns in authentic texts"
-vocabulary_count: 25
-register: "науковий"
-vocab_count: 66
----
-
 # Словотворення: прикметники
 
 > 🎯 **Чому це важливо?**

@@ -1,31 +1,3 @@
----
-module: a1-14
-title: 'Mine and Yours'
-subtitle: 'Possessive Pronouns in Ukrainian'
-version: '1.0'
-phase: 'A1.2'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: 'vocab-only'
-tags:
-  - possessives
-  - pronouns
-  - agreement
-  - gender
-  - ownership
-grammar:
-  - possessive pronouns
-  - gender agreement
-  - invariant vs variable
-objectives:
-  - 'Learner can use possessive pronouns мій/твій/його/її/наш/ваш/їхній'
-  - 'Learner can match possessive pronouns to noun gender (m/f/n/pl)'
-  - 'Learner can ask and answer simple questions about possession'
-  - 'Learner can distinguish between інваріантні (його, її) and змінні (мій, твій) possessives'
-vocabulary_count: 20
-vocab_count: 25
----
-
 # Mine and Yours
 
 ## Warm-up
@@ -335,33 +307,3 @@ You now know:
 > **Declension Table:** [Possessive Pronouns Declension](https://www.ukrainianlessons.com/possessive-pronouns-declension/) — Full table for all cases
 >
 > **ТВІЙ vs СВІЙ:** [Reflexive Possessive Pronoun](https://www.ukrainianlessons.com/reflexive-possessive-pronoun/) — When to use свій
-
-# Vocabulary
-
-| Word          | IPA               | English             | POS  | Gender | Note |
-| ------------- | ----------------- | ------------------- | ---- | ------ | ---- |
-| адреса        | /ɑˈdrɛsɑ/         | address             | noun | ж      |      |
-| бабуся        | /bɑˈbusʲɑ/        | grandmother         | noun | ж      |      |
-| дочка         | /dɔt͡ʃˈkɑ/         | daughter            | noun | ж      |      |
-| змінний       | /ˈzminnɪj/        | variable            | adj  | ч      |      |
-| інваріантний  | /invɑriˈɑntnɪj/   | invariant           | adj  | ч      |      |
-| її            | /jiˈji/           | her (possessive)    | pron | -      |      |
-| їхній         | /ˈjixnʲij/        | their               | pron | ч      |      |
-| казати        | /kɑˈzɑtɪ/         | to say/tell         | verb | -      |      |
-| коломийка     | /kɔlɔˈmɪjkɑ/      | kolomyika (song)    | noun | ж      |      |
-| кільце        | /kilʲˈt͡sɛ/        | ring                | noun | с      |      |
-| максим        | /mɑkˈsɪm/         | Maksym              | name | ч      |      |
-| малий         | /mɑˈlɪj/          | small               | adj  | ч      |      |
-| машина        | /mɑˈʃɪnɑ/         | car                 | noun | ж      |      |
-| милий         | /ˈmɪlɪj/          | sweet/dear          | adj  | ч      |      |
-| око           | /ˈɔkɔ/            | eye                 | noun | с      |      |
-| особистий     | /ɔsɔˈbɪstɪj/      | personal            | adj  | ч      |      |
-| сестра        | /sɛsˈtrɑ/         | sister              | noun | ж      |      |
-| спостереження | /spɔstɛˈrɛʒɛnʲːɑ/ | observation         | noun | с      |      |
-| спільний      | /ˈspilʲnɪj/       | common/shared       | adj  | ч      |      |
-| тихий         | /ˈtɪxɪj/          | quiet               | adj  | ч      |      |
-| уявити        | /ujɑˈvɪtɪ/        | to imagine          | verb | -      |      |
-| хата          | /ˈxɑtɑ/           | house (traditional) | noun | ж      |      |
-| чий           | /t͡ʃɪj/            | whose (m)           | pron | ч      |      |
-| чиє           | /t͡ʃɪˈjɛ/          | whose (n)           | pron | с      |      |
-| чиї           | /t͡ʃɪˈji/          | whose (pl)          | pron | -      |      |

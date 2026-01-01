@@ -1,30 +1,3 @@
----
-module: a2-15
-title: "Aspect Pairs Deep Dive"
-subtitle: "Prefixation Patterns and Common Pairs"
-version: "1.0"
-phase: "A2.2"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - grammar
-  - aspect
-  - word-formation
-  - prefixes
-grammar:
-  - prefixation patterns
-  - suffixation patterns
-  - suppletive pairs
-objectives:
-  - "Learner knows common prefix patterns for aspect"
-  - "Learner recognizes suffix changes in aspect pairs"
-  - "Learner can predict aspect from verb form"
-  - "Learner knows suppletive pairs"
-vocabulary_count: 30
-vocab_count: 37
----
-
 ## Warm-up
 
 **Ласкаво просимо до глибшого вивчення аспектних пар!**

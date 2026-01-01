@@ -1,27 +1,3 @@
----
-module: a2-17
-title: "Possessive: Свій vs Його"
-subtitle: "My Own vs His/Her/Their"
-version: "1.0"
-phase: "A2.2"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - possessives
-  - pronouns
-  - grammar
-grammar:
-  - reflexive possessive свій
-  - contrast with його/її/їхній
-objectives:
-  - "Learner can distinguish свій from його/її/їхній"
-  - "Learner can use свій when possessor is the subject"
-  - "Learner can decline свій correctly"
-vocabulary_count: 25
-vocab_count: 20
----
-
 ## Warm-up
 
 In A1, you learned possessive pronouns: мій, твій, його, її, наш, ваш, їхній.

@@ -1,33 +1,3 @@
----
-module: b2-35
-title: "Словотворення: назви місць та об'єктів"
-subtitle: "Word Formation: Place and Object Names"
-version: "1.0"
-phase: "B2.1c [Grammar Completion]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-immersion: 100
-tags:
-  - grammar
-  - word-formation
-  - suffixes
-  - vocabulary
-grammar:
-  - "Suffix -ня (place of activity)"
-  - "Suffix -ище (place/area)"
-  - "Suffix -арня (workshop/establishment)"
-  - "Derivational morphology for place names"
-objectives:
-  - "Learner can identify suffixes that form place and object names in Ukrainian"
-  - "Learner can derive place names from verbs and nouns using appropriate suffixes"
-  - "Learner can distinguish between -ня, -ище, and -арня formations"
-  - "Learner can use place vocabulary appropriately in context"
-vocabulary_count: 25
-register: "науковий"
-vocab_count: 110
----
-
 # Словотворення: назви місць та об'єктів
 
 > 🎯 **Чому це важливо?**

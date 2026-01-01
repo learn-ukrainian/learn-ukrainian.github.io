@@ -1,29 +1,3 @@
----
-module: b1-42
-title: "Дієприслівники недоконаного виду"
-subtitle: "Adverbial Participles - Imperfective (-ючи/-ачи)"
-version: "1.0"
-phase: "B1.4 Advanced Grammar"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - participles
-  - adverbial-participles
-  - imperfective
-grammar:
-  - "Дієприслівники недоконаного виду"
-  - "Суфікси -ючи/-ачи"
-  - "Одночасність дій"
-objectives:
-  - "Learner can form imperfective adverbial participles using -ючи/-ачи suffixes"
-  - "Learner can use adverbial participles to express simultaneous actions"
-  - "Learner understands when imperfective participles are preferred over perfective"
-vocabulary_count: 20
-vocab_count: 91
----
-
 # Дієприслівники недоконаного виду
 
 > 🎯 **Чому це важливо?**

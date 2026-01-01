@@ -1,9 +1,9 @@
 # Audit Report: 06-the-living-verb-i.md
-**Phase:** A1 | **Level:** A1 | **Pedagogy:** "PPP" | **Target:** 500
+**Phase:** A1.1 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 500
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (2 words): розуміти, знаходити...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): шукати, називати, працювати, мріяти, закінчувати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,18 +12,19 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1253/500
+- **Words:** ✅ 1273/500
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 23/1
+- **Vocab:** ✅ 48/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 25.9% (target 15-35% (M06))
+- **Immersion:** 🇺🇦 18.8% (target 15-35% (M06))
+- **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -34,20 +35,10 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **The Living Verb I** | ⚪️ | 187 | Skipped |
+| **Intro/Narrative** | ✅ | 187 | Included in Core |
 | **Warm-up** | ✅ | 45 | Included in Core |
-| **Presentation** | ✅ | 449 | Included in Core |
+| **Presentation** | ✅ | 470 | Included in Core |
 | **Practice** | ⚪️ | 210 | Skipped |
 | **Cultural Insight** | ✅ | 155 | Included in Core |
 | **Reading Practice: Мій день (My Day)** | ✅ | 68 | Included in Core |
-| **Summary** | ✅ | 139 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Infinitive to English** | 🎮 | 8 | Activity (8 items, min 8) |
-| **quiz: Conjugation Recognition** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Person and Form** | 🎮 | 12 | Activity (12 items, min 12) |
-| **fill-in: Complete the Sentence** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: Verb Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **anagram: Build the Verb** | 🎮 | 12 | Activity (12 items, min 8) |
-| **anagram: Build the Conjugated Form** | 🎮 | 12 | Activity (12 items, min 8) |
-| **unjumble: Build Verb Sentences** | 🎮 | 8 | Activity (8 items, min 6) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Summary** | ✅ | 138 | Included in Core |

@@ -1,0 +1,113 @@
+module: 13-work-week-aspect-in-action
+level: B1
+version: '2.0'
+items:
+- lemma: айтема
+  ipa: /ˈajtɛma/
+  translation: item (slang)
+  pos: noun
+  gender: m
+- lemma: апдейт
+  ipa: /apˈdɛjt/
+  translation: update
+  pos: noun
+  gender: m
+- lemma: банош
+  ipa: /ˈbanɔʃ/
+  translation: banosh
+  pos: noun
+  gender: m
+- lemma: білд
+  ipa: /bʲild/
+  translation: build (tech)
+  pos: noun
+  gender: m
+- lemma: витідний
+  ipa: /vɪtʲidˈnɪj/
+  translation: weekend (typo)
+  pos: adj
+- lemma: вівторка
+  ipa: /viu̯ˈtɔrka/
+  translation: Tuesday (gen.)
+  pos: noun
+  gender: m
+- lemma: відпрати
+  ipa: /vidˈpratɪ/
+  translation: to wash off/send (typo?)
+  pos: verb
+- lemma: гуляй
+  ipa: /ɦuˈlʲaj/
+  translation: party (imp.)
+  pos: noun
+  gender: m
+- lemma: деплеїти
+  ipa: /dɛˈplɛjɪtɪ/
+  translation: to deploy
+  pos: verb
+  gender: m
+- lemma: доручення
+  ipa: /dɔˈrut͡ʃɛnʲːa/
+  translation: errand
+  pos: noun
+  gender: n
+- lemma: емейл
+  ipa: /ɛˈmɛjl/
+  translation: email
+  pos: noun
+  gender: m
+- lemma: задеплоїти
+  ipa: /zadɛˈplɔjɪtɪ/
+  translation: to deploy (perf)
+  pos: verb
+  gender: m
+- lemma: марнування
+  ipa: /marnuˈvanʲːa/
+  translation: wasting
+  pos: noun
+  gender: n
+- lemma: нафармив
+  ipa: '/naˈfarmɪu̯/ '
+  translation: farmed (slang)
+  pos: noun
+  gender: m
+- lemma: очам
+  ipa: /ɔˈt͡ʃam/
+  translation: eyes (dat.)
+  pos: adv
+- lemma: п'ятничний
+  ipa: /ˈpjatnɪt͡ʃnɪj/
+  translation: Friday (adj)
+  pos: adj
+  gender: m
+- lemma: передити
+  ipa: /pɛrɛˈdɪtɪ/
+  translation: to pass (typo?)
+  pos: verb
+- lemma: понеділковий
+  ipa: /pɔnɛdilˈkɔvɪj/
+  translation: Monday (adj)
+  pos: adj
+- lemma: пояснути
+  ipa: /pɔjasˈnutɪ/
+  translation: to explain (typo)
+  pos: verb
+- lemma: стендап
+  ipa: /stɛnˈdap/
+  translation: stand-up (meeting)
+  pos: noun
+  gender: m
+- lemma: трекінг
+  ipa: /ˈtrɛkʲinɡ/
+  translation: tracking
+  pos: noun
+  gender: m
+- lemma: фармити
+  ipa: /ˈfarmɪtɪ/
+  translation: to farm (slang)
+  pos: verb
+  gender: m
+- lemma: четверг
+  ipa: /t͡ʃɛtˈvɛrɦ/
+  translation: Thursday (typo)
+  pos: noun
+  gender: m

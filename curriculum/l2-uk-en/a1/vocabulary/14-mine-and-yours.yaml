@@ -1,0 +1,125 @@
+module: 14-mine-and-yours
+level: A1
+version: '2.0'
+items:
+  - lemma: адреса
+    ipa: /ɑˈdrɛsɑ/
+    translation: address
+    pos: noun
+    gender: f
+  - lemma: бабуся
+    ipa: /bɑˈbusʲɑ/
+    translation: grandmother
+    pos: noun
+    gender: f
+  - lemma: дочка
+    ipa: /dɔt͡ʃˈkɑ/
+    translation: daughter
+    pos: noun
+    gender: f
+  - lemma: змінний
+    ipa: /ˈzminnɪj/
+    translation: variable
+    pos: adj
+    gender: m
+  - lemma: інваріантний
+    ipa: /invɑriˈɑntnɪj/
+    translation: invariant
+    pos: adj
+    gender: m
+  - lemma: її
+    ipa: /jiˈji/
+    translation: her (possessive)
+    pos: pron
+  - lemma: їхній
+    ipa: /ˈjixnʲij/
+    translation: their
+    pos: pron
+    gender: m
+  - lemma: казати
+    ipa: /kɑˈzɑtɪ/
+    translation: to say/tell
+    pos: verb
+  - lemma: коломийка
+    ipa: /kɔlɔˈmɪjkɑ/
+    translation: kolomyika (song)
+    pos: noun
+    gender: f
+  - lemma: кільце
+    ipa: /kilʲˈt͡sɛ/
+    translation: ring
+    pos: noun
+    gender: n
+  - lemma: максим
+    ipa: /mɑkˈsɪm/
+    translation: Maksym
+    pos: propn
+    gender: m
+  - lemma: малий
+    ipa: /mɑˈlɪj/
+    translation: small
+    pos: adj
+    gender: m
+  - lemma: машина
+    ipa: /mɑˈʃɪnɑ/
+    translation: car
+    pos: noun
+    gender: f
+  - lemma: милий
+    ipa: /ˈmɪlɪj/
+    translation: sweet/dear
+    pos: adj
+    gender: m
+  - lemma: око
+    ipa: /ˈɔkɔ/
+    translation: eye
+    pos: noun
+    gender: n
+  - lemma: особистий
+    ipa: /ɔsɔˈbɪstɪj/
+    translation: personal
+    pos: adj
+    gender: m
+  - lemma: сестра
+    ipa: /sɛsˈtrɑ/
+    translation: sister
+    pos: noun
+    gender: f
+  - lemma: спостереження
+    ipa: /spɔstɛˈrɛʒɛnʲːɑ/
+    translation: observation
+    pos: noun
+    gender: n
+  - lemma: спільний
+    ipa: /ˈspilʲnɪj/
+    translation: common/shared
+    pos: adj
+    gender: m
+  - lemma: тихий
+    ipa: /ˈtɪxɪj/
+    translation: quiet
+    pos: adj
+    gender: m
+  - lemma: уявити
+    ipa: /ujɑˈvɪtɪ/
+    translation: to imagine
+    pos: verb
+  - lemma: хата
+    ipa: /ˈxɑtɑ/
+    translation: house (traditional)
+    pos: noun
+    gender: f
+  - lemma: чий
+    ipa: /t͡ʃɪj/
+    translation: whose (m)
+    pos: pron
+    gender: m
+  - lemma: чиє
+    ipa: /t͡ʃɪˈjɛ/
+    translation: whose (n)
+    pos: pron
+    gender: n
+  - lemma: чиї
+    ipa: /t͡ʃɪˈji/
+    translation: whose (pl)
+    pos: pron

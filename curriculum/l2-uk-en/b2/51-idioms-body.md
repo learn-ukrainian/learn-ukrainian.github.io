@@ -1,30 +1,3 @@
----
-module: b2-51
-title: "Фразеологізми: Душа і Серце"
-phase: "B2.2 [Phraseology & Synonymy]"
-pedagogy: "CBI"
-register: "varies"
-duration: 60
-transliteration: "none"
-tags:
-  - phraseology
-  - somatic
-  - emotions
-  - idioms
-grammar:
-  - "Fixed expressions"
-  - "Idiom structure and variation"
-vocabulary_focus:
-vocab_count: 74
-  - "Phraseological units"
-  - "Semantic nuance"
-objectives:
-  - "Вивчити 8 ключових фразеологізмів зі словами 'душа' і 'серце'"
-  - "Розрізняти емоційні відтінки фразеологізмів (страх, полегшення, жаль, щирість)"
-  - "Вживати нові вирази в контексті для збагачення мови"
-vocabulary_count: 33
----
-
 # Фразеологізми: Душа і Серце
 
 > 🎯 **Чому це важливо?**

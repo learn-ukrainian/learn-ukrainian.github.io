@@ -1,30 +1,3 @@
----
-module: a2-20
-title: "Preferences & Choices"
-subtitle: "Expressing What You Like Better"
-version: "1.0"
-phase: "A2.2"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - grammar
-  - preferences
-  - comparison
-  - functional
-grammar:
-  - preference expressions
-  - comparison of actions
-  - choice vocabulary
-objectives:
-  - "Learner can express preferences"
-  - "Learner can compare options"
-  - "Learner can make and explain choices"
-  - "Learner can discuss likes and dislikes"
-vocabulary_count: 25
-vocab_count: 22
----
-
 ## Warm-up
 
 Now that you can form comparatives and superlatives, let's use them to express preferences! This module teaches you how to say what you like better, make choices, and explain why you prefer one thing over another.

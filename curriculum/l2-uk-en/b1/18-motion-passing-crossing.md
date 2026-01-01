@@ -1,27 +1,3 @@
----
-module: b1-18
-title: "Рух: перехід і обхід"
-subtitle: "Motion - Passing & Crossing"
-version: "1.0"
-phase: "B1.2 Motion"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - motion-verbs
-  - prefixes
-grammar:
-  - "Prefixes пере-, про-, об-"
-  - "Crossing, passing, going around patterns"
-objectives:
-  - "Learner can use пере- for crossing"
-  - "Learner can use про- for passing through/by"
-  - "Learner can use об- for going around"
-vocabulary_count: 25
-vocab_count: 92
----
-
 # Рух: перехід і обхід
 
 > 🎯 **Чому це важливо?**

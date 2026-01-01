@@ -1,0 +1,25 @@
+module: b2-09
+title: Дієприкметники проти підрядних речень
+subtitle: Стилістичний вибір між формами
+version: '1.0'
+phase: B2.1a [Grammar & Register]
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - grammar
+  - participles
+  - relative-clauses
+  - register
+  - style
+grammar:
+  - 'Дієприкметники: активні та пасивні'
+  - Підрядні означальні речення з який/яка/яке
+  - Стилістичний вибір залежно від регістру
+objectives:
+  - Розуміти різницю між дієприкметниками та підрядними означальними реченнями
+  - Трансформувати дієприкметники в підрядні речення і навпаки
+  - Обирати правильну форму залежно від регістру та стилю
+vocabulary_count: 25
+vocab_count: 112
+slug: 09-participles-vs-relative-clauses

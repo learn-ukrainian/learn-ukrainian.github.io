@@ -1,29 +1,3 @@
----
-module: b1-32
-title: "Умовні речення: нереальна умова (якби)"
-subtitle: "Unreal Conditionals - Hypothetical Situations"
-version: "1.0"
-phase: "B1.3a Complex Sentences"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - conditionals
-  - complex-sentences
-  - yakby
-  - subjunctive
-grammar:
-  - "Unreal conditional constructions with якби"
-  - "Conditional mood (умовний спосіб)"
-objectives:
-  - "Learner understands unreal conditional constructions"
-  - "Learner can form hypothetical sentences with якби"
-  - "Learner can distinguish real and unreal conditionals"
-vocabulary_count: 25
-vocab_count: 42
----
-
 > [!motivation]
 > Як би ви сказали «якби я був мільйонером...»? Нереальні умови дозволяють нам мріяти, уявляти альтернативні сценарії, аналізувати минулі помилки та висловлювати жаль. Це потужний інструмент для вираження гіпотез, бажань і контрфактичних припущень. Без «якби» неможливо говорити про те, що **могло б** статися, але не сталося.
 

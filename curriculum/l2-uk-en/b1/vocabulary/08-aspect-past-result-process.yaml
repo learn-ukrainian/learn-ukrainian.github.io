@@ -1,0 +1,119 @@
+module: 08-aspect-past-result-process
+level: B1
+version: '2.0'
+items:
+- lemma: викидати
+  ipa: /vɪkɪˈdatɪ/
+  translation: to throw out
+  pos: verb
+  gender: f
+- lemma: відрігти
+  ipa: /vidˈriɦtɪ/
+  translation: to cut off (dialect?)
+  pos: verb
+  gender: m
+- lemma: екзаменатор
+  ipa: /ɛkzameˈnatɔr/
+  translation: examiner
+  pos: noun
+  gender: m
+- lemma: задач
+  ipa: /zaˈdat͡ʃ/
+  translation: tasks (gen. pl.)
+  pos: noun
+  gender: f
+- lemma: закінти
+  ipa: /zaˈkʲintɪ/
+  translation: to finish (typo)
+  pos: verb
+- lemma: майстрин
+  ipa: /majˈstrɪn/
+  translation: master (gen. pl.?)
+  pos: noun
+  gender: f
+- lemma: марта
+  ipa: /ˈmarta/
+  translation: Marta
+  pos: propn
+  gender: f
+- lemma: монотонність
+  ipa: /mɔnɔˈtɔnʲːisʲtʲ/
+  translation: monotony
+  pos: noun
+  gender: f
+- lemma: найголовніше
+  ipa: /najɦɔlɔu̯ˈnʲiʃɛ/
+  translation: most importantly
+  pos: noun
+  gender: n
+- lemma: одночасність
+  ipa: /ɔdnɔˈt͡ʃasnʲisʲtʲ/
+  translation: simultaneity
+  pos: noun
+  gender: f
+- lemma: пакувати
+  ipa: /pakuˈvatɪ/
+  translation: to pack
+  pos: verb
+  gender: f
+- lemma: петриківка
+  ipa: /pɛtrɪˈkʲiu̯ka/
+  translation: Petrykivka style
+  pos: propn
+  gender: f
+- lemma: продуктивно
+  ipa: /prɔdukˈtɪu̯nɔ/
+  translation: productively
+  pos: adv
+- lemma: розпаковувати
+  ipa: /rɔzpakoˈvuvatɪ/
+  translation: to unpack
+  pos: verb
+- lemma: розписувати
+  ipa: /rɔzˈpɪsuvatɪ/
+  translation: to paint
+  pos: verb
+- lemma: розставляти
+  ipa: /rɔzstaˈu̯lʲatɪ/
+  translation: to arrange
+  pos: verb
+  gender: f
+- lemma: скосити
+  ipa: /skɔˈsɪtɪ/
+  translation: to mow
+  pos: verb
+  gender: m
+- lemma: скошений
+  ipa: /ˈskɔʃɛnɪj/
+  translation: mown
+  pos: adj
+  gender: f
+- lemma: скрина
+  ipa: /skrɪna/
+  translation: chest (typo)
+  pos: noun
+  gender: f
+- lemma: сміло
+  ipa: /ˈsmʲiɫɔ/
+  translation: boldly
+  pos: adv
+- lemma: сортувати
+  ipa: /sɔrtuˈvatɪ/
+  translation: to sort
+  pos: verb
+  gender: f
+- lemma: співбесід
+  ipa: /spiu̯ˈbɛsid/
+  translation: interviews (gen. pl.)
+  pos: noun
+  gender: m
+- lemma: толока
+  ipa: /tɔˈlɔka/
+  translation: toloka
+  pos: noun
+  gender: f
+- lemma: фоновий
+  ipa: /ˈfɔnɔvɪj/
+  translation: background (adj)
+  pos: adj
+  gender: f

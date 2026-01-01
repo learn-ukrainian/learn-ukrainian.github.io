@@ -20,24 +20,22 @@ import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 
 
-# Colors & Clothing
-
 ## Warm-up
 
 > 💡 **Кольори навколо нас! (Colors Around Us)**
 >
 > Colors are adjectives, so they must agree with nouns! Сорочка біла (feminine), светр білий (masculine), пальто біле (neuter). Once you know the pattern from Module 26, colors work the same way!
 
-
-
 ---
 
 ## Grammar
+
 ## Color Adjectives Must Agree
 
 :::tip[Спостереження (Pattern Discovery)]
 
 Look at how "білий" (white) changes:
+
 - **білий** светр (white sweater - m)
 - **біла** сорочка (white shirt - f)
 - **біле** пальто (white coat - n)
@@ -49,14 +47,14 @@ The color changes to match the clothing item!
 
 ### Color Agreement Table
 
-| Color (m) | Feminine | Neuter | Plural |
-|-----------|----------|--------|--------|
-| білий | біла | біле | білі |
-| чорний | чорна | чорне | чорні |
-| червоний | червона | червоне | червоні |
-| зелений | зелена | зелене | зелені |
-| синій | синя | синє | сині |
-| жовтий | жовта | жовте | жовті |
+| Color (m) | Feminine | Neuter  | Plural  |
+| --------- | -------- | ------- | ------- |
+| білий     | біла     | біле    | білі    |
+| чорний    | чорна    | чорне   | чорні   |
+| червоний  | червона  | червоне | червоні |
+| зелений   | зелена   | зелене  | зелені  |
+| синій     | синя     | синє    | сині    |
+| жовтий    | жовта    | жовте   | жовті   |
 
 ---
 
@@ -65,18 +63,22 @@ The color changes to match the clothing item!
 ### Simple Patterns
 
 **Stating what you have:**
+
 - У мене **білий** светр. (I have a white sweater.)
 - У мене **чорна** куртка. (I have a black jacket.)
 - У мене **синє** пальто. (I have a blue coat.)
 
 **Asking about clothing:**
+
 - Який у тебе светр? — Білий. (What sweater do you have? — White.)
 - Яка у тебе сорочка? — Синя. (What shirt do you have? — Blue.)
 
 **Describing what someone wears:**
-- Він у **білій** сорочці... *(wait, this uses locative case!)*
+
+- Він у **білій** сорочці... _(wait, this uses locative case!)_
 
 Actually, for A1, we describe clothing WITHOUT the locative case. Use simple sentences:
+
 - Його светр **білий**. (His sweater is white.)
 - Її сукня **червона**. (Her dress is red.)
 - На ньому білий светр. (He has a white sweater on.)
@@ -87,15 +89,16 @@ Actually, for A1, we describe clothing WITHOUT the locative case. Use simple sen
 
 Some clothing words are ALWAYS plural in Ukrainian:
 
-| Word | Meaning | Why? |
-|------|---------|------|
-| штани | pants | Two legs |
-| джинси | jeans | Two legs |
-| шорти | shorts | Two legs |
-| черевики | boots | Two feet |
+| Word     | Meaning  | Why?     |
+| -------- | -------- | -------- |
+| штани    | pants    | Two legs |
+| джинси   | jeans    | Two legs |
+| шорти    | shorts   | Two legs |
+| черевики | boots    | Two feet |
 | кросівки | sneakers | Two feet |
 
 These words take **plural adjectives**:
+
 - **чорні** штани (black pants)
 - **сині** джинси (blue jeans)
 - **білі** кросівки (white sneakers)
@@ -260,6 +263,101 @@ These words take **plural adjectives**:
 ---
 
 
+
+## 🎯 Activities
+
+### Колір і одяг
+
+<MatchUp
+  title="Колір і одяг"
+  pairs={JSON.parse(`[{"left": "- біла", "right": "сорочка"}, {"left": "- чорний", "right": "светр"}, {"left": "- сині", "right": "джинси"}, {"left": "- червона", "right": "сукня"}, {"left": "- зелене", "right": "пальто"}, {"left": "- жовта", "right": "футболка"}, {"left": "- білі", "right": "кросівки"}, {"left": "- чорні", "right": "штани"}, {"left": "- синя", "right": "куртка"}, {"left": "- сіра", "right": "спідниця"}, {"left": "- коричневий", "right": "капелюх"}, {"left": "- рожевий", "right": "шарф"}]`)}
+/>
+
+### Clothing by Gender
+
+<GroupSort
+  title="Clothing by Gender"
+  groups={JSON.parse(`{"Masculine (Він)": ["светр", "капелюх", "шарф", "піджак"], "Feminine (Вона)": ["сорочка", "футболка", "куртка", "спідниця", "сукня"], "Neuter or Plural (Воно/Вони)": ["пальто", "штани", "джинси", "--"]}`)}
+/>
+
+### Узгодження кольорів (Color Agreement)
+
+<FillIn
+  title="Узгодження кольорів (Color Agreement)"
+  items={JSON.parse(`[{"sentence": "У мене ___ сорочка.", "answer": "біла", "options": ["біла", "білий", "біле", "білі"]}, {"sentence": "Його светр ___.", "answer": "чорний", "options": ["чорний", "чорна", "чорне", "чорні"]}, {"sentence": "Це ___ пальто.", "answer": "синє", "options": ["синє", "синій", "синя", "сині"]}, {"sentence": "У неї ___ сукня.", "answer": "червона", "options": ["червона", "червоний", "червоне", "червоні"]}, {"sentence": "Мої джинси ___.", "answer": "сині", "options": ["сині", "синій", "синя", "синє"]}, {"sentence": "Ця футболка ___.", "answer": "жовта", "options": ["жовта", "жовтий", "жовте", "жовті"]}, {"sentence": "Його капелюх ___.", "answer": "коричневий", "options": ["коричневий", "коричнева", "коричневе", "коричневі"]}, {"sentence": "Мої кросівки ___.", "answer": "білі", "options": ["білі", "білий", "біла", "біле"]}]`)}
+/>
+
+### Опис одягу (Describing Outfits)
+
+<FillIn
+  title="Опис одягу (Describing Outfits)"
+  items={JSON.parse(`[{"sentence": "У мене нова ___ куртка.", "answer": "чорна", "options": ["чорна", "чорний", "чорне", "чорні"]}, {"sentence": "Я люблю ___ кольори.", "answer": "яскраві", "options": ["яскраві", "яскравий", "яскрава", "яскраве"]}, {"sentence": "Небо сьогодні ___.", "answer": "блакитне", "options": ["блакитне", "блакитний", "блакитна", "блакитні"]}, {"sentence": "Її шарф дуже ___.", "answer": "теплий", "options": ["теплий", "тепла", "тепле", "теплі"]}, {"sentence": "Це ___ спідниця.", "answer": "зелена", "options": ["зелена", "зелений", "зелене", "зелені"]}, {"sentence": "У нас ___ черевики.", "answer": "нові", "options": ["нові", "новий", "нова", "нове"]}, {"sentence": "Мій светр ___.", "answer": "теплий", "options": ["теплий", "тепла", "тепле", "теплі"]}, {"sentence": "Сонце ___.", "answer": "жовте", "options": ["жовте", "жовтий", "жовта", "жовті"]}]`)}
+/>
+
+### Що це? (What Is It?)
+
+<Quiz
+  title="Що це? (What Is It?)"
+  questions={JSON.parse(`[{"question": "What is the English translation of \\\"Біла сорочка\\\"?", "options": [{"text": "White shirt", "correct": true}, {"text": "Black shirt", "correct": false}, {"text": "Blue shirt", "correct": false}, {"text": "Red shirt", "correct": false}]}, {"question": "How do you translate \\\"Чорні штани\\\" into English?", "options": [{"text": "Black pants", "correct": true}, {"text": "White pants", "correct": false}, {"text": "Blue pants", "correct": false}, {"text": "Black shirt", "correct": false}]}, {"question": "Which English term matches \\\"Синє пальто\\\"?", "options": [{"text": "Blue coat", "correct": true}, {"text": "Blue pants", "correct": false}, {"text": "Red coat", "correct": false}, {"text": "Green coat", "correct": false}]}, {"question": "How is \\\"Червона сукня\\\" translated into English?", "options": [{"text": "Red dress", "correct": true}, {"text": "Red skirt", "correct": false}, {"text": "Red t-shirt", "correct": false}, {"text": "Yellow dress", "correct": false}]}, {"question": "What is the English meaning of \\\"Зелена футболка\\\"?", "options": [{"text": "Green t-shirt", "correct": true}, {"text": "Green dress", "correct": false}, {"text": "Blue t-shirt", "correct": false}, {"text": "Yellow t-shirt", "correct": false}]}, {"question": "Which English sentence represents \\\"Сіра куртка\\\"?", "options": [{"text": "Gray jacket", "correct": true}, {"text": "Gray shirt", "correct": false}, {"text": "Black jacket", "correct": false}, {"text": "Gray pants", "correct": false}]}, {"question": "How do you translate \\\"Жовті кросівки\\\" into English?", "options": [{"text": "Yellow sneakers", "correct": true}, {"text": "Yellow shirt", "correct": false}, {"text": "White sneakers", "correct": false}, {"text": "Yellow coat", "correct": false}]}, {"question": "What is the English meaning of \\\"Коричневий капелюх\\\"?", "options": [{"text": "Brown hat", "correct": true}, {"text": "Black hat", "correct": false}, {"text": "Brown coat", "correct": false}, {"text": "Brown pants", "correct": false}]}]`)}
+/>
+
+### Який колір? (What Color?)
+
+<Quiz
+  title="Який колір? (What Color?)"
+  questions={JSON.parse(`[{"question": "Which color represents the snow?", "options": [{"text": "Білий", "correct": true}, {"text": "Чорний", "correct": false}, {"text": "Синій", "correct": false}, {"text": "Зелений", "correct": false}]}, {"question": "What color is the sky during the day?", "options": [{"text": "Блакитний", "correct": true}, {"text": "Чорний", "correct": false}, {"text": "Червоний", "correct": false}, {"text": "Жовтий", "correct": false}]}, {"question": "Which color is associated with the grass?", "options": [{"text": "Зелена", "correct": true}, {"text": "Синя", "correct": false}, {"text": "Біла", "correct": false}, {"text": "Жовта", "correct": false}]}, {"question": "What color is the sun?", "options": [{"text": "Жовте", "correct": true}, {"text": "Біле", "correct": false}, {"text": "Синє", "correct": false}, {"text": "Чорне", "correct": false}]}, {"question": "Which color represents the sea?", "options": [{"text": "Синє", "correct": true}, {"text": "Біле", "correct": false}, {"text": "Зелене", "correct": false}, {"text": "Жовте", "correct": false}]}, {"question": "What color is the earth?", "options": [{"text": "Коричнева", "correct": true}, {"text": "Біла", "correct": false}, {"text": "Синя", "correct": false}, {"text": "Жовта", "correct": false}]}, {"question": "Which color is associated with the night?", "options": [{"text": "Чорна", "correct": true}, {"text": "Біла", "correct": false}, {"text": "Синя", "correct": false}, {"text": "Жовта", "correct": false}]}, {"question": "What is the color of a red flower?", "options": [{"text": "Червона", "correct": true}, {"text": "Зелена", "correct": false}, {"text": "Синя", "correct": false}, {"text": "Біла", "correct": false}]}]`)}
+/>
+
+### Опис одягу
+
+<Unjumble
+  title="Опис одягу"
+  items={JSON.parse(`[{"jumbled": "", "answer": "У мене біла сорочка"}, {"jumbled": "", "answer": "Мій светр чорний"}, {"jumbled": "", "answer": "Нові сині штани"}, {"jumbled": "", "answer": "Гарна червона сукня"}, {"jumbled": "", "answer": "Це білі кросівки"}, {"jumbled": "", "answer": "Його куртка синя"}]`)}
+/>
+
+### Color Rules
+
+<TrueFalse
+  title="Color Rules"
+  items={JSON.parse(`[{"statement": "\\\"Біла\\\" is the feminine form of \\\"white\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Синій\\\" is the neuter form.", "isTrue": false, "explanation": "Incorrect! it's masculine"}, {"statement": "\\\"Штани\\\" is always plural in Ukrainian.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Пальто\\\" is masculine.", "isTrue": false, "explanation": "Incorrect! it's neuter"}, {"statement": "\\\"Блакитний\\\" means light blue.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Чорне\\\" is masculine.", "isTrue": false, "explanation": "Incorrect! it's neuter"}, {"statement": "\\\"Джинси\\\" is always plural.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Біле\\\" is feminine.", "isTrue": false, "explanation": "Incorrect! it's neuter"}, {"statement": "Colors are adjectives and must agree with nouns.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Сукня\\\" is neuter.", "isTrue": false, "explanation": "Incorrect! it's feminine"}, {"statement": "\\\"Світлий\\\" means \\\"light\\\" (as in bright).", "isTrue": true, "explanation": ""}, {"statement": "\\\"Темна\\\" is the masculine form.", "isTrue": false, "explanation": "Incorrect! it's feminine"}]`)}
+/>
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| білий | /ˈbilɪj/ | white | adj | ч |  |
+| блакитний | /blɑˈkɪtnɪj/ | light blue | adj | ч |  |
+| взуття | /vzuˈtʲːɑ/ | footwear | noun | с |  |
+| вишиванка | /vɪʃɪˈvɑnkɑ/ | embroidered shirt | noun | ж |  |
+| жовтий | /ˈʒɔwtɪj/ | yellow | adj | ч |  |
+| забутий | /zɑˈbutɪj/ | forgotten | adj | ч |  |
+| класно | /ˈklɑsnɔ/ | cool/great | adv |  |  |
+| коричневий | /kɔˈrɪt͡ʃnɛvɪj/ | brown | adj | ч |  |
+| красиво | /krɑˈsɪvɔ/ | beautifully | adv |  |  |
+| кросівки | /krɔˈsivkɪ/ | sneakers (pl) | noun | pl |  |
+| куртка | /ˈkurtkɑ/ | jacket | noun | ж |  |
+| навколо | /nɑwˈkɔlɔ/ | around | adv |  |  |
+| описати | /ɔpɪˈsɑtɪ/ | to describe | verb |  |  |
+| пальто | /pɑlʲˈtɔ/ | coat | noun | с |  |
+| подобатися | /pɔˈdɔbɑtɪsʲɑ/ | to like | verb |  |  |
+| поєднання | /pɔjɛdˈnɑnʲːɑ/ | combination | noun | с |  |
+| предок | /ˈprɛdɔk/ | ancestor | noun | ч |  |
+| светр | /svɛtr/ | sweater | noun | ч |  |
+| світлий | /ˈsvitlɪj/ | light/bright | adj | ч |  |
+| світло- | /ˈsvitlɔ/ | light- | adj |  |  |
+| сіро- | /ˈsirɔ/ | gray- | adj |  |  |
+| сніг | /snih/ | snow | noun | ч |  |
+| сукня | /ˈsuknʲɑ/ | dress | noun | ж |  |
+| темний | /ˈtɛmnɪj/ | dark | adj | ч |  |
+| тіні | /ˈtinʲi/ | shadows | noun | ж |  |
+| трава | /trɑˈvɑ/ | grass | noun | ж |  |
+| футболка | /futˈbɔlkɑ/ | t-shirt | noun | ж |  |
+| черевики | /t͡ʃɛrɛˈvɪkɪ/ | boots/shoes (pl) | noun | pl |  |
+| шорти | /ˈʃɔrtɪ/ | shorts (pl) | noun | pl |  |
+| штани | /ʃtɑˈnɪ/ | pants (pl) | noun | pl |  |
+| яскравий | /jɑsˈkrɑvɪj/ | bright | adj | ч |  |
+
 ## 📋 Summary
 
 Ви вивчили кольори та одяг. Тепер ви можете описати свою футболку або штани. (You learned colors and clothing. Now you can describe your t-shirt or pants.) Ви знаєте слова "білий" та "чорний". Тепер ви знаєте два сині кольори: синій та блакитний. Це чудова робота! (This is great work!)
@@ -269,350 +367,9 @@ These words take **plural adjectives**:
 :::info[External Resources]
 
 **Media:**
+
 - [Colors Guide](https://www.ukrainianlessons.com/vocabulary-colors/) — Complete color vocabulary
 - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons
 - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
 :::
 
-
-## 🎯 Activities
-
-### Колір і одяг
-
-<MatchUp pairs={[
-  { left: `біла`, right: `сорочка` },
-  { left: `чорний`, right: `светр` },
-  { left: `сині`, right: `джинси` },
-  { left: `червона`, right: `сукня` },
-  { left: `зелене`, right: `пальто` },
-  { left: `жовта`, right: `футболка` },
-  { left: `білі`, right: `кросівки` },
-  { left: `чорні`, right: `штани` },
-  { left: `синя`, right: `куртка` },
-  { left: `сіра`, right: `спідниця` },
-  { left: `коричневий`, right: `капелюх` },
-  { left: `рожевий`, right: `шарф` }
-]} />
-
-### Clothing by Gender
-
-<GroupSort groups={{
-  "Masculine (Він)": ["светр", "капелюх", "шарф", "піджак"],
-  "Feminine (Вона)": ["сорочка", "футболка", "куртка", "спідниця", "сукня"],
-  "Neuter or Plural (Воно/Вони)": ["пальто", "штани", "джинси"]
-}} />
-
-### Узгодження кольорів (Color Agreement)
-
-<FillIn items={[
-  {
-    sentence: `У мене ___ сорочка.`,
-    answer: `біла`,
-    options: [`біла`, `білий`, `біле`, `білі`]
-  },  {
-    sentence: `Його светр ___.`,
-    answer: `чорний`,
-    options: [`чорний`, `чорна`, `чорне`, `чорні`]
-  },  {
-    sentence: `Це ___ пальто.`,
-    answer: `синє`,
-    options: [`синє`, `синій`, `синя`, `сині`]
-  },  {
-    sentence: `У неї ___ сукня.`,
-    answer: `червона`,
-    options: [`червона`, `червоний`, `червоне`, `червоні`]
-  },  {
-    sentence: `Мої джинси ___.`,
-    answer: `сині`,
-    options: [`сині`, `синій`, `синя`, `синє`]
-  },  {
-    sentence: `Ця футболка ___.`,
-    answer: `жовта`,
-    options: [`жовта`, `жовтий`, `жовте`, `жовті`]
-  },  {
-    sentence: `Його капелюх ___.`,
-    answer: `коричневий`,
-    options: [`коричневий`, `коричнева`, `коричневе`, `коричневі`]
-  },  {
-    sentence: `Мої кросівки ___.`,
-    answer: `білі`,
-    options: [`білі`, `білий`, `біла`, `біле`]
-  }
-]} />
-
-### Опис одягу (Describing Outfits)
-
-<FillIn items={[
-  {
-    sentence: `У мене нова ___ куртка.`,
-    answer: `чорна`,
-    options: [`чорна`, `чорний`, `чорне`, `чорні`]
-  },  {
-    sentence: `Я люблю ___ кольори.`,
-    answer: `яскраві`,
-    options: [`яскраві`, `яскравий`, `яскрава`, `яскраве`]
-  },  {
-    sentence: `Небо сьогодні ___.`,
-    answer: `блакитне`,
-    options: [`блакитне`, `блакитний`, `блакитна`, `блакитні`]
-  },  {
-    sentence: `Її шарф дуже ___.`,
-    answer: `теплий`,
-    options: [`теплий`, `тепла`, `тепле`, `теплі`]
-  },  {
-    sentence: `Це ___ спідниця.`,
-    answer: `зелена`,
-    options: [`зелена`, `зелений`, `зелене`, `зелені`]
-  },  {
-    sentence: `У нас ___ черевики.`,
-    answer: `нові`,
-    options: [`нові`, `новий`, `нова`, `нове`]
-  },  {
-    sentence: `Мій светр ___.`,
-    answer: `теплий`,
-    options: [`теплий`, `тепла`, `тепле`, `теплі`]
-  },  {
-    sentence: `Сонце ___.`,
-    answer: `жовте`,
-    options: [`жовте`, `жовтий`, `жовта`, `жовті`]
-  }
-]} />
-
-### Що це? (What Is It?)
-
-<Quiz questions={[
-  {
-    question: `What is the English translation of \"Біла сорочка\"?`,
-    options: [
-      { text: `White shirt`, correct: true },
-      { text: `Black shirt`, correct: false },
-      { text: `Blue shirt`, correct: false },
-      { text: `Red shirt`, correct: false }
-    ]
-  },  {
-    question: `How do you translate \"Чорні штани\" into English?`,
-    options: [
-      { text: `Black pants`, correct: true },
-      { text: `White pants`, correct: false },
-      { text: `Blue pants`, correct: false },
-      { text: `Black shirt`, correct: false }
-    ]
-  },  {
-    question: `Which English term matches \"Синє пальто\"?`,
-    options: [
-      { text: `Blue coat`, correct: true },
-      { text: `Blue pants`, correct: false },
-      { text: `Red coat`, correct: false },
-      { text: `Green coat`, correct: false }
-    ]
-  },  {
-    question: `How is \"Червона сукня\" translated into English?`,
-    options: [
-      { text: `Red dress`, correct: true },
-      { text: `Red skirt`, correct: false },
-      { text: `Red t-shirt`, correct: false },
-      { text: `Yellow dress`, correct: false }
-    ]
-  },  {
-    question: `What is the English meaning of \"Зелена футболка\"?`,
-    options: [
-      { text: `Green t-shirt`, correct: true },
-      { text: `Green dress`, correct: false },
-      { text: `Blue t-shirt`, correct: false },
-      { text: `Yellow t-shirt`, correct: false }
-    ]
-  },  {
-    question: `Which English sentence represents \"Сіра куртка\"?`,
-    options: [
-      { text: `Gray jacket`, correct: true },
-      { text: `Gray shirt`, correct: false },
-      { text: `Black jacket`, correct: false },
-      { text: `Gray pants`, correct: false }
-    ]
-  },  {
-    question: `How do you translate \"Жовті кросівки\" into English?`,
-    options: [
-      { text: `Yellow sneakers`, correct: true },
-      { text: `Yellow shirt`, correct: false },
-      { text: `White sneakers`, correct: false },
-      { text: `Yellow coat`, correct: false }
-    ]
-  },  {
-    question: `What is the English meaning of \"Коричневий капелюх\"?`,
-    options: [
-      { text: `Brown hat`, correct: true },
-      { text: `Black hat`, correct: false },
-      { text: `Brown coat`, correct: false },
-      { text: `Brown pants`, correct: false }
-    ]
-  }
-]} />
-
-### Який колір? (What Color?)
-
-<Quiz questions={[
-  {
-    question: `Which color represents the snow?`,
-    options: [
-      { text: `Білий`, correct: true },
-      { text: `Чорний`, correct: false },
-      { text: `Синій`, correct: false },
-      { text: `Зелений`, correct: false }
-    ]
-  },  {
-    question: `What color is the sky during the day?`,
-    options: [
-      { text: `Блакитний`, correct: true },
-      { text: `Чорний`, correct: false },
-      { text: `Червоний`, correct: false },
-      { text: `Жовтий`, correct: false }
-    ]
-  },  {
-    question: `Which color is associated with the grass?`,
-    options: [
-      { text: `Зелена`, correct: true },
-      { text: `Синя`, correct: false },
-      { text: `Біла`, correct: false },
-      { text: `Жовта`, correct: false }
-    ]
-  },  {
-    question: `What color is the sun?`,
-    options: [
-      { text: `Жовте`, correct: true },
-      { text: `Біле`, correct: false },
-      { text: `Синє`, correct: false },
-      { text: `Чорне`, correct: false }
-    ]
-  },  {
-    question: `Which color represents the sea?`,
-    options: [
-      { text: `Синє`, correct: true },
-      { text: `Біле`, correct: false },
-      { text: `Зелене`, correct: false },
-      { text: `Жовте`, correct: false }
-    ]
-  },  {
-    question: `What color is the earth?`,
-    options: [
-      { text: `Коричнева`, correct: true },
-      { text: `Біла`, correct: false },
-      { text: `Синя`, correct: false },
-      { text: `Жовта`, correct: false }
-    ]
-  },  {
-    question: `Which color is associated with the night?`,
-    options: [
-      { text: `Чорна`, correct: true },
-      { text: `Біла`, correct: false },
-      { text: `Синя`, correct: false },
-      { text: `Жовта`, correct: false }
-    ]
-  },  {
-    question: `What is the color of a red flower?`,
-    options: [
-      { text: `Червона`, correct: true },
-      { text: `Зелена`, correct: false },
-      { text: `Синя`, correct: false },
-      { text: `Біла`, correct: false }
-    ]
-  }
-]} />
-
-### Опис одягу
-
-<Unjumble items={[
-  { jumbled: `сорочка / біла / у мене`, answer: `У мене біла сорочка` },
-  { jumbled: `чорний / светр / мій`, answer: `Мій светр чорний` },
-  { jumbled: `сині / штани / нові`, answer: `Нові сині штани` },
-  { jumbled: `червона / гарна / сукня`, answer: `Гарна червона сукня` },
-  { jumbled: `білі / кросівки / це`, answer: `Це білі кросівки` },
-  { jumbled: `синя / куртка / його`, answer: `Його куртка синя` }
-]} />
-
-### Color Rules
-
-<TrueFalse items={[
-  {
-    statement: `\"Біла\" is the feminine form of \"white\".`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Синій\" is the neuter form.`,
-    isTrue: false,
-    explanation: `Incorrect! it's masculine`
-  },  {
-    statement: `\"Штани\" is always plural in Ukrainian.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Пальто\" is masculine.`,
-    isTrue: false,
-    explanation: `Incorrect! it's neuter`
-  },  {
-    statement: `\"Блакитний\" means light blue.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Чорне\" is masculine.`,
-    isTrue: false,
-    explanation: `Incorrect! it's neuter`
-  },  {
-    statement: `\"Джинси\" is always plural.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Біле\" is feminine.`,
-    isTrue: false,
-    explanation: `Incorrect! it's neuter`
-  },  {
-    statement: `Colors are adjectives and must agree with nouns.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Сукня\" is neuter.`,
-    isTrue: false,
-    explanation: `Incorrect! it's feminine`
-  },  {
-    statement: `\"Світлий\" means \"light\" (as in bright).`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Темна\" is the masculine form.`,
-    isTrue: false,
-    explanation: `Incorrect! it's feminine`
-  }
-]} />
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| білий | /ˈbilɪj/ | white | adj | m | color |
-| сірий | /ˈsirɪj/ | gray | adj | m | color |
-| червоний | /t͡ʃɛrˈvɔnɪj/ | red | adj | m | color |
-| помаранчевий | /pɔmɑˈrɑnt͡ʃɛvɪj/ | orange | adj | m | color |
-| жовтий | /ˈʒɔvtɪj/ | yellow | adj | m | color |
-| зелений | /zɛˈlɛnɪj/ | green | adj | m | color |
-| синій | /ˈsɪnʲij/ | blue (dark) | adj | m | soft stem |
-| блакитний | /blɑˈkɪtnɪj/ | light blue | adj | m | color |
-| фіолетовий | /fʲiɔˈlɛtɔvɪj/ | purple | adj | m | color |
-| рожевий | /rɔˈʒɛvɪj/ | pink | adj | m | color |
-| коричневий | /kɔˈrɪt͡ʃnɛvɪj/ | brown | adj | m | color |
-| світлий | /ˈsvʲitlɪj/ | light | adj | m | modifier |
-| темний | /ˈtɛmnɪj/ | dark | adj | m | modifier |
-| яскравий | /jɑsˈkrɑvɪj/ | bright | adj | m | modifier |
-| сорочка | /sɔˈrɔt͡ʃkɑ/ | shirt | n | f | clothing |
-| футболка | /futˈbɔlkɑ/ | t-shirt | n | f | clothing |
-| светр | /svɛtr/ | sweater | n | m | clothing |
-| куртка | /ˈkurtkɑ/ | jacket | n | f | clothing |
-| пальто | /pɑlʲˈtɔ/ | coat | n | n | indeclinable |
-| штани | /ʃtɑˈnɪ/ | pants | n | pl | always plural |
-| шорти | /ˈʃɔrtɪ/ | shorts | n | pl | always plural |
-| спідниця | /spidˈnɪt͡sʲɑ/ | skirt | n | f | clothing |
-| сукня | /ˈsuknʲɑ/ | dress | n | f | clothing |
-| взуття | /vzutʲˈtʲɑ/ | footwear | n | n | collective |
-| черевики | /t͡ʃɛrɛˈvɪkɪ/ | boots | n | pl | always plural |
-| кросівки | /krɔˈsivkɪ/ | sneakers | n | pl | always plural |
-| капелюх | /kɑpɛˈlʲux/ | hat | n | m | clothing |
-| шарф | /ʃɑrf/ | scarf | n | m | clothing |
-
----

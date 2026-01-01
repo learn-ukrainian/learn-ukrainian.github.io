@@ -1,0 +1,84 @@
+module: 22-if-i-were
+level: A2
+version: '2.0'
+items:
+- lemma: австралія
+  ipa: ɐu̯strˈɑlʲijɐ
+  translation: Australia
+  pos: propn
+  gender: f
+- lemma: би
+  ipa: bɪ
+  translation: would (particle)
+  pos: other
+- lemma: богатий
+  ipa: boˈɦɑtɪj
+  translation: rich (typo)
+  pos: adj
+  gender: m
+- lemma: білет
+  ipa: bʲiˈlɛt
+  translation: ticket
+  pos: noun
+  gender: m
+- lemma: вибачитися
+  ipa: ˈvɪbɐt͡ʃɪtɪsʲɐ
+  translation: to apologize (perf)
+  pos: verb
+- lemma: виграти
+  ipa: ˈvɪhrɐte
+  translation: to win (perf)
+  pos: verb
+  gender: f
+- lemma: впасти
+  ipa: ˈvpɑste
+  translation: to fall (perf)
+  pos: verb
+- lemma: зачекати
+  ipa: zɐt͡ʃeˈkɑte
+  translation: to wait (perf)
+  pos: verb
+- lemma: лотерейний
+  ipa: loteˈrɛjnɪj
+  translation: lottery (adj)
+  pos: adj
+  gender: m
+- lemma: мільйон
+  ipa: mʲilʲˈjɔn
+  translation: million
+  pos: other
+- lemma: наврочити
+  ipa: nɐˈvrɔt͡ʃɪte
+  translation: to jinx
+  pos: verb
+- lemma: незручно
+  ipa: neˈzrut͡ʃno
+  translation: uncomfortably; awkwardly
+  pos: adv
+- lemma: ого
+  ipa: oˈɦɔ
+  translation: wow
+  pos: other
+- lemma: підстелити
+  ipa: pʲidsteˈlɪte
+  translation: to spread (under)
+  pos: verb
+  gender: m
+- lemma: реальність
+  ipa: reˈɑlʲnʲisʲtʲ
+  translation: reality
+  pos: noun
+  gender: f
+- lemma: соломка
+  ipa: soˈlɔmkɐ
+  translation: straw (diminutive)
+  pos: noun
+  gender: f
+- lemma: уявати
+  ipa: ujɐˈʋɑte
+  translation: to imagine (typo for уявляти)
+  pos: verb
+- lemma: якби
+  ipa: jɐkˈbɪ
+  translation: if (subjunctive)
+  pos: other

@@ -1,0 +1,199 @@
+module: 48-work-professions
+level: A2
+version: '2.0'
+items:
+- lemma: авіакомпанія
+  ipa: ɐviɐkomˈpɑnʲijɐ
+  translation: airline
+  pos: noun
+  gender: f
+- lemma: вартий
+  ipa: ˈvɑrtɪj
+  translation: worth
+  pos: adj
+  gender: m
+- lemma: вдень
+  ipa: vdɛnʲ
+  translation: during the day
+  pos: adv
+- lemma: виклик
+  ipa: ˈvɪklɪk
+  translation: challenge/call
+  pos: noun
+  gender: m
+- lemma: вночі
+  ipa: vnoˈt͡ʃi
+  translation: at night
+  pos: adv
+- lemma: відповідальний
+  ipa: vidpoʋiˈdɑlʲnɪj
+  translation: responsible
+  pos: adj
+  gender: f
+- lemma: гідно
+  ipa: ˈhʲidno
+  translation: dignified/worthily
+  pos: adv
+- lemma: дитинство
+  ipa: dɪˈtɪnstvo
+  translation: childhood
+  pos: noun
+  gender: n
+- lemma: займати
+  ipa: zɐjˈmɑte
+  translation: to occupy/borrow (imp)
+  pos: verb
+- lemma: закон
+  ipa: zɐˈkɔn
+  translation: law
+  pos: noun
+  gender: m
+- lemma: закордонний
+  ipa: zɐkorˈdɔnːɪj
+  translation: foreign
+  pos: adj
+  gender: m
+- lemma: зарплата
+  ipa: zɐrˈplɑtɐ
+  translation: salary
+  pos: noun
+  gender: f
+- lemma: згадувати
+  ipa: zhɐˈduʋɐte
+  translation: to recall/mention
+  pos: verb
+- lemma: керувати
+  ipa: keruˈʋɑte
+  translation: to manage/drive
+  pos: verb
+- lemma: колего
+  ipa: koˈlɛho
+  translation: colleague (voc/typo?)
+  pos: noun
+  gender: m
+- lemma: команда
+  ipa: koˈmɑndɐ
+  translation: team
+  pos: noun
+  gender: f
+- lemma: літати
+  ipa: lʲiˈtɑte
+  translation: to fly (imp)
+  pos: verb
+- lemma: медсестр
+  ipa: medseˈstr
+  translation: nurse (gen pl/typo)
+  pos: noun
+  gender: f
+- lemma: минати
+  ipa: mɪˈnɑte
+  translation: to pass (time)
+  pos: verb
+- lemma: моральний
+  ipa: moˈrɑlʲnɪj
+  translation: moral
+  pos: adj
+  gender: n
+- lemma: навчати
+  ipa: nɐu̯ˈt͡ʃɑte
+  translation: to teach (imp)
+  pos: verb
+- lemma: наймати
+  ipa: nɐjˈmɑte
+  translation: to hire (imp)
+  pos: verb
+- lemma: найняти
+  ipa: nɐjˈnʲɑte
+  translation: to hire (perf)
+  pos: verb
+- lemma: оплатити
+  ipa: oplɐˈtɪte
+  translation: to pay (perf)
+  pos: verb
+- lemma: офісний
+  ipa: ˈɔfʲisnɪj
+  translation: office (adj)
+  pos: adj
+  gender: n
+- lemma: помічник
+  ipa: pomit͡ʃˈnɪk
+  translation: assistant
+  pos: noun
+  gender: m
+- lemma: працьовитий
+  ipa: prɐt͡sʲoˈvɪtɪj
+  translation: hardworking
+  pos: adj
+- lemma: праця
+  ipa: ˈprɑt͡sʲɐ
+  translation: work/labor
+  pos: noun
+  gender: f
+- lemma: працівник
+  ipa: prɐt͡sʲiʋˈnɪk
+  translation: employee
+  pos: noun
+  gender: m
+- lemma: професіонал
+  ipa: profesʲioˈnɑl
+  translation: professional
+  pos: noun
+  gender: m
+- lemma: пілот
+  ipa: piˈlɔt
+  translation: pilot
+  pos: noun
+  gender: m
+- lemma: пілота
+  ipa: piˈlɔtɐ
+  translation: pilot (gen)
+  pos: noun
+  gender: m
+- lemma: пілото
+  ipa: piˈlɔto
+  translation: pilot (voc? typo)
+  pos: noun
+  gender: m
+- lemma: реалізувати
+  ipa: reɐlʲizuˈʋɑte
+  translation: to realize/implement
+  pos: verb
+- lemma: ризик
+  ipa: ˈrɪzɪk
+  translation: risk
+  pos: noun
+  gender: m
+- lemma: свобода
+  ipa: svoˈbɔdɐ
+  translation: freedom
+  pos: noun
+  gender: f
+- lemma: старанно
+  ipa: stɐˈrɑnːo
+  translation: diligently
+  pos: adv
+- lemma: старенький
+  ipa: stɐˈrɛnʲkɪj
+  translation: old (diminutive)
+  pos: adj
+  gender: f
+- lemma: стартап
+  ipa: stɐrˈtɑp
+  translation: startup
+  pos: noun
+  gender: m
+- lemma: успішний
+  ipa: usˈpiʃnɪj
+  translation: successful
+  pos: adj
+  gender: f
+- lemma: ірин
+  ipa: ˈirɪn
+  translation: Iryna's?
+  pos: propn
+  gender: f
+- lemma: ірина
+  ipa: iˈrɪnɐ
+  translation: Iryna
+  pos: propn
+  gender: f

@@ -1,0 +1,389 @@
+module: 91-ruina-ii-doroshenko
+level: B2
+version: '2.0'
+items:
+  - lemma: боронитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: борце
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: бусурман
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: бучацький
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: валахія
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: васальний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: версалю
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: вибухнути
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: n
+  - lemma: вшановувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: відвага
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: відвезти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: відпадати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: відрікатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: відстрочка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: відчайдушно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: героїзувати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: гетьманувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: депеша
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: дилема
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: диявол
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: загряжська
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: закотитися
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: n
+  - lemma: залучати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: запеклий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: капітулювати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: капітуляція
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: кошов
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: многогрішний
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: молдован
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: мустаф
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: мусульманський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: наважитися
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: наважуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: навернення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: нагод
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: найтемніший
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: наступити
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: невірний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: нездійсненний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: непоступливість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: непримиренний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: ослаблювати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: осман
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: османама
+    ipa: ''
+    translation: ''
+    pos: propn
+  - lemma: оспіваний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: племінниця
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: поглибити
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: подільський
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: почесний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: правнучка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: правобережне
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: принизливий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: принциповість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: програний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: прожити
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: промень
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: протистояння
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: пушкін
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: ризикований
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: рєпін
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: самойлович
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: серба
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: союзуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: спалах
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: спустошуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: n
+  - lemma: султанський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: сюзеренітет
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: сірка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: сірком
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: сірків
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: турчина
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: урус
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: фанаріотський
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: хижака
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: хижий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: чигирин
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: чигиринщина
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: шайтан
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: шарль
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: ібрагім
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m

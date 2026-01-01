@@ -1,28 +1,3 @@
----
-module: b1-38
-title: "Інтеграція складних речень"
-subtitle: "Complex Sentence Integration"
-version: "1.0"
-phase: "B1.3b Complex Sentences"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - complex-sentences
-  - integration
-  - synthesis
-grammar:
-  - "Combining multiple clause types in one sentence"
-  - "Coordination and subordination together"
-objectives:
-  - "Learner can combine причинові, часові, умовні clauses"
-  - "Learner can build multi-clause sentences"
-  - "Learner can choose appropriate connectors for context"
-vocabulary_count: 25
-vocab_count: 43
----
-
 > [!motivation]
 > Як поєднати всі типи складних речень в один текст? Інтеграція складних речень — це вершина граматичної майстерності в українській мові. Коли ви вмієте комбінувати причинові, часові, умовні та відносні речення в одному тексті, ваше мовлення стає по-справжньому природним і багатим. Це ключова навичка для написання есе, доповідей, офіційних листів та ведення складних дискусій українською мовою!
 

@@ -1,27 +1,3 @@
----
-module: a2-41
-title: "Root Families II"
-subtitle: "Motion and Perception Roots"
-version: "2.0"
-phase: "A2.4"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - grammar
-  - word-formation
-  - roots
-grammar:
-  - perception roots
-  - speaking roots
-objectives:
-  - "Learner knows perception root families"
-  - "Learner knows speaking root families"
-  - "Learner can recognize word connections"
-vocabulary_count: 25
-vocab_count: 41
----
-
 ## Warm-up
 
 Welcome to more root families! This module covers **seeing** (бач-), **hearing** (слух-/чут-), and **speaking** (говор-/мов-) roots.

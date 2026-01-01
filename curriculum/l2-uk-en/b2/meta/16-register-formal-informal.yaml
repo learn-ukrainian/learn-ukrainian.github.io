@@ -1,0 +1,24 @@
+module: b2-16
+title: Формальне та неформальне спілкування
+subtitle: Коли на «ти», а коли на «Ви»
+version: '1.0'
+phase: B2.1a [Grammar & Register]
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - grammar
+  - register
+  - address-forms
+grammar:
+  - Ти/Ви-distinction in address
+  - Formal/informal lexical pairs
+  - Forms of address (Пан/Пані, Шановний)
+  - Register-appropriate vocabulary selection
+objectives:
+  - Учень може правильно обирати між формами «ти» та «Ви» залежно від ситуації
+  - Учень може трансформувати неформальний текст у формальний і навпаки
+  - Учень може використовувати відповідні форми звертання у діловому спілкуванні
+vocabulary_count: 25
+vocab_count: 76
+slug: 16-register-formal-informal

@@ -463,4 +463,70 @@
     відпочивати. Вона заздрить *подрузі*(correct).'
 - type: translate
   title: English to Ukrainian
-  items: []
+  items:
+  - source: I believe you.
+    options:
+    - text: Я вірю тобі.
+      correct: true
+    - text: Я вірю тебе.
+      correct: false
+    - text: Я вірю ти.
+      correct: false
+    - text: Я вірю твій.
+      correct: false
+    explanation: Dative тобі.
+  - source: He helps his sister.
+    options:
+    - text: Він допомагає сестрі.
+      correct: true
+    - text: Він допомагає сестру.
+      correct: false
+    - text: Він допомагає сестра.
+      correct: false
+    - text: Він допомагає сестри.
+      correct: false
+    explanation: Dative сестрі.
+  - source: The mother forbids children to play here.
+    options:
+    - text: Мама забороняє дітям гратися тут.
+      correct: true
+    - text: Мама забороняє діти гратися тут.
+      correct: false
+    - text: Мама забороняє дітей гратися тут.
+      correct: false
+    - text: Мама забороняє дітям грати тут.
+      correct: false
+    explanation: Dative plural дітям + infinitive.
+  - source: I like Ukrainian songs.
+    options:
+    - text: Мені подобаються українські пісні.
+      correct: true
+    - text: Я подобаюся українські пісні.
+      correct: false
+    - text: Мене подобаються українські пісні.
+      correct: false
+    - text: Мені подобається українські пісні.
+      correct: false
+    explanation: Dative мені + plural verb подобаються.
+  - source: We thank the doctor for the help.
+    options:
+    - text: Ми дякуємо лікареві за допомогу.
+      correct: true
+    - text: Ми дякуємо лікар за допомогу.
+      correct: false
+    - text: Ми дякуємо лікаря за допомогу.
+      correct: false
+    - text: Ми дякуємо лікарем за допомогу.
+      correct: false
+    explanation: Dative лікареві.
+  - source: She explains the rule to the student.
+    options:
+    - text: Вона пояснює правило учневі.
+      correct: true
+    - text: Вона пояснює правило учень.
+      correct: false
+    - text: Вона пояснює правило учня.
+      correct: false
+    - text: Вона пояснює правило учнем.
+      correct: false
+    explanation: Dative учневі.

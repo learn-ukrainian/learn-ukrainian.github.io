@@ -1,29 +1,3 @@
----
-module: b1-43
-title: "Дієприслівники доконаного виду"
-subtitle: "Adverbial Participles - Perfective (-вши/-ши)"
-version: "1.0"
-phase: "B1.4 Advanced Grammar"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - participles
-  - adverbial-participles
-  - perfective
-grammar:
-  - "Дієприслівники доконаного виду"
-  - "Суфікси -вши/-ши"
-  - "Попередність дій"
-objectives:
-  - "Learner can form perfective adverbial participles using -вши/-ши suffixes"
-  - "Learner can use adverbial participles to express prior completed actions"
-  - "Learner can distinguish between imperfective and perfective adverbial participles"
-vocabulary_count: 20
-vocab_count: 38
----
-
 # Дієприслівники доконаного виду
 
 > 🎯 **Чому це важливо?**

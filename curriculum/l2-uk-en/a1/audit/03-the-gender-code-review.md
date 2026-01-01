@@ -1,20 +1,30 @@
 # Audit Report: 03-the-gender-code.md
-**Phase:** A1 | **Level:** A1 | **Pedagogy:** "PPP" | **Target:** 300
+**Phase:** A1.1 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 300
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): огірок, м'ясо, помідор, чай, риба...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
-- **Words:** ✅ 1082/300
+- **Words:** ✅ 1084/300
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 45/1
+- **Vocab:** ✅ 53/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 17.2% (target 10-25% (M03))
+- **Immersion:** 🇺🇦 14.0% (target 10-25% (M03))
+- **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -25,20 +35,10 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **The Gender Code** | ⚪️ | 0 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 101 | Included in Core |
-| **Presentation** | ✅ | 295 | Included in Core |
+| **Presentation** | ✅ | 296 | Included in Core |
 | **Practice** | ⚪️ | 280 | Skipped |
-| **Production** | ➖ | 102 | Excluded Type |
-| **Cultural Insight** | ✅ | 149 | Included in Core |
-| **Summary** | ✅ | 155 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **quiz: Gender Recognition** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Gender Pairs** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Sort by Gender** | 🎮 | 29 | Activity (29 items, min 12) |
-| **fill-in: Complete with Gender** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: Gender Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **anagram: Build the Word** | 🎮 | 12 | Activity (12 items, min 8) |
-| **anagram: More Words** | 🎮 | 12 | Activity (12 items, min 8) |
-| **quiz: Gender Pronoun Match** | 🎮 | 8 | Activity (8 items, min 8) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Production** | ➖ | 103 | Excluded Type |
+| **Cultural Insight** | ✅ | 150 | Included in Core |
+| **Summary** | ✅ | 154 | Included in Core |

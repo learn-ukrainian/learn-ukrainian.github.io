@@ -1,6 +1,15 @@
 # Audit Report: 01-passive-voice-system.md
 **Phase:** B2 | **Level:** B2 | **Pedagogy:** "TTT" | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (2 words): об'єкт, дійсний...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1868/1750
@@ -10,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 57/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -36,12 +45,6 @@
 | questions | 29 | 5 | 100% | 5% | 5.0% |
 | proverbs | 2 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.3%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,0 +1,253 @@
+module: 31-numeral-declension-time-dates
+level: B2
+version: '2.0'
+items:
+  - lemma: анкета
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: березо
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: виключення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: відм
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вітатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: горох
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: датний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: двадцяте
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: двадцятичотиригодинний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: дванадцят
+    ipa: ''
+    translation: ''
+    pos: other
+    gender: f
+  - lemma: дванадцятії
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: десяте
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: заснування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: корпоратив
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: коцюбинський
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: крайній
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: латинський
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: маркетинг
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: маруся
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: мінідіалог
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: місц
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: неофіційно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: нерегулярний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: обідній
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: опівночі
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: опівніч
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: побуть
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: поетеса
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: порядковий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: потяг
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: приблизний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: прикмета
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: припускатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: підведення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: підтвестидя
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: рівно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: різ
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: річниця
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: словесний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: сполучення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: сьома
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: сімнадцятий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: сіти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: тридцятий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: тринадцятий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: упродовж
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: ущерб
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: четверт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: чотирнадцятий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: чурай
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: шістнадцятий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: ювіль
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m

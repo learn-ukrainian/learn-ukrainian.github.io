@@ -1,0 +1,354 @@
+module: 16-register-formal-informal
+level: B2
+version: '2.0'
+items:
+  - lemma: близький
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: близькість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: вдячний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: вельмишановний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: взаємний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: годитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: гоп
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: господин
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: госпожа
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: декан
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: дзвінок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: директоре
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: добродій
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: добродійка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: домовити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: дружність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: етикет
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: ефір
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: завчасно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: звертань
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: ковальчук
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: комбінація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: курсовий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: ласкавий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: лексичний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: маша
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: нагода
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: надішлати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: неповага
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: норм
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: ознайтися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: окрім
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: олександре
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: ольго
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: перебувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: передбачатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: переписка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: перескочити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: перестрахуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: петрович
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: петрівно
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: плюс
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: повага
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: подяка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: посередництво
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: поспілкуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: прийнятно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: присвійний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: присутність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: приєднатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: проконсультуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: прізвище
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: підвезти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: підліток
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: саша
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: святковий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: середовище
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: сигналізувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: синонім
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: соціолінгвістичний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: спланувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: співрозмовник
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: створюватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: стриманий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: танець
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: телеведучий
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: телеглядач
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: титул
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: формально
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: французький
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: фуршет
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: шановний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: іванович
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: інтимній
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: інфий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: ініціювати
+    ipa: ''
+    translation: ''
+    pos: verb

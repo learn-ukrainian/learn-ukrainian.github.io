@@ -1,6 +1,15 @@
 # Audit Report: 29-purpose-shchob-infinitive.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
+**Phase:** B1.3a | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): завдання, призначення, заради, метою, бажання...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1565/1500
@@ -10,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ⚠️ 17 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,19 +46,12 @@
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.0%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Підрядні речення мети: щоб + інфінітив** | ⚪️ | 50 | Skipped |
+| **Intro/Narrative** | ✅ | 50 | Included in Core |
 | **Діагностика** | ✅ | 143 | Included in Core |
 | **Аналіз** | ✅ | 186 | Included in Core |
 | **Поглиблення** | ⚪️ | 745 | Skipped |
 | **Діалоги** | ✅ | 190 | Included in Core |
 | **Підсумок** | ✅ | 251 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

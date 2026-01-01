@@ -1,28 +1,3 @@
----
-module: a2-36
-title: Advanced Motion Prefixes
-subtitle: "Complex Paths: Crossing, Stopping, Going Around"
-version: "1.0"
-phase: "A2.4"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - motion verbs
-  - prefixes
-  - spatial
-  - advanced
-grammar:
-  - advanced motion prefixes (пере-, за-, про-, під-, об-, до-)
-  - path semantics in motion verbs
-objectives:
-  - "Learner can describe complex motion paths"
-  - "Learner can use prefixes to express crossing, passing, stopping by"
-  - "Learner can give and follow directional instructions"
-vocabulary_count: 30
-vocab_count: 66
----
-
 ## Warm-up
 
 In A1, you learned basic motion verbs (йти, їхати). In earlier A2 modules, you learned simple prefixes.

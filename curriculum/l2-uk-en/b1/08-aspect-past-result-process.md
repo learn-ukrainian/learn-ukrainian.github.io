@@ -1,30 +1,3 @@
----
-module: b1-08
-title: "Вид у минулому: результат vs процес"
-subtitle: "Aspect in Past: Result vs Process"
-version: "1.0"
-phase: "B1.1 Aspect"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - aspect
-  - past-tense
-  - duration
-grammar:
-  - "Result-oriented vs process-oriented aspect"
-  - "Duration markers and aspect"
-  - "Completed actions vs ongoing processes"
-objectives:
-  - "Learner can distinguish result from process in past tense"
-  - "Learner understands duration markers with imperfective"
-  - "Learner can select aspect based on speaker's focus (result vs activity)"
-  - "Learner recognizes completion markers with perfective"
-vocabulary_count: 35
-vocab_count: 81
----
-
 # Вид у минулому: результат vs процес
 
 > 🎯 **Чому це важливо?**
@@ -149,8 +122,6 @@ vocab_count: 81
 >
 > У селі **Петриківка** на Дніпропетровщині майстрині століттями **розписували** (НДВ - процес) хати, скрині та посуд. Вони **малювали** (НДВ) годинами, але результат — вони **створили** (ДВ) унікальний стиль! Петриківський розпис — це свідчення української творчості: довгий **процес** навчання веде до прекрасного **результату**.
 
-
-
 ---
 
 ### Контраст: той самий факт, різний акцент
@@ -250,7 +221,6 @@ graph TD
 > *(Measure seven times, cut once.)*
 >
 > **Відміряй** (процес) — треба робити уважно і довго. **Відріж** (результат) — це одна швидка, завершена дія.
-
 
 ---
 

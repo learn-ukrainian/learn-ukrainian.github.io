@@ -1,0 +1,394 @@
+module: 02-the-cyrillic-code-ii
+level: A1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/02-the-cyrillic-code-ii.md
+generated: '2026-01-01T17:33:19.080634'
+scope: fill-in, quiz, true-false
+activity_counts:
+  fill-in: 13
+  quiz: 12
+  true-false: 12
+total_items: 37
+item_count: 37
+sample_percent: null
+items:
+- activity: fill-in
+  title: Complete the Greetings
+  sentence_template: ___ (Hello!)
+  answer: Привіт
+  complete_sentence: Привіт (Hello!)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Greetings
+  sentence_template: ___ (Thank you)
+  answer: Дякую
+  complete_sentence: Дякую (Thank you)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Greetings
+  sentence_template: ___ (Please / You're welcome)
+  answer: Будь ласка
+  complete_sentence: Будь ласка (Please / You're welcome)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Greetings
+  sentence_template: ___ (Goodbye)
+  answer: До побачення
+  complete_sentence: До побачення (Goodbye)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Greetings
+  sentence_template: ___ (Excuse me / Sorry)
+  answer: Вибачте
+  complete_sentence: Вибачте (Excuse me / Sorry)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Greetings
+  sentence_template: ___ (Yes)
+  answer: Так
+  complete_sentence: Так (Yes)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Greetings
+  sentence_template: ___ (No)
+  answer: Ні
+  complete_sentence: Ні (No)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Greetings
+  sentence_template: ___ (Good / Well)
+  answer: Добре
+  complete_sentence: Добре (Good / Well)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Greetings
+  sentence_template: ___ (What?)
+  answer: Що
+  complete_sentence: Що (What?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Greetings
+  sentence_template: ___ (How?)
+  answer: Як
+  complete_sentence: Як (How?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Greetings
+  sentence_template: ___ (Where?)
+  answer: Де
+  complete_sentence: Де (Where?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Greetings
+  sentence_template: ___ (Who?)
+  answer: Хто
+  complete_sentence: Хто (Who?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Greetings
+  sentence_template: ___ (Welcome)
+  answer: Ласкаво просимо
+  complete_sentence: Ласкаво просимо (Welcome)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Alphabet Knowledge
+  question: Which letter makes the "h" sound in Ukrainian?
+  options:
+  - '{''text'': ''Ґ'', ''correct'': False}'
+  - '{''text'': ''Г'', ''correct'': True}'
+  - '{''text'': ''Х'', ''correct'': False}'
+  - '{''text'': ''К'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Alphabet Knowledge
+  question: What does the letter Ї sound like?
+  options:
+  - '{''text'': ''ya'', ''correct'': False}'
+  - '{''text'': ''ye'', ''correct'': False}'
+  - '{''text'': ''yi'', ''correct'': True}'
+  - '{''text'': ''yu'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Alphabet Knowledge
+  question: Which letter makes the "shch" sound in борщ?
+  options:
+  - '{''text'': ''Ш'', ''correct'': False}'
+  - '{''text'': ''Ч'', ''correct'': False}'
+  - '{''text'': ''Щ'', ''correct'': True}'
+  - '{''text'': ''Ц'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Alphabet Knowledge
+  question: What is special about the letter Ь?
+  options:
+  - '{''text'': ''It makes a "y" sound'', ''correct'': False}'
+  - '{''text'': ''It softens the consonant before it'', ''correct'': True}'
+  - '{''text'': ''It makes an "e" sound'', ''correct'': False}'
+  - '{''text'': "It''s silent and has no effect", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Alphabet Knowledge
+  question: Which letter makes the "ts" sound?
+  options:
+  - '{''text'': ''С'', ''correct'': False}'
+  - '{''text'': ''З'', ''correct'': False}'
+  - '{''text'': ''Ц'', ''correct'': True}'
+  - '{''text'': ''Ч'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Alphabet Knowledge
+  question: What does Є sound like?
+  options:
+  - '{''text'': ''ye'', ''correct'': True}'
+  - '{''text'': ''e'', ''correct'': False}'
+  - '{''text'': ''yi'', ''correct'': False}'
+  - '{''text'': ''ya'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Alphabet Knowledge
+  question: How do you pronounce Київ in Ukrainian?
+  options:
+  - '{''text'': ''Keev'', ''correct'': False}'
+  - '{''text'': ''Kiev'', ''correct'': False}'
+  - '{''text'': ''Kyiv'', ''correct'': True}'
+  - '{''text'': ''Kee-iv'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Alphabet Knowledge
+  question: Which letter was lost in Russian but kept in Ukrainian?
+  options:
+  - '{''text'': ''Г'', ''correct'': False}'
+  - '{''text'': ''Ґ'', ''correct'': True}'
+  - '{''text'': ''Щ'', ''correct'': False}'
+  - '{''text'': ''Є'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Alphabet Knowledge
+  question: What sound does Ж make?
+  options:
+  - '{''text'': ''sh'', ''correct'': False}'
+  - '{''text'': ''zh'', ''correct'': True}'
+  - '{''text'': ''j'', ''correct'': False}'
+  - '{''text'': ''ch'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Alphabet Knowledge
+  question: In italic/cursive, which letter looks like Latin "m"?
+  options:
+  - '{''text'': ''т'', ''correct'': True}'
+  - '{''text'': ''м'', ''correct'': False}'
+  - '{''text'': ''п'', ''correct'': False}'
+  - '{''text'': ''н'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Alphabet Knowledge
+  question: Which of these is a iotated vowel?
+  options:
+  - '{''text'': ''А'', ''correct'': False}'
+  - '{''text'': ''Е'', ''correct'': False}'
+  - '{''text'': ''Ю'', ''correct'': True}'
+  - '{''text'': ''И'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Alphabet Knowledge
+  question: What does Я sound like?
+  options:
+  - '{''text'': ''ye'', ''correct'': False}'
+  - '{''text'': ''ya'', ''correct'': True}'
+  - '{''text'': ''yi'', ''correct'': False}'
+  - '{''text'': ''y'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Alphabet Facts
+  statement: The letter Г makes an "h" sound, not a "g" sound.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Alphabet Facts
+  statement: Ґ exists in Ukrainian but was lost in Russian.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Alphabet Facts
+  statement: The letter Ї sounds like "e" in English.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Alphabet Facts
+  statement: Щ makes the "shch" sound in борщ.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Alphabet Facts
+  statement: The soft sign Ь makes a "y" sound.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Alphabet Facts
+  statement: 'There are four iotated vowels in Ukrainian: Є, Ї, Ю, Я.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Alphabet Facts
+  statement: Київ should be pronounced "Keev" like in Russian.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Alphabet Facts
+  statement: The Ukrainian alphabet has 33 letters total.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Alphabet Facts
+  statement: Italic т looks like "t" in Latin script.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Alphabet Facts
+  statement: UNESCO recognized Ukrainian borscht culture as endangered heritage.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Alphabet Facts
+  statement: Є sounds like "ye" as in "yes."
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Alphabet Facts
+  statement: The letter И is the same as І in Ukrainian.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

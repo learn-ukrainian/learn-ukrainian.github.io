@@ -1,0 +1,193 @@
+module: 67-advanced-conjunctions-i
+level: B2
+version: '2.0'
+items:
+  - lemma: академічно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: аналітиця
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: багатогранний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: багатошаровий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: безпековий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: битва
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: блок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: бутувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: взаєморозуміння
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: вирушити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: впровадити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: господарювання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: дехто
+    ipa: ''
+    translation: ''
+    pos: pron
+  - lemma: доповнювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: енергопостачання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: задавати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: зміщуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: знецінення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: зосередити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: конструктивніше
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: маркетинговий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: митник
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: навігатор
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: нестабільний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: обґрунтованість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: окупність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: опір
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: очевидність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: перевантажувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: погодний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: погіршитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: посилити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: посушливий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: праві
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: припортовий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: реалізовати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: ремонтний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: рятувальник
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: сприяння
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: стійкий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: тренувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: ціновий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f

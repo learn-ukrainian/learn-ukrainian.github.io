@@ -1,28 +1,3 @@
----
-module: b1-29
-title: "Підрядні речення мети: щоб + інфінітив"
-subtitle: "Purpose Clauses - Same Subject"
-version: "1.0"
-phase: "B1.3a Complex Sentences"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - purpose-clauses
-  - complex-sentences
-  - infinitive
-grammar:
-  - "щоб + infinitive for same-subject purpose clauses"
-  - "Alternative purpose expressions"
-objectives:
-  - "Learner understands when to use щоб + infinitive"
-  - "Learner can form same-subject purpose clauses"
-  - "Learner can use alternative purpose expressions"
-vocabulary_count: 25
-vocab_count: 54
----
-
 # Підрядні речення мети: щоб + інфінітив
 
 > 🎯 **Чому це важливо?**
@@ -350,7 +325,5 @@ vocab_count: 54
 > - 🎧 [Ukrainian Grammar](https://www.youtube.com/results?search_query=ukrainian+grammar) — подкаст уроки
 
 ---
-
-
 
 ---

@@ -1,0 +1,144 @@
+module: 75-regions-center
+level: B1
+version: '2.0'
+items:
+- lemma: борещь
+  ipa: /bɔˈrɛʃt͡ʃ/
+  translation: ??? (typo)
+  pos: noun
+  gender: m
+- lemma: вола
+  ipa: /vɔˈla/
+  translation: ox (gen.)
+  pos: noun
+  gender: f
+- lemma: гідроелектронції
+  ipa: /hidrɔɛlɛkˈtrɔnt͡sʲiji/
+  translation: HPP (typo)
+  pos: noun
+  gender: f
+- lemma: гідропарк
+  ipa: /hidrɔˈpark/
+  translation: hydropark
+  pos: propn
+  gender: m
+- lemma: диканьк
+  ipa: /dɪˈkanʲk/
+  translation: Dykanka (trunc)
+  pos: propn
+  gender: f
+- lemma: диканька
+  ipa: /dɪˈkanʲka/
+  translation: Dykanka
+  pos: propn
+  gender: f
+- lemma: диканьки
+  ipa: /dɪˈkanʲkɪ/
+  translation: Dykanka (gen.)
+  pos: propn
+  gender: f
+- lemma: дніпровий
+  ipa: /dnʲiˈprɔvɪj/
+  translation: Dnieper (adj)
+  pos: adj
+- lemma: засмагати
+  ipa: /zasmaˈhatɪ/
+  translation: to sunbathe
+  pos: verb
+- lemma: керамика
+  ipa: /kɛˈramɪka/
+  translation: ceramics (typo)
+  pos: noun
+  gender: f
+- lemma: круїза
+  ipa: /kruˈjiza/
+  translation: cruise (gen.)
+  pos: noun
+  gender: m
+- lemma: мащенко
+  ipa: /ˈmaʃt͡ʃɛnkɔ/
+  translation: Mashchenko
+  pos: propn
+  gender: m
+- lemma: надихатися
+  ipa: /nadɪˈxatɪsʲa/
+  translation: to be inspired
+  pos: verb
+  gender: m
+- lemma: наймальовничіший
+  ipa: /najmalʲɔu̯ˈnɪt͡ʃʲiʃɪj/
+  translation: most picturesque
+  pos: adj
+- lemma: нечистий
+  ipa: /nɛˈt͡ʃɪstɪj/
+  translation: evil
+  pos: adj
+  gender: f
+- lemma: панас
+  ipa: /paˈnas/
+  translation: Panas
+  pos: propn
+  gender: m
+- lemma: полтавка
+  ipa: /pɔlˈtau̯ka/
+  translation: Poltava woman
+  pos: noun
+  gender: m
+- lemma: ревуть
+  ipa: /rɛˈvutʲ/
+  translation: roar (3pl)
+  pos: noun
+  gender: m
+- lemma: сал
+  ipa: /sal/
+  translation: fat (gen. pl.)
+  pos: noun
+  gender: m
+- lemma: сорочинка
+  ipa: /sɔrɔˈt͡ʃɪnka/
+  translation: Sorochyntsi (dim.)
+  pos: propn
+- lemma: тарасовій
+  ipa: /taraˈsɔvij/
+  translation: Taras's (loc.)
+  pos: propn
+  gender: f
+- lemma: тарасів
+  ipa: /taˈrasiu̯/
+  translation: Taras's
+  pos: adj
+  gender: f
+- lemma: трухановий
+  ipa: /truxaˈnɔvɪj/
+  translation: Trukhaniv
+  pos: adj
+  gender: m
+- lemma: узвіз
+  ipa: /uzˈviz/
+  translation: descent
+  pos: noun
+  gender: m
+- lemma: центральноукраїнський
+  ipa: /t͡sɛntralʲnɔukraˈjinsʲkɪj/
+  translation: Central Ukrainian
+  pos: adj
+- lemma: черкащин
+  ipa: /t͡ʃɛrˈkaʃt͡ʃɪn/
+  translation: Cherkasy region (trunc)
+  pos: propn
+  gender: f
+- lemma: черкащини
+  ipa: /t͡ʃɛrˈkaʃt͡ʃɪnɪ/
+  translation: Cherkasy region (gen.)
+  pos: propn
+  gender: f
+- lemma: ясло
+  ipa: /ˈjaslɔ/
+  translation: manger
+  pos: noun
+  gender: m
+- lemma: іринко
+  ipa: /iˈrɪnkɔ/
+  translation: Irynka (voc.)
+  pos: propn
+  gender: f

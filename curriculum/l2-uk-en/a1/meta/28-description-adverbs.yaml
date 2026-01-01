@@ -1,0 +1,25 @@
+module: a1-28
+title: 'Description: Adverbs'
+subtitle: How We Do Things
+version: '1.0'
+phase: A1.3 - Consolidation
+pedagogy: PPP
+duration: 60 min
+transliteration: first-occurrence
+tags:
+  - adverbs
+  - manner
+  - frequency
+  - description
+grammar:
+  - Adverbs of manner (adjective stem + -о)
+  - Adverbs of frequency
+  - Comparison with adjectives
+objectives:
+  - Learner can form adverbs from adjectives
+  - Learner can use adverbs to describe how actions are done
+  - Learner can use frequency adverbs (always, sometimes, never)
+  - Learner can distinguish adverbs from adjectives
+vocabulary_count: 30
+vocab_count: 25
+slug: 28-description-adverbs

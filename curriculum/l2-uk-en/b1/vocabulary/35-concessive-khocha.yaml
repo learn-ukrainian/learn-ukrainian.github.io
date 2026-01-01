@@ -1,0 +1,71 @@
+module: 35-concessive-khocha
+level: B1
+version: '2.0'
+items:
+- lemma: вольний
+  ipa: /ˈvɔlʲnɪj/
+  translation: free
+  pos: adj
+  gender: f
+- lemma: відзнака
+  ipa: /vidˈznaka/
+  translation: award
+  pos: noun
+  gender: f
+- lemma: зневіритися
+  ipa: /znɛˈvʲirɪtɪsʲa/
+  translation: to despair
+  pos: verb
+- lemma: незлий
+  ipa: /nɛzˈlɪj/
+  translation: not evil
+  pos: adj
+  gender: n
+- lemma: несподіваність
+  ipa: /nɛspɔˈdʲivanʲisʲtʲ/
+  translation: surprise
+  pos: noun
+  gender: f
+- lemma: поранення
+  ipa: /pɔˈranɛnʲːa/
+  translation: injury
+  pos: noun
+  gender: n
+- lemma: прохолодний
+  ipa: /prɔxɔˈlɔdnɪj/
+  translation: cool
+  pos: adj
+- lemma: піднімти
+  ipa: /pidˈnʲimtɪ/
+  translation: to raise (typo)
+  pos: verb
+- lemma: підсилювальний
+  ipa: /pidsɪˈlʲuvalʲnɪj/
+  translation: amplifying
+  pos: adj
+- lemma: скромно
+  ipa: /ˈskrɔmnɔ/
+  translation: modestly
+  pos: adv
+- lemma: соловейка
+  ipa: /sɔlɔˈvɛjka/
+  translation: nightingale (dim.)
+  pos: noun
+  gender: m
+- lemma: стомлений
+  ipa: /ˈstɔmlɛnɪj/
+  translation: tired
+  pos: adj
+  gender: m
+- lemma: фінансово
+  ipa: /fiˈnansɔvɔ/
+  translation: financially
+  pos: adv
+- lemma: хотяти
+  ipa: /xɔˈtʲatɪ/
+  translation: to want (typo)
+  pos: verb
+- lemma: часом
+  ipa: /ˈt͡ʃasɔm/
+  translation: sometimes
+  pos: adv

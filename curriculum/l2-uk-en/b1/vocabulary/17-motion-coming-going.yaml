@@ -1,0 +1,141 @@
+module: 17-motion-coming-going
+level: B1
+version: '2.0'
+items:
+- lemma: борисполь
+  ipa: /bɔˈrɪspɔlʲ/
+  translation: Boryspil (typo)
+  pos: propn
+  gender: m
+- lemma: брістоль
+  ipa: /brisˈtɔlʲ/
+  translation: Bristol
+  pos: propn
+  gender: m
+- lemma: в'їжджати
+  ipa: /vjizhˈdʒatɪ/
+  translation: to drive in
+  pos: verb
+- lemma: вбігти
+  ipa: /ˈvbihtɪ/
+  translation: to run in
+  pos: verb
+- lemma: ввезти
+  ipa: /vːɛzˈtɪ/
+  translation: to bring in
+  pos: verb
+- lemma: випливти
+  ipa: /ˈvɪplɪu̯tɪ/
+  translation: to swim out
+  pos: verb
+- lemma: виплист
+  ipa: /ˈvɪplɪst/
+  translation: swim out (typo)
+  pos: noun
+  gender: m
+- lemma: виплисти
+  ipa: /ˈvɪplɪstɪ/
+  translation: to swim out
+  pos: verb
+- lemma: виразніший
+  ipa: /vɪˈraznʲiʃɪj/
+  translation: more expressive
+  pos: adj
+  gender: f
+- lemma: виїжджання
+  ipa: /vɪjiʒˈdʒanʲːa/
+  translation: departure
+  pos: noun
+  gender: n
+- lemma: влетіти
+  ipa: /vlɛˈtʲitɪ/
+  translation: to fly in
+  pos: verb
+- lemma: всередина
+  ipa: /fsɛˈrɛdɪna/
+  translation: inside (typo)
+  pos: noun
+  gender: f
+- lemma: втрачатися
+  ipa: /vtraˈt͡ʃatɪsʲa/
+  translation: to be lost
+  pos: verb
+- lemma: відлетіти
+  ipa: /vidlɛˈtʲitɪ/
+  translation: to fly away
+  pos: verb
+- lemma: забування
+  ipa: /zabuˈvanʲːa/
+  translation: forgetting
+  pos: noun
+  gender: n
+- lemma: залишення
+  ipa: /zaˈlɪʃɛnʲːa/
+  translation: leaving
+  pos: noun
+  gender: n
+- lemma: зачинятися
+  ipa: /zat͡ʃɪˈnʲatɪsʲa/
+  translation: to close
+  pos: verb
+- lemma: зранка
+  ipa: /ˈzranka/
+  translation: in the morning
+  pos: propn
+  gender: f
+- lemma: колія
+  ipa: /ˈkɔlʲija/
+  translation: track
+  pos: noun
+  gender: f
+- lemma: найстабільніший
+  ipa: /najstaˈbʲilʲnʲiʃɪj/
+  translation: most stable
+  pos: adj
+- lemma: населений
+  ipa: /naˈsɛlɛnɪj/
+  translation: inhabited
+  pos: adj
+  gender: m
+- lemma: номера
+  ipa: /nɔmɛˈra/
+  translation: rooms
+  pos: noun
+  gender: m
+- lemma: паспортний
+  ipa: /ˈpaspɔrtnɪj/
+  translation: passport (adj)
+  pos: adj
+  gender: m
+- lemma: перево
+  ipa: /pɛrɛˈvɔ/
+  translation: transfer? (trunc)
+  pos: noun
+  gender: f
+- lemma: прибігти
+  ipa: /prɪˈbihtɪ/
+  translation: to run to
+  pos: verb
+- lemma: припливти
+  ipa: /prɪplɪu̯ˈtɪ/
+  translation: to swim to
+  pos: verb
+- lemma: приплисти
+  ipa: /prɪplɪsˈtɪ/
+  translation: to swim to
+  pos: verb
+- lemma: рецепціоніст
+  ipa: /rɛt͡sɛpt͡sʲiɔˈnʲist/
+  translation: receptionist
+  pos: noun
+  gender: m
+- lemma: точніший
+  ipa: /tɔt͡ʃˈnʲiʃɪj/
+  translation: more precise
+  pos: adj
+  gender: f
+- lemma: фраз
+  ipa: /fraz/
+  translation: phrases (gen. pl.)
+  pos: noun
+  gender: f

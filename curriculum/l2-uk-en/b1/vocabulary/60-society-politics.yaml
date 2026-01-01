@@ -1,0 +1,69 @@
+module: 60-society-politics
+level: B1
+version: '2.0'
+items:
+- lemma: верховенствовий
+  ipa: /vɛrxɔˈvɛnstvɔvɪj/
+  translation: supremacy (adj?)
+  pos: adj
+  gender: n
+- lemma: викорінити
+  ipa: /vɪˈkɔrʲinɪtɪ/
+  translation: to eradicate
+  pos: verb
+- lemma: гарантований
+  ipa: /haranˈtɔvanɪj/
+  translation: guaranteed
+  pos: adj
+- lemma: громадянство
+  ipa: /hrɔmaˈdʲanstvɔ/
+  translation: citizenship
+  pos: noun
+  gender: n
+- lemma: зібрань
+  ipa: /ziˈbranʲ/
+  translation: gatherings (gen.)
+  pos: noun
+  gender: n
+- lemma: кабмін
+  ipa: /kabˈmʲin/
+  translation: Cabinet of Ministers
+  pos: noun
+  gender: m
+- lemma: мобілізація
+  ipa: /mɔbʲilʲiˈzat͡sʲija/
+  translation: mobilization
+  pos: noun
+  gender: f
+- lemma: неурядовий
+  ipa: /nɛurʲaˈdɔvɪj/
+  translation: non-governmental
+  pos: adj
+- lemma: партій
+  ipa: /parˈtʲij/
+  translation: parties (gen.)
+  pos: noun
+  gender: f
+- lemma: передвиборчий
+  ipa: /pɛrɛdˈvɪbɔrt͡ʃɪj/
+  translation: pre-election
+  pos: adj
+  gender: f
+- lemma: правлячий
+  ipa: /ˈprau̯lʲat͡ʃɪj/
+  translation: ruling
+  pos: adj
+  gender: f
+- lemma: слідкування
+  ipa: /slidkuˈvanʲːa/
+  translation: surveillance
+  pos: noun
+  gender: n
+- lemma: сфальсифікувати
+  ipa: /sfalʲsɪfikuˈvatɪ/
+  translation: to falsify
+  pos: verb
+- lemma: тиснути
+  ipa: /ˈtɪsnutɪ/
+  translation: to pressure
+  pos: verb

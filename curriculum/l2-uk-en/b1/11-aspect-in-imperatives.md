@@ -1,27 +1,3 @@
----
-module: b1-11
-title: "Вид у наказовому способі"
-subtitle: "Aspect in Imperatives"
-version: "1.0"
-phase: "B1.1 Aspect"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - aspect
-  - imperatives
-grammar:
-  - "Aspect selection in imperatives"
-  - "Perfective vs Imperfective commands"
-objectives:
-  - "Learner can choose correct aspect for different command types"
-  - "Learner understands when to use НДВ vs ДВ in imperatives"
-  - "Learner can form polite requests and direct commands"
-vocabulary_count: 26
-vocab_count: 97
----
-
 # Вид у наказовому способі
 
 > 🎯 **Чому це важливо?**

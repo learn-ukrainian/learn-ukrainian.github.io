@@ -1,0 +1,105 @@
+module: 07-spatial-prepositions
+level: A2
+version: '2.0'
+items:
+  - lemma: вживання
+    ipa: vʒɪˈʋɑnʲːɐ
+    translation: usage
+    pos: noun
+    gender: n
+  - lemma: висити
+    ipa: ˈvɪsɪte
+    translation: to hang (intransitive) - typo? висіти
+    pos: verb
+  - lemma: висіти
+    ipa: vɪˈsʲite
+    translation: to hang (be hanging)
+    pos: verb
+  - lemma: група
+    ipa: ˈɦrupɐ
+    translation: group
+    pos: noun
+    gender: f
+  - lemma: двосторонній
+    ipa: dʋostoˈrɔnːij
+    translation: two-sided
+    pos: adj
+  - lemma: знаходитися
+    ipa: znɐˈxɔdɪtɪsʲɐ
+    translation: to be located
+    pos: verb
+  - lemma: зустрінутися
+    ipa: zustˈrinutɪsʲɐ
+    translation: to meet (oneself/each other)
+    pos: verb
+  - lemma: камінь
+    ipa: ˈkɑminʲ
+    translation: stone
+    pos: noun
+    gender: m
+  - lemma: картинка
+    ipa: kɐrˈtɪnkɐ
+    translation: picture; image
+    pos: noun
+    gender: f
+  - lemma: килим
+    ipa: ˈkɪlɪm
+    translation: carpet; rug
+    pos: noun
+    gender: m
+  - lemma: класти
+    ipa: ˈklɑste
+    translation: to put (horizontally)
+    pos: verb
+  - lemma: ключовий
+    ipa: klʲut͡ʃoˈʋei̯
+    translation: key (adj); pivotal
+    pos: adj
+  - lemma: ко
+    ipa: ko
+    translation: to (archaic/dialect/rare prep)
+    pos: pron
+    gender: m
+  - lemma: кошик
+    ipa: ˈkɔʃɪk
+    translation: basket
+    pos: noun
+    gender: m
+  - lemma: куток
+    ipa: kuˈtɔk
+    translation: corner
+    pos: noun
+    gender: m
+  - lemma: кілька
+    ipa: ˈkilʲkɐ
+    translation: several
+    pos: other
+  - lemma: найцікавіший
+    ipa: nɐi̯t͡sʲikɐˈʋiʃei̯
+    translation: most interesting
+    pos: adj
+    gender: f
+  - lemma: посередині
+    ipa: posereˈdɪnʲi
+    translation: in the middle
+    pos: adv
+  - lemma: таємниця
+    ipa: tɐjemˈnɪt͡sʲɐ
+    translation: secret; mystery
+    pos: noun
+    gender: f
+  - lemma: текст
+    ipa: tɛkst
+    translation: text
+    pos: noun
+    gender: m
+  - lemma: удач
+    ipa: uˈdɑt͡ʃ
+    translation: luck (genitive pl?)
+    pos: noun
+    gender: f
+  - lemma: фотографії
+    ipa: fotoˈɦrɑfiji
+    translation: photos
+    pos: noun
+    gender: f

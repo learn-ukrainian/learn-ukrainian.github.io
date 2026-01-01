@@ -1,29 +1,3 @@
----
-module: a1-30
-title: 'Prepositions III'
-subtitle: 'Direction, Location & Origin'
-version: '1.0'
-phase: 'A1.3 - Consolidation'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: 'first-occurrence'
-tags:
-  - prepositions
-  - direction
-  - location
-  - movement
-grammar:
-  - Location (De?) vs Direction (Kudy?) vs Origin (Zvidky?)
-  - Prepositions with cases
-objectives:
-  - 'Learner can distinguish location from direction questions'
-  - 'Learner can use в/на for location (Locative)'
-  - 'Learner can use в/на/до for direction (Accusative/Genitive)'
-  - 'Learner can use з/від for origin'
-vocabulary_count: 20
-vocab_count: 10
----
-
 # Prepositions III
 
 ## Warm-up
@@ -243,18 +217,3 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 > - [Location vs Destination](https://www.ukrainianlessons.com/location-destination-prepositions/) — Preposition guide
 > - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/prepositions
 > - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
-
-# Vocabulary
-
-| Word     | IPA          | English             | POS   | Gender | Note |
-| -------- | ------------ | ------------------- | ----- | ------ | ---- |
-| аеропорт | /ɑɛrɔˈpɔrt/  | airport             | noun  | ч      |      |
-| ліворуч  | /lʲiˈvɔrut͡ʃ/ | to the left         | adv   | -      |      |
-| напрямок | /ˈnɑprʲɑmɔk/ | direction           | noun  | ч      |      |
-| покласти | /pɔˈklɑstɪ/  | to put              | verb  | -      |      |
-| Польща   | /ˈpɔlʲʃt͡ʃɑ/  | Poland              | name  | ж      |      |
-| пройти   | /prɔjˈtɪ/    | to pass/go through  | verb  | -      |      |
-| супер    | /ˈsupɛr/     | super               | other | -      |      |
-| сюди     | /sʲuˈdɪ/     | here (directional)  | adv   | -      |      |
-| татко    | /ˈtɑtkɔ/     | dad (affectionate)  | noun  | ч      |      |
-| туди     | /tuˈdɪ/      | there (directional) | adv   | -      |      |

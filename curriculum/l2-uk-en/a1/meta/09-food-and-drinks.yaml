@@ -1,0 +1,25 @@
+module: a1-09
+title: Food & Drinks
+subtitle: Ukrainian Cuisine and Meal Vocabulary
+version: '1.0'
+phase: A1.1
+pedagogy: PPP
+duration: 60min
+transliteration: full
+tags:
+  - food
+  - drinks
+  - cuisine
+  - vocabulary
+  - meals
+grammar:
+  - 'Present tense irregular verbs: їсти, пити'
+  - Nominative case (review)
+objectives:
+  - Learner can name common Ukrainian foods and drinks
+  - Learner can use їсти (to eat) and пити (to drink) in present tense
+  - Learner can talk about meals (breakfast, lunch, dinner)
+  - Learner can order food in simple scenarios
+vocabulary_count: 34
+vocab_count: 51
+slug: 09-food-and-drinks

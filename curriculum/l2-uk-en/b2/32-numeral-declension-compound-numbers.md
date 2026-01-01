@@ -1,31 +1,3 @@
----
-module: b2-32
-title: "Відмінювання числівників ІІ: Складені числівники"
-subtitle: "Numeral Declension II: Compound Numbers"
-version: "1.0"
-phase: "B2.1c"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-immersion: 100
-tags:
-  - grammar
-  - numerals
-  - statistics
-  - prices
-grammar:
-  - "Відмінювання складених порядкових числівників"
-  - "Відмінювання складених кількісних числівників"
-  - "Числівники в статистиці та цінах"
-objectives:
-  - "Learner can decline compound ordinal numerals in all cases"
-  - "Learner can decline compound cardinal numerals in all cases"
-  - "Learner can use numerals correctly in statistical and price contexts"
-vocabulary_count: 25
-register: "нейтральний"
-vocab_count: 81
----
-
 # Відмінювання числівників ІІ: Складені числівники
 
 > 🎯 **Чому це важливо?**

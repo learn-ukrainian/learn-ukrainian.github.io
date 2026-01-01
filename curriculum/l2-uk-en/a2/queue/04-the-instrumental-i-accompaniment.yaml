@@ -1,0 +1,632 @@
+module: 04-the-instrumental-i-accompaniment
+level: A2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/04-the-instrumental-i-accompaniment.md
+generated: '2025-12-31T23:13:33.675020'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 6
+  fill-in: 12
+  cloze: 1
+  unjumble: 6
+  quiz: 12
+  true-false: 12
+total_items: 49
+item_count: 49
+sample_percent: null
+items:
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Я йду в кіно з *друг*.
+  error: друг
+  answer: другом
+  sentence_corrected: Я йду в кіно з *другом*.
+  options:
+  - друг
+  - другом
+  - друга
+  - другові
+  original_explanation: 'After the preposition «з», nouns take Instrumental case.
+    Masculine hard-stem nouns take -ом: друг → другом.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Вона розмовляє з *сестра*.
+  error: сестра
+  answer: сестрою
+  sentence_corrected: Вона розмовляє з *сестрою*.
+  options:
+  - сестра
+  - сестрою
+  - сестри
+  - сестрі
+  original_explanation: 'After the preposition «з», nouns take Instrumental case.
+    Feminine hard-stem nouns take -ою: сестра → сестрою.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Він гуляє з *собака*.
+  error: собака
+  answer: собакою
+  sentence_corrected: Він гуляє з *собакою*.
+  options:
+  - собака
+  - собакою
+  - собаки
+  - собаці
+  original_explanation: 'After the preposition «з», nouns take Instrumental case.
+    Feminine hard-stem nouns take -ою: собака → собакою.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Ми живемо з *батьки*.
+  error: батьки
+  answer: батьками
+  sentence_corrected: Ми живемо з *батьками*.
+  options:
+  - батьки
+  - батьками
+  - батьків
+  - батькам
+  original_explanation: 'After the preposition «з», nouns take Instrumental case.
+    Plural nouns take -ами: батьки → батьками.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Я п'ю каву з *молоко*.
+  error: молоко
+  answer: молоком
+  sentence_corrected: Я п'ю каву з *молоком*.
+  options:
+  - молоко
+  - молоком
+  - молока
+  - молоці
+  original_explanation: 'After the preposition «з», nouns take Instrumental case.
+    Neuter hard-stem nouns take -ом: молоко → молоком.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Instrumental
+  sentence_with_error: Вона познайомилася з *хлопець*.
+  error: хлопець
+  answer: хлопцем
+  sentence_corrected: Вона познайомилася з *хлопцем*.
+  options:
+  - хлопець
+  - хлопцем
+  - хлопця
+  - хлопцеві
+  original_explanation: 'After the preposition «з», nouns take Instrumental case.
+    Masculine soft-stem nouns take -ем: хлопець → хлопцем.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Endings
+  sentence_template: Я йду в кіно з ___.
+  answer: другом
+  complete_sentence: Я йду в кіно з другом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Endings
+  sentence_template: Вона розмовляє з ___.
+  answer: мамою
+  complete_sentence: Вона розмовляє з мамою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Endings
+  sentence_template: Він гуляє з ___.
+  answer: собакою
+  complete_sentence: Він гуляє з собакою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Endings
+  sentence_template: Ми живемо з ___.
+  answer: батьками
+  complete_sentence: Ми живемо з батьками.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Endings
+  sentence_template: Я п'ю каву з ___.
+  answer: молоком
+  complete_sentence: Я п'ю каву з молоком.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Endings
+  sentence_template: Вона познайомилася з ___.
+  answer: хлопцем
+  complete_sentence: Вона познайомилася з хлопцем.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Endings
+  sentence_template: Діти грають з ___.
+  answer: котом
+  complete_sentence: Діти грають з котом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Endings
+  sentence_template: Він одружився з ___.
+  answer: Марією
+  complete_sentence: Він одружився з Марією.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Endings
+  sentence_template: Ми зустрічаємося з ___ щотижня.
+  answer: друзями
+  complete_sentence: Ми зустрічаємося з друзями щотижня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Endings
+  sentence_template: Я працюю з ___ над проєктом.
+  answer: колегою
+  complete_sentence: Я працюю з колегою над проєктом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Endings
+  sentence_template: Вона п'є чай з ___.
+  answer: лимоном
+  complete_sentence: Вона п'є чай з лимоном.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Instrumental Endings
+  sentence_template: Він помирився з ___.
+  answer: сестрою
+  complete_sentence: Він помирився з сестрою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Complete the Story
+  passage_template: 'У суботу ми пішли в ресторан {з батьками|з батьки|з батьків}.
+    Марія прийшла {зустрічається|зустрічатися|зустрічаюсь}. Петро прийшов {познайомилася|познайомитися|познайомлюсь}.
+    Ми їли піцу {гуляють|гуляти|гуляємо} і пили каву {розмовляє|розмовляти|розмовляюсь}.
+    Увечері ми {одружаться|одружуються|одружитися} разом. Було дуже весело!
+
+    ---
+
+    Оленка живе {з батьками|з батьки|з батьків}. Вона часто {зустрічається|зустрічатися|зустрічаюсь}
+    з подругами. Минулого тижня вона {познайомилася|познайомитися|познайомлюсь} з
+    хлопцем на вечірці. Тепер вони часто {гуляють|гуляти|гуляємо}. Вона {розмовляє|розмовляти|розмовляюсь}
+    з батьками про нього. Може, вони {одружаться|одружуються|одружитися}?'
+  blanks:
+  - answer: з батьків
+    options:
+    - з батьками
+    - з батьки
+  - answer: зустрічаюсь
+    options:
+    - зустрічається
+    - зустрічатися
+  - answer: познайомлюсь
+    options:
+    - познайомилася
+    - познайомитися
+  - answer: гуляємо
+    options:
+    - гуляють
+    - гуляти
+  - answer: розмовляюсь
+    options:
+    - розмовляє
+    - розмовляти
+  - answer: одружитися
+    options:
+    - одружаться
+    - одружуються
+  - answer: з батьків
+    options:
+    - з батьками
+    - з батьки
+  - answer: зустрічаюсь
+    options:
+    - зустрічається
+    - зустрічатися
+  - answer: познайомлюсь
+    options:
+    - познайомилася
+    - познайомитися
+  - answer: гуляємо
+    options:
+    - гуляють
+    - гуляти
+  - answer: розмовляюсь
+    options:
+    - розмовляє
+    - розмовляти
+  - answer: одружитися
+    options:
+    - одружаться
+    - одружуються
+  blank_count: 12
+  complete_passage: 'У суботу ми пішли в ресторан з батьків. Марія прийшла зустрічаюсь.
+    Петро прийшов познайомлюсь. Ми їли піцу гуляємо і пили каву розмовляюсь. Увечері
+    ми одружитися разом. Було дуже весело!
+
+    ---
+
+    Оленка живе з батьків. Вона часто зустрічаюсь з подругами. Минулого тижня вона
+    познайомлюсь з хлопцем на вечірці. Тепер вони часто гуляємо. Вона розмовляюсь
+    з батьками про нього. Може, вони одружитися?'
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Instrumental Sentences
+  jumbled_words: []
+  answer: Я сьогодні ввечері йду в кіно з другом
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Instrumental Sentences
+  jumbled_words: []
+  answer: Вона кожного дня розмовляє з сестрою по телефону
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Instrumental Sentences
+  jumbled_words: []
+  answer: Ми вже давно живемо з батьками в Києві
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Instrumental Sentences
+  jumbled_words: []
+  answer: Він кожного ранку гуляє з собакою в парку
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Instrumental Sentences
+  jumbled_words: []
+  answer: Я завжди зранку п'ю каву з молоком вранці
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Instrumental Sentences
+  jumbled_words: []
+  answer: Вона познайомилася з хлопцем на вечірці минулого тижня
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Forms
+  question: When you want to form the Instrumental case of "вчитель" (teacher), which
+    ending is correct?
+  options:
+  - '{''text'': ''вчителя'', ''correct'': False}'
+  - '{''text'': ''вчителем'', ''correct'': True}'
+  - '{''text'': ''вчителеві'', ''correct'': False}'
+  - '{''text'': ''вчителю'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Forms
+  question: How do you correctly say "with my sister" in Ukrainian using the Instrumental
+    case?
+  options:
+  - '{''text'': ''з моя сестра'', ''correct'': False}'
+  - '{''text'': ''з моєю сестрою'', ''correct'': True}'
+  - '{''text'': ''з моєї сестри'', ''correct'': False}'
+  - '{''text'': ''з мою сестру'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Forms
+  question: For feminine nouns in the Instrumental case, which endings are typically
+    correct in Ukrainian grammar?
+  options:
+  - '{''text'': ''-ом'', ''correct'': False}'
+  - '{''text'': ''-ою/-ею'', ''correct'': True}'
+  - '{''text'': ''-ам'', ''correct'': False}'
+  - '{''text'': ''-ові'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Forms
+  question: How do you correctly express "with me" in Ukrainian using the proper Instrumental
+    form?
+  options:
+  - '{''text'': ''з я'', ''correct'': False}'
+  - '{''text'': ''з мене'', ''correct'': False}'
+  - '{''text'': ''зі мною'', ''correct'': True}'
+  - '{''text'': ''з мою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Forms
+  question: When forming the Instrumental plural of "діти" (children), which irregular
+    form is correct?
+  options:
+  - '{''text'': ''дітями'', ''correct'': False}'
+  - '{''text'': ''дітьми'', ''correct'': True}'
+  - '{''text'': ''дітей'', ''correct'': False}'
+  - '{''text'': ''дітям'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Forms
+  question: How do you correctly say "coffee with milk" in Ukrainian using the Instrumental
+    case?
+  options:
+  - '{''text'': ''кава з молоком'', ''correct'': True}'
+  - '{''text'': ''кава з молока'', ''correct'': False}'
+  - '{''text'': ''кава з молоко'', ''correct'': False}'
+  - '{''text'': ''кава з молокою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Forms
+  question: When using "with snow" in Ukrainian, which preposition variant is required
+    before "снігом"?
+  options:
+  - '{''text'': ''з'', ''correct'': False}'
+  - '{''text'': ''із'', ''correct'': False}'
+  - '{''text'': ''зі'', ''correct'': True}'
+  - '{''text'': ''зе'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Forms
+  question: How do you correctly say "I met him" in Ukrainian using the Instrumental
+    case?
+  options:
+  - '{''text'': ''Я познайомився з він.'', ''correct'': False}'
+  - '{''text'': ''Я познайомився з ним.'', ''correct'': True}'
+  - '{''text'': ''Я познайомився з його.'', ''correct'': False}'
+  - '{''text'': ''Я познайомився з йому.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Forms
+  question: When forming the Instrumental plural of "люди" (people), which irregular
+    form is correct?
+  options:
+  - '{''text'': ''людями'', ''correct'': False}'
+  - '{''text'': ''людьми'', ''correct'': True}'
+  - '{''text'': ''людей'', ''correct'': False}'
+  - '{''text'': ''людям'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Forms
+  question: How do you correctly express "with friends" in Ukrainian using the Instrumental
+    plural?
+  options:
+  - '{''text'': ''з друзі'', ''correct'': False}'
+  - '{''text'': ''з друзями'', ''correct'': True}'
+  - '{''text'': ''з друзів'', ''correct'': False}'
+  - '{''text'': ''з другами'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Forms
+  question: When forming the Instrumental case of "батько" (father), which ending
+    is correct?
+  options:
+  - '{''text'': ''батька'', ''correct'': False}'
+  - '{''text'': ''батьком'', ''correct'': True}'
+  - '{''text'': ''батькові'', ''correct'': False}'
+  - '{''text'': ''батьку'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Instrumental Forms
+  question: How do you correctly say "She married Petro" in Ukrainian using the Instrumental
+    case?
+  options:
+  - '{''text'': ''Вона одружилася з Петром.'', ''correct'': True}'
+  - '{''text'': ''Вона одружилася Петра.'', ''correct'': False}'
+  - '{''text'': ''Вона одружилася з Петра.'', ''correct'': False}'
+  - '{''text'': ''Вона одружилася з Петрові.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: Masculine nouns always take -ом in the instrumental.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: Feminine nouns take -ою or -ею in the instrumental.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: The preposition "зі" is used before "мною."
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: '"Дітьми" is the correct instrumental plural of "діти."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: All plural instrumental endings are -ами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: '"Познайомитися" requires the accusative case.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: '"З" and "із" mean the same thing.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: Neuter nouns take -ою in the instrumental.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: '"Людьми" is an irregular instrumental form.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: '"Одружитися" means "to divorce."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: The instrumental pronoun for "вона" is "нею."
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Instrumental Rules
+  statement: '"Ім''я" has an irregular instrumental form.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

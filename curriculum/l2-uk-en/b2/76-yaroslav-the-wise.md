@@ -1,35 +1,3 @@
----
-module: b2-76
-title: "Ярослав Мудрий — Золота доба Київської Русі"
-subtitle: "Законодавець, будівничий, дипломат"
-version: "1.0"
-phase: "B2.3a [Ukrainian History]"
-pedagogy: "CBI"
-duration: 90
-transliteration: "none"
-tags:
-  - history
-  - medieval
-  - yaroslav-the-wise
-  - ruska-pravda
-  - kyivan-rus
-register: "публіцистичний"
-grammar:
-  - "Historical narrative tenses"
-  - "Passive voice in historical writing"
-vocabulary_focus:
-vocab_count: 103
-  - "Historical terminology"
-  - "Legal and political vocabulary"
-  - "Cultural and educational vocabulary"
-objectives:
-  - "Learner can understand and discuss the reign of Yaroslav the Wise in Ukrainian"
-  - "Learner can analyze primary sources related to medieval Ukrainian law and culture"
-  - "Learner can recognize and counter Russian historiographical appropriation of Kyivan Rus legacy"
-  - "Learner can use era-specific vocabulary in historical discourse"
-vocabulary_count: 42
----
-
 # Ярослав Мудрий — Золота доба Київської Русі
 
 > 🎯 **Чому це важливо?**

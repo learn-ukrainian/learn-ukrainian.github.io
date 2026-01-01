@@ -1,33 +1,3 @@
----
-module: a2-11
-title: "Checkpoint - Cases"
-subtitle: "Comprehensive Review of Modules 01-09"
-version: "2.0"
-phase: "A2.1"
-focus: checkpoint
-pedagogy: "Review"
-duration: "60 min"
-transliteration: none
-tags:
-  - review
-  - checkpoint
-  - assessment
-  - cases
-grammar:
-  - dative pronouns and nouns
-  - instrumental case review
-  - preposition + case combinations
-  - all 7 cases integration
-  - service vocabulary
-objectives:
-  - "Learner can demonstrate mastery of dative case"
-  - "Learner can use instrumental case correctly"
-  - "Learner can combine prepositions with correct cases"
-  - "Learner can apply cases in service contexts"
-vocabulary_count: 27
-vocab_count: 18
----
-
 # Checkpoint - Cases
 
 **Вітаємо!** Ви завершили Фазу A2.1! Цей контрольний модуль перевіряє все, що ви вивчили в Модулях 01-09.

@@ -1,30 +1,3 @@
----
-module: a1-08
-title: 'The Living Verb II'
-subtitle: 'Class II Conjugation (-ити verbs)'
-version: '1.0'
-phase: 'A1.1'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: 'full'
-tags:
-  - verbs
-  - conjugation
-  - class-ii
-  - irregular-verbs
-grammar:
-  - 'Class II verb conjugation (-ити)'
-  - 'Irregular verbs: їсти, пити, хотіти'
-  - 'Consonant mutation in first person singular'
-objectives:
-  - 'Learner can conjugate Class II verbs (-ити) in present tense'
-  - 'Learner can distinguish between Class I (-ати) and Class II (-ити) verbs'
-  - 'Learner can use common irregular verbs (їсти, пити)'
-  - 'Learner can form basic sentences with action verbs'
-vocabulary_count: 25
-vocab_count: 36
----
-
 # The Living Verb II
 
 ## Warm-up
@@ -252,30 +225,3 @@ With Class I and Class II verbs combined, you can now express hundreds of action
 > **Grammar Chart:** [Verb Tenses Overview](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable conjugation chart
 >
 > **Podcast Episodes:** [Ukrainian Verbs in Context](https://www.ukrainianlessons.com/ukrainian-verbs-podcasts/) — Top episodes for verb practice
-
-# Vocabulary
-
-| Word         | IPA              | English               | POS   | Gender | Note |
-| ------------ | ---------------- | --------------------- | ----- | ------ | ---- |
-| бачити       | /ˈbɑt͡ʃɪtɪ/       | to see                | verb  | -      |      |
-| біля         | /ˈbilʲɑ/         | near                  | other | -      |      |
-| вправа       | /ˈwprɑvɑ/        | exercise              | noun  | ж      |      |
-| вчити        | /ˈwt͡ʃɪtɪ/        | to teach/learn        | verb  | -      |      |
-| вчитися      | /ˈwt͡ʃɪtɪsʲɑ/     | to learn (oneself)    | verb  | -      |      |
-| вітати       | /viˈtɑtɪ/        | to greet/congratulate | verb  | -      |      |
-| дивитися     | /dɪˈvɪtɪsʲɑ/     | to look/watch         | verb  | -      |      |
-| допомога     | /dɔpɔˈmɔɦɑ/      | help                  | noun  | ж      |      |
-| катя         | /ˈkɑtʲɑ/         | Katya                 | name  | ж      |      |
-| лежати       | /lɛˈʒɑtɪ/        | to lie (down)         | verb  | -      |      |
-| олена        | /ɔˈlɛnɑ/         | Olena                 | name  | ж      |      |
-| сидіти       | /sɪˈditɪ/        | to sit                | verb  | -      |      |
-| спати        | /ˈspɑtɪ/         | to sleep              | verb  | -      |      |
-| стояти       | /stɔˈjɑtɪ/       | to stand              | verb  | -      |      |
-| також        | /tɑˈkɔʒ/         | also                  | adv   | -      |      |
-| телефонувати | /tɛlɛfɔnuˈvɑtɪ/  | to phone/call         | verb  | -      |      |
-| український  | /ʊkrɑˈjinʲsʲkɪj/ | Ukrainian (adj)       | adj   | ч      |      |
-| фільм        | /filʲm/          | film/movie            | noun  | ч      |      |
-| ходити       | /xɔˈdɪtɪ/        | to walk               | verb  | -      |      |
-| хід          | /xid/            | move/turn             | noun  | ч      |      |
-| їздити       | /ˈjizdɪtɪ/       | to ride/drive         | verb  | -      |      |
-| їсти         | /ˈjistɪ/         | to eat                | verb  | -      |      |

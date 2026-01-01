@@ -1,0 +1,23 @@
+module: b1-35
+title: 'Допустові речення: хоча, незважаючи на'
+subtitle: Concessive Clauses - Although, Despite
+version: '1.0'
+phase: B1.3b Complex Sentences
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - grammar
+  - concessive-clauses
+  - complex-sentences
+  - khocha
+grammar:
+  - Concessive clauses with хоча, незважаючи на
+  - Contrast and unexpected outcomes
+objectives:
+  - Learner understands concessive clause constructions
+  - Learner can express contrast and unexpected outcomes
+  - Learner can use various concessive connectors
+vocabulary_count: 25
+vocab_count: 15
+slug: 35-concessive-khocha

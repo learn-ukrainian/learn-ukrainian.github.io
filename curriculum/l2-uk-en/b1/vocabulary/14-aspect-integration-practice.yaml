@@ -1,0 +1,142 @@
+module: 14-aspect-integration-practice
+level: B1
+version: '2.0'
+items:
+- lemma: автентично
+  ipa: /au̯tɛnˈtɪt͡ʃnɔ/
+  translation: authentically
+  pos: adv
+- lemma: вдягнутися
+  ipa: /vdʲaɦˈnutɪsʲa/
+  translation: to get dressed
+  pos: verb
+  gender: m
+- lemma: вискочити
+  ipa: /ˈvɪskɔt͡ʃɪtɪ/
+  translation: to jump out
+  pos: verb
+  gender: m
+- lemma: вистрілити
+  ipa: /ˈvɪstrʲilɪtɪ/
+  translation: to shoot
+  pos: verb
+  gender: m
+- lemma: гасити
+  ipa: /ɦaˈsɪtɪ/
+  translation: to extinguish
+  pos: verb
+- lemma: додзвонитися
+  ipa: /dɔdzvɔˈnɪtɪsʲa/
+  translation: to get through
+  pos: verb
+  gender: m
+- lemma: екшн
+  ipa: /ˈɛkʃn/
+  translation: action
+  pos: propn
+  gender: m
+- lemma: загасити
+  ipa: /zaɦaˈsɪtɪ/
+  translation: to extinguish
+  pos: verb
+- lemma: застрибнути
+  ipa: /zastrɪbˈnutɪ/
+  translation: to jump in
+  pos: verb
+  gender: m
+- lemma: кипіти
+  ipa: /kɪˈpʲitɪ/
+  translation: to boil
+  pos: verb
+- lemma: наголошування
+  ipa: /naɦɔˈlɔʃuvanʲːa/
+  translation: stressing
+  pos: noun
+  gender: n
+- lemma: налий
+  ipa: /naˈlɪj/
+  translation: pour (imp.)
+  pos: adj
+  gender: m
+- lemma: нарігти
+  ipa: /naˈrʲiɦtɪ/
+  translation: ??? (typo)
+  pos: verb
+- lemma: оволодіти
+  ipa: /ɔvɔlɔˈdʲitɪ/
+  translation: to master
+  pos: verb
+- lemma: одиничний
+  ipa: /ɔdɪˈnɪt͡ʃnɪj/
+  translation: single
+  pos: adj
+  gender: f
+- lemma: одягнутися
+  ipa: /ɔdʲaɦˈnutɪsʲa/
+  translation: to get dressed
+  pos: verb
+  gender: m
+- lemma: плавно
+  ipa: /ˈplau̯nɔ/
+  translation: smoothly
+  pos: adv
+- lemma: пожежник
+  ipa: /pɔˈʒɛʒnɪk/
+  translation: firefighter
+  pos: noun
+  gender: m
+- lemma: пожнеш
+  ipa: /pɔʒˈnɛʃ/
+  translation: you will reap
+  pos: noun
+  gender: m
+- lemma: проскочити
+  ipa: /prɔˈskɔt͡ʃɪtɪ/
+  translation: to slip through
+  pos: verb
+  gender: n
+- lemma: розслабити
+  ipa: /rɔzˈslabɪtɪ/
+  translation: to relax
+  pos: verb
+- lemma: слухавка
+  ipa: /ˈsluxau̯ka/
+  translation: receiver
+  pos: noun
+  gender: f
+- lemma: споглядальний
+  ipa: /spɔhlʲaˈdalʲnɪj/
+  translation: contemplative
+  pos: adj
+- lemma: стрийський
+  ipa: /ˈstrɪjsʲkɪj/
+  translation: Stryi (adj)
+  pos: adj
+  gender: m
+- lemma: сукупний
+  ipa: /suˈkupnɪj/
+  translation: total
+  pos: adj
+  gender: m
+- lemma: темпоральний
+  ipa: /tɛmpɔˈralʲnɪj/
+  translation: temporal
+  pos: adj
+- lemma: триваючий
+  ipa: /trɪˈvajut͡ʃɪj/
+  translation: ongoing
+  pos: adj
+- lemma: ущяти
+  ipa: /uʃˈt͡ʃʲatɪ/
+  translation: ??? (typo)
+  pos: verb
+- lemma: цибулина
+  ipa: /t͡sɪbuˈlɪna/
+  translation: onion bulb
+  pos: noun
+  gender: f
+- lemma: ізоляція
+  ipa: /izɔˈlʲat͡sʲija/
+  translation: isolation
+  pos: noun
+  gender: f

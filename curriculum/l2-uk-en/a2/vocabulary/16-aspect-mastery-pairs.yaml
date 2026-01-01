@@ -1,0 +1,92 @@
+module: 16-aspect-mastery-pairs
+level: A2
+version: '2.0'
+items:
+- lemma: відмінно
+  ipa: vʲidˈmʲinːo
+  translation: excellently
+  pos: adv
+- lemma: відчути
+  ipa: vʲidˈt͡ʃute
+  translation: to feel (perf)
+  pos: verb
+  gender: f
+- lemma: гордитися
+  ipa: horˈdɪtɪsʲɐ
+  translation: to be proud
+  pos: verb
+- lemma: двічі
+  ipa: ˈdvʲit͡ʃi
+  translation: twice
+  pos: adv
+- lemma: закривати
+  ipa: zɐkrɪˈʋɑte
+  translation: to close (imp)
+  pos: verb
+- lemma: закінчувати
+  ipa: zɐˈkʲint͡ʃuʋɐte
+  translation: to finish (imp)
+  pos: verb
+- lemma: заплатити
+  ipa: zɐplɐˈtɪte
+  translation: to pay (perf)
+  pos: verb
+- lemma: звіт
+  ipa: zvʲit
+  translation: report
+  pos: noun
+  gender: m
+- lemma: конспект
+  ipa: konˈspɛkt
+  translation: notes; abstract
+  pos: noun
+  gender: m
+- lemma: мити
+  ipa: ˈmɪte
+  translation: to wash (imp)
+  pos: verb
+- lemma: окупитися
+  ipa: okupˈɪtɪsʲɐ
+  translation: to pay off (perf)
+  pos: verb
+  gender: f
+- lemma: помити
+  ipa: poˈmɪte
+  translation: to wash (perf)
+  pos: verb
+- lemma: поснідати
+  ipa: poˈsʲnʲidɐte
+  translation: to have breakfast (perf)
+  pos: verb
+  gender: f
+- lemma: пояснити
+  ipa: pojɐsˈnɪte
+  translation: to explain (perf)
+  pos: verb
+- lemma: прибрати
+  ipa: prɪˈbrɑte
+  translation: to clean/tidy up (perf)
+  pos: verb
+- lemma: привітати
+  ipa: prɪvʲiˈtɑte
+  translation: to congratulate/greet (perf)
+  pos: verb
+  gender: f
+- lemma: продавати
+  ipa: prodɐˈʋɑte
+  translation: to sell (imp)
+  pos: verb
+- lemma: продати
+  ipa: proˈdɑte
+  translation: to sell (perf)
+  pos: verb
+- lemma: розповісти
+  ipa: rozpovʲiˈsʲtɪ
+  translation: to tell (perf)
+  pos: verb
+  gender: f
+- lemma: іспить
+  ipa: ˈispɪt
+  translation: exam (typo for іспит)
+  pos: noun
+  gender: m

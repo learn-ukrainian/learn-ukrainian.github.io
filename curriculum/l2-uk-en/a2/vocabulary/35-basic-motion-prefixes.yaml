@@ -1,0 +1,101 @@
+module: 35-basic-motion-prefixes
+level: A2
+version: '2.0'
+items:
+- lemma: барист
+  ipa: bɐˈrɪst
+  translation: barista (typo for бариста?)
+  pos: noun
+  gender: m
+- lemma: в'
+  ipa: v
+  translation: in (prefix/preposition)
+  pos: other
+- lemma: в'їхати
+  ipa: ˈvjixɐte
+  translation: to drive in (perf)
+  pos: verb
+- lemma: вагон
+  ipa: vɐˈhɔn
+  translation: wagon; carriage
+  pos: noun
+  gender: m
+- lemma: ввійти
+  ipa: vːijˈtɪ
+  translation: to enter (perf)
+  pos: verb
+- lemma: вивантажувати
+  ipa: vɪvɐnˈtɑʒuʋɐte
+  translation: to unload
+  pos: verb
+- lemma: виїхати
+  ipa: ˈvɪjixɐte
+  translation: to drive out (perf)
+  pos: verb
+- lemma: вмитися
+  ipa: ˈvmɪtɪsʲɐ
+  translation: to wash face (perf)
+  pos: verb
+  gender: m
+- lemma: ворота
+  ipa: voˈrɔtɐ
+  translation: gate
+  pos: noun
+  gender: m
+- lemma: візит
+  ipa: vʲiˈzɪt
+  translation: visit
+  pos: noun
+  gender: m
+- lemma: глибокий
+  ipa: hlɪˈbɔkɪj
+  translation: deep
+  pos: adj
+  gender: f
+- lemma: ескалатор
+  ipa: eskɐˈlɑtor
+  translation: escalator
+  pos: noun
+  gender: m
+- lemma: закінчитися
+  ipa: zɐˈkʲint͡ʃɪtɪsʲɐ
+  translation: to end (perf)
+  pos: verb
+- lemma: змокнути
+  ipa: zmɔkˈnute
+  translation: to get wet (perf)
+  pos: verb
+- lemma: золотий
+  ipa: zoloˈtɪj
+  translation: golden
+  pos: adj
+- lemma: зупинок
+  ipa: zuˈpɪnok
+  translation: stops (gen pl)
+  pos: noun
+  gender: f
+- lemma: лате
+  ipa: lɑˈtɛ
+  translation: latte
+  pos: noun
+  gender: n
+- lemma: парковка
+  ipa: pɐrˈkɔu̯kɐ
+  translation: parking
+  pos: noun
+  gender: f
+- lemma: піднятися
+  ipa: pidˈnʲɑtɪsʲɐ
+  translation: to go up/rise (perf)
+  pos: verb
+  gender: m
+- lemma: спускатися
+  ipa: spusˈkɑtɪsʲɐ
+  translation: to go down (imp)
+  pos: verb
+  gender: m
+- lemma: тротуар
+  ipa: trotuˈɑr
+  translation: sidewalk
+  pos: noun
+  gender: m

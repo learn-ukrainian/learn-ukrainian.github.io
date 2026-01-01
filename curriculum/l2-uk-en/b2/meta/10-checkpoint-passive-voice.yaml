@@ -1,0 +1,24 @@
+module: b2-10
+title: 'Контрольна точка: Пасивний стан'
+subtitle: Перевірка фази B2.1a
+version: '1.0'
+phase: B2.1a [Passive Voice] Checkpoint
+pedagogy: checkpoint
+duration: 90
+transliteration: none
+tags:
+  - checkpoint
+  - integration
+  - passive
+  - participles
+register: varies
+grammar:
+  - Інтеграція M01-M09
+  - Комплексна перевірка та тестування
+objectives:
+  - Демонструвати майстерність усіх чотирьох пасивних форм
+  - Інтегрувати знання з модулів M01-M09
+  - Самостійно оцінювати готовність до наступної фази
+vocabulary_count: 45
+vocab_count: 47
+slug: 10-checkpoint-passive-voice

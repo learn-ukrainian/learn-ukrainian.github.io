@@ -1,0 +1,265 @@
+module: 103-mykhailo-hrushevskyi
+level: B2
+version: '2.0'
+items:
+  - lemma: аматор
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: аматорський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: буржуазний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: більшовицький
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: вибраний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: вигадати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: вселюдний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: всенародний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: всеукраїнський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: вчене
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: десятитомний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: емігрувати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: загадковий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: загарбувати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: записок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: зорганізувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: катедра
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: катівня
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: кисловодськ
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: лютневий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: москвина
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: найплідніший
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: націоналістичний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: неособа
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: неєвропейський
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: нквс
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: одділятися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: оксфорд
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: периферійний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: петроград
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: покаяння
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: порядкувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: президентство
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: прецедент
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: принизливо
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: пізний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: реорганізація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: репресувати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: русифікувати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: сергійович
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: сойм
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: сорбонна
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: ставрополь
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: сталін
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: сталінський
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: тайний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: тбілісі
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: n
+  - lemma: твердити
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: терор
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: тифліс
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: томашівський
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: холмі
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: інсульт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: історика
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m

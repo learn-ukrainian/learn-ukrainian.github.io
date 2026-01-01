@@ -1,0 +1,168 @@
+module: 49-numerals-collectives-fractions
+level: B1
+version: '2.0'
+items:
+- lemma: близня
+  ipa: /blɪzˈnʲa/
+  translation: twin
+  pos: noun
+  gender: f
+- lemma: виховуватися
+  ipa: /vɪˈxɔvuvatɪsʲa/
+  translation: to be raised
+  pos: verb
+- lemma: втора
+  ipa: /vtaˈra/
+  translation: second (Rus.)
+  pos: noun
+  gender: m
+- lemma: десятеро
+  ipa: /dɛˈsʲatɛrɔ/
+  translation: ten (coll.)
+  pos: other
+- lemma: дитинчат
+  ipa: /dɪtɪnˈt͡ʃat/
+  translation: cubs (gen.)
+  pos: noun
+  gender: f
+- lemma: долька
+  ipa: /ˈdɔlʲka/
+  translation: wedge (dim.)
+  pos: noun
+  gender: f
+- lemma: збірня
+  ipa: /zbirˈnʲa/
+  translation: team/collection
+  pos: noun
+  gender: m
+- lemma: клопіт
+  ipa: /ˈklɔpit/
+  translation: trouble
+  pos: noun
+  gender: m
+- lemma: козенят
+  ipa: /kɔzɛˈnʲat/
+  translation: kids (gen.)
+  pos: noun
+  gender: m
+- lemma: косар
+  ipa: /kɔˈsar/
+  translation: mower
+  pos: noun
+  gender: m
+- lemma: котка
+  ipa: /ˈkɔtka/
+  translation: cat (gen.)
+  pos: noun
+  gender: f
+- lemma: кошеня
+  ipa: /kɔʃɛˈnʲa/
+  translation: kitten
+  pos: noun
+  gender: n
+- lemma: кошенят
+  ipa: /kɔʃɛˈnʲat/
+  translation: kittens (gen.)
+  pos: noun
+  gender: f
+- lemma: кулінарний
+  ipa: /kulʲiˈnarnɪj/
+  translation: culinary
+  pos: adj
+- lemma: лиж
+  ipa: /lɪʒ/
+  translation: skis (gen.)
+  pos: noun
+  gender: f
+- lemma: малят
+  ipa: /maˈlʲat/
+  translation: toddlers (gen.)
+  pos: noun
+  gender: f
+- lemma: немовлят
+  ipa: /nɛmɔu̯ˈlʲat/
+  translation: infants (gen.)
+  pos: noun
+  gender: f
+- lemma: п'ятеро
+  ipa: /ˈpjatɛrɔ/
+  translation: five (coll.)
+  pos: noun
+  gender: n
+- lemma: поросят
+  ipa: /pɔrɔˈsʲat/
+  translation: piglets (gen.)
+  pos: noun
+  gender: m
+- lemma: півтор
+  ipa: /piu̯ˈtɔr/
+  translation: one and a half (typo)
+  pos: propn
+  gender: m
+- lemma: півтори
+  ipa: /piu̯tɔˈrɪ/
+  translation: one and a half (fem.)
+  pos: other
+- lemma: пісочниця
+  ipa: /piˈsɔt͡ʃnɪt͡sʲa/
+  translation: sandbox
+  pos: noun
+  gender: f
+- lemma: рукавиця
+  ipa: /rukavɪˈt͡sʲa/
+  translation: mitten
+  pos: noun
+  gender: f
+- lemma: рукоділля
+  ipa: /rukɔˈdʲilʲːa/
+  translation: handicrafts
+  pos: noun
+  gender: n
+- lemma: семеро
+  ipa: /ˈsɛmɛrɔ/
+  translation: seven (coll.)
+  pos: noun
+  gender: n
+- lemma: сонцезахисний
+  ipa: /sɔnt͡sɛzaxɪsˈnɪj/
+  translation: sun-protection
+  pos: adj
+- lemma: соціолог
+  ipa: /sɔt͡sʲiˈɔlɔh/
+  translation: sociologist
+  pos: noun
+  gender: m
+- lemma: цуценя
+  ipa: /t͡sut͡sɛˈnʲa/
+  translation: puppy
+  pos: noun
+  gender: f
+- lemma: цуценят
+  ipa: /t͡sut͡sɛˈnʲat/
+  translation: puppies (gen.)
+  pos: noun
+  gender: f
+- lemma: четверо
+  ipa: /ˈt͡ʃɛtvɛrɔ/
+  translation: four (coll.)
+  pos: other
+- lemma: четвертих
+  ipa: /t͡ʃɛtˈvɛrtɪx/
+  translation: fourth (gen.)
+  pos: noun
+  gender: m
+- lemma: чобіт
+  ipa: /ˈt͡ʃɔbit/
+  translation: boot (gen.)
+  pos: noun
+  gender: m
+- lemma: штані
+  ipa: /ˈʃtanʲi/
+  translation: pants (loc.?)
+  pos: noun
+  gender: pl
+- lemma: явка
+  ipa: /ˈjau̯ka/
+  translation: turnout
+  pos: noun
+  gender: f

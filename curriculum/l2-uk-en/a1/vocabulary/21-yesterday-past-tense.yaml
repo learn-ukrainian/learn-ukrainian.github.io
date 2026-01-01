@@ -1,0 +1,186 @@
+module: 21-yesterday-past-tense
+level: A1
+version: '2.0'
+items:
+  - lemma: бабусин
+    ipa: /bɑˈbusɪn/
+    translation: grandmother's
+    pos: adj
+    gender: m
+  - lemma: вау
+    ipa: /vɑu/
+    translation: wow
+    pos: other
+  - lemma: вивчити
+    ipa: /ˈvɪvt͡ʃɪtɪ/
+    translation: to learn
+    pos: verb
+  - lemma: вираз
+    ipa: /ˈvɪrɑz/
+    translation: expression
+    pos: noun
+    gender: m
+  - lemma: вихідний
+    ipa: /vɪxiˈdnɪj/
+    translation: weekend/day off
+    pos: noun
+    gender: m
+  - lemma: відповідати
+    ipa: /vidpɔviˈdɑtɪ/
+    translation: to answer
+    pos: verb
+  - lemma: давно
+    ipa: /dɑwˈnɔ/
+    translation: long ago
+    pos: adv
+  - lemma: дієслово
+    ipa: /dijɛˈslɔvɔ/
+    translation: verb
+    pos: noun
+    gender: n
+  - lemma: закінчення
+    ipa: /zɑˈkint͡ʃɛnʲːɑ/
+    translation: ending
+    pos: noun
+    gender: n
+  - lemma: знайти
+    ipa: /znɑjˈtɪ/
+    translation: to find
+    pos: verb
+  - lemma: зустрітися
+    ipa: /zustˈritɪsʲɑ/
+    translation: to meet
+    pos: verb
+  - lemma: колись
+    ipa: /kɔˈlɪsʲ/
+    translation: once/sometime
+    pos: adv
+  - lemma: круто
+    ipa: /ˈkrutɔ/
+    translation: cool
+    pos: adv
+  - lemma: майбутній
+    ipa: /mɑjˈbutnʲij/
+    translation: future
+    pos: adj
+    gender: m
+  - lemma: минуле
+    ipa: /mɪˈnulɛ/
+    translation: past
+    pos: noun
+    gender: n
+  - lemma: минулий
+    ipa: /mɪˈnulɪj/
+    translation: past
+    pos: adj
+    gender: m
+  - lemma: молодий
+    ipa: /mɔlɔˈdɪj/
+    translation: young
+    pos: adj
+    gender: m
+  - lemma: наступний
+    ipa: /nɑˈstupnɪj/
+    translation: next
+    pos: adj
+    gender: m
+  - lemma: недавно
+    ipa: /nɛˈdɑwnɔ/
+    translation: recently
+    pos: adv
+  - lemma: неправильний
+    ipa: /nɛˈprɑvɪlʲnɪj/
+    translation: irregular
+    pos: adj
+    gender: m
+  - lemma: новина
+    ipa: /nɔvɪˈnɑ/
+    translation: news
+    pos: noun
+    gender: f
+  - lemma: нудно
+    ipa: /ˈnudnɔ/
+    translation: boring
+    pos: adv
+  - lemma: онук
+    ipa: /ɔˈnuk/
+    translation: grandson
+    pos: noun
+    gender: m
+  - lemma: основа
+    ipa: /ɔsˈnɔvɑ/
+    translation: stem
+    pos: noun
+    gender: f
+  - lemma: план
+    ipa: /plɑn/
+    translation: plan
+    pos: noun
+    gender: m
+  - lemma: позавчора
+    ipa: /pɔzɑwˈt͡ʃɔrɑ/
+    translation: day before yesterday
+    pos: adv
+  - lemma: понеділок
+    ipa: /pɔnɛˈdilɔk/
+    translation: Monday
+    pos: noun
+    gender: m
+  - lemma: поїхати
+    ipa: /pɔˈjixɑtɪ/
+    translation: to go (by vehicle)
+    pos: verb
+  - lemma: працювати
+    ipa: /prɑt͡sʲuˈvɑtɪ/
+    translation: to work
+    pos: verb
+  - lemma: прийти
+    ipa: /prɪjˈtɪ/
+    translation: to come
+    pos: verb
+  - lemma: приїхати
+    ipa: /prɪˈjixɑtɪ/
+    translation: to arrive
+    pos: verb
+  - lemma: піти
+    ipa: /piˈtɪ/
+    translation: to go (on foot)
+    pos: verb
+  - lemma: раніше
+    ipa: /rɑˈniʃɛ/
+    translation: earlier
+    pos: adv
+  - lemma: рута
+    ipa: /ˈrutɑ/
+    translation: rue (flower)
+    pos: noun
+    gender: f
+  - lemma: рід
+    ipa: /rid/
+    translation: gender
+    pos: noun
+    gender: m
+  - lemma: сад
+    ipa: /sɑd/
+    translation: garden
+    pos: noun
+    gender: m
+  - lemma: тиждень
+    ipa: /ˈtɪʒdɛnʲ/
+    translation: week
+    pos: noun
+    gender: m
+  - lemma: тихо
+    ipa: /ˈtɪxɔ/
+    translation: quietly
+    pos: adv
+  - lemma: утворення
+    ipa: /utˈvɔrɛnʲːɑ/
+    translation: formation
+    pos: noun
+    gender: n
+  - lemma: часовий
+    ipa: /t͡ʃɑsɔˈvɪj/
+    translation: temporal/time
+    pos: adj
+    gender: m

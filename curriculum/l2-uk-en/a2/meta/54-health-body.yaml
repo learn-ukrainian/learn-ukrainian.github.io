@@ -1,0 +1,23 @@
+module: a2-54
+title: Health & Body
+subtitle: Feeling Good
+version: '1.0'
+phase: A2
+pedagogy: Narrative
+duration: 60
+transliteration: none
+tags:
+  - vocabulary
+  - health
+  - body
+  - doctor
+grammar:
+  - dative-subjects
+  - imperative-health
+objectives:
+  - Name body parts: голова, рука, серце
+  - Describe symptoms: болить, температура
+  - Visit a doctor/pharmacy: ліки, рецепт
+  - Give health advice: пийте воду, не хворійте
+vocab_count: 57
+slug: 54-health-body

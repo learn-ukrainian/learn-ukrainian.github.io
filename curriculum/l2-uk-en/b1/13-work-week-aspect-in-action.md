@@ -1,28 +1,3 @@
----
-module: b1-13
-title: "Робочий тиждень: вид у дії"
-subtitle: "Work Week - Aspect in Real-Life Context"
-version: "1.0"
-phase: "B1.1 Aspect"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - aspect
-  - work
-  - thematic
-grammar:
-  - "All aspect contexts in work scenarios"
-  - "Aspect integration in daily routine"
-objectives:
-  - "Learner can describe work routines using correct aspect"
-  - "Learner can report completed and ongoing tasks"
-  - "Learner can use aspect naturally in professional contexts"
-vocabulary_count: 27
-vocab_count: 62
----
-
 # Робочий тиждень: вид у дії
 
 > 🎯 **Чому це важливо?**

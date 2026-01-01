@@ -1,26 +1,21 @@
 # Audit Report: 32-time-clauses.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "Expressive" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## Gates
-- **Words:** ✅ 1336/1000
+- **Words:** ✅ 1361/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 24/1
+- **Vocab:** ✅ 28/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 51.5% (target 40-55% (A2.2))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
+- **Immersion:** ❌ 37.0% LOW (target 40-55% (A2.2))
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -37,18 +32,6 @@
 | **Language in Action** | ⚪️ | 0 | Skipped |
 | **Dialogue: The Busy Morning** | ✅ | 125 | Included in Core |
 | **Monologue: My Strategy** | ⚪️ | 73 | Skipped |
-| **Pro-Tip: The "Until" Dual Meaning** | ✅ | 88 | Included in Core |
+| **Pro-Tip: The "Until" Dual Meaning** | ✅ | 113 | Included in Core |
 | **Summary** | ✅ | 44 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Time Connectors** | 🎮 | 10 | Activity (10 items, min 8) |
-| **fill-in: Select the Connector** | 🎮 | 8 | Activity (8 items, min 6) |
-| **quiz: Time Logic** | 🎮 | 8 | Activity (8 items, min 8) |
-| **unjumble: Time Lines** | 🎮 | 6 | Activity (6 items, min 6) |
-| **group-sort: Process vs Point** | 🎮 | 12 | Activity (12 items, min 12) |
-| **true-false: Connector Check** | 🎮 | 8 | Activity (8 items, min 8) |
-| **cloze: The Narrative** | 🎮 | 12 | Activity (12 items, min 12) |
-| **dialogue-reorder: The Meeting** | 🎮 | 8 | Activity (8 items, min 4) |
-| **mark-the-words: Time Markers** | 🎮 | 8 | Activity (8 items, min 6) |
-| **error-correction: Fix the Logic** | 🎮 | 6 | Activity (6 items, min 6) |
-| **translate: English to Ukrainian** | 🎮 | 6 | Activity (6 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

@@ -1,0 +1,156 @@
+module: 25-checkpoint-motion-verbs
+level: B1
+version: '2.0'
+items:
+- lemma: відбігти
+  ipa: /vidˈbihtɪ/
+  translation: to run away
+  pos: verb
+  gender: m
+- lemma: відплив
+  ipa: /vidˈplɪu̯/
+  translation: ebb/departure
+  pos: noun
+  gender: m
+- lemma: відплити
+  ipa: /vidˈplɪtɪ/
+  translation: to swim away
+  pos: verb
+  gender: m
+- lemma: відставати
+  ipa: /vidstaˈvatɪ/
+  translation: to lag behind
+  pos: verb
+- lemma: забігти
+  ipa: /zaˈbihtɪ/
+  translation: to run in
+  pos: verb
+- lemma: злетіти
+  ipa: /zlɛˈtʲitɪ/
+  translation: to take off
+  pos: verb
+- lemma: катер
+  ipa: /ˈkatɛr/
+  translation: boat
+  pos: noun
+  gender: m
+- lemma: катера
+  ipa: /ˈkatɛra/
+  translation: boats (gen.)
+  pos: noun
+  gender: f
+- lemma: когось
+  ipa: /kɔˈɦɔsʲ/
+  translation: someone (gen.)
+  pos: other
+  gender: m
+- lemma: малюка
+  ipa: /malʲuˈka/
+  translation: toddler (gen.)
+  pos: noun
+  gender: m
+- lemma: напоготові
+  ipa: /napɔhɔˈtɔvʲi/
+  translation: at the ready
+  pos: adv
+- lemma: насталий
+  ipa: /naˈstalɪj/
+  translation: occurred
+  pos: adj
+  gender: f
+- lemma: неквапливий
+  ipa: /nɛkvaˈplɪvɪj/
+  translation: unhurried
+  pos: adj
+  gender: f
+- lemma: однонапрямлений
+  ipa: /ɔdnɔnaˈprʲamlɛnɪj/
+  translation: unidirectional
+  pos: adj
+- lemma: перебігти
+  ipa: /pɛrɛˈbihtɪ/
+  translation: to run across
+  pos: verb
+- lemma: перекусити
+  ipa: /pɛrɛkuˈsɪtɪ/
+  translation: to have a snack
+  pos: verb
+- lemma: переміщати
+  ipa: /pɛrɛmiˈʃt͡ʃatɪ/
+  translation: to move
+  pos: verb
+- lemma: пересіти
+  ipa: /pɛrɛˈsʲitɪ/
+  translation: to change seats (typo)
+  pos: verb
+- lemma: плинути
+  ipa: /ˈplɪnutɪ/
+  translation: to flow
+  pos: verb
+- lemma: повер
+  ipa: /pɔˈvɛr/
+  translation: ??? (truncated)
+  pos: noun
+  gender: m
+- lemma: поверти
+  ipa: /pɔˈvɛrtɪ/
+  translation: ??? (typo)
+  pos: verb
+- lemma: полоннна
+  ipa: /pɔlɔnˈnna/
+  translation: mountain valley (typo)
+  pos: noun
+  gender: f
+- lemma: поплисти
+  ipa: /pɔplɪsˈtɪ/
+  translation: to start swimming
+  pos: verb
+- lemma: поштар
+  ipa: /pɔʃˈtar/
+  translation: postman
+  pos: noun
+  gender: m
+- lemma: підбігти
+  ipa: /pidˈbihtɪ/
+  translation: to run up to
+  pos: verb
+  gender: m
+- lemma: підлет
+  ipa: /pidˈlɛt/
+  translation: approach (typo)
+  pos: noun
+  gender: m
+- lemma: підніс
+  ipa: /pidˈnʲis/
+  translation: tray
+  pos: noun
+  gender: m
+- lemma: підскочити
+  ipa: /pidˈskɔt͡ʃɪtɪ/
+  translation: to jump up
+  pos: verb
+- lemma: різнонапрямлений
+  ipa: /rʲiznɔnaˈprʲamlɛnɪj/
+  translation: multidirectional
+  pos: adj
+- lemma: спуститися
+  ipa: /spusˈtɪtɪsʲa/
+  translation: to descend
+  pos: verb
+- lemma: убігти
+  ipa: /uˈbihtɪ/
+  translation: to run in
+  pos: verb
+- lemma: щонеділі
+  ipa: /ʃt͡ʃɔnɛˈdʲilʲi/
+  translation: every Sunday
+  pos: adv
+- lemma: інфографіка
+  ipa: /infɔˈhrafika/
+  translation: infographics
+  pos: noun
+  gender: f
+- lemma: ґуцульський
+  ipa: /huˈt͡sulʲsʲkɪj/
+  translation: Hutsul (adj)
+  pos: adj

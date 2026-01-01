@@ -1,29 +1,3 @@
----
-module: b1-73
-title: "Українські регіони: Схід"
-subtitle: "Eastern Ukraine - Industrial Heritage and Academic Excellence"
-version: "1.0"
-phase: "B1.7 Contemporary Ukraine"
-focus: cultural
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "reading comprehension"
-  - "cultural vocabulary in context"
-tags:
-  - cultural
-  - regions
-  - eastern-ukraine
-objectives:
-  - "Learner can discuss Eastern Ukraine's industrial heritage and academic centers"
-  - "Learner can understand authentic texts about Kharkiv, Slobozhanshchyna, and Donbas"
-  - "Learner can use regional vocabulary to describe Eastern Ukrainian culture and identity"
-  - "Learner can compare Eastern Ukrainian traditions with other regions"
-vocabulary_count: 25
-vocab_count: 91
----
-
 # Українські регіони: Схід
 
 > 🎯 **Чому це важливо?**

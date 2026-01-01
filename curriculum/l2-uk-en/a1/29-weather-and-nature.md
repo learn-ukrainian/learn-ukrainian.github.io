@@ -1,31 +1,3 @@
----
-module: a1-29
-title: 'Weather & Nature'
-subtitle: 'Seasons, Weather & The Natural World'
-version: '1.0'
-phase: 'A1.3 - Consolidation'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: 'first-occurrence'
-tags:
-  - weather
-  - nature
-  - seasons
-  - pets
-  - impersonal
-grammar:
-  - Impersonal weather expressions
-  - Nature vocabulary
-  - Pet vocabulary
-objectives:
-  - 'Learner can describe the weather'
-  - 'Learner can ask about weather conditions'
-  - 'Learner can name common plants and animals'
-  - 'Learner can use impersonal expressions (cold, warm, hot)'
-vocabulary_count: 35
-vocab_count: 39
----
-
 # Weather & Nature
 
 ## Warm-up
@@ -225,47 +197,3 @@ For rain and snow, Ukrainian uses "йде" (goes):
 > - [Weather Vocabulary](https://www.ukrainianlessons.com/weather-vocabulary/) — Яка погода?
 > - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/weather
 > - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
-
-# Vocabulary
-
-| Word       | IPA            | English      | POS   | Gender | Note      |
-| ---------- | -------------- | ------------ | ----- | ------ | --------- |
-| бо         | /bɔ/           | because      | other | -      |           |
-| взимку     | /ˈvzɪmku/      | in winter    | adv   | -      |           |
-| влітку     | /ˈvlitku/      | in summer    | adv   | -      |           |
-| восени     | /vɔsɛˈnɪ/      | in autumn    | adv   | -      |           |
-| вітряно    | /ˈvitrʲɑnɔ/    | windy        | adv   | -      |           |
-| гора       | /ɦɔˈrɑ/        | mountain     | noun  | ж      |           |
-| дерево     | /ˈdɛrɛvɔ/      | tree         | noun  | с      |           |
-| дощ        | /dɔʃt͡ʃ/        | rain         | noun  | ч      |           |
-| жарко      | /ˈʒɑrkɔ/       | hot          | adv   | -      |           |
-| зима       | /zɪˈmɑ/        | winter       | noun  | ж      |           |
-| калина     | /kɑˈlɪnɑ/      | viburnum     | noun  | ж      |           |
-| Карпати    | /kɑrˈpɑtɪ/     | Carpathians  | name  | -      | Plural    |
-| квітка     | /ˈkvitkɑ/      | flower       | noun  | ж      |           |
-| клімат     | /ˈklimɑt/      | climate      | noun  | ч      |           |
-| кіт        | /kit/          | cat (male)   | noun  | ч      |           |
-| кішка      | /ˈkiʃkɑ/       | cat (female) | noun  | ж      |           |
-| луг        | /luɦ/          | meadow       | noun  | ч      |           |
-| ліс        | /lʲis/         | forest       | noun  | ч      |           |
-| Мурчик     | /ˈmurt͡ʃɪk/     | Murchyk      | name  | ч      | Cat name  |
-| надворі    | /nɑdˈvɔri/     | outside      | adv   | -      |           |
-| озеро      | /ˈɔzɛrɔ/       | lake         | noun  | с      |           |
-| ой         | /ɔj/           | oh           | other | -      |           |
-| осінь      | /ˈɔsʲinʲ/      | autumn       | noun  | ж      |           |
-| пес        | /pɛs/          | dog (male)   | noun  | ч      |           |
-| подорож    | /ˈpɔdɔrɔʒ/     | journey/trip | noun  | ж      |           |
-| природа    | /prɪˈrɔdɑ/     | nature       | noun  | ж      |           |
-| прогноз    | /prɔɦˈnɔz/     | forecast     | noun  | ч      |           |
-| прогулянка | /prɔˈhulʲɑnkɑ/ | walk/stroll  | noun  | ж      |           |
-| птах       | /ptɑx/         | bird         | noun  | ч      |           |
-| південь    | /ˈpivdɛnʲ/     | south        | noun  | ч      |           |
-| північ     | /ˈpivnit͡ʃ/     | north        | noun  | ж      |           |
-| Рекс       | /rɛks/         | Rex          | name  | ч      | Dog name  |
-| рослина    | /rɔsˈlɪnɑ/     | plant        | noun  | ж      |           |
-| рудий      | /ruˈdɪj/       | ginger/red   | adj   | ч      |           |
-| Світязь    | /ˈsvitʲɑzʲ/    | Svityaz      | name  | ч      | Lake name |
-| собака     | /sɔˈbɑkɑ/      | dog          | noun  | ч      |           |
-| сонячно    | /ˈsɔnʲɑt͡ʃnɔ/   | sunny        | adv   | -      |           |
-| тварина    | /tvɑˈrɪnɑ/     | animal       | noun  | ж      |           |
-| хмарно     | /ˈxmɑrnɔ/      | cloudy       | adv   | -      |           |

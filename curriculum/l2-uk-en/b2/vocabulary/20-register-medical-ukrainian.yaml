@@ -1,0 +1,774 @@
+module: 20-register-medical-ukrainian
+level: B2
+version: '2.0'
+items:
+  - lemma: алергія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: амосова
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: антибіотик
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: антибіотика
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: анц
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: блювот
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: блювота
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: боль
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: больовий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: бригада
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: буковель
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: виміряти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: висип
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: витісняти
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: виїзд
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: відкрий
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: вірусний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: гарячка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: грва
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: грецький
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: груди
+    ipa: ''
+    translation: ''
+    pos: noun
+  - lemma: гірськолижний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: данило
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: дере
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: деталізація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: добробут
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: дозування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: дотримуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: дтп
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: діагноз
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: екстрений
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: епідеміологія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: жар
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: жарознижувальний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: житель
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: заболотний
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: закапувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: запалення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: запаморочення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: запивати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: записування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: запор
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: зберігання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: звужувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: зламаний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: знизу
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: капата
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: капс
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: капсул
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: капсула
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: карієс
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: кашляти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: кловський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: ковтання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: ковтати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: колючий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: крапля
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: кров
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: кушетка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: лексика
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: липа
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: лобовий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: локалізація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: ломоносов
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: ліжковий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: лікарський
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: мазати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: мазь
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: малюк
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: мг
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: медпрацівник
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: мерзний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: моршинський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: міліг
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: мілілітр
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: місцевість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: набряк
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: набрякнути
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: наказовий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: наносити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: наркотичний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: настоянка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: натщесерце
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: нафтуся
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: невеличкий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: невірно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: нестерпний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: ниючий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: нормальний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: нудити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: нудота
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: ніздря
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: ніс
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: ніякий
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: озноб
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: охматдит
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: палець
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: паморочитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: парацетамол
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: педіатр
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: пирогов
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: пломбувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: погіршувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: покривати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: полегшувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: польовий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: поліклінік
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: помірний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: порожнина
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: порятунок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: посилюватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: потилиця
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: почервонілий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: почервоніння
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: препарат
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: призвести
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: приїзд
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: противірусний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: протипоказання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: пульсувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: пульсуючий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: піднітися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: рака
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: респіраторний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: реєстратура
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: розжовувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розлад
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: ротик
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: рідина
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: санаторій
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: свічка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: симпт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: скроня
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: стоматологічний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: суглоб
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: супозиторія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: сформульований
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: таб
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: таблеток
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: терапевт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: травма
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: травний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: триматися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: трускавка
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: тупий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: узд
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: уражений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: фітотерапій
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: холодне
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: хірургія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: чайний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: часниковий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: черевний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: чорновіл
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: чутливість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: шар
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: шкал
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: ібупрофен
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: інгаляція
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: інтенсивність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: інфекція
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f

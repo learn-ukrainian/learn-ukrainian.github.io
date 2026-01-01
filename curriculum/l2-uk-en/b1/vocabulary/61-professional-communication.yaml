@@ -1,0 +1,76 @@
+module: 61-professional-communication
+level: B1
+version: '2.0'
+items:
+- lemma: айт
+  ipa: /ˈajt/
+  translation: IT (slang)
+  pos: noun
+  gender: m
+- lemma: виплачуватися
+  ipa: /vɪˈplat͡ʃuvatɪsʲa/
+  translation: to be paid out
+  pos: verb
+- lemma: заслужено
+  ipa: /zaˈsluʒɛnɔ/
+  translation: deservedly
+  pos: adv
+- lemma: кластер
+  ipa: /ˈklastɛr/
+  translation: cluster
+  pos: noun
+  gender: m
+- lemma: корпорація
+  ipa: /kɔrpɔˈrat͡sʲija/
+  translation: corporation
+  pos: noun
+  gender: f
+- lemma: лікарняний
+  ipa: /lʲikarˈnʲanɪj/
+  translation: sick leave
+  pos: adj
+  gender: m
+- lemma: організаційний
+  ipa: /ɔrhanʲizaˈt͡sʲijnɪj/
+  translation: organizational
+  pos: adj
+  gender: f
+- lemma: переда
+  ipa: /pɛrɛˈda/
+  translation: transmit (trunc)
+  pos: noun
+  gender: m
+- lemma: подібній
+  ipa: /pɔˈdʲibnʲij/
+  translation: similar (loc.)
+  pos: adj
+  gender: f
+- lemma: пострадянський
+  ipa: /pɔstraˈdʲansʲkɪj/
+  translation: post-Soviet
+  pos: adj
+  gender: m
+- lemma: продакт
+  ipa: /ˈprɔdakt/
+  translation: product (slang)
+  pos: noun
+  gender: m
+- lemma: підпорядкований
+  ipa: /pidpɔrʲadˈkɔvanɪj/
+  translation: subordinate
+  pos: adj
+- lemma: стажування
+  ipa: /staʒuˈvanʲːa/
+  translation: internship
+  pos: noun
+  gender: n
+- lemma: таска
+  ipa: /ˈtaska/
+  translation: task (slang)
+  pos: noun
+  gender: f
+- lemma: фідбек
+  ipa: /fidˈbɛk/
+  translation: feedback
+  pos: noun
+  gender: m

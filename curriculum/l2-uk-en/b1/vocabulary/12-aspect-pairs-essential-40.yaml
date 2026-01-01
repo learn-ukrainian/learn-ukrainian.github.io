@@ -1,0 +1,86 @@
+module: 12-aspect-pairs-essential-40
+level: B1
+version: '2.0'
+items:
+- lemma: безперервно
+  ipa: /bɛzpɛˈrɛrvnɔ/
+  translation: continuously
+  pos: adv
+- lemma: вбудований
+  ipa: /vbuˈdɔvanɪj/
+  translation: built-in
+  pos: adj
+  gender: m
+- lemma: вдало
+  ipa: /ˈvdaɫɔ/
+  translation: successfully
+  pos: adv
+- lemma: виражальний
+  ipa: /vɪraˈʒalʲnɪj/
+  translation: expressive
+  pos: adj
+- lemma: відеопояснення
+  ipa: /vidɛɔpɔˈjasnɛnʲːa/
+  translation: video explanation
+  pos: noun
+  gender: n
+- lemma: геймерський
+  ipa: /ˈɦɛjmɛrsʲkɪj/
+  translation: gamer (adj)
+  pos: adj
+  gender: m
+- lemma: заучати
+  ipa: /zauˈt͡ʃatɪ/
+  translation: to memorize (typo)
+  pos: verb
+- lemma: зписати
+  ipa: /zpɪˈsatɪ/
+  translation: to copy (typo)
+  pos: verb
+  gender: m
+- lemma: контекстуальний
+  ipa: /kɔntɛkstuˈalʲnɪj/
+  translation: contextual
+  pos: adj
+- lemma: кінчувати
+  ipa: /kʲinˈt͡ʃuvatɪ/
+  translation: to finish (typo)
+  pos: verb
+- lemma: найчастотніший
+  ipa: /najt͡ʃasˈtɔtnʲiʃɪj/
+  translation: most frequent
+  pos: adj
+- lemma: накопичити
+  ipa: /nakɔˈpɪt͡ʃɪtɪ/
+  translation: to accumulate
+  pos: verb
+- lemma: наскрізь
+  ipa: /ˈnaskrʲizʲ/
+  translation: through/throughout
+  pos: adv
+- lemma: рідкісніший
+  ipa: /ridˈkʲisnʲiʃɪj/
+  translation: rarer
+  pos: adj
+- lemma: сла
+  ipa: /sla/
+  translation: ???
+  pos: other
+- lemma: суплетивний
+  ipa: /suplɛˈtɪvnɪj/
+  translation: suppletive
+  pos: adj
+- lemma: суфіксація
+  ipa: /sufiksˈat͡sʲija/
+  translation: suffixation
+  pos: noun
+  gender: f
+- lemma: топ
+  ipa: /tɔp/
+  translation: top
+  pos: noun
+  gender: m
+- lemma: чергуватися
+  ipa: /t͡ʃɛrɦuˈvatɪsʲa/
+  translation: to alternate
+  pos: verb

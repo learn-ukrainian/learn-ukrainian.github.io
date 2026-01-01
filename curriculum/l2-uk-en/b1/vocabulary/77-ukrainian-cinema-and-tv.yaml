@@ -1,0 +1,246 @@
+module: 77-ukrainian-cinema-and-tv
+level: B1
+version: '2.0'
+items:
+- lemma: акторський
+  ipa: /akˈtɔrsʲkɪj/
+  translation: acting (adj)
+  pos: adj
+  gender: f
+- lemma: аніматор
+  ipa: /anʲiˈmatɔr/
+  translation: animator
+  pos: noun
+  gender: m
+- lemma: анімація
+  ipa: /anʲiˈmat͡sʲija/
+  translation: animation
+  pos: noun
+  gender: f
+- lemma: атлантид
+  ipa: /atlanˈtɪd/
+  translation: Atlantis (gen.)
+  pos: propn
+  gender: f
+- lemma: берлінале
+  ipa: /bɛrlʲiˈnalɛ/
+  translation: Berlinale
+  pos: propn
+  gender: m
+- lemma: венецій
+  ipa: /vɛˈnɛt͡sʲij/
+  translation: Venice (gen.)
+  pos: propn
+  gender: f
+- lemma: венеційський
+  ipa: /vɛnɛˈt͡sʲijsʲkɪj/
+  translation: Venetian
+  pos: adj
+  gender: m
+- lemma: вертов
+  ipa: /ˈvɛrtɔu̯/
+  translation: Vertov
+  pos: propn
+  gender: m
+- lemma: гвардія
+  ipa: /ˈhvardʲija/
+  translation: guard
+  pos: noun
+  gender: f
+- lemma: дебютант
+  ipa: /dɛbʲuˈtant/
+  translation: debutant
+  pos: noun
+  gender: m
+- lemma: дебютний
+  ipa: /dɛˈbʲutnɪj/
+  translation: debut (adj)
+  pos: adj
+- lemma: держкіно
+  ipa: /dɛrʒkiˈnɔ/
+  translation: State Cinema
+  pos: noun
+  gender: n
+- lemma: дзиґ
+  ipa: /dzɪg/
+  translation: top (trunc)
+  pos: propn
+  gender: m
+- lemma: жестовий
+  ipa: /ʒɛsˈtɔvɪj/
+  translation: sign (adj)
+  pos: adj
+  gender: f
+- lemma: зніматися
+  ipa: /znʲiˈmatɪsʲa/
+  translation: to be filmed
+  pos: verb
+- lemma: кавалерідзе
+  ipa: /kavalɛˈrʲidzɛ/
+  translation: Kavaleridze
+  pos: propn
+  gender: m
+- lemma: канна
+  ipa: /ˈkanːa/
+  translation: Canna
+  pos: propn
+- lemma: каннах
+  ipa: /ˈkanːax/
+  translation: Cannes (loc.)
+  pos: propn
+  gender: m
+- lemma: каннський
+  ipa: /ˈkanːsʲkɪj/
+  translation: Cannes (adj)
+  pos: adj
+  gender: m
+- lemma: київнаукфільм
+  ipa: /kɪjiu̯naukˈfʲilʲm/
+  translation: Kyivnaukfilm
+  pos: noun
+  gender: m
+- lemma: комедійний
+  ipa: /kɔmɛˈdʲijnɪj/
+  translation: comedy (adj)
+  pos: adj
+  gender: m
+- lemma: копродукція
+  ipa: /kɔprɔˈdukt͡sʲija/
+  translation: co-production
+  pos: noun
+  gender: f
+- lemma: короткометражний
+  ipa: /kɔrɔtkɔmɛˈtraʒnɪj/
+  translation: short (film)
+  pos: adj
+- lemma: кінематографічний
+  ipa: /kʲinɛmatɔhraˈfʲit͡ʃnɪj/
+  translation: cinematographic
+  pos: adj
+  gender: m
+- lemma: кінематографія
+  ipa: /kʲinɛmatɔˈhrafʲija/
+  translation: cinematography
+  pos: noun
+  gender: f
+- lemma: кіновиробництво
+  ipa: /kʲinɔvɪrɔbˈnɪt͡stvɔ/
+  translation: filmmaking
+  pos: noun
+  gender: n
+- lemma: кінокритик
+  ipa: /kʲinɔˈkrɪtɪk/
+  translation: film critic
+  pos: noun
+  gender: m
+- lemma: кінолексик
+  ipa: /kʲinɔˈlɛksɪk/
+  translation: film lexis (trunc)
+  pos: noun
+  gender: f
+- lemma: кіностудія
+  ipa: /kʲinɔˈstudʲija/
+  translation: film studio
+  pos: noun
+  gender: f
+- lemma: кінофестивал
+  ipa: /kʲinɔfɛstɪˈval/
+  translation: film festival (trunc)
+  pos: noun
+  gender: m
+- lemma: кінофестивалий
+  ipa: /kʲinɔfɛstɪˈvalɪj/
+  translation: film festival (typo)
+  pos: noun
+  gender: f
+- lemma: кіноіндустрій
+  ipa: /kʲinɔinduˈstrʲij/
+  translation: film industries (gen.)
+  pos: noun
+  gender: f
+- lemma: лозниця
+  ipa: /lɔzˈnɪt͡sʲa/
+  translation: Loznitsa
+  pos: propn
+  gender: m
+- lemma: ліцензований
+  ipa: /lʲit͡sɛnˈzɔvanɪj/
+  translation: licensed
+  pos: adj
+- lemma: мирослав
+  ipa: /mɪrɔˈslau̯/
+  translation: Myroslav
+  pos: propn
+  gender: m
+- lemma: мультфільм
+  ipa: /mulʲtˈfʲilʲm/
+  translation: cartoon
+  pos: noun
+  gender: m
+- lemma: новаторський
+  ipa: /nɔˈvatɔrsʲkɪj/
+  translation: innovative
+  pos: adj
+- lemma: партер
+  ipa: /parˈtɛr/
+  translation: orchestra seats
+  pos: noun
+  gender: m
+- lemma: приз
+  ipa: /prɪz/
+  translation: prize
+  pos: noun
+  gender: m
+- lemma: режисере
+  ipa: /rɛʒɪˈsɛrɛ/
+  translation: director (voc.)
+  pos: noun
+  gender: m
+- lemma: режисура
+  ipa: /rɛʒɪˈsura/
+  translation: directing
+  pos: noun
+  gender: f
+- lemma: розважальний
+  ipa: /rɔzvaˈʒalʲnɪj/
+  translation: entertainment (adj)
+  pos: adj
+- lemma: серій
+  ipa: /sɛˈrʲij/
+  translation: series (gen.)
+  pos: noun
+  gender: f
+- lemma: слабошпицький
+  ipa: /slabɔʃˈpɪt͡sʲkɪj/
+  translation: Slaboshpytskyi
+  pos: propn
+  gender: m
+- lemma: співробітництво
+  ipa: /spivrɔˈbitnɪt͡stvɔ/
+  translation: cooperation
+  pos: noun
+  gender: n
+- lemma: страсть
+  ipa: /strastʲ/
+  translation: passion (Rus.)
+  pos: noun
+  gender: m
+- lemma: стрімінговий
+  ipa: /striminˈhɔvɪj/
+  translation: streaming (adj)
+  pos: adj
+- lemma: сценарист
+  ipa: /st͡sɛnaˈrɪst/
+  translation: screenwriter
+  pos: noun
+  gender: m
+- lemma: укранімафільм
+  ipa: /ukranʲimaˈfʲilʲm/
+  translation: Ukranimafilm
+  pos: propn
+  gender: m
+- lemma: чемберлен
+  ipa: /t͡ʃɛmbɛrˈlɛn/
+  translation: Chamberlain
+  pos: propn
+  gender: m

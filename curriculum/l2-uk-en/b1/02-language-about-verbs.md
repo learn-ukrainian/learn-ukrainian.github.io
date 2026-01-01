@@ -1,32 +1,3 @@
----
-module: b1-02
-title: "Мова про дієслова"
-subtitle: "Verb-specific terminology for aspect and tense"
-version: "1.0"
-phase: "B1.0 Bridge"
-pedagogy: "PPP"
-duration: 75
-transliteration: none
-tags:
-  - grammar
-  - metalanguage
-  - aspect
-  - tense
-  - bridge
-grammar:
-  - "Aspect terms in Ukrainian"
-  - "Tense terminology in Ukrainian"
-  - "Action concepts for grammar discussion"
-objectives:
-  - "Learner can name perfective and imperfective aspect in Ukrainian"
-  - "Learner can identify tense names in grammar explanations"
-  - "Learner can describe verb properties using Ukrainian terminology"
-  - "Learner can use negation terminology correctly"
-  - "Learner can identify different verb forms (compound, synthetic, imperative)"
-vocabulary_count: 34
-vocab_count: 40
----
-
 # Мова про дієслова
 
 > 🎯 **Why This Module Matters**

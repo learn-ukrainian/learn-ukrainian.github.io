@@ -1,0 +1,164 @@
+module: 65-synonyms-state
+level: B2
+version: '2.0'
+items:
+  - lemma: академізм
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: аналоговий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: атмосферний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: видатися
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: воєнний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: врівноважений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: втручання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: екосистема
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: задовільний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: занепад
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: звітність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: здавання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: камертон
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: конфліктний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: мегаполіс
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: минулі
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: монументальність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: непохитність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: новело
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: переосмислюватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: позбавляти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розквіт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: сакура
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: синергія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: синхронізований
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: скам'янілий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: скластися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: споглядати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: справити
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: становище
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: стуси
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: являти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: істинний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f

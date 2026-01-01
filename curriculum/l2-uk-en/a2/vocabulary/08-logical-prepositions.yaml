@@ -1,0 +1,123 @@
+module: 08-logical-prepositions
+level: A2
+version: '2.0'
+items:
+  - lemma: акцент
+    ipa: ɐkˈt͡sɛnt
+    translation: accent
+    pos: noun
+    gender: m
+  - lemma: варення
+    ipa: ʋɐˈrɛnʲːɐ
+    translation: jam
+    pos: noun
+    gender: n
+  - lemma: вишень
+    ipa: ˈvɪʃenʲ
+    translation: cherries (genitive pl)
+    pos: noun
+    gender: n
+  - lemma: виїжджати
+    ipa: vijiʒˈdʒɑte
+    translation: to depart; to drive out
+    pos: verb
+  - lemma: відпустка
+    ipa: vidˈpustkɐ
+    translation: vacation; leave
+    pos: noun
+    gender: f
+  - lemma: глютен
+    ipa: hlʲuˈtɛn
+    translation: gluten
+    pos: noun
+    gender: m
+  - lemma: домовитися
+    ipa: doˈmɔʋɪtɪsʲɐ
+    translation: to agree; to arrange
+    pos: verb
+  - lemma: дорослий
+    ipa: doˈrɔslei̯
+    translation: adult
+    pos: noun
+    gender: m
+  - lemma: жартувати
+    ipa: ʒɐrtuˈʋɑte
+    translation: to joke
+    pos: verb
+  - lemma: зайти
+    ipa: zɐi̯ˈtɪ
+    translation: to enter; to stop by
+    pos: verb
+    gender: f
+  - lemma: закритися
+    ipa: zɐˈkrɪtɪsʲɐ
+    translation: to close; to be closed
+    pos: verb
+    gender: n
+  - lemma: запросити
+    ipa: zɐproˈsɪte
+    translation: to invite
+    pos: verb
+    gender: f
+  - lemma: кашля
+    ipa: ˈkɑʃlʲɐ
+    translation: cough (genitive)
+    pos: noun
+    gender: m
+  - lemma: легше
+    ipa: ˈlɛɦʃe
+    translation: easier
+    pos: adv
+  - lemma: мало
+    ipa: ˈmɑlo
+    translation: little; few
+    pos: adv
+  - lemma: масло
+    ipa: ˈmɑslo
+    translation: butter; oil
+    pos: noun
+    gender: m
+  - lemma: надіслати
+    ipa: nɐdisˈlɑte
+    translation: to send
+    pos: verb
+    gender: f
+  - lemma: неважливо
+    ipa: neʋɐʒˈlɪʋo
+    translation: unimportant; it doesn't matter
+    pos: adv
+  - lemma: палатка
+    ipa: pɐˈlɑtkɐ
+    translation: tent
+    pos: noun
+    gender: f
+  - lemma: почитати
+    ipa: pot͡ʃɪˈtɑte
+    translation: to read (for a while)
+    pos: verb
+  - lemma: підійти
+    ipa: pidiˈi̯tɪ
+    translation: to approach; to suit
+    pos: verb
+  - lemma: раптом
+    ipa: ˈrɑptom
+    translation: suddenly
+    pos: adv
+  - lemma: рекомендувати
+    ipa: rekomenduˈʋɑte
+    translation: to recommend
+    pos: verb
+  - lemma: скло
+    ipa: sklɔ
+    translation: glass (material)
+    pos: noun
+    gender: n
+  - lemma: хвороба
+    ipa: xʋoˈrɔbɐ
+    translation: illness; disease
+    pos: noun
+    gender: f
+  - lemma: хотітися
+    ipa: xoˈtitusʲɐ
+    translation: to want (impersonal)
+    pos: verb

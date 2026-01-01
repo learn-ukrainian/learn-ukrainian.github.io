@@ -1,28 +1,3 @@
----
-module: b1-67
-title: "Подорожі та географія"
-subtitle: "Travel & Geography"
-version: "1.0"
-phase: "B1.6 Vocabulary Expansion II"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "travel vocabulary collocations"
-  - "geographical terminology"
-tags:
-  - vocabulary
-  - travel
-  - geography
-objectives:
-  - "Learner can use 30 travel and geography words in context"
-  - "Learner can distinguish between подорож/мандрівка/поїздка"
-  - "Learner can form natural collocations with travel vocabulary"
-vocabulary_count: 35
-vocab_count: 59
----
-
 # Подорожі та географія
 
 > 🎯 **Чому це важливо?**

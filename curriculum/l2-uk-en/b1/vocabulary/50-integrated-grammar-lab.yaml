@@ -1,0 +1,210 @@
+module: 50-integrated-grammar-lab
+level: B1
+version: '2.0'
+items:
+- lemma: аудитор
+  ipa: /audɪˈtɔr/
+  translation: auditor
+  pos: noun
+  gender: m
+- lemma: аутсорс
+  ipa: /autˈsɔrs/
+  translation: outsourcing
+  pos: noun
+  gender: m
+- lemma: бабусенький
+  ipa: /baˈbusɛnʲkɪj/
+  translation: granny (adj)
+  pos: adj
+  gender: f
+- lemma: бюджетик
+  ipa: /bʲuˈdʒɛtɪk/
+  translation: budget (dim.)
+  pos: noun
+  gender: m
+- lemma: відсоточок
+  ipa: /vidˈsɔtɔt͡ʃɔk/
+  translation: percentage (dim.)
+  pos: noun
+  gender: m
+- lemma: гарненько
+  ipa: /harˈnɛnʲkɔ/
+  translation: nicely
+  pos: adv
+- lemma: городик
+  ipa: /hɔˈrɔdɪk/
+  translation: garden (dim.)
+  pos: noun
+  gender: m
+- lemma: готовенький
+  ipa: /hɔtɔˈvɛnʲkɪj/
+  translation: ready (dim.)
+  pos: adj
+  gender: m
+- lemma: держслужбовець
+  ipa: /dɛrʒsluʒˈbɔvɛt͡sʲ/
+  translation: civil servant
+  pos: noun
+  gender: m
+- lemma: дроб
+  ipa: /drɔb/
+  translation: fraction (typo)
+  pos: noun
+  gender: f
+- lemma: діточок
+  ipa: /dʲiˈtɔt͡ʃɔk/
+  translation: children (dim.)
+  pos: noun
+  gender: pl
+- lemma: задіяний
+  ipa: /zaˈdʲijanɪj/
+  translation: involved
+  pos: adj
+- lemma: задіяти
+  ipa: /zaˈdʲijatɪ/
+  translation: to involve
+  pos: verb
+- lemma: знеособленість
+  ipa: /znɛɔˈsɔblɛnʲisʲtʲ/
+  translation: depersonalization
+  pos: noun
+  gender: f
+- lemma: кищві
+  ipa: /ˈkɪʃt͡ʃvʲi/
+  translation: ??? (typo)
+  pos: propn
+  gender: m
+- lemma: командній
+  ipa: /kɔˈmandnʲij/
+  translation: command (loc.)
+  pos: adj
+  gender: f
+- lemma: коригування
+  ipa: /kɔrɪhuˈvanʲːa/
+  translation: adjustment
+  pos: noun
+  gender: n
+- lemma: меро
+  ipa: /ˈmɛrɔ/
+  translation: ??? (typo)
+  pos: propn
+  gender: m
+- lemma: нагородити
+  ipa: /nahɔrɔˈdɪtɪ/
+  translation: to reward
+  pos: verb
+- lemma: напекти
+  ipa: /napɛkˈtɪ/
+  translation: to bake
+  pos: verb
+  gender: f
+- lemma: начальничка
+  ipa: /nat͡ʃalʲˈnɪt͡ʃka/
+  translation: boss (fem. dim.)
+  pos: noun
+  gender: m
+- lemma: новеньки
+  ipa: /nɔˈvɛnʲkɪ/
+  translation: new ones (dim.)
+  pos: noun
+  gender: m
+- lemma: новенький
+  ipa: /nɔˈvɛnʲkɪj/
+  translation: new (dim.)
+  pos: adj
+- lemma: оформлюватися
+  ipa: /ɔˈfɔrmlʲuvatɪsʲa/
+  translation: to be processed
+  pos: verb
+- lemma: паперовий
+  ipa: /papɛˈrɔvɪj/
+  translation: paper (adj)
+  pos: adj
+  gender: f
+- lemma: пиріжечка
+  ipa: /pɪriˈʒɛt͡ʃka/
+  translation: pie (dim. gen.)
+  pos: noun
+  gender: f
+- lemma: пиріжечок
+  ipa: /pɪriˈʒɛt͡ʃɔk/
+  translation: pie (dim.)
+  pos: noun
+  gender: m
+- lemma: посидіти
+  ipa: /pɔsɪˈdʲitɪ/
+  translation: to sit
+  pos: verb
+- lemma: провкта
+  ipa: /prɔˈvkta/
+  translation: project (typo)
+  pos: propn
+  gender: m
+- lemma: проектний
+  ipa: /prɔˈɛktnɪj/
+  translation: project (adj)
+  pos: adj
+  gender: f
+- lemma: проектування
+  ipa: /prɔɛktuˈvanʲːa/
+  translation: designing
+  pos: noun
+  gender: n
+- lemma: серйозність
+  ipa: /sɛrˈjɔznʲisʲtʲ/
+  translation: seriousness
+  pos: noun
+  gender: f
+- lemma: сніданати
+  ipa: /snʲiˈdanatɪ/
+  translation: to have breakfast (typo)
+  pos: verb
+- lemma: стажер
+  ipa: /staˈʒɛr/
+  translation: intern
+  pos: noun
+  gender: m
+- lemma: сусідок
+  ipa: /suˈsidɔk/
+  translation: neighbors (fem. gen.)
+  pos: noun
+  gender: m
+- lemma: сусідський
+  ipa: /suˈsidsʲkɪj/
+  translation: neighborly
+  pos: noun
+  gender: m
+- lemma: сяодовні
+  ipa: /sʲaɔˈdɔu̯nʲi/
+  translation: ??? (typo)
+  pos: noun
+  gender: n
+- lemma: сіренький
+  ipa: /sʲiˈrɛnʲkɪj/
+  translation: grey (dim.)
+  pos: adj
+  gender: m
+- lemma: третин
+  ipa: /trɛˈtɪn/
+  translation: thirds (gen.)
+  pos: noun
+  gender: f
+- lemma: чашечка
+  ipa: /ˈt͡ʃaʃɛt͡ʃka/
+  translation: cup (dim.)
+  pos: noun
+  gender: f
+- lemma: чаєчок
+  ipa: /t͡ʃaˈjɛt͡ʃɔk/
+  translation: tea (dim.)
+  pos: noun
+  gender: m
+- lemma: ізольовано
+  ipa: /izɔˈlʲɔvanɔ/
+  translation: isolatedly
+  pos: adv
+- lemma: інструментарія
+  ipa: /instrumɛnˈtarʲija/
+  translation: toolkit (typo)
+  pos: noun
+  gender: m

@@ -1,30 +1,3 @@
----
-module: a2-38
-title: Word Formation — Adjective Suffixes
-subtitle: "Painting the World with Nuance"
-version: "1.0"
-phase: "A2.4"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - grammar
-  - word-formation
-  - adjectives
-  - suffixes
-grammar:
-  - relational suffixes (-н-, -ськ-)
-  - diminutive/subjective suffixes (-еньк-, -есеньк-)
-  - intensifier suffixes (-енн-, -уч-)
-  - adjectival patterns
-objectives:
-  - "Learner can recognize and use relational adjective suffixes correctly"
-  - "Learner can express affection and softness using diminutive suffixes"
-  - "Learner can amplify meanings using intensive suffixes for emphasis"
-vocabulary_count: 65
-vocab_count: 45
----
-
 # Summary
 
 ## The Palette of Description 🎨

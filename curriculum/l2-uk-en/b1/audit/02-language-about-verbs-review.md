@@ -1,6 +1,15 @@
 # Audit Report: 02-language-about-verbs.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "PPP" | **Target:** 1200
+**Phase:** B1.0 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): особові, умовний, недоконаний, інфінітив, минулий...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1817/1200
@@ -10,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 34/20
+- **Vocab:** ⚠️ 9 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,16 +46,10 @@
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.8%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (16 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Мова про дієслова** | ⚪️ | 55 | Skipped |
+| **Intro/Narrative** | ✅ | 55 | Included in Core |
 | **Presentation** | ✅ | 211 | Included in Core |
 | **The Aspect Terms: Вид** | ⚪️ | 300 | Skipped |
 | **The Tense Terms: Час** | ⚪️ | 231 | Skipped |
@@ -56,4 +59,3 @@
 | **Practice** | ⚪️ | 287 | Skipped |
 | **Mini-Dialogues** | ✅ | 188 | Included in Core |
 | **Підсумок** | ✅ | 162 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

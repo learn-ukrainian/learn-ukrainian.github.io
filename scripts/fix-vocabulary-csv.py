@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 
 # Valid POS values
-VALID_POS = {'noun', 'verb', 'adj', 'adv', 'prep', 'conj', 'pron', 'num', 'phrase', 'fixed expr', 'particle', 'interjection'}
+VALID_POS = {'noun', 'verb', 'adj', 'adv', 'prep', 'conj', 'pron', 'num', 'phrase', 'fixed expr', 'particle', 'interjection', 'suffix', 'prefix'}
 
 # Valid gender values
 VALID_GENDER = {'m', 'f', 'n', 'pl', '-', ''}

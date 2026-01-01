@@ -1,20 +1,31 @@
 # Audit Report: 83-interviu-ta-podkasty.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "PPP" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Phase:** B1.8 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1000
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
+  - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): резюме, питання, гість, уточнювати, тези...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 2 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 2085/1000 (>2000 may be too long)
+- **Words:** ✅ 1964/1000
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/15
+- **Vocab:** ✅ 32/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.5% (target 85-100% (B1.7-8 Ukraine))
+- **Pedagogy:** ❌ 1 violations
+- **Immersion:** 🇺🇦 99.7% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ✅ Validated (10/58 confirmed)
 
@@ -37,20 +48,12 @@
 | proverbs | 2 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.6%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Інтерв'ю та подкасти** | ⚪️ | 44 | Skipped |
+| **Intro/Narrative** | ✅ | 44 | Included in Core |
 | **Вступ** | ⚪️ | 146 | Skipped |
 | **Презентація** | ⚪️ | 997 | Skipped |
 | **Практика** | ⚪️ | 410 | Skipped |
 | **Продукція** | ⚪️ | 262 | Skipped |
 | **Підсумок** | ✅ | 105 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |
-| **Ресурси** | ⚪️ | 121 | Skipped |

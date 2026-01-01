@@ -1,0 +1,803 @@
+module: 13-the-locative-where-things-are
+level: A1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/13-the-locative-where-things-are.md
+generated: '2026-01-01T17:33:19.968165'
+scope: fill-in, quiz, true-false
+activity_counts:
+  fill-in: 24
+  quiz: 36
+  true-false: 12
+total_items: 72
+item_count: 72
+sample_percent: null
+items:
+- activity: fill-in
+  title: Complete the Locative
+  sentence_template: Я живу в ___.
+  answer: Києві
+  complete_sentence: Я живу в Києві.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Locative
+  sentence_template: Книга на ___.
+  answer: столі
+  complete_sentence: Книга на столі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Locative
+  sentence_template: Діти в ___.
+  answer: школі
+  complete_sentence: Діти в школі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Locative
+  sentence_template: Ми на ___.
+  answer: роботі
+  complete_sentence: Ми на роботі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Locative
+  sentence_template: Вона у ___.
+  answer: магазині
+  complete_sentence: Вона у магазині.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Locative
+  sentence_template: Концерт на ___.
+  answer: стадіоні
+  complete_sentence: Концерт на стадіоні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Locative
+  sentence_template: Чашка на ___.
+  answer: кухні
+  complete_sentence: Чашка на кухні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Locative
+  sentence_template: Студенти в ___.
+  answer: бібліотеці
+  complete_sentence: Студенти в бібліотеці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Locative
+  sentence_template: Квартира на третьому ___.
+  answer: поверсі
+  complete_sentence: Квартира на третьому поверсі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Locative
+  sentence_template: Ми у ___.
+  answer: Львові
+  complete_sentence: Ми у Львові.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Locative
+  sentence_template: Кіт на ___.
+  answer: балконі
+  complete_sentence: Кіт на балконі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Locative
+  sentence_template: Зустріч у ___.
+  answer: кафе
+  complete_sentence: Зустріч у кафе.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Preposition Choice
+  sentence_template: Я ___ кімнаті.
+  answer: в
+  complete_sentence: Я в кімнаті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Preposition Choice
+  sentence_template: Книга ___ столі.
+  answer: на
+  complete_sentence: Книга на столі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Preposition Choice
+  sentence_template: Ми ___ Львові.
+  answer: у
+  complete_sentence: Ми у Львові.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Preposition Choice
+  sentence_template: Вона ___ роботі.
+  answer: на
+  complete_sentence: Вона на роботі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Preposition Choice
+  sentence_template: Діти ___ школі.
+  answer: у
+  complete_sentence: Діти у школі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Preposition Choice
+  sentence_template: Концерт ___ стадіоні.
+  answer: на
+  complete_sentence: Концерт на стадіоні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Preposition Choice
+  sentence_template: Я живу ___ Україні.
+  answer: в
+  complete_sentence: Я живу в Україні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Preposition Choice
+  sentence_template: Чашка ___ кухні.
+  answer: на
+  complete_sentence: Чашка на кухні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Preposition Choice
+  sentence_template: Ми ___ центрі.
+  answer: у
+  complete_sentence: Ми у центрі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Preposition Choice
+  sentence_template: Вони ___ пляжі.
+  answer: на
+  complete_sentence: Вони на пляжі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Preposition Choice
+  sentence_template: Твій телефон ___ сумці?
+  answer: у
+  complete_sentence: Твій телефон у сумці?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Preposition Choice
+  sentence_template: Зустріч ___ офісі.
+  answer: в
+  complete_sentence: Зустріч в офісі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Is It?
+  question: Де ти? — Я ___ кафе.
+  options:
+  - '{''text'': ''на'', ''correct'': False}'
+  - '{''text'': ''в'', ''correct'': True}'
+  - '{''text'': ''у'', ''correct'': False}'
+  - '{''text'': ''біля'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Is It?
+  question: Де книга? — Вона ___ столі.
+  options:
+  - '{''text'': ''на'', ''correct'': True}'
+  - '{''text'': ''в'', ''correct'': False}'
+  - '{''text'': ''у'', ''correct'': False}'
+  - '{''text'': ''під'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Is It?
+  question: Де ти живеш? — Я живу ___ Києві.
+  options:
+  - '{''text'': ''в'', ''correct'': False}'
+  - '{''text'': ''у'', ''correct'': True}'
+  - '{''text'': ''на'', ''correct'': False}'
+  - '{''text'': ''при'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Is It?
+  question: Де твоя робота? — ___ центрі.
+  options:
+  - '{''text'': ''У'', ''correct'': True}'
+  - '{''text'': ''В'', ''correct'': False}'
+  - '{''text'': ''На'', ''correct'': False}'
+  - '{''text'': ''Від'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Is It?
+  question: Де діти? — Вони ___ школі.
+  options:
+  - '{''text'': ''на'', ''correct'': False}'
+  - '{''text'': ''у'', ''correct'': True}'
+  - '{''text'': ''біля'', ''correct'': False}'
+  - '{''text'': ''коло'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Is It?
+  question: How do you say accurately "I am in the city"?
+  options:
+  - '{''text'': ''Я у місті'', ''correct'': True}'
+  - '{''text'': ''Я на місті'', ''correct'': False}'
+  - '{''text'': ''Я в місті (alternative)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Is It?
+  question: How can you say "She is at the stop"?
+  options:
+  - '{''text'': ''Вона на зупинці'', ''correct'': True}'
+  - '{''text'': ''Вона в зупинці'', ''correct'': False}'
+  - '{''text'': ''Вона зупинка'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Is It?
+  question: Де ваша квартира? — ___ третьому поверсі.
+  options:
+  - '{''text'': ''На'', ''correct'': True}'
+  - '{''text'': ''В'', ''correct'': False}'
+  - '{''text'': ''У'', ''correct'': False}'
+  - '{''text'': ''Під'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Is It?
+  question: Де ти працюєш? — Я працюю ___ офісі.
+  options:
+  - '{''text'': ''на'', ''correct'': False}'
+  - '{''text'': ''в'', ''correct'': True}'
+  - '{''text'': ''під'', ''correct'': False}'
+  - '{''text'': ''біля'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Is It?
+  question: Де твій паспорт? — ___ сумці.
+  options:
+  - '{''text'': ''На'', ''correct'': False}'
+  - '{''text'': ''У'', ''correct'': True}'
+  - '{''text'': ''В'', ''correct'': False}'
+  - '{''text'': ''Під'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Is It?
+  question: Де музей? — ___ центрі міста.
+  options:
+  - '{''text'': ''У'', ''correct'': True}'
+  - '{''text'': ''В'', ''correct'': False}'
+  - '{''text'': ''На'', ''correct'': False}'
+  - '{''text'': ''Від'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Is It?
+  question: Де вони? — Вони ___ пляжі.
+  options:
+  - '{''text'': ''на'', ''correct'': True}'
+  - '{''text'': ''в'', ''correct'': False}'
+  - '{''text'': ''у'', ''correct'': False}'
+  - '{''text'': ''під'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Questions Order
+  question: 'Correct sentence order for: "Where are you?"'
+  options:
+  - '{''text'': ''Де ти'', ''correct'': True}'
+  - '{''text'': ''ти Де'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Questions Order
+  question: 'Correct sentence order for: "I''m in a café."'
+  options:
+  - '{''text'': ''Я в кафе'', ''correct'': True}'
+  - '{''text'': ''в Я кафе'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Questions Order
+  question: 'Correct sentence order for: "The book is on..."'
+  options:
+  - '{''text'': ''Книга на столі'', ''correct'': True}'
+  - '{''text'': ''на Книга столі'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Questions Order
+  question: 'Correct sentence order for: "I live in Kyiv."'
+  options:
+  - '{''text'': ''Я живу у Києві'', ''correct'': True}'
+  - '{''text'': ''живу Я у Києві'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Questions Order
+  question: 'Correct sentence order for: "The children are at school."'
+  options:
+  - '{''text'': ''Діти в школі'', ''correct'': True}'
+  - '{''text'': ''в Діти школі'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Questions Order
+  question: 'Correct sentence order for: "She''s at work."'
+  options:
+  - '{''text'': ''Вона на роботі'', ''correct'': True}'
+  - '{''text'': ''на Вона роботі'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Questions Order
+  question: 'Correct sentence order for: "We''re in a shop..."'
+  options:
+  - '{''text'': ''Ми в магазині у центрі'', ''correct'': True}'
+  - '{''text'': ''в Ми магазині у центрі'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Questions Order
+  question: 'Correct sentence order for: "Where is your passport?"'
+  options:
+  - '{''text'': ''Де твій паспорт'', ''correct'': True}'
+  - '{''text'': ''твій Де паспорт'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Questions Order
+  question: 'Correct sentence order for: "It''s in the bag."'
+  options:
+  - '{''text'': ''Він у сумці'', ''correct'': True}'
+  - '{''text'': ''у Він сумці'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Questions Order
+  question: 'Correct sentence order for: "The concert is at..."'
+  options:
+  - '{''text'': ''Концерт на стадіоні'', ''correct'': True}'
+  - '{''text'': ''на Концерт стадіоні'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Questions Order
+  question: 'Correct sentence order for: "They''re at the beach now."'
+  options:
+  - '{''text'': ''Вони зараз на пляжі'', ''correct'': True}'
+  - '{''text'': ''зараз Вони на пляжі'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Where Questions Order
+  question: 'Correct sentence order for: "The students are in..."'
+  options:
+  - '{''text'': ''Студенти у бібліотеці'', ''correct'': True}'
+  - '{''text'': ''у Студенти бібліотеці'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Translation Practice
+  question: How do you ask "Where is the museum"?
+  options:
+  - '{''text'': ''Де музей?'', ''correct'': True}'
+  - '{''text'': ''Де музея?'', ''correct'': False}'
+  - '{''text'': ''Музеї де?'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Translation Practice
+  question: The book is on the table.
+  options:
+  - '{''text'': ''Книга на столі.'', ''correct'': True}'
+  - '{''text'': ''Книга в столі.'', ''correct'': False}'
+  - '{''text'': ''Книга стіл.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Translation Practice
+  question: Which phrase means "The bank is here"?
+  options:
+  - '{''text'': ''Банк тут.'', ''correct'': True}'
+  - '{''text'': ''Банк там.'', ''correct'': False}'
+  - '{''text'': ''Банку вже тут.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Translation Practice
+  question: She's in the shop.
+  options:
+  - '{''text'': ''Вона на магазині.'', ''correct'': False}'
+  - '{''text'': ''Вона у магазині.'', ''correct'': True}'
+  - '{''text'': ''Вона магазину.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Translation Practice
+  question: The children are at school.
+  options:
+  - '{''text'': ''Діти в школі.'', ''correct'': True}'
+  - '{''text'': ''Діти на школі.'', ''correct'': False}'
+  - '{''text'': ''Діти школа тут.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Translation Practice
+  question: Which phrase means "The stop is there"?
+  options:
+  - '{''text'': ''Зупинка там.'', ''correct'': True}'
+  - '{''text'': ''Зупинка тут.'', ''correct'': False}'
+  - '{''text'': ''Там зупинка.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Translation Practice
+  question: The concert is at the stadium.
+  options:
+  - '{''text'': ''Концерт у стадіоні.'', ''correct'': False}'
+  - '{''text'': ''Концерт на стадіоні.'', ''correct'': True}'
+  - '{''text'': ''Концерт за стадіоном.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Translation Practice
+  question: Your passport is in the bag.
+  options:
+  - '{''text'': ''Твій паспорт на сумці.'', ''correct'': False}'
+  - '{''text'': ''Твій паспорт у сумці.'', ''correct'': True}'
+  - '{''text'': ''Твій паспорт сумку.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Translation Practice
+  question: We're in the center.
+  options:
+  - '{''text'': ''Ми у центрі.'', ''correct'': True}'
+  - '{''text'': ''Ми на центрі.'', ''correct'': False}'
+  - '{''text'': ''Ми в центр.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Translation Practice
+  question: They're at the beach.
+  options:
+  - '{''text'': ''Вони на пляжі.'', ''correct'': True}'
+  - '{''text'': ''Вони в пляжі.'', ''correct'': False}'
+  - '{''text'': ''Вони пляж.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Translation Practice
+  question: The cup is in the kitchen.
+  options:
+  - '{''text'': ''Чашка на кухні.'', ''correct'': True}'
+  - '{''text'': ''Чашка в кухні.'', ''correct'': False}'
+  - '{''text'': ''Чашка кухня.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Translation Practice
+  question: My apartment is on the third floor.
+  options:
+  - '{''text'': ''Моя квартира на третьому поверсі.'', ''correct'': True}'
+  - '{''text'': ''Моя квартира в третьому поверсі.'', ''correct'': False}'
+  - '{''text'': ''Моя квартира третій поверх.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Locative Rules
+  statement: The locative case always requires a preposition (в/у or на).
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Locative Rules
+  statement: Locative case is used to show direction (where you're going).
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Locative Rules
+  statement: '"У" and "в" are the same preposition, just different forms.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Locative Rules
+  statement: All cities use "на" (e.g., на Києві).
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Locative Rules
+  statement: Most feminine nouns ending in -а change to -і in locative.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Locative Rules
+  statement: Masculine nouns always end in -і in locative.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Locative Rules
+  statement: The phrase "в Україні" (not "на Україні") is politically significant.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Locative Rules
+  statement: '"На роботі" is a fixed expression.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Locative Rules
+  statement: You can use locative case without a preposition in questions.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Locative Rules
+  statement: Events (concerts, meetings) use "на".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Locative Rules
+  statement: '"На столі" means "to the table."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Locative Rules
+  statement: Some masculine nouns have -ові ending in locative for people.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

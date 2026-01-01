@@ -1,31 +1,3 @@
----
-module: b2-39
-title: "Регістр — Релігійний та епістолярний стилі"
-subtitle: "Мова духовності та листування"
-version: "1.0"
-phase: "B2"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - register
-  - religious-style
-  - epistolary-style
-  - stylistics
-grammar:
-  - "religious-register"
-  - "epistolary-register"
-  - "letter-writing"
-  - "formal-correspondence"
-objectives:
-  - "Учень може розпізнавати характерні ознаки релігійного стилю"
-  - "Учень може писати формальні та неформальні листи українською"
-  - "Учень може трансформувати текст між формальним та неформальним регістрами"
-vocabulary_count: 25
-vocab_count: 66
----
-
 # Регістр — Релігійний та епістолярний стилі
 
 > Чому це важливо?

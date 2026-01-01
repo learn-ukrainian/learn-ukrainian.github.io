@@ -1,19 +1,28 @@
 # Audit Report: 85-b1-vocabulary-integration.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Phase:** B1.8 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1000
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
+  - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 2050/1000 (>2000 may be too long)
+- **Words:** ✅ 1987/1000
 - **Activities:** ✅ 14/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/15
+- **Vocab:** ✅ 18/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Immersion:** 🇺🇦 98.1% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ✅ Validated (14/68 confirmed)
@@ -37,19 +46,12 @@
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.1%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Інтеграція лексики B1** | ⚪️ | 49 | Skipped |
+| **Intro/Narrative** | ✅ | 49 | Included in Core |
 | **Діагностика** | ✅ | 148 | Included in Core |
 | **Аналіз** | ✅ | 1072 | Included in Core |
 | **Поглиблення** | ⚪️ | 305 | Skipped |
 | **Практика** | ⚪️ | 289 | Skipped |
 | **Підсумок** | ✅ | 124 | Included in Core |
-| **Словник** | ⚪️ | 63 | Skipped |

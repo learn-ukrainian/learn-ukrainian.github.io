@@ -1,0 +1,526 @@
+module: 85-zaporizka-sich
+level: B2
+version: '2.0'
+items:
+  - lemma: актуальніший
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: анархіст
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: артилерія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: байда
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: байду
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: барабан
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: батальйон
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: безуспішно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: боєздатний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: булава
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: бунчука
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: взаємодопомог
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: випередити
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: волелюбне
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вписуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: n
+  - lemma: відобратити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: відтворений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: відтворити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: генерал
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: геральдика
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: гола
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: грітися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: дніпровський
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: дніпрогес
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: добровольчий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: жертвувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: задунайський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: запорожець
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: затопити
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: захисниця
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: зруйнування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: казарма
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: калнишевський
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: клейнод
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: кошем
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: кошовий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: кубань
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: кур
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: курень
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: кіш
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: литавра
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: любитель
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: молитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: мушкет
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: мілководдь
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: наступник
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: обозний
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: одиночка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: окупований
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: олешківський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: орлик
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: орлика
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: осавул
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: освячувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: оточити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: переобрати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: перепон
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: переселитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: пилип
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: плавучість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: побратимство
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: повставати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: покрова
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: покровителька
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: полковник
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: порог
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: прапора
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: пресвятий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: пригноблювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: прикордонний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: провіант
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: проклятий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: протодемократичний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: підкоритися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: підпільненський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: ракетний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: розміститися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розсіятися
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: романтизувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: рєпіна
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: самоорганізовуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: скидати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: скуштувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: славетний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: соловецький
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: стамбул
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: сторожа
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: султан
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: султане
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: сформуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: n
+  - lemma: сірко
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: січчя
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: текелія
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: тематик
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: товариський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: ультимат
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: урядовець
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: утікач
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: хортика
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: чайці
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: чорноморський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: чорт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: чортомлицький
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: шанування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: щоліта
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: яке
+    ipa: ''
+    translation: ''
+    pos: pron
+    gender: n
+  - lemma: євромайдан
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: іллі
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: їжака
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m

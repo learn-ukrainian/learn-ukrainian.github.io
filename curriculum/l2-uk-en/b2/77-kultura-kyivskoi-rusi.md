@@ -1,36 +1,3 @@
----
-module: b2-77
-title: "Культура Київської Русі — Писемність, мистецтво, архітектура"
-subtitle: "Від графіті до мозаїк: культурна спадщина XI століття"
-version: "1.0"
-phase: "B2.3a [Ukrainian History]"
-pedagogy: "CBI"
-duration: 90
-transliteration: "none"
-tags:
-  - history
-  - medieval
-  - kyivan-rus-culture
-  - literacy
-  - mosaics
-  - architecture
-register: "публіцистичний"
-grammar:
-  - "Historical narrative tenses"
-  - "Passive voice in historical writing"
-vocabulary_focus:
-vocab_count: 103
-  - "Historical terminology"
-  - "Cultural and artistic vocabulary"
-  - "Medieval literacy vocabulary"
-objectives:
-  - "Learner can understand and discuss the cultural achievements of Kyivan Rus in Ukrainian"
-  - "Learner can analyze primary sources related to medieval Ukrainian literacy and art"
-  - "Learner can recognize the uniqueness of Kyivan Rus culture and counter appropriation narratives"
-  - "Learner can use era-specific vocabulary in cultural and historical discourse"
-vocabulary_count: 40
----
-
 # Культура Київської Русі — Писемність, мистецтво, архітектура
 
 > 🎯 **Чому це важливо?**

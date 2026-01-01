@@ -1,29 +1,3 @@
----
-module: b1-01
-title: "Як говорити про граматику"
-subtitle: "Learning grammar terminology in Ukrainian"
-version: "1.0"
-phase: "B1.0 Bridge"
-pedagogy: "PPP"
-duration: 75
-transliteration: none
-tags:
-  - grammar
-  - metalanguage
-  - terminology
-  - bridge
-grammar:
-  - "Parts of speech names in Ukrainian"
-  - "Case names in Ukrainian"
-  - "Basic sentence structure terms"
-objectives:
-  - "Learner can identify parts of speech using Ukrainian terminology"
-  - "Learner can name all seven grammatical cases in Ukrainian"
-  - "Learner can describe basic sentence elements using Ukrainian terms"
-vocabulary_count: 25
-vocab_count: 29
----
-
 # Як говорити про граматику
 
 > 🎯 **Why This Module Matters**

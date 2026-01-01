@@ -1,0 +1,79 @@
+module: 10-checkpoint-first-contact
+level: A1
+version: '2.0'
+items:
+  - lemma: американо
+    ipa: /ɑmɛrɪˈkɑnɔ/
+    translation: americano
+    pos: noun
+    gender: n
+  - lemma: бажати
+    ipa: /bɑˈʒɑtɪ/
+    translation: to wish/desire
+    pos: verb
+  - lemma: газета
+    ipa: /ɦɑˈzɛtɑ/
+    translation: newspaper
+    pos: noun
+    gender: f
+  - lemma: година
+    ipa: /ɦɔˈdɪnɑ/
+    translation: hour/o'clock
+    pos: noun
+    gender: f
+  - lemma: домашній
+    ipa: /dɔˈmɑʃnʲij/
+    translation: home/homemade
+    pos: adj
+    gender: m
+  - lemma: жити
+    ipa: /dɔˈmɑʃnʲij/
+    translation: to live
+    pos: verb
+  - lemma: журнал
+    ipa: /ʒʊrˈnɑl/
+    translation: magazine
+    pos: noun
+    gender: m
+  - lemma: завдання
+    ipa: /zɑwˈdɑnʲːɑ/
+    translation: task/homework
+    pos: noun
+    gender: n
+  - lemma: зелений
+    ipa: /zɛˈlɛnɪj/
+    translation: green
+    pos: adj
+    gender: m
+  - lemma: лате
+    ipa: /ˈlɑtɛ/
+    translation: latte
+    pos: noun
+    gender: n
+  - lemma: меню
+    ipa: /mɛˈnʲu/
+    translation: menu
+    pos: noun
+    gender: n
+  - lemma: перевірити
+    ipa: /pɛrɛˈvirɪtɪ/
+    translation: to check
+    pos: verb
+  - lemma: чорний
+    ipa: /ˈt͡ʃɔrnɪj/
+    translation: black
+    pos: adj
+    gender: m
+  - lemma: швидко
+    ipa: /ˈʃvɪdkɔ/
+    translation: fast/quickly
+    pos: adv
+  - lemma: ще
+    ipa: /ʃt͡ʃɛ/
+    translation: more/yet/still
+    pos: adv
+  - lemma: щось
+    ipa: /ʃt͡ʃɔsʲ/
+    translation: something
+    pos: pron
+    gender: n

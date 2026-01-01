@@ -1,5 +1,5 @@
 # Audit Report: 25-checkpoint-motion-verbs.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 800
+**Phase:** B1.2 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 800
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -10,7 +10,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 37/10
+- **Vocab:** ✅ 34/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,16 +37,10 @@
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.6%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (15 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Контрольна точка: Дієслова руху** | ⚪️ | 39 | Skipped |
+| **Intro/Narrative** | ✅ | 39 | Included in Core |
 | **Огляд** | ⚪️ | 104 | Skipped |
 | **Skill 1: Пари дієслів руху (M16)** | ⚪️ | 298 | Skipped |
 | **Skill 2: Прихід і вихід (M17)** | ⚪️ | 277 | Skipped |
@@ -59,4 +53,3 @@
 | **Skill 9: Інтеграція у наративі (M24)** | ⚪️ | 238 | Skipped |
 | **Інтеграційне завдання** | ⚪️ | 354 | Skipped |
 | **Підсумок** | ✅ | 91 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

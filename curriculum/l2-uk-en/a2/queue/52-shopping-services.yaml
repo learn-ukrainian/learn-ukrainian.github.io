@@ -1,0 +1,779 @@
+module: 52-shopping-services
+level: A2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/52-shopping-services.md
+generated: '2025-12-31T23:53:02.092693'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 12
+  fill-in: 12
+  cloze: 1
+  unjumble: 12
+  quiz: 12
+  true-false: 12
+total_items: 61
+item_count: 61
+sample_percent: null
+items:
+- activity: error-correction
+  title: Shop Grammar
+  sentence_with_error: Я йду в магазину.
+  error: магазину
+  answer: магазин
+  sentence_corrected: Я йду в магазин.
+  options:
+  - магазин
+  - магазину
+  - магазина
+  - магазином
+  original_explanation: 'Direction (Accusative): в магазин.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Shop Grammar
+  sentence_with_error: Скільки коштує банани?
+  error: коштує
+  answer: коштують
+  sentence_corrected: Скільки коштують банани?
+  options:
+  - коштують
+  - коштує
+  - коштувати
+  - коштував
+  original_explanation: 'Plural subject (bananas): коштують.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Shop Grammar
+  sentence_with_error: Я плачу картка.
+  error: картка
+  answer: карткою
+  sentence_corrected: Я плачу карткою.
+  options:
+  - карткою
+  - картка
+  - карти
+  - карту
+  original_explanation: 'Instrumental (with what?): карткою.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Shop Grammar
+  sentence_with_error: Дайте чеку.
+  error: чеку
+  answer: чек
+  sentence_corrected: Дайте чек.
+  options:
+  - чек
+  - чеку
+  - чека
+  - чеком
+  original_explanation: 'Accusative request: чек.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Shop Grammar
+  sentence_with_error: У мене немає готівка.
+  error: готівка
+  answer: готівки
+  sentence_corrected: У мене немає готівки.
+  options:
+  - готівки
+  - готівка
+  - готівку
+  - готівкою
+  original_explanation: 'Genitive negation: немає готівки.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Shop Grammar
+  sentence_with_error: Ми були на ринок.
+  error: ринок
+  answer: ринку
+  sentence_corrected: Ми були на ринку.
+  options:
+  - ринку
+  - ринок
+  - ринка
+  - ринком
+  original_explanation: 'Location (Locative): на ринку.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Shop Grammar
+  sentence_with_error: Я купую хліба.
+  error: хліба
+  answer: хліб
+  sentence_corrected: Я купую хліб.
+  options:
+  - хліб
+  - хліба
+  - хлібу
+  - хлібом
+  original_explanation: 'Accusative: купую хліб. (Partitive Genitive ''хліба'' exists
+    but Accusative is standard for ''a loaf'').'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Shop Grammar
+  sentence_with_error: Це дорога магазин.
+  error: дорога
+  answer: дорогий
+  sentence_corrected: Це дорогий магазин.
+  options:
+  - дорогий
+  - дорога
+  - дороге
+  - дорогі
+  original_explanation: 'Masculine noun: дорогий магазин.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Shop Grammar
+  sentence_with_error: Тут велика знижку.
+  error: знижку
+  answer: знижка
+  sentence_corrected: Тут велика знижка.
+  options:
+  - знижка
+  - знижку
+  - знижки
+  - знижкою
+  original_explanation: 'Nominative ("There is"): знижка.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Shop Grammar
+  sentence_with_error: Він працює в аптека.
+  error: аптека
+  answer: аптеці
+  sentence_corrected: Він працює в аптеці.
+  options:
+  - аптеці
+  - аптека
+  - аптеку
+  - аптекою
+  original_explanation: 'Locative: в аптеці.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Shop Grammar
+  sentence_with_error: Я хочу поміряти сукня.
+  error: сукня
+  answer: сукню
+  sentence_corrected: Я хочу поміряти сукню.
+  options:
+  - сукню
+  - сукня
+  - сукні
+  - сукнею
+  original_explanation: 'Accusative feminine: сукню.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Shop Grammar
+  sentence_with_error: Де тут банків?
+  error: банків
+  answer: банк
+  sentence_corrected: Де тут банк?
+  options:
+  - банк
+  - банків
+  - банку
+  - банком
+  original_explanation: 'Nominative subject: банк.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Sentences
+  sentence_template: Я хочу ____ хліб.
+  answer: купити
+  complete_sentence: Я хочу купити_ хліб.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Sentences
+  sentence_template: Скільки це ____?
+  answer: коштує
+  complete_sentence: Скільки це коштує_?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Sentences
+  sentence_template: У мене немає ____. (cash)
+  answer: готівки
+  complete_sentence: У мене немає готівки_. (cash)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Sentences
+  sentence_template: Я плачу ____. (by card)
+  answer: карткою
+  complete_sentence: Я плачу карткою_. (by card)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Sentences
+  sentence_template: Це велика ____. (queue)
+  answer: черга
+  complete_sentence: Це велика черга_. (queue)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Sentences
+  sentence_template: Дайте, будь ласка, ____. (receipt)
+  answer: чек
+  complete_sentence: Дайте, будь ласка, чек_. (receipt)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Sentences
+  sentence_template: Ось ваша ____. (change)
+  answer: решта
+  complete_sentence: Ось ваша решта_. (change)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Sentences
+  sentence_template: Ми йдемо на ____. (market)
+  answer: ринок
+  complete_sentence: Ми йдемо на ринок_. (market)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Sentences
+  sentence_template: Я хочу ____ ці джинси. (try on)
+  answer: поміряти
+  complete_sentence: Я хочу поміряти_ ці джинси. (try on)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Sentences
+  sentence_template: Сьогодні у магазині ____. (discount)
+  answer: знижка
+  complete_sentence: Сьогодні у магазині знижка_. (discount)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Sentences
+  sentence_template: Можна ____ піцу? (order)
+  answer: замовити
+  complete_sentence: Можна замовити_ піцу? (order)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Sentences
+  sentence_template: Банк закритий, він не ____.
+  answer: працює
+  complete_sentence: Банк закритий, він не працює_.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: At the Supermarket
+  passage_template: 'Я беру {кошик|пакет|стіл} і йду в зал.
+
+    Мені треба {купити|продати|знайти} молоко і хліб.
+
+    Я дивлюся на {ціну|вагу|колір}. Молоко коштує 40 гривень.
+
+    Я йду на {касу|вікно|двері}. Там велика {черга|знижка|каса}.
+
+    Касир питає: "Пакет потрібен?". Я кажу: "Ні, дякую".
+
+    Я плачу {карткою|готівкою|чеком}, тому що не люблю {готівку|картку|знижку}.
+
+    Касир дає мені {чек|гроші|товар}. Шопінг закінчено.
+
+    Вдома я мию {овочі|руки|підлогу} і {фрукти|посуд|вікна}.
+
+    Потім я {готую|купую|продаю} смачну {вечерю|воду|чергу}.'
+  blanks:
+  - answer: стіл
+    options:
+    - кошик
+    - пакет
+  - answer: знайти
+    options:
+    - купити
+    - продати
+  - answer: колір
+    options:
+    - ціну
+    - вагу
+  - answer: двері
+    options:
+    - касу
+    - вікно
+  - answer: каса
+    options:
+    - черга
+    - знижка
+  - answer: чеком
+    options:
+    - карткою
+    - готівкою
+  - answer: знижку
+    options:
+    - готівку
+    - картку
+  - answer: товар
+    options:
+    - чек
+    - гроші
+  - answer: підлогу
+    options:
+    - овочі
+    - руки
+  - answer: вікна
+    options:
+    - фрукти
+    - посуд
+  - answer: продаю
+    options:
+    - готую
+    - купую
+  - answer: чергу
+    options:
+    - вечерю
+    - воду
+  blank_count: 12
+  complete_passage: 'Я беру стіл і йду в зал.
+
+    Мені треба знайти молоко і хліб.
+
+    Я дивлюся на колір. Молоко коштує 40 гривень.
+
+    Я йду на двері. Там велика каса.
+
+    Касир питає: "Пакет потрібен?". Я кажу: "Ні, дякую".
+
+    Я плачу чеком, тому що не люблю знижку.
+
+    Касир дає мені товар. Шопінг закінчено.
+
+    Вдома я мию підлогу і вікна.
+
+    Потім я продаю смачну чергу.'
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Shopping Dialogue
+  jumbled_words: []
+  answer: Скільки зараз коштує цей смачний білий хліб
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Shopping Dialogue
+  jumbled_words: []
+  answer: Я сьогодні хочу заплатити за це своєю карткою
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Shopping Dialogue
+  jumbled_words: []
+  answer: Де тут знаходиться найближчий і відкритий банк
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Shopping Dialogue
+  jumbled_words: []
+  answer: У нас сьогодні діє дуже велика святкова знижка
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Shopping Dialogue
+  jumbled_words: []
+  answer: Я йду в новий великий супермаркет за продуктами
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Shopping Dialogue
+  jumbled_words: []
+  answer: Дайте мені будь ласка мій фіскальний чек
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Shopping Dialogue
+  jumbled_words: []
+  answer: Ця червона вечірня сукня дуже гарна але дорога
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Shopping Dialogue
+  jumbled_words: []
+  answer: Ми часто замовляємо смачну їжу з ресторану додому
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Shopping Dialogue
+  jumbled_words: []
+  answer: На старій пошті сьогодні дуже велика і довга черга
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Shopping Dialogue
+  jumbled_words: []
+  answer: Ваша решта — це двадцять п'ять нових гривень
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Shopping Dialogue
+  jumbled_words: []
+  answer: Я більше люблю купувати свіжі овочі на ринку
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Shopping Dialogue
+  jumbled_words: []
+  answer: Мені терміново треба поміряти це зручне взуття
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Facts
+  question: Where would you typically go if you want to bargain for a lower price?
+  options:
+  - '{''text'': ''на ринку'', ''correct'': True}'
+  - '{''text'': ''у супермаркеті'', ''correct'': False}'
+  - '{''text'': ''в аптеці'', ''correct'': False}'
+  - '{''text'': ''у банку'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Facts
+  question: What is the Ukrainian word "готівка" used to describe?
+  options:
+  - '{''text'': ''cash'', ''correct'': True}'
+  - '{''text'': ''card'', ''correct'': False}'
+  - '{''text'': ''discount'', ''correct'': False}'
+  - '{''text'': ''check'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Facts
+  question: What key feature is the "Нова Пошта" service most famous for?
+  options:
+  - '{''text'': ''speed and modern service'', ''correct'': True}'
+  - '{''text'': ''losing letters'', ''correct'': False}'
+  - '{''text'': ''selling food'', ''correct'': False}'
+  - '{''text'': ''slow delivery'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Facts
+  question: Which phrase should you use to ask for the price of an item?
+  options:
+  - '{''text'': ''Скільки коштує?'', ''correct'': True}'
+  - '{''text'': ''Як тебе звати?'', ''correct'': False}'
+  - '{''text'': ''Де магазин?'', ''correct'': False}'
+  - '{''text'': ''Котра година?'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Facts
+  question: What does the word "знижка" mean when you see it in a store?
+  options:
+  - '{''text'': ''discount'', ''correct'': True}'
+  - '{''text'': ''receipt'', ''correct'': False}'
+  - '{''text'': ''bag'', ''correct'': False}'
+  - '{''text'': ''price'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Facts
+  question: Where would you go if you needed to buy medicine or pills?
+  options:
+  - '{''text'': ''в аптеці'', ''correct'': True}'
+  - '{''text'': ''у банку'', ''correct'': False}'
+  - '{''text'': ''на пошті'', ''correct'': False}'
+  - '{''text'': ''у кафе'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Facts
+  question: What document do you receive from the cashier after paying for goods?
+  options:
+  - '{''text'': ''чек'', ''correct'': True}'
+  - '{''text'': ''чергу'', ''correct'': False}'
+  - '{''text'': ''ціну'', ''correct'': False}'
+  - '{''text'': ''пакет'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Facts
+  question: What does the word "черга" mean when you see people waiting?
+  options:
+  - '{''text'': ''queue/line'', ''correct'': True}'
+  - '{''text'': ''cashier'', ''correct'': False}'
+  - '{''text'': ''money'', ''correct'': False}'
+  - '{''text'': ''door'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Facts
+  question: What type of banking institution is Monobank known as in Ukraine?
+  options:
+  - '{''text'': ''neo-bank inside a phone'', ''correct'': True}'
+  - '{''text'': ''state post office'', ''correct'': False}'
+  - '{''text'': ''market stall'', ''correct'': False}'
+  - '{''text'': ''traditional bank branch'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Facts
+  question: What is "решта" that you receive after a cash payment?
+  options:
+  - '{''text'': ''change (money returned)'', ''correct'': True}'
+  - '{''text'': ''price'', ''correct'': False}'
+  - '{''text'': ''card'', ''correct'': False}'
+  - '{''text'': ''bill'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Facts
+  question: What action does the verb "міряти" describe in a clothing store?
+  options:
+  - '{''text'': ''to try on (clothes)'', ''correct'': True}'
+  - '{''text'': ''to buy'', ''correct'': False}'
+  - '{''text'': ''to eat'', ''correct'': False}'
+  - '{''text'': ''to sleep'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Facts
+  question: Is it possible to pay with Apple Pay or Google Pay in Ukraine?
+  options:
+  - '{''text'': ''Yes, almost everywhere'', ''correct'': True}'
+  - '{''text'': ''No, cash only'', ''correct'': False}'
+  - '{''text'': ''Only in banks'', ''correct'': False}'
+  - '{''text'': ''Only in Kyiv'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Ukrainian Services
+  statement: '"Ринок" usually has fresher food than supermarkets.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Ukrainian Services
+  statement: You cannot pay by card in Ukraine.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Ukrainian Services
+  statement: '"Аптека" sells clothes.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Ukrainian Services
+  statement: '"Нова Пошта" is a slow service.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Ukrainian Services
+  statement: You can bargain in a supermarket.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Ukrainian Services
+  statement: Monobank has many physical buildings.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Ukrainian Services
+  statement: '"Решта" is the money you pay.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Ukrainian Services
+  statement: '"Хімчистка" cleans clothes.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Ukrainian Services
+  statement: '"Готівка" is paper money/coins.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Ukrainian Services
+  statement: Waiters bring a "чек".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Ukrainian Services
+  statement: '"Черга" is good.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Ukrainian Services
+  statement: You can order delivery ("замовити").
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

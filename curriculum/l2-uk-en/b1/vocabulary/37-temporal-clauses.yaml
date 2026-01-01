@@ -1,0 +1,73 @@
+module: 37-temporal-clauses
+level: B1
+version: '2.0'
+items:
+- lemma: виїсти
+  ipa: /vɪˈjistɪ/
+  translation: to eat out
+  pos: verb
+- lemma: впізнати
+  ipa: /u̯pizˈnatɪ/
+  translation: to recognize
+  pos: verb
+  gender: m
+- lemma: едва
+  ipa: /jɛdˈva/
+  translation: barely (Rus.)
+  pos: other
+- lemma: замовкнути
+  ipa: /zaˈmɔu̯knutɪ/
+  translation: to fall silent
+  pos: verb
+- lemma: моментальність
+  ipa: /mɔmɛnˈtalʲnʲisʲtʲ/
+  translation: instantaneity
+  pos: noun
+  gender: f
+- lemma: нетерплячість
+  ipa: /nɛtɛrplʲaˈt͡ʃisʲtʲ/
+  translation: impatience
+  pos: noun
+  gender: f
+- lemma: ойно
+  ipa: /ˈɔjnɔ/
+  translation: just now (typo)
+  pos: noun
+  gender: n
+- lemma: остигати
+  ipa: /ɔstɪˈhatɪ/
+  translation: to cool down
+  pos: verb
+- lemma: повечеряти
+  ipa: /pɔvɛˈt͡ʃɛrʲatɪ/
+  translation: to have dinner
+  pos: verb
+- lemma: попередність
+  ipa: /pɔpɛˈrɛdnʲisʲtʲ/
+  translation: precedence
+  pos: noun
+  gender: f
+- lemma: почутися
+  ipa: /pɔˈt͡ʃutɪsʲa/
+  translation: to be heard
+  pos: verb
+  gender: m
+- lemma: пір
+  ipa: /pir/
+  translation: times (gen. pl.)
+  pos: noun
+  gender: f
+- lemma: темніший
+  ipa: /tɛmˈnʲiʃɪj/
+  translation: darker
+  pos: adj
+  gender: n
+- lemma: только
+  ipa: /ˈtolʲkə/
+  translation: only (Rus.)
+  pos: other
+- lemma: хронологічний
+  ipa: /xrɔnɔlɔˈhʲit͡ʃnɪj/
+  translation: chronological
+  pos: adj
+  gender: f

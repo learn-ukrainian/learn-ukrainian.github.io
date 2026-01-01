@@ -469,4 +469,70 @@
     розмовляє *з колегою*(correct) *про роботу*(wrong).'
 - type: translate
   title: English to Ukrainian
-  items: []
+  items:
+  - source: I am going to the cinema with a friend.
+    options:
+    - text: Я йду в кіно з другом.
+      correct: true
+    - text: Я йду в кіно з друг.
+      correct: false
+    - text: Я йду в кіно з другого.
+      correct: false
+    - text: Я йду в кіно з другові.
+      correct: false
+    explanation: Instrumental другом.
+  - source: She is talking with her mother.
+    options:
+    - text: Вона розмовляє з мамою.
+      correct: true
+    - text: Вона розмовляє з мама.
+      correct: false
+    - text: Вона розмовляє з мамі.
+      correct: false
+    - text: Вона розмовляє з маму.
+      correct: false
+    explanation: Instrumental мамою.
+  - source: We live with our parents.
+    options:
+    - text: Ми живемо з батьками.
+      correct: true
+    - text: Ми живемо з батьки.
+      correct: false
+    - text: Ми живемо з батьків.
+      correct: false
+    - text: Ми живемо з батькам.
+      correct: false
+    explanation: Instrumental plural батьками.
+  - source: He is walking with the dog.
+    options:
+    - text: Він гуляє з собакою.
+      correct: true
+    - text: Він гуляє з собака.
+      correct: false
+    - text: Він гуляє з собаку.
+      correct: false
+    - text: Він гуляє з собаці.
+      correct: false
+    explanation: Instrumental собакою.
+  - source: I am drinking coffee with milk.
+    options:
+    - text: Я п'ю каву з молоком.
+      correct: true
+    - text: Я п'ю каву з молоко.
+      correct: false
+    - text: Я п'ю каву з молока.
+      correct: false
+    - text: Я п'ю каву з молоці.
+      correct: false
+    explanation: Instrumental молоком.
+  - source: Are you going with me?
+    options:
+    - text: Ти йдеш зі мною?
+      correct: true
+    - text: Ти йдеш з я?
+      correct: false
+    - text: Ти йдеш з мене?
+      correct: false
+    - text: Ти йдеш з мною?
+      correct: false
+    explanation: Instrumental зі мною.

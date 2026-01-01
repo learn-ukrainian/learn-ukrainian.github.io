@@ -1,29 +1,3 @@
----
-module: b1-68
-title: "Синонімія I: Дієслова мислення"
-subtitle: "Synonymy I: Thinking Verbs"
-version: "1.0"
-phase: "B1.6 Vocabulary Expansion II"
-focus: grammar
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "verb synonymy and semantic distinctions"
-  - "thinking verb collocations"
-tags:
-  - vocabulary
-  - synonymy
-  - verbs
-  - cognition
-objectives:
-  - "Learner can distinguish between думати/гадати/вважати/міркувати"
-  - "Learner can use 20 thinking verbs in appropriate contexts"
-  - "Learner can form natural collocations with thinking verbs"
-vocabulary_count: 20
-vocab_count: 42
----
-
 # Синонімія I: Дієслова мислення
 
 > 🎯 **Чому це важливо?**

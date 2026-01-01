@@ -1,0 +1,268 @@
+module: 59-synonyms-communication
+level: B2
+version: '2.0'
+items:
+  - lemma: аргументований
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: аргументовано
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: базікати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: балакати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: баталії
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: бахмут
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: безперечний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: випитувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: галера
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: дезінформація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: декларувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: диктор
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: докоряти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: допитувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: дорікати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: епіцентр
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: жестикулювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: загальнодоступний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: заявляти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: звуковий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: знизувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: катакомба
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: координат
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: круглий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: люд
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: лідерство
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: маріупол
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: маріуполь
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: медіаграмотний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: невербальний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: невербально
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: обґрунтовувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: переконувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: переосмислення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: порозуміння
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: потай
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: поширювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: правота
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: претензія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: прибуття
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: професійніший
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: підбивати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: підморгувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: рад
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: резюмувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: репостити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розпитувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: руйнуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: рятувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: рішучий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: самоусвідомлення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: сповіщати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: спірний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: тегати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: типологія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: цікатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: чатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: чаєм
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m

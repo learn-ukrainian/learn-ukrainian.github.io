@@ -1,0 +1,778 @@
+module: 07-spatial-prepositions
+level: A2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/07-spatial-prepositions.md
+generated: '2025-12-31T23:17:44.814760'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 12
+  fill-in: 12
+  cloze: 1
+  unjumble: 12
+  quiz: 12
+  true-false: 12
+total_items: 61
+item_count: 61
+sample_percent: null
+items:
+- activity: error-correction
+  title: Fix the Case
+  sentence_with_error: Він йде до школа.
+  error: школа
+  answer: школи
+  sentence_corrected: Він йде до школи.
+  options:
+  - школа
+  - школи
+  - школу
+  - школі
+  original_explanation: '"До" requires genitive case: школа → школи.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Case
+  sentence_with_error: Кава без цукор.
+  error: цукор
+  answer: цукру
+  sentence_corrected: Кава без цукру.
+  options:
+  - цукор
+  - цукру
+  - цукром
+  - цукрі
+  original_explanation: '"Без" requires genitive case: цукор → цукру.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Case
+  sentence_with_error: Лампа над стіл.
+  error: стіл
+  answer: столом
+  sentence_corrected: Лампа над столом.
+  options:
+  - стіл
+  - столом
+  - столі
+  - столу
+  original_explanation: '"Над" requires instrumental case: стіл → столом.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Case
+  sentence_with_error: Подарунок для мама.
+  error: мама
+  answer: мами
+  sentence_corrected: Подарунок для мами.
+  options:
+  - мама
+  - мами
+  - маму
+  - мамі
+  original_explanation: '"Для" requires genitive case: мама → мами.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Case
+  sentence_with_error: Вони говорять про ти.
+  error: ти
+  answer: тебе
+  sentence_corrected: Вони говорять про тебе.
+  options:
+  - ти
+  - тебе
+  - тобі
+  - тобою
+  original_explanation: '"Про" requires accusative case: ти → тебе.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Case
+  sentence_with_error: Він гуляє з друг.
+  error: друг
+  answer: другом
+  sentence_corrected: Він гуляє з другом.
+  options:
+  - друг
+  - другом
+  - друга
+  - другу
+  original_explanation: '"З" (with) requires instrumental case: друг → другом.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Case
+  sentence_with_error: Стояти перед двері.
+  error: двері
+  answer: дверима
+  sentence_corrected: Стояти перед дверима.
+  options:
+  - двері
+  - дверима
+  - дверей
+  - дверях
+  original_explanation: '"Перед" requires instrumental case: двері → дверима.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Case
+  sentence_with_error: Між ми.
+  error: ми
+  answer: нами
+  sentence_corrected: Між нами.
+  options:
+  - ми
+  - нами
+  - нас
+  - нам
+  original_explanation: '"Між" requires instrumental case: ми → нами.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Case
+  sentence_with_error: Лист від мама.
+  error: мама
+  answer: мами
+  sentence_corrected: Лист від мами.
+  options:
+  - мама
+  - мами
+  - маму
+  - мамі
+  original_explanation: '"Від" requires genitive case: мама → мами.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Case
+  sentence_with_error: Йти через парку.
+  error: парку
+  answer: парк
+  sentence_corrected: Йти через парк.
+  options:
+  - парку
+  - парк
+  - парком
+  - парці
+  original_explanation: '"Через" requires accusative case: парку → парк.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Case
+  sentence_with_error: Кіт під стіл.
+  error: стіл
+  answer: столом
+  sentence_corrected: Кіт під столом.
+  options:
+  - стіл
+  - столом
+  - столі
+  - столу
+  original_explanation: 'Location after "під" requires instrumental: стіл → столом.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Case
+  sentence_with_error: Бути за будинок.
+  error: будинок
+  answer: будинком
+  sentence_corrected: Бути за будинком.
+  options:
+  - будинок
+  - будинком
+  - будинку
+  - будинці
+  original_explanation: 'Location after "за" requires instrumental: будинок → будинком.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Choose the Correct Preposition
+  sentence_template: Вона йде ___ школи.
+  answer: до
+  complete_sentence: Вона йде до школи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Choose the Correct Preposition
+  sentence_template: Кава ___ цукру.
+  answer: без
+  complete_sentence: Кава без цукру.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Choose the Correct Preposition
+  sentence_template: Лист ___ мами.
+  answer: від
+  complete_sentence: Лист від мами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Choose the Correct Preposition
+  sentence_template: Подарунок ___ тебе.
+  answer: для
+  complete_sentence: Подарунок для тебе.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Choose the Correct Preposition
+  sentence_template: Він іде ___ роботи.
+  answer: з
+  complete_sentence: Він іде з роботи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Choose the Correct Preposition
+  sentence_template: Лампа ___ столом.
+  answer: над
+  complete_sentence: Лампа над столом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Choose the Correct Preposition
+  sentence_template: Стояти ___ дверима.
+  answer: перед
+  complete_sentence: Стояти перед дверима.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Choose the Correct Preposition
+  sentence_template: Йти ___ парк.
+  answer: через
+  complete_sentence: Йти через парк.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Choose the Correct Preposition
+  sentence_template: Говорити ___ тебе.
+  answer: про
+  complete_sentence: Говорити про тебе.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Choose the Correct Preposition
+  sentence_template: Кіт ___ столом.
+  answer: під
+  complete_sentence: Кіт під столом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Choose the Correct Preposition
+  sentence_template: Гуляти ___ друзями.
+  answer: з
+  complete_sentence: Гуляти з друзями.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Choose the Correct Preposition
+  sentence_template: ___ нами.
+  answer: Між
+  complete_sentence: Між нами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Complete the Story
+  passage_template: 'Марія живе {в/у + Loc|на + Acc|до + Gen} Києві. Вранці вона йде
+    {на + Loc|в + Acc|до + Gen} роботи. Вона працює {над + Instr|під + Instr|перед
+    + Instr} великому офісі. {під + Instr|над + Instr|за + Instr} роботи вона йде
+    {перед + Instr|за + Instr|між + Instr} магазину. Магазин знаходиться {на + Loc|під
+    + Instr|над + Instr} станції метро.
+
+    ---
+
+    Він живе {в/у + Loc|на + Acc|до + Gen} центрі міста. Його квартира {на + Loc|в
+    + Acc|до + Gen} третьому поверсі. Лампа висить {над + Instr|під + Instr|перед
+    + Instr} столом. Кіт спить {під + Instr|над + Instr|за + Instr} ліжком. Стіл стоїть
+    {перед + Instr|за + Instr|між + Instr} вікном. Книги лежать {на + Loc|під + Instr|над
+    + Instr} столі.'
+  blanks:
+  - answer: до + Gen
+    options:
+    - в/у + Loc
+    - на + Acc
+  - answer: до + Gen
+    options:
+    - на + Loc
+    - в + Acc
+  - answer: перед + Instr
+    options:
+    - над + Instr
+    - під + Instr
+  - answer: за + Instr
+    options:
+    - під + Instr
+    - над + Instr
+  - answer: між + Instr
+    options:
+    - перед + Instr
+    - за + Instr
+  - answer: над + Instr
+    options:
+    - на + Loc
+    - під + Instr
+  - answer: до + Gen
+    options:
+    - в/у + Loc
+    - на + Acc
+  - answer: до + Gen
+    options:
+    - на + Loc
+    - в + Acc
+  - answer: перед + Instr
+    options:
+    - над + Instr
+    - під + Instr
+  - answer: за + Instr
+    options:
+    - під + Instr
+    - над + Instr
+  - answer: між + Instr
+    options:
+    - перед + Instr
+    - за + Instr
+  - answer: над + Instr
+    options:
+    - на + Loc
+    - під + Instr
+  blank_count: 12
+  complete_passage: 'Марія живе до + Gen Києві. Вранці вона йде до + Gen роботи. Вона
+    працює перед + Instr великому офісі. за + Instr роботи вона йде між + Instr магазину.
+    Магазин знаходиться над + Instr станції метро.
+
+    ---
+
+    Він живе до + Gen центрі міста. Його квартира до + Gen третьому поверсі. Лампа
+    висить перед + Instr столом. Кіт спить за + Instr ліжком. Стіл стоїть між + Instr
+    вікном. Книги лежать над + Instr столі.'
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Preposition Sentences
+  jumbled_words: []
+  answer: Я йду до школи щодня о восьмій годині
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Preposition Sentences
+  jumbled_words: []
+  answer: Кава без цукру і молока будь ласка мені
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Preposition Sentences
+  jumbled_words: []
+  answer: Лампа над столом світить яскраво увечері у кімнаті
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Preposition Sentences
+  jumbled_words: []
+  answer: Він гуляє з друзями у парку після роботи
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Preposition Sentences
+  jumbled_words: []
+  answer: Подарунок для мами лежить на столі у коробці
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Preposition Sentences
+  jumbled_words: []
+  answer: Ми йдемо через парк і потім до магазину
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Preposition Sentences
+  jumbled_words: []
+  answer: Вони говорять про мене і моїх друзів часто
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Preposition Sentences
+  jumbled_words: []
+  answer: Кіт спить під столом бо там тепло завжди
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Preposition Sentences
+  jumbled_words: []
+  answer: Стояти перед дверима і чекати на друга довго
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Preposition Sentences
+  jumbled_words: []
+  answer: Бути за будинком і не бачити вулиці звідти
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Preposition Sentences
+  jumbled_words: []
+  answer: Лист від брата прийшов вчора з Німеччини поштою
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Preposition Sentences
+  jumbled_words: []
+  answer: Після роботи ми йдемо до кафе на каву
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Motion or Location?
+  question: In the sentence "Я йду в школу," which grammatical case is the word "школу"
+    in?
+  options:
+  - '{''text'': ''Accusative (motion)'', ''correct'': True}'
+  - '{''text'': ''Locative (location)'', ''correct'': False}'
+  - '{''text'': ''Genitive'', ''correct'': False}'
+  - '{''text'': ''Instrumental'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Motion or Location?
+  question: In the sentence "Він у школі," which grammatical case is the word "школі"
+    in?
+  options:
+  - '{''text'': ''Locative (location)'', ''correct'': True}'
+  - '{''text'': ''Accusative (motion)'', ''correct'': False}'
+  - '{''text'': ''Instrumental'', ''correct'': False}'
+  - '{''text'': ''Genitive'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Motion or Location?
+  question: When someone places a book on a table, as in "Вона кладе книгу на стіл,"
+    which case is "стіл"?
+  options:
+  - '{''text'': ''Accusative (motion)'', ''correct'': True}'
+  - '{''text'': ''Locative (location)'', ''correct'': False}'
+  - '{''text'': ''Genitive'', ''correct'': False}'
+  - '{''text'': ''Instrumental'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Motion or Location?
+  question: When a book is already lying on a table, as in "Книга лежить на столі,"
+    which case is "столі"?
+  options:
+  - '{''text'': ''Locative (location)'', ''correct'': True}'
+  - '{''text'': ''Accusative (motion)'', ''correct'': False}'
+  - '{''text'': ''Instrumental'', ''correct'': False}'
+  - '{''text'': ''Genitive'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Motion or Location?
+  question: When a cat runs under a table, as in "Кіт біжить під стіл," which case
+    is "стіл"?
+  options:
+  - '{''text'': ''Accusative (motion)'', ''correct'': True}'
+  - '{''text'': ''Instrumental (location)'', ''correct'': False}'
+  - '{''text'': ''Genitive'', ''correct'': False}'
+  - '{''text'': ''Locative'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Motion or Location?
+  question: When a cat is sleeping under a table already, as in "Кіт спить під столом,"
+    which case is "столом"?
+  options:
+  - '{''text'': ''Instrumental (location)'', ''correct'': True}'
+  - '{''text'': ''Accusative (motion)'', ''correct'': False}'
+  - '{''text'': ''Locative'', ''correct'': False}'
+  - '{''text'': ''Genitive'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Motion or Location?
+  question: When someone goes behind a building for motion, as in "Вони йдуть за будинок,"
+    which case is used?
+  options:
+  - '{''text'': ''Accusative (motion)'', ''correct'': True}'
+  - '{''text'': ''Instrumental (location)'', ''correct'': False}'
+  - '{''text'': ''Genitive'', ''correct'': False}'
+  - '{''text'': ''Locative'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Motion or Location?
+  question: When someone is standing behind a building expressing location, as in
+    "Вони стоять за будинком," which case?
+  options:
+  - '{''text'': ''Instrumental (location)'', ''correct'': True}'
+  - '{''text'': ''Accusative (motion)'', ''correct'': False}'
+  - '{''text'': ''Locative'', ''correct'': False}'
+  - '{''text'': ''Genitive'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Motion or Location?
+  question: In Ukrainian grammar, which preposition always requires the Genitive case
+    regardless of context?
+  options:
+  - '{''text'': ''без'', ''correct'': True}'
+  - '{''text'': ''над'', ''correct'': False}'
+  - '{''text'': ''про'', ''correct'': False}'
+  - '{''text'': ''на'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Motion or Location?
+  question: In Ukrainian grammar, which preposition always requires the Instrumental
+    case regardless of context?
+  options:
+  - '{''text'': ''між'', ''correct'': True}'
+  - '{''text'': ''до'', ''correct'': False}'
+  - '{''text'': ''через'', ''correct'': False}'
+  - '{''text'': ''про'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Motion or Location?
+  question: In Ukrainian, the preposition "про" (about) always requires which grammatical
+    case to follow it?
+  options:
+  - '{''text'': ''Accusative'', ''correct'': True}'
+  - '{''text'': ''Genitive'', ''correct'': False}'
+  - '{''text'': ''Instrumental'', ''correct'': False}'
+  - '{''text'': ''Locative'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Motion or Location?
+  question: In Ukrainian, the preposition "для" (for) always requires which grammatical
+    case to follow it?
+  options:
+  - '{''text'': ''Genitive'', ''correct'': True}'
+  - '{''text'': ''Accusative'', ''correct'': False}'
+  - '{''text'': ''Dative'', ''correct'': False}'
+  - '{''text'': ''Instrumental'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: Prepositions in Ukrainian require specific grammatical cases.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"В школу" and "в школі" mean exactly the same thing.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"Без" always takes the genitive case.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"Над" always takes the instrumental case.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"На" only takes accusative case.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"До" takes genitive case.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"З" always means "from."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: Motion uses accusative with в/у, на, під, за.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"В" and "у" have the same meaning.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"Перед" takes locative case.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"Між" means "between" and takes instrumental.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: Location after "під" uses instrumental, not locative.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -1,0 +1,159 @@
+module: 26-because-and-although
+level: A2
+version: '2.0'
+items:
+- lemma: бензин
+  ipa: benˈzɪn
+  translation: gasoline
+  pos: noun
+  gender: m
+- lemma: блищити
+  ipa: blɪˈʃt͡ʃɪte
+  translation: to shine (imp)
+  pos: verb
+- lemma: важливіший
+  ipa: vɐʒlɪˈvʲiʃɪj
+  translation: more important
+  pos: adj
+  gender: m
+- lemma: впоратися
+  ipa: ˈvpɔrɐtɪsʲɐ
+  translation: to manage/cope (perf)
+  pos: verb
+- lemma: втратити
+  ipa: ˈvtrɑtɪte
+  translation: to lose (perf)
+  pos: verb
+- lemma: вірус
+  ipa: ˈvʲirus
+  translation: virus
+  pos: noun
+  gender: m
+- lemma: гараж
+  ipa: hɐˈrɑʒ
+  translation: garage
+  pos: noun
+  gender: m
+- lemma: живий
+  ipa: ʒɪˈvɪj
+  translation: alive
+  pos: adj
+- lemma: завдяки
+  ipa: zɐwdʲɐˈkɪ
+  translation: thanks to
+  pos: other
+- lemma: зате
+  ipa: zɐˈtɛ
+  translation: but; on the other hand
+  pos: other
+- lemma: захворівати
+  ipa: zɐxvoˈrʲiʋɐte
+  translation: to fall ill (imp)
+  pos: verb
+- lemma: захворіти
+  ipa: zɐxvoˈrʲite
+  translation: to fall ill (perf)
+  pos: verb
+  gender: m
+- lemma: кататися
+  ipa: kɐˈtɑtɪsʲɐ
+  translation: to ride/skate (imp)
+  pos: verb
+- lemma: комфорт
+  ipa: komˈfɔrt
+  translation: comfort
+  pos: noun
+  gender: m
+- lemma: красномовство
+  ipa: krɐsnoˈmɔu̯stvo
+  translation: eloquence
+  pos: noun
+  gender: n
+- lemma: лижа
+  ipa: ˈlɪʒɐ
+  translation: ski
+  pos: noun
+  gender: m
+- lemma: мокрий
+  ipa: ˈmɔkrɪj
+  translation: wet
+  pos: adj
+  gender: m
+- lemma: незважаючи
+  ipa: nezvɐˈʒɑjut͡ʃɪ
+  translation: despite
+  pos: verb
+- lemma: непростий
+  ipa: neproˈstɪj
+  translation: not simple
+  pos: adj
+  gender: n
+- lemma: однак
+  ipa: odˈnɑk
+  translation: however
+  pos: other
+- lemma: одно
+  ipa: odˈnɔ
+  translation: one; same
+  pos: adv
+- lemma: оптиміст
+  ipa: optɪˈmʲist
+  translation: optimist
+  pos: noun
+  gender: m
+- lemma: переконати
+  ipa: perekɔˈnɑte
+  translation: to convince (perf)
+  pos: verb
+- lemma: песиміст
+  ipa: pesɪˈmʲist
+  translation: pessimist
+  pos: noun
+  gender: m
+- lemma: почнати
+  ipa: pot͡ʃˈnɑte
+  translation: to start (typo pot͡ʃɪnɑte?)
+  pos: verb
+- lemma: програти
+  ipa: proˈhrɑte
+  translation: to lose (game) (perf)
+  pos: verb
+- lemma: реаліст
+  ipa: reɐˈlʲist
+  translation: realist
+  pos: noun
+  gender: m
+- lemma: ремонт
+  ipa: reˈmɔnt
+  translation: repair
+  pos: noun
+  gender: m
+- lemma: рости
+  ipa: roˈstɪ
+  translation: to grow (imp)
+  pos: verb
+- lemma: сильно
+  ipa: ˈsɪlʲno
+  translation: strongly
+  pos: adv
+- lemma: скаратися
+  ipa: skɐˈrɑtɪsʲɐ
+  translation: to complain (typo for skɐrʒɪtɪsʲɐ?)
+  pos: verb
+- lemma: скаржитися
+  ipa: ˈskɑrʒɪtɪsʲɐ
+  translation: to complain
+  pos: verb
+- lemma: суперечка
+  ipa: supeˈrɛt͡ʃkɐ
+  translation: dispute; argument
+  pos: noun
+  gender: f
+- lemma: тренуватися
+  ipa: trenuˈʋɑtɪsʲɐ
+  translation: to train (imp)
+  pos: verb
+- lemma: хоча
+  ipa: xoˈt͡ʃɑ
+  translation: although
+  pos: other

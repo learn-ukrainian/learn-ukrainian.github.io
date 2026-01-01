@@ -1,31 +1,3 @@
----
-module: b2-21
-title: "Регістр: науково-технічний стиль"
-subtitle: "Технічна документація та наукові тексти"
-version: "1.0"
-phase: "B2.1c [Register System & Domain Vocab]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - register
-  - technical
-  - scientific
-grammar:
-  - "Passive constructions in technical texts"
-  - "Impersonal constructions (-но/-то)"
-  - "Numbered procedures and instructions"
-  - "Abbreviations and acronyms"
-objectives:
-  - "Learner can recognize and produce technical/scientific register"
-  - "Learner can read and understand technical documentation"
-  - "Learner can write step-by-step instructions"
-  - "Learner can transform casual descriptions into technical style"
-vocabulary_count: 30
-vocab_count: 130
----
-
 # Регістр: науково-технічний стиль
 
 > Чому це важливо?

@@ -372,7 +372,73 @@
     explanation: Yes! Кава без цукру = coffee without sugar.
 - type: translate
   title: English to Ukrainian
-  items: []
+  items:
+  - source: Coffee without sugar.
+    options:
+    - text: Кава без цукру.
+      correct: true
+    - text: Кава без цукор.
+      correct: false
+    - text: Кава без цукром.
+      correct: false
+    - text: Кава без цукрі.
+      correct: false
+    explanation: "'Без' + Genitive 'цукру'."
+  - source: A gift for mom.
+    options:
+    - text: Подарунок для мами.
+      correct: true
+    - text: Подарунок для мама.
+      correct: false
+    - text: Подарунок до мами.
+      correct: false
+    - text: Подарунок від мами.
+      correct: false
+    explanation: "'Для' + Genitive 'мами'."
+  - source: We talked about you.
+    options:
+    - text: Ми говорили про тебе.
+      correct: true
+    - text: Ми говорили про я.
+      correct: false
+    - text: Ми говорили про мені.
+      correct: false
+    - text: Ми говорили про мною.
+      correct: false
+    explanation: "'Про' + Accusative 'тебе'."
+  - source: Because of rain we stayed home.
+    options:
+    - text: Через дощ ми залишилися вдома.
+      correct: true
+    - text: Через дощу ми залишилися вдома.
+      correct: false
+    - text: Від дощу ми залишилися вдома.
+      correct: false
+    - text: Про дощ ми залишилися вдома.
+      correct: false
+    explanation: "'Через' (because of) + Accusative 'дощ'."
+  - source: A letter from mom.
+    options:
+    - text: Лист від мами.
+      correct: true
+    - text: Лист для мами.
+      correct: false
+    - text: Лист до мами.
+      correct: false
+    - text: Лист від мама.
+      correct: false
+    explanation: "'Від' (from person) + Genitive 'мами'."
+  - source: Coffee with milk.
+    options:
+    - text: Кава з молоком.
+      correct: true
+    - text: Кава без молока.
+      correct: false
+    - text: Кава з молока.
+      correct: false
+    - text: Кава з молоку.
+      correct: false
+    explanation: "'З' (with) + Instrumental 'молоком'."
 - type: match-up
   title: Contrast Pairs
   pairs:

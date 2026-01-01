@@ -1,20 +1,21 @@
 # Audit Report: 10-checkpoint-first-contact.md
-**Phase:** A1 | **Level:** A1 | **Pedagogy:** "Review" | **Target:** 500
+**Phase:** A1.1 | **Level:** A1 | **Pedagogy:** Review | **Target:** 500
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1210/500
+- **Words:** ✅ 1217/500
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 18/1
+- **Vocab:** ✅ 16/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 34.9% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 28.5% (checkpoint - no gate)
+- **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -25,25 +26,12 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Checkpoint - First Contact** | ➖ | 105 | Excluded Type |
+| **Intro/Narrative** | ✅ | 105 | Included in Core |
 | **Skill 1: Reading Cyrillic** | ✅ | 96 | Included in Core |
-| **Skill 2: Identifying Gender** | ⚪️ | 164 | Skipped |
-| **Skill 3: Conjugating Verbs** | ⚪️ | 227 | Skipped |
-| **Skill 4: Asking Questions** | ⚪️ | 184 | Skipped |
+| **Skill 2: Identifying Gender** | ⚪️ | 165 | Skipped |
+| **Skill 3: Conjugating Verbs** | ⚪️ | 228 | Skipped |
+| **Skill 4: Asking Questions** | ⚪️ | 185 | Skipped |
 | **Skill 5: Ordering Food** | ⚪️ | 191 | Skipped |
-| **Integration Challenge** | ⚪️ | 122 | Skipped |
+| **Integration Challenge** | ⚪️ | 123 | Skipped |
 | **Summary** | ✅ | 22 | Included in Core |
-| **Need More Practice?** | ⚪️ | 99 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **quiz: Cyrillic Reading** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Gender Recognition** | 🎮 | 8 | Activity (8 items, min 8) |
-| **fill-in: Demonstrative Agreement** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Verb Conjugation Class I** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Verb Conjugation Class II** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Verb Classes** | 🎮 | 12 | Activity (12 items, min 12) |
-| **quiz: Question Words** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: Grammar Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Food and Drinks** | 🎮 | 8 | Activity (8 items, min 8) |
-| **anagram: Cyrillic Practice** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Negation Practice** | 🎮 | 12 | Activity (12 items, min 8) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Need More Practice?** | ⚪️ | 102 | Skipped |

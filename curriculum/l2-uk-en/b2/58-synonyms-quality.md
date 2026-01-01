@@ -1,28 +1,3 @@
----
-module: b2-58
-title: "Синоніми: Якість та Оцінка"
-subtitle: "Synonyms - Quality and Evaluation"
-version: "1.0"
-phase: "B2.2 [Phraseology & Synonymy]"
-pedagogy: "CBI"
-duration: 90
-transliteration: none
-immersion: 100
-tags:
-  - vocabulary
-  - synonyms
-  - quality
-grammar:
-  - "Nuances in evaluative adjectives"
-  - "Register and subjective judgment"
-objectives:
-  - "Учень може розрізняти відтінки значень синонімів на позначення якості"
-  - "Учень вміє вживати оцінну лексику відповідно до контексту та регістру"
-vocabulary_count: 35
-register: "публіцистичний"
-vocab_count: 47
----
-
 # Синоніми: Якість та Оцінка
 
 > 🎯 **Чому це важливо?**

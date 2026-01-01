@@ -1,0 +1,103 @@
+module: 25-my-daily-routine
+level: A1
+version: '2.0'
+items:
+  - lemma: бігати
+    ipa: /ˈbiɦɑtɪ/
+    translation: to run
+    pos: verb
+  - lemma: ввечері
+    ipa: /vˈvɛt͡ʃɛri/
+    translation: in the evening
+    pos: adv
+  - lemma: виходити
+    ipa: /vɪˈxɔdɪtɪ/
+    translation: to go out
+    pos: verb
+  - lemma: вмиватися
+    ipa: /vmɪˈvɑtɪsʲɑ/
+    translation: to wash oneself
+    pos: verb
+  - lemma: вставати
+    ipa: /fstɑˈvɑtɪ/
+    translation: to get up
+    pos: verb
+  - lemma: голитися
+    ipa: /ɦɔˈlɪtɪsʲɑ/
+    translation: to shave
+    pos: verb
+  - lemma: десята
+    ipa: /dɛˈsʲɑtɑ/
+    translation: tenth (hour)
+    pos: adj
+    gender: f
+  - lemma: засинати
+    ipa: /zɑsɪˈnɑtɪ/
+    translation: to fall asleep
+    pos: verb
+  - lemma: зуб
+    ipa: /zub/
+    translation: tooth
+    pos: noun
+    gender: m
+  - lemma: лягати
+    ipa: /lʲɑˈɦɑtɪ/
+    translation: to lie down
+    pos: verb
+  - lemma: нарешті
+    ipa: /nɑˈrɛʃti/
+    translation: finally
+    pos: adv
+  - lemma: одягатися
+    ipa: /ɔdʲɑˈɦɑtɪsʲɑ/
+    translation: to dress oneself
+    pos: verb
+  - lemma: опівдні
+    ipa: /ɔˈpivdni/
+    translation: at noon
+    pos: adv
+  - lemma: повертатися
+    ipa: /pɔvɛrˈtɑtɪsʲɑ/
+    translation: to return
+    pos: verb
+  - lemma: прокидатися
+    ipa: /prɔkɪˈdɑtɪsʲɑ/
+    translation: to wake up
+    pos: verb
+  - lemma: розпорядок
+    ipa: /rɔzpɔˈrʲɑdɔk/
+    translation: schedule
+    pos: noun
+    gender: m
+  - lemma: спочатку
+    ipa: /spɔˈt͡ʃɑtku/
+    translation: at first
+    pos: adv
+  - lemma: сьома
+    ipa: /ˈsʲɔmɑ/
+    translation: seventh (hour)
+    pos: adj
+    gender: f
+  - lemma: телевізор
+    ipa: /tɛlɛˈvizɔr/
+    translation: television
+    pos: noun
+    gender: m
+  - lemma: типовий
+    ipa: /tɪˈpɔvɪj/
+    translation: typical
+    pos: adj
+    gender: m
+  - lemma: увечері
+    ipa: /uˈvɛt͡ʃɛri/
+    translation: in the evening
+    pos: adv
+  - lemma: чистити
+    ipa: /ˈt͡ʃɪstɪtɪ/
+    translation: to clean
+    pos: verb
+  - lemma: шоста
+    ipa: /ˈʃɔstɑ/
+    translation: sixth (hour)
+    pos: adj
+    gender: f

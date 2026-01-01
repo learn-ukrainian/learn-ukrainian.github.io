@@ -1,0 +1,270 @@
+module: 46-nature-and-weather
+level: A2
+version: '2.0'
+items:
+- lemma: бутерброда
+  ipa: buterˈbrɔdɐ
+  translation: sandwich (gen)
+  pos: noun
+  gender: m
+- lemma: вечорія
+  ipa: veˈt͡ʃɔrʲijɐ
+  translation: evening (diminutive/typo?)
+  pos: noun
+  gender: f
+- lemma: вислова
+  ipa: ˈvɪsloʋɐ
+  translation: expression (gen?)
+  pos: noun
+  gender: m
+- lemma: глянути
+  ipa: ˈhlʲɑnute
+  translation: to glance (perf)
+  pos: verb
+- lemma: голубий
+  ipa: holuˈbɪj
+  translation: light blue
+  pos: adj
+  gender: n
+- lemma: градус
+  ipa: ˈhrɑdus
+  translation: degree
+  pos: noun
+  gender: m
+- lemma: гріз
+  ipa: hrʲiz
+  translation: threat/storm (gen pl гроза?)
+  pos: noun
+  gender: f
+- lemma: долина
+  ipa: doˈlɪnɐ
+  translation: valley
+  pos: noun
+  gender: f
+- lemma: досягати
+  ipa: dosʲɐˈhɑte
+  translation: to reach (imp)
+  pos: verb
+- lemma: дувати
+  ipa: duˈʋɑte
+  translation: blow (typo?)
+  pos: verb
+- lemma: дути
+  ipa: ˈdute
+  translation: to blow (imp)
+  pos: verb
+- lemma: запитувати
+  ipa: zɐˈpɪtuʋɐte
+  translation: to ask (imp)
+  pos: verb
+- lemma: захоплюватися
+  ipa: zɐˈxɔplʲuʋɐtɪsʲɐ
+  translation: to admire/be fond of
+  pos: verb
+- lemma: йтися
+  ipa: jˈtɪsʲɐ
+  translation: to be about (impersonal)
+  pos: verb
+- lemma: канікула
+  ipa: kɐˈnʲikulɐ
+  translation: vacation (sg typo)
+  pos: noun
+  gender: m
+- lemma: катаватися
+  ipa: kɐtɐˈʋɑtɪsʲɐ
+  translation: to ride (typo кататися)
+  pos: verb
+- lemma: квітнити
+  ipa: kvʲitˈnɪte
+  translation: to bloom (typo квітнути)
+  pos: verb
+- lemma: ковзан
+  ipa: kou̯ˈzɑn
+  translation: skate (noun)
+  pos: noun
+  gender: m
+- lemma: краса
+  ipa: krɐˈsɑ
+  translation: beauty
+  pos: noun
+  gender: f
+- lemma: ландшафт
+  ipa: lɐndˈʃɑft
+  translation: landscape
+  pos: noun
+  gender: m
+- lemma: лелека
+  ipa: leˈlɛkɐ
+  translation: stork
+  pos: noun
+  gender: f
+- lemma: листя
+  ipa: lysʲtʲɐ
+  translation: leaves
+  pos: noun
+  gender: n
+- lemma: ловити
+  ipa: loˈvɪte
+  translation: to catch (imp)
+  pos: verb
+- lemma: марійка
+  ipa: mɐˈrʲijkɐ
+  translation: Mariika
+  pos: propn
+  gender: f
+- lemma: мороз
+  ipa: moˈrɔz
+  translation: frost
+  pos: noun
+  gender: m
+- lemma: надвір
+  ipa: nɐdˈvʲir
+  translation: outside
+  pos: adv
+- lemma: обговорювати
+  ipa: obhoˈvɔrʲuʋɐte
+  translation: to discuss (imp)
+  pos: verb
+- lemma: одягнути
+  ipa: odʲɐhˈnute
+  translation: to put on (perf)
+  pos: verb
+- lemma: олесь
+  ipa: oˈlɛsʲ
+  translation: Oles
+  pos: propn
+  gender: m
+- lemma: оновлення
+  ipa: oˈnɔu̯lenʲːɐ
+  translation: update
+  pos: noun
+  gender: n
+- lemma: опади
+  ipa: ˈɔpɐdɪ
+  translation: precipitation
+  pos: noun
+  gender: pl
+- lemma: оранжевий
+  ipa: oˈrɑnʒeʋɪj
+  translation: orange
+  pos: adj
+  gender: m
+- lemma: падати
+  ipa: ˈpɑdɐte
+  translation: to fall (imp)
+  pos: verb
+- lemma: парасолька
+  ipa: pɐrɐˈsɔlʲkɐ
+  translation: umbrella
+  pos: noun
+  gender: f
+- lemma: перебування
+  ipa: perebuˈʋɑnʲːɐ
+  translation: stay/residence
+  pos: noun
+  gender: n
+- lemma: петренко
+  ipa: peˈtrɛnko
+  translation: Petrenko
+  pos: propn
+  gender: m
+- lemma: прекрасний
+  ipa: preˈkrɑsnɪj
+  translation: beautiful/wonderful
+  pos: adj
+  gender: f
+- lemma: примітка
+  ipa: prɪˈmʲitkɐ
+  translation: note
+  pos: noun
+  gender: f
+- lemma: приїжджати
+  ipa: prɪjiʒˈdʒɑte
+  translation: to arrive (imp)
+  pos: verb
+- lemma: пробудження
+  ipa: proˈbudʒenʲːɐ
+  translation: awakening
+  pos: noun
+  gender: n
+- lemma: прозорий
+  ipa: proˈzɔrɪj
+  translation: transparent
+  pos: adj
+  gender: f
+- lemma: пропонувати
+  ipa: proponuˈʋɑte
+  translation: to offer/suggest
+  pos: verb
+- lemma: прохолодно
+  ipa: proxoˈlɔdno
+  translation: cool (adv)
+  pos: adv
+- lemma: рожевий
+  ipa: roˈʒɛʋɪj
+  translation: pink
+  pos: adj
+  gender: m
+- lemma: розташування
+  ipa: roztɐʃuˈʋɑnʲːɐ
+  translation: location
+  pos: noun
+  gender: n
+- lemma: ромашка
+  ipa: roˈmɑʃkɐ
+  translation: chamomile
+  pos: noun
+  gender: f
+- lemma: ріка
+  ipa: rʲiˈkɑ
+  translation: river
+  pos: noun
+  gender: f
+- lemma: сезон
+  ipa: seˈzɔn
+  translation: season
+  pos: noun
+  gender: m
+- lemma: синичка
+  ipa: sɪˈnɪt͡ʃkɐ
+  translation: titmouse
+  pos: noun
+  gender: f
+- lemma: сніговик
+  ipa: snihoˈvɪk
+  translation: snowman
+  pos: noun
+  gender: m
+- lemma: сірий
+  ipa: ˈsʲirɪj
+  translation: grey
+  pos: adj
+  gender: n
+- lemma: танути
+  ipa: ˈtɑnute
+  translation: to melt (imp)
+  pos: verb
+- lemma: траві
+  ipa: trɐˈvʲi
+  translation: grass (loc)
+  pos: noun
+  gender: f
+- lemma: туман
+  ipa: tuˈmɑn
+  translation: fog
+  pos: noun
+  gender: m
+- lemma: узбережжя
+  ipa: uzbeˈrɛʒːɐ
+  translation: coast
+  pos: noun
+  gender: m
+- lemma: хмарний
+  ipa: ˈxmɑrnɪj
+  translation: cloudy
+  pos: adj
+  gender: n
+- lemma: яскраво
+  ipa: jɐˈskrɑʋo
+  translation: brightly
+  pos: adv

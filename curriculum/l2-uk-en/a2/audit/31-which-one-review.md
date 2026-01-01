@@ -1,15 +1,11 @@
 # Audit Report: 31-which-one.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "Expressive" | **Target:** 1000
-**Overall Status:** ✅ PASS
-
-## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: рід, множина
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+**Overall Status:** ❌ FAIL
 
 ## Recommendation
-**📝 UPDATE** (severity 10/100)
+**📝 UPDATE** (severity 5/100)
 
-- 1 pedagogical violations (minor)
+- Immersion 6% off target (minor)
 
 ## Gates
 - **Words:** ✅ 1288/1000
@@ -23,13 +19,8 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 54.0% (target 40-55% (A2.2))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
+- **Immersion:** ❌ 34.4% LOW (target 40-55% (A2.2))
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -47,16 +38,4 @@
 | **Dialogue: The Lost Item (Revamped)** | ✅ | 155 | Included in Core |
 | **Monologue: My Ideal City** | ⚪️ | 110 | Skipped |
 | **Summary** | ✅ | 55 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Noun-Pronoun Link** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Choose the Form** | 🎮 | 8 | Activity (8 items, min 8) |
-| **quiz: Detective Works** | 🎮 | 8 | Activity (8 items, min 8) |
-| **unjumble: Building Bridges** | 🎮 | 6 | Activity (6 items, min 6) |
-| **group-sort: Which Case?** | 🎮 | 12 | Activity (12 items, min 12) |
-| **true-false: Grammar Truths** | 🎮 | 8 | Activity (8 items, min 8) |
-| **cloze: My Dream House** | 🎮 | 12 | Activity (12 items, min 12) |
-| **dialogue-reorder: The Stranger** | 🎮 | 8 | Activity (8 items, min 4) |
-| **mark-the-words: Find Relative Clauses** | 🎮 | 8 | Activity (8 items, min 6) |
-| **error-correction: Fix the Link** | 🎮 | 6 | Activity (6 items, min 6) |
-| **translate: English to Ukrainian** | 🎮 | 6 | Activity (6 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

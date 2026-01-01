@@ -462,4 +462,70 @@
     Він живе *з братом*(wrong).'
 - type: translate
   title: English to Ukrainian
-  items: []
+  items:
+  - source: We go to the airport by taxi.
+    options:
+    - text: Ми їдемо в аеропорт таксі.
+      correct: true
+    - text: Ми їдемо в аеропорт з таксі.
+      correct: false
+    - text: Ми їдемо в аеропорт таксою.
+      correct: false
+    - text: Ми їдемо в аеропорт таксу.
+      correct: false
+    explanation: Taxi is indeclinable in Ukrainian. Bare instrumental is used for transport.
+  - source: She writes a letter with a pen.
+    options:
+    - text: Вона пише листа ручкою.
+      correct: true
+    - text: Вона пише листа ручка.
+      correct: false
+    - text: Вона пише листа з ручкою.
+      correct: false
+    - text: Вона пише листа ручку.
+      correct: false
+    explanation: Bare instrumental ручкою for tools.
+  - source: He cuts bread with a knife.
+    options:
+    - text: Він ріже хліб ножем.
+      correct: true
+    - text: Він ріже хліб з ножем.
+      correct: false
+    - text: Він ріже хліб ніж.
+      correct: false
+    - text: Він ріже хліб нож.
+      correct: false
+    explanation: Bare instrumental ножем.
+  - source: We eat soup with a spoon.
+    options:
+    - text: Ми їмо суп ложкою.
+      correct: true
+    - text: Ми їмо суп ложка.
+      correct: false
+    - text: Ми їмо суп з ложкою.
+      correct: false
+    - text: Ми їмо суп ложкам.
+      correct: false
+    explanation: Bare instrumental ложкою.
+  - source: She is flying to Paris by plane.
+    options:
+    - text: Вона летить до Парижа літаком.
+      correct: true
+    - text: Вона летить до Парижа з літаком.
+      correct: false
+    - text: Вона летить до Парижа літак.
+      correct: false
+    - text: Вона летить до Парижа на літаку.
+      correct: false
+    explanation: Bare instrumental літаком for mode of transport.
+  - source: He speaks in a quiet voice.
+    options:
+    - text: Він говорить тихим голосом.
+      correct: true
+    - text: Він говорить з тихим голосом.
+      correct: false
+    - text: Він говорить тихий голос.
+      correct: false
+    - text: Він говорить тихого голосу.
+      correct: false
+    explanation: Bare instrumental тихим голосом for manner.

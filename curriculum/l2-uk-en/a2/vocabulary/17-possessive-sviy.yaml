@@ -1,0 +1,103 @@
+module: 17-possessive-sviy
+level: A2
+version: '2.0'
+items:
+- lemma: бізнес
+  ipa: ˈbʲiznɛs
+  translation: business
+  pos: noun
+  gender: m
+- lemma: власне
+  ipa: ˈvlɑsne
+  translation: actually; strictly speaking
+  pos: adj
+  gender: n
+- lemma: власний
+  ipa: ˈvlɑsnɪj
+  translation: own; personal
+  pos: adj
+  gender: m
+- lemma: гостинність
+  ipa: hosˈtɪnʲːisʲtʲ
+  translation: hospitality
+  pos: noun
+  gender: f
+- lemma: житло
+  ipa: ʒɪtˈlɔ
+  translation: housing; accommodation
+  pos: noun
+  gender: n
+- lemma: кивнути
+  ipa: kɪvˈnute
+  translation: to nod (perf)
+  pos: verb
+  gender: m
+- lemma: костюм
+  ipa: koˈsʲtʲum
+  translation: suit
+  pos: noun
+  gender: m
+- lemma: країна
+  ipa: krɐˈjinɐ
+  translation: country
+  pos: noun
+  gender: f
+- lemma: менеджер
+  ipa: ˈmɛnedʒer
+  translation: manager
+  pos: noun
+  gender: m
+- lemma: надіти
+  ipa: nɐˈdʲite
+  translation: to put on (perf)
+  pos: verb
+  gender: m
+- lemma: обійняти
+  ipa: obʲijˈnʲɑte
+  translation: to hug (perf)
+  pos: verb
+  gender: m
+- lemma: папк
+  ipa: ˈpɑpkɐ
+  translation: folder (typo for папка)
+  pos: noun
+  gender: f
+- lemma: повернутися
+  ipa: poʋerˈnutɪsʲɐ
+  translation: to return (perf)
+  pos: verb
+  gender: m
+- lemma: поцілувати
+  ipa: pot͡sʲiluˈʋɑte
+  translation: to kiss (perf)
+  pos: verb
+  gender: f
+- lemma: право
+  ipa: ˈprɑʋo
+  translation: right; law
+  pos: noun
+  gender: n
+- lemma: рада
+  ipa: ˈrɑdɐ
+  translation: council; advice
+  pos: noun
+  gender: f
+- lemma: серця
+  ipa: ˈsɛrt͡sʲɐ
+  translation: hearts (pl) / heart (gen)
+  pos: noun
+  gender: m
+- lemma: сплякти
+  ipa: speˈkɫɪ
+  translation: baked (typo for спекли?)
+  pos: verb
+- lemma: чужий
+  ipa: t͡ʃuˈʒɪj
+  translation: foreign; alien; someone else's
+  pos: adj
+  gender: m
+- lemma: інтерес
+  ipa: inˈtɛrɛs
+  translation: interest
+  pos: noun
+  gender: m

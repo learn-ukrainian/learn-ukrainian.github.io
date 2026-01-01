@@ -1,28 +1,3 @@
----
-module: b1-40
-title: "Непрямі питання та накази"
-subtitle: "Reported Questions & Commands"
-version: "1.0"
-phase: "B1.3b Complex Sentences"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - reported-speech
-  - indirect-questions
-  - commands
-grammar:
-  - "Reported questions with чи, що, хто, де, коли"
-  - "Reported commands with щоб"
-objectives:
-  - "Learner can report questions using indirect speech"
-  - "Learner can report commands and requests using щоб"
-  - "Learner can choose appropriate structures for different speech acts"
-vocabulary_count: 30
-vocab_count: 36
----
-
 > [!motivation]
 > «Він запитав, чи я прийду.» «Вона попросила, щоб я допоміг.» Як передавати чужі питання та накази? Це завершальний етап опанування непрямої мови. Після цього важливого модуля ви зможете переказувати будь-яку розмову — твердження, питання, прохання, накази! Ця граматична навичка критично важлива для журналістики, ділових переговорів, написання звітів та повсякденного спілкування. Вмійте точно передавати не лише що сказали, а й що запитали та попросили!
 

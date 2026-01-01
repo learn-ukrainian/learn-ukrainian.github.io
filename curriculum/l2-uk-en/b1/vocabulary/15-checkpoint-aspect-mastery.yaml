@@ -1,0 +1,64 @@
+module: 15-checkpoint-aspect-mastery
+level: B1
+version: '2.0'
+items:
+- lemma: впізнавати
+  ipa: /vpʲiznaˈvatɪ/
+  translation: to recognize
+  pos: verb
+- lemma: дивити
+  ipa: /dɪˈvɪtɪ/
+  translation: to look (typo)
+  pos: verb
+- lemma: доконаність
+  ipa: /dɔˈkɔnanʲisʲtʲ/
+  translation: perfectiveness
+  pos: noun
+  gender: f
+- lemma: липовий
+  ipa: /ˈlɪpɔvɪj/
+  translation: fake (slang)
+  pos: adj
+  gender: m
+- lemma: множення
+  ipa: /ˈmnɔʒɛnʲːa/
+  translation: multiplication
+  pos: noun
+  gender: n
+- lemma: недок
+  ipa: /nɛˈdɔk/
+  translation: Imperf.
+  pos: noun
+  gender: m
+- lemma: паляниця
+  ipa: /palʲaˈnɪt͡sʲa/
+  translation: palianytsia
+  pos: noun
+  gender: f
+- lemma: похогти
+  ipa: /pɔxɔhˈtɪ/
+  translation: help (typo)
+  pos: verb
+- lemma: раф
+  ipa: /raf/
+  translation: raf (coffee)
+  pos: noun
+  gender: m
+- lemma: сдача
+  ipa: /ˈzdat͡ʃa/
+  translation: change (money) (Surzhyk)
+  pos: noun
+  gender: f
+- lemma: супплетивний
+  ipa: /suplɛˈtɪvnɪj/
+  translation: suppletive
+  pos: adj
+  gender: f
+- lemma: тимати
+  ipa: /tɪˈmatɪ/
+  translation: hold (typo)
+  pos: verb
+- lemma: чіпити
+  ipa: /t͡ʃiˈpɪtɪ/
+  translation: to hook (typo?)
+  pos: verb

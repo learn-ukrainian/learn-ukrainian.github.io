@@ -1,0 +1,45 @@
+module: 38-complex-sentence-integration
+level: B1
+version: '2.0'
+items:
+- lemma: дворівневий
+  ipa: /dvɔriu̯ˈnɛvɪj/
+  translation: two-level
+  pos: adj
+- lemma: залагодити
+  ipa: /zaˈlahɔdɪtɪ/
+  translation: to settle
+  pos: verb
+- lemma: заходь
+  ipa: /zaˈxɔdʲ/
+  translation: come in
+  pos: noun
+  gender: m
+- lemma: зрозумілість
+  ipa: /zrɔzuˈmʲilʲisʲtʲ/
+  translation: clarity
+  pos: noun
+  gender: f
+- lemma: лектор
+  ipa: /ˈlɛktɔr/
+  translation: lecturer
+  pos: noun
+  gender: m
+- lemma: пече
+  ipa: /pɛˈt͡ʃɛ/
+  translation: bakes
+  pos: noun
+  gender: f
+- lemma: причинове
+  ipa: /prɪt͡ʃɪˈnɔvɛ/
+  translation: causal
+  pos: adv
+- lemma: трирівневий
+  ipa: /trɪriu̯ˈnɛvɪj/
+  translation: three-level
+  pos: adj
+- lemma: інна
+  ipa: /ˈinːa/
+  translation: Inna
+  pos: propn
+  gender: f

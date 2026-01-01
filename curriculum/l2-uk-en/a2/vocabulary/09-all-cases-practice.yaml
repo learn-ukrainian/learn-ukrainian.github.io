@@ -1,0 +1,236 @@
+module: 09-all-cases-practice
+level: A2
+version: '2.0'
+items:
+  - lemma: адресат
+    ipa: ɐdreˈsɑt
+    translation: addressee
+    pos: noun
+    gender: m
+  - lemma: базовий
+    ipa: ˈbɑzoʋei̯
+    translation: basic
+    pos: adj
+    gender: n
+  - lemma: взнначити
+    ipa: ˈvznːɐt͡ʃɪte
+    translation: to determine (typo? визначити)
+    pos: verb
+  - lemma: виділений
+    ipa: ˈvɪdile nei̯
+    translation: highlighted; selected
+    pos: adj
+  - lemma: визначити
+    ipa: ˈvɪznɐt͡ʃɪte
+    translation: to determine; to define
+    pos: verb
+  - lemma: виконати
+    ipa: ˈvɪkonɐte
+    translation: to execute; to perform
+    pos: verb
+  - lemma: виконувати
+    ipa: vɪˈkɔnuʋɐte
+    translation: to perform; to execute
+    pos: verb
+  - lemma: вміння
+    ipa: ˈvminʲːɐ
+    translation: skill; ability
+    pos: noun
+    gender: n
+  - lemma: володіння
+    ipa: voloˈdinʲːɐ
+    translation: possession; mastery
+    pos: noun
+    gender: n
+  - lemma: втрата
+    ipa: ˈvtrɑtɐ
+    translation: loss
+    pos: noun
+    gender: f
+  - lemma: відіграти
+    ipa: vidiˈɦrɑte
+    translation: to play (a role)
+    pos: verb
+  - lemma: вікторе
+    ipa: ˈviktore
+    translation: Viktor (vocative)
+    pos: propn
+    gender: m
+  - lemma: довідник
+    ipa: doˈvidnɪk
+    translation: guide; handbook
+    pos: noun
+    gender: m
+  - lemma: залежно
+    ipa: zɐˈlɛʒno
+    translation: depending
+    pos: adv
+  - lemma: звертання
+    ipa: zʋerˈtɑnʲːɐ
+    translation: address; appeal
+    pos: noun
+    gender: n
+  - lemma: звертатися
+    ipa: zʋerˈtɑtɪsʲɐ
+    translation: to address; to turn to
+    pos: verb
+  - lemma: згадати
+    ipa: zɦɐˈdɑte
+    translation: to recall; to mention
+    pos: verb
+  - lemma: комплексний
+    ipa: ˈkɔmpleksnei̯
+    translation: complex; comprehensive
+    pos: adj
+    gender: f
+  - lemma: критичний
+    ipa: krɪˈtɪt͡ʃnei̯
+    translation: critical
+    pos: adj
+  - lemma: навчання
+    ipa: nɐu̯ˈt͡ʃɑnʲːɐ
+    translation: learning; study
+    pos: noun
+    gender: n
+  - lemma: навіщо
+    ipa: nɐˈviʃt͡ʃo
+    translation: why; what for
+    pos: adv
+  - lemma: наприклад
+    ipa: nɐˈprɪklɑd
+    translation: for example
+    pos: adv
+  - lemma: наприкінці
+    ipa: nɐprɪkinˈt͡sʲi
+    translation: at the end
+    pos: other
+  - lemma: обирати
+    ipa: obɪˈrɑte
+    translation: to choose
+    pos: verb
+  - lemma: обррати
+    ipa: obrɐte
+    translation: to choose (typo? обрати)
+    pos: verb
+  - lemma: перевірка
+    ipa: pereˈvirkɐ
+    translation: check; verification
+    pos: noun
+    gender: f
+  - lemma: перш
+    ipa: pɛrʃ
+    translation: first (adv)
+    pos: adv
+  - lemma: петре
+    ipa: ˈpetre
+    translation: Petro (vocative)
+    pos: propn
+    gender: m
+  - lemma: повторити
+    ipa: pou̯toˈrɪte
+    translation: to repeat
+    pos: verb
+  - lemma: повторювати
+    ipa: pou̯ˈtɔrʲuʋɐte
+    translation: to repeat (imperfective)
+    pos: verb
+  - lemma: позначати
+    ipa: poznɐˈt͡ʃɑte
+    translation: to verify; to mark
+    pos: verb
+  - lemma: порівняти
+    ipa: poriu̯ˈnʲɑte
+    translation: to compare
+    pos: verb
+  - lemma: послідовно
+    ipa: poslʲiˈdɔu̯no
+    translation: consistently; sequentially
+    pos: adv
+  - lemma: потренуватися
+    ipa: potrenuˈʋɑtɪsʲɐ
+    translation: to practice
+    pos: verb
+  - lemma: практичний
+    ipa: prɐkˈtɪt͡ʃnei̯
+    translation: practical
+    pos: adj
+  - lemma: презентація
+    ipa: prezenˈtɑt͡sʲijɐ
+    translation: presentation
+    pos: noun
+    gender: f
+  - lemma: при
+    ipa: prɪ
+    translation: at; by; during
+    pos: other
+  - lemma: природно
+    ipa: prɪˈrɔdno
+    translation: naturally
+    pos: adv
+  - lemma: провідмінювати
+    ipa: providmiˈnʲuʋɐte
+    translation: to decline (grammar)
+    pos: verb
+  - lemma: продовжувати
+    ipa: proˈdɔu̯ʒuʋɐte
+    translation: to continue
+    pos: verb
+  - lemma: підказати
+    ipa: pidkɐˈzɑte
+    translation: to prompt; to suggest
+    pos: verb
+  - lemma: розминка
+    ipa: rozˈmɪnkɐ
+    translation: warm-up
+    pos: noun
+    gender: f
+  - lemma: розрізняти
+    ipa: rozrizˈnʲɑte
+    translation: to distinguish
+    pos: verb
+  - lemma: роль
+    ipa: rɔlʲ
+    translation: role
+    pos: noun
+    gender: f
+  - lemma: спілкування
+    ipa: spilkuˈʋɑnʲːɐ
+    translation: communication
+    pos: noun
+    gender: n
+  - lemma: ставити
+    ipa: ˈstɑʋɪte
+    translation: to put; to place
+    pos: verb
+  - lemma: стратегія
+    ipa: strɐˈtɛɦijɐ
+    translation: strategy
+    pos: noun
+    gender: f
+  - lemma: супровід
+    ipa: ˈsuproʋid
+    translation: accompaniment
+    pos: noun
+    gender: m
+  - lemma: теорія
+    ipa: teˈɔrijɐ
+    translation: theory
+    pos: noun
+    gender: f
+  - lemma: увестися
+    ipa: uˈʋɛstɪsʲɐ
+    translation: to be introduced (typo? ввестися?)
+    pos: verb
+  - lemma: формувати
+    ipa: formuˈʋɑte
+    translation: to form
+    pos: verb
+  - lemma: функіка
+    ipa: ˈfiʃkɐ
+    translation: feature? (typo? функція? фішка?)
+    pos: noun
+    gender: f
+  - lemma: чого
+    ipa: t͡ʃoˈɦɔ
+    translation: why (coll); of what
+    pos: adv

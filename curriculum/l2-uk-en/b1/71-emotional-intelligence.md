@@ -1,27 +1,3 @@
----
-module: b1-71
-title: "Емоційний інтелект та міжособистісні навички"
-subtitle: "Emotional Intelligence & Interpersonal Skills"
-version: "1.0"
-phase: "B1.6 Vocabulary Expansion II"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "interpersonal vocabulary collocations"
-tags:
-  - vocabulary
-  - emotional-intelligence
-  - interpersonal
-objectives:
-  - "Learner can use 30 emotional and interpersonal vocabulary words in context"
-  - "Learner can distinguish between similar concepts like співчуття/емпатія, вибачення/пробачення"
-  - "Learner can form natural collocations with interpersonal nouns and verbs"
-vocabulary_count: 35
-vocab_count: 49
----
-
 # Емоційний інтелект та міжособистісні навички
 
 > 🎯 **Чому це важливо?**

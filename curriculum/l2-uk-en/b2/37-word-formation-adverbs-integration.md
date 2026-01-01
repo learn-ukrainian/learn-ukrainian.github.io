@@ -1,33 +1,3 @@
----
-module: b2-37
-title: "Словотворення: прислівники та інтеграція"
-subtitle: "Творення прислівників від прикметників і повторення словотвірних моделей"
-version: "1.0"
-phase: "B2.1b [Grammar Completion]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - word-formation
-  - adverbs
-  - diminutives
-  - augmentatives
-  - integration
-grammar:
-  - "Творення прислівників від прикметників (-о, -е, по-...-ськи, по-...-ому)"
-  - "Зменшувально-пестливі та збільшувальні суфікси"
-  - "Інтеграція всіх словотвірних моделей"
-objectives:
-  - "Learner can form adverbs from adjectives using Ukrainian patterns"
-  - "Learner can distinguish between adverb formation patterns (-о, -е, по-...-ськи)"
-  - "Learner can recognize and use diminutives and augmentatives"
-  - "Learner can integrate word formation knowledge across noun, adjective, and adverb categories"
-vocabulary_count: 25
-register: "науковий"
-vocab_count: 48
----
-
 # Словотворення: прислівники та інтеграція
 
 > 🎯 **Чому це важливо?**

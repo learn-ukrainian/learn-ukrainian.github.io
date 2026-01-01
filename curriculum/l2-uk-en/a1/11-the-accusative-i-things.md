@@ -1,29 +1,3 @@
----
-module: a1-11
-title: 'The Accusative I - Things'
-subtitle: 'Making Direct Objects Work'
-version: '1.0'
-phase: 'A1.2 Navigation'
-pedagogy: 'PPP'
-duration: 60
-transliteration: 'vocab'
-tags:
-  - grammar
-  - accusative
-  - cases
-  - direct-objects
-grammar:
-  - Accusative case (inanimate nouns)
-  - Feminine -а → -у
-  - Masculine/Neuter no change
-objectives:
-  - 'Learner can form accusative case for inanimate nouns'
-  - 'Learner can use accusative after verbs like бачити, брати, мати'
-  - 'Learner can distinguish between nominative and accusative forms'
-vocabulary_count: 25
-vocab_count: 33
----
-
 # The Accusative I - Things
 
 ## Warm-up
@@ -221,37 +195,3 @@ In this module, you learned:
 > **Cases Overview:** [Introduction to Ukrainian Cases](https://www.ukrainianlessons.com/intro-cases/) — Quick overview of all 7 cases
 >
 > **Podcast:** [FMU 1-15 | Accusative Case](https://www.ukrainianlessons.com/fmu15/) — Learn accusative while ordering pizza!
-
-# Vocabulary
-
-| Word        | IPA             | English          | POS   | Gender | Note |
-| ----------- | --------------- | ---------------- | ----- | ------ | ---- |
-| автобус     | /ɑwˈtɔbus/      | bus              | noun  | ч      |      |
-| аномалія    | /ɑnɔˈmɑlʲijɑ/   | anomaly          | noun  | ж      |      |
-| брати       | /ˈbrɑtɪ/        | to take          | verb  | -      |      |
-| валіза      | /vɑˈlʲizɑ/      | suitcase         | noun  | ж      |      |
-| вже         | /vʒɛ/           | already          | adv   | -      |      |
-| відкривати  | /vidkrɪˈvɑtɪ/   | to open          | verb  | -      |      |
-| відмінок    | /vidˈminɔk/     | case (grammar)   | noun  | ч      |      |
-| відправити  | /vidˈprɑvɪtɪ/   | to send (perf)   | verb  | -      |      |
-| відправляти | /vidprɑwˈlʲɑtɪ/ | to send (imp)    | verb  | -      |      |
-| давати      | /dɑˈvɑtɪ/       | to give (imp)    | verb  | -      |      |
-| дати        | /ˈdɑtɪ/         | to give (perf)   | verb  | -      |      |
-| документ    | /dɔkuˈmɛnt/     | document         | noun  | ч      |      |
-| дорога      | /dɔˈrɔɦɑ/       | road/way         | noun  | ж      |      |
-| за          | /zɑ/            | for/behind       | other | -      |      |
-| забути      | /zɑˈbutɪ/       | to forget        | verb  | -      |      |
-| знахідний   | /znɑˈxidnɪj/    | accusative (adj) | adj   | ч      |      |
-| квиток      | /kvɪˈtɔk/       | ticket           | noun  | ч      |      |
-| конверт     | /kɔnˈvɛrt/      | envelope         | noun  | ч      |      |
-| коробка     | /kɔˈrɔbkɑ/      | box              | noun  | ж      |      |
-| мати        | /ˈmɑtɪ/         | to have          | verb  | -      |      |
-| один        | /ɔˈdɪn/         | one              | num   | ч      |      |
-| подарунок   | /pɔdɑˈrunɔk/    | gift/present     | noun  | ч      |      |
-| показати    | /pɔkɑˈzɑtɪ/     | to show (perf)   | verb  | -      |      |
-| показувати  | /pɔˈkɑzuvɑtɪ/   | to show (imp)    | verb  | -      |      |
-| посилка     | /pɔˈsɪlkɑ/      | parcel           | noun  | ж      |      |
-| свій        | /sʲvij/         | one's own        | pron  | ч      |      |
-| цікавий     | /t͡sʲiˈkɑvɪj/    | interesting      | adj   | ч      |      |
-| чути        | /ˈt͡ʃutɪ/        | to hear          | verb  | -      |      |
-| іти         | /iˈtɪ/          | to go            | verb  | -      |      |

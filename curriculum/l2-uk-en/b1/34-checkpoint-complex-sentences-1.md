@@ -1,31 +1,3 @@
----
-module: b1-34
-title: "Контрольна точка: складні речення (частина 1)"
-subtitle: "Checkpoint - Complex Sentences Part 1"
-version: "1.0"
-phase: "B1.3a Complex Sentences Checkpoint"
-focus: checkpoint
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - checkpoint
-  - integration
-  - complex-sentences
-  - relative-clauses
-  - purpose-clauses
-  - conditionals
-grammar:
-  - "Integration of M26-M33"
-  - "Comprehensive review and testing"
-objectives:
-  - "Learner can demonstrate mastery of complex sentence structures"
-  - "Learner can integrate knowledge from M26-M33"
-  - "Learner can self-assess readiness for B1.3b phase"
-vocabulary_count: 35
-vocab_count: 15
----
-
 > [!motivation]
 > Ви завершили першу частину складних речень! За модулі 26-33 ви опанували відносні речення (який, де, куди, коли, що), підрядні речення мети (щоб + інфінітив та щоб + минула форма), і все про умовні речення — реальні, нереальні та змішані. Ця контрольна точка перевірить ваші знання й підготує до наступної фази: допустових, причинових і часових речень.
 

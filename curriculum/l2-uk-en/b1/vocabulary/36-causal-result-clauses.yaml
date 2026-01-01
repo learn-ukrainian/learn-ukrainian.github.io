@@ -1,0 +1,73 @@
+module: 36-causal-result-clauses
+level: B1
+version: '2.0'
+items:
+- lemma: бонус
+  ipa: /ˈbɔnus/
+  translation: bonus
+  pos: noun
+  gender: m
+- lemma: будильник
+  ipa: /buˈdɪlʲnɪk/
+  translation: alarm clock
+  pos: noun
+  gender: m
+- lemma: вищевикладений
+  ipa: /vɪʃt͡ʃɛˈvɪkladɛnɪj/
+  translation: above-mentioned
+  pos: adj
+  gender: m
+- lemma: долара
+  ipa: /ˈdɔlara/
+  translation: dollar (gen.)
+  pos: noun
+  gender: m
+- lemma: ефіопія
+  ipa: /ɛfiˈɔpija/
+  translation: Ethiopia
+  pos: propn
+  gender: f
+- lemma: затримок
+  ipa: /ˈzatrɪmɔk/
+  translation: delays (gen. pl.)
+  pos: noun
+  gender: f
+- lemma: злагодити
+  ipa: /zlaˈhɔdɪtɪ/
+  translation: to fix
+  pos: verb
+- lemma: каркас
+  ipa: /karˈkas/
+  translation: frame
+  pos: noun
+  gender: m
+- lemma: невирішений
+  ipa: /nɛˈvɪrʲiʃɛnɪj/
+  translation: unresolved
+  pos: adj
+  gender: f
+- lemma: переглянити
+  ipa: /pɛrɛˈhlʲanɪtɪ/
+  translation: to review (typo)
+  pos: verb
+- lemma: переноситися
+  ipa: /pɛrɛˈnɔsɪtɪsʲa/
+  translation: to be moved
+  pos: verb
+- lemma: перескласти
+  ipa: /pɛrɛˈsklastɪ/
+  translation: to retake
+  pos: verb
+- lemma: привозити
+  ipa: /prɪˈvɔzɪtɪ/
+  translation: to bring
+  pos: verb
+- lemma: підвищитися
+  ipa: /pidˈvɪʃt͡ʃɪtɪsʲa/
+  translation: to increase
+  pos: verb
+- lemma: сорт
+  ipa: /sɔrt/
+  translation: sort
+  pos: noun
+  gender: m

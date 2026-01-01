@@ -1,31 +1,3 @@
----
-module: b2-23
-title: "Медійний та журналістський регістр"
-subtitle: "Мова новин і преси"
-version: "1.0"
-phase: "B2.1c [Register System]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - register
-  - media
-  - journalism
-grammar:
-  - "News headline syntax (telegram style)"
-  - "Lead paragraph structure (5W)"
-  - "Attribution and quoting conventions"
-  - "Bias markers and objectivity"
-objectives:
-  - "Учень може розпізнавати та аналізувати стиль новинних заголовків"
-  - "Учень може структурувати лід-абзац за принципом 5W"
-  - "Учень може правильно вживати конструкції цитування та атрибуції"
-  - "Учень може виявляти маркери упередженості в медійних текстах"
-vocabulary_count: 30
-vocab_count: 50
----
-
 # Медійний та журналістський регістр
 
 > Чому це важливо?

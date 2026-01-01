@@ -1,26 +1,3 @@
----
-module: b1-77
-title: "Українське кіно та серіали"
-subtitle: "Ukrainian Cinema and Television"
-version: "1.0"
-phase: "B1.7"
-pedagogy: "cultural"
-focus: "cultural"
-duration: 75
-transliteration: "none"
-tags: ["culture", "cinema", "television", "media"]
-grammar: []
-objectives:
-  - "Learner can discuss Ukrainian films and television series"
-  - "Learner can understand authentic texts about Ukrainian cinema"
-  - "Learner can use film industry vocabulary in context"
-  - "Learner can compare Ukrainian cinema with their own cultural experience"
-vocabulary_count: 35
-word_target: 1500
-immersion_target: 100
-vocab_count: 57
----
-
 # Вступ
 
 Чи знаєте ви українських режисерів? Чи бачили ви українські фільми на великих кінофестивалях? Українське кіно має багату історію та яскраве сучасне обличчя. Від класичних робіт Олександра Довженка до сучасних драм, що здобувають нагороди на Берлінале та Каннському фестивалі, українська кінематографія є важливою частиною світової культури.

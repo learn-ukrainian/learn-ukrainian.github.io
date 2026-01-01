@@ -1,0 +1,81 @@
+module: 68-synonymy-thinking-verbs
+level: B1
+version: '2.0'
+items:
+- lemma: агресивніший
+  ipa: /ahrɛˈsɪu̯nʲiʃɪj/
+  translation: more aggressive
+  pos: adj
+  gender: m
+- lemma: доцільне
+  ipa: /dɔˈt͡sʲilʲnɛ/
+  translation: expedient
+  pos: noun
+  gender: n
+- lemma: міркувати
+  ipa: /mirkuˈvatɪ/
+  translation: to reason
+  pos: verb
+- lemma: невдаха
+  ipa: /nɛu̯ˈdaxa/
+  translation: loser
+  pos: noun
+  gender: f
+- lemma: невпевнено
+  ipa: /nɛu̯ˈpɛu̯nɛnɔ/
+  translation: uncertainly
+  pos: adv
+- lemma: обдумування
+  ipa: /ɔbduˈmuvanʲːa/
+  translation: thinking over
+  pos: noun
+  gender: n
+- lemma: обдумувати
+  ipa: /ɔbduˈmuvatɪ/
+  translation: to think over
+  pos: verb
+- lemma: обмірковувати
+  ipa: /ɔbmirˈkɔvuvatɪ/
+  translation: to deliberate
+  pos: verb
+- lemma: обміркувати
+  ipa: /ɔbmirkuˈvatɪ/
+  translation: to deliberate
+  pos: verb
+- lemma: оруд
+  ipa: /ɔˈrud/
+  translation: Instr.
+  pos: noun
+  gender: m
+- lemma: осуджувати
+  ipa: /ɔˈsudʒuvatɪ/
+  translation: to condemn
+  pos: verb
+- lemma: осуди
+  ipa: /ɔˈsudɪ/
+  translation: condemn (imp.)
+  pos: noun
+  gender: m
+- lemma: поспішно
+  ipa: /pɔˈspʲiʃnɔ/
+  translation: hastily
+  pos: adv
+- lemma: прогалини
+  ipa: /prɔˈhalɪnɪ/
+  translation: gaps
+  pos: noun
+  gender: m
+- lemma: прогнозування
+  ipa: /prɔhnɔzuˈvanʲːa/
+  translation: forecasting
+  pos: noun
+  gender: n
+- lemma: слабко
+  ipa: /ˈslabkɔ/
+  translation: weakly
+  pos: adv
+- lemma: сучасне
+  ipa: /suˈt͡ʃasnɛ/
+  translation: modern
+  pos: noun
+  gender: n

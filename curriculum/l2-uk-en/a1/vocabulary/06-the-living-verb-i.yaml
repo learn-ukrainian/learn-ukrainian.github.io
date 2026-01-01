@@ -1,0 +1,213 @@
+module: 06-the-living-verb-i
+level: A1
+version: '2.0'
+items:
+  - lemma: але
+    ipa: /ɑˈlɛ/
+    translation: but
+    pos: other
+  - lemma: бережок
+    ipa: /bɛrɛˈʒɔk/
+    translation: river bank (diminutive)
+    pos: noun
+    gender: m
+  - lemma: в
+    ipa: /v/
+    translation: in
+    pos: other
+  - lemma: вдома
+    ipa: /ˈwdɔmɑ/
+    translation: at home
+    pos: adv
+  - lemma: вечеряти
+    ipa: /vɛt͡ʃɛˈrʲɑtɪ/
+    translation: to have dinner
+    pos: verb
+  - lemma: вечір
+    ipa: /ˈvɛt͡ʃir/
+    translation: evening
+    pos: noun
+    gender: m
+  - lemma: відпочивати
+    ipa: /vidpɔt͡ʃɪˈvɑtɪ/
+    translation: to rest
+    pos: verb
+  - lemma: вільний
+    ipa: /ˈvilʲnɪj/
+    translation: free
+    pos: adj
+    gender: m
+  - lemma: говорити
+    ipa: /ɦɔvɔˈrɪtɪ/
+    translation: to speak
+    pos: verb
+  - lemma: гра
+    ipa: /ɦrɑ/
+    translation: game
+    pos: noun
+    gender: f
+  - lemma: грати
+    ipa: /ˈɦrɑtɪ/
+    translation: to play
+    pos: verb
+  - lemma: гуляти
+    ipa: /ɦuˈlʲɑtɪ/
+    translation: to walk/stroll
+    pos: verb
+  - lemma: думати
+    ipa: /ˈdumɑtɪ/
+    translation: to think
+    pos: verb
+  - lemma: дія
+    ipa: /ˈdijɑ/
+    translation: action
+    pos: noun
+    gender: f
+  - lemma: життя
+    ipa: /ʒɪˈtʲːɑ/
+    translation: life
+    pos: noun
+    gender: n
+  - lemma: знати
+    ipa: /ˈznɑtɪ/
+    translation: to know
+    pos: verb
+  - lemma: знаходити
+    ipa: /znɑˈxɔdɪtɪ/
+    translation: to find
+    pos: verb
+  - lemma: лист
+    ipa: /lɪst/
+    translation: letter
+    pos: noun
+    gender: m
+  - lemma: любити
+    ipa: /lʲuˈbɪtɪ/
+    translation: to love
+    pos: verb
+  - lemma: малювати
+    ipa: /mɑlʲuˈvɑtɪ/
+    translation: to draw/paint
+    pos: verb
+  - lemma: момент
+    ipa: /mɔˈmɛnt/
+    translation: moment
+    pos: noun
+    gender: m
+  - lemma: навчитися
+    ipa: /nɑwˈt͡ʃɪtɪsʲɑ/
+    translation: to learn
+    pos: verb
+  - lemma: обідати
+    ipa: /ɔˈbidɑtɪ/
+    translation: to have lunch
+    pos: verb
+  - lemma: писати
+    ipa: /pɪˈsɑtɪ/
+    translation: to write
+    pos: verb
+  - lemma: питання
+    ipa: /pɪˈtɑnʲːɑ/
+    translation: question
+    pos: noun
+    gender: n
+  - lemma: потім
+    ipa: /ˈpɔtim/
+    translation: then/afterwards
+    pos: adv
+  - lemma: починати
+    ipa: /pɔt͡ʃɪˈnɑtɪ/
+    translation: to start
+    pos: verb
+  - lemma: пісня
+    ipa: /ˈpisnʲɑ/
+    translation: song
+    pos: noun
+    gender: f
+  - lemma: ранок
+    ipa: /ˈrɑnɔk/
+    translation: morning
+    pos: noun
+    gender: m
+  - lemma: робити
+    ipa: /rɔˈbɪtɪ/
+    translation: to do/make
+    pos: verb
+  - lemma: робота
+    ipa: /rɔˈbɔtɑ/
+    translation: work
+    pos: noun
+    gender: f
+  - lemma: розум
+    ipa: /ˈrɔzʊm/
+    translation: mind/intellect
+    pos: noun
+    gender: m
+  - lemma: розуміти
+    ipa: /rɔzuˈmitɪ/
+    translation: to understand
+    pos: verb
+  - lemma: рух
+    ipa: /rux/
+    translation: movement
+    pos: noun
+    gender: m
+  - lemma: слухати
+    ipa: /ˈsluxɑtɪ/
+    translation: to listen
+    pos: verb
+  - lemma: снідати
+    ipa: /ˈsnidɑtɪ/
+    translation: to have breakfast
+    pos: verb
+  - lemma: співати
+    ipa: /spiˈvɑtɪ/
+    translation: to sing
+    pos: verb
+  - lemma: співак
+    ipa: /spiˈvɑk/
+    translation: singer
+    pos: noun
+    gender: m
+  - lemma: сьогодні
+    ipa: /sʲɔˈɦɔdɲi/
+    translation: today
+    pos: adv
+  - lemma: танцювати
+    ipa: /tɑnt͡sʲuˈvɑtɪ/
+    translation: to dance
+    pos: verb
+  - lemma: то
+    ipa: /tɔ/
+    translation: that (participle)
+    pos: other
+  - lemma: тут
+    ipa: /tut/
+    translation: here
+    pos: adv
+  - lemma: у
+    ipa: /u/
+    translation: in
+    pos: other
+  - lemma: українська
+    ipa: /ʊkrɑˈjinʲsʲkɑ/
+    translation: Ukrainian (lang)
+    pos: noun
+    gender: f
+  - lemma: час
+    ipa: /t͡ʃɑs/
+    translation: time
+    pos: noun
+    gender: m
+  - lemma: чекати
+    ipa: /t͡ʃɛˈkɑtɪ/
+    translation: to wait
+    pos: verb
+  - lemma: чи
+    ipa: /t͡ʃɪ/
+    translation: if/whether
+    pos: other
+  - lemma: читати
+    ipa: /t͡ʃɪˈtɑtɪ/
+    translation: to read
+    pos: verb

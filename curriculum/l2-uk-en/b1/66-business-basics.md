@@ -1,28 +1,3 @@
----
-module: b1-66
-title: "Основи бізнесу"
-subtitle: "Business Basics"
-version: "1.0"
-phase: "B1.6 Vocabulary Expansion II"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "business vocabulary collocations"
-  - "professional register"
-tags:
-  - vocabulary
-  - business
-  - professional
-objectives:
-  - "Learner can use 30 business vocabulary words in context"
-  - "Learner can distinguish between similar business terms (компанія/фірма/підприємство)"
-  - "Learner can form natural collocations with business nouns"
-vocabulary_count: 35
-vocab_count: 60
----
-
 # Основи бізнесу
 
 > 🎯 **Чому це важливо?**

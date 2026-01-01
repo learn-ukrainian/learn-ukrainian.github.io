@@ -1,20 +1,30 @@
 # Audit Report: 13-the-locative-where-things-are.md
-**Phase:** A1 | **Level:** A1 | **Pedagogy:** "PPP" | **Target:** 750
+**Phase:** A1.2 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): робота, лікарня, ресторан, магазин, кухня...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
-- **Words:** ✅ 1436/750
+- **Words:** ✅ 1438/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 23/1
+- **Vocab:** ✅ 34/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 32.7% (target 25-40% (M13))
+- **Immersion:** 🇺🇦 27.3% (target 25-40% (M13))
+- **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -25,20 +35,9 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **The Locative - Where Things Are** | ⚪️ | 0 | Skipped |
-| **Warm-up** | ✅ | 162 | Included in Core |
-| **Presentation** | ✅ | 557 | Included in Core |
-| **Practice** | ⚪️ | 282 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Warm-up** | ✅ | 163 | Included in Core |
+| **Presentation** | ✅ | 558 | Included in Core |
+| **Practice** | ⚪️ | 283 | Skipped |
 | **Production** | ➖ | 245 | Excluded Type |
-| **Summary** | ✅ | 190 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **quiz: Where Is It?** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Places and Locations** | 🎮 | 9 | Activity (9 items, min 8) |
-| **fill-in: Complete the Locative** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: в/у or на?** | 🎮 | 12 | Activity (12 items, min 12) |
-| **true-false: Locative Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **quiz: Where Questions Order** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Preposition Choice** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Nominative to Locative** | 🎮 | 9 | Activity (9 items, min 8) |
-| **quiz: Translation Practice** | 🎮 | 12 | Activity (12 items, min 8) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Summary** | ✅ | 189 | Included in Core |

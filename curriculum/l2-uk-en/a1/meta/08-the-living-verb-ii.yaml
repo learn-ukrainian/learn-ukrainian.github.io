@@ -1,0 +1,25 @@
+module: a1-08
+title: The Living Verb II
+subtitle: Class II Conjugation (-ити verbs)
+version: '1.0'
+phase: A1.1
+pedagogy: PPP
+duration: 60 min
+transliteration: full
+tags:
+  - verbs
+  - conjugation
+  - class-ii
+  - irregular-verbs
+grammar:
+  - Class II verb conjugation (-ити)
+  - 'Irregular verbs: їсти, пити, хотіти'
+  - Consonant mutation in first person singular
+objectives:
+  - Learner can conjugate Class II verbs (-ити) in present tense
+  - Learner can distinguish between Class I (-ати) and Class II (-ити) verbs
+  - Learner can use common irregular verbs (їсти, пити)
+  - Learner can form basic sentences with action verbs
+vocabulary_count: 25
+vocab_count: 36
+slug: 08-the-living-verb-ii

@@ -1,22 +1,3 @@
----
-module: a2-49
-title: Technology & Media
-subtitle: "Digital Life in Ukrainian"
-version: "1.0"
-phase: "A2"
-pedagogy: "Narrative"
-duration: 60
-transliteration: none
-tags: ["vocabulary", "technology", "internet", "media"]
-grammar: ["accusative-inanimate", "locative-places"]
-objectives:
-  - Name common devices: комп'ютер, смартфон, планшет
-  - Discuss internet activities: шукати, завантажувати
-  - Talk about media: новини, блог, соціальні мережі
-  - Describe digital habits
-vocab_count: 53
----
-
 # Technology & Media
 
 ## Warm-up

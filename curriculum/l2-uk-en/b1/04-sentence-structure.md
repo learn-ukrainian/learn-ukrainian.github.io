@@ -1,29 +1,3 @@
----
-module: b1-04
-title: "Структура речення"
-subtitle: "Sentence analysis terminology"
-version: "1.0"
-phase: "B1.0 Bridge"
-pedagogy: "PPP"
-duration: 75
-transliteration: none
-tags:
-  - grammar
-  - metalanguage
-  - syntax
-  - bridge
-grammar:
-  - "Sentence parts in Ukrainian"
-  - "Clause types"
-  - "Sentence types and punctuation"
-objectives:
-  - "Learner can identify sentence parts using Ukrainian terminology"
-  - "Learner can distinguish main and subordinate clauses"
-  - "Learner can name sentence types and punctuation marks"
-vocabulary_count: 25
-vocab_count: 35
----
-
 # Структура речення
 
 > 🎯 **Why This Module Matters**

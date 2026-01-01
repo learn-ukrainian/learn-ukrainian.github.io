@@ -1,12 +1,12 @@
 # C1 Curriculum Plan: Ukrainian for English Speakers
 
 **Status:** 📝 PLANNED (Upgraded to A1 Quality - Rebalanced 2025, Arts Expansion Dec 2025)
-**Modules:** 01-182 (182 modules)
-**Vocabulary Target:** ~4,368 new words (~24/module)
-**Cumulative Target:** ~10,308 words after C1
+**Modules:** 01-196 (196 modules)
+**Vocabulary Target:** ~4,704 new words (~24/module)
+**Cumulative Target:** ~10,644 words after C1
 **Immersion:** 100% Ukrainian (full immersion — English only in vocabulary translations)
 
-> **Note:** Folk Culture & Fine Arts (36 modules) and Biographies (76 modules) expanded for comprehensive cultural coverage. December 2025 expansion added 11 composer/artist biographies and 11 fine arts modules (classical music, opera, visual arts, ballet, theater, architecture).
+> **Note:** Folk Culture & Fine Arts (36 modules) and Biographies (90 modules) expanded for comprehensive cultural coverage. December 2025 expansion added 11 composer/artist biographies and 11 fine arts modules. December 31, 2025: Removed military figures, added 15 contemporary Ukrainian writers (1951-1987) verified as Ukrainian patriots.
 
 ---
 
@@ -1098,10 +1098,15 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ### Module Specifications
 
-**All 76 Biographies Ordered by Birth Year:**
+**All 90 Biographies Ordered by Birth Year:**
 
 > **December 2025 Expansion:** Added 11 biographies of major composers, visual artists, and performing artists:
 > Березовський, Бортнянський, Гулак-Артемовський, Лисенко, Леонтович, Малевич, Богомазов, Архипенко, Курбас, Лятошинський, Лифар
+>
+> **December 31, 2025 Expansion:** Removed Залужний. Added 15 contemporary Ukrainian writers (1951-1987):
+> Василь Шкляр, Юрій Винничук, Галина Пагутяк, Марія Матіос, Мирослав Дочинець, Марина Гримич, Тарас Прохасько,
+> Олександр Гаврош, Сергій Жадан, Тамара Горіха Зерня, Катерина Калитко, Софія Андрухович, Тетяна Малярчук,
+> Макс Кідрук, Андрій Любка. All verified as Ukrainian patriots with no Russian connections.
 
 | # | Name | Years | Focus |
 |---|------|-------|-------|
@@ -1177,12 +1182,26 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 | 105 | Ліна Костенко | 1930- | Poet, Sixtiers generation |
 | 106 | В'ячеслав Чорновіл | 1937-1999 | Independence leader, journalist |
 | 107 | Василь Стус | 1938-1985 | Dissident poet, died in Gulag |
-| 108 | Леонід Каденюк | 1951-2018 | First Ukrainian astronaut |
-| 109 | Квітка Цісик | 1953-1998 | Ukrainian diaspora voice, singer |
-| 110 | Валерій Залужний | 1973- | Military commander, defense strategist |
-| 111 | C1.3 Checkpoint | Review | Biographical analysis assessment |
+| 108 | Василь Шкляр | 1951- | Contemporary writer, historical fiction, "Залишенець" |
+| 109 | Леонід Каденюк | 1951-2018 | First Ukrainian astronaut |
+| 110 | Юрій Винничук | 1952- | Contemporary writer, "Танґо смерті" |
+| 111 | Квітка Цісик | 1953-1998 | Ukrainian diaspora voice, singer |
+| 112 | Галина Пагутяк | 1958- | Contemporary writer, mystical prose, Shevchenko Prize |
+| 113 | Марія Матіос | 1959- | Contemporary writer, "Солодка Даруся", Shevchenko Prize |
+| 114 | Мирослав Дочинець | 1959- | Contemporary writer, Transcarpathian themes |
+| 115 | Марина Гримич | 1961- | Contemporary writer, literary critic |
+| 116 | Тарас Прохасько | 1968- | Contemporary writer, essayist, minimalist prose |
+| 117 | Олександр Гаврош | 1971- | Contemporary writer, science fiction, children's books |
+| 118 | Сергій Жадан | 1974- | Contemporary writer, poet, joined military 2024 |
+| 119 | Тамара Горіха Зерня | 1976- | Contemporary writer, "Доця", Shevchenko Prize |
+| 120 | Катерина Калитко | 1982- | Contemporary writer, poet |
+| 121 | Софія Андрухович | 1982- | Contemporary writer, "Фелікс Австрія" |
+| 122 | Тетяна Малярчук | 1983- | Contemporary writer, writes in Ukrainian and German |
+| 123 | Макс Кідрук | 1984- | Contemporary writer, science fiction, thrillers |
+| 124 | Андрій Любка | 1987- | Contemporary writer, poet, translator |
+| 125 | C1.3 Checkpoint | Review | Biographical analysis assessment |
 
-### Vocabulary Plan C1.3 (~1,824 words)
+### Vocabulary Plan C1.3 (~2,160 words)
 - Biographical terms: народження, дитинство, юність, освіта, кар'єра, досягнення, спадщина, вплив, значення
 - Historical context: епоха, доба, період, умови, обставини, виклики
 - Analysis vocabulary: внесок, роль, місце в історії, оцінка сучасників, переоцінка
@@ -1193,7 +1212,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-## Phase C1.4: Advanced Stylistics & Rhetoric (Modules 112-131)
+## Phase C1.4: Advanced Stylistics & Rhetoric (Modules 126-145)
 
 
 ### Learning Goals
@@ -1210,26 +1229,26 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 | Module | Grammar Point | Builds On | Enables |
 |--------|--------------|-----------|---------|
-| 112 | Metaphor & Simile | B2 phraseology | Literary reading |
-| 113 | Irony & Sarcasm | M112 | Tone detection |
-| 114 | Hyperbole & Litotes | M112-113 | Emphasis control |
-| 115 | Euphemism & Taboo | M114 | Social navigation |
-| 116 | Rhetorical Questions | M112-115 | Persuasion |
-| 117 | Degrees of Certainty | C1.1 hedging | Precise modality |
-| 118 | Politeness Strategies | M117 | Face-saving |
-| 119 | Indirectness | M117-118 | Implicit meaning |
-| 120 | Ukrainian Humor | M112-119 | Cultural fluency |
-| 121 | Wordplay & Puns | M120 | Linguistic creativity |
-| 122 | Anecdotes & Jokes | M120-121 | Social integration |
-| 123 | Archaic Verb Forms | B2 verbs | Historical texts |
-| 124 | Literary Syntax | M123 | Poetic reading |
-| 125 | Church Slavonicisms | M123-124 | Religious/formal texts |
-| 126 | Archaic Pronouns | M123-125 | Old texts |
-| 127 | High Formal Register | M123-126 | Official documents |
-| 128 | Intimate Register | All above | Close relationships |
-| 129 | Slang & Youth Language | M128 | Informal contexts |
-| 130 | C1.4 Review | M112-129 | Consolidation |
-| 131 | C1.4 Checkpoint | M112-130 | Assessment |
+| 126 | Metaphor & Simile | B2 phraseology | Literary reading |
+| 127 | Irony & Sarcasm | M126 | Tone detection |
+| 128 | Hyperbole & Litotes | M126-127 | Emphasis control |
+| 129 | Euphemism & Taboo | M128 | Social navigation |
+| 130 | Rhetorical Questions | M126-129 | Persuasion |
+| 131 | Degrees of Certainty | C1.1 hedging | Precise modality |
+| 132 | Politeness Strategies | M131 | Face-saving |
+| 133 | Indirectness | M131-132 | Implicit meaning |
+| 134 | Ukrainian Humor | M126-133 | Cultural fluency |
+| 135 | Wordplay & Puns | M134 | Linguistic creativity |
+| 136 | Anecdotes & Jokes | M134-135 | Social integration |
+| 137 | Archaic Verb Forms | B2 verbs | Historical texts |
+| 138 | Literary Syntax | M137 | Poetic reading |
+| 139 | Church Slavonicisms | M137-138 | Religious/formal texts |
+| 140 | Archaic Pronouns | M137-139 | Old texts |
+| 141 | High Formal Register | M137-140 | Official documents |
+| 142 | Intimate Register | All above | Close relationships |
+| 143 | Slang & Youth Language | M142 | Informal contexts |
+| 144 | C1.4 Review | M126-143 | Consolidation |
+| 145 | C1.4 Checkpoint | M126-144 | Assessment |
 
 ### Module Content Specifications C1.4
 
@@ -1670,7 +1689,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-## Phase C1.5: Folk Culture & Fine Arts (Modules 132-167)
+## Phase C1.5: Folk Culture & Fine Arts (Modules 146-181)
 
 > **Moved from B2** for better vocabulary balance across levels.
 > **Expanded December 2025:** Added 11 fine arts modules for comprehensive cultural education.
@@ -2455,7 +2474,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-## Phase C1.6: Literature - Complete (Modules 168-182)
+## Phase C1.6: Literature - Complete (Modules 182-196)
 
 ### Learning Goals
 - Know major Ukrainian literary figures
@@ -2860,35 +2879,35 @@ graph TD
         M78 --> M80[M80 Малевич 1879]
         M80 --> M89[M89 Курбас 1887]
         M89 --> M99[M99 Лифар 1904]
-        M99 --> M111[M111 Checkpoint]
+        M99 --> M125[M125 Checkpoint]
     end
 
-    %% Phase C1.4: Advanced Stylistics (M112-131)
-    subgraph C1_4 [Phase C1.4: Stylistics M112-131]
-        M112[M112 Metaphor] --> M116[M116 Rhetoric]
-        M116 --> M120[M120 Humor]
-        M120 --> M125[M125 Archaic Forms]
-        M125 --> M131[M131 Checkpoint]
+    %% Phase C1.4: Advanced Stylistics (M126-145)
+    subgraph C1_4 [Phase C1.4: Stylistics M126-145]
+        M126[M126 Metaphor] --> M130[M130 Rhetoric]
+        M130 --> M134[M134 Humor]
+        M134 --> M139[M139 Archaic Forms]
+        M139 --> M145[M145 Checkpoint]
     end
 
-    %% Phase C1.5: Folk Culture & Fine Arts (M132-167)
-    subgraph C1_5 [Phase C1.5: Culture & Arts M132-167]
-        M132[M132 Kobzari] --> M140[M140 Mythology]
-        M140 --> M151[M151 Regions]
-        M151 --> M152[M152 Classical Music I]
-        M152 --> M157[M157 Visual Arts]
-        M157 --> M159[M159 Ballet]
-        M159 --> M162[M162 Architecture]
-        M162 --> M167[M167 Checkpoint]
+    %% Phase C1.5: Folk Culture & Fine Arts (M146-181)
+    subgraph C1_5 [Phase C1.5: Culture & Arts M146-181]
+        M146[M146 Kobzari] --> M154[M154 Mythology]
+        M154 --> M165[M165 Regions]
+        M165 --> M166[M166 Classical Music I]
+        M166 --> M171[M171 Visual Arts]
+        M171 --> M173[M173 Ballet]
+        M173 --> M176[M176 Architecture]
+        M176 --> M181[M181 Checkpoint]
     end
 
-    %% Phase C1.6: Literature (M168-182)
-    subgraph C1_6 [Phase C1.6: Literature M168-182]
-        M168[M168 Lit History] --> M170[M170 Shevchenko]
-        M170 --> M173[M173 Franko]
-        M173 --> M175[M175 Lesia Ukrainka]
-        M175 --> M178[M178 Kotsyubynsky]
-        M178 --> M182[M182 Checkpoint]
+    %% Phase C1.6: Literature (M182-196)
+    subgraph C1_6 [Phase C1.6: Literature M182-196]
+        M182[M182 Lit History] --> M184[M184 Shevchenko]
+        M184 --> M187[M187 Franko]
+        M187 --> M189[M189 Lesia Ukrainka]
+        M189 --> M192[M192 Kotsyubynsky]
+        M192 --> M196[M196 Checkpoint]
     end
 
     %% Phase Connections
@@ -2977,11 +2996,11 @@ Before generating any C1 module:
 
 ## Notes
 
-1. **182 modules** provides comprehensive C1 coverage aligned with CEFR and Ukrainian State Standard 2024.
+1. **196 modules** provides comprehensive C1 coverage aligned with CEFR and Ukrainian State Standard 2024.
 
-2. **Level-relative numbering** (01-182) replaces old global numbering.
+2. **Level-relative numbering** (01-196) replaces old global numbering.
 
-3. **Biographies** (C1.3, 76 modules) expanded Dec 2025 with 11 additional arts figures (composers, visual artists, ballet, theater).
+3. **Biographies** (C1.3, 90 modules) expanded Dec 2025 with 11 arts figures (composers, visual artists, ballet, theater), then Dec 31 with 15 contemporary writers (removed military figures, added Ukrainian literary voices from 1951-1987).
 
 4. **Folk Culture & Fine Arts** (C1.5, 36 modules) expanded Dec 2025 with 11 fine arts modules covering classical music, opera, visual arts, ballet, theater, and architecture.
 
@@ -3005,6 +3024,7 @@ Before generating any C1 module:
 
 ## Changelog
 
+- **2025-12-31:** Expanded to 196 modules: Removed Залужний (military figure). Added 15 contemporary Ukrainian writers (Шкляр, Винничук, Пагутяк, Матіос, Дочинець, Гримич, Прохасько, Гаврош, Жадан, Горіха Зерня, Калитко, Андрухович, Малярчук, Кідрук, Любка). All verified as Ukrainian patriots with no Russian connections. Renumbered C1.4-C1.6 accordingly.
 - **2025-12-29:** Expanded to 182 modules: +11 biographies (composers, visual artists, ballet, theater) + 11 fine arts modules (classical music, opera, visual arts, ballet, theater, architecture). Renumbered C1.4-C1.6 accordingly.
 - **2025-12-23:** Rebalanced: expanded to 160 modules (Biographies from B2 added as C1.3, renumbered all subsequent phases)
 - **2025-12-05:** Expanded State Standard alignment with full grammar tables

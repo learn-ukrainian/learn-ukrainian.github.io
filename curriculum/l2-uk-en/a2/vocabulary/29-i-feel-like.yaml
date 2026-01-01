@@ -1,0 +1,107 @@
+module: 29-i-feel-like
+level: A2
+version: '2.0'
+items:
+- lemma: боятися
+  ipa: boˈjɑtɪsʲɐ
+  translation: to be afraid
+  pos: verb
+- lemma: встигнути
+  ipa: ˈvstɪhnutie
+  translation: to manage (perf)
+  pos: verb
+- lemma: втомлений
+  ipa: ˈvtɔmlenɪj
+  translation: tired
+  pos: adj
+  gender: m
+- lemma: гумор
+  ipa: ˈhumor
+  translation: humor
+  pos: noun
+  gender: m
+- lemma: дивуватися
+  ipa: dɪvuˈʋɑtɪsʲɐ
+  translation: to be surprised
+  pos: verb
+- lemma: журба
+  ipa: ʒurˈbɑ
+  translation: sorrow
+  pos: noun
+  gender: f
+- lemma: задоволений
+  ipa: zɐdoˈvɔlenɪj
+  translation: satisfied
+  pos: adj
+  gender: m
+- lemma: засмучений
+  ipa: zɐsˈmut͡ʃenɪj
+  translation: sad; upset
+  pos: adj
+  gender: m
+- lemma: здивований
+  ipa: zdɪˈvɔʋɐnɪj
+  translation: surprised (adj)
+  pos: adj
+  gender: f
+- lemma: злий
+  ipa: zlɪj
+  translation: evil; angry
+  pos: adj
+  gender: m
+- lemma: прикро
+  ipa: ˈprɪkro
+  translation: it is a pity/shame
+  pos: adv
+- lemma: радий
+  ipa: ˈrɑdɪj
+  translation: glad
+  pos: adj
+  gender: m
+- lemma: радісно
+  ipa: ˈrɑdʲisno
+  translation: joyfully
+  pos: adv
+- lemma: радіти
+  ipa: rɐˈdʲite
+  translation: to rejoice
+  pos: verb
+- lemma: розчарований
+  ipa: rozt͡ʃɐˈrɔʋɐnɪj
+  translation: disappointed
+  pos: adj
+- lemma: сміятися
+  ipa: sʲmʲiˈjɑtɪsʲɐ
+  translation: to laugh
+  pos: verb
+- lemma: сонечко
+  ipa: ˈsɔnet͡ʃko
+  translation: sun (diminutive)
+  pos: noun
+  gender: n
+- lemma: страшно
+  ipa: ˈstrɑʃno
+  translation: scary
+  pos: adv
+- lemma: сумний
+  ipa: sumˈnɪj
+  translation: sad
+  pos: adj
+  gender: m
+- lemma: туга
+  ipa: tuˈhɑ
+  translation: longing; anguish
+  pos: noun
+  gender: f
+- lemma: турбуватися
+  ipa: turbuˈʋɑtɪsʲɐ
+  translation: to worry
+  pos: verb
+- lemma: хвилюватися
+  ipa: xvɪlʲuˈʋɑtɪsʲɐ
+  translation: to worry/be excited
+  pos: verb
+- lemma: шкода
+  ipa: ʃkoˈdɑ
+  translation: pity/harm
+  pos: adv

@@ -1,6 +1,15 @@
 # Audit Report: 10-aspect-negation.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
+**Phase:** B1.1 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): більше, недоцільно, ніхто, ніщо, жодний...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1917/1500
@@ -10,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ⚠️ 19 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,16 +46,10 @@
 | proverbs | 2 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.4%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Вид у запереченні** | ⚪️ | 8 | Skipped |
+| **Intro/Narrative** | ✅ | 8 | Included in Core |
 | **Тест** | ⚪️ | 194 | Skipped |
 | **Пояснення** | ⚪️ | 0 | Skipped |
 | **Основне правило: заперечення + недоконаний вид** | ⚪️ | 209 | Skipped |
@@ -67,4 +70,3 @@
 | **Основні правила заперечення** | ⚪️ | 120 | Skipped |
 | **Таблиця вибору** | ⚪️ | 0 | Skipped |
 | **Самоперевірка** | ⚪️ | 152 | Skipped |
-| **Словник** | ⚪️ | 0 | Skipped |

@@ -1,22 +1,3 @@
----
-module: a2-52
-title: Shopping & Services
-subtitle: "Buying and Selling in Ukrainian"
-version: "1.0"
-phase: "A2"
-pedagogy: "Narrative"
-duration: 60
-transliteration: none
-tags: ["vocabulary", "shopping", "money", "services"]
-grammar: ["accusative-inanimate", "genitive-quantities"]
-objectives:
-  - Buy items in a shop: купувати, платити
-  - Use services: банк, пошта, перукарня
-  - Talk about money: готівка, картка, ціна
-  - Ask for price: скільки коштує?
-vocab_count: 43
----
-
 # Shopping & Services
 
 ## Warm-up

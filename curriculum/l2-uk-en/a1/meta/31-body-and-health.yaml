@@ -1,0 +1,24 @@
+module: a1-31
+title: Body & Health
+subtitle: At the Doctor's
+version: '1.0'
+phase: A1.3 - Consolidation
+pedagogy: PPP
+duration: 60 min
+transliteration: first-occurrence
+tags:
+  - body
+  - health
+  - doctor
+  - pharmacy
+grammar:
+  - Pain expressions (Болить + body part)
+  - Health vocabulary
+objectives:
+  - Learner can name body parts
+  - Learner can describe symptoms (what hurts)
+  - Learner can communicate at the doctor's office
+  - Learner can ask for medicine at a pharmacy
+vocabulary_count: 30
+vocab_count: 35
+slug: 31-body-and-health

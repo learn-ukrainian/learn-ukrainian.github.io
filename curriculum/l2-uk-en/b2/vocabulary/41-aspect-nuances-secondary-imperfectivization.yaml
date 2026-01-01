@@ -1,0 +1,359 @@
+module: 41-aspect-nuances-secondary-imperfectivization
+level: B2
+version: '2.0'
+items:
+  - lemma: анотований
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: апостол
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: багаторазовість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: безперервність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: ва
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: вглядатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: вдягати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: вдягнути
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: вибачатися
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: вигідний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: видаювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: видовий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: випадання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: виривати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: виробувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: вирізати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: виходжувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: виїдати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: вкорінений
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: відслідковувати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: відступати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: відступлювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: генеральний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: глибоко
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: доводитися
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: n
+  - lemma: дописувати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: дуративний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: дуративність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: запомагати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: запомогти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: засипати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: засипляти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: затримувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: зосереджений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: зіронька
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: калин
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: кафетерія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: коментування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: коментуючий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: криниченький
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: майстр
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: мамай
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: наголоса
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: нагрівання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: надаювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: найякісніший
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: нестандартний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: однокореневий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: оповідати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: перегортати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: перервати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: переробляти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: полонина
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: поточній
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: префіксальний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: префіксація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: пригадати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: пригадувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: притягатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: приєднуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: провожити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: підвищуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: підганяти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: регіонально
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: розповісувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розподіляти
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: росий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: скорочуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: суплетивізм
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: схопити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: сіст
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: фіксувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: цикл
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: циклічність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: імперфектив
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: імперфективація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: істин
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: ітеративний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: ітеративність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f

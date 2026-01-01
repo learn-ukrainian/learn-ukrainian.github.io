@@ -1,0 +1,25 @@
+module: b1-08
+title: 'Вид у минулому: результат vs процес'
+subtitle: 'Aspect in Past: Result vs Process'
+version: '1.0'
+phase: B1.1 Aspect
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - grammar
+  - aspect
+  - past-tense
+  - duration
+grammar:
+  - Result-oriented vs process-oriented aspect
+  - Duration markers and aspect
+  - Completed actions vs ongoing processes
+objectives:
+  - Learner can distinguish result from process in past tense
+  - Learner understands duration markers with imperfective
+  - Learner can select aspect based on speaker's focus (result vs activity)
+  - Learner recognizes completion markers with perfective
+vocabulary_count: 35
+vocab_count: 24
+slug: 08-aspect-past-result-process

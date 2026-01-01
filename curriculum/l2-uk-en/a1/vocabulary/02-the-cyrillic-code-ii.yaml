@@ -1,0 +1,199 @@
+module: 02-the-cyrillic-code-ii
+level: A1
+version: '2.0'
+items:
+  - lemma: алфавіт
+    ipa: /ɑlfɑˈvit/
+    translation: alphabet
+    pos: noun
+    gender: m
+  - lemma: борщ
+    ipa: /bɔrʃt͡ʃ/
+    translation: borscht
+    pos: noun
+    gender: m
+  - lemma: буква
+    ipa: /ˈbukvɑ/
+    translation: letter
+    pos: noun
+    gender: f
+  - lemma: відьмак
+    ipa: /vidʲˈmɑk/
+    translation: witcher
+    pos: noun
+    gender: m
+  - lemma: вона
+    ipa: /vɔˈnɑ/
+    translation: she
+    pos: pron
+    gender: f
+  - lemma: де
+    ipa: /dɛ/
+    translation: where
+    pos: adv
+  - lemma: джинси
+    ipa: /ˈdʒɪnsɪ/
+    translation: jeans
+    pos: noun
+    gender: pl
+  - lemma: дніпро
+    ipa: /dɲiˈprɔ/
+    translation: Dnipro
+    pos: propn
+    gender: m
+  - lemma: до
+    ipa: /dɔ/
+    translation: to/until
+    pos: other
+  - lemma: добре
+    ipa: /ˈdɔbrɛ/
+    translation: good/well
+    pos: adv
+  - lemma: дякувати
+    ipa: /ˈdʲɑkʊvɑtɪ/
+    translation: to thank
+    pos: verb
+  - lemma: желе
+    ipa: /ʒɛˈlɛ/
+    translation: jelly
+    pos: noun
+    gender: n
+  - lemma: йогурт
+    ipa: /ˈjɔɦʊrt/
+    translation: yogurt
+    pos: noun
+    gender: m
+  - lemma: край
+    ipa: /krɑj/
+    translation: edge, land
+    pos: other
+  - lemma: лан
+    ipa: /lɑn/
+    translation: field
+    pos: noun
+    gender: m
+  - lemma: лань
+    ipa: /lɑnʲ/
+    translation: doe
+    pos: noun
+    gender: f
+  - lemma: ласка
+    ipa: /ˈlɑskɑ/
+    translation: favor (bud' laska)
+    pos: noun
+    gender: f
+  - lemma: ласкаво
+    ipa: /lɑsˈkɑvɔ/
+    translation: welcome (adv)
+    pos: adv
+  - lemma: львів
+    ipa: /lʲviw/
+    translation: Lviv
+    pos: propn
+    gender: m
+  - lemma: любов
+    ipa: /lʲuˈbɔw/
+    translation: love
+    pos: noun
+    gender: f
+  - lemma: майонез
+    ipa: /mɑjɔˈnɛz/
+    translation: mayonnaise
+    pos: noun
+    gender: m
+  - lemma: мова
+    ipa: /ˈmɔvɑ/
+    translation: language
+    pos: noun
+    gender: f
+  - lemma: ні
+    ipa: /ni/
+    translation: 'no'
+    pos: other
+  - lemma: одеса
+    ipa: /ɔˈdɛsɑ/
+    translation: Odesa
+    pos: propn
+    gender: f
+  - lemma: побачення
+    ipa: /pɔˈbɑt͡ʃɛnʲːɑ/
+    translation: seeing (goodbye)
+    pos: noun
+    gender: n
+  - lemma: привіт
+    ipa: /prɪˈvit/
+    translation: hello
+    pos: other
+  - lemma: просити
+    ipa: /prɔˈsɪtɪ/
+    translation: to ask/invite
+    pos: verb
+  - lemma: рис
+    ipa: /rɪs/
+    translation: rice
+    pos: noun
+    gender: m
+  - lemma: рись
+    ipa: /rɪsʲ/
+    translation: lynx
+    pos: noun
+    gender: f
+  - lemma: слово
+    ipa: /ˈslɔvɔ/
+    translation: word
+    pos: noun
+    gender: n
+  - lemma: справа
+    ipa: /ˈsprɑvɑ/
+    translation: affair/matter
+    pos: noun
+    gender: f
+  - lemma: україна
+    ipa: /ʊkrɑˈjinɑ/
+    translation: Ukraine
+    pos: propn
+    gender: f
+  - lemma: харків
+    ipa: /ˈxɑrkiw/
+    translation: Kharkiv
+    pos: propn
+    gender: m
+  - lemma: хто
+    ipa: /xtɔ/
+    translation: who
+    pos: pron
+    gender: m
+  - lemma: центр
+    ipa: /t͡sɛntr/
+    translation: center
+    pos: noun
+    gender: m
+  - lemma: цукор
+    ipa: /ˈt͡sukɔr/
+    translation: sugar
+    pos: noun
+    gender: m
+  - lemma: чемпіон
+    ipa: /t͡ʃɛmpiˈɔn/
+    translation: champion
+    pos: noun
+    gender: m
+  - lemma: шоколад
+    ipa: /ʃɔkɔˈlɑd/
+    translation: chocolate
+    pos: noun
+    gender: m
+  - lemma: як
+    ipa: /jɑk/
+    translation: how
+    pos: other
+  - lemma: європа
+    ipa: /jɛwˈrɔpɑ/
+    translation: Europe
+    pos: propn
+    gender: f
+  - lemma: ґума
+    ipa: /ˈgʊmɑ/
+    translation: eraser/rubber
+    pos: noun
+    gender: f

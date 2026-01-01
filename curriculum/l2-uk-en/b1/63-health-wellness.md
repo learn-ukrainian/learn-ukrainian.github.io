@@ -1,28 +1,3 @@
----
-module: b1-63
-title: "Здоров'я та самопочуття"
-subtitle: "Health and Wellness"
-version: "1.0"
-phase: "B1.6 Vocabulary Expansion II"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "noun collocations with health vocabulary"
-  - "adjective-noun agreement in health contexts"
-tags:
-  - vocabulary
-  - health
-  - wellness
-objectives:
-  - "Learner can use 30 health and wellness words in context"
-  - "Learner can distinguish between здоров'я/самопочуття/стан"
-  - "Learner can form natural collocations with health-related nouns"
-vocabulary_count: 35
-vocab_count: 66
----
-
 # Здоров'я та самопочуття
 
 > 🎯 **Чому це важливо?**

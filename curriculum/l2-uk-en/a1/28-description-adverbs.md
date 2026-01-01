@@ -1,30 +1,3 @@
----
-module: a1-28
-title: 'Description: Adverbs'
-subtitle: 'How We Do Things'
-version: '1.0'
-phase: 'A1.3 - Consolidation'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: 'first-occurrence'
-tags:
-  - adverbs
-  - manner
-  - frequency
-  - description
-grammar:
-  - Adverbs of manner (adjective stem + -о)
-  - Adverbs of frequency
-  - Comparison with adjectives
-objectives:
-  - 'Learner can form adverbs from adjectives'
-  - 'Learner can use adverbs to describe how actions are done'
-  - 'Learner can use frequency adverbs (always, sometimes, never)'
-  - 'Learner can distinguish adverbs from adjectives'
-vocabulary_count: 30
-vocab_count: 25
----
-
 # Description: Adverbs
 
 ## Warm-up
@@ -222,32 +195,3 @@ Some adverbs are special:
 > - [Adjectives and Adverbs](https://www.ukrainianlessons.com/adjectives-and-adverbs/) — Comprehensive guide
 > - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/adverbs
 > - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
-
-# Vocabulary
-
-| Word        | IPA              | English              | POS  | Gender | Note |
-| ----------- | ---------------- | -------------------- | ---- | ------ | ---- |
-| алкоголь    | /ɑlkɔˈɦɔlʲ/      | alcohol              | noun | ч      |      |
-| бувати      | /buˈvɑtɪ/        | to happen/be usually | verb | -      |      |
-| бігати      | /ˈbiɦɑtɪ/        | to run               | verb | -      |      |
-| весело      | /ˈvɛsɛlɔ/        | cheerfully           | adv  | -      |      |
-| високо      | /ˈvɪsɔkɔ/        | high                 | adv  | -      |      |
-| втомитися   | /vtɔˈmɪtɪsʲɑ/    | to get tired         | verb | -      |      |
-| відповідь   | /ˈvidpɔvidʲ/     | answer               | noun | ж      |      |
-| гарно       | /ˈɦɑrnɔ/         | beautifully/nicely   | adv  | -      |      |
-| голос       | /ˈɦɔlɔs/         | voice                | noun | ч      |      |
-| голосний    | /ɦɔlɔsˈnɪj/      | loud                 | adj  | ч      |      |
-| голосно     | /ˈɦɔlɔsnɔ/       | loudly               | adv  | -      |      |
-| занадто     | /zɑˈnɑdtɔ/       | too/too much         | adv  | -      |      |
-| зовсім      | /ˈzɔwsim/        | completely/at all    | adv  | -      |      |
-| козак       | /kɔˈzɑk/         | Cossack              | noun | ч      |      |
-| курити      | /kuˈrɪtɪ/        | to smoke             | verb | -      |      |
-| молодець    | /mɔlɔˈdɛt͡sʲ/     | well done/good job   | noun | ч      |      |
-| повільно    | /pɔˈvilʲnɔ/      | slowly               | adv  | -      |      |
-| погано      | /pɔˈhɑnɔ/        | badly                | adv  | -      |      |
-| потяг       | /ˈpɔtʲɑɦ/        | train                | noun | ч      |      |
-| трохи       | /ˈtrɔxɪ/         | a little             | adv  | -      |      |
-| хороший     | /xɔˈrɔʃɪj/       | good                 | adj  | ч      |      |
-| частота     | /t͡ʃɑstɔˈtɑ/      | frequency            | noun | ж      |      |
-| частотність | /t͡ʃɑsˈtɔtnisʲtʲ/ | frequency            | noun | ж      |      |
-| шкала       | /ʃkɑˈlɑ/         | scale                | noun | ж      |      |

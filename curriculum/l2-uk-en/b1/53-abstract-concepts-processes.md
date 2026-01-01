@@ -1,28 +1,3 @@
----
-module: b1-53
-title: "Абстрактні концепції: процеси та зміни"
-subtitle: "Abstract Concepts: Processes and Changes"
-version: "1.0"
-phase: "B1.5 Vocabulary Expansion I"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "noun collocations with process vocabulary"
-  - "verb-noun pairs for change descriptions"
-tags:
-  - vocabulary
-  - abstract
-  - processes
-objectives:
-  - "Learner can use 35 process and change vocabulary words in context"
-  - "Learner can distinguish between similar process words (розвиток/прогрес/еволюція)"
-  - "Learner can describe trends and changes using appropriate collocations"
-vocabulary_count: 35
-vocab_count: 77
----
-
 # Абстрактні концепції: процеси та зміни
 
 > 🎯 **Чому це важливо?**

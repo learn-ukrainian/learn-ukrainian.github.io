@@ -10,149 +10,146 @@ Create the module skeleton with frontmatter, section headers, and vocabulary tab
 
 ## Output
 
-A markdown file with:
-1. Complete YAML frontmatter
-2. All section headers (based on pedagogy)
-3. Vocabulary table (copied EXACTLY from plan)
-4. Empty content placeholders
+Three files:
 
-## Frontmatter Template
+1. `meta/{slug}.yaml`: Module configuration (formerly frontmatter)
+2. `vocabulary/{slug}.yaml`: Structured vocabulary data
+3. `module.md`: Pure content (headers + placeholders)
+
+## Metadata YAML Template (`meta/{slug}.yaml`)
 
 ```yaml
----
-module: {level}-{number}
-title: "{title from plan}"
-subtitle: "{subtitle if applicable}"
-version: "1.0"
-phase: "{phase}"
-pedagogy: "{PPP|TTT|CLIL}"
+id: { number }
+slug: '{slug}'
+title: '{title from plan}'
+subtitle: '{subtitle if applicable}'
+version: '2.0'
+phase: '{phase}'
+pedagogy: '{PPP|TTT|CLIL}'
 objectives:
-  - "Learner can..."
-  - "Learner can..."
-vocabulary_count: {count}
----
+  - 'Learner can...'
+  - 'Learner can...'
+# Note: vocabulary_count is dynamic, no longer needed in meta
 ```
 
-## Section Structure by Pedagogy
+## Vocabulary YAML Format (`vocabulary/{slug}.yaml`)
+
+Refer to `docs/dev/VOCAB_YAML_SCHEMA.md` for full details.
+
+```yaml
+config:
+  standard: '2024'
+items:
+  - lemma: слово
+    ipa: /ˈsɫɔwɔ/
+    translation: word
+    pos: noun
+    gender: n
+    tags: []
+```
+
+## Section Structure by Pedagogy (`module.md`)
 
 ### PPP (A1-A2)
+
 ```markdown
 # {title}
 
 ## Warm-up
+
 [placeholder]
 
 ## Presentation
+
 [placeholder]
 
 ## Practice
+
 [placeholder]
 
 ## Production
+
 [placeholder]
 
 ## Cultural Insight
+
 [placeholder]
 
 ---
 
 ## Summary
+
 [placeholder]
-
----
-
-## Vocabulary
-{copy table from plan}
 ```
 
 ### TTT (B1+ grammar)
+
 ```markdown
 # {title}
 
 ## Diagnostic
+
 [placeholder]
 
 ## Analysis
+
 [placeholder]
 
 ## Deep Dive
+
 [placeholder]
 
 ## Practice
+
 [placeholder]
 
 ---
 
 ## Summary
+
 [placeholder]
-
----
-
-## Словник
-{copy table from plan}
 ```
 
 ### CLIL/Narrative (B1+ vocabulary/culture)
+
 ```markdown
 # {title}
 
 ## Introduction
+
 [placeholder]
 
 ## Immersive Narrative
+
 [placeholder]
 
 ## Analysis
+
 [placeholder]
 
 ## Grammar in Context
+
 [placeholder]
 
 ---
 
 ## Summary
+
 [placeholder]
-
----
-
-## Словник
-{copy table from plan}
-```
-
-## Vocabulary Table Formats
-
-### A1-A2 (English headers)
-```markdown
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| слово | /ˈsɫɔwɔ/ | word | noun | n | - |
-```
-
-### B1+ (Ukrainian headers)
-```markdown
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-|-------|--------|----------|-----|----------|
-| слово | /ˈsɫɔwɔ/ | word | ім. | - |
-```
-
-### B2-C2 (Simplified)
-```markdown
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| слово | word | - |
 ```
 
 ## Validation
 
 Before completing:
-- [ ] Frontmatter has all required fields
-- [ ] Pedagogy matches level (PPP for A1-A2, TTT/CLIL for B1+)
-- [ ] All section headers present
-- [ ] Vocabulary table copied exactly from plan (no additions/removals)
-- [ ] Module number in correct format (01-XX with leading zero)
+
+- [ ] Metadata YAML created valid ID, slug, and Objectives
+- [ ] Vocabulary YAML created with valid Schema (POS, Gender)
+- [ ] Module MD created with NO Frontmatter and NO Vocabulary table
+- [ ] All section headers present in MD
+- [ ] File naming conventions followed completely
 
 ## File Naming
 
-`curriculum/l2-uk-en/{level}/{number}-{slugified-title}.md`
-
-Example: `curriculum/l2-uk-en/a1/01-the-cyrillic-code-i.md`
+- `curriculum/l2-uk-en/{level}/meta/{number}-{slugified-title}.yaml`
+- `curriculum/l2-uk-en/{level}/vocabulary/{number}-{slugified-title}.yaml`
+- `curriculum/l2-uk-en/{level}/{number}-{slugified-title}.md`

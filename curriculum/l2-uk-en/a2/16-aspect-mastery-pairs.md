@@ -1,27 +1,3 @@
----
-module: a2-16
-title: Aspect Mastery
-subtitle: "Drilling the 30 Most Common Pairs"
-version: "1.0"
-phase: "A2.2"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - aspect
-  - verbs
-  - drilling
-grammar:
-  - perfective/imperfective pairs
-  - aspect selection in context
-objectives:
-  - "Learner can recall 30+ aspect pairs automatically"
-  - "Learner can select correct aspect based on context"
-  - "Learner can transform between aspects fluently"
-vocabulary_count: 30
-vocab_count: 21
----
-
 ## Warm-up
 
 In Modules 12-15, you learned the theory of aspect. Now it's time to **drill** until the pairs become automatic!

@@ -1,0 +1,334 @@
+module: 01-the-dative-i-pronouns
+level: A2
+version: '2.0'
+items:
+  - lemma: байдуже
+    ipa: bɐi̯ˈduʒe
+    translation: indifferently; it doesn't matter
+    pos: adv
+  - lemma: вживаний
+    ipa: u̯ˈʒɪu̯ɐnei̯
+    translation: used
+    pos: adj
+  - lemma: вимагати
+    ipa: vɪmɐˈɦɑte
+    translation: to demand; to require
+    pos: verb
+  - lemma: виражатися
+    ipa: vɪrɐˈʒɑtɪsʲɐ
+    translation: to be expressed
+    pos: verb
+  - lemma: вираження
+    ipa: ˈvɪrɐʒenʲːɐ
+    translation: expression
+    pos: noun
+    gender: n
+  - lemma: вступ
+    ipa: u̯stup
+    translation: introduction
+    pos: noun
+    gender: m
+  - lemma: відмінка
+    ipa: vidˈminkɐ
+    translation: case (genitive)
+    pos: noun
+    gender: m
+  - lemma: відмінковий
+    ipa: vidminˈkɔvei̯
+    translation: case (adj)
+    pos: adj
+  - lemma: відчуття
+    ipa: vidt͡ʃuˈtʲːa
+    translation: feeling; sensation
+    pos: noun
+    gender: n
+  - lemma: граматичний
+    ipa: ɦrɐmɐˈtɪt͡ʃnei̯
+    translation: grammatical
+    pos: adj
+    gender: f
+  - lemma: давальний
+    ipa: dɐˈʋalʲnei̯
+    translation: dative
+    pos: adj
+    gender: m
+  - lemma: додавати
+    ipa: dodɐˈʋɑte
+    translation: to add
+    pos: verb
+  - lemma: додати
+    ipa: doˈdɑte
+    translation: to add (perfective)
+    pos: verb
+  - lemma: додаток
+    ipa: doˈdɑtok
+    translation: app; addition; object (grammar)
+    pos: noun
+    gender: m
+  - lemma: допомагати
+    ipa: dopomɐˈɦɑte
+    translation: to help
+    pos: verb
+  - lemma: дослівний
+    ipa: doˈsliu̯nei̯
+    translation: literal
+    pos: adj
+  - lemma: думка
+    ipa: ˈdumkɐ
+    translation: thought; opinion
+    pos: noun
+    gender: f
+  - lemma: діяти
+    ipa: ˈdijɐte
+    translation: to act
+    pos: verb
+  - lemma: емоційний
+    ipa: emɔˈt͡sʲijnei̯
+    translation: emotional
+    pos: adj
+  - lemma: емоція
+    ipa: eˈmɔt͡sʲijɐ
+    translation: emotion
+    pos: noun
+    gender: f
+  - lemma: заважати
+    ipa: zɐʋɐˈʒɑte
+    translation: to disturb; to bother
+    pos: verb
+  - lemma: займенник
+    ipa: zɐi̯ˈmɛnːɪk
+    translation: pronoun
+    pos: noun
+    gender: m
+  - lemma: закріпити
+    ipa: zɐkriˈpɪte
+    translation: to consolidate; to fasten
+    pos: verb
+  - lemma: замислюватися
+    ipa: zɐˈmɪsʲlʲuʋɐtɪsʲɐ
+    translation: to ponder; to think about
+    pos: verb
+  - lemma: замовлення
+    ipa: zɐˈmɔu̯lenʲːɐ
+    translation: order
+    pos: noun
+    gender: n
+  - lemma: звернути
+    ipa: zʋerˈnute
+    translation: to turn; to pay attention
+    pos: verb
+  - lemma: здаватися
+    ipa: zdɐˈʋɑtɪsʲɐ
+    translation: to seem
+    pos: verb
+  - lemma: зрозуміліший
+    ipa: zrozʊˈmilʲiʃei̯
+    translation: more understandable
+    pos: adj
+    gender: f
+  - lemma: листівка
+    ipa: lɪsˈtiu̯kɐ
+    translation: postcard
+    pos: noun
+    gender: f
+  - lemma: матеріал
+    ipa: mɐteriˈɑl
+    translation: material
+    pos: noun
+    gender: m
+  - lemma: модель
+    ipa: moˈdɛlʲ
+    translation: model
+    pos: noun
+    gender: f
+  - lemma: модуль
+    ipa: ˈmɔdulʲ
+    translation: module
+    pos: noun
+    gender: m
+  - lemma: навести
+    ipa: nɐˈʋɛste
+    translation: to cite; to give (an example)
+    pos: verb
+  - lemma: називний
+    ipa: nɐzɪu̯ˈnei̯
+    translation: nominative
+    pos: adj
+    gender: m
+  - lemma: найбільш
+    ipa: nɐi̯ˈbilʲʃ
+    translation: most
+    pos: adv
+  - lemma: найлегший
+    ipa: nɐi̯ˈlɛɦʃei̯
+    translation: easiest
+    pos: noun
+    gender: n
+  - lemma: найпопулярніший
+    ipa: nɐi̯popuˈlʲɑrnʲiʃei̯
+    translation: most popular
+    pos: adj
+  - lemma: настати
+    ipa: nɐˈstɑte
+    translation: to arrive (time); to come
+    pos: verb
+    gender: m
+  - lemma: натомість
+    ipa: nɐˈtɔmisʲtʲ
+    translation: instead; on the other hand
+    pos: other
+  - lemma: нижче
+    ipa: ˈnɪʒt͡ʃe
+    translation: below
+    pos: adv
+  - lemma: опанувати
+    ipa: opɐnuˈʋɑte
+    translation: to master
+    pos: verb
+  - lemma: особливий
+    ipa: osoˈblɪʋei̯
+    translation: special
+    pos: adj
+    gender: f
+  - lemma: отримувати
+    ipa: otˈrɪmuʋɐte
+    translation: to receive
+    pos: verb
+  - lemma: отримувач
+    ipa: otˈrɪmuʋɐt͡ʃ
+    translation: recipient; receiver
+    pos: noun
+    gender: m
+  - lemma: переживання
+    ipa: pereʒɪˈʋanʲːɐ
+    translation: experience; worry
+    pos: noun
+    gender: n
+  - lemma: переживач
+    ipa: pereʒɪˈʋat͡ʃ
+    translation: experiencer (grammar)
+    pos: noun
+    gender: m
+  - lemma: побудова
+    ipa: pobuˈdɔʋɐ
+    translation: construction; structure
+    pos: noun
+    gender: f
+  - lemma: поговорити
+    ipa: poɦoʋoˈrɪte
+    translation: to have a talk
+    pos: verb
+  - lemma: познайомитися
+    ipa: poznɐˈjɔmɪtɪsʲɐ
+    translation: to get acquainted
+    pos: verb
+  - lemma: позначення
+    ipa: pozˈnɑt͡ʃenʲːɐ
+    translation: designation; marking
+    pos: noun
+    gender: n
+  - lemma: потреба
+    ipa: poˈtrɛbɐ
+    translation: need; necessity
+    pos: noun
+    gender: m
+  - lemma: потребувати
+    ipa: potrebuˈʋɑte
+    translation: to need; to require
+    pos: verb
+  - lemma: потужніший
+    ipa: poˈtuʒnʲiʃei̯
+    translation: more powerful
+    pos: adj
+    gender: m
+  - lemma: почуття
+    ipa: pot͡ʃuˈtʲːa
+    translation: feeling; sentiment
+    pos: noun
+    gender: m
+  - lemma: пояснювати
+    ipa: poˈjɑsʲnʲuʋɐte
+    translation: to explain
+    pos: verb
+  - lemma: практика
+    ipa: ˈprɑktɪkɐ
+    translation: practice
+    pos: noun
+    gender: f
+  - lemma: прямий
+    ipa: prʲɐˈmei̯
+    translation: direct
+    pos: adj
+    gender: m
+  - lemma: речень
+    ipa: ˈrɛt͡ʃenʲ
+    translation: sentence (genitive plural)
+    pos: noun
+    gender: n
+  - lemma: розповідати
+    ipa: rozpoʋiˈdɑte
+    translation: to tell; to narrate
+    pos: verb
+  - lemma: самостійно
+    ipa: sɐmoˈstʲijno
+    translation: independently
+    pos: adv
+  - lemma: система
+    ipa: sɪˈstɛmɐ
+    translation: system
+    pos: noun
+    gender: f
+  - lemma: сподобатися
+    ipa: spoˈdɔbɐtɪsʲɐ
+    translation: to be liked
+    pos: verb
+    gender: n
+  - lemma: стан
+    ipa: stɑn
+    translation: state; condition
+    pos: noun
+    gender: m
+  - lemma: структура
+    ipa: strukˈturɐ
+    translation: structure
+    pos: noun
+    gender: f
+  - lemma: сумно
+    ipa: ˈsumno
+    translation: sadly; boring
+    pos: adv
+  - lemma: тощо
+    ipa: ˈtɔʃt͡ʃo
+    translation: etc.; and so on
+    pos: other
+  - lemma: траплятися
+    ipa: trɐpˈlʲɑtɪsʲɐ
+    translation: to happen; to occur
+    pos: verb
+  - lemma: уподобання
+    ipa: upodoˈbɑnʲːɐ
+    translation: preference; like
+    pos: noun
+    gender: n
+  - lemma: фундаментальний
+    ipa: fundɐmenˈtɑlʲnei̯
+    translation: fundamental
+    pos: adj
+    gender: n
+  - lemma: фізичний
+    ipa: fiˈzɪt͡ʃnei̯
+    translation: physical
+    pos: adj
+  - lemma: цілий
+    ipa: ˈt͡sʲilei̯
+    translation: whole; entire
+    pos: adj
+  - lemma: ціль
+    ipa: t͡sʲilʲ
+    translation: goal; target
+    pos: noun
+    gender: f
+  - lemma: якщо
+    ipa: jɐkˈʃt͡ʃɔ
+    translation: if
+    pos: other

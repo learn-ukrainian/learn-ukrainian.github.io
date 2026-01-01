@@ -1,0 +1,538 @@
+module: 55-checkpoint-vocabulary
+level: A2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/55-checkpoint-vocabulary.md
+generated: '2025-12-31T23:55:26.718726'
+scope: cloze, fill-in, quiz, true-false, unjumble
+activity_counts:
+  fill-in: 12
+  cloze: 1
+  unjumble: 6
+  quiz: 12
+  true-false: 12
+total_items: 43
+item_count: 43
+sample_percent: null
+items:
+- activity: fill-in
+  title: Vocabulary Test
+  sentence_template: Вранці я ___ о 7:00. (wake up)
+  answer: прокидаюся
+  complete_sentence: Вранці я прокидаюся о 7:00. (wake up)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Vocabulary Test
+  sentence_template: Він працює ___. (as a doctor)
+  answer: лікарем
+  complete_sentence: Він працює лікарем. (as a doctor)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Vocabulary Test
+  sentence_template: У мене болить ___. (head)
+  answer: голова
+  complete_sentence: У мене болить голова. (head)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Vocabulary Test
+  sentence_template: Скільки це ___? (costs)
+  answer: коштує
+  complete_sentence: Скільки це коштує? (costs)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Vocabulary Test
+  sentence_template: Можна заплатити ___? (by card)
+  answer: карткою
+  complete_sentence: Можна заплатити карткою? (by card)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Vocabulary Test
+  sentence_template: Я хочу купити ___. (ticket)
+  answer: квиток
+  complete_sentence: Я хочу купити квиток. (ticket)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Vocabulary Test
+  sentence_template: Вона ___ в університеті. (studies)
+  answer: вчиться
+  complete_sentence: Вона вчиться в університеті. (studies)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Vocabulary Test
+  sentence_template: Я ___ українську мову. (learn)
+  answer: вивчаю
+  complete_sentence: Я вивчаю українську мову. (learn)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Vocabulary Test
+  sentence_template: Де тут ___? (pharmacy)
+  answer: аптека
+  complete_sentence: Де тут аптека? (pharmacy)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Vocabulary Test
+  sentence_template: Яка у вас ___? (temperature)
+  answer: температура
+  complete_sentence: Яка у вас температура? (temperature)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Vocabulary Test
+  sentence_template: Він живе у великому ___. (city-LOC)
+  answer: місті
+  complete_sentence: Він живе у великому місті. (city-LOC)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Vocabulary Test
+  sentence_template: Ввечері я йду в ___. (gym-ACC)
+  answer: спортзал
+  complete_sentence: Ввечері я йду в спортзал. (gym-ACC)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: A Day in Life
+  passage_template: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00.
+
+    Потім я {снідаю|вечеряю|сплю} і йду на роботу.
+
+    Я працюю {менеджером|менеджер|менеджера} в офісі.
+
+    Вчора у мене боліла {голова|голову|голові}.
+
+    Я пішов до {аптеки|аптека|аптеку} і купив ліки.
+
+    У вихідні я хочу поїхати в {подорож|роботу|аптеку}.
+
+    Я вже купив {квитки|квиток|квитку} на поїзд.
+
+    Я забронював {готель|парк|вокзал} у центрі.
+
+    Там я буду {гуляти|працювати|хворіти} і відпочивати.
+
+    Ввечері я піду в {ресторан|магазин|банк} на вечерю.
+
+    Я люблю {вивчати|забувати|втрачати} нові місця.
+
+    Це буде чудова {поїздка|робота|хвороба}!'
+  blanks:
+  - answer: сплю
+    options:
+    - прокидаюся
+    - засинаю
+  - answer: сплю
+    options:
+    - снідаю
+    - вечеряю
+  - answer: менеджера
+    options:
+    - менеджером
+    - менеджер
+  - answer: голові
+    options:
+    - голова
+    - голову
+  - answer: аптеку
+    options:
+    - аптеки
+    - аптека
+  - answer: аптеку
+    options:
+    - подорож
+    - роботу
+  - answer: квитку
+    options:
+    - квитки
+    - квиток
+  - answer: вокзал
+    options:
+    - готель
+    - парк
+  - answer: хворіти
+    options:
+    - гуляти
+    - працювати
+  - answer: банк
+    options:
+    - ресторан
+    - магазин
+  - answer: втрачати
+    options:
+    - вивчати
+    - забувати
+  - answer: хвороба
+    options:
+    - поїздка
+    - робота
+  blank_count: 12
+  complete_passage: 'Вранці я сплю о 7:00.
+
+    Потім я сплю і йду на роботу.
+
+    Я працюю менеджера в офісі.
+
+    Вчора у мене боліла голові.
+
+    Я пішов до аптеку і купив ліки.
+
+    У вихідні я хочу поїхати в аптеку.
+
+    Я вже купив квитку на поїзд.
+
+    Я забронював вокзал у центрі.
+
+    Там я буду хворіти і відпочивати.
+
+    Ввечері я піду в банк на вечерю.
+
+    Я люблю втрачати нові місця.
+
+    Це буде чудова хвороба!'
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Daily Routines
+  jumbled_words: []
+  answer: Вранці я завжди прокидаюся дуже рано о сьомій
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Daily Routines
+  jumbled_words: []
+  answer: Мій старший брат зараз успішно працює програмістом
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Daily Routines
+  jumbled_words: []
+  answer: Сьогодні у мене дуже сильно болить голова
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Daily Routines
+  jumbled_words: []
+  answer: Скажіть будь ласка чи можна тут заплатити карткою
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Daily Routines
+  jumbled_words: []
+  answer: Вона зараз дуже старанно вчиться в національному університеті
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Daily Routines
+  jumbled_words: []
+  answer: Вибачте скажіть де тут є найближча аптека
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: A2 Vocabulary Quiz
+  question: What is the meaning of the reflexive verb "прокидатися" in English?
+  options:
+  - '{''text'': ''To wake up'', ''correct'': True}'
+  - '{''text'': ''To fall asleep'', ''correct'': False}'
+  - '{''text'': ''To eat breakfast'', ''correct'': False}'
+  - '{''text'': ''To get dressed'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: A2 Vocabulary Quiz
+  question: Which grammatical case is used in the phrase "працювати лікарем"?
+  options:
+  - '{''text'': ''Instrumental case'', ''correct'': True}'
+  - '{''text'': ''Accusative case'', ''correct'': False}'
+  - '{''text'': ''Nominative case'', ''correct'': False}'
+  - '{''text'': ''Genitive case'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: A2 Vocabulary Quiz
+  question: In the phrase "У мене болить голова", what is the grammatical role of
+    "голова"?
+  options:
+  - '{''text'': ''Nominative (subject)'', ''correct'': True}'
+  - '{''text'': ''Accusative (object)'', ''correct'': False}'
+  - '{''text'': ''Genitive (possession)'', ''correct'': False}'
+  - '{''text'': ''Dative (recipient)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: A2 Vocabulary Quiz
+  question: In the phrase "Заплатити карткою", what case is "карткою" in?
+  options:
+  - '{''text'': ''Instrumental (means)'', ''correct'': True}'
+  - '{''text'': ''Accusative'', ''correct'': False}'
+  - '{''text'': ''Dative'', ''correct'': False}'
+  - '{''text'': ''Locative'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: A2 Vocabulary Quiz
+  question: What is the primary meaning of the verb "вчитися" in an educational context?
+  options:
+  - '{''text'': ''To study (as student)'', ''correct'': True}'
+  - '{''text'': ''To teach a class'', ''correct'': False}'
+  - '{''text'': ''To learn a subject'', ''correct'': False}'
+  - '{''text'': ''To read a book'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: A2 Vocabulary Quiz
+  question: What does the verb "вивчати" specifically mean when talking about education?
+  options:
+  - '{''text'': ''To learn (a subject)'', ''correct'': True}'
+  - '{''text'': ''To be a student'', ''correct'': False}'
+  - '{''text'': ''To teach'', ''correct'': False}'
+  - '{''text'': ''To write'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: A2 Vocabulary Quiz
+  question: What is the English translation of the travel word "квиток"?
+  options:
+  - '{''text'': ''Ticket'', ''correct'': True}'
+  - '{''text'': ''Key'', ''correct'': False}'
+  - '{''text'': ''Bag'', ''correct'': False}'
+  - '{''text'': ''Map'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: A2 Vocabulary Quiz
+  question: What does the shopping word "знижка" mean in a store?
+  options:
+  - '{''text'': ''Discount'', ''correct'': True}'
+  - '{''text'': ''Receipt'', ''correct'': False}'
+  - '{''text'': ''Price'', ''correct'': False}'
+  - '{''text'': ''Change'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: A2 Vocabulary Quiz
+  question: What part of the body is "горло" in English?
+  options:
+  - '{''text'': ''Throat'', ''correct'': True}'
+  - '{''text'': ''Head'', ''correct'': False}'
+  - '{''text'': ''Leg'', ''correct'': False}'
+  - '{''text'': ''Arm'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: A2 Vocabulary Quiz
+  question: What is the correct translation for the word "подорож"?
+  options:
+  - '{''text'': ''Trip/journey'', ''correct'': True}'
+  - '{''text'': ''Work/job'', ''correct'': False}'
+  - '{''text'': ''Food/meal'', ''correct'': False}'
+  - '{''text'': ''Rest/sleep'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: A2 Vocabulary Quiz
+  question: What kind of establishment is a "готель" for travelers?
+  options:
+  - '{''text'': ''Hotel'', ''correct'': True}'
+  - '{''text'': ''House'', ''correct'': False}'
+  - '{''text'': ''Restaurant'', ''correct'': False}'
+  - '{''text'': ''Hospital'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: A2 Vocabulary Quiz
+  question: Which room in the house is called "вітальня" in Ukrainian?
+  options:
+  - '{''text'': ''Living room'', ''correct'': True}'
+  - '{''text'': ''Bedroom'', ''correct'': False}'
+  - '{''text'': ''Kitchen'', ''correct'': False}'
+  - '{''text'': ''Bathroom'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Vocabulary Rules
+  statement: '"Працювати + Instrumental" describes profession.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Vocabulary Rules
+  statement: '"У мене болить" = my... hurts.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Vocabulary Rules
+  statement: '"Голову" is correct after "болить".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Vocabulary Rules
+  statement: '"Вчитися" = to be a student.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Vocabulary Rules
+  statement: '"Вивчати" = to learn a subject.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Vocabulary Rules
+  statement: '"Картка" in Instrumental is "картку".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Vocabulary Rules
+  statement: '"Знижка" means discount.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Vocabulary Rules
+  statement: Reflexive verbs end in "-ся".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Vocabulary Rules
+  statement: '"Квиток" and "готель" are health vocabulary.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Vocabulary Rules
+  statement: '"Скільки це коштує?" asks the price.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Vocabulary Rules
+  statement: '"Поїзд" means train.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Vocabulary Rules
+  statement: '"Вітальня" is the kitchen.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

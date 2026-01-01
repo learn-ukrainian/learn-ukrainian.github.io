@@ -21,9 +21,9 @@ Create or review vocabulary-focused modules using the B1 vocabulary template.
 
 ## Template Location
 
-| Level | Template | Modules |
-|-------|----------|---------|
-| B1 | `docs/l2-uk-en/templates/b1-vocab-module-template.md` | M51-70 |
+| Level | Template                                              | Modules |
+| ----- | ----------------------------------------------------- | ------- |
+| B1    | `docs/l2-uk-en/templates/b1-vocab-module-template.md` | M51-70  |
 
 **CRITICAL:** Read the template BEFORE creating a module.
 
@@ -43,13 +43,13 @@ Detects: Russianisms, surzhyk, calques, agreement/case errors.
 
 ## Vocabulary Module Characteristics
 
-| Aspect | Grammar Module | Vocabulary Module |
-|--------|----------------|-------------------|
-| Focus | Grammar rules | Word usage & context |
-| Pedagogy | TTT | PPP |
-| Activities | All types | Emphasis on match-up, group-sort, select |
-| Tables | Grammar paradigms | Collocation tables |
-| Reading | Examples | Authentic passages (2-3) |
+| Aspect     | Grammar Module    | Vocabulary Module                        |
+| ---------- | ----------------- | ---------------------------------------- |
+| Focus      | Grammar rules     | Word usage & context                     |
+| Pedagogy   | TTT               | PPP                                      |
+| Activities | All types         | Emphasis on match-up, group-sort, select |
+| Tables     | Grammar paradigms | Collocation tables                       |
+| Reading    | Examples          | Authentic passages (2-3)                 |
 
 ---
 
@@ -58,9 +58,9 @@ Detects: Russianisms, surzhyk, calques, agreement/case errors.
 ### 1. Teach Collocations, Not Isolated Words
 
 ```markdown
-| Слово | Типові колокації | Приклад |
-|-------|------------------|---------|
-| **ідея** | мати ідею, цікава ідея | У мене є ідея. |
+| Слово     | Типові колокації              | Приклад         |
+| --------- | ----------------------------- | --------------- |
+| **ідея**  | мати ідею, цікава ідея        | У мене є ідея.  |
 | **думка** | на мою думку, висловити думку | На мою думку... |
 ```
 
@@ -78,6 +78,7 @@ Detects: Russianisms, surzhyk, calques, agreement/case errors.
 ### 4. Organize by Semantic Field
 
 Group vocabulary thematically:
+
 - Ідеї та думки (Ideas and Thoughts)
 - Проблеми та виклики (Problems and Challenges)
 - Рішення та підходи (Solutions and Approaches)
@@ -86,15 +87,15 @@ Group vocabulary thematically:
 
 ## Activity Priorities
 
-| Priority | Activity Types | Purpose |
-|----------|---------------|---------|
-| **HIGH** | match-up (12+) | Collocation practice |
-| **HIGH** | group-sort (16+) | Semantic categorization |
-| **HIGH** | select (8+) | Multiple correct collocations |
-| **HIGH** | fill-in (12+) | Contextual usage |
-| **MEDIUM** | cloze (14+) | Extended passage |
-| **MEDIUM** | quiz (8+) | Comprehension |
-| **LOW** | unjumble, error-correction | Production |
+| Priority   | Activity Types             | Purpose                       |
+| ---------- | -------------------------- | ----------------------------- |
+| **HIGH**   | match-up (12+)             | Collocation practice          |
+| **HIGH**   | group-sort (16+)           | Semantic categorization       |
+| **HIGH**   | select (8+)                | Multiple correct collocations |
+| **HIGH**   | fill-in (12+)              | Contextual usage              |
+| **MEDIUM** | cloze (14+)                | Extended passage              |
+| **MEDIUM** | quiz (8+)                  | Comprehension                 |
+| **LOW**    | unjumble, error-correction | Production                    |
 
 ---
 
@@ -104,7 +105,7 @@ Before submitting a vocabulary module:
 
 - [ ] **Template read?** — `b1-vocab-module-template.md` consulted
 - [ ] **Word count:** 1500+ words
-- [ ] **Vocabulary:** 25-30 items with collocations in Примітка column
+- [ ] **Vocabulary:** 25-30 items in YAML Sidecar
 - [ ] **Thematic groups:** Vocabulary organized by semantic field
 - [ ] **Collocations:** Explicitly taught in tables and activities
 - [ ] **Synonymy:** Similar words differentiated by usage

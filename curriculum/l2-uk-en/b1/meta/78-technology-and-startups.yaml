@@ -1,0 +1,27 @@
+module: 78
+title: Технології та стартапи
+subtitle: Technology and Startups
+version: '1.0'
+phase: B1.7
+level: B1
+focus: cultural
+pedagogy: PPP
+duration: 75
+transliteration: none
+tags:
+  - cultural
+  - technology
+  - IT
+  - startups
+  - contemporary
+grammar: []
+objectives:
+  - Learner can discuss Ukraine's IT sector in Ukrainian
+  - Learner can understand authentic texts about Ukrainian tech companies
+  - Learner can use technology-related vocabulary in context
+  - Learner can compare Ukrainian tech industry with global trends
+word_target: 1500
+vocab_target: 35
+immersion_target: 95
+vocab_count: 23
+slug: 78-technology-and-startups

@@ -1,31 +1,3 @@
----
-module: b2-79
-title: "Монгольська навала 1240"
-subtitle: "Падіння Києва та кінець Київської Русі"
-version: "1.0"
-phase: "B2.3a"
-focus: history
-pedagogy: "CBI"
-duration: 90
-transliteration: "none"
-tags:
-  - history
-  - era:medieval
-  - topic:mongol-invasion
-grammar:
-  - "Historical narrative tenses"
-  - "Passive voice in historical writing"
-vocabulary_focus:
-vocab_count: 127
-  - "Military terminology"
-  - "Historical political vocabulary"
-vocabulary_count: 40
-objectives:
-  - "Розуміти причини та наслідки монгольської навали на Русь"
-  - "Аналізувати історичні джерела про облогу та падіння Києва"
-  - "Використовувати військову та історичну лексику в контексті"
----
-
 # Монгольська навала 1240
 
 > 🎯 **Чому це важливо?**

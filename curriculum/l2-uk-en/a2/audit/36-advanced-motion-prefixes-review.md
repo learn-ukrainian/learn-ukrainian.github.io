@@ -10,17 +10,12 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 21/1
+- **Vocab:** ✅ 71/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 54.0% (target 40-55% (A2.2))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
+- **Immersion:** 🇺🇦 43.0% (target 40-55% (A2.2))
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -45,15 +40,4 @@
 | **Mistake 3: Forgetting the Apostrophe with Об-** | ⚪️ | 10 | Skipped |
 | **Language Learning Tip** | ✅ | 124 | Included in Core |
 | **Summary** | ✅ | 17 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Prefix Meanings** | 🎮 | 8 | Activity (8 items, min 8) |
-| **fill-in: Choose the Prefix** | 🎮 | 8 | Activity (8 items, min 8) |
-| **quiz: Prefix Concepts** | 🎮 | 8 | Activity (8 items, min 8) |
-| **cloze: Tour Guide Instructions** | 🎮 | 12 | Activity (12 items, min 12) |
-| **unjumble: Motion Sentences** | 🎮 | 8 | Activity (8 items, min 6) |
-| **error-correction: Wrong Prefix** | 🎮 | 6 | Activity (6 items, min 6) |
-| **group-sort: Prefix Categories** | 🎮 | 12 | Activity (12 items, min 12) |
-| **match-up: Directions** | 🎮 | 8 | Activity (8 items, min 8) |
-| **fill-in: Daily Commute** | 🎮 | 8 | Activity (8 items, min 8) |
-| **cloze: Carpathians Trip** | 🎮 | 12 | Activity (12 items, min 12) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

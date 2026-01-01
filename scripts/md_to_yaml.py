@@ -65,7 +65,7 @@ def parse_quiz(content: str) -> list[dict]:
             if line.startswith('>'):
                 explanation = line[1:].strip()
 
-        if question and len(options) >= 4:
+        if question and len(options) >= 2:
             item = {'question': question, 'options': options}
             if explanation:
                 item['explanation'] = explanation
@@ -146,52 +146,84 @@ def parse_fill_in(content: str) -> list[dict]:
 def parse_true_false(content: str) -> list[dict]:
     """Parse true-false activity from markdown.
 
-    Handles format:
+    Handles format 1 (Numbered):
     1. Statement text here.
        - [ ] Правда
        - [x] Неправда
        > Explanation text.
+
+    Handles format 2 (Bullet checklist):
+    - [x] Statement is true.
+      > Explanation.
+    - [ ] Statement is false.
     """
     items = []
 
-    # Split by numbered items
+    # Try numbered format first
     blocks = re.split(r'^\d+\.\s+', content, flags=re.MULTILINE)
+    
+    if len(blocks) > 1:
+        # Process numbered items
+        for block in blocks[1:]:
+            lines = block.strip().split('\n')
+            if not lines:
+                continue
 
-    for block in blocks[1:]:  # Skip first empty split
-        lines = block.strip().split('\n')
-        if not lines:
-            continue
+            statement = lines[0].strip()
+            is_correct = None
+            explanation = None
 
-        # First line is the statement
-        statement = lines[0].strip()
-        is_correct = None
-        explanation = None
+            for line in lines[1:]:
+                line = line.strip()
+                # Check for options
+                pravda_match = re.match(r'-\s*\[(x|\s)\]\s*(Правда|True)', line, re.IGNORECASE)
+                nepravda_match = re.match(r'-\s*\[(x|\s)\]\s*(Неправда|False)', line, re.IGNORECASE)
 
-        for line in lines[1:]:
+                if pravda_match:
+                    if pravda_match.group(1).lower() == 'x': is_correct = True
+                elif nepravda_match:
+                    if nepravda_match.group(1).lower() == 'x': is_correct = False
+                elif line.startswith('>') and not line.startswith('> [!'):
+                    explanation = line[1:].strip()
+
+            if statement and is_correct is not None:
+                item = {'statement': statement, 'correct': is_correct}
+                if explanation:
+                    item['explanation'] = explanation
+                items.append(item)
+    
+    # If no numbered items found, try bullet format
+    if not items:
+        lines = content.split('\n')
+        current_item = None
+        
+        for line in lines:
             line = line.strip()
-
-            # Check for Правда/Неправда options
-            pravda_match = re.match(r'-\s*\[(x|\s)\]\s*(Правда|True)', line, re.IGNORECASE)
-            nepravda_match = re.match(r'-\s*\[(x|\s)\]\s*(Неправда|False)', line, re.IGNORECASE)
-
-            if pravda_match:
-                # If Правда is checked, statement is true
-                if pravda_match.group(1).lower() == 'x':
-                    is_correct = True
-            elif nepravda_match:
-                # If Неправда is checked, statement is false
-                if nepravda_match.group(1).lower() == 'x':
-                    is_correct = False
-
-            # Explanation: > text
-            elif line.startswith('>') and not line.startswith('> [!'):
+            if not line: continue
+            
+            # Match: - [x] Statement
+            match = re.match(r'^-\s*\[([ xX])\]\s*(.+)', line)
+            if match:
+                # Save previous item
+                if current_item:
+                    items.append(current_item)
+                
+                # Start new item
+                is_correct = match.group(1).lower() == 'x'
+                statement = match.group(2).strip()
+                current_item = {'statement': statement, 'correct': is_correct}
+            
+            # Match explanation: > text
+            elif line.startswith('>') and not line.startswith('> [!') and current_item:
                 explanation = line[1:].strip()
-
-        if statement and is_correct is not None:
-            item = {'statement': statement, 'correct': is_correct}
-            if explanation:
-                item['explanation'] = explanation
-            items.append(item)
+                if 'explanation' in current_item:
+                    current_item['explanation'] += ' ' + explanation
+                else:
+                    current_item['explanation'] = explanation
+        
+        # Add last item
+        if current_item:
+            items.append(current_item)
 
     return items
 

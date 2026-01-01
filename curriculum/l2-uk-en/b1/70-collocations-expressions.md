@@ -1,28 +1,3 @@
----
-module: b1-70
-title: "Колокації та вирази"
-subtitle: "Collocations and Expressions"
-version: "1.0"
-phase: "B1.6 Vocabulary Expansion II"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "verb-noun collocations"
-  - "adjective-noun collocations"
-tags:
-  - vocabulary
-  - collocations
-  - expressions
-objectives:
-  - "Learner can use 25 common verb-noun collocations naturally"
-  - "Learner can distinguish between similar verbs in collocations"
-  - "Learner can form natural word combinations in professional and everyday contexts"
-vocabulary_count: 35
-vocab_count: 26
----
-
 # Колокації та вирази
 
 > 🎯 **Чому це важливо?**

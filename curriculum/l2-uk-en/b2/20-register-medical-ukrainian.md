@@ -1,30 +1,3 @@
----
-module: b2-20
-title: "Медична українська: спілкування у сфері охорони здоров'я"
-subtitle: "Як говорити про здоров'я правильно"
-version: "1.0"
-phase: "B2.1b [Participles & Register]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - register
-  - medical
-  - healthcare
-grammar:
-  - "Medical register vocabulary and phrases"
-  - "Doctor-patient dialogue conventions"
-  - "Medical instructions and prescriptions"
-  - "Formal healthcare communication"
-objectives:
-  - "Учень може правильно описати симптоми та скарги на прийомі у лікаря"
-  - "Учень може зрозуміти та пояснити медичні інструкції"
-  - "Учень може використовувати відповідну медичну лексику в різних ситуаціях"
-vocabulary_count: 30
-vocab_count: 114
----
-
 # Медична українська: спілкування у сфері охорони здоров'я
 
 > Чому це важливо?

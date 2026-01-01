@@ -1,0 +1,649 @@
+module: 16-the-genitive-i-absence
+level: A1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/16-the-genitive-i-absence.md
+generated: '2026-01-01T17:33:20.166772'
+scope: fill-in, quiz, true-false
+activity_counts:
+  fill-in: 24
+  quiz: 24
+  true-false: 12
+total_items: 60
+item_count: 60
+sample_percent: null
+items:
+- activity: fill-in
+  title: Complete with Genitive
+  sentence_template: У мене немає ___.
+  answer: часу
+  complete_sentence: У мене немає часу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Genitive
+  sentence_template: Тут немає ___.
+  answer: кави
+  complete_sentence: Тут немає кави.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Genitive
+  sentence_template: У неї немає ___.
+  answer: грошей
+  complete_sentence: У неї немає грошей.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Genitive
+  sentence_template: ___ цукру, будь ласка.
+  answer: Без
+  complete_sentence: Без цукру, будь ласка.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Genitive
+  sentence_template: У нас немає ___.
+  answer: проблеми
+  complete_sentence: У нас немає проблеми.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Genitive
+  sentence_template: Немає ___ тут.
+  answer: вибору
+  complete_sentence: Немає вибору тут.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Genitive
+  sentence_template: У тебе немає ___?
+  answer: ідеї
+  complete_sentence: У тебе немає ідеї?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Genitive
+  sentence_template: Це ___ причини.
+  answer: без
+  complete_sentence: Це без причини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Genitive
+  sentence_template: У мене немає ___.
+  answer: досвіду
+  complete_sentence: У мене немає досвіду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Genitive
+  sentence_template: Тут немає ___.
+  answer: різниці
+  complete_sentence: Тут немає різниці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Genitive
+  sentence_template: У них немає ___.
+  answer: знання
+  complete_sentence: У них немає знання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Genitive
+  sentence_template: ___ допомоги це важко.
+  answer: Без
+  complete_sentence: Без допомоги це важко.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Negative
+  sentence_template: У мене є час. → У мене ___ ___.
+  answer: немає часу
+  complete_sentence: У мене є час. → У мене немає часу немає часу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Negative
+  sentence_template: Тут є кава. → Тут ___ ___.
+  answer: немає кави
+  complete_sentence: Тут є кава. → Тут немає кави немає кави.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Negative
+  sentence_template: У неї є гроші. → У неї ___ ___.
+  answer: немає грошей
+  complete_sentence: У неї є гроші. → У неї немає грошей немає грошей.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Negative
+  sentence_template: У нас є ідея. → У нас ___ ___.
+  answer: немає ідеї
+  complete_sentence: У нас є ідея. → У нас немає ідеї немає ідеї.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Negative
+  sentence_template: У них є вибір. → У них ___ ___.
+  answer: немає вибору
+  complete_sentence: У них є вибір. → У них немає вибору немає вибору.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Negative
+  sentence_template: Тут є проблема. → Тут ___ ___.
+  answer: немає проблеми
+  complete_sentence: Тут є проблема. → Тут немає проблеми немає проблеми.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Negative
+  sentence_template: У мене є сила. → У мене ___ ___.
+  answer: немає сили
+  complete_sentence: У мене є сила. → У мене немає сили немає сили.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Negative
+  sentence_template: У вас є досвід. → У вас ___ ___.
+  answer: немає досвіду
+  complete_sentence: У вас є досвід. → У вас немає досвіду немає досвіду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Negative
+  sentence_template: Тут є різниця. → Тут ___ ___.
+  answer: немає різниці
+  complete_sentence: Тут є різниця. → Тут немає різниці немає різниці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Negative
+  sentence_template: У тебе є терпіння. → У тебе ___ ___.
+  answer: немає терпіння
+  complete_sentence: У тебе є терпіння. → У тебе немає терпіння немає терпіння.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Negative
+  sentence_template: У них є знання. → У них ___ ___.
+  answer: немає знання
+  complete_sentence: У них є знання. → У них немає знання немає знання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Transform to Negative
+  sentence_template: У неї є допомога. → У неї ___ ___.
+  answer: немає допомоги
+  complete_sentence: У неї є допомога. → У неї немає допомоги немає допомоги.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Genitive
+  question: What case do you use after "немає"?
+  options:
+  - '{''text'': ''Nominative'', ''correct'': False}'
+  - '{''text'': ''Genitive'', ''correct'': True}'
+  - '{''text'': ''Accusative'', ''correct'': False}'
+  - '{''text'': ''Locative'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Genitive
+  question: How do you accurately say "I don't have time"?
+  options:
+  - '{''text'': ''Я не маю час'', ''correct'': False}'
+  - '{''text'': ''У мене немає часу'', ''correct'': True}'
+  - '{''text'': ''Я немає час'', ''correct'': False}'
+  - '{''text'': ''У мене не час'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Genitive
+  question: What is accurately the genitive form of "книга"?
+  options:
+  - '{''text'': ''книга'', ''correct'': False}'
+  - '{''text'': ''книги'', ''correct'': True}'
+  - '{''text'': ''книзі'', ''correct'': False}'
+  - '{''text'': ''книгою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Genitive
+  question: Which word means accurately the English word "without"?
+  options:
+  - '{''text'': ''з'', ''correct'': False}'
+  - '{''text'': ''без'', ''correct'': True}'
+  - '{''text'': ''до'', ''correct'': False}'
+  - '{''text'': ''від'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Genitive
+  question: What is the genitive form of "стіл"?
+  options:
+  - '{''text'': ''стіл'', ''correct'': False}'
+  - '{''text'': ''столу'', ''correct'': True}'
+  - '{''text'': ''столі'', ''correct'': False}'
+  - '{''text'': ''столом'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Genitive
+  question: How do you accurately say "No problem"?
+  options:
+  - '{''text'': ''Не проблема'', ''correct'': False}'
+  - '{''text'': ''Немає проблем'', ''correct'': True}'
+  - '{''text'': ''Без проблема'', ''correct'': False}'
+  - '{''text'': ''У проблеми немає'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Genitive
+  question: What is accurately the genitive form of "вікно"?
+  options:
+  - '{''text'': ''вікно'', ''correct'': False}'
+  - '{''text'': ''вікна'', ''correct'': True}'
+  - '{''text'': ''вікні'', ''correct'': False}'
+  - '{''text'': ''вікном'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Genitive
+  question: Which pattern is correct for "She doesn't have money"?
+  options:
+  - '{''text'': ''Вона не має гроші'', ''correct'': False}'
+  - '{''text'': ''У неї немає грошей'', ''correct'': True}'
+  - '{''text'': ''Вона немає гроші'', ''correct'': False}'
+  - '{''text'': ''У вона немає грошей'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Genitive
+  question: What does "У вас немає часу?" accurately mean?
+  options:
+  - '{''text'': ''Do you have time?'', ''correct'': False}'
+  - '{''text'': "You don''t have time?", ''correct'': True}'
+  - '{''text'': "I don''t have time", ''correct'': False}'
+  - '{''text'': "Time doesn''t have you", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Genitive
+  question: Which preposition requires accurately the genitive case?
+  options:
+  - '{''text'': ''в'', ''correct'': False}'
+  - '{''text'': ''на'', ''correct'': False}'
+  - '{''text'': ''без'', ''correct'': True}'
+  - '{''text'': ''з (with)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Genitive
+  question: What is the genitive form of accurately the word "ідея"?
+  options:
+  - '{''text'': ''ідея'', ''correct'': False}'
+  - '{''text'': ''ідеї'', ''correct'': True}'
+  - '{''text'': ''ідеї (alt)'', ''correct'': False}'
+  - '{''text'': ''ідеєю'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Understanding Genitive
+  question: How do you say accurately "coffee without sugar"?
+  options:
+  - '{''text'': ''кава не цукор'', ''correct'': False}'
+  - '{''text'': ''кава без цукру'', ''correct'': True}'
+  - '{''text'': ''кава з цукор'', ''correct'': False}'
+  - '{''text'': ''кава немає цукру'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Form Sentences Order
+  question: 'Correct sentence order for: "I don''t have time."'
+  options:
+  - '{''text'': ''У мене немає часу'', ''correct'': True}'
+  - '{''text'': ''мене У немає часу'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Form Sentences Order
+  question: 'Correct sentence order for: "There''s no coffee here."'
+  options:
+  - '{''text'': ''Тут немає кави'', ''correct'': True}'
+  - '{''text'': ''немає Тут кави'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Form Sentences Order
+  question: 'Correct sentence order for: "She doesn''t have money."'
+  options:
+  - '{''text'': ''У неї немає грошей'', ''correct'': True}'
+  - '{''text'': ''неї У немає грошей'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Form Sentences Order
+  question: 'Correct sentence order for: "Without sugar, please."'
+  options:
+  - '{''text'': ''Без цукру, будь ласка'', ''correct'': True}'
+  - '{''text'': ''цукру, Без будь ласка'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Form Sentences Order
+  question: 'Correct sentence order for: "No problem!"'
+  options:
+  - '{''text'': ''Немає проблем'', ''correct'': True}'
+  - '{''text'': ''проблем Némає'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Form Sentences Order
+  question: 'Correct sentence order for: "We don''t have a choice."'
+  options:
+  - '{''text'': ''У нас немає вибору'', ''correct'': True}'
+  - '{''text'': ''нас У немає вибору'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Form Sentences Order
+  question: 'Correct sentence order for: "You don''t have the opportunity?"'
+  options:
+  - '{''text'': ''У тебе немає можливості'', ''correct'': True}'
+  - '{''text'': ''тебе У немає можливості'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Form Sentences Order
+  question: 'Correct sentence order for: "Without help, it''s difficult."'
+  options:
+  - '{''text'': ''Без допомоги це важко'', ''correct'': True}'
+  - '{''text'': ''допомоги Без це важко'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Form Sentences Order
+  question: 'Correct sentence order for: "There''s no difference here."'
+  options:
+  - '{''text'': ''Тут немає різниці'', ''correct'': True}'
+  - '{''text'': ''немає Тут різниці'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Form Sentences Order
+  question: 'Correct sentence order for: "You don''t have patience?"'
+  options:
+  - '{''text'': ''У вас немає терпіння'', ''correct'': True}'
+  - '{''text'': ''вас У немає терпіння'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Form Sentences Order
+  question: 'Correct sentence order for: "They don''t have knowledge."'
+  options:
+  - '{''text'': ''У них немає знання'', ''correct'': True}'
+  - '{''text'': ''них У немає знання'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Form Sentences Order
+  question: 'Correct sentence order for: "I don''t have experience."'
+  options:
+  - '{''text'': ''У мене немає досвіду'', ''correct'': True}'
+  - '{''text'': ''мене У немає досвіду'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Genitive Rules
+  statement: Genitive case is used after "немає" (there isn't).
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Genitive Rules
+  statement: The pattern is "Я немає + nominative".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Genitive Rules
+  statement: '"Без" (without) requires genitive case.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Genitive Rules
+  statement: Feminine nouns don't change in genitive.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Genitive Rules
+  statement: '"Немає проблем" means "No problem".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Genitive Rules
+  statement: Masculine genitive always ends in -а.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Genitive Rules
+  statement: Neuter -о becomes -а in genitive.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Genitive Rules
+  statement: You say "Я не маю час" for "I don't have time".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Genitive Rules
+  statement: Genitive expresses absence or negation.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Genitive Rules
+  statement: Genitive is only used with "немає".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Genitive Rules
+  statement: '"У + person" means "by/at person" in possession contexts.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Genitive Rules
+  statement: 'Both parts are required: немає AND genitive ending.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -1,26 +1,32 @@
 # Audit Report: 02-the-dative-ii-nouns.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Phase:** A2 | **Level:** A2 | **Pedagogy:** 'PPP' | **Target:** 1000
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[GRAMMAR]** Participle used before B1: 'передбачуваний'
+  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: давальний, називний
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 2 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1739/1000
+- **Words:** ✅ 1700/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 15/1
+- **Vocab:** ✅ 83/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 47.8% (target 35-50% (A2.1))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
+- **Pedagogy:** ❌ 1 violations
+- **Immersion:** 🇺🇦 41.3% (target 35-50% (A2.1))
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -28,10 +34,10 @@
 | **Introduction** | ✅ | 165 | Included in Core |
 | **Warm-up** | ✅ | 106 | Included in Core |
 | **Presentation** | ✅ | 85 | Included in Core |
-| **Masculine Noun Endings** | ⚪️ | 178 | Skipped |
-| **Feminine Noun Endings** | ⚪️ | 148 | Skipped |
+| **Закінчення іменників чоловічого роду (Masculine Noun Endings)** | ⚪️ | 167 | Skipped |
+| **Закінчення іменників жіночого роду (Feminine Noun Endings)** | ⚪️ | 130 | Skipped |
 | **Neuter Noun Endings** | ⚪️ | 59 | Skipped |
-| **Plural Dative Endings** | ⚪️ | 122 | Skipped |
+| **Закінчення іменників у множині (Plural Dative Endings)** | ⚪️ | 111 | Skipped |
 | **Cultural Insight** | ✅ | 0 | Included in Core |
 | **Давати і Дарувати: The Culture of Giving** | ✅ | 148 | Included in Core |
 | **Verbs That Love the Dative** | ⚪️ | 74 | Skipped |
@@ -41,17 +47,5 @@
 | **Mini-Dialogues** | ✅ | 183 | Included in Core |
 | **Reading Practice: Лист із Канади** | ✅ | 226 | Included in Core |
 | **Підсумок** | ✅ | 105 | Included in Core |
-| **Need More Practice?** | ⚪️ | 33 | Skipped |
-| **Activities** | ➖ | 65 | Excluded Type |
-| **match-up: Nominative to Dative** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Dative Noun Forms** | 🎮 | 12 | Activity (12 items, min 8) |
-| **quiz: Dative or Not?** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: Dative Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Noun Genders in Dative** | 🎮 | 12 | Activity (12 items, min 12) |
-| **unjumble: Dative Sentences** | 🎮 | 6 | Activity (6 items, min 6) |
-| **error-correction: Fix the Dative** | 🎮 | 6 | Activity (6 items, min 6) |
-| **cloze: Complete the Dialogue** | 🎮 | 12 | Activity (12 items, min 12) |
-| **dialogue-reorder: At the Post Office** | 🎮 | 10 | Activity (10 items, min 4) |
-| **mark-the-words: Find Dative Nouns** | 🎮 | 30 | Activity (30 items, min 6) |
-| **translate: English to Ukrainian** | 🎮 | 36 | Activity (36 items, min 6) |
+| **Need More Practice?** | ⚪️ | 34 | Skipped |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

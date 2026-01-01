@@ -1,0 +1,877 @@
+module: 10-checkpoint-first-contact
+level: A1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/10-checkpoint-first-contact.md
+generated: '2026-01-01T17:33:19.621762'
+scope: fill-in, quiz, true-false
+activity_counts:
+  fill-in: 48
+  quiz: 24
+  true-false: 12
+total_items: 84
+item_count: 84
+sample_percent: null
+items:
+- activity: fill-in
+  title: Demonstrative Agreement
+  sentence_template: ___ книга цікава.
+  answer: Ця
+  complete_sentence: Ця книга цікава.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Demonstrative Agreement
+  sentence_template: ___ стіл новий.
+  answer: Цей
+  complete_sentence: Цей стіл новий.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Demonstrative Agreement
+  sentence_template: ___ вікно велике.
+  answer: Це
+  complete_sentence: Це вікно велике.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Demonstrative Agreement
+  sentence_template: ___ книги нові.
+  answer: Ці
+  complete_sentence: Ці книги нові.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Demonstrative Agreement
+  sentence_template: ___ кава гаряча.
+  answer: Ця
+  complete_sentence: Ця кава гаряча.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Demonstrative Agreement
+  sentence_template: ___ чай холодний.
+  answer: Цей
+  complete_sentence: Цей чай холодний.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Demonstrative Agreement
+  sentence_template: ___ місто гарне.
+  answer: Це
+  complete_sentence: Це місто гарне.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Demonstrative Agreement
+  sentence_template: ___ двері старі.
+  answer: Ці
+  complete_sentence: Ці двері старі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Demonstrative Agreement
+  sentence_template: ___ хлопець студент.
+  answer: Цей
+  complete_sentence: Цей хлопець студент.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Demonstrative Agreement
+  sentence_template: ___ дівчина українка.
+  answer: Ця
+  complete_sentence: Ця дівчина українка.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Demonstrative Agreement
+  sentence_template: ___ слово нове.
+  answer: Це
+  complete_sentence: Це слово нове.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Demonstrative Agreement
+  sentence_template: ___ студенти працюють.
+  answer: Ці
+  complete_sentence: Ці студенти працюють.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class I
+  sentence_template: Я ___ книгу.
+  answer: читаю
+  complete_sentence: Я читаю книгу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class I
+  sentence_template: Ти ___ газету.
+  answer: читаєш
+  complete_sentence: Ти читаєш газету.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class I
+  sentence_template: Він ___ журнал.
+  answer: читає
+  complete_sentence: Він читає журнал.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class I
+  sentence_template: Ми ___ українською.
+  answer: читаємо
+  complete_sentence: Ми читаємо українською.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class I
+  sentence_template: Ви ___ англійською.
+  answer: читаєте
+  complete_sentence: Ви читаєте англійською.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class I
+  sentence_template: Вони ___ багато.
+  answer: читають
+  complete_sentence: Вони читають багато.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class I
+  sentence_template: Вона ___ книгу про Україну.
+  answer: читає
+  complete_sentence: Вона читає книгу про Україну.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class I
+  sentence_template: Ти ___ цікаві книги?
+  answer: читаєш
+  complete_sentence: Ти читаєш цікаві книги?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class I
+  sentence_template: Я ___ щодня.
+  answer: читаю
+  complete_sentence: Я читаю щодня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class I
+  sentence_template: Вони ___ українські книги.
+  answer: читають
+  complete_sentence: Вони читають українські книги.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class I
+  sentence_template: Ми ___ українською мовою.
+  answer: читаємо
+  complete_sentence: Ми читаємо українською мовою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class I
+  sentence_template: Ви ___ швидко?
+  answer: читаєте
+  complete_sentence: Ви читаєте швидко?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class II
+  sentence_template: Я ___ українською.
+  answer: говорю
+  complete_sentence: Я говорю українською.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class II
+  sentence_template: Ти ___ англійською.
+  answer: говориш
+  complete_sentence: Ти говориш англійською.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class II
+  sentence_template: Він ___ швидко.
+  answer: говорить
+  complete_sentence: Він говорить швидко.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class II
+  sentence_template: Ми ___ повільно.
+  answer: говоримо
+  complete_sentence: Ми говоримо повільно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class II
+  sentence_template: Ви ___ добре.
+  answer: говорите
+  complete_sentence: Ви говорите добре.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class II
+  sentence_template: Вони ___ тихо.
+  answer: говорять
+  complete_sentence: Вони говорять тихо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class II
+  sentence_template: Вона ___ українською і англійською.
+  answer: говорить
+  complete_sentence: Вона говорить українською і англійською.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class II
+  sentence_template: Ти ___ добре українською?
+  answer: говориш
+  complete_sentence: Ти говориш добре українською?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class II
+  sentence_template: Я ___ з друзями.
+  answer: говорю
+  complete_sentence: Я говорю з друзями.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class II
+  sentence_template: Вони ___ багато.
+  answer: говорять
+  complete_sentence: Вони говорять багато.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class II
+  sentence_template: Ми ___ українською мовою.
+  answer: говоримо
+  complete_sentence: Ми говоримо українською мовою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Verb Conjugation Class II
+  sentence_template: Ви ___ правильно?
+  answer: говорите
+  complete_sentence: Ви говорите правильно?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Negation Practice
+  sentence_template: Я ___ читаю газету.
+  answer: не
+  complete_sentence: Я не читаю газету.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Negation Practice
+  sentence_template: Вона ___ говорить англійською.
+  answer: не
+  complete_sentence: Вона не говорить англійською.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Negation Practice
+  sentence_template: Ми ___ п'ємо каву.
+  answer: не
+  complete_sentence: Ми не п'ємо каву.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Negation Practice
+  sentence_template: Ти ___ їси м'ясо?
+  answer: не
+  complete_sentence: Ти не їси м'ясо?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Negation Practice
+  sentence_template: Він ___ студент.
+  answer: не
+  complete_sentence: Він не студент.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Negation Practice
+  sentence_template: Вони ___ живуть тут.
+  answer: не
+  complete_sentence: Вони не живуть тут.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Negation Practice
+  sentence_template: Я ___ знаю цього слова.
+  answer: не
+  complete_sentence: Я не знаю цього слова.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Negation Practice
+  sentence_template: Це ___ моя книга.
+  answer: не
+  complete_sentence: Це не моя книга.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Negation Practice
+  sentence_template: Ви ___ працюєте сьогодні?
+  answer: не
+  complete_sentence: Ви не працюєте сьогодні?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Negation Practice
+  sentence_template: Вона ___ українка.
+  answer: не
+  complete_sentence: Вона не українка.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Negation Practice
+  sentence_template: Я ___ вчу цю мову.
+  answer: не
+  complete_sentence: Я не вчу цю мову.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Negation Practice
+  sentence_template: Ти ___ любиш борщ?
+  answer: не
+  complete_sentence: Ти не любиш борщ?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Cyrillic Reading
+  question: What is the English translation of "хліб"?
+  options:
+  - '{''text'': ''bread'', ''correct'': True}'
+  - '{''text'': ''tea'', ''correct'': False}'
+  - '{''text'': ''water'', ''correct'': False}'
+  - '{''text'': ''coffee'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Cyrillic Reading
+  question: How do you translate "вареники" to English?
+  options:
+  - '{''text'': ''soup'', ''correct'': False}'
+  - '{''text'': ''dumplings'', ''correct'': True}'
+  - '{''text'': ''meat'', ''correct'': False}'
+  - '{''text'': ''milk'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Cyrillic Reading
+  question: What does the word "дякую" mean?
+  options:
+  - '{''text'': ''hello'', ''correct'': False}'
+  - '{''text'': ''goodbye'', ''correct'': False}'
+  - '{''text'': ''thank you'', ''correct'': True}'
+  - '{''text'': ''please'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Cyrillic Reading
+  question: What is the meaning of "добрий день"?
+  options:
+  - '{''text'': ''good day'', ''correct'': True}'
+  - '{''text'': ''good night'', ''correct'': False}'
+  - '{''text'': ''good evening'', ''correct'': False}'
+  - '{''text'': ''goodbye'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Cyrillic Reading
+  question: How do you translate "вікно" to English?
+  options:
+  - '{''text'': ''table'', ''correct'': False}'
+  - '{''text'': ''chair'', ''correct'': False}'
+  - '{''text'': ''window'', ''correct'': True}'
+  - '{''text'': ''door'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Cyrillic Reading
+  question: What is the English translation of "молоко"?
+  options:
+  - '{''text'': ''water'', ''correct'': False}'
+  - '{''text'': ''milk'', ''correct'': True}'
+  - '{''text'': ''juice'', ''correct'': False}'
+  - '{''text'': ''coffee'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Cyrillic Reading
+  question: What does the word "книга" mean?
+  options:
+  - '{''text'': ''newspaper'', ''correct'': False}'
+  - '{''text'': ''book'', ''correct'': True}'
+  - '{''text'': ''magazine'', ''correct'': False}'
+  - '{''text'': ''letter'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Cyrillic Reading
+  question: What is the meaning of "будь ласка"?
+  options:
+  - '{''text'': ''thank you'', ''correct'': False}'
+  - '{''text'': ''please'', ''correct'': True}'
+  - '{''text'': ''hello'', ''correct'': False}'
+  - '{''text'': ''goodbye'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Cyrillic Reading
+  question: How do you translate "кава" to English?
+  options:
+  - '{''text'': ''tea'', ''correct'': False}'
+  - '{''text'': ''water'', ''correct'': False}'
+  - '{''text'': ''coffee'', ''correct'': True}'
+  - '{''text'': ''juice'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Cyrillic Reading
+  question: What is the English translation of "місто"?
+  options:
+  - '{''text'': ''country'', ''correct'': False}'
+  - '{''text'': ''city'', ''correct'': True}'
+  - '{''text'': ''village'', ''correct'': False}'
+  - '{''text'': ''street'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Cyrillic Reading
+  question: What does the word "студент" mean?
+  options:
+  - '{''text'': ''student'', ''correct'': True}'
+  - '{''text'': ''teacher'', ''correct'': False}'
+  - '{''text'': ''doctor'', ''correct'': False}'
+  - '{''text'': ''worker'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Cyrillic Reading
+  question: How do you translate "українська" to English?
+  options:
+  - '{''text'': ''English'', ''correct'': False}'
+  - '{''text'': ''Ukrainian'', ''correct'': True}'
+  - '{''text'': ''Polish'', ''correct'': False}'
+  - '{''text'': ''German'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Words
+  question: ___ це? (What is this?)
+  options:
+  - '{''text'': ''Що'', ''correct'': True}'
+  - '{''text'': ''Хто'', ''correct'': False}'
+  - '{''text'': ''Де'', ''correct'': False}'
+  - '{''text'': ''Як'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Words
+  question: ___ він? (Who is he?)
+  options:
+  - '{''text'': ''Що'', ''correct'': False}'
+  - '{''text'': ''Хто'', ''correct'': True}'
+  - '{''text'': ''Де'', ''correct'': False}'
+  - '{''text'': ''Коли'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Words
+  question: ___ ти живеш? (Where do you live?)
+  options:
+  - '{''text'': ''Що'', ''correct'': False}'
+  - '{''text'': ''Хто'', ''correct'': False}'
+  - '{''text'': ''Де'', ''correct'': True}'
+  - '{''text'': ''Куди'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Words
+  question: ___ справи? (How are things?)
+  options:
+  - '{''text'': ''Що'', ''correct'': False}'
+  - '{''text'': ''Де'', ''correct'': False}'
+  - '{''text'': ''Коли'', ''correct'': False}'
+  - '{''text'': ''Як'', ''correct'': True}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Words
+  question: ___ ти вдома? (When are you home?)
+  options:
+  - '{''text'': ''Що'', ''correct'': False}'
+  - '{''text'': ''Де'', ''correct'': False}'
+  - '{''text'': ''Коли'', ''correct'': True}'
+  - '{''text'': ''Як'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Words
+  question: ___ ти тут? (Why are you here?)
+  options:
+  - '{''text'': ''Що'', ''correct'': False}'
+  - '{''text'': ''Хто'', ''correct'': False}'
+  - '{''text'': ''Де'', ''correct'': False}'
+  - '{''text'': ''Чому'', ''correct'': True}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Words
+  question: ___ це коштує? (How much does this cost?)
+  options:
+  - '{''text'': ''Що'', ''correct'': False}'
+  - '{''text'': ''Як'', ''correct'': False}'
+  - '{''text'': ''Коли'', ''correct'': False}'
+  - '{''text'': ''Скільки'', ''correct'': True}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Words
+  question: ___ ти йдеш? (Where are you going?)
+  options:
+  - '{''text'': ''Де'', ''correct'': False}'
+  - '{''text'': ''Куди'', ''correct'': True}'
+  - '{''text'': ''Коли'', ''correct'': False}'
+  - '{''text'': ''Що'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Words
+  question: ___ ти робиш? (What are you doing?)
+  options:
+  - '{''text'': ''Що'', ''correct'': True}'
+  - '{''text'': ''Хто'', ''correct'': False}'
+  - '{''text'': ''Де'', ''correct'': False}'
+  - '{''text'': ''Як'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Words
+  question: ___ ти вивчаєш українську? (Why do you study Ukrainian?)
+  options:
+  - '{''text'': ''Що'', ''correct'': False}'
+  - '{''text'': ''Як'', ''correct'': False}'
+  - '{''text'': ''Чому'', ''correct'': True}'
+  - '{''text'': ''Коли'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Words
+  question: ___ ти? (Who are you?)
+  options:
+  - '{''text'': ''Що'', ''correct'': False}'
+  - '{''text'': ''Хто'', ''correct'': True}'
+  - '{''text'': ''Де'', ''correct'': False}'
+  - '{''text'': ''Як'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Words
+  question: ___ ти говориш українською? (How do you speak Ukrainian?)
+  options:
+  - '{''text'': ''Що'', ''correct'': False}'
+  - '{''text'': ''Де'', ''correct'': False}'
+  - '{''text'': ''Коли'', ''correct'': False}'
+  - '{''text'': ''Як'', ''correct'': True}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules
+  statement: Ukrainian has 33 letters in its alphabet.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules
+  statement: The letter "Г" sounds like hard "g" in "go".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules
+  statement: Feminine nouns typically end in -а or -я.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules
+  statement: Ukrainian uses "to be" (є) in all present tense sentences.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules
+  statement: '"Це" can mean both "this" (neuter) and "this is".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules
+  statement: Class I verbs end in -ати or -яти.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules
+  statement: Class II verbs use -ють in the 3rd person plural.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules
+  statement: Questions can be formed by adding "чи" at the beginning.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules
+  statement: Negation in Ukrainian uses "ні" before the verb.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules
+  statement: '"Борщ" is a traditional Ukrainian soup.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules
+  statement: '"Смачного!" means "Bon appétit!" in Ukrainian.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules
+  statement: All Ukrainian verbs are regular.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

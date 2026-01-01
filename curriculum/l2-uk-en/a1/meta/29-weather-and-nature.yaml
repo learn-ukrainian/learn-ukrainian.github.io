@@ -1,0 +1,26 @@
+module: a1-29
+title: Weather & Nature
+subtitle: Seasons, Weather & The Natural World
+version: '1.0'
+phase: A1.3 - Consolidation
+pedagogy: PPP
+duration: 60 min
+transliteration: first-occurrence
+tags:
+  - weather
+  - nature
+  - seasons
+  - pets
+  - impersonal
+grammar:
+  - Impersonal weather expressions
+  - Nature vocabulary
+  - Pet vocabulary
+objectives:
+  - Learner can describe the weather
+  - Learner can ask about weather conditions
+  - Learner can name common plants and animals
+  - Learner can use impersonal expressions (cold, warm, hot)
+vocabulary_count: 35
+vocab_count: 39
+slug: 29-weather-and-nature

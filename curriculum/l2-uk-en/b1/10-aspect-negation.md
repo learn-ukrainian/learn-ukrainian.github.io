@@ -1,31 +1,3 @@
----
-module: b1-10
-title: "Вид у запереченні"
-subtitle: "Aspect in Negation: How 'не' Changes Aspect Selection"
-version: "1.0"
-phase: "B1.1 Aspect"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - aspect
-  - negation
-  - imperatives
-grammar:
-  - "Imperfective preference with не"
-  - "ще не + perfective - expected completion"
-  - "не + imperfective - general negation"
-  - "Negative imperatives - наказові форми"
-objectives:
-  - "Learner understands why negation favors imperfective aspect"
-  - "Learner can distinguish 'ще не' + perfective vs 'не' + imperfective"
-  - "Learner can form negative imperatives with correct aspect"
-  - "Learner recognizes exceptions to imperfective preference"
-vocabulary_count: 25
-vocab_count: 56
----
-
 # Вид у запереченні
 
 **Aspect in Negation: How 'не' Changes Aspect Selection**

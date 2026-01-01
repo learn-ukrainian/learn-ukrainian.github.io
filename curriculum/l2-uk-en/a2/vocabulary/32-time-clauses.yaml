@@ -1,0 +1,121 @@
+module: 32-time-clauses
+level: A2
+version: '2.0'
+items:
+- lemma: божевільний
+  ipa: boʒeˈvʲilʲnɪj
+  translation: crazy; mad
+  pos: adj
+  gender: m
+- lemma: вимкна
+  ipa: ˈvɪmknɐ
+  translation: turn off (imperative typo?)
+  pos: noun
+  gender: m
+- lemma: душ
+  ipa: duʃ
+  translation: shower
+  pos: noun
+  gender: f
+- lemma: задзвонити
+  ipa: zɐdzvoˈnɪte
+  translation: to start ringing (bis)
+  pos: verb
+  gender: m
+- lemma: заснути
+  ipa: zɐˈsnute
+  translation: to fall asleep (perf)
+  pos: verb
+  gender: m
+- lemma: затор
+  ipa: zɐˈtɔr
+  translation: traffic jam
+  pos: noun
+  gender: m
+- lemma: збирати
+  ipa: zbɪˈrɑte
+  translation: to collect/gather (imp)
+  pos: verb
+- lemma: зібрати
+  ipa: zʲiˈbrɑte
+  translation: to collect/gather (perf)
+  pos: verb
+- lemma: лягти
+  ipa: lʲɐhˈtɪ
+  translation: to lie down (perf)
+  pos: verb
+- lemma: максим
+  ipa: mɐkˈsɪm
+  translation: Maksym
+  pos: propn
+  gender: m
+- lemma: народитися
+  ipa: nɐroˈdɪtɪsʲɐ
+  translation: to be born (perf)
+  pos: verb
+  gender: m
+- lemma: нервувати
+  ipa: nervuˈʋɑte
+  translation: to be nervous
+  pos: verb
+  gender: m
+- lemma: одягтися
+  ipa: odʲɐhˈtɪsʲɐ
+  translation: to get dressed (perf)
+  pos: verb
+  gender: f
+- lemma: перерва
+  ipa: peˈrɛrʋɐ
+  translation: break; pause
+  pos: noun
+  gender: f
+- lemma: побігти
+  ipa: poˈbʲihte
+  translation: to run (perf start)
+  pos: verb
+  gender: f
+- lemma: подзвон
+  ipa: poˈdzvɔn
+  translation: call (imperative typo?)
+  pos: noun
+  gender: m
+- lemma: поки
+  ipa: ˈpɔkɪ
+  translation: while; until
+  pos: adv
+- lemma: пообідати
+  ipa: pooˈbʲidɐte
+  translation: to have lunch (perf)
+  pos: verb
+- lemma: поспішати
+  ipa: posʲpʲiˈʃɑte
+  translation: to hurry (imp)
+  pos: verb
+- lemma: розслаблятися
+  ipa: rozslɐbˈlʲɑtɪsʲɐ
+  translation: to relax (imp)
+  pos: verb
+- lemma: рухатися
+  ipa: ˈruxɐtɪsʲɐ
+  translation: to move (imp)
+  pos: verb
+  gender: f
+- lemma: світло
+  ipa: ˈsvʲitlo
+  translation: light
+  pos: noun
+  gender: n
+- lemma: щасливчик
+  ipa: ʃt͡ʃɐsˈlɪu̯t͡ʃɪk
+  translation: lucky person
+  pos: noun
+  gender: m
+- lemma: щойно
+  ipa: ˈʃt͡ʃɔjno
+  translation: just now
+  pos: adv
+- lemma: ідеальний
+  ipa: ideˈɑlʲnɪj
+  translation: ideal
+  pos: adj
+  gender: m

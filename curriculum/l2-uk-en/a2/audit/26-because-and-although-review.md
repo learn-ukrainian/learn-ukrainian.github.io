@@ -1,26 +1,38 @@
 # Audit Report: 26-because-and-although.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "Complex Sentences" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## LINT ERRORS
+- ❌ Line 204: Empty Header detected (Lonely '#'). Remove or add title.
+
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
+  - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): дарма, нехай, якби, би, оскільки...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- 3 pedagogical violations (minor)
+- Immersion 9% off target (minor)
 
 ## Gates
-- **Words:** ✅ 1045/1000
+- **Words:** ✅ 1003/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 22/1
+- **Vocab:** ✅ 35/1
 - **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 54.6% (target 40-55% (A2.2))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
+- **Lint:** ❌ 1 Format Errors
+- **Pedagogy:** ❌ 1 violations
+- **Immersion:** ❌ 30.8% LOW (target 40-55% (A2.2))
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -38,17 +50,5 @@
 | **Language in Action** | ⚪️ | 0 | Skipped |
 | **Dialogue: The Great Debate** | ✅ | 164 | Included in Core |
 | **The Debate** | ⚪️ | 150 | Skipped |
-| **Summary Table** | ✅ | 54 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Logic Pairs** | 🎮 | 8 | Activity (8 items, min 8) |
-| **fill-in: Choose the Connector** | 🎮 | 12 | Activity (12 items, min 8) |
-| **quiz: Understand the Logic** | 🎮 | 12 | Activity (12 items, min 8) |
-| **unjumble: Build the Argument** | 🎮 | 6 | Activity (6 items, min 6) |
-| **group-sort: Cause vs Contrast** | 🎮 | 12 | Activity (12 items, min 12) |
-| **true-false: Grammar Rules** | 🎮 | 10 | Activity (10 items, min 8) |
-| **cloze: The Job Interview Success** | 🎮 | 12 | Activity (12 items, min 12) |
-| **dialogue-reorder: Making Excuses** | 🎮 | 8 | Activity (8 items, min 4) |
-| **mark-the-words: Find the Logic** | 🎮 | 8 | Activity (8 items, min 6) |
-| **error-correction: Fix the Connector** | 🎮 | 6 | Activity (6 items, min 6) |
-| **translate: English to Ukrainian** | 🎮 | 12 | Activity (12 items, min 6) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Summary Table** | ✅ | 12 | Included in Core |
+| **# Vocabulary** | ➖ | 0 | Excluded Type |

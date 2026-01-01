@@ -1,29 +1,3 @@
----
-module: b1-15
-title: "Контрольна точка: Опанування виду"
-subtitle: "Aspect Mastery Phase Checkpoint"
-version: "2.1"
-phase: "B1.1 Aspect Mastery Checkpoint"
-focus: checkpoint
-pedagogy: "TTT"
-duration: 75
-transliteration: none
-tags:
-  - checkpoint
-  - integration
-  - aspect
-grammar:
-  - "Integration of M06-14"
-  - "Comprehensive review and testing"
-objectives:
-  - "Learner can demonstrate mastery of verbal aspect"
-  - "Learner can integrate knowledge from M06-14"
-  - "Learner can select correct aspect in all contexts"
-  - "Learner can self-assess readiness for Motion Verbs phase"
-vocabulary_count: 35
-vocab_count: 47
----
-
 # Контрольна точка: Опанування виду
 
 > 🎯 **Чому це важливо?**

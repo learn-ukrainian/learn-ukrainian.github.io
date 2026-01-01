@@ -1,0 +1,210 @@
+module: 107-syntez-kozachchyna-1920
+level: B2
+version: '2.0'
+items:
+  - lemma: синтез
+    ipa: /sɪnˈtɛz/
+    translation: synthesis
+    pos: noun
+    gender: m
+    notes: об'єднання знань у цілісну картину
+  - lemma: патерн
+    ipa: /pɐˈtɛrn/
+    translation: pattern
+    pos: noun
+    gender: m
+    notes: повторюваний зразок; запозичення з англ.
+  - lemma: суверенітет
+    ipa: /suvɛrɛnʲiˈtɛt/
+    translation: sovereignty
+    pos: noun
+    gender: m
+    notes: незалежність держави
+  - lemma: автономія
+    ipa: /ɐvtɔˈnɔmʲijɐ/
+    translation: autonomy
+    pos: noun
+    gender: f
+    notes: право на самоуправління
+  - lemma: деколонізація
+    ipa: /dɛkɔlɔnʲiˈzɐt͡sʲijɐ/
+    translation: decolonization
+    pos: noun
+    gender: f
+    notes: звільнення від колоніальних впливів
+  - lemma: наратив
+    ipa: /nɐrɐˈtɪv/
+    translation: narrative
+    pos: noun
+    gender: m
+    notes: спосіб розповіді про події
+  - lemma: безперервність
+    ipa: /bɛzpɛˈrɛrvnʲistʲ/
+    translation: continuity
+    pos: noun
+    gender: f
+    notes: тяглість традиції
+  - lemma: спротив
+    ipa: /sprɔˈtɪv/
+    translation: resistance
+    pos: noun
+    gender: m
+    notes: протидія, опір
+  - lemma: кордоцентризм
+    ipa: /kɔrdɔt͡sɛnˈtrɪzm/
+    translation: cordocentrism
+    pos: noun
+    gender: m
+    notes: філософія, зосереджена на серці (Сковорода)
+  - lemma: возз'єднання
+    ipa: /vɔz.jɛdˈnɐnʲːɐ/
+    translation: reunification (imperial term)
+    pos: noun
+    gender: n
+    notes: імперський термін; правильно — «угода»
+  - lemma: малоросійство
+    ipa: /mɐlɔˈrɔsʲijstvɔ/
+    translation: Little Russianism
+    pos: noun
+    gender: n
+    notes: колоніальна ідеологія меншовартості
+  - lemma: суб'єктність
+    ipa: /sub.jɛkˈtnʲistʲ/
+    translation: agency, subjecthood
+    pos: noun
+    gender: f
+    notes: здатність бути самостійним діячем
+  - lemma: пастка
+    ipa: /ˈpɐstkɐ/
+    translation: trap
+    pos: noun
+    gender: f
+    notes: небезпечна ситуація
+  - lemma: поглинання
+    ipa: /pɔɦlɪˈnɐnʲːɐ/
+    translation: absorption, annexation
+    pos: noun
+    gender: n
+    notes: примусове включення
+  - lemma: спростовувати
+    ipa: /sprɔsˈtɔvuvɐtɪ/
+    translation: to refute, disprove
+    pos: verb
+    notes: недоконаний вид
+  - lemma: спростувати
+    ipa: /sprɔstuˈvɐtɪ/
+    translation: to refute, disprove
+    pos: verb
+    notes: доконаний вид
+  - lemma: заперечувати
+    ipa: /zɐpɛˈrɛt͡ʃuvɐtɪ/
+    translation: to deny, negate
+    pos: verb
+    notes: недоконаний вид
+  - lemma: заперечити
+    ipa: /zɐpɛˈrɛt͡ʃɪtɪ/
+    translation: to deny, negate
+    pos: verb
+    notes: доконаний вид
+  - lemma: засвоювати
+    ipa: /zɐsˈvɔjuvɐtɪ/
+    translation: to assimilate, learn
+    pos: verb
+    notes: недоконаний вид
+  - lemma: засвоїти
+    ipa: /zɐsˈvɔjitɪ/
+    translation: to assimilate, learn
+    pos: verb
+    notes: доконаний вид
+  - lemma: колоніальний
+    ipa: /kɔlɔnʲiˈɐlʲnɪj/
+    translation: colonial
+    pos: adj
+    gender: m
+    notes: пов'язаний із колонізацією
+  - lemma: імперський
+    ipa: /imˈpɛrsʲkɪj/
+    translation: imperial
+    pos: adj
+    gender: m
+    notes: пов'язаний з імперією
+  - lemma: системний
+    ipa: /sɪsˈtɛmnɪj/
+    translation: systemic
+    pos: adj
+    gender: m
+    notes: що охоплює систему
+  - lemma: публіцистичний
+    ipa: /publʲit͡sɪsˈtɪt͡ʃnɪj/
+    translation: publicistic, journalistic
+    pos: adj
+    gender: m
+    notes: стиль публічних текстів
+  - lemma: заново
+    ipa: /zɐˈnɔvɔ/
+    translation: anew, again
+    pos: adv
+    notes: ще раз, спочатку
+  - lemma: неодмінно
+    ipa: /nɛɔdˈmʲinnɔ/
+    translation: inevitably
+    pos: adv
+    notes: обов'язково
+  - lemma: причинно-наслідковий
+    ipa: /prɪˈt͡ʃɪnnɔ nɐsˈlʲidkɔvɪj/
+    translation: cause-and-effect
+    pos: adj
+    gender: m
+    notes: зв'язок причини та наслідку
+  - lemma: історіографічний
+    ipa: /istɔrʲiɔɦrɐˈfʲit͡ʃnɪj/
+    translation: historiographical
+    pos: adj
+    gender: m
+    notes: пов'язаний з історіографією
+  - lemma: аргументація
+    ipa: /ɐrɦumɛntɐˈt͡sʲijɐ/
+    translation: argumentation
+    pos: noun
+    gender: f
+    notes: система доказів
+  - lemma: теза
+    ipa: /ˈtɛzɐ/
+    translation: thesis
+    pos: noun
+    gender: f
+    notes: головна думка
+  - lemma: узагальнення
+    ipa: /uzɐˈɦɐlʲnɛnʲːɐ/
+    translation: generalization
+    pos: noun
+    gender: n
+    notes: загальний висновок
+  - lemma: тяглість
+    ipa: /ˈtʲaɦlʲistʲ/
+    translation: continuity
+    pos: noun
+    gender: f
+    notes: безперервність, спадковість
+  - lemma: ренесанс
+    ipa: /rɛnɛˈsɐns/
+    translation: renaissance
+    pos: noun
+    gender: m
+    notes: відродження культури
+  - lemma: калька
+    ipa: /ˈkɐlʲkɐ/
+    translation: calque, loan translation
+    pos: noun
+    gender: f
+    notes: мовна копія з іншої мови
+  - lemma: Переяславська угода
+    ipa: /pɛrɛˈjɐslɐvsʲkɐ uˈɦɔdɐ/
+    translation: Treaty of Pereyaslav
+    pos: propn
+    notes: 1654; правильний термін замість «возз'єднання»
+  - lemma: Хмельниччина
+    ipa: /xmɛlʲnɪˈt͡ʃːɪnɐ/
+    translation: Khmelnytsky Uprising
+    pos: propn
+    notes: козацька революція 1648-1657

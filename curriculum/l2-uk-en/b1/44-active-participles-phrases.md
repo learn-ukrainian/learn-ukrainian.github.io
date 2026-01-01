@@ -1,33 +1,3 @@
----
-module: b1-44
-title: "Активні дієприкметники та їхній стиль"
-subtitle: "Active Participles & Phrases"
-version: "1.0"
-phase: "B1.4 Advanced Grammar"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - participles
-  - active-participles
-  - stylistics
-  - register
-grammar:
-  - "Активні дієприкметники теперішнього часу (-учий/-ючий)"
-  - "Активні дієприкметники минулого часу (-лий)"
-  - "Стилістична маркованість дієприкметників"
-  - "Канцелярити та русизми"
-objectives:
-  - "Learner can recognize active present participles (-учий/-ючий)"
-  - "Learner can recognize active past participles (-лий)"
-  - "Learner understands stylistic markedness of participles"
-  - "Learner can avoid bureaucratic forms and russicisms"
-vocabulary_count: 25
-requires: [42, 43]
-vocab_count: 110
----
-
 # Активні дієприкметники та їхній стиль
 
 > 🎯 **Чому це важливо?**

@@ -1,0 +1,224 @@
+module: 57-final-review
+level: A2
+version: '2.0'
+items:
+- lemma: аліна
+  ipa: /ɐˈlʲinɐ/
+  translation: Alina
+  pos: propn
+  gender: f
+- lemma: аліно
+  ipa: /ɐˈlʲino/
+  translation: Alina (voc)
+  pos: propn
+  gender: f
+- lemma: анатомія
+  ipa: /ɐnɐˈtɔmʲijɐ/
+  translation: anatomy
+  pos: noun
+  gender: f
+- lemma: бал
+  ipa: /bɑl/
+  translation: ball; grade/score
+  pos: noun
+  gender: m
+- lemma: браво
+  ipa: /ˈbrɑʋo/
+  translation: bravo
+  pos: adv
+- lemma: бізнесмен
+  ipa: /biznesˈmɛn/
+  translation: businessman
+  pos: noun
+  gender: m
+- lemma: ведучий
+  ipa: /veˈdut͡ʃɪj/
+  translation: presenter; host
+  pos: noun
+  gender: m
+- lemma: венеція
+  ipa: /veˈnɛt͡sʲijɐ/
+  translation: Venice
+  pos: propn
+  gender: f
+- lemma: відрядження
+  ipa: /vidˈrʲɑdʒenʲːɐ/
+  translation: business trip
+  pos: noun
+  gender: n
+- lemma: вітання
+  ipa: /viˈtɑnʲːɐ/
+  translation: greeting
+  pos: noun
+  gender: n
+- lemma: говерло
+  ipa: /hoˈvɛrlo/
+  translation: Hoverla (voc/typo)
+  pos: propn
+  gender: f
+- lemma: грошовий
+  ipa: /hroʃoˈvɪj/
+  translation: monetary
+  pos: adj
+  gender: f
+- lemma: долоня
+  ipa: /doˈlɔnʲɐ/
+  translation: palm (hand)
+  pos: noun
+  gender: f
+- lemma: дружба
+  ipa: /ˈdruʒbɐ/
+  translation: friendship
+  pos: noun
+  gender: f
+- lemma: ділити
+  ipa: /diˈlɪte/
+  translation: to share/divide
+  pos: verb
+- lemma: енергія
+  ipa: /eˈnɛrɦijɐ/
+  translation: energy
+  pos: noun
+  gender: f
+- lemma: залізниця
+  ipa: /zɐlizˈnɪt͡sʲɐ/
+  translation: railway
+  pos: noun
+  gender: f
+- lemma: заміж
+  ipa: /ˈzɑmuʒ/
+  translation: married (to get married)
+  pos: adv
+- lemma: кобзар
+  ipa: /kobˈzɑr/
+  translation: Kobzar (minstrel)
+  pos: propn
+  gender: m
+- lemma: кпі
+  ipa: /kɐpeˈji/
+  translation: KPI (university)
+  pos: propn
+  gender: f
+- lemma: лондон
+  ipa: /ˈlɔndon/
+  translation: London
+  pos: propn
+  gender: m
+- lemma: марк
+  ipa: /mɑrk/
+  translation: Mark
+  pos: propn
+  gender: m
+- lemma: медовий
+  ipa: /meˈdɔʋɪj/
+  translation: honey (adj)
+  pos: adj
+  gender: m
+- lemma: метр
+  ipa: /mɛtr/
+  translation: meter
+  pos: noun
+  gender: m
+- lemma: микола
+  ipa: /mɪˈkɔlɐ/
+  translation: Mykola
+  pos: propn
+  gender: m
+- lemma: мира
+  ipa: /ˈmɪrɐ/
+  translation: Myra (name?)
+  pos: noun
+  gender: f
+- lemma: мріти
+  ipa: /ˈmritɪ/
+  translation: to dream (dialect)
+  pos: verb
+- lemma: недорого
+  ipa: /neˈdɔroho/
+  translation: inexpensively
+  pos: adv
+- lemma: область
+  ipa: /ˈɔblɐsʲtʲ/
+  translation: oblast; region
+  pos: noun
+  gender: f
+- lemma: одеський
+  ipa: /oˈdɛsʲkɪj/
+  translation: Odessa (adj)
+  pos: adj
+  gender: f
+- lemma: понад
+  ipa: /ˈpɔnɐd/
+  translation: over; more than
+  pos: other
+- lemma: проти
+  ipa: /ˈprɔtɪ/
+  translation: against
+  pos: other
+- lemma: підйом
+  ipa: /pidˈjɔm/
+  translation: rise; ascent
+  pos: noun
+  gender: m
+- lemma: район
+  ipa: /rɐˈjɔn/
+  translation: district
+  pos: noun
+  gender: m
+- lemma: рахів
+  ipa: /ˈrɑxiu̯/
+  translation: Rakhiv
+  pos: propn
+  gender: m
+- lemma: рим
+  ipa: /rɪm/
+  translation: Rome
+  pos: propn
+  gender: m
+- lemma: розпалити
+  ipa: /rozpɐˈlɪte/
+  translation: to light/kindle
+  pos: verb
+- lemma: розробляти
+  ipa: /rozrobˈlʲɑte/
+  translation: to develop
+  pos: verb
+- lemma: розумно
+  ipa: /roˈzumno/
+  translation: intelligently
+  pos: adv
+- lemma: телевізійний
+  ipa: /telewiˈzʲijnɪj/
+  translation: television (adj)
+  pos: adj
+  gender: f
+- lemma: туризм
+  ipa: /tuˈrɪzm/
+  translation: tourism
+  pos: noun
+  gender: m
+- lemma: фантастика
+  ipa: /fɐnˈtɑstɪkɐ/
+  translation: science fiction; fantasy
+  pos: noun
+  gender: f
+- lemma: фінал
+  ipa: /fiˈnɑl/
+  translation: finale
+  pos: noun
+  gender: m
+- lemma: церков
+  ipa: /t͡sɛrˈkɔu̯/
+  translation: church (gen pl)
+  pos: noun
+  gender: f
+- lemma: ігоря
+  ipa: /ˈiɦorʲɐ/
+  translation: Ihor (gen)
+  pos: propn
+  gender: m
+- lemma: італія
+  ipa: /iˈtɑlʲijɐ/
+  translation: Italy
+  pos: propn
+  gender: f

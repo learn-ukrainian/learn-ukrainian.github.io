@@ -1,28 +1,3 @@
----
-module: b1-22
-title: "Рух: інтеграція префіксів"
-subtitle: "Motion: Full Prefix Integration"
-version: "1.7"
-phase: "B1.3 Motion Verbs"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - motion-verbs
-  - prefixes
-grammar:
-  - "Prefixes of motion (по-, при-, пі-, за-, ви-, в-, до-, від-, пере-, про-)"
-  - "Aspect pairs in motion (ідти/піти, ходити/сходити)"
-  - "Figurative meanings of prefixed motion verbs"
-objectives:
-  - "Master the logic of motion prefixes"
-  - "Distinguish between spatial and resultative meanings"
-  - "Use prefixed verbs in narratives and dialogues"
-vocabulary_count: 25
-vocab_count: 63
----
-
 # Рух: інтеграція префіксів
 
 > 🎯 **Чому це важливо?**

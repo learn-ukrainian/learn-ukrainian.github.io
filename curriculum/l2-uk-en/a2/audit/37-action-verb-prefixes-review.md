@@ -1,26 +1,32 @@
 # Audit Report: 37-action-verb-prefixes.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "Inquiry" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1171/1000
 - **Activities:** ✅ 10/10
-- **Density:** ✅ All > 12
+- **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 26/1
+- **Vocab:** ✅ 73/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 48.3% (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 40.6% (target 40-55% (A2.2))
+- **Grammar:** ⏳ Pending validation
 
-## MDX VALIDATION
-✅ No issues found
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| The Transformers | match-up | 1 | 8 | Add 7 more items |
 
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -39,16 +45,4 @@
 | **Deep Dive - The "Za-" Trap** | ✅ | 103 | Included in Core |
 | **Anti-Propaganda Showcase** | ⚪️ | 89 | Skipped |
 | **Summary** | ✅ | 87 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: The Transformers** | 🎮 | 8 | Activity (8 items, min 8) |
-| **fill-in: The Editor** | 🎮 | 8 | Activity (8 items, min 8) |
-| **fill-in: The Perfectionist** | 🎮 | 8 | Activity (8 items, min 8) |
-| **Deep Dive - Feel the Prefix** | ✅ | 78 | Included in Core |
-| **group-sort: Open vs Close** | 🎮 | 12 | Activity (12 items, min 12) |
-| **quiz: Meaning Check** | 🎮 | 8 | Activity (8 items, min 8) |
-| **true-false: Propaganda Check** | 🎮 | 8 | Activity (8 items, min 8) |
-| **cloze: The Test** | 🎮 | 12 | Activity (12 items, min 12) |
-| **error-correction: Fix the Verb** | 🎮 | 6 | Activity (6 items, min 6) |
-| **match-up: Give and Take** | 🎮 | 8 | Activity (8 items, min 8) |
-| **unjumble: The Office** | 🎮 | 6 | Activity (6 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

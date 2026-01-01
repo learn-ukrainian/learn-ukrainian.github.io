@@ -1,0 +1,212 @@
+module: 23-motion-patterns-other-verbs
+level: B1
+version: '2.0'
+items:
+- lemma: абстрактно
+  ipa: /abˈstraktnɔ/
+  translation: abstractly
+  pos: adv
+- lemma: атом
+  ipa: /ˈatɔm/
+  translation: atom
+  pos: noun
+  gender: m
+- lemma: вгадати
+  ipa: /vhaˈdatɪ/
+  translation: to guess
+  pos: verb
+- lemma: вивіз
+  ipa: /ˈvɪviz/
+  translation: export
+  pos: noun
+  gender: m
+- lemma: винахід
+  ipa: /ˈvɪnaxid/
+  translation: invention
+  pos: noun
+  gender: m
+- lemma: витягувати
+  ipa: /vɪˈtʲahuvatɪ/
+  translation: to pull out
+  pos: verb
+- lemma: виховати
+  ipa: /vɪˈxɔvatɪ/
+  translation: to raise
+  pos: verb
+- lemma: вичерпання
+  ipa: /vɪˈt͡ʃɛrpanʲːa/
+  translation: exhaustion
+  pos: noun
+  gender: n
+- lemma: вичерпати
+  ipa: /vɪˈt͡ʃɛrpatɪ/
+  translation: to exhaust
+  pos: verb
+- lemma: відреагувати
+  ipa: /vidrɛahuˈvatɪ/
+  translation: to react
+  pos: verb
+- lemma: відштовхнути
+  ipa: /vidʃtɔu̯xˈnutɪ/
+  translation: to push away
+  pos: verb
+- lemma: закриття
+  ipa: /zakrɪtʲˈtʲa/
+  translation: closing
+  pos: noun
+  gender: n
+- lemma: заслухатися
+  ipa: /zaˈsluxatɪsʲa/
+  translation: to listen with delight
+  pos: verb
+  gender: f
+- lemma: затихнути
+  ipa: /zaˈtɪxnutɪ/
+  translation: to quiet down
+  pos: verb
+- lemma: здогадатися
+  ipa: /zdɔhaˈdatɪsʲa/
+  translation: to guess
+  pos: verb
+- lemma: ля
+  ipa: /lʲa/
+  translation: La / Look!
+  pos: other
+- lemma: мога
+  ipa: /ˈmɔha/
+  translation: possibility (arch.)
+  pos: noun
+  gender: f
+- lemma: назовний
+  ipa: /naˈzɔu̯nɪj/
+  translation: nominative
+  pos: adj
+- lemma: найдинамічніший
+  ipa: /najdɪnaˈmʲit͡ʃnʲiʃɪj/
+  translation: most dynamic
+  pos: adj
+  gender: m
+- lemma: нишко
+  ipa: /ˈnɪʃkɔ/
+  translation: stealthily (typo)
+  pos: noun
+  gender: m
+- lemma: перестаратися
+  ipa: /pɛrɛstaˈratɪsʲa/
+  translation: to overdo it
+  pos: verb
+- lemma: перефарбувати
+  ipa: /pɛrɛfarbuˈvatɪ/
+  translation: to repaint
+  pos: verb
+- lemma: полісемія
+  ipa: /pɔlʲisɛˈmʲija/
+  translation: polysemy
+  pos: noun
+  gender: f
+- lemma: постфікс
+  ipa: /ˈpɔstfʲiks/
+  translation: postfix
+  pos: noun
+  gender: m
+- lemma: привчити
+  ipa: /prɪu̯ˈt͡ʃɪtɪ/
+  translation: to accustom
+  pos: verb
+- lemma: прилягти
+  ipa: /prɪlʲahˈtɪ/
+  translation: to lie down
+  pos: verb
+- lemma: пристосування
+  ipa: /prɪstɔsuˈvanʲːa/
+  translation: adaptation
+  pos: noun
+  gender: n
+- lemma: пристосуватися
+  ipa: /prɪstɔsuˈvatɪsʲa/
+  translation: to adapt
+  pos: verb
+- lemma: присісти
+  ipa: /prɪˈsʲistɪ/
+  translation: to sit down
+  pos: verb
+- lemma: прихованість
+  ipa: /prɪˈxɔvanʲisʲtʲ/
+  translation: concealment
+  pos: noun
+  gender: f
+- lemma: прозоріший
+  ipa: /prɔˈzɔrʲiʃɪj/
+  translation: more transparent
+  pos: adj
+- lemma: підводний
+  ipa: /pidˈvɔdnɪj/
+  translation: underwater
+  pos: adj
+  gender: m
+- lemma: підслухати
+  ipa: /pidˈsluxatɪ/
+  translation: to eavesdrop
+  pos: verb
+- lemma: рекрутер
+  ipa: /rɛkruˈtɛr/
+  translation: recruiter
+  pos: noun
+  gender: m
+- lemma: розкласти
+  ipa: /rɔzˈklastɪ/
+  translation: to decompose
+  pos: verb
+- lemma: розрізати
+  ipa: /rɔzˈrʲizatɪ/
+  translation: to cut
+  pos: verb
+- lemma: різке
+  ipa: /rʲizˈkɛ/
+  translation: sharp
+  pos: noun
+  gender: n
+- lemma: скочити
+  ipa: /ˈskɔt͡ʃɪtɪ/
+  translation: to jump
+  pos: verb
+- lemma: смисл
+  ipa: /smɪsl/
+  translation: sense
+  pos: noun
+  gender: m
+- lemma: спів
+  ipa: /spiu̯/
+  translation: singing
+  pos: noun
+  gender: m
+- lemma: стос
+  ipa: /stɔs/
+  translation: stack
+  pos: noun
+  gender: m
+- lemma: суперсити
+  ipa: /supɛrˈsɪtɪ/
+  translation: ??? (typo)
+  pos: verb
+  gender: f
+- lemma: тестовий
+  ipa: /ˈtɛstɔvɪj/
+  translation: test (adj)
+  pos: adj
+  gender: n
+- lemma: тишк
+  ipa: /tɪʃk/
+  translation: quietly (typo)
+  pos: noun
+  gender: m
+- lemma: уваський
+  ipa: /uˈvasʲkɪj/
+  translation: ??? (typo)
+  pos: adj
+  gender: n
+- lemma: інхоатив
+  ipa: /inxɔaˈtɪu̯/
+  translation: inchoative
+  pos: noun
+  gender: m

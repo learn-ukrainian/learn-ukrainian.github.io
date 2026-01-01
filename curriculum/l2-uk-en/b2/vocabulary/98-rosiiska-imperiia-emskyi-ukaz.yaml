@@ -1,0 +1,352 @@
+module: 98-rosiiska-imperiia-emskyi-ukaz
+level: B2
+version: '2.0'
+items:
+  - lemma: абсурдний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: агітація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: алегорія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: антонович
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: бад
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: белетристика
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: валуєв
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: вигнаний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: вилучати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: винайти
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: виростати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: вовчка
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: відчужити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: гастролювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: геноцидальний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: грінченко
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: гуртка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: дисидент
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: дискредитація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: дозволений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: допущення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: драгоманов
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: драматург
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: езоповий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: женева
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: жорсткіше
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: жорсткіший
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: заборон
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: заборонений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: завозити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: загнати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: кобзарь
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: контрабанда
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: красний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: кропивницький
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: курорт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: лексикограф
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: лінгвоцид
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: лінгвоцида
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: маскування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: меншовартість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: наддніпрянський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: нелегально
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: непомітній
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: основательно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: п'ємонт
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: письменство
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: помешкання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: прага
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: придушити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: примус
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: провозити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: підпадати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: підпілля
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: розпадатися
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: російськийвний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: стереотип
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: сховати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: тактик
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: телеграф
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: труп
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: уживати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: українофіл
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: українофільство
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: українофільський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: українськість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: українізація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: хитрувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: цензор
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: цензур
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: цензура
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: частковий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: швейцарія
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f

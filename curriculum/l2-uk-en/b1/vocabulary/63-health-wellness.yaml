@@ -1,0 +1,145 @@
+module: 63-health-wellness
+level: B1
+version: '2.0'
+items:
+- lemma: алкогольний
+  ipa: /alkɔˈhɔlʲnɪj/
+  translation: alcoholic
+  pos: adj
+  gender: f
+- lemma: білок
+  ipa: /biˈlɔk/
+  translation: protein
+  pos: noun
+  gender: m
+- lemma: веганський
+  ipa: /vɛhanˈsʲkɪj/
+  translation: vegan (adj)
+  pos: adj
+- lemma: вимотаний
+  ipa: /vɪˈmɔtanɪj/
+  translation: exhausted
+  pos: adj
+  gender: m
+- lemma: груповий
+  ipa: /hrupɔˈvɪj/
+  translation: group (adj)
+  pos: adj
+  gender: f
+- lemma: діт
+  ipa: /dʲit/
+  translation: children (trunc)
+  pos: noun
+  gender: f
+- lemma: дієта
+  ipa: /dʲiˈjɛta/
+  translation: diet
+  pos: noun
+  gender: f
+- lemma: жир
+  ipa: /ʒɪr/
+  translation: fat
+  pos: noun
+  gender: m
+- lemma: збалансований
+  ipa: /zbalanˈsɔvanɪj/
+  translation: balanced
+  pos: adj
+  gender: n
+- lemma: знижувати
+  ipa: /znɪˈʒuvatɪ/
+  translation: to lower
+  pos: verb
+- lemma: крапельний
+  ipa: /kraˈpɛlʲnɪj/
+  translation: drip (adj)
+  pos: adj
+  gender: m
+- lemma: курортний
+  ipa: /kuˈrɔrtnɪj/
+  translation: resort (adj)
+  pos: adj
+- lemma: миргород
+  ipa: /ˈmɪrhɔrɔd/
+  translation: Myrhorod
+  pos: propn
+  gender: m
+- lemma: моршин
+  ipa: /ˈmɔrʃɪn/
+  translation: Morshyn
+  pos: propn
+  gender: m
+- lemma: нездоровий
+  ipa: /nɛzdɔˈrɔvɪj/
+  translation: unhealthy
+  pos: adj
+  gender: m
+- lemma: паління
+  ipa: /paˈlʲinʲːa/
+  translation: smoking
+  pos: noun
+  gender: n
+- lemma: приплив
+  ipa: /prɪˈplɪu̯/
+  translation: influx
+  pos: noun
+  gender: m
+- lemma: підвищений
+  ipa: /pidˈvɪʃt͡ʃɛnɪj/
+  translation: elevated
+  pos: adj
+  gender: f
+- lemma: санаторний
+  ipa: /sanaˈtɔrnɪj/
+  translation: sanatorium (adj)
+  pos: adj
+  gender: n
+- lemma: сеанс
+  ipa: /sɛˈans/
+  translation: session
+  pos: noun
+  gender: m
+- lemma: синдр
+  ipa: /sɪndr/
+  translation: syndrome (trunc)
+  pos: noun
+  gender: m
+- lemma: суцільний
+  ipa: /suˈt͡sʲilʲnɪj/
+  translation: solid
+  pos: adj
+  gender: m
+- lemma: таба
+  ipa: /taˈba/
+  translation: Tabata? (trunc)
+  pos: noun
+  gender: f
+- lemma: терапія
+  ipa: /tɛraˈpʲija/
+  translation: therapy
+  pos: noun
+  gender: f
+- lemma: тривожний
+  ipa: /trɪˈvɔʒnɪj/
+  translation: anxious
+  pos: adj
+  gender: m
+- lemma: фастфуд
+  ipa: /fastˈfud/
+  translation: fast food
+  pos: propn
+  gender: m
+- lemma: хм
+  ipa: /xm/
+  translation: hmm
+  pos: other
+- lemma: хронічний
+  ipa: /xrɔˈnʲit͡ʃnɪj/
+  translation: chronic
+  pos: adj
+  gender: f
+- lemma: інфекційний
+  ipa: /infɛkˈt͡sʲijnɪj/
+  translation: infectious
+  pos: adj
+  gender: f

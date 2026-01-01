@@ -1,26 +1,3 @@
----
-module: b1-83
-title: "Інтерв'ю та подкасти"
-subtitle: "Interviews and Podcasts"
-version: "1.0"
-phase: "B1.8"
-focus: "skills"
-pedagogy: "PPP"
-duration: 90
-transliteration: "none"
-tags: ["integration", "listening", "audio comprehension", "note-taking"]
-grammar: []
-objectives:
-  - "Learner can apply listening strategies to authentic Ukrainian interviews and podcasts"
-  - "Learner can identify main points and key information in spoken discourse"
-  - "Learner can take effective notes while listening to Ukrainian audio content"
-  - "Learner is prepared for autonomous listening practice at B2"
-vocabulary_count: 20
-word_target: 1500
-immersion_target: 100
-vocab_count: 58
----
-
 # Інтерв'ю та подкасти
 
 > 🎯 **Чому це важливо?**

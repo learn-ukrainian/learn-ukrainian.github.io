@@ -1,0 +1,527 @@
+module: 22-tomorrow-future-tense
+level: A1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/22-tomorrow-future-tense.md
+generated: '2026-01-01T17:33:20.611687'
+scope: fill-in, quiz, true-false, unjumble
+activity_counts:
+  fill-in: 16
+  unjumble: 6
+  quiz: 16
+  true-false: 12
+total_items: 50
+item_count: 50
+sample_percent: null
+items:
+- activity: fill-in
+  title: Future Tense Forms
+  sentence_template: Я ___ читати цю книгу завтра.
+  answer: буду
+  complete_sentence: Я буду читати цю книгу завтра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Future Tense Forms
+  sentence_template: Вона ___ працювати до вечора.
+  answer: буде
+  complete_sentence: Вона буде працювати до вечора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Future Tense Forms
+  sentence_template: Ми ___ вивчати українську разом.
+  answer: будемо
+  complete_sentence: Ми будемо вивчати українську разом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Future Tense Forms
+  sentence_template: Ти ___ готувати вечерю сьогодні?
+  answer: будеш
+  complete_sentence: Ти будеш готувати вечерю сьогодні?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Future Tense Forms
+  sentence_template: Вони ___ грати у футбол завтра.
+  answer: будуть
+  complete_sentence: Вони будуть грати у футбол завтра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Future Tense Forms
+  sentence_template: Ви ___ дивитися цей фільм?
+  answer: будете
+  complete_sentence: Ви будете дивитися цей фільм?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Future Tense Forms
+  sentence_template: Він ___ писати листа завтра.
+  answer: буде
+  complete_sentence: Він буде писати листа завтра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Future Tense Forms
+  sentence_template: Ти ___ слухати музику ввечері?
+  answer: будеш
+  complete_sentence: Ти будеш слухати музику ввечері?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Planning Expressions
+  sentence_template: Я ___ поїхати в Київ наступного місяця.
+  answer: планую
+  complete_sentence: Я планую поїхати в Київ наступного місяця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Planning Expressions
+  sentence_template: Вона ___ стати співачкою.
+  answer: мріє
+  complete_sentence: Вона мріє стати співачкою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Planning Expressions
+  sentence_template: Він ___ купити нову машину.
+  answer: вирішив
+  complete_sentence: Він вирішив купити нову машину.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Planning Expressions
+  sentence_template: Ми ___ побачити вас скоро.
+  answer: сподіваємося
+  complete_sentence: Ми сподіваємося побачити вас скоро.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Planning Expressions
+  sentence_template: Я ___ прийти вчасно.
+  answer: постараюся
+  complete_sentence: Я постараюся прийти вчасно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Planning Expressions
+  sentence_template: Вона ___ допомогти нам завтра.
+  answer: обіцяє
+  complete_sentence: Вона обіцяє допомогти нам завтра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Planning Expressions
+  sentence_template: Він ___ вивчити японську мову.
+  answer: хоче
+  complete_sentence: Він хоче вивчити японську мову.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Planning Expressions
+  sentence_template: Ми ___ почати проект наступного тижня.
+  answer: збираємося
+  complete_sentence: Ми збираємося почати проект наступного тижня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Future Plans
+  jumbled_words: []
+  answer: Я буду працювати завтра
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Future Plans
+  jumbled_words: []
+  answer: Ми будемо вивчати українську
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Future Plans
+  jumbled_words: []
+  answer: Вона буде готувати вечерю скоро
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Future Plans
+  jumbled_words: []
+  answer: Вони будуть грати у футбол
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Future Plans
+  jumbled_words: []
+  answer: Що ви будете робити завтра
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Future Plans
+  jumbled_words: []
+  answer: Я планую поїхати до Києва
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: буду Conjugation
+  question: What is the correct translation of "Ми будемо вечеряти о сьомій"?
+  options:
+  - '{''text'': ''We will have dinner at seven.'', ''correct'': True}'
+  - '{''text'': ''We had dinner at seven.'', ''correct'': False}'
+  - '{''text'': ''We are having dinner at seven.'', ''correct'': False}'
+  - '{''text'': ''We have dinner at seven.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: буду Conjugation
+  question: How do you accurately translate "Вони будуть працювати завтра?" into English?
+  options:
+  - '{''text'': ''Will they work tomorrow?'', ''correct'': True}'
+  - '{''text'': ''Did they work tomorrow?'', ''correct'': False}'
+  - '{''text'': ''Are they working tomorrow?'', ''correct'': False}'
+  - '{''text'': ''Do they work tomorrow?'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: буду Conjugation
+  question: What does accurately the phrase "Я обов'язково буду там" mean?
+  options:
+  - '{''text'': ''I will definitely be there.'', ''correct'': True}'
+  - '{''text'': ''I was definitely there.'', ''correct'': False}'
+  - '{''text'': ''I am definitely there.'', ''correct'': False}'
+  - '{''text'': ''I have definitely been there.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: буду Conjugation
+  question: How do you correctly translate "Вона збирається купити квартиру" today?
+  options:
+  - '{''text'': ''She is going to buy an apartment.'', ''correct'': True}'
+  - '{''text'': ''She bought an apartment.'', ''correct'': False}'
+  - '{''text'': ''She has an apartment.'', ''correct'': False}'
+  - '{''text'': ''She sells apartments.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: буду Conjugation
+  question: Which English sentence accurately represents "Ти будеш читати цю книгу?"?
+  options:
+  - '{''text'': ''Will you read this book?'', ''correct'': True}'
+  - '{''text'': ''Did you read this book?'', ''correct'': False}'
+  - '{''text'': ''Are you reading this book?'', ''correct'': False}'
+  - '{''text'': ''Do you read this book?'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: буду Conjugation
+  question: How do you accurately say "Він буде вчитися в університеті"?
+  options:
+  - '{''text'': ''He will study at the university.'', ''correct'': True}'
+  - '{''text'': ''He studied at the university.'', ''correct'': False}'
+  - '{''text'': ''He is studying at the university.'', ''correct'': False}'
+  - '{''text'': ''He studies at the university.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: буду Conjugation
+  question: Which translation is correct for "Я буду готувати вечерю" now?
+  options:
+  - '{''text'': ''I will cook dinner.'', ''correct'': True}'
+  - '{''text'': ''I cooked dinner.'', ''correct'': False}'
+  - '{''text'': ''I am cooking dinner.'', ''correct'': False}'
+  - '{''text'': ''I cook dinner.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: буду Conjugation
+  question: What is accurately the English translation of "Ви будете дивитися фільм?"?
+  options:
+  - '{''text'': ''Will you watch the movie?'', ''correct'': True}'
+  - '{''text'': ''Did you watch the movie?'', ''correct'': False}'
+  - '{''text'': ''Are you watching the movie?'', ''correct'': False}'
+  - '{''text'': ''Do you watch the movie?'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Time Expressions
+  question: Which English phrase correctly translates "Наступного року ми поїдемо
+    до моря"?
+  options:
+  - '{''text'': ''Next year we will go to the sea.'', ''correct'': True}'
+  - '{''text'': ''Last year we went to the sea.'', ''correct'': False}'
+  - '{''text'': ''This year we go to the sea.'', ''correct'': False}'
+  - '{''text'': ''Every year we go to the sea.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Time Expressions
+  question: How do you accurately translate "Пізніше я подзвоню тобі" into English?
+  options:
+  - '{''text'': ''Later I will call you.'', ''correct'': True}'
+  - '{''text'': ''Earlier I called you.'', ''correct'': False}'
+  - '{''text'': ''Now I am calling you.'', ''correct'': False}'
+  - '{''text'': ''Yesterday I called you.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Time Expressions
+  question: What does accurately the phrase "Скоро буде літо" mean today?
+  options:
+  - '{''text'': ''Soon it will be summer.'', ''correct'': True}'
+  - '{''text'': ''Soon it was summer.'', ''correct'': False}'
+  - '{''text'': ''It is already summer.'', ''correct'': False}'
+  - '{''text'': ''Summer has passed.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Time Expressions
+  question: Which English sentence accurately represents "Я ще не вирішив" now?
+  options:
+  - '{''text'': "I haven''t decided yet.", ''correct'': True}'
+  - '{''text'': ''I have already decided.'', ''correct'': False}'
+  - '{''text'': ''I never decide.'', ''correct'': False}'
+  - '{''text'': ''I always decide.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Time Expressions
+  question: How do you accurately say "Завтра я буду вдома" in English?
+  options:
+  - '{''text'': ''Tomorrow I will be at home.'', ''correct'': True}'
+  - '{''text'': ''Yesterday I was at home.'', ''correct'': False}'
+  - '{''text'': ''Today I am at home.'', ''correct'': False}'
+  - '{''text'': ''I am always at home.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Time Expressions
+  question: What is the correct English translation of "Післязавтра вона приїде"?
+  options:
+  - '{''text'': ''The day after tomorrow she will arrive.'', ''correct'': True}'
+  - '{''text'': ''Yesterday she arrived.'', ''correct'': False}'
+  - '{''text'': ''Today she is arriving.'', ''correct'': False}'
+  - '{''text'': ''She always arrives.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Time Expressions
+  question: Which translation is correct for "Наступного тижня ми почнемо курс"?
+  options:
+  - '{''text'': ''Next week we will start the course.'', ''correct'': True}'
+  - '{''text'': ''Last week we started the course.'', ''correct'': False}'
+  - '{''text'': ''This week we start the course.'', ''correct'': False}'
+  - '{''text'': ''Every week we start the course.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Time Expressions
+  question: What does exactly the word "Згодом він зрозуміє" mean today?
+  options:
+  - '{''text'': ''Eventually he will understand.'', ''correct'': True}'
+  - '{''text'': ''He already understands.'', ''correct'': False}'
+  - '{''text'': ''He never understands.'', ''correct'': False}'
+  - '{''text'': ''He understood yesterday.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Understanding Future Expressions
+  statement: '"Завтра" means "tomorrow."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Understanding Future Expressions
+  statement: '"Післязавтра" means "yesterday."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Understanding Future Expressions
+  statement: '"Буду читати" means "I will read."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Understanding Future Expressions
+  statement: '"Наступного року" means "last year."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Understanding Future Expressions
+  statement: '"Я мрію" means "I dream."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Understanding Future Expressions
+  statement: '"Скоро" means "slowly."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Understanding Future Expressions
+  statement: '"Обіцяю" means "I promise."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Understanding Future Expressions
+  statement: '"Вже" means "never."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Understanding Future Expressions
+  statement: '"Пізніше" means "later."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Understanding Future Expressions
+  statement: '"Планую" means "I hope."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Understanding Future Expressions
+  statement: '"Сподіваюся" means "I hope."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Understanding Future Expressions
+  statement: '"Ніколи" means "always."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -1,0 +1,32 @@
+module: a1-10
+title: Checkpoint - First Contact
+subtitle: Can you do the А1.1 skills?
+version: '2.0'
+phase: A1.1
+focus: checkpoint
+pedagogy: Review
+duration: 45 min
+transliteration: full
+tags:
+  - checkpoint
+  - review
+  - alphabet
+  - gender
+  - verbs
+  - questions
+  - food
+grammar:
+  - Cyrillic alphabet (all 33 letters)
+  - Noun gender (masculine, feminine, neuter)
+  - Present tense Class I (-ати) and Class II (-ити)
+  - Question formation (чи, що, хто, де)
+  - Negation (не)
+objectives:
+  - Demonstrate Cyrillic reading fluency
+  - Identify noun gender by word ending
+  - Conjugate Class I and II verbs correctly
+  - Form questions using question words
+  - Use food vocabulary in practical contexts
+vocabulary_count: 20
+vocab_count: 20
+slug: 10-checkpoint-first-contact

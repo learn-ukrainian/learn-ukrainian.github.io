@@ -1,0 +1,113 @@
+module: 19-at-the-cafe
+level: A1
+version: '2.0'
+items:
+  - lemma: ввічливо
+    ipa: /ˈvvit͡ʃlɪvɔ/
+    translation: politely
+    pos: adv
+  - lemma: достатньо
+    ipa: /dɔˈstɑtnʲɔ/
+    translation: enough
+    pos: adv
+  - lemma: запитати
+    ipa: /zɑpɪˈtɑtɪ/
+    translation: to ask
+    pos: verb
+  - lemma: звісно
+    ipa: /ˈzvisnɔ/
+    translation: of course
+    pos: adv
+  - lemma: кавовий
+    ipa: /kɑˈvɔvɪj/
+    translation: coffee (adj)
+    pos: adj
+    gender: m
+  - lemma: круасан
+    ipa: /kruɑˈsɑn/
+    translation: croissant
+    pos: noun
+    gender: m
+  - lemma: медівник
+    ipa: /mɛdiwˈnɪk/
+    translation: honey cake
+    pos: noun
+    gender: m
+  - lemma: найкращий
+    ipa: /nɑjˈkrɑʃt͡ʃɪj/
+    translation: best
+    pos: adj
+    gender: m
+  - lemma: наполеон
+    ipa: /nɑpɔlɛˈɔn/
+    translation: Napoleon (cake)
+    pos: noun
+    gender: m
+  - lemma: обслуговування
+    ipa: /ɔbsluˈɦɔvuvɑnʲːɑ/
+    translation: service
+    pos: noun
+    gender: n
+  - lemma: окремий
+    ipa: /ɔˈkrɛmɪj/
+    translation: separate
+    pos: adj
+    gender: m
+  - lemma: попросити
+    ipa: /pɔprɔˈsɪtɪ/
+    translation: to ask/request
+    pos: verb
+  - lemma: порекомендувати
+    ipa: /pɔrɛkɔmɛnduˈvɑtɪ/
+    translation: to recommend
+    pos: verb
+  - lemma: проводити
+    ipa: /prɔˈvɔdɪtɪ/
+    translation: to spend (time)
+    pos: verb
+  - lemma: рекомендація
+    ipa: /rɛkɔmɛnˈdɑt͡sʲijɑ/
+    translation: recommendation
+    pos: noun
+    gender: f
+  - lemma: решта
+    ipa: /ˈrɛʃtɑ/
+    translation: change
+    pos: noun
+    gender: f
+  - lemma: спробувати
+    ipa: /sprɔˈbuvɑtɪ/
+    translation: to try
+    pos: verb
+  - lemma: столик
+    ipa: /ˈstɔlɪk/
+    translation: small table
+    pos: noun
+    gender: m
+  - lemma: торт
+    ipa: /tɔrt/
+    translation: cake
+    pos: noun
+    gender: m
+  - lemma: треба
+    ipa: /ˈtrɛbɑ/
+    translation: necessary/need
+    pos: adv
+  - lemma: хвилинка
+    ipa: /xvɪˈlɪnkɑ/
+    translation: minute
+    pos: noun
+    gender: f
+  - lemma: частина
+    ipa: /t͡ʃɑˈstɪnɑ/
+    translation: part
+    pos: noun
+    gender: f
+  - lemma: чудово
+    ipa: /t͡ʃuˈdɔvɔ/
+    translation: wonderfully
+    pos: adv
+  - lemma: який
+    ipa: /jɑˈkɪj/
+    translation: which
+    pos: pron

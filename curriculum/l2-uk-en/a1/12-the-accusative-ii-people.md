@@ -1,22 +1,3 @@
----
-module: a1-12
-title: 'The Accusative II: People'
-subtitle: 'Animate Nouns and the Genitive Connection'
-version: '1.0'
-phase: 'A1.2'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: 'vocab-only'
-tags: ['accusative', 'cases', 'animate', 'people', 'grammar']
-grammar: ['accusative-animate', 'genitive-accusative-connection']
-objectives:
-  - 'Learner can use accusative case for animate nouns (people/animals)'
-  - 'Learner can distinguish between animate and inanimate accusative'
-  - 'Learner can identify when accusative = genitive'
-vocabulary_count: 20
-vocab_count: 45
----
-
 # The Accusative II: People
 
 ## Warm-up
@@ -254,50 +235,3 @@ In this module, you learned the **animate accusative** — how Ukrainian marks p
 > **Pronouns:** [Personal Pronouns Declension](https://www.ukrainianlessons.com/ukrainian-personal-pronouns/) — See мене, тебе, його in accusative
 >
 > **Podcast:** [ULP 1-33 | Books + Accusative of People](https://www.ukrainianlessons.com/episode33/) — Practice accusative with animate nouns
-
-# Vocabulary
-
-| Word         | IPA              | English             | POS  | Gender | Note |
-| ------------ | ---------------- | ------------------- | ---- | ------ | ---- |
-| андрій       | /ɑnˈdrij/        | Andriy              | name | ч      |      |
-| бібліотека   | /biblʲiɔˈtɛkɑ/   | library             | noun | ж      |      |
-| вибачити     | /vɪˈbɑt͡ʃɪtɪ/     | to forgive/excuse   | verb | -      |      |
-| водій        | /vɔˈdij/         | driver              | noun | ч      |      |
-| возити       | /vɔˈzɪtɪ/        | to drive/transport  | verb | -      |      |
-| вулиця       | /ˈvulɪt͡sʲɑ/      | street              | noun | ж      |      |
-| вчитель      | /ˈwt͡ʃɪtɛlʲ/      | teacher (m)         | noun | ч      |      |
-| вчителька    | /ˈwt͡ʃɪtɛlʲkɑ/    | teacher (f)         | noun | ж      |      |
-| гість        | /ɦisʲtʲ/         | guest               | noun | ч      |      |
-| директор     | /dɪˈrɛktɔr/      | director            | noun | ч      |      |
-| директорка   | /dɪˈrɛktɔrkɑ/    | director (f)        | noun | ж      |      |
-| додому       | /dɔˈdɔmu/        | homewards           | adv  | -      |      |
-| дошка        | /ˈdɔʃkɑ/         | board/blackboard    | noun | ж      |      |
-| дружина      | /druˈʒɪnɑ/       | wife                | noun | ж      |      |
-| дідусь       | /diˈdusʲ/        | grandpa             | noun | ч      |      |
-| замовити     | /zɑˈmɔvɪtɪ/      | to order            | verb | -      |      |
-| його         | /jɔˈɦɔ/          | his/him             | pron | -      |      |
-| кожний       | /ˈkɔʒnɪj/        | every/each          | pron | ч      |      |
-| колега       | /kɔˈlɛɦɑ/        | colleague           | noun | ч      |      |
-| коридор      | /kɔrɪˈdɔr/       | corridor            | noun | ч      |      |
-| може         | /ˈmɔʒɛ/          | maybe               | adv  | -      |      |
-| офіціант     | /ɔfit͡sʲiˈɑnt/    | waiter              | noun | ч      |      |
-| пасажир      | /pɑsɑˈʒɪr/       | passenger           | noun | ч      |      |
-| питати       | /pɪˈtɑtɪ/        | to ask              | verb | -      |      |
-| практикувати | /prɑktɪkuˈvɑtɪ/  | to practice         | verb | -      |      |
-| привітний    | /prɪˈvitnɪj/     | friendly/welcoming  | adj  | ч      |      |
-| разом        | /ˈrɑzɔm/         | together            | adv  | -      |      |
-| спізнюватися | /spizɲuˈvɑtɪsʲɑ/ | to be late          | verb | -      |      |
-| суддя        | /sudˈdʲɑ/        | judge               | noun | ч      |      |
-| сусід        | /suˈsid/         | neighbor (m)        | noun | ч      |      |
-| сусідка      | /suˈsidkɑ/       | neighbor (f)        | noun | ж      |      |
-| сідати       | /siˈdɑtɪ/        | to sit down         | verb | -      |      |
-| тато         | /ˈtɑtɔ/          | dad                 | noun | ч      |      |
-| тепер        | /tɛˈpɛr/         | now                 | adv  | -      |      |
-| учениця      | /ut͡ʃɛˈnɪt͡sʲɑ/    | student (school, f) | noun | ж      |      |
-| учень        | /ˈut͡ʃɛnʲ/        | student (school, m) | noun | ч      |      |
-| хтось        | /xtɔsʲ/          | someone             | pron | -      |      |
-| цікаво       | /t͡sʲiˈkɑvɔ/      | interestingly       | adv  | -      |      |
-| чудовий      | /t͡ʃuˈdɔvɪj/      | wonderful           | adj  | ч      |      |
-| школа        | /ˈʃkɔlɑ/         | school              | noun | ж      |      |
-| шукати       | /ʃuˈkɑtɪ/        | to look for         | verb | -      |      |
-| ідея         | /iˈdɛjɑ/         | idea                | noun | ж      |      |

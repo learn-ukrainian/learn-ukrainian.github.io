@@ -1,31 +1,3 @@
----
-module: a2-07
-title: 'Spatial Prepositions'
-subtitle: 'Location, Motion, and Case Combinations'
-version: '1.0'
-phase: 'A2.1'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: none
-tags:
-  - grammar
-  - prepositions
-  - cases
-  - spatial
-grammar:
-  - preposition + case combinations
-  - motion vs. location distinction
-  - genitive prepositions
-  - instrumental prepositions
-objectives:
-  - 'Learner can use prepositions with correct cases'
-  - 'Learner can distinguish motion vs. location contexts'
-  - 'Learner can form sentences with common preposition + case combinations'
-  - 'Learner can understand spatial relationships in Ukrainian'
-vocabulary_count: 30
-vocab_count: 23
----
-
 ## Warm-up
 
 Prepositions are small but mighty words that connect nouns to the rest of the sentence. In English, prepositions like "in," "on," "to," and "from" are straightforward. But in Ukrainian, prepositions work hand-in-hand with grammatical cases — and some prepositions even change meaning depending on which case follows them!

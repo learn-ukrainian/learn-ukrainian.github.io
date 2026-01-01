@@ -1,29 +1,3 @@
----
-module: b1-23
-title: "Префікси руху в інших дієсловах"
-subtitle: "Motion prefixes in non-motion verbs"
-version: "3.0"
-phase: "B1.2 Motion"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - prefixes
-  - word-formation
-  - verbs
-grammar:
-  - "Prefix meanings transferred to non-motion verbs"
-  - "Word formation with motion prefixes"
-  - "Semantic patterns across verb categories"
-objectives:
-  - "Master the abstract logic of Ukrainian prefixes"
-  - "Predict meanings of new verbs based on their prefixes"
-  - "Use complex prefixed verbs in professional and daily contexts"
-vocabulary_count: 31
-vocab_count: 129
----
-
 # Префікси руху в інших дієсловах
 
 > 🎯 **Чому це важливо?**
@@ -277,8 +251,5 @@ vocab_count: 129
 > - 🎧 [Ukrainian Lessons Podcast: Prefixes](https://www.ukrainianlessons.com/) — Аудіо практика
 
 ---
-
-
-
 
 ---

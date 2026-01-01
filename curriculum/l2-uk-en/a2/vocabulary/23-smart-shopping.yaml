@@ -1,0 +1,89 @@
+module: 23-smart-shopping
+level: A2
+version: '2.0'
+items:
+- lemma: грам
+  ipa: ɦrɑm
+  translation: gram
+  pos: noun
+  gender: m
+- lemma: зручний
+  ipa: zrut͡ʃˈnɪj
+  translation: comfortable; convenient
+  pos: adj
+- lemma: крамниця
+  ipa: krɐmˈnɪt͡sʲɐ
+  translation: shop
+  pos: noun
+  gender: f
+- lemma: літр
+  ipa: lʲitr
+  translation: liter
+  pos: noun
+  gender: m
+- lemma: мінус
+  ipa: ˈmʲinus
+  translation: minus
+  pos: noun
+  gender: m
+- lemma: натуральний
+  ipa: nɐtuˈrɑlʲnɪj
+  translation: natural
+  pos: adj
+  gender: f
+- lemma: остаточний
+  ipa: ostɐˈtɔt͡ʃnɪj
+  translation: final; definitive
+  pos: adj
+  gender: f
+- lemma: плям
+  ipa: plʲɑm
+  translation: stain (gen pl)
+  pos: noun
+  gender: f
+- lemma: подумати
+  ipa: poˈdumɐte
+  translation: to think (perf)
+  pos: verb
+- lemma: поміряти
+  ipa: poˈmʲirʲɐte
+  translation: to measure/try on (perf)
+  pos: verb
+- lemma: постійний
+  ipa: poˈsʲtʲijnɪj
+  translation: constant; permanent
+  pos: adj
+  gender: m
+- lemma: приміряти
+  ipa: prɪˈmʲirʲɐte
+  translation: to try on
+  pos: verb
+- lemma: пройтися
+  ipa: projˈtɪsʲɐ
+  translation: to walk around (perf)
+  pos: verb
+- lemma: товар
+  ipa: toˈvɑr
+  translation: goods; item
+  pos: noun
+  gender: m
+- lemma: торг
+  ipa: tɔrɦ
+  translation: bargaining
+  pos: noun
+  gender: m
+- lemma: туфля
+  ipa: ˈtuflʲɐ
+  translation: shoe
+  pos: noun
+  gender: m
+- lemma: чек
+  ipa: t͡ʃɛk
+  translation: receipt
+  pos: noun
+  gender: m
+- lemma: шкіра
+  ipa: ˈʃkʲirɐ
+  translation: leather; skin
+  pos: noun
+  gender: f

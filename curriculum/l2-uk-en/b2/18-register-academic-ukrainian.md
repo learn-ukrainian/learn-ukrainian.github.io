@@ -1,29 +1,3 @@
----
-module: b2-18
-title: "Науковий стиль української мови"
-subtitle: "Як писати та говорити академічно"
-version: "1.0"
-phase: "B2.1b [Participles & Register]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - register
-  - academic-writing
-grammar:
-  - "Academic writing conventions"
-  - "Impersonal constructions in academic texts"
-  - "Мовне хеджування"
-  - "Citation conventions"
-objectives:
-  - "Учень може розпізнавати характерні риси наукового стилю"
-  - "Учень може використовувати академічну лексику та конструкції у власних текстах"
-  - "Учень може трансформувати розмовний текст в академічний"
-vocabulary_count: 30
-vocab_count: 54
----
-
 # Науковий стиль української мови
 
 > Чому це важливо?

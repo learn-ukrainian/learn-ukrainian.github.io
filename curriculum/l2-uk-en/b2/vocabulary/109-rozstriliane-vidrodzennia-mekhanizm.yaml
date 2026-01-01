@@ -1,0 +1,261 @@
+module: 109-rozstriliane-vidrodzennia-mekhanizm
+level: B2
+version: '2.0'
+items:
+  - lemma: антоніна
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: арештован
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: арештовуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: вибивати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: виплачити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: гені
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: дмитрій
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: дмитрієв
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: добування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: евфемізм
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: епік
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: етапований
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: загальносоюзний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: запобігання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: засекречуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: засуджений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: зізнання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: катування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: комісаріат
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: конвеєр
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: конвеєра
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: концтабір
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: леплевський
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: лісоповал
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: марусь
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: музеєфікація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: нарком
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: обком
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: перевиконання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: перевиховання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: позасудовий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: пошуковий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: прискорений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: приховування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: прозаїк
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: прокуратура
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: репресивний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: розкривати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: санкціонування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: соловко
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: спускати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: таборний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: торфа
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: тоталітаризм
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: трійка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: трійок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: фабрикувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: футурист
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: фікція
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: юліус
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: єжов
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: ізраїль
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: імена
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n

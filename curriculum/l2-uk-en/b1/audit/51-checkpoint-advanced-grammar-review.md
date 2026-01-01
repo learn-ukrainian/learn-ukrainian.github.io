@@ -1,49 +1,67 @@
 # Audit Report: 51-checkpoint-advanced-grammar.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 800
-**Overall Status:** ✅ PASS
+**Phase:** B1.4 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 800
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
+  - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1987/800 (>1800 may be too long)
+- **Words:** ⚠️ 1910/800 (>1800 may be too long)
 - **Activities:** ✅ 20/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 41/10
+- **Vocab:** ✅ 28/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Immersion:** 🇺🇦 99.8% (checkpoint - no gate)
-- **Richness:** ✅ 98% (checkpoint)
+- **Richness:** ❌ 81% < 95% min (grammar)
 - **Grammar:** ✅ Validated (10/102 confirmed)
 
 ## Richness Details
-**Score:** 98% (minimum: 85%)
-**Module Type:** checkpoint
+**Score:** 81% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 12 | 8 | 100% | 25% | 25.0% |
-| review_sections | 34 | 3 | 100% | 20% | 20.0% |
-| variety | 0.90 | - | 90% | 15% | 13.5% |
-| engagement | 4 | 3 | 100% | 10% | 10.0% |
-| cultural | 2 | - | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 10% | 10.0% |
-| paragraph_var | 0.99 | - | 99% | 10% | 9.9% |
-| **TOTAL** | | | | | **98.4%** |
+| examples | 47 | 24 | 100% | 20% | 20.0% |
+| engagement | 4 | 5 | 80% | 15% | 12.0% |
+| dialogues | 1 | 4 | 25% | 15% | 3.8% |
+| variety | 0.90 | - | 90% | 10% | 9.0% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 8 | 3 | 100% | 10% | 10.0% |
+| visual | 10 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.99 | - | 99% | 5% | 5.0% |
+| questions | 37 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **81.4%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (20 interactive elements)
+### Dryness Flags & Fixes
+- ❌ **LOW_DIALOGUE**
+  - FIX:
+    Add more mini-dialogues (need 4+ total). Use this exact format:
+    
+    **Діалог: [Location in Ukraine]**
+    
+    > — [Speaker 1 line with **bolded** grammar examples]
+    > — [Speaker 2 response with **bolded** grammar examples]
+    > — [Speaker 1 continuation]
+    > — [Speaker 2 conclusion]
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Контрольна точка: Просунута граматика** | ⚪️ | 82 | Skipped |
+| **Intro/Narrative** | ✅ | 82 | Included in Core |
 | **Огляд** | ⚪️ | 89 | Skipped |
 | **Skill 1: Дієприслівники недоконаного виду (M42)** | ⚪️ | 185 | Skipped |
 | **Skill 2: Дієприслівники доконаного виду (M43)** | ⚪️ | 185 | Skipped |
@@ -55,4 +73,3 @@
 | **Skill 8: Збірні числівники та дроби (M49)** | ⚪️ | 161 | Skipped |
 | **Інтеграційне завдання** | ⚪️ | 182 | Skipped |
 | **Підсумок** | ✅ | 130 | Included in Core |
-| **Словник** | ⚪️ | 77 | Skipped |

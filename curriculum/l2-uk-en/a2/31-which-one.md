@@ -1,28 +1,3 @@
----
-module: a2-31
-title: Which One?
-subtitle: "Relative Clauses"
-version: "1.0"
-phase: "A2.3"
-pedagogy: "Expressive"
-duration: "60 min"
-transliteration: none
-tags:
-  - connectors
-  - relative clauses
-  - grammar
-  - declension
-grammar:
-  - relative pronouns (який/яка/яке/які)
-  - case agreement in clauses
-objectives:
-  - "Learner can describe nouns using clauses"
-  - "Learner understands 'який' declension"
-  - "Learner can link sentences"
-vocabulary_count: 25
-vocab_count: 13
----
-
 ## Warm-up
 
 How do you describe things?

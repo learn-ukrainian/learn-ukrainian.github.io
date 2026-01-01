@@ -1,26 +1,44 @@
 # Audit Report: 25-telling-stories.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "Narrative Arc" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## LINT ERRORS
+- ❌ Line 193: Empty Header detected (Lonely '#'). Remove or add title.
+
+## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
+  - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): несподівано, згодом, пізніше, раніше, нарешті...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 30/100)
+
+- Borderline case (severity 30/100)
+- 2 pedagogical violations (minor)
+- Immersion 9% off target (minor)
+- Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1187/1000
+- **Words:** ✅ 1074/1000
 - **Activities:** ✅ 11/10
-- **Density:** ✅ All > 12
+- **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 13/1
+- **Vocab:** ✅ 44/1
 - **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 54.3% (target 40-55% (A2.2))
+- **Lint:** ❌ 1 Format Errors
+- **Pedagogy:** ❌ 1 violations
+- **Immersion:** ❌ 30.9% LOW (target 40-55% (A2.2))
+- **Grammar:** ⏳ Pending validation
 
-## MDX VALIDATION
-✅ No issues found
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Order the Story | dialogue-reorder | 0 | 4 | Add 4 more items |
 
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -38,17 +56,4 @@
 | **Language in Action** | ⚪️ | 0 | Skipped |
 | **A Strange Morning** | ⚪️ | 137 | Skipped |
 | **Useful Phrases for Storytellers** | ✅ | 88 | Included in Core |
-| **Summary Table** | ✅ | 113 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **dialogue-reorder: Order the Story** | 🎮 | 6 | Activity (6 items, min 4) |
-| **match-up: Connectors and Meanings** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Complete the Story** | 🎮 | 12 | Activity (12 items, min 8) |
-| **quiz: Understand the Sequence** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Time Categories** | 🎮 | 18 | Activity (18 items, min 12) |
-| **true-false: True or False?** | 🎮 | 12 | Activity (12 items, min 8) |
-| **cloze: The Lost Keys in the City** | 🎮 | 12 | Activity (12 items, min 12) |
-| **dialogue-reorder: Telling a Funny Story** | 🎮 | 10 | Activity (10 items, min 4) |
-| **mark-the-words: Identify Connectors** | 🎮 | 12 | Activity (12 items, min 6) |
-| **error-correction: Fix the Story Flow** | 🎮 | 6 | Activity (6 items, min 6) |
-| **translate: English to Ukrainian** | 🎮 | 12 | Activity (12 items, min 6) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **# Vocabulary** | ➖ | 0 | Excluded Type |

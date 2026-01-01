@@ -1,6 +1,17 @@
 # Audit Report: 53-sports-fitness.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "Narrative" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[GRAMMAR]** Participle used before B1: 'одягнений'
+  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 2 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1269/1000
@@ -10,17 +21,12 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 24/1
+- **Vocab:** ✅ 54/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 50.4% (target 50-60% (A2.3))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
+- **Pedagogy:** ❌ 1 violations
+- **Immersion:** 🇺🇦 53.0% (target 50-60% (A2.3))
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -30,16 +36,4 @@
 | **Presentation** | ✅ | 320 | Included in Core |
 | **Practice** | ⚪️ | 679 | Skipped |
 | **Summary** | ✅ | 142 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **quiz: Sports Knowledge** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Sports Vocab** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Sport Instrumental** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: Sports Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Action vs Place** | 🎮 | 15 | Activity (15 items, min 12) |
-| **unjumble: Sport Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
-| **error-correction: Sport Mistakes** | 🎮 | 12 | Activity (12 items, min 6) |
-| **cloze: Football Match** | 🎮 | 12 | Activity (12 items, min 12) |
-| **dialogue-reorder: Gym Chat** | 🎮 | 12 | Activity (12 items, min 4) |
-| **mark-the-words: Sports List** | 🎮 | 8 | Activity (8 items, min 6) |
-| **select: Choose Correct Verb** | 🎮 | 12 | Activity (12 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

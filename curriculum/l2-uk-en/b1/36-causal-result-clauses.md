@@ -1,28 +1,3 @@
----
-module: b1-36
-title: "Причинові та наслідкові речення"
-subtitle: "Causal and Result Clauses"
-version: "1.0"
-phase: "B1.3b Complex Sentences"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - complex-sentences
-  - causal-clauses
-  - result-clauses
-grammar:
-  - "Causal clause constructions with тому що, бо, через те що"
-  - "Result clause constructions with тому, отже, внаслідок"
-objectives:
-  - "Learner can express причина using various causal connectors"
-  - "Learner can express наслідок using result connectors"
-  - "Learner can transform causal statements into result statements"
-vocabulary_count: 25
-vocab_count: 83
----
-
 > [!motivation]
 > Чому щось сталося? Які наслідки має ця подія? Причинові та наслідкові сполучники — це логічний каркас мови. Вони дозволяють пояснювати події, аргументувати думки й будувати переконливі тексти українською мовою. Без них неможливо вести дискусію, писати есе чи пояснювати складні явища. Опануйте ці конструкції — і ваше мовлення стане логічним і переконливим!
 

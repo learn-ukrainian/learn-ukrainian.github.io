@@ -1,0 +1,653 @@
+module: 07-questions-and-negation
+level: A1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/07-questions-and-negation.md
+generated: '2026-01-01T17:33:19.379798'
+scope: fill-in, quiz, true-false
+activity_counts:
+  fill-in: 24
+  quiz: 24
+  true-false: 12
+total_items: 60
+item_count: 60
+sample_percent: null
+items:
+- activity: fill-in
+  title: Complete Questions
+  sentence_template: ___ ти читаєш? (What do you read?)
+  answer: Що
+  complete_sentence: Що ти читаєш? (What do you read?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete Questions
+  sentence_template: ___ ти? (Where are you?)
+  answer: Де
+  complete_sentence: Де ти? (Where are you?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete Questions
+  sentence_template: ___ ти працюєш? (When do you work?)
+  answer: Коли
+  complete_sentence: Коли ти працюєш? (When do you work?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete Questions
+  sentence_template: ___ ти? (How are you?)
+  answer: Як
+  complete_sentence: Як ти? (How are you?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete Questions
+  sentence_template: ___ працює? (Who works?)
+  answer: Хто
+  complete_sentence: Хто працює? (Who works?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete Questions
+  sentence_template: ___ ти йдеш? (Where are you going?)
+  answer: Куди
+  complete_sentence: Куди ти йдеш? (Where are you going?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete Questions
+  sentence_template: ___ ти вивчаєш українську? (Why do you study Ukrainian?)
+  answer: Чому
+  complete_sentence: Чому ти вивчаєш українську? (Why do you study Ukrainian?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete Questions
+  sentence_template: ___ ти? (Where are you from?)
+  answer: Звідки
+  complete_sentence: Звідки ти? (Where are you from?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete Questions
+  sentence_template: ___ це коштує? (How much is this?)
+  answer: Скільки
+  complete_sentence: Скільки це коштує? (How much is this?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete Questions
+  sentence_template: ___ ти знаєш? (Do you know?)
+  answer: Чи
+  complete_sentence: Чи ти знаєш? (Do you know?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete Questions
+  sentence_template: ___ тебе звуть? (What is your name? lit. How do they call you?)
+  answer: Як
+  complete_sentence: Як тебе звуть? (What is your name? lit. How do they call you?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete Questions
+  sentence_template: ___ ти говориш? (What language do you speak?)
+  answer: Що
+  complete_sentence: Що ти говориш? (What language do you speak?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Add Negation
+  sentence_template: я ___ читаю українською. (I don't read in Ukrainian.)
+  answer: не
+  complete_sentence: я не читаю українською. (I don't read in Ukrainian.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Add Negation
+  sentence_template: Вона ___ працює сьогодні. (She doesn't work today.)
+  answer: не
+  complete_sentence: Вона не працює сьогодні. (She doesn't work today.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Add Negation
+  sentence_template: Ми ___ знаємо. (We don't know.)
+  answer: не
+  complete_sentence: Ми не знаємо. (We don't know.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Add Negation
+  sentence_template: Ти ___ розумієш? (You don't understand?)
+  answer: не
+  complete_sentence: Ти не розумієш? (You don't understand?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Add Negation
+  sentence_template: я ___ ___ п'ю каву. (I never drink coffee.) [Two blanks!]
+  answer: ніколи не
+  complete_sentence: я ніколи не ніколи не п'ю каву. (I never drink coffee.) [Two
+    blanks!]
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Add Negation
+  sentence_template: Він ___ говорить англійською. (He doesn't speak English.)
+  answer: не
+  complete_sentence: Він не говорить англійською. (He doesn't speak English.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Add Negation
+  sentence_template: Вони ___ пишуть листи. (They don't write letters.)
+  answer: не
+  complete_sentence: Вони не пишуть листи. (They don't write letters.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Add Negation
+  sentence_template: я ___ хочу чаю. (I don't want tea.)
+  answer: не
+  complete_sentence: я не хочу чаю. (I don't want tea.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Add Negation
+  sentence_template: Це ___ правда. (That's not true.)
+  answer: не
+  complete_sentence: Це не правда. (That's not true.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Add Negation
+  sentence_template: Чи ти ___ знаєш? (Don't you know?)
+  answer: не
+  complete_sentence: Чи ти не знаєш? (Don't you know?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Add Negation
+  sentence_template: Ми ___ ___ їмо м'ясо. (We never eat meat.)
+  answer: ніколи не
+  complete_sentence: Ми ніколи не ніколи не їмо м'ясо. (We never eat meat.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Add Negation
+  sentence_template: Вона ___ слухає музику. (She doesn't listen to music.)
+  answer: не
+  complete_sentence: Вона не слухає музику. (She doesn't listen to music.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Word Meanings
+  question: What is the meaning of the word "де"?
+  options:
+  - '{''text'': ''what'', ''correct'': False}'
+  - '{''text'': ''who'', ''correct'': False}'
+  - '{''text'': ''where'', ''correct'': True}'
+  - '{''text'': ''when'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Word Meanings
+  question: Which question word means "why"?
+  options:
+  - '{''text'': ''що'', ''correct'': False}'
+  - '{''text'': ''як'', ''correct'': False}'
+  - '{''text'': ''чому'', ''correct'': True}'
+  - '{''text'': ''коли'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Word Meanings
+  question: How do you say "when" in Ukrainian?
+  options:
+  - '{''text'': ''де'', ''correct'': False}'
+  - '{''text'': ''коли'', ''correct'': True}'
+  - '{''text'': ''куди'', ''correct'': False}'
+  - '{''text'': ''скільки'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Word Meanings
+  question: What is the meaning of the word "хто"?
+  options:
+  - '{''text'': ''what'', ''correct'': False}'
+  - '{''text'': ''who'', ''correct'': True}'
+  - '{''text'': ''how'', ''correct'': False}'
+  - '{''text'': ''where'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Word Meanings
+  question: Which word asks "where to" (direction)?
+  options:
+  - '{''text'': ''де'', ''correct'': False}'
+  - '{''text'': ''звідки'', ''correct'': False}'
+  - '{''text'': ''куди'', ''correct'': True}'
+  - '{''text'': ''коли'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Word Meanings
+  question: How do you say "how much/many"?
+  options:
+  - '{''text'': ''як'', ''correct'': False}'
+  - '{''text'': ''що'', ''correct'': False}'
+  - '{''text'': ''скільки'', ''correct'': True}'
+  - '{''text'': ''коли'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Word Meanings
+  question: What is the meaning of the word "звідки"?
+  options:
+  - '{''text'': ''where'', ''correct'': False}'
+  - '{''text'': ''where to'', ''correct'': False}'
+  - '{''text'': ''where from'', ''correct'': True}'
+  - '{''text'': ''when'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Word Meanings
+  question: Which Ukrainian word means "what"?
+  options:
+  - '{''text'': ''що'', ''correct'': True}'
+  - '{''text'': ''хто'', ''correct'': False}'
+  - '{''text'': ''де'', ''correct'': False}'
+  - '{''text'': ''як'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Word Meanings
+  question: How do you say "how"?
+  options:
+  - '{''text'': ''що'', ''correct'': False}'
+  - '{''text'': ''чому'', ''correct'': False}'
+  - '{''text'': ''як'', ''correct'': True}'
+  - '{''text'': ''коли'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Word Meanings
+  question: What is the question word for "who"?
+  options:
+  - '{''text'': ''що'', ''correct'': False}'
+  - '{''text'': ''хто'', ''correct'': True}'
+  - '{''text'': ''де'', ''correct'': False}'
+  - '{''text'': ''чому'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Word Meanings
+  question: Which Ukrainian word corresponds to "where" (location)?
+  options:
+  - '{''text'': ''де'', ''correct'': True}'
+  - '{''text'': ''куди'', ''correct'': False}'
+  - '{''text'': ''звідки'', ''correct'': False}'
+  - '{''text'': ''коли'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Question Word Meanings
+  question: How do you ask "why" in Ukrainian?
+  options:
+  - '{''text'': ''що'', ''correct'': False}'
+  - '{''text'': ''як'', ''correct'': False}'
+  - '{''text'': ''коли'', ''correct'': False}'
+  - '{''text'': ''чому'', ''correct'': True}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Negative Sentence Order
+  question: 'Identify the correct word order for the sentence: "I don''t read."'
+  options:
+  - '{''text'': ''Я не читаю'', ''correct'': True}'
+  - '{''text'': ''не Я читаю'', ''correct'': False}'
+  - '{''text'': ''читаю Я не'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Negative Sentence Order
+  question: 'Identify the correct word order for the sentence: "She doesn''t work."'
+  options:
+  - '{''text'': ''Вона не працює'', ''correct'': True}'
+  - '{''text'': ''не Вона працює'', ''correct'': False}'
+  - '{''text'': ''працює Вона не'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Negative Sentence Order
+  question: 'Identify the correct word order for the sentence: "We don''t know."'
+  options:
+  - '{''text'': ''Ми не знаємо'', ''correct'': True}'
+  - '{''text'': ''не Ми знаємо'', ''correct'': False}'
+  - '{''text'': ''знаємо Ми не'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Negative Sentence Order
+  question: 'Identify the correct word order for the sentence: "I never drink coffee."'
+  options:
+  - '{''text'': "Я ніколи не п''ю каву", ''correct'': True}'
+  - '{''text'': "ніколи Я не п''ю каву", ''correct'': False}'
+  - '{''text'': "каву Я ніколи не п''ю", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Negative Sentence Order
+  question: 'Identify the correct word order for the sentence: "He doesn''t speak
+    Ukrainian."'
+  options:
+  - '{''text'': ''Він не говорить українською'', ''correct'': True}'
+  - '{''text'': ''не Він говорить українською'', ''correct'': False}'
+  - '{''text'': ''українською Він не говорить'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Negative Sentence Order
+  question: 'Identify the correct word order for the sentence: "I don''t understand."'
+  options:
+  - '{''text'': ''Я не розумію'', ''correct'': True}'
+  - '{''text'': ''не Я розумію'', ''correct'': False}'
+  - '{''text'': ''розумію Я не'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Negative Sentence Order
+  question: 'Identify the correct word order for the sentence: "That''s not true."'
+  options:
+  - '{''text'': ''Це не правда'', ''correct'': True}'
+  - '{''text'': ''не Це правда'', ''correct'': False}'
+  - '{''text'': ''правда Це не'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Negative Sentence Order
+  question: 'Identify the correct word order for the sentence: "You don''t write."'
+  options:
+  - '{''text'': ''Ти не пишеш'', ''correct'': True}'
+  - '{''text'': ''не Ти пишеш'', ''correct'': False}'
+  - '{''text'': ''пишеш Ти не'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Negative Sentence Order
+  question: 'Identify the correct word order for the sentence: "We never eat meat."'
+  options:
+  - '{''text'': "Ми ніколи не їмо м''ясо", ''correct'': True}'
+  - '{''text'': "ніколи Ми не їмо м''ясо", ''correct'': False}'
+  - '{''text'': "м''ясо Ми ніколи не їмо", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Negative Sentence Order
+  question: 'Identify the correct word order for the sentence: "They don''t listen
+    to music."'
+  options:
+  - '{''text'': ''Вони не слухають музику'', ''correct'': True}'
+  - '{''text'': ''не Вони слухають музику'', ''correct'': False}'
+  - '{''text'': ''музику Вони не слухають'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Negative Sentence Order
+  question: 'Identify the correct word order for the sentence: "I don''t work today."'
+  options:
+  - '{''text'': ''Я не працюю сьогодні'', ''correct'': True}'
+  - '{''text'': ''не Я працюю сьогодні'', ''correct'': False}'
+  - '{''text'': ''сьогодні Я не працюю'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Negative Sentence Order
+  question: 'Identify the correct word order for the sentence: "I don''t want tea."'
+  options:
+  - '{''text'': ''Я не хочу чаю'', ''correct'': True}'
+  - '{''text'': ''не Я хочу чаю'', ''correct'': False}'
+  - '{''text'': ''чаю Я не хочу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Question and Negation Rules
+  statement: '"Чи" at the beginning of a sentence signals a yes/no question.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Question and Negation Rules
+  statement: Ukrainian question words require "do/does" like English.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Question and Negation Rules
+  statement: '"Не" goes directly before the verb to make it negative.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Question and Negation Rules
+  statement: '"Ніколи" (never) doesn''t need "не" because it''s already negative.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Question and Negation Rules
+  statement: You can skip "чи" in casual speech and use rising intonation instead.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Question and Negation Rules
+  statement: '"Де" and "куди" mean exactly the same thing.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Question and Negation Rules
+  statement: '"Звідки" asks about origin or source.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Question and Negation Rules
+  statement: Ukrainian uses double negation with words like "ніколи" (never).
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Question and Negation Rules
+  statement: '"Що" can only mean "what", never "that".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Question and Negation Rules
+  statement: Frequency adverbs like "завжди" (always) can come before or after the
+    verb.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Question and Negation Rules
+  statement: To ask "how are you", Ukrainians always say "Як справи?"
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Question and Negation Rules
+  statement: '"Так" means yes and "ні" means no.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

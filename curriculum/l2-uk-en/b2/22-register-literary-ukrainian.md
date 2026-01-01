@@ -1,30 +1,3 @@
----
-module: b2-22
-title: "Регістр — Літературна українська"
-subtitle: "Мова художньої літератури"
-version: "1.0"
-phase: "B2"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - register
-  - literary-style
-  - stylistics
-grammar:
-  - "literary-register"
-  - "figurative-language"
-  - "archaic-vocabulary"
-  - "inverted-word-order"
-objectives:
-  - "Учень може розпізнавати характерні ознаки літературного стилю"
-  - "Учень може аналізувати стилістичні засоби в художніх текстах"
-  - "Учень може трансформувати нейтральний текст у літературний стиль"
-vocabulary_count: 30
-vocab_count: 114
----
-
 # Регістр — Літературна українська
 
 > Чому це важливо?

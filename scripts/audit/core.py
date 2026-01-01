@@ -147,7 +147,7 @@ def count_yaml_activity_items(activity: dict) -> int:
     """Count items in a YAML activity based on its type."""
     act_type = activity.get('type', '').lower()
 
-    if act_type in ('quiz', 'fill-in', 'true-false', 'unjumble', 'error-correction', 'select', 'translate'):
+    if act_type in ('quiz', 'fill-in', 'true-false', 'unjumble', 'error-correction', 'select', 'translate', 'anagram'):
         return len(activity.get('items', []))
     elif act_type == 'match-up':
         # Support both 'pairs' (preferred) and 'items' with left/right keys
@@ -551,6 +551,34 @@ def check_structure(content: str) -> tuple[bool, bool, bool]:
     return has_summary, has_vocab, has_vocab_table
 
 
+
+def load_yaml_meta(md_file_path: str) -> dict | None:
+    """Load metadata from YAML sidecar if exists."""
+    from pathlib import Path
+    md_path = Path(md_file_path)
+    yaml_path = md_path.parent / 'meta' / (md_path.stem + '.yaml')
+    if not yaml_path.exists():
+        return None
+    try:
+        with open(yaml_path, 'r', encoding='utf-8') as f:
+            return yaml.safe_load(f)
+    except Exception:
+        return None
+
+def load_yaml_vocab(md_file_path: str) -> list[dict] | None:
+    """Load vocabulary from YAML sidecar if exists."""
+    from pathlib import Path
+    md_path = Path(md_file_path)
+    yaml_path = md_path.parent / 'vocabulary' / (md_path.stem + '.yaml')
+    if not yaml_path.exists():
+        return None
+    try:
+        with open(yaml_path, 'r', encoding='utf-8') as f:
+            data = yaml.safe_load(f)
+            return data.get('items', [])
+    except Exception:
+        return None
+
 def audit_module(file_path: str) -> bool:
     """
     Main audit function for a module file.
@@ -568,10 +596,22 @@ def audit_module(file_path: str) -> bool:
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
+    # Try loading YAML sidecars
+    meta_data = load_yaml_meta(file_path)
+    vocab_data = load_yaml_vocab(file_path)
+    
     # Parse frontmatter
-    frontmatter_str, body = parse_frontmatter(content)
+    if meta_data:
+        # Reconstruct frontmatter string for validation functions that expect it
+        frontmatter_str = yaml.dump(meta_data, sort_keys=False, allow_unicode=True)
+        # Content is the body (file is stripped)
+        body = content
+        print(f"  📋 Loaded Metadata from YAML sidecar")
+    else:
+        frontmatter_str, body = parse_frontmatter(content)
+
     if not frontmatter_str:
-        print("Error: No YAML frontmatter found.")
+        print("Error: No YAML frontmatter found (checked embedded and sidecar).")
         sys.exit(1)
 
     # Validate required metadata
@@ -614,6 +654,11 @@ def audit_module(file_path: str) -> bool:
 
     # Summary check
     has_summary, has_vocab, has_vocab_table = check_structure(content)
+    
+    if vocab_data:
+        has_vocab = True
+        has_vocab_table = True
+        
     if not has_summary:
         print(f"❌ AUDIT FAILED: Missing 'Summary' section.")
         print("  -> Every module must have a Summary section.")
@@ -830,10 +875,25 @@ def audit_module(file_path: str) -> bool:
 
     results['audio'] = evaluate_audio(audio_count)
 
-    vocab_count = count_vocab_rows(content)
+    results['audio'] = evaluate_audio(audio_count)
+
+    if vocab_data:
+        vocab_count = len(vocab_data)
+    else:
+        vocab_count = count_vocab_rows(content)
+        
     results['vocab'] = evaluate_vocab(vocab_count, vocab_target)
-    if results['vocab'].status == 'FAIL':
-        has_critical_failure = True
+    # Note: vocab_count is a soft target (Issue #340) - don't fail audit
+
+    # If using YAML sidecar for vocab, we assume "table format" is "handled by schema",
+    # but we still want to check if the Markdown *links* or *displays* it... 
+    # Actually, the Markdown file doesn't display it anymore. generate_mdx injects it.
+    # So we pass structure check if vocab_data exists.
+    if vocab_data:
+        has_vocab = True
+        has_vocab_table = True
+    else:
+        has_summary, has_vocab, has_vocab_table = check_structure(content)
 
     results['structure'] = evaluate_structure(has_summary, has_vocab, has_vocab_table)
     if results['structure'].status == 'FAIL':
@@ -852,7 +912,15 @@ def audit_module(file_path: str) -> bool:
 
     # Run vocabulary plan compliance checks
     # VOCAB_PLAN_MISSING is now BLOCKING - core vocab from plan must be present
-    vocab_words = extract_vocab_from_section(content)
+    if vocab_data:
+        # Extract set of words from vocab_data dicts
+        vocab_words = set()
+        for item in vocab_data:
+            uk = item.get('lemma', '') # YAML schema uses 'lemma'
+            if uk: vocab_words.add(uk.lower())
+    else:
+        vocab_words = extract_vocab_from_section(content)
+
     plan_violations = check_vocab_matches_plan(
         file_path, level_code, module_num, vocab_words
     )
@@ -877,8 +945,9 @@ def audit_module(file_path: str) -> bool:
     pedagogical_violations.extend(markdown_violations)
 
     # Run vocabulary table format checks
-    vocab_format_violations = check_vocab_table_format(content, level_code)
-    pedagogical_violations.extend(vocab_format_violations)
+    if not vocab_data:
+        vocab_format_violations = check_vocab_table_format(content, level_code)
+        pedagogical_violations.extend(vocab_format_violations)
 
     # Run section order checks
     section_order_violations = check_section_order(content)

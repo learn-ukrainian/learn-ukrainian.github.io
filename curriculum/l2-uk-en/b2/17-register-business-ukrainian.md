@@ -1,30 +1,3 @@
----
-module: b2-17
-title: "Ділова українська мова"
-subtitle: "Листування, переговори та корпоративна комунікація"
-version: "1.0"
-phase: "B2.1b [Participles & Register]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - register
-  - business
-  - correspondence
-grammar:
-  - "Business correspondence formulas"
-  - "Corporate communication register"
-  - "Formal request constructions"
-  - "Business vocabulary and collocations"
-objectives:
-  - "Учень може писати ділові листи з правильним регістром та формулами"
-  - "Учень може вести переговори українською мовою з належною формальністю"
-  - "Учень може трансформувати звичайний текст у діловий стиль"
-vocabulary_count: 30
-vocab_count: 44
----
-
 # Ділова українська мова
 
 > Чому це важливо?

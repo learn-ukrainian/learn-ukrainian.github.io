@@ -1,26 +1,37 @@
 # Audit Report: 11-checkpoint-cases.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "Review" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: орудний, час, відмінок, кличний, родовий
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- 1 pedagogical violations (minor)
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1196/1000
 - **Activities:** ✅ 10/10
-- **Density:** ✅ All > 12
+- **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 5/1
+- **Vocab:** ✅ 18/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 43.8% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 37.6% (checkpoint - no gate)
+- **Grammar:** ⏳ Pending validation
 
-## MDX VALIDATION
-✅ No issues found
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| English to Ukrainian | translate | 0 | 6 | Add 6 more items |
 
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -33,15 +44,4 @@
 | **Integration Challenge** | ⚪️ | 147 | Skipped |
 | **Summary** | ✅ | 104 | Included in Core |
 | **Need More Practice?** | ⚪️ | 43 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Case Questions** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Case Selection** | 🎮 | 12 | Activity (12 items, min 6) |
-| **quiz: Comprehensive Case Quiz** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: Case Rules Review** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Preposition Cases** | 🎮 | 17 | Activity (17 items, min 12) |
-| **unjumble: Case Sentences** | 🎮 | 6 | Activity (6 items, min 6) |
-| **cloze: Service Dialogue** | 🎮 | 12 | Activity (12 items, min 12) |
-| **dialogue-reorder: Case Usage in Context** | 🎮 | 12 | Activity (12 items, min 4) |
-| **mark-the-words: Identify Cases** | 🎮 | 14 | Activity (14 items, min 6) |
-| **translate: English to Ukrainian** | 🎮 | 36 | Activity (36 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

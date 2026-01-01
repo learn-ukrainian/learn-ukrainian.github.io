@@ -1,0 +1,649 @@
+module: 18-food-and-shopping
+level: A1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/18-food-and-shopping.md
+generated: '2026-01-01T17:33:20.346868'
+scope: fill-in, quiz, true-false
+activity_counts:
+  fill-in: 24
+  quiz: 24
+  true-false: 12
+total_items: 60
+item_count: 60
+sample_percent: null
+items:
+- activity: fill-in
+  title: Shopping Phrases
+  sentence_template: Скільки ___ хліб? (How much is bread?)
+  answer: коштує
+  complete_sentence: Скільки коштує хліб? (How much is bread?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Phrases
+  sentence_template: Я ___ каву. (I want coffee.)
+  answer: хочу
+  complete_sentence: Я хочу каву. (I want coffee.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Phrases
+  sentence_template: Я хочу ___, будь ласка. (I want bread, please.)
+  answer: хліб
+  complete_sentence: Я хочу хліб, будь ласка. (I want bread, please.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Phrases
+  sentence_template: Склянку ___, будь ласка. (A glass of water, please.)
+  answer: води
+  complete_sentence: Склянку води, будь ласка. (A glass of water, please.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Phrases
+  sentence_template: Ми ___ овочі. (We buy vegetables.)
+  answer: купуємо
+  complete_sentence: Ми купуємо овочі. (We buy vegetables.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Phrases
+  sentence_template: ___, будь ласка. (The bill, please.)
+  answer: Рахунок
+  complete_sentence: Рахунок, будь ласка. (The bill, please.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Phrases
+  sentence_template: У меню є ___? (Is there dessert on the menu?)
+  answer: десерт
+  complete_sentence: У меню є десерт? (Is there dessert on the menu?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Phrases
+  sentence_template: Я шукаю зубну ___. (I'm looking for toothpaste.)
+  answer: пасту
+  complete_sentence: Я шукаю зубну пасту. (I'm looking for toothpaste.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Phrases
+  sentence_template: Я хочу ___. (I want a pen.)
+  answer: ручку
+  complete_sentence: Я хочу ручку. (I want a pen.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Phrases
+  sentence_template: Магазин ___ о восьмій. (The store opens at 8.)
+  answer: відчинено
+  complete_sentence: Магазин відчинено о восьмій. (The store opens at 8.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Phrases
+  sentence_template: Це дуже ___. (This is very expensive.)
+  answer: дорого
+  complete_sentence: Це дуже дорого. (This is very expensive.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Shopping Phrases
+  sentence_template: Я візьму ___ та салат. (I'll take soup and salad.)
+  answer: суп
+  complete_sentence: Я візьму суп та салат. (I'll take soup and salad.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Café Dialogue
+  sentence_template: — Що ти будеш ___? (What will you order?)
+  answer: замовляти
+  complete_sentence: — Що ти будеш замовляти? (What will you order?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Café Dialogue
+  sentence_template: — Я візьму каву та ___. (I'll take coffee and dessert.)
+  answer: десерт
+  complete_sentence: — Я візьму каву та десерт. (I'll take coffee and dessert.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Café Dialogue
+  sentence_template: — Я хочу чай та ___, будь ласка. (I want tea and salad, please.)
+  answer: салат
+  complete_sentence: — Я хочу чай та салат, будь ласка. (I want tea and salad, please.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Café Dialogue
+  sentence_template: — ___! Можна меню? (Waiter! Can we have the menu?)
+  answer: Офіціант
+  complete_sentence: — Офіціант! Можна меню? (Waiter! Can we have the menu?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Café Dialogue
+  sentence_template: — Так, ___ принесу. (Yes, I'll bring it now.)
+  answer: зараз
+  complete_sentence: — Так, зараз принесу. (Yes, I'll bring it now.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Café Dialogue
+  sentence_template: — Скільки коштує ___? (How much is the soup?)
+  answer: суп
+  complete_sentence: — Скільки коштує суп? (How much is the soup?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Café Dialogue
+  sentence_template: — ___ 45 гривень. (Together 45 hryvnias.)
+  answer: Разом
+  complete_sentence: — Разом 45 гривень. (Together 45 hryvnias.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Café Dialogue
+  sentence_template: — ___, будь ласка. (The bill, please.)
+  answer: Рахунок
+  complete_sentence: — Рахунок, будь ласка. (The bill, please.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Café Dialogue
+  sentence_template: — Ось ___. Дякую! (Here's the money. Thank you!)
+  answer: гроші
+  complete_sentence: — Ось гроші. Дякую! (Here's the money. Thank you!)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Café Dialogue
+  sentence_template: — Дякую! ___ побачення! (Thank you! Goodbye!)
+  answer: До
+  complete_sentence: — Дякую! До побачення! (Thank you! Goodbye!)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Café Dialogue
+  sentence_template: — Це дуже ___. (This is very tasty.)
+  answer: смачно
+  complete_sentence: — Це дуже смачно. (This is very tasty.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Café Dialogue
+  sentence_template: — Пляшку ___, будь ласка. (A bottle of wine, please.)
+  answer: вина
+  complete_sentence: — Пляшку вина, будь ласка. (A bottle of wine, please.)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Situations
+  question: Where do you pay for items?
+  options:
+  - '{''text'': ''на касі'', ''correct'': True}'
+  - '{''text'': ''на полиці'', ''correct'': False}'
+  - '{''text'': ''у кошику'', ''correct'': False}'
+  - '{''text'': ''у візку'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Situations
+  question: What do you use for small shopping?
+  options:
+  - '{''text'': ''кошик'', ''correct'': True}'
+  - '{''text'': ''візок'', ''correct'': False}'
+  - '{''text'': ''пакет'', ''correct'': False}'
+  - '{''text'': ''чек'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Situations
+  question: How do you accurately ask for a bag?
+  options:
+  - '{''text'': ''Мені потрібен пакет'', ''correct'': True}'
+  - '{''text'': ''Мені потрібна пакет'', ''correct'': False}'
+  - '{''text'': ''Я пакет хочу'', ''correct'': False}'
+  - '{''text'': ''Де пакет?'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Situations
+  question: How do you ask for the price?
+  options:
+  - '{''text'': ''Яка ціна?'', ''correct'': True}'
+  - '{''text'': ''Де ціна?'', ''correct'': False}'
+  - '{''text'': ''Що ціна?'', ''correct'': False}'
+  - '{''text'': ''Як ціна?'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Situations
+  question: How can you say accurately "I pay by card"?
+  options:
+  - '{''text'': ''Я плачу карткою'', ''correct'': True}'
+  - '{''text'': ''Я плачу готівку'', ''correct'': False}'
+  - '{''text'': ''Я плачу чек'', ''correct'': False}'
+  - '{''text'': ''Картка я плачу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Situations
+  question: Which phrase means accurately "The discount is 10%"?
+  options:
+  - '{''text'': ''Знижка десять відсотків'', ''correct'': True}'
+  - '{''text'': ''Ціна десять гривень'', ''correct'': False}'
+  - '{''text'': ''Каса відчинена'', ''correct'': False}'
+  - '{''text'': ''Чек тут'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Situations
+  question: What do you use for a big shopping?
+  options:
+  - '{''text'': ''візок'', ''correct'': True}'
+  - '{''text'': ''кошик'', ''correct'': False}'
+  - '{''text'': ''пакет'', ''correct'': False}'
+  - '{''text'': ''сумка'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Situations
+  question: How do you accurately say "Show me the receipt"?
+  options:
+  - '{''text'': ''Покажіть мені чек'', ''correct'': True}'
+  - '{''text'': ''Дайте мені чек'', ''correct'': False}'
+  - '{''text'': ''Де мій чек?'', ''correct'': False}'
+  - '{''text'': ''Чек покажіть'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Situations
+  question: Where is the milk usually stored?
+  options:
+  - '{''text'': ''на полиці'', ''correct'': True}'
+  - '{''text'': ''на касі'', ''correct'': False}'
+  - '{''text'': ''у чеку'', ''correct'': False}'
+  - '{''text'': ''у знижці'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Situations
+  question: How do you say accurately "I have fresh vegetables"?
+  options:
+  - '{''text'': ''У мене є свіжі овочі'', ''correct'': True}'
+  - '{''text'': ''У мене свіжий овоч'', ''correct'': False}'
+  - '{''text'': ''Свіжі овочі у мене'', ''correct'': False}'
+  - '{''text'': ''Я маю свіжі овоч'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Situations
+  question: How do you accurately ask for cash payments?
+  options:
+  - '{''text'': ''Ви приймаєте готівку?'', ''correct'': True}'
+  - '{''text'': ''Ви маєте готівку?'', ''correct'': False}'
+  - '{''text'': ''Де готівка?'', ''correct'': False}'
+  - '{''text'': ''Готівка є?'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Situations
+  question: How do you say accurately "This is cheap"?
+  options:
+  - '{''text'': ''Це дешево'', ''correct'': True}'
+  - '{''text'': ''Це дорого'', ''correct'': False}'
+  - '{''text'': ''Це ціна'', ''correct'': False}'
+  - '{''text'': ''Дешево це'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "I want coffee."'
+  options:
+  - '{''text'': ''Я хочу каву'', ''correct'': True}'
+  - '{''text'': ''хочу Я каву'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "How much is bread?"'
+  options:
+  - '{''text'': ''Скільки коштує хліб'', ''correct'': True}'
+  - '{''text'': ''коштує Скільки хліб'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "I''ll take cheese, please."'
+  options:
+  - '{''text'': ''Я візьму сир, будь ласка'', ''correct'': True}'
+  - '{''text'': ''візьму Я сир, будь ласка'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "A glass of water, please."'
+  options:
+  - '{''text'': ''Склянку води, будь ласка'', ''correct'': True}'
+  - '{''text'': ''води, Склянку будь ласка'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "We buy vegetables and meat."'
+  options:
+  - '{''text'': "Ми купуємо овочі та м''ясо", ''correct'': True}'
+  - '{''text'': "купуємо Ми овочі та м''ясо", ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "Is there dessert on..."'
+  options:
+  - '{''text'': ''У меню є десерт'', ''correct'': True}'
+  - '{''text'': ''меню У є десерт'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "The bill, please."'
+  options:
+  - '{''text'': ''Рахунок, будь ласка'', ''correct'': True}'
+  - '{''text'': ''будь Рахунок, ласка'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "Borscht is very tasty."'
+  options:
+  - '{''text'': ''Борщ дуже смачний'', ''correct'': True}'
+  - '{''text'': ''дуже Борщ смачний'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "I''m looking for toothpaste."'
+  options:
+  - '{''text'': ''Я шукаю зубну пасту'', ''correct'': True}'
+  - '{''text'': ''шукаю Я зубну пасту'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "Excuse me, where is..."'
+  options:
+  - '{''text'': ''Вибачте, де магазин'', ''correct'': True}'
+  - '{''text'': ''де Вибачте, магазин'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "I''ll take soup and salad."'
+  options:
+  - '{''text'': ''Я візьму суп та салат'', ''correct'': True}'
+  - '{''text'': ''візьму Я суп та салат'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Shopping Sentences Order
+  question: 'Correct sentence order for: "The store opens at 8."'
+  options:
+  - '{''text'': ''Магазин відчинено о восьмій'', ''correct'': True}'
+  - '{''text'': ''відчинено Магазин о восьмій'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Shopping Culture
+  statement: Ukrainian markets (ринки) are popular for fresh produce.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Shopping Culture
+  statement: You should never greet the salesperson in a small Ukrainian store.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Shopping Culture
+  statement: '"Скільки коштує?" means "How much does it cost?"'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Shopping Culture
+  statement: Bread (хліб) has no cultural significance in Ukraine.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Shopping Culture
+  statement: Ukrainian supermarkets often have multiple floors.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Shopping Culture
+  statement: You use accusative case for quantities like "a glass of water."
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Shopping Culture
+  statement: UNESCO recognizes Ukrainian borsch culture as endangered heritage.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Shopping Culture
+  statement: '"Дешево" means "expensive."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Shopping Culture
+  statement: '"Каса" is where you pay at a supermarket.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Shopping Culture
+  statement: Ukrainians only use cash, never cards.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Shopping Culture
+  statement: '"Офіціантка" is the feminine form of "waiter."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Shopping Culture
+  statement: It's rude to ask "Ще щось?" (Anything else?) in a store.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

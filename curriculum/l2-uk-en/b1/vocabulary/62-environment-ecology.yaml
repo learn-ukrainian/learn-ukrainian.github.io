@@ -1,0 +1,298 @@
+module: 62-environment-ecology
+level: B1
+version: '2.0'
+items:
+- lemma: автомобільний
+  ipa: /autɔmɔˈbilʲnɪj/
+  translation: automobile (adj)
+  pos: adj
+  gender: m
+- lemma: альпійський
+  ipa: /alʲˈpʲijsʲkɪj/
+  translation: alpine
+  pos: adj
+- lemma: антилоп
+  ipa: /antɪˈlɔp/
+  translation: antelopes (gen.)
+  pos: noun
+  gender: f
+- lemma: асканія
+  ipa: /asˈkanʲija/
+  translation: Askania
+  pos: propn
+  gender: f
+- lemma: батарейка
+  ipa: /bataˈrɛjka/
+  translation: battery
+  pos: noun
+  gender: f
+- lemma: болота
+  ipa: /bɔlɔˈta/
+  translation: swamps
+  pos: propn
+  gender: n
+- lemma: буковий
+  ipa: /ˈbukɔvɪj/
+  translation: beech (adj)
+  pos: adj
+- lemma: біорізноманіття
+  ipa: /biɔrʲiznɔmaˈnʲitʲːa/
+  translation: biodiversity
+  pos: noun
+  gender: n
+- lemma: біосферний
+  ipa: /biɔsˈfɛrnɪj/
+  translation: biosphere (adj)
+  pos: adj
+  gender: m
+- lemma: вимирання
+  ipa: /vɪmɪˈranʲːa/
+  translation: extinction
+  pos: noun
+  gender: n
+- lemma: вирубка
+  ipa: /vɪˈrubka/
+  translation: deforestation
+  pos: noun
+  gender: f
+- lemma: вирубок
+  ipa: /vɪˈrubɔk/
+  translation: clearings (gen.)
+  pos: noun
+  gender: f
+- lemma: вирубувати
+  ipa: /vɪˈrubuvatɪ/
+  translation: to cut down
+  pos: verb
+- lemma: вичерпний
+  ipa: /vɪˈt͡ʃɛrpnɪj/
+  translation: exhaustive
+  pos: adj
+- lemma: вичерпувати
+  ipa: /vɪˈt͡ʃɛrpuvatɪ/
+  translation: to deplete
+  pos: verb
+- lemma: волокно
+  ipa: /vɔlɔkˈnɔ/
+  translation: fiber
+  pos: noun
+  gender: n
+- lemma: відмотися
+  ipa: /vidˈmɔtɪsʲa/
+  translation: to refuse (typo)
+  pos: verb
+- lemma: відновлювальний
+  ipa: /vidˈnɔu̯lʲuvalʲnɪj/
+  translation: renewable
+  pos: adj
+- lemma: деградація
+  ipa: /dɛhraˈdat͡sʲija/
+  translation: degradation
+  pos: noun
+  gender: f
+- lemma: еколога
+  ipa: /ɛkɔˈlɔha/
+  translation: ecologist (gen.)
+  pos: noun
+  gender: m
+- lemma: екосисть
+  ipa: /ɛkɔsɪsˈtʲ/
+  translation: ecosystem (trunc)
+  pos: noun
+  gender: f
+- lemma: загальніший
+  ipa: /zaˈhalʲnʲiʃɪj/
+  translation: more general
+  pos: adj
+  gender: m
+- lemma: застосунок
+  ipa: /zastɔˈsunɔk/
+  translation: app
+  pos: noun
+  gender: m
+- lemma: захоронення
+  ipa: /zaxɔˈrɔnɛnʲːa/
+  translation: disposal
+  pos: noun
+  gender: n
+- lemma: зубр
+  ipa: /zubr/
+  translation: bison
+  pos: noun
+  gender: m
+- lemma: колокаційний
+  ipa: /kɔlɔkaˈt͡sʲijnɪj/
+  translation: collocation (adj)
+  pos: adj
+- lemma: кран
+  ipa: /kran/
+  translation: faucet/crane
+  pos: noun
+  gender: m
+- lemma: куточка
+  ipa: /kuˈtɔt͡ʃka/
+  translation: corner (dim. gen.)
+  pos: noun
+  gender: m
+- lemma: найчистіший
+  ipa: /najt͡ʃɪˈstʲiʃɪj/
+  translation: cleanest
+  pos: adj
+  gender: n
+- lemma: нелегальний
+  ipa: /nɛlɛˈhalʲnɪj/
+  translation: illegal
+  pos: adj
+  gender: f
+- lemma: нова
+  ipa: /nɔˈva/
+  translation: Nova
+  pos: noun
+  gender: m
+- lemma: обміління
+  ipa: /ɔbmʲiˈlʲinʲːa/
+  translation: shallowing
+  pos: noun
+  gender: n
+- lemma: озоновий
+  ipa: /ɔˈzɔnɔvɪj/
+  translation: ozone (adj)
+  pos: adj
+  gender: m
+- lemma: оленя
+  ipa: /ɔlɛˈnʲa/
+  translation: deer (gen.)
+  pos: noun
+  gender: m
+- lemma: охоронний
+  ipa: /ɔxɔˈrɔnnɪj/
+  translation: protective
+  pos: adj
+- lemma: парниковий
+  ipa: /parnɪˈkɔvɪj/
+  translation: greenhouse (adj)
+  pos: adj
+- lemma: питний
+  ipa: /pɪtˈnɪj/
+  translation: drinking (adj)
+  pos: adj
+  gender: f
+- lemma: поводження
+  ipa: /pɔˈvɔdʒɛnʲːa/
+  translation: handling
+  pos: noun
+  gender: n
+- lemma: популяція
+  ipa: /pɔpuˈlʲat͡sʲija/
+  translation: population
+  pos: noun
+  gender: f
+- lemma: потока
+  ipa: /pɔˈtɔka/
+  translation: stream (gen.)
+  pos: noun
+  gender: m
+- lemma: пржевальський
+  ipa: /prʒɛˈvalʲsʲkɪj/
+  translation: Przewalski
+  pos: propn
+  gender: m
+- lemma: прилеглий
+  ipa: /prɪˈlɛhlɪj/
+  translation: adjacent
+  pos: adj
+- lemma: резерват
+  ipa: /rɛzɛrˈvat/
+  translation: reserve
+  pos: noun
+  gender: m
+- lemma: роздільний
+  ipa: /rɔzˈdʲilʲnɪj/
+  translation: separate
+  pos: adj
+  gender: m
+- lemma: сміття
+  ipa: /smitʲˈtʲa/
+  translation: trash
+  pos: noun
+  gender: n
+- lemma: сортуй
+  ipa: /sɔrˈtuj/
+  translation: sort (imp.)
+  pos: noun
+  gender: m
+- lemma: сполох
+  ipa: /spɔˈlɔx/
+  translation: alarm
+  pos: noun
+  gender: m
+- lemma: спричиняти
+  ipa: /sprɪt͡ʃɪˈnʲatɪ/
+  translation: to cause
+  pos: verb
+- lemma: старовіковий
+  ipa: /starɔviˈkɔvɪj/
+  translation: ancient
+  pos: adj
+- lemma: страус
+  ipa: /ˈstraus/
+  translation: ostrich
+  pos: noun
+  gender: m
+- lemma: сухіше
+  ipa: /suˈxiʃɛ/
+  translation: drier
+  pos: adv
+- lemma: тканинний
+  ipa: /tkaˈnɪnnɪj/
+  translation: fabric (adj)
+  pos: adj
+  gender: f
+- lemma: товтри
+  ipa: /ˈtɔu̯trɪ/
+  translation: Tovtry
+  pos: propn
+- lemma: тонн
+  ipa: /tɔn/
+  translation: tons (gen.)
+  pos: noun
+  gender: f
+- lemma: тропічний
+  ipa: /trɔˈpʲit͡ʃnɪj/
+  translation: tropical
+  pos: adj
+  gender: m
+- lemma: ультрафіолет
+  ipa: /ulʲtrafʲiɔˈlɛt/
+  translation: ultraviolet
+  pos: noun
+  gender: m
+- lemma: утилізувати
+  ipa: /utɪlʲizuˈvatɪ/
+  translation: to recycle
+  pos: verb
+- lemma: чорнобиль
+  ipa: /t͡ʃɔrˈnɔbɪlʲ/
+  translation: Chornobyl
+  pos: propn
+  gender: m
+- lemma: чорнобильський
+  ipa: /t͡ʃɔrnɔˈbɪlʲsʲkɪj/
+  translation: Chornobyl (adj)
+  pos: adj
+  gender: f
+- lemma: чорнізем
+  ipa: /t͡ʃɔrniˈzɛm/
+  translation: chernozem (typo)
+  pos: noun
+  gender: m
+- lemma: шара
+  ipa: /ˈʃara/
+  translation: freebie (slang)
+  pos: noun
+  gender: m
+- lemma: ядерний
+  ipa: /ˈjadɛrnɪj/
+  translation: nuclear
+  pos: adj
+  gender: f

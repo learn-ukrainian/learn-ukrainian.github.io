@@ -1,0 +1,646 @@
+module: 28-description-adverbs
+level: A1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/28-description-adverbs.md
+generated: '2026-01-01T17:33:20.917035'
+scope: fill-in, quiz, true-false, unjumble
+activity_counts:
+  fill-in: 24
+  unjumble: 12
+  quiz: 16
+  true-false: 12
+total_items: 64
+item_count: 64
+sample_percent: null
+items:
+- activity: fill-in
+  title: Як ти це робиш? (How Do You Do It?)
+  sentence_template: Вона співає дуже ___.
+  answer: гарно
+  complete_sentence: Вона співає дуже гарно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як ти це робиш? (How Do You Do It?)
+  sentence_template: Він говорить дуже ___.
+  answer: тихо
+  complete_sentence: Він говорить дуже тихо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як ти це робиш? (How Do You Do It?)
+  sentence_template: Бабуся готує дуже ___.
+  answer: смачно
+  complete_sentence: Бабуся готує дуже смачно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як ти це робиш? (How Do You Do It?)
+  sentence_template: Діти грають дуже ___.
+  answer: голосно
+  complete_sentence: Діти грають дуже голосно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як ти це робиш? (How Do You Do It?)
+  sentence_template: Він біжить дуже ___.
+  answer: швидко
+  complete_sentence: Він біжить дуже швидко.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як ти це робиш? (How Do You Do It?)
+  sentence_template: Вона читає дуже ___.
+  answer: повільно
+  complete_sentence: Вона читає дуже повільно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як ти це робиш? (How Do You Do It?)
+  sentence_template: Я розумію це ___.
+  answer: добре
+  complete_sentence: Я розумію це добре.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як ти це робиш? (How Do You Do It?)
+  sentence_template: Він танцює дуже ___.
+  answer: погано
+  complete_sentence: Він танцює дуже погано.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як ти це робиш? (How Do You Do It?)
+  sentence_template: Вона працює дуже ___.
+  answer: важко
+  complete_sentence: Вона працює дуже важко.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як ти це робиш? (How Do You Do It?)
+  sentence_template: Він говорить ___.
+  answer: чесно
+  complete_sentence: Він говорить чесно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як ти це робиш? (How Do You Do It?)
+  sentence_template: Вона відповідає ___.
+  answer: ввічливо
+  complete_sentence: Вона відповідає ввічливо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як ти це робиш? (How Do You Do It?)
+  sentence_template: Він жартує ___.
+  answer: весело
+  complete_sentence: Він жартує весело.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як часто? (How Often?)
+  sentence_template: Я ___ снідаю о сьомій.
+  answer: завжди
+  complete_sentence: Я завжди снідаю о сьомій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як часто? (How Often?)
+  sentence_template: Вона ___ читає книжки.
+  answer: часто
+  complete_sentence: Вона часто читає книжки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як часто? (How Often?)
+  sentence_template: Ми ___ їмо в ресторані.
+  answer: іноді
+  complete_sentence: Ми іноді їмо в ресторані.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як часто? (How Often?)
+  sentence_template: Він ___ запізнюється.
+  answer: рідко
+  complete_sentence: Він рідко запізнюється.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як часто? (How Often?)
+  sentence_template: Вона ___ не п'є каву.
+  answer: ніколи
+  complete_sentence: Вона ніколи не п'є каву.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як часто? (How Often?)
+  sentence_template: Ми ___ гуляємо в парку.
+  answer: зазвичай
+  complete_sentence: Ми зазвичай гуляємо в парку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як часто? (How Often?)
+  sentence_template: Він ___ обідає о першій.
+  answer: завжди
+  complete_sentence: Він завжди обідає о першій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як часто? (How Often?)
+  sentence_template: Вона ___ працює вдома.
+  answer: часто
+  complete_sentence: Вона часто працює вдома.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як часто? (How Often?)
+  sentence_template: Вони ___ дивляться телевізор.
+  answer: рідко
+  complete_sentence: Вони рідко дивляться телевізор.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як часто? (How Often?)
+  sentence_template: Я ___ приходжу о дев'ятій.
+  answer: зазвичай
+  complete_sentence: Я зазвичай приходжу о дев'ятій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як часто? (How Often?)
+  sentence_template: Він ___ не курить.
+  answer: ніколи
+  complete_sentence: Він ніколи не курить.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Як часто? (How Often?)
+  sentence_template: Ми ___ їмо вдома.
+  answer: зазвичай
+  complete_sentence: Ми зазвичай їмо вдома.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Describing Actions
+  jumbled_words: []
+  answer: Він швидко бігає
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Describing Actions
+  jumbled_words: []
+  answer: Вона добре співає
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Describing Actions
+  jumbled_words: []
+  answer: Я читаю повільно
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Describing Actions
+  jumbled_words: []
+  answer: Ми часто гуляємо
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Describing Actions
+  jumbled_words: []
+  answer: Я завжди снідаю вранці
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Describing Actions
+  jumbled_words: []
+  answer: Він ніколи не курить
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Describing Actions
+  jumbled_words: []
+  answer: Діти голосно грають
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Describing Actions
+  jumbled_words: []
+  answer: Вона тихо говорить
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Describing Actions
+  jumbled_words: []
+  answer: Як справи? Добре
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Describing Actions
+  jumbled_words: []
+  answer: Ми іноді їмо піцу
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Describing Actions
+  jumbled_words: []
+  answer: Я рідко дивлюсь телевізор
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Describing Actions
+  jumbled_words: []
+  answer: Вони весело танцюють
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Adverb or Adjective?
+  question: Does the sentence "Він ___ хлопець" require an adjective or adverb?
+  options:
+  - '{''text'': ''добрий (adjective)'', ''correct'': True}'
+  - '{''text'': ''добре (adverb)'', ''correct'': False}'
+  - '{''text'': ''добро'', ''correct'': False}'
+  - '{''text'': ''добра'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Adverb or Adjective?
+  question: Which form is correct for "Він говорить ___" in English?
+  options:
+  - '{''text'': ''добре (adverb)'', ''correct'': True}'
+  - '{''text'': ''добрий (adjective)'', ''correct'': False}'
+  - '{''text'': ''добра'', ''correct'': False}'
+  - '{''text'': ''добро'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Adverb or Adjective?
+  question: How should you describe "Це ___ машина" using masculine/feminine forms?
+  options:
+  - '{''text'': ''швидка (adjective)'', ''correct'': True}'
+  - '{''text'': ''швидко (adverb)'', ''correct'': False}'
+  - '{''text'': ''швидкий'', ''correct'': False}'
+  - '{''text'': ''швидке'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Adverb or Adjective?
+  question: What is the correct form for "Вона біжить ___" here?
+  options:
+  - '{''text'': ''швидко (adverb)'', ''correct'': True}'
+  - '{''text'': ''швидка (adjective)'', ''correct'': False}'
+  - '{''text'': ''швидкий'', ''correct'': False}'
+  - '{''text'': ''швидке'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Adverb or Adjective?
+  question: Which word correctly completes "У неї ___ голос" in Ukrainian?
+  options:
+  - '{''text'': ''тихий (adjective)'', ''correct'': True}'
+  - '{''text'': ''тихо (adverb)'', ''correct'': False}'
+  - '{''text'': ''тиха'', ''correct'': False}'
+  - '{''text'': ''тихе'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Adverb or Adjective?
+  question: How should you accurately translate "He speaks quietly" into Ukrainian?
+  options:
+  - '{''text'': ''тихо (adverb)'', ''correct'': True}'
+  - '{''text'': ''тихий (adjective)'', ''correct'': False}'
+  - '{''text'': ''тиха'', ''correct'': False}'
+  - '{''text'': ''тихе'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Adverb or Adjective?
+  question: What is the right adjective for "Вона ___ людина" here?
+  options:
+  - '{''text'': ''весела (adjective)'', ''correct'': True}'
+  - '{''text'': ''весело (adverb)'', ''correct'': False}'
+  - '{''text'': ''веселий'', ''correct'': False}'
+  - '{''text'': ''веселе'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Adverb or Adjective?
+  question: Which form correctly represents "The children sing loudly"?
+  options:
+  - '{''text'': ''голосно (adverb)'', ''correct'': True}'
+  - '{''text'': ''голосний (adjective)'', ''correct'': False}'
+  - '{''text'': ''голосна'', ''correct'': False}'
+  - '{''text'': ''голосне'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Frequency Meaning
+  question: What is the English translation of "Завжди"?
+  options:
+  - '{''text'': ''Always'', ''correct'': True}'
+  - '{''text'': ''Sometimes'', ''correct'': False}'
+  - '{''text'': ''Never'', ''correct'': False}'
+  - '{''text'': ''Rarely'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Frequency Meaning
+  question: Which English word represents the adverb "Часто"?
+  options:
+  - '{''text'': ''Often'', ''correct'': True}'
+  - '{''text'': ''Never'', ''correct'': False}'
+  - '{''text'': ''Rarely'', ''correct'': False}'
+  - '{''text'': ''Always'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Frequency Meaning
+  question: How do you translate "Іноді" into English?
+  options:
+  - '{''text'': ''Sometimes'', ''correct'': True}'
+  - '{''text'': ''Always'', ''correct'': False}'
+  - '{''text'': ''Never'', ''correct'': False}'
+  - '{''text'': ''Often'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Frequency Meaning
+  question: What is the meaning of "Рідко" in English?
+  options:
+  - '{''text'': ''Rarely'', ''correct'': True}'
+  - '{''text'': ''Always'', ''correct'': False}'
+  - '{''text'': ''Often'', ''correct'': False}'
+  - '{''text'': ''Never'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Frequency Meaning
+  question: Which English term matches "Ніколи"?
+  options:
+  - '{''text'': ''Never'', ''correct'': True}'
+  - '{''text'': ''Sometimes'', ''correct'': False}'
+  - '{''text'': ''Often'', ''correct'': False}'
+  - '{''text'': ''Always'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Frequency Meaning
+  question: How is "Зазвичай" translated into English?
+  options:
+  - '{''text'': ''Usually'', ''correct'': True}'
+  - '{''text'': ''Never'', ''correct'': False}'
+  - '{''text'': ''Rarely'', ''correct'': False}'
+  - '{''text'': ''Sometimes'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Frequency Meaning
+  question: What is the English meaning of "Дуже"?
+  options:
+  - '{''text'': ''Very'', ''correct'': True}'
+  - '{''text'': ''Sometimes'', ''correct'': False}'
+  - '{''text'': ''Never'', ''correct'': False}'
+  - '{''text'': ''Rarely'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Frequency Meaning
+  question: Which phrase translates the word "Трохи" into English?
+  options:
+  - '{''text'': ''A little'', ''correct'': True}'
+  - '{''text'': ''Very much'', ''correct'': False}'
+  - '{''text'': ''Never'', ''correct'': False}'
+  - '{''text'': ''Always'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Adverb Rules
+  statement: Adverbs describe verbs (actions).
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Adverb Rules
+  statement: Adverbs describe nouns.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Adverb Rules
+  statement: Most adverbs end in -о.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Adverb Rules
+  statement: '"Добрий" is an adverb.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Adverb Rules
+  statement: '"Добре" is an adverb.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Adverb Rules
+  statement: '"Ніколи" doesn''t need "не" before the verb.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Adverb Rules
+  statement: '"Завжди" means "always".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Adverb Rules
+  statement: '"Дуже" can modify adverbs (дуже добре).'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Adverb Rules
+  statement: '"Швидкий" describes how you do something.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Adverb Rules
+  statement: '"Швидко" describes how you do something.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Adverb Rules
+  statement: '"Як справи?" — "Добрий!".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Adverb Rules
+  statement: '"Як справи?" — "Добре!".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -1,0 +1,771 @@
+module: 12-the-accusative-ii-people
+level: A1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/12-the-accusative-ii-people.md
+generated: '2026-01-01T17:33:19.835537'
+scope: fill-in, quiz, true-false
+activity_counts:
+  fill-in: 26
+  quiz: 32
+  true-false: 12
+total_items: 70
+item_count: 70
+sample_percent: null
+items:
+- activity: fill-in
+  title: Complete with Animate Accusative
+  sentence_template: Я бачу ___ у магазині.
+  answer: колегу
+  complete_sentence: Я бачу колегу у магазині.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Animate Accusative
+  sentence_template: Вона знає цього ___.
+  answer: студента
+  complete_sentence: Вона знає цього студента.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Animate Accusative
+  sentence_template: Ми чекаємо ___.
+  answer: лікаря
+  complete_sentence: Ми чекаємо лікаря.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Animate Accusative
+  sentence_template: Ти бачиш мою ___?
+  answer: подругу
+  complete_sentence: Ти бачиш мою подругу?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Animate Accusative
+  sentence_template: Він любить свою ___.
+  answer: вчительку
+  complete_sentence: Він любить свою вчительку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Animate Accusative
+  sentence_template: Я шукаю ___.
+  answer: водія
+  complete_sentence: Я шукаю водія.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Animate Accusative
+  sentence_template: Вона бачить нашого ___.
+  answer: сусіда
+  complete_sentence: Вона бачить нашого сусіда.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Animate Accusative
+  sentence_template: Ми знаємо цього ___.
+  answer: директора
+  complete_sentence: Ми знаємо цього директора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Animate Accusative
+  sentence_template: Ти чекаєш ___?
+  answer: офіціанта
+  complete_sentence: Ти чекаєш офіціанта?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Animate Accusative
+  sentence_template: Він бачить ___ на вулиці.
+  answer: пасажира
+  complete_sentence: Він бачить пасажира на вулиці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Animate Accusative
+  sentence_template: Я люблю свого ___.
+  answer: друга
+  complete_sentence: Я люблю свого друга.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Animate Accusative
+  sentence_template: Вона знає цю ___.
+  answer: студентку
+  complete_sentence: Вона знає цю студентку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Animate Accusative
+  sentence_template: Ми бачимо ___.
+  answer: гостя
+  complete_sentence: Ми бачимо гостя.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete with Animate Accusative
+  sentence_template: Ти чекаєш свою ___?
+  answer: сусідку
+  complete_sentence: Ти чекаєш свою сусідку?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Sentences in Context
+  sentence_template: У кав'ярні я бачу ___.
+  answer: офіціанта
+  complete_sentence: У кав'ярні я бачу офіціанта.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Sentences in Context
+  sentence_template: Вона знає мого ___ з університету.
+  answer: друга
+  complete_sentence: Вона знає мого друга з університету.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Sentences in Context
+  sentence_template: Ми чекаємо ___ біля школи.
+  answer: вчителя
+  complete_sentence: Ми чекаємо вчителя біля школи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Sentences in Context
+  sentence_template: Ти бачиш ___ на зупинці?
+  answer: водія
+  complete_sentence: Ти бачиш водія на зупинці?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Sentences in Context
+  sentence_template: Він любить свою ___.
+  answer: лікарку
+  complete_sentence: Він любить свою лікарку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Sentences in Context
+  sentence_template: Я шукаю свого ___.
+  answer: колегу
+  complete_sentence: Я шукаю свого колегу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Sentences in Context
+  sentence_template: Вона бачить ___ у магазині.
+  answer: продавця
+  complete_sentence: Вона бачить продавця у магазині.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Sentences in Context
+  sentence_template: Ми знаємо цього ___.
+  answer: менеджера
+  complete_sentence: Ми знаємо цього менеджера.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Sentences in Context
+  sentence_template: Ти чекаєш свою ___?
+  answer: подругу
+  complete_sentence: Ти чекаєш свою подругу?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Sentences in Context
+  sentence_template: Він бачить ___ біля метро.
+  answer: пасажира
+  complete_sentence: Він бачить пасажира біля метро.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Sentences in Context
+  sentence_template: Я люблю нашого ___.
+  answer: директора
+  complete_sentence: Я люблю нашого директора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Sentences in Context
+  sentence_template: Вона знає цього ___?
+  answer: гостя
+  complete_sentence: Вона знає цього гостя?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Accusative Endings
+  question: Which form is correct for "I see a female friend"?
+  options:
+  - '{''text'': ''подругу'', ''correct'': True}'
+  - '{''text'': ''подруга'', ''correct'': False}'
+  - '{''text'': ''подруги'', ''correct'': False}'
+  - '{''text'': ''подрузі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Accusative Endings
+  question: Which form is correct for "I see a brother"?
+  options:
+  - '{''text'': ''брат'', ''correct'': False}'
+  - '{''text'': ''брата'', ''correct'': True}'
+  - '{''text'': ''брату'', ''correct'': False}'
+  - '{''text'': ''братом'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Accusative Endings
+  question: Which form is correct for "I see a mother"?
+  options:
+  - '{''text'': ''мама'', ''correct'': False}'
+  - '{''text'': ''маму'', ''correct'': True}'
+  - '{''text'': ''мами'', ''correct'': False}'
+  - '{''text'': ''мамі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Accusative Endings
+  question: Which form is correct for "I see a father"?
+  options:
+  - '{''text'': ''тато'', ''correct'': False}'
+  - '{''text'': ''тата'', ''correct'': True}'
+  - '{''text'': ''тату'', ''correct'': False}'
+  - '{''text'': ''тата (again)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Accusative Endings
+  question: Which form is correct for "I see an uncle"?
+  options:
+  - '{''text'': ''дядько'', ''correct'': False}'
+  - '{''text'': ''дядька'', ''correct'': True}'
+  - '{''text'': ''дядьку'', ''correct'': False}'
+  - '{''text'': ''дядьком'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Accusative Endings
+  question: Which form is correct for "I see a teacher"?
+  options:
+  - '{''text'': ''вчитель'', ''correct'': False}'
+  - '{''text'': ''вчителя'', ''correct'': True}'
+  - '{''text'': ''вчителю'', ''correct'': False}'
+  - '{''text'': ''вчителем'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Accusative Endings
+  question: Which form is correct for "I see a sister"?
+  options:
+  - '{''text'': ''сестра'', ''correct'': False}'
+  - '{''text'': ''сестру'', ''correct'': True}'
+  - '{''text'': ''сестри'', ''correct'': False}'
+  - '{''text'': ''сестрі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Accusative Endings
+  question: Which form is correct for "I see a son"?
+  options:
+  - '{''text'': ''син'', ''correct'': False}'
+  - '{''text'': ''сина'', ''correct'': True}'
+  - '{''text'': ''сину'', ''correct'': False}'
+  - '{''text'': ''сином'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Accusative Endings
+  question: Which form is correct for "I see a daughter"?
+  options:
+  - '{''text'': ''донька'', ''correct'': False}'
+  - '{''text'': ''доньку'', ''correct'': True}'
+  - '{''text'': ''доньки'', ''correct'': False}'
+  - '{''text'': ''доньці'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Accusative Endings
+  question: Which form is correct for "I see a grandfather"?
+  options:
+  - '{''text'': ''дідусь'', ''correct'': False}'
+  - '{''text'': ''дідуся'', ''correct'': True}'
+  - '{''text'': ''дідусю'', ''correct'': False}'
+  - '{''text'': ''дідусем'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Accusative Endings
+  question: Which form is correct for "I see a grandmother"?
+  options:
+  - '{''text'': ''бабуся'', ''correct'': False}'
+  - '{''text'': ''бабусю'', ''correct'': True}'
+  - '{''text'': ''бабусі'', ''correct'': False}'
+  - '{''text'': ''бабусьою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Accusative Endings
+  question: Which form is correct for "I see a friend" (male)?
+  options:
+  - '{''text'': ''друг'', ''correct'': False}'
+  - '{''text'': ''друга'', ''correct'': True}'
+  - '{''text'': ''другу'', ''correct'': False}'
+  - '{''text'': ''другом'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Sentences with Animate Objects
+  question: 'Correct sentence order for: "I see the student..."'
+  options:
+  - '{''text'': ''Я бачу студента у бібліотеці'', ''correct'': True}'
+  - '{''text'': ''бачу Я студента у бібліотеці'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Sentences with Animate Objects
+  question: 'Correct sentence order for: "She knows my friend well."'
+  options:
+  - '{''text'': ''Вона добре знає мого друга'', ''correct'': True}'
+  - '{''text'': ''добре Вона знає мого друга'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Sentences with Animate Objects
+  question: 'Correct sentence order for: "We''re waiting for the..."'
+  options:
+  - '{''text'': ''Ми чекаємо лікаря у лікарні'', ''correct'': True}'
+  - '{''text'': ''чекаємо Ми лікаря у лікарні'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Sentences with Animate Objects
+  question: 'Correct sentence order for: "Do you see the..."'
+  options:
+  - '{''text'': ''Ти бачиш офіціанта там'', ''correct'': True}'
+  - '{''text'': ''бачиш Ти офіціанта там'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Sentences with Animate Objects
+  question: 'Correct sentence order for: "He loves his teacher."'
+  options:
+  - '{''text'': ''Він любить свою вчительку'', ''correct'': True}'
+  - '{''text'': ''любить Він свою вчительку'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Sentences with Animate Objects
+  question: 'Correct sentence order for: "I''m looking for our driver."'
+  options:
+  - '{''text'': ''Я шукаю нашого водія'', ''correct'': True}'
+  - '{''text'': ''шукаю Я нашого водія'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Sentences with Animate Objects
+  question: 'Correct sentence order for: "We know this director."'
+  options:
+  - '{''text'': ''Ми знаємо цього директора'', ''correct'': True}'
+  - '{''text'': ''знаємо Ми цього директора'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Sentences with Animate Objects
+  question: 'Correct sentence order for: "She sees the neighbor..."'
+  options:
+  - '{''text'': ''Вона бачить сусіда кожного ранку'', ''correct'': True}'
+  - '{''text'': ''бачить Вона сусіда кожного ранку'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Sentences with Animate Objects
+  question: 'Correct sentence order for: "Are you waiting for..."'
+  options:
+  - '{''text'': ''Ти чекаєш свою подругу'', ''correct'': True}'
+  - '{''text'': ''чекаєш Ти свою подругу'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Sentences with Animate Objects
+  question: 'Correct sentence order for: "I love my colleague."'
+  options:
+  - '{''text'': ''Я люблю мого колегу'', ''correct'': True}'
+  - '{''text'': ''люблю Я мого колегу'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Sentences with Animate Objects
+  question: 'Correct sentence order for: "We see the passenger..."'
+  options:
+  - '{''text'': ''Ми бачимо пасажира біля метро'', ''correct'': True}'
+  - '{''text'': ''бачимо Ми пасажира біля метро'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Sentences with Animate Objects
+  question: 'Correct sentence order for: "He knows this student..."'
+  options:
+  - '{''text'': ''Він знає цю студентку з школи'', ''correct'': True}'
+  - '{''text'': ''знає Він цю студентку з школи'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: More Complex Sentence Order
+  question: 'Correct sentence order for: "I see my friend..."'
+  options:
+  - '{''text'': ''Я бачу мого друга та його подругу'', ''correct'': True}'
+  - '{''text'': ''бачу Я мого друга та його подругу'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: More Complex Sentence Order
+  question: 'Correct sentence order for: "We''re waiting for our..."'
+  options:
+  - '{''text'': ''Ми чекаємо нашого вчителя біля університету'', ''correct'': True}'
+  - '{''text'': ''чекаємо Ми нашого вчителя біля університету'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: More Complex Sentence Order
+  question: 'Correct sentence order for: "She knows this..."'
+  options:
+  - '{''text'': ''Вона знає цього студента у групі'', ''correct'': True}'
+  - '{''text'': ''знає Вона цього студента у групі'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: More Complex Sentence Order
+  question: 'Correct sentence order for: "Do you see that..."'
+  options:
+  - '{''text'': ''Ти бачиш того лікаря там'', ''correct'': True}'
+  - '{''text'': ''бачиш Ти того лікаря там'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: More Complex Sentence Order
+  question: 'Correct sentence order for: "He really loves his neighbor."'
+  options:
+  - '{''text'': ''Він дуже любить свою сусідку'', ''correct'': True}'
+  - '{''text'': ''дуже Він любить свою сусідку'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: More Complex Sentence Order
+  question: 'Correct sentence order for: "I''m looking for our..."'
+  options:
+  - '{''text'': ''Я шукаю нашого директора і менеджера'', ''correct'': True}'
+  - '{''text'': ''шукаю Я нашого директора і менеджера'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: More Complex Sentence Order
+  question: 'Correct sentence order for: "We know this driver well."'
+  options:
+  - '{''text'': ''Ми добре знаємо цього водія'', ''correct'': True}'
+  - '{''text'': ''добре Ми знаємо цього водія'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: More Complex Sentence Order
+  question: 'Correct sentence order for: "She sees the waiter..."'
+  options:
+  - '{''text'': ''Вона бачить офіціанта та офіціантку'', ''correct'': True}'
+  - '{''text'': ''бачить Вона офіціанта та офіціантку'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Animate Accusative Rules
+  statement: Masculine animate nouns in accusative case end in -а or -я.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Animate Accusative Rules
+  statement: Feminine animate nouns have special accusative endings.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Animate Accusative Rules
+  statement: '"Я бачу студента" is correct.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Animate Accusative Rules
+  statement: '"Я знаю лікар" is correct.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Animate Accusative Rules
+  statement: '"Вона чекає подругу" is correct.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Animate Accusative Rules
+  statement: Inanimate masculine nouns change in accusative case.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Animate Accusative Rules
+  statement: The animate-inanimate distinction only affects masculine nouns.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Animate Accusative Rules
+  statement: '"Він бачить водія" is correct.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Animate Accusative Rules
+  statement: '"Ми чекаємо вчитель" is correct.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Animate Accusative Rules
+  statement: Accusative = genitive for masculine animate nouns.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Animate Accusative Rules
+  statement: '"Я люблю директор" is correct.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Animate Accusative Rules
+  statement: '"Ти знаєш мою сусідку" is correct.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

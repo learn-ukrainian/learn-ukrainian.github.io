@@ -1,6 +1,15 @@
 # Audit Report: 82-novyny-yak-chytaty.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "PPP" | **Target:** 1000
+**Phase:** B1.8 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): редакція, головна, дайджест, новина, підзаголовок...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1864/1000
@@ -10,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/15
+- **Vocab:** ✅ 21/15
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,18 +46,11 @@
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **97.5%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Вступ** | ⚪️ | 146 | Skipped |
+| **Intro/Narrative** | ✅ | 146 | Included in Core |
 | **Презентація** | ⚪️ | 634 | Skipped |
 | **Практика** | ⚪️ | 550 | Skipped |
 | **Продукція** | ⚪️ | 372 | Skipped |
 | **Підсумок** | ✅ | 162 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

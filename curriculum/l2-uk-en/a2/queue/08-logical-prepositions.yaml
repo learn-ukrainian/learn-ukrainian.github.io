@@ -1,0 +1,654 @@
+module: 08-logical-prepositions
+level: A2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/08-logical-prepositions.md
+generated: '2025-12-31T23:18:11.463429'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 6
+  fill-in: 8
+  cloze: 2
+  unjumble: 8
+  quiz: 8
+  true-false: 12
+total_items: 44
+item_count: 44
+sample_percent: null
+items:
+- activity: error-correction
+  title: Wrong Preposition
+  sentence_with_error: 'Подарунок від мами. (Intended: for mom)'
+  error: від
+  answer: для
+  sentence_corrected: 'Подарунок для мами. (Intended: for mom)'
+  options:
+  - для
+  - від
+  original_explanation: '"For mom" = benefit → для. "From mom" = від.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Wrong Preposition
+  sentence_with_error: 'Кава з цукру. (Intended: without sugar)'
+  error: з
+  answer: без
+  sentence_corrected: 'Кава без цукру. (Intended: without sugar)'
+  options:
+  - без
+  - з
+  original_explanation: '"Without" = без. "With" = з.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Wrong Preposition
+  sentence_with_error: 'Ми говорили для тебе. (Intended: about you)'
+  error: для
+  answer: про
+  sentence_corrected: 'Ми говорили про тебе. (Intended: about you)'
+  options:
+  - про
+  - для
+  original_explanation: '"About" = про. "For" = для.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Wrong Preposition
+  sentence_with_error: 'Від хвороби він не прийшов. (Intended: because of)'
+  error: Від
+  answer: Через
+  sentence_corrected: 'Через хвороби він не прийшов. (Intended: because of)'
+  options:
+  - Через
+  - Від
+  original_explanation: '"Because of" = через. "From" (source) = від.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Wrong Preposition
+  sentence_with_error: 'Я не можу для тебе. (Intended: without you)'
+  error: для
+  answer: без
+  sentence_corrected: 'Я не можу без тебе. (Intended: without you)'
+  options:
+  - без
+  - для
+  original_explanation: '"Without" = без. "For" = для.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Wrong Preposition
+  sentence_with_error: 'Після кого? (Intended: for whom)'
+  error: Після
+  answer: Для
+  sentence_corrected: 'Для кого? (Intended: for whom)'
+  options:
+  - Для
+  - Після
+  original_explanation: '"For whom?" = Для кого? "After" = Після.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Кава [___] цукру, будь ласка.
+  answer: без
+  complete_sentence: Кава [без] цукру, будь ласка.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Це подарунок [___] тебе.
+  answer: для
+  complete_sentence: Це подарунок [для] тебе.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Ми говорили [___] тебе.
+  answer: про
+  complete_sentence: Ми говорили [про] тебе.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: '[___] дощ я залишився вдома.'
+  answer: Через
+  complete_sentence: '[Через] дощ я залишився вдома.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Лист [___] мами.
+  answer: від
+  complete_sentence: Лист [від] мами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Кава [___] молоком.
+  answer: з
+  complete_sentence: Кава [з] молоком.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Зустрінемось [___] третій.
+  answer: о
+  complete_sentence: Зустрінемось [о] третій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Sentence
+  sentence_template: Всі прийшли, [___] Олега.
+  answer: крім
+  complete_sentence: Всі прийшли, [крім] Олега.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Story Gaps
+  passage_template: 'Марія отримала лист {від|для|про} мами.
+
+    У листі було написано {про|для|від} сім''ю.
+
+    Вона надіслала посилку {для|від|з} Марії.
+
+    У посилці було варення {з|без|для} вишень.
+
+    Марія прочитала лист {о|після|для} восьмій ранку.
+
+    {Після|Через|Для} сніданку вона зателефонувала.
+
+    {Через|Для|Про} роботу вона не їздить часто додому.
+
+    Всі її люблять, {крім|для|з} одного колеги.
+
+    Вона взяла чай {замість|з|без} кави сьогодні.
+
+    Марія планує відпустку {після|до|для} роботи.
+
+    Вона поїде {з|без|для} подругою в гори.
+
+    Це буде подорож {без|з|про} планів.'
+  blanks:
+  - answer: про
+    options:
+    - від
+    - для
+  - answer: від
+    options:
+    - про
+    - для
+  - answer: з
+    options:
+    - для
+    - від
+  - answer: для
+    options:
+    - з
+    - без
+  - answer: для
+    options:
+    - о
+    - після
+  - answer: Для
+    options:
+    - Після
+    - Через
+  - answer: Про
+    options:
+    - Через
+    - Для
+  - answer: з
+    options:
+    - крім
+    - для
+  - answer: без
+    options:
+    - замість
+    - з
+  - answer: для
+    options:
+    - після
+    - до
+  - answer: для
+    options:
+    - з
+    - без
+  - answer: про
+    options:
+    - без
+    - з
+  blank_count: 12
+  complete_passage: 'Марія отримала лист про мами.
+
+    У листі було написано від сім''ю.
+
+    Вона надіслала посилку з Марії.
+
+    У посилці було варення для вишень.
+
+    Марія прочитала лист для восьмій ранку.
+
+    Для сніданку вона зателефонувала.
+
+    Про роботу вона не їздить часто додому.
+
+    Всі її люблять, з одного колеги.
+
+    Вона взяла чай без кави сьогодні.
+
+    Марія планує відпустку для роботи.
+
+    Вона поїде для подругою в гори.
+
+    Це буде подорож про планів.'
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Pharmacy Dialogue
+  passage_template: 'Мені потрібні ліки {від|для|про} головного болю.
+
+    {Для|Від|Без} дітей чи {для|від|з} дорослих?
+
+    {Для|Від|Без} дорослих. І щось {від|для|про} кашлю.
+
+    Сироп {без|з|для} цукру підійде?
+
+    Так, дякую. Це подарунок {для|від|про} бабусі.
+
+    Візьміть вітаміни {для|від|без} імунітету.
+
+    Скільки коштує? Я хочу заплатити {без|з|для} готівкою.
+
+    Будь ласка, прийміть ліки {після|до|через} їжі.
+
+    Можна взяти чай {замість|з|без} кави?
+
+    Так, ось чай {з|без|для} лимоном.'
+  blanks:
+  - answer: про
+    options:
+    - від
+    - для
+  - answer: Без
+    options:
+    - Для
+    - Від
+  - answer: з
+    options:
+    - для
+    - від
+  - answer: Без
+    options:
+    - Для
+    - Від
+  - answer: про
+    options:
+    - від
+    - для
+  - answer: для
+    options:
+    - без
+    - з
+  - answer: про
+    options:
+    - для
+    - від
+  - answer: без
+    options:
+    - для
+    - від
+  - answer: для
+    options:
+    - без
+    - з
+  - answer: через
+    options:
+    - після
+    - до
+  - answer: без
+    options:
+    - замість
+    - з
+  - answer: для
+    options:
+    - з
+    - без
+  blank_count: 12
+  complete_passage: 'Мені потрібні ліки про головного болю.
+
+    Без дітей чи з дорослих?
+
+    Без дорослих. І щось про кашлю.
+
+    Сироп для цукру підійде?
+
+    Так, дякую. Це подарунок про бабусі.
+
+    Візьміть вітаміни без імунітету.
+
+    Скільки коштує? Я хочу заплатити для готівкою.
+
+    Будь ласка, прийміть ліки через їжі.
+
+    Можна взяти чай без кави?
+
+    Так, ось чай для лимоном.'
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Logical Sentences
+  jumbled_words: []
+  answer: Кава без цукру і молока будь ласка мені
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Logical Sentences
+  jumbled_words: []
+  answer: Це подарунок для тебе я купив у магазині
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Logical Sentences
+  jumbled_words: []
+  answer: Лист від мами прийшов вчора з нашого села
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Logical Sentences
+  jumbled_words: []
+  answer: Через дощ я залишився вдома і читав книгу
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Logical Sentences
+  jumbled_words: []
+  answer: Ми говорили про тебе і твою нову роботу
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Logical Sentences
+  jumbled_words: []
+  answer: Кава з молоком і цукром будь ласка мені
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Logical Sentences
+  jumbled_words: []
+  answer: Зустрінемось о третій годині біля входу в метро
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Logical Sentences
+  jumbled_words: []
+  answer: Чай замість кави будь ласка і з лимоном
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Logical Prepositions
+  question: In Ukrainian grammar, which grammatical case does the preposition "для"
+    (for) always require?
+  options:
+  - '{''text'': ''Genitive'', ''correct'': True}'
+  - '{''text'': ''Accusative'', ''correct'': False}'
+  - '{''text'': ''Instrumental'', ''correct'': False}'
+  - '{''text'': ''Locative'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Logical Prepositions
+  question: When someone says "Через дощ ми залишилися вдома," what does "через" express
+    here?
+  options:
+  - '{''text'': ''Because of rain'', ''correct'': True}'
+  - '{''text'': ''Through the rain'', ''correct'': False}'
+  - '{''text'': ''About rain'', ''correct'': False}'
+  - '{''text'': ''Without rain'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Logical Prepositions
+  question: When you receive "Лист від мами," what does the preposition "від" indicate
+    in this context?
+  options:
+  - '{''text'': ''From mom (source)'', ''correct'': True}'
+  - '{''text'': ''For mom (benefit)'', ''correct'': False}'
+  - '{''text'': ''With mom (accompaniment)'', ''correct'': False}'
+  - '{''text'': ''About mom (topic)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Logical Prepositions
+  question: When expressing the topic of a conversation in Ukrainian, which preposition
+    correctly means "about"?
+  options:
+  - '{''text'': ''про'', ''correct'': True}'
+  - '{''text'': ''для'', ''correct'': False}'
+  - '{''text'': ''від'', ''correct'': False}'
+  - '{''text'': ''через'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Logical Prepositions
+  question: When ordering "Кава без цукру" at a café, what does "без" express in this
+    phrase?
+  options:
+  - '{''text'': ''Without sugar'', ''correct'': True}'
+  - '{''text'': ''With sugar'', ''correct'': False}'
+  - '{''text'': ''For sugar'', ''correct'': False}'
+  - '{''text'': ''Instead of sugar'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Logical Prepositions
+  question: When arranging to meet "О третій годині," what does the preposition "о"
+    indicate here?
+  options:
+  - '{''text'': "Time (at 3 o''clock)", ''correct'': True}'
+  - '{''text'': ''Place (at the third)'', ''correct'': False}'
+  - '{''text'': ''Person (about the third)'', ''correct'': False}'
+  - '{''text'': ''Duration (for 3 hours)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Logical Prepositions
+  question: When someone orders "Чай замість кави," what does the preposition "замість"
+    express here?
+  options:
+  - '{''text'': ''Instead of tea'', ''correct'': True}'
+  - '{''text'': ''About tea'', ''correct'': False}'
+  - '{''text'': ''Without tea'', ''correct'': False}'
+  - '{''text'': ''After tea'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Logical Prepositions
+  question: In Ukrainian, which preposition always requires the Instrumental case
+    to follow it?
+  options:
+  - '{''text'': ''з'', ''correct'': True}'
+  - '{''text'': ''для'', ''correct'': False}'
+  - '{''text'': ''про'', ''correct'': False}'
+  - '{''text'': ''без'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"Для" always takes the genitive case.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"Про" takes the genitive case.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"Через" can mean both "because of" and "through."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"Від" is used for receiving something from a person.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"З" always means "from."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"Після" means "after" and takes genitive.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"Для" and "на" mean the same thing.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"Крім" means "except" and takes genitive.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"О/об" is used for clock time.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"Через + noun" and "тому що + clause" are interchangeable.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"Замість" means "instead of."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Preposition Rules
+  statement: '"Без" expresses absence.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

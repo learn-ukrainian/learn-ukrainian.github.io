@@ -1,29 +1,3 @@
----
-module: a1-32
-title: 'My Family'
-subtitle: 'Родина'
-version: '1.0'
-phase: 'A1.3 - Consolidation'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: 'first-occurrence'
-tags:
-  - family
-  - relationships
-  - possessives
-grammar:
-  - Family vocabulary
-  - Possessives with family members
-  - Genitive for relationships
-objectives:
-  - 'Learner can name family members'
-  - 'Learner can describe family relationships'
-  - 'Learner can talk about their own family'
-  - 'Learner can use possessives with family terms'
-vocabulary_count: 35
-vocab_count: 39
----
-
 # My Family
 
 ## Warm-up
@@ -253,43 +227,3 @@ When calling someone directly, Ukrainian changes the word ending. This is the **
 > - [Family Vocabulary](https://www.ukrainianlessons.com/vocabulary-family/) — Сім'я
 > - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/family
 > - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
-
-# Vocabulary
-
-| Word        | IPA            | English          | POS  | Gender | Note           |
-| ----------- | -------------- | ---------------- | ---- | ------ | -------------- |
-| батьки      | /bɑtʲˈkɪ/      | parents          | noun | -      | Plural         |
-| батько      | /ˈbɑtʲkɔ/      | father           | noun | ч      |                |
-| Бог         | /bɔh/          | God              | noun | ч      |                |
-| брат        | /brɑt/         | brother          | noun | ч      |                |
-| вдова       | /vdɔˈvɑ/       | widow            | noun | ж      |                |
-| вдівець     | /vdiˈvɛt͡sʲ/    | widower          | noun | ч      |                |
-| Великдень   | /vɛˈlɪkdɛnʲ/   | Easter           | name | ч      |                |
-| Ганна       | /ˈɦɑnːɑ/       | Hanna            | name | ж      |                |
-| двоюрідний  | /dvɔˈjuridnɪj/ | cousin (adj)     | adj  | ч      |                |
-| двоє        | /ˈdvɔjɛ/       | two (collective) | num  | -      |                |
-| дядько      | /ˈdʲɑdʲkɔ/     | uncle            | noun | ч      |                |
-| єдиний      | /jɛˈdɪnɪj/     | only             | adj  | ч      |                |
-| Іван        | /iˈvɑn/        | Ivan             | name | ч      |                |
-| кличний     | /ˈklɪt͡ʃnɪj/    | vocative         | adj  | ч      |                |
-| мама        | /ˈmɑmɑ/        | mom              | noun | ж      |                |
-| молодший    | /mɔˈlɔdʃɪj/    | younger          | adj  | ч      |                |
-| наречена    | /nɑrɛˈt͡ʃɛnɑ/   | fiancée          | noun | ж      |                |
-| наречений   | /nɑrɛˈt͡ʃɛnɪj/  | fiancé           | noun | ч      |                |
-| неодружений | /nɛɔdˈruʒɛnɪj/ | unmarried        | adj  | ч      |                |
-| одружений   | /ɔdˈruʒɛnɪj/   | married          | adj  | ч      |                |
-| Оксана      | /ɔkˈsɑnɑ/      | Oksana           | name | ж      |                |
-| пан         | /pɑn/          | Mr/Sir           | noun | ч      |                |
-| Петро       | /pɛtˈrɔ/       | Petro            | name | ч      |                |
-| родина      | /rɔˈdɪnɑ/      | family           | noun | ж      |                |
-| родич       | /ˈrɔdɪt͡ʃ/      | relative         | noun | ч      |                |
-| розлучений  | /rɔzˈlut͡ʃɛnɪj/ | divorced         | adj  | ч      |                |
-| святий      | /svʲɑˈtɪj/     | holy/saint       | adj  | ч      |                |
-| середній    | /sɛˈrɛdnʲij/   | middle           | adj  | ч      |                |
-| сестра      | /sɛsˈtrɑ/      | sister           | noun | ж      |                |
-| сімейний    | /siˈmɛjnɪj/    | family (adj)     | adj  | ч      |                |
-| старший     | /ˈstɑrʃɪj/     | older            | adj  | ч      |                |
-| стосунок    | /stɔˈsunɔk/    | relationship     | noun | ч      | Usually plural |
-| тато        | /ˈtɑtɔ/        | dad              | noun | ч      |                |
-| традиція    | /trɑˈdɪt͡sʲijɑ/ | tradition        | noun | ж      |                |
-| тітка       | /ˈtitkɑ/       | aunt             | noun | ж      |                |

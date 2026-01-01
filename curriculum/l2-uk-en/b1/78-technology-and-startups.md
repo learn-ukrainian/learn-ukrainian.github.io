@@ -1,27 +1,3 @@
----
-module: 78
-title: "Технології та стартапи"
-subtitle: "Technology and Startups"
-version: "1.0"
-phase: "B1.7"
-level: "B1"
-focus: "cultural"
-pedagogy: "PPP"
-duration: 75
-transliteration: "none"
-tags: ["cultural", "technology", "IT", "startups", "contemporary"]
-grammar: []
-objectives:
-  - "Learner can discuss Ukraine's IT sector in Ukrainian"
-  - "Learner can understand authentic texts about Ukrainian tech companies"
-  - "Learner can use technology-related vocabulary in context"
-  - "Learner can compare Ukrainian tech industry with global trends"
-word_target: 1500
-vocab_target: 35
-immersion_target: 95
-vocab_count: 51
----
-
 # Вступ
 
 Чи знаєте ви, що Україна є одним із найбільших ІТ-хабів Європи? Українські програмісти та підприємці створюють продукти, якими користуються мільйони людей у всьому світі. Від Grammarly до GitLab, від Reface до Ajax Systems — українські технологічні компанії змінюють світ.

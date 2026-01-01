@@ -1,0 +1,27 @@
+module: b2-12
+title: Вставні слова та вирази
+subtitle: Модальність, джерело інформації та логічні зв'язки
+version: '1.0'
+phase: B2.1b [Participles & Register]
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - grammar
+  - syntax
+  - modality
+  - discourse-markers
+grammar:
+  - Вставні слова для вираження впевненості та невпевненості
+  - Вставні слова для вираження ставлення
+  - Вставні слова для позначення джерела інформації
+  - Вставні слова для організації висловлювання
+  - Пунктуація при вставних словах
+objectives:
+  - Learner can use parenthetical expressions to indicate certainty and uncertainty
+  - Learner can employ parenthetical expressions for attitude and source attribution
+  - Learner can organize discourse using sequence markers
+  - Learner can correctly punctuate sentences with parenthetical expressions
+vocabulary_count: 30
+vocab_count: 123
+slug: 12-parenthetical-expressions

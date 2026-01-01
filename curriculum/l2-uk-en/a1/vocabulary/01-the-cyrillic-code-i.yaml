@@ -1,0 +1,208 @@
+module: 01-the-cyrillic-code-i
+level: A1
+version: '2.0'
+items:
+  - lemma: актор
+    ipa: /ɑkˈtɔr/
+    translation: actor
+    pos: noun
+    gender: m
+  - lemma: балет
+    ipa: /bɑˈlɛt/
+    translation: ballet
+    pos: noun
+    gender: m
+  - lemma: банан
+    ipa: /bɑˈnɑn/
+    translation: banana
+    pos: noun
+    gender: m
+  - lemma: банк
+    ipa: /bɑnk/
+    translation: bank
+    pos: noun
+    gender: m
+  - lemma: бар
+    ipa: /bɑr/
+    translation: bar
+    pos: noun
+    gender: m
+  - lemma: бути
+    ipa: /ˈbutɪ/
+    translation: to be
+    pos: verb
+  - lemma: ваза
+    ipa: /ˈvɑzɑ/
+    translation: vase
+    pos: noun
+    gender: f
+  - lemma: відео
+    ipa: /ˈvidɛɔ/
+    translation: video
+    pos: noun
+    gender: n
+  - lemma: віза
+    ipa: /ˈvizɑ/
+    translation: visa
+    pos: noun
+    gender: f
+  - lemma: доктор
+    ipa: /ˈdɔktɔr/
+    translation: doctor
+    pos: noun
+    gender: m
+  - lemma: кава
+    ipa: /ˈkɑwɑ/
+    translation: coffee
+    pos: noun
+    gender: f
+  - lemma: какао
+    ipa: /kɑˈkɑɔ/
+    translation: cocoa
+    pos: noun
+    gender: n
+  - lemma: карта
+    ipa: /ˈkɑrtɑ/
+    translation: map, card
+    pos: noun
+    gender: f
+  - lemma: кафе
+    ipa: /kɑˈfɛ/
+    translation: café
+    pos: noun
+    gender: n
+  - lemma: київ
+    ipa: /ˈkɪjiw/
+    translation: Kyiv
+    pos: propn
+    gender: m
+  - lemma: комета
+    ipa: /kɔˈmɛtɑ/
+    translation: comet
+    pos: noun
+    gender: f
+  - lemma: лимон
+    ipa: /lɪˈmɔn/
+    translation: lemon
+    pos: noun
+    gender: m
+  - lemma: мама
+    ipa: /ˈmɑmɑ/
+    translation: mom
+    pos: noun
+    gender: f
+  - lemma: метро
+    ipa: /mɛˈtrɔ/
+    translation: metro
+    pos: noun
+    gender: n
+  - lemma: музика
+    ipa: /ˈmuzɪkɑ/
+    translation: music
+    pos: noun
+    gender: f
+  - lemma: опера
+    ipa: /ˈɔpɛrɑ/
+    translation: opera
+    pos: noun
+    gender: f
+  - lemma: парк
+    ipa: /pɑrk/
+    translation: park
+    pos: noun
+    gender: m
+  - lemma: паспорт
+    ipa: /ˈpɑspɔrt/
+    translation: passport
+    pos: noun
+    gender: m
+  - lemma: піца
+    ipa: /ˈpitsɑ/
+    translation: pizza
+    pos: noun
+    gender: f
+  - lemma: радіо
+    ipa: /ˈrɑdʲiɔ/
+    translation: radio
+    pos: noun
+    gender: n
+  - lemma: ракета
+    ipa: /rɑˈkɛtɑ/
+    translation: rocket
+    pos: noun
+    gender: f
+  - lemma: ресторан
+    ipa: /rɛstɔˈrɑn/
+    translation: restaurant
+    pos: noun
+    gender: m
+  - lemma: салат
+    ipa: /sɑˈlɑt/
+    translation: salad
+    pos: noun
+    gender: m
+  - lemma: сталкер
+    ipa: /ˈstɑlkɛr/
+    translation: stalker
+    pos: noun
+    gender: m
+  - lemma: студент
+    ipa: /stʊˈdɛnt/
+    translation: student
+    pos: noun
+    gender: m
+  - lemma: суп
+    ipa: /sup/
+    translation: soup
+    pos: noun
+    gender: m
+  - lemma: так
+    ipa: /tɑk/
+    translation: 'yes'
+    pos: part
+
+  - lemma: таксі
+    ipa: /tɑkˈsi/
+    translation: taxi
+    pos: noun
+    gender: n
+  - lemma: тато
+    ipa: /ˈtɑtɔ/
+    translation: dad
+    pos: noun
+    gender: m
+  - lemma: телефон
+    ipa: /tɛlɛˈfɔn/
+    translation: telephone
+    pos: noun
+    gender: m
+  - lemma: турист
+    ipa: /tʊˈrɪst/
+    translation: tourist
+    pos: noun
+    gender: m
+  - lemma: фото
+    ipa: /ˈfɔtɔ/
+    translation: photo
+    pos: noun
+    gender: n
+  - lemma: футбол
+    ipa: /fʊdˈbɔl/
+    translation: football
+    pos: noun
+    gender: m
+  - lemma: хокей
+    ipa: /xɔˈkɛj/
+    translation: hockey
+    pos: noun
+    gender: m
+  - lemma: це
+    ipa: /t͡sɛ/
+    translation: this is
+    pos: pron
+    gender: n
+  - lemma: інтернет
+    ipa: /intɛrˈnɛt/
+    translation: internet
+    pos: noun
+    gender: m

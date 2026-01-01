@@ -1,41 +1,64 @@
+import json
 import re
-import glob
+import argparse
+from pathlib import Path
 
-def check_translations():
-    files = sorted(glob.glob("curriculum/l2-uk-en/a1/module-*.md"))
-    missing = []
+def get_missing(level):
+    base_dir = Path("curriculum/l2-uk-en") / level
+    modules = sorted(list(base_dir.glob("*.md")))
+    
+    # Sort modules numerically
+    try:
+        modules.sort(key=lambda x: int(x.name.split('-')[0]))
+    except:
+        pass
 
-    for file_path in files:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            content = f.read()
-
-        # Split into sections
-        sections = re.split(r'\n##\s+', content)
+    results = []
+    
+    for mod_file in modules:
+        content = mod_file.read_text(encoding="utf-8")
         
-        has_missing = False
-        missing_sections = []
-
-        for section in sections:
-            header = section.split('\n')[0].lower()
-            
-            # Sections that MUST have translation
-            target_sections = ["reading practice", "story time", "dialogue", "narrative", "conversation"]
-            
-            is_target = any(t in header for t in target_sections)
-            
-            if is_target:
-                # Check for explicit translation markers (flexible)
-                has_translation_marker = "**English Translation:**" in section or "**English:**" in section or "> **English:**" in section or "**English Translation**" in section
-                
-                # Check if it actually has significant Cyrillic text (some might be empty placeholders)
-                has_cyrillic = bool(re.search(r'[\u0400-\u04ff]{10,}', section))
-                
-                if has_cyrillic and not has_translation_marker:
-                    has_missing = True
-                    missing_sections.append(header)
+        # Regex to find table rows with empty IPA/English
+        # Row format: | word |  |  | pos | gender | note |
+        # We look for rows where col 1 (IPA) or col 2 (English) is empty.
         
-        if has_missing:
-            print(f"MISSING: {file_path} -> {missing_sections}")
+        missing_words = []
+        
+        lines = content.splitlines()
+        in_table = False
+        
+        for line in lines:
+            if "| Word" in line and "| IPA" in line:
+                in_table = True
+                continue
+            if in_table:
+                if not line.strip():
+                    in_table = False
+                    continue
+                if line.strip().startswith("| ---"):
+                    continue
+                
+                if line.strip().startswith("|"):
+                    parts = [p.strip() for p in line.strip("|").split("|")]
+                    if len(parts) >= 3:
+                        word = parts[0]
+                        ipa = parts[1]
+                        eng = parts[2]
+                        
+                        if not ipa or not eng:
+                            missing_words.append(word)
+        
+        if missing_words:
+            results.append({
+                "file": str(mod_file),
+                "words": missing_words
+            })
+            
+    print(json.dumps(results, indent=2, ensure_ascii=False))
 
 if __name__ == "__main__":
-    check_translations()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--level", required=True)
+    args = parser.parse_args()
+    
+    get_missing(args.level)

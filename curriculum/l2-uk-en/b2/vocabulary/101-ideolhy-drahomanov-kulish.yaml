@@ -1,0 +1,241 @@
+module: 101-ideolhy-drahomanov-kulish
+level: B2
+version: '2.0'
+items:
+  - lemma: абсурдність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: болгари
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: болгарій
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: взаємодоповнюючий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: відданий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: відірваний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: гадячі
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: громадівський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: деспотизм
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: децентралізація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: драгомановський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: драгоманівець
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: емігрант
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: засланий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: колотитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: консервативніший
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: консерватор
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: костомарові
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: культурництво
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: кулішівець
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: кулішівка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: кулішівський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: левицький
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: лютер
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: марксизм
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: ментор
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: настановити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: націоналізм
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: нечуй
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: община
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: орфографія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: перевезти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: письма
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: подітися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: полемізувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: провінційність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: пулюїм
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: радикал
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: радикалізм
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: реалізовуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розгром
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: сакралізація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: сепаратистський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: систематизація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: соціалізм
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: стовп
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: федералізм
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: якова
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: ірландець
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m

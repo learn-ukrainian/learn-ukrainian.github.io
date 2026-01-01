@@ -1,0 +1,171 @@
+module: 64-emotions-deep-dive
+level: B1
+version: '2.0'
+items:
+- lemma: амбіційний
+  ipa: /ambʲiˈt͡sʲijnɪj/
+  translation: ambitious
+  pos: adj
+  gender: m
+- lemma: атлантида
+  ipa: /atlanˈtɪda/
+  translation: Atlantis
+  pos: noun
+  gender: f
+- lemma: васянович
+  ipa: /vasʲaˈnɔvɪt͡ʃ/
+  translation: Vasyanovych
+  pos: propn
+  gender: m
+- lemma: горювати
+  ipa: /hɔrʲuˈvatɪ/
+  translation: to grieve
+  pos: verb
+- lemma: демотивований
+  ipa: /dɛmɔtɪˈvɔvanɪj/
+  translation: demotivated
+  pos: adj
+  gender: f
+- lemma: дістати
+  ipa: /dʲiˈstatɪ/
+  translation: to annoy
+  pos: verb
+  gender: n
+- lemma: екстраверт
+  ipa: /ɛkstraˈvɛrt/
+  translation: extrovert
+  pos: noun
+  gender: m
+- lemma: збіг
+  ipa: /zbih/
+  translation: coincidence
+  pos: noun
+  gender: m
+- lemma: згоряти
+  ipa: /zhɔˈrʲatɪ/
+  translation: to burn out
+  pos: verb
+- lemma: зітхання
+  ipa: /zitˈxanʲːa/
+  translation: sigh
+  pos: noun
+  gender: n
+- lemma: конкретніший
+  ipa: /kɔnˈkrɛtnʲiʃɪj/
+  translation: more concrete
+  pos: adj
+- lemma: мучитися
+  ipa: /ˈmut͡ʃɪtɪsʲa/
+  translation: to suffer
+  pos: verb
+- lemma: небезпечніший
+  ipa: /nɛbɛzˈpɛt͡ʃnʲiʃɪj/
+  translation: more dangerous
+  pos: adj
+  gender: f
+- lemma: нюансувати
+  ipa: /nʲuansuˈvatɪ/
+  translation: to nuance
+  pos: verb
+- lemma: огида
+  ipa: /ɔˈhɪda/
+  translation: disgust
+  pos: noun
+  gender: f
+- lemma: оніміння
+  ipa: /ɔnʲiˈmʲinʲːa/
+  translation: numbness
+  pos: noun
+  gender: n
+- lemma: періодичний
+  ipa: /pɛriɔˈdɪt͡ʃnɪj/
+  translation: periodic
+  pos: adj
+  gender: f
+- lemma: побоювання
+  ipa: /pɔˈbɔjuvanʲːa/
+  translation: apprehension
+  pos: noun
+  gender: n
+- lemma: порадниця
+  ipa: /pɔˈradnɪt͡sʲa/
+  translation: advisor (fem.)
+  pos: noun
+  gender: f
+- lemma: посттравматичний
+  ipa: /pɔsttrau̯maˈtɪt͡ʃnɪj/
+  translation: post-traumatic
+  pos: adj
+  gender: m
+- lemma: потекти
+  ipa: /pɔtɛkˈtɪ/
+  translation: to flow
+  pos: verb
+- lemma: праведний
+  ipa: /ˈpravɛdnɪj/
+  translation: righteous
+  pos: adj
+  gender: m
+- lemma: ревнощ
+  ipa: /ˈrɛvnɔʃt͡ʃ/
+  translation: jealousy (trunc)
+  pos: noun
+  gender: m
+- lemma: ревнощі
+  ipa: /ˈrɛvnɔʃt͡ʃi/
+  translation: jealousy
+  pos: noun
+  gender: pl
+- lemma: розгубленість
+  ipa: /rɔzˈhublɛnʲisʲtʲ/
+  translation: confusion
+  pos: noun
+  gender: f
+- lemma: сновидіння
+  ipa: /snɔvɪˈdʲinʲːa/
+  translation: dream
+  pos: noun
+  gender: f
+- lemma: соройти
+  ipa: /sɔˈrɔjtɪ/
+  translation: ??? (typo)
+  pos: verb
+- lemma: сором
+  ipa: /ˈsɔrɔm/
+  translation: shame
+  pos: noun
+  gender: m
+- lemma: стремно
+  ipa: /ˈstrʲɔmnɔ/
+  translation: scary (slang)
+  pos: adv
+- lemma: стримування
+  ipa: /strɪˈmuvanʲːa/
+  translation: restraint
+  pos: noun
+  gender: n
+- lemma: торга
+  ipa: /ˈtɔrha/
+  translation: bargaining?
+  pos: noun
+  gender: m
+- lemma: турина
+  ipa: /tuˈrɪna/
+  translation: ??? (typo)
+  pos: propn
+  gender: m
+- lemma: феєрверк
+  ipa: /fɛjɛrˈvɛrk/
+  translation: fireworks
+  pos: noun
+  gender: m
+- lemma: івасюк
+  ipa: /ivaˈsʲuk/
+  translation: Ivasyuk
+  pos: propn
+  gender: m
+- lemma: інтроверт
+  ipa: /intrɔˈvɛrt/
+  translation: introvert
+  pos: noun
+  gender: m

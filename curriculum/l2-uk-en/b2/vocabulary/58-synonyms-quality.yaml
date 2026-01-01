@@ -1,0 +1,317 @@
+module: 58-synonyms-quality
+level: B2
+version: '2.0'
+items:
+  - lemma: авторитетний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: арсенал
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: витонити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: відмінний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: відраза
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: деградаційний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: дзеркаль
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: доброзичливий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: досконалість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: достойний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: екологічність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: загальноприйнятий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: згуртувати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: зла
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: зле
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: золотоверхий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: квітучий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: кепський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: кепсько
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: креативний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: луцьк
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: мачуха
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: мірило
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: надмірність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: наповнений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: неперевершений
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: неприємне
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: неякісний
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: низин
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: нікудишній
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: об'єктивізувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: обережніший
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: огидний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: пахіще
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: пересічний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: планка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: помилковий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: попередник
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: поразка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: поскаржитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: потрясіння
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: привабливість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: приготований
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: придатний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: придатність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: приємність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: розкішний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: розчарувати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: самооцінок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: саморозвиток
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: соловиїний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: статичний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: стиратися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: суб'єктивність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: суджень
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: суття
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: сходинок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: тисячоліть
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: ужгород
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: футуристичний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: чаклун
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: чудесний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: шепот
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: ідіоматичний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: індустрія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f

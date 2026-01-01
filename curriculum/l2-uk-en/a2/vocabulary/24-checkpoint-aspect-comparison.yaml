@@ -1,0 +1,29 @@
+module: 24-checkpoint-aspect-comparison
+level: A2
+version: '2.0'
+items:
+- lemma: нереальний
+  ipa: nereˈɑlʲnɪj
+  translation: unreal
+  pos: adj
+  gender: f
+- lemma: повторення
+  ipa: poˈvtɔrenʲːɐ
+  translation: repetition
+  pos: noun
+  gender: n
+- lemma: собор
+  ipa: soˈbɔr
+  translation: cathedral
+  pos: noun
+  gender: m
+- lemma: софійський
+  ipa: soˈfʲijsʲkɪj
+  translation: Sophia (adj)
+  pos: adj
+  gender: m
+- lemma: умова
+  ipa: uˈmɔʋɐ
+  translation: condition
+  pos: noun
+  gender: f

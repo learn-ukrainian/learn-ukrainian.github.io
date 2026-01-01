@@ -1,27 +1,3 @@
----
-module: 79
-title: "Спорт в Україні"
-subtitle: "Sports in Ukraine"
-version: "1.0"
-phase: "B1.7"
-level: "B1"
-focus: "cultural"
-pedagogy: "PPP"
-duration: 75
-transliteration: "none"
-tags: ["cultural", "sports", "football", "boxing", "Olympics", "contemporary"]
-grammar: []
-objectives:
-  - "Learner can discuss Ukrainian sports culture in Ukrainian"
-  - "Learner can understand authentic texts about Ukrainian athletes and teams"
-  - "Learner can use sports-related vocabulary in context"
-  - "Learner can compare Ukrainian sports achievements with global trends"
-word_target: 1500
-vocab_target: 25
-immersion_target: 95
-vocab_count: 63
----
-
 # Вступ
 
 Чи знаєте ви, що Україна є однією з найуспішніших спортивних націй Європи? Від футболу до боксу, від легкої атлетики до біатлону — українські спортсмени здобувають медалі на найпрестижніших змаганнях світу. Брати Кличко, Андрій Шевченко, Яна Клочкова — ці імена знають вболівальники у всьому світі.

@@ -1,0 +1,268 @@
+module: 18-food-and-shopping
+level: A1
+version: '2.0'
+items:
+  - lemma: атб
+    ipa: /ɑ tɛ bɛ/
+    translation: ATB (store)
+    pos: propn
+    gender: m
+  - lemma: атмосфера
+    ipa: /ɑtmɔˈsfɛrɑ/
+    translation: atmosphere
+    pos: noun
+    gender: f
+  - lemma: багато
+    ipa: /bɑˈɦɑtɔ/
+    translation: many/much
+    pos: adv
+  - lemma: вага
+    ipa: /vɑˈɦɑ/
+    translation: weight/scale
+    pos: noun
+    gender: f
+  - lemma: взяти
+    ipa: /ˈvzʲɑtɪ/
+    translation: to take
+    pos: verb
+  - lemma: голубець
+    ipa: /ɦɔluˈbɛt͡sʲ/
+    translation: cabbage roll
+    pos: noun
+    gender: m
+  - lemma: гігієна
+    ipa: /hihiˈjɛnɑ/
+    translation: hygiene
+    pos: noun
+    gender: f
+  - lemma: дерун
+    ipa: /dɛˈrun/
+    translation: potato pancake
+    pos: noun
+    gender: m
+  - lemma: десерт
+    ipa: /dɛˈsɛrt/
+    translation: dessert
+    pos: noun
+    gender: m
+  - lemma: дорогий
+    ipa: /dɔrɔˈɦɪj/
+    translation: expensive
+    pos: adj
+    gender: m
+  - lemma: знак
+    ipa: /znɑk/
+    translation: sign
+    pos: noun
+    gender: m
+  - lemma: зошит
+    ipa: /ˈzɔʃɪt/
+    translation: notebook
+    pos: noun
+    gender: m
+  - lemma: зубний
+    ipa: /zubˈnɪj/
+    translation: dental
+    pos: adj
+    gender: m
+  - lemma: капуста
+    ipa: /kɑˈpustɑ/
+    translation: cabbage
+    pos: noun
+    gender: f
+  - lemma: картопляний
+    ipa: /kɑrtɔˈplʲɑnɪj/
+    translation: potato (adj)
+    pos: adj
+    gender: m
+  - lemma: каса
+    ipa: /ˈkɑsɑ/
+    translation: cashier/checkout
+    pos: noun
+    gender: f
+  - lemma: касир
+    ipa: /kɑˈsɪr/
+    translation: cashier (person)
+    pos: noun
+    gender: m
+  - lemma: компот
+    ipa: /kɔmˈpɔt/
+    translation: compote
+    pos: noun
+    gender: m
+  - lemma: купувати
+    ipa: /kupuˈvɑtɪ/
+    translation: to buy
+    pos: verb
+  - lemma: кількість
+    ipa: /ˈkilʲkisʲtʲ/
+    translation: quantity
+    pos: noun
+    gender: f
+  - lemma: національний
+    ipa: /nɑt͡sʲiɔˈnɑlʲnɪj/
+    translation: national
+    pos: adj
+    gender: m
+  - lemma: новус
+    ipa: /ˈnɔvus/
+    translation: Novus
+    pos: propn
+    gender: m
+  - lemma: окремо
+    ipa: /ɔˈkrɛmɔ/
+    translation: separately
+    pos: adv
+  - lemma: олег
+    ipa: /ɔˈlɛɦ/
+    translation: Oleh
+    pos: propn
+    gender: m
+  - lemma: пакет
+    ipa: /pɑˈkɛt/
+    translation: bag
+    pos: noun
+    gender: m
+  - lemma: пампушка
+    ipa: /pɑmˈpuʃkɑ/
+    translation: pampushka
+    pos: noun
+    gender: f
+  - lemma: папір
+    ipa: /pɑˈpir/
+    translation: paper
+    pos: noun
+    gender: m
+  - lemma: паста
+    ipa: /ˈpɑstɑ/
+    translation: paste/pasta
+    pos: noun
+    gender: f
+  - lemma: патерн
+    ipa: /pɑˈtɛrn/
+    translation: pattern
+    pos: noun
+    gender: m
+  - lemma: пачка
+    ipa: /ˈpɑt͡ʃkɑ/
+    translation: pack
+    pos: noun
+    gender: f
+  - lemma: перший
+    ipa: /ˈpɛrʃɪj/
+    translation: first
+    pos: adj
+    gender: m
+  - lemma: покупка
+    ipa: /pɔˈkupkɑ/
+    translation: purchase
+    pos: noun
+    gender: f
+  - lemma: помилка
+    ipa: /pɔˈmɪlkɑ/
+    translation: mistake
+    pos: noun
+    gender: f
+  - lemma: порада
+    ipa: /pɔˈrɑdɑ/
+    translation: advice
+    pos: noun
+    gender: f
+  - lemma: принести
+    ipa: /prɪnɛˈstɪ/
+    translation: to bring
+    pos: verb
+  - lemma: рахунок
+    ipa: /rɑˈxunɔk/
+    translation: bill/check
+    pos: noun
+    gender: m
+  - lemma: реальний
+    ipa: /rɛˈɑlʲnɪj/
+    translation: real
+    pos: adj
+    gender: m
+  - lemma: сало
+    ipa: /ˈsɑlɔ/
+    translation: salo
+    pos: noun
+    gender: n
+  - lemma: свіжий
+    ipa: /ˈsviʒɪj/
+    translation: fresh
+    pos: adj
+    gender: m
+  - lemma: світ
+    ipa: /svit/
+    translation: world
+    pos: noun
+    gender: m
+  - lemma: секція
+    ipa: /ˈsɛkt͡sʲijɑ/
+    translation: section
+    pos: noun
+    gender: f
+  - lemma: сирний
+    ipa: /ˈsɪrnɪj/
+    translation: cheese (adj)
+    pos: adj
+    gender: m
+  - lemma: сирник
+    ipa: /ˈsɪrnɪk/
+    translation: syrnyk
+    pos: noun
+    gender: m
+  - lemma: сільпо
+    ipa: /silʲˈpɔ/
+    translation: Silpo
+    pos: propn
+    gender: n
+  - lemma: супермаркет
+    ipa: /supɛrˈmɑrkɛt/
+    translation: supermarket
+    pos: noun
+    gender: m
+  - lemma: тільки
+    ipa: /ˈtilʲkɪ/
+    translation: only
+    pos: adv
+  - lemma: традиційний
+    ipa: /trɑdɪˈt͡sʲijnɪj/
+    translation: traditional
+    pos: adj
+    gender: m
+  - lemma: фора
+    ipa: /ˈfɔrɑ/
+    translation: Fora
+    pos: propn
+    gender: f
+  - lemma: холодець
+    ipa: /xɔlɔˈdɛt͡sʲ/
+    translation: kholodets
+    pos: noun
+    gender: m
+  - lemma: хороший
+    ipa: /xɔˈrɔʃɪj/
+    translation: good
+    pos: adj
+    gender: m
+  - lemma: червоний
+    ipa: /t͡ʃɛrˈvɔnɪj/
+    translation: red
+    pos: adj
+    gender: m
+  - lemma: шампунь
+    ipa: /ʃɑmˈpunʲ/
+    translation: shampoo
+    pos: noun
+    gender: m
+  - lemma: швидкий
+    ipa: /ʃvɪdˈkɪj/
+    translation: fast
+    pos: adj
+    gender: m
+  - lemma: їдальня
+    ipa: /jiˈdɑlʲnʲɑ/
+    translation: canteen
+    pos: noun
+    gender: f

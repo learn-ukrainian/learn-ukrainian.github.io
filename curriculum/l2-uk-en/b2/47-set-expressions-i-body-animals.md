@@ -1,32 +1,3 @@
----
-module: b2-47
-title: "Сталі вирази I: Частини тіла та тварини"
-subtitle: "Set Expressions I: Body & Animals"
-version: "1.0"
-phase: "B2.2 [Phraseology & Synonymy]"
-pedagogy: "CBI"
-duration: 90
-transliteration: none
-immersion: 100
-tags:
-  - phraseology
-  - idioms
-  - somatic
-  - zoomorphic
-  - body-parts
-  - animals
-grammar:
-  - "Fixed expressions (фразеологічні одиниці)"
-  - "Somatic and zoomorphic idioms"
-objectives:
-  - "Learner can recognize and interpret 16 core Ukrainian idioms with body parts and animals"
-  - "Learner can use somatic and zoomorphic idioms appropriately in context"
-  - "Learner understands the cultural symbolism of body parts and animals in Ukrainian phraseology"
-vocabulary_count: 35
-register: "varies"
-vocab_count: 80
----
-
 # Сталі вирази I: Частини тіла та тварини
 
 > 🎯 **Чому це важливо?**

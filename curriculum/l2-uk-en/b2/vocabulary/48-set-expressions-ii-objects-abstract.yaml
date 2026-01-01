@@ -1,0 +1,440 @@
+module: 48-set-expressions-ii-objects-abstract
+level: B2
+version: '2.0'
+items:
+  - lemma: ані
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: афродіт
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: афіна
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: бавитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: байдужість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: безглуздий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: бенкет
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: богиня
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: божевілля
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: бочка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: біса
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: важкість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: виборець
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: влізати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: водойма
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: волонтерський
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: воріт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: вперед
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: впустити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: відсилати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: відігнати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: гера
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: гуска
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: гідний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: диверсифікувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: дністер
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: дратувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: духи
+    ipa: ''
+    translation: ''
+    pos: noun
+  - lemma: дьоготь
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: діжка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: ерід
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: журитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: заглядати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: зайтовити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: замкнений
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: заста
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: застережливий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: застрягнути
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: збожеволіти
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: зглазити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: зрушити
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: крапель
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: крига
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: лізти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: мертвий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: метафоричний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: мисливка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: мисливський
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: міфологія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: найважчий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: найвродливіший
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: невдалий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: невдача
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: невдоволення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: нелогічний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: неминучий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: неминучість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: необачно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: непопулярний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: неприйнятний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: нерегулярність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: нерозумно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: образливий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: оточувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: паркан
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: періодично
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: поводитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: поворот
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: пожертва
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: посмішка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: просторий
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: псувати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: підбадьорювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: підставляти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розбрат
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: роздратування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: розсудок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: ріжон
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: рішучість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: селянський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: скреслити
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: смола
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: сперечатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: спостерігати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: спотикання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: спотикатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: стікати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: суто
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: танення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: тин
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: троянський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: тріщати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: тягар
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: шо
+    ipa: ''
+    translation: ''
+    pos: other

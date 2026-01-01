@@ -1,28 +1,3 @@
----
-module: b1-12
-title: "Видові пари: 40 найважливіших"
-subtitle: "Essential Aspect Pairs - The 40 most common verb pairs"
-version: "1.0"
-phase: "B1.1 Aspect"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - aspect
-  - verbs
-  - vocabulary
-grammar:
-  - "40 essential aspect pairs"
-  - "Imperfective-perfective correspondence"
-objectives:
-  - "Learner knows the 40 most essential aspect pairs"
-  - "Learner can recognize and use both forms correctly"
-  - "Learner understands common aspect formation patterns"
-vocabulary_count: 40
-vocab_count: 67
----
-
 # Видові пари: 40 найважливіших
 
 > 🎯 **Чому це важливо?**

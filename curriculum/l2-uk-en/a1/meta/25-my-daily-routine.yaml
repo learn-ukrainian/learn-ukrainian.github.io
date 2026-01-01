@@ -1,0 +1,25 @@
+module: a1-25
+title: My Daily Routine
+subtitle: Reflexive Verbs and Daily Activities
+version: '1.0'
+phase: A1.3 - Consolidation
+pedagogy: PPP
+duration: 60 min
+transliteration: first-occurrence
+tags:
+  - reflexive-verbs
+  - daily-routine
+  - time-sequence
+  - habits
+grammar:
+  - Reflexive verbs (-ся/-сь)
+  - Reflexive verb conjugation
+  - Sequence adverbs (спочатку, потім, нарешті)
+objectives:
+  - Learner can conjugate common reflexive verbs
+  - Learner can describe daily routine activities
+  - Learner can use sequence words to order events
+  - Learner can talk about habits and regular activities
+vocabulary_count: 30
+vocab_count: 27
+slug: 25-my-daily-routine

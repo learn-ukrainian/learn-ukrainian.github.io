@@ -1,26 +1,33 @@
 # Audit Report: 12-aspect-introduction.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- Immersion 11% off target
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1135/1000
 - **Activities:** ✅ 11/10
-- **Density:** ✅ All > 12
+- **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 15/1
+- **Vocab:** ✅ 14/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 37.7% (target 35-50% (A2.1))
+- **Immersion:** ❌ 23.8% LOW (target 35-50% (A2.1))
+- **Grammar:** ⏳ Pending validation
 
-## MDX VALIDATION
-✅ No issues found
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| English to Ukrainian | translate | 0 | 6 | Add 6 more items |
 
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -38,16 +45,4 @@
 | **Summary** | ✅ | 0 | Included in Core |
 | **What You Learned** | ⚪️ | 348 | Skipped |
 | **Need More Practice?** | ⚪️ | 31 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Aspect Pairs** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Choose the Correct Aspect** | 🎮 | 12 | Activity (12 items, min 8) |
-| **quiz: Process or Result?** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: Aspect Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Imperfective vs Perfective** | 🎮 | 12 | Activity (12 items, min 12) |
-| **unjumble: Aspect Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
-| **error-correction: Fix the Aspect** | 🎮 | 8 | Activity (8 items, min 6) |
-| **cloze: Complete the Story** | 🎮 | 12 | Activity (12 items, min 12) |
-| **dialogue-reorder: Aspect in Conversation** | 🎮 | 12 | Activity (12 items, min 4) |
-| **mark-the-words: Identify Aspect** | 🎮 | 9 | Activity (9 items, min 6) |
-| **translate: English to Ukrainian** | 🎮 | 24 | Activity (24 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

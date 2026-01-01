@@ -1,26 +1,39 @@
 # Audit Report: 15-aspect-morphology.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: доконаний, дієслово, вид
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 35/100)
+
+- Borderline case (severity 35/100)
+- 1 pedagogical violations (minor)
+- Immersion 13% off target
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1157/1000
 - **Activities:** ✅ 11/10
-- **Density:** ✅ All > 12
+- **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 22/1
+- **Vocab:** ✅ 35/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 40.0% (target 35-50% (A2.1))
+- **Immersion:** ❌ 22.2% LOW (target 35-50% (A2.1))
+- **Grammar:** ⏳ Pending validation
 
-## MDX VALIDATION
-✅ No issues found
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| English to Ukrainian | translate | 0 | 6 | Add 6 more items |
 
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -37,16 +50,4 @@
 | **Summary** | ✅ | 0 | Included in Core |
 | **What You Learned** | ⚪️ | 301 | Skipped |
 | **Need More Practice?** | ⚪️ | 30 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Aspect Pairs** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Identify the Pattern** | 🎮 | 14 | Activity (14 items, min 8) |
-| **quiz: Aspect Formation** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: Formation Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Formation Patterns** | 🎮 | 15 | Activity (15 items, min 12) |
-| **unjumble: Aspect Pattern Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
-| **error-correction: Find the Perfective** | 🎮 | 6 | Activity (6 items, min 6) |
-| **cloze: Pattern Recognition** | 🎮 | 12 | Activity (12 items, min 12) |
-| **dialogue-reorder: Learning Aspect** | 🎮 | 12 | Activity (12 items, min 4) |
-| **mark-the-words: Identify Perfective Verbs** | 🎮 | 10 | Activity (10 items, min 6) |
-| **translate: English to Ukrainian** | 🎮 | 24 | Activity (24 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

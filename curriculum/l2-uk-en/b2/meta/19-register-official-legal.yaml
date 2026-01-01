@@ -1,0 +1,26 @@
+module: b2-19
+title: 'Офіційно-діловий стиль: документи, закони, заяви'
+subtitle: Мова законів, наказів та офіційних звернень
+version: '1.0'
+phase: B2.1b [Participles & Register]
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - grammar
+  - register
+  - official-style
+  - legal-language
+grammar:
+  - Impersonal -но/-то constructions
+  - Fixed formulas and clichés in official documents
+  - Complex nominal groups
+  - Advanced vocative forms in formal contexts
+objectives:
+  - Учень може розпізнавати та розуміти офіційно-діловий стиль у документах
+  - Учень може використовувати безособові конструкції на -но/-то в офіційному контексті
+  - Учень може правильно застосовувати сталі вирази та кліше в офіційному листуванні
+  - Учень може трансформувати розмовний текст в офіційно-діловий стиль
+vocabulary_count: 30
+vocab_count: 90
+slug: 19-register-official-legal

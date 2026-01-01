@@ -1,0 +1,127 @@
+module: 70-b2-checkpoint
+level: B2
+version: '2.0'
+items:
+  - lemma: ансамбль
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: афікс
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: блисок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: борода
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: відшліфований
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: вісьмомаст
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: зно
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: морф
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: морфологічний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: накивати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: обидвий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: палітро
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: провідміняти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: проговорити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: проміжка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: підбити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: підручниковий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: раунд
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: розривати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розчин
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: різноплановий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: самодіагностика
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: системність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: стрункий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: цілісність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: ідіомий
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m

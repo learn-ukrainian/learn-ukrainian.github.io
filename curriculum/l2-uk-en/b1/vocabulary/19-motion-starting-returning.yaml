@@ -1,0 +1,155 @@
+module: 19-motion-starting-returning
+level: B1
+version: '2.0'
+items:
+- lemma: адресо
+  ipa: /aˈdrɛsɔ/
+  translation: address (vocative)
+  pos: noun
+  gender: m
+- lemma: босс
+  ipa: /bɔs/
+  translation: boss
+  pos: propn
+  gender: m
+- lemma: вирій
+  ipa: /ˈvɪrʲij/
+  translation: warm lands
+  pos: noun
+  gender: m
+- lemma: віддалення
+  ipa: /vidˈdalɛnʲːa/
+  translation: distancing
+  pos: noun
+  gender: n
+- lemma: домівок
+  ipa: /dɔˈmivɔk/
+  translation: homes (gen. pl.)
+  pos: noun
+  gender: f
+- lemma: завезти
+  ipa: /zavɛzˈtɪ/
+  translation: to deliver
+  pos: verb
+- lemma: завести
+  ipa: /zavɛsˈtɪ/
+  translation: to start (engine)
+  pos: verb
+- lemma: залетіти
+  ipa: /zalɛˈtʲitɪ/
+  translation: to fly in
+  pos: verb
+- lemma: залитися
+  ipa: /zaˈlɪtɪsʲa/
+  translation: to flood
+  pos: verb
+- lemma: занести
+  ipa: /zanɛsˈtɪ/
+  translation: to bring in
+  pos: verb
+- lemma: затягнутися
+  ipa: /zatʲaɦˈnutɪsʲa/
+  translation: to drag on
+  pos: verb
+- lemma: заїдати
+  ipa: /zajiˈdatɪ/
+  translation: to seize/eat after
+  pos: verb
+- lemma: заїзд
+  ipa: /zaˈjizd/
+  translation: check-in
+  pos: noun
+  gender: m
+- lemma: координатор
+  ipa: /kɔɔrdɪˈnatɔr/
+  translation: coordinator
+  pos: noun
+  gender: m
+- lemma: короткочасність
+  ipa: /kɔrɔtkɔˈt͡ʃasnʲisʲtʲ/
+  translation: short duration
+  pos: noun
+  gender: f
+- lemma: печерська
+  ipa: /pɛˈt͡ʃɛrsʲka/
+  translation: Pecherska
+  pos: propn
+  gender: f
+- lemma: побаток
+  ipa: /pɔˈbatɔk/
+  translation: beginning (typo)
+  pos: noun
+  gender: m
+- lemma: повезти
+  ipa: /pɔvɛzˈtɪ/
+  translation: to take/get lucky
+  pos: verb
+- lemma: поехати
+  ipa: /pɔˈjɛxatɪ/
+  translation: to go (typo)
+  pos: verb
+- lemma: пуск
+  ipa: /pusk/
+  translation: launch
+  pos: noun
+  gender: m
+- lemma: развестися
+  ipa: /razvɛsˈtɪsʲa/
+  translation: to divorce (typo)
+  pos: verb
+- lemma: роз'їхатися
+  ipa: /rɔzˈjixatɪsʲa/
+  translation: to disperse
+  pos: verb
+- lemma: розвезати
+  ipa: /rɔzvɛˈzatɪ/
+  translation: to untie (typo?)
+  pos: verb
+- lemma: розвезти
+  ipa: /rɔzvɛzˈtɪ/
+  translation: to distribute
+  pos: verb
+- lemma: розвести
+  ipa: /rɔzvɛsˈtɪ/
+  translation: to breed/dilute
+  pos: verb
+- lemma: розділення
+  ipa: /rɔzˈdʲilɛnʲːa/
+  translation: separation
+  pos: noun
+  gender: n
+- lemma: розділятися
+  ipa: /rɔzdʲiˈlʲatɪsʲa/
+  translation: to separate
+  pos: verb
+- lemma: розлетітися
+  ipa: /rɔzlɛˈtʲitɪsʲa/
+  translation: to fly apart
+  pos: verb
+- lemma: розминутися
+  ipa: /rɔzmɪˈnutɪsʲa/
+  translation: to miss each other
+  pos: verb
+- lemma: рознести
+  ipa: /rɔznɛsˈtɪ/
+  translation: to distribute
+  pos: verb
+- lemma: розсіювання
+  ipa: /rɔzˈsʲijuvanʲːa/
+  translation: scattering
+  pos: noun
+  gender: n
+- lemma: стартувати
+  ipa: /startuˈvatɪ/
+  translation: to start
+  pos: verb
+- lemma: уклон
+  ipa: /uˈklɔn/
+  translation: Uklon/slope
+  pos: noun
+  gender: m
+- lemma: учителька
+  ipa: /uˈt͡ʃɪtɛlʲka/
+  translation: teacher
+  pos: noun
+  gender: f

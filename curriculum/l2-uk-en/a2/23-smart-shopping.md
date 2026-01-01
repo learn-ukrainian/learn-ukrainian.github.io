@@ -1,30 +1,3 @@
----
-module: a2-23
-title: "Smart Shopping"
-subtitle: "Comparing Products and Making Decisions"
-version: "1.0"
-phase: "A2.2"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - vocabulary
-  - functional
-  - shopping
-  - comparison
-grammar:
-  - comparison in practice
-  - negotiation phrases
-  - shopping vocabulary
-objectives:
-  - "Learner can compare products"
-  - "Learner can negotiate politely"
-  - "Learner can express requirements"
-  - "Learner can make purchase decisions"
-vocabulary_count: 25
-vocab_count: 18
----
-
 # Summary
 
 ## Warm-up

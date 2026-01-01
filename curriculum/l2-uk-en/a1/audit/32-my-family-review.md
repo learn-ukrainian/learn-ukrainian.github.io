@@ -1,9 +1,9 @@
 # Audit Report: 32-my-family.md
-**Phase:** A1 | **Level:** A1 | **Pedagogy:** "PPP" | **Target:** 750
+**Phase:** A1.3 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): вдова, розлучений, вдівець...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): онук, бабуся, онучка, хлопець, сім'я...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,18 +12,19 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1034/750
+- **Words:** ✅ 1055/750
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 27/1
+- **Vocab:** ✅ 35/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 47.0% (target 35-55% (M32))
+- **Immersion:** 🇺🇦 36.4% (target 35-55% (M32))
+- **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -34,22 +35,11 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **My Family** | ⚪️ | 0 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 68 | Included in Core |
-| **Grammar** | ⚪️ | 56 | Skipped |
-| **Describing Family Members** | ⚪️ | 152 | Skipped |
-| **Examples in Context** | ✅ | 215 | Included in Core |
+| **Grammar** | ⚪️ | 0 | Skipped |
+| **Talking About Family** | ⚪️ | 57 | Skipped |
+| **Describing Family Members** | ⚪️ | 154 | Skipped |
+| **Examples in Context** | ✅ | 232 | Included in Core |
 | **Dialogues** | ✅ | 452 | Included in Core |
-| **Summary** | ✅ | 91 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Family Members** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: More Family** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Generations** | 🎮 | 12 | Activity (12 items, min 12) |
-| **group-sort: Gender of Family Terms** | 🎮 | 12 | Activity (12 items, min 12) |
-| **fill-in: Моя сім'я (My Family)** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Possessives with Family** | 🎮 | 12 | Activity (12 items, min 8) |
-| **quiz: Who Is Who?** | 🎮 | 8 | Activity (8 items, min 8) |
-| **quiz: Marital Status** | 🎮 | 8 | Activity (8 items, min 8) |
-| **unjumble: Family Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
-| **true-false: Family Facts** | 🎮 | 12 | Activity (12 items, min 8) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Summary** | ✅ | 92 | Included in Core |

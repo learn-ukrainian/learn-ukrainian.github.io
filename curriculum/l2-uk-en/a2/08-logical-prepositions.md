@@ -1,27 +1,3 @@
----
-module: a2-08
-title: Logical Prepositions
-subtitle: "Beyond Space: Relationships & Reasons"
-version: "1.0"
-phase: "A2.1"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - prepositions
-  - grammar
-  - abstract
-grammar:
-  - logical prepositions (для, без, через, про, від, з, о, після, крім)
-  - case requirements for each preposition
-objectives:
-  - "Learner can express abstract relationships (benefit, absence, cause)"
-  - "Learner can distinguish для vs на, через vs тому що"
-  - "Learner can use prepositions for time expressions"
-vocabulary_count: 30
-vocab_count: 25
----
-
 ## Warm-up
 
 In Module 07, you learned **where** things are.

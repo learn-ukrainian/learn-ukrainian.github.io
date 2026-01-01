@@ -1,0 +1,749 @@
+module: 19-at-the-cafe
+level: A1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/19-at-the-cafe.md
+generated: '2026-01-01T17:33:20.410035'
+scope: fill-in, quiz, true-false
+activity_counts:
+  fill-in: 24
+  quiz: 31
+  true-false: 12
+total_items: 67
+item_count: 67
+sample_percent: null
+items:
+- activity: fill-in
+  title: Complete the Café Dialogue
+  sentence_template: Доброго дня! ___ на двох, будь ласка.
+  answer: Столик
+  complete_sentence: Доброго дня! Столик на двох, будь ласка.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Café Dialogue
+  sentence_template: Дякую. Можна ___?
+  answer: меню
+  complete_sentence: Дякую. Можна меню?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Café Dialogue
+  sentence_template: Що ___? (What do you recommend?)
+  answer: порекомендуєте
+  complete_sentence: Що порекомендуєте? (What do you recommend?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Café Dialogue
+  sentence_template: Я ___ каву з молоком. (I'll take)
+  answer: візьму
+  complete_sentence: Я візьму каву з молоком. (I'll take)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Café Dialogue
+  sentence_template: ___, будь ласка, ще хліб. (Bring)
+  answer: Принесіть
+  complete_sentence: Принесіть, будь ласка, ще хліб. (Bring)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Café Dialogue
+  sentence_template: ___ щось? (Anything else?)
+  answer: Ще
+  complete_sentence: Ще щось? (Anything else?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Café Dialogue
+  sentence_template: Ні, це ___. (That's everything)
+  answer: все
+  complete_sentence: Ні, це все. (That's everything)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Café Dialogue
+  sentence_template: ___, будь ласка. (Check, please)
+  answer: Рахунок
+  complete_sentence: Рахунок, будь ласка. (Check, please)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Café Dialogue
+  sentence_template: Разом чи ___? (Together or separately?)
+  answer: окремо
+  complete_sentence: Разом чи окремо? (Together or separately?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Café Dialogue
+  sentence_template: Це ___. (That's enough)
+  answer: достатньо
+  complete_sentence: Це достатньо. (That's enough)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Café Dialogue
+  sentence_template: Дякую, було дуже ___! (delicious)
+  answer: смачно
+  complete_sentence: Дякую, було дуже смачно! (delicious)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Complete the Café Dialogue
+  sentence_template: ___, будь ласка, воду. (Bring)
+  answer: Принесіть
+  complete_sentence: Принесіть, будь ласка, воду. (Bring)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Polite vs Direct
+  sentence_template: You want coffee. ___ (What should you say?)
+  answer: Я візьму каву, будь ласка
+  complete_sentence: You want coffee. Я візьму каву, будь ласка (What should you say?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Polite vs Direct
+  sentence_template: You need the menu. ___ (What's the polite way?)
+  answer: Можна меню
+  complete_sentence: You need the menu. Можна меню (What's the polite way?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Polite vs Direct
+  sentence_template: You want more bread. ___ (How do you ask?)
+  answer: Принесіть, будь ласка, ще хліб
+  complete_sentence: You want more bread. Принесіть, будь ласка, ще хліб (How do you
+    ask?)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Polite vs Direct
+  sentence_template: You're ready for the check. ___
+  answer: Рахунок, будь ласка
+  complete_sentence: You're ready for the check. Рахунок, будь ласка
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Polite vs Direct
+  sentence_template: You want to try something. ___
+  answer: Можна спробувати
+  complete_sentence: You want to try something. Можна спробувати
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Polite vs Direct
+  sentence_template: You want to thank the waiter. ___
+  answer: Дякую, було дуже смачно
+  complete_sentence: You want to thank the waiter. Дякую, було дуже смачно
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Polite vs Direct
+  sentence_template: The waiter asks "Ще щось?" You're done. ___
+  answer: Ні, це все. Дякую
+  complete_sentence: The waiter asks "Ще щось?" You're done. Ні, це все. Дякую
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Polite vs Direct
+  sentence_template: You want to split the check. ___
+  answer: Рахунок окремо, будь ласка
+  complete_sentence: You want to split the check. Рахунок окремо, будь ласка
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Polite vs Direct
+  sentence_template: You want another coffee. ___
+  answer: Ще одну каву, будь ласка
+  complete_sentence: You want another coffee. Ще одну каву, будь ласка
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Polite vs Direct
+  sentence_template: You want to know the recommendation. ___
+  answer: Що порекомендуєте
+  complete_sentence: You want to know the recommendation. Що порекомендуєте
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Polite vs Direct
+  sentence_template: You're satisfied with the service. ___
+  answer: Дякую за обслуговування
+  complete_sentence: You're satisfied with the service. Дякую за обслуговування
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Polite vs Direct
+  sentence_template: You want to thank for good service. ___
+  answer: Дякую за обслуговування
+  complete_sentence: You want to thank for good service. Дякую за обслуговування
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Waiter Questions
+  question: How does a waiter ask accurately "What would you like"?
+  options:
+  - '{''text'': ''Що ви бажаєте?'', ''correct'': True}'
+  - '{''text'': ''Де ви бажаєте?'', ''correct'': False}'
+  - '{''text'': ''Як ви бажаєте?'', ''correct'': False}'
+  - '{''text'': ''Хто ви бажаєте?'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Waiter Questions
+  question: How does a waiter ask accurately "Are you ready to order"?
+  options:
+  - '{''text'': ''Ви готові замовляти?'', ''correct'': True}'
+  - '{''text'': ''Ви готові платити?'', ''correct'': False}'
+  - '{''text'': ''Ви готові їсти?'', ''correct'': False}'
+  - '{''text'': ''Ви готові йти?'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Waiter Questions
+  question: How do you accurately ask for the bill?
+  options:
+  - '{''text'': ''Рахунок, будь ласка.'', ''correct'': True}'
+  - '{''text'': ''Меню, будь ласка.'', ''correct'': False}'
+  - '{''text'': ''Сіль, будь ласка.'', ''correct'': False}'
+  - '{''text'': ''Де офіціант?'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Waiter Questions
+  question: How do you ask for a table for two people?
+  options:
+  - '{''text'': ''Столик на двох, будь ласка.'', ''correct'': True}'
+  - '{''text'': ''Столик на одного, будь ласка.'', ''correct'': False}'
+  - '{''text'': ''Де столик?'', ''correct'': False}'
+  - '{''text'': ''Столик тут.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Waiter Questions
+  question: How do you accurately ask "Can I have a menu"?
+  options:
+  - '{''text'': ''Можна меню, будь ласка?'', ''correct'': True}'
+  - '{''text'': ''Де меню?'', ''correct'': False}'
+  - '{''text'': ''Маєте меню?'', ''correct'': False}'
+  - '{''text'': ''Я хочу меню.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Waiter Questions
+  question: How do you accurately ask for a napkin now?
+  options:
+  - '{''text'': ''Дайте серветку, будь ласка.'', ''correct'': True}'
+  - '{''text'': ''Де серветка?'', ''correct'': False}'
+  - '{''text'': ''Серветка тут.'', ''correct'': False}'
+  - '{''text'': ''Що це серветка?'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Waiter Questions
+  question: How does the waiter or customer say "Bon appetit" in Ukraine?
+  options:
+  - '{''text'': ''Смачного!'', ''correct'': True}'
+  - '{''text'': ''Дякую!'', ''correct'': False}'
+  - '{''text'': ''Будь ласка!'', ''correct'': False}'
+  - '{''text'': ''Вибачте!'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Waiter Questions
+  question: How can you say accurately the phrase "The bill, please"?
+  options:
+  - '{''text'': ''Можна рахунок, будь ласка?'', ''correct'': True}'
+  - '{''text'': ''Дайте рахунок.'', ''correct'': False}'
+  - '{''text'': ''Де рахунок?'', ''correct'': False}'
+  - '{''text'': ''Рахунок тут.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Order the Café Sentences Order
+  question: 'Correct sentence order for: "Table for two, please."'
+  options:
+  - '{''text'': ''Столик на двох, будь ласка'', ''correct'': True}'
+  - '{''text'': ''на Столик двох, будь ласка'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Order the Café Sentences Order
+  question: 'Correct sentence order for: "I''ll take coffee with milk."'
+  options:
+  - '{''text'': ''Я візьму каву з молоком'', ''correct'': True}'
+  - '{''text'': ''візьму Я каву з молоком'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Order the Café Sentences Order
+  question: 'Correct sentence order for: "What do you recommend?"'
+  options:
+  - '{''text'': ''Що порекомендуєте'', ''correct'': True}'
+  - '{''text'': ''порекомендуєте Що'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Order the Café Sentences Order
+  question: 'Correct sentence order for: "Please bring more bread."'
+  options:
+  - '{''text'': ''Принесіть, будь ласка, ще хліб'', ''correct'': True}'
+  - '{''text'': ''будь Принесіть, ласка, ще хліб'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Order the Café Sentences Order
+  question: 'Correct sentence order for: "Check separately, please."'
+  options:
+  - '{''text'': ''Рахунок окремо, будь ласка'', ''correct'': True}'
+  - '{''text'': ''окремо, Рахунок будь ласка'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Order the Café Sentences Order
+  question: 'Correct sentence order for: "That''s everything."'
+  options:
+  - '{''text'': ''Це все'', ''correct'': True}'
+  - '{''text'': ''все Це'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Order the Café Sentences Order
+  question: 'Correct sentence order for: "Thank you, it was..."'
+  options:
+  - '{''text'': ''Дякую, було дуже смачно'', ''correct'': True}'
+  - '{''text'': ''було Дякую, дуже смачно'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Order the Café Sentences Order
+  question: 'Correct sentence order for: "That''s enough."'
+  options:
+  - '{''text'': ''Це достатньо'', ''correct'': True}'
+  - '{''text'': ''достатньо Це'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Order the Café Sentences Order
+  question: 'Correct sentence order for: "Can I have a menu?"'
+  options:
+  - '{''text'': ''Можна меню'', ''correct'': True}'
+  - '{''text'': ''меню Можна'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Order the Café Sentences Order
+  question: 'Correct sentence order for: "Anything else?"'
+  options:
+  - '{''text'': ''Ще щось'', ''correct'': True}'
+  - '{''text'': ''щось Ще'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Order the Café Sentences Order
+  question: 'Correct sentence order for: "Please bring water."'
+  options:
+  - '{''text'': ''Принесіть, будь ласка, воду'', ''correct'': True}'
+  - '{''text'': ''будь Принесіть, ласка, воду'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Café Situations
+  question: You walk into a café with a friend. What do you say first?
+  options:
+  - '{''text'': ''Рахунок, будь ласка.'', ''correct'': False}'
+  - '{''text'': ''Столик на двох, будь ласка.'', ''correct'': True}'
+  - '{''text'': ''Меню, будь ласка.'', ''correct'': False}'
+  - '{''text'': ''Я візьму каву.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Café Situations
+  question: The waiter brings the menu. What's your response?
+  options:
+  - '{''text'': ''Дякую.'', ''correct'': True}'
+  - '{''text'': ''Добре.'', ''correct'': False}'
+  - '{''text'': ''Так.'', ''correct'': False}'
+  - '{''text'': ''Нормально.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Café Situations
+  question: You don't know what to order. What do you ask?
+  options:
+  - '{''text'': ''Що тут є?'', ''correct'': False}'
+  - '{''text'': ''Що порекомендуєте?'', ''correct'': True}'
+  - '{''text'': ''Що маєте?'', ''correct'': False}'
+  - '{''text'': ''Що смачне?'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Café Situations
+  question: You want coffee. What's the polite order?
+  options:
+  - '{''text'': ''Я хочу каву!'', ''correct'': False}'
+  - '{''text'': ''Я візьму каву, будь ласка.'', ''correct'': True}'
+  - '{''text'': ''Каву!'', ''correct'': False}'
+  - '{''text'': ''Дайте каву!'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Café Situations
+  question: The waiter asks "З цукром?" You want sugar. What do you say?
+  options:
+  - '{''text'': ''Ні'', ''correct'': False}'
+  - '{''text'': ''Так, будь ласка'', ''correct'': True}'
+  - '{''text'': ''Без цукру'', ''correct'': False}'
+  - '{''text'': ''Може бути'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Café Situations
+  question: You want more bread. What do you say?
+  options:
+  - '{''text'': ''Хліб!'', ''correct'': False}'
+  - '{''text'': ''Дайте хліб!'', ''correct'': False}'
+  - '{''text'': ''Принесіть, будь ласка, ще хліб.'', ''correct'': True}'
+  - '{''text'': ''Я хочу хліб!'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Café Situations
+  question: The waiter asks "Ще щось?" You're finished ordering. What do you say?
+  options:
+  - '{''text'': ''Ні, це все. Дякую.'', ''correct'': True}'
+  - '{''text'': ''Ні!'', ''correct'': False}'
+  - '{''text'': ''Все!'', ''correct'': False}'
+  - '{''text'': ''Достатньо!'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Café Situations
+  question: You've finished eating. What do you ask for?
+  options:
+  - '{''text'': ''Меню'', ''correct'': False}'
+  - '{''text'': ''Столик'', ''correct'': False}'
+  - '{''text'': ''Рахунок'', ''correct'': True}'
+  - '{''text'': ''Воду'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Café Situations
+  question: The waiter asks "Разом чи окремо?" You want to split. What do you say?
+  options:
+  - '{''text'': ''Разом'', ''correct'': False}'
+  - '{''text'': ''Окремо, будь ласка'', ''correct'': True}'
+  - '{''text'': ''Ні'', ''correct'': False}'
+  - '{''text'': ''Так'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Café Situations
+  question: You're leaving. What's a nice thing to say?
+  options:
+  - '{''text'': ''До побачення.'', ''correct'': False}'
+  - '{''text'': ''Дякую, було дуже смачно!'', ''correct'': True}'
+  - '{''text'': ''Гаразд.'', ''correct'': False}'
+  - '{''text'': ''Добре.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Café Situations
+  question: Where is Lviv's coffee culture most famous?
+  options:
+  - '{''text'': ''Kyiv'', ''correct'': False}'
+  - '{''text'': ''Lviv'', ''correct'': True}'
+  - '{''text'': ''Odesa'', ''correct'': False}'
+  - '{''text'': ''Kharkiv'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Café Situations
+  question: What dessert is a Kyiv specialty?
+  options:
+  - '{''text'': ''Медівник'', ''correct'': False}'
+  - '{''text'': ''Наполеон'', ''correct'': False}'
+  - '{''text'': ''Київський торт'', ''correct'': True}'
+  - '{''text'': ''Тірамісу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Café Etiquette
+  statement: In Ukraine, it's normal to spend hours at a café.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Café Etiquette
+  statement: You should say "Я хочу каву" when ordering.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Café Etiquette
+  statement: Asking for separate checks is common in Ukraine.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Café Etiquette
+  statement: Tipping is never expected in Ukraine.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Café Etiquette
+  statement: Lviv is famous for its coffee culture.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Café Etiquette
+  statement: '"Будь ласка" should be added to most requests.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Café Etiquette
+  statement: You should rush to leave after finishing your coffee.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Café Etiquette
+  statement: '"Візьму" is the polite way to say "I''ll take."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Café Etiquette
+  statement: The waiter will ask "Разом чи окремо?" when bringing the bill.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Café Etiquette
+  statement: '"Меню" means "table" in Ukrainian.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Café Etiquette
+  statement: '"Ще" means "more" or "another."'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Café Etiquette
+  statement: Київський торт is a famous Kyiv dessert.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -1,32 +1,3 @@
----
-module: b2-14
-title: "Стилістичні сполучники"
-subtitle: "Як зв'язувати думки елегантно"
-version: "1.0"
-phase: "B2.1b [Participles & Register]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - connectors
-  - register
-  - syntax
-  - cohesion
-grammar:
-  - "Сполучники протиставлення (проте, втім, зате, натомість, навпаки)"
-  - "Сполучники приєднання (причому, до того ж, крім того, тим більше)"
-  - "Сполучники наслідку (тому, отже, відтак, внаслідок чого)"
-  - "Допустові сполучники (хоча, незважаючи на те що, попри те що, дарма що)"
-objectives:
-  - "Learner can use contrast connectors to express opposition and alternatives"
-  - "Learner can build complex sentences with cause-consequence relationships"
-  - "Learner can apply concessive connectors in formal and informal registers"
-  - "Learner can choose appropriate connectors based on register and context"
-vocabulary_count: 30
-vocab_count: 47
----
-
 # Стилістичні сполучники
 
 > Чому це важливо?

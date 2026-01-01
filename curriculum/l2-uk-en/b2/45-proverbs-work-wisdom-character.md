@@ -1,31 +1,3 @@
----
-module: b2-45
-title: "Прислів'я I: Праця, мудрість і характер"
-subtitle: "Proverbs I: Work, Wisdom & Character"
-version: "1.0"
-phase: "B2.2 [Phraseology & Synonymy]"
-pedagogy: "CBI"
-duration: 90
-transliteration: none
-immersion: 100
-tags:
-  - phraseology
-  - proverbs
-  - wisdom
-  - work-ethic
-  - character
-grammar:
-  - "Fixed expressions (фразеологічні одиниці)"
-  - "Proverb structure and variation"
-objectives:
-  - "Learner can recognize and interpret 16 core Ukrainian proverbs about work, wisdom, and character"
-  - "Learner can use proverbs appropriately in context to express advice, commentary, or wisdom"
-  - "Learner understands the cultural values embedded in Ukrainian folk wisdom"
-vocabulary_count: 35
-register: "varies"
-vocab_count: 57
----
-
 # Прислів'я I: Праця, мудрість і характер
 
 > 🎯 **Чому це важливо?**

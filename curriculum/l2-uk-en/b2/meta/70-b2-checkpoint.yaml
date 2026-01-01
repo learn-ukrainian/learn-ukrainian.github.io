@@ -1,0 +1,28 @@
+module: b2-70
+title: Контрольна точка B2.2
+subtitle: B2.2 Checkpoint
+version: '1.0'
+phase: B2.2 [Phraseology & Synonymy]
+pedagogy: Assessment
+duration: 120
+transliteration: none
+immersion: 100
+tags:
+  - assessment
+  - checkpoint
+  - grammar
+  - vocabulary
+  - synonyms
+  - idioms
+grammar:
+  - Review of M31-M69 grammar topics
+objectives:
+  - Учень успішно демонструє знання відмінювання складних числівників
+  - Учень вільно оперує системою синонімів на позначення дій, станів та абстрактних
+    понять
+  - Учень правильно вживає ідіоми та прислів'я у відповідному контексті
+  - Учень будує складні синтаксичні конструкції з використанням вдосконалених сполучників
+vocabulary_count: 20
+register: академічний
+vocab_count: 26
+slug: 70-b2-checkpoint

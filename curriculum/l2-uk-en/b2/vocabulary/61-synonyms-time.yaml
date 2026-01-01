@@ -1,0 +1,316 @@
+module: 61-synonyms-time
+level: B2
+version: '2.0'
+items:
+  - lemma: аромат
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: багаж
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: виборювати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: вимор
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: ворскл
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: впорядкований
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: вчасний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: відбудова
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: відрізок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: віковічний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: гармонійно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: геологічний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: гранично
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: гума
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: довік
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: ера
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: жорстоко
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: забарити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: звітний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: згаяти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: злет
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: каштан
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: козаччина
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: контекстний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: контур
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: кривавий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: лунний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: людство
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: лінійний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: матеріальний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: менеджмент
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: назавжда
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: напіврозпад
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: незворотність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: непомітно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: нинішній
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: перечекати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: плин
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: плина
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: повік
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: помилково
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: поцілунок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: проміжок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: півень
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: ретроспектива
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: розкіш
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: розстріляний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: світловий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: сий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: синхронний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: сорочинський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: стрічка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: суми
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: сьогоднішній
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: табун
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: тайм
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: темпоритм
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: тяглість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: фокусуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: фотограф
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: хаотичний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: хімія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: циклічно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: шкаля
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: щохвилини
+    ipa: ''
+    translation: ''
+    pos: adv

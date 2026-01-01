@@ -1,0 +1,220 @@
+module: 38-adjective-suffixes-qualities
+level: A2
+version: '2.0'
+items:
+- lemma: '''н'''
+  ipa: n
+  translation: suffix -n-
+  pos: other
+- lemma: веселенький
+  ipa: veseˈlɛnʲkɪj
+  translation: merry (diminutive)
+  pos: adj
+  gender: m
+- lemma: вигукнути
+  ipa: vɪˈhuknute
+  translation: to exclaim (perf)
+  pos: verb
+  gender: m
+- lemma: високесенький
+  ipa: vɪsoˈkɛsenʲkɪj
+  translation: very high (diminutive)
+  pos: adj
+  gender: m
+- lemma: високотехнологічний
+  ipa: vɪsokotexnoˈlɔhʲit͡ʃnɪj
+  translation: high-tech
+  pos: adj
+  gender: m
+- lemma: гарненький
+  ipa: hɐrˈnɛnʲkɪj
+  translation: pretty (diminutive)
+  pos: adj
+  gender: m
+- lemma: дотик
+  ipa: ˈdɔtɪk
+  translation: touch
+  pos: noun
+  gender: m
+- lemma: дівчинка
+  ipa: ˈdʲiu̯t͡ʃɪnkɐ
+  translation: girl
+  pos: noun
+  gender: f
+- lemma: енн
+  ipa: ɛnː
+  translation: suffix -enn-
+  pos: other
+- lemma: еньк
+  ipa: ɛnʲk
+  translation: suffix -en'k-
+  pos: other
+- lemma: есеньк
+  ipa: ɛsenʲk
+  translation: suffix -esen'k-
+  pos: other
+- lemma: зальний
+  ipa: ˈzɑlʲnɪj
+  translation: hall (adj)
+  pos: adj
+  gender: m
+- lemma: здоровенний
+  ipa: zdoroˈvɛnːɪj
+  translation: huge
+  pos: adj
+  gender: m
+- lemma: зелененький
+  ipa: zeleˈnɛnʲkɪj
+  translation: green (diminutive)
+  pos: adj
+  gender: n
+- lemma: кавун
+  ipa: kɐˈvun
+  translation: watermelon
+  pos: noun
+  gender: m
+- lemma: мешканець
+  ipa: meʃˈkɑnet͡sʲ
+  translation: resident
+  pos: noun
+  gender: m
+- lemma: міський
+  ipa: mʲisʲˈkɪj
+  translation: urban/city
+  pos: adj
+  gender: m
+- lemma: навіть
+  ipa: ˈnɑvʲitʲ
+  translation: even
+  pos: other
+- lemma: напівпровідниковий
+  ipa: nɐpiu̯providˈnɪkoʋɪj
+  translation: semiconductor (adj)
+  pos: adj
+  gender: m
+- lemma: насправді
+  ipa: nɐˈsprɑu̯dʲi
+  translation: actually
+  pos: adv
+- lemma: ний
+  ipa: nɪj
+  translation: suffix -nyy
+  pos: adj
+  gender: m
+- lemma: обстановка
+  ipa: obstɐˈnɔu̯kɐ
+  translation: situation/furniture
+  pos: noun
+  gender: f
+- lemma: печиво
+  ipa: peˈt͡ʃɪʋo
+  translation: cookie
+  pos: noun
+  gender: n
+- lemma: повітря
+  ipa: poˈvʲitrʲɐ
+  translation: air
+  pos: noun
+  gender: n
+- lemma: притягувати
+  ipa: prɪˈtʲɑhuʋɐte
+  translation: to attract
+  pos: verb
+  gender: n
+- lemma: свіжесенький
+  ipa: sʲvʲiˈʒɛsenʲkɪj
+  translation: fresh (diminutive)
+  pos: adj
+  gender: n
+- lemma: синесенький
+  ipa: sɪˈnɛsenʲkɪj
+  translation: blue (diminutive)
+  pos: adj
+  gender: m
+- lemma: солодкий
+  ipa: soˈlɔdkɪj
+  translation: sweet
+  pos: adj
+  gender: n
+- lemma: сонячний
+  ipa: ˈsɔnʲɐt͡ʃnɪj
+  translation: sunny
+  pos: adj
+  gender: m
+- lemma: спокійний
+  ipa: spoˈkʲijnɪj
+  translation: calm
+  pos: adj
+- lemma: страх
+  ipa: strɑx
+  translation: fear
+  pos: noun
+  gender: m
+- lemma: страшенний
+  ipa: strɐˈʃɛnːɪj
+  translation: dreadful/huge
+  pos: adj
+  gender: m
+- lemma: ськ
+  ipa: sʲk
+  translation: suffix -s'k-
+  pos: other
+- lemma: ський
+  ipa: sʲkɪj
+  translation: suffix -s'kyy
+  pos: adj
+  gender: m
+- lemma: сільський
+  ipa: sʲilʲˈsʲkɪj
+  translation: rural
+  pos: adj
+  gender: m
+- lemma: тоненький
+  ipa: toˈnɛnʲkɪj
+  translation: thin (diminutive)
+  pos: adj
+  gender: f
+- lemma: уважний
+  ipa: uˈʋɑʒnɪj
+  translation: attentive
+  pos: adj
+  gender: m
+- lemma: уч
+  ipa: ut͡ʃ
+  translation: suffix -uch-
+  pos: other
+- lemma: хустка
+  ipa: ˈxustkɐ
+  translation: kerchief
+  pos: noun
+  gender: f
+- lemma: чистесенький
+  ipa: t͡ʃɪsˈtɛsenʲkɪj
+  translation: clean (diminutive)
+  pos: adj
+  gender: m
+- lemma: шкільний
+  ipa: ʃkʲilʲˈnɪj
+  translation: school (adj)
+  pos: adj
+  gender: m
+- lemma: щасливенький
+  ipa: ʃt͡ʃɐsˈlɪvɛnʲkɪj
+  translation: happy (diminutive)
+  pos: adj
+  gender: m
+- lemma: ягода
+  ipa: ˈjɑhodɐ
+  translation: berry
+  pos: noun
+  gender: f
+- lemma: яний
+  ipa: jɐnɪj
+  translation: suffix -yanyy
+  pos: adj
+  gender: m
+- lemma: ярмарка
+  ipa: ˈjɑrmɐrkɐ
+  translation: fair
+  pos: noun
+  gender: m

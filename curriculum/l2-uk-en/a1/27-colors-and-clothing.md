@@ -1,30 +1,3 @@
----
-module: a1-27
-title: 'Colors & Clothing'
-subtitle: 'Describing What You Wear'
-version: '1.0'
-phase: 'A1.3 - Consolidation'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: 'first-occurrence'
-tags:
-  - colors
-  - clothing
-  - adjectives
-  - description
-grammar:
-  - Color adjectives with agreement
-  - Clothing vocabulary
-  - Describing outfits
-objectives:
-  - 'Learner can name basic colors in Ukrainian'
-  - 'Learner can use color adjectives with correct gender agreement'
-  - 'Learner can describe clothing items'
-  - 'Learner can describe what someone is wearing'
-vocabulary_count: 30
-vocab_count: 31
----
-
 # Colors & Clothing
 
 ## Warm-up
@@ -220,39 +193,3 @@ These words take **plural adjectives**:
 > - [Colors Guide](https://www.ukrainianlessons.com/vocabulary-colors/) — Complete color vocabulary
 > - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons
 > - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
-
-# Vocabulary
-
-| Word       | IPA            | English           | POS  | Gender | Note            |
-| ---------- | -------------- | ----------------- | ---- | ------ | --------------- |
-| білий      | /ˈbilɪj/       | white             | adj  | ч      |                 |
-| блакитний  | /blɑˈkɪtnɪj/   | light blue        | adj  | ч      |                 |
-| взуття     | /vzuˈtʲːɑ/     | footwear          | noun | с      |                 |
-| вишиванка  | /vɪʃɪˈvɑnkɑ/   | embroidered shirt | noun | ж      |                 |
-| жовтий     | /ˈʒɔwtɪj/      | yellow            | adj  | ч      |                 |
-| забутий    | /zɑˈbutɪj/     | forgotten         | adj  | ч      |                 |
-| класно     | /ˈklɑsnɔ/      | cool/great        | adv  | -      |                 |
-| коричневий | /kɔˈrɪt͡ʃnɛvɪj/ | brown             | adj  | ч      |                 |
-| красиво    | /krɑˈsɪvɔ/     | beautifully       | adv  | -      |                 |
-| кросівки   | /krɔˈsivkɪ/    | sneakers (pl)     | noun | -      | Plural only     |
-| куртка     | /ˈkurtkɑ/      | jacket            | noun | ж      |                 |
-| навколо    | /nɑwˈkɔlɔ/     | around            | adv  | -      |                 |
-| описати    | /ɔpɪˈsɑtɪ/     | to describe       | verb | -      |                 |
-| пальто     | /pɑlʲˈtɔ/      | coat              | noun | с      |                 |
-| подобатися | /pɔˈdɔbɑtɪsʲɑ/ | to like           | verb | -      |                 |
-| поєднання  | /pɔjɛdˈnɑnʲːɑ/ | combination       | noun | с      |                 |
-| предок     | /ˈprɛdɔk/      | ancestor          | noun | ч      |                 |
-| светр      | /svɛtr/        | sweater           | noun | ч      |                 |
-| світлий    | /ˈsvitlɪj/     | light/bright      | adj  | ч      |                 |
-| світло-    | /ˈsvitlɔ/      | light-            | adj  | -      | Compound prefix |
-| сіро-      | /ˈsirɔ/        | gray-             | adj  | -      | Compound prefix |
-| сніг       | /snih/         | snow              | noun | ч      |                 |
-| сукня      | /ˈsuknʲɑ/      | dress             | noun | ж      |                 |
-| темний     | /ˈtɛmnɪj/      | dark              | adj  | ч      |                 |
-| тіні       | /ˈtinʲi/       | shadows           | noun | ж      | Plural          |
-| трава      | /trɑˈvɑ/       | grass             | noun | ж      |                 |
-| футболка   | /futˈbɔlkɑ/    | t-shirt           | noun | ж      |                 |
-| черевики   | /t͡ʃɛrɛˈvɪkɪ/   | boots/shoes (pl)  | noun | -      | Plural only     |
-| шорти      | /ˈʃɔrtɪ/       | shorts (pl)       | noun | -      | Plural only     |
-| штани      | /ʃtɑˈnɪ/       | pants (pl)        | noun | -      | Plural only     |
-| яскравий   | /jɑsˈkrɑvɪj/   | bright            | adj  | ч      |                 |

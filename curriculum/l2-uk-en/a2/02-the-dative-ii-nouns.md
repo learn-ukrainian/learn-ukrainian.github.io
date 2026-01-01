@@ -1,32 +1,3 @@
----
-module: a2-02
-title: 'The Dative II — Nouns'
-subtitle: 'Giving, Sending, and Showing'
-version: '1.0'
-phase: 'A2.1'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: none
-tags:
-  - grammar
-  - cases
-  - dative
-  - nouns
-grammar:
-  - dative noun endings
-  - masculine dative
-  - feminine dative
-  - neuter dative
-  - plural dative
-objectives:
-  - 'Learner can form dative case endings for masculine nouns'
-  - 'Learner can form dative case endings for feminine and neuter nouns'
-  - 'Learner can form dative plural endings'
-  - 'Learner can use dative nouns with common verbs'
-vocabulary_count: 25
-vocab_count: 75
----
-
 ## Introduction
 
 Module 01 introduced the seven Dative pronouns: мені, тобі, йому, їй, нам, вам, їм. Now it's time to learn how to form Dative endings for nouns — and there are different patterns for masculine, feminine, neuter, and plural nouns.

@@ -1,0 +1,26 @@
+module: a1-18
+title: Food & Shopping
+subtitle: Practical vocabulary for market and store
+version: '1.0'
+phase: A1.2
+pedagogy: PPP
+duration: 60 min
+transliteration: vocab-only
+tags:
+  - food
+  - shopping
+  - vocabulary
+  - accusative
+  - genitive
+grammar:
+  - Accusative case for direct objects (review)
+  - Genitive case for quantities (review)
+  - Price questions with Скільки коштує
+objectives:
+  - Learner can order food items using accusative case
+  - Learner can request quantities using genitive case
+  - Learner can ask prices and make purchases
+  - Learner can distinguish between food and non-food items
+vocabulary_count: 46
+vocab_count: 55
+slug: 18-food-and-shopping

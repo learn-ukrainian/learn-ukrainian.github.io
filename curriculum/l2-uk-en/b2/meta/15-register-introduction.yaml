@@ -1,0 +1,23 @@
+module: b2-15
+title: Функціональні стилі мови
+subtitle: П'ять голосів української
+version: '1.0'
+phase: B2
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - grammar
+  - register
+  - functional-styles
+grammar:
+  - functional-styles
+  - style-markers
+  - register-identification
+objectives:
+  - Учень може розпізнавати п'ять функціональних стилів української мови
+  - Учень може визначати стильові маркери в тексті
+  - Учень може обирати відповідний стиль залежно від комунікативної ситуації
+vocabulary_count: 25
+vocab_count: 203
+slug: 15-register-introduction

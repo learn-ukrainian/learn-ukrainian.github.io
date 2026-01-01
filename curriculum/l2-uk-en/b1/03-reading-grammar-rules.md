@@ -1,32 +1,3 @@
----
-module: b1-03
-title: "Читаємо граматичні правила"
-subtitle: "Understanding grammar explanations in Ukrainian"
-version: "1.0"
-phase: "B1.0 Bridge"
-pedagogy: "PPP"
-duration: 75
-transliteration: none
-tags:
-  - grammar
-  - metalanguage
-  - patterns
-  - bridge
-grammar:
-  - "Grammar explanation patterns"
-  - "Instruction vocabulary"
-  - "Word formation terms"
-objectives:
-  - "Learner can understand standard grammar explanation patterns"
-  - "Learner can follow Ukrainian grammar instructions"
-  - "Learner can identify word formation components"
-  - "Learner can recognize activity instruction verbs"
-  - "Learner can understand analytical terminology"
-  - "Learner can distinguish language styles and registers"
-vocabulary_count: 39
-vocab_count: 47
----
-
 # Читаємо граматичні правила
 
 > 🎯 **Why This Module Matters**

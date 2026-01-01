@@ -1,28 +1,3 @@
----
-module: b1-58
-title: "Опис змін"
-subtitle: "Describing Changes"
-version: "1.0"
-phase: "B1.5 Vocabulary Expansion I"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "verb collocations for describing change"
-  - "adverbs of manner with change verbs"
-tags:
-  - vocabulary
-  - change
-  - dynamics
-objectives:
-  - "Learner can use 25 verbs and expressions for describing changes"
-  - "Learner can distinguish between gradual and sudden change vocabulary"
-  - "Learner can form natural collocations with change-related adverbs"
-vocabulary_count: 35
-vocab_count: 74
----
-
 # Опис змін
 
 > 🎯 **Чому це важливо?**

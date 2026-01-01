@@ -1,29 +1,3 @@
----
-module: a2-33
-title: At the Doctor's
-subtitle: "Health & Medicine"
-version: "1.0"
-phase: "A2.3"
-pedagogy: "Expressive"
-duration: "60 min"
-transliteration: none
-tags:
-  - medicine
-  - health
-  - symptoms
-  - functional
-grammar:
-  - expression of pain (болить + Nom)
-  - medical imperative (приймайте, лежіть)
-  - symptoms description
-objectives:
-  - "Learner can describe symptoms"
-  - "Learner can understand doctor's instructions"
-  - "Learner can buy medicine"
-vocabulary_count: 30
-vocab_count: 38
----
-
 ## Warm-up
 
 "Health is wealth."

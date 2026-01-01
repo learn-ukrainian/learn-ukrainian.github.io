@@ -1,0 +1,103 @@
+module: 56-discourse-markers-basic
+level: B1
+version: '2.0'
+items:
+- lemma: білборд
+  ipa: /bilˈbɔrd/
+  translation: billboard
+  pos: noun
+  gender: m
+- lemma: видимість
+  ipa: /ˈvɪdɪmʲisʲtʲ/
+  translation: visibility
+  pos: noun
+  gender: f
+- lemma: детальніший
+  ipa: /dɛˈtalʲnʲiʃɪj/
+  translation: more detailed
+  pos: adj
+  gender: m
+- lemma: дискурсивний
+  ipa: /dɪskurˈsɪvnɪj/
+  translation: discursive
+  pos: adj
+- lemma: злива
+  ipa: /ˈzlɪva/
+  translation: downpour
+  pos: noun
+  gender: f
+- lemma: клей
+  ipa: /klɛj/
+  translation: glue
+  pos: noun
+  gender: m
+- lemma: маркетолог
+  ipa: /markɛˈtɔlɔh/
+  translation: marketer
+  pos: noun
+  gender: m
+- lemma: меншина
+  ipa: /mɛnˈʃɪna/
+  translation: minority
+  pos: noun
+  gender: f
+- lemma: найформальніший
+  ipa: /najfɔrˈmalʲnʲiʃɪj/
+  translation: most formal
+  pos: adj
+  gender: m
+- lemma: оптимістично
+  ipa: /ɔptɪmʲisˈtɪt͡ʃnɔ/
+  translation: optimistically
+  pos: adv
+- lemma: переформульовувати
+  ipa: /pɛrɛfɔrmuˈlʲɔvuvatɪ/
+  translation: to rephrase
+  pos: verb
+- lemma: переформулювання
+  ipa: /pɛrɛfɔrmulʲuˈvanʲːa/
+  translation: rephrasing
+  pos: noun
+  gender: n
+- lemma: плавний
+  ipa: /ˈplau̯nɪj/
+  translation: smooth
+  pos: adj
+  gender: f
+- lemma: плюралістичний
+  ipa: /plʲuralʲisˈtɪt͡ʃnɪj/
+  translation: pluralistic
+  pos: adj
+  gender: m
+- lemma: поліглот
+  ipa: /pɔlʲiˈhlɔt/
+  translation: polyglot
+  pos: noun
+  gender: m
+- lemma: ринка
+  ipa: /ˈrɪnka/
+  translation: market (gen.)
+  pos: propn
+  gender: m
+- lemma: скептичний
+  ipa: /skɛpˈtɪt͡ʃnɪj/
+  translation: skeptical
+  pos: adj
+- lemma: спеціальність
+  ipa: /spɛt͡sʲiˈalʲnʲisʲtʲ/
+  translation: specialty
+  pos: noun
+  gender: f
+- lemma: узагальнювати
+  ipa: /uzaˈhalʲnʲuvatɪ/
+  translation: to generalize
+  pos: verb
+- lemma: унітарний
+  ipa: /unʲiˈtarnɪj/
+  translation: unitary
+  pos: adj
+  gender: m
+- lemma: уривчасто
+  ipa: /uˈrɪu̯t͡ʃastɔ/
+  translation: abruptly
+  pos: adv

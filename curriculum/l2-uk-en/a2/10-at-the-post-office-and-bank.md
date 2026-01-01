@@ -1,30 +1,3 @@
----
-module: a2-10
-title: 'At the Post Office & Bank'
-subtitle: 'Service Interactions with Cases'
-version: '1.0'
-phase: 'A2.1'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: none
-tags:
-  - vocabulary
-  - services
-  - functional
-  - cases
-grammar:
-  - functional case application
-  - service vocabulary
-  - polite requests
-objectives:
-  - 'Learner can navigate post office interactions'
-  - 'Learner can perform basic banking tasks in Ukrainian'
-  - 'Learner can use correct cases in service contexts'
-  - 'Learner can make polite requests'
-vocabulary_count: 30
-vocab_count: 46
----
-
 ## Warm-up
 
 Welcome to the practical world of Ukrainian services! In this module, you'll learn vocabulary and phrases for two essential destinations: the post office (пошта) and the bank (банк). These real-world situations will help you practice the cases you've learned in authentic contexts.

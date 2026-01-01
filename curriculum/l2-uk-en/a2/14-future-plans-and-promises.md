@@ -1,30 +1,3 @@
----
-module: a2-14
-title: "Future Plans & Promises"
-subtitle: "Perfective Future Tense"
-version: "1.0"
-phase: "A2.2"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - grammar
-  - aspect
-  - future-tense
-  - perfective
-grammar:
-  - perfective future tense
-  - process vs completion in future
-  - promise and intention
-objectives:
-  - "Learner can form perfective future"
-  - "Learner can form imperfective future"
-  - "Learner understands when to use each"
-  - "Learner can make promises and express intentions"
-vocabulary_count: 20
-vocab_count: 7
----
-
 ## Warm-up
 
 **Ласкаво просимо до майбутнього часу!**

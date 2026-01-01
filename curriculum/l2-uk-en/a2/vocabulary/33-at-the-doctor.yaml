@@ -1,0 +1,184 @@
+module: 33-at-the-doctor
+level: A2
+version: '2.0'
+items:
+- lemma: аптекар
+  ipa: ɐpˈtɛkɐr
+  translation: pharmacist (m)
+  pos: noun
+  gender: m
+- lemma: аптекарка
+  ipa: ɐpˈtɛkɐrkɐ
+  translation: pharmacist (f)
+  pos: other
+- lemma: бабусиний
+  ipa: bɐˈbusɪnɪj
+  translation: grandmother's
+  pos: adj
+- lemma: бідний
+  ipa: ˈbʲidnɪj
+  translation: poor
+  pos: adj
+  gender: n
+- lemma: видужувати
+  ipa: vɪˈduʒuʋɐte
+  translation: to recover (imp)
+  pos: verb
+- lemma: волосся
+  ipa: voˈlɔsʲːɐ
+  translation: hair
+  pos: noun
+  gender: n
+- lemma: вчяти
+  ipa: ˈvt͡ʃʲɑte
+  translation: to teach/learn (typo for вчити)
+  pos: verb
+- lemma: грип
+  ipa: hrɪp
+  translation: flu
+  pos: noun
+  gender: m
+- lemma: гірчичник
+  ipa: hʲirˈt͡ʃɪt͡ʃnɪk
+  translation: mustard plaster
+  pos: noun
+  gender: m
+- lemma: джон
+  ipa: dʒɔn
+  translation: John
+  pos: propn
+  gender: m
+- lemma: дихати
+  ipa: ˈdɪxɐte
+  translation: to breathe
+  pos: verb
+- lemma: жахливий
+  ipa: ʒɐxˈlɪʋɪj
+  translation: terrible
+  pos: adj
+  gender: m
+- lemma: здивуватися
+  ipa: zdɪvuˈʋɑtɪsʲɐ
+  translation: to be surprised (perf)
+  pos: verb
+  gender: m
+- lemma: кути
+  ipa: kuˈtɪ
+  translation: corners
+  pos: verb
+- lemma: лівий
+  ipa: ˈlʲiʋɪj
+  translation: left
+  pos: adj
+  gender: n
+- lemma: лікувати
+  ipa: lʲikuˈʋɑte
+  translation: to treat/cure
+  pos: verb
+- lemma: лікуватися
+  ipa: lʲikuˈʋɑtɪsʲɐ
+  translation: to be treated
+  pos: verb
+- lemma: лінь
+  ipa: lʲinʲ
+  translation: laziness
+  pos: noun
+  gender: m
+- lemma: малина
+  ipa: mɐˈlɪnɐ
+  translation: raspberry
+  pos: noun
+  gender: f
+- lemma: мораль
+  ipa: moˈrɑlʲ
+  translation: moral
+  pos: noun
+  gender: f
+- lemma: називатися
+  ipa: nɐzɪˈʋɑtɪsʲɐ
+  translation: to be called
+  pos: verb
+- lemma: направлення
+  ipa: nɐˈprɑʋlenʲːɐ
+  translation: referral; direction
+  pos: noun
+  gender: n
+- lemma: наука
+  ipa: nɐˈukɐ
+  translation: science
+  pos: noun
+  gender: f
+- lemma: носити
+  ipa: noˈsɪte
+  translation: to carry/wear
+  pos: verb
+- lemma: одужати
+  ipa: oˈduʒɐte
+  translation: to recover (perf)
+  pos: verb
+  gender: m
+- lemma: пахнути
+  ipa: ˈpɑxnute
+  translation: to smell
+  pos: verb
+- lemma: поліклініка
+  ipa: polʲiˈklʲinʲikɐ
+  translation: polyclinic
+  pos: noun
+  gender: f
+- lemma: приймати
+  ipa: prɪjˈmɑte
+  translation: to take/accept (imp)
+  pos: verb
+- lemma: рецепом
+  ipa: reˈt͡sɛpom
+  translation: prescription (inst)
+  pos: noun
+  gender: m
+- lemma: рот
+  ipa: rɔt
+  translation: mouth
+  pos: noun
+  gender: m
+- lemma: рухати
+  ipa: ˈruxɐte
+  translation: to move (transitive)
+  pos: verb
+- lemma: серйозно
+  ipa: serˈjɔzno
+  translation: seriously
+  pos: adv
+- lemma: слабкість
+  ipa: ˈslɑbkʲisʲtʲ
+  translation: weakness
+  pos: noun
+  gender: f
+- lemma: смішний
+  ipa: sʲmʲiʃˈnɪj
+  translation: funny
+  pos: adj
+  gender: f
+- lemma: трішка
+  ipa: ˈtrʲiʃkɐ
+  translation: a little (typo tрішки?)
+  pos: noun
+  gender: f
+- lemma: туриста
+  ipa: tuˈrɪstɐ
+  translation: tourist (gen)
+  pos: noun
+  gender: m
+- lemma: фарба
+  ipa: ˈfɑrbɐ
+  translation: paint
+  pos: noun
+  gender: f
+- lemma: фонтан
+  ipa: fonˈtɑn
+  translation: fountain
+  pos: noun
+  gender: m
+- lemma: хворіти
+  ipa: xvoˈrʲite
+  translation: to be sick
+  pos: verb

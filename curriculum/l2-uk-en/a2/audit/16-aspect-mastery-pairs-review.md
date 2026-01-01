@@ -2,34 +2,20 @@
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
 **Overall Status:** ✅ PASS
 
-## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: минулий, теперішній
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-
-## Recommendation
-**📝 UPDATE** (severity 10/100)
-
-- 1 pedagogical violations (minor)
-
 ## Gates
-- **Words:** ✅ 1125/1000
+- **Words:** ✅ 1202/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 6/4 types
+- **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 24/1
+- **Vocab:** ✅ 39/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 45.4% (target 35-50% (A2.1))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
+- **Immersion:** 🇺🇦 36.2% (target 35-50% (A2.1))
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -44,7 +30,7 @@
 | **Pattern A: Past Tense Drill** | ✅ | 65 | Included in Core |
 | **Pattern B: Future Tense Drill** | ✅ | 78 | Included in Core |
 | **Rapid Fire Drills** | ⚪️ | 0 | Skipped |
-| **Drill 1: Instant Recall** | ⚪️ | 24 | Skipped |
+| **Drill 1: Instant Recall** | ⚪️ | 39 | Skipped |
 | **Drill 2: Reverse Recall** | ⚪️ | 22 | Skipped |
 | **Drill 3: Context Switch** | ✅ | 42 | Included in Core |
 | **Story Time: The Exam** | ✅ | 109 | Included in Core |
@@ -53,18 +39,7 @@
 | **Mistake 1: Using Imperfective for Results** | ⚪️ | 20 | Skipped |
 | **Mistake 2: Using Perfective for Ongoing Actions** | ⚪️ | 26 | Skipped |
 | **Mistake 3: Using Perfective for Habits** | ⚪️ | 18 | Skipped |
-| **Language Learning Tip** | ✅ | 121 | Included in Core |
+| **Language Learning Tip** | ✅ | 183 | Included in Core |
 | **Summary** | ✅ | 162 | Included in Core |
 | **Need More Practice?** | ⚪️ | 30 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Tier 1 Pairs** | 🎮 | 8 | Activity (8 items, min 8) |
-| **match-up: Tier 2 Pairs** | 🎮 | 8 | Activity (8 items, min 8) |
-| **match-up: Tier 3 Pairs** | 🎮 | 8 | Activity (8 items, min 8) |
-| **fill-in: Transform to Perfective** | 🎮 | 10 | Activity (10 items, min 8) |
-| **fill-in: Transform to Imperfective** | 🎮 | 8 | Activity (8 items, min 8) |
-| **quiz: Aspect Selection** | 🎮 | 8 | Activity (8 items, min 6) |
-| **cloze: Context Selection** | 🎮 | 12 | Activity (12 items, min 6) |
-| **unjumble: Aspect Sentences** | 🎮 | 8 | Activity (8 items, min 6) |
-| **error-correction: Wrong Aspect** | 🎮 | 6 | Activity (6 items, min 6) |
-| **group-sort: Formation Pattern** | 🎮 | 14 | Activity (14 items, min 12) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

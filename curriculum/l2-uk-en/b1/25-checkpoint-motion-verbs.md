@@ -1,28 +1,3 @@
----
-module: b1-25
-title: "Контрольна точка: Дієслова руху"
-subtitle: "Checkpoint: Motion Verbs"
-version: "2.0"
-phase: "B1.2 Motion Verbs Checkpoint"
-pedagogy: "TTT"
-duration: 75
-transliteration: "none"
-tags:
-  - checkpoint
-  - integration
-  - motion-verbs
-grammar:
-  - "Integration of M16-M24"
-  - "Comprehensive review and testing"
-objectives:
-  - "Learner can demonstrate mastery of motion verb pairs"
-  - "Learner can use all directional prefixes correctly"
-  - "Learner can apply figurative motion expressions"
-  - "Learner can integrate motion verbs in complex narratives"
-vocabulary_count: 38
-vocab_count: 62
----
-
 # Контрольна точка: Дієслова руху
 
 > 🎯 **Чому це важливо?**
@@ -512,7 +487,6 @@ vocab_count: 62
 
 ---
 
-
 # Підсумок
 
 **Що ви навчилися:**
@@ -543,7 +517,5 @@ vocab_count: 62
 > Якщо ви відповіли «так» на всі питання — ви готові до фази B1.3!
 
 ---
-
-
 
 ---

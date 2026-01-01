@@ -1,33 +1,3 @@
----
-module: b2-42
-title: "Відтінки виду II: наказовий спосіб та інфінітив"
-subtitle: "Вид дієслова в командах та інфінітивних конструкціях"
-version: "1.0"
-phase: "B2.2 [Grammar Completion]"
-pedagogy: "TTT"
-duration: 90
-transliteration: "none"
-tags:
-  - grammar
-  - aspect
-  - imperative
-  - infinitive
-  - politeness
-grammar:
-  - "Aspect in imperative mood"
-  - "Imperfective vs perfective commands"
-  - "Prohibition with imperfective"
-  - "Aspect in infinitive constructions"
-  - "не можна + aspect distinction"
-objectives:
-  - "Learner can distinguish polite invitations from urgent commands by aspect"
-  - "Learner can form prohibitions using the correct aspect"
-  - "Learner can interpret не можна + infinitive based on aspect"
-  - "Learner can choose appropriate aspect in imperative for different situations"
-vocabulary_count: 35
-vocab_count: 38
----
-
 # Відтінки виду II: наказовий спосіб та інфінітив
 
 > Чому це важливо?

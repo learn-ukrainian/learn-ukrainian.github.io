@@ -1,27 +1,3 @@
----
-module: a2-40
-title: Root Families I
-subtitle: "Language Legos"
-version: "1.0"
-phase: "A2.4"
-pedagogy: "Inquiry"
-duration: "60 min"
-transliteration: none
-tags:
-  - vocabulary
-  - roots
-  - word-formation
-grammar:
-  - root families (хід, пис, чит, бач)
-  - guessing meaning from context
-objectives:
-  - "Learner can recognize common roots (хід, пис)"
-  - "Learner can deduce meaning of new words (Вхід vs Вихід)"
-  - "Learner uses root logic to expand vocabulary rapidly"
-vocabulary_count: 30
-vocab_count: 54
----
-
 ## Warm-up
 
 Ukrainian words are like Lego structures.

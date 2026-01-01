@@ -1,27 +1,3 @@
----
-module: a2-45
-title: "Home & Furniture"
-subtitle: "Household Vocabulary and Descriptions"
-version: "2.0"
-phase: "A2.5"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - vocabulary
-  - home
-  - furniture
-grammar:
-  - thematic vocabulary
-  - locative case for rooms
-objectives:
-  - "Learner knows home and furniture vocabulary"
-  - "Learner can describe rooms and furniture"
-  - "Learner can talk about where things are located"
-vocabulary_count: 30
-vocab_count: 47
----
-
 ## Warm-up
 
 Ласкаво просимо додому! Welcome home! This module covers rooms, furniture, and household vocabulary. Being able to describe your home is essential for daily conversations in Ukrainian.

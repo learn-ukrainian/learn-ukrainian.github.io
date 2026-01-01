@@ -1,0 +1,40 @@
+module: 20-checkpoint-navigation
+level: A1
+version: '2.0'
+items:
+  - lemma: вчора
+    ipa: /ˈvt͡ʃɔrɑ/
+    translation: yesterday
+    pos: adv
+  - lemma: ж
+    ipa: /ʒɛ/
+    translation: (particle, emphasis)
+    pos: other
+  - lemma: красивий
+    ipa: /krɑˈsɪvɪj/
+    translation: beautiful
+    pos: adj
+    gender: m
+  - lemma: маленький
+    ipa: /mɑˈlɛnʲkɪj/
+    translation: small
+    pos: adj
+    gender: m
+  - lemma: оксана
+    ipa: /ɔkˈsɑnɑ/
+    translation: Oksana
+    pos: propn
+    gender: f
+  - lemma: праворуч
+    ipa: /prɑˈvɔrut͡ʃ/
+    translation: to the right
+    pos: adv
+  - lemma: тому
+    ipa: /tɔˈmu/
+    translation: therefore/back
+    pos: adv
+  - lemma: улюблений
+    ipa: /uˈlʲublɛnɪj/
+    translation: favorite
+    pos: adj
+    gender: m

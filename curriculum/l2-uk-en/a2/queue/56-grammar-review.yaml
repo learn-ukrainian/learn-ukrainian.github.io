@@ -1,0 +1,808 @@
+module: 56-grammar-review
+level: A2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/56-grammar-review.md
+generated: '2025-12-31T23:56:59.877275'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 13
+  fill-in: 12
+  cloze: 1
+  unjumble: 12
+  quiz: 12
+  true-false: 12
+total_items: 62
+item_count: 62
+sample_percent: null
+items:
+- activity: error-correction
+  title: Fix the Letter
+  sentence_with_error: Привіт мама!
+  error: мама
+  answer: мамо
+  sentence_corrected: Привіт мамо!
+  options:
+  - мамо
+  - мама
+  - маму
+  - мами
+  original_explanation: 'Vocative: Мамо.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Letter
+  sentence_with_error: Я живу в Київ.
+  error: Київ
+  answer: Києві
+  sentence_corrected: Я живу в Києві.
+  options:
+  - Києві
+  - Київ
+  - Києва
+  - Києвом
+  original_explanation: 'Locative: в Києві.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Letter
+  sentence_with_error: Я працюю програміст.
+  error: програміст
+  answer: програмістом
+  sentence_corrected: Я працюю програмістом.
+  options:
+  - програмістом
+  - програміст
+  - програміста
+  - програмісту
+  original_explanation: 'Instrumental: працюю програмістом.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Letter
+  sentence_with_error: Я люблю Україна.
+  error: Україна
+  answer: Україну
+  sentence_corrected: Я люблю Україну.
+  options:
+  - Україну
+  - Україна
+  - України
+  - Україні
+  original_explanation: 'Accusative: люблю Україну.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Letter
+  sentence_with_error: Машина червоний.
+  error: червоний
+  answer: червона
+  sentence_corrected: Машина червона.
+  options:
+  - червона
+  - червоний
+  - червоне
+  - червоні
+  original_explanation: 'Gender agreement (Fem): червона машина.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Letter
+  sentence_with_error: 'Вчора я купував машину. (Context: completed)'
+  error: купував
+  answer: купив
+  sentence_corrected: 'Вчора я купив машину. (Context: completed)'
+  options:
+  - купив
+  - купував
+  - купую
+  - буду купувати
+  original_explanation: 'Result (bought): купив.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Letter
+  sentence_with_error: Я не маю гроші.
+  error: гроші
+  answer: грошей
+  sentence_corrected: Я не маю грошей.
+  options:
+  - гроші
+  - грошей
+  - грошам
+  - грошима
+  original_explanation: 'Genitive Negation: не маю грошей.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Letter
+  sentence_with_error: Ми йдемо з друг.
+  error: друг
+  answer: другом
+  sentence_corrected: Ми йдемо з другом.
+  options:
+  - другом
+  - друг
+  - друга
+  - другу
+  original_explanation: Instrumental.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Letter
+  sentence_with_error: Дай мені вода.
+  error: вода
+  answer: воду
+  sentence_corrected: Дай мені воду.
+  options:
+  - воду
+  - вода
+  - води
+  - водою
+  original_explanation: Accusative.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Letter
+  sentence_with_error: Я в кімнату. (Location)
+  error: кімнату
+  answer: кімнаті
+  sentence_corrected: Я в кімнаті. (Location)
+  options:
+  - кімнаті
+  - кімнату
+  - кімната
+  - кімнатою
+  original_explanation: 'Locative (Where?): в кімнаті.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Letter
+  sentence_with_error: Я дякую вас.
+  error: вас
+  answer: вам
+  sentence_corrected: Я дякую вам.
+  options:
+  - вам
+  - вас
+  - ви
+  - вами
+  original_explanation: 'Dative: дякую *кому?* вам.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Letter
+  sentence_with_error: Я чекаю автобус.
+  error: автобус
+  answer: автобуса
+  sentence_corrected: Я чекаю автобуса.
+  options:
+  - автобуса
+  - автобус
+  - автобусі
+  - автобусом
+  original_explanation: Genitive after "чекати" (often used). Or Accusative "автобус".
+    Both are used.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Fix the Letter
+  sentence_with_error: Я пишу ручка.
+  error: ручка
+  answer: ручкою
+  sentence_corrected: Я пишу ручкою.
+  options:
+  - ручкою
+  - ручка
+  - ручку
+  - ручки
+  original_explanation: Instrumental.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Challenge
+  sentence_template: Я йду в ____. (park)
+  answer: парк
+  complete_sentence: Я йду в парк_. (park)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Challenge
+  sentence_template: Я гуляю в ____. (park)
+  answer: парку
+  complete_sentence: Я гуляю в парку_. (park)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Challenge
+  sentence_template: Я не бачу ____. (bus)
+  answer: автобуса
+  complete_sentence: Я не бачу автобуса_. (bus)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Challenge
+  sentence_template: Я їм ____. (soup)
+  answer: суп
+  complete_sentence: Я їм суп_. (soup)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Challenge
+  sentence_template: Я їм суп ____. (spoon)
+  answer: ложкою
+  complete_sentence: Я їм суп ложкою_. (spoon)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Challenge
+  sentence_template: Я телефоную ____. (dad)
+  answer: татові
+  complete_sentence: Я телефоную татові_. (dad)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Challenge
+  sentence_template: Ми з ____. (brother)
+  answer: братом
+  complete_sentence: Ми з братом_. (brother)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Challenge
+  sentence_template: Книга лежить на ____. (table)
+  answer: столі
+  complete_sentence: Книга лежить на столі_. (table)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Challenge
+  sentence_template: У ____ є ідея. (me)
+  answer: мене
+  complete_sentence: У мене_ є ідея. (me)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Challenge
+  sentence_template: Це подарунок для ____. (sister)
+  answer: сестри
+  complete_sentence: Це подарунок для сестри_. (sister)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Challenge
+  sentence_template: Я хочу стати ____. (artist)
+  answer: художником
+  complete_sentence: Я хочу стати художником_. (artist)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Challenge
+  sentence_template: Привіт, ____! (Ivan)
+  answer: Іване
+  complete_sentence: Привіт, Іване_! (Ivan)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Grammar Fill
+  passage_template: 'Я {новий|нова|нове} студент. Я {навчаюся|навчаюсь|вчу} в університеті.
+
+    Вчора я {купив|купував|куплю} книгу.
+
+    Книга {була|був|було} дуже цікава.
+
+    Я читав її {весь|все|всі} вечір.
+
+    Мій друг {ніколи|завжди|часто} не читає книги.
+
+    Він любить {грати|граю|грав} у футбол.
+
+    Ми з {ним|він|його} різні, але ми друзі.
+
+    У нас є спільна {мрія|мета|ціль}.
+
+    Ми разом {вивчаємо|вчимо|знаємо} англійську.
+
+    Я {думаю|знаю|бачу}, що це важливо.
+
+    Ми хочемо {побачити|бачити|дивитися} світ.'
+  blanks:
+  - answer: нове
+    options:
+    - новий
+    - нова
+  - answer: вчу
+    options:
+    - навчаюся
+    - навчаюсь
+  - answer: куплю
+    options:
+    - купив
+    - купував
+  - answer: було
+    options:
+    - була
+    - був
+  - answer: всі
+    options:
+    - весь
+    - все
+  - answer: часто
+    options:
+    - ніколи
+    - завжди
+  - answer: грав
+    options:
+    - грати
+    - граю
+  - answer: його
+    options:
+    - ним
+    - він
+  - answer: ціль
+    options:
+    - мрія
+    - мета
+  - answer: знаємо
+    options:
+    - вивчаємо
+    - вчимо
+  - answer: бачу
+    options:
+    - думаю
+    - знаю
+  - answer: дивитися
+    options:
+    - побачити
+    - бачити
+  blank_count: 12
+  complete_passage: 'Я нове студент. Я вчу в університеті.
+
+    Вчора я куплю книгу.
+
+    Книга було дуже цікава.
+
+    Я читав її всі вечір.
+
+    Мій друг часто не читає книги.
+
+    Він любить грав у футбол.
+
+    Ми з його різні, але ми друзі.
+
+    У нас є спільна ціль.
+
+    Ми разом знаємо англійську.
+
+    Я бачу, що це важливо.
+
+    Ми хочемо дивитися світ.'
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Sentence Builder
+  jumbled_words: []
+  answer: Я не пішов у кіно тому що працював
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Sentence Builder
+  jumbled_words: []
+  answer: Коли ми прийшли додому він вже давно спав
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Sentence Builder
+  jumbled_words: []
+  answer: Я дуже хочу щоб ти купив свіжий хліб
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Sentence Builder
+  jumbled_words: []
+  answer: Цей молодий студент який читає книгу мій друг
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Sentence Builder
+  jumbled_words: []
+  answer: Якщо завтра буде гарне сонце ми підемо гуляти
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Sentence Builder
+  jumbled_words: []
+  answer: Він мені сказав що дуже сильно любить Україну
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Sentence Builder
+  jumbled_words: []
+  answer: Я зараз пишу довгого листа своєму найкращому другу
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Sentence Builder
+  jumbled_words: []
+  answer: Ми їдемо цим великим автобусом до міста Львова
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Sentence Builder
+  jumbled_words: []
+  answer: На жаль у мене сьогодні немає вільного часу
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Sentence Builder
+  jumbled_words: []
+  answer: Мені дуже подобається ця весела українська народна музика
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Sentence Builder
+  jumbled_words: []
+  answer: Скажи мені де ти був вчора пізно ввечері
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Sentence Builder
+  jumbled_words: []
+  answer: Мамо скажи де лежать мої теплі зимові шкарпетки
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Master
+  question: Which grammatical case is primarily used for indicating a location in
+    Ukrainian?
+  options:
+  - '{''text'': ''Locative'', ''correct'': True}'
+  - '{''text'': ''Accusative'', ''correct'': False}'
+  - '{''text'': ''Dative'', ''correct'': False}'
+  - '{''text'': ''Genitive'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Master
+  question: Which case correctly completes the phrase "Я працюю..." to mean "I work
+    as"?
+  options:
+  - '{''text'': ''Instrumental (менеджером)'', ''correct'': True}'
+  - '{''text'': ''Nominative (менеджер)'', ''correct'': False}'
+  - '{''text'': ''Genitive (менеджера)'', ''correct'': False}'
+  - '{''text'': ''Locative (менеджері)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Master
+  question: Which case is required after the phrase "У мене немає..." (I don't have)?
+  options:
+  - '{''text'': ''Genitive (часу)'', ''correct'': True}'
+  - '{''text'': ''Accusative (час)'', ''correct'': False}'
+  - '{''text'': ''Instrumental (часом)'', ''correct'': False}'
+  - '{''text'': ''Dative (часу)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Master
+  question: Which case is used for the direct object in the phrase "Я бачу..."?
+  options:
+  - '{''text'': ''Accusative (сестру)'', ''correct'': True}'
+  - '{''text'': ''Nominative (сестра)'', ''correct'': False}'
+  - '{''text'': ''Dative (сестрі)'', ''correct'': False}'
+  - '{''text'': ''Locative (сестрі)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Master
+  question: What does the "Imperfective" verb aspect typically describe in a sentence?
+  options:
+  - '{''text'': ''Process / Habit / Duration'', ''correct'': True}'
+  - '{''text'': ''Result / Completion'', ''correct'': False}'
+  - '{''text'': ''Command / Order'', ''correct'': False}'
+  - '{''text'': ''Wish / Desire'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Master
+  question: What is the meaning and function of the connector "щоб" in a complex sentence?
+  options:
+  - '{''text'': ''In order to / Purpose'', ''correct'': True}'
+  - '{''text'': ''Because / Reason'', ''correct'': False}'
+  - '{''text'': ''But / Contrast'', ''correct'': False}'
+  - '{''text'': ''And / Addition'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Master
+  question: Which case is used for the recipient in the phrase "Я даю подарунок..."?
+  options:
+  - '{''text'': ''Dative (мамі)'', ''correct'': True}'
+  - '{''text'': ''Nominative (мама)'', ''correct'': False}'
+  - '{''text'': ''Genitive (мами)'', ''correct'': False}'
+  - '{''text'': ''Accusative (маму)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Master
+  question: Which case is used to describe the tool in the phrase "Я пишу..."?
+  options:
+  - '{''text'': ''Instrumental (олівцем)'', ''correct'': True}'
+  - '{''text'': ''Nominative (олівець)'', ''correct'': False}'
+  - '{''text'': ''Genitive (олівця)'', ''correct'': False}'
+  - '{''text'': ''Accusative (олівець)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Master
+  question: Which case is used with the preposition "з" meaning "from" in "Він прийшов
+    з..."?
+  options:
+  - '{''text'': ''Genitive (магазину)'', ''correct'': True}'
+  - '{''text'': ''Nominative (магазин)'', ''correct'': False}'
+  - '{''text'': ''Locative (магазині)'', ''correct'': False}'
+  - '{''text'': ''Instrumental (магазином)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Master
+  question: Which case follows the preposition "про" in the phrase "Ми говоримо про..."?
+  options:
+  - '{''text'': ''Accusative (політику)'', ''correct'': True}'
+  - '{''text'': ''Nominative (політика)'', ''correct'': False}'
+  - '{''text'': ''Genitive (політики)'', ''correct'': False}'
+  - '{''text'': ''Instrumental (політикою)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Master
+  question: Which case is used for location in the phrase "Я живу в..."?
+  options:
+  - '{''text'': ''Locative (Україні)'', ''correct'': True}'
+  - '{''text'': ''Nominative (Україна)'', ''correct'': False}'
+  - '{''text'': ''Genitive (України)'', ''correct'': False}'
+  - '{''text'': ''Accusative (Україну)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Master
+  question: Which special case form is used when addressing someone directly, like
+    "Привіт, ..."?
+  options:
+  - '{''text'': ''Vocative (друже)'', ''correct'': True}'
+  - '{''text'': ''Nominative (друг)'', ''correct'': False}'
+  - '{''text'': ''Genitive (друга)'', ''correct'': False}'
+  - '{''text'': ''Dative (другу)'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Truths
+  statement: '"Dative" case is used for "Where?".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Truths
+  statement: '"Accusative" is used for Direct Object.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Truths
+  statement: Negative sentences (Немає...) usually take Genitive.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Truths
+  statement: '"With my friend" uses Instrumental.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Truths
+  statement: '"Я працюю..." takes Instrumental case.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Truths
+  statement: Perfective verbs explain a process.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Truths
+  statement: '"Тому що" means "Although".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Truths
+  statement: Neuter nouns end in -а usually.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Truths
+  statement: '"Vocative" is for calling someone.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Truths
+  statement: Adjectives agree with nouns in gender/number/case.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Truths
+  statement: '"Мені треба" uses Nominative "Я".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Truths
+  statement: '"У мене є" uses Genitive "мене".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

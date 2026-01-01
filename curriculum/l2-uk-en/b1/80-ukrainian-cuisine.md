@@ -1,29 +1,3 @@
----
-module: b1-80
-title: "Українська кухня"
-subtitle: "Ukrainian Cuisine"
-version: "1.0"
-phase: "B1.7 Contemporary Ukraine"
-focus: cultural
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-tags:
-  - cultural
-  - cuisine
-  - food
-  - traditions
-grammar:
-  - "cultural vocabulary in context"
-objectives:
-  - "Learner can discuss Ukrainian regional cuisines in context"
-  - "Learner can understand authentic texts about Ukrainian food traditions"
-  - "Learner can use food-related vocabulary to describe dishes and cooking methods"
-  - "Learner can compare Ukrainian cuisine with their own food culture"
-vocabulary_count: 35
-vocab_count: 104
----
-
 # Українська кухня
 
 > 🎯 **Чому це важливо?**

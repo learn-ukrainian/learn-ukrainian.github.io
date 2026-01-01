@@ -1,6 +1,15 @@
 # Audit Report: 14-aspect-integration-practice.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
+**Phase:** B1.1 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): спочатку, водночас, наступного, решт, нарешті...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1726/1500
@@ -10,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,19 +46,12 @@
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.1%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Інтеграція виду: практика** | ⚪️ | 74 | Skipped |
+| **Intro/Narrative** | ✅ | 74 | Included in Core |
 | **Тест** | ⚪️ | 134 | Skipped |
 | **Пояснення** | ⚪️ | 795 | Skipped |
 | **Практика** | ⚪️ | 165 | Skipped |
 | **Діалоги** | ✅ | 292 | Included in Core |
 | **Підсумок** | ✅ | 266 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

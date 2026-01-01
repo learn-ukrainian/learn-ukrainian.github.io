@@ -1,0 +1,117 @@
+module: 66-business-basics
+level: B1
+version: '2.0'
+items:
+- lemma: агробізнес
+  ipa: /ahrɔˈbʲiznɛs/
+  translation: agribusiness
+  pos: noun
+  gender: m
+- lemma: акціонер
+  ipa: /akt͡sʲiɔˈnɛr/
+  translation: shareholder
+  pos: noun
+  gender: m
+- lemma: вирахування
+  ipa: /vɪraxuˈvanʲːa/
+  translation: deduction
+  pos: noun
+  gender: n
+- lemma: виручка
+  ipa: /vɪˈrut͡ʃka/
+  translation: revenue
+  pos: noun
+  gender: f
+- lemma: гарантійний
+  ipa: /haranˈtʲijnɪj/
+  translation: warranty (adj)
+  pos: adj
+- lemma: залучення
+  ipa: /zaˈlut͡ʃɛnʲːa/
+  translation: involvement
+  pos: noun
+  gender: n
+- lemma: заробіток
+  ipa: /zarɔˈbitɔk/
+  translation: earnings
+  pos: noun
+  gender: m
+- lemma: здравствувати
+  ipa: /ˈzdraustvuvatɪ/
+  translation: to prosper (Rus.)
+  pos: verb
+- lemma: комплектуючі
+  ipa: /kɔmplɛkˈtujut͡ʃi/
+  translation: components
+  pos: noun
+  gender: f
+- lemma: машинобудування
+  ipa: /maʃɪnɔbuduˈvanʲːa/
+  translation: mechanical engineering
+  pos: noun
+  gender: n
+- lemma: некомерційний
+  ipa: /nɛkɔmɛrˈt͡sʲijnɪj/
+  translation: non-profit
+  pos: adj
+  gender: f
+- lemma: оборотний
+  ipa: /ɔbɔˈrɔtnɪj/
+  translation: circulating
+  pos: adj
+  gender: m
+- lemma: оподаткування
+  ipa: /ɔpɔdatkuˈvanʲːa/
+  translation: taxation
+  pos: noun
+  gender: n
+- lemma: оптовий
+  ipa: /ɔpˈtɔvɪj/
+  translation: wholesale
+  pos: adj
+  gender: f
+- lemma: платній
+  ipa: /platˈnʲij/
+  translation: paid (loc.)
+  pos: adj
+- lemma: подвоїти
+  ipa: /pɔdˈvɔjɪtɪ/
+  translation: to double
+  pos: verb
+- lemma: покрити
+  ipa: /pɔˈkrɪtɪ/
+  translation: to cover
+  pos: verb
+- lemma: послуз
+  ipa: /ˈpɔsluz/
+  translation: services (gen. typo)
+  pos: noun
+  gender: f
+- lemma: починаючий
+  ipa: /pɔt͡ʃɪˈnajut͡ʃɪj/
+  translation: beginner
+  pos: adj
+- lemma: підписка
+  ipa: /pidˈpɪska/
+  translation: subscription
+  pos: noun
+  gender: f
+- lemma: підприємницький
+  ipa: /pidprɪˈjɛmnɪt͡sʲkɪj/
+  translation: entrepreneurial
+  pos: adj
+  gender: f
+- lemma: сфокусуватися
+  ipa: /sfɔkusuˈvatɪsʲa/
+  translation: to focus
+  pos: verb
+- lemma: транснаціональний
+  ipa: /transnat͡sʲiɔˈnalʲnɪj/
+  translation: transnational
+  pos: adj
+  gender: f
+- lemma: інвесторський
+  ipa: /inˈvɛstɔrsʲkɪj/
+  translation: investor (adj)
+  pos: adj
+  gender: f

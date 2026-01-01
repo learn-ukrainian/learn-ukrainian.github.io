@@ -1,0 +1,99 @@
+module: 08-the-living-verb-ii
+level: A1
+version: '2.0'
+items:
+  - lemma: бачити
+    ipa: /ˈbɑt͡ʃɪtɪ/
+    translation: to see
+    pos: verb
+  - lemma: біля
+    ipa: /ˈbilʲɑ/
+    translation: near
+    pos: other
+  - lemma: вправа
+    ipa: /ˈwprɑvɑ/
+    translation: exercise
+    pos: noun
+    gender: f
+  - lemma: вчити
+    ipa: /ˈwt͡ʃɪtɪ/
+    translation: to teach/learn
+    pos: verb
+  - lemma: вчитися
+    ipa: /ˈwt͡ʃɪtɪsʲɑ/
+    translation: to learn (oneself)
+    pos: verb
+  - lemma: вітати
+    ipa: /viˈtɑtɪ/
+    translation: to greet/congratulate
+    pos: verb
+  - lemma: дивитися
+    ipa: /dɪˈvɪtɪsʲɑ/
+    translation: to look/watch
+    pos: verb
+  - lemma: допомога
+    ipa: /dɔpɔˈmɔɦɑ/
+    translation: help
+    pos: noun
+    gender: f
+  - lemma: катя
+    ipa: /ˈkɑtʲɑ/
+    translation: Katya
+    pos: propn
+    gender: f
+  - lemma: лежати
+    ipa: /lɛˈʒɑtɪ/
+    translation: to lie (down)
+    pos: verb
+  - lemma: олена
+    ipa: /ɔˈlɛnɑ/
+    translation: Olena
+    pos: propn
+    gender: f
+  - lemma: сидіти
+    ipa: /sɪˈditɪ/
+    translation: to sit
+    pos: verb
+  - lemma: спати
+    ipa: /ˈspɑtɪ/
+    translation: to sleep
+    pos: verb
+  - lemma: стояти
+    ipa: /stɔˈjɑtɪ/
+    translation: to stand
+    pos: verb
+  - lemma: також
+    ipa: /tɑˈkɔʒ/
+    translation: also
+    pos: adv
+  - lemma: телефонувати
+    ipa: /tɛlɛfɔnuˈvɑtɪ/
+    translation: to phone/call
+    pos: verb
+  - lemma: український
+    ipa: /ʊkrɑˈjinʲsʲkɪj/
+    translation: Ukrainian (adj)
+    pos: adj
+    gender: m
+  - lemma: фільм
+    ipa: /filʲm/
+    translation: film/movie
+    pos: noun
+    gender: m
+  - lemma: ходити
+    ipa: /xɔˈdɪtɪ/
+    translation: to walk
+    pos: verb
+  - lemma: хід
+    ipa: /xid/
+    translation: move/turn
+    pos: noun
+    gender: m
+  - lemma: їздити
+    ipa: /ˈjizdɪtɪ/
+    translation: to ride/drive
+    pos: verb
+  - lemma: їсти
+    ipa: /ˈjistɪ/
+    translation: to eat
+    pos: verb

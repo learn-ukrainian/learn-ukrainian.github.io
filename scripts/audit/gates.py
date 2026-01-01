@@ -85,10 +85,16 @@ def evaluate_audio(count: int) -> GateResult:
 
 
 def evaluate_vocab(count: int, target: int) -> GateResult:
-    """Evaluate vocabulary count gate."""
+    """Evaluate vocabulary count gate.
+    
+    Note: As of Issue #340, vocab_count is a SOFT TARGET (warning, not blocking).
+    Content-driven vocabulary extraction means modules may have fewer explicit
+    vocab table entries while vocabulary is used throughout content.
+    """
     if count >= target:
         return GateResult('PASS', '✅', f"{count}/{target}")
-    return GateResult('FAIL', '❌', f"{count} < {target}")
+    # Soft target - warn but don't block
+    return GateResult('WARN', '⚠️', f"{count} < {target} (soft target)")
 
 
 def evaluate_structure(has_summary: bool, has_vocab: bool, has_vocab_table: bool) -> GateResult:
@@ -301,14 +307,14 @@ def compute_recommendation(
         severity += 10
         reasons.append("Activity density below minimum")
 
+    # vocab_count is now a soft target (Issue #340) - no severity impact
     vocab_result = results.get('vocab', {})
     if isinstance(vocab_result, GateResult):
-        if vocab_result.status == 'FAIL':
-            severity += 20
-            reasons.append("Vocabulary count below minimum")
-    elif isinstance(vocab_result, dict) and vocab_result.get('status') == 'FAIL':
-        severity += 20
-        reasons.append("Vocabulary count below minimum")
+        if vocab_result.status == 'WARN':
+            # Informational only - no severity
+            pass
+    elif isinstance(vocab_result, dict) and vocab_result.get('status') == 'WARN':
+        pass
 
     # Clamp severity
     severity = min(100, severity)

@@ -1,20 +1,21 @@
 # Audit Report: 14-mine-and-yours.md
-**Phase:** A1 | **Level:** A1 | **Pedagogy:** "PPP" | **Target:** 750
+**Phase:** A1.2 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1463/750
+- **Words:** ✅ 1467/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 36/1
+- **Vocab:** ✅ 25/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 31.6% (target 25-40% (M14))
+- **Immersion:** 🇺🇦 28.9% (target 25-40% (M14))
+- **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -25,20 +26,10 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Mine and Yours** | ⚪️ | 0 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 105 | Included in Core |
-| **Presentation** | ✅ | 559 | Included in Core |
-| **Practice** | ⚪️ | 225 | Skipped |
+| **Presentation** | ✅ | 562 | Included in Core |
+| **Practice** | ⚪️ | 226 | Skipped |
 | **Production** | ➖ | 212 | Excluded Type |
-| **Cultural Insight** | ✅ | 206 | Included in Core |
-| **Summary** | ✅ | 156 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Possessive Forms** | 🎮 | 8 | Activity (8 items, min 8) |
-| **group-sort: Gender Agreement** | 🎮 | 12 | Activity (12 items, min 12) |
-| **quiz: Choose the Correct Possessive** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: Possessive Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Complete with Possessives** | 🎮 | 15 | Activity (15 items, min 8) |
-| **quiz: Possessive Sentence Order** | 🎮 | 15 | Activity (15 items, min 8) |
-| **group-sort: Інваріантні vs Змінні** | 🎮 | 12 | Activity (12 items, min 12) |
-| **quiz: Cultural Context** | 🎮 | 12 | Activity (12 items, min 8) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Cultural Insight** | ✅ | 207 | Included in Core |
+| **Summary** | ✅ | 155 | Included in Core |

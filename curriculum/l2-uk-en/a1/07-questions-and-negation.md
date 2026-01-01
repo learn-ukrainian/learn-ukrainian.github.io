@@ -1,32 +1,3 @@
----
-module: a1-07
-title: 'Questions & Negation'
-subtitle: 'Asking Questions and Saying No'
-version: '1.0'
-phase: 'A1.1'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: 'full'
-tags:
-  - questions
-  - negation
-  - question-words
-  - frequency-adverbs
-grammar:
-  - 'Yes/no questions with чи'
-  - 'Question words (що, хто, де, куди, звідки, коли, чому, як, скільки)'
-  - 'Negation with не'
-  - 'Double negation with ніколи'
-  - 'Frequency adverbs'
-objectives:
-  - "Ask yes/no questions using 'чи'"
-  - 'Form questions with question words (що, хто, де, коли, etc.)'
-  - "Make negative statements with 'не'"
-  - 'Understand frequency adverbs (завжди, часто, іноді, ніколи)'
-vocabulary_count: 28
-vocab_count: 25
----
-
 # Questions & Negation
 
 ## Warm-up
@@ -253,33 +224,3 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 > **Negation:** [Double Negation Rules](https://www.ukrainianlessons.com/negation-in-ukrainian/) — Master Ukrainian negative sentences
 >
 > **Useful Questions:** [Short Ukrainian Questions](https://www.ukrainianlessons.com/useful-ukrainian-questions/) — Practical phrases for travelers
-
-# Vocabulary
-
-| Word        | IPA             | English        | POS   | Gender | Note |
-| ----------- | --------------- | -------------- | ----- | ------ | ---- |
-| америка     | /ɑˈmɛrɪkɑ/      | America        | name  | ж      |      |
-| англійський | /ɑnˈhlijʲsʲkɪj/ | English (adj)  | adj   | ч      |      |
-| вивчати     | /vɪwˈt͡ʃɑtɪ/     | to study/learn | verb  | -      |      |
-| з           | /z/             | from/with      | other | -      |      |
-| завжди      | /zɑwˈʒdɪ/       | always         | adv   | -      |      |
-| звати       | /ˈzvɑtɪ/        | to call (name) | verb  | -      |      |
-| звідки      | /ˈzvidkɪ/       | from where     | adv   | -      |      |
-| йти         | /jtɪ/           | to go          | verb  | -      |      |
-| коли        | /kɔˈlɪ/         | when           | adv   | -      |      |
-| коштувати   | /kɔˈʃtuvɑtɪ/    | to cost        | verb  | -      |      |
-| куди        | /kuˈdɪ/         | where to       | adv   | -      |      |
-| нормально   | /nɔrˈmɑlʲnɔ/    | normally/fine  | adv   | -      |      |
-| ніколи      | /niˈkɔlɪ/       | never          | adv   | -      |      |
-| ніщо        | /niˈʃt͡ʃɔ/       | nothing        | pron  | -      |      |
-| оля         | /ˈɔlʲɑ/         | Olya           | name  | ж      |      |
-| питальний   | /pɪˈtɑlʲnɪj/    | question (adj) | adj   | ч      |      |
-| пити        | /ˈpɪtɪ/         | to drink       | verb  | -      |      |
-| правда      | /ˈprɑwdɑ/       | truth          | noun  | ж      |      |
-| рідко       | /ˈridkɔ/        | rarely         | adv   | -      |      |
-| скільки     | /ˈskilʲkɪ/      | how much/many  | adv   | -      |      |
-| туалет      | /tuɑˈlɛt/       | toilet         | noun  | ч      |      |
-| хотіти      | /xɔˈtitɪ/       | to want        | verb  | -      |      |
-| часто       | /ˈt͡ʃɑstɔ/       | often          | adv   | -      |      |
-| чому        | /t͡ʃɔˈmu/        | why            | adv   | -      |      |
-| іноді       | /ˈinɔdi/        | sometimes      | adv   | -      |      |

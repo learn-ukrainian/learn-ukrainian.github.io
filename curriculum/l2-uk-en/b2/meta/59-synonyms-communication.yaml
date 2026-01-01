@@ -1,0 +1,26 @@
+module: b2-59
+title: 'Синоніми: Комунікація та Мовлення'
+subtitle: Synonyms - Communication and Speech
+version: '1.0'
+phase: B2.2 [Phraseology & Synonymy]
+pedagogy: CBI
+duration: 90
+transliteration: none
+immersion: 100
+tags:
+  - vocabulary
+  - synonyms
+  - communication
+grammar:
+  - Nuances in verbs of speech
+  - Reporting and dialogue structure
+objectives:
+  - Учень може розрізняти відтінки значень дієслів мовлення (казати, повідомляти,
+    заявляти)
+  - Учень вміє обирати точне дієслово для запиту інформації залежно від контексту
+    (питати, цікавитися, допитувати)
+  - Учень розуміє стилістичні відмінності між офіційним та розмовним мовленням
+vocabulary_count: 35
+register: публіцистичний
+vocab_count: 58
+slug: 59-synonyms-communication

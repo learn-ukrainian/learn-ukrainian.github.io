@@ -1,5 +1,5 @@
 # Audit Report: 01-the-cyrillic-code-i.md
-**Phase:** A1 | **Level:** A1 | **Pedagogy:** "PPP" | **Target:** 300
+**Phase:** A1.1 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 300
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -10,11 +10,12 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/1
+- **Vocab:** ✅ 41/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 9.7% (target 5-15% (M01))
+- **Immersion:** 🇺🇦 6.9% (target 5-15% (M01))
+- **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -25,7 +26,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **The Cyrillic Code I** | ⚪️ | 0 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 109 | Included in Core |
 | **Presentation** | ✅ | 351 | Included in Core |
 | **Practice** | ⚪️ | 134 | Skipped |
@@ -33,13 +34,3 @@
 | **Production** | ➖ | 58 | Excluded Type |
 | **Summary** | ✅ | 122 | Included in Core |
 | **Need More Practice?** | ⚪️ | 51 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: True Friends** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: False Friends Sound** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Letter Types** | 🎮 | 18 | Activity (18 items, min 12) |
-| **quiz: Reading Words** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: Letter Recognition** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Complete the Word** | 🎮 | 12 | Activity (12 items, min 8) |
-| **anagram:Build the Word** | 🎮 | 12 | Activity (12 items, min 8) |
-| **anagram:International Words** | 🎮 | 12 | Activity (12 items, min 8) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |

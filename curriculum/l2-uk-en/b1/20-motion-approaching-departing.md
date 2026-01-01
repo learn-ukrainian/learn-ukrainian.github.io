@@ -1,27 +1,3 @@
----
-module: b1-20
-title: "Рух: наближення і віддалення"
-subtitle: "Motion - Approaching & Departing"
-version: "1.0"
-phase: "B1.2 Motion"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - motion-verbs
-  - prefixes
-grammar:
-  - "Prefixes під-, від-, до-"
-  - "Approaching, departing, reaching patterns"
-objectives:
-  - "Learner can use під- for approaching"
-  - "Learner can use від- for departing"
-  - "Learner can use до- for reaching destination"
-vocabulary_count: 25
-vocab_count: 63
----
-
 # Рух: наближення і віддалення
 
 > 🎯 **Чому це важливо?**

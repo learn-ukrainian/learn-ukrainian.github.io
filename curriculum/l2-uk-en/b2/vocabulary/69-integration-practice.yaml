@@ -1,0 +1,212 @@
+module: 69-integration-practice
+level: B2
+version: '2.0'
+items:
+  - lemma: акорд
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: байдик
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вдосконалений
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: вивчене
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: вплітати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: вставляти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: втерти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: відшліфовувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: дипломат
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: донести
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: еся
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: забаритися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: змістовний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: зоровий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: кейс
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: компетентний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: контекстуально
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: лямка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: механік
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: мотиваційний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: найцінніший
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: нарад
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: наступати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: непосильний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: оживляти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: перебивати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: переконливо
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: покроковий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: порозумітися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: пряма
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: підключати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: підкорити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: пілотаж
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: розберти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розкутий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: розрядити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: рідковживаний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: самовираження
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: самопрезентація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: скептик
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: складання
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: суперсил
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: твердо
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: утися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: фінішний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: човен
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m

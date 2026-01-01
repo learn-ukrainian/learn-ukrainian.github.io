@@ -1,30 +1,3 @@
----
-module: b1-85
-title: "Інтеграція лексики B1"
-subtitle: "B1 Vocabulary Integration"
-version: "1.0"
-phase: "B1.8 Skills & Integration"
-focus: integration
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-grammar:
-  - "vocabulary collocations review"
-  - "register and formality"
-  - "cross-domain usage"
-tags:
-  - integration
-  - vocabulary
-  - review
-objectives:
-  - "Learner can demonstrate mastery of all B1 vocabulary domains"
-  - "Learner can apply vocabulary in integrated cross-domain contexts"
-  - "Learner can identify and correct vocabulary usage errors"
-  - "Learner is prepared for B2 vocabulary challenges"
-vocabulary_count: 35
-vocab_count: 28
----
-
 # Інтеграція лексики B1
 
 > 🎯 **Мета цього модуля**

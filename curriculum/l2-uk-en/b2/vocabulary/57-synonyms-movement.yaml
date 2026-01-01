@@ -1,0 +1,628 @@
+module: 57-synonyms-movement
+level: B2
+version: '2.0'
+items:
+  - lemma: автошлях
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: альпіність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: багатогранність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: багнюк
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: байдарк
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: брест
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: брети
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: бриз
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: буцький
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: вантаж
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вантажівка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: вартувати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: варяг
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вектор
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вершник
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вештатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: вирушати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: всередину
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: віддалитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: вікінг
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: гальмувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: героїчний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: говерли
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: гордо
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: греки
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: дворик
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: дертися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: десні
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: диктувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: евакуація
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: життєдіяльність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: затора
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: зачіпка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: злив
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: злодій
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: змивати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: змушений
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: каньйон
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: князівський
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: кочовий
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: крастися
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: крило
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: крокувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: курсувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: кущ
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: кіннота
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: логістика
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: магістраль
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: мандр
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: мандрувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: мандрівник
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: маневрувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: манер
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: марафонський
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: маршь
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: мобільність
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: монотонний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: мчат
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: мчати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: мчатися
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: мчити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: міграційний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: міграція
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: набережна
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: наблизитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: назустріч
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: налягати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: насуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: неконтрольувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: непомічений
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: нерівний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: неспішно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: нестися
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: ністися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: опишати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: палиця
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: палкий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: n
+  - lemma: парад
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: перевозити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: переліт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: переселення
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: переставати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: перестрибувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: перетнути
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: племен
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: пливти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: плист
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: повзати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: повзсти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: повзта
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: поза
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: покидати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: політ
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: потічка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: початківець
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: присмак
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: прихистка
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: прогресувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: прогулюватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: прокладати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: проноситися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: протискатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: підібрати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: ракет
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: розказувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розмірити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: скакати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: сунути
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: сунутися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: схил
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: табір
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: темп
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: трагічний
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: транспортувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: траєкторія
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: тупати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: угору
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: уздовж
+    ipa: ''
+    translation: ''
+    pos: other
+  - lemma: утома
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: філософ
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: хаб
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: ходьба
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: цілеспрямований
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: чагарник
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: чайк
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: черепаха
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: чимчикування
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: чимчикувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: чутливий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: швидкісний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: шкутильгат
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: шкутильгати
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: m
+  - lemma: штурмувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: інтегрованість
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: інтерсіт
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: їжачок
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m

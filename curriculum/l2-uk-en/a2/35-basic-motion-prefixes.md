@@ -1,30 +1,3 @@
----
-module: a2-35
-title: Motion Prefixes I — Entering and Exiting
-subtitle: "Mastering the В- and ВИ- Logic"
-version: "1.0"
-phase: "A2.4"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - grammar
-  - verbs
-  - prefixes
-  - word-formation
-grammar:
-  - prefix в- (entry)
-  - prefix ви- (exit)
-  - perfective motion verbs
-  - directional cases (в + Acc, з + Gen)
-objectives:
-  - "Learner can distinguish between entering and exiting space using prefixes"
-  - "Learner can use correct destination prepositions for motion"
-  - "Learner can express the completion of a movement"
-vocabulary_count: 25
-vocab_count: 22
----
-
 # Summary
 
 ## The Logic of Movement 🌍

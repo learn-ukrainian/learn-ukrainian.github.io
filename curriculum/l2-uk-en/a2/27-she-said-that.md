@@ -1,28 +1,3 @@
----
-module: a2-27
-title: She Said That...
-subtitle: "Reporting What People Say"
-version: "1.0"
-phase: "A2.3"
-pedagogy: "Communicative"
-duration: "60 min"
-transliteration: none
-tags:
-  - speech
-  - dialogue
-  - gossip
-grammar:
-  - reported speech
-  - that-clauses
-  - speech verbs
-objectives:
-  - "Learner can report simple statements"
-  - "Learner understands tense handling in reported speech"
-  - "Learner can use verbs like 'say', 'tell', 'ask'"
-vocabulary_count: 25
-vocab_count: 35
----
-
 # Summary
 
 ## Warm-up

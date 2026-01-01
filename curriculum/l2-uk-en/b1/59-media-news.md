@@ -1,28 +1,3 @@
----
-module: b1-59
-title: "Медіа та новини"
-subtitle: "Media and News"
-version: "1.0"
-phase: "B1.5 Vocabulary Expansion I"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "media vocabulary collocations"
-  - "journalistic expressions"
-tags:
-  - vocabulary
-  - media
-  - journalism
-objectives:
-  - "Learner can use 30 media and journalism vocabulary words in context"
-  - "Learner can distinguish between types of media content"
-  - "Learner can form natural collocations with media vocabulary"
-vocabulary_count: 35
-vocab_count: 62
----
-
 # Медіа та новини
 
 > 🎯 **Чому це важливо?**

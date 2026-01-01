@@ -1,0 +1,110 @@
+module: 07-questions-and-negation
+level: A1
+version: '2.0'
+items:
+  - lemma: америка
+    ipa: /ɑˈmɛrɪkɑ/
+    translation: America
+    pos: propn
+    gender: f
+  - lemma: англійський
+    ipa: /ɑnˈhlijʲsʲkɪj/
+    translation: English (adj)
+    pos: adj
+    gender: m
+  - lemma: вивчати
+    ipa: /vɪwˈt͡ʃɑtɪ/
+    translation: to study/learn
+    pos: verb
+  - lemma: з
+    ipa: /z/
+    translation: from/with
+    pos: other
+  - lemma: завжди
+    ipa: /zɑwˈʒdɪ/
+    translation: always
+    pos: adv
+  - lemma: звати
+    ipa: /ˈzvɑtɪ/
+    translation: to call (name)
+    pos: verb
+  - lemma: звідки
+    ipa: /ˈzvidkɪ/
+    translation: from where
+    pos: adv
+  - lemma: йти
+    ipa: /jtɪ/
+    translation: to go
+    pos: verb
+  - lemma: коли
+    ipa: /kɔˈlɪ/
+    translation: when
+    pos: adv
+  - lemma: коштувати
+    ipa: /kɔˈʃtuvɑtɪ/
+    translation: to cost
+    pos: verb
+  - lemma: куди
+    ipa: /kuˈdɪ/
+    translation: where to
+    pos: adv
+  - lemma: нормально
+    ipa: /nɔrˈmɑlʲnɔ/
+    translation: normally/fine
+    pos: adv
+  - lemma: ніколи
+    ipa: /niˈkɔlɪ/
+    translation: never
+    pos: adv
+  - lemma: ніщо
+    ipa: /niˈʃt͡ʃɔ/
+    translation: nothing
+    pos: pron
+  - lemma: оля
+    ipa: /ˈɔlʲɑ/
+    translation: Olya
+    pos: propn
+    gender: f
+  - lemma: питальний
+    ipa: /pɪˈtɑlʲnɪj/
+    translation: question (adj)
+    pos: adj
+    gender: m
+  - lemma: пити
+    ipa: /ˈpɪtɪ/
+    translation: to drink
+    pos: verb
+  - lemma: правда
+    ipa: /ˈprɑwdɑ/
+    translation: truth
+    pos: noun
+    gender: f
+  - lemma: рідко
+    ipa: /ˈridkɔ/
+    translation: rarely
+    pos: adv
+  - lemma: скільки
+    ipa: /ˈskilʲkɪ/
+    translation: how much/many
+    pos: adv
+  - lemma: туалет
+    ipa: /tuɑˈlɛt/
+    translation: toilet
+    pos: noun
+    gender: m
+  - lemma: хотіти
+    ipa: /xɔˈtitɪ/
+    translation: to want
+    pos: verb
+  - lemma: часто
+    ipa: /ˈt͡ʃɑstɔ/
+    translation: often
+    pos: adv
+  - lemma: чому
+    ipa: /t͡ʃɔˈmu/
+    translation: why
+    pos: adv
+  - lemma: іноді
+    ipa: /ˈinɔdi/
+    translation: sometimes
+    pos: adv

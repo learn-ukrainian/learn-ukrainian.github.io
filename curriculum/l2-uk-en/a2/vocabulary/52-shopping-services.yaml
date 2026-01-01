@@ -1,0 +1,214 @@
+module: 52-shopping-services
+level: A2
+version: '2.0'
+items:
+- lemma: адміністратор
+  ipa: ɐdmʲinʲisˈtrɑtor
+  translation: administrator
+  pos: noun
+  gender: m
+- lemma: безконтактний
+  ipa: bezkonˈtɑktnɪj
+  translation: contactless
+  pos: adj
+  gender: f
+- lemma: брендовий
+  ipa: ˈbrɛndoʋɪj
+  translation: brand (adj)
+  pos: adj
+  gender: m
+- lemma: витратити
+  ipa: vɪˈtrɑtɪte
+  translation: to spend (perf)
+  pos: verb
+- lemma: відділення
+  ipa: vidˈdʲilenʲːɐ
+  translation: branch/department
+  pos: noun
+  gender: n
+- lemma: доставляти
+  ipa: dostɐu̯ˈlʲɑte
+  translation: to deliver (imp)
+  pos: verb
+- lemma: забирати
+  ipa: zɐbɪˈrɑte
+  translation: to take away (imp)
+  pos: verb
+- lemma: забронювати
+  ipa: zɐbronʲuˈʋɑte
+  translation: to book (perf)
+  pos: verb
+- lemma: зайняти
+  ipa: zɐjˈnʲɑte
+  translation: to occupy/borrow (perf)
+  pos: verb
+  gender: n
+- lemma: залишати
+  ipa: zɐlɪˈʃɑte
+  translation: to leave (imp)
+  pos: verb
+- lemma: записаний
+  ipa: zɐˈpɪsɐnɪj
+  translation: recorded
+  pos: adj
+  gender: f
+- lemma: зачіска
+  ipa: ˈzɑt͡ʃiskɐ
+  translation: hairstyle
+  pos: noun
+  gender: f
+- lemma: красуня
+  ipa: krɐˈsunʲɐ
+  translation: beauty
+  pos: noun
+  gender: f
+- lemma: куштувати
+  ipa: kuʃtuˈʋɑte
+  translation: to taste
+  pos: verb
+- lemma: магія
+  ipa: ˈmɑhʲijɐ
+  translation: magic
+  pos: noun
+  gender: f
+- lemma: молл
+  ipa: mɔl
+  translation: mall
+  pos: noun
+  gender: m
+- lemma: міряти
+  ipa: ˈmʲirʲɐte
+  translation: to measure/try on (imp)
+  pos: verb
+- lemma: одержувач
+  ipa: oˈdɛrʒuʋɐt͡ʃ
+  translation: recipient
+  pos: noun
+  gender: m
+- lemma: оператор
+  ipa: opeˈrɑtor
+  translation: operator
+  pos: noun
+  gender: m
+- lemma: отримання
+  ipa: otˈrɪmɐnʲːɐ
+  translation: receipt
+  pos: noun
+  gender: n
+- lemma: оформлювати
+  ipa: oˈfɔrmlʲuʋɐte
+  translation: to process/register
+  pos: verb
+- lemma: перукар
+  ipa: peruˈkɑr
+  translation: hairdresser
+  pos: noun
+  gender: m
+- lemma: перукарня
+  ipa: peruˈkɑrnʲɐ
+  translation: barbershop/salon
+  pos: noun
+  gender: f
+- lemma: плата
+  ipa: ˈplɑtɐ
+  translation: payment/fee
+  pos: noun
+  gender: f
+- lemma: попробовать
+  ipa: poˈprobovɐtʲ
+  translation: to try (Russian, typo спробувати)
+  pos: other
+- lemma: прибути
+  ipa: prɪˈbute
+  translation: to arrive (perf)
+  pos: verb
+  gender: f
+- lemma: приватбанк
+  ipa: prɪvɐtˈbɑnk
+  translation: PrivatBank
+  pos: propn
+  gender: m
+- lemma: прикласти
+  ipa: prɪˈklɑste
+  translation: to attach/apply (perf)
+  pos: verb
+- lemma: продуктовий
+  ipa: produkˈtɔʋɪj
+  translation: grocery (adj)
+  pos: adj
+  gender: m
+- lemma: розпродаж
+  ipa: rɔzˈprodɐʒ
+  translation: sale
+  pos: noun
+  gender: m
+- lemma: сервіс
+  ipa: ˈsɛrvis
+  translation: service
+  pos: noun
+  gender: m
+- lemma: сканувати
+  ipa: skɐnuˈʋɑte
+  translation: to scan
+  pos: verb
+- lemma: скинутися
+  ipa: ˈskɪnutɪsʲɐ
+  translation: to chip in (perf)
+  pos: verb
+- lemma: смс
+  ipa: smˈs (es-em-es)
+  translation: SMS
+  pos: noun
+  gender: m
+- lemma: стрижка
+  ipa: ˈstrɪʒkɐ
+  translation: haircut
+  pos: noun
+  gender: f
+- lemma: творог
+  ipa: tvoˈrɔh
+  translation: curd (Russian, typo сир)
+  pos: other
+- lemma: тойота
+  ipa: toˈjotɐ
+  translation: Toyota
+  pos: propn
+  gender: f
+- lemma: торговий
+  ipa: torˈhɔʋɪj
+  translation: trade (adj)
+  pos: adj
+- lemma: торгуватися
+  ipa: torhuˈʋɑtɪsʲɐ
+  translation: to bargain
+  pos: verb
+- lemma: тістечка
+  ipa: ˈtʲistet͡ʃkɐ
+  translation: pastries
+  pos: noun
+  gender: n
+- lemma: фарбування
+  ipa: fɐrbuˈʋɑnʲːɐ
+  translation: dyeing/painting
+  pos: noun
+  gender: n
+- lemma: хімчистка
+  ipa: ximˈt͡ʃɪstkɐ
+  translation: dry cleaning
+  pos: noun
+  gender: f
+- lemma: чайова
+  ipa: t͡ʃɐjoˈvɑ
+  translation: tip (money) gen? or чайові
+  pos: noun
+  gender: m
+- lemma: черга
+  ipa: ˈt͡ʃɛrhɐ
+  translation: queue/turn
+  pos: noun
+  gender: f
+- lemma: шопінг
+  ipa: ˈʃɔpinh
+  translation: shopping
+  pos: noun
+  gender: m

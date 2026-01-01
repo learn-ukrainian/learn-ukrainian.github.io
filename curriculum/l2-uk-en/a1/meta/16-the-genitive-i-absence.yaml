@@ -1,0 +1,28 @@
+module: a1-16
+title: The Genitive I - Absence
+subtitle: Talking About What You Don't Have
+version: '1.0'
+phase: A1.2 - Navigation
+pedagogy: PPP
+duration: 60 min
+transliteration: vocabulary-only
+tags:
+  - genitive-case
+  - absence
+  - negation
+  - немає
+  - prepositions
+grammar:
+  - Genitive case for absence and negation
+  - Genitive endings (masculine -у/-а, feminine -и/-і, neuter -а)
+  - Expression "немає + genitive"
+  - Preposition "без + genitive"
+  - Possession pattern "у + person + немає + genitive"
+objectives:
+  - Learner can express absence using немає + genitive
+  - Learner can use genitive case for negation
+  - Learner can say what they don't have (немає часу)
+  - Learner can use без + genitive (without)
+vocabulary_count: 25
+vocab_count: 43
+slug: 16-the-genitive-i-absence

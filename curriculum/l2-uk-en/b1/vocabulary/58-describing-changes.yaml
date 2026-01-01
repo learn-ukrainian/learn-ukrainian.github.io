@@ -1,0 +1,154 @@
+module: 58-describing-changes
+level: B1
+version: '2.0'
+items:
+- lemma: активніше
+  ipa: /akˈtɪu̯nʲiʃɛ/
+  translation: more actively
+  pos: adv
+- lemma: антонімічний
+  ipa: /antɔnʲiˈmʲit͡ʃnɪj/
+  translation: antonymous
+  pos: adj
+- lemma: артеріальний
+  ipa: /artɛrʲiˈalʲnɪj/
+  translation: arterial
+  pos: adj
+  gender: m
+- lemma: відкритіший
+  ipa: /vidˈkrɪtʲiʃɪj/
+  translation: more open
+  pos: adj
+  gender: n
+- lemma: відсотковий
+  ipa: /vidsɔtˈkɔvɪj/
+  translation: percentage (adj)
+  pos: adj
+- lemma: вісімома
+  ipa: /visʲiˈmɔma/
+  translation: eight (instr.)
+  pos: other
+- lemma: запальний
+  ipa: /zaˈpalʲnɪj/
+  translation: inflammatory
+  pos: adj
+  gender: m
+- lemma: захворювання
+  ipa: /zaˈxvɔrʲuvanʲːa/
+  translation: disease
+  pos: noun
+  gender: n
+- lemma: звуження
+  ipa: /ˈzvuʒɛnʲːa/
+  translation: narrowing
+  pos: noun
+  gender: n
+- lemma: звужуватися
+  ipa: /ˈzvuʒuvatɪsʲa/
+  translation: to narrow
+  pos: verb
+- lemma: зменшуватися
+  ipa: /ˈzmɛnʃuvatɪsʲa/
+  translation: to decrease
+  pos: verb
+- lemma: карантинний
+  ipa: /karanˈtɪnnɪj/
+  translation: quarantine (adj)
+  pos: adj
+- lemma: коригуватися
+  ipa: /kɔrɪhuˈvatɪsʲa/
+  translation: to be adjusted
+  pos: verb
+- lemma: маржа
+  ipa: /marˈʒa/
+  translation: margin
+  pos: noun
+  gender: f
+- lemma: метеоролог
+  ipa: /mɛtɛɔˈrɔlɔh/
+  translation: meteorologist
+  pos: noun
+  gender: m
+- lemma: напруженіший
+  ipa: /naˈpruʒɛnʲiʃɪj/
+  translation: tenser
+  pos: adj
+  gender: f
+- lemma: нафта
+  ipa: /ˈnafta/
+  translation: oil
+  pos: noun
+  gender: f
+- lemma: незначно
+  ipa: /nɛˈznat͡ʃnɔ/
+  translation: insignificantly
+  pos: adv
+- lemma: пальне
+  ipa: /palʲˈnɛ/
+  translation: fuel
+  pos: noun
+  gender: n
+- lemma: повільніший
+  ipa: /pɔˈvilʲnʲiʃɪj/
+  translation: slower
+  pos: adj
+  gender: m
+- lemma: погіршуватися
+  ipa: /pɔˈhʲirʃuvatɪsʲa/
+  translation: to worsen
+  pos: verb
+- lemma: помітно
+  ipa: /pɔˈmʲitnɔ/
+  translation: noticeably
+  pos: adv
+- lemma: послаблюватися
+  ipa: /pɔˈslablʲuvatɪsʲa/
+  translation: to weaken
+  pos: verb
+- lemma: потеплішати
+  ipa: /pɔtɛˈplʲiʃatɪ/
+  translation: to get warmer
+  pos: verb
+- lemma: протриматися
+  ipa: /prɔˈtrɪmatɪsʲa/
+  translation: to hold out
+  pos: verb
+- lemma: піднімитися
+  ipa: /pidnʲiˈmɪtɪsʲa/
+  translation: to rise (typo)
+  pos: verb
+- lemma: розширюватися
+  ipa: /rɔzˈʃɪrʲuvatɪsʲa/
+  translation: to expand
+  pos: verb
+- lemma: сентенець
+  ipa: /sɛnˈtɛnɛt͡sʲ/
+  translation: ??? (typo)
+  pos: noun
+  gender: f
+- lemma: смог
+  ipa: /smɔh/
+  translation: smog
+  pos: noun
+  gender: m
+- lemma: спадати
+  ipa: /spaˈdatɪ/
+  translation: to fall
+  pos: verb
+- lemma: сповільнюватися
+  ipa: /spɔˈvilʲnʲuvatɪsʲa/
+  translation: to slow down
+  pos: verb
+- lemma: сприятливіший
+  ipa: /sprɪˈjatlɪvʲiʃɪj/
+  translation: more favorable
+  pos: adj
+- lemma: удвічі
+  ipa: /uˈdvʲit͡ʃʲi/
+  translation: twice
+  pos: adv
+- lemma: хвірий
+  ipa: /ˈxvʲirɪj/
+  translation: sick (typo)
+  pos: noun
+  gender: m

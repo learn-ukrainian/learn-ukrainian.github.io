@@ -1,0 +1,64 @@
+module: 53-abstract-concepts-processes
+level: B1
+version: '2.0'
+items:
+- lemma: докорінний
+  ipa: /dɔkɔˈrʲinːɪj/
+  translation: radical
+  pos: adj
+  gender: n
+- lemma: застрязати
+  ipa: /zastrʲaˈzatɪ/
+  translation: to get stuck (typo)
+  pos: verb
+  gender: m
+- lemma: навик
+  ipa: /ˈnavɪk/
+  translation: skill
+  pos: noun
+  gender: m
+- lemma: оптимізація
+  ipa: /ɔptɪmʲiˈzat͡sʲija/
+  translation: optimization
+  pos: noun
+  gender: f
+- lemma: плановий
+  ipa: /ˈplanɔvɪj/
+  translation: planned
+  pos: adj
+  gender: f
+- lemma: податковий
+  ipa: /pɔdatˈkɔvɪj/
+  translation: tax (adj)
+  pos: adj
+  gender: f
+- lemma: реалії
+  ipa: /rɛˈalʲiji/
+  translation: realities
+  pos: noun
+  gender: f
+- lemma: регрес
+  ipa: /rɛhˈrɛs/
+  translation: regression
+  pos: noun
+  gender: m
+- lemma: собівартість
+  ipa: /sɔbiˈvartʲisʲtʲ/
+  translation: cost price
+  pos: noun
+  gender: f
+- lemma: спадання
+  ipa: /spaˈdanʲːa/
+  translation: decline
+  pos: noun
+  gender: n
+- lemma: стабілізація
+  ipa: /stabʲilʲiˈzat͡sʲija/
+  translation: stabilization
+  pos: noun
+  gender: f
+- lemma: тренда
+  ipa: /ˈtrɛnda/
+  translation: trend (gen.)
+  pos: noun
+  gender: m

@@ -1,22 +1,3 @@
----
-module: a2-53
-title: Sports & Fitness
-subtitle: "Active Life in Ukraine"
-version: "1.0"
-phase: "A2"
-pedagogy: "Narrative"
-duration: 60
-transliteration: none
-tags: ["vocabulary", "sports", "health", "hobby"]
-grammar: ["instrumental-with-verbs", "play-prep-review"]
-objectives:
-  - Talk about sports: футбол, бокс, біг
-  - Describe fitness: тренування, спортзал
-  - Discuss watching sports: матч, вболівальник
-  - Use play verbs correctly: грати в
-vocab_count: 50
----
-
 # Sports & Fitness
 
 ## Warm-up

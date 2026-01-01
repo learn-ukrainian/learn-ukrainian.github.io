@@ -1,32 +1,3 @@
----
-module: b2-46
-title: "Прислів'я II: Природа, час і обережність"
-subtitle: "Proverbs II: Nature, Time & Caution"
-version: "1.0"
-phase: "B2.2 [Phraseology & Synonymy]"
-pedagogy: "CBI"
-duration: 90
-transliteration: none
-immersion: 100
-tags:
-  - phraseology
-  - proverbs
-  - nature
-  - time
-  - caution
-  - planning
-grammar:
-  - "Fixed expressions (фразеологічні одиниці)"
-  - "Proverb structure and variation"
-objectives:
-  - "Learner can recognize and interpret 16 core Ukrainian proverbs about nature, time, and caution"
-  - "Learner can use proverbs appropriately to give advice about planning, risk, and patience"
-  - "Learner understands the cultural values embedded in Ukrainian folk wisdom about natural cycles and prudence"
-vocabulary_count: 36
-register: "varies"
-vocab_count: 66
----
-
 # Прислів'я II: Природа, час і обережність
 
 > 🎯 **Чому це важливо?**

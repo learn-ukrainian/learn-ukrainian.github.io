@@ -1,29 +1,3 @@
----
-module: a2-32
-title: When & While
-subtitle: "Time Clauses"
-version: "1.0"
-phase: "A2.3"
-pedagogy: "Expressive"
-duration: "60 min"
-transliteration: none
-tags:
-  - connectors
-  - time
-  - grammar
-  - logic
-grammar:
-  - time clauses (коли, поки)
-  - sequence of events (після того як)
-  - simultaneous events
-objectives:
-  - "Learner can express sequence (before/after)"
-  - "Learner can express duration (while)"
-  - "Learner understands 'як тільки'"
-vocabulary_count: 25
-vocab_count: 23
----
-
 ## Warm-up
 
 Life is a sequence of events.

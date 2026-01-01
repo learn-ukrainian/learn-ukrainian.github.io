@@ -1,28 +1,3 @@
----
-module: a2-44
-title: "Food & Cooking"
-subtitle: "Kitchen Vocabulary and Cooking Expressions"
-version: "2.0"
-phase: "A2.5"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - vocabulary
-  - food
-  - cooking
-  - kitchen
-grammar:
-  - thematic vocabulary
-  - imperative for recipes
-objectives:
-  - "Learner knows food and cooking vocabulary"
-  - "Learner can describe meals and cooking processes"
-  - "Learner can follow simple recipes in Ukrainian"
-vocabulary_count: 35
-vocab_count: 77
----
-
 ## Warm-up
 
 Welcome to the kitchen! Food and cooking are central to Ukrainian culture. In this module, you will learn essential vocabulary for cooking, kitchen equipment, and describing food. After this lesson, you will be able to navigate a Ukrainian kitchen and follow basic recipes.

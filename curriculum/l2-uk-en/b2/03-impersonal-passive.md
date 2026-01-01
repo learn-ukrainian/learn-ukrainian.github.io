@@ -1,32 +1,3 @@
----
-module: b2-03
-title: "Безособові конструкції з -но/-то"
-subtitle: "The Impersonal Passive of Official Ukrainian"
-version: "1.0"
-phase: "B2.1a [Grammar & Register]"
-pedagogy: "TTT"
-register: "офіційно-діловий"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - passive
-  - register
-  - official-style
-grammar:
-  - "Impersonal passive -но/-то formation"
-  - "No agreement (always neuter)"
-  - "Accusative object with impersonal passive"
-  - "High register: official documents, announcements"
-objectives:
-  - "Learner can form -но/-то constructions from past passive participles"
-  - "Learner understands the impersonal nature (no subject agreement)"
-  - "Learner recognizes -но/-то as the hallmark of official Ukrainian style"
-  - "Learner can use -но/-то appropriately in formal contexts"
-vocabulary_count: 25
-vocab_count: 53
----
-
 # Безособові конструкції з -но/-то
 
 > 🎯 **Чому це важливо?**

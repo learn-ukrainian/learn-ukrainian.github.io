@@ -1,0 +1,309 @@
+module: 42-aspect-nuances-imperative-infinitive
+level: B2
+version: '2.0'
+items:
+  - lemma: акуратно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: безглуздо
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: беркут
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: браття
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: буклет
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: бульйон
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: вибігти
+    ipa: ''
+    translation: ''
+    pos: verb
+    gender: f
+  - lemma: випадковий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: виписатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: ворог
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: відходити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: галино
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: f
+  - lemma: германський
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: годувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: гостинно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: дв
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: диєт
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: дорожній
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: m
+  - lemma: дрібно
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: екскурсант
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: експонат
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: заблокований
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: завітати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: задача
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: залах
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: запалити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: захар
+    ipa: ''
+    translation: ''
+    pos: propn
+    gender: m
+  - lemma: зачепи
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: зневажати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: зупитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: ковдр
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: коровай
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: крихкий
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: морозиво
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: n
+  - lemma: ндв
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: негайний
+    ipa: ''
+    translation: ''
+    pos: adj
+    gender: f
+  - lemma: панікувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: паркуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: плюти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: погратися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: подитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: порад
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: поручня
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: поріжти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: почисти
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: почистити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: поїст
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: пригощатися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: прийтися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: репетиція
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: f
+  - lemma: розбивати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розбий
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: розпочнити
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: романський
+    ipa: ''
+    translation: ''
+    pos: adj
+  - lemma: рушати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: слизько
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: соромитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: спалоха
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: спізнютися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: сфотографувати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: схвилюватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: схопитися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: сядати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: тікати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: фотоальб
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m
+  - lemma: фізично
+    ipa: ''
+    translation: ''
+    pos: adv
+  - lemma: частуватися
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: чіпати
+    ipa: ''
+    translation: ''
+    pos: verb
+  - lemma: штук
+    ipa: ''
+    translation: ''
+    pos: noun
+    gender: m

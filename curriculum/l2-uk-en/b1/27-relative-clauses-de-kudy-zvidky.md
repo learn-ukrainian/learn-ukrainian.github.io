@@ -1,28 +1,3 @@
----
-module: b1-27
-title: "Підрядні означальні: де, куди, звідки"
-subtitle: "Place Relative Clauses"
-version: "1.0"
-phase: "B1.3a Complex Sentences"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - relative-clauses
-  - complex-sentences
-  - place-adverbs
-grammar:
-  - "Place relatives with де, куди, звідки"
-  - "Distinction between static location and directional movement"
-objectives:
-  - "Learner understands difference between де, куди, звідки"
-  - "Learner can form relative clauses describing places"
-  - "Learner can choose correct place relative for context"
-vocabulary_count: 25
-vocab_count: 52
----
-
 # Підрядні означальні: де, куди, звідки
 
 > 🎯 **Чому це важливо?**
@@ -348,7 +323,5 @@ vocab_count: 52
 > - 🎧 [Ukrainian Grammar](https://www.youtube.com/results?search_query=ukrainian+grammar) — подкаст уроки
 
 ---
-
-
 
 ---

@@ -1,28 +1,3 @@
----
-module: b1-76
-title: "Українська музика сьогодні"
-subtitle: "Contemporary Ukrainian Music"
-version: "1.0"
-phase: "B1.7 Contemporary Ukraine"
-focus: cultural
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-tags:
-  - cultural
-  - music
-  - contemporary
-grammar:
-  - "cultural vocabulary in context"
-objectives:
-  - "Learner can discuss Ukrainian music genres and artists in context"
-  - "Learner can understand authentic texts about Ukrainian music scene"
-  - "Learner can use music-related vocabulary to express preferences"
-  - "Learner can compare Ukrainian music with their own musical culture"
-vocabulary_count: 25
-vocab_count: 53
----
-
 # Українська музика сьогодні
 
 > 🎯 **Чому це важливо?**

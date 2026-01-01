@@ -1,20 +1,30 @@
 # Audit Report: 07-questions-and-negation.md
-**Phase:** A1 | **Level:** A1 | **Pedagogy:** "PPP" | **Target:** 500
+**Phase:** A1.1 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 500
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (1 words): звичайно...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
-- **Words:** ✅ 1121/500
+- **Words:** ✅ 1120/500
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 19/1
+- **Vocab:** ✅ 25/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 25.6% (target 15-35% (M07))
+- **Immersion:** 🇺🇦 18.6% (target 15-35% (M07))
+- **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -25,21 +35,10 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Questions & Negation** | ⚪️ | 0 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 101 | Included in Core |
 | **Presentation** | ✅ | 560 | Included in Core |
 | **Practice** | ⚪️ | 44 | Skipped |
 | **Production** | ➖ | 158 | Excluded Type |
 | **Cultural Insight** | ✅ | 131 | Included in Core |
-| **Summary** | ✅ | 127 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **quiz: Question Word Meanings** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Question Words to Context** | 🎮 | 8 | Activity (8 items, min 8) |
-| **fill-in: Complete Questions** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: Question and Negation Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Frequency Adverbs** | 🎮 | 12 | Activity (12 items, min 12) |
-| **fill-in: Add Negation** | 🎮 | 12 | Activity (12 items, min 8) |
-| **anagram: Question Words** | 🎮 | 12 | Activity (12 items, min 8) |
-| **anagram: Frequency Words** | 🎮 | 8 | Activity (8 items, min 8) |
-| **quiz: Negative Sentence Order** | 🎮 | 12 | Activity (12 items, min 8) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Summary** | ✅ | 126 | Included in Core |

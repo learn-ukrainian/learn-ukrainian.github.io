@@ -1,0 +1,25 @@
+module: a1-01
+title: The Cyrillic Code I
+subtitle: Cracking the Ukrainian Alphabet
+version: '1.0'
+phase: A1.1
+pedagogy: PPP
+duration: 60 min
+transliteration: full
+tags:
+  - alphabet
+  - cyrillic
+  - phonetics
+  - true-friends
+  - false-friends
+grammar:
+  - letter recognition
+  - pronunciation
+objectives:
+  - Learner can recognize True Friends (letters that look AND sound like English)
+  - Learner can decode False Friends (letters that look familiar but sound different)
+  - Learner can read 19 new Cyrillic letters
+  - Learner can pronounce basic international words in Ukrainian
+vocabulary_count: 35
+vocab_count: 40
+slug: 01-the-cyrillic-code-i

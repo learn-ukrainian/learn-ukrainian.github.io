@@ -1,0 +1,24 @@
+module: b1-48
+title: 'Демінутиви: майстер-клас'
+subtitle: Diminutives - Forms, Usage, and Nuance
+version: '1.0'
+phase: B1.4 Advanced Grammar
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - grammar
+  - diminutives
+  - word-formation
+  - pragmatics
+grammar:
+  - 'Суфікси демінутивів: -ик, -ок, -очок, -еньк-, -оньк-, -ечк-'
+  - Прагматичні функції демінутивів
+  - Регістрові відтінки
+objectives:
+  - Учень може утворювати демінутиви від іменників та прикметників
+  - Учень розуміє різні прагматичні функції демінутивів
+  - 'Учень може розрізняти відтінки: ніжність, іронія, ввічливість'
+vocabulary_count: 35
+vocab_count: 116
+slug: 48-diminutives-master-class

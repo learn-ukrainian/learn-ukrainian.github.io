@@ -1,0 +1,206 @@
+module: 25-telling-stories
+level: A2
+version: '2.0'
+items:
+- lemma: '''але'
+  ipa: ɐˈlɛ
+  translation: but
+  pos: other
+- lemma: анекдот
+  ipa: ɐnekˈdɔt
+  translation: joke; anecdote
+  pos: noun
+  gender: m
+- lemma: байка
+  ipa: ˈbɑjkɐ
+  translation: fable; tale
+  pos: noun
+  gender: m
+- lemma: бах
+  ipa: bɑx
+  translation: bang!
+  pos: propn
+  gender: m
+- lemma: бачитися
+  ipa: ˈbɑt͡ʃɪtɪsʲɐ
+  translation: to see each other
+  pos: verb
+- lemma: величезний
+  ipa: velɪˈt͡ʃɛznɪj
+  translation: huge
+  pos: adj
+  gender: f
+- lemma: врешті
+  ipa: ˈvrɛʃtʲi
+  translation: finally; in the end
+  pos: adv
+- lemma: втекти
+  ipa: vtekˈtɪ
+  translation: to run away (perf)
+  pos: verb
+  gender: f
+- lemma: вудка
+  ipa: ˈvudkɐ
+  translation: fishing rod
+  pos: noun
+  gender: f
+- lemma: відкритися
+  ipa: vʲidˈkrɪtɪsʲɐ
+  translation: to open (perf)
+  pos: verb
+  gender: n
+- lemma: вітер
+  ipa: ˈvʲiter
+  translation: wind
+  pos: noun
+  gender: m
+- lemma: дивний
+  ipa: ˈdɪvnɪj
+  translation: strange
+  pos: adj
+  gender: f
+- lemma: звук
+  ipa: zvuk
+  translation: sound
+  pos: noun
+  gender: m
+- lemma: зірватися
+  ipa: zʲirˈvɑtɪsʲɐ
+  translation: to break loose (perf)
+  pos: verb
+  gender: f
+- lemma: коротше
+  ipa: koˈrɔtʃe
+  translation: shorter; in short (slang)
+  pos: adv
+- lemma: крок
+  ipa: krɔk
+  translation: step
+  pos: noun
+  gender: m
+- lemma: кум
+  ipa: kum
+  translation: godfather/friend
+  pos: other
+- lemma: куме
+  ipa: ˈkume
+  translation: godfather (vocative)
+  pos: propn
+  gender: m
+- lemma: ледве
+  ipa: ˈlɛdve
+  translation: barely
+  pos: adv
+- lemma: миколо
+  ipa: mɪˈkɔlo
+  translation: Mykola (vocative)
+  pos: propn
+  gender: m
+- lemma: мовчки
+  ipa: ˈmɔu̯t͡ʃkɪ
+  translation: silently
+  pos: adv
+- lemma: нещодавно
+  ipa: neʃt͡ʃoˈdɑu̯no
+  translation: recently
+  pos: adv
+- lemma: но
+  ipa: nɔ
+  translation: but (coll.)
+  pos: other
+- lemma: ну
+  ipa: nu
+  translation: well
+  pos: other
+- lemma: ні'
+  ipa: nʲi
+  translation: no (typo?)
+  pos: other
+- lemma: ніхто
+  ipa: nʲixˈtɔ
+  translation: nobody
+  pos: pron
+- lemma: от
+  ipa: ɔt
+  translation: here; so
+  pos: other
+- lemma: отже
+  ipa: ˈɔtdʒe
+  translation: so; therefore
+  pos: other
+- lemma: повторитися
+  ipa: povtoˈrɪtɪsʲɐ
+  translation: to repeat (perf)
+  pos: verb
+  gender: m
+- lemma: повірити
+  ipa: poˈvʲirɪte
+  translation: to believe (perf)
+  pos: verb
+- lemma: полетіти
+  ipa: poleˈtʲite
+  translation: to fly (perf)
+  pos: verb
+  gender: f
+- lemma: поплавка
+  ipa: poplɐu̯ˈkɑ
+  translation: float (gen)
+  pos: noun
+  gender: m
+- lemma: потягнути
+  ipa: potʲɐhˈnute
+  translation: to pull (perf)
+  pos: verb
+  gender: m
+- lemma: початися
+  ipa: poˈt͡ʃɑtɪsʲɐ
+  translation: to start (perf)
+  pos: verb
+  gender: m
+- lemma: прокинутися
+  ipa: proˈkɪnutɪsʲɐ
+  translation: to wake up (perf)
+  pos: verb
+  gender: m
+- lemma: пташка
+  ipa: ˈptɑʃkɐ
+  translation: bird
+  pos: noun
+  gender: f
+- lemma: решт
+  ipa: rɛʃt
+  translation: rest (gen pl? or врешті-решт)
+  pos: noun
+  gender: m
+- lemma: риболовля
+  ipa: rɪboˈlɔvlʲɐ
+  translation: fishing
+  pos: noun
+  gender: f
+- lemma: спити
+  ipa: spɪˈtɪ
+  translation: sleep (typo? спите?)
+  pos: verb
+- lemma: спіймати
+  ipa: sʲpijˈmɑte
+  translation: to catch (perf)
+  pos: verb
+  gender: m
+- lemma: схожий
+  ipa: ˈsxɔʒɪj
+  translation: similar
+  pos: adj
+  gender: n
+- lemma: тож
+  ipa: tɔʒ
+  translation: so
+  pos: other
+- lemma: тримати
+  ipa: trɪˈmɑte
+  translation: to hold
+  pos: verb
+  gender: m
+- lemma: якось
+  ipa: ˈjɑkosʲ
+  translation: somehow; once
+  pos: adv

@@ -1,0 +1,139 @@
+module: 47-passive-constructions
+level: B1
+version: '2.0'
+items:
+- lemma: верстатися
+  ipa: /vɛrˈstatɪsʲa/
+  translation: to be laid out
+  pos: verb
+- lemma: вигулювати
+  ipa: /vɪˈhulʲuvatɪ/
+  translation: to walk (dog)
+  pos: verb
+- lemma: випікатися
+  ipa: /vɪpiˈkatɪsʲa/
+  translation: to be baked
+  pos: verb
+- lemma: виставлятися
+  ipa: /vɪstaˈu̯lʲatɪsʲa/
+  translation: to be exhibited
+  pos: verb
+- lemma: вичитати
+  ipa: /ˈvɪt͡ʃɪtatɪ/
+  translation: to proofread
+  pos: verb
+- lemma: друге
+  ipa: /ˈdruhɛ/
+  translation: secondly
+  pos: pron
+  gender: n
+- lemma: електрика
+  ipa: /ɛˈlɛktrɪka/
+  translation: electricity
+  pos: noun
+  gender: f
+- lemma: етикетка
+  ipa: /ɛtɪˈkɛtka/
+  translation: label
+  pos: noun
+  gender: f
+- lemma: запікатися
+  ipa: /zapiˈkatɪsʲa/
+  translation: to be baked
+  pos: verb
+- lemma: ліквідований
+  ipa: /lʲikviˈdɔvanɪj/
+  translation: liquidated
+  pos: adj
+  gender: f
+- lemma: малюватися
+  ipa: /malʲuˈvatɪsʲa/
+  translation: to be painted
+  pos: verb
+- lemma: обкладинка
+  ipa: /ɔbˈkladɪnka/
+  translation: cover
+  pos: noun
+  gender: f
+- lemma: охолоджений
+  ipa: /ɔxɔˈlɔdʒɛnɪj/
+  translation: chilled
+  pos: adj
+  gender: n
+- lemma: охолодити
+  ipa: /ɔxɔlɔˈdɪtɪ/
+  translation: to cool
+  pos: verb
+- lemma: очищуватися
+  ipa: /ɔˈt͡ʃɪʃt͡ʃuvatɪsʲa/
+  translation: to be purified
+  pos: verb
+- lemma: пекати
+  ipa: /pɛˈkatɪ/
+  translation: to bake (typo)
+  pos: verb
+- lemma: пекертися
+  ipa: /pɛkɛrˈtɪsʲa/
+  translation: to be baked (typo)
+  pos: verb
+- lemma: прокладатися
+  ipa: /prɔklaˈdatɪsʲa/
+  translation: to be laid
+  pos: verb
+- lemma: рекорд
+  ipa: /rɛˈkɔrd/
+  translation: record
+  pos: noun
+  gender: m
+- lemma: рошен
+  ipa: /rɔˈʃɛn/
+  translation: Roshen
+  pos: propn
+  gender: m
+- lemma: рішити
+  ipa: /rʲiˈʃɪtɪ/
+  translation: to decide (Surzhyk)
+  pos: verb
+- lemma: сенкевич
+  ipa: /sɛnˈkɛvɪt͡ʃ/
+  translation: Senkevych
+  pos: propn
+  gender: m
+- lemma: соус
+  ipa: /ˈsɔus/
+  translation: sauce
+  pos: noun
+  gender: m
+- lemma: труби
+  ipa: /ˈtrubɪ/
+  translation: pipes
+  pos: noun
+  gender: f
+- lemma: тушкуватися
+  ipa: /tuʃkuˈvatɪsʲa/
+  translation: to stew
+  pos: verb
+- lemma: уніан
+  ipa: /uniˈan/
+  translation: UNIAN
+  pos: propn
+  gender: m
+- lemma: упаковка
+  ipa: /upaˈkɔu̯ka/
+  translation: packaging
+  pos: noun
+  gender: f
+- lemma: фокусувати
+  ipa: /fɔkusuˈvatɪ/
+  translation: to focus
+  pos: verb
+- lemma: щоранка
+  ipa: /ʃt͡ʃɔˈranka/
+  translation: every morning
+  pos: noun
+  gender: f
+- lemma: інтерфакс
+  ipa: /intɛrˈfaks/
+  translation: Interfax
+  pos: propn
+  gender: m

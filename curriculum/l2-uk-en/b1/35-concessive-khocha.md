@@ -1,28 +1,3 @@
----
-module: b1-35
-title: "Допустові речення: хоча, незважаючи на"
-subtitle: "Concessive Clauses - Although, Despite"
-version: "1.0"
-phase: "B1.3b Complex Sentences"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - concessive-clauses
-  - complex-sentences
-  - khocha
-grammar:
-  - "Concessive clauses with хоча, незважаючи на"
-  - "Contrast and unexpected outcomes"
-objectives:
-  - "Learner understands concessive clause constructions"
-  - "Learner can express contrast and unexpected outcomes"
-  - "Learner can use various concessive connectors"
-vocabulary_count: 25
-vocab_count: 61
----
-
 > [!motivation]
 > Як сказати «хоча холодно, ми пішли гуляти»? Допустові речення виражають **контраст** — коли результат не відповідає очікуванням. Це потужний граматичний інструмент для вираження несподіваних наслідків, подолання труднощів і протиставлення ідей у складних текстах. Без цих конструкцій неможливо описати складності реального життя, де результати часто суперечать обставинам. Опанування цих сполучників підніме ваше українське мовлення на новий рівень!
 

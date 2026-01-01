@@ -1,32 +1,3 @@
----
-module: 74
-title: Українські регіони - Південь
-subtitle: Southern Ukraine
-level: B1
-phase: B1.7
-pedagogy: PPP
-focus: cultural
-duration: 75
-transliteration: none
-tags:
-  - cultural
-  - geography
-  - regions
-  - southern-ukraine
-grammar:
-  - regional-vocabulary
-  - cultural-context
-objectives:
-  - Learner can discuss Southern Ukraine's geography and culture
-  - Learner can understand authentic texts about Black Sea coastal cities
-  - Learner can use regional vocabulary to describe the south
-  - Learner can compare Southern Ukrainian traditions with other regions
-word_target: 1500
-vocab_target: 25
-immersion_target: 95
-vocab_count: 100
----
-
 # Вступ
 
 Південь України — це унікальний регіон, де степ зустрічається з морем. Чорне та Азовське моря формують характер цього краю: тут панує торгівля, судноплавство та туризм. Одеса, Херсон і Миколаїв — три головні порти, що зробили Україну морською державою.

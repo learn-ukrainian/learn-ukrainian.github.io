@@ -1,0 +1,27 @@
+module: a1-07
+title: Questions & Negation
+subtitle: Asking Questions and Saying No
+version: '1.0'
+phase: A1.1
+pedagogy: PPP
+duration: 60 min
+transliteration: full
+tags:
+  - questions
+  - negation
+  - question-words
+  - frequency-adverbs
+grammar:
+  - Yes/no questions with чи
+  - Question words (що, хто, де, куди, звідки, коли, чому, як, скільки)
+  - Negation with не
+  - Double negation with ніколи
+  - Frequency adverbs
+objectives:
+  - Ask yes/no questions using 'чи'
+  - Form questions with question words (що, хто, де, коли, etc.)
+  - Make negative statements with 'не'
+  - Understand frequency adverbs (завжди, часто, іноді, ніколи)
+vocabulary_count: 28
+vocab_count: 25
+slug: 07-questions-and-negation

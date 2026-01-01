@@ -1,0 +1,111 @@
+module: 28-description-adverbs
+level: A1
+version: '2.0'
+items:
+  - lemma: алкоголь
+    ipa: /ɑlkɔˈɦɔlʲ/
+    translation: alcohol
+    pos: noun
+    gender: m
+  - lemma: бувати
+    ipa: /buˈvɑtɪ/
+    translation: to happen/be usually
+    pos: verb
+  - lemma: бігати
+    ipa: /ˈbiɦɑtɪ/
+    translation: to run
+    pos: verb
+  - lemma: весело
+    ipa: /ˈvɛsɛlɔ/
+    translation: cheerfully
+    pos: adv
+  - lemma: високо
+    ipa: /ˈvɪsɔkɔ/
+    translation: high
+    pos: adv
+  - lemma: втомитися
+    ipa: /vtɔˈmɪtɪsʲɑ/
+    translation: to get tired
+    pos: verb
+  - lemma: відповідь
+    ipa: /ˈvidpɔvidʲ/
+    translation: answer
+    pos: noun
+    gender: f
+  - lemma: гарно
+    ipa: /ˈɦɑrnɔ/
+    translation: beautifully/nicely
+    pos: adv
+  - lemma: голос
+    ipa: /ˈɦɔlɔs/
+    translation: voice
+    pos: noun
+    gender: m
+  - lemma: голосний
+    ipa: /ɦɔlɔsˈnɪj/
+    translation: loud
+    pos: adj
+    gender: m
+  - lemma: голосно
+    ipa: /ˈɦɔlɔsnɔ/
+    translation: loudly
+    pos: adv
+  - lemma: занадто
+    ipa: /zɑˈnɑdtɔ/
+    translation: too/too much
+    pos: adv
+  - lemma: зовсім
+    ipa: /ˈzɔwsim/
+    translation: completely/at all
+    pos: adv
+  - lemma: козак
+    ipa: /kɔˈzɑk/
+    translation: Cossack
+    pos: noun
+    gender: m
+  - lemma: курити
+    ipa: /kuˈrɪtɪ/
+    translation: to smoke
+    pos: verb
+  - lemma: молодець
+    ipa: /mɔlɔˈdɛt͡sʲ/
+    translation: well done/good job
+    pos: noun
+    gender: m
+  - lemma: повільно
+    ipa: /pɔˈvilʲnɔ/
+    translation: slowly
+    pos: adv
+  - lemma: погано
+    ipa: /pɔˈhɑnɔ/
+    translation: badly
+    pos: adv
+  - lemma: потяг
+    ipa: /ˈpɔtʲɑɦ/
+    translation: train
+    pos: noun
+    gender: m
+  - lemma: трохи
+    ipa: /ˈtrɔxɪ/
+    translation: a little
+    pos: adv
+  - lemma: хороший
+    ipa: /xɔˈrɔʃɪj/
+    translation: good
+    pos: adj
+    gender: m
+  - lemma: частота
+    ipa: /t͡ʃɑstɔˈtɑ/
+    translation: frequency
+    pos: noun
+    gender: f
+  - lemma: частотність
+    ipa: /t͡ʃɑsˈtɔtnisʲtʲ/
+    translation: frequency
+    pos: noun
+    gender: f
+  - lemma: шкала
+    ipa: /ʃkɑˈlɑ/
+    translation: scale
+    pos: noun
+    gender: f

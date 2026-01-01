@@ -1,0 +1,30 @@
+module: a1-02
+title: The Cyrillic Code II
+subtitle: The Final 14 Letters
+version: '1.0'
+phase: A1.1
+pedagogy: PPP
+duration: 60 min
+transliteration: full
+tags:
+  - alphabet
+  - cyrillic
+  - phonetics
+  - unique-letters
+  - iotated-vowels
+  - soft-sign
+  - italic
+grammar:
+  - letter recognition
+  - pronunciation
+  - italic forms
+objectives:
+  - Learner can recognize and pronounce unique Ukrainian letters (Г, Ґ, Ж, Ш, Щ, Ч,
+    Ц)
+  - Learner can identify iotated vowels (Є, Ї, Ю, Я)
+  - Learner can understand the soft sign (Ь)
+  - Learner can distinguish И (hard i) from І (soft i)
+  - Learner can recognize common italic letter variants
+vocabulary_count: 35
+vocab_count: 77
+slug: 02-the-cyrillic-code-ii

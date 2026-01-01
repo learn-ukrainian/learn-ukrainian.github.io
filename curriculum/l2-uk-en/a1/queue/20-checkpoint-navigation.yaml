@@ -1,0 +1,913 @@
+module: 20-checkpoint-navigation
+level: A1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/20-checkpoint-navigation.md
+generated: '2026-01-01T17:33:20.474123'
+scope: fill-in, quiz, true-false
+activity_counts:
+  fill-in: 36
+  quiz: 36
+  true-false: 12
+total_items: 84
+item_count: 84
+sample_percent: null
+items:
+- activity: fill-in
+  title: Case Mastery - Accusative
+  sentence_template: Я бачу ___ у парку.
+  answer: студента
+  complete_sentence: Я бачу студента у парку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Accusative
+  sentence_template: Вона читає ___ кожен день.
+  answer: книгу
+  complete_sentence: Вона читає книгу кожен день.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Accusative
+  sentence_template: Ми хочемо купити ___.
+  answer: хліб
+  complete_sentence: Ми хочемо купити хліб.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Accusative
+  sentence_template: Ти любиш ___?
+  answer: каву
+  complete_sentence: Ти любиш каву?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Accusative
+  sentence_template: Він знає ___ добре.
+  answer: цього лікаря
+  complete_sentence: Він знає цього лікаря добре.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Accusative
+  sentence_template: Вони слухають ___.
+  answer: музику
+  complete_sentence: Вони слухають музику.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Accusative
+  sentence_template: Я п'ю ___ з молоком.
+  answer: чай
+  complete_sentence: Я п'ю чай з молоком.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Accusative
+  sentence_template: Ми бачимо ___ біля школи.
+  answer: вчительку
+  complete_sentence: Ми бачимо вчительку біля школи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Accusative
+  sentence_template: Вона купує ___ на ринку.
+  answer: яблука
+  complete_sentence: Вона купує яблука на ринку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Accusative
+  sentence_template: Ти чекаєш ___?
+  answer: друга
+  complete_sentence: Ти чекаєш друга?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Accusative
+  sentence_template: Він відкриває ___.
+  answer: вікно
+  complete_sentence: Він відкриває вікно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Accusative
+  sentence_template: Я знаю ___ добре.
+  answer: цю дівчину
+  complete_sentence: Я знаю цю дівчину добре.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Locative
+  sentence_template: Книга ___ столі.
+  answer: на
+  complete_sentence: Книга на столі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Locative
+  sentence_template: Ми живемо ___ Україні.
+  answer: в
+  complete_sentence: Ми живемо в Україні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Locative
+  sentence_template: Студенти ___ бібліотеці.
+  answer: у
+  complete_sentence: Студенти у бібліотеці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Locative
+  sentence_template: Вона працює ___ офісі.
+  answer: в
+  complete_sentence: Вона працює в офісі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Locative
+  sentence_template: Діти ___ парку.
+  answer: у
+  complete_sentence: Діти у парку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Locative
+  sentence_template: Концерт ___ вулиці Хрещатик.
+  answer: на
+  complete_sentence: Концерт на вулиці Хрещатик.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Locative
+  sentence_template: Ми ___ ресторані.
+  answer: у
+  complete_sentence: Ми у ресторані.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Locative
+  sentence_template: Лампа ___ столі.
+  answer: на
+  complete_sentence: Лампа на столі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Locative
+  sentence_template: Турист ___ центрі міста.
+  answer: у
+  complete_sentence: Турист у центрі міста.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Locative
+  sentence_template: Вони ___ станції метро.
+  answer: на
+  complete_sentence: Вони на станції метро.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Locative
+  sentence_template: Я ___ роботі зараз.
+  answer: на
+  complete_sentence: Я на роботі зараз.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Locative
+  sentence_template: Кава ___ чашці.
+  answer: у
+  complete_sentence: Кава у чашці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Genitive
+  sentence_template: У мене немає ___.
+  answer: часу
+  complete_sentence: У мене немає часу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Genitive
+  sentence_template: Тут немає ___.
+  answer: молока
+  complete_sentence: Тут немає молока.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Genitive
+  sentence_template: Кава без ___, будь ласка.
+  answer: цукру
+  complete_sentence: Кава без цукру, будь ласка.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Genitive
+  sentence_template: У нас немає ___.
+  answer: води
+  complete_sentence: У нас немає води.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Genitive
+  sentence_template: П'ять ___, будь ласка.
+  answer: квитків
+  complete_sentence: П'ять квитків, будь ласка.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Genitive
+  sentence_template: У них немає ___.
+  answer: машини
+  complete_sentence: У них немає машини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Genitive
+  sentence_template: Склянка ___, будь ласка.
+  answer: соку
+  complete_sentence: Склянка соку, будь ласка.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Genitive
+  sentence_template: Сьогодні немає ___.
+  answer: хліба
+  complete_sentence: Сьогодні немає хліба.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Genitive
+  sentence_template: У магазині немає ___.
+  answer: помідорів
+  complete_sentence: У магазині немає помідорів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Genitive
+  sentence_template: Кілограм ___, будь ласка.
+  answer: яблук
+  complete_sentence: Кілограм яблук, будь ласка.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Genitive
+  sentence_template: Без ___ я не можу працювати.
+  answer: кави
+  complete_sentence: Без кави я не можу працювати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Case Mastery - Genitive
+  sentence_template: Тридцять ___.
+  answer: гривень
+  complete_sentence: Тридцять гривень.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Knowledge Check
+  question: Which case do you use for the direct object of "I see"?
+  options:
+  - '{''text'': ''Nominative'', ''correct'': False}'
+  - '{''text'': ''Accusative'', ''correct'': True}'
+  - '{''text'': ''Locative'', ''correct'': False}'
+  - '{''text'': ''Genitive'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Knowledge Check
+  question: What preposition requires the locative case for "inside"?
+  options:
+  - '{''text'': ''на'', ''correct'': False}'
+  - '{''text'': ''у/в'', ''correct'': True}'
+  - '{''text'': ''до'', ''correct'': False}'
+  - '{''text'': ''з'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Knowledge Check
+  question: Which case do you use after "немає"?
+  options:
+  - '{''text'': ''Nominative'', ''correct'': False}'
+  - '{''text'': ''Accusative'', ''correct'': False}'
+  - '{''text'': ''Locative'', ''correct'': False}'
+  - '{''text'': ''Genitive'', ''correct'': True}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Knowledge Check
+  question: Which possessive pronoun NEVER changes form?
+  options:
+  - '{''text'': ''мій'', ''correct'': False}'
+  - '{''text'': ''наш'', ''correct'': False}'
+  - '{''text'': ''його'', ''correct'': True}'
+  - '{''text'': ''їхній'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Knowledge Check
+  question: What is the accusative form of "студент" (animate)?
+  options:
+  - '{''text'': ''студент'', ''correct'': False}'
+  - '{''text'': ''студента'', ''correct'': True}'
+  - '{''text'': ''студенту'', ''correct'': False}'
+  - '{''text'': ''студентом'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Knowledge Check
+  question: Which preposition do you use with "на столі"?
+  options:
+  - '{''text'': ''на'', ''correct'': True}'
+  - '{''text'': ''у'', ''correct'': False}'
+  - '{''text'': ''в'', ''correct'': False}'
+  - '{''text'': ''біля'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Knowledge Check
+  question: How do you say "without sugar"?
+  options:
+  - '{''text'': ''немає цукор'', ''correct'': False}'
+  - '{''text'': ''не цукру'', ''correct'': False}'
+  - '{''text'': ''без цукру'', ''correct'': True}'
+  - '{''text'': ''до цукру'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Knowledge Check
+  question: What's the locative form of "Київ"?
+  options:
+  - '{''text'': ''в Київ'', ''correct'': False}'
+  - '{''text'': ''у Києві'', ''correct'': True}'
+  - '{''text'': ''на Київ'', ''correct'': False}'
+  - '{''text'': ''до Києва'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Knowledge Check
+  question: Which number range uses genitive plural?
+  options:
+  - '{''text'': ''1'', ''correct'': False}'
+  - '{''text'': ''2-4'', ''correct'': False}'
+  - '{''text'': ''5+'', ''correct'': True}'
+  - '{''text'': ''All numbers'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Knowledge Check
+  question: What's the feminine form of "мій"?
+  options:
+  - '{''text'': ''мій'', ''correct'': False}'
+  - '{''text'': ''моя'', ''correct'': True}'
+  - '{''text'': ''моє'', ''correct'': False}'
+  - '{''text'': ''мої'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Knowledge Check
+  question: Which preposition means "on" or "at" (surface)?
+  options:
+  - '{''text'': ''на'', ''correct'': True}'
+  - '{''text'': ''у'', ''correct'': False}'
+  - '{''text'': ''в'', ''correct'': False}'
+  - '{''text'': ''біля'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Grammar Knowledge Check
+  question: What case do you use for "I love Ukraine"?
+  options:
+  - '{''text'': ''Nominative - Україна'', ''correct'': False}'
+  - '{''text'': ''Accusative - Україну'', ''correct'': True}'
+  - '{''text'': ''Locative - Україні'', ''correct'': False}'
+  - '{''text'': ''Genitive - України'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Building Sentences Order
+  question: 'Correct sentence order for: "I see a student..."'
+  options:
+  - '{''text'': ''Я бачу студента у бібліотеці.'', ''correct'': True}'
+  - '{''text'': ''бачу Я студента у бібліотеці.'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Building Sentences Order
+  question: 'Correct sentence order for: "The book is lying..."'
+  options:
+  - '{''text'': ''Книга лежить на столі.'', ''correct'': True}'
+  - '{''text'': ''лежить Книга на столі.'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Building Sentences Order
+  question: 'Correct sentence order for: "I don''t have time today."'
+  options:
+  - '{''text'': ''У мене немає часу сьогодні.'', ''correct'': True}'
+  - '{''text'': ''мене У немає часу сьогодні.'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Building Sentences Order
+  question: 'Correct sentence order for: "This is my bag,..."'
+  options:
+  - '{''text'': ''Це моя сумка, а це твоя.'', ''correct'': True}'
+  - '{''text'': ''моя Це сумка, а це твоя.'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Building Sentences Order
+  question: 'Correct sentence order for: "We live in the..."'
+  options:
+  - '{''text'': ''Ми живемо у центрі Львова.'', ''correct'': True}'
+  - '{''text'': ''живемо Ми у центрі Львова.'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Building Sentences Order
+  question: 'Correct sentence order for: "I want coffee without sugar."'
+  options:
+  - '{''text'': ''Я хочу каву без цукру.'', ''correct'': True}'
+  - '{''text'': ''хочу Я каву без цукру.'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Building Sentences Order
+  question: 'Correct sentence order for: "She''s at work now."'
+  options:
+  - '{''text'': ''Вона на роботі зараз.'', ''correct'': True}'
+  - '{''text'': ''на Вона роботі зараз.'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Building Sentences Order
+  question: 'Correct sentence order for: "One ticket costs five hryvnias."'
+  options:
+  - '{''text'': "Один квиток коштує п''ять гривень.", ''correct'': True}'
+  - '{''text'': "квиток Один коштує п''ять гривень.", ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Building Sentences Order
+  question: 'Correct sentence order for: "I want to buy..."'
+  options:
+  - '{''text'': ''Я хочу купити хліб і молоко.'', ''correct'': True}'
+  - '{''text'': ''хочу Я купити хліб і молоко.'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Building Sentences Order
+  question: 'Correct sentence order for: "Today there are no..."'
+  options:
+  - '{''text'': ''Сьогодні у магазині немає помідорів.'', ''correct'': True}'
+  - '{''text'': ''у Сьогодні магазині немає помідорів.'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Building Sentences Order
+  question: 'Correct sentence order for: "He reads a very..."'
+  options:
+  - '{''text'': ''Він читає дуже цікаву книгу.'', ''correct'': True}'
+  - '{''text'': ''читає Він дуже цікаву книгу.'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Building Sentences Order
+  question: 'Correct sentence order for: "The metro station is..."'
+  options:
+  - '{''text'': ''Станція метро біля вокзалу.'', ''correct'': True}'
+  - '{''text'': ''метро Станція біля вокзалу.'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Real Dialogues Order
+  question: 'Correct sentence order for: "How do I get..."'
+  options:
+  - '{''text'': ''Як дістатися до станції метро?'', ''correct'': True}'
+  - '{''text'': ''дістатися Як до станції метро?'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Real Dialogues Order
+  question: 'Correct sentence order for: "Go straight and then left."'
+  options:
+  - '{''text'': ''Ідіть прямо і потім наліво.'', ''correct'': True}'
+  - '{''text'': ''прямо Ідіть і потім наліво.'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Real Dialogues Order
+  question: 'Correct sentence order for: "Is there a menu..."'
+  options:
+  - '{''text'': ''У ресторані є меню українською?'', ''correct'': True}'
+  - '{''text'': ''ресторані У є меню українською?'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Real Dialogues Order
+  question: 'Correct sentence order for: "Yes, of course. Here..."'
+  options:
+  - '{''text'': ''Так, звичайно. Ось, будь ласка.'', ''correct'': True}'
+  - '{''text'': ''звичайно. Так, Ось, будь ласка.'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Real Dialogues Order
+  question: 'Correct sentence order for: "I''ll take borsch and varenyky."'
+  options:
+  - '{''text'': ''Я візьму борщ і вареники.'', ''correct'': True}'
+  - '{''text'': ''візьму Я борщ і вареники.'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Real Dialogues Order
+  question: 'Correct sentence order for: "Can I have the..."'
+  options:
+  - '{''text'': ''Можна рахунок, будь ласка?'', ''correct'': True}'
+  - '{''text'': ''рахунок, Можна будь ласка?'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Real Dialogues Order
+  question: 'Correct sentence order for: "How much does everything..."'
+  options:
+  - '{''text'': ''Скільки коштує все разом?'', ''correct'': True}'
+  - '{''text'': ''коштує Скільки все разом?'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Real Dialogues Order
+  question: 'Correct sentence order for: "Together eighty hryvnias."'
+  options:
+  - '{''text'': ''Разом вісімдесят гривень.'', ''correct'': True}'
+  - '{''text'': ''вісімдесят Разом гривень.'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Real Dialogues Order
+  question: 'Correct sentence order for: "Can I pay by card?"'
+  options:
+  - '{''text'': ''Можна платити карткою?'', ''correct'': True}'
+  - '{''text'': ''платити Можна карткою?'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Real Dialogues Order
+  question: 'Correct sentence order for: "Yes, you can pay..."'
+  options:
+  - '{''text'': ''Так, можна готівкою або карткою.'', ''correct'': True}'
+  - '{''text'': ''можна Так, готівкою або карткою.'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Real Dialogues Order
+  question: 'Correct sentence order for: "Thank you very much..."'
+  options:
+  - '{''text'': ''Дякую дуже за допомогу!'', ''correct'': True}'
+  - '{''text'': ''дуже Дякую за допомогу!'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Real Dialogues Order
+  question: 'Correct sentence order for: "You''re welcome! Safe travels!"'
+  options:
+  - '{''text'': ''Будь ласка! Доброї дороги!'', ''correct'': True}'
+  - '{''text'': ''ласка! Будь Доброї дороги!'', ''correct'': False}'
+  - '{''text'': ''Incorrect order for this sentence'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules Review
+  statement: Accusative case is used for direct objects.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules Review
+  statement: Locative case is used with the preposition "до".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules Review
+  statement: Genitive case is used after "немає".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules Review
+  statement: Masculine animate accusative has no change from nominative.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules Review
+  statement: Feminine nouns ending in -а change to -у in accusative.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules Review
+  statement: '"його" changes to "його" for different genders.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules Review
+  statement: '"на" can mean both "on" and "at".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules Review
+  statement: Numbers 2-4 use genitive plural.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules Review
+  statement: '"у/в" and "на" both require locative case for location.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules Review
+  statement: '"їхній" never changes form.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules Review
+  statement: '"без" + genitive means "without".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Grammar Rules Review
+  statement: Neuter nouns don't change in accusative.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

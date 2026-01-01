@@ -1,30 +1,3 @@
----
-module: a1-34
-title: 'Checkpoint: Final Review'
-subtitle: 'Can you do ALL the A1 skills?'
-version: '2.0'
-phase: 'A1.3 - Consolidation'
-focus: checkpoint
-pedagogy: 'Review'
-duration: '90 min'
-transliteration: 'first-occurrence'
-tags:
-  - review
-  - checkpoint
-  - assessment
-  - A1
-grammar:
-  - 'All A1 grammar review'
-objectives:
-  - 'Demonstrate Cyrillic reading fluency'
-  - 'Identify noun gender and use agreement correctly'
-  - 'Conjugate verbs in present, past, and future tense'
-  - 'Apply four cases (Nominative, Accusative, Genitive, Locative)'
-  - 'Navigate daily life situations in Ukrainian'
-vocabulary_count: 20
-vocab_count: 19
----
-
 # Checkpoint: Final Review
 
 **Вітаємо!** (vitayemo) You've completed all 33 modules of A1! Now let's check: **can you DO all the skills?**
@@ -337,27 +310,3 @@ At a café:
 > - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Essential video review
 
 ---
-
-# Vocabulary
-
-| Word         | IPA               | English                 | POS  | Gender | Note |
-| ------------ | ----------------- | ----------------------- | ---- | ------ | ---- |
-| акція        | /ˈɑkt͡sʲijɑ/       | special offer/promotion | noun | ж      |      |
-| будувати     | /buduˈvɑtɪ/       | to build                | verb | -      |      |
-| випити       | /ˈvɪpɪtɪ/         | to drink (perf)         | verb | -      |      |
-| вчитися      | /ˈvt͡ʃɪtɪsʲɑ/      | to study/learn          | verb | -      |      |
-| захід        | /ˈzɑxid/          | west/event              | noun | ч      |      |
-| здавати      | /zdɑˈvɑtɪ/        | to take (exam)/hand in  | verb | -      |      |
-| зустрічатися | /zustriˈt͡ʃɑtɪsʲɑ/ | to meet                 | verb | -      |      |
-| іспит        | /ˈispɪt/          | exam                    | noun | ч      |      |
-| оглянути     | /ɔɦˈlʲɑnutɪ/      | to examine              | verb | -      |      |
-| одинадцята   | /ɔdɪˈnɑdt͡sʲɑtɑ/   | eleventh                | adj  | ж      |      |
-| попереду     | /pɔˈpɛrɛdu/       | ahead                   | adv  | -      |      |
-| приготувати  | /prɪɦɔtuˈvɑtɪ/    | to cook/prepare         | verb | -      |      |
-| простий      | /prɔsˈtɪj/        | simple                  | adj  | ч      |      |
-| прочитати    | /prɔt͡ʃɪˈtɑtɪ/     | to read (perf)          | verb | -      |      |
-| речення      | /ˈrɛt͡ʃɛnʲːɑ/      | sentence                | noun | с      |      |
-| теперішній   | /tɛˈpɛriʃnʲij/    | present (time)          | adj  | ч      |      |
-| тричі        | /ˈtrɪt͡ʃi/         | three times             | adv  | -      |      |
-| турбувати    | /turbuˈvɑtɪ/      | to trouble/bother       | verb | -      |      |
-| увага        | /uˈvɑɦɑ/          | attention               | noun | ж      |      |

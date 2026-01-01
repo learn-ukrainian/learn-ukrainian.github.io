@@ -1,0 +1,27 @@
+module: 01-how-to-talk-about-grammar
+level: B1
+version: '2.0'
+items:
+- lemma: книго
+  ipa: /ˈknɪɦɔ/
+  translation: book (vocative)
+  pos: other
+- lemma: ковбаска
+  ipa: /kɔu̯ˈbaska/
+  translation: sausage (diminutive)
+  pos: propn
+- lemma: мнемонік
+  ipa: /mnɛˈmɔnʲik/
+  translation: mnemonic
+  pos: noun
+  gender: f
+- lemma: одниний
+  ipa: /ɔdnɪˈnɪj/
+  translation: singular (adj)
+  pos: adj
+  gender: f
+- lemma: орішка
+  ipa: /ɔˈrʲiʃka/
+  translation: nut (diminutive)
+  pos: propn
+  gender: m

@@ -1,26 +1,3 @@
----
-module: b1-81
-title: "Українські свята та фестивалі"
-subtitle: "Ukrainian Holidays and Festivals"
-version: "1.0"
-phase: "B1.7"
-pedagogy: "cultural"
-focus: "cultural"
-duration: 75
-transliteration: "none"
-tags: ["culture", "holidays", "festivals", "traditions"]
-grammar: []
-objectives:
-  - "Learner can discuss Ukrainian holidays and festivals in context"
-  - "Learner can understand authentic texts about Ukrainian celebrations"
-  - "Learner can use celebration-related vocabulary in communicative contexts"
-  - "Learner can compare Ukrainian festivals with their own cultural traditions"
-vocabulary_count: 30
-word_target: 1500
-immersion_target: 100
-vocab_count: 96
----
-
 # Вступ
 
 Чи знаєте ви, коли українці святкують Різдво? Чому Івана Купала — одне з найдавніших свят на території України? Україна має надзвичайно багату традицію святкувань, яка поєднує дохристиянські обряди, релігійні свята та сучасні фестивалі.

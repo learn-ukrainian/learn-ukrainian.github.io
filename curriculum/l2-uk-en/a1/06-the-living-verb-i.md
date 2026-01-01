@@ -1,22 +1,3 @@
----
-module: a1-06
-title: 'The Living Verb I'
-subtitle: 'Present Tense Class I (-ати/-яті)'
-version: '1.0'
-phase: 'A1.1'
-pedagogy: 'PPP'
-duration: 60
-transliteration: 'full'
-tags: ['verbs', 'conjugation', 'class-i', 'present-tense', 'actions']
-grammar: ['present-tense-class-i', 'verb-conjugation', 'personal-endings']
-objectives:
-  - 'Learner can conjugate Class I verbs in present tense'
-  - 'Learner can form basic action statements'
-  - 'Learner can describe daily activities using -ati verbs'
-vocabulary_count: 25
-vocab_count: 63
----
-
 # The Living Verb I
 
 До цього моменту ми говорили: це книга, то стіл. (This is a book. That is a table.). Але життя — це рух, дія! Час навчитися: я читаю, ти пишеш, ми працюємо.
@@ -230,56 +211,3 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
 > **Podcast:** [ULP 1-22 | First Verb Conjugation](https://www.ukrainianlessons.com/episode22/) — Learn conjugation in context
 >
 > **Quick Lesson:** [FMU 1-57 | Verb Conjugations](https://www.ukrainianlessons.com/fmu57/) — 5-minute grammar review
-
-# Vocabulary
-
-| Word        | IPA             | English                 | POS   | Gender | Note |
-| ----------- | --------------- | ----------------------- | ----- | ------ | ---- |
-| але         | /ɑˈlɛ/          | but                     | other | -      |      |
-| бережок     | /bɛrɛˈʒɔk/      | river bank (diminutive) | noun  | ч      |      |
-| в           | /v/             | in                      | other | -      |      |
-| вдома       | /ˈwdɔmɑ/        | at home                 | adv   | -      |      |
-| вечеряти    | /vɛt͡ʃɛˈrʲɑtɪ/   | to have dinner          | verb  | -      |      |
-| вечір       | /ˈvɛt͡ʃir/       | evening                 | noun  | ч      |      |
-| відпочивати | /vidpɔt͡ʃɪˈvɑtɪ/ | to rest                 | verb  | -      |      |
-| вільний     | /ˈvilʲnɪj/      | free                    | adj   | ч      |      |
-| говорити    | /ɦɔvɔˈrɪtɪ/     | to speak                | verb  | -      |      |
-| гра         | /ɦrɑ/           | game                    | noun  | ж      |      |
-| грати       | /ˈɦrɑtɪ/        | to play                 | verb  | -      |      |
-| гуляти      | /ɦuˈlʲɑtɪ/      | to walk/stroll          | verb  | -      |      |
-| думати      | /ˈdumɑtɪ/       | to think                | verb  | -      |      |
-| дія         | /ˈdijɑ/         | action                  | noun  | ж      |      |
-| життя       | /ʒɪˈtʲːɑ/       | life                    | noun  | с      |      |
-| знати       | /ˈznɑtɪ/        | to know                 | verb  | -      |      |
-| знаходити   | /znɑˈxɔdɪtɪ/    | to find                 | verb  | -      |      |
-| лист        | /lɪst/          | letter                  | noun  | ч      |      |
-| любити      | /lʲuˈbɪtɪ/      | to love                 | verb  | -      |      |
-| малювати    | /mɑlʲuˈvɑtɪ/    | to draw/paint           | verb  | -      |      |
-| момент      | /mɔˈmɛnt/       | moment                  | noun  | ч      |      |
-| навчитися   | /nɑwˈt͡ʃɪtɪsʲɑ/  | to learn                | verb  | -      |      |
-| обідати     | /ɔˈbidɑtɪ/      | to have lunch           | verb  | -      |      |
-| писати      | /pɪˈsɑtɪ/       | to write                | verb  | -      |      |
-| питання     | /pɪˈtɑnʲːɑ/     | question                | noun  | с      |      |
-| потім       | /ˈpɔtim/        | then/afterwards         | adv   | -      |      |
-| починати    | /pɔt͡ʃɪˈnɑtɪ/    | to start                | verb  | -      |      |
-| пісня       | /ˈpisnʲɑ/       | song                    | noun  | ж      |      |
-| ранок       | /ˈrɑnɔk/        | morning                 | noun  | ч      |      |
-| робити      | /rɔˈbɪtɪ/       | to do/make              | verb  | -      |      |
-| робота      | /rɔˈbɔtɑ/       | work                    | noun  | ж      |      |
-| розум       | /ˈrɔzʊm/        | mind/intellect          | noun  | ч      |      |
-| розуміти    | /rɔzuˈmitɪ/     | to understand           | verb  | -      |      |
-| рух         | /rux/           | movement                | noun  | ч      |      |
-| слухати     | /ˈsluxɑtɪ/      | to listen               | verb  | -      |      |
-| снідати     | /ˈsnidɑtɪ/      | to have breakfast       | verb  | -      |      |
-| співати     | /spiˈvɑtɪ/      | to sing                 | verb  | -      |      |
-| співак      | /spiˈvɑk/       | singer                  | noun  | ч      |      |
-| сьогодні    | /sʲɔˈɦɔdɲi/     | today                   | adv   | -      |      |
-| танцювати   | /tɑnt͡sʲuˈvɑtɪ/  | to dance                | verb  | -      |      |
-| то          | /tɔ/            | that (participle)       | other | -      |      |
-| тут         | /tut/           | here                    | adv   | -      |      |
-| у           | /u/             | in                      | other | -      |      |
-| українська  | /ʊkrɑˈjinʲsʲkɑ/ | Ukrainian (lang)        | noun  | ж      |      |
-| час         | /t͡ʃɑs/          | time                    | noun  | ч      |      |
-| чекати      | /t͡ʃɛˈkɑtɪ/      | to wait                 | verb  | -      |      |
-| чи          | /t͡ʃɪ/           | if/whether              | other | -      |      |
-| читати      | /t͡ʃɪˈtɑtɪ/      | to read                 | verb  | -      |      |

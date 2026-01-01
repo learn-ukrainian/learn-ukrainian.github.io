@@ -1,30 +1,3 @@
----
-module: b1-45
-title: "Пасивні дієприкметники минулого часу I"
-subtitle: "Past Passive Participles I (-ний/-тий)"
-version: "1.0"
-phase: "B1.4 Advanced Grammar"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - participles
-  - passive-participles
-  - past
-grammar:
-  - "Пасивні дієприкметники минулого часу"
-  - "Суфікси -ний/-тий"
-  - "Узгодження з іменником"
-objectives:
-  - "Learner can form past passive participles using -ний/-тий suffixes"
-  - "Learner can agree participles with nouns in gender, number, and case"
-  - "Learner can use passive participles in sentences"
-vocabulary_count: 25
-requires: [42, 43, 44]
-vocab_count: 143
----
-
 # Пасивні дієприкметники минулого часу
 
 > 🎯 **Чому це важливо?**

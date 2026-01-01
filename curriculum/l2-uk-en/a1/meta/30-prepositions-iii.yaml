@@ -1,0 +1,24 @@
+module: a1-30
+title: Prepositions III
+subtitle: Direction, Location & Origin
+version: '1.0'
+phase: A1.3 - Consolidation
+pedagogy: PPP
+duration: 60 min
+transliteration: first-occurrence
+tags:
+  - prepositions
+  - direction
+  - location
+  - movement
+grammar:
+  - Location (De?) vs Direction (Kudy?) vs Origin (Zvidky?)
+  - Prepositions with cases
+objectives:
+  - Learner can distinguish location from direction questions
+  - Learner can use в/на for location (Locative)
+  - Learner can use в/на/до for direction (Accusative/Genitive)
+  - Learner can use з/від for origin
+vocabulary_count: 20
+vocab_count: 10
+slug: 30-prepositions-iii

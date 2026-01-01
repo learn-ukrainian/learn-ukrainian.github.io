@@ -3,33 +3,30 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: рід, множина
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: називний, жіночий, множина, чоловічий, рід
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): нуль, одинадцять, дев'ять, десять, шість...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 10/100)
 
-- 1 pedagogical violations (minor)
+- 2 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1151/1000
+- **Words:** ✅ 1161/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 13/1
+- **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 50.0% (target 40-55% (A2.2))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
+- **Immersion:** 🇺🇦 40.6% (target 40-55% (A2.2))
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -47,7 +44,7 @@
 | **Quick Reference Table** | ⚪️ | 11 | Skipped |
 | **Story Time: At the Market** | ✅ | 127 | Included in Core |
 | **Story Time Part 2: The Bookstore** | ✅ | 135 | Included in Core |
-| **Story Time Part 3: Сімейний обід** | ✅ | 84 | Included in Core |
+| **Story Time Part 3: Сімейний обід** | ✅ | 94 | Included in Core |
 | **Common Mistakes** | ⚪️ | 0 | Skipped |
 | **Mistake 1: Using Plural After 2-4** | ⚪️ | 34 | Skipped |
 | **Mistake 2: Forgetting Gender Agreement for "Two"** | ⚪️ | 9 | Skipped |
@@ -55,15 +52,4 @@
 | **Mistake 4: Ignoring the Last Digit Rule** | ⚪️ | 14 | Skipped |
 | **Language Learning Tip** | ✅ | 98 | Included in Core |
 | **Summary Table** | ✅ | 158 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Zone Identification** | 🎮 | 8 | Activity (8 items, min 8) |
-| **fill-in: Complete the Phrase** | 🎮 | 10 | Activity (10 items, min 8) |
-| **quiz: Agreement Rules** | 🎮 | 8 | Activity (8 items, min 8) |
-| **cloze: Shopping at the Market** | 🎮 | 12 | Activity (12 items, min 12) |
-| **unjumble: Counting Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
-| **error-correction: Wrong Agreement** | 🎮 | 6 | Activity (6 items, min 6) |
-| **group-sort: Zone Classification** | 🎮 | 14 | Activity (14 items, min 12) |
-| **match-up: Noun Forms** | 🎮 | 8 | Activity (8 items, min 8) |
-| **cloze: The Modern Bookstore** | 🎮 | 12 | Activity (12 items, min 12) |
-| **cloze: Age Expressions** | 🎮 | 12 | Activity (12 items, min 12) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

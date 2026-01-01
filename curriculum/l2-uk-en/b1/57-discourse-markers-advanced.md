@@ -1,27 +1,3 @@
----
-module: b1-57
-title: "Дискурсивні маркери II: складна організація"
-subtitle: "Discourse Markers II: Advanced Text Organization"
-version: "1.0"
-phase: "B1.5 Vocabulary Expansion I"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "advanced discourse markers for text organization"
-tags:
-  - vocabulary
-  - discourse-markers
-  - text-organization
-objectives:
-  - "Learner can use 25 advanced discourse markers to organize complex arguments"
-  - "Learner can sequence ideas using ordinal markers (по-перше, по-друге, нарешті)"
-  - "Learner can express addition, contrast, and conclusion in academic writing"
-vocabulary_count: 35
-vocab_count: 62
----
-
 # Дискурсивні маркери II: складна організація
 
 > 🎯 **Чому це важливо?**

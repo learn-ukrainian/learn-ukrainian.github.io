@@ -1,0 +1,69 @@
+module: 52-abstract-concepts-ideas
+level: B1
+version: '2.0'
+items:
+- lemma: вакцина
+  ipa: /vakˈt͡sɪna/
+  translation: vaccine
+  pos: noun
+  gender: f
+- lemma: варіюватися
+  ipa: /varʲijuˈvatɪsʲa/
+  translation: to vary
+  pos: verb
+- lemma: данія
+  ipa: /ˈdanʲija/
+  translation: Denmark
+  pos: propn
+  gender: f
+- lemma: конотація
+  ipa: /kɔnɔˈtat͡sʲija/
+  translation: connotation
+  pos: noun
+  gender: f
+- lemma: концептуальний
+  ipa: /kɔnt͡sɛptuˈalʲnɪj/
+  translation: conceptual
+  pos: adj
+  gender: m
+- lemma: незграбно
+  ipa: /nɛzˈhrabnɔ/
+  translation: clumsily
+  pos: adv
+- lemma: неспростовний
+  ipa: /nɛsprɔˈstɔu̯nɪj/
+  translation: irrefutable
+  pos: adj
+  gender: m
+- lemma: оптимісти
+  ipa: /ɔptɪˈmʲistɪ/
+  translation: optimists
+  pos: verb
+- lemma: песимістичний
+  ipa: /pɛsɪmʲisˈtɪt͡ʃnɪj/
+  translation: pessimistic
+  pos: adj
+- lemma: стимул
+  ipa: /ˈstɪmul/
+  translation: stimulus
+  pos: noun
+  gender: m
+- lemma: теорій
+  ipa: /tɛˈɔrʲij/
+  translation: theories (gen.)
+  pos: noun
+  gender: f
+- lemma: формальніший
+  ipa: /fɔrˈmalʲnʲiʃɪj/
+  translation: more formal
+  pos: adj
+  gender: n
+- lemma: цінно
+  ipa: /ˈt͡sʲinːɔ/
+  translation: valuably
+  pos: adv
+- lemma: ші
+  ipa: /ʃi/
+  translation: ??? (typo)
+  pos: noun
+  gender: m

@@ -9,6 +9,7 @@ Fill the skeleton with rich instructional content.
 ### Template Selection by Level and Type
 
 **B1 Modules:**
+
 - **M01-05 (Metalanguage/Grammar Terms):** `docs/l2-uk-en/templates/b1-metalanguage-module-template.md`
 - **M06-51 (Grammar):** `docs/l2-uk-en/templates/b1-grammar-module-template.md`
 - **Checkpoints (M15, M25, M34, M41, M51 — grammar phases only):** `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
@@ -17,15 +18,18 @@ Fill the skeleton with rich instructional content.
 - **M82-86 (Integration/Skills):** `docs/l2-uk-en/templates/b1-integration-module-template.md`
 
 **B2+ Modules:**
+
 - **B2 (All types):** `docs/l2-uk-en/templates/b2-module-template.md`
 - **C1 (All types):** `docs/l2-uk-en/templates/c1-module-template.md`
 - **C2 (All types):** `docs/l2-uk-en/templates/c2-module-template.md`
 
 **LIT Track (Post-C1):**
+
 - **LIT-001 to LIT-030:** `docs/l2-uk-en/templates/lit-module-template.md`
   - **⚠️ IMPORTANT:** For LIT modules, ALSO check archived reference modules in `curriculum/l2-uk-en/lit/reference/` for research material, vocabulary, and content inspiration before writing!
 
 **Why templates matter:**
+
 - They define EXACT structure and required sections
 - They specify word count, vocabulary count, activity requirements
 - They document pedagogy (PPP, TTT, CBI, Creative Production)
@@ -37,7 +41,7 @@ Fill the skeleton with rich instructional content.
 
 ## Input
 
-- **Module file**: Created in Stage 1 (skeleton exists)
+- **Module file**: `module.md` (pure prose, no frontmatter) created in Stage 1
 - **Level**: Determines immersion %, word count target
 - **Template**: Appropriate template from above (MUST READ FIRST)
 
@@ -47,71 +51,75 @@ Write ONLY the instructional content sections. Do NOT write activities.
 
 ## Word Count Targets (Core Prose Only)
 
-**Definition:** Word count = core prose (explanations, examples, engagement boxes) — EXCLUDES vocabulary section, activities section, and tables.
+**Definition:** Word count = core prose (explanations, examples, engagement boxes).
 
-| Level | Range | Target |
-|-------|-------|--------|
-| A1 | M01-05 | 300+ |
-| A1 | M06-10 | 500+ |
-| A1 | M11+ | 750+ |
-| A2 | all | 1000+ |
-| B1 | all | 1500+ |
-| B2 | all | 1800+ |
-| C1 | all | 2000+ |
-| C2 | all | 2200+ |
-| LIT | all | 2200+ (often 2500-3000) |
+| Level | Range  | Target                  |
+| ----- | ------ | ----------------------- |
+| A1    | M01-05 | 300+                    |
+| A1    | M06-10 | 500+                    |
+| A1    | M11+   | 750+                    |
+| A2    | all    | 1000+                   |
+| B1    | all    | 1500+                   |
+| B2    | all    | 1800+                   |
+| C1    | all    | 2000+                   |
+| C2    | all    | 2200+                   |
+| LIT   | all    | 2200+ (often 2500-3000) |
 
 **Note:** Templates specify exact word count requirements. These are minimums; consult the template for details.
 
 ## Immersion Targets
 
-| Level | Ukrainian % |
-|-------|-------------|
-| A1 M01-15 | 15% |
-| A1 M16-34 | 30% |
-| A2 | 40-55% |
-| B1 (M01-86) | 90-100% (Ukrainian Only) |
-| B2 (M01-110) | 100% (Ukrainian Only) |
-| C1 (M01-160) | 100% (Ukrainian Only) |
-| C2 (M01-100) | 100% (Ukrainian Only) |
-| LIT (M01-30) | 100% (Ukrainian Only) |
+| Level        | Ukrainian %              |
+| ------------ | ------------------------ |
+| A1 M01-15    | 15%                      |
+| A1 M16-34    | 30%                      |
+| A2           | 40-55%                   |
+| B1 (M01-86)  | 90-100% (Ukrainian Only) |
+| B2 (M01-110) | 100% (Ukrainian Only)    |
+| C1 (M01-160) | 100% (Ukrainian Only)    |
+| C2 (M01-100) | 100% (Ukrainian Only)    |
+| LIT (M01-30) | 100% (Ukrainian Only)    |
 
 **Note:** Templates specify exact immersion requirements. Consult the appropriate template for your module type.
 
 ## Required Elements
 
 ### Example Sentences
+
 | Level | Minimum |
-|-------|---------|
-| A1 | 12+ |
-| A2 | 18+ |
-| B1 | 24+ |
-| B2 | 28+ |
-| C1 | 30+ |
-| C2 | 32+ |
+| ----- | ------- |
+| A1    | 12+     |
+| A2    | 18+     |
+| B1    | 24+     |
+| B2    | 28+     |
+| C1    | 30+     |
+| C2    | 32+     |
 
 ### Engagement Boxes
+
 | Level | Minimum |
-|-------|---------|
-| A1 | 3+ |
-| A2 | 4+ |
-| B1 | 5+ |
-| B2 | 6+ |
-| C1 | 7+ |
-| C2 | 8+ |
+| ----- | ------- |
+| A1    | 3+      |
+| A2    | 4+      |
+| B1    | 5+      |
+| B2    | 6+      |
+| C1    | 7+      |
+| C2    | 8+      |
 
 Box types:
+
 - `> [!tip]` - Did You Know
 - `> [!example]` - Pop Culture Moment
 - `> [!info]` - Real World Usage
 - `> [!warning]` - Common Mistake
 
 ### Mini-Dialogues
+
 | Level | Minimum |
-|-------|---------|
-| A1-A2 | 2-3+ |
-| B1-B2 | 4+ |
-| C1-C2 | 5+ |
+| ----- | ------- |
+| A1-A2 | 2-3+    |
+| B1-B2 | 4+      |
+| C1-C2 | 5+      |
 
 ## Content Quality Rules
 
@@ -125,26 +133,30 @@ Box types:
 ## Vocabulary Usage
 
 - **Narrative text**: May use "passive" vocabulary for richness
-- **Later Activities**: MUST use ONLY vocabulary from table or prior modules
-- **Never invent**: Do not add words not in the vocabulary table
+- **Later Activities**: MUST use ONLY vocabulary from the **YAML Vocabulary file** or prior modules
+- **Never invent**: Do not add words not in the Vocabulary YAML
 
 ## Section Guidelines
 
 ### Warm-up (PPP) / Diagnostic (TTT)
+
 - 2-3 sentences connecting to prior knowledge
 - A leading question or mini-challenge
 
 ### Presentation (PPP) / Analysis (TTT)
+
 - Main grammar/vocabulary explanation
 - Tables for conjugation/declension patterns
 - 6+ example sentences with translations (A1-B1)
 
 ### Cultural Insight / Deep Dive
+
 - Historical context, cultural notes
 - Engagement boxes
 - Mini-dialogues showing usage
 
 ### Practice
+
 - Model exercises (not full activities)
 - Pattern drills with examples
 
@@ -154,7 +166,7 @@ Box types:
 - [ ] Example sentences meet minimum
 - [ ] Engagement boxes meet minimum
 - [ ] Mini-dialogues present
-- [ ] Uses ONLY vocabulary from table + prior modules
+- [ ] Uses ONLY vocabulary from YAML + prior modules
 - [ ] Immersion percentage appropriate for level
 - [ ] Specific Ukrainian locations used
 - [ ] Grammar elegance noted

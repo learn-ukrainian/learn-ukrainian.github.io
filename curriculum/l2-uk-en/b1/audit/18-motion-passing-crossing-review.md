@@ -1,6 +1,15 @@
 # Audit Report: 18-motion-passing-crossing.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
+**Phase:** B1.2 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): повз, навколо, об'їхати, проїхати, шлях...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1706/1500
@@ -10,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 41/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -37,20 +46,13 @@
 | proverbs | 2 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **98.8%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Рух: перехід і обхід** | ⚪️ | 50 | Skipped |
+| **Intro/Narrative** | ✅ | 50 | Included in Core |
 | **Діагностика** | ✅ | 139 | Included in Core |
 | **Аналіз** | ✅ | 355 | Included in Core |
 | **Поглиблення** | ⚪️ | 454 | Skipped |
 | **Практика** | ⚪️ | 62 | Skipped |
 | **Діалоги** | ✅ | 409 | Included in Core |
 | **Підсумок** | ✅ | 237 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

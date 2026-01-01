@@ -1,0 +1,69 @@
+module: 39-reported-statements
+level: B1
+version: '2.0'
+items:
+- lemma: зауважити
+  ipa: /zauˈvaʒɪtɪ/
+  translation: to note
+  pos: verb
+- lemma: зос
+  ipa: /zɔs/
+  translation: ??? (abbr)
+  pos: noun
+  gender: m
+- lemma: зсува
+  ipa: /ˈzsuva/
+  translation: shift (gen.)
+  pos: noun
+  gender: m
+- lemma: напередодні
+  ipa: /napɛrɛˈdɔdnʲi/
+  translation: the day before
+  pos: adv
+- lemma: неактуальний
+  ipa: /nɛaktuˈalʲnɪj/
+  translation: irrelevant
+  pos: adj
+  gender: f
+- lemma: незмінений
+  ipa: /nɛˈzmʲinɛnɪj/
+  translation: unchanged
+  pos: adj
+- lemma: неточність
+  ipa: /nɛˈtɔt͡ʃnʲisʲtʲ/
+  translation: inaccuracy
+  pos: noun
+  gender: f
+- lemma: правдивість
+  ipa: /prau̯ˈdɪvisʲtʲ/
+  translation: truthfulness
+  pos: noun
+  gender: f
+- lemma: промовити
+  ipa: /prɔˈmɔvɪtɪ/
+  translation: to utter
+  pos: verb
+- lemma: протоколювання
+  ipa: /prɔtɔkɔlʲuˈvanʲːa/
+  translation: logging
+  pos: noun
+  gender: n
+- lemma: підсумовування
+  ipa: /pidsumɔˈvuvanʲːa/
+  translation: summarizing
+  pos: noun
+  gender: n
+- lemma: спікер
+  ipa: /ˈspikɛr/
+  translation: speaker
+  pos: noun
+  gender: m
+- lemma: харчуватися
+  ipa: /xart͡ʃuˈvatɪsʲa/
+  translation: to eat
+  pos: verb
+- lemma: інтуїтивніший
+  ipa: /intujitɪu̯ˈnʲiʃɪj/
+  translation: more intuitive
+  pos: adj
+  gender: f

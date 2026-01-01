@@ -1,27 +1,3 @@
----
-module: b1-16
-title: "Дієслова руху: повна система"
-subtitle: "Motion Verbs - The Full System"
-version: "1.0"
-phase: "B1.2 Motion"
-pedagogy: "TTT"
-duration: 90
-transliteration: none
-tags:
-  - grammar
-  - motion-verbs
-  - verbs
-grammar:
-  - "14 motion verb pairs"
-  - "Unidirectional vs multidirectional distinction"
-objectives:
-  - "Learner knows all 14 motion verb pairs"
-  - "Learner understands unidirectional vs multidirectional"
-  - "Learner can choose correct motion verb for context"
-vocabulary_count: 25
-vocab_count: 101
----
-
 # Дієслова руху: повна система
 
 > 🎯 **Чому це важливо?**

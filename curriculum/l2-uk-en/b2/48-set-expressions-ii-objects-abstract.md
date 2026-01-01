@@ -1,31 +1,3 @@
----
-module: b2-48
-title: "Сталі вирази II: Предмети та абстракції"
-subtitle: "Set Expressions II: Objects & Abstract"
-version: "1.0"
-phase: "B2.2 [Phraseology & Synonymy]"
-pedagogy: "CBI"
-duration: 90
-transliteration: none
-immersion: 100
-tags:
-  - phraseology
-  - idioms
-  - objects
-  - abstract-concepts
-  - metaphors
-grammar:
-  - "Fixed expressions (фразеологічні одиниці)"
-  - "Object and abstract metaphors"
-objectives:
-  - "Learner can recognize and interpret 16 core Ukrainian idioms with objects and abstract concepts"
-  - "Learner can use object-based metaphors appropriately in context"
-  - "Learner understands the cultural significance of everyday objects in Ukrainian phraseology"
-vocabulary_count: 35
-register: "varies"
-vocab_count: 67
----
-
 # Сталі вирази II: Предмети та абстракції
 
 > 🎯 **Чому це важливо?**

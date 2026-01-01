@@ -1,26 +1,30 @@
 # Audit Report: 05-the-instrumental-ii-means-and-tools.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Phase:** A2 | **Level:** A2 | **Pedagogy:** 'PPP' | **Target:** 1000
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[GRAMMAR]** Participle used before B1: 'закритий'
+  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 2046/1000 (>2000 may be too long)
+- **Words:** ⚠️ 2141/1000 (>2000 may be too long)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 23/1
+- **Vocab:** ✅ 64/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 41.4% (target 35-50% (A2.1))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
+- **Pedagogy:** ❌ 1 violations
+- **Immersion:** 🇺🇦 37.8% (target 35-50% (A2.1))
+- **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -28,30 +32,18 @@
 | **Introduction** | ✅ | 175 | Included in Core |
 | **Warm-up** | ✅ | 79 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
-| **The Bare Instrumental: No Preposition Needed** | ⚪️ | 84 | Skipped |
-| **Means of Transport** | ⚪️ | 273 | Skipped |
-| **Tools and Instruments** | ⚪️ | 295 | Skipped |
-| **Communication and Technology** | ⚪️ | 136 | Skipped |
+| **Орудний відмінок без прийменника** | ⚪️ | 68 | Skipped |
+| **Засоби пересування** | ⚪️ | 276 | Skipped |
+| **Інструменти та знаряддя (Tools and Instruments)** | ⚪️ | 270 | Skipped |
+| **Communication and Technology** | ⚪️ | 138 | Skipped |
 | **Cultural Insight** | ✅ | 0 | Included in Core |
 | **Manner and Voice** | ⚪️ | 140 | Skipped |
-| **Ukrainian Transport Culture** | ✅ | 312 | Included in Core |
+| **Ukrainian Transport Culture** | ✅ | 313 | Included in Core |
 | **Practice** | ⚪️ | 71 | Skipped |
 | **Choose: With or Without Preposition?** | ⚪️ | 0 | Skipped |
 | **Form the Instrumental** | ⚪️ | 0 | Skipped |
 | **Mini-Dialogues** | ✅ | 145 | Included in Core |
-| **Reading Practice: Один день у Києві** | ✅ | 195 | Included in Core |
+| **Reading Practice: Один день у Києві** | ✅ | 324 | Included in Core |
 | **Підсумок** | ✅ | 112 | Included in Core |
-| **Need More Practice?** | ⚪️ | 29 | Skipped |
-| **Activities** | ➖ | 55 | Excluded Type |
-| **match-up: Transport and Tools** | 🎮 | 12 | Activity (12 items, min 8) |
-| **fill-in: Instrumental Without Preposition** | 🎮 | 12 | Activity (12 items, min 8) |
-| **quiz: Instrumental Uses** | 🎮 | 12 | Activity (12 items, min 8) |
-| **true-false: Instrumental Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Transport vs. Tools** | 🎮 | 12 | Activity (12 items, min 12) |
-| **unjumble: Instrumental Sentences** | 🎮 | 6 | Activity (6 items, min 6) |
-| **error-correction: Fix the Instrumental** | 🎮 | 6 | Activity (6 items, min 6) |
-| **cloze: Complete the Story** | 🎮 | 12 | Activity (12 items, min 12) |
-| **dialogue-reorder: Asking Directions** | 🎮 | 12 | Activity (12 items, min 4) |
-| **mark-the-words: Find Bare Instrumental** | 🎮 | 15 | Activity (15 items, min 6) |
-| **translate: English to Ukrainian** | 🎮 | 36 | Activity (36 items, min 6) |
+| **Need More Practice?** | ⚪️ | 30 | Skipped |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

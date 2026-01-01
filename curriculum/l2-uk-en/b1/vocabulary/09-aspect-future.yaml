@@ -1,0 +1,138 @@
+module: 09-aspect-future
+level: B1
+version: '2.0'
+items:
+- lemma: бігатий
+  ipa: /biˈɦatɪj/
+  translation: running (typo)
+  pos: adj
+  gender: f
+- lemma: ворожити
+  ipa: /vɔrɔˈʒɪtɪ/
+  translation: to tell fortunes
+  pos: verb
+- lemma: ворожіння
+  ipa: /vɔrɔˈʒinʲːa/
+  translation: fortune telling
+  pos: noun
+  gender: n
+- lemma: дві
+  ipa: /dvʲi/
+  translation: two (fem.)
+  pos: other
+  gender: f
+- lemma: докторант
+  ipa: /dɔktɔˈrant/
+  translation: doctoral student
+  pos: noun
+  gender: m
+- lemma: діалектизм
+  ipa: /dʲialɛkˈtɪzm/
+  translation: dialectism
+  pos: noun
+  gender: m
+- lemma: екзамена
+  ipa: /ɛkˈzamɛna/
+  translation: exam (gen.)
+  pos: noun
+  gender: m
+- lemma: завтрашний
+  ipa: /zau̯ˈtraʃnɪj/
+  translation: tomorrow's (typo)
+  pos: adj
+- lemma: зберати
+  ipa: /zbɛˈratɪ/
+  translation: to collect (typo)
+  pos: verb
+- lemma: зіпсута
+  ipa: /zʲipˈsuta/
+  translation: spoiled (fem.)
+  pos: noun
+  gender: f
+- lemma: канікули
+  ipa: /kaˈnʲikulɪ/
+  translation: vacation
+  pos: noun
+  gender: pl
+- lemma: маргіналізувати
+  ipa: /marɦinalʲizuˈvatɪ/
+  translation: to marginalize
+  pos: verb
+- lemma: невідворотний
+  ipa: /nɛvidvɔˈrɔtnɪj/
+  translation: inevitable
+  pos: adj
+  gender: m
+- lemma: новорічний
+  ipa: /nɔvɔˈrʲit͡ʃnɪj/
+  translation: New Year's
+  pos: adj
+- lemma: опрацьовувати
+  ipa: /ɔprat͡sʲˈɔvuvatɪ/
+  translation: to process
+  pos: verb
+- lemma: органічний
+  ipa: /ɔrɦaˈnʲit͡ʃnɪj/
+  translation: organic
+  pos: adj
+  gender: f
+- lemma: орендувати
+  ipa: /ɔrɛnduˈvatɪ/
+  translation: to rent
+  pos: verb
+- lemma: полонізм
+  ipa: /pɔlɔˈnʲizm/
+  translation: Polonism
+  pos: noun
+  gender: m
+- lemma: прадавній
+  ipa: /praˈdau̯nʲij/
+  translation: ancient
+  pos: adj
+  gender: f
+- lemma: соня
+  ipa: /ˈsɔnʲa/
+  translation: Sonya
+  pos: propn
+  gender: f
+- lemma: темо
+  ipa: /ˈtɛmɔ/
+  translation: theme (vocative)
+  pos: noun
+  gender: n
+- lemma: тете
+  ipa: /ˈtɛtɛ/
+  translation: Tete
+  pos: noun
+  gender: n
+- lemma: тиме
+  ipa: /ˈtɪmɛ/
+  translation: will (suffix 3sg)
+  pos: other
+- lemma: тиму
+  ipa: /ˈtɪmu/
+  translation: will (suffix 1sg)
+  pos: other
+- lemma: тити
+  ipa: /ˈtɪtɪ/
+  translation: to ... (suffix?)
+  pos: verb
+- lemma: утворитися
+  ipa: /utvɔˈrɪtɪsʲa/
+  translation: to be formed
+  pos: verb
+  gender: f
+- lemma: іма
+  ipa: /ˈima/
+  translation: will (suffix 1pl)
+  pos: noun
+  gender: m
+- lemma: іспанська
+  ipa: /iˈspanʲsʲka/
+  translation: Spanish
+  pos: noun
+  gender: f
+- lemma: їдити
+  ipa: /jiˈdɪtɪ/
+  translation: to go (typo)
+  pos: verb

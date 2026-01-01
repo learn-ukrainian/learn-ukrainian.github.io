@@ -1,27 +1,3 @@
----
-module: b1-55
-title: "Згода і незгода"
-subtitle: "Agreement & Disagreement"
-version: "1.0"
-phase: "B1.5 Vocabulary Expansion I"
-focus: vocabulary
-pedagogy: "PPP"
-duration: 90
-transliteration: none
-grammar:
-  - "expression patterns for agreement and disagreement"
-tags:
-  - vocabulary
-  - discussion
-  - debate
-objectives:
-  - "Learner can express agreement at different levels of intensity"
-  - "Learner can express polite disagreement in formal and informal contexts"
-  - "Learner can participate in debates using appropriate vocabulary"
-vocabulary_count: 35
-vocab_count: 52
----
-
 # Згода і незгода
 
 > 🎯 **Чому це важливо?**
