@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 1676/1750 (74 short)
+- **Words:** ✅ 1807/1750
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 11/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.8% (target 98-100% (vocab))
+- **Immersion:** 🇺🇦 99.9% (target 98-100% (vocab))
 - **Richness:** ✅ 95% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -40,8 +40,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 114 | Included in Core |
-| **Вступ** | ⚪️ | 200 | Skipped |
-| **Історичний наратив: Від анексії до свободи** | ⚪️ | 743 | Skipped |
+| **Вступ** | ⚪️ | 224 | Skipped |
+| **Історичний наратив: Від анексії до свободи** | ⚪️ | 850 | Skipped |
 | **Первинні джерела** | ⚪️ | 254 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 251 | Skipped |
 | **Підсумок** | ✅ | 114 | Included in Core |

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 1724/1750 (26 short)
+- **Words:** ✅ 1785/1750
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 11/4 types
@@ -40,8 +40,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 90 | Included in Core |
-| **Вступ** | ⚪️ | 265 | Skipped |
-| **Історичний наратив: Лавина свободи** | ⚪️ | 734 | Skipped |
+| **Вступ** | ⚪️ | 271 | Skipped |
+| **Історичний наратив: Лавина свободи** | ⚪️ | 789 | Skipped |
 | **Первинні джерела** | ⚪️ | 244 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 254 | Skipped |
 | **Підсумок** | ✅ | 137 | Included in Core |

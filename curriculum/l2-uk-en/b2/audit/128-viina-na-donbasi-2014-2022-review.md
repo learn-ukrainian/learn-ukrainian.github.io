@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 1720/1750 (30 short)
+- **Words:** ✅ 1782/1750
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 11/4 types
@@ -28,20 +28,20 @@
 | primary_sources | 9 | 3 | 100% | 24% | 23.8% |
 | engagement | 10 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
-| decolonization | 4 | 2 | 100% | 14% | 14.3% |
+| decolonization | 5 | 2 | 100% | 14% | 14.3% |
 | cultural | 2 | 4 | 50% | 10% | 4.8% |
 | visual | 10 | 4 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| variety | 0.98 | - | 98% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 5 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **95.2%** |
+| **TOTAL** | | | | | **95.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 86 | Included in Core |
-| **Вступ** | ⚪️ | 154 | Skipped |
-| **Історичний наратив: Хроніка оборони** | ⚪️ | 938 | Skipped |
+| **Вступ** | ⚪️ | 169 | Skipped |
+| **Історичний наратив: Хроніка оборони** | ⚪️ | 968 | Skipped |
 | **Первинні джерела** | ⚪️ | 220 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 214 | Skipped |
-| **Підсумок** | ✅ | 108 | Included in Core |
+| **Підсумок** | ✅ | 125 | Included in Core |

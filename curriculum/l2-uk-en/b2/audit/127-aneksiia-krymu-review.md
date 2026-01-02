@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 1656/1750 (94 short)
+- **Words:** ✅ 1878/1750
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 11/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.7% (target 98-100% (vocab))
+- **Immersion:** 🇺🇦 99.8% (target 98-100% (vocab))
 - **Richness:** ✅ 95% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -27,8 +27,8 @@
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 8 | 3 | 100% | 24% | 23.8% |
 | engagement | 10 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 19 | 10 | 100% | 14% | 14.3% |
-| decolonization | 12 | 2 | 100% | 14% | 14.3% |
+| timeline_markers | 20 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 2 | 4 | 50% | 10% | 4.8% |
 | visual | 10 | 4 | 100% | 10% | 9.5% |
 | variety | 0.98 | - | 98% | 5% | 4.7% |
@@ -40,8 +40,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 111 | Included in Core |
-| **Вступ** | ⚪️ | 197 | Skipped |
-| **Історичний наратив: Хроніка злочину** | ⚪️ | 778 | Skipped |
+| **Вступ** | ⚪️ | 247 | Skipped |
+| **Історичний наратив: Хроніка злочину** | ⚪️ | 919 | Skipped |
 | **Первинні джерела** | ⚪️ | 209 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 251 | Skipped |
-| **Підсумок** | ✅ | 110 | Included in Core |
+| **Підсумок** | ✅ | 141 | Included in Core |

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 1742/1750 (8 short)
+- **Words:** ✅ 1793/1750
 - **Activities:** ✅ 15/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 12/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 98.5% (target 98-100% (vocab))
+- **Immersion:** 🇺🇦 98.3% (target 98-100% (vocab))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -25,7 +25,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 5 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 4 | 3 | 100% | 24% | 23.8% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
@@ -41,7 +41,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 109 | Included in Core |
 | **Ключова тема: Травма як фундамент стійкості** | ⚪️ | 96 | Skipped |
-| **Тематичний аналіз: Патерни нищення та виживання** | ✅ | 860 | Included in Core |
+| **Тематичний аналіз: Патерни нищення та виживання** | ✅ | 908 | Included in Core |
 | **Деколонізаційний синтез: Повернення національної суб'єктності** | ⚪️ | 205 | Skipped |
 | **Історіографічна рефлексія: Пам'ять як наша головна зброя** | ⚪️ | 311 | Skipped |
-| **Summary** | ✅ | 161 | Included in Core |
+| **Summary** | ✅ | 164 | Included in Core |
