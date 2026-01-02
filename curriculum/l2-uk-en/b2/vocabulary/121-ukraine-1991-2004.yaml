@@ -1,0 +1,185 @@
+module: 121-ukraine-1991-2004
+level: B2
+version: '2.0'
+items:
+- lemma: незалежність
+  ipa: /nezaleʒˈn⁽ʲ⁾istʲ/
+  translation: independence
+  pos: noun
+  gender: f
+- lemma: криза
+  ipa: /ˈkrɪza/
+  translation: crisis
+  pos: noun
+  gender: f
+- lemma: інфляція
+  ipa: /infˈlʲat͡s⁽ʲ⁾ija/
+  translation: inflation
+  pos: noun
+  gender: f
+- lemma: купони
+  ipa: /kuˈpɔnɪ/
+  translation: coupons (transitional currency)
+  pos: noun
+  gender: pl
+- lemma: будапештський меморандум
+  ipa: /budaˈpɛʃtsʲkɪj memoˈrandum/
+  translation: Budapest Memorandum
+  pos: phrase
+- lemma: ядерна зброя
+  ipa: /ˈjadernɐ ˈzbrɔjɐ/
+  translation: nuclear weapons
+  pos: phrase
+- lemma: гарантія
+  ipa: /ɦaˈrant⁽ʲ⁾ija/
+  translation: guarantee
+  pos: noun
+  gender: f
+- lemma: конституція
+  ipa: /konstɪˈtut͡s⁽ʲ⁾ija/
+  translation: constitution
+  pos: noun
+  gender: f
+- lemma: гривня
+  ipa: /ˈɦrɪwnʲa/
+  translation: hryvnia (national currency)
+  pos: noun
+  gender: f
+- lemma: приватизація
+  ipa: /prɪwatɪˈzat͡s⁽ʲ⁾ija/
+  translation: privatization
+  pos: noun
+  gender: f
+- lemma: олігарх
+  ipa: /ol⁽ʲ⁾iˈɦarx/
+  translation: oligarch
+  pos: noun
+  gender: m
+- lemma: корупція
+  ipa: /koˈrupt͡s⁽ʲ⁾ija/
+  translation: corruption
+  pos: noun
+  gender: f
+- lemma: плівки
+  ipa: /ˈpl⁽ʲ⁾iwkɪ/
+  translation: tapes (referring to Melnychenko tapes)
+  pos: noun
+  gender: pl
+- lemma: становлення
+  ipa: /stanoˈwlennʲa/
+  translation: formation / establishment
+  pos: noun
+  gender: n
+- lemma: гіперінфляція
+  ipa: /ɦiperinfˈlʲat͡s⁽ʲ⁾ija/
+  translation: hyperinflation
+  pos: noun
+  gender: f
+- lemma: реформа
+  ipa: /reˈfɔrma/
+  translation: reform
+  pos: noun
+  gender: f
+- lemma: президент
+  ipa: /prezɪˈdɛnt/
+  translation: president
+  pos: noun
+  gender: m
+- lemma: парламент
+  ipa: /parˈlamɛnt/
+  translation: parliament
+  pos: noun
+  gender: m
+- lemma: суверенітет
+  ipa: /suweren⁽ʲ⁾iˈtɛt/
+  translation: sovereignty
+  pos: noun
+  gender: m
+- lemma: дефіцит
+  ipa: /def⁽ʲ⁾it͡sɪt/
+  translation: deficit / shortage
+  pos: noun
+  gender: m
+- lemma: бартер
+  ipa: /ˈbartɛr/
+  translation: barter
+  pos: noun
+  gender: m
+- lemma: безробіття
+  ipa: /bezroˈbitʲtʲa/
+  translation: unemployment
+  pos: noun
+  gender: n
+- lemma: виживання
+  ipa: /wɪˈʒɪwannʲa/
+  translation: survival
+  pos: noun
+  gender: n
+- lemma: розпад
+  ipa: /ˈrɔzpad/
+  translation: collapse / disintegration
+  pos: noun
+  gender: m
+- lemma: ваучер
+  ipa: /ˈwaut͡ʃɛr/
+  translation: voucher
+  pos: noun
+  gender: m
+- lemma: клан
+  ipa: /klan/
+  translation: clan
+  pos: noun
+  gender: m
+- lemma: збагачення
+  ipa: /zbaˈɦat͡ʃennʲa/
+  translation: enrichment
+  pos: noun
+  gender: n
+- lemma: багатовекторність
+  ipa: /baɦatowɛkˈtɔrn⁽ʲ⁾istʲ/
+  translation: multi-vector policy
+  pos: noun
+  gender: f
+- lemma: вбивство
+  ipa: /ˈwbɪwstwo/
+  translation: murder
+  pos: noun
+  gender: n
+- lemma: розслідування
+  ipa: /rozˈsl⁽ʲ⁾iduwannʲa/
+  translation: investigation
+  pos: noun
+  gender: n
+- lemma: скандал
+  ipa: /skanˈdal/
+  translation: scandal
+  pos: noun
+  gender: m
+- lemma: правоохоронні органи
+  ipa: /prawooxoˈron⁽ʲ⁾n⁽ʲ⁾i ˈɔrɦanɪ/
+  translation: law enforcement agencies
+  pos: phrase
+- lemma: демократія
+  ipa: /demoˈkrat⁽ʲ⁾ija/
+  translation: democracy
+  pos: noun
+  gender: f
+- lemma: громадянське суспільство
+  ipa: /ɦromadʲˈansʲkɛ susˈp⁽ʲ⁾ilʲstwo/
+  translation: civil society
+  pos: phrase
+- lemma: спадкоємність
+  ipa: /spadkoˈjɛmn⁽ʲ⁾istʲ/
+  translation: continuity / succession
+  pos: noun
+  gender: f
+- lemma: кордон
+  ipa: /korˈdɔn/
+  translation: border
+  pos: noun
+  gender: m
+- lemma: роззброєння
+  ipa: /rozzbroˈjennʲa/
+  translation: disarmament
+  pos: noun
+  gender: n

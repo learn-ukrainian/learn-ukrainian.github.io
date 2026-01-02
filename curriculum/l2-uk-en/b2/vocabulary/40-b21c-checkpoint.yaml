@@ -2,186 +2,186 @@ module: 40-b21c-checkpoint
 level: B2
 version: '2.0'
 items:
-  - lemma: абстракція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: аспектуальний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: безособове
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: блога
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: восемнадцятий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: дизайнер
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: днк
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: збільшитися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: зверху
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: консультант
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: консультувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: координувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: кореляційний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: коротко
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: коїнатий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: макет
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: манера
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: надішити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: обнімати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: оргкомітет
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: парцеляція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: прикметниковий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: пунктуальність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: підстригтися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: різдвяний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: самоорганізація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: синк
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: синоніміка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: скучити
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: славити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: теплодушний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: тераса
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: третє
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: тітонька
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: фах
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: фразеологіз
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: худоба
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: ідіома
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: імперфективізація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
+- lemma: абстракція
+  ipa: /ɑbstrɑkˈt͡sʲijɑ/
+  translation: abstraction
+  pos: noun
+  gender: f
+- lemma: аспектуальний
+  ipa: /ɑspɛktuˈɑlʲnɪj/
+  translation: aspectual
+  pos: adj
+- lemma: безособове
+  ipa: /bɛzoˈsobowɛ/
+  translation: impersonal (sentence)
+  pos: noun
+  gender: n
+- lemma: блога
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: восемнадцятий
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: f
+- lemma: дизайнер
+  ipa: /dɪzɐjˈnɛr/
+  translation: designer
+  pos: noun
+  gender: m
+- lemma: днк
+  ipa: /dɛ-ɛn-ˈkɑ/
+  translation: DNA
+  pos: noun
+  gender: f
+- lemma: збільшитися
+  ipa: /zbʲilʲˈʃɪtɪsʲɑ/
+  translation: to increase, to grow
+  pos: verb
+  gender: m
+- lemma: зверху
+  ipa: /ˈzwɛrxu/
+  translation: from above, on top
+  pos: adv
+- lemma: консультант
+  ipa: /konsulʲˈtɑnt/
+  translation: consultant
+  pos: noun
+  gender: m
+- lemma: консультувати
+  ipa: /konsulʲtuˈwɑtɪ/
+  translation: to consult, to advise
+  pos: verb
+- lemma: координувати
+  ipa: /koordinuˈwɑtɪ/
+  translation: to coordinate
+  pos: verb
+- lemma: кореляційний
+  ipa: /korɛlʲɑˈt͡sʲijnɪj/
+  translation: correlative
+  pos: adj
+- lemma: коротко
+  ipa: /ˈkorotko/
+  translation: briefly, shortly
+  pos: adv
+- lemma: коїнатий
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: f
+- lemma: макет
+  ipa: /mɐˈkɛt/
+  translation: model, mockup
+  pos: noun
+  gender: m
+- lemma: манера
+  ipa: /mɐˈnɛrɑ/
+  translation: manner, style
+  pos: noun
+  gender: f
+- lemma: надішити
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: обнімати
+  ipa: /obˈnʲimɑtɪ/
+  translation: to embrace, to hug
+  pos: verb
+- lemma: оргкомітет
+  ipa: /orɦkomʲiˈtɛt/
+  translation: organizing committee
+  pos: noun
+  gender: m
+- lemma: парцеляція
+  ipa: /pɑrt͡sɛlʲɑˈt͡sʲijɑ/
+  translation: parceling (syntax)
+  pos: noun
+  gender: f
+- lemma: прикметниковий
+  ipa: /prɪkmɛtnɪˈkowɪj/
+  translation: adjectival
+  pos: adj
+  gender: f
+- lemma: пунктуальність
+  ipa: /punktuˈɑlʲnʲistʲ/
+  translation: punctuality
+  pos: noun
+  gender: f
+- lemma: підстригтися
+  ipa: /pʲidsˈtrɪɦtɪsʲɑ/
+  translation: to get a haircut
+  pos: verb
+- lemma: різдвяний
+  ipa: /rʲizdwʲɑˈnɪj/
+  translation: Christmas (adj.)
+  pos: adj
+- lemma: самоорганізація
+  ipa: /sɐmoorɦɐnʲizɑˈt͡sʲijɑ/
+  translation: self-organization
+  pos: noun
+  gender: f
+- lemma: синк
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: синоніміка
+  ipa: /sɪnonʲimʲikɑ/
+  translation: synonymy, study of synonyms
+  pos: noun
+  gender: f
+- lemma: скучити
+  ipa: ''
+  translation: ''
+  pos: verb
+  gender: f
+- lemma: славити
+  ipa: /slɑˈwɪtɪ/
+  translation: to glorify, to praise
+  pos: verb
+- lemma: теплодушний
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: f
+- lemma: тераса
+  ipa: /tɛˈrɑsɑ/
+  translation: terrace
+  pos: noun
+  gender: f
+- lemma: третє
+  ipa: ''
+  translation: ''
+  pos: other
+- lemma: тітонька
+  ipa: /tʲiˈtonʲkɑ/
+  translation: auntie
+  pos: noun
+  gender: f
+- lemma: фах
+  ipa: /fɑx/
+  translation: profession, specialty
+  pos: noun
+  gender: m
+- lemma: фразеологіз
+  ipa: /frɑzɛoloˈɦʲizm/
+  translation: phraseological unit, set expression
+  pos: noun
+  gender: m
+- lemma: худоба
+  ipa: /xuˈdobɑ/
+  translation: livestock, cattle
+  pos: noun
+  gender: f
+- lemma: ідіома
+  ipa: /ʲiˈdʲiomɑ/
+  translation: idiom
+  pos: noun
+  gender: m
+- lemma: імперфективізація
+  ipa: /ʲimpɛrfɛktɪwʲizɑˈt͡sʲijɑ/
+  translation: imperfectivization
+  pos: noun
+  gender: f

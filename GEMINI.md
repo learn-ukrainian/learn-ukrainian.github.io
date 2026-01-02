@@ -84,6 +84,7 @@
 9. **Issue Tracking**: Use GitHub Issues for all task tracking. DO NOT use `docs/issues/` (folder has been deprecated and removed). Use `gh issue create` and `gh issue list`.
 10. **Workflow/Command Loading**: When user types `/slash-command`, load from `claude_extensions/commands/slash-command.md` (tracked in Git). NEVER load from `.agent/workflows/` (gitignored, not source of truth).
 11. **Virtual Environment**: Always run Python scripts in the virtual environment. Use `.venv/bin/python3` or `source .venv/bin/activate`. Never use system Python.
+12. **BROKEN TOOL AVOIDANCE**: The `search_file_content` tool is BROKEN (internal configuration error). DO NOT USE IT. Always use `run_shell_command("rg ...")` for searching the codebase. Use flags like `-i` (ignore case) or `-F` (fixed string) as needed.
 
 ## File Structure Reference
 
@@ -97,3 +98,96 @@
   - `scripts/generate_mdx.py` (Converts MD to Docusaurus MDX)
 - **CLI Setup**: `docs/GEMINI-CLI-SETUP.md`
 - **CLI Config**: `.gemini/config.yaml`
+
+## B2+ Module Creation Workflow (CRITICAL)
+
+For B2+ levels (B2, C1, C2), follow this EXACT workflow:
+
+### 1. Create Metadata Sidecar FIRST
+
+Create `curriculum/l2-uk-en/{level}/meta/{slug}.yaml`:
+
+```yaml
+module: b2-112
+title: "Друга світова: окупації"
+subtitle: "WWII: Occupations"
+version: "2.0"
+phase: "B2.3c Trauma & Resistance"
+focus: history        # CRITICAL: Must be set for history modules!
+pedagogy: "CBI"
+duration: 120
+transliteration: none
+tags:
+  - history
+  - wwii
+grammar:
+  - "Historical narrative register"
+objectives:
+  - "Learner understands..."
+vocabulary_count: 25
+slug: 112-druha-svitova-okupatsii
+```
+
+**CRITICAL**: The `focus` field MUST be set to one of:
+- `history` - for history modules (M71-145 in B2)
+- `biography` - for biography modules
+- `grammar` - for grammar-focused modules
+- `vocabulary` - for vocabulary expansion modules
+- `style` - for register/style modules
+- `checkpoint` - for checkpoint modules
+
+### 2. Create Vocabulary YAML (NOT Embedded Table)
+
+For B2+ modules, vocabulary goes in a SEPARATE YAML file:
+
+Create `curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml`:
+
+```yaml
+module: 112-druha-svitova-okupatsii
+level: B2
+version: '2.0'
+items:
+- lemma: окупація
+  ipa: /okʊˈpat͡sʲija/     # Include IPA!
+  translation: occupation
+  pos: noun
+  gender: f
+```
+
+**DO NOT add embedded `# Словник` table to the markdown for B2+ modules.**
+
+### 3. Create Module Content
+
+Create `curriculum/l2-uk-en/{level}/{slug}.md`:
+- Start directly with `# Title` (no frontmatter needed - use sidecar)
+- Use B2+ history callouts: `[!history-bite]`, `[!myth-buster]`, `[!quote]`, `[!context]`
+- End with `> [!resources]` section
+
+### 4. Create Activities YAML
+
+Create `curriculum/l2-uk-en/{level}/activities/{slug}.yaml`
+
+### 5. Run Audit
+
+```bash
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/{level}/{slug}.md
+```
+
+**All gates must pass before proceeding.**
+
+## B2+ History Callout Types
+
+Use these engagement box types for history modules:
+
+| Callout | Purpose |
+|---------|---------|
+| `[!history-bite]` | Interesting historical fact |
+| `[!myth-buster]` | Debunk Russian/Soviet propaganda |
+| `[!quote]` | Primary source quote |
+| `[!context]` | Historical context |
+| `[!analysis]` | Source analysis guidance |
+| `[!source]` | Primary source introduction |
+| `[!legacy]` | Modern legacy/impact |
+| `[!reflection]` | Reflective moment |
+
+These are recognized by the audit system alongside standard callouts (`[!tip]`, `[!important]`, etc.).

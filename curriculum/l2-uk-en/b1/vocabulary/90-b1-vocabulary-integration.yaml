@@ -1,0 +1,90 @@
+module: 90-b1-vocabulary-integration
+level: B1
+version: '2.0'
+items:
+- lemma: взаємозе'зязка
+  ipa: /vzaˈjɛmɔzɛzjazka/
+  translation: interconnection (typo)
+  pos: noun
+  gender: m
+- lemma: видний
+  ipa: /ˈvɪdnɪj/
+  translation: visible
+  pos: adj
+- lemma: вірте
+  ipa: /vʲirˈtɛ/
+  translation: believe (imp.)
+  pos: propn
+  gender: m
+- lemma: готик
+  ipa: /ˈhɔtɪk/
+  translation: gothic (gen.)
+  pos: noun
+  gender: f
+- lemma: дискримінація
+  ipa: /dɪskrɪmʲiˈnat͡sʲija/
+  translation: discrimination
+  pos: noun
+  gender: f
+- lemma: доменя
+  ipa: /dɔˈmɛnʲa/
+  translation: domain (typo)
+  pos: noun
+  gender: m
+- lemma: діагностичний
+  ipa: /dʲiahnoˈstɪt͡ʃnɪj/
+  translation: diagnostic
+  pos: adj
+  gender: m
+- lemma: зложитися
+  ipa: /zlɔˈʒɪtɪsʲa/
+  translation: to develop (dial.)
+  pos: verb
+- lemma: мультикультурний
+  ipa: /mulʲtɪkulʲˈturnɪj/
+  translation: multicultural
+  pos: adj
+  gender: m
+- lemma: мультикультурність
+  ipa: /mulʲtɪkulʲˈturnʲisʲtʲ/
+  translation: multiculturalism
+  pos: noun
+  gender: f
+- lemma: міжкультурний
+  ipa: /mʲiʒkulʲˈturnɪj/
+  translation: intercultural
+  pos: adj
+  gender: n
+- lemma: набутий
+  ipa: /naˈbutɪj/
+  translation: acquired
+  pos: adj
+- lemma: однодумець
+  ipa: /ɔdnɔˈdumɛt͡sʲ/
+  translation: like-minded person
+  pos: noun
+  gender: m
+- lemma: переконливіший
+  ipa: /pɛrɛˈkɔnlɪvʲiʃɪj/
+  translation: more convincing
+  pos: adj
+  gender: f
+- lemma: поверхнево
+  ipa: /pɔvɛrxˈnɛvɔ/
+  translation: superficially
+  pos: adv
+- lemma: самовдосконалення
+  ipa: /samɔu̯dɔskɔˈnalɛnʲːa/
+  translation: self-improvement
+  pos: noun
+  gender: n
+- lemma: скульптура
+  ipa: /skulʲpˈtura/
+  translation: sculpture
+  pos: noun
+  gender: f
+- lemma: трий
+  ipa: /trɪj/
+  translation: three (typo)
+  pos: adj
+  gender: f

@@ -2,358 +2,358 @@ module: 41-aspect-nuances-secondary-imperfectivization
 level: B2
 version: '2.0'
 items:
-  - lemma: анотований
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: апостол
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: багаторазовість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: безперервність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: ва
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: вглядатися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: вдягати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: вдягнути
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: вибачатися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: вигідний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: видаювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: видовий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: випадання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: виривати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: виробувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: вирізати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: виходжувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: виїдати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: вкорінений
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: відслідковувати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: відступати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: відступлювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: генеральний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: глибоко
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: доводитися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: n
-  - lemma: дописувати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: дуративний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: дуративність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: запомагати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: запомогти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: засипати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: засипляти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: затримувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: зосереджений
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: зіронька
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: калин
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: кафетерія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: коментування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: коментуючий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: криниченький
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: майстр
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: мамай
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: наголоса
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: нагрівання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: надаювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: найякісніший
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: нестандартний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: однокореневий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: оповідати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: перегортати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: перервати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: переробляти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: полонина
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: поточній
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: префіксальний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: префіксація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: пригадати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: пригадувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: притягатися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: приєднуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: провожити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: підвищуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: підганяти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: регіонально
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: розповісувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: розподіляти
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: росий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: скорочуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: суплетивізм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: схопити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: сіст
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: фіксувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: цикл
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: циклічність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: імперфектив
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: імперфективація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: істин
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: ітеративний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: ітеративність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
+- lemma: анотований
+  ipa: /ɐnotoˈwɑnɪj/
+  translation: annotated
+  pos: adj
+  gender: m
+- lemma: апостол
+  ipa: /ɐˈpostol/
+  translation: apostle
+  pos: noun
+  gender: m
+- lemma: багаторазовість
+  ipa: /bɑɦɐtorɐˈzowʲistʲ/
+  translation: repeatability, multiple times
+  pos: noun
+  gender: f
+- lemma: безперервність
+  ipa: /bɛzpɛˈrɛrwnʲistʲ/
+  translation: continuity
+  pos: noun
+  gender: f
+- lemma: ва
+  ipa: ''
+  translation: ''
+  pos: other
+- lemma: вглядатися
+  ipa: /wɦlʲɑˈdɑtɪsʲɑ/
+  translation: to peer, to look closely
+  pos: verb
+- lemma: вдягати
+  ipa: /wdʲɑˈɦɑtɪ/
+  translation: to put on, to dress (imperfective)
+  pos: verb
+- lemma: вдягнути
+  ipa: /wdʲɑɦˈnutɪ/
+  translation: to put on, to dress (perfective)
+  pos: verb
+- lemma: вибачатися
+  ipa: /wɪbɑˈt͡ʃɑtɪsʲɑ/
+  translation: to apologize
+  pos: verb
+  gender: m
+- lemma: вигідний
+  ipa: /wɪˈɦʲidnɪj/
+  translation: profitable, advantageous
+  pos: adj
+- lemma: видаювати
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: видовий
+  ipa: /wɪˈdowɪj/
+  translation: aspectual (grammar)
+  pos: adj
+- lemma: випадання
+  ipa: /wɪpɐˈdɑnʲːɑ/
+  translation: falling out, elision
+  pos: noun
+  gender: n
+- lemma: виривати
+  ipa: /wɪrɪˈwɑtɪ/
+  translation: to tear out
+  pos: verb
+  gender: m
+- lemma: виробувати
+  ipa: /wɪroˈbuwɑtɪ/
+  translation: to produce, to work out
+  pos: verb
+- lemma: вирізати
+  ipa: /wɪˈrʲizɑtɪ/
+  translation: to cut out
+  pos: verb
+- lemma: виходжувати
+  ipa: /wɪxoˈdʒuwɑtɪ/
+  translation: to nurse back to health
+  pos: verb
+- lemma: виїдати
+  ipa: /wɪˈjidɑtɪ/
+  translation: to eat away, to corrode
+  pos: verb
+- lemma: вкорінений
+  ipa: /wkorʲiˈnɛnɪj/
+  translation: rooted, entrenched
+  pos: adj
+- lemma: відслідковувати
+  ipa: /wʲidsˈlʲidkowuwɑtɪ/
+  translation: to track, to monitor
+  pos: verb
+  gender: m
+- lemma: відступати
+  ipa: /wʲidstuˈpɑtɪ/
+  translation: to retreat, to step back
+  pos: verb
+- lemma: відступлювати
+  ipa: /wʲidstuplʲuˈwɑtɪ/
+  translation: to retreat (iterative)
+  pos: verb
+- lemma: генеральний
+  ipa: /ɦɛnɛˈrɑlʲnɪj/
+  translation: general
+  pos: adj
+  gender: m
+- lemma: глибоко
+  ipa: /ɦlɪboˈko/
+  translation: deeply
+  pos: adv
+- lemma: доводитися
+  ipa: /doˈwodɪtɪsʲɑ/
+  translation: to have to, must
+  pos: verb
+  gender: n
+- lemma: дописувати
+  ipa: ''
+  translation: ''
+  pos: verb
+  gender: f
+- lemma: дуративний
+  ipa: /durɐˈtɪwnɪj/
+  translation: durative
+  pos: adj
+  gender: n
+- lemma: дуративність
+  ipa: /durɐtɪwnʲistʲ/
+  translation: durativity
+  pos: noun
+  gender: f
+- lemma: запомагати
+  ipa: /zɐpoˈmɑɦɑtɪ/
+  translation: to help (imperfective, iterative)
+  pos: verb
+- lemma: запомогти
+  ipa: /zɐpoˈmoɦtɪ/
+  translation: to help (perfective)
+  pos: verb
+- lemma: засипати
+  ipa: /zɐsɪˈpɑtɪ/
+  translation: to fall asleep (perfective)
+  pos: verb
+- lemma: засипляти
+  ipa: /zɐsɪplʲɑtɪ/
+  translation: to fall asleep (imperfective, iterative)
+  pos: verb
+- lemma: затримувати
+  ipa: /zɐtrɪˈmuwɑtɪ/
+  translation: to detain, to delay
+  pos: verb
+- lemma: зосереджений
+  ipa: /zosɛˈrɛdʒɛnɪj/
+  translation: concentrated, focused
+  pos: adj
+  gender: f
+- lemma: зіронька
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: калин
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: кафетерія
+  ipa: /kɑfɛˈtɛrʲijɑ/
+  translation: cafeteria
+  pos: noun
+  gender: f
+- lemma: коментування
+  ipa: /komɛntuˈwɑnʲːɑ/
+  translation: commenting
+  pos: noun
+  gender: n
+- lemma: коментуючий
+  ipa: /komɛnˈtujut͡ʃɪj/
+  translation: commenting (participle)
+  pos: adj
+  gender: n
+- lemma: криниченький
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: f
+- lemma: майстр
+  ipa: /ˈmɑjstr/
+  translation: master, craftsman
+  pos: noun
+  gender: m
+- lemma: мамай
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: наголоса
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: нагрівання
+  ipa: /nɐɦrʲiˈwɑnʲːɑ/
+  translation: heating
+  pos: noun
+  gender: n
+- lemma: надаювати
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: найякісніший
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: f
+- lemma: нестандартний
+  ipa: /nɛstɐnˈdɑrtnɪj/
+  translation: non-standard
+  pos: adj
+- lemma: однокореневий
+  ipa: /odnokoˈrɛnɛwɪj/
+  translation: having the same root
+  pos: adj
+- lemma: оповідати
+  ipa: /opowʲiˈdɑtɪ/
+  translation: to narrate, to tell
+  pos: verb
+- lemma: перегортати
+  ipa: /pɛrɛɦorˈtɑtɪ/
+  translation: to flip through, to turn pages
+  pos: verb
+- lemma: перервати
+  ipa: /pɛrɛrˈwɑtɪ/
+  translation: to interrupt, to break
+  pos: verb
+- lemma: переробляти
+  ipa: /pɛrɛroblʲɑtɪ/
+  translation: to process, to rework
+  pos: verb
+- lemma: полонина
+  ipa: /poloˈnɪnɑ/
+  translation: mountain meadow
+  pos: noun
+  gender: f
+- lemma: поточній
+  ipa: /poˈtot͡ʃnʲij/
+  translation: current, present
+  pos: adj
+- lemma: префіксальний
+  ipa: /prɛfʲiksɑlʲnɪj/
+  translation: prefixal
+  pos: adj
+  gender: m
+- lemma: префіксація
+  ipa: /prɛfʲiksɑˈt͡sʲijɑ/
+  translation: prefixation
+  pos: noun
+  gender: f
+- lemma: пригадати
+  ipa: /prɪɦɐˈdɑtɪ/
+  translation: to recall, to remember (perfective)
+  pos: verb
+- lemma: пригадувати
+  ipa: /prɪɦɐˈduwɑtɪ/
+  translation: to recall, to remember (imperfective)
+  pos: verb
+- lemma: притягатися
+  ipa: /prɪtʲɑˈɦɑtɪsʲɑ/
+  translation: to be attracted
+  pos: verb
+- lemma: приєднуватися
+  ipa: /prɪjɛdnuˈwɑtɪsʲɑ/
+  translation: to join, to attach oneself
+  pos: verb
+- lemma: провожити
+  ipa: /proˈwoʒɪtɪ/
+  translation: to see off, to escort
+  pos: verb
+- lemma: підвищуватися
+  ipa: /pʲidwɪʃuˈwɑtɪsʲɑ/
+  translation: to increase, to rise
+  pos: verb
+- lemma: підганяти
+  ipa: /pʲidɦɐˈnʲɑtɪ/
+  translation: to urge on, to rush
+  pos: verb
+- lemma: регіонально
+  ipa: /rɛɦʲionɑlʲno/
+  translation: regionally
+  pos: adv
+- lemma: розповісувати
+  ipa: /rozpowʲisuˈwɑtɪ/
+  translation: to tell, to narrate (iterative)
+  pos: verb
+- lemma: розподіляти
+  ipa: /rozpodʲiˈlʲɑtɪ/
+  translation: to distribute, to allocate
+  pos: verb
+  gender: m
+- lemma: росий
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: f
+- lemma: скорочуватися
+  ipa: /skorot͡ʃuˈwɑtɪsʲɑ/
+  translation: to shorten, to reduce
+  pos: verb
+- lemma: суплетивізм
+  ipa: /suplɛtɪˈwʲizm/
+  translation: suppletion
+  pos: noun
+  gender: m
+- lemma: схопити
+  ipa: /sxoˈpɪtɪ/
+  translation: to grab, to seize
+  pos: verb
+- lemma: сіст
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: фіксувати
+  ipa: /fʲiksuˈwɑtɪ/
+  translation: to fix, to record
+  pos: verb
+- lemma: цикл
+  ipa: /t͡sɪkl/
+  translation: cycle
+  pos: noun
+  gender: m
+- lemma: циклічність
+  ipa: /t͡sɪklʲit͡ʃnʲistʲ/
+  translation: cyclicity
+  pos: noun
+  gender: f
+- lemma: імперфектив
+  ipa: /ʲimpɛrˈfɛktɪw/
+  translation: imperfective aspect
+  pos: noun
+  gender: m
+- lemma: імперфективація
+  ipa: /ʲimpɛrfɛktɪwɑˈt͡sʲijɑ/
+  translation: imperfectivization
+  pos: noun
+  gender: f
+- lemma: істин
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: ітеративний
+  ipa: /ʲitɛrɐˈtɪwnɪj/
+  translation: iterative
+  pos: adj
+  gender: n
+- lemma: ітеративність
+  ipa: /ʲitɛrɐtɪwnʲistʲ/
+  translation: iterativity
+  pos: noun
+  gender: f

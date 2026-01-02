@@ -24,27 +24,24 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Immersion:** 🇺🇦 99.8% (checkpoint - no gate)
-- **Richness:** ✅ 99% (grammar)
+- **Richness:** ✅ 98% (checkpoint)
 - **Grammar:** ✅ Validated (7/109 confirmed)
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 98% (minimum: 85%)
+**Module Type:** checkpoint
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 29 | 24 | 100% | 20% | 20.0% |
-| engagement | 5 | 5 | 100% | 15% | 15.0% |
-| dialogues | 10 | 4 | 100% | 15% | 15.0% |
-| variety | 0.92 | - | 92% | 10% | 9.2% |
-| cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 7 | 3 | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 43 | 5 | 100% | 5% | 5.0% |
-| proverbs | 4 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.2%** |
+| activity_types | 12 | 8 | 100% | 25% | 25.0% |
+| review_sections | 22 | 3 | 100% | 20% | 20.0% |
+| variety | 0.92 | - | 92% | 15% | 13.8% |
+| engagement | 5 | 3 | 100% | 10% | 10.0% |
+| cultural | 3 | - | 100% | 10% | 10.0% |
+| visual | 8 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
+| **TOTAL** | | | | | **98.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): чого, правда, тоді, факт, питання...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): треба, разу, щоразу, нічого, чого...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): відійти, донести, підійти, доїхати, відстань...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): долетіти, дійти, відхід, наближення, донести...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

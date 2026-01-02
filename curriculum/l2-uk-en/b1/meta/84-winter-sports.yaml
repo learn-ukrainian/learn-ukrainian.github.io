@@ -1,0 +1,27 @@
+module: 84
+title: Зимові види спорту
+subtitle: Skiing & Snowboarding
+version: '1.0'
+phase: B1.7
+level: B1
+focus: cultural
+pedagogy: PPP
+duration: 75
+transliteration: none
+tags:
+  - cultural
+  - winter-sports
+  - skiing
+  - snowboarding
+  - bukovel
+grammar: []
+objectives:
+  - Learner can discuss winter sports and ski resorts in Ukrainian
+  - Learner can understand slopes maps and weather conditions
+  - Learner can use vocabulary for skiing equipment
+  - Learner can plan a winter vacation to Bukovel or Drahobrat
+word_target: 1500
+vocab_target: 25
+immersion_target: 95
+vocab_count: 25
+slug: 84-winter-sports

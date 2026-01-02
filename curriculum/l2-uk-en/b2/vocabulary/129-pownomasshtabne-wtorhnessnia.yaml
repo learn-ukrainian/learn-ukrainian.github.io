@@ -1,0 +1,173 @@
+module: 129-pownomasshtabne-wtorhnessnia
+level: B2
+version: '2.0'
+items:
+- lemma: лютий
+  ipa: /ˈlʲutɪj/
+  translation: February
+  pos: noun
+  gender: m
+- lemma: 24 лютого
+  ipa: /dwad͡t͡sʲatʲ ˈt͡ʃɛtwerte ˈlʲutoɦo/
+  translation: February 24th
+  pos: phrase
+- lemma: ракета
+  ipa: /raˈkɛta/
+  translation: missile / rocket
+  pos: noun
+  gender: f
+- lemma: сирена
+  ipa: /sɪˈrɛna/
+  translation: siren
+  pos: noun
+  gender: f
+- lemma: тривога
+  ipa: /trɪˈwɔɦa/
+  translation: alert / alarm
+  pos: noun
+  gender: f
+- lemma: повітряна тривога
+  ipa: /poˈw⁽ʲ⁾it rʲana trɪˈwɔɦa/
+  translation: air raid alert
+  pos: phrase
+- lemma: вторгнення
+  ipa: /ˈwtɔrɦnennʲa/
+  translation: invasion
+  pos: noun
+  gender: n
+- lemma: повномасштабний
+  ipa: /pownomaˈʃtabnɪj/
+  translation: full-scale
+  pos: adj
+- lemma: наступ
+  ipa: /ˈnastup/
+  translation: offensive / advance
+  pos: noun
+  gender: m
+- lemma: колона
+  ipa: /koˈlɔna/
+  translation: column / convoy
+  pos: noun
+  gender: f
+- lemma: танк
+  ipa: /tank/
+  translation: tank
+  pos: noun
+  gender: m
+- lemma: Київ
+  ipa: /ˈkɪjiw/
+  translation: Kyiv
+  pos: noun
+  gender: m
+- lemma: оборона
+  ipa: /oboˈrɔna/
+  translation: defense
+  pos: noun
+  gender: f
+- lemma: ЗСУ
+  ipa: /zɛ.sɛ.ˈu/
+  translation: AFU (Armed Forces of Ukraine)
+  pos: noun
+  gender: pl
+- lemma: тероборона
+  ipa: /teroboˈrɔna/
+  translation: Territorial Defense
+  pos: noun
+  gender: f
+- lemma: президент тут
+  ipa: /prezɪˈdɛnt tut/
+  translation: the president is here
+  pos: phrase
+- lemma: вибух
+  ipa: /ˈwɪbux/
+  translation: explosion
+  pos: noun
+  gender: m
+- lemma: бомбосховище
+  ipa: /bomboˈsxɔwɪʃt͡ʃe/
+  translation: bomb shelter
+  pos: noun
+  gender: n
+- lemma: доброволець
+  ipa: /dobroˈwɔlet͡sʲ/
+  translation: volunteer (combatant)
+  pos: noun
+  gender: m
+- lemma: зброя
+  ipa: /ˈzbrɔja/
+  translation: weapon
+  pos: noun
+  gender: f
+- lemma: спротив
+  ipa: /ˈsprɔtɪw/
+  translation: resistance
+  pos: noun
+  gender: m
+- lemma: незламність
+  ipa: /nezˈlamn⁽ʲ⁾istʲ/
+  translation: invincibility / resilience
+  pos: noun
+  gender: f
+- lemma: агресор
+  ipa: /aˈɦrɛsɔr/
+  translation: aggressor
+  pos: noun
+  gender: m
+- lemma: окупація
+  ipa: /okuˈpat͡s⁽ʲ⁾ija/
+  translation: occupation
+  pos: noun
+  gender: f
+- lemma: визволення
+  ipa: /ˈwɪzwɔlennʲa/
+  translation: liberation
+  pos: noun
+  gender: n
+- lemma: перемога
+  ipa: /pereˈmɔɦa/
+  translation: victory
+  pos: noun
+  gender: f
+- lemma: гуманітарна допомога
+  ipa: /ɦuman⁽ʲ⁾iˈtarna dopoˈmɔɦa/
+  translation: humanitarian aid
+  pos: phrase
+- lemma: єдність
+  ipa: /ˈjɛdn⁽ʲ⁾istʲ/
+  translation: unity
+  pos: noun
+  gender: f
+- lemma: черга
+  ipa: /ˈt͡ʃɛrɦa/
+  translation: queue / line
+  pos: noun
+  gender: f
+- lemma: військкомат
+  ipa: /w⁽ʲ⁾ijsʲkkoˈmat/
+  translation: military enlistment office
+  pos: noun
+  gender: m
+- lemma: ворог
+  ipa: /ˈwɔrɔɦ/
+  translation: enemy
+  pos: noun
+  gender: m
+- lemma: героїзм
+  ipa: /ɦeroˈjizm/
+  translation: heroism
+  pos: noun
+  gender: m
+- lemma: битва
+  ipa: /ˈbɪtwa/
+  translation: battle
+  pos: noun
+  gender: f
+- lemma: невідворотність
+  ipa: /newidwoˈrɔtn⁽ʲ⁾istʲ/
+  translation: inevitability
+  pos: noun
+  gender: f
+- lemma: вистояти
+  ipa: /ˈwɪstojatɪ/
+  translation: to stand firm / to hold out
+  pos: verb

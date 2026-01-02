@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): забороняти, дозволяти, попросити, уточнювати, рекомендувати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): питати, рекомендувати, вимагати, попросити, наполягати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

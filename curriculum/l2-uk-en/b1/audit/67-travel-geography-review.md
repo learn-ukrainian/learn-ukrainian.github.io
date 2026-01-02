@@ -5,7 +5,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
   - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): багаж, валіза, паспорт, карта, напрямок...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): пам'ятка, подорож, острів, багаж, рюкзак...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -26,27 +26,25 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Immersion:** 🇺🇦 99.7% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ❌ 91% < 95% min (grammar)
+- **Richness:** ✅ 98% (vocabulary)
 - **Grammar:** ✅ Validated (8/48 confirmed)
 
 ## Richness Details
-**Score:** 91% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 98% (minimum: 95%)
+**Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 14 | 24 | 58% | 20% | 11.6% |
-| engagement | 12 | 5 | 100% | 15% | 15.0% |
-| dialogues | 13 | 4 | 100% | 15% | 15.0% |
-| variety | 0.98 | - | 98% | 10% | 9.8% |
+| collocations | 30 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 14 | 15 | 93% | 20% | 18.6% |
+| engagement | 12 | 4 | 100% | 15% | 15.0% |
 | cultural | 12 | 3 | 100% | 10% | 10.0% |
-| realworld | 9 | 3 | 100% | 10% | 10.0% |
-| visual | 6 | 3 | 100% | 5% | 5.0% |
+| visual | 6 | 3 | 100% | 10% | 10.0% |
+| register_notes | 14 | 5 | 100% | 10% | 10.0% |
+| variety | 0.98 | - | 98% | 5% | 4.9% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 28 | 5 | 100% | 5% | 5.0% |
-| proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **91.4%** |
+| **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

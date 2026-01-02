@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): напевно, сподіваюся, вирішив, часом, мабуть...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): планую, наступного, намір, можливо, сподіваюся...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -19,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 29/25
+- **Vocab:** ✅ 28/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

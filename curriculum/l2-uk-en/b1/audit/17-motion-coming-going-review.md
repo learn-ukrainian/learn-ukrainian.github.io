@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): привезти, ввести, вхід, вилетіти, виїхати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): прилетіти, ворота, ввести, прийти, вийти...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -19,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/25
+- **Vocab:** ✅ 28/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

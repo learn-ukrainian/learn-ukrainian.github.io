@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): повз, навколо, об'їхати, проїхати, шлях...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): облетіти, міст, пройти, шлях, навколо...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -19,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 41/25
+- **Vocab:** ✅ 40/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

@@ -10,7 +10,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 19 < 25 (soft target)
+- **Vocab:** ⚠️ 18 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

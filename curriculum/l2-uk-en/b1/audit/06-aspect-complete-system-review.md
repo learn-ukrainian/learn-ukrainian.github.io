@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): результат, багаторазовий, доконаний, намір, початок...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): тривалість, спроба, рішення, багаторазовий, завершеність...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

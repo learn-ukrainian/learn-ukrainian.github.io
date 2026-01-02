@@ -1,0 +1,168 @@
+module: 130-zlochyny-i-stiikist
+level: B2
+version: '2.0'
+items:
+- lemma: окупація
+  ipa: /okuˈpat͡s⁽ʲ⁾ija/
+  translation: occupation
+  pos: noun
+  gender: f
+- lemma: Буча
+  ipa: /ˈbut͡ʃa/
+  translation: Bucha
+  pos: noun
+  gender: f
+- lemma: Ірпінь
+  ipa: /irˈp⁽ʲ⁾inʲ/
+  translation: Irpin
+  pos: noun
+  gender: m
+- lemma: звірство
+  ipa: /ˈzw⁽ʲ⁾irstwo/
+  translation: atrocity / brutality
+  pos: noun
+  gender: n
+- lemma: розстріл
+  ipa: /rɔzˈstr⁽ʲ⁾il/
+  translation: execution (by shooting)
+  pos: noun
+  gender: m
+- lemma: катування
+  ipa: /kaˈtuwannʲa/
+  translation: torture
+  pos: noun
+  gender: n
+- lemma: Маріуполь
+  ipa: /mariˈupolʲ/
+  translation: Mariupol
+  pos: noun
+  gender: m
+- lemma: блокада
+  ipa: /bloˈkada/
+  translation: blockade
+  pos: noun
+  gender: f
+- lemma: драмтеатр
+  ipa: /dramteˈatr/
+  translation: drama theater
+  pos: noun
+  gender: m
+- lemma: Азовсталь
+  ipa: /azowˈstalʲ/
+  translation: Azovstal
+  pos: noun
+  gender: f
+- lemma: полон
+  ipa: /poˈlɔn/
+  translation: captivity
+  pos: noun
+  gender: m
+- lemma: Херсон
+  ipa: /xerˈsɔn/
+  translation: Kherson
+  pos: noun
+  gender: m
+- lemma: звільнення
+  ipa: /zˈw⁽ʲ⁾ilʲnennʲa/
+  translation: liberation
+  pos: noun
+  gender: n
+- lemma: блекаут
+  ipa: /blɛˈkaut/
+  translation: blackout
+  pos: noun
+  gender: m
+- lemma: стійкість
+  ipa: /ˈst⁽ʲ⁾ijk⁽ʲ⁾istʲ/
+  translation: resilience / steadfastness
+  pos: noun
+  gender: f
+- lemma: воєнний злочин
+  ipa: /woˈjɛnnɪj ˈzlɔt͡ʃɪн/
+  translation: war crime
+  pos: phrase
+- lemma: катівня
+  ipa: /kaˈt⁽ʲ⁾iwnʲa/
+  translation: torture chamber
+  pos: noun
+  gender: f
+- lemma: масове поховання
+  ipa: /ˈmasowɛ poˈxowannʲa/
+  translation: mass burial / grave
+  pos: phrase
+- lemma: депортація дітей
+  ipa: /deporˈtat͡s⁽ʲ⁾ija d⁽ʲ⁾iˈtɛj/
+  translation: deportation of children
+  pos: phrase
+- lemma: фільтраційний табір
+  ipa: /f⁽ʲ⁾ilʲtraˈt͡s⁽ʲ⁾ijnɪj ˈtab⁽ʲ⁾ir/
+  translation: filtration camp
+  pos: phrase
+- lemma: незламність
+  ipa: /nezˈlamn⁽ʲ⁾istʲ/
+  translation: invincibility
+  pos: noun
+  gender: f
+- lemma: енергосистема
+  ipa: /enerɦosɪsˈtɛma/
+  translation: power system
+  pos: noun
+  gender: f
+- lemma: пункт незламності
+  ipa: /punkt nezˈlamnosʲt⁽ʲ⁾i/
+  translation: point of invincibility
+  pos: phrase
+- lemma: деокупація
+  ipa: /deokuˈpat͡s⁽ʲ⁾ija/
+  translation: de-occupation
+  pos: noun
+  gender: f
+- lemma: контрнаступ
+  ipa: /ˈkɔntrnastup/
+  translation: counteroffensive
+  pos: noun
+  gender: m
+- lemma: героїзм
+  ipa: /ɦeroˈjizm/
+  translation: heroism
+  pos: noun
+  gender: m
+- lemma: трагедія
+  ipa: /traˈɦɛd⁽ʲ⁾ija/
+  translation: tragedy
+  pos: noun
+  gender: f
+- lemma: вижити
+  ipa: /wɪˈʒɪtɪ/
+  translation: to survive
+  pos: verb
+- lemma: свідчити
+  ipa: /ˈsw⁽ʲ⁾idt͡ʃɪtɪ/
+  translation: to testify / to witness
+  pos: verb
+- lemma: катувати
+  ipa: /kaˈtuwatɪ/
+  translation: to torture
+  pos: verb
+- lemma: звільнити
+  ipa: /zˈw⁽ʲ⁾ilʲnɪtɪ/
+  translation: to liberate / to release
+  pos: verb
+- lemma: триматися
+  ipa: /trɪˈmatɪsʲa/
+  translation: to hold on / to hold out
+  pos: verb
+- lemma: справедливість
+  ipa: /sprawedˈlɪw⁽ʲ⁾istʲ/
+  translation: justice
+  pos: noun
+  gender: f
+- lemma: покарання
+  ipa: /pokarˈannʲa/
+  translation: punishment
+  pos: noun
+  gender: n
+- lemma: міжнародний трибунал
+  ipa: /m⁽ʲ⁾iʒnaˈrɔdnɪj trɪbuˈnal/
+  translation: international tribunal
+  pos: phrase

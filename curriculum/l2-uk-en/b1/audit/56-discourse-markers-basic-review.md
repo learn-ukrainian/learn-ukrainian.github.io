@@ -5,7 +5,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
   - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): отже, того, взагалі, таким, наприклад...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): дійсно, хоч, іншим, насправді, загалом...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -26,27 +26,25 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Immersion:** 🇺🇦 99.8% (target 85-100% (B1.5-6 Vocab))
-- **Richness:** ✅ 96% (grammar)
+- **Richness:** ✅ 98% (vocabulary)
 - **Grammar:** ✅ Validated (8/82 confirmed)
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 98% (minimum: 95%)
+**Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 20 | 24 | 83% | 20% | 16.6% |
-| engagement | 15 | 5 | 100% | 15% | 15.0% |
-| dialogues | 16 | 4 | 100% | 15% | 15.0% |
-| variety | 0.96 | - | 96% | 10% | 9.6% |
+| collocations | 19 | 20 | 95% | 25% | 23.8% |
+| usage_examples | 20 | 15 | 100% | 20% | 20.0% |
+| engagement | 15 | 4 | 100% | 15% | 15.0% |
 | cultural | 7 | 3 | 100% | 10% | 10.0% |
-| realworld | 15 | 3 | 100% | 10% | 10.0% |
-| visual | 9 | 3 | 100% | 5% | 5.0% |
+| visual | 9 | 3 | 100% | 10% | 10.0% |
+| register_notes | 15 | 5 | 100% | 10% | 10.0% |
+| variety | 0.96 | - | 96% | 5% | 4.8% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 27 | 5 | 100% | 5% | 5.0% |
-| proverbs | 2 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.2%** |
+| **TOTAL** | | | | | **98.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

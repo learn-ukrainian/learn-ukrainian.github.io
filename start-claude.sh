@@ -57,19 +57,18 @@ fi
 echo ""
 echo "LEARN UKRAINIAN - Ukrainian Language Learning"
 
-# Show level status from CLAUDE.md enrichment status table
+# Show completion status from CLAUDE.md
 if [ -f "CLAUDE.md" ]; then
-    echo "   Enrichment Status:"
-    # Extract only the enrichment status table (matches pattern: | Level | XX-YY | Status |)
-    grep -E "^\| [ABC][12] \| [0-9]+-[0-9]+ \| " CLAUDE.md 2>/dev/null | while read line; do
-        LEVEL=$(echo "$line" | cut -d'|' -f2 | xargs)
-        MODULES=$(echo "$line" | cut -d'|' -f3 | xargs)
-        STATUS=$(echo "$line" | cut -d'|' -f4 | xargs)
-        echo "       $LEVEL ($MODULES): $STATUS"
-    done
+    echo "   Completion Status:"
+    # Extract completion status (lines between "### Completion Status" and next "###")
+    sed -n '/^### Completion Status/,/^###/p' CLAUDE.md 2>/dev/null | \
+        grep -E "^\- \*\*[ABC][12]" | \
+        sed 's/^- /       /' | \
+        head -4
 fi
 
 # Count modules per level
+echo ""
 echo "   Module counts:"
 for level in a1 a2 b1 b2 c1 c2; do
     if [ -d "curriculum/l2-uk-en/$level" ]; then
@@ -79,11 +78,34 @@ for level in a1 a2 b1 b2 c1 c2; do
     fi
 done
 
-echo "   Skills: grammar-check, module-architect, vocab-enrichment"
-echo "   Commands:"
-echo "       /module-create [level] [num]   - Full pipeline (4 stages)"
-echo "       /module-stage-1..4 [level] [num] - Individual stages"
-echo "       npm run generate, npm run vocab:enrich"
+# List available skills dynamically
+echo ""
+if [ -d ".claude/skills" ]; then
+    SKILL_COUNT=$(ls -1d .claude/skills/*/ 2>/dev/null | wc -l | xargs)
+    echo "   Skills ($SKILL_COUNT available):"
+    ls -1 .claude/skills/ 2>/dev/null | head -5 | sed 's/^/       /'
+    if [ "$SKILL_COUNT" -gt 5 ]; then
+        echo "       ... and $((SKILL_COUNT - 5)) more"
+    fi
+fi
+
+# List available commands dynamically
+echo ""
+if [ -d ".claude/commands" ]; then
+    CMD_COUNT=$(ls -1 .claude/commands/*.md 2>/dev/null | wc -l | xargs)
+    echo "   Commands ($CMD_COUNT available):"
+    ls -1 .claude/commands/*.md 2>/dev/null | \
+        sed 's|.claude/commands/||' | \
+        sed 's|.md$||' | \
+        sed 's/^/       \//' | \
+        head -4
+    if [ "$CMD_COUNT" -gt 4 ]; then
+        echo "       ... and $((CMD_COUNT - 4)) more"
+    fi
+fi
+
+echo ""
+echo "   Quick reference: npm run generate, npm run vocab:enrich, npm run pipeline"
 
 echo ""
 

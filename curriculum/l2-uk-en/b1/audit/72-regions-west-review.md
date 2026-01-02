@@ -5,7 +5,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
   - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): івано, польський, карпатський, буковина, площа...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): площа, польський, п'ерник, спадщина, львів...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -26,38 +26,25 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Immersion:** 🇺🇦 99.8% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ❌ 90% < 95% min (grammar)
+- **Richness:** ✅ 97% (cultural)
 - **Grammar:** ✅ Validated (8/50 confirmed)
 
 ## Richness Details
-**Score:** 90% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 97% (minimum: 95%)
+**Module Type:** cultural
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 21 | 24 | 88% | 20% | 17.6% |
-| engagement | 11 | 5 | 100% | 15% | 15.0% |
-| dialogues | 14 | 4 | 100% | 15% | 15.0% |
-| variety | 0.98 | - | 98% | 10% | 9.8% |
-| cultural | 12 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 4 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.70 | - | 70% | 5% | 3.5% |
-| questions | 36 | 5 | 100% | 5% | 5.0% |
-| proverbs | 0 | 1 | 0% | 5% | 0.0% |
-| **TOTAL** | | | | | **90.9%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_PROVERBS**
-  - FIX:
-    Add 1+ Ukrainian proverb. Use this format:
-    
-    Українці кажу|ть: «[Proverb in Ukrainian]»
-    
-    Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
-    
-    Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.
+| cultural | 12 | 5 | 100% | 33% | 33.3% |
+| engagement | 11 | 6 | 100% | 20% | 20.0% |
+| visual | 4 | 4 | 100% | 13% | 13.3% |
+| variety | 0.98 | - | 98% | 7% | 6.5% |
+| paragraph_var | 0.70 | - | 70% | 7% | 4.7% |
+| examples | 21 | - | 100% | 7% | 6.7% |
+| realworld | 3 | - | 100% | 7% | 6.7% |
+| questions | 36 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **97.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

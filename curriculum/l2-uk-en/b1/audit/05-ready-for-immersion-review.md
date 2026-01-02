@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): синтаксис, правило, система, поняття, наголос...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): синтаксис, правопис, граматичне, поняття, система...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

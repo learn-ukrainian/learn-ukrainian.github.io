@@ -1,26 +1,25 @@
 module: b2-109
-title: 'Розстріляне відродження II: Механізм терору'
-subtitle: 'Executed Renaissance II: Terror Mechanism'
-version: '1.0'
-phase: B2.3c [Trauma & Resistance]
-pedagogy: CBI
-duration: 90
+title: "Розстріляне відродження II: Механізм терору"
+subtitle: "The Executed Renaissance II: The Mechanism of Terror"
+version: "2.0"
+phase: "B2.3c Trauma & Resistance"
+focus: history
+pedagogy: "CBI"
+duration: 120
 transliteration: none
-immersion: 100
 tags:
   - history
-  - decolonization
-  - 1930s
+  - terror
   - nkvd
-  - sandarmokh
+  - repression
+  - gulag
 grammar:
-  - Historical narrative tenses
-  - Impersonal constructions
+  - "Historical narrative register"
+  - "Passive voice in administrative context"
 objectives:
-  - Учень розуміє механізми радянського терору 1930-х років
-  - Учень може аналізувати функціонування репресивного апарату
-  - Учень розпізнає методи знищення української інтелігенції
+  - "Understand the systematic nature of the Great Terror in Ukraine"
+  - "Identify the roles of the NKVD and 'Special Troikas'"
+  - "Analyze the mechanism of 'limits' and quotas for executions"
+  - "Identify the significance of the Solovki camp and the Sandarmokh massacre"
 vocabulary_count: 25
-register: публіцистичний
-vocab_count: 53
 slug: 109-rozstriliane-vidrodzennia-mekhanizm

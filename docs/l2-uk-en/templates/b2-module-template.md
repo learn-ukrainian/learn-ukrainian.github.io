@@ -211,25 +211,15 @@ register: "науковий"  # Options: офіційно-діловий, нау
 
 ### 4. Vocabulary Section (Словник)
 
-**Format:** 3-column table (B2+ standard — NO pronunciation column)
+**Format:** YAML file ONLY (`vocabulary/{slug}.yaml`)
 
-```markdown
-# Словник
-
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| пасивний стан | passive voice | grammar term |
-| дієприкметник | participle | from "дія" (action) + "прикмета" (attribute) |
-| офіційно-діловий | official/bureaucratic style | functional register |
-| фразеологізм | idiom, set expression | phraseology term |
-| [30+ items] | | |
-```
+**Do NOT include a vocabulary table in the Markdown file.** The build system automatically generates the vocabulary view from the YAML sidecar.
 
 **B2 Vocabulary Notes:**
 - **30+ items minimum** (vs. 25+ for B1)
-- **3 columns only:** Слово, Переклад, Примітки (no Вимова/IPA)
+- **Structure:** `lemma`, `translation`, `pos`, `gender` (for nouns), `ipa` (auto-enriched)
 - **Register-appropriate:** Vocabulary should match module's functional style
-- **Примітки column:** Etymology, usage notes, collocations, register markers
+- **Richness:** Use `tags` in YAML for grouping if needed
 
 ---
 

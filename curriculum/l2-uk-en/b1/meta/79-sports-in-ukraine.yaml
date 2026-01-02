@@ -1,7 +1,7 @@
 module: 79
 title: Спорт в Україні
-subtitle: Sports in Ukraine
-version: '1.0'
+subtitle: Spectator Sports in Ukraine
+version: '1.1'
 phase: B1.7
 level: B1
 focus: cultural
@@ -10,6 +10,7 @@ duration: 75
 transliteration: none
 tags:
   - cultural
+  - spectator-sports
   - sports
   - football
   - boxing

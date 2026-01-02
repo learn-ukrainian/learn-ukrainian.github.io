@@ -1,9 +1,9 @@
 # Audit Report: 74-regions-south.md
 **Phase:** B1.7 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1500
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): сільське, туризм, одещина, курорт, пляж...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): господарство, степ, зерно, пшениця, пляж...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -24,27 +24,25 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 99.7% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ❌ 92% < 95% min (grammar)
+- **Richness:** ✅ 97% (cultural)
 - **Grammar:** ✅ Validated (8/50 confirmed)
 
 ## Richness Details
-**Score:** 92% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 97% (minimum: 95%)
+**Module Type:** cultural
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 21 | 24 | 88% | 20% | 17.6% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
-| dialogues | 16 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
-| cultural | 10 | 3 | 100% | 10% | 10.0% |
-| realworld | 2 | 3 | 67% | 10% | 6.7% |
-| visual | 5 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.70 | - | 70% | 5% | 3.5% |
-| questions | 24 | 5 | 100% | 5% | 5.0% |
-| proverbs | 8 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **92.5%** |
+| cultural | 10 | 5 | 100% | 33% | 33.3% |
+| engagement | 8 | 6 | 100% | 20% | 20.0% |
+| visual | 5 | 4 | 100% | 13% | 13.3% |
+| variety | 0.97 | - | 97% | 7% | 6.5% |
+| paragraph_var | 0.70 | - | 70% | 7% | 4.7% |
+| examples | 21 | - | 100% | 7% | 6.7% |
+| realworld | 2 | - | 100% | 7% | 6.7% |
+| questions | 24 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **97.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

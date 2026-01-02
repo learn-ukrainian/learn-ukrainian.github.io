@@ -1,0 +1,27 @@
+module: 83
+title: Велосипед та водні види
+subtitle: Cycling & Water Sports
+version: '1.0'
+phase: B1.7
+level: B1
+focus: cultural
+pedagogy: PPP
+duration: 75
+transliteration: none
+tags:
+  - cultural
+  - cycling
+  - swimming
+  - triathlon
+  - kayaking
+grammar: []
+objectives:
+  - Learner can discuss cycling and water sports in Ukrainian
+  - Learner can understand rules and rental information
+  - Learner can use vocabulary for bikes, boats, and swimming
+  - Learner can describe a summer active holiday
+word_target: 1500
+vocab_target: 25
+immersion_target: 95
+vocab_count: 25
+slug: 83-cycling-water

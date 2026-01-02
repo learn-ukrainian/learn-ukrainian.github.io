@@ -5,7 +5,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
   - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (27 words): здоров'я, харчування, корисний, вправи, активність...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (27 words): шкідливий, харчування, самопочуття, симптом, хвороба...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -26,38 +26,25 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Immersion:** 🇺🇦 99.8% (target 85-100% (B1.5-6 Vocab))
-- **Richness:** ❌ 86% < 95% min (grammar)
+- **Richness:** ✅ 98% (vocabulary)
 - **Grammar:** ✅ Validated (8/48 confirmed)
 
 ## Richness Details
-**Score:** 86% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 98% (minimum: 95%)
+**Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 14 | 24 | 58% | 20% | 11.6% |
-| engagement | 6 | 5 | 100% | 15% | 15.0% |
-| dialogues | 17 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
+| collocations | 30 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 14 | 15 | 93% | 20% | 18.6% |
+| engagement | 6 | 4 | 100% | 15% | 15.0% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 6 | 3 | 100% | 5% | 5.0% |
+| visual | 6 | 3 | 100% | 10% | 10.0% |
+| register_notes | 8 | 5 | 100% | 10% | 10.0% |
+| variety | 0.97 | - | 97% | 5% | 4.9% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 33 | 5 | 100% | 5% | 5.0% |
-| proverbs | 0 | 1 | 0% | 5% | 0.0% |
-| **TOTAL** | | | | | **86.3%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_PROVERBS**
-  - FIX:
-    Add 1+ Ukrainian proverb. Use this format:
-    
-    Українці кажу|ть: «[Proverb in Ukrainian]»
-    
-    Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
-    
-    Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.
+| **TOTAL** | | | | | **98.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

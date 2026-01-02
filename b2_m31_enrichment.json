@@ -1,0 +1,41 @@
+[
+  {
+    "file": "curriculum/l2-uk-en/b2/31-numeral-declension-time-dates.md",
+    "enrichments": {
+      "анкета": {"ipa": "/ɐnˈkɛtɑ/", "en": "questionnaire, form"},
+      "виключення": {"ipa": "/wɪklʲuˈt͡ʃɛnʲːɑ/", "en": "exception"},
+      "вітатися": {"ipa": "/wʲitɑˈtɪsʲɑ/", "en": "to greet, to say hello"},
+      "датний": {"ipa": "/ˈdɑtnɪj/", "en": "dative"},
+      "двадцятичотиригодинний": {"ipa": "/dwɑd͡t͡sʲɑtɪt͡ʃotɪrɪɦoˈdɪnnɪj/", "en": "24-hour"},
+      "заснування": {"ipa": "/zɐsnuˈwɑnʲːɑ/", "en": "founding, establishment"},
+      "корпоратив": {"ipa": "/korporɑˈtɪw/", "en": "corporate party"},
+      "крайній": {"ipa": "/ˈkrɑjnʲij/", "en": "extreme, last"},
+      "латинський": {"ipa": "/lɐˈtɪnsʲkɪj/", "en": "Latin"},
+      "маркетинг": {"ipa": "/mɑrˈkɛtɪŋ/", "en": "marketing"},
+      "мінідіалог": {"ipa": "/mʲinʲidʲiˈɑloɦ/", "en": "mini-dialogue"},
+      "неофіційно": {"ipa": "/nɛofʲit͡sʲijno/", "en": "unofficially"},
+      "нерегулярний": {"ipa": "/nɛrɛɦuˈlʲɑrnɪj/", "en": "irregular"},
+      "обідній": {"ipa": "/oˈbʲidnʲij/", "en": "lunch, noon (adj.)"},
+      "опівночі": {"ipa": "/opʲiwˈnot͡ʃʲi/", "en": "at midnight"},
+      "опівніч": {"ipa": "/opʲiwˈnʲit͡ʃ/", "en": "midnight"},
+      "поетеса": {"ipa": "/poɛˈtɛsɑ/", "en": "poetess"},
+      "порядковий": {"ipa": "/porʲɑdˈkowɪj/", "en": "ordinal"},
+      "потяг": {"ipa": "/ˈpotʲɑɦ/", "en": "train"},
+      "приблизний": {"ipa": "/prɪˈblɪznɪj/", "en": "approximate"},
+      "прикмета": {"ipa": "/prɪkˈmɛtɑ/", "en": "sign, omen"},
+      "припускатися": {"ipa": "/prɪpuskɑˈtɪsʲɑ/", "en": "to assume, to suppose"},
+      "підведення": {"ipa": "/pʲidwɛˈdɛnʲːɑ/", "en": "summing up"},
+      "рівно": {"ipa": "/ˈrʲiwno/", "en": "exactly, precisely"},
+      "річниця": {"ipa": "/rʲit͡ʃˈnɪt͡sʲɑ/", "en": "anniversary"},
+      "словесний": {"ipa": "/sloˈwɛsnɪj/", "en": "verbal"},
+      "сполучення": {"ipa": "/spolut͡ʃɛnʲːɑ/", "en": "combination"},
+      "упродовж": {"ipa": "/uˈprodowʃ/", "en": "throughout, during"},
+      "ущерб": {"ipa": "/uˈʃt͡ʃɛrb/", "en": "damage, harm"},
+      "березень": {"ipa": "/ˈbɛrɛzɛnʲ/", "en": "March"},
+      "побут": {"ipa": "/ˈpobut/", "en": "everyday life, household"},
+      "різниця": {"ipa": "/ˈrʲiznɪt͡sʲɑ/", "en": "difference"},
+      "сісти": {"ipa": "/ˈsʲistɪ/", "en": "to sit down"},
+      "ювілей": {"ipa": "/juwʲiˈlɛj/", "en": "jubilee, anniversary"}
+    }
+  }
+]

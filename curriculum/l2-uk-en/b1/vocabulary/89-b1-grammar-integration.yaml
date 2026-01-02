@@ -1,0 +1,57 @@
+module: 89-b1-grammar-integration
+level: B1
+version: '2.0'
+items:
+- lemma: відправитися
+  ipa: /vidpraˈvɪtɪsʲa/
+  translation: to depart
+  pos: verb
+  gender: m
+- lemma: думський
+  ipa: /ˈdumsʲkɪj/
+  translation: Duma (adj)
+  pos: adj
+  gender: f
+- lemma: заходження
+  ipa: /zaˈxɔdʒɛnʲːa/
+  translation: entry
+  pos: noun
+  gender: n
+- lemma: катакомб
+  ipa: /kataˈkɔmb/
+  translation: catacombs (gen.)
+  pos: noun
+  gender: f
+- lemma: леч
+  ipa: /lɛt͡ʃ/
+  translation: fly (typo)
+  pos: noun
+  gender: f
+- lemma: переконатися
+  ipa: /pɛrɛkɔˈnatɪsʲa/
+  translation: to make sure
+  pos: verb
+- lemma: принесений
+  ipa: /prɪˈnɛsɛnɪj/
+  translation: brought
+  pos: adj
+  gender: n
+- lemma: сварити
+  ipa: /svaˈrɪtɪ/
+  translation: to scold
+  pos: verb
+  gender: m
+- lemma: увімкнений
+  ipa: /uˈvimknɛnɪj/
+  translation: switched on
+  pos: adj
+  gender: m
+- lemma: удосконалити
+  ipa: /udɔskɔˈnalɪtɪ/
+  translation: to improve
+  pos: verb
+- lemma: уча
+  ipa: /uˈt͡ʃa/
+  translation: learn (root)
+  pos: noun
+  gender: m

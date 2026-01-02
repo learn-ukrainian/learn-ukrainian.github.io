@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): оскар, субтитри, критика, зйомки, драма...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): оскар, дубляж, продюсер, трилер, драма...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -24,27 +24,25 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 99.7% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ✅ 96% (grammar)
+- **Richness:** ✅ 98% (cultural)
 - **Grammar:** ✅ Validated (8/50 confirmed)
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 98% (minimum: 95%)
+**Module Type:** cultural
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 22 | 24 | 92% | 20% | 18.4% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
-| dialogues | 16 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
-| cultural | 5 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 4 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.74 | - | 74% | 5% | 3.7% |
-| questions | 31 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.8%** |
+| cultural | 5 | 5 | 100% | 33% | 33.3% |
+| engagement | 8 | 6 | 100% | 20% | 20.0% |
+| visual | 4 | 4 | 100% | 13% | 13.3% |
+| variety | 0.97 | - | 97% | 7% | 6.5% |
+| paragraph_var | 0.74 | - | 74% | 7% | 4.9% |
+| examples | 22 | - | 100% | 7% | 6.7% |
+| realworld | 3 | - | 100% | 7% | 6.7% |
+| questions | 31 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **98.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

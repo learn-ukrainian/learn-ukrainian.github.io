@@ -2,240 +2,240 @@ module: 43-correlative-constructions
 level: B2
 version: '2.0'
 items:
-  - lemma: афоризм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: афористичний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: афористичність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: взаємозалежність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: влаштувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: влучно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: відокремлений
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: вільність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: вірти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: дко
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: досягнути
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: доти
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: думатися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: ентузіазм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: жін
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: забуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: задовольняти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: замовкати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: занурюватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: заслужити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: зателефонува
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: звідти
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: здивувати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: n
-  - lemma: корелятив
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: корелятивний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: лихо
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: ліричність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: маніпуляція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: мовознавство
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: недооцінювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: неодмінно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: особова
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: очолити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: парність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: писемний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: побувати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: покращитися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: помнити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: потрібне
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: предметний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: пропасти
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: n
-  - lemma: просторовий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: процвітати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: пізнавати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: самопізнання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: систематично
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: скоїти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: співвідносний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: стикатися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: тяжко
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: узагальнювальний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: уточнити
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: ятрань
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
+- lemma: афоризм
+  ipa: /ɐfoˈrɪzm/
+  translation: aphorism
+  pos: noun
+  gender: m
+- lemma: афористичний
+  ipa: /ɐforɪˈstɪt͡ʃnɪj/
+  translation: aphoristic
+  pos: adj
+  gender: m
+- lemma: афористичність
+  ipa: /ɐforɪstɪt͡ʃnʲistʲ/
+  translation: aphoristic quality
+  pos: noun
+  gender: f
+- lemma: взаємозалежність
+  ipa: /wzɑjɛmozɑˈlɛʒnʲistʲ/
+  translation: interdependence
+  pos: noun
+  gender: f
+- lemma: влаштувати
+  ipa: /wlɑʃtuˈwɑtɪ/
+  translation: to arrange, to organize
+  pos: verb
+- lemma: влучно
+  ipa: /ˈwlut͡ʃno/
+  translation: aptly, precisely
+  pos: adv
+- lemma: відокремлений
+  ipa: /wʲidoˈkrɛmlɛnɪj/
+  translation: separated, detached
+  pos: adj
+- lemma: вільність
+  ipa: /ˈwʲilʲnʲistʲ/
+  translation: freedom, liberty
+  pos: noun
+  gender: f
+- lemma: вірти
+  ipa: /ˈwʲirtɪ/
+  translation: to believe
+  pos: verb
+- lemma: дко
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: досягнути
+  ipa: /dosʲɑɦˈnutɪ/
+  translation: to reach, to achieve
+  pos: verb
+- lemma: доти
+  ipa: /doˈtɪ/
+  translation: until then
+  pos: adv
+- lemma: думатися
+  ipa: /ˈdumɑtɪsʲɑ/
+  translation: to think, to ponder
+  pos: verb
+- lemma: ентузіазм
+  ipa: /ɛntuˈzʲiɑzm/
+  translation: enthusiasm
+  pos: noun
+  gender: m
+- lemma: жін
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: m
+- lemma: забуватися
+  ipa: /zɐbuˈwɑtɪsʲɑ/
+  translation: to forget oneself, to lose oneself
+  pos: verb
+- lemma: задовольняти
+  ipa: /zɐdoˈwolʲnʲɑtɪ/
+  translation: to satisfy
+  pos: verb
+- lemma: замовкати
+  ipa: /zɐmowˈkɑtɪ/
+  translation: to fall silent
+  pos: verb
+- lemma: занурюватися
+  ipa: /zɐnurʲuˈwɑtɪsʲɑ/
+  translation: to immerse oneself, to dive
+  pos: verb
+- lemma: заслужити
+  ipa: /zɐsluˈʒɪtɪ/
+  translation: to deserve, to earn
+  pos: verb
+- lemma: зателефонува
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: звідти
+  ipa: /ˈzwʲidtɪ/
+  translation: from there
+  pos: adv
+- lemma: здивувати
+  ipa: /zdɪwuˈwɑtɪ/
+  translation: to surprise
+  pos: verb
+  gender: n
+- lemma: корелятив
+  ipa: /korɛlʲɑˈtɪw/
+  translation: correlative
+  pos: noun
+  gender: m
+- lemma: корелятивний
+  ipa: /korɛlʲɑˈtɪwnɪj/
+  translation: correlative (adj.)
+  pos: adj
+- lemma: лихо
+  ipa: /ˈlɪxo/
+  translation: misfortune, evil
+  pos: noun
+  gender: n
+- lemma: ліричність
+  ipa: /lʲirɪt͡ʃnʲistʲ/
+  translation: lyricism
+  pos: noun
+  gender: f
+- lemma: маніпуляція
+  ipa: /mɐnʲipulʲɑˈt͡sʲijɑ/
+  translation: manipulation
+  pos: noun
+  gender: f
+- lemma: мовознавство
+  ipa: /mowozˈnɑwstwo/
+  translation: linguistics
+  pos: noun
+  gender: n
+- lemma: недооцінювати
+  ipa: /nɛdoot͡sʲinʲuˈwɑtɪ/
+  translation: to underestimate
+  pos: verb
+- lemma: неодмінно
+  ipa: /nɛodˈmʲinːo/
+  translation: without fail, certainly
+  pos: adv
+- lemma: особова
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: очолити
+  ipa: /ot͡ʃoˈlɪtɪ/
+  translation: to head, to lead
+  pos: verb
+- lemma: парність
+  ipa: /ˈpɑrnʲistʲ/
+  translation: pairing, paired nature
+  pos: noun
+  gender: f
+- lemma: писемний
+  ipa: /pɪˈsɛmnɪj/
+  translation: written
+  pos: adj
+  gender: n
+- lemma: побувати
+  ipa: /pobuˈwɑtɪ/
+  translation: to visit, to stay
+  pos: verb
+  gender: m
+- lemma: покращитися
+  ipa: /pokrɑˈʃt͡ʃɪtɪsʲɑ/
+  translation: to improve
+  pos: verb
+- lemma: помнити
+  ipa: /ˈpomnɪtɪ/
+  translation: to remember (archaic)
+  pos: verb
+- lemma: потрібне
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: предметний
+  ipa: /prɛdˈmɛtnɪj/
+  translation: object, substantive (adj.)
+  pos: adj
+- lemma: пропасти
+  ipa: /proˈpɑstɪ/
+  translation: to perish, to disappear
+  pos: verb
+  gender: n
+- lemma: просторовий
+  ipa: /prostoˈrowɪj/
+  translation: spatial
+  pos: adj
+- lemma: процвітати
+  ipa: /prot͡swʲiˈtɑtɪ/
+  translation: to flourish, to prosper
+  pos: verb
+- lemma: пізнавати
+  ipa: /pʲizˈnɑwɑtɪ/
+  translation: to learn, to get to know
+  pos: verb
+- lemma: самопізнання
+  ipa: /sɐmopʲizˈnɑnʲːɑ/
+  translation: self-knowledge
+  pos: noun
+  gender: n
+- lemma: систематично
+  ipa: /sɪstɛmɑˈtɪt͡ʃno/
+  translation: systematically
+  pos: adv
+- lemma: скоїти
+  ipa: /skoˈjitɪ/
+  translation: to commit, to do
+  pos: verb
+- lemma: співвідносний
+  ipa: /spʲiwwʲidˈnosnɪj/
+  translation: correlative, relative
+  pos: adj
+- lemma: стикатися
+  ipa: /stɪˈkɑtɪsʲɑ/
+  translation: to collide, to encounter
+  pos: verb
+- lemma: тяжко
+  ipa: /ˈtʲɑʒko/
+  translation: heavily, with difficulty
+  pos: adv
+- lemma: узагальнювальний
+  ipa: /uzɐɦɑlʲˈnʲuwɑlʲnɪj/
+  translation: generalizing
+  pos: adj
+  gender: m
+- lemma: уточнити
+  ipa: /utot͡ʃˈnɪtɪ/
+  translation: to clarify, to specify
+  pos: verb
+  gender: m
+- lemma: ятрань
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f

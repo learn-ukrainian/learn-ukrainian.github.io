@@ -1,0 +1,33 @@
+[
+  {
+    "file": "curriculum/l2-uk-en/b2/30-b21-checkpoint.md",
+    "enrichments": {
+      "багатосурядний": {"ipa": "/bɑɦɑtosurʲɑdnɪj/", "en": "multi-clause"},
+      "вводитися": {"ipa": "/wwodɪˈtɪsʲɑ/", "en": "to be introduced"},
+      "виголосити": {"ipa": "/wɪɦoloˈsɪtɪ/", "en": "to proclaim"},
+      "впорядковувати": {"ipa": "/wporʲɑdkowuˈwɑtɪ/", "en": "to organize"},
+      "дебат": {"ipa": "/dɛˈbɑt/", "en": "debate (gen. pl.)"},
+      "домен": {"ipa": "/doˈmɛn/", "en": "domain"},
+      "завершувати": {"ipa": "/zɐwɛrˈʃuwɑtɪ/", "en": "to complete"},
+      "заливати": {"ipa": "/zɐlɪˈwɑtɪ/", "en": "to pour over"},
+      "консультуватися": {"ipa": "/konsulʲtuˈwɑtɪsʲɑ/", "en": "to consult"},
+      "контора": {"ipa": "/konˈtorɑ/", "en": "office"},
+      "користь": {"ipa": "/ˈkorɪstʲ/", "en": "benefit"},
+      "крилатий": {"ipa": "/krɪˈlɑtɪj/", "en": "winged"},
+      "непрямо": {"ipa": "/nɛˈprʲɑmo/", "en": "indirectly"},
+      "нотатка": {"ipa": "/noˈtɑtkɑ/", "en": "note"},
+      "огортати": {"ipa": "/oɦorˈtɑtɪ/", "en": "to wrap"},
+      "переключатися": {"ipa": "/pɛrɛklʲut͡ʃɑˈtɪsʲɑ/", "en": "to switch"},
+      "посилювати": {"ipa": "/posɪlʲuˈwɑtɪ/", "en": "to strengthen"},
+      "поінформований": {"ipa": "/poʲinforˈmowɑnɪj/", "en": "informed"},
+      "прибувати": {"ipa": "/prɪbuˈwɑtɪ/", "en": "to arrive"},
+      "прибуваючий": {"ipa": "/prɪbuˈwɑjut͡ʃɪj/", "en": "arriving"},
+      "приністи": {"ipa": "/prɪˈnʲistɪ/", "en": "to bring (dialectal)"},
+      "розширювати": {"ipa": "/rozʃɪˈrʲuwɑtɪ/", "en": "to expand"},
+      "супровідний": {"ipa": "/suproˈwʲidnɪj/", "en": "accompanying"},
+      "тропи": {"ipa": "/ˈtropɪ/", "en": "tropes"},
+      "формуляр": {"ipa": "/forˈmulʲɑr/", "en": "form, blank"},
+      "формулярний": {"ipa": "/formulʲɑrnɪj/", "en": "form (adj.)"}
+    }
+  }
+]

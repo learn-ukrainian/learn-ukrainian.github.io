@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): би, більше, одно, разі, інакше...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): тим, попри, того, такому, інакше...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

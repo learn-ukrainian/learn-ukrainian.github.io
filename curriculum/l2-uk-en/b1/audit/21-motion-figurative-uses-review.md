@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (27 words): розумом, історію, відійти, дійти, далеко...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (27 words): ситуації, пройти, межу, входити, зайти...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -17,7 +17,7 @@
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/5
+- **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
@@ -35,7 +35,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 36 | 24 | 100% | 20% | 20.0% |
-| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| engagement | 10 | 5 | 100% | 15% | 15.0% |
 | dialogues | 7 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 7 | 3 | 100% | 10% | 10.0% |

@@ -1,26 +1,25 @@
 module: b2-108
-title: 'Розстріляне відродження I: Постаті'
-subtitle: 'Executed Renaissance I: Figures'
-version: '1.0'
-phase: B2.3c [Trauma & Resistance]
-pedagogy: CBI
-duration: 90
+title: "Розстріляне відродження I: Постаті"
+subtitle: "The Executed Renaissance I: Key Figures"
+version: "2.0"
+phase: "B2.3c Trauma & Resistance"
+focus: history
+pedagogy: "CBI"
+duration: 120
 transliteration: none
-immersion: 100
 tags:
   - history
   - literature
-  - decolonization
-  - 1920s
-  - executed-renaissance
+  - art
+  - repression
+  - sandarmokh
 grammar:
-  - Historical narrative tenses
-  - Biographical discourse
+  - "Historical narrative register"
+  - "Biography-specific vocabulary"
 objectives:
-  - Учень розуміє значення постатей Розстріляного відродження
-  - Учень може аналізувати біографії Хвильового, Зерова, Курбаса, Бойчука
-  - Учень розпізнає їхній внесок у українську культуру
+  - "Identify key figures of the Executed Renaissance: Khvylovy, Zerov, Kurbas, Boychuk"
+  - "Understand the concept of 'Psychological Europe' and 'Away from Moscow'"
+  - "Analyze the tragic fate of the 1920s generation"
+  - "Identify the cultural significance of the 'Slovo' building"
 vocabulary_count: 25
-register: публіцистичний
-vocab_count: 53
 slug: 108-rozstriliane-vidrodzennia-postati

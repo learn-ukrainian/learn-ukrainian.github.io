@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): працюючий, відсталий, колишній, дорослий, оточуючий...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): відсталий, бувший, діючий, працюючий, навколишній...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -19,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 45/25
+- **Vocab:** ✅ 40/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

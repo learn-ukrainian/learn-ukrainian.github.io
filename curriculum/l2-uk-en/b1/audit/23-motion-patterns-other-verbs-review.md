@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): виконувати, заплакати, приготувати, замовкнути, заговорити...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): виробляти, випускати, заплакати, вимагати, приєднатися...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -17,9 +17,9 @@
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 46/25
+- **Vocab:** ✅ 44/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -35,7 +35,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 42 | 24 | 100% | 20% | 20.0% |
-| engagement | 6 | 5 | 100% | 15% | 15.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
 | dialogues | 8 | 4 | 100% | 15% | 15.0% |
 | variety | 1.00 | - | 100% | 10% | 10.0% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |

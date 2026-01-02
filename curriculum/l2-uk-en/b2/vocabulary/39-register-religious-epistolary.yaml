@@ -2,493 +2,493 @@ module: 39-register-religious-epistolary
 level: B2
 version: '2.0'
 items:
-  - lemma: адресувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: амінь
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: апостола
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: атеїст
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: благодать
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: благословенний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: благословити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: благословлений
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: благословіння
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: благослоти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: богослужбовий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: богослужіння
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: божий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: вдячність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: великодний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: великодній
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: воскрес
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: воскрести
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: воскрости
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: воістину
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: всемилостивий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: всемогутний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: всемогутній
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: всесильний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: відкинути
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: відкласти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: вірян
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: господний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: грамотно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: гроб
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: дар
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: декане
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: духовній
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: епоха
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: епістолярний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: зумовити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: кафка
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: комунальний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: конфесійний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: кп
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: крашанка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: культ
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: люба
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: любий
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: літургійний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: максе
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: мамусю
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: мертва
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: милість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: мир
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: михаїла
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: молитва
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: мілена
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: непередбачуваний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: неформальне
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: нині
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: обіймати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: освячений
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: оселя
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: основне
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: павло
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: панове
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: парафія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: парафії
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: паска
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: пасха
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: повсякчас
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: подруго
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: помилувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: послання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: працевлаштування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: приділяти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: прикріплений
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: пронизувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: проповідувати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: проповідь
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: професорко
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: прізвисько
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: пізніший
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: ректоре
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: релігійний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: релігійно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: релігійність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: саваоф
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: свиня
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: священник
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: скарга
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: служитель
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: стандартно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: супроводжувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: терміновість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: топор
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: формальне
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: формульність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: франца
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: хей
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: хор
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: хрещення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: християн
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: христос
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: церковний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: єсенська
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: істинно
-    ipa: ''
-    translation: ''
-    pos: adv
+- lemma: адресувати
+  ipa: /ɐdrɛsuˈwɑtɪ/
+  translation: to address
+  pos: verb
+- lemma: амінь
+  ipa: /ɐˈmʲinʲ/
+  translation: amen
+  pos: noun
+  gender: m
+- lemma: апостола
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: атеїст
+  ipa: /ɐtɛˈjist/
+  translation: atheist
+  pos: noun
+  gender: m
+- lemma: благодать
+  ipa: /blɑɦoˈdɑtʲ/
+  translation: grace (religious)
+  pos: noun
+  gender: f
+- lemma: благословенний
+  ipa: /blɑɦoslovˈlɛnnɪj/
+  translation: blessed
+  pos: adj
+  gender: m
+- lemma: благословити
+  ipa: /blɑɦoslovɪtɪ/
+  translation: to bless
+  pos: verb
+- lemma: благословлений
+  ipa: /blɑɦosloˈwlɛnɪj/
+  translation: blessed
+  pos: adj
+  gender: m
+- lemma: благословіння
+  ipa: /blɑɦosloˈwʲinʲːɑ/
+  translation: blessing
+  pos: noun
+  gender: n
+- lemma: благослоти
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: богослужбовий
+  ipa: /boɦosluʒˈbowɪj/
+  translation: liturgical
+  pos: adj
+  gender: f
+- lemma: богослужіння
+  ipa: /boɦosluˈʒʲinʲːɑ/
+  translation: divine service, liturgy
+  pos: noun
+  gender: n
+- lemma: божий
+  ipa: /ˈboʒɪj/
+  translation: God's, divine
+  pos: adj
+  gender: f
+- lemma: вдячність
+  ipa: /wˈdʲɑt͡ʃnʲistʲ/
+  translation: gratitude
+  pos: noun
+  gender: f
+- lemma: великодний
+  ipa: /wɛlɪˈkodnɪj/
+  translation: Easter (adj.)
+  pos: adj
+  gender: m
+- lemma: великодній
+  ipa: /wɛlɪˈkodnʲij/
+  translation: Easter (adj., variant)
+  pos: adj
+  gender: f
+- lemma: воскрес
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: воскрести
+  ipa: /woskˈrɛstɪ/
+  translation: to resurrect
+  pos: verb
+- lemma: воскрости
+  ipa: ''
+  translation: ''
+  pos: verb
+  gender: m
+- lemma: воістину
+  ipa: /woˈjistɪnu/
+  translation: truly, verily
+  pos: adv
+- lemma: всемилостивий
+  ipa: /wsɛmɪˈlostɪwɪj/
+  translation: all-merciful
+  pos: adj
+  gender: f
+- lemma: всемогутний
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: m
+- lemma: всемогутній
+  ipa: /wsɛmoˈɦutnʲij/
+  translation: almighty
+  pos: adj
+  gender: m
+- lemma: всесильний
+  ipa: /wsɛsɪlʲnɪj/
+  translation: all-powerful
+  pos: adj
+  gender: m
+- lemma: відкинути
+  ipa: /wʲidkɪˈnutɪ/
+  translation: to cast away, to reject
+  pos: verb
+  gender: m
+- lemma: відкласти
+  ipa: /wʲidˈklɑstɪ/
+  translation: to postpone
+  pos: verb
+- lemma: вірян
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: господний
+  ipa: /ɦoˈspodnɪj/
+  translation: Lord's
+  pos: adj
+  gender: n
+- lemma: грамотно
+  ipa: /ɦrɐˈmotno/
+  translation: competently, literately
+  pos: adv
+- lemma: гроб
+  ipa: /ɦrob/
+  translation: tomb, grave
+  pos: noun
+  gender: m
+- lemma: дар
+  ipa: /dɑr/
+  translation: gift
+  pos: noun
+  gender: m
+- lemma: декане
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: духовній
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: f
+- lemma: епоха
+  ipa: /ɛˈpoxɑ/
+  translation: epoch, era
+  pos: noun
+  gender: f
+- lemma: епістолярний
+  ipa: /ɛpʲistoˈlʲɑrnɪj/
+  translation: epistolary
+  pos: adj
+  gender: m
+- lemma: зумовити
+  ipa: /zuˈmowɪtɪ/
+  translation: to determine, to cause
+  pos: verb
+- lemma: кафка
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: комунальний
+  ipa: /komunɑlʲnɪj/
+  translation: communal, utility (adj.)
+  pos: adj
+  gender: f
+- lemma: конфесійний
+  ipa: /konfɛˈsʲijnɪj/
+  translation: confessional
+  pos: adj
+  gender: m
+- lemma: кп
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: крашанка
+  ipa: /krɑˈʃɑnkɑ/
+  translation: dyed Easter egg
+  pos: noun
+  gender: f
+- lemma: культ
+  ipa: /kulʲt/
+  translation: cult
+  pos: noun
+  gender: m
+- lemma: люба
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: любий
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: літургійний
+  ipa: /lʲiturˈɦʲijnɪj/
+  translation: liturgical
+  pos: adj
+- lemma: максе
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: мамусю
+  ipa: ''
+  translation: ''
+  pos: other
+- lemma: мертва
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: милість
+  ipa: /ˈmɪlʲistʲ/
+  translation: mercy, grace
+  pos: noun
+  gender: f
+- lemma: мир
+  ipa: /mɪr/
+  translation: peace, world
+  pos: noun
+  gender: m
+- lemma: михаїла
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: молитва
+  ipa: /moˈlɪtwɑ/
+  translation: prayer
+  pos: noun
+  gender: f
+- lemma: мілена
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: непередбачуваний
+  ipa: /nɛpɛrɛdbɑˈt͡ʃuwɑnɪj/
+  translation: unpredictable
+  pos: adj
+- lemma: неформальне
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: нині
+  ipa: /nɪˈnʲi/
+  translation: now (archaic/religious)
+  pos: adv
+- lemma: обіймати
+  ipa: /obʲijˈmɑtɪ/
+  translation: to embrace, to hug
+  pos: verb
+- lemma: освячений
+  ipa: /oswʲɑˈt͡ʃɛnɪj/
+  translation: consecrated, blessed
+  pos: adj
+- lemma: оселя
+  ipa: /oˈsɛlʲɑ/
+  translation: dwelling, home
+  pos: noun
+  gender: f
+- lemma: основне
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: павло
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: панове
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: парафія
+  ipa: /pɑˈrɑfʲijɑ/
+  translation: parish
+  pos: noun
+  gender: f
+- lemma: парафії
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: паска
+  ipa: /ˈpɑskɑ/
+  translation: Easter bread
+  pos: noun
+  gender: m
+- lemma: пасха
+  ipa: /ˈpɑsxɑ/
+  translation: Passover, Easter
+  pos: noun
+  gender: f
+- lemma: повсякчас
+  ipa: /powsʲɑkˈt͡ʃɑs/
+  translation: always, constantly
+  pos: adv
+- lemma: подруго
+  ipa: ''
+  translation: ''
+  pos: other
+- lemma: помилувати
+  ipa: /pomɪluˈwɑtɪ/
+  translation: to have mercy on
+  pos: verb
+- lemma: послання
+  ipa: /posˈlɑnʲːɑ/
+  translation: epistle, message
+  pos: noun
+  gender: n
+- lemma: працевлаштування
+  ipa: /prɑt͡sɛwlɑʃtuˈwɑnʲːɑ/
+  translation: employment
+  pos: noun
+  gender: n
+- lemma: приділяти
+  ipa: /prɪdʲiˈlʲɑtɪ/
+  translation: to devote, to allocate
+  pos: verb
+- lemma: прикріплений
+  ipa: /prɪkrʲipˈlɛnɪj/
+  translation: attached
+  pos: adj
+- lemma: пронизувати
+  ipa: /pronɪzuˈwɑtɪ/
+  translation: to permeate, to pierce
+  pos: verb
+- lemma: проповідувати
+  ipa: /propowʲiduˈwɑtɪ/
+  translation: to preach
+  pos: verb
+  gender: m
+- lemma: проповідь
+  ipa: /ˈpropowʲidʲ/
+  translation: sermon
+  pos: noun
+  gender: m
+- lemma: професорко
+  ipa: /profɛˈsorko/
+  translation: professor (vocative, female)
+  pos: noun
+  gender: f
+- lemma: прізвисько
+  ipa: /prʲizˈwɪsʲko/
+  translation: nickname
+  pos: noun
+  gender: n
+- lemma: пізніший
+  ipa: /pʲizˈnʲiʃɪj/
+  translation: later
+  pos: adj
+  gender: f
+- lemma: ректоре
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: релігійний
+  ipa: /rɛlʲiˈɦʲijnɪj/
+  translation: religious
+  pos: adj
+  gender: m
+- lemma: релігійно
+  ipa: /rɛlʲiˈɦʲijno/
+  translation: religiously
+  pos: adv
+- lemma: релігійність
+  ipa: /rɛlʲiɦʲijnʲistʲ/
+  translation: religiousness
+  pos: noun
+  gender: f
+- lemma: саваоф
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: свиня
+  ipa: /swɪˈnʲɑ/
+  translation: pig
+  pos: noun
+  gender: f
+- lemma: священник
+  ipa: /swʲɑˈʃt͡ʃɛnnɪk/
+  translation: priest
+  pos: noun
+  gender: m
+- lemma: скарга
+  ipa: /ˈskɑrɦɑ/
+  translation: complaint
+  pos: noun
+  gender: f
+- lemma: служитель
+  ipa: /sluˈʒɪtɛlʲ/
+  translation: minister, servant
+  pos: noun
+  gender: m
+- lemma: стандартно
+  ipa: /stɐnˈdɑrtno/
+  translation: standardly
+  pos: adv
+- lemma: супроводжувати
+  ipa: /suproˈwodʒuwɑtɪ/
+  translation: to accompany
+  pos: verb
+- lemma: терміновість
+  ipa: /tɛrmʲiˈnowʲistʲ/
+  translation: urgency
+  pos: noun
+  gender: f
+- lemma: топор
+  ipa: /toˈpor/
+  translation: axe
+  pos: noun
+  gender: m
+- lemma: формальне
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: формульність
+  ipa: /forˈmulʲnʲistʲ/
+  translation: formulaic nature
+  pos: noun
+  gender: f
+- lemma: франца
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: хей
+  ipa: ''
+  translation: ''
+  pos: other
+- lemma: хор
+  ipa: /xor/
+  translation: choir
+  pos: noun
+  gender: m
+- lemma: хрещення
+  ipa: /xrɛˈʃt͡ʃɛnʲːɑ/
+  translation: baptism
+  pos: noun
+  gender: n
+- lemma: християн
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: христос
+  ipa: /xrɪsˈtos/
+  translation: Christ
+  pos: propn
+  gender: m
+- lemma: церковний
+  ipa: /t͡sɛrˈkownɪj/
+  translation: church (adj.)
+  pos: adj
+  gender: f
+- lemma: єсенська
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: істинно
+  ipa: /ʲisˈtɪnːo/
+  translation: truly
+  pos: adv

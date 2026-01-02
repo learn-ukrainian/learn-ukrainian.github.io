@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): потрібно, необхідно, сказано, завершено, вирішено...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): сказано, завершено, забезпечено, встановлено, необхідно...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

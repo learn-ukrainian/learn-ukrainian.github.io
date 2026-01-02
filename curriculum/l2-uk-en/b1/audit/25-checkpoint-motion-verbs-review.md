@@ -10,7 +10,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 34/10
+- **Vocab:** ✅ 32/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

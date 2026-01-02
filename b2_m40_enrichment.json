@@ -1,0 +1,38 @@
+[
+  {
+    "file": "curriculum/l2-uk-en/b2/40-b21c-checkpoint.md",
+    "enrichments": {
+      "абстракція": {"ipa": "/ɑbstrɑkˈt͡sʲijɑ/", "en": "abstraction"},
+      "аспектуальний": {"ipa": "/ɑspɛktuˈɑlʲnɪj/", "en": "aspectual"},
+      "безособове": {"ipa": "/bɛzoˈsobowɛ/", "en": "impersonal (sentence)"},
+      "дизайнер": {"ipa": "/dɪzɐjˈnɛr/", "en": "designer"},
+      "днк": {"ipa": "/dɛ-ɛn-ˈkɑ/", "en": "DNA"},
+      "збільшитися": {"ipa": "/zbʲilʲˈʃɪtɪsʲɑ/", "en": "to increase, to grow"},
+      "зверху": {"ipa": "/ˈzwɛrxu/", "en": "from above, on top"},
+      "консультант": {"ipa": "/konsulʲˈtɑnt/", "en": "consultant"},
+      "консультувати": {"ipa": "/konsulʲtuˈwɑtɪ/", "en": "to consult, to advise"},
+      "координувати": {"ipa": "/koordinuˈwɑtɪ/", "en": "to coordinate"},
+      "кореляційний": {"ipa": "/korɛlʲɑˈt͡sʲijnɪj/", "en": "correlative"},
+      "коротко": {"ipa": "/ˈkorotko/", "en": "briefly, shortly"},
+      "макет": {"ipa": "/mɐˈkɛt/", "en": "model, mockup"},
+      "манера": {"ipa": "/mɐˈnɛrɑ/", "en": "manner, style"},
+      "обнімати": {"ipa": "/obˈnʲimɑtɪ/", "en": "to embrace, to hug"},
+      "оргкомітет": {"ipa": "/orɦkomʲiˈtɛt/", "en": "organizing committee"},
+      "парцеляція": {"ipa": "/pɑrt͡sɛlʲɑˈt͡sʲijɑ/", "en": "parceling (syntax)"},
+      "прикметниковий": {"ipa": "/prɪkmɛtnɪˈkowɪj/", "en": "adjectival"},
+      "пунктуальність": {"ipa": "/punktuˈɑlʲnʲistʲ/", "en": "punctuality"},
+      "підстригтися": {"ipa": "/pʲidsˈtrɪɦtɪsʲɑ/", "en": "to get a haircut"},
+      "різдвяний": {"ipa": "/rʲizdwʲɑˈnɪj/", "en": "Christmas (adj.)"},
+      "самоорганізація": {"ipa": "/sɐmoorɦɐnʲizɑˈt͡sʲijɑ/", "en": "self-organization"},
+      "синоніміка": {"ipa": "/sɪnonʲimʲikɑ/", "en": "synonymy, study of synonyms"},
+      "славити": {"ipa": "/slɑˈwɪtɪ/", "en": "to glorify, to praise"},
+      "тераса": {"ipa": "/tɛˈrɑsɑ/", "en": "terrace"},
+      "тітонька": {"ipa": "/tʲiˈtonʲkɑ/", "en": "auntie"},
+      "фах": {"ipa": "/fɑx/", "en": "profession, specialty"},
+      "фразеологіз": {"ipa": "/frɑzɛoloˈɦʲizm/", "en": "phraseological unit, set expression"},
+      "худоба": {"ipa": "/xuˈdobɑ/", "en": "livestock, cattle"},
+      "ідіома": {"ipa": "/ʲiˈdʲiomɑ/", "en": "idiom"},
+      "імперфективізація": {"ipa": "/ʲimpɛrfɛktɪwʲizɑˈt͡sʲijɑ/", "en": "imperfectivization"}
+    }
+  }
+]

@@ -5,7 +5,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
   - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (26 words): здивування, емоція, почуття, захоплення, щастя...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (26 words): роздратування, смуток, радість, настрій, щастя...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -26,27 +26,25 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Immersion:** 🇺🇦 99.9% (target 85-100% (B1.5-6 Vocab))
-- **Richness:** ❌ 94% < 95% min (grammar)
+- **Richness:** ✅ 99% (vocabulary)
 - **Grammar:** ✅ Validated (8/60 confirmed)
 
 ## Richness Details
-**Score:** 94% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 99% (minimum: 95%)
+**Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 18 | 24 | 75% | 20% | 15.0% |
-| engagement | 12 | 5 | 100% | 15% | 15.0% |
-| dialogues | 13 | 4 | 100% | 15% | 15.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
+| collocations | 29 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 18 | 15 | 100% | 20% | 20.0% |
+| engagement | 12 | 4 | 100% | 15% | 15.0% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 5 | 3 | 100% | 5% | 5.0% |
+| visual | 5 | 3 | 100% | 10% | 10.0% |
+| register_notes | 13 | 5 | 100% | 10% | 10.0% |
+| variety | 0.99 | - | 99% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 23 | 5 | 100% | 5% | 5.0% |
-| proverbs | 3 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **94.9%** |
+| **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

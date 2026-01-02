@@ -5,7 +5,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
   - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): осмислювати, судити, сприймати, припускати, планувати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): роздумувати, сприймати, усвідомлювати, гадати, уявляти...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

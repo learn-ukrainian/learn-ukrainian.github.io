@@ -1,0 +1,154 @@
+module: 83-cycling-water
+level: B1
+version: '1.1'
+items:
+- lemma: велосипед
+  ipa: /weɫosɪˈpɛd/
+  translation: bicycle
+  pos: noun
+  gender: m
+- lemma: шолом
+  ipa: /ʃoˈɫɔm/
+  translation: helmet
+  pos: noun
+  gender: m
+- lemma: колесо
+  ipa: /kˈɔɫeso/
+  translation: wheel
+  pos: noun
+  gender: n
+- lemma: їздити
+  ipa: /jˈizdɪtɪ/
+  translation: to ride (habitually)
+  pos: verb
+  gender: ~
+- lemma: велодоріжка
+  ipa: /weɫodoˈɾ⁽ʲ⁾iʒkɑ/
+  translation: bike lane
+  pos: noun
+  gender: f
+- lemma: прокат
+  ipa: /pɾoˈkɑt/
+  translation: rental
+  pos: noun
+  gender: m
+- lemma: плавання
+  ipa: /pˈɫɑwɑnʲːɑ/
+  translation: swimming
+  pos: noun
+  gender: n
+- lemma: басейн
+  ipa: /bɑˈsɛjn/
+  translation: pool
+  pos: noun
+  gender: m
+- lemma: відкрита вода
+  ipa: /widˈkɾɪtɑ woˈdɑ/
+  translation: open water
+  pos: noun phrase (f)
+  gender: f
+- lemma: байдарка
+  ipa: /bɑjˈdɑɾkɑ/
+  translation: kayak
+  pos: noun
+  gender: f
+- lemma: сплав
+  ipa: /spɫɑw/
+  translation: rafting / floating trip
+  pos: noun
+  gender: m
+- lemma: весло
+  ipa: /wesˈɫɔ/
+  translation: paddle / oar
+  pos: noun
+  gender: n
+- lemma: рятувальний жилет
+  ipa: /ɾʲɑtʊˈwɑlʲнɪj ʒɪˈlɛt/
+  translation: life vest
+  pos: noun phrase (m)
+  gender: m
+- lemma: триатлон
+  ipa: /tɾɪɑtˈɫɔn/
+  translation: triathlon
+  pos: noun
+  gender: m
+- lemma: змагання
+  ipa: /zmɑˈɦɑnʲːɑ/
+  translation: competition
+  pos: noun
+  gender: n
+- lemma: швидкість
+  ipa: /ʃwˈɪdkʲisʲtʲ/
+  translation: speed
+  pos: noun
+  gender: f
+- lemma: безпека
+  ipa: /bezˈpɛkɑ/
+  translation: safety
+  pos: noun
+  gender: f
+- lemma: техніка
+  ipa: /tˈɛxnʲikɑ/
+  translation: technique
+  pos: noun
+  gender: f
+- lemma: тренер
+  ipa: /tˈɾɛneɾ/
+  translation: coach
+  pos: noun
+  gender: m
+- lemma: річка
+  ipa: /ɾ⁽ʲ⁾it͡ʃkɑ/
+  translation: river
+  pos: noun
+  gender: f
+- lemma: озеро
+  ipa: /oˈzɛɾo/
+  translation: lake
+  pos: noun
+  gender: n
+- lemma: море
+  ipa: /mˈɔɾe/
+  translation: sea
+  pos: noun
+  gender: n
+- lemma: пляж
+  ipa: /plʲɑʒ/
+  translation: beach
+  pos: noun
+  gender: m
+- lemma: засмагати
+  ipa: /zɑsmɑˈɦɑtɪ/
+  translation: to sunbathe
+  pos: verb
+  gender: ~
+- lemma: відпочивати
+  ipa: /widpot͡ʃɪˈwɑtɪ/
+  translation: to rest / relax
+  pos: verb
+  gender: ~
+- lemma: дистанція
+  ipa: /dɪsˈtɑnt͡sʲijɑ/
+  translation: distance
+  pos: noun
+  gender: f
+- lemma: веслування
+  ipa: /wesɫʊˈwɑnʲːɑ/
+  translation: rowing
+  pos: noun
+  gender: n
+- lemma: надувний
+  ipa: /nɑdʊwˈnɪj/
+  translation: inflatable
+  pos: adj
+  gender: m
+- lemma: дошка
+  ipa: /dˈɔʃkɑ/
+  translation: board
+  pos: noun
+  gender: f
+- lemma: інструктаж
+  ipa: /instɾʊkˈtɑʒ/
+  translation: briefing / instruction
+  pos: noun
+  gender: m

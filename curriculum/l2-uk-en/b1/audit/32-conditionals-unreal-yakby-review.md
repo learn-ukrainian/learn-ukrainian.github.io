@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): шкода, ідеалі, принципі, теоретично, якби...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): теоретично, гіпотеза, мрія, жаль, уява...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

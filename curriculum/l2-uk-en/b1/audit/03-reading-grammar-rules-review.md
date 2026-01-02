@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): використовується, корінь, таким, тобто, виняток...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): увагу, форма, чином, показує, отже...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -19,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 13 < 20 (soft target)
+- **Vocab:** ⚠️ 12 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

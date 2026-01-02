@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): всупереч, цьому, попри, хоч, менш...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): дарма, менш, незважаючи, таки, попри...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

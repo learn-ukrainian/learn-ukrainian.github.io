@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): шлях, стежка, провулок, розвилка, траєкторія...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): шлях, провулок, призначення, вихідний, поворот...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -17,7 +17,7 @@
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 46/25
 - **Structure:** ✅ Valid Structure
@@ -35,7 +35,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 42 | 24 | 100% | 20% | 20.0% |
-| engagement | 5 | 5 | 100% | 15% | 15.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
 | dialogues | 9 | 4 | 100% | 15% | 15.0% |
 | variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 5 | 3 | 100% | 10% | 10.0% |

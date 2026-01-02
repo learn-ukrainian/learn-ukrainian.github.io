@@ -5,7 +5,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
   - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (24 words): гази, стійкий, відходи, захист, середовище...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (24 words): джерела, захист, ґрунт, повітря, енергія...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -26,27 +26,25 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Immersion:** 🇺🇦 99.6% (target 85-100% (B1.5-6 Vocab))
-- **Richness:** ❌ 86% < 95% min (grammar)
+- **Richness:** ✅ 96% (vocabulary)
 - **Grammar:** ✅ Validated (8/48 confirmed)
 
 ## Richness Details
-**Score:** 86% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 96% (minimum: 95%)
+**Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 16 | 24 | 67% | 20% | 13.4% |
-| engagement | 11 | 5 | 100% | 15% | 15.0% |
-| dialogues | 11 | 4 | 100% | 15% | 15.0% |
-| variety | 0.96 | - | 96% | 10% | 9.6% |
+| collocations | 30 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 16 | 15 | 100% | 20% | 20.0% |
+| engagement | 11 | 4 | 100% | 15% | 15.0% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 2 | 3 | 67% | 10% | 6.7% |
-| visual | 9 | 3 | 100% | 5% | 5.0% |
+| visual | 9 | 3 | 100% | 10% | 10.0% |
+| register_notes | 15 | 5 | 100% | 10% | 10.0% |
+| variety | 0.96 | - | 96% | 5% | 4.8% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 21 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **86.4%** |
+| **TOTAL** | | | | | **96.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

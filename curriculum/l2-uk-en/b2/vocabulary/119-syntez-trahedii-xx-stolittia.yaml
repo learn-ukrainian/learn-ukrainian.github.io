@@ -1,0 +1,129 @@
+module: 119-syntez-trahedii-xx-stolittia
+level: B2
+version: '2.0'
+items:
+- lemma: синтез
+  ipa: /ˈsɪntɛz/
+  translation: synthesis
+  pos: noun
+  gender: m
+- lemma: патерн
+  ipa: /ˈpɑtɛrn/
+  translation: pattern
+  pos: noun
+  gender: m
+- lemma: безперервність
+  ipa: /bezpɛˈrɛrʋnʲistʲ/
+  translation: continuity
+  pos: noun
+  gender: f
+- lemma: паралель
+  ipa: /pɐrɐˈlɛlʲ/
+  translation: parallel
+  pos: noun
+  gender: f
+- lemma: аргумент
+  ipa: /ɐrɦuˈmɛnt/
+  translation: argument
+  pos: noun
+  gender: m
+- lemma: доказ
+  ipa: /ˈdɔkɐz/
+  translation: evidence, proof
+  pos: noun
+  gender: m
+- lemma: історіографія
+  ipa: /isˌtɔrʲioˈɦrɑfʲija/
+  translation: historiography
+  pos: noun
+  gender: f
+- lemma: наратив
+  ipa: /nɐrɐˈtɪʋ/
+  translation: narrative
+  pos: noun
+  gender: m
+- lemma: деконструкція
+  ipa: /dɛkonˈstrukt͡sʲija/
+  translation: deconstruction
+  pos: noun
+  gender: f
+- lemma: контекстуалізація
+  ipa: /kontɛkstuɐlʲiˈzat͡sʲija/
+  translation: contextualization
+  pos: noun
+  gender: f
+- lemma: репресія
+  ipa: /rɛˈprɛsʲija/
+  translation: repression
+  pos: noun
+  gender: f
+- lemma: спротив
+  ipa: /ˈsprɔtɪʋ/
+  translation: resistance
+  pos: noun
+  gender: m
+- lemma: виживання
+  ipa: /ʋɪˈʒɪʋɐnʲːɐ/
+  translation: survival
+  pos: noun
+  gender: n
+- lemma: ідентичність
+  ipa: /idɛnˈtɪt͡ʃnʲistʲ/
+  translation: identity
+  pos: noun
+  gender: f
+- lemma: пам'ять
+  ipa: /ˈpɑmʲɐtʲ/
+  translation: memory
+  pos: noun
+  gender: f
+- lemma: геноцид
+  ipa: /ɦɛnoˈt͡sɪd/
+  translation: genocide
+  pos: noun
+  gender: m
+- lemma: незламність
+  ipa: /nɛˈzlɑmnʲistʲ/
+  translation: resilience, indomitability
+  pos: noun
+  gender: f
+- lemma: порівнювати
+  ipa: /poˈrʲiʋnʲuʋatɪ/
+  translation: to compare
+  pos: verb
+  aspect: impf
+- lemma: аналізувати
+  ipa: /ɐnɐlʲizuˈʋatɪ/
+  translation: to analyze
+  pos: verb
+  aspect: impf
+- lemma: спростовувати
+  ipa: /sproˈstɔʋuʋatɪ/
+  translation: to refute, to debunk
+  pos: verb
+  aspect: impf
+- lemma: обґрунтовувати
+  ipa: /obɦrunˈtɔʋuʋatɪ/
+  translation: to justify, to substantiate
+  pos: verb
+  aspect: impf
+- lemma: тяглість
+  ipa: /ˈtʲɑɦlʲistʲ/
+  translation: continuity, lineage
+  pos: noun
+  gender: f
+- lemma: самовизначення
+  ipa: /sɐmoˈʋɪznɐt͡ʃenʲːɐ/
+  translation: self-determination
+  pos: noun
+  gender: n
+- lemma: трагедія
+  ipa: /trɐˈɦɛdʲija/
+  translation: tragedy
+  pos: noun
+  gender: f
+- lemma: наслідок
+  ipa: /ˈnɑslʲidok/
+  translation: consequence, aftermath
+  pos: noun
+  gender: m

@@ -1,0 +1,47 @@
+# Audit Report: 119-syntez-trahedii-xx-stolittia.md
+**Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Overall Status:** ✅ PASS
+
+## Gates
+- **Words:** ⚠️ 1742/1750 (8 short)
+- **Activities:** ✅ 15/14
+- **Density:** ✅ All > 16
+- **Unique_types:** ✅ 12/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 7/6
+- **Audio:** ℹ️ No audio
+- **Vocab:** ⚠️ 25 < 35 (soft target)
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Immersion:** 🇺🇦 98.5% (target 98-100% (vocab))
+- **Richness:** ✅ 97% (history)
+- **Grammar:** ⏳ Pending validation
+
+## Richness Details
+**Score:** 97% (minimum: 95%)
+**Module Type:** history
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| primary_sources | 5 | 3 | 100% | 24% | 23.8% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 3 | 4 | 75% | 10% | 7.1% |
+| visual | 7 | 4 | 100% | 10% | 9.5% |
+| variety | 0.99 | - | 99% | 5% | 4.7% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 5 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **97.6%** |
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 109 | Included in Core |
+| **Ключова тема: Травма як фундамент стійкості** | ⚪️ | 96 | Skipped |
+| **Тематичний аналіз: Патерни нищення та виживання** | ✅ | 860 | Included in Core |
+| **Деколонізаційний синтез: Повернення національної суб'єктності** | ⚪️ | 205 | Skipped |
+| **Історіографічна рефлексія: Пам'ять як наша головна зброя** | ⚪️ | 311 | Skipped |
+| **Summary** | ✅ | 161 | Included in Core |

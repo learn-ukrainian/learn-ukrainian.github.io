@@ -2,651 +2,651 @@ module: 27-law-justice-vocabulary
 level: B2
 version: '2.0'
 items:
-  - lemma: аліб
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: апеляційний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: апеляція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: банківський
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: будсервіс
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: варта
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: венеціанський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: вердикт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: визнаний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: викласти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: винений
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: виносити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: виписка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: вирок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: вирік
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: вислухати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: вккс
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: власноруч
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: воля
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: вр
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: врп
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: врядування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: встаньти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: вчинення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: відбувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: відшкодувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: голлівудський
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: делегування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: дефект
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: дисциплінарний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: доброчесність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: довести
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: досудовий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: експертиза
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: заборонятися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: завдати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: законний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: закріпитися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: запечатаний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: запобіжний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: заспокоїтися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: засудити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: засідати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: затримання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: захоти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: зачитувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: здобуття
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: зламатися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: злодія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: злочин
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: зобов'язати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: касаційний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: касація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: кваліфікаційний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: конкурсний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: конфіденційніший
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: крадіжка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: кримінальний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: кровний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: латинізм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: ліквідувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: медіатор
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: медіація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: механічний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: набрати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: n
-  - lemma: найформалізованіший
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: невинуватість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: невідчужуваний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: незаконний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: непорушний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: нотаріус
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: обвинувачене
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: обвинувачений
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: обікрати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: окупація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: оскарити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: палац
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: паралель
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: перекваліфікувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: повсякденно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: позбавлення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: позов
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: позовний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: покарання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: покарати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: поліція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: помст
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: поновлення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: посередник
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: потерпілий
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: потерпілі
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: пошкодження
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: правосуддя
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: презумпція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: прискорення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: присяжний
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: притягнути
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: провина
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: прокурор
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: протиправний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: професійність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: підозра
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: підозрюваний
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: підпити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: підприємництво
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: підряда
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: підсудний
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: регулювати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: резонансний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: роботодавець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: розслідування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: скоювати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: слідкувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: слідство
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: слідчий
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: спор
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: спори
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: споруджений
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: столичний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: страховий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: стягнення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: стягнути
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: судді
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: суддівський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: судження
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: судоустрій
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: техномаркет
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: тримання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: тяжкий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: уповноважений
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: феміди
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: формалізований
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: фіктивний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: цивільний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: шахрайство
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: юрисдикція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: іспитовий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
+- lemma: аліб
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: апеляційний
+  ipa: /ɐpɛlʲɑˈt͡sʲijnɪj/
+  translation: appellate
+  pos: adj
+- lemma: апеляція
+  ipa: /ɐpɛˈlʲɑt͡sʲijɑ/
+  translation: appeal
+  pos: noun
+  gender: f
+- lemma: банківський
+  ipa: /bɐnˈkʲiwsʲkɪj/
+  translation: banking, bank (adj.)
+  pos: adj
+- lemma: будсервіс
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: варта
+  ipa: /ˈwɑrtɑ/
+  translation: guard, watch
+  pos: noun
+  gender: f
+- lemma: венеціанський
+  ipa: /wɛnɛt͡sʲiˈɑnsʲkɪj/
+  translation: Venetian
+  pos: adj
+  gender: f
+- lemma: вердикт
+  ipa: /wɛrˈdɪkt/
+  translation: verdict
+  pos: noun
+  gender: m
+- lemma: визнаний
+  ipa: /wɪˈznɑnɪj/
+  translation: recognized, acknowledged
+  pos: adj
+  gender: m
+- lemma: викласти
+  ipa: /wɪˈklɑstɪ/
+  translation: to state, to present
+  pos: verb
+- lemma: винений
+  ipa: /wɪˈnɛnɪj/
+  translation: guilty (person)
+  pos: noun
+  gender: m
+- lemma: виносити
+  ipa: /wɪˈnosɪtɪ/
+  translation: to issue (verdict), to carry out
+  pos: verb
+- lemma: виписка
+  ipa: /ˈwɪpɪskɑ/
+  translation: extract, statement
+  pos: noun
+  gender: f
+- lemma: вирок
+  ipa: /ˈwɪrok/
+  translation: sentence, verdict
+  pos: noun
+  gender: m
+- lemma: вирік
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вислухати
+  ipa: /ˈwɪsluxɑtɪ/
+  translation: to hear out, to listen
+  pos: verb
+  gender: m
+- lemma: вккс
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: власноруч
+  ipa: /wlɑsnoˈrut͡ʃ/
+  translation: by one's own hand
+  pos: adv
+- lemma: воля
+  ipa: /ˈwolʲɑ/
+  translation: will, freedom
+  pos: noun
+  gender: f
+- lemma: вр
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: врп
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: врядування
+  ipa: /wrʲɑduˈwɑnʲːɑ/
+  translation: governance
+  pos: noun
+  gender: n
+- lemma: встаньти
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: вчинення
+  ipa: /wt͡ʃɪˈnɛnʲːɑ/
+  translation: committing, perpetration
+  pos: noun
+  gender: n
+- lemma: відбувати
+  ipa: /wʲidbuˈwɑtɪ/
+  translation: to serve (sentence)
+  pos: verb
+- lemma: відшкодувати
+  ipa: /wʲidʃkoduˈwɑtɪ/
+  translation: to compensate, to reimburse
+  pos: verb
+- lemma: голлівудський
+  ipa: /ɦolʲlʲiˈwudsʲkɪj/
+  translation: Hollywood (adj.)
+  pos: adj
+- lemma: делегування
+  ipa: /dɛlɛɦuˈwɑnʲːɑ/
+  translation: delegation
+  pos: noun
+  gender: n
+- lemma: дефект
+  ipa: /dɛˈfɛkt/
+  translation: defect, flaw
+  pos: noun
+  gender: m
+- lemma: дисциплінарний
+  ipa: /dɪst͡sɪplʲiˈnɑrnɪj/
+  translation: disciplinary
+  pos: adj
+  gender: f
+- lemma: доброчесність
+  ipa: /doˈbrot͡ʃɛsnʲistʲ/
+  translation: integrity, virtue
+  pos: noun
+  gender: f
+- lemma: довести
+  ipa: /doˈwɛstɪ/
+  translation: to prove
+  pos: verb
+- lemma: досудовий
+  ipa: /doˈsudowɪj/
+  translation: pre-trial
+  pos: adj
+  gender: n
+- lemma: експертиза
+  ipa: /ɛkspɛrˈtɪzɑ/
+  translation: expert examination
+  pos: noun
+  gender: f
+- lemma: заборонятися
+  ipa: /zɐboronʲɑˈtɪsʲɑ/
+  translation: to be prohibited
+  pos: verb
+- lemma: завдати
+  ipa: /zɐwˈdɑtɪ/
+  translation: to inflict, to cause
+  pos: verb
+- lemma: законний
+  ipa: /zɐˈkonnɪj/
+  translation: lawful
+  pos: adj
+  gender: f
+- lemma: закріпитися
+  ipa: /zɐkrʲipɪˈtɪsʲɑ/
+  translation: to become established
+  pos: verb
+  gender: f
+- lemma: запечатаний
+  ipa: /zɐpɛt͡ʃɑˈtɑnɪj/
+  translation: sealed
+  pos: adj
+  gender: m
+- lemma: запобіжний
+  ipa: /zɐˈpobʲiʒnɪj/
+  translation: preventive, precautionary
+  pos: adj
+  gender: m
+- lemma: заспокоїтися
+  ipa: /zɐspokoˈjitɪsʲɑ/
+  translation: to calm down
+  pos: verb
+- lemma: засудити
+  ipa: /zɐˈsudɪtɪ/
+  translation: to condemn, to sentence
+  pos: verb
+- lemma: засідати
+  ipa: /zɐsʲiˈdɑtɪ/
+  translation: to sit (in session)
+  pos: verb
+- lemma: затримання
+  ipa: /zɐtrɪˈmɑnʲːɑ/
+  translation: detention, arrest
+  pos: noun
+  gender: n
+- lemma: захоти
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: зачитувати
+  ipa: /zɐt͡ʃɪˈtuwɑtɪ/
+  translation: to read aloud
+  pos: verb
+- lemma: здобуття
+  ipa: /zdobutʲːɑ/
+  translation: obtaining, acquisition
+  pos: noun
+  gender: n
+- lemma: зламатися
+  ipa: /zlɑˈmɑtɪsʲɑ/
+  translation: to break down
+  pos: verb
+  gender: f
+- lemma: злодія
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: злочин
+  ipa: /zˈlot͡ʃɪn/
+  translation: crime
+  pos: noun
+  gender: m
+- lemma: зобов'язати
+  ipa: /zobowʲɑˈzɑtɪ/
+  translation: to oblige, to compel
+  pos: verb
+- lemma: касаційний
+  ipa: /kɐsɑˈt͡sʲijnɪj/
+  translation: cassation
+  pos: adj
+- lemma: касація
+  ipa: /kɐˈsɑt͡sʲijɑ/
+  translation: cassation appeal
+  pos: noun
+  gender: f
+- lemma: кваліфікаційний
+  ipa: /kwɐlʲifʲikɑˈt͡sʲijnɪj/
+  translation: qualification (adj.)
+  pos: adj
+  gender: f
+- lemma: конкурсний
+  ipa: /konˈkursnɪj/
+  translation: competition (adj.), competitive
+  pos: adj
+  gender: m
+- lemma: конфіденційніший
+  ipa: /konfʲidɛnt͡sʲijˈnʲiʃɪj/
+  translation: more confidential
+  pos: adj
+  gender: n
+- lemma: крадіжка
+  ipa: /krɑˈdʲiʒkɑ/
+  translation: theft
+  pos: noun
+  gender: f
+- lemma: кримінальний
+  ipa: /krɪmʲiˈnɑlʲnɪj/
+  translation: criminal
+  pos: adj
+- lemma: кровний
+  ipa: /ˈkrownɪj/
+  translation: blood (adj.), consanguineous
+  pos: adj
+  gender: f
+- lemma: латинізм
+  ipa: /lɑtɪˈnʲizm/
+  translation: Latinism
+  pos: noun
+  gender: f
+- lemma: ліквідувати
+  ipa: /lʲikwʲiduˈwɑtɪ/
+  translation: to liquidate, to eliminate
+  pos: verb
+- lemma: медіатор
+  ipa: /mɛdʲiˈɑtor/
+  translation: mediator
+  pos: noun
+  gender: m
+- lemma: медіація
+  ipa: /mɛdʲiˈɑt͡sʲijɑ/
+  translation: mediation
+  pos: noun
+  gender: f
+- lemma: механічний
+  ipa: /mɛxɐˈnʲit͡ʃnɪj/
+  translation: mechanical
+  pos: adj
+- lemma: набрати
+  ipa: /nɐˈbrɑtɪ/
+  translation: to enter into force, to recruit
+  pos: verb
+  gender: n
+- lemma: найформалізованіший
+  ipa: /nɑjformɐlʲizoˈwɑnʲiʃɪj/
+  translation: most formalized
+  pos: adj
+- lemma: невинуватість
+  ipa: /nɛwɪnuwɑˈtʲistʲ/
+  translation: innocence
+  pos: noun
+  gender: f
+- lemma: невідчужуваний
+  ipa: /nɛwʲidt͡ʃuˈʒuwɑnɪj/
+  translation: inalienable
+  pos: adj
+- lemma: незаконний
+  ipa: /nɛzɐˈkonnɪj/
+  translation: illegal
+  pos: adj
+  gender: n
+- lemma: непорушний
+  ipa: /nɛpoˈruʃnɪj/
+  translation: inviolable
+  pos: adj
+- lemma: нотаріус
+  ipa: /noˈtɑrʲijus/
+  translation: notary
+  pos: noun
+  gender: m
+- lemma: обвинувачене
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: обвинувачений
+  ipa: /obwɪnuwɑˈt͡ʃɛnɪj/
+  translation: accused, defendant
+  pos: noun
+  gender: m
+- lemma: обікрати
+  ipa: /obʲiˈkrɑtɪ/
+  translation: to rob
+  pos: verb
+- lemma: окупація
+  ipa: /okupɑˈt͡sʲijɑ/
+  translation: occupation
+  pos: noun
+  gender: f
+- lemma: оскарити
+  ipa: /osˈkɑrɪtɪ/
+  translation: to appeal, to contest
+  pos: verb
+- lemma: палац
+  ipa: /pɐˈlɑt͡s/
+  translation: palace
+  pos: noun
+  gender: m
+- lemma: паралель
+  ipa: /pɐrɐˈlɛlʲ/
+  translation: parallel
+  pos: noun
+  gender: f
+- lemma: перекваліфікувати
+  ipa: /pɛrɛkwɐlʲifʲikuˈwɑtɪ/
+  translation: to requalify
+  pos: verb
+- lemma: повсякденно
+  ipa: /powsʲɑkˈdɛnːo/
+  translation: daily, everyday
+  pos: adv
+- lemma: позбавлення
+  ipa: /pozbɑwˈlɛnʲːɑ/
+  translation: deprivation
+  pos: noun
+  gender: n
+- lemma: позов
+  ipa: /ˈpozow/
+  translation: lawsuit, claim
+  pos: noun
+  gender: m
+- lemma: позовний
+  ipa: /poˈzownɪj/
+  translation: claim (adj.), lawsuit (adj.)
+  pos: adj
+  gender: f
+- lemma: покарання
+  ipa: /pokɐˈrɑnʲːɑ/
+  translation: punishment
+  pos: noun
+  gender: n
+- lemma: покарати
+  ipa: /pokɐˈrɑtɪ/
+  translation: to punish
+  pos: verb
+- lemma: поліція
+  ipa: /poˈlʲit͡sʲijɑ/
+  translation: police
+  pos: noun
+  gender: f
+- lemma: помст
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: поновлення
+  ipa: /ponowˈlɛnʲːɑ/
+  translation: restoration, renewal
+  pos: noun
+  gender: n
+- lemma: посередник
+  ipa: /posɛˈrɛdnɪk/
+  translation: intermediary, mediator
+  pos: noun
+  gender: m
+- lemma: потерпілий
+  ipa: /potɛrˈpʲilɪj/
+  translation: victim
+  pos: noun
+  gender: m
+- lemma: потерпілі
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: пошкодження
+  ipa: /poʃˈkodʒɛnʲːɑ/
+  translation: damage
+  pos: noun
+  gender: n
+- lemma: правосуддя
+  ipa: /prɑwoˈsudʲːɑ/
+  translation: justice
+  pos: noun
+  gender: n
+- lemma: презумпція
+  ipa: /prɛˈzumpt͡sʲijɑ/
+  translation: presumption
+  pos: noun
+  gender: f
+- lemma: прискорення
+  ipa: /prɪskoˈrɛnʲːɑ/
+  translation: acceleration
+  pos: noun
+  gender: n
+- lemma: присяжний
+  ipa: /prɪˈsʲɑʒnɪj/
+  translation: juror
+  pos: noun
+  gender: m
+- lemma: притягнути
+  ipa: /prɪtʲɑɦˈnutɪ/
+  translation: to bring to (justice)
+  pos: verb
+- lemma: провина
+  ipa: /proˈwɪnɑ/
+  translation: fault, guilt
+  pos: noun
+  gender: f
+- lemma: прокурор
+  ipa: /prokuˈror/
+  translation: prosecutor
+  pos: noun
+  gender: m
+- lemma: протиправний
+  ipa: /protɪˈprɑwnɪj/
+  translation: unlawful
+  pos: adj
+- lemma: професійність
+  ipa: /profɛˈsʲijnʲistʲ/
+  translation: professionalism
+  pos: noun
+  gender: f
+- lemma: підозра
+  ipa: /pʲiˈdozrɑ/
+  translation: suspicion
+  pos: noun
+  gender: f
+- lemma: підозрюваний
+  ipa: /pʲidozrʲuˈwɑnɪj/
+  translation: suspect
+  pos: noun
+  gender: m
+- lemma: підпити
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: підприємництво
+  ipa: /pʲidprɪˈjɛmnɪt͡stwo/
+  translation: entrepreneurship
+  pos: noun
+  gender: n
+- lemma: підряда
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: підсудний
+  ipa: /pʲidˈsudnɪj/
+  translation: defendant
+  pos: noun
+  gender: m
+- lemma: регулювати
+  ipa: /rɛɦulʲuˈwɑtɪ/
+  translation: to regulate
+  pos: verb
+  gender: m
+- lemma: резонансний
+  ipa: /rɛzoˈnɑnsnɪj/
+  translation: high-profile, resonant
+  pos: adj
+- lemma: роботодавець
+  ipa: /robotoˈdɑwɛt͡sʲ/
+  translation: employer
+  pos: noun
+  gender: m
+- lemma: розслідування
+  ipa: /rozsˈlʲiduwɑnʲːɑ/
+  translation: investigation
+  pos: noun
+  gender: n
+- lemma: скоювати
+  ipa: /skoˈjuwɑtɪ/
+  translation: to commit (crime)
+  pos: verb
+  gender: m
+- lemma: слідкувати
+  ipa: /slʲidkuˈwɑtɪ/
+  translation: to follow, to monitor
+  pos: verb
+- lemma: слідство
+  ipa: /ˈslʲidstwo/
+  translation: investigation
+  pos: noun
+  gender: n
+- lemma: слідчий
+  ipa: /ˈslʲidt͡ʃɪj/
+  translation: investigator
+  pos: noun
+  gender: m
+- lemma: спор
+  ipa: /spor/
+  translation: dispute
+  pos: noun
+  gender: m
+- lemma: спори
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: споруджений
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: f
+- lemma: столичний
+  ipa: /stoˈlɪt͡ʃnɪj/
+  translation: capital (city) (adj.)
+  pos: adj
+  gender: m
+- lemma: страховий
+  ipa: /strɑˈxowɪj/
+  translation: insurance (adj.)
+  pos: adj
+  gender: f
+- lemma: стягнення
+  ipa: /stʲɑɦˈnɛnʲːɑ/
+  translation: penalty, collection
+  pos: noun
+  gender: n
+- lemma: стягнути
+  ipa: /stʲɑɦˈnutɪ/
+  translation: to collect, to levy
+  pos: verb
+- lemma: судді
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: суддівський
+  ipa: /sudʲːʲiwsʲkɪj/
+  translation: judicial, judge's
+  pos: adj
+  gender: n
+- lemma: судження
+  ipa: /suˈdʒɛnʲːɑ/
+  translation: judgment, opinion
+  pos: noun
+  gender: n
+- lemma: судоустрій
+  ipa: /sudouˈstrʲij/
+  translation: judicial system
+  pos: noun
+  gender: m
+- lemma: техномаркет
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: тримання
+  ipa: /trɪˈmɑnʲːɑ/
+  translation: holding, detention
+  pos: noun
+  gender: n
+- lemma: тяжкий
+  ipa: /ˈtʲɑʒkɪj/
+  translation: grave, serious
+  pos: adj
+  gender: m
+- lemma: уповноважений
+  ipa: /upownoˈwɑʒɛnɪj/
+  translation: authorized, commissioner
+  pos: noun
+  gender: m
+- lemma: феміди
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: формалізований
+  ipa: /formɐlʲizoˈwɑnɪj/
+  translation: formalized
+  pos: adj
+  gender: f
+- lemma: фіктивний
+  ipa: /fʲikˈtɪwnɪj/
+  translation: fictitious
+  pos: adj
+  gender: f
+- lemma: цивільний
+  ipa: /t͡sɪˈwʲilʲnɪj/
+  translation: civil
+  pos: adj
+- lemma: шахрайство
+  ipa: /ʃɑxˈrɑjstwo/
+  translation: fraud
+  pos: noun
+  gender: n
+- lemma: юрисдикція
+  ipa: /jurɪsdɪkˈt͡sʲijɑ/
+  translation: jurisdiction
+  pos: noun
+  gender: f
+- lemma: іспитовий
+  ipa: /ʲispɪˈtowɪj/
+  translation: probationary, trial
+  pos: adj
+  gender: m

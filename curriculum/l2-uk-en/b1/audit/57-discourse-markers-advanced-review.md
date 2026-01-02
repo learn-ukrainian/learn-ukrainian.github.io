@@ -5,7 +5,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
   - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): натомість, результаті, тим, внаслідок, врешті...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): додатково, результаті, врешті, кажучи, натомість...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -26,27 +26,25 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Immersion:** 🇺🇦 99.8% (target 85-100% (B1.5-6 Vocab))
-- **Richness:** ❌ 89% < 95% min (grammar)
+- **Richness:** ✅ 96% (vocabulary)
 - **Grammar:** ✅ Validated (8/48 confirmed)
 
 ## Richness Details
-**Score:** 89% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 96% (minimum: 95%)
+**Module Type:** vocabulary
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 16 | 24 | 67% | 20% | 13.4% |
-| engagement | 10 | 5 | 100% | 15% | 15.0% |
-| dialogues | 14 | 4 | 100% | 15% | 15.0% |
-| variety | 0.94 | - | 94% | 10% | 9.4% |
+| collocations | 30 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 16 | 15 | 100% | 20% | 20.0% |
+| engagement | 10 | 4 | 100% | 15% | 15.0% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 4 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
+| visual | 7 | 3 | 100% | 10% | 10.0% |
+| register_notes | 14 | 5 | 100% | 10% | 10.0% |
+| variety | 0.94 | - | 94% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 21 | 5 | 100% | 5% | 5.0% |
-| proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **89.5%** |
+| **TOTAL** | | | | | **96.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

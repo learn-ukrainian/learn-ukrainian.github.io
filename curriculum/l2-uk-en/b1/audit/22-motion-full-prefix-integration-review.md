@@ -8,9 +8,9 @@
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 29/25
+- **Vocab:** ✅ 27/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -26,7 +26,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 47 | 24 | 100% | 20% | 20.0% |
-| engagement | 5 | 5 | 100% | 15% | 15.0% |
+| engagement | 8 | 5 | 100% | 15% | 15.0% |
 | dialogues | 11 | 4 | 100% | 15% | 15.0% |
 | variety | 0.99 | - | 99% | 10% | 9.9% |
 | cultural | 7 | 3 | 100% | 10% | 10.0% |

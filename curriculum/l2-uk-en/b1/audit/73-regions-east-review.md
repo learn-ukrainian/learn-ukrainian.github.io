@@ -5,7 +5,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
   - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): спорт, харківщина, кордон, культура, технології...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): наука, спорт, університет, промисловість, машинобудування...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -26,27 +26,25 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Immersion:** 🇺🇦 99.6% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ✅ 96% (grammar)
+- **Richness:** ✅ 98% (cultural)
 - **Grammar:** ✅ Validated (8/50 confirmed)
 
 ## Richness Details
-**Score:** 96% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 98% (minimum: 95%)
+**Module Type:** cultural
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 21 | 24 | 88% | 20% | 17.6% |
-| engagement | 13 | 5 | 100% | 15% | 15.0% |
-| dialogues | 15 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
-| cultural | 8 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 4 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.79 | - | 79% | 5% | 4.0% |
-| questions | 36 | 5 | 100% | 5% | 5.0% |
-| proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.3%** |
+| cultural | 8 | 5 | 100% | 33% | 33.3% |
+| engagement | 13 | 6 | 100% | 20% | 20.0% |
+| visual | 4 | 4 | 100% | 13% | 13.3% |
+| variety | 0.97 | - | 97% | 7% | 6.5% |
+| paragraph_var | 0.79 | - | 79% | 7% | 5.3% |
+| examples | 21 | - | 100% | 7% | 6.7% |
+| realworld | 3 | - | 100% | 7% | 6.7% |
+| questions | 36 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **98.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

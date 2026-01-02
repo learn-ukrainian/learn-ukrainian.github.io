@@ -1,0 +1,152 @@
+module: 88-interviu-ta-podkasty
+level: B1
+version: '2.0'
+items:
+- lemma: аудіоконтент
+  ipa: /audʲiɔkɔnˈtɛnt/
+  translation: audio content
+  pos: noun
+  gender: m
+- lemma: багатогодинний
+  ipa: /bahatɔhɔˈdɪnːɪj/
+  translation: multi-hour
+  pos: adj
+- lemma: бум
+  ipa: /bum/
+  translation: boom
+  pos: noun
+  gender: m
+- lemma: вгадувати
+  ipa: /vhaˈduvatɪ/
+  translation: to guess
+  pos: verb
+- lemma: ведучі
+  ipa: /vɛˈdut͡ʃi/
+  translation: hosts
+  pos: noun
+  gender: m
+- lemma: вимовляти
+  ipa: /vɪmɔu̯ˈlʲatɪ/
+  translation: to pronounce
+  pos: verb
+- lemma: демократизація
+  ipa: /dɛmɔkratɪˈzat͡sʲija/
+  translation: democratization
+  pos: noun
+  gender: f
+- lemma: дилетантизм
+  ipa: /dɪlɛtanˈtɪzm/
+  translation: dilettantism
+  pos: noun
+  gender: m
+- lemma: думаючий
+  ipa: /ˈdumajut͡ʃɪj/
+  translation: thinking
+  pos: adj
+- lemma: зупиняти
+  ipa: /zupɪˈnʲatɪ/
+  translation: to stop
+  pos: verb
+- lemma: ліцензія
+  ipa: /lʲiˈt͡sɛnzʲija/
+  translation: license
+  pos: noun
+  gender: f
+- lemma: медіасцень
+  ipa: /mɛdiasˈt͡sɛnʲ/
+  translation: media scene (typo)
+  pos: noun
+  gender: f
+- lemma: мозок
+  ipa: /ˈmɔzɔk/
+  translation: brain
+  pos: noun
+  gender: m
+- lemma: нитка
+  ipa: /ˈnɪtka/
+  translation: thread
+  pos: noun
+  gender: f
+- lemma: ніша
+  ipa: /ˈnʲiʃa/
+  translation: niche
+  pos: noun
+  gender: f
+- lemma: перепитати
+  ipa: /pɛrɛpɪˈtatɪ/
+  translation: to ask again
+  pos: verb
+- lemma: перепитувати
+  ipa: /pɛrɛˈpɪtuvatɪ/
+  translation: to keep asking
+  pos: verb
+- lemma: переслуховувати
+  ipa: /pɛrɛsluˈxɔvuvatɪ/
+  translation: to listen again
+  pos: verb
+- lemma: повід
+  ipa: /ˈpɔvid/
+  translation: reason
+  pos: noun
+  gender: f
+- lemma: подкастер
+  ipa: /pɔdˈkastɛr/
+  translation: podcaster
+  pos: noun
+  gender: m
+- lemma: подкастинг
+  ipa: /pɔdˈkastɪnɡ/
+  translation: podcasting
+  pos: noun
+  gender: m
+- lemma: подкасть
+  ipa: /pɔdˈkastʲ/
+  translation: podcast (typo)
+  pos: noun
+  gender: f
+- lemma: сегмент
+  ipa: /sɛhˈmɛnt/
+  translation: segment
+  pos: noun
+  gender: m
+- lemma: сигнальний
+  ipa: /sɪhˈnalʲnɪj/
+  translation: signal (adj)
+  pos: adj
+- lemma: текстовий
+  ipa: /tɛkˈstɔvɪj/
+  translation: text (adj)
+  pos: adj
+- lemma: точ
+  ipa: /tɔt͡ʃ/
+  translation: ??? (trunc)
+  pos: other
+- lemma: транскрипція
+  ipa: /transˈkrɪpt͡sʲija/
+  translation: transcription
+  pos: noun
+  gender: f
+- lemma: фрустрація
+  ipa: /fruˈstrat͡sʲija/
+  translation: frustration
+  pos: noun
+  gender: f
+- lemma: хвилювати
+  ipa: /xvɪlʲuˈvatɪ/
+  translation: to worry
+  pos: verb
+- lemma: шустер
+  ipa: /ˈʃustɛr/
+  translation: Shuster
+  pos: propn
+  gender: m
+- lemma: інтонації
+  ipa: /intɔˈnat͡sʲiji/
+  translation: intonations
+  pos: noun
+  gender: f
+- lemma: історичність
+  ipa: /istɔˈrɪt͡ʃnʲisʲtʲ/
+  translation: historicity
+  pos: noun
+  gender: f

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): стілець, хлопчик, сонечко, дівчинка, столик...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): квіточка, будиночок, зірочка, стілець, хлопчик...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -19,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 16/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 116/25
+- **Vocab:** ✅ 114/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

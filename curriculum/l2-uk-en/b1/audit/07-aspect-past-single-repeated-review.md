@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): раптом, востаннє, давно, щотижня, нещодавно...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): разу, періодично, давно, щодня, востаннє...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

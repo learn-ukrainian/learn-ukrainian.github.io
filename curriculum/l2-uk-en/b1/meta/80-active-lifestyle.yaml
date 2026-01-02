@@ -1,0 +1,27 @@
+module: 80
+title: Активний відпочинок
+subtitle: Active Lifestyle Basics
+version: '1.0'
+phase: B1.7
+level: B1
+focus: cultural
+pedagogy: PPP
+duration: 75
+transliteration: none
+tags:
+  - cultural
+  - active-lifestyle
+  - fitness
+  - health
+  - outdoors
+grammar: []
+objectives:
+  - Learner can discuss active lifestyle habits in Ukrainian
+  - Learner can understand texts about fitness and outdoor activities
+  - Learner can use vocabulary for diverse physical activities
+  - Learner can compare active leisure traditions in Ukraine and abroad
+word_target: 1500
+vocab_target: 25
+immersion_target: 95
+vocab_count: 25
+slug: 80-active-lifestyle

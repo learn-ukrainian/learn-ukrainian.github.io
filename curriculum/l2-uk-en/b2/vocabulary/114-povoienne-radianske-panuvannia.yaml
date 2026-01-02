@@ -1,0 +1,129 @@
+module: 114-povoienne-radianske-panuvannia
+level: B2
+version: '2.0'
+items:
+- lemma: СРСР
+  ipa: /ɛsɛsɛˈɛr/
+  translation: USSR (Soviet Union)
+  pos: noun
+  gender: m
+- lemma: режим
+  ipa: /reˈʒɪm/
+  translation: regime
+  pos: noun
+  gender: m
+- lemma: відбудова
+  ipa: /ʋidbuˈdɔʋɐ/
+  translation: reconstruction, rebuilding
+  pos: noun
+  gender: f
+- lemma: завод
+  ipa: /zɐˈʋɔd/
+  translation: factory, plant
+  pos: noun
+  gender: m
+- lemma: індустріалізація
+  ipa: /indʊstrʲiɐlʲiˈzat͡sʲijɐ/
+  translation: industrialization
+  pos: noun
+  gender: f
+- lemma: хрущовка
+  ipa: /xrʊˈʃt͡ʃɔu̯kɐ/
+  translation: Khrushchevka (Soviet-era apartment block)
+  pos: noun
+  gender: f
+- lemma: дефіцит
+  ipa: /dɛfʲiˈt͡sʲit/
+  translation: shortage, deficit
+  pos: noun
+  gender: m
+- lemma: застій
+  ipa: /zɐˈstij/
+  translation: stagnation (Brezhnev era)
+  pos: noun
+  gender: m
+- lemma: Брежнєв
+  ipa: /ˈbrɛʒnʲɛu̯/
+  translation: Leonid Brezhnev (Soviet leader)
+  pos: noun
+  gender: m
+- lemma: номенклатура
+  ipa: /nomɛnklɐˈturɐ/
+  translation: nomenklatura (Soviet elite)
+  pos: noun
+  gender: f
+- lemma: русифікація
+  ipa: /rʊsʲifʲiˈkat͡sʲijɐ/
+  translation: Russification
+  pos: noun
+  gender: f
+- lemma: школа
+  ipa: /ˈʃkɔlɐ/
+  translation: school
+  pos: noun
+  gender: f
+- lemma: суржик
+  ipa: /ˈsʊrʒɪk/
+  translation: Surzhyk (mixed Ukrainian-Russian speech)
+  pos: noun
+  gender: m
+- lemma: двомовність
+  ipa: /dʋɔˈmɔu̯nʲistʲ/
+  translation: bilingualism
+  pos: noun
+  gender: f
+- lemma: стабільність
+  ipa: /stɐˈbʲilʲnʲistʲ/
+  translation: stability
+  pos: noun
+  gender: f
+- lemma: партія
+  ipa: /ˈpartʲijɐ/
+  translation: party (political)
+  pos: noun
+  gender: f
+- lemma: ідеологія
+  ipa: /ideɔˈlɔɦʲijɐ/
+  translation: ideology
+  pos: noun
+  gender: f
+- lemma: пропаганда
+  ipa: /prɔpɐˈɦandɐ/
+  translation: propaganda
+  pos: noun
+  gender: f
+- lemma: цензура
+  ipa: /t͡sɛnˈzurɐ/
+  translation: censorship
+  pos: noun
+  gender: f
+- lemma: репресії
+  ipa: /rɛˈprɛsʲiji/
+  translation: repressions
+  pos: noun
+  gender: f.pl
+- lemma: шістдесятники
+  ipa: /ʃisʲdɛsʲaˈtnɪkɪ/
+  translation: Sixtiers (1960s Ukrainian dissidents)
+  pos: noun
+  gender: m.pl
+- lemma: дисидент
+  ipa: /dɪsɪˈdɛnt/
+  translation: dissident
+  pos: noun
+  gender: m
+- lemma: самвидав
+  ipa: /sɐmʋɪˈdau̯/
+  translation: samvydav (self-published dissident literature)
+  pos: noun
+  gender: m
+- lemma: Хельсінкі
+  ipa: /xɛlʲˈsʲinkʲi/
+  translation: Helsinki (Helsinki Accords/Group)
+  pos: noun
+  gender: n
+- lemma: Чорнобиль
+  ipa: /t͡ʃɔrˈnɔbɪlʲ/
+  translation: Chornobyl
+  pos: noun
+  gender: m

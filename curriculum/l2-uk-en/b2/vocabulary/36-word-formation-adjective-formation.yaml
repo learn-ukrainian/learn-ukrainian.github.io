@@ -2,542 +2,542 @@ module: 36-word-formation-adjective-formation
 level: B2
 version: '2.0'
 items:
-  - lemma: авангард
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: альб
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: альний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: андрей
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: архипенко
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: аток
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: брова
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: буття
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: білолиций
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: білолиця
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: біолог
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: біологічний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: біологія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: вивчений
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: волосий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: всебічний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: вторинний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: відеозапис
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: відношення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: відображений
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: дефіс
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: добросердечний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: доступніший
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: духовність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: еволюція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: екскурсоводка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: експозиція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: етнограф
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: етнографічний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: жартома
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: живопис
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: заглянити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: закономірний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: зовнішність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: зький
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: инний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: истий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: казимир
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: каталога
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: козакський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: колірний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: командувач
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: композитор
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: культурологія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: лице
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: львівщина
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: лісистий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: малевич
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: мальовничий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: малярство
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: манітний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: меценат
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: мистецтвознавець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: мистецький
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: мотив
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: музикальний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: надбання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: належність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: націяльний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: носія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: німечинський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: обзивати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: орнамент
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ота
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: первісний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: похідні
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: прагнення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: прапор
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: прапори
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: приваблювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: прикрашати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: пульс
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ратуш
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: садовий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: самобутній
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: своєрідний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: сийній
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: символізувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: синьожовтий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: синьоокий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: скарбниця
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: ский
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: скульптор
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: скульптур
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: соціально
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: стенд
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: супрематизм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: суфіксальний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: сьогодення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: теммний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: темноволосий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: територіальний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: ткач
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ток
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: трипільський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: україніанський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: українія
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: упорядкований
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: фауна
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: флора
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: фольклорний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: фонетика
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: фонетичний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: франція
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: цький
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: чинник
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: чорно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: чорнобривий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: чоррний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: шептицький
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: ілюстрація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: історрий
-    ipa: ''
-    translation: ''
-    pos: adj
+- lemma: авангард
+  ipa: /ɐwɐnˈɦɑrd/
+  translation: avant-garde
+  pos: noun
+  gender: m
+- lemma: альб
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: альний
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: m
+- lemma: андрей
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: архипенко
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: аток
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: брова
+  ipa: /broˈwɑ/
+  translation: eyebrow
+  pos: noun
+  gender: f
+- lemma: буття
+  ipa: /butˈtʲɑ/
+  translation: being, existence
+  pos: noun
+  gender: n
+- lemma: білолиций
+  ipa: /bʲiloˈlɪt͡sɪj/
+  translation: white-faced
+  pos: adj
+  gender: m
+- lemma: білолиця
+  ipa: /bʲiloˈlɪt͡sʲɑ/
+  translation: white-faced (feminine noun)
+  pos: noun
+  gender: f
+- lemma: біолог
+  ipa: /bʲioˈloɦ/
+  translation: biologist
+  pos: noun
+  gender: m
+- lemma: біологічний
+  ipa: /bʲioloˈɦʲit͡ʃnɪj/
+  translation: biological
+  pos: adj
+  gender: m
+- lemma: біологія
+  ipa: /bʲioloˈɦʲijɑ/
+  translation: biology
+  pos: noun
+  gender: f
+- lemma: вивчений
+  ipa: /wɪwˈt͡ʃɛnɪj/
+  translation: studied, learned
+  pos: adj
+- lemma: волосий
+  ipa: /woˈlosɪj/
+  translation: hairy
+  pos: adj
+  gender: m
+- lemma: всебічний
+  ipa: /wsɛˈbʲit͡ʃnɪj/
+  translation: comprehensive, all-round
+  pos: adj
+  gender: m
+- lemma: вторинний
+  ipa: /wtoˈrɪnnɪj/
+  translation: secondary
+  pos: adj
+  gender: f
+- lemma: відеозапис
+  ipa: /wʲidɛozɑˈpɪs/
+  translation: video recording
+  pos: noun
+  gender: m
+- lemma: відношення
+  ipa: /wʲidnoˈʃɛnʲːɑ/
+  translation: relation, attitude
+  pos: noun
+  gender: n
+- lemma: відображений
+  ipa: /wʲidobrɑˈʒɛnɪj/
+  translation: reflected, depicted
+  pos: adj
+- lemma: дефіс
+  ipa: /dɛˈfʲis/
+  translation: hyphen
+  pos: noun
+  gender: m
+- lemma: добросердечний
+  ipa: /dobrosɛrˈdɛt͡ʃnɪj/
+  translation: kind-hearted
+  pos: adj
+- lemma: доступніший
+  ipa: /dosˈtupnʲiʃɪj/
+  translation: more accessible
+  pos: adj
+  gender: f
+- lemma: духовність
+  ipa: /duxowˈnʲistʲ/
+  translation: spirituality
+  pos: noun
+  gender: f
+- lemma: еволюція
+  ipa: /ɛwolʲuˈt͡sʲijɑ/
+  translation: evolution
+  pos: noun
+  gender: f
+- lemma: екскурсоводка
+  ipa: /ɛkskursoˈwodkɑ/
+  translation: tour guide (female)
+  pos: noun
+  gender: f
+- lemma: експозиція
+  ipa: /ɛkspoˈzɪt͡sʲijɑ/
+  translation: exhibition, exposition
+  pos: noun
+  gender: f
+- lemma: етнограф
+  ipa: /ɛtnoˈɦrɑf/
+  translation: ethnographer
+  pos: noun
+  gender: m
+- lemma: етнографічний
+  ipa: /ɛtnoɦrɐˈfʲit͡ʃnɪj/
+  translation: ethnographic
+  pos: adj
+  gender: m
+- lemma: жартома
+  ipa: /ʒɑrˈtomɑ/
+  translation: jokingly
+  pos: adv
+- lemma: живопис
+  ipa: /ʒɪwoˈpɪs/
+  translation: painting (art form)
+  pos: noun
+  gender: m
+- lemma: заглянити
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: закономірний
+  ipa: /zɐkonomʲirnɪj/
+  translation: logical, natural, regular
+  pos: adj
+- lemma: зовнішність
+  ipa: /ˈzownʲiʃnʲistʲ/
+  translation: appearance
+  pos: noun
+  gender: f
+- lemma: зький
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: m
+- lemma: инний
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: m
+- lemma: истий
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: m
+- lemma: казимир
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: каталога
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: козакський
+  ipa: /kozɑt͡sʲkɪj/
+  translation: Cossack (adj.)
+  pos: adj
+  gender: m
+- lemma: колірний
+  ipa: /koˈlʲirnɪj/
+  translation: color (adj.)
+  pos: adj
+- lemma: командувач
+  ipa: /komɐnduˈwɑt͡ʃ/
+  translation: commander
+  pos: noun
+  gender: m
+- lemma: композитор
+  ipa: /kompozɪˈtor/
+  translation: composer
+  pos: noun
+  gender: m
+- lemma: культурологія
+  ipa: /kulʲturoloˈɦʲijɑ/
+  translation: cultural studies
+  pos: noun
+  gender: f
+- lemma: лице
+  ipa: /lɪˈt͡sɛ/
+  translation: face
+  pos: noun
+  gender: n
+- lemma: львівщина
+  ipa: /lʲwʲiwˈʃt͡ʃɪnɑ/
+  translation: Lviv region
+  pos: propn
+  gender: f
+- lemma: лісистий
+  ipa: /lʲiˈsɪstɪj/
+  translation: forested, wooded
+  pos: adj
+  gender: m
+- lemma: малевич
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: мальовничий
+  ipa: /mɑlʲowˈnɪt͡ʃɪj/
+  translation: picturesque
+  pos: adj
+  gender: f
+- lemma: малярство
+  ipa: /mɑˈlʲɑrstwo/
+  translation: painting (art)
+  pos: noun
+  gender: n
+- lemma: манітний
+  ipa: /mɐˈnʲitnɪj/
+  translation: magnetic
+  pos: adj
+  gender: m
+- lemma: меценат
+  ipa: /mɛt͡sɛˈnɑt/
+  translation: patron, sponsor
+  pos: noun
+  gender: m
+- lemma: мистецтвознавець
+  ipa: /mɪstɛt͡stwozˈnɑwɛt͡sʲ/
+  translation: art historian
+  pos: noun
+  gender: m
+- lemma: мистецький
+  ipa: /mɪsˈtɛt͡sʲkɪj/
+  translation: artistic
+  pos: adj
+- lemma: мотив
+  ipa: /moˈtɪw/
+  translation: motif, motive
+  pos: noun
+  gender: m
+- lemma: музикальний
+  ipa: /muzɪˈkɑlʲnɪj/
+  translation: musical
+  pos: adj
+  gender: m
+- lemma: надбання
+  ipa: /nɐdˈbɑnʲːɑ/
+  translation: heritage, acquisition
+  pos: noun
+  gender: n
+- lemma: належність
+  ipa: /nɐˈlɛʒnʲistʲ/
+  translation: belonging, affiliation
+  pos: noun
+  gender: f
+- lemma: націяльний
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: m
+- lemma: носія
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: німечинський
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: m
+- lemma: обзивати
+  ipa: /obzɪˈwɑtɪ/
+  translation: to call names, to insult
+  pos: verb
+- lemma: орнамент
+  ipa: /ornɐˈmɛnt/
+  translation: ornament
+  pos: noun
+  gender: m
+- lemma: ота
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: первісний
+  ipa: /pɛrˈwʲisnɪj/
+  translation: primitive, primeval
+  pos: adj
+  gender: n
+- lemma: похідні
+  ipa: /poˈxʲidnʲi/
+  translation: derivatives
+  pos: noun
+  gender: m
+- lemma: прагнення
+  ipa: /prɑɦˈnɛnʲːɑ/
+  translation: aspiration, desire
+  pos: noun
+  gender: n
+- lemma: прапор
+  ipa: /ˈprɑpor/
+  translation: flag
+  pos: noun
+  gender: m
+- lemma: прапори
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: приваблювати
+  ipa: /prɪwɑblʲuˈwɑtɪ/
+  translation: to attract
+  pos: verb
+- lemma: прикрашати
+  ipa: /prɪkrɑˈʃɑtɪ/
+  translation: to decorate, to adorn
+  pos: verb
+- lemma: пульс
+  ipa: /pulʲs/
+  translation: pulse
+  pos: noun
+  gender: m
+- lemma: ратуш
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: садовий
+  ipa: /sɐˈdowɪj/
+  translation: garden (adj.)
+  pos: adj
+  gender: m
+- lemma: самобутній
+  ipa: /sɐmoˈbutnʲij/
+  translation: original, unique
+  pos: adj
+  gender: m
+- lemma: своєрідний
+  ipa: /swoˈjerʲidnɪj/
+  translation: peculiar, distinctive
+  pos: adj
+- lemma: сийній
+  ipa: ''
+  translation: ''
+  pos: adj
+- lemma: символізувати
+  ipa: /sɪmbolʲizuˈwɑtɪ/
+  translation: to symbolize
+  pos: verb
+- lemma: синьожовтий
+  ipa: /sɪnʲoˈʒowtɪj/
+  translation: blue-yellow
+  pos: adj
+  gender: m
+- lemma: синьоокий
+  ipa: /sɪnʲoˈokɪj/
+  translation: blue-eyed
+  pos: adj
+  gender: m
+- lemma: скарбниця
+  ipa: /skɑrbˈnɪt͡sʲɑ/
+  translation: treasury
+  pos: noun
+  gender: f
+- lemma: ский
+  ipa: ''
+  translation: ''
+  pos: adv
+- lemma: скульптор
+  ipa: /skulʲpˈtor/
+  translation: sculptor
+  pos: noun
+  gender: m
+- lemma: скульптур
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: соціально
+  ipa: ''
+  translation: ''
+  pos: adj
+- lemma: стенд
+  ipa: /stɛnd/
+  translation: stand, display
+  pos: noun
+  gender: m
+- lemma: супрематизм
+  ipa: /suprɛmɐˈtɪzm/
+  translation: suprematism
+  pos: noun
+  gender: m
+- lemma: суфіксальний
+  ipa: /sufʲiksɑlʲnɪj/
+  translation: suffixal
+  pos: adj
+  gender: n
+- lemma: сьогодення
+  ipa: /sʲoˈɦodɛnʲːɑ/
+  translation: present day
+  pos: noun
+  gender: n
+- lemma: теммний
+  ipa: ''
+  translation: ''
+  pos: adj
+- lemma: темноволосий
+  ipa: /tɛmnowoˈlosɪj/
+  translation: dark-haired
+  pos: adj
+  gender: f
+- lemma: територіальний
+  ipa: /tɛrɪtorʲiˈɑlʲnɪj/
+  translation: territorial
+  pos: adj
+  gender: m
+- lemma: ткач
+  ipa: /tkɑt͡ʃ/
+  translation: weaver
+  pos: noun
+  gender: m
+- lemma: ток
+  ipa: /tok/
+  translation: current, threshing floor
+  pos: noun
+  gender: m
+- lemma: трипільський
+  ipa: /trɪˈpʲilʲsʲkɪj/
+  translation: Trypillian
+  pos: adj
+  gender: f
+- lemma: україніанський
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: m
+- lemma: українія
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: упорядкований
+  ipa: /uporʲɑdˈkowɑnɪj/
+  translation: organized, arranged
+  pos: adj
+  gender: m
+- lemma: фауна
+  ipa: /fɐˈunɑ/
+  translation: fauna
+  pos: noun
+  gender: f
+- lemma: флора
+  ipa: /ˈflorɑ/
+  translation: flora
+  pos: noun
+  gender: f
+- lemma: фольклорний
+  ipa: /folʲkˈlornɪj/
+  translation: folkloric
+  pos: adj
+  gender: f
+- lemma: фонетика
+  ipa: /fonɛˈtɪkɑ/
+  translation: phonetics
+  pos: noun
+  gender: f
+- lemma: фонетичний
+  ipa: /fonɛˈtɪt͡ʃnɪj/
+  translation: phonetic
+  pos: adj
+- lemma: франція
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: цький
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: m
+- lemma: чинник
+  ipa: /ˈt͡ʃɪnnɪk/
+  translation: factor
+  pos: noun
+  gender: m
+- lemma: чорно
+  ipa: ''
+  translation: ''
+  pos: adv
+- lemma: чорнобривий
+  ipa: /t͡ʃornoˈbrɪwɪj/
+  translation: black-browed
+  pos: adj
+  gender: f
+- lemma: чоррний
+  ipa: ''
+  translation: ''
+  pos: adj
+- lemma: шептицький
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: ілюстрація
+  ipa: /ʲilʲusˈtrɑt͡sʲijɑ/
+  translation: illustration
+  pos: noun
+  gender: f
+- lemma: історрий
+  ipa: ''
+  translation: ''
+  pos: adj

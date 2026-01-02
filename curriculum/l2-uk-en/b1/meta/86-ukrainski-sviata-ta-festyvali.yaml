@@ -1,0 +1,25 @@
+module: b1-86
+title: Українські свята та фестивалі
+subtitle: Ukrainian Holidays and Festivals
+version: '1.0'
+phase: B1.7
+pedagogy: cultural
+focus: cultural
+duration: 75
+transliteration: none
+tags:
+  - culture
+  - holidays
+  - festivals
+  - traditions
+grammar: []
+objectives:
+  - Learner can discuss Ukrainian holidays and festivals in context
+  - Learner can understand authentic texts about Ukrainian celebrations
+  - Learner can use celebration-related vocabulary in communicative contexts
+  - Learner can compare Ukrainian festivals with their own cultural traditions
+vocabulary_count: 30
+word_target: 1500
+immersion_target: 100
+vocab_count: 49
+slug: 86-ukrainski-sviata-ta-festyvali

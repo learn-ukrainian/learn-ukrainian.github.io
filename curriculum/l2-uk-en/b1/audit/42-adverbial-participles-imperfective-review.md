@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): йдучи, одягаючись, думаючи, говорячи, стоячи...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): несучи, йдучи, біжачи, стоячи, летячи...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -19,7 +19,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 40/25
+- **Vocab:** ✅ 36/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

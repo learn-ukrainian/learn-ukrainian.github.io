@@ -24,39 +24,24 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Immersion:** 🇺🇦 99.8% (checkpoint - no gate)
-- **Richness:** ❌ 81% < 95% min (grammar)
+- **Richness:** ✅ 98% (checkpoint)
 - **Grammar:** ✅ Validated (10/102 confirmed)
 
 ## Richness Details
-**Score:** 81% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 98% (minimum: 85%)
+**Module Type:** checkpoint
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 47 | 24 | 100% | 20% | 20.0% |
-| engagement | 4 | 5 | 80% | 15% | 12.0% |
-| dialogues | 1 | 4 | 25% | 15% | 3.8% |
-| variety | 0.90 | - | 90% | 10% | 9.0% |
-| cultural | 2 | 3 | 67% | 10% | 6.7% |
-| realworld | 8 | 3 | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.99 | - | 99% | 5% | 5.0% |
-| questions | 37 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **81.4%** |
-
-### Dryness Flags & Fixes
-- ❌ **LOW_DIALOGUE**
-  - FIX:
-    Add more mini-dialogues (need 4+ total). Use this exact format:
-    
-    **Діалог: [Location in Ukraine]**
-    
-    > — [Speaker 1 line with **bolded** grammar examples]
-    > — [Speaker 2 response with **bolded** grammar examples]
-    > — [Speaker 1 continuation]
-    > — [Speaker 2 conclusion]
+| activity_types | 12 | 8 | 100% | 25% | 25.0% |
+| review_sections | 34 | 3 | 100% | 20% | 20.0% |
+| variety | 0.90 | - | 90% | 15% | 13.5% |
+| engagement | 4 | 3 | 100% | 10% | 10.0% |
+| cultural | 2 | - | 100% | 10% | 10.0% |
+| visual | 10 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 0.99 | - | 99% | 10% | 9.9% |
+| **TOTAL** | | | | | **98.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

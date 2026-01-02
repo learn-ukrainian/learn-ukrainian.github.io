@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): обід, команда, вихідні, зустріч, дедлайн...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): презентація, дедлайн, зустріч, обід, начальник...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

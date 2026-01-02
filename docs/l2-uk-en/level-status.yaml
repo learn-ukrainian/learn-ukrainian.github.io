@@ -22,8 +22,8 @@ a2:
   description: "Elementary — All 7 cases, aspect intro, comparison"
 
 b1:
-  planned: 86
-  status: auto
+  planned: 91
+  status: complete  # Manually verified 2026-01-02
   description: "Intermediate — Aspect mastery, motion verbs, complex sentences"
 
 b2:

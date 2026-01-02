@@ -5,7 +5,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
   - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): медаль, матч, гравець, збірна, плавання...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): матч, тренер, спорт, стадіон, команда...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -26,27 +26,25 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Immersion:** 🇺🇦 99.6% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ✅ 95% (grammar)
+- **Richness:** ✅ 98% (cultural)
 - **Grammar:** ✅ Validated (7/51 confirmed)
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 98% (minimum: 95%)
+**Module Type:** cultural
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 26 | 24 | 100% | 20% | 20.0% |
-| engagement | 6 | 5 | 100% | 15% | 15.0% |
-| dialogues | 12 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
-| cultural | 7 | 3 | 100% | 10% | 10.0% |
-| realworld | 2 | 3 | 67% | 10% | 6.7% |
-| visual | 4 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.83 | - | 83% | 5% | 4.2% |
-| questions | 20 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **95.6%** |
+| cultural | 7 | 5 | 100% | 33% | 33.3% |
+| engagement | 6 | 6 | 100% | 20% | 20.0% |
+| visual | 4 | 4 | 100% | 13% | 13.3% |
+| variety | 0.97 | - | 97% | 7% | 6.5% |
+| paragraph_var | 0.83 | - | 83% | 7% | 5.5% |
+| examples | 26 | - | 100% | 7% | 6.7% |
+| realworld | 2 | - | 100% | 7% | 6.7% |
+| questions | 20 | 4 | 100% | 7% | 6.7% |
+| **TOTAL** | | | | | **98.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

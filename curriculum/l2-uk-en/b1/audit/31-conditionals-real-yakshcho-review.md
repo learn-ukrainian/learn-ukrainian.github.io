@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): такому, можливість, значить, умова, можливо...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): напевно, умов, виходить, ймовірно, такому...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

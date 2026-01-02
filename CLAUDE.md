@@ -110,8 +110,8 @@ When you find a problem:
 ### Completion Status
 - **A1 COMPLETE** (34/34 modules) - all pass audit, MDX, HTML validation
 - **A2 COMPLETE** (57/57 modules) - all pass validation
-- **B1 COMPLETE** (86/86 modules) - all pass validation
-- **B2 IN PROGRESS** (106/145 modules, 73%)
+- **B1 COMPLETE** (91/91 modules) - all pass validation
+- **B2 IN PROGRESS** (131/145 modules, 90%)
 
 ### Immersion Levels (affects NLP validation strategy)
 - **A1**: Scaffolded with English translations & transliteration → NOT suitable for Ukrainian NLP validation
@@ -122,8 +122,8 @@ When you find a problem:
 
 **CURRENT FOCUS: B2** (A1, A2, B1 complete)
 - B2 focuses on Ukrainian history (M71-131), passive voice, registers, and advanced grammar
-- 106/145 modules complete (73%) - need modules 107-145
-- Remaining modules cover: Cossack era synthesis, Soviet trauma, independence, modern war
+- 131/145 modules complete (90%) - need modules 132-145
+- Remaining modules: Skills & Capstone (M132-145: Reading, Listening, Speaking, Writing, Culture integration)
 - B1-B2-C1-C2 are fully immersed Ukrainian content, ideal for Ukrainian NLP validation
 
 ---
@@ -339,8 +339,8 @@ learn-ukrainian/
 │   │   │   └── 01-cyrillic-code-i.yaml
 │   │   └── audit/        # Review reports
 │   ├── a2/               # A2 modules (57 complete)
-│   ├── b1/               # B1 modules (86 complete)
-│   ├── b2/               # B2 modules (106/145, 73%)
+│   ├── b1/               # B1 modules (91 complete)
+│   ├── b2/               # B2 modules (131/145, 90%)
 │   ├── c1/               # C1 modules (0/196 planned)
 │   ├── c2/               # C2 modules (0/100 planned)
 │   ├── vocabulary.db     # Master vocabulary database (SQLite)
@@ -369,7 +369,7 @@ Level and module number are derived from the file path, not frontmatter.
 |-------|--------|---------|--------------|-------------|
 | A1 | `a1/` | 34 | ~750 | Beginner - Cyrillic, basic phrases, simple grammar |
 | A2 | `a2/` | 57 | ~1,050 | Elementary - All 7 cases, aspect basics, comparison |
-| B1 | `b1/` | 86 | ~1,500 | Intermediate - Aspect mastery, motion verbs, complex sentences |
+| B1 | `b1/` | 91 | ~1,500 | Intermediate - Aspect mastery, motion verbs, complex sentences |
 | B2 | `b2/` | 145 | ~2,640 | Upper-Intermediate - Passive voice, registers, Ukrainian history |
 | C1 | `c1/` | 196 | ~4,700 | Advanced - Biographies, stylistics, folk culture, literature |
 | C2 | `c2/` | 100 | ~2,500 | Mastery - Stylistic perfection, professional specialization |
@@ -524,25 +524,23 @@ Is this a real error or pedagogically acceptable? Respond in JSON.
 
 **Result:** Fix confirmed → Update module with "моєму другу"
 
-## Level Status (Updated: Dec 31, 2024)
+## Level Status (Updated: Jan 2, 2026)
 
 | Level | Modules | Status | Pipeline | Next Step |
 |-------|---------|--------|----------|-----------|
 | A1 | 34/34 | ✅ Complete | ✅ All pass | ✅ Ready for production |
 | A2 | 57/57 | ✅ Complete | ✅ All pass | ✅ Ready for production |
-| B1 | 86/86 | ✅ Complete | ✅ All pass | ✅ Ready for production |
-| B2 | 106/145 | 🚧 In Progress (73%) | ⏳ Partial | Continue M107-145 |
+| B1 | 91/91 | ✅ Complete | ✅ All pass | ✅ Ready for production |
+| B2 | 131/145 | 🚧 In Progress (90%) | ⏳ Partial | Continue M132-145 |
 | C1 | 0/196 | 📋 Planned | ❌ Not started | Waiting for B2 |
 | C2 | 0/100 | 📋 Planned | ❌ Not started | Waiting for C1 |
 
 **Current B2 Focus:**
-- **Completed:** M01-106 (Grammar, Vocabulary, Early History)
-- **Remaining:** M107-145 (39 modules)
-  - M107: Synthesis (Cossacks to 1920s)
-  - M108-119: Trauma & Resistance (Holodomor, WWII, Chornobyl)
-  - M120-125: Independence & War (1991-2014)
-  - M126-131: War for Existence (Euromaidan, Crimea, 2022)
-  - M132-145: Skills & Capstone
+- **Completed:** M01-131 (Grammar, Vocabulary, Ukrainian History complete)
+- **Remaining:** M132-145 (14 modules - Skills & Capstone)
+  - M132-138: Advanced Skills (Reading, Listening, Speaking, Writing integration)
+  - M139-144: Cultural & Professional Synthesis
+  - M145: B2 Capstone
 
 **Per-level workflow:**
 1. Build all modules (stages 1-3)

@@ -2,365 +2,365 @@ module: 37-word-formation-adverbs-integration
 level: B2
 version: '2.0'
 items:
-  - lemma: аугментатив
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: аугментатива
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: будиночок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: вертеп
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: вистояти
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: n
-  - lemma: вказівний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: вовк
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: вовчище
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: вітерець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: вітрищий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: гостювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: двір
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: демінутив
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: демінутива
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: демінутивний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: дме
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: донечко
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: донечонький
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: житися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: замерзати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: зарплатко
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: збільшувальний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: звикнути
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: зло
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: зірочка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: калинівка
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: кликати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: колядка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ласкавість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: літ
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: метушливий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: михайлик
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: морозець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: морозище
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: морозищий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: наздогнати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: несхвально
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: носище
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: ніженька
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ніженький
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: оленк
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: ому
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: опалення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: очок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: петрівка
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: плач
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: повалити
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: n
-  - lemma: поновий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: поукраїнський
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: практикуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: прекрасно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: прикм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: прудкий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: роботка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: рідкий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: серденько
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: синочок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: спатися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: n
-  - lemma: страшний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: сусідній
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: ськи
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: сіква
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: теплота
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: точніше
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: узагальнити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: українськ
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: хлопчинка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: хлопчичок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: холодище
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: холодищий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: холодок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ціка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: чик
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: швидо
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: інколи
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: іронічно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: іронія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
+- lemma: аугментатив
+  ipa: /ɐuɦmɛntɑˈtɪw/
+  translation: augmentative
+  pos: noun
+  gender: m
+- lemma: аугментатива
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: будиночок
+  ipa: /budɪˈnot͡ʃok/
+  translation: small house (diminutive)
+  pos: noun
+  gender: m
+- lemma: вертеп
+  ipa: /wɛrˈtɛp/
+  translation: nativity scene, cave
+  pos: noun
+  gender: m
+- lemma: вистояти
+  ipa: /wɪstoˈjɑtɪ/
+  translation: to withstand, to endure
+  pos: verb
+  gender: n
+- lemma: вказівний
+  ipa: /wkɑˈzʲiwnɪj/
+  translation: demonstrative
+  pos: adj
+- lemma: вовк
+  ipa: /wowk/
+  translation: wolf
+  pos: noun
+  gender: m
+- lemma: вовчище
+  ipa: /wowˈt͡ʃɪʃt͡ʃɛ/
+  translation: big wolf (augmentative)
+  pos: noun
+  gender: n
+- lemma: вітерець
+  ipa: /wʲitɛˈrɛt͡sʲ/
+  translation: light breeze (diminutive)
+  pos: noun
+  gender: m
+- lemma: вітрищий
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: n
+- lemma: гостювати
+  ipa: /ɦostʲuˈwɑtɪ/
+  translation: to visit, to stay as a guest
+  pos: verb
+- lemma: двір
+  ipa: /dwʲir/
+  translation: yard, court
+  pos: noun
+  gender: m
+- lemma: демінутив
+  ipa: /dɛmʲinuˈtɪw/
+  translation: diminutive
+  pos: noun
+  gender: m
+- lemma: демінутива
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: демінутивний
+  ipa: /dɛmʲinutɪwnɪj/
+  translation: diminutive (adj.)
+  pos: adj
+  gender: m
+- lemma: дме
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: донечко
+  ipa: /doˈnɛt͡ʃko/
+  translation: dear daughter (diminutive)
+  pos: noun
+  gender: f
+- lemma: донечонький
+  ipa: /donɛˈt͡ʃonʲkɪj/
+  translation: dear little (daughter) (diminutive adj.)
+  pos: adj
+  gender: f
+- lemma: житися
+  ipa: /ˈʒɪtɪsʲɑ/
+  translation: to live
+  pos: verb
+- lemma: замерзати
+  ipa: /zɐmɛrˈzɑtɪ/
+  translation: to freeze
+  pos: verb
+- lemma: зарплатко
+  ipa: /zɐrplɑtˈko/
+  translation: small salary (diminutive, ironic)
+  pos: noun
+  gender: f
+- lemma: збільшувальний
+  ipa: /zbʲilʲʃuˈwɑlʲnɪj/
+  translation: augmentative
+  pos: adj
+- lemma: звикнути
+  ipa: /zwɪkˈnutɪ/
+  translation: to get used to
+  pos: verb
+- lemma: зло
+  ipa: /zlo/
+  translation: evil
+  pos: noun
+  gender: n
+- lemma: зірочка
+  ipa: /ˈzʲirot͡ʃkɑ/
+  translation: little star (diminutive)
+  pos: noun
+  gender: n
+- lemma: калинівка
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: кликати
+  ipa: /klɪˈkɑtɪ/
+  translation: to call, to summon
+  pos: verb
+- lemma: колядка
+  ipa: /koˈlʲɑdkɑ/
+  translation: carol
+  pos: noun
+  gender: m
+- lemma: ласкавість
+  ipa: /lɐskɑˈwʲistʲ/
+  translation: tenderness, affection
+  pos: noun
+  gender: f
+- lemma: літ
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: метушливий
+  ipa: /mɛˈtuʃlɪwɪj/
+  translation: fussy, bustling
+  pos: adj
+- lemma: михайлик
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: морозець
+  ipa: /moroˈzɛt͡sʲ/
+  translation: light frost (diminutive)
+  pos: noun
+  gender: m
+- lemma: морозище
+  ipa: /moroˈzɪʃt͡ʃɛ/
+  translation: severe frost (augmentative)
+  pos: noun
+  gender: n
+- lemma: морозищий
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: n
+- lemma: наздогнати
+  ipa: /nɐzdoɦˈnɑtɪ/
+  translation: to catch up
+  pos: verb
+- lemma: несхвально
+  ipa: /nɛsxwɑlʲno/
+  translation: disapprovingly
+  pos: adv
+- lemma: носище
+  ipa: /noˈsɪʃt͡ʃɛ/
+  translation: big nose (augmentative)
+  pos: noun
+  gender: n
+- lemma: ніженька
+  ipa: /ˈnʲiʒɛnʲkɑ/
+  translation: little leg (diminutive)
+  pos: noun
+  gender: m
+- lemma: ніженький
+  ipa: /ˈnʲiʒɛnʲkɪj/
+  translation: tender, delicate
+  pos: adj
+  gender: f
+- lemma: оленк
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: ому
+  ipa: ''
+  translation: ''
+  pos: other
+- lemma: опалення
+  ipa: /opɑˈlɛnʲːɑ/
+  translation: heating
+  pos: noun
+  gender: n
+- lemma: очок
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: петрівка
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: плач
+  ipa: /plɑt͡ʃ/
+  translation: crying, weeping
+  pos: noun
+  gender: m
+- lemma: повалити
+  ipa: /powɑˈlɪtɪ/
+  translation: to knock down
+  pos: verb
+  gender: n
+- lemma: поновий
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: f
+- lemma: поукраїнський
+  ipa: /poukrɑˈjinsʲkɪj/
+  translation: in Ukrainian manner/style
+  pos: adj
+- lemma: практикуватися
+  ipa: /prɑktɪkuwɑˈtɪsʲɑ/
+  translation: to practice
+  pos: verb
+- lemma: прекрасно
+  ipa: /prɛˈkrɑsno/
+  translation: excellently
+  pos: adv
+- lemma: прикм
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: прудкий
+  ipa: /ˈprudkɪj/
+  translation: quick, nimble
+  pos: adj
+- lemma: роботка
+  ipa: /roˈbotkɑ/
+  translation: small job (diminutive)
+  pos: noun
+  gender: f
+- lemma: рідкий
+  ipa: /ˈrʲidkɪj/
+  translation: rare, thin
+  pos: adj
+  gender: m
+- lemma: серденько
+  ipa: /sɛrˈdɛnʲko/
+  translation: little heart (diminutive)
+  pos: noun
+  gender: n
+- lemma: синочок
+  ipa: /sɪnoˈt͡ʃok/
+  translation: little son (diminutive)
+  pos: noun
+  gender: m
+- lemma: спатися
+  ipa: /ˈspɑtɪsʲɑ/
+  translation: to sleep, to feel like sleeping
+  pos: verb
+  gender: n
+- lemma: страшний
+  ipa: /ˈstrɑʃnɪj/
+  translation: terrible, scary
+  pos: adj
+  gender: m
+- lemma: сусідній
+  ipa: /suˈsʲidnʲij/
+  translation: neighboring
+  pos: adj
+  gender: m
+- lemma: ськи
+  ipa: ''
+  translation: ''
+  pos: other
+- lemma: сіква
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: теплота
+  ipa: /tɛploˈtɑ/
+  translation: warmth
+  pos: noun
+  gender: f
+- lemma: точніше
+  ipa: /ˈtot͡ʃnʲiʃɛ/
+  translation: more precisely
+  pos: adv
+- lemma: узагальнити
+  ipa: /uzɐɦɑlʲˈnɪtɪ/
+  translation: to generalize
+  pos: verb
+- lemma: українськ
+  ipa: ''
+  translation: ''
+  pos: other
+- lemma: хлопчинка
+  ipa: /xlopt͡ʃɪnˈkɑ/
+  translation: little boy (diminutive)
+  pos: noun
+  gender: f
+- lemma: хлопчичок
+  ipa: /xlopt͡ʃɪˈt͡ʃok/
+  translation: little boy (diminutive)
+  pos: noun
+  gender: f
+- lemma: холодище
+  ipa: /xoloˈdɪʃt͡ʃɛ/
+  translation: severe cold (augmentative)
+  pos: noun
+  gender: n
+- lemma: холодищий
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: n
+- lemma: холодок
+  ipa: /xoloˈdok/
+  translation: coolness (diminutive)
+  pos: noun
+  gender: m
+- lemma: ціка
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: чик
+  ipa: ''
+  translation: ''
+  pos: other
+- lemma: швидо
+  ipa: ''
+  translation: ''
+  pos: adv
+- lemma: інколи
+  ipa: /ʲinˈkolɪ/
+  translation: sometimes
+  pos: adv
+- lemma: іронічно
+  ipa: /ʲiroˈnʲit͡ʃno/
+  translation: ironically
+  pos: adv
+- lemma: іронія
+  ipa: /ʲiˈronʲijɑ/
+  translation: irony
+  pos: noun
+  gender: f

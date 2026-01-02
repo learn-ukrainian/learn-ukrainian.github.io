@@ -2,701 +2,701 @@ module: 28-economics-business-vocabulary
 level: B2
 version: '2.0'
 items:
-  - lemma: авторитет
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: аналогічно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: аркадій
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: артерія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: безробітний
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: борговий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: бренда
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: буквально
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: біржа
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: біржя
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: важити
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: валовий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: ввп
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: вижити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: вимірювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: вкласти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: власність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: впізнавання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: гарантуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: голобородька
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: господарство
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: девальвація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: девальвувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: депозит
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: дефіцит
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: дешевшати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: дивіденда
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: домовлятися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: дотація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: дохід
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: дохідність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: дізнаватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: експорт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: експортер
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: експортувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: ембарго
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: жвавий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: завищений
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: зайнятість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: закуповувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: залустити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: залучити
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: заощадження
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: запозити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: здешевити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: зміцнення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: зміцнитися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: знижуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: знизити
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: знизитися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: зсередини
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: комерційний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: конкурентний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: конкуренція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: конкурувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: кредитування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: кредитувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: кривий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: кулак
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: купівельний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: локальний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: макроекономічний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: металургія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: мит
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: мито
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: молдова
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: монетарний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: монополія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: мільйони
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: надійніший
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: назовні
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: найвигідніший
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: наразі
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: націоналізація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: нбу
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: неподалік
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: нерухомість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: облігація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: обліковий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: обіг
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: овдп
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: олія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: оподатковувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: ощадбанк
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: падіння
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: пдв
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: перевищення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: перевищувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: переживати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: податок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: позик
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: позичання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: позичати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: популяризувати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: почнути
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: поштовий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: працездатний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: прибуток
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: приватизація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: приватизувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: прийменниковий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: профіт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: профіцит
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: процент
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: пумб
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: пфтс
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: підприємець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ревальвація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: реконструкція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: рекордний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: рецесія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: розвага
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: росія
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: різноманітність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: річний
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: скасування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: соняшниковий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: сповільнення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: сповільнитися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: сприятливий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: спроможність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: співвласник
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ставка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: ставок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: стар
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: стартовий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: субсидіювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: сша
-    ipa: ''
-    translation: ''
-    pos: propn
-  - lemma: сягнути
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: сільськогосподарський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: танок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: толерантність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: торговельний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: торгувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: торгівля
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: традиції
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: трильйона
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: уповільнення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: фондовий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: фоп
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: фунт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: шпаліть
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: штат
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: імпорт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: імпортний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: імпортувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: інвестиційний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: інвестувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: іноземка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
+- lemma: авторитет
+  ipa: /ɐwtorɪˈtɛt/
+  translation: authority
+  pos: noun
+  gender: m
+- lemma: аналогічно
+  ipa: /ɐnɐloˈɦʲit͡ʃno/
+  translation: analogously, similarly
+  pos: adv
+- lemma: аркадій
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: артерія
+  ipa: /ɐrˈtɛrʲijɑ/
+  translation: artery
+  pos: noun
+  gender: f
+- lemma: безробітний
+  ipa: /bɛzroˈbʲitnɪj/
+  translation: unemployed person
+  pos: noun
+  gender: m
+- lemma: борговий
+  ipa: /borˈɦowɪj/
+  translation: debt (adj.)
+  pos: adj
+- lemma: бренда
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: буквально
+  ipa: /bukˈwɑlʲno/
+  translation: literally
+  pos: adv
+- lemma: біржа
+  ipa: /ˈbʲirʒɑ/
+  translation: stock exchange
+  pos: noun
+  gender: f
+- lemma: біржя
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: важити
+  ipa: /wɑˈʒɪtɪ/
+  translation: to weigh
+  pos: verb
+  gender: f
+- lemma: валовий
+  ipa: /wɐˈlowɪj/
+  translation: gross
+  pos: adj
+  gender: m
+- lemma: ввп
+  ipa: /wɛ wɛ pɛ/
+  translation: GDP
+  pos: noun
+  gender: m
+- lemma: вижити
+  ipa: /ˈwɪʒɪtɪ/
+  translation: to survive
+  pos: verb
+- lemma: вимірювати
+  ipa: /wɪmʲiˈrʲuwɑtɪ/
+  translation: to measure
+  pos: verb
+- lemma: вкласти
+  ipa: /ˈwklɑstɪ/
+  translation: to invest, to insert
+  pos: verb
+- lemma: власність
+  ipa: /ˈwlɑsnʲistʲ/
+  translation: property, ownership
+  pos: noun
+  gender: f
+- lemma: впізнавання
+  ipa: /wpʲiznɑˈwɑnʲːɑ/
+  translation: recognition
+  pos: noun
+  gender: n
+- lemma: гарантуватися
+  ipa: /ɦɑrɑntuˈwɑtɪsʲɑ/
+  translation: to be guaranteed
+  pos: verb
+- lemma: голобородька
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: господарство
+  ipa: /ɦospodɑrˈstwo/
+  translation: economy, household
+  pos: noun
+  gender: n
+- lemma: девальвація
+  ipa: /dɛwɐlʲˈwɑt͡sʲijɑ/
+  translation: devaluation
+  pos: noun
+  gender: f
+- lemma: девальвувати
+  ipa: /dɛwɐlʲwuˈwɑtɪ/
+  translation: to devaluate
+  pos: verb
+- lemma: депозит
+  ipa: /dɛˈpozɪt/
+  translation: deposit
+  pos: noun
+  gender: m
+- lemma: дефіцит
+  ipa: /dɛˈfʲit͡sɪt/
+  translation: deficit
+  pos: noun
+  gender: m
+- lemma: дешевшати
+  ipa: /dɛˈʃɛwʃɑtɪ/
+  translation: to become cheaper
+  pos: verb
+- lemma: дивіденда
+  ipa: /dɪwʲiˈdɛndɑ/
+  translation: dividend
+  pos: noun
+  gender: m
+- lemma: домовлятися
+  ipa: /domowlʲɑˈtɪsʲɑ/
+  translation: to agree, to arrange
+  pos: verb
+- lemma: дотація
+  ipa: /doˈtɑt͡sʲijɑ/
+  translation: subsidy
+  pos: noun
+  gender: f
+- lemma: дохід
+  ipa: /doˈxʲid/
+  translation: income
+  pos: noun
+  gender: m
+- lemma: дохідність
+  ipa: /doxʲidˈnʲistʲ/
+  translation: profitability
+  pos: noun
+  gender: f
+- lemma: дізнаватися
+  ipa: /dʲiznɑˈwɑtɪsʲɑ/
+  translation: to find out, to learn
+  pos: verb
+- lemma: експорт
+  ipa: /ˈɛksport/
+  translation: export
+  pos: noun
+  gender: m
+- lemma: експортер
+  ipa: /ɛksˈportɛr/
+  translation: exporter
+  pos: noun
+  gender: m
+- lemma: експортувати
+  ipa: /ɛksportuˈwɑtɪ/
+  translation: to export
+  pos: verb
+- lemma: ембарго
+  ipa: /ɛmˈbɑrɦo/
+  translation: embargo
+  pos: noun
+  gender: n
+- lemma: жвавий
+  ipa: /ʒwɑˈwɪj/
+  translation: lively, brisk
+  pos: adj
+  gender: f
+- lemma: завищений
+  ipa: /zɐˈwɪʃɛnɪj/
+  translation: overpriced, inflated
+  pos: adj
+- lemma: зайнятість
+  ipa: /zɐjnʲɑˈtʲistʲ/
+  translation: employment
+  pos: noun
+  gender: f
+- lemma: закуповувати
+  ipa: /zɐkupowuˈwɑtɪ/
+  translation: to purchase
+  pos: verb
+- lemma: залустити
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: залучити
+  ipa: /zɐˈlut͡ʃɪtɪ/
+  translation: to attract, to involve
+  pos: verb
+  gender: f
+- lemma: заощадження
+  ipa: /zɐoʃɑdˈʒɛnʲːɑ/
+  translation: savings
+  pos: noun
+  gender: n
+- lemma: запозити
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: здешевити
+  ipa: /zdɛˈʃɛwɪtɪ/
+  translation: to make cheaper
+  pos: verb
+- lemma: зміцнення
+  ipa: /zmʲit͡sˈnɛnʲːɑ/
+  translation: strengthening
+  pos: noun
+  gender: n
+- lemma: зміцнитися
+  ipa: /zmʲit͡sˈnɪtɪsʲɑ/
+  translation: to strengthen
+  pos: verb
+  gender: m
+- lemma: знижуватися
+  ipa: /znɪˈʒuwɑtɪsʲɑ/
+  translation: to decrease
+  pos: verb
+- lemma: знизити
+  ipa: /ˈznɪzɪtɪ/
+  translation: to reduce, to lower
+  pos: verb
+  gender: m
+- lemma: знизитися
+  ipa: /znɪˈzɪtɪsʲɑ/
+  translation: to decrease
+  pos: verb
+  gender: f
+- lemma: зсередини
+  ipa: /zsɛrɛˈdɪnɪ/
+  translation: from inside
+  pos: adv
+- lemma: комерційний
+  ipa: /komɛrˈt͡sʲijnɪj/
+  translation: commercial
+  pos: adj
+- lemma: конкурентний
+  ipa: /konkuˈrɛntnɪj/
+  translation: competitive
+  pos: adj
+  gender: f
+- lemma: конкуренція
+  ipa: /konkurɛnt͡sʲijɑ/
+  translation: competition
+  pos: noun
+  gender: f
+- lemma: конкурувати
+  ipa: /konkuruˈwɑtɪ/
+  translation: to compete
+  pos: verb
+- lemma: кредитування
+  ipa: /krɛdɪtuˈwɑnʲːɑ/
+  translation: lending
+  pos: noun
+  gender: n
+- lemma: кредитувати
+  ipa: /krɛdɪtuˈwɑtɪ/
+  translation: to lend, to credit
+  pos: verb
+- lemma: кривий
+  ipa: /krɪˈwɪj/
+  translation: crooked, curved
+  pos: adj
+  gender: m
+- lemma: кулак
+  ipa: /kuˈlɑk/
+  translation: fist, kulak
+  pos: noun
+  gender: m
+- lemma: купівельний
+  ipa: /kupʲiwɛlʲnɪj/
+  translation: purchasing
+  pos: adj
+  gender: f
+- lemma: локальний
+  ipa: /loˈkɑlʲnɪj/
+  translation: local
+  pos: adj
+- lemma: макроекономічний
+  ipa: /mɑkroɛkonoˈmʲit͡ʃnɪj/
+  translation: macroeconomic
+  pos: adj
+- lemma: металургія
+  ipa: /mɛtɐˈlurɦʲijɑ/
+  translation: metallurgy
+  pos: noun
+  gender: f
+- lemma: мит
+  ipa: /mɪt/
+  translation: customs
+  pos: noun
+  gender: m
+- lemma: мито
+  ipa: /ˈmɪto/
+  translation: customs duty
+  pos: noun
+  gender: n
+- lemma: молдова
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: монетарний
+  ipa: /monɛˈtɑrnɪj/
+  translation: monetary
+  pos: adj
+  gender: f
+- lemma: монополія
+  ipa: /monoˈpolʲijɑ/
+  translation: monopoly
+  pos: noun
+  gender: f
+- lemma: мільйони
+  ipa: ''
+  translation: ''
+  pos: other
+- lemma: надійніший
+  ipa: /nɐˈdʲijnʲiʃɪj/
+  translation: more reliable
+  pos: adj
+- lemma: назовні
+  ipa: /nɐˈzownʲi/
+  translation: outward
+  pos: adv
+- lemma: найвигідніший
+  ipa: /nɑjˈwɪɦʲidnʲiʃɪj/
+  translation: most profitable
+  pos: adj
+  gender: m
+- lemma: наразі
+  ipa: /nɐˈrɑzʲi/
+  translation: currently, for now
+  pos: adv
+- lemma: націоналізація
+  ipa: /nɑt͡sʲionɑlʲizɑˈt͡sʲijɑ/
+  translation: nationalization
+  pos: noun
+  gender: f
+- lemma: нбу
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: неподалік
+  ipa: /nɛpodɐˈlʲik/
+  translation: nearby
+  pos: adv
+- lemma: нерухомість
+  ipa: /nɛˈruxomʲistʲ/
+  translation: real estate
+  pos: noun
+  gender: f
+- lemma: облігація
+  ipa: /oblʲiˈɦɑt͡sʲijɑ/
+  translation: bond
+  pos: noun
+  gender: f
+- lemma: обліковий
+  ipa: /oblʲiˈkowɪj/
+  translation: accounting, discount (adj.)
+  pos: adj
+  gender: f
+- lemma: обіг
+  ipa: /oˈbʲiɦ/
+  translation: circulation, turnover
+  pos: noun
+  gender: m
+- lemma: овдп
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: олія
+  ipa: /ˈolʲijɑ/
+  translation: oil
+  pos: noun
+  gender: f
+- lemma: оподатковувати
+  ipa: /opodɑtkuwuˈwɑtɪ/
+  translation: to tax
+  pos: verb
+- lemma: ощадбанк
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: падіння
+  ipa: /pɐˈdʲinʲːɑ/
+  translation: fall, decline
+  pos: noun
+  gender: n
+- lemma: пдв
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: перевищення
+  ipa: /pɛrɛˈwɪʃɛnʲːɑ/
+  translation: excess, exceeding
+  pos: noun
+  gender: n
+- lemma: перевищувати
+  ipa: /pɛrɛwɪˈʃuwɑtɪ/
+  translation: to exceed
+  pos: verb
+- lemma: переживати
+  ipa: /pɛrɛʒɪˈwɑtɪ/
+  translation: to experience, to worry
+  pos: verb
+- lemma: податок
+  ipa: /poˈdɑtok/
+  translation: tax
+  pos: noun
+  gender: m
+- lemma: позик
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: позичання
+  ipa: /pozɪˈt͡ʃɑnʲːɑ/
+  translation: borrowing, loan
+  pos: noun
+  gender: n
+- lemma: позичати
+  ipa: /pozɪˈt͡ʃɑtɪ/
+  translation: to borrow, to lend
+  pos: verb
+- lemma: популяризувати
+  ipa: /populʲɑrɪzuˈwɑtɪ/
+  translation: to popularize
+  pos: verb
+  gender: m
+- lemma: почнути
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: поштовий
+  ipa: /poʃˈtowɪj/
+  translation: postal, mail (adj.)
+  pos: adj
+  gender: f
+- lemma: працездатний
+  ipa: /prɑt͡sɛˈzdɑtnɪj/
+  translation: able-bodied, working
+  pos: adj
+  gender: n
+- lemma: прибуток
+  ipa: /ˈprɪbutok/
+  translation: profit
+  pos: noun
+  gender: m
+- lemma: приватизація
+  ipa: /prɪwɑtɪˈzɑt͡sʲijɑ/
+  translation: privatization
+  pos: noun
+  gender: f
+- lemma: приватизувати
+  ipa: /prɪwɑtɪzuˈwɑtɪ/
+  translation: to privatize
+  pos: verb
+- lemma: прийменниковий
+  ipa: /prɪjmɛnːɪˈkowɪj/
+  translation: prepositional
+  pos: adj
+- lemma: профіт
+  ipa: /proˈfʲit/
+  translation: profit
+  pos: noun
+  gender: m
+- lemma: профіцит
+  ipa: /proˈfʲit͡sɪt/
+  translation: surplus
+  pos: noun
+  gender: m
+- lemma: процент
+  ipa: /proˈt͡sɛnt/
+  translation: percent, interest
+  pos: noun
+  gender: m
+- lemma: пумб
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: пфтс
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: підприємець
+  ipa: /pʲidprɪˈjɛmɛt͡sʲ/
+  translation: entrepreneur
+  pos: noun
+  gender: m
+- lemma: ревальвація
+  ipa: /rɛwɐlʲˈwɑt͡sʲijɑ/
+  translation: revaluation
+  pos: noun
+  gender: f
+- lemma: реконструкція
+  ipa: /rɛkonstrukˈt͡sʲijɑ/
+  translation: reconstruction
+  pos: noun
+  gender: f
+- lemma: рекордний
+  ipa: /rɛˈkordnɪj/
+  translation: record (adj.)
+  pos: adj
+- lemma: рецесія
+  ipa: /rɛˈt͡sɛsʲijɑ/
+  translation: recession
+  pos: noun
+  gender: f
+- lemma: розвага
+  ipa: /rozˈwɑɦɑ/
+  translation: entertainment
+  pos: noun
+  gender: f
+- lemma: росія
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: різноманітність
+  ipa: /rʲiznomɐˈnʲitnʲistʲ/
+  translation: diversity
+  pos: noun
+  gender: f
+- lemma: річний
+  ipa: /ˈrʲit͡ʃnɪj/
+  translation: annual, river (adj.)
+  pos: noun
+  gender: m
+- lemma: скасування
+  ipa: /skɑsuˈwɑnʲːɑ/
+  translation: cancellation, abolition
+  pos: noun
+  gender: n
+- lemma: соняшниковий
+  ipa: /sonʲɑʃˈnɪkowɪj/
+  translation: sunflower (adj.)
+  pos: adj
+  gender: f
+- lemma: сповільнення
+  ipa: /spowʲilʲˈnɛnʲːɑ/
+  translation: slowdown
+  pos: noun
+  gender: n
+- lemma: сповільнитися
+  ipa: /spowʲilʲˈnɪtɪsʲɑ/
+  translation: to slow down
+  pos: verb
+  gender: f
+- lemma: сприятливий
+  ipa: /sprɪˈjɑtlɪwɪj/
+  translation: favorable
+  pos: adj
+- lemma: спроможність
+  ipa: /sproˈmoʒnʲistʲ/
+  translation: ability, capacity
+  pos: noun
+  gender: f
+- lemma: співвласник
+  ipa: /spʲiwˈwlɑsnɪk/
+  translation: co-owner
+  pos: noun
+  gender: m
+- lemma: ставка
+  ipa: /ˈstɑwkɑ/
+  translation: rate
+  pos: noun
+  gender: f
+- lemma: ставок
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: стар
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: стартовий
+  ipa: /stɑrˈtowɪj/
+  translation: starting, initial
+  pos: adj
+  gender: m
+- lemma: субсидіювати
+  ipa: /subsɪdʲijuˈwɑtɪ/
+  translation: to subsidize
+  pos: verb
+- lemma: сша
+  ipa: ''
+  translation: ''
+  pos: propn
+- lemma: сягнути
+  ipa: /sʲɑɦˈnutɪ/
+  translation: to reach
+  pos: verb
+- lemma: сільськогосподарський
+  ipa: /sʲilʲsʲkoɦospoˈdɑrsʲkɪj/
+  translation: agricultural
+  pos: adj
+  gender: f
+- lemma: танок
+  ipa: /tɑˈnok/
+  translation: dance
+  pos: noun
+  gender: m
+- lemma: толерантність
+  ipa: /tolɛˈrɑntnʲistʲ/
+  translation: tolerance
+  pos: noun
+  gender: f
+- lemma: торговельний
+  ipa: /torˈɦowɛlʲnɪj/
+  translation: trade (adj.)
+  pos: adj
+- lemma: торгувати
+  ipa: /torɦuˈwɑtɪ/
+  translation: to trade
+  pos: verb
+- lemma: торгівля
+  ipa: /torˈɦʲiwlʲɑ/
+  translation: trade
+  pos: noun
+  gender: f
+- lemma: традиції
+  ipa: /trɑˈdɪt͡sʲiji/
+  translation: traditions
+  pos: noun
+  gender: f
+- lemma: трильйона
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: уповільнення
+  ipa: /upowʲilʲˈnɛnʲːɑ/
+  translation: deceleration
+  pos: noun
+  gender: n
+- lemma: фондовий
+  ipa: /ˈfondowɪj/
+  translation: stock (adj.)
+  pos: adj
+  gender: f
+- lemma: фоп
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: фунт
+  ipa: /funt/
+  translation: pound (currency)
+  pos: noun
+  gender: m
+- lemma: шпаліть
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: штат
+  ipa: /ʃtɑt/
+  translation: state, staff
+  pos: noun
+  gender: m
+- lemma: імпорт
+  ipa: /ˈʲimport/
+  translation: import
+  pos: noun
+  gender: m
+- lemma: імпортний
+  ipa: /ʲimˈportnɪj/
+  translation: imported
+  pos: adj
+- lemma: імпортувати
+  ipa: /ʲimportuˈwɑtɪ/
+  translation: to import
+  pos: verb
+- lemma: інвестиційний
+  ipa: /ʲinwɛstɪˈt͡sʲijnɪj/
+  translation: investment (adj.)
+  pos: adj
+- lemma: інвестувати
+  ipa: /ʲinwɛstuˈwɑtɪ/
+  translation: to invest
+  pos: verb
+- lemma: іноземка
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): більше, недоцільно, ніхто, ніщо, жодний...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): марно, ніщо, більше, майже, навряд...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

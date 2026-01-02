@@ -2,363 +2,363 @@ module: 33-word-formation-person-suffixes
 level: B2
 version: '2.0'
 items:
-  - lemma: артист
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: безпечний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: бібліотекар
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: бібліотекер
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: винахідник
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: випасати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: вносити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: воротар
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: вівця
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: вівч
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: вівчар
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: відбити
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: глядіти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: гірський
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: дослід
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: досі
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: духовний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: заради
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: затребуваний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: збагачувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: збірний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: згрупувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: ик
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: ист
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: камен
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: каменяр
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: кик
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: книгозбірня
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: кобга
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: кобзо
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: купець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ланцюжка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ломити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: лік
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: мовек
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: наведений
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: найменування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: найпродуктивніший
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: неможливий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: основ
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: отара
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: охороняти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: пасовище
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: пенальт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: письмен
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: письменництво
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: письменницький
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: помічати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: праці
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ролля
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: рівняти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: сертифікат
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: скал
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: слов
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: словотворення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: словотвірний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: спеціалізація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: спожив
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: споживати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: співець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: сумлінно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: суфікси
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: творець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: творити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: телепрогр
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: тираж
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: учен
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ученик
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ходач
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: читальня
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: читацтво
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: чумак
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: шанувальник
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: школяр
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: яр
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: івець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
+- lemma: артист
+  ipa: /ɐrˈtɪst/
+  translation: artist, performer
+  pos: noun
+  gender: m
+- lemma: безпечний
+  ipa: /bɛzˈpɛt͡ʃnɪj/
+  translation: safe
+  pos: adj
+- lemma: бібліотекар
+  ipa: /bʲiblʲiotɛˈkɑr/
+  translation: librarian
+  pos: noun
+  gender: m
+- lemma: бібліотекер
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: винахідник
+  ipa: /wɪnɐˈxʲidnɪk/
+  translation: inventor
+  pos: noun
+  gender: m
+- lemma: випасати
+  ipa: /wɪpɑˈsɑtɪ/
+  translation: to graze, to pasture
+  pos: verb
+  gender: m
+- lemma: вносити
+  ipa: /wnoˈsɪtɪ/
+  translation: to bring in, to contribute
+  pos: verb
+- lemma: воротар
+  ipa: /woroˈtɑr/
+  translation: goalkeeper
+  pos: noun
+  gender: m
+- lemma: вівця
+  ipa: /ˈwʲiwt͡sʲɑ/
+  translation: sheep
+  pos: noun
+  gender: m
+- lemma: вівч
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: вівчар
+  ipa: /wʲiwˈt͡ʃɑr/
+  translation: shepherd
+  pos: noun
+  gender: m
+- lemma: відбити
+  ipa: /wʲidˈbɪtɪ/
+  translation: to repel, to reflect
+  pos: verb
+  gender: m
+- lemma: глядіти
+  ipa: /ɦlʲɑˈdʲitɪ/
+  translation: to watch, to look
+  pos: verb
+- lemma: гірський
+  ipa: /ˈɦʲirsʲkɪj/
+  translation: mountain (adj.)
+  pos: adj
+- lemma: дослід
+  ipa: /ˈdoslʲid/
+  translation: experiment, research
+  pos: noun
+  gender: m
+- lemma: досі
+  ipa: /doˈsʲi/
+  translation: until now, still
+  pos: adv
+- lemma: духовний
+  ipa: /duxˈownɪj/
+  translation: spiritual
+  pos: adj
+  gender: n
+- lemma: заради
+  ipa: /zɐˈrɑdɪ/
+  translation: for the sake of
+  pos: other
+- lemma: затребуваний
+  ipa: /zɐtrɛˈbuwɑnɪj/
+  translation: in demand
+  pos: adj
+- lemma: збагачувати
+  ipa: /zbɑɦɑt͡ʃuˈwɑtɪ/
+  translation: to enrich
+  pos: verb
+- lemma: збірний
+  ipa: /ˈzbʲirnɪj/
+  translation: collective, assembled
+  pos: adj
+  gender: n
+- lemma: згрупувати
+  ipa: /zɦrupuˈwɑtɪ/
+  translation: to group
+  pos: verb
+- lemma: ик
+  ipa: ''
+  translation: ''
+  pos: other
+- lemma: ист
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: камен
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: каменяр
+  ipa: /kɐmɛˈnʲɑr/
+  translation: stonemason
+  pos: noun
+  gender: m
+- lemma: кик
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: книгозбірня
+  ipa: /knɪɦozˈbʲirnʲɑ/
+  translation: library
+  pos: noun
+  gender: f
+- lemma: кобга
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: кобзо
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: купець
+  ipa: /kuˈpɛt͡sʲ/
+  translation: merchant
+  pos: noun
+  gender: m
+- lemma: ланцюжка
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ломити
+  ipa: /loˈmɪtɪ/
+  translation: to break
+  pos: verb
+- lemma: лік
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мовек
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: наведений
+  ipa: /nɐˈwɛdɛnɪj/
+  translation: given, cited
+  pos: adj
+  gender: n
+- lemma: найменування
+  ipa: /nɑjmɛnuˈwɑnʲːɑ/
+  translation: naming, designation
+  pos: noun
+  gender: n
+- lemma: найпродуктивніший
+  ipa: /nɑjproduktɪwˈnʲiʃɪj/
+  translation: most productive
+  pos: adj
+- lemma: неможливий
+  ipa: /nɛˈmoʒlɪwɪj/
+  translation: impossible
+  pos: adj
+  gender: f
+- lemma: основ
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: отара
+  ipa: /oˈtɑrɑ/
+  translation: flock
+  pos: noun
+  gender: f
+- lemma: охороняти
+  ipa: /oxoroˈnʲɑtɪ/
+  translation: to guard, to protect
+  pos: verb
+- lemma: пасовище
+  ipa: /pɐsoˈwɪʃt͡ʃɛ/
+  translation: pasture
+  pos: noun
+  gender: n
+- lemma: пенальт
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: письмен
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: письменництво
+  ipa: /pɪsʲmɛnˈnɪt͡stwo/
+  translation: literature, writing
+  pos: noun
+  gender: n
+- lemma: письменницький
+  ipa: /pɪsʲmɛnˈnɪt͡sʲkɪj/
+  translation: writer's, literary
+  pos: adj
+  gender: m
+- lemma: помічати
+  ipa: /pomʲiˈt͡ʃɑtɪ/
+  translation: to notice
+  pos: verb
+- lemma: праці
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ролля
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: рівняти
+  ipa: /rʲiwˈnʲɑtɪ/
+  translation: to equate, to level
+  pos: verb
+- lemma: сертифікат
+  ipa: /sɛrtɪfʲiˈkɑt/
+  translation: certificate
+  pos: noun
+  gender: m
+- lemma: скал
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: слов
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: словотворення
+  ipa: /slowotˈworɛnʲːɑ/
+  translation: word formation
+  pos: noun
+  gender: n
+- lemma: словотвірний
+  ipa: /slowotˈwʲirnɪj/
+  translation: word-formative
+  pos: adj
+- lemma: спеціалізація
+  ipa: /spɛt͡sʲiɑlʲizɑˈt͡sʲijɑ/
+  translation: specialization
+  pos: noun
+  gender: f
+- lemma: спожив
+  ipa: ''
+  translation: ''
+  pos: other
+- lemma: споживати
+  ipa: /spoʒɪˈwɑtɪ/
+  translation: to consume
+  pos: verb
+- lemma: співець
+  ipa: /spʲiˈwɛt͡sʲ/
+  translation: singer (poetic)
+  pos: noun
+  gender: m
+- lemma: сумлінно
+  ipa: /sumˈlʲinːo/
+  translation: conscientiously
+  pos: adv
+- lemma: суфікси
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: творець
+  ipa: /twoˈrɛt͡sʲ/
+  translation: creator
+  pos: noun
+  gender: m
+- lemma: творити
+  ipa: /twoˈrɪtɪ/
+  translation: to create
+  pos: verb
+- lemma: телепрогр
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: тираж
+  ipa: /tɪˈrɑʃ/
+  translation: circulation, print run
+  pos: noun
+  gender: m
+- lemma: учен
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ученик
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: ходач
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: читальня
+  ipa: /t͡ʃɪˈtɑlʲnʲɑ/
+  translation: reading room
+  pos: noun
+  gender: f
+- lemma: читацтво
+  ipa: /t͡ʃɪˈtɑt͡stwo/
+  translation: readership
+  pos: noun
+  gender: n
+- lemma: чумак
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: шанувальник
+  ipa: /ʃɑnuˈwɑlʲnɪk/
+  translation: admirer, fan
+  pos: noun
+  gender: m
+- lemma: школяр
+  ipa: /ʃkoˈlʲɑr/
+  translation: schoolboy, student
+  pos: noun
+  gender: m
+- lemma: яр
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: івець
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m

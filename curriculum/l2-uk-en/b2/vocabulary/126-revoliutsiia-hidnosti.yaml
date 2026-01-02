@@ -1,0 +1,175 @@
+module: 126-revoliutsiia-hidnosti
+level: B2
+version: '2.0'
+items:
+- lemma: Євромайдан
+  ipa: /jewroˈmajdan/
+  translation: Euromaidan
+  pos: noun
+  gender: m
+- lemma: студент
+  ipa: /stuˈdɛnt/
+  translation: student
+  pos: noun
+  gender: m
+- lemma: побиття
+  ipa: /pobɪˈtʲtʲa/
+  translation: beating
+  pos: noun
+  gender: n
+- lemma: Беркут
+  ipa: /ˈbɛrkut/
+  translation: Berkut (riot police unit)
+  pos: noun
+  gender: m
+- lemma: барикада
+  ipa: /barɪˈkada/
+  translation: barricade
+  pos: noun
+  gender: f
+- lemma: шина
+  ipa: /ˈʃɪna/
+  translation: tire
+  pos: noun
+  gender: f
+- lemma: вогонь
+  ipa: /woˈɦɔnʲ/
+  translation: fire
+  pos: noun
+  gender: m
+- lemma: Грушевського
+  ipa: /ɦruˈʃɛwsʲkoɦo/
+  translation: Hrushevskoho (street name)
+  pos: noun
+  gender: f
+- lemma: закони 16 січня
+  ipa: /zaˈkɔnɪ ʃistnaˈd͡t͡sʲatoɦo ˈs⁽ʲ⁾it͡ʃnʲa/
+  translation: Dictatorship Laws of January 16th
+  pos: phrase
+- lemma: диктатура
+  ipa: /dɪktaˈtura/
+  translation: dictatorship
+  pos: noun
+  gender: f
+- lemma: снайпер
+  ipa: /ˈsnajper/
+  translation: sniper
+  pos: noun
+  gender: m
+- lemma: розстріл
+  ipa: /rɔzˈstr⁽ʲ⁾il/
+  translation: shooting / execution
+  pos: noun
+  gender: m
+- lemma: Інститутська
+  ipa: /instɪˈtut͡sʲka/
+  translation: Instytutska (street name)
+  pos: noun
+  gender: f
+- lemma: Небесна Сотня
+  ipa: /neˈbɛsna ˈsɔtnʲa/
+  translation: Heavenly Hundred
+  pos: phrase
+- lemma: гідність
+  ipa: /ˈɦid⁽ʲ⁾n⁽ʲ⁾istʲ/
+  translation: dignity
+  pos: noun
+  gender: f
+- lemma: спротив
+  ipa: /ˈsprɔtɪw/
+  translation: resistance
+  pos: noun
+  gender: m
+- lemma: волонтер
+  ipa: /wolonˈtɛr/
+  translation: volunteer
+  pos: noun
+  gender: m
+- lemma: намет
+  ipa: /naˈmɛt/
+  translation: tent
+  pos: noun
+  gender: m
+- lemma: протест
+  ipa: /proˈtɛst/
+  translation: protest
+  pos: noun
+  gender: m
+- lemma: узурпація
+  ipa: /uzurˈpat͡s⁽ʲ⁾ija/
+  translation: usurpation
+  pos: noun
+  gender: f
+- lemma: режим
+  ipa: /reˈʒɪm/
+  translation: regime
+  pos: noun
+  gender: m
+- lemma: втеча
+  ipa: /ˈwtɛt͡ʃa/
+  translation: escape / flight
+  pos: noun
+  gender: f
+- lemma: Майдан Незалежності
+  ipa: /majˈdan nezaleʒˈnosʲt⁽ʲ⁾i/
+  translation: Independence Square
+  pos: phrase
+- lemma: віче
+  ipa: /ˈw⁽ʲ⁾it͡ʃe/
+  translation: viche (public assembly)
+  pos: noun
+  gender: n
+- lemma: коктейль Молотова
+  ipa: /kokˈtɛjlʲ ˈmɔlotowa/
+  translation: Molotov cocktail
+  pos: phrase
+- lemma: протистояння
+  ipa: /protɪstoˈjannʲa/
+  translation: confrontation
+  pos: noun
+  gender: n
+- lemma: самоорганізація
+  ipa: /samoɔrɦan⁽ʲ⁾iˈzat͡s⁽ʲ⁾ija/
+  translation: self-organization
+  pos: noun
+  gender: f
+- lemma: штурм
+  ipa: /ʃturm/
+  translation: assault / storming
+  pos: noun
+  gender: m
+- lemma: бруківка
+  ipa: /bruˈkiwka/
+  translation: cobblestones / paving stones
+  pos: noun
+  gender: f
+- lemma: каска
+  ipa: /ˈkaska/
+  translation: helmet
+  pos: noun
+  gender: f
+- lemma: справедливість
+  ipa: /sprawedˈlɪw⁽ʲ⁾istʲ/
+  translation: justice
+  pos: noun
+  gender: f
+- lemma: свобода
+  ipa: /swoˈbɔda/
+  translation: freedom
+  pos: noun
+  gender: f
+- lemma: воля
+  ipa: /ˈwɔlʲa/
+  translation: will / liberty
+  pos: noun
+  gender: f
+- lemma: перемога
+  ipa: /pereˈmɔɦa/
+  translation: victory
+  pos: noun
+  gender: f
+- lemma: жертва
+  ipa: /ˈʒɛrtwa/
+  translation: victim / sacrifice
+  pos: noun
+  gender: f

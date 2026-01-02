@@ -1,0 +1,136 @@
+module: 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru
+level: B2
+version: '2.0'
+items:
+- lemma: розстріляний
+  ipa: /roˈs.t.rʲi.lʲɐ.nɪi̯/
+  translation: executed (by shooting)
+  pos: adjective
+- lemma: відродження
+  ipa: /ʋʲiˈd.rɔ.d͡ʒ.e.ɲ.ːɐ/
+  translation: renaissance, rebirth
+  pos: noun
+  gender: n
+- lemma: механізм
+  ipa: /me.xɐˈnʲi.zm/
+  translation: mechanism
+  pos: noun
+  gender: m
+- lemma: терор
+  ipa: /teˈrɔr/
+  translation: terror
+  pos: noun
+  gender: m
+- lemma: Соловки
+  ipa: /so.loʋˈkɪ/
+  translation: Solovki (notorious prison camp)
+  pos: noun
+  gender: pl
+- lemma: Сандармох
+  ipa: /sɐn.dɐrˈmɔx/
+  translation: Sandarmokh (execution site)
+  pos: noun
+  gender: m
+- lemma: Карелія
+  ipa: /kɐˈrɛ.lʲi.jɐ/
+  translation: Karelia (region in Russia)
+  pos: noun
+  gender: f
+- lemma: яма
+  ipa: /ˈjɐ.mɐ/
+  translation: pit, hole (mass grave)
+  pos: noun
+  gender: f
+- lemma: список
+  ipa: /ˈspɪ.sok/
+  translation: list
+  pos: noun
+  gender: m
+- lemma: систематичний
+  ipa: /sɪ.ste.mɐˈtɪt͡ʃ.nɪi̯/
+  translation: systematic
+  pos: adjective
+- lemma: культурний геноцид
+  ipa: /kʊlʲˈtʊr.nɪi̯ ɦe.noˈt͡sɪd/
+  translation: cultural genocide
+  pos: phrase
+- lemma: знищення
+  ipa: /ˈznɪ.ʃːe.ɲ.ːɐ/
+  translation: destruction, annihilation
+  pos: noun
+  gender: n
+- lemma: покоління
+  ipa: /po.koˈlʲi.ɲ.ːɐ/
+  translation: generation
+  pos: noun
+  gender: n
+- lemma: еліта
+  ipa: /eˈlʲi.tɐ/
+  translation: elite
+  pos: noun
+  gender: f
+- lemma: інтелігенція
+  ipa: /in.te.lʲiˈɦɛn.t͡sʲi.jɐ/
+  translation: intelligentsia
+  pos: noun
+  gender: f
+- lemma: втрата
+  ipa: /ˈʋtrɐ.tɐ/
+  translation: loss
+  pos: noun
+  gender: f
+- lemma: пам'ять
+  ipa: /ˈpɐ.mʲɐtʲ/
+  translation: memory
+  pos: noun
+  gender: f
+- lemma: спадщина
+  ipa: /ˈspɐd.ʃt͡ʃɪ.nɐ/
+  translation: heritage, legacy
+  pos: noun
+  gender: f
+- lemma: репресія
+  ipa: /reˈp.rɛ.sʲi.jɐ/
+  translation: repression
+  pos: noun
+  gender: f
+- lemma: терор
+  ipa: /teˈrɔr/
+  translation: terror
+  pos: noun
+  gender: m
+- lemma: НКВС
+  ipa: /ɛn.kɐ.ʋeˈɛs/
+  translation: NKVD (Soviet secret police)
+  pos: noun
+  gender: m
+- lemma: кат
+  ipa: /kɐt/
+  translation: executioner, hangman
+  pos: noun
+  gender: m
+- lemma: вирок
+  ipa: /ˈʋɪ.rok/
+  translation: sentence, verdict
+  pos: noun
+  gender: m
+- lemma: допит
+  ipa: /ˈdɔ.pɪt/
+  translation: interrogation
+  pos: noun
+  gender: m
+- lemma: катування
+  ipa: /kɐˈtʊ.ʋɐ.ɲ.ːɐ/
+  translation: torture
+  pos: noun
+  gender: n
+- lemma: табір
+  ipa: /ˈtɐ.bʲir/
+  translation: camp
+  pos: noun
+  gender: m
+- lemma: ГУЛАГ
+  ipa: /ɦʊˈɫɐɦ/
+  translation: Gulag
+  pos: noun
+  gender: m

@@ -1,0 +1,139 @@
+module: 81-running-in-ukraine
+level: B1
+version: '1.0'
+items:
+- lemma: біг
+  ipa: /b⁽ʲ⁾iɦ/
+  translation: running
+  pos: noun
+  gender: m
+- lemma: забіг
+  ipa: /zɑˈb⁽ʲ⁾iɦ/
+  translation: race / run (event)
+  pos: noun
+  gender: m
+- lemma: марафон
+  ipa: /mɑɾɑˈfɔn/
+  translation: marathon
+  pos: noun
+  gender: m
+- lemma: напівмарафон
+  ipa: /nɑˈp⁽ʲ⁾iwmɑɾɑfɔn/
+  translation: half marathon
+  pos: noun
+  gender: m
+- lemma: старт
+  ipa: /stɑɾt/
+  translation: start
+  pos: noun
+  gender: m
+- lemma: фініш
+  ipa: /fˈinʲiʃ/
+  translation: finish
+  pos: noun
+  gender: m
+- lemma: медаль
+  ipa: /meˈdɑlʲ/
+  translation: medal
+  pos: noun
+  gender: f
+- lemma: учасник
+  ipa: /ʊˈt͡ʃɑsnɪk/
+  translation: participant
+  pos: noun
+  gender: m
+- lemma: реєстрація
+  ipa: /ɾejesˈtɾɑt͡sʲijɑ/
+  translation: registration
+  pos: noun
+  gender: f
+- lemma: внесок
+  ipa: /wˈnɛsok/
+  translation: fee / contribution
+  pos: noun
+  gender: m
+- lemma: результат
+  ipa: /ɾezʊlʲˈtɑt/
+  translation: result
+  pos: noun
+  gender: m
+- lemma: особистий рекорд
+  ipa: /osoˈbɪstɪj ɾeˈkɔɾd/
+  translation: personal best
+  pos: noun phrase (m)
+  gender: m
+- lemma: рекорд
+  ipa: /reˈkɔrd/
+  translation: record
+  pos: noun
+  gender: m
+- lemma: темп
+  ipa: /tɛmp/
+  translation: pace
+  pos: noun
+  gender: m
+- lemma: дистанція
+  ipa: /dɪsˈtɑnʲt͡sʲijɑ/
+  translation: distance
+  pos: noun
+  gender: f
+- lemma: біговий клуб
+  ipa: /b⁽ʲ⁾iɦoˈwɪj klʊb/
+  translation: running club
+  pos: noun phrase (m)
+  gender: m
+- lemma: клуб
+  ipa: /klub/
+  translation: club
+  pos: noun
+  gender: m
+- lemma: тренуватися
+  ipa: /tɾenʊˈwɑtɪsʲɑ/
+  translation: to train
+  pos: verb
+  gender: ~
+- lemma: готуватися
+  ipa: /ɦotʊˈwɑtɪsʲɑ/
+  translation: to prepare
+  pos: verb
+  gender: ~
+- lemma: брати участь
+  ipa: /bˈɾɑtɪ ˈut͡ʃɑsʲtʲ/
+  translation: to participate
+  pos: verb phrase
+  gender: ~
+- lemma: перемагати
+  ipa: /peɾemɑˈɦɑtɪ/
+  translation: to win
+  pos: verb
+  gender: ~
+- lemma: вболівати
+  ipa: /wbol⁽ʲ⁾iˈwɑtɪ/
+  translation: to cheer for
+  pos: verb
+  gender: ~
+- lemma: волонтер
+  ipa: /woɫonˈtɛɾ/
+  translation: volunteer
+  pos: noun
+  gender: m
+- lemma: благодійність
+  ipa: /bɫɑɦoˈd⁽ʲ⁾ijnʲisʲtʲ/
+  translation: charity
+  pos: noun
+  gender: f
+- lemma: здоров'я
+  ipa: /zdoˈɾowjɑ/
+  translation: health
+  pos: noun
+  gender: n
+- lemma: виклик
+  ipa: /wˈɪkɫɪk/
+  translation: challenge
+  pos: noun
+  gender: m
+- lemma: команда
+  ipa: /koˈmɑndɑ/
+  translation: team
+  pos: noun
+  gender: f

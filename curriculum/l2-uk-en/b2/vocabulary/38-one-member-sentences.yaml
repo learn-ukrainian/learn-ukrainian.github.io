@@ -2,379 +2,379 @@ module: 38-one-member-sentences
 level: B2
 version: '2.0'
 items:
-  - lemma: багаття
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: буттєвий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: визнач
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: відчуження
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: голодно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: горе
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: двоскладний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: декорація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: дефектний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: динамічно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: експериментувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: експресивніший
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: жайворонок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: жовкнути
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: замріти
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: n
-  - lemma: зловживати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: кручя
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: лаконічніший
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: ледь
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: летять
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: мазок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: мака
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: мо
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: мінімалізм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: надвор
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: надивитися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: називання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: невизначеність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: невідий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: неозначено
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: неозначиний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: неозначити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: новеля
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: номінативний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: однозначно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: односкладний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: означити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: побути
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: подазати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: пожати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: привести
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: примітивний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: присудковий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: підзаголовка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: рвати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: ремарка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: ритмічний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: розгорнутий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: розстелитися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: різне
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: самодостатній
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: самота
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: самотній
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: свіжо
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: світанка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: світанок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: світати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: світлій
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: світліти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: словосполучення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: смерть
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: соромно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: спека
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: стук
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: суєта
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: сценарій
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: сценічний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: сіно
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: темніти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: усвідомлювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: фрагментарний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: фрагментарність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: хмар
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: хробака
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: чагар
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: іменниковий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: імпресіонізм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: імпресіоністичний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: імпресіоністичність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: інтимний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: існування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: ґанок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
+- lemma: багаття
+  ipa: /bɑˈɦɑtʲːɑ/
+  translation: bonfire
+  pos: noun
+  gender: n
+- lemma: буттєвий
+  ipa: /butˈtʲɛwɪj/
+  translation: existential
+  pos: adj
+- lemma: визнач
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: відчуження
+  ipa: /wʲidt͡ʃuˈʒɛnʲːɑ/
+  translation: alienation
+  pos: noun
+  gender: n
+- lemma: голодно
+  ipa: /ɦoˈlodno/
+  translation: hungrily, it is hungry
+  pos: adv
+- lemma: горе
+  ipa: /ˈɦorɛ/
+  translation: grief, woe
+  pos: noun
+  gender: n
+- lemma: двоскладний
+  ipa: /dwosklɑdnɪj/
+  translation: two-member (sentence)
+  pos: adj
+- lemma: декорація
+  ipa: /dɛkorɑˈt͡sʲijɑ/
+  translation: decoration, scenery
+  pos: noun
+  gender: f
+- lemma: дефектний
+  ipa: /dɛˈfɛktnɪj/
+  translation: defective
+  pos: adj
+- lemma: динамічно
+  ipa: /dɪnɐˈmʲit͡ʃno/
+  translation: dynamically
+  pos: adv
+- lemma: експериментувати
+  ipa: /ɛkspɛrɪmɛntuˈwɑtɪ/
+  translation: to experiment
+  pos: verb
+- lemma: експресивніший
+  ipa: /ɛksprɛsɪwˈnʲiʃɪj/
+  translation: more expressive
+  pos: adj
+- lemma: жайворонок
+  ipa: /ʒɑjwoˈronok/
+  translation: lark (bird)
+  pos: noun
+  gender: m
+- lemma: жовкнути
+  ipa: /ʒowkˈnutɪ/
+  translation: to turn yellow
+  pos: verb
+- lemma: замріти
+  ipa: /zɐmˈrʲitɪ/
+  translation: to freeze, to become motionless
+  pos: verb
+  gender: n
+- lemma: зловживати
+  ipa: /zloʒɪˈwɑtɪ/
+  translation: to abuse
+  pos: verb
+- lemma: кручя
+  ipa: /kruˈt͡ʃɑ/
+  translation: steep slope
+  pos: noun
+  gender: f
+- lemma: лаконічніший
+  ipa: /lɐkoˈnʲit͡ʃnʲiʃɪj/
+  translation: more laconic
+  pos: adj
+- lemma: ледь
+  ipa: /lɛdʲ/
+  translation: barely
+  pos: adv
+- lemma: летять
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мазок
+  ipa: /mɐˈzok/
+  translation: stroke, swab
+  pos: noun
+  gender: m
+- lemma: мака
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мо
+  ipa: ''
+  translation: ''
+  pos: other
+- lemma: мінімалізм
+  ipa: /mʲinʲimɐˈlʲizm/
+  translation: minimalism
+  pos: noun
+  gender: m
+- lemma: надвор
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: n
+- lemma: надивитися
+  ipa: /nɐdɪˈwɪtɪsʲɑ/
+  translation: to have a good look
+  pos: verb
+- lemma: називання
+  ipa: /nɐzɪˈwɑnʲːɑ/
+  translation: naming
+  pos: noun
+  gender: n
+- lemma: невизначеність
+  ipa: /nɛwɪznɑˈt͡ʃɛnʲistʲ/
+  translation: uncertainty
+  pos: noun
+  gender: f
+- lemma: невідий
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: f
+- lemma: неозначено
+  ipa: /nɛoznɑˈt͡ʃɛno/
+  translation: indefinitely
+  pos: adv
+- lemma: неозначиний
+  ipa: ''
+  translation: ''
+  pos: adj
+- lemma: неозначити
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: новеля
+  ipa: /noˈwɛlʲɑ/
+  translation: short story
+  pos: noun
+  gender: f
+- lemma: номінативний
+  ipa: /nomʲinɐˈtɪwnɪj/
+  translation: nominative
+  pos: adj
+- lemma: однозначно
+  ipa: /odnozˈnɑt͡ʃno/
+  translation: unambiguously
+  pos: adv
+- lemma: односкладний
+  ipa: /odnosklɑdnɪj/
+  translation: one-member (sentence)
+  pos: adj
+- lemma: означити
+  ipa: /oznɑˈt͡ʃɪtɪ/
+  translation: to define, to mark
+  pos: verb
+- lemma: побути
+  ipa: /poˈbutɪ/
+  translation: to stay for a while
+  pos: verb
+- lemma: подазати
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: пожати
+  ipa: /poˈʒɑtɪ/
+  translation: to reap, to shake hands
+  pos: verb
+- lemma: привести
+  ipa: /prɪˈwɛstɪ/
+  translation: to bring, to lead
+  pos: verb
+- lemma: примітивний
+  ipa: /prɪmʲiˈtɪwnɪj/
+  translation: primitive
+  pos: adj
+  gender: n
+- lemma: присудковий
+  ipa: /prɪsudˈkowɪj/
+  translation: predicate (adj.)
+  pos: adj
+  gender: n
+- lemma: підзаголовка
+  ipa: /pʲidzɐɦoˈlowkɑ/
+  translation: subtitle
+  pos: noun
+  gender: f
+- lemma: рвати
+  ipa: /rwɑtɪ/
+  translation: to tear
+  pos: verb
+- lemma: ремарка
+  ipa: /rɛˈmɑrkɑ/
+  translation: stage direction, remark
+  pos: noun
+  gender: f
+- lemma: ритмічний
+  ipa: /rɪtˈmʲit͡ʃnɪj/
+  translation: rhythmic
+  pos: adj
+- lemma: розгорнутий
+  ipa: /rozɦorˈnutɪj/
+  translation: unfolded, developed
+  pos: adj
+  gender: m
+- lemma: розстелитися
+  ipa: /rozsˈtɛlɪtɪsʲɑ/
+  translation: to spread out
+  pos: verb
+  gender: m
+- lemma: різне
+  ipa: /ˈrʲiznɛ/
+  translation: various, different things
+  pos: noun
+  gender: n
+- lemma: самодостатній
+  ipa: /sɐmodoˈstɑtnʲij/
+  translation: self-sufficient
+  pos: adj
+- lemma: самота
+  ipa: /sɐmoˈtɑ/
+  translation: loneliness
+  pos: noun
+  gender: m
+- lemma: самотній
+  ipa: /sɐˈmotnʲij/
+  translation: lonely
+  pos: adj
+  gender: f
+- lemma: свіжо
+  ipa: /ˈswʲiʒo/
+  translation: freshly
+  pos: adv
+- lemma: світанка
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: світанок
+  ipa: /swʲiˈtɑnok/
+  translation: dawn
+  pos: noun
+  gender: m
+- lemma: світати
+  ipa: /swʲiˈtɑtɪ/
+  translation: to dawn
+  pos: verb
+- lemma: світлій
+  ipa: ''
+  translation: ''
+  pos: adj
+  gender: n
+- lemma: світліти
+  ipa: /swʲitˈlʲitɪ/
+  translation: to brighten
+  pos: verb
+- lemma: словосполучення
+  ipa: /slowospolut͡ʃɛnʲːɑ/
+  translation: phrase, word combination
+  pos: noun
+  gender: n
+- lemma: смерть
+  ipa: /smɛrtʲ/
+  translation: death
+  pos: noun
+  gender: f
+- lemma: соромно
+  ipa: /soˈromno/
+  translation: shamefully, it is shameful
+  pos: adv
+- lemma: спека
+  ipa: /spɛˈkɑ/
+  translation: heat
+  pos: noun
+  gender: f
+- lemma: стук
+  ipa: /stuk/
+  translation: knock, knocking
+  pos: noun
+  gender: m
+- lemma: суєта
+  ipa: /suˈjetɑ/
+  translation: vanity, hustle
+  pos: noun
+  gender: f
+- lemma: сценарій
+  ipa: /st͡sɛˈnɑrʲij/
+  translation: scenario, script
+  pos: noun
+  gender: f
+- lemma: сценічний
+  ipa: /st͡sɛˈnʲit͡ʃnɪj/
+  translation: scenic, stage (adj.)
+  pos: adj
+- lemma: сіно
+  ipa: /ˈsʲino/
+  translation: hay
+  pos: noun
+  gender: m
+- lemma: темніти
+  ipa: /tɛmˈnʲitɪ/
+  translation: to darken
+  pos: verb
+- lemma: усвідомлювати
+  ipa: /uswʲidomlʲuˈwɑtɪ/
+  translation: to realize
+  pos: verb
+- lemma: фрагментарний
+  ipa: /frɑɦmɛnˈtɑrnɪj/
+  translation: fragmentary
+  pos: adj
+  gender: m
+- lemma: фрагментарність
+  ipa: /frɑɦmɛntɑrnʲistʲ/
+  translation: fragmentariness
+  pos: noun
+  gender: f
+- lemma: хмар
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: хробака
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: чагар
+  ipa: /t͡ʃɑˈɦɑr/
+  translation: shrub
+  pos: noun
+  gender: m
+- lemma: іменниковий
+  ipa: /ʲimɛnnɪˈkowɪj/
+  translation: nominal
+  pos: adj
+  gender: n
+- lemma: імпресіонізм
+  ipa: /ʲimprɛsʲioˈnʲizm/
+  translation: impressionism
+  pos: noun
+  gender: m
+- lemma: імпресіоністичний
+  ipa: /ʲimprɛsʲionʲisˈtɪt͡ʃnɪj/
+  translation: impressionistic
+  pos: adj
+  gender: m
+- lemma: імпресіоністичність
+  ipa: /ʲimprɛsʲionʲistɪt͡ʃnʲistʲ/
+  translation: impressionistic quality
+  pos: noun
+  gender: f
+- lemma: інтимний
+  ipa: /ʲinˈtɪmnɪj/
+  translation: intimate
+  pos: adj
+  gender: f
+- lemma: існування
+  ipa: /ʲisnuˈwɑnʲːɑ/
+  translation: existence
+  pos: noun
+  gender: n
+- lemma: ґанок
+  ipa: /ˈɡɑnok/
+  translation: porch
+  pos: noun
+  gender: m

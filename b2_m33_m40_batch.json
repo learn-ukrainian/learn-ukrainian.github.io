@@ -1,0 +1,25 @@
+[
+  {
+    "file": "curriculum/l2-uk-en/b2/33-word-formation-person-suffixes.md",
+    "enrichments": {
+      "артист": {"ipa": "/ɐrˈtɪst/", "en": "artist, performer"},
+      "безпечний": {"ipa": "/bɛzˈpɛt͡ʃnɪj/", "en": "safe"},
+      "бібліотекар": {"ipa": "/bʲiblʲiotɛˈkɑr/", "en": "librarian"},
+      "винахідник": {"ipa": "/wɪnɐˈxʲidnɪk/", "en": "inventor"},
+      "випасати": {"ipa": "/wɪpɑˈsɑtɪ/", "en": "to graze, to pasture"},
+      "вносити": {"ipa": "/wnoˈsɪtɪ/", "en": "to bring in, to contribute"},
+      "воротар": {"ipa": "/woroˈtɑr/", "en": "goalkeeper"},
+      "вівчар": {"ipa": "/wʲiwˈt͡ʃɑr/", "en": "shepherd"},
+      "відбити": {"ipa": "/wʲidˈbɪtɪ/", "en": "to repel, to reflect"},
+      "глядіти": {"ipa": "/ɦlʲɑˈdʲitɪ/", "en": "to watch, to look"},
+      "гірський": {"ipa": "/ˈɦʲirsʲkɪj/", "en": "mountain (adj.)"},
+      "дослід": {"ipa": "/ˈdoslʲid/", "en": "experiment, research"},
+      "досі": {"ipa": "/doˈsʲi/", "en": "until now, still"},
+      "духовний": {"ipa": "/duxˈownɪj/", "en": "spiritual"},
+      "заради": {"ipa": "/zɐˈrɑdɪ/", "en": "for the sake of"},
+      "затребуваний": {"ipa": "/zɐtrɛˈbuwɑnɪj/", "en": "in demand"},
+      "збагачувати": {"ipa": "/zbɑɦɑt͡ʃuˈwɑtɪ/", "en": "to enrich"},
+      "збірний": {"ipa": "/ˈzbʲirnɪj/", "en": "collective, assembled"}
+    }
+  }
+]

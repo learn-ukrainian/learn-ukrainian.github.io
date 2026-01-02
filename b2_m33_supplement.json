@@ -1,0 +1,40 @@
+[
+  {
+    "file": "curriculum/l2-uk-en/b2/33-word-formation-person-suffixes.md",
+    "enrichments": {
+      "вівця": {"ipa": "/ˈwʲiwt͡sʲɑ/", "en": "sheep"},
+      "згрупувати": {"ipa": "/zɦrupuˈwɑtɪ/", "en": "to group"},
+      "каменяр": {"ipa": "/kɐmɛˈnʲɑr/", "en": "stonemason"},
+      "книгозбірня": {"ipa": "/knɪɦozˈbʲirnʲɑ/", "en": "library"},
+      "купець": {"ipa": "/kuˈpɛt͡sʲ/", "en": "merchant"},
+      "ломити": {"ipa": "/loˈmɪtɪ/", "en": "to break"},
+      "наведений": {"ipa": "/nɐˈwɛdɛnɪj/", "en": "given, cited"},
+      "найменування": {"ipa": "/nɑjmɛnuˈwɑnʲːɑ/", "en": "naming, designation"},
+      "найпродуктивніший": {"ipa": "/nɑjproduktɪwˈnʲiʃɪj/", "en": "most productive"},
+      "неможливий": {"ipa": "/nɛˈmoʒlɪwɪj/", "en": "impossible"},
+      "отара": {"ipa": "/oˈtɑrɑ/", "en": "flock"},
+      "охороняти": {"ipa": "/oxoroˈnʲɑtɪ/", "en": "to guard, to protect"},
+      "пасовище": {"ipa": "/pɐsoˈwɪʃt͡ʃɛ/", "en": "pasture"},
+      "пенальті": {"ipa": "/pɛˈnɑlʲtʲi/", "en": "penalty (sports)"},
+      "письменництво": {"ipa": "/pɪsʲmɛnˈnɪt͡stwo/", "en": "literature, writing"},
+      "письменницький": {"ipa": "/pɪsʲmɛnˈnɪt͡sʲkɪj/", "en": "writer's, literary"},
+      "помічати": {"ipa": "/pomʲiˈt͡ʃɑtɪ/", "en": "to notice"},
+      "рівняти": {"ipa": "/rʲiwˈnʲɑtɪ/", "en": "to equate, to level"},
+      "сертифікат": {"ipa": "/sɛrtɪfʲiˈkɑt/", "en": "certificate"},
+      "словотворення": {"ipa": "/slowotˈworɛnʲːɑ/", "en": "word formation"},
+      "словотвірний": {"ipa": "/slowotˈwʲirnɪj/", "en": "word-formative"},
+      "спеціалізація": {"ipa": "/spɛt͡sʲiɑlʲizɑˈt͡sʲijɑ/", "en": "specialization"},
+      "споживати": {"ipa": "/spoʒɪˈwɑtɪ/", "en": "to consume"},
+      "співець": {"ipa": "/spʲiˈwɛt͡sʲ/", "en": "singer (poetic)"},
+      "сумлінно": {"ipa": "/sumˈlʲinːo/", "en": "conscientiously"},
+      "творець": {"ipa": "/twoˈrɛt͡sʲ/", "en": "creator"},
+      "творити": {"ipa": "/twoˈrɪtɪ/", "en": "to create"},
+      "тираж": {"ipa": "/tɪˈrɑʃ/", "en": "circulation, print run"},
+      "учень": {"ipa": "/uˈt͡ʃɛnʲ/", "en": "pupil, student"},
+      "читальня": {"ipa": "/t͡ʃɪˈtɑlʲnʲɑ/", "en": "reading room"},
+      "читацтво": {"ipa": "/t͡ʃɪˈtɑt͡stwo/", "en": "readership"},
+      "шанувальник": {"ipa": "/ʃɑnuˈwɑlʲnɪk/", "en": "admirer, fan"},
+      "школяр": {"ipa": "/ʃkoˈlʲɑr/", "en": "schoolboy, student"}
+    }
+  }
+]

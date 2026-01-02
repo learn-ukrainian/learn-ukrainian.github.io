@@ -1,0 +1,24 @@
+module: b2-114
+title: "Повоєнне радянське панування"
+subtitle: "Post-War Soviet Rule (1950s-70s)"
+version: "2.0"
+phase: "B2.3c Trauma & Resistance"
+focus: history
+pedagogy: "CBI"
+duration: 120
+transliteration: none
+tags:
+  - history
+  - soviet
+  - russification
+  - cold-war
+grammar:
+  - "Historical narrative register"
+  - "Passive voice in political discourse"
+objectives:
+  - "Learner understands the mechanisms of Soviet Russification policies."
+  - "Learner can analyze primary sources from the Soviet era."
+  - "Learner understands the concept of 'Brezhnev stagnation' (застій)."
+  - "Learner can discuss the impact of Surzhyk on Ukrainian identity."
+vocabulary_count: 25
+slug: 114-povoienne-radianske-panuvannia

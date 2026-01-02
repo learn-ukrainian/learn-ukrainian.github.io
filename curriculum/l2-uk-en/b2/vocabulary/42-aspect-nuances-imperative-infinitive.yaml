@@ -2,308 +2,308 @@ module: 42-aspect-nuances-imperative-infinitive
 level: B2
 version: '2.0'
 items:
-  - lemma: акуратно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: безглуздо
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: беркут
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: браття
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: буклет
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: бульйон
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: вибігти
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: випадковий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: виписатися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: ворог
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: відходити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: галино
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: германський
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: годувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: гостинно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: дв
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: диєт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: дорожній
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: дрібно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: екскурсант
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: експонат
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: заблокований
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: завітати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: задача
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: залах
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: запалити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: захар
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: зачепи
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: зневажати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: зупитися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: ковдр
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: коровай
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: крихкий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: морозиво
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: ндв
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: негайний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: панікувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: паркуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: плюти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: погратися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: подитися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: порад
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: поручня
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: поріжти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: почисти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: почистити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: поїст
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: пригощатися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: прийтися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: репетиція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: розбивати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: розбий
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: розпочнити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: романський
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: рушати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: слизько
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: соромитися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: спалоха
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: спізнютися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: сфотографувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: схвилюватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: схопитися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: сядати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: тікати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: фотоальб
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: фізично
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: частуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: чіпати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: штук
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
+- lemma: акуратно
+  ipa: /ɐkuˈrɑtno/
+  translation: carefully, neatly
+  pos: adv
+- lemma: безглуздо
+  ipa: /bɛzˈɦluzdo/
+  translation: senselessly, absurdly
+  pos: adv
+- lemma: беркут
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: браття
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: буклет
+  ipa: /bukˈlɛt/
+  translation: booklet, brochure
+  pos: noun
+  gender: m
+- lemma: бульйон
+  ipa: /bulʲˈjon/
+  translation: broth, bouillon
+  pos: noun
+  gender: m
+- lemma: вибігти
+  ipa: /wɪˈbʲiɦtɪ/
+  translation: to run out
+  pos: verb
+  gender: f
+- lemma: випадковий
+  ipa: /wɪpɐdˈkowɪj/
+  translation: random, accidental
+  pos: adj
+  gender: m
+- lemma: виписатися
+  ipa: /wɪpɪˈsɑtɪsʲɑ/
+  translation: to be discharged (from hospital)
+  pos: verb
+- lemma: ворог
+  ipa: /woˈroɦ/
+  translation: enemy
+  pos: noun
+  gender: m
+- lemma: відходити
+  ipa: /wʲidxoˈdɪtɪ/
+  translation: to move away, to depart
+  pos: verb
+- lemma: галино
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: германський
+  ipa: /ɦɛrˈmɑnsʲkɪj/
+  translation: Germanic
+  pos: adj
+- lemma: годувати
+  ipa: /ɦoduˈwɑtɪ/
+  translation: to feed
+  pos: verb
+- lemma: гостинно
+  ipa: /ɦosˈtɪnːo/
+  translation: hospitably
+  pos: adv
+- lemma: дв
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: диєт
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: дорожній
+  ipa: /doˈroʒnʲij/
+  translation: road, travel (adj.)
+  pos: adj
+  gender: m
+- lemma: дрібно
+  ipa: /ˈdrʲibno/
+  translation: finely, in small pieces
+  pos: adv
+- lemma: екскурсант
+  ipa: /ɛkskurˈsɑnt/
+  translation: excursionist, tourist
+  pos: noun
+  gender: m
+- lemma: експонат
+  ipa: /ɛkspoˈnɑt/
+  translation: exhibit
+  pos: noun
+  gender: m
+- lemma: заблокований
+  ipa: /zɐbloˈkowɑnɪj/
+  translation: blocked
+  pos: adj
+- lemma: завітати
+  ipa: /zɐwʲiˈtɑtɪ/
+  translation: to visit, to drop by
+  pos: verb
+- lemma: задача
+  ipa: /zɐˈdɑt͡ʃɑ/
+  translation: task, problem
+  pos: noun
+  gender: f
+- lemma: залах
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: запалити
+  ipa: /zɐpɐˈlɪtɪ/
+  translation: to light, to ignite
+  pos: verb
+- lemma: захар
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: зачепи
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: зневажати
+  ipa: /znɛwɐˈʒɑtɪ/
+  translation: to despise, to scorn
+  pos: verb
+- lemma: зупитися
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: ковдр
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: коровай
+  ipa: /koroˈwɑj/
+  translation: wedding bread, korovai
+  pos: noun
+  gender: m
+- lemma: крихкий
+  ipa: /ˈkrɪxkɪj/
+  translation: fragile, brittle
+  pos: adj
+  gender: f
+- lemma: морозиво
+  ipa: /moˈrozɪwo/
+  translation: ice cream
+  pos: noun
+  gender: n
+- lemma: ндв
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: негайний
+  ipa: /nɛˈɦɑjnɪj/
+  translation: immediate, urgent
+  pos: adj
+  gender: f
+- lemma: панікувати
+  ipa: /pɐnʲikuˈwɑtɪ/
+  translation: to panic
+  pos: verb
+- lemma: паркуватися
+  ipa: /pɑrkuwɑˈtɪsʲɑ/
+  translation: to park
+  pos: verb
+- lemma: плюти
+  ipa: /plʲuˈtɪ/
+  translation: to spit
+  pos: verb
+- lemma: погратися
+  ipa: /poɦrɑˈtɪsʲɑ/
+  translation: to play (for a while)
+  pos: verb
+- lemma: подитися
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: порад
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: поручня
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: поріжти
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: почисти
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: почистити
+  ipa: /pot͡ʃɪˈstɪtɪ/
+  translation: to clean
+  pos: verb
+- lemma: поїст
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: пригощатися
+  ipa: /prɪɦoˈʃt͡ʃɑtɪsʲɑ/
+  translation: to treat oneself, to help oneself to food
+  pos: verb
+- lemma: прийтися
+  ipa: /prɪjˈtɪsʲɑ/
+  translation: to have to, to be necessary
+  pos: verb
+- lemma: репетиція
+  ipa: /rɛpɛˈtɪt͡sʲijɑ/
+  translation: rehearsal
+  pos: noun
+  gender: f
+- lemma: розбивати
+  ipa: /rozbɪˈwɑtɪ/
+  translation: to break, to smash
+  pos: verb
+- lemma: розбий
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: розпочнити
+  ipa: /rozpot͡ʃˈnɪtɪ/
+  translation: to begin, to start
+  pos: verb
+- lemma: романський
+  ipa: /roˈmɑnsʲkɪj/
+  translation: Romance (language group)
+  pos: adj
+- lemma: рушати
+  ipa: /ruˈʃɑtɪ/
+  translation: to move, to set off
+  pos: verb
+- lemma: слизько
+  ipa: /ˈslɪzʲko/
+  translation: slippery
+  pos: adv
+- lemma: соромитися
+  ipa: /soroˈmɪtɪsʲɑ/
+  translation: to be ashamed, to feel shy
+  pos: verb
+- lemma: спалоха
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: спізнютися
+  ipa: /spʲizˈnʲutɪsʲɑ/
+  translation: to be late
+  pos: verb
+- lemma: сфотографувати
+  ipa: /sfotoɦrɐfuˈwɑtɪ/
+  translation: to photograph, to take a photo
+  pos: verb
+- lemma: схвилюватися
+  ipa: /sxwɪlʲuˈwɑtɪsʲɑ/
+  translation: to get excited, to worry
+  pos: verb
+- lemma: схопитися
+  ipa: /sxoˈpɪtɪsʲɑ/
+  translation: to grab, to clutch
+  pos: verb
+- lemma: сядати
+  ipa: /sʲɑˈdɑtɪ/
+  translation: to sit down
+  pos: verb
+- lemma: тікати
+  ipa: /tʲiˈkɑtɪ/
+  translation: to flee, to run away
+  pos: verb
+- lemma: фотоальб
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: фізично
+  ipa: /fʲizɪt͡ʃno/
+  translation: physically
+  pos: adv
+- lemma: частуватися
+  ipa: /t͡ʃɑstuˈwɑtɪsʲɑ/
+  translation: to be treated, to be offered refreshments
+  pos: verb
+- lemma: чіпати
+  ipa: /t͡ʃʲiˈpɑtɪ/
+  translation: to touch, to bother
+  pos: verb
+- lemma: штук
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m

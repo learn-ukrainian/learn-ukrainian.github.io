@@ -1,0 +1,172 @@
+module: 128-viina-na-donbasi-2014-2022
+level: B2
+version: '2.0'
+items:
+- lemma: Донбас
+  ipa: /donˈbas/
+  translation: Donbas
+  pos: noun
+  gender: m
+- lemma: схід
+  ipa: /sx⁽ʲ⁾id/
+  translation: east
+  pos: noun
+  gender: m
+- lemma: Слов'янськ
+  ipa: /sloˈwjanʲsʲk/
+  translation: Sloviansk
+  pos: noun
+  gender: m
+- lemma: терорист
+  ipa: /teroˈrɪst/
+  translation: terrorist
+  pos: noun
+  gender: m
+- lemma: сепаратист
+  ipa: /separaˈtɪst/
+  translation: separatist
+  pos: noun
+  gender: m
+- lemma: АТО
+  ipa: /a.te.ˈɔ/
+  translation: ATO (Anti-Terrorist Operation)
+  pos: noun
+  gender: f
+- lemma: добробат
+  ipa: /dobroˈbat/
+  translation: volunteer battalion
+  pos: noun
+  gender: m
+- lemma: волонтер
+  ipa: /wolonˈtɛr/
+  translation: volunteer
+  pos: noun
+  gender: m
+- lemma: Іловайськ
+  ipa: /iloˈwajsʲk/
+  translation: Ilovaisk
+  pos: noun
+  gender: m
+- lemma: котел
+  ipa: /koˈtɛl/
+  translation: cauldron / encirclement
+  pos: noun
+  gender: m
+- lemma: Мінськ
+  ipa: /m⁽ʲ⁾insʲk/
+  translation: Minsk
+  pos: noun
+  gender: m
+- lemma: аеропорт
+  ipa: /aeroˈpɔrt/
+  translation: airport
+  pos: noun
+  gender: m
+- lemma: ДАП
+  ipa: /dap/
+  translation: DAP (Donetsk Airport)
+  pos: noun
+  gender: m
+- lemma: кіборг
+  ipa: /ˈk⁽ʲ⁾ibɔrɦ/
+  translation: cyborg (defender of Donetsk Airport)
+  pos: noun
+  gender: m
+- lemma: фронт
+  ipa: /frɔnt/
+  translation: front / frontline
+  pos: noun
+  gender: m
+- lemma: обстріл
+  ipa: /obˈstr⁽ʲ⁾il/
+  translation: shelling
+  pos: noun
+  gender: m
+- lemma: блокпост
+  ipa: /blɔkˈpɔst/
+  translation: checkpoint
+  pos: noun
+  gender: m
+- lemma: полон
+  ipa: /poˈlɔn/
+  translation: captivity
+  pos: noun
+  gender: m
+- lemma: перемир'я
+  ipa: /pereˈmɪrjɐ/
+  translation: truce / ceasefire
+  pos: noun
+  gender: n
+- lemma: окупація
+  ipa: /okuˈpat͡s⁽ʲ⁾ija/
+  translation: occupation
+  pos: noun
+  gender: f
+- lemma: звільнення
+  ipa: /zˈw⁽ʲ⁾ilʲnennʲa/
+  translation: liberation
+  pos: noun
+  gender: n
+- lemma: вторгнення
+  ipa: /ˈwtɔrɦnennʲa/
+  translation: invasion
+  pos: noun
+  gender: n
+- lemma: найманець
+  ipa: /ˈnajmanet͡sʲ/
+  translation: mercenary
+  pos: noun
+  gender: m
+- lemma: артилерія
+  ipa: /artɪˈlɛr⁽ʲ⁾ija/
+  translation: artillery
+  pos: noun
+  gender: f
+- lemma: окоп
+  ipa: /oˈkɔp/
+  translation: trench
+  pos: noun
+  gender: m
+- lemma: зброя
+  ipa: /ˈzbrɔja/
+  translation: weapon
+  pos: noun
+  gender: f
+- lemma: захисник
+  ipa: /zaxɪsˈnɪk/
+  translation: defender
+  pos: noun
+  gender: m
+- lemma: лінія розмежування
+  ipa: /ˈl⁽ʲ⁾in⁽ʲ⁾ija rozmeʒuˈwannʲa/
+  translation: line of contact / demarcation line
+  pos: phrase
+- lemma: гуманітарна допомога
+  ipa: /ɦuman⁽ʲ⁾iˈtarna dopoˈmɔɦa/
+  translation: humanitarian aid
+  pos: phrase
+- lemma: переселенець
+  ipa: /pereseˈlenet͡sʲ/
+  translation: IDP (internally displaced person)
+  pos: noun
+  gender: m
+- lemma: боронити
+  ipa: /boroˈnɪtɪ/
+  translation: to defend
+  pos: verb
+- lemma: воювати
+  ipa: /wojuˈwatɪ/
+  translation: to fight / to war
+  pos: verb
+- lemma: загинути
+  ipa: /zaˈɦɪnutɪ/
+  translation: to die (in battle/accident)
+  pos: verb
+- lemma: вистояти
+  ipa: /ˈwɪstojatɪ/
+  translation: to withstand / to hold out
+  pos: verb
+- lemma: гібридний
+  ipa: /ɦ⁽ʲ⁾iˈbrɪdnɪj/
+  translation: hybrid
+  pos: adj

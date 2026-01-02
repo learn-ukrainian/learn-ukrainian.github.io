@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): дев'ятеро, обидва, двоє, дріб, половина...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): восьмеро, пропорція, обидві, третина, відсоток...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

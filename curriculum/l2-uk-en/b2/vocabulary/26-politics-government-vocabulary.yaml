@@ -2,482 +2,482 @@ module: 26-politics-government-vocabulary
 level: B2
 version: '2.0'
 items:
-  - lemma: автономія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: авторитаризм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: агресор
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: боротьба
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: вето
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: виборчий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: виведення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: виконавчий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: вирішувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: відповідність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: відставка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: віктор
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: гарант
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: голобородько
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: головнокомандувач
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: граніт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: гідність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: гілка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: дебата
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: дипломатичний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: достроковий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: дільниця
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: загинути
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: закликати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: засвоїти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: збройний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: звинувачувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: звітувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: знайтися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: зовнішній
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: зіграти
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: кандидат
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: кандидатура
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: керування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: коаліційний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: коаліція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: колокація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: контролювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: корупція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: малоймовірно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: меншість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: мирний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: мітинг
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: надіятися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: найвпізнаваніший
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: наймасовіший
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: наказжа
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: накласти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: напружено
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: наратив
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: небесний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: недофінансування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: неефективний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: оптимізм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: партійний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: партія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: перевибор
-    ipa: ''
-    translation: ''
-    pos: noun
-  - lemma: петиція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: подолати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: покращувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: положення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: поправка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: популізм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: посол
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: постановесь
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: президентський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: призначати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: принциповий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: просунути
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: проштовхнути
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: підконтрольний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: республіка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: референдум
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: рефір
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: розподілений
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: розстріл
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: санкція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: свобод
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: скоріше
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: сотня
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: союзник
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: споруда
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: стабільний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: сформувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: точити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: трагічно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: третина
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ухвалювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: фальсифікація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: феномен
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: фракція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: фронт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: хазяїн
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: цеглинка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: цілісний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: чоло
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: ющенк
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: ігнорування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: імпічмент
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: інстанція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: інститутський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
+- lemma: автономія
+  ipa: /ɐwtoˈnomʲijɑ/
+  translation: autonomy
+  pos: noun
+  gender: f
+- lemma: авторитаризм
+  ipa: /ɐwtorɪtɐˈrɪzm/
+  translation: authoritarianism
+  pos: noun
+  gender: n
+- lemma: агресор
+  ipa: /ɐɦrɛˈsor/
+  translation: aggressor
+  pos: noun
+  gender: m
+- lemma: боротьба
+  ipa: /boˈrotʲbɑ/
+  translation: struggle
+  pos: noun
+  gender: f
+- lemma: вето
+  ipa: /ˈwɛto/
+  translation: veto
+  pos: noun
+  gender: n
+- lemma: виборчий
+  ipa: /wɪˈbort͡ʃɪj/
+  translation: electoral
+  pos: adj
+  gender: f
+- lemma: виведення
+  ipa: /wɪˈwɛdɛnʲːɑ/
+  translation: withdrawal
+  pos: noun
+  gender: n
+- lemma: виконавчий
+  ipa: /wɪkoˈnɑwt͡ʃɪj/
+  translation: executive
+  pos: adj
+  gender: f
+- lemma: вирішувати
+  ipa: /wɪrʲiˈʃuwɑtɪ/
+  translation: to resolve
+  pos: verb
+- lemma: відповідність
+  ipa: /wʲidpoˈwʲidnʲistʲ/
+  translation: compliance
+  pos: noun
+  gender: f
+- lemma: відставка
+  ipa: /wʲidˈstɑwkɑ/
+  translation: resignation
+  pos: noun
+  gender: f
+- lemma: віктор
+  ipa: /ˈwʲiktor/
+  translation: Viktor
+  pos: propn
+  gender: m
+- lemma: гарант
+  ipa: /ɦɐˈrɑnt/
+  translation: guarantor
+  pos: noun
+  gender: m
+- lemma: голобородько
+  ipa: /ɦoloboˈrodʲko/
+  translation: Holoborodko (name)
+  pos: propn
+  gender: m
+- lemma: головнокомандувач
+  ipa: /ɦolownokomɐnˈduwɑt͡ʃ/
+  translation: commander-in-chief
+  pos: noun
+  gender: m
+- lemma: граніт
+  ipa: /ɦrɐˈnʲit/
+  translation: granite
+  pos: noun
+  gender: m
+- lemma: гідність
+  ipa: /ɦʲidˈnʲistʲ/
+  translation: dignity
+  pos: noun
+  gender: f
+- lemma: гілка
+  ipa: /ˈɦʲilkɑ/
+  translation: branch
+  pos: noun
+  gender: f
+- lemma: дебата
+  ipa: /dɛˈbɑtɑ/
+  translation: debates (gen.pl.)
+  pos: noun
+  gender: m
+- lemma: дипломатичний
+  ipa: /dɪplomɐˈtɪt͡ʃnɪj/
+  translation: diplomatic
+  pos: adj
+- lemma: достроковий
+  ipa: /dostroˈkowɪj/
+  translation: early, pre-term
+  pos: adj
+- lemma: дільниця
+  ipa: /dʲilʲˈnɪt͡sʲɑ/
+  translation: district, precinct
+  pos: noun
+  gender: f
+- lemma: загинути
+  ipa: /zɐˈɦɪnutɪ/
+  translation: to perish
+  pos: verb
+- lemma: закликати
+  ipa: /zɐklɪˈkɑtɪ/
+  translation: to call upon
+  pos: verb
+  gender: m
+- lemma: засвоїти
+  ipa: /zɐswoˈjitɪ/
+  translation: to assimilate
+  pos: verb
+- lemma: збройний
+  ipa: /ˈzbrојnɪј/
+  translation: armed
+  pos: adj
+- lemma: звинувачувати
+  ipa: /zwɪnuwɐˈt͡ʃuwɑtɪ/
+  translation: to accuse
+  pos: verb
+- lemma: звітувати
+  ipa: /zwʲituˈwɑtɪ/
+  translation: to report
+  pos: verb
+- lemma: знайтися
+  ipa: /znɐjˈtɪsʲɑ/
+  translation: to be found
+  pos: verb
+- lemma: зовнішній
+  ipa: /ˈzownʲiʃnʲij/
+  translation: external
+  pos: adj
+- lemma: зіграти
+  ipa: /zʲiˈɦrɑtɪ/
+  translation: to play (role)
+  pos: verb
+  gender: m
+- lemma: кандидат
+  ipa: /kɐndɪˈdɑt/
+  translation: candidate
+  pos: noun
+  gender: m
+- lemma: кандидатура
+  ipa: /kɐndɪdɐˈturɑ/
+  translation: candidacy
+  pos: noun
+  gender: f
+- lemma: керування
+  ipa: /kɛruˈwɑnʲːɑ/
+  translation: management
+  pos: noun
+  gender: n
+- lemma: коаліційний
+  ipa: /koɐlʲiˈt͡sʲijnɪj/
+  translation: coalition (adj.)
+  pos: adj
+  gender: f
+- lemma: коаліція
+  ipa: /koɐˈlʲit͡sʲijɑ/
+  translation: coalition
+  pos: noun
+  gender: f
+- lemma: колокація
+  ipa: /koloˈkɑt͡sʲijɑ/
+  translation: collocation
+  pos: noun
+  gender: f
+- lemma: контролювати
+  ipa: /kontrolʲuˈwɑtɪ/
+  translation: to control
+  pos: verb
+- lemma: корупція
+  ipa: /koˈrupt͡sʲijɑ/
+  translation: corruption
+  pos: noun
+  gender: f
+- lemma: малоймовірно
+  ipa: /mɐlojmoˈwʲirno/
+  translation: unlikely
+  pos: adv
+- lemma: меншість
+  ipa: /ˈmɛnʃʲistʲ/
+  translation: minority
+  pos: noun
+  gender: f
+- lemma: мирний
+  ipa: /ˈmɪrnɪj/
+  translation: peaceful
+  pos: adj
+  gender: m
+- lemma: мітинг
+  ipa: /ˈmʲitɪnɦ/
+  translation: rally, meeting
+  pos: noun
+  gender: m
+- lemma: надіятися
+  ipa: /nɐˈdʲijɑtɪsʲɑ/
+  translation: to hope
+  pos: verb
+- lemma: найвпізнаваніший
+  ipa: /nɑjwpʲiznɐwɐˈnʲiʃɪj/
+  translation: most recognizable
+  pos: adj
+- lemma: наймасовіший
+  ipa: /nɑjmɐˈsowʲiʃɪj/
+  translation: most massive
+  pos: adj
+  gender: m
+- lemma: наказжа
+  ipa: /nɐˈkɑʒːɑ/
+  translation: orders (gen.pl.)
+  pos: noun
+  gender: m
+- lemma: накласти
+  ipa: /nɐˈklɑstɪ/
+  translation: to impose
+  pos: verb
+- lemma: напружено
+  ipa: /nɐˈpruʒɛno/
+  translation: tensely
+  pos: adv
+- lemma: наратив
+  ipa: /nɐrɐˈtɪw/
+  translation: narrative
+  pos: noun
+  gender: m
+- lemma: небесний
+  ipa: /nɛˈbɛsnɪj/
+  translation: heavenly
+  pos: adj
+  gender: f
+- lemma: недофінансування
+  ipa: /nɛdofʲinɐnsuˈwɑnʲːɑ/
+  translation: underfunding
+  pos: noun
+  gender: n
+- lemma: неефективний
+  ipa: /nɛɛfɛkˈtɪwnɪj/
+  translation: ineffective
+  pos: adj
+  gender: n
+- lemma: оптимізм
+  ipa: /optɪˈmʲizm/
+  translation: optimism
+  pos: noun
+  gender: m
+- lemma: партійний
+  ipa: /pɐrˈtʲijnɪj/
+  translation: party (adj.)
+  pos: adj
+  gender: f
+- lemma: партія
+  ipa: /ˈpɑrtʲijɑ/
+  translation: party
+  pos: noun
+  gender: f
+- lemma: перевибор
+  ipa: /pɛrɛˈwɪbor/
+  translation: re-election (gen.)
+  pos: noun
+- lemma: петиція
+  ipa: /pɛˈtɪt͡sʲijɑ/
+  translation: petition
+  pos: noun
+  gender: f
+- lemma: подолати
+  ipa: /podoˈlɑtɪ/
+  translation: to overcome
+  pos: verb
+- lemma: покращувати
+  ipa: /pokrɑˈʃt͡ʃuwɑtɪ/
+  translation: to improve
+  pos: verb
+- lemma: положення
+  ipa: /poloˈʒɛnʲːɑ/
+  translation: position, provision
+  pos: noun
+  gender: n
+- lemma: поправка
+  ipa: /poˈprɑwkɑ/
+  translation: amendment
+  pos: noun
+  gender: m
+- lemma: популізм
+  ipa: /popuˈlʲizm/
+  translation: populism
+  pos: noun
+  gender: m
+- lemma: посол
+  ipa: /poˈsol/
+  translation: ambassador
+  pos: noun
+  gender: m
+- lemma: постановесь
+  ipa: /postɐˈnowɛsʲ/
+  translation: decrees (gen.pl.)
+  pos: noun
+  gender: f
+- lemma: президентський
+  ipa: /prɛzɪˈdɛnt͡sʲkɪj/
+  translation: presidential
+  pos: adj
+  gender: f
+- lemma: призначати
+  ipa: /prɪznɐˈt͡ʃɑtɪ/
+  translation: to appoint
+  pos: verb
+- lemma: принциповий
+  ipa: /prɪnt͡sɪˈpowɪj/
+  translation: principled
+  pos: adj
+  gender: f
+- lemma: просунути
+  ipa: /proˈsunutɪ/
+  translation: to advance
+  pos: verb
+  gender: f
+- lemma: проштовхнути
+  ipa: /proʃtowxˈnutɪ/
+  translation: to push through
+  pos: verb
+  gender: m
+- lemma: підконтрольний
+  ipa: /pʲidkonˈtrolʲnɪj/
+  translation: controlled
+  pos: adj
+- lemma: республіка
+  ipa: /rɛˈspublʲikɑ/
+  translation: republic
+  pos: noun
+  gender: f
+- lemma: референдум
+  ipa: /rɛfɛˈrɛndum/
+  translation: referendum
+  pos: noun
+  gender: m
+- lemma: рефір
+  ipa: /rɛˈfʲir/
+  translation: refer (gen.)
+  pos: noun
+  gender: f
+- lemma: розподілений
+  ipa: /rozpodʲiˈlɛnɪj/
+  translation: distributed
+  pos: adj
+  gender: f
+- lemma: розстріл
+  ipa: /rozˈstrʲil/
+  translation: execution (shooting)
+  pos: noun
+  gender: m
+- lemma: санкція
+  ipa: /ˈsɑnkt͡sʲijɑ/
+  translation: sanction
+  pos: noun
+  gender: f
+- lemma: свобод
+  ipa: /swoˈbod/
+  translation: freedoms (gen.pl.)
+  pos: noun
+  gender: f
+- lemma: скоріше
+  ipa: /skoˈrʲiʃɛ/
+  translation: sooner, rather
+  pos: adv
+- lemma: сотня
+  ipa: /ˈsotnʲɑ/
+  translation: hundred
+  pos: noun
+  gender: f
+- lemma: союзник
+  ipa: /soˈjuznɪk/
+  translation: ally
+  pos: noun
+  gender: m
+- lemma: споруда
+  ipa: /spoˈrudɑ/
+  translation: structure, building
+  pos: noun
+  gender: f
+- lemma: стабільний
+  ipa: /stɐˈbʲilʲnɪj/
+  translation: stable
+  pos: adj
+  gender: f
+- lemma: сформувати
+  ipa: /sformuˈwɑtɪ/
+  translation: to form
+  pos: verb
+- lemma: точити
+  ipa: /toˈt͡ʃɪtɪ/
+  translation: to sharpen
+  pos: verb
+- lemma: трагічно
+  ipa: /trɐˈɦʲit͡ʃno/
+  translation: tragically
+  pos: adv
+- lemma: третина
+  ipa: /trɛˈtɪnɑ/
+  translation: third (part)
+  pos: noun
+  gender: m
+- lemma: ухвалювати
+  ipa: /uxwɐˈlʲuwɑtɪ/
+  translation: to approve
+  pos: verb
+- lemma: фальсифікація
+  ipa: /fɑlʲsɪfʲiˈkɑt͡sʲijɑ/
+  translation: falsification
+  pos: noun
+  gender: f
+- lemma: феномен
+  ipa: /fɛnoˈmɛn/
+  translation: phenomenon
+  pos: noun
+  gender: m
+- lemma: фракція
+  ipa: /ˈfrɑkt͡sʲijɑ/
+  translation: faction
+  pos: noun
+  gender: f
+- lemma: фронт
+  ipa: /front/
+  translation: front
+  pos: noun
+  gender: m
+- lemma: хазяїн
+  ipa: /xɐˈzʲɑjin/
+  translation: master, owner
+  pos: noun
+  gender: m
+- lemma: цеглинка
+  ipa: /t͡sɛɦˈlɪnkɑ/
+  translation: brick (dim.)
+  pos: noun
+  gender: f
+- lemma: цілісний
+  ipa: /t͡sʲiˈlʲisnɪj/
+  translation: integral
+  pos: adj
+  gender: f
+- lemma: чоло
+  ipa: /t͡ʃoˈlo/
+  translation: head, forehead
+  pos: noun
+  gender: n
+- lemma: ющенк
+  ipa: /ˈjuʃt͡ʃɛnk/
+  translation: Yushchenko
+  pos: propn
+  gender: m
+- lemma: ігнорування
+  ipa: /ʲiɦnoruˈwɑnʲːɑ/
+  translation: ignoring
+  pos: noun
+  gender: n
+- lemma: імпічмент
+  ipa: /ʲimˈpʲit͡ʃmɛnt/
+  translation: impeachment
+  pos: noun
+  gender: m
+- lemma: інстанція
+  ipa: /ʲinˈstɑnt͡sʲijɑ/
+  translation: instance
+  pos: noun
+  gender: f
+- lemma: інститутський
+  ipa: /ʲinstɪˈtut͡sʲkɪj/
+  translation: Instytutska (street)
+  pos: adj
+  gender: f

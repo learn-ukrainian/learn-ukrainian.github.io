@@ -340,23 +340,9 @@ The lesson teaches both Ukrainian AND history. Activities practice only Ukrainia
 
 ## Vocabulary Section for History Modules
 
-```markdown
-# Словник
+**Format:** YAML file ONLY (`vocabulary/{slug}.yaml`)
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **гетьман** | hetman | козацький вождь, очільник Війська Запорозького |
-| **козацтво** | Cossackdom | козацький соціальний стан та культура |
-| **Січ** | Sich | козацька фортеця-столиця |
-| **повстання** | uprising, rebellion | збройний спротив владі |
-| **гноблення** | oppression | соціально-політичний тиск |
-| **панування** | rule, dominion | контроль, влада над територією |
-| **спротив** | resistance | протидія, опір |
-| **здобути перемогу** | to win a victory | фіксований вираз |
-| **підірвати владу** | to undermine power | ослабити, зашкодити |
-| **первинне джерело** | primary source | історіографічний термін |
-| [30+ items] | | |
-```
+**Do NOT include a vocabulary table in the Markdown file.**
 
 **History vocabulary notes:**
 - Include political/military terminology

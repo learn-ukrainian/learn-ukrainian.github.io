@@ -1,0 +1,167 @@
+module: 127-aneksiia-krymu
+level: B2
+version: '2.0'
+items:
+- lemma: анексія
+  ipa: /aˈnɛks⁽ʲ⁾ija/
+  translation: annexation
+  pos: noun
+  gender: f
+- lemma: захоплення
+  ipa: /zaˈxɔplennʲa/
+  translation: seizure / capture
+  pos: noun
+  gender: n
+- lemma: окупація
+  ipa: /okuˈpat͡s⁽ʲ⁾ija/
+  translation: occupation
+  pos: noun
+  gender: f
+- lemma: зелені чоловічки
+  ipa: /zeˈlɛn⁽ʲ⁾i t͡ʃoloˈw⁽ʲ⁾it͡ʃkɪ/
+  translation: little green men (Russian soldiers without insignia)
+  pos: phrase
+- lemma: спецназ
+  ipa: /spet͡sˈnaz/
+  translation: special forces
+  pos: noun
+  gender: m
+- lemma: референдум
+  ipa: /refeˈrɛndum/
+  translation: referendum
+  pos: noun
+  gender: m
+- lemma: фейковий
+  ipa: /ˈfɛjkowɪj/
+  translation: fake
+  pos: adj
+- lemma: санкції
+  ipa: /ˈsankts⁽ʲ⁾iji/
+  translation: sanctions
+  pos: noun
+  gender: pl
+- lemma: півострів
+  ipa: /ˈp⁽ʲ⁾iwɔstrew/
+  translation: peninsula
+  pos: noun
+  gender: m
+- lemma: блокада
+  ipa: /bloˈkada/
+  translation: blockade
+  pos: noun
+  gender: f
+- lemma: зрада
+  ipa: /ˈzrada/
+  translation: betrayal / treason
+  pos: noun
+  gender: f
+- lemma: спротив
+  ipa: /ˈsprɔtɪw/
+  translation: resistance
+  pos: noun
+  gender: m
+- lemma: мітинг
+  ipa: /ˈm⁽ʲ⁾itɪnɦ/
+  translation: rally / meeting
+  pos: noun
+  gender: m
+- lemma: Меджліс
+  ipa: /medʒˈl⁽ʲ⁾is/
+  translation: Mejlis (Crimean Tatar representative body)
+  pos: noun
+  gender: m
+- lemma: агресія
+  ipa: /aˈɦrɛs⁽ʲ⁾ija/
+  translation: aggression
+  pos: noun
+  gender: f
+- lemma: гібридна війна
+  ipa: /ɦ⁽ʲ⁾iˈbrɪdna w⁽ʲ⁾ijˈna/
+  translation: hybrid war
+  pos: phrase
+- lemma: військовий
+  ipa: /w⁽ʲ⁾ijsʲˈkɔwɪj/
+  translation: military (noun/adj)
+  pos: noun
+  gender: m
+- lemma: база
+  ipa: /ˈbaza/
+  translation: base
+  pos: noun
+  gender: f
+- lemma: парламент
+  ipa: /parˈlament/
+  translation: parliament
+  pos: noun
+  gender: m
+- lemma: прапор
+  ipa: /ˈprapor/
+  translation: flag
+  pos: noun
+  gender: m
+- lemma: порушення
+  ipa: /poruˈʃennʲa/
+  translation: violation
+  pos: noun
+  gender: n
+- lemma: право
+  ipa: /ˈprawo/
+  translation: law / right
+  pos: noun
+  gender: n
+- lemma: міжнародний
+  ipa: /m⁽ʲ⁾iʒnaˈrɔdnɪj/
+  translation: international
+  pos: adj
+- lemma: договір
+  ipa: /doˈɦɔw⁽ʲ⁾ir/
+  translation: treaty / agreement
+  pos: noun
+  gender: m
+- lemma: озброєний
+  ipa: /ozˈbrɔjenɪj/
+  translation: armed
+  pos: adj
+- lemma: без розпізнавальних знаків
+  ipa: /bɛz roz⁽ʲ⁾p⁽ʲ⁾iznaˈwalʲnɪx ˈznak⁽ʲ⁾iw/
+  translation: without insignia
+  pos: phrase
+- lemma: легітимність
+  ipa: /leɦ⁽ʲ⁾iˈtɪmn⁽ʲ⁾istʲ/
+  translation: legitimacy
+  pos: noun
+  gender: f
+- lemma: маріонетка
+  ipa: /mar⁽ʲ⁾ioˈnɛtka/
+  translation: puppet
+  pos: noun
+  gender: f
+- lemma: визнання
+  ipa: /wɪzˈnannʲa/
+  translation: recognition
+  pos: noun
+  gender: n
+- lemma: територіальна цілісність
+  ipa: /terɪtor⁽ʲ⁾iˈalʲna ˈt͡s⁽ʲ⁾il⁽ʲ⁾isn⁽ʲ⁾istʲ/
+  translation: territorial integrity
+  pos: phrase
+- lemma: захоплювати
+  ipa: /zaˈxɔplʲuwatɪ/
+  translation: to seize / to capture
+  pos: verb
+- lemma: блокувати
+  ipa: /blokuˈwatɪ/
+  translation: to block
+  pos: verb
+- lemma: захищати
+  ipa: /zaxɪˈʃt͡ʃatɪ/
+  translation: to defend / to protect
+  pos: verb
+- lemma: брехати
+  ipa: /breˈxatɪ/
+  translation: to lie
+  pos: verb
+- lemma: ігнорувати
+  ipa: /iɦnoruˈwatɪ/
+  translation: to ignore
+  pos: verb
