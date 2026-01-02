@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (24 words): частка, прикметник, родовий, особа, відмінок...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (24 words): закінчення, родовий, знахідний, займенник, дієслово...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -45,6 +45,9 @@
 | questions | 41 | 5 | 100% | 5% | 5.0% |
 | proverbs | 3 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.7%** |
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
