@@ -1,0 +1,3976 @@
+generated_at: '2026-01-02'
+mappings:
+- module_id: a1-06-the-living-verb-i
+  module_title: 06 The Living Verb I
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-014
+    title: ULP 1-14 Likes and dislikes – common verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/14/
+    match_reason: 'Level-aligned topic match: verb'
+    relevance: high
+  - episode_id: ULP-022
+    title: ULP 1-22 Are you going to the party? – First verb conjugation in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/22/
+    match_reason: 'Level-aligned topic match: verb'
+    relevance: high
+  - episode_id: ULP-034
+    title: ULP 1-34 Going to the movies in Ukraine – Perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/34/
+    match_reason: 'Level-aligned topic match: verb'
+    relevance: high
+  - episode_id: FMU-057
+    title: 'Grammar Point: Verb conjugations in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu57/
+    match_reason: 'Level-aligned topic match: verb'
+    relevance: high
+  - episode_id: ULP-059
+    title: ULP 2-59 Vacation plans & the verbs of movement in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/59/
+    match_reason: 'Cross-level topic match: verb'
+    relevance: medium
+- module_id: a1-08-the-living-verb-ii
+  module_title: 08 The Living Verb Ii
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-014
+    title: ULP 1-14 Likes and dislikes – common verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/14/
+    match_reason: 'Level-aligned topic match: verb'
+    relevance: high
+  - episode_id: ULP-022
+    title: ULP 1-22 Are you going to the party? – First verb conjugation in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/22/
+    match_reason: 'Level-aligned topic match: verb'
+    relevance: high
+  - episode_id: ULP-034
+    title: ULP 1-34 Going to the movies in Ukraine – Perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/34/
+    match_reason: 'Level-aligned topic match: verb'
+    relevance: high
+  - episode_id: FMU-057
+    title: 'Grammar Point: Verb conjugations in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu57/
+    match_reason: 'Level-aligned topic match: verb'
+    relevance: high
+  - episode_id: ULP-059
+    title: ULP 2-59 Vacation plans & the verbs of movement in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/59/
+    match_reason: 'Cross-level topic match: verb'
+    relevance: medium
+- module_id: a1-09-food-and-drinks
+  module_title: 09 Food And Drinks
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-011
+    title: ULP 1-11 Ordering drinks in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/11/
+    match_reason: 'Level-aligned topic match: drinks'
+    relevance: high
+  - episode_id: ULP-012
+    title: ULP 1-12 Ordering food in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/12/
+    match_reason: 'Level-aligned topic match: food'
+    relevance: high
+  - episode_id: ULP-013
+    title: ULP 1-13 More about food in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/13/
+    match_reason: 'Level-aligned topic match: food'
+    relevance: high
+  - episode_id: FMU-012
+    title: Vocabulary booster! Beverages / Drinks in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu12/
+    match_reason: 'Level-aligned topic match: drinks'
+    relevance: high
+  - episode_id: FMU-016
+    title: How to ORDER at the restaurant in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu16/
+    match_reason: 'Level-aligned topic match: restaurant'
+    relevance: high
+- module_id: a1-11-the-accusative-i-things
+  module_title: 11 The Accusative I Things
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-032
+    title: ULP 1-32 Shopping for clothes – Accusative case in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/32/
+    match_reason: 'Level-aligned topic match: accusative'
+    relevance: high
+  - episode_id: ULP-033
+    title: ULP 1-33 Talking about books in Ukrainian – Accusative case of people
+    url: https://www.ukrainianlessons.com/lesson/33/
+    match_reason: 'Level-aligned topic match: accusative'
+    relevance: high
+  - episode_id: FMU-015
+    title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu15/
+    match_reason: 'Level-aligned topic match: accusative'
+    relevance: high
+  - episode_id: FMU-044
+    title: Vocabulary booster! Things you can find in every house in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu44/
+    match_reason: 'Level-aligned topic match: things'
+    relevance: high
+  - episode_id: ULP-056
+    title: ULP 2-56 Asking for an advice + Accusative case
+    url: https://www.ukrainianlessons.com/lesson/56/
+    match_reason: 'Cross-level topic match: accusative'
+    relevance: medium
+- module_id: a1-12-the-accusative-ii-people
+  module_title: 12 The Accusative Ii People
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-032
+    title: ULP 1-32 Shopping for clothes – Accusative case in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/32/
+    match_reason: 'Level-aligned topic match: accusative'
+    relevance: high
+  - episode_id: ULP-033
+    title: ULP 1-33 Talking about books in Ukrainian – Accusative case of people
+    url: https://www.ukrainianlessons.com/lesson/33/
+    match_reason: 'Level-aligned topic match: people, accusative'
+    relevance: high
+  - episode_id: FMU-015
+    title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu15/
+    match_reason: 'Level-aligned topic match: accusative'
+    relevance: high
+  - episode_id: ULP-056
+    title: ULP 2-56 Asking for an advice + Accusative case
+    url: https://www.ukrainianlessons.com/lesson/56/
+    match_reason: 'Cross-level topic match: accusative'
+    relevance: medium
+  - episode_id: ULP-057
+    title: ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions
+    url: https://www.ukrainianlessons.com/lesson/57/
+    match_reason: 'Cross-level topic match: accusative'
+    relevance: medium
+- module_id: a1-13-the-locative-where-things-are
+  module_title: 13 The Locative Where Things Are
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-004
+    title: ULP 1-04 Talking About Where You Come From and Where You Live in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/4/
+    match_reason: 'Level-aligned topic match: where'
+    relevance: high
+  - episode_id: ULP-017
+    title: ULP 1-17 Where is it? Here and there in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/17/
+    match_reason: 'Level-aligned topic match: where'
+    relevance: high
+  - episode_id: FMU-044
+    title: Vocabulary booster! Things you can find in every house in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu44/
+    match_reason: 'Level-aligned topic match: things'
+    relevance: high
+  - episode_id: ULP-066
+    title: ULP 2-66 Sharing memories + Locative case with places
+    url: https://www.ukrainianlessons.com/lesson/66/
+    match_reason: 'Cross-level topic match: locative'
+    relevance: medium
+  - episode_id: ULP-067
+    title: ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case
+    url: https://www.ukrainianlessons.com/lesson/67/
+    match_reason: 'Cross-level topic match: locative'
+    relevance: medium
+- module_id: a1-14-mine-and-yours
+  module_title: 14 Mine And Yours
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-003
+    title: ULP 1-03 How to Introduce Yourself in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/3/
+    match_reason: 'Level-aligned topic match: yours'
+    relevance: high
+  - episode_id: FMU-021
+    title: How to introduce yourself in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu21/
+    match_reason: 'Level-aligned topic match: yours'
+    relevance: high
+- module_id: a1-15-around-the-city
+  module_title: 15 Around The City
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-020
+    title: ULP 1-20 My favorite city in Ukrainian – Review 11-19
+    url: https://www.ukrainianlessons.com/lesson/20/
+    match_reason: 'Level-aligned topic match: city'
+    relevance: high
+- module_id: a1-16-the-genitive-i-absence
+  module_title: 16 The Genitive I Absence
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-046
+    title: ULP 2-46 At the grocery store + Genitive case
+    url: https://www.ukrainianlessons.com/lesson/46/
+    match_reason: 'Cross-level topic match: genitive'
+    relevance: medium
+  - episode_id: ULP-047
+    title: ULP 2-47 Food festivals + Genitive case
+    url: https://www.ukrainianlessons.com/lesson/47/
+    match_reason: 'Cross-level topic match: genitive'
+    relevance: medium
+  - episode_id: ULP-048
+    title: ULP 2-48 Eating habits + Genitive case
+    url: https://www.ukrainianlessons.com/lesson/48/
+    match_reason: 'Cross-level topic match: genitive'
+    relevance: medium
+  - episode_id: ULP-049
+    title: ULP 2-49 Syrnyky recipe + Genitive case
+    url: https://www.ukrainianlessons.com/lesson/49/
+    match_reason: 'Cross-level topic match: genitive'
+    relevance: medium
+  - episode_id: ULP-236
+    title: ULP 6-236 Наталія Кобринська — мама українського фемінізму
+    url: https://www.ukrainianlessons.com/season6/ULP-6-236-nataliia-kobrynska-mama-ukrainskoho-feminizmu/
+    match_reason: 'Cross-level topic match: кого'
+    relevance: medium
+- module_id: a1-17-numbers-and-money
+  module_title: 17 Numbers And Money
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-005
+    title: ULP 1-05 Numbers 1-20 in Ukrainian + Pronunciation Trainer (и)
+    url: https://www.ukrainianlessons.com/lesson/5/
+    match_reason: 'Level-aligned topic match: numbers'
+    relevance: high
+  - episode_id: FMU-008
+    title: How to exchange money in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu8/
+    match_reason: 'Level-aligned topic match: money'
+    relevance: high
+  - episode_id: ULP-067
+    title: ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case
+    url: https://www.ukrainianlessons.com/lesson/67/
+    match_reason: 'Cross-level topic match: numbers'
+    relevance: medium
+- module_id: a1-18-food-and-shopping
+  module_title: 18 Food And Shopping
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-012
+    title: ULP 1-12 Ordering food in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/12/
+    match_reason: 'Level-aligned topic match: food'
+    relevance: high
+  - episode_id: ULP-013
+    title: ULP 1-13 More about food in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/13/
+    match_reason: 'Level-aligned topic match: food'
+    relevance: high
+  - episode_id: ULP-031
+    title: ULP 1-31 Shopping in Ukrainian – At the shoe shop
+    url: https://www.ukrainianlessons.com/lesson/31/
+    match_reason: 'Level-aligned topic match: shopping'
+    relevance: high
+  - episode_id: ULP-032
+    title: ULP 1-32 Shopping for clothes – Accusative case in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/32/
+    match_reason: 'Level-aligned topic match: shopping'
+    relevance: high
+  - episode_id: FMU-016
+    title: How to ORDER at the restaurant in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu16/
+    match_reason: 'Level-aligned topic match: restaurant'
+    relevance: high
+- module_id: a1-21-yesterday-past-tense
+  module_title: 21 Yesterday Past Tense
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-026
+    title: ULP 1-26 Talking about traveling – Past tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/26/
+    match_reason: 'Level-aligned topic match: past, tense'
+    relevance: high
+  - episode_id: ULP-027
+    title: ULP 1-27 Traveling in Ukraine in winter – More Past tense
+    url: https://www.ukrainianlessons.com/lesson/27/
+    match_reason: 'Level-aligned topic match: past, tense'
+    relevance: high
+  - episode_id: ULP-028
+    title: ULP 1-28 Making plans for the weekend – Future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/28/
+    match_reason: 'Level-aligned topic match: tense'
+    relevance: high
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Cross-level topic match: tense'
+    relevance: medium
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Cross-level topic match: tense'
+    relevance: medium
+- module_id: a1-22-tomorrow-future-tense
+  module_title: 22 Tomorrow Future Tense
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-026
+    title: ULP 1-26 Talking about traveling – Past tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/26/
+    match_reason: 'Level-aligned topic match: tense'
+    relevance: high
+  - episode_id: ULP-027
+    title: ULP 1-27 Traveling in Ukraine in winter – More Past tense
+    url: https://www.ukrainianlessons.com/lesson/27/
+    match_reason: 'Level-aligned topic match: tense'
+    relevance: high
+  - episode_id: ULP-028
+    title: ULP 1-28 Making plans for the weekend – Future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/28/
+    match_reason: 'Level-aligned topic match: future, tense'
+    relevance: high
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Cross-level topic match: future, tense'
+    relevance: medium
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Cross-level topic match: future, tense'
+    relevance: medium
+- module_id: a1-23-what-time-is-it
+  module_title: 23 What Time Is It
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-021
+    title: ULP 1-21 What languages do you speak?
+    url: https://www.ukrainianlessons.com/lesson/21/
+    match_reason: 'Level-aligned topic match: what'
+    relevance: high
+  - episode_id: ULP-024
+    title: ULP 1-24 What a surprise! Second conjugation in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/24/
+    match_reason: 'Level-aligned topic match: what'
+    relevance: high
+  - episode_id: FMU-053
+    title: How to describe what hurts in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu53/
+    match_reason: 'Level-aligned topic match: what'
+    relevance: high
+  - episode_id: ULP-050
+    title: 'ULP 2-50 Review: 46-49 + What I eat in a day in Ukrainian'
+    url: https://www.ukrainianlessons.com/lesson/50/
+    match_reason: 'Cross-level topic match: what'
+    relevance: medium
+  - episode_id: ULP-055
+    title: 'ULP 2-55 Review: 51-54 – What''s on my phone'
+    url: https://www.ukrainianlessons.com/lesson/55/
+    match_reason: 'Cross-level topic match: what'
+    relevance: medium
+- module_id: a1-24-can-must-want-modals
+  module_title: 24 Can Must Want Modals
+  level: A1
+  recommended_episodes:
+  - episode_id: FMU-013
+    title: 10 Ukrainian dishes you must try in Ukraine
+    url: https://www.ukrainianlessons.com/fmu13/
+    match_reason: 'Level-aligned topic match: must'
+    relevance: high
+- module_id: a1-25-my-daily-routine
+  module_title: 25 My Daily Routine
+  level: A1
+  recommended_episodes:
+  - episode_id: FMU-058
+    title: How to describe your daily routine in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu58/
+    match_reason: 'Level-aligned topic match: daily, routine'
+    relevance: high
+- module_id: a1-26-describing-things-adjectives
+  module_title: 26 Describing Things Adjectives
+  level: A1
+  recommended_episodes:
+  - episode_id: FMU-044
+    title: Vocabulary booster! Things you can find in every house in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu44/
+    match_reason: 'Level-aligned topic match: things'
+    relevance: high
+- module_id: a1-27-colors-and-clothing
+  module_title: 27 Colors And Clothing
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-025
+    title: ULP 1-25 Colors in Ukrainian + Pronunciation Trainer (Р – rolled R)
+    url: https://www.ukrainianlessons.com/lesson/25/
+    match_reason: 'Level-aligned topic match: colors'
+    relevance: high
+- module_id: a1-28-description-adverbs
+  module_title: 28 Description Adverbs
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-101
+    title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in
+      Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/101/
+    match_reason: 'Cross-level topic match: adverbs'
+    relevance: medium
+  - episode_id: ULP-102
+    title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
+      + Indefinite adverbs and pronouns
+    url: https://www.ukrainianlessons.com/lesson/102/
+    match_reason: 'Cross-level topic match: adverbs'
+    relevance: medium
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Cross-level topic match: adverbs'
+    relevance: medium
+  - episode_id: ULP-106
+    title: ULP 3-106 Події на вихідних – Weekend events in Ukrainian + Negative adverbs
+      and pronouns in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/106/
+    match_reason: 'Cross-level topic match: adverbs'
+    relevance: medium
+- module_id: a1-29-weather-and-nature
+  module_title: 29 Weather And Nature
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-016
+    title: ULP 1-16 Talking about weather in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/16/
+    match_reason: 'Level-aligned topic match: weather'
+    relevance: high
+  - episode_id: FMU-028
+    title: How to talk about weather in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu28/
+    match_reason: 'Level-aligned topic match: weather'
+    relevance: high
+- module_id: a1-30-prepositions-iii
+  module_title: 30 Prepositions Iii
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-057
+    title: ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions
+    url: https://www.ukrainianlessons.com/lesson/57/
+    match_reason: 'Cross-level topic match: prepositions'
+    relevance: medium
+- module_id: a1-31-body-and-health
+  module_title: 31 Body And Health
+  level: A1
+  recommended_episodes:
+  - episode_id: FMU-036
+    title: How to ask somebody on a date in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu36/
+    match_reason: 'Level-aligned topic match: body'
+    relevance: high
+  - episode_id: FMU-052
+    title: Vocabulary booster! Body parts in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu52/
+    match_reason: 'Level-aligned topic match: body'
+    relevance: high
+  - episode_id: ULP-102
+    title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
+      + Indefinite adverbs and pronouns
+    url: https://www.ukrainianlessons.com/lesson/102/
+    match_reason: 'Cross-level topic match: лікар'
+    relevance: medium
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Cross-level topic match: лікар'
+    relevance: medium
+  - episode_id: ULP-104
+    title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
+      in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/104/
+    match_reason: 'Cross-level topic match: health'
+    relevance: medium
+- module_id: a1-32-my-family
+  module_title: 32 My Family
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-006
+    title: ULP 1-06 Talking about your family in Ukrainian + I have, you have
+    url: https://www.ukrainianlessons.com/lesson/6/
+    match_reason: 'Level-aligned topic match: family'
+    relevance: high
+  - episode_id: ULP-007
+    title: ULP 1-07 More about your family in Ukrainian + Possessive Pronouns
+    url: https://www.ukrainianlessons.com/lesson/7/
+    match_reason: 'Level-aligned topic match: family'
+    relevance: high
+  - episode_id: FMU-033
+    title: Vocabulary booster! Family members in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu33/
+    match_reason: 'Level-aligned topic match: family'
+    relevance: high
+- module_id: a1-33-holidays-and-traditions
+  module_title: 33 Holidays And Traditions
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Cross-level topic match: holidays'
+    relevance: medium
+- module_id: a1-34-checkpoint-final-review
+  module_title: 34 Checkpoint Final Review
+  level: A1
+  recommended_episodes:
+  - episode_id: ULP-010
+    title: ULP 1-10 About me in Ukrainian – Review 1-9
+    url: https://www.ukrainianlessons.com/lesson/10/
+    match_reason: 'Level-aligned topic match: review'
+    relevance: high
+  - episode_id: ULP-020
+    title: ULP 1-20 My favorite city in Ukrainian – Review 11-19
+    url: https://www.ukrainianlessons.com/lesson/20/
+    match_reason: 'Level-aligned topic match: review'
+    relevance: high
+  - episode_id: ULP-030
+    title: ULP 1-30 Review 21-29 – My travels in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/30/
+    match_reason: 'Level-aligned topic match: review'
+    relevance: high
+  - episode_id: ULP-041
+    title: 'ULP 2-41 Review: Season 1'
+    url: https://www.ukrainianlessons.com/lesson/41/
+    match_reason: 'Cross-level topic match: review'
+    relevance: medium
+  - episode_id: ULP-045
+    title: 'ULP 2-45 Review: 41-44 + My home'
+    url: https://www.ukrainianlessons.com/lesson/45/
+    match_reason: 'Cross-level topic match: review'
+    relevance: medium
+- module_id: a2-01-the-dative-i-pronouns
+  module_title: 01 The Dative I Pronouns
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-051
+    title: ULP 2-51 Electronics and technology + Dative case
+    url: https://www.ukrainianlessons.com/lesson/51/
+    match_reason: 'Level-aligned topic match: dative'
+    relevance: high
+  - episode_id: ULP-052
+    title: ULP 2-52 Buying a phone in Ukraine + Dative case
+    url: https://www.ukrainianlessons.com/lesson/52/
+    match_reason: 'Level-aligned topic match: dative'
+    relevance: high
+  - episode_id: ULP-053
+    title: ULP 2-53 Social Media in Ukrainian + Dative case
+    url: https://www.ukrainianlessons.com/lesson/53/
+    match_reason: 'Level-aligned topic match: dative'
+    relevance: high
+  - episode_id: ULP-058
+    title: ULP 2-58 Inviting to a party + Accusative case of pronouns
+    url: https://www.ukrainianlessons.com/lesson/58/
+    match_reason: 'Level-aligned topic match: pronouns'
+    relevance: high
+  - episode_id: ULP-062
+    title: ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns
+    url: https://www.ukrainianlessons.com/lesson/62/
+    match_reason: 'Level-aligned topic match: pronouns'
+    relevance: high
+- module_id: a2-02-the-dative-ii-nouns
+  module_title: 02 The Dative Ii Nouns
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-042
+    title: ULP 2-42My Room + Plural nouns in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/42/
+    match_reason: 'Level-aligned topic match: nouns'
+    relevance: high
+  - episode_id: ULP-051
+    title: ULP 2-51 Electronics and technology + Dative case
+    url: https://www.ukrainianlessons.com/lesson/51/
+    match_reason: 'Level-aligned topic match: dative'
+    relevance: high
+  - episode_id: ULP-052
+    title: ULP 2-52 Buying a phone in Ukraine + Dative case
+    url: https://www.ukrainianlessons.com/lesson/52/
+    match_reason: 'Level-aligned topic match: dative'
+    relevance: high
+  - episode_id: ULP-053
+    title: ULP 2-53 Social Media in Ukrainian + Dative case
+    url: https://www.ukrainianlessons.com/lesson/53/
+    match_reason: 'Level-aligned topic match: dative'
+    relevance: high
+  - episode_id: ULP-058
+    title: ULP 2-58 Inviting to a party + Accusative case of pronouns
+    url: https://www.ukrainianlessons.com/lesson/58/
+    match_reason: 'Level-aligned topic match: nouns'
+    relevance: high
+- module_id: a2-03-dative-verbs
+  module_title: 03 Dative Verbs
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-051
+    title: ULP 2-51 Electronics and technology + Dative case
+    url: https://www.ukrainianlessons.com/lesson/51/
+    match_reason: 'Level-aligned topic match: dative'
+    relevance: high
+  - episode_id: ULP-052
+    title: ULP 2-52 Buying a phone in Ukraine + Dative case
+    url: https://www.ukrainianlessons.com/lesson/52/
+    match_reason: 'Level-aligned topic match: dative'
+    relevance: high
+  - episode_id: ULP-053
+    title: ULP 2-53 Social Media in Ukrainian + Dative case
+    url: https://www.ukrainianlessons.com/lesson/53/
+    match_reason: 'Level-aligned topic match: dative'
+    relevance: high
+  - episode_id: ULP-059
+    title: ULP 2-59 Vacation plans & the verbs of movement in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/59/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-216
+    title: ULP 6-216 Декомунізація, деколонізація, дерусифікація
+    url: https://www.ukrainianlessons.com/season6/ULP-6-216-dekomunizatsiia-dekolonizatsiia-derusyfikatsiia/
+    match_reason: 'Cross-level topic match: кому'
+    relevance: medium
+- module_id: a2-04-the-instrumental-i-accompaniment
+  module_title: 04 The Instrumental I Accompaniment
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-061
+    title: ULP 2-61 Christmas dinner in Ukraine + Instrumental case
+    url: https://www.ukrainianlessons.com/lesson/61/
+    match_reason: 'Level-aligned topic match: instrumental'
+    relevance: high
+  - episode_id: ULP-062
+    title: ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns
+    url: https://www.ukrainianlessons.com/lesson/62/
+    match_reason: 'Level-aligned topic match: instrumental'
+    relevance: high
+- module_id: a2-05-the-instrumental-ii-means-and-tools
+  module_title: 05 The Instrumental Ii Means And Tools
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-061
+    title: ULP 2-61 Christmas dinner in Ukraine + Instrumental case
+    url: https://www.ukrainianlessons.com/lesson/61/
+    match_reason: 'Level-aligned topic match: instrumental'
+    relevance: high
+  - episode_id: ULP-062
+    title: ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns
+    url: https://www.ukrainianlessons.com/lesson/62/
+    match_reason: 'Level-aligned topic match: instrumental'
+    relevance: high
+- module_id: a2-07-spatial-prepositions
+  module_title: 07 Spatial Prepositions
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-057
+    title: ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions
+    url: https://www.ukrainianlessons.com/lesson/57/
+    match_reason: 'Level-aligned topic match: prepositions'
+    relevance: high
+- module_id: a2-08-logical-prepositions
+  module_title: 08 Logical Prepositions
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-057
+    title: ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions
+    url: https://www.ukrainianlessons.com/lesson/57/
+    match_reason: 'Level-aligned topic match: prepositions'
+    relevance: high
+- module_id: a2-10-at-the-post-office-and-bank
+  module_title: 10 At The Post Office And Bank
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-084
+    title: ULP 3-84 В банку – At the bank in Ukraine + Prefixes об- and від-
+    url: https://www.ukrainianlessons.com/lesson/84/
+    match_reason: 'Challenge listening (B1): bank'
+    relevance: medium
+  - episode_id: ULP-089
+    title: ULP 3-89 Навчання в аспірантурі – Postgraduate education in Ukraine + Prefixes
+      на-, за-
+    url: https://www.ukrainianlessons.com/lesson/89/
+    match_reason: 'Challenge listening (B1): post'
+    relevance: medium
+  - episode_id: FMU-006
+    title: How to open a bank account in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu6/
+    match_reason: 'Listening review (A1): bank'
+    relevance: medium
+- module_id: a2-12-aspect-introduction
+  module_title: 12 Aspect Introduction
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-034
+    title: ULP 1-34 Going to the movies in Ukraine – Perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/34/
+    match_reason: 'Listening review (A1): perfective'
+    relevance: medium
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Challenge listening (B1): aspect, imperfective, perfective'
+    relevance: medium
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Challenge listening (B1): aspect, perfective'
+    relevance: medium
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Challenge listening (B1): imperfective, perfective'
+    relevance: medium
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Challenge listening (B1): perfective'
+    relevance: medium
+- module_id: a2-13-the-completed-past
+  module_title: 13 The Completed Past
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-026
+    title: ULP 1-26 Talking about traveling – Past tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/26/
+    match_reason: 'Listening review (A1): past'
+    relevance: medium
+  - episode_id: ULP-027
+    title: ULP 1-27 Traveling in Ukraine in winter – More Past tense
+    url: https://www.ukrainianlessons.com/lesson/27/
+    match_reason: 'Listening review (A1): past'
+    relevance: medium
+  - episode_id: ULP-118
+    title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the
+      past tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/118/
+    match_reason: 'Challenge listening (B1): past'
+    relevance: medium
+- module_id: a2-14-future-plans-and-promises
+  module_title: 14 Future Plans And Promises
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-059
+    title: ULP 2-59 Vacation plans & the verbs of movement in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/59/
+    match_reason: 'Level-aligned topic match: plans'
+    relevance: high
+  - episode_id: ULP-028
+    title: ULP 1-28 Making plans for the weekend – Future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/28/
+    match_reason: 'Listening review (A1): future, plans'
+    relevance: medium
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Challenge listening (B1): future'
+    relevance: medium
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Challenge listening (B1): future, plans'
+    relevance: medium
+  - episode_id: ULP-098
+    title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians
+      –  One-word synthetic future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/98/
+    match_reason: 'Challenge listening (B1): future'
+    relevance: medium
+- module_id: a2-15-aspect-morphology
+  module_title: 15 Aspect Morphology
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-034
+    title: ULP 1-34 Going to the movies in Ukraine – Perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/34/
+    match_reason: 'Listening review (A1): perfective'
+    relevance: medium
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Challenge listening (B1): aspect, imperfective, perfective'
+    relevance: medium
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Challenge listening (B1): aspect, perfective'
+    relevance: medium
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Challenge listening (B1): imperfective, perfective'
+    relevance: medium
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Challenge listening (B1): perfective'
+    relevance: medium
+- module_id: a2-16-aspect-mastery-pairs
+  module_title: 16 Aspect Mastery Pairs
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-034
+    title: ULP 1-34 Going to the movies in Ukraine – Perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/34/
+    match_reason: 'Listening review (A1): perfective'
+    relevance: medium
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Challenge listening (B1): perfective, aspect, imperfective'
+    relevance: medium
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Challenge listening (B1): perfective, aspect'
+    relevance: medium
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Challenge listening (B1): perfective, imperfective'
+    relevance: medium
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Challenge listening (B1): perfective'
+    relevance: medium
+- module_id: a2-17-possessive-sviy
+  module_title: 17 Possessive Sviy
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-007
+    title: ULP 1-07 More about your family in Ukrainian + Possessive Pronouns
+    url: https://www.ukrainianlessons.com/lesson/7/
+    match_reason: 'Listening review (A1): possessive'
+    relevance: medium
+- module_id: a2-21-numerals-and-nouns
+  module_title: 21 Numerals And Nouns
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-042
+    title: ULP 2-42My Room + Plural nouns in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/42/
+    match_reason: 'Level-aligned topic match: nouns'
+    relevance: high
+  - episode_id: ULP-058
+    title: ULP 2-58 Inviting to a party + Accusative case of pronouns
+    url: https://www.ukrainianlessons.com/lesson/58/
+    match_reason: 'Level-aligned topic match: nouns'
+    relevance: high
+  - episode_id: ULP-062
+    title: ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns
+    url: https://www.ukrainianlessons.com/lesson/62/
+    match_reason: 'Level-aligned topic match: nouns'
+    relevance: high
+  - episode_id: ULP-002
+    title: ULP 1-02 Formal Greetings and Saying Goodbye in Ukrainian + Pronouns
+    url: https://www.ukrainianlessons.com/lesson/2/
+    match_reason: 'Listening review (A1): nouns'
+    relevance: medium
+  - episode_id: ULP-007
+    title: ULP 1-07 More about your family in Ukrainian + Possessive Pronouns
+    url: https://www.ukrainianlessons.com/lesson/7/
+    match_reason: 'Listening review (A1): nouns'
+    relevance: medium
+- module_id: a2-23-smart-shopping
+  module_title: 23 Smart Shopping
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-031
+    title: ULP 1-31 Shopping in Ukrainian – At the shoe shop
+    url: https://www.ukrainianlessons.com/lesson/31/
+    match_reason: 'Listening review (A1): shopping'
+    relevance: medium
+  - episode_id: ULP-032
+    title: ULP 1-32 Shopping for clothes – Accusative case in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/32/
+    match_reason: 'Listening review (A1): shopping'
+    relevance: medium
+  - episode_id: FMU-018
+    title: Vocabulary booster! Shopping Vocabulary in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu18/
+    match_reason: 'Listening review (A1): shopping'
+    relevance: medium
+- module_id: a2-24-checkpoint-aspect-comparison
+  module_title: 24 Checkpoint Aspect Comparison
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-034
+    title: ULP 1-34 Going to the movies in Ukraine – Perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/34/
+    match_reason: 'Listening review (A1): perfective'
+    relevance: medium
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Challenge listening (B1): aspect, imperfective, perfective'
+    relevance: medium
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Challenge listening (B1): aspect, perfective'
+    relevance: medium
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Challenge listening (B1): imperfective, perfective'
+    relevance: medium
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Challenge listening (B1): perfective'
+    relevance: medium
+- module_id: a2-25-telling-stories
+  module_title: 25 Telling Stories
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-067
+    title: ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case
+    url: https://www.ukrainianlessons.com/lesson/67/
+    match_reason: 'Level-aligned topic match: telling'
+    relevance: high
+- module_id: a2-27-she-said-that
+  module_title: 27 She Said That
+  level: A2
+  recommended_episodes:
+  - episode_id: FMU-001
+    title: How to explain that you don't speak Ukrainian very well (yet)
+    url: https://www.ukrainianlessons.com/fmu1/
+    match_reason: 'Listening review (A1): that'
+    relevance: medium
+- module_id: a2-28-i-think-that
+  module_title: 28 I Think That
+  level: A2
+  recommended_episodes:
+  - episode_id: FMU-001
+    title: How to explain that you don't speak Ukrainian very well (yet)
+    url: https://www.ukrainianlessons.com/fmu1/
+    match_reason: 'Listening review (A1): that'
+    relevance: medium
+- module_id: a2-29-i-feel-like
+  module_title: 29 I Feel Like
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-014
+    title: ULP 1-14 Likes and dislikes – common verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/14/
+    match_reason: 'Listening review (A1): like'
+    relevance: medium
+  - episode_id: ULP-101
+    title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in
+      Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/101/
+    match_reason: 'Challenge listening (B1): feel'
+    relevance: medium
+- module_id: a2-30-in-order-to
+  module_title: 30 In Order To
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-011
+    title: ULP 1-11 Ordering drinks in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/11/
+    match_reason: 'Listening review (A1): order'
+    relevance: medium
+  - episode_id: ULP-012
+    title: ULP 1-12 Ordering food in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/12/
+    match_reason: 'Listening review (A1): order'
+    relevance: medium
+  - episode_id: FMU-011
+    title: How to order a coffee in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu11/
+    match_reason: 'Listening review (A1): order'
+    relevance: medium
+  - episode_id: FMU-016
+    title: How to ORDER at the restaurant in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu16/
+    match_reason: 'Listening review (A1): order'
+    relevance: medium
+- module_id: a2-32-time-clauses
+  module_title: 32 Time Clauses
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-067
+    title: ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case
+    url: https://www.ukrainianlessons.com/lesson/67/
+    match_reason: 'Level-aligned topic match: time'
+    relevance: high
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Challenge listening (B1): clauses'
+    relevance: medium
+  - episode_id: ULP-117
+    title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
+      with Attributive Clauses
+    url: https://www.ukrainianlessons.com/lesson/117/
+    match_reason: 'Challenge listening (B1): clauses'
+    relevance: medium
+- module_id: a2-33-at-the-doctor
+  module_title: 33 At The Doctor
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-102
+    title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
+      + Indefinite adverbs and pronouns
+    url: https://www.ukrainianlessons.com/lesson/102/
+    match_reason: 'Challenge listening (B1): doctor'
+    relevance: medium
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Challenge listening (B1): doctor'
+    relevance: medium
+  - episode_id: FMU-054
+    title: How to book an appointment with a doctor in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu54/
+    match_reason: 'Listening review (A1): doctor'
+    relevance: medium
+- module_id: a2-35-basic-motion-prefixes
+  module_title: 35 Basic Motion Prefixes
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-081
+    title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes
+      ви- and пере-
+    url: https://www.ukrainianlessons.com/lesson/81/
+    match_reason: 'Challenge listening (B1): prefixes'
+    relevance: medium
+  - episode_id: ULP-082
+    title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian
+      + Prefixes при- and по-
+    url: https://www.ukrainianlessons.com/lesson/82/
+    match_reason: 'Challenge listening (B1): prefixes'
+    relevance: medium
+  - episode_id: ULP-083
+    title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes
+      до- and під-
+    url: https://www.ukrainianlessons.com/lesson/83/
+    match_reason: 'Challenge listening (B1): prefixes'
+    relevance: medium
+  - episode_id: ULP-084
+    title: ULP 3-84 В банку – At the bank in Ukraine + Prefixes об- and від-
+    url: https://www.ukrainianlessons.com/lesson/84/
+    match_reason: 'Challenge listening (B1): prefixes'
+    relevance: medium
+  - episode_id: ULP-086
+    title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the
+      school in Ukraine + Prefixes в-, у-
+    url: https://www.ukrainianlessons.com/lesson/86/
+    match_reason: 'Challenge listening (B1): prefixes'
+    relevance: medium
+- module_id: a2-36-advanced-motion-prefixes
+  module_title: 36 Advanced Motion Prefixes
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-081
+    title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes
+      ви- and пере-
+    url: https://www.ukrainianlessons.com/lesson/81/
+    match_reason: 'Challenge listening (B1): prefixes'
+    relevance: medium
+  - episode_id: ULP-082
+    title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian
+      + Prefixes при- and по-
+    url: https://www.ukrainianlessons.com/lesson/82/
+    match_reason: 'Challenge listening (B1): prefixes'
+    relevance: medium
+  - episode_id: ULP-083
+    title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes
+      до- and під-
+    url: https://www.ukrainianlessons.com/lesson/83/
+    match_reason: 'Challenge listening (B1): prefixes'
+    relevance: medium
+  - episode_id: ULP-084
+    title: ULP 3-84 В банку – At the bank in Ukraine + Prefixes об- and від-
+    url: https://www.ukrainianlessons.com/lesson/84/
+    match_reason: 'Challenge listening (B1): prefixes'
+    relevance: medium
+  - episode_id: ULP-086
+    title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the
+      school in Ukraine + Prefixes в-, у-
+    url: https://www.ukrainianlessons.com/lesson/86/
+    match_reason: 'Challenge listening (B1): prefixes'
+    relevance: medium
+- module_id: a2-37-action-verb-prefixes
+  module_title: 37 Action Verb Prefixes
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-059
+    title: ULP 2-59 Vacation plans & the verbs of movement in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/59/
+    match_reason: 'Level-aligned topic match: verb'
+    relevance: high
+  - episode_id: ULP-014
+    title: ULP 1-14 Likes and dislikes – common verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/14/
+    match_reason: 'Listening review (A1): verb'
+    relevance: medium
+  - episode_id: ULP-022
+    title: ULP 1-22 Are you going to the party? – First verb conjugation in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/22/
+    match_reason: 'Listening review (A1): verb'
+    relevance: medium
+  - episode_id: ULP-034
+    title: ULP 1-34 Going to the movies in Ukraine – Perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/34/
+    match_reason: 'Listening review (A1): verb'
+    relevance: medium
+  - episode_id: ULP-081
+    title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes
+      ви- and пере-
+    url: https://www.ukrainianlessons.com/lesson/81/
+    match_reason: 'Challenge listening (B1): prefixes'
+    relevance: medium
+- module_id: a2-43-checkpoint-word-formation
+  module_title: 43 Checkpoint Word Formation
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-035
+    title: ULP 1-35 Question words in Ukrainian + Pronunciation trainer (intonation)
+    url: https://www.ukrainianlessons.com/lesson/35/
+    match_reason: 'Listening review (A1): word'
+    relevance: medium
+  - episode_id: ULP-093
+    title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive
+      words in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/93/
+    match_reason: 'Challenge listening (B1): word'
+    relevance: medium
+  - episode_id: ULP-098
+    title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians
+      –  One-word synthetic future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/98/
+    match_reason: 'Challenge listening (B1): word'
+    relevance: medium
+  - episode_id: FMU-010
+    title: 7 helpful Ukrainian words to link sentences
+    url: https://www.ukrainianlessons.com/fmu10/
+    match_reason: 'Listening review (A1): word'
+    relevance: medium
+- module_id: a2-44-food-and-cooking
+  module_title: 44 Food And Cooking
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-047
+    title: ULP 2-47 Food festivals + Genitive case
+    url: https://www.ukrainianlessons.com/lesson/47/
+    match_reason: 'Level-aligned topic match: food'
+    relevance: high
+  - episode_id: ULP-181
+    title: ULP 5-181 Українська кухня в радянські часи
+    url: https://www.ukrainianlessons.com/lesson-181/
+    match_reason: 'Cross-level topic match: кухня'
+    relevance: medium
+  - episode_id: ULP-012
+    title: ULP 1-12 Ordering food in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/12/
+    match_reason: 'Listening review (A1): food'
+    relevance: medium
+  - episode_id: ULP-013
+    title: ULP 1-13 More about food in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/13/
+    match_reason: 'Listening review (A1): food'
+    relevance: medium
+  - episode_id: ULP-093
+    title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive
+      words in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/93/
+    match_reason: 'Challenge listening (B1): food'
+    relevance: medium
+- module_id: a2-45-home-and-furniture
+  module_title: 45 Home And Furniture
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-045
+    title: 'ULP 2-45 Review: 41-44 + My home'
+    url: https://www.ukrainianlessons.com/lesson/45/
+    match_reason: 'Level-aligned topic match: home'
+    relevance: high
+- module_id: a2-46-nature-and-weather
+  module_title: 46 Nature And Weather
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-016
+    title: ULP 1-16 Talking about weather in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/16/
+    match_reason: 'Listening review (A1): weather'
+    relevance: medium
+  - episode_id: FMU-028
+    title: How to talk about weather in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu28/
+    match_reason: 'Listening review (A1): weather'
+    relevance: medium
+- module_id: a2-47-emotions-personality
+  module_title: 47 Emotions Personality
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Challenge listening (B1): motion'
+    relevance: medium
+- module_id: a2-48-work-professions
+  module_title: 48 Work Professions
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-008
+    title: ULP 1-08 Talking about jobs and professions in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/8/
+    match_reason: 'Listening review (A1): professions'
+    relevance: medium
+  - episode_id: FMU-034
+    title: Professions in Ukrainian (male and female forms)
+    url: https://www.ukrainianlessons.com/fmu34/
+    match_reason: 'Listening review (A1): professions'
+    relevance: medium
+  - episode_id: FMU-035
+    title: Vocabulary booster! Jobs and professions in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu35/
+    match_reason: 'Listening review (A1): professions'
+    relevance: medium
+- module_id: a2-49-technology-media
+  module_title: 49 Technology Media
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-051
+    title: ULP 2-51 Electronics and technology + Dative case
+    url: https://www.ukrainianlessons.com/lesson/51/
+    match_reason: 'Level-aligned topic match: technology'
+    relevance: high
+  - episode_id: ULP-053
+    title: ULP 2-53 Social Media in Ukrainian + Dative case
+    url: https://www.ukrainianlessons.com/lesson/53/
+    match_reason: 'Level-aligned topic match: media'
+    relevance: high
+  - episode_id: ULP-166
+    title: ULP 5-166 Український інтернет-сленг
+    url: https://www.ukrainianlessons.com/lesson-166/
+    match_reason: 'Cross-level topic match: інтернет'
+    relevance: medium
+- module_id: a2-50-hobbies-leisure
+  module_title: 50 Hobbies Leisure
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-115
+    title: ULP 3-115 Мої нові захоплення (Голосове повідомлення №7) – My new hobbies
+      (Voice message №7)
+    url: https://www.ukrainianlessons.com/lesson/115/
+    match_reason: 'Challenge listening (B1): hobbies'
+    relevance: medium
+  - episode_id: FMU-023
+    title: Vocabulary booster! Hobbies in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu23/
+    match_reason: 'Listening review (A1): hobbies'
+    relevance: medium
+- module_id: a2-51-education-learning
+  module_title: 51 Education Learning
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-171
+    title: ULP 5-171 Інтерв'ю з Міленою про навчання в музичному коледжі
+    url: https://www.ukrainianlessons.com/lesson-171/
+    match_reason: 'Cross-level topic match: навчання'
+    relevance: medium
+  - episode_id: ULP-088
+    title: ULP 3-88 Вища освіта – Higher education in Ukraine + Prefixes з-, с-
+    url: https://www.ukrainianlessons.com/lesson/88/
+    match_reason: 'Challenge listening (B1): education'
+    relevance: medium
+  - episode_id: ULP-089
+    title: ULP 3-89 Навчання в аспірантурі – Postgraduate education in Ukraine + Prefixes
+      на-, за-
+    url: https://www.ukrainianlessons.com/lesson/89/
+    match_reason: 'Challenge listening (B1): навчання, education'
+    relevance: medium
+  - episode_id: ULP-090
+    title: ULP 3-90 Освіта в Україні – Education in Ukraine (Голосове повідомлення
+      №2 – Voice message №2)
+    url: https://www.ukrainianlessons.com/lesson/90/
+    match_reason: 'Challenge listening (B1): education'
+    relevance: medium
+  - episode_id: FMU-002
+    title: Useful phrases for learning Ukrainian
+    url: https://www.ukrainianlessons.com/fmu2/
+    match_reason: 'Listening review (A1): learning'
+    relevance: medium
+- module_id: a2-52-shopping-services
+  module_title: 52 Shopping Services
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-031
+    title: ULP 1-31 Shopping in Ukrainian – At the shoe shop
+    url: https://www.ukrainianlessons.com/lesson/31/
+    match_reason: 'Listening review (A1): shopping'
+    relevance: medium
+  - episode_id: ULP-032
+    title: ULP 1-32 Shopping for clothes – Accusative case in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/32/
+    match_reason: 'Listening review (A1): shopping'
+    relevance: medium
+  - episode_id: FMU-018
+    title: Vocabulary booster! Shopping Vocabulary in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu18/
+    match_reason: 'Listening review (A1): shopping'
+    relevance: medium
+- module_id: a2-53-sports-fitness
+  module_title: 53 Sports Fitness
+  level: A2
+  recommended_episodes:
+  - episode_id: FMU-025
+    title: Vocabulary booster! Sports in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu25/
+    match_reason: 'Listening review (A1): sports'
+    relevance: medium
+- module_id: a2-54-health-body
+  module_title: 54 Health Body
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-102
+    title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
+      + Indefinite adverbs and pronouns
+    url: https://www.ukrainianlessons.com/lesson/102/
+    match_reason: 'Challenge listening (B1): лікар'
+    relevance: medium
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Challenge listening (B1): лікар'
+    relevance: medium
+  - episode_id: ULP-104
+    title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
+      in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/104/
+    match_reason: 'Challenge listening (B1): health'
+    relevance: medium
+  - episode_id: FMU-036
+    title: How to ask somebody on a date in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu36/
+    match_reason: 'Listening review (A1): body'
+    relevance: medium
+  - episode_id: FMU-052
+    title: Vocabulary booster! Body parts in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu52/
+    match_reason: 'Listening review (A1): body'
+    relevance: medium
+- module_id: a2-55-checkpoint-vocabulary
+  module_title: 55 Checkpoint Vocabulary
+  level: A2
+  recommended_episodes:
+  - episode_id: FMU-004
+    title: Vocabulary booster! Transport in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu4/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-012
+    title: Vocabulary booster! Beverages / Drinks in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu12/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-018
+    title: Vocabulary booster! Shopping Vocabulary in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu18/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-023
+    title: Vocabulary booster! Hobbies in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu23/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-025
+    title: Vocabulary booster! Sports in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu25/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+- module_id: a2-56-grammar-review
+  module_title: 56 Grammar Review
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-041
+    title: 'ULP 2-41 Review: Season 1'
+    url: https://www.ukrainianlessons.com/lesson/41/
+    match_reason: 'Level-aligned topic match: review'
+    relevance: high
+  - episode_id: ULP-045
+    title: 'ULP 2-45 Review: 41-44 + My home'
+    url: https://www.ukrainianlessons.com/lesson/45/
+    match_reason: 'Level-aligned topic match: review'
+    relevance: high
+  - episode_id: ULP-050
+    title: 'ULP 2-50 Review: 46-49 + What I eat in a day in Ukrainian'
+    url: https://www.ukrainianlessons.com/lesson/50/
+    match_reason: 'Level-aligned topic match: review'
+    relevance: high
+  - episode_id: ULP-055
+    title: 'ULP 2-55 Review: 51-54 – What''s on my phone'
+    url: https://www.ukrainianlessons.com/lesson/55/
+    match_reason: 'Level-aligned topic match: review'
+    relevance: high
+  - episode_id: ULP-060
+    title: 'ULP 2-60 Review: 56-60 – My week in Ukrainian'
+    url: https://www.ukrainianlessons.com/lesson/60/
+    match_reason: 'Level-aligned topic match: review'
+    relevance: high
+- module_id: a2-57-final-review
+  module_title: 57 Final Review
+  level: A2
+  recommended_episodes:
+  - episode_id: ULP-041
+    title: 'ULP 2-41 Review: Season 1'
+    url: https://www.ukrainianlessons.com/lesson/41/
+    match_reason: 'Level-aligned topic match: review'
+    relevance: high
+  - episode_id: ULP-045
+    title: 'ULP 2-45 Review: 41-44 + My home'
+    url: https://www.ukrainianlessons.com/lesson/45/
+    match_reason: 'Level-aligned topic match: review'
+    relevance: high
+  - episode_id: ULP-050
+    title: 'ULP 2-50 Review: 46-49 + What I eat in a day in Ukrainian'
+    url: https://www.ukrainianlessons.com/lesson/50/
+    match_reason: 'Level-aligned topic match: review'
+    relevance: high
+  - episode_id: ULP-055
+    title: 'ULP 2-55 Review: 51-54 – What''s on my phone'
+    url: https://www.ukrainianlessons.com/lesson/55/
+    match_reason: 'Level-aligned topic match: review'
+    relevance: high
+  - episode_id: ULP-060
+    title: 'ULP 2-60 Review: 56-60 – My week in Ukrainian'
+    url: https://www.ukrainianlessons.com/lesson/60/
+    match_reason: 'Level-aligned topic match: review'
+    relevance: high
+- module_id: b1-01-how-to-talk-about-grammar
+  module_title: 01 How To Talk About Grammar
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-113
+    title: ULP 3-113 Майстер-клас з вишивання – Ukrainian traditional embroidery master
+      class +  More about the Imperative mood in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/113/
+    match_reason: 'Level-aligned topic match: about'
+    relevance: high
+  - episode_id: ULP-004
+    title: ULP 1-04 Talking About Where You Come From and Where You Live in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/4/
+    match_reason: 'Listening review (A1): about, talk'
+    relevance: medium
+  - episode_id: ULP-006
+    title: ULP 1-06 Talking about your family in Ukrainian + I have, you have
+    url: https://www.ukrainianlessons.com/lesson/6/
+    match_reason: 'Listening review (A1): about, talk'
+    relevance: medium
+  - episode_id: ULP-007
+    title: ULP 1-07 More about your family in Ukrainian + Possessive Pronouns
+    url: https://www.ukrainianlessons.com/lesson/7/
+    match_reason: 'Listening review (A1): about'
+    relevance: medium
+  - episode_id: ULP-008
+    title: ULP 1-08 Talking about jobs and professions in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/8/
+    match_reason: 'Listening review (A1): about, talk'
+    relevance: medium
+- module_id: b1-02-language-about-verbs
+  module_title: 02 Language About Verbs
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-101
+    title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in
+      Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/101/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-102
+    title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
+      + Indefinite adverbs and pronouns
+    url: https://www.ukrainianlessons.com/lesson/102/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+- module_id: b1-03-reading-grammar-rules
+  module_title: 03 Reading Grammar Rules
+  level: B1
+  recommended_episodes:
+  - episode_id: FMU-007
+    title: 'Grammar point: numeral / noun agreement in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu7/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+  - episode_id: FMU-015
+    title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu15/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+  - episode_id: FMU-032
+    title: 'Grammar point: Conditional sentences in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu32/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+  - episode_id: FMU-046
+    title: 'Grammar point: Plural of nouns in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu46/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+  - episode_id: FMU-057
+    title: 'Grammar Point: Verb conjugations in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu57/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+- module_id: b1-04-sentence-structure
+  module_title: 04 Sentence Structure
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Level-aligned topic match: sentence'
+    relevance: high
+  - episode_id: ULP-117
+    title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
+      with Attributive Clauses
+    url: https://www.ukrainianlessons.com/lesson/117/
+    match_reason: 'Level-aligned topic match: sentence'
+    relevance: high
+  - episode_id: FMU-010
+    title: 7 helpful Ukrainian words to link sentences
+    url: https://www.ukrainianlessons.com/fmu10/
+    match_reason: 'Listening review (A1): sentence'
+    relevance: medium
+  - episode_id: FMU-032
+    title: 'Grammar point: Conditional sentences in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu32/
+    match_reason: 'Listening review (A1): sentence'
+    relevance: medium
+- module_id: b1-06-aspect-complete-system
+  module_title: 06 Aspect Complete System
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Level-aligned topic match: aspect, perfective'
+    relevance: high
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Level-aligned topic match: perfective'
+    relevance: high
+  - episode_id: ULP-034
+    title: ULP 1-34 Going to the movies in Ukraine – Perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/34/
+    match_reason: 'Listening review (A1): perfective'
+    relevance: medium
+- module_id: b1-07-aspect-past-single-repeated
+  module_title: 07 Aspect Past Single Repeated
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Level-aligned topic match: aspect, perfective'
+    relevance: high
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Level-aligned topic match: perfective'
+    relevance: high
+  - episode_id: ULP-118
+    title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the
+      past tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/118/
+    match_reason: 'Level-aligned topic match: past'
+    relevance: high
+- module_id: b1-08-aspect-past-result-process
+  module_title: 08 Aspect Past Result Process
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Level-aligned topic match: aspect, perfective'
+    relevance: high
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Level-aligned topic match: perfective'
+    relevance: high
+  - episode_id: ULP-118
+    title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the
+      past tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/118/
+    match_reason: 'Level-aligned topic match: past'
+    relevance: high
+- module_id: b1-09-aspect-future
+  module_title: 09 Aspect Future
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Level-aligned topic match: aspect, perfective'
+    relevance: high
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Level-aligned topic match: future, perfective'
+    relevance: high
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Level-aligned topic match: future'
+    relevance: high
+- module_id: b1-10-aspect-negation
+  module_title: 10 Aspect Negation
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Level-aligned topic match: aspect, perfective'
+    relevance: high
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Level-aligned topic match: perfective'
+    relevance: high
+  - episode_id: ULP-034
+    title: ULP 1-34 Going to the movies in Ukraine – Perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/34/
+    match_reason: 'Listening review (A1): perfective'
+    relevance: medium
+- module_id: b1-11-aspect-in-imperatives
+  module_title: 11 Aspect In Imperatives
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Level-aligned topic match: aspect, perfective'
+    relevance: high
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Level-aligned topic match: perfective'
+    relevance: high
+  - episode_id: ULP-034
+    title: ULP 1-34 Going to the movies in Ukraine – Perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/34/
+    match_reason: 'Listening review (A1): perfective'
+    relevance: medium
+- module_id: b1-12-aspect-pairs-essential-40
+  module_title: 12 Aspect Pairs Essential 40
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Level-aligned topic match: perfective, aspect, imperfective'
+    relevance: high
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Level-aligned topic match: perfective, aspect'
+    relevance: high
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: perfective, imperfective'
+    relevance: high
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Level-aligned topic match: perfective'
+    relevance: high
+  - episode_id: ULP-034
+    title: ULP 1-34 Going to the movies in Ukraine – Perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/34/
+    match_reason: 'Listening review (A1): perfective'
+    relevance: medium
+- module_id: b1-13-work-week-aspect-in-action
+  module_title: 13 Work Week Aspect In Action
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Level-aligned topic match: aspect, perfective'
+    relevance: high
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Level-aligned topic match: perfective'
+    relevance: high
+  - episode_id: ULP-106
+    title: ULP 3-106 Події на вихідних – Weekend events in Ukrainian + Negative adverbs
+      and pronouns in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/106/
+    match_reason: 'Level-aligned topic match: week'
+    relevance: high
+- module_id: b1-14-aspect-integration-practice
+  module_title: 14 Aspect Integration Practice
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Level-aligned topic match: aspect, perfective'
+    relevance: high
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Level-aligned topic match: perfective'
+    relevance: high
+  - episode_id: ULP-034
+    title: ULP 1-34 Going to the movies in Ukraine – Perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/34/
+    match_reason: 'Listening review (A1): perfective'
+    relevance: medium
+- module_id: b1-15-checkpoint-aspect-mastery
+  module_title: 15 Checkpoint Aspect Mastery
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Level-aligned topic match: aspect, imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Level-aligned topic match: aspect, perfective'
+    relevance: high
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: imperfective, perfective'
+    relevance: high
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Level-aligned topic match: perfective'
+    relevance: high
+  - episode_id: ULP-034
+    title: ULP 1-34 Going to the movies in Ukraine – Perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/34/
+    match_reason: 'Listening review (A1): perfective'
+    relevance: medium
+- module_id: b1-16-motion-verbs-full-system
+  module_title: 16 Motion Verbs Full System
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Level-aligned topic match: motion, verbs'
+    relevance: high
+  - episode_id: ULP-101
+    title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in
+      Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/101/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-102
+    title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
+      + Indefinite adverbs and pronouns
+    url: https://www.ukrainianlessons.com/lesson/102/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+- module_id: b1-17-motion-coming-going
+  module_title: 17 Motion Coming Going
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Level-aligned topic match: motion'
+    relevance: high
+  - episode_id: ULP-022
+    title: ULP 1-22 Are you going to the party? – First verb conjugation in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/22/
+    match_reason: 'Listening review (A1): going'
+    relevance: medium
+  - episode_id: ULP-034
+    title: ULP 1-34 Going to the movies in Ukraine – Perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/34/
+    match_reason: 'Listening review (A1): going'
+    relevance: medium
+- module_id: b1-18-motion-passing-crossing
+  module_title: 18 Motion Passing Crossing
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Level-aligned topic match: motion'
+    relevance: high
+- module_id: b1-19-motion-starting-returning
+  module_title: 19 Motion Starting Returning
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Level-aligned topic match: motion'
+    relevance: high
+- module_id: b1-20-motion-approaching-departing
+  module_title: 20 Motion Approaching Departing
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Level-aligned topic match: motion'
+    relevance: high
+- module_id: b1-21-motion-figurative-uses
+  module_title: 21 Motion Figurative Uses
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Level-aligned topic match: motion'
+    relevance: high
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Level-aligned topic match: uses'
+    relevance: high
+  - episode_id: ULP-117
+    title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
+      with Attributive Clauses
+    url: https://www.ukrainianlessons.com/lesson/117/
+    match_reason: 'Level-aligned topic match: uses'
+    relevance: high
+- module_id: b1-22-motion-full-prefix-integration
+  module_title: 22 Motion Full Prefix Integration
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-081
+    title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes
+      ви- and пере-
+    url: https://www.ukrainianlessons.com/lesson/81/
+    match_reason: 'Level-aligned topic match: prefix'
+    relevance: high
+  - episode_id: ULP-082
+    title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian
+      + Prefixes при- and по-
+    url: https://www.ukrainianlessons.com/lesson/82/
+    match_reason: 'Level-aligned topic match: prefix'
+    relevance: high
+  - episode_id: ULP-083
+    title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes
+      до- and під-
+    url: https://www.ukrainianlessons.com/lesson/83/
+    match_reason: 'Level-aligned topic match: prefix'
+    relevance: high
+  - episode_id: ULP-084
+    title: ULP 3-84 В банку – At the bank in Ukraine + Prefixes об- and від-
+    url: https://www.ukrainianlessons.com/lesson/84/
+    match_reason: 'Level-aligned topic match: prefix'
+    relevance: high
+  - episode_id: ULP-086
+    title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the
+      school in Ukraine + Prefixes в-, у-
+    url: https://www.ukrainianlessons.com/lesson/86/
+    match_reason: 'Level-aligned topic match: prefix'
+    relevance: high
+- module_id: b1-23-motion-patterns-other-verbs
+  module_title: 23 Motion Patterns Other Verbs
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Level-aligned topic match: verbs, motion'
+    relevance: high
+  - episode_id: ULP-101
+    title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in
+      Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/101/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-102
+    title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
+      + Indefinite adverbs and pronouns
+    url: https://www.ukrainianlessons.com/lesson/102/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+- module_id: b1-24-motion-practice-integration
+  module_title: 24 Motion Practice Integration
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Level-aligned topic match: motion'
+    relevance: high
+- module_id: b1-25-checkpoint-motion-verbs
+  module_title: 25 Checkpoint Motion Verbs
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Level-aligned topic match: verbs, motion'
+    relevance: high
+  - episode_id: ULP-101
+    title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in
+      Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/101/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-102
+    title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
+      + Indefinite adverbs and pronouns
+    url: https://www.ukrainianlessons.com/lesson/102/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+- module_id: b1-26-relative-clauses-yakyi
+  module_title: 26 Relative Clauses Yakyi
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Level-aligned topic match: clauses'
+    relevance: high
+  - episode_id: ULP-117
+    title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
+      with Attributive Clauses
+    url: https://www.ukrainianlessons.com/lesson/117/
+    match_reason: 'Level-aligned topic match: clauses'
+    relevance: high
+- module_id: b1-27-relative-clauses-de-kudy-zvidky
+  module_title: 27 Relative Clauses De Kudy Zvidky
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Level-aligned topic match: clauses'
+    relevance: high
+  - episode_id: ULP-117
+    title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
+      with Attributive Clauses
+    url: https://www.ukrainianlessons.com/lesson/117/
+    match_reason: 'Level-aligned topic match: clauses'
+    relevance: high
+- module_id: b1-28-relative-clauses-koly-shcho
+  module_title: 28 Relative Clauses Koly Shcho
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Level-aligned topic match: clauses'
+    relevance: high
+  - episode_id: ULP-117
+    title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
+      with Attributive Clauses
+    url: https://www.ukrainianlessons.com/lesson/117/
+    match_reason: 'Level-aligned topic match: clauses'
+    relevance: high
+- module_id: b1-30-purpose-shchob-past-form
+  module_title: 30 Purpose Shchob Past Form
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Level-aligned topic match: form'
+    relevance: high
+  - episode_id: ULP-101
+    title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in
+      Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/101/
+    match_reason: 'Level-aligned topic match: form'
+    relevance: high
+  - episode_id: ULP-118
+    title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the
+      past tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/118/
+    match_reason: 'Level-aligned topic match: past'
+    relevance: high
+  - episode_id: ULP-043
+    title: ULP 2-43 Looking for an apartment + Special plural forms
+    url: https://www.ukrainianlessons.com/lesson/43/
+    match_reason: 'Cross-level topic match: form'
+    relevance: medium
+  - episode_id: ULP-044
+    title: ULP 2-44 My pets + Special plural forms
+    url: https://www.ukrainianlessons.com/lesson/44/
+    match_reason: 'Cross-level topic match: form'
+    relevance: medium
+- module_id: b1-33-conditionals-mixed-complex
+  module_title: 33 Conditionals Mixed Complex
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Level-aligned topic match: complex'
+    relevance: high
+  - episode_id: ULP-117
+    title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
+      with Attributive Clauses
+    url: https://www.ukrainianlessons.com/lesson/117/
+    match_reason: 'Level-aligned topic match: complex'
+    relevance: high
+- module_id: b1-34-checkpoint-complex-sentences-1
+  module_title: 34 Checkpoint Complex Sentences 1
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Level-aligned topic match: sentences, complex'
+    relevance: high
+  - episode_id: ULP-117
+    title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
+      with Attributive Clauses
+    url: https://www.ukrainianlessons.com/lesson/117/
+    match_reason: 'Level-aligned topic match: sentences, complex'
+    relevance: high
+  - episode_id: FMU-010
+    title: 7 helpful Ukrainian words to link sentences
+    url: https://www.ukrainianlessons.com/fmu10/
+    match_reason: 'Listening review (A1): sentences'
+    relevance: medium
+  - episode_id: FMU-032
+    title: 'Grammar point: Conditional sentences in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu32/
+    match_reason: 'Listening review (A1): sentences'
+    relevance: medium
+- module_id: b1-36-causal-result-clauses
+  module_title: 36 Causal Result Clauses
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Level-aligned topic match: clauses'
+    relevance: high
+  - episode_id: ULP-117
+    title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
+      with Attributive Clauses
+    url: https://www.ukrainianlessons.com/lesson/117/
+    match_reason: 'Level-aligned topic match: clauses'
+    relevance: high
+- module_id: b1-37-temporal-clauses
+  module_title: 37 Temporal Clauses
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Level-aligned topic match: clauses'
+    relevance: high
+  - episode_id: ULP-117
+    title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
+      with Attributive Clauses
+    url: https://www.ukrainianlessons.com/lesson/117/
+    match_reason: 'Level-aligned topic match: clauses'
+    relevance: high
+- module_id: b1-38-complex-sentence-integration
+  module_title: 38 Complex Sentence Integration
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Level-aligned topic match: sentence, complex'
+    relevance: high
+  - episode_id: ULP-117
+    title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
+      with Attributive Clauses
+    url: https://www.ukrainianlessons.com/lesson/117/
+    match_reason: 'Level-aligned topic match: sentence, complex'
+    relevance: high
+  - episode_id: FMU-010
+    title: 7 helpful Ukrainian words to link sentences
+    url: https://www.ukrainianlessons.com/fmu10/
+    match_reason: 'Listening review (A1): sentence'
+    relevance: medium
+  - episode_id: FMU-032
+    title: 'Grammar point: Conditional sentences in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu32/
+    match_reason: 'Listening review (A1): sentence'
+    relevance: medium
+- module_id: b1-41-checkpoint-complex-sentences-2
+  module_title: 41 Checkpoint Complex Sentences 2
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Level-aligned topic match: sentences, complex'
+    relevance: high
+  - episode_id: ULP-117
+    title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
+      with Attributive Clauses
+    url: https://www.ukrainianlessons.com/lesson/117/
+    match_reason: 'Level-aligned topic match: sentences, complex'
+    relevance: high
+  - episode_id: FMU-010
+    title: 7 helpful Ukrainian words to link sentences
+    url: https://www.ukrainianlessons.com/fmu10/
+    match_reason: 'Listening review (A1): sentences'
+    relevance: medium
+  - episode_id: FMU-032
+    title: 'Grammar point: Conditional sentences in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu32/
+    match_reason: 'Listening review (A1): sentences'
+    relevance: medium
+- module_id: b1-42-adverbial-participles-imperfective
+  module_title: 42 Adverbial Participles Imperfective
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Level-aligned topic match: imperfective'
+    relevance: high
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: imperfective'
+    relevance: high
+  - episode_id: ULP-107
+    title: ULP 3-107 У барі – At the bar in Ukraine + Дієприслівник – Adverbial participle
+      in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/107/
+    match_reason: 'Level-aligned topic match: adverbial'
+    relevance: high
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Level-aligned topic match: adverbial'
+    relevance: high
+- module_id: b1-43-adverbial-participles-perfective
+  module_title: 43 Adverbial Participles Perfective
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Level-aligned topic match: perfective'
+    relevance: high
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Level-aligned topic match: perfective'
+    relevance: high
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: perfective'
+    relevance: high
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Level-aligned topic match: perfective'
+    relevance: high
+  - episode_id: ULP-107
+    title: ULP 3-107 У барі – At the bar in Ukraine + Дієприслівник – Adverbial participle
+      in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/107/
+    match_reason: 'Level-aligned topic match: adverbial'
+    relevance: high
+- module_id: b1-44-active-participles-phrases
+  module_title: 44 Active Participles Phrases
+  level: B1
+  recommended_episodes:
+  - episode_id: FMU-002
+    title: Useful phrases for learning Ukrainian
+    url: https://www.ukrainianlessons.com/fmu2/
+    match_reason: 'Listening review (A1): phrases'
+    relevance: medium
+  - episode_id: FMU-020
+    title: 7 easy Ukrainian phrases you can use from day one
+    url: https://www.ukrainianlessons.com/fmu20/
+    match_reason: 'Listening review (A1): phrases'
+    relevance: medium
+  - episode_id: FMU-040
+    title: 8 most useful etiquette phrases in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu40/
+    match_reason: 'Listening review (A1): phrases'
+    relevance: medium
+- module_id: b1-45-past-passive-participles-1
+  module_title: 45 Past Passive Participles 1
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-118
+    title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the
+      past tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/118/
+    match_reason: 'Level-aligned topic match: past'
+    relevance: high
+  - episode_id: ULP-026
+    title: ULP 1-26 Talking about traveling – Past tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/26/
+    match_reason: 'Listening review (A1): past'
+    relevance: medium
+  - episode_id: ULP-027
+    title: ULP 1-27 Traveling in Ukraine in winter – More Past tense
+    url: https://www.ukrainianlessons.com/lesson/27/
+    match_reason: 'Listening review (A1): past'
+    relevance: medium
+- module_id: b1-46-past-passive-participles-2
+  module_title: 46 Past Passive Participles 2
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-118
+    title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the
+      past tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/118/
+    match_reason: 'Level-aligned topic match: past'
+    relevance: high
+  - episode_id: ULP-026
+    title: ULP 1-26 Talking about traveling – Past tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/26/
+    match_reason: 'Listening review (A1): past'
+    relevance: medium
+  - episode_id: ULP-027
+    title: ULP 1-27 Traveling in Ukraine in winter – More Past tense
+    url: https://www.ukrainianlessons.com/lesson/27/
+    match_reason: 'Listening review (A1): past'
+    relevance: medium
+- module_id: b1-48-diminutives-master-class
+  module_title: 48 Diminutives Master Class
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-086
+    title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the
+      school in Ukraine + Prefixes в-, у-
+    url: https://www.ukrainianlessons.com/lesson/86/
+    match_reason: 'Level-aligned topic match: master'
+    relevance: high
+  - episode_id: ULP-113
+    title: ULP 3-113 Майстер-клас з вишивання – Ukrainian traditional embroidery master
+      class +  More about the Imperative mood in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/113/
+    match_reason: 'Level-aligned topic match: class, master'
+    relevance: high
+- module_id: b1-49-numerals-collectives-fractions
+  module_title: 49 Numerals Collectives Fractions
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Level-aligned topic match: numerals'
+    relevance: high
+- module_id: b1-50-integrated-grammar-lab
+  module_title: 50 Integrated Grammar Lab
+  level: B1
+  recommended_episodes:
+  - episode_id: FMU-007
+    title: 'Grammar point: numeral / noun agreement in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu7/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+  - episode_id: FMU-015
+    title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu15/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+  - episode_id: FMU-032
+    title: 'Grammar point: Conditional sentences in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu32/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+  - episode_id: FMU-046
+    title: 'Grammar point: Plural of nouns in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu46/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+  - episode_id: FMU-057
+    title: 'Grammar Point: Verb conjugations in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu57/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+- module_id: b1-51-checkpoint-advanced-grammar
+  module_title: 51 Checkpoint Advanced Grammar
+  level: B1
+  recommended_episodes:
+  - episode_id: FMU-007
+    title: 'Grammar point: numeral / noun agreement in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu7/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+  - episode_id: FMU-015
+    title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu15/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+  - episode_id: FMU-032
+    title: 'Grammar point: Conditional sentences in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu32/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+  - episode_id: FMU-046
+    title: 'Grammar point: Plural of nouns in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu46/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+  - episode_id: FMU-057
+    title: 'Grammar Point: Verb conjugations in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu57/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+- module_id: b1-55-agreement-disagreement
+  module_title: 55 Agreement Disagreement
+  level: B1
+  recommended_episodes:
+  - episode_id: FMU-007
+    title: 'Grammar point: numeral / noun agreement in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu7/
+    match_reason: 'Listening review (A1): agreement'
+    relevance: medium
+- module_id: b1-58-describing-changes
+  module_title: 58 Describing Changes
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: changes'
+    relevance: high
+- module_id: b1-59-media-news
+  module_title: 59 Media News
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-053
+    title: ULP 2-53 Social Media in Ukrainian + Dative case
+    url: https://www.ukrainianlessons.com/lesson/53/
+    match_reason: 'Cross-level topic match: media'
+    relevance: medium
+- module_id: b1-63-health-wellness
+  module_title: 63 Health Wellness
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-104
+    title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
+      in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/104/
+    match_reason: 'Level-aligned topic match: health'
+    relevance: high
+- module_id: b1-64-emotions-deep-dive
+  module_title: 64 Emotions Deep Dive
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Level-aligned topic match: motion'
+    relevance: high
+- module_id: b1-67-travel-geography
+  module_title: 67 Travel Geography
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-099
+    title: ULP 3-99 План подорожі (Голосове повідомлення №4) – Travel plan (Voice
+      message №4)
+    url: https://www.ukrainianlessons.com/lesson/99/
+    match_reason: 'Level-aligned topic match: подорож, travel'
+    relevance: high
+  - episode_id: ULP-202
+    title: ULP 6-202 Наша подорож в Україну влітку 2023 року
+    url: https://www.ukrainianlessons.com/season6/ULP-6-202-nasha-podorozh-v-ukrainu-vlitku-2023-roku/
+    match_reason: 'Cross-level topic match: подорож'
+    relevance: medium
+  - episode_id: ULP-026
+    title: ULP 1-26 Talking about traveling – Past tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/26/
+    match_reason: 'Listening review (A1): travel'
+    relevance: medium
+  - episode_id: ULP-027
+    title: ULP 1-27 Traveling in Ukraine in winter – More Past tense
+    url: https://www.ukrainianlessons.com/lesson/27/
+    match_reason: 'Listening review (A1): travel'
+    relevance: medium
+  - episode_id: ULP-030
+    title: ULP 1-30 Review 21-29 – My travels in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/30/
+    match_reason: 'Listening review (A1): travel'
+    relevance: medium
+- module_id: b1-68-synonymy-thinking-verbs
+  module_title: 68 Synonymy Thinking Verbs
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-101
+    title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in
+      Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/101/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-102
+    title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
+      + Indefinite adverbs and pronouns
+    url: https://www.ukrainianlessons.com/lesson/102/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+- module_id: b1-69-synonymy-speaking-verbs
+  module_title: 69 Synonymy Speaking Verbs
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-101
+    title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in
+      Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/101/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-102
+    title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
+      + Indefinite adverbs and pronouns
+    url: https://www.ukrainianlessons.com/lesson/102/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Level-aligned topic match: verbs'
+    relevance: high
+- module_id: b1-71-emotional-intelligence
+  module_title: 71 Emotional Intelligence
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Level-aligned topic match: motion'
+    relevance: high
+- module_id: b1-73-regions-east
+  module_title: 73 Regions East
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Level-aligned topic match: east'
+    relevance: high
+- module_id: b1-76-ukrainian-music-today
+  module_title: 76 Ukrainian Music Today
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-081
+    title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes
+      ви- and пере-
+    url: https://www.ukrainianlessons.com/lesson/81/
+    match_reason: 'Level-aligned topic match: ukrainian'
+    relevance: high
+  - episode_id: ULP-082
+    title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian
+      + Prefixes при- and по-
+    url: https://www.ukrainianlessons.com/lesson/82/
+    match_reason: 'Level-aligned topic match: ukrainian'
+    relevance: high
+  - episode_id: ULP-083
+    title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes
+      до- and під-
+    url: https://www.ukrainianlessons.com/lesson/83/
+    match_reason: 'Level-aligned topic match: ukrainian'
+    relevance: high
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Level-aligned topic match: ukrainian'
+    relevance: high
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Level-aligned topic match: ukrainian'
+    relevance: high
+- module_id: b1-77-ukrainian-cinema-and-tv
+  module_title: 77 Ukrainian Cinema And Tv
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-081
+    title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes
+      ви- and пере-
+    url: https://www.ukrainianlessons.com/lesson/81/
+    match_reason: 'Level-aligned topic match: ukrainian'
+    relevance: high
+  - episode_id: ULP-082
+    title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian
+      + Prefixes при- and по-
+    url: https://www.ukrainianlessons.com/lesson/82/
+    match_reason: 'Level-aligned topic match: ukrainian'
+    relevance: high
+  - episode_id: ULP-083
+    title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes
+      до- and під-
+    url: https://www.ukrainianlessons.com/lesson/83/
+    match_reason: 'Level-aligned topic match: ukrainian'
+    relevance: high
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Level-aligned topic match: ukrainian'
+    relevance: high
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Level-aligned topic match: ukrainian'
+    relevance: high
+- module_id: b1-78-technology-and-startups
+  module_title: 78 Technology And Startups
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-051
+    title: ULP 2-51 Electronics and technology + Dative case
+    url: https://www.ukrainianlessons.com/lesson/51/
+    match_reason: 'Cross-level topic match: technology'
+    relevance: medium
+  - episode_id: ULP-166
+    title: ULP 5-166 Український інтернет-сленг
+    url: https://www.ukrainianlessons.com/lesson-166/
+    match_reason: 'Cross-level topic match: інтернет'
+    relevance: medium
+- module_id: b1-79-sports-in-ukraine
+  module_title: 79 Sports In Ukraine
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-084
+    title: ULP 3-84 В банку – At the bank in Ukraine + Prefixes об- and від-
+    url: https://www.ukrainianlessons.com/lesson/84/
+    match_reason: 'Level-aligned topic match: ukraine'
+    relevance: high
+  - episode_id: ULP-086
+    title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the
+      school in Ukraine + Prefixes в-, у-
+    url: https://www.ukrainianlessons.com/lesson/86/
+    match_reason: 'Level-aligned topic match: ukraine'
+    relevance: high
+  - episode_id: ULP-087
+    title: ULP 3-87 День вчителя – Teacher's Day in Ukraine + Prefixes роз-, про-
+    url: https://www.ukrainianlessons.com/lesson/87/
+    match_reason: 'Level-aligned topic match: ukraine'
+    relevance: high
+  - episode_id: ULP-088
+    title: ULP 3-88 Вища освіта – Higher education in Ukraine + Prefixes з-, с-
+    url: https://www.ukrainianlessons.com/lesson/88/
+    match_reason: 'Level-aligned topic match: ukraine'
+    relevance: high
+  - episode_id: ULP-089
+    title: ULP 3-89 Навчання в аспірантурі – Postgraduate education in Ukraine + Prefixes
+      на-, за-
+    url: https://www.ukrainianlessons.com/lesson/89/
+    match_reason: 'Level-aligned topic match: ukraine'
+    relevance: high
+- module_id: b1-80-active-lifestyle
+  module_title: 80 Active Lifestyle
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-104
+    title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
+      in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/104/
+    match_reason: 'Level-aligned topic match: lifestyle'
+    relevance: high
+- module_id: b1-81-running-in-ukraine
+  module_title: 81 Running In Ukraine
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-084
+    title: ULP 3-84 В банку – At the bank in Ukraine + Prefixes об- and від-
+    url: https://www.ukrainianlessons.com/lesson/84/
+    match_reason: 'Level-aligned topic match: ukraine'
+    relevance: high
+  - episode_id: ULP-086
+    title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the
+      school in Ukraine + Prefixes в-, у-
+    url: https://www.ukrainianlessons.com/lesson/86/
+    match_reason: 'Level-aligned topic match: ukraine'
+    relevance: high
+  - episode_id: ULP-087
+    title: ULP 3-87 День вчителя – Teacher's Day in Ukraine + Prefixes роз-, про-
+    url: https://www.ukrainianlessons.com/lesson/87/
+    match_reason: 'Level-aligned topic match: ukraine'
+    relevance: high
+  - episode_id: ULP-088
+    title: ULP 3-88 Вища освіта – Higher education in Ukraine + Prefixes з-, с-
+    url: https://www.ukrainianlessons.com/lesson/88/
+    match_reason: 'Level-aligned topic match: ukraine'
+    relevance: high
+  - episode_id: ULP-089
+    title: ULP 3-89 Навчання в аспірантурі – Postgraduate education in Ukraine + Prefixes
+      на-, за-
+    url: https://www.ukrainianlessons.com/lesson/89/
+    match_reason: 'Level-aligned topic match: ukraine'
+    relevance: high
+- module_id: b1-84-winter-sports
+  module_title: 84 Winter Sports
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Level-aligned topic match: winter'
+    relevance: high
+  - episode_id: ULP-027
+    title: ULP 1-27 Traveling in Ukraine in winter – More Past tense
+    url: https://www.ukrainianlessons.com/lesson/27/
+    match_reason: 'Listening review (A1): winter'
+    relevance: medium
+  - episode_id: FMU-025
+    title: Vocabulary booster! Sports in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu25/
+    match_reason: 'Listening review (A1): sports'
+    relevance: medium
+- module_id: b1-85-ukrainian-cuisine
+  module_title: 85 Ukrainian Cuisine
+  level: B1
+  recommended_episodes:
+  - episode_id: ULP-081
+    title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes
+      ви- and пере-
+    url: https://www.ukrainianlessons.com/lesson/81/
+    match_reason: 'Level-aligned topic match: ukrainian'
+    relevance: high
+  - episode_id: ULP-082
+    title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian
+      + Prefixes при- and по-
+    url: https://www.ukrainianlessons.com/lesson/82/
+    match_reason: 'Level-aligned topic match: ukrainian'
+    relevance: high
+  - episode_id: ULP-083
+    title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes
+      до- and під-
+    url: https://www.ukrainianlessons.com/lesson/83/
+    match_reason: 'Level-aligned topic match: ukrainian'
+    relevance: high
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Level-aligned topic match: ukrainian'
+    relevance: high
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Level-aligned topic match: ukrainian'
+    relevance: high
+- module_id: b1-89-b1-grammar-integration
+  module_title: 89 B1 Grammar Integration
+  level: B1
+  recommended_episodes:
+  - episode_id: FMU-007
+    title: 'Grammar point: numeral / noun agreement in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu7/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+  - episode_id: FMU-015
+    title: 'Grammar point: Accusative case / Direct object in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu15/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+  - episode_id: FMU-032
+    title: 'Grammar point: Conditional sentences in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu32/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+  - episode_id: FMU-046
+    title: 'Grammar point: Plural of nouns in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu46/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+  - episode_id: FMU-057
+    title: 'Grammar Point: Verb conjugations in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu57/
+    match_reason: 'Listening review (A1): grammar'
+    relevance: medium
+- module_id: b1-90-b1-vocabulary-integration
+  module_title: 90 B1 Vocabulary Integration
+  level: B1
+  recommended_episodes:
+  - episode_id: FMU-004
+    title: Vocabulary booster! Transport in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu4/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-012
+    title: Vocabulary booster! Beverages / Drinks in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu12/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-018
+    title: Vocabulary booster! Shopping Vocabulary in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu18/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-023
+    title: Vocabulary booster! Hobbies in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu23/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-025
+    title: Vocabulary booster! Sports in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu25/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+- module_id: b2-01-passive-voice-system
+  module_title: 01 Passive Voice System
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-085
+    title: ULP 3-85 Голосове повідомлення №1 (Повторення) – Voice message №1 (Review
+      episode)
+    url: https://www.ukrainianlessons.com/lesson/85/
+    match_reason: 'Cross-level topic match: voice'
+    relevance: medium
+  - episode_id: ULP-090
+    title: ULP 3-90 Освіта в Україні – Education in Ukraine (Голосове повідомлення
+      №2 – Voice message №2)
+    url: https://www.ukrainianlessons.com/lesson/90/
+    match_reason: 'Cross-level topic match: voice'
+    relevance: medium
+  - episode_id: ULP-095
+    title: ULP 3-95 Моє життя в Києві (Голосове повідомлення №3) – My life in Kyiv
+      (Voice message №3)
+    url: https://www.ukrainianlessons.com/lesson/95/
+    match_reason: 'Cross-level topic match: voice'
+    relevance: medium
+  - episode_id: ULP-099
+    title: ULP 3-99 План подорожі (Голосове повідомлення №4) – Travel plan (Voice
+      message №4)
+    url: https://www.ukrainianlessons.com/lesson/99/
+    match_reason: 'Cross-level topic match: voice'
+    relevance: medium
+  - episode_id: ULP-105
+    title: ULP 3-105 Захворіла… (Голосове повідомлення №5) – I got sick… (Voice message
+      №5)
+    url: https://www.ukrainianlessons.com/lesson/105/
+    match_reason: 'Cross-level topic match: voice'
+    relevance: medium
+- module_id: b2-02-past-passive-participles
+  module_title: 02 Past Passive Participles
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-118
+    title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the
+      past tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/118/
+    match_reason: 'Cross-level topic match: past'
+    relevance: medium
+  - episode_id: ULP-026
+    title: ULP 1-26 Talking about traveling – Past tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/26/
+    match_reason: 'Listening review (A1): past'
+    relevance: medium
+  - episode_id: ULP-027
+    title: ULP 1-27 Traveling in Ukraine in winter – More Past tense
+    url: https://www.ukrainianlessons.com/lesson/27/
+    match_reason: 'Listening review (A1): past'
+    relevance: medium
+- module_id: b2-04-reflexive-passive
+  module_title: 04 Reflexive Passive
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-109
+    title: ULP 3-109 На побаченні – On a date in Ukrainian + Reflexive verbs
+    url: https://www.ukrainianlessons.com/lesson/109/
+    match_reason: 'Cross-level topic match: reflexive'
+    relevance: medium
+- module_id: b2-05-third-person-plural-passive
+  module_title: 05 Third Person Plural Passive
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-042
+    title: ULP 2-42My Room + Plural nouns in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/42/
+    match_reason: 'Cross-level topic match: plural'
+    relevance: medium
+  - episode_id: ULP-043
+    title: ULP 2-43 Looking for an apartment + Special plural forms
+    url: https://www.ukrainianlessons.com/lesson/43/
+    match_reason: 'Cross-level topic match: plural'
+    relevance: medium
+  - episode_id: ULP-044
+    title: ULP 2-44 My pets + Special plural forms
+    url: https://www.ukrainianlessons.com/lesson/44/
+    match_reason: 'Cross-level topic match: plural'
+    relevance: medium
+  - episode_id: ULP-112
+    title: ULP 3-112 Майстер-клас з приготування вареників – How to cook varenyky
+      +  Imperative mood of the second person plural
+    url: https://www.ukrainianlessons.com/lesson/112/
+    match_reason: 'Cross-level topic match: person, plural'
+    relevance: medium
+  - episode_id: ULP-114
+    title: ULP 3-114 Майстер-клас з писанкарства – How to make pysanky +  Imperative
+      mood of the verbs in the first person plural (Let's…)
+    url: https://www.ukrainianlessons.com/lesson/114/
+    match_reason: 'Cross-level topic match: person, plural'
+    relevance: medium
+- module_id: b2-07-active-participles-present
+  module_title: 07 Active Participles Present
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-111
+    title: ULP 3-111 Подарунки на День народження – Birthday presents + Imperative
+      mood in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/111/
+    match_reason: 'Cross-level topic match: present'
+    relevance: medium
+- module_id: b2-08-active-participles-past
+  module_title: 08 Active Participles Past
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-118
+    title: ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the
+      past tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/118/
+    match_reason: 'Cross-level topic match: past'
+    relevance: medium
+  - episode_id: ULP-026
+    title: ULP 1-26 Talking about traveling – Past tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/26/
+    match_reason: 'Listening review (A1): past'
+    relevance: medium
+  - episode_id: ULP-027
+    title: ULP 1-27 Traveling in Ukraine in winter – More Past tense
+    url: https://www.ukrainianlessons.com/lesson/27/
+    match_reason: 'Listening review (A1): past'
+    relevance: medium
+- module_id: b2-09-participles-vs-relative-clauses
+  module_title: 09 Participles Vs Relative Clauses
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Cross-level topic match: clauses'
+    relevance: medium
+  - episode_id: ULP-117
+    title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
+      with Attributive Clauses
+    url: https://www.ukrainianlessons.com/lesson/117/
+    match_reason: 'Cross-level topic match: clauses'
+    relevance: medium
+- module_id: b2-10-checkpoint-passive-voice
+  module_title: 10 Checkpoint Passive Voice
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-085
+    title: ULP 3-85 Голосове повідомлення №1 (Повторення) – Voice message №1 (Review
+      episode)
+    url: https://www.ukrainianlessons.com/lesson/85/
+    match_reason: 'Cross-level topic match: voice'
+    relevance: medium
+  - episode_id: ULP-090
+    title: ULP 3-90 Освіта в Україні – Education in Ukraine (Голосове повідомлення
+      №2 – Voice message №2)
+    url: https://www.ukrainianlessons.com/lesson/90/
+    match_reason: 'Cross-level topic match: voice'
+    relevance: medium
+  - episode_id: ULP-095
+    title: ULP 3-95 Моє життя в Києві (Голосове повідомлення №3) – My life in Kyiv
+      (Voice message №3)
+    url: https://www.ukrainianlessons.com/lesson/95/
+    match_reason: 'Cross-level topic match: voice'
+    relevance: medium
+  - episode_id: ULP-099
+    title: ULP 3-99 План подорожі (Голосове повідомлення №4) – Travel plan (Voice
+      message №4)
+    url: https://www.ukrainianlessons.com/lesson/99/
+    match_reason: 'Cross-level topic match: voice'
+    relevance: medium
+  - episode_id: ULP-105
+    title: ULP 3-105 Захворіла… (Голосове повідомлення №5) – I got sick… (Voice message
+      №5)
+    url: https://www.ukrainianlessons.com/lesson/105/
+    match_reason: 'Cross-level topic match: voice'
+    relevance: medium
+- module_id: b2-11-multi-clause-sentences
+  module_title: 11 Multi Clause Sentences
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Cross-level topic match: sentences, clause'
+    relevance: medium
+  - episode_id: ULP-117
+    title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
+      with Attributive Clauses
+    url: https://www.ukrainianlessons.com/lesson/117/
+    match_reason: 'Cross-level topic match: sentences, clause'
+    relevance: medium
+  - episode_id: FMU-010
+    title: 7 helpful Ukrainian words to link sentences
+    url: https://www.ukrainianlessons.com/fmu10/
+    match_reason: 'Listening review (A1): sentences'
+    relevance: medium
+  - episode_id: FMU-032
+    title: 'Grammar point: Conditional sentences in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu32/
+    match_reason: 'Listening review (A1): sentences'
+    relevance: medium
+- module_id: b2-121-ukraine-1991-2004
+  module_title: 121 Ukraine 1991 2004
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-142
+    title: ULP 4-142 Виставка “Ukraine WOW”
+    url: https://www.ukrainianlessons.com/lesson-142/
+    match_reason: 'Level-aligned topic match: ukraine'
+    relevance: high
+  - episode_id: ULP-052
+    title: ULP 2-52 Buying a phone in Ukraine + Dative case
+    url: https://www.ukrainianlessons.com/lesson/52/
+    match_reason: 'Cross-level topic match: ukraine'
+    relevance: medium
+  - episode_id: ULP-061
+    title: ULP 2-61 Christmas dinner in Ukraine + Instrumental case
+    url: https://www.ukrainianlessons.com/lesson/61/
+    match_reason: 'Cross-level topic match: ukraine'
+    relevance: medium
+  - episode_id: ULP-062
+    title: ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns
+    url: https://www.ukrainianlessons.com/lesson/62/
+    match_reason: 'Cross-level topic match: ukraine'
+    relevance: medium
+  - episode_id: ULP-074
+    title: ULP 2-74 Ukrainian History Course Part 4 – Ukraine as a part of two empires
+    url: https://www.ukrainianlessons.com/lesson/74/
+    match_reason: 'Cross-level topic match: ukraine'
+    relevance: medium
+- module_id: b2-16-register-formal-informal
+  module_title: 16 Register Formal Informal
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-001
+    title: ULP 1-01 Informal Greetings in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/1/
+    match_reason: 'Listening review (A1): informal, formal'
+    relevance: medium
+  - episode_id: ULP-002
+    title: ULP 1-02 Formal Greetings and Saying Goodbye in Ukrainian + Pronouns
+    url: https://www.ukrainianlessons.com/lesson/2/
+    match_reason: 'Listening review (A1): formal'
+    relevance: medium
+  - episode_id: FMU-050
+    title: 'Greetings in Ukrainian: informal, formal and fun!'
+    url: https://www.ukrainianlessons.com/fmu50/
+    match_reason: 'Listening review (A1): informal, formal'
+    relevance: medium
+- module_id: b2-17-register-business-ukrainian
+  module_title: 17 Register Business Ukrainian
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-042
+    title: ULP 2-42My Room + Plural nouns in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/42/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+  - episode_id: ULP-050
+    title: 'ULP 2-50 Review: 46-49 + What I eat in a day in Ukrainian'
+    url: https://www.ukrainianlessons.com/lesson/50/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+  - episode_id: ULP-053
+    title: ULP 2-53 Social Media in Ukrainian + Dative case
+    url: https://www.ukrainianlessons.com/lesson/53/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+  - episode_id: ULP-054
+    title: ULP 2-54 10 ways to express gratitude in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/54/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+  - episode_id: ULP-057
+    title: ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions
+    url: https://www.ukrainianlessons.com/lesson/57/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+- module_id: b2-18-register-academic-ukrainian
+  module_title: 18 Register Academic Ukrainian
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-042
+    title: ULP 2-42My Room + Plural nouns in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/42/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+  - episode_id: ULP-050
+    title: 'ULP 2-50 Review: 46-49 + What I eat in a day in Ukrainian'
+    url: https://www.ukrainianlessons.com/lesson/50/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+  - episode_id: ULP-053
+    title: ULP 2-53 Social Media in Ukrainian + Dative case
+    url: https://www.ukrainianlessons.com/lesson/53/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+  - episode_id: ULP-054
+    title: ULP 2-54 10 ways to express gratitude in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/54/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+  - episode_id: ULP-057
+    title: ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions
+    url: https://www.ukrainianlessons.com/lesson/57/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+- module_id: b2-20-register-medical-ukrainian
+  module_title: 20 Register Medical Ukrainian
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-042
+    title: ULP 2-42My Room + Plural nouns in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/42/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+  - episode_id: ULP-050
+    title: 'ULP 2-50 Review: 46-49 + What I eat in a day in Ukrainian'
+    url: https://www.ukrainianlessons.com/lesson/50/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+  - episode_id: ULP-053
+    title: ULP 2-53 Social Media in Ukrainian + Dative case
+    url: https://www.ukrainianlessons.com/lesson/53/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+  - episode_id: ULP-054
+    title: ULP 2-54 10 ways to express gratitude in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/54/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+  - episode_id: ULP-057
+    title: ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions
+    url: https://www.ukrainianlessons.com/lesson/57/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+- module_id: b2-22-register-literary-ukrainian
+  module_title: 22 Register Literary Ukrainian
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-042
+    title: ULP 2-42My Room + Plural nouns in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/42/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+  - episode_id: ULP-050
+    title: 'ULP 2-50 Review: 46-49 + What I eat in a day in Ukrainian'
+    url: https://www.ukrainianlessons.com/lesson/50/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+  - episode_id: ULP-053
+    title: ULP 2-53 Social Media in Ukrainian + Dative case
+    url: https://www.ukrainianlessons.com/lesson/53/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+  - episode_id: ULP-054
+    title: ULP 2-54 10 ways to express gratitude in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/54/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+  - episode_id: ULP-057
+    title: ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions
+    url: https://www.ukrainianlessons.com/lesson/57/
+    match_reason: 'Cross-level topic match: ukrainian'
+    relevance: medium
+- module_id: b2-23-register-media-journalistic
+  module_title: 23 Register Media Journalistic
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-053
+    title: ULP 2-53 Social Media in Ukrainian + Dative case
+    url: https://www.ukrainianlessons.com/lesson/53/
+    match_reason: 'Cross-level topic match: media'
+    relevance: medium
+- module_id: b2-24-register-colloquial-style
+  module_title: 24 Register Colloquial Style
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-104
+    title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
+      in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/104/
+    match_reason: 'Cross-level topic match: style'
+    relevance: medium
+- module_id: b2-26-politics-government-vocabulary
+  module_title: 26 Politics Government Vocabulary
+  level: B2
+  recommended_episodes:
+  - episode_id: FMU-004
+    title: Vocabulary booster! Transport in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu4/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-012
+    title: Vocabulary booster! Beverages / Drinks in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu12/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-018
+    title: Vocabulary booster! Shopping Vocabulary in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu18/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-023
+    title: Vocabulary booster! Hobbies in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu23/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-025
+    title: Vocabulary booster! Sports in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu25/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+- module_id: b2-27-law-justice-vocabulary
+  module_title: 27 Law Justice Vocabulary
+  level: B2
+  recommended_episodes:
+  - episode_id: FMU-004
+    title: Vocabulary booster! Transport in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu4/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-012
+    title: Vocabulary booster! Beverages / Drinks in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu12/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-018
+    title: Vocabulary booster! Shopping Vocabulary in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu18/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-023
+    title: Vocabulary booster! Hobbies in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu23/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-025
+    title: Vocabulary booster! Sports in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu25/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+- module_id: b2-28-economics-business-vocabulary
+  module_title: 28 Economics Business Vocabulary
+  level: B2
+  recommended_episodes:
+  - episode_id: FMU-004
+    title: Vocabulary booster! Transport in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu4/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-012
+    title: Vocabulary booster! Beverages / Drinks in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu12/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-018
+    title: Vocabulary booster! Shopping Vocabulary in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu18/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-023
+    title: Vocabulary booster! Hobbies in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu23/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+  - episode_id: FMU-025
+    title: Vocabulary booster! Sports in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu25/
+    match_reason: 'Listening review (A1): vocabulary'
+    relevance: medium
+- module_id: b2-31-numeral-declension-time-dates
+  module_title: 31 Numeral Declension Time Dates
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-067
+    title: ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case
+    url: https://www.ukrainianlessons.com/lesson/67/
+    match_reason: 'Cross-level topic match: time'
+    relevance: medium
+  - episode_id: ULP-068
+    title: ULP 2-68 Making a hair appointment + Dates & Locative case
+    url: https://www.ukrainianlessons.com/lesson/68/
+    match_reason: 'Cross-level topic match: dates'
+    relevance: medium
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Cross-level topic match: numeral'
+    relevance: medium
+  - episode_id: FMU-007
+    title: 'Grammar point: numeral / noun agreement in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu7/
+    match_reason: 'Listening review (A1): numeral'
+    relevance: medium
+- module_id: b2-32-numeral-declension-compound-numbers
+  module_title: 32 Numeral Declension Compound Numbers
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-067
+    title: ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case
+    url: https://www.ukrainianlessons.com/lesson/67/
+    match_reason: 'Cross-level topic match: numbers'
+    relevance: medium
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Cross-level topic match: numeral'
+    relevance: medium
+  - episode_id: ULP-005
+    title: ULP 1-05 Numbers 1-20 in Ukrainian + Pronunciation Trainer (и)
+    url: https://www.ukrainianlessons.com/lesson/5/
+    match_reason: 'Listening review (A1): numbers'
+    relevance: medium
+  - episode_id: FMU-007
+    title: 'Grammar point: numeral / noun agreement in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu7/
+    match_reason: 'Listening review (A1): numeral'
+    relevance: medium
+- module_id: b2-33-word-formation-person-suffixes
+  module_title: 33 Word Formation Person Suffixes
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-093
+    title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive
+      words in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/93/
+    match_reason: 'Cross-level topic match: word'
+    relevance: medium
+  - episode_id: ULP-098
+    title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians
+      –  One-word synthetic future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/98/
+    match_reason: 'Cross-level topic match: word'
+    relevance: medium
+  - episode_id: ULP-112
+    title: ULP 3-112 Майстер-клас з приготування вареників – How to cook varenyky
+      +  Imperative mood of the second person plural
+    url: https://www.ukrainianlessons.com/lesson/112/
+    match_reason: 'Cross-level topic match: person'
+    relevance: medium
+  - episode_id: ULP-114
+    title: ULP 3-114 Майстер-клас з писанкарства – How to make pysanky +  Imperative
+      mood of the verbs in the first person plural (Let's…)
+    url: https://www.ukrainianlessons.com/lesson/114/
+    match_reason: 'Cross-level topic match: person'
+    relevance: medium
+  - episode_id: ULP-035
+    title: ULP 1-35 Question words in Ukrainian + Pronunciation trainer (intonation)
+    url: https://www.ukrainianlessons.com/lesson/35/
+    match_reason: 'Listening review (A1): word'
+    relevance: medium
+- module_id: b2-34-word-formation-abstract-nouns
+  module_title: 34 Word Formation Abstract Nouns
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-042
+    title: ULP 2-42My Room + Plural nouns in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/42/
+    match_reason: 'Cross-level topic match: nouns'
+    relevance: medium
+  - episode_id: ULP-058
+    title: ULP 2-58 Inviting to a party + Accusative case of pronouns
+    url: https://www.ukrainianlessons.com/lesson/58/
+    match_reason: 'Cross-level topic match: nouns'
+    relevance: medium
+  - episode_id: ULP-062
+    title: ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns
+    url: https://www.ukrainianlessons.com/lesson/62/
+    match_reason: 'Cross-level topic match: nouns'
+    relevance: medium
+  - episode_id: ULP-093
+    title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive
+      words in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/93/
+    match_reason: 'Cross-level topic match: word'
+    relevance: medium
+  - episode_id: ULP-098
+    title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians
+      –  One-word synthetic future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/98/
+    match_reason: 'Cross-level topic match: word'
+    relevance: medium
+- module_id: b2-35-word-formation-place-object-names
+  module_title: 35 Word Formation Place Object Names
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-066
+    title: ULP 2-66 Sharing memories + Locative case with places
+    url: https://www.ukrainianlessons.com/lesson/66/
+    match_reason: 'Cross-level topic match: place'
+    relevance: medium
+  - episode_id: ULP-093
+    title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive
+      words in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/93/
+    match_reason: 'Cross-level topic match: word'
+    relevance: medium
+  - episode_id: ULP-098
+    title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians
+      –  One-word synthetic future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/98/
+    match_reason: 'Cross-level topic match: word'
+    relevance: medium
+  - episode_id: ULP-035
+    title: ULP 1-35 Question words in Ukrainian + Pronunciation trainer (intonation)
+    url: https://www.ukrainianlessons.com/lesson/35/
+    match_reason: 'Listening review (A1): word'
+    relevance: medium
+  - episode_id: FMU-010
+    title: 7 helpful Ukrainian words to link sentences
+    url: https://www.ukrainianlessons.com/fmu10/
+    match_reason: 'Listening review (A1): word'
+    relevance: medium
+- module_id: b2-36-word-formation-adjective-formation
+  module_title: 36 Word Formation Adjective Formation
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-093
+    title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive
+      words in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/93/
+    match_reason: 'Cross-level topic match: word'
+    relevance: medium
+  - episode_id: ULP-098
+    title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians
+      –  One-word synthetic future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/98/
+    match_reason: 'Cross-level topic match: word'
+    relevance: medium
+  - episode_id: ULP-035
+    title: ULP 1-35 Question words in Ukrainian + Pronunciation trainer (intonation)
+    url: https://www.ukrainianlessons.com/lesson/35/
+    match_reason: 'Listening review (A1): word'
+    relevance: medium
+  - episode_id: FMU-010
+    title: 7 helpful Ukrainian words to link sentences
+    url: https://www.ukrainianlessons.com/fmu10/
+    match_reason: 'Listening review (A1): word'
+    relevance: medium
+- module_id: b2-37-word-formation-adverbs-integration
+  module_title: 37 Word Formation Adverbs Integration
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-093
+    title: ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive
+      words in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/93/
+    match_reason: 'Cross-level topic match: word'
+    relevance: medium
+  - episode_id: ULP-098
+    title: ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians
+      –  One-word synthetic future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/98/
+    match_reason: 'Cross-level topic match: word'
+    relevance: medium
+  - episode_id: ULP-101
+    title: ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in
+      Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/101/
+    match_reason: 'Cross-level topic match: adverbs'
+    relevance: medium
+  - episode_id: ULP-102
+    title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
+      + Indefinite adverbs and pronouns
+    url: https://www.ukrainianlessons.com/lesson/102/
+    match_reason: 'Cross-level topic match: adverbs'
+    relevance: medium
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Cross-level topic match: adverbs'
+    relevance: medium
+- module_id: b2-38-one-member-sentences
+  module_title: 38 One Member Sentences
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Cross-level topic match: sentences'
+    relevance: medium
+  - episode_id: ULP-117
+    title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
+      with Attributive Clauses
+    url: https://www.ukrainianlessons.com/lesson/117/
+    match_reason: 'Cross-level topic match: sentences'
+    relevance: medium
+  - episode_id: FMU-010
+    title: 7 helpful Ukrainian words to link sentences
+    url: https://www.ukrainianlessons.com/fmu10/
+    match_reason: 'Listening review (A1): sentences'
+    relevance: medium
+  - episode_id: FMU-032
+    title: 'Grammar point: Conditional sentences in Ukrainian'
+    url: https://www.ukrainianlessons.com/fmu32/
+    match_reason: 'Listening review (A1): sentences'
+    relevance: medium
+  - episode_id: FMU-033
+    title: Vocabulary booster! Family members in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu33/
+    match_reason: 'Listening review (A1): member'
+    relevance: medium
+- module_id: b2-41-aspect-nuances-secondary-imperfectivization
+  module_title: 41 Aspect Nuances Secondary Imperfectivization
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Cross-level topic match: aspect, imperfective, perfective'
+    relevance: medium
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Cross-level topic match: aspect, perfective'
+    relevance: medium
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Cross-level topic match: imperfective, perfective'
+    relevance: medium
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Cross-level topic match: perfective'
+    relevance: medium
+  - episode_id: ULP-034
+    title: ULP 1-34 Going to the movies in Ukraine – Perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/34/
+    match_reason: 'Listening review (A1): perfective'
+    relevance: medium
+- module_id: b2-42-aspect-nuances-imperative-infinitive
+  module_title: 42 Aspect Nuances Imperative Infinitive
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-091
+    title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective
+      and perfective  verb aspects in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/91/
+    match_reason: 'Cross-level topic match: aspect, imperfective, perfective'
+    relevance: medium
+  - episode_id: ULP-092
+    title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective
+      aspect in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/92/
+    match_reason: 'Cross-level topic match: aspect, perfective'
+    relevance: medium
+  - episode_id: ULP-094
+    title: ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective
+      and perfective verbs in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/94/
+    match_reason: 'Cross-level topic match: imperfective, perfective'
+    relevance: medium
+  - episode_id: ULP-096
+    title: ULP 3-96 Новорічні свята в школі – New Year's celebrations at school +
+      Perfective future tense in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/96/
+    match_reason: 'Cross-level topic match: perfective'
+    relevance: medium
+  - episode_id: ULP-111
+    title: ULP 3-111 Подарунки на День народження – Birthday presents + Imperative
+      mood in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/111/
+    match_reason: 'Cross-level topic match: imperative'
+    relevance: medium
+- module_id: b2-44-complex-syntax-ellipsis-parcelling
+  module_title: 44 Complex Syntax Ellipsis Parcelling
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-116
+    title: ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with
+      Adverbial Clauses
+    url: https://www.ukrainianlessons.com/lesson/116/
+    match_reason: 'Cross-level topic match: complex'
+    relevance: medium
+  - episode_id: ULP-117
+    title: ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences
+      with Attributive Clauses
+    url: https://www.ukrainianlessons.com/lesson/117/
+    match_reason: 'Cross-level topic match: complex'
+    relevance: medium
+- module_id: b2-46-proverbs-nature-time-caution
+  module_title: 46 Proverbs Nature Time Caution
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-067
+    title: ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case
+    url: https://www.ukrainianlessons.com/lesson/67/
+    match_reason: 'Cross-level topic match: time'
+    relevance: medium
+- module_id: b2-47-set-expressions-i-body-animals
+  module_title: 47 Set Expressions I Body Animals
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-102
+    title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
+      + Indefinite adverbs and pronouns
+    url: https://www.ukrainianlessons.com/lesson/102/
+    match_reason: 'Cross-level topic match: лікар'
+    relevance: medium
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Cross-level topic match: лікар'
+    relevance: medium
+  - episode_id: ULP-104
+    title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
+      in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/104/
+    match_reason: 'Cross-level topic match: health'
+    relevance: medium
+  - episode_id: FMU-036
+    title: How to ask somebody on a date in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu36/
+    match_reason: 'Listening review (A1): body'
+    relevance: medium
+  - episode_id: FMU-052
+    title: Vocabulary booster! Body parts in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu52/
+    match_reason: 'Listening review (A1): body'
+    relevance: medium
+- module_id: b2-49-idioms-body-head-face
+  module_title: 49 Idioms Body Head Face
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-086
+    title: ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the
+      school in Ukraine + Prefixes в-, у-
+    url: https://www.ukrainianlessons.com/lesson/86/
+    match_reason: 'Cross-level topic match: head'
+    relevance: medium
+  - episode_id: ULP-102
+    title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
+      + Indefinite adverbs and pronouns
+    url: https://www.ukrainianlessons.com/lesson/102/
+    match_reason: 'Cross-level topic match: лікар'
+    relevance: medium
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Cross-level topic match: лікар'
+    relevance: medium
+  - episode_id: ULP-104
+    title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
+      in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/104/
+    match_reason: 'Cross-level topic match: health'
+    relevance: medium
+  - episode_id: FMU-036
+    title: How to ask somebody on a date in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu36/
+    match_reason: 'Listening review (A1): body'
+    relevance: medium
+- module_id: b2-50-idioms-body-hands-legs
+  module_title: 50 Idioms Body Hands Legs
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-102
+    title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
+      + Indefinite adverbs and pronouns
+    url: https://www.ukrainianlessons.com/lesson/102/
+    match_reason: 'Cross-level topic match: лікар'
+    relevance: medium
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Cross-level topic match: лікар'
+    relevance: medium
+  - episode_id: ULP-104
+    title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
+      in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/104/
+    match_reason: 'Cross-level topic match: health'
+    relevance: medium
+  - episode_id: FMU-036
+    title: How to ask somebody on a date in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu36/
+    match_reason: 'Listening review (A1): body'
+    relevance: medium
+  - episode_id: FMU-052
+    title: Vocabulary booster! Body parts in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu52/
+    match_reason: 'Listening review (A1): body'
+    relevance: medium
+- module_id: b2-51-idioms-body
+  module_title: 51 Idioms Body
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-102
+    title: ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian
+      + Indefinite adverbs and pronouns
+    url: https://www.ukrainianlessons.com/lesson/102/
+    match_reason: 'Cross-level topic match: лікар'
+    relevance: medium
+  - episode_id: ULP-103
+    title: ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the
+      numerals
+    url: https://www.ukrainianlessons.com/lesson/103/
+    match_reason: 'Cross-level topic match: лікар'
+    relevance: medium
+  - episode_id: ULP-104
+    title: ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison
+      in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/104/
+    match_reason: 'Cross-level topic match: health'
+    relevance: medium
+  - episode_id: FMU-036
+    title: How to ask somebody on a date in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu36/
+    match_reason: 'Listening review (A1): body'
+    relevance: medium
+  - episode_id: FMU-052
+    title: Vocabulary booster! Body parts in Ukrainian
+    url: https://www.ukrainianlessons.com/fmu52/
+    match_reason: 'Listening review (A1): body'
+    relevance: medium
+- module_id: b2-55-synonyms-emotion
+  module_title: 55 Synonyms Emotion
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-097
+    title: ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future
+      tense of the verbs of motion
+    url: https://www.ukrainianlessons.com/lesson/97/
+    match_reason: 'Cross-level topic match: motion'
+    relevance: medium
+- module_id: b2-57-synonyms-movement
+  module_title: 57 Synonyms Movement
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-059
+    title: ULP 2-59 Vacation plans & the verbs of movement in Ukrainian
+    url: https://www.ukrainianlessons.com/lesson/59/
+    match_reason: 'Cross-level topic match: movement'
+    relevance: medium
+  - episode_id: ULP-075
+    title: ULP 2-75 Ukrainian History Course Part 5 – The liberation movement of 1917-1922
+    url: https://www.ukrainianlessons.com/lesson/75/
+    match_reason: 'Cross-level topic match: movement'
+    relevance: medium
+- module_id: b2-61-synonyms-time
+  module_title: 61 Synonyms Time
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-067
+    title: ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case
+    url: https://www.ukrainianlessons.com/lesson/67/
+    match_reason: 'Cross-level topic match: time'
+    relevance: medium
+- module_id: b2-62-synonyms-place
+  module_title: 62 Synonyms Place
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-066
+    title: ULP 2-66 Sharing memories + Locative case with places
+    url: https://www.ukrainianlessons.com/lesson/66/
+    match_reason: 'Cross-level topic match: place'
+    relevance: medium
+  - episode_id: FMU-041
+    title: How to look for a place to rent in Ukraine
+    url: https://www.ukrainianlessons.com/fmu41/
+    match_reason: 'Listening review (A1): place'
+    relevance: medium
+- module_id: b2-92-ivan-mazepa-i-derzhavnyk
+  module_title: 92 Ivan Mazepa I Derzhavnyk
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-071
+    title: ULP 2-71 Ukrainian History Course Part 1 – Kyivan Rus'
+    url: https://www.ukrainianlessons.com/lesson/71/
+    match_reason: 'Cross-level topic match: ivan'
+    relevance: medium
+- module_id: b2-93-ivan-mazepa-ii-kultura
+  module_title: 93 Ivan Mazepa Ii Kultura
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-071
+    title: ULP 2-71 Ukrainian History Course Part 1 – Kyivan Rus'
+    url: https://www.ukrainianlessons.com/lesson/71/
+    match_reason: 'Cross-level topic match: ivan'
+    relevance: medium
+- module_id: b2-94-ivan-mazepa-iii-poltava
+  module_title: 94 Ivan Mazepa Iii Poltava
+  level: B2
+  recommended_episodes:
+  - episode_id: ULP-071
+    title: ULP 2-71 Ukrainian History Course Part 1 – Kyivan Rus'
+    url: https://www.ukrainianlessons.com/lesson/71/
+    match_reason: 'Cross-level topic match: ivan'
+    relevance: medium
