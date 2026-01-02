@@ -11,6 +11,7 @@
 | **M** | Gemini 2 | User's | B2 M112 | #349 | ✅ Complete (reviewed) |
 | **K** | Gemini 3 | User's | B1 M81-84 | #351 | ✅ Complete (4 modules created) |
 | **C1-b** | Claude 1 (other session) | User's | B2 enrichment | #349 | 🔄 M01-M10 done |
+| **Opus** | Antigravity Opus | Google AI Pro #1 | Grammar validation refactor | #352 | 🔄 In progress |
 | **C2** | Claude 2 | Different sub | (standing by) | - | ⏳ Available |
 
 ## This Session (C1-a: Coordinator)
@@ -87,9 +88,46 @@
 
 ## Issue Tracking
 
-- **#340** - Epic: Vocabulary YAML Architecture (Agent A - A2)
-- **#349** - B2 YAML Migration (C1-b)
-- **#350** - B1 YAML Migration (Agent M)
+- **#340** - Epic: Vocabulary YAML Architecture (Agent A - A2) - ✅ CLOSED
+- **#349** - B2 YAML Migration (C1-b) - 🔄 IN PROGRESS
+- **#350** - B1 YAML Migration (Agent M) - ⏸️ BLOCKED by #352
+- **#351** - B1.7 Expansion (Agent K) - ✅ CLOSED (M81-M84 complete)
+- **#352** - Grammar Validation Refactor (Antigravity Opus) - 🔄 IN PROGRESS
+
+## Issue #352: Grammar Validation System Refactor
+
+**Agent:** Antigravity Opus (Google AI Pro #1)
+**Priority:** P0 - BLOCKS ALL CONTENT WORK
+**Status:** 🔄 In progress (corrected scope assigned)
+
+### Problem
+- Queue generation still in pipeline (`scripts/pipeline.py` line 306)
+- Next pipeline run will recreate 300+ deleted queue files
+- Grammar validation is overcomplicated and unreliable
+
+### Solution Required
+
+**Phase 1: Remove Queue Generation**
+- Remove `grammar_queue` from pipeline default steps
+- Delete queue generation scripts: `generate_grammar_queue.py`, `generate_grammar_review_queue.py`, `finalize_validation.py`
+- Remove `step_grammar_queue()` from `scripts/pipeline.py`
+
+**Phase 2: Implement Direct LLM Validation**
+- Add `--validate-grammar` flag to audit script (opt-in like content quality)
+- Use Gemini API directly on flagged sentences (no queue intermediary)
+- Update `scripts/audit/ukrainian_grammar_validator_prompt.md`
+
+**Phase 3: Documentation**
+- Update CLAUDE.md, SCRIPTS.md, CONTENT-QUALITY-AUDIT.md
+- Remove queue references
+
+**Verification:**
+```bash
+npm run pipeline l2-uk-en b1 1
+ls curriculum/l2-uk-en/b1/queue/  # Should not exist
+```
+
+**Blocks:** B1 word count fixes (15 modules), all content work
 
 ## Remaining B2 Work: M132-M145 (14 modules)
 
