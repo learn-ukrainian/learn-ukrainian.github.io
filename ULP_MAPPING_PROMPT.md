@@ -77,7 +77,33 @@ done
 **Focus areas:** Aspect mastery, motion verbs, complex sentences, participles, cultural topics
 
 ### B2 Modules (145 target, 131 exist)
-**Note:** B2 is 100% immersed Ukrainian, no beginner content
+```bash
+# Get B2 module titles
+for i in {1..145}; do
+  f="curriculum/l2-uk-en/b2/"*"$i-"*.md
+  if [ -f $f ]; then
+    echo "M$i: $(grep '^title:' $f | head -1)"
+  fi
+done
+```
+
+**Focus areas:** Passive voice, registers, Ukrainian history, idioms, advanced syntax
+
+### C1 Modules (196 planned)
+```bash
+# Get C1 module titles (if they exist)
+ls curriculum/l2-uk-en/c1/*.md 2>/dev/null | wc -l
+```
+
+**Focus areas:** Biographies, stylistics, folk culture, literature (planned)
+
+### C2 Modules (100 planned)
+```bash
+# Get C2 module titles (if they exist)
+ls curriculum/l2-uk-en/c2/*.md 2>/dev/null | wc -l
+```
+
+**Focus areas:** Stylistic perfection, professional specialization (planned)
 
 ---
 
@@ -93,12 +119,14 @@ done
 - Episode grammar tags ↔ Module grammar focus
 - Example: "Dative Case" → A2-M01, A2-M02
 
-**3. Level Alignment**
-- Don't map B2 episodes to A1 modules
-- ULP is A1-B1, so no B2 mappings expected
+**3. Level Alignment & Progressive Reuse**
+- Episodes can map to MULTIPLE levels (beginner → advanced reinterpretation)
+- Example: "Greetings" episode → A1 (basic vocab), A2 (review), B1 (listening practice)
+- Don't map advanced grammar to beginner levels (but vocab reuse is OK)
+- Higher-level modules can use beginner episodes for listening comprehension
 
 **4. Multiple Mappings OK**
-- One episode can map to multiple modules
+- One episode can map to multiple modules (same or different levels)
 - One module can have multiple episodes
 
 ### Output Format (YAML - NOT JSON)
@@ -150,6 +178,31 @@ mappings:
         url: "https://ukrainianlessons.com/thepodcast/XXX"
         match_reason: "Dative case grammar"
         relevance: high
+
+  # B1 Modules
+  - module_id: b1-16-motion-verbs-full-system
+    module_title: "Motion Verbs: Full System"
+    level: B1
+    recommended_episodes:
+      - episode_id: ULP-YYY
+        title: "Motion Verbs йти/ходити"
+        url: "https://ukrainianlessons.com/thepodcast/YYY"
+        match_reason: "Motion verb pairs"
+        relevance: high
+
+  # B2 Modules (history, advanced grammar)
+  - module_id: b2-75-volodymyr-i-khreshchennia
+    module_title: "Volodymyr I and Christianization"
+    level: B2
+    recommended_episodes:
+      - episode_id: ULP-ZZZ
+        title: "Interview about Ukrainian history"
+        url: "https://ukrainianlessons.com/thepodcast/ZZZ"
+        match_reason: "Historical context, immersed Ukrainian"
+        relevance: medium
+
+  # C1 Modules (if applicable)
+  # C2 Modules (if applicable)
 
   # ... continue for all relevant modules
 ```
@@ -218,10 +271,18 @@ jq '[.episodes[].tags[]?] | unique' docs/resources/podcasts/podcast_db.json
 1. Focus on advanced grammar (motion verbs, participles)
 2. Cultural modules may not have ULP matches (that's OK)
 3. Map available episodes
+4. Consider beginner episodes for listening comprehension practice
 
-**Skip B2:**
-- ULP is A1-B1, no B2 content expected
-- B2 will use other sources (news, documentaries)
+**For B2:**
+1. Focus on interview episodes (Q&A, natural conversation)
+2. Advanced grammar episodes
+3. History/culture topics
+4. Episodes can be used for immersed listening practice
+
+**For C1/C2:**
+1. Map if episodes exist with appropriate complexity
+2. Use for listening comprehension and cultural context
+3. Not all C1/C2 modules will have ULP matches (literature, specialized topics)
 
 ---
 
@@ -247,10 +308,13 @@ yq '[.mappings[].recommended_episodes[].episode_id] | unique | length' ulp_mappi
 **Expected coverage:**
 - A1: 20-30 modules mapped (~60-90%)
 - A2: 15-25 modules mapped (~25-45%)
-- B1: 10-20 modules mapped (~10-25%)
-- Total episodes used: 50-100 of ~200
+- B1: 15-30 modules mapped (~15-35%)
+- B2: 10-20 modules mapped (~7-15%) - interviews, conversations
+- C1: 5-15 modules mapped (~2-8%) - if applicable
+- C2: 0-5 modules mapped (~0-5%) - if applicable
+- Total episodes used: 30-40 unique episodes (many reused across levels)
 
-**Not all modules will have matches - that's OK!** ULP is grammar-focused, so cultural/vocabulary modules may not match.
+**Not all modules will have matches - that's OK!** Focus on grammar, conversation, and listening practice content. Literary and highly specialized modules may not have podcast equivalents.
 
 ---
 
@@ -275,7 +339,10 @@ yq '[.mappings[].recommended_episodes[].episode_id] | unique | length' ulp_mappi
 | A1 | 34 | XX | XX% |
 | A2 | 57 | XX | XX% |
 | B1 | 91 | XX | XX% |
-| **Total** | **182** | **XX** | **XX%** |
+| B2 | 145 | XX | XX% |
+| C1 | 196 | XX | XX% |
+| C2 | 100 | XX | XX% |
+| **Total** | **623** | **XX** | **XX%** |
 
 ## Episode Usage
 
