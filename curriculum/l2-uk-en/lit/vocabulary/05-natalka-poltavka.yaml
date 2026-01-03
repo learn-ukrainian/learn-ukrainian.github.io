@@ -1,0 +1,99 @@
+module: 05-natalka-poltavka
+level: LIT
+items:
+- lemma: Термін
+  translation: Визначення
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Контекст
+- lemma: '**Возний**'
+  translation: Судовий чиновник (нижчого рангу) в повітовому суді
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Статус Тетерваковського
+- lemma: '**Виборний**'
+  translation: Представник громади (староста села), обраний селянами
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Макогоненко
+- lemma: '**Терпелиха**'
+  translation: Від слова "терпіти" (страждати)
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Прізвище матері
+- lemma: '**Похвальний лист**'
+  translation: Документ про нагородження, грамота
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Обіцянка Возного
+- lemma: '**Рушники**'
+  translation: Вишита тканина для сватання
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Символ згоди на шлюб
+- lemma: '**Гарбуз**'
+  translation: Символ відмови у сватанні ("дати гарбуза")
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Народний звичай
+- lemma: '**Приймак**'
+  translation: Чоловік, який йде жити в дім дружини (соціально нижчий)
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Статус
+- lemma: '**Канцеляризми**'
+  translation: Офіційно-ділові слова ("понеже", "токмо", "воістину")
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Мова Возного
+- lemma: '**Бурлака**'
+  translation: Бездомний мандрівник, заробітчанин, безпаспортний
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Статус Петра
+- lemma: '**Сентименталізм**'
+  translation: Літературний напрям, що підкреслює почуття і жалість
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Стиль п'єси
+- lemma: '**Пєнь**'
+  translation: (Жарг.) Дурна людина, перешкода, або буквально пеньок
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Лайка Возного
+- lemma: '**Позов**'
+  translation: Судова справа, скарга
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Діяльність Возного
+- lemma: '**Водевіль**'
+  translation: Легка комедійна п'єса з піснями
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Жанр, до якого близька "Наталка"
+- lemma: '**Ремарка**'
+  translation: Авторська примітка в тексті (в дужках)
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: '"Зітхає", "пішов", "співає"'
+- lemma: '**Драма**'
+  translation: Серйозний твір із гострим конфліктом
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: '"Наталка" поєднує риси драми і комедії'

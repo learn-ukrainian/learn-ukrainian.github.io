@@ -1,0 +1,102 @@
+module: 14-son
+level: LIT
+items:
+  - lemma: комедія
+    translation: comedy (here: farce, satire)
+    pos: noun
+    gender: f
+    ipa: /koˈmɛdʲijɐ/
+  - lemma: цар волі
+    translation: Tsar of Freedom (prisoner of spirit)
+    pos: noun
+    gender: m
+    ipa: /t͡sɑr ˈʋɔlʲi/
+  - lemma: опеньок засушений
+    translation: dried mushroom (caricature of Empress)
+    pos: noun
+    gender: m
+    ipa: /oˈpɛnʲok zɐˈsuʃɛnɪj/
+  - lemma: пика
+    translation: snout, mug (rude for face)
+    pos: noun
+    gender: f
+    ipa: /ˈpɪkɐ/
+  - lemma: землячок
+    translation: fellow countryman (traitor/collaborator)
+    pos: noun
+    gender: m
+    ipa: /zɛmlʲɐˈt͡ʃɔk/
+  - lemma: муштра
+    translation: drilling, military discipline
+    pos: noun
+    gender: f
+    ipa: /ˈmuʃtrɐ/
+  - lemma: помазаник Божий
+    translation: God's anointed (Tsar)
+    pos: noun
+    gender: m
+    ipa: /poˈmɑzɐnɪk ˈbɔʒɪj/
+  - lemma: кріпацтво
+    translation: serfdom
+    pos: noun
+    gender: n
+    ipa: /krʲiˈpɑt͡stʋo/
+  - lemma: байстрюк
+    translation: bastard, illegitimate child
+    pos: noun
+    gender: m
+    ipa: /bɐjˈstrʲuk/
+  - lemma: інвектива
+    translation: invective, verbal attack
+    pos: noun
+    gender: f
+    ipa: /inʋɛkˈtɪʋɐ/
+  - lemma: гротеск
+    translation: grotesque
+    pos: noun
+    gender: m
+    ipa: /ɦroˈtɛsk/
+  - lemma: алегорія
+    translation: allegory
+    pos: noun
+    gender: f
+    ipa: /ɐlɛˈɦɔrʲijɐ/
+  - lemma: кайдани
+    translation: shackles, fetters
+    pos: noun
+    gender: f
+    ipa: /kɐjˈdɑnɪ/
+  - lemma: свита
+    translation: traditional peasant coat
+    pos: noun
+    gender: f
+    ipa: /ˈsvɪtɐ/
+  - lemma: москалі
+    translation: Muscovites (soldiers/Russians)
+    pos: noun
+    gender: m
+    ipa: /moskɐˈlʲi/
+  - lemma: неситий
+    translation: insatiable, greedy
+    pos: adj
+    ipa: /nɛˈsɪtɪj/
+  - lemma: упир
+    translation: vampire, ghoul
+    pos: noun
+    gender: m
+    ipa: /uˈpɪr/
+  - lemma: прометей
+    translation: Prometheus (symbol of resistance)
+    pos: noun
+    gender: m
+    ipa: /promɛˈtɛj/
+  - lemma: блюдолиз
+    translation: sycophant, lickspittle
+    pos: noun
+    gender: m
+    ipa: /blʲudoˈlɪz/
+  - lemma: мордобитіє
+    translation: face-beating (brutal violence)
+    pos: noun
+    gender: n
+    ipa: /mordɔˈbɪtʲijɛ/

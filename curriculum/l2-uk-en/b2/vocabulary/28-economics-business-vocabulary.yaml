@@ -11,11 +11,11 @@ items:
   ipa: /ɐnɐloˈɦʲit͡ʃno/
   translation: analogously, similarly
   pos: adv
-- lemma: аркадій
-  ipa: ''
-  translation: ''
+- lemma: Аркадій
+  ipa: /ɐrˈkɑdʲij/
+  translation: Arkadiy (name)
   pos: propn
-  gender: f
+  gender: m
 - lemma: артерія
   ipa: /ɐrˈtɛrʲijɑ/
   translation: artery
@@ -30,9 +30,9 @@ items:
   ipa: /borˈɦowɪj/
   translation: debt (adj.)
   pos: adj
-- lemma: бренда
-  ipa: ''
-  translation: ''
+- lemma: бренд
+  ipa: /brɛnd/
+  translation: brand
   pos: noun
   gender: m
 - lemma: буквально
@@ -44,21 +44,14 @@ items:
   translation: stock exchange
   pos: noun
   gender: f
-- lemma: біржя
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: важити
   ipa: /wɑˈʒɪtɪ/
   translation: to weigh
   pos: verb
-  gender: f
 - lemma: валовий
   ipa: /wɐˈlowɪj/
   translation: gross
   pos: adj
-  gender: m
 - lemma: ввп
   ipa: /wɛ wɛ pɛ/
   translation: GDP
@@ -90,9 +83,9 @@ items:
   ipa: /ɦɑrɑntuˈwɑtɪsʲɑ/
   translation: to be guaranteed
   pos: verb
-- lemma: голобородька
-  ipa: ''
-  translation: ''
+- lemma: Голобородько
+  ipa: /ɦoloboˈrodʲko/
+  translation: Holoborodko (surname)
   pos: propn
   gender: m
 - lemma: господарство
@@ -174,7 +167,6 @@ items:
   ipa: /ʒwɑˈwɪj/
   translation: lively, brisk
   pos: adj
-  gender: f
 - lemma: завищений
   ipa: /zɐˈwɪʃɛnɪj/
   translation: overpriced, inflated
@@ -188,23 +180,22 @@ items:
   ipa: /zɐkupowuˈwɑtɪ/
   translation: to purchase
   pos: verb
-- lemma: залустити
-  ipa: ''
-  translation: ''
+- lemma: запустити
+  ipa: /zɐpusˈtɪtɪ/
+  translation: to launch, to start
   pos: verb
 - lemma: залучити
   ipa: /zɐˈlut͡ʃɪtɪ/
   translation: to attract, to involve
   pos: verb
-  gender: f
 - lemma: заощадження
   ipa: /zɐoʃɑdˈʒɛnʲːɑ/
   translation: savings
   pos: noun
   gender: n
-- lemma: запозити
-  ipa: ''
-  translation: ''
+- lemma: запозичити
+  ipa: /zɐˈpozɪt͡ʃɪtɪ/
+  translation: to borrow
   pos: verb
 - lemma: здешевити
   ipa: /zdɛˈʃɛwɪtɪ/
@@ -219,7 +210,6 @@ items:
   ipa: /zmʲit͡sˈnɪtɪsʲɑ/
   translation: to strengthen
   pos: verb
-  gender: m
 - lemma: знижуватися
   ipa: /znɪˈʒuwɑtɪsʲɑ/
   translation: to decrease
@@ -228,12 +218,10 @@ items:
   ipa: /ˈznɪzɪtɪ/
   translation: to reduce, to lower
   pos: verb
-  gender: m
 - lemma: знизитися
   ipa: /znɪˈzɪtɪsʲɑ/
   translation: to decrease
   pos: verb
-  gender: f
 - lemma: зсередини
   ipa: /zsɛrɛˈdɪnɪ/
   translation: from inside
@@ -246,7 +234,6 @@ items:
   ipa: /konkuˈrɛntnɪj/
   translation: competitive
   pos: adj
-  gender: f
 - lemma: конкуренція
   ipa: /konkurɛnt͡sʲijɑ/
   translation: competition
@@ -269,7 +256,6 @@ items:
   ipa: /krɪˈwɪj/
   translation: crooked, curved
   pos: adj
-  gender: m
 - lemma: кулак
   ipa: /kuˈlɑk/
   translation: fist, kulak
@@ -279,7 +265,6 @@ items:
   ipa: /kupʲiwɛlʲnɪj/
   translation: purchasing
   pos: adj
-  gender: f
 - lemma: локальний
   ipa: /loˈkɑlʲnɪj/
   translation: local
@@ -303,25 +288,24 @@ items:
   translation: customs duty
   pos: noun
   gender: n
-- lemma: молдова
-  ipa: ''
-  translation: ''
+- lemma: Молдова
+  ipa: /molˈdowɑ/
+  translation: Moldova
   pos: propn
   gender: f
 - lemma: монетарний
   ipa: /monɛˈtɑrnɪj/
   translation: monetary
   pos: adj
-  gender: f
 - lemma: монополія
   ipa: /monoˈpolʲijɑ/
   translation: monopoly
   pos: noun
   gender: f
-- lemma: мільйони
-  ipa: ''
-  translation: ''
-  pos: other
+- lemma: мільйон
+  ipa: /mʲilʲˈjon/
+  translation: million
+  pos: num
 - lemma: надійніший
   ipa: /nɐˈdʲijnʲiʃɪj/
   translation: more reliable
@@ -334,7 +318,6 @@ items:
   ipa: /nɑjˈwɪɦʲidnʲiʃɪj/
   translation: most profitable
   pos: adj
-  gender: m
 - lemma: наразі
   ipa: /nɐˈrɑzʲi/
   translation: currently, for now
@@ -344,11 +327,11 @@ items:
   translation: nationalization
   pos: noun
   gender: f
-- lemma: нбу
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: f
+- lemma: НБУ
+  ipa: /ɛn bɛ u/
+  translation: National Bank of Ukraine
+  pos: noun
+  gender: m
 - lemma: неподалік
   ipa: /nɛpodɐˈlʲik/
   translation: nearby
@@ -367,17 +350,16 @@ items:
   ipa: /oblʲiˈkowɪj/
   translation: accounting, discount (adj.)
   pos: adj
-  gender: f
 - lemma: обіг
   ipa: /oˈbʲiɦ/
   translation: circulation, turnover
   pos: noun
   gender: m
-- lemma: овдп
-  ipa: ''
-  translation: ''
+- lemma: ОВДП
+  ipa: /o wɛ dɛ pɛ/
+  translation: domestic government bonds
   pos: noun
-  gender: m
+  gender: f
 - lemma: олія
   ipa: /ˈolʲijɑ/
   translation: oil
@@ -387,9 +369,9 @@ items:
   ipa: /opodɑtkuwuˈwɑtɪ/
   translation: to tax
   pos: verb
-- lemma: ощадбанк
-  ipa: ''
-  translation: ''
+- lemma: Ощадбанк
+  ipa: /oˈʃɑdbɑnk/
+  translation: Oschadbank (state savings bank)
   pos: propn
   gender: m
 - lemma: падіння
@@ -397,11 +379,11 @@ items:
   translation: fall, decline
   pos: noun
   gender: n
-- lemma: пдв
-  ipa: ''
-  translation: ''
+- lemma: ПДВ
+  ipa: /pɛ dɛ wɛ/
+  translation: VAT (value-added tax)
   pos: noun
-  gender: f
+  gender: m
 - lemma: перевищення
   ipa: /pɛrɛˈwɪʃɛnʲːɑ/
   translation: excess, exceeding
@@ -420,9 +402,9 @@ items:
   translation: tax
   pos: noun
   gender: m
-- lemma: позик
-  ipa: ''
-  translation: ''
+- lemma: позика
+  ipa: /ˈpozɪkɑ/
+  translation: loan
   pos: noun
   gender: f
 - lemma: позичання
@@ -438,21 +420,18 @@ items:
   ipa: /populʲɑrɪzuˈwɑtɪ/
   translation: to popularize
   pos: verb
-  gender: m
-- lemma: почнути
-  ipa: ''
-  translation: ''
+- lemma: почати
+  ipa: /poˈt͡ʃɑtɪ/
+  translation: to begin, to start
   pos: verb
 - lemma: поштовий
   ipa: /poʃˈtowɪj/
   translation: postal, mail (adj.)
   pos: adj
-  gender: f
 - lemma: працездатний
   ipa: /prɑt͡sɛˈzdɑtnɪj/
   translation: able-bodied, working
   pos: adj
-  gender: n
 - lemma: прибуток
   ipa: /ˈprɪbutok/
   translation: profit
@@ -486,14 +465,14 @@ items:
   translation: percent, interest
   pos: noun
   gender: m
-- lemma: пумб
-  ipa: ''
-  translation: ''
+- lemma: ПУМБ
+  ipa: /pɛ u ɛm bɛ/
+  translation: PUMB (First Ukrainian International Bank)
   pos: propn
   gender: m
-- lemma: пфтс
-  ipa: ''
-  translation: ''
+- lemma: ПФТС
+  ipa: /pɛ ɛf tɛ ɛs/
+  translation: PFTS (stock exchange)
   pos: propn
   gender: f
 - lemma: підприємець
@@ -525,9 +504,9 @@ items:
   translation: entertainment
   pos: noun
   gender: f
-- lemma: росія
-  ipa: ''
-  translation: ''
+- lemma: Росія
+  ipa: /roˈsʲijɑ/
+  translation: Russia
   pos: propn
   gender: f
 - lemma: різноманітність
@@ -538,8 +517,7 @@ items:
 - lemma: річний
   ipa: /ˈrʲit͡ʃnɪj/
   translation: annual, river (adj.)
-  pos: noun
-  gender: m
+  pos: adj
 - lemma: скасування
   ipa: /skɑsuˈwɑnʲːɑ/
   translation: cancellation, abolition
@@ -549,7 +527,6 @@ items:
   ipa: /sonʲɑʃˈnɪkowɪj/
   translation: sunflower (adj.)
   pos: adj
-  gender: f
 - lemma: сповільнення
   ipa: /spowʲilʲˈnɛnʲːɑ/
   translation: slowdown
@@ -559,7 +536,6 @@ items:
   ipa: /spowʲilʲˈnɪtɪsʲɑ/
   translation: to slow down
   pos: verb
-  gender: f
 - lemma: сприятливий
   ipa: /sprɪˈjɑtlɪwɪj/
   translation: favorable
@@ -580,28 +556,28 @@ items:
   pos: noun
   gender: f
 - lemma: ставок
-  ipa: ''
-  translation: ''
+  ipa: /ˈstɑwok/
+  translation: pond
   pos: noun
-  gender: f
-- lemma: стар
-  ipa: ''
-  translation: ''
+  gender: m
+- lemma: Стар
+  ipa: /stɑr/
+  translation: Star (brand name)
   pos: propn
   gender: m
 - lemma: стартовий
   ipa: /stɑrˈtowɪj/
   translation: starting, initial
   pos: adj
-  gender: m
 - lemma: субсидіювати
   ipa: /subsɪdʲijuˈwɑtɪ/
   translation: to subsidize
   pos: verb
-- lemma: сша
-  ipa: ''
-  translation: ''
+- lemma: США
+  ipa: /sɛ ʃɑ ɑ/
+  translation: USA
   pos: propn
+  gender: m
 - lemma: сягнути
   ipa: /sʲɑɦˈnutɪ/
   translation: to reach
@@ -610,7 +586,6 @@ items:
   ipa: /sʲilʲsʲkoɦospoˈdɑrsʲkɪj/
   translation: agricultural
   pos: adj
-  gender: f
 - lemma: танок
   ipa: /tɑˈnok/
   translation: dance
@@ -639,11 +614,10 @@ items:
   translation: traditions
   pos: noun
   gender: f
-- lemma: трильйона
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: трильйон
+  ipa: /trɪlʲˈjon/
+  translation: trillion
+  pos: num
 - lemma: уповільнення
   ipa: /upowʲilʲˈnɛnʲːɑ/
   translation: deceleration
@@ -653,20 +627,19 @@ items:
   ipa: /ˈfondowɪj/
   translation: stock (adj.)
   pos: adj
-  gender: f
-- lemma: фоп
-  ipa: ''
-  translation: ''
+- lemma: ФОП
+  ipa: /ɛf o pɛ/
+  translation: individual entrepreneur
   pos: noun
-  gender: f
+  gender: m
 - lemma: фунт
   ipa: /funt/
   translation: pound (currency)
   pos: noun
   gender: m
-- lemma: шпаліть
-  ipa: ''
-  translation: ''
+- lemma: шпальти
+  ipa: /ˈʃpɑlʲtɪ/
+  translation: newspaper columns, pages
   pos: noun
   gender: f
 - lemma: штат
@@ -696,7 +669,7 @@ items:
   translation: to invest
   pos: verb
 - lemma: іноземка
-  ipa: ''
-  translation: ''
+  ipa: /ʲinoˈzɛmkɑ/
+  translation: foreign woman, foreigner (female)
   pos: noun
-  gender: m
+  gender: f

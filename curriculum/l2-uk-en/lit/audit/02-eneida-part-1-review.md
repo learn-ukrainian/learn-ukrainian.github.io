@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 3526/3500
+- **Words:** ⚠️ 3488/3500 (12 short)
 - **Activities:** ✅ 0/0
 - **Density:** ✅ All > 0
 - **Unique_types:** ✅ 0/0 types
@@ -15,11 +15,11 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 99.1% (target 95-100%)
-- **Richness:** ✅ 99% (literature)
+- **Richness:** ⚠️ 91% (literature) - 1 flags
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 99% (minimum: 90%)
+**Score:** 91% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
@@ -30,12 +30,22 @@
 | engagement | 8 | 4 | 100% | 13% | 13.0% |
 | historical_context | 30 | 3 | 100% | 13% | 13.0% |
 | essays | 5 | 2 | 100% | 13% | 13.0% |
-| resources | 5 | 3 | 100% | 9% | 8.7% |
+| resources | 0 | 3 | 0% | 9% | 0.0% |
 | variety | 0.98 | - | 98% | 4% | 4.3% |
 | cultural | 8 | - | 100% | 4% | 4.3% |
-| visual | 9 | 1 | 100% | 4% | 4.3% |
+| visual | 8 | 1 | 100% | 4% | 4.3% |
 | paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
-| **TOTAL** | | | | | **99.9%** |
+| **TOTAL** | | | | | **91.2%** |
+
+### Dryness Flags & Fixes
+- ❌ **NO_RESOURCES**
+  - FIX:
+    Add 2+ resource blocks. Use this format:
+    
+    > [!resources] Додаткові ресурси
+    >
+    > - [Resource 1 with link or description]
+    > - [Resource 2 with link or description]
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -70,4 +80,4 @@
 | **Частина XV: Феномен Лайки: "Естетика Огидного" 🤬** | ⚪️ | 92 | Skipped |
 | **Частина XVI: Вплив на Мову: Котляревський як Лексикограф 📚** | ⚪️ | 104 | Skipped |
 | **1. Ямб як Серцебиття** | ⚪️ | 67 | Skipped |
-| **2. Алітерація: Звукопис Бурі** | ⚪️ | 329 | Skipped |
+| **2. Алітерація: Звукопис Бурі** | ⚪️ | 291 | Skipped |

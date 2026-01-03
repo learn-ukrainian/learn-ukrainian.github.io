@@ -3,7 +3,7 @@
 **Overall Status:** ❌ FAIL
 
 ## Gates
-- **Words:** ❌ 2496/3500
+- **Words:** ❌ 2204/3500
 - **Activities:** ✅ 0/0
 - **Density:** ✅ All > 0
 - **Unique_types:** ✅ 0/0 types
@@ -14,12 +14,12 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.4% (target 95-100%)
-- **Richness:** ❌ 86% < 90% min (literature)
+- **Immersion:** 🇺🇦 99.3% (target 95-100%)
+- **Richness:** ❌ 71% < 90% min (literature) - REWRITE needed
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 86% (minimum: 90%)
+**Score:** 71% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
@@ -28,14 +28,14 @@
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
 | literary_citations | 2 | 5 | 40% | 17% | 7.0% |
 | engagement | 3 | 4 | 75% | 13% | 9.8% |
-| historical_context | 11 | 3 | 100% | 13% | 13.0% |
-| essays | 5 | 2 | 100% | 13% | 13.0% |
-| resources | 6 | 3 | 100% | 9% | 8.7% |
+| historical_context | 10 | 3 | 100% | 13% | 13.0% |
+| essays | 1 | 2 | 50% | 13% | 6.5% |
+| resources | 0 | 3 | 0% | 9% | 0.0% |
 | variety | 0.99 | - | 99% | 4% | 4.3% |
 | cultural | 9 | - | 100% | 4% | 4.3% |
-| visual | 8 | 1 | 100% | 4% | 4.3% |
+| visual | 6 | 1 | 100% | 4% | 4.3% |
 | paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
-| **TOTAL** | | | | | **86.3%** |
+| **TOTAL** | | | | | **71.0%** |
 
 ### Dryness Flags & Fixes
 - ❌ **NO_LITERARY_CITATIONS**
@@ -45,6 +45,14 @@
     «[Quote from the literary work, minimum 20 characters]»
     
     Example: «Зібравши троянців в остатки / І швидше прийнявши присягу»
+- ❌ **NO_RESOURCES**
+  - FIX:
+    Add 2+ resource blocks. Use this format:
+    
+    > [!resources] Додаткові ресурси
+    >
+    > - [Resource 1 with link or description]
+    > - [Resource 2 with link or description]
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -77,7 +85,3 @@
 | **Частина XII: Географія Смаку** | ⚪️ | 125 | Skipped |
 | **Частина XIII: Етнографічний Інвентар (Одяг і Посуд) 🏺** | ⚪️ | 88 | Skipped |
 | **Частина XIV: Сучасні Відлуння 🔉** | ⚪️ | 81 | Skipped |
-| **🏛️ Читальна Зала** | ⚪️ | 80 | Skipped |
-| **✍️ Аналітичний Практикум** | ⚪️ | 0 | Skipped |
-| **Тема Есе (350-500 слів)** | ⚪️ | 168 | Skipped |
-| **Творче Завдання** | ⚪️ | 44 | Skipped |

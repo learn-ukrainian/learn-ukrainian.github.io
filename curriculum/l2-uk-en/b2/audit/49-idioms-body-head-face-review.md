@@ -1,20 +1,29 @@
 # Audit Report: 49-idioms-body-head-face.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "CBI" | **Target:** 1750
+**Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): ламати, чоло, щоки, обличчя, довгий...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
-- **Words:** ✅ 2088/1750
+- **Words:** ✅ 2034/1750
 - **Activities:** ✅ 15/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 36/35
+- **Vocab:** ✅ 104/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 98.6% (target 98-100% (vocab))
+- **Immersion:** 🇺🇦 99.4% (target 98-100% (vocab))
 - **Richness:** ✅ 97% (content)
 - **Grammar:** ⏳ Pending validation
 
@@ -30,21 +39,15 @@
 | variety | 0.92 | - | 92% | 12% | 11.5% |
 | cultural | 6 | 4 | 100% | 12% | 12.5% |
 | realworld | 6 | 3 | 100% | 12% | 12.5% |
-| visual | 5 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.82 | - | 82% | 6% | 5.1% |
-| questions | 15 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **97.9%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (15 interactive elements)
+| visual | 4 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 0.81 | - | 81% | 6% | 5.1% |
+| questions | 14 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **97.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Соматичні фразеологізми: Голова та обличчя** | ⚪️ | 126 | Skipped |
+| **Intro/Narrative** | ✅ | 72 | Included in Core |
 | **Вступ** | ⚪️ | 177 | Skipped |
 | **Фразеологізми з головою** | ⚪️ | 432 | Skipped |
 | **Фразеологізми з язиком** | ⚪️ | 453 | Skipped |
@@ -55,4 +58,3 @@
 | **Помилки у вживанні** | ✅ | 78 | Included in Core |
 | **Міні-діалоги для практики** | ✅ | 111 | Included in Core |
 | **Підсумок** | ✅ | 102 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

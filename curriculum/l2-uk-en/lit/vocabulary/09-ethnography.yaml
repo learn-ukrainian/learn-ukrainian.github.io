@@ -1,0 +1,93 @@
+module: 09-ethnography
+level: LIT
+items:
+  - lemma: старости
+    translation: matchmakers, wedding envoys
+    pos: noun
+    gender: m
+    ipa: /stɐˈrɔstɪ/
+  - lemma: гарбуз
+    translation: pumpkin (symbol of rejection)
+    pos: noun
+    gender: m
+    ipa: /ɦɐrˈbuz/
+  - lemma: рушник
+    translation: ritual embroidered towel
+    pos: noun
+    gender: m
+    ipa: /ruʃˈnɪk/
+  - lemma: коровай
+    translation: ritual wedding bread
+    pos: noun
+    gender: m
+    ipa: /korɐˈʋɑj/
+  - lemma: голосіння
+    translation: ritual lamentation
+    pos: noun
+    gender: n
+    ipa: /ɦoloˈsʲinʲːɐ/
+  - lemma: посаг
+    translation: dowry
+    pos: noun
+    gender: m
+    ipa: /ˈpɔsɐɦ/
+  - lemma: скриня
+    translation: dowry chest
+    pos: noun
+    gender: f
+    ipa: /ˈskrɪnʲɐ/
+  - lemma: очіпок
+    translation: married woman's headdress
+    pos: noun
+    gender: m
+    ipa: /oˈt͡ʃʲipok/
+  - lemma: плахта
+    translation: traditional wrap-around skirt
+    pos: noun
+    gender: f
+    ipa: /ˈplɑxtɐ/
+  - lemma: чумак
+    translation: traditional salt trader/carrier
+    pos: noun
+    gender: m
+    ipa: /t͡ʃuˈmɑk/
+  - lemma: комора
+    translation: storehouse, granary
+    pos: noun
+    gender: f
+    ipa: /koˈmɔrɐ/
+  - lemma: світлиця
+    translation: front room, parlor
+    pos: noun
+    gender: f
+    ipa: /sʲvʲitˈlɪt͡sʲɐ/
+  - lemma: покуть
+    translation: corner with icons (sacred spot)
+    pos: noun
+    gender: m
+    ipa: /ˈpɔkutʲ/
+  - lemma: шинок
+    translation: tavern, inn
+    pos: noun
+    gender: m
+    ipa: /ʃɪˈnɔk/
+  - lemma: свитка
+    translation: traditional outer garment
+    pos: noun
+    gender: f
+    ipa: /ˈsvɪtkɐ/
+  - lemma: дукач
+    translation: necklace with large coin medallion
+    pos: noun
+    gender: m
+    ipa: /duˈkɑt͡ʃ/
+  - lemma: хутір
+    translation: isolated farmstead, hamlet
+    pos: noun
+    gender: m
+    ipa: /ˈxutʲir/
+  - lemma: степ
+    translation: steppe, open plain
+    pos: noun
+    gender: m
+    ipa: /stɛp/

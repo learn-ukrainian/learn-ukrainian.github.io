@@ -6,20 +6,19 @@ items:
   ipa: /ɐmbʲiwɑˈlɛntno/
   translation: ambivalently
   pos: adv
-- lemma: аня
-  ipa: ''
-  translation: ''
+- lemma: Аня
+  ipa: /ˈɑnʲɑ/
+  translation: Anna (diminutive)
   pos: propn
   gender: f
 - lemma: багатший
   ipa: ''
   translation: ''
   pos: adj
-  gender: f
 - lemma: балакун
-  ipa: ''
-  translation: ''
-  pos: propn
+  ipa: /bɐlɐˈkun/
+  translation: chatterbox
+  pos: noun
   gender: m
 - lemma: безліч
   ipa: /bɛzˈlʲit͡ʃ/
@@ -48,7 +47,6 @@ items:
   ipa: /wɪsˈmʲijɑtɪ/
   translation: to ridicule, to mock
   pos: verb
-  gender: m
 - lemma: вихвалятися
   ipa: /wɪxwɑlʲɑˈtɪsʲɑ/
   translation: to boast, to brag
@@ -57,15 +55,14 @@ items:
   ipa: /ˈwlut͡ʃnɪj/
   translation: accurate, apt
   pos: adj
-  gender: m
 - lemma: влучність
   ipa: /ˈwlut͡ʃnʲistʲ/
   translation: accuracy, aptness
   pos: noun
   gender: f
-- lemma: вражень
-  ipa: ''
-  translation: ''
+- lemma: враження
+  ipa: /wrɐˈʒɛnʲːɑ/
+  translation: impression
   pos: noun
   gender: n
 - lemma: втручатися
@@ -80,15 +77,9 @@ items:
   ipa: /ɦɐˈnɛbnɪj/
   translation: shameful, disgraceful
   pos: adj
-  gender: f
 - lemma: глузд
   ipa: /ɦluzd/
   translation: sense, reason
-  pos: noun
-  gender: m
-- lemma: гудза
-  ipa: ''
-  translation: ''
   pos: noun
   gender: m
 - lemma: гудзик
@@ -105,16 +96,15 @@ items:
   ipa: /dɛkorɐˈtɪwnɪj/
   translation: decorative
   pos: adj
-- lemma: денис
-  ipa: ''
-  translation: ''
+- lemma: Денис
+  ipa: /dɛˈnɪs/
+  translation: Denys (Ukrainian name)
   pos: propn
   gender: m
 - lemma: дотепний
   ipa: /doˈtɛpnɪj/
   translation: witty
   pos: adj
-  gender: m
 - lemma: дошкульно
   ipa: /doʃˈkulʲno/
   translation: painfully, sharply
@@ -124,11 +114,6 @@ items:
   translation: painfulness, sharpness
   pos: noun
   gender: f
-- lemma: дрімат
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: дрімати
   ipa: /drʲiˈmɑtɪ/
   translation: to doze, to drowse
@@ -146,16 +131,14 @@ items:
   translation: being in love, infatuation
   pos: noun
   gender: f
-- lemma: збожеволіт
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: збожеволіти
+  ipa: /zboʒɛwoˈlʲitɪ/
+  translation: to go crazy
+  pos: verb
 - lemma: звільнитися
   ipa: /zwʲilʲˈnɪtɪsʲɑ/
   translation: to free oneself, to be released
   pos: verb
-  gender: f
 - lemma: здуріти
   ipa: /zduˈrʲitɪ/
   translation: to go crazy
@@ -164,7 +147,6 @@ items:
   ipa: /zˈmut͡ʃɛnɪj/
   translation: exhausted, tormented
   pos: adj
-  gender: m
 - lemma: знайомість
   ipa: /znɐˈjomʲistʲ/
   translation: acquaintance
@@ -192,27 +174,20 @@ items:
   ipa: /klʲuˈwɑtɪ/
   translation: to peck, to nod off
   pos: verb
-  gender: m
-- lemma: колом
-  ipa: ''
-  translation: ''
+- lemma: коло
+  ipa: /ˈkolo/
+  translation: circle, around
   pos: noun
   gender: n
 - lemma: конфіденційний
   ipa: /konfʲidɛnˈt͡sʲijnɪj/
   translation: confidential
   pos: adj
-  gender: f
 - lemma: коса
   ipa: /koˈsɑ/
   translation: braid, scythe
   pos: noun
   gender: f
-- lemma: кунят
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: лірник
   ipa: /ˈlʲirnɪk/
   translation: lyre player, minstrel
@@ -238,8 +213,7 @@ items:
 - lemma: надміру
   ipa: /nɐdˈmʲiru/
   translation: excessively, overly
-  pos: noun
-  gender: m
+  pos: adv
 - lemma: незручний
   ipa: /nɛˈzrut͡ʃnɪj/
   translation: uncomfortable, inconvenient
@@ -248,7 +222,6 @@ items:
   ipa: /nɛprɪwɑblɪwɪj/
   translation: unattractive
   pos: adj
-  gender: f
 - lemma: оберт
   ipa: /oˈbɛrt/
   translation: rotation, turn
@@ -291,16 +264,15 @@ items:
   ipa: /plʲitkuˈwɑtɪ/
   translation: to gossip
   pos: verb
-- lemma: пліток
-  ipa: ''
-  translation: ''
+- lemma: плітка
+  ipa: /ˈplʲitkɑ/
+  translation: gossip, rumor
   pos: noun
   gender: f
 - lemma: пожежний
   ipa: /poˈʒɛʒnɪj/
   translation: fire (adj.), firefighter
   pos: adj
-  gender: f
 - lemma: позаду
   ipa: /pozɐˈdu/
   translation: behind
@@ -318,7 +290,6 @@ items:
   ipa: /prɪɦolomˈʃɛnɪj/
   translation: stunned, shocked
   pos: adj
-  gender: f
 - lemma: приголомшення
   ipa: /prɪɦolomˈʃɛnʲːɑ/
   translation: shock, stunning
@@ -328,14 +299,13 @@ items:
   ipa: /prɪˈnɪzɪtɪ/
   translation: to humiliate
   pos: verb
-  gender: m
 - lemma: пришивати
   ipa: /prɪʃɪˈwɑtɪ/
   translation: to sew on
   pos: verb
-- lemma: противаг
-  ipa: ''
-  translation: ''
+- lemma: противага
+  ipa: /prɐtɪˈwɑɦɑ/
+  translation: counterbalance, counterweight
   pos: noun
   gender: f
 - lemma: пускати
@@ -355,7 +325,6 @@ items:
   ipa: /rozˈɦublɛnɪj/
   translation: confused, bewildered
   pos: adj
-  gender: f
 - lemma: розплітати
   ipa: /rozplʲiˈtɑtɪ/
   translation: to unbraid
@@ -364,10 +333,9 @@ items:
   ipa: /rozuˈmowɪj/
   translation: mental, intellectual
   pos: adj
-  gender: m
-- lemma: рівноваг
-  ipa: ''
-  translation: ''
+- lemma: рівновага
+  ipa: /rʲiwnoˈwɑɦɑ/
+  translation: balance, equilibrium
   pos: noun
   gender: f
 - lemma: самовихваляння
@@ -384,7 +352,6 @@ items:
   ipa: /sɑrkɐˈstɪt͡ʃnɪj/
   translation: sarcastic
   pos: adj
-  gender: m
 - lemma: сигналізація
   ipa: /sɪɦnɑlʲizɑˈt͡sʲijɑ/
   translation: alarm system
@@ -394,19 +361,18 @@ items:
   ipa: /skoˈt͡ʃɪtɪsʲɑ/
   translation: to roll down, to degenerate
   pos: verb
-- lemma: сома
-  ipa: ''
-  translation: ''
+- lemma: сом
+  ipa: /som/
+  translation: catfish
   pos: noun
-  gender: f
+  gender: m
 - lemma: спрацювати
   ipa: /sprɑt͡sʲuˈwɑtɪ/
   translation: to work, to function
   pos: verb
-  gender: f
-- lemma: співка
-  ipa: ''
-  translation: ''
+- lemma: співак
+  ipa: /spʲiˈwɑk/
+  translation: singer
   pos: noun
   gender: m
 - lemma: співробітниця
@@ -419,16 +385,15 @@ items:
   translation: scholarship, stipend
   pos: noun
   gender: f
-- lemma: стреса
-  ipa: ''
-  translation: ''
+- lemma: стрес
+  ipa: /strɛs/
+  translation: stress
   pos: noun
   gender: m
 - lemma: стресовий
   ipa: /strɛˈsowɪj/
   translation: stressful
   pos: adj
-  gender: f
 - lemma: стриманість
   ipa: /strɪˈmɑnʲistʲ/
   translation: restraint, composure
@@ -460,40 +425,35 @@ items:
   ipa: /frɑzɛoloˈɦʲit͡ʃnɪj/
   translation: phraseological
   pos: adj
-  gender: m
 - lemma: фігурувати
   ipa: /fʲiɦuruˈwɑtɪ/
   translation: to figure, to appear
   pos: verb
-- lemma: хвеський
-  ipa: ''
-  translation: ''
+- lemma: хвацький
+  ipa: /ˈxwɑt͡sʲkɪj/
+  translation: dashing, bold
   pos: adj
-  gender: f
 - lemma: хибний
   ipa: /ˈxɪbnɪj/
   translation: false, erroneous
   pos: adj
-  gender: n
 - lemma: шанувати
   ipa: /ʃɐnuˈwɑtɪ/
   translation: to respect, to honor
   pos: verb
-- lemma: юля
-  ipa: ''
-  translation: ''
+- lemma: Юля
+  ipa: /ˈjulʲɑ/
+  translation: Yulia (diminutive)
   pos: propn
   gender: f
 - lemma: язикатий
   ipa: /jɐzɪˈkɑtɪj/
   translation: sharp-tongued
   pos: adj
-  gender: f
 - lemma: їдкий
   ipa: /ˈjidkɪj/
   translation: caustic, biting
   pos: adj
-  gender: m
 - lemma: їдко
   ipa: /ˈjidko/
   translation: caustically

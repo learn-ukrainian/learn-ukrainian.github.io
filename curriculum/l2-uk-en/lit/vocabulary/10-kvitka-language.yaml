@@ -1,0 +1,102 @@
+module: 10-kvitka-language
+level: LIT
+items:
+  - lemma: бурлеск
+    translation: burlesque (style of humor)
+    pos: noun
+    gender: m
+    ipa: /burˈlɛsk/
+  - lemma: сентименталізм
+    translation: sentimentalism
+    pos: noun
+    gender: m
+    ipa: /sɛntɪmɛntɐˈlʲizm/
+  - lemma: діалектизм
+    translation: dialectal word
+    pos: noun
+    gender: m
+    ipa: /dʲiɐlɛkˈtɪzm/
+  - lemma: димінутив
+    translation: diminutive (pet name form)
+    pos: noun
+    gender: m
+    ipa: /dɪmʲinuˈtɪu̯/
+  - lemma: макаронічна мова
+    translation: macaronic language (mixed languages)
+    pos: noun
+    gender: f
+    ipa: /mɐkɐrɔˈnʲit͡ʃnɐ ˈmɔʋɐ/
+  - lemma: суржик
+    translation: surzhyk (mixed UA-RU speech)
+    pos: noun
+    gender: m
+    ipa: /ˈsurʒɪk/
+  - lemma: сказова манера
+    translation: skaz (oral narrative style)
+    pos: noun
+    gender: f
+    ipa: /ˈskɑzoʋɐ mɐˈnɛrɐ/
+  - lemma: вульгаризм
+    translation: vulgarism, coarse word
+    pos: noun
+    gender: m
+    ipa: /ʋulʲɦɐˈrɪzm/
+  - lemma: епітет
+    translation: epithet
+    pos: noun
+    gender: m
+    ipa: /ɛˈpʲitɛt/
+  - lemma: гіпербола
+    translation: hyperbole
+    pos: noun
+    gender: f
+    ipa: /ɦʲiˈpɛrbolɐ/
+  - lemma: патрет
+    translation: portrait (dialectal/archaic)
+    pos: noun
+    gender: m
+    ipa: /pɐˈtrɛt/
+  - lemma: бецман
+    translation: clumsy person, sluggard
+    pos: noun
+    gender: m
+    ipa: /ˈbɛt͡smɐn/
+  - lemma: скиндячка
+    translation: hair ribbon (dialectal)
+    pos: noun
+    gender: f
+    ipa: /skɪnˈdʲɑt͡ʃkɐ/
+  - lemma: журба
+    translation: sorrow, melancholy
+    pos: noun
+    gender: f
+    ipa: /ʒurˈbɑ/
+  - lemma: ґедз
+    translation: gadfly (also: whim, fit of temper)
+    pos: noun
+    gender: m
+    ipa: /ɦɛd͡z/
+  - lemma: витребеньки
+    translation: whims, fancies, knick-knacks
+    pos: noun
+    gender: f
+    ipa: /ʋɪtrɛˈbɛnʲkɪ/
+  - lemma: мотлох
+    translation: junk, rubbish, rabble
+    pos: noun
+    gender: m
+    ipa: /ˈmɔtlɔx/
+  - lemma: пантрувати
+    translation: to watch, to look after (dialectal)
+    pos: verb
+    aspect: impf
+    ipa: /pɐntruˈʋɑtɪ/
+  - lemma: лементувати
+    translation: to lament, to wail loudly
+    pos: verb
+    aspect: impf
+    ipa: /lɛmɛntuˈʋɑtɪ/
+  - lemma: знічев'я
+    translation: out of boredom, for no reason
+    pos: adv
+    ipa: /zʲnʲiˈt͡ʃɛʋjɐ/

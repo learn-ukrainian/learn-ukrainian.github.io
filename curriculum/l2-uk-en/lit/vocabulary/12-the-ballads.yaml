@@ -1,0 +1,88 @@
+module: 12-the-ballads
+level: LIT
+items:
+  - lemma: балада
+    translation: ballad (literary genre)
+    pos: noun
+    gender: f
+    ipa: /bɐˈlɑdɐ/
+  - lemma: метаморфоза
+    translation: metamorphosis, transformation
+    pos: noun
+    gender: f
+    ipa: /mɛtɐmorˈfɔzɐ/
+  - lemma: причинна
+    translation: bewitched, moonstruck (girl)
+    pos: noun
+    gender: f
+    ipa: /prɪˈt͡ʃɪnːɐ/
+  - lemma: русалка
+    translation: mermaid, water nymph
+    pos: noun
+    gender: f
+    ipa: /ruˈsɑlkɐ/
+  - lemma: психологічний паралелізм
+    translation: psychological parallelism
+    pos: noun
+    gender: m
+    ipa: /psɪxoloˈɦʲit͡ʃnɪj pɐrɐlɛˈlʲizm/
+  - lemma: зілля
+    translation: potion, magic herbs
+    pos: noun
+    gender: n
+    ipa: /ˈzʲilʲːɐ/
+  - lemma: фатум
+    translation: fate, doom
+    pos: noun
+    gender: m
+    ipa: /ˈfɑtum/
+  - lemma: ворожіння
+    translation: fortune-telling, divination
+    pos: noun
+    gender: n
+    ipa: /ʋoroˈʒʲinʲːɐ/
+  - lemma: потойбіччя
+    translation: the hereafter, beyond
+    pos: noun
+    gender: n
+    ipa: /potojˈbʲit͡ʃʲːɐ/
+  - lemma: антропоморфізм
+    translation: anthropomorphism
+    pos: noun
+    gender: m
+    ipa: /ɐntropomorˈfʲizm/
+  - lemma: меланхолія
+    translation: melancholy, sadness
+    pos: noun
+    gender: f
+    ipa: /mɛlɐnxoˈlʲijɐ/
+  - lemma: тополя
+    translation: poplar tree (symbol of sorrow)
+    pos: noun
+    gender: f
+    ipa: /toˈpɔlʲɐ/
+  - lemma: верба
+    translation: willow tree
+    pos: noun
+    gender: f
+    ipa: /ʋɛrˈbɑ/
+  - lemma: дніпро
+    translation: Dnieper River
+    pos: noun
+    gender: m
+    ipa: /dnʲiˈprɔ/
+  - lemma: залоскотати
+    translation: to tickle to death (by mermaids)
+    pos: verb
+    aspect: pf
+    ipa: /zɐloskoˈtɑtɪ/
+  - lemma: ворожка
+    translation: fortune teller, witch
+    pos: noun
+    gender: f
+    ipa: /ʋoˈrɔʒkɐ/
+  - lemma: утоплена
+    translation: drowned woman
+    pos: noun
+    gender: f
+    ipa: /uˈtɔplɛnɐ/

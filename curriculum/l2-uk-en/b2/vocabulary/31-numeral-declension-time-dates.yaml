@@ -7,59 +7,50 @@ items:
   translation: questionnaire, form
   pos: noun
   gender: f
-- lemma: березо
-  ipa: ''
-  translation: ''
+- lemma: березень
+  ipa: /ˈbɛrɛzɛnʲ/
+  translation: March
   pos: noun
-  gender: f
+  gender: m
 - lemma: виключення
   ipa: /wɪklʲuˈt͡ʃɛnʲːɑ/
   translation: exception
   pos: noun
   gender: n
-- lemma: відм
-  ipa: ''
-  translation: ''
+- lemma: відмінок
+  ipa: /wʲidˈmʲinok/
+  translation: case (grammatical)
   pos: noun
   gender: m
 - lemma: вітатися
   ipa: /wʲitɑˈtɪsʲɑ/
   translation: to greet, to say hello
   pos: verb
-- lemma: горох
-  ipa: ''
-  translation: ''
+- lemma: Горохова
+  ipa: /ɦoroˈxowɑ/
+  translation: Gorokhova (street in Kyiv)
   pos: propn
-  gender: m
+  gender: f
 - lemma: датний
   ipa: /ˈdɑtnɪj/
   translation: dative
   pos: adj
 - lemma: двадцяте
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: n
+  ipa: /dwɑd͡t͡sʲɑˈtɛ/
+  translation: twentieth
+  pos: adj
 - lemma: двадцятичотиригодинний
   ipa: /dwɑd͡t͡sʲɑtɪt͡ʃotɪrɪɦoˈdɪnnɪj/
   translation: 24-hour
   pos: adj
-  gender: m
-- lemma: дванадцят
-  ipa: ''
-  translation: ''
-  pos: other
-  gender: f
-- lemma: дванадцятії
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
+- lemma: дванадцята
+  ipa: /dwɐnɐd͡t͡sʲɑˈtɑ/
+  translation: twelfth (feminine)
+  pos: adj
 - lemma: десяте
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: n
+  ipa: /dɛˈsʲɑtɛ/
+  translation: tenth (neuter)
+  pos: adj
 - lemma: заснування
   ipa: /zɐsnuˈwɑnʲːɑ/
   translation: founding, establishment
@@ -70,16 +61,15 @@ items:
   translation: corporate party
   pos: noun
   gender: m
-- lemma: коцюбинський
-  ipa: ''
-  translation: ''
+- lemma: Коцюбинський
+  ipa: /kot͡sʲuˈbɪnsʲkɪj/
+  translation: Kotsyubynsky (Ukrainian writer)
   pos: propn
   gender: m
 - lemma: крайній
   ipa: /ˈkrɑjnʲij/
   translation: extreme, last
   pos: adj
-  gender: m
 - lemma: латинський
   ipa: /lɐˈtɪnsʲkɪj/
   translation: Latin
@@ -89,9 +79,9 @@ items:
   translation: marketing
   pos: noun
   gender: m
-- lemma: маруся
-  ipa: ''
-  translation: ''
+- lemma: Маруся
+  ipa: /mɐˈrusʲɑ/
+  translation: Marusya (name)
   pos: propn
   gender: f
 - lemma: мінідіалог
@@ -99,11 +89,10 @@ items:
   translation: mini-dialogue
   pos: noun
   gender: m
-- lemma: місц
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: місцевий
+  ipa: /mʲisˈt͡sɛwɪj/
+  translation: local
+  pos: adj
 - lemma: неофіційно
   ipa: /nɛofʲit͡sʲijno/
   translation: unofficially
@@ -112,12 +101,10 @@ items:
   ipa: /nɛrɛɦuˈlʲɑrnɪj/
   translation: irregular
   pos: adj
-  gender: f
 - lemma: обідній
   ipa: /oˈbʲidnʲij/
   translation: lunch, noon (adj.)
   pos: adj
-  gender: f
 - lemma: опівночі
   ipa: /opʲiwˈnot͡ʃʲi/
   translation: at midnight
@@ -127,9 +114,9 @@ items:
   translation: midnight
   pos: noun
   gender: f
-- lemma: побуть
-  ipa: ''
-  translation: ''
+- lemma: побут
+  ipa: /ˈpobut/
+  translation: everyday life, daily routine
   pos: noun
   gender: m
 - lemma: поетеса
@@ -150,7 +137,6 @@ items:
   ipa: /prɪˈblɪznɪj/
   translation: approximate
   pos: adj
-  gender: m
 - lemma: прикмета
   ipa: /prɪkˈmɛtɑ/
   translation: sign, omen
@@ -165,19 +151,19 @@ items:
   translation: summing up
   pos: noun
   gender: n
-- lemma: підтвестидя
-  ipa: ''
-  translation: ''
+- lemma: підтвердитися
+  ipa: /pʲidtwɛrˈdɪtɪsʲɑ/
+  translation: to be confirmed, to be verified
   pos: verb
 - lemma: рівно
   ipa: /ˈrʲiwno/
   translation: exactly, precisely
   pos: adv
-- lemma: різ
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: Різдво
+  ipa: /ˈrʲizdwo/
+  translation: Christmas
+  pos: propn
+  gender: n
 - lemma: річниця
   ipa: /rʲit͡ʃˈnɪt͡sʲɑ/
   translation: anniversary
@@ -187,36 +173,32 @@ items:
   ipa: /sloˈwɛsnɪj/
   translation: verbal
   pos: adj
-  gender: f
 - lemma: сполучення
   ipa: /spolut͡ʃɛnʲːɑ/
   translation: combination
   pos: noun
   gender: n
 - lemma: сьома
-  ipa: ''
-  translation: ''
+  ipa: /ˈsʲomɑ/
+  translation: seventh (feminine)
+  pos: adj
+- lemma: сімнадцятий
+  ipa: /sʲimnɑd͡t͡sʲɑtɪj/
+  translation: seventeenth
+  pos: adj
+- lemma: сітка
+  ipa: /ˈsʲitkɑ/
+  translation: grid, net
   pos: noun
   gender: f
-- lemma: сімнадцятий
-  ipa: ''
-  translation: ''
-  pos: adj
-  gender: f
-- lemma: сіти
-  ipa: ''
-  translation: ''
-  pos: verb
 - lemma: тридцятий
-  ipa: ''
-  translation: ''
+  ipa: /trɪd͡t͡sʲɑˈtɪj/
+  translation: thirtieth
   pos: adj
-  gender: m
 - lemma: тринадцятий
-  ipa: ''
-  translation: ''
+  ipa: /trɪnɑd͡t͡sʲɑˈtɪj/
+  translation: thirteenth
   pos: adj
-  gender: n
 - lemma: упродовж
   ipa: /uˈprodowʃ/
   translation: throughout, during
@@ -226,28 +208,25 @@ items:
   translation: damage, harm
   pos: noun
   gender: m
-- lemma: четверт
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: чотирнадцятий
-  ipa: ''
-  translation: ''
+- lemma: четверта
+  ipa: /t͡ʃɛˈtwɛrtɑ/
+  translation: fourth (feminine)
   pos: adj
-  gender: f
-- lemma: чурай
-  ipa: ''
-  translation: ''
+- lemma: чотирнадцятий
+  ipa: /t͡ʃotɪrnɑd͡t͡sʲɑˈtɪj/
+  translation: fourteenth
+  pos: adj
+- lemma: Чурай
+  ipa: /t͡ʃuˈrɑj/
+  translation: Churai (surname, Marusya Churai)
   pos: propn
   gender: f
 - lemma: шістнадцятий
-  ipa: ''
-  translation: ''
+  ipa: /ʃʲistnɑd͡t͡sʲɑˈtɪj/
+  translation: sixteenth
   pos: adj
-  gender: f
-- lemma: ювіль
-  ipa: ''
-  translation: ''
+- lemma: ювілей
+  ipa: /juwʲiˈlɛj/
+  translation: jubilee, anniversary
   pos: noun
   gender: m

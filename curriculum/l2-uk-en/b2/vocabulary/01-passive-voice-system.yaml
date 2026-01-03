@@ -7,6 +7,10 @@ items:
   translation: agent
   pos: noun
   gender: m
+- lemma: активний стан
+  ipa: /ɐkˈtɪwnɪj stɑn/
+  translation: active voice
+  pos: phrase
 - lemma: активно
   ipa: /ɐkˈtɪwno/
   translation: actively
@@ -284,11 +288,20 @@ items:
   translation: small, petty
   pos: adj
   gender: m
+- lemma: дійсний
+  ipa: /ˈdʲijsnɪj/
+  translation: active (grammatical)
+  pos: adj
 - lemma: діловий
   ipa: /dʲiloˈwɪj/
   translation: business (adj)
   pos: adj
   gender: m
+- lemma: дія
+  ipa: /ˈdʲijɐ/
+  translation: action
+  pos: noun
+  gender: f
 - lemma: дієприкметник
   ipa: /dʲijɛprɪˈkmɛtn̪ɪk/
   translation: participle
@@ -298,6 +311,11 @@ items:
   ipa: /dʲijɛprɪkmɛtn̪ɪˈkowɪj/
   translation: participial
   pos: adj
+- lemma: еквівалент
+  ipa: /ɛkwiˈwɐlɛnt/
+  translation: equivalent
+  pos: noun
+  gender: m
 - lemma: експеримент
   ipa: /ɛkspɛrɪˈmɛnt/
   translation: experiment
@@ -428,6 +446,10 @@ items:
   ipa: /klɐsɪfʲikuˈwɑtɪ/
   translation: to classify
   pos: verb
+- lemma: книжний
+  ipa: /ˈknɪʒnɪj/
+  translation: bookish, literary
+  pos: adj
 - lemma: коворкінг
   ipa: /koˈworkʲinɦ/
   translation: coworking
@@ -448,6 +470,11 @@ items:
   translation: competition, contest
   pos: noun
   gender: m
+- lemma: конструкція
+  ipa: /konstrukˈt͡sʲijɐ/
+  translation: construction
+  pos: noun
+  gender: f
 - lemma: корпус
   ipa: /ˈkorpus/
   translation: corpus, building
@@ -560,6 +587,10 @@ items:
   ipa: /nɐtɪsˈkɑtɪsʲɐ/
   translation: to be pressed
   pos: verb
+- lemma: науковий
+  ipa: /nɐuˈkowɪj/
+  translation: scientific
+  pos: adj
 - lemma: науковка
   ipa: /nɐuˈkowkɐ/
   translation: scientific (colloquial)
@@ -593,6 +624,10 @@ items:
   translation: unchangeable
   pos: adj
   gender: f
+- lemma: нейтральний
+  ipa: /nɛjtˈrɑlʲnɪj/
+  translation: neutral
+  pos: adj
 - lemma: неправильно
   ipa: /nɛˈprɑwɪlʲno/
   translation: incorrectly
@@ -612,6 +647,11 @@ items:
   translation: norm, standard
   pos: noun
   gender: f
+- lemma: об'єкт
+  ipa: /obˈjɛkt/
+  translation: object
+  pos: noun
+  gender: m
 - lemma: обробляти
   ipa: /oˈbroblʲɐtɪ/
   translation: to process
@@ -667,6 +707,10 @@ items:
   translation: original
   pos: adj
   gender: m
+- lemma: офіційний
+  ipa: /ofʲit͡sʲijˈnɪj/
+  translation: official
+  pos: adj
 - lemma: охоронятися
   ipa: /oxoroˈnʲɐtɪsʲɐ/
   translation: to be protected
@@ -685,6 +729,14 @@ items:
   translation: passive voice
   pos: noun
   gender: m
+- lemma: пасивний
+  ipa: /pɐˈsɪwnɪj/
+  translation: passive
+  pos: adj
+- lemma: пасивний стан
+  ipa: /pɐˈsɪwnɪj stɑn/
+  translation: passive voice
+  pos: phrase
 - lemma: переважати
   ipa: /pɛrɛwɐˈʒɑtɪ/
   translation: to prevail
@@ -724,6 +776,10 @@ items:
   ipa: /pɪˈsɑtɪsʲɐ/
   translation: to be written
   pos: verb
+- lemma: письмовий
+  ipa: /pɪsʲˈmowɪj/
+  translation: written
+  pos: adj
 - lemma: плануватися
   ipa: /plɐnuˈwɑtɪsʲɐ/
   translation: to be planned
@@ -886,11 +942,20 @@ items:
   translation: resource
   pos: noun
   gender: m
+- lemma: реєстр
+  ipa: /rɛˈjɛstr/
+  translation: register (linguistic)
+  pos: noun
+  gender: m
 - lemma: рода
   ipa: /ˈrodɐ/
   translation: gender (gram)
   pos: noun
   gender: m
+- lemma: розмовний
+  ipa: /rozmowˈnɪj/
+  translation: colloquial
+  pos: adj
 - lemma: розпочати
   ipa: /rozpotʃɐˈtɪ/
   translation: to begin
@@ -958,6 +1023,11 @@ items:
   translation: statistics
   pos: noun
   gender: f
+- lemma: стиль
+  ipa: /stɪlʲ/
+  translation: style
+  pos: noun
+  gender: m
 - lemma: стилістичний
   ipa: /stɪlʲisˈtɪtʃnɪj/
   translation: stylistic
@@ -968,6 +1038,11 @@ items:
   translation: century
   pos: noun
   gender: n
+- lemma: суб'єкт
+  ipa: /subˈjɛkt/
+  translation: subject
+  pos: noun
+  gender: m
 - lemma: сучасно
   ipa: /suˈtʃɑsno/
   translation: modernly
@@ -1038,6 +1113,10 @@ items:
   ipa: /uroˈtʃɪsto/
   translation: solemnly
   pos: adv
+- lemma: усний
+  ipa: /ˈusnɪj/
+  translation: oral
+  pos: adj
 - lemma: утворюватися
   ipa: /utwoˈrʲuwɐtɪsʲɐ/
   translation: to be formed
@@ -1052,6 +1131,11 @@ items:
   translation: fund, foundation
   pos: noun
   gender: m
+- lemma: форма
+  ipa: /ˈformɐ/
+  translation: form
+  pos: noun
+  gender: f
 - lemma: формальний
   ipa: /forˈmɑlʲnɪj/
   translation: formal
@@ -1072,6 +1156,11 @@ items:
   translation: fresco
   pos: noun
   gender: f
+- lemma: функція
+  ipa: /ˈfunkt͡sʲijɐ/
+  translation: function
+  pos: noun
+  gender: f
 - lemma: хвалити
   ipa: /xwɐˈlɪtɪ/
   translation: to praise
@@ -1081,6 +1170,10 @@ items:
   translation: artist
   pos: noun
   gender: m
+- lemma: художній
+  ipa: /xuˈdoʒnʲij/
+  translation: artistic, literary
+  pos: adj
 - lemma: церемонія
   ipa: /t͡sɛrɛˈmonʲijɐ/
   translation: ceremony

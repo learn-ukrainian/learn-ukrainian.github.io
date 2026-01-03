@@ -2,22 +2,22 @@ module: 80-galytsko-volynske-knyazivstvo
 level: B2
 version: '2.0'
 items:
-- lemma: '''визволення'''
-  ipa: ''
-  translation: ''
+- lemma: визволення
+  ipa: /wɪzwoˈlɛnʲːɑ/
+  translation: liberation
   pos: noun
   gender: n
-- lemma: австрія
+- lemma: Австрія
   ipa: /ɐwsˈtrʲijɑ/
   translation: Austria
   pos: propn
   gender: f
-- lemma: балтика
+- lemma: Балтика
   ipa: /bɐlˈtɪkɑ/
   translation: Baltic (region)
   pos: propn
   gender: f
-- lemma: болеслав
+- lemma: Болеслав
   ipa: /boˈlɛslɑw/
   translation: Bolesław (Polish king)
   pos: propn
@@ -32,17 +32,12 @@ items:
   translation: Bratoliubets (epithet)
   pos: propn
   gender: m
-- lemma: булл
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: булла
   ipa: /ˈbulːɑ/
   translation: papal bull
-  pos: propn
+  pos: noun
   gender: f
-- lemma: василько
+- lemma: Василько
   ipa: /wɐˈsɪlʲko/
   translation: Vasylko (prince)
   pos: propn
@@ -64,9 +59,8 @@ items:
   ipa: /wozˈlʲublɛnɪj/
   translation: beloved
   pos: adj
-  gender: m
-- lemma: волиння
-  ipa: /woˈlɪnʲːɑ/
+- lemma: Волинь
+  ipa: /ˈwolɪnʲ/
   translation: Volhynia
   pos: propn
   gender: f
@@ -91,24 +85,18 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: f
-- lemma: галич
+- lemma: Галич
   ipa: /ˈɦɑlɪt͡ʃ/
   translation: Halych (city)
   pos: propn
   gender: m
-- lemma: галичі
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
-- lemma: данил
-  ipa: /dɐˈnɪl/
+- lemma: Данило
+  ipa: /dɐˈnɪlo/
   translation: Danylo (Daniel of Galicia)
   pos: propn
   gender: m
-- lemma: дорогочина
-  ipa: /doroɦoˈt͡ʃɪnɑ/
+- lemma: Дорогочин
+  ipa: /doroɦoˈt͡ʃɪn/
   translation: Dorohochyn (city)
   pos: propn
   gender: m
@@ -116,12 +104,10 @@ items:
   ipa: /ʒɐˈdɑtɪ/
   translation: to demand, to crave
   pos: verb
-  gender: m
 - lemma: західноєвропейський
   ipa: /zɐxʲidnoˈjɛwroˈpɛjsʲkɪj/
   translation: Western European
   pos: adj
-  gender: m
 - lemma: злее
   ipa: ''
   translation: ''
@@ -130,7 +116,6 @@ items:
   ipa: /zuˈmʲitɪ/
   translation: to manage to, to succeed in
   pos: verb
-  gender: n
 - lemma: княжіння
   ipa: /knʲɑˈʒʲinʲːɑ/
   translation: princely reign
@@ -155,13 +140,12 @@ items:
   ipa: /koroˈnowɑnɪj/
   translation: crowned
   pos: adj
-  gender: m
-- lemma: красот
-  ipa: ''
-  translation: ''
+- lemma: краса
+  ipa: /krɐˈsɑ/
+  translation: beauty
   pos: noun
   gender: f
-- lemma: кременець
+- lemma: Кременець
   ipa: /krɛˈmɛnɛt͡sʲ/
   translation: Kremenets (city)
   pos: propn
@@ -170,12 +154,6 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: m
-- lemma: лева
-  ipa: /ˈlɛwɑ/
-  translation: Lev (Leo, prince, genitive)
-  pos: propn
-  gender: m
 - lemma: легат
   ipa: /lɛˈɦɑt/
   translation: legates (papal envoys, genitive plural)
@@ -190,7 +168,6 @@ items:
   ipa: /mɐloˈlʲitnʲij/
   translation: underage, minor
   pos: adj
-  gender: m
 - lemma: ментальний
   ipa: ''
   translation: ''
@@ -205,7 +182,7 @@ items:
   translation: monarchies (genitive plural)
   pos: noun
   gender: f
-- lemma: мстиславич
+- lemma: Мстиславич
   ipa: /msˈtɪslɑwɪt͡ʃ/
   translation: Mstyslavych (patronymic)
   pos: propn
@@ -224,7 +201,6 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: f
 - lemma: одружуватися
   ipa: /odruˈʒuwɑtɪsʲɑ/
   translation: to marry
@@ -239,7 +215,7 @@ items:
   translation: strongholds (genitive plural)
   pos: noun
   gender: m
-- lemma: опізо
+- lemma: Опізо
   ipa: /oˈpʲizo/
   translation: Opizo (papal legate)
   pos: propn
@@ -248,17 +224,10 @@ items:
   ipa: /orˈdɪnsʲkɪj/
   translation: Horde (adj.)
   pos: adj
-  gender: f
-- lemma: орді
-  ipa: /orˈdʲi/
-  translation: Horde (dative)
-  pos: propn
-  gender: f
 - lemma: отруєний
   ipa: /otˈrujɛnɪj/
   translation: poisoned
   pos: adj
-  gender: m
 - lemma: папоє
   ipa: ''
   translation: ''
@@ -268,12 +237,10 @@ items:
   ipa: /ˈpɑpsʲkɪj/
   translation: papal
   pos: adj
-  gender: m
 - lemma: передовий
   ipa: /pɛrɛˈdowɪj/
   translation: advanced, progressive
   pos: adj
-  gender: f
 - lemma: поділити
   ipa: /podʲiˈlɪtɪ/
   translation: to divide
@@ -282,7 +249,6 @@ items:
   ipa: /poˈmɛrtɪ/
   translation: to die
   pos: verb
-  gender: m
 - lemma: постать
   ipa: /ˈpostɑtʲ/
   translation: figures (genitive plural)
@@ -324,7 +290,7 @@ items:
   ipa: /rozbuˈdowuwɑtɪ/
   translation: to develop, to build up
   pos: verb
-- lemma: романович
+- lemma: Романович
   ipa: /roˈmɑnowɪt͡ʃ/
   translation: Romanovych (patronymic)
   pos: propn
@@ -333,8 +299,7 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: f
-- lemma: сарай
+- lemma: Сарай
   ipa: /sɐˈrɑj/
   translation: Sarai (Horde capital)
   pos: propn
@@ -343,7 +308,6 @@ items:
   ipa: /soˈjuzɪtɪsʲɑ/
   translation: to ally
   pos: verb
-  gender: m
 - lemma: стратити
   ipa: /strɐˈtɪtɪ/
   translation: to execute
@@ -352,26 +316,22 @@ items:
   ipa: /suzˈdɑlʲsʲkɪj/
   translation: Suzdal (adj.)
   pos: adj
-  gender: n
 - lemma: сформований
   ipa: /sforˈmowɑnɪj/
   translation: formed
   pos: adj
-  gender: n
-- lemma: татарьская
-  ipa: ''
-  translation: ''
-  pos: other
+- lemma: татарська
+  ipa: /tɐˈtɑrsʲkɑ/
+  translation: Tatar (fem.)
+  pos: adj
 - lemma: тевтонський
   ipa: /tɛwˈtonsʲkɪj/
   translation: Teutonic
   pos: adj
-  gender: m
 - lemma: тернопільський
   ipa: ''
   translation: ''
   pos: adj
-  gender: f
 - lemma: угорець
   ipa: /uˈɦorɛt͡sʲ/
   translation: Hungarians (genitive plural)
@@ -381,22 +341,14 @@ items:
   ipa: /uˈɦorsʲkɑ/
   translation: Hungarian (fem.)
   pos: adj
-  gender: f
 - lemma: украсити
-  ipa: ''
-  translation: ''
+  ipa: /ukrɐˈsɪtɪ/
+  translation: to decorate, to adorn
   pos: verb
-  gender: m
 - lemma: укріпити
   ipa: /uˈkrʲipɪtɪ/
   translation: to fortify, to strengthen
   pos: verb
-  gender: m
-- lemma: уній
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: унія
   ipa: /ˈunʲijɑ/
   translation: unions (with Rome, genitive plural)
@@ -407,12 +359,12 @@ items:
   translation: ''
   pos: propn
   gender: f
-- lemma: хелм
+- lemma: Хелм
   ipa: /xɛlm/
   translation: Kholm/Chełm (city)
   pos: propn
   gender: m
-- lemma: холм
+- lemma: Холм
   ipa: /xolm/
   translation: Kholm (Ukrainian name)
   pos: propn
@@ -428,23 +380,17 @@ items:
   pos: noun
   gender: m
 - lemma: штовхнути
-  ipa: ''
-  translation: ''
+  ipa: /ʃtowxˈnutɪ/
+  translation: to push, to shove
   pos: verb
-  gender: n
-- lemma: юрій
+- lemma: Юрій
   ipa: /ˈjurʲij/
   translation: Yurii (prince)
   pos: propn
   gender: m
-- lemma: інокент
+- lemma: Інокент
   ipa: /ʲinoˈkɛnt/
   translation: Innocent (Pope)
-  pos: propn
-  gender: m
-- lemma: інокентія
-  ipa: /ʲinoˈkɛntʲijɑ/
-  translation: Innocent (genitive)
   pos: propn
   gender: m
 - lemma: інтригувати

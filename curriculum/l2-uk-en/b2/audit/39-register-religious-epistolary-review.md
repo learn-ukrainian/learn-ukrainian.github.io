@@ -1,16 +1,16 @@
 # Audit Report: 39-register-religious-epistolary.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "TTT" | **Target:** 1750
+**Phase:** B2 | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1915/1750
+- **Words:** ✅ 1881/1750
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 13/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 93/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -28,25 +28,19 @@
 | examples | 56 | 24 | 100% | 20% | 20.0% |
 | engagement | 10 | 5 | 100% | 15% | 15.0% |
 | dialogues | 20 | 4 | 100% | 15% | 15.0% |
-| variety | 0.89 | - | 89% | 10% | 8.9% |
+| variety | 0.90 | - | 90% | 10% | 9.0% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 9 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.92 | - | 92% | 5% | 4.6% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
 | questions | 27 | 5 | 100% | 5% | 5.0% |
 | proverbs | 3 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **95.2%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
+| **TOTAL** | | | | | **95.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Регістр — Релігійний та епістолярний стилі** | ⚪️ | 94 | Skipped |
+| **Intro/Narrative** | ✅ | 60 | Included in Core |
 | **Тест: Прочитайте тексти** | ✅ | 190 | Included in Core |
 | **Пояснення** | ⚪️ | 315 | Skipped |
 | **Епістолярний стиль (Стиль листування)** | ⚪️ | 563 | Skipped |
@@ -56,4 +50,3 @@
 | **Що ми вивчили** | ⚪️ | 97 | Skipped |
 | **Самоперевірка** | ⚪️ | 53 | Skipped |
 | **Наступні кроки** | ⚪️ | 30 | Skipped |
-| **Словник** | ⚪️ | 0 | Skipped |

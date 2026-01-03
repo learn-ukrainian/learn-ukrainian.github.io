@@ -34,12 +34,10 @@ items:
   ipa: /wɪˈbʲiɦtɪ/
   translation: to run out
   pos: verb
-  gender: f
 - lemma: випадковий
   ipa: /wɪpɐdˈkowɪj/
   translation: random, accidental
   pos: adj
-  gender: m
 - lemma: виписатися
   ipa: /wɪpɪˈsɑtɪsʲɑ/
   translation: to be discharged (from hospital)
@@ -84,7 +82,6 @@ items:
   ipa: /doˈroʒnʲij/
   translation: road, travel (adj.)
   pos: adj
-  gender: m
 - lemma: дрібно
   ipa: /ˈdrʲibno/
   translation: finely, in small pieces
@@ -152,22 +149,20 @@ items:
   ipa: /ˈkrɪxkɪj/
   translation: fragile, brittle
   pos: adj
-  gender: f
 - lemma: морозиво
   ipa: /moˈrozɪwo/
   translation: ice cream
   pos: noun
   gender: n
-- lemma: ндв
-  ipa: ''
-  translation: ''
+- lemma: недобір
+  ipa: /nɛˈdobʲir/
+  translation: shortage, deficit
   pos: noun
   gender: m
 - lemma: негайний
   ipa: /nɛˈɦɑjnɪj/
   translation: immediate, urgent
   pos: adj
-  gender: f
 - lemma: панікувати
   ipa: /pɐnʲikuˈwɑtɪ/
   translation: to panic
@@ -184,18 +179,18 @@ items:
   ipa: /poɦrɑˈtɪsʲɑ/
   translation: to play (for a while)
   pos: verb
-- lemma: подитися
-  ipa: ''
-  translation: ''
+- lemma: подивитися
+  ipa: /podɪˈwɪtɪsʲɑ/
+  translation: to look, to watch
   pos: verb
-- lemma: порад
-  ipa: ''
-  translation: ''
+- lemma: порада
+  ipa: /poˈrɑdɑ/
+  translation: advice, counsel
   pos: noun
   gender: f
-- lemma: поручня
-  ipa: ''
-  translation: ''
+- lemma: поручень
+  ipa: /poˈrut͡ʃɛnʲ/
+  translation: handrail, railing
   pos: noun
   gender: m
 - lemma: порізати
@@ -206,11 +201,10 @@ items:
   ipa: /pot͡ʃɪˈstɪtɪ/
   translation: to clean
   pos: verb
-- lemma: поїст
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: поїсти
+  ipa: /poˈjistɪ/
+  translation: to eat (perfective)
+  pos: verb
 - lemma: пригощатися
   ipa: /prɪɦoˈʃt͡ʃɑtɪsʲɑ/
   translation: to treat oneself, to help oneself to food
@@ -228,9 +222,9 @@ items:
   ipa: /rozbɪˈwɑtɪ/
   translation: to break, to smash
   pos: verb
-- lemma: розбий
-  ipa: ''
-  translation: ''
+- lemma: розбити
+  ipa: /rozˈbɪtɪ/
+  translation: to break, to smash
   pos: verb
 - lemma: розпочнити
   ipa: /rozpot͡ʃˈnɪtɪ/
@@ -252,9 +246,9 @@ items:
   ipa: /soroˈmɪtɪsʲɑ/
   translation: to be ashamed, to feel shy
   pos: verb
-- lemma: спалоха
-  ipa: ''
-  translation: ''
+- lemma: спалах
+  ipa: /spɐˈlɑx/
+  translation: flash, outbreak
   pos: noun
   gender: m
 - lemma: спізнютися
@@ -281,9 +275,9 @@ items:
   ipa: /tʲiˈkɑtɪ/
   translation: to flee, to run away
   pos: verb
-- lemma: фотоальб
-  ipa: ''
-  translation: ''
+- lemma: фотоальбом
+  ipa: /fotoˈɑlʲbom/
+  translation: photo album
   pos: noun
   gender: m
 - lemma: фізично
@@ -298,8 +292,8 @@ items:
   ipa: /t͡ʃʲiˈpɑtɪ/
   translation: to touch, to bother
   pos: verb
-- lemma: штук
-  ipa: ''
-  translation: ''
+- lemma: штука
+  ipa: /ˈʃtukɑ/
+  translation: piece, thing
   pos: noun
-  gender: m
+  gender: f

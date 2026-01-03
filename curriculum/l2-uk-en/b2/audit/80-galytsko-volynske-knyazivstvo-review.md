@@ -1,16 +1,16 @@
 # Audit Report: 80-galytsko-volynske-knyazivstvo.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "CBI" | **Target:** 1750
+**Phase:** B2.3a | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1755/1750
+- **Words:** ⚠️ 1708/1750 (42 short)
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/6
+- **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/35
+- **Vocab:** ✅ 87/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -26,7 +26,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 19 | 15 | 100% | 25% | 25.0% |
-| engagement | 7 | 5 | 100% | 19% | 18.7% |
+| engagement | 9 | 5 | 100% | 19% | 18.7% |
 | variety | 0.93 | - | 93% | 12% | 11.6% |
 | cultural | 9 | 4 | 100% | 12% | 12.5% |
 | realworld | 3 | 3 | 100% | 12% | 12.5% |
@@ -35,19 +35,12 @@
 | questions | 8 | 4 | 100% | 6% | 6.2% |
 | **TOTAL** | | | | | **97.2%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Галицько-Волинське князівство — Західний оплот Русі** | ⚪️ | 56 | Skipped |
+| **Intro/Narrative** | ✅ | 56 | Included in Core |
 | **Вступ** | ⚪️ | 179 | Skipped |
 | **Утворення князівства** | ⚪️ | 737 | Skipped |
 | **Первинні джерела** | ⚪️ | 257 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 342 | Skipped |
 | **Підсумок** | ✅ | 137 | Included in Core |
-| **Словник** | ⚪️ | 47 | Skipped |

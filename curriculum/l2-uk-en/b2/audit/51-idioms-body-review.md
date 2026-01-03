@@ -1,20 +1,29 @@
 # Audit Report: 51-idioms-body.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "CBI" | **Target:** 1750
+**Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): щирий, брати, п'ята, емоція, серце...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
-- **Words:** ✅ 1898/1750
+- **Words:** ✅ 1865/1750
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/35
+- **Vocab:** ✅ 102/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.6% (target 98-100% (vocab))
+- **Immersion:** 🇺🇦 99.7% (target 98-100% (vocab))
 - **Richness:** ✅ 99% (content)
 - **Grammar:** ⏳ Pending validation
 
@@ -38,7 +47,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Фразеологізми: Душа і Серце** | ⚪️ | 64 | Skipped |
+| **Intro/Narrative** | ✅ | 64 | Included in Core |
 | **Вступ: Емоційний ландшафт** | ⚪️ | 238 | Skipped |
 | **Частина 1: Душа — Дзеркало внутрішнього світу** | ⚪️ | 411 | Skipped |
 | **Частина 2: Серце — Центр болю та співчуття** | ⚪️ | 179 | Skipped |
@@ -47,4 +56,3 @@
 | **Вживання у контексті: Практика** | ✅ | 317 | Included in Core |
 | **Стилістичні поради** | ⚪️ | 324 | Skipped |
 | **Підсумок** | ✅ | 59 | Included in Core |
-| **Словник** | ⚪️ | 33 | Skipped |

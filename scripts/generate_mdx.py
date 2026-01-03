@@ -214,11 +214,36 @@ def yaml_activities_to_jsx(activities: list[dict]) -> str:
             jsx = _yaml_mark_the_words_to_jsx(activity, title)
         elif activity_type == 'anagram':
             jsx = _yaml_anagram_to_jsx(activity, title)
+        elif activity_type == 'reading':
+            jsx = _yaml_reading_to_jsx(activity, title)
 
         if jsx:
             jsx_parts.append(jsx)
 
     return '\n\n'.join(jsx_parts)
+
+def _yaml_reading_to_jsx(activity: dict, title: str) -> str:
+    """Convert YAML reading activity to JSX."""
+    resource = activity.get('resource', {})
+    tasks = activity.get('tasks', [])
+    context = activity.get('context', '')
+    
+    tasks_md = '\n'.join([f"<li>{escape_jsx(t)}</li>" for t in tasks])
+    
+    # We use a custom 'Reading' component if it exists, or just a styled block
+    return f'''### 🏛️ {escape_jsx(title)}
+
+:::info[Reading Assignment]
+{escape_jsx(context)}
+
+**Source:** [{escape_jsx(resource.get('title', 'Link'))}]({resource.get('url', '#')})
+
+**Tasks:**
+<ul>
+{tasks_md}
+</ul>
+:::'''
+
 
 def _yaml_quiz_to_jsx(activity: dict, title: str) -> str:
     """Convert YAML quiz to JSX."""
@@ -1891,11 +1916,16 @@ def _lit_vocab_items_to_markdown(items: list[dict]) -> str:
     lines = [
         "## Vocabulary",
         "",
-        "| Термін/Слово | Визначення та Етимологія | Коментар Патріота (Контекст XVIII ст.) |",
+        "| Термін/Слово | Переклад | Примітки |",
         "| --- | --- | --- |"
     ]
     for item in items:
-        line = f"| **{item.get('term')}** | *{item.get('definition','')}* | {item.get('comment','')} |"
+        # Use lemma, translation, notes (standardized fields)
+        lemma = item.get('lemma') or item.get('term', '')
+        translation = item.get('translation') or item.get('definition', '')
+        notes = item.get('notes') or item.get('comment', '')
+        
+        line = f"| **{lemma}** | {translation} | {notes} |"
         lines.append(line)
         
     return '\n'.join(lines)

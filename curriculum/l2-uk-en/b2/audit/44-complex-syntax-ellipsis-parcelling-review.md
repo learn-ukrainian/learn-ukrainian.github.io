@@ -1,16 +1,25 @@
 # Audit Report: 44-complex-syntax-ellipsis-parcelling.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "TTT" | **Target:** 1750
+**Phase:** B2.2 | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): натяк, фрагмент, динаміка, інтонація, стиль...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
-- **Words:** ✅ 1908/1750
+- **Words:** ✅ 1879/1750
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/35
+- **Vocab:** ✅ 76/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -31,22 +40,16 @@
 | variety | 0.84 | - | 84% | 10% | 8.4% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 4 | 3 | 100% | 5% | 5.0% |
+| visual | 3 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.82 | - | 82% | 5% | 4.1% |
 | questions | 69 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **97.5%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Складний синтаксис: еліпсис і парцеляція** | ⚪️ | 94 | Skipped |
+| **Intro/Narrative** | ✅ | 65 | Included in Core |
 | **Тест: Прочитайте текст** | ✅ | 206 | Included in Core |
 | **Пояснення** | ⚪️ | 924 | Skipped |
 | **Практика** | ⚪️ | 315 | Skipped |
@@ -54,4 +57,3 @@
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Ключові моменти** | ⚪️ | 105 | Skipped |
 | **Самооцінка** | ⚪️ | 80 | Skipped |
-| **Словник** | ⚪️ | 0 | Skipped |

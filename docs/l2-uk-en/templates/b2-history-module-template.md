@@ -19,6 +19,9 @@ Before submitting a B2 history module, verify all items from `b2-module-template
 - [ ] **Extended narrative:** 500+ word historical account (main text)
 - [ ] **Decolonization lens:** Ukraine-centric perspective, not Russian imperial framing
 - [ ] **Primary sources (≥2):** MANDATORY — include at least 2 excerpts from historical documents using `[!quote]` callout format
+- [ ] **Reading tasks (2-3):** External reading assignments with linguistic analysis questions
+- [ ] **Essay assignment:** 400+ word essay with model answer and rubric
+- [ ] **Activity count:** 10-12 language-focused activities (reduced from 14+)
 - [ ] **Vocabulary in context:** Historical terms embedded in narrative, not listed
 - [ ] **Engagement boxes:** Historical context, myth-busting, modern relevance
 - [ ] **NO DIALOGS:** History modules are READING-CENTRIC. Do NOT include conversational dialogs — they waste space and distract from historical content. Use primary source excerpts instead.
@@ -112,14 +115,27 @@ vocabulary_focus:
 > [Excerpt from primary source in Ukrainian — 100-200 words]
 > *— Джерело: [Attribution]*
 
-**Аналіз:**
-- Яку позицію висловлює автор?
-- Які слова/вирази вказують на цю позицію?
-- Як цей документ відображає погляди свого часу?
+**Лінгвістичний аналіз:**
+
+<critical>
+**FOCUS ON LANGUAGE, NOT CONTENT INTERPRETATION**
+
+Questions must analyze LINGUISTIC features, not historical meaning.
+</critical>
+
+**✅ GOOD (Linguistic Analysis):**
+- Який регістр використовує автор? Наведіть приклади.
+- Знайдіть три приклади пасивного стану. Чому автор їх використовує?
+- Порівняйте лексику цього тексту з лексикою модуля. Які слова застаріли?
+- Які синтаксичні конструкції характерні для офіційного стилю?
+
+**❌ BAD (Content Interpretation):**
+- Що автор думає про Московське царство? ← Tests interpretation
+- Чому Хмельницький прийняв це рішення? ← Tests historical knowledge
 
 ### Документ 2: [Contrasting Source]
 
-[If applicable, provide contrasting perspective for analysis]
+[If applicable, provide contrasting perspective for LINGUISTIC comparison]
 ```
 
 #### Section 4: Decolonization Focus — 200-300 words
@@ -145,22 +161,162 @@ vocabulary_focus:
 
 ---
 
+## Reading Tasks (External Assignments)
+
+History modules should include **2-3 external reading tasks** for deeper engagement with authentic Ukrainian historical texts.
+
+```yaml
+# In activities/{slug}.yaml
+
+- type: reading
+  id: b2-75-reading-01
+  title: "Аналіз первинного джерела"
+  resource:
+    type: primary_source
+    url: "https://..."
+    title: "Універсал Богдана Хмельницького"
+  tasks:
+    - "Знайдіть у тексті три приклади офіційного регістру"
+    - "Які дієслова використовує автор для опису своїх дій?"
+    - "Порівняйте синтаксис цього документа із сучасною публіцистикою"
+
+- type: reading
+  id: b2-75-reading-02
+  title: "Сучасний історичний аналіз"
+  resource:
+    type: article
+    url: "https://..."
+    title: "[Ukrainian historian's article]"
+  tasks:
+    - "Як автор описує деколонізаційний підхід до цього періоду?"
+    - "Знайдіть приклади академічного регістру в тексті"
+    - "Порівняйте мову історика з мовою первинного джерела"
+```
+
+**Note:** Questions focus on LINGUISTIC analysis, not historical interpretation.
+
+---
+
+## Essay Assignment
+
+Each history module should include a **400+ word essay** with model answer and rubric.
+
+```markdown
+# Есе
+
+## Тема
+
+Напишіть есе (400+ слів) на тему: "[Деколонізаційний аналіз історичної події]"
+
+**Вимоги:**
+- Використайте лексику та граматику модуля
+- Застосуйте деколонізаційний підхід до аналізу
+- Порівняйте українську та російську/радянську історіографію
+- Використайте цитати з первинних джерел
+
+**Структура:**
+1. Вступ (100 слів) — тема та теза
+2. Основна частина (200 слів) — аргументи з первинних джерел
+3. Висновок (100 слів) — деколонізаційна перспектива
+
+## Критерії оцінювання
+
+| Критерій | Вага | Опис |
+|----------|------|------|
+| **Мовна якість** | 40% | Граматична правильність, багатство лексики, складність речень (B2 рівень) |
+| **Використання матеріалу** | 30% | Цитування первинних джерел, використання лексики модуля |
+| **Структура та зв'язність** | 20% | Логічна організація, дискурсивні маркери |
+| **Деколонізаційний підхід** | 10% | Критичний аналіз імперських наративів |
+
+## Зразок відповіді
+
+[400+ word model essay demonstrating:]
+- B2-level grammar and syntax
+- Module vocabulary in context
+- Decolonization framework
+- Citations from primary sources
+- Academic register
+
+**Мовні особливості зразка:**
+- Пасивні конструкції: "було засновано", "був обраний"
+- Складні речення з підрядними
+- Історична лексика модуля
+- Академічний регістр
+```
+
+---
+
 ## History-Specific Activities
 
 ### CRITICAL: Language Practice, Not Content Testing
 
 <critical>
 
-**Activities test LANGUAGE SKILLS, not historical knowledge.**
+**These are LANGUAGE lessons that use history as context, NOT history exams taught in Ukrainian.**
 
-The lesson teaches both Ukrainian AND history. Activities practice only Ukrainian using the historical content as context.
+**The Golden Rule:** "Can the learner answer this without reading the Ukrainian text?"
+- **If YES** → Rewrite (tests content recall, not language)
+- **If NO** → Keep (tests Ukrainian comprehension)
 
-**✅ CORRECT:** "Згідно з текстом, яка була головна причина повстання?" (requires reading Ukrainian)
-**❌ WRONG:** "У якому році почалося повстання?" (tests recall, not language)
+### Examples: GOOD vs BAD Activities
 
-**Key Test:** Can the learner answer without reading the Ukrainian text? If yes, rewrite the activity.
+**❌ BAD (Tests Historical Knowledge):**
+```markdown
+1. У якому році заснована Запорозька Січ?
+   - [x] 1552
+```
+Problem: Tests dates. Can be answered without reading Ukrainian text.
+
+**❌ BAD (Tests Factual Recall):**
+```markdown
+1. Хто був першим гетьманом?
+   - [x] Дмитро Вишневецький
+```
+Problem: Tests names. No language learning.
+
+**✅ GOOD (Tests Ukrainian Language):**
+```markdown
+1. Згідно з текстом, як автор пояснює причини виникнення козацтва?
+   - [x] Автор виділяє поєднання соціальних, економічних та військових факторів
+```
+Why GOOD: Requires reading the Ukrainian module text, tests comprehension of Ukrainian explanations.
+
+**✅ GOOD (Tests Ukrainian Collocations):**
+```markdown
+1. Козаки [___] спротив польському пануванню.
+   - [x] чинили
+```
+Why GOOD: Tests fixed collocation (чинити спротив), requires understanding Ukrainian usage.
+
+**Key phrases to use:**
+- "Згідно з текстом..."
+- "У тексті модуля автор..."
+- "Як автор описує/характеризує/пояснює..."
+
+**Never ask:**
+- "У якому році..." (unless "Згідно з текстом, у якому році автор каже що...")
+- "Хто був..." (unless "Як автор описує роль...")
+- "Що символізує..." (unless "Як автор інтерпретує символіку...")
 
 </critical>
+
+---
+
+### Activity Mix for History Modules
+
+**Total: 10-12 activities** (reduced from 14+ to focus on quality over quantity)
+
+| Activity Type | Count | Purpose | Example |
+|---------------|-------|---------|---------|
+| **quiz** | 4-5 | Reading comprehension | "Згідно з текстом, як автор характеризує роль козацтва?" |
+| **fill-in / cloze** | 3-4 | Vocabulary in context | "Козаки [___] спротив польському пануванню" → чинили |
+| **error-correction** | 2-3 | Grammar practice | Fix case errors in historical sentences |
+| **match-up** | 1-2 | Terminology | Ukrainian term ↔ Ukrainian definition |
+| **select / mark-the-words** | 1-2 | Analytical | Find passive voice in primary source |
+
+**Note:** Plus 2-3 external reading tasks and 1 essay assignment (tracked in activities YAML).
+
+---
 
 ### Activity Format Quick Reference
 
@@ -378,7 +534,8 @@ The lesson teaches both Ukrainian AND history. Activities practice only Ukrainia
 
 # Підсумок
 # Словник [30+ historical terms]
-# Активності [14+ activities]
+# Активності [10-12 language-focused activities]
+# Есе [400+ word decolonization analysis with rubric]
 ```
 
 ---

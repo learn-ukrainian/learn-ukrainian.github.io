@@ -10,23 +10,21 @@ items:
   ipa: /bɛzuˈtʲiʃno/
   translation: inconsolably
   pos: adv
-- lemma: бережись
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
+- lemma: берегися
+  ipa: /bɛrɛˈɦʲisʲɑ/
+  translation: beware, be careful (imperative)
+  pos: verb
 - lemma: болючий
   ipa: /boˈlʲut͡ʃɪj/
   translation: painful
   pos: adj
-  gender: f
 - lemma: вагатися
   ipa: /wɐˈɦɑtɪsʲɑ/
   translation: to hesitate
   pos: verb
-- lemma: висл
-  ipa: ''
-  translation: ''
+- lemma: вислів
+  ipa: /ˈwɪslʲiw/
+  translation: saying, expression
   pos: noun
   gender: m
 - lemma: вміло
@@ -45,7 +43,6 @@ items:
   ipa: /wʲidwɛrˈnutɪsʲɑ/
   translation: to turn away
   pos: verb
-  gender: m
 - lemma: відвести
   ipa: /wʲidˈwɛstɪ/
   translation: to lead away, to take aside
@@ -62,14 +59,13 @@ items:
   ipa: /wʲidˈtot͡ʃuwɑtɪ/
   translation: to sharpen, to polish
   pos: verb
-  gender: f
 - lemma: геть
   ipa: /ɦɛtʲ/
   translation: away, completely
   pos: adv
-- lemma: глуха
-  ipa: ''
-  translation: ''
+- lemma: Глуха
+  ipa: /ˈɦluxɑ/
+  translation: Hlukha (surname)
   pos: propn
   gender: f
 - lemma: градація
@@ -85,10 +81,9 @@ items:
   ipa: /dʲiɐloˈɦʲit͡ʃnɪj/
   translation: dialogic
   pos: adj
-  gender: f
-- lemma: діалок
-  ipa: ''
-  translation: ''
+- lemma: діалог
+  ipa: /dʲiɐˈloɦ/
+  translation: dialogue
   pos: noun
   gender: m
 - lemma: еліптичний
@@ -100,20 +95,17 @@ items:
   translation: to wait
   pos: verb
 - lemma: завинити
-  ipa: ''
-  translation: ''
+  ipa: /zɐwɪˈnɪtɪ/
+  translation: to be guilty, to cause
   pos: verb
-  gender: f
 - lemma: загудіти
   ipa: /zɐɦuˈdʲitɪ/
   translation: to start humming/buzzing
   pos: verb
-  gender: m
-- lemma: закохані
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: закоханий
+  ipa: /zɐˈkoxɑnɪj/
+  translation: in love, lover
+  pos: adj
 - lemma: зачинитися
   ipa: /zɐt͡ʃɪˈnɪtɪsʲɑ/
   translation: to close oneself in
@@ -122,11 +114,10 @@ items:
   ipa: /zbɑɦɐˈtɪtɪ/
   translation: to enrich
   pos: verb
-- lemma: звичайне
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: n
+- lemma: звичайно
+  ipa: /zwɪˈt͡ʃɑjno/
+  translation: usually, of course
+  pos: adv
 - lemma: зненацька
   ipa: /znɛˈnɑt͡sʲkɑ/
   translation: suddenly, unexpectedly
@@ -145,31 +136,29 @@ items:
   translation: culmination, climax
   pos: noun
   gender: f
-- lemma: кіло
-  ipa: ''
-  translation: ''
+- lemma: коло
+  ipa: /ˈkolo/
+  translation: circle, near
   pos: noun
   gender: n
 - lemma: лаконічний
   ipa: /lɐkoˈnʲit͡ʃnɪj/
   translation: laconic, concise
   pos: adj
-  gender: n
 - lemma: мить
   ipa: /mɪtʲ/
   translation: instant, moment
   pos: noun
   gender: f
-- lemma: мовчанко
-  ipa: ''
-  translation: ''
+- lemma: Мовчанко
+  ipa: /mowˈt͡ʃɑnko/
+  translation: Movchenko (surname)
   pos: propn
   gender: f
-- lemma: мовчка
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: мовчки
+  ipa: /ˈmowt͡ʃkɪ/
+  translation: silently
+  pos: adv
 - lemma: наростання
   ipa: /nɐrosˈtɑnʲːɑ/
   translation: growth, increase
@@ -188,7 +177,6 @@ items:
   ipa: /nɛzrozuˈmʲilɪj/
   translation: incomprehensible
   pos: adj
-  gender: m
 - lemma: незрозуміло
   ipa: /nɛzrozuˈmʲilo/
   translation: incomprehensibly, unclear
@@ -205,7 +193,6 @@ items:
   ipa: /nɛsˈkʲint͡ʃɛnːɪj/
   translation: endless, infinite
   pos: adj
-  gender: f
 - lemma: несміливо
   ipa: /nɛsˈmʲilɪwo/
   translation: timidly
@@ -223,15 +210,14 @@ items:
   ipa: /pɑrt͡sɛlʲoˈwɑnɪj/
   translation: parceled (syntax)
   pos: adj
-  gender: n
 - lemma: пауза
   ipa: /ˈpɑuzɑ/
   translation: pause
   pos: noun
   gender: f
-- lemma: перон
-  ipa: ''
-  translation: ''
+- lemma: Перон
+  ipa: /pɛˈron/
+  translation: Peron (surname)
   pos: propn
   gender: m
 - lemma: повнота
@@ -243,15 +229,13 @@ items:
   ipa: /postuˈkɑtɪ/
   translation: to knock, to tap
   pos: verb
-  gender: m
 - lemma: похилитися
   ipa: /poxɪˈlɪtɪsʲɑ/
   translation: to lean, to bend
   pos: verb
-  gender: f
-- lemma: почити
-  ipa: ''
-  translation: ''
+- lemma: почути
+  ipa: /poˈt͡ʃutɪ/
+  translation: to hear
   pos: verb
 - lemma: причаїтися
   ipa: /prɪt͡ʃɐˈjitɪsʲɑ/
@@ -270,10 +254,10 @@ items:
   translation: to head, to go towards
   pos: verb
 - lemma: півслова
-  ipa: ''
-  translation: ''
+  ipa: /pʲiwˈslowɑ/
+  translation: half a word
   pos: noun
-  gender: m
+  gender: n
 - lemma: ритмізація
   ipa: /rɪtmʲizɑˈt͡sʲijɑ/
   translation: rhythmization
@@ -288,12 +272,10 @@ items:
   ipa: /rozdrobˈlɛnɪj/
   translation: fragmented
   pos: adj
-  gender: n
 - lemma: розлогий
   ipa: /rozˈloɦɪj/
   translation: extensive, detailed
   pos: adj
-  gender: m
 - lemma: розчленування
   ipa: /rot͡ʃlɛnuˈwɑnʲːɑ/
   translation: segmentation, division
@@ -303,31 +285,29 @@ items:
   ipa: /ruˈʃɪtɪ/
   translation: to set off, to move
   pos: verb
-  gender: m
 - lemma: силует
   ipa: /sɪluˈɛt/
   translation: silhouette
   pos: noun
   gender: m
-- lemma: солоня
-  ipa: ''
-  translation: ''
+- lemma: солончак
+  ipa: /soˈlont͡ʃɑk/
+  translation: salt marsh, solonchak
   pos: noun
   gender: m
 - lemma: спорожніти
   ipa: /sporoʒˈnʲitɪ/
   translation: to become empty
   pos: verb
-  gender: m
 - lemma: співучасник
   ipa: /spʲiwut͡ʃɑsnɪk/
   translation: accomplice
   pos: noun
   gender: m
-- lemma: стілька
-  ipa: ''
-  translation: ''
-  pos: other
+- lemma: стільки
+  ipa: /ˈstʲilʲkɪ/
+  translation: so much, so many
+  pos: adv
 - lemma: терпляче
   ipa: /tɛrplʲɑt͡ʃɛ/
   translation: patiently
@@ -337,17 +317,17 @@ items:
   translation: universality
   pos: noun
   gender: f
-- lemma: цезар
-  ipa: ''
-  translation: ''
+- lemma: Цезар
+  ipa: /ˈt͡sɛzɑr/
+  translation: Caesar
   pos: propn
   gender: m
 - lemma: чергувати
   ipa: /t͡ʃɛrɦuˈwɑtɪ/
   translation: to alternate
   pos: verb
-- lemma: юлій
-  ipa: ''
-  translation: ''
+- lemma: Юлій
+  ipa: /ˈjulʲij/
+  translation: Julius
   pos: propn
   gender: m

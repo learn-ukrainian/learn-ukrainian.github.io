@@ -3,23 +3,23 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 3845/3500
+- **Words:** ✅ 3602/3500
 - **Activities:** ✅ 0/0
 - **Density:** ✅ All > 0
 - **Unique_types:** ✅ 0/0 types
 - **Priority:** ✅ N/A (LIT)
-- **Engagement:** ✅ 7/4
+- **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 34/0
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 99.3% (target 95-100%)
-- **Richness:** ✅ 99% (literature)
+- **Richness:** ✅ 97% (literature)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 99% (minimum: 90%)
+**Score:** 97% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
@@ -27,15 +27,15 @@
 |--------|-------|--------|-------|--------|--------------|
 | analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
 | literary_citations | 9 | 5 | 100% | 17% | 17.4% |
-| engagement | 5 | 4 | 100% | 13% | 13.0% |
+| engagement | 4 | 4 | 100% | 13% | 13.0% |
 | historical_context | 30 | 3 | 100% | 13% | 13.0% |
 | essays | 2 | 2 | 100% | 13% | 13.0% |
-| resources | 8 | 3 | 100% | 9% | 8.7% |
-| variety | 0.97 | - | 97% | 4% | 4.2% |
+| resources | 2 | 3 | 67% | 9% | 5.8% |
+| variety | 0.99 | - | 99% | 4% | 4.3% |
 | cultural | 15 | - | 100% | 4% | 4.3% |
-| visual | 5 | 1 | 100% | 4% | 4.3% |
+| visual | 4 | 1 | 100% | 4% | 4.3% |
 | paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
-| **TOTAL** | | | | | **99.9%** |
+| **TOTAL** | | | | | **97.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -64,4 +64,3 @@
 | **1. Символіка спадщини: Батько Тараса** | ⚪️ | 150 | Skipped |
 | **2. Руйнування Імперського Міфу** | ⚪️ | 197 | Skipped |
 | **Частина VII: Котляревський і сучасна Україна** | ⚪️ | 102 | Skipped |
-| **🏛️ Читальна Зала** | ⚪️ | 243 | Skipped |

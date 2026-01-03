@@ -2,11 +2,11 @@ module: 34-word-formation-abstract-nouns
 level: B2
 version: '2.0'
 items:
-- lemma: ація
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
+- lemma: Драгоманов
+  ipa: /drɑɦomɑˈnow/
+  translation: Drahomanov (Ukrainian educator)
+  pos: propn
+  gender: m
 - lemma: багаторічний
   ipa: /bɑɦɐtoˈrʲit͡ʃnɪj/
   translation: perennial, many years'
@@ -31,6 +31,16 @@ items:
   translation: determination, defining
   pos: noun
   gender: n
+- lemma: визначення
+  ipa: /wɪznɐˈtʃɛnʲːɐ/
+  translation: definition, determination
+  pos: noun
+  gender: n
+- lemma: вимір
+  ipa: /ˈwɪmʲir/
+  translation: dimension, measurement
+  pos: noun
+  gender: m
 - lemma: виробляння
   ipa: /wɪrobˈlʲɑnʲːɑ/
   translation: production, developing
@@ -41,6 +51,16 @@ items:
   translation: cultivation, growing
   pos: noun
   gender: n
+- lemma: виріб
+  ipa: /ˈwɪrʲib/
+  translation: product, manufacture
+  pos: noun
+  gender: m
+- lemma: внесок
+  ipa: /wneˈsok/
+  translation: contribution
+  pos: noun
+  gender: m
 - lemma: впливання
   ipa: /wplɪˈwɑnʲːɑ/
   translation: influencing, influence
@@ -65,34 +85,23 @@ items:
   ipa: /wt͡ʃɪˈtɛlʲsʲkɪj/
   translation: teacher's, teaching (adj.)
   pos: adj
-  gender: m
-- lemma: відповідальн
-  ipa: ''
-  translation: ''
+- lemma: відповідальність
+  ipa: /wʲidpowʲiˈdɑlʲnʲistʲ/
+  translation: responsibility
   pos: noun
-  gender: m
+  gender: f
 - lemma: гартувати
   ipa: /ɦɑrtuˈwɑtɪ/
   translation: to temper, to harden
   pos: verb
-- lemma: горд
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: гордість
   ipa: /ˈɦordʲistʲ/
   translation: pride
   pos: noun
   gender: f
-- lemma: гостинн
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: готува
-  ipa: ''
-  translation: ''
+- lemma: гостинність
+  ipa: /ɦosˈtɪnnʲistʲ/
+  translation: hospitality
   pos: noun
   gender: f
 - lemma: готування
@@ -105,6 +114,11 @@ items:
   translation: good, kindness
   pos: noun
   gender: n
+- lemma: додаток
+  ipa: /ˈdodɐtok/
+  translation: supplement, addition
+  pos: noun
+  gender: m
 - lemma: документально
   ipa: /dokumɛnˈtɑlʲno/
   translation: documentarily
@@ -118,21 +132,21 @@ items:
   translation: achievement, attainment
   pos: noun
   gender: n
-- lemma: драч
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
-- lemma: екзамень
-  ipa: ''
-  translation: ''
+- lemma: досягнення
+  ipa: /doˈsʲɑɦnɛnʲːɐ/
+  translation: achievement, attainment
+  pos: noun
+  gender: n
+- lemma: екзамен
+  ipa: /ɛɡˈzɑmɛn/
+  translation: exam, examination
   pos: noun
   gender: m
-- lemma: забарвлюва
-  ipa: ''
-  translation: ''
+- lemma: забарвлення
+  ipa: /zɐˈbɑrwlɛnʲːɐ/
+  translation: coloring, tinting
   pos: noun
-  gender: f
+  gender: n
 - lemma: забарвлювати
   ipa: /zɐbɑrwlʲuˈwɑtɪ/
   translation: to color, to tint
@@ -147,23 +161,29 @@ items:
   translation: enrichment
   pos: noun
   gender: n
-- lemma: здатн
-  ipa: ''
-  translation: ''
-  pos: other
+- lemma: здатність
+  ipa: /ˈzdɑtnʲistʲ/
+  translation: ability, capability
+  pos: noun
+  gender: f
 - lemma: здобуток
   ipa: /zˈdobutok/
   translation: achievement, acquisition
   pos: noun
   gender: m
+- lemma: значення
+  ipa: /znɐˈtʃɛnʲːɐ/
+  translation: meaning, significance
+  pos: noun
+  gender: n
 - lemma: зусилля
   ipa: /zuˈsɪlʲːɑ/
   translation: effort
   pos: noun
   gender: n
 - lemma: класика
-  ipa: ''
-  translation: ''
+  ipa: /ˈklɑsɪkɑ/
+  translation: classics, classic works
   pos: noun
   gender: f
 - lemma: конкурентоспроможність
@@ -184,20 +204,20 @@ items:
   ipa: /ˈlʲirɪt͡ʃnɪj/
   translation: lyrical
   pos: adj
-  gender: m
-- lemma: можлив
-  ipa: ''
-  translation: ''
-  pos: other
+- lemma: можливість
+  ipa: /ˈmoʒlɪwʲistʲ/
+  translation: possibility, opportunity
+  pos: noun
+  gender: f
 - lemma: мотивувати
   ipa: /motɪwuˈwɑtɪ/
   translation: to motivate
   pos: verb
-- lemma: навчий
-  ipa: ''
-  translation: ''
-  pos: adj
-  gender: f
+- lemma: навчання
+  ipa: /nɐwˈt͡ʃɑnʲːɑ/
+  translation: education, learning, teaching
+  pos: noun
+  gender: n
 - lemma: найбагатший
   ipa: /nɑjbɑˈɦɑt͡ʃɪj/
   translation: richest, wealthiest
@@ -206,12 +226,10 @@ items:
   ipa: /nɛot͡sʲiˈnɛnɪj/
   translation: invaluable, priceless
   pos: adj
-  gender: m
 - lemma: неоцінний
   ipa: /nɛoˈt͡sʲinnɪj/
   translation: invaluable, priceless
   pos: adj
-  gender: n
 - lemma: обережність
   ipa: /obɛˈrɛʒnʲistʲ/
   translation: caution, carefulness
@@ -226,11 +244,11 @@ items:
   translation: educator, education worker
   pos: noun
   gender: m
-- lemma: освічени
-  ipa: ''
-  translation: ''
+- lemma: освіченість
+  ipa: /osˈwʲit͡ʃɛnʲistʲ/
+  translation: education, enlightenment
   pos: noun
-  gender: m
+  gender: f
 - lemma: очищати
   ipa: /ot͡ʃɪˈʃt͡ʃɑtɪ/
   translation: to purify, to clean
@@ -238,6 +256,11 @@ items:
 - lemma: педагог
   ipa: /pɛdɐˈɦoɦ/
   translation: pedagogue, educator
+  pos: noun
+  gender: m
+- lemma: переклад
+  ipa: /pɛrɛˈklɑd/
+  translation: translation
   pos: noun
   gender: m
 - lemma: перекладання
@@ -254,6 +277,11 @@ items:
   translation: sorrow, sadness
   pos: noun
   gender: f
+- lemma: писання
+  ipa: /pɪˈsɑnʲːɐ/
+  translation: writing (process)
+  pos: noun
+  gender: n
 - lemma: писар
   ipa: /pɪˈsɑr/
   translation: scribe, clerk
@@ -264,20 +292,15 @@ items:
   translation: literacy, writing system
   pos: noun
   gender: f
-- lemma: погордит
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: погордіння
   ipa: /poɦorˈdʲinʲːɑ/
   translation: contempt, disdain
   pos: noun
   gender: n
-- lemma: подвійний
-  ipa: ''
-  translation: ''
-  pos: adj
+- lemma: подвійність
+  ipa: /podˈwʲijnʲistʲ/
+  translation: duality, duplicity
+  pos: noun
   gender: f
 - lemma: подібність
   ipa: /poˈdʲibnʲistʲ/
@@ -294,10 +317,20 @@ items:
   translation: showing, demonstration
   pos: noun
   gender: n
+- lemma: походження
+  ipa: /poxoˈdʒɛnʲːɐ/
+  translation: origin, descent
+  pos: noun
+  gender: n
 - lemma: похідний
   ipa: /poˈxʲidnɪj/
   translation: derivative, derived
   pos: adj
+- lemma: пояснення
+  ipa: /pojɐsˈnɛnʲːɐ/
+  translation: explanation
+  pos: noun
+  gender: n
 - lemma: пояснювання
   ipa: /pojɑsnʲuˈwɑnʲːɑ/
   translation: explanation, clarification
@@ -308,14 +341,9 @@ items:
   translation: profitability
   pos: noun
   gender: f
-- lemma: публікация
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: публікува
-  ipa: ''
-  translation: ''
+- lemma: публікація
+  ipa: /publʲikɑˈt͡sʲijɑ/
+  translation: publication
   pos: noun
   gender: f
 - lemma: публікування
@@ -357,14 +385,19 @@ items:
   translation: suffering
   pos: noun
   gender: n
-- lemma: хода
-  ipa: ''
-  translation: ''
+- lemma: утворення
+  ipa: /utwoˈrɛnʲːɐ/
+  translation: formation, creation
   pos: noun
-  gender: m
+  gender: n
 - lemma: ходіння
   ipa: /xoˈdʲinʲːɑ/
   translation: walking, going
+  pos: noun
+  gender: n
+- lemma: читання
+  ipa: /tʃɪˈtɑnʲːɐ/
+  translation: reading (process)
   pos: noun
   gender: n
 - lemma: шістдесятник
@@ -372,13 +405,16 @@ items:
   translation: Sixtier (1960s generation)
   pos: noun
   gender: m
-- lemma: юваський
-  ipa: ''
-  translation: ''
+- lemma: ювілейний
+  ipa: /juwʲiˈlɛjnɪj/
+  translation: jubilee, anniversary (adj.)
   pos: adj
-  gender: f
 - lemma: інтелектуальний
   ipa: /ʲintɛlɛktuˈɑlʲnɪj/
   translation: intellectual
   pos: adj
-  gender: m
+- lemma: інформація
+  ipa: /ʲinformɑˈt͡sʲijɑ/
+  translation: information
+  pos: noun
+  gender: f

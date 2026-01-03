@@ -2,10 +2,10 @@ module: 51-idioms-body
 level: B2
 version: '2.0'
 items:
-- lemma: близькі
-  ipa: ''
-  translation: ''
-  pos: noun
+- lemma: близький
+  ipa: /blɪzʲkɪj/
+  translation: close, near
+  pos: adj
 - lemma: божеволіти
   ipa: /boʒɛwoˈlʲitɪ/
   translation: to go mad, to go crazy
@@ -22,13 +22,11 @@ items:
 - lemma: вдосталь
   ipa: /wdosˈtɑlʲ/
   translation: enough, in abundance
-  pos: noun
-  gender: m
+  pos: adv
 - lemma: викрутитися
   ipa: /wɪkruˈtɪtɪsʲɑ/
   translation: to get out of, to wriggle out
   pos: verb
-  gender: m
 - lemma: вимогливий
   ipa: /wɪˈmoɦlɪwɪj/
   translation: demanding
@@ -43,9 +41,9 @@ items:
   translation: volunteer
   pos: noun
   gender: m
-- lemma: ворога
-  ipa: ''
-  translation: ''
+- lemma: ворог
+  ipa: /woˈroɦ/
+  translation: enemy
   pos: noun
   gender: m
 - lemma: вразливість
@@ -57,12 +55,10 @@ items:
   ipa: /ˈwsʲɑkɪj/
   translation: any, every
   pos: adj
-  gender: n
 - lemma: відвертий
   ipa: /wʲidˈwɛrtɪj/
   translation: frank, open
   pos: adj
-  gender: f
 - lemma: відданість
   ipa: /wʲidˈdɑnʲistʲ/
   translation: devotion, dedication
@@ -72,7 +68,6 @@ items:
   ipa: /wʲidnɐjˈtɪ/
   translation: to find, to discover
   pos: verb
-  gender: n
 - lemma: відпускати
   ipa: /wʲidpusˈkɑtɪ/
   translation: to let go, to release
@@ -90,24 +85,21 @@ items:
   ipa: /dobrojɑˈkʲisnɪj/
   translation: benign, good quality
   pos: adj
-  gender: f
-- lemma: добрій
-  ipa: ''
-  translation: ''
+- lemma: добрий
+  ipa: /ˈdobrɪj/
+  translation: good, kind
   pos: adj
 - lemma: довгостроковий
   ipa: /dowɦostroˈkowɪj/
   translation: long-term
   pos: adj
-  gender: f
 - lemma: довірливий
   ipa: /dowʲirˈlɪwɪj/
   translation: trusting, credulous
   pos: adj
-  gender: f
-- lemma: докторе
-  ipa: ''
-  translation: ''
+- lemma: доктор
+  ipa: /ˈdoktor/
+  translation: doctor
   pos: noun
   gender: m
 - lemma: духовно
@@ -118,7 +110,6 @@ items:
   ipa: /duˈʃɛwnɪj/
   translation: soulful, heartfelt
   pos: adj
-  gender: m
 - lemma: душевність
   ipa: /duˈʃɛwnʲistʲ/
   translation: soulfulness, warmth
@@ -133,7 +124,6 @@ items:
   ipa: /ɛmpɐˈtɪt͡ʃnɪj/
   translation: empathetic
   pos: adj
-  gender: f
 - lemma: жалість
   ipa: /ˈʒɑlʲistʲ/
   translation: pity, compassion
@@ -143,12 +133,10 @@ items:
   ipa: /zɐˈklɑstɪ/
   translation: to lay (foundation), to mortgage
   pos: verb
-  gender: m
-- lemma: закохане
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: закоханий
+  ipa: /zɐkoˈxɑnɪj/
+  translation: in love
+  pos: adj
 - lemma: замикатися
   ipa: /zɐmɪˈkɑtɪsʲɑ/
   translation: to close oneself off
@@ -161,20 +149,13 @@ items:
   ipa: /zwɑˈlɪtɪsʲɑ/
   translation: to fall down, to collapse
   pos: verb
-  gender: m
-- lemma: звалітися
-  ipa: ''
-  translation: ''
-  pos: verb
-  gender: m
-- lemma: згоден
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
-- lemma: злагод
-  ipa: ''
-  translation: ''
+- lemma: згодний
+  ipa: /zˈɦodnɪj/
+  translation: agreeable, willing
+  pos: adj
+- lemma: злагода
+  ipa: /zlɐˈɦodɑ/
+  translation: harmony, concord
   pos: noun
   gender: f
 - lemma: калатати
@@ -185,7 +166,6 @@ items:
   ipa: /komunʲikɐˈbɛlʲnɪj/
   translation: sociable, communicative
   pos: adj
-  gender: f
 - lemma: комір
   ipa: /koˈmʲir/
   translation: collar
@@ -205,25 +185,14 @@ items:
   ipa: /kordot͡sɛnˈtrɪt͡ʃnɪj/
   translation: cordocentric, heart-centered
   pos: adj
-  gender: f
 - lemma: краватися
   ipa: /krɐˈwɑtɪsʲɑ/
   translation: to bleed (archaic)
   pos: verb
-- lemma: краятися
-  ipa: ''
-  translation: ''
-  pos: verb
-  gender: n
 - lemma: кривити
   ipa: /krɪˈwɪtɪ/
   translation: to bend, to distort
   pos: verb
-- lemma: лопуцький
-  ipa: ''
-  translation: ''
-  pos: adj
-  gender: f
 - lemma: лукавство
   ipa: /luˈkɑwstwo/
   translation: cunning, craftiness
@@ -239,11 +208,10 @@ items:
   translation: filling, fulfillment
   pos: noun
   gender: n
-- lemma: нараспашка
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
+- lemma: нараспашку
+  ipa: /nɐrɐsˈpɑʃku/
+  translation: wide open (shirt unbuttoned)
+  pos: adv
 - lemma: нарозхрист
   ipa: /nɐrozˈxrɪst/
   translation: wide open (shirt)
@@ -258,7 +226,6 @@ items:
   ipa: /nɛˈlɛɦkɪj/
   translation: difficult
   pos: adj
-  gender: f
 - lemma: ненавидіти
   ipa: /nɛnɐˈwɪdʲitɪ/
   translation: to hate
@@ -280,7 +247,6 @@ items:
   ipa: /nɛˈʃt͡ʃɪrɪj/
   translation: insincere
   pos: adj
-  gender: m
 - lemma: оберіг
   ipa: /obɛˈrʲiɦ/
   translation: amulet, talisman
@@ -292,9 +258,9 @@ items:
   pos: noun
   gender: n
 - lemma: ох
-  ipa: ''
-  translation: ''
-  pos: other
+  ipa: /ox/
+  translation: oh (interjection)
+  pos: intj
 - lemma: передчувати
   ipa: /pɛrɛdt͡ʃuˈwɑtɪ/
   translation: to foresee, to have a premonition
@@ -314,9 +280,9 @@ items:
   translation: pearl
   pos: noun
   gender: f
-- lemma: перспективя
-  ipa: ''
-  translation: ''
+- lemma: перспектива
+  ipa: /pɛrspɛkˈtɪwɑ/
+  translation: perspective, prospect
   pos: noun
   gender: f
 - lemma: полегшення
@@ -332,20 +298,18 @@ items:
   ipa: /prɪɦotoˈwlɛnɪj/
   translation: prepared
   pos: adj
-  gender: m
-- lemma: призм
-  ipa: ''
-  translation: ''
+- lemma: призма
+  ipa: /ˈprʲizmɑ/
+  translation: prism
   pos: noun
   gender: f
 - lemma: продуктивніший
   ipa: /produktɪwˈnʲiʃɪj/
   translation: more productive
   pos: adj
-  gender: m
-- lemma: психолога
-  ipa: ''
-  translation: ''
+- lemma: психолог
+  ipa: /psɪˈxoloɦ/
+  translation: psychologist
   pos: noun
   gender: m
 - lemma: пухлина
@@ -357,9 +321,9 @@ items:
   ipa: /pʲidˈkɑzuwɑtɪ/
   translation: to prompt, to hint
   pos: verb
-- lemma: пісні
-  ipa: ''
-  translation: ''
+- lemma: пісня
+  ipa: /ˈpʲisnʲɑ/
+  translation: song
   pos: noun
   gender: f
 - lemma: пітніти
@@ -370,7 +334,6 @@ items:
   ipa: /rɑpˈtowɪj/
   translation: sudden
   pos: adj
-  gender: m
 - lemma: розлучатися
   ipa: /rozluˈt͡ʃɑtɪsʲɑ/
   translation: to divorce, to part
@@ -388,7 +351,6 @@ items:
   ipa: /rozstɛbˈnutɪj/
   translation: unbuttoned
   pos: adj
-  gender: m
 - lemma: роятися
   ipa: /roˈjɑtɪsʲɑ/
   translation: to swarm, to teem
@@ -397,30 +359,24 @@ items:
   ipa: /ˈrʲizko/
   translation: sharply, abruptly
   pos: adv
-- lemma: самовіддач
-  ipa: ''
-  translation: ''
+- lemma: самовіддача
+  ipa: /sɐmowʲidˈdɑt͡ʃɑ/
+  translation: self-sacrifice, dedication
   pos: noun
   gender: f
 - lemma: сваритися
   ipa: /swɑˈrɪtɪsʲɑ/
   translation: to quarrel
   pos: verb
-- lemma: сварок
-  ipa: ''
-  translation: ''
+- lemma: сварка
+  ipa: /ˈswɑrkɑ/
+  translation: quarrel, scolding
   pos: noun
   gender: f
-- lemma: серденят
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: скрутний
   ipa: /skrutˈnɪj/
   translation: difficult, hard (times)
   pos: adj
-  gender: f
 - lemma: смакувати
   ipa: /smɐkuˈwɑtɪ/
   translation: to taste, to savor
@@ -452,9 +408,9 @@ items:
   ipa: /sxɪlʲnɪj/
   translation: inclined, prone
   pos: adj
-- lemma: трагедій
-  ipa: ''
-  translation: ''
+- lemma: трагедія
+  ipa: /trɐˈɦɛdʲijɑ/
+  translation: tragedy
   pos: noun
   gender: f
 - lemma: тягнутися
@@ -471,27 +427,27 @@ items:
   translation: universally
   pos: adv
 - lemma: хух
-  ipa: ''
-  translation: ''
-  pos: other
+  ipa: /xux/
+  translation: phew (interjection of relief)
+  pos: intj
 - lemma: ціпеніти
   ipa: /t͡sʲipɛˈnʲitɪ/
   translation: to become numb, to stiffen
   pos: verb
-- lemma: чеснот
-  ipa: ''
-  translation: ''
+- lemma: чеснота
+  ipa: /t͡ʃɛsnoˈtɑ/
+  translation: virtue
   pos: noun
   gender: f
 - lemma: чийсь
-  ipa: ''
-  translation: ''
-  pos: other
-- lemma: шефа
-  ipa: ''
-  translation: ''
+  ipa: /t͡ʃɪjsʲ/
+  translation: someone's
+  pos: pron
+- lemma: шеф
+  ipa: /ʃɛf/
+  translation: boss, chief
   pos: noun
-  gender: f
+  gender: m
 - lemma: інтимно
   ipa: /ʲinˈtɪmno/
   translation: intimately

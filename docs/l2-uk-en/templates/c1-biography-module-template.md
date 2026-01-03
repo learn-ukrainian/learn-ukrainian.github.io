@@ -16,6 +16,9 @@ Before submitting a C1 biography module, verify all items from `c1-module-templa
 - [ ] **CBI pedagogy:** Content-Based Instruction (vocabulary through narrative)
 - [ ] **Extended narrative:** 800-1000 word biographical account
 - [ ] **Primary sources (≥2):** Include quotes, letters, or speeches from the figure using `[!quote]` callouts
+- [ ] **Reading tasks (2-3):** External reading assignments with linguistic analysis questions
+- [ ] **Essay assignment:** 400+ word comparative essay with model answer and rubric
+- [ ] **Activity count:** 10-12 language-focused activities (NOT 14+)
 - [ ] **Historical context:** Place figure in their era's political/cultural context
 - [ ] **Legacy section:** Connect to modern Ukraine
 - [ ] **Gender/era balance:** Follow curriculum diversity requirements
@@ -165,22 +168,161 @@ vocabulary_focus:
 
 ---
 
+## Reading Tasks (External Assignments)
+
+Biography modules should include **2-3 external reading tasks** for deeper engagement with primary sources and scholarly biographies.
+
+```yaml
+# In activities/{slug}.yaml
+
+- type: reading
+  id: c1-XX-reading-01
+  title: "Первинні джерела: Листи/Промови/Твори"
+  resource:
+    type: primary_source
+    url: "https://..."
+    title: "[Figure Name]: [Document Title]"
+  tasks:
+    - "Який регістр використовує автор у цьому документі? Наведіть приклади."
+    - "Знайдіть три приклади емоційно забарвленої лексики"
+    - "Порівняйте мову автора з сучасною українською. Які слова застаріли?"
+
+- type: reading
+  id: c1-XX-reading-02
+  title: "Науковий біографічний нарис"
+  resource:
+    type: article
+    url: "https://..."
+    title: "[Ukrainian historian's biography]"
+  tasks:
+    - "Як автор використовує біографічну лексику (відіграти роль, творча спадщина)?"
+    - "Знайдіть приклади академічного регістру в тексті"
+    - "Порівняйте інтерпретацію історика з аналізом у модулі"
+```
+
+**Note:** Questions focus on LINGUISTIC analysis, not biographical interpretation.
+
+---
+
+## Essay Assignment
+
+Each biography module should include a **400+ word comparative essay** with model answer and rubric.
+
+```markdown
+# Есе
+
+## Тема
+
+Напишіть порівняльне есе (400+ слів): "[Figure 1] та [Figure 2]: Порівняльний аналіз внеску в українську культуру"
+
+**Вимоги:**
+- Використайте лексику та граматику модуля
+- Порівняйте підходи, досягнення, спадщину двох постатей
+- Використайте цитати з первинних джерел
+- Застосуйте біографічну та історичну лексику
+
+**Структура:**
+1. Вступ (100 слів) — контекст та теза
+2. Основна частина (200 слів) — порівняльний аналіз
+3. Висновок (100 слів) — значення для сучасної України
+
+## Критерії оцінювання
+
+| Критерій | Вага | Опис |
+|----------|------|------|
+| **Мовна якість** | 40% | Граматична правильність, біографічна лексика, складність речень (C1 рівень) |
+| **Використання матеріалу** | 30% | Цитування первинних джерел, використання лексики модуля |
+| **Порівняльний аналіз** | 20% | Логічне порівняння двох постатей |
+| **Структура та зв'язність** | 10% | Організація, дискурсивні маркери |
+
+## Зразок відповіді
+
+[400+ word model essay demonstrating:]
+- C1-level grammar and syntax
+- Module biographical vocabulary (відіграти роль, творча спадщина, брати участь)
+- Comparative analysis structure
+- Citations from primary sources
+- Публіцистичний register
+
+**Мовні особливості зразка:**
+- Біографічні колокації: "відіграв визначну роль", "творча спадщина"
+- Порівняльні конструкції: "на відміну від", "подібно до"
+- Складні речення з підрядними
+- Публіцистичний регістр
+```
+
+---
+
 ## Biography-Specific Activities
 
 ### CRITICAL: Language Practice, Not Biographical Recall
 
 <critical>
 
-**Activities test LANGUAGE SKILLS, not biographical facts.**
+**These are LANGUAGE lessons that use biography as context, NOT biography tests taught in Ukrainian.**
 
-The lesson teaches both Ukrainian AND the figure's life/achievements. Activities practice only Ukrainian using the biography as context.
+**The Golden Rule:** "Can the learner answer this without reading the Ukrainian text?"
+- **If YES** → Rewrite (tests biographical recall, not language)
+- **If NO** → Keep (tests Ukrainian comprehension)
 
-**✅ CORRECT:** "Згідно з текстом, який головний внесок автор виділяє?" (requires reading Ukrainian)
-**❌ WRONG:** "У якому році народився Шевченко?" (tests recall, not language)
+### Examples: GOOD vs BAD Activities
 
-**Key Test:** Can the learner answer without reading the Ukrainian text? If yes, rewrite.
+**❌ BAD (Tests Biographical Facts):**
+```markdown
+1. Шевченко народився в [___] році.
+   > [!answer] 1814
+```
+Problem: Tests dates. No language learning.
+
+**❌ BAD (Tests Factual Recall):**
+```markdown
+1. Хто викупив Шевченка з кріпацтва?
+   - [x] Група митців та меценатів
+```
+Problem: Tests biographical knowledge from memory.
+
+**✅ GOOD (Tests Ukrainian Collocations):**
+```markdown
+1. Згідно з текстом, Шевченко [___] визначну роль у розвитку української літератури.
+   > [!answer] відіграв
+   > [!options] відіграв | зробив | мав | дав
+```
+Why GOOD: Tests fixed collocation (відіграти роль), requires reading Ukrainian text.
+
+**✅ GOOD (Tests Reading Comprehension):**
+```markdown
+1. Як автор характеризує вплив цієї постаті на українську культуру?
+   - [x] Автор підкреслює революційний характер її творчості
+```
+Why GOOD: Requires understanding how the MODULE describes the figure's influence.
+
+**Key phrases to use:**
+- "Згідно з текстом..."
+- "Як автор характеризує..."
+- "Який внесок автор виділяє..."
+
+**Never ask:**
+- "У якому році народився/померла..." (tests dates)
+- "Де навчався/жила..." (tests facts)
+- "Хто був..." (tests biographical knowledge)
 
 </critical>
+
+---
+
+### Activity Mix for Biography Modules
+
+**Total: 10-12 activities** (focus on quality over quantity)
+
+| Activity Type | Count | Purpose | Example |
+|---------------|-------|---------|---------|
+| **quiz** | 4-5 | Reading comprehension | "Згідно з текстом, який внесок автор виділяє?" |
+| **fill-in / cloze** | 3-4 | Biographical vocabulary | "Постать [___] визначну роль" → відіграла |
+| **error-correction** | 2-3 | Grammar practice | Fix case/collocation errors in biographical sentences |
+| **match-up** | 1-2 | Terminology | Ukrainian term ↔ Ukrainian definition |
+| **select** | 1-2 | Source analysis | Linguistic features of primary source quotes |
+
+**Note:** Plus 2-3 external reading tasks and 1 essay assignment (tracked in activities YAML).
 
 ### Activity Format Quick Reference
 

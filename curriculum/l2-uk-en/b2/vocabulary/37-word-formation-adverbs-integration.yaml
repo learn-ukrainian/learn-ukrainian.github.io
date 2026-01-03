@@ -7,11 +7,6 @@ items:
   translation: augmentative
   pos: noun
   gender: m
-- lemma: аугментатива
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: будиночок
   ipa: /budɪˈnot͡ʃok/
   translation: small house (diminutive)
@@ -26,7 +21,6 @@ items:
   ipa: /wɪstoˈjɑtɪ/
   translation: to withstand, to endure
   pos: verb
-  gender: n
 - lemma: вказівний
   ipa: /wkɑˈzʲiwnɪj/
   translation: demonstrative
@@ -46,10 +40,10 @@ items:
   translation: light breeze (diminutive)
   pos: noun
   gender: m
-- lemma: вітрищий
-  ipa: ''
-  translation: ''
-  pos: adj
+- lemma: вітрище
+  ipa: /wʲitˈrɪʃt͡ʃɛ/
+  translation: strong wind (augmentative)
+  pos: noun
   gender: n
 - lemma: гостювати
   ipa: /ɦostʲuˈwɑtɪ/
@@ -65,21 +59,10 @@ items:
   translation: diminutive
   pos: noun
   gender: m
-- lemma: демінутива
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: демінутивний
   ipa: /dɛmʲinutɪwnɪj/
   translation: diminutive (adj.)
   pos: adj
-  gender: m
-- lemma: дме
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: донечко
   ipa: /doˈnɛt͡ʃko/
   translation: dear daughter (diminutive)
@@ -89,7 +72,6 @@ items:
   ipa: /donɛˈt͡ʃonʲkɪj/
   translation: dear little (daughter) (diminutive adj.)
   pos: adj
-  gender: f
 - lemma: житися
   ipa: /ˈʒɪtɪsʲɑ/
   translation: to live
@@ -121,9 +103,9 @@ items:
   translation: little star (diminutive)
   pos: noun
   gender: n
-- lemma: калинівка
-  ipa: ''
-  translation: ''
+- lemma: Калинівка
+  ipa: /kɐlɪˈnʲiwkɑ/
+  translation: Kalynivka (village name)
   pos: propn
   gender: f
 - lemma: кликати
@@ -134,24 +116,19 @@ items:
   ipa: /koˈlʲɑdkɑ/
   translation: carol
   pos: noun
-  gender: m
+  gender: f
 - lemma: ласкавість
   ipa: /lɐskɑˈwʲistʲ/
   translation: tenderness, affection
   pos: noun
   gender: f
-- lemma: літ
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: метушливий
   ipa: /mɛˈtuʃlɪwɪj/
   translation: fussy, bustling
   pos: adj
-- lemma: михайлик
-  ipa: ''
-  translation: ''
+- lemma: Михайлик
+  ipa: /mɪxɐjˈlɪk/
+  translation: Mykhaylyk (diminutive of Mykhailo)
   pos: propn
   gender: m
 - lemma: морозець
@@ -163,11 +140,6 @@ items:
   ipa: /moroˈzɪʃt͡ʃɛ/
   translation: severe frost (augmentative)
   pos: noun
-  gender: n
-- lemma: морозищий
-  ipa: ''
-  translation: ''
-  pos: adj
   gender: n
 - lemma: наздогнати
   ipa: /nɐzdoɦˈnɑtɪ/
@@ -186,34 +158,29 @@ items:
   ipa: /ˈnʲiʒɛnʲkɑ/
   translation: little leg (diminutive)
   pos: noun
-  gender: m
+  gender: f
 - lemma: ніженький
   ipa: /ˈnʲiʒɛnʲkɪj/
   translation: tender, delicate
   pos: adj
-  gender: f
-- lemma: оленк
-  ipa: ''
-  translation: ''
+- lemma: Оленка
+  ipa: /oˈlɛnkɑ/
+  translation: Olenka (Ukrainian name, diminutive of Olena)
   pos: propn
   gender: f
-- lemma: ому
-  ipa: ''
-  translation: ''
-  pos: other
 - lemma: опалення
   ipa: /opɑˈlɛnʲːɑ/
   translation: heating
   pos: noun
   gender: n
-- lemma: очок
-  ipa: ''
-  translation: ''
+- lemma: очко
+  ipa: /ot͡ʃˈko/
+  translation: point, score
   pos: noun
-  gender: f
-- lemma: петрівка
-  ipa: ''
-  translation: ''
+  gender: n
+- lemma: Петрівка
+  ipa: /pɛˈtrʲiwkɑ/
+  translation: Petrivka (village name)
   pos: propn
   gender: f
 - lemma: плач
@@ -225,12 +192,6 @@ items:
   ipa: /powɑˈlɪtɪ/
   translation: to knock down
   pos: verb
-  gender: n
-- lemma: поновий
-  ipa: ''
-  translation: ''
-  pos: adj
-  gender: f
 - lemma: поукраїнський
   ipa: /poukrɑˈjinsʲkɪj/
   translation: in Ukrainian manner/style
@@ -243,9 +204,9 @@ items:
   ipa: /prɛˈkrɑsno/
   translation: excellently
   pos: adv
-- lemma: прикм
-  ipa: ''
-  translation: ''
+- lemma: прикметник
+  ipa: /prɪkˈmɛtnɪk/
+  translation: adjective
   pos: noun
   gender: m
 - lemma: прудкий
@@ -261,7 +222,6 @@ items:
   ipa: /ˈrʲidkɪj/
   translation: rare, thin
   pos: adj
-  gender: m
 - lemma: серденько
   ipa: /sɛrˈdɛnʲko/
   translation: little heart (diminutive)
@@ -276,26 +236,14 @@ items:
   ipa: /ˈspɑtɪsʲɑ/
   translation: to sleep, to feel like sleeping
   pos: verb
-  gender: n
 - lemma: страшний
   ipa: /ˈstrɑʃnɪj/
   translation: terrible, scary
   pos: adj
-  gender: m
 - lemma: сусідній
   ipa: /suˈsʲidnʲij/
   translation: neighboring
   pos: adj
-  gender: m
-- lemma: ськи
-  ipa: ''
-  translation: ''
-  pos: other
-- lemma: сіква
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: теплота
   ipa: /tɛploˈtɑ/
   translation: warmth
@@ -309,10 +257,6 @@ items:
   ipa: /uzɐɦɑlʲˈnɪtɪ/
   translation: to generalize
   pos: verb
-- lemma: українськ
-  ipa: ''
-  translation: ''
-  pos: other
 - lemma: хлопчинка
   ipa: /xlopt͡ʃɪnˈkɑ/
   translation: little boy (diminutive)
@@ -322,34 +266,20 @@ items:
   ipa: /xlopt͡ʃɪˈt͡ʃok/
   translation: little boy (diminutive)
   pos: noun
-  gender: f
+  gender: m
 - lemma: холодище
   ipa: /xoloˈdɪʃt͡ʃɛ/
   translation: severe cold (augmentative)
   pos: noun
-  gender: n
-- lemma: холодищий
-  ipa: ''
-  translation: ''
-  pos: adj
   gender: n
 - lemma: холодок
   ipa: /xoloˈdok/
   translation: coolness (diminutive)
   pos: noun
   gender: m
-- lemma: ціка
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: чик
-  ipa: ''
-  translation: ''
-  pos: other
-- lemma: швидо
-  ipa: ''
-  translation: ''
+- lemma: швидко
+  ipa: /ˈʃwɪdko/
+  translation: quickly
   pos: adv
 - lemma: інколи
   ipa: /ʲinˈkolɪ/

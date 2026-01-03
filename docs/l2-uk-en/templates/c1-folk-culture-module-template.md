@@ -15,6 +15,9 @@ Before submitting a C1 folk culture module, verify all items from `c1-module-tem
 ### Folk Culture-Specific Requirements
 - [ ] **CBI pedagogy:** Content-Based Instruction (cultural content drives language)
 - [ ] **Authentic materials:** Folk songs, proverbs, ritual descriptions, craft terminology
+- [ ] **Reading tasks (2-3):** External reading assignments with linguistic analysis of authentic materials
+- [ ] **Essay assignment:** 400+ word cultural analysis with model answer and rubric
+- [ ] **Activity count:** 10-12 language-focused activities (NOT 14+)
 - [ ] **Regional variation:** Note differences across Ukrainian regions
 - [ ] **Historical context:** Pre-Christian origins, Christian syncretism, Soviet era changes
 - [ ] **Modern relevance:** How traditions continue or are revived today
@@ -199,6 +202,99 @@ vocabulary_focus:
 
 ### Де побачити/почути/спробувати
 
+[Continue with modern context section...]
+```
+
+---
+
+## Reading Tasks (External Assignments)
+
+Folk culture modules should include **2-3 external reading tasks** for deeper engagement with authentic materials.
+
+```yaml
+# In activities/{slug}.yaml
+
+- type: reading
+  id: c1-1XX-reading-01
+  title: "Автентичний фольклорний текст"
+  resource:
+    type: primary_source
+    url: "https://..."
+    title: "[Folk song collection / ritual description / craft manual]"
+  tasks:
+    - "Знайдіть у тексті три приклади архаїчних форм. Як вони змінилися в сучасній мові?"
+    - "Який регістр використовується в тексті? Наведіть приклади."
+    - "Порівняйте лексику тексту з лексикою модуля. Які терміни потребують пояснення?"
+
+- type: reading
+  id: c1-1XX-reading-02
+  title: "Науковий культурологічний аналіз"
+  resource:
+    type: article
+    url: "https://..."
+    title: "[Ukrainian ethnographer's article]"
+  tasks:
+    - "Як автор використовує фольклорну термінологію?"
+    - "Знайдіть приклади академічного регістру в тексті"
+    - "Порівняйте інтерпретацію дослідника з аналізом у модулі"
+```
+
+**Note:** Questions focus on LINGUISTIC analysis of authentic materials, not cultural interpretation alone.
+
+---
+
+## Essay Assignment
+
+Each folk culture module should include a **400+ word cultural analysis essay** with model answer and rubric.
+
+```markdown
+# Есе
+
+## Тема
+
+Напишіть культурознавчий аналіз (400+ слів): "[Folk Tradition]: Культурна функція та символіка"
+
+**Вимоги:**
+- Використайте лексику та граматику модуля
+- Проаналізуйте культурну функцію та символічне значення традиції
+- Використайте приклади з автентичних фольклорних текстів
+- Порівняйте регіональні варіанти (якщо є)
+
+**Структура:**
+1. Вступ (100 слів) — культурний контекст
+2. Основна частина (200 слів) — функція та символіка
+3. Висновок (100 слів) — сучасне відродження та значення
+
+## Критерії оцінювання
+
+| Критерій | Вага | Опис |
+|----------|------|------|
+| **Мовна якість** | 40% | Граматична правильність, фольклорна термінологія, C1 рівень |
+| **Використання матеріалу** | 30% | Цитування автентичних текстів, використання лексики модуля |
+| **Культурний аналіз** | 20% | Розуміння функції та символіки традиції |
+| **Структура та зв'язність** | 10% | Організація, дискурсивні маркери |
+
+## Зразок відповіді
+
+[400+ word model essay demonstrating:]
+- C1-level grammar and syntax
+- Module folk culture vocabulary (відіграти роль, символізувати, втілювати)
+- Cultural analysis framework
+- Citations from authentic folk texts
+- Mix of художній and публіцистичний registers
+
+**Мовні особливості зразка:**
+- Фольклорна термінологія: "обрядова функція", "символічне значення"
+- Складні речення з підрядними
+- Академічні конструкції: "як свідчить", "на відміну від"
+```
+
+---
+
+## Folk Culture-Specific Activities
+
+### Де побачити/почути/спробувати
+
 | Місце | Тип | Особливості |
 |-------|-----|-------------|
 | [Location 1] | [Type] | [Features] |
@@ -218,30 +314,70 @@ vocabulary_focus:
 
 <critical>
 
-**Activities test LANGUAGE SKILLS, not folk culture recall.**
+**These are LANGUAGE lessons that use folk culture as context, NOT folk culture exams taught in Ukrainian.**
 
-The lesson teaches both Ukrainian AND folk culture. Activities practice only Ukrainian using cultural content as context.
+**The Golden Rule:** "Can the learner answer this without reading the Ukrainian text?"
+- **If YES** → Rewrite (tests cultural knowledge, not language)
+- **If NO** → Keep (tests Ukrainian comprehension)
 
-**✅ CORRECT:** "Згідно з текстом, як автор описує функцію рушника?" (requires reading Ukrainian)
-**❌ WRONG:** "Що символізує калина в українській культурі?" (tests cultural recall, not language)
+### Examples: GOOD vs BAD Activities
 
-**Key Test:** Can the learner answer without reading the Ukrainian text? If yes, rewrite.
+**❌ BAD (Tests Cultural Knowledge):**
+```markdown
+1. Що символізує калина в українській культурі?
+   - [x] Материнство і жіночність
+```
+Problem: Tests cultural symbolism recall. Can be answered without reading Ukrainian.
 
-| Component | Purpose |
-|-----------|---------|
-| **Lesson Content** | Teaches BOTH Ukrainian language AND folk culture knowledge |
-| **Activities** | Practice ONLY Ukrainian language skills using cultural content as context |
+**❌ BAD (Tests Factual Recall):**
+```markdown
+1. Коли співають колядки?
+   - [x] Під час Різдва
+```
+Problem: Tests folk calendar knowledge, not language.
 
-**Activity Types and Their Language Focus:**
-- **quiz**: Test reading comprehension — "Згідно з текстом модуля..."
-- **cloze**: Test vocabulary in folk song/text context
-- **match-up**: Test vocabulary — Ukrainian terms ↔ Ukrainian definitions
-- **fill-in**: Test vocabulary/collocations from module
-- **group-sort**: Test categorization using module vocabulary
-- **mark-the-words**: Test grammar recognition in authentic folk text
-- **error-correction**: Test grammar, NOT cultural facts
+**✅ GOOD (Tests Ukrainian Language):**
+```markdown
+1. Згідно з текстом, як автор описує функцію рушника в обряді?
+   - [x] Автор підкреслює його символічну роль як зв'язку між світами
+```
+Why GOOD: Requires reading MODULE'S DESCRIPTION in Ukrainian.
+
+**✅ GOOD (Tests Ukrainian Collocations):**
+```markdown
+1. Ця традиція [___] важливу роль у збереженні культурної ідентичності.
+   - [x] відіграє
+   > [!options] відіграє | робить | має | дає
+```
+Why GOOD: Tests fixed collocation (відіграти роль), requires understanding Ukrainian usage.
+
+**Key phrases to use:**
+- "Згідно з текстом..."
+- "Як автор описує функцію/значення..."
+- "У тексті модуля зазначено..."
+
+**Never ask:**
+- "Що символізує..." (unless "Як автор тлумачить символіку...")
+- "Коли відбувається..." (tests cultural knowledge)
+- "Які кольори використовують..." (tests craft facts)
 
 </critical>
+
+---
+
+### Activity Mix for Folk Culture Modules
+
+**Total: 10-12 activities** (focus on quality over quantity)
+
+| Activity Type | Count | Purpose | Example |
+|---------------|-------|---------|---------|
+| **quiz** | 4-5 | Reading comprehension | "Згідно з текстом, як автор описує функцію рушника?" |
+| **fill-in / cloze** | 3-4 | Folk vocabulary in context | "Традиція [___] важливу роль" → відіграє |
+| **error-correction** | 2-3 | Grammar practice | Fix case/aspect errors in folk culture sentences |
+| **match-up** | 1-2 | Terminology | Ukrainian folk term ↔ Ukrainian definition |
+| **mark-the-words / select** | 1-2 | Analysis | Find archaic forms in folk song, identify symbolism |
+
+**Note:** Plus 2-3 external reading tasks and 1 essay assignment (tracked in activities YAML).
 
 ---
 

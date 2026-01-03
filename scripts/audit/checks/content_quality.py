@@ -231,30 +231,35 @@ def check_content_quality(content: str, level_code: str, module_num: int) -> lis
 
     # --- Deterministic Checks (Run regardless of API Key or Enabled Flag) ---
     
-    # Check for Russian-only characters (ё, ъ, ы, э)
-    # These should almost NEVER appear in Ukrainian content except in explicit "Russian uses..." comparisons
-    # NOTE: We scan the ENTIRE content (including Activities) for this check.
-    russian_chars = re.compile(r'[ёъыэЁЪЫЭ]')
-    matches = list(russian_chars.finditer(content))
+    # Check for Russian-only and Historical characters (ё, ъ, ы, э, ѣ, ѳ, ѵ)
+    # These are allowed in LIT track ONLY within citations (> blockquotes)
+    historical_chars = set('ёъыэѣѳѵЁЪЫЭѢѲѴ')
+    lines = content.split('\n')
+    bad_matches = []
     
-    if matches:
-        # Check if they are inside a "Russian" context (simple heuristic)
-        # If the word "Russian" or "російськ" is NOT in the same line/paragraph, flag it.
-        bad_matches = []
-        for m in matches:
-            start, end = max(0, m.start() - 50), min(len(content), m.end() + 50)
-            context = content[start:end].lower()
-            # STRICTER CHECK: Even with context, we warn about it, but for now let's just flag if context missing
-            if 'russian' not in context and 'rocійськ' not in context and 'російськ' not in context:
-                bad_matches.append(m.group())
-        
-        if bad_matches:
-             violations.append({
-                'type': 'LINGUISTIC_PURITY',
-                'severity': 'error',
-                'issue': f"Found Russian-only characters in module: {', '.join(set(bad_matches))}",
-                'fix': "Remove Russian characters (ё, ъ, ы, э) or ensure they are properly contextually framed."
-            })
+    for line in lines:
+        found = [c for c in line if c in historical_chars]
+        if found:
+            is_citation = line.strip().startswith('>')
+            # Heuristic context check
+            context = line.lower()
+            has_context = 'russian' in context or 'rocійськ' in context or 'російськ' in context
+            
+            if level_code.lower() == 'lit' and is_citation:
+                # Allowed in literature citations
+                continue
+            
+            if not has_context:
+                bad_matches.extend(found)
+    
+    if bad_matches:
+         violations.append({
+            'type': 'LINGUISTIC_PURITY',
+            'severity': 'error',
+            'issue': f"Found forbidden or historical characters outside of allowed context: {', '.join(set(bad_matches))}",
+            'fix': "Remove non-Ukrainian characters (ё, ъ, ы, э, ѣ, etc.) or ensure they are inside a citation (> ) in the LIT track."
+        })
+
 
     if not CONTENT_QUALITY_ENABLED:
         return violations

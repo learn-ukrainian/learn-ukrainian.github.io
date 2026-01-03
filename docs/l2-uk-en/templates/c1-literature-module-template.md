@@ -18,7 +18,9 @@ Before submitting a C1 literature module, verify all items from `c1-module-templ
 - [ ] **Comparative analysis:** 2+ texts compared (same author different works, or different authors)
 - [ ] **Historical context:** Author's era, literary movement, political context
 - [ ] **Rhetorical devices:** Identify and analyze метафора, іронія, символ, etc.
-- [ ] **Critical essay:** Writing task with model answer
+- [ ] **Reading tasks (2-3):** External reading assignments with stylistic analysis questions
+- [ ] **Critical essay:** 400+ word essay with model answer and rubric
+- [ ] **Activity count:** 10-12 language-focused activities (NOT 14+)
 - [ ] **NO CONVERSATIONAL DIALOGS:** Literature modules focus on TEXTUAL ANALYSIS. Do NOT add conversational dialogs between learners or fictional scenarios. If a literary work contains dialogue (e.g., drama, prose), analyze it—don't simulate it.
 
 ---
@@ -275,36 +277,123 @@ vocabulary_focus:
 
 ---
 
+## Reading Tasks (External Assignments)
+
+Literature modules should include **2-3 external reading tasks** for deeper engagement with primary texts and literary criticism.
+
+```yaml
+# In activities/{slug}.yaml
+
+- type: reading
+  id: c1-146-reading-01
+  title: "Повний текст твору"
+  resource:
+    type: primary_source
+    url: "https://www.ukrlib.com.ua/..."
+    title: "Тарас Шевченко. Заповіт (повний текст)"
+  tasks:
+    - "Знайдіть у тексті три приклади майбутнього часу. Чому автор їх використовує?"
+    - "Які дієслова наказового способу є в тексті? Який ефект вони створюють?"
+    - "Порівняйте мову поета з сучасною українською. Які слова змінили значення?"
+
+- type: reading
+  id: c1-146-reading-02
+  title: "Літературознавчий аналіз"
+  resource:
+    type: article
+    url: "https://..."
+    title: "[Ukrainian literary critic's analysis]"
+  tasks:
+    - "Як автор статті використовує літературознавчу термінологію?"
+    - "Знайдіть приклади академічного регістру в тексті"
+    - "Порівняйте інтерпретацію критика з аналізом у модулі"
+
+- type: reading
+  id: c1-146-reading-03
+  title: "Порівняльний аналіз"
+  resource:
+    type: article
+    url: "https://..."
+    title: "[Another poem by same author]"
+  tasks:
+    - "Порівняйте стилістичні засоби двох творів"
+    - "Як змінюється мова автора між ранніми та пізніми творами?"
+    - "Які теми повторюються?"
+```
+
+**Note:** Questions focus on LINGUISTIC and STYLISTIC analysis, not literary interpretation alone.
+
+---
+
 ## Literature-Specific Activities
 
 ### CRITICAL: Language Practice, Not Content Testing
 
 <critical>
 
-**Activities test LANGUAGE SKILLS, not literary content recall.**
+**These are LANGUAGE lessons that use literature as context, NOT literature exams taught in Ukrainian.**
 
-The lesson teaches both Ukrainian AND literary analysis. Activities practice only Ukrainian using the literary content as context.
+**The Golden Rule:** "Can the learner answer this without reading the Ukrainian text?"
+- **If YES** → Rewrite (tests content recall, not language)
+- **If NO** → Keep (tests Ukrainian comprehension)
 
-**✅ CORRECT:** "Згідно з текстом аналізу, який стилістичний засіб автор виділяє?" (requires reading Ukrainian)
-**❌ WRONG:** "Що символізує образ каменярів у Франка?" (tests literary recall, not language)
+### Examples: GOOD vs BAD Activities
 
-**Key Test:** Can the learner answer without reading the Ukrainian analysis text? If yes, rewrite.
+**❌ BAD (Tests Literary Facts):**
+```markdown
+1. У якому році написаний "Заповіт"?
+   - [x] 1845
+```
+Problem: Tests dates. Can be answered from prior knowledge.
 
-| Component | Purpose |
-|-----------|---------|
-| **Lesson Content** | Teaches BOTH Ukrainian language AND literary analysis/theory |
-| **Activities** | Practice ONLY Ukrainian language skills using literary content as context |
+**❌ BAD (Tests Interpretation from Memory):**
+```markdown
+1. Що символізує образ Дніпра в поезії Шевченка?
+   - [x] Волю України
+```
+Problem: Tests literary knowledge. Students can answer without reading Ukrainian module text.
 
-**Activity Types and Their Language Focus:**
-- **quiz**: Test reading comprehension of analysis text — "Згідно з текстом..."
-- **mark-the-words**: Test recognition of literary devices IN THE TEXT — find metaphors, identify verbs, etc.
-- **fill-in**: Test literary vocabulary/collocations — "[___] засіб" (стилістичний)
-- **match-up**: Test vocabulary — match Ukrainian terms to Ukrainian definitions
-- **group-sort**: Test categorization using module vocabulary
-- **cloze**: Test vocabulary in literary context
-- **error-correction**: Test grammar, NOT literary interpretation
+**✅ GOOD (Tests Ukrainian Language):**
+```markdown
+1. Згідно з аналізом у модулі, який стилістичний засіб автор виділяє в рядку "Реве та стогне Дніпр широкий"?
+   - [x] Автор визначає це як персоніфікацію
+```
+Why GOOD: Requires reading the MODULE'S ANALYSIS in Ukrainian, tests comprehension of Ukrainian literary terminology.
+
+**✅ GOOD (Tests Ukrainian Collocations):**
+```markdown
+1. Шевченко [___] визначну роль у розвитку української літератури.
+   - [x] відіграв
+```
+Why GOOD: Tests fixed collocation (відіграти роль), requires understanding Ukrainian usage.
+
+**Key phrases to use:**
+- "Згідно з текстом модуля..."
+- "У тексті аналізу автор..."
+- "Як автор інтерпретує/тлумачить/характеризує..."
+
+**Never ask:**
+- "У якому році написаний..." (unless "Згідно з текстом, у якому році автор каже що...")
+- "Що символізує..." (unless "Як автор модуля інтерпретує символіку...")
+- "Хто написав..." (tests literary knowledge, not Ukrainian)
 
 </critical>
+
+---
+
+### Activity Mix for Literature Modules
+
+**Total: 10-12 activities** (focus on quality over quantity)
+
+| Activity Type | Count | Purpose | Example |
+|---------------|-------|---------|---------|
+| **quiz** | 4-5 | Reading comprehension of analysis | "Згідно з текстом, як автор інтерпретує образ каменярів?" |
+| **fill-in / cloze** | 3-4 | Literary vocabulary in context | "Франко [___] важливу роль у модернізмі" → відіграв |
+| **error-correction** | 2-3 | Grammar practice | Fix case/aspect errors in literary sentences |
+| **match-up** | 1-2 | Terminology | Ukrainian literary term ↔ Ukrainian definition |
+| **mark-the-words / select** | 1-2 | Device identification | Find metaphors, passive voice in poem excerpt |
+
+**Note:** Plus 2-3 external reading tasks and 1 essay assignment (tracked in activities YAML).
 
 ---
 

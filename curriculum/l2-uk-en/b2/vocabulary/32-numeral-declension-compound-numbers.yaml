@@ -11,10 +11,10 @@ items:
   translation: army
   pos: noun
   gender: f
-- lemma: божога
-  ipa: ''
-  translation: ''
-  pos: noun
+- lemma: Богдан
+  ipa: /bohˈdɑn/
+  translation: Bohdan (name)
+  pos: propn
   gender: m
 - lemma: бухгалтерія
   ipa: /buxɦɐlʲˈtɛrʲijɑ/
@@ -25,7 +25,6 @@ items:
   ipa: /wɪɦɑˈdɑnɪj/
   translation: fictional, made-up
   pos: adj
-  gender: f
 - lemma: висловитися
   ipa: /wɪsloˈwɪtɪsʲɑ/
   translation: to express oneself
@@ -34,26 +33,19 @@ items:
   ipa: /wolʲt/
   translation: volt
   pos: noun
-  gender: f
-- lemma: вольта
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
+  gender: m
 - lemma: восьмеро
   ipa: /wosʲˈmɛro/
   translation: eight (collective)
   pos: other
 - lemma: восьмисот
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: восьмист
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+  ipa: /wosʲmɪˈsot/
+  translation: eight hundred (gen/dat/loc)
+  pos: num
+- lemma: восьмиста
+  ipa: /wosʲmɪˈstɑ/
+  translation: eight hundred (instr)
+  pos: num
 - lemma: вояк
   ipa: /woˈjɑk/
   translation: soldier, warrior
@@ -64,64 +56,41 @@ items:
   translation: to decline (grammar)
   pos: verb
 - lemma: вісьма
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: вісьмаст
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: вісімдесятьий
-  ipa: ''
-  translation: ''
+  ipa: /ˈwʲisʲmɑ/
+  translation: eight (instr)
+  pos: num
+- lemma: вісімдесятий
+  ipa: /wʲisʲimdɛˈsʲɑtɪj/
+  translation: eightieth
   pos: adj
-  gender: f
-- lemma: вісімдесятьм
-  ipa: ''
-  translation: ''
-  pos: other
 - lemma: вісімдесятьма
-  ipa: ''
-  translation: ''
-  pos: other
+  ipa: /wʲisʲimdɛˈsʲɑtʲmɑ/
+  translation: eighty (instr)
+  pos: num
 - lemma: вісімсот
-  ipa: ''
-  translation: ''
-  pos: other
+  ipa: /wʲisʲimˈsot/
+  translation: eight hundred (gen/dat/loc)
+  pos: num
 - lemma: групувати
   ipa: /ɦrupuˈwɑtɪ/
   translation: to group
   pos: verb
-- lemma: двомаст
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: двомет
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: двомастами
+  ipa: /dwoˈmɑstɑmɪ/
+  translation: two hundred (instr)
+  pos: num
 - lemma: двохсот
-  ipa: ''
-  translation: ''
-  pos: other
-- lemma: двохст
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+  ipa: /dwoxˈsot/
+  translation: two hundred (gen/dat/loc)
+  pos: num
 - lemma: двохста
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
+  ipa: /dwoxˈstɑ/
+  translation: two hundred (instr)
+  pos: num
 - lemma: десятих
-  ipa: ''
-  translation: ''
-  pos: other
+  ipa: /dɛˈsʲɑtɪx/
+  translation: tenths (gen/loc)
+  pos: num
 - lemma: десятковий
   ipa: /dɛsʲɑtˈkowɪj/
   translation: decimal
@@ -163,7 +132,6 @@ items:
   ipa: /zɐoʃɑˈdɪtɪ/
   translation: to save (money)
   pos: verb
-  gender: m
 - lemma: записуватися
   ipa: /zɐpɪsuwɑˈtɪsʲɑ/
   translation: to sign up, to be written
@@ -176,9 +144,9 @@ items:
   ipa: /zɐpobʲiˈɦɑtɪ/
   translation: to prevent
   pos: verb
-- lemma: зачина
-  ipa: ''
-  translation: ''
+- lemma: зачин
+  ipa: /zɐˈt͡ʃɪn/
+  translation: beginning, opening
   pos: noun
   gender: m
 - lemma: збігатися
@@ -189,7 +157,6 @@ items:
   ipa: /zownʲiʃnʲotorˈɦowɛlʲnɪj/
   translation: foreign trade (adj.)
   pos: adj
-  gender: m
 - lemma: зручність
   ipa: /ˈzrut͡ʃnʲistʲ/
   translation: convenience
@@ -204,26 +171,21 @@ items:
   ipa: /kɪrɪˈlʲit͡ʃnɪj/
   translation: Cyrillic (adj.)
   pos: adj
-  gender: n
 - lemma: комбінування
   ipa: /kombʲinuˈwɑnʲːɑ/
   translation: combining
   pos: noun
   gender: n
-- lemma: купюр
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: купюра
   ipa: /kuˈpʲurɑ/
   translation: banknote
   pos: noun
   gender: f
 - lemma: літа
-  ipa: ''
-  translation: ''
+  ipa: /ˈlʲitɑ/
+  translation: years, summers (gen. pl.)
   pos: noun
+  gender: n
 - lemma: маса
   ipa: /ˈmɑsɑ/
   translation: mass
@@ -233,17 +195,15 @@ items:
   ipa: /mɪnuloˈrʲit͡ʃnɪj/
   translation: last year's
   pos: adj
-  gender: f
-- lemma: млрд
-  ipa: ''
-  translation: ''
-  pos: noun
+- lemma: мільярд
+  ipa: /mʲilʲˈjɑrd/
+  translation: billion
+  pos: num
   gender: m
 - lemma: налічувати
   ipa: /nɐlʲit͡ʃuˈwɑtɪ/
   translation: to count, to number
   pos: verb
-  gender: f
 - lemma: непарний
   ipa: /nɛˈpɑrnɪj/
   translation: odd (number)
@@ -258,9 +218,9 @@ items:
   translation: injustice
   pos: noun
   gender: f
-- lemma: оборота
-  ipa: ''
-  translation: ''
+- lemma: оборот
+  ipa: /oboˈrot/
+  translation: turnover, revolution
   pos: noun
   gender: m
 - lemma: округлювати
@@ -275,12 +235,10 @@ items:
   ipa: /pɛrɛjɑˈslɑwsʲkɪj/
   translation: Pereyaslav (adj.)
   pos: adj
-  gender: f
 - lemma: питомий
   ipa: /pɪˈtomɪj/
   translation: specific, native
   pos: adj
-  gender: m
 - lemma: подорожчати
   ipa: /podoroʒˈt͡ʃɑtɪ/
   translation: to become more expensive
@@ -311,15 +269,10 @@ items:
   ipa: /pʲidˈropkɑ/
   translation: counterfeit
   pos: noun
-  gender: m
-- lemma: підробок
-  ipa: ''
-  translation: ''
-  pos: noun
   gender: f
-- lemma: раза
-  ipa: ''
-  translation: ''
+- lemma: раз
+  ipa: /rɑz/
+  translation: time, instance
   pos: noun
   gender: m
 - lemma: рейтинг
@@ -332,15 +285,13 @@ items:
   translation: register (adj.)
   pos: adj
 - lemma: семисот
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: семист
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+  ipa: /sɛmɪˈsot/
+  translation: seven hundred (gen/dat/loc)
+  pos: num
+- lemma: семиста
+  ipa: /sɛmɪˈstɑ/
+  translation: seven hundred (instr)
+  pos: num
 - lemma: складніше
   ipa: /ˈsklɑdnʲiʃɛ/
   translation: more complex
@@ -350,15 +301,14 @@ items:
   translation: forty; magpie
   pos: noun
   gender: f
-- lemma: сот
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: сота
+  ipa: /ˈsotɑ/
+  translation: hundredth
+  pos: adj
 - lemma: сотих
-  ipa: ''
-  translation: ''
-  pos: other
+  ipa: /ˈsotɪx/
+  translation: hundredths (gen/loc)
+  pos: num
 - lemma: сплатити
   ipa: /splɑˈtɪtɪ/
   translation: to pay
@@ -371,7 +321,6 @@ items:
   ipa: /sproˈʃt͡ʃɛnɪj/
   translation: simplified
   pos: adj
-  gender: f
 - lemma: спрощувати
   ipa: /sproʃt͡ʃuˈwɑtɪ/
   translation: to simplify
@@ -380,34 +329,27 @@ items:
   ipa: /sproʃt͡ʃuˈwɑtɪsʲɑ/
   translation: to be simplified
   pos: verb
-- lemma: статистиця
-  ipa: ''
-  translation: ''
+- lemma: статистика
+  ipa: /stɐtɪsˈtɪkɑ/
+  translation: statistics
   pos: noun
   gender: f
-- lemma: стом
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: сьомаст
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: стами
+  ipa: /ˈstɑmɪ/
+  translation: hundreds (instr)
+  pos: num
 - lemma: сімдесять
   ipa: /sʲimˈdɛsʲɑtʲ/
   translation: seventy
   pos: other
 - lemma: сімсот
-  ipa: ''
-  translation: ''
-  pos: other
-- lemma: сіо
-  ipa: ''
-  translation: ''
-  pos: other
-  gender: f
+  ipa: /sʲimˈsot/
+  translation: seven hundred (gen/dat/loc)
+  pos: num
+- lemma: сіоме
+  ipa: /sʲiˈomɛ/
+  translation: hundredth (neuter)
+  pos: adj
 - lemma: тисячоліття
   ipa: /tɪsʲɑt͡ʃoˈlʲitʲːɑ/
   translation: millennium
@@ -422,36 +364,26 @@ items:
   ipa: /ˈtrɪstɑ/
   translation: three hundred
   pos: other
-- lemma: трьомаст
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: трьомст
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: тримаста
+  ipa: /trɪˈmɑstɑ/
+  translation: three hundred (instr)
+  pos: num
 - lemma: трьохсот
-  ipa: ''
-  translation: ''
-  pos: other
-- lemma: трьохст
-  ipa: ''
-  translation: ''
-  pos: noun
+  ipa: /trʲoxˈsot/
+  translation: three hundred (gen/dat/loc)
+  pos: num
 - lemma: утворений
   ipa: /utˈworɛnɪj/
   translation: formed
   pos: adj
-- lemma: хі
-  ipa: ''
-  translation: ''
-  pos: adj
+- lemma: Хі
+  ipa: /xi/
+  translation: Chi (Greek letter)
+  pos: propn
   gender: n
-- lemma: цельсієм
-  ipa: ''
-  translation: ''
+- lemma: Цельсій
+  ipa: /t͡sɛlʲˈsʲij/
+  translation: Celsius
   pos: propn
   gender: m
 - lemma: числення
@@ -463,52 +395,34 @@ items:
   ipa: /t͡ʃotɪˈrɪstɑ/
   translation: four hundred
   pos: other
-- lemma: чотирмаст
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: чотирьомест
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: чотирьохест
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: чотирмаста
+  ipa: /t͡ʃotɪrˈmɑstɑ/
+  translation: four hundred (instr)
+  pos: num
 - lemma: чотирьохсот
-  ipa: ''
-  translation: ''
-  pos: other
+  ipa: /t͡ʃotɪrʲoxˈsot/
+  translation: four hundred (gen/dat/loc)
+  pos: num
 - lemma: шестисот
-  ipa: ''
-  translation: ''
-  pos: other
-- lemma: шестист
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+  ipa: /ʃɛstɪˈsot/
+  translation: six hundred (gen/dat/loc)
+  pos: num
+- lemma: шестиста
+  ipa: /ʃɛstɪˈstɑ/
+  translation: six hundred (instr)
+  pos: num
 - lemma: шістдесять
   ipa: /ʃʲizˈdɛsʲɑtʲ/
   translation: sixty
   pos: other
 - lemma: шістдесятьма
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
+  ipa: /ʃʲizdɛˈsʲɑtʲmɑ/
+  translation: sixty (instr)
+  pos: num
 - lemma: шістсот
-  ipa: ''
-  translation: ''
-  pos: other
-- lemma: шістьмаст
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
+  ipa: /ʃʲistˈsot/
+  translation: six hundred (gen/dat/loc)
+  pos: num
 - lemma: ініціатива
   ipa: /ʲinʲit͡sʲiɑˈtɪwɑ/
   translation: initiative

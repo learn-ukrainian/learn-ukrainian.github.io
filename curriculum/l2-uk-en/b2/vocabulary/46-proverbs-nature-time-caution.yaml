@@ -2,38 +2,71 @@ module: 46-proverbs-nature-time-caution
 level: B2
 version: '2.0'
 items:
+- lemma: Буковина
+  ipa: /bukoˈwɪnɑ/
+  translation: Bukovina (Ukrainian region)
+  pos: propn
+  gender: f
+- lemma: Вікіпедія
+  ipa: /wʲikʲiˈpɛdʲijɑ/
+  translation: Wikipedia
+  pos: propn
+  gender: f
+- lemma: Вінниця
+  ipa: /ˈwʲinːɪt͡sʲɑ/
+  translation: Vinnytsia (Ukrainian city)
+  pos: propn
+  gender: f
+- lemma: Голодомор
+  ipa: /ɦoloˈdomor/
+  translation: Holodomor (Ukrainian genocide)
+  pos: propn
+  gender: m
+- lemma: Житомир
+  ipa: /ʒɪˈtomɪr/
+  translation: Zhytomyr (Ukrainian city)
+  pos: propn
+  gender: m
+- lemma: Луцьк
+  ipa: /lut͡sʲk/
+  translation: Lutsk (Ukrainian city)
+  pos: propn
+  gender: m
+- lemma: Полтава
+  ipa: /polˈtɑwɑ/
+  translation: Poltava (Ukrainian city)
+  pos: propn
+  gender: f
 - lemma: альпініст
-  ipa: ''
-  translation: ''
+  ipa: /ɑlʲpʲiˈnʲist/
+  translation: mountain climber
   pos: noun
   gender: m
 - lemma: античний
-  ipa: ''
-  translation: ''
+  ipa: /ɐnˈtɪt͡ʃnɪj/
+  translation: ancient, antique
   pos: adj
-  gender: n
 - lemma: асоціювати
-  ipa: ''
-  translation: ''
+  ipa: /ɐsot͡sʲijuˈwɑtɪ/
+  translation: to associate
   pos: verb
 - lemma: асфальт
-  ipa: ''
-  translation: ''
+  ipa: /ɑsˈfɑlʲt/
+  translation: asphalt
   pos: noun
   gender: m
 - lemma: багатовіковий
   ipa: /bɑɦɐtowʲiˈkowɪj/
   translation: centuries-old
   pos: adj
-  gender: f
 - lemma: балачка
-  ipa: ''
-  translation: ''
+  ipa: /bɑˈlɑt͡ʃkɑ/
+  translation: chat, talk
   pos: noun
-  gender: m
+  gender: f
 - lemma: бандура
-  ipa: ''
-  translation: ''
+  ipa: /bɐnˈdurɑ/
+  translation: bandura (Ukrainian musical instrument)
   pos: noun
   gender: f
 - lemma: банкрутство
@@ -41,6 +74,10 @@ items:
   translation: ''
   pos: noun
   gender: n
+- lemma: берегти
+  ipa: /bɛˈrɛɦtɪ/
+  translation: to protect, to guard
+  pos: verb
 - lemma: берегтися
   ipa: ''
   translation: ''
@@ -54,17 +91,11 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: m
 - lemma: боягузтво
-  ipa: ''
-  translation: ''
+  ipa: /bojɑˈɦuzstwo/
+  translation: cowardice
   pos: noun
-  gender: f
-- lemma: буковина
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: f
+  gender: n
 - lemma: вакансія
   ipa: ''
   translation: ''
@@ -74,6 +105,11 @@ items:
   ipa: /wɛsˈnoju/
   translation: in spring
   pos: adv
+- lemma: вечір
+  ipa: /ˈwɛtʃʲir/
+  translation: evening
+  pos: noun
+  gender: m
 - lemma: виважений
   ipa: ''
   translation: ''
@@ -97,58 +133,35 @@ items:
   translation: ''
   pos: noun
   gender: n
-- lemma: воза
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: возом
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: втрачити
   ipa: ''
   translation: ''
   pos: verb
 - lemma: віз
-  ipa: ''
-  translation: ''
+  ipa: /wʲiz/
+  translation: cart, wagon
   pos: noun
   gender: m
-- lemma: вікіпедія
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
-- lemma: вінниця
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: f
 - lemma: гнатися
   ipa: ''
   translation: ''
   pos: verb
-- lemma: голодомори
-  ipa: ''
-  translation: ''
+- lemma: гоп
+  ipa: /ɦop/
+  translation: hop (exclamation)
+  pos: intj
+- lemma: гроші
+  ipa: /ˈɦroʃʲi/
+  translation: money
   pos: noun
-  gender: m
 - lemma: давньогрецький
   ipa: /dɑwʲnoˈɦrɛt͡sʲkɪj/
   translation: ancient Greek
   pos: adj
-  gender: n
 - lemma: донині
   ipa: ''
   translation: ''
   pos: adv
-- lemma: житомир
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
 - lemma: життєво
   ipa: ''
   translation: ''
@@ -185,20 +198,17 @@ items:
   pos: propn
   gender: n
 - lemma: замерзти
-  ipa: ''
-  translation: ''
+  ipa: /zɐˈmɛrzti/
+  translation: to freeze
   pos: verb
-  gender: f
 - lemma: запорозький
   ipa: ''
   translation: ''
   pos: adj
-  gender: f
-- lemma: застерігти
-  ipa: ''
-  translation: ''
+- lemma: застерегти
+  ipa: /zɐstɛˈrɛɦtɪ/
+  translation: to warn
   pos: verb
-  gender: m
 - lemma: захокти
   ipa: ''
   translation: ''
@@ -207,6 +217,11 @@ items:
   ipa: ''
   translation: ''
   pos: verb
+- lemma: зима
+  ipa: /zɪˈmɑ/
+  translation: winter
+  pos: noun
+  gender: f
 - lemma: зрештою
   ipa: ''
   translation: ''
@@ -229,21 +244,21 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-- lemma: козака
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: конкурент
   ipa: ''
   translation: ''
   pos: noun
   gender: m
-- lemma: краха
-  ipa: ''
-  translation: ''
+- lemma: крах
+  ipa: /krɑx/
+  translation: collapse, crash
   pos: noun
   gender: m
+- lemma: криниця
+  ipa: /krɪˈnɪt͡sʲɑ/
+  translation: well (water source)
+  pos: noun
+  gender: f
 - lemma: криничний
   ipa: ''
   translation: ''
@@ -277,11 +292,11 @@ items:
   translation: ''
   pos: noun
   gender: f
-- lemma: луцька
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
+- lemma: літо
+  ipa: /ˈlʲito/
+  translation: summer
+  pos: noun
+  gender: n
 - lemma: мандри
   ipa: ''
   translation: ''
@@ -291,12 +306,10 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: m
 - lemma: міжмовний
   ipa: ''
   translation: ''
   pos: adj
-  gender: f
 - lemma: мільйонер
   ipa: ''
   translation: ''
@@ -322,22 +335,18 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: n
 - lemma: незадовільний
   ipa: ''
   translation: ''
   pos: adj
-  gender: f
 - lemma: неписаний
   ipa: ''
   translation: ''
   pos: adj
-  gender: m
 - lemma: обробити
-  ipa: ''
-  translation: ''
+  ipa: /obroˈbɪtɪ/
+  translation: to process, to work
   pos: verb
-  gender: m
 - lemma: обробка
   ipa: ''
   translation: ''
@@ -356,36 +365,26 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: m
 - lemma: орати
   ipa: /oˈrɑtɪ/
   translation: to plow
   pos: verb
-  gender: m
 - lemma: осінній
   ipa: /oˈsʲinːʲij/
   translation: autumn (adj.)
   pos: adj
-  gender: f
 - lemma: передчасний
   ipa: ''
   translation: ''
   pos: adj
 - lemma: перестрибнути
-  ipa: ''
-  translation: ''
+  ipa: /pɛrɛstrɪbˈnutɪ/
+  translation: to jump over
   pos: verb
-  gender: m
-- lemma: полтава
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: f
-- lemma: полтаві
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
+- lemma: пожати
+  ipa: /poˈʒɑtɪ/
+  translation: to reap, to harvest
+  pos: verb
 - lemma: порадник
   ipa: ''
   translation: ''
@@ -399,12 +398,15 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: n
 - lemma: посів
   ipa: ''
   translation: ''
   pos: noun
   gender: m
+- lemma: посіяти
+  ipa: /poˈsʲijɑtɪ/
+  translation: to sow (perfective)
+  pos: verb
 - lemma: пошкодувати
   ipa: ''
   translation: ''
@@ -423,7 +425,6 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: n
 - lemma: провідник
   ipa: ''
   translation: ''
@@ -437,7 +438,6 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: m
 - lemma: підбадьорення
   ipa: ''
   translation: ''
@@ -447,6 +447,16 @@ items:
   ipa: ''
   translation: ''
   pos: verb
+- lemma: раз
+  ipa: /rɑz/
+  translation: time (occurrence), once
+  pos: noun
+  gender: m
+- lemma: ранок
+  ipa: /ˈrɑnok/
+  translation: morning
+  pos: noun
+  gender: m
 - lemma: рейган
   ipa: ''
   translation: ''
@@ -510,7 +520,6 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: m
 - lemma: сумщина
   ipa: ''
   translation: ''
@@ -521,11 +530,19 @@ items:
   translation: sowing
   pos: noun
   gender: f
+- lemma: сім
+  ipa: /sʲim/
+  translation: seven
+  pos: num
 - lemma: січі
   ipa: ''
   translation: ''
   pos: propn
   gender: f
+- lemma: сіяти
+  ipa: /ˈsʲijɑtɪ/
+  translation: to sow
+  pos: verb
 - lemma: тернопол
   ipa: ''
   translation: ''
@@ -535,7 +552,6 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: m
 - lemma: урожай
   ipa: /uroˈʒɑj/
   translation: harvest, crop
@@ -554,6 +570,10 @@ items:
   ipa: ''
   translation: ''
   pos: adj
+- lemma: час
+  ipa: /tʃɑs/
+  translation: time
+  pos: noun
   gender: m
 - lemma: чернігівщина
   ipa: ''
@@ -582,7 +602,6 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: n
 - lemma: ґрунт
   ipa: /ɡrunt/
   translation: soil, ground

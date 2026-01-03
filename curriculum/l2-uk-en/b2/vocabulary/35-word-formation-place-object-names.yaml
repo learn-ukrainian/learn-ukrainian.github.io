@@ -12,21 +12,15 @@ items:
   translation: car wash (older form)
   pos: noun
   gender: f
-- lemma: альня
-  ipa: ''
-  translation: ''
+- lemma: ковальня
+  ipa: /koˈwɑlʲnʲɑ/
+  translation: smithy, forge
   pos: noun
-  gender: f
-- lemma: альній
-  ipa: ''
-  translation: ''
-  pos: adj
   gender: f
 - lemma: аналогічний
   ipa: /ɐnɐloˈɦʲit͡ʃnɪj/
   translation: analogous, similar
   pos: adj
-  gender: f
 - lemma: аптекарня
   ipa: /ɑptɛˈkɑrnʲɑ/
   translation: pharmacy (archaic)
@@ -37,9 +31,9 @@ items:
   translation: aristocrat
   pos: noun
   gender: m
-- lemma: арня
-  ipa: ''
-  translation: ''
+- lemma: друкарня
+  ipa: /drukɑrˈnʲɑ/
+  translation: printing house, print shop
   pos: noun
   gender: f
 - lemma: археолог
@@ -65,7 +59,6 @@ items:
   ipa: /ˈbʲilʲsʲkɪj/
   translation: Bilsk (adj.)
   pos: adj
-  gender: n
 - lemma: варильня
   ipa: /wɐˈrɪlʲnʲɑ/
   translation: brewery
@@ -89,7 +82,6 @@ items:
   ipa: /ˈwɪrʲistɪ/
   translation: to grow up
   pos: verb
-  gender: m
 - lemma: вмістилище
   ipa: /wˈmʲistɪlɪʃt͡ʃɛ/
   translation: container, receptacle
@@ -103,15 +95,14 @@ items:
   ipa: /wʲiˈtɑlʲnɪj/
   translation: living room (adj.)
   pos: adj
-  gender: f
 - lemma: городище
   ipa: /ɦoroˈdɪʃt͡ʃɛ/
   translation: ancient settlement site
   pos: noun
   gender: n
-- lemma: горпинич
-  ipa: ''
-  translation: ''
+- lemma: Горпинич
+  ipa: /ɦorˈpɪnɪt͡ʃ/
+  translation: Horpynych (surname)
   pos: propn
   gender: m
 - lemma: дериватологія
@@ -123,7 +114,6 @@ items:
   ipa: /doˈwʲidkowɪj/
   translation: reference (adj.)
   pos: adj
-  gender: f
 - lemma: друкар
   ipa: /druˈkɑr/
   translation: printer (person)
@@ -158,9 +148,9 @@ items:
   translation: hall
   pos: noun
   gender: f
-- lemma: залишка
-  ipa: ''
-  translation: ''
+- lemma: залишок
+  ipa: /zɐˈlɪʃok/
+  translation: remainder, leftover
   pos: noun
   gender: m
 - lemma: заправка
@@ -180,7 +170,6 @@ items:
   ipa: /zɐˈtɪʃnʲij/
   translation: cozy
   pos: adj
-  gender: f
 - lemma: звалище
   ipa: /zwɐˈlɪʃt͡ʃɛ/
   translation: dump, landfill
@@ -209,15 +198,16 @@ items:
   ipa: /zˈlʲiwɑ/
   translation: on the left, from the left
   pos: adv
-- lemma: ильня
-  ipa: ''
-  translation: ''
+- lemma: мильня
+  ipa: /ˈmɪlʲnʲɑ/
+  translation: soap factory
   pos: noun
   gender: f
-- lemma: ище
-  ipa: ''
-  translation: ''
-  pos: adv
+- lemma: вогнище
+  ipa: /woɦˈnɪʃt͡ʃɛ/
+  translation: hearth, fireplace
+  pos: noun
+  gender: n
 - lemma: капище
   ipa: /kɑˈpɪʃt͡ʃɛ/
   translation: pagan temple
@@ -232,7 +222,6 @@ items:
   ipa: /kɑrdʲioloˈɦʲit͡ʃnɪj/
   translation: cardiological
   pos: adj
-  gender: n
 - lemma: клад
   ipa: /klɑd/
   translation: treasure, cache
@@ -252,12 +241,10 @@ items:
   ipa: /kondɪˈtɛrsʲkɪj/
   translation: confectionery (adj.)
   pos: adj
-  gender: f
 - lemma: контрактовий
   ipa: /kontrɑkˈtowɪj/
   translation: contract (adj.)
   pos: adj
-  gender: f
 - lemma: коптильня
   ipa: /kopˈtɪlʲnʲɑ/
   translation: smokehouse
@@ -275,7 +262,6 @@ items:
   ipa: /kopʲijuˈwɑlʲnɪj/
   translation: copying (adj.)
   pos: adj
-  gender: m
 - lemma: корова
   ipa: /koˈrowɑ/
   translation: cow
@@ -290,9 +276,9 @@ items:
   ipa: /kuˈwɑtɪ/
   translation: to forge
   pos: verb
-- lemma: кузень
-  ipa: ''
-  translation: ''
+- lemma: кузня
+  ipa: /ˈkuznʲɑ/
+  translation: smithy, forge
   pos: noun
   gender: f
 - lemma: купальня
@@ -319,20 +305,13 @@ items:
   ipa: /lɪt͡ʃɐˈkʲiwsʲkɪj/
   translation: Lychakiv (adj.)
   pos: adj
-  gender: n
 - lemma: лікувальний
   ipa: /lʲikuˈwɑlʲnɪj/
   translation: therapeutic, medical
   pos: adj
-  gender: m
 - lemma: лічниця
   ipa: /lʲit͡ʃˈnɪt͡sʲɑ/
   translation: hospital (archaic)
-  pos: noun
-  gender: f
-- lemma: майстерення
-  ipa: ''
-  translation: ''
   pos: noun
   gender: f
 - lemma: майстерня
@@ -358,7 +337,6 @@ items:
   ipa: /ˈmɪjnɪj/
   translation: washing (adj.)
   pos: adj
-  gender: f
 - lemma: монастир
   ipa: /monɐˈstɪr/
   translation: monastery
@@ -369,11 +347,6 @@ items:
   translation: microdistrict
   pos: noun
   gender: m
-- lemma: містечка
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: містечко
   ipa: /mʲisˈtɛt͡ʃko/
   translation: small town
@@ -393,11 +366,6 @@ items:
   ipa: /nɛproduktɪwnɪj/
   translation: unproductive
   pos: adj
-- lemma: ня
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: обмінка
   ipa: /obˈmʲinkɑ/
   translation: exchange point
@@ -440,25 +408,19 @@ items:
   translation: suburb
   pos: noun
   gender: m
-- lemma: перук
-  ipa: ''
-  translation: ''
+- lemma: перукарня
+  ipa: /pɛruˈkɑrnʲɑ/
+  translation: hairdresser, barbershop
   pos: noun
   gender: f
-- lemma: песати
-  ipa: ''
-  translation: ''
-  pos: verb
 - lemma: печерний
   ipa: /pɛˈt͡ʃɛrnɪj/
   translation: cave (adj.)
   pos: adj
-  gender: m
 - lemma: печерський
   ipa: /pɛˈt͡ʃɛrsʲkɪj/
   translation: Pechersk (adj.)
   pos: adj
-  gender: f
 - lemma: пласт
   ipa: /plɑst/
   translation: layer, stratum
@@ -478,11 +440,11 @@ items:
   translation: printing, polygraphy
   pos: noun
   gender: f
-- lemma: полісс
-  ipa: ''
-  translation: ''
+- lemma: Полісся
+  ipa: /poˈlʲisːʲɑ/
+  translation: Polissya (region in northern Ukraine)
   pos: propn
-  gender: m
+  gender: n
 - lemma: померлий
   ipa: /ˈpomɛrlɪj/
   translation: deceased
@@ -492,7 +454,6 @@ items:
   ipa: /poxoˈwɑnɪj/
   translation: buried
   pos: adj
-  gender: m
 - lemma: поховання
   ipa: /poxoˈwɑnʲːɑ/
   translation: burial
@@ -503,16 +464,10 @@ items:
   translation: laundry
   pos: noun
   gender: f
-- lemma: прата
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: приймальний
   ipa: /prɪjˈmɑlʲnɪj/
   translation: reception (adj.)
   pos: adj
-  gender: n
 - lemma: приміщення
   ipa: /prɪˈmʲiʃt͡ʃɛnʲːɑ/
   translation: premises, room
@@ -527,7 +482,6 @@ items:
   ipa: /rɐˈjonnɪj/
   translation: district (adj.)
   pos: adj
-  gender: f
 - lemma: реєстрація
   ipa: /rɛjɛsˈtrɑt͡sʲijɑ/
   translation: registration
@@ -537,12 +491,10 @@ items:
   ipa: /ˈrozbɪtɪj/
   translation: broken, laid out
   pos: adj
-  gender: m
 - lemma: розкинутися
   ipa: /rozkɪˈnutɪsʲɑ/
   translation: to spread out
   pos: verb
-  gender: m
 - lemma: самообслуговування
   ipa: /sɐmoobsluɦowuˈwɑnʲːɑ/
   translation: self-service
@@ -552,7 +504,6 @@ items:
   ipa: /sˈkʲifsʲkɪj/
   translation: Scythian
   pos: adj
-  gender: f
 - lemma: слюсар
   ipa: /slʲuˈsɑr/
   translation: locksmith
@@ -567,16 +518,10 @@ items:
   ipa: /sortuˈwɑlʲnɪj/
   translation: sorting (adj.)
   pos: adj
-  gender: f
-- lemma: спляти
-  ipa: ''
-  translation: ''
-  pos: verb
 - lemma: стародавній
   ipa: /stɐroˈdɑwnʲij/
   translation: ancient
   pos: adj
-  gender: n
 - lemma: стригти
   ipa: /ˈstrɪɦtɪ/
   translation: to cut, to shear
@@ -595,7 +540,6 @@ items:
   ipa: /suˈt͡ʃɑsnʲiʃɪj/
   translation: more modern
   pos: adj
-  gender: n
 - lemma: сушильня
   ipa: /suˈʃɪlʲnʲɑ/
   translation: drying room
@@ -614,7 +558,6 @@ items:
   ipa: /toˈwɑrnɪj/
   translation: goods, freight (adj.)
   pos: adj
-  gender: m
 - lemma: токар
   ipa: /toˈkɑr/
   translation: turner, lathe operator
@@ -634,7 +577,6 @@ items:
   ipa: /uˈɦorsʲkɪj/
   translation: Hungarian
   pos: adj
-  gender: f
 - lemma: укріплений
   ipa: /ukrʲipˈlɛnɪj/
   translation: fortified
@@ -649,14 +591,9 @@ items:
   translation: tract of land, location
   pos: noun
   gender: n
-- lemma: федоровий
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
-- lemma: федорович
-  ipa: ''
-  translation: ''
+- lemma: Федорович
+  ipa: /fɛˈdorowɪt͡ʃ/
+  translation: Fedorovych (patronymic)
   pos: propn
   gender: m
 - lemma: ферма
@@ -668,11 +605,11 @@ items:
   ipa: /xoˈwɑtɪ/
   translation: to hide, to bury
   pos: verb
-- lemma: хресть
-  ipa: ''
-  translation: ''
+- lemma: хрестильня
+  ipa: /xrɛsˈtɪlʲnʲɑ/
+  translation: baptistery
   pos: noun
-  gender: m
+  gender: f
 - lemma: цвинтарище
   ipa: /t͡swɪntɐˈrɪʃt͡ʃɛ/
   translation: large cemetery
@@ -688,11 +625,6 @@ items:
   translation: reading room
   pos: noun
   gender: f
-- lemma: читар
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: читарня
   ipa: /t͡ʃɪˈtɑrnʲɑ/
   translation: reading room (archaic)

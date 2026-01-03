@@ -6,7 +6,6 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: m
 - lemma: автобіографія
   ipa: ''
   translation: ''
@@ -16,9 +15,9 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-- lemma: афганістан
-  ipa: ''
-  translation: ''
+- lemma: Афганістан
+  ipa: /ɑfɦɐnʲisˈtɑn/
+  translation: Afghanistan
   pos: propn
   gender: m
 - lemma: багаті
@@ -33,9 +32,9 @@ items:
   ipa: ''
   translation: ''
   pos: verb
-- lemma: битв
-  ipa: ''
-  translation: ''
+- lemma: битва
+  ipa: /ˈbɪtwɑ/
+  translation: battle
   pos: noun
   gender: f
 - lemma: бранець
@@ -61,9 +60,9 @@ items:
   ipa: /wɛˈlɪtɪ/
   translation: to command
   pos: verb
-- lemma: величко
-  ipa: ''
-  translation: ''
+- lemma: Величко
+  ipa: /wɛˈlɪt͡ʃko/
+  translation: Velychko (Ukrainian chronicler)
   pos: propn
   gender: m
 - lemma: вийто
@@ -74,9 +73,9 @@ items:
   ipa: ''
   translation: ''
   pos: verb
-- lemma: витичев
-  ipa: ''
-  translation: ''
+- lemma: Витичів
+  ipa: /wɪˈtɪt͡ʃʲiw/
+  translation: Vytychiv (city)
   pos: propn
   gender: m
 - lemma: включно
@@ -88,16 +87,15 @@ items:
   translation: ''
   pos: noun
   gender: n
-- lemma: волга
-  ipa: ''
-  translation: ''
+- lemma: Волга
+  ipa: /ˈwolɦɑ/
+  translation: Volga (river)
   pos: propn
   gender: f
 - lemma: ворогуючий
   ipa: /woroˈɦujut͡ʃɪj/
   translation: warring, hostile
   pos: adj
-  gender: m
 - lemma: ворожнеч
   ipa: /woroʒˈnɛt͡ʃ/
   translation: enmity (genitive plural)
@@ -112,7 +110,6 @@ items:
   ipa: /wotˈt͡ʃɪnːɪj/
   translation: patrimonial
   pos: adj
-  gender: m
 - lemma: воєвід
   ipa: /woˈjɛwʲid/
   translation: voivodes (genitive plural)
@@ -122,7 +119,6 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: n
 - lemma: герб
   ipa: ''
   translation: ''
@@ -154,10 +150,6 @@ items:
   ipa: /ɦuˈbɪtɪ/
   translation: to lose
   pos: verb
-- lemma: губіти
-  ipa: ''
-  translation: ''
-  pos: verb
 - lemma: давид
   ipa: /dɐˈwɪd/
   translation: David (prince)
@@ -165,8 +157,9 @@ items:
   gender: m
 - lemma: данник
   ipa: /ˈdɑnːɪk/
-  translation: tributary (genitive plural)
+  translation: tributary
   pos: noun
+  gender: m
 - lemma: добровільно
   ipa: ''
   translation: ''
@@ -176,21 +169,19 @@ items:
   translation: ladder
   pos: noun
   gender: f
-- lemma: загрога
-  ipa: ''
-  translation: ''
+- lemma: загроза
+  ipa: /zɐˈɦrozɑ/
+  translation: threat, danger
   pos: noun
   gender: f
 - lemma: заманити
   ipa: /zɐmɐˈnɪtɪ/
   translation: to lure, to entice
   pos: verb
-  gender: m
 - lemma: занепадати
   ipa: /zɐnɛpɐˈdɑtɪ/
   translation: to decline, to decay
   pos: verb
-  gender: f
 - lemma: здобиччя
   ipa: /zdobɪt͡ʃːɑ/
   translation: prey, booty
@@ -201,26 +192,20 @@ items:
   translation: ''
   pos: noun
   gender: n
-- lemma: карл
-  ipa: ''
-  translation: ''
+- lemma: Карл
+  ipa: /kɑrl/
+  translation: Karl (Charles)
   pos: propn
   gender: m
 - lemma: катастрофічний
   ipa: ''
   translation: ''
   pos: adj
-  gender: f
 - lemma: клятва
   ipa: /ˈklʲɑtwɑ/
   translation: oaths (genitive plural)
   pos: noun
   gender: f
-- lemma: константина
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
 - lemma: конфедерація
   ipa: ''
   translation: ''
@@ -240,12 +225,10 @@ items:
   ipa: /lɛsˈtwɪt͡ʃnɪj/
   translation: ladder (adj., relating to succession)
   pos: adj
-  gender: m
 - lemma: любецький
   ipa: /lʲuˈbɛt͡sʲkɪj/
   translation: Liubech (adj., Congress of Liubech)
   pos: adj
-  gender: m
 - lemma: межувати
   ipa: /mɛʒuˈwɑtɪ/
   translation: to border, to demarcate
@@ -254,15 +237,9 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: m
 - lemma: мономах
   ipa: /monoˈmɑx/
   translation: Monomakh (Vladimir Monomakh)
-  pos: propn
-  gender: m
-- lemma: мономи
-  ipa: ''
-  translation: ''
   pos: propn
   gender: m
 - lemma: мстислав
@@ -274,7 +251,6 @@ items:
   ipa: /mʲiʒuˈsobnɪj/
   translation: internecine
   pos: adj
-  gender: f
 - lemma: набіг
   ipa: /nɐˈbʲiɦ/
   translation: raids (genitive plural)
@@ -297,12 +273,10 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: m
 - lemma: найстрашніший
   ipa: ''
   translation: ''
   pos: adj
-  gender: m
 - lemma: настанова
   ipa: /nɐstɐˈnowɑ/
   translation: instruction, testament
@@ -316,7 +290,6 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: f
 - lemma: невільничий
   ipa: ''
   translation: ''
@@ -325,7 +298,6 @@ items:
   ipa: /nɛzwoˈrotnɪj/
   translation: irreversible
   pos: adj
-  gender: m
 - lemma: ненадовго
   ipa: /nɛnɐˈdowɦo/
   translation: not for long
@@ -362,11 +334,11 @@ items:
   ipa: /osˈlʲipɪtɪ/
   translation: to blind
   pos: verb
-- lemma: особь
-  ipa: ''
-  translation: ''
+- lemma: особа
+  ipa: /oˈsobɑ/
+  translation: person, individual
   pos: noun
-  gender: m
+  gender: f
 - lemma: парадоксально
   ipa: ''
   translation: ''
@@ -385,10 +357,9 @@ items:
   pos: noun
   gender: f
 - lemma: перейняти
-  ipa: ''
-  translation: ''
+  ipa: /pɛrɛjˈnʲɑtɪ/
+  translation: to adopt, to take over
   pos: verb
-  gender: n
 - lemma: переступати
   ipa: ''
   translation: ''
@@ -397,12 +368,10 @@ items:
   ipa: /pokɐˈrɑnɪj/
   translation: punished
   pos: adj
-  gender: m
 - lemma: покликаний
   ipa: ''
   translation: ''
   pos: adj
-  gender: m
 - lemma: полк
   ipa: /polk/
   translation: regiments (genitive plural)
@@ -431,16 +400,14 @@ items:
   ipa: /pomɪˈrɑtɪ/
   translation: to die
   pos: verb
-  gender: m
 - lemma: поміж
   ipa: /poˈmʲiʒ/
   translation: between, among
   pos: other
 - lemma: породжувати
-  ipa: ''
-  translation: ''
+  ipa: /poˈrodʒuwɑtɪ/
+  translation: to generate, to spawn
   pos: verb
-  gender: f
 - lemma: послаблювати
   ipa: /poslɐˈblʲuwɑtɪ/
   translation: to weaken
@@ -472,10 +439,9 @@ items:
   translation: to oppose, to resist
   pos: verb
 - lemma: пустити
-  ipa: ''
-  translation: ''
+  ipa: /pusˈtɪtɪ/
+  translation: to let, to release
   pos: verb
-  gender: m
 - lemma: піддані
   ipa: /pʲidˈdɑnʲi/
   translation: subjects
@@ -493,7 +459,6 @@ items:
   ipa: /rozdɛrˈtɪsʲɑ/
   translation: to be torn apart
   pos: verb
-  gender: f
 - lemma: роздроблення
   ipa: /rozdrobˈlɛnʲːɑ/
   translation: fragmentation
@@ -522,16 +487,6 @@ items:
   translation: Samovidets (chronicler)
   pos: propn
   gender: m
-- lemma: сахари
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: f
-- lemma: святополка
-  ipa: /swʲɑtoˈpolkɑ/
-  translation: Sviatopolk (genitive)
-  pos: propn
-  gender: m
 - lemma: сего
   ipa: /sɛˈɦo/
   translation: this (archaic genitive)
@@ -540,7 +495,6 @@ items:
   ipa: /sklɪˈkɑtɪ/
   translation: to convene, to summon
   pos: verb
-  gender: m
 - lemma: скот
   ipa: ''
   translation: ''
@@ -569,24 +523,23 @@ items:
   translation: opponents (genitive plural)
   pos: noun
   gender: m
-- lemma: суспілество
-  ipa: ''
-  translation: ''
+- lemma: суспільство
+  ipa: /susˈpʲilʲstwo/
+  translation: society
   pos: noun
   gender: n
 - lemma: теребовлянський
   ipa: /tɛrɛbowˈlʲɑnsʲkɪj/
-  translation: Terebovlia (adj.)
-  pos: propn
-  gender: m
+  translation: Terebovlian
+  pos: adj
 - lemma: терористичний
   ipa: ''
   translation: ''
   pos: adj
 - lemma: тризуб
   ipa: /trɪˈzub/
-  translation: trident (Ukrainian coat of arms)
-  pos: propn
+  translation: trident
+  pos: noun
   gender: m
 - lemma: убивати
   ipa: /ubɪˈwɑtɪ/
@@ -610,7 +563,6 @@ items:
   ipa: /uzɐˈkonɪtɪ/
   translation: to legitimize, to legalize
   pos: verb
-  gender: m
 - lemma: усобиця
   ipa: /usoˈbɪt͡sʲɑ/
   translation: strife, internecine warfare
@@ -624,7 +576,6 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: f
 - lemma: хані
   ipa: /xɐˈnʲi/
   translation: khans
@@ -632,8 +583,9 @@ items:
   gender: m
 - lemma: чвар
   ipa: /t͡ʃwɑr/
-  translation: quarrels (genitive plural)
+  translation: quarrel
   pos: noun
+  gender: f
 - lemma: чвари
   ipa: /t͡ʃˈwɑrɪ/
   translation: quarrels
@@ -643,20 +595,18 @@ items:
   ipa: /t͡ʃɛrˈnʲiɦʲiwsʲkɪj/
   translation: Chernihiv (adj.)
   pos: adj
-  gender: m
 - lemma: шарукановий
   ipa: /ʃɐrukɐˈnowɪj/
   translation: Sharukan (Polovtsian fortress, adj.)
   pos: adj
 - lemma: шестеро
-  ipa: ''
-  translation: ''
-  pos: other
+  ipa: /ʃɛˈstɛro/
+  translation: six (collective)
+  pos: num
 - lemma: шокувати
-  ipa: ''
-  translation: ''
+  ipa: /ʃokuˈwɑtɪ/
+  translation: to shock
   pos: verb
-  gender: n
 - lemma: ігоревім
   ipa: /ʲiˈɦorɛwʲim/
   translation: Igor's (archaic dative)

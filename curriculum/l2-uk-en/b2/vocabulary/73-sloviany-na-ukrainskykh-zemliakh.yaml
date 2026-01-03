@@ -11,20 +11,18 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: m
 - lemma: авторитарний
   ipa: ''
   translation: ''
   pos: adj
-  gender: f
 - lemma: ант
   ipa: /ɑnt/
   translation: Antes (genitive plural)
   pos: noun
   gender: m
-- lemma: анта
-  ipa: ''
-  translation: ''
+- lemma: ант
+  ipa: /ɑnt/
+  translation: Antes (ancient Slavic tribe)
   pos: noun
   gender: m
 - lemma: антський
@@ -45,42 +43,36 @@ items:
   translation: ''
   pos: noun
   gender: f
-- lemma: бояро
-  ipa: ''
-  translation: ''
+- lemma: боярин
+  ipa: /boˈjɑrɪn/
+  translation: boyar (noble)
   pos: noun
   gender: m
 - lemma: боярський
   ipa: ''
   translation: ''
   pos: adj
-  gender: f
-- lemma: велеса
-  ipa: ''
-  translation: ''
+- lemma: Велес
+  ipa: /ˈwɛlɛs/
+  translation: Veles (Slavic god of cattle)
   pos: propn
   gender: m
 - lemma: виборний
   ipa: ''
   translation: ''
   pos: adj
-- lemma: витока
-  ipa: ''
-  translation: ''
+- lemma: витік
+  ipa: /wɪˈtʲik/
+  translation: source, origin
   pos: noun
   gender: m
 - lemma: витривалий
   ipa: ''
   translation: ''
   pos: adj
-- lemma: владик
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: вождева
-  ipa: ''
-  translation: ''
+- lemma: владика
+  ipa: /wlɐˈdɪkɑ/
+  translation: bishop, ruler
   pos: noun
   gender: m
 - lemma: вождь
@@ -88,19 +80,14 @@ items:
   translation: chieftain, leader
   pos: noun
   gender: m
-- lemma: вождя
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: волинянин
   ipa: /wolɪˈnʲɑnɪn/
   translation: Volhynians (genitive plural)
   pos: noun
   gender: m
-- lemma: воєн
-  ipa: ''
-  translation: ''
+- lemma: війна
+  ipa: /wʲijˈnɑ/
+  translation: war
   pos: noun
   gender: f
 - lemma: временний
@@ -108,10 +95,9 @@ items:
   translation: ''
   pos: adj
 - lemma: відродитися
-  ipa: ''
-  translation: ''
+  ipa: /wʲidroˈdɪtɪsʲɑ/
+  translation: to be reborn, to revive
   pos: verb
-  gender: f
 - lemma: візантія
   ipa: /wʲiˈzɑntʲijɑ/
   translation: Byzantium
@@ -131,11 +117,6 @@ items:
   translation: ''
   pos: noun
   gender: n
-- lemma: віч
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: n
 - lemma: віче
   ipa: /ˈwʲit͡ʃɛ/
   translation: veche (popular assembly)
@@ -145,9 +126,9 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-- lemma: гота
-  ipa: ''
-  translation: ''
+- lemma: гот
+  ipa: /ɦot/
+  translation: Goth
   pos: noun
   gender: m
 - lemma: грім
@@ -155,9 +136,9 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: дажбога
-  ipa: ''
-  translation: ''
+- lemma: Дажбог
+  ipa: /dɐʒˈboɦ/
+  translation: Dazhbog (Slavic sun god)
   pos: propn
   gender: m
 - lemma: данина
@@ -169,12 +150,10 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: f
 - lemma: дохристиянський
   ipa: ''
   translation: ''
   pos: adj
-  gender: n
 - lemma: древлянин
   ipa: /drɛwˈlʲɑnɪn/
   translation: Drevlianians (genitive plural)
@@ -195,11 +174,11 @@ items:
   translation: ''
   pos: noun
   gender: f
-- lemma: жител
-  ipa: ''
-  translation: ''
+- lemma: житель
+  ipa: /ˈʒɪtɛlʲ/
+  translation: inhabitant, resident
   pos: noun
-  gender: f
+  gender: m
 - lemma: заселити
   ipa: ''
   translation: ''
@@ -214,23 +193,21 @@ items:
   pos: noun
   gender: f
 - lemma: знищити
-  ipa: ''
-  translation: ''
+  ipa: /ˈznɪʃt͡ʃɪtɪ/
+  translation: to destroy
   pos: verb
-  gender: f
 - lemma: каганат
   ipa: ''
   translation: ''
   pos: noun
   gender: m
 - lemma: кесарійський
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
-- lemma: княз
-  ipa: ''
-  translation: ''
+  ipa: /kɛsɐˈrʲijsʲkɪj/
+  translation: Caesarean
+  pos: adj
+- lemma: князь
+  ipa: /knʲɑzʲ/
+  translation: prince
   pos: noun
   gender: m
 - lemma: колективно
@@ -238,15 +215,13 @@ items:
   translation: ''
   pos: adv
 - lemma: контрастувати
-  ipa: ''
-  translation: ''
+  ipa: /kontrɐstuˈwɑtɪ/
+  translation: to contrast
   pos: verb
-  gender: n
 - lemma: корчацький
   ipa: ''
   translation: ''
   pos: adj
-  gender: f
 - lemma: купал
   ipa: /kuˈpɑl/
   translation: Kupalo (god)
@@ -262,41 +237,34 @@ items:
   translation: Maurice (Byzantine emperor)
   pos: propn
   gender: m
-- lemma: маврикія
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
 - lemma: могутність
   ipa: ''
   translation: ''
   pos: noun
   gender: f
-- lemma: мокоша
-  ipa: ''
-  translation: ''
+- lemma: Мокош
+  ipa: /moˈkoʃ/
+  translation: Mokosh (Slavic goddess)
   pos: propn
-  gender: m
+  gender: f
 - lemma: монархія
   ipa: ''
   translation: ''
   pos: noun
   gender: f
-- lemma: міщан
-  ipa: ''
-  translation: ''
+- lemma: міщанин
+  ipa: /mʲiˈʃt͡ʃɑnɪn/
+  translation: townsman, burgher
   pos: noun
   gender: m
 - lemma: найдокладніший
   ipa: ''
   translation: ''
   pos: adj
-  gender: m
 - lemma: найцінніше
   ipa: ''
   translation: ''
   pos: adj
-  gender: n
 - lemma: народовладдя
   ipa: /nɐrodowˈlɑdʲːɑ/
   translation: popular rule, democracy
@@ -307,16 +275,15 @@ items:
   translation: democracy
   pos: noun
   gender: n
-- lemma: нестач
-  ipa: ''
-  translation: ''
+- lemma: нестача
+  ipa: /nɛsˈtɑt͡ʃɑ/
+  translation: shortage, lack
   pos: noun
   gender: f
 - lemma: норманський
   ipa: ''
   translation: ''
   pos: adj
-  gender: f
 - lemma: ніяк
   ipa: ''
   translation: ''
@@ -325,10 +292,9 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: m
-- lemma: перса
-  ipa: ''
-  translation: ''
+- lemma: перс
+  ipa: /pɛrs/
+  translation: Persian
   pos: noun
   gender: m
 - lemma: перун
@@ -336,9 +302,9 @@ items:
   translation: Perun (thunder god)
   pos: propn
   gender: m
-- lemma: покор
-  ipa: ''
-  translation: ''
+- lemma: покора
+  ipa: /poˈkorɑ/
+  translation: submission, obedience
   pos: noun
   gender: f
 - lemma: полян
@@ -347,8 +313,8 @@ items:
   pos: noun
   gender: m
 - lemma: полянин
-  ipa: ''
-  translation: ''
+  ipa: /poˈlʲɑnɪn/
+  translation: Polyanian (member of Polians tribe)
   pos: noun
   gender: m
 - lemma: посольство
@@ -357,10 +323,9 @@ items:
   pos: noun
   gender: n
 - lemma: правити
-  ipa: ''
-  translation: ''
+  ipa: /ˈprɑwɪtɪ/
+  translation: to rule, to govern
   pos: verb
-  gender: m
 - lemma: празько
   ipa: ''
   translation: ''
@@ -374,51 +339,42 @@ items:
   translation: Procopius (Byzantine historian)
   pos: propn
   gender: m
-- lemma: прокопія
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
 - lemma: півтора
-  ipa: ''
-  translation: ''
-  pos: other
-  gender: m
+  ipa: /pʲiwˈtorɑ/
+  translation: one and a half
+  pos: num
 - lemma: рабство
   ipa: /ˈrɑbstwo/
   translation: slavery
   pos: noun
   gender: n
 - lemma: радитися
-  ipa: ''
-  translation: ''
+  ipa: /ˈrɑdɪtɪsʲɑ/
+  translation: to consult, to take counsel
   pos: verb
-  gender: m
 - lemma: рахуватися
-  ipa: ''
-  translation: ''
+  ipa: /rɐxuˈwɑtɪsʲɑ/
+  translation: to reckon with, to consider
   pos: verb
-  gender: f
-- lemma: ремесл
-  ipa: ''
-  translation: ''
+- lemma: ремесло
+  ipa: /rɛmɛsˈlo/
+  translation: craft, trade
   pos: noun
-  gender: m
+  gender: n
 - lemma: розпад
   ipa: ''
   translation: ''
   pos: noun
   gender: m
 - lemma: розпатися
-  ipa: ''
-  translation: ''
+  ipa: /rozˈpɑstɪsʲɑ/
+  translation: to disintegrate, to fall apart
   pos: verb
-  gender: m
 - lemma: самодержавство
-  ipa: ''
-  translation: ''
+  ipa: /sɐmodɛrˈʒɑwstwo/
+  translation: autocracy
   pos: noun
-  gender: m
+  gender: n
 - lemma: селитися
   ipa: ''
   translation: ''
@@ -430,11 +386,6 @@ items:
 - lemma: склавина
   ipa: /sklɐˈwɪnɑ/
   translation: Sclavenoi (genitive plural)
-  pos: noun
-  gender: m
-- lemma: склавиня
-  ipa: ''
-  translation: ''
   pos: noun
   gender: m
 - lemma: сонцестояння
@@ -456,21 +407,21 @@ items:
   translation: elders (genitative plural)
   pos: noun
   gender: m
-- lemma: стратег
-  ipa: ''
-  translation: ''
-  pos: propn
+- lemma: стратиг
+  ipa: /strɐˈtɪɦ/
+  translation: strategos (Byzantine general)
+  pos: noun
   gender: m
 - lemma: стратегікон
   ipa: /strɐtɛˈɦʲikon/
   translation: Strategikon (military treatise)
   pos: propn
   gender: m
-- lemma: стрибога
-  ipa: ''
-  translation: ''
+- lemma: Стрибог
+  ipa: /strɪˈboɦ/
+  translation: Stribog (Slavic wind god)
   pos: propn
-  gender: f
+  gender: m
 - lemma: сіверянин
   ipa: /sʲiˈwɛrʲɑnɪn/
   translation: Severians (genitive plural)
@@ -511,10 +462,9 @@ items:
   pos: noun
   gender: f
 - lemma: увібрати
-  ipa: ''
-  translation: ''
+  ipa: /uwʲibˈrɑtɪ/
+  translation: to absorb, to assimilate
   pos: verb
-  gender: m
 - lemma: укладати
   ipa: ''
   translation: ''
@@ -534,10 +484,9 @@ items:
   pos: noun
   gender: m
 - lemma: утвердитися
-  ipa: ''
-  translation: ''
+  ipa: /utwɛrˈdɪtɪsʲɑ/
+  translation: to establish oneself
   pos: verb
-  gender: n
 - lemma: федерат
   ipa: ''
   translation: ''
@@ -561,19 +510,19 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-- lemma: чехія
-  ipa: ''
-  translation: ''
+- lemma: Чехія
+  ipa: /ˈt͡ʃɛxʲijɑ/
+  translation: Czech Republic
   pos: propn
   gender: f
-- lemma: чужинк
-  ipa: ''
-  translation: ''
+- lemma: чужинець
+  ipa: /t͡ʃuˈʒɪnɛt͡sʲ/
+  translation: stranger, foreigner
   pos: noun
   gender: m
-- lemma: щека
-  ipa: ''
-  translation: ''
+- lemma: Щек
+  ipa: /ʃt͡ʃɛk/
+  translation: Shchek (legendary brother)
   pos: propn
   gender: m
 - lemma: язичництво
@@ -585,7 +534,6 @@ items:
   ipa: ''
   translation: ''
   pos: adj
-  gender: n
 - lemma: імператор
   ipa: ''
   translation: ''

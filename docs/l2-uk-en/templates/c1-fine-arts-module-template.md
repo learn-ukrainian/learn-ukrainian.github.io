@@ -22,6 +22,9 @@ Before submitting a C1 fine arts module, verify all items from `c1-module-templa
 - [ ] **Ukrainian contribution:** Emphasize Ukrainian artists' role in world culture
 - [ ] **Register:** Mix of науковий (academic) and публіцистичний (arts journalism)
 - [ ] **Modern relevance:** Contemporary Ukrainian artists continuing traditions
+- [ ] **Reading tasks (2-3):** External reading assignments with linguistic analysis questions
+- [ ] **Essay assignment:** 400+ word essay with model answer and rubric
+- [ ] **Activity count:** 10-12 language-focused activities (reduced from 14+)
 
 ---
 
@@ -238,36 +241,266 @@ vocabulary_focus:
 
 ---
 
+## Reading Tasks (External Assignments)
+
+### Purpose
+
+Reading tasks provide authentic Ukrainian practice beyond the module. They focus on **linguistic analysis**, not arts interpretation.
+
+### Format (2-3 reading tasks per module)
+
+```yaml
+activities:
+  - type: reading
+    id: c1-1XX-reading-01
+    title: "Аналіз мистецької рецензії"
+    resource:
+      type: authentic_text
+      url: "https://...Ukrainian arts magazine/website..."
+      title: "Рецензія на виставу/концерт/виставку"
+    tasks:
+      - "Який регістр використовує рецензент? Наведіть три приклади науково-публіцистичної лексики."
+      - "Знайдіть у тексті п'ять мистецьких термінів з модуля. Як автор їх використовує?"
+      - "Порівняйте синтаксис рецензії з побутовою мовою. Які складні конструкції ви помітили?"
+
+  - type: reading
+    id: c1-1XX-reading-02
+    title: "Первинне джерело: Програмна примітка / Лібрето"
+    resource:
+      type: primary_source
+      url: "https://...historical text..."
+      title: "[Composer/Artist Name]: [Work Title] — програмна примітка (рік)"
+    tasks:
+      - "Який регістр використовує автор? Знайдіть три приклади науково-популярної мови."
+      - "Які тропи та фігури мови є в тексті? Яка їхня функція?"
+      - "Порівняйте лексику тексту з сучасною українською. Які слова застаріли або змінили значення?"
+
+  - type: reading
+    id: c1-1XX-reading-03
+    title: "Інтерв'ю з сучасним митцем"
+    resource:
+      type: contemporary_media
+      url: "https://...interview link..."
+      title: "Інтерв'ю з [Contemporary Artist]"
+    tasks:
+      - "Як митець описує свій творчий процес? Яку лексику він використовує?"
+      - "Знайдіть три приклади метафоричного використання мистецьких термінів."
+      - "Порівняйте регістр інтерв'ю з академічним текстом модуля. Які відмінності?"
+```
+
+### Reading Task Guidelines
+
+**✅ GOOD Questions (Linguistic Analysis):**
+- "Який регістр використовує автор рецензії?"
+- "Знайдіть п'ять пасивних конструкцій у тексті. Чому автор їх використовує?"
+- "Порівняйте лексику програмної примітки з лексикою модуля."
+- "Які дієслова руху використовує автор для опису балету?"
+
+**❌ BAD Questions (Content Interpretation):**
+- "Яку оцінку дає рецензент виставі?" ← Tests interpretation
+- "Чи погоджуєтеся ви з думкою автора?" ← Tests opinion, not language
+- "Що символізує цей образ у творі?" ← Tests arts analysis
+
+---
+
+## Essay Assignment
+
+### Standard Essay Prompt (400+ words)
+
+**Topic:** Напишіть мистецтвознавчий есе (400+ слів): "[Topic]: Аналіз українського внеску у світове мистецтво"
+
+**Example topics by domain:**
+- Classical Music: "Борис Лятошинський: Український симфонізм у європейському контексті"
+- Opera: "Опера 'Наталка Полтавка': Національна ідентичність і музична традиція"
+- Visual Arts: "Бойчукізм: Український монументалізм і його доля"
+- Ballet: "Серж Лифар: Український внесок у французький балет"
+- Theater: "Театр 'Березіль': Експеримент і трагедія"
+
+### Essay Requirements
+
+1. **Структура:**
+   - Вступ (100 слів): Контекст і теза
+   - Основна частина (250 слів): Аналіз з прикладами
+   - Висновок (50 слів): Підсумок та значення
+
+2. **Обов'язкові елементи:**
+   - Мінімум 3 цитати з первинних джерел
+   - Використання мінімум 10 мистецьких термінів з модуля
+   - Порівняння з європейським контекстом
+   - Аналіз сучасної спадщини
+
+3. **Мовні вимоги:**
+   - Науково-публіцистичний регістр
+   - Складні речення з підрядними
+   - Дискурсивні маркери (отже, проте, водночас, крім того)
+   - Пасивні конструкції де доречно
+
+### Критерії оцінювання
+
+| Критерій | Вага | Опис |
+|----------|------|------|
+| **Мовна якість** | 40% | Граматична правильність, мистецька термінологія, складність речень (C1 рівень) |
+| **Використання матеріалу** | 30% | Цитування первинних джерел, використання лексики модуля |
+| **Аналітична глибина** | 20% | Порівняння з європейським контекстом, сучасна релевантність |
+| **Структура та зв'язність** | 10% | Логічна організація, дискурсивні маркери |
+
+### Model Answer (Extract)
+
+**Note:** Provide a 100-150 word model answer extract demonstrating C1-level language use:
+
+```markdown
+**Приклад вступу:**
+
+Борис Лятошинський (1895-1968) відіграв визначальну роль у формуванні української симфонічної школи. Його творчість, що охоплює період від пізнього романтизму до авангарду, втілює унікальний синтез європейських традицій та національної ідентичності. Попри радянські обмеження, композитор виробив оригінальний стиль, який вплинув на кілька поколінь українських митців. У цьому есе я проаналізую, як Лятошинський поєднував українську фольклорну спадщину з модерністичними засобами виразності, створюючи музику, яка залишається актуальною у XXI столітті.
+
+**Vocabulary demonstrated:** відіграти роль, визначальний, формування, творчість, охоплювати, втілювати, синтез, попри, обмеження, виробити стиль, оригінальний, вплинути, поєднувати, спадщина, засоби виразності
+```
+
+---
+
 ## Fine Arts-Specific Activities
 
 ### CRITICAL: Language Practice, Not Content Testing
 
 <critical>
 
-**Activities test LANGUAGE SKILLS, not arts knowledge recall.**
+**These are LANGUAGE lessons that use fine arts as context, NOT arts history lessons taught in Ukrainian.**
 
-The lesson teaches both Ukrainian AND fine arts content. Activities practice only Ukrainian using artistic content as context.
+### The Golden Rule
 
-**CORRECT:** "Згідно з текстом, як автор характеризує стиль Лисенка?" (requires reading Ukrainian)
-**WRONG:** "У якому році була написана опера 'Запорожець за Дунаєм'?" (tests factual recall, not language)
+**"Can the learner answer this without reading the Ukrainian text?"**
 
-**Key Test:** Can the learner answer without reading the Ukrainian text? If yes, rewrite.
+- **If YES** → Rewrite (it's testing arts knowledge, not language)
+- **If NO** → Keep (it's testing Ukrainian comprehension)
 
 | Component | Purpose |
 |-----------|---------|
 | **Lesson Content** | Teaches BOTH Ukrainian language AND fine arts knowledge |
 | **Activities** | Practice ONLY Ukrainian language skills using arts content as context |
 
-**Activity Types and Their Language Focus:**
-- **quiz**: Test reading comprehension — "Згідно з текстом модуля..."
-- **cloze**: Test vocabulary in arts context (reviews, program notes)
-- **match-up**: Test vocabulary — Ukrainian arts terms <-> Ukrainian definitions
-- **fill-in**: Test vocabulary/collocations from module
-- **group-sort**: Test categorization using module vocabulary (eras, styles, genres)
-- **mark-the-words**: Test grammar recognition in authentic arts text
-- **error-correction**: Test grammar in arts sentences, NOT factual accuracy
+### Examples: GOOD vs BAD Activities
+
+#### ❌ BAD (Tests Arts Knowledge)
+
+```markdown
+## quiz: Історія опери
+
+1. У якому році була написана опера "Запорожець за Дунаєм"?
+   - [ ] 1860
+   - [x] 1863
+   - [ ] 1865
+   - [ ] 1870
+
+2. Хто написав "Щедрик"?
+   - [ ] Лисенко
+   - [x] Леонтович
+   - [ ] Стеценко
+   - [ ] Лятошинський
+```
+
+**Problem:** Tests dates and names. Can be answered from prior knowledge without reading Ukrainian text.
+
+#### ✅ GOOD (Tests Ukrainian Language)
+
+```markdown
+## quiz: Розуміння тексту модуля
+
+> **Інструкція:** Відповідайте на питання на основі прочитаного тексту модуля.
+
+1. Згідно з текстом, як автор характеризує внесок Миколи Лисенка в українську музику?
+   - [ ] Автор зазначає, що Лисенко лише обробляв народні пісні
+   - [x] Автор виділяє Лисенка як засновника української національної музичної школи
+   - [ ] Автор пише, що творчість Лисенка не мала впливу на наступні покоління
+   - [ ] Автор не згадує Лисенка в тексті
+   > У тексті модуля чітко формулюється роль Лисенка в розділі про національну школу.
+
+2. Як у тексті модуля інтерпретується значення опери "Запорожець за Дунаєм"?
+   - [ ] Текст зосереджується лише на музичних аспектах
+   - [ ] Автор називає оперу невдалою спробою
+   - [x] Автор підкреслює, що це перша українська опера, яка утвердила жанр
+   - [ ] У тексті не згадується ця опера
+   > У розділі про українську оперу автор детально пояснює історичне значення твору.
+```
+
+**Why GOOD:**
+- Requires reading the MODULE'S ANALYSIS in Ukrainian
+- Tests comprehension of HOW author describes, not WHAT happened
+- Answer depends on understanding Ukrainian explanations
+
+#### ❌ BAD (Tests Arts Facts)
+
+```markdown
+## fill-in: Композитори
+
+1. Леонтович народився в [___] році.
+   > [!answer] 1877
+   > [!options] 1875 | 1877 | 1879 | 1881
+
+2. Він написав [___] хорових творів.
+   > [!answer] понад 100
+   > [!options] близько 50 | понад 100 | більше 200
+```
+
+**Problem:** Tests biographical facts and numbers. No language learning.
+
+#### ✅ GOOD (Tests Ukrainian Collocations)
+
+```markdown
+## fill-in: Мистецька лексика в контексті
+
+1. Згідно з текстом, Леонтович [___] значний вплив на розвиток української хорової музики.
+   > [!answer] справив
+   > [!options] справив | зробив | мав | дав
+   > Fixed collocation: справити вплив = to exert influence.
+
+2. Його хорові твори [___] невід'ємною частиною репертуару українських хорів.
+   > [!answer] стали
+   > [!options] стали | були | є | роблять
+   > Collocation: стати частиною = to become part of.
+
+3. Композитор [___] унікальний стиль, що поєднував фольклор і професійну техніку.
+   > [!answer] виробив
+   > [!options] виробив | зробив | створив | написав
+   > Fixed expression: виробити стиль = to develop a style.
+```
+
+**Why GOOD:**
+- Tests Ukrainian collocations (справити вплив, стати частиною, виробити стиль)
+- Requires understanding how these expressions work in Ukrainian
+- Language-focused, not fact-focused
+
+### Key Phrases to Use
+
+**Always start quiz questions with:**
+- "Згідно з текстом..."
+- "У тексті модуля автор..."
+- "Як автор описує/характеризує/інтерпретує..."
+- "Який аргумент автор наводить..."
+
+**Never ask:**
+- "У якому році..." (tests dates)
+- "Хто написав..." (tests names)
+- "Скільки творів..." (tests numbers)
+- "Що символізує..." (unless: "як автор тлумачить символіку")
 
 </critical>
+
+---
+
+### Activity Mix (10-12 Activities)
+
+| Activity Type | Count | Purpose | Example (Fine Arts) |
+|---------------|-------|---------|---------------------|
+| **quiz** | 4-5 | Reading comprehension | "Згідно з текстом, як автор характеризує стиль Лисенка?" |
+| **fill-in / cloze** | 3-4 | Vocabulary in context | "Композитор [___] унікальний стиль" → виробив |
+| **error-correction** | 2-3 | Grammar practice | Fix case errors in arts review sentences |
+| **match-up** | 1-2 | Terminology | Ukrainian arts term ↔ Ukrainian definition |
+| **select / mark-the-words** | 1-2 | Analytical | Find passive voice in arts review |
+| **group-sort** | 1 | Categorization | Sort composers by era using module vocabulary |
+
+**Total:** 10-12 activities (down from 14+)
+
+**Focus:** All activities test Ukrainian language skills using fine arts content as authentic context.
 
 ---
 

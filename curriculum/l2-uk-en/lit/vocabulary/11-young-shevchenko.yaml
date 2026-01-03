@@ -1,0 +1,93 @@
+module: 11-young-shevchenko
+level: LIT
+items:
+- lemma: '**Кріпак**'
+  translation: Селянин, який є власністю поміщика
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Статус, близький до раба, але з правом на землю.
+- lemma: '**Панщина**'
+  translation: Примусова праця на землі пана
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Економічна основа імперії, яка гальмувала розвиток.
+- lemma: '**Козачок**'
+  translation: Хлопчик-слуга в домі пана
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Принизлива роль "живої ляльки".
+- lemma: '**Дяк**'
+  translation: Церковний служитель і вчитель
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Часто жорстокі, неосвічені "педагоги".
+- lemma: '**Богомаз**'
+  translation: Ремісник-іконописець
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Малював прості ікони для селянських хат.
+- lemma: '**Відпускна**'
+  translation: Документ про волю
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Папірець, який коштував 2500 рублів.
+- lemma: '**Академія**'
+  translation: Академія Мистецтв у Петербурзі
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Вищий навчальний заклад, олімп для художника.
+- lemma: '**Гайдамаки**'
+  translation: Учасники повстань XVIII ст.
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Герої дитячих снів Тараса.
+- lemma: '**Артіль**'
+  translation: Бригада ремісників
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Колективна форма праці (у Ширяєва).
+- lemma: '**Офорт**'
+  translation: Вид гравюри на металі
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Улюблена техніка Шевченка-художника.
+- lemma: '**Могила**'
+  translation: Курган, стародавнє поховання
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Символ пам'яті і зв'язку з предками.
+- lemma: '**Степ**'
+  translation: Безлісий простір
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Символ абсолютної свободи (Волі).
+- lemma: '**Топофілія**'
+  translation: Любов до місця
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Прив'язаність Шевченка до українського ландшафту.
+- lemma: '**Балада**'
+  translation: Ліро-епічний віршований твір
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Жанр з фантастичним сюжетом ("Причинна").
+- lemma: '**Акварель**'
+  translation: Водяні фарби
+  pos: noun
+  gender: m
+  ipa: /.../
+  notes: Техніка, яку Шевченко любив за прозорість.

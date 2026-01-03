@@ -20,16 +20,13 @@ class GateResult:
 def evaluate_word_count(total_words: int, target: int) -> GateResult:
     """Evaluate word count gate.
 
-    - PASS: at or above target (up to target + 1000)
+    - PASS: at or above target (no upper limit - we love words!)
     - WARN: below target but within 100 words
     - FAIL: 100+ words below target
     """
-    max_words = target + 1000  # Allow up to 1000 words over target for rich content
     min_words = target - 100   # Hard fail threshold
 
     if total_words >= target:
-        if total_words > max_words:
-            return GateResult('WARN', '⚠️', f"{total_words}/{target} (>{max_words} may be too long)")
         return GateResult('PASS', '✅', f"{total_words}/{target}")
     elif total_words >= min_words:
         # Within 100 words of target - warn but don't fail

@@ -1,20 +1,29 @@
 # Audit Report: 50-idioms-body-hands-legs.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "CBI" | **Target:** 1750
+**Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): здатність, палець, лікоть, стати, сісти...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
-- **Words:** ✅ 1904/1750
+- **Words:** ✅ 1862/1750
 - **Activities:** ✅ 15/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 13/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 36/35
+- **Vocab:** ✅ 63/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 98.9% (target 98-100% (vocab))
+- **Immersion:** 🇺🇦 99.4% (target 98-100% (vocab))
 - **Richness:** ✅ 97% (content)
 - **Grammar:** ⏳ Pending validation
 
@@ -30,21 +39,15 @@
 | variety | 0.93 | - | 93% | 12% | 11.6% |
 | cultural | 5 | 4 | 100% | 12% | 12.5% |
 | realworld | 7 | 3 | 100% | 12% | 12.5% |
-| visual | 6 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.75 | - | 75% | 6% | 4.7% |
-| questions | 19 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **97.6%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (15 interactive elements)
+| visual | 5 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 0.74 | - | 74% | 6% | 4.6% |
+| questions | 18 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **97.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Соматичні фразеологізми: Руки та ноги** | ⚪️ | 56 | Skipped |
+| **Intro/Narrative** | ✅ | 56 | Included in Core |
 | **Вступ** | ⚪️ | 170 | Skipped |
 | **Руки: Фразеологізми про діяльність та здатність** | ⚪️ | 286 | Skipped |
 | **Ноги: Фразеологізми про рух та незалежність** | ⚪️ | 448 | Skipped |
@@ -53,6 +56,5 @@
 | **Помилки у вживанні** | ✅ | 118 | Included in Core |
 | **Тематична класифікація** | ⚪️ | 0 | Skipped |
 | **Порівняння з іншими мовами** | ⚪️ | 112 | Skipped |
-| **Міні-діалоги для практики** | ✅ | 155 | Included in Core |
+| **Міні-діалоги для практики** | ✅ | 113 | Included in Core |
 | **Підсумок** | ✅ | 101 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |
