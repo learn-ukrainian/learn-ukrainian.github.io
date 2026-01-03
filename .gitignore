@@ -52,3 +52,7 @@ temp/
 
 gha-creds-*.json
 .pytest_cache/
+
+# ULP mapping intermediate files (build artifacts)
+docs/resources/ukrainianlessons/resource_module_scores.json
+docs/resources/ukrainianlessons/resource_module_scores_v*.json
