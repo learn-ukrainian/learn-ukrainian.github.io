@@ -836,3 +836,43 @@ def check_activity_header_format(content: str) -> list[dict]:
 
     return violations
 
+
+def check_mark_the_words_format(activities: list[dict]) -> list[dict]:
+    """Check for malformed mark-the-words activities in YAML.
+    
+    The md_to_yaml conversion script incorrectly copied markdown annotations
+    (correct)/(wrong) into YAML. These should have been stripped.
+    
+    Wrong:  '*слово*(correct)'
+    Correct: '*слово*'
+    
+    Args:
+        activities: List of activity dicts from YAML
+        
+    Returns:
+        List of violations
+    """
+    violations = []
+    
+    if not activities or not isinstance(activities, list):
+        return violations
+    
+    for activity in activities:
+        if not isinstance(activity, dict):
+            continue
+            
+        if activity.get('type') != 'mark-the-words':
+            continue
+            
+        text = activity.get('text', '')
+        title = activity.get('title', 'Untitled')
+        
+        if '(correct)' in text or '(wrong)' in text:
+            violations.append({
+                'type': 'MALFORMED_MARK_THE_WORDS',
+                'severity': 'critical',
+                'issue': f"mark-the-words '{title}' contains (correct)/(wrong) annotations",
+                'fix': "Run: .venv/bin/python scripts/fix_mark_the_words.py"
+            })
+    
+    return violations

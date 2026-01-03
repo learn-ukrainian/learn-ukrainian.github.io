@@ -44,6 +44,7 @@ from .checks import (
     check_content_quality,
     check_activity_header_format,
 )
+from .checks.activities import check_mark_the_words_format
 from .checks.vocabulary import (
     count_vocab_rows,
     extract_vocab_items,
@@ -69,7 +70,12 @@ from .gates import (
     evaluate_immersion,
     evaluate_richness,
     evaluate_grammar,
+    evaluate_content_heavy,
     compute_recommendation,
+)
+from .checks.content_recall_detection import (
+    check_content_recall_violations,
+    is_content_heavy_module,
 )
 
 # Import richness calculation
@@ -658,14 +664,34 @@ def audit_module(file_path: str) -> bool:
     if vocab_data:
         has_vocab = True
         has_vocab_table = True
+
+    # If metadata sidecar exists, check if it handles the summary (via description or summary field)
+    if meta_data and (meta_data.get('summary') or meta_data.get('description')):
+        has_summary = True
         
     if not has_summary:
         print(f"❌ AUDIT FAILED: Missing 'Summary' section.")
-        print("  -> Every module must have a Summary section.")
+        print("  -> Every module must have a Summary section (in Markdown or YAML metadata).")
         sys.exit(1)
 
     # Initialize failure flag early (checkpoint validation may set it)
     has_critical_failure = False
+
+    # Duplicate vocabulary check (B1+ should have YAML-only, not both)
+    if vocab_data and level_code in ('B1', 'B2', 'C1', 'C2', 'LIT'):
+        # Check if markdown also has embedded vocab table
+        has_embedded_vocab = bool(re.search(r'^#\s*(Словник|Vocabulary)', content, re.MULTILINE))
+        if has_embedded_vocab:
+            # Check if there's actually a table after the header
+            vocab_section_match = re.search(r'^#\s*(Словник|Vocabulary)\s*\n(.*?)(?=^#|\Z)', content, re.MULTILINE | re.DOTALL)
+            if vocab_section_match:
+                vocab_section = vocab_section_match.group(2)
+                has_embedded_table = '|' in vocab_section and re.search(r'\|.*\|.*\|', vocab_section)
+                if has_embedded_table:
+                    print(f"⚠️  DUPLICATE VOCABULARY: Both YAML sidecar and embedded markdown table exist.")
+                    print(f"   → For {level_code}+ modules, vocabulary should be YAML-only.")
+                    print(f"   → Remove the '# Словник' section from the markdown file.")
+
 
     # Checkpoint format validation
     if module_focus == 'checkpoint':
@@ -724,6 +750,15 @@ def audit_module(file_path: str) -> bool:
     # Check for YAML activities file
     yaml_activities = load_yaml_activities(file_path)
     use_yaml_activities = yaml_activities is not None
+
+    # Check mark-the-words format (Issue #361: prevent (correct)/(wrong) annotations)
+    mark_words_violations = []
+    if yaml_activities:
+        mark_words_violations = check_mark_the_words_format(yaml_activities)
+        if mark_words_violations:
+            print(f"  ⚠️  mark-the-words format violations: {len(mark_words_violations)}")
+            for v in mark_words_violations:
+                print(f"     → {v['issue']}")
 
     if use_yaml_activities:
         print(f"  📋 Found YAML activities file ({len(yaml_activities)} activities)")
@@ -1021,6 +1056,15 @@ def audit_module(file_path: str) -> bool:
             'fix': v['fix']
         })
 
+    # 6. Check mark-the-words format (Issue #361: malformed (correct)/(wrong) annotations)
+    for v in mark_words_violations:
+        pedagogical_violations.append({
+            'type': v['type'],
+            'severity': v['severity'],
+            'issue': v['issue'],
+            'fix': v['fix']
+        })
+
     blocking_pedagogy = [v for v in pedagogical_violations if v.get('blocking', True)]
     results['pedagogy'] = evaluate_pedagogy(len(blocking_pedagogy))
     if results['pedagogy'].status == 'FAIL':
@@ -1113,6 +1157,17 @@ def audit_module(file_path: str) -> bool:
             pass
 
     results['grammar'] = evaluate_grammar(os.path.exists(grammar_file), grammar_summary)
+
+    # Content-heavy module check (B2 history, C1 literature/biography/folk/arts)
+    is_content_heavy = is_content_heavy_module(level_code, module_num, module_focus or "")
+    content_recall_violations = []
+    if is_content_heavy:
+        content_recall_violations = check_content_recall_violations(content, level_code, module_focus or "")
+    results['content_heavy'] = evaluate_content_heavy(
+        is_content_heavy,
+        activity_count,
+        content_recall_violations
+    )
 
     # Transliteration policy
     if not transliteration_allowed:

@@ -34,6 +34,7 @@ from .activities import (
     check_resources_required,
     check_unjumble_word_match,
     check_activity_header_format,
+    check_mark_the_words_format,
     count_items,
 )
 from .pedagogy import (
@@ -65,6 +66,11 @@ from .checkpoint_format import (
     check_checkpoint_format,
     get_checkpoint_structure_summary,
 )
+from .content_recall_detection import (
+    check_content_recall_violations,
+    check_content_heavy_activity_count,
+    is_content_heavy_module,
+)
 
 __all__ = [
     # Grammar
@@ -92,6 +98,7 @@ __all__ = [
     'check_unjumble_word_match',
     'check_activity_header_format',
     'count_items',
+    'check_mark_the_words_format',
     # Pedagogy
     'run_pedagogical_checks',
     'check_duplicate_content',
@@ -116,4 +123,8 @@ __all__ = [
     # Checkpoint Format
     'check_checkpoint_format',
     'get_checkpoint_structure_summary',
+    # Content Recall Detection
+    'check_content_recall_violations',
+    'check_content_heavy_activity_count',
+    'is_content_heavy_module',
 ]
