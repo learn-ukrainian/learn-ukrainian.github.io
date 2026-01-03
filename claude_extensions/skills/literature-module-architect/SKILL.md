@@ -38,29 +38,61 @@ LIT modules are a **Sanctum** where only the Ukrainian language exists.
 | **The Struggle (Боротьба)** | Frame history as a battle for identity |
 | **The Melody (Солов'їна)** | Focus on the *music* of the text |
 
-**Why 100% Ukrainian?** LIT learners have completed C1. They don't need English scaffolding. They are ready to enter the authentic world of Ukrainian literary heritage.
+## ⚠️ CRITICAL: LIT Track vs C1 Literature
+
+**This skill is ONLY for LIT track modules** (`curriculum/l2-uk-en/lit/`).
+
+| What | LIT Track | C1 Literature |
+|------|-----------|---------------|
+| **Location** | `curriculum/l2-uk-en/lit/` | `curriculum/l2-uk-en/c1/` |
+| **Modules** | LIT-001 to LIT-030 | C1.6 Phase (M146-160) |
+| **Pedagogy** | Graduate seminar (essay-based) | C1 language mastery |
+| **Use this skill?** | ✅ YES | ❌ NO (use C1 skills) |
+
+**DO NOT confuse these tracks.** If working on C1 modules (M146-160), use C1 templates and skills.
 
 ---
 
-## Vocabulary Strategy: The Relic & The Weapon
+## 🏗️ Atomic Architecture (Multi-File)
 
-We do not translate to English. We translate from *Then* to *Now*.
+LIT modules are no longer monolithic. You must create four distinct files for every module:
 
-### 🏛️ Museum Vocabulary (Архаїзми / Relics)
-Words that belong in a museum — preserved for understanding, not active use.
+1.  **Lecture (`lit/{slug}.md`)**: Pure narrative. No frontmatter. No activities. No vocab.
+2.  **Metadata (`lit/meta/{slug}.yaml`)**: Technical specs (title, focus, objectives).
+3.  **Vocabulary (`lit/vocabulary/{slug}.yaml`)**: Specialized 3-column items.
+4.  **Activities (`lit/activities/{slug}.yaml`)**: Essays AND Reading Tasks.
 
-| Marking | Definition | Example |
-|---------|------------|---------|
-| `[Архаїзм]` | Archaic word | *уста* → *губи* (але поетично) |
-| `[Діалектизм]` | Dialectal word | *файний* → *гарний* |
-| `[Поетизм]` | Poetic register | *ректи* → *говорити* |
+---
 
-### ⚔️ Market Vocabulary (Активна лексика / Weapons)
-Words essential for modern high-level discourse — master and wield.
+## 🏛️ The "Reading Hall" (Active Reading)
 
-- **Marking:** Standard (no special tag)
-- **Pedagogy:** Active production expected
-- **Examples:** *гідність* (dignity), *вирувати* (to seethe/boil), *спротив* (resistance)
+We do not use passive resource lists. We use **Active Reading Tasks** (`type: reading`).
+
+**Schema in `activities/{slug}.yaml`**:
+```yaml
+- type: reading
+  id: lit-001-reading-01
+  title: "Primary Source Analysis"
+  resource:
+    type: article # or primary_source
+    url: "https://..."
+    title: "Document Title"
+  tasks:
+    - "Question 1?"
+    - "Question 2?"
+```
+
+---
+
+## Glossary Format (YAML)
+
+LIT vocabulary uses **Ukrainian-to-Ukrainian** (or very high-level English) definitions in the `notes` field:
+
+| Field | Description |
+|-------|-------------|
+| `lemma` | The word |
+| `translation` | High-level English equivalent |
+| `notes` | Context/Patriot's Comment (In Ukrainian) |
 
 ---
 
@@ -99,10 +131,11 @@ Every LIT module must contain moments that connect literature to identity:
 
 ## Forbidden Actions
 
-1. **NO STANDARD ACTIVITIES** — No "match-up", "quiz", "fill-in". Only essays and deep reading.
-2. **NO ENGLISH** — 100% Ukrainian immersion (English only in MDX `description` field).
-3. **DO NOT SIMPLIFY** — LIT learners need complex syntax. Don't dumb it down.
-4. **DO NOT IGNORE CONTEXT** — Always name oppressors, acknowledge trauma, celebrate resilience.
+1.  **NO EMBEDDED COMPONENTS** — NEVER include `# Словник` or `# Activities` in the Markdown file. Use YAML sidecars.
+2.  **NO STANDARD DRILLS** — No "match-up", "quiz", "fill-in". Only essays and deep **reading** tasks.
+3.  **NO ENGLISH** — 100% Ukrainian immersion (English only in Metadata `subtitle`).
+4.  **DO NOT SIMPLIFY** — LIT learners need complex syntax. Don't dumb it down.
+
 
 ---
 

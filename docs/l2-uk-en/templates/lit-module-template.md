@@ -10,6 +10,19 @@
 
 ---
 
+## ⚠️ CRITICAL: LIT Track vs C1 Literature
+
+**This template is ONLY for LIT track modules (LIT-001 to LIT-030).**
+
+C1 core curriculum has its own literature modules (C1.6 Phase: M146-160) which use:
+- Template: `c1-literature-module-template.md`
+- Location: `curriculum/l2-uk-en/c1/`
+- Different pedagogy (C1 language mastery, not graduate seminar)
+
+**If you're creating C1 literature modules, STOP. Use the C1 template instead.**
+
+---
+
 ## ⚠️ BEFORE WRITING: Check Reference Modules!
 
 **CRITICAL:** Before creating any new LIT module, consult the archived reference modules for research material:
@@ -52,15 +65,23 @@ If you are compelled to create a module from scratch (e.g., Kvitka-Osnovianenko 
 *   **Allowed:** ONLY specialized linguistic terms if absolutely necessary (e.g., `*cor*` in Latin), but better to avoid entirely.
 *   **Check:** Run `grep -P "[a-zA-Z]"` before submitting.
 
-### 3. Header Hierarchy
-*   **H1 (`#`)**: ONLY for:
-    *   Module Title (`# LIT-00X: ...`)
-    *   `# Summary`
-    *   `# Словник`
-    *   `# 🏛️ Читальна Зала`
-    *   `# ✍️ Аналітичний Практикум`
-*   **H2 (`##`)**: For ALL content sections (`## Частина I`, `## Частина II`).
-*   **Failure to follow this triggers an immediate audit fail.**
+## 🏗️ YAML Architecture (Required)
+
+LIT modules now follow a **multi-file architecture**. The Markdown file contains ONLY the lecture narrative. All other components reside in YAML sidecars.
+
+| Component | Location | Description |
+|-----------|----------|-------------|
+| **Metadata** | `lit/meta/{slug}.yaml` | Title, subtitle, tags, objectives, focus. |
+| **Vocabulary** | `lit/vocabulary/{slug}.yaml` | 3-column items (lemma, translation, notes). |
+| **Activities** | `lit/activities/{slug}.yaml` | Essays, debates, and structured **reading** tasks. |
+| **Lesson** | `lit/{slug}.md` | **CLEAN** narrative (lecture) only. |
+
+---
+
+### 3. Header Hierarchy (Markdown)
+*   **H1 (`#`)**: ONLY for the Module Title (`# LIT-00X: ...`).
+*   **H2 (`##`)**: For lesson sections (`## Частина I: ...`).
+*   **PROHIBITED**: DO NOT include `# Summary`, `# Словник`, `# 🏛️ Читальна Зала`, or `# ✍️ Аналітичний Практикум` in the Markdown file. These are injected automatically from YAML.
 
 ---
 
@@ -68,13 +89,17 @@ If you are compelled to create a module from scratch (e.g., Kvitka-Osnovianenko 
 
 Before submitting a LIT module, verify:
 
+### File Structure
+- [ ] **Clean Markdown:** Main file has NO frontmatter, NO vocabulary table, and NO activity lists.
+- [ ] **Meta Sidecar:** Created in `meta/` with correct `focus: literature`.
+- [ ] **Vocab Sidecar:** Created in `vocabulary/` with 30-40 items.
+- [ ] **Activities Sidecar:** Created in `activities/` containing essays and reading tasks.
+
 ### Content Requirements
-- [ ] **Word count:** 2200+ words (core prose: historical/biographical/analytical content — excludes vocabulary section and reading resources)
-- [ ] **Vocabulary:** 30-40 items in 3-column format (Термін | Визначення | Контекст/Коментар)
-- [ ] **Content sections:** 15-20 themed sections (Частини I-XX)
-- [ ] **Historical depth:** Biographical, cultural, and historical context provided
-- [ ] **Literary analysis:** Philological analysis of texts, style, themes
-- [ ] **Engagement boxes:** 6-8 boxes with academic/cultural depth
+- [ ] **Word count:** 2200+ words (core prose narrative).
+- [ ] **Reading Hall (YAML):** Structured as `type: reading` activities with tasks and links.
+- [ ] **Analytical Workshop (YAML):** Structured as `type: essay` or `type: debate`.
+
 
 ### Essay Requirements
 - [ ] **Analytical essays:** 1-2 essay prompts (300-500 words each)
