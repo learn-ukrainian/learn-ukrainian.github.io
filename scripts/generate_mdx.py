@@ -101,6 +101,18 @@ class MarkTheWordsItem:
     text: str  # Plain text with marks removed
     correctWords: list[str]  # List of correct words to mark
 
+@dataclass
+class MorphemeItem:
+    word: str  # The full word containing the morpheme
+    morpheme: str  # The morpheme to highlight within the word
+    type: str = 'unknown'  # prefix, root, or suffix
+
+@dataclass
+class HighlightMorphemesItem:
+    text: str  # Plain text with asterisks removed
+    morphemes: list[MorphemeItem]  # List of morphemes to highlight
+    instruction: str = ''  # Optional instruction text
+
 # =============================================================================
 # UTILITIES
 # =============================================================================
@@ -350,13 +362,29 @@ def _yaml_group_sort_to_jsx(activity: dict, title: str) -> str:
 def _yaml_unjumble_to_jsx(activity: dict, title: str) -> str:
     """Convert YAML unjumble to JSX."""
     items = activity.get('items', [])
-    items_json = [
-        {
-            "jumbled": escape_jsx(item.get('scrambled', '')),
+    items_json = []
+
+    for item in items:
+        # Handle FOUR YAML formats:
+        # - words: [array] for unjumble (reorder words into sentence)
+        # - jumbled: "word1 / word2 / word3" for unjumble (standard format)
+        # - prompt: "word1 / word2 / word3" for unjumble (legacy format)
+        # - scrambled: "string" for anagram (unscramble letters)
+        if 'words' in item:
+            jumbled = ' / '.join(item['words'])
+        elif 'jumbled' in item:
+            jumbled = item['jumbled']  # Already formatted with " / " separators
+        elif 'prompt' in item:
+            jumbled = item['prompt']  # Already formatted with " / " separators
+        elif 'scrambled' in item:
+            jumbled = item['scrambled']
+        else:
+            jumbled = ''
+
+        items_json.append({
+            "jumbled": escape_jsx(jumbled),
             "answer": escape_jsx(item.get('answer', ''))
-        }
-        for item in items
-    ]
+        })
 
     import json
     return f'''### {escape_jsx(title)}
@@ -487,16 +515,26 @@ def _yaml_dialogue_reorder_to_jsx(activity: dict, title: str) -> str:
 
 def _yaml_mark_the_words_to_jsx(activity: dict, title: str) -> str:
     """Convert YAML mark-the-words to JSX."""
-    instruction = activity.get('instruction', 'Click the correct words.')
     text = activity.get('text', '')
+    instruction = activity.get('instruction', 'Mark the correct words.')
 
-    # Extract correct words (marked with *word*)
-    correct_words = re.findall(r'\*([^*]+)\*', text)
-    clean_text = re.sub(r'\*([^*]+)\*', r'\1', text)
+    # Check if this uses morpheme patterns (*morpheme*word)
+    if has_morpheme_patterns(text):
+        # Parse as morpheme highlighting
+        item = parse_highlight_morphemes(text)
+        # Only override instruction if explicitly provided in YAML
+        if 'instruction' in activity:
+            item.instruction = activity['instruction']
+        return highlight_morphemes_to_jsx(item, title)
+    else:
+        # Old format: full word matching with *word*
+        # Extract correct words (marked with *word*)
+        correct_words = re.findall(r'\*([^*]+)\*', text)
+        clean_text = re.sub(r'\*([^*]+)\*', r'\1', text)
 
-    import json
-    # Use template literals for text to properly handle special characters like ! and ?
-    return f'''### {escape_jsx(title)}
+        import json
+        # Use template literals for text to properly handle special characters like ! and ?
+        return f'''### {escape_jsx(title)}
 
 <MarkTheWords>
   <MarkTheWordsActivity
@@ -1240,6 +1278,109 @@ def mark_the_words_to_jsx(items: list[MarkTheWordsItem], title: str) -> str:
 {chr(10).join(jsx_parts)}
 </MarkTheWords>'''
 
+def has_morpheme_patterns(content: str) -> bool:
+    """Detect if content uses morpheme highlighting patterns.
+
+    Supports pattern types:
+    - *prefix*rest (e.g., *при*йшов)
+    - rest*suffix* (e.g., Чит*ач*)
+    - *wholeWord* (e.g., *Читач*)
+    - *multi-word phrase* (e.g., *Мені більше подобається*)
+    """
+    # Pattern: optional prefix + *morpheme/phrase* + optional suffix
+    # Morpheme can contain spaces for multi-word phrases
+    pattern = r'[а-яіїєґА-ЯІЇЄҐ]*\*[а-яіїєґА-ЯІЇЄҐ\s]+\*[а-яіїєґА-ЯІЇЄҐ]*'
+    return bool(re.search(pattern, content))
+
+def parse_highlight_morphemes(content: str) -> HighlightMorphemesItem:
+    """Parse morpheme highlighting content.
+
+    Supports pattern types:
+    - *prefix*rest (e.g., *при*йшов → highlight "при" in "прийшов")
+    - rest*suffix* (e.g., Чит*ач* → highlight "ач" in "Читач")
+    - *wholeWord* (e.g., *Читач* → highlight entire word "Читач")
+    - *multi-word phrase* (e.g., *Мені більше подобається* → highlight entire phrase)
+
+    If the first line has no morphemes, treat it as an instruction.
+    """
+    morphemes = []
+    instruction = ''
+
+    # Check if first line is an instruction (no morphemes)
+    lines = content.strip().split('\n')
+    first_line = lines[0] if lines else ''
+
+    # Pattern: (prefix)*morpheme*(suffix)
+    # Group 1: optional text before * (prefix of word)
+    # Group 2: morpheme inside * * (can be single word or multi-word phrase)
+    # Group 3: optional text after * (suffix of word)
+    pattern = r'([а-яіїєґА-ЯІЇЄҐ]*)\*([а-яіїєґА-ЯІЇЄҐ\s]+)\*([а-яіїєґА-ЯІЇЄҐ]*)'
+
+    # If first line has no morphemes, it's likely an instruction
+    if first_line and not re.search(pattern, first_line):
+        instruction = first_line.strip()
+        # Remove instruction from content
+        content = '\n'.join(lines[1:]).strip()
+
+    for match in re.finditer(pattern, content):
+        prefix = match.group(1)      # Text before morpheme
+        morpheme = match.group(2)    # The morpheme to highlight
+        suffix = match.group(3)      # Text after morpheme
+
+        # Construct the full word
+        full_word = prefix + morpheme + suffix
+
+        # Detect morpheme type based on position
+        if not prefix and suffix:
+            morph_type = 'prefix'
+        elif prefix and not suffix:
+            morph_type = 'suffix'
+        elif not prefix and not suffix:
+            morph_type = 'whole'
+        else:
+            morph_type = 'root'
+
+        morphemes.append(MorphemeItem(
+            word=full_word,
+            morpheme=morpheme,
+            type=morph_type
+        ))
+
+    # Remove asterisks to get plain text
+    plain_text = re.sub(r'[а-яіїєґА-ЯІЇЄҐ]*\*([а-яіїєґА-ЯІЇЄҐ\s]+)\*[а-яіїєґА-ЯІЇЄҐ]*',
+                        lambda m: m.group(0).replace('*', ''), content)
+
+    return HighlightMorphemesItem(text=plain_text.strip(), morphemes=morphemes, instruction=instruction)
+
+def highlight_morphemes_to_jsx(item: HighlightMorphemesItem, title: str) -> str:
+    """Convert morpheme highlighting item to JSX HighlightMorphemesActivity component."""
+    if not item.morphemes:
+        return ''
+
+    # Build morphemes array for JSX
+    morphemes_jsx_parts = []
+    for m in item.morphemes:
+        morphemes_jsx_parts.append(
+            f'{{ word: `{escape_jsx(m.word)}`, morpheme: `{escape_jsx(m.morpheme)}`, type: `{m.type}` }}'
+        )
+
+    morphemes_jsx = ',\n    '.join(morphemes_jsx_parts)
+
+    instruction_jsx = ''
+    if item.instruction:
+        instruction_jsx = f'\n  instruction={{`{escape_jsx(item.instruction)}`}}'
+
+    return f'''### {title}
+
+<HighlightMorphemes>
+  <HighlightMorphemesActivity{instruction_jsx}
+    text={{`{escape_jsx(item.text)}`}}
+    morphemes={{[
+    {morphemes_jsx}
+  ]}}
+  />
+</HighlightMorphemes>'''
+
 # =============================================================================
 # CONTENT PROCESSING
 # =============================================================================
@@ -1316,8 +1457,15 @@ def process_activities(body: str) -> str:
             lines = parse_dialogue_reorder(content)
             jsx = dialogue_reorder_to_jsx(lines, title)
         elif activity_type == 'mark-the-words':
-            items = parse_mark_the_words(content)
-            jsx = mark_the_words_to_jsx(items, title)
+            # Detect if content uses morpheme patterns (*morpheme*word)
+            if has_morpheme_patterns(content):
+                item = parse_highlight_morphemes(content)
+                if instruction:
+                    item.instruction = instruction
+                jsx = highlight_morphemes_to_jsx(item, title)
+            else:
+                items = parse_mark_the_words(content)
+                jsx = mark_the_words_to_jsx(items, title)
 
         if jsx:
             activities_jsx_parts.append(jsx)
@@ -1572,7 +1720,8 @@ import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
-import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';"""
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';"""
 
     # Frontmatter
     frontmatter = f'''---
@@ -1656,6 +1805,51 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
 # EXTERNAL RESOURCES
 # =============================================================================
 
+def validate_and_clean_url(url: str, title: str = '') -> str:
+    """
+    Validate and clean URL for markdown link formatting.
+
+    Detects and fixes common URL issues:
+    - Incomplete angle brackets: <https://...  → https://...
+    - Unmatched parentheses in URL
+
+    Args:
+        url: The URL string to validate
+        title: Optional title for error messages
+
+    Returns:
+        Cleaned URL string
+
+    Raises:
+        Warning if URL has issues
+    """
+    if not url:
+        return url
+
+    original_url = url
+
+    # Remove angle brackets if present (not needed in YAML, causes issues)
+    if url.startswith('<'):
+        if not url.endswith('>'):
+            print(f"  ⚠️  Malformed URL (missing closing '>'): {title}")
+            print(f"      {url}")
+            url = url.lstrip('<')
+        else:
+            url = url[1:-1]  # Remove both angle brackets
+
+    # Check for unmatched parentheses
+    open_parens = url.count('(')
+    close_parens = url.count(')')
+    if open_parens != close_parens:
+        print(f"  ⚠️  URL has unmatched parentheses: {title}")
+        print(f"      {url}")
+        print(f"      Expected {open_parens} closing parentheses, found {close_parens}")
+
+    if url != original_url:
+        print(f"      Fixed to: {url}")
+
+    return url
+
 def format_resources_for_mdx(resources: dict) -> str:
     """
     Format external resources for MDX output (emoji template).
@@ -1708,7 +1902,7 @@ def format_resources_for_mdx(resources: dict) -> str:
         # Format each item
         for item in sorted_items:
             title = item.get('title', 'Unknown')
-            url = item.get('url', '')
+            url = validate_and_clean_url(item.get('url', ''), title)
 
             if resource_type == 'podcasts':
                 desc = item.get('match_reason') or item.get('description', '')
@@ -1905,9 +2099,6 @@ def main():
         result = subprocess.run(validate_args)
         sys.exit(result.returncode)
 
-if __name__ == '__main__':
-    main()
-
 # =============================================================================
 # VOCABULARY HELPERS
 # =============================================================================
@@ -1929,3 +2120,6 @@ def _lit_vocab_items_to_markdown(items: list[dict]) -> str:
         lines.append(line)
         
     return '\n'.join(lines)
+
+if __name__ == '__main__':
+    main()
