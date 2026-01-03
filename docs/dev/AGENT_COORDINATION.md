@@ -1,6 +1,6 @@
 # Agent Coordination Hub
 
-**Last Updated:** 2026-01-02 (afternoon)
+**Last Updated:** 2026-01-03
 **Coordinator:** Claude 1 (this session)
 
 ## Active Agents
@@ -123,6 +123,7 @@
 - **#338** - Ukrainian Lessons Integration - ✅ CLOSED (296 ULP resources, priority sorting)
 - **#355** - Activity Quality Validation Expansion - 📋 OPEN (awaiting Claude agent assignment)
 - **#356** - LIT Track YAML Conversion - 📋 OPEN (awaiting agent assignment)
+- **#358** - Epic: Complete External Content Coverage for All Modules - 📋 OPEN (3-phase external resources plan)
 
 ## Issue #352: Grammar Validation System Refactor ✅ COMPLETE + TESTED
 
@@ -596,6 +597,217 @@ The LIT (Ukrainian Literature & Classics) track modules have not been converted 
 - **3-column vocabulary** - Specialized format may be retained (literary terminology needs context)
 - **User feedback:** "we forgot to convert LIT please create an issue about that"
 - **Conversion can happen in parallel** with C1/C2 work (independent track)
+
+---
+
+## Issue #358: Epic: Complete External Content Coverage for All Modules 📋 OPEN
+
+**Agent:** TBD (awaiting assignment)
+**Priority:** HIGH - Organize all external content integration efforts
+**Status:** 📋 OPEN (2026-01-03)
+
+### Vision
+
+Every curriculum module should have rich external content in `[!resources]` sections, prioritized by quality and pedagogical value.
+
+### Prioritization Strategy
+
+**Priority 1: ULP Podcasts 🎧 (HIGHEST)**
+- **Source:** Ukrainian Lessons Podcast episodes
+- **Status:** Issue #334 (Epic: Podcast Data Ingestion and Structuring)
+- **Current:** 240 episodes cataloged, mapping in progress
+- **Target:** Map all episodes to relevant modules (A1-B1 focus)
+
+**Priority 2: ULP Blog Posts 📖 (HIGH)**
+- **Source:** Ukrainian Lessons blog articles
+- **Status:** ✅ COMPLETE (Issue #338)
+- **Result:** 296 ULP resources integrated
+- **Coverage:** A1 33.3%, A2 27.3%, B1 18.7%, B2 3.1%
+- **Gap:** Need more B1-B2 content (ULP is beginner-focused)
+
+**Priority 3: Verified Ukrainian Content 🇺🇦 (MEDIUM)**
+- **Criteria:**
+  - Created by Ukrainian speakers (native or heritage)
+  - **B1+ ONLY:** 100% Ukrainian immersion (no English)
+  - A1-A2: Bilingual content acceptable
+  - Quality verified (accurate grammar, natural Ukrainian)
+- **Sources to explore:**
+  - YouTube creators (see issues #238, #239, #240, #304)
+  - Ukrainian news outlets (Українська правда, Суспільне)
+  - Educational platforms (Ukrainian Institute)
+  - Cultural resources (museums, literature sites)
+
+### Current Coverage Statistics
+
+| Level | ULP Podcasts | ULP Blogs | YouTube | Other | Total Modules | Coverage |
+|-------|--------------|-----------|---------|-------|---------------|----------|
+| **A1** | TBD | 11/33 (33.3%) | 0 | 0 | 34 | **33.3%** |
+| **A2** | TBD | 15/55 (27.3%) | 0 | 0 | 57 | **27.3%** |
+| **B1** | TBD | 17/91 (18.7%) | TBD (#304) | 0 | 86 | **18.7%** |
+| **B2** | TBD | 4/131 (3.1%) | TBD (#238) | 0 | 145 | **3.1%** |
+| **C1** | N/A | 0 | TBD (#239) | 0 | 196 | **0%** |
+| **C2** | N/A | 0 | TBD (#240) | 0 | 100 | **0%** |
+| **LIT** | N/A | 0 | 0 | 0 | 14 | **0%** |
+
+**Critical gaps:**
+- **B2:** Only 3.1% coverage (4/145 modules) - ULP doesn't cover advanced topics
+- **C1/C2:** 0% coverage - Need native Ukrainian educational content
+- **LIT:** 0% coverage - Need literary analysis resources
+
+### Implementation Phases
+
+**Phase 1: ULP Podcast Integration ⏳ IN PROGRESS**
+- **Owner:** Issue #334
+- **Estimated:** 240 episodes × 1-2 modules each = 200-400 mappings
+- **Tasks:**
+  1. Complete podcast metadata ingestion (Issue #334)
+  2. Map episodes to modules using same scoring algorithm as blog posts
+  3. Add to `external_resources.yaml` with Priority 1
+  4. Regenerate all modules with podcast links
+- **Target coverage after Phase 1:**
+  - A1: 60-70% (ULP's primary audience)
+  - A2: 50-60%
+  - B1: 30-40%
+  - B2: 10-15% (ULP has limited advanced content)
+
+**Phase 2: YouTube Content Curation ⏳ PENDING**
+- **Owner:** Issues #238, #239, #240, #304
+- **Estimated:** 50-100 videos per level
+- **Tasks:**
+  1. Research Ukrainian YouTube creators (educational, cultural, news)
+  2. Verify quality (natural Ukrainian, accurate grammar)
+  3. **B1+ constraint:** ONLY 100% Ukrainian content (no English)
+  4. Map videos to modules by topic
+  5. Add to `external_resources.yaml` with Priority 3
+- **YouTube creator categories:**
+  - Language learning: Easy Ukrainian, Ukrainian with Yana, Learn Ukrainian with Max
+  - News/Current events: Українська правда, Суспільне, ICTV
+  - Culture/History: Ukrainian Institute, Історична правда
+  - Literature/Philosophy: Ukrainian book reviews, Shevchenko readings
+  - Science/Tech: Ukrainian science communicators
+- **Target coverage after Phase 2:**
+  - B1: 60-70%
+  - B2: 40-50%
+  - C1: 30-40%
+  - C2: 30-40%
+
+**Phase 3: Other Verified Content 📋 PLANNED**
+- **Owner:** TBD
+- **Estimated:** 100-200 resources
+- **Source types:**
+  1. Podcasts (non-ULP): Fresh Mova Ukrainian, Ukrainian cultural podcasts
+  2. Articles: Українська правда, BBC Україна, Ukrainian cultural sites
+  3. Interactive resources: Ukrainian grammar drills (B1+), vocabulary games
+  4. Literary resources (C1/C2/LIT): Project Gutenberg Ukrainian texts, Shevchenko digital archive, contemporary literature excerpts
+- **Target coverage after Phase 3:**
+  - All levels: 70-90%
+  - C1/C2/LIT: 50-60% (specialized content harder to find)
+
+### Quality Gates
+
+**Content Verification Criteria (All levels):**
+- ✅ Created by Ukrainian speakers (native or heritage)
+- ✅ Accurate Ukrainian grammar (verified by native speaker or grammar checker)
+- ✅ Natural phrasing (not translated from English)
+- ✅ Relevant to module topic (grammar, vocabulary, culture)
+
+**B1+ specific:**
+- ✅ 100% Ukrainian immersion (no English explanations)
+- ✅ CEFR-appropriate complexity
+- ✅ Cultural authenticity (Ukrainian perspectives, not Western)
+
+**Excluded content:**
+- ❌ Machine-translated resources
+- ❌ Content with Russianisms or Surzhyk (unless pedagogically intentional)
+- ❌ Content created by non-Ukrainian speakers (B1+)
+- ❌ English-language explanations (B1+, except for A1-A2)
+
+### Priority Assignment Rules
+
+**Priority 1 (Critical):**
+- Exact topic match + exact level match
+- ULP podcasts/blogs
+- Example: "Dative case" episode → A2 dative module
+
+**Priority 2 (High):**
+- Strong topic match + adjacent level
+- ULP content with partial relevance
+- Example: "All cases" article → specific case module
+
+**Priority 3 (Moderate):**
+- Moderate topic match OR distant level
+- YouTube videos, other verified content
+- Example: Ukrainian culture video → cultural module
+
+### Coverage Goals
+
+**Short-term (Q1 2026):**
+- ✅ ULP blog posts: COMPLETE (296 resources)
+- 🔄 ULP podcasts: IN PROGRESS (Issue #334)
+- **Target:** A1 70%, A2 60%, B1 40%
+
+**Mid-term (Q2 2026):**
+- 🎯 YouTube curation: B1-C2 (Issues #238-240, #304)
+- **Target:** B1 60%, B2 40%, C1 30%
+
+**Long-term (Q3-Q4 2026):**
+- 🎯 Other verified content (all levels)
+- **Target:** All levels 70%+, C1/C2/LIT 50%+
+
+### Success Metrics
+
+**When this epic is complete:**
+- ✅ Every A1 module has 2-3 external resources (70%+ coverage)
+- ✅ Every A2 module has 2-3 external resources (60%+ coverage)
+- ✅ Every B1 module has 2-4 external resources (60%+ coverage)
+- ✅ Every B2 module has 2-4 external resources (40%+ coverage)
+- ✅ Every C1 module has 1-3 external resources (30%+ coverage)
+- ✅ Every C2 module has 1-3 external resources (30%+ coverage)
+- ✅ B1+ modules have ONLY 100% Ukrainian content
+- ✅ All resources verified for quality (grammar, authenticity)
+
+### Related Issues
+
+**Completed:**
+- ✅ Issue #338: Ukrainian Lessons Blog Integration - 296 resources added
+
+**In Progress:**
+- 🔄 Issue #334: Podcast Data Ingestion (ULP podcasts) - 240 episodes
+
+**Pending:**
+- ⏳ Issue #304: B1 Media (YouTube content)
+- ⏳ Issue #238: B2 Media (YouTube content)
+- ⏳ Issue #239: C1 Media (YouTube content)
+- ⏳ Issue #240: C2 Media (YouTube content)
+
+### Documentation
+
+**Created:**
+- `docs/resources/EXTERNAL_RESOURCES_SCHEMA.md` - YAML structure
+- `docs/resources/external_resources.yaml` - Master database (production)
+- `docs/resources/ukrainianlessons/` - ULP integration reports
+
+**To create:**
+- `docs/resources/CONTENT_VERIFICATION_GUIDE.md` - Quality criteria
+- `docs/resources/YOUTUBE_CURATION_GUIDE.md` - YouTube vetting process
+- `docs/resources/coverage_report.md` - Coverage tracking dashboard
+
+### Dependencies
+
+- ✅ Issue #338: ULP blog integration (COMPLETE)
+- 🔄 Issue #334: ULP podcast ingestion (IN PROGRESS)
+- ⏳ Issues #238-240, #304: YouTube content curation (PENDING)
+- ✅ Generation scripts support priority-based sorting (COMPLETE)
+
+### Notes
+
+- **ULP bias toward beginners:** Ukrainian Lessons Podcast targets A1-B1, so B2/C1/C2 need other sources
+- **B1+ immersion constraint:** Critical for pedagogical integrity - no English explanations allowed
+- **Cultural authenticity:** Prefer Ukrainian creators over Western "Ukrainian language" content
+- **Scalability:** Use automated scoring + manual verification workflow (proven effective with ULP blogs)
+
+**Issue created:** 2026-01-03 by C1-a (Coordinator)
+**Epic owner:** TBD (assign when ready to proceed with Phase 2)
 
 ---
 
