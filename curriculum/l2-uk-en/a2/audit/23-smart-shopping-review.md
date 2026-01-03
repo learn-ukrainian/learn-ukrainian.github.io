@@ -1,21 +1,19 @@
 # Audit Report: 23-smart-shopping.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
+**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
 ## LINT ERRORS
-- ❌ Line 233: Empty Header detected (Lonely '#'). Remove or add title.
+- ❌ Line 206: Empty Header detected (Lonely '#'). Remove or add title.
 
 ## PEDAGOGICAL VIOLATIONS
-- **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
-  - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): шукати, ціна, радити, вигідний, якість...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): невигідний, доступний, ціна, акція, якість...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 40/100)
 
 - Borderline case (severity 40/100)
-- 2 pedagogical violations (minor)
+- 1 pedagogical violations (minor)
 - Immersion 18% off target
 - Activity density below minimum
 
@@ -30,7 +28,7 @@
 - **Vocab:** ✅ 18/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ❌ 1 Format Errors
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** ❌ 22.1% LOW (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
 
@@ -43,7 +41,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Summary** | ✅ | 0 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 55 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **Comparing Products** | ⚪️ | 202 | Skipped |
@@ -56,4 +54,3 @@
 | **Shopping for Clothes vs. Food** | ⚪️ | 29 | Skipped |
 | **Practice** | ⚪️ | 0 | Skipped |
 | **Practice Dialogues** | ✅ | 188 | Included in Core |
-| **# Vocabulary** | ➖ | 0 | Excluded Type |

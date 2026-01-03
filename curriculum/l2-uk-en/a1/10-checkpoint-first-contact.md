@@ -277,24 +277,3 @@ Fill in the customer's responses:
 ## Need More Practice?
 
 ---
-
-> [!resources] External Resources
->
-> **Alphabet Review:**
->
-> - 📖 [Ukrainian Alphabet Guide](https://www.ukrainianlessons.com/ukrainian-alphabet/) — All 33 letters with audio
-> - 🎙️ [FMU 1-01: The Ukrainian Alphabet](https://www.ukrainianlessons.com/fmu01/) — Podcast lesson
->
-> **Grammar Basics:**
->
-> - 📖 [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/) — Gender rules
-> - 📖 [Present Tense Verbs](https://www.ukrainianlessons.com/present-tense-verbs/) — Conjugation guide
->
-> **Struggling with a skill?** Go back to:
->
-> - Cyrillic → Modules 1-2
-> - Gender → Module 3
-> - Pronouns → Module 4
-> - Verbs → Modules 6-8
-> - Questions → Module 7
-> - Food → Module 9

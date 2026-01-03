@@ -192,11 +192,3 @@ You can:
 
 You are ready for **Level B1**.
 Success! (*Успіхів!*)
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Essential Ukrainian Phrases for Beginners](https://www.youtube.com/watch?v=aJ2Ldu2TaKA) — Speak Ukrainian
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

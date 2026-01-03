@@ -476,12 +476,6 @@
 >
 > Найкращий спосіб запам'ятати фразеологізми — візуалізувати їх буквальне значення. Уявіть кота, який плаче (кіт наплакав), або рака, який свистить (коли рак свисне). Чим абсурдніший образ, тим легше запам'ятати!
 
-> [!resources]
-> **Корисні ресурси для вивчення українських фразеологізмів:**
-> - [Ukrainian Lessons - Idioms Series](https://ukrainianlessons.com/category/idioms/) — подкаст з поясненням ідіом
-> - [Словник фразеологізмів](http://lcorp.ulif.org.ua/dictua/) — академічний словник
-> - [YouTube: Speak Ukrainian - Idioms](https://www.youtube.com/results?search_query=ukrainian+idioms+speak+ukrainian) — відеоуроки з вимовою
-
 ---
 
 # Підсумок

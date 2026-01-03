@@ -266,11 +266,4 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 
 ## Need More Practice?
 
-> [!resources] External Resources
->
-> - 🎥 [Prepositions Guide](https://www.youtube.com/@SpeakUkrainian) — Speak Ukrainian
-> - 📖 [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/)
-> - 📝 [Cases Overview](https://www.ukrainianlessons.com/intro-cases/)
-> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-
 ---

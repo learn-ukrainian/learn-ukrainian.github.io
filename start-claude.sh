@@ -62,7 +62,7 @@ if [ -f "CLAUDE.md" ]; then
     echo "   Completion Status:"
     # Extract completion status (lines between "### Completion Status" and next "###")
     sed -n '/^### Completion Status/,/^###/p' CLAUDE.md 2>/dev/null | \
-        grep -E "^\- \*\*[ABC][12]" | \
+        grep -E "^- \*\*[ABC][12]" | \
         sed 's/^- /       /' | \
         head -4
 fi

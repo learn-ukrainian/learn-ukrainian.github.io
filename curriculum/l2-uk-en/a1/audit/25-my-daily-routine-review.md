@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): працювати, відпочивати, їхати, вечеряти, спати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): їхати, вечеряти, щодня, зазвичай, приходити...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 813/750
+- **Words:** ✅ 780/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 44.9% (target 35-55% (M25))
+- **Immersion:** 🇺🇦 47.3% (target 35-55% (M25))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -38,4 +35,4 @@
 | **Intro/Narrative** | ✅ | 88 | Included in Core |
 | **Examples in Context** | ✅ | 251 | Included in Core |
 | **Dialogues** | ✅ | 374 | Included in Core |
-| **Summary** | ✅ | 100 | Included in Core |
+| **Summary** | ✅ | 67 | Included in Core |

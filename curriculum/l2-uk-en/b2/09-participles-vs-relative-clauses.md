@@ -354,14 +354,6 @@
 
 ---
 
-> [!resources]
->
-> **Додаткові матеріали:**
-> - [Ukrainian Lessons: Participles in Ukrainian](https://ukrainianlessons.com/participles) — детальний огляд системи дієприкметників
-> - [Mova.info: Підрядні речення](https://mova.info/grammatics/subordinate) — граматичний довідник з підрядними реченнями
-> - [YouTube: Українська з Анною](https://youtube.com/ukrainewithlove) — відеоуроки про складні граматичні теми
-> - [LanguageTool Ukrainian](https://languagetool.org/uk) — перевірка граматики онлайн
-
 ---
 
 # Підсумок

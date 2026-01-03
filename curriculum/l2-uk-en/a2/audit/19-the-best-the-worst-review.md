@@ -1,20 +1,15 @@
 # Audit Report: 19-the-best-the-worst.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
+**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
-## PEDAGOGICAL VIOLATIONS
-- **[GRAMMAR]** Participle used before B1: 'талановитий'
-  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
-
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 15/100)
 
-- 1 pedagogical violations (minor)
-- Immersion 10% off target (minor)
+- Immersion 9% off target (minor)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1075/1000
+- **Words:** ✅ 1045/1000
 - **Activities:** ✅ 11/10
 - **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 11/4 types
@@ -24,8 +19,8 @@
 - **Vocab:** ✅ 47/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Immersion:** ❌ 25.2% LOW (target 35-50% (A2.1))
+- **Pedagogy:** ✅ Level-appropriate
+- **Immersion:** ❌ 25.8% LOW (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Low Density Activities
@@ -37,7 +32,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 56 | Included in Core |
+| **Intro/Narrative** | ✅ | 56 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **Forming Superlatives** | ⚪️ | 77 | Skipped |
 | **Using Superlatives** | ⚪️ | 94 | Skipped |
@@ -52,5 +47,4 @@
 | **Practice Examples** | ⚪️ | 146 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
 | **What You Learned** | ⚪️ | 143 | Skipped |
-| **Need More Practice?** | ⚪️ | 30 | Skipped |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Need More Practice?** | ⚪️ | 0 | Skipped |

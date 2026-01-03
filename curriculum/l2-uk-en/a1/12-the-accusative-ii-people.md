@@ -225,13 +225,3 @@ In this module, you learned the **animate accusative** — how Ukrainian marks p
 - Distinguish between people and things in the accusative case.
 
 ---
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Practice #Ukrainian Accusative Case with me! (with nouns, pronouns and adjectives)](https://www.youtube.com/watch?v=BYBWx6ds8Fk) — Let's Learn Ukrainian
->
-> **Grammar Guide:** [Accusative Case](https://www.ukrainianlessons.com/accusativecase/) — Animate vs inanimate distinction explained
->
-> **Pronouns:** [Personal Pronouns Declension](https://www.ukrainianlessons.com/ukrainian-personal-pronouns/) — See мене, тебе, його in accusative
->
-> **Podcast:** [ULP 1-33 | Books + Accusative of People](https://www.ukrainianlessons.com/episode33/) — Practice accusative with animate nouns

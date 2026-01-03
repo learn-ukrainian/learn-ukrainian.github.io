@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): ліки, аптека, допомагати, ніс, допомога...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): рот, здоровий, здоров'я, ніс, ліки...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 893/750
+- **Words:** ✅ 860/750
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 39.2% (target 35-55% (M31))
+- **Immersion:** 🇺🇦 41.0% (target 35-55% (M31))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -43,4 +40,4 @@
 | **At the Pharmacy** | ⚪️ | 0 | Skipped |
 | **Examples in Context** | ✅ | 224 | Included in Core |
 | **Dialogues** | ✅ | 449 | Included in Core |
-| **Summary** | ✅ | 84 | Included in Core |
+| **Summary** | ✅ | 51 | Included in Core |

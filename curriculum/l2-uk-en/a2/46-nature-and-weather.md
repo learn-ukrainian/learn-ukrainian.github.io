@@ -243,11 +243,3 @@ Each season in Ukraine has its own beauty and character:
 > - **Зима**: холодно, йде сніг
 >
 > Українці дуже люблять говорити про погоду! Це завжди гарна тема для розмови.
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Nature & Weather in Ukrainian...](https://www.youtube.com/watch?v=x9qlDTX3fVg) — Pinhok Languages
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

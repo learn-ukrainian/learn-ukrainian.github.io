@@ -1,5 +1,5 @@
 # Audit Report: 18-bigger-better-stronger.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
+**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
@@ -11,11 +11,11 @@
 
 - Borderline case (severity 35/100)
 - 1 pedagogical violations (minor)
-- Immersion 12% off target
+- Immersion 11% off target
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1115/1000
+- **Words:** ✅ 1085/1000
 - **Activities:** ✅ 10/10
 - **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 10/4 types
@@ -26,7 +26,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 23.3% LOW (target 35-50% (A2.1))
+- **Immersion:** ❌ 23.9% LOW (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Low Density Activities
@@ -38,7 +38,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 191 | Included in Core |
+| **Intro/Narrative** | ✅ | 191 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **Forming Comparative Adjectives** | ⚪️ | 132 | Skipped |
 | **Irregular Comparatives** | ⚪️ | 40 | Skipped |
@@ -50,5 +50,4 @@
 | **Practice Examples** | ⚪️ | 163 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
 | **What You Learned** | ⚪️ | 236 | Skipped |
-| **Need More Practice?** | ⚪️ | 30 | Skipped |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Need More Practice?** | ⚪️ | 0 | Skipped |

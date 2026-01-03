@@ -314,13 +314,3 @@ You now have the vocabulary to:
 Next module: **Genitive Case I — Absence and Negation** (немає, without). You'll learn to say "I don't have" and "There is no..." — essential for shopping, restaurants, and everyday problem-solving!
 
 ---
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian Vocabulary: Tourism, Travelling, Asking for Directions #ukrainian #letslearnukrainian](https://www.youtube.com/watch?v=40HW7URLQNI) — Let's Learn Ukrainian
->
-> **Vocabulary:** [Around Town in Ukrainian](https://www.ukrainianlessons.com/vocabulary-town/) — City map with vocabulary
->
-> **Directions:** [Directions in Ukrainian](https://www.ukrainianlessons.com/vocabulary-directions/) — Navigation vocabulary with audio
->
-> **Podcast:** [ULP 1-18 | Directions](https://www.ukrainianlessons.com/episode18/) — Ask for and understand directions

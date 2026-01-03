@@ -173,9 +173,3 @@ You learned to:
 - Discuss career: **зарплата**, **відпустка**, **колега**
 
 Work is not just about money; it's about passion and contribution. Whether you are a lawyer or a driver, your work matters. Keep learning Ukrainian to expand your professional horizons!
-
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

@@ -238,11 +238,3 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 > - **сало** — традиційна українська закуска
 >
 > Українці кажуть: «Їж, пий, та нас не забувай!» Смачного!
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [20 Ukrainian Food Words You Need To Know ...](https://www.youtube.com/watch?v=fN0BIF-iejo) — QUICK and EASY food vocabulary
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

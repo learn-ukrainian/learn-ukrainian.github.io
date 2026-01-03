@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): огірок, м'ясо, помідор, чай, риба...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): риба, огірок, м'ясо, чай, помідор...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1084/300
+- **Words:** ✅ 1026/300
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 14.0% (target 10-25% (M03))
+- **Immersion:** 🇺🇦 14.7% (target 10-25% (M03))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -41,4 +38,4 @@
 | **Practice** | ⚪️ | 280 | Skipped |
 | **Production** | ➖ | 103 | Excluded Type |
 | **Cultural Insight** | ✅ | 150 | Included in Core |
-| **Summary** | ✅ | 154 | Included in Core |
+| **Summary** | ✅ | 96 | Included in Core |

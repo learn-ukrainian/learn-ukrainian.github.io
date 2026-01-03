@@ -223,13 +223,6 @@
 
 ---
 
-> [!resources] Додаткові матеріали
->
-> - [Український інститут національної пам'яті — Голодомор](https://uinp.gov.ua/informaciyni-materialy/holodomor) — офіційний ресурс з документами та дослідженнями
-> - [Holodomor Museum](https://holodomormuseum.org.ua/) — Національний музей Голодомору-геноциду у Києві
-> - [Фільм «Mr. Jones»](https://www.imdb.com/title/tt6828390/) — художній фільм про Гарета Джонса
-> - [Harvard Ukrainian Research Institute](https://huri.harvard.edu/) — наукові дослідження з історії України
-
 ---
 
 # Підсумок

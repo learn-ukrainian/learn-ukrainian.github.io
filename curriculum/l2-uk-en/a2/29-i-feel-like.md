@@ -125,8 +125,3 @@ Ukrainian literature and folk songs are famous for their emotional depth. The co
 > **Reality:** A smile in Ukraine is usually earned and reserved for those we know or have an actual reason to interact with. We don't use "polite smiles" for strangers in the street, but once a conversation starts, Ukrainians are among the most emotionally expressive and warm people in Europe. Our language is rich with diminutive forms (сонечко, матінко) that express deep affection and familial warmth. This distinction between public reserve and private warmth is a key part of the Ukrainian social code.
 
 ---
-
-> [!resources] 🔗 External Resources
-> - **YouTube:** [Feelings and Emotions in Ukrainian](https://www.youtube.com/results?search_query=ukrainian+feelings+vocabulary) — Slow Ukrainian with Yevhen
-> - **Article:** [How to express emotions in Ukrainian](https://www.ukrainianlessons.com/emotions/) — Ukrainian Lessons
-> - **Audio:** [Pronunciation of Ukrainian Emotions](https://forvo.com/languages/uk/) — Forvo Database

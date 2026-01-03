@@ -324,11 +324,4 @@
 
 ---
 
-> [!resources] Зовнішні ресурси
->
-> **Додаткові матеріали для вивчення:**
-> - [Непряма мова](https://uk.wikipedia.org/wiki/Непряма_мова) — Вікіпедія
-> - [Ukrainian Grammar](https://www.youtube.com/@ukrainianlesson) — відеоуроки
-> - [Ukrainian Lessons Podcast](https://ukrainianlessons.com/) — подкаст для вивчення
-
 ---

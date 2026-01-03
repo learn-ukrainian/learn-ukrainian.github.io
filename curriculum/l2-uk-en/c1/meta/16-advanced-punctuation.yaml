@@ -1,0 +1,17 @@
+module: c1-16
+title: Advanced Punctuation
+subtitle: Academic Foundation
+version: '2.0'
+phase: C1.1 Academic
+focus: grammar
+pedagogy: academic
+duration: 120
+vocabulary_count: 24
+tags:
+- c1
+- grammar
+- punctuation
+- writing
+objectives:
+- Master C1 concepts in Advanced Punctuation
+slug: 16-advanced-punctuation

@@ -214,13 +214,3 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 - іноді (sometimes), рідко (rarely), ніколи (never)
 
 ---
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Negative sentences/Double negative in Ukrainian language](https://www.youtube.com/watch?v=93NJlqXegFw) — Speak Ukrainian
->
-> **Question Words:** [Питальні слова](https://www.ukrainianlessons.com/question-words/) — All question words with examples
->
-> **Negation:** [Double Negation Rules](https://www.ukrainianlessons.com/negation-in-ukrainian/) — Master Ukrainian negative sentences
->
-> **Useful Questions:** [Short Ukrainian Questions](https://www.ukrainianlessons.com/useful-ukrainian-questions/) — Practical phrases for travelers

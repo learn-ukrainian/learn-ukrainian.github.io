@@ -225,11 +225,4 @@ Examples:
 
 ## Need More Practice?
 
-> [!resources] External Resources
->
-> - 🎥 [All 7 Cases](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
-> - 📖 [Cases Introduction](https://www.ukrainianlessons.com/intro-cases/)
-> - 📝 [Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/)
-> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-
 ---

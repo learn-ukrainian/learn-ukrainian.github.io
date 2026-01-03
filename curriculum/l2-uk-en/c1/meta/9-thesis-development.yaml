@@ -1,0 +1,17 @@
+module: c1-9
+title: Thesis Development
+subtitle: Academic Foundation
+version: '2.0'
+phase: C1.1 Academic
+focus: writing
+pedagogy: academic
+duration: 120
+vocabulary_count: 24
+tags:
+- c1
+- writing
+- thesis
+- argument
+objectives:
+- Master C1 concepts in Thesis Development
+slug: 9-thesis-development

@@ -1,9 +1,9 @@
 # Audit Report: 33-at-the-doctor.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "Expressive" | **Target:** 1000
+**Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Expressive | **Target:** 1000
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): вухо, горло, таблетка, ліки, пацієнт...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): температура, голова, пацієнт, око, горло...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1319/1000
+- **Words:** ✅ 1280/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -23,13 +23,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 41.6% (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 43.0% (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 64 | Included in Core |
+| **Intro/Narrative** | ✅ | 64 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **1. Expressing Pain: Болить** | ⚪️ | 125 | Skipped |
 | **2. Other Symptoms** | ⚪️ | 47 | Skipped |
@@ -41,6 +41,5 @@
 | **Dialogue: Calling an Ambulance** | ✅ | 47 | Included in Core |
 | **Deep Dive: Heart Metaphors** | ✅ | 58 | Included in Core |
 | **Monologue: The Hypochondriac** | ⚪️ | 111 | Skipped |
-| **Pro-Tip: "Being Sick" vs "Sicking"** | ✅ | 148 | Included in Core |
+| **Pro-Tip: "Being Sick" vs "Sicking"** | ✅ | 109 | Included in Core |
 | **Summary** | ✅ | 32 | Included in Core |
-| **Vocabulary** | ➖ | 0 | Excluded Type |

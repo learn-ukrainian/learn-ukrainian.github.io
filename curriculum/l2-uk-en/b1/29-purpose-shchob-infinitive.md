@@ -317,13 +317,6 @@
 >
 > Якщо так — ви готові до практики!
 
-> [!resources] 🎧 Зовнішні ресурси
->
-> **Додаткові матеріали:**
-> - 📖 [Підрядне речення мети](https://uk.wikipedia.org/wiki/Підрядне_речення_мети) — Вікіпедія
-> - 📺 [Ukrainian Purpose Clauses](https://www.youtube.com/results?search_query=ukrainian+purpose+clauses) — відео пояснення
-> - 🎧 [Ukrainian Grammar](https://www.youtube.com/results?search_query=ukrainian+grammar) — подкаст уроки
-
 ---
 
 ---

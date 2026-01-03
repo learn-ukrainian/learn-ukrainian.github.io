@@ -189,11 +189,3 @@ In this module, you learned:
 Ви вивчили частини тіла та здоров'я! Тепер ви можете описати свій біль. (You learned body parts and health! Now you can describe your pain.) Ви знаєте, як купити ліки в аптеці або викликати швидку допомогу. Ви також знаєте, як почувається хворий або здоровий. Це чудовий результат! (This is a great result!)
 
 ---
-
-> [!resources] External Resources
->
-> **Media:**
->
-> - [Body Parts Vocabulary](https://www.ukrainianlessons.com/vocabulary-body/) — Complete body vocabulary
-> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/health
-> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons

@@ -5,7 +5,7 @@ items:
 - lemma: розстріляний
   ipa: /roˈs.t.rʲi.lʲɐ.nɪi̯/
   translation: executed (by shooting)
-  pos: adjective
+  pos: adj
 - lemma: відродження
   ipa: /ʋʲiˈd.rɔ.d͡ʒ.e.ɲ.ːɐ/
   translation: renaissance, rebirth
@@ -49,7 +49,7 @@ items:
 - lemma: систематичний
   ipa: /sɪ.ste.mɐˈtɪt͡ʃ.nɪi̯/
   translation: systematic
-  pos: adjective
+  pos: adj
 - lemma: культурний геноцид
   ipa: /kʊlʲˈtʊr.nɪi̯ ɦe.noˈt͡sɪd/
   translation: cultural genocide
@@ -94,11 +94,6 @@ items:
   translation: repression
   pos: noun
   gender: f
-- lemma: терор
-  ipa: /teˈrɔr/
-  translation: terror
-  pos: noun
-  gender: m
 - lemma: НКВС
   ipa: /ɛn.kɐ.ʋeˈɛs/
   translation: NKVD (Soviet secret police)

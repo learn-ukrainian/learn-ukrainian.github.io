@@ -187,11 +187,3 @@ Some adverbs are special:
 Ви вивчили українські прислівники! Тепер ви можете описати, як ви щось робите. (You learned Ukrainian adverbs! Now you can describe how you do something.) Ви знаєте слова: швидко, повільно, добре. Ви також знаєте, як часто ви це робите: завжди або часто. Це був чудовий урок! (This was a great lesson!)
 
 ---
-
-> [!resources] External Resources
->
-> **Media:**
->
-> - [Adjectives and Adverbs](https://www.ukrainianlessons.com/adjectives-and-adverbs/) — Comprehensive guide
-> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/adverbs
-> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons

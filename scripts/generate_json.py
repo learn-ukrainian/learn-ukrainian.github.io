@@ -740,8 +740,14 @@ def get_immersion_level(level: str) -> float:
     """Get immersion level for CEFR level."""
     return IMMERSION_LEVELS.get(level.upper(), 0.50)
 
-def render_vibe_json(parsed: dict, lang_pair: str) -> dict:
-    """Render parsed module to Vibe JSON format."""
+def render_vibe_json(parsed: dict, lang_pair: str, external_resources: dict | None = None) -> dict:
+    """Render parsed module to Vibe JSON format.
+
+    Args:
+        parsed: Parsed module data
+        lang_pair: Language pair (e.g., 'l2-uk-en')
+        external_resources: Optional external resources dict (from YAML)
+    """
     fm = parsed["frontmatter"]
     now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
@@ -829,12 +835,43 @@ def render_vibe_json(parsed: dict, lang_pair: str) -> dict:
         "version": 2,
     }
 
-    return {
+    # Build result
+    result = {
         "$schema": "../../../schemas/vibe-module.schema.json",
         "lesson": lesson,
         "activities": vibe_activities,
         "vocabulary": vocab_section,
     }
+
+    # Add external resources if present (sorted by priority)
+    if external_resources:
+        # Priority and relevance maps for sorting
+        # Priority 1 = highest (Ukrainian Lessons Priority 1), 5 = lowest
+        priority_map = {1: 5, 2: 4, 3: 3, 4: 2, 5: 1, None: 0}
+        relevance_map = {'high': 3, 'medium': 2, 'low': 1}
+
+        def sort_resources(items):
+            """Sort resources by: priority (1→5) → relevance (high→low) → title (A→Z)"""
+            if not items:
+                return items
+            return sorted(
+                items,
+                key=lambda x: (
+                    -priority_map.get(x.get('priority'), 0),  # Priority 1 appears first
+                    -relevance_map.get(x.get('relevance', 'low'), 0),  # High relevance next
+                    x.get('title', '').lower()  # Alphabetical last
+                )
+            )
+
+        result["external_resources"] = {
+            "podcasts": sort_resources(external_resources.get("podcasts", [])),
+            "youtube": sort_resources(external_resources.get("youtube", [])),
+            "articles": sort_resources(external_resources.get("articles", [])),
+            "books": sort_resources(external_resources.get("books", [])),
+            "websites": sort_resources(external_resources.get("websites", []))
+        }
+
+    return result
 
 # =============================================================================
 # MAIN
@@ -849,6 +886,15 @@ def main():
     print("\n🚀 Learn Ukrainian JSON Generator (Python)\n")
     print("Source: curriculum/[lang]/[level]/*.md")
     print("Output: output/json/\n")
+
+    # Load EXTERNAL RESOURCES (YAML Architecture) - loaded once for all modules
+    external_resources_file = ROOT_DIR / 'docs' / 'resources' / 'external_resources.yaml'
+    all_resources = {}
+    if external_resources_file.exists():
+        with open(external_resources_file, 'r', encoding='utf-8') as f:
+            resources_data = yaml.safe_load(f)
+            all_resources = resources_data.get('resources', {})
+        print(f'📚 Loaded {len(all_resources)} modules with external resources\n')
 
     # Find language pairs
     if target_lang_pair:
@@ -907,8 +953,15 @@ def main():
                     # Parse module
                     parsed = parse_module(md_content, level_folder, module_num)
 
+                    # Lookup EXTERNAL RESOURCES by module_id
+                    # module_id format: {level}-{filename} (e.g., a1-09-food-and-drinks)
+                    # Extract filename without extension
+                    module_filename = Path(md_file).stem
+                    module_id = f"{level_folder}-{module_filename}"
+                    module_resources = all_resources.get(module_id, {})
+
                     # Render to JSON
-                    vibe_json = render_vibe_json(parsed, lang_pair)
+                    vibe_json = render_vibe_json(parsed, lang_pair, module_resources)
 
                     # Write output
                     out_dir = OUTPUT_DIR / "json" / lang_pair / level_folder

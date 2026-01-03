@@ -1,0 +1,17 @@
+module: c1-31
+title: Diaspora Ukrainian
+subtitle: Professional & Social
+version: '2.0'
+phase: C1.2 Professional
+focus: sociolinguistics
+pedagogy: academic
+duration: 120
+vocabulary_count: 24
+tags:
+- c1
+- sociolinguistics
+- diaspora
+- global
+objectives:
+- Master C1 concepts in Diaspora Ukrainian
+slug: 31-diaspora-ukrainian

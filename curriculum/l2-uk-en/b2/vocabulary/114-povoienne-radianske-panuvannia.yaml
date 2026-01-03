@@ -101,12 +101,12 @@ items:
   ipa: /rɛˈprɛsʲiji/
   translation: repressions
   pos: noun
-  gender: f.pl
+  gender: f
 - lemma: шістдесятники
   ipa: /ʃisʲdɛsʲaˈtnɪkɪ/
   translation: Sixtiers (1960s Ukrainian dissidents)
   pos: noun
-  gender: m.pl
+  gender: m
 - lemma: дисидент
   ipa: /dɪsɪˈdɛnt/
   translation: dissident

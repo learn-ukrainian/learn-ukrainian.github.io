@@ -219,11 +219,3 @@ When calling someone directly, Ukrainian changes the word ending. This is the **
 Ви вивчили багато слів про сім'ю! Тепер ви знаєте, як звати ваших батьків, братів та сестер. (You learned many words about family! Now you know how to name your parents, brothers and sisters.) Ви знаєте, як сказати "у мене є" або "у мене немає". Це був чудовий урок! Ви любите свою родину? (This was a great lesson! Do you love your family?)
 
 ---
-
-> [!resources] External Resources
->
-> **Media:**
->
-> - [Family Vocabulary](https://www.ukrainianlessons.com/vocabulary-family/) — Сім'я
-> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/family
-> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons

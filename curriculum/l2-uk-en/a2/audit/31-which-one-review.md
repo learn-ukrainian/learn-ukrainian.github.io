@@ -1,14 +1,9 @@
 # Audit Report: 31-which-one.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "Expressive" | **Target:** 1000
+**Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Expressive | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- Immersion 6% off target (minor)
-
 ## Gates
-- **Words:** ✅ 1288/1000
+- **Words:** ✅ 1266/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -19,13 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 34.4% LOW (target 40-55% (A2.2))
+- **Immersion:** ❌ 35.0% LOW (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 75 | Included in Core |
+| **Intro/Narrative** | ✅ | 75 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **1. Simple Linking (Nominative)** | ⚪️ | 37 | Skipped |
 | **2. The Case Detective** | ⚪️ | 339 | Skipped |
@@ -36,6 +31,5 @@
 | **Dialogue: The Police Witness** | ✅ | 104 | Included in Core |
 | **Monologue: The Object That Changed My Life** | ⚪️ | 109 | Skipped |
 | **Dialogue: The Lost Item (Revamped)** | ✅ | 155 | Included in Core |
-| **Monologue: My Ideal City** | ⚪️ | 110 | Skipped |
+| **Monologue: My Ideal City** | ⚪️ | 88 | Skipped |
 | **Summary** | ✅ | 55 | Included in Core |
-| **Vocabulary** | ➖ | 0 | Excluded Type |

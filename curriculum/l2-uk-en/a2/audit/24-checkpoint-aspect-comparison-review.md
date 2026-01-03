@@ -1,9 +1,9 @@
 # Audit Report: 24-checkpoint-aspect-comparison.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "Review" | **Target:** 1000
+**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** Review | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: недоконаний, час, доконаний
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: доконаний, недоконаний, час
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
@@ -13,18 +13,18 @@
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1146/1000
+- **Words:** ✅ 1118/1000
 - **Activities:** ✅ 10/10
 - **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/4
+- **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 5/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 34.5% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 35.4% (checkpoint - no gate)
 - **Grammar:** ⏳ Pending validation
 
 ## Low Density Activities
@@ -36,12 +36,11 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Summary** | ✅ | 0 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Checkpoint - Aspect & Comparison** | ➖ | 55 | Excluded Type |
 | **Skill 1: Verbal Aspect** | ⚪️ | 213 | Skipped |
 | **Skill 2: Comparison** | ⚪️ | 156 | Skipped |
 | **Skill 3: Conditional Mood** | ⚪️ | 205 | Skipped |
 | **Skill 4: Shopping Context** | ✅ | 172 | Included in Core |
 | **Integration Challenge** | ⚪️ | 192 | Skipped |
-| **Summary Table** | ✅ | 153 | Included in Core |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Summary Table** | ✅ | 125 | Included in Core |

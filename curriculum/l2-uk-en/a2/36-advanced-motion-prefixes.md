@@ -258,14 +258,6 @@ Motion prefix mastery comes from visualization. For each prefix, create a mental
 
 When you hear a motion verb, visualize the path first. This will help you understand and produce the correct prefix naturally.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Learn verbs of movements # 96...](https://www.youtube.com/watch?v=-tjrxxvT8Q8) — Ukrainian Language
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
 ---
 
 # Summary

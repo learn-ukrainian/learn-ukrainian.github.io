@@ -313,11 +313,17 @@ For each activity, check:
 
 **8e. External Resources**
 
+**NOTE:** Resources are stored in `docs/resources/external_resources.yaml` (NOT in markdown files).
+
+When reviewing, check the YAML file for this module's resources:
+
 - YouTube videos are relevant to module topic
 - URLs are valid and accessible
 - Resources match level (A1 shouldn't link C1 content)
 - No duplicate resources across modules without reason
 - Blog/article links are from reputable Ukrainian learning sources
+
+If you find `> [!resources]` in a markdown file, it's stale (remove it - will be regenerated from YAML at build time).
 
 **Activity Red Flags (Auto-fail):**
 
@@ -673,7 +679,7 @@ Reviewing A1...
 - Language quality
 - Pedagogical approach
 - **Activities** (structural integrity, answer validity, linguistic accuracy)
-- **External resources** (relevance, accessibility)
+- **External resources** (relevance, accessibility - checked in `docs/resources/external_resources.yaml`)
 - **Vocabulary coverage** (B2+: content vocabulary exists in YAML)
 
 ❌ **Not Checked:**
@@ -794,11 +800,16 @@ These trigger automatic REWRITE recommendation:
 
 ### Issue 4: Unrelated External Resources
 
-```markdown
-> [!resources]
->
-> - [Cat Videos Compilation](https://youtube.com/...) ← UNRELATED
+**NOTE:** Resources are in `docs/resources/external_resources.yaml`, NOT markdown.
+
+```yaml
+# In external_resources.yaml
+a1-09-food-and-drinks:
+  youtube:
+    - title: "Cat Videos Compilation"  # ← UNRELATED
+      url: "https://youtube.com/..."
+      relevance: "high"
 ```
 
 **Problem:** Resource has nothing to do with Ukrainian learning.
-**Fix:** Replace with relevant Ukrainian learning content or remove.
+**Fix:** Edit `external_resources.yaml` - replace with relevant Ukrainian learning content or remove the entry.

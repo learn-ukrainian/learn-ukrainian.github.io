@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1432/750
+- **Words:** ✅ 1399/750
 - **Activities:** ✅ 12/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -14,14 +14,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 41.9% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 43.0% (checkpoint - no gate)
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -33,4 +30,4 @@
 | **Skill 4: Case System** | ⚪️ | 233 | Skipped |
 | **Skill 5: Daily Life Skills** | ⚪️ | 250 | Skipped |
 | **Integration Challenge** | ⚪️ | 169 | Skipped |
-| **Summary** | ✅ | 85 | Included in Core |
+| **Summary** | ✅ | 52 | Included in Core |

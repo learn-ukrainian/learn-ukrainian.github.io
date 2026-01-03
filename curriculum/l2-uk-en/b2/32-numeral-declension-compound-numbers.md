@@ -582,11 +582,6 @@
 
 ---
 
-> [!resources] Зовнішні ресурси
-> **Граматика:** [Числівник в українській мові](https://goroh.pp.ua/граматика/числівник) — Горох
-> **Вправи:** [Numeral Practice](https://ukrainianlessons.com/numerals) — Ukrainian Lessons
-> **Словник:** [Числові вирази](https://sum.in.ua) — Словник української мови
-
 # Вправи
 
 Активності подано в окремому файлі `activities/32-numeral-declension-compound-numbers.yaml`.

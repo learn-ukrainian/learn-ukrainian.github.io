@@ -213,9 +213,3 @@ A healthy mind in a healthy body!
 > - **плавання** — багато українців люблять плавати
 >
 > Спорт — це здоров'я! Українці кажуть: «Рух — це життя!»
-
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

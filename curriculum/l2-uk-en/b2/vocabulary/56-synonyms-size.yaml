@@ -2,541 +2,541 @@ module: 56-synonyms-size
 level: B2
 version: '2.0'
 items:
-  - lemma: артиста
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: бесід
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: бідність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: велетенський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: велетень
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: вертикаль
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: вертикальний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: висотний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: вишивка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: вловлювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: відносно
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: візерунок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: глада
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: гніздо
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: гоголь
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: горизонталь
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: граматиця
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: грандіозний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: грубість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: густий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: гіпербола
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: делікатність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: долетіти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: доречніший
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: діаметр
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: жалюгідність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: житловий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: заздрість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: зріст
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: кераміка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: колосальний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: краплина
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: крихта
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: крихітний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: купол
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: лупа
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: мале
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: масив
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: масивний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: масштабний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: масштабність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: мацюпунький
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: мегаполіка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: миттєво
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: мізерний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: мізерність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: мікросвіт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: мікроскопічний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: мілкий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: мініатюра
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: мініатюризація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: мініатюрний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: найширший
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: натяк
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: неважливість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: недостатність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: незграбний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: неозброєний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: неосяжність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: непереможність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: непохитний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: опішні
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: осягнути
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: парадокс
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: пензля
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: передбачувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: петриківський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: писанкарство
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: пластика
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: площина
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: поверховість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: позбавлений
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: похвалити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: престиж
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: применшення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: причал
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: пропорційний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: пташень
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: птиця
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: підсилити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: пісок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: пішохідний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: розгледіти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: розкритикувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: розстилатися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: розходитися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: ряд
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: самопожертво
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: сантиметр
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: сарказм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: світобачення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: сенсор
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: сильніший
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: скеля
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: смерека
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: стадіонь
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: стібка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: судно
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: сукупність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: сход
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: товстий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: товщина
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: тренд
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: турбін
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: урбаністика
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: хмарочос
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: хребт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ціле
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: щедрість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: щільність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: ювелірний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: індустріальний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
+- lemma: артиста
+  ipa: /ɑrˈtɪstɑ/
+  translation: artist (genitive)
+  pos: noun
+  gender: m
+- lemma: бесід
+  ipa: /bɛˈsʲid/
+  translation: conversations (genitive plural)
+  pos: noun
+  gender: f
+- lemma: бідність
+  ipa: /ˈbʲidnʲistʲ/
+  translation: poverty
+  pos: noun
+  gender: f
+- lemma: велетенський
+  ipa: /wɛlɛˈtɛnsʲkɪj/
+  translation: gigantic, colossal
+  pos: adj
+  gender: m
+- lemma: велетень
+  ipa: /wɛˈlɛtɛnʲ/
+  translation: giant
+  pos: noun
+  gender: m
+- lemma: вертикаль
+  ipa: /wɛrtɪˈkɑlʲ/
+  translation: vertical
+  pos: noun
+  gender: f
+- lemma: вертикальний
+  ipa: /wɛrtɪˈkɑlʲnɪj/
+  translation: vertical
+  pos: adj
+  gender: m
+- lemma: висотний
+  ipa: /wɪˈsotnɪj/
+  translation: high-rise
+  pos: adj
+- lemma: вишивка
+  ipa: /wɪˈʃɪwkɑ/
+  translation: embroidery
+  pos: noun
+  gender: f
+- lemma: вловлювати
+  ipa: /wlowlʲuˈwɑtɪ/
+  translation: to catch, to capture
+  pos: verb
+- lemma: відносно
+  ipa: /wʲidˈnosno/
+  translation: relatively
+  pos: other
+- lemma: візерунок
+  ipa: /wʲizɛˈrunok/
+  translation: pattern, design
+  pos: noun
+  gender: m
+- lemma: глада
+  ipa: /ɦlɐˈdɑ/
+  translation: hunger, famine
+  pos: noun
+  gender: f
+- lemma: гніздо
+  ipa: /ɦnʲizˈdo/
+  translation: nest
+  pos: noun
+  gender: n
+- lemma: гоголь
+  ipa: /ˈɦoɦolʲ/
+  translation: Hohol, Gogol
+  pos: propn
+  gender: m
+- lemma: горизонталь
+  ipa: /ɦorɪzonˈtɑlʲ/
+  translation: horizontal
+  pos: propn
+  gender: f
+- lemma: граматиця
+  ipa: /ɦrɐˈmɑtɪt͡sʲɑ/
+  translation: grammar (archaic)
+  pos: noun
+  gender: f
+- lemma: грандіозний
+  ipa: /ɦrɐndʲiˈoznɪj/
+  translation: grandiose
+  pos: adj
+  gender: f
+- lemma: грубість
+  ipa: /ɦruˈbʲistʲ/
+  translation: rudeness, coarseness
+  pos: noun
+  gender: f
+- lemma: густий
+  ipa: /ɦusˈtɪj/
+  translation: thick, dense
+  pos: adj
+- lemma: гіпербола
+  ipa: /ɦʲipɛrˈbolɑ/
+  translation: hyperbole
+  pos: noun
+  gender: f
+- lemma: делікатність
+  ipa: /dɛlʲikɐtnʲistʲ/
+  translation: delicacy, tact
+  pos: noun
+  gender: f
+- lemma: долетіти
+  ipa: /dolɛˈtʲitɪ/
+  translation: to fly to, to reach
+  pos: verb
+- lemma: доречніший
+  ipa: /dorɛt͡ʃˈnʲiʃɪj/
+  translation: more appropriate
+  pos: adj
+- lemma: діаметр
+  ipa: /dʲiˈɑmɛtr/
+  translation: diameter
+  pos: noun
+  gender: m
+- lemma: жалюгідність
+  ipa: /ʒɐlʲuˈɦʲidnʲistʲ/
+  translation: wretchedness
+  pos: noun
+  gender: f
+- lemma: житловий
+  ipa: /ʒɪtloˈwɪj/
+  translation: residential
+  pos: adj
+- lemma: заздрість
+  ipa: /zɐzˈdrʲistʲ/
+  translation: envy
+  pos: noun
+  gender: f
+- lemma: зріст
+  ipa: /zrʲist/
+  translation: height, growth
+  pos: noun
+  gender: m
+- lemma: кераміка
+  ipa: /kɛˈrɑmʲikɑ/
+  translation: ceramics
+  pos: noun
+  gender: f
+- lemma: колосальний
+  ipa: /koloˈsɑlʲnɪj/
+  translation: colossal
+  pos: adj
+  gender: m
+- lemma: краплина
+  ipa: /krɐˈplɪnɑ/
+  translation: droplet
+  pos: noun
+  gender: f
+- lemma: крихта
+  ipa: /ˈkrɪxtɑ/
+  translation: crumb
+  pos: noun
+  gender: f
+- lemma: крихітний
+  ipa: /krɪˈxʲitnɪj/
+  translation: tiny
+  pos: adj
+- lemma: купол
+  ipa: /ˈkupol/
+  translation: dome, cupola
+  pos: noun
+  gender: m
+- lemma: лупа
+  ipa: /luˈpɑ/
+  translation: magnifying glass
+  pos: noun
+  gender: f
+- lemma: мале
+  ipa: /mɐˈlɛ/
+  translation: small thing
+  pos: noun
+  gender: n
+- lemma: масив
+  ipa: /mɐˈsɪw/
+  translation: massif, array
+  pos: noun
+  gender: m
+- lemma: масивний
+  ipa: /mɐˈsɪwnɪj/
+  translation: massive
+  pos: adj
+  gender: m
+- lemma: масштабний
+  ipa: /mɐʃˈtɑbnɪj/
+  translation: large-scale
+  pos: adj
+  gender: m
+- lemma: масштабність
+  ipa: /mɐʃˈtɑbnʲistʲ/
+  translation: scale, magnitude
+  pos: noun
+  gender: f
+- lemma: мацюпунький
+  ipa: /mɐt͡sʲupunʲkɪj/
+  translation: tiny (diminutive)
+  pos: propn
+  gender: m
+- lemma: мегаполіка
+  ipa: /mɛɦɐpoˈlʲikɑ/
+  translation: megapolis (rare)
+  pos: noun
+  gender: m
+- lemma: миттєво
+  ipa: /mɪtˈt͡sɛwo/
+  translation: instantly
+  pos: adv
+- lemma: мізерний
+  ipa: /mʲizɛrnɪj/
+  translation: meager, paltry
+  pos: adj
+- lemma: мізерність
+  ipa: /mʲizɛrnʲistʲ/
+  translation: paltry amount
+  pos: noun
+  gender: f
+- lemma: мікросвіт
+  ipa: /mʲikrosˈwʲit/
+  translation: microcosm
+  pos: noun
+  gender: m
+- lemma: мікроскопічний
+  ipa: /mʲikroskoˈpʲit͡ʃnɪj/
+  translation: microscopic
+  pos: adj
+  gender: m
+- lemma: мілкий
+  ipa: /mʲilˈkɪj/
+  translation: shallow, petty
+  pos: adj
+  gender: m
+- lemma: мініатюра
+  ipa: /mʲinʲiɐˈtʲurɑ/
+  translation: miniature
+  pos: noun
+  gender: f
+- lemma: мініатюризація
+  ipa: /mʲinʲiɐtʲurɪzɑˈt͡sʲijɑ/
+  translation: miniaturization
+  pos: noun
+  gender: f
+- lemma: мініатюрний
+  ipa: /mʲinʲiɐˈtʲurnɪj/
+  translation: miniature (adj.)
+  pos: adj
+  gender: m
+- lemma: найширший
+  ipa: /nɐjˈʃɪrʃɪj/
+  translation: widest, broadest
+  pos: adj
+- lemma: натяк
+  ipa: /nɐˈtʲɑk/
+  translation: hint
+  pos: noun
+  gender: m
+- lemma: неважливість
+  ipa: /nɛwɐʒˈlɪwʲistʲ/
+  translation: unimportance
+  pos: noun
+  gender: f
+- lemma: недостатність
+  ipa: /nɛdostɐtnʲistʲ/
+  translation: insufficiency
+  pos: noun
+  gender: f
+- lemma: незграбний
+  ipa: /nɛzˈɦrɑbnɪj/
+  translation: clumsy, awkward
+  pos: adj
+  gender: m
+- lemma: неозброєний
+  ipa: /nɛozbroˈjɛnɪj/
+  translation: unarmed
+  pos: adj
+  gender: n
+- lemma: неосяжність
+  ipa: /nɛosʲɑʒnʲistʲ/
+  translation: immensity
+  pos: noun
+  gender: f
+- lemma: непереможність
+  ipa: /nɛpɛrɛˈmoʒnʲistʲ/
+  translation: invincibility
+  pos: noun
+  gender: f
+- lemma: непохитний
+  ipa: /nɛˈpoxɪtnɪj/
+  translation: unwavering
+  pos: adj
+- lemma: опішні
+  ipa: /oˈpʲiʃnʲi/
+  translation: Opishnya (pottery town)
+  pos: propn
+  gender: f
+- lemma: осягнути
+  ipa: /osʲɑɦˈnutɪ/
+  translation: to comprehend, to grasp
+  pos: verb
+- lemma: парадокс
+  ipa: /pɑrɐˈdoks/
+  translation: paradox
+  pos: noun
+  gender: m
+- lemma: пензля
+  ipa: /pɛnˈzlʲɑ/
+  translation: brush (genitive)
+  pos: noun
+  gender: m
+- lemma: передбачувати
+  ipa: /pɛrɛdbɐˈt͡ʃuwɑtɪ/
+  translation: to predict, to foresee
+  pos: verb
+- lemma: петриківський
+  ipa: /pɛtrɪˈkʲiwsʲkɪj/
+  translation: Petrykivka (painting style)
+  pos: adj
+  gender: m
+- lemma: писанкарство
+  ipa: /pɪsɐnˈkɑrstwo/
+  translation: pysanka art
+  pos: noun
+  gender: n
+- lemma: пластика
+  ipa: /ˈplɑstɪkɑ/
+  translation: plastic arts, sculpture
+  pos: noun
+  gender: m
+- lemma: площина
+  ipa: /ˈploʃt͡ʃɪnɑ/
+  translation: plane, surface
+  pos: noun
+  gender: f
+- lemma: поверховість
+  ipa: /powɛrxoˈwʲistʲ/
+  translation: superficiality
+  pos: noun
+  gender: f
+- lemma: позбавлений
+  ipa: /pozbɐwˈlɛnɪj/
+  translation: deprived of
+  pos: adj
+  gender: n
+- lemma: похвалити
+  ipa: /poxwɐˈlɪtɪ/
+  translation: to praise
+  pos: verb
+- lemma: престиж
+  ipa: /prɛsˈtɪʒ/
+  translation: prestige
+  pos: noun
+  gender: m
+- lemma: применшення
+  ipa: /prɪmɛnˈʃɛnʲːɑ/
+  translation: diminution, understatement
+  pos: noun
+  gender: n
+- lemma: причал
+  ipa: /prɪˈt͡ʃɑl/
+  translation: pier, dock
+  pos: noun
+  gender: m
+- lemma: пропорційний
+  ipa: /propɔrˈt͡sʲijnɪj/
+  translation: proportional
+  pos: adj
+  gender: m
+- lemma: пташень
+  ipa: /ptɐˈʃɛnʲ/
+  translation: little bird (diminutive)
+  pos: noun
+  gender: n
+- lemma: птиця
+  ipa: /ˈptɪt͡sʲɑ/
+  translation: bird
+  pos: noun
+  gender: f
+- lemma: підсилити
+  ipa: /pʲidsɪˈlɪtɪ/
+  translation: to strengthen, to amplify
+  pos: verb
+- lemma: пісок
+  ipa: /pʲiˈsok/
+  translation: sand
+  pos: noun
+  gender: m
+- lemma: пішохідний
+  ipa: /pʲiʃoxʲidnɪj/
+  translation: pedestrian
+  pos: adj
+- lemma: розгледіти
+  ipa: /rozɦlɛˈdʲitɪ/
+  translation: to discern, to make out
+  pos: verb
+- lemma: розкритикувати
+  ipa: /rozkrɪtɪkuˈwɑtɪ/
+  translation: to criticize harshly
+  pos: verb
+- lemma: розстилатися
+  ipa: /rozstɪˈlɑtɪsʲɑ/
+  translation: to spread out
+  pos: verb
+- lemma: розходитися
+  ipa: /rozˈxodɪtɪsʲɑ/
+  translation: to disperse, to diverge
+  pos: verb
+- lemma: ряд
+  ipa: /rʲɑd/
+  translation: row, series
+  pos: noun
+  gender: m
+- lemma: самопожертво
+  ipa: /sɐmopoˈʒɛrtwo/
+  translation: self-sacrifice
+  pos: noun
+  gender: f
+- lemma: сантиметр
+  ipa: /sɐntɪˈmɛtr/
+  translation: centimeter
+  pos: noun
+  gender: m
+- lemma: сарказм
+  ipa: /sɑrˈkɑzm/
+  translation: sarcasm
+  pos: noun
+  gender: m
+- lemma: світобачення
+  ipa: /swʲitobɐˈt͡ʃɛnʲːɑ/
+  translation: worldview
+  pos: noun
+  gender: n
+- lemma: сенсор
+  ipa: /ˈsɛnsor/
+  translation: sensor
+  pos: noun
+  gender: m
+- lemma: сильніший
+  ipa: /sɪlʲˈnʲiʃɪj/
+  translation: stronger
+  pos: adj
+  gender: m
+- lemma: скеля
+  ipa: /ˈskɛlʲɑ/
+  translation: rock, cliff
+  pos: noun
+  gender: f
+- lemma: смерека
+  ipa: /smɛˈrɛkɑ/
+  translation: spruce tree
+  pos: noun
+  gender: f
+- lemma: стадіонь
+  ipa: /stɐdʲiˈonʲ/
+  translation: stadium (archaic)
+  pos: noun
+  gender: m
+- lemma: стібка
+  ipa: /ˈstʲibkɑ/
+  translation: stitch
+  pos: noun
+  gender: m
+- lemma: судно
+  ipa: /ˈsudno/
+  translation: vessel, ship
+  pos: noun
+  gender: n
+- lemma: сукупність
+  ipa: /sukupnʲistʲ/
+  translation: totality, aggregate
+  pos: noun
+  gender: f
+- lemma: сход
+  ipa: /sxod/
+  translation: gathering, ascent
+  pos: noun
+  gender: m
+- lemma: товстий
+  ipa: /ˈtowstɪj/
+  translation: thick, fat
+  pos: adj
+  gender: m
+- lemma: товщина
+  ipa: /towˈʃt͡ʃɪnɑ/
+  translation: thickness
+  pos: noun
+  gender: f
+- lemma: тренд
+  ipa: /trɛnd/
+  translation: trend
+  pos: noun
+  gender: m
+- lemma: турбін
+  ipa: /turˈbʲin/
+  translation: turbines (genitive plural)
+  pos: noun
+  gender: f
+- lemma: урбаністика
+  ipa: /urbɑˈnʲistɪkɑ/
+  translation: urban studies
+  pos: noun
+  gender: f
+- lemma: хмарочос
+  ipa: /xmɐroˈt͡ʃos/
+  translation: skyscraper
+  pos: noun
+  gender: m
+- lemma: хребт
+  ipa: /xrɛbt/
+  translation: spine, ridge
+  pos: noun
+  gender: m
+- lemma: ціле
+  ipa: /ˈt͡sʲilɛ/
+  translation: the whole
+  pos: noun
+  gender: n
+- lemma: щедрість
+  ipa: /ʃt͡ʃɛdˈrʲistʲ/
+  translation: generosity
+  pos: noun
+  gender: f
+- lemma: щільність
+  ipa: /ʃt͡ʃʲilʲnʲistʲ/
+  translation: density
+  pos: noun
+  gender: f
+- lemma: ювелірний
+  ipa: /juwɛˈlʲirnɪj/
+  translation: jewelry (adj.), exquisite
+  pos: adj
+- lemma: індустріальний
+  ipa: /ʲindustrʲiˈɑlʲnɪj/
+  translation: industrial
+  pos: adj
+  gender: m

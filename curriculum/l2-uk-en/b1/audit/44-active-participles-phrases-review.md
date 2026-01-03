@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): відсталий, бувший, діючий, працюючий, навколишній...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): зів'ялий, слідуючий, відсталий, оточуючий, навколишній...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1474/1500 (26 short)
+- **Words:** ✅ 1567/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -34,12 +34,12 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 49 | 24 | 100% | 20% | 20.0% |
+| examples | 51 | 24 | 100% | 20% | 20.0% |
 | engagement | 6 | 5 | 100% | 15% | 15.0% |
 | dialogues | 7 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
-| realworld | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 5 | 3 | 100% | 10% | 10.0% |
 | visual | 8 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 11 | 5 | 100% | 5% | 5.0% |
@@ -51,7 +51,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 65 | Included in Core |
 | **Діагностика** | ✅ | 90 | Included in Core |
-| **Теоретичне пояснення** | ⚪️ | 833 | Skipped |
+| **Теоретичне пояснення** | ⚪️ | 926 | Skipped |
 | **Практика** | ⚪️ | 198 | Skipped |
 | **Приклади використання** | ⚪️ | 231 | Skipped |
 | **Підсумок** | ✅ | 57 | Included in Core |

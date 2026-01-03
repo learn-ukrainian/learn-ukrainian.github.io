@@ -241,12 +241,4 @@ In this module, you learned:
 
 ## Need More Practice?
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Demonstrative pronouns in Ukrainian - ЦЕ VS ЦЕЙ VS ТОЙ IN THE UKRAINIAN](https://www.youtube.com/watch?v=2IlH4OxyFJ8) — Ukrainian grammar
->
-> **Grammar:** [ЦЕЙ and ТОЙ Declension](https://www.ukrainianlessons.com/pronouns-this-that/) — Full table with examples
->
-> **Vocabulary:** [100 Most Common Words](https://www.ukrainianlessons.com/100words/) — PDF flashcards of essential vocabulary
-
 ---

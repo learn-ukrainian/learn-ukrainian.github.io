@@ -1,0 +1,25 @@
+module: c1-112
+title: Квітка Цісик
+subtitle: Kvitka Cisyk
+version: '2.0'
+phase: C1.3 Biographies
+focus: biography
+pedagogy: narrative
+duration: 120
+transliteration: none
+vocabulary_count: 24
+tags:
+- biography
+- c1
+- music
+- diaspora
+- folk_songs
+- cultural_preservation
+grammar:
+- Biographical narrative register
+- Advanced stylistic analysis
+objectives:
+- Analyze the contribution of Kvitka Cisyk to modern Ukraine
+- Master vocabulary related to music, diaspora
+- Discuss the historical context of their work
+slug: 112-kvitka-cisyk

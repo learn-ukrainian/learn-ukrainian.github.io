@@ -260,13 +260,3 @@ You've mastered the locative case! Here's what you learned:
 Next up: You'll learn possessive pronouns (мій, твій, його...) so you can say "MY book is on the table" and "HIS work is in the center"!
 
 ---
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [The Locative Case in the Ukrainian language](https://www.youtube.com/watch?v=kQof_vYOdm8) — Speak Ukrainian
->
-> **Podcast:** [ULP 2-66 | Locative Case with Places](https://www.ukrainianlessons.com/episode66/) — Share memories using locative
->
-> **Podcast:** [ULP 2-67 | Telling Time + Locative](https://www.ukrainianlessons.com/episode67/) — Locative case with ordinal numbers
->
-> **Prepositions:** [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Which preposition uses which case

@@ -309,6 +309,7 @@ items:
   ipa: /zmʲi/
   translation: mass media (abbr)
   pos: noun
+  gender: m
 - lemma: зміст
   ipa: /zmʲist/
   translation: content

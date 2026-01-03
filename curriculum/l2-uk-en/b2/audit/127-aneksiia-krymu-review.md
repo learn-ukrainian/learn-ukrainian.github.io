@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1878/1750
+- **Words:** ✅ 2005/1750
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 11/4 types
@@ -27,21 +27,21 @@
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 8 | 3 | 100% | 24% | 23.8% |
 | engagement | 10 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 20 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 21 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 2 | 4 | 50% | 10% | 4.8% |
 | visual | 10 | 4 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 4 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **95.1%** |
+| **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 111 | Included in Core |
 | **Вступ** | ⚪️ | 247 | Skipped |
-| **Історичний наратив: Хроніка злочину** | ⚪️ | 919 | Skipped |
+| **Історичний наратив: Хроніка злочину** | ⚪️ | 1042 | Skipped |
 | **Первинні джерела** | ⚪️ | 209 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 251 | Skipped |
-| **Підсумок** | ✅ | 141 | Included in Core |
+| **Підсумок** | ✅ | 145 | Included in Core |

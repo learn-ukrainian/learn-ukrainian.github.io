@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): синій, сірий, фіолетовий, джинси, сорочка...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): джинси, чорний, сорочка, капелюх, помаранчевий...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 838/750
+- **Words:** ✅ 806/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 36.7% (target 35-55% (M27))
+- **Immersion:** 🇺🇦 38.2% (target 35-55% (M27))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -43,4 +40,4 @@
 | **Pluralia Tantum (Always Plural)** | ⚪️ | 28 | Skipped |
 | **Examples in Context** | ✅ | 189 | Included in Core |
 | **Dialogues** | ✅ | 325 | Included in Core |
-| **Summary** | ✅ | 80 | Included in Core |
+| **Summary** | ✅ | 48 | Included in Core |

@@ -237,11 +237,3 @@ Translation:
 # Summary
 
 Ви вивчили минулий час в українській мові. Ви знаєте закінчення -в, -ла, -ло та -ли. Ви знаєте слова "вчора" та "давно". Це була гарна робота (This was good work).
-
-> [!resources] External Resources
->
-> **YouTube:** [The Past Tense in Ukrainian](https://www.youtube.com/watch?v=SUx5xUfABIc) — Speak Ukrainian
->
-> **Grammar Guide:** [Ukrainian Past Tense](https://www.ukrainianlessons.com/grammar-past-tense/) — Ukrainian Lessons
->
-> **Practice:** [Past Tense Exercises](https://ukrainianlanguage.uk/exercise-past-tense/) — Ukrainian Language

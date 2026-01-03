@@ -297,13 +297,3 @@ You now know:
 **Next up:** We'll explore the city and learn directional vocabulary (Module 15)!
 
 ---
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian Possessive Pronouns + Family Vocabulary ](https://www.youtube.com/watch?v=LARvKb7D38M) — Ukrainian lesson 12|VERBA SCHOOL
->
-> **Grammar Guide:** [Possessive Pronouns](https://www.ukrainianlessons.com/grammar-possessive-pronouns/) — Illustrations and audio
->
-> **Declension Table:** [Possessive Pronouns Declension](https://www.ukrainianlessons.com/possessive-pronouns-declension/) — Full table for all cases
->
-> **ТВІЙ vs СВІЙ:** [Reflexive Possessive Pronoun](https://www.ukrainianlessons.com/reflexive-possessive-pronoun/) — When to use свій

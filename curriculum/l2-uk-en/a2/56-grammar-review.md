@@ -200,11 +200,3 @@ This review covered:
 - **Structure**: Complex sentences make you sound smart.
 
 You are now ready for the **Final Checkpoint**. Good luck!
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian Cases Explained](https://www.youtube.com/watch?v=xVD1GRxnvNw) — Ukrainian Lessons
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

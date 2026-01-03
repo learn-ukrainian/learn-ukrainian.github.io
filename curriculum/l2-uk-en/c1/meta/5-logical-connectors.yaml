@@ -1,0 +1,17 @@
+module: c1-5
+title: Logical Connectors
+subtitle: Academic Foundation
+version: '2.0'
+phase: C1.1 Academic
+focus: grammar
+pedagogy: academic
+duration: 120
+vocabulary_count: 24
+tags:
+- c1
+- grammar
+- connectors
+- logic
+objectives:
+- Master C1 concepts in Logical Connectors
+slug: 5-logical-connectors

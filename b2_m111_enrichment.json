@@ -1,0 +1,23 @@
+[
+  {
+    "file": "curriculum/l2-uk-en/b2/111-holodomor-ii-pamiat.md",
+    "enrichments": {
+      "голод": {"ipa": "/ˈɦolod/", "en": "famine, hunger"},
+      "смерть": {"ipa": "/smɛrtʲ/", "en": "death"},
+      "виживання": {"ipa": "/wɪʒɪˈwɑnʲːɑ/", "en": "survival"},
+      "їжа": {"ipa": "/ˈjiʒɑ/", "en": "food"},
+      "сурогат": {"ipa": "/suroˈɦɑt/", "en": "surrogate (food substitute)"},
+      "канібалізм": {"ipa": "/kɐnʲibɐˈlʲizm/", "en": "cannibalism"},
+      "жах": {"ipa": "/ʒɑx/", "en": "horror, terror"},
+      "тиша": {"ipa": "/tɪˈʃɑ/", "en": "silence"},
+      "приховування": {"ipa": "/prɪxoˈwuwɑnʲːɑ/", "en": "concealment, cover-up"},
+      "брехня": {"ipa": "/brɛxˈnʲɑ/", "en": "lie, falsehood"},
+      "журналіст": {"ipa": "/ʒurnɐˈlʲist/", "en": "journalist"},
+      "правда": {"ipa": "/ˈprɑwdɑ/", "en": "truth"},
+      "визнання": {"ipa": "/wɪˈznɑnʲːɑ/", "en": "recognition, acknowledgement"},
+      "заперечення": {"ipa": "/zɐpɛˈrɛt͡ʃɛnʲːɑ/", "en": "denial"},
+      "геноцид": {"ipa": "/ɦɛnot͡sɪd/", "en": "genocide"},
+      "пам'ять": {"ipa": "/ˈpɑmʲɑtʲ/", "en": "memory"}
+    }
+  }
+]

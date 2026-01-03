@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): місяця, спробую, завтра, тижня, буду...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): спробую, буду, мрію, місяця, тижня...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1111/750
+- **Words:** ✅ 1074/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 40.8% (target 35-55% (M22))
+- **Immersion:** 🇺🇦 42.3% (target 35-55% (M22))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -43,4 +40,4 @@
 | **Useful Adverbs** | ⚪️ | 82 | Skipped |
 | **Examples in Context** | ✅ | 240 | Included in Core |
 | **Dialogues** | ✅ | 339 | Included in Core |
-| **Summary** | ✅ | 153 | Included in Core |
+| **Summary** | ✅ | 116 | Included in Core |

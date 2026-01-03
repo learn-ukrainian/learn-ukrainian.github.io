@@ -1,5 +1,5 @@
 # Audit Report: 12-aspect-introduction.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
+**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
 ## Recommendation
@@ -9,7 +9,7 @@
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1135/1000
+- **Words:** ✅ 1104/1000
 - **Activities:** ✅ 11/10
 - **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 11/4 types
@@ -20,7 +20,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 23.8% LOW (target 35-50% (A2.1))
+- **Immersion:** ❌ 24.2% LOW (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Low Density Activities
@@ -32,7 +32,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 110 | Included in Core |
+| **Intro/Narrative** | ✅ | 110 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **What is Verbal Aspect?** | ⚪️ | 113 | Skipped |
 | **Aspect in Practice** | ⚪️ | 60 | Skipped |
@@ -44,5 +44,4 @@
 | **Practice Examples** | ⚪️ | 123 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
 | **What You Learned** | ⚪️ | 348 | Skipped |
-| **Need More Practice?** | ⚪️ | 31 | Skipped |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Need More Practice?** | ⚪️ | 0 | Skipped |

@@ -200,13 +200,3 @@ Gender affects adjectives, pronouns, and case endings. Master gender now, and ev
 **Next Module:** You'll learn how to say "This is..." and use pronouns — building on the gender foundation you just mastered.
 
 ---
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Gender of Ukrainian Nouns ](https://www.youtube.com/watch?v=Vl5MAW3AYoU) — Basic Ukrainian Grammar|Learn Ukrainian with Vakulenko
->
-> **Grammar Guide:** [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/) — Infographic with rules and exceptions
->
-> **Video:** [How to Know Noun Gender](https://www.ukrainianlessons.com/video-noun-gender/) — 8-minute grammar guide
->
-> **Plurals:** [Plural of Nouns](https://www.ukrainianlessons.com/grammar-plural-nouns/) — How gender affects plural forms

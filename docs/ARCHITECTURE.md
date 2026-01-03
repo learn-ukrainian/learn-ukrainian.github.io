@@ -398,6 +398,44 @@ The vocabulary system tracks:
 - **First module**: Where each word first appears in curriculum
 - **New/Review split**: Vocabulary sections show new words with full details, review words with module references
 
+## External Resources Management
+
+**Single source of truth:** `docs/resources/external_resources.yaml`
+
+External resources (podcasts, YouTube videos, articles, books, websites) are NOT stored in markdown files. They are:
+1. Defined once in `external_resources.yaml` (YAML-first architecture)
+2. Loaded at build time by `generate_mdx.py` and `generate_json.py`
+3. Injected into MDX output as `[!resources]` callout blocks
+4. Added to JSON output as `external_resources` field
+
+**Module ID format:** `{level}-{filename}` (e.g., `a1-09-food-and-drinks`)
+
+**Resource types:**
+- `podcasts` - Ukrainian Lessons Podcast, Ukrainian with Olena, etc.
+- `youtube` - YouTube videos
+- `articles` - Blog posts, online articles
+- `books` - Physical/digital books
+- `websites` - Web resources
+
+**Architecture benefits:**
+- ✅ Single source of truth (no duplication between markdown and YAML)
+- ✅ Resources updated centrally (247 modules updated by editing one file)
+- ✅ Consistent formatting (emoji template applied at generation time)
+- ✅ Matches proven activities pattern (YAML → inject at build time)
+
+**Important:** Markdown files should NOT contain `> [!resources]` sections. If you see one, it's stale and should be removed.
+
+**Viewing resources for a module:**
+```bash
+# View resources for a specific module (e.g., a1-09)
+yq '.resources.a1-09-food-and-drinks' docs/resources/external_resources.yaml
+```
+
+**Migration notes:**
+- Issue #353: Extracted resources from markdown to YAML (Jan 2026)
+- Issue #354: Refactored to YAML-first architecture (Jan 2026)
+- Deprecated script: `scripts/generate_resource_sections.py` (kept for reference only)
+
 ## Content Creation Workflow
 
 ### Creating or Rewriting Modules

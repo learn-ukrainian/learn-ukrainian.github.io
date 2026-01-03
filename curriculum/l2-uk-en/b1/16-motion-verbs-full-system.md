@@ -382,11 +382,4 @@
 >
 > Якщо так — ви готові до практики!
 
-> [!resources] 🎧 Зовнішні ресурси
->
-> **Додаткові матеріали:**
-> - 📖 [Дієслова руху](https://uk.wikipedia.org/wiki/Дієслова_руху) — Вікіпедія
-> - 📺 [Ukrainian Motion Verbs Explained](https://www.youtube.com/results?search_query=ukrainian+motion+verbs) — відео пояснення
-> - 🎧 [Real Russian Club: Motion Verbs](https://www.youtube.com/c/RealRussianClub) — подкаст уроки (Slavic comparison)
-
 ---

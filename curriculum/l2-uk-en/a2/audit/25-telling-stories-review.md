@@ -1,21 +1,19 @@
 # Audit Report: 25-telling-stories.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "Narrative Arc" | **Target:** 1000
+**Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Narrative Arc | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
 ## LINT ERRORS
-- ❌ Line 193: Empty Header detected (Lonely '#'). Remove or add title.
+- ❌ Line 168: Empty Header detected (Lonely '#'). Remove or add title.
 
 ## PEDAGOGICAL VIOLATIONS
-- **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
-  - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): несподівано, згодом, пізніше, раніше, нарешті...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): раптом, разу, щойно, цього, цим...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 30/100)
 
 - Borderline case (severity 30/100)
-- 2 pedagogical violations (minor)
+- 1 pedagogical violations (minor)
 - Immersion 9% off target (minor)
 - Activity density below minimum
 
@@ -30,7 +28,7 @@
 - **Vocab:** ✅ 44/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ❌ 1 Format Errors
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** ❌ 30.9% LOW (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
 
@@ -43,7 +41,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Summary** | ✅ | 0 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 130 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **1. The Timeline of a Story** | ✅ | 201 | Included in Core |
@@ -56,4 +54,3 @@
 | **Language in Action** | ⚪️ | 0 | Skipped |
 | **A Strange Morning** | ⚪️ | 137 | Skipped |
 | **Useful Phrases for Storytellers** | ✅ | 88 | Included in Core |
-| **# Vocabulary** | ➖ | 0 | Excluded Type |

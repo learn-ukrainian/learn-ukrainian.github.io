@@ -261,11 +261,3 @@ Or in conversation:
 ---
 
 **Наступний урок:** Модальні дієслова — можна, треба, хочу!
-
-> [!resources] External Resources
->
-> **YouTube:** [Telling Time in Ukrainian](https://www.youtube.com/watch?v=FieIdat4u_0) — Speak Ukrainian
->
-> **Grammar Guide:** [Ukrainian Calendar & Time](https://www.ukrainianlessons.com/telling-time/) — Ukrainian Lessons
->
-> **Flashcards:** [Days and Months](https://www.ukrainianlessons.com/vocabulary/days-months/) — Vocabulary builder with audio

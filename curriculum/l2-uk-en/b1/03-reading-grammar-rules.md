@@ -451,11 +451,4 @@ With these terms, you can now read grammar explanations in Ukrainian textbooks a
 
 ---
 
-> [!resources] 🎧 External Resources
->
-> **Grammar Patterns:**
-> - 📖 [Ukrainian Grammar Reference](https://www.ukrainianlessons.com/grammar/) — Grammar in English
-> - 📺 [Word Formation](https://www.youtube.com/results?search_query=ukrainian+word+formation) — YouTube tutorials
-> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/the-podcast/) — Grammar episodes
-
 ---

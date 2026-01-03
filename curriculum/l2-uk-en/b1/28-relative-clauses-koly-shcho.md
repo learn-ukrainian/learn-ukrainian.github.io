@@ -349,13 +349,6 @@
 >
 > Якщо так — ви готові до практики!
 
-> [!resources] 🎧 Зовнішні ресурси
->
-> **Додаткові матеріали:**
-> - 📖 [Підрядне означальне речення](https://uk.wikipedia.org/wiki/Підрядне_означальне_речення) — Вікіпедія
-> - 📺 [Ukrainian Complex Sentences](https://www.youtube.com/results?search_query=ukrainian+complex+sentences) — відео пояснення
-> - 🎧 [Ukrainian Grammar](https://www.youtube.com/results?search_query=ukrainian+grammar) — подкаст уроки
-
 ---
 
 ---

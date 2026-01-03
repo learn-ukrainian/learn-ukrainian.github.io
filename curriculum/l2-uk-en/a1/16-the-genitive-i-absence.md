@@ -246,13 +246,3 @@ This case is very useful! Next module: genitive with numbers and quantities!
 ## Need More Practice?
 
 ---
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Genitive case in the Ukrainian language](https://www.youtube.com/watch?v=FafVwRIxhpg) — Speak Ukrainian
->
-> **Grammar Guide:** [10 Uses of Genitive Case](https://www.ukrainianlessons.com/genitive-case/) — All genitive functions explained
->
-> **Podcast:** [ULP 2-46 | Grocery Store + Genitive](https://www.ukrainianlessons.com/episode46/) — Practice genitive at the grocery store
->
-> **Podcast:** [ULP 2-49 | Syrnyky Recipe + Genitive](https://www.ukrainianlessons.com/episode49/) — Learn cooking vocabulary with genitive

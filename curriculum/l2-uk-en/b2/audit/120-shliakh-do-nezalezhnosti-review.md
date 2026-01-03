@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1785/1750
+- **Words:** ✅ 1938/1750
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 11/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.8% (target 98-100% (vocab))
+- **Immersion:** 🇺🇦 99.7% (target 98-100% (vocab))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -40,8 +40,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 90 | Included in Core |
-| **Вступ** | ⚪️ | 271 | Skipped |
+| **Вступ** | ⚪️ | 427 | Skipped |
 | **Історичний наратив: Лавина свободи** | ⚪️ | 789 | Skipped |
 | **Первинні джерела** | ⚪️ | 244 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 254 | Skipped |
-| **Підсумок** | ✅ | 137 | Included in Core |
+| **Підсумок** | ✅ | 134 | Included in Core |

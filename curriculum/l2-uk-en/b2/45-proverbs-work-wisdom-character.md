@@ -429,13 +429,6 @@
 >
 > Найкращий спосіб запам'ятати прислів'я — використовувати їх у реальних ситуаціях. Спробуйте щодня застосовувати одне нове прислів'я в розмові або в своєму щоденнику. З часом вони стануть природною частиною вашого мовлення.
 
-> [!resources]
-> **Корисні ресурси для вивчення українських прислів'їв:**
-> - [Ukrainian Lessons - Proverbs Series](https://ukrainianlessons.com/category/proverbs/) — подкаст з поясненням прислів'їв
-> - [Словник української мови (СУМ)](https://sum.in.ua/) — академічний словник з прикладами вживання
-> - [YouTube: Speak Ukrainian - Proverbs](https://www.youtube.com/results?search_query=ukrainian+proverbs+speak+ukrainian) — відеоуроки з вимовою
-> - [Learn Ukrainian with Anna - Idioms and Proverbs](https://www.youtube.com/c/LearnUkrainianWithAnna) — популярний канал з пояснення фразеології
-
 ---
 
 # Підсумок

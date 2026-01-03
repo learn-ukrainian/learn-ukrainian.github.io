@@ -236,13 +236,3 @@ Tipping is becoming more common in Ukraine, especially in cities. 10% is standar
 ## Need More Practice?
 
 ---
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Menu in the coffee shop in the Ukrainian language](https://www.youtube.com/watch?v=wUH7sf5ccP8) — Speak Ukrainian
->
-> **Podcast:** [FMU 1-11 | Order Coffee](https://www.ukrainianlessons.com/fmu11/) — Essential café phrases
->
-> **Podcast:** [ULP 1-12 | Ordering Food](https://www.ukrainianlessons.com/episode12/) — Restaurant ordering + culture tips
->
-> **Podcast:** [FMU 1-16 | Order at Restaurant](https://www.ukrainianlessons.com/fmu16/) — Full restaurant dialogue

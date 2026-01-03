@@ -219,11 +219,3 @@ Shopping in Ukraine is easy and modern. Don't be afraid to ask the price!
 > - **торговий центр** — сучасний молл для шопінгу
 >
 > Запрошуємо до покупок! Шопінг в Україні — це зручно та швидко!
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [UKRAINIAN DIALOGUES for beginners. Episode #3 At the coffee shop](https://www.youtube.com/watch?v=YLBABZIOoo0) — Speak Ukrainian
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

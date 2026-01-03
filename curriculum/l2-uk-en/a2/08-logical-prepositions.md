@@ -314,14 +314,6 @@ Key distinctions:
 
 ## Need More Practice?
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian prepositions У, В and НА and the differe...]( https://www.youtube.com/watch?v=aqKdvKXPCMo) — Speak Ukrainian
->
-> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
->
-> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
-
 ---
 
 ---

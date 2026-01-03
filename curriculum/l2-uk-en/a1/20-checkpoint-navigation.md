@@ -320,27 +320,3 @@ Fill in the gaps:
 ## Need More Practice?
 
 ---
-
-> [!resources] External Resources
->
-> **Cases Deep Dive:**
->
-> - 📖 [Ukrainian Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/) — All 7 cases in one table
-> - 📖 [Introduction to Cases](https://www.ukrainianlessons.com/intro-cases/) — Quick strategies
-> - 📖 [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Which preposition uses which case
->
-> **Practical Situations:**
->
-> - 🎙️ [FMU 1-11: Ordering Coffee](https://www.ukrainianlessons.com/fmu11/) — Café vocabulary
-> - 🎙️ [FMU 1-18: Shopping](https://www.ukrainianlessons.com/fmu18/) — Market conversations
-> - 📖 [Vocabulary: Around Town](https://www.ukrainianlessons.com/vocabulary-town/) — Navigation words
->
-> **Struggling with a skill?** Go back to:
->
-> - Accusative → Modules 11-12
-> - Locative → Module 13
-> - Possessives → Module 14
-> - Navigation → Module 15
-> - Genitive → Module 16
-> - Numbers → Module 17
-> - Shopping/Café → Modules 18-19

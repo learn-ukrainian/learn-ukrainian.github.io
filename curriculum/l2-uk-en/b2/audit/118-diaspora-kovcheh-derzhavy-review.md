@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1777/1750
+- **Words:** ✅ 2002/1750
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 11/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.9% (target 98-100% (vocab))
+- **Immersion:** 🇺🇦 99.7% (target 98-100% (vocab))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -32,7 +32,7 @@
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
 | visual | 20 | 4 | 100% | 10% | 9.5% |
 | variety | 0.97 | - | 97% | 5% | 4.6% |
-| paragraph_var | 0.94 | - | 94% | 5% | 4.5% |
+| paragraph_var | 0.95 | - | 95% | 5% | 4.5% |
 | questions | 4 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **99.6%** |
 
@@ -42,8 +42,8 @@
 | **Intro/Narrative** | ✅ | 90 | Included in Core |
 | **Вступ** | ⚪️ | 178 | Skipped |
 | **Уряд УНР в екзилі** | ⚪️ | 253 | Skipped |
-| **Діаспорні інституції** | ⚪️ | 602 | Skipped |
+| **Діаспорні інституції** | ⚪️ | 833 | Skipped |
 | **Передача клейнодів** | ⚪️ | 198 | Skipped |
 | **Первинні джерела** | ⚪️ | 183 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 154 | Skipped |
-| **Підсумок** | ✅ | 119 | Included in Core |
+| **Підсумок** | ✅ | 113 | Included in Core |

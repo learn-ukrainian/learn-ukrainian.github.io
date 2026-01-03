@@ -259,13 +259,3 @@ You can now count, ask prices, and shop confidently in Ukraine!
 ## Need More Practice?
 
 ---
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [COUNTING UKRAINIAN CARDINAL NUMBERS - 0 - 100](https://www.youtube.com/watch?v=7XrQddM5llE) — Speak Ukrainian
->
-> **Numbers:** [Numbers in Ukrainian](https://www.ukrainianlessons.com/numbers/) — Full list with audio and illustrations
->
-> **Nouns After Numbers:** [How to Use Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/) — 1, 2-4, 5+ agreement rules
->
-> **Podcast:** [ULP 1-19 | Phone Numbers](https://www.ukrainianlessons.com/episode19/) — Practice numbers 100-1000

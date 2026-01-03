@@ -259,11 +259,4 @@
 >
 > Якщо так — ви готові до нових висот!
 
-> [!resources] 🎧 Зовнішні ресурси
->
-> **Додаткові матеріали:**
-> - 📖 [Prefixes of Usage](https://uk.wikipedia.org/wiki/Префікс) — Вікіпедія про словотвір
-> - 📺 [Ukrainian Motion Verbs with Prefixes](https://www.youtube.com/results?search_query=ukrainian+motion+verbs+prefixes) — Відео уроки
-> - 🎧 [Ukrainian Lessons Podcast: Prefixes](https://www.ukrainianlessons.com/episode85/) — Аудіо практика
-
 ---

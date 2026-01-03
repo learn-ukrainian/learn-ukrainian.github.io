@@ -215,13 +215,3 @@ You've now mastered **Class II verbs (-ити)**! Here's what you can do:
 With Class I and Class II verbs combined, you can now express hundreds of actions in Ukrainian. Вітаю! (Congratulations!)
 
 ---
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Practice : the verbs 'to go' # 97](https://www.youtube.com/watch?v=mSw2i5NXOH4) — Ukrainian Language
->
-> **Podcast:** [ULP 1-24 | Second Conjugation](https://www.ukrainianlessons.com/episode24/) — Learn Class II verbs in context
->
-> **Grammar Chart:** [Verb Tenses Overview](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable conjugation chart
->
-> **Podcast Episodes:** [Ukrainian Verbs in Context](https://www.ukrainianlessons.com/ukrainian-verbs-podcasts/) — Top episodes for verb practice

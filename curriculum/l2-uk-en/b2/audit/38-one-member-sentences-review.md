@@ -1,16 +1,25 @@
 # Audit Report: 38-one-member-sentences.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "TTT" | **Target:** 1750
+**Phase:** B2.1c | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): конструкція, підмет, безособовий, другорядний, синтаксис...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
-- **Words:** ✅ 1812/1750
+- **Words:** ✅ 1784/1750
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 13/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 79/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -31,22 +40,16 @@
 | variety | 0.88 | - | 88% | 10% | 8.8% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 11 | 3 | 100% | 5% | 5.0% |
+| visual | 10 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.86 | - | 86% | 5% | 4.3% |
 | questions | 26 | 5 | 100% | 5% | 5.0% |
 | proverbs | 6 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **98.1%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Односкладні речення** | ⚪️ | 77 | Skipped |
+| **Intro/Narrative** | ✅ | 49 | Included in Core |
 | **Тест: Прочитайте текст** | ✅ | 134 | Included in Core |
 | **Пояснення** | ⚪️ | 877 | Skipped |
 | **Практика** | ⚪️ | 224 | Skipped |
@@ -55,4 +58,3 @@
 | **Ключові моменти** | ⚪️ | 83 | Skipped |
 | **Стилістичні функції** | ⚪️ | 20 | Skipped |
 | **Самооцінка** | ⚪️ | 66 | Skipped |
-| **Словник** | ⚪️ | 0 | Skipped |

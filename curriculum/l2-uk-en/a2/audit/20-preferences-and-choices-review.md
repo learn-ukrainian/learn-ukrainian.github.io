@@ -1,9 +1,9 @@
 # Audit Report: 20-preferences-and-choices.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
+**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): вибирати, більше, дешевше, легше, краще...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): більше, віддавати, краще, подобатися, перевагу...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -13,7 +13,7 @@
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1217/1000
+- **Words:** ✅ 1186/1000
 - **Activities:** ✅ 11/10
 - **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 11/4 types
@@ -24,7 +24,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 32.2% LOW (target 35-50% (A2.1))
+- **Immersion:** ❌ 32.9% LOW (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Low Density Activities
@@ -36,7 +36,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 68 | Included in Core |
+| **Intro/Narrative** | ✅ | 68 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **Expressing Preferences** | ⚪️ | 343 | Skipped |
 | **Comparing Actions** | ⚪️ | 119 | Skipped |
@@ -49,5 +49,4 @@
 | **What is your choice?** | ⚪️ | 42 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
 | **What You Learned** | ⚪️ | 79 | Skipped |
-| **Need More Practice?** | ⚪️ | 31 | Skipped |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Need More Practice?** | ⚪️ | 0 | Skipped |

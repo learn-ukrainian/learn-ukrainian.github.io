@@ -2,163 +2,163 @@ module: 65-synonyms-state
 level: B2
 version: '2.0'
 items:
-  - lemma: академізм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: аналоговий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: атмосферний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: видатися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: воєнний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: врівноважений
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: втручання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: екосистема
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: задовільний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: занепад
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: звітність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: здавання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: камертон
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: конфліктний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: мегаполіс
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: минулі
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: монументальність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: непохитність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: новело
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: переосмислюватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: позбавляти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: розквіт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: сакура
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: синергія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: синхронізований
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: скам'янілий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: скластися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: споглядати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: справити
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: становище
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: стуси
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: являти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: істинний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
+- lemma: академізм
+  ipa: /ɐkɐdɛˈmʲizm/
+  translation: academicism
+  pos: noun
+  gender: m
+- lemma: аналоговий
+  ipa: /ɐnɐˈloɦowɪj/
+  translation: analog
+  pos: adj
+  gender: n
+- lemma: атмосферний
+  ipa: /ɐtmosfɛrnɪj/
+  translation: atmospheric
+  pos: adj
+  gender: m
+- lemma: видатися
+  ipa: /wɪˈdɑtɪsʲɑ/
+  translation: to seem, to appear
+  pos: verb
+  gender: f
+- lemma: воєнний
+  ipa: /woˈjɛnːɪj/
+  translation: military, war (adj.)
+  pos: adj
+  gender: m
+- lemma: врівноважений
+  ipa: /wrʲiwnoˈwɑʒɛnɪj/
+  translation: balanced, equilibrated
+  pos: adj
+  gender: n
+- lemma: втручання
+  ipa: /wtruˈt͡ʃɑnʲːɑ/
+  translation: interference, intervention
+  pos: noun
+  gender: n
+- lemma: екосистема
+  ipa: /ɛkosɪsˈtɛmɑ/
+  translation: ecosystem
+  pos: noun
+  gender: f
+- lemma: задовільний
+  ipa: /zɐdoˈwʲilʲnɪj/
+  translation: satisfactory
+  pos: adj
+  gender: m
+- lemma: занепад
+  ipa: /zɐnɛˈpɑd/
+  translation: decline, decay
+  pos: noun
+  gender: m
+- lemma: звітність
+  ipa: /ˈzwʲitnʲistʲ/
+  translation: reporting, accountability
+  pos: noun
+  gender: f
+- lemma: здавання
+  ipa: /zdɐˈwɑnʲːɑ/
+  translation: surrender, submission
+  pos: noun
+  gender: n
+- lemma: камертон
+  ipa: /kɐmɛrˈton/
+  translation: tuning fork
+  pos: noun
+  gender: m
+- lemma: конфліктний
+  ipa: /konflʲiktnɪj/
+  translation: conflictual
+  pos: adj
+  gender: f
+- lemma: мегаполіс
+  ipa: /mɛɦɐˈpolʲis/
+  translation: megapolis, megalopolis
+  pos: noun
+  gender: m
+- lemma: минулі
+  ipa: /mɪnuˈlʲi/
+  translation: past (things/times)
+  pos: noun
+  gender: m
+- lemma: монументальність
+  ipa: /monumɛntɐlʲnʲistʲ/
+  translation: monumentality
+  pos: noun
+  gender: f
+- lemma: непохитність
+  ipa: /nɛˈpoxɪtnʲistʲ/
+  translation: steadfastness, firmness
+  pos: noun
+  gender: f
+- lemma: новело
+  ipa: /noˈwɛlo/
+  translation: novella (genitive plural)
+  pos: noun
+  gender: f
+- lemma: переосмислюватися
+  ipa: /pɛrɛosmɪslʲuˈwɑtɪsʲɑ/
+  translation: to be rethought, to be reinterpreted
+  pos: verb
+- lemma: позбавляти
+  ipa: /pozbɐwˈlʲɑtɪ/
+  translation: to deprive
+  pos: verb
+- lemma: розквіт
+  ipa: /rozˈkwʲit/
+  translation: flourishing, bloom
+  pos: noun
+  gender: m
+- lemma: сакура
+  ipa: /sɐˈkurɑ/
+  translation: sakura, cherry blossom
+  pos: noun
+  gender: f
+- lemma: синергія
+  ipa: /sɪnɛrˈɦʲijɑ/
+  translation: synergy
+  pos: noun
+  gender: f
+- lemma: синхронізований
+  ipa: /sɪnxronʲiˈzowɑnɪj/
+  translation: synchronized
+  pos: adj
+  gender: m
+- lemma: скам'янілий
+  ipa: /skɐmʲjɐˈnʲilɪj/
+  translation: petrified, fossilized
+  pos: adj
+  gender: m
+- lemma: скластися
+  ipa: /sklɐˈstɪsʲɑ/
+  translation: to form, to develop
+  pos: verb
+- lemma: споглядати
+  ipa: /spoɦlʲɑˈdɑtɪ/
+  translation: to contemplate, to observe
+  pos: verb
+- lemma: справити
+  ipa: /sprɐˈwɪtɪ/
+  translation: to make, to cause
+  pos: verb
+  gender: f
+- lemma: становище
+  ipa: /stɐˈnowɪʃt͡ʃɛ/
+  translation: position, situation
+  pos: noun
+  gender: n
+- lemma: стуси
+  ipa: /stuˈsɪ/
+  translation: Stus (poet Vasyl Stus)
+  pos: propn
+  gender: m
+- lemma: являти
+  ipa: /jɐwˈlʲɑtɪ/
+  translation: to present, to represent
+  pos: verb
+- lemma: істинний
+  ipa: /ʲisˈtɪnːɪj/
+  translation: true, genuine
+  pos: adj
+  gender: f

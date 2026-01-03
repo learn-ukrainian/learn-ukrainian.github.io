@@ -236,12 +236,4 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
 >
 > Український дім — це затишок, тепло та любов! Запрошуйте гостей: «Заходьте, будь ласка!»
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Furniture in Ukrainian - Lesson about Furniture in Ukrainian...](https://www.youtube.com/watch?v=pVknviJ4OOg) — Bright Kids Ukrainian Online School
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
 ---

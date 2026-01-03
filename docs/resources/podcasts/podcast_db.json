@@ -1,322 +1,3602 @@
 [
   {
+    "id": "FMU-001",
+    "season": 1,
+    "episode_number": 1,
+    "title": "How to explain that you don't speak Ukrainian very well (yet)",
+    "url": "https://www.ukrainianlessons.com/fmu1/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-002",
+    "season": 1,
+    "episode_number": 2,
+    "title": "Useful phrases for learning Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu2/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-003",
+    "season": 1,
+    "episode_number": 3,
+    "title": "How to talk to an Uber / taxi driver in Ukrainian?",
+    "url": "https://www.ukrainianlessons.com/fmu3/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-004",
+    "season": 1,
+    "episode_number": 4,
+    "title": "Vocabulary booster! Transport in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu4/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-005",
+    "season": 1,
+    "episode_number": 5,
+    "title": "How to talk about transport in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu5/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-006",
+    "season": 1,
+    "episode_number": 6,
+    "title": "How to open a bank account in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu6/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-007",
+    "season": 1,
+    "episode_number": 7,
+    "title": "Grammar point: numeral / noun agreement in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu7/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-008",
+    "season": 1,
+    "episode_number": 8,
+    "title": "How to exchange money in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu8/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-009",
+    "season": 1,
+    "episode_number": 9,
+    "title": "How to pick up a parcel at Nova Poshta",
+    "url": "https://www.ukrainianlessons.com/fmu9/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-010",
+    "season": 1,
+    "episode_number": 10,
+    "title": "7 helpful Ukrainian words to link sentences",
+    "url": "https://www.ukrainianlessons.com/fmu10/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-011",
+    "season": 1,
+    "episode_number": 11,
+    "title": "How to order a coffee in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu11/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-012",
+    "season": 1,
+    "episode_number": 12,
+    "title": "Vocabulary booster! Beverages / Drinks in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu12/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-013",
+    "season": 1,
+    "episode_number": 13,
+    "title": "10 Ukrainian dishes you must try in Ukraine",
+    "url": "https://www.ukrainianlessons.com/fmu13/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-014",
+    "season": 1,
+    "episode_number": 14,
+    "title": "How to book a table in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu14/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-015",
+    "season": 1,
+    "episode_number": 15,
+    "title": "Grammar point: Accusative case / Direct object in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu15/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-016",
+    "season": 1,
+    "episode_number": 16,
+    "title": "How to ORDER at the restaurant in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu16/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-017",
+    "season": 1,
+    "episode_number": 17,
+    "title": "How to PAY at the restaurant in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu17/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-018",
+    "season": 1,
+    "episode_number": 18,
+    "title": "Vocabulary booster! Shopping Vocabulary in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu18/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-019",
+    "season": 1,
+    "episode_number": 19,
+    "title": "Conversation at the supermarket checkout in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu19/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-020",
+    "season": 1,
+    "episode_number": 20,
+    "title": "7 easy Ukrainian phrases you can use from day one",
+    "url": "https://www.ukrainianlessons.com/fmu20/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-021",
+    "season": 1,
+    "episode_number": 21,
+    "title": "How to introduce yourself in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu21/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-022",
+    "season": 1,
+    "episode_number": 22,
+    "title": "Meeting Ukrainian parents",
+    "url": "https://www.ukrainianlessons.com/fmu22/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-023",
+    "season": 1,
+    "episode_number": 23,
+    "title": "Vocabulary booster! Hobbies in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu23/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-024",
+    "season": 1,
+    "episode_number": 24,
+    "title": "How to talk about your interests in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu24/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-025",
+    "season": 1,
+    "episode_number": 25,
+    "title": "Vocabulary booster! Sports in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu25/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-026",
+    "season": 1,
+    "episode_number": 26,
+    "title": "How to talk about sport in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu26/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-027",
+    "season": 1,
+    "episode_number": 27,
+    "title": "How to say Merry Christmas and Happy New Year in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu27/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-028",
+    "season": 1,
+    "episode_number": 28,
+    "title": "How to talk about weather in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu28/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-029",
+    "season": 1,
+    "episode_number": 29,
+    "title": "Vocabulary booster! Months and seasons in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu29/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-030",
+    "season": 1,
+    "episode_number": 30,
+    "title": "Talking about vacation in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu30/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-031",
+    "season": 1,
+    "episode_number": 31,
+    "title": "How to talk about your job / occupation in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu31/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-032",
+    "season": 1,
+    "episode_number": 32,
+    "title": "Grammar point: Conditional sentences in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu32/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-033",
+    "season": 1,
+    "episode_number": 33,
+    "title": "Vocabulary booster! Family members in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu33/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-034",
+    "season": 1,
+    "episode_number": 34,
+    "title": "Professions in Ukrainian (male and female forms)",
+    "url": "https://www.ukrainianlessons.com/fmu34/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-035",
+    "season": 1,
+    "episode_number": 35,
+    "title": "Vocabulary booster! Jobs and professions in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu35/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-036",
+    "season": 1,
+    "episode_number": 36,
+    "title": "How to ask somebody on a date in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu36/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-037",
+    "season": 1,
+    "episode_number": 37,
+    "title": "First date in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu37/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-038",
+    "season": 1,
+    "episode_number": 38,
+    "title": "Любити vs Кохати in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu38/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-039",
+    "season": 1,
+    "episode_number": 39,
+    "title": "How to pay a compliment in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu39/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-040",
+    "season": 1,
+    "episode_number": 40,
+    "title": "8 most useful etiquette phrases in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu40/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-041",
+    "season": 1,
+    "episode_number": 41,
+    "title": "How to look for a place to rent in Ukraine",
+    "url": "https://www.ukrainianlessons.com/fmu41/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-042",
+    "season": 1,
+    "episode_number": 42,
+    "title": "Vocabulary booster! Housing and rooms in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu42/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-043",
+    "season": 1,
+    "episode_number": 43,
+    "title": "How to describe your house / apartment in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu43/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-044",
+    "season": 1,
+    "episode_number": 44,
+    "title": "Vocabulary booster! Things you can find in every house in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu44/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-045",
+    "season": 1,
+    "episode_number": 45,
+    "title": "Cleaning and tidying in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu45/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-046",
+    "season": 1,
+    "episode_number": 46,
+    "title": "Grammar point: Plural of nouns in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu46/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-047",
+    "season": 1,
+    "episode_number": 47,
+    "title": "Talking about gardening in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu47/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-048",
+    "season": 1,
+    "episode_number": 48,
+    "title": "Vocabulary booster! Staple food in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu48/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-049",
+    "season": 1,
+    "episode_number": 49,
+    "title": "How to shop at the market in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu49/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-050",
+    "season": 1,
+    "episode_number": 50,
+    "title": "Greetings in Ukrainian: informal, formal and fun!",
+    "url": "https://www.ukrainianlessons.com/fmu50/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-051",
+    "season": 1,
+    "episode_number": 51,
+    "title": "How to chat with a hairdresser in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu51/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-052",
+    "season": 1,
+    "episode_number": 52,
+    "title": "Vocabulary booster! Body parts in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu52/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-053",
+    "season": 1,
+    "episode_number": 53,
+    "title": "How to describe what hurts in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu53/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-054",
+    "season": 1,
+    "episode_number": 54,
+    "title": "How to book an appointment with a doctor in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu54/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-055",
+    "season": 1,
+    "episode_number": 55,
+    "title": "Vocabulary booster! Car and road vocabulary in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu55/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-056",
+    "season": 1,
+    "episode_number": 56,
+    "title": "Conversation on the road / Driving in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu56/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-057",
+    "season": 1,
+    "episode_number": 57,
+    "title": "Grammar Point: Verb conjugations in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu57/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-058",
+    "season": 1,
+    "episode_number": 58,
+    "title": "How to describe your daily routine in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu58/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-059",
+    "season": 1,
+    "episode_number": 59,
+    "title": "How to talk about weekend plans in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu59/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "FMU-060",
+    "season": 1,
+    "episode_number": 60,
+    "title": "10 authentic ways to say goodbye in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu60/",
+    "summary": "",
+    "tags": [
+      "FMU",
+      "Season 1"
+    ]
+  },
+  {
     "id": "ULP-001",
     "season": 1,
     "episode_number": 1,
-    "title": "Informal Greetings in Ukrainian",
+    "title": "ULP 1-01 Informal Greetings in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/1/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-002",
     "season": 1,
     "episode_number": 2,
-    "title": "Formal Greetings and Saying Goodbye in Ukrainian + Pronouns",
+    "title": "ULP 1-02 Formal Greetings and Saying Goodbye in Ukrainian + Pronouns",
     "url": "https://www.ukrainianlessons.com/lesson/2/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-003",
     "season": 1,
     "episode_number": 3,
-    "title": "How to Introduce Yourself in Ukrainian",
+    "title": "ULP 1-03 How to Introduce Yourself in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/3/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-004",
     "season": 1,
     "episode_number": 4,
-    "title": "Talking About Where You Come From and Where You Live in Ukrainian",
+    "title": "ULP 1-04 Talking About Where You Come From and Where You Live in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/4/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-005",
     "season": 1,
     "episode_number": 5,
-    "title": "Numbers 1-20 in Ukrainian + Pronunciation Trainer (и)",
+    "title": "ULP 1-05 Numbers 1-20 in Ukrainian + Pronunciation Trainer (и)",
     "url": "https://www.ukrainianlessons.com/lesson/5/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-006",
     "season": 1,
     "episode_number": 6,
-    "title": "Talking about your family in Ukrainian + I have, you have",
+    "title": "ULP 1-06 Talking about your family in Ukrainian + I have, you have",
     "url": "https://www.ukrainianlessons.com/lesson/6/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-007",
     "season": 1,
     "episode_number": 7,
-    "title": "More about your family in Ukrainian + Possessive Pronouns",
+    "title": "ULP 1-07 More about your family in Ukrainian + Possessive Pronouns",
     "url": "https://www.ukrainianlessons.com/lesson/7/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-008",
     "season": 1,
     "episode_number": 8,
-    "title": "Talking about jobs and professions in Ukrainian",
+    "title": "ULP 1-08 Talking about jobs and professions in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/8/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-009",
     "season": 1,
     "episode_number": 9,
-    "title": "How much does it cost? At the market in Ukraine",
+    "title": "ULP 1-09 How much does it cost? At the market in Ukraine",
     "url": "https://www.ukrainianlessons.com/lesson/9/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-010",
     "season": 1,
     "episode_number": 10,
-    "title": "About me in Ukrainian – Review 1-9",
+    "title": "ULP 1-10 About me in Ukrainian – Review 1-9",
     "url": "https://www.ukrainianlessons.com/lesson/10/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-011",
     "season": 1,
     "episode_number": 11,
-    "title": "Ordering drinks in Ukrainian",
+    "title": "ULP 1-11 Ordering drinks in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/11/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-012",
     "season": 1,
     "episode_number": 12,
-    "title": "Ordering food in Ukrainian",
+    "title": "ULP 1-12 Ordering food in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/12/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-013",
     "season": 1,
     "episode_number": 13,
-    "title": "More about food in Ukrainian",
+    "title": "ULP 1-13 More about food in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/13/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-014",
     "season": 1,
     "episode_number": 14,
-    "title": "Likes and dislikes – common verbs in Ukrainian",
+    "title": "ULP 1-14 Likes and dislikes – common verbs in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/14/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-015",
     "season": 1,
     "episode_number": 15,
-    "title": "Days of the Week, Months, Seasons + Pronunciation Trainer (soft)",
+    "title": "ULP 1-15 Days of the Week, Months, Seasons + Pronunciation Trainer (soft)",
     "url": "https://www.ukrainianlessons.com/lesson/15/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-016",
     "season": 1,
     "episode_number": 16,
-    "title": "Talking about weather in Ukrainian",
+    "title": "ULP 1-16 Talking about weather in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/16/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-017",
     "season": 1,
     "episode_number": 17,
-    "title": "Where is it? Here and there in Ukrainian",
+    "title": "ULP 1-17 Where is it? Here and there in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/17/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-018",
     "season": 1,
     "episode_number": 18,
-    "title": "Directions in Ukrainian",
+    "title": "ULP 1-18 Directions in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/18/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-019",
     "season": 1,
     "episode_number": 19,
-    "title": "Asking for a phone number in Ukrainian",
+    "title": "ULP 1-19 Asking for a phone number in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/19/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-020",
     "season": 1,
     "episode_number": 20,
-    "title": "My favorite city in Ukrainian – Review 11-19",
+    "title": "ULP 1-20 My favorite city in Ukrainian – Review 11-19",
     "url": "https://www.ukrainianlessons.com/lesson/20/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-021",
     "season": 1,
     "episode_number": 21,
-    "title": "What languages do you speak?",
+    "title": "ULP 1-21 What languages do you speak?",
     "url": "https://www.ukrainianlessons.com/lesson/21/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-022",
     "season": 1,
     "episode_number": 22,
-    "title": "Are you going to the party? – First verb conjugation in Ukrainian",
+    "title": "ULP 1-22 Are you going to the party? – First verb conjugation in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/22/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-023",
     "season": 1,
     "episode_number": 23,
-    "title": "Happy New Year and Merry Chrismas in Ukrainian",
+    "title": "ULP 1-23 Happy New Year and Merry Chrismas in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/23/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-024",
     "season": 1,
     "episode_number": 24,
-    "title": "What a surprise! Second conjugation in Ukrainian",
+    "title": "ULP 1-24 What a surprise! Second conjugation in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/24/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-025",
     "season": 1,
     "episode_number": 25,
-    "title": "Colors in Ukrainian + Pronunciation Trainer (Р – rolled R)",
+    "title": "ULP 1-25 Colors in Ukrainian + Pronunciation Trainer (Р – rolled R)",
     "url": "https://www.ukrainianlessons.com/lesson/25/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-026",
     "season": 1,
     "episode_number": 26,
-    "title": "Talking about traveling – Past tense in Ukrainian",
+    "title": "ULP 1-26 Talking about traveling – Past tense in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/26/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-027",
     "season": 1,
     "episode_number": 27,
-    "title": "Traveling in Ukraine in winter – More Past tense",
+    "title": "ULP 1-27 Traveling in Ukraine in winter – More Past tense",
     "url": "https://www.ukrainianlessons.com/lesson/27/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-028",
     "season": 1,
     "episode_number": 28,
-    "title": "Making plans for the weekend – Future tense in Ukrainian",
+    "title": "ULP 1-28 Making plans for the weekend – Future tense in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/28/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-029",
     "season": 1,
     "episode_number": 29,
-    "title": "Talking about love in Ukrainian – St. Valentine's special",
+    "title": "ULP 1-29 Talking about love in Ukrainian – St. Valentine's special",
     "url": "https://www.ukrainianlessons.com/lesson/29/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-030",
     "season": 1,
     "episode_number": 30,
-    "title": "Review 21-29 – My travels in Ukrainian",
+    "title": "ULP 1-30 Review 21-29 – My travels in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/30/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-031",
     "season": 1,
     "episode_number": 31,
-    "title": "Shopping in Ukrainian – At the shoe shop",
+    "title": "ULP 1-31 Shopping in Ukrainian – At the shoe shop",
     "url": "https://www.ukrainianlessons.com/lesson/31/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-032",
     "season": 1,
     "episode_number": 32,
-    "title": "Shopping for clothes – Accusative case in Ukrainian",
+    "title": "ULP 1-32 Shopping for clothes – Accusative case in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/32/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-033",
     "season": 1,
     "episode_number": 33,
-    "title": "Talking about books in Ukrainian – Accusative case of people",
+    "title": "ULP 1-33 Talking about books in Ukrainian – Accusative case of people",
     "url": "https://www.ukrainianlessons.com/lesson/33/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-034",
     "season": 1,
     "episode_number": 34,
-    "title": "Going to the movies in Ukraine – Perfective verbs in Ukrainian",
+    "title": "ULP 1-34 Going to the movies in Ukraine – Perfective verbs in Ukrainian",
     "url": "https://www.ukrainianlessons.com/lesson/34/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-035",
     "season": 1,
     "episode_number": 35,
-    "title": "Question words in Ukrainian + Pronunciation trainer (intonation)",
+    "title": "ULP 1-35 Question words in Ukrainian + Pronunciation trainer (intonation)",
     "url": "https://www.ukrainianlessons.com/lesson/35/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-036",
     "season": 1,
     "episode_number": 36,
-    "title": "Interview 1: У тебе є улюблений предмет?..",
+    "title": "ULP 1-36 Interview 1: У тебе є улюблений предмет?..",
     "url": "https://www.ukrainianlessons.com/lesson/36/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-037",
     "season": 1,
     "episode_number": 37,
-    "title": "Interview 2: Ти зараз вчишся чи працюєш?..",
+    "title": "ULP 1-37 Interview 2: Ти зараз вчишся чи працюєш?..",
     "url": "https://www.ukrainianlessons.com/lesson/37/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-038",
     "season": 1,
     "episode_number": 38,
-    "title": "Interview 3: Ого! Це цікавий факт…",
+    "title": "ULP 1-38 Interview 3: Ого! Це цікавий факт…",
     "url": "https://www.ukrainianlessons.com/lesson/38/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-039",
     "season": 1,
     "episode_number": 39,
-    "title": "Interview 4: Ви давно живете в Україні?",
+    "title": "ULP 1-39 Interview 4: Ви давно живете в Україні?",
     "url": "https://www.ukrainianlessons.com/lesson/39/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
   },
   {
     "id": "ULP-040",
     "season": 1,
     "episode_number": 40,
-    "title": "Q&A – Запитання та відповіді",
+    "title": "ULP 1-40 Q&A – Запитання та відповіді",
     "url": "https://www.ukrainianlessons.com/lesson/40/",
-    "tags": ["ULP", "Season 1"]
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 1"
+    ]
+  },
+  {
+    "id": "ULP-041",
+    "season": 2,
+    "episode_number": 41,
+    "title": "ULP 2-41 Review: Season 1",
+    "url": "https://www.ukrainianlessons.com/lesson/41/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-042",
+    "season": 2,
+    "episode_number": 42,
+    "title": "ULP 2-42My Room + Plural nouns in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/42/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-043",
+    "season": 2,
+    "episode_number": 43,
+    "title": "ULP 2-43 Looking for an apartment + Special plural forms",
+    "url": "https://www.ukrainianlessons.com/lesson/43/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-044",
+    "season": 2,
+    "episode_number": 44,
+    "title": "ULP 2-44 My pets + Special plural forms",
+    "url": "https://www.ukrainianlessons.com/lesson/44/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-045",
+    "season": 2,
+    "episode_number": 45,
+    "title": "ULP 2-45 Review: 41-44 + My home",
+    "url": "https://www.ukrainianlessons.com/lesson/45/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-046",
+    "season": 2,
+    "episode_number": 46,
+    "title": "ULP 2-46 At the grocery store + Genitive case",
+    "url": "https://www.ukrainianlessons.com/lesson/46/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-047",
+    "season": 2,
+    "episode_number": 47,
+    "title": "ULP 2-47 Food festivals + Genitive case",
+    "url": "https://www.ukrainianlessons.com/lesson/47/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-048",
+    "season": 2,
+    "episode_number": 48,
+    "title": "ULP 2-48 Eating habits + Genitive case",
+    "url": "https://www.ukrainianlessons.com/lesson/48/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-049",
+    "season": 2,
+    "episode_number": 49,
+    "title": "ULP 2-49 Syrnyky recipe + Genitive case",
+    "url": "https://www.ukrainianlessons.com/lesson/49/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-050",
+    "season": 2,
+    "episode_number": 50,
+    "title": "ULP 2-50 Review: 46-49 + What I eat in a day in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/50/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-051",
+    "season": 2,
+    "episode_number": 51,
+    "title": "ULP 2-51 Electronics and technology + Dative case",
+    "url": "https://www.ukrainianlessons.com/lesson/51/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-052",
+    "season": 2,
+    "episode_number": 52,
+    "title": "ULP 2-52 Buying a phone in Ukraine + Dative case",
+    "url": "https://www.ukrainianlessons.com/lesson/52/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-053",
+    "season": 2,
+    "episode_number": 53,
+    "title": "ULP 2-53 Social Media in Ukrainian + Dative case",
+    "url": "https://www.ukrainianlessons.com/lesson/53/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-054",
+    "season": 2,
+    "episode_number": 54,
+    "title": "ULP 2-54 10 ways to express gratitude in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/54/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-055",
+    "season": 2,
+    "episode_number": 55,
+    "title": "ULP 2-55 Review: 51-54 – What's on my phone",
+    "url": "https://www.ukrainianlessons.com/lesson/55/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-056",
+    "season": 2,
+    "episode_number": 56,
+    "title": "ULP 2-56 Asking for an advice + Accusative case",
+    "url": "https://www.ukrainianlessons.com/lesson/56/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-057",
+    "season": 2,
+    "episode_number": 57,
+    "title": "ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions",
+    "url": "https://www.ukrainianlessons.com/lesson/57/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-058",
+    "season": 2,
+    "episode_number": 58,
+    "title": "ULP 2-58 Inviting to a party + Accusative case of pronouns",
+    "url": "https://www.ukrainianlessons.com/lesson/58/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-059",
+    "season": 2,
+    "episode_number": 59,
+    "title": "ULP 2-59 Vacation plans & the verbs of movement in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/59/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-060",
+    "season": 2,
+    "episode_number": 60,
+    "title": "ULP 2-60 Review: 56-60 – My week in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/60/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-061",
+    "season": 2,
+    "episode_number": 61,
+    "title": "ULP 2-61 Christmas dinner in Ukraine + Instrumental case",
+    "url": "https://www.ukrainianlessons.com/lesson/61/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-062",
+    "season": 2,
+    "episode_number": 62,
+    "title": "ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns",
+    "url": "https://www.ukrainianlessons.com/lesson/62/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-063",
+    "season": 2,
+    "episode_number": 63,
+    "title": "ULP 2-63 Ukrainian Holiday Greetings",
+    "url": "https://www.ukrainianlessons.com/lesson/63/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-064",
+    "season": 2,
+    "episode_number": 64,
+    "title": "ULP 2-64 Ukrainian Christmas Carol",
+    "url": "https://www.ukrainianlessons.com/lesson/64/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-065",
+    "season": 2,
+    "episode_number": 65,
+    "title": "ULP 2-65 Review + My American (road) trip",
+    "url": "https://www.ukrainianlessons.com/lesson/65/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-066",
+    "season": 2,
+    "episode_number": 66,
+    "title": "ULP 2-66 Sharing memories + Locative case with places",
+    "url": "https://www.ukrainianlessons.com/lesson/66/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-067",
+    "season": 2,
+    "episode_number": 67,
+    "title": "ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case",
+    "url": "https://www.ukrainianlessons.com/lesson/67/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-068",
+    "season": 2,
+    "episode_number": 68,
+    "title": "ULP 2-68 Making a hair appointment + Dates & Locative case",
+    "url": "https://www.ukrainianlessons.com/lesson/68/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-069",
+    "season": 2,
+    "episode_number": 69,
+    "title": "ULP 2-69 Ukrainian Children's Poem + Vocative case",
+    "url": "https://www.ukrainianlessons.com/lesson/69/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-070",
+    "season": 2,
+    "episode_number": 70,
+    "title": "ULP 2-70 Writing an email in Ukrainian – Review 66-69",
+    "url": "https://www.ukrainianlessons.com/lesson/70/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-071",
+    "season": 2,
+    "episode_number": 71,
+    "title": "ULP 2-71 Ukrainian History Course Part 1 – Kyivan Rus'",
+    "url": "https://www.ukrainianlessons.com/lesson/71/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-072",
+    "season": 2,
+    "episode_number": 72,
+    "title": "ULP 2-72 Ukrainian History Course Part 2 – 13th – 16th centuries",
+    "url": "https://www.ukrainianlessons.com/lesson/72/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-073",
+    "season": 2,
+    "episode_number": 73,
+    "title": "ULP 2-73 Ukrainian History Course Part 3 – Ukrainian Cossacks",
+    "url": "https://www.ukrainianlessons.com/lesson/73/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-074",
+    "season": 2,
+    "episode_number": 74,
+    "title": "ULP 2-74 Ukrainian History Course Part 4 – Ukraine as a part of two empires",
+    "url": "https://www.ukrainianlessons.com/lesson/74/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-075",
+    "season": 2,
+    "episode_number": 75,
+    "title": "ULP 2-75 Ukrainian History Course Part 5 – The liberation movement of 1917-1922",
+    "url": "https://www.ukrainianlessons.com/lesson/75/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-076",
+    "season": 2,
+    "episode_number": 76,
+    "title": "ULP 2-76 Ukrainian History Course Part 6 – Ukrainian Socialist Soviet Republic",
+    "url": "https://www.ukrainianlessons.com/lesson/76/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-077",
+    "season": 2,
+    "episode_number": 77,
+    "title": "ULP 2-77 Ukrainian History Course Part 7 – Second World War in Ukraine",
+    "url": "https://www.ukrainianlessons.com/lesson/77/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-078",
+    "season": 2,
+    "episode_number": 78,
+    "title": "ULP 2-78 Ukrainian History Course Part 8 – History of Soviet Ukraine",
+    "url": "https://www.ukrainianlessons.com/lesson/78/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-079",
+    "season": 2,
+    "episode_number": 79,
+    "title": "ULP 2-79 Ukrainian History Course Part 9 – Independent Ukraine",
+    "url": "https://www.ukrainianlessons.com/lesson/79/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-080",
+    "season": 2,
+    "episode_number": 80,
+    "title": "ULP 2-80 Ukrainian History Test – Review 71-79",
+    "url": "https://www.ukrainianlessons.com/lesson/80/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 2"
+    ]
+  },
+  {
+    "id": "ULP-081",
+    "season": 3,
+    "episode_number": 81,
+    "title": "ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes ви- and пере-",
+    "url": "https://www.ukrainianlessons.com/lesson/81/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-082",
+    "season": 3,
+    "episode_number": 82,
+    "title": "ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian + Prefixes при- and по-",
+    "url": "https://www.ukrainianlessons.com/lesson/82/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-083",
+    "season": 3,
+    "episode_number": 83,
+    "title": "ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes до- and під-",
+    "url": "https://www.ukrainianlessons.com/lesson/83/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-084",
+    "season": 3,
+    "episode_number": 84,
+    "title": "ULP 3-84 В банку – At the bank in Ukraine + Prefixes об- and від-",
+    "url": "https://www.ukrainianlessons.com/lesson/84/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-085",
+    "season": 3,
+    "episode_number": 85,
+    "title": "ULP 3-85 Голосове повідомлення №1 (Повторення) – Voice message №1 (Review episode)",
+    "url": "https://www.ukrainianlessons.com/lesson/85/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-086",
+    "season": 3,
+    "episode_number": 86,
+    "title": "ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the school in Ukraine + Prefixes в-, у-",
+    "url": "https://www.ukrainianlessons.com/lesson/86/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-087",
+    "season": 3,
+    "episode_number": 87,
+    "title": "ULP 3-87 День вчителя – Teacher's Day in Ukraine + Prefixes роз-, про-",
+    "url": "https://www.ukrainianlessons.com/lesson/87/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-088",
+    "season": 3,
+    "episode_number": 88,
+    "title": "ULP 3-88 Вища освіта – Higher education in Ukraine + Prefixes з-, с-",
+    "url": "https://www.ukrainianlessons.com/lesson/88/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-089",
+    "season": 3,
+    "episode_number": 89,
+    "title": "ULP 3-89 Навчання в аспірантурі – Postgraduate education in Ukraine + Prefixes на-, за-",
+    "url": "https://www.ukrainianlessons.com/lesson/89/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-090",
+    "season": 3,
+    "episode_number": 90,
+    "title": "ULP 3-90 Освіта в Україні – Education in Ukraine (Голосове повідомлення №2 – Voice message №2)",
+    "url": "https://www.ukrainianlessons.com/lesson/90/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-091",
+    "season": 3,
+    "episode_number": 91,
+    "title": "ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/91/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-092",
+    "season": 3,
+    "episode_number": 92,
+    "title": "ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/92/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-093",
+    "season": 3,
+    "episode_number": 93,
+    "title": "ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive words in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/93/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-094",
+    "season": 3,
+    "episode_number": 94,
+    "title": "ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/94/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-095",
+    "season": 3,
+    "episode_number": 95,
+    "title": "ULP 3-95 Моє життя в Києві (Голосове повідомлення №3) – My life in Kyiv (Voice message №3)",
+    "url": "https://www.ukrainianlessons.com/lesson/95/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-096",
+    "season": 3,
+    "episode_number": 96,
+    "title": "ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/96/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-097",
+    "season": 3,
+    "episode_number": 97,
+    "title": "ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion",
+    "url": "https://www.ukrainianlessons.com/lesson/97/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-098",
+    "season": 3,
+    "episode_number": 98,
+    "title": "ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/98/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-099",
+    "season": 3,
+    "episode_number": 99,
+    "title": "ULP 3-99 План подорожі (Голосове повідомлення №4) – Travel plan (Voice message №4)",
+    "url": "https://www.ukrainianlessons.com/lesson/99/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-100",
+    "season": 3,
+    "episode_number": 100,
+    "title": "ULP 3-100 Повідомлення від слухачів подкасту – Messages from the podcast listeners",
+    "url": "https://www.ukrainianlessons.com/lesson/100/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-101",
+    "season": 3,
+    "episode_number": 101,
+    "title": "ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/101/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-102",
+    "season": 3,
+    "episode_number": 102,
+    "title": "ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns",
+    "url": "https://www.ukrainianlessons.com/lesson/102/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-103",
+    "season": 3,
+    "episode_number": 103,
+    "title": "ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals",
+    "url": "https://www.ukrainianlessons.com/lesson/103/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-104",
+    "season": 3,
+    "episode_number": 104,
+    "title": "ULP 3-104 Здоровий спосіб життя – Healthy lifestyle + Degrees of comparison in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/104/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-105",
+    "season": 3,
+    "episode_number": 105,
+    "title": "ULP 3-105 Захворіла… (Голосове повідомлення №5) – I got sick… (Voice message №5)",
+    "url": "https://www.ukrainianlessons.com/lesson/105/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-106",
+    "season": 3,
+    "episode_number": 106,
+    "title": "ULP 3-106 Події на вихідних – Weekend events in Ukrainian + Negative adverbs and pronouns in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/106/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-107",
+    "season": 3,
+    "episode_number": 107,
+    "title": "ULP 3-107 У барі – At the bar in Ukraine + Дієприслівник – Adverbial participle in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/107/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-108",
+    "season": 3,
+    "episode_number": 108,
+    "title": "ULP 3-108 Екскурсія Києвом – Kyiv tour + Participle in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/108/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-109",
+    "season": 3,
+    "episode_number": 109,
+    "title": "ULP 3-109 На побаченні – On a date in Ukrainian + Reflexive verbs",
+    "url": "https://www.ukrainianlessons.com/lesson/109/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-110",
+    "season": 3,
+    "episode_number": 110,
+    "title": "ULP 3-110 Мій український хлопець (Голосове повідомлення №6) – My Ukrainian boyfriend (Voice message №6)",
+    "url": "https://www.ukrainianlessons.com/lesson/110/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-111",
+    "season": 3,
+    "episode_number": 111,
+    "title": "ULP 3-111 Подарунки на День народження – Birthday presents + Imperative mood in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/111/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-112",
+    "season": 3,
+    "episode_number": 112,
+    "title": "ULP 3-112 Майстер-клас з приготування вареників – How to cook varenyky +  Imperative mood of the second person plural",
+    "url": "https://www.ukrainianlessons.com/lesson/112/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-113",
+    "season": 3,
+    "episode_number": 113,
+    "title": "ULP 3-113 Майстер-клас з вишивання – Ukrainian traditional embroidery master class +  More about the Imperative mood in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/113/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-114",
+    "season": 3,
+    "episode_number": 114,
+    "title": "ULP 3-114 Майстер-клас з писанкарства – How to make pysanky +  Imperative mood of the verbs in the first person plural (Let's…)",
+    "url": "https://www.ukrainianlessons.com/lesson/114/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-115",
+    "season": 3,
+    "episode_number": 115,
+    "title": "ULP 3-115 Мої нові захоплення (Голосове повідомлення №7) – My new hobbies (Voice message №7)",
+    "url": "https://www.ukrainianlessons.com/lesson/115/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-116",
+    "season": 3,
+    "episode_number": 116,
+    "title": "ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses",
+    "url": "https://www.ukrainianlessons.com/lesson/116/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-117",
+    "season": 3,
+    "episode_number": 117,
+    "title": "ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses",
+    "url": "https://www.ukrainianlessons.com/lesson/117/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-118",
+    "season": 3,
+    "episode_number": 118,
+    "title": "ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/118/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-119",
+    "season": 3,
+    "episode_number": 119,
+    "title": "ULP 3-119 Остання розмова – The last conversation + Conditional mood in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/lesson/119/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-120",
+    "season": 3,
+    "episode_number": 120,
+    "title": "ULP 3-120 Голосове повідомлення для… – Voice message to…",
+    "url": "https://www.ukrainianlessons.com/lesson/120/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 3"
+    ]
+  },
+  {
+    "id": "ULP-121",
+    "season": 4,
+    "episode_number": 121,
+    "title": "ULP 4-121 10 цікавих фактів про моє життя",
+    "url": "https://www.ukrainianlessons.com/lesson-121/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-122",
+    "season": 4,
+    "episode_number": 122,
+    "title": "ULP 4-122 Як я вивчала і вивчила англійську мову?",
+    "url": "https://www.ukrainianlessons.com/lesson-122/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-123",
+    "season": 4,
+    "episode_number": 123,
+    "title": "ULP 4-123 Похід у Карпати: як підготуватися",
+    "url": "https://www.ukrainianlessons.com/lesson-123/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-124",
+    "season": 4,
+    "episode_number": 124,
+    "title": "ULP 4-124 Як це було: незалежність України",
+    "url": "https://www.ukrainianlessons.com/lesson-124/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-125",
+    "season": 4,
+    "episode_number": 125,
+    "title": "ULP 4-125 Державні символи України: Прапор України",
+    "url": "https://www.ukrainianlessons.com/lesson-125/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-126",
+    "season": 4,
+    "episode_number": 126,
+    "title": "ULP 4-126 Державні символи України: Гімн України",
+    "url": "https://www.ukrainianlessons.com/lesson-126/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-127",
+    "season": 4,
+    "episode_number": 127,
+    "title": "ULP 4-127 Державні символи України: Герб України",
+    "url": "https://www.ukrainianlessons.com/lesson-127/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-128",
+    "season": 4,
+    "episode_number": 128,
+    "title": "ULP 4-128 Рослини – символи України",
+    "url": "https://www.ukrainianlessons.com/lesson-128/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-129",
+    "season": 4,
+    "episode_number": 129,
+    "title": "ULP 4-129 Тварини – символи України",
+    "url": "https://www.ukrainianlessons.com/lesson-129/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-130",
+    "season": 4,
+    "episode_number": 130,
+    "title": "ULP 4-130 Які сувеніри привезти з України?",
+    "url": "https://www.ukrainianlessons.com/lesson-130/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-131",
+    "season": 4,
+    "episode_number": 131,
+    "title": "ULP 4-131 Козаки: ким вони були?",
+    "url": "https://www.ukrainianlessons.com/lesson-131/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-132",
+    "season": 4,
+    "episode_number": 132,
+    "title": "ULP 4-132 Українські прислів'я та приказки. Частина 1",
+    "url": "https://www.ukrainianlessons.com/lesson-132/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-133",
+    "season": 4,
+    "episode_number": 133,
+    "title": "ULP 4-133 Українські прислів'я та приказки. Частина 2",
+    "url": "https://www.ukrainianlessons.com/lesson-133/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-134",
+    "season": 4,
+    "episode_number": 134,
+    "title": "ULP 4-134 Український сленг",
+    "url": "https://www.ukrainianlessons.com/lesson-134/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-135",
+    "season": 4,
+    "episode_number": 135,
+    "title": "ULP 4-135 Що таке суржик?",
+    "url": "https://www.ukrainianlessons.com/lesson-135/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-136",
+    "season": 4,
+    "episode_number": 136,
+    "title": "ULP 4-136 Екологічні тренди та екологічні традиції в Україні",
+    "url": "https://www.ukrainianlessons.com/lesson-136/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-137",
+    "season": 4,
+    "episode_number": 137,
+    "title": "ULP 4-137 5 порад для покращення української мови",
+    "url": "https://www.ukrainianlessons.com/lesson-137/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-138",
+    "season": 4,
+    "episode_number": 138,
+    "title": "ULP 4-138 Як пережити зиму в Україні",
+    "url": "https://www.ukrainianlessons.com/lesson-138/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-139",
+    "season": 4,
+    "episode_number": 139,
+    "title": "ULP 4-139 Андріївські вечорниці",
+    "url": "https://www.ukrainianlessons.com/lesson-139/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-140",
+    "season": 4,
+    "episode_number": 140,
+    "title": "ULP 4-140 Легенда про Святого Миколая",
+    "url": "https://www.ukrainianlessons.com/lesson-140/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-141",
+    "season": 4,
+    "episode_number": 141,
+    "title": "ULP 4-141 Україна в 2019 році: головні новини",
+    "url": "https://www.ukrainianlessons.com/lesson-141/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-142",
+    "season": 4,
+    "episode_number": 142,
+    "title": "ULP 4-142 Виставка “Ukraine WOW”",
+    "url": "https://www.ukrainianlessons.com/lesson-142/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-143",
+    "season": 4,
+    "episode_number": 143,
+    "title": "ULP 4-143 4 нові українські фільми на всі смаки",
+    "url": "https://www.ukrainianlessons.com/lesson-143/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-144",
+    "season": 4,
+    "episode_number": 144,
+    "title": "ULP 4-144 Діалекти української мови",
+    "url": "https://www.ukrainianlessons.com/lesson-144/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-145",
+    "season": 4,
+    "episode_number": 145,
+    "title": "ULP 4-145 Українські народні музичні інструменти",
+    "url": "https://www.ukrainianlessons.com/lesson-145/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-146",
+    "season": 4,
+    "episode_number": 146,
+    "title": "ULP 4-146 Масниця в Україні",
+    "url": "https://www.ukrainianlessons.com/lesson-146/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-147",
+    "season": 4,
+    "episode_number": 147,
+    "title": "ULP 4-147 Піст і українські веганські страви",
+    "url": "https://www.ukrainianlessons.com/lesson-147/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-148",
+    "season": 4,
+    "episode_number": 148,
+    "title": "ULP 4-148 Українські фразеологізми про тварин",
+    "url": "https://www.ukrainianlessons.com/lesson-148/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-149",
+    "season": 4,
+    "episode_number": 149,
+    "title": "ULP 4-149 Трипільська культура",
+    "url": "https://www.ukrainianlessons.com/lesson-149/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-150",
+    "season": 4,
+    "episode_number": 150,
+    "title": "ULP 4-150 Коронавірус в Україні",
+    "url": "https://www.ukrainianlessons.com/lesson-150/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-151",
+    "season": 4,
+    "episode_number": 151,
+    "title": "ULP 4-151 Ярослав Мудрий ― Тесть Європи",
+    "url": "https://www.ukrainianlessons.com/lesson-151/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-152",
+    "season": 4,
+    "episode_number": 152,
+    "title": "ULP 4-152 Роксолана ― La Sultana Rossa",
+    "url": "https://www.ukrainianlessons.com/lesson-152/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-153",
+    "season": 4,
+    "episode_number": 153,
+    "title": "ULP 4-153 Маруся Чурай ― Дівчина з легенди",
+    "url": "https://www.ukrainianlessons.com/lesson-153/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-154",
+    "season": 4,
+    "episode_number": 154,
+    "title": "ULP 4-154 Олекса Довбуш ― український Робін Гуд",
+    "url": "https://www.ukrainianlessons.com/lesson-154/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-155",
+    "season": 4,
+    "episode_number": 155,
+    "title": "ULP 4-155 Григорій Сковорода ― мандрівний філософ",
+    "url": "https://www.ukrainianlessons.com/lesson-155/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-156",
+    "season": 4,
+    "episode_number": 156,
+    "title": "ULP 4-156 Тарас Шевченко ― Великий Кобзар",
+    "url": "https://www.ukrainianlessons.com/lesson-156/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-157",
+    "season": 4,
+    "episode_number": 157,
+    "title": "ULP 4-157 Леся Українка ― письменниця сильної волі",
+    "url": "https://www.ukrainianlessons.com/lesson-157/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-158",
+    "season": 4,
+    "episode_number": 158,
+    "title": "ULP 4-158 Іван Франко ― Великий Каменяр",
+    "url": "https://www.ukrainianlessons.com/lesson-158/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-159",
+    "season": 4,
+    "episode_number": 159,
+    "title": "ULP 4-159 Олександр Довженко ― новатор кіно",
+    "url": "https://www.ukrainianlessons.com/lesson-159/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-160",
+    "season": 4,
+    "episode_number": 160,
+    "title": "ULP 4-160 Василь Стус, шістдесятники та дисиденти",
+    "url": "https://www.ukrainianlessons.com/lesson-160/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 4"
+    ]
+  },
+  {
+    "id": "ULP-161",
+    "season": 5,
+    "episode_number": 161,
+    "title": "ULP 5-161 Як у мене справи і що нового в Ukrainian Lessons",
+    "url": "https://www.ukrainianlessons.com/lesson-161/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-162",
+    "season": 5,
+    "episode_number": 162,
+    "title": "ULP 5-162 Інтерв'ю з Іванкою (про життя на карантині)",
+    "url": "https://www.ukrainianlessons.com/lesson-162/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-163",
+    "season": 5,
+    "episode_number": 163,
+    "title": "ULP 5-163 Про моє життя у Швеції",
+    "url": "https://www.ukrainianlessons.com/lesson-163/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-164",
+    "season": 5,
+    "episode_number": 164,
+    "title": "ULP 5-164 Інтерв'ю з Євгеном про життя в Америці",
+    "url": "https://www.ukrainianlessons.com/lesson-164/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-165",
+    "season": 5,
+    "episode_number": 165,
+    "title": "ULP 5-165 Як використовувати смартфон для вивчення мов",
+    "url": "https://www.ukrainianlessons.com/lesson-165/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-166",
+    "season": 5,
+    "episode_number": 166,
+    "title": "ULP 5-166 Український інтернет-сленг",
+    "url": "https://www.ukrainianlessons.com/lesson-166/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-167",
+    "season": 5,
+    "episode_number": 167,
+    "title": "ULP 5-167 Україномовні ютуб-канали",
+    "url": "https://www.ukrainianlessons.com/lesson-167/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-168",
+    "season": 5,
+    "episode_number": 168,
+    "title": "ULP 5-168 Етнографічні регіони України. Частина 1: Захід і Північ України",
+    "url": "https://www.ukrainianlessons.com/lesson-168/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-169",
+    "season": 5,
+    "episode_number": 169,
+    "title": "ULP 5-169 Етнографічні регіони України. Частина 2: Південь і Схід України",
+    "url": "https://www.ukrainianlessons.com/lesson-169/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-170",
+    "season": 5,
+    "episode_number": 170,
+    "title": "ULP 5-170 15 фразеологізмів з частинами тіла",
+    "url": "https://www.ukrainianlessons.com/lesson-170/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-171",
+    "season": 5,
+    "episode_number": 171,
+    "title": "ULP 5-171 Інтерв'ю з Міленою про навчання в музичному коледжі",
+    "url": "https://www.ukrainianlessons.com/lesson-171/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-172",
+    "season": 5,
+    "episode_number": 172,
+    "title": "ULP 5-172 Українськомовні подкасти",
+    "url": "https://www.ukrainianlessons.com/lesson-172/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-173",
+    "season": 5,
+    "episode_number": 173,
+    "title": "ULP 5-173 Зимовий цикл свят",
+    "url": "https://www.ukrainianlessons.com/lesson-173/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-174",
+    "season": 5,
+    "episode_number": 174,
+    "title": "ULP 5-174 Україна в 2020 році: головні новини",
+    "url": "https://www.ukrainianlessons.com/lesson-174/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-175",
+    "season": 5,
+    "episode_number": 175,
+    "title": "ULP 5-175 З Новим роком і Різдвом! – Пісня Скрябіна",
+    "url": "https://www.ukrainianlessons.com/lesson-175/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-176",
+    "season": 5,
+    "episode_number": 176,
+    "title": "ULP 5-176 Українські стартапи",
+    "url": "https://www.ukrainianlessons.com/lesson-176/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-177",
+    "season": 5,
+    "episode_number": 177,
+    "title": "ULP 5-177 День соборності України",
+    "url": "https://www.ukrainianlessons.com/lesson-177/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-178",
+    "season": 5,
+    "episode_number": 178,
+    "title": "ULP 5-178 Як ефективніше вчитися",
+    "url": "https://www.ukrainianlessons.com/lesson-178/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-179",
+    "season": 5,
+    "episode_number": 179,
+    "title": "ULP 5-179 Інтерв'ю з Кортні про те, як вона вивчила українську мову",
+    "url": "https://www.ukrainianlessons.com/lesson-179/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-180",
+    "season": 5,
+    "episode_number": 180,
+    "title": "ULP 5-180 Про борщ",
+    "url": "https://www.ukrainianlessons.com/lesson-180/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-181",
+    "season": 5,
+    "episode_number": 181,
+    "title": "ULP 5-181 Українська кухня в радянські часи",
+    "url": "https://www.ukrainianlessons.com/lesson-181/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-182",
+    "season": 5,
+    "episode_number": 182,
+    "title": "ULP 5-182 Місцеві кухні України",
+    "url": "https://www.ukrainianlessons.com/lesson-182/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-183",
+    "season": 5,
+    "episode_number": 183,
+    "title": "ULP 5-183 Сучасна гастрономічна культура України",
+    "url": "https://www.ukrainianlessons.com/lesson-183/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-184",
+    "season": 5,
+    "episode_number": 184,
+    "title": "ULP 5-184 Кавова культура України",
+    "url": "https://www.ukrainianlessons.com/lesson-184/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-185",
+    "season": 5,
+    "episode_number": 185,
+    "title": "ULP 5-185 Як іноземці козака рятували — нова книга від Ukrainian Lessons",
+    "url": "https://www.ukrainianlessons.com/lesson-185/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-186",
+    "season": 5,
+    "episode_number": 186,
+    "title": "ULP 5-186 Інтерв'ю з Наталією Пендюр ― авторкою книги простою українською мовою",
+    "url": "https://www.ukrainianlessons.com/lesson-186/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-187",
+    "season": 5,
+    "episode_number": 187,
+    "title": "ULP 5-187 Дитинство 90-х",
+    "url": "https://www.ukrainianlessons.com/lesson-187/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-188",
+    "season": 5,
+    "episode_number": 188,
+    "title": "ULP 5-188 Шкільна освіта в Україні",
+    "url": "https://www.ukrainianlessons.com/lesson-188/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-189",
+    "season": 5,
+    "episode_number": 189,
+    "title": "ULP 5-189 Вища освіта в Україні та США",
+    "url": "https://www.ukrainianlessons.com/lesson-189/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-190",
+    "season": 5,
+    "episode_number": 190,
+    "title": "ULP 5-190 Великодній кошик",
+    "url": "https://www.ukrainianlessons.com/lesson-190/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-191",
+    "season": 5,
+    "episode_number": 191,
+    "title": "ULP 5-191 Хвилі еміграції з України",
+    "url": "https://www.ukrainianlessons.com/lesson-191/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-192",
+    "season": 5,
+    "episode_number": 192,
+    "title": "ULP 5-192 Українці в Аргентині: розмова з Антоніною Чембарович",
+    "url": "https://www.ukrainianlessons.com/lesson-192/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-193",
+    "season": 5,
+    "episode_number": 193,
+    "title": "ULP 5-193 Українці в Японії: розмова з Наталею Ковальовою",
+    "url": "https://www.ukrainianlessons.com/lesson-193/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-194",
+    "season": 5,
+    "episode_number": 194,
+    "title": "ULP 5-194 Українці в Шотландії: розмова з Олексою Курилюком",
+    "url": "https://www.ukrainianlessons.com/lesson-194/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-195",
+    "season": 5,
+    "episode_number": 195,
+    "title": "ULP 5-195 Українці в Південно-Африканській Республіці: розмова з Олесею Лобшер",
+    "url": "https://www.ukrainianlessons.com/lesson-195/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-196",
+    "season": 5,
+    "episode_number": 196,
+    "title": "ULP 5-196 Українці в США: розмова з Андрієм Бойчуком",
+    "url": "https://www.ukrainianlessons.com/lesson-196/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-197",
+    "season": 5,
+    "episode_number": 197,
+    "title": "ULP 5-197 Українці в Новій Зеландії: розмова з Ольгою Вязенко",
+    "url": "https://www.ukrainianlessons.com/lesson-197/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-198",
+    "season": 5,
+    "episode_number": 198,
+    "title": "ULP 5-198 Українці в Австралії: розмова з Богуславом Когутом",
+    "url": "https://www.ukrainianlessons.com/lesson-198/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-199",
+    "season": 5,
+    "episode_number": 199,
+    "title": "ULP 5-199 Українці в Канаді: розмова з Оксаною Грициною",
+    "url": "https://www.ukrainianlessons.com/lesson-199/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-200",
+    "season": 5,
+    "episode_number": 200,
+    "title": "ULP 5-200 Повідомлення слухачів подкасту та плани Ukrainian Lessons",
+    "url": "https://www.ukrainianlessons.com/lesson-200/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 5"
+    ]
+  },
+  {
+    "id": "ULP-201",
+    "season": 6,
+    "episode_number": 201,
+    "title": "ULP 6-201 Про шостий сезон подкасту",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-201-pro-shostyi-sezon-podkastu/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-202",
+    "season": 6,
+    "episode_number": 202,
+    "title": "ULP 6-202 Наша подорож в Україну влітку 2023 року",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-202-nasha-podorozh-v-ukrainu-vlitku-2023-roku/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-203",
+    "season": 6,
+    "episode_number": 203,
+    "title": "ULP 6-203 Інтерв'ю з Катериною Олійник про медичний батальйон «Госпітальєри»",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-203-interviu-z-katerynoiu-oliinyk-pro-medychnyi-batalion-hospitallery/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-204",
+    "season": 6,
+    "episode_number": 204,
+    "title": "ULP 6-204 Мовна ситуація в Україні",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-204-movna-sytuatsiia-v-ukraini/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-205",
+    "season": 6,
+    "episode_number": 205,
+    "title": "ULP 6-205 День української писемності та мови",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-205-den-ukrainskoi-pysemnosti-ta-movy/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-206",
+    "season": 6,
+    "episode_number": 206,
+    "title": "ULP 6-206 Мовний закон 2019 року",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-206-movnyi-zakon-2019-roku/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-207",
+    "season": 6,
+    "episode_number": 207,
+    "title": "ULP 6-207 Бавовна, паляниця, 4.5.0. та інші слова війни",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-207-bavovna-palianytsia-4-5-0-ta-inshi-slova-viiny/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-208",
+    "season": 6,
+    "episode_number": 208,
+    "title": "ULP 6-208 Про моє життя у Швеції: частина друга",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-208-pro-moie-zhyttia-u-shvetsii-chastyna-druha/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-209",
+    "season": 6,
+    "episode_number": 209,
+    "title": "ULP 6-209 Питання-відповіді. Частина перша",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-209-pytannia-vidpovidi-chastyna-persha/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-210",
+    "season": 6,
+    "episode_number": 210,
+    "title": "ULP 6-210 Питання-відповіді. Частина друга",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-210-pytannia-vidpovidi-chastyna-druha/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-211",
+    "season": 6,
+    "episode_number": 211,
+    "title": "ULP 6-211 Наголос в українській мові",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-211-naholos-v-ukrainskii-movi/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-212",
+    "season": 6,
+    "episode_number": 212,
+    "title": "ULP 6-212 Про літеру ґ",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-212-pro-literu-g/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-213",
+    "season": 6,
+    "episode_number": 213,
+    "title": "ULP 6-213 Милозвучність української мови",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-213-mylozvuchnist-ukrainskoi-movy/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-214",
+    "season": 6,
+    "episode_number": 214,
+    "title": "ULP 6-214 Символи Різдва в Україні",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-214-symvoly-rizdva-v-ukraini/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-215",
+    "season": 6,
+    "episode_number": 215,
+    "title": "ULP 6-215 Емоції під час війни",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-215-emotsii-pid-chas-viiny/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-216",
+    "season": 6,
+    "episode_number": 216,
+    "title": "ULP 6-216 Декомунізація, деколонізація, дерусифікація",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-216-dekomunizatsiia-dekolonizatsiia-derusyfikatsiia/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-217",
+    "season": 6,
+    "episode_number": 217,
+    "title": "ULP 6-217 Про Крим. Частина 1: Географія та корінні народи",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-217-pro-krym-chastyna-1-heohrafiia-ta-korinni-narody/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-218",
+    "season": 6,
+    "episode_number": 218,
+    "title": "ULP 6-218 Про Крим. Частина 2: Коротка історія Криму",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-218-pro-krym-chastyna-2-korotka-istoriia-krymu/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-219",
+    "season": 6,
+    "episode_number": 219,
+    "title": "ULP 6-219 Про Крим. Частина 3: Відомі особистості",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-219-pro-krym-chastyna-3-vidomi-osobystosti/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-220",
+    "season": 6,
+    "episode_number": 220,
+    "title": "ULP 6-220 Про Крим. Частина 4: Гастрономічні традиції",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-220-pro-krym-chastyna-4-hastronomichni-tradytsii/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-221",
+    "season": 6,
+    "episode_number": 221,
+    "title": "ULP 6-221 Українська поезія. Григорій Сковорода «De libertate»",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-221-ukrainska-poeziia-hryhorii-skovoroda-de-libertate/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-222",
+    "season": 6,
+    "episode_number": 222,
+    "title": "ULP 6-222 Українська поезія. Тарас Шевченко «Заповіт»",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-222-ukrainska-poeziia-taras-shevchenko-zapovit/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-223",
+    "season": 6,
+    "episode_number": 223,
+    "title": "ULP 6-223 Українська поезія. Леся Українка «Contra spem spero!»",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-223-ukrainska-poeziia-lesia-ukrainka-contra-spem-spero/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-224",
+    "season": 6,
+    "episode_number": 224,
+    "title": "ULP 6-224 Українська поезія. Олександр Олесь «О слово рідне! Орле скутий!..»",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-224-ukrainska-poeziia-oleksandr-oles-o-slovo-ridne-orle-skutyi/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-225",
+    "season": 6,
+    "episode_number": 225,
+    "title": "ULP 6-225 Українська поезія. Павло Тичина «Гаї шумлять»",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-225-ukrainska-poeziia-pavlo-tychyna-haii-shumliat/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-226",
+    "season": 6,
+    "episode_number": 226,
+    "title": "ULP 6-226 Українська поезія. Володимир Сосюра «Так ніхто не кохав»",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-226-ukrainska-poeziia-volodymyr-sosiura-tak-nikhto-ne-kokhav/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-227",
+    "season": 6,
+    "episode_number": 227,
+    "title": "ULP 6-227 Українська поезія. Василь Симоненко «Ти знаєш, що ти — людина»",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-227-ukrainska-poeziia-vasyl-symonenko-ty-znaiesh-shcho-ty-liudyna/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-228",
+    "season": 6,
+    "episode_number": 228,
+    "title": "ULP 6-228 Українська поезія. Дмитро Павличко «Два кольори»",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-228-ukrainska-poeziia-dmytro-pavlychko-dva-kolory/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-229",
+    "season": 6,
+    "episode_number": 229,
+    "title": "ULP 6-229 Українська поезія. Василь Стус «Господи, гніву пречистого…»",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-229-ukrainska-poeziia-vasyl-stus-hospody-hnivu-prechystoho/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-230",
+    "season": 6,
+    "episode_number": 230,
+    "title": "ULP 6-230 Українська поезія. Ліна Костенко «Страшні слова, коли вони мовчать»",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-230-ukrainska-poeziia-lina-kostenko-strashni-slova-koly-vony-movchat/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-231",
+    "season": 6,
+    "episode_number": 231,
+    "title": "ULP 6-231 Княгиня Ольга — хитра правителька Русі",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-231-knyahynia-olha-khytra-pravytelka-rusi/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-232",
+    "season": 6,
+    "episode_number": 232,
+    "title": "ULP 6-232 Богдан Хмельницький — творець української держави",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-232-bohdan-khmelnytskyi-tvorets-ukrainskoi-derzhavy/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-233",
+    "season": 6,
+    "episode_number": 233,
+    "title": "ULP 6-233 Іван Котляревський — зачинатель нової української літератури",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-233-ivan-kotliarevskyi-zachynatel-novoi-ukrainskoi-literatury/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-234",
+    "season": 6,
+    "episode_number": 234,
+    "title": "ULP 6-234 Марко Вовчок — фатальна жінка української літератури",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-234-marko-vovchok-fatalna-zhinka-ukrainskoi-literatury/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-235",
+    "season": 6,
+    "episode_number": 235,
+    "title": "ULP 6-235 Марко Кропивницький і театр корифеїв",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-235-marko-kropyvnytskyi-i-teatr-koryfeiv/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-236",
+    "season": 6,
+    "episode_number": 236,
+    "title": "ULP 6-236 Наталія Кобринська — мама українського фемінізму",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-236-nataliia-kobrynska-mama-ukrainskoho-feminizmu/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-237",
+    "season": 6,
+    "episode_number": 237,
+    "title": "ULP 6-237 Михайло Грушевський — великий історик України",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-237-mykhailo-hrushevskyi-velykyi-istoryk-ukrainy/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-238",
+    "season": 6,
+    "episode_number": 238,
+    "title": "ULP 6-238 Марія Примаченко — дивовижна художниця Полісся",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-238-mariia-prymachenko-dyvovyzhna-khudozhnytsia-polissia/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-239",
+    "season": 6,
+    "episode_number": 239,
+    "title": "ULP 6-239 Володимир Івасюк — легенда української музики",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-239-volodymyr-ivasiuk-lehenda-ukrainskoi-muzyky/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
+  },
+  {
+    "id": "ULP-240",
+    "season": 6,
+    "episode_number": 240,
+    "title": "ULP 6-240 Квітка Цісик — голос України за океаном",
+    "url": "https://www.ukrainianlessons.com/season6/ULP-6-240-kvitka-tsisyk-holos-ukrainy-za-okeanom/",
+    "summary": "",
+    "tags": [
+      "ULP",
+      "Season 6"
+    ]
   }
 ]

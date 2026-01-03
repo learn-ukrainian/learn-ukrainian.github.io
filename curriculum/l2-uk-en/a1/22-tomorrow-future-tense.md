@@ -242,11 +242,3 @@ Ukrainian uses **буду** (future of "to be") + infinitive to form the compoun
 ---
 
 **Наступний урок:** Котра година? Дні тижня та місяці!
-
-> [!resources] External Resources
->
-> **YouTube:** [Future Tense in Ukrainian](https://www.youtube.com/watch?v=kY67m6y6Oyc) — Speak Ukrainian
->
-> **Grammar:** [Ukrainian Future Tense Guide](https://www.ukrainianlessons.com/future-tense/) — Ukrainian Lessons
->
-> **Podcast:** [ULP Episode 27 | Future Tense](https://www.ukrainianlessons.com/episode27/) — Ukrainian Lessons Podcast

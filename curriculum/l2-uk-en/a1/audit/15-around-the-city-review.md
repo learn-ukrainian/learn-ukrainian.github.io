@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): міст, площа, туди, таксі, бульвар...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): машиною, набережна, сюди, вулиця, звідти...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1877/750 (>1750 may be too long)
+- **Words:** ⚠️ 1820/750 (>1750 may be too long)
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 29.6% (target 25-40% (M15))
+- **Immersion:** 🇺🇦 30.6% (target 25-40% (M15))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -41,4 +38,4 @@
 | **Practice** | ⚪️ | 394 | Skipped |
 | **Production** | ➖ | 239 | Excluded Type |
 | **Cultural Insight** | ✅ | 207 | Included in Core |
-| **Summary** | ✅ | 185 | Included in Core |
+| **Summary** | ✅ | 128 | Included in Core |

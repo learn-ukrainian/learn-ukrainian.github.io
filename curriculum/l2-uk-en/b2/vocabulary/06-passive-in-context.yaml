@@ -222,6 +222,7 @@ items:
   ipa: /zbʲir/
   translation: collection, gathering
   pos: noun
+  gender: m
 - lemma: звернення
   ipa: /zwɛrˈnɛnʲːɑ/
   translation: appeal, address
@@ -312,6 +313,7 @@ items:
   ipa: /ˈmɛdʲiɑ/
   translation: media
   pos: noun
+  gender: n
 - lemma: метафор
   ipa: /mɛtɑˈfor/
   translation: metaphor

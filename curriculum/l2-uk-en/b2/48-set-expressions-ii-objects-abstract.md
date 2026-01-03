@@ -485,12 +485,6 @@
 >
 > Зверніть увагу, що деякі вирази мають міжнародне походження (яблуко розбрату — з грецької міфології), а інші — суто українські (як з гуски вода). Міжнародні вирази легше запам'ятати через знайомий образ.
 
-> [!resources]
-> **Корисні ресурси для вивчення українських фразеологізмів:**
-> - [Ukrainian Lessons - Idioms Series](https://ukrainianlessons.com/category/idioms/) — подкаст з поясненням ідіом
-> - [Словник фразеологізмів](http://lcorp.ulif.org.ua/dictua/) — академічний словник
-> - [YouTube: Speak Ukrainian - Idioms](https://www.youtube.com/results?search_query=ukrainian+idioms+speak+ukrainian) — відеоуроки з вимовою
-
 ---
 
 # Підсумок

@@ -154,8 +154,3 @@ In the next block, we will explore Word Formation. You will learn how to "multip
 ---
 
 ## Need More Practice?
-
-> [!resources] External Resources
-> - 📖 [Ukrainian Conjunctions Guide](https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/)
-> - 📖 [Relative Pronouns (який)](https://www.talkukrainian.com/relative-pronouns-ukrainian/)
-> - 🎙️ [Something Hurts Podcast](https://www.ukrainianlessons.com/something-hurts/)

@@ -275,11 +275,4 @@ In this module, you learned the core grammar terminology in Ukrainian:
 
 ---
 
-> [!resources] 🎧 External Resources
->
-> **Grammar Terminology:**
-> - 📖 [Ukrainian Grammar Overview](https://www.ukrainianlessons.com/grammar/) — Grammar guide in English
-> - 📺 [Ukrainian Cases Explained](https://www.youtube.com/watch?v=N3vXjvVDPqY) — Let's Learn Ukrainian
-> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/the-podcast/) — Grammar episodes
-
 ---

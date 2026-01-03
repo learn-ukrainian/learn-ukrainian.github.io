@@ -359,11 +359,4 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 ## Need More Practice?
 
-> [!resources] External Resources
->
-> - 🎥 [Instrumental Case Explained](https://www.youtube.com/watch?v=lmPHpt2DGos) — Speak Ukrainian
-> - 📖 [Instrumental Case Guide](https://www.talkukrainian.com/instrumental-case/)
-> - 📝 [Instrumental Usage](https://www.speakua.com/blog/instrumental-case-ukrainian)
-> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-
 ---

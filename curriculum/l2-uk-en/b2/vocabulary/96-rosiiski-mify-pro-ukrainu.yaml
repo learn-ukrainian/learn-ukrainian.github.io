@@ -2,369 +2,369 @@ module: 96-rosiiski-mify-pro-ukrainu
 level: B2
 version: '2.0'
 items:
-  - lemma: агресивно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: алжирка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: болгар
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: британець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: брошура
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: білорус
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: більшовик
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: валуєва
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: валуєвський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: варфоломій
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: ввезення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: великорос
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: вибірковий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: витвір
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: владивосток
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: вугілля
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: депортація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: джордж
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: домінування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: друк
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: друкування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: емс
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: завойований
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: задокументований
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: залізо
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: знецінити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: зунр
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: зіпсований
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: калінінград
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: канон
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: кенігсберг
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: китай
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: ленін
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: леніна
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: лінгвість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: малорос
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: малоросія
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: малоруський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: маніфест
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: найсистематичніший
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: наріччя
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: нацист
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: незнання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: несвідомо
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: новоросія
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: окупувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: орвела
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: отруювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: повторений
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: присвоїти
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: проекція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: простолюддя
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: путінський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: підгруп
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: підміна
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: розкольник
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: розсварити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: руда
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: русский
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: самосвідомість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: сконструйований
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: соловйов
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: спростування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: троцький
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: уживаний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: унр
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: урср
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: флота
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: француз
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: хабар
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: хайшеньвей
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: циркуляр
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: штучність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: євря
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: індієць
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
+- lemma: агресивно
+  ipa: /ɐɦrɛˈsɪwno/
+  translation: aggressively
+  pos: adv
+- lemma: алжирка
+  ipa: /ɐlˈʒɪrkɑ/
+  translation: Algerian (genitive plural)
+  pos: noun
+  gender: m
+- lemma: болгар
+  ipa: /bolˈɦɑr/
+  translation: Bulgarian (genitive plural)
+  pos: noun
+  gender: m
+- lemma: британець
+  ipa: /brɪˈtɑnɛt͡sʲ/
+  translation: British person
+  pos: noun
+  gender: m
+- lemma: брошура
+  ipa: /broˈʃurɑ/
+  translation: brochure, pamphlet
+  pos: noun
+  gender: f
+- lemma: білорус
+  ipa: /bʲiloˈrus/
+  translation: Belarusian
+  pos: noun
+  gender: m
+- lemma: більшовик
+  ipa: /bʲilʲʃoˈwɪk/
+  translation: Bolshevik
+  pos: noun
+  gender: m
+- lemma: валуєва
+  ipa: /wɐˈlujewɑ/
+  translation: Valuev (Pyotr Valuev, genitive)
+  pos: propn
+  gender: m
+- lemma: валуєвський
+  ipa: /wɐˈlujɛwsʲkɪj/
+  translation: Valuev's (Valuev Circular 1863)
+  pos: adj
+  gender: m
+- lemma: варфоломій
+  ipa: /wɐrfoˈlomʲij/
+  translation: Bartholomew (Ecumenical Patriarch)
+  pos: propn
+  gender: m
+- lemma: ввезення
+  ipa: /ˈwwɛzɛnʲːɑ/
+  translation: importation
+  pos: noun
+  gender: n
+- lemma: великорос
+  ipa: /wɛlɪkoˈros/
+  translation: Great Russian
+  pos: noun
+  gender: m
+- lemma: вибірковий
+  ipa: /wɪˈbʲirkowɪj/
+  translation: selective
+  pos: adj
+  gender: f
+- lemma: витвір
+  ipa: /wɪtˈwʲir/
+  translation: creation, work
+  pos: noun
+  gender: m
+- lemma: владивосток
+  ipa: /wlɐdɪwosˈtok/
+  translation: Vladivostok
+  pos: propn
+  gender: m
+- lemma: вугілля
+  ipa: /wuˈɦʲilːɑ/
+  translation: coal
+  pos: noun
+  gender: n
+- lemma: депортація
+  ipa: /dɛporˈtɑt͡sʲijɑ/
+  translation: deportation
+  pos: noun
+  gender: f
+- lemma: джордж
+  ipa: /d͡ʒord͡ʒ/
+  translation: George
+  pos: propn
+  gender: m
+- lemma: домінування
+  ipa: /domʲinuˈwɑnʲːɑ/
+  translation: domination
+  pos: noun
+  gender: n
+- lemma: друк
+  ipa: /druk/
+  translation: print, press
+  pos: noun
+  gender: m
+- lemma: друкування
+  ipa: /drukuˈwɑnʲːɑ/
+  translation: printing
+  pos: noun
+  gender: n
+- lemma: емс
+  ipa: /ɛms/
+  translation: Ems (Ems Ukase 1876 - ban on Ukrainian)
+  pos: propn
+  gender: m
+- lemma: завойований
+  ipa: /zɐwoˈjowɑnɪj/
+  translation: conquered
+  pos: adj
+- lemma: задокументований
+  ipa: /zɐdokumɛntoˈwɑnɪj/
+  translation: documented
+  pos: adj
+  gender: f
+- lemma: залізо
+  ipa: /zɐˈlʲizo/
+  translation: iron
+  pos: noun
+  gender: n
+- lemma: знецінити
+  ipa: /znɛt͡sʲiˈnɪtɪ/
+  translation: to devalue, to depreciate
+  pos: verb
+- lemma: зунр
+  ipa: /zunr/
+  translation: ZUNR (West Ukrainian People's Republic)
+  pos: propn
+  gender: f
+- lemma: зіпсований
+  ipa: /zʲipˈsowɑnɪj/
+  translation: spoiled, corrupted
+  pos: adj
+  gender: f
+- lemma: калінінград
+  ipa: /kɐlʲinʲinˈɦrɑd/
+  translation: Kaliningrad
+  pos: propn
+  gender: m
+- lemma: канон
+  ipa: /kɐˈnon/
+  translation: canon
+  pos: noun
+  gender: m
+- lemma: кенігсберг
+  ipa: /kɛˈnʲiɦzbɛrɦ/
+  translation: Königsberg (former German city, now Kaliningrad)
+  pos: propn
+  gender: m
+- lemma: китай
+  ipa: /kɪˈtɑj/
+  translation: China
+  pos: propn
+  gender: m
+- lemma: ленін
+  ipa: /ˈlɛnʲin/
+  translation: Lenin
+  pos: propn
+  gender: m
+- lemma: леніна
+  ipa: /ˈlɛnʲinɑ/
+  translation: Lenin (genitive)
+  pos: propn
+  gender: m
+- lemma: лінгвість
+  ipa: /lʲinˈɦwʲistʲ/
+  translation: linguist
+  pos: noun
+  gender: m
+- lemma: малорос
+  ipa: /mɐloˈros/
+  translation: Little Russian (derogatory imperial term)
+  pos: noun
+  gender: m
+- lemma: малоросія
+  ipa: /mɐloˈrosʲijɑ/
+  translation: Little Russia (derogatory imperial name for Ukraine)
+  pos: propn
+  gender: f
+- lemma: малоруський
+  ipa: /mɐloˈrusʲkɪj/
+  translation: Little Russian (adj., derogatory)
+  pos: adj
+  gender: n
+- lemma: маніфест
+  ipa: /mɐnʲiˈfɛst/
+  translation: manifesto
+  pos: noun
+  gender: m
+- lemma: найсистематичніший
+  ipa: /nɐjsɪstɛmɐˈtɪt͡ʃnʲiʃɪj/
+  translation: most systematic
+  pos: adj
+- lemma: наріччя
+  ipa: /nɐˈrʲit͡ʃːɑ/
+  translation: dialect (used to diminish Ukrainian)
+  pos: noun
+  gender: n
+- lemma: нацист
+  ipa: /nɐˈt͡sɪst/
+  translation: Nazi
+  pos: noun
+  gender: m
+- lemma: незнання
+  ipa: /nɛˈznɑnʲːɑ/
+  translation: ignorance
+  pos: noun
+  gender: n
+- lemma: несвідомо
+  ipa: /nɛˈswʲidomo/
+  translation: unconsciously
+  pos: adv
+- lemma: новоросія
+  ipa: /nowoˈrosʲijɑ/
+  translation: Novorossiya (invented colonial term for southern Ukraine)
+  pos: propn
+  gender: f
+- lemma: окупувати
+  ipa: /okupuˈwɑtɪ/
+  translation: to occupy
+  pos: verb
+- lemma: орвела
+  ipa: /orˈwɛlɑ/
+  translation: Orwell (George Orwell, genitive)
+  pos: propn
+  gender: m
+- lemma: отруювати
+  ipa: /otrujuˈwɑtɪ/
+  translation: to poison
+  pos: verb
+- lemma: повторений
+  ipa: /powtoˈrɛnɪj/
+  translation: repeated
+  pos: adj
+  gender: f
+- lemma: присвоїти
+  ipa: /prɪswoˈjitɪ/
+  translation: to appropriate, to usurp
+  pos: verb
+  gender: f
+- lemma: проекція
+  ipa: /proˈjɛkt͡sʲijɑ/
+  translation: projection
+  pos: noun
+  gender: f
+- lemma: простолюддя
+  ipa: /prostoˈlʲudːɑ/
+  translation: common people, plebeians
+  pos: noun
+  gender: m
+- lemma: путінський
+  ipa: /ˈputʲinsʲkɪj/
+  translation: Putin's
+  pos: adj
+  gender: m
+- lemma: підгруп
+  ipa: /ˈpʲidɦrup/
+  translation: subgroup (genitive plural)
+  pos: noun
+  gender: f
+- lemma: підміна
+  ipa: /pʲidˈmʲinɑ/
+  translation: substitution, falsification
+  pos: noun
+  gender: f
+- lemma: розкольник
+  ipa: /rozˈkolʲnɪk/
+  translation: schismatic
+  pos: noun
+  gender: m
+- lemma: розсварити
+  ipa: /rozsˈwɑrɪtɪ/
+  translation: to set at odds, to embroil
+  pos: verb
+- lemma: руда
+  ipa: /ruˈdɑ/
+  translation: ore
+  pos: noun
+  gender: f
+- lemma: русский
+  ipa: /ˈrusːkʲij/
+  translation: Russian (adj., Russian language form)
+  pos: adj
+  gender: m
+- lemma: самосвідомість
+  ipa: /sɐmoswʲiˈdomʲistʲ/
+  translation: self-consciousness, national identity
+  pos: noun
+  gender: f
+- lemma: сконструйований
+  ipa: /skonstruˈjowɑnɪj/
+  translation: constructed
+  pos: adj
+- lemma: соловйов
+  ipa: /soloˈwjow/
+  translation: Solovyov (Vladimir Solovyov, Russian propagandist)
+  pos: propn
+  gender: m
+- lemma: спростування
+  ipa: /sprostuˈwɑnʲːɑ/
+  translation: refutation, rebuttal
+  pos: noun
+  gender: n
+- lemma: троцький
+  ipa: /ˈtrot͡sʲkɪj/
+  translation: Trotsky (Leon Trotsky)
+  pos: propn
+  gender: m
+- lemma: уживаний
+  ipa: /uʒɪˈwɑnɪj/
+  translation: used, employed
+  pos: adj
+  gender: n
+- lemma: унр
+  ipa: /unr/
+  translation: UNR (Ukrainian People's Republic)
+  pos: propn
+  gender: f
+- lemma: урср
+  ipa: /ursr/
+  translation: Ukrainian SSR (Soviet Socialist Republic)
+  pos: propn
+  gender: f
+- lemma: флота
+  ipa: /ˈflotɑ/
+  translation: fleet (genitive)
+  pos: noun
+  gender: m
+- lemma: француз
+  ipa: /frɐnt͡suˈzʲ/
+  translation: Frenchman
+  pos: noun
+  gender: m
+- lemma: хабар
+  ipa: /xɐˈbɑr/
+  translation: bribe
+  pos: noun
+  gender: m
+- lemma: хайшеньвей
+  ipa: /xɐjʃɛnˈwɛj/
+  translation: Haixenwey (name)
+  pos: propn
+  gender: m
+- lemma: циркуляр
+  ipa: /t͡sɪrkuˈlʲɑr/
+  translation: circular (administrative order)
+  pos: noun
+  gender: m
+- lemma: штучність
+  ipa: /ʃtuˈt͡ʃnʲistʲ/
+  translation: artificiality
+  pos: noun
+  gender: f
+- lemma: євря
+  ipa: /ˈjɛwrʲɑ/
+  translation: Jew (genitive)
+  pos: noun
+  gender: m
+- lemma: індієць
+  ipa: /ʲinˈdʲijɛt͡sʲ/
+  translation: Indian
+  pos: noun
+  gender: m

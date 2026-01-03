@@ -1,0 +1,18 @@
+[
+  {
+    "file": "curriculum/l2-uk-en/b2/87-khmelnychchyna-i-povstannia.md",
+    "enrichments": {
+      "ббея": {"ipa": "/ˈbːɛjɑ/", "en": "bey (variant spelling of Turkish/Tatar title бея)"},
+      "водам": {"ipa": "/woˈdɑm/", "en": "to waters (dative plural, archaic)"},
+      "водама": {"ipa": "/woˈdɑmɑ/", "en": "with waters (instrumental dual, archaic dual form)"},
+      "вождім": {"ipa": "/woˈʒdʲim/", "en": "to leaders (dative plural, archaic)"},
+      "коронній": {"ipa": "/koˈronːʲij/", "en": "of the crown, royal (archaic adj.)"},
+      "котрій": {"ipa": "/koˈtrʲij/", "en": "which (archaic relative pronoun, dative feminine)"},
+      "многія": {"ipa": "/mnoˈɦʲijɑ/", "en": "many (Church Slavonic, accusative plural neuter)"},
+      "острівець": {"ipa": "/ostˈrʲiwɛt͡sʲ/", "en": "small island, islet (diminutive)"},
+      "розгр": {"ipa": "/ˈrozɦr/", "en": "rout, defeat (truncated form of розгром)"},
+      "стефаан": {"ipa": "/stɛˈfɑːn/", "en": "Stefan (archaic spelling with double 'a')"},
+      "ґрондський": {"ipa": "/ˈɡronsʲkɪj/", "en": "of Grodno (city in Belarus, adj.)"}
+    }
+  }
+]

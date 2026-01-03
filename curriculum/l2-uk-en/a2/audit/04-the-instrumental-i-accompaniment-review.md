@@ -1,9 +1,9 @@
 # Audit Report: 04-the-instrumental-i-accompaniment.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** 'PPP' | **Target:** 1000
-**Overall Status:** ❌ FAIL
+**Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
+**Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, знахідний, кличний, називний, час
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, місцевий, знахідний, називний, відмінок
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1758/1000
+- **Words:** ✅ 1727/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -23,13 +23,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 43.1% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 43.8% (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Introduction** | ✅ | 155 | Included in Core |
+| **Intro/Narrative** | ✅ | 155 | Included in Core |
 | **Warm-up** | ✅ | 90 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **Питання орудного відмінка: Ким? Чим? (The Instrumental Question)** | ⚪️ | 78 | Skipped |
@@ -47,5 +47,4 @@
 | **Mini-Dialogues** | ✅ | 161 | Included in Core |
 | **Reading Practice: Вечірка-сюрприз** | ✅ | 208 | Included in Core |
 | **Підсумок** | ✅ | 133 | Included in Core |
-| **Need More Practice?** | ⚪️ | 31 | Skipped |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Need More Practice?** | ⚪️ | 0 | Skipped |

@@ -388,11 +388,4 @@ With these terms, you can now follow sentence analysis in Ukrainian grammar book
 
 ---
 
-> [!resources] 🎧 External Resources
->
-> **Sentence Structure:**
-> - 📖 [Ukrainian Syntax](https://www.ukrainianlessons.com/grammar/) — Grammar overview
-> - 📺 [Sentence Analysis](https://www.youtube.com/results?search_query=ukrainian+sentence+structure) — YouTube tutorials
-> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/the-podcast/) — Grammar episodes
-
 ---

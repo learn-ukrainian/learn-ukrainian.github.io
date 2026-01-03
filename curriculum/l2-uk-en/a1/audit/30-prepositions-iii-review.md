@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): далеко, близько, додому, назад, вдома...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): далеко, близько, додому, вдома, назад...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1109/750
+- **Words:** ✅ 1077/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 37.2% (target 35-55% (M30))
+- **Immersion:** 🇺🇦 38.7% (target 35-55% (M30))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (9 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -45,4 +42,4 @@
 | **Location vs Direction Pairs** | ⚪️ | 0 | Skipped |
 | **Examples in Context** | ✅ | 192 | Included in Core |
 | **Dialogues** | ✅ | 472 | Included in Core |
-| **Summary** | ✅ | 114 | Included in Core |
+| **Summary** | ✅ | 82 | Included in Core |

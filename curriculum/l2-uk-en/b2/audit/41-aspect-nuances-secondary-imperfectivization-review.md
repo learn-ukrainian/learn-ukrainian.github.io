@@ -1,16 +1,25 @@
 # Audit Report: 41-aspect-nuances-secondary-imperfectivization.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "TTT" | **Target:** 1750
+**Phase:** B2.2 | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): запізнюватися, починати, програвати, вставати, згадувати...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
-- **Words:** ✅ 1822/1750
+- **Words:** ✅ 1790/1750
 - **Activities:** ✅ 16/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/35
+- **Vocab:** ✅ 77/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -31,22 +40,16 @@
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 7 | 3 | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 5% | 5.0% |
+| visual | 9 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.95 | - | 95% | 5% | 4.8% |
 | questions | 18 | 5 | 100% | 5% | 5.0% |
 | proverbs | 2 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.2%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (16 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Видові нюанси I: Вторинна імперфективація** | ⚪️ | 95 | Skipped |
+| **Intro/Narrative** | ✅ | 63 | Included in Core |
 | **Тест: Прочитайте текст** | ✅ | 150 | Included in Core |
 | **Пояснення** | ⚪️ | 310 | Skipped |
 | **Значення вторинних імперфективів** | ⚪️ | 202 | Skipped |
@@ -56,4 +59,3 @@
 | **Міні-діалоги** | ✅ | 149 | Included in Core |
 | **Культурний контекст** | ✅ | 273 | Included in Core |
 | **Підсумок** | ✅ | 81 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

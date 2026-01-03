@@ -239,12 +239,4 @@ The prefix **За-** is the trickiest one. It has three opposite meanings!
 6.  **По-** = A bit | Start.
 7.  **На-** = Accumulate | Create.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Prefix з-/с-: Which one to use? ...](https://www.youtube.com/watch?v=fRv6h6nhPxQ) — Spell It Right! #Ukrainian
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
 ---

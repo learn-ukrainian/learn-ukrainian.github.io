@@ -496,6 +496,7 @@ items:
   ipa: /fʲiˈnɑnsɪ/
   translation: finances
   pos: noun
+  gender: m
 - lemma: цитувати
   ipa: /t͡sɪtuˈwɑtɪ/
   translation: to quote

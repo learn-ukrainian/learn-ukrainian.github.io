@@ -301,12 +301,4 @@ At a café:
 
 ---
 
-> [!resources] External Resources
->
-> **Media:**
->
-> - [Alphabet Guide](https://www.ukrainianlessons.com/ukrainian-alphabet/) — Master Cyrillic
-> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Complete audio course
-> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Essential video review
-
 ---

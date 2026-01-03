@@ -1,0 +1,17 @@
+module: c1-19
+title: C1.1 Practice II
+subtitle: Academic Foundation
+version: '2.0'
+phase: C1.1 Academic
+focus: practice
+pedagogy: academic
+duration: 120
+vocabulary_count: 24
+tags:
+- c1
+- practice
+- critique
+- practice
+objectives:
+- Master C1 concepts in C1.1 Practice II
+slug: 19-c11-practice-ii

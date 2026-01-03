@@ -11,11 +11,10 @@ items:
   ipa: /butˈtʲɛwɪj/
   translation: existential
   pos: adj
-- lemma: визнач
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: визначений
+  ipa: /wɪznɑˈt͡ʃɛnɪj/
+  translation: definite
+  pos: adj
 - lemma: відчуження
   ipa: /wʲidt͡ʃuˈʒɛnʲːɑ/
   translation: alienation
@@ -68,7 +67,6 @@ items:
   ipa: /zɐmˈrʲitɪ/
   translation: to freeze, to become motionless
   pos: verb
-  gender: n
 - lemma: зловживати
   ipa: /zloʒɪˈwɑtɪ/
   translation: to abuse
@@ -86,35 +84,29 @@ items:
   ipa: /lɛdʲ/
   translation: barely
   pos: adv
-- lemma: летять
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: летіти
+  ipa: /lɛˈtʲitɪ/
+  translation: to fly
+  pos: verb
 - lemma: мазок
   ipa: /mɐˈzok/
   translation: stroke, swab
   pos: noun
   gender: m
-- lemma: мака
-  ipa: ''
-  translation: ''
+- lemma: мак
+  ipa: /mɑk/
+  translation: poppy
   pos: noun
   gender: m
-- lemma: мо
-  ipa: ''
-  translation: ''
-  pos: other
 - lemma: мінімалізм
   ipa: /mʲinʲimɐˈlʲizm/
   translation: minimalism
   pos: noun
   gender: m
-- lemma: надвор
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: n
+- lemma: надворі
+  ipa: /nɐdwoˈrʲi/
+  translation: outside, outdoors
+  pos: adv
 - lemma: надивитися
   ipa: /nɐdɪˈwɪtɪsʲɑ/
   translation: to have a good look
@@ -129,23 +121,18 @@ items:
   translation: uncertainty
   pos: noun
   gender: f
-- lemma: невідий
-  ipa: ''
-  translation: ''
+- lemma: невідомий
+  ipa: /nɛˈwʲidomɪj/
+  translation: unknown
   pos: adj
-  gender: f
 - lemma: неозначено
   ipa: /nɛoznɑˈt͡ʃɛno/
   translation: indefinitely
   pos: adv
-- lemma: неозначиний
-  ipa: ''
-  translation: ''
+- lemma: неозначений
+  ipa: /nɛoznɑˈt͡ʃɛnɪj/
+  translation: indefinite
   pos: adj
-- lemma: неозначити
-  ipa: ''
-  translation: ''
-  pos: verb
 - lemma: новеля
   ipa: /noˈwɛlʲɑ/
   translation: short story
@@ -171,9 +158,9 @@ items:
   ipa: /poˈbutɪ/
   translation: to stay for a while
   pos: verb
-- lemma: подазати
-  ipa: ''
-  translation: ''
+- lemma: показати
+  ipa: /pokɐˈzɑtɪ/
+  translation: to show
   pos: verb
 - lemma: пожати
   ipa: /poˈʒɑtɪ/
@@ -187,12 +174,10 @@ items:
   ipa: /prɪmʲiˈtɪwnɪj/
   translation: primitive
   pos: adj
-  gender: n
 - lemma: присудковий
   ipa: /prɪsudˈkowɪj/
   translation: predicate (adj.)
   pos: adj
-  gender: n
 - lemma: підзаголовка
   ipa: /pʲidzɐɦoˈlowkɑ/
   translation: subtitle
@@ -215,12 +200,10 @@ items:
   ipa: /rozɦorˈnutɪj/
   translation: unfolded, developed
   pos: adj
-  gender: m
 - lemma: розстелитися
   ipa: /rozsˈtɛlɪtɪsʲɑ/
   translation: to spread out
   pos: verb
-  gender: m
 - lemma: різне
   ipa: /ˈrʲiznɛ/
   translation: various, different things
@@ -234,21 +217,15 @@ items:
   ipa: /sɐmoˈtɑ/
   translation: loneliness
   pos: noun
-  gender: m
+  gender: f
 - lemma: самотній
   ipa: /sɐˈmotnʲij/
   translation: lonely
   pos: adj
-  gender: f
 - lemma: свіжо
   ipa: /ˈswʲiʒo/
   translation: freshly
   pos: adv
-- lemma: світанка
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: світанок
   ipa: /swʲiˈtɑnok/
   translation: dawn
@@ -258,11 +235,10 @@ items:
   ipa: /swʲiˈtɑtɪ/
   translation: to dawn
   pos: verb
-- lemma: світлій
-  ipa: ''
-  translation: ''
+- lemma: світлий
+  ipa: /ˈswʲitlɪj/
+  translation: bright, light
   pos: adj
-  gender: n
 - lemma: світліти
   ipa: /swʲitˈlʲitɪ/
   translation: to brighten
@@ -322,20 +298,19 @@ items:
   ipa: /frɑɦmɛnˈtɑrnɪj/
   translation: fragmentary
   pos: adj
-  gender: m
 - lemma: фрагментарність
   ipa: /frɑɦmɛntɑrnʲistʲ/
   translation: fragmentariness
   pos: noun
   gender: f
-- lemma: хмар
-  ipa: ''
-  translation: ''
+- lemma: хмара
+  ipa: /ˈxmɑrɑ/
+  translation: cloud
   pos: noun
   gender: f
-- lemma: хробака
-  ipa: ''
-  translation: ''
+- lemma: хробак
+  ipa: /xroˈbɑk/
+  translation: worm
   pos: noun
   gender: m
 - lemma: чагар
@@ -347,7 +322,6 @@ items:
   ipa: /ʲimɛnnɪˈkowɪj/
   translation: nominal
   pos: adj
-  gender: n
 - lemma: імпресіонізм
   ipa: /ʲimprɛsʲioˈnʲizm/
   translation: impressionism
@@ -357,7 +331,6 @@ items:
   ipa: /ʲimprɛsʲionʲisˈtɪt͡ʃnɪj/
   translation: impressionistic
   pos: adj
-  gender: m
 - lemma: імпресіоністичність
   ipa: /ʲimprɛsʲionʲistɪt͡ʃnʲistʲ/
   translation: impressionistic quality
@@ -367,7 +340,6 @@ items:
   ipa: /ʲinˈtɪmnɪj/
   translation: intimate
   pos: adj
-  gender: f
 - lemma: існування
   ipa: /ʲisnuˈwɑnʲːɑ/
   translation: existence

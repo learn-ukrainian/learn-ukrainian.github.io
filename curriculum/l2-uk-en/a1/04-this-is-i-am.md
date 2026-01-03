@@ -297,14 +297,4 @@ In Module 05, you'll learn demonstratives (цей, ця, це, ці) to be even 
 
 ## Need More Practice?
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Basic Ukrainian grammar: Personal pronouns](https://www.youtube.com/watch?v=WtpQU-oQ8A0) — Speak Ukrainian
->
-> **Pronouns:** [Personal Pronouns in Ukrainian](https://www.ukrainianlessons.com/personal-pronouns/) — Full declension table with audio
->
-> **Podcast:** [ULP 1-03 | How to Introduce Yourself](https://www.ukrainianlessons.com/episode3/) — Real conversations about identity
->
-> **Basic Phrases:** [14 Basic Ukrainian Phrases](https://www.ukrainianlessons.com/14-basic-ukrainian-phrases/) — Essential phrases for introductions
-
 ---

@@ -1,0 +1,17 @@
+module: c1-1
+title: B2 Review & Bridge
+subtitle: Academic Foundation
+version: '2.0'
+phase: C1.1 Academic
+focus: review
+pedagogy: academic
+duration: 120
+vocabulary_count: 24
+tags:
+- c1
+- review
+- review
+- grammar
+objectives:
+- Master C1 concepts in B2 Review & Bridge
+slug: 1-b2-review--bridge

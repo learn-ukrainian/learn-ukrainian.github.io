@@ -1,0 +1,375 @@
+{
+  "version": "1.0",
+  "source": "Ukrainian Lessons (www.ukrainianlessons.com)",
+  "generated_at": "2026-01-02",
+  "total_articles": 29,
+  "articles": [
+    {
+      "id": "ulp-blog-000",
+      "category": "alphabet",
+      "url": "https://www.ukrainianlessons.com/ukrainian-alphabet/",
+      "title": "Ukrainian Alphabet: Full Guide with Examples and Pronunciation",
+      "topics": [
+        "alphabet",
+        "cyrillic",
+        "pronunciation",
+        "letters"
+      ],
+      "suggested_level": "A1",
+      "content_type": "interactive_guide"
+    },
+    {
+      "id": "ulp-blog-001",
+      "category": "grammar",
+      "url": "https://www.ukrainianlessons.com/ukrainian-cases-chart/",
+      "title": "Ukrainian Cases Chart",
+      "topics": [
+        "cases",
+        "grammar",
+        "declension"
+      ],
+      "suggested_level": "A2",
+      "content_type": "reference"
+    },
+    {
+      "id": "ulp-blog-002",
+      "category": "grammar",
+      "url": "https://www.ukrainianlessons.com/accusativecase/",
+      "title": "Accusative Case in Ukrainian",
+      "topics": [
+        "accusative",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "guide"
+    },
+    {
+      "id": "ulp-blog-003",
+      "category": "grammar",
+      "url": "https://www.ukrainianlessons.com/genitive-case/",
+      "title": "Genitive Case in Ukrainian",
+      "topics": [
+        "genitive",
+        "cases",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "guide"
+    },
+    {
+      "id": "ulp-blog-004",
+      "category": "grammar",
+      "url": "https://www.ukrainianlessons.com/grammar-past-tense/",
+      "title": "Past Tense in Ukrainian",
+      "topics": [
+        "past tense",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "guide"
+    },
+    {
+      "id": "ulp-blog-005",
+      "category": "grammar",
+      "url": "https://www.ukrainianlessons.com/grammar-future/",
+      "title": "Future Tense in Ukrainian",
+      "topics": [
+        "future tense",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "A1",
+      "content_type": "guide"
+    },
+    {
+      "id": "ulp-blog-006",
+      "category": "grammar",
+      "url": "https://www.ukrainianlessons.com/ukrainian-verb-prefixes/",
+      "title": "Ukrainian Verb Prefixes",
+      "topics": [
+        "prefixes",
+        "verbs",
+        "aspect"
+      ],
+      "suggested_level": "B1",
+      "content_type": "reference"
+    },
+    {
+      "id": "ulp-blog-007",
+      "category": "grammar",
+      "url": "https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/",
+      "title": "Verb Aspect in Ukrainian",
+      "topics": [
+        "aspect",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "A2",
+      "content_type": "guide"
+    },
+    {
+      "id": "ulp-blog-008",
+      "category": "grammar",
+      "url": "https://www.ukrainianlessons.com/reflexive-verbs/",
+      "title": "Reflexive Verbs in Ukrainian",
+      "topics": [
+        "reflexive verbs",
+        "verbs",
+        "grammar"
+      ],
+      "suggested_level": "B1",
+      "content_type": "guide"
+    },
+    {
+      "id": "ulp-blog-009",
+      "category": "grammar",
+      "url": "https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/",
+      "title": "Ukrainian Conjunctions Guide",
+      "topics": [
+        "conjunctions",
+        "grammar",
+        "syntax"
+      ],
+      "suggested_level": "A2",
+      "content_type": "reference"
+    },
+    {
+      "id": "ulp-blog-010",
+      "category": "vocabulary",
+      "url": "https://www.ukrainianlessons.com/vocabulary-family/",
+      "title": "Family Vocabulary in Ukrainian",
+      "topics": [
+        "family",
+        "vocabulary"
+      ],
+      "suggested_level": "A1",
+      "content_type": "vocabulary_list"
+    },
+    {
+      "id": "ulp-blog-011",
+      "category": "vocabulary",
+      "url": "https://www.ukrainianlessons.com/vocabulary-clothes/",
+      "title": "Clothes Vocabulary in Ukrainian",
+      "topics": [
+        "clothes",
+        "vocabulary"
+      ],
+      "suggested_level": "A1",
+      "content_type": "vocabulary_list"
+    },
+    {
+      "id": "ulp-blog-012",
+      "category": "vocabulary",
+      "url": "https://www.ukrainianlessons.com/ukrainian-food/",
+      "title": "40+ Ukrainian Dishes",
+      "topics": [
+        "food",
+        "culture",
+        "vocabulary"
+      ],
+      "suggested_level": "A1",
+      "content_type": "vocabulary_list"
+    },
+    {
+      "id": "ulp-blog-013",
+      "category": "vocabulary",
+      "url": "https://www.ukrainianlessons.com/vocabulary-fruits-and-vegetables/",
+      "title": "Fruits and Vegetables in Ukrainian",
+      "topics": [
+        "food",
+        "vocabulary"
+      ],
+      "suggested_level": "A1",
+      "content_type": "vocabulary_list"
+    },
+    {
+      "id": "ulp-blog-014",
+      "category": "vocabulary",
+      "url": "https://www.ukrainianlessons.com/animals-in-ukrainian-with-audio/",
+      "title": "Animals in Ukrainian (with Audio)",
+      "topics": [
+        "animals",
+        "vocabulary"
+      ],
+      "suggested_level": "A1",
+      "content_type": "vocabulary_list"
+    },
+    {
+      "id": "ulp-blog-015",
+      "category": "phrases",
+      "url": "https://www.ukrainianlessons.com/greetings/",
+      "title": "Greetings in Ukrainian",
+      "topics": [
+        "greetings",
+        "phrases"
+      ],
+      "suggested_level": "A1",
+      "content_type": "phrasebook"
+    },
+    {
+      "id": "ulp-blog-016",
+      "category": "phrases",
+      "url": "https://www.ukrainianlessons.com/thank-you-in-ukrainian/",
+      "title": "8+ Ways to Say Thank You in Ukrainian",
+      "topics": [
+        "gratitude",
+        "phrases"
+      ],
+      "suggested_level": "A1",
+      "content_type": "phrasebook"
+    },
+    {
+      "id": "ulp-blog-017",
+      "category": "phrases",
+      "url": "https://www.ukrainianlessons.com/14-basic-ukrainian-phrases/",
+      "title": "14 Basic Ukrainian Phrases",
+      "topics": [
+        "phrases",
+        "basics"
+      ],
+      "suggested_level": "A1",
+      "content_type": "phrasebook"
+    },
+    {
+      "id": "ulp-blog-018",
+      "category": "phrases",
+      "url": "https://www.ukrainianlessons.com/small-talk-in-ukrainian/",
+      "title": "Small Talk in Ukrainian",
+      "topics": [
+        "conversation",
+        "phrases"
+      ],
+      "suggested_level": "A2",
+      "content_type": "guide"
+    },
+    {
+      "id": "ulp-blog-019",
+      "category": "culture",
+      "url": "https://www.ukrainianlessons.com/kyiv-things-to-do/",
+      "title": "Things to Do in Kyiv",
+      "topics": [
+        "kyiv",
+        "culture",
+        "travel"
+      ],
+      "suggested_level": "A2",
+      "content_type": "cultural_guide"
+    },
+    {
+      "id": "ulp-blog-020",
+      "category": "culture",
+      "url": "https://www.ukrainianlessons.com/ukrainian-customs/",
+      "title": "Ukrainian Customs and Traditions",
+      "topics": [
+        "customs",
+        "culture",
+        "traditions"
+      ],
+      "suggested_level": "B1",
+      "content_type": "cultural_guide"
+    },
+    {
+      "id": "ulp-blog-021",
+      "category": "culture",
+      "url": "https://www.ukrainianlessons.com/ukrainian-superstitions/",
+      "title": "Ukrainian Superstitions",
+      "topics": [
+        "superstitions",
+        "culture",
+        "beliefs"
+      ],
+      "suggested_level": "B1",
+      "content_type": "cultural_guide"
+    },
+    {
+      "id": "ulp-blog-022",
+      "category": "culture",
+      "url": "https://www.ukrainianlessons.com/taras-shevchenko/",
+      "title": "Taras Shevchenko - Ukraine's National Poet",
+      "topics": [
+        "shevchenko",
+        "literature",
+        "history"
+      ],
+      "suggested_level": "B2",
+      "content_type": "biography"
+    },
+    {
+      "id": "ulp-blog-023",
+      "category": "learning_resources",
+      "url": "https://www.ukrainianlessons.com/learning-ukrainian-vocabulary/",
+      "title": "How to Learn Ukrainian Vocabulary",
+      "topics": [
+        "study tips",
+        "vocabulary",
+        "methodology"
+      ],
+      "suggested_level": "A1",
+      "content_type": "methodology"
+    },
+    {
+      "id": "ulp-blog-024",
+      "category": "learning_resources",
+      "url": "https://www.ukrainianlessons.com/ukrainian-dictionaries/",
+      "title": "Best Ukrainian Dictionaries",
+      "topics": [
+        "dictionaries",
+        "resources"
+      ],
+      "suggested_level": "A1",
+      "content_type": "resource_guide"
+    },
+    {
+      "id": "ulp-blog-025",
+      "category": "learning_resources",
+      "url": "https://www.ukrainianlessons.com/ukrainian-podcasts/",
+      "title": "Ukrainian Podcasts for Learners",
+      "topics": [
+        "podcasts",
+        "resources"
+      ],
+      "suggested_level": "A2",
+      "content_type": "resource_guide"
+    },
+    {
+      "id": "ulp-blog-026",
+      "category": "learning_resources",
+      "url": "https://www.ukrainianlessons.com/ukrainian-fiction-books/",
+      "title": "Ukrainian Fiction Books for Learners",
+      "topics": [
+        "books",
+        "literature",
+        "resources"
+      ],
+      "suggested_level": "B1",
+      "content_type": "resource_guide"
+    },
+    {
+      "id": "ulp-blog-027",
+      "category": "advanced",
+      "url": "https://www.ukrainianlessons.com/confusing-ukrainian-words/",
+      "title": "Confusing Ukrainian Words",
+      "topics": [
+        "vocabulary",
+        "common mistakes"
+      ],
+      "suggested_level": "B1",
+      "content_type": "troubleshooting"
+    },
+    {
+      "id": "ulp-blog-028",
+      "category": "advanced",
+      "url": "https://www.ukrainianlessons.com/false-friends/",
+      "title": "False Friends in Ukrainian",
+      "topics": [
+        "vocabulary",
+        "common mistakes",
+        "cognates"
+      ],
+      "suggested_level": "B1",
+      "content_type": "troubleshooting"
+    }
+  ]
+}

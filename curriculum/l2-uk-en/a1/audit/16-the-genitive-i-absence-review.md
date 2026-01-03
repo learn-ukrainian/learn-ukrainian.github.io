@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): гроші, ідея, увага, допомога, досвід...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): нема, увага, ідея, користь, гроші...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1136/750
+- **Words:** ✅ 1072/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 29.2% (target 25-40% (M16))
+- **Immersion:** 🇺🇦 30.8% (target 25-40% (M16))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -41,4 +38,4 @@
 | **Practice** | ⚪️ | 103 | Skipped |
 | **Cultural Insight** | ✅ | 411 | Included in Core |
 | **Summary / Підсумок** | ✅ | 123 | Included in Core |
-| **Need More Practice?** | ⚪️ | 64 | Skipped |
+| **Need More Practice?** | ⚪️ | 0 | Skipped |

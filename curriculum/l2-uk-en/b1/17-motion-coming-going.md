@@ -378,11 +378,4 @@
 >
 > Якщо так — переходьте до M18! 🚀
 
-> [!resources] 🎧 Зовнішні ресурси
->
-> **Додаткові матеріали:**
-> - 📺 [Ukrainian Motion Verbs](https://www.youtube.com/results?search_query=ukrainian+motion+verbs+prefixes) — відео пояснення
-> - 🎧 [Ukrainian Lessons - Verbs of Motion](https://www.ukrainianlessons.com/) — подкаст уроки
-> - 📖 [Verbs of Motion](https://www.ukrainianlanguage.uk/) — граматичний довідник
-
 ---

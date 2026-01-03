@@ -329,11 +329,4 @@ This letter from Canada demonstrates Dative nouns in a natural context. Before r
 
 ## Need More Practice?
 
-> [!resources] External Resources
->
-> - 🎥 [Dative Case Practice](https://www.youtube.com/watch?v=Cm0Ay7NEOlw) — Let's Learn Ukrainian
-> - 📖 [Nouns in Dative Case](https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-dative-case/)
-> - 📝 [Dative Case Guide](https://www.ukrainianlessons.com/intro-cases/)
-> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-
 ---

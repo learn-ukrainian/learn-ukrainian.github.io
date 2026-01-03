@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): шафа, двері, стеля, телефон, стілець...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): комп'ютер, телефон, ліжко, стіна, вікно...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1634/300 (>1300 may be too long)
+- **Words:** ⚠️ 1585/300 (>1300 may be too long)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 15.0% (target 10-25% (M05))
+- **Immersion:** 🇺🇦 15.2% (target 10-25% (M05))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -42,4 +39,4 @@
 | **Cultural Insight** | ✅ | 398 | Included in Core |
 | **Production** | ➖ | 91 | Excluded Type |
 | **Summary** | ✅ | 134 | Included in Core |
-| **Need More Practice?** | ⚪️ | 49 | Skipped |
+| **Need More Practice?** | ⚪️ | 0 | Skipped |

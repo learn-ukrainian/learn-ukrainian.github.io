@@ -177,9 +177,3 @@ You learned to:
 - General terms: **хобі**, **вільний час**, **відпочинок**
 
 Life is not only work. Ukrainians value their rest highly. Make sure you rest well and find a hobby that makes you truly happy! Don't forget to invite friends!
-
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

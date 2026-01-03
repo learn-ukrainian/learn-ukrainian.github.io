@@ -551,6 +551,7 @@ items:
   ipa: /ˈsxodɪ/
   translation: stairs, steps
   pos: noun
+  gender: f
 - lemma: тавтологія
   ipa: /tɑwtɔˈlohʲijɑ/
   translation: tautology
@@ -569,10 +570,12 @@ items:
   ipa: /trudˈnoʃt͡ʃʲi/
   translation: difficulties
   pos: noun
+  gender: f
 - lemma: трудніщ
   ipa: /trudˈnʲiʃt͡ʃ/
   translation: difficulty (var.)
   pos: noun
+  gender: f
 - lemma: утопія
   ipa: /uˈtopʲijɑ/
   translation: utopia

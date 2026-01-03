@@ -338,11 +338,4 @@ _(Через хвилину)_
 >
 > Якщо так — ви готові до практики!
 
-> [!resources] 🎧 Зовнішні ресурси
->
-> **Додаткові матеріали:**
-> - 📖 [Вид дієслова](https://uk.wikipedia.org/wiki/Вид_(лінгвістика)) — Вікіпедія
-> - 📺 [Ukrainian Verb Aspect](https://www.youtube.com/results?search_query=ukrainian+verb+aspect) — відео пояснення
-> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/category/podcast/) — приклади з реального життя
-
 ---

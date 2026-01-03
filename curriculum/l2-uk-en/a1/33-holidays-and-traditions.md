@@ -172,11 +172,3 @@
 Ви вивчили українські свята та традиції! Тепер ви знаєте багато щирих привітань. (You learned Ukrainian holidays and traditions! Now you know many sincere greetings.) Ви знаєте слова: подарунок, торт, вечірка. Це був дуже веселий урок! (This was a very cheerful lesson!)
 
 ---
-
-> [!resources] External Resources
->
-> **Media:**
->
-> - [Greetings for Every Occasion](https://www.ukrainianlessons.com/greetings/) — Holiday phrases
-> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/holidays
-> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons

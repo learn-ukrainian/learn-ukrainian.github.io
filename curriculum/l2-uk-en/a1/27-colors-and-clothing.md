@@ -185,11 +185,3 @@ These words take **plural adjectives**:
 Ви вивчили кольори та одяг. Тепер ви можете описати свою футболку або штани. (You learned colors and clothing. Now you can describe your t-shirt or pants.) Ви знаєте слова "білий" та "чорний". Тепер ви знаєте два сині кольори: синій та блакитний. Це чудова робота! (This is great work!)
 
 ---
-
-> [!resources] External Resources
->
-> **Media:**
->
-> - [Colors Guide](https://www.ukrainianlessons.com/vocabulary-colors/) — Complete color vocabulary
-> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons
-> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons

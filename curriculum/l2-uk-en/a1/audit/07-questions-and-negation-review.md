@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1120/500
+- **Words:** ✅ 1068/500
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 18.6% (target 15-35% (M07))
+- **Immersion:** 🇺🇦 19.5% (target 15-35% (M07))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (9 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -41,4 +38,4 @@
 | **Practice** | ⚪️ | 44 | Skipped |
 | **Production** | ➖ | 158 | Excluded Type |
 | **Cultural Insight** | ✅ | 131 | Included in Core |
-| **Summary** | ✅ | 126 | Included in Core |
+| **Summary** | ✅ | 74 | Included in Core |

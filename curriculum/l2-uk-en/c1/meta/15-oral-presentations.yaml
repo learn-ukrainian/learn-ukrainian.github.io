@@ -1,0 +1,17 @@
+module: c1-15
+title: Oral Presentations
+subtitle: Academic Foundation
+version: '2.0'
+phase: C1.1 Academic
+focus: speaking
+pedagogy: academic
+duration: 120
+vocabulary_count: 24
+tags:
+- c1
+- speaking
+- presentation
+- speech
+objectives:
+- Master C1 concepts in Oral Presentations
+slug: 15-oral-presentations

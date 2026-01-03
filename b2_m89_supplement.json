@@ -1,0 +1,12 @@
+[
+  {
+    "file": "curriculum/l2-uk-en/b2/89-pereiaslav-treaty.md",
+    "enrichments": {
+      "братній": {"ipa": "/ˈbrɑtnʲij/", "en": "fraternal, brotherly (declined form)"},
+      "бутурліна": {"ipa": "/buturˈlʲinɑ/", "en": "Buturlin (genitive - Vasiliy Buturlin, Russian envoy to Pereiaslav)"},
+      "волим": {"ipa": "/ˈwolɪm/", "en": "we wish, we want (archaic 1st person plural of волити)"},
+      "дяка": {"ipa": "/dʲɑˈkɑ/", "en": "dyak, scribe (genitive of дяк)"},
+      "хмельк": {"ipa": "/xmɛlʲk/", "en": "Khmelnytsky (truncated form of Хмельницький)"}
+    }
+  }
+]

@@ -1,23 +1,21 @@
 # Audit Report: 22-if-i-were.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
+**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
 ## LINT ERRORS
-- ❌ Line 235: Empty Header detected (Lonely '#'). Remove or add title.
+- ❌ Line 209: Empty Header detected (Lonely '#'). Remove or add title.
 
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
-  - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): мабуть, певно, пішов, обов'язково, поїхав...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): обов'язково, купив, можливо, мабуть, пішов...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 40/100)
 
 - Borderline case (severity 40/100)
-- 3 pedagogical violations (minor)
+- 2 pedagogical violations (minor)
 - Immersion 11% off target
 - Activity density below minimum
 
@@ -32,7 +30,7 @@
 - **Vocab:** ✅ 18/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ❌ 1 Format Errors
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** ❌ 28.8% LOW (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
 
@@ -45,7 +43,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Summary** | ✅ | 0 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 63 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **Real vs. Unreal Conditions** | ⚪️ | 62 | Skipped |
@@ -58,4 +56,3 @@
 | **Practice** | ⚪️ | 0 | Skipped |
 | **Practice Examples** | ⚪️ | 40 | Skipped |
 | **Saying Sorry and Politeness** | ⚪️ | 150 | Skipped |
-| **# Vocabulary** | ➖ | 0 | Excluded Type |

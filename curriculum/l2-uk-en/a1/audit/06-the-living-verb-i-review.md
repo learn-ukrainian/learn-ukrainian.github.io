@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): шукати, називати, працювати, мріяти, закінчувати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): мріяти, шукати, називати, працювати, закінчувати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1273/500
+- **Words:** ✅ 1217/500
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 18.8% (target 15-35% (M06))
+- **Immersion:** 🇺🇦 19.7% (target 15-35% (M06))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -41,4 +38,4 @@
 | **Practice** | ⚪️ | 210 | Skipped |
 | **Cultural Insight** | ✅ | 155 | Included in Core |
 | **Reading Practice: Мій день (My Day)** | ✅ | 68 | Included in Core |
-| **Summary** | ✅ | 138 | Included in Core |
+| **Summary** | ✅ | 82 | Included in Core |

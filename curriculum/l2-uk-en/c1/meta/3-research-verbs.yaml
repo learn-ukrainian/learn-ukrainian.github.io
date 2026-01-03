@@ -1,0 +1,17 @@
+module: c1-3
+title: Research Verbs
+subtitle: Academic Foundation
+version: '2.0'
+phase: C1.1 Academic
+focus: vocabulary
+pedagogy: academic
+duration: 120
+vocabulary_count: 24
+tags:
+- c1
+- vocabulary
+- verbs
+- research
+objectives:
+- Master C1 concepts in Research Verbs
+slug: 3-research-verbs

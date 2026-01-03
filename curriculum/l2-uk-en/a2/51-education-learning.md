@@ -185,11 +185,3 @@ You learned to:
 - Distinguish verbs: **вчитися** (place/process) vs **вивчати** (subject)
 
 Keep learning! Education is the key to the future. Good luck on your path to fluency!
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Most interesting Facts about Ukrainian Schools/ #ukraineeducation #ukr...](https://www.youtube.com/watch?v=m2KybmMH1pE) — Ukrainian Guy
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): традиція, музика, гості, різдво, торт...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): запрошення, любові, подарунок, свічка, народження...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 831/750
+- **Words:** ✅ 798/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 35.8% (target 35-55% (M33))
+- **Immersion:** 🇺🇦 37.4% (target 35-55% (M33))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (9 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -43,4 +40,4 @@
 | **When Is Your Birthday?** | ⚪️ | 12 | Skipped |
 | **Examples in Context** | ✅ | 186 | Included in Core |
 | **Dialogues** | ✅ | 443 | Included in Core |
-| **Summary** | ✅ | 74 | Included in Core |
+| **Summary** | ✅ | 41 | Included in Core |

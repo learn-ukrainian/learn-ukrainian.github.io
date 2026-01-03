@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (24 words): частка, закінчення, місцевий, відмінок, особа...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (24 words): речення, дієслово, відмінок, особа, займенник...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

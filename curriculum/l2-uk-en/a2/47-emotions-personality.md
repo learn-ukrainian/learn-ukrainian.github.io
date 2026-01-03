@@ -184,11 +184,3 @@ You learned to:
 - Form opposites with не-: терплячий → нетерплячий
 
 Remember that emotions in Ukrainian culture are often expressed openly. Use these new words to share your feelings with friends and family. Practice describing the characters in books or movies using the personality adjectives you learned. Are they сміливі or боягузливі? Чесні or нечесні? This will help you master the vocabulary.
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [How do you really feel? (Ukrainian)](https://www.youtube.com/watch?v=Mn_MOEThvCI) — EMOTIONS AND FEELINGS VOCABULARY
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

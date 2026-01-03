@@ -1,0 +1,17 @@
+module: c1-25
+title: Political System
+subtitle: Professional & Social
+version: '2.0'
+phase: C1.2 Professional
+focus: social
+pedagogy: academic
+duration: 120
+vocabulary_count: 24
+tags:
+- c1
+- social
+- politics
+- government
+objectives:
+- Master C1 concepts in Political System
+slug: 25-political-system

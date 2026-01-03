@@ -217,14 +217,6 @@ Don't confuse with **Боліти** (to hurt).
 > 37.0°C is already considered "sick" suitable for staying home.
 > 38.0°C is "high".
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Doctors Vocabulary and questions in Ukrainian - Learn doctor vocab and...](https://www.youtube.com/watch?v=OnO697z9iPM) — Ukrainian grammar
->
-> **Grammar Guide:** [Something Hurts](https://www.ukrainianlessons.com/something-hurts/) — Ukrainian Lessons
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
 ---
 
 # Summary

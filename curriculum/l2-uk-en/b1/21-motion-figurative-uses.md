@@ -259,10 +259,4 @@ vocab_count: 25
 
 ---
 
-> [!resources] Зовнішні ресурси
->
-> **Додаткові матеріали:**
-> - [Фразеологізми з дієсловами руху](https://uk.wikipedia.org/wiki/Фразеологія) — Вікіпедія (для загального розвитку).
-> - [Ukrainian Idioms and Proverbs](https://www.ukrainianlessons.com/) — Ресурс Ukrainian Lessons.
-
 ---

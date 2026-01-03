@@ -2,315 +2,313 @@ module: 61-synonyms-time
 level: B2
 version: '2.0'
 items:
-  - lemma: аромат
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: багаж
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: виборювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: вимор
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ворскл
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: впорядкований
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: вчасний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: відбудова
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: відрізок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: віковічний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: гармонійно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: геологічний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: гранично
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: гума
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: довік
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: ера
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: жорстоко
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: забарити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: звітний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: згаяти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: злет
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: каштан
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: козаччина
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: контекстний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: контур
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: кривавий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: лунний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: людство
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: лінійний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: матеріальний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: менеджмент
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: назавжда
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: напіврозпад
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: незворотність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: непомітно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: нинішній
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: перечекати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: плин
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: плина
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: повік
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: помилково
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: поцілунок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: проміжок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: півень
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ретроспектива
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: розкіш
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: розстріляний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: світловий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: сий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: синхронний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: сорочинський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: стрічка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: суми
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: сьогоднішній
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: табун
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: тайм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: темпоритм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: тяглість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: фокусуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: фотограф
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: хаотичний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: хімія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: циклічно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: шкаля
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: щохвилини
-    ipa: ''
-    translation: ''
-    pos: adv
+- lemma: аромат
+  ipa: /ɐroˈmɑt/
+  translation: aroma, fragrance
+  pos: noun
+  gender: m
+- lemma: багаж
+  ipa: /bɐˈɦɑʒ/
+  translation: baggage, luggage
+  pos: noun
+  gender: m
+- lemma: виборювати
+  ipa: /wɪboˈrʲuwɑtɪ/
+  translation: to fight for, to win
+  pos: verb
+- lemma: вимор
+  ipa: /ˈwɪmor/
+  translation: extinction, dying out
+  pos: noun
+  gender: m
+- lemma: ворскл
+  ipa: /worˈskl/
+  translation: Vorskla (river)
+  pos: propn
+  gender: f
+- lemma: впорядкований
+  ipa: /wporʲɑdˈkowɑnɪj/
+  translation: organized, arranged
+  pos: adj
+  gender: m
+- lemma: вчасний
+  ipa: /wt͡ʃɐsnɪj/
+  translation: timely, on time
+  pos: adj
+- lemma: відбудова
+  ipa: /wʲidˈbudowɑ/
+  translation: reconstruction
+  pos: noun
+  gender: f
+- lemma: відрізок
+  ipa: /wʲidˈrʲizok/
+  translation: segment, period
+  pos: noun
+  gender: m
+- lemma: віковічний
+  ipa: /wʲikoˈwʲit͡ʃnɪj/
+  translation: age-old, eternal
+  pos: adj
+  gender: f
+- lemma: гармонійно
+  ipa: /ɦɑrˈmonʲijno/
+  translation: harmoniously
+  pos: adv
+- lemma: геологічний
+  ipa: /ɦɛoloˈɦʲit͡ʃnɪj/
+  translation: geological
+  pos: adj
+  gender: f
+- lemma: гранично
+  ipa: /ɦrɐˈnɪt͡ʃno/
+  translation: extremely, to the limit
+  pos: adv
+- lemma: гума
+  ipa: /ɦuˈmɑ/
+  translation: rubber
+  pos: noun
+  gender: f
+- lemma: довік
+  ipa: /doˈwʲik/
+  translation: lifetime, eternity
+  pos: noun
+  gender: f
+- lemma: ера
+  ipa: /ˈɛrɑ/
+  translation: era, epoch
+  pos: noun
+  gender: f
+- lemma: жорстоко
+  ipa: /ˈʒorstoko/
+  translation: cruelly, harshly
+  pos: adv
+- lemma: забарити
+  ipa: /zɐbɐˈrɪtɪ/
+  translation: to delay, to be late
+  pos: verb
+- lemma: звітний
+  ipa: /ˈzwʲitnɪj/
+  translation: reporting, fiscal
+  pos: adj
+  gender: m
+- lemma: згаяти
+  ipa: /zɦɐˈjɑtɪ/
+  translation: to waste, to lose time
+  pos: verb
+- lemma: злет
+  ipa: /zlɛt/
+  translation: takeoff, rise
+  pos: noun
+  gender: m
+- lemma: каштан
+  ipa: /kɐʃˈtɑn/
+  translation: chestnut
+  pos: noun
+  gender: m
+- lemma: козаччина
+  ipa: /kozɐt͡ʃˈt͡ʃɪnɑ/
+  translation: Cossack era, Cossackdom
+  pos: propn
+  gender: f
+- lemma: контекстний
+  ipa: /kontɛkstnɪj/
+  translation: contextual
+  pos: adj
+  gender: f
+- lemma: контур
+  ipa: /konˈtur/
+  translation: contour, outline
+  pos: noun
+  gender: m
+- lemma: кривавий
+  ipa: /krɪˈwɑwɪj/
+  translation: bloody
+  pos: adj
+  gender: m
+- lemma: лунний
+  ipa: /ˈlunːɪj/
+  translation: lunar, moon
+  pos: adj
+  gender: m
+- lemma: людство
+  ipa: /lʲudˈstwo/
+  translation: humanity, mankind
+  pos: noun
+  gender: n
+- lemma: лінійний
+  ipa: /lʲinʲijnɪj/
+  translation: linear
+  pos: adj
+  gender: m
+- lemma: матеріальний
+  ipa: /mɐtɛrʲiˈɑlʲnɪj/
+  translation: material, tangible
+  pos: adj
+  gender: m
+- lemma: менеджмент
+  ipa: /mɛˈnɛdʒmɛnt/
+  translation: management
+  pos: noun
+  gender: m
+- lemma: назавжди
+  ipa: /nɐˈzɑʋʒdɪ/
+  translation: forever, always
+  pos: adv
+- lemma: напіврозпад
+  ipa: /nɐpʲiwˈrozpɑd/
+  translation: half-life
+  pos: noun
+  gender: m
+- lemma: незворотність
+  ipa: /nɛzwoˈrotnʲistʲ/
+  translation: irreversibility
+  pos: noun
+  gender: f
+- lemma: непомітно
+  ipa: /nɛpoˈmʲitno/
+  translation: imperceptibly
+  pos: adv
+- lemma: нинішній
+  ipa: /nɪˈnʲiʃnʲij/
+  translation: current, present
+  pos: adj
+  gender: m
+- lemma: перечекати
+  ipa: /pɛrɛt͡ʃɛˈkɑtɪ/
+  translation: to wait out
+  pos: verb
+- lemma: плин
+  ipa: /plɪn/
+  translation: flow, passage (of time)
+  pos: noun
+  gender: m
+- lemma: плина
+  ipa: /plɪˈnɑ/
+  translation: flow (genitive)
+  pos: noun
+  gender: m
+- lemma: повік
+  ipa: /poˈwʲik/
+  translation: forever, for ages
+  pos: noun
+  gender: m
+- lemma: помилково
+  ipa: /pomɪlˈkowo/
+  translation: mistakenly, erroneously
+  pos: adv
+- lemma: поцілунок
+  ipa: /pot͡sʲiˈlunok/
+  translation: kiss
+  pos: noun
+  gender: m
+- lemma: проміжок
+  ipa: /proˈmʲiʒok/
+  translation: interval, gap
+  pos: noun
+  gender: m
+- lemma: півень
+  ipa: /ˈpʲiwɛnʲ/
+  translation: rooster
+  pos: noun
+  gender: m
+- lemma: ретроспектива
+  ipa: /rɛtrospɛkˈtɪwɑ/
+  translation: retrospective
+  pos: noun
+  gender: f
+- lemma: розкіш
+  ipa: /rozˈkʲiʃ/
+  translation: luxury
+  pos: noun
+  gender: f
+- lemma: розстріляний
+  ipa: /rozstrʲiˈlʲɑnɪj/
+  translation: shot, executed
+  pos: adj
+  gender: n
+- lemma: світловий
+  ipa: /swʲitloˈwɪj/
+  translation: light (adj.), luminous
+  pos: adj
+  gender: m
+- lemma: сей
+  ipa: /sɛj/
+  translation: this (archaic demonstrative)
+  pos: pron
+- lemma: синхронний
+  ipa: /sɪnˈxronːɪj/
+  translation: synchronous
+  pos: adj
+  gender: m
+- lemma: сорочинський
+  ipa: /sorot͡ʃɪnsʲkɪj/
+  translation: Sorochyntsi (fair)
+  pos: adj
+  gender: m
+- lemma: стрічка
+  ipa: /ˈstrit͡ʃkɑ/
+  translation: ribbon, tape
+  pos: noun
+  gender: f
+- lemma: суми
+  ipa: /ˈsumɪ/
+  translation: Sumy (city)
+  pos: propn
+  gender: f
+- lemma: сьогоднішній
+  ipa: /sʲoˈɦodnʲiʃnʲij/
+  translation: today's, current
+  pos: adj
+  gender: m
+- lemma: табун
+  ipa: /tɐˈbun/
+  translation: herd
+  pos: noun
+  gender: m
+- lemma: тайм
+  ipa: /tɑjm/
+  translation: time (sports period)
+  pos: noun
+  gender: m
+- lemma: темпоритм
+  ipa: /tɛmpoˈrɪtm/
+  translation: tempo-rhythm
+  pos: noun
+  gender: m
+- lemma: тяглість
+  ipa: /tʲɑˈɦlʲistʲ/
+  translation: continuity
+  pos: noun
+  gender: f
+- lemma: фокусуватися
+  ipa: /fokusuˈwɑtɪsʲɑ/
+  translation: to focus
+  pos: verb
+- lemma: фотограф
+  ipa: /fotoˈɦrɑf/
+  translation: photographer
+  pos: noun
+  gender: m
+- lemma: хаотичний
+  ipa: /xɐoˈtɪt͡ʃnɪj/
+  translation: chaotic
+  pos: adj
+  gender: m
+- lemma: хімія
+  ipa: /ˈxʲimʲijɑ/
+  translation: chemistry
+  pos: noun
+  gender: f
+- lemma: циклічно
+  ipa: /t͡sɪkˈlʲit͡ʃno/
+  translation: cyclically
+  pos: adv
+- lemma: шкаля
+  ipa: /ʃkɐˈlʲɑ/
+  translation: scale (genitive)
+  pos: noun
+  gender: f
+- lemma: щохвилини
+  ipa: /ʃt͡ʃoxwɪˈlɪnɪ/
+  translation: every minute
+  pos: adv

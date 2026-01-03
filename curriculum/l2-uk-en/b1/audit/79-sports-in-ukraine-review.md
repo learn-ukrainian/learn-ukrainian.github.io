@@ -1,56 +1,54 @@
 # Audit Report: 79-sports-in-ukraine.md
 **Phase:** B1.7 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1500
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
-  - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): матч, тренер, спорт, стадіон, команда...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): поразка, стадіон, спорт, команда, теніс...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 10/100)
 
-- 2 pedagogical violations (minor)
+- 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1447/1500 (53 short)
+- **Words:** ✅ 1691/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 69/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Immersion:** 🇺🇦 99.6% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ✅ 98% (cultural)
+- **Pedagogy:** ✅ Level-appropriate
+- **Immersion:** 🇺🇦 99.4% (target 85-100% (B1.7-8 Ukraine))
+- **Richness:** ✅ 99% (cultural)
 - **Grammar:** ✅ Validated (7/51 confirmed)
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** cultural
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | cultural | 7 | 5 | 100% | 33% | 33.3% |
-| engagement | 6 | 6 | 100% | 20% | 20.0% |
-| visual | 4 | 4 | 100% | 13% | 13.3% |
-| variety | 0.97 | - | 97% | 7% | 6.5% |
-| paragraph_var | 0.83 | - | 83% | 7% | 5.5% |
-| examples | 26 | - | 100% | 7% | 6.7% |
-| realworld | 2 | - | 100% | 7% | 6.7% |
+| engagement | 7 | 6 | 100% | 20% | 20.0% |
+| visual | 8 | 4 | 100% | 13% | 13.3% |
+| variety | 0.98 | - | 98% | 7% | 6.5% |
+| paragraph_var | 1.00 | - | 100% | 7% | 6.7% |
+| examples | 29 | - | 100% | 7% | 6.7% |
+| realworld | 1 | - | 100% | 7% | 6.7% |
 | questions | 20 | 4 | 100% | 7% | 6.7% |
-| **TOTAL** | | | | | **98.7%** |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 110 | Included in Core |
-| **Презентація** | ⚪️ | 714 | Skipped |
+| **Презентація** | ⚪️ | 843 | Skipped |
 | **Практика** | ⚪️ | 123 | Skipped |
-| **Продукція** | ⚪️ | 289 | Skipped |
+| **Продукція** | ⚪️ | 404 | Skipped |
 | **Підсумок** | ✅ | 211 | Included in Core |

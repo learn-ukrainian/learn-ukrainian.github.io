@@ -228,10 +228,4 @@ Use these to add emotion without comparison:
 
 ## Need More Practice?
 
-> [!resources] External Resources
-> - 🎥 [Comparative Adjectives](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
-> - 📖 [Degrees of Comparison](https://www.talkukrainian.com/adjectives-degrees-comparison/)
-> - 📝 [Adjectives Guide](https://www.ukrainianlessons.com/vocabulary-adjectives/)
-> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-
 ---

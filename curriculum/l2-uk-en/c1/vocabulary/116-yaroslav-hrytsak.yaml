@@ -1,0 +1,189 @@
+module: 116-yaroslav-hrytsak
+level: C1
+version: '2.0'
+items:
+- lemma: світовідчуття
+  ipa: /sʲvʲitoˈvʲidt͡ʃutʲtʲɐ/
+  translation: worldview, perception of the world
+  pos: noun
+  gender: n
+- lemma: тяглість
+  ipa: /ˈtʲɑɦlʲisʲtʲ/
+  translation: continuity
+  pos: noun
+  gender: f
+- lemma: суб'єктність
+  ipa: /subjˈɛktnʲisʲtʲ/
+  translation: agency, subjecthood
+  pos: noun
+  gender: f
+- lemma: наратив
+  ipa: /nɐrɐˈtɪu̯/
+  translation: narrative
+  pos: noun
+  gender: m
+- lemma: деколонізація
+  ipa: /dɛkolonʲiˈzat͡sʲijɐ/
+  translation: decolonization
+  pos: noun
+  gender: f
+- lemma: ідентичність
+  ipa: /idɛnˈtɪt͡ʃnʲisʲtʲ/
+  translation: identity
+  pos: noun
+  gender: f
+- lemma: візія
+  ipa: /ˈvʲizʲijɐ/
+  translation: vision
+  pos: noun
+  gender: f
+- lemma: модернізація
+  ipa: /modɛrnʲiˈzat͡sʲijɐ/
+  translation: modernization
+  pos: noun
+  gender: f
+- lemma: переосмислення
+  ipa: /pɛrɛosˈmɪslɛnʲːɐ/
+  translation: rethinking, re-evaluation
+  pos: noun
+  gender: n
+- lemma: глобалізація
+  ipa: /ɦlobalʲiˈzat͡sʲijɐ/
+  translation: globalization
+  pos: noun
+  gender: f
+- lemma: дискурс
+  ipa: /ˈdɪskurs/
+  translation: discourse
+  pos: noun
+  gender: m
+- lemma: тяжіти
+  ipa: /tʲɐˈʒitɪ/
+  translation: to gravitate towards, to tend to
+  pos: verb
+  aspect: impf
+- lemma: інтерпретація
+  ipa: /intɛrprɛˈtat͡sʲijɐ/
+  translation: interpretation
+  pos: noun
+  gender: f
+- lemma: концепція
+  ipa: /konˈt͡sɛpt͡sʲijɐ/
+  translation: concept, conception
+  pos: noun
+  gender: f
+- lemma: парадигма
+  ipa: /pɐrɐˈdɪɦmɐ/
+  translation: paradigm
+  pos: noun
+  gender: f
+- lemma: спростовувати
+  ipa: /sproˈstɔwuvɐtɪ/
+  translation: to refute, to debunk
+  pos: verb
+  aspect: impf
+- lemma: ґрунтовний
+  ipa: /ɦrunˈtɔunɪj/
+  translation: thorough, profound, well-grounded
+  pos: adj
+- lemma: осмислення
+  ipa: /osˈmɪslɛnʲːɐ/
+  translation: comprehension, conceptualization
+  pos: noun
+  gender: n
+- lemma: верифікація
+  ipa: /vɛrɪfʲiˈkat͡sʲijɐ/
+  translation: verification
+  pos: noun
+  gender: f
+- lemma: маніпуляція
+  ipa: /manʲipulʲat͡sʲijɐ/
+  translation: manipulation
+  pos: noun
+  gender: f
+- lemma: тягар
+  ipa: /tʲɐˈɦar/
+  translation: burden, weight
+  pos: noun
+  gender: m
+- lemma: спадкоємність
+  ipa: /spɐdkoˈjɛmnʲisʲtʲ/
+  translation: succession, continuity of heritage
+  pos: noun
+  gender: f
+- lemma: трансформація
+  ipa: /trɐnsformɐˈt͡sʲijɐ/
+  translation: transformation
+  pos: noun
+  gender: f
+- lemma: велич
+  ipa: /ˈvɛlɪt͡ʃ/
+  translation: grandeur, greatness
+  pos: noun
+  gender: f
+- lemma: слухач
+  ipa: /sluˈxat͡ʃ/
+  translation: listener, student
+  pos: noun
+  gender: m
+- lemma: емоція
+  ipa: /ɛˈmɔt͡sʲijɐ/
+  translation: emotion
+  pos: noun
+  gender: f
+- lemma: риторичний
+  ipa: /rɪtoˈrɪt͡ʃnɪj/
+  translation: rhetorical
+  pos: adj
+- lemma: ефект
+  ipa: /ɛˈfɛkt/
+  translation: effect
+  pos: noun
+  gender: m
+- lemma: аргумент
+  ipa: /ɐrɦuˈmɛnt/
+  translation: argument
+  pos: noun
+  gender: m
+- lemma: відповідь
+  ipa: /vʲidˈpɔvʲidʲ/
+  translation: answer
+  pos: noun
+  gender: f
+- lemma: питання
+  ipa: /pɪˈtanʲːɐ/
+  translation: question
+  pos: noun
+  gender: n
+- lemma: акцент
+  ipa: /ɐkˈt͡sɛnt/
+  translation: accent, emphasis
+  pos: noun
+  gender: m
+- lemma: почуття
+  ipa: /poˈt͡ʃutʲtʲɐ/
+  translation: feeling
+  pos: noun
+  gender: n
+- lemma: можна
+  ipa: /ˈmɔʒnɐ/
+  translation: it is possible
+  pos: adv
+- lemma: хіба
+  ipa: /xʲiˈba/
+  translation: really?, is it...?
+  pos: part
+- lemma: невже
+  ipa: /nɛu̯ˈʒɛ/
+  translation: can it be?, really?
+  pos: part
+- lemma: аудиторія
+  ipa: /ɐu̯dɪˈtɔrʲijɐ/
+  translation: audience
+  pos: noun
+  gender: f
+- lemma: вплив
+  ipa: /ˈvplɪu̯/
+  translation: influence
+  pos: noun
+  gender: m

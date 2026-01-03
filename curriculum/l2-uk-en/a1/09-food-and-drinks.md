@@ -327,13 +327,3 @@ In this module, you learned:
 In Module 10, you'll review everything you've learned in Modules 1-9. You're completing your first phase of Ukrainian — congratulations!
 
 ---
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [20 Ukrainian Food Words You Need To Know ](https://www.youtube.com/watch?v=fN0BIF-iejo) — QUICK and EASY food vocabulary|Mariya 💙💛
->
-> **Food Guide:** [40+ Ukrainian Dishes](https://www.ukrainianlessons.com/ukrainian-food/) — Complete guide with photos
->
-> **Podcast:** [ULP 1-12 | Ordering Food](https://www.ukrainianlessons.com/episode12/) — Where and how to order in Ukrainian
->
-> **Quick Lesson:** [FMU 1-16 | Order at Restaurant](https://www.ukrainianlessons.com/fmu16/) — Essential restaurant phrases

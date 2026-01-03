@@ -16,16 +16,10 @@ items:
   translation: impersonal (sentence)
   pos: noun
   gender: n
-- lemma: блога
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
-- lemma: восемнадцятий
-  ipa: ''
-  translation: ''
+- lemma: вісімнадцятий
+  ipa: /ʋʲisʲimˈnɑt͡sʲɑtɪj/
+  translation: eighteenth
   pos: adj
-  gender: f
 - lemma: дизайнер
   ipa: /dɪzɐjˈnɛr/
   translation: designer
@@ -66,11 +60,6 @@ items:
   ipa: /ˈkorotko/
   translation: briefly, shortly
   pos: adv
-- lemma: коїнатий
-  ipa: ''
-  translation: ''
-  pos: adj
-  gender: f
 - lemma: макет
   ipa: /mɐˈkɛt/
   translation: model, mockup
@@ -81,10 +70,6 @@ items:
   translation: manner, style
   pos: noun
   gender: f
-- lemma: надішити
-  ipa: ''
-  translation: ''
-  pos: verb
 - lemma: обнімати
   ipa: /obˈnʲimɑtɪ/
   translation: to embrace, to hug
@@ -122,39 +107,28 @@ items:
   translation: self-organization
   pos: noun
   gender: f
-- lemma: синк
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: f
 - lemma: синоніміка
   ipa: /sɪnonʲimʲikɑ/
   translation: synonymy, study of synonyms
   pos: noun
-  gender: f
-- lemma: скучити
-  ipa: ''
-  translation: ''
-  pos: verb
   gender: f
 - lemma: славити
   ipa: /slɑˈwɪtɪ/
   translation: to glorify, to praise
   pos: verb
 - lemma: теплодушний
-  ipa: ''
-  translation: ''
+  ipa: /tɛplodʊʃnɪj/
+  translation: warmhearted, kindhearted
   pos: adj
-  gender: f
 - lemma: тераса
   ipa: /tɛˈrɑsɑ/
   translation: terrace
   pos: noun
   gender: f
 - lemma: третє
-  ipa: ''
-  translation: ''
-  pos: other
+  ipa: /ˈtrɛtʲɛ/
+  translation: third (neuter)
+  pos: adj
 - lemma: тітонька
   ipa: /tʲiˈtonʲkɑ/
   translation: auntie

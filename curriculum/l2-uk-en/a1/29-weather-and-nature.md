@@ -189,11 +189,3 @@ For rain and snow, Ukrainian uses "йде" (goes):
 Ви вивчили погоду та природу! Тепер ви знаєте, як описати сонце або дощ. (You learned weather and nature! Now you know how to describe the sun or rain.) Ви знаєте пори року: весна, літо, осінь та зима. Ви можете говорити про тварин та рослини. Це була дуже цікава подорож! (This was a very interesting journey!)
 
 ---
-
-> [!resources] External Resources
->
-> **Media:**
->
-> - [Weather Vocabulary](https://www.ukrainianlessons.com/weather-vocabulary/) — Яка погода?
-> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/weather
-> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons

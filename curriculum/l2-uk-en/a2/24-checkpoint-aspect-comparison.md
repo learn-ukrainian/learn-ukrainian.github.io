@@ -274,9 +274,3 @@ Read this story and identify the grammar points:
 > Practice daily! The more pairs you memorize, the more natural your Ukrainian becomes. Focus on the 20 most common verbs first.
 
 ---
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [A little test on Ukrainian language_ A2 level...](https://www.youtube.com/watch?v=0zgsiO7-TRQ) — Ukrainian grammar
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview

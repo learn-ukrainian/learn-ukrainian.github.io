@@ -214,10 +214,4 @@ This module covered expressing preferences and making choices.
 
 ## Need More Practice?
 
-> [!resources] External Resources
-> - 🎥 [Numbers with Nouns](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
-> - 📖 [Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/)
-> - 📝 [Numbers Guide](https://www.ukrainianlessons.com/numbers/)
-> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-
 ---

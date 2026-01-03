@@ -1,0 +1,17 @@
+module: c1-21
+title: CV & Resume Writing
+subtitle: Professional & Social
+version: '2.0'
+phase: C1.2 Professional
+focus: professional
+pedagogy: academic
+duration: 120
+vocabulary_count: 24
+tags:
+- c1
+- professional
+- cv
+- resume
+objectives:
+- Master C1 concepts in CV & Resume Writing
+slug: 21-cv--resume-writing

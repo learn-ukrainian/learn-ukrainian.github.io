@@ -10,7 +10,6 @@ items:
   ipa: /ɐwˈtonomnɪj/
   translation: autonomous
   pos: adj
-  gender: n
 - lemma: авторитетність
   ipa: /ɐwtorɪtɛtˈnʲistʲ/
   translation: authoritativeness
@@ -20,7 +19,6 @@ items:
   ipa: /ɑntɪkorupt͡sʲijnɪj/
   translation: anti-corruption
   pos: adj
-  gender: f
 - lemma: багатоступеневий
   ipa: /bɑɦɑtostuˈpɛnɛwɪj/
   translation: multi-stage
@@ -81,7 +79,6 @@ items:
   ipa: /ɦromɑˈdʲɑnsʲkɪj/
   translation: civil, civic
   pos: adj
-  gender: f
 - lemma: динамічність
   ipa: /dɪnɐmʲit͡ʃˈnʲistʲ/
   translation: dynamism
@@ -99,7 +96,6 @@ items:
   ipa: /doˈmɛnnɪj/
   translation: domain (adj.)
   pos: adj
-  gender: f
 - lemma: діагностика
   ipa: /dʲiɑɦˈnostɪkɑ/
   translation: diagnostics
@@ -110,11 +106,11 @@ items:
   translation: expansion
   pos: noun
   gender: f
-- lemma: емодезь
-  ipa: ''
-  translation: ''
+- lemma: емоційність
+  ipa: /ɛmoˈt͡sʲijnʲistʲ/
+  translation: emotionality
   pos: noun
-  gender: m
+  gender: f
 - lemma: емоційно
   ipa: /ɛmoˈt͡sʲijno/
   translation: emotionally
@@ -123,17 +119,14 @@ items:
   ipa: /zɐklɑˈdɛnɪj/
   translation: laid down, embedded
   pos: adj
-  gender: m
 - lemma: запустити
   ipa: /zɐpusˈtɪtɪ/
   translation: to launch
   pos: verb
-  gender: f
 - lemma: зацікавити
   ipa: /zɐt͡sʲikɑˈwɪtɪ/
   translation: to interest
   pos: verb
-  gender: m
 - lemma: зворот
   ipa: /ˈzworot/
   translation: turn, phrase
@@ -143,12 +136,10 @@ items:
   ipa: /zupɪˈnɛnɪj/
   translation: stopped
   pos: adj
-  gender: f
-- lemma: книжн
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: книжний
+  ipa: /ˈknɪʒnɪj/
+  translation: bookish, literary
+  pos: adj
 - lemma: комунікатор
   ipa: /komunʲiˈkɑtor/
   translation: communicator
@@ -168,11 +159,11 @@ items:
   ipa: /korupt͡sʲijnɪj/
   translation: corruption (adj.)
   pos: adj
-- lemma: кочерг
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
+- lemma: кочерга
+  ipa: /koˈt͡ʃɛrɦɑ/
+  translation: poker (fire iron)
+  pos: noun
+  gender: f
 - lemma: лазівка
   ipa: /lɑˈzʲiwkɑ/
   translation: loophole
@@ -187,7 +178,6 @@ items:
   ipa: /mʲilʲˈjonnɪj/
   translation: millionth
   pos: adj
-  gender: f
 - lemma: мінімалка
   ipa: /mʲinʲiˈmɑlkɑ/
   translation: minimum wage (colloquial)
@@ -210,12 +200,10 @@ items:
   ipa: /nɛdofʲinɑnˈsowɑnɪj/
   translation: underfunded
   pos: adj
-  gender: f
 - lemma: несвідомий
   ipa: /nɛˈswʲidomɪj/
   translation: unconscious
   pos: adj
-  gender: m
 - lemma: неформальність
   ipa: /nɛformɑlʲˈnʲistʲ/
   translation: informality
@@ -238,12 +226,10 @@ items:
   ipa: /pɑrtˈnɛrsʲkɪj/
   translation: partnership (adj.)
   pos: adj
-  gender: f
 - lemma: перевершити
   ipa: /pɛrɛwɛrˈʃɪtɪ/
   translation: to surpass
   pos: verb
-  gender: m
 - lemma: перемикати
   ipa: /pɛrɛmɪˈkɑtɪ/
   translation: to switch
@@ -268,13 +254,13 @@ items:
   translation: strengthening
   pos: noun
   gender: n
-- lemma: практико
-  ipa: ''
-  translation: ''
+- lemma: практично
+  ipa: /prɑkˈtɪt͡ʃno/
+  translation: practically
   pos: adv
-- lemma: прибррити
-  ipa: ''
-  translation: ''
+- lemma: прибрати
+  ipa: /prɪˈbrɑtɪ/
+  translation: to remove, to clean up
   pos: verb
 - lemma: промисловість
   ipa: /promɪsˈlowʲistʲ/
@@ -296,16 +282,15 @@ items:
   translation: publicist
   pos: noun
   gender: m
-- lemma: підказок
-  ipa: ''
-  translation: ''
+- lemma: підказка
+  ipa: /pʲidˈkɑzkɑ/
+  translation: hint, clue
   pos: noun
   gender: f
 - lemma: революційний
   ipa: /rɛwolʲut͡sʲijnɪj/
   translation: revolutionary
   pos: adj
-  gender: m
 - lemma: розважити
   ipa: /rozwɑˈʒɪtɪ/
   translation: to entertain
@@ -319,15 +304,14 @@ items:
   translation: synonymy
   pos: noun
   gender: f
-- lemma: скорешти
-  ipa: ''
-  translation: ''
+- lemma: скоригувати
+  ipa: /skorɪɦuˈwɑtɪ/
+  translation: to adjust, to correct
   pos: verb
 - lemma: скоригований
   ipa: /skorɪˈɦowɑnɪj/
   translation: adjusted
   pos: adj
-  gender: m
 - lemma: слабший
   ipa: /ˈslɑpʃɪj/
   translation: weaker
@@ -336,7 +320,6 @@ items:
   ipa: /sprɪˈt͡ʃɪnɛnɪj/
   translation: caused
   pos: adj
-  gender: f
 - lemma: сприяти
   ipa: /sprɪˈjɑtɪ/
   translation: to contribute
@@ -345,24 +328,23 @@ items:
   ipa: /stɑbʲilʲizuˈwɑtɪ/
   translation: to stabilize
   pos: verb
-- lemma: техпр
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
+- lemma: техпідтримка
+  ipa: /tɛxpʲidˈtrɪmkɑ/
+  translation: technical support
+  pos: noun
+  gender: f
 - lemma: тіньовий
   ipa: /tʲinʲoˈwɪj/
   translation: shadow (adj.)
   pos: adj
-  gender: m
 - lemma: укладення
   ipa: /uklɑˈdɛnʲːɑ/
   translation: conclusion (of agreement)
   pos: noun
   gender: n
-- lemma: українськийпродукт
-  ipa: ''
-  translation: ''
+- lemma: продукт
+  ipa: /proˈdukt/
+  translation: product
   pos: noun
   gender: m
 - lemma: умовність
@@ -389,14 +371,14 @@ items:
   translation: functionality
   pos: noun
   gender: f
-- lemma: хештега
-  ipa: ''
-  translation: ''
+- lemma: хештег
+  ipa: /xɛʃˈtɛɦ/
+  translation: hashtag
   pos: noun
   gender: m
-- lemma: центробанка
-  ipa: ''
-  translation: ''
+- lemma: центробанк
+  ipa: /t͡sɛntroˈbɑnk/
+  translation: central bank
   pos: noun
   gender: m
 - lemma: європеєць
@@ -404,21 +386,19 @@ items:
   translation: European (person)
   pos: noun
   gender: m
-- lemma: інноватек
-  ipa: ''
-  translation: ''
+- lemma: Інноватек
+  ipa: /ʲinnoˈwɑtɛk/
+  translation: Innovatek (company name)
   pos: propn
   gender: m
-- lemma: іннот
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
+- lemma: інноваційний
+  ipa: /ʲinnowɑˈt͡sʲijnɪj/
+  translation: innovative
+  pos: adj
 - lemma: інтегрований
   ipa: /ʲintɛɦˈrowɑnɪj/
   translation: integrated
   pos: adj
-  gender: m
 - lemma: інтегрувати
   ipa: /ʲintɛɦruˈwɑtɪ/
   translation: to integrate

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 2752/800 (>1800 may be too long)
+- **Words:** ⚠️ 2704/800 (>1800 may be too long)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.1% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 99.8% (checkpoint - no gate)
 - **Richness:** ✅ 95% (grammar)
 - **Grammar:** ✅ Validated (10/70 confirmed)
 
@@ -31,11 +31,17 @@
 | variety | 0.89 | - | 89% | 10% | 8.9% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 12 | 3 | 100% | 5% | 5.0% |
+| visual | 11 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 57 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.6%** |
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (15 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -51,5 +57,5 @@
 | **Skill 7: Інтеграція префіксів (M22)** | ⚪️ | 198 | Skipped |
 | **Skill 8: Дієслова руху з об'єктами (M23)** | ⚪️ | 278 | Skipped |
 | **Skill 9: Інтеграція у наративі (M24)** | ⚪️ | 238 | Skipped |
-| **Інтеграційне завдання** | ⚪️ | 354 | Skipped |
+| **Інтеграційне завдання** | ⚪️ | 306 | Skipped |
 | **Підсумок** | ✅ | 91 | Included in Core |

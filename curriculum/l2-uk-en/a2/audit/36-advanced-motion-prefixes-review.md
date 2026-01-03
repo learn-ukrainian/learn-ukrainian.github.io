@@ -1,9 +1,9 @@
 # Audit Report: 36-advanced-motion-prefixes.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
+**Phase:** A2.4 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1188/1000
+- **Words:** ✅ 1154/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -14,13 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 43.0% (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 44.1% (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 219 | Included in Core |
+| **Intro/Narrative** | ✅ | 219 | Included in Core |
 | **Prefix Group 1: Crossing & Through** | ⚪️ | 0 | Skipped |
 | **Пере- (Across, Over, Re-)** | ⚪️ | 66 | Skipped |
 | **Про- (Through, Past)** | ⚪️ | 111 | Skipped |
@@ -38,6 +38,5 @@
 | **Mistake 1: Confusing Пере- and Про-** | ⚪️ | 22 | Skipped |
 | **Mistake 2: Using За- Incorrectly** | ⚪️ | 18 | Skipped |
 | **Mistake 3: Forgetting the Apostrophe with Об-** | ⚪️ | 10 | Skipped |
-| **Language Learning Tip** | ✅ | 124 | Included in Core |
+| **Language Learning Tip** | ✅ | 90 | Included in Core |
 | **Summary** | ✅ | 17 | Included in Core |
-| **Vocabulary** | ➖ | 0 | Excluded Type |

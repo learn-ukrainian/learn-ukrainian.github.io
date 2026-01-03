@@ -159,6 +159,37 @@ Use `> [!observe]` callout for inductive pattern discovery BEFORE explaining gra
 - Follow immediately with explicit grammar explanation
 - Required for B1-B2 modules, optional for A2 and C1-C2
 
+### 9. External Resources (Generated Content)
+
+**IMPORTANT: External resources are NOT stored in markdown files.**
+
+External resources (podcasts, YouTube videos, articles, books, websites) are:
+1. Defined in `docs/resources/external_resources.yaml` (YAML-first architecture)
+2. Injected at build time by `generate_mdx.py` and `generate_json.py`
+3. Appear in MDX output as `> [!resources]` callout blocks (for display only)
+
+**What this means for module authors:**
+- ❌ **DO NOT** add `> [!resources]` sections to markdown files
+- ❌ **DO NOT** edit resources in markdown (edits will be lost at next build)
+- ✅ **DO** edit resources in `docs/resources/external_resources.yaml`
+
+**If you see `> [!resources]` in a markdown file:**
+- It's stale content from before Issue #354 (Jan 2026)
+- Remove it (will be regenerated from YAML at build time)
+
+**Example MDX output** (generated, not authored):
+```markdown
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [Ukrainian Lessons Podcast #42](https://example.com)
+>
+> **📺 YouTube:**
+> - [Ukrainian with Olena: Food](https://youtube.com/...)
+```
+
+**See:** `docs/ARCHITECTURE.md` → "External Resources Management" for details.
+
 ---
 
 ## Migration Rules

@@ -158,11 +158,3 @@ You learned to:
 - Use verbs: **шукати**, **завантажувати**, **публікувати**
 
 Digital literacy is key in modern Ukrainian society. Use these words to stay connected!
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [100 basic Ukrainian IT terms | Ukrainian vocabulary: IT, Technologies,...](https://www.youtube.com/watch?v=BAuSNnrkCKM) — Red Purple Ukrainian
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

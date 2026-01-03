@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1517/750
+- **Words:** ✅ 1388/750
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -14,14 +14,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 36.5% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 39.6% (checkpoint - no gate)
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -34,4 +31,4 @@
 | **Skill 5: Practical Navigation** | ⚪️ | 251 | Skipped |
 | **Integration Challenge** | ⚪️ | 143 | Skipped |
 | **Summary** | ✅ | 25 | Included in Core |
-| **Need More Practice?** | ⚪️ | 129 | Skipped |
+| **Need More Practice?** | ⚪️ | 0 | Skipped |

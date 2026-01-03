@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): понеділок, котрій, година, тиждень, хвилина...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): вчасно, сьогодні, хвилина, котрій, вихідні...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1094/750
+- **Words:** ✅ 1058/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 37.9% (target 35-55% (M23))
+- **Immersion:** 🇺🇦 39.5% (target 35-55% (M23))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (9 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -44,4 +41,4 @@
 | **Time Prepositions** | ⚪️ | 68 | Skipped |
 | **Examples in Context** | ✅ | 345 | Included in Core |
 | **Dialogues** | ✅ | 306 | Included in Core |
-| **Summary** | ✅ | 119 | Included in Core |
+| **Summary** | ✅ | 83 | Included in Core |

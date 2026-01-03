@@ -150,12 +150,4 @@ You can now read **35 international words** in Ukrainian. The key insight: many 
 
 ## Need More Practice?
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [How to read the Ukrainian Alphabet. Cyrillic Letters. Part I](https://www.youtube.com/watch?v=Gt7O4FLGxjI) — Speak Ukrainian
->
-> **Interactive:** [Talk Ukrainian - Alphabet with Audio](https://talkukrainian.com/ukrainian-alphabet/) — All 33 letters with IPA and native audio
->
-> **Practice:** [Ukrainian Course - Lesson 1](https://www.ukrainiancourse.com/free-ukrainian-courses/lesson-1-the-ukrainian-alphabet/) — Interactive alphabet exercises
-
 ---

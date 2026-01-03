@@ -185,13 +185,3 @@ In this module, you learned:
 **Next step:** Module 12 will introduce accusative for **people**!
 
 ---
-
-> [!resources] **Need More Practice?**
->
-> **YouTube:** [The Accusative case in the Ukrainian language](https://www.youtube.com/watch?v=D_-Y5kfanl0) — Speak Ukrainian
->
-> **Grammar Guide:** [Accusative Case in Ukrainian](https://www.ukrainianlessons.com/accusativecase/) — Complete guide with tables and examples
->
-> **Cases Overview:** [Introduction to Ukrainian Cases](https://www.ukrainianlessons.com/intro-cases/) — Quick overview of all 7 cases
->
-> **Podcast:** [FMU 1-15 | Accusative Case](https://www.ukrainianlessons.com/fmu15/) — Learn accusative while ordering pizza!

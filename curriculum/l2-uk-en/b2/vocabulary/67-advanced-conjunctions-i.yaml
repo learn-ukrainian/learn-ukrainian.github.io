@@ -2,192 +2,192 @@ module: 67-advanced-conjunctions-i
 level: B2
 version: '2.0'
 items:
-  - lemma: академічно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: аналітиця
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: багатогранний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: багатошаровий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: безпековий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: битва
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: блок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: бутувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: взаєморозуміння
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: вирушити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: впровадити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: господарювання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: дехто
-    ipa: ''
-    translation: ''
-    pos: pron
-  - lemma: доповнювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: енергопостачання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: задавати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: зміщуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: знецінення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: зосередити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: конструктивніше
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: маркетинговий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: митник
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: навігатор
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: нестабільний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: обґрунтованість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: окупність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: опір
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: очевидність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: перевантажувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: погодний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: погіршитися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: посилити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: посушливий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: праві
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: припортовий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: реалізовати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: ремонтний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: рятувальник
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: сприяння
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: стійкий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: тренувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: ціновий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
+- lemma: академічно
+  ipa: /ɐkɐdɛˈmʲit͡ʃno/
+  translation: academically
+  pos: adv
+- lemma: аналітиця
+  ipa: /ɐnɐˈlʲitɪt͡sʲɑ/
+  translation: analytics (genitive)
+  pos: noun
+  gender: f
+- lemma: багатогранний
+  ipa: /bɐɦɐtoˈɦrɑnːɪj/
+  translation: multi-faceted
+  pos: adj
+  gender: f
+- lemma: багатошаровий
+  ipa: /bɐɦɐtoʃɐˈrowɪj/
+  translation: multilayered
+  pos: adj
+- lemma: безпековий
+  ipa: /bɛzpɛˈkowɪj/
+  translation: security (adj.)
+  pos: adj
+- lemma: битва
+  ipa: /ˈbɪtwɑ/
+  translation: battle
+  pos: noun
+  gender: f
+- lemma: блок
+  ipa: /blok/
+  translation: block
+  pos: noun
+  gender: m
+- lemma: бутувати
+  ipa: /butuˈwɑtɪ/
+  translation: to exist, to be
+  pos: verb
+- lemma: взаєморозуміння
+  ipa: /wzɑjɛmorozuˈmʲinʲːɑ/
+  translation: mutual understanding
+  pos: noun
+  gender: n
+- lemma: вирушити
+  ipa: /wɪˈruʃɪtɪ/
+  translation: to set out, to depart
+  pos: verb
+- lemma: впровадити
+  ipa: /wproˈwɑdɪtɪ/
+  translation: to implement, to introduce
+  pos: verb
+- lemma: господарювання
+  ipa: /ɦospodɐrʲuˈwɑnʲːɑ/
+  translation: economic management
+  pos: noun
+  gender: n
+- lemma: дехто
+  ipa: /ˈdɛxto/
+  translation: someone
+  pos: pron
+- lemma: доповнювати
+  ipa: /dopowˈnʲuwɑtɪ/
+  translation: to complement, to supplement
+  pos: verb
+- lemma: енергопостачання
+  ipa: /ɛnɛrɦopostɐˈt͡ʃɑnʲːɑ/
+  translation: energy supply
+  pos: noun
+  gender: n
+- lemma: задавати
+  ipa: /zɐdɐˈwɑtɪ/
+  translation: to ask, to set
+  pos: verb
+- lemma: зміщуватися
+  ipa: /zmʲiʃt͡ʃuˈwɑtɪsʲɑ/
+  translation: to shift, to be displaced
+  pos: verb
+- lemma: знецінення
+  ipa: /znɛt͡sʲiˈnɛnʲːɑ/
+  translation: devaluation
+  pos: noun
+  gender: n
+- lemma: зосередити
+  ipa: /zosɛˈrɛdɪtɪ/
+  translation: to focus, to concentrate
+  pos: verb
+- lemma: конструктивніше
+  ipa: /konstruktɪwˈnʲiʃɛ/
+  translation: more constructively
+  pos: adv
+- lemma: маркетинговий
+  ipa: /mɑrkɛˈtɪnɦowɪj/
+  translation: marketing (adj.)
+  pos: adj
+  gender: f
+- lemma: митник
+  ipa: /ˈmɪtnɪk/
+  translation: customs officer
+  pos: noun
+  gender: m
+- lemma: навігатор
+  ipa: /nɐwʲiˈɦɑtor/
+  translation: navigator
+  pos: noun
+  gender: m
+- lemma: нестабільний
+  ipa: /nɛstɐˈbʲilʲnɪj/
+  translation: unstable
+  pos: adj
+- lemma: обґрунтованість
+  ipa: /obɡruntowɑnʲistʲ/
+  translation: justification, validity
+  pos: noun
+  gender: f
+- lemma: окупність
+  ipa: /okupnʲistʲ/
+  translation: return on investment, payback
+  pos: noun
+  gender: f
+- lemma: опір
+  ipa: /oˈpʲir/
+  translation: resistance
+  pos: noun
+  gender: m
+- lemma: очевидність
+  ipa: /ot͡ʃɛˈwɪdnʲistʲ/
+  translation: obviousness
+  pos: noun
+  gender: f
+- lemma: перевантажувати
+  ipa: /pɛrɛwɐntɐˈʒuwɑtɪ/
+  translation: to overload
+  pos: verb
+- lemma: погодний
+  ipa: /poˈɦodnɪj/
+  translation: weather (adj.)
+  pos: adj
+- lemma: погіршитися
+  ipa: /poˈɦʲirʃɪtɪsʲɑ/
+  translation: to worsen, to deteriorate
+  pos: verb
+- lemma: посилити
+  ipa: /posɪˈlɪtɪ/
+  translation: to strengthen, to intensify
+  pos: verb
+- lemma: посушливий
+  ipa: /posuʃlɪwɪj/
+  translation: dry, arid
+  pos: adj
+  gender: m
+- lemma: праві
+  ipa: /prɐˈwʲi/
+  translation: rights (genitive plural)
+  pos: noun
+  gender: f
+- lemma: припортовий
+  ipa: /prɪporˈtowɪj/
+  translation: port (adj.), near-port
+  pos: adj
+- lemma: реалізовати
+  ipa: /rɛɐlʲizoˈwɑtɪ/
+  translation: to realize, to implement
+  pos: verb
+- lemma: ремонтний
+  ipa: /rɛˈmontnɪj/
+  translation: repair (adj.)
+  pos: adj
+- lemma: рятувальник
+  ipa: /rʲɑtuˈwɑlʲnɪk/
+  translation: rescuer, lifeguard
+  pos: noun
+  gender: m
+- lemma: сприяння
+  ipa: /sprɪˈjɑnʲːɑ/
+  translation: facilitation, promotion
+  pos: noun
+  gender: n
+- lemma: стійкий
+  ipa: /ˈstʲijkɪj/
+  translation: stable, resistant
+  pos: adj
+  gender: f
+- lemma: тренувати
+  ipa: /trɛnuˈwɑtɪ/
+  translation: to train
+  pos: verb
+- lemma: ціновий
+  ipa: /t͡sʲinoˈwɪj/
+  translation: price (adj.)
+  pos: adj
+  gender: f

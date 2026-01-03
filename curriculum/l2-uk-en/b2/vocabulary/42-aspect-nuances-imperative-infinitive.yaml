@@ -10,14 +10,14 @@ items:
   ipa: /bɛzˈɦluzdo/
   translation: senselessly, absurdly
   pos: adv
-- lemma: беркут
-  ipa: ''
-  translation: ''
+- lemma: Беркут
+  ipa: /bɛrˈkut/
+  translation: Berkut (special police unit)
   pos: propn
   gender: m
-- lemma: браття
-  ipa: ''
-  translation: ''
+- lemma: брати
+  ipa: /ˈbrɑtɪ/
+  translation: brothers
   pos: noun
   gender: m
 - lemma: буклет
@@ -53,9 +53,9 @@ items:
   ipa: /wʲidxoˈdɪtɪ/
   translation: to move away, to depart
   pos: verb
-- lemma: галино
-  ipa: ''
-  translation: ''
+- lemma: Галина
+  ipa: /ɦɐˈlɪnɑ/
+  translation: Halyna (name)
   pos: propn
   gender: f
 - lemma: германський
@@ -70,14 +70,14 @@ items:
   ipa: /ɦosˈtɪnːo/
   translation: hospitably
   pos: adv
-- lemma: дв
-  ipa: ''
-  translation: ''
+- lemma: двері
+  ipa: /ˈdwɛrʲi/
+  translation: door
   pos: noun
-  gender: m
-- lemma: диєт
-  ipa: ''
-  translation: ''
+  gender: f
+- lemma: дієта
+  ipa: /dʲiˈjetɑ/
+  translation: diet
   pos: noun
   gender: f
 - lemma: дорожній
@@ -112,35 +112,35 @@ items:
   translation: task, problem
   pos: noun
   gender: f
-- lemma: залах
-  ipa: ''
-  translation: ''
+- lemma: зала
+  ipa: /ˈzɑlɑ/
+  translation: hall
   pos: noun
-  gender: m
+  gender: f
 - lemma: запалити
   ipa: /zɐpɐˈlɪtɪ/
   translation: to light, to ignite
   pos: verb
-- lemma: захар
-  ipa: ''
-  translation: ''
+- lemma: Захар
+  ipa: /ˈzɑxɑr/
+  translation: Zakhar (name)
   pos: propn
   gender: m
-- lemma: зачепи
-  ipa: ''
-  translation: ''
+- lemma: зачепити
+  ipa: /zɐt͡ʃɛˈpɪtɪ/
+  translation: to hook, to catch
   pos: verb
 - lemma: зневажати
   ipa: /znɛwɐˈʒɑtɪ/
   translation: to despise, to scorn
   pos: verb
-- lemma: зупитися
-  ipa: ''
-  translation: ''
+- lemma: зупинитися
+  ipa: /zupɪˈnɪtɪsʲɑ/
+  translation: to stop
   pos: verb
-- lemma: ковдр
-  ipa: ''
-  translation: ''
+- lemma: ковдра
+  ipa: /kowdˈrɑ/
+  translation: blanket
   pos: noun
   gender: f
 - lemma: коровай
@@ -198,13 +198,9 @@ items:
   translation: ''
   pos: noun
   gender: m
-- lemma: поріжти
-  ipa: ''
-  translation: ''
-  pos: verb
-- lemma: почисти
-  ipa: ''
-  translation: ''
+- lemma: порізати
+  ipa: /porʲiˈzɑtɪ/
+  translation: to cut
   pos: verb
 - lemma: почистити
   ipa: /pot͡ʃɪˈstɪtɪ/

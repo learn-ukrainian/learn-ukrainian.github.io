@@ -336,11 +336,4 @@ In this module, you learned the core terminology for discussing Ukrainian verbs:
 
 ---
 
-> [!resources] 🎧 External Resources
->
-> **Aspect and Tense:**
-> - 📖 [Ukrainian Verb Aspect](https://www.ukrainianlessons.com/aspect/) — Overview in English
-> - 📺 [Perfective vs Imperfective](https://www.youtube.com/watch?v=WbL0P6eEJQw) — Let's Learn Ukrainian
-> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/the-podcast/) — Grammar episodes
-
 ---

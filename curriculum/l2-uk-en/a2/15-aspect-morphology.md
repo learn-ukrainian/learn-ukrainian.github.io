@@ -239,10 +239,4 @@ Adding different prefixes to the same root creates different perfective verbs wi
 
 ## Need More Practice?
 
-> [!resources] External Resources
-> - 🎥 [50 Verb Pairs](https://www.youtube.com/watch?v=iK4uNlozmFE) — Let's Learn Ukrainian
-> - 📖 [Perfective Verbs](https://www.ukrainianlessons.com/perfective-verbs/)
-> - 📝 [Aspect Differences](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/)
-> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-
 ---

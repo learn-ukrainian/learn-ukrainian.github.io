@@ -288,9 +288,3 @@ Analyze these words by breaking them into parts:
 >
 > Якщо ви знаєте корінь, ви можете зрозуміти багато споріднених слів.
 > *If you know the root, you can understand many related words.*
-
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

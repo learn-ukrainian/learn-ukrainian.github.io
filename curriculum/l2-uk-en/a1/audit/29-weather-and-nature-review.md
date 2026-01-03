@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): погода, вітер, парку, гуляти, температура...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): тепло, вітер, річка, парку, сніг...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 938/750
+- **Words:** ✅ 907/750
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 37.2% (target 35-55% (M29))
+- **Immersion:** 🇺🇦 38.4% (target 35-55% (M29))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -43,4 +40,4 @@
 | **Seasons** | ⚪️ | 0 | Skipped |
 | **Examples in Context** | ✅ | 239 | Included in Core |
 | **Dialogues** | ✅ | 496 | Included in Core |
-| **Summary** | ✅ | 86 | Included in Core |
+| **Summary** | ✅ | 55 | Included in Core |

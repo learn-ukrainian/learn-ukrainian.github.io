@@ -225,6 +225,7 @@ These were all documented requirements that were ignored during creation.
 - Add "helpful" words not in the plan
 - Skip reading the template because you think you remember the structure
 - Ignore template checklists
+- Add `> [!resources]` sections to markdown (resources are in YAML, injected at build time)
 
 **The templates exist because structure matters. Use them every time.**
 </critical>

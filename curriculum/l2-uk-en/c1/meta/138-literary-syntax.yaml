@@ -1,0 +1,17 @@
+module: c1-138
+title: Literary Syntax
+subtitle: Syntax
+version: '2.0'
+phase: C1.4 Stylistics
+focus: stylistics
+pedagogy: academic
+duration: 120
+vocabulary_count: 24
+tags:
+- c1
+- stylistics
+- literary
+- syntax
+objectives:
+- Master C1 concepts in Literary Syntax
+slug: 138-literary-syntax

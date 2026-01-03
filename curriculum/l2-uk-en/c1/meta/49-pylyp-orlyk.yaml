@@ -1,0 +1,17 @@
+module: c1-49
+title: Пилип Орлик
+subtitle: Pylyp Orlyk
+version: '2.0'
+phase: C1.3 Biographies
+focus: biography
+pedagogy: narrative
+duration: 120
+vocabulary_count: 24
+tags:
+- c1
+- biography
+- history
+- culture
+objectives:
+- Master C1 concepts in Пилип Орлик
+slug: 49-pylyp-orlyk

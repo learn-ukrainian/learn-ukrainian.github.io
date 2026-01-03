@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): візьму, принесіть, разом...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): разом, візьму, принесіть...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1182/750
+- **Words:** ✅ 1123/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 27.8% (target 25-40% (M19))
+- **Immersion:** 🇺🇦 29.0% (target 25-40% (M19))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -42,4 +39,4 @@
 | **Production** | ➖ | 103 | Excluded Type |
 | **Cultural Insight** | ✅ | 166 | Included in Core |
 | **Підсумок (Summary)** | ✅ | 79 | Included in Core |
-| **Need More Practice?** | ⚪️ | 59 | Skipped |
+| **Need More Practice?** | ⚪️ | 0 | Skipped |

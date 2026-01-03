@@ -1,0 +1,17 @@
+module: c1-29
+title: Surzhyk
+subtitle: Professional & Social
+version: '2.0'
+phase: C1.2 Professional
+focus: sociolinguistics
+pedagogy: academic
+duration: 120
+vocabulary_count: 24
+tags:
+- c1
+- sociolinguistics
+- surzhyk
+- mixing
+objectives:
+- Master C1 concepts in Surzhyk
+slug: 29-surzhyk

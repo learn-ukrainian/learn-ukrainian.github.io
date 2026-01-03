@@ -1,0 +1,17 @@
+module: c1-136
+title: Anecdotes & Jokes
+subtitle: Humor
+version: '2.0'
+phase: C1.4 Stylistics
+focus: stylistics
+pedagogy: academic
+duration: 120
+vocabulary_count: 24
+tags:
+- c1
+- stylistics
+- anecdote
+- storytelling
+objectives:
+- Master C1 concepts in Anecdotes & Jokes
+slug: 136-anecdotes--jokes

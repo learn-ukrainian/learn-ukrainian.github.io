@@ -1,5 +1,5 @@
 # Audit Report: 37-action-verb-prefixes.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "Inquiry" | **Target:** 1000
+**Phase:** A2.4 | **Level:** A2 | **Pedagogy:** Inquiry | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
 ## Recommendation
@@ -8,7 +8,7 @@
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1171/1000
+- **Words:** ✅ 1134/1000
 - **Activities:** ✅ 10/10
 - **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 8/4 types
@@ -19,7 +19,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 40.6% (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 41.8% (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
 
 ## Low Density Activities
@@ -31,7 +31,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 125 | Included in Core |
+| **Intro/Narrative** | ✅ | 125 | Included in Core |
 | **The Meaning Map** | ⚪️ | 7 | Skipped |
 | **Story Time: The Writer's Deadline** | ✅ | 185 | Included in Core |
 | **Deep Dive - Open and Close (Відкрити | Закрити)** | ✅ | 87 | Included in Core |
@@ -44,5 +44,4 @@
 | **Deep Dive - The Logic of "Na-" (Accumulation)** | ✅ | 63 | Included in Core |
 | **Deep Dive - The "Za-" Trap** | ✅ | 103 | Included in Core |
 | **Anti-Propaganda Showcase** | ⚪️ | 89 | Skipped |
-| **Summary** | ✅ | 87 | Included in Core |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Summary** | ✅ | 50 | Included in Core |

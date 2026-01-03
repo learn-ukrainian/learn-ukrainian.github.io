@@ -201,13 +201,3 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
 **Next up:** Module 07 — Questions & Negation. You learn questions and negation!
 
 ---
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian Present Tense. The First Conjugation Group.](https://www.youtube.com/watch?v=gSmbSuSs-Ps) — Speak Ukrainian
->
-> **Grammar Chart:** [Verb Tenses Overview](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable conjugation chart
->
-> **Podcast:** [ULP 1-22 | First Verb Conjugation](https://www.ukrainianlessons.com/episode22/) — Learn conjugation in context
->
-> **Quick Lesson:** [FMU 1-57 | Verb Conjugations](https://www.ukrainianlessons.com/fmu57/) — 5-minute grammar review

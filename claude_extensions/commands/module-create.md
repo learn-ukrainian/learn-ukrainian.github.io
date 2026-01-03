@@ -186,7 +186,7 @@ Before writing, confirm from quick-ref:
 - [ ] Activity count + types match level requirements
 - [ ] Immersion target known
 - [ ] No duplicate explanations planned
-- [ ] External Resources (YouTube/Blogs) planned?
+- [ ] External Resources planned (edit `docs/resources/external_resources.yaml`, NOT markdown)
 - [ ] **If checkpoint:** Read `docs/l2-uk-en/CHECKPOINT-DESIGN-GUIDE.md`
 
 ### ⚠️ CRITICAL CONSTRAINTS (Apply DURING Writing, Not After)

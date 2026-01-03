@@ -197,10 +197,4 @@ Verbal aspect is about HOW you conceptualize an action, not WHEN it happened. Th
 
 ## Need More Practice?
 
-> [!resources] External Resources
-> - 🎥 [Perfective vs Imperfective](https://www.youtube.com/watch?v=YnWlncQJg8o) — Let's Learn Ukrainian
-> - 📖 [Verb Aspect Guide](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/)
-> - 📝 [Aspect Overview](https://www.ukrainianlessons.com/perfective-verbs/)
-> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-
 ---

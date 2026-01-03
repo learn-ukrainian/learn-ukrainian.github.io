@@ -1,5 +1,5 @@
 # Audit Report: 105-unr-zunr.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "CBI" | **Target:** 1750
+**Phase:** B2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Overall Status:** ✅ PASS
 
 ## Gates
@@ -8,9 +8,9 @@
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/6
+- **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/35
+- **Vocab:** ✅ 90/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -26,7 +26,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 6 | 3 | 100% | 24% | 23.8% |
-| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 14 | 2 | 100% | 14% | 14.3% |
 | cultural | 9 | 4 | 100% | 10% | 9.5% |
@@ -45,7 +45,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **УНР і ЗУНР: Мрія про Соборність** | ⚪️ | 0 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **1917: Весна народів** | ⚪️ | 90 | Skipped |
 | **Чотири Універсали: шлях до свободи** | ⚪️ | 98 | Skipped |
 | **Крути: бій за майбутнє** | ⚪️ | 297 | Skipped |
@@ -59,4 +59,3 @@
 | **Трагедія "Трикутника смерті"** | ⚪️ | 111 | Skipped |
 | **Еміграція: Збереження Держави** | ⚪️ | 189 | Skipped |
 | **Підсумок** | ✅ | 109 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

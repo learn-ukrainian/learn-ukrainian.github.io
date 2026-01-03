@@ -8,34 +8,32 @@
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/6
+- **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 68/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 99.3% (target 98-100% (vocab))
-- **Richness:** ✅ 98% (grammar)
+- **Richness:** ✅ 97% (content)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
-**Module Type:** grammar
+**Score:** 97% (minimum: 95%)
+**Module Type:** content
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 42 | 24 | 100% | 20% | 20.0% |
-| engagement | 5 | 5 | 100% | 15% | 15.0% |
-| dialogues | 4 | 4 | 100% | 15% | 15.0% |
-| variety | 1.00 | - | 100% | 10% | 10.0% |
-| cultural | 4 | 3 | 100% | 10% | 10.0% |
-| realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 4 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.65 | - | 65% | 5% | 3.2% |
-| questions | 14 | 5 | 100% | 5% | 5.0% |
-| proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **98.2%** |
+| examples | 42 | 15 | 100% | 25% | 25.0% |
+| engagement | 8 | 5 | 100% | 19% | 18.7% |
+| variety | 1.00 | - | 100% | 12% | 12.5% |
+| cultural | 4 | 4 | 100% | 12% | 12.5% |
+| realworld | 3 | 3 | 100% | 12% | 12.5% |
+| visual | 4 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 0.65 | - | 65% | 6% | 4.1% |
+| questions | 14 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **97.8%** |
 
 ## MDX VALIDATION
 ✅ No issues found

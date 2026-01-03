@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): онук, бабуся, онучка, хлопець, сім'я...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): дитина, чоловік, дружина, дівчина, дідусь...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1055/750
+- **Words:** ✅ 1025/750
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 36.4% (target 35-55% (M32))
+- **Immersion:** 🇺🇦 37.5% (target 35-55% (M32))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -42,4 +39,4 @@
 | **Describing Family Members** | ⚪️ | 154 | Skipped |
 | **Examples in Context** | ✅ | 232 | Included in Core |
 | **Dialogues** | ✅ | 452 | Included in Core |
-| **Summary** | ✅ | 92 | Included in Core |
+| **Summary** | ✅ | 62 | Included in Core |

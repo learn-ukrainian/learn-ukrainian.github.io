@@ -217,11 +217,3 @@ Take care and stay healthy!
 > - **спина** — back (болить спина — backache)
 >
 > Бережіть своє здоров'я! Здорове харчування, спорт і достатній сон — запорука довгого життя!
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [UKRAINIAN VOCABULARY: body parts and organs](https://www.youtube.com/watch?v=JZGl3Qo25Yc) — Red Purple Ukrainian
->
-> **Grammar Guide:** [Ukrainian Health Vocabulary](https://www.ukrainianlessons.com/something-hurts/) — Common health expressions
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

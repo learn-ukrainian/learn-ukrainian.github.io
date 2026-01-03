@@ -102,6 +102,7 @@ items:
   ipa: /ˈɦrudɪ/
   translation: chest, breasts
   pos: noun
+  gender: f
 - lemma: гірськолижний
   ipa: /ɦʲirsʲkoˈlɪʒnɪj/
   translation: ski (adj.)

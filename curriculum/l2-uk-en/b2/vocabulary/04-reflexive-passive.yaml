@@ -314,6 +314,7 @@ items:
   ipa: /ˈzborɪ/
   translation: assembly, meeting
   pos: noun
+  gender: m
 - lemma: звичай
   ipa: /ˈzwɪtʃɑj/
   translation: custom
@@ -495,6 +496,7 @@ items:
   ipa: /pɛrɛˈɦoworɪ/
   translation: negotiations
   pos: noun
+  gender: m
 - lemma: перемовини
   ipa: /pɛrɛmoˈwɪnɪ/
   translation: negotiations

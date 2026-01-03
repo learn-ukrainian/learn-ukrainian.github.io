@@ -196,12 +196,6 @@ A detective interviews a witness about a robbery.
 Я хочу, **щоб** мої друзі приходили до мене в гості.
 Ми будемо пити чай і говорити про життя.
 
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
 ---
 
 # Summary

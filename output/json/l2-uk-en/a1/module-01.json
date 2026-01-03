@@ -14,56 +14,35 @@
     "moduleType": "grammar",
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
-    "title": "The Cyrillic Code I",
+    "title": "Module 1",
     "titleUk": null,
-    "subtitle": "Cracking the Ukrainian Alphabet",
-    "description": "Learner can recognize True Friends (letters that look AND sound like English)",
-    "objectives": [
-      "Learner can recognize True Friends (letters that look AND sound like English)",
-      "Learner can decode False Friends (letters that look familiar but sound different)",
-      "Learner can read 19 new Cyrillic letters",
-      "Learner can pronounce basic international words in Ukrainian"
-    ],
+    "subtitle": null,
+    "description": "Module 1",
+    "objectives": [],
     "objectivesUk": null,
-    "grammarFocus": [
-      "letter recognition",
-      "pronunciation"
-    ],
-    "tags": [
-      "alphabet",
-      "cyrillic",
-      "phonetics",
-      "true-friends",
-      "false-friends"
-    ],
-    "totalDuration": "60 min",
-    "transliterationMode": "full",
+    "grammarFocus": [],
+    "tags": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "sections": [
       {
         "id": "section-1",
         "name": "The Cyrillic Code I",
         "nameEn": null,
         "type": "content",
-        "content": "## Warm-up\n\nYou're about to crack a code that 45 million people use every day. The Ukrainian Cyrillic alphabet isn't as foreign as it looks. In fact, you already know how to read about a third of it. Some letters are **True Friends** (they look AND sound like their English equivalents). Some are **False Friends** (they look familiar but make completely different sounds). And some are entirely new.\n\nThink of learning Cyrillic like learning to read again. But this time, it only takes a few hours instead of a few years. By the end of this module, you'll be reading real Ukrainian words. Let's start with the letters you already know.\n\n## Presentation\n\n### The True Friends (7 letters)\n\nThese letters look and sound almost identical to their English counterparts. When you see them, read them exactly as you would in English:\n\n| Letter | Sound | Example | English |\n|--------|-------|---------|---------|\n| **А а** | /ɑ/ like \"father\" | м**а**м**а** | mama |\n| **Е е** | /ɛ/ like \"bet\" | м**е**тро | metro |\n| **І і** | /i/ like \"meet\" | п**і**ца | pizza |\n| **О о** | /ɔ/ like \"soft\" | д**о**ктор | doctor |\n| **К к** | /k/ like \"kite\" | бан**к** | bank |\n| **М м** | /m/ like \"mom\" | **м**узика | music |\n| **Т т** | /t/ like \"top\" | **т**урист | tourist |\n\nThese are your **True Friends**. When you see А, О, Е, І, К, М, Т, read them just like English. The word **метро** (metro) uses only True Friends, so you can read it right now: M-E-T-R-O. Wait, what about that Р? That's where things get interesting.\n\n> 💡 **Did You Know?**\n>\n> The Cyrillic alphabet wasn't invented by Russians. It was created in the 9th century in Bulgaria by followers of Saints Cyril and Methodius. Ukraine adopted Cyrillic independently through the medieval state of Kyivan Rus'. Russian didn't even exist as a distinct language when Cyrillic was created!\n\n### The False Friends (6 letters)\n\nThese letters LOOK like English letters but make COMPLETELY different sounds. This is where English speakers get tripped up:\n\n| Letter | Looks Like | Actually Says | Example | English |\n|--------|------------|---------------|---------|---------|\n| **В в** | B | /v/ like \"van\" | ка**в**а | coffee |\n| **Н н** | H | /n/ like \"no\" | ба**н**к | bank |\n| **Р р** | P | /r/ like \"red\" (rolled) | **р**адіо | radio |\n| **С с** | C | /s/ like \"sun\" | **с**уп | soup |\n| **У у** | Y | /u/ like \"moon\" | с**у**п | soup |\n| **Х х** | X | /x/ like Scottish \"loch\" | **х**окей | hockey |\n\nThe word **банк** (bank) has the False Friend **Н** (sounds like N, not H). So it's pronounced \"bank\", not \"bahk\"!\n\nLook at **радіо** (radio): the **Р** looks like a P, but it's actually an R. So it says \"radio\". Exactly what you'd expect, just with a different letter!\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Russian and Ukrainian are basically the same language.\"\n> **Fact:** Ukrainian and Russian are as different as Spanish and Portuguese. They share Cyrillic roots, but Ukrainian has unique letters (Ї, Є, Ґ) that Russian doesn't have. They have different grammar and thousands of words that don't exist in Russian.\n\n### The New Letters (6 letters)\n\nThese letters are completely new to English speakers. But don't worry. They represent sounds you can make:\n\n| Letter | Sound | Example | English |\n|--------|-------|---------|---------|\n| **Б б** | /b/ like \"ball\" | **б**анан | banana |\n| **Д д** | /d/ like \"dog\" | **д**октор | doctor |\n| **З з** | /z/ like \"zoo\" | ва**з**а | vase |\n| **Л л** | /l/ like \"love\" | **л**имон | lemon |\n| **П п** | /p/ like \"pet\" | **п**арк | park |\n| **Ф ф** | /f/ like \"fun\" | **ф**ото | photo |\n\nThe word **футбол** (football) uses several new letters: **Ф** (f), **У** (u, False Friend!), **Т** (t, True Friend), **Б** (b), **О** (o, True Friend), **Л** (l). Put it together: f-u-t-b-o-l. Football!\n\n> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R.**\n>\n> The famous Ukrainian video game **S.T.A.L.K.E.R.** was made by GSC Game World in Kyiv. In Ukrainian, \"stalker\" is written **сталкер**. You can decode it using False Friends: С (s), Т (t), А (a), Л (l), К (k), Е (e), Р (r). The game is set in the Chornobyl Exclusion Zone.\n\n## Practice\n\n### Reading International Words\n\nMany words in Ukrainian are international. They're borrowed from Latin, Greek, or English. Once you know the letters, you can read these immediately.\n\n**Places:**\nБанк (bank). Парк (park). Кафе (café). Бар (bar). Ресторан (restaurant).\n\n**Food:**\nКава (coffee). Суп (soup). Салат (salad). Піца (pizza). Банан (banana). Лимон (lemon).\n\n**Technology:**\nМетро (metro). Радіо (radio). Телефон (telephone). Інтернет (internet). Фото (photo). Відео (video).\n\n### Mini-Dialogue 1: At the Metro Station\n\n— Це метро? *(Tse metro?)* — Is this the metro?\n— Так, метро. *(Tak, metro.)* — Yes, the metro.\n\nNotice how **метро** looks almost English? That's because it IS almost English. Just written in Cyrillic!\n\n### Mini-Dialogue 2: At a Café\n\n— Кава? *(Kava?)* — Coffee?\n— Так, кава. *(Tak, kava.)* — Yes, coffee.\n\nThe word **кава** comes from the same root as English \"coffee\" but took a different path through Turkish and Arabic. In Ukrainian, it sounds like \"kava.\"\n\n## Cultural Insight\n\n### Why Ukrainian Uses Cyrillic\n\nWhen people see Cyrillic, they often think \"Russian alphabet.\" But Cyrillic belongs to no single nation. It was created specifically for Slavic peoples. Bulgarians, Serbs, Ukrainians, and others used it centuries before the Russian Empire even existed.\n\nUkrainian Cyrillic has 33 letters. Some exist only in Ukrainian:\n\n**І і** — Ukrainian has this simple \"ee\" sound like in \"meet\".\n\n**Ї ї** — A uniquely Ukrainian sound (we'll learn it in Module 2).\n\n**Є є** — Another uniquely Ukrainian letter.\n\n**Ґ ґ** — A hard \"g\" sound that Russian lost centuries ago.\n\n> 🌍 **Real World**\n>\n> When you visit **Київ** (Kyiv, note the Ukrainian spelling!), you'll see Cyrillic everywhere: on metro stations, street signs, restaurant menus, and shop windows. The words банк, кафе, бар, ресторан, метро are all around you. And now you can read them!\n\n### The Letter Count\n\nToday you learned **19 letters**. That's more than half the alphabet! Only 14 letters remain for Module 2.\n\n## Production\n\nNow it's time to test your decoding skills. Look at these Ukrainian words and try to read them aloud:\n\nТаксі (taxi). Опера (opera). Балет (ballet). Актор (actor). Паспорт (passport). Віза (visa). Карта (card/map). Комета (comet). Ракета (rocket). Какао (cocoa).\n\nEvery single one of these is an international word that you already know. Just written in a different alphabet!\n\n---"
+        "content": "## Warm-up\n\nYou're about to crack a code that 45 million people use every day. The Ukrainian Cyrillic alphabet isn't as foreign as it looks. In fact, you already know how to read about a third of it. Some letters are **True Friends** (they look AND sound like their English equivalents). Some are **False Friends** (they look familiar but make completely different sounds). And some are entirely new.\n\nThink of learning Cyrillic like learning to read again. But this time, it only takes a few hours instead of a few years. By the end of this module, you'll be reading real Ukrainian words. Let's start with the letters you already know.\n\n## Presentation\n\n### The True Friends (7 letters)\n\nThese letters look and sound almost identical to their English counterparts. When you see them, read them exactly as you would in English:\n\n| Letter  | Sound             | Example      | English |\n| ------- | ----------------- | ------------ | ------- |\n| **А а** | /ɑ/ like \"father\" | м**а**м**а** | mama    |\n| **Е е** | /ɛ/ like \"bet\"    | м**е**тро    | metro   |\n| **І і** | /i/ like \"meet\"   | п**і**ца     | pizza   |\n| **О о** | /ɔ/ like \"soft\"   | д**о**ктор   | doctor  |\n| **К к** | /k/ like \"kite\"   | бан**к**     | bank    |\n| **М м** | /m/ like \"mom\"    | **м**узика   | music   |\n| **Т т** | /t/ like \"top\"    | **т**урист   | tourist |\n\nThese are your **True Friends**. When you see А, О, Е, І, К, М, Т, read them just like English. The word **метро** (metro) uses only True Friends, so you can read it right now: M-E-T-R-O. Wait, what about that Р? That's where things get interesting.\n\n> 💡 **Did You Know?**\n>\n> The Cyrillic alphabet wasn't invented by Russians. It was created in the 9th century in Bulgaria by followers of Saints Cyril and Methodius. Ukraine adopted Cyrillic independently through the medieval state of Kyivan Rus'. Russian didn't even exist as a distinct language when Cyrillic was created!\n\n### The False Friends (6 letters)\n\nThese letters LOOK like English letters but make COMPLETELY different sounds. This is where English speakers get tripped up:\n\n| Letter  | Looks Like | Actually Says            | Example   | English |\n| ------- | ---------- | ------------------------ | --------- | ------- |\n| **В в** | B          | /v/ like \"van\"           | ка**в**а  | coffee  |\n| **Н н** | H          | /n/ like \"no\"            | ба**н**к  | bank    |\n| **Р р** | P          | /r/ like \"red\" (rolled)  | **р**адіо | radio   |\n| **С с** | C          | /s/ like \"sun\"           | **с**уп   | soup    |\n| **У у** | Y          | /u/ like \"moon\"          | с**у**п   | soup    |\n| **Х х** | X          | /x/ like Scottish \"loch\" | **х**окей | hockey  |\n\nThe word **банк** (bank) has the False Friend **Н** (sounds like N, not H). So it's pronounced \"bank\", not \"bahk\"!\n\nLook at **радіо** (radio): the **Р** looks like a P, but it's actually an R. So it says \"radio\". Exactly what you'd expect, just with a different letter!\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Russian and Ukrainian are basically the same language.\"\n> **Fact:** Ukrainian and Russian are as different as Spanish and Portuguese. They share Cyrillic roots, but Ukrainian has unique letters (Ї, Є, Ґ) that Russian doesn't have. They have different grammar and thousands of words that don't exist in Russian.\n\n### The New Letters (6 letters)\n\nThese letters are completely new to English speakers. But don't worry. They represent sounds you can make:\n\n| Letter  | Sound           | Example    | English |\n| ------- | --------------- | ---------- | ------- |\n| **Б б** | /b/ like \"ball\" | **б**анан  | banana  |\n| **Д д** | /d/ like \"dog\"  | **д**октор | doctor  |\n| **З з** | /z/ like \"zoo\"  | ва**з**а   | vase    |\n| **Л л** | /l/ like \"love\" | **л**имон  | lemon   |\n| **П п** | /p/ like \"pet\"  | **п**арк   | park    |\n| **Ф ф** | /f/ like \"fun\"  | **ф**ото   | photo   |\n\nThe word **футбол** (football) uses several new letters: **Ф** (f), **У** (u, False Friend!), **Т** (t, True Friend), **Б** (b), **О** (o, True Friend), **Л** (l). Put it together: f-u-t-b-o-l. Football!\n\n> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R.**\n>\n> The famous Ukrainian video game **S.T.A.L.K.E.R.** was made by GSC Game World in Kyiv. In Ukrainian, \"stalker\" is written **сталкер**. You can decode it using False Friends: С (s), Т (t), А (a), Л (l), К (k), Е (e), Р (r). The game is set in the Chornobyl Exclusion Zone.\n\n## Practice\n\n### Reading International Words\n\nMany words in Ukrainian are international. They're borrowed from Latin, Greek, or English. Once you know the letters, you can read these immediately.\n\n**Places:**\nБанк (bank). Парк (park). Кафе (café). Бар (bar). Ресторан (restaurant).\n\n**Food:**\nКава (coffee). Суп (soup). Салат (salad). Піца (pizza). Банан (banana). Лимон (lemon).\n\n**Technology:**\nМетро (metro). Радіо (radio). Телефон (telephone). Інтернет (internet). Фото (photo). Відео (video).\n\n### Mini-Dialogue 1: At the Metro Station\n\n— Це метро? _(Tse metro?)_ — Is this the metro?\n— Так, метро. _(Tak, metro.)_ — Yes, the metro.\n\nNotice how **метро** looks almost English? That's because it IS almost English. Just written in Cyrillic!\n\n### Mini-Dialogue 2: At a Café\n\n— Кава? _(Kava?)_ — Coffee?\n— Так, кава. _(Tak, kava.)_ — Yes, coffee.\n\nThe word **кава** comes from the same root as English \"coffee\" but took a different path through Turkish and Arabic. In Ukrainian, it sounds like \"kava.\"\n\n## Cultural Insight\n\n### Why Ukrainian Uses Cyrillic\n\nWhen people see Cyrillic, they often think \"Russian alphabet.\" But Cyrillic belongs to no single nation. It was created specifically for Slavic peoples. Bulgarians, Serbs, Ukrainians, and others used it centuries before the Russian Empire even existed.\n\nUkrainian Cyrillic has 33 letters. Some exist only in Ukrainian:\n\n**І і** — Ukrainian has this simple \"ee\" sound like in \"meet\".\n\n**Ї ї** — A uniquely Ukrainian sound (we'll learn it in Module 2).\n\n**Є є** — Another uniquely Ukrainian letter.\n\n**Ґ ґ** — A hard \"g\" sound that Russian lost centuries ago.\n\n> 🌍 **Real World**\n>\n> When you visit **Київ** (Kyiv, note the Ukrainian spelling!), you'll see Cyrillic everywhere: on metro stations, street signs, restaurant menus, and shop windows. The words банк, кафе, бар, ресторан, метро are all around you. And now you can read them!\n\n### The Letter Count\n\nToday you learned **19 letters**. That's more than half the alphabet! Only 14 letters remain for Module 2.\n\n## Production\n\nNow it's time to test your decoding skills. Look at these Ukrainian words and try to read them aloud:\n\nТаксі (taxi). Опера (opera). Балет (ballet). Актор (actor). Паспорт (passport). Віза (visa). Карта (card/map). Комета (comet). Ракета (rocket). Какао (cocoa).\n\nEvery single one of these is an international word that you already know. Just written in a different alphabet!\n\n---"
       },
       {
         "id": "section-2",
         "name": "Summary",
         "nameEn": null,
         "type": "summary",
-        "content": "In this module, you learned:\n\n**True Friends** (7 letters): А, Е, І, О, К, М, Т. They look AND sound like English.\n\n**False Friends** (6 letters): В (v), Н (n), Р (r), С (s), У (u), Х (kh). They look familiar but sound different.\n\n**New Letters** (6 letters): Б (b), Д (d), З (z), Л (l), П (p), Ф (f). They are completely new shapes.\n\nYou can now read **35 international words** in Ukrainian. The key insight: many \"Ukrainian\" words are actually international words you already know, just written in Cyrillic.\n\n**Remember:** В is V, not B. Н is N, not H. Р is R, not P. С is S, not C. У is U, not Y. Х is like Scottish \"loch.\"\n\n---\n\n## Need More Practice?\n\n> [!resources] 🔗 External Resources\n>\n> **YouTube:** [How to read the Ukrainian Alphabet. Cyrillic Letters. Part I](https://www.youtube.com/watch?v=Gt7O4FLGxjI) — Speak Ukrainian\n>\n> **Interactive:** [Talk Ukrainian - Alphabet with Audio](https://talkukrainian.com/ukrainian-alphabet/) — All 33 letters with IPA and native audio\n>\n> **Practice:** [Ukrainian Course - Lesson 1](https://www.ukrainiancourse.com/free-ukrainian-courses/lesson-1-the-ukrainian-alphabet/) — Interactive alphabet exercises\n\n---"
-      },
-      {
-        "id": "section-3",
-        "name": "Vocabulary",
-        "nameEn": null,
-        "type": "vocabulary",
-        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| мама | /ˈmɑmɑ/ | mom | noun | f | - |\n| тато | /ˈtɑtɔ/ | dad | noun | m | - |\n| банк | /bɑnk/ | bank | noun | m | - |\n| парк | /pɑrk/ | park | noun | m | - |\n| кафе | /kɑˈfɛ/ | café | noun | n | indecl. |\n| метро | /mɛˈtrɔ/ | metro | noun | n | indecl. |\n| таксі | /tɑkˈsi/ | taxi | noun | n | indecl. |\n| радіо | /ˈrɑdiɔ/ | radio | noun | n | indecl. |\n| піца | /ˈpitsɑ/ | pizza | noun | f | - |\n| суп | /sup/ | soup | noun | m | - |\n| салат | /sɑˈlɑt/ | salad | noun | m | - |\n| лимон | /lɪˈmɔn/ | lemon | noun | m | - |\n| банан | /bɑˈnɑn/ | banana | noun | m | - |\n| хокей | /xɔˈkɛj/ | hockey | noun | m | - |\n| футбол | /futˈbɔl/ | football | noun | m | - |\n| студент | /stuˈdɛnt/ | student | noun | m | - |\n| турист | /tuˈrɪst/ | tourist | noun | m | - |\n| музика | /ˈmuzɪkɑ/ | music | noun | f | - |\n| фото | /ˈfɔtɔ/ | photo | noun | n | indecl. |\n| відео | /ˈvidɛɔ/ | video | noun | n | indecl. |\n| бар | /bɑr/ | bar | noun | m | - |\n| ресторан | /rɛstɔˈrɑn/ | restaurant | noun | m | - |\n| доктор | /ˈdɔktɔr/ | doctor | noun | m | - |\n| актор | /ˈɑktɔr/ | actor | noun | m | - |\n| опера | /ˈɔpɛrɑ/ | opera | noun | f | - |\n| балет | /bɑˈlɛt/ | ballet | noun | m | - |\n| паспорт | /ˈpɑspɔrt/ | passport | noun | m | - |\n| віза | /ˈvizɑ/ | visa | noun | f | - |\n| карта | /ˈkɑrtɑ/ | card/map | noun | f | - |\n| комета | /kɔˈmɛtɑ/ | comet | noun | f | - |\n| ракета | /rɑˈkɛtɑ/ | rocket | noun | f | - |\n| телефон | /tɛlɛˈfɔn/ | telephone | noun | m | - |\n| інтернет | /intɛrˈnɛt/ | internet | noun | m | - |\n| какао | /kɑˈkɑɔ/ | cocoa | noun | n | indecl. |\n| кава | /ˈkɑvɑ/ | coffee | noun | f | - |"
+        "content": "In this module, you learned:\n\n**True Friends** (7 letters): А, Е, І, О, К, М, Т. They look AND sound like English.\n\n**False Friends** (6 letters): В (v), Н (n), Р (r), С (s), У (u), Х (kh). They look familiar but sound different.\n\n**New Letters** (6 letters): Б (b), Д (d), З (z), Л (l), П (p), Ф (f). They are completely new shapes.\n\nYou can now read **35 international words** in Ukrainian. The key insight: many \"Ukrainian\" words are actually international words you already know, just written in Cyrillic.\n\n**Remember:** В is V, not B. Н is N, not H. Р is R, not P. С is S, not C. У is U, not Y. Х is like Scottish \"loch.\"\n\n---\n\n## Need More Practice?\n\n---"
       }
     ],
-    "rawMarkdown": "---\n\nmodule: a1-01\ntitle: \"The Cyrillic Code I\"\nsubtitle: \"Cracking the Ukrainian Alphabet\"\nversion: \"1.0\"\nphase: \"A1.1\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: \"full\"\ntags:\n  - alphabet\n  - cyrillic\n  - phonetics\n  - true-friends\n  - false-friends\ngrammar:\n  - letter recognition\n  - pronunciation\nobjectives:\n  - \"Learner can recognize True Friends (letters that look AND sound like English)\"\n  - \"Learner can decode False Friends (letters that look familiar but sound different)\"\n  - \"Learner can read 19 new Cyrillic letters\"\n  - \"Learner can pronounce basic international words in Ukrainian\"\nvocabulary_count: 35\n---\n\n# The Cyrillic Code I\n\n## Warm-up\n\nYou're about to crack a code that 45 million people use every day. The Ukrainian Cyrillic alphabet isn't as foreign as it looks. In fact, you already know how to read about a third of it. Some letters are **True Friends** (they look AND sound like their English equivalents). Some are **False Friends** (they look familiar but make completely different sounds). And some are entirely new.\n\nThink of learning Cyrillic like learning to read again. But this time, it only takes a few hours instead of a few years. By the end of this module, you'll be reading real Ukrainian words. Let's start with the letters you already know.\n\n## Presentation\n\n### The True Friends (7 letters)\n\nThese letters look and sound almost identical to their English counterparts. When you see them, read them exactly as you would in English:\n\n| Letter | Sound | Example | English |\n|--------|-------|---------|---------|\n| **А а** | /ɑ/ like \"father\" | м**а**м**а** | mama |\n| **Е е** | /ɛ/ like \"bet\" | м**е**тро | metro |\n| **І і** | /i/ like \"meet\" | п**і**ца | pizza |\n| **О о** | /ɔ/ like \"soft\" | д**о**ктор | doctor |\n| **К к** | /k/ like \"kite\" | бан**к** | bank |\n| **М м** | /m/ like \"mom\" | **м**узика | music |\n| **Т т** | /t/ like \"top\" | **т**урист | tourist |\n\nThese are your **True Friends**. When you see А, О, Е, І, К, М, Т, read them just like English. The word **метро** (metro) uses only True Friends, so you can read it right now: M-E-T-R-O. Wait, what about that Р? That's where things get interesting.\n\n> 💡 **Did You Know?**\n>\n> The Cyrillic alphabet wasn't invented by Russians. It was created in the 9th century in Bulgaria by followers of Saints Cyril and Methodius. Ukraine adopted Cyrillic independently through the medieval state of Kyivan Rus'. Russian didn't even exist as a distinct language when Cyrillic was created!\n\n### The False Friends (6 letters)\n\nThese letters LOOK like English letters but make COMPLETELY different sounds. This is where English speakers get tripped up:\n\n| Letter | Looks Like | Actually Says | Example | English |\n|--------|------------|---------------|---------|---------|\n| **В в** | B | /v/ like \"van\" | ка**в**а | coffee |\n| **Н н** | H | /n/ like \"no\" | ба**н**к | bank |\n| **Р р** | P | /r/ like \"red\" (rolled) | **р**адіо | radio |\n| **С с** | C | /s/ like \"sun\" | **с**уп | soup |\n| **У у** | Y | /u/ like \"moon\" | с**у**п | soup |\n| **Х х** | X | /x/ like Scottish \"loch\" | **х**окей | hockey |\n\nThe word **банк** (bank) has the False Friend **Н** (sounds like N, not H). So it's pronounced \"bank\", not \"bahk\"!\n\nLook at **радіо** (radio): the **Р** looks like a P, but it's actually an R. So it says \"radio\". Exactly what you'd expect, just with a different letter!\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Russian and Ukrainian are basically the same language.\"\n> **Fact:** Ukrainian and Russian are as different as Spanish and Portuguese. They share Cyrillic roots, but Ukrainian has unique letters (Ї, Є, Ґ) that Russian doesn't have. They have different grammar and thousands of words that don't exist in Russian.\n\n### The New Letters (6 letters)\n\nThese letters are completely new to English speakers. But don't worry. They represent sounds you can make:\n\n| Letter | Sound | Example | English |\n|--------|-------|---------|---------|\n| **Б б** | /b/ like \"ball\" | **б**анан | banana |\n| **Д д** | /d/ like \"dog\" | **д**октор | doctor |\n| **З з** | /z/ like \"zoo\" | ва**з**а | vase |\n| **Л л** | /l/ like \"love\" | **л**имон | lemon |\n| **П п** | /p/ like \"pet\" | **п**арк | park |\n| **Ф ф** | /f/ like \"fun\" | **ф**ото | photo |\n\nThe word **футбол** (football) uses several new letters: **Ф** (f), **У** (u, False Friend!), **Т** (t, True Friend), **Б** (b), **О** (o, True Friend), **Л** (l). Put it together: f-u-t-b-o-l. Football!\n\n> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R.**\n>\n> The famous Ukrainian video game **S.T.A.L.K.E.R.** was made by GSC Game World in Kyiv. In Ukrainian, \"stalker\" is written **сталкер**. You can decode it using False Friends: С (s), Т (t), А (a), Л (l), К (k), Е (e), Р (r). The game is set in the Chornobyl Exclusion Zone.\n\n## Practice\n\n### Reading International Words\n\nMany words in Ukrainian are international. They're borrowed from Latin, Greek, or English. Once you know the letters, you can read these immediately.\n\n**Places:**\nБанк (bank). Парк (park). Кафе (café). Бар (bar). Ресторан (restaurant).\n\n**Food:**\nКава (coffee). Суп (soup). Салат (salad). Піца (pizza). Банан (banana). Лимон (lemon).\n\n**Technology:**\nМетро (metro). Радіо (radio). Телефон (telephone). Інтернет (internet). Фото (photo). Відео (video).\n\n### Mini-Dialogue 1: At the Metro Station\n\n— Це метро? *(Tse metro?)* — Is this the metro?\n— Так, метро. *(Tak, metro.)* — Yes, the metro.\n\nNotice how **метро** looks almost English? That's because it IS almost English. Just written in Cyrillic!\n\n### Mini-Dialogue 2: At a Café\n\n— Кава? *(Kava?)* — Coffee?\n— Так, кава. *(Tak, kava.)* — Yes, coffee.\n\nThe word **кава** comes from the same root as English \"coffee\" but took a different path through Turkish and Arabic. In Ukrainian, it sounds like \"kava.\"\n\n## Cultural Insight\n\n### Why Ukrainian Uses Cyrillic\n\nWhen people see Cyrillic, they often think \"Russian alphabet.\" But Cyrillic belongs to no single nation. It was created specifically for Slavic peoples. Bulgarians, Serbs, Ukrainians, and others used it centuries before the Russian Empire even existed.\n\nUkrainian Cyrillic has 33 letters. Some exist only in Ukrainian:\n\n**І і** — Ukrainian has this simple \"ee\" sound like in \"meet\".\n\n**Ї ї** — A uniquely Ukrainian sound (we'll learn it in Module 2).\n\n**Є є** — Another uniquely Ukrainian letter.\n\n**Ґ ґ** — A hard \"g\" sound that Russian lost centuries ago.\n\n> 🌍 **Real World**\n>\n> When you visit **Київ** (Kyiv, note the Ukrainian spelling!), you'll see Cyrillic everywhere: on metro stations, street signs, restaurant menus, and shop windows. The words банк, кафе, бар, ресторан, метро are all around you. And now you can read them!\n\n### The Letter Count\n\nToday you learned **19 letters**. That's more than half the alphabet! Only 14 letters remain for Module 2.\n\n## Production\n\nNow it's time to test your decoding skills. Look at these Ukrainian words and try to read them aloud:\n\nТаксі (taxi). Опера (opera). Балет (ballet). Актор (actor). Паспорт (passport). Віза (visa). Карта (card/map). Комета (comet). Ракета (rocket). Какао (cocoa).\n\nEvery single one of these is an international word that you already know. Just written in a different alphabet!\n\n---\n\n# Summary\n\nIn this module, you learned:\n\n**True Friends** (7 letters): А, Е, І, О, К, М, Т. They look AND sound like English.\n\n**False Friends** (6 letters): В (v), Н (n), Р (r), С (s), У (u), Х (kh). They look familiar but sound different.\n\n**New Letters** (6 letters): Б (b), Д (d), З (z), Л (l), П (p), Ф (f). They are completely new shapes.\n\nYou can now read **35 international words** in Ukrainian. The key insight: many \"Ukrainian\" words are actually international words you already know, just written in Cyrillic.\n\n**Remember:** В is V, not B. Н is N, not H. Р is R, not P. С is S, not C. У is U, not Y. Х is like Scottish \"loch.\"\n\n---\n\n## Need More Practice?\n\n> [!resources] 🔗 External Resources\n>\n> **YouTube:** [How to read the Ukrainian Alphabet. Cyrillic Letters. Part I](https://www.youtube.com/watch?v=Gt7O4FLGxjI) — Speak Ukrainian\n>\n> **Interactive:** [Talk Ukrainian - Alphabet with Audio](https://talkukrainian.com/ukrainian-alphabet/) — All 33 letters with IPA and native audio\n>\n> **Practice:** [Ukrainian Course - Lesson 1](https://www.ukrainiancourse.com/free-ukrainian-courses/lesson-1-the-ukrainian-alphabet/) — Interactive alphabet exercises\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| мама | /ˈmɑmɑ/ | mom | noun | f | - |\n| тато | /ˈtɑtɔ/ | dad | noun | m | - |\n| банк | /bɑnk/ | bank | noun | m | - |\n| парк | /pɑrk/ | park | noun | m | - |\n| кафе | /kɑˈfɛ/ | café | noun | n | indecl. |\n| метро | /mɛˈtrɔ/ | metro | noun | n | indecl. |\n| таксі | /tɑkˈsi/ | taxi | noun | n | indecl. |\n| радіо | /ˈrɑdiɔ/ | radio | noun | n | indecl. |\n| піца | /ˈpitsɑ/ | pizza | noun | f | - |\n| суп | /sup/ | soup | noun | m | - |\n| салат | /sɑˈlɑt/ | salad | noun | m | - |\n| лимон | /lɪˈmɔn/ | lemon | noun | m | - |\n| банан | /bɑˈnɑn/ | banana | noun | m | - |\n| хокей | /xɔˈkɛj/ | hockey | noun | m | - |\n| футбол | /futˈbɔl/ | football | noun | m | - |\n| студент | /stuˈdɛnt/ | student | noun | m | - |\n| турист | /tuˈrɪst/ | tourist | noun | m | - |\n| музика | /ˈmuzɪkɑ/ | music | noun | f | - |\n| фото | /ˈfɔtɔ/ | photo | noun | n | indecl. |\n| відео | /ˈvidɛɔ/ | video | noun | n | indecl. |\n| бар | /bɑr/ | bar | noun | m | - |\n| ресторан | /rɛstɔˈrɑn/ | restaurant | noun | m | - |\n| доктор | /ˈdɔktɔr/ | doctor | noun | m | - |\n| актор | /ˈɑktɔr/ | actor | noun | m | - |\n| опера | /ˈɔpɛrɑ/ | opera | noun | f | - |\n| балет | /bɑˈlɛt/ | ballet | noun | m | - |\n| паспорт | /ˈpɑspɔrt/ | passport | noun | m | - |\n| віза | /ˈvizɑ/ | visa | noun | f | - |\n| карта | /ˈkɑrtɑ/ | card/map | noun | f | - |\n| комета | /kɔˈmɛtɑ/ | comet | noun | f | - |\n| ракета | /rɑˈkɛtɑ/ | rocket | noun | f | - |\n| телефон | /tɛlɛˈfɔn/ | telephone | noun | m | - |\n| інтернет | /intɛrˈnɛt/ | internet | noun | m | - |\n| какао | /kɑˈkɑɔ/ | cocoa | noun | n | indecl. |\n| кава | /ˈkɑvɑ/ | coffee | noun | f | - |\n",
-    "createdAt": "2025-12-31T22:29:20.979224Z",
-    "modifiedAt": "2025-12-31T22:29:20.979224Z",
+    "rawMarkdown": "# The Cyrillic Code I\n\n## Warm-up\n\nYou're about to crack a code that 45 million people use every day. The Ukrainian Cyrillic alphabet isn't as foreign as it looks. In fact, you already know how to read about a third of it. Some letters are **True Friends** (they look AND sound like their English equivalents). Some are **False Friends** (they look familiar but make completely different sounds). And some are entirely new.\n\nThink of learning Cyrillic like learning to read again. But this time, it only takes a few hours instead of a few years. By the end of this module, you'll be reading real Ukrainian words. Let's start with the letters you already know.\n\n## Presentation\n\n### The True Friends (7 letters)\n\nThese letters look and sound almost identical to their English counterparts. When you see them, read them exactly as you would in English:\n\n| Letter  | Sound             | Example      | English |\n| ------- | ----------------- | ------------ | ------- |\n| **А а** | /ɑ/ like \"father\" | м**а**м**а** | mama    |\n| **Е е** | /ɛ/ like \"bet\"    | м**е**тро    | metro   |\n| **І і** | /i/ like \"meet\"   | п**і**ца     | pizza   |\n| **О о** | /ɔ/ like \"soft\"   | д**о**ктор   | doctor  |\n| **К к** | /k/ like \"kite\"   | бан**к**     | bank    |\n| **М м** | /m/ like \"mom\"    | **м**узика   | music   |\n| **Т т** | /t/ like \"top\"    | **т**урист   | tourist |\n\nThese are your **True Friends**. When you see А, О, Е, І, К, М, Т, read them just like English. The word **метро** (metro) uses only True Friends, so you can read it right now: M-E-T-R-O. Wait, what about that Р? That's where things get interesting.\n\n> 💡 **Did You Know?**\n>\n> The Cyrillic alphabet wasn't invented by Russians. It was created in the 9th century in Bulgaria by followers of Saints Cyril and Methodius. Ukraine adopted Cyrillic independently through the medieval state of Kyivan Rus'. Russian didn't even exist as a distinct language when Cyrillic was created!\n\n### The False Friends (6 letters)\n\nThese letters LOOK like English letters but make COMPLETELY different sounds. This is where English speakers get tripped up:\n\n| Letter  | Looks Like | Actually Says            | Example   | English |\n| ------- | ---------- | ------------------------ | --------- | ------- |\n| **В в** | B          | /v/ like \"van\"           | ка**в**а  | coffee  |\n| **Н н** | H          | /n/ like \"no\"            | ба**н**к  | bank    |\n| **Р р** | P          | /r/ like \"red\" (rolled)  | **р**адіо | radio   |\n| **С с** | C          | /s/ like \"sun\"           | **с**уп   | soup    |\n| **У у** | Y          | /u/ like \"moon\"          | с**у**п   | soup    |\n| **Х х** | X          | /x/ like Scottish \"loch\" | **х**окей | hockey  |\n\nThe word **банк** (bank) has the False Friend **Н** (sounds like N, not H). So it's pronounced \"bank\", not \"bahk\"!\n\nLook at **радіо** (radio): the **Р** looks like a P, but it's actually an R. So it says \"radio\". Exactly what you'd expect, just with a different letter!\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Russian and Ukrainian are basically the same language.\"\n> **Fact:** Ukrainian and Russian are as different as Spanish and Portuguese. They share Cyrillic roots, but Ukrainian has unique letters (Ї, Є, Ґ) that Russian doesn't have. They have different grammar and thousands of words that don't exist in Russian.\n\n### The New Letters (6 letters)\n\nThese letters are completely new to English speakers. But don't worry. They represent sounds you can make:\n\n| Letter  | Sound           | Example    | English |\n| ------- | --------------- | ---------- | ------- |\n| **Б б** | /b/ like \"ball\" | **б**анан  | banana  |\n| **Д д** | /d/ like \"dog\"  | **д**октор | doctor  |\n| **З з** | /z/ like \"zoo\"  | ва**з**а   | vase    |\n| **Л л** | /l/ like \"love\" | **л**имон  | lemon   |\n| **П п** | /p/ like \"pet\"  | **п**арк   | park    |\n| **Ф ф** | /f/ like \"fun\"  | **ф**ото   | photo   |\n\nThe word **футбол** (football) uses several new letters: **Ф** (f), **У** (u, False Friend!), **Т** (t, True Friend), **Б** (b), **О** (o, True Friend), **Л** (l). Put it together: f-u-t-b-o-l. Football!\n\n> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R.**\n>\n> The famous Ukrainian video game **S.T.A.L.K.E.R.** was made by GSC Game World in Kyiv. In Ukrainian, \"stalker\" is written **сталкер**. You can decode it using False Friends: С (s), Т (t), А (a), Л (l), К (k), Е (e), Р (r). The game is set in the Chornobyl Exclusion Zone.\n\n## Practice\n\n### Reading International Words\n\nMany words in Ukrainian are international. They're borrowed from Latin, Greek, or English. Once you know the letters, you can read these immediately.\n\n**Places:**\nБанк (bank). Парк (park). Кафе (café). Бар (bar). Ресторан (restaurant).\n\n**Food:**\nКава (coffee). Суп (soup). Салат (salad). Піца (pizza). Банан (banana). Лимон (lemon).\n\n**Technology:**\nМетро (metro). Радіо (radio). Телефон (telephone). Інтернет (internet). Фото (photo). Відео (video).\n\n### Mini-Dialogue 1: At the Metro Station\n\n— Це метро? _(Tse metro?)_ — Is this the metro?\n— Так, метро. _(Tak, metro.)_ — Yes, the metro.\n\nNotice how **метро** looks almost English? That's because it IS almost English. Just written in Cyrillic!\n\n### Mini-Dialogue 2: At a Café\n\n— Кава? _(Kava?)_ — Coffee?\n— Так, кава. _(Tak, kava.)_ — Yes, coffee.\n\nThe word **кава** comes from the same root as English \"coffee\" but took a different path through Turkish and Arabic. In Ukrainian, it sounds like \"kava.\"\n\n## Cultural Insight\n\n### Why Ukrainian Uses Cyrillic\n\nWhen people see Cyrillic, they often think \"Russian alphabet.\" But Cyrillic belongs to no single nation. It was created specifically for Slavic peoples. Bulgarians, Serbs, Ukrainians, and others used it centuries before the Russian Empire even existed.\n\nUkrainian Cyrillic has 33 letters. Some exist only in Ukrainian:\n\n**І і** — Ukrainian has this simple \"ee\" sound like in \"meet\".\n\n**Ї ї** — A uniquely Ukrainian sound (we'll learn it in Module 2).\n\n**Є є** — Another uniquely Ukrainian letter.\n\n**Ґ ґ** — A hard \"g\" sound that Russian lost centuries ago.\n\n> 🌍 **Real World**\n>\n> When you visit **Київ** (Kyiv, note the Ukrainian spelling!), you'll see Cyrillic everywhere: on metro stations, street signs, restaurant menus, and shop windows. The words банк, кафе, бар, ресторан, метро are all around you. And now you can read them!\n\n### The Letter Count\n\nToday you learned **19 letters**. That's more than half the alphabet! Only 14 letters remain for Module 2.\n\n## Production\n\nNow it's time to test your decoding skills. Look at these Ukrainian words and try to read them aloud:\n\nТаксі (taxi). Опера (opera). Балет (ballet). Актор (actor). Паспорт (passport). Віза (visa). Карта (card/map). Комета (comet). Ракета (rocket). Какао (cocoa).\n\nEvery single one of these is an international word that you already know. Just written in a different alphabet!\n\n---\n\n# Summary\n\nIn this module, you learned:\n\n**True Friends** (7 letters): А, Е, І, О, К, М, Т. They look AND sound like English.\n\n**False Friends** (6 letters): В (v), Н (n), Р (r), С (s), У (u), Х (kh). They look familiar but sound different.\n\n**New Letters** (6 letters): Б (b), Д (d), З (z), Л (l), П (p), Ф (f). They are completely new shapes.\n\nYou can now read **35 international words** in Ukrainian. The key insight: many \"Ukrainian\" words are actually international words you already know, just written in Cyrillic.\n\n**Remember:** В is V, not B. Н is N, not H. Р is R, not P. С is S, not C. У is U, not Y. Х is like Scottish \"loch.\"\n\n---\n\n## Need More Practice?\n\n---\n",
+    "createdAt": "2026-01-02T22:33:44.922912Z",
+    "modifiedAt": "2026-01-02T22:33:44.922912Z",
     "version": 2
   },
   "activities": [],
@@ -71,327 +50,48 @@
     "moduleId": "mod-uk-A1-01",
     "level": "A1",
     "phase": "A1.1",
-    "wordCount": 35,
-    "newWordCount": 35,
+    "wordCount": 0,
+    "newWordCount": 0,
     "reviewWordCount": 0,
-    "transliterationMode": "full",
-    "words": [
+    "transliterationMode": "none",
+    "words": [],
+    "reviewWords": []
+  },
+  "external_resources": {
+    "podcasts": [],
+    "youtube": [
       {
-        "id": "vocab-1",
-        "uk": "мама",
-        "ipa": "/ˈmɑmɑ/",
-        "en": "mom",
-        "pos": "noun",
-        "gender": "f",
-        "note": "-"
-      },
-      {
-        "id": "vocab-2",
-        "uk": "тато",
-        "ipa": "/ˈtɑtɔ/",
-        "en": "dad",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-3",
-        "uk": "банк",
-        "ipa": "/bɑnk/",
-        "en": "bank",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-4",
-        "uk": "парк",
-        "ipa": "/pɑrk/",
-        "en": "park",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-5",
-        "uk": "кафе",
-        "ipa": "/kɑˈfɛ/",
-        "en": "café",
-        "pos": "noun",
-        "gender": "n",
-        "note": "indecl."
-      },
-      {
-        "id": "vocab-6",
-        "uk": "метро",
-        "ipa": "/mɛˈtrɔ/",
-        "en": "metro",
-        "pos": "noun",
-        "gender": "n",
-        "note": "indecl."
-      },
-      {
-        "id": "vocab-7",
-        "uk": "таксі",
-        "ipa": "/tɑkˈsi/",
-        "en": "taxi",
-        "pos": "noun",
-        "gender": "n",
-        "note": "indecl."
-      },
-      {
-        "id": "vocab-8",
-        "uk": "радіо",
-        "ipa": "/ˈrɑdiɔ/",
-        "en": "radio",
-        "pos": "noun",
-        "gender": "n",
-        "note": "indecl."
-      },
-      {
-        "id": "vocab-9",
-        "uk": "піца",
-        "ipa": "/ˈpitsɑ/",
-        "en": "pizza",
-        "pos": "noun",
-        "gender": "f",
-        "note": "-"
-      },
-      {
-        "id": "vocab-10",
-        "uk": "суп",
-        "ipa": "/sup/",
-        "en": "soup",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-11",
-        "uk": "салат",
-        "ipa": "/sɑˈlɑt/",
-        "en": "salad",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-12",
-        "uk": "лимон",
-        "ipa": "/lɪˈmɔn/",
-        "en": "lemon",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-13",
-        "uk": "банан",
-        "ipa": "/bɑˈnɑn/",
-        "en": "banana",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-14",
-        "uk": "хокей",
-        "ipa": "/xɔˈkɛj/",
-        "en": "hockey",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-15",
-        "uk": "футбол",
-        "ipa": "/futˈbɔl/",
-        "en": "football",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-16",
-        "uk": "студент",
-        "ipa": "/stuˈdɛnt/",
-        "en": "student",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-17",
-        "uk": "турист",
-        "ipa": "/tuˈrɪst/",
-        "en": "tourist",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-18",
-        "uk": "музика",
-        "ipa": "/ˈmuzɪkɑ/",
-        "en": "music",
-        "pos": "noun",
-        "gender": "f",
-        "note": "-"
-      },
-      {
-        "id": "vocab-19",
-        "uk": "фото",
-        "ipa": "/ˈfɔtɔ/",
-        "en": "photo",
-        "pos": "noun",
-        "gender": "n",
-        "note": "indecl."
-      },
-      {
-        "id": "vocab-20",
-        "uk": "відео",
-        "ipa": "/ˈvidɛɔ/",
-        "en": "video",
-        "pos": "noun",
-        "gender": "n",
-        "note": "indecl."
-      },
-      {
-        "id": "vocab-21",
-        "uk": "бар",
-        "ipa": "/bɑr/",
-        "en": "bar",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-22",
-        "uk": "ресторан",
-        "ipa": "/rɛstɔˈrɑn/",
-        "en": "restaurant",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-23",
-        "uk": "доктор",
-        "ipa": "/ˈdɔktɔr/",
-        "en": "doctor",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-24",
-        "uk": "актор",
-        "ipa": "/ˈɑktɔr/",
-        "en": "actor",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-25",
-        "uk": "опера",
-        "ipa": "/ˈɔpɛrɑ/",
-        "en": "opera",
-        "pos": "noun",
-        "gender": "f",
-        "note": "-"
-      },
-      {
-        "id": "vocab-26",
-        "uk": "балет",
-        "ipa": "/bɑˈlɛt/",
-        "en": "ballet",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-27",
-        "uk": "паспорт",
-        "ipa": "/ˈpɑspɔrt/",
-        "en": "passport",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-28",
-        "uk": "віза",
-        "ipa": "/ˈvizɑ/",
-        "en": "visa",
-        "pos": "noun",
-        "gender": "f",
-        "note": "-"
-      },
-      {
-        "id": "vocab-29",
-        "uk": "карта",
-        "ipa": "/ˈkɑrtɑ/",
-        "en": "card/map",
-        "pos": "noun",
-        "gender": "f",
-        "note": "-"
-      },
-      {
-        "id": "vocab-30",
-        "uk": "комета",
-        "ipa": "/kɔˈmɛtɑ/",
-        "en": "comet",
-        "pos": "noun",
-        "gender": "f",
-        "note": "-"
-      },
-      {
-        "id": "vocab-31",
-        "uk": "ракета",
-        "ipa": "/rɑˈkɛtɑ/",
-        "en": "rocket",
-        "pos": "noun",
-        "gender": "f",
-        "note": "-"
-      },
-      {
-        "id": "vocab-32",
-        "uk": "телефон",
-        "ipa": "/tɛlɛˈfɔn/",
-        "en": "telephone",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-33",
-        "uk": "інтернет",
-        "ipa": "/intɛrˈnɛt/",
-        "en": "internet",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-"
-      },
-      {
-        "id": "vocab-34",
-        "uk": "какао",
-        "ipa": "/kɑˈkɑɔ/",
-        "en": "cocoa",
-        "pos": "noun",
-        "gender": "n",
-        "note": "indecl."
-      },
-      {
-        "id": "vocab-35",
-        "uk": "кава",
-        "ipa": "/ˈkɑvɑ/",
-        "en": "coffee",
-        "pos": "noun",
-        "gender": "f",
-        "note": "-"
+        "title": "How to read the Ukrainian Alphabet. Cyrillic Letters. Part I",
+        "url": "https://www.youtube.com/watch?v=Gt7O4FLGxjI",
+        "relevance": "high",
+        "channel": "Speak Ukrainian"
       }
     ],
-    "reviewWords": []
+    "articles": [
+      {
+        "id": "ulp-blog-000",
+        "title": "Ukrainian Alphabet: Full Guide with Examples and Pronunciation",
+        "url": "https://www.ukrainianlessons.com/ukrainian-alphabet/",
+        "priority": 1,
+        "relevance": "high",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'cyrillic', 'alphabet', 'letters'} (Score: 90, Priority: 1)"
+      }
+    ],
+    "books": [],
+    "websites": [
+      {
+        "title": "Talk Ukrainian - Alphabet with Audio",
+        "url": "https://talkukrainian.com/ukrainian-alphabet/",
+        "relevance": "high",
+        "source": "All 33 letters with IPA and native audio"
+      },
+      {
+        "title": "Ukrainian Course - Lesson 1",
+        "url": "https://www.ukrainiancourse.com/free-ukrainian-courses/lesson-1-the-ukrainian-alphabet/",
+        "relevance": "high",
+        "source": "Interactive alphabet exercises"
+      }
+    ]
   }
 }

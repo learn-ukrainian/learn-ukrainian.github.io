@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (30 words): відчинено, вода, яйце, пиво, овочі...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (30 words): продавець, овочі, закуска, офіціант, риба...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 951/750
+- **Words:** ✅ 923/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 31.6% (target 25-40% (M18))
+- **Immersion:** 🇺🇦 32.6% (target 25-40% (M18))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (9 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -39,5 +36,5 @@
 | **Warm-up** | ✅ | 134 | Included in Core |
 | **Presentation** | ✅ | 335 | Included in Core |
 | **Dialogues** | ✅ | 247 | Included in Core |
-| **Practice** | ⚪️ | 182 | Skipped |
+| **Practice** | ⚪️ | 154 | Skipped |
 | **Summary** | ✅ | 53 | Included in Core |

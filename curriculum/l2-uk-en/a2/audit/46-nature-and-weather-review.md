@@ -1,9 +1,9 @@
 # Audit Report: 46-nature-and-weather.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** 'PPP' | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Phase:** A2.5 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
+**Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, відмінок, місцевий, дієслово
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, відмінок, час, дієслово
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1077/1000
+- **Words:** ✅ 1044/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -23,13 +23,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 59.8% (target 50-60% (A2.3))
+- **Immersion:** ❌ 61.7% HIGH (target 50-60% (A2.3))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Nature & Weather** | ⚪️ | 0 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 92 | Included in Core |
 | **Ландшафт** | ⚪️ | 128 | Skipped |
 | **Погода** | ⚪️ | 99 | Skipped |
@@ -39,5 +39,4 @@
 | **Common Expressions** | ⚪️ | 0 | Skipped |
 | **Weather Questions and Answers** | ⚪️ | 0 | Skipped |
 | **Useful Phrases** | ⚪️ | 108 | Skipped |
-| **Summary** | ✅ | 189 | Included in Core |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Summary** | ✅ | 156 | Included in Core |

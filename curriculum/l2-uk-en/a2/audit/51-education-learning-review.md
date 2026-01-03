@@ -1,5 +1,5 @@
 # Audit Report: 51-education-learning.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "Narrative" | **Target:** 1000
+**Phase:** A2 | **Level:** A2 | **Pedagogy:** Narrative | **Target:** 1000
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1170/1000
+- **Words:** ✅ 1134/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -23,15 +23,14 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 56.2% (target 50-60% (A2.3))
+- **Immersion:** 🇺🇦 58.2% (target 50-60% (A2.3))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Education & Learning** | ⚪️ | 0 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 134 | Included in Core |
 | **Presentation** | ✅ | 293 | Included in Core |
 | **Practice** | ⚪️ | 657 | Skipped |
-| **Summary** | ✅ | 86 | Included in Core |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Summary** | ✅ | 50 | Included in Core |

@@ -1,9 +1,9 @@
 # Audit Report: 08-logical-prepositions.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
+**Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1146/1000
+- **Words:** ✅ 1103/1000
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -14,13 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 37.6% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 38.9% (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 68 | Included in Core |
+| **Intro/Narrative** | ✅ | 68 | Included in Core |
 | **Part 1: Benefit & Absence** | ⚪️ | 0 | Skipped |
 | **Understanding Logical Prepositions** | ⚪️ | 61 | Skipped |
 | **Для + Genitive (For)** | ⚪️ | 91 | Skipped |
@@ -45,5 +45,4 @@
 | **Dialogue: Planning a Trip** | ✅ | 57 | Included in Core |
 | **Dialogue: About a Book** | ✅ | 89 | Included in Core |
 | **Summary** | ✅ | 31 | Included in Core |
-| **Need More Practice?** | ⚪️ | 43 | Skipped |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Need More Practice?** | ⚪️ | 0 | Skipped |

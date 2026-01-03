@@ -2,446 +2,446 @@ module: 99-austrian-galicia
 level: B2
 version: '2.0'
 items:
-  - lemma: будучність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: буквар
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: вагилевич
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: володарюї
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: відень
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: габсбург
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: галицкий
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: галицкій
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: головацький
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: гурток
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: дністров
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: дністрова
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: дністровий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: дрогобич
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: душити
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: етнографій
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: етноні
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: зародитися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: зловживання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: злука
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: йосиф
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: йосифінський
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: камчатки
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: кафедра
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: кооператив
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: лодомерія
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: людовий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: малозрозумілий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: маркіян
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: мас
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: москвофіл
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: москвофільство
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: навмисно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: наддніпрянщина
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: найжорстокіший
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: наклад
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: народе
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: народовка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: наштовхнутися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: непросвічений
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: окремішність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: парламентаризм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: патент
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: патріот
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: передмова
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: перемишль
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: петиції
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: побоюватися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: позволити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: присілок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: провадити
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: прокотитися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: пропагувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: просвіт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: просвіта
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: просвіченійший
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: підданський
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: рейхстаз
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: романтизм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: руский
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: руські
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: сардінія
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: селянина
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: семінарист
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: семінарій
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: соборність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: станіславив
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: твердіти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: терезія
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: тернопіль
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: тертя
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: трон
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: троє
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: трійць
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: трійця
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: уважати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: україномовній
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: уніать
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: учитися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: фердинанд
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: філіжанка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: цісар
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: числити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: читалення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: шашкевич
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: ширити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: щоби
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: язичія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: яков
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: єврейський
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: єсьмий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: інтелігент
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
+- lemma: будучність
+  ipa: /buˈdut͡ʃnʲistʲ/
+  translation: future (archaic form)
+  pos: noun
+  gender: f
+- lemma: буквар
+  ipa: /bukˈwɑr/
+  translation: primer, alphabet book
+  pos: noun
+  gender: m
+- lemma: вагилевич
+  ipa: /wɐˈɦɪlɛwɪt͡ʃ/
+  translation: Vahylevych (Ivan Vahylevych, member of Ruska Trijca)
+  pos: propn
+  gender: m
+- lemma: володарюї
+  ipa: /woloˈdɑrʲuji/
+  translation: rulers (genitive plural of володар)
+  pos: noun
+  gender: m
+- lemma: відень
+  ipa: /ˈwʲidɛnʲ/
+  translation: Vienna
+  pos: propn
+  gender: m
+- lemma: габсбург
+  ipa: /ɦɐpsˈburɦ/
+  translation: Habsburg (dynasty)
+  pos: noun
+  gender: m
+- lemma: галицкий
+  ipa: /ɦɐˈlɪt͡sʲkɪj/
+  translation: Galician (archaic form, masculine)
+  pos: propn
+  gender: m
+- lemma: галицкій
+  ipa: /ɦɐˈlɪt͡sʲkʲij/
+  translation: Galician (archaic form, feminine)
+  pos: propn
+  gender: f
+- lemma: головацький
+  ipa: /ɦoloˈwɑt͡sʲkɪj/
+  translation: Holovatskyi (Yakiv Holovatskyi, member of Ruska Trijca)
+  pos: propn
+  gender: m
+- lemma: гурток
+  ipa: /ɦurˈtok/
+  translation: circle, study group
+  pos: noun
+  gender: m
+- lemma: дністров
+  ipa: /dnʲisˈtrow/
+  translation: Dniester (genitive plural)
+  pos: propn
+  gender: m
+- lemma: дністрова
+  ipa: /dnʲisˈtrowɑ/
+  translation: Dniester (genitive)
+  pos: propn
+  gender: f
+- lemma: дністровий
+  ipa: /dnʲisˈtrowɪj/
+  translation: Dniester (adj.)
+  pos: adj
+  gender: f
+- lemma: дрогобич
+  ipa: /droˈɦobɪt͡ʃ/
+  translation: Drohobych (city in Galicia)
+  pos: propn
+  gender: m
+- lemma: душити
+  ipa: /duˈʃɪtɪ/
+  translation: to strangle, to suppress
+  pos: verb
+  gender: f
+- lemma: етнографій
+  ipa: /ɛtnoˈɦrɑfʲij/
+  translation: ethnography (genitive plural)
+  pos: noun
+  gender: f
+- lemma: етноні
+  ipa: /ɛtnoˈnʲi/
+  translation: ethnonym (truncated form of етнонім)
+  pos: noun
+  gender: m
+- lemma: зародитися
+  ipa: /zɐroˈdɪtɪsʲɑ/
+  translation: to originate, to emerge
+  pos: verb
+  gender: f
+- lemma: зловживання
+  ipa: /zloʒɪˈwɑnʲːɑ/
+  translation: abuse
+  pos: noun
+  gender: n
+- lemma: злука
+  ipa: /ˈzlukɑ/
+  translation: Zluka (Union - Ruthenian identity concept)
+  pos: propn
+  gender: f
+- lemma: йосиф
+  ipa: /ˈjosɪf/
+  translation: Joseph (Joseph II, Habsburg emperor)
+  pos: propn
+  gender: m
+- lemma: йосифінський
+  ipa: /josɪˈfʲinsʲkɪj/
+  translation: Josephine (Joseph II's reforms)
+  pos: adj
+- lemma: камчатки
+  ipa: /kɐmˈt͡ʃɑtkɪ/
+  translation: Kamchatka (genitive - remote Russian peninsula)
+  pos: propn
+  gender: f
+- lemma: кафедра
+  ipa: /kɐˈfɛdrɑ/
+  translation: department, chair (university)
+  pos: noun
+  gender: f
+- lemma: кооператив
+  ipa: /kooˈpɛrɐtɪw/
+  translation: cooperative
+  pos: noun
+  gender: m
+- lemma: лодомерія
+  ipa: /loˈdomɛrʲijɑ/
+  translation: Lodomeria (Kingdom of Galicia and Lodomeria)
+  pos: propn
+  gender: f
+- lemma: людовий
+  ipa: /lʲuˈdowɪj/
+  translation: people's, popular (archaic form)
+  pos: adj
+- lemma: малозрозумілий
+  ipa: /mɐlozrozuˈmʲilɪj/
+  translation: barely comprehensible
+  pos: adj
+  gender: f
+- lemma: маркіян
+  ipa: /mɐrˈkʲijɑn/
+  translation: Markiyan (Shashkevych's first name)
+  pos: propn
+  gender: m
+- lemma: мас
+  ipa: /mɑs/
+  translation: masses (genitive plural of маса)
+  pos: noun
+  gender: f
+- lemma: москвофіл
+  ipa: /moskwoˈfʲil/
+  translation: Moscophile (pro-Russian Galician)
+  pos: noun
+  gender: m
+- lemma: москвофільство
+  ipa: /moskwoˈfʲilʲstwo/
+  translation: Moscophilism (pro-Russian orientation)
+  pos: noun
+  gender: n
+- lemma: навмисно
+  ipa: /nɐwˈmɪsno/
+  translation: intentionally, deliberately
+  pos: adv
+- lemma: наддніпрянщина
+  ipa: /nɐdːnʲipˈrʲɑnʃt͡ʃɪnɑ/
+  translation: Dnieper Ukraine (region under Russian rule)
+  pos: propn
+  gender: f
+- lemma: найжорстокіший
+  ipa: /nɐjʒorstoˈkʲiʃɪj/
+  translation: most cruel
+  pos: adj
+  gender: f
+- lemma: наклад
+  ipa: /nɐˈklɑd/
+  translation: print run, circulation
+  pos: noun
+  gender: m
+- lemma: народе
+  ipa: /nɐˈrodɛ/
+  translation: people (vocative of народ - O people!)
+  pos: other
+- lemma: народовка
+  ipa: /nɐˈrodowkɑ/
+  translation: narodovets (populist, pro-Ukrainian nationalist)
+  pos: noun
+  gender: m
+- lemma: наштовхнутися
+  ipa: /nɐʃtowxˈnutɪsʲɑ/
+  translation: to stumble upon, to encounter
+  pos: verb
+  gender: f
+- lemma: непросвічений
+  ipa: /nɛproswʲiˈt͡ʃɛnɪj/
+  translation: unenlightened
+  pos: adj
+  gender: f
+- lemma: окремішність
+  ipa: /okrɛˈmʲiʃnʲistʲ/
+  translation: separateness, distinctiveness
+  pos: noun
+  gender: f
+- lemma: парламентаризм
+  ipa: /pɐrlɐmɛntɐˈrɪzm/
+  translation: parliamentarism
+  pos: noun
+  gender: m
+- lemma: патент
+  ipa: /pɐˈtɛnt/
+  translation: patent, decree
+  pos: noun
+  gender: m
+- lemma: патріот
+  ipa: /pɐtrʲiˈot/
+  translation: patriot
+  pos: noun
+  gender: m
+- lemma: передмова
+  ipa: /pɛrɛdˈmowɑ/
+  translation: foreword, preface
+  pos: noun
+  gender: f
+- lemma: перемишль
+  ipa: /pɛˈrɛmɪʃlʲ/
+  translation: Przemyśl (city in Galicia)
+  pos: propn
+  gender: m
+- lemma: петиції
+  ipa: /pɛˈtɪt͡sʲiji/
+  translation: petition (genitive)
+  pos: noun
+  gender: f
+- lemma: побоюватися
+  ipa: /poˈbojuwɑtɪsʲɑ/
+  translation: to fear
+  pos: verb
+  gender: f
+- lemma: позволити
+  ipa: /pozˈwolɪtɪ/
+  translation: to allow, to permit
+  pos: verb
+- lemma: присілок
+  ipa: /prɪˈsʲilok/
+  translation: hamlets (genitive plural of присілок)
+  pos: noun
+  gender: f
+- lemma: провадити
+  ipa: /proˈwɑdɪtɪ/
+  translation: to conduct, to carry out
+  pos: verb
+  gender: f
+- lemma: прокотитися
+  ipa: /prokoˈtɪtɪsʲɑ/
+  translation: to roll through, to sweep through
+  pos: verb
+  gender: f
+- lemma: пропагувати
+  ipa: /propɐˈɦuwɑtɪ/
+  translation: to propagate
+  pos: verb
+- lemma: просвіт
+  ipa: /prosˈwʲit/
+  translation: enlightenment (genitive plural)
+  pos: noun
+  gender: f
+- lemma: просвіта
+  ipa: /prosˈwʲitɑ/
+  translation: Prosvita (Enlightenment society)
+  pos: noun
+  gender: f
+- lemma: просвіченійший
+  ipa: /proswʲiˈt͡ʃɛnʲiʃɪj/
+  translation: more enlightened
+  pos: adj
+- lemma: підданський
+  ipa: /pʲidˈdɑnsʲkɪj/
+  translation: subject (relating to subjects of empire)
+  pos: adj
+- lemma: рейхстаз
+  ipa: /rɛjxsˈtɑz/
+  translation: Reichstag (Austrian parliament)
+  pos: noun
+  gender: m
+- lemma: романтизм
+  ipa: /romɐnˈtɪzm/
+  translation: Romanticism
+  pos: noun
+  gender: m
+- lemma: руский
+  ipa: /ˈrusʲkɪj/
+  translation: Ruthenian (Galician Ukrainian self-designation)
+  pos: adj
+  gender: m
+- lemma: руські
+  ipa: /ˈrusʲkʲi/
+  translation: Ruthenians (Galician Ukrainians)
+  pos: noun
+  gender: m
+- lemma: сардінія
+  ipa: /sɐrˈdʲinʲijɑ/
+  translation: Sardinia (Italian unification parallel)
+  pos: propn
+  gender: f
+- lemma: селянина
+  ipa: /sɛlʲɑˈnɪnɑ/
+  translation: peasant (genitive)
+  pos: noun
+  gender: m
+- lemma: семінарист
+  ipa: /sɛmʲinɐˈrɪst/
+  translation: seminarian
+  pos: noun
+  gender: m
+- lemma: семінарій
+  ipa: /sɛmʲiˈnɑrʲij/
+  translation: seminary (genitive plural)
+  pos: noun
+  gender: f
+- lemma: соборність
+  ipa: /soˈbornʲistʲ/
+  translation: unity, catholicity (Ukrainian national unity concept)
+  pos: noun
+  gender: f
+- lemma: станіславив
+  ipa: /stɐnʲisˈlɑwɪw/
+  translation: Stanislaviv (now Ivano-Frankivsk)
+  pos: propn
+  gender: m
+- lemma: твердіти
+  ipa: /twɛrˈdʲitɪ/
+  translation: to harden, to strengthen
+  pos: verb
+- lemma: терезія
+  ipa: /tɛˈrɛzʲijɑ/
+  translation: Theresa (Maria Theresa, Habsburg empress)
+  pos: propn
+  gender: f
+- lemma: тернопіль
+  ipa: /tɛrˈnopʲilʲ/
+  translation: Ternopil (city in Galicia)
+  pos: propn
+  gender: m
+- lemma: тертя
+  ipa: /ˈtɛrtʲɑ/
+  translation: friction
+  pos: noun
+  gender: n
+- lemma: трон
+  ipa: /tron/
+  translation: throne
+  pos: noun
+  gender: m
+- lemma: троє
+  ipa: /ˈtrojɛ/
+  translation: three (collective numeral)
+  pos: other
+- lemma: трійць
+  ipa: /ˈtrijt͡sʲ/
+  translation: trinity (genitive plural)
+  pos: propn
+  gender: f
+- lemma: трійця
+  ipa: /ˈtrijt͡sʲɑ/
+  translation: trinity, triad (Ruska Trijca)
+  pos: noun
+  gender: f
+- lemma: уважати
+  ipa: /uwɐˈʒɑtɪ/
+  translation: to consider
+  pos: verb
+- lemma: україномовній
+  ipa: /ukrɐjinoˈmownʲij/
+  translation: Ukrainian-language (adj.)
+  pos: adj
+- lemma: уніать
+  ipa: /uˈnʲijɑtʲ/
+  translation: Uniate, Greek Catholic
+  pos: noun
+  gender: m
+- lemma: учитися
+  ipa: /uˈt͡ʃɪtɪsʲɑ/
+  translation: to study, to learn
+  pos: verb
+- lemma: фердинанд
+  ipa: /fɛrdɪˈnɑnd/
+  translation: Ferdinand (Habsburg emperor)
+  pos: propn
+  gender: m
+- lemma: філіжанка
+  ipa: /fʲilʲiˈʒɑnkɑ/
+  translation: cup (archaic)
+  pos: noun
+  gender: f
+- lemma: цісар
+  ipa: /t͡sʲiˈsɑr/
+  translation: emperor, kaiser
+  pos: noun
+  gender: m
+- lemma: числити
+  ipa: /t͡ʃɪsˈlɪtɪ/
+  translation: to count, to number
+  pos: verb
+- lemma: читалення
+  ipa: /t͡ʃɪˈtɑlɛnʲːɑ/
+  translation: reading room
+  pos: noun
+  gender: n
+- lemma: шашкевич
+  ipa: /ʃɑʃˈkɛwɪt͡ʃ/
+  translation: Shashkevych (Markiyan Shashkevych, poet, leader of Ruska Trijca)
+  pos: propn
+  gender: m
+- lemma: ширити
+  ipa: /ʃɪˈrɪtɪ/
+  translation: to spread, to disseminate
+  pos: verb
+- lemma: щоби
+  ipa: /ʃt͡ʃoˈbɪ/
+  translation: in order to (archaic form)
+  pos: other
+- lemma: язичія
+  ipa: /jɐˈzɪt͡ʃʲijɑ/
+  translation: language question
+  pos: noun
+  gender: f
+- lemma: яков
+  ipa: /ˈjɑkow/
+  translation: Yakov (Holovatskyi's first name)
+  pos: propn
+  gender: m
+- lemma: єврейський
+  ipa: /jɛwˈrɛjsʲkɪj/
+  translation: Jewish
+  pos: adj
+- lemma: єсьмий
+  ipa: /ˈjɛsʲmɪj/
+  translation: eighth (archaic form)
+  pos: adj
+  gender: f
+- lemma: інтелігент
+  ipa: /ʲintɛlʲiˈɦɛnt/
+  translation: intellectual
+  pos: noun
+  gender: m

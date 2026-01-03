@@ -315,13 +315,6 @@
 >
 > Якщо так — ви готові до практики!
 
-> [!resources] 🎧 Зовнішні ресурси
->
-> **Додаткові матеріали:**
-> - 📖 [Підрядне означальне речення](https://uk.wikipedia.org/wiki/Підрядне_означальне_речення) — Вікіпедія
-> - 📺 [Ukrainian Place Relatives](https://www.youtube.com/results?search_query=ukrainian+where+direction) — відео пояснення
-> - 🎧 [Ukrainian Grammar](https://www.youtube.com/results?search_query=ukrainian+grammar) — подкаст уроки
-
 ---
 
 ---

@@ -1,6 +1,6 @@
 # Audit Report: 50-hobbies-leisure.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** 'Narrative' | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Phase:** A2 | **Level:** A2 | **Pedagogy:** Narrative | **Target:** 1000
+**Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: дієслово, час
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1156/1000
+- **Words:** ✅ 1134/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -23,15 +23,14 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 59.9% (target 50-60% (A2.3))
+- **Immersion:** ❌ 61.1% HIGH (target 50-60% (A2.3))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Hobbies & Leisure** | ⚪️ | 0 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 114 | Included in Core |
 | **Presentation** | ✅ | 374 | Included in Core |
 | **Practice** | ⚪️ | 588 | Skipped |
-| **Summary** | ✅ | 80 | Included in Core |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Summary** | ✅ | 58 | Included in Core |

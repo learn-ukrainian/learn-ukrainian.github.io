@@ -296,11 +296,4 @@ You've completed the Bridge phase! You now know:
 
 ---
 
-> [!resources] 🎧 External Resources
->
-> **Ukrainian Grammar Resources (Now Accessible!):**
-> - 📖 [Ukrainian Grammar in Ukrainian](https://uk.wikipedia.org/wiki/Граматика_української_мови) — Wikipedia
-> - 📺 [Ukrainian Lessons](https://www.youtube.com/c/UkrainianLessons) — YouTube channel
-> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/the-podcast/) — Advanced episodes
-
 ---

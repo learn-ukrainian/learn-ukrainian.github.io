@@ -267,14 +267,6 @@ Read this dialogue and identify the case of each bolded word:
 
 ## Need More Practice?
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [How I learnt my first 500 words in Ukrainian ...](https://www.youtube.com/watch?v=SdgPUOHXNts) — Vocabooster Review
->
-> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
->
-> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
-
 ---
 
 ---

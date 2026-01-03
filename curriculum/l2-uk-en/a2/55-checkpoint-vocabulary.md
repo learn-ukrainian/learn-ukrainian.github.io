@@ -302,9 +302,3 @@ Read the story and answer the questions:
 > _You finished A2 level! Now you can talk about daily life, work, health, and travel._
 
 ---
-
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

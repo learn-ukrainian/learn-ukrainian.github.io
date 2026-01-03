@@ -565,11 +565,6 @@
 
 ---
 
-> [!resources] Зовнішні ресурси
-> **Відео:** [Як називати час українською](https://www.youtube.com/watch?v=time-ukrainian) — Ukrainian Lessons
-> **Стаття:** [Числівники в українській мові](https://goroh.pp.ua/граматика/числівник) — Горох (граматика)
-> **Практика:** [Time expressions quiz](https://ukrainianlessons.com/time) — Ukrainian Lessons Podcast
-
 # Вправи
 
 Активності подано в окремому файлі `activities/31-numeral-declension-time-dates.yaml`.

@@ -283,11 +283,3 @@ Today you learned numeral-noun agreement:
 > - **5-20**: п'ять студентів, десять книг, двадцять вікон
 >
 > Ці правила здаються складними, але вони логічні! Практикуйте з реальними предметами навколо вас.
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [How to use numbers 1,2,3,4,5, etc. with the nouns...](https://www.youtube.com/watch?v=SJPr-ilnIV0) — Speak Ukrainian
->
-> **Grammar Guide:** [Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/) — Ukrainian Lessons
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

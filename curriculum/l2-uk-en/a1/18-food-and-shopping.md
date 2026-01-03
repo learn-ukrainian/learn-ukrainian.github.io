@@ -139,12 +139,6 @@ Practice these common shopping phrases:
 - Пляшку (a bottle)
 - Пачку (a pack)
 
-> [!resources] External Resources
->
-> **YouTube:** [Shopping in Ukraine](https://www.youtube.com/watch?v=2tEPOopp7-I) — Real Ukrainian shopping situations
->
-> **Podcast:** [Ukrainian Lessons - At the Market](https://www.ukrainianlessons.com/thepodcast/) — Shopping vocabulary practice
-
 ---
 
 # Summary

@@ -343,12 +343,4 @@
 >
 > Якщо так — ви готові до практики!
 
-> [!resources] 🎧 Зовнішні ресурси
->
-> **Додаткові матеріали:**
-> - 📖 [Українська мова — Вид дієслова](https://uk.wikipedia.org/wiki/Вид_дієслова) — Вікіпедія
-> - 📺 [Aspect in Ukrainian Explained](https://www.youtube.com/results?search_query=ukrainian+verb+aspect) — відео пояснення
-> - 🎧 [Ukrainian Lessons Podcast - Aspect](https://www.ukrainianlessons.com/) — подкаст уроки
-> - 💼 [Ukrainian Business Language](https://www.ukrainianlessons.com/business-ukrainian) — професійна українська
-
 ---

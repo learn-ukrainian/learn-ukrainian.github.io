@@ -2,479 +2,482 @@ module: 54-idioms-nature
 level: B2
 version: '2.0'
 items:
-  - lemma: адаптивність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: архетиповий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: бакота
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: батьківський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: безвідповідально
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: безсмертний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: буг
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: бурхливий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: вагомий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: ватра
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: вивести
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: викривати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: викрити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: виповнитися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: n
-  - lemma: витягнути
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: впливовий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: гадання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: гес
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: годувальниця
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: гулянка
-    ipa: ''
-    translation: ''
-    pos: noun
-  - lemma: гідромантія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: десна
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: детективний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: дивовижний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: довірити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: домовик
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: драматизм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: екзистенційний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: ефективніший
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: загартований
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: загартування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: загартуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: заздрісний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: заземлення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: заклик
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: затоплений
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: затягувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: зашифрований
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: збулий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: землеробство
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: зраджувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: зрілість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: кидавати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: конкретно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: корупціонер
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: легковажний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: легковажність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: маніпулювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: мореплавець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: мідний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: міцний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: навколишній
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: налякати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: нахабно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: неважливе
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: невідповідальний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: незаконно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: незламний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: неоціненний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: неочікуваний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: несерйозний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: обманути
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: обряд
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: обійми
-    ipa: ''
-    translation: ''
-    pos: noun
-  - lemma: опора
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: оратор
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: оточуючі
-    ipa: ''
-    translation: ''
-    pos: noun
-  - lemma: охоронець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: очищувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: переливати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: плинність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: поблажливий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: покровитель
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: породити
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: n
-  - lemma: порт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: посудина
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: провал
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: прозорість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: підсвідомий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: підсвідомість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: піч
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: резильєнтність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: розраховувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: руйнівний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: рятівний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: скоєння
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: смертельний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: сприйняти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: стихійний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: тонь
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: труб
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: усмішка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: фальш
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: хитрий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: хмельниччин
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: ховатися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: хімічний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: цивілізація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: якоря
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ігра
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ініціація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
+- lemma: адаптивність
+  ipa: /ɐdɐptɪwnʲistʲ/
+  translation: adaptability
+  pos: noun
+  gender: f
+- lemma: архетиповий
+  ipa: /ɑrxɛˈtɪpowɪj/
+  translation: archetypal
+  pos: adj
+- lemma: бакота
+  ipa: /bɐˈkotɑ/
+  translation: Bakota (archaeological site)
+  pos: propn
+  gender: f
+- lemma: батьківський
+  ipa: /bɐtʲˈkʲiwsʲkɪj/
+  translation: paternal, fatherly
+  pos: adj
+  gender: f
+- lemma: безвідповідально
+  ipa: /bɛzwʲidpowʲidɑlʲno/
+  translation: irresponsibly
+  pos: adv
+- lemma: безсмертний
+  ipa: /bɛzˈsmɛrtnɪj/
+  translation: immortal
+  pos: adj
+  gender: f
+- lemma: буг
+  ipa: /buh/
+  translation: Bug (river)
+  pos: propn
+  gender: m
+- lemma: бурхливий
+  ipa: /burxlɪwɪj/
+  translation: turbulent, stormy
+  pos: adj
+  gender: m
+- lemma: вагомий
+  ipa: /wɐˈɦomɪj/
+  translation: weighty, significant
+  pos: adj
+  gender: f
+- lemma: ватра
+  ipa: /wɐˈtrɑ/
+  translation: bonfire, campfire
+  pos: noun
+  gender: f
+- lemma: вивести
+  ipa: /ˈwɪwɛstɪ/
+  translation: to lead out, to derive
+  pos: verb
+- lemma: викривати
+  ipa: /wɪkrɪˈwɑtɪ/
+  translation: to expose, to reveal
+  pos: verb
+- lemma: викрити
+  ipa: /wɪˈkrɪtɪ/
+  translation: to expose, to uncover
+  pos: verb
+- lemma: виповнитися
+  ipa: /wɪˈpownɪtɪsʲɑ/
+  translation: to be fulfilled
+  pos: verb
+  gender: n
+- lemma: витягнути
+  ipa: /wɪˈtʲɑɦnutɪ/
+  translation: to pull out, to extract
+  pos: verb
+- lemma: впливовий
+  ipa: /wplɪˈwowɪj/
+  translation: influential
+  pos: adj
+- lemma: гадання
+  ipa: /ɦɐˈdɑnʲːɑ/
+  translation: divination, fortune-telling
+  pos: noun
+  gender: n
+- lemma: гес
+  ipa: /ɦɛs/
+  translation: hydroelectric power station
+  pos: noun
+  gender: f
+- lemma: годувальниця
+  ipa: /ɦoduˈwɑlʲnɪt͡sʲɑ/
+  translation: breadwinner (f.), provider (f.)
+  pos: noun
+  gender: f
+- lemma: гулянка
+  ipa: /ɦuˈlʲɑnkɑ/
+  translation: party, celebration
+  pos: noun
+  gender: f
+- lemma: гідромантія
+  ipa: /ɦʲidromɐnˈtʲijɑ/
+  translation: hydromancy, water divination
+  pos: noun
+  gender: f
+- lemma: десна
+  ipa: /dɛsˈnɑ/
+  translation: Desna (river)
+  pos: propn
+  gender: f
+- lemma: детективний
+  ipa: /dɛtɛkˈtɪwnɪj/
+  translation: detective (adj.)
+  pos: adj
+- lemma: дивовижний
+  ipa: /dɪwoˈwɪʒnɪj/
+  translation: marvelous, amazing
+  pos: adj
+  gender: m
+- lemma: довірити
+  ipa: /doˈwʲirɪtɪ/
+  translation: to entrust
+  pos: verb
+- lemma: домовик
+  ipa: /domoˈwɪk/
+  translation: house spirit, domovyk
+  pos: noun
+  gender: m
+- lemma: драматизм
+  ipa: /drɐmɐˈtɪzm/
+  translation: drama, dramatic quality
+  pos: noun
+  gender: m
+- lemma: екзистенційний
+  ipa: /ɛɡzɪstɛnˈt͡sʲijnɪj/
+  translation: existential
+  pos: adj
+  gender: f
+- lemma: ефективніший
+  ipa: /ɛfɛktɪwˈnʲiʃɪj/
+  translation: more effective
+  pos: adj
+  gender: n
+- lemma: загартований
+  ipa: /zɐɦɑrˈtowɑnɪj/
+  translation: hardened, tempered
+  pos: adj
+  gender: f
+- lemma: загартування
+  ipa: /zɐɦɑrtuˈwɑnʲːɑ/
+  translation: hardening, tempering
+  pos: noun
+  gender: n
+- lemma: загартуватися
+  ipa: /zɐɦɑrtuˈwɑtɪsʲɑ/
+  translation: to harden oneself, to toughen up
+  pos: verb
+- lemma: заздрісний
+  ipa: /zɐzdrʲisnɪj/
+  translation: envious
+  pos: adj
+  gender: m
+- lemma: заземлення
+  ipa: /zɐzɛmˈlɛnʲːɑ/
+  translation: grounding, earthing
+  pos: noun
+  gender: n
+- lemma: заклик
+  ipa: /ˈzɐklɪk/
+  translation: appeal, call
+  pos: noun
+  gender: m
+- lemma: затоплений
+  ipa: /zɐˈtoplɛnɪj/
+  translation: flooded, submerged
+  pos: adj
+  gender: m
+- lemma: затягувати
+  ipa: /zɐtʲɑˈɦuwɑtɪ/
+  translation: to delay, to drag out
+  pos: verb
+- lemma: зашифрований
+  ipa: /zɐʃɪfroˈwɑnɪj/
+  translation: encrypted, encoded
+  pos: adj
+  gender: m
+- lemma: збулий
+  ipa: /zˈbulɪj/
+  translation: come true, fulfilled
+  pos: adj
+  gender: n
+- lemma: землеробство
+  ipa: /zɛmlɛˈrobstwo/
+  translation: agriculture, farming
+  pos: noun
+  gender: n
+- lemma: зраджувати
+  ipa: /zrɐˈdʒuwɑtɪ/
+  translation: to betray
+  pos: verb
+- lemma: зрілість
+  ipa: /ˈzrʲilʲistʲ/
+  translation: maturity, ripeness
+  pos: noun
+  gender: f
+- lemma: кидавати
+  ipa: /kɪˈdɑwɑtɪ/
+  translation: to throw
+  pos: verb
+- lemma: конкретно
+  ipa: /konˈkrɛtno/
+  translation: specifically, concretely
+  pos: adv
+- lemma: корупціонер
+  ipa: /korupt͡sʲioˈnɛr/
+  translation: corrupt person
+  pos: noun
+  gender: m
+- lemma: легковажний
+  ipa: /lɛɦkoˈwɑʒnɪj/
+  translation: frivolous, light-minded
+  pos: adj
+  gender: f
+- lemma: легковажність
+  ipa: /lɛɦkoˈwɑʒnʲistʲ/
+  translation: frivolity
+  pos: noun
+  gender: f
+- lemma: маніпулювати
+  ipa: /mɐnʲipulʲuˈwɑtɪ/
+  translation: to manipulate
+  pos: verb
+- lemma: мореплавець
+  ipa: /morɛˈplɑwɛt͡sʲ/
+  translation: seafarer, navigator
+  pos: noun
+  gender: m
+- lemma: мідний
+  ipa: /ˈmʲidnɪj/
+  translation: copper (adj.)
+  pos: adj
+- lemma: міцний
+  ipa: /ˈmʲit͡snɪj/
+  translation: strong, solid
+  pos: adj
+  gender: f
+- lemma: навколишній
+  ipa: /nɐwkoˈlɪʃnʲij/
+  translation: surrounding
+  pos: adj
+  gender: m
+- lemma: налякати
+  ipa: /nɐlʲɑˈkɑtɪ/
+  translation: to scare, to frighten
+  pos: verb
+- lemma: нахабно
+  ipa: /nɐˈxɑbno/
+  translation: impudently, brazenly
+  pos: adv
+- lemma: неважливе
+  ipa: /nɛwɐʒˈlɪwɛ/
+  translation: unimportant thing
+  pos: noun
+  gender: n
+- lemma: невідповідальний
+  ipa: /nɛwʲidpowʲiˈdɑlʲnɪj/
+  translation: irresponsible
+  pos: adj
+  gender: f
+- lemma: незаконно
+  ipa: /nɛzɐˈkonːo/
+  translation: illegally
+  pos: adv
+- lemma: незламний
+  ipa: /nɛˈzlɑmnɪj/
+  translation: unbreakable, resilient
+  pos: adj
+  gender: m
+- lemma: неоціненний
+  ipa: /nɛot͡sʲiˈnɛnːɪj/
+  translation: invaluable, priceless
+  pos: adj
+  gender: m
+- lemma: неочікуваний
+  ipa: /nɛot͡ʃʲikuˈwɑnɪj/
+  translation: unexpected
+  pos: adj
+- lemma: несерйозний
+  ipa: /nɛsɛrˈjoznɪj/
+  translation: frivolous, unserious
+  pos: adj
+  gender: f
+- lemma: обманути
+  ipa: /obmɐˈnutɪ/
+  translation: to deceive, to trick
+  pos: verb
+- lemma: обряд
+  ipa: /obˈrʲɑd/
+  translation: ritual, ceremony
+  pos: noun
+  gender: m
+- lemma: обійми
+  ipa: /oˈbʲijmɪ/
+  translation: embrace, hug
+  pos: noun
+  gender: f
+- lemma: опора
+  ipa: /opoˈrɑ/
+  translation: support, pillar
+  pos: noun
+  gender: f
+- lemma: оратор
+  ipa: /orɐˈtor/
+  translation: orator, speaker
+  pos: noun
+  gender: m
+- lemma: оточуючі
+  ipa: /otot͡ʃuˈjut͡ʃʲi/
+  translation: surrounding people
+  pos: noun
+  gender: m
+- lemma: охоронець
+  ipa: /oxoˈronɛt͡sʲ/
+  translation: guard, protector
+  pos: noun
+  gender: m
+- lemma: очищувати
+  ipa: /ot͡ʃɪˈʃt͡ʃuwɑtɪ/
+  translation: to clean, to purify
+  pos: verb
+- lemma: переливати
+  ipa: /pɛrɛlɪˈwɑtɪ/
+  translation: to pour over, to overflow
+  pos: verb
+- lemma: плинність
+  ipa: /plɪnˈnʲistʲ/
+  translation: fluidity, flow
+  pos: noun
+  gender: f
+- lemma: поблажливий
+  ipa: /poblɐʒlɪwɪj/
+  translation: indulgent, lenient
+  pos: adj
+  gender: f
+- lemma: покровитель
+  ipa: /pokroˈwɪtɛlʲ/
+  translation: patron, protector
+  pos: noun
+  gender: m
+- lemma: породити
+  ipa: /poroˈdɪtɪ/
+  translation: to give birth to, to generate
+  pos: verb
+  gender: n
+- lemma: порт
+  ipa: /port/
+  translation: port, harbor
+  pos: noun
+  gender: m
+- lemma: посудина
+  ipa: /poˈsudɪnɑ/
+  translation: vessel, container
+  pos: noun
+  gender: f
+- lemma: провал
+  ipa: /proˈwɑl/
+  translation: failure, fiasco
+  pos: noun
+  gender: m
+- lemma: прозорість
+  ipa: /prozoˈrʲistʲ/
+  translation: transparency
+  pos: noun
+  gender: f
+- lemma: підсвідомий
+  ipa: /pʲidswʲiˈdomɪj/
+  translation: subconscious
+  pos: adj
+  gender: m
+- lemma: підсвідомість
+  ipa: /pʲidswʲiˈdomʲistʲ/
+  translation: subconsciousness
+  pos: noun
+  gender: f
+- lemma: піч
+  ipa: /pʲit͡ʃ/
+  translation: stove, oven
+  pos: noun
+  gender: f
+- lemma: резильєнтність
+  ipa: /rɛzɪlʲˈjɛntnʲistʲ/
+  translation: resilience
+  pos: noun
+  gender: f
+- lemma: розраховувати
+  ipa: /rozrɐˈxowuwɑtɪ/
+  translation: to count on, to expect
+  pos: verb
+- lemma: руйнівний
+  ipa: /rujˈnʲiwnɪj/
+  translation: destructive
+  pos: adj
+  gender: f
+- lemma: рятівний
+  ipa: /rʲɑˈtʲiwnɪj/
+  translation: saving, redeeming
+  pos: adj
+  gender: n
+- lemma: скоєння
+  ipa: /skoˈjɛnʲːɑ/
+  translation: committing (a crime)
+  pos: noun
+  gender: n
+- lemma: смертельний
+  ipa: /smɛrˈtɛlʲnɪj/
+  translation: deadly, fatal
+  pos: adj
+  gender: f
+- lemma: сприйняти
+  ipa: /sprɪjˈnʲɑtɪ/
+  translation: to perceive, to accept
+  pos: verb
+- lemma: стихійний
+  ipa: /stɪˈxʲijnɪj/
+  translation: spontaneous, elemental
+  pos: adj
+  gender: f
+- lemma: тонь
+  ipa: /tonʲ/
+  translation: deep water, depths
+  pos: noun
+  gender: m
+- lemma: труб
+  ipa: /trub/
+  translation: pipe (genitive plural)
+  pos: noun
+  gender: f
+- lemma: усмішка
+  ipa: /usˈmʲiʃkɑ/
+  translation: smile
+  pos: noun
+  gender: f
+- lemma: фальш
+  ipa: /fɑlʲʃ/
+  translation: falseness, fake
+  pos: noun
+  gender: m
+- lemma: хитрий
+  ipa: /ˈxɪtrɪj/
+  translation: cunning, sly
+  pos: adj
+- lemma: хмельниччин
+  ipa: /xmɛlʲˈnɪt͡ʃt͡ʃɪn/
+  translation: Khmelnytskyi region
+  pos: propn
+  gender: f
+- lemma: ховатися
+  ipa: /xoˈwɑtɪsʲɑ/
+  translation: to hide
+  pos: verb
+  gender: m
+- lemma: хімічний
+  ipa: /xʲiˈmʲit͡ʃnɪj/
+  translation: chemical
+  pos: adj
+  gender: m
+- lemma: цивілізація
+  ipa: /t͡sɪwʲilʲizɑˈt͡sʲijɑ/
+  translation: civilization
+  pos: noun
+  gender: f
+- lemma: якоря
+  ipa: /jɐkoˈrʲɑ/
+  translation: anchor (genitive)
+  pos: noun
+  gender: m
+- lemma: ігра
+  ipa: /ʲiɦˈrɑ/
+  translation: game, play
+  pos: noun
+  gender: m
+- lemma: ініціація
+  ipa: /ʲinʲit͡sʲiˈjɑt͡sʲijɑ/
+  translation: initiation
+  pos: noun
+  gender: f

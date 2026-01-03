@@ -1,0 +1,17 @@
+module: c1-7
+title: Citation & Reference
+subtitle: Academic Foundation
+version: '2.0'
+phase: C1.1 Academic
+focus: skills
+pedagogy: academic
+duration: 120
+vocabulary_count: 24
+tags:
+- c1
+- skills
+- citation
+- integrity
+objectives:
+- Master C1 concepts in Citation & Reference
+slug: 7-citation--reference

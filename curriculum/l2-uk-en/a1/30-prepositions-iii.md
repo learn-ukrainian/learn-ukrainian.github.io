@@ -209,11 +209,3 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 Ви вивчили прийменники місця та напрямку! Тепер ви знаєте, як запитати "Де?" або "Куди?". (You learned prepositions of location and direction! Now you know how to ask "Where?" or "Where to?") Ви знаєте різницю між "вдома" та "додому". Ви також знаєте, як сказати "звідки" ви приїхали. Також ви вивчили прийменники: з, від, до. Це була чудова робота! Ви великі молодці! Гуляйте в парку та говоріть українською! Супер! (This was great work! You are great! Walk in the park and speak Ukrainian! Super!)
 
 ---
-
-> [!resources] External Resources
->
-> **Media:**
->
-> - [Location vs Destination](https://www.ukrainianlessons.com/location-destination-prepositions/) — Preposition guide
-> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/prepositions
-> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons

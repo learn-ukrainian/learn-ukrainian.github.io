@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 963/750
+- **Words:** ✅ 920/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -14,14 +14,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 42.4% (target 35-55% (M26))
+- **Immersion:** 🇺🇦 44.6% (target 35-55% (M26))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -35,4 +32,4 @@
 | **Common Antonym Pairs** | ⚪️ | 9 | Skipped |
 | **Examples in Context** | ✅ | 301 | Included in Core |
 | **Dialogues** | ✅ | 344 | Included in Core |
-| **Summary** | ✅ | 102 | Included in Core |
+| **Summary** | ✅ | 59 | Included in Core |

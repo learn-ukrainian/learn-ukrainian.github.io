@@ -16,6 +16,7 @@ items:
   ipa: /ɐnˈtonʲim/
   translation: antonym
   pos: noun
+  gender: m
 - lemma: аудіокний
   ipa: /ˈɑudʲioknɪj/
   translation: audiobook (adj.)

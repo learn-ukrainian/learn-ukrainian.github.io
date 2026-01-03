@@ -372,11 +372,4 @@
 
 ---
 
-> [!resources] 🎧 Зовнішні ресурси
->
-> **Додаткові матеріали:**
-> - 📖 [Вид дієслова на Вікіпедії](https://uk.wikipedia.org/wiki/Дієслівний_вид) — докладна стаття
-> - 📺 [Ukrainian Aspect Video](https://www.youtube.com/results?search_query=ukrainian+verb+aspect) — відео пояснення
-> - 🎧 [UkrainianLessons Podcast on Aspect](https://www.ukrainianlessons.com/) — подкаст урок
-
 ---

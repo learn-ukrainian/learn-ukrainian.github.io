@@ -2,294 +2,294 @@ module: 50-idioms-body-hands-legs
 level: B2
 version: '2.0'
 items:
-  - lemma: андрійко
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: брак
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: вислів
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: витягнутий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: вмілий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: вмінь
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: всььий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: відверто
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: вічно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: галичина
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: ганьба
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: дорослішання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: доступно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: діставати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: електроніка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: енеїді
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: завад
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: завтрашній
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: зайнятися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: записуїти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: зв'язати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: звідси
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: здібність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: златися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: змусити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: калюж
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: калюжа
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: коваля
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: котляревський
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: курга
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: мотузка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: наближати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: намочитися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: неправдивий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: нізвідки
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: ображатися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: образа
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: осоромити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: осоромитися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: перестати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: перечепитися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: петрик
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: плутатися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: покликати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: полагодити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: поширити
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: публічно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: пулесь
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: підвестися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: піди
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: підставити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: підступ
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: підступно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: підступність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: реліквія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: ремонтувати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: розв'язати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: рота
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: самостійність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: сашка
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: скорий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: смішно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: тарттіртя
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: шанований
-    ipa: ''
-    translation: ''
-    pos: adj
+- lemma: андрійко
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: брак
+  ipa: /brɑk/
+  translation: lack, shortage
+  pos: noun
+  gender: m
+- lemma: вислів
+  ipa: /ˈwɪslʲiw/
+  translation: expression, saying
+  pos: noun
+  gender: m
+- lemma: витягнутий
+  ipa: /wɪˈtʲɑɦnutɪj/
+  translation: stretched out, extended
+  pos: adj
+  gender: f
+- lemma: вмілий
+  ipa: /ˈwmʲilɪj/
+  translation: skillful, able
+  pos: adj
+  gender: f
+- lemma: вмінь
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: всььий
+  ipa: ''
+  translation: ''
+  pos: adj
+- lemma: відверто
+  ipa: /wʲidˈwɛrto/
+  translation: openly, frankly
+  pos: adv
+- lemma: вічно
+  ipa: /ˈwʲit͡ʃno/
+  translation: eternally, forever
+  pos: adv
+- lemma: галичина
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: f
+- lemma: ганьба
+  ipa: /ˈɦɑnʲbɑ/
+  translation: shame, disgrace
+  pos: noun
+  gender: f
+- lemma: дорослішання
+  ipa: /dorosˈlʲiʃɑnʲːɑ/
+  translation: growing up, maturation
+  pos: noun
+  gender: n
+- lemma: доступно
+  ipa: /dosˈtupno/
+  translation: accessibly, clearly
+  pos: adv
+- lemma: діставати
+  ipa: /dʲistɐˈwɑtɪ/
+  translation: to get, to reach
+  pos: verb
+- lemma: електроніка
+  ipa: /ɛlɛkˈtronʲikɑ/
+  translation: electronics
+  pos: noun
+  gender: f
+- lemma: енеїді
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: завад
+  ipa: /ˈzɐwɑd/
+  translation: obstacle, hindrance
+  pos: noun
+  gender: m
+- lemma: завтрашній
+  ipa: /zɐwˈtrɑʃnʲij/
+  translation: tomorrow's
+  pos: adj
+  gender: f
+- lemma: зайнятися
+  ipa: /zɐjˈnʲɑtɪsʲɑ/
+  translation: to take up, to engage in
+  pos: verb
+- lemma: записуїти
+  ipa: ''
+  translation: ''
+  pos: verb
+- lemma: зв'язати
+  ipa: /zwjɑˈzɑtɪ/
+  translation: to bind, to tie
+  pos: verb
+- lemma: звідси
+  ipa: /ˈzwʲidsɪ/
+  translation: from here
+  pos: adv
+- lemma: здібність
+  ipa: /ˈzdʲibnʲistʲ/
+  translation: ability, talent
+  pos: noun
+  gender: f
+- lemma: златися
+  ipa: /zlɑˈtɪsʲɑ/
+  translation: to climb up
+  pos: verb
+- lemma: змусити
+  ipa: /zˈmusɪtɪ/
+  translation: to force, to compel
+  pos: verb
+- lemma: калюж
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: f
+- lemma: калюжа
+  ipa: /kɐˈlʲuʒɑ/
+  translation: puddle
+  pos: noun
+  gender: f
+- lemma: коваля
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: котляревський
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: курга
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: мотузка
+  ipa: /moˈtuzkɑ/
+  translation: rope, cord
+  pos: noun
+  gender: f
+- lemma: наближати
+  ipa: /nɐblɪˈʒɑtɪ/
+  translation: to bring closer, to approach
+  pos: verb
+- lemma: намочитися
+  ipa: /nɐmoˈt͡ʃɪtɪsʲɑ/
+  translation: to get wet
+  pos: verb
+- lemma: неправдивий
+  ipa: /nɛprɑwdɪwɪj/
+  translation: untruthful, false
+  pos: adj
+  gender: f
+- lemma: нізвідки
+  ipa: /nʲizˈwʲidkɪ/
+  translation: from nowhere
+  pos: adv
+- lemma: ображатися
+  ipa: /obrɐˈʒɑtɪsʲɑ/
+  translation: to be offended
+  pos: verb
+- lemma: образа
+  ipa: /oˈbrɑzɑ/
+  translation: offense, insult
+  pos: noun
+  gender: f
+- lemma: осоромити
+  ipa: /osoroˈmɪtɪ/
+  translation: to shame, to embarrass
+  pos: verb
+- lemma: осоромитися
+  ipa: /osoroˈmɪtɪsʲɑ/
+  translation: to embarrass oneself
+  pos: verb
+- lemma: перестати
+  ipa: /pɛrɛsˈtɑtɪ/
+  translation: to stop, to cease
+  pos: verb
+- lemma: перечепитися
+  ipa: /pɛrɛt͡ʃɛˈpɪtɪsʲɑ/
+  translation: to stumble, to trip
+  pos: verb
+  gender: m
+- lemma: петрик
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: плутатися
+  ipa: /pluˈtɑtɪsʲɑ/
+  translation: to get tangled, to get confused
+  pos: verb
+- lemma: покликати
+  ipa: /poklɪˈkɑtɪ/
+  translation: to call, to summon
+  pos: verb
+- lemma: полагодити
+  ipa: /polɐɦoˈdɪtɪ/
+  translation: to fix, to repair
+  pos: verb
+- lemma: поширити
+  ipa: /poˈʃɪrɪtɪ/
+  translation: to spread, to disseminate
+  pos: verb
+  gender: m
+- lemma: публічно
+  ipa: /publʲit͡ʃno/
+  translation: publicly
+  pos: adv
+- lemma: пулесь
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: підвестися
+  ipa: /pʲidwɛsˈtɪsʲɑ/
+  translation: to stand up, to rise
+  pos: verb
+- lemma: піди
+  ipa: ''
+  translation: ''
+  pos: noun
+  gender: m
+- lemma: підставити
+  ipa: /pʲidstɑˈwɪtɪ/
+  translation: to substitute, to betray
+  pos: verb
+- lemma: підступ
+  ipa: /ˈpʲitstup/
+  translation: treachery, deceit
+  pos: noun
+  gender: m
+- lemma: підступно
+  ipa: /pʲidˈstupno/
+  translation: treacherously
+  pos: adv
+- lemma: підступність
+  ipa: /pʲidˈstupnʲistʲ/
+  translation: treachery, deceitfulness
+  pos: noun
+  gender: f
+- lemma: реліквія
+  ipa: /rɛˈlʲikwʲijɑ/
+  translation: relic
+  pos: noun
+  gender: f
+- lemma: ремонтувати
+  ipa: /rɛmontuˈwɑtɪ/
+  translation: to repair, to renovate
+  pos: verb
+  gender: m
+- lemma: розв'язати
+  ipa: /rozwjɑˈzɑtɪ/
+  translation: to untie, to solve
+  pos: verb
+- lemma: рота
+  ipa: /roˈtɑ/
+  translation: company (military), mouth
+  pos: noun
+  gender: f
+- lemma: самостійність
+  ipa: /sɐmosˈtʲijnʲistʲ/
+  translation: independence, self-reliance
+  pos: noun
+  gender: f
+- lemma: сашка
+  ipa: ''
+  translation: ''
+  pos: propn
+  gender: m
+- lemma: скорий
+  ipa: /ˈskorɪj/
+  translation: quick, fast
+  pos: adj
+  gender: m
+- lemma: смішно
+  ipa: /ˈsmʲiʃno/
+  translation: funny, ridiculous
+  pos: adv
+- lemma: тарттіртя
+  ipa: ''
+  translation: ''
+  pos: other
+- lemma: шанований
+  ipa: /ʃɐnoˈwɑnɪj/
+  translation: respected, esteemed
+  pos: adj

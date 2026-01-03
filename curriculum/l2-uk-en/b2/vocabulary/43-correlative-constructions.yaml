@@ -11,7 +11,6 @@ items:
   ipa: /ɐforɪˈstɪt͡ʃnɪj/
   translation: aphoristic
   pos: adj
-  gender: m
 - lemma: афористичність
   ipa: /ɐforɪstɪt͡ʃnʲistʲ/
   translation: aphoristic quality
@@ -44,8 +43,8 @@ items:
   translation: to believe
   pos: verb
 - lemma: дко
-  ipa: ''
-  translation: ''
+  ipa: /dɛˈkɑo/
+  translation: DKO (State Control Commission)
   pos: propn
   gender: f
 - lemma: досягнути
@@ -65,11 +64,10 @@ items:
   translation: enthusiasm
   pos: noun
   gender: m
-- lemma: жін
-  ipa: ''
-  translation: ''
+- lemma: жіночий
+  ipa: /ʒʲiˈnot͡ʃɪj/
+  translation: feminine, female
   pos: adj
-  gender: m
 - lemma: забуватися
   ipa: /zɐbuˈwɑtɪsʲɑ/
   translation: to forget oneself, to lose oneself
@@ -90,11 +88,10 @@ items:
   ipa: /zɐsluˈʒɪtɪ/
   translation: to deserve, to earn
   pos: verb
-- lemma: зателефонува
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: зателефонувати
+  ipa: /zɐtɛlɛfonuˈwɑtɪ/
+  translation: to call, to phone
+  pos: verb
 - lemma: звідти
   ipa: /ˈzwʲidtɪ/
   translation: from there
@@ -103,7 +100,6 @@ items:
   ipa: /zdɪwuˈwɑtɪ/
   translation: to surprise
   pos: verb
-  gender: n
 - lemma: корелятив
   ipa: /korɛlʲɑˈtɪw/
   translation: correlative
@@ -141,11 +137,10 @@ items:
   ipa: /nɛodˈmʲinːo/
   translation: without fail, certainly
   pos: adv
-- lemma: особова
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
+- lemma: особовий
+  ipa: /osoˈbowɪj/
+  translation: personal
+  pos: adj
 - lemma: очолити
   ipa: /ot͡ʃoˈlɪtɪ/
   translation: to head, to lead
@@ -159,12 +154,10 @@ items:
   ipa: /pɪˈsɛmnɪj/
   translation: written
   pos: adj
-  gender: n
 - lemma: побувати
   ipa: /pobuˈwɑtɪ/
   translation: to visit, to stay
   pos: verb
-  gender: m
 - lemma: покращитися
   ipa: /pokrɑˈʃt͡ʃɪtɪsʲɑ/
   translation: to improve
@@ -174,8 +167,8 @@ items:
   translation: to remember (archaic)
   pos: verb
 - lemma: потрібне
-  ipa: ''
-  translation: ''
+  ipa: /poˈtrʲibnɛ/
+  translation: what's needed, the necessary
   pos: noun
   gender: n
 - lemma: предметний
@@ -186,7 +179,6 @@ items:
   ipa: /proˈpɑstɪ/
   translation: to perish, to disappear
   pos: verb
-  gender: n
 - lemma: просторовий
   ipa: /prostoˈrowɪj/
   translation: spatial
@@ -228,14 +220,12 @@ items:
   ipa: /uzɐɦɑlʲˈnʲuwɑlʲnɪj/
   translation: generalizing
   pos: adj
-  gender: m
 - lemma: уточнити
   ipa: /utot͡ʃˈnɪtɪ/
   translation: to clarify, to specify
   pos: verb
-  gender: m
 - lemma: ятрань
-  ipa: ''
-  translation: ''
+  ipa: /ˈjɑtrɑnʲ/
+  translation: Yatran (river)
   pos: propn
   gender: f

@@ -2,320 +2,320 @@ module: 83-syntez-vytoky
 level: B2
 version: '2.0'
 items:
-  - lemma: автокефалія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: анахронізм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: анексія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: археологічно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: бездержавність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: букерівський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: булгарія
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: виживати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: владимир
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: волзький
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: вразливий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: відлунювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: грека
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: грецизм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: грюнвальд
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: деколонізований
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: деконструкція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: дерусифікація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: древня
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: древняя
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: ерудиція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: етнос
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: замовчування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: запроваджений
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: калуш
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: карамзін
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: колиска
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: константинопосоку
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: ланка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: московит
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: наступна
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: неперервний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: нестабільність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: одну
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: окраїна
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: патерна
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: перейменування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: петербург
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: пліч
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: посполитий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: потому
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: праматір
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: приречений
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: провокація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: ранньомодерний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: ренесанес
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: рефлексія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: розбіжність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: розібрати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: россия
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: русина
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: синтезувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: спадкоємність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: спотворення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: теологія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: фіналіст
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: хазарія
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: цивілізаційний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: щоразу
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: яковенко
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: євробачення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: ілюстрований
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: імператриця
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: історіографій
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: історіографічний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
+- lemma: автокефалія
+  ipa: /ɐwtokɛˈfɑlʲijɑ/
+  translation: autocephaly (church independence)
+  pos: noun
+  gender: f
+- lemma: анахронізм
+  ipa: /ɐnɐxroˈnʲizm/
+  translation: anachronism
+  pos: noun
+  gender: m
+- lemma: анексія
+  ipa: /ɐnɛˈksʲijɑ/
+  translation: annexation
+  pos: noun
+  gender: f
+- lemma: археологічно
+  ipa: /ɐrxɛoˈlohʲit͡ʃno/
+  translation: archaeologically
+  pos: adv
+- lemma: бездержавність
+  ipa: /bɛzdɛrˈʒɑwnʲistʲ/
+  translation: statelessness
+  pos: noun
+  gender: f
+- lemma: букерівський
+  ipa: /bukɛˈrʲiwsʲkɪj/
+  translation: Bukerivsky (historiographic adj.)
+  pos: adj
+  gender: f
+- lemma: булгарія
+  ipa: /bulˈɦɑrʲijɑ/
+  translation: Bulgaria
+  pos: propn
+  gender: f
+- lemma: виживати
+  ipa: /wɪʒɪˈwɑtɪ/
+  translation: to survive
+  pos: verb
+  gender: f
+- lemma: владимир
+  ipa: /wlɐˈdɪmɪr/
+  translation: Vladimir (Russian form)
+  pos: propn
+  gender: m
+- lemma: волзький
+  ipa: /ˈwolzʲkɪj/
+  translation: Volga (adj.)
+  pos: adj
+  gender: f
+- lemma: вразливий
+  ipa: /wrɐˈzlɪwɪj/
+  translation: vulnerable
+  pos: adj
+  gender: f
+- lemma: відлунювати
+  ipa: /wʲidluˈnuwɑtɪ/
+  translation: to echo, to resonate
+  pos: verb
+- lemma: грека
+  ipa: /ˈɦrɛkɑ/
+  translation: Greeks (genitive plural)
+  pos: noun
+  gender: m
+- lemma: грецизм
+  ipa: /ɦrɛˈt͡sɪzm/
+  translation: Grecism (Greek loanword)
+  pos: noun
+  gender: m
+- lemma: грюнвальд
+  ipa: /ɦrʲunˈwɑlʲd/
+  translation: Grunwald
+  pos: propn
+  gender: m
+- lemma: деколонізований
+  ipa: /dɛkoloˈnʲizowɑnɪj/
+  translation: decolonized
+  pos: adj
+  gender: f
+- lemma: деконструкція
+  ipa: /dɛkonˈstrukt͡sʲijɑ/
+  translation: deconstruction
+  pos: noun
+  gender: f
+- lemma: дерусифікація
+  ipa: /dɛrusɪfʲiˈkɑt͡sʲijɑ/
+  translation: de-Russification
+  pos: noun
+  gender: f
+- lemma: древня
+  ipa: /ˈdrɛwnʲɑ/
+  translation: ancient (Ukrainian form)
+  pos: adj
+  gender: f
+- lemma: древняя
+  ipa: /ˈdrɛwnʲɑjɑ/
+  translation: ancient (Russian form, incorrect in Ukrainian)
+  pos: other
+- lemma: ерудиція
+  ipa: /ɛruˈdɪt͡sʲijɑ/
+  translation: erudition
+  pos: noun
+  gender: f
+- lemma: етнос
+  ipa: /ˈɛtnos/
+  translation: ethnos
+  pos: noun
+  gender: m
+- lemma: замовчування
+  ipa: /zɐmowˈt͡ʃuwɑnʲːɑ/
+  translation: silencing, suppression (of facts)
+  pos: noun
+  gender: n
+- lemma: запроваджений
+  ipa: /zɐproˈwɑdʒɛnɪj/
+  translation: introduced, implemented
+  pos: adj
+  gender: m
+- lemma: калуш
+  ipa: /kɐˈluʃ/
+  translation: Kalush (band)
+  pos: propn
+  gender: m
+- lemma: карамзін
+  ipa: /kɐrɐmˈzʲin/
+  translation: Karamzin (Russian historian)
+  pos: propn
+  gender: m
+- lemma: колиска
+  ipa: /koˈlɪskɑ/
+  translation: cradle
+  pos: noun
+  gender: f
+- lemma: константинопосоку
+  ipa: /konstɐntɪnoˈposoku/
+  translation: Constantinople (dative)
+  pos: propn
+  gender: f
+- lemma: ланка
+  ipa: /ˈlɑnkɑ/
+  translation: link (in chain)
+  pos: noun
+  gender: f
+- lemma: московит
+  ipa: /moskoˈwʲit/
+  translation: Muscovite
+  pos: noun
+  gender: m
+- lemma: наступна
+  ipa: /nɐˈstupnɑ/
+  translation: next, following (fem.)
+  pos: adj
+  gender: f
+- lemma: неперервний
+  ipa: /nɛpɛˈrɛrwnɪj/
+  translation: continuous, uninterrupted
+  pos: adj
+  gender: m
+- lemma: нестабільність
+  ipa: /nɛstɐˈbʲilʲnʲistʲ/
+  translation: instability
+  pos: noun
+  gender: f
+- lemma: одну
+  ipa: /odˈnu/
+  translation: one (fem. accusative)
+  pos: noun
+  gender: f
+- lemma: окраїна
+  ipa: /okrɐˈjinɑ/
+  translation: periphery, borderland (pejorative term for Ukraine)
+  pos: noun
+  gender: f
+- lemma: патерна
+  ipa: /pɐˈtɛrnɑ/
+  translation: pattern (genitive plural)
+  pos: noun
+  gender: m
+- lemma: перейменування
+  ipa: /pɛrɛjmɛnuˈwɑnʲːɑ/
+  translation: renaming
+  pos: noun
+  gender: n
+- lemma: петербург
+  ipa: /pɛtɛrˈburh/
+  translation: Petersburg
+  pos: propn
+  gender: m
+- lemma: пліч
+  ipa: /plʲit͡ʃ/
+  translation: shoulder (archaic, genitive plural)
+  pos: noun
+  gender: m
+- lemma: посполитий
+  ipa: /pospoˈlɪtɪj/
+  translation: common, commonwealth (adj.)
+  pos: adj
+- lemma: потому
+  ipa: /poˈtomu/
+  translation: therefore (Russianism, should be тому)
+  pos: adv
+- lemma: праматір
+  ipa: /prɐˈmɑtʲir/
+  translation: progenitor, mother (fem.)
+  pos: noun
+  gender: f
+- lemma: приречений
+  ipa: /prɪˈrɛt͡ʃɛnɪj/
+  translation: doomed
+  pos: adj
+  gender: m
+- lemma: провокація
+  ipa: /prowoˈkɑt͡sʲijɑ/
+  translation: provocation
+  pos: noun
+  gender: f
+- lemma: ранньомодерний
+  ipa: /ˈrɑnʲːomodɛrnɪj/
+  translation: early modern
+  pos: adj
+  gender: f
+- lemma: ренесанес
+  ipa: /rɛnɛˈsɑnɛs/
+  translation: Renaissance
+  pos: noun
+  gender: m
+- lemma: рефлексія
+  ipa: /rɛflɛˈksʲijɑ/
+  translation: reflection, reflexivity
+  pos: noun
+  gender: f
+- lemma: розбіжність
+  ipa: /rozˈbʲiʒnʲistʲ/
+  translation: divergence, discrepancy
+  pos: noun
+  gender: f
+- lemma: розібрати
+  ipa: /rozʲiˈbrɑtɪ/
+  translation: to take apart, to analyze
+  pos: verb
+- lemma: россия
+  ipa: /rosˈsʲijɑ/
+  translation: Russia (Russian spelling, incorrect in Ukrainian)
+  pos: propn
+  gender: f
+- lemma: русина
+  ipa: /ruˈsɪnɑ/
+  translation: Ruthenian (genitive plural)
+  pos: noun
+  gender: m
+- lemma: синтезувати
+  ipa: /sɪnˈtɛzuwɑtɪ/
+  translation: to synthesize
+  pos: verb
+- lemma: спадкоємність
+  ipa: /spɐdkoˈjɛmnʲistʲ/
+  translation: succession, continuity (inheritance)
+  pos: noun
+  gender: f
+- lemma: спотворення
+  ipa: /spotˈworɛnʲːɑ/
+  translation: distortion
+  pos: noun
+  gender: n
+- lemma: теологія
+  ipa: /tɛoˈlohʲijɑ/
+  translation: theology
+  pos: noun
+  gender: f
+- lemma: фіналіст
+  ipa: /fʲinɐˈlʲist/
+  translation: finalist
+  pos: noun
+  gender: m
+- lemma: хазарія
+  ipa: /xɐˈzɑrʲijɑ/
+  translation: Khazaria
+  pos: propn
+  gender: f
+- lemma: цивілізаційний
+  ipa: /t͡sɪwʲilʲiˈzɑt͡sʲijnɪj/
+  translation: civilizational
+  pos: adj
+  gender: m
+- lemma: щоразу
+  ipa: /ʃt͡ʃoˈrɑzu/
+  translation: every time
+  pos: adv
+- lemma: яковенко
+  ipa: /jɐˈkowɛnko/
+  translation: Yakovenko (historian)
+  pos: propn
+  gender: f
+- lemma: євробачення
+  ipa: /jɛwroˈbɑt͡ʃɛnʲːɑ/
+  translation: Eurovision
+  pos: noun
+  gender: n
+- lemma: ілюстрований
+  ipa: /ʲilʲusˈtrowɑnɪj/
+  translation: illustrated
+  pos: adj
+  gender: f
+- lemma: імператриця
+  ipa: /ʲimpɛˈrɑtrɪt͡sʲɑ/
+  translation: empress
+  pos: noun
+  gender: f
+- lemma: історіографій
+  ipa: /ʲistoˈrʲioɦrɐfʲij/
+  translation: historiographies (genitive plural)
+  pos: noun
+  gender: f
+- lemma: історіографічний
+  ipa: /ʲistoˈrʲioɦrɐfʲit͡ʃnɪj/
+  translation: historiographic
+  pos: adj
+  gender: f

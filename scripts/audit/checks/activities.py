@@ -769,70 +769,30 @@ def check_activity_ukrainian_content(content: str, level_code: str = 'A1', modul
 
 def check_resources_placement(content: str) -> list[dict]:
     """
-    Check if [!resources] callout is correctly placed right before Activities section.
-    
-    The resources section should appear immediately before ## Activities / # Activities
-    (within 1000 chars) so students can optionally read supplementary material before practicing.
-    
-    Resources buried in earlier sections (Warm-up, Presentation) are misplaced.
+    DEPRECATED - Resources are now managed in YAML (Issue #354, Jan 2026).
+
+    Resources are stored in docs/resources/external_resources.yaml and injected
+    at build time, not stored in markdown files.
+
+    This check is disabled - [!resources] sections should NOT appear in markdown.
+    If found, they are stale and will be ignored (replaced by YAML at build time).
     """
-    violations = []
-    
-    # Find position of Activities header (both H1 and H2, English and Ukrainian)
-    activities_match = re.search(r'^#{1,2}\s*(?:Activities|Вправи)', content, re.MULTILINE)
-    if not activities_match:
-        return violations  # No activities section, nothing to check
-    
-    activities_pos = activities_match.start()
-    
-    # Find all [!resources] callouts
-    resources_matches = list(re.finditer(r'>\s*\[!resources\]', content, re.IGNORECASE))
-    
-    if not resources_matches:
-        return violations  # No resources to check placement for
-    
-    for match in resources_matches:
-        resource_pos = match.start()
-        
-        # Check if resources appear AFTER activities (wrong)
-        if resource_pos > activities_pos:
-            violations.append({
-                'type': 'MISPLACED_RESOURCES',
-                'issue': "External resources callout [!resources] appears AFTER Activities section",
-                'fix': "Move [!resources] section to appear immediately BEFORE ## Activities (within ~500 chars)."
-            })
-            break
-        
-        # Check if resources are too far before Activities (wrong - buried in earlier sections)
-        distance_to_activities = activities_pos - resource_pos
-        if distance_to_activities > 1000:
-            violations.append({
-                'type': 'MISPLACED_RESOURCES',
-                'issue': f"External resources callout [!resources] is {distance_to_activities} chars before Activities (should be <1000)",
-                'fix': "Move [!resources] section to appear immediately BEFORE ## Activities, not buried in earlier sections like Warm-up."
-            })
-            break
-    
-    return violations
+    # No longer check for resources in markdown
+    return []
 
 
 def check_resources_required(content: str) -> list[dict]:
     """
-    Check if [!resources] callout exists in the module.
+    DEPRECATED - Resources are now managed in YAML (Issue #354, Jan 2026).
 
-    All modules should have external resources for further learning.
+    Resources are stored in docs/resources/external_resources.yaml and injected
+    at build time, not stored in markdown files.
+
+    This check is disabled - modules should NOT have [!resources] in markdown.
+    To add resources, edit docs/resources/external_resources.yaml instead.
     """
-    violations = []
-
-    # Check if any [!resources] callout exists
-    if not re.search(r'>\s*\[!resources\]', content, re.IGNORECASE):
-        violations.append({
-            'type': 'MISSING_RESOURCES',
-            'issue': "Module is missing [!resources] callout with external learning resources",
-            'fix': "Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources."
-        })
-
-    return violations
+    # No longer require resources in markdown
+    return []
 
 
 def check_activity_header_format(content: str) -> list[dict]:

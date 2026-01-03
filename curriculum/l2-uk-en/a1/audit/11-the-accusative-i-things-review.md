@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): паспорт, газета, закривати, сумка, лист...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): закривати, лист, вимикати, нести, паспорт...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 962/750
+- **Words:** ✅ 900/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 26.1% (target 25-40% (M11))
+- **Immersion:** 🇺🇦 28.0% (target 25-40% (M11))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (9 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -41,4 +38,4 @@
 | **Practice** | ⚪️ | 116 | Skipped |
 | **Production** | ➖ | 75 | Excluded Type |
 | **Cultural Insight** | ✅ | 63 | Included in Core |
-| **Summary** | ✅ | 130 | Included in Core |
+| **Summary** | ✅ | 68 | Included in Core |

@@ -1513,7 +1513,7 @@ def process_dialogues(content: str) -> str:
 # MDX GENERATOR
 # =============================================================================
 
-def generate_mdx(md_content: str, module_num: int, yaml_activities: list[dict] | None = None, meta_data: dict | None = None, vocab_items: list[dict] | None = None) -> str:
+def generate_mdx(md_content: str, module_num: int, yaml_activities: list[dict] | None = None, meta_data: dict | None = None, vocab_items: list[dict] | None = None, external_resources: dict | None = None, level: str = 'a1') -> str:
     """Convert markdown content to MDX.
 
     Args:
@@ -1522,6 +1522,8 @@ def generate_mdx(md_content: str, module_num: int, yaml_activities: list[dict] |
         yaml_activities: Optional list of activities from YAML file (takes precedence over embedded)
         meta_data: Optional metadata from YAML (replaces frontmatter)
         vocab_items: Optional vocab list from YAML
+        external_resources: Optional external resources dict (injected from YAML)
+        level: Current level (used for specialized formatting like LIT)
     """
     if meta_data:
         fm = meta_data
@@ -1558,7 +1560,11 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
 
     # Inject Vocabulary Table if present
     if vocab_items:
-        vocab_md = _vocab_items_to_markdown(vocab_items)
+        if level.lower() == 'lit':
+            vocab_md = _lit_vocab_items_to_markdown(vocab_items)
+        else:
+            vocab_md = _vocab_items_to_markdown(vocab_items)
+            
         # Inject before Summary or at end
         inject_match = re.search(r'\n(#{1,2}\s+(?:Summary|Підсумок))', body)
         if inject_match:
@@ -1609,10 +1615,127 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
     processed = re.sub(r'^#{1,2} (Self-Assessment|Самооцінка)', r'## ✅ \1', processed, flags=re.MULTILINE)
     processed = re.sub(r'^#{1,2} (External Resources?|Зовнішні ресурси)', r'## 🔗 \1', processed, flags=re.MULTILINE)
 
+    # Inject external resources from YAML (if present)
+    if external_resources:
+        resources_md = format_resources_for_mdx(external_resources)
+        if resources_md:
+            # Append at end of content
+            processed = processed.rstrip() + '\n\n' + resources_md
+
     # Build MDX
     parts = [frontmatter, imports, '', processed]
 
     return '\n'.join(parts)
+
+# =============================================================================
+# EXTERNAL RESOURCES
+# =============================================================================
+
+def format_resources_for_mdx(resources: dict) -> str:
+    """
+    Format external resources for MDX output (emoji template).
+
+    Args:
+        resources: Dict with keys: podcasts, youtube, articles, books, websites
+
+    Returns:
+        Formatted markdown string for [!resources] callout block
+    """
+    if not resources or not any(resources.get(t) for t in ['podcasts', 'youtube', 'articles', 'books', 'websites']):
+        return ""
+
+    lines = []
+    lines.append("> [!resources] 🔗 External Resources")
+    lines.append(">")
+
+    # Emoji icons per resource type
+    resource_config = [
+        ('podcasts', '🎧', 'Podcasts'),
+        ('youtube', '📺', 'YouTube'),
+        ('articles', '📖', 'Articles'),
+        ('books', '📚', 'Books'),
+        ('websites', '🌐', 'Websites')
+    ]
+
+    # Priority and relevance maps for sorting
+    # Priority 1 = highest (Ukrainian Lessons Priority 1), 5 = lowest
+    priority_map = {1: 5, 2: 4, 3: 3, 4: 2, 5: 1, None: 0}
+    relevance_priority = {'high': 3, 'medium': 2, 'low': 1}
+
+    for resource_type, icon, display_name in resource_config:
+        items = resources.get(resource_type, [])
+        if not items:
+            continue
+
+        # Sort by: priority (1→5, highest first) → relevance (high→low) → title (A→Z)
+        sorted_items = sorted(
+            items,
+            key=lambda x: (
+                -priority_map.get(x.get('priority'), 0),  # Priority 1 appears first
+                -relevance_priority.get(x.get('relevance', 'low'), 0),  # High relevance next
+                x.get('title', '').lower()  # Alphabetical last
+            )
+        )
+
+        # Add section header
+        lines.append(f"> **{icon} {display_name}:**")
+
+        # Format each item
+        for item in sorted_items:
+            title = item.get('title', 'Unknown')
+            url = item.get('url', '')
+
+            if resource_type == 'podcasts':
+                desc = item.get('match_reason') or item.get('description', '')
+                if desc:
+                    lines.append(f"> - [{title}]({url}) — {desc}")
+                else:
+                    lines.append(f"> - [{title}]({url})")
+
+            elif resource_type == 'youtube':
+                channel = item.get('channel', '')
+                desc = item.get('description', channel)
+                if desc:
+                    lines.append(f"> - [{title}]({url}) — {desc}")
+                else:
+                    lines.append(f"> - [{title}]({url})")
+
+            elif resource_type == 'articles':
+                source = item.get('source', '')
+                desc = item.get('description', source)
+                if desc:
+                    lines.append(f"> - [{title}]({url}) — {desc}")
+                else:
+                    lines.append(f"> - [{title}]({url})")
+
+            elif resource_type == 'books':
+                author = item.get('author', 'Unknown')
+                pages = item.get('pages', '')
+                desc = item.get('description', '')
+
+                parts = [f"{title} by {author}"]
+                if pages:
+                    parts.append(f"(pages: {pages})")
+                if desc:
+                    parts.append(f"— {desc}")
+                lines.append(f"> - {' '.join(parts)}")
+
+            elif resource_type == 'websites':
+                source = item.get('source', '')
+                desc = item.get('description', source)
+                if desc:
+                    lines.append(f"> - [{title}]({url}) — {desc}")
+                else:
+                    lines.append(f"> - [{title}]({url})")
+
+        # Add blank line between sections
+        lines.append(">")
+
+    # Remove trailing blank line
+    if lines and lines[-1] == ">":
+        lines.pop()
+
+    return '\n'.join(lines)
 
 # =============================================================================
 # MAIN
@@ -1654,6 +1777,15 @@ def main():
     print('\n🚀 MDX Generator (Python)\n', flush=True)
     print(f'Source: curriculum/{lang_pair}/', flush=True)
     print(f'Output: docusaurus/docs/\n', flush=True)
+
+    # Load EXTERNAL RESOURCES (YAML Architecture) - loaded once for all modules
+    external_resources_file = PROJECT_ROOT / 'docs' / 'resources' / 'external_resources.yaml'
+    all_resources = {}
+    if external_resources_file.exists():
+        with open(external_resources_file, 'r', encoding='utf-8') as f:
+            resources_data = yaml.safe_load(f)
+            all_resources = resources_data.get('resources', {})
+        print(f'📚 Loaded {len(all_resources)} modules with external resources\n', flush=True)
 
     curriculum_path = CURRICULUM_DIR / lang_pair
     levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit']
@@ -1717,7 +1849,15 @@ def main():
             if yaml_activities:
                 print(f'    📋 Loading {len(yaml_activities)} activities from YAML')
 
-            mdx_content = generate_mdx(md_content, module_num, yaml_activities, meta_data, vocab_items)
+            # Lookup EXTERNAL RESOURCES by module_id
+            # module_id format: {level}-{filename} (e.g., a1-09-food-and-drinks)
+            module_id = f"{level}-{md_file.stem}"
+            module_resources = all_resources.get(module_id, {})
+            if module_resources:
+                resource_count = sum(len(module_resources.get(t, [])) for t in ['podcasts', 'youtube', 'articles', 'books', 'websites'])
+                print(f'    🔗 Loading {resource_count} external resources from YAML')
+
+            mdx_content = generate_mdx(md_content, module_num, yaml_activities, meta_data, vocab_items, module_resources, level)
 
             # Write output
             output_file = output_dir / f'module-{str(module_num).zfill(2)}.mdx'
@@ -1742,3 +1882,20 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+# =============================================================================
+# VOCABULARY HELPERS
+# =============================================================================
+
+def _lit_vocab_items_to_markdown(items: list[dict]) -> str:
+    lines = [
+        "## Vocabulary",
+        "",
+        "| Термін/Слово | Визначення та Етимологія | Коментар Патріота (Контекст XVIII ст.) |",
+        "| --- | --- | --- |"
+    ]
+    for item in items:
+        line = f"| **{item.get('term')}** | *{item.get('definition','')}* | {item.get('comment','')} |"
+        lines.append(line)
+        
+    return '\n'.join(lines)

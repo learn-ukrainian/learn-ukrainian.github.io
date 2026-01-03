@@ -1083,7 +1083,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 ---
 
 
-## Phase C1.3: Biographies (Modules 36-111)
+## Phase C1.3: Biographies (Modules 36-125)
 
 ### Learning Goals
 - Understand iconic Ukrainian figures across all eras
@@ -1182,23 +1182,23 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 | 105 | Ліна Костенко | 1930- | Poet, Sixtiers generation |
 | 106 | В'ячеслав Чорновіл | 1937-1999 | Independence leader, journalist |
 | 107 | Василь Стус | 1938-1985 | Dissident poet, died in Gulag |
-| 108 | Василь Шкляр | 1951- | Contemporary writer, historical fiction, "Залишенець" |
+| 108 | Мирослав Маринович | 1949- | Moral authority, dissident, human rights activist |
 | 109 | Леонід Каденюк | 1951-2018 | First Ukrainian astronaut |
-| 110 | Юрій Винничук | 1952- | Contemporary writer, "Танґо смерті" |
-| 111 | Квітка Цісик | 1953-1998 | Ukrainian diaspora voice, singer |
-| 112 | Галина Пагутяк | 1958- | Contemporary writer, mystical prose, Shevchenko Prize |
-| 113 | Марія Матіос | 1959- | Contemporary writer, "Солодка Даруся", Shevchenko Prize |
-| 114 | Мирослав Дочинець | 1959- | Contemporary writer, Transcarpathian themes |
-| 115 | Марина Гримич | 1961- | Contemporary writer, literary critic |
-| 116 | Тарас Прохасько | 1968- | Contemporary writer, essayist, minimalist prose |
-| 117 | Олександр Гаврош | 1971- | Contemporary writer, science fiction, children's books |
-| 118 | Сергій Жадан | 1974- | Contemporary writer, poet, joined military 2024 |
-| 119 | Тамара Горіха Зерня | 1976- | Contemporary writer, "Доця", Shevchenko Prize |
-| 120 | Катерина Калитко | 1982- | Contemporary writer, poet |
-| 121 | Софія Андрухович | 1982- | Contemporary writer, "Фелікс Австрія" |
-| 122 | Тетяна Малярчук | 1983- | Contemporary writer, writes in Ukrainian and German |
-| 123 | Макс Кідрук | 1984- | Contemporary writer, science fiction, thrillers |
-| 124 | Андрій Любка | 1987- | Contemporary writer, poet, translator |
+| 110 | Василь Шкляр | 1951- | Contemporary writer, historical fiction, "Залишенець" |
+| 111 | Юрій Винничук | 1952- | Contemporary writer, "Танґо смерті" |
+| 112 | Квітка Цісик | 1953-1998 | Ukrainian diaspora voice, singer |
+| 113 | Галина Пагутяк | 1958- | Contemporary writer, mystical prose, Shevchenko Prize |
+| 114 | Марія Матіос | 1959- | Contemporary writer, "Солодка Даруся", Shevchenko Prize |
+| 115 | Оксана Забужко | 1960- | Public intellectual, "Museum of Abandoned Secrets", feminist essayist |
+| 116 | Ярослав Грицак | 1960- | Historian, public intellectual, "Global History of Ukraine" |
+| 117 | Віталій Портников | 1967- | Journalist, political analyst, essayist, "Church of the Virgin Mary" |
+| 118 | Тарас Прохасько | 1968- | Contemporary writer, essayist, minimalist prose |
+| 119 | Сергій Жадан | 1974- | Contemporary writer, poet, joined military 2024 |
+| 120 | Олег Сенцов | 1976- | Filmmaker, former political prisoner, symbol of resistance |
+| 121 | Тамара Горіха Зерня | 1976- | Contemporary writer, "Доця", Shevchenko Prize |
+| 122 | Катерина Калитко | 1982- | Contemporary writer, poet |
+| 123 | Софія Андрухович | 1982- | Contemporary writer, "Фелікс Австрія" |
+| 124 | Олександра Матвійчук | 1983- | Nobel Peace Prize laureate, human rights lawyer |
 | 125 | C1.3 Checkpoint | Review | Biographical analysis assessment |
 
 ### Vocabulary Plan C1.3 (~2,160 words)
@@ -2839,11 +2839,11 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 |-------|--------------|------------|
 | C1.1 | ~500 | 500 |
 | C1.2 | ~450 | 950 |
-| C1.3 | ~1,824 | 2,774 | (76 modules × 24 words)
-| C1.4 | ~480 | 3,254 |
-| C1.5 | ~864 | 4,118 | (36 modules × 24 words)
-| C1.6 | ~250 | 4,368 |
-| **Total C1** | **~4,368** | **~10,308 cumulative** |
+| C1.3 | ~2,160 | 3,110 | (90 modules × 24 words)
+| C1.4 | ~480 | 3,590 |
+| C1.5 | ~864 | 4,454 | (36 modules × 24 words)
+| C1.6 | ~250 | 4,704 |
+| **Total C1** | **~4,704** | **~10,644 cumulative** |
 
 ---
 
@@ -2870,8 +2870,8 @@ graph TD
         M30 --> M35[M35 Checkpoint]
     end
 
-    %% Phase C1.3: Biographies (M36-111) - 76 figures by birth year
-    subgraph C1_3 [Phase C1.3: Biographies M36-111]
+    %% Phase C1.3: Biographies (M36-125) - 90 figures by birth year
+    subgraph C1_3 [Phase C1.3: Biographies M36-125]
         M36[M36 Ольга 890] --> M45[M45 Сковорода 1722]
         M45 --> M52[M52 Березовський 1745]
         M52 --> M58[M58 Лисенко 1842]
@@ -2987,10 +2987,11 @@ Before generating any C1 module:
 |-------|---------|--------|
 | C1.1 | 01-20 | ✅ Detailed specs complete |
 | C1.2 | 21-35 | ✅ Detailed specs complete |
-| C1.3 | 36-111 | ✅ Biographies (76 modules, expanded Dec 2025) |
-| C1.4 | 112-131 | ✅ Advanced Stylistics & Rhetoric |
-| C1.5 | 132-167 | ✅ Folk Culture & Fine Arts (36 modules, expanded Dec 2025) |
-| C1.6 | 168-182 | ✅ Literature (incl. capstone) |
+| C1.3 | 36-125 | ✅ Biographies (90 modules, expanded Dec 2025) |
+| C1.4 | 126-145 | ✅ Advanced Stylistics & Rhetoric |
+| C1.5 | 146-181 | ✅ Folk Culture & Fine Arts (36 modules, expanded Dec 2025) |
+| C1.6 | 182-196 | ✅ Literature (incl. capstone) |
+| **TOTAL** | **01-196** | **196** | |
 
 ---
 
@@ -3000,7 +3001,7 @@ Before generating any C1 module:
 
 2. **Level-relative numbering** (01-196) replaces old global numbering.
 
-3. **Biographies** (C1.3, 90 modules) expanded Dec 2025 with 11 arts figures (composers, visual artists, ballet, theater), then Dec 31 with 15 contemporary writers (removed military figures, added Ukrainian literary voices from 1951-1987).
+3. **Biographies** (C1.3, 90 modules) expanded Dec 2025 with 11 arts figures (composers, visual artists, ballet, theater), then Jan 2026 with a focus on high-impact contributors (Marynovych, Sentsov, Matviichuk) alongside key literary voices (Zabuzhko, Zhadan, Andrukhovych).
 
 4. **Folk Culture & Fine Arts** (C1.5, 36 modules) expanded Dec 2025 with 11 fine arts modules covering classical music, opera, visual arts, ballet, theater, and architecture.
 
@@ -3024,7 +3025,8 @@ Before generating any C1 module:
 
 ## Changelog
 
-- **2025-12-31:** Expanded to 196 modules: Removed Залужний (military figure). Added 15 contemporary Ukrainian writers (Шкляр, Винничук, Пагутяк, Матіос, Дочинець, Гримич, Прохасько, Гаврош, Жадан, Горіха Зерня, Калитко, Андрухович, Малярчук, Кідрук, Любка). All verified as Ukrainian patriots with no Russian connections. Renumbered C1.4-C1.6 accordingly.
+- **2026-01-02:** Refined Biography section: Swapped pure literary figures for high-impact moral and civic leaders (Мирослав Маринович, Олег Сенцов, Олександра Матвійчук). Re-ordered by birth year.
+- **2025-12-31:** Expanded to 196 modules: Removed Залужний (military figure). Added contemporary Ukrainian writers. Renumbered C1.4-C1.6 accordingly.
 - **2025-12-29:** Expanded to 182 modules: +11 biographies (composers, visual artists, ballet, theater) + 11 fine arts modules (classical music, opera, visual arts, ballet, theater, architecture). Renumbered C1.4-C1.6 accordingly.
 - **2025-12-23:** Rebalanced: expanded to 160 modules (Biographies from B2 added as C1.3, renumbered all subsequent phases)
 - **2025-12-05:** Expanded State Standard alignment with full grammar tables

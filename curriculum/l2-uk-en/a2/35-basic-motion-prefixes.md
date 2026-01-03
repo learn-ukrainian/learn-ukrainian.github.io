@@ -100,9 +100,4 @@ A common challenge for learners is choosing between **В** and **На**. This di
 
 ## Need More Practice?
 
-> [!resources] External Resources
-> - 📖 [Prefixes of Motion Guide](https://www.ukrainianlessons.com/prefixes-of-motion/) — Systematic tables for beginners.
-> - 🎙 [Ukrainian Lessons Podcast: Prefixes](https://www.ukrainianlessons.com/the-verbs-of-motion-with-prefixes/) — Audio examples and drills.
-> - 🎭 [Visual Motion Verbs](https://www.education-ukrainian.com/motion-verbs) — Diagrams of prefixes to help with spatial memory.
-
 ---

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): яблуко, сік, фрукти, яйце, пити...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): вода, суп, їсти, цибуля, яблуко...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1968/500 (>1500 may be too long)
+- **Words:** ⚠️ 1902/500 (>1500 may be too long)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 15.4% (target 15-35% (M09))
+- **Immersion:** 🇺🇦 15.8% (target 15-35% (M09))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -41,4 +38,4 @@
 | **Practice** | ⚪️ | 288 | Skipped |
 | **Production** | ➖ | 189 | Excluded Type |
 | **Cultural Insight** | ✅ | 132 | Included in Core |
-| **Summary** | ✅ | 192 | Included in Core |
+| **Summary** | ✅ | 126 | Included in Core |

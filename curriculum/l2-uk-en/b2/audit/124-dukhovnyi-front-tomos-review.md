@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1807/1750
+- **Words:** ✅ 1911/1750
 - **Activities:** ✅ 14/14
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 11/4 types
@@ -41,7 +41,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 114 | Included in Core |
 | **Вступ** | ⚪️ | 224 | Skipped |
-| **Історичний наратив: Від анексії до свободи** | ⚪️ | 850 | Skipped |
+| **Історичний наратив: Від анексії до свободи** | ⚪️ | 959 | Skipped |
 | **Первинні джерела** | ⚪️ | 254 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 251 | Skipped |
-| **Підсумок** | ✅ | 114 | Included in Core |
+| **Підсумок** | ✅ | 109 | Included in Core |

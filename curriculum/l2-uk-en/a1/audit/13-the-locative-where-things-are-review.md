@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): робота, лікарня, ресторан, магазин, кухня...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): магазин, робота, центр, будинок, церква...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1438/750
+- **Words:** ✅ 1377/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 27.3% (target 25-40% (M13))
+- **Immersion:** 🇺🇦 28.7% (target 25-40% (M13))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (9 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -40,4 +37,4 @@
 | **Presentation** | ✅ | 558 | Included in Core |
 | **Practice** | ⚪️ | 283 | Skipped |
 | **Production** | ➖ | 245 | Excluded Type |
-| **Summary** | ✅ | 189 | Included in Core |
+| **Summary** | ✅ | 128 | Included in Core |

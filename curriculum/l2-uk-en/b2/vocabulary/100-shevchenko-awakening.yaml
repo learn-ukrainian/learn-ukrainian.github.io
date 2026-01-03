@@ -2,743 +2,743 @@ module: 100-shevchenko-awakening
 level: B2
 version: '2.0'
 items:
-  - lemma: акварель
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: акин
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: антиколоніальний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: аральський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: аристократка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: аудіокнига
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: безводний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: безсмертя
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: битія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: борець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: братчик
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: брюллов
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: варвара
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: взаємність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: вибуховий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: викупити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: вилитися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: вишневий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: вклонитися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: воскреснути
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: вписатися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: вражий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: відчай
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: вільнодумство
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: гайдамака
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: галере
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: геній
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: горце
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: гранітний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: гротескний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: демократ
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: демонстрація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: денді
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: десятилітний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: домовина
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: домогтися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: дубовий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: елітарний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: енгельгардт
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: епатажний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: жалобий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: живописний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: жуковський
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: загарбницький
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: задумати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: засушений
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: захалявний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: захопитися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: звабити
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: звання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: знущання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: зобразити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: зсу
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: казах
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: казахстан
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: казахський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: канів
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: каторга
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: катувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: клаптик
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: книжечка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: кожус
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: кожух
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: козачок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: коліївщина
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: костомаров
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: лазаревський
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: ламання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: ликера
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: лякати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: n
-  - lemma: ліберальний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: мефодіївський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: моринка
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: мужицький
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: муштра
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: нагляд
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: найглубокіший
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: найгостріший
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: найсуворіше
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: найсуворіший
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: напризволяще
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: несприйняття
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: новопетровський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: обрага
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: обшук
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: окропіте
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: олійний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: опенік
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: оренбурзький
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: орський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: оспівати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: офорт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: палко
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: паломництво
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: пекло
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: пекучий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: перепоховання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: петербурзький
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: поборити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: побія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: поглиблювати
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: подоба
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: покладений
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: покір
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: полусмак
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: поліцейський
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: помагати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: порвіти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: портретист
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: похорон
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: прах
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: приїздити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: пробудити
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: m
-  - lemma: пронизаний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: пророк
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: пророка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: процесія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: пустельний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: піщаний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: радикальніший
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: революціонер
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: резолюція
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: риск
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: розпорядитися
-    ipa: ''
-    translation: ''
-    pos: verb
-    gender: f
-  - lemma: розіграти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: романтик
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: рубль
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: рукавичка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: рукописний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: рєпніна
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: садок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: салон
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: сатира
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: серія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: смоленський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: солдатський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: статуя
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: ступка
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: тараз
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: тризна
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: труна
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: улюбленець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: феноменальний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: фрак
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: французька
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: халява
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: чернечий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: чернишевський
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: чеченець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: чобота
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: яготин
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: євросоюз
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: ідола
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
+- lemma: акварель
+  ipa: /ɐkwɐˈrɛlʲ/
+  translation: watercolor
+  pos: noun
+  gender: f
+- lemma: акин
+  ipa: /ɐˈkɪn/
+  translation: akin, Kazakh folk poet (Abai Qunanbaiuly - parallel to Shevchenko)
+  pos: other
+- lemma: антиколоніальний
+  ipa: /ɐntɪkolonʲiˈɑlʲnɪj/
+  translation: anticolonial
+  pos: adj
+  gender: m
+- lemma: аральський
+  ipa: /ɐˈrɑlʲsʲkɪj/
+  translation: Aral (Aral Sea, adj.)
+  pos: adj
+  gender: f
+- lemma: аристократка
+  ipa: /ɐrɪstoˈkrɑtkɑ/
+  translation: aristocrat (feminine)
+  pos: noun
+  gender: f
+- lemma: аудіокнига
+  ipa: /ɐuˈdʲiokn̪ɪɦɑ/
+  translation: audiobook
+  pos: noun
+  gender: f
+- lemma: безводний
+  ipa: /bɛzˈwodnɪj/
+  translation: waterless
+  pos: adj
+- lemma: безсмертя
+  ipa: /bɛzˈsmɛrtʲɑ/
+  translation: immortality
+  pos: noun
+  gender: n
+- lemma: битія
+  ipa: /bɪˈtʲijɑ/
+  translation: being, existence (archaic Church Slavonic form)
+  pos: noun
+  gender: n
+- lemma: борець
+  ipa: /boˈrɛt͡sʲ/
+  translation: fighter, warrior
+  pos: noun
+  gender: m
+- lemma: братчик
+  ipa: /ˈbrɑt͡ʃɪk/
+  translation: little brother (diminutive, affectionate)
+  pos: noun
+  gender: m
+- lemma: брюллов
+  ipa: /brʲulˈlow/
+  translation: Bryullov (Karl Bryullov, artist who helped free Shevchenko)
+  pos: propn
+  gender: m
+- lemma: варвара
+  ipa: /wɐrˈwɑrɑ/
+  translation: Varvara (Varvara Repnina)
+  pos: propn
+  gender: f
+- lemma: взаємність
+  ipa: /wzɐˈjɛmnʲistʲ/
+  translation: reciprocity
+  pos: noun
+  gender: f
+- lemma: вибуховий
+  ipa: /wɪbuˈxowɪj/
+  translation: explosive
+  pos: adj
+  gender: m
+- lemma: викупити
+  ipa: /wɪˈkupɪtɪ/
+  translation: to ransom, to buy out (Shevchenko's freedom)
+  pos: verb
+- lemma: вилитися
+  ipa: /wɪˈlɪtɪsʲɑ/
+  translation: to pour out, to overflow
+  pos: verb
+  gender: f
+- lemma: вишневий
+  ipa: /wɪʃˈnɛwɪj/
+  translation: cherry (adj.), of cherry wood
+  pos: adj
+- lemma: вклонитися
+  ipa: /wkloˈnɪtɪsʲɑ/
+  translation: to bow
+  pos: verb
+- lemma: воскреснути
+  ipa: /woskrɛsˈnutɪ/
+  translation: to resurrect
+  pos: verb
+- lemma: вписатися
+  ipa: /ˈwpɪsɑtɪsʲɑ/
+  translation: to fit in, to inscribe oneself
+  pos: verb
+  gender: m
+- lemma: вражий
+  ipa: /ˈwrɑʒɪj/
+  translation: enemy's, hostile
+  pos: adj
+  gender: f
+- lemma: відчай
+  ipa: /wʲidˈt͡ʃɑj/
+  translation: despair
+  pos: noun
+  gender: m
+- lemma: вільнодумство
+  ipa: /wʲilʲnoˈdumstwo/
+  translation: freethinking
+  pos: noun
+  gender: n
+- lemma: гайдамака
+  ipa: /ɦɐjdɐˈmɑkɑ/
+  translation: Haidamaky (Shevchenko's epic poem about 1768 uprising)
+  pos: propn
+  gender: m
+- lemma: галере
+  ipa: /ɦɐˈlɛrɛ/
+  translation: gallery (locative case)
+  pos: noun
+  gender: f
+- lemma: геній
+  ipa: /ɦɛˈnʲij/
+  translation: genius
+  pos: noun
+  gender: m
+- lemma: горце
+  ipa: /ˈɦort͡sɛ/
+  translation: highlander (vocative)
+  pos: noun
+  gender: m
+- lemma: гранітний
+  ipa: /ɦrɐˈnʲitnɪj/
+  translation: granite (adj.)
+  pos: adj
+  gender: m
+- lemma: гротескний
+  ipa: /ɦroˈtɛsknɪj/
+  translation: grotesque
+  pos: adj
+  gender: f
+- lemma: демократ
+  ipa: /dɛmoˈkrɑt/
+  translation: democrat
+  pos: noun
+  gender: m
+- lemma: демонстрація
+  ipa: /dɛmonˈstrɑt͡sʲijɑ/
+  translation: demonstration, showing
+  pos: noun
+  gender: f
+- lemma: денді
+  ipa: /dɛnˈdʲi/
+  translation: dandy
+  pos: noun
+  gender: m
+- lemma: десятилітний
+  ipa: /dɛsʲɐtɪˈlʲitnʲij/
+  translation: ten-year
+  pos: adj
+  gender: m
+- lemma: домовина
+  ipa: /domoˈwɪnɑ/
+  translation: coffin
+  pos: noun
+  gender: f
+- lemma: домогтися
+  ipa: /domoɦˈtɪsʲɑ/
+  translation: to achieve
+  pos: verb
+- lemma: дубовий
+  ipa: /duˈbowɪj/
+  translation: oak (adj.), made of oak
+  pos: adj
+  gender: m
+- lemma: елітарний
+  ipa: /ɛlʲiˈtɑrnɪj/
+  translation: elitist
+  pos: adj
+  gender: m
+- lemma: енгельгардт
+  ipa: /ɛnɦɛlʲˈɦɑrdt/
+  translation: Engelhardt (Pavel Engelhardt, Shevchenko's owner)
+  pos: propn
+  gender: m
+- lemma: епатажний
+  ipa: /ɛpɐˈtɑʒnɪj/
+  translation: shocking, provocative
+  pos: adj
+  gender: m
+- lemma: жалобий
+  ipa: /ʒɐˈlobɪj/
+  translation: mourning (adj.)
+  pos: adj
+  gender: f
+- lemma: живописний
+  ipa: /ʒɪwoˈpɪsnɪj/
+  translation: picturesque
+  pos: adj
+  gender: f
+- lemma: жуковський
+  ipa: /ʒuˈkowsʲkɪj/
+  translation: Zhukovsky (Vasily Zhukovsky, Russian poet)
+  pos: propn
+  gender: m
+- lemma: загарбницький
+  ipa: /zɐɦɐrˈbnɪt͡sʲkɪj/
+  translation: aggressive, conquering
+  pos: adj
+  gender: f
+- lemma: задумати
+  ipa: /zɐˈdumɑtɪ/
+  translation: to conceive, to plan
+  pos: verb
+  gender: m
+- lemma: засушений
+  ipa: /zɐˈsuʃɛnɪj/
+  translation: dried, desiccated
+  pos: adj
+  gender: m
+- lemma: захалявний
+  ipa: /zɐxɐˈlʲɑwnɪj/
+  translation: above the boot top
+  pos: adj
+  gender: f
+- lemma: захопитися
+  ipa: /zɐxoˈpɪtɪsʲɑ/
+  translation: to become enthusiastic
+  pos: verb
+  gender: m
+- lemma: звабити
+  ipa: /zwɐˈbɪtɪ/
+  translation: to lure, to entice
+  pos: verb
+  gender: m
+- lemma: звання
+  ipa: /ˈzvɑnʲːɑ/
+  translation: rank, title
+  pos: noun
+  gender: n
+- lemma: знущання
+  ipa: /znuˈʃt͡ʃɑnʲːɑ/
+  translation: mockery, abuse
+  pos: noun
+  gender: n
+- lemma: зобразити
+  ipa: /zobrɐˈzɪtɪ/
+  translation: to depict
+  pos: verb
+- lemma: зсу
+  ipa: /zɛˈsu/
+  translation: Armed Forces of Ukraine (abbreviation)
+  pos: propn
+  gender: f
+- lemma: казах
+  ipa: /kɐˈzɑx/
+  translation: Kazakh
+  pos: noun
+  gender: m
+- lemma: казахстан
+  ipa: /kɐzɐxˈstɑn/
+  translation: Kazakhstan
+  pos: propn
+  gender: m
+- lemma: казахський
+  ipa: /kɐˈzɑxsʲkɪj/
+  translation: Kazakh (adj.)
+  pos: adj
+  gender: m
+- lemma: канів
+  ipa: /kɐˈnʲiw/
+  translation: Kaniv (Shevchenko's burial place)
+  pos: propn
+  gender: m
+- lemma: каторга
+  ipa: /kɐˈtorɦɑ/
+  translation: hard labor, penal servitude
+  pos: noun
+  gender: f
+- lemma: катувати
+  ipa: /kɐtuˈwɑtɪ/
+  translation: to torture
+  pos: verb
+- lemma: клаптик
+  ipa: /ˈklɑptɪk/
+  translation: patch, scrap (diminutive)
+  pos: noun
+  gender: f
+- lemma: книжечка
+  ipa: /ˈknɪʒɛt͡ʃkɑ/
+  translation: booklet, little book (diminutive)
+  pos: noun
+  gender: f
+- lemma: кожус
+  ipa: /koˈʒus/
+  translation: fur coat (dialectal variant of кожух)
+  pos: noun
+  gender: m
+- lemma: кожух
+  ipa: /koˈʒux/
+  translation: fur coat, sheepskin coat
+  pos: noun
+  gender: m
+- lemma: козачок
+  ipa: /kozɐˈt͡ʃok/
+  translation: kozachok (Cossack folk dance)
+  pos: noun
+  gender: m
+- lemma: коліївщина
+  ipa: /kolʲiˈjiwʃt͡ʃɪnɑ/
+  translation: Koliivshchyna (Haidamak uprising 1768)
+  pos: propn
+  gender: f
+- lemma: костомаров
+  ipa: /kostoˈmɑrow/
+  translation: Kostomarov (Mykola Kostomarov, historian)
+  pos: propn
+  gender: m
+- lemma: лазаревський
+  ipa: /lɐˈzɑrɛwsʲkɪj/
+  translation: Lazarevsky (artist who befriended Shevchenko)
+  pos: propn
+  gender: m
+- lemma: ламання
+  ipa: /lɐˈmɑnʲːɑ/
+  translation: breaking, fracture
+  pos: noun
+  gender: n
+- lemma: ликера
+  ipa: /lɪˈkɛrɑ/
+  translation: liqueur (genitive)
+  pos: propn
+  gender: m
+- lemma: лякати
+  ipa: /lʲɐˈkɑtɪ/
+  translation: to frighten, to scare
+  pos: verb
+  gender: n
+- lemma: ліберальний
+  ipa: /lʲibɛˈrɑlʲnɪj/
+  translation: liberal
+  pos: adj
+  gender: f
+- lemma: мефодіївський
+  ipa: /mɛˈfodʲijɛwsʲkɪj/
+  translation: Methodian (Brotherhood of Saints Cyril and Methodius)
+  pos: adj
+  gender: n
+- lemma: моринка
+  ipa: /moˈrɪnkɑ/
+  translation: sea (diminutive, archaic poetic)
+  pos: propn
+  gender: m
+- lemma: мужицький
+  ipa: /muˈʒɪt͡sʲkɪj/
+  translation: peasant's, muzhik (adj.)
+  pos: adj
+  gender: n
+- lemma: муштра
+  ipa: /ˈmuʃtrɑ/
+  translation: drill, military training
+  pos: propn
+  gender: f
+- lemma: нагляд
+  ipa: /nɐˈɦlʲɑd/
+  translation: supervision, surveillance
+  pos: noun
+  gender: m
+- lemma: найглубокіший
+  ipa: /nɐjɦluboˈkʲiʃɪj/
+  translation: deepest (archaic form)
+  pos: adj
+- lemma: найгостріший
+  ipa: /nɐjɦosˈtrʲiʃɪj/
+  translation: sharpest
+  pos: adj
+- lemma: найсуворіше
+  ipa: /nɐjsuwoˈrʲiʃɛ/
+  translation: most strictly
+  pos: adv
+- lemma: найсуворіший
+  ipa: /nɐjsuwoˈrʲiʃɪj/
+  translation: most severe
+  pos: adj
+  gender: m
+- lemma: напризволяще
+  ipa: /nɐprɪzˈwolʲɑʃt͡ʃɛ/
+  translation: at will, freely (archaic adverb)
+  pos: adv
+- lemma: несприйняття
+  ipa: /nɛsprɪjˈnʲɑtːɑ/
+  translation: non-acceptance, rejection
+  pos: noun
+  gender: n
+- lemma: новопетровський
+  ipa: /nowopɛˈtrowsʲkɪj/
+  translation: Novopetrovsk (fort where Shevchenko was exiled)
+  pos: adj
+  gender: n
+- lemma: обрага
+  ipa: /obˈrɑɦɑ/
+  translation: insult, offense (archaic)
+  pos: noun
+  gender: m
+- lemma: обшук
+  ipa: /obˈʃuk/
+  translation: search, raid
+  pos: noun
+  gender: m
+- lemma: окропіте
+  ipa: /okroˈpʲitɛ/
+  translation: sprinkle (imperative plural, Church Slavonic)
+  pos: noun
+  gender: n
+- lemma: олійний
+  ipa: /oˈlʲijnɪj/
+  translation: oil (painting)
+  pos: adj
+  gender: m
+- lemma: опенік
+  ipa: /oˈpɛnʲik/
+  translation: trustee, guardian (archaic)
+  pos: noun
+  gender: m
+- lemma: оренбурзький
+  ipa: /orɛnˈburzkɪj/
+  translation: Orenburg (adj.)
+  pos: adj
+  gender: m
+- lemma: орський
+  ipa: /ˈorsʲkɪj/
+  translation: Orsk (adj.)
+  pos: adj
+  gender: f
+- lemma: оспівати
+  ipa: /osˈpʲiwɑtɪ/
+  translation: to sing of, to glorify
+  pos: verb
+  gender: m
+- lemma: офорт
+  ipa: /oˈfort/
+  translation: etching
+  pos: noun
+  gender: m
+- lemma: палко
+  ipa: /ˈpɑlko/
+  translation: ardently
+  pos: adv
+- lemma: паломництво
+  ipa: /pɐˈlomnɪt͡stwo/
+  translation: pilgrimage
+  pos: noun
+  gender: n
+- lemma: пекло
+  ipa: /ˈpɛklo/
+  translation: hell
+  pos: noun
+  gender: n
+- lemma: пекучий
+  ipa: /pɛˈkut͡ʃɪj/
+  translation: burning, scorching
+  pos: adj
+  gender: n
+- lemma: перепоховання
+  ipa: /pɛrɛpoxoˈwɑnʲːɑ/
+  translation: reburial
+  pos: noun
+  gender: n
+- lemma: петербурзький
+  ipa: /pɛtɛrˈburzkɪj/
+  translation: Petersburg (adj.)
+  pos: adj
+- lemma: поборити
+  ipa: /poboˈrɪtɪ/
+  translation: to overcome
+  pos: verb
+- lemma: побія
+  ipa: /poˈbʲijɑ/
+  translation: beating (archaic)
+  pos: noun
+  gender: f
+- lemma: поглиблювати
+  ipa: /poɦlɪˈblʲuwɑtɪ/
+  translation: to deepen
+  pos: verb
+  gender: f
+- lemma: подоба
+  ipa: /poˈdobɑ/
+  translation: likeness, image (archaic)
+  pos: noun
+  gender: f
+- lemma: покладений
+  ipa: /poˈklɑdɛnɪj/
+  translation: laid down, placed
+  pos: adj
+  gender: f
+- lemma: покір
+  ipa: /poˈkʲir/
+  translation: submission
+  pos: noun
+  gender: f
+- lemma: полусмак
+  ipa: /poluˈsmɑk/
+  translation: half-taste, semi-flavor
+  pos: propn
+  gender: m
+- lemma: поліцейський
+  ipa: /polʲit͡sɛjsʲkɪj/
+  translation: police (adj.)
+  pos: adj
+- lemma: помагати
+  ipa: /pomɐˈɦɑtɪ/
+  translation: 'to help (archaic form, modern: допомагати)'
+  pos: verb
+- lemma: порвіти
+  ipa: /porˈwʲitɪ/
+  translation: to tear apart, to break
+  pos: verb
+- lemma: портретист
+  ipa: /portrɛˈtɪst/
+  translation: portrait painter
+  pos: noun
+  gender: m
+- lemma: похорон
+  ipa: /poˈxoron/
+  translation: funeral
+  pos: noun
+  gender: m
+- lemma: прах
+  ipa: /prɑx/
+  translation: ashes, remains
+  pos: noun
+  gender: m
+- lemma: приїздити
+  ipa: /prɪˈjizdɪtɪ/
+  translation: to come (by vehicle), to arrive
+  pos: verb
+- lemma: пробудити
+  ipa: /probuˈdɪtɪ/
+  translation: to awaken
+  pos: verb
+  gender: m
+- lemma: пронизаний
+  ipa: /pronɪˈzɑnɪj/
+  translation: pierced through
+  pos: adj
+  gender: m
+- lemma: пророк
+  ipa: /proˈrok/
+  translation: prophet
+  pos: noun
+  gender: m
+- lemma: пророка
+  ipa: /proˈrokɑ/
+  translation: prophet (genitive)
+  pos: noun
+  gender: m
+- lemma: процесія
+  ipa: /proˈt͡sɛsʲijɑ/
+  translation: procession
+  pos: noun
+  gender: f
+- lemma: пустельний
+  ipa: /pusˈtɛlʲnɪj/
+  translation: desert (adj.)
+  pos: adj
+- lemma: піщаний
+  ipa: /pʲiˈʃt͡ʃɑnɪj/
+  translation: sandy
+  pos: adj
+- lemma: радикальніший
+  ipa: /rɐdɪˈkɑlʲnʲiʃɪj/
+  translation: more radical
+  pos: adj
+- lemma: революціонер
+  ipa: /rɛwolʲut͡sʲioˈnɛr/
+  translation: revolutionary
+  pos: noun
+  gender: m
+- lemma: резолюція
+  ipa: /rɛzoˈlʲut͡sʲijɑ/
+  translation: resolution
+  pos: noun
+  gender: f
+- lemma: риск
+  ipa: /rɪsk/
+  translation: dash, stroke (art term)
+  pos: noun
+  gender: f
+- lemma: розпорядитися
+  ipa: /rozporʲɑˈdɪtɪsʲɑ/
+  translation: to dispose of, to order
+  pos: verb
+  gender: f
+- lemma: розіграти
+  ipa: /rozʲiˈɦrɑtɪ/
+  translation: to perform, to play out
+  pos: verb
+- lemma: романтик
+  ipa: /roˈmɑntɪk/
+  translation: romantic
+  pos: noun
+  gender: f
+- lemma: рубль
+  ipa: /rublʲ/
+  translation: ruble
+  pos: noun
+  gender: m
+- lemma: рукавичка
+  ipa: /rukɐˈwɪt͡ʃkɑ/
+  translation: glove
+  pos: noun
+  gender: f
+- lemma: рукописний
+  ipa: /rukoˈpɪsnɪj/
+  translation: handwritten, manuscript
+  pos: adj
+  gender: f
+- lemma: рєпніна
+  ipa: /rjɛpˈnʲinɑ/
+  translation: Repnina (Princess Varvara Repnina)
+  pos: propn
+  gender: f
+- lemma: садок
+  ipa: /sɐˈdok/
+  translation: garden, orchard
+  pos: noun
+  gender: m
+- lemma: салон
+  ipa: /sɐˈlon/
+  translation: salon
+  pos: noun
+  gender: m
+- lemma: сатира
+  ipa: /sɐˈtɪrɑ/
+  translation: satire
+  pos: noun
+  gender: f
+- lemma: серія
+  ipa: /ˈsɛrʲijɑ/
+  translation: series
+  pos: noun
+  gender: f
+- lemma: смоленський
+  ipa: /smoˈlɛnsʲkɪj/
+  translation: Smolensk (adj.)
+  pos: adj
+  gender: m
+- lemma: солдатський
+  ipa: /solˈdɑt͡sʲkɪj/
+  translation: soldier's
+  pos: adj
+  gender: f
+- lemma: статуя
+  ipa: /stɐˈtujɑ/
+  translation: statue
+  pos: noun
+  gender: f
+- lemma: ступка
+  ipa: /ˈstupkɑ/
+  translation: Stupka (Petro Stupka, member of Cyril-Methodian Brotherhood)
+  pos: propn
+  gender: m
+- lemma: тараз
+  ipa: /tɐˈrɑz/
+  translation: Taraz (city in Kazakhstan)
+  pos: propn
+  gender: m
+- lemma: тризна
+  ipa: /ˈtrɪznɑ/
+  translation: funeral feast, memorial
+  pos: propn
+  gender: f
+- lemma: труна
+  ipa: /truˈnɑ/
+  translation: coffin
+  pos: noun
+  gender: f
+- lemma: улюбленець
+  ipa: /ulʲublʲɛˈnɛt͡sʲ/
+  translation: favorite
+  pos: noun
+  gender: m
+- lemma: феноменальний
+  ipa: /fɛnomɛˈnɑlʲnɪj/
+  translation: phenomenal
+  pos: adj
+- lemma: фрак
+  ipa: /frɑk/
+  translation: tailcoat
+  pos: noun
+  gender: m
+- lemma: французька
+  ipa: /frɐnˈt͡suzkɑ/
+  translation: French woman; French language
+  pos: noun
+  gender: f
+- lemma: халява
+  ipa: /xɐˈlʲɑwɑ/
+  translation: boot top
+  pos: noun
+  gender: f
+- lemma: чернечий
+  ipa: /t͡ʃɛrˈnɛt͡ʃɪj/
+  translation: monastic
+  pos: adj
+  gender: f
+- lemma: чернишевський
+  ipa: /t͡ʃɛrnɪˈʃɛwsʲkɪj/
+  translation: Chernyshevsky (Nikolay Chernyshevsky, Russian revolutionary)
+  pos: propn
+  gender: m
+- lemma: чеченець
+  ipa: /t͡ʃɛˈt͡ʃɛnɛt͡sʲ/
+  translation: Chechen
+  pos: noun
+  gender: m
+- lemma: чобота
+  ipa: /t͡ʃoboˈtɑ/
+  translation: boot (genitive)
+  pos: noun
+  gender: m
+- lemma: яготин
+  ipa: /jɐˈɦotɪn/
+  translation: Yahotyn (town)
+  pos: propn
+  gender: m
+- lemma: євросоюз
+  ipa: /jɛwrosoˈjuz/
+  translation: European Union
+  pos: propn
+  gender: m
+- lemma: ідола
+  ipa: /ʲiˈdolɑ/
+  translation: idol (genitive)
+  pos: noun
+  gender: m

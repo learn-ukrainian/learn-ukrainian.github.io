@@ -1,0 +1,17 @@
+module: c1-170
+title: Вокальне мистецтво
+subtitle: Fine Arts
+version: '2.0'
+phase: C1.5 Culture
+focus: culture
+pedagogy: academic
+duration: 120
+vocabulary_count: 24
+tags:
+- c1
+- culture
+- folk
+- arts
+objectives:
+- Master C1 concepts in Вокальне мистецтво
+slug: 170-vokalne-mystetstvo

@@ -2,240 +2,240 @@ module: 101-ideolhy-drahomanov-kulish
 level: B2
 version: '2.0'
 items:
-  - lemma: абсурдність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: болгари
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: болгарій
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: взаємодоповнюючий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: відданий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: відірваний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: гадячі
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: громадівський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: деспотизм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: децентралізація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: драгомановський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: драгоманівець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: емігрант
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: засланий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: колотитися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: консервативніший
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: консерватор
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: костомарові
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: культурництво
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: кулішівець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: кулішівка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: кулішівський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: левицький
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: лютер
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: марксизм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ментор
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: настановити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: націоналізм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: нечуй
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: община
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: орфографія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: перевезти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: письма
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: подітися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: полемізувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: провінційність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: пулюїм
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: радикал
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: радикалізм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: реалізовуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: розгром
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: сакралізація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: сепаратистський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: систематизація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: соціалізм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: стовп
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: федералізм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: якова
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: ірландець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
+- lemma: абсурдність
+  ipa: /ɐbˈsurdnʲistʲ/
+  translation: absurdity
+  pos: noun
+  gender: f
+- lemma: болгари
+  ipa: /bolˈɦɑrɪ/
+  translation: Bulgarians
+  pos: noun
+  gender: m
+- lemma: болгарій
+  ipa: /bolˈɦɑrʲij/
+  translation: Bulgaria (genitive plural)
+  pos: propn
+  gender: f
+- lemma: взаємодоповнюючий
+  ipa: /wzɐjɛmodopowˈnʲujut͡ʃɪj/
+  translation: complementary
+  pos: adj
+- lemma: відданий
+  ipa: /wʲidˈdɑnɪj/
+  translation: devoted
+  pos: adj
+- lemma: відірваний
+  ipa: /wʲidʲirˈwɑnɪj/
+  translation: detached, separated
+  pos: adj
+  gender: m
+- lemma: гадячі
+  ipa: /ɦɐˈdʲɑt͡ʃʲi/
+  translation: Hadiach (Treaty of Hadiach 1658)
+  pos: propn
+  gender: m
+- lemma: громадівський
+  ipa: /ɦromɐˈdʲiwsʲkɪj/
+  translation: hromada (community movement adj.)
+  pos: adj
+  gender: m
+- lemma: деспотизм
+  ipa: /dɛspoˈtɪzm/
+  translation: despotism
+  pos: noun
+  gender: m
+- lemma: децентралізація
+  ipa: /dɛt͡sɛntrɐlʲiˈzɑt͡sʲijɑ/
+  translation: decentralization
+  pos: noun
+  gender: f
+- lemma: драгомановський
+  ipa: /drɐɦoˈmɑnowsʲkɪj/
+  translation: Drahomanov's (adj.)
+  pos: adj
+  gender: f
+- lemma: драгоманівець
+  ipa: /drɐɦomɐˈnʲiwɛt͡sʲ/
+  translation: Drahomanov follower
+  pos: noun
+  gender: m
+- lemma: емігрант
+  ipa: /ɛmʲiˈɦrɑnt/
+  translation: emigrant
+  pos: noun
+  gender: m
+- lemma: засланий
+  ipa: /zɐsˈlɑnɪj/
+  translation: exiled
+  pos: adj
+  gender: m
+- lemma: колотитися
+  ipa: /koloˈtɪtɪsʲɑ/
+  translation: to struggle, to toil
+  pos: verb
+- lemma: консервативніший
+  ipa: /konsɛrwɐˈtɪwnʲiʃɪj/
+  translation: more conservative
+  pos: noun
+  gender: m
+- lemma: консерватор
+  ipa: /konsɛrˈwɑtor/
+  translation: conservative
+  pos: noun
+  gender: m
+- lemma: костомарові
+  ipa: /kostoˈmɑrowʲi/
+  translation: Kostomarov (dative/locative)
+  pos: propn
+  gender: m
+- lemma: культурництво
+  ipa: /kulʲˈturːnɪt͡stwo/
+  translation: culturalism, cultural work
+  pos: noun
+  gender: n
+- lemma: кулішівець
+  ipa: /kulʲiˈʃʲiwɛt͡sʲ/
+  translation: Kulish follower
+  pos: noun
+  gender: m
+- lemma: кулішівка
+  ipa: /kulʲiˈʃʲiwkɑ/
+  translation: Kulish follower (feminine)
+  pos: noun
+  gender: f
+- lemma: кулішівський
+  ipa: /kulʲiˈʃʲiwsʲkɪj/
+  translation: Kulish's (adj.)
+  pos: adj
+  gender: f
+- lemma: левицький
+  ipa: /lɛˈwɪt͡sʲkɪj/
+  translation: Levytskyi (Volodymyr Levytskyi, writer)
+  pos: propn
+  gender: m
+- lemma: лютер
+  ipa: /ˈlʲutɛr/
+  translation: Luther (Martin Luther, Protestant Reformation)
+  pos: propn
+  gender: m
+- lemma: марксизм
+  ipa: /mɐrˈksɪzm/
+  translation: Marxism
+  pos: noun
+  gender: m
+- lemma: ментор
+  ipa: /mɛnˈtor/
+  translation: mentor
+  pos: noun
+  gender: f
+- lemma: настановити
+  ipa: /nɐstɐˈnowɪtɪ/
+  translation: to set, to establish
+  pos: verb
+- lemma: націоналізм
+  ipa: /nɑt͡sʲionɐˈlʲizm/
+  translation: nationalism
+  pos: noun
+  gender: m
+- lemma: нечуй
+  ipa: /nɛˈt͡ʃuj/
+  translation: Nechui (Ivan Nechui-Levytskyi, writer)
+  pos: propn
+  gender: m
+- lemma: община
+  ipa: /obˈʃt͡ʃɪnɑ/
+  translation: commune, community
+  pos: noun
+  gender: f
+- lemma: орфографія
+  ipa: /orfоˈɦrɑfʲijɑ/
+  translation: orthography
+  pos: noun
+  gender: f
+- lemma: перевезти
+  ipa: /pɛrɛˈwɛztɪ/
+  translation: to transport, to move
+  pos: verb
+- lemma: письма
+  ipa: /ˈpɪsʲmɑ/
+  translation: letters (genitive singular or nominative plural)
+  pos: propn
+  gender: m
+- lemma: подітися
+  ipa: /poˈdʲitɪsʲɑ/
+  translation: to happen, to go
+  pos: verb
+- lemma: полемізувати
+  ipa: /polɛmʲiˈzuwɑtɪ/
+  translation: to polemicize, to debate
+  pos: verb
+- lemma: провінційність
+  ipa: /prowʲinˈt͡sʲijnʲistʲ/
+  translation: provincialism
+  pos: noun
+  gender: f
+- lemma: пулюїм
+  ipa: /puˈlujim/
+  translation: Puliui (Ivan Puliui, scientist)
+  pos: propn
+  gender: m
+- lemma: радикал
+  ipa: /rɐdɪˈkɑl/
+  translation: radical
+  pos: noun
+  gender: m
+- lemma: радикалізм
+  ipa: /rɐdɪkɐˈlʲizm/
+  translation: radicalism
+  pos: noun
+  gender: m
+- lemma: реалізовуватися
+  ipa: /rɛɐlʲizowuˈwɑtɪsʲɑ/
+  translation: to be realized
+  pos: verb
+- lemma: розгром
+  ipa: /rozˈɦrom/
+  translation: destruction, defeat
+  pos: noun
+  gender: m
+- lemma: сакралізація
+  ipa: /sɐkrɐlʲiˈzɑt͡sʲijɑ/
+  translation: sacralization
+  pos: noun
+  gender: f
+- lemma: сепаратистський
+  ipa: /sɛpɐrɐˈtɪsʲt͡sʲkɪj/
+  translation: separatist (adj.)
+  pos: adj
+  gender: f
+- lemma: систематизація
+  ipa: /sɪstɛmɐtɪˈzɑt͡sʲijɑ/
+  translation: systematization
+  pos: noun
+  gender: f
+- lemma: соціалізм
+  ipa: /sot͡sʲiɐˈlʲizm/
+  translation: socialism
+  pos: noun
+  gender: m
+- lemma: стовп
+  ipa: /stowp/
+  translation: column, pillar
+  pos: noun
+  gender: m
+- lemma: федералізм
+  ipa: /fɛdɛrɐˈlʲizm/
+  translation: federalism
+  pos: noun
+  gender: m
+- lemma: якова
+  ipa: /ˈjɑkowɑ/
+  translation: Yakov (genitive - Yakov/Yakiv, common Ukrainian name)
+  pos: propn
+  gender: m
+- lemma: ірландець
+  ipa: /ʲirˈlɑndɛt͡sʲ/
+  translation: Irishman
+  pos: noun
+  gender: m

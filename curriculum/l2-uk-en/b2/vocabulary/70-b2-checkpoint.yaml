@@ -2,126 +2,126 @@ module: 70-b2-checkpoint
 level: B2
 version: '2.0'
 items:
-  - lemma: ансамбль
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: афікс
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: блисок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: борода
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: відшліфований
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: вісьмомаст
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: зно
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: морф
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: морфологічний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: накивати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: обидвий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: палітро
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: провідміняти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: проговорити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: проміжка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: підбити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: підручниковий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: раунд
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: розривати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: розчин
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: різноплановий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: самодіагностика
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: системність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: стрункий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: цілісність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: ідіомий
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
+- lemma: ансамбль
+  ipa: /ɐnˈsɑmblʲ/
+  translation: ensemble
+  pos: noun
+  gender: m
+- lemma: афікс
+  ipa: /ɐˈfʲiks/
+  translation: affix
+  pos: noun
+  gender: m
+- lemma: блисок
+  ipa: /blɪˈsok/
+  translation: luster, shine
+  pos: noun
+  gender: m
+- lemma: борода
+  ipa: /boroˈdɑ/
+  translation: beard
+  pos: noun
+  gender: f
+- lemma: відшліфований
+  ipa: /wʲidʃlʲiˈfowɑnɪj/
+  translation: polished, refined
+  pos: adj
+  gender: f
+- lemma: вісьмомаст
+  ipa: /wʲisʲmomɑst/
+  translation: eight-suit (card game)
+  pos: noun
+  gender: m
+- lemma: зно
+  ipa: /zɛnˈo/
+  translation: ZNO (External Independent Testing)
+  pos: noun
+  gender: f
+- lemma: морф
+  ipa: /morf/
+  translation: morphs (genitive plural)
+  pos: noun
+  gender: f
+- lemma: морфологічний
+  ipa: /morfoˈloɦʲit͡ʃnɪj/
+  translation: morphological
+  pos: adj
+  gender: f
+- lemma: накивати
+  ipa: /nɐkɪˈwɑtɪ/
+  translation: to nod repeatedly
+  pos: verb
+- lemma: обидвий
+  ipa: /obɪdˈwɪj/
+  translation: both
+  pos: adj
+- lemma: палітро
+  ipa: /pɐˈlʲitro/
+  translation: palettes (genitive plural)
+  pos: noun
+  gender: f
+- lemma: провідміняти
+  ipa: /prowʲidmʲiˈnʲɑtɪ/
+  translation: to decline (through cases)
+  pos: verb
+- lemma: проговорити
+  ipa: /proɦowoˈrɪtɪ/
+  translation: to say aloud, to pronounce
+  pos: verb
+- lemma: проміжка
+  ipa: /proˈmʲiʒkɑ/
+  translation: gaps (genitive plural)
+  pos: noun
+  gender: m
+- lemma: підбити
+  ipa: /pʲidˈbɪtɪ/
+  translation: to sum up, to tally
+  pos: verb
+- lemma: підручниковий
+  ipa: /pʲidrut͡ʃnɪˈkowɪj/
+  translation: textbook-like
+  pos: adj
+  gender: n
+- lemma: раунд
+  ipa: /rɐˈund/
+  translation: round
+  pos: noun
+  gender: m
+- lemma: розривати
+  ipa: /rozrɪˈwɑtɪ/
+  translation: to tear, to break
+  pos: verb
+- lemma: розчин
+  ipa: /ˈroz t͡ʃɪn/
+  translation: solution, mortar
+  pos: noun
+  gender: m
+- lemma: різноплановий
+  ipa: /rʲiznoplɐˈnowɪj/
+  translation: diverse, multifaceted
+  pos: adj
+- lemma: самодіагностика
+  ipa: /sɐmodʲiɐɦnosˈtɪkɑ/
+  translation: self-diagnosis
+  pos: noun
+  gender: f
+- lemma: системність
+  ipa: /sɪsˈtɛmnʲistʲ/
+  translation: systematicity
+  pos: noun
+  gender: f
+- lemma: стрункий
+  ipa: /ˈstrunkɪj/
+  translation: coherent, slender
+  pos: adj
+  gender: m
+- lemma: цілісність
+  ipa: /t͡sʲiˈlʲisnʲistʲ/
+  translation: integrity, wholeness
+  pos: noun
+  gender: f
+- lemma: ідіомий
+  ipa: /ʲidʲioˈmɪj/
+  translation: idioms (genitive plural)
+  pos: noun
+  gender: m

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): вибачте, прошу, англійська, будь, київ...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): вибачте, київ, будь, лондон, англійська...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1499/300 (>1300 may be too long)
+- **Words:** ⚠️ 1434/300 (>1300 may be too long)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,14 +23,11 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 8.8% (target 5-15% (M02))
+- **Immersion:** 🇺🇦 9.1% (target 5-15% (M02))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (9 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -42,4 +39,4 @@
 | **Production** | ➖ | 70 | Excluded Type |
 | **Cultural Insight** | ✅ | 291 | Included in Core |
 | **Summary** | ✅ | 144 | Included in Core |
-| **Need More Practice?** | ⚪️ | 65 | Skipped |
+| **Need More Practice?** | ⚪️ | 0 | Skipped |

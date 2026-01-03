@@ -1,6 +1,6 @@
 # Task: Map Ukrainian Lessons Podcast Episodes to Curriculum Modules
 
-**Context:** User wants Ukrainian Lessons Podcast (ULP) as the primary external resource for A1-B2 modules. You'll map ~200 podcast episodes to relevant curriculum modules based on topic and grammar alignment.
+**Context:** User wants Ukrainian Lessons Podcast (ULP) as the primary external resource for A1-C2 modules. You'll map 240 podcast episodes to relevant curriculum modules based on topic and grammar alignment.
 
 **Your task:** Create podcast → module mappings and prepare for external resources integration.
 
@@ -28,10 +28,11 @@ cat docs/l2-uk-en/MEDIA-SOURCES.md | grep -A 10 "Ukrainian Lessons Podcast"
 ```
 
 ### Key Information
-- **ULP (Ukrainian Lessons Podcast):** ~200 episodes, grammar-focused, A1-B1 aligned
+- **ULP (Ukrainian Lessons Podcast):** 240 episodes, grammar-focused, beginner to advanced
 - **FMU (5 Minute Ukrainian):** Quick dialogues, A1-A2 aligned
 - **Current state:** Only 1/34 A1 modules have `[!resources]` sections
-- **Goal:** Map episodes to modules, prepare YAML-based resource structure
+- **Goal:** Map all 240 episodes to 623 modules (A1-C2), prepare YAML-based resource structure
+- **Progressive reuse:** Episodes can map to multiple levels (e.g., beginner episodes for listening practice at higher levels)
 
 ---
 
@@ -138,8 +139,8 @@ ls curriculum/l2-uk-en/c2/*.md 2>/dev/null | wc -l
 ```yaml
 # Ukrainian Lessons Podcast → Curriculum Mapping
 # Generated: 2026-01-02
-# Episodes: ~200 from ULP + FMU
-# Modules: A1 (34), A2 (57), B1 (91)
+# Episodes: 240 from ULP + FMU
+# Modules: A1 (34), A2 (57), B1 (91), B2 (145), C1 (196), C2 (100) = 623 total
 
 mappings:
   # A1 Modules
@@ -210,7 +211,7 @@ mappings:
 **Field definitions:**
 - `module_id` - Slug from filename (e.g., `01-cyrillic-code-i`)
 - `module_title` - Human-readable title
-- `level` - A1, A2, B1 (no B2)
+- `level` - A1, A2, B1, B2, C1, or C2
 - `episode_id` - ULP-XXX or FMU-XXX
 - `match_reason` - Why this episode matches this module
 - `relevance` - high/medium/low
@@ -292,7 +293,7 @@ jq '[.episodes[].tags[]?] | unique' docs/resources/podcasts/podcast_db.json
 - [ ] All episode IDs valid (exist in podcast_db.json)
 - [ ] All module IDs valid (files exist in curriculum)
 - [ ] Match reasons make sense
-- [ ] No B2 mappings (ULP doesn't cover B2)
+- [ ] Progressive reuse documented (episodes mapped to multiple levels where appropriate)
 - [ ] High relevance > Medium relevance > Low relevance
 - [ ] YAML syntax valid (`yq . ulp_mapping.yaml`)
 
@@ -306,15 +307,15 @@ yq '[.mappings[].recommended_episodes[].episode_id] | unique | length' ulp_mappi
 ```
 
 **Expected coverage:**
-- A1: 20-30 modules mapped (~60-90%)
-- A2: 15-25 modules mapped (~25-45%)
-- B1: 15-30 modules mapped (~15-35%)
-- B2: 10-20 modules mapped (~7-15%) - interviews, conversations
-- C1: 5-15 modules mapped (~2-8%) - if applicable
-- C2: 0-5 modules mapped (~0-5%) - if applicable
-- Total episodes used: 30-40 unique episodes (many reused across levels)
+- A1: 30-34 modules mapped (~90-100%) - Strong grammar and topic alignment
+- A2: 45-55 modules mapped (~80-95%) - Grammar episodes + progressive reuse
+- B1: 60-85 modules mapped (~65-95%) - Advanced grammar + listening practice
+- B2: 80-130 modules mapped (~55-90%) - Interviews, conversations, listening comprehension
+- C1: 100-180 modules mapped (~50-90%) - Listening practice, cultural context
+- C2: 50-90 modules mapped (~50-90%) - Advanced listening, professional topics
+- Total episodes used: 240 episodes (extensive multi-level reuse)
 
-**Not all modules will have matches - that's OK!** Focus on grammar, conversation, and listening practice content. Literary and highly specialized modules may not have podcast equivalents.
+**Goal: Maximum coverage through progressive reuse.** With 240 ULP episodes and 623 modules, episodes should be mapped to ALL appropriate levels - beginner episodes work for listening comprehension at advanced levels, advanced episodes provide challenge for intermediate learners.
 
 ---
 
@@ -346,9 +347,11 @@ yq '[.mappings[].recommended_episodes[].episode_id] | unique | length' ulp_mappi
 
 ## Episode Usage
 
-- Total episodes in ULP database: ~200
+- Total episodes in ULP database: 240
 - Episodes used in mappings: XX
 - Most mapped episode: [ID] ([title]) - XX modules
+- Average episodes per module: XX
+- Average modules per episode: XX (progressive reuse)
 
 ## High-Confidence Mappings
 
@@ -426,7 +429,7 @@ yq -P docs/resources/podcasts/ulp_mapping.yaml
 
 1. **Use YAML, not JSON** - Consistent with project architecture
 2. **Include match_reason** - Explain why episode matches module
-3. **No B2 mappings** - ULP is A1-B1 only
+3. **Progressive reuse encouraged** - Episodes can map to multiple levels
 4. **Quality > Quantity** - Better to have 50 high-confidence mappings than 100 weak ones
 5. **Document gaps** - Note modules that need other resources
 

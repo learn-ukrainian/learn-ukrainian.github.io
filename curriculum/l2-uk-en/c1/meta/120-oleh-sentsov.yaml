@@ -1,0 +1,27 @@
+module: c1-120
+title: Олег Сенцов
+subtitle: Oleh Sentsov
+version: '2.0'
+phase: C1.3 Biographies
+focus: biography
+pedagogy: narrative
+duration: 120
+transliteration: none
+vocabulary_count: 24
+tags:
+- biography
+- c1
+- cinema
+- resistance
+- human_rights
+- war
+- memoirs
+- crimea
+grammar:
+- Biographical narrative register
+- Advanced stylistic analysis
+objectives:
+- Analyze the contribution of Oleh Sentsov to modern Ukraine
+- Master vocabulary related to cinema, resistance
+- Discuss the historical context of their work
+slug: 120-oleh-sentsov

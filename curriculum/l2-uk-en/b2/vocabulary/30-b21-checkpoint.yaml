@@ -2,10 +2,6 @@ module: 30-b21-checkpoint
 level: B2
 version: '2.0'
 items:
-- lemma: ачи
-  ipa: ''
-  translation: ''
-  pos: other
 - lemma: багатосурядний
   ipa: /bɑɦɑtosurʲɑdnɪj/
   translation: multi-clause
@@ -33,11 +29,6 @@ items:
   translation: delegation
   pos: noun
   gender: f
-- lemma: ди
-  ipa: ''
-  translation: ''
-  pos: propn
-  gender: m
 - lemma: домен
   ipa: /doˈmɛn/
   translation: domain
@@ -133,9 +124,9 @@ items:
   translation: tropes
   pos: noun
   gender: m
-- lemma: уривка
-  ipa: ''
-  translation: ''
+- lemma: уривок
+  ipa: /ʊˈrɪvok/
+  translation: excerpt, fragment
   pos: noun
   gender: m
 - lemma: формуляр
@@ -148,12 +139,8 @@ items:
   translation: form (adj.)
   pos: adj
   gender: m
-- lemma: ши
-  ipa: ''
-  translation: ''
-  pos: other
-- lemma: ідіо
-  ipa: ''
-  translation: ''
+- lemma: ідіома
+  ipa: /iˈdʲiomɑ/
+  translation: idiom
   pos: noun
-  gender: m
+  gender: f

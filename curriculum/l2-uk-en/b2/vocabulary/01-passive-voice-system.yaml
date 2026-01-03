@@ -99,6 +99,7 @@ items:
   ipa: /ˈwɪborɪ/
   translation: elections
   pos: noun
+  gender: m
 - lemma: виголошити
   ipa: /wɪɦoˈloʃɪtɪ/
   translation: to proclaim, announce
@@ -240,6 +241,7 @@ items:
   ipa: /ˈdɑni/
   translation: data
   pos: noun
+  gender: n
 - lemma: державний
   ipa: /dɛrˈʒɑwnɪj/
   translation: state (adj)

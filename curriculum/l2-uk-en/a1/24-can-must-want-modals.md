@@ -251,11 +251,3 @@ These are impersonal — the "subject" is optional:
 ---
 
 **Coming up:** Module 25 will teach you reflexive verbs for daily routines!
-
-> [!resources] External Resources
->
-> **YouTube:** [Modal Verbs in Ukrainian](https://www.youtube.com/watch?v=kY67m6y6Oyc) — Speak Ukrainian
->
-> **Grammar Guide:** [Ukrainian Modal Verbs](https://www.ukrainianlessons.com/modal-verbs/) — Ukrainian Lessons
->
-> **Listening:** [Can and Must in Ukrainian](https://ukrainianlanguage.uk/modal-verbs-can-must/) — Listening practice with audio

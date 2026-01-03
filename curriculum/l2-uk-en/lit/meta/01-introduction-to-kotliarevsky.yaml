@@ -1,0 +1,26 @@
+module: lit-01
+title: "Феномен Івана Котляревського"
+subtitle: "Ivan Kotliarevsky"
+version: "2.0"
+phase: LIT
+focus: literature
+pedagogy: literature
+duration: 120
+transliteration: none
+tags:
+  - література
+  - історія
+  - класика
+  - котляревський
+  - біографія
+grammar:
+  - "Науковий стиль: біографічний опис та історичний аналіз"
+  - "Лексика: архаїзми XVIII століття, військові та масонські терміни"
+objectives:
+  - Зрозуміти історичний контекст появи "Енеїди" (1798)
+  - Дослідити біографію Івана Котляревського як "людини вчинку"
+  - Проаналізувати поняття "Котляревщина" та його роль у національному відродженні
+  - Написати есе про роль особистості в історії культури
+slug: 01-introduction-to-kotliarevsky
+audio: true
+description: "LIT-001: Introduction to Ivan Kotliarevsky, the father of modern Ukrainian literature. Biography, historical context of the late 18th century, and the birth of 'Eneida'."

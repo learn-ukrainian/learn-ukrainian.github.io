@@ -288,12 +288,4 @@ Try creating similar sentences about yourself before moving to the activities be
 
 ## Need More Practice?
 
-> [!resources] External Resources
->
-> **YouTube:** [The Dative Case in Ukrainian ...](https://www.youtube.com/watch?v=ATeU7iwuyLU) — Nouns, Pronouns & How to Use Them
->
-> **Grammar Guide:** [Ukrainian Cases](https://www.ukrainianlessons.com/intro-cases/) — Overview of all 7 cases
->
-> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
-
 ---

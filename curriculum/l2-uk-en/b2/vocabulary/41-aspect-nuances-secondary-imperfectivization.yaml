@@ -6,7 +6,6 @@ items:
   ipa: /ɐnotoˈwɑnɪj/
   translation: annotated
   pos: adj
-  gender: m
 - lemma: апостол
   ipa: /ɐˈpostol/
   translation: apostle
@@ -22,10 +21,6 @@ items:
   translation: continuity
   pos: noun
   gender: f
-- lemma: ва
-  ipa: ''
-  translation: ''
-  pos: other
 - lemma: вглядатися
   ipa: /wɦlʲɑˈdɑtɪsʲɑ/
   translation: to peer, to look closely
@@ -42,14 +37,13 @@ items:
   ipa: /wɪbɑˈt͡ʃɑtɪsʲɑ/
   translation: to apologize
   pos: verb
-  gender: m
 - lemma: вигідний
   ipa: /wɪˈɦʲidnɪj/
   translation: profitable, advantageous
   pos: adj
-- lemma: видаювати
-  ipa: ''
-  translation: ''
+- lemma: видавати
+  ipa: /wɪdɐˈwɑtɪ/
+  translation: to publish, to issue
   pos: verb
 - lemma: видовий
   ipa: /wɪˈdowɪj/
@@ -64,7 +58,6 @@ items:
   ipa: /wɪrɪˈwɑtɪ/
   translation: to tear out
   pos: verb
-  gender: m
 - lemma: виробувати
   ipa: /wɪroˈbuwɑtɪ/
   translation: to produce, to work out
@@ -89,7 +82,6 @@ items:
   ipa: /wʲidsˈlʲidkowuwɑtɪ/
   translation: to track, to monitor
   pos: verb
-  gender: m
 - lemma: відступати
   ipa: /wʲidstuˈpɑtɪ/
   translation: to retreat, to step back
@@ -102,7 +94,6 @@ items:
   ipa: /ɦɛnɛˈrɑlʲnɪj/
   translation: general
   pos: adj
-  gender: m
 - lemma: глибоко
   ipa: /ɦlɪboˈko/
   translation: deeply
@@ -111,17 +102,14 @@ items:
   ipa: /doˈwodɪtɪsʲɑ/
   translation: to have to, must
   pos: verb
-  gender: n
 - lemma: дописувати
-  ipa: ''
-  translation: ''
+  ipa: /dopɪˈsuwɑtɪ/
+  translation: to add writing to, to finish writing
   pos: verb
-  gender: f
 - lemma: дуративний
   ipa: /durɐˈtɪwnɪj/
   translation: durative
   pos: adj
-  gender: n
 - lemma: дуративність
   ipa: /durɐtɪwnʲistʲ/
   translation: durativity
@@ -151,15 +139,14 @@ items:
   ipa: /zosɛˈrɛdʒɛnɪj/
   translation: concentrated, focused
   pos: adj
-  gender: f
 - lemma: зіронька
-  ipa: ''
-  translation: ''
+  ipa: /ˈzʲironʲkɑ/
+  translation: little star (diminutive)
   pos: noun
-  gender: m
-- lemma: калин
-  ipa: ''
-  translation: ''
+  gender: f
+- lemma: калина
+  ipa: /kɐˈlɪnɑ/
+  translation: viburnum, guelder rose
   pos: noun
   gender: f
 - lemma: кафетерія
@@ -176,25 +163,24 @@ items:
   ipa: /komɛnˈtujut͡ʃɪj/
   translation: commenting (participle)
   pos: adj
-  gender: n
-- lemma: криниченький
-  ipa: ''
-  translation: ''
-  pos: adj
+- lemma: криниченька
+  ipa: /krɪˈnɪt͡ʃɛnʲkɑ/
+  translation: little well (diminutive)
+  pos: noun
   gender: f
 - lemma: майстр
   ipa: /ˈmɑjstr/
   translation: master, craftsman
   pos: noun
   gender: m
-- lemma: мамай
-  ipa: ''
-  translation: ''
+- lemma: Мамай
+  ipa: /mɐˈmɑj/
+  translation: Mamai (historical figure)
   pos: propn
   gender: m
-- lemma: наголоса
-  ipa: ''
-  translation: ''
+- lemma: наголос
+  ipa: /nɐɦoˈlos/
+  translation: accent, stress
   pos: noun
   gender: m
 - lemma: нагрівання
@@ -202,15 +188,14 @@ items:
   translation: heating
   pos: noun
   gender: n
-- lemma: надаювати
-  ipa: ''
-  translation: ''
+- lemma: надавати
+  ipa: /nɐdɐˈwɑtɪ/
+  translation: to give, to provide
   pos: verb
 - lemma: найякісніший
-  ipa: ''
-  translation: ''
+  ipa: /nɐjjɐkʲisˈnʲiʃɪj/
+  translation: highest quality
   pos: adj
-  gender: f
 - lemma: нестандартний
   ipa: /nɛstɐnˈdɑrtnɪj/
   translation: non-standard
@@ -248,7 +233,6 @@ items:
   ipa: /prɛfʲiksɑlʲnɪj/
   translation: prefixal
   pos: adj
-  gender: m
 - lemma: префіксація
   ipa: /prɛfʲiksɑˈt͡sʲijɑ/
   translation: prefixation
@@ -294,11 +278,10 @@ items:
   ipa: /rozpodʲiˈlʲɑtɪ/
   translation: to distribute, to allocate
   pos: verb
-  gender: m
-- lemma: росий
-  ipa: ''
-  translation: ''
-  pos: adj
+- lemma: роса
+  ipa: /roˈsɑ/
+  translation: dew
+  pos: noun
   gender: f
 - lemma: скорочуватися
   ipa: /skorot͡ʃuˈwɑtɪsʲɑ/
@@ -313,11 +296,6 @@ items:
   ipa: /sxoˈpɪtɪ/
   translation: to grab, to seize
   pos: verb
-- lemma: сіст
-  ipa: ''
-  translation: ''
-  pos: noun
-  gender: m
 - lemma: фіксувати
   ipa: /fʲiksuˈwɑtɪ/
   translation: to fix, to record
@@ -342,16 +320,15 @@ items:
   translation: imperfectivization
   pos: noun
   gender: f
-- lemma: істин
-  ipa: ''
-  translation: ''
+- lemma: істина
+  ipa: /ʲisˈtɪnɑ/
+  translation: truth
   pos: noun
   gender: f
 - lemma: ітеративний
   ipa: /ʲitɛrɐˈtɪwnɪj/
   translation: iterative
   pos: adj
-  gender: n
 - lemma: ітеративність
   ipa: /ʲitɛrɐtɪwnʲistʲ/
   translation: iterativity

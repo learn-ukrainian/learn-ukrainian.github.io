@@ -374,11 +374,4 @@
 
 ---
 
-> [!resources] 🎧 Зовнішні ресурси
->
-> **Додаткові матеріали:**
-> - 📖 [Вид дієслова](https://uk.wikipedia.org/wiki/Вид_(мовознавство)) — Вікіпедія
-> - 📺 [Ukrainian Aspect Explained](https://www.youtube.com/watch?v=example) — відео пояснення
-> - 🎧 [Ukrainian Lessons Podcast: Aspect](https://www.ukrainianlessons.com/aspect/) — подкаст урок
-
 ---

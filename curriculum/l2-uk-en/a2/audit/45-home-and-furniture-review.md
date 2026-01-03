@@ -1,9 +1,9 @@
 # Audit Report: 45-home-and-furniture.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
+**Phase:** A2.5 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1212/1000
+- **Words:** ✅ 1172/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -14,13 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 51.3% (target 50-60% (A2.3))
+- **Immersion:** 🇺🇦 53.1% (target 50-60% (A2.3))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 78 | Included in Core |
+| **Intro/Narrative** | ✅ | 78 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **Rooms of the House** | ⚪️ | 85 | Skipped |
 | **Furniture** | ⚪️ | 111 | Skipped |
@@ -30,5 +30,4 @@
 | **Common Expressions** | ⚪️ | 0 | Skipped |
 | **Describing Location** | ⚪️ | 26 | Skipped |
 | **Useful Home Phrases** | ⚪️ | 161 | Skipped |
-| **Summary** | ✅ | 281 | Included in Core |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Summary** | ✅ | 241 | Included in Core |

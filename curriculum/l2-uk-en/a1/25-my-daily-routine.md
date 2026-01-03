@@ -131,11 +131,3 @@ In this module, you learned:
 ---
 
 **Coming up:** Module 26 will teach you adjective agreement for describing things!
-
-> [!resources] External Resources
->
-> **YouTube:** [Daily Routine in Ukrainian](https://www.youtube.com/watch?v=kY67m6y6Oyc) — Speak Ukrainian
->
-> **Grammar:** [Reflexive Verbs in Ukrainian](https://www.ukrainianlessons.com/reflexive-verbs/) — Ukrainian Lessons
->
-> **Reading:** [Daily Routine Text](https://ukrainianlanguage.uk/exercise-daily-routine/) — Ukrainian Language

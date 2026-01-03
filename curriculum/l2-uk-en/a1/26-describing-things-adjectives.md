@@ -214,15 +214,3 @@ Learning adjectives in pairs helps you remember them better:
 **Наступний урок:** Кольори та одяг!
 
 ---
-
-> [!resources] External Resources
->
-> **Vocabulary:**
->
-> - [Common Adjectives](https://www.ukrainianlessons.com/vocabulary-adjectives/) — Essential descriptive words
-> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons
->
-> **Grammar:**
->
-> - [Adjective Agreement](https://www.ukrainianlessons.com/adjectives-and-adverbs/) — Gender agreement
-> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
