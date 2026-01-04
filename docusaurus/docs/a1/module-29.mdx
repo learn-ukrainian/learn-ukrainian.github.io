@@ -18,6 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 
 ## Warm-up
@@ -344,7 +345,7 @@ For rain and snow, Ukrainian uses "йде" (goes):
 
 <Unjumble
   title="Weather Sentences"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Яка сьогодні погода надворі"}, {"jumbled": "", "answer": "Сьогодні тепло і сонячно"}, {"jumbled": "", "answer": "Взимку часто йде сніг"}, {"jumbled": "", "answer": "Влітку завжди дуже жарко"}, {"jumbled": "", "answer": "Весною часто йде дощ"}, {"jumbled": "", "answer": "У мене є собака"}, {"jumbled": "", "answer": "Мій кіт дуже білий"}, {"jumbled": "", "answer": "У парку багато дерев"}, {"jumbled": "", "answer": "В Карпатах є гори"}, {"jumbled": "", "answer": "Дніпро це велика річка"}, {"jumbled": "", "answer": "Я дуже люблю море"}, {"jumbled": "", "answer": "Сьогодні надворі дуже холодно"}]`)}
+  items={JSON.parse(`[{"jumbled": "погода / яка / сьогодні / надворі", "answer": "Яка сьогодні погода надворі"}, {"jumbled": "тепло / сьогодні / і / сонячно", "answer": "Сьогодні тепло і сонячно"}, {"jumbled": "йде / взимку / часто / сніг", "answer": "Взимку часто йде сніг"}, {"jumbled": "жарко / влітку / завжди / дуже", "answer": "Влітку завжди дуже жарко"}, {"jumbled": "дощ / весною / часто / йде", "answer": "Весною часто йде дощ"}, {"jumbled": "є / у мене / собака", "answer": "У мене є собака"}, {"jumbled": "кіт / мій / дуже / білий", "answer": "Мій кіт дуже білий"}, {"jumbled": "багато / у парку / дерев", "answer": "У парку багато дерев"}, {"jumbled": "гори / в Карпатах / є", "answer": "В Карпатах є гори"}, {"jumbled": "річка / Дніпро / велика / це", "answer": "Дніпро це велика річка"}, {"jumbled": "люблю / я / дуже / море", "answer": "Я дуже люблю море"}, {"jumbled": "холодно / надворі / сьогодні / дуже", "answer": "Сьогодні надворі дуже холодно"}]`)}
 />
 
 ### Weather and Nature Facts

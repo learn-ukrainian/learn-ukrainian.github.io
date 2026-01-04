@@ -18,7 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 ## Warm-up
 
@@ -28,7 +28,6 @@ Now that you can make comparisons (bigger, better), let's go to the extreme! Thi
 - How to form superlative adjectives (the best, the worst)
 - Irregular superlatives
 - Intensifiers (very, extremely, incredibly)
-
 
 ## Presentation
 
@@ -81,7 +80,6 @@ Superlatives are used like regular adjectives and agree in gender, number, and c
 - Це **найкраща** книга. (This is the best book.) — feminine
 - Він **найстарший** студент. (He's the oldest student.) — masculine
 - Вони **найкращі** друзі. (They're the best friends.) — plural
-
 
 ### Agreement Examples
 
@@ -227,6 +225,205 @@ Try to translate these common superlative phrases:
 
 ---
 
+
+
+## 🎯 Activities
+
+### Superlative Forms
+
+<MatchUp
+  title="Superlative Forms"
+  pairs={JSON.parse(`[{"left": "- кращий", "right": "найкращий"}, {"left": "- гірший", "right": "найгірший"}, {"left": "- більший", "right": "найбільший"}, {"left": "- менший", "right": "найменший"}, {"left": "- вищий", "right": "найвищий"}, {"left": "- нижчий", "right": "найнижчий"}, {"left": "- довший", "right": "найдовший"}, {"left": "- коротший", "right": "найкоротший"}, {"left": "- дорожчий", "right": "найдорожчий"}, {"left": "- дешевший", "right": "найдешевший"}, {"left": "- старіший", "right": "найстаріший"}, {"left": "- молодший", "right": "наймолодший"}]`)}
+/>
+
+### Form the Superlative
+
+<FillIn
+  title="Form the Superlative"
+  items={JSON.parse(`[{"sentence": "Це ___ книга. (добрий)", "answer": "найкраща", "options": ["краща", "найкраща", "добра", "найдобріша"]}, {"sentence": "Він ___ студент. (старий)", "answer": "найстаріший", "options": ["старіший", "найстаріший", "старий", "наймолодший"]}, {"sentence": "Це ___ місто. (великий)", "answer": "найбільше", "options": ["більше", "найбільше", "велике", "великіше"]}, {"sentence": "Вона ___ людина. (розумний)", "answer": "найрозумніша", "options": ["розумніша", "найрозумніша", "розумна", "надрозумна"]}, {"sentence": "Це ___ день. (поганий)", "answer": "найгірший", "options": ["гірший", "найгірший", "поганий", "найпоганіший"]}, {"sentence": "Дніпро — ___ річка. (довгий)", "answer": "найдовша", "options": ["довша", "найдовша", "довга", "найдовгіша"]}, {"sentence": "Говерла — ___ гора. (високий)", "answer": "найвища", "options": ["вища", "найвища", "висока", "найвисоча"]}, {"sentence": "Це ___ телефон. (дорогий)", "answer": "найдорожчий", "options": ["дорожчий", "найдорожчий", "дорогий", "найдорогіший"]}, {"sentence": "Він ___ спортсмен. (швидкий)", "answer": "найшвидший", "options": ["швидший", "найшвидший", "швидкий", "швидкіший"]}, {"sentence": "Це ___ фільм. (цікавий)", "answer": "найцікавіший", "options": ["цікавіший", "найцікавіший", "цікавий", "надцікавий"]}, {"sentence": "Це ___ рішення. (важливий)", "answer": "найважливіше", "options": ["важливіше", "найважливіше", "важливе", "надважливіше"]}, {"sentence": "Вона ___ акторка. (талановитий)", "answer": "найталановитіша", "options": ["талановитіша", "найталановитіша", "талановита", "надталановита"]}]`)}
+/>
+
+### Superlatives
+
+<Quiz
+  title="Superlatives"
+  questions={JSON.parse(`[{"question": "Which of the following prefixes is universally used in Ukrainian to form the superlative degree of adjectives?", "options": [{"text": "най-", "correct": true}, {"text": "пре-", "correct": false}, {"text": "над-", "correct": false}, {"text": "ви-", "correct": false}]}, {"question": "What is the correct superlative form of the irregular Ukrainian adjective \\\"кращий\\\" to mean \\\"the best\\\"?", "options": [{"text": "найкращий", "correct": true}, {"text": "добріший", "correct": false}, {"text": "найдобрий", "correct": false}, {"text": "прегарний", "correct": false}]}, {"question": "Which of the following superlative forms corresponds to the Ukrainian comparative \\\"більший,\\\" meaning \\\"the biggest\\\"?", "options": [{"text": "найбільший", "correct": true}, {"text": "найвеликий", "correct": false}, {"text": "великший", "correct": false}, {"text": "більшавий", "correct": false}]}, {"question": "What is the specific English meaning of the Ukrainian superlative adjective \\\"найгірший\\\"?", "options": [{"text": "the worst", "correct": true}, {"text": "better", "correct": false}, {"text": "very bad", "correct": false}, {"text": "more bad", "correct": false}]}, {"question": "What is the correct English translation for the Ukrainian superlative adjective \\\"найдорожчий\\\" in a retail context?", "options": [{"text": "the most expensive", "correct": true}, {"text": "the cheapest", "correct": false}, {"text": "extremely expensive", "correct": false}, {"text": "very dear", "correct": false}]}, {"question": "Which of the following Ukrainian adverbs serves as a common intensifier for adjectives, meaning \\\"very\\\"?", "options": [{"text": "дуже", "correct": true}, {"text": "ніж", "correct": false}, {"text": "за", "correct": false}, {"text": "під", "correct": false}]}, {"question": "What is the specific meaning of the Ukrainian intensifier \\\"надзвичайно\\\" when modifying an adjective?", "options": [{"text": "extraordinarily", "correct": true}, {"text": "extraordinarily badly", "correct": false}, {"text": "very quickly", "correct": false}, {"text": "somewhat", "correct": false}]}, {"question": "In a Ukrainian sentence, which grammatical categories must a superlative adjective agree with in relation to its noun?", "options": [{"text": "Gender, number, and case", "correct": true}, {"text": "Only gender and number", "correct": false}, {"text": "Only case and gender", "correct": false}, {"text": "Only number", "correct": false}]}, {"question": "In the phrase \\\"найкраща книга,\\\" what is the grammatical gender of the superlative adjective \\\"найкраща\\\"?", "options": [{"text": "Жіночий рід", "correct": true}, {"text": "Чоловічий рід", "correct": false}, {"text": "Середній рід", "correct": false}, {"text": "Множина", "correct": false}]}, {"question": "In the Ukrainian expression \\\"найбільше місто,\\\" what is the grammatical gender of the superlative form?", "options": [{"text": "Середній рід", "correct": true}, {"text": "Чоловічий рід", "correct": false}, {"text": "Жіночий рід", "correct": false}, {"text": "Множина", "correct": false}]}, {"question": "What is the primary morphological component added to a comparative adjective to create a superlative in Ukrainian?", "options": [{"text": "The prefix \\\"най-\\\"", "correct": true}, {"text": "The suffix \\\"-ший\\\"", "correct": false}, {"text": "The ending \\\"-ий\\\"", "correct": false}, {"text": "The particle \\\"більш\\\"", "correct": false}]}, {"question": "Which statement best describes the formation of superlatives for adjectives with irregular comparative forms?", "options": [{"text": "They follow the regular rule of adding \\\"най-\\\" to the comparative", "correct": true}, {"text": "They use a completely unique word root for the superlative", "correct": false}, {"text": "They require the prefix \\\"над-\\\" instead of \\\"най-\\\"", "correct": false}, {"text": "They cannot form a superlative degree in standard Ukrainian", "correct": false}]}]`)}
+/>
+
+### Superlative Rules
+
+<TrueFalse
+  title="Superlative Rules"
+  items={JSON.parse(`[{"statement": "Superlatives are formed with най- + comparative.", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Найкращий\\\" means \\\"the best.\\\"", "isTrue": true, "explanation": "Yes!"}, {"statement": "Superlatives don't agree in gender.", "isTrue": false, "explanation": "They do agree in gender, number, and case."}, {"statement": "\\\"Дуже\\\" is an intensifier meaning \\\"very.\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "Ukrainian superlative formation is regular.", "isTrue": true, "explanation": "Yes, always най- + comparative!"}, {"statement": "\\\"Найбільший\\\" means \\\"smaller.\\\"", "isTrue": false, "explanation": "\\\"Найбільший\\\" means \\\"biggest.\\\""}, {"statement": "\\\"Найдовший\\\" means \\\"longest.\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "Irregular comparatives also use най-.", "isTrue": true, "explanation": "Yes! кращий → найкращий."}, {"statement": "\\\"Найгірший\\\" is the superlative of \\\"добрий.\\\"", "isTrue": false, "explanation": "\\\"Найгірший\\\" is from \\\"поганий.\\\" \\\"Добрий\\\" gives \\\"найкращий.\\\""}, {"statement": "\\\"Неймовірно\\\" is an intensifier.", "isTrue": true, "explanation": "Yes! It means \\\"incredibly.\\\""}, {"statement": "Говерла is the highest mountain in Ukraine.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Different prefixes are used for different adjectives.", "isTrue": false, "explanation": "Always най-, no variation."}]`)}
+/>
+
+### Comparative vs Superlative
+
+<GroupSort
+  title="Comparative vs Superlative"
+  groups={JSON.parse(`{"Comparative": ["кращий", "гірший", "більший", "вищий", "довший", "дорожчий"], "Superlative": ["найкращий", "найгірший", "найбільший", "найвищий", "найдовший", "найдорожчий"]}`)}
+/>
+
+### Superlative Sentences
+
+<Unjumble
+  title="Superlative Sentences"
+  items={JSON.parse(`[{"jumbled": "це / безумовно / сьогодні / найкраща / нова / книга / у / цій / бібліотеці", "answer": "Це сьогодні найкраща нова книга у цій бібліотеці"}, {"jumbled": "він / зараз / найстаріший / і / найдосвідченіший / студент / у / нашому / університеті", "answer": "Він зараз найстаріший і найдосвідченіший студент у університеті"}, {"jumbled": "Україна / це / найбільша / і / найкрасивіша / країна / у / всій / Європі", "answer": "Україна найбільша і найкрасивіша країна у всій Європі"}, {"jumbled": "це / був / напевно / найгірший / і / найважчий / день / у / моєму / житті", "answer": "Це був найгірший і найважчий день у моєму житті"}, {"jumbled": "вона / справді / найрозумніша / і / найталановитіша / людина / у / нашій / команді", "answer": "Вона справді найрозумніша і найталановитіша людина у команді"}, {"jumbled": "великий / Дніпро / це / найдовша / і / найважливіша / річка / в / Україні", "answer": "Дніпро найдовша і найважливіша річка в Україні"}, {"jumbled": "цей / новий / український / фільм / дуже / цікавий / для / всіх / глядачів", "answer": "Цей новий український фільм дуже цікавий для всіх глядачів"}, {"jumbled": "він / мій / найкращий / і / найвірніший / друг / вже / багато / років", "answer": "Він мій найкращий і найвірніший друг вже багато років"}, {"jumbled": "моя / мила / мама / завжди / найкраща / і / найдобріша / у / світі", "answer": "Моя мама завжди найкраща і найдобріша у світі"}, {"jumbled": "це / був / дуже / дорогий / і / найгарніший / телефон / у / магазині", "answer": "Це був найдорожчий і найгарніший телефон у магазині"}, {"jumbled": "вона / надзвичайно / талановита / і / дуже / працьовита / молода / дівчина", "answer": "Вона надзвичайно талановита і дуже працьовита молода дівчина"}, {"jumbled": "Говерла / це / найвища / і / найпопулярніша / гора / в / українських / Карпатах", "answer": "Говерла найвища і найпопулярніша гора в українських Карпатах"}]`)}
+/>
+
+### Form the Superlative
+
+<ErrorCorrection title="Form the Superlative">
+  <ErrorCorrectionItem
+    sentence={`Це ___ книга. (best)`}
+    errorWord={`best`}
+    correctForm={`найкраща`}
+    options={[`краща`, `найкраща`, `добріша`, `найдобріша`]}
+    explanation={`Superlative of добра is найкраща.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Він ___ студент. (tallest)`}
+    errorWord={`tallest`}
+    correctForm={`найвищий`}
+    options={[`вищий`, `найвищий`, `високий`, `найвисокий`]}
+    explanation={`Superlative of високий is найвищий.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це ___ день. (worst)`}
+    errorWord={`worst`}
+    correctForm={`найгірший`}
+    options={[`гірший`, `найгірший`, `поганий`, `найпоганий`]}
+    explanation={`Superlative of поганий is найгірший.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Вона ___ людина. (smartest)`}
+    errorWord={`smartest`}
+    correctForm={`найрозумніша`}
+    options={[`розумніша`, `найрозумніша`, `розумна`, `надрозумна`]}
+    explanation={`Superlative of розумна is найрозумніша.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це ___ місто. (biggest)`}
+    errorWord={`biggest`}
+    correctForm={`найбільше`}
+    options={[`більше`, `найбільше`, `велике`, `надбільше`]}
+    explanation={`Superlative of велике is найбільше — neuter.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Це ___ річка. (longest)`}
+    errorWord={`longest`}
+    correctForm={`найдовша`}
+    options={[`довша`, `найдовша`, `довга`, `наддовга`]}
+    explanation={`Superlative of довга is найдовша.`}
+  />
+</ErrorCorrection>
+
+### World Records
+
+<Cloze
+  title="World Records"
+  passage={`Україна — ___ країна в Європі за територією. ___ річка в нашій країні — Дніпро. ___ гора — Говерла. ___ місто України — Київ. Це наше ___ і ___ серце.
+---
+Моя мама — ___ людина у світі! Мій друг — ___ хлопець у школі! Це був ___ день у моєму житті! Я був ___ щаслива людина. Ми бачили ___ краєвиди і ___ гори.`}
+  blanks={JSON.parse(`[{"answer": "найкраща", "options": ["найкраща", "краща", "добра"]}, {"answer": "найкращий", "options": ["найкращий", "кращий", "добрий"]}, {"answer": "найкращий", "options": ["найкращий", "кращий", "хороший"]}, {"answer": "найщасливіша", "options": ["найщасливіша", "щасливіша", "щаслива"]}, {"answer": "найгарніші", "options": ["найгарніші", "гарніші", "гарні"]}, {"answer": "найвищі", "options": ["найвищі", "вищі", "високі"]}, {"answer": "найкраща", "options": ["найкраща", "краща", "добра"]}, {"answer": "найкращий", "options": ["найкращий", "кращий", "добрий"]}, {"answer": "найкращий", "options": ["найкращий", "кращий", "хороший"]}, {"answer": "найщасливіша", "options": ["найщасливіша", "щасливіша", "щаслива"]}, {"answer": "найгарніші", "options": ["найгарніші", "гарніші", "гарні"]}, {"answer": "найвищі", "options": ["найвищі", "вищі", "високі"]}]`)}
+/>
+
+### The Best
+
+<Cloze
+  title="The Best"
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "Який твій найкращий фільм?", "options": ["Який твій найкращий фільм?", "Україна — велика країна?", "А найгірший?"]}, {"answer": "Мій найкращий фільм — \\\"Тіні забутих предків.\\\"", "options": ["Мій найкращий фільм — \\\"Тіні забутих предків.\\\"", "--", "Дніпро."]}, {"answer": "Чому?", "options": ["Чому?", "Україна — велика країна?", "--"]}, {"answer": "Тому що він надзвичайно гарний і важливий для української культури.", "options": ["Тому що він надзвичайно гарний і важливий для української культури.", "Говерла.", "Чому?"]}, {"answer": "А найгірший?", "options": ["А найгірший?", "Який твій найкращий фільм?", "Не хочу говорити про найгірше!"]}, {"answer": "Не хочу говорити про найгірше!", "options": ["Не хочу говорити про найгірше!", "Говерла.", "Яка найвища гора в Україні?"]}, {"answer": "--", "options": ["--", "Мій найкращий фільм — \\\"Тіні забутих предків.\\\"", "А найдовша річка?"]}, {"answer": "Яка найвища гора в Україні?", "options": ["Яка найвища гора в Україні?", "А найгірший?", "Не хочу говорити про найгірше!"]}, {"answer": "Говерла.", "options": ["Говерла.", "Не хочу говорити про найгірше!", "Так, найбільша в Європі!"]}, {"answer": "А найдовша річка?", "options": ["А найдовша річка?", "Не хочу говорити про найгірше!", "--"]}, {"answer": "Дніпро.", "options": ["Дніпро.", "Який твій найкращий фільм?", "А найгірший?"]}, {"answer": "Україна — велика країна?", "options": ["Україна — велика країна?", "Говерла.", "Не хочу говорити про найгірше!"]}, {"answer": "Так, найбільша в Європі!", "options": ["Так, найбільша в Європі!", "Тому що він надзвичайно гарний і важливий для української культури.", "Чому?"]}]`)}
+/>
+
+### Find Superlatives
+
+<HighlightMorphemes>
+  <HighlightMorphemesActivity
+  instruction={`Click on SUPERLATIVE forms only.`}
+    text={`Це найкраща книга! Він найстаріший студент. Україна — найбільша країна.
+---
+Дніпро — найдовша річка. Говерла — найвища гора. Це найгірший день.
+---
+Вона дуже талановита. Він найрозумніший. Це найдорожчий телефон.`}
+    morphemes={[
+    { word: `найкраща`, morpheme: `найкраща`, type: `whole` },
+    { word: `найстаріший`, morpheme: `найстаріший`, type: `whole` },
+    { word: `найбільша`, morpheme: `найбільша`, type: `whole` },
+    { word: `найдовша`, morpheme: `найдовша`, type: `whole` },
+    { word: `найвища`, morpheme: `найвища`, type: `whole` },
+    { word: `найгірший`, morpheme: `найгірший`, type: `whole` },
+    { word: `найрозумніший`, morpheme: `найрозумніший`, type: `whole` },
+    { word: `найдорожчий`, morpheme: `найдорожчий`, type: `whole` }
+  ]}
+  />
+</HighlightMorphemes>
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| ан | ɑn | An? | name | ч |  |
+| атака | ɐˈtɑkɐ | attack | noun | ж |  |
+| видання | vɪˈdɑnʲːɐ | edition; publication | noun | с |  |
+| вкрай | vkrɑj | extremely | noun | ч |  |
+| всюди | ˈvsʲudɪ | everywhere | adv |  |  |
+| ле | lɛ | Le? | other |  |  |
+| можливо | moʒˈlɪʋo | possibly | adv |  |  |
+| надзвичайно | nɐdzzvɪˈt͡ʃɑjno | extraordinarily | adv |  |  |
+| най | nɑj | most (prefix) | other |  |  |
+| найбільший | nɑjˈbʲilʲʃɪj | biggest | adj | ч |  |
+| найвищий | nɑjˈvɪʃt͡ʃɪj | highest | adj | ч |  |
+| найвідоміший | nɑjviˈdɔmxiʃɪj | most famous | adj |  |  |
+| найгостинніший | nɑjhosˈtʲɪnːiʃɪj | most hospitable | adj |  |  |
+| найгірший | nɑjˈhʲirʃɪj | worst | adj | ч |  |
+| найдешевший | nɑjdeˈʃɛu̯ʃɪj | cheapest | adj | ч |  |
+| найдивовижніший | nɑjdɪvoˈvɪʒnʲiʃɪj | most amazing | adj | с |  |
+| найдовший | nɑjˈdɔu̯ʃɪj | longest | adj | ч |  |
+| найдорожчий | nɑjdoˈrɔʒt͡ʃɪj | most expensive | adj | ч |  |
+| найкоротший | nɑjkoˈrɔtʃɪj | shortest | adj | ч |  |
+| найкрасивіший | nɑjkrɐsɪˈvʲiʃɪj | most beautiful | adj |  |  |
+| найкраще | nɑjˈkrɑʃt͡ʃe | best (adv) | adj | с |  |
+| найменший | nɑjˈmɛnʃɪj | smallest | adj | ч |  |
+| найнижчий | nɑjˈnɪʒt͡ʃɪj | lowest | adj | ч |  |
+| найновіший | nɑjnoˈvʲiʃɪj | newest | adj | ч |  |
+| найпотужніший | nɑjpoˈtuʒnʲiʃɪj | most powerful | adj | ч |  |
+| найрідкісніший | nɑjˈrʲidkʲisʲnʲiʃɪj | rarest | adj | ж |  |
+| найсмачніший | nɑjsmɐt͡ʃˈnʲiʃɪj | tastiest | adj | ч |  |
+| найстарший | nɑjˈstɑrʃɪj | eldest | adj | ч |  |
+| найстаріший | nɑjstɐˈrʲiʃɪj | oldest (objects) | adj | ч |  |
+| найчарівніший | nɑjt͡ʃɐˈrʲivnʲiʃɪj | most charming | adj | ж |  |
+| найшвидший | nɑjˈʃvɪdʃɪj | fastest | adj | ч |  |
+| найщиріший | nɑjʃt͡ʃɪˈrʲiʃɪj | most sincere | adj | ч |  |
+| небудь | ˈnɛbudʲ | any- | pron | с |  |
+| неймовірно | nejmoˈvʲirno | incredibly | adv |  |  |
+| новинка | noˈvɪnkɐ | novelty | noun | ж |  |
+| оборона | oboˈrɔnɐ | defense | noun | ж |  |
+| оптимістичний | optɪmisˈtɪt͡ʃnɪj | optimistic | adj | ж |  |
+| папорот | ˈpɑporotʲ | fern | noun | ж |  |
+| печера | peˈt͡ʃɛrɐ | cave | noun | ж |  |
+| рідкісний | ˈrʲidkʲisnɪj | rare | adj | с |  |
+| страшенно | strɐˈʃɛnːo | terribly; awfully | adv |  |  |
+| талановитий | tɐlɐnoˈvɪtɪj | talented | adj | ж |  |
+| унікальний | uniˈkɑlʲnɪj | unique | adj | с |  |
+| хіта | ˈxʲitɐ | hit (gen) | noun | ч |  |
+| цвіт | t͡svʲit | blossom | noun | ч |  |
+| шлях | ʃlʲɑx | way; path | noun | ч |  |
+| іра | ˈirɐ | Ira | name | ж |  |
+
 ## 📋 Summary
 
 ## What You Learned
@@ -260,459 +457,14 @@ Use these to add emotion without comparison:
 
 ## Need More Practice?
 
-:::info[External Resources]
-- 🎥 [Comparative Adjectives](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
-- 📖 [Degrees of Comparison](https://www.talkukrainian.com/adjectives-degrees-comparison/)
-- 📝 [Adjectives Guide](https://www.ukrainianlessons.com/vocabulary-adjectives/)
-- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-:::
-
-
 ---
 
-## 🎯 Activities
-
-### Superlative Forms
-
-<MatchUp pairs={[
-  { left: `кращий`, right: `найкращий` },
-  { left: `гірший`, right: `найгірший` },
-  { left: `більший`, right: `найбільший` },
-  { left: `менший`, right: `найменший` },
-  { left: `вищий`, right: `найвищий` },
-  { left: `нижчий`, right: `найнижчий` },
-  { left: `довший`, right: `найдовший` },
-  { left: `коротший`, right: `найкоротший` },
-  { left: `дорожчий`, right: `найдорожчий` },
-  { left: `дешевший`, right: `найдешевший` },
-  { left: `старіший`, right: `найстаріший` },
-  { left: `молодший`, right: `наймолодший` }
-]} />
-
-### Form the Superlative
-
-<FillIn items={[
-  {
-    sentence: `Це ___ книга. (добрий)`,
-    answer: `найкраща`,
-    options: [`краща`, `найкраща`, `добра`, `найдобріша`]
-  },  {
-    sentence: `Він ___ студент. (старий)`,
-    answer: `найстаріший`,
-    options: [`старіший`, `найстаріший`, `старий`, `наймолодший`]
-  },  {
-    sentence: `Це ___ місто. (великий)`,
-    answer: `найбільше`,
-    options: [`більше`, `найбільше`, `велике`, `великіше`]
-  },  {
-    sentence: `Вона ___ людина. (розумний)`,
-    answer: `найрозумніша`,
-    options: [`розумніша`, `найрозумніша`, `розумна`, `надрозумна`]
-  },  {
-    sentence: `Це ___ день. (поганий)`,
-    answer: `найгірший`,
-    options: [`гірший`, `найгірший`, `поганий`, `найпоганіший`]
-  },  {
-    sentence: `Дніпро — ___ річка. (довгий)`,
-    answer: `найдовша`,
-    options: [`довша`, `найдовша`, `довга`, `найдовгіша`]
-  },  {
-    sentence: `Говерла — ___ гора. (високий)`,
-    answer: `найвища`,
-    options: [`вища`, `найвища`, `висока`, `найвисоча`]
-  },  {
-    sentence: `Це ___ телефон. (дорогий)`,
-    answer: `найдорожчий`,
-    options: [`дорожчий`, `найдорожчий`, `дорогий`, `найдорогіший`]
-  },  {
-    sentence: `Він ___ спортсмен. (швидкий)`,
-    answer: `найшвидший`,
-    options: [`швидший`, `найшвидший`, `швидкий`, `швидкіший`]
-  },  {
-    sentence: `Це ___ фільм. (цікавий)`,
-    answer: `найцікавіший`,
-    options: [`цікавіший`, `найцікавіший`, `цікавий`, `надцікавий`]
-  },  {
-    sentence: `Це ___ рішення. (важливий)`,
-    answer: `найважливіше`,
-    options: [`важливіше`, `найважливіше`, `важливе`, `надважливіше`]
-  },  {
-    sentence: `Вона ___ акторка. (талановитий)`,
-    answer: `найталановитіша`,
-    options: [`талановитіша`, `найталановитіша`, `талановита`, `надталановита`]
-  }
-]} />
-
-### Superlatives
-
-<Quiz questions={[
-  {
-    question: `Which of the following prefixes is universally used in Ukrainian to form the superlative degree of adjectives?`,
-    options: [
-      { text: `най-`, correct: true },
-      { text: `пре-`, correct: false },
-      { text: `над-`, correct: false },
-      { text: `ви-`, correct: false }
-    ]
-  },  {
-    question: `What is the correct superlative form of the irregular Ukrainian adjective \"кращий\" to mean \"the best\"?`,
-    options: [
-      { text: `найкращий`, correct: true },
-      { text: `добріший`, correct: false },
-      { text: `найдобрий`, correct: false },
-      { text: `прегарний`, correct: false }
-    ]
-  },  {
-    question: `Which of the following superlative forms corresponds to the Ukrainian comparative \"більший,\" meaning \"the biggest\"?`,
-    options: [
-      { text: `найбільший`, correct: true },
-      { text: `найвеликий`, correct: false },
-      { text: `великший`, correct: false },
-      { text: `більшавий`, correct: false }
-    ]
-  },  {
-    question: `What is the specific English meaning of the Ukrainian superlative adjective \"найгірший\"?`,
-    options: [
-      { text: `the worst`, correct: true },
-      { text: `better`, correct: false },
-      { text: `very bad`, correct: false },
-      { text: `more bad`, correct: false }
-    ]
-  },  {
-    question: `What is the correct English translation for the Ukrainian superlative adjective \"найдорожчий\" in a retail context?`,
-    options: [
-      { text: `the most expensive`, correct: true },
-      { text: `the cheapest`, correct: false },
-      { text: `extremely expensive`, correct: false },
-      { text: `very dear`, correct: false }
-    ]
-  },  {
-    question: `Which of the following Ukrainian adverbs serves as a common intensifier for adjectives, meaning \"very\"?`,
-    options: [
-      { text: `дуже`, correct: true },
-      { text: `ніж`, correct: false },
-      { text: `за`, correct: false },
-      { text: `під`, correct: false }
-    ]
-  },  {
-    question: `What is the specific meaning of the Ukrainian intensifier \"надзвичайно\" when modifying an adjective?`,
-    options: [
-      { text: `extraordinarily`, correct: true },
-      { text: `extraordinarily badly`, correct: false },
-      { text: `very quickly`, correct: false },
-      { text: `somewhat`, correct: false }
-    ]
-  },  {
-    question: `In a Ukrainian sentence, which grammatical categories must a superlative adjective agree with in relation to its noun?`,
-    options: [
-      { text: `Gender, number, and case`, correct: true },
-      { text: `Only gender and number`, correct: false },
-      { text: `Only case and gender`, correct: false },
-      { text: `Only number`, correct: false }
-    ]
-  },  {
-    question: `In the phrase \"найкраща книга,\" what is the grammatical gender of the superlative adjective \"найкраща\"?`,
-    options: [
-      { text: `Жіночий рід`, correct: true },
-      { text: `Чоловічий рід`, correct: false },
-      { text: `Середній рід`, correct: false },
-      { text: `Множина`, correct: false }
-    ]
-  },  {
-    question: `In the Ukrainian expression \"найбільше місто,\" what is the grammatical gender of the superlative form?`,
-    options: [
-      { text: `Середній рід`, correct: true },
-      { text: `Чоловічий рід`, correct: false },
-      { text: `Жіночий рід`, correct: false },
-      { text: `Множина`, correct: false }
-    ]
-  },  {
-    question: `What is the primary morphological component added to a comparative adjective to create a superlative in Ukrainian?`,
-    options: [
-      { text: `The prefix \"най-\"`, correct: true },
-      { text: `The suffix \"-ший\"`, correct: false },
-      { text: `The ending \"-ий\"`, correct: false },
-      { text: `The particle \"більш\"`, correct: false }
-    ]
-  },  {
-    question: `Which statement best describes the formation of superlatives for adjectives with irregular comparative forms?`,
-    options: [
-      { text: `They follow the regular rule of adding \"най-\" to the comparative`, correct: true },
-      { text: `They use a completely unique word root for the superlative`, correct: false },
-      { text: `They require the prefix \"над-\" instead of \"най-\"`, correct: false },
-      { text: `They cannot form a superlative degree in standard Ukrainian`, correct: false }
-    ]
-  }
-]} />
-
-### Superlative Rules
-
-<TrueFalse items={[
-  {
-    statement: `Superlatives are formed with най- + comparative.`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `\"Найкращий\" means \"the best.\"`,
-    isTrue: true,
-    explanation: `Yes!`
-  },  {
-    statement: `Superlatives don't agree in gender.`,
-    isTrue: false,
-    explanation: `They do agree in gender, number, and case.`
-  },  {
-    statement: `\"Дуже\" is an intensifier meaning \"very.\"`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `Ukrainian superlative formation is regular.`,
-    isTrue: true,
-    explanation: `Yes, always най- + comparative!`
-  },  {
-    statement: `\"Найбільший\" means \"smaller.\"`,
-    isTrue: false,
-    explanation: `\"Найбільший\" means \"biggest.\"`
-  },  {
-    statement: `\"Найдовший\" means \"longest.\"`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `Irregular comparatives also use най-.`,
-    isTrue: true,
-    explanation: `Yes! кращий → найкращий.`
-  },  {
-    statement: `\"Найгірший\" is the superlative of \"добрий.\"`,
-    isTrue: false,
-    explanation: `\"Найгірший\" is from \"поганий.\" \"Добрий\" gives \"найкращий.\"`
-  },  {
-    statement: `\"Неймовірно\" is an intensifier.`,
-    isTrue: true,
-    explanation: `Yes! It means \"incredibly.\"`
-  },  {
-    statement: `Говерла is the highest mountain in Ukraine.`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `Different prefixes are used for different adjectives.`,
-    isTrue: false,
-    explanation: `Always най-, no variation.`
-  }
-]} />
-
-### Comparative vs Superlative
-
-<GroupSort groups={{
-  "Comparative": ["кращий", "гірший", "більший", "вищий", "довший", "дорожчий"],
-  "Superlative": ["найкращий", "найгірший", "найбільший", "найвищий", "найдовший", "найдорожчий"]
-}} />
-
-### Superlative Sentences
-
-<Unjumble items={[
-  { jumbled: `це / безумовно / сьогодні / найкраща / нова / книга / у / цій / бібліотеці`, answer: `Це сьогодні найкраща нова книга у цій бібліотеці` },
-  { jumbled: `він / зараз / найстаріший / і / найдосвідченіший / студент / у / нашому / університеті`, answer: `Він зараз найстаріший і найдосвідченіший студент у університеті` },
-  { jumbled: `Україна / це / найбільша / і / найкрасивіша / країна / у / всій / Європі`, answer: `Україна найбільша і найкрасивіша країна у всій Європі` },
-  { jumbled: `це / був / напевно / найгірший / і / найважчий / день / у / моєму / житті`, answer: `Це був найгірший і найважчий день у моєму житті` },
-  { jumbled: `вона / справді / найрозумніша / і / найталановитіша / людина / у / нашій / команді`, answer: `Вона справді найрозумніша і найталановитіша людина у команді` },
-  { jumbled: `великий / Дніпро / це / найдовша / і / найважливіша / річка / в / Україні`, answer: `Дніпро найдовша і найважливіша річка в Україні` },
-  { jumbled: `цей / новий / український / фільм / дуже / цікавий / для / всіх / глядачів`, answer: `Цей новий український фільм дуже цікавий для всіх глядачів` },
-  { jumbled: `він / мій / найкращий / і / найвірніший / друг / вже / багато / років`, answer: `Він мій найкращий і найвірніший друг вже багато років` },
-  { jumbled: `моя / мила / мама / завжди / найкраща / і / найдобріша / у / світі`, answer: `Моя мама завжди найкраща і найдобріша у світі` },
-  { jumbled: `це / був / дуже / дорогий / і / найгарніший / телефон / у / магазині`, answer: `Це був найдорожчий і найгарніший телефон у магазині` },
-  { jumbled: `вона / надзвичайно / талановита / і / дуже / працьовита / молода / дівчина`, answer: `Вона надзвичайно талановита і дуже працьовита молода дівчина` },
-  { jumbled: `Говерла / це / найвища / і / найпопулярніша / гора / в / українських / Карпатах`, answer: `Говерла найвища і найпопулярніша гора в українських Карпатах` }
-]} />
-
-### Form the Superlative
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Це ___ книга.`}
-    errorWord={`best`}
-    correctForm={`найкраща`}
-    options={[`краща`, `найкраща`, `добріша`, `найдобріша`]}
-    explanation={`Superlative of добра is найкраща.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він ___ студент.`}
-    errorWord={`tallest`}
-    correctForm={`найвищий`}
-    options={[`вищий`, `найвищий`, `високий`, `найвисокий`]}
-    explanation={`Superlative of високий is найвищий.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це ___ день.`}
-    errorWord={`worst`}
-    correctForm={`найгірший`}
-    options={[`гірший`, `найгірший`, `поганий`, `найпоганий`]}
-    explanation={`Superlative of поганий is найгірший.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона ___ людина.`}
-    errorWord={`smartest`}
-    correctForm={`найрозумніша`}
-    options={[`розумніша`, `найрозумніша`, `розумна`, `надрозумна`]}
-    explanation={`Superlative of розумна is найрозумніша.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це ___ місто.`}
-    errorWord={`biggest`}
-    correctForm={`найбільше`}
-    options={[`більше`, `найбільше`, `велике`, `надбільше`]}
-    explanation={`Superlative of велике is найбільше — neuter.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Це ___ річка.`}
-    errorWord={`longest`}
-    correctForm={`найдовша`}
-    options={[`довша`, `найдовша`, `довга`, `наддовга`]}
-    explanation={`Superlative of довга is найдовша.`}
-  />
-</ErrorCorrection>
-
-### World Records
-
-<Cloze
-  passage={`Україна — [___:1] країна в Європі за територією. [___:2] річка в нашій країні — Дніпро. [___:3] гора — Говерла. [___:4] місто України — Київ. Це наше [___:5] і [___:6] серце.`}
-  blanks={[{ index: 0, answer: `найкраща`, options: [`найкраща`, `краща`, `добра`] }, { index: 1, answer: `найкращий`, options: [`найкращий`, `кращий`, `добрий`] }, { index: 2, answer: `найкращий`, options: [`найкращий`, `кращий`, `хороший`] }, { index: 3, answer: `найщасливіша`, options: [`найщасливіша`, `щасливіша`, `щаслива`] }, { index: 4, answer: `найгарніші`, options: [`найгарніші`, `гарніші`, `гарні`] }, { index: 5, answer: `найвищі`, options: [`найвищі`, `вищі`, `високі`] }]}
-/>
-
-### The Best
-
-<DialogueReorder lines={[
-  { text: `Який твій найкращий фільм?`, order: 1 },
-  { text: `Мій найкращий фільм — \"Тіні забутих предків.\"`, order: 2 },
-  { text: `Чому?`, order: 3 },
-  { text: `Тому що він надзвичайно гарний і важливий для української культури.`, order: 4 },
-  { text: `А найгірший?`, order: 5 },
-  { text: `Не хочу говорити про найгірше!`, order: 6 },
-  { text: `Яка найвища гора в Україні?`, order: 7 },
-  { text: `Говерла.`, order: 8 },
-  { text: `А найдовша річка?`, order: 9 },
-  { text: `Дніпро.`, order: 10 },
-  { text: `Україна — велика країна?`, order: 11 },
-  { text: `Так, найбільша в Європі!`, order: 12 }
-]} />
-
-### Find Superlatives
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Click on SUPERLATIVE forms only.
-
-Це найкраща книга! Він найстаріший студент. Україна — найбільша країна.`}
-  correctWords={[`найкраща`, `найстаріший`, `найбільша`]}
-/>
-<MarkTheWordsActivity
-  text={`Дніпро — найдовша річка. Говерла — найвища гора. Це найгірший день.`}
-  correctWords={[`найдовша`, `найвища`, `найгірший`]}
-/>
-<MarkTheWordsActivity
-  text={`Вона дуже талановита. Він найрозумніший. Це найдорожчий телефон.`}
-  correctWords={[`найрозумніший`, `найдорожчий`]}
-/>
-</MarkTheWords>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `This is the best book.`,
-    options: [
-      { text: `Це найкраща книга.`, correct: true },
-      { text: `Це краща книга.`, correct: false },
-      { text: `Це добра книга.`, correct: false },
-      { text: `Він найстаріший студент.`, correct: true },
-      { text: `Він старіший студент.`, correct: false },
-      { text: `Він старий студент.`, correct: false },
-      { text: `Україна — найбільша країна в Європі.`, correct: true },
-      { text: `Україна — більша країна в Європі.`, correct: false },
-      { text: `Україна — велика країна в Європі.`, correct: false },
-      { text: `Це найгірший день.`, correct: true },
-      { text: `Це гірший день.`, correct: false },
-      { text: `Це поганий день.`, correct: false },
-      { text: `Дніпро — найдовша річка.`, correct: true },
-      { text: `Дніпро — довша річка.`, correct: false },
-      { text: `Дніпро — довга річка.`, correct: false },
-      { text: `Вона найрозумніша людина.`, correct: true },
-      { text: `Вона розумніша людина.`, correct: false },
-      { text: `Вона розумна людина.`, correct: false },
-      { text: `Це дуже цікаво.`, correct: true },
-      { text: `Це найцікавіше.`, correct: false },
-      { text: `Це цікаве.`, correct: false },
-      { text: `Це надзвичайно гарно.`, correct: true },
-      { text: `Це гарніше.`, correct: false },
-      { text: `Це гарно.`, correct: false },
-      { text: `Моя мама найкраща!`, correct: true },
-      { text: `Моя мама краща!`, correct: false },
-      { text: `Моя мама добра!`, correct: false },
-      { text: `Це найдорожчий телефон.`, correct: true },
-      { text: `Це дорожчий телефон.`, correct: false },
-      { text: `Це дорогий телефон.`, correct: false },
-      { text: `Він найшвидший спортсмен.`, correct: true },
-      { text: `Він швидший спортсмен.`, correct: false },
-      { text: `Він швидкий спортсмен.`, correct: false },
-      { text: `Це найдешевший варіант.`, correct: true },
-      { text: `Це дешевший варіант.`, correct: false },
-      { text: `Це дешевий варіант.`, correct: false }
-    ]
-  }
-]} />
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| --------- |  |  | other | - |  |
-| атака |  |  | noun | ж |  |
-| варіант |  |  | noun | ч |  |
-| видання |  |  | noun | с |  |
-| вкрай |  |  | noun | ч |  |
-| всюди |  |  | adv | - |  |
-| гарніше |  |  | adv | - |  |
-| господар |  |  | noun | ч |  |
-| ле |  |  | other | - |  |
-| можливо |  |  | adv | - |  |
-| надзвичайно |  |  | adv | - |  |
-| най |  |  | other | - |  |
-| найвищий |  |  | adj | ч |  |
-| найвідоміший |  |  | adj | - |  |
-| найглибший |  |  | adj | ж |  |
-| найгостинніший |  |  | adj | - |  |
-| найгірший |  |  | adj | ч |  |
-| найдешевший |  |  | adj | ч |  |
-| найдивовижніший |  |  | adj | с |  |
-| найдовший |  |  | adj | ч |  |
-| найдорожчий |  |  | adj | ч |  |
-| найкоротший |  |  | adj | ч |  |
-| найкрасивіший |  |  | adj | - |  |
-| найкращ |  |  | adv | - |  |
-| найкраще |  |  | adj | с |  |
-| найменший |  |  | adj | ч |  |
-| найпотужніший |  |  | adj | ч |  |
-| найрозумніший |  |  | adj | ч |  |
-| найрідкісніший |  |  | adj | ж |  |
-| найсмачніший |  |  | adj | ч |  |
-| найстарший |  |  | adj | ч |  |
-| найстаріший |  |  | adj | ч |  |
-| найцікавіше |  |  | noun | с |  |
-| найцікавіший |  |  | adj | - |  |
-| найчарівніший |  |  | adj | ж |  |
-| найшвидший |  |  | adj | ч |  |
-| найщиріший |  |  | adj | ч |  |
-| небудь |  |  | pron | с |  |
-| неймовірно |  |  | adv | - |  |
-| новинка |  |  | noun | ж |  |
-| оборона |  |  | noun | ж |  |
-| оптимістичний |  |  | adj | ж |  |
-| папорот |  |  | noun | ж |  |
-| печера |  |  | noun | ж |  |
-| рідкісний |  |  | adj | с |  |
-| рішення |  |  | noun | с |  |
-| спортсмен |  |  | noun | ч |  |
-| страшенно |  |  | adv | - |  |
-| талановитий |  |  | adj | ж |  |
-| тоді |  |  | adv | - |  |
-| унікальний |  |  | adj | с |  |
-| хіта |  |  | noun | ч |  |
-| цвіт |  |  | noun | ч |  |
-| шлях |  |  | noun | ч |  |
+> [!resources] 🔗 External Resources
+>
+> **📖 Articles:**
+> - [Adjectives Guide](https://www.ukrainianlessons.com/vocabulary-adjectives/) — Unknown
+> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Unknown
+>
+> **🌐 Websites:**
+> - [Comparative Adjectives](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
+> - [Degrees of Comparison](https://www.talkukrainian.com/adjectives-degrees-comparison/) — Unknown

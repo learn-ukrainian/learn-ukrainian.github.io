@@ -18,6 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 
 ## Warm-up
@@ -244,14 +245,14 @@ This pattern consistency makes Ukrainian **easier to learn** than languages with
 
 <Anagram
   title="Build the Word"
-  items={JSON.parse(`[{"scrambled": "с т і л", "answer": "стіл", "hint": "table"}, {"scrambled": "к н и г а", "answer": "книга", "hint": "book"}, {"scrambled": "в і к н о", "answer": "вікно", "hint": "window"}, {"scrambled": "д в е р і", "answer": "двері", "hint": "door"}, {"scrambled": "к і м н а т а", "answer": "кімната", "hint": "room"}, {"scrambled": "д і м", "answer": "дім", "hint": "house"}, {"scrambled": "м і с т о", "answer": "місто", "hint": "city"}, {"scrambled": "с е л о", "answer": "село", "hint": "village"}, {"scrambled": "р і ч к а", "answer": "річка", "hint": "river"}, {"scrambled": "м о р е", "answer": "море", "hint": "sea"}, {"scrambled": "х л і б", "answer": "хліб", "hint": "bread"}, {"scrambled": "в о д а", "answer": "вода", "hint": "water"}]`)}
+  items={JSON.parse(`[{"scrambled": "с т і л", "answer": "стіл", "hint": ""}, {"scrambled": "к н и г а", "answer": "книга", "hint": ""}, {"scrambled": "в і к н о", "answer": "вікно", "hint": ""}, {"scrambled": "д в е р і", "answer": "двері", "hint": ""}, {"scrambled": "к і м н а т а", "answer": "кімната", "hint": ""}, {"scrambled": "д і м", "answer": "дім", "hint": ""}, {"scrambled": "м і с т о", "answer": "місто", "hint": ""}, {"scrambled": "с е л о", "answer": "село", "hint": ""}, {"scrambled": "р і ч к а", "answer": "річка", "hint": ""}, {"scrambled": "м о р е", "answer": "море", "hint": ""}, {"scrambled": "х л і б", "answer": "хліб", "hint": ""}, {"scrambled": "в о д а", "answer": "вода", "hint": ""}]`)}
 />
 
 ### More Words
 
 <Anagram
   title="More Words"
-  items={JSON.parse(`[{"scrambled": "м о л о к о", "answer": "молоко", "hint": "milk"}, {"scrambled": "я б л у к о", "answer": "яблуко", "hint": "apple"}, {"scrambled": "м ' я с о", "answer": "м'ясо", "hint": "meat"}, {"scrambled": "р и б а", "answer": "риба", "hint": "fish"}, {"scrambled": "о в о ч і", "answer": "овочі", "hint": "vegetables"}, {"scrambled": "к а р т о п л я", "answer": "картопля", "hint": "potato"}, {"scrambled": "п о м і д о р", "answer": "помідор", "hint": "tomato"}, {"scrambled": "с т і л е ц ь", "answer": "стілець", "hint": "chair"}, {"scrambled": "к р і с л о", "answer": "крісло", "hint": "armchair"}, {"scrambled": "ш а ф а", "answer": "шафа", "hint": "wardrobe"}, {"scrambled": "д и в а н", "answer": "диван", "hint": "sofa"}, {"scrambled": "л і ж к о", "answer": "ліжко", "hint": "bed"}]`)}
+  items={JSON.parse(`[{"scrambled": "м о л о к о", "answer": "молоко", "hint": ""}, {"scrambled": "я б л у к о", "answer": "яблуко", "hint": ""}, {"scrambled": "м ' я с о", "answer": "м'ясо", "hint": ""}, {"scrambled": "р и б а", "answer": "риба", "hint": ""}, {"scrambled": "о в о ч і", "answer": "овочі", "hint": ""}, {"scrambled": "к а р т о п л я", "answer": "картопля", "hint": ""}, {"scrambled": "п о м і д о р", "answer": "помідор", "hint": ""}, {"scrambled": "с т і л е ц ь", "answer": "стілець", "hint": ""}, {"scrambled": "к р і с л о", "answer": "крісло", "hint": ""}, {"scrambled": "ш а ф а", "answer": "шафа", "hint": ""}, {"scrambled": "д и в а н", "answer": "диван", "hint": ""}, {"scrambled": "л і ж к о", "answer": "ліжко", "hint": ""}]`)}
 />
 
 ### Gender Pronoun Match

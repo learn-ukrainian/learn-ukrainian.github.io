@@ -295,7 +295,7 @@
     options:
     - зробили
     - розробили
-    explanation: Use "зробили" (simple did) or "переробили" (redid). "Розробили" implies "developed/designed" which is weird
+    explanation: Use "зробили" or "переробили" (redid). "Розробили" implies "developed/designed" which is weird
       for "repair".
   - sentence: Я **написав** трохи, 5 хвилин. (Brief process)
     error: написав
@@ -303,7 +303,7 @@
     options:
     - пописав
     - написав
-    explanation: Brief process uses По-. "Написав" implies a result (finished thing).
+    explanation: Brief process uses По-. "Написав" implies a result.
 - type: match-up
   title: Give and Take
   pairs:

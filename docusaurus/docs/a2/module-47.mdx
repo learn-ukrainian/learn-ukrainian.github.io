@@ -18,9 +18,8 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
-
-# Emotions & Personality
 
 ## Розминка (Warm-up)
 
@@ -241,13 +240,14 @@ Many negative traits use **не-** prefix: добрий → **не**добрий
 Сміливість і чесність — це головні українські цінності.
 
 
+
 ## 🎯 Activities
 
 ### Emotion Recognition
 
 <Quiz
   title="Emotion Recognition"
-  questions={JSON.parse(`[{"question": "What emotion does the Ukrainian word \\\"радість\\\" primarily express to others?", "options": [{"text": "Joy", "correct": true}, {"text": "Anger", "correct": false}, {"text": "Fear", "correct": false}, {"text": "Sadness", "correct": false}]}, {"question": "If someone says \\\"Я хвилююся\\\", what state are they likely describing?", "options": [{"text": "They are worried", "correct": true}, {"text": "They are happy", "correct": false}, {"text": "They are angry", "correct": false}, {"text": "They are sleepy", "correct": false}]}, {"question": "What is the direct opposite personality trait of \\\"сміливий\\\" (brave)?", "options": [{"text": "Боягузливий", "correct": true}, {"text": "Добрий", "correct": false}, {"text": "Веселий", "correct": false}, {"text": "Розумний", "correct": false}]}, {"question": "Which word would you use to describe a feeling of deep disappointment?", "options": [{"text": "Розчарований", "correct": true}, {"text": "Задоволений", "correct": false}, {"text": "Здивований", "correct": false}, {"text": "Щасливий", "correct": false}]}, {"question": "What does the quality of \\\"щирість\\\" represent in a person's character?", "options": [{"text": "Sincerity", "correct": true}, {"text": "Courage", "correct": false}, {"text": "Intelligence", "correct": false}, {"text": "Laziness", "correct": false}]}, {"question": "Who was famous in Ukrainian history for their emotional openness?", "options": [{"text": "Cossacks", "correct": true}, {"text": "Farmers", "correct": false}, {"text": "Merchants", "correct": false}, {"text": "Builders", "correct": false}]}, {"question": "Which grammatical case is required when using the verb \\\"боятися\\\" (to fear)?", "options": [{"text": "Genitive", "correct": true}, {"text": "Nominative", "correct": false}, {"text": "Dative", "correct": false}, {"text": "Instrumental", "correct": false}]}, {"question": "If a person is \\\"чесний\\\", how do they typically behave?", "options": [{"text": "They are honest", "correct": true}, {"text": "They are lazy", "correct": false}, {"text": "They are angry", "correct": false}, {"text": "They are fearful", "correct": false}]}]`)}
+  questions={JSON.parse(`[{"question": "What emotion does the Ukrainian word \\\"радість\\\" primarily express to others?", "options": [{"text": "Joy", "correct": true}, {"text": "Anger", "correct": false}, {"text": "Fear", "correct": false}, {"text": "Sadness", "correct": false}]}, {"question": "If someone says \\\"Я хвилююся\\\", what state are they likely describing?", "options": [{"text": "They are worried", "correct": true}, {"text": "They are happy", "correct": false}, {"text": "They are angry", "correct": false}, {"text": "They are sleepy", "correct": false}]}, {"question": "What is the direct opposite personality trait of \\\"сміливий\\\" (brave)?", "options": [{"text": "Боягузливий", "correct": true}, {"text": "Добрий", "correct": false}, {"text": "Веселий", "correct": false}, {"text": "Розумний", "correct": false}]}, {"question": "Which word would you use to describe a feeling of deep disappointment?", "options": [{"text": "Розчарований", "correct": true}, {"text": "Задоволений", "correct": false}, {"text": "Здивований", "correct": false}, {"text": "Щасливий", "correct": false}]}, {"question": "What does the quality of \\\"щирість\\\" represent in a person's character?", "options": [{"text": "Sincerity", "correct": true}, {"text": "Courage", "correct": false}, {"text": "Intelligence", "correct": false}, {"text": "Laziness", "correct": false}]}, {"question": "Who was famous in Ukrainian history for their emotional openness?", "options": [{"text": "Cossacks", "correct": true}, {"text": "Farmers", "correct": false}, {"text": "Merchants", "correct": false}, {"text": "Builders", "correct": false}]}, {"question": "Which grammatical case is required when using the verb \\\"боятися\\\"?", "options": [{"text": "Genitive", "correct": true}, {"text": "Nominative", "correct": false}, {"text": "Dative", "correct": false}, {"text": "Instrumental", "correct": false}]}, {"question": "If a person is \\\"чесний\\\", how do they typically behave?", "options": [{"text": "They are honest", "correct": true}, {"text": "They are lazy", "correct": false}, {"text": "They are angry", "correct": false}, {"text": "They are fearful", "correct": false}]}]`)}
 />
 
 ### Complete the Sentences
@@ -282,7 +282,7 @@ Many negative traits use **не-** prefix: добрий → **не**добрий
 
 <Unjumble
   title="Emotion Sentences"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Я дуже радий бачити тебе сьогодні в цьому парку"}, {"jumbled": "", "answer": "Вона часто сумує за своїм рідним домом і сім'єю"}, {"jumbled": "", "answer": "Маленькі діти завжди щиро радіють новим цікавим подарункам"}, {"jumbled": "", "answer": "Наша мама дуже сильно хвилюється за свого сина"}, {"jumbled": "", "answer": "Він боїться темряви коли залишається один вдома ввечері"}, {"jumbled": "", "answer": "Ми всі дуже дивувалися його великому музичному таланту"}, {"jumbled": "", "answer": "Ця жінка є дуже доброю і чесною людиною"}, {"jumbled": "", "answer": "Сміливі люди можуть змінити цей великий світ накраще"}]`)}
+  items={JSON.parse(`[{"jumbled": "Я / дуже / радий / бачити / тебе / сьогодні / в / цьому / парку", "answer": "Я дуже радий бачити тебе сьогодні в цьому парку"}, {"jumbled": "Вона / часто / сумує / за / своїм / рідним / домом / і / сім'єю", "answer": "Вона часто сумує за своїм рідним домом і сім'єю"}, {"jumbled": "Маленькі / діти / завжди / щиро / радіють / новим / цікавим / подарункам", "answer": "Маленькі діти завжди щиро радіють новим цікавим подарункам"}, {"jumbled": "Наша / мама / дуже / сильно / хвилюється / за / свого / сина", "answer": "Наша мама дуже сильно хвилюється за свого сина"}, {"jumbled": "Він / боїться / темряви / коли / залишається / один / вдома / ввечері", "answer": "Він боїться темряви коли залишається один вдома ввечері"}, {"jumbled": "Ми / всі / дуже / дивувалися / його / великому / музичному / таланту", "answer": "Ми всі дуже дивувалися його великому музичному таланту"}, {"jumbled": "Ця / жінка / є / дуже / доброю / і / чесною / людиною", "answer": "Ця жінка є дуже доброю і чесною людиною"}, {"jumbled": "Сміливі / люди / можуть / змінити / цей / великий / світ / накраще", "answer": "Сміливі люди можуть змінити цей великий світ накраще"}]`)}
 />
 
 ### Fix the Mistakes
@@ -401,21 +401,46 @@ ___ Марійка допомогла шукати кота. Вони знайш
 
 ### At the Party
 
-<DialogueReorder
+<Cloze
   title="At the Party"
-  lines={JSON.parse(`[{"text": "Привіт, Оксано! Як настрій?", "order": 1, "speaker": ""}, {"text": "Привіт! Я дуже щаслива сьогодні!", "order": 2, "speaker": ""}, {"text": "Чому? Що сталося?", "order": 3, "speaker": ""}, {"text": "Я здала всі іспити!", "order": 4, "speaker": ""}, {"text": "Це чудово! Я радий за тебе.", "order": 5, "speaker": ""}, {"text": "Дякую! А як твої справи?", "order": 6, "speaker": ""}, {"text": "Трохи хвилююся за завтрашній день.", "order": 7, "speaker": ""}, {"text": "Не хвилюйся! Все буде добре.", "order": 8, "speaker": ""}, {"text": "Ти права. Дякую за підтримку!", "order": 9, "speaker": ""}, {"text": "Завжди рада допомогти другу!", "order": 10, "speaker": ""}, {"text": "Ти справді добра людина.", "order": 11, "speaker": ""}, {"text": "А ти — чудовий друг!", "order": 12, "speaker": ""}]`)}
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "Привіт, Оксано! Як настрій?", "options": ["Привіт, Оксано! Як настрій?", "Чому? Що сталося?", "Не хвилюйся! Все буде добре."]}, {"answer": "Привіт! Я дуже щаслива сьогодні!", "options": ["Привіт! Я дуже щаслива сьогодні!", "Не хвилюйся! Все буде добре.", "Трохи хвилююся за завтрашній день."]}, {"answer": "Чому? Що сталося?", "options": ["Чому? Що сталося?", "А ти — чудовий друг!", "Я здала всі іспити!"]}, {"answer": "Я здала всі іспити!", "options": ["Я здала всі іспити!", "Це чудово! Я радий за тебе.", "Привіт! Я дуже щаслива сьогодні!"]}, {"answer": "Це чудово! Я радий за тебе.", "options": ["Це чудово! Я радий за тебе.", "Чому? Що сталося?", "Ти права. Дякую за підтримку!"]}, {"answer": "Дякую! А як твої справи?", "options": ["Дякую! А як твої справи?", "Чому? Що сталося?", "Ти права. Дякую за підтримку!"]}, {"answer": "Трохи хвилююся за завтрашній день.", "options": ["Трохи хвилююся за завтрашній день.", "Ти права. Дякую за підтримку!", "А ти — чудовий друг!"]}, {"answer": "Не хвилюйся! Все буде добре.", "options": ["Не хвилюйся! Все буде добре.", "Ти справді добра людина.", "Я здала всі іспити!"]}, {"answer": "Ти права. Дякую за підтримку!", "options": ["Ти права. Дякую за підтримку!", "Дякую! А як твої справи?", "Це чудово! Я радий за тебе."]}, {"answer": "Завжди рада допомогти другу!", "options": ["Завжди рада допомогти другу!", "Ти права. Дякую за підтримку!", "Ти справді добра людина."]}, {"answer": "Ти справді добра людина.", "options": ["Ти справді добра людина.", "Привіт! Я дуже щаслива сьогодні!", "Не хвилюйся! Все буде добре."]}, {"answer": "А ти — чудовий друг!", "options": ["А ти — чудовий друг!", "Не хвилюйся! Все буде добре.", "Ти справді добра людина."]}]`)}
 />
 
 ### Find the Emotions
 
-<MarkTheWords>
-  <MarkTheWordsActivity
-    instruction={`Click the correct words.`}
+<HighlightMorphemes>
+  <HighlightMorphemesActivity
     text={`Марійка прокинулася з радістю. Сьогодні особливий день! Але потім вона відчула страх — екзамен о десятій. Хвилювання наростало. Вона згадала слова мами: \"Будь сміливою!\" Це додало їй сили. На екзамені все пішло добре. Задоволення і щастя заповнили її серце. Вона відчула гордість за себе.
 Пізніше Марійка зустріла подругу. Подруга була сумною — вона провалила іспит. Марійка відчула співчуття. Вона обійняла подругу і сказала: \"Не хвилюйся! Наступного разу буде краще.\" Подруга посміхнулася і відчула надію. Дружити — це підтримувати!`}
-    correctWords={JSON.parse(`["радістю", "страх", "Хвилювання", "сміливою", "Задоволення", "щастя", "гордість", "сумною", "співчуття", "хвилюйся", "посміхнулася", "надію"]`)}
+    morphemes={[
+    { word: `радістю`, morpheme: `радістю`, type: `whole` },
+    { word: `страх`, morpheme: `страх`, type: `whole` },
+    { word: `Хвилювання`, morpheme: `Хвилювання`, type: `whole` },
+    { word: `сміливою`, morpheme: `сміливою`, type: `whole` },
+    { word: `Задоволення`, morpheme: `Задоволення`, type: `whole` },
+    { word: `щастя`, morpheme: `щастя`, type: `whole` },
+    { word: `гордість`, morpheme: `гордість`, type: `whole` },
+    { word: `сумною`, morpheme: `сумною`, type: `whole` },
+    { word: `співчуття`, morpheme: `співчуття`, type: `whole` },
+    { word: `хвилюйся`, morpheme: `хвилюйся`, type: `whole` },
+    { word: `посміхнулася`, morpheme: `посміхнулася`, type: `whole` },
+    { word: `надію`, morpheme: `надію`, type: `whole` }
+  ]}
   />
-</MarkTheWords>
+</HighlightMorphemes>
 
 ### Choose the Correct Form
 
@@ -423,6 +448,77 @@ ___ Марійка допомогла шукати кота. Вони знайш
   title="Choose the Correct Form"
   questions={JSON.parse(`[{"question": "Він боїться ____.", "options": [{"text": "темряви", "correct": true}, {"text": "темрява", "correct": false}]}, {"question": "Вона сумує ____.", "options": [{"text": "за домом", "correct": true}, {"text": "за дім", "correct": false}]}, {"question": "Діти раділи ____.", "options": [{"text": "подарункам", "correct": true}, {"text": "подарунки", "correct": false}]}, {"question": "Вона є ____ людиною.", "options": [{"text": "доброю", "correct": true}, {"text": "добра", "correct": false}]}, {"question": "Ми дивувалися ____.", "options": [{"text": "успіхам", "correct": true}, {"text": "успіхи", "correct": false}]}, {"question": "Я задоволений ____.", "options": [{"text": "роботою", "correct": true}, {"text": "робота", "correct": false}]}, {"question": "Він був ____ воїном.", "options": [{"text": "сміливим", "correct": true}, {"text": "сміливий", "correct": false}]}, {"question": "Мама хвилюється ____.", "options": [{"text": "за дітей", "correct": true}, {"text": "за діти", "correct": false}]}, {"question": "Ти виглядаєш ____.", "options": [{"text": "щасливим", "correct": true}, {"text": "щасливий", "correct": false}]}, {"question": "Я почуваюся ____.", "options": [{"text": "добре", "correct": true}, {"text": "добрий", "correct": false}]}, {"question": "Це був ____ вчинок.", "options": [{"text": "сміливий", "correct": true}, {"text": "сміливим", "correct": false}]}, {"question": "Вона стала ____.", "options": [{"text": "спокійною", "correct": true}, {"text": "спокійна", "correct": false}]}]`)}
 />
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| боягузливий | bojahuzˈlɪʋɪj | cowardly | adj | ч |  |
+| боягузливі | bojahuzˈlɪʋi | cowardly (pl) | noun | ч |  |
+| виразити | ˈvɪrɐzɪte | to express (perf) | verb |  |  |
+| витонченість | vɪˈtɔnt͡ʃenʲisʲtʲ | refinement | noun | ж |  |
+| воювати | vojuˈʋɑte | to fight/war | verb | ч |  |
+| воїн | ˈvɔjin | warrior | noun | ч |  |
+| вчинок | ˈvt͡ʃɪnok | act/deed | noun | ч |  |
+| відповідник | vidpoˈvʲidnɪk | equivalent/counterpart | noun | ч |  |
+| війна | vʲijˈnɑ | war | noun | ж |  |
+| гона | ˈhɔnɐ | race/chase? (typo) | noun | ч |  |
+| гордий | ˈhɔrdɪj | proud | adj | ч |  |
+| грів | hrʲiu̯ | warmed/sin (typo гріх?) | noun | ч |  |
+| даний | ˈdɑnɪj | given | adj | ч |  |
+| дмоційний | dmoˈt͡sʲijnɪj | emotional (typo емоційний) | adj |  |  |
+| довше | ˈdɔu̯ʃe | longer (adv) | adv |  |  |
+| дрібниця | dribˈnɪt͡sʲɐ | trifle/small thing | noun | ж |  |
+| захищати | zɐxɪˈʃt͡ʃɑte | to protect (imp) | verb | ч |  |
+| здивування | zdɪvuˈʋɑnʲːɐ | surprise | noun | с |  |
+| лінивий | lʲiˈnɪʋɪj | lazy | adj | ч |  |
+| марійко | mɐˈrʲijko | Mariika (voc) | name | ж |  |
+| негатив | nehɐˈtɪʋ | negative | noun | ч |  |
+| негативний | nehɐˈtɪʋnɪj | negative (adj) | adj |  |  |
+| недобрий | neˈdɔbrɪj | unkind | adj | ч |  |
+| ненависть | neˈnɑvɪsʲtʲ | hatred | noun | ж |  |
+| нетерплячий | neterˈplʲɑt͡ʃɪj | impatient | adj | ч |  |
+| нечесний | neˈt͡ʃɛsnɪj | dishonest | adj |  |  |
+| олексія | olekˈsʲijɐ | Oleksiy (gen) | name | ч |  |
+| особистість | osoˈbɪsʲtʲisʲtʲ | personality | noun | ж |  |
+| оцінка | oˈt͡sʲinkɐ | grade/evaluation | noun | ж |  |
+| паралізувати | pɐrɐlʲizuˈʋɑte | to paralyze | verb | ч |  |
+| перемагати | peremɐˈhɑte | to win/overcome | verb |  |  |
+| поважати | poʋɐˈʒɑte | to respect | verb |  |  |
+| позитив | pozɪˈtɪʋ | positive | noun | ч |  |
+| пощастити | poʃt͡ʃɐsˈtɪte | to get lucky (perf) | verb | с |  |
+| поїздка | poˈjizdkɐ | trip | noun | ж |  |
+| пропаганда | propɐˈhɑndɐ | propaganda | noun | ж |  |
+| протилежний | protɪˈlɛʒnɪj | opposite | adj |  |  |
+| протилежність | protɪˈlɛʒnʲisʲtʲ | opposite (noun) | noun | ж |  |
+| підготуватися | pidhotuˈʋɑtɪsʲɐ | to prepare (perf) | verb | ж |  |
+| раділ | rɐˈdʲil | rejoiced? (typo) | noun | ч |  |
+| раняття | rɐˈnʲɑtʲːɐ | activity (typo заняття) | noun | ж |  |
+| розчарування | rozt͡ʃɐruˈʋɑnʲːɐ | disappointment | noun | с |  |
+| розширити | rozˈʃɪrɪte | to expand (perf) | verb |  |  |
+| російський | roˈsʲijsʲkɪj | Russian | adj | ж |  |
+| словник | slou̯ˈnɪk | dictionary | noun | ч |  |
+| сміливий | smiˈlɪʋɪj | brave | adj | ч |  |
+| сміливість | snoˈlɪvʲisʲtʲ | bravery | noun | ж |  |
+| софійка | soˈfʲijkɐ | Sofiika | name | ж |  |
+| спектр | spɛktr | spectrum | noun | ч |  |
+| спокійніший | spokʲijˈnʲiʃɪj | calmer | adj | ж |  |
+| стримати | ˈstrɪmɐte | to restrain (perf) | verb |  |  |
+| стурбований | sturˈbɔʋɐnɪj | worried | adj | ч |  |
+| сум | sum | sadness | noun | ч |  |
+| схвильований | sxvɪˈlʲɔʋɐnɪj | excited/agitated | adj | ч |  |
+| талант | tɐˈlɑnt | talent | noun | ч |  |
+| терплячий | terˈplʲɑt͡ʃɪj | patient | adj | ч |  |
+| тимчасовий | tɪmt͡ʃɐˈsɔʋɪj | temporary | adj |  |  |
+| усміхнутися | usmixˈnutɪsʲɐ | to smile (perf) | verb | ж |  |
+| характеристика | xɐrɐkteˈrɪstɪkɐ | characteristic | noun | ж |  |
+| хвилювання | xvɪlʲuˈʋɑnʲːɐ | excitement/worry | noun | с |  |
+| хлопчик | ˈxlɔpt͡ʃɪk | boy | noun | ч |  |
+| хоробро | xoˈrɔbro | bravely | adv |  |  |
+| чесний | ˈt͡ʃɛsnɪj | honest | adj | ч |  |
+| чесність | ˈt͡ʃɛsnʲisʲtʲ | honesty | noun | ж |  |
+| щасливіший | ʃt͡ʃɐsˈlɪʋiʃɪj | happier | adj |  |  |
+| щирість | ˈʃt͡ʃɪrʲisʲtʲ | sincerity | noun | ж |  |
 
 ## 📋 Summary
 
@@ -436,44 +532,16 @@ You learned to:
 
 Remember that emotions in Ukrainian culture are often expressed openly. Use these new words to share your feelings with friends and family. Practice describing the characters in books or movies using the personality adjectives you learned. Are they сміливі or боягузливі? Чесні or нечесні? This will help you master the vocabulary.
 
-:::info[🔗 External Resources]
-
-**YouTube:** [How do you really feel? (Ukrainian)](https://www.youtube.com/watch?v=Mn_MOEThvCI) — EMOTIONS AND FEELINGS VOCABULARY
-
-**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
-
-**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-:::
-
-
-## 📚 Vocabulary
-
-| Word | IPA              | English           | POS  | Gender | Note            |
-|------| ---------------- | ----------------- | ---- | ------ | --------------- |
-| радість      | /ˈrɑdʲisʲtʲ/     | joy               | noun | f      | Acc: радість    |
-| сум          | /sum/            | sadness           | noun | m      | Loc: у сумі     |
-| гнів         | /ɦnʲiw/          | anger             | noun | m      | Acc: гнів       |
-| страх        | /strɑx/          | fear              | noun | m      | Acc: страх      |
-| здивування   | /zdɪwuˈwɑnʲːɑ/   | surprise          | noun | n      | Acc: здивування |
-| щастя        | /ˈʃtʃɑsʲtʲɑ/     | happiness         | noun | n      | Acc: щастя      |
-| задоволений  | /zɑdɔˈʋɔlɛnɪj/   | satisfied         | adj  | m      | state           |
-| розчарований | /rɔztʃɑˈrɔʋɑnɪj/ | disappointed      | adj  | m      | state           |
-| стурбований  | /sturˈbɔʋɑnɪj/   | worried           | adj  | m      | state           |
-| схвильований | /sxʋɪˈlʲɔʋɑnɪj/  | excited, agitated | adj  | m      | state           |
-| добрий       | /ˈdɔbrɪj/        | kind              | adj  | m      | personality     |
-| чесний       | /ˈtʃɛsnɪj/       | honest            | adj  | m      | personality     |
-| сміливий     | /smʲiˈlɪwɪj/     | brave             | adj  | m      | personality     |
-| терплячий    | /tɛrˈplʲɑtʃɪj/   | patient           | adj  | m      | personality     |
-| розумний     | /rɔˈzumnɪj/      | smart             | adj  | m      | personality     |
-| веселий      | /ʋɛˈsɛlɪj/       | cheerful          | adj  | m      | personality     |
-| лінивий      | /lʲiˈnɪwɪj/      | lazy              | adj  | m      | personality     |
-| боягузливий  | /bɔjɑɦuzˈlɪwɪj/  | cowardly          | adj  | m      | personality     |
-| нетерплячий  | /nɛtɛrˈplʲɑtʃɪj/ | impatient         | adj  | m      | personality     |
-| радіти       | /rɑˈditɪ/        | to rejoice        | verb | —      | impf; + Dat     |
-| сумувати     | /sumuˈʋɑtɪ/      | to be sad         | verb | —      | impf            |
-| хвилюватися  | /xʋɪlʲuˈʋɑtɪsʲɑ/ | to worry          | verb | —      | impf            |
-| почуватися   | /pɔtʃuˈʋɑtɪsʲɑ/  | to feel           | verb | —      | reflexive       |
-| прикметник   | /prɪkˈmɛtnɪk/    | adjective         | noun | m      | grammar term    |
-| дієслово     | /diˈjɛslɔʋɔ/     | verb              | noun | n      | grammar term    |
-| характер     | /xɑˈrɑktɛr/      | character         | noun | m      | personality     |
-| настрій      | /ˈnɑstrʲij/      | mood              | noun | m      | temporary state |
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion](https://www.ukrainianlessons.com/lesson/97/) — Challenge listening (B1): motion
+>
+> **📺 YouTube:**
+> - [How do you really feel? (Ukrainian)](https://www.youtube.com/watch?v=Mn_MOEThvCI) — EMOTIONS AND FEELINGS VOCABULARY
+>
+> **📖 Articles:**
+> - [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **🌐 Websites:**
+> - [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

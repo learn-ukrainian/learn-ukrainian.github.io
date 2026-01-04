@@ -188,7 +188,7 @@
     explanation: 'Correct! Animate masculine: студент → студента.'
   - statement: '"Я знаю лікар" is correct.'
     correct: false
-    explanation: Incorrect! Should be "лікаря" (animate accusative).
+    explanation: Incorrect! Should be "лікаря".
   - statement: '"Вона чекає подругу" is correct.'
     correct: true
     explanation: 'Correct! Feminine accusative: подруга → подругу.'
@@ -203,13 +203,13 @@
     explanation: 'Correct! Animate masculine: водій → водія.'
   - statement: '"Ми чекаємо вчитель" is correct.'
     correct: false
-    explanation: Incorrect! Should be "вчителя" (animate accusative).
+    explanation: Incorrect! Should be "вчителя".
   - statement: Accusative = genitive for masculine animate nouns.
     correct: true
     explanation: Correct! This is the key rule for animate objects.
   - statement: '"Я люблю директор" is correct.'
     correct: false
-    explanation: Incorrect! Should be "директора" (animate accusative).
+    explanation: Incorrect! Should be "директора".
   - statement: '"Ти знаєш мою сусідку" is correct.'
     correct: true
     explanation: 'Correct! Feminine accusative: сусідка → сусідку.'

@@ -18,9 +18,8 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
-
-# Shopping & Services
 
 ## Warm-up
 
@@ -290,13 +289,14 @@ Black Friday is popular in Ukraine, but big **розпродаж** (sales) also 
 
 
 
+
 ## 🎯 Activities
 
 ### Shopping Facts
 
 <Quiz
   title="Shopping Facts"
-  questions={JSON.parse(`[{"question": "Where would you typically go if you want to bargain for a lower price?", "options": [{"text": "на ринку", "correct": true}, {"text": "у супермаркеті", "correct": false}, {"text": "в аптеці", "correct": false}, {"text": "у банку", "correct": false}]}, {"question": "What is the Ukrainian word \\\"готівка\\\" used to describe?", "options": [{"text": "cash", "correct": true}, {"text": "card", "correct": false}, {"text": "discount", "correct": false}, {"text": "check", "correct": false}]}, {"question": "What key feature is the \\\"Нова Пошта\\\" service most famous for?", "options": [{"text": "speed and modern service", "correct": true}, {"text": "losing letters", "correct": false}, {"text": "selling food", "correct": false}, {"text": "slow delivery", "correct": false}]}, {"question": "Which phrase should you use to ask for the price of an item?", "options": [{"text": "Скільки коштує?", "correct": true}, {"text": "Як тебе звати?", "correct": false}, {"text": "Де магазин?", "correct": false}, {"text": "Котра година?", "correct": false}]}, {"question": "What does the word \\\"знижка\\\" mean when you see it in a store?", "options": [{"text": "discount", "correct": true}, {"text": "receipt", "correct": false}, {"text": "bag", "correct": false}, {"text": "price", "correct": false}]}, {"question": "Where would you go if you needed to buy medicine or pills?", "options": [{"text": "в аптеці", "correct": true}, {"text": "у банку", "correct": false}, {"text": "на пошті", "correct": false}, {"text": "у кафе", "correct": false}]}, {"question": "What document do you receive from the cashier after paying for goods?", "options": [{"text": "чек", "correct": true}, {"text": "чергу", "correct": false}, {"text": "ціну", "correct": false}, {"text": "пакет", "correct": false}]}, {"question": "What does the word \\\"черга\\\" mean when you see people waiting?", "options": [{"text": "queue/line", "correct": true}, {"text": "cashier", "correct": false}, {"text": "money", "correct": false}, {"text": "door", "correct": false}]}, {"question": "What type of banking institution is Monobank known as in Ukraine?", "options": [{"text": "neo-bank inside a phone", "correct": true}, {"text": "state post office", "correct": false}, {"text": "market stall", "correct": false}, {"text": "traditional bank branch", "correct": false}]}, {"question": "What is \\\"решта\\\" that you receive after a cash payment?", "options": [{"text": "change (money returned)", "correct": true}, {"text": "price", "correct": false}, {"text": "card", "correct": false}, {"text": "bill", "correct": false}]}, {"question": "What action does the verb \\\"міряти\\\" describe in a clothing store?", "options": [{"text": "to try on (clothes)", "correct": true}, {"text": "to buy", "correct": false}, {"text": "to eat", "correct": false}, {"text": "to sleep", "correct": false}]}, {"question": "Is it possible to pay with Apple Pay or Google Pay in Ukraine?", "options": [{"text": "Yes, almost everywhere", "correct": true}, {"text": "No, cash only", "correct": false}, {"text": "Only in banks", "correct": false}, {"text": "Only in Kyiv", "correct": false}]}]`)}
+  questions={JSON.parse(`[{"question": "Where would you typically go if you want to bargain for a lower price?", "options": [{"text": "на ринку", "correct": true}, {"text": "у супермаркеті", "correct": false}, {"text": "в аптеці", "correct": false}, {"text": "у банку", "correct": false}]}, {"question": "What is the Ukrainian word \\\"готівка\\\" used to describe?", "options": [{"text": "cash", "correct": true}, {"text": "card", "correct": false}, {"text": "discount", "correct": false}, {"text": "check", "correct": false}]}, {"question": "What key feature is the \\\"Нова Пошта\\\" service most famous for?", "options": [{"text": "speed and modern service", "correct": true}, {"text": "losing letters", "correct": false}, {"text": "selling food", "correct": false}, {"text": "slow delivery", "correct": false}]}, {"question": "Which phrase should you use to ask for the price of an item?", "options": [{"text": "Скільки коштує?", "correct": true}, {"text": "Як тебе звати?", "correct": false}, {"text": "Де магазин?", "correct": false}, {"text": "Котра година?", "correct": false}]}, {"question": "What does the word \\\"знижка\\\" mean when you see it in a store?", "options": [{"text": "discount", "correct": true}, {"text": "receipt", "correct": false}, {"text": "bag", "correct": false}, {"text": "price", "correct": false}]}, {"question": "Where would you go if you needed to buy medicine or pills?", "options": [{"text": "в аптеці", "correct": true}, {"text": "у банку", "correct": false}, {"text": "на пошті", "correct": false}, {"text": "у кафе", "correct": false}]}, {"question": "What document do you receive from the cashier after paying for goods?", "options": [{"text": "чек", "correct": true}, {"text": "чергу", "correct": false}, {"text": "ціну", "correct": false}, {"text": "пакет", "correct": false}]}, {"question": "What does the word \\\"черга\\\" mean when you see people waiting?", "options": [{"text": "queue/line", "correct": true}, {"text": "cashier", "correct": false}, {"text": "money", "correct": false}, {"text": "door", "correct": false}]}, {"question": "What type of banking institution is Monobank known as in Ukraine?", "options": [{"text": "neo-bank inside a phone", "correct": true}, {"text": "state post office", "correct": false}, {"text": "market stall", "correct": false}, {"text": "traditional bank branch", "correct": false}]}, {"question": "What is \\\"решта\\\" that you receive after a cash payment?", "options": [{"text": "change", "correct": true}, {"text": "price", "correct": false}, {"text": "card", "correct": false}, {"text": "bill", "correct": false}]}, {"question": "What action does the verb \\\"міряти\\\" describe in a clothing store?", "options": [{"text": "to try on (clothes)", "correct": true}, {"text": "to buy", "correct": false}, {"text": "to eat", "correct": false}, {"text": "to sleep", "correct": false}]}, {"question": "Is it possible to pay with Apple Pay or Google Pay in Ukraine?", "options": [{"text": "Yes, almost everywhere", "correct": true}, {"text": "No, cash only", "correct": false}, {"text": "Only in banks", "correct": false}, {"text": "Only in Kyiv", "correct": false}]}]`)}
 />
 
 ### Shop Vocabulary
@@ -310,7 +310,7 @@ Black Friday is popular in Ukraine, but big **розпродаж** (sales) also 
 
 <FillIn
   title="Shopping Sentences"
-  items={JSON.parse(`[{"sentence": "Я хочу ____ хліб.", "answer": "купити", "options": ["купити", "продати", "міряти", "спати"]}, {"sentence": "Скільки це ____?", "answer": "коштує", "options": ["коштує", "коштують", "платить", "купує"]}, {"sentence": "У мене немає ____. (cash)", "answer": "готівки", "options": ["готівки", "готівка", "картка", "банку"]}, {"sentence": "Я плачу ____. (by card)", "answer": "карткою", "options": ["карткою", "карта", "карту", "картки"]}, {"sentence": "Це велика ____. (queue)", "answer": "черга", "options": ["черга", "каса", "ціна", "знижка"]}, {"sentence": "Дайте, будь ласка, ____. (receipt)", "answer": "чек", "options": ["чек", "чергу", "гривню", "решту"]}, {"sentence": "Ось ваша ____. (change)", "answer": "решта", "options": ["решта", "каса", "ціна", "пошта"]}, {"sentence": "Ми йдемо на ____. (market)", "answer": "ринок", "options": ["ринок", "банк", "аптеку", "магазин"]}, {"sentence": "Я хочу ____ ці джинси. (try on)", "answer": "поміряти", "options": ["поміряти", "купити", "з'їсти", "випити"]}, {"sentence": "Сьогодні у магазині ____. (discount)", "answer": "знижка", "options": ["знижка", "черга", "ціна", "каса"]}, {"sentence": "Можна ____ піцу? (order)", "answer": "замовити", "options": ["замовити", "купити", "міряти", "платити"]}, {"sentence": "Банк закритий, він не ____.", "answer": "працює", "options": ["працює", "коштує", "купує", "спить"]}]`)}
+  items={JSON.parse(`[{"sentence": "Я хочу ____ хліб.", "answer": "купити", "options": ["купити", "продати", "міряти", "спати"]}, {"sentence": "Скільки це ____?", "answer": "коштує", "options": ["коштує", "коштують", "платить", "купує"]}, {"sentence": "У мене немає ____. (cash)", "answer": "готівки", "options": ["готівки", "готівка", "картка", "банку"]}, {"sentence": "Я плачу ____.", "answer": "карткою", "options": ["карткою", "карта", "карту", "картки"]}, {"sentence": "Це велика ____. (queue)", "answer": "черга", "options": ["черга", "каса", "ціна", "знижка"]}, {"sentence": "Дайте, будь ласка, ____. (receipt)", "answer": "чек", "options": ["чек", "чергу", "гривню", "решту"]}, {"sentence": "Ось ваша ____. (change)", "answer": "решта", "options": ["решта", "каса", "ціна", "пошта"]}, {"sentence": "Ми йдемо на ____. (market)", "answer": "ринок", "options": ["ринок", "банк", "аптеку", "магазин"]}, {"sentence": "Я хочу ____ ці джинси.", "answer": "поміряти", "options": ["поміряти", "купити", "з'їсти", "випити"]}, {"sentence": "Сьогодні у магазині ____. (discount)", "answer": "знижка", "options": ["знижка", "черга", "ціна", "каса"]}, {"sentence": "Можна ____ піцу? (order)", "answer": "замовити", "options": ["замовити", "купити", "міряти", "платити"]}, {"sentence": "Банк закритий, він не ____.", "answer": "працює", "options": ["працює", "коштує", "купує", "спить"]}]`)}
 />
 
 ### Ukrainian Services
@@ -331,7 +331,7 @@ Black Friday is popular in Ukraine, but big **розпродаж** (sales) also 
 
 <Unjumble
   title="Shopping Dialogue"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Скільки зараз коштує цей смачний білий хліб"}, {"jumbled": "", "answer": "Я сьогодні хочу заплатити за це своєю карткою"}, {"jumbled": "", "answer": "Де тут знаходиться найближчий і відкритий банк"}, {"jumbled": "", "answer": "У нас сьогодні діє дуже велика святкова знижка"}, {"jumbled": "", "answer": "Я йду в новий великий супермаркет за продуктами"}, {"jumbled": "", "answer": "Дайте мені будь ласка мій фіскальний чек"}, {"jumbled": "", "answer": "Ця червона вечірня сукня дуже гарна але дорога"}, {"jumbled": "", "answer": "Ми часто замовляємо смачну їжу з ресторану додому"}, {"jumbled": "", "answer": "На старій пошті сьогодні дуже велика і довга черга"}, {"jumbled": "", "answer": "Ваша решта — це двадцять п'ять нових гривень"}, {"jumbled": "", "answer": "Я більше люблю купувати свіжі овочі на ринку"}, {"jumbled": "", "answer": "Мені терміново треба поміряти це зручне взуття"}]`)}
+  items={JSON.parse(`[{"jumbled": "Скільки / зараз / коштує / цей / смачний / білий / хліб", "answer": "Скільки зараз коштує цей смачний білий хліб"}, {"jumbled": "Я / сьогодні / хочу / заплатити / за / це / своєю / карткою", "answer": "Я сьогодні хочу заплатити за це своєю карткою"}, {"jumbled": "Де / тут / знаходиться / найближчий / і / відкритий / банк", "answer": "Де тут знаходиться найближчий і відкритий банк"}, {"jumbled": "У / нас / сьогодні / діє / дуже / велика / святкова / знижка", "answer": "У нас сьогодні діє дуже велика святкова знижка"}, {"jumbled": "Я / йду / в / новий / великий / супермаркет / за / продуктами", "answer": "Я йду в новий великий супермаркет за продуктами"}, {"jumbled": "Дайте / мені / будь ласка / мій / фіскальний / чек", "answer": "Дайте мені будь ласка мій фіскальний чек"}, {"jumbled": "Ця / червона / вечірня / сукня / дуже / гарна / але / дорога", "answer": "Ця червона вечірня сукня дуже гарна але дорога"}, {"jumbled": "Ми / часто / замовляємо / смачну / їжу / з / ресторану / додому", "answer": "Ми часто замовляємо смачну їжу з ресторану додому"}, {"jumbled": "На / старій / пошті / сьогодні / дуже / велика / і / довга / черга", "answer": "На старій пошті сьогодні дуже велика і довга черга"}, {"jumbled": "Ваша / решта — / це / двадцять / п'ять / нових / гривень", "answer": "Ваша решта — це двадцять п'ять нових гривень"}, {"jumbled": "Я / більше / люблю / купувати / свіжі / овочі / на / ринку", "answer": "Я більше люблю купувати свіжі овочі на ринку"}, {"jumbled": "Мені / терміново / треба / поміряти / це / зручне / взуття", "answer": "Мені терміново треба поміряти це зручне взуття"}]`)}
 />
 
 ### Shop Grammar
@@ -441,20 +441,42 @@ Black Friday is popular in Ukraine, but big **розпродаж** (sales) also 
 
 ### Buying Shoes
 
-<DialogueReorder
+<Cloze
   title="Buying Shoes"
-  lines={JSON.parse(`[{"text": "Добрий день. Я можу вам допомогти?", "order": 1, "speaker": ""}, {"text": "Добрий день. Я шукаю кросівки.", "order": 2, "speaker": ""}, {"text": "Який у вас розмір?", "order": 3, "speaker": ""}, {"text": "42-й розмір.", "order": 4, "speaker": ""}, {"text": "Ось гарна модель. Хочете поміряти?", "order": 5, "speaker": ""}, {"text": "Так, дякую. Де дзеркало?", "order": 6, "speaker": ""}, {"text": "Дзеркало там, зліва.", "order": 7, "speaker": ""}, {"text": "Вони зручні. Скільки вони коштують?", "order": 8, "speaker": ""}, {"text": "2000 гривень.", "order": 9, "speaker": ""}, {"text": "Добре, я беру їх.", "order": 10, "speaker": ""}, {"text": "Оплата карткою чи готівкою?", "order": 11, "speaker": ""}, {"text": "Карткою, будь ласка.", "order": 12, "speaker": ""}]`)}
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "Добрий день. Я можу вам допомогти?", "options": ["Добрий день. Я можу вам допомогти?", "Карткою, будь ласка.", "Добре, я беру їх."]}, {"answer": "Добрий день. Я шукаю кросівки.", "options": ["Добрий день. Я шукаю кросівки.", "Так, дякую. Де дзеркало?", "Добре, я беру їх."]}, {"answer": "Який у вас розмір?", "options": ["Який у вас розмір?", "42-й розмір.", "Добре, я беру їх."]}, {"answer": "42-й розмір.", "options": ["42-й розмір.", "Дзеркало там, зліва.", "Так, дякую. Де дзеркало?"]}, {"answer": "Ось гарна модель. Хочете поміряти?", "options": ["Ось гарна модель. Хочете поміряти?", "42-й розмір.", "Вони зручні. Скільки вони коштують?"]}, {"answer": "Так, дякую. Де дзеркало?", "options": ["Так, дякую. Де дзеркало?", "Ось гарна модель. Хочете поміряти?", "Добрий день. Я можу вам допомогти?"]}, {"answer": "Дзеркало там, зліва.", "options": ["Дзеркало там, зліва.", "Ось гарна модель. Хочете поміряти?", "42-й розмір."]}, {"answer": "Вони зручні. Скільки вони коштують?", "options": ["Вони зручні. Скільки вони коштують?", "Добрий день. Я шукаю кросівки.", "42-й розмір."]}, {"answer": "2000 гривень.", "options": ["2000 гривень.", "Так, дякую. Де дзеркало?", "42-й розмір."]}, {"answer": "Добре, я беру їх.", "options": ["Добре, я беру їх.", "Добрий день. Я шукаю кросівки.", "Вони зручні. Скільки вони коштують?"]}, {"answer": "Оплата карткою чи готівкою?", "options": ["Оплата карткою чи готівкою?", "Так, дякую. Де дзеркало?", "Дзеркало там, зліва."]}, {"answer": "Карткою, будь ласка.", "options": ["Карткою, будь ласка.", "Оплата карткою чи готівкою?", "Добрий день. Я можу вам допомогти?"]}]`)}
 />
 
 ### Find Services
 
-<MarkTheWords>
-  <MarkTheWordsActivity
-    instruction={`Click the correct words.`}
+<HighlightMorphemes>
+  <HighlightMorphemesActivity
     text={`Я живу в центрі. Біля мого дому є супермаркет і маленька аптека. Коли мені треба гроші, я йду в банк. У неділю я йду на ринок за овочами. Моя мама працює на пошті. Тато стрижеться в перукарні. Ми любимо ходити в кіно і ресторан. Лікарня теж недалеко.`}
-    correctWords={JSON.parse(`["супермаркет", "аптека", "банк", "ринок", "пошті", "перукарні", "кіно", "ресторан", "Лікарня"]`)}
+    morphemes={[
+    { word: `супермаркет`, morpheme: `супермаркет`, type: `whole` },
+    { word: `аптека`, morpheme: `аптека`, type: `whole` },
+    { word: `банк`, morpheme: `банк`, type: `whole` },
+    { word: `ринок`, morpheme: `ринок`, type: `whole` },
+    { word: `пошті`, morpheme: `пошті`, type: `whole` },
+    { word: `перукарні`, morpheme: `перукарні`, type: `whole` },
+    { word: `кіно`, morpheme: `кіно`, type: `whole` },
+    { word: `ресторан`, morpheme: `ресторан`, type: `whole` },
+    { word: `Лікарня`, morpheme: `Лікарня`, type: `whole` }
+  ]}
   />
-</MarkTheWords>
+</HighlightMorphemes>
 
 ### Shopping Choices
 
@@ -462,6 +484,56 @@ Black Friday is popular in Ukraine, but big **розпродаж** (sales) also 
   title="Shopping Choices"
   questions={JSON.parse(`[{"question": "To pay money.", "options": [{"text": "Платити.", "correct": true}, {"text": "Плакати.", "correct": false}]}, {"question": "To buy.", "options": [{"text": "Купувати.", "correct": true}, {"text": "Купати.", "correct": false}]}, {"question": "To order.", "options": [{"text": "Замовляти.", "correct": true}, {"text": "Мовчати.", "correct": false}]}, {"question": "Receipt.", "options": [{"text": "Чек.", "correct": true}, {"text": "Чех.", "correct": false}]}, {"question": "Cash.", "options": [{"text": "Готівка.", "correct": true}, {"text": "Готування.", "correct": false}]}, {"question": "Price.", "options": [{"text": "Ціна.", "correct": true}, {"text": "Стіна.", "correct": false}]}, {"question": "Discount.", "options": [{"text": "Знижка.", "correct": true}, {"text": "Книжка.", "correct": false}]}, {"question": "Market.", "options": [{"text": "Ринок.", "correct": true}, {"text": "Ранок.", "correct": false}]}, {"question": "Shop.", "options": [{"text": "Магазин.", "correct": true}, {"text": "Журнал", "correct": false}]}, {"question": "Pharmacy.", "options": [{"text": "Аптека.", "correct": true}, {"text": "Бібліотека.", "correct": false}]}, {"question": "Post Office.", "options": [{"text": "Пошта.", "correct": true}, {"text": "Площа.", "correct": false}]}, {"question": "To try on.", "options": [{"text": "Міряти.", "correct": true}, {"text": "Мирити.", "correct": false}]}]`)}
 />
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| адміністратор | ɐdmʲinʲisˈtrɑtor | administrator | noun | ч |  |
+| безконтактний | bezkonˈtɑktnɪj | contactless | adj | ж |  |
+| брендовий | ˈbrɛndoʋɪj | brand (adj) | adj | ч |  |
+| витратити | vɪˈtrɑtɪte | to spend (perf) | verb |  |  |
+| відділення | vidˈdʲilenʲːɐ | branch/department | noun | с |  |
+| доставляти | dostɐu̯ˈlʲɑte | to deliver (imp) | verb |  |  |
+| забирати | zɐbɪˈrɑte | to take away (imp) | verb |  |  |
+| забронювати | zɐbronʲuˈʋɑte | to book (perf) | verb |  |  |
+| зайняти | zɐjˈnʲɑte | to occupy/borrow (perf) | verb | с |  |
+| залишати | zɐlɪˈʃɑte | to leave (imp) | verb |  |  |
+| записаний | zɐˈpɪsɐnɪj | recorded | adj | ж |  |
+| зачіска | ˈzɑt͡ʃiskɐ | hairstyle | noun | ж |  |
+| красуня | krɐˈsunʲɐ | beauty | noun | ж |  |
+| куштувати | kuʃtuˈʋɑte | to taste | verb |  |  |
+| магія | ˈmɑhʲijɐ | magic | noun | ж |  |
+| молл | mɔl | mall | noun | ч |  |
+| міряти | ˈmʲirʲɐte | to measure/try on (imp) | verb |  |  |
+| одержувач | oˈdɛrʒuʋɐt͡ʃ | recipient | noun | ч |  |
+| оператор | opeˈrɑtor | operator | noun | ч |  |
+| отримання | otˈrɪmɐnʲːɐ | receipt | noun | с |  |
+| оформлювати | oˈfɔrmlʲuʋɐte | to process/register | verb |  |  |
+| перукар | peruˈkɑr | hairdresser | noun | ч |  |
+| перукарня | peruˈkɑrnʲɐ | barbershop/salon | noun | ж |  |
+| плата | ˈplɑtɐ | payment/fee | noun | ж |  |
+| попробовать | poˈprobovɐtʲ | to try (Russian, typo спробувати) | other |  |  |
+| прибути | prɪˈbute | to arrive (perf) | verb | ж |  |
+| приватбанк | prɪvɐtˈbɑnk | PrivatBank | name | ч |  |
+| прикласти | prɪˈklɑste | to attach/apply (perf) | verb |  |  |
+| продуктовий | produkˈtɔʋɪj | grocery (adj) | adj | ч |  |
+| розпродаж | rɔzˈprodɐʒ | sale | noun | ч |  |
+| сервіс | ˈsɛrvis | service | noun | ч |  |
+| сканувати | skɐnuˈʋɑte | to scan | verb |  |  |
+| скинутися | ˈskɪnutɪsʲɐ | to chip in (perf) | verb |  |  |
+| смс | smˈs (es-em-es) | SMS | noun | ч |  |
+| стрижка | ˈstrɪʒkɐ | haircut | noun | ж |  |
+| творог | tvoˈrɔh | curd (Russian, typo сир) | other |  |  |
+| тойота | toˈjotɐ | Toyota | name | ж |  |
+| торговий | torˈhɔʋɪj | trade (adj) | adj |  |  |
+| торгуватися | torhuˈʋɑtɪsʲɐ | to bargain | verb |  |  |
+| тістечка | ˈtʲistet͡ʃkɐ | pastries | noun | с |  |
+| фарбування | fɐrbuˈʋɑnʲːɐ | dyeing/painting | noun | с |  |
+| хімчистка | ximˈt͡ʃɪstkɐ | dry cleaning | noun | ж |  |
+| чайова | t͡ʃɐjoˈvɑ | tip (money) gen? or чайові | noun | ч |  |
+| черга | ˈt͡ʃɛrhɐ | queue/turn | noun | ж |  |
+| шопінг | ˈʃɔpinh | shopping | noun | ч |  |
 
 ## 📋 Summary
 
@@ -501,25 +573,18 @@ Shopping in Ukraine is easy and modern. Don't be afraid to ask the price!
 >
 > Запрошуємо до покупок! Шопінг в Україні — це зручно та швидко!
 
-:::info[🔗 External Resources]
-
-**YouTube:** [UKRAINIAN DIALOGUES for beginners. Episode #3 At the coffee shop](https://www.youtube.com/watch?v=YLBABZIOoo0) — Speak Ukrainian
-
-**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
-
-**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-:::
-
-
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| перукарня | /peruˈkarnʲa/ | hairdresser's | noun | f | |
-| хімчистка | /ximˈtʃɪstka/ | dry cleaner's | noun | f | |
-| міряти | /ˈmirʲatɪ/ | to try on | verb | - | |
-| торговий центр | /torˈhɔʋɪj ˈtsɛntr/ | shopping mall | phrase | m | |
-| відділення | /vidˈdilennʲa/ | branch/office | noun | n | |
-| одяг | /ˈɔdʲaɦ/ | clothes | noun | m | |
-| продукти | /proˈduktɪ/ | groceries | noun | pl | |
-| сервіс | /ˈsɛrvis/ | service | noun | m | |
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [ULP 1-31 Shopping in Ukrainian – At the shoe shop](https://www.ukrainianlessons.com/lesson/31/) — Listening review (A1): shopping
+> - [ULP 1-32 Shopping for clothes – Accusative case in Ukrainian](https://www.ukrainianlessons.com/lesson/32/) — Listening review (A1): shopping
+> - [Vocabulary booster! Shopping Vocabulary in Ukrainian](https://www.ukrainianlessons.com/fmu18/) — Listening review (A1): shopping
+>
+> **📺 YouTube:**
+> - [UKRAINIAN DIALOGUES for beginners. Episode #3 At the coffee shop](https://www.youtube.com/watch?v=YLBABZIOoo0) — Speak Ukrainian
+>
+> **📖 Articles:**
+> - [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **🌐 Websites:**
+> - [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

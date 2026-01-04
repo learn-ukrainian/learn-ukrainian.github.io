@@ -424,7 +424,7 @@
   - statement: Січень — це весняний місяць.
     correct: false
     explanation: Incorrect! January is a winter month.
-  - statement: Неділя означає "немає діла" (no work).
+  - statement: Неділя означає "немає діла".
     correct: true
     explanation: Correct! Nedilya means "no work."
   - statement: Середа — це останній день тижня.

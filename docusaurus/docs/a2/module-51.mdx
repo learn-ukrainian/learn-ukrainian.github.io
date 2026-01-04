@@ -18,9 +18,8 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
-
-# Education & Learning
 
 ## Warm-up
 
@@ -286,6 +285,7 @@ On the first Sunday of October, Ukraine celebrates Teachers' Day. Students bring
 
 
 
+
 ## 🎯 Activities
 
 ### Education Facts
@@ -327,7 +327,7 @@ On the first Sunday of October, Ukraine celebrates Teachers' Day. Students bring
 
 <Unjumble
   title="Education Syntax"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Я зараз старанно вивчаю українську та англійську мову"}, {"jumbled": "", "answer": "Мій молодший брат добре вчиться в новій школі"}, {"jumbled": "", "answer": "Завтра у нас буде дуже важкий і важливий іспит"}, {"jumbled": "", "answer": "Студенти уважно слухають цікаву лекцію про історію України"}, {"jumbled": "", "answer": "Вчитель швидко пише нові слова на великій дошці"}, {"jumbled": "", "answer": "Відкрийте свої зошити і візьміть сині ручки будь ласка"}, {"jumbled": "", "answer": "У мене сьогодні дуже гарна оцінка з математики"}, {"jumbled": "", "answer": "Я зараз складаю складний іспит з історії України"}, {"jumbled": "", "answer": "Знання це справді велика і важлива сила сьогодні"}, {"jumbled": "", "answer": "Ми всі дуже любимо наш дружній університетський факультет"}, {"jumbled": "", "answer": "Де лежить твій новий синій олівець для малювання"}, {"jumbled": "", "answer": "Вона зараз пише свою складну дипломну роботу вдома"}]`)}
+  items={JSON.parse(`[{"jumbled": "Я / зараз / старанно / вивчаю / українську / та / англійську / мову", "answer": "Я зараз старанно вивчаю українську та англійську мову"}, {"jumbled": "Мій / молодший / брат / добре / вчиться / в / новій / школі", "answer": "Мій молодший брат добре вчиться в новій школі"}, {"jumbled": "Завтра / у / нас / буде / дуже / важкий / і / важливий / іспит", "answer": "Завтра у нас буде дуже важкий і важливий іспит"}, {"jumbled": "Студенти / уважно / слухають / цікаву / лекцію / про / історію / України", "answer": "Студенти уважно слухають цікаву лекцію про історію України"}, {"jumbled": "Вчитель / швидко / пише / нові / слова / на / великій / дошці", "answer": "Вчитель швидко пише нові слова на великій дошці"}, {"jumbled": "Відкрийте / свої / зошити / і / візьміть / сині / ручки / будь ласка", "answer": "Відкрийте свої зошити і візьміть сині ручки будь ласка"}, {"jumbled": "У / мене / сьогодні / дуже / гарна / оцінка / з / математики", "answer": "У мене сьогодні дуже гарна оцінка з математики"}, {"jumbled": "Я / зараз / складаю / складний / іспит / з / історії / України", "answer": "Я зараз складаю складний іспит з історії України"}, {"jumbled": "Знання — / це / справді / велика / і / важлива / сила / сьогодні", "answer": "Знання це справді велика і важлива сила сьогодні"}, {"jumbled": "Ми / всі / дуже / любимо / наш / дружній / університетський / факультет", "answer": "Ми всі дуже любимо наш дружній університетський факультет"}, {"jumbled": "Де / лежить / твій / новий / синій / олівець / для / малювання", "answer": "Де лежить твій новий синій олівець для малювання"}, {"jumbled": "Вона / зараз / пише / свою / складну / дипломну / роботу / вдома", "answer": "Вона зараз пише свою складну дипломну роботу вдома"}]`)}
 />
 
 ### Grammar Fix
@@ -436,20 +436,42 @@ On the first Sunday of October, Ukraine celebrates Teachers' Day. Students bring
 
 ### Be Quiet Example
 
-<DialogueReorder
+<Cloze
   title="Be Quiet Example"
-  lines={JSON.parse(`[{"text": "Привіт! Ти готовий до іспиту?", "order": 1, "speaker": ""}, {"text": "Привіт. Ні, я дуже хвилююся.", "order": 2, "speaker": ""}, {"text": "Чому? Ти ж добре вчишся.", "order": 3, "speaker": ""}, {"text": "Так, але я не розумію останню тему.", "order": 4, "speaker": ""}, {"text": "Давай я тобі поясню.", "order": 5, "speaker": ""}, {"text": "Справді? Ти можеш допомогти?", "order": 6, "speaker": ""}, {"text": "Звичайно. Відкривай підручник.", "order": 7, "speaker": ""}, {"text": "Дякую! Ти справжній друг.", "order": 8, "speaker": ""}, {"text": "Де ми будемо займатися?", "order": 9, "speaker": ""}, {"text": "Пішли в бібліотеку. Там тихо.", "order": 10, "speaker": ""}, {"text": "Добре. Я візьму зошит і ручку.", "order": 11, "speaker": ""}, {"text": "Ходімо!", "order": 12, "speaker": ""}]`)}
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "Привіт! Ти готовий до іспиту?", "options": ["Привіт! Ти готовий до іспиту?", "Де ми будемо займатися?", "Привіт. Ні, я дуже хвилююся."]}, {"answer": "Привіт. Ні, я дуже хвилююся.", "options": ["Привіт. Ні, я дуже хвилююся.", "Добре. Я візьму зошит і ручку.", "Звичайно. Відкривай підручник."]}, {"answer": "Чому? Ти ж добре вчишся.", "options": ["Чому? Ти ж добре вчишся.", "Дякую! Ти справжній друг.", "Пішли в бібліотеку. Там тихо."]}, {"answer": "Так, але я не розумію останню тему.", "options": ["Так, але я не розумію останню тему.", "Давай я тобі поясню.", "Ходімо!"]}, {"answer": "Давай я тобі поясню.", "options": ["Давай я тобі поясню.", "Де ми будемо займатися?", "Привіт! Ти готовий до іспиту?"]}, {"answer": "Справді? Ти можеш допомогти?", "options": ["Справді? Ти можеш допомогти?", "Де ми будемо займатися?", "Пішли в бібліотеку. Там тихо."]}, {"answer": "Звичайно. Відкривай підручник.", "options": ["Звичайно. Відкривай підручник.", "Привіт. Ні, я дуже хвилююся.", "Пішли в бібліотеку. Там тихо."]}, {"answer": "Дякую! Ти справжній друг.", "options": ["Дякую! Ти справжній друг.", "Де ми будемо займатися?", "Так, але я не розумію останню тему."]}, {"answer": "Де ми будемо займатися?", "options": ["Де ми будемо займатися?", "Привіт! Ти готовий до іспиту?", "Привіт. Ні, я дуже хвилююся."]}, {"answer": "Пішли в бібліотеку. Там тихо.", "options": ["Пішли в бібліотеку. Там тихо.", "Ходімо!", "Привіт! Ти готовий до іспиту?"]}, {"answer": "Добре. Я візьму зошит і ручку.", "options": ["Добре. Я візьму зошит і ручку.", "Чому? Ти ж добре вчишся.", "Давай я тобі поясню."]}, {"answer": "Ходімо!", "options": ["Ходімо!", "Чому? Ти ж добре вчишся.", "Давай я тобі поясню."]}]`)}
 />
 
 ### Classroom Objects
 
-<MarkTheWords>
-  <MarkTheWordsActivity
-    instruction={`Click the correct words.`}
+<HighlightMorphemes>
+  <HighlightMorphemesActivity
     text={`На столі лежить підручник і мій синій зошит. Я беру ручку, щоб писати. Де мій олівець? Вчитель пише на дошці. У класі є комп'ютер і карта. У мене в рюкзаку є книга і лінійка. Я люблю свій клас.`}
-    correctWords={JSON.parse(`["підручник", "зошит", "ручку", "олівець", "дошці", "карта", "книга", "лінійка", "клас"]`)}
+    morphemes={[
+    { word: `підручник`, morpheme: `підручник`, type: `whole` },
+    { word: `зошит`, morpheme: `зошит`, type: `whole` },
+    { word: `ручку`, morpheme: `ручку`, type: `whole` },
+    { word: `олівець`, morpheme: `олівець`, type: `whole` },
+    { word: `дошці`, morpheme: `дошці`, type: `whole` },
+    { word: `карта`, morpheme: `карта`, type: `whole` },
+    { word: `книга`, morpheme: `книга`, type: `whole` },
+    { word: `лінійка`, morpheme: `лінійка`, type: `whole` },
+    { word: `клас`, morpheme: `клас`, type: `whole` }
+  ]}
   />
-</MarkTheWords>
+</HighlightMorphemes>
 
 ### Word Choice
 
@@ -457,6 +479,40 @@ On the first Sunday of October, Ukraine celebrates Teachers' Day. Students bring
   title="Word Choice"
   questions={JSON.parse(`[{"question": "We study history.", "options": [{"text": "Ми вивчаємо історію.", "correct": true}, {"text": "Ми вчимося історію.", "correct": false}]}, {"question": "I am a student (uni).", "options": [{"text": "Я студент.", "correct": true}, {"text": "Я учень.", "correct": false}]}, {"question": "Teacher (female).", "options": [{"text": "Вчителька.", "correct": true}, {"text": "Вчитель.", "correct": false}]}, {"question": "To pass an exam (perfective/result).", "options": [{"text": "Скласти іспит.", "correct": true}, {"text": "Складати іспит.", "correct": false}]}, {"question": "Notebook.", "options": [{"text": "Зошит.", "correct": true}, {"text": "Книга.", "correct": false}]}, {"question": "Lesson.", "options": [{"text": "Урок.", "correct": true}, {"text": "Перерва.", "correct": false}]}, {"question": "Knowledge.", "options": [{"text": "Знання.", "correct": true}, {"text": "Дурниці.", "correct": false}]}, {"question": "Grade/Mark.", "options": [{"text": "Оцінка.", "correct": true}, {"text": "Ціна.", "correct": false}]}, {"question": "Pen.", "options": [{"text": "Ручка.", "correct": true}, {"text": "Ніжка.", "correct": false}]}, {"question": "Faculty.", "options": [{"text": "Факультет.", "correct": true}, {"text": "Кафедра.", "correct": false}]}, {"question": "To read a lecture.", "options": [{"text": "Читати лекцію.", "correct": true}, {"text": "Співати лекцію.", "correct": false}]}, {"question": "Diploma.", "options": [{"text": "Диплом.", "correct": true}, {"text": "Папір.", "correct": false}]}]`)}
 />
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| айтішник | ɐjˈtʲiʃnɪk | IT specialist (coll.) | noun | ч |  |
+| вальс | vɐlʲs | waltz | noun | ч |  |
+| випускний | vɪpusˈknɪj | prom/graduation | adj | ч |  |
+| вступати | vstuˈpɑte | to enter (university) | verb |  |  |
+| гуртожиток | hurˈtɔʒɪtok | dormitory | noun | ч |  |
+| дзвоник | ˈdzvɔnɪk | bell | noun | ч |  |
+| диплом | dɪˈplɔm | diploma | noun | ч |  |
+| задовільно | zɐdoˈvʲilʲno | satisfactorily | adv |  |  |
+| залік | ˈzɑlʲik | pass/fail exam | noun | ч |  |
+| карлос | ˈkɑrlos | Carlos | name | ч |  |
+| навчатися | nɐu̯ˈt͡ʃɑtɪsʲɐ | to study | verb |  |  |
+| найбільше | nɑjˈbʲilʲʃe | most | adv |  |  |
+| наклейк | nɐˈklɛjkɐ | sticker (gen pl? typo наклейка) | noun | ж |  |
+| незадовільно | nezɐdoˈvʲilʲno | unsatisfactorily | adv |  |  |
+| нести | neˈstɪ | to carry (imp) | verb |  |  |
+| парта | ˈpɑrtɐ | desk (school) | noun | ж |  |
+| початковий | pot͡ʃɐtˈkɔʋɪj | initial/elementary | adj | ж |  |
+| профільний | ˈprɔfʲilʲnɪj | specialized (adj) | adj | ж |  |
+| піцерія | pʲit͡seˈrʲijɐ | pizzeria | noun | ж |  |
+| семінар | semʲiˈnɑr | seminar | noun | ч |  |
+| сесія | ˈsɛsʲijɐ | session/exams | noun | ж |  |
+| скласти | ˈsklɑste | to pass (exam); assemble | verb |  |  |
+| старанний | stɐˈrɑnːɪj | diligent | adj | ч |  |
+| сходити | sxoˈdɪte | to go/descend | verb |  |  |
+| факультет | fɐkulʲˈtɛt | faculty | noun | ч |  |
+| школярка | ʃkoˈlʲɑrkɐ | schoolgirl | noun | ж |  |
+| юридичний | jurɪˈdɪt͡ʃnɪj | legal/juridical | adj | ч |  |
+| іспанський | isˈpɑnsʲkɪj | Spanish | adj | ж |  |
+| іспанія | isˈpɑnʲijɐ | Spain | name | ж |  |
 
 ## 📋 Summary
 
@@ -468,39 +524,20 @@ You learned to:
 
 Keep learning! Education is the key to the future. Good luck on your path to fluency!
 
-:::info[🔗 External Resources]
-
-**YouTube:** [Most interesting Facts about Ukrainian Schools/ #ukraineeducation #ukr...](https://www.youtube.com/watch?v=m2KybmMH1pE) — Ukrainian Guy
-
-**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
-
-**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-:::
-
-
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| час | /tʃas/ | tense, time | noun | m | grammar term |
-| клас | /klas/ | class/grade | noun | m | |
-| урок | /uˈrɔk/ | lesson | noun | m | |
-| учень | /ˈutʃenʲ/ | pupil | noun | m | |
-| факультет | /fakulʲˈtɛt/ | faculty | noun | m | |
-| лекція | /ˈlɛktsʲija/ | lecture | noun | f | |
-
-| семінар | /semiˈnar/ | seminar | noun | m | |
-| іспит | /ˈispɪt/ | exam | noun | m | |
-| залік | /ˈzalik/ | credit/test | noun | m | |
-| диплом | /dɪˈplɔm/ | diploma | noun | m | |
-| підручник | /pidˈrutʃnɪk/ | textbook | noun | m | |
-| дошка | /ˈdɔʃka/ | board | noun | f | |
-| предмет | /predˈmɛt/ | subject | noun | m | |
-
-| навчатися | /naʋˈtʃatɪsʲa/ | to learn/study | verb | - | |
-| складати | /sklaˈdatɪ/ | to take (exam) | verb | - | |
-| конспект | /konˈspɛkt/ | notes | noun | m | |
-| бібліотека | /biblioˈtɛka/ | library | noun | f | |
-| парта | /ˈparta/ | school desk | noun | f | |
-| сесія | /ˈsɛsʲija/ | exam period | noun | f | |
-
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [ULP 3-88 Вища освіта – Higher education in Ukraine + Prefixes з-, с-](https://www.ukrainianlessons.com/lesson/88/) — Challenge listening (B1): education
+> - [ULP 3-89 Навчання в аспірантурі – Postgraduate education in Ukraine + Prefixes на-, за-](https://www.ukrainianlessons.com/lesson/89/) — Challenge listening (B1): навчання, education
+> - [ULP 3-90 Освіта в Україні – Education in Ukraine (Голосове повідомлення №2 – Voice message №2)](https://www.ukrainianlessons.com/lesson/90/) — Challenge listening (B1): education
+> - [ULP 5-171 Інтерв'ю з Міленою про навчання в музичному коледжі](https://www.ukrainianlessons.com/lesson-171/) — Cross-level topic match: навчання
+> - [Useful phrases for learning Ukrainian](https://www.ukrainianlessons.com/fmu2/) — Listening review (A1): learning
+>
+> **📺 YouTube:**
+> - [Most interesting Facts about Ukrainian Schools/ #ukraineeducation #ukr...](https://www.youtube.com/watch?v=m2KybmMH1pE) — Ukrainian Guy
+>
+> **📖 Articles:**
+> - [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **🌐 Websites:**
+> - [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

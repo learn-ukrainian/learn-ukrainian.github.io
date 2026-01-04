@@ -18,6 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 
 ## Introduction
@@ -330,24 +331,24 @@ Try creating similar sentences about yourself before moving to the activities be
   pairs={JSON.parse(`[{"left": "Nominative", "right": "Dative"}, {"left": "я", "right": "мені"}, {"left": "ти", "right": "тобі"}, {"left": "він", "right": "йому"}, {"left": "вона", "right": "їй"}, {"left": "ми", "right": "нам"}, {"left": "ви", "right": "вам"}, {"left": "вони", "right": "їм"}, {"left": "воно", "right": "йому"}, {"left": "подобатися (до кого?)", "right": "мені подобається"}, {"left": "потрібно (кому?)", "right": "тобі потрібно"}, {"left": "холодно (кому?)", "right": "йому холодно"}]`)}
 />
 
-### Pronoun Cases [stage: recognition]
+### Pronoun Cases
 
 <GroupSort
-  title="Pronoun Cases [stage: recognition]"
+  title="Pronoun Cases"
   groups={JSON.parse(`{"Називний": ["я", "ти", "він", "вона", "ми", "ви", "вони"], "Давальний": ["мені", "тобі", "йому", "їй", "нам", "вам", "їм"], "Родовий": ["мене", "тебе", "його", "її", "нас", "вас", "їх"]}`)}
 />
 
-### Dative Rules [stage: discrimination]
+### Dative Rules
 
 <TrueFalse
-  title="Dative Rules [stage: discrimination]"
+  title="Dative Rules"
   items={JSON.parse(`[{"statement": "«Мені подобається» дослівно означає «мені це приємно».", "isTrue": true, "explanation": "Так! Те, що подобається, є граматичним підметом в українській мові."}, {"statement": "У реченні «Йому холодно» слово «йому» стоїть у знахідному відмінку.", "isTrue": false, "explanation": "Ні! «Йому» — це давальний відмінок. Фізичні стани вимагають давального."}, {"statement": "Давальні форми слів «він» і «воно» — обидві «йому».", "isTrue": true, "explanation": "Yes! Masculine and neuter share the same Dative form."}, {"statement": "Щоб сказати «I need», використовують «Я потрібно».", "isTrue": false, "explanation": "Ні! Використовують «Мені потрібно» з займенником у давальному відмінку."}, {"statement": "The verb «подобатися» always requires a Dative object.", "isTrue": true, "explanation": "Yes! The person who likes something is always in the Dative case."}, {"statement": "«Їй» означає «to him».", "isTrue": false, "explanation": "Ні! «Їй» означає «to her». «Йому» означає «to him»."}, {"statement": "Українською «I'm cold» передається як «Мені холодно».", "isTrue": true, "explanation": "Так! Фізичні стани використовують давальний + прислівник."}, {"statement": "«Вам» — це давальна форма «ви», але лише для формальних ситуацій.", "isTrue": false, "explanation": "Ні! «Вам» використовується і для формального звертання, і для множини."}, {"statement": "«Нам весело» означає «We're having fun».", "isTrue": true, "explanation": "Так! Дослівно «нам весело»."}, {"statement": "Давальний відмінок виражає лише отримувачів предметів.", "isTrue": false, "explanation": "Ні! Давальний також виражає переживачів, потреби та стани."}, {"statement": "«Дякую тобі» uses the Dative case.", "isTrue": true, "explanation": "Yes! The verb «дякувати» requires a Dative object."}, {"statement": "Щоб запитати «Do you like Ukraine?», кажуть «Ти подобаєшся Україна?»", "isTrue": false, "explanation": "Ні! Кажуть «Тобі подобається Україна?» з давальним відмінком."}]`)}
 />
 
-### Dative Pronouns [stage: controlled-production]
+### Dative Pronouns
 
 <FillIn
-  title="Dative Pronouns [stage: controlled-production]"
+  title="Dative Pronouns"
   items={JSON.parse(`[{"sentence": "___ подобається музика.", "answer": "Мені", "options": ["Мені", "Я", "Мене", "Моя"]}, {"sentence": "___ потрібно йти.", "answer": "Тобі", "options": ["Тобі", "Ти", "Тебе", "Твоя"]}, {"sentence": "___ холодно. Дай куртку.", "answer": "Йому", "options": ["Йому", "Він", "Його", "Його"]}, {"sentence": "___ подобається танцювати.", "answer": "Їй", "options": ["Їй", "Вона", "Її", "Її"]}, {"sentence": "___ потрібна допомога?", "answer": "Вам", "options": ["Вам", "Ви", "Вас", "Ваша"]}, {"sentence": "___ весело в Києві.", "answer": "Нам", "options": ["Нам", "Ми", "Нас", "Наша"]}, {"sentence": "___ подобається футбол.", "answer": "Їм", "options": ["Їм", "Вони", "Їх", "Їхній"]}, {"sentence": "___ здається, що це правда.", "answer": "Мені", "options": ["Мені", "Я", "Мене", "Моя"]}, {"sentence": "___ потрібно більше часу.", "answer": "Йому", "options": ["Йому", "Він", "Його", "Його"]}, {"sentence": "___ тепло тут?", "answer": "Тобі", "options": ["Тобі", "Ти", "Тебе", "Твоя"]}, {"sentence": "___ цікаво вчити українську.", "answer": "Нам", "options": ["Нам", "Ми", "Нас", "Наш"]}, {"sentence": "___ сумно без друзів.", "answer": "Їй", "options": ["Їй", "Вона", "Її", "Її"]}]`)}
 />
 
@@ -358,9 +359,9 @@ Try creating similar sentences about yourself before moving to the activities be
   questions={JSON.parse(`[{"question": "When you want to say \\\"I like coffee\\\" in Ukrainian, how do you express this sentiment?", "options": [{"text": "Я подобаюся кава.", "correct": false}, {"text": "Мені подобається кава.", "correct": true}, {"text": "Моя подобається кава.", "correct": false}, {"text": "Мене подобається кава.", "correct": false}]}, {"question": "If you want to tell someone \\\"She needs to rest\\\" in Ukrainian, which sentence is correct?", "options": [{"text": "Вона потрібно відпочити.", "correct": false}, {"text": "Її потрібно відпочити.", "correct": false}, {"text": "Їй потрібно відпочити.", "correct": true}, {"text": "Вона потрібна відпочити.", "correct": false}]}, {"question": "When expressing that \\\"He is cold\\\" in Ukrainian, which construction should you use?", "options": [{"text": "Він холодно.", "correct": false}, {"text": "Йому холодно.", "correct": true}, {"text": "Його холодно.", "correct": false}, {"text": "Він холодний.", "correct": false}]}, {"question": "To ask \\\"Do you like Kyiv?\\\" in Ukrainian, which sentence would a native speaker use?", "options": [{"text": "Тобі подобається Київ?", "correct": true}, {"text": "Ти подобаєшся Київ?", "correct": false}, {"text": "Твій подобається Київ?", "correct": false}, {"text": "Тебе подобається Київ?", "correct": false}]}, {"question": "When you want to say \\\"We need help\\\" in Ukrainian, which sentence is grammatically correct?", "options": [{"text": "Ми потрібно допомога.", "correct": false}, {"text": "Ми потрібна допомога.", "correct": false}, {"text": "Нам потрібна допомога.", "correct": true}, {"text": "Нас потрібна допомога.", "correct": false}]}, {"question": "To express that \\\"They find it interesting\\\" in Ukrainian, which sentence captures this meaning correctly?", "options": [{"text": "Вони цікаво.", "correct": false}, {"text": "Їм цікаво.", "correct": true}, {"text": "Їх цікаво.", "correct": false}, {"text": "Вони цікаві.", "correct": false}]}, {"question": "When a Ukrainian speaker says \\\"Мені здається\\\", what meaning are they trying to express?", "options": [{"text": "I am seen", "correct": false}, {"text": "It seems to me", "correct": true}, {"text": "I see", "correct": false}, {"text": "I am being", "correct": false}]}, {"question": "If someone asks you \\\"Тобі добре?\\\" in Ukrainian, what are they inquiring about?", "options": [{"text": "You are good?", "correct": false}, {"text": "Are you okay?", "correct": true}, {"text": "Your good?", "correct": false}, {"text": "Do you have good?", "correct": false}]}, {"question": "When referring to a female recipient, which Ukrainian pronoun means \\\"to her\\\" in the Dative case?", "options": [{"text": "її", "correct": false}, {"text": "їй", "correct": true}, {"text": "вона", "correct": false}, {"text": "йому", "correct": false}]}, {"question": "When referring to multiple people as recipients, which Ukrainian pronoun means \\\"to them\\\" in Dative?", "options": [{"text": "вони", "correct": false}, {"text": "їх", "correct": false}, {"text": "їм", "correct": true}, {"text": "вонам", "correct": false}]}, {"question": "When a Ukrainian speaker says \\\"Дякую тобі\\\", what are they expressing to the listener?", "options": [{"text": "I thank you", "correct": true}, {"text": "You thank me", "correct": false}, {"text": "Thanks for you", "correct": false}, {"text": "Your thanks", "correct": false}]}, {"question": "In the phrase \\\"Вам каву?\\\", what is the speaker doing or offering to the recipient?", "options": [{"text": "Asking if you have coffee", "correct": false}, {"text": "Offering you coffee", "correct": true}, {"text": "Thanking you for coffee", "correct": false}, {"text": "Ordering coffee for themselves", "correct": false}]}]`)}
 />
 
-### Find the Mistake [stage: controlled-production]
+### Find the Mistake
 
-<ErrorCorrection title="Find the Mistake [stage: controlled-production]">
+<ErrorCorrection title="Find the Mistake">
   <ErrorCorrectionItem
     sentence={`Я подобається музика.`}
     errorWord={`Я`}
@@ -447,10 +448,10 @@ Try creating similar sentences about yourself before moving to the activities be
   />
 </ErrorCorrection>
 
-### Complete the Story [stage: controlled-production]
+### Complete the Story
 
 <Cloze
-  title="Complete the Story [stage: controlled-production]"
+  title="Complete the Story"
   passage={`Марія і Петро в Одесі. ___ подобається море. ___ тепло і весело. Погода чудова!
 Офіціант запитує: «___ каву?» Марія каже: «Так, ___ каву, будь ласка.» А Петро каже: «Ні, ___ не потрібно. ___ краще чай.»
 Марія телефонує подрузі: «___ подобається тут!» Подруга відповідає: «___ теж хочеться поїхати!»
@@ -458,24 +459,31 @@ Try creating similar sentences about yourself before moving to the activities be
   blanks={JSON.parse(`[{"answer": "Їм", "options": ["Їм", "Їх", "Вони"]}, {"answer": "Їм", "options": ["Їм", "Їх", "Вони"]}, {"answer": "Вам", "options": ["Вам", "Вас", "Ви"]}, {"answer": "мені", "options": ["мені", "мене", "я"]}, {"answer": "мені", "options": ["мені", "мене", "я"]}, {"answer": "Мені", "options": ["Мені", "Мене", "Я"]}, {"answer": "Мені", "options": ["Мені", "Мене", "Я"]}, {"answer": "Мені", "options": ["Мені", "Мене", "Я"]}, {"answer": "їм", "options": ["їм", "їх", "вони"]}, {"answer": "їм", "options": ["їм", "їх", "вони"]}, {"answer": "Їм", "options": ["Їм", "Їх", "Вони"]}, {"answer": "Їм", "options": ["Їм", "Їх", "Вони"]}]`)}
 />
 
-### Dative Sentences [stage: free-production]
+### Dative Sentences 
 
 <Unjumble
-  title="Dative Sentences [stage: free-production]"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Мені дуже подобається українська музика і народні пісні"}, {"jumbled": "", "answer": "Тобі сьогодні потрібно добре відпочити після важкого дня"}, {"jumbled": "", "answer": "Йому дуже холодно тут в цій великій кімнаті"}, {"jumbled": "", "answer": "Чи їй взагалі подобається Київ як столиця України"}, {"jumbled": "", "answer": "Нам потрібна твоя допомога з цим складним завданням"}, {"jumbled": "", "answer": "Чи вам цікаво працювати тут в цій компанії"}, {"jumbled": "", "answer": "Їм подобається український футбол і вони дивляться матчі"}, {"jumbled": "", "answer": "Мені здається, що це правда, і я вірю"}, {"jumbled": "", "answer": "Чи тобі зараз тепло в цьому новому светрі"}, {"jumbled": "", "answer": "Нам сьогодні дуже весело тут на цій вечірці"}, {"jumbled": "", "answer": "Йому потрібно більше працювати, щоб заробити гарні гроші"}, {"jumbled": "", "answer": "Їй подобаються червоні квіти, особливо троянди і тюльпани"}]`)}
+  title="Dative Sentences "
+  items={JSON.parse(`[{"jumbled": "подобається / Мені / музика / українська / і / народні / пісні / дуже", "answer": "Мені дуже подобається українська музика і народні пісні"}, {"jumbled": "потрібно / Тобі / добре / відпочити / після / важкого / дня / сьогодні", "answer": "Тобі сьогодні потрібно добре відпочити після важкого дня"}, {"jumbled": "холодно / Йому / тут / в / цій / великій / кімнаті / дуже", "answer": "Йому дуже холодно тут в цій великій кімнаті"}, {"jumbled": "подобається / їй / Київ / Чи / як / столиця / України / взагалі", "answer": "Чи їй взагалі подобається Київ як столиця України"}, {"jumbled": "потрібна / Нам / допомога / з / цим / складним / завданням / твоя", "answer": "Нам потрібна твоя допомога з цим складним завданням"}, {"jumbled": "цікаво / Вам / тут / працювати / в / цій / компанії / Чи", "answer": "Чи вам цікаво працювати тут в цій компанії"}, {"jumbled": "футбол / Їм / подобається / український / і / вони / дивляться / матчі", "answer": "Їм подобається український футбол і вони дивляться матчі"}, {"jumbled": "здається / Мені / що / це / правда / і / я / вірю", "answer": "Мені здається, що це правда, і я вірю"}, {"jumbled": "тепло / Тобі / зараз / в / цьому / новому / светрі / Чи", "answer": "Чи тобі зараз тепло в цьому новому светрі"}, {"jumbled": "весело / Нам / дуже / тут / на / цій / вечірці / сьогодні", "answer": "Нам сьогодні дуже весело тут на цій вечірці"}, {"jumbled": "потрібно / Йому / працювати / більше / щоб / заробити / гроші / гарні", "answer": "Йому потрібно більше працювати, щоб заробити гарні гроші"}, {"jumbled": "подобаються / Їй / квіти / червоні / особливо / троянди / і / тюльпани", "answer": "Їй подобаються червоні квіти, особливо троянди і тюльпани"}]`)}
 />
 
-### At the Restaurant [stage: free-production]
+### At the Restaurant 
 
-<DialogueReorder
-  title="At the Restaurant [stage: free-production]"
-  lines={JSON.parse(`[{"text": "Добрий вечір! Вам меню?", "order": 1, "speaker": "A"}, {"text": "Так, дякую. Нам меню, будь ласка.", "order": 2, "speaker": "B"}, {"text": "Вам подобається риба?", "order": 3, "speaker": "A"}, {"text": "Так, мені подобається. А йому більше подобається м'ясо.", "order": 4, "speaker": "B"}, {"text": "Зрозуміло. Йому м'ясо, вам рибу?", "order": 5, "speaker": "A"}, {"text": "Так, дякую. І нам воду, будь ласка.", "order": 6, "speaker": "B"}]`)}
+<Cloze
+  title="At the Restaurant "
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "Добрий вечір! Вам меню?", "options": ["Добрий вечір! Вам меню?", "Так, дякую. І нам воду, будь ласка.", "Зрозуміло. Йому м'ясо, вам рибу?"]}, {"answer": "Так, дякую. Нам меню, будь ласка.", "options": ["Так, дякую. Нам меню, будь ласка.", "Зрозуміло. Йому м'ясо, вам рибу?", "Так, мені подобається. А йому більше подобається м'ясо."]}, {"answer": "Вам подобається риба?", "options": ["Вам подобається риба?", "Так, дякую. Нам меню, будь ласка.", "Так, дякую. І нам воду, будь ласка."]}, {"answer": "Так, мені подобається. А йому більше подобається м'ясо.", "options": ["Так, мені подобається. А йому більше подобається м'ясо.", "Так, дякую. І нам воду, будь ласка.", "Так, дякую. Нам меню, будь ласка."]}, {"answer": "Зрозуміло. Йому м'ясо, вам рибу?", "options": ["Зрозуміло. Йому м'ясо, вам рибу?", "Так, дякую. Нам меню, будь ласка.", "Вам подобається риба?"]}, {"answer": "Так, дякую. І нам воду, будь ласка.", "options": ["Так, дякую. І нам воду, будь ласка.", "Так, дякую. Нам меню, будь ласка.", "Вам подобається риба?"]}]`)}
 />
 
-### English to Ukrainian [stage: free-production]
+### English to Ukrainian 
 
 <Translate
-  title="English to Ukrainian [stage: free-production]"
+  title="English to Ukrainian "
   questions={JSON.parse(`[{"source": "I like Ukrainian music.", "options": [{"text": "Я подобаюся українська музика.", "correct": false}, {"text": "Мені подобається українська музика.", "correct": true}, {"text": "Мене подобається українська музика.", "correct": false}, {"text": "Моя подобається українська музика.", "correct": false}]}, {"source": "She needs help.", "options": [{"text": "Вона потрібна допомога.", "correct": false}, {"text": "Її потрібна допомога.", "correct": false}, {"text": "Їй потрібна допомога.", "correct": true}, {"text": "Вона потрібно допомога.", "correct": false}]}, {"source": "We are having fun.", "options": [{"text": "Ми весело.", "correct": false}, {"text": "Нам весело.", "correct": true}, {"text": "Нас весело.", "correct": false}, {"text": "Наш весело.", "correct": false}]}, {"source": "Do you like Kyiv?", "options": [{"text": "Ти подобаєшся Київ?", "correct": false}, {"text": "Тобі подобається Київ?", "correct": true}, {"text": "Тебе подобається Київ?", "correct": false}, {"text": "Твій подобається Київ?", "correct": false}]}, {"source": "He is cold.", "options": [{"text": "Він холодно.", "correct": false}, {"text": "Він холодний.", "correct": false}, {"text": "Йому холодно.", "correct": true}, {"text": "Його холодно.", "correct": false}]}, {"source": "They need more time.", "options": [{"text": "Вони потрібно більше часу.", "correct": false}, {"text": "Їх потрібно більше часу.", "correct": false}, {"text": "Їм потрібно більше часу.", "correct": true}, {"text": "Вони потрібний більше часу.", "correct": false}]}, {"source": "I thank you.", "options": [{"text": "Я дякую ти.", "correct": false}, {"text": "Дякую тобі.", "correct": true}, {"text": "Дякую тебе.", "correct": false}, {"text": "Я дякую твій.", "correct": false}]}, {"source": "It seems to me that...", "options": [{"text": "Мені здається, що...", "correct": true}, {"text": "Я здаюся, що...", "correct": false}, {"text": "Мене здається, що...", "correct": false}, {"text": "Моя здається, що...", "correct": false}]}, {"source": "Are you warm?", "options": [{"text": "Ти тепло?", "correct": false}, {"text": "Тобі тепло?", "correct": true}, {"text": "Тебе тепло?", "correct": false}, {"text": "Твоя тепло?", "correct": false}]}, {"source": "She likes to dance.", "options": [{"text": "Вона подобається танцювати.", "correct": false}, {"text": "Її подобається танцювати.", "correct": false}, {"text": "Їй подобається танцювати.", "correct": true}, {"text": "Вона подобається танець.", "correct": false}]}, {"source": "Do you need coffee?", "options": [{"text": "Ти потрібно кава?", "correct": false}, {"text": "Вам потрібна кава?", "correct": true}, {"text": "Вас потрібна кава?", "correct": false}, {"text": "Ви потрібно кава?", "correct": false}]}, {"source": "They find it interesting.", "options": [{"text": "Вони цікаво.", "correct": false}, {"text": "Їх цікаво.", "correct": false}, {"text": "Їм цікаво.", "correct": true}, {"text": "Вони цікаві.", "correct": false}]}]`)}
 />
 

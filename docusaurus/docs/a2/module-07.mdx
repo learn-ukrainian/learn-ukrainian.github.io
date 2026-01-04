@@ -18,7 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 ## Warm-up
 
@@ -266,6 +266,7 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 ---
 
 
+
 ## 🎯 Activities
 
 ### Preposition Meanings
@@ -293,7 +294,7 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 
 <TrueFalse
   title="Preposition Rules"
-  items={JSON.parse(`[{"statement": "Prepositions in Ukrainian require specific grammatical cases.", "isTrue": true, "explanation": "Correct! Every Ukrainian preposition is linked to one or more cases."}, {"statement": "\\\"В школу\\\" and \\\"в школі\\\" mean exactly the same thing.", "isTrue": false, "explanation": "False! \\\"В школу\\\" (accusative) means motion TO school; \\\"в школі\\\" (locative) means location AT school."}, {"statement": "\\\"Без\\\" always takes the genitive case.", "isTrue": true, "explanation": "Yes! \\\"Без цукру\\\" (without sugar) uses genitive."}, {"statement": "\\\"Над\\\" always takes the instrumental case.", "isTrue": true, "explanation": "Correct! \\\"Над столом\\\" (above the table) uses instrumental."}, {"statement": "\\\"На\\\" only takes accusative case.", "isTrue": false, "explanation": "False! \\\"На\\\" takes accusative for motion, locative for location."}, {"statement": "\\\"До\\\" takes genitive case.", "isTrue": true, "explanation": "Yes! \\\"До школи\\\" (to school) uses genitive."}, {"statement": "\\\"З\\\" always means \\\"from.\\\"", "isTrue": false, "explanation": "\\\"З\\\" can mean \\\"from\\\" with genitive OR \\\"with\\\" with instrumental."}, {"statement": "Motion uses accusative with в/у, на, під, за.", "isTrue": true, "explanation": "Correct! These two-way prepositions use accusative for motion."}, {"statement": "\\\"В\\\" and \\\"у\\\" have the same meaning.", "isTrue": true, "explanation": "Yes! They differ only in when you use them for euphony."}, {"statement": "\\\"Перед\\\" takes locative case.", "isTrue": false, "explanation": "\\\"Перед\\\" takes instrumental: \\\"перед дверима.\\\""}, {"statement": "\\\"Між\\\" means \\\"between\\\" and takes instrumental.", "isTrue": true, "explanation": "Correct! \\\"Між нами\\\" (between us)."}, {"statement": "Location after \\\"під\\\" uses instrumental, not locative.", "isTrue": true, "explanation": "Yes! \\\"Під столом\\\" (under the table) uses instrumental."}]`)}
+  items={JSON.parse(`[{"statement": "Prepositions in Ukrainian require specific grammatical cases.", "isTrue": true, "explanation": "Correct! Every Ukrainian preposition is linked to one or more cases."}, {"statement": "\\\"В школу\\\" and \\\"в школі\\\" mean exactly the same thing.", "isTrue": false, "explanation": "False! \\\"В школу\\\" means motion TO school; \\\"в школі\\\" (locative) means location AT school."}, {"statement": "\\\"Без\\\" always takes the genitive case.", "isTrue": true, "explanation": "Yes! \\\"Без цукру\\\" uses genitive."}, {"statement": "\\\"Над\\\" always takes the instrumental case.", "isTrue": true, "explanation": "Correct! \\\"Над столом\\\" uses instrumental."}, {"statement": "\\\"На\\\" only takes accusative case.", "isTrue": false, "explanation": "False! \\\"На\\\" takes accusative for motion, locative for location."}, {"statement": "\\\"До\\\" takes genitive case.", "isTrue": true, "explanation": "Yes! \\\"До школи\\\" uses genitive."}, {"statement": "\\\"З\\\" always means \\\"from.\\\"", "isTrue": false, "explanation": "\\\"З\\\" can mean \\\"from\\\" with genitive OR \\\"with\\\" with instrumental."}, {"statement": "Motion uses accusative with в/у, на, під, за.", "isTrue": true, "explanation": "Correct! These two-way prepositions use accusative for motion."}, {"statement": "\\\"В\\\" and \\\"у\\\" have the same meaning.", "isTrue": true, "explanation": "Yes! They differ only in when you use them for euphony."}, {"statement": "\\\"Перед\\\" takes locative case.", "isTrue": false, "explanation": "\\\"Перед\\\" takes instrumental: \\\"перед дверима.\\\""}, {"statement": "\\\"Між\\\" means \\\"between\\\" and takes instrumental.", "isTrue": true, "explanation": "Correct! \\\"Між нами\\\"."}, {"statement": "Location after \\\"під\\\" uses instrumental, not locative.", "isTrue": true, "explanation": "Yes! \\\"Під столом\\\" uses instrumental."}]`)}
 />
 
 ### Prepositions by Case
@@ -307,7 +308,7 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 
 <Unjumble
   title="Preposition Sentences"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Я йду до школи щодня о восьмій годині"}, {"jumbled": "", "answer": "Кава без цукру і молока будь ласка мені"}, {"jumbled": "", "answer": "Лампа над столом світить яскраво увечері у кімнаті"}, {"jumbled": "", "answer": "Він гуляє з друзями у парку після роботи"}, {"jumbled": "", "answer": "Подарунок для мами лежить на столі у коробці"}, {"jumbled": "", "answer": "Ми йдемо через парк і потім до магазину"}, {"jumbled": "", "answer": "Вони говорять про мене і моїх друзів часто"}, {"jumbled": "", "answer": "Кіт спить під столом бо там тепло завжди"}, {"jumbled": "", "answer": "Стояти перед дверима і чекати на друга довго"}, {"jumbled": "", "answer": "Бути за будинком і не бачити вулиці звідти"}, {"jumbled": "", "answer": "Лист від брата прийшов вчора з Німеччини поштою"}, {"jumbled": "", "answer": "Після роботи ми йдемо до кафе на каву"}]`)}
+  items={JSON.parse(`[{"jumbled": "я / йду / до / школи / щодня / о / восьмій / годині", "answer": "Я йду до школи щодня о восьмій годині"}, {"jumbled": "кава / без / цукру / і / молока / будь / ласка / мені", "answer": "Кава без цукру і молока будь ласка мені"}, {"jumbled": "лампа / над / столом / світить / яскраво / увечері / у / кімнаті", "answer": "Лампа над столом світить яскраво увечері у кімнаті"}, {"jumbled": "він / гуляє / з / друзями / у / парку / після / роботи", "answer": "Він гуляє з друзями у парку після роботи"}, {"jumbled": "подарунок / для / мами / лежить / на / столі / у / коробці", "answer": "Подарунок для мами лежить на столі у коробці"}, {"jumbled": "ми / йдемо / через / парк / і / потім / до / магазину", "answer": "Ми йдемо через парк і потім до магазину"}, {"jumbled": "вони / говорять / про / мене / і / моїх / друзів / часто", "answer": "Вони говорять про мене і моїх друзів часто"}, {"jumbled": "кіт / спить / під / столом / бо / там / тепло / завжди", "answer": "Кіт спить під столом бо там тепло завжди"}, {"jumbled": "стояти / перед / дверима / і / чекати / на / друга / довго", "answer": "Стояти перед дверима і чекати на друга довго"}, {"jumbled": "бути / за / будинком / і / не / бачити / вулиці / звідти", "answer": "Бути за будинком і не бачити вулиці звідти"}, {"jumbled": "лист / від / брата / прийшов / вчора / з / Німеччини / поштою", "answer": "Лист від брата прийшов вчора з Німеччини поштою"}, {"jumbled": "після / роботи / ми / йдемо / до / кафе / на / каву", "answer": "Після роботи ми йдемо до кафе на каву"}]`)}
 />
 
 ### Fix the Case
@@ -411,25 +412,51 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 
 ### Asking for Directions
 
-<DialogueReorder
+<Cloze
   title="Asking for Directions"
-  lines={JSON.parse(`[{"text": "Вибачте, як дійти до пошти?", "order": 1, "speaker": ""}, {"text": "Йдіть через парк.", "order": 2, "speaker": ""}, {"text": "Дякую!", "order": 3, "speaker": ""}, {"text": "Потім поверніть за будинок.", "order": 4, "speaker": ""}, {"text": "Пошта буде перед вами.", "order": 5, "speaker": ""}, {"text": "Будь ласка!", "order": 6, "speaker": ""}, {"text": "--", "order": 7, "speaker": ""}, {"text": "Де знаходиться банк?", "order": 8, "speaker": ""}, {"text": "Він між аптекою і магазином.", "order": 9, "speaker": ""}, {"text": "Далеко від станції метро?", "order": 10, "speaker": ""}, {"text": "Ні, біля станції.", "order": 11, "speaker": ""}, {"text": "Добре, дякую!", "order": 12, "speaker": ""}, {"text": "Немає за що!", "order": 13, "speaker": ""}]`)}
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "Вибачте, як дійти до пошти?", "options": ["Вибачте, як дійти до пошти?", "Дякую!", "Йдіть через парк."]}, {"answer": "Йдіть через парк.", "options": ["Йдіть через парк.", "Добре, дякую!", "Будь ласка!"]}, {"answer": "Дякую!", "options": ["Дякую!", "Вибачте, як дійти до пошти?", "Де знаходиться банк?"]}, {"answer": "Потім поверніть за будинок.", "options": ["Потім поверніть за будинок.", "Будь ласка!", "Добре, дякую!"]}, {"answer": "Пошта буде перед вами.", "options": ["Пошта буде перед вами.", "Він між аптекою і магазином.", "Ні, біля станції."]}, {"answer": "Будь ласка!", "options": ["Будь ласка!", "Дякую!", "Далеко від станції метро?"]}, {"answer": "--", "options": ["--", "Дякую!", "Немає за що!"]}, {"answer": "Де знаходиться банк?", "options": ["Де знаходиться банк?", "Будь ласка!", "Потім поверніть за будинок."]}, {"answer": "Він між аптекою і магазином.", "options": ["Він між аптекою і магазином.", "Будь ласка!", "Дякую!"]}, {"answer": "Далеко від станції метро?", "options": ["Далеко від станції метро?", "Дякую!", "Йдіть через парк."]}, {"answer": "Ні, біля станції.", "options": ["Ні, біля станції.", "Пошта буде перед вами.", "Немає за що!"]}, {"answer": "Добре, дякую!", "options": ["Добре, дякую!", "Будь ласка!", "Де знаходиться банк?"]}, {"answer": "Немає за що!", "options": ["Немає за що!", "Далеко від станції метро?", "Він між аптекою і магазином."]}]`)}
 />
 
 ### Find Preposition + Case
 
-<MarkTheWords>
-  <MarkTheWordsActivity
-    instruction={`Click the correct words.`}
-    text={`Click on preposition + noun combinations.
-Він іде до школи(correct). Потім він буде в класі(correct). Книги лежать на столі(correct). Олівець під зошитом(correct).
+<HighlightMorphemes>
+  <HighlightMorphemesActivity
+  instruction={`Click on preposition + noun combinations.`}
+    text={`Він іде до школи. Потім він буде в класі. Книги лежать на столі. Олівець під зошитом.
 ---
-Вона живе біля парку(correct). Гуляє з собакою(correct). Сидить перед телевізором(correct). Після роботи йде до магазину(correct).
+Вона живе біля парку. Гуляє з собакою. Сидить перед телевізором. Після роботи йде до магазину.
 ---
-Лист від друга(correct). Подарунок для сестри(correct). Кава без цукру(correct). Розмова про майбутнє(correct).`}
-    correctWords={JSON.parse(`["до школи", "в класі", "на столі", "під зошитом", "біля парку", "з собакою", "перед телевізором", "до магазину", "від друга", "для сестри", "без цукру", "про майбутнє"]`)}
+Лист від друга. Подарунок для сестри. Кава без цукру. Розмова про майбутнє.`}
+    morphemes={[
+    { word: `до школи`, morpheme: `до школи`, type: `whole` },
+    { word: `в класі`, morpheme: `в класі`, type: `whole` },
+    { word: `на столі`, morpheme: `на столі`, type: `whole` },
+    { word: `під зошитом`, morpheme: `під зошитом`, type: `whole` },
+    { word: `біля парку`, morpheme: `біля парку`, type: `whole` },
+    { word: `з собакою`, morpheme: `з собакою`, type: `whole` },
+    { word: `перед телевізором`, morpheme: `перед телевізором`, type: `whole` },
+    { word: `до магазину`, morpheme: `до магазину`, type: `whole` },
+    { word: `від друга`, morpheme: `від друга`, type: `whole` },
+    { word: `для сестри`, morpheme: `для сестри`, type: `whole` },
+    { word: `без цукру`, morpheme: `без цукру`, type: `whole` },
+    { word: `про майбутнє`, morpheme: `про майбутнє`, type: `whole` }
+  ]}
   />
-</MarkTheWords>
+</HighlightMorphemes>
 
 ### English to Ukrainian
 
@@ -437,6 +464,33 @@ Practice forming sentences with the correct preposition + case combinations. Sta
   title="English to Ukrainian"
   questions={JSON.parse(`[{"source": "I am going to school.", "options": [{"text": "Я йду до школи.", "correct": true}, {"text": "Я йду в школі.", "correct": false}, {"text": "Я йду на школі.", "correct": false}, {"text": "Я йду до школа.", "correct": false}]}, {"source": "Coffee without sugar.", "options": [{"text": "Кава без цукру.", "correct": true}, {"text": "Кава без цукор.", "correct": false}, {"text": "Кава без цукром.", "correct": false}, {"text": "Кава без цукрі.", "correct": false}]}, {"source": "The lamp is above the table.", "options": [{"text": "Лампа над столом.", "correct": true}, {"text": "Лампа на столі.", "correct": false}, {"text": "Лампа під столом.", "correct": false}, {"text": "Лампа над столі.", "correct": false}]}, {"source": "A gift for mom.", "options": [{"text": "Подарунок для мами.", "correct": true}, {"text": "Подарунок для мама.", "correct": false}, {"text": "Подарунок до мами.", "correct": false}, {"text": "Подарунок від мами.", "correct": false}]}, {"source": "They are talking about me.", "options": [{"text": "Вони говорять про мене.", "correct": true}, {"text": "Вони говорять про я.", "correct": false}, {"text": "Вони говорять про мені.", "correct": false}, {"text": "Вони говорять про мною.", "correct": false}]}, {"source": "The cat is under the table.", "options": [{"text": "Кіт під столом.", "correct": true}, {"text": "Кіт під стіл.", "correct": false}, {"text": "Кіт на столі.", "correct": false}, {"text": "Кіт під столі.", "correct": false}]}]`)}
 />
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| вживання | vʒɪˈʋɑnʲːɐ | usage | noun | с |  |
+| висити | ˈvɪsɪte | to hang (intransitive) - typo? висіти | verb |  |  |
+| висіти | vɪˈsʲite | to hang (be hanging) | verb |  |  |
+| група | ˈɦrupɐ | group | noun | ж |  |
+| двосторонній | dʋostoˈrɔnːij | two-sided | adj |  |  |
+| знаходитися | znɐˈxɔdɪtɪsʲɐ | to be located | verb |  |  |
+| зустрінутися | zustˈrinutɪsʲɐ | to meet (oneself/each other) | verb |  |  |
+| камінь | ˈkɑminʲ | stone | noun | ч |  |
+| картинка | kɐrˈtɪnkɐ | picture; image | noun | ж |  |
+| килим | ˈkɪlɪm | carpet; rug | noun | ч |  |
+| класти | ˈklɑste | to put (horizontally) | verb |  |  |
+| ключовий | klʲut͡ʃoˈʋei̯ | key (adj); pivotal | adj |  |  |
+| ко | ko | to (archaic/dialect/rare prep) | pron | ч |  |
+| кошик | ˈkɔʃɪk | basket | noun | ч |  |
+| куток | kuˈtɔk | corner | noun | ч |  |
+| кілька | ˈkilʲkɐ | several | other |  |  |
+| найцікавіший | nɐi̯t͡sʲikɐˈʋiʃei̯ | most interesting | adj | ж |  |
+| посередині | posereˈdɪnʲi | in the middle | adv |  |  |
+| таємниця | tɐjemˈnɪt͡sʲɐ | secret; mystery | noun | ж |  |
+| текст | tɛkst | text | noun | ч |  |
+| удач | uˈdɑt͡ʃ | luck (genitive pl?) | noun | ж |  |
+| фотографії | fotoˈɦrɑfiji | photos | noun | ж |  |
 
 ## 📋 Summary
 
@@ -467,28 +521,37 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 
 ## Need More Practice?
 
-:::info[External Resources]
-
-- 🎥 [Prepositions Guide](https://www.youtube.com/@SpeakUkrainian) — Speak Ukrainian
-- 📖 [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/)
-- 📝 [Cases Overview](https://www.ukrainianlessons.com/intro-cases/)
-- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-:::
-
-
 ---
 
-## 📚 Vocabulary
-
-| Word | IPA         | English    | POS  | Gender | Note                               |
-| ------- | ----------- | ---------- | ---- | ------ | ---------------------------------- |
-| під     | /pid/       | under      | prep | —      | + Acc (motion) or Instr (location) |
-| над     | /nɑd/       | above      | prep | —      | + Instr                            |
-| про     | /prɔ/       | about      | prep | —      | + Acc                              |
-| коло    | /ˈkɔlɔ/     | near       | prep | —      | + Gen                              |
-| навколо | /nɑʋˈkɔlɔ/  | around     | prep | —      | + Gen                              |
-| замість | /ˈzɑmistʲ/  | instead of | prep | —      | + Gen                              |
-| серед   | /ˈsɛrɛd/    | among      | prep | —      | + Gen                              |
-| завдяки | /zɑʋˈdʲɑkɪ/ | thanks to  | prep | —      | + Dat                              |
-
----
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions](https://www.ukrainianlessons.com/lesson/57/) — Level-aligned topic match: prepositions
+>
+> **📖 Articles:**
+> - [Accusative Case in Ukrainian](https://www.ukrainianlessons.com/accusativecase/) — Ukrainian Lessons
+> - [Genitive Case in Ukrainian](https://www.ukrainianlessons.com/genitive-case/) — Ukrainian Lessons
+> - [ULP 1-32 Shopping for clothes – Accusative case in Ukrainian](https://www.ukrainianlessons.com/lesson/32/) — Ukrainian Lessons
+> - [ULP 1-33 Talking about books in Ukrainian – Accusative case of people](https://www.ukrainianlessons.com/lesson/33/) — Ukrainian Lessons
+> - [ULP 2-46 At the grocery store + Genitive case](https://www.ukrainianlessons.com/lesson/46/) — Ukrainian Lessons
+> - [ULP 2-47 Food festivals + Genitive case](https://www.ukrainianlessons.com/lesson/47/) — Ukrainian Lessons
+> - [ULP 2-48 Eating habits + Genitive case](https://www.ukrainianlessons.com/lesson/48/) — Ukrainian Lessons
+> - [ULP 2-49 Syrnyky recipe + Genitive case](https://www.ukrainianlessons.com/lesson/49/) — Ukrainian Lessons
+> - [ULP 2-51 Electronics and technology + Dative case](https://www.ukrainianlessons.com/lesson/51/) — Ukrainian Lessons
+> - [ULP 2-52 Buying a phone in Ukraine + Dative case](https://www.ukrainianlessons.com/lesson/52/) — Ukrainian Lessons
+> - [ULP 2-53 Social Media in Ukrainian + Dative case](https://www.ukrainianlessons.com/lesson/53/) — Ukrainian Lessons
+> - [ULP 2-56 Asking for an advice + Accusative case](https://www.ukrainianlessons.com/lesson/56/) — Ukrainian Lessons
+> - [ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions](https://www.ukrainianlessons.com/lesson/57/) — Ukrainian Lessons
+> - [ULP 2-58 Inviting to a party + Accusative case of pronouns](https://www.ukrainianlessons.com/lesson/58/) — Ukrainian Lessons
+> - [ULP 2-61 Christmas dinner in Ukraine + Instrumental case](https://www.ukrainianlessons.com/lesson/61/) — Ukrainian Lessons
+> - [ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns](https://www.ukrainianlessons.com/lesson/62/) — Ukrainian Lessons
+> - [ULP 2-66 Sharing memories + Locative case with places](https://www.ukrainianlessons.com/lesson/66/) — Ukrainian Lessons
+> - [ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case](https://www.ukrainianlessons.com/lesson/67/) — Ukrainian Lessons
+> - [ULP 2-68 Making a hair appointment + Dates & Locative case](https://www.ukrainianlessons.com/lesson/68/) — Ukrainian Lessons
+> - [ULP 2-69 Ukrainian Children's Poem + Vocative case](https://www.ukrainianlessons.com/lesson/69/) — Ukrainian Lessons
+> - [Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — Unknown
+> - [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Unknown
+> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Unknown
+>
+> **🌐 Websites:**
+> - [Prepositions Guide](https://www.youtube.com/@SpeakUkrainian) — Speak Ukrainian

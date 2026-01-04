@@ -18,7 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 ## Розминка
 
@@ -230,6 +230,7 @@ First identify the function of the word in the sentence, then choose the case. N
 ---
 
 
+
 ## 🎯 Activities
 
 ### Case Questions
@@ -271,7 +272,7 @@ First identify the function of the word in the sentence, then choose the case. N
 
 <Unjumble
   title="Case Sentences"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Я бачу маму і тата у магазині сьогодні"}, {"jumbled": "", "answer": "Книга лежить на столі вже давно тут у"}, {"jumbled": "", "answer": "Він дає подарунок сестрі на день народження сьогодні"}, {"jumbled": "", "answer": "Немає часу сьогодні у мене на це зовсім"}, {"jumbled": "", "answer": "Ми їдемо автобусом до центру міста щодня вранці"}, {"jumbled": "", "answer": "Вона пише ручкою у зошиті на уроці завжди"}, {"jumbled": "", "answer": "Друже привіт як ти сьогодні себе почуваєш добре"}, {"jumbled": "", "answer": "Я йду з другом у парк щодня ввечері"}, {"jumbled": "", "answer": "Студент читає книгу про Україну в бібліотеці сьогодні"}, {"jumbled": "", "answer": "Їхня чашка кави стоїть на столі в кафе"}, {"jumbled": "", "answer": "Мама готує обід для всієї родини щодня ввечері"}, {"jumbled": "", "answer": "Вона в університеті вчиться вже три роки зараз"}]`)}
+  items={JSON.parse(`[{"jumbled": "я / бачу / маму / і / тата / у / магазині / сьогодні", "answer": "Я бачу маму і тата у магазині сьогодні"}, {"jumbled": "книга / на / столі / лежить / вже / давно / тут / у", "answer": "Книга лежить на столі вже давно тут у"}, {"jumbled": "він / дає / подарунок / сестрі / на / день / народження / сьогодні", "answer": "Він дає подарунок сестрі на день народження сьогодні"}, {"jumbled": "немає / часу / сьогодні / у / мене / на / це / зовсім", "answer": "Немає часу сьогодні у мене на це зовсім"}, {"jumbled": "ми / їдемо / автобусом / до / центру / міста / щодня / вранці", "answer": "Ми їдемо автобусом до центру міста щодня вранці"}, {"jumbled": "вона / пише / ручкою / у / зошиті / на / уроці / завжди", "answer": "Вона пише ручкою у зошиті на уроці завжди"}, {"jumbled": "друже / привіт / як / ти / сьогодні / себе / почуваєш / добре", "answer": "Друже привіт як ти сьогодні себе почуваєш добре"}, {"jumbled": "я / йду / з / другом / у / парк / щодня / ввечері", "answer": "Я йду з другом у парк щодня ввечері"}, {"jumbled": "студент / читає / книгу / про / Україну / в / бібліотеці / сьогодні", "answer": "Студент читає книгу про Україну в бібліотеці сьогодні"}, {"jumbled": "їхня / чашка / кави / стоїть / на / столі / в / кафе", "answer": "Їхня чашка кави стоїть на столі в кафе"}, {"jumbled": "мама / готує / обід / для / всієї / родини / щодня / ввечері", "answer": "Мама готує обід для всієї родини щодня ввечері"}, {"jumbled": "вона / в / університеті / вчиться / вже / три / роки / зараз", "answer": "Вона в університеті вчиться вже три роки зараз"}]`)}
 />
 
 ### Fix the Case
@@ -375,25 +376,56 @@ ___ вчиться в ___. Він читає ___. Потім він пише ___
 
 ### At the Bookstore
 
-<DialogueReorder
+<Cloze
   title="At the Bookstore"
-  lines={JSON.parse(`[{"text": "Добрий день! Чим можу допомогти?", "order": 1, "speaker": ""}, {"text": "Я шукаю книгу для друга.", "order": 2, "speaker": ""}, {"text": "Які книги він любить?", "order": 3, "speaker": ""}, {"text": "Він любить історичні романи.", "order": 4, "speaker": ""}, {"text": "Ось хороша книга про Україну.", "order": 5, "speaker": ""}, {"text": "Дякую! Скільки це коштує?", "order": 6, "speaker": ""}, {"text": "--", "order": 7, "speaker": ""}, {"text": "У мене проблема з рахунком.", "order": 8, "speaker": ""}, {"text": "Який саме рахунок?", "order": 9, "speaker": ""}, {"text": "Ощадний рахунок.", "order": 10, "speaker": ""}, {"text": "Покажіть, будь ласка, картку.", "order": 11, "speaker": ""}, {"text": "Ось, будь ласка.", "order": 12, "speaker": ""}, {"text": "Зачекайте хвилинку, я перевірю.", "order": 13, "speaker": ""}]`)}
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "Добрий день! Чим можу допомогти?", "options": ["Добрий день! Чим можу допомогти?", "Ось хороша книга про Україну.", "Він любить історичні романи."]}, {"answer": "Я шукаю книгу для друга.", "options": ["Я шукаю книгу для друга.", "Який саме рахунок?", "Добрий день! Чим можу допомогти?"]}, {"answer": "Які книги він любить?", "options": ["Які книги він любить?", "--", "Ось хороша книга про Україну."]}, {"answer": "Він любить історичні романи.", "options": ["Він любить історичні романи.", "Ось, будь ласка.", "Дякую! Скільки це коштує?"]}, {"answer": "Ось хороша книга про Україну.", "options": ["Ось хороша книга про Україну.", "У мене проблема з рахунком.", "Який саме рахунок?"]}, {"answer": "Дякую! Скільки це коштує?", "options": ["Дякую! Скільки це коштує?", "Добрий день! Чим можу допомогти?", "--"]}, {"answer": "--", "options": ["--", "Я шукаю книгу для друга.", "Дякую! Скільки це коштує?"]}, {"answer": "У мене проблема з рахунком.", "options": ["У мене проблема з рахунком.", "Зачекайте хвилинку, я перевірю.", "Дякую! Скільки це коштує?"]}, {"answer": "Який саме рахунок?", "options": ["Який саме рахунок?", "Зачекайте хвилинку, я перевірю.", "У мене проблема з рахунком."]}, {"answer": "Ощадний рахунок.", "options": ["Ощадний рахунок.", "Ось, будь ласка.", "Ось хороша книга про Україну."]}, {"answer": "Покажіть, будь ласка, картку.", "options": ["Покажіть, будь ласка, картку.", "--", "Добрий день! Чим можу допомогти?"]}, {"answer": "Ось, будь ласка.", "options": ["Ось, будь ласка.", "Я шукаю книгу для друга.", "Він любить історичні романи."]}, {"answer": "Зачекайте хвилинку, я перевірю.", "options": ["Зачекайте хвилинку, я перевірю.", "Які книги він любить?", "Ощадний рахунок."]}]`)}
 />
 
 ### Find Case Usage
 
-<MarkTheWords>
-  <MarkTheWordsActivity
-    instruction={`Click the correct words.`}
-    text={`Click on words that show case usage.
-Мама(correct) готує обід(correct). Вона дає тарілку(correct) синові(correct). Хлопчик(correct) їсть ложкою(correct).
+<HighlightMorphemes>
+  <HighlightMorphemesActivity
+  instruction={`Click on words that show case usage.`}
+    text={`Мама готує обід. Вона дає тарілку синові. Хлопчик їсть ложкою.
 ---
-Я читаю книгу(correct) про Україну(correct). Книга(correct) дуже цікава. Після читання(correct) я пишу листа(correct) подрузі(correct).
+Я читаю книгу про Україну. Книга дуже цікава. Після читання я пишу листа подрузі.
 ---
-Друже(correct)! Давай підемо в кіно(correct)! Я маю квитки(correct). Після фільму(correct) можемо поїсти піци(correct).`}
-    correctWords={JSON.parse(`["Мама", "обід", "тарілку", "синові", "Хлопчик", "ложкою", "книгу", "Україну", "Книга", "читання", "листа", "подрузі", "Друже", "кіно", "квитки", "фільму", "піци"]`)}
+Друже! Давай підемо в кіно! Я маю квитки. Після фільму можемо поїсти піци.`}
+    morphemes={[
+    { word: `Мама`, morpheme: `Мама`, type: `whole` },
+    { word: `обід`, morpheme: `обід`, type: `whole` },
+    { word: `тарілку`, morpheme: `тарілку`, type: `whole` },
+    { word: `синові`, morpheme: `синові`, type: `whole` },
+    { word: `Хлопчик`, morpheme: `Хлопчик`, type: `whole` },
+    { word: `ложкою`, morpheme: `ложкою`, type: `whole` },
+    { word: `книгу`, morpheme: `книгу`, type: `whole` },
+    { word: `Україну`, morpheme: `Україну`, type: `whole` },
+    { word: `Книга`, morpheme: `Книга`, type: `whole` },
+    { word: `читання`, morpheme: `читання`, type: `whole` },
+    { word: `листа`, morpheme: `листа`, type: `whole` },
+    { word: `подрузі`, morpheme: `подрузі`, type: `whole` },
+    { word: `Друже`, morpheme: `Друже`, type: `whole` },
+    { word: `кіно`, morpheme: `кіно`, type: `whole` },
+    { word: `квитки`, morpheme: `квитки`, type: `whole` },
+    { word: `фільму`, morpheme: `фільму`, type: `whole` },
+    { word: `піци`, morpheme: `піци`, type: `whole` }
+  ]}
   />
-</MarkTheWords>
+</HighlightMorphemes>
 
 ### English to Ukrainian
 
@@ -401,6 +433,64 @@ ___ вчиться в ___. Він читає ___. Потім він пише ___
   title="English to Ukrainian"
   questions={JSON.parse(`[{"source": "I see mom.", "options": [{"text": "Я бачу маму.", "correct": true}, {"text": "Я бачу мама.", "correct": false}, {"text": "Я бачу мамі.", "correct": false}, {"text": "Я бачу мамою.", "correct": false}]}, {"source": "There is no time.", "options": [{"text": "Немає часу.", "correct": true}, {"text": "Немає час.", "correct": false}, {"text": "Немає часом.", "correct": false}, {"text": "Немає часі.", "correct": false}]}, {"source": "Give a book to a friend.", "options": [{"text": "Дати книгу другові.", "correct": true}, {"text": "Дати книгу друг.", "correct": false}, {"text": "Дати книгу друга.", "correct": false}, {"text": "Дати книгу другом.", "correct": false}]}, {"source": "The book is on the table.", "options": [{"text": "Книга на столі.", "correct": true}, {"text": "Книга на стіл.", "correct": false}, {"text": "Книга на столом.", "correct": false}, {"text": "Книга на стола.", "correct": false}]}, {"source": "I write with a pen.", "options": [{"text": "Я пишу ручкою.", "correct": true}, {"text": "Я пишу ручка.", "correct": false}, {"text": "Я пишу ручки.", "correct": false}, {"text": "Я пишу ручці.", "correct": false}]}, {"source": "Friend, hello!", "options": [{"text": "Друже, привіт!", "correct": true}, {"text": "Друг, привіт!", "correct": false}, {"text": "Друга, привіт!", "correct": false}, {"text": "Другом, привіт!", "correct": false}]}]`)}
 />
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| адресат | ɐdreˈsɑt | addressee | noun | ч |  |
+| базовий | ˈbɑzoʋei̯ | basic | adj | с |  |
+| взнначити | ˈvznːɐt͡ʃɪte | to determine (typo? визначити) | verb |  |  |
+| виділений | ˈvɪdile nei̯ | highlighted; selected | adj |  |  |
+| визначити | ˈvɪznɐt͡ʃɪte | to determine; to define | verb |  |  |
+| виконати | ˈvɪkonɐte | to execute; to perform | verb |  |  |
+| виконувати | vɪˈkɔnuʋɐte | to perform; to execute | verb |  |  |
+| вміння | ˈvminʲːɐ | skill; ability | noun | с |  |
+| володіння | voloˈdinʲːɐ | possession; mastery | noun | с |  |
+| втрата | ˈvtrɑtɐ | loss | noun | ж |  |
+| відіграти | vidiˈɦrɑte | to play (a role) | verb |  |  |
+| вікторе | ˈviktore | Viktor (vocative) | name | ч |  |
+| довідник | doˈvidnɪk | guide; handbook | noun | ч |  |
+| залежно | zɐˈlɛʒno | depending | adv |  |  |
+| звертання | zʋerˈtɑnʲːɐ | address; appeal | noun | с |  |
+| звертатися | zʋerˈtɑtɪsʲɐ | to address; to turn to | verb |  |  |
+| згадати | zɦɐˈdɑte | to recall; to mention | verb |  |  |
+| комплексний | ˈkɔmpleksnei̯ | complex; comprehensive | adj | ж |  |
+| критичний | krɪˈtɪt͡ʃnei̯ | critical | adj |  |  |
+| навчання | nɐu̯ˈt͡ʃɑnʲːɐ | learning; study | noun | с |  |
+| навіщо | nɐˈviʃt͡ʃo | why; what for | adv |  |  |
+| наприклад | nɐˈprɪklɑd | for example | adv |  |  |
+| наприкінці | nɐprɪkinˈt͡sʲi | at the end | other |  |  |
+| обирати | obɪˈrɑte | to choose | verb |  |  |
+| обррати | obrɐte | to choose (typo? обрати) | verb |  |  |
+| перевірка | pereˈvirkɐ | check; verification | noun | ж |  |
+| перш | pɛrʃ | first (adv) | adv |  |  |
+| петре | ˈpetre | Petro (vocative) | name | ч |  |
+| повторити | pou̯toˈrɪte | to repeat | verb |  |  |
+| повторювати | pou̯ˈtɔrʲuʋɐte | to repeat (imperfective) | verb |  |  |
+| позначати | poznɐˈt͡ʃɑte | to verify; to mark | verb |  |  |
+| порівняти | poriu̯ˈnʲɑte | to compare | verb |  |  |
+| послідовно | poslʲiˈdɔu̯no | consistently; sequentially | adv |  |  |
+| потренуватися | potrenuˈʋɑtɪsʲɐ | to practice | verb |  |  |
+| практичний | prɐkˈtɪt͡ʃnei̯ | practical | adj |  |  |
+| презентація | prezenˈtɑt͡sʲijɐ | presentation | noun | ж |  |
+| при | prɪ | at; by; during | other |  |  |
+| природно | prɪˈrɔdno | naturally | adv |  |  |
+| провідмінювати | providmiˈnʲuʋɐte | to decline (grammar) | verb |  |  |
+| продовжувати | proˈdɔu̯ʒuʋɐte | to continue | verb |  |  |
+| підказати | pidkɐˈzɑte | to prompt; to suggest | verb |  |  |
+| розминка | rozˈmɪnkɐ | warm-up | noun | ж |  |
+| розрізняти | rozrizˈnʲɑte | to distinguish | verb |  |  |
+| роль | rɔlʲ | role | noun | ж |  |
+| спілкування | spilkuˈʋɑnʲːɐ | communication | noun | с |  |
+| ставити | ˈstɑʋɪte | to put; to place | verb |  |  |
+| стратегія | strɐˈtɛɦijɐ | strategy | noun | ж |  |
+| супровід | ˈsuproʋid | accompaniment | noun | ч |  |
+| теорія | teˈɔrijɐ | theory | noun | ж |  |
+| увестися | uˈʋɛstɪsʲɐ | to be introduced (typo? ввестися?) | verb |  |  |
+| формувати | formuˈʋɑte | to form | verb |  |  |
+| функіка | ˈfiʃkɐ | feature? (typo? функція? фішка?) | noun | ж |  |
+| чого | t͡ʃoˈɦɔ | why (coll); of what | adv |  |  |
 
 ## 📋 Summary
 
@@ -424,29 +514,34 @@ ___ вчиться в ___. Він читає ___. Потім він пише ___
 
 ## Need More Practice?
 
-:::info[External Resources]
-
-- 🎥 [All 7 Cases](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
-- 📖 [Cases Introduction](https://www.ukrainianlessons.com/intro-cases/)
-- 📝 [Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/)
-- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-:::
-
-
 ---
 
-## 📚 Vocabulary
-
-| Word       | IPA            | English    | POS  | Gender | Note           |
-| ---------- | -------------- | ---------- | ---- | ------ | -------------- |
-| кого       | /kɔˈɦɔ/        | whom       | pron | —      | Gen/Acc of хто |
-| чого       | /t͡ʃɔˈɦɔ/       | of what    | pron | —      | Gen of що      |
-| кому       | /kɔˈmu/        | to whom    | pron | —      | Dat of хто     |
-| ким        | /kɪm/          | by whom    | pron | —      | Instr of хто   |
-| чим        | /t͡ʃɪm/         | with what  | pron | —      | Instr of що    |
-| підмет     | /ˈpidmɛt/      | subject    | noun | m      | grammar term   |
-| додаток    | /ˈdɔdɑtɔk/     | object     | noun | m      | grammar term   |
-| присудок   | /prɪˈsudɔk/    | predicate  | noun | m      | grammar term   |
-| звертатися | /zʋɛrˈtɑtɪsʲɑ/ | to address | verb | —      | uses vocative  |
-
----
+> [!resources] 🔗 External Resources
+>
+> **📖 Articles:**
+> - [Accusative Case in Ukrainian](https://www.ukrainianlessons.com/accusativecase/) — Ukrainian Lessons
+> - [Genitive Case in Ukrainian](https://www.ukrainianlessons.com/genitive-case/) — Ukrainian Lessons
+> - [ULP 2-51 Electronics and technology + Dative case](https://www.ukrainianlessons.com/lesson/51/) — Ukrainian Lessons
+> - [ULP 2-52 Buying a phone in Ukraine + Dative case](https://www.ukrainianlessons.com/lesson/52/) — Ukrainian Lessons
+> - [ULP 2-53 Social Media in Ukrainian + Dative case](https://www.ukrainianlessons.com/lesson/53/) — Ukrainian Lessons
+> - [ULP 2-56 Asking for an advice + Accusative case](https://www.ukrainianlessons.com/lesson/56/) — Ukrainian Lessons
+> - [ULP 2-58 Inviting to a party + Accusative case of pronouns](https://www.ukrainianlessons.com/lesson/58/) — Ukrainian Lessons
+> - [ULP 2-61 Christmas dinner in Ukraine + Instrumental case](https://www.ukrainianlessons.com/lesson/61/) — Ukrainian Lessons
+> - [ULP 2-69 Ukrainian Children's Poem + Vocative case](https://www.ukrainianlessons.com/lesson/69/) — Ukrainian Lessons
+> - [ULP 1-32 Shopping for clothes – Accusative case in Ukrainian](https://www.ukrainianlessons.com/lesson/32/) — Ukrainian Lessons
+> - [ULP 1-33 Talking about books in Ukrainian – Accusative case of people](https://www.ukrainianlessons.com/lesson/33/) — Ukrainian Lessons
+> - [ULP 2-46 At the grocery store + Genitive case](https://www.ukrainianlessons.com/lesson/46/) — Ukrainian Lessons
+> - [ULP 2-47 Food festivals + Genitive case](https://www.ukrainianlessons.com/lesson/47/) — Ukrainian Lessons
+> - [ULP 2-48 Eating habits + Genitive case](https://www.ukrainianlessons.com/lesson/48/) — Ukrainian Lessons
+> - [ULP 2-49 Syrnyky recipe + Genitive case](https://www.ukrainianlessons.com/lesson/49/) — Ukrainian Lessons
+> - [ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions](https://www.ukrainianlessons.com/lesson/57/) — Ukrainian Lessons
+> - [ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns](https://www.ukrainianlessons.com/lesson/62/) — Ukrainian Lessons
+> - [ULP 2-66 Sharing memories + Locative case with places](https://www.ukrainianlessons.com/lesson/66/) — Ukrainian Lessons
+> - [ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case](https://www.ukrainianlessons.com/lesson/67/) — Ukrainian Lessons
+> - [ULP 2-68 Making a hair appointment + Dates & Locative case](https://www.ukrainianlessons.com/lesson/68/) — Ukrainian Lessons
+> - [Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/) — Unknown
+> - [Cases Introduction](https://www.ukrainianlessons.com/intro-cases/) — Unknown
+> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Unknown
+>
+> **🌐 Websites:**
+> - [All 7 Cases](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian

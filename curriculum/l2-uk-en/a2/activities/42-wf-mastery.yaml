@@ -166,13 +166,13 @@
   items:
   - question: What is the literal meaning of the verb "Мовчати"?
     options:
-    - text: To be silent (keep quiet)
+    - text: To be silent
       correct: true
     - text: To speak loud (shout)
       correct: false
-    - text: To sing (make music)
+    - text: To sing
       correct: false
-    - text: To whisper (speak softly)
+    - text: To whisper
       correct: false
   - question: The Ukrainian word "Замовлення" (Order) contains which specific root component?
     options:

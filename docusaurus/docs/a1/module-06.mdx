@@ -18,6 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 
 До цього моменту ми говорили: це книга, то стіл. (This is a book. That is a table.). Але життя — це рух, дія! Час навчитися: я читаю, ти пишеш, ми працюємо.
@@ -280,21 +281,21 @@ I have breakfast. Then I work. I have lunch. I walk to the park. I read a book. 
 
 <Anagram
   title="Build the Verb"
-  items={JSON.parse(`[{"scrambled": "ч и т а т и", "answer": "читати", "hint": "to read"}, {"scrambled": "п и с а т и", "answer": "писати", "hint": "to write"}, {"scrambled": "з н а т и", "answer": "знати", "hint": "to know"}, {"scrambled": "г р а т и", "answer": "грати", "hint": "to play"}, {"scrambled": "с п і в а т и", "answer": "співати", "hint": "to sing"}, {"scrambled": "д у м а т и", "answer": "думати", "hint": "to think"}, {"scrambled": "г у л я т и", "answer": "гуляти", "hint": "to walk, stroll"}, {"scrambled": "м а л ю в а т и", "answer": "малювати", "hint": "to paint, draw"}, {"scrambled": "п р а ц ю в а т и", "answer": "працювати", "hint": "to work"}, {"scrambled": "с л у х а т и", "answer": "слухати", "hint": "to listen"}, {"scrambled": "ч е к а т и", "answer": "чекати", "hint": "to wait"}, {"scrambled": "с н і д а т и", "answer": "снідати", "hint": "to have breakfast"}]`)}
+  items={JSON.parse(`[{"scrambled": "ч и т а т и", "answer": "читати", "hint": ""}, {"scrambled": "п и с а т и", "answer": "писати", "hint": ""}, {"scrambled": "з н а т и", "answer": "знати", "hint": ""}, {"scrambled": "г р а т и", "answer": "грати", "hint": ""}, {"scrambled": "с п і в а т и", "answer": "співати", "hint": ""}, {"scrambled": "д у м а т и", "answer": "думати", "hint": ""}, {"scrambled": "г у л я т и", "answer": "гуляти", "hint": ""}, {"scrambled": "м а л ю в а т и", "answer": "малювати", "hint": ""}, {"scrambled": "п р а ц ю в а т и", "answer": "працювати", "hint": ""}, {"scrambled": "с л у х а т и", "answer": "слухати", "hint": ""}, {"scrambled": "ч е к а т и", "answer": "чекати", "hint": ""}, {"scrambled": "с н і д а т и", "answer": "снідати", "hint": ""}]`)}
 />
 
 ### Build the Conjugated Form
 
 <Anagram
   title="Build the Conjugated Form"
-  items={JSON.parse(`[{"scrambled": "ч и т а ю", "answer": "читаю", "hint": "I read"}, {"scrambled": "п и ш е ш", "answer": "пишеш", "hint": "you write"}, {"scrambled": "п р а ц ю є", "answer": "працює", "hint": "he/she works"}, {"scrambled": "г р а є м о", "answer": "граємо", "hint": "we play"}, {"scrambled": "с п і в а є т е", "answer": "співаєте", "hint": "you sing - formal/plural"}, {"scrambled": "д у м а ю т ь", "answer": "думають", "hint": "they think"}, {"scrambled": "г у л я ю", "answer": "гуляю", "hint": "I walk"}, {"scrambled": "з н а є ш", "answer": "знаєш", "hint": "you know"}, {"scrambled": "ч и т а є", "answer": "читає", "hint": "he/she reads"}, {"scrambled": "с л у х а є м о", "answer": "слухаємо", "hint": "we listen"}, {"scrambled": "ч е к а є т е", "answer": "чекаєте", "hint": "you wait - formal/plural"}, {"scrambled": "с н і д а ю т ь", "answer": "снідають", "hint": "they have breakfast"}]`)}
+  items={JSON.parse(`[{"scrambled": "ч и т а ю", "answer": "читаю", "hint": ""}, {"scrambled": "п и ш е ш", "answer": "пишеш", "hint": ""}, {"scrambled": "п р а ц ю є", "answer": "працює", "hint": ""}, {"scrambled": "г р а є м о", "answer": "граємо", "hint": ""}, {"scrambled": "с п і в а є т е", "answer": "співаєте", "hint": ""}, {"scrambled": "д у м а ю т ь", "answer": "думають", "hint": ""}, {"scrambled": "г у л я ю", "answer": "гуляю", "hint": ""}, {"scrambled": "з н а є ш", "answer": "знаєш", "hint": ""}, {"scrambled": "ч и т а є", "answer": "читає", "hint": ""}, {"scrambled": "с л у х а є м о", "answer": "слухаємо", "hint": ""}, {"scrambled": "ч е к а є т е", "answer": "чекаєте", "hint": ""}, {"scrambled": "с н і д а ю т ь", "answer": "снідають", "hint": ""}]`)}
 />
 
 ### Build Verb Sentences
 
 <Unjumble
   title="Build Verb Sentences"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Я читаю книгу"}, {"jumbled": "", "answer": "Він працює добре"}, {"jumbled": "", "answer": "Вона співає українською"}, {"jumbled": "", "answer": "Ми граємо футбол"}, {"jumbled": "", "answer": "Ви слухаєте музику"}, {"jumbled": "", "answer": "Вони думають багато"}, {"jumbled": "", "answer": "Ти пишеш листа"}, {"jumbled": "", "answer": "Вона співає пісню"}]`)}
+  items={JSON.parse(`[{"jumbled": "читаю / Я / книгу", "answer": "Я читаю книгу"}, {"jumbled": "працює / Він / добре", "answer": "Він працює добре"}, {"jumbled": "співає / Вона / українською", "answer": "Вона співає українською"}, {"jumbled": "граємо / Ми / футбол", "answer": "Ми граємо футбол"}, {"jumbled": "слухаєте / Ви / музику", "answer": "Ви слухаєте музику"}, {"jumbled": "думають / Вони / багато", "answer": "Вони думають багато"}, {"jumbled": "пишеш / Ти / листа", "answer": "Ти пишеш листа"}, {"jumbled": "співає / Вона / пісню", "answer": "Вона співає пісню"}]`)}
 />
 
 ## 📚 Vocabulary

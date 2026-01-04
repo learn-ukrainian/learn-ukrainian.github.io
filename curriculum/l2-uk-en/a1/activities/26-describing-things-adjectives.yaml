@@ -175,7 +175,7 @@
     options:
     - text: Big car (feminine)
       correct: true
-    - text: Big house (masculine)
+    - text: Big house
       correct: false
     - text: Big cars (plural)
       correct: false
@@ -187,7 +187,7 @@
       correct: true
     - text: Old book (feminine)
       correct: false
-    - text: Old man (masculine)
+    - text: Old man
       correct: false
     - text: Old friends (plural)
       correct: false
@@ -195,7 +195,7 @@
     options:
     - text: Good people (plural)
       correct: true
-    - text: Good person (masculine)
+    - text: Good person
       correct: false
     - text: Good woman (feminine)
       correct: false
@@ -203,7 +203,7 @@
       correct: false
   - question: Which category fits the phrase "Цікавий фільм" most accurately?
     options:
-    - text: Interesting movie (masculine)
+    - text: Interesting movie
       correct: true
     - text: Interesting book (feminine)
       correct: false
@@ -215,7 +215,7 @@
     options:
     - text: New book (feminine)
       correct: true
-    - text: New house (masculine)
+    - text: New house
       correct: false
     - text: New city (neuter)
       correct: false
@@ -223,7 +223,7 @@
       correct: false
   - question: What is correctly the description for "Високий чоловік" now?
     options:
-    - text: Tall man (masculine)
+    - text: Tall man
       correct: true
     - text: Tall woman (feminine)
       correct: false
@@ -237,7 +237,7 @@
       correct: true
     - text: Beautiful woman (feminine)
       correct: false
-    - text: Beautiful man (masculine)
+    - text: Beautiful man
       correct: false
     - text: Beautiful cities (plural)
       correct: false
@@ -245,7 +245,7 @@
     options:
     - text: Fast cars (plural)
       correct: true
-    - text: Fast car (masculine)
+    - text: Fast car
       correct: false
     - text: Fast car (feminine)
       correct: false

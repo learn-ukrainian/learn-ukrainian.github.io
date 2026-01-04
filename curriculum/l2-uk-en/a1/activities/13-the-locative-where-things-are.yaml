@@ -65,7 +65,7 @@
       correct: true
     - text: Я на місті
       correct: false
-    - text: Я в місті (alternative)
+    - text: Я в місті
       correct: false
     explanation: City is an enclosed space, locative -і.
   - question: How can you say "She is at the stop"?
@@ -268,7 +268,7 @@
     explanation: Correct! You never use locative without a preposition.
   - statement: Locative case is used to show direction (where you're going).
     correct: false
-    explanation: Incorrect! Locative shows LOCATION (where you are). Direction uses accusative.
+    explanation: Incorrect! Locative shows LOCATION. Direction uses accusative.
   - statement: '"У" and "в" are the same preposition, just different forms.'
     correct: true
     explanation: Correct! "У" is used before consonant clusters for easier pronunciation.
@@ -286,7 +286,7 @@
     explanation: Correct! Russian uses "на" to imply Ukraine is just a borderland region.
   - statement: '"На роботі" is a fixed expression.'
     correct: true
-    explanation: Correct! You always say "на роботі" (at work), never "в роботі".
+    explanation: Correct! You always say "на роботі", never "в роботі".
   - statement: You can use locative case without a preposition in questions.
     correct: false
     explanation: 'Incorrect! Even in questions, you need a preposition: "Де ти?" → "В кафе."'

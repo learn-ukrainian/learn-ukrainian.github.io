@@ -251,7 +251,7 @@
   items:
   - question: Does the sentence "Він ___ хлопець" require an adjective or adverb?
     options:
-    - text: добрий (adjective)
+    - text: добрий
       correct: true
     - text: добре (adverb)
       correct: false
@@ -263,7 +263,7 @@
     options:
     - text: добре (adverb)
       correct: true
-    - text: добрий (adjective)
+    - text: добрий
       correct: false
     - text: добра
       correct: false
@@ -271,7 +271,7 @@
       correct: false
   - question: How should you describe "Це ___ машина" using masculine/feminine forms?
     options:
-    - text: швидка (adjective)
+    - text: швидка
       correct: true
     - text: швидко (adverb)
       correct: false
@@ -283,7 +283,7 @@
     options:
     - text: швидко (adverb)
       correct: true
-    - text: швидка (adjective)
+    - text: швидка
       correct: false
     - text: швидкий
       correct: false
@@ -291,7 +291,7 @@
       correct: false
   - question: Which word correctly completes "У неї ___ голос" in Ukrainian?
     options:
-    - text: тихий (adjective)
+    - text: тихий
       correct: true
     - text: тихо (adverb)
       correct: false
@@ -303,7 +303,7 @@
     options:
     - text: тихо (adverb)
       correct: true
-    - text: тихий (adjective)
+    - text: тихий
       correct: false
     - text: тиха
       correct: false
@@ -311,7 +311,7 @@
       correct: false
   - question: What is the right adjective for "Вона ___ людина" here?
     options:
-    - text: весела (adjective)
+    - text: весела
       correct: true
     - text: весело (adverb)
       correct: false
@@ -323,7 +323,7 @@
     options:
     - text: голосно (adverb)
       correct: true
-    - text: голосний (adjective)
+    - text: голосний
       correct: false
     - text: голосна
       correct: false

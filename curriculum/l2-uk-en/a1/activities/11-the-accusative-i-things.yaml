@@ -28,13 +28,13 @@
     explanation: Masculine inanimate stays the same
   - question: Which verb requires accusative case?
     options:
-    - text: бачити (to see)
+    - text: бачити
       correct: true
-    - text: бути (to be)
+    - text: бути
       correct: false
-    - text: працювати (to work)
+    - text: працювати
       correct: false
-    - text: спати (to sleep)
+    - text: спати
       correct: false
     explanation: 'бачити needs an object: Я бачу книгу'
   - question: What is the accusative form of "вікно"?
@@ -48,7 +48,7 @@
     - text: вікном
       correct: false
     explanation: Neuter stays the same
-  - question: 'Complete: "Я читаю ___" (newspaper)'
+  - question: 'Complete: "Я читаю ___"'
     options:
     - text: газета
       correct: false
@@ -263,7 +263,7 @@
   - statement: The accusative form of "газета" is "газети".
     correct: false
     explanation: Incorrect! газета → газету
-  - statement: The verb "мати" (to have) requires accusative.
+  - statement: The verb "мати" requires accusative.
     correct: true
     explanation: Correct! Я маю книгу
   - statement: Masculine nouns ending in consonants add -а in accusative.
@@ -275,7 +275,7 @@
   - statement: The accusative of "вікно" is "вікна".
     correct: false
     explanation: 'Incorrect! Neuter stays same: вікно'
-  - statement: '"Брати" (to take) uses accusative for the object.'
+  - statement: '"Брати" uses accusative for the object.'
     correct: true
     explanation: Correct! Він бере сумку
   - statement: All Ukrainian nouns change in accusative.
@@ -303,84 +303,84 @@
 - type: fill-in
   title: Complete the Sentences
   items:
-  - sentence: Я ___ (to see) автобус.
+  - sentence: Я ___ автобус.
     answer: бачу
     options:
     - бачу
     - бачиш
     - бачить
     - бачимо
-  - sentence: Вона ___ (to read) газету вранці.
+  - sentence: Вона ___ газету вранці.
     answer: читає
     options:
     - читаю
     - читає
     - читаєш
     - читають
-  - sentence: Ти ___ (to have) паспорт?
+  - sentence: Ти ___ паспорт?
     answer: маєш
     options:
     - маю
     - маєш
     - має
     - маємо
-  - sentence: Ми ___ (to take) валізу.
+  - sentence: Ми ___ валізу.
     answer: беремо
     options:
     - беру
     - береш
     - бере
     - беремо
-  - sentence: Він ___ (to open) вікно.
+  - sentence: Він ___ вікно.
     answer: відкриває
     options:
     - відкриваю
     - відкриваєш
     - відкриває
     - відкривають
-  - sentence: Вони ___ (to give) подарунок.
+  - sentence: Вони ___ подарунок.
     answer: дають
     options:
     - даю
     - даєш
     - дає
     - дають
-  - sentence: Я ___ (to show) квиток.
+  - sentence: Я ___ квиток.
     answer: показую
     options:
     - показую
     - показуєш
     - показує
     - показують
-  - sentence: Ти ___ (to hear) музику?
+  - sentence: Ти ___ музику?
     answer: чуєш
     options:
     - чую
     - чуєш
     - чує
     - чуємо
-  - sentence: Вона ___ (to close) двері.
+  - sentence: Вона ___ двері.
     answer: закриває
     options:
     - закриваю
     - закриваєш
     - закриває
     - закривають
-  - sentence: Ми ___ (to carry) сумку.
+  - sentence: Ми ___ сумку.
     answer: несемо
     options:
     - несу
     - несеш
     - несе
     - несемо
-  - sentence: Він ___ (to turn on) світло.
+  - sentence: Він ___ світло.
     answer: вмикає
     options:
     - вмикаю
     - вмикаєш
     - вмикає
     - вмикають
-  - sentence: Я ___ (to take) документ.
+  - sentence: Я ___ документ.
     answer: беру
     options:
     - беру

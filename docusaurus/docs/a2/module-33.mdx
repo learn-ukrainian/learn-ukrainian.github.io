@@ -18,7 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 ## Warm-up
 
@@ -49,6 +49,9 @@ Construction: **У мене** (Genitive 'In me') + **болить** (hurts) + **
 - **У мене болить живіт.** (My stomach hurts).
 - **У мене болить горло.** (My throat hurts).
 - **У мене болить спина.** (My back hurts).
+- **У мене болить рука.** (My arm hurts).
+- **У мене болить зуб.** (My tooth hurts).
+- **У мене болить вухо.** (My ear hurts).
 
 **PLURAL:** If multiple things hurt, use **болять**.
 - **У мене болять ноги.** (My legs hurt).
@@ -252,17 +255,206 @@ In Ukraine, normal temperature is 36.6°C.
 :::
 
 
-:::info[🔗 External Resources]
-
-**YouTube:** [Doctors Vocabulary and questions in Ukrainian - Learn doctor vocab and...](https://www.youtube.com/watch?v=OnO697z9iPM) — Ukrainian grammar
-
-**Grammar Guide:** [Something Hurts](https://www.ukrainianlessons.com/something-hurts/) — Ukrainian Lessons
-
-**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-:::
-
-
 ---
+
+
+
+## 🎯 Activities
+
+### Body & Pain
+
+<MatchUp
+  title="Body & Pain"
+  pairs={JSON.parse(`[{"left": "- Голова", "right": "Head"}, {"left": "- Горло", "right": "Throat"}, {"left": "- Живіт", "right": "Stomach"}, {"left": "- Спина", "right": "Back"}, {"left": "- Нога", "right": "Leg"}, {"left": "- Рука", "right": "Arm/Hand"}, {"left": "- Око", "right": "Eye"}, {"left": "- Вухо", "right": "Ear"}, {"left": "- Серце", "right": "Heart"}, {"left": "- Зуб", "right": "Tooth"}]`)}
+/>
+
+### Diagnosis
+
+<FillIn
+  title="Diagnosis"
+  items={JSON.parse(`[{"sentence": "У мене ___ голова. (Hurts sing.)", "answer": "болить", "options": ["болить", "болять", "хворіє"]}, {"sentence": "У мене ___ ноги. (Hurts pl.)", "answer": "болять", "options": ["болять", "болить", "хворіють"]}, {"sentence": "У нього висока ___. (Fever)", "answer": "температура", "options": ["температура", "кашель", "нежить"]}, {"sentence": "Треба купити ліки в ___. (Pharmacy)", "answer": "аптеці", "options": ["аптеці", "лікарні", "магазині"]}, {"sentence": "Лікар виписал ___. (Prescription)", "answer": "рецепт", "options": ["рецепт", "таблетку", "симптом"]}, {"sentence": "Що вас ___? (Bothers)", "answer": "турбує", "options": ["турбує", "болить", "хворіє"]}, {"sentence": "Мені потрібен ___. (Doctor)", "answer": "лікар", "options": ["лікар", "пацієнт", "рецепт"]}, {"sentence": "У мене сильний ___. (Cough)", "answer": "кашель", "options": ["кашель", "нежить", "температура"]}]`)}
+/>
+
+### Medical Expert
+
+<Quiz
+  title="Medical Expert"
+  questions={JSON.parse(`[{"question": "Якщо у вас є \\\"нежить\\\" то що це означає в українській мові для симптомів?", "options": [{"text": "A runny nose (нежить це нежить)", "correct": true}, {"text": "A broken leg (зламана нога)", "correct": false}, {"text": "A headache (головний біль)", "correct": false}, {"text": "A fever (температура)", "correct": false}]}, {"question": "Що означає фраза \\\"у мене болить живіт\\\" в українській мові правильно?", "options": [{"text": "My stomach hurts (мій живіт болить)", "correct": true}, {"text": "My life hurts (моє життя болить)", "correct": false}, {"text": "I am hungry (я голодний)", "correct": false}, {"text": "I am tired (я втомлений)", "correct": false}]}, {"question": "Де можна купити ліки в Україні зазвичай для лікування?", "options": [{"text": "В аптеці (в аптеці)", "correct": true}, {"text": "В лікарні (в лікарні)", "correct": false}, {"text": "В бібліотеці (в бібліотеці)", "correct": false}, {"text": "В магазині (в магазині)", "correct": false}]}, {"question": "Яка нормальна температура тіла в Україні згідно з медичними стандартами?", "options": [{"text": "Normal temperature (36.6°C нормальна)", "correct": true}, {"text": "High fever (38.0°C висока)", "correct": false}, {"text": "Low temperature (35.0°C низька)", "correct": false}, {"text": "Critical (40.0°C критична)", "correct": false}]}, {"question": "Що означає слово \\\"видужуйте\\\" в українській мові для побажання?", "options": [{"text": "Get well soon (одужуйте швидко)", "correct": true}, {"text": "Good bye (до побачення)", "correct": false}, {"text": "Pay here (платіть тут)", "correct": false}, {"text": "Thank you (дякую)", "correct": false}]}, {"question": "Що означає дієслово \\\"хворіти\\\" в українській мові для стану здоров'я?", "options": [{"text": "To be ill process (бути хворим процес)", "correct": true}, {"text": "To hurt pain (боліти біль)", "correct": false}, {"text": "To heal (лікувати)", "correct": false}, {"text": "To recover (одужувати)", "correct": false}]}, {"question": "Чи можна сказати \\\"я болю голову\\\" в українській мові правильно граматично?", "options": [{"text": "No incorrect (ні неправильно)", "correct": true}, {"text": "Yes correct (так правильно)", "correct": false}, {"text": "Sometimes (іноді)", "correct": false}, {"text": "Only formal (тільки офіційно)", "correct": false}]}, {"question": "Який відмінок використовується в питанні \\\"що вас турбує\\\" для слова \\\"вас\\\"?", "options": [{"text": "Accusative (знахідний відмінок)", "correct": true}, {"text": "Dative (давальний відмінок)", "correct": false}, {"text": "Genitive (родовий відмінок)", "correct": false}, {"text": "Nominative (називний відмінок)", "correct": false}]}]`)}
+/>
+
+### Doctors Orders
+
+<Unjumble
+  title="Doctors Orders"
+  items={JSON.parse(`[{"jumbled": "що / вас / турбує / сьогодні / дуже / зранку / вже", "answer": "Що вас турбує сьогодні дуже зранку вже"}, {"jumbled": "у / мене / дуже / болить / голова / сильно / зараз / вже", "answer": "У мене дуже болить голова сильно зараз вже"}, {"jumbled": "цю / таблетку / прийміть / після / їжі / завжди / тричі / на / день", "answer": "Прийміть цю таблетку після їжі завжди тричі на день"}, {"jumbled": "мені / лікаря / викликати / треба / зараз / дуже / швидко / будь / ласка", "answer": "Мені треба викликати лікаря зараз дуже швидко будь ласка"}, {"jumbled": "я / ліки / купив / в / аптеці / вчора / ввечері / пізно", "answer": "Я купив ліки в аптеці вчора ввечері пізно"}, {"jumbled": "вам / бажаю / міцного / здоров'я / завжди / від / щирого / серця", "answer": "Бажаю вам міцного здоров'я завжди від щирого серця"}]`)}
+/>
+
+### Symptoms vs Remedies
+
+<GroupSort
+  title="Symptoms vs Remedies"
+  groups={JSON.parse(`{"Symptoms (Problems)": ["Кашель", "Нежить", "Температура", "Біль", "Грип", "Слабкість"], "Remedies (Solutions)": ["Таблетка", "Ліки", "Чай з лимоном", "Рецепт", "Лікар", "Аптека"]}`)}
+/>
+
+### Medical Truths
+
+<TrueFalse
+  title="Medical Truths"
+  items={JSON.parse(`[{"statement": "\\\"Аптека\\\" is where you see a doctor.", "isTrue": false, "explanation": "Pharmacy."}, {"statement": "\\\"У мене болить рука\\\" uses Nominative for \\\"Hand\\\".", "isTrue": true, "explanation": ""}, {"statement": "You should call 103 for pizza.", "isTrue": false, "explanation": "Ambulance."}, {"statement": "38.5 is a normal temperature.", "isTrue": false, "explanation": ""}, {"statement": "\\\"Одужувати\\\" involves getting better.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Ліки\\\" means \\\"Doctors\\\".", "isTrue": false, "explanation": "Medicine."}, {"statement": "\\\"Серце\\\" is \\\"Heart\\\".", "isTrue": true, "explanation": ""}, {"statement": "Tea with lemon is a standard Ukrainian cure.", "isTrue": true, "explanation": ""}]`)}
+/>
+
+### The Appointment
+
+<Cloze
+  title="The Appointment"
+  passage={`Я прийшов у ___, тому що я захворів.
+Лікар запитав: \"Що вас ___?\"
+Я сказав, що у мене болить ___.
+Він поміряв мою ___. Вона була висока.
+Лідкар сказав, що це ___.
+Він дав мені ___ на ліки.
+Я пішов в ___, щоб купити таблетки.
+Аптекар сказав приймати ___ тричі на день.
+Я питиму багато ___ з лимоном.
+Лікар сказав мені ___ вдома.
+Я сподіваюся що скоро ___.
+Моє ___ дуже важливе для мене.`}
+  blanks={JSON.parse(`[{"answer": "поліклініку", "options": ["поліклініку", "школу", "магазин"]}, {"answer": "турбує", "options": ["турбує", "радіє", "цікавить"]}, {"answer": "горло", "options": ["горло", "стіл", "вікно"]}, {"answer": "температуру", "options": ["температуру", "книгу", "сумку"]}, {"answer": "грип", "options": ["грип", "спорт", "відпочинок"]}, {"answer": "рецепт", "options": ["рецепт", "квиток", "паспорт"]}, {"answer": "аптеку", "options": ["аптеку", "кіно", "кафе"]}, {"answer": "ліки", "options": ["ліки", "каву", "воду"]}, {"answer": "чаю", "options": ["чаю", "кави", "соку"]}, {"answer": "лежати", "options": ["лежати", "гуляти", "працювати"]}, {"answer": "одужаю", "options": ["одужаю", "хворію", "працюю"]}, {"answer": "здоров'я", "options": ["здоров'я", "робота", "хобі"]}]`)}
+/>
+
+### The Emergency
+
+<Cloze
+  title="The Emergency"
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "Алло, швидка?", "options": ["Алло, швидка?", "Скільки йому років?", "Де ви знаходитесь?"]}, {"answer": "Так, що сталося?", "options": ["Так, що сталося?", "Мій чоловік впав. У нього болить серце.", "Вулиця Шевченка, 10."]}, {"answer": "Мій чоловік впав. У нього болить серце.", "options": ["Мій чоловік впав. У нього болить серце.", "Чекайте, машина виїхала.", "П'ятдесят."]}, {"answer": "Де ви знаходитесь?", "options": ["Де ви знаходитесь?", "П'ятдесят.", "Чекайте, машина виїхала."]}, {"answer": "Вулиця Шевченка, 10.", "options": ["Вулиця Шевченка, 10.", "Де ви знаходитесь?", "Мій чоловік впав. У нього болить серце."]}, {"answer": "Скільки йому років?", "options": ["Скільки йому років?", "Мій чоловік впав. У нього болить серце.", "Вулиця Шевченка, 10."]}, {"answer": "П'ятдесят.", "options": ["П'ятдесят.", "Де ви знаходитесь?", "Скільки йому років?"]}, {"answer": "Чекайте, машина виїхала.", "options": ["Чекайте, машина виїхала.", "Мій чоловік впав. У нього болить серце.", "Де ви знаходитесь?"]}]`)}
+/>
+
+### Medical Terms
+
+<HighlightMorphemes>
+  <HighlightMorphemesActivity
+    text={`У мене температура і кашель. Я йду до лікаря. Мені треба купити ліки. Моє *здоров'я* важливе. Аптека за рогом.
+---
+Я люблю спорт. Це мій кіт. Сонце світить.`}
+    morphemes={[
+    { word: `температура`, morpheme: `температура`, type: `whole` },
+    { word: `кашель`, morpheme: `кашель`, type: `whole` },
+    { word: `лікаря`, morpheme: `лікаря`, type: `whole` },
+    { word: `ліки`, morpheme: `ліки`, type: `whole` },
+    { word: `Аптека`, morpheme: `Аптека`, type: `whole` },
+    { word: `спорт`, morpheme: `спорт`, type: `whole` },
+    { word: `мій кіт`, morpheme: `мій кіт`, type: `whole` },
+    { word: `світить`, morpheme: `світить`, type: `whole` }
+  ]}
+  />
+</HighlightMorphemes>
+
+### Fix the Complaint
+
+<ErrorCorrection title="Fix the Complaint">
+  <ErrorCorrectionItem
+    sentence={`Я **болю** голова. (Grammar)`}
+    errorWord={`Я болю`}
+    correctForm={`У мене болить`}
+    options={[`У мене болить`, `Я болю`]}
+    explanation={`Construction is \"At me hurts head\".`}
+  />
+  <ErrorCorrectionItem
+    sentence={`У мене болить **ноги**. (Number)`}
+    errorWord={`болить`}
+    correctForm={`болять`}
+    options={[`болять`, `болить`]}
+    explanation={`Legs are plural -> болять.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`У мене є **кашлю**. (Case)`}
+    errorWord={`кашлю`}
+    correctForm={`кашель`}
+    options={[`кашель`, `кашлю`]}
+    explanation={`\"У мене (є)\" takes Nominative -> кашель.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Мені треба **аптека**. (Goal)`}
+    errorWord={`аптека`}
+    correctForm={`аптеку`}
+    options={[`аптеку`, `аптека`]}
+    explanation={`Motion into place -> Accusative.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Дайте **рецепта**. (Case)`}
+    errorWord={`рецепта`}
+    correctForm={`рецепт`}
+    options={[`рецепт`, `рецепта`]}
+    explanation={`Give (what? Accusative inanimate) -> рецепт.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Лікар **лікує** пацієнт. (Case)`}
+    errorWord={`пацієнт`}
+    correctForm={`пацієнта`}
+    options={[`пацієнта`, `пацієнт`]}
+    explanation={`Treats whom? (Accusative animate) -> пацієнта.`}
+  />
+</ErrorCorrection>
+
+### English to Ukrainian
+
+<Translate
+  title="English to Ukrainian"
+  questions={JSON.parse(`[{"source": "My head hurts.", "options": [{"text": "У мене болить голова.", "correct": true}, {"text": "Я болю голову.", "correct": false}]}, {"source": "I have a fever.", "options": [{"text": "У мене температура.", "correct": true}, {"text": "Я є температура.", "correct": false}]}, {"source": "I need a doctor.", "options": [{"text": "Мені потрібен лікар.", "correct": true}, {"text": "Я треба лікар.", "correct": false}]}, {"source": "Where is the pharmacy?", "options": [{"text": "Де аптека?", "correct": true}, {"text": "Де лікар?", "correct": false}]}, {"source": "Get well soon!", "options": [{"text": "Видужуйте!", "correct": true}, {"text": "Хворійте!", "correct": false}]}, {"source": "I am sick.", "options": [{"text": "Я хворий | Я хворію.", "correct": true}, {"text": "У мене хворий.", "correct": false}]}]`)}
+/>
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| аптекар | ɐpˈtɛkɐr | pharmacist (m) | noun | ч |  |
+| аптекарка | ɐpˈtɛkɐrkɐ | pharmacist (f) | other |  |  |
+| бабусиний | bɐˈbusɪnɪj | grandmother's | adj |  |  |
+| бідний | ˈbʲidnɪj | poor | adj | с |  |
+| видужувати | vɪˈduʒuʋɐte | to recover (imp) | verb |  |  |
+| волосся | voˈlɔsʲːɐ | hair | noun | с |  |
+| вчяти | ˈvt͡ʃʲɑte | to teach/learn (typo for вчити) | verb |  |  |
+| грип | hrɪp | flu | noun | ч |  |
+| гірчичник | hʲirˈt͡ʃɪt͡ʃnɪk | mustard plaster | noun | ч |  |
+| джон | dʒɔn | John | name | ч |  |
+| дихати | ˈdɪxɐte | to breathe | verb |  |  |
+| жахливий | ʒɐxˈlɪʋɪj | terrible | adj | ч |  |
+| здивуватися | zdɪvuˈʋɑtɪsʲɐ | to be surprised (perf) | verb | ч |  |
+| кути | kuˈtɪ | corners | verb |  |  |
+| лівий | ˈlʲiʋɪj | left | adj | с |  |
+| лікувати | lʲikuˈʋɑte | to treat/cure | verb |  |  |
+| лікуватися | lʲikuˈʋɑtɪsʲɐ | to be treated | verb |  |  |
+| лінь | lʲinʲ | laziness | noun | ч |  |
+| малина | mɐˈlɪnɐ | raspberry | noun | ж |  |
+| мораль | moˈrɑlʲ | moral | noun | ж |  |
+| називатися | nɐzɪˈʋɑtɪsʲɐ | to be called | verb |  |  |
+| направлення | nɐˈprɑʋlenʲːɐ | referral; direction | noun | с |  |
+| наука | nɐˈukɐ | science | noun | ж |  |
+| носити | noˈsɪte | to carry/wear | verb |  |  |
+| одужати | oˈduʒɐte | to recover (perf) | verb | ч |  |
+| пахнути | ˈpɑxnute | to smell | verb |  |  |
+| поліклініка | polʲiˈklʲinʲikɐ | polyclinic | noun | ж |  |
+| приймати | prɪjˈmɑte | to take/accept (imp) | verb |  |  |
+| рецепом | reˈt͡sɛpom | prescription (inst) | noun | ч |  |
+| рот | rɔt | mouth | noun | ч |  |
+| рухати | ˈruxɐte | to move (transitive) | verb |  |  |
+| серйозно | serˈjɔzno | seriously | adv |  |  |
+| слабкість | ˈslɑbkʲisʲtʲ | weakness | noun | ж |  |
+| смішний | sʲmʲiʃˈnɪj | funny | adj | ж |  |
+| трішка | ˈtrʲiʃkɐ | a little (typo tрішки?) | noun | ж |  |
+| туриста | tuˈrɪstɐ | tourist (gen) | noun | ч |  |
+| фарба | ˈfɑrbɐ | paint | noun | ж |  |
+| фонтан | fonˈtɑn | fountain | noun | ч |  |
+| хворіти | xvoˈrʲite | to be sick | verb |  |  |
 
 ## 📋 Summary
 
@@ -274,379 +466,18 @@ In Ukraine, normal temperature is 36.6°C.
 
 ---
 
-## 🎯 Activities
-
-### Body & Pain
-
-<MatchUp pairs={[
-  { left: `Голова`, right: `Head` },
-  { left: `Горло`, right: `Throat` },
-  { left: `Живіт`, right: `Stomach` },
-  { left: `Спина`, right: `Back` },
-  { left: `Нога`, right: `Leg` },
-  { left: `Рука`, right: `Arm/Hand` },
-  { left: `Око`, right: `Eye` },
-  { left: `Вухо`, right: `Ear` },
-  { left: `Серце`, right: `Heart` },
-  { left: `Зуб`, right: `Tooth` }
-]} />
-
-### Diagnosis
-
-<FillIn items={[
-  {
-    sentence: `У мене ___ голова. (Hurts sing.)`,
-    answer: `болить`,
-    options: [`болить`, `болять`, `хворіє`]
-  },  {
-    sentence: `У мене ___ ноги. (Hurts pl.)`,
-    answer: `болять`,
-    options: [`болять`, `болить`, `хворіють`]
-  },  {
-    sentence: `У нього висока ___. (Fever)`,
-    answer: `температура`,
-    options: [`температура`, `кашель`, `нежить`]
-  },  {
-    sentence: `Треба купити ліки в ___. (Pharmacy)`,
-    answer: `аптеці`,
-    options: [`аптеці`, `лікарні`, `магазині`]
-  },  {
-    sentence: `Лікар виписал ___. (Prescription)`,
-    answer: `рецепт`,
-    options: [`рецепт`, `таблетку`, `симптом`]
-  },  {
-    sentence: `Що вас ___? (Bothers)`,
-    answer: `турбує`,
-    options: [`турбує`, `болить`, `хворіє`]
-  },  {
-    sentence: `Мені потрібен ___. (Doctor)`,
-    answer: `лікар`,
-    options: [`лікар`, `пацієнт`, `рецепт`]
-  },  {
-    sentence: `У мене сильний ___. (Cough)`,
-    answer: `кашель`,
-    options: [`кашель`, `нежить`, `температура`]
-  }
-]} />
-
-### Medical Expert
-
-<Quiz questions={[
-  {
-    question: `Якщо у вас є \"нежить\" то що це означає в українській мові для симптомів?`,
-    options: [
-      { text: `A runny nose (нежить це нежить)`, correct: true },
-      { text: `A broken leg (зламана нога)`, correct: false },
-      { text: `A headache (головний біль)`, correct: false },
-      { text: `A fever (температура)`, correct: false }
-    ]
-  },  {
-    question: `Що означає фраза \"у мене болить живіт\" в українській мові правильно?`,
-    options: [
-      { text: `My stomach hurts (мій живіт болить)`, correct: true },
-      { text: `My life hurts (моє життя болить)`, correct: false },
-      { text: `I am hungry (я голодний)`, correct: false },
-      { text: `I am tired (я втомлений)`, correct: false }
-    ]
-  },  {
-    question: `Де можна купити ліки в Україні зазвичай для лікування?`,
-    options: [
-      { text: `В аптеці (в аптеці)`, correct: true },
-      { text: `В лікарні (в лікарні)`, correct: false },
-      { text: `В бібліотеці (в бібліотеці)`, correct: false },
-      { text: `В магазині (в магазині)`, correct: false }
-    ]
-  },  {
-    question: `Яка нормальна температура тіла в Україні згідно з медичними стандартами?`,
-    options: [
-      { text: `Normal temperature (36.6°C нормальна)`, correct: true },
-      { text: `High fever (38.0°C висока)`, correct: false },
-      { text: `Low temperature (35.0°C низька)`, correct: false },
-      { text: `Critical (40.0°C критична)`, correct: false }
-    ]
-  },  {
-    question: `Що означає слово \"видужуйте\" в українській мові для побажання?`,
-    options: [
-      { text: `Get well soon (одужуйте швидко)`, correct: true },
-      { text: `Good bye (до побачення)`, correct: false },
-      { text: `Pay here (платіть тут)`, correct: false },
-      { text: `Thank you (дякую)`, correct: false }
-    ]
-  },  {
-    question: `Що означає дієслово \"хворіти\" в українській мові для стану здоров'я?`,
-    options: [
-      { text: `To be ill process (бути хворим процес)`, correct: true },
-      { text: `To hurt pain (боліти біль)`, correct: false },
-      { text: `To heal (лікувати)`, correct: false },
-      { text: `To recover (одужувати)`, correct: false }
-    ]
-  },  {
-    question: `Чи можна сказати \"я болю голову\" в українській мові правильно граматично?`,
-    options: [
-      { text: `No incorrect (ні неправильно)`, correct: true },
-      { text: `Yes correct (так правильно)`, correct: false },
-      { text: `Sometimes (іноді)`, correct: false },
-      { text: `Only formal (тільки офіційно)`, correct: false }
-    ]
-  },  {
-    question: `Який відмінок використовується в питанні \"що вас турбує\" для слова \"вас\"?`,
-    options: [
-      { text: `Accusative (знахідний відмінок)`, correct: true },
-      { text: `Dative (давальний відмінок)`, correct: false },
-      { text: `Genitive (родовий відмінок)`, correct: false },
-      { text: `Nominative (називний відмінок)`, correct: false }
-    ]
-  }
-]} />
-
-### Doctors Orders
-
-<Unjumble items={[
-  { jumbled: `що / вас / турбує / сьогодні / дуже / зранку / вже`, answer: `Що вас турбує сьогодні дуже зранку вже` },
-  { jumbled: `у / мене / дуже / болить / голова / сильно / зараз / вже`, answer: `У мене дуже болить голова сильно зараз вже` },
-  { jumbled: `цю / таблетку / прийміть / після / їжі / завжди / тричі / на / день`, answer: `Прийміть цю таблетку після їжі завжди тричі на день` },
-  { jumbled: `мені / лікаря / викликати / треба / зараз / дуже / швидко / будь / ласка`, answer: `Мені треба викликати лікаря зараз дуже швидко будь ласка` },
-  { jumbled: `я / ліки / купив / в / аптеці / вчора / ввечері / пізно`, answer: `Я купив ліки в аптеці вчора ввечері пізно` },
-  { jumbled: `вам / бажаю / міцного / здоров'я / завжди / від / щирого / серця`, answer: `Бажаю вам міцного здоров'я завжди від щирого серця` }
-]} />
-
-### Symptoms vs Remedies
-
-<GroupSort groups={{
-  "Symptoms (Problems)": ["Кашель", "Нежить", "Температура", "Біль", "Грип", "Слабкість"],
-  "Remedies (Solutions)": ["Таблетка", "Ліки", "Чай з лимоном", "Рецепт", "Лікар", "Аптека"]
-}} />
-
-### Medical Truths
-
-<TrueFalse items={[
-  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `Pharmacy.`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `Ambulance.`
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `Medicine.`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: ``
-  }
-]} />
-
-### The Appointment
-
-<Cloze
-  passage={`Я прийшов у [___:1], тому що я захворів.
-Лікар запитав: \"Що вас [___:2]?\"
-Я сказав, що у мене болить [___:3].
-Він поміряв мою [___:4]. Вона була висока.
-Лідкар сказав, що це [___:5].
-Він дав мені [___:6] на ліки.
-Я пішов в [___:7], щоб купити таблетки.
-Аптекар сказав приймати [___:8] тричі на день.
-Я питиму багато [___:9] з лимоном.
-Лікар сказав мені [___:10] вдома.
-Я сподіваюся що скоро [___:11].
-Моє [___:12] дуже важливе для мене.`}
-  blanks={[{ index: 0, answer: `поліклініку`, options: [`поліклініку`, `школу`, `магазин`] }, { index: 1, answer: `турбує`, options: [`турбує`, `радіє`, `цікавить`] }, { index: 2, answer: `горло`, options: [`горло`, `стіл`, `вікно`] }, { index: 3, answer: `температуру`, options: [`температуру`, `книгу`, `сумку`] }, { index: 4, answer: `грип`, options: [`грип`, `спорт`, `відпочинок`] }, { index: 5, answer: `рецепт`, options: [`рецепт`, `квиток`, `паспорт`] }, { index: 6, answer: `аптеку`, options: [`аптеку`, `кіно`, `кафе`] }, { index: 7, answer: `ліки`, options: [`ліки`, `каву`, `воду`] }, { index: 8, answer: `чаю`, options: [`чаю`, `кави`, `соку`] }, { index: 9, answer: `лежати`, options: [`лежати`, `гуляти`, `працювати`] }, { index: 10, answer: `одужаю`, options: [`одужаю`, `хворію`, `працюю`] }, { index: 11, answer: `здоров'я`, options: [`здоров'я`, `робота`, `хобі`] }]}
-/>
-
-### The Emergency
-
-<DialogueReorder lines={[
-  { text: `Алло, швидка?`, order: 1 },
-  { text: `Так, що сталося?`, order: 2 },
-  { text: `Мій чоловік впав. У нього болить серце.`, order: 3 },
-  { text: `Де ви знаходитесь?`, order: 4 },
-  { text: `Вулиця Шевченка, 10.`, order: 5 },
-  { text: `Скільки йому років?`, order: 6 },
-  { text: `П'ятдесят.`, order: 7 },
-  { text: `Чекайте, машина виїхала.`, order: 8 }
-]} />
-
-### Medical Terms
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`У мене температура і кашель. Я йду до лікаря. Мені треба купити ліки. Моє здоров'я важливе. Аптека за рогом.`}
-  correctWords={[`температура`, `кашель`, `лікаря`, `ліки`, `здоров'я`, `Аптека`]}
-/>
-<MarkTheWordsActivity
-  text={`Я люблю спорт. Це мій кіт. Сонце світить.`}
-  correctWords={[`спорт`, `мій кіт`, `світить`]}
-/>
-</MarkTheWords>
-
-### Fix the Complaint
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я болю голова.`}
-    errorWord={`Я болю`}
-    correctForm={`У мене болить`}
-    options={[`У мене болить`, `Я болю`]}
-    explanation={`Construction is \"At me hurts head\".`}
-  />
-  <ErrorCorrectionItem
-    sentence={`У мене болить ноги.`}
-    errorWord={`болить`}
-    correctForm={`болять`}
-    options={[`болять`, `болить`]}
-    explanation={`Legs are plural -> болять.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`У мене є кашлю.`}
-    errorWord={`кашлю`}
-    correctForm={`кашель`}
-    options={[`кашель`, `кашлю`]}
-    explanation={`\"У мене (є)\" takes Nominative -> кашель.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Мені треба аптека.`}
-    errorWord={`аптека`}
-    correctForm={`аптеку`}
-    options={[`аптеку`, `аптека`]}
-    explanation={`Motion into place -> Accusative.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Дайте рецепта.`}
-    errorWord={`рецепта`}
-    correctForm={`рецепт`}
-    options={[`рецепт`, `рецепта`]}
-    explanation={`Give (what? Accusative inanimate) -> рецепт.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Лікар лікує пацієнт.`}
-    errorWord={`пацієнт`}
-    correctForm={`пацієнта`}
-    options={[`пацієнта`, `пацієнт`]}
-    explanation={`Treats whom? (Accusative animate) -> пацієнта.`}
-  />
-</ErrorCorrection>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `My head hurts.`,
-    options: [
-      { text: `У мене болить голова.`, correct: true },
-      { text: `Я болю голову.`, correct: false }
-    ]
-  },  {
-    source: `I have a fever.`,
-    options: [
-      { text: `У мене температура.`, correct: true },
-      { text: `Я є температура.`, correct: false }
-    ]
-  },  {
-    source: `I need a doctor.`,
-    options: [
-      { text: `Мені потрібен лікар.`, correct: true },
-      { text: `Я треба лікар.`, correct: false }
-    ]
-  },  {
-    source: `Where is the pharmacy?`,
-    options: [
-      { text: `Де аптека?`, correct: true },
-      { text: `Де лікар?`, correct: false }
-    ]
-  },  {
-    source: `Get well soon!`,
-    options: [
-      { text: `Видужуйте!`, correct: true },
-      { text: `Хворійте!`, correct: false }
-    ]
-  },  {
-    source: `I am sick.`,
-    options: [
-      { text: `Я хворий | Я хворію.`, correct: true },
-      { text: `У мене хворий.`, correct: false }
-    ]
-  }
-]} />
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| алло |  |  | interj | - |  |
-| аптекар |  |  | noun | ч |  |
-| бідний |  |  | adj | с |  |
-| видужувати |  |  | verb | - |  |
-| виїхати |  |  | verb | ж |  |
-| відпочинок |  |  | noun | ч |  |
-| відчувати |  |  | verb | - |  |
-| грип |  |  | noun | ч |  |
-| гірчичник |  |  | noun | ч |  |
-| зранку |  |  | adv | - |  |
-| лівий |  |  | adj | с |  |
-| лікувати |  |  | verb | - |  |
-| лінь |  |  | noun | ч |  |
-| міцний |  |  | adj | с |  |
-| називатися |  |  | verb | - |  |
-| одужати |  |  | verb | - |  |
-| одужувати |  |  | verb | - |  |
-| пахнути |  |  | verb | - |  |
-| поліклініка |  |  | noun | ж |  |
-| поміряти |  |  | verb | ч |  |
-| приймати |  |  | verb | - |  |
-| слабкість |  |  | noun | ж |  |
-| спорт |  |  | noun | ч |  |
-| тричі |  |  | adv | - |  |
-| хворій |  |  | noun | ж |  |
-| хворіти |  |  | verb | - |  |
-| хіб |  |  | noun | ч |  |
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [How to book an appointment with a doctor in Ukrainian](https://www.ukrainianlessons.com/fmu54/) — Listening review (A1): doctor
+> - [ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns](https://www.ukrainianlessons.com/lesson/102/) — Challenge listening (B1): doctor
+> - [ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals](https://www.ukrainianlessons.com/lesson/103/) — Challenge listening (B1): doctor
+>
+> **📺 YouTube:**
+> - [Doctors Vocabulary and questions in Ukrainian - Learn doctor vocab and...](https://www.youtube.com/watch?v=OnO697z9iPM) — Ukrainian grammar
+>
+> **📖 Articles:**
+> - [Something Hurts](https://www.ukrainianlessons.com/something-hurts/) — Ukrainian Lessons
+>
+> **🌐 Websites:**
+> - [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

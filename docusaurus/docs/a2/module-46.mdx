@@ -18,9 +18,8 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
-
-# Nature & Weather
 
 ## Warm-up
 
@@ -270,6 +269,7 @@ This tradition of spending time outdoors helps families connect with nature and 
 ---
 
 
+
 ## 🎯 Activities
 
 ### Nature Words
@@ -310,7 +310,7 @@ This tradition of spending time outdoors helps families connect with nature and 
 
 <Unjumble
   title="Weather Sentences"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Сьогодні на вулиці дуже гарна і тепла погода"}, {"jumbled": "", "answer": "Влітку ми часто їздимо відпочивати на синє море"}, {"jumbled": "", "answer": "Взимку в горах падає білий сніг і холодно"}, {"jumbled": "", "answer": "Осінь це золота пора коли листя стає жовтим"}, {"jumbled": "", "answer": "Навесні птахи повертаються додому і співають веселі пісні"}, {"jumbled": "", "answer": "Яке величезне і красиве озеро ми бачимо перед собою"}]`)}
+  items={JSON.parse(`[{"jumbled": "Сьогодні / на / вулиці / дуже / гарна / і / тепла / погода", "answer": "Сьогодні на вулиці дуже гарна і тепла погода"}, {"jumbled": "Влітку / ми / часто / їздимо / відпочивати / на / синє / море", "answer": "Влітку ми часто їздимо відпочивати на синє море"}, {"jumbled": "Взимку / в / горах / падає / білий / сніг / і / холодно", "answer": "Взимку в горах падає білий сніг і холодно"}, {"jumbled": "Осінь / це / золота / пора / коли / листя / стає / жовтим", "answer": "Осінь це золота пора коли листя стає жовтим"}, {"jumbled": "Навесні / птахи / повертаються / додому / і / співають / веселі / пісні", "answer": "Навесні птахи повертаються додому і співають веселі пісні"}, {"jumbled": "Яке / величезне / і / красиве / озеро / ми / бачимо / перед / собою", "answer": "Яке величезне і красиве озеро ми бачимо перед собою"}]`)}
 />
 
 ### Weather Mistakes
@@ -388,6 +388,68 @@ This tradition of spending time outdoors helps families connect with nature and 
   questions={JSON.parse(`[{"source": "Mountain", "options": [{"text": "гора", "correct": true}, {"text": "долина", "correct": false}, {"text": "ріка", "correct": false}]}, {"source": "Lake", "options": [{"text": "озеро", "correct": true}, {"text": "ріка", "correct": false}, {"text": "море", "correct": false}]}, {"source": "Forest", "options": [{"text": "ліс", "correct": true}, {"text": "поле", "correct": false}, {"text": "гора", "correct": false}]}, {"source": "Sunny", "options": [{"text": "сонячно", "correct": true}, {"text": "хмарно", "correct": false}, {"text": "дощ", "correct": false}]}, {"source": "Rain", "options": [{"text": "дощ", "correct": true}, {"text": "сніг", "correct": false}, {"text": "вітер", "correct": false}]}, {"source": "Spring", "options": [{"text": "весна", "correct": true}, {"text": "літо", "correct": false}, {"text": "зима", "correct": false}]}, {"source": "Summer", "options": [{"text": "літо", "correct": true}, {"text": "зима", "correct": false}, {"text": "осінь", "correct": false}]}, {"source": "Winter", "options": [{"text": "зима", "correct": true}, {"text": "літо", "correct": false}, {"text": "весна", "correct": false}]}]`)}
 />
 
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| бутерброда | buterˈbrɔdɐ | sandwich (gen) | noun | ч |  |
+| вечорія | veˈt͡ʃɔrʲijɐ | evening (diminutive/typo?) | noun | ж |  |
+| вислова | ˈvɪsloʋɐ | expression (gen?) | noun | ч |  |
+| глянути | ˈhlʲɑnute | to glance (perf) | verb |  |  |
+| голубий | holuˈbɪj | light blue | adj | с |  |
+| градус | ˈhrɑdus | degree | noun | ч |  |
+| гріз | hrʲiz | threat/storm (gen pl гроза?) | noun | ж |  |
+| долина | doˈlɪnɐ | valley | noun | ж |  |
+| досягати | dosʲɐˈhɑte | to reach (imp) | verb |  |  |
+| дувати | duˈʋɑte | blow (typo?) | verb |  |  |
+| дути | ˈdute | to blow (imp) | verb |  |  |
+| запитувати | zɐˈpɪtuʋɐte | to ask (imp) | verb |  |  |
+| захоплюватися | zɐˈxɔplʲuʋɐtɪsʲɐ | to admire/be fond of | verb |  |  |
+| йтися | jˈtɪsʲɐ | to be about (impersonal) | verb |  |  |
+| канікула | kɐˈnʲikulɐ | vacation (sg typo) | noun | ч |  |
+| катаватися | kɐtɐˈʋɑtɪsʲɐ | to ride (typo кататися) | verb |  |  |
+| квітнити | kvʲitˈnɪte | to bloom (typo квітнути) | verb |  |  |
+| ковзан | kou̯ˈzɑn | skate (noun) | noun | ч |  |
+| краса | krɐˈsɑ | beauty | noun | ж |  |
+| ландшафт | lɐndˈʃɑft | landscape | noun | ч |  |
+| лелека | leˈlɛkɐ | stork | noun | ж |  |
+| листя | lysʲtʲɐ | leaves | noun | с |  |
+| ловити | loˈvɪte | to catch (imp) | verb |  |  |
+| марійка | mɐˈrʲijkɐ | Mariika | name | ж |  |
+| мороз | moˈrɔz | frost | noun | ч |  |
+| надвір | nɐdˈvʲir | outside | adv |  |  |
+| обговорювати | obhoˈvɔrʲuʋɐte | to discuss (imp) | verb |  |  |
+| одягнути | odʲɐhˈnute | to put on (perf) | verb |  |  |
+| олесь | oˈlɛsʲ | Oles | name | ч |  |
+| оновлення | oˈnɔu̯lenʲːɐ | update | noun | с |  |
+| опади | ˈɔpɐdɪ | precipitation | noun | pl |  |
+| оранжевий | oˈrɑnʒeʋɪj | orange | adj | ч |  |
+| падати | ˈpɑdɐte | to fall (imp) | verb |  |  |
+| парасолька | pɐrɐˈsɔlʲkɐ | umbrella | noun | ж |  |
+| перебування | perebuˈʋɑnʲːɐ | stay/residence | noun | с |  |
+| петренко | peˈtrɛnko | Petrenko | name | ч |  |
+| прекрасний | preˈkrɑsnɪj | beautiful/wonderful | adj | ж |  |
+| примітка | prɪˈmʲitkɐ | note | noun | ж |  |
+| приїжджати | prɪjiʒˈdʒɑte | to arrive (imp) | verb |  |  |
+| пробудження | proˈbudʒenʲːɐ | awakening | noun | с |  |
+| прозорий | proˈzɔrɪj | transparent | adj | ж |  |
+| пропонувати | proponuˈʋɑte | to offer/suggest | verb |  |  |
+| прохолодно | proxoˈlɔdno | cool (adv) | adv |  |  |
+| рожевий | roˈʒɛʋɪj | pink | adj | ч |  |
+| розташування | roztɐʃuˈʋɑnʲːɐ | location | noun | с |  |
+| ромашка | roˈmɑʃkɐ | chamomile | noun | ж |  |
+| ріка | rʲiˈkɑ | river | noun | ж |  |
+| сезон | seˈzɔn | season | noun | ч |  |
+| синичка | sɪˈnɪt͡ʃkɐ | titmouse | noun | ж |  |
+| сніговик | snihoˈvɪk | snowman | noun | ч |  |
+| сірий | ˈsʲirɪj | grey | adj | с |  |
+| танути | ˈtɑnute | to melt (imp) | verb |  |  |
+| траві | trɐˈvʲi | grass (loc) | noun | ж |  |
+| туман | tuˈmɑn | fog | noun | ч |  |
+| узбережжя | uzbeˈrɛʒːɐ | coast | noun | ч |  |
+| хмарний | ˈxmɑrnɪj | cloudy | adj | с |  |
+| яскраво | jɐˈskrɑʋo | brightly | adv |  |  |
+
 ## 📋 Summary
 
 **Landscape:**
@@ -439,50 +501,17 @@ This tradition of spending time outdoors helps families connect with nature and 
 >
 > Українці дуже люблять говорити про погоду! Це завжди гарна тема для розмови.
 
-:::info[🔗 External Resources]
-
-**YouTube:** [Nature & Weather in Ukrainian...](https://www.youtube.com/watch?v=x9qlDTX3fVg) — Pinhok Languages
-
-**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
-
-**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-:::
-
-
-## 📚 Vocabulary
-
-| Word      | IPA          | English      | POS  | Gender | Note           |
-| --------- | ------------ | ------------ | ---- | ------ | -------------- |
-| гора      | /ˈɦɔrɑ/      | mountain     | noun | f      | Acc: гору      |
-| долина    | /dɔˈlɪna/    | valley       | noun | f      | landscape      |
-| ліс       | /lʲis/       | forest       | noun | m      | Loc: у лісі    |
-| озеро     | /ˈɔzɛrɔ/     | lake         | noun | n      | water          |
-| ріка      | /riˈkɑ/      | river        | noun | f      | water          |
-| море      | /ˈmɔrɛ/      | sea          | noun | n      | water          |
-| пляж      | /plʲaʒ/      | beach        | noun | m      | landscape      |
-| поле      | /ˈpɔle/      | field        | noun | n      | landscape      |
-| берег     | /ˈbɛrɛɦ/     | coast, shore | noun | m      | Loc: на березі |
-| дерево    | /ˈdɛrɛʋɔ/    | tree         | noun | n      | flora          |
-| квітка    | /ˈkʋitkɑ/    | flower       | noun | f      | flora          |
-| птах      | /ptɑx/       | bird         | noun | m      | fauna          |
-| тварина   | /tʋɑˈrɪnɑ/   | animal       | noun | f      | fauna          |
-| сонячно   | /ˈsɔnʲɑtʃnɔ/ | sunny        | adv  | —      | weather        |
-| хмарно    | /ˈxmɑrnɔ/    | cloudy       | adv  | —      | weather        |
-| дощ       | /dɔʃtʃ/      | rain         | noun | m      | weather        |
-| сніг      | /snʲiɦ/      | snow         | noun | m      | weather        |
-| вітер     | /ˈʋitɛr/     | wind         | noun | m      | weather        |
-| гроза     | /ɦrɔˈzɑ/     | thunderstorm | noun | f      | weather        |
-| туман     | /tuˈmɑn/     | fog          | noun | m      | weather        |
-| блискавка | /blɪsˈkavka/ | lightning    | noun | f      | weather        |
-| грім      | /ɦrim/       | thunder      | noun | m      | weather        |
-| трава     | /traˈva/     | grass        | noun | f      | flora          |
-| весна     | /ʋɛˈsnɑ/     | spring       | noun | f      | season         |
-| літо      | /ˈlʲitɔ/     | summer       | noun | n      | season         |
-| осінь     | /ˈɔsʲinʲ/    | autumn       | noun | f      | season         |
-| зима      | /zɪˈmɑ/      | winter       | noun | f      | season         |
-| погода    | /pɔˈɦɔdɑ/    | weather      | noun | f      | climate        |
-| дієслово  | /diˈjɛslɔʋɔ/ | verb         | noun | n      | grammar term   |
-| природа   | /prɪˈrɔdɑ/   | nature       | noun | f      | environment    |
-| клімат    | /ˈklimat/    | climate      | noun | m      | environment    |
-| океан     | /ɔkeˈan/     | ocean        | noun | m      | water          |
-| луг       | /luɦ/        | meadow       | noun | m      | landscape      |
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [How to talk about weather in Ukrainian](https://www.ukrainianlessons.com/fmu28/) — Listening review (A1): weather
+> - [ULP 1-16 Talking about weather in Ukrainian](https://www.ukrainianlessons.com/lesson/16/) — Listening review (A1): weather
+>
+> **📺 YouTube:**
+> - [Nature & Weather in Ukrainian...](https://www.youtube.com/watch?v=x9qlDTX3fVg) — Pinhok Languages
+>
+> **📖 Articles:**
+> - [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **🌐 Websites:**
+> - [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

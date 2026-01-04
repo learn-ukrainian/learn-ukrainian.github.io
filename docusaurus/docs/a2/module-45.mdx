@@ -18,7 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 ## Warm-up
 
@@ -263,6 +263,7 @@ The dacha represents an escape from city life and a deep connection to nature. F
 ---
 
 
+
 ## 🎯 Activities
 
 ### Home Words
@@ -276,7 +277,7 @@ The dacha represents an escape from city life and a deep connection to nature. F
 
 <FillIn
   title="Home Vocabulary"
-  items={JSON.parse(`[{"sentence": "Я сплю у [___]. (bedroom)", "answer": "спальні", "options": ["спальні", "вітальні", "кухні", "ванній"]}, {"sentence": "Ми їмо на [___]. (kitchen)", "answer": "кухні", "options": ["спальні", "вітальні", "кухні", "ванній"]}, {"sentence": "Сідай на [___]. (sofa)", "answer": "диван", "options": ["диван", "крісло", "стіл", "ліжко"]}, {"sentence": "Книги на [___]. (shelf)", "answer": "полиці", "options": ["полиці", "шафі", "комоді", "столі"]}, {"sentence": "Одяг у [___]. (wardrobe)", "answer": "шафі", "options": ["полиці", "шафі", "комоді", "столі"]}, {"sentence": "Тато працює в [___]. (office)", "answer": "кабінеті", "options": ["спальні", "кабінеті", "кухні", "ванній"]}, {"sentence": "Білизна в [___]. (washing machine)", "answer": "пральній машині", "options": ["пральній машині", "посудомийці", "пилососі", "духовці"]}, {"sentence": "Прибираю [___]. (vacuum)", "answer": "пилососом", "options": ["пральною машиною", "посудомийкою", "пилососом", "чайником"]}]`)}
+  items={JSON.parse(`[{"sentence": "Я сплю у [___]. (bedroom)", "answer": "спальні", "options": ["спальні", "вітальні", "кухні", "ванній"]}, {"sentence": "Ми їмо на [___]. (kitchen)", "answer": "кухні", "options": ["спальні", "вітальні", "кухні", "ванній"]}, {"sentence": "Сідай на [___]. (sofa)", "answer": "диван", "options": ["диван", "крісло", "стіл", "ліжко"]}, {"sentence": "Книги на [___]. (shelf)", "answer": "полиці", "options": ["полиці", "шафі", "комоді", "столі"]}, {"sentence": "Одяг у [___]. (wardrobe)", "answer": "шафі", "options": ["полиці", "шафі", "комоді", "столі"]}, {"sentence": "Тато працює в [___]. (office)", "answer": "кабінеті", "options": ["спальні", "кабінеті", "кухні", "ванній"]}, {"sentence": "Білизна в [___].", "answer": "пральній машині", "options": ["пральній машині", "посудомийці", "пилососі", "духовці"]}, {"sentence": "Прибираю [___]. (vacuum)", "answer": "пилососом", "options": ["пральною машиною", "посудомийкою", "пилососом", "чайником"]}]`)}
 />
 
 ### Story Comprehension
@@ -286,7 +287,7 @@ The dacha represents an escape from city life and a deep connection to nature. F
 
   title="Story Comprehension"
 
-  passage={`Ольга переїхала в нову ___. (apartment)
+  passage={`Ольга переїхала в нову ___.
 
 У вітальні є ___ і два крісла. (sofa)
 
@@ -306,7 +307,7 @@ The dacha represents an escape from city life and a deep connection to nature. F
 
 Він дивиться у ___. (mirror)
 
-На кухні працює ___. (dishwasher)
+На кухні працює ___.
 
 Взуття стоїть у ___. (hallway)`}
 
@@ -325,7 +326,7 @@ The dacha represents an escape from city life and a deep connection to nature. F
 
 <Unjumble
   title="Home Sentences"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Кожного вечора я міцно сплю у своїй спальні"}, {"jumbled": "", "answer": "Ця цікава книга лежить на великому дерев'яному столі"}, {"jumbled": "", "answer": "Будь ласка сідай на цей зручний м'який диван"}, {"jumbled": "", "answer": "Сьогодні я ретельно прибираю всю свою велику квартиру"}, {"jumbled": "", "answer": "Мій чистий одяг висить у великій білій шафі"}, {"jumbled": "", "answer": "Всі мої книги стоять рівно на книжковій полиці"}, {"jumbled": "", "answer": "Я нарешті переїжджаю у нову квартиру вже завтра"}, {"jumbled": "", "answer": "Ця нова квартира виглядає просто чудова та світла"}]`)}
+  items={JSON.parse(`[{"jumbled": "Кожного / вечора / я / міцно / сплю / у / своїй / спальні", "answer": "Кожного вечора я міцно сплю у своїй спальні"}, {"jumbled": "Ця / цікава / книга / лежить / на / великому / дерев'яному / столі", "answer": "Ця цікава книга лежить на великому дерев'яному столі"}, {"jumbled": "Будь / ласка / сідай / на / цей / зручний / м'який / диван", "answer": "Будь ласка сідай на цей зручний м'який диван"}, {"jumbled": "Сьогодні / я / ретельно / прибираю / всю / свою / велику / квартиру", "answer": "Сьогодні я ретельно прибираю всю свою велику квартиру"}, {"jumbled": "Мій / чистий / одяг / висить / у / великій / білій / шафі", "answer": "Мій чистий одяг висить у великій білій шафі"}, {"jumbled": "Всі / мої / книги / стоять / рівно / на / книжковій / полиці", "answer": "Всі мої книги стоять рівно на книжковій полиці"}, {"jumbled": "Я / нарешті / переїжджаю / у / нову / квартиру / вже / завтра", "answer": "Я нарешті переїжджаю у нову квартиру вже завтра"}, {"jumbled": "Ця / нова / квартира / виглядає / просто / чудова / та / світла", "answer": "Ця нова квартира виглядає просто чудова та світла"}]`)}
 />
 
 ### Home Mistakes
@@ -403,6 +404,57 @@ The dacha represents an escape from city life and a deep connection to nature. F
   questions={JSON.parse(`[{"source": "Living room", "options": [{"text": "вітальня", "correct": true}, {"text": "спальня", "correct": false}, {"text": "кухня", "correct": false}]}, {"source": "Bedroom", "options": [{"text": "спальня", "correct": true}, {"text": "кухня", "correct": false}, {"text": "ванна", "correct": false}]}, {"source": "Sofa", "options": [{"text": "диван", "correct": true}, {"text": "крісло", "correct": false}, {"text": "стіл", "correct": false}]}, {"source": "Wardrobe", "options": [{"text": "шафа", "correct": true}, {"text": "полиця", "correct": false}, {"text": "комод", "correct": false}]}, {"source": "Bed", "options": [{"text": "ліжко", "correct": true}, {"text": "диван", "correct": false}, {"text": "крісло", "correct": false}]}, {"source": "Vacuum", "options": [{"text": "пилосос", "correct": true}, {"text": "пральна машина", "correct": false}, {"text": "праска", "correct": false}]}, {"source": "Balcony", "options": [{"text": "балкон", "correct": true}, {"text": "коридор", "correct": false}, {"text": "комора", "correct": false}]}, {"source": "Kitchen", "options": [{"text": "кухня", "correct": true}, {"text": "вітальня", "correct": false}, {"text": "спальня", "correct": false}]}]`)}
 />
 
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| брудний | brudˈnɪj | dirty | adj | ч |  |
+| ванний | ˈvɑnːɪj | bath (adj) | adj | ж |  |
+| ванній | ˈvɑnːij | bath (loc) | adj | ж |  |
+| вирощувати | vɪˈrɔʃt͡ʃuʋɐte | to grow/cultivate | verb |  |  |
+| витирати | vɪtɪˈrɑte | to wipe (imp) | verb |  |  |
+| вчятися | vt͡ʃʲɑˈtɪsʲɐ | to study (typo вчитися) | verb |  |  |
+| город | hoˈrɔd | vegetable garden | noun | ч |  |
+| гігієна | hihiˈjɛnɐ | hygiene | noun | ж |  |
+| дач | dɑt͡ʃ | dachas (gen pl) | noun | ж |  |
+| дача | ˈdɑt͡ʃɐ | dacha/summer house | noun | ж |  |
+| заміський | zɐmʲisʲˈkɪj | suburban | adj | ч |  |
+| запрошувати | zɐˈprɔʃuʋɐte | to invite (imp) | verb |  |  |
+| застеляти | zɐsteˈlʲɑte | to make bed (imp) | verb |  |  |
+| затишний | ˈzɑtɪʃnɪj | cozy | adj | ж |  |
+| затишок | ˈzɑtɪʃok | comfort/coziness | noun | ч |  |
+| зітхати | zitˈxɑte | to sigh (imp) | verb |  |  |
+| катерина | kɐteˈrɪnɐ | Kateryna | name | ж |  |
+| комод | koˈmɔd | chest of drawers | noun | ч |  |
+| комора | koˈmɔrɐ | pantry | noun | ж |  |
+| максити | mɐkˈsɪtɪ | maximize? (typo) | verb |  |  |
+| меблі | ˈmɛblʲi | furniture | noun | ч |  |
+| найважливіше | nɑjʋɐʒlɪˈʋiʃe | most importantly | noun | с |  |
+| новосілля | novoˈsʲilʲːɐ | housewarming | noun | ч |  |
+| оглядати | ohlʲɐˈdɑte | to inspect/view | verb |  |  |
+| особливо | osoˈblɪʋo | especially | adv |  |  |
+| переїжджати | perejiʒˈdʒɑte | to move (house) (imp) | verb |  |  |
+| переїзд | pereˈjizd | move/relocation | noun | ч |  |
+| пилососити | pɪloˈsɔsɪte | to vacuum | verb |  |  |
+| попрацювати | poprɐt͡sʲuˈʋɑte | to work for a while (perf) | verb | ч |  |
+| посуд | ˈpɔsud | dishes | noun | ч |  |
+| посудомийка | posudoˈmɪjkɐ | dishwasher | noun | ж |  |
+| пральний | ˈprɑlʲnɪj | washing (adj) | adj | ж |  |
+| прибирання | prɪbɪˈrɑnʲːɐ | cleaning | noun | с |  |
+| прилад | ˈprɪlɑd | appliance/device | noun | ч |  |
+| раковин | ˈrɑkoʋɪn | sink (gen pl? or typo раковина) | noun | ж |  |
+| раковина | ˈrɑkoʋɪnɐ | sink | noun | ж |  |
+| синка | ˈsɪnkɐ | son (gen? diminutive?) or ham? | noun | ж |  |
+| сон | sɔn | dream/sleep | noun | ч |  |
+| стомитися | stoˈmɪtɪsʲɐ | to get tired (perf) | verb | ч |  |
+| тумбочка | ˈtumbot͡ʃkɐ | nightstand | noun | ж |  |
+| усміхатися | usmʲiˈxɑtɪsʲɐ | to smile | verb |  |  |
+| фортеця | forˈtɛt͡sʲɐ | fortress | noun | ж |  |
+| фух | fux | phew | other |  |  |
+| чистити | ˈt͡ʃɪstɪte | to clean (imp) | verb |  |  |
+| чисток | t͡ʃɪsˈtɔk | cleanings (gen pl?) | noun | ж |  |
+| штора | ˈʃtɔrɐ | curtain | noun | ж |  |
+
 ## 📋 Summary
 
 **Кімнати:**
@@ -451,29 +503,18 @@ The dacha represents an escape from city life and a deep connection to nature. F
 >
 > Український дім — це затишок, тепло та любов! Запрошуйте гостей: «Заходьте, будь ласка!»
 
-:::info[🔗 External Resources]
-
-**YouTube:** [Furniture in Ukrainian - Lesson about Furniture in Ukrainian...](https://www.youtube.com/watch?v=pVknviJ4OOg) — Bright Kids Ukrainian Online School
-
-**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
-
-**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-:::
-
-
 ---
 
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| комора | /kɔˈmɔrɑ/ | storage room | noun | f | room |
-| полиця | /pɔˈlɪt͡sʲɑ/ | shelf | noun | f | furniture |
-| комод | /kɔˈmɔd/ | dresser | noun | m | furniture |
-| килим | /kɪˈlɪm/ | carpet | noun | m | decor |
-| штори | /ˈʃtɔrɪ/ | curtains | noun | pl | decor |
-| пральна машина | /ˈprɑlʲnɑ mɑˈʃɪnɑ/ | washing machine | phrase | f | appliance |
-| посудомийка | /pɔsudɔˈmɪjkɑ/ | dishwasher | noun | f | appliance |
-| облаштовувати | /ɔblɑʃtɔˈʋuʋɑtɪ/ | to furnish | verb | - | action |
-| переїжджати | /pɛrɛˈjʒdʒɑtɪ/ | to move house | verb | - | action |
-| орендувати | /ɔrɛnduˈʋɑtɪ/ | to rent | verb | - | action |
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [ULP 2-45 Review: 41-44 + My home](https://www.ukrainianlessons.com/lesson/45/) — Level-aligned topic match: home
+>
+> **📺 YouTube:**
+> - [Furniture in Ukrainian - Lesson about Furniture in Ukrainian...](https://www.youtube.com/watch?v=pVknviJ4OOg) — Bright Kids Ukrainian Online School
+>
+> **📖 Articles:**
+> - [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **🌐 Websites:**
+> - [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

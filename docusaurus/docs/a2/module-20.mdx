@@ -18,7 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 ## Warm-up
 
@@ -29,7 +29,6 @@ Now that you can form comparatives and superlatives, let's use them to express p
 - Comparing actions (better to do this than that)
 - Making and explaining choices
 - Useful expressions for everyday decisions
-
 
 ## Presentation
 
@@ -109,6 +108,14 @@ You can compare actions using comparatives + infinitives:
 - Краще **читати**, ніж **дивитися** телевізор.
 - Легше **говорити**, ніж **робити**.
 - Цікавіше **подорожувати**, ніж **сидіти** вдома.
+- Це **корисніше** для здоров'я. (This is more useful for health.)
+- Це **шкідливіше**. (This is more harmful.)
+- Це **ефективніше**. (This is more effective.)
+- Це **нудніше**. (This is more boring.)
+- Я **волію** чай. (I prefer tea.)
+- Тут **комфортніше**. (It is more comfortable here.)
+- Цей чай **гарячіший**. (This tea is hotter.)
+- Це **практичніше**. (This is more practical.)
 
 :::tip[Common Wisdom]
 "Легше сказати, ніж зробити" (It's easier said than done) is a popular Ukrainian saying!
@@ -213,6 +220,190 @@ Try to answer using different structures:
 
 ---
 
+
+
+## 🎯 Activities
+
+### Preference Expressions
+
+<MatchUp
+  title="Preference Expressions"
+  pairs={JSON.parse(`[{"left": "- Мені більше подобається", "right": "I like more"}, {"left": "- Я віддаю перевагу", "right": "I prefer"}, {"left": "- Краще", "right": "better"}, {"left": "- Гірше", "right": "worse"}, {"left": "- Легше", "right": "easier"}, {"left": "- Важче", "right": "harder"}, {"left": "- Цікавіше", "right": "more interesting"}, {"left": "- Нудніше", "right": "more boring"}, {"left": "- Я б вибрав", "right": "I would choose (m)"}, {"left": "- Я б вибрала", "right": "I would choose (f)"}, {"left": "- корисніше", "right": "more useful"}, {"left": "- зручніше", "right": "more convenient"}]`)}
+/>
+
+### Express Preferences
+
+<FillIn
+  title="Express Preferences"
+  items={JSON.parse(`[{"sentence": "Мені ___ подобається кава. (I like coffee more)", "answer": "більше", "options": ["більше", "менше", "найбільше", "добре"]}, {"sentence": "Я ___ перевагу книгам. (I prefer books)", "answer": "віддаю", "options": ["віддаю", "даю", "беру", "маю"]}, {"sentence": "___ читати, ніж дивитися телевізор. (It's better)", "answer": "Краще", "options": ["Краще", "Кращий", "Добре", "Добрий"]}, {"sentence": "___ сказати, ніж зробити. (It's easier)", "answer": "Легше", "options": ["Легше", "Легкий", "Легко", "Легкіше"]}, {"sentence": "Мені більше подобається чай, ___ кава. (than)", "answer": "ніж", "options": ["ніж", "за", "від", "до"]}, {"sentence": "Я б ___ зелений. (I would choose — masc.)", "answer": "вибрав", "options": ["вибрав", "вибрала", "вибираю", "виберу"]}, {"sentence": "Вона б ___ каву. (She would choose)", "answer": "вибрала", "options": ["вибрала", "вибрав", "вибираю", "виберу"]}, {"sentence": "___ подорожувати, ніж сидіти вдома. (It's more interesting)", "answer": "Цікавіше", "options": ["Цікавіше", "Цікавий", "Цікаво", "Найцікавіше"]}, {"sentence": "Я віддаю перевагу ___. (to books — Dative)", "answer": "книгам", "options": ["книги", "книгам", "книгою", "книг"]}, {"sentence": "Мені ___ подобаються фільми. (more — plural verb)", "answer": "більше", "options": ["більше", "великий", "багато", "найбільше"]}, {"sentence": "___ нічого не робити. (It's worse)", "answer": "Гірше", "options": ["Гірше", "Гірший", "Погано", "Поганий"]}, {"sentence": "Що ти б ___? (What would you choose?)", "answer": "вибрав", "options": ["вибрав", "вибираєш", "виберешся", "вибір"]}]`)}
+/>
+
+### Preferences
+
+<Quiz
+  title="Preferences"
+  questions={JSON.parse(`[{"question": "In Ukrainian, which of the following phrases correctly translates the casual expression for \\\"I like (this) more\\\"?", "options": [{"text": "Мені більше подобається", "correct": true}, {"text": "Я більше люблю це", "correct": false}, {"text": "Я віддаю перевагу цьому", "correct": false}, {"text": "Мені дуже подобається", "correct": false}]}, {"question": "When using the formal reflexive expression \\\"Я віддаю перевагу,\\\" which grammatical case must the object be in?", "options": [{"text": "Давальний відмінок", "correct": true}, {"text": "Знахідний відмінок", "correct": false}, {"text": "Називний відмінок", "correct": false}, {"text": "Орудний відмінок", "correct": false}]}, {"question": "What is the most accurate English equivalent for the common Ukrainian comparison \\\"Легше сказати, ніж зробити\\\"?", "options": [{"text": "Easier said than done", "correct": true}, {"text": "Harder to say than do", "correct": false}, {"text": "Easy to do and say", "correct": false}, {"text": "Always easier to speak", "correct": false}]}, {"question": "Which of these expressions would be considered the most formal way to state a preference in a business meeting?", "options": [{"text": "Я віддаю перевагу", "correct": true}, {"text": "Мені більше подобається", "correct": false}, {"text": "Краще вибрати це", "correct": false}, {"text": "Я люблю це більше", "correct": false}]}, {"question": "When a male speaker uses the conditional form \\\"Я б вибрав,\\\" what is he essentially expressing to the listener?", "options": [{"text": "I would choose", "correct": true}, {"text": "I am choosing now", "correct": false}, {"text": "I have already chosen", "correct": false}, {"text": "I must choose", "correct": false}]}, {"question": "What is the specific functional meaning of the comparative adverb \\\"цікавіше\\\" when used in a Ukrainian sentence?", "options": [{"text": "more interesting", "correct": true}, {"text": "less interesting", "correct": false}, {"text": "most interesting", "correct": false}, {"text": "not interesting", "correct": false}]}, {"question": "Within the context of a logical comparison, what does the Ukrainian conjunction \\\"ніж\\\" typically mean in English?", "options": [{"text": "than", "correct": true}, {"text": "if", "correct": false}, {"text": "because", "correct": false}, {"text": "although", "correct": false}]}, {"question": "When comparing two activities, what is the correct English translation for the Ukrainian phrase \\\"важче робити\\\"?", "options": [{"text": "harder to do", "correct": true}, {"text": "easier to do", "correct": false}, {"text": "faster to do", "correct": false}, {"text": "possible to do", "correct": false}]}, {"question": "To express a formal preference for something specific, which of the following grammatical structures should be utilized?", "options": [{"text": "Я віддаю перевагу + Dative", "correct": true}, {"text": "Мені подобається + Nominative", "correct": false}, {"text": "Я люблю + Accusative", "correct": false}, {"text": "Я вибираю + Genitive", "correct": false}]}, {"question": "In a sentence comparing two different actions, what does the phrase \\\"краще читати\\\" specifically signify?", "options": [{"text": "It's better to read", "correct": true}, {"text": "Reading is worse now", "correct": false}, {"text": "I read better today", "correct": false}, {"text": "I like reading only", "correct": false}]}, {"question": "If a woman is speaking and says \\\"Я б вибрала,\\\" which grammatical gender form is she correctly using?", "options": [{"text": "Жіночий рід", "correct": true}, {"text": "Чоловічий рід", "correct": false}, {"text": "Середній рід", "correct": false}, {"text": "Множина", "correct": false}]}, {"question": "To make choices sound significantly more polite and less direct in Ukrainian, which particle is usually added?", "options": [{"text": "\\\"б\\\"", "correct": true}, {"text": "\\\"же\\\"", "correct": false}, {"text": "\\\"б'ю\\\"", "correct": false}, {"text": "\\\"вже\\\" (adverb)", "correct": false}]}]`)}
+/>
+
+### Preference Rules
+
+<TrueFalse
+  title="Preference Rules"
+  items={JSON.parse(`[{"statement": "\\\"Мені більше подобається\\\" is casual.", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Я віддаю перевагу\\\" requires Dative.", "isTrue": true, "explanation": "Yes! Віддаю перевагу книгам."}, {"statement": "\\\"Краще\\\" means \\\"worse.\\\"", "isTrue": false, "explanation": "\\\"Краще\\\" means \\\"better.\\\" \\\"Гірше\\\" means \\\"worse.\\\""}, {"statement": "\\\"Легше\\\" means \\\"easier.\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Б\\\" makes forms more polite.", "isTrue": true, "explanation": "Yes! \\\"Я б вибрав\\\" sounds polite."}, {"statement": "\\\"Ніж\\\" means \\\"because.\\\"", "isTrue": false, "explanation": "\\\"Ніж\\\" means \\\"than.\\\""}, {"statement": "You can compare actions with infinitives.", "isTrue": true, "explanation": "Correct! Краще читати, ніж дивитися."}, {"statement": "\\\"Вибрав\\\" is masculine past.", "isTrue": true, "explanation": "Yes!"}, {"statement": "\\\"Вибрала\\\" is masculine past.", "isTrue": false, "explanation": "\\\"Вибрала\\\" is feminine."}, {"statement": "Preferences with Dative sound formal.", "isTrue": true, "explanation": "Yes! Я віддаю перевагу каві."}, {"statement": "\\\"Цікавіше подорожувати\\\" = more interesting to travel.", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Важче\\\" means \\\"easier.\\\"", "isTrue": false, "explanation": "\\\"Важче\\\" means \\\"harder.\\\""}]`)}
+/>
+
+### Preference Expressions
+
+<GroupSort
+  title="Preference Expressions"
+  groups={JSON.parse(`{"Casual Preference": ["Мені більше подобається", "Краще", "Мені подобається", "(Мені) байдуже", "Тобі подобається?", "Я люблю більше"], "Formal Preference": ["Я віддаю перевагу", "Я б вибрав/вибрала", "Мені б хотілося", "Мій вибір — це...", "Чи не могли б ви...", "Я волію (I'd rather)"]}`)}
+/>
+
+### Preference Sentences
+
+<Unjumble
+  title="Preference Sentences"
+  items={JSON.parse(`[{"jumbled": "сьогодні / мені / набагато / більше / подобається / ця / ароматна / гаряча / кава", "answer": "Сьогодні мені набагато більше подобається ця ароматна гаряча кава"}, {"jumbled": "завжди / набагато / краще / читати / цікаву / книгу / ніж / дивитися / старий / телевізор", "answer": "Завжди набагато краще читати цікаву книгу ніж дивитися старий телевізор"}, {"jumbled": "я / завжди / віддаю / перевагу / новим / та / дуже / корисним / книгам", "answer": "Я завжди віддаю перевагу новим та дуже корисним книгам"}, {"jumbled": "іноді / набагато / легше / все / щиро / сказати / ніж / потім / це / зробити", "answer": "Іноді набагато легше все щиро сказати ніж потім це зробити"}, {"jumbled": "сьогодні / я / б / вибрав / цей / красивий / зелений / великий / телефон", "answer": "Сьогодні я б вибрав цей красивий зелений великий телефон"}, {"jumbled": "мені / завжди / набагато / більше / подобаються / ці / нові / цікаві / фантастичні / книги", "answer": "Мені завжди набагато більше подобаються ці нові цікаві книги"}, {"jumbled": "зараз / набагато / цікавіше / подорожувати / у / нові / та / далекі / країни", "answer": "Зараз набагато цікавіше подорожувати у нові та далекі країни"}, {"jumbled": "здається / вона / б / вибрала / цю / дуже / смачну / гарячу / чорну / каву", "answer": "Здається вона б вибрала цю дуже смачну гарячу чорну каву"}, {"jumbled": "напевно / набагато / гірше / нічого / взагалі / не / робити / цілий / день", "answer": "Напевно набагато гірше нічого взагалі не робити цілий день"}, {"jumbled": "що / саме / тобі / сьогодні / більше / подобається / робити / вдома", "answer": "Що саме тобі сьогодні більше подобається робити вдома"}, {"jumbled": "я / зазвичай / віддаю / повну / перевагу / тільки / міцній / чорній / каві", "answer": "Я зазвичай віддаю повну перевагу тільки міцній чорній каві"}, {"jumbled": "завжди / набагато / важче / робити / важку / справу / ніж / просто / говорити", "answer": "Завжди набагато важче робити важку справу ніж просто говорити"}]`)}
+/>
+
+### Fix Preferences
+
+<ErrorCorrection title="Fix Preferences">
+  <ErrorCorrectionItem
+    sentence={`Я віддаю перевагу ___. (books)`}
+    errorWord={`books`}
+    correctForm={`книгам`}
+    options={[`книги`, `книгам`, `книг`, `книгою`]}
+    explanation={`\"Віддавати перевагу\" requires Dative: книгам.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Мені ___ подобається чай. (more)`}
+    errorWord={`more`}
+    correctForm={`більше`}
+    options={[`більше`, `більший`, `великий`, `багато`]}
+    explanation={`\"Більше подобається\" = like more.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`___ читати, ніж дивитися. (better)`}
+    errorWord={`better`}
+    correctForm={`Краще`}
+    options={[`Краще`, `Кращий`, `Добре`, `Добро`]}
+    explanation={`Comparative adverb \"краще\" = better.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Я б ___ каву. (would choose — feminine)`}
+    errorWord={`would choose — feminine`}
+    correctForm={`вибрала`}
+    options={[`вибрав`, `вибрала`, `вибираю`, `виберу`]}
+    explanation={`Feminine past: вибрала.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`___ сказати, ніж зробити. (easier)`}
+    errorWord={`easier`}
+    correctForm={`Легше`}
+    options={[`Легше`, `Легкий`, `Легко`, `Легкіший`]}
+    explanation={`Comparative adverb \"легше\" = easier.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Мені більше ___ фільми. (like — plural)`}
+    errorWord={`like — plural`}
+    correctForm={`подобаються`}
+    options={[`подобається`, `подобаються`, `подобатися`, `подобаюся`]}
+    explanation={`Plural verb agreement: подобаються фільми.`}
+  />
+</ErrorCorrection>
+
+### Expressing Preferences
+
+<Cloze
+  title="Expressing Preferences"
+  passage={`— Що тобі ___ подобається: кава чи чай?
+— ___ більше подобається кава.
+— А що ___ сьогодні в кафе?
+— Я б ___ каву з молоком.
+— ___ пити каву рано-вранці.
+— Так, ___ сказати, ніж зробити!
+---
+— Я ___ перевагу ___ у вільний час.
+— Чому?
+— Тому що ___ читати, ніж дивитися телевізор.
+— Я б ___ гарний фільм.
+— Мені ___ подобаються розумні книги.
+— Кожному своє! Ми всі ___ вибір.`}
+  blanks={JSON.parse(`[{"answer": "віддаю", "options": ["віддаю", "дію", "беру"]}, {"answer": "книгам", "options": ["книгам", "книги", "книгою"]}, {"answer": "цікавіше", "options": ["цікавіше", "цікавий", "цікаво"]}, {"answer": "вибрав", "options": ["вибрав", "вибрала", "вибираю"]}, {"answer": "більше", "options": ["більше", "великий", "багато"]}, {"answer": "маємо", "options": ["маємо", "маєте", "маєш"]}, {"answer": "віддаю", "options": ["віддаю", "дію", "беру"]}, {"answer": "книгам", "options": ["книгам", "книги", "книгою"]}, {"answer": "цікавіше", "options": ["цікавіше", "цікавий", "цікаво"]}, {"answer": "вибрав", "options": ["вибрав", "вибрала", "вибираю"]}, {"answer": "більше", "options": ["більше", "великий", "багато"]}, {"answer": "маємо", "options": ["маємо", "маєте", "маєш"]}]`)}
+/>
+
+### Making Choices
+
+<Cloze
+  title="Making Choices"
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "кава чи чай?", "options": ["кава чи чай?", "--", "Краще купити дешевший."]}, {"answer": "Мені більше подобається кава.", "options": ["Мені більше подобається кава.", "Але він дорожчий!", "Кожному своє!"]}, {"answer": "Чому?", "options": ["Чому?", "Кожному своє!", "А я віддаю перевагу чаю."]}, {"answer": "Тому що кава смачніша і бадьоріша.", "options": ["Тому що кава смачніша і бадьоріша.", "Я б вибрав цей.", "Мені більше подобається кава."]}, {"answer": "А я віддаю перевагу чаю.", "options": ["А я віддаю перевагу чаю.", "Який телефон ти б вибрав?", "--"]}, {"answer": "Кожному своє!", "options": ["Кожному своє!", "Чому?", "--"]}, {"answer": "--", "options": ["--", "кава чи чай?", "А я віддаю перевагу чаю."]}, {"answer": "Який телефон ти б вибрав?", "options": ["Який телефон ти б вибрав?", "Ні, краще заплатити більше за якість.", "Мені більше подобається кава."]}, {"answer": "Я б вибрав цей.", "options": ["Я б вибрав цей.", "Мені більше подобається кава.", "Ні, краще заплатити більше за якість."]}, {"answer": "Але він дорожчий!", "options": ["Але він дорожчий!", "А я віддаю перевагу чаю.", "--"]}, {"answer": "Так, але він кращий.", "options": ["Так, але він кращий.", "Я б вибрав цей.", "А я віддаю перевагу чаю."]}, {"answer": "Краще купити дешевший.", "options": ["Краще купити дешевший.", "кава чи чай?", "Ні, краще заплатити більше за якість."]}, {"answer": "Ні, краще заплатити більше за якість.", "options": ["Ні, краще заплатити більше за якість.", "Мені більше подобається кава.", "кава чи чай?"]}]`)}
+/>
+
+### Find Preference Words
+
+<HighlightMorphemes>
+  <HighlightMorphemesActivity
+  instruction={`Click on PREFERENCE expressions.`}
+    text={`Мені більше подобається кава. Я віддаю перевагу книгам. Краще читати, ніж дивитися.
+---
+Легше говорити. Важче робити. Я б вибрала каву.
+---
+Він більше любить музику. Вона віддає перевагу театру. Це цікавіше!`}
+    morphemes={[
+    { word: `Мені більше подобається`, morpheme: `Мені більше подобається`, type: `whole` },
+    { word: `Я віддаю перевагу`, morpheme: `Я віддаю перевагу`, type: `whole` },
+    { word: `Краще`, morpheme: `Краще`, type: `whole` },
+    { word: `Легше`, morpheme: `Легше`, type: `whole` },
+    { word: `Важче`, morpheme: `Важче`, type: `whole` },
+    { word: `Я б вибрала`, morpheme: `Я б вибрала`, type: `whole` },
+    { word: `більше`, morpheme: `більше`, type: `whole` },
+    { word: `віддає перевагу`, morpheme: `віддає перевагу`, type: `whole` },
+    { word: `цікавіше`, morpheme: `цікавіше`, type: `whole` }
+  ]}
+  />
+</HighlightMorphemes>
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| активний | ɐkˈtɪʋnɪj | active | adj | ч |  |
+| важче | ˈʋɑʒt͡ʃe | harder; heavier | adv |  |  |
+| вибрати | ˈʋɪbrɐte | to choose (perf) | verb | ч |  |
+| висловлювати | ʋɪˈslɔʋlʲuʋɐte | to express | verb |  |  |
+| вподобання | ʋpodɔˈbɑnʲːɐ | preference | noun | с |  |
+| відпочинок | ʋidpoˈt͡ʃɪnok | rest; vacation | noun | ч |  |
+| гарячіший | hɐrʲɐˈt͡ʃiʃɪj | hotter | adj | ч |  |
+| голодний | hoˈlɔdnɪj | hungry | adj | ч |  |
+| гірше | ˈhirʃe | worse (adv) | adv |  |  |
+| ефективніше | efekˈtɪʋnʲiʃe | more effectively | adv |  |  |
+| затишніше | zɐˈtɪʃnʲiʃe | cozier | adv |  |  |
+| корисніший | koˈrɪsnʲiʃɪj | more useful | adj | с |  |
+| нудніший | nudˈnʲiʃɪj | more boring | adj | с |  |
+| порадити | poˈrɑdɪte | to advise (perf) | verb |  |  |
+| практичніше | prɐkˈtɪt͡ʃnʲiʃe | more practically | adv |  |  |
+| суша | ˈsuʃɐ | sushi | noun | ж |  |
+| траторія | trɐˈtɔrʲijɐ | trattoria | name | ж |  |
+| цікавіше | t͡sʲikɐˈʋiʃe | more interesting (adv) | adv |  |  |
+| чесно | ˈt͡ʃɛsno | honestly | adv |  |  |
+| шкідливіший | ʃkʲidˈlɪʋiʃɪj | more harmful | adj | с |  |
+| італійський | itɐˈlʲijsʲkɪj | Italian | adj | ч |  |
+
 ## 📋 Summary
 
 ## What You Learned
@@ -233,431 +424,14 @@ This module covered expressing preferences and making choices.
 
 ## Need More Practice?
 
-:::info[External Resources]
-- 🎥 [Numbers with Nouns](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
-- 📖 [Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/)
-- 📝 [Numbers Guide](https://www.ukrainianlessons.com/numbers/)
-- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-:::
-
-
 ---
 
-## 🎯 Activities
-
-### Preference Expressions
-
-<MatchUp pairs={[
-  { left: `Мені більше подобається`, right: `I like more` },
-  { left: `Я віддаю перевагу`, right: `I prefer` },
-  { left: `Краще`, right: `better` },
-  { left: `Гірше`, right: `worse` },
-  { left: `Легше`, right: `easier` },
-  { left: `Важче`, right: `harder` },
-  { left: `Цікавіше`, right: `more interesting` },
-  { left: `Нудніше`, right: `more boring` },
-  { left: `Я б вибрав`, right: `I would choose (m)` },
-  { left: `Я б вибрала`, right: `I would choose (f)` },
-  { left: `корисніше`, right: `more useful` },
-  { left: `зручніше`, right: `more convenient` }
-]} />
-
-### Express Preferences
-
-<FillIn items={[
-  {
-    sentence: `Мені ___ подобається кава. (I like coffee more)`,
-    answer: `більше`,
-    options: [`більше`, `менше`, `найбільше`, `добре`]
-  },  {
-    sentence: `Я ___ перевагу книгам. (I prefer books)`,
-    answer: `віддаю`,
-    options: [`віддаю`, `даю`, `беру`, `маю`]
-  },  {
-    sentence: `___ читати, ніж дивитися телевізор. (It's better)`,
-    answer: `Краще`,
-    options: [`Краще`, `Кращий`, `Добре`, `Добрий`]
-  },  {
-    sentence: `___ сказати, ніж зробити. (It's easier)`,
-    answer: `Легше`,
-    options: [`Легше`, `Легкий`, `Легко`, `Легкіше`]
-  },  {
-    sentence: `Мені більше подобається чай, ___ кава. (than)`,
-    answer: `ніж`,
-    options: [`ніж`, `за`, `від`, `до`]
-  },  {
-    sentence: `Я б ___ зелений. (I would choose — masc.)`,
-    answer: `вибрав`,
-    options: [`вибрав`, `вибрала`, `вибираю`, `виберу`]
-  },  {
-    sentence: `Вона б ___ каву. (She would choose)`,
-    answer: `вибрала`,
-    options: [`вибрала`, `вибрав`, `вибираю`, `виберу`]
-  },  {
-    sentence: `___ подорожувати, ніж сидіти вдома. (It's more interesting)`,
-    answer: `Цікавіше`,
-    options: [`Цікавіше`, `Цікавий`, `Цікаво`, `Найцікавіше`]
-  },  {
-    sentence: `Я віддаю перевагу ___. (to books — Dative)`,
-    answer: `книгам`,
-    options: [`книги`, `книгам`, `книгою`, `книг`]
-  },  {
-    sentence: `Мені ___ подобаються фільми. (more — plural verb)`,
-    answer: `більше`,
-    options: [`більше`, `великий`, `багато`, `найбільше`]
-  },  {
-    sentence: `___ нічого не робити. (It's worse)`,
-    answer: `Гірше`,
-    options: [`Гірше`, `Гірший`, `Погано`, `Поганий`]
-  },  {
-    sentence: `Що ти б ___? (What would you choose?)`,
-    answer: `вибрав`,
-    options: [`вибрав`, `вибираєш`, `виберешся`, `вибір`]
-  }
-]} />
-
-### Preferences
-
-<Quiz questions={[
-  {
-    question: `In Ukrainian, which of the following phrases correctly translates the casual expression for \"I like (this) more\"?`,
-    options: [
-      { text: `Мені більше подобається`, correct: true },
-      { text: `Я більше люблю це`, correct: false },
-      { text: `Я віддаю перевагу цьому`, correct: false },
-      { text: `Мені дуже подобається`, correct: false }
-    ]
-  },  {
-    question: `When using the formal reflexive expression \"Я віддаю перевагу,\" which grammatical case must the object be in?`,
-    options: [
-      { text: `Давальний відмінок`, correct: true },
-      { text: `Знахідний відмінок`, correct: false },
-      { text: `Називний відмінок`, correct: false },
-      { text: `Орудний відмінок`, correct: false }
-    ]
-  },  {
-    question: `What is the most accurate English equivalent for the common Ukrainian comparison \"Легше сказати, ніж зробити\"?`,
-    options: [
-      { text: `Easier said than done`, correct: true },
-      { text: `Harder to say than do`, correct: false },
-      { text: `Easy to do and say`, correct: false },
-      { text: `Always easier to speak`, correct: false }
-    ]
-  },  {
-    question: `Which of these expressions would be considered the most formal way to state a preference in a business meeting?`,
-    options: [
-      { text: `Я віддаю перевагу`, correct: true },
-      { text: `Мені більше подобається`, correct: false },
-      { text: `Краще вибрати це`, correct: false },
-      { text: `Я люблю це більше`, correct: false }
-    ]
-  },  {
-    question: `When a male speaker uses the conditional form \"Я б вибрав,\" what is he essentially expressing to the listener?`,
-    options: [
-      { text: `I would choose`, correct: true },
-      { text: `I am choosing now`, correct: false },
-      { text: `I have already chosen`, correct: false },
-      { text: `I must choose`, correct: false }
-    ]
-  },  {
-    question: `What is the specific functional meaning of the comparative adverb \"цікавіше\" when used in a Ukrainian sentence?`,
-    options: [
-      { text: `more interesting`, correct: true },
-      { text: `less interesting`, correct: false },
-      { text: `most interesting`, correct: false },
-      { text: `not interesting`, correct: false }
-    ]
-  },  {
-    question: `Within the context of a logical comparison, what does the Ukrainian conjunction \"ніж\" typically mean in English?`,
-    options: [
-      { text: `than`, correct: true },
-      { text: `if`, correct: false },
-      { text: `because`, correct: false },
-      { text: `although`, correct: false }
-    ]
-  },  {
-    question: `When comparing two activities, what is the correct English translation for the Ukrainian phrase \"важче робити\"?`,
-    options: [
-      { text: `harder to do`, correct: true },
-      { text: `easier to do`, correct: false },
-      { text: `faster to do`, correct: false },
-      { text: `possible to do`, correct: false }
-    ]
-  },  {
-    question: `To express a formal preference for something specific, which of the following grammatical structures should be utilized?`,
-    options: [
-      { text: `Я віддаю перевагу + Dative`, correct: true },
-      { text: `Мені подобається + Nominative`, correct: false },
-      { text: `Я люблю + Accusative`, correct: false },
-      { text: `Я вибираю + Genitive`, correct: false }
-    ]
-  },  {
-    question: `In a sentence comparing two different actions, what does the phrase \"краще читати\" specifically signify?`,
-    options: [
-      { text: `It's better to read`, correct: true },
-      { text: `Reading is worse now`, correct: false },
-      { text: `I read better today`, correct: false },
-      { text: `I like reading only`, correct: false }
-    ]
-  },  {
-    question: `If a woman is speaking and says \"Я б вибрала,\" which grammatical gender form is she correctly using?`,
-    options: [
-      { text: `Жіночий рід`, correct: true },
-      { text: `Чоловічий рід`, correct: false },
-      { text: `Середній рід`, correct: false },
-      { text: `Множина`, correct: false }
-    ]
-  },  {
-    question: `To make choices sound significantly more polite and less direct in Ukrainian, which particle is usually added?`,
-    options: [
-      { text: `\"б\" (conditional particle)`, correct: true },
-      { text: `\"же\" (emphatic particle)`, correct: false },
-      { text: `\"б'ю\" (verb ending)`, correct: false },
-      { text: `\"вже\" (adverb)`, correct: false }
-    ]
-  }
-]} />
-
-### Preference Rules
-
-<TrueFalse items={[
-  {
-    statement: `\"Мені більше подобається\" is casual.`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `\"Я віддаю перевагу\" requires Dative.`,
-    isTrue: true,
-    explanation: `Yes! Віддаю перевагу книгам.`
-  },  {
-    statement: `\"Краще\" means \"worse.\"`,
-    isTrue: false,
-    explanation: `\"Краще\" means \"better.\" \"Гірше\" means \"worse.\"`
-  },  {
-    statement: `\"Легше\" means \"easier.\"`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `\"Б\" makes forms more polite.`,
-    isTrue: true,
-    explanation: `Yes! \"Я б вибрав\" sounds polite.`
-  },  {
-    statement: `\"Ніж\" means \"because.\"`,
-    isTrue: false,
-    explanation: `\"Ніж\" means \"than.\"`
-  },  {
-    statement: `You can compare actions with infinitives.`,
-    isTrue: true,
-    explanation: `Correct! Краще читати, ніж дивитися.`
-  },  {
-    statement: `\"Вибрав\" is masculine past.`,
-    isTrue: true,
-    explanation: `Yes!`
-  },  {
-    statement: `\"Вибрала\" is masculine past.`,
-    isTrue: false,
-    explanation: `\"Вибрала\" is feminine.`
-  },  {
-    statement: `Preferences with Dative sound formal.`,
-    isTrue: true,
-    explanation: `Yes! Я віддаю перевагу каві.`
-  },  {
-    statement: `\"Цікавіше подорожувати\" = more interesting to travel.`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `\"Важче\" means \"easier.\"`,
-    isTrue: false,
-    explanation: `\"Важче\" means \"harder.\"`
-  }
-]} />
-
-### Preference Expressions
-
-<GroupSort groups={{
-  "Casual Preference": ["Мені більше подобається", "Краще", "Мені подобається", "(Мені) байдуже", "Тобі подобається?", "Я люблю більше"],
-  "Formal Preference": ["Я віддаю перевагу", "Я б вибрав/вибрала", "Мені б хотілося", "Мій вибір — це...", "Чи не могли б ви...", "Я волію (I'd rather)"]
-}} />
-
-### Preference Sentences
-
-<Unjumble items={[
-  { jumbled: `сьогодні / мені / набагато / більше / подобається / ця / ароматна / гаряча / кава`, answer: `Сьогодні мені набагато більше подобається ця ароматна гаряча кава` },
-  { jumbled: `завжди / набагато / краще / читати / цікаву / книгу / ніж / дивитися / старий / телевізор`, answer: `Завжди набагато краще читати цікаву книгу ніж дивитися старий телевізор` },
-  { jumbled: `я / завжди / віддаю / перевагу / новим / та / дуже / корисним / книгам`, answer: `Я завжди віддаю перевагу новим та дуже корисним книгам` },
-  { jumbled: `іноді / набагато / легше / все / щиро / сказати / ніж / потім / це / зробити`, answer: `Іноді набагато легше все щиро сказати ніж потім це зробити` },
-  { jumbled: `сьогодні / я / б / вибрав / цей / красивий / зелений / великий / телефон`, answer: `Сьогодні я б вибрав цей красивий зелений великий телефон` },
-  { jumbled: `мені / завжди / набагато / більше / подобаються / ці / нові / цікаві / фантастичні / книги`, answer: `Мені завжди набагато більше подобаються ці нові цікаві книги` },
-  { jumbled: `зараз / набагато / цікавіше / подорожувати / у / нові / та / далекі / країни`, answer: `Зараз набагато цікавіше подорожувати у нові та далекі країни` },
-  { jumbled: `здається / вона / б / вибрала / цю / дуже / смачну / гарячу / чорну / каву`, answer: `Здається вона б вибрала цю дуже смачну гарячу чорну каву` },
-  { jumbled: `напевно / набагато / гірше / нічого / взагалі / не / робити / цілий / день`, answer: `Напевно набагато гірше нічого взагалі не робити цілий день` },
-  { jumbled: `що / саме / тобі / сьогодні / більше / подобається / робити / вдома`, answer: `Що саме тобі сьогодні більше подобається робити вдома` },
-  { jumbled: `я / зазвичай / віддаю / повну / перевагу / тільки / міцній / чорній / каві`, answer: `Я зазвичай віддаю повну перевагу тільки міцній чорній каві` },
-  { jumbled: `завжди / набагато / важче / робити / важку / справу / ніж / просто / говорити`, answer: `Завжди набагато важче робити важку справу ніж просто говорити` }
-]} />
-
-### Fix Preferences
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Я віддаю перевагу ___.`}
-    errorWord={`books`}
-    correctForm={`книгам`}
-    options={[`книги`, `книгам`, `книг`, `книгою`]}
-    explanation={`\"Віддавати перевагу\" requires Dative: книгам.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Мені ___ подобається чай.`}
-    errorWord={`more`}
-    correctForm={`більше`}
-    options={[`більше`, `більший`, `великий`, `багато`]}
-    explanation={`\"Більше подобається\" = like more.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`___ читати, ніж дивитися.`}
-    errorWord={`better`}
-    correctForm={`Краще`}
-    options={[`Краще`, `Кращий`, `Добре`, `Добро`]}
-    explanation={`Comparative adverb \"краще\" = better.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я б ___ каву.`}
-    errorWord={`would choose — feminine`}
-    correctForm={`вибрала`}
-    options={[`вибрав`, `вибрала`, `вибираю`, `виберу`]}
-    explanation={`Feminine past: вибрала.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`___ сказати, ніж зробити.`}
-    errorWord={`easier`}
-    correctForm={`Легше`}
-    options={[`Легше`, `Легкий`, `Легко`, `Легкіший`]}
-    explanation={`Comparative adverb \"легше\" = easier.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Мені більше ___ фільми.`}
-    errorWord={`like — plural`}
-    correctForm={`подобаються`}
-    options={[`подобається`, `подобаються`, `подобатися`, `подобаюся`]}
-    explanation={`Plural verb agreement: подобаються фільми.`}
-  />
-</ErrorCorrection>
-
-### Expressing Preferences
-
-<Cloze
-  passage={`— Що тобі [___:1] подобається: кава чи чай?
-— [___:2] більше подобається кава.
-— А що [___:3] сьогодні в кафе?
-— Я б [___:4] каву з молоком.
-— [___:5] пити каву рано-вранці.
-— Так, [___:6] сказати, ніж зробити!`}
-  blanks={[{ index: 0, answer: `віддаю`, options: [`віддаю`, `дію`, `беру`] }, { index: 1, answer: `книгам`, options: [`книгам`, `книги`, `книгою`] }, { index: 2, answer: `цікавіше`, options: [`цікавіше`, `цікавий`, `цікаво`] }, { index: 3, answer: `вибрав`, options: [`вибрав`, `вибрала`, `вибираю`] }, { index: 4, answer: `більше`, options: [`більше`, `великий`, `багато`] }, { index: 5, answer: `маємо`, options: [`маємо`, `маєте`, `маєш`] }]}
-/>
-
-### Making Choices
-
-<DialogueReorder lines={[
-  { text: `Що тобі більше подобається: кава чи чай?`, order: 1 },
-  { text: `Мені більше подобається кава.`, order: 2 },
-  { text: `Чому?`, order: 3 },
-  { text: `Тому що кава смачніша і бадьоріша.`, order: 4 },
-  { text: `А я віддаю перевагу чаю.`, order: 5 },
-  { text: `Кожному своє!`, order: 6 },
-  { text: `Який телефон ти б вибрав?`, order: 7 },
-  { text: `Я б вибрав цей.`, order: 8 },
-  { text: `Але він дорожчий!`, order: 9 },
-  { text: `Так, але він кращий.`, order: 10 },
-  { text: `Краще купити дешевший.`, order: 11 },
-  { text: `Ні, краще заплатити більше за якість.`, order: 12 }
-]} />
-
-### Find Preference Words
-
-<MarkTheWords>
-<MarkTheWordsActivity
-  text={`Click on PREFERENCE expressions.
-
-Мені більше подобається кава. Я віддаю перевагу книгам. Краще читати, ніж дивитися.`}
-  correctWords={[`Мені більше подобається`, `Я віддаю перевагу`, `Краще`]}
-/>
-<MarkTheWordsActivity
-  text={`Легше говорити. Важче робити. Я б вибрала каву.`}
-  correctWords={[`Легше`, `Важче`, `Я б вибрала`]}
-/>
-<MarkTheWordsActivity
-  text={`Він більше любить музику. Вона віддає перевагу театру. Це цікавіше!`}
-  correctWords={[`більше`, `віддає перевагу`, `цікавіше`]}
-/>
-</MarkTheWords>
-
-### English to Ukrainian
-
-<Translate questions={[
-  {
-    source: `I like coffee more than tea.`,
-    options: [
-      { text: `Мені більше подобається кава, ніж чай.`, correct: true },
-      { text: `Мені подобається кава більш ніж чай.`, correct: false },
-      { text: `Я люблю кава більше чай.`, correct: false },
-      { text: `Я віддаю перевагу книгам.`, correct: true },
-      { text: `Я віддаю перевагу книги.`, correct: false },
-      { text: `Мені більше подобається книги.`, correct: false },
-      { text: `Краще читати.`, correct: true },
-      { text: `Кращий читати.`, correct: false },
-      { text: `Добре читати.`, correct: false },
-      { text: `Легше сказати, ніж зробити.`, correct: true },
-      { text: `Легкий сказати, чим зробити.`, correct: false },
-      { text: `Легко сказати, ніж робити.`, correct: false },
-      { text: `Я б вибрав зелений.`, correct: true },
-      { text: `Я вибрав зелений.`, correct: false },
-      { text: `Я б вибрала зелений.`, correct: false },
-      { text: `Вона б вибрала каву.`, correct: true },
-      { text: `Вона б вибрав каву.`, correct: false },
-      { text: `Вона вибрала каву.`, correct: false },
-      { text: `Цікавіше подорожувати.`, correct: true },
-      { text: `Цікавий подорожувати.`, correct: false },
-      { text: `Найцікавіше подорожувати.`, correct: false },
-      { text: `Що тобі більше подобається?`, correct: true },
-      { text: `Що ти більше любиш?`, correct: false },
-      { text: `Що тобі подобається більший?`, correct: false },
-      { text: `Я віддаю перевагу чаю.`, correct: true },
-      { text: `Я віддаю перевагу чай.`, correct: false },
-      { text: `Мені краще чай.`, correct: false },
-      { text: `Важче робити.`, correct: true },
-      { text: `Важкий робити.`, correct: false },
-      { text: `Важко робити.`, correct: false },
-      { text: `Мені більше подобаються фільми.`, correct: true },
-      { text: `Мені більший подобаються фільми.`, correct: false },
-      { text: `Мені подобаються більше фільми.`, correct: false },
-      { text: `Гірше нічого не робити.`, correct: true },
-      { text: `Гірший нічого робити.`, correct: false },
-      { text: `Погано нічого робити.`, correct: false }
-    ]
-  }
-]} />
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| ароматний |  |  | adj | ж |  |
-| бадьоріший |  |  | adj | ж |  |
-| важче |  |  | adv | - |  |
-| вибраввибиба |  |  | verb | ж |  |
-| вибрати |  |  | verb | ч |  |
-| вибррати |  |  | verb | - |  |
-| віддавати |  |  | verb | - |  |
-| гірше |  |  | adv | - |  |
-| далекий |  |  | adj | - |  |
-| добро |  |  | noun | с |  |
-| корисний |  |  | adj | ч |  |
-| легко |  |  | adv | - |  |
-| легкіший |  |  | adj | ч |  |
-| легший |  |  | adj | с |  |
-| менше |  |  | adv | - |  |
-| напевно |  |  | adv | - |  |
-| перевага |  |  | noun | ж |  |
-| повний |  |  | adj | ж |  |
-| порадити |  |  | verb | - |  |
-| фантастичний |  |  | adj | - |  |
-| цікавіше |  |  | adv | - |  |
+> [!resources] 🔗 External Resources
+>
+> **📖 Articles:**
+> - [Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/) — Unknown
+> - [Numbers Guide](https://www.ukrainianlessons.com/numbers/) — Unknown
+> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Unknown
+>
+> **🌐 Websites:**
+> - [Numbers with Nouns](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian

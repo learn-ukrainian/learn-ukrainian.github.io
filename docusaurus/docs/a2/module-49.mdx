@@ -18,9 +18,8 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
-
-# Technology & Media
 
 ## Warm-up
 
@@ -207,6 +206,7 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
 Інтернет — це цікаво, навіть якщо тобі 70 років.
 
 
+
 ## 🎯 Activities
 
 ### Tech Quiz
@@ -234,7 +234,7 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
 
 <TrueFalse
   title="Tech Facts"
-  items={JSON.parse(`[{"statement": "\\\"Мишка\\\" is an animal and a computer device.", "isTrue": true, "explanation": "Yes, mouse (animal) and mouse (device) are both мишка."}, {"statement": "\\\"Новини\\\" is a singular noun.", "isTrue": false, "explanation": "Новини is plural (news). One piece of news = новина."}, {"statement": "\\\"Завантажувати\\\" means to delete.", "isTrue": false, "explanation": "It means to download/upload. Delete is видаляти."}, {"statement": "Ukrainians use Telegram for news frequently.", "isTrue": true, "explanation": "Telegram is a major news source."}, {"statement": "\\\"Скріншот\\\" is used in Ukrainian.", "isTrue": true, "explanation": "Yes, it's a loan word. Also знімок екрана."}, {"statement": "Diia (Дія) is a paper document.", "isTrue": false, "explanation": "Diia is a digital app for government services."}, {"statement": "\\\"Навушники\\\" is always plural.", "isTrue": true, "explanation": "Like \\\"headphones\\\" or \\\"pants\\\", it's plural only (pluralia tantum)."}, {"statement": "\\\"Пароль\\\" usually needs to be secret.", "isTrue": true, "explanation": "Passwords should be secret."}, {"statement": "First computer in continental Europe was built in Paris.", "isTrue": false, "explanation": "It was built in Kyiv (MESM)."}, {"statement": "\\\"Публікувати\\\" means to read.", "isTrue": false, "explanation": "To publish/post. To read is читати."}, {"statement": "A \\\"блогер\\\" writes blogs or makes vlogs.", "isTrue": true, "explanation": "Yes, blogger/vlogger."}, {"statement": "Wifi is \\\"вайфай\\\" in Ukrainian.", "isTrue": true, "explanation": "Phonetic borrowing: вайфай."}]`)}
+  items={JSON.parse(`[{"statement": "\\\"Мишка\\\" is an animal and a computer device.", "isTrue": true, "explanation": "Yes, mouse (animal) and mouse (device) are both мишка."}, {"statement": "\\\"Новини\\\" is a singular noun.", "isTrue": false, "explanation": "Новини is plural (news). One piece of news = новина."}, {"statement": "\\\"Завантажувати\\\" means to delete.", "isTrue": false, "explanation": "It means to download/upload. Delete is видаляти."}, {"statement": "Ukrainians use Telegram for news frequently.", "isTrue": true, "explanation": "Telegram is a major news source."}, {"statement": "\\\"Скріншот\\\" is used in Ukrainian.", "isTrue": true, "explanation": "Yes, it's a loan word. Also знімок екрана."}, {"statement": "Diia (Дія) is a paper document.", "isTrue": false, "explanation": "Diia is a digital app for government services."}, {"statement": "\\\"Навушники\\\" is always plural.", "isTrue": true, "explanation": "Like \\\"headphones\\\" or \\\"pants\\\", it's plural only."}, {"statement": "\\\"Пароль\\\" usually needs to be secret.", "isTrue": true, "explanation": "Passwords should be secret."}, {"statement": "First computer in continental Europe was built in Paris.", "isTrue": false, "explanation": "It was built in Kyiv (MESM)."}, {"statement": "\\\"Публікувати\\\" means to read.", "isTrue": false, "explanation": "To publish/post. To read is читати."}, {"statement": "A \\\"блогер\\\" writes blogs or makes vlogs.", "isTrue": true, "explanation": "Yes, blogger/vlogger."}, {"statement": "Wifi is \\\"вайфай\\\" in Ukrainian.", "isTrue": true, "explanation": "Phonetic borrowing: вайфай."}]`)}
 />
 
 ### Hardware vs Software
@@ -248,7 +248,7 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
 
 <Unjumble
   title="Digital Sentences"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Я хочу купити собі новий і потужний планшет"}, {"jumbled": "", "answer": "Надішли мені будь ласка це цікаве посилання в Телеграм"}, {"jumbled": "", "answer": "Вона щодня читає свіжі новини онлайн на цьому сайті"}, {"jumbled": "", "answer": "Мій старий домашній комп'ютер працює дуже повільно сьогодні"}, {"jumbled": "", "answer": "Я нажаль зовсім не пам'ятаю свій новий складний пароль"}, {"jumbled": "", "answer": "Ми зараз дивимося дуже смішне і популярне відео"}, {"jumbled": "", "answer": "Він часто пише негативний коментар під кожним новим фото"}, {"jumbled": "", "answer": "Моя старенька бабуся тепер має сучасний і дорогий смартфон"}]`)}
+  items={JSON.parse(`[{"jumbled": "Я / хочу / купити / собі / новий / і / потужний / планшет", "answer": "Я хочу купити собі новий і потужний планшет"}, {"jumbled": "Надішли / мені / будь ласка / це / цікаве / посилання / в / Телеграм", "answer": "Надішли мені будь ласка це цікаве посилання в Телеграм"}, {"jumbled": "Вона / щодня / читає / свіжі / новини / онлайн / на / цьому / сайті", "answer": "Вона щодня читає свіжі новини онлайн на цьому сайті"}, {"jumbled": "Мій / старий / домашній / комп'ютер / працює / дуже / повільно / сьогодні", "answer": "Мій старий домашній комп'ютер працює дуже повільно сьогодні"}, {"jumbled": "Я / нажаль / зовсім / не / пам'ятаю / свій / новий / складний / пароль", "answer": "Я нажаль зовсім не пам'ятаю свій новий складний пароль"}, {"jumbled": "Ми / зараз / дивимося / дуже / смішне / і / популярне / відео", "answer": "Ми зараз дивимося дуже смішне і популярне відео"}, {"jumbled": "Він / часто / пише / негативний / коментар / під / кожним / новим / фото", "answer": "Він часто пише негативний коментар під кожним новим фото"}, {"jumbled": "Моя / старенька / бабуся / тепер / має / сучасний / і / дорогий / смартфон", "answer": "Моя старенька бабуся тепер має сучасний і дорогий смартфон"}]`)}
 />
 
 ### Fix the Tech
@@ -356,20 +356,42 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
 
 ### IT Support
 
-<DialogueReorder
+<Cloze
   title="IT Support"
-  lines={JSON.parse(`[{"text": "Алло, підтримка? У мене не працює інтернет.", "order": 1, "speaker": ""}, {"text": "Доброго дня. Який у вас логін?", "order": 2, "speaker": ""}, {"text": "Мій логін — user123.", "order": 3, "speaker": ""}, {"text": "Бачу ваш акаунт. Модем увімкнений?", "order": 4, "speaker": ""}, {"text": "Так, всі лампочки горять.", "order": 5, "speaker": ""}, {"text": "Спробуйте вимкнути його на 10 секунд.", "order": 6, "speaker": ""}, {"text": "Хвилиночку... Вимкнув... Увімкнув.", "order": 7, "speaker": ""}, {"text": "Тепер працює?", "order": 8, "speaker": ""}, {"text": "О, так! Дякую. Ви мене врятували.", "order": 9, "speaker": ""}, {"text": "Будь ласка. Маєте ще питання?", "order": 10, "speaker": ""}, {"text": "Ні, це все. Гарного дня!", "order": 11, "speaker": ""}, {"text": "До побачення!", "order": 12, "speaker": ""}]`)}
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "Алло, підтримка? У мене не працює інтернет.", "options": ["Алло, підтримка? У мене не працює інтернет.", "Будь ласка. Маєте ще питання?", "Тепер працює?"]}, {"answer": "Доброго дня. Який у вас логін?", "options": ["Доброго дня. Який у вас логін?", "Бачу ваш акаунт. Модем увімкнений?", "Алло, підтримка? У мене не працює інтернет."]}, {"answer": "Мій логін — user123.", "options": ["Мій логін — user123.", "Доброго дня. Який у вас логін?", "Тепер працює?"]}, {"answer": "Бачу ваш акаунт. Модем увімкнений?", "options": ["Бачу ваш акаунт. Модем увімкнений?", "Мій логін — user123.", "Будь ласка. Маєте ще питання?"]}, {"answer": "Так, всі лампочки горять.", "options": ["Так, всі лампочки горять.", "Алло, підтримка? У мене не працює інтернет.", "Ні, це все. Гарного дня!"]}, {"answer": "Спробуйте вимкнути його на 10 секунд.", "options": ["Спробуйте вимкнути його на 10 секунд.", "Мій логін — user123.", "Ні, це все. Гарного дня!"]}, {"answer": "Хвилиночку... Вимкнув... Увімкнув.", "options": ["Хвилиночку... Вимкнув... Увімкнув.", "Ні, це все. Гарного дня!", "Доброго дня. Який у вас логін?"]}, {"answer": "Тепер працює?", "options": ["Тепер працює?", "Спробуйте вимкнути його на 10 секунд.", "Хвилиночку... Вимкнув... Увімкнув."]}, {"answer": "О, так! Дякую. Ви мене врятували.", "options": ["О, так! Дякую. Ви мене врятували.", "Бачу ваш акаунт. Модем увімкнений?", "Спробуйте вимкнути його на 10 секунд."]}, {"answer": "Будь ласка. Маєте ще питання?", "options": ["Будь ласка. Маєте ще питання?", "Спробуйте вимкнути його на 10 секунд.", "О, так! Дякую. Ви мене врятували."]}, {"answer": "Ні, це все. Гарного дня!", "options": ["Ні, це все. Гарного дня!", "Алло, підтримка? У мене не працює інтернет.", "Тепер працює?"]}, {"answer": "До побачення!", "options": ["До побачення!", "Мій логін — user123.", "Хвилиночку... Вимкнув... Увімкнув."]}]`)}
 />
 
 ### Find the Gadgets
 
-<MarkTheWords>
-  <MarkTheWordsActivity
-    instruction={`Click the correct words.`}
-    text={`Я люблю свій смартфон. Це мій головний гаджет. Вдома у мене є ноутбук і планшет. Я люблю грати в ігри на планшеті. Для роботи мені потрібен комп'ютер. У нього великий екран і зручна клавіатура. Я також маю бездротові навушники. Техніка допомагає мені бути онлайн.`}
-    correctWords={JSON.parse(`["смартфон", "гаджет", "ноутбук", "планшет", "планшеті", "комп'ютер", "екран", "клавіатура", "навушники", "онлайн"]`)}
+<HighlightMorphemes>
+  <HighlightMorphemesActivity
+    text={`Я люблю свій смартфон. Це мій головний гаджет. Вдома у мене є ноутбук і планшет. Я люблю грати в ігри на планшеті. Для роботи мені потрібен *комп'ютер*. У нього великий екран і зручна клавіатура. Я також маю бездротові навушники. Техніка допомагає мені бути онлайн.`}
+    morphemes={[
+    { word: `смартфон`, morpheme: `смартфон`, type: `whole` },
+    { word: `гаджет`, morpheme: `гаджет`, type: `whole` },
+    { word: `ноутбук`, morpheme: `ноутбук`, type: `whole` },
+    { word: `планшет`, morpheme: `планшет`, type: `whole` },
+    { word: `планшеті`, morpheme: `планшеті`, type: `whole` },
+    { word: `екран`, morpheme: `екран`, type: `whole` },
+    { word: `клавіатура`, morpheme: `клавіатура`, type: `whole` },
+    { word: `навушники`, morpheme: `навушники`, type: `whole` },
+    { word: `онлайн`, morpheme: `онлайн`, type: `whole` }
+  ]}
   />
-</MarkTheWords>
+</HighlightMorphemes>
 
 ### Choose Best Word
 
@@ -377,6 +399,68 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
   title="Choose Best Word"
   questions={JSON.parse(`[{"question": "I need to enter my...", "options": [{"text": "пароль", "correct": true}, {"text": "паспорт", "correct": false}]}, {"question": "Click on the...", "options": [{"text": "посилання", "correct": true}, {"text": "пошту", "correct": false}]}, {"question": "Read the...", "options": [{"text": "статтю", "correct": true}, {"text": "стілець", "correct": false}]}, {"question": "Connect to the...", "options": [{"text": "мережі", "correct": true}, {"text": "вулиці", "correct": false}]}, {"question": "Send a...", "options": [{"text": "повідомлення", "correct": true}, {"text": "книгу", "correct": false}]}, {"question": "Watch a...", "options": [{"text": "відео", "correct": true}, {"text": "радіо", "correct": false}]}, {"question": "Write a...", "options": [{"text": "коментар", "correct": true}, {"text": "роман", "correct": false}]}, {"question": "Buy a...", "options": [{"text": "ноутбук", "correct": true}, {"text": "вікно", "correct": false}]}, {"question": "Search in...", "options": [{"text": "Гуглі", "correct": true}, {"text": "кишені", "correct": false}]}, {"question": "Charge the...", "options": [{"text": "смартфон", "correct": true}, {"text": "стіл", "correct": false}]}, {"question": "Listen to a...", "options": [{"text": "подкаст", "correct": true}, {"text": "газету", "correct": false}]}, {"question": "Work...", "options": [{"text": "онлайн", "correct": true}, {"text": "у лісі", "correct": false}]}]`)}
 />
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| безпека | bezˈpɛkɐ | security | noun | ж |  |
+| блог | blɔh | blog | noun | ч |  |
+| блогер | ˈbloher | blogger | noun | ч |  |
+| блокувати | blokuˈʋɑte | to block | verb |  |  |
+| вебсайт | vɛbˈsɑjt | website | noun | ч |  |
+| вподобайка | vpodɔˈbɑjkɐ | like (noun) | other |  |  |
+| вподобати | vpodɔˈbɑte | to like (perf) | verb |  |  |
+| гаджет | ˈhɑdʒet | gadget | noun | ч |  |
+| галина | hɐˈlɪnɐ | Halyna | name | ж |  |
+| гугл | ɡuɡl | Google | name | ч |  |
+| ділитися | dʲiˈlɪtɪsʲɐ | to share | verb |  |  |
+| завантажувати | zɐvɐnˈtɑʒuʋɐte | to download/upload | verb |  |  |
+| залити | zɐˈlɪte | to upload/pour (slang) | verb |  |  |
+| захотіти | zɐxoˈtʲite | to want (perf) | verb | ч |  |
+| знімати | znʲiˈmɑte | to film/take off (imp) | verb |  |  |
+| зранку | ˈzrɑnku | in the morning | adv |  |  |
+| камера | ˈkɑmerɐ | camera | noun | ж |  |
+| клавіатура | klɐviɐˈturɐ | keyboard | noun | ж |  |
+| коментар | komenˈtɑr | comment | noun | ч |  |
+| коментувати | komentuˈʋɑte | to comment | verb |  |  |
+| лайк | lɑjk | like | noun | ч |  |
+| логін | loˈhʲin | login | noun | ч |  |
+| мережа | meˈrɛʒɐ | network | noun | ж |  |
+| мишка | ˈmɪʃkɐ | mouse | noun | ж |  |
+| мода | ˈmɔdɐ | fashion | noun | ж |  |
+| монтувати | montuˈʋɑte | to edit (video) | verb |  |  |
+| мікрофон | mikroˈfɔn | microphone | noun | ч |  |
+| навушник | nɐˈvuʃnɪk | headphone | noun | ч |  |
+| надійний | nɐˈdʲijnɪj | reliable | adj | ч |  |
+| надішти | nɐˈdʲiʃtɪ | send (typo надіслати?) | verb |  |  |
+| ноутбуця | noutˈbut͡sʲɐ | laptop (gen/typo?) | noun | ч |  |
+| нічого | nʲiˈt͡ʃɔho | nothing | adv |  |  |
+| онлайн | onˈlɑjn | online | noun | ч |  |
+| офлайн | ofˈlɑjn | offline | other |  |  |
+| пароль | pɐˈrɔlʲ | password | noun | ч |  |
+| пирог | pɪˈroh | pie (typo пиріг?) | noun | ч |  |
+| планшет | plɐnˈʃɛt | tablet | noun | ч |  |
+| посилання | posɪˈlɑnʲːɐ | link | noun | с |  |
+| пост | pɔst | post | noun | ч |  |
+| поставати | postɐˈʋɑte | to appear/arise | verb |  |  |
+| приватність | prɪˈvɑtnʲisʲtʲ | privacy | noun | ж |  |
+| пристрій | ˈprɪstrʲij | device | noun | ч |  |
+| профіль | ˈprɔfʲilʲ | profile | noun | ч |  |
+| публікувати | publʲikuˈʋɑte | to publish | verb |  |  |
+| резервний | reˈzɛrvnɪj | backup (adj) | adj | ж |  |
+| садівництво | sɐdʲivˈnɪt͡stvo | gardening | noun | с |  |
+| серіал | serʲiˈɑl | series | noun | ч |  |
+| скинути | ˈskɪnute | to reset/drop (perf) | verb |  |  |
+| смартфон | smɐrtˈfɔn | smartphone | noun | ч |  |
+| технологія | texnoˈlɔhʲijɐ | technology | noun | ж |  |
+| фейсбук | fejsˈbuk | Facebook | name | ч |  |
+| хейтер | ˈxɛjter | hater | noun | ч |  |
+| цегло | t͡sɛhlo | brick (typo цегла) | noun | ж |  |
+| цифровий | t͡sɪfroˈvɪj | digital | adj | ж |  |
+| чат | t͡ʃɑt | chat | noun | ч |  |
+| шахрай | ʃɐxˈrɑj | scammer | noun | ч |  |
+| ютуб | juˈtub | YouTube | name | ч |  |
 
 ## 📋 Summary
 
@@ -388,41 +472,18 @@ You learned to:
 
 Digital literacy is key in modern Ukrainian society. Use these words to stay connected!
 
-:::info[🔗 External Resources]
-
-**YouTube:** [100 basic Ukrainian IT terms | Ukrainian vocabulary: IT, Technologies,...](https://www.youtube.com/watch?v=BAuSNnrkCKM) — Red Purple Ukrainian
-
-**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
-
-**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-:::
-
-
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| смартфон | /smartˈfɔn/ | smartphone | noun | m | |
-| планшет | /planˈʃɛt/ | tablet | noun | m | |
-| ноутбук | /noutˈbuk/ | laptop | noun | m | |
-| гаджет | /ˈɡadʒet/ | gadget | noun | m | |
-| екран | /eˈkran/ | screen | noun | m | |
-| клавіатура | /klavijaˈtura/ | keyboard | noun | f | |
-| мишка | /ˈmɪʃka/ | mouse | noun | f | |
-| навушники | /naˈvuʃnɪkɪ/ | headphones | noun | pl | |
-| вебсайт | /vɛbˈsajt/ | website | noun | m | |
-| посилання | /posɪˈlanʲːa/ | link | noun | n | |
-| пароль | /paˈrɔlʲ/ | password | noun | m | |
-| логін | /loˈɡin/ | login | noun | m | |
-| мережа | /meˈrɛʒa/ | network | noun | f | |
-| зв'язок | /zʋjɐˈzɔk/ | connection | noun | m | |
-| новини | /noˈvɪnɪ/ | news | noun | pl | |
-| стаття | /statˈtʲa/ | article | noun | f | |
-| блог | /blɔh/ | blog | noun | m | |
-| блогер | /ˈblɔher/ | blogger | noun | m | |
-| подкаст | /podˈkast/ | podcast | noun | m | |
-| коментар | /komenˈtar/ | comment | noun | m | |
-| лайк | /lajk/ | like | noun | m | slang |
-| повідомлення | /poviˈdɔmlenʲːa/ | message | noun | n | |
-| завантажувати | /zavanˈtaʒuvatɪ/ | to download | verb | - | |
-| публікувати | /publikuˈvatɪ/ | to publish | verb | - | |
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [ULP 2-51 Electronics and technology + Dative case](https://www.ukrainianlessons.com/lesson/51/) — Level-aligned topic match: technology
+> - [ULP 2-53 Social Media in Ukrainian + Dative case](https://www.ukrainianlessons.com/lesson/53/) — Level-aligned topic match: media
+> - [ULP 5-166 Український інтернет-сленг](https://www.ukrainianlessons.com/lesson-166/) — Cross-level topic match: інтернет
+>
+> **📺 YouTube:**
+> - [100 basic Ukrainian IT terms | Ukrainian vocabulary: IT, Technologies,...](https://www.youtube.com/watch?v=BAuSNnrkCKM) — Red Purple Ukrainian
+>
+> **📖 Articles:**
+> - [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **🌐 Websites:**
+> - [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

@@ -18,9 +18,8 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
-
-# A2 Final Review (Skills)
 
 ## Warm-up
 
@@ -301,6 +300,7 @@ If yes, welcome to B1!
 
 
 
+
 ## 🎯 Activities
 
 ### Reading Comprehension (Text 1)
@@ -357,24 +357,52 @@ If yes, welcome to B1!
 
 <Unjumble
   title="Final Sentences"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Я ніколи в житті не забуду цей чудовий день"}, {"jumbled": "", "answer": "Ми дуже хочемо жити у вільній та красивій країні"}, {"jumbled": "", "answer": "Ти любиш читати цікаві українські історичні книги"}, {"jumbled": "", "answer": "Вчора ввечері я був на чудовому рок концерті"}, {"jumbled": "", "answer": "Завтра зранку ми поїдемо відпочивати на дачу"}, {"jumbled": "", "answer": "Ця молода дівчина дуже гарно і голосно співає"}, {"jumbled": "", "answer": "Я зараз шукаю нову цікаву роботу в офісі"}, {"jumbled": "", "answer": "Де ти купив ці нові білі кросівки"}, {"jumbled": "", "answer": "Мені треба більше практикувати українську мову з друзями"}, {"jumbled": "", "answer": "У нас є великі плани на наступний рік"}, {"jumbled": "", "answer": "Наше життя це завжди найцікавіша та найдовша у світі подорож"}, {"jumbled": "", "answer": "На мою власну думку все обов'язково буде дуже добре вже скоро"}]`)}
+  items={JSON.parse(`[{"jumbled": "Я / ніколи / в житті / не / забуду / цей / чудовий / день", "answer": "Я ніколи в житті не забуду цей чудовий день"}, {"jumbled": "Ми / дуже / хочемо / жити / у / вільній / та / красивій / країні", "answer": "Ми дуже хочемо жити у вільній та красивій країні"}, {"jumbled": "Ти / любиш / читати / цікаві / українські / історичні / книги", "answer": "Ти любиш читати цікаві українські історичні книги"}, {"jumbled": "Вчора / ввечері / я / був / на / чудовому / рок / концерті", "answer": "Вчора ввечері я був на чудовому рок концерті"}, {"jumbled": "Завтра / зранку / ми / поїдемо / відпочивати / на / дачу", "answer": "Завтра зранку ми поїдемо відпочивати на дачу"}, {"jumbled": "Ця / молода / дівчина / дуже / гарно / і / голосно / співає", "answer": "Ця молода дівчина дуже гарно і голосно співає"}, {"jumbled": "Я / зараз / шукаю / нову / цікаву / роботу / в / офісі", "answer": "Я зараз шукаю нову цікаву роботу в офісі"}, {"jumbled": "Де / ти / купив / ці / нові / білі / кросівки", "answer": "Де ти купив ці нові білі кросівки"}, {"jumbled": "Мені / треба / більше / практикувати / українську / мову / з / друзями", "answer": "Мені треба більше практикувати українську мову з друзями"}, {"jumbled": "У / нас / є / великі / плани / на / наступний / рік", "answer": "У нас є великі плани на наступний рік"}, {"jumbled": "Наше / життя / — / це / завжди / найцікавіша / та / найдовша / у / світі / подорож", "answer": "Наше життя це завжди найцікавіша та найдовша у світі подорож"}, {"jumbled": "На / мою / власну / думку / все / обов'язково / буде / дуже / добре / вже / скоро", "answer": "На мою власну думку все обов'язково буде дуже добре вже скоро"}]`)}
 />
 
 ### Final Check
 
-<MarkTheWords>
-  <MarkTheWordsActivity
-    instruction={`Click the correct words.`}
+<HighlightMorphemes>
+  <HighlightMorphemesActivity
     text={`Україна — це країна. Київ — це столиця. Дніпро — це річка. Люди люблять свободу. Студент читає книгу. Лікар лікує хворих. Мама готує обід. Сонце світить. Дощ іде.`}
-    correctWords={JSON.parse(`["Україна", "країна", "Київ", "столиця", "Дніпро", "річка", "Люди", "свободу", "Студент", "книгу", "Лікар", "Мама", "обід", "Сонце", "Дощ"]`)}
+    morphemes={[
+    { word: `Україна`, morpheme: `Україна`, type: `whole` },
+    { word: `країна`, morpheme: `країна`, type: `whole` },
+    { word: `Київ`, morpheme: `Київ`, type: `whole` },
+    { word: `столиця`, morpheme: `столиця`, type: `whole` },
+    { word: `Дніпро`, morpheme: `Дніпро`, type: `whole` },
+    { word: `річка`, morpheme: `річка`, type: `whole` },
+    { word: `Люди`, morpheme: `Люди`, type: `whole` },
+    { word: `свободу`, morpheme: `свободу`, type: `whole` },
+    { word: `Студент`, morpheme: `Студент`, type: `whole` },
+    { word: `книгу`, morpheme: `книгу`, type: `whole` },
+    { word: `Лікар`, morpheme: `Лікар`, type: `whole` },
+    { word: `Мама`, morpheme: `Мама`, type: `whole` },
+    { word: `обід`, morpheme: `обід`, type: `whole` },
+    { word: `Сонце`, morpheme: `Сонце`, type: `whole` },
+    { word: `Дощ`, morpheme: `Дощ`, type: `whole` }
+  ]}
   />
-</MarkTheWords>
+</HighlightMorphemes>
 
 ### Goodbye A2
 
-<DialogueReorder
+<Cloze
   title="Goodbye A2"
-  lines={JSON.parse(`[{"text": "Привіт! Це наш останній урок рівня А2.", "order": 1, "speaker": ""}, {"text": "Привіт! Я не вірю, що ми закінчили.", "order": 2, "speaker": ""}, {"text": "Це був довгий шлях. Ти багато вивчив?", "order": 3, "speaker": ""}, {"text": "Так. Я можу говорити і читати.", "order": 4, "speaker": ""}, {"text": "Що було найважче?", "order": 5, "speaker": ""}, {"text": "Напевно, відмінки. Але я старався.", "order": 6, "speaker": ""}, {"text": "Ти молодець. Які твої плани?", "order": 7, "speaker": ""}, {"text": "Я буду вчити рівень В1.", "order": 8, "speaker": ""}, {"text": "Чудово! Я тобі допоможу.", "order": 9, "speaker": ""}, {"text": "Дякую. Ти найкращий вчитель.", "order": 10, "speaker": ""}, {"text": "До зустрічі на наступному рівні!", "order": 11, "speaker": ""}, {"text": "До побачення!", "order": 12, "speaker": ""}]`)}
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "Привіт! Це наш останній урок рівня А2.", "options": ["Привіт! Це наш останній урок рівня А2.", "Напевно, відмінки. Але я старався.", "Я буду вчити рівень В1."]}, {"answer": "Привіт! Я не вірю, що ми закінчили.", "options": ["Привіт! Я не вірю, що ми закінчили.", "Чудово! Я тобі допоможу.", "Це був довгий шлях. Ти багато вивчив?"]}, {"answer": "Це був довгий шлях. Ти багато вивчив?", "options": ["Це був довгий шлях. Ти багато вивчив?", "До зустрічі на наступному рівні!", "Я буду вчити рівень В1."]}, {"answer": "Так. Я можу говорити і читати.", "options": ["Так. Я можу говорити і читати.", "Привіт! Це наш останній урок рівня А2.", "Привіт! Я не вірю, що ми закінчили."]}, {"answer": "Що було найважче?", "options": ["Що було найважче?", "До зустрічі на наступному рівні!", "Я буду вчити рівень В1."]}, {"answer": "Напевно, відмінки. Але я старався.", "options": ["Напевно, відмінки. Але я старався.", "До побачення!", "Це був довгий шлях. Ти багато вивчив?"]}, {"answer": "Ти молодець. Які твої плани?", "options": ["Ти молодець. Які твої плани?", "Я буду вчити рівень В1.", "Привіт! Я не вірю, що ми закінчили."]}, {"answer": "Я буду вчити рівень В1.", "options": ["Я буду вчити рівень В1.", "Що було найважче?", "Ти молодець. Які твої плани?"]}, {"answer": "Чудово! Я тобі допоможу.", "options": ["Чудово! Я тобі допоможу.", "Так. Я можу говорити і читати.", "Привіт! Це наш останній урок рівня А2."]}, {"answer": "Дякую. Ти найкращий вчитель.", "options": ["Дякую. Ти найкращий вчитель.", "Привіт! Я не вірю, що ми закінчили.", "Привіт! Це наш останній урок рівня А2."]}, {"answer": "До зустрічі на наступному рівні!", "options": ["До зустрічі на наступному рівні!", "Що було найважче?", "До побачення!"]}, {"answer": "До побачення!", "options": ["До побачення!", "Привіт! Я не вірю, що ми закінчили.", "Дякую. Ти найкращий вчитель."]}]`)}
 />
 
 ### Fluency Test
@@ -383,6 +411,57 @@ If yes, welcome to B1!
   title="Fluency Test"
   questions={JSON.parse(`[{"question": "Can you confidently introduce yourself in Ukrainian to a stranger?", "options": [{"text": "Так, я можу.", "correct": true}, {"text": "Ні, я не знаю.", "correct": false}, {"text": "Трішки.", "correct": false}, {"text": "Не хочу.", "correct": false}]}, {"question": "Can you order food in a restaurant without using English?", "options": [{"text": "Так, я голодний і можу.", "correct": true}, {"text": "Я не їм.", "correct": false}, {"text": "Тільки воду.", "correct": false}, {"text": "Ні, це важко.", "correct": false}]}, {"question": "Can you buy a train ticket at the station by yourself?", "options": [{"text": "Так, без проблем.", "correct": true}, {"text": "Ні, не можу.", "correct": false}, {"text": "Я ходжу пішки.", "correct": false}, {"text": "Можливо.", "correct": false}]}, {"question": "Can you describe your pain symptoms to a doctor?", "options": [{"text": "Так, у мене болить...", "correct": true}, {"text": "Я здоровий.", "correct": false}, {"text": "Лікар не знає.", "correct": false}, {"text": "Ні.", "correct": false}]}, {"question": "Can you talk about your family members and their professions?", "options": [{"text": "Так, у мене є мама...", "correct": true}, {"text": "Хто це?", "correct": false}, {"text": "Я один.", "correct": false}, {"text": "Ні.", "correct": false}]}, {"question": "Can you understand street signs and directions in the city?", "options": [{"text": "Так, я читаю.", "correct": true}, {"text": "Ні.", "correct": false}, {"text": "Я гублюся.", "correct": false}, {"text": "Не бачу.", "correct": false}]}, {"question": "What is the correct English translation for \\\"Річка\\\"?", "options": [{"text": "River", "correct": true}, {"text": "Lake", "correct": false}, {"text": "Ocean", "correct": false}, {"text": "Pool", "correct": false}]}, {"question": "What is the correct English translation for \\\"Мрія\\\"?", "options": [{"text": "Dream", "correct": true}, {"text": "Nightmare", "correct": false}, {"text": "Plan", "correct": false}, {"text": "Sleep", "correct": false}]}, {"question": "What is the correct English translation for \\\"Свобода\\\"?", "options": [{"text": "Freedom", "correct": true}, {"text": "Prison", "correct": false}, {"text": "Wall", "correct": false}, {"text": "Law", "correct": false}]}, {"question": "What is the correct English translation for \\\"Майбутнє\\\"?", "options": [{"text": "Future", "correct": true}, {"text": "Past", "correct": false}, {"text": "Present", "correct": false}, {"text": "Time", "correct": false}]}, {"question": "What is the correct English translation for \\\"Мир\\\"?", "options": [{"text": "Peace", "correct": true}, {"text": "War", "correct": false}, {"text": "Fight", "correct": false}, {"text": "Quiet", "correct": false}]}, {"question": "Are you ready to move to the next level B1?", "options": [{"text": "Так, я готовий!", "correct": true}, {"text": "Ні, ще рано...", "correct": false}, {"text": "Я не знаю.", "correct": false}, {"text": "Можливо пізніше.", "correct": false}]}]`)}
 />
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| аліна | /ɐˈlʲinɐ/ | Alina | name | ж |  |
+| аліно | /ɐˈlʲino/ | Alina (voc) | name | ж |  |
+| анатомія | /ɐnɐˈtɔmʲijɐ/ | anatomy | noun | ж |  |
+| бал | /bɑl/ | ball; grade/score | noun | ч |  |
+| браво | /ˈbrɑʋo/ | bravo | adv |  |  |
+| бізнесмен | /biznesˈmɛn/ | businessman | noun | ч |  |
+| ведучий | /veˈdut͡ʃɪj/ | presenter; host | noun | ч |  |
+| венеція | /veˈnɛt͡sʲijɐ/ | Venice | name | ж |  |
+| відрядження | /vidˈrʲɑdʒenʲːɐ/ | business trip | noun | с |  |
+| вітання | /viˈtɑnʲːɐ/ | greeting | noun | с |  |
+| говерло | /hoˈvɛrlo/ | Hoverla (voc/typo) | name | ж |  |
+| грошовий | /hroʃoˈvɪj/ | monetary | adj | ж |  |
+| долоня | /doˈlɔnʲɐ/ | palm (hand) | noun | ж |  |
+| дружба | /ˈdruʒbɐ/ | friendship | noun | ж |  |
+| ділити | /diˈlɪte/ | to share/divide | verb |  |  |
+| енергія | /eˈnɛrɦijɐ/ | energy | noun | ж |  |
+| залізниця | /zɐlizˈnɪt͡sʲɐ/ | railway | noun | ж |  |
+| заміж | /ˈzɑmuʒ/ | married (to get married) | adv |  |  |
+| кобзар | /kobˈzɑr/ | Kobzar (minstrel) | name | ч |  |
+| кпі | /kɐpeˈji/ | KPI (university) | name | ж |  |
+| лондон | /ˈlɔndon/ | London | name | ч |  |
+| марк | /mɑrk/ | Mark | name | ч |  |
+| медовий | /meˈdɔʋɪj/ | honey (adj) | adj | ч |  |
+| метр | /mɛtr/ | meter | noun | ч |  |
+| микола | /mɪˈkɔlɐ/ | Mykola | name | ч |  |
+| мира | /ˈmɪrɐ/ | Myra (name?) | noun | ж |  |
+| мріти | /ˈmritɪ/ | to dream (dialect) | verb |  |  |
+| недорого | /neˈdɔroho/ | inexpensively | adv |  |  |
+| область | /ˈɔblɐsʲtʲ/ | oblast; region | noun | ж |  |
+| одеський | /oˈdɛsʲkɪj/ | Odessa (adj) | adj | ж |  |
+| понад | /ˈpɔnɐd/ | over; more than | other |  |  |
+| проти | /ˈprɔtɪ/ | against | other |  |  |
+| підйом | /pidˈjɔm/ | rise; ascent | noun | ч |  |
+| район | /rɐˈjɔn/ | district | noun | ч |  |
+| рахів | /ˈrɑxiu̯/ | Rakhiv | name | ч |  |
+| рим | /rɪm/ | Rome | name | ч |  |
+| розпалити | /rozpɐˈlɪte/ | to light/kindle | verb |  |  |
+| розробляти | /rozrobˈlʲɑte/ | to develop | verb |  |  |
+| розумно | /roˈzumno/ | intelligently | adv |  |  |
+| телевізійний | /telewiˈzʲijnɪj/ | television (adj) | adj | ж |  |
+| туризм | /tuˈrɪzm/ | tourism | noun | ч |  |
+| фантастика | /fɐnˈtɑstɪkɐ/ | science fiction; fantasy | noun | ж |  |
+| фінал | /fiˈnɑl/ | finale | noun | ч |  |
+| церков | /t͡sɛrˈkɔu̯/ | church (gen pl) | noun | ж |  |
+| ігоря | /ˈiɦorʲɐ/ | Ihor (gen) | name | ч |  |
+| італія | /iˈtɑlʲijɐ/ | Italy | name | ж |  |
 
 ## 📋 Summary
 
@@ -396,48 +475,20 @@ You can:
 You are ready for **Level B1**.
 Success! (*Успіхів!*)
 
-:::info[🔗 External Resources]
-
-**YouTube:** [Essential Ukrainian Phrases for Beginners](https://www.youtube.com/watch?v=aJ2Ldu2TaKA) — Speak Ukrainian
-
-**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
-
-**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-:::
-
-
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| анатомія |  |  | noun | ж |  |
-| бал |  |  | noun | ч |  |
-| браво |  |  | adv | - |  |
-| бізнесмен |  |  | noun | ч |  |
-| ведучий |  |  | noun | ч |  |
-| вітання | /vʲiˈtɑnʲːɑ/ | greeting | noun | с | n |
-| грошовий |  |  | adj | ж |  |
-| долоня |  |  | noun | ж |  |
-| дружба |  |  | noun | ж |  |
-| ділити |  |  | verb | - |  |
-| енергія |  |  | noun | ж |  |
-| залізниця |  |  | noun | ж |  |
-| заміж |  |  | adv | - |  |
-| медовий |  |  | adj | ч |  |
-| метр |  |  | noun | ч |  |
-| мира |  |  | noun | ж |  |
-| недорого |  |  | adv | - |  |
-| область |  |  | noun | ж |  |
-| одеський |  |  | adj | ж |  |
-| понад |  |  | prep | - |  |
-| проти |  |  | prep | - |  |
-| підйом |  |  | noun | ч |  |
-| район |  |  | noun | ч |  |
-| розпалити |  |  | verb | - |  |
-| розробляти |  |  | verb | - |  |
-| розумно |  |  | adv | - |  |
-| телевізійний |  |  | adj | ж |  |
-| туризм |  |  | noun | ч |  |
-| фантастика |  |  | noun | ж |  |
-| фінал |  |  | noun | ч |  |
-| церков |  |  | noun | ж |  |
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [ULP 2-41 Review: Season 1](https://www.ukrainianlessons.com/lesson/41/) — Level-aligned topic match: review
+> - [ULP 2-45 Review: 41-44 + My home](https://www.ukrainianlessons.com/lesson/45/) — Level-aligned topic match: review
+> - [ULP 2-50 Review: 46-49 + What I eat in a day in Ukrainian](https://www.ukrainianlessons.com/lesson/50/) — Level-aligned topic match: review
+> - [ULP 2-55 Review: 51-54 – What's on my phone](https://www.ukrainianlessons.com/lesson/55/) — Level-aligned topic match: review
+> - [ULP 2-60 Review: 56-60 – My week in Ukrainian](https://www.ukrainianlessons.com/lesson/60/) — Level-aligned topic match: review
+>
+> **📺 YouTube:**
+> - [Essential Ukrainian Phrases for Beginners](https://www.youtube.com/watch?v=aJ2Ldu2TaKA) — Speak Ukrainian
+>
+> **📖 Articles:**
+> - [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **🌐 Websites:**
+> - [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

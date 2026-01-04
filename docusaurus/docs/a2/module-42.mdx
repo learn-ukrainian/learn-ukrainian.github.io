@@ -18,7 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 ## Warm-up
 
@@ -96,9 +96,11 @@ Verb: **Народитися** (To be born).
 | **Народ** | People/Nation | On-kin (The born ones) |
 | **Передмістя** | Suburb | Before-town (related logic) |
 | **Земний** | Earthly | Earth-adj (often with nature) |
+| **Родина** | Family | Kin-group |
 
 *Україна — мій рідний край.* (Ukraine is my native land).
 *Ми любимо відпочивати на природі.* (We love to relax in nature).
+*Це моя **родина**.* (This is my family).
 
 ---
 
@@ -149,7 +151,6 @@ Verb: **Світити** (To shine).
 | **Містянин** | City dweller | City-an |
 
 *Київ — це велике місто. Там живуть містяни.*
-
 
 :::tip[Pro Tip: Mova vs Yazik]
 **Мова** is Language/Speech.
@@ -342,271 +343,107 @@ Be polite, be heard!
 :::
 
 
----
+##
 
-## 📋 Summary
-
-Congratulations! You have completed the **Word Formation** phase.
-This is a huge milestone.
-You are no longer just memorizing words. You are **building** them.
-
-Key Takeaways:
-1.  **Roots are the Core:**
-    - `ХІД`, `ПИС`, `МОВ`
-    - `ЧУ`, `БАЧ`, `РІД`
-    - `СВІТ`, `ЗЕМ`, `МІСТ`
-2.  **Prefixes are Directors:** 
-    - `В-`
-    - `Ви-`
-    - `Пере-`
-    - `За-`
-3.  **Suffixes are Identities:**
-    - `-ач`
-    - `-ння`
-    - `-ість`
-
-Now you are ready for the next phase: **Vocabulary Expansion**.
-We will apply these tools to real life: Food, Health, Home, and Work.
-Get ready to speak!
-
-:::note[Рідна Мова]
-The concept of **Рідна Мова** (Native Language) comes from the root **РІД** (Kin).
-It connects your language to your ancestors.
-It is why language is so sacred in Ukrainian culture.
-:::
-
-
-
----
-
-
-
-> 💡 **Словотвір — мистецтво**
->
-> «Українська мова — як конструктор: префікси, корені, суфікси. Будуйте слова самостійно!»
->
-> *Translation: "Ukrainian is like a construction set: prefixes, roots, suffixes."*
-
-> 🇺🇦 **Творіть нові слова!**
->
-> Основні префікси та їх значення:
-> - **пере-**: переписати (писати знову), перечитати (читати знову)
-> - **роз-**: розповісти (розказати детально), розібрати (розділити на частини)
-> - **при-**: прийти (наблизитися), прибігти (прибігти до місця)
->
-> Суфікси також важливі: -ець (читач → читачець), -ість (добрий → доброта)
-
-:::info[🔗 External Resources]
-
-**YouTube:** [100 Ukrainian cognates ...](https://www.youtube.com/watch?v=CMpe0h8AcJs) — Ukrainian vocabulary for beginners
-
-**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
-
-**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-:::
 
 
 ## 🎯 Activities
 
 ### Root Match
 
-<MatchUp pairs={[
-  { left: `Мова`, right: `Speech` },
-  { left: `Слух`, right: `Hearing` },
-  { left: `Думка`, right: `Thought` },
-  { left: `Вхід`, right: `Entrance (Go)` },
-  { left: `Письмо`, right: `Writing` },
-  { left: `Вигляд`, right: `Appearance (See)` },
-  { left: `Перемога`, right: `Victory (Over-power)` },
-  { left: `Розмова`, right: `Conversation` }
-]} />
+<MatchUp
+  title="Root Match"
+  pairs={JSON.parse(`[{"left": "- Мова", "right": "Speech"}, {"left": "- Слух", "right": "Hearing"}, {"left": "- Думка", "right": "Thought"}, {"left": "- Вхід", "right": "Entrance (Go)"}, {"left": "- Письмо", "right": "Writing"}, {"left": "- Вигляд", "right": "Appearance (See)"}, {"left": "- Перемога", "right": "Victory (Over-power)"}, {"left": "- Розмова", "right": "Conversation"}]`)}
+/>
 
 ### Family Tree
 
-<GroupSort groups={{
-  "МОВ - Speech": ["Мова", "Розмова", "Промова", "Замовлення", "Мовчати", "Мовлення"],
-  "СЛУХ/ДУМ - Sense": ["Слухати", "Слухач", "Слухняний", "Думати", "Думка", "Задум"],
-  "Review (Mix)": ["Письменник", "Переклад", "Вхід", "Науковий", "Український", "Читач"]
-}} />
+<GroupSort
+  title="Family Tree"
+  groups={JSON.parse(`{"МОВ - Speech": ["Мова", "Розмова", "Промова", "Замовлення", "Мовчати", "Мовлення"], "СЛУХ/ДУМ - Sense": ["Слухати", "Слухач", "Слухняний", "Думати", "Думка", "Задум"], "Review (Mix)": ["Письменник", "Переклад", "Вхід", "Науковий", "Український", "Читач"]}`)}
+/>
 
 ### Logic Puzzle
 
-<FillIn items={[
-  {
-    sentence: `Людина, яка слухає. Це [___].`,
-    answer: `слухач`,
-    options: [`слухач`, `мовець`, `письменник`]
-  },  {
-    sentence: `Процес обміну словами. Це [___].`,
-    answer: `розмова`,
-    options: [`розмова`, `промова`, `замовлення`]
-  },  {
-    sentence: `Те, що ми думаємо. Це [___].`,
-    answer: `думка`,
-    options: [`думка`, `слух`, `мова`]
-  },  {
-    sentence: `Офіційний виступ. Це [___].`,
-    answer: `промова`,
-    options: [`промова`, `розмова`, `мовчання`]
-  },  {
-    sentence: `Те, що ми робимо в ресторані. Це [___].`,
-    answer: `замовлення`,
-    options: [`замовлення`, `промова`, `слух`]
-  },  {
-    sentence: `Перекласти текст іншою мовою. Це [___].`,
-    answer: `переклад`,
-    options: [`переклад`, `перехід`, `перерва`]
-  },  {
-    sentence: `Коли ти не говориш. Це [___].`,
-    answer: `мовчання`,
-    options: [`мовчання`, `розмова`, `крик`]
-  },  {
-    sentence: `Результат творчості. Це [___].`,
-    answer: `твір`,
-    options: [`твір`, `двір`, `звір`]
-  }
-]} />
+<FillIn
+  title="Logic Puzzle"
+  items={JSON.parse(`[{"sentence": "Людина, яка слухає. Це [___].", "answer": "слухач", "options": ["слухач", "мовець", "письменник"]}, {"sentence": "Процес обміну словами. Це [___].", "answer": "розмова", "options": ["розмова", "промова", "замовлення"]}, {"sentence": "Те, що ми думаємо. Це [___].", "answer": "думка", "options": ["думка", "слух", "мова"]}, {"sentence": "Офіційний виступ. Це [___].", "answer": "промова", "options": ["промова", "розмова", "мовчання"]}, {"sentence": "Те, що ми робимо в ресторані. Це [___].", "answer": "замовлення", "options": ["замовлення", "промова", "слух"]}, {"sentence": "Перекласти текст іншою мовою. Це [___].", "answer": "переклад", "options": ["переклад", "перехід", "перерва"]}, {"sentence": "Коли ти не говориш. Це [___].", "answer": "мовчання", "options": ["мовчання", "розмова", "крик"]}, {"sentence": "Результат творчості. Це [___].", "answer": "твір", "options": ["твір", "двір", "звір"]}]`)}
+/>
 
 ### High Sentences
 
-<Unjumble items={[
-  { jumbled: `гарна / Це / дуже / думка / про / майбутнє / проект`, answer: `Це дуже гарна думка про майбутнє проект` },
-  { jumbled: `українську / Ми / мову / вивчаємо / щодня / з / радістю / в / школі`, answer: `Ми вивчаємо українську мову щодня з радістю в школі` },
-  { jumbled: `уважно / Слухачі / професора / слухають / під / час / цікавої / промови`, answer: `Слухачі уважно слухають професора під час цікавої промови` },
-  { jumbled: `зробив / Я / замовлення / вже / в / цьому / новому / ресторані`, answer: `Я вже зробив замовлення в цьому новому ресторані` },
-  { jumbled: `була / серйозна / Це / розмова / між / двома / добрими / друзями`, answer: `Це була серйозна розмова між двома добрими друзями` },
-  { jumbled: `має / Він / талант / письменницький / і / пише / чудові / книги`, answer: `Він має письменницький талант і пише чудові книги` }
-]} />
+<Unjumble
+  title="High Sentences"
+  items={JSON.parse(`[{"jumbled": "гарна / Це / дуже / думка / про / майбутнє / проект", "answer": "Це дуже гарна думка про майбутнє проект"}, {"jumbled": "українську / Ми / мову / вивчаємо / щодня / з / радістю / в / школі", "answer": "Ми вивчаємо українську мову щодня з радістю в школі"}, {"jumbled": "уважно / Слухачі / професора / слухають / під / час / цікавої / промови", "answer": "Слухачі уважно слухають професора під час цікавої промови"}, {"jumbled": "зробив / Я / замовлення / вже / в / цьому / новому / ресторані", "answer": "Я вже зробив замовлення в цьому новому ресторані"}, {"jumbled": "була / серйозна / Це / розмова / між / двома / добрими / друзями", "answer": "Це була серйозна розмова між двома добрими друзями"}, {"jumbled": "має / Він / талант / письменницький / і / пише / чудові / книги", "answer": "Він має письменницький талант і пише чудові книги"}]`)}
+/>
 
 ### Formation Check
 
-<Quiz questions={[
-  {
-    question: `What is the literal meaning of the verb \"Мовчати\"?`,
-    options: [
-      { text: `To be silent (keep quiet)`, correct: true },
-      { text: `To speak loud (shout)`, correct: false },
-      { text: `To sing (make music)`, correct: false },
-      { text: `To whisper (speak softly)`, correct: false }
-    ]
-  },  {
-    question: `The Ukrainian word \"Замовлення\" (Order) contains which specific root component?`,
-    options: [
-      { text: `МОВ`, correct: true },
-      { text: `ДУМ`, correct: false },
-      { text: `ХІД`, correct: false },
-      { text: `РОБ`, correct: false }
-    ]
-  },  {
-    question: `The suffix \"-ач\" in \"Слухач\" indicates what meaning?`,
-    options: [
-      { text: `Person who does the action (Agent)`, correct: true },
-      { text: `The process of doing action`, correct: false },
-      { text: `The quality of the object`, correct: false },
-      { text: `The location of the action`, correct: false }
-    ]
-  },  {
-    question: `What is the literal logic of \"Переклад\" (Translation)?`,
-    options: [
-      { text: `Cross-lay (Laying meaning across)`, correct: true },
-      { text: `In-write`, correct: false },
-      { text: `Out-speak`, correct: false },
-      { text: `Re-read`, correct: false }
-    ]
-  },  {
-    question: `Which adjective is correctly derived from \"Наука\" (Science)?`,
-    options: [
-      { text: `Науковий`, correct: true },
-      { text: `Наукний`, correct: false },
-      { text: `Наукач`, correct: false },
-      { text: `Наукський`, correct: false }
-    ]
-  },  {
-    question: `Can you explain why the words \"Вхід\" and \"Вихід\" are typically paired together?`,
-    options: [
-      { text: `They are opposites`, correct: true },
-      { text: `They are synonyms`, correct: false },
-      { text: `They are unrelated words`, correct: false },
-      { text: `They are different spellings of one word`, correct: false }
-    ]
-  },  {
-    question: `Can you identify the correct meaning of the Ukrainian verb \"Придумати\"?`,
-    options: [
-      { text: `To invent`, correct: true },
-      { text: `To forget`, correct: false },
-      { text: `To sleep`, correct: false },
-      { text: `To analyze`, correct: false }
-    ]
-  },  {
-    question: `\"Українська мова is beautiful.\" Which form is correct?`,
-    options: [
-      { text: `Українська мова`, correct: true },
-      { text: `Український мова`, correct: false },
-      { text: `Українське мова`, correct: false },
-      { text: `Українські мова`, correct: false }
-    ]
-  }
-]} />
+<Quiz
+  title="Formation Check"
+  questions={JSON.parse(`[{"question": "What is the literal meaning of the verb \\\"Мовчати\\\"?", "options": [{"text": "To be silent", "correct": true}, {"text": "To speak loud (shout)", "correct": false}, {"text": "To sing", "correct": false}, {"text": "To whisper", "correct": false}]}, {"question": "The Ukrainian word \\\"Замовлення\\\" (Order) contains which specific root component?", "options": [{"text": "МОВ", "correct": true}, {"text": "ДУМ", "correct": false}, {"text": "ХІД", "correct": false}, {"text": "РОБ", "correct": false}]}, {"question": "The suffix \\\"-ач\\\" in \\\"Слухач\\\" indicates what meaning?", "options": [{"text": "Person who does the action (Agent)", "correct": true}, {"text": "The process of doing action", "correct": false}, {"text": "The quality of the object", "correct": false}, {"text": "The location of the action", "correct": false}]}, {"question": "What is the literal logic of \\\"Переклад\\\" (Translation)?", "options": [{"text": "Cross-lay (Laying meaning across)", "correct": true}, {"text": "In-write", "correct": false}, {"text": "Out-speak", "correct": false}, {"text": "Re-read", "correct": false}]}, {"question": "Which adjective is correctly derived from \\\"Наука\\\" (Science)?", "options": [{"text": "Науковий", "correct": true}, {"text": "Наукний", "correct": false}, {"text": "Наукач", "correct": false}, {"text": "Наукський", "correct": false}]}, {"question": "Can you explain why the words \\\"Вхід\\\" and \\\"Вихід\\\" are typically paired together?", "options": [{"text": "They are opposites", "correct": true}, {"text": "They are synonyms", "correct": false}, {"text": "They are unrelated words", "correct": false}, {"text": "They are different spellings of one word", "correct": false}]}, {"question": "Can you identify the correct meaning of the Ukrainian verb \\\"Придумати\\\"?", "options": [{"text": "To invent", "correct": true}, {"text": "To forget", "correct": false}, {"text": "To sleep", "correct": false}, {"text": "To analyze", "correct": false}]}, {"question": "\\\"Українська мова is beautiful.\\\" Which form is correct?", "options": [{"text": "Українська мова", "correct": true}, {"text": "Український мова", "correct": false}, {"text": "Українське мова", "correct": false}, {"text": "Українські мова", "correct": false}]}]`)}
+/>
 
 ### The Conference
 
 <Cloze
-  passage={`На сцені стоїть [___:1].
-Він читає [___:2].
+  title="The Conference"
+  passage={`На сцені стоїть ___.
+Він читає ___.
 Тема — екологія.
-Це важлива [___:3].
-Люди в залі — це [___:4].
-Потім буде [___:5].
-Ми маємо знайти [___:6].
-Це наш спільний [___:7].
-Всі сидять [___:8].
-Після промови буде [___:9].
-Це [___:10] для всіх нас.
-Ми напишемо [___:11] про цю подію.
-Це гарна [___:12] для роздумів.`}
-  blanks={[{ index: 0, answer: `промовець`, options: [`промовець`, `співак`, `актор`] }, { index: 1, answer: `промову`, options: [`промову`, `розмова`, `мовчання`] }, { index: 2, answer: `думка`, options: [`думка`, `слух`, `вихід`] }, { index: 3, answer: `слухачі`, options: [`слухачі`, `глядачі`, `читачі`] }, { index: 4, answer: `розмова`, options: [`розмова`, `промова`, `замовлення`] }, { index: 5, answer: `вихід`, options: [`вихід`, `вхід`, `схід`] }, { index: 6, answer: `внесок`, options: [`внесок`, `список`, `голосок`] }, { index: 7, answer: `мовчки`, options: [`мовчки`, `голосно`, `швидко`] }, { index: 8, answer: `перерва`, options: [`перерва`, `вечірка`, `робота`] }, { index: 9, answer: `наука`, options: [`наука`, `гра`, `забава`] }, { index: 10, answer: `статтю`, options: [`статтю`, `книгу`, `листа`] }, { index: 11, answer: `тема`, options: [`тема`, `проблема`, `гра`] }]}
+Це важлива ___.
+Люди в залі — це ___.
+Потім буде ___.
+Ми маємо знайти ___.
+Це наш спільний ___.
+Всі сидять ___.
+Після промови буде ___.
+Це ___ для всіх нас.
+Ми напишемо ___ про цю подію.
+Це гарна ___ для роздумів.`}
+  blanks={JSON.parse(`[{"answer": "промовець", "options": ["промовець", "співак", "актор"]}, {"answer": "промову", "options": ["промову", "розмова", "мовчання"]}, {"answer": "думка", "options": ["думка", "слух", "вихід"]}, {"answer": "слухачі", "options": ["слухачі", "глядачі", "читачі"]}, {"answer": "розмова", "options": ["розмова", "промова", "замовлення"]}, {"answer": "вихід", "options": ["вихід", "вхід", "схід"]}, {"answer": "внесок", "options": ["внесок", "список", "голосок"]}, {"answer": "мовчки", "options": ["мовчки", "голосно", "швидко"]}, {"answer": "перерва", "options": ["перерва", "вечірка", "робота"]}, {"answer": "наука", "options": ["наука", "гра", "забава"]}, {"answer": "статтю", "options": ["статтю", "книгу", "листа"]}, {"answer": "тема", "options": ["тема", "проблема", "гра"]}]`)}
 />
 
 ### Wrong Logic
 
-<ErrorCorrection>
+<ErrorCorrection title="Wrong Logic">
   <ErrorCorrectionItem
-    sentence={`Я слухаю книгу.`}
+    sentence={`Я **слухаю** книгу. (Intended: Read)`}
     errorWord={`слухаю`}
     correctForm={`читаю`}
     options={[`читаю`, `слухаю`]}
     explanation={`You read books (ЧИТ). Though audiobooks exist, usually we read.`}
   />
   <ErrorCorrectionItem
-    sentence={`Це моя мова.`}
+    sentence={`Це моя **мова**. (Intended: Opinion/Thought)`}
     errorWord={`мова`}
     correctForm={`думка`}
     options={[`думка`, `мова`]}
     explanation={`Opinion is 'Thought' (Думка), not 'Language' (Мова).`}
   />
   <ErrorCorrectionItem
-    sentence={`Де тут вхід?`}
+    sentence={`Де тут **вхід**? (Intended: Exit)`}
     errorWord={`вхід`}
     correctForm={`вихід`}
     options={[`вихід`, `вхід`]}
     explanation={`Exit is Out-go (Вихід).`}
   />
   <ErrorCorrectionItem
-    sentence={`Він читач музику.`}
+    sentence={`Він **читач** музику. (Intended: Listener)`}
     errorWord={`читач`}
     correctForm={`слухач`}
     options={[`слухач`, `читач`]}
     explanation={`Music is for hearing (СЛУХ).`}
   />
   <ErrorCorrectionItem
-    sentence={`Це наука журнал.`}
+    sentence={`Це **наука** журнал. (Intended: Scientific)`}
     errorWord={`наука`}
     correctForm={`науковий`}
     options={[`науковий`, `наука`]}
     explanation={`Adjective form needed: -овий.`}
   />
   <ErrorCorrectionItem
-    sentence={`Гарна розмова.`}
+    sentence={`Гарна **розмова**. (Intended: Speech/Oration)`}
     errorWord={`розмова`}
     correctForm={`промова`}
     options={[`промова`, `розмова`]}
@@ -616,98 +453,91 @@ It is why language is so sacred in Ukrainian culture.
 
 ### Opposites
 
-<MatchUp pairs={[
-  { left: `Вхід`, right: `Вихід` },
-  { left: `Мовчати`, right: `Говорити` },
-  { left: `Вступ`, right: `Виступ` },
-  { left: `Схід`, right: `Захід` },
-  { left: `Слухач`, right: `Мовець` },
-  { left: `Вдих`, right: `Видих` },
-  { left: `Прихід`, right: `Відхід` },
-  { left: `Запитання`, right: `Відповідь` }
-]} />
+<MatchUp
+  title="Opposites"
+  pairs={JSON.parse(`[{"left": "- Вхід", "right": "Вихід"}, {"left": "- Мовчати", "right": "Говорити"}, {"left": "- Вступ", "right": "Виступ"}, {"left": "- Схід", "right": "Захід"}, {"left": "- Слухач", "right": "Мовець"}, {"left": "- Вдих", "right": "Видих"}, {"left": "- Прихід", "right": "Відхід"}, {"left": "- Запитання", "right": "Відповідь"}]`)}
+/>
 
 ### Parts of Speech
 
-<GroupSort groups={{
-  "Noun - Object/Thing": ["Мова", "Думка", "Слух", "Вхід", "Письменник", "Погляд", "Промова", "Розмова"],
-  "Verb - Action": ["Мовчати", "Думати", "Слухати", "Бачити", "Писати", "Говорити", "Обдумати"]
-}} />
+<GroupSort
+  title="Parts of Speech"
+  groups={JSON.parse(`{"Noun - Object/Thing": ["Мова", "Думка", "Слух", "Вхід", "Письменник", "Погляд", "Промова", "Розмова"], "Verb - Action": ["Мовчати", "Думати", "Слухати", "Бачити", "Писати", "Говорити", "Обдумати"]}`)}
+/>
 
 ### Definitions II
 
-<MatchUp pairs={[
-  { left: `Огляд`, right: `Review` },
-  { left: `Погляд`, right: `Glance` },
-  { left: `Вигляд`, right: `Appearance` },
-  { left: `Відчуття`, right: `Sensation` },
-  { left: `Почуття`, right: `Feeling` },
-  { left: `Побачення`, right: `Date/Meeting` },
-  { left: `Передбачення`, right: `Prediction` },
-  { left: `Обдумати`, right: `To think over` }
-]} />
+<MatchUp
+  title="Definitions II"
+  pairs={JSON.parse(`[{"left": "- Огляд", "right": "Review"}, {"left": "- Погляд", "right": "Glance"}, {"left": "- Вигляд", "right": "Appearance"}, {"left": "- Відчуття", "right": "Sensation"}, {"left": "- Почуття", "right": "Feeling"}, {"left": "- Побачення", "right": "Date/Meeting"}, {"left": "- Передбачення", "right": "Prediction"}, {"left": "- Обдумати", "right": "To think over"}]`)}
+/>
+
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 | --- | --- | --- | --- | --- | --- |
-| ач |  |  | other | - |  |
-| бестселер |  |  | noun | ч |  |
-| блокнот |  |  | noun | ж |  |
-| будівельник |  |  | noun | ч |  |
-| виступати |  |  | verb | - |  |
-| власне |  |  | det | с |  |
-| газ |  |  | noun | ч |  |
-| депресія |  |  | noun | ж |  |
-| детально |  |  | adv | - |  |
-| доброта |  |  | noun | ж |  |
-| діл |  |  | noun | ч |  |
-| етап |  |  | noun | ч |  |
-| ець |  |  | other | - |  |
-| задум |  |  | noun | ч |  |
-| заслуга |  |  | noun | ж |  |
-| земний |  |  | adj | ч |  |
-| катастрофа |  |  | noun | ж |  |
-| код |  |  | noun | ч |  |
-| конструктор |  |  | noun | ч |  |
-| конференція |  |  | noun | ж |  |
-| котлета |  |  | noun | ж |  |
-| людимовлення |  |  | noun | с |  |
-| лікарь |  |  | noun | ч |  |
-| мистецтво |  |  | noun | с |  |
-| мовчання |  |  | noun | с |  |
-| міркування |  |  | noun | с |  |
-| містян |  |  | noun | ч |  |
-| містянин |  |  | other | - |  |
-| наблизитися |  |  | verb | - |  |
-| науковець |  |  | noun | ч |  |
-| нація |  |  | noun | ж |  |
-| обговорення |  |  | noun | с |  |
-| обдумати |  |  | verb | - |  |
-| опускати |  |  | verb | - |  |
-| передмістя |  |  | noun | с |  |
-| перерва |  |  | noun | ж |  |
-| перерозподіл |  |  | noun | ч |  |
-| послуха |  |  | noun | ч |  |
-| прибігти |  |  | verb | - |  |
-| промова |  |  | noun | ж |  |
-| психолог |  |  | noun | ч |  |
-| розвиток |  |  | noun | ч |  |
-| роздум |  |  | noun | ч |  |
-| розділити |  |  | verb | - |  |
-| розум |  |  | noun | ч |  |
-| розібрати |  |  | verb | - |  |
-| самостійно |  |  | adv | - |  |
-| словотвір |  |  | noun | ч |  |
-| слухатися |  |  | verb | - |  |
-| слухняний |  |  | adj | ч |  |
-| срібло |  |  | noun | с |  |
-| суб'єктивний |  |  | adj | ч |  |
-| суфікси |  |  | noun | ч |  |
-| талант |  |  | noun | ч |  |
-| творити |  |  | verb | - |  |
-| фабрика |  |  | noun | ж |  |
-| фінальний |  |  | adj | ч |  |
-| читачець |  |  | noun | ч |  |
-| ясний |  |  | adj | ч |  |
-| інтерес |  |  | noun | ч |  |
-| ість |  |  | noun | ж |  |
+| ач | ɐt͡ʃ | suffix -ach | other |  |  |
+| бестселер | bestˈsɛler | bestseller | noun | ч |  |
+| будівельник | budʲiˈvɛlʲnɪk | builder | noun | ч |  |
+| виступ | ˈvɪstup | performance/speech | noun | ч |  |
+| виступати | vɪstuˈpɑte | to perform | verb |  |  |
+| вниз | vnɪz | down | adv |  |  |
+| всесвіт | ˈvsesʲvʲit | universe | noun | ч |  |
+| газ | hɑz | gas | noun | ч |  |
+| депресія | deˈprɛsʲijɐ | depression | noun | ж |  |
+| дум | dum | thought (root) | noun | ч |  |
+| діл | dʲil | part/share (root) | noun | ч |  |
+| елемент | eleˈmɛnt | element | noun | ч |  |
+| етап | eˈtɑp | stage | noun | ч |  |
+| ець | ɛt͡sʲ | suffix -ets' | other |  |  |
+| задум | ˈzɑdum | idea/plan | noun | ч |  |
+| заслуга | zɐˈsluhɐ | merit | noun | ж |  |
+| зем | zɛm | earth (root) | noun | ч |  |
+| земляк | zemˈlʲɑk | countryman | name | ч |  |
+| земний | zemˈnɪj | earthly | adj | ч |  |
+| золото | ˈzɔloto | gold | noun | с |  |
+| катастрофа | kɐtɐˈstrɔfɐ | catastrophe | noun | ж |  |
+| код | kɔd | code | noun | ч |  |
+| комунікація | komunʲiˈkɑt͡sʲijɐ | communication | noun | ж |  |
+| конференція | konfeˈrɛnt͡sʲijɐ | conference | noun | ж |  |
+| концепція | konˈt͡sɛpt͡sʲijɐ | concept | noun | ж |  |
+| лікарь | lʲiˈkɑr | doctor (typo лікар) | noun | ч |  |
+| мовець | moˈʋɛt͡sʲ | speaker | name | ч |  |
+| мовити | ˈmɔʋɪte | to speak | verb |  |  |
+| міркування | mʲirkuˈʋɑnʲːɐ | reasoning | noun | с |  |
+| містян | mʲisˈtʲɑn | townspeople | noun | ч |  |
+| містянин | mʲisˈtʲɑnɪn | townsman | name | ч |  |
+| народ | nɐˈrɔd | people/nation | noun | ч |  |
+| науковець | nɐuˈkɔʋet͡sʲ | scientist | noun | ч |  |
+| нація | ˈnɑt͡sʲijɐ | nation | noun | ж |  |
+| невчення | neˈvt͡ʃɛnʲːɐ | ignorance (lack of learning) | noun | с |  |
+| нень | nɛnʲ | suffix -nen' | noun | с |  |
+| неслухняний | nesluxˈnʲɑnɪj | disobedient | adj | ч |  |
+| опускати | opusˈkɑte | to lower/drop | verb |  |  |
+| освіта | oˈsʲvʲitɐ | education | noun | ж |  |
+| передмістя | peredˈmʲisʲtʲɐ | suburb | noun | ж |  |
+| перемога | pereˈmɔhɐ | victory | noun | ж |  |
+| перерозподіл | pererozˈpɔdʲil | redistribution | noun | ч |  |
+| перехрестя | pereˈxrɛsʲtʲɐ | crossroads | noun | с |  |
+| позитивний | pozɪˈtɪʋnɪj | positive | adj | ж |  |
+| придумати | prɪˈdumɐte | to invent (perf) | verb |  |  |
+| промова | proˈmɔʋɐ | speech | noun | ж |  |
+| психолог | psɪˈxɔloh | psychologist | noun | ч |  |
+| розвиток | ˈrɔzvɪtok | development | noun | ч |  |
+| світити | sʲvʲiˈtɪte | to shine | verb |  |  |
+| серйозний | serˈjɔznɪj | serious | adj | ч |  |
+| слухатися | ˈsluxɐtɪsʲɐ | to obey | verb |  |  |
+| слухняний | sluxˈnʲɑnɪj | obedient | adj | ч |  |
+| соціальний | sot͡sʲiˈɑlʲnɪj | social | adj |  |  |
+| срібло | ˈsrʲiblo | silver | noun | с |  |
+| стиль | stɪlʲ | style | noun | ч |  |
+| суб'єктивний | subjekˈtɪʋnɪj | subjective | adj | ч |  |
+| темрява | ˈtɛmrʲɐʋɐ | darkness | noun | ж |  |
+| фабрика | ˈfɑbrɪkɐ | factory | noun | ж |  |
+| фінальний | fiˈnɑlʲnɪj | final | adj | ч |  |
+| хрест | xrɛst | cross | other |  |  |
+| чу | t͡ʃu | hear (root) | other |  |  |
+| язик | jɐˈzɪk | tongue | noun | ч |  |
+| ясний | jɐsˈnɪj | clear | adj | ч |  |
+| іноземець | inoˈzemetsʲ | foreigner | noun | ч |  |
+| ість | isʲtʲ | suffix -ist' | noun | с |  |

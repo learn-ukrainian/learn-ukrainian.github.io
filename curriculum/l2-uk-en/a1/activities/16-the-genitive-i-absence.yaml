@@ -297,7 +297,7 @@
     explanation: Correct! That's one of genitive's main functions.
   - statement: Genitive is only used with "немає".
     correct: false
-    explanation: Incorrect! It's also used with quantities, possession, and more (future modules).
+    explanation: Incorrect! It's also used with quantities, possession, and more.
   - statement: '"У + person" means "by/at person" in possession contexts.'
     correct: true
     explanation: Correct! У мене = "by me" = "I have".

@@ -11,7 +11,7 @@
   - left: '- повинен'
     right: must (personal)
   - left: '- треба'
-    right: need to (impersonal)
+    right: need to
   - left: '- можна'
     right: may, allowed
   - left: '- не можна'
@@ -173,7 +173,7 @@
   items:
   - question: Does the sentence "Я вмію плавати" express ability or skill?
     options:
-    - text: Skill (learned ability)
+    - text: Skill
       correct: true
     - text: Physical ability
       correct: false
@@ -183,7 +183,7 @@
       correct: false
   - question: How do you categorize the sentence "Я не можу прийти сьогодні"?
     options:
-    - text: Physical ability (circumstance)
+    - text: Physical ability
       correct: true
     - text: Skill
       correct: false
@@ -193,7 +193,7 @@
       correct: false
   - question: What category does "Вона вміє готувати українські страви" specifically belong to?
     options:
-    - text: Skill (learned ability)
+    - text: Skill
       correct: true
     - text: Physical ability
       correct: false
@@ -213,7 +213,7 @@
       correct: false
   - question: Does the sentence "Він вміє грати на гітарі" mean skill or ability?
     options:
-    - text: Skill (learned ability)
+    - text: Skill
       correct: true
     - text: Physical ability
       correct: false
@@ -223,7 +223,7 @@
       correct: false
   - question: How is the sentence "Ми можемо почати зараз" correctly categorized here?
     options:
-    - text: Physical ability (circumstance)
+    - text: Physical ability
       correct: true
     - text: Skill
       correct: false
@@ -233,7 +233,7 @@
       correct: false
   - question: What does the sentence "Вони вміють танцювати сальсу" actually express?
     options:
-    - text: Skill (learned ability)
+    - text: Skill
       correct: true
     - text: Physical ability
       correct: false
@@ -243,7 +243,7 @@
       correct: false
   - question: Which category fits "Я не можу знайти свої ключі" accurately?
     options:
-    - text: Physical ability (circumstance)
+    - text: Physical ability
       correct: true
     - text: Skill
       correct: false
@@ -374,7 +374,7 @@
 - type: true-false
   title: Modal Understanding
   items:
-  - statement: '"Вміти" means "to know how to" (learned skill).'
+  - statement: '"Вміти" means "to know how to".'
     correct: true
   - statement: '"Могти" means "must".'
     correct: false

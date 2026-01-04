@@ -95,7 +95,7 @@
     - була
     - було
     - були
-  - sentence: Я ___ каву вранці. (male speaker)
+  - sentence: Я ___ каву вранці.
     answer: пив
     options:
     - пив
@@ -152,7 +152,7 @@
     - text: Last week
       correct: false
     explanation: Вчора = yesterday
-  - question: Which is the correct past tense of "їсти" (to eat) for "він"?
+  - question: Which is the correct past tense of "їсти" for "він"?
     options:
     - text: їстив
       correct: false
@@ -184,7 +184,7 @@
       correct: true
     - text: Every day
       correct: false
-    explanation: Колись = once, sometime (in the past)
+    explanation: Колись = once, sometime
   - question: Which verb changes its stem in past tense?
     options:
     - text: читати → читав
@@ -263,7 +263,7 @@
     explanation: Correct! Був (m), була (f), було (n), були (pl).
   - statement: The verb "їсти" becomes "їв" in masculine past tense.
     correct: true
-    explanation: Correct! Їсти → їв/їла/їло/їли (stem changes).
+    explanation: Correct! Їсти → їв/їла/їло/їли.
   - statement: '"Ми" uses the -ли ending in past tense.'
     correct: true
     explanation: Correct! All plural subjects use -ли.
@@ -304,14 +304,14 @@
     - працювала
     - працювало
     - працювали
-  - sentence: Я (слухати) ___ музику. (female speaker)
+  - sentence: Я (слухати) ___ музику.
     answer: слухала
     options:
     - слухав
     - слухала
     - слухало
     - слухали
-  - sentence: Ти (дивитися) ___ фільм? (asking a male)
+  - sentence: Ти (дивитися) ___ фільм?
     answer: дивився
     options:
     - дивився
@@ -389,7 +389,7 @@
       correct: true
     - text: Always
       correct: false
-    explanation: Раніше = earlier, before (in the past)
+    explanation: Раніше = earlier, before
   - question: What does accurately "Минулого року" mean in English?
     options:
     - text: This year
@@ -411,7 +411,7 @@
       correct: true
     - text: Often
       correct: false
-    explanation: Колись = once, sometime (in the past)
+    explanation: Колись = once, sometime
   - question: What does "Минулого тижня" accurately mean in English?
     options:
     - text: This week

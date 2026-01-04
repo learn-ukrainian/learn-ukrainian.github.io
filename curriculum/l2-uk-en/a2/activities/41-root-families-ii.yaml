@@ -70,7 +70,7 @@
     - слухаю
     - бачу
     - говорю
-  - sentence: Ми мали гарну [___]. (conversation)
+  - sentence: Ми мали гарну [___].
     answer: розмову
     options:
     - розмову
@@ -84,14 +84,14 @@
     - бачення
     - розмова
     - слухання
-  - sentence: '[___] були уважними. (listeners)'
+  - sentence: '[___] були уважними.'
     answer: Слухачі
     options:
     - Слухачі
     - Мовці
     - Читачі
     - Глядачі
-  - sentence: Будь ласка, [___]! (be silent)
+  - sentence: Будь ласка, [___]!
     answer: мовчи
     options:
     - мовчи
@@ -191,7 +191,7 @@
 
     Він {почув|бачив|слухав} дивний звук. (heard)
 
-    Пташка {мовчала|говорила|слухала} коли він дивився. (was silent)
+    Пташка {мовчала|говорила|слухала} коли він дивився.
 
     Професор {говорить|слухає|мовчить} про мову. (speaks)
 
@@ -203,13 +203,13 @@
 
     Оксана зрозуміла {бачення|побачення|думку} свого друга. (vision)
 
-    Вони продовжили {розмову|мову|мовчання} про природу. (conversation)
+    Вони продовжили {розмову|мову|мовчання} про природу.
 
     Студент мав глибокі {почуття|відчуття|думки} про тему. (feelings)
 
-    Марія записує важливу {інформацію|розмову|мову}. (information)
+    Марія записує важливу {інформацію|розмову|мову}.
 
-    Вони люблять {слухати|чути|бачити} тишу в лісі. (to listen to)'
+    Вони люблять {слухати|чути|бачити} тишу в лісі.'
 - type: unjumble
   title: Perception Sentences
   items:
@@ -297,14 +297,14 @@
 - type: error-correction
   title: Root Usage
   items:
-  - sentence: Я **слухаю** шум машин на вулиці. (passive hearing)
+  - sentence: Я **слухаю** шум машин на вулиці.
     error: слухаю
     answer: чую
     options:
     - чую
     - слухаю
     explanation: Passive hearing = чути, active listening = слухати.
-  - sentence: Він вчить українське **мовлення**. (the language system)
+  - sentence: Він вчить українське **мовлення**.
     error: мовлення
     answer: мову
     options:
@@ -318,7 +318,7 @@
     - відчуття
     - почуття
     explanation: Physical sensation = відчуття, emotion = почуття.
-  - sentence: '**Чуй** уважно, що я кажу! (active listening)'
+  - sentence: '**Чуй** уважно, що я кажу!'
     error: Чуй
     answer: Слухай
     options:
@@ -442,7 +442,7 @@
       correct: false
     - text: бачити
       correct: false
-  - source: Feeling (emotional)
+  - source: Feeling
     options:
     - text: почуття
       correct: true

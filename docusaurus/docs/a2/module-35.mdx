@@ -18,101 +18,190 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 
-## 📋 Summary
+## Система префіксів руху
 
-## The Logic of Movement 🌍
+> 🧭 **Префікси = GPS для дієслів**
 
-> 🧭
+English uses separate words for direction: go **in**, walk **out**, drive **into**.
+Ukrainian builds direction INTO the verb with prefixes!
 
-In English, we often rely on separate adverbs or prepositions to show direction: we "go **in**", "walk **out**", or "drive **into**" a parking lot. In Ukrainian, this logic is encapsulated within the verb itself through a powerful system of **prefixes**. This is the core of Slavic word formation. By snapping a small block (the prefix) onto the front of a base verb, you create a new, precise concept with its own directional vector. Think of the prefix as the "GPS instruction" built into the DNA of the action. This allows for extreme precision in describing spatial transitions without needing a huge vocabulary of separate roots.
-
-Today, we focus on the most fundamental pair of opposites in the directional universe: **В- (Into)** and **ВИ- (Out)**. 
-
-### Core Prefixes: The Inbound/Outbound Switch
+**Базова пара: В- (into) і ВИ- (out)**
 
 | Prefix | Meaning | Base Verb | New Verb | Result |
 | :--- | :--- | :--- | :--- | :--- |
-| **В- / У-** | **Into** | йти/їхати | **в**війти / **в**'їхати | Inside the space |
-| **ВИ-** | **Out** | йти/їхати | **ви**йти / **ви**їхати | Outside the space |
+| **В- / У-** | **Into** | йти/їхати | **в**війти / **в**'їхати | Усередині |
+| **ВИ-** | **Out** | йти/їхати | **ви**йти / **ви**їхати | Назовні |
 
-### The "Apostrophe" Rule for Wheels
-When you add the prefix **в-** to the verb **їхати** (to drive), the meeting of the consonant "в" and the vowel "ї" requires a hard stop in pronunciation. We represent this with an apostrophe: **в'їхати**. Without it, the sounds would blur together in a way that is unnatural to the Ukrainian phonetic system. When you say **в'їхати**, imagine hitting a tiny pause right after the "v" before saying "yi-khaty." This preserves the independence of the prefix and the root, which is a key feature of Ukrainian phonetics.
+**Приклади:**
+- Я **ввійшов** у кімнату. (I entered the room.)
+- Він **вийшов** з будинку. (He exited the house.)
+- Машина **в'їхала** на парковку. (Car drove onto parking lot.)
+- Вона **виїхала** з міста. (She drove out of the city.)
+
+### Апостроф з їхати
+
+**в** + **їхати** = **в'їхати** (apostrophe needed!)
+
+Апостроф зберігає чіткість вимови між префіксом і коренем.
 
 ---
 
-## The Morphological Shift: From Process to Result
+## Aspect: Process → Result
 
-What is the deeper reason for using these prefixes? Can't we just use the base verbs and add prepositions like in English? While "Я йшов у будинок" (I was walking into the house) is grammatically possible, it sounds incomplete and focuses only on the journey, not the transition. In Ukrainian, the goal of movement is usually shown by a deliberate shift in **Aspect**.
+Why use prefixed verbs instead of just the base verb? The prefix changes the aspect from imperfective (process) to perfective (completed result).
 
-1. **The Base Verb (Imperfective):** Verbs like **йти** (to walk) or **їхати** (to drive) describe the *process* of movement. They are like a continuous video stream. If you say "Я йшов," you are describing the act of moving your legs without telling us if you ever reached a destination or crossed a specific threshold. It is a state of being "in motion."
-2. **The Prefixed Verb (Perfective):** Adding a directional prefix such as **в-** or **ви-** does more than just add a vector; it flips the linguistic switch from "process" to "completion." These verbs are almost always **perfective**. They focus on the **boundary crossing** itself. You are either inside or outside. There is no middle ground in a perfective prefix; the moment you cross the line, the action is done and a new state is achieved.
+**Base verbs (Imperfective):**
+- **йти** = walking process (ongoing action)
+- **їхати** = driving process (ongoing action)
+- Я **йшов** у будинок. (I was walking... but did I arrive? Unknown!)
 
-:::warning[The Perfective Power]
-A prefixed motion verb is a "result machine." If you use the word **вийшов** (exited), the listener immediately understands that you have successfully completed the act and are no longer in the room. This makes your communication much more efficient than in English, where you might need extra sentences or adverbs to prove you actually reached the outside and aren't still standing in the doorway.
+**Prefixed verbs (Perfective):**
+- **ввійти** = RESULT: now inside! (action completed)
+- **вийти** = RESULT: now outside! (action completed)
+- Я **ввійшов** у будинок. (I entered = I'm now inside! Result achieved!)
+
+:::warning[Prefix = Result Machine]
+
+**вийшов** (exited) → Listener understands: you are ALREADY outside, action complete!
+
+This is more efficient than English, which needs extra words to explain that you actually exited.
 :::
 
 
+**Comparison:**
+- Я **йшов** з кімнати. (I was walking from the room — still walking?)
+- Я **вийшов** з кімнати. (I exited the room — I'm outside now!)
+
 ---
 
-## Spatial Mapping: Prepositions & Cases
+## Prefixes + Prepositions + Cases
 
-Directional prefixes are not solo players; they participate in a strict grammatical "agreement" with prepositions and cases. They act as signals for the noun (the destination) that follows, providing a triple-layered system of clarity.
+**Agreement system:** prefix signals which preposition and case come next.
 
-### 1. The Inbound Agreement (The "B" Path)
-Movement **into** something typically requires the preposition **в/на** followed by the **Accusative Case** (showing the target destination). This is the case of "Motion Toward."
-- **Ввійти в** кімнат**у** (Focus on the entry point into the enclosed room)
-- **В'їхати на** парковк**у** (Focus on the arrival on the open surface of the parking lot)
+### 1. Motion INWARD (В- + в/на + Accusative)
 
-### 2. The Exit Pattern (ВИ- + з/із + Genitive)
-Movement **out of** something requires the preposition **з/із** followed by the **Genitive Case** (showing the point of separation or origin). This is the case of "Movement From."
-- **Вийти з** кімнат**и** (The physical separation from the enclosed room)
-- **Виїхати з** парковк**и** (The departure from the open parking area)
+When moving INTO something, use prefix **В-** with preposition **в** or **на** + Accusative case.
 
-### The Harmonic Logic of Prepositions
+**В- + в + Accusative** (enclosed spaces like rooms, buildings, cities):
+- **Ввійти в** кімнат**у** (enter the room)
+- **Ввійти в** буд**инок** (enter the building)
+- **Ввійти в** мі́**сто** (enter the city)
 
-Ukrainian grammar is not a collection of random rules; it is a system of **harmonic logic**. The directional prefix acts as a "pre-signal" to the brain, preparing it for the specific preposition and case that will follow. This redundancy ensures that the meaning is clear even in noisy environments.
+**В- + на + Accusative** (open spaces like streets, squares, parking lots):
+- **В'їхати на** парковк**у** (drive onto parking lot)
+- **Війти на** площ**у** (walk onto square)
+- **Ввійти на** вулиц**ю** (walk onto street)
 
-| Vector | Prefix | Preposition | Case | Logic |
+### 2. Motion OUTWARD (ВИ- + з/із + Genitive)
+
+When moving OUT OF something, use prefix **ВИ-** with preposition **з/із** + Genitive case.
+
+**ВИ- + з + Genitive** (both enclosed and open spaces):
+- **Вийти з** кімнат**и** (exit the room)
+- **Вийти з** буд**инку** (exit the building)
+- **Виїхати з** парковк**и** (drive out of parking lot)
+- **Вийти з** мі́**ста** (leave the city)
+
+### Таблиця узгодження
+
+| Direction | Prefix | Preposition | Case | Logic |
 | :--- | :--- | :--- | :--- | :--- |
-| **Inbound** | **В-** | **В / У** | Accusative | Movement into a container |
-| **Outbound** | **ВИ-** | **З / ІЗ** | Genitive | Movement out of a container |
-| **Onward** | **В'** | **НА** | Accusative | Movement onto a surface |
-| **Offward** | **ВИ-** | **З** | Genitive | Movement off a surface/area |
+| **Into** | **В-** | **В / У** | Accusative | Motion to target |
+| **Out of** | **ВИ-** | **З / ІЗ** | Genitive | Motion from source |
 
-:::warning[Case Hierarchy and Meta-Logic]
-Notice that for **ingress** (moving into), we use the **Accusative**, which is the case of direct impact and target. For **egress** (moving out), we use the **Genitive**, which is the case of origin and non-existence. Once you leave a room, you are "no longer of" that room. This logical alignment between prefix, preposition, and case is what gives Ukrainian its structural beauty and mathematical precision.
-:::
+> 💡 **Case Logic**
+>
+> **В + Accusative** = target, where we go (direct target)
+> **З + Genitive** = source, where we leave from (origin, "no longer of")
 
+### В or НА? Enclosed vs. Open Spaces
 
-### Which Preposition? Open vs. Enclosed Spaces
+A common question: when to use **В** and when **НА**?
 
-A common challenge for learners is choosing between **В** and **На**. This distinction is often more psychological than physical in Ukrainian culture.
-- Use **В / З** for enclosed spaces like buildings, cities, countries, or forests. These are "vessels" you can be inside.
-- Use **На / З** for open spaces (the street, the square), events (concerts, meetings, work), or elevated surfaces (mountains, islands).
-- For people, we use **До / Від** (I go **to** Mom), as you cannot conceptually "enter" or "exit" a person's physical space with these prefixes without changing the fundamental meaning of the verbs.
+**В / З** — enclosed spaces (containers you're inside):
+- будинок, кімната, місто, ліс, країна
 
----
+**НА / З** — open spaces, surfaces, events:
+- вулиця, площа, парковка
+- концерт, робота, гора, острів
 
-## Anti-Propaganda Showcase: The Urban Complexity
-
-:::note[Myth: "Ukrainian is just a simple rural dialect of Russian or Polish."]
-**The Verdict: Absolute Fiction.**
-
-**Linguistic Fact:** Ukrainian possesses a highly sophisticated and ancient system of motion prefixes that is far more nuanced than many dialects of other Slavic languages. This system allows for precise distinctions between "entering briefly" (**зайти**), "entering formally" (**увійти**), and "entering by transport" (**в'їхати**). This is the hallmark of a language developed for both complex rural logistics and high-level urban navigation.
-
-During the 19th and 20th centuries, imperial powers (both Tsarist and Soviet) attempted to marginalize Ukrainian as a "peasant language" by banning its use in urban science, engineering, and administration. However, the language's complex urban grammar—including its ability to describe intricate mechanical and logistical movements in a modern city like Kyiv—remained intact. When you ask a stranger, "**Як пройти до метро?**" (How to get to the metro?), you are using high-level prefix logic that proves the language's inherent status as a sophisticated urban and national tongue, capable of describing the most advanced modern infrastructure.
-:::
-
+**Examples:**
+- Я **ввійшов** **у** будинок. (I entered the building.)
+- Він **вийшов** **з** будинку. (He exited the building.)
+- Вона **в'їхала** **на** парковку. (She drove onto the parking lot.)
+- Ми **виїхали** **з** парковки. (We drove out of the parking lot.)
 
 ---
 
-## Narrative Context: The Great Departure
+## Міська складність
 
-**Read the story of a busy morning in Kyiv. Notice how every movement is defined by its boundary.**
+> 🌍 **Міф:** "Українська — проста сільська мова."
+>
+> **Факт:** Українська має високорозвинену систему префіксів руху!
+>
+> **Приклади:**
+> - **зайти** = enter briefly (quick visit)
+> - **увійти** = enter formally (official entry)
+> - **в'їхати** = enter by vehicle (driving in)
+>
+> Ця система дозволяє точно описати складні рухи в сучасному місті як Київ.
+>
+> **Київський діалог:**
+> - Як **пройти** до метро? (How to get to metro?)
+> - **Ввійдіть** у той будинок, **підіть** на другий поверх, **вийдіть** через чорний вхід. (Enter that building, go to 2nd floor, exit through back entrance.)
 
-Сьогодні вранці Марко прокинувся пізно. Він швидко **вмився** і **зібрався**. О восьмій годині він **вийшов** зі своєї квартири. Він хотів піти в парк, але згадав, що в нього немає кави. Тому він **зайшов** у маленьке кафе на розі. В Україні "зайти" в кафе — це короткий візит, часто просто на п'ять хвилин, щоб щось купити або дізнатися.
+---
+
+## Практика
+
+### Вправа 1: Формуйте дієслова з префіксами
+
+**Модель:** йти + В- → **ввійти** (to enter)
+
+1. йти + ВИ- → **вийти** (to exit)
+2. їхати + В'- → **в'їхати** (to drive in)
+3. їхати + ВИ- → **виїхати** (to drive out)
+4. йти + ЗА- → **зайти** (to pop in, quick visit)
+
+### Exercise 2: Choose the correct case
+
+**Model:** Я ввійшов ____ кімнату (у + Accusative)
+
+1. Він вийшов ____ будинку (з + Genitive)
+2. Вона в'їхала ____ парковку (на + Accusative)
+3. Ми виїхали ____ міста (з + Genitive)
+4. Вони ввійшли ____ магазин (у + Accusative)
+
+### Діалог: На вулиці
+
+<div className="conversation">
+
+— Вибачте, як **пройти** до метро?
+
+— **Ввійдіть** у той будинок, **підніміться** на другий поверх, потім **вийдіть** через задній вхід.
+
+— А потім?
+
+— **Вийдете** на площу. Метро прямо там.
+
+— Дякую!
+
+</div>
+
+---
+
+## Ранок у Києві 🌆
+
+**Прочитайте оповідання. Зверніть увагу на префікси руху.**
+
+Сьогодні вранці Марко прокинувся пізно. Він швидко **вмився** і **зібрався**. О восьмій годині він **вийшов** зі своєї квартири.
+
+Він хотів піти в парк, але згадав, що в нього немає кави. Тому він **зайшов** у маленьке кафе на розі.
+
+> 💡 **зайти** = короткий візит (quick stop, 5 minutes)
 
 <div className="conversation">
 
@@ -122,500 +211,222 @@ During the 19th and 20th centuries, imperial powers (both Tsarist and Soviet) at
 
 </div>
 
-Раптом на вулиці почався дощ. Марко подивився у вікно. Люди швидко **заходили** в магазини та аптеки, щоб не змокнути. Велика машина **в'їхала** на тротуар, і водій почав вивантажувати продукти. Марко чекав, поки дощ закінчиться.
+Раптом на вулиці почався дощ. Марко подивився у вікно. Люди швидко **заходили** в магазини та аптеки, щоб не змокнути. Велика машина **в'їхала** на тротуар, і водій почав вивантажувати продукти.
 
-Коли небо стало світлим, Марко **вийшов** з кафе зі своєю кавою. Тепер йому треба було поспішати. Він **увійшов** у метро "Золоті ворота". Це дуже глибока станція, тому він довго **спускався** ескалатором. Коли він приїхав на свою зупинку, він **вийшов** з вагону і **піднявся** на вулицю. День нарешті почався по-справжньому.
+Коли небо стало світлим, Марко **вийшов** з кафе зі своєю кавою. Тепер йому треба було поспішати.
 
-:::note[History Bite: The Architecture of Entry]
-Many historical gates in Ukraine, like the **Golden Gate** (Золоті Ворота) in Kyiv, were designed not just for defense, but as symbolic points of **entry** for royalty and ambassadors. To **увійти** (enter) through these gates was a symbol of being accepted by the city's heart.
-:::
+Він **увійшов** у метро "Золоті ворота". Це дуже глибока станція, тому він довго **спускався** ескалатором. Коли він приїхав на свою зупинку, він **вийшов** з вагону і **піднявся** на вулицю.
 
+День нарешті почався по-справжньому! ☕
 
----
-
-## Need More Practice?
-
-:::info[External Resources]
-- 📖 [Prefixes of Motion Guide](https://www.ukrainianlessons.com/prefixes-of-motion/) — Systematic tables for beginners.
-- 🎙 [Ukrainian Lessons Podcast: Prefixes](https://www.ukrainianlessons.com/the-verbs-of-motion-with-prefixes/) — Audio examples and drills.
-- 🎭 [Visual Motion Verbs](https://www.education-ukrainian.com/motion-verbs) — Diagrams of prefixes to help with spatial memory.
-:::
-
+> 🏛️ **Історична довідка**
+>
+> **Золоті Ворота** в Києві — історична брама для королівських візитів. **Увійти** через ці ворота означало бути прийнятим містом.
 
 ---
+
+
 
 ## 🎯 Activities
 
-### Directional Pairs (Concept: Semantic Inversion) [stage: practice]
+### Directional Pairs (Concept: Semantic Inversion)
 
-<MatchUp pairs={[
-  { left: `Ввійти в будинок`, right: `Вийти з будинку` },
-  { left: `В'їхати в гараж`, right: `Виїхати з гаража` },
-  { left: `Увійти в ліфт`, right: `Вийти з ліфта` },
-  { left: `В'їхати на міст`, right: `З'їхати з мосту` },
-  { left: `Ввійти в метро`, right: `Вийти з метро` },
-  { left: `Вставити ключ`, right: `Вийняти ключ` },
-  { left: `Вдихнути повітря`, right: `Видихнути повітря` },
-  { left: `Включити світло`, right: `Виключити світло` },
-  { left: `Влити воду`, right: `Вилити воду` },
-  { left: `Вантажити в авто`, right: `Вивантажити з авто` },
-  { left: `Вписати слово`, right: `Виписати слово` }
-]} />
-
-### Entry or Exit? (Concept: Contextual Logic) [stage: practice]
-
-<FillIn items={[
-  {
-    sentence: `Машина [___:1]їхала в гараж дуже повільно, щоб не вдарити стіну.`,
-    answer: `в`,
-    options: [`в`, `ви`, `за`, `при`]
-  },  {
-    sentence: `Коли ми нарешті [___:2]йшли з кімнати, we turned off the light.`,
-    answer: `ви`,
-    options: [`ви`, `у`, `за`, `під`]
-  },  {
-    sentence: `Треба [___:3]війти в будівлю через головний вхід поруч з площею.`,
-    answer: `у`,
-    options: [`у`, `ви`, `пере`, `від`]
-  },  {
-    sentence: `Поїзд швидко [___:4]їхав з тунелю, і ми побачили сонце.`,
-    answer: `ви`,
-    options: [`ви`, `в`, `за`, `під`]
-  },  {
-    sentence: `Студенти дружно [___:5]йшли в аудиторію і сіли за свої столи.`,
-    answer: `уві`,
-    options: [`уві`, `ви`, `за`, `при`]
-  },  {
-    sentence: `Хлопець [___:6]йшов з аптеки з великою коробкою ліків для мами.`,
-    answer: `ви`,
-    options: [`ви`, `у`, `за`, `від`]
-  },  {
-    sentence: `Ми [___:7]їхали на територію заводу о дев'ятій годині ранку.`,
-    answer: `в`,
-    options: [`в`, `ви`, `об`, `про`]
-  },  {
-    sentence: `Хто останній [___:8]йде з офісу сьогодні ввечері перед вихідними?`,
-    answer: `ви`,
-    options: [`ви`, `у`, `за`, `пере`]
-  }
-]} />
-
-### The Prefix Master (Concept: Morphological Awareness) [stage: practice]
-
-<Quiz questions={[
-  {
-    question: `Що саме суттєво змінюється в дієслові руху, коли ми додаємо до нього префікс \\\"в-\\\" або \\\"ви-\\\"?`,
-    options: [
-      { text: `Воно стає доконаного виду і показує результат певної дії`, correct: true },
-      { text: `Воно стає недоконаного виду і показує тривалий процес руху`, correct: false },
-      { text: `Воно змінює своє відмінювання з першої на другу дієвідміну`, correct: false },
-      { text: `Воно завжди стає дієсловом, яке вживається тільки в минулому часі`, correct: false }
-    ]
-  },  {
-    question: `Який прийменник ми обов'язково використовуємо з дієсловом \\\"вийти\\\" для позначення місця?`,
-    options: [
-      { text: `Прийменник \\\"з\\\" (або \\\"із\\\") разом з формами родового відмінка`, correct: true },
-      { text: `Прийменник \\\"в\\\" (або \\\"у\\\") разом з формами знахідного відмінка`, correct: false },
-      { text: `Прийменник \\\"на\\\" разом зі знахідним відмінком мети руху`, correct: false },
-      { text: `Прийменник \\\"під\\\" разом з орудним відмінком місця перебування`, correct: false }
-    ]
-  },  {
-    question: `Як правильно написати дієслово \\\"їздити\\\" з префіксом \\\"в-\\\", щоб показати дію в'їзду кудись?`,
-    options: [
-      { text: `Треба обов'язково поставити апостроф перед йотованою літерою: \\\"в'їхати\\\"`, correct: true },
-      { text: `Треба написати префікс разом з коренем без жодних знаків: \\\"вїхати\\\"`, correct: false },
-      { text: `Треба написати цей префікс через дефіс для зручності: \\\"в-їхати\\\"`, correct: false },
-      { text: `Треба подвоїти першу літеру слова для кращої вимови: \\\"ввїхати\\\"`, correct: false }
-    ]
-  },  {
-    question: `Що означає відомий український фразеологізм \\\"вийти заміж\\\" у сучасному контексті?`,
-    options: [
-      { text: `Це означає, що жінка офіційно створює нову сім'ю з чоловіком`, correct: true },
-      { text: `Це означає, що жінка просто фізично вийшла зі свого будинку`, correct: false },
-      { text: `Це означає, що жінка вирішила раптово купити собі нову сукню`, correct: false },
-      { text: `Це означає, що жінка пішла на коротку прогулянку в парк`, correct: false }
-    ]
-  },  {
-    question: `Який з цих прикладів найкраще показує рух всередину закритого простору?`,
-    options: [
-      { text: `Увійти в аудиторію для складання іспиту в університеті`, correct: true },
-      { text: `Вийти на балкон, щоб подивитися на гарні вечірні зорі`, correct: false },
-      { text: `Підійти до великого столу в біблітеці для читання книг`, correct: false },
-      { text: `Перейти дорогу на зелене світло великого світлофора`, correct: false }
-    ]
-  },  {
-    question: `Як сказати граматично правильно: \\\"Машина ... в гараж о сьомій годині вечора\\\"?`,
-    options: [
-      { text: `Машина в'їхала в гараж о сьомій годині вечора після роботи`, correct: true },
-      { text: `Машина ввійшла в гараж о сьомій годині вечора після роботи`, correct: false },
-      { text: `Машина прийшла в гараж о сьомій годині вечора після роботи`, correct: false },
-      { text: `Машина виїхала в гараж о сьомій годині вечора після роботи`, correct: false }
-    ]
-  },  {
-    question: `Чому ми кажемо \\\"увійти в метро\\\", а не \\\"уйти в метро\\\" в українській мові?`,
-    options: [
-      { text: `Для милозвучності між двома приголосними додається голосна літера \\\"і\\\"`, correct: true },
-      { text: `Тому що це зовсім інше дієслово з абсолютно іншим значенням`, correct: false },
-      { text: `Тому що це офіційний стиль мовлення в київському метрополітену`, correct: false },
-      { text: `Тому що літера \\\"у\\\" — це завжди окремий префікс для руху вниз`, correct: false }
-    ]
-  },  {
-    question: `Що саме станеться з вами, якщо ви нарешті \\\"вийдете з маленької кімнати\\\"?`,
-    options: [
-      { text: `Ви опинитеся ззовні цієї кімнати на коридорі або просто на вулиці`, correct: true },
-      { text: `Ви все одно залишитеся всередині цієї закритої кімнати надовго`, correct: false },
-      { text: `Ви просто підійдете трохи ближче до дверей цієї маленької кімнати`, correct: false },
-      { text: `Ви будете стояти точно між великими дверима і стіною кімнати`, correct: false }
-    ]
-  }
-]} />
-
-### Building Complex Routes (Concept: Syntax Integrity) [stage: practice]
-
-<Unjumble items={[
-  { jumbled: `він / вийшов / з / машини / і / увійшов / у / магазин`, answer: `Він вийшов з машини і увійшов у магазин` },
-  { jumbled: `ми / в'їхали / на / територію / великої / лікарні / вчора`, answer: `Ми в'їхали на територію великої лікарні вчора` },
-  { jumbled: `вона / швидко / вийшла / з / будинку / на / вулицю / вранці`, answer: `Вона швидко вийшла з будинку на вулицю вранці` },
-  { jumbled: `автобус / в'їхав / у / центр / нашого / маленького / міста`, answer: `Автобус в’їхав у центр нашого маленького міста` },
-  { jumbled: `ти / хочеш / увійти / в / цей / старий / замок / сьогодні`, answer: `Ти хочеш увійти в цей старий замок сьогодні` },
-  { jumbled: `водій / виїхав / з / парковки / о / шостій / годині / вечора`, answer: `Водій виїхав з парковки о шостій годині вечора` }
-]} />
-
-### Into vs. Out of (Concept: Directional Categorization) [stage: practice]
-
-<GroupSort groups={{
-  "Рух всередину": ["В'їхати на заправку", "Увійти в кабінет", "Внести стіл у кімнату", "Влити молоко в чай", "В'їхати в тунель", "Увійти в ліфт"],
-  "Рух назовні": ["Виїхати з міста", "Винести сміття", "Вийти з офісу", "Вилити воду на землю", "Виїхати з тупика", "Вийти з вагона"]
-}} />
-
-### Directional Logic (Concept: Concept Validation) [stage: practice]
-
-<TrueFalse items={[
-  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `Він означає рух назовні або вихід з певного простору.`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: `Правильно, це правило вживання апострофа після префіксів.`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: `Це одне з багатьох фігуральних значень префікса **ви-**.`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: `Так, ця комбінація є найпоширенішою в українській мові.`
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `Ні, це означає \\\"втратити глузд\\\" або просто \\\"збожеволіти\\\".`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: `Звук \\\"і\\\" з'являється для полегшення вимови приголосних.`
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `Ні, воно зазвичай вимагає Родового відмінка з прийменником **з**.`
-  },  {
-    statement: `True`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: false,
-    explanation: `Так, префіксація є головним способом творення доконаного виду.`
-  }
-]} />
-
-### The Museum Visit (Concept: Narrative Coherence) [stage: production]
-
-<Cloze
-  passage={`Complete the narrative about a complex visit to the local museum by choosing the correct prefixed verbs.
-
-Ми приїхали в самий центр міста. Спочатку ми [___:1] з великого автобуса на зупинці поруч з музеєм. Потім ми повільно [___:2] до великих вхідних дверей. Нам треба було [___:3] всередину старої будівлі, але там була велика черга. Коли ми нарешті [___:4] в просторий хол, ми відразу побачили касу. Охоронець ввічливо [___:5] нас з натовпу і показав правильну дорогу. Ми [___:6] в першу залу і побачили там унікальні старі карти. Потім ми [___:7] в іншу кімнату. Через годину ми [___:8] з музею. На вулиці ми [___:9] в парк, щоб [___:10] свіжим повітрям. Ми [___:11] в машину і доїхали додому. Вечір [___:12] вдалим.`}
-  blanks={[{ index: 0, answer: `вийшли`, options: [`вийшли`, `увійшли`, `заїхали`, `підійшли`] }, { index: 1, answer: `підійшли`, options: [`підійшли`, `вийти`, `увійти`, `в'їхали`] }, { index: 2, answer: `увійти`, options: [`увійти`, `вийти`, `підійти`, `проїхати`] }, { index: 3, answer: `увійшли`, options: [`увійшли`, `вийшли`, `зайшли`, `прийшли`] }, { index: 4, answer: `вивів`, options: [`вивів`, `ввів`, `навів`, `завів`] }, { index: 5, answer: `увійшли`, options: [`увійшли`, `вийшли`, `перейшли`, `обійшли`] }, { index: 6, answer: `перейшли`, options: [`перейшли`, `вийшли`, `увійшли`, `заїхали`] }, { index: 7, answer: `вийшли`, options: [`вийшли`, `увійшли`, `відійшли`, `заїхали`] }, { index: 8, answer: `зайшли`, options: [`зайшли`, `вийшли`, `ввійшли`, `прийшли`] }, { index: 9, answer: `подихати`, options: [`подихати`, `вдихнути`, `видихнути`, `дихати`] }, { index: 10, answer: `сіли`, options: [`сіли`, `ввійшли`, `виїхали`, `прийшли`] }, { index: 11, answer: `вийшов`, options: [`вийшов`, `увійшов`, `зайшов`, `прийшов`] }]}
+<MatchUp
+  title="Directional Pairs (Concept: Semantic Inversion)"
+  pairs={JSON.parse(`[{"left": "Action", "right": "Opposite"}, {"left": "Ввійти в будинок", "right": "Вийти з будинку"}, {"left": "В'їхати в гараж", "right": "Виїхати з гаража"}, {"left": "Увійти в ліфт", "right": "Вийти з ліфта"}, {"left": "В'їхати на міст", "right": "З'їхати з мосту"}, {"left": "Ввійти в метро", "right": "Вийти з метро"}, {"left": "Вставити ключ", "right": "Вийняти ключ"}, {"left": "Вдихнути повітря", "right": "Видихнути повітря"}, {"left": "Включити світло", "right": "Виключити світло"}, {"left": "Влити воду", "right": "Вилити воду"}, {"left": "Вантажити в авто", "right": "Вивантажити з авто"}, {"left": "Вписати слово", "right": "Виписати слово"}]`)}
 />
 
-### Prefix Selection (Concept: Morphological Choice) [stage: production]
+### Entry or Exit? (Concept: Contextual Logic)
 
-<Select questions={[
-  {
-    question: `Кур'єр швидко [___] у будівлю, щоб доставити обід клієнту.`,
-    options: [
-      { text: `забіг`, correct: true },
-      { text: `вибіг`, correct: false },
-      { text: `перебіг`, correct: false }
-    ]
-  },  {
-    question: `Лікар [___] з кабінету і запросив наступного пацієнта на прийом.`,
-    options: [
-      { text: `вийшов`, correct: true },
-      { text: `увійшов`, correct: false },
-      { text: `відійшов`, correct: false }
-    ]
-  },  {
-    question: `Машина швидкої допомоги швидко [___] у двір центральної лікарні нашого міста.`,
-    options: [
-      { text: `в'їхала`, correct: true },
-      { text: `виїхала`, correct: false },
-      { text: `переїхала`, correct: false }
-    ]
-  },  {
-    question: `Вона мовчки [___] ключ у замок і відчинила старі двері.`,
-    options: [
-      { text: `вставила`, correct: true },
-      { text: `вийняла`, correct: false },
-      { text: `переставила`, correct: false }
-    ]
-  },  {
-    question: `Ми всі разом [___] з офісу рівно о шостій вечора сьогодні.`,
-    options: [
-      { text: `вийшли`, correct: true },
-      { text: `увійшли`, correct: false },
-      { text: `зайшли`, correct: false }
-    ]
-  },  {
-    question: `Хлопець випадково [___] всю воду зі склянки на зелені квіти.`,
-    options: [
-      { text: `вилив`, correct: true },
-      { text: `влив`, correct: false },
-      { text: `зазлив`, correct: false }
-    ]
-  },  {
-    question: `Вам потрібно уважно [___] у цю велику анкету своє прізвище.`,
-    options: [
-      { text: `вписати`, correct: true },
-      { text: `виписати`, correct: false },
-      { text: `переписати`, correct: false }
-    ]
-  },  {
-    question: `Коли ви нарешті [___] з поїзда, не забудьте свої речі.`,
-    options: [
-      { text: `виходите`, correct: true },
-      { text: `входите`, correct: false },
-      { text: `підходите`, correct: false }
-    ]
-  }
-]} />
+<FillIn
+  title="Entry or Exit? (Concept: Contextual Logic)"
+  items={JSON.parse(`[{"sentence": "Машина [___:1]їхала в гараж дуже повільно, щоб не вдарити стіну.", "answer": "в", "options": ["в", "ви", "за", "при"]}, {"sentence": "Коли ми нарешті [___:2]йшли з кімнати, we turned off the light.", "answer": "ви", "options": ["ви", "у", "за", "під"]}, {"sentence": "Треба [___:3]війти в будівлю через головний вхід поруч з площею.", "answer": "у", "options": ["у", "ви", "пере", "від"]}, {"sentence": "Поїзд швидко [___:4]їхав з тунелю, і ми побачили сонце.", "answer": "ви", "options": ["ви", "в", "за", "під"]}, {"sentence": "Студенти дружно [___:5]йшли в аудиторію і сіли за свої столи.", "answer": "уві", "options": ["уві", "ви", "за", "при"]}, {"sentence": "Хлопець [___:6]йшов з аптеки з великою коробкою ліків для мами.", "answer": "ви", "options": ["ви", "у", "за", "від"]}, {"sentence": "Ми [___:7]їхали на територію заводу о дев'ятій годині ранку.", "answer": "в", "options": ["в", "ви", "об", "про"]}, {"sentence": "Хто останній [___:8]йде з офісу сьогодні ввечері перед вихідними?", "answer": "ви", "options": ["ви", "у", "за", "пере"]}]`)}
+/>
 
-### Moving Borders (Concept: Cross-Linguistic Transfer) [stage: production]
+### The Prefix Master (Concept: Morphological Awareness)
 
-<Translate questions={[
-  {
-    source: `He walked out of the house.`,
-    options: [
-      { text: `Він вийшов з будинку`, correct: true },
-      { text: `Він увійшов у будинок`, correct: false },
-      { text: `Він зайшов у будинок`, correct: false }
-    ]
-  },  {
-    source: `The car drove into the garage.`,
-    options: [
-      { text: `Машина в'їхала в гараж`, correct: true },
-      { text: `Машина виїхала з гаража`, correct: false },
-      { text: `Машина заїхала в гараж`, correct: false }
-    ]
-  },  {
-    source: `Please, walk into the room.`,
-    options: [
-      { text: `Будь ласка, увійдіть у кімнату`, correct: true },
-      { text: `Будь ласка, вийдіть з кімнати`, correct: false },
-      { text: `Будь ласка, зайдіть у кімнату`, correct: false }
-    ]
-  },  {
-    source: `We are exiting the metro now.`,
-    options: [
-      { text: `Ми зараз виходимо з метро`, correct: true },
-      { text: `Ми зараз входимо в метро`, correct: false },
-      { text: `Ми зараз заходимо в метро`, correct: false }
-    ]
-  },  {
-    source: `She walked into the store.`,
-    options: [
-      { text: `Вона зайшла в магазин`, correct: true },
-      { text: `Вона вийшла з магазину`, correct: false },
-      { text: `Вона перейшла магазин`, correct: false }
-    ]
-  },  {
-    source: `The taxi drove out of the yard.`,
-    options: [
-      { text: `Таксі виїхало з двору`, correct: true },
-      { text: `Таксі в'їхало у двір`, correct: false },
-      { text: `Таксі заїхало у двір`, correct: false }
-    ]
-  },  {
-    source: `They entered the building slowly.`,
-    options: [
-      { text: `Вони ввійшли в будівлю повільно`, correct: true },
-      { text: `Вони вийшли з будівлі повільно`, correct: false },
-      { text: `Вони зайшли в будівлю повільно`, correct: false }
-    ]
-  },  {
-    source: `I want to exit the car.`,
-    options: [
-      { text: `Я хочу вийти з машини`, correct: true },
-      { text: `Я хочу ввійти в машину`, correct: false },
-      { text: `Я хочу заїхати в машину`, correct: false }
-    ]
-  }
-]} />
+<Quiz
+  title="The Prefix Master (Concept: Morphological Awareness)"
+  questions={JSON.parse(`[{"question": "Що саме суттєво змінюється в дієслові руху, коли ми додаємо до нього префікс \\\\\\\"в-\\\\\\\" або \\\\\\\"ви-\\\\\\\"?", "options": [{"text": "Воно стає доконаного виду і показує результат певної дії", "correct": true}, {"text": "Воно стає недоконаного виду і показує тривалий процес руху", "correct": false}, {"text": "Воно змінює своє відмінювання з першої на другу дієвідміну", "correct": false}, {"text": "Воно завжди стає дієсловом, яке вживається тільки в минулому часі", "correct": false}]}, {"question": "Який прийменник ми обов'язково використовуємо з дієсловом \\\\\\\"вийти\\\\\\\" для позначення місця?", "options": [{"text": "Прийменник \\\\\\\"з\\\\\\\" (або \\\\\\\"із\\\\\\\") разом з формами родового відмінка", "correct": true}, {"text": "Прийменник \\\\\\\"в\\\\\\\" (або \\\\\\\"у\\\\\\\") разом з формами знахідного відмінка", "correct": false}, {"text": "Прийменник \\\\\\\"на\\\\\\\" разом зі знахідним відмінком мети руху", "correct": false}, {"text": "Прийменник \\\\\\\"під\\\\\\\" разом з орудним відмінком місця перебування", "correct": false}]}, {"question": "Як правильно написати дієслово \\\\\\\"їздити\\\\\\\" з префіксом \\\\\\\"в-\\\\\\\", щоб показати дію в'їзду кудись?", "options": [{"text": "Треба обов'язково поставити апостроф перед йотованою літерою: \\\\\\\"в'їхати\\\\\\\"", "correct": true}, {"text": "Треба написати префікс разом з коренем без жодних знаків: \\\\\\\"вїхати\\\\\\\"", "correct": false}, {"text": "Треба написати цей префікс через дефіс для зручності: \\\\\\\"в-їхати\\\\\\\"", "correct": false}, {"text": "Треба подвоїти першу літеру слова для кращої вимови: \\\\\\\"ввїхати\\\\\\\"", "correct": false}]}, {"question": "Що означає відомий український фразеологізм \\\\\\\"вийти заміж\\\\\\\" у сучасному контексті?", "options": [{"text": "Це означає, що жінка офіційно створює нову сім'ю з чоловіком", "correct": true}, {"text": "Це означає, що жінка просто фізично вийшла зі свого будинку", "correct": false}, {"text": "Це означає, що жінка вирішила раптово купити собі нову сукню", "correct": false}, {"text": "Це означає, що жінка пішла на коротку прогулянку в парк", "correct": false}]}, {"question": "Який з цих прикладів найкраще показує рух всередину закритого простору?", "options": [{"text": "Увійти в аудиторію для складання іспиту в університеті", "correct": true}, {"text": "Вийти на балкон, щоб подивитися на гарні вечірні зорі", "correct": false}, {"text": "Підійти до великого столу в біблітеці для читання книг", "correct": false}, {"text": "Перейти дорогу на зелене світло великого світлофора", "correct": false}]}, {"question": "Як сказати граматично правильно: \\\\\\\"Машина ... в гараж о сьомій годині вечора\\\\\\\"?", "options": [{"text": "Машина в'їхала в гараж о сьомій годині вечора після роботи", "correct": true}, {"text": "Машина ввійшла в гараж о сьомій годині вечора після роботи", "correct": false}, {"text": "Машина прийшла в гараж о сьомій годині вечора після роботи", "correct": false}, {"text": "Машина виїхала в гараж о сьомій годині вечора після роботи", "correct": false}]}, {"question": "Чому ми кажемо \\\\\\\"увійти в метро\\\\\\\", а не \\\\\\\"уйти в метро\\\\\\\" в українській мові?", "options": [{"text": "Для милозвучності між двома приголосними додається голосна літера \\\\\\\"і\\\\\\\"", "correct": true}, {"text": "Тому що це зовсім інше дієслово з абсолютно іншим значенням", "correct": false}, {"text": "Тому що це офіційний стиль мовлення в київському метрополітену", "correct": false}, {"text": "Тому що літера \\\\\\\"у\\\\\\\" — це завжди окремий префікс для руху вниз", "correct": false}]}, {"question": "Що саме станеться з вами, якщо ви нарешті \\\\\\\"вийдете з маленької кімнати\\\\\\\"?", "options": [{"text": "Ви опинитеся ззовні цієї кімнати на коридорі або просто на вулиці", "correct": true}, {"text": "Ви все одно залишитеся всередині цієї закритої кімнати надовго", "correct": false}, {"text": "Ви просто підійдете трохи ближче до дверей цієї маленької кімнати", "correct": false}, {"text": "Ви будете стояти точно між великими дверима і стіною кімнати", "correct": false}]}]`)}
+/>
 
-### Directional Failures (Concept: Critical Proofreading) [stage: production]
+### Building Complex Routes (Concept: Syntax Integrity)
 
-<ErrorCorrection>
+<Unjumble
+  title="Building Complex Routes (Concept: Syntax Integrity)"
+  items={JSON.parse(`[{"jumbled": "він / вийшов / з / машини / і / увійшов / у / магазин", "answer": "Він вийшов з машини і увійшов у магазин"}, {"jumbled": "ми / в'їхали / на / територію / великої / лікарні / вчора", "answer": "Ми в'їхали на територію великої лікарні вчора"}, {"jumbled": "вона / швидко / вийшла / з / будинку / на / вулицю / вранці", "answer": "Вона швидко вийшла з будинку на вулицю вранці"}, {"jumbled": "автобус / в'їхав / у / центр / нашого / маленького / міста", "answer": "Автобус в’їхав у центр нашого маленького міста"}, {"jumbled": "ти / хочеш / увійти / в / цей / старий / замок / сьогодні", "answer": "Ти хочеш увійти в цей старий замок сьогодні"}, {"jumbled": "водій / виїхав / з / парковки / о / шостій / годині / вечора", "answer": "Водій виїхав з парковки о шостій годині вечора"}]`)}
+/>
+
+### Into vs. Out of (Concept: Directional Categorization)
+
+<GroupSort
+  title="Into vs. Out of (Concept: Directional Categorization)"
+  groups={JSON.parse(`{"Рух всередину": ["В'їхати на заправку", "Увійти в кабінет", "Внести стіл у кімнату", "Влити молоко в чай", "В'їхати в тунель", "Увійти в ліфт"], "Рух назовні": ["Виїхати з міста", "Винести сміття", "Вийти з офісу", "Вилити воду на землю", "Виїхати з тупика", "Вийти з вагона"]}`)}
+/>
+
+### Directional Logic (Concept: Concept Validation)
+
+<TrueFalse
+  title="Directional Logic (Concept: Concept Validation)"
+  items={JSON.parse(`[{"statement": "Префікс \\\\\\\"ви-\\\\\\\" завжди означає рух до певної далекої мети.", "isTrue": false, "explanation": "Він означає рух назовні або вихід з певного простору."}, {"statement": "Дієслово \\\\\\\"в'їхати\\\\\\\" обов'язково пишеться з апострофом після \\\\\\\"в\\\\\\\".", "isTrue": true, "explanation": "Правильно, це правило вживання апострофа після префіксів."}, {"statement": "Фразеологізм \\\\\\\"вийти з себе\\\\\\\" означає раптово втратити спокій.", "isTrue": true, "explanation": "Це одне з багатьох фігуральних значень префікса **ви-**."}, {"statement": "Після префікса \\\\\\\"в-\\\\\\\" we usually use the preposition \\\\\\\"v\\\\\\\".", "isTrue": true, "explanation": "Так, ця комбінація є найпоширенішою в українській мові."}, {"statement": "Рух \\\\\\\"зійти з розуму\\\\\\\" за значенням підходить до слова \\\\\\\"помудрішати\\\\\\\".", "isTrue": false, "explanation": "Ні, це означає \\\\\\\"втратити глузд\\\\\\\" або просто \\\\\\\"збожеволіти\\\\\\\"."}, {"statement": "\\\\\\\"Ввійти\\\\\\\" — це фонетична форма для дієслова \\\\\\\"йти\\\\\\\" з префіксом \\\\\\\"в\\\\\\\".", "isTrue": true, "explanation": "Звук \\\\\\\"і\\\\\\\" з'являється для полегшення вимови приголосних."}, {"statement": "Дієслово \\\\\\\"виїхати\\\\\\\" завжди вимагає після себе знахідного відмінка.", "isTrue": false, "explanation": "Ні, воно зазвичай вимагає Родового відмінка з прийменником **з**."}, {"statement": "Префікси в- та ви- завжди роблять дієслово доконаним за видом.", "isTrue": true, "explanation": "Так, префіксація є головним способом творення доконаного виду."}]`)}
+/>
+
+### The Museum Visit (Concept: Narrative Coherence)
+
+<Cloze
+  title="The Museum Visit (Concept: Narrative Coherence)"
+  passage={`Complete the narrative about a complex visit to the local museum by choosing the correct prefixed verbs.
+Ми приїхали в самий центр міста. Спочатку ми ___ з великого автобуса на зупинці поруч з музеєм. Потім ми повільно ___ до великих вхідних дверей. Нам треба було ___ всередину старої будівлі, але там була велика черга. Коли ми нарешті ___ в просторий хол, ми відразу побачили касу. Охоронець ввічливо ___ нас з натовпу і показав правильну дорогу. Ми ___ в першу залу і побачили там унікальні старі карти. Потім ми ___ в іншу кімнату. Через годину ми ___ з музею. На вулиці ми ___ в парк, щоб ___ свіжим повітрям. Ми ___ в машину і доїхали додому. Вечір ___ вдалим.`}
+  blanks={JSON.parse(`[{"answer": "вийшли", "options": ["вийшли", "увійшли", "заїхали", "підійшли"]}, {"answer": "підійшли", "options": ["підійшли", "вийти", "увійти", "в'їхали"]}, {"answer": "увійти", "options": ["увійти", "вийти", "підійти", "проїхати"]}, {"answer": "увійшли", "options": ["увійшли", "вийшли", "зайшли", "прийшли"]}, {"answer": "вивів", "options": ["вивів", "ввів", "навів", "завів"]}, {"answer": "увійшли", "options": ["увійшли", "вийшли", "перейшли", "обійшли"]}, {"answer": "перейшли", "options": ["перейшли", "вийшли", "увійшли", "заїхали"]}, {"answer": "вийшли", "options": ["вийшли", "увійшли", "відійшли", "заїхали"]}, {"answer": "зайшли", "options": ["зайшли", "вийшли", "ввійшли", "прийшли"]}, {"answer": "подихати", "options": ["подихати", "вдихнути", "видихнути", "дихати"]}, {"answer": "сіли", "options": ["сіли", "ввійшли", "виїхали", "прийшли"]}, {"answer": "вийшов", "options": ["вийшов", "увійшов", "зайшов", "прийшов"]}]`)}
+/>
+
+### Prefix Selection (Concept: Morphological Choice)
+
+<Select
+  title="Prefix Selection (Concept: Morphological Choice)"
+  questions={JSON.parse(`[{"question": "Кур'єр швидко [___] у будівлю, щоб доставити обід клієнту.", "options": [{"text": "забіг", "correct": true}, {"text": "вибіг", "correct": false}, {"text": "перебіг", "correct": false}]}, {"question": "Лікар [___] з кабінету і запросив наступного пацієнта на прийом.", "options": [{"text": "вийшов", "correct": true}, {"text": "увійшов", "correct": false}, {"text": "відійшов", "correct": false}]}, {"question": "Машина швидкої допомоги швидко [___] у двір центральної лікарні нашого міста.", "options": [{"text": "в'їхала", "correct": true}, {"text": "виїхала", "correct": false}, {"text": "переїхала", "correct": false}]}, {"question": "Вона мовчки [___] ключ у замок і відчинила старі двері.", "options": [{"text": "вставила", "correct": true}, {"text": "вийняла", "correct": false}, {"text": "переставила", "correct": false}]}, {"question": "Ми всі разом [___] з офісу рівно о шостій вечора сьогодні.", "options": [{"text": "вийшли", "correct": true}, {"text": "увійшли", "correct": false}, {"text": "зайшли", "correct": false}]}, {"question": "Хлопець випадково [___] всю воду зі склянки на зелені квіти.", "options": [{"text": "вилив", "correct": true}, {"text": "влив", "correct": false}, {"text": "зазлив", "correct": false}]}, {"question": "Вам потрібно уважно [___] у цю велику анкету своє прізвище.", "options": [{"text": "вписати", "correct": true}, {"text": "виписати", "correct": false}, {"text": "переписати", "correct": false}]}, {"question": "Коли ви нарешті [___] з поїзда, не забудьте свої речі.", "options": [{"text": "виходите", "correct": true}, {"text": "входите", "correct": false}, {"text": "підходите", "correct": false}]}]`)}
+/>
+
+### Directional Failures (Concept: Critical Proofreading)
+
+<ErrorCorrection title="Directional Failures (Concept: Critical Proofreading)">
   <ErrorCorrectionItem
-    sentence={`Я вийшов в кімнату.`}
+    sentence={`Я **вийшов** в кімнату.`}
     errorWord={`вийшов`}
     correctForm={`увійшов | зайшов`}
-    options={[`увійшов`, `вийшов`, `увійшов | зайшов`]}
+    options={[`увійшов`, `вийшов`]}
     explanation={`Entering a room typically uses the prefix \\\"уві-\\\" or \\\"за-\\\". \\\"Вийти\\\" means to exit.`}
   />
   <ErrorCorrectionItem
-    sentence={`Машина прийшла в гараж.`}
+    sentence={`Машина **прийшла** в гараж.`}
     errorWord={`прийшла`}
     correctForm={`приїхала | заїхала`}
-    options={[`заїхала`, `прийшла`, `приїхала | заїхала`]}
+    options={[`заїхала`, `прийшла`]}
     explanation={`Vehicles use the base \\\"їхати\\\" (wheels), while \\\"йти\\\" is for walking (feet).`}
   />
   <ErrorCorrectionItem
-    sentence={`Він перейшов від мене.`}
+    sentence={`Він **перейшов** від мене.`}
     errorWord={`перейшов`}
     correctForm={`відійшов`}
     options={[`відійшов`, `перейшов`]}
     explanation={`Prefix \\\"пере-\\\" means crossing. Moving away from someone requires \\\"від-\\\".`}
   />
   <ErrorCorrectionItem
-    sentence={`Ми приїхали з дому на роботу.`}
+    sentence={`Ми **приїхали** з дому на роботу.`}
     errorWord={`приїхали`}
     correctForm={`виїхали`}
     options={[`виїхали`, `приїхали`]}
     explanation={`Leaving a starting point requires the prefix \\\"ви-\\\". \\\"Приїхали\\\" focuses on the arrival.`}
   />
   <ErrorCorrectionItem
-    sentence={`Я обійшов вулицю вчора на перехресті.`}
+    sentence={`Я **обійшов** вулицю вчора на перехресті.`}
     errorWord={`обійшов`}
     correctForm={`перейшов`}
     options={[`перейшов`, `обійшов`]}
     explanation={`In the context of a crossing, we use \\\"перейшов.\\\" \\\"Обійшов\\\" means to circle around.`}
   />
   <ErrorCorrectionItem
-    sentence={`Поїзд під'їхав з Києва сьогодні вранці.`}
+    sentence={`Поїзд **під'їхав** з Києва сьогодні вранці.`}
     errorWord={`під'їхав`}
     correctForm={`приїхав`}
     options={[`приїхав`, `під'їхав`]}
     explanation={`Arrival from another city is \\\"приїхати.\\\" \\\"Під'їхати\\\" is for short-range approach.`}
   />
 </ErrorCorrection>
+
+### Motion Prefix Translation
+
+<Translate
+  title="Motion Prefix Translation"
+  questions={JSON.parse(`[{"source": "", "options": [{"text": "Машина в'їхала в гараж.", "correct": true}, {"text": "Машина виїхала в гараж.", "correct": false}, {"text": "Машина увійшла в гараж.", "correct": false}, {"text": "Машина заїхала в гараж.", "correct": false}]}, {"source": "", "options": [{"text": "Ми вийшли з будинку.", "correct": true}, {"text": "Ми увійшли з будинку.", "correct": false}, {"text": "Ми зайшли з будинку.", "correct": false}, {"text": "Ми прийшли з будинку.", "correct": false}]}, {"source": "", "options": [{"text": "Він увійшов у кімнату.", "correct": true}, {"text": "Він вийшов у кімнату.", "correct": false}, {"text": "Він зайшов у кімнату.", "correct": true}, {"text": "Він підійшов у кімнату.", "correct": false}]}, {"source": "", "options": [{"text": "Поїзд виїхав зі станції.", "correct": true}, {"text": "Поїзд в'їхав зі станції.", "correct": false}, {"text": "Поїзд вийшов зі станції.", "correct": false}, {"text": "Поїзд заїхав зі станції.", "correct": false}]}, {"source": "", "options": [{"text": "Вона вийняла ключ з сумки.", "correct": true}, {"text": "Вона вставила ключ з сумки.", "correct": false}, {"text": "Вона взяла ключ з сумки.", "correct": false}, {"text": "Вона витягла ключ з сумки.", "correct": true}]}, {"source": "", "options": [{"text": "Я вставив картку в банкомат.", "correct": true}, {"text": "Я вийняв картку в банкомат.", "correct": false}, {"text": "Я ввів картку в банкомат.", "correct": false}, {"text": "Я поклав картку в банкомат.", "correct": false}]}, {"source": "", "options": [{"text": "Вони вийшли на вулицю.", "correct": true}, {"text": "Вони увійшли на вулицю.", "correct": false}, {"text": "Вони зайшли на вулицю.", "correct": false}, {"text": "Вони прийшли на вулицю.", "correct": false}]}, {"source": "", "options": [{"text": "Автобус в'їхав у центр міста.", "correct": true}, {"text": "Автобус виїхав у центр міста.", "correct": false}, {"text": "Автобус заїхав у центр міста.", "correct": true}, {"text": "Автобус приїхав у центр міста.", "correct": false}]}, {"source": "", "options": [{"text": "Вона влила воду в склянку.", "correct": true}, {"text": "Вона вилила воду в склянку.", "correct": false}, {"text": "Вона налила воду в склянку.", "correct": true}, {"text": "Вона полила воду в склянку.", "correct": false}]}, {"source": "", "options": [{"text": "Він вилив молоко на підлогу.", "correct": true}, {"text": "Він влив молоко на підлогу.", "correct": false}, {"text": "Він налив молоко на підлогу.", "correct": false}, {"text": "Він розлив молоко на підлогу.", "correct": true}]}, {"source": "", "options": [{"text": "Ми увійшли в метро.", "correct": true}, {"text": "Ми вийшли в метро.", "correct": false}, {"text": "Ми зайшли в метро.", "correct": true}, {"text": "Ми прийшли в метро.", "correct": false}]}, {"source": "", "options": [{"text": "Водій виїхав з парковки.", "correct": true}, {"text": "Водій в'їхав з парковки.", "correct": false}, {"text": "Водій від'їхав з парковки.", "correct": true}, {"text": "Водій приїхав з парковки.", "correct": false}]}]`)}
+/>
+
 ## 📚 Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 | --- | --- | --- | --- | --- | --- |
-| 'їхати |  |  | verb | - |  |
-| -їхати |  |  | verb | - |  |
-| апострофа |  |  | noun | ч |  |
-| аудиторія |  |  | noun | ж |  |
-| ближче |  |  | adv | - |  |
-| біблітець |  |  | noun | ж |  |
-| в'їхати |  |  | verb | - |  |
-| вагон |  |  | noun | ч |  |
-| вантажити |  |  | verb | - |  |
-| вви |  |  | other | - |  |
-| ввійти |  |  | verb | - |  |
-| ввїхати |  |  | verb | - |  |
-| вдарити |  |  | verb | - |  |
-| вдихнути |  |  | verb | - |  |
-| вечірній |  |  | adj | - |  |
-| вживатися |  |  | verb | - |  |
-| вивантажити |  |  | verb | - |  |
-| видихнути |  |  | verb | - |  |
-| вийняти |  |  | verb | - |  |
-| виключити |  |  | verb | - |  |
-| вилити |  |  | verb | - |  |
-| вимова |  |  | noun | ж |  |
-| винести |  |  | verb | - |  |
-| включити |  |  | verb | - |  |
-| влити |  |  | verb | - |  |
-| внести |  |  | verb | - |  |
-| вниз |  |  | adv | - |  |
-| вписати |  |  | verb | - |  |
-| всередину |  |  | prep | - |  |
-| всередині |  |  | prep | - |  |
-| вставити |  |  | verb | - |  |
-| відмінювання |  |  | noun | с |  |
-| відійти |  |  | verb | ч |  |
-| граматично |  |  | adv | - |  |
-| дефіс |  |  | noun | ч |  |
-| додаватися |  |  | verb | - |  |
-| дружно |  |  | adv | - |  |
-| дієвідміна |  |  | noun | ж |  |
-| з'їхати |  |  | verb | - |  |
-| замка |  |  | noun | ч |  |
-| заміж |  |  | adv | - |  |
-| заправка |  |  | noun | ж |  |
-| заїхати |  |  | verb | ж |  |
-| ззовні |  |  | prep | - |  |
-| зоря |  |  | noun | ж |  |
-| зручність |  |  | noun | ж |  |
-| йотований |  |  | adj | ж |  |
-| кабінет |  |  | noun | ч |  |
-| коридор |  |  | noun | ч |  |
-| кудись |  |  | adv | - |  |
-| літера |  |  | noun | ж |  |
-| метрополітен |  |  | noun | ч |  |
-| милозвучність |  |  | noun | ж |  |
-| надовго |  |  | adv | - |  |
-| назовні |  |  | adv | - |  |
-| обійти |  |  | verb | ч |  |
-| опинитися |  |  | verb | - |  |
-| офіційно |  |  | adv | - |  |
-| парковка |  |  | noun | ж |  |
-| перебування |  |  | noun | с |  |
-| перейти |  |  | verb | - |  |
-| подвоїти |  |  | verb | - |  |
-| приголосний |  |  | noun | ч |  |
-| простір |  |  | noun | ч |  |
-| під'їхати |  |  | verb | - |  |
-| раптово |  |  | adv | - |  |
-| складання |  |  | noun | с |  |
-| сміття |  |  | noun | с |  |
-| створювати |  |  | verb | - |  |
-| стиль |  |  | noun | ч |  |
-| суттєво |  |  | adv | - |  |
-| територія |  |  | noun | ж |  |
-| тунель |  |  | noun | ч |  |
-| тупик |  |  | noun | ч |  |
-| уві |  |  | other | - |  |
-| уйти |  |  | verb | - |  |
-| фразеологізм |  |  | noun | ч |  |
-| фізично |  |  | adv | - |  |
+| барист | bɐˈrɪst | barista (typo for бариста?) | noun | ч |  |
+| в' | v | in (prefix/preposition) | other |  |  |
+| в'їхати | ˈvjixɐte | to drive in (perf) | verb |  |  |
+| вагон | vɐˈhɔn | wagon; carriage | noun | ч |  |
+| ввійти | vːijˈtɪ | to enter (perf) | verb |  |  |
+| вивантажувати | vɪvɐnˈtɑʒuʋɐte | to unload | verb |  |  |
+| виїхати | ˈvɪjixɐte | to drive out (perf) | verb |  |  |
+| вмитися | ˈvmɪtɪsʲɐ | to wash face (perf) | verb | ч |  |
+| ворота | voˈrɔtɐ | gate | noun | ч |  |
+| візит | vʲiˈzɪt | visit | noun | ч |  |
+| глибокий | hlɪˈbɔkɪj | deep | adj | ж |  |
+| ескалатор | eskɐˈlɑtor | escalator | noun | ч |  |
+| закінчитися | zɐˈkʲint͡ʃɪtɪsʲɐ | to end (perf) | verb |  |  |
+| змокнути | zmɔkˈnute | to get wet (perf) | verb |  |  |
+| золотий | zoloˈtɪj | golden | adj |  |  |
+| зупинок | zuˈpɪnok | stops (gen pl) | noun | ж |  |
+| лате | lɑˈtɛ | latte | noun | с |  |
+| парковка | pɐrˈkɔu̯kɐ | parking | noun | ж |  |
+| піднятися | pidˈnʲɑtɪsʲɐ | to go up/rise (perf) | verb | ч |  |
+| спускатися | spusˈkɑtɪsʲɐ | to go down (imp) | verb | ч |  |
+| тротуар | trotuˈɑr | sidewalk | noun | ч |  |
+
+## 📋 Summary
+
+## Що ви вивчили
+
+У цьому модулі ви опанували базові префікси руху **В-** (into) та **ВИ-** (out).
+
+**Ключові префікси:**
+
+| Префікс | Значення | Приклад | Переклад |
+| :--- | :--- | :--- | :--- |
+| **В- / У-** | Into | **ввійти** | enter |
+| **ВИ-** | Out | **вийти** | exit |
+| **В'-** | Drive into | **в'їхати** | drive in |
+| **ВИ-** | Drive out | **виїхати** | drive out |
+
+**Система узгодження:**
+
+**Рух УСЕРЕДИНУ:**
+- В- + **в/на** + **Accusative**
+- Я **ввійшов** **у** кімнату.
+- Машина **в'їхала** **на** парковку.
+
+**Рух НАЗОВНІ:**
+- ВИ- + **з/із** + **Genitive**
+- Він **вийшов** **з** будинку.
+- Ми **виїхали** **з** міста.
+
+**В чи НА?**
+- **В/У** + Accusative → закриті простори (будинок, місто, ліс)
+- **НА** + Accusative → відкриті простори (вулиця, площа, парковка)
+
+**Aspect:**
+- Base verb = PROCESS (йти, їхати)
+- Prefixed verb = RESULT (ввійти, вийти)
+
+> 💡 **Remember**
+>
+> Prefix + preposition + case = triple confirmation of direction!
+> This makes Ukrainian very precise and efficient.
+
+Тепер ви можете описати складні рухи в місті українською! 🚗🚶
+
+---
+
+## Need More Practice?
+
+---
+
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes ви- and пере-](https://www.ukrainianlessons.com/lesson/81/) — Challenge listening (B1): prefixes
+> - [ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian + Prefixes при- and по-](https://www.ukrainianlessons.com/lesson/82/) — Challenge listening (B1): prefixes
+> - [ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes до- and під-](https://www.ukrainianlessons.com/lesson/83/) — Challenge listening (B1): prefixes
+> - [ULP 3-84 В банку – At the bank in Ukraine + Prefixes об- and від-](https://www.ukrainianlessons.com/lesson/84/) — Challenge listening (B1): prefixes
+> - [ULP 3-86 Знайомство з директором школи – Meeting the headmaster of the school in Ukraine + Prefixes в-, у-](https://www.ukrainianlessons.com/lesson/86/) — Challenge listening (B1): prefixes
+>
+> **📖 Articles:**
+> - [Prefixes of Motion Guide](https://www.ukrainianlessons.com/prefixes-of-motion/) — Systematic tables for beginners.
+> - [Ukrainian Lessons Podcast: Prefixes](https://www.ukrainianlessons.com/the-verbs-of-motion-with-prefixes/) — Audio examples and drills.
+>
+> **🌐 Websites:**
+> - [Visual Motion Verbs](https://www.education-ukrainian.com/motion-verbs) — Diagrams of prefixes to help with spatial memory.

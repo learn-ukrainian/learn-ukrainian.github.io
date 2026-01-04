@@ -124,7 +124,7 @@
       correct: true
     - text: For mom (benefit)
       correct: false
-    - text: With mom (accompaniment)
+    - text: With mom
       correct: false
     - text: About mom (topic)
       correct: false
@@ -152,9 +152,9 @@
     options:
     - text: Time (at 3 o'clock)
       correct: true
-    - text: Place (at the third)
+    - text: Place
       correct: false
-    - text: Person (about the third)
+    - text: Person
       correct: false
     - text: Duration (for 3 hours)
       correct: false
@@ -342,7 +342,7 @@
     explanation: 'False! "Про" takes accusative: про тебе, про книгу.'
   - statement: '"Через" can mean both "because of" and "through."'
     correct: true
-    explanation: Yes! Через дощ (because of rain), через парк (through the park).
+    explanation: Yes! Через дощ, через парк.
   - statement: '"Від" is used for receiving something from a person.'
     correct: true
     explanation: Correct! Лист від мами = a letter from mom.
@@ -416,7 +416,7 @@
       correct: false
     - text: Про дощ ми залишилися вдома.
       correct: false
-    explanation: "'Через' (because of) + Accusative 'дощ'."
+    explanation: "'Через' + Accusative 'дощ'."
   - source: A letter from mom.
     options:
     - text: Лист від мами.
@@ -427,7 +427,7 @@
       correct: false
     - text: Лист від мама.
       correct: false
-    explanation: "'Від' (from person) + Genitive 'мами'."
+    explanation: "'Від' + Genitive 'мами'."
   - source: Coffee with milk.
     options:
     - text: Кава з молоком.

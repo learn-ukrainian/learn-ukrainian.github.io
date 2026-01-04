@@ -23,12 +23,12 @@
 - type: fill-in
   title: Choose Свій or Його
   items:
-  - sentence: Він читає [___] книгу. (his own book)
+  - sentence: Він читає [___] книгу.
     answer: свою
     options:
     - свою
     - його
-  - sentence: Вона любить [___] маму. (her own mom)
+  - sentence: Вона любить [___] маму.
     answer: свою
     options:
     - свою
@@ -38,17 +38,17 @@
     options:
     - його
     - свого
-  - sentence: Вони живуть у [___] домі. (their own house)
+  - sentence: Вони живуть у [___] домі.
     answer: своєму
     options:
     - своєму
     - їхньому
-  - sentence: Марія взяла [___] сумку. (her own bag)
+  - sentence: Марія взяла [___] сумку.
     answer: свою
     options:
     - свою
     - її
-  - sentence: Він допоміг [___] сестрі. (his own sister)
+  - sentence: Він допоміг [___] сестрі.
     answer: своїй
     options:
     - своїй
@@ -58,7 +58,7 @@
     options:
     - її
     - своїх
-  - sentence: Вона говорить про [___] роботу. (her own work)
+  - sentence: Вона говорить про [___] роботу.
     answer: свою
     options:
     - свою
@@ -108,7 +108,7 @@
       correct: false
     - text: it declines like a regular non-possessive adjective
       correct: false
-  - question: Can the pronoun "свій" be used grammatically as part of the subject (nominative case) in a main clause?
+  - question: Can the pronoun "свій" be used grammatically as part of the subject in a main clause?
     options:
     - text: No, it usually refers to something the subject possesses
       correct: true
@@ -122,11 +122,11 @@
     options:
     - text: свою ( accusative feminine singular)
       correct: true
-    - text: своєї (genitive feminine singular)
+    - text: своєї
       correct: false
-    - text: своїй (dative feminine singular)
+    - text: своїй
       correct: false
-    - text: своєю (instrumental feminine singular)
+    - text: своєю
       correct: false
   - question: When using the first or second person, are both "мій" and "свій" generally considered acceptable in standard
       Ukrainian?
@@ -151,15 +151,13 @@
       correct: false
 - type: cloze
   title: Family Story
-  passage: 'Марія готує у [своїй:1] кухні. (her own) Її мама приїхала зі [своїм:2] чоловіком. (her own husband) Марія показала
-    [свою:3] квартиру. (her own) Батько говорив про [свою:4] роботу. (his own) Мама взяла [свою:5] сумку. (her own) Марія
-    слухала [своїх:6] батьків. (her own)
+  passage: 'Марія готує у [своїй:1] кухні. Її мама приїхала зі [своїм:2] чоловіком. Марія показала
+    [свою:3] квартиру. Батько говорив про [свою:4] роботу. Мама взяла [свою:5] сумку. Марія
+    слухала [своїх:6] батьків.
 
     ---
 
-    Мій брат розповів про [свій:1] день. (his own) Максим любить [свою:2] роботу. (his own) Ми цінуємо [свою:3] родину. (our
-    own) Ви бачите [свої:4] помилки. (your own) Вони шукають [свої:5] речі. (their own) Сестра миє [своє:6] обличчя. (her
-    own)'
+    Мій брат розповів про [свій:1] день. Максим любить [свою:2] роботу. Ми цінуємо [свою:3] родину. Ви бачите [свої:4] помилки. Вони шукають [свої:5] речі. Сестра миє [своє:6] обличчя.'
 - type: unjumble
   title: Possessive Sentences
   items:
@@ -337,12 +335,12 @@
 - type: fill-in
   title: Interview Story
   items:
-  - sentence: Петро надів [___] костюм. (his own)
+  - sentence: Петро надів [___] костюм.
     answer: свій
     options:
     - свій
     - його
-  - sentence: Він взяв [___] папку. (his own)
+  - sentence: Він взяв [___] папку.
     answer: свою
     options:
     - свою
@@ -352,40 +350,39 @@
     options:
     - його
     - свій
-  - sentence: Петро розповів про [___] роботу. (his own)
+  - sentence: Петро розповів про [___] роботу.
     answer: свою
     options:
     - свою
     - його
-  - sentence: Він показав [___] рекомендації. (his own)
+  - sentence: Він показав [___] рекомендації.
     answer: свої
     options:
     - свої
     - його
-  - sentence: Менеджер подивився на [___] колегу. (his own)
+  - sentence: Менеджер подивився на [___] колегу.
     answer: свого
     options:
     - свого
     - його
-  - sentence: Петро обійняв [___] дружину. (his own)
+  - sentence: Петро обійняв [___] дружину.
     answer: свою
     options:
     - свою
     - її
-  - sentence: Вони святкували [___] успіх. (their own)
+  - sentence: Вони святкували [___] успіх.
     answer: свій
     options:
     - свій
     - їхній
 - type: cloze
   title: Edge Cases
-  passage: 'Він попросив мене взяти [свою:1] книгу. (his own) Треба любити [свою:2] країну. (one''s own) Марія знає, що Петро
-    любить [свою:3] роботу. (his own) Добре мати [своє:4] житло. (one''s own) Вона хоче, щоб я прочитав [свою:5] статтю. (her
-    own) Він допоміг [своєму:6] братові. (his own)
+  passage: 'Він попросив мене взяти [свою:1] книгу. Треба любити [свою:2] країну. (one''s own) Марія знає, що Петро
+    любить [свою:3] роботу. Добре мати [своє:4] житло. (one''s own) Вона хоче, щоб я прочитав [свою:5] статтю. Він допоміг [своєму:6] братові.
 
     ---
 
-    Я бачу [свій:1] дім. (my own) Ти відкрив [своє:2] вікно. (your own) Ми знаємо [свої:3] цілі. (our own) Ви купили [свою:4]
-    машину. (your own) Вони чекають [своїх:5] друзів. (their own) Вона миє [свої:6] руки. (her own)
+    Я бачу [свій:1] дім. Ти відкрив [своє:2] вікно. Ми знаємо [свої:3] цілі. Ви купили [свою:4]
+    машину. Вони чекають [своїх:5] друзів. Вона миє [свої:6] руки.
 
     ---'

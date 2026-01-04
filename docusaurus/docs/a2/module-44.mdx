@@ -18,7 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 ## Warm-up
 
@@ -29,7 +29,6 @@ Ukrainian cuisine is famous for dishes like борщ, вареники, and го
 Food vocabulary is particularly important for language learners because eating is a daily activity that provides constant opportunities for practice. Whether you are shopping for groceries, ordering at a restaurant, or cooking at home with Ukrainian friends, these words will come up frequently.
 
 The cooking verbs in this module are especially useful because they use the imperative mood, which you will encounter in recipes and when receiving cooking instructions from native speakers.
-
 
 ---
 
@@ -247,6 +246,209 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 
 ---
 
+
+
+## 🎯 Activities
+
+### Kitchen Words
+
+<MatchUp
+  title="Kitchen Words"
+  pairs={JSON.parse(`[{"left": "- каструля", "right": "pot"}, {"left": "- сковорода", "right": "frying pan"}, {"left": "- духовка", "right": "oven"}, {"left": "- мікрохвильовка", "right": "microwave"}, {"left": "- холодильник", "right": "refrigerator"}, {"left": "- плита", "right": "stove"}, {"left": "- варити", "right": "to boil"}, {"left": "- смажити", "right": "to fry"}, {"left": "- пекти", "right": "to bake"}, {"left": "- тушкувати", "right": "to stew"}, {"left": "- нарізати", "right": "to chop"}, {"left": "- чайник", "right": "kettle"}]`)}
+/>
+
+### Cooking Methods
+
+<FillIn
+  title="Cooking Methods"
+  items={JSON.parse(`[{"sentence": "Я [___] картоплю 20 хвилин. (boil)", "answer": "варю", "options": ["варю", "смажу", "печу", "тушкую"]}, {"sentence": "Вона [___] м'ясо на сковороді. (fries)", "answer": "смажить", "options": ["варить", "смажить", "пече", "тушкує"]}, {"sentence": "Він [___] хліб у духовці. (bakes)", "answer": "пече", "options": ["варить", "смажить", "пече", "тушкує"]}, {"sentence": "Я [___] цибулю на дошці. (chop)", "answer": "нарізаю", "options": ["варю", "смажу", "нарізаю", "тушкую"]}, {"sentence": "Суп у [___]. (pot)", "answer": "каструлі", "options": ["каструлі", "сковороді", "духовці", "чайнику"]}, {"sentence": "Смаж м'ясо на [___]. (pan)", "answer": "сковороді", "options": ["каструлі", "сковороді", "духовці", "чайнику"]}, {"sentence": "Пиріг у [___]. (oven)", "answer": "духовці", "options": ["каструлі", "сковороді", "духовці", "холодильнику"]}, {"sentence": "Молоко в [___]. (fridge)", "answer": "холодильнику", "options": ["каструлі", "духовці", "холодильнику", "плиті"]}]`)}
+/>
+
+### Recipe Story
+
+<Cloze
+  title="Recipe Story"
+  passage={`Бабуся ___ борщ. (cooks)
+Спочатку ___ овочі. (chop)
+Потім ___ цибулю. (fry)
+___ все в каструлю. (put)
+___ борщ дві години. (stew)
+___ пампушки в духовці. (bake)
+Треба ___ воду для чаю. (boil)
+Вже готовий ___. (lunch)
+Бабуся каже: \"___!\" (Bon appetit)
+Борщ налили у ___. (pot/plate)
+Це була чудова ___. (dinner)
+Марія каже: \"___, бабусю!\" (Thank you)`}
+  blanks={JSON.parse(`[{"answer": "готує", "options": ["готує", "нарізає", "смажить"]}, {"answer": "наріж", "options": ["наріж", "вари", "смаж"]}, {"answer": "смаж", "options": ["смаж", "вари", "наріж"]}, {"answer": "Поклади", "options": ["Поклади", "Наріж", "Смаж"]}, {"answer": "Тушкуй", "options": ["Тушкуй", "Вари", "Смаж"]}, {"answer": "Печи", "options": ["Печи", "Вари", "Смаж"]}, {"answer": "закип'яти", "options": ["закип'яти", "заморози", "випий"]}, {"answer": "обід", "options": ["обід", "сніданок", "вечір"]}, {"answer": "Смачного", "options": ["Смачного", "Привіт", "Бувай"]}, {"answer": "тарілку", "options": ["тарілку", "сковороду", "духовку"]}, {"answer": "вечеря", "options": ["вечеря", "кухня", "кімната"]}, {"answer": "Дякую", "options": ["Дякую", "Будь ласка", "Прошу"]}]`)}
+/>
+
+### Food & Cooking
+
+<Quiz
+  title="Food & Cooking"
+  questions={JSON.parse(`[{"question": "What is the Ukrainian verb for \\\"To boil\\\", as in \\\"boil water\\\" (**Варити**)?", "options": [{"text": "Варити", "correct": true}, {"text": "Пекти", "correct": false}, {"text": "Смажити", "correct": false}, {"text": "Різати", "correct": false}]}, {"question": "Which imperative command means \\\"Slice!\\\" or \\\"Cut!\\\" in the kitchen (**Наріж**)?", "options": [{"text": "Наріж", "correct": true}, {"text": "Вари", "correct": false}, {"text": "Смаж", "correct": false}, {"text": "Їж", "correct": false}]}, {"question": "Which verb form means \\\"Fry!\\\" as a specific command (**Смаж**)?", "options": [{"text": "Смаж", "correct": true}, {"text": "Вари", "correct": false}, {"text": "Печи", "correct": false}, {"text": "Пий", "correct": false}]}, {"question": "Can you identify the imperative command form for the verb \\\"Put!\\\" (**Поклади**)?", "options": [{"text": "Поклади", "correct": true}, {"text": "Забери", "correct": false}, {"text": "Наріж", "correct": false}, {"text": "Мий", "correct": false}]}, {"question": "Which command tells someone to \\\"Stew\\\" or \\\"Simmer\\\" correctly (**Тушкуй**)?", "options": [{"text": "Тушкуй", "correct": true}, {"text": "Вари", "correct": false}, {"text": "Смаж", "correct": false}, {"text": "Печи", "correct": false}]}, {"question": "Which word refers to the morning meal (**Сніданок**) in Ukraine?", "options": [{"text": "Сніданок", "correct": true}, {"text": "Обід", "correct": false}, {"text": "Вечеря", "correct": false}, {"text": "Перекус", "correct": false}]}, {"question": "What phrase do you politely say before a meal starts (**Смачного**)?", "options": [{"text": "Смачного", "correct": true}, {"text": "Будь ласка", "correct": false}, {"text": "Дякую", "correct": false}, {"text": "Привіт", "correct": false}]}, {"question": "Which word translates to \\\"Dinner\\\" (**Вечеря**) in Ukrainian context?", "options": [{"text": "Вечеря", "correct": true}, {"text": "Сніданок", "correct": false}, {"text": "Обід", "correct": false}, {"text": "Їжа", "correct": false}]}]`)}
+/>
+
+### Cooking Sentences
+
+<Unjumble
+  title="Cooking Sentences"
+  items={JSON.parse(`[{"jumbled": "Ти / маєш / покласти / свіжу / картоплю / у / велику / каструлю", "answer": "Ти маєш покласти свіжу картоплю у велику каструлю"}, {"jumbled": "Ми / будемо / смажити / смачне / м'ясо / на / великій / сковороді", "answer": "Ми будемо смажити смачне м'ясо на великій сковороді"}, {"jumbled": "Бабуся / приготувала / дуже / смачний / та / гарячий / український / борщ", "answer": "Бабуся приготувала дуже смачний та гарячий український борщ"}, {"jumbled": "Ми / поставили / солодкий / яблучний / пиріг / у / гарячу / духовку", "answer": "Ми поставили солодкий яблучний пиріг у гарячу духовку"}, {"jumbled": "Цей / овочевий / суп / на / жаль / вийшов / занадто / солоний", "answer": "Цей овочевий суп на жаль вийшов занадто солоний"}, {"jumbled": "Будь / ласка / закип'яти / чисту / воду / в / чайнику / для / чаю", "answer": "Будь ласка закип'яти чисту воду в чайнику для чаю"}, {"jumbled": "Цей / чорний / хліб / дуже / свіжий / та / смачний / до / борщу", "answer": "Цей чорний хліб дуже свіжий та смачний до борщу"}, {"jumbled": "Я / сьогодні / ввечері / готую / святкову / вечерю / для / родини", "answer": "Я сьогодні ввечері готую святкову вечерю для родини"}]`)}
+/>
+
+### Kitchen Mistakes
+
+<ErrorCorrection title="Kitchen Mistakes">
+  <ErrorCorrectionItem
+    sentence={`Смаж м'ясо в **каструлі**.`}
+    errorWord={`каструлі`}
+    correctForm={`сковороді`}
+    options={[`сковороді`, `каструлі`]}
+    explanation={`We fry (смажити) in a pan (сковорода), not a pot.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`**Вари** хліб у духовці.`}
+    errorWord={`Вари`}
+    correctForm={`Печи`}
+    options={[`Печи`, `Вари`]}
+    explanation={`We bake (пекти) bread in the oven, not boil.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Суп дуже **солодкий**.`}
+    errorWord={`солодкий`}
+    correctForm={`солоний`}
+    options={[`солоний`, `солодкий`]}
+    explanation={`Soup is typically described as salty (солоний), not sweet.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`**Обід** — це ранкова їжа.`}
+    errorWord={`Обід`}
+    correctForm={`Сніданок`}
+    options={[`Сніданок`, `Обід`]}
+    explanation={`Morning meal = сніданок. Обід = lunch.`}
+  />
+  <ErrorCorrectionItem
+    sentence={`Поклади молоко в **духовку**.`}
+    errorWord={`духовку`}
+    correctForm={`холодильник`}
+    options={[`холодильник`, `духовку`]}
+    explanation={`Milk goes in the refrigerator, not the oven!`}
+  />
+  <ErrorCorrectionItem
+    sentence={`**Тушкуй** воду в чайнику.`}
+    errorWord={`Тушкуй`}
+    correctForm={`Закип'яти`}
+    options={[`Закип'яти`, `Тушкуй`]}
+    explanation={`We boil (кип'ятити) water, not stew it.`}
+  />
+</ErrorCorrection>
+
+### Meals & Times
+
+<MatchUp
+  title="Meals & Times"
+  pairs={JSON.parse(`[{"left": "- сніданок", "right": "7-9 ранку"}, {"left": "- обід", "right": "12-14"}, {"left": "- вечеря", "right": "18-20"}, {"left": "- перекус", "right": "будь-коли"}, {"left": "- борщ", "right": "на обід"}, {"left": "- каша", "right": "на сніданок"}, {"left": "- бутерброди", "right": "на вечерю"}, {"left": "- компот", "right": "після їжі"}]`)}
+/>
+
+### Kitchen Categories
+
+<GroupSort
+  title="Kitchen Categories"
+  groups={JSON.parse(`{"Equipment": ["каструля", "сковорода", "духовка", "холодильник", "плита", "чайник"], "Cooking Methods": ["варити", "смажити", "пекти", "тушкувати", "нарізати", "запікати"], "Tastes": ["солодкий", "солоний", "кислий", "гострий"]}`)}
+/>
+
+### Kitchen Facts
+
+<TrueFalse
+  title="Kitchen Facts"
+  items={JSON.parse(`[{"statement": "\\\"Каструля\\\" = pot.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Сковорода\\\" = frying pan.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Варити\\\" = to bake.", "isTrue": false, "explanation": ""}, {"statement": "\\\"Варити\\\" = to boil.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Сніданок\\\" = breakfast.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Вечеря\\\" = lunch.", "isTrue": false, "explanation": ""}, {"statement": "\\\"Вечеря\\\" = dinner.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Солодкий\\\" = sweet.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Солоний\\\" = sweet.", "isTrue": false, "explanation": ""}, {"statement": "\\\"Гострий\\\" = spicy.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Духовка\\\" = oven.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Обід\\\" = dinner.", "isTrue": false, "explanation": ""}]`)}
+/>
+
+### Food Words
+
+<Translate
+  title="Food Words"
+  questions={JSON.parse(`[{"source": "Pot", "options": [{"text": "каструля", "correct": true}, {"text": "сковорода", "correct": false}, {"text": "тарілка", "correct": false}]}, {"source": "To fry", "options": [{"text": "смажити", "correct": true}, {"text": "варити", "correct": false}, {"text": "пекти", "correct": false}]}, {"source": "Breakfast", "options": [{"text": "сніданок", "correct": true}, {"text": "обід", "correct": false}, {"text": "вечеря", "correct": false}]}, {"source": "Delicious", "options": [{"text": "смачний", "correct": true}, {"text": "солоний", "correct": false}, {"text": "гострий", "correct": false}]}, {"source": "Refrigerator", "options": [{"text": "холодильник", "correct": true}, {"text": "духовка", "correct": false}, {"text": "плита", "correct": false}]}, {"source": "Spicy", "options": [{"text": "гострий", "correct": true}, {"text": "солодкий", "correct": false}, {"text": "кислий", "correct": false}]}, {"source": "To chop", "options": [{"text": "нарізати", "correct": true}, {"text": "смажити", "correct": false}, {"text": "варити", "correct": false}]}, {"source": "Oven", "options": [{"text": "духовка", "correct": true}, {"text": "плита", "correct": false}, {"text": "холодильник", "correct": false}]}]`)}
+/>
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| борошно | boˈrɔʃno | flour | noun | с |  |
+| бутерброд | buterˈbrɔd | sandwich | noun | ч |  |
+| вара | ˈvɑrɐ | cooking/brew (typo?) | noun | ч |  |
+| варати | vɐˈrɑte | to cook (typo варити) | verb |  |  |
+| варитися | vɐˈrɪtɪsʲɐ | to be cooked (imp) | verb |  |  |
+| визнати | ˈvɪznɐte | to admit/recognize (perf) | verb | ж |  |
+| виймати | vɪjˈmɑte | to take out (imp) | verb |  |  |
+| виміс | vɪˈmʲis | kneading (typo вимісити?) | noun | ч |  |
+| виріжти | vɪˈrʲiʒtɪ | cut out (imperative typo) | verb |  |  |
+| внучка | ˈvnut͡ʃkɐ | granddaughter | noun | ж |  |
+| вогонь | voˈhɔnʲ | fire | noun | ч |  |
+| гладкий | hlɐdˈkɪj | smooth/fat | adj | ч |  |
+| голубець | holuˈbɛt͡sʲ | cabbage roll | noun | ч |  |
+| гіркий | hʲirˈkɪj | bitter | adj | ч |  |
+| духовець | duxoˈvɛt͡sʲ | oven (typo духовка?) | noun | ж |  |
+| духовка | duˈxɔu̯kɐ | oven | noun | ж |  |
+| еластичний | elɐsˈtɪt͡ʃnɪj | elastic | adj | ч |  |
+| задоволення | zɐdoˈvɔlenʲːɐ | pleasure | noun | с |  |
+| закуска | zɐˈkuskɐ | appetizer | noun | ж |  |
+| замішувати | zɐˈmʲiʃuʋɐte | to knead/mix (imp) | verb |  |  |
+| запікати | zɐpiˈkɑte | to bake (imp) | verb |  |  |
+| зліп | zlʲip | mold (typo зліпити?) | noun | ч |  |
+| змішати | zmʲiˈʃɑte | to mix (perf) | verb |  |  |
+| золотистий | zoloˈtɪstɪj | golden | adj | ч |  |
+| каструль | kɐsˈtrulʲ | pot (gen pl? typo каструля) | noun | ж |  |
+| кружечка | kruˈʒɛt͡ʃkɐ | mug (diminutive) | noun | ж |  |
+| кубик | ˈkubɪk | cube | noun | ж |  |
+| кухарка | kuˈxɑrkɐ | cook (female) | noun | ж |  |
+| легший | ˈlɛhʃɪj | easier/lighter | adj | ж |  |
+| ліпити | lʲiˈpɪte | to mold/sculpt (imp) | verb |  |  |
+| морквина | morkˈvɪnɐ | carrot | noun | ж |  |
+| наріж | nɐˈrʲiʒ | cut (imperative) | noun | ч |  |
+| наріжти | nɐˈrʲiʒtɪ | cut (imperative typo) | verb | ч |  |
+| наріжчя | nɐˈrʲiʒt͡ʃːɐ | cornerstone? | noun | ч |  |
+| нарізати | nɐˈrʲizɐte | to cut/slice | verb |  |  |
+| нарізьти | nɐˈrʲizʲtɪ | cut (typo) | verb |  |  |
+| насичений | nɐˈsɪt͡ʃenɪj | saturated/rich | adj | ч |  |
+| начинка | ˈnɑt͡ʃɪnkɐ | filling | noun | ж |  |
+| нематеріальний | nemɐterʲiˈɑlʲnɪj | intangible | adj | ж |  |
+| непросто | neˈprɔsto | not easy | adv |  |  |
+| обладнання | obˈlɑdnɐnʲːɐ | equipment | noun | с |  |
+| пе | pɛ | PE? | verb |  |  |
+| пекти | pekˈtɪ | to bake (imp) | noun | ч |  |
+| передасти | peredɐˈstɪ | to pass/transmit (old form typo?) | verb |  |  |
+| перекус | pereˈkus | snack | noun | ч |  |
+| перше | ˈpɛrʃe | first course | adv |  |  |
+| печив | peˈt͡ʃɪu̯ | cookies (gen pl?) | noun | с |  |
+| пиріг | pɪˈrʲih | pie | noun | ч |  |
+| подавати | podɐˈʋɑte | to serve (imp) | verb |  |  |
+| постати | poˈstɑte | to arise/appear (perf) | verb | ч |  |
+| прийом | prɪˈjɔm | reception/meal | noun | ч |  |
+| розкачати | rozkɐˈt͡ʃɑte | to roll out (dough) (perf) | verb |  |  |
+| розпочніти | rozpot͡ʃˈnʲite | to start (imperative typo?) | verb |  |  |
+| розігріти | roziˈhrʲite | to warm up (perf) | verb |  |  |
+| смаж | smɑʒ | fry (imperative) | noun | ч |  |
+| смажити | ˈsmɑʒɪte | to fry (imp) | verb |  |  |
+| смазати | ˈsmɑzɐte | to grease (perf/surzhyk?) | verb |  |  |
+| смати | ˈsmɑte | fry (typo?) | verb |  |  |
+| сметана | smeˈtɑnɐ | sour cream | noun | ж |  |
+| солоний | soˈlɔnɪj | salty | adj | ч |  |
+| спливати | splɪˈʋɑte | to flow away/expire | verb |  |  |
+| техніка | ˈtɛxnʲikɐ | technique/appliances | noun | ж |  |
+| тушкування | tuʃkuˈʋɑnʲːɐ | stewing | noun | с |  |
+| тушкувати | tuʃkuˈʋɑte | to stew (imp) | verb |  |  |
+| тісто | ˈtʲisto | dough | noun | с |  |
+| увімкти | uˈvʲimktɪ | to turn on (typo увімкнути) | verb |  |  |
+| уміти | uˈmʲite | to be able to | verb |  |  |
+| чайник | ˈt͡ʃɑjnɪk | kettle | noun | ч |  |
+| часник | t͡ʃɐsˈnɪk | garlic | noun | ч |  |
+| честь | t͡ʃɛsʲtʲ | honor | noun | ж |  |
+| юнеско | juˈnɛsko | UNESCO | name | ж |  |
+| інструкція | inˈstrukt͡sʲijɐ | instruction | noun | ж |  |
+
 ## 📋 Summary
 
 **Обладнання:**
@@ -283,8 +485,6 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 
 ---
 
-
-
 > 💡 **Смачна культура**
 >
 > «Борщ — це не просто їжа, це українська традиція!»
@@ -301,401 +501,20 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 >
 > Українці кажуть: «Їж, пий, та нас не забувай!» Смачного!
 
-:::info[🔗 External Resources]
-
-**YouTube:** [20 Ukrainian Food Words You Need To Know ...](https://www.youtube.com/watch?v=fN0BIF-iejo) — QUICK and EASY food vocabulary
-
-**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
-
-**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-:::
-
-
-## 🎯 Activities
-
-### Kitchen Words
-
-<MatchUp pairs={[
-  { left: `каструля`, right: `pot` },
-  { left: `сковорода`, right: `frying pan` },
-  { left: `духовка`, right: `oven` },
-  { left: `мікрохвильовка`, right: `microwave` },
-  { left: `холодильник`, right: `refrigerator` },
-  { left: `плита`, right: `stove` },
-  { left: `варити`, right: `to boil` },
-  { left: `смажити`, right: `to fry` },
-  { left: `пекти`, right: `to bake` },
-  { left: `тушкувати`, right: `to stew` },
-  { left: `нарізати`, right: `to chop` },
-  { left: `чайник`, right: `kettle` }
-]} />
-
-### Cooking Methods
-
-<FillIn items={[
-  {
-    sentence: `Я [___] картоплю 20 хвилин. (boil)`,
-    answer: `варю`,
-    options: [`варю`, `смажу`, `печу`, `тушкую`]
-  },  {
-    sentence: `Вона [___] м'ясо на сковороді. (fries)`,
-    answer: `смажить`,
-    options: [`варить`, `смажить`, `пече`, `тушкує`]
-  },  {
-    sentence: `Він [___] хліб у духовці. (bakes)`,
-    answer: `пече`,
-    options: [`варить`, `смажить`, `пече`, `тушкує`]
-  },  {
-    sentence: `Я [___] цибулю на дошці. (chop)`,
-    answer: `нарізаю`,
-    options: [`варю`, `смажу`, `нарізаю`, `тушкую`]
-  },  {
-    sentence: `Суп у [___]. (pot)`,
-    answer: `каструлі`,
-    options: [`каструлі`, `сковороді`, `духовці`, `чайнику`]
-  },  {
-    sentence: `Смаж м'ясо на [___]. (pan)`,
-    answer: `сковороді`,
-    options: [`каструлі`, `сковороді`, `духовці`, `чайнику`]
-  },  {
-    sentence: `Пиріг у [___]. (oven)`,
-    answer: `духовці`,
-    options: [`каструлі`, `сковороді`, `духовці`, `холодильнику`]
-  },  {
-    sentence: `Молоко в [___]. (fridge)`,
-    answer: `холодильнику`,
-    options: [`каструлі`, `духовці`, `холодильнику`, `плиті`]
-  }
-]} />
-
-### Recipe Story
-
-<Cloze
-  passage={`Бабуся [___:1] борщ. (cooks)
-Спочатку [___:2] овочі. (chop)
-Потім [___:3] цибулю. (fry)
-[___:4] все в каструлю. (put)
-[___:5] борщ дві години. (stew)
-[___:6] пампушки в духовці. (bake)
-Треба [___:7] воду для чаю. (boil)
-Вже готовий [___:8]. (lunch)
-Бабуся каже: \"[___:9]!\" (Bon appetit)
-Борщ налили у [___:10]. (pot/plate)
-Це була чудова [___:11]. (dinner)
-Марія каже: \"[___:12], бабусю!\" (Thank you)`}
-  blanks={[{ index: 0, answer: `готує`, options: [`готує`, `нарізає`, `смажить`] }, { index: 1, answer: `наріж`, options: [`наріж`, `вари`, `смаж`] }, { index: 2, answer: `смаж`, options: [`смаж`, `вари`, `наріж`] }, { index: 3, answer: `Поклади`, options: [`Поклади`, `Наріж`, `Смаж`] }, { index: 4, answer: `Тушкуй`, options: [`Тушкуй`, `Вари`, `Смаж`] }, { index: 5, answer: `Печи`, options: [`Печи`, `Вари`, `Смаж`] }, { index: 6, answer: `закип'яти`, options: [`закип'яти`, `заморози`, `випий`] }, { index: 7, answer: `обід`, options: [`обід`, `сніданок`, `вечір`] }, { index: 8, answer: `Смачного`, options: [`Смачного`, `Привіт`, `Бувай`] }, { index: 9, answer: `тарілку`, options: [`тарілку`, `сковороду`, `духовку`] }, { index: 10, answer: `вечеря`, options: [`вечеря`, `кухня`, `кімната`] }, { index: 11, answer: `Дякую`, options: [`Дякую`, `Будь ласка`, `Прошу`] }]}
-/>
-
-### Food & Cooking
-
-<Quiz questions={[
-  {
-    question: `What is the Ukrainian verb for \"To boil\", as in \"boil water\" (**Варити**)?`,
-    options: [
-      { text: `Варити`, correct: true },
-      { text: `Пекти`, correct: false },
-      { text: `Смажити`, correct: false },
-      { text: `Різати`, correct: false }
-    ]
-  },  {
-    question: `Which imperative command means \"Slice!\" or \"Cut!\" in the kitchen (**Наріж**)?`,
-    options: [
-      { text: `Наріж`, correct: true },
-      { text: `Вари`, correct: false },
-      { text: `Смаж`, correct: false },
-      { text: `Їж`, correct: false }
-    ]
-  },  {
-    question: `Which verb form means \"Fry!\" as a specific command (**Смаж**)?`,
-    options: [
-      { text: `Смаж`, correct: true },
-      { text: `Вари`, correct: false },
-      { text: `Печи`, correct: false },
-      { text: `Пий`, correct: false }
-    ]
-  },  {
-    question: `Can you identify the imperative command form for the verb \"Put!\" (**Поклади**)?`,
-    options: [
-      { text: `Поклади`, correct: true },
-      { text: `Забери`, correct: false },
-      { text: `Наріж`, correct: false },
-      { text: `Мий`, correct: false }
-    ]
-  },  {
-    question: `Which command tells someone to \"Stew\" or \"Simmer\" correctly (**Тушкуй**)?`,
-    options: [
-      { text: `Тушкуй`, correct: true },
-      { text: `Вари`, correct: false },
-      { text: `Смаж`, correct: false },
-      { text: `Печи`, correct: false }
-    ]
-  },  {
-    question: `Which word refers to the morning meal (**Сніданок**) in Ukraine?`,
-    options: [
-      { text: `Сніданок`, correct: true },
-      { text: `Обід`, correct: false },
-      { text: `Вечеря`, correct: false },
-      { text: `Перекус`, correct: false }
-    ]
-  },  {
-    question: `What phrase do you politely say before a meal starts (**Смачного**)?`,
-    options: [
-      { text: `Смачного`, correct: true },
-      { text: `Будь ласка`, correct: false },
-      { text: `Дякую`, correct: false },
-      { text: `Привіт`, correct: false }
-    ]
-  },  {
-    question: `Which word translates to \"Dinner\" (**Вечеря**) in Ukrainian context?`,
-    options: [
-      { text: `Вечеря`, correct: true },
-      { text: `Сніданок`, correct: false },
-      { text: `Обід`, correct: false },
-      { text: `Їжа`, correct: false }
-    ]
-  }
-]} />
-
-### Cooking Sentences
-
-<Unjumble items={[
-  { jumbled: `Ти / маєш / покласти / свіжу / картоплю / у / велику / каструлю`, answer: `Ти маєш покласти свіжу картоплю у велику каструлю` },
-  { jumbled: `Ми / будемо / смажити / смачне / м'ясо / на / великій / сковороді`, answer: `Ми будемо смажити смачне м'ясо на великій сковороді` },
-  { jumbled: `Бабуся / приготувала / дуже / смачний / та / гарячий / український / борщ`, answer: `Бабуся приготувала дуже смачний та гарячий український борщ` },
-  { jumbled: `Ми / поставили / солодкий / яблучний / пиріг / у / гарячу / духовку`, answer: `Ми поставили солодкий яблучний пиріг у гарячу духовку` },
-  { jumbled: `Цей / овочевий / суп / на / жаль / вийшов / занадто / солоний`, answer: `Цей овочевий суп на жаль вийшов занадто солоний` },
-  { jumbled: `Будь / ласка / закип'яти / чисту / воду / в / чайнику / для / чаю`, answer: `Будь ласка закип'яти чисту воду в чайнику для чаю` },
-  { jumbled: `Цей / чорний / хліб / дуже / свіжий / та / смачний / до / борщу`, answer: `Цей чорний хліб дуже свіжий та смачний до борщу` },
-  { jumbled: `Я / сьогодні / ввечері / готую / святкову / вечерю / для / родини`, answer: `Я сьогодні ввечері готую святкову вечерю для родини` }
-]} />
-
-### Kitchen Mistakes
-
-<ErrorCorrection>
-  <ErrorCorrectionItem
-    sentence={`Смаж м'ясо в каструлі.`}
-    errorWord={`каструлі`}
-    correctForm={`сковороді`}
-    options={[`сковороді`, `каструлі`]}
-    explanation={`We fry (смажити) in a pan (сковорода), not a pot.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вари хліб у духовці.`}
-    errorWord={`Вари`}
-    correctForm={`Печи`}
-    options={[`Печи`, `Вари`]}
-    explanation={`We bake (пекти) bread in the oven, not boil.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Суп дуже солодкий.`}
-    errorWord={`солодкий`}
-    correctForm={`солоний`}
-    options={[`солоний`, `солодкий`]}
-    explanation={`Soup is typically described as salty (солоний), not sweet.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Обід — це ранкова їжа.`}
-    errorWord={`Обід`}
-    correctForm={`Сніданок`}
-    options={[`Сніданок`, `Обід`]}
-    explanation={`Morning meal = сніданок. Обід = lunch.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Поклади молоко в духовку.`}
-    errorWord={`духовку`}
-    correctForm={`холодильник`}
-    options={[`холодильник`, `духовку`]}
-    explanation={`Milk goes in the refrigerator, not the oven!`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Тушкуй воду в чайнику.`}
-    errorWord={`Тушкуй`}
-    correctForm={`Закип'яти`}
-    options={[`Закип'яти`, `Тушкуй`]}
-    explanation={`We boil (кип'ятити) water, not stew it.`}
-  />
-</ErrorCorrection>
-
-### Meals & Times
-
-<MatchUp pairs={[
-  { left: `сніданок`, right: `7-9 ранку` },
-  { left: `обід`, right: `12-14` },
-  { left: `вечеря`, right: `18-20` },
-  { left: `перекус`, right: `будь-коли` },
-  { left: `борщ`, right: `на обід` },
-  { left: `каша`, right: `на сніданок` },
-  { left: `бутерброди`, right: `на вечерю` },
-  { left: `компот`, right: `після їжі` }
-]} />
-
-### Kitchen Categories
-
-<GroupSort groups={{
-  "Equipment": ["каструля", "сковорода", "духовка", "холодильник", "плита", "чайник"],
-  "Cooking Methods": ["варити", "смажити", "пекти", "тушкувати", "нарізати", "запікати"],
-  "Tastes": ["солодкий", "солоний", "кислий", "гострий"]
-}} />
-
-### Kitchen Facts
-
-<TrueFalse items={[
-  {
-    statement: `\"Каструля\" = pot.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Сковорода\" = frying pan.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Варити\" = to bake.`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Варити\" = to boil.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Сніданок\" = breakfast.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Вечеря\" = lunch.`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Вечеря\" = dinner.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Солодкий\" = sweet.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Солоний\" = sweet.`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `\"Гострий\" = spicy.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Духовка\" = oven.`,
-    isTrue: true,
-    explanation: ``
-  },  {
-    statement: `\"Обід\" = dinner.`,
-    isTrue: false,
-    explanation: ``
-  }
-]} />
-
-### Food Words
-
-<Translate questions={[
-  {
-    source: `Pot`,
-    options: [
-      { text: `каструля`, correct: true },
-      { text: `сковорода`, correct: false },
-      { text: `тарілка`, correct: false }
-    ]
-  },  {
-    source: `To fry`,
-    options: [
-      { text: `смажити`, correct: true },
-      { text: `варити`, correct: false },
-      { text: `пекти`, correct: false }
-    ]
-  },  {
-    source: `Breakfast`,
-    options: [
-      { text: `сніданок`, correct: true },
-      { text: `обід`, correct: false },
-      { text: `вечеря`, correct: false }
-    ]
-  },  {
-    source: `Delicious`,
-    options: [
-      { text: `смачний`, correct: true },
-      { text: `солоний`, correct: false },
-      { text: `гострий`, correct: false }
-    ]
-  },  {
-    source: `Refrigerator`,
-    options: [
-      { text: `холодильник`, correct: true },
-      { text: `духовка`, correct: false },
-      { text: `плита`, correct: false }
-    ]
-  },  {
-    source: `Spicy`,
-    options: [
-      { text: `гострий`, correct: true },
-      { text: `солодкий`, correct: false },
-      { text: `кислий`, correct: false }
-    ]
-  },  {
-    source: `To chop`,
-    options: [
-      { text: `нарізати`, correct: true },
-      { text: `смажити`, correct: false },
-      { text: `варити`, correct: false }
-    ]
-  },  {
-    source: `Oven`,
-    options: [
-      { text: `духовка`, correct: true },
-      { text: `плита`, correct: false },
-      { text: `холодильник`, correct: false }
-    ]
-  }
-]} />
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| будь-коли |  |  | adv | - |  |
-| бутерброда |  |  | noun | ч |  |
-| вара |  |  | noun | ч |  |
-| варати |  |  | verb | - |  |
-| варити |  |  | verb | - |  |
-| варю |  |  | interj | - |  |
-| варяти |  |  | verb | - |  |
-| голубець |  |  | noun | ч |  |
-| духовець |  |  | noun | ж |  |
-| духовка |  |  | noun | ж |  |
-| закуска |  |  | noun | ж |  |
-| запікати |  |  | verb | - |  |
-| змішати |  |  | verb | - |  |
-| каструль |  |  | noun | ж |  |
-| компот |  |  | noun | ч |  |
-| метод |  |  | noun | ч |  |
-| найпопулярніший |  |  | adj | - |  |
-| налити |  |  | verb | - |  |
-| наріжчя |  |  | noun | ч |  |
-| нарізати |  |  | verb | - |  |
-| нарізьти |  |  | verb | - |  |
-| обладнання |  |  | noun | с |  |
-| овочевий |  |  | adj | ч |  |
-| пекти |  |  | verb | - |  |
-| перекус |  |  | noun | ч |  |
-| печа |  |  | noun | ж |  |
-| пече |  |  | noun | с |  |
-| печи |  |  | interj | - |  |
-| пиріг |  |  | noun | ч |  |
-| постати |  |  | verb | ч |  |
-| прийом |  |  | noun | ч |  |
-| розігріти |  |  | verb | - |  |
-| сковорода |  |  | noun | ч |  |
-| смаж |  |  | noun | ч |  |
-| смажа |  |  | noun | ж |  |
-| смажити |  |  | verb | - |  |
-| смазати |  |  | verb | - |  |
-| смати |  |  | verb | - |  |
-| солоний |  |  | adj | ч |  |
-| тушкувати |  |  | verb | - |  |
-| тушкуй |  |  | interj | - |  |
-| увімкти |  |  | verb | - |  |
-| чайник |  |  | noun | ч |  |
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [ULP 2-47 Food festivals + Genitive case](https://www.ukrainianlessons.com/lesson/47/) — Level-aligned topic match: food
+> - [ULP 1-12 Ordering food in Ukrainian](https://www.ukrainianlessons.com/lesson/12/) — Listening review (A1): food
+> - [ULP 1-13 More about food in Ukrainian](https://www.ukrainianlessons.com/lesson/13/) — Listening review (A1): food
+> - [ULP 3-93 На продуктовому ярмарку – At the food fair in Ukraine + Diminutive words in Ukrainian](https://www.ukrainianlessons.com/lesson/93/) — Challenge listening (B1): food
+> - [ULP 5-181 Українська кухня в радянські часи](https://www.ukrainianlessons.com/lesson-181/) — Cross-level topic match: кухня
+>
+> **📺 YouTube:**
+> - [20 Ukrainian Food Words You Need To Know ...](https://www.youtube.com/watch?v=fN0BIF-iejo) — QUICK and EASY food vocabulary
+>
+> **📖 Articles:**
+> - [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **🌐 Websites:**
+> - [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

@@ -133,7 +133,7 @@
       correct: false
     - text: дві гривень
       correct: false
-    explanation: '2-4 use nominative plural: дві гривні (feminine form)'
+    explanation: '2-4 use nominative plural: дві гривні'
   - question: How do you say "five hryvnias"?
     options:
     - text: п'ять гривні
@@ -164,7 +164,7 @@
       correct: true
     - text: три
       correct: false
-    - text: всі вище (all above)
+    - text: всі вище
       correct: false
     explanation: 'Both 1 and 2 have gender: один/одна/одне and два/дві'
   - question: What is the genitive plural of the word "студент"?
@@ -618,7 +618,7 @@
       correct: false
     - text: money
       correct: false
-    explanation: Решта is change (money back).
+    explanation: Решта is change.
   - question: How do you say "Fifty" in Ukrainian?
     options:
     - text: п’ятдесят

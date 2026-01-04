@@ -18,9 +18,8 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
-
-# Sports & Fitness
 
 ## Warm-up
 
@@ -267,13 +266,14 @@ Ukrainian athletes love **гречка** (buckwheat). It acts as a superfood ful
 
 
 
+
 ## 🎯 Activities
 
 ### Sports Knowledge
 
 <Quiz
   title="Sports Knowledge"
-  questions={JSON.parse(`[{"question": "Who is **Андрій Шевченко** (Andriy Shevchenko) in Ukrainian sports?", "options": [{"text": "Football legend", "correct": true}, {"text": "Boxer", "correct": false}, {"text": "Singer", "correct": false}, {"text": "Dancer", "correct": false}]}, {"question": "Which grammatical case must follow **займатися** (to practice)?", "options": [{"text": "Instrumental", "correct": true}, {"text": "Nominative", "correct": false}, {"text": "Accusative", "correct": false}, {"text": "Genitive", "correct": false}]}, {"question": "What does the word **вболівальник** refer to in sports?", "options": [{"text": "fan / supporter", "correct": true}, {"text": "player", "correct": false}, {"text": "referee", "correct": false}, {"text": "coach", "correct": false}]}, {"question": "What famous geographical feature is **Говерла** (Hoverla) typically known as in Ukraine?", "options": [{"text": "highest mountain", "correct": true}, {"text": "biggest stadium", "correct": false}, {"text": "longest river", "correct": false}, {"text": "deepest lake", "correct": false}]}, {"question": "Who is the historic rival of **Динамо Київ** (Dynamo Kyiv)?", "options": [{"text": "Shakhtar Donetsk", "correct": true}, {"text": "Karpaty Lviv", "correct": false}, {"text": "Desna", "correct": false}, {"text": "Liverpool", "correct": false}]}, {"question": "What activity is a **басейн** primarily designed for?", "options": [{"text": "swimming", "correct": true}, {"text": "running", "correct": false}, {"text": "boxing", "correct": false}, {"text": "sleeping", "correct": false}]}, {"question": "What specific physical action does the Ukrainian verb **тренуватися** describe in English?", "options": [{"text": "to train/workout", "correct": true}, {"text": "to sleep", "correct": false}, {"text": "to eat", "correct": false}, {"text": "to read", "correct": false}]}, {"question": "In a sports context, what does **рахунок** mean?", "options": [{"text": "score", "correct": true}, {"text": "bill (restaurant)", "correct": false}, {"text": "count", "correct": false}, {"text": "money", "correct": false}]}, {"question": "The **Клички** (Klitschko) brothers are famous for which sport?", "options": [{"text": "boxing", "correct": true}, {"text": "tennis", "correct": false}, {"text": "hockey", "correct": false}, {"text": "basketball", "correct": false}]}, {"question": "What is the meaning of the noun **змагання**?", "options": [{"text": "competition", "correct": true}, {"text": "training", "correct": false}, {"text": "game", "correct": false}, {"text": "ball", "correct": false}]}, {"question": "What is the correct English translation of the important Ukrainian noun **перемога**?", "options": [{"text": "victory", "correct": true}, {"text": "loss", "correct": false}, {"text": "draw", "correct": false}, {"text": "start", "correct": false}]}, {"question": "What role does a **гравець** perform on the field?", "options": [{"text": "player", "correct": true}, {"text": "fan", "correct": false}, {"text": "coach", "correct": false}, {"text": "doctor", "correct": false}]}]`)}
+  questions={JSON.parse(`[{"question": "Who is **Андрій Шевченко** (Andriy Shevchenko) in Ukrainian sports?", "options": [{"text": "Football legend", "correct": true}, {"text": "Boxer", "correct": false}, {"text": "Singer", "correct": false}, {"text": "Dancer", "correct": false}]}, {"question": "Which grammatical case must follow **займатися**?", "options": [{"text": "Instrumental", "correct": true}, {"text": "Nominative", "correct": false}, {"text": "Accusative", "correct": false}, {"text": "Genitive", "correct": false}]}, {"question": "What does the word **вболівальник** refer to in sports?", "options": [{"text": "fan / supporter", "correct": true}, {"text": "player", "correct": false}, {"text": "referee", "correct": false}, {"text": "coach", "correct": false}]}, {"question": "What famous geographical feature is **Говерла** (Hoverla) typically known as in Ukraine?", "options": [{"text": "highest mountain", "correct": true}, {"text": "biggest stadium", "correct": false}, {"text": "longest river", "correct": false}, {"text": "deepest lake", "correct": false}]}, {"question": "Who is the historic rival of **Динамо Київ** (Dynamo Kyiv)?", "options": [{"text": "Shakhtar Donetsk", "correct": true}, {"text": "Karpaty Lviv", "correct": false}, {"text": "Desna", "correct": false}, {"text": "Liverpool", "correct": false}]}, {"question": "What activity is a **басейн** primarily designed for?", "options": [{"text": "swimming", "correct": true}, {"text": "running", "correct": false}, {"text": "boxing", "correct": false}, {"text": "sleeping", "correct": false}]}, {"question": "What specific physical action does the Ukrainian verb **тренуватися** describe in English?", "options": [{"text": "to train/workout", "correct": true}, {"text": "to sleep", "correct": false}, {"text": "to eat", "correct": false}, {"text": "to read", "correct": false}]}, {"question": "In a sports context, what does **рахунок** mean?", "options": [{"text": "score", "correct": true}, {"text": "bill", "correct": false}, {"text": "count", "correct": false}, {"text": "money", "correct": false}]}, {"question": "The **Клички** (Klitschko) brothers are famous for which sport?", "options": [{"text": "boxing", "correct": true}, {"text": "tennis", "correct": false}, {"text": "hockey", "correct": false}, {"text": "basketball", "correct": false}]}, {"question": "What is the meaning of the noun **змагання**?", "options": [{"text": "competition", "correct": true}, {"text": "training", "correct": false}, {"text": "game", "correct": false}, {"text": "ball", "correct": false}]}, {"question": "What is the correct English translation of the important Ukrainian noun **перемога**?", "options": [{"text": "victory", "correct": true}, {"text": "loss", "correct": false}, {"text": "draw", "correct": false}, {"text": "start", "correct": false}]}, {"question": "What role does a **гравець** perform on the field?", "options": [{"text": "player", "correct": true}, {"text": "fan", "correct": false}, {"text": "coach", "correct": false}, {"text": "doctor", "correct": false}]}]`)}
 />
 
 ### Sports Vocab
@@ -308,7 +308,7 @@ Ukrainian athletes love **гречка** (buckwheat). It acts as a superfood ful
 
 <Unjumble
   title="Sport Sentences"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Я дуже люблю дивитися футбол з друзями"}, {"jumbled": "", "answer": "Ми сьогодні йдемо на великий олімпійський стадіон"}, {"jumbled": "", "answer": "Він серйозно займається боксом щодня після роботи"}, {"jumbled": "", "answer": "Наша сильна команда вчора нарешті виграла матч"}, {"jumbled": "", "answer": "Я зовсім не вмію швидко плавати в басейні"}, {"jumbled": "", "answer": "Олена часто ходить у новий спортзал біля дому"}, {"jumbled": "", "answer": "Який зараз рахунок цього цікавого футбольного матчу"}, {"jumbled": "", "answer": "Мій старший брат відомий олімпійський чемпіон з боксу"}, {"jumbled": "", "answer": "Треба дуже багато тренуватися щоб стати сильним"}, {"jumbled": "", "answer": "Спорт це моє активне і здорове життя"}, {"jumbled": "", "answer": "Де лежать твої нові білі кросівки для бігу"}, {"jumbled": "", "answer": "Ми повільно бігаємо вранці в зеленому лісі"}]`)}
+  items={JSON.parse(`[{"jumbled": "Я / дуже / люблю / дивитися / футбол / з / друзями", "answer": "Я дуже люблю дивитися футбол з друзями"}, {"jumbled": "Ми / сьогодні / йдемо / на / великий / олімпійський / стадіон", "answer": "Ми сьогодні йдемо на великий олімпійський стадіон"}, {"jumbled": "Він / серйозно / займається / боксом / щодня / після / роботи", "answer": "Він серйозно займається боксом щодня після роботи"}, {"jumbled": "Наша / сильна / команда / вчора / нарешті / виграла / матч", "answer": "Наша сильна команда вчора нарешті виграла матч"}, {"jumbled": "Я / зовсім / не / вмію / швидко / плавати / в / басейні", "answer": "Я зовсім не вмію швидко плавати в басейні"}, {"jumbled": "Олена / часто / ходить / у / новий / спортзал / біля / дому", "answer": "Олена часто ходить у новий спортзал біля дому"}, {"jumbled": "Який / зараз / рахунок / цього / цікавого / футбольного / матчу", "answer": "Який зараз рахунок цього цікавого футбольного матчу"}, {"jumbled": "Мій / старший / брат — / відомий / олімпійський / чемпіон / з / боксу", "answer": "Мій старший брат відомий олімпійський чемпіон з боксу"}, {"jumbled": "Треба / дуже / багато / тренуватися / щоб / стати / сильним", "answer": "Треба дуже багато тренуватися щоб стати сильним"}, {"jumbled": "Спорт — / це / моє / активне / і / здорове / життя", "answer": "Спорт це моє активне і здорове життя"}, {"jumbled": "Де / лежать / твої / нові / білі / кросівки / для / бігу", "answer": "Де лежать твої нові білі кросівки для бігу"}, {"jumbled": "Ми / повільно / бігаємо / вранці / в / зеленому / лісі", "answer": "Ми повільно бігаємо вранці в зеленому лісі"}]`)}
 />
 
 ### Sport Mistakes
@@ -333,7 +333,7 @@ Ukrainian athletes love **гречка** (buckwheat). It acts as a superfood ful
     errorWord={`в`}
     correctForm={`на`}
     options={[`на`, `в`, `біля`, `під`]}
-    explanation={`'На стадіон' is standard (open space).`}
+    explanation={`'На стадіон' is standard.`}
   />
   <ErrorCorrectionItem
     sentence={`Я люблю бігати у басейні.`}
@@ -423,27 +423,107 @@ ___ стає 1:0.
 
 ### Gym Chat
 
-<DialogueReorder
+<Cloze
   title="Gym Chat"
-  lines={JSON.parse(`[{"text": "Привіт! Ти теж тут тренуєшся?", "order": 1, "speaker": ""}, {"text": "Привіт. Так, я ходжу сюди в понеділок і середу.", "order": 2, "speaker": ""}, {"text": "А я тільки почав. Ти можеш мені допомогти?", "order": 3, "speaker": ""}, {"text": "Звичайно. Що ти хочеш робити?", "order": 4, "speaker": ""}, {"text": "Я хочу качати прес.", "order": 5, "speaker": ""}, {"text": "Добре. Лягай на килимок.", "order": 6, "speaker": ""}, {"text": "Скільки разів робити?", "order": 7, "speaker": ""}, {"text": "Роби 3 підходи по 15 разів.", "order": 8, "speaker": ""}, {"text": "Ох, це важко!", "order": 9, "speaker": ""}, {"text": "Не здавайся. Спорт любить сильних.", "order": 10, "speaker": ""}, {"text": "Дякую за мотивацію!", "order": 11, "speaker": ""}, {"text": "Будь ласка. Відпочивай хвилину.", "order": 12, "speaker": ""}]`)}
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "Привіт! Ти теж тут тренуєшся?", "options": ["Привіт! Ти теж тут тренуєшся?", "Будь ласка. Відпочивай хвилину.", "Не здавайся. Спорт любить сильних."]}, {"answer": "Привіт. Так, я ходжу сюди в понеділок і середу.", "options": ["Привіт. Так, я ходжу сюди в понеділок і середу.", "Скільки разів робити?", "Я хочу качати прес."]}, {"answer": "А я тільки почав. Ти можеш мені допомогти?", "options": ["А я тільки почав. Ти можеш мені допомогти?", "Не здавайся. Спорт любить сильних.", "Я хочу качати прес."]}, {"answer": "Звичайно. Що ти хочеш робити?", "options": ["Звичайно. Що ти хочеш робити?", "А я тільки почав. Ти можеш мені допомогти?", "Я хочу качати прес."]}, {"answer": "Я хочу качати прес.", "options": ["Я хочу качати прес.", "Привіт. Так, я ходжу сюди в понеділок і середу.", "А я тільки почав. Ти можеш мені допомогти?"]}, {"answer": "Добре. Лягай на килимок.", "options": ["Добре. Лягай на килимок.", "Звичайно. Що ти хочеш робити?", "Привіт. Так, я ходжу сюди в понеділок і середу."]}, {"answer": "Скільки разів робити?", "options": ["Скільки разів робити?", "Привіт! Ти теж тут тренуєшся?", "Ох, це важко!"]}, {"answer": "Роби 3 підходи по 15 разів.", "options": ["Роби 3 підходи по 15 разів.", "Будь ласка. Відпочивай хвилину.", "Звичайно. Що ти хочеш робити?"]}, {"answer": "Ох, це важко!", "options": ["Ох, це важко!", "Я хочу качати прес.", "Дякую за мотивацію!"]}, {"answer": "Не здавайся. Спорт любить сильних.", "options": ["Не здавайся. Спорт любить сильних.", "Будь ласка. Відпочивай хвилину.", "Дякую за мотивацію!"]}, {"answer": "Дякую за мотивацію!", "options": ["Дякую за мотивацію!", "Привіт. Так, я ходжу сюди в понеділок і середу.", "Я хочу качати прес."]}, {"answer": "Будь ласка. Відпочивай хвилину.", "options": ["Будь ласка. Відпочивай хвилину.", "А я тільки почав. Ти можеш мені допомогти?", "Не здавайся. Спорт любить сильних."]}]`)}
 />
 
 ### Sports List
 
-<MarkTheWords>
-  <MarkTheWordsActivity
-    instruction={`Click the correct words.`}
+<HighlightMorphemes>
+  <HighlightMorphemesActivity
     text={`У школі ми грали в футбол і баскетбол. Мій брат любить теніс. Взимку ми дивимося біатлон. Влітку я люблю плавання. Мій тато дивиться бокс. Його друг займається карате. Гімнастика — це дуже красиво.`}
-    correctWords={JSON.parse(`["футбол", "баскетбол", "теніс", "біатлон", "плавання", "бокс", "карате", "Гімнастика"]`)}
+    morphemes={[
+    { word: `футбол`, morpheme: `футбол`, type: `whole` },
+    { word: `баскетбол`, morpheme: `баскетбол`, type: `whole` },
+    { word: `теніс`, morpheme: `теніс`, type: `whole` },
+    { word: `біатлон`, morpheme: `біатлон`, type: `whole` },
+    { word: `плавання`, morpheme: `плавання`, type: `whole` },
+    { word: `бокс`, morpheme: `бокс`, type: `whole` },
+    { word: `карате`, morpheme: `карате`, type: `whole` },
+    { word: `Гімнастика`, morpheme: `Гімнастика`, type: `whole` }
+  ]}
   />
-</MarkTheWords>
+</HighlightMorphemes>
 
 ### Choose Correct Verb
 
 <Select
   title="Choose Correct Verb"
-  questions={JSON.parse(`[{"question": "To run.", "options": [{"text": "Бігати.", "correct": true}, {"text": "Стрибати.", "correct": false}]}, {"question": "To swim.", "options": [{"text": "Плавати.", "correct": true}, {"text": "Літати.", "correct": false}]}, {"question": "To win.", "options": [{"text": "Вигравати.", "correct": true}, {"text": "Програвати.", "correct": false}]}, {"question": "To lose.", "options": [{"text": "Програвати.", "correct": true}, {"text": "Грати.", "correct": false}]}, {"question": "To train.", "options": [{"text": "Тренуватися.", "correct": true}, {"text": "Лікуватися.", "correct": false}]}, {"question": "To play a game.", "options": [{"text": "Грати.", "correct": true}, {"text": "Спати.", "correct": false}]}, {"question": "To cheer/support.", "options": [{"text": "Вболівати.", "correct": true}, {"text": "Хворіти.", "correct": false}]}, {"question": "To score (a goal).", "options": [{"text": "Забити.", "correct": true}, {"text": "Забути.", "correct": false}]}, {"question": "To kick.", "options": [{"text": "Бити.", "correct": true}, {"text": "Пити.", "correct": false}]}, {"question": "To jump.", "options": [{"text": "Стрибати.", "correct": true}, {"text": "Співати.", "correct": false}]}, {"question": "To catch.", "options": [{"text": "Ловити.", "correct": true}, {"text": "Любити.", "correct": false}]}, {"question": "To become.", "options": [{"text": "Стати.", "correct": true}, {"text": "Спати.", "correct": false}]}]`)}
+  questions={JSON.parse(`[{"question": "To run.", "options": [{"text": "Бігати.", "correct": true}, {"text": "Стрибати.", "correct": false}]}, {"question": "To swim.", "options": [{"text": "Плавати.", "correct": true}, {"text": "Літати.", "correct": false}]}, {"question": "To win.", "options": [{"text": "Вигравати.", "correct": true}, {"text": "Програвати.", "correct": false}]}, {"question": "To lose.", "options": [{"text": "Програвати.", "correct": true}, {"text": "Грати.", "correct": false}]}, {"question": "To train.", "options": [{"text": "Тренуватися.", "correct": true}, {"text": "Лікуватися.", "correct": false}]}, {"question": "To play a game.", "options": [{"text": "Грати.", "correct": true}, {"text": "Спати.", "correct": false}]}, {"question": "To cheer/support.", "options": [{"text": "Вболівати.", "correct": true}, {"text": "Хворіти.", "correct": false}]}, {"question": "To score.", "options": [{"text": "Забити.", "correct": true}, {"text": "Забути.", "correct": false}]}, {"question": "To kick.", "options": [{"text": "Бити.", "correct": true}, {"text": "Пити.", "correct": false}]}, {"question": "To jump.", "options": [{"text": "Стрибати.", "correct": true}, {"text": "Співати.", "correct": false}]}, {"question": "To catch.", "options": [{"text": "Ловити.", "correct": true}, {"text": "Любити.", "correct": false}]}, {"question": "To become.", "options": [{"text": "Стати.", "correct": true}, {"text": "Спати.", "correct": false}]}]`)}
 />
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| басейн | bɐˈsɛjn | pool | noun | ч |  |
+| баскетбол | bɐsketˈbɔl | basketball | noun | ч |  |
+| бокс | bɔks | boxing | noun | ч |  |
+| біг | bih | run/running | noun | ч |  |
+| біга | ˈbiɦɐ | cart/running (gen?) | noun | ч |  |
+| біговий | bihoˈvɪj | running (adj) | adj | ч |  |
+| вболівальник | vbolʲiˈʋɑlʲnɪk | fan/supporter | noun | ч |  |
+| вболівати | vbolʲiˈʋɑte | to support/cheer | verb |  |  |
+| вдих | vdɪx | inhale | noun | ч |  |
+| вигравати | vɪhrɐˈʋɑte | to win (imp) | verb |  |  |
+| видих | ˈvɪdɪx | exhale | noun | ч |  |
+| гол | hɔl | goal | noun | ч |  |
+| гравець | hrɐˈvɛt͡sʲ | player | noun | ч |  |
+| гімн | himn | anthem | noun | ч |  |
+| гімнастика | himˈnɑstɪkɐ | gymnastics | noun | ж |  |
+| дистанція | dɪsˈtɑnt͡sʲijɐ | distance | noun | ж |  |
+| еліна | eˈlʲinɐ | Elina | name | ж |  |
+| займатися | zɐjˈmɑtɪsʲɐ | to engage in/exercise | verb |  |  |
+| збірно | ˈzbʲirno | team (typo збірна) | noun | ж |  |
+| змагання | zmɐˈhɑnʲːɐ | competition | noun | с |  |
+| йога | ˈjɔhɐ | yoga | noun | ж |  |
+| йоги | ˈjɔhɪ | yogis | noun | ж |  |
+| йогий | ˈjɔhɪj | yogi (adj? typo) | adj | ж |  |
+| качатися | kɐˈt͡ʃɑtɪsʲɐ | to swing/pump muscles | verb |  |  |
+| класичний | klɐˈsɪt͡ʃnɪj | classical | adj | с |  |
+| класний | ˈklɑsnɪj | cool/class (adj) | adj | ж |  |
+| кличка | klɪt͡ʃˈkɔ | Klitschko (typo Кличко) | name | ч |  |
+| клуб | klub | club | noun | ч |  |
+| кілометр | kiloˈmɛtr | kilometer | noun | ч |  |
+| майданчик | mɐjˈdɑnt͡ʃɪk | playground/court | noun | ч |  |
+| матч | mɑt͡ʃ | match | noun | ч |  |
+| нелегко | neˈlɛhko | not easily | adv |  |  |
+| одягнений | oˈdʲɑhnenɪj | dressed | adj |  |  |
+| олімпійський | olʲimˈpijsʲkɪj | Olympic | adj | ч |  |
+| пагорб | ˈpɑhorb | hill | noun | ч |  |
+| плавання | ˈplɑʋɐnʲːɐ | swimming | noun | с |  |
+| подякувати | poˈdʲɑkuʋɐte | to thank (perf) | verb |  |  |
+| пробігти | proˈbʲihte | to run a distance (perf) | verb | ч |  |
+| програвати | prohrɐˈʋɑte | to lose (imp) | verb |  |  |
+| підніматися | pidnʲiˈmɑtɪsʲɐ | to rise/climb | verb |  |  |
+| піз | piz | late? (typo пізно) | noun | ж |  |
+| ранковий | rɐnˈkɔʋɪj | morning (adj) | adj | ч |  |
+| роздягальний | rozdʲɐˈhɑlʲnɪj | changing (room adj) | adj |  |  |
+| світоліна | svitoˈlʲinɐ | Svitolina | name | ж |  |
+| сноуборд | snou̯ˈbɔrd | snowboard | noun | ч |  |
+| спортзал | sportˈzɑl | gym | noun | ч |  |
+| спортивний | sporˈtɪʋnɪj | sports (adj) | adj | ж |  |
+| стадіон | stɐdʲiˈɔn | stadium | noun | ч |  |
+| стрес | strɛs | stress | noun | ч |  |
+| тренер | ˈtrɛner | coach | noun | ч |  |
+| тренування | trenuˈʋɑnʲːɐ | training | noun | с |  |
+| футбольний | fudˈbɔlʲnɪj | football (adj) | adj | ч |  |
+| фітнес | ˈfʲitnes | fitness | noun | ч |  |
+| інструктор | inˈstruktor | instructor | noun | ч |  |
 
 ## 📋 Summary
 
@@ -471,40 +551,13 @@ A healthy mind in a healthy body!
 >
 > Спорт — це здоров'я! Українці кажуть: «Рух — це життя!»
 
-:::info[🔗 External Resources]
-
-**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
-
-**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-:::
-
-
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| вид | /vɪd/ | aspect (grammar) | noun | m | grammar term |
-| спорт | /spɔrt/ | sport | noun | m | |
-| баскетбол | /basketˈbɔl/ | basketball | noun | m | |
-| теніс | /ˈtɛnis/ | tennis | noun | m | |
-| бокс | /bɔks/ | boxing | noun | m | |
-| плавання | /ˈplaʋannʲa/ | swimming | noun | n | |
-| біг | /bih/ | running | noun | m | |
-| гімнастика | /himˈnastɪka/ | gymnastics | noun | f | |
-| спортзал | /spɔrtˈzal/ | gym | noun | m | |
-| басейн | /baˈsɛjn/ | pool | noun | m | |
-| команда | /koˈmanda/ | team | noun | f | |
-| гравець | /hraˈʋɛtsʲ/ | player | noun | m | |
-| вболівальник | /ʋboliˈʋalʲnɪk/ | fan | noun | m | |
-| тренер | /ˈtrɛner/ | coach | noun | m | |
-| тренуватися | /trenuˈʋatɪsʲa/ | to train | verb | - | |
-| займатися | /zajˈmatɪsʲa/ | to practice | verb | - | |
-| бігати | /ˈbihatɪ/ | to run | verb | - | |
-| плавати | /ˈplaʋatɪ/ | to swim | verb | - | |
-| вигравати | /ʋɪhraˈʋatɪ/ | to win | verb | - | |
-| програвати | /prohraˈʋatɪ/ | to lose | verb | - | |
-| змагання | /zmaˈhannʲa/ | competition | noun | n | |
-| матч | /matʃ/ | match | noun | m | |
-| м'яч | /mʲatʃ/ | ball | noun | m | |
-| гол | /hɔl/ | goal | noun | m | |
-| медаль | /meˈdalʲ/ | medal | noun | f | |
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [Vocabulary booster! Sports in Ukrainian](https://www.ukrainianlessons.com/fmu25/) — Listening review (A1): sports
+>
+> **📖 Articles:**
+> - [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **🌐 Websites:**
+> - [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

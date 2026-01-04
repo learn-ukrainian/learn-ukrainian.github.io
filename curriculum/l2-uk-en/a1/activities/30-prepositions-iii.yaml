@@ -7,7 +7,7 @@
   - left: '- Де?'
     right: Where? (location)
   - left: '- Куди?'
-    right: Where to? (direction)
+    right: Where to?
   - left: '- Звідки?'
     right: Where from? (origin)
   - left: '- Тут'
@@ -21,7 +21,7 @@
   - left: '- Вдома'
     right: At home
   - left: '- Додому'
-    right: Home (direction)
+    right: Home
   - left: '- Прямо'
     right: Straight
   - left: '- Ліворуч'
@@ -253,7 +253,7 @@
       correct: false
     - text: I am in the park (location)
       correct: true
-    - text: I'm going to the park (direction)
+    - text: I'm going to the park
       correct: false
     - text: I was in the park (past)
       correct: false
@@ -263,13 +263,13 @@
       correct: false
     - text: I'm from the park (origin)
       correct: false
-    - text: I'm going to the park (direction)
+    - text: I'm going to the park
       correct: true
     - text: I was in the park (past)
       correct: false
   - question: What is the meaning of "Вдома"?
     options:
-    - text: To home (direction)
+    - text: To home
       correct: false
     - text: At home (location)
       correct: true
@@ -311,7 +311,7 @@
     options:
     - text: Here (location)
       correct: true
-    - text: To here (direction)
+    - text: To here
       correct: false
     - text: From here (origin)
       correct: false
@@ -321,7 +321,7 @@
     options:
     - text: Here (location)
       correct: false
-    - text: To here (direction)
+    - text: To here
       correct: true
     - text: From here (origin)
       correct: false

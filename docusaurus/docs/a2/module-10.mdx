@@ -18,7 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 ## Warm-up
 
@@ -80,6 +80,8 @@ Most service verbs (відправити, зняти, обміняти, відк
 - Я хочу відправити листа. (I want to send a letter.)
 - Мені потрібно надіслати посилку. (I need to send a package.)
 - Скільки коштує марка? (How much is a stamp?)
+- Я маю **лист** і **конверт**. (I have a letter and an envelope.)
+- Це моя **посилка**. (This is my package.)
 
 **Receiving mail:**
 
@@ -135,18 +137,21 @@ Most service verbs (відправити, зняти, обміняти, відк
 - Я хочу відкрити рахунок. (I want to open an account.)
 - Мені потрібно закрити рахунок. (I need to close an account.)
 - Покажіть, будь ласка, баланс. (Show me the balance, please.)
+- Це мій **рахунок**. (This is my account.)
 
 **Money operations:**
 
 - Я хочу зняти гроші. (I want to withdraw money.)
 - Мені потрібно обміняти долари. (I need to exchange dollars.)
 - Який сьогодні курс? (What's the exchange rate today?)
+- У мене є **гроші** і **готівка**. (I have money and cash.)
 
 **Card operations:**
 
 - Моя картка не працює. (My card doesn't work.)
 - Я загубив картку. (I lost my card.)
 - Мені потрібна нова картка. (I need a new card.)
+- Ось моя **картка**. (Here is my card.)
 
 > 📜 **Cultural Note**
 >
@@ -239,7 +244,8 @@ Read these dialogues aloud and identify the cases used in each sentence. This ex
 >
 > When practicing service dialogues, focus on the verb-object patterns. Most service verbs like відправити, зняти, обміняти require accusative for the direct object. Quantity expressions like "сто гривень" require genitive. Master these patterns and you'll handle any service interaction!
 
----
+##
+
 
 
 ## 🎯 Activities
@@ -283,7 +289,7 @@ Read these dialogues aloud and identify the cases used in each sentence. This ex
 
 <Unjumble
   title="Service Sentences"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Я хочу відправити листа до Канади будь ласка"}, {"jumbled": "", "answer": "Мені потрібно зняти гроші з рахунку сьогодні вранці"}, {"jumbled": "", "answer": "Скільки коштує марка до Німеччини будь ласка скажіть"}, {"jumbled": "", "answer": "Який сьогодні курс долара до гривні будь ласка"}, {"jumbled": "", "answer": "Дайте будь ласка квитанцію і чек на це"}, {"jumbled": "", "answer": "Посилка з України прийшла вчора дуже швидко сюди"}, {"jumbled": "", "answer": "Я хочу обміняти долари на гривні сьогодні зараз"}, {"jumbled": "", "answer": "Напишіть адресу на конверті будь ласка тут чітко"}, {"jumbled": "", "answer": "Платити карткою чи готівкою будь ласка скажіть мені"}, {"jumbled": "", "answer": "Мені потрібна нова картка бо стара не працює"}, {"jumbled": "", "answer": "Я хочу відкрити рахунок у вашому банку сьогодні"}, {"jumbled": "", "answer": "П'ятсот гривень будь ласка зніміть з мого рахунку"}]`)}
+  items={JSON.parse(`[{"jumbled": "я / хочу / відправити / листа / до / Канади / будь / ласка", "answer": "Я хочу відправити листа до Канади будь ласка"}, {"jumbled": "мені / потрібно / зняти / гроші / з / рахунку / сьогодні / вранці", "answer": "Мені потрібно зняти гроші з рахунку сьогодні вранці"}, {"jumbled": "скільки / коштує / марка / до / Німеччини / будь / ласка / скажіть", "answer": "Скільки коштує марка до Німеччини будь ласка скажіть"}, {"jumbled": "який / сьогодні / курс / долара / до / гривні / будь / ласка", "answer": "Який сьогодні курс долара до гривні будь ласка"}, {"jumbled": "дайте / будь / ласка / квитанцію / і / чек / на / це", "answer": "Дайте будь ласка квитанцію і чек на це"}, {"jumbled": "посилка / з / України / прийшла / вчора / дуже / швидко / сюди", "answer": "Посилка з України прийшла вчора дуже швидко сюди"}, {"jumbled": "я / хочу / обміняти / долари / на / гривні / сьогодні / зараз", "answer": "Я хочу обміняти долари на гривні сьогодні зараз"}, {"jumbled": "напишіть / адресу / на / конверті / будь / ласка / тут / чітко", "answer": "Напишіть адресу на конверті будь ласка тут чітко"}, {"jumbled": "платити / карткою / чи / готівкою / будь / ласка / скажіть / мені", "answer": "Платити карткою чи готівкою будь ласка скажіть мені"}, {"jumbled": "мені / потрібна / нова / картка / бо / стара / не / працює", "answer": "Мені потрібна нова картка бо стара не працює"}, {"jumbled": "я / хочу / відкрити / рахунок / у / вашому / банку / сьогодні", "answer": "Я хочу відкрити рахунок у вашому банку сьогодні"}, {"jumbled": "п'ятсот / гривень / будь / ласка / зніміть / з / мого / рахунку", "answer": "П'ятсот гривень будь ласка зніміть з мого рахунку"}]`)}
 />
 
 ### Fix the Case
@@ -398,25 +404,52 @@ Read these dialogues aloud and identify the cases used in each sentence. This ex
 
 ### At the Post Office
 
-<DialogueReorder
+<Cloze
   title="At the Post Office"
-  lines={JSON.parse(`[{"text": "Добрий день! Чим можу допомогти?", "order": 1, "speaker": ""}, {"text": "Я хочу відправити посилку до Німеччини.", "order": 2, "speaker": ""}, {"text": "Що в посилці?", "order": 3, "speaker": ""}, {"text": "Книги і одяг.", "order": 4, "speaker": ""}, {"text": "Покладіть на вагу. Три кілограми.", "order": 5, "speaker": ""}, {"text": "Скільки це коштує?", "order": 6, "speaker": ""}, {"text": "--", "order": 7, "speaker": ""}, {"text": "Добрий день! Я хочу обміняти валюту.", "order": 8, "speaker": ""}, {"text": "Яку валюту?", "order": 9, "speaker": ""}, {"text": "Долари на гривні.", "order": 10, "speaker": ""}, {"text": "Скільки доларів?", "order": 11, "speaker": ""}, {"text": "П'ятсот.", "order": 12, "speaker": ""}, {"text": "Курс сьогодні 37. Вісімнадцять тисяч п'ятсот гривень.", "order": 13, "speaker": ""}]`)}
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "Добрий день! Чим можу допомогти?", "options": ["Добрий день! Чим можу допомогти?", "Книги і одяг.", "Покладіть на вагу. Три кілограми."]}, {"answer": "Я хочу відправити посилку до Німеччини.", "options": ["Я хочу відправити посилку до Німеччини.", "Скільки доларів?", "Що в посилці?"]}, {"answer": "Що в посилці?", "options": ["Що в посилці?", "Добрий день! Чим можу допомогти?", "Яку валюту?"]}, {"answer": "Книги і одяг.", "options": ["Книги і одяг.", "Покладіть на вагу. Три кілограми.", "Добрий день! Чим можу допомогти?"]}, {"answer": "Покладіть на вагу. Три кілограми.", "options": ["Покладіть на вагу. Три кілограми.", "Книги і одяг.", "Долари на гривні."]}, {"answer": "Скільки це коштує?", "options": ["Скільки це коштує?", "--", "Книги і одяг."]}, {"answer": "--", "options": ["--", "Курс сьогодні 37. Вісімнадцять тисяч п'ятсот гривень.", "Що в посилці?"]}, {"answer": "Добрий день! Я хочу обміняти валюту.", "options": ["Добрий день! Я хочу обміняти валюту.", "--", "Книги і одяг."]}, {"answer": "Яку валюту?", "options": ["Яку валюту?", "Що в посилці?", "Курс сьогодні 37. Вісімнадцять тисяч п'ятсот гривень."]}, {"answer": "Долари на гривні.", "options": ["Долари на гривні.", "Книги і одяг.", "Добрий день! Чим можу допомогти?"]}, {"answer": "Скільки доларів?", "options": ["Скільки доларів?", "Скільки це коштує?", "Долари на гривні."]}, {"answer": "П'ятсот.", "options": ["П'ятсот.", "Добрий день! Я хочу обміняти валюту.", "Що в посилці?"]}, {"answer": "Курс сьогодні 37. Вісімнадцять тисяч п'ятсот гривень.", "options": ["Курс сьогодні 37. Вісімнадцять тисяч п'ятсот гривень.", "Покладіть на вагу. Три кілограми.", "Добрий день! Чим можу допомогти?"]}]`)}
 />
 
 ### Find Case Forms
 
-<MarkTheWords>
-  <MarkTheWordsActivity
-    instruction={`Click the correct words.`}
-    text={`Click on words in a specific case.
-Я хочу відправити листа(correct) до Канади(correct). Дайте мені(correct) квитанцію(correct). Посилка з України(correct).
+<HighlightMorphemes>
+  <HighlightMorphemesActivity
+  instruction={`Click on words in a specific case.`}
+    text={`Я хочу відправити листа до Канади. Дайте мені квитанцію. Посилка з України.
 ---
-Мені потрібно зняти гроші(correct). Я хочу обміняти долари(correct) на гривні(correct). Платити карткою(correct).
+Мені потрібно зняти гроші. Я хочу обміняти долари на гривні. Платити карткою.
 ---
-Напишіть адресу(correct) на конверті(correct). Покажіть паспорт(correct). Скільки коштує марка(correct)?`}
-    correctWords={JSON.parse(`["листа", "Канади", "мені", "квитанцію", "України", "гроші", "долари", "гривні", "карткою", "адресу", "конверті", "паспорт", "марка"]`)}
+Напишіть адресу на конверті. Покажіть паспорт. Скільки коштує марка?`}
+    morphemes={[
+    { word: `листа`, morpheme: `листа`, type: `whole` },
+    { word: `Канади`, morpheme: `Канади`, type: `whole` },
+    { word: `мені`, morpheme: `мені`, type: `whole` },
+    { word: `квитанцію`, morpheme: `квитанцію`, type: `whole` },
+    { word: `України`, morpheme: `України`, type: `whole` },
+    { word: `гроші`, morpheme: `гроші`, type: `whole` },
+    { word: `долари`, morpheme: `долари`, type: `whole` },
+    { word: `гривні`, morpheme: `гривні`, type: `whole` },
+    { word: `карткою`, morpheme: `карткою`, type: `whole` },
+    { word: `адресу`, morpheme: `адресу`, type: `whole` },
+    { word: `конверті`, morpheme: `конверті`, type: `whole` },
+    { word: `паспорт`, morpheme: `паспорт`, type: `whole` },
+    { word: `марка`, morpheme: `марка`, type: `whole` }
+  ]}
   />
-</MarkTheWords>
+</HighlightMorphemes>
 
 ### English to Ukrainian
 
@@ -425,73 +458,83 @@ Read these dialogues aloud and identify the cases used in each sentence. This ex
   questions={JSON.parse(`[{"source": "I want to send a letter.", "options": [{"text": "Я хочу відправити листа.", "correct": true}, {"text": "Я хочу відправити лист.", "correct": false}, {"text": "Я хочу відправити листом.", "correct": false}, {"text": "Я хочу відправити листі.", "correct": false}]}, {"source": "I need to withdraw money.", "options": [{"text": "Мені потрібно зняти гроші.", "correct": true}, {"text": "Мені потрібно зняти грошей.", "correct": false}, {"text": "Мені потрібно зняти грошам.", "correct": false}, {"text": "Мені потрібно зняти грошима.", "correct": false}]}, {"source": "How much is a stamp?", "options": [{"text": "Скільки коштує марка?", "correct": true}, {"text": "Скільки коштує марку?", "correct": false}, {"text": "Скільки коштує марки?", "correct": false}, {"text": "Скільки коштує маркою?", "correct": false}]}, {"source": "Pay by card.", "options": [{"text": "Платити карткою.", "correct": true}, {"text": "Платити картка.", "correct": false}, {"text": "Платити картку.", "correct": false}, {"text": "Платити картки.", "correct": false}]}, {"source": "A package from Ukraine.", "options": [{"text": "Посилка з України.", "correct": true}, {"text": "Посилка з Україна.", "correct": false}, {"text": "Посилка з Україну.", "correct": false}, {"text": "Посилка з Україні.", "correct": false}]}, {"source": "I want to exchange dollars.", "options": [{"text": "Я хочу обміняти долари.", "correct": true}, {"text": "Я хочу обміняти доларів.", "correct": false}, {"text": "Я хочу обміняти доларам.", "correct": false}, {"text": "Я хочу обміняти доларами.", "correct": false}]}]`)}
 />
 
-## 📋 Summary
-
-In this module you learned essential vocabulary for two key service locations in Ukraine. You practiced applying grammatical cases in real-world contexts.
-
-**Post Office Vocabulary:**
-
-- лист, посилка, марка, конверт, адреса, індекс
-- відправляти, отримувати, надсилати
-
-**Banking Vocabulary:**
-
-- рахунок, картка, гроші, готівка, валюта, переказ
-- знімати, вкладати, обмінювати
-
-**Key Phrases:**
-
-- Я хочу відправити/отримати... — I want to send/receive...
-- Мені потрібно обміняти/зняти... — I need to exchange/withdraw...
-- Скільки це коштує? — How much does this cost?
-- Який сьогодні курс? — What's the exchange rate today?
-
-**Case Patterns Practiced:**
-
-- Accusative for direct objects of service verbs
-- Genitive for origin (з України) and quantities (сто гривень)
-- Instrumental for payment method (карткою)
-- Dative for recipient expressions (дайте мені)
-
-Тепер ви готові до реальних ситуацій! 📬🏦
-
-## Need More Practice?
-
-:::info[External Resources]
-
-- 🎥 [All 7 Cases](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
-- 📖 [Cases Introduction](https://www.ukrainianlessons.com/intro-cases/)
-- 📝 [Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/)
-- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-:::
-
-
----
-
 ## 📚 Vocabulary
 
-| Word | IPA             | English                | POS  | Gender | Note              |
-| ----------- | --------------- | ---------------------- | ---- | ------ | ----------------- |
-| пошта       | /ˈpɔʃtɑ/        | post office            | noun | f      | service location  |
-| марка       | /ˈmɑrkɑ/        | stamp                  | noun | f      | Acc: марку        |
-| адреса      | /ɑdˈrɛsɑ/       | address                | noun | f      | Acc: адресу       |
-| індекс      | /ˈindɛks/       | postal code            | noun | m      | Acc: індекс       |
-| квитанція   | /kʋɪˈtɑnt͡sʲijɑ/ | receipt                | noun | f      | Acc: квитанцію    |
-| валюта      | /ʋɑˈlʲutɑ/      | currency               | noun | f      | Acc: валюту       |
-| переказ     | /pɛrɛˈkɑz/      | transfer               | noun | m      | Acc: переказ      |
-| кредит      | /krɛˈdɪt/       | credit, loan           | noun | m      | Acc: кредит       |
-| курс        | /kurs/          | exchange rate          | noun | m      | banking term      |
-| відправляти | /ʋidprɑʋˈlʲɑtɪ/ | to send                | verb | —      | requires Acc      |
-| знімати     | /zniˈmɑtɪ/      | to withdraw            | verb | —      | requires Acc      |
-| вкладати    | /ʋklɑˈdɑtɪ/     | to deposit             | verb | —      | requires Acc      |
-| обмінювати  | /ɔbmiˈnʲuʋɑtɪ/  | to exchange            | verb | —      | requires Acc      |
-| загубити    | /zɑɦuˈbɪtɪ/     | to lose                | verb | —      | perfective        |
-| чек         | /t͡ʃɛk/          | check, receipt         | noun | m      | Acc: чек          |
-| черга       | /ˈt͡ʃɛrɦɑ/       | queue, line            | noun | f      | Acc: чергу        |
-| відсоток    | /ʋidˈsɔtɔk/     | interest rate, percent | noun | m      | Gen: відсотка     |
-| позика      | /pɔˈzɪkɑ/       | loan                   | noun | f      | Acc: позику       |
-| касир       | /kɑˈsɪr/        | cashier                | noun | m      | professional term |
-| бланк       | /blɑnk/         | form, blank            | noun | m      | Acc: бланк        |
-| бандероль   | /bɑndɛˈrɔlʲ/    | small package          | noun | f      | Acc: бандероль    |
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| автоматично | ɐu̯tomɐˈtɪt͡ʃno | automatically | adv |  |  |
+| баланс | bɐˈlɑns | balance | noun | ч |  |
+| валюта | ʋɐˈlʲutɐ | currency | noun | ж |  |
+| ввічливий | ˈʋːit͡ʃlɪʋei̯ | polite | adj |  |  |
+| ввічливість | ˈʋːit͡ʃlɪʋisʲtʲ | politeness | noun | ж |  |
+| використання | vɪkorɪsˈtɑnʲːɐ | usage | noun | с |  |
+| вказати | vkɐˈzɑte | to indicate | verb |  |  |
+| відправлення | vidˈprɑu̯lenʲːɐ | shipment; sending | noun | с |  |
+| гаразд | ɦɐˈrɑzd | okay; fine | other |  |  |
+| готово | hoˈtɔʋo | ready; done | adv |  |  |
+| двість | dvisʲtʲ | two hundred (typo? двісті) | other |  |  |
+| ефективно | efekˈtɪu̯no | effectively | adv |  |  |
+| загубити | zɐhuˈbɪte | to lose | verb | ч |  |
+| закрити | zɐˈkrɪte | to close | verb |  |  |
+| звазти | zʋɐʒte | to weigh (typo? зважити) | verb |  |  |
+| звичайний | zʋɪˈt͡ʃɑi̯nei̯ | ordinary; normal | adj | ч |  |
+| зняти | ˈznʲɑte | to withdraw; to remove | verb |  |  |
+| квитанція | kvɪˈtɑnt͡sʲijɐ | receipt | noun | ж |  |
+| контексть | konˈtɛkst | context (typo? контекст) | noun | ч |  |
+| кредит | kreˈdɪt | credit | noun | ч |  |
+| купівля | kuˈpiu̯lʲɐ | purchase | noun | ж |  |
+| лексик | ˈlɛksɪkɐ | vocabulary | noun | ж |  |
+| марка | ˈmɑrkɐ | stamp | noun | ж |  |
+| метод | ˈmɛtod | method | noun | ч |  |
+| німеччина | nimeˈt͡ʃːɪnɐ | Germany | name | ж |  |
+| обмін | ˈobmin | exchange | noun | ч |  |
+| обміняти | obmiˈnʲɑte | to exchange | verb |  |  |
+| огляд | ˈɔhlʲɐd | review; overview | noun | ч |  |
+| оплата | oˈplɑtɐ | payment | noun | ж |  |
+| п'ятсот | pjɐtˈsɔt | five hundred | other |  |  |
+| переказ | pereˈkɑz | transfer; retelling | noun | ч |  |
+| переказа | pereˈkɑzɐ | transfer (genitive?) | noun | ч |  |
+| переказати | perekɐˈzɑte | to transfer; to retell | verb |  |  |
+| переклад | pereˈklɑd | translation | noun | ч |  |
+| покласти | poˈklɑste | to put; to deposit | verb |  |  |
+| послуга | ˈpɔsluɦɐ | service | noun | ж |  |
+| походження | poˈxɔdʒenʲːɐ | origin | noun | с |  |
+| прохань | proˈxɑnʲ | request (genitive pl?) | noun | с |  |
+| рекомендований | rekomenˈdɔʋɐnei̯ | recommended; registered (mail) | adj | ч |  |
+| розуміння | rozuˈminʲːɐ | understanding | noun | с |  |
+| сервісний | ˈsɛrvisnei̯ | service (adj) | adj |  |  |
+| ситуація | sɪtuˈɑt͡sʲijɐ | situation | noun | ж |  |
+| сфера | ˈsfɛrɐ | sphere; area | noun | ж |  |
+| тисяча | ˈtɪsʲɐt͡ʃɐ | thousand | other |  |  |
+| управління | uprɐu̯ˈlʲinʲːɐ | management; control | noun | с |  |
+| формула | ˈfɔrmulɐ | formula | noun | ж |  |
+| індекс | ˈindeks | zip code; index | noun | ч |  |
 
----
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [How to open a bank account in Ukrainian](https://www.ukrainianlessons.com/fmu6/) — Listening review (A1): bank
+> - [ULP 3-84 В банку – At the bank in Ukraine + Prefixes об- and від-](https://www.ukrainianlessons.com/lesson/84/) — Challenge listening (B1): bank
+> - [ULP 3-89 Навчання в аспірантурі – Postgraduate education in Ukraine + Prefixes на-, за-](https://www.ukrainianlessons.com/lesson/89/) — Challenge listening (B1): post
+>
+> **📖 Articles:**
+> - [ULP 2-51 Electronics and technology + Dative case](https://www.ukrainianlessons.com/lesson/51/) — Ukrainian Lessons
+> - [ULP 2-52 Buying a phone in Ukraine + Dative case](https://www.ukrainianlessons.com/lesson/52/) — Ukrainian Lessons
+> - [ULP 2-53 Social Media in Ukrainian + Dative case](https://www.ukrainianlessons.com/lesson/53/) — Ukrainian Lessons
+> - [ULP 2-56 Asking for an advice + Accusative case](https://www.ukrainianlessons.com/lesson/56/) — Ukrainian Lessons
+> - [ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions](https://www.ukrainianlessons.com/lesson/57/) — Ukrainian Lessons
+> - [ULP 2-58 Inviting to a party + Accusative case of pronouns](https://www.ukrainianlessons.com/lesson/58/) — Ukrainian Lessons
+> - [ULP 2-61 Christmas dinner in Ukraine + Instrumental case](https://www.ukrainianlessons.com/lesson/61/) — Ukrainian Lessons
+> - [ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns](https://www.ukrainianlessons.com/lesson/62/) — Ukrainian Lessons
+> - [ULP 2-66 Sharing memories + Locative case with places](https://www.ukrainianlessons.com/lesson/66/) — Ukrainian Lessons
+> - [ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case](https://www.ukrainianlessons.com/lesson/67/) — Ukrainian Lessons
+> - [ULP 2-68 Making a hair appointment + Dates & Locative case](https://www.ukrainianlessons.com/lesson/68/) — Ukrainian Lessons
+> - [ULP 2-69 Ukrainian Children's Poem + Vocative case](https://www.ukrainianlessons.com/lesson/69/) — Ukrainian Lessons
+> - [Accusative Case in Ukrainian](https://www.ukrainianlessons.com/accusativecase/) — Ukrainian Lessons
+> - [Genitive Case in Ukrainian](https://www.ukrainianlessons.com/genitive-case/) — Ukrainian Lessons
+> - [ULP 1-32 Shopping for clothes – Accusative case in Ukrainian](https://www.ukrainianlessons.com/lesson/32/) — Ukrainian Lessons
+> - [ULP 1-33 Talking about books in Ukrainian – Accusative case of people](https://www.ukrainianlessons.com/lesson/33/) — Ukrainian Lessons
+> - [ULP 2-46 At the grocery store + Genitive case](https://www.ukrainianlessons.com/lesson/46/) — Ukrainian Lessons
+> - [ULP 2-47 Food festivals + Genitive case](https://www.ukrainianlessons.com/lesson/47/) — Ukrainian Lessons
+> - [ULP 2-48 Eating habits + Genitive case](https://www.ukrainianlessons.com/lesson/48/) — Ukrainian Lessons
+> - [ULP 2-49 Syrnyky recipe + Genitive case](https://www.ukrainianlessons.com/lesson/49/) — Ukrainian Lessons

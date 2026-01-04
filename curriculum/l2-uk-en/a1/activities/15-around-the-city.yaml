@@ -174,7 +174,7 @@
     - біля
     - за
     - перед
-  - sentence: На перехресті поверніть ___. (to the left)
+  - sentence: На перехресті поверніть ___.
     answer: наліво
     options:
     - наліво
@@ -202,7 +202,7 @@
     - перед
     - навпроти
     - між
-  - sentence: Я їду до університету ___. (by tram)
+  - sentence: Я їду до університету ___.
     answer: на трамваї
     options:
     - на трамваї
@@ -223,21 +223,21 @@
     - через
     - до
     - від
-  - sentence: Театр ___ парку. (in front of)
+  - sentence: Театр ___ парку.
     answer: перед
     options:
     - перед
     - за
     - біля
     - навпроти
-  - sentence: Поверніть ___ біля світлофора. (to the right)
+  - sentence: Поверніть ___ біля світлофора.
     answer: направо
     options:
     - направо
     - наліво
     - прямо
     - назад
-  - sentence: Я ходжу на роботу ___. (on foot)
+  - sentence: Я ходжу на роботу ___.
     answer: пішки
     options:
     - пішки
@@ -247,56 +247,56 @@
 - type: fill-in
   title: Transportation Phrases
   items:
-  - sentence: Ми їдемо ___ до центру. (by bus)
+  - sentence: Ми їдемо ___ до центру.
     answer: на автобусі
     options:
     - на автобусі
     - автобус
     - в автобусі
     - автобуса
-  - sentence: Вона дістається на роботу ___. (by metro)
+  - sentence: Вона дістається на роботу ___.
     answer: метро
     options:
     - метро
     - на метро
     - в метро
     - метром
-  - sentence: Я їжджу ___ щодня. (by bicycle)
+  - sentence: Я їжджу ___ щодня.
     answer: на велосипеді
     options:
     - на велосипеді
     - велосипед
     - велосипедом
     - у велосипеді
-  - sentence: Вони приїхали ___. (by car)
+  - sentence: Вони приїхали ___.
     answer: на машині
     options:
     - на машині
     - машина
     - машину
     - машиною
-  - sentence: Ти їдеш ___? (by tram)
+  - sentence: Ти їдеш ___?
     answer: на трамваї
     options:
     - на трамваї
     - трамвай
     - трамваєм
     - у трамваї
-  - sentence: Я вже йду ___. (on foot)
+  - sentence: Я вже йду ___.
     answer: пішки
     options:
     - пішки
     - ногами
     - на ногах
     - пішком
-  - sentence: Вони дістаються ___ до університету. (by taxi)
+  - sentence: Вони дістаються ___ до університету.
     answer: на таксі
     options:
     - на таксі
     - таксі
     - таксієм
     - в таксі
-  - sentence: Ми їдемо ___ на роботу. (by bus)
+  - sentence: Ми їдемо ___ на роботу.
     answer: на автобусі
     options:
     - на автобусі
@@ -520,7 +520,7 @@
     explanation: Correct! Пішки = walking.
   - statement: You say "автобус" to mean "by bus."
     correct: false
-    explanation: Incorrect. You say "на автобусі" (on the bus).
+    explanation: Incorrect. You say "на автобусі".
   - statement: '"Метро" is used alone without a preposition.'
     correct: true
     explanation: Correct! "Я їду метро" (I go by metro).

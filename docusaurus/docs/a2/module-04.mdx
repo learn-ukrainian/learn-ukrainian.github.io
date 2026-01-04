@@ -18,7 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 ## Introduction
 
@@ -404,6 +404,7 @@ This story about a surprise party is full of Instrumental examples. Every time s
 ---
 
 
+
 ## 🎯 Activities
 
 ### Nominative to Instrumental
@@ -445,7 +446,7 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 <Unjumble
   title="Instrumental Sentences"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Я сьогодні ввечері йду в кіно з другом"}, {"jumbled": "", "answer": "Вона кожного дня розмовляє з сестрою по телефону"}, {"jumbled": "", "answer": "Ми вже давно живемо з батьками в Києві"}, {"jumbled": "", "answer": "Він кожного ранку гуляє з собакою в парку"}, {"jumbled": "", "answer": "Я завжди зранку п'ю каву з молоком вранці"}, {"jumbled": "", "answer": "Вона познайомилася з хлопцем на вечірці минулого тижня"}]`)}
+  items={JSON.parse(`[{"jumbled": "Я / йду / в / кіно / з / другом / сьогодні / ввечері", "answer": "Я сьогодні ввечері йду в кіно з другом"}, {"jumbled": "Вона / розмовляє / з / сестрою / по / телефону / кожного / дня", "answer": "Вона кожного дня розмовляє з сестрою по телефону"}, {"jumbled": "Ми / живемо / з / батьками / в / Києві / вже / давно", "answer": "Ми вже давно живемо з батьками в Києві"}, {"jumbled": "Він / гуляє / з / собакою / в / парку / кожного / ранку", "answer": "Він кожного ранку гуляє з собакою в парку"}, {"jumbled": "Я / завжди / п'ю / каву / з / молоком / вранці / зранку", "answer": "Я завжди зранку п'ю каву з молоком вранці"}, {"jumbled": "Вона / познайомилася / з / хлопцем / на / вечірці / минулого / тижня", "answer": "Вона познайомилася з хлопцем на вечірці минулого тижня"}]`)}
 />
 
 ### Fix the Instrumental
@@ -507,25 +508,51 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 ### Meeting Someone New
 
-<DialogueReorder
+<Cloze
   title="Meeting Someone New"
-  lines={JSON.parse(`[{"text": "Приємно познайомитися! Я Олег.", "order": 1, "speaker": ""}, {"text": "Ви вже знайомі?", "order": 2, "speaker": ""}, {"text": "Привіт! З ким ти прийшла?", "order": 3, "speaker": ""}, {"text": "Ні, ми щойно познайомилися!", "order": 4, "speaker": ""}, {"text": "Я прийшла з подругою. Ось вона — Марина.", "order": 5, "speaker": ""}, {"text": "Приємно познайомитися, Марино!", "order": 6, "speaker": ""}, {"text": "--", "order": 7, "speaker": ""}, {"text": "Ні, ми посварилися минулого тижня.", "order": 8, "speaker": ""}, {"text": "Ти все ще спілкуєшся з Петром?", "order": 9, "speaker": ""}, {"text": "Вибач, що так сталося.", "order": 10, "speaker": ""}, {"text": "Так, я розмовлятиму з ним сьогодні.", "order": 11, "speaker": ""}, {"text": "Що трапилося?", "order": 12, "speaker": ""}, {"text": "Нічого серйозного. Ми вже помирилися.", "order": 13, "speaker": ""}, {"text": "Ти спробуєш помиритися з ним?", "order": 14, "speaker": ""}]`)}
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "Приємно познайомитися! Я Олег.", "options": ["Приємно познайомитися! Я Олег.", "Ні, ми щойно познайомилися!", "Приємно познайомитися, Марино!"]}, {"answer": "Ви вже знайомі?", "options": ["Ви вже знайомі?", "Ти все ще спілкуєшся з Петром?", "Так, я розмовлятиму з ним сьогодні."]}, {"answer": "Привіт! З ким ти прийшла?", "options": ["Привіт! З ким ти прийшла?", "Приємно познайомитися, Марино!", "Ні, ми щойно познайомилися!"]}, {"answer": "Ні, ми щойно познайомилися!", "options": ["Ні, ми щойно познайомилися!", "Приємно познайомитися, Марино!", "Що трапилося?"]}, {"answer": "Я прийшла з подругою. Ось вона — Марина.", "options": ["Я прийшла з подругою. Ось вона — Марина.", "Що трапилося?", "Привіт! З ким ти прийшла?"]}, {"answer": "Приємно познайомитися, Марино!", "options": ["Приємно познайомитися, Марино!", "Нічого серйозного. Ми вже помирилися.", "Ні, ми посварилися минулого тижня."]}, {"answer": "--", "options": ["--", "Я прийшла з подругою. Ось вона — Марина.", "Привіт! З ким ти прийшла?"]}, {"answer": "Ні, ми посварилися минулого тижня.", "options": ["Ні, ми посварилися минулого тижня.", "Нічого серйозного. Ми вже помирилися.", "Так, я розмовлятиму з ним сьогодні."]}, {"answer": "Ти все ще спілкуєшся з Петром?", "options": ["Ти все ще спілкуєшся з Петром?", "Я прийшла з подругою. Ось вона — Марина.", "Нічого серйозного. Ми вже помирилися."]}, {"answer": "Вибач, що так сталося.", "options": ["Вибач, що так сталося.", "Приємно познайомитися! Я Олег.", "Нічого серйозного. Ми вже помирилися."]}, {"answer": "Так, я розмовлятиму з ним сьогодні.", "options": ["Так, я розмовлятиму з ним сьогодні.", "Приємно познайомитися, Марино!", "--"]}, {"answer": "Що трапилося?", "options": ["Що трапилося?", "--", "Приємно познайомитися! Я Олег."]}, {"answer": "Нічого серйозного. Ми вже помирилися.", "options": ["Нічого серйозного. Ми вже помирилися.", "Я прийшла з подругою. Ось вона — Марина.", "Привіт! З ким ти прийшла?"]}, {"answer": "Ти спробуєш помиритися з ним?", "options": ["Ти спробуєш помиритися з ним?", "Я прийшла з подругою. Ось вона — Марина.", "Ні, ми щойно познайомилися!"]}]`)}
 />
 
 ### Find Instrumental Forms
 
-<MarkTheWords>
-  <MarkTheWordsActivity
-    instruction={`Click the correct words.`}
-    text={`Click on all instrumental case forms.
-Я йду в кіно з другом(correct). Вона розмовляє з сестрою(correct). Ми живемо з батьками(correct). Діти(wrong) грають з котом(correct).
+<HighlightMorphemes>
+  <HighlightMorphemesActivity
+  instruction={`Click on all instrumental case forms.`}
+    text={`Я йду в кіно з другом. Вона розмовляє з сестрою. Ми живемо з батьками. Діти грають з котом.
 ---
-Він познайомився(wrong) з дівчиною(correct) на вечірці(wrong). Вона п'є каву(wrong) з молоком(correct). Ми зустрічаємося(wrong) з друзями(correct) щотижня(wrong).
+Він познайомився з дівчиною на вечірці. Вона п'є каву з молоком. Ми зустрічаємося з друзями щотижня.
 ---
-Петро одружився з Марією(correct). Вони живуть з дітьми(correct). Бабуся(wrong) гуляє з онуками(correct). Він розмовляє з колегою(correct) про роботу(wrong).`}
-    correctWords={JSON.parse(`["з другом", "з сестрою", "з батьками", "Діти", "з котом", "познайомився", "з дівчиною", "вечірці", "каву", "з молоком", "зустрічаємося", "з друзями", "щотижня", "з Марією", "з дітьми", "Бабуся", "з онуками", "з колегою", "про роботу"]`)}
+Петро одружився з Марією. Вони живуть з дітьми. Бабуся гуляє з онуками. Він розмовляє з колегою про роботу.`}
+    morphemes={[
+    { word: `з другом`, morpheme: `з другом`, type: `whole` },
+    { word: `з сестрою`, morpheme: `з сестрою`, type: `whole` },
+    { word: `з батьками`, morpheme: `з батьками`, type: `whole` },
+    { word: `з котом`, morpheme: `з котом`, type: `whole` },
+    { word: `з дівчиною`, morpheme: `з дівчиною`, type: `whole` },
+    { word: `з молоком`, morpheme: `з молоком`, type: `whole` },
+    { word: `з друзями`, morpheme: `з друзями`, type: `whole` },
+    { word: `з Марією`, morpheme: `з Марією`, type: `whole` },
+    { word: `з дітьми`, morpheme: `з дітьми`, type: `whole` },
+    { word: `з онуками`, morpheme: `з онуками`, type: `whole` },
+    { word: `з колегою`, morpheme: `з колегою`, type: `whole` }
+  ]}
   />
-</MarkTheWords>
+</HighlightMorphemes>
 
 ### English to Ukrainian
 
@@ -533,6 +560,63 @@ This story about a surprise party is full of Instrumental examples. Every time s
   title="English to Ukrainian"
   questions={JSON.parse(`[{"source": "I am going to the cinema with a friend.", "options": [{"text": "Я йду в кіно з другом.", "correct": true}, {"text": "Я йду в кіно з друг.", "correct": false}, {"text": "Я йду в кіно з другого.", "correct": false}, {"text": "Я йду в кіно з другові.", "correct": false}]}, {"source": "She is talking with her mother.", "options": [{"text": "Вона розмовляє з мамою.", "correct": true}, {"text": "Вона розмовляє з мама.", "correct": false}, {"text": "Вона розмовляє з мамі.", "correct": false}, {"text": "Вона розмовляє з маму.", "correct": false}]}, {"source": "We live with our parents.", "options": [{"text": "Ми живемо з батьками.", "correct": true}, {"text": "Ми живемо з батьки.", "correct": false}, {"text": "Ми живемо з батьків.", "correct": false}, {"text": "Ми живемо з батькам.", "correct": false}]}, {"source": "He is walking with the dog.", "options": [{"text": "Він гуляє з собакою.", "correct": true}, {"text": "Він гуляє з собака.", "correct": false}, {"text": "Він гуляє з собаку.", "correct": false}, {"text": "Він гуляє з собаці.", "correct": false}]}, {"source": "I am drinking coffee with milk.", "options": [{"text": "Я п'ю каву з молоком.", "correct": true}, {"text": "Я п'ю каву з молоко.", "correct": false}, {"text": "Я п'ю каву з молока.", "correct": false}, {"text": "Я п'ю каву з молоці.", "correct": false}]}, {"source": "Are you going with me?", "options": [{"text": "Ти йдеш зі мною?", "correct": true}, {"text": "Ти йдеш з я?", "correct": false}, {"text": "Ти йдеш з мене?", "correct": false}, {"text": "Ти йдеш з мною?", "correct": false}]}]`)}
 />
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| ама | ˈɑmɐ | ending (instr pl) | noun | ч |  |
+| ами | ˈɑmɪ | ending (instr pl) | other |  |  |
+| виконуватися | vɪˈkɔnuʋɐtɪsʲɐ | to be performed; to happen | verb |  |  |
+| використовуватися | vɪkorɪsˈtɔʋuʋɐtɪsʲɐ | to be used | verb |  |  |
+| виняток | ˈvɪnʲɐtok | exception | noun | ч |  |
+| відображати | vidobrɐˈʒɑte | to reflect | verb |  |  |
+| відразу | vidˈrɑzu | immediately | adv |  |  |
+| господар | hosˈpɔdɐr | master; host; owner | noun | ч |  |
+| ем | em | ending (instr sg) | other |  |  |
+| закохатися | zɐkoˈxɑtɪsʲɐ | to fall in love | verb |  |  |
+| закричати | zɐkrɪˈt͡ʃɑte | to scream; to shout | verb |  |  |
+| закінчуватися | zɐˈkint͡ʃuʋɐtɪsʲɐ | to finish; to end | verb |  |  |
+| засіб | ˈzɑsib | means; remedy | noun | ч |  |
+| зм | zm | change? (likely typo or grammar marker) | other |  |  |
+| зі | zi | with (variant of з) | other |  |  |
+| й | i | and | other |  |  |
+| кохання | koˈxɑnʲːɐ | love | noun | с |  |
+| крем | krɛm | cream | noun | ч |  |
+| любовий | lʲuˈbɔʋei̯ | love (adj) - typo? Любов (name)? | adj | ж |  |
+| марина | mɐˈrɪnɐ | Maryna | name | ж |  |
+| мн | mn | pl (abbreviation) | other |  |  |
+| над | nɑd | above; over | other |  |  |
+| найчастіше | nɐi̯t͡ʃɐsˈtiʃe | most often | adv |  |  |
+| наталія | nɐˈtɑlʲijɐ | Nataliya | name | ж |  |
+| начальник | nɐˈt͡ʃɑlʲnɪk | boss; chief | noun | ч |  |
+| олексій | olekˈsʲii̯ | Oleksiy | name | ч |  |
+| ом | om | ending (instr sg) | noun | ч |  |
+| орудний | oˈrudnei̯ | instrumental (case) | adj | ч |  |
+| орудувати | oruˈduʋɐte | to wield; to operate | verb |  |  |
+| освіжати | osʲʋiˈʒɑte | to refresh | verb |  |  |
+| партнер | pɐrtˈnɛr | partner | noun | ч |  |
+| подружитися | podruˈʒɪtɪsʲɐ | to make friends | verb |  |  |
+| познайомити | poznɐˈjɔmɪte | to introduce | verb | ч |  |
+| поле | ˈpɔle | field | noun | с |  |
+| помиритися | pomɪˈrɪtɪsʲɐ | to reconcile; to make up | verb |  |  |
+| попрощатися | poproˈʃt͡ʃɑtɪsʲɐ | to say goodbye | verb |  |  |
+| посваритися | posʋɐˈrɪtɪsʲɐ | to quarrel | verb |  |  |
+| походити | poxoˈdɪte | to originate; to come from | verb |  |  |
+| правильно | ˈprɑʋɪlʲno | correctly | adv |  |  |
+| проєкт | proˈjɛkt | project | noun | ч |  |
+| розлучитися | rozluˈt͡ʃɪtɪsʲɐ | to divorce | verb |  |  |
+| супровод | suˈprɔʋid | accompaniment; escort | noun | ч |  |
+| сховатися | sxoˈʋɑtɪsʲɐ | to hide (oneself) | verb |  |  |
+| сюрприз | sʲurˈprɪz | surprise | noun | ч |  |
+| уже | uˈʒɛ | already | adv |  |  |
+| утворити | utʋoˈrɪte | to form; to create | verb |  |  |
+| учора | uˈt͡ʃɔrɐ | yesterday | adv |  |  |
+| функція | ˈfunkt͡sʲijɐ | function | noun | ж |  |
+| хресна | ˈxrɛsnɐ | godmother | other | ж |  |
+| яма | ˈjɑmɐ | ending (instr pl) or pit | noun | ж |  |
+| єм | jem | ending (instr sg) | other |  |  |
+| інструмент | instruˈmɛnt | instrument; tool | noun | ч |  |
 
 ## 📋 Підсумок
 
@@ -564,40 +648,20 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 ## Need More Practice?
 
-:::info[External Resources]
-
-- 🎥 [Instrumental Case Explained](https://www.youtube.com/watch?v=lmPHpt2DGos) — Speak Ukrainian
-- 📖 [Instrumental Case Guide](https://www.talkukrainian.com/instrumental-case/)
-- 📝 [Instrumental Usage](https://www.speakua.com/blog/instrumental-case-ukrainian)
-- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-:::
-
-
 ---
 
-## 📚 Vocabulary
-
-| Word | IPA               | English                 | POS  | Gender | Note                      |
-| ------------- | ----------------- | ----------------------- | ---- | ------ | ------------------------- |
-| із            | /iz/              | with                    | prep | —      | variant before clusters   |
-| зі            | /zi/              | with                    | prep | —      | variant before з, с, ш, щ |
-| разом з       | /ˈrɑzom z/        | together with           | prep | —      | + Instrumental            |
-| поруч з       | /ˈporutʃ z/       | next to                 | prep | —      | + Instrumental            |
-| поряд з       | /ˈporʲɑd z/       | alongside               | prep | —      | + Instrumental            |
-| зустрічатися  | /zustriˈtʃɑtɪsʲɑ/ | to meet                 | verb | —      | impf; з + Instr           |
-| розмовляти    | /rozmɔʋˈlʲɑtɪ/    | to talk, converse       | verb | —      | impf; з + Instr           |
-| спілкуватися  | /spilkuˈʋɑtɪsʲɑ/  | to communicate          | verb | —      | impf; з + Instr           |
-| зустрітися    | /zuˈstritɪsʲɑ/    | to meet                 | verb | —      | pf; з + Instr             |
-| познайомитися | /poznɑˈjɔmɪtɪsʲɑ/ | to get acquainted       | verb | —      | pf; з + Instr             |
-| посваритися   | /poswɑˈrɪtɪsʲɑ/   | to quarrel              | verb | —      | pf; з + Instr             |
-| помиритися    | /pomɪˈrɪtɪsʲɑ/    | to make peace           | verb | —      | pf; з + Instr             |
-| одружитися    | /oˈdruʒɪtɪsʲɑ/    | to marry                | verb | —      | pf; з + Instr             |
-| розлучитися   | /rozluˈtʃɪtɪsʲɑ/  | to divorce              | verb | —      | pf; з + Instr             |
-| подружитися   | /podruˈʒɪtɪsʲɑ/   | to become friends       | verb | —      | pf; з + Instr             |
-| товаришувати  | /toʋɑˈrɪʃuʋɑtɪ/   | to be friends with      | verb | —      | impf; з + Instr           |
-| приятелювати  | /prɪjɑˈtelʲuʋɑtɪ/ | to be on friendly terms | verb | —      | impf; з + Instr           |
-| сусідити      | /suˈsidɪtɪ/       | to be neighbors         | verb | —      | impf; з + Instr           |
-| жити          | /ˈʒɪtɪ/           | to live                 | verb | —      | impf                      |
-| орудний       | /oˈrudnɪj/        | Instrumental (case)     | adj  | m      | this module               |
-
----
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [ULP 2-61 Christmas dinner in Ukraine + Instrumental case](https://www.ukrainianlessons.com/lesson/61/) — Level-aligned topic match: instrumental
+> - [ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns](https://www.ukrainianlessons.com/lesson/62/) — Level-aligned topic match: instrumental
+>
+> **📺 YouTube:**
+> - [Instrumental Case Explained](https://www.youtube.com/watch?v=lmPHpt2DGos) — Speak Ukrainian
+>
+> **📖 Articles:**
+> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Unknown
+>
+> **🌐 Websites:**
+> - [Instrumental Case Guide](https://www.talkukrainian.com/instrumental-case/) — Unknown
+> - [Instrumental Usage](https://www.speakua.com/blog/instrumental-case-ukrainian) — Unknown

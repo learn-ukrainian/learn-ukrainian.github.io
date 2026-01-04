@@ -18,7 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 ## Introduction
 
@@ -375,6 +375,7 @@ Every answer is in the dative case because all these people are _recipients_ of 
 ---
 
 
+
 ## 🎯 Activities
 
 ### Nominative to Dative
@@ -416,7 +417,7 @@ Every answer is in the dative case because all these people are _recipients_ of 
 
 <Unjumble
   title="Dative Sentences"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Я сьогодні даю книгу другові в новому магазині"}, {"jumbled": "", "answer": "Вона щодня завжди телефонує мамі ввечері після роботи"}, {"jumbled": "", "answer": "Ми кожного тижня пишемо листа бабусі з Канади"}, {"jumbled": "", "answer": "Він кожного дня допомагає сестрі з уроками вдома"}, {"jumbled": "", "answer": "Батько щороку дарує квіти мамі на день народження"}, {"jumbled": "", "answer": "Лікар дуже детально пояснює діагноз пацієнтові в кабінеті"}]`)}
+  items={JSON.parse(`[{"jumbled": "Я / даю / книгу / другові / в / новому / магазині / сьогодні", "answer": "Я сьогодні даю книгу другові в новому магазині"}, {"jumbled": "Вона / телефонує / мамі / щодня / ввечері / після / роботи / завжди", "answer": "Вона щодня завжди телефонує мамі ввечері після роботи"}, {"jumbled": "Ми / пишемо / листа / бабусі / з / Канади / кожного / тижня", "answer": "Ми кожного тижня пишемо листа бабусі з Канади"}, {"jumbled": "Він / допомагає / сестрі / з / уроками / кожного / дня / вдома", "answer": "Він кожного дня допомагає сестрі з уроками вдома"}, {"jumbled": "Батько / дарує / квіти / мамі / на / день / народження / щороку", "answer": "Батько щороку дарує квіти мамі на день народження"}, {"jumbled": "Лікар / пояснює / діагноз / пацієнтові / в / кабінеті / дуже / детально", "answer": "Лікар дуже детально пояснює діагноз пацієнтові в кабінеті"}]`)}
 />
 
 ### Fix the Dative
@@ -478,25 +479,52 @@ Every answer is in the dative case because all these people are _recipients_ of 
 
 ### At the Post Office
 
-<DialogueReorder
+<Cloze
   title="At the Post Office"
-  lines={JSON.parse(`[{"text": "Дякую! До побачення!", "order": 1, "speaker": ""}, {"text": "Так, звичайно. Ось ваша квитанція.", "order": 2, "speaker": ""}, {"text": "Добрий день! Кому ви надсилаєте посилку?", "order": 3, "speaker": ""}, {"text": "Батькам. Вони живуть у Львові.", "order": 4, "speaker": ""}, {"text": "Добре. Можете написати адресу тут?", "order": 5, "speaker": ""}, {"text": "--", "order": 6, "speaker": ""}, {"text": "Може, цю книгу про Карпати?", "order": 7, "speaker": ""}, {"text": "Чудова ідея! Він точно буде радий.", "order": 8, "speaker": ""}, {"text": "Я шукаю щось цікаве для племінника.", "order": 9, "speaker": ""}, {"text": "Йому подобаються книги про подорожі?", "order": 10, "speaker": ""}, {"text": "Так, він любить читати про нові місця!", "order": 11, "speaker": ""}]`)}
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "Дякую! До побачення!", "options": ["Дякую! До побачення!", "Може, цю книгу про Карпати?", "--"]}, {"answer": "Так, звичайно. Ось ваша квитанція.", "options": ["Так, звичайно. Ось ваша квитанція.", "Добре. Можете написати адресу тут?", "Може, цю книгу про Карпати?"]}, {"answer": "Добрий день! Кому ви надсилаєте посилку?", "options": ["Добрий день! Кому ви надсилаєте посилку?", "Може, цю книгу про Карпати?", "Чудова ідея! Він точно буде радий."]}, {"answer": "Батькам. Вони живуть у Львові.", "options": ["Батькам. Вони живуть у Львові.", "Так, звичайно. Ось ваша квитанція.", "--"]}, {"answer": "Добре. Можете написати адресу тут?", "options": ["Добре. Можете написати адресу тут?", "Я шукаю щось цікаве для племінника.", "Так, він любить читати про нові місця!"]}, {"answer": "--", "options": ["--", "Батькам. Вони живуть у Львові.", "Добрий день! Кому ви надсилаєте посилку?"]}, {"answer": "Може, цю книгу про Карпати?", "options": ["Може, цю книгу про Карпати?", "Чудова ідея! Він точно буде радий.", "Йому подобаються книги про подорожі?"]}, {"answer": "Чудова ідея! Він точно буде радий.", "options": ["Чудова ідея! Він точно буде радий.", "Йому подобаються книги про подорожі?", "Так, звичайно. Ось ваша квитанція."]}, {"answer": "Я шукаю щось цікаве для племінника.", "options": ["Я шукаю щось цікаве для племінника.", "Йому подобаються книги про подорожі?", "Так, звичайно. Ось ваша квитанція."]}, {"answer": "Йому подобаються книги про подорожі?", "options": ["Йому подобаються книги про подорожі?", "--", "Батькам. Вони живуть у Львові."]}, {"answer": "Так, він любить читати про нові місця!", "options": ["Так, він любить читати про нові місця!", "Добрий день! Кому ви надсилаєте посилку?", "Добре. Можете написати адресу тут?"]}]`)}
 />
 
 ### Find Dative Nouns
 
-<MarkTheWords>
-  <MarkTheWordsActivity
-    instruction={`Click the correct words.`}
-    text={`Click on all the nouns in the dative case.
-Я даю книгу(wrong) другові(correct). Він показує фото(wrong) сестрі(correct). Ми пишемо листи(wrong) батькам(correct). Лікар(wrong) допомагає пацієнтові(correct). Вона телефонує мамі(correct) щодня.
+<HighlightMorphemes>
+  <HighlightMorphemesActivity
+  instruction={`Click on all the nouns in the dative case.`}
+    text={`Я даю книгу другові. Він показує фото сестрі. Ми пишемо листи батькам. Лікар допомагає пацієнтові. Вона телефонує мамі щодня.
 ---
-Вчитель(wrong) пояснює урок(wrong) учням(correct). Я надсилаю посилку(wrong) бабусі(correct). Він дарує квіти(wrong) дівчині(correct). Брат(wrong) допомагає сестрі(correct). Ми довіряємо цьому(wrong) лікареві(correct).
+Вчитель пояснює урок учням. Я надсилаю посилку бабусі. Він дарує квіти дівчині. Брат допомагає сестрі. Ми довіряємо цьому лікареві.
 ---
-Я пишу листа(wrong) другові(correct). Вона показує картину(wrong) гостям(correct). Батько(wrong) читає казку(wrong) дітям(correct). Ми телефонуємо друзям(correct) щотижня. Він дарує подарунок(wrong) мамі(correct).`}
-    correctWords={JSON.parse(`["книгу", "другові", "фото", "сестрі", "листи", "батькам", "Лікар", "пацієнтові", "мамі", "Вчитель", "урок", "учням", "посилку", "бабусі", "квіти", "дівчині", "Брат", "сестрі", "цьому", "лікареві", "листа", "другові", "картину", "гостям", "Батько", "казку", "дітям", "друзям", "подарунок", "мамі"]`)}
+Я пишу листа другові. Вона показує картину гостям. Батько читає казку дітям. Ми телефонуємо друзям щотижня. Він дарує подарунок мамі.`}
+    morphemes={[
+    { word: `другові`, morpheme: `другові`, type: `whole` },
+    { word: `сестрі`, morpheme: `сестрі`, type: `whole` },
+    { word: `батькам`, morpheme: `батькам`, type: `whole` },
+    { word: `пацієнтові`, morpheme: `пацієнтові`, type: `whole` },
+    { word: `мамі`, morpheme: `мамі`, type: `whole` },
+    { word: `учням`, morpheme: `учням`, type: `whole` },
+    { word: `бабусі`, morpheme: `бабусі`, type: `whole` },
+    { word: `дівчині`, morpheme: `дівчині`, type: `whole` },
+    { word: `сестрі`, morpheme: `сестрі`, type: `whole` },
+    { word: `лікареві`, morpheme: `лікареві`, type: `whole` },
+    { word: `другові`, morpheme: `другові`, type: `whole` },
+    { word: `гостям`, morpheme: `гостям`, type: `whole` },
+    { word: `дітям`, morpheme: `дітям`, type: `whole` },
+    { word: `друзям`, morpheme: `друзям`, type: `whole` },
+    { word: `мамі`, morpheme: `мамі`, type: `whole` }
+  ]}
   />
-</MarkTheWords>
+</HighlightMorphemes>
 
 ### English to Ukrainian
 
@@ -504,6 +532,94 @@ Every answer is in the dative case because all these people are _recipients_ of 
   title="English to Ukrainian"
   questions={JSON.parse(`[{"source": "I am writing a letter to my mother.", "options": [{"text": "Я пишу листа мамі.", "correct": true}, {"text": "Я пишу листа маму.", "correct": false}, {"text": "Я пишу листа мамою.", "correct": false}, {"text": "Я пишу листа мама.", "correct": false}]}, {"source": "He helps his friend.", "options": [{"text": "Він допомагає другу.", "correct": true}, {"text": "Він допомагає друга.", "correct": false}, {"text": "Він допомагає другом.", "correct": false}, {"text": "Він допомагає друг.", "correct": false}]}, {"source": "We are sending a parcel to our grandparents.", "options": [{"text": "Ми надсилаємо посилку бабусі і дідусеві.", "correct": true}, {"text": "Ми надсилаємо посилку бабуся і дідусь.", "correct": false}, {"text": "Ми надсилаємо посилку бабусю і дідуся.", "correct": false}, {"text": "Ми надсилаємо посилку бабусі і дідуся.", "correct": false}]}, {"source": "The teacher explains the lesson to the students.", "options": [{"text": "Вчитель пояснює урок учням.", "correct": true}, {"text": "Вчитель пояснює урок учні.", "correct": false}, {"text": "Вчитель пояснює урок учнів.", "correct": false}, {"text": "Вчитель пояснює урок учнями.", "correct": false}]}, {"source": "Do you trust this doctor?", "options": [{"text": "Ви довіряєте цьому лікареві?", "correct": true}, {"text": "Ви довіряєте цей лікар?", "correct": false}, {"text": "Ви довіряєте цього лікаря?", "correct": false}, {"text": "Ви довіряєте цим лікарем?", "correct": false}]}, {"source": "She gives flowers to her sister.", "options": [{"text": "Вона дарує квіти сестрі.", "correct": true}, {"text": "Вона дарує квіти сестру.", "correct": false}, {"text": "Вона дарує квіти сестра.", "correct": false}, {"text": "Вона дарує квіти сестрою.", "correct": false}]}]`)}
 />
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| ам | ɑm | ending (dative pl) | noun | ч |  |
+| бабусі | bɐˈbusʲi | grandmother (dative) | noun | ж |  |
+| братова | brɐˈtɔʋɐ | brother's | name | ч |  |
+| більш | bilʲʃ | more | adv |  |  |
+| важливо | ʋɐʒˈlɪʋo | importantly; it is important | adv |  |  |
+| вибачати | vɪbɐˈt͡ʃɑte | to forgive | verb |  |  |
+| викладач | vɪklɐˈdɑt͡ʃ | teacher; lecturer | noun | ч |  |
+| відбуватися | vidbuˈʋɑtɪsʲɐ | to happen; to take place | verb |  |  |
+| віддавати | vidːɐˈʋɑte | to give back | verb |  |  |
+| вірити | ˈvirɪte | to believe | verb |  |  |
+| герой | ɦeˈrɔi̯ | hero | noun | ч |  |
+| господиня | hospoˈdɪnʲɐ | hostess; housewife | noun | ж |  |
+| граматично | ɦrɐmɐˈtɪt͡ʃno | grammatically | adv |  |  |
+| деякий | ˈdɛjɐkei̯ | some; certain | other |  |  |
+| довго | ˈdɔu̯ɦo | long (time) | adv |  |  |
+| довіряти | doʋiˈrʲɑte | to trust | verb |  |  |
+| дозвіл | ˈdɔzʋil | permission | noun | ч |  |
+| донець | doˈnɛt͡sʲ | Donets (river) | noun | ж |  |
+| донька | ˈdɔnʲkɐ | daughter | noun | ж |  |
+| еві | ˈɛʋi | ending (dative sg) | other |  |  |
+| забруднення | zɐˈbrudnʲenʲːɐ | pollution | noun | с |  |
+| звучати | zʋuˈt͡ʃɑte | to sound | verb |  |  |
+| зміна | ˈzminɐ | change | noun | ж |  |
+| канада | kɐˈnɑdɐ | Canada | name | ж |  |
+| канади | kɐˈnɑde | Canada (genitive) | name | ж |  |
+| кеві | ˈkɛʋi | Kevin (dative?) | name | ч |  |
+| колезо | ˈkɔlezo | wheel (typo? колесо) | noun | ч |  |
+| контекст | konˈtɛkst | context | noun | ч |  |
+| котова | koˈtɔʋɐ | cat's | noun | ч |  |
+| котовий | koˈtɔʋei̯ | cat's | adj |  |  |
+| личати | lɪˈt͡ʃɑte | to suit; to become (archaic/dialect? пасувати is std) | verb |  |  |
+| лише | lɪˈʃɛ | only | other |  |  |
+| літературний | lʲiterɐˈturnei̯ | literary | adj | ч |  |
+| математика | mɐteˈmɑtɪkɐ | mathematics | noun | ж |  |
+| мелодійніше | melodiˈjnʲiʃe | more melodiously | adv |  |  |
+| множина | mnoʒɪˈnɑ | plural | noun | ж |  |
+| мовлення | ˈmɔu̯lenʲːɐ | speech | noun | с |  |
+| можливий | moʒˈlɪʋei̯ | possible | adj |  |  |
+| надсилати | nɐdsɪˈlɑte | to send | verb |  |  |
+| неформальний | neforˈmɑlʲnei̯ | informal | adj |  |  |
+| обидва | ˈɔbɪdʋɐ | both | other | ж |  |
+| обрати | obˈrɑte | to choose | verb |  |  |
+| ові | ˈɔʋi | ending (dative sg) | other |  |  |
+| однина | odnɪˈnɑ | singular | noun | ж |  |
+| оленко | oˈlɛnko | Olenka (vocative) | name | ж |  |
+| офіційно | ofiˈt͡sʲijno | officially | adv |  |  |
+| пані | ˈpɑni | Mrs.; Lady | name | ж |  |
+| пацієнт | pɐt͡sʲiˈjɛnt | patient | noun | ч |  |
+| перевага | pereˈʋɑɦɐ | advantage; preference | noun | ж |  |
+| передбачуваний | peredˈbɑt͡ʃuʋɐnei̯ | predictable | adj |  |  |
+| письмовий | pɪsʲˈmɔʋei̯ | written | adj | ч |  |
+| повсякденний | pou̯sʲɐkˈdɛnːei̯ | everyday | adj | с |  |
+| повідомлення | poʋiˈdɔmlenʲːɐ | message | noun | с |  |
+| подрузі | poˈdruzʲi | friend (female, dative) | other |  |  |
+| правильний | ˈprɑʋɪlʲnei̯ | correct; right | adj |  |  |
+| приголосний | ˈprɪɦolosnei̯ | consonant | adj | ч |  |
+| приголосній | ˈprɪɦolosnʲij | consonant (locative?) | noun | ч |  |
+| пропустити | propusˈtɪte | to miss | verb | ж |  |
+| простіший | prosˈtiʃei̯ | simpler | adj |  |  |
+| проте | proˈtɛ | however | other |  |  |
+| радити | ˈrɑdɪte | to advise | verb |  |  |
+| розмовний | rozˈmɔu̯nei̯ | colloquial; conversational | adj | ж |  |
+| розмовно | rozˈmɔu̯no | colloquially | adv |  |  |
+| свекрус | sʋekˈrus | mother-in-law (typo? свекруха) | noun | ж |  |
+| свекрухий | sʋekruˈxɪi̯ | mother-in-law's | adj | ж |  |
+| сетрі | ˈsɛtri | sister (dative - typo? сестрі) | noun | ч |  |
+| спілкуватися | spilkuˈʋɑtɪsʲɐ | to communicate | verb |  |  |
+| суворий | suˈʋɔrei̯ | strict; severe | adj | ч |  |
+| сумувати | sumuˈʋɑte | to miss; to be sad | verb |  |  |
+| твердий | tʋerˈdei̯ | hard | adj | ч |  |
+| тип | tɪp | type | noun | ч |  |
+| торонто | toˈrɔnto | Toronto | name | с |  |
+| уряд | ˈurʲɐd | government | noun | ч |  |
+| учня | ˈut͡ʃnʲɐ | student (genitive) | noun | ч |  |
+| фотографія | fotoˈɦrɑfijɐ | photograph | noun | ж |  |
+| цукерка | t͡suˈkɛrkɐ | candy | noun | ж |  |
+| цілувати | t͡sʲiluˈʋɑte | to kiss | verb |  |  |
+| чергування | t͡ʃerɦuˈʋɑnʲːɐ | alternation | noun | с |  |
+| чоловічий | t͡ʃoloˈʋit͡ʃei̯ | masculine; male | adj | ч |  |
+| шкодити | ˈʃkɔdɪte | to harm | verb |  |  |
+| щотижня | ʃt͡ʃoˈtɪʒnʲɐ | weekly | adv |  |  |
+| ям | jɑm | pits (genitive pl) or ending | other |  |  |
+| із | iz | from; with | other |  |  |
 
 ## 📋 Підсумок
 
@@ -533,35 +649,23 @@ Every answer is in the dative case because all these people are _recipients_ of 
 
 ## Need More Practice?
 
-:::info[External Resources]
-
-- 🎥 [Dative Case Practice](https://www.youtube.com/watch?v=Cm0Ay7NEOlw) — Let's Learn Ukrainian
-- 📖 [Nouns in Dative Case](https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-dative-case/)
-- 📝 [Dative Case Guide](https://www.ukrainianlessons.com/intro-cases/)
-- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-:::
-
-
 ---
 
-## 📚 Vocabulary
-
-| Word        | IPA             | English              | POS  | Gender | Note                      |
-| ----------- | --------------- | -------------------- | ---- | ------ | ------------------------- |
-| посилати    | /posɪˈlɑtɪ/     | to send              | verb | —      | imperfective; + Dat + Acc |
-| надсилати   | /nɑdsɪˈlɑtɪ/    | to send              | verb | —      | formal; impf; + Dat + Acc |
-| пояснювати  | /pojɑˈsnjuʋɑtɪ/ | to explain           | verb | —      | imperfective; + Dat + Acc |
-| розповідати | /rɔzpoʋiˈdɑtɪ/  | to tell, narrate     | verb | —      | imperfective; + Dat + Acc |
-| личити      | /lɪˈtʃɪtɪ/      | to suit, become      | verb | —      | imperfective; + Dat       |
-| підходити   | /pidxoˈdɪtɪ/    | to suit, fit         | verb | —      | imperfective; + Dat       |
-| пасувати    | /pɑsuˈʋɑtɪ/     | to match, go well    | verb | —      | imperfective; + Dat       |
-| вистачати   | /ʋɪstɑˈtʃɑtɪ/   | to be enough         | verb | —      | imperfective; + Dat       |
-| бракувати   | /brɑˈkuʋɑtɪ/    | to lack, be short of | verb | —      | imperfective; + Dat       |
-| шкодити     | /ʃkoˈdɪtɪ/      | to harm              | verb | —      | imperfective; + Dat       |
-| вірити      | /ˈʋirɪtɪ/       | to believe           | verb | —      | imperfective; + Dat       |
-| довіряти    | /doʋiˈrʲɑtɪ/    | to trust             | verb | —      | imperfective; + Dat       |
-| радити      | /ˈrɑdɪtɪ/       | to advise            | verb | —      | imperfective; + Dat + Acc |
-| дозволяти   | /dozʋoˈlʲɑtɪ/   | to allow, permit     | verb | —      | imperfective; + Dat + Inf |
-| забороняти  | /zɑboroˈnʲɑtɪ/  | to forbid            | verb | —      | imperfective; + Dat + Inf |
-
----
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [ULP 2-42My Room + Plural nouns in Ukrainian](https://www.ukrainianlessons.com/lesson/42/) — Level-aligned topic match: nouns
+> - [ULP 2-51 Electronics and technology + Dative case](https://www.ukrainianlessons.com/lesson/51/) — Level-aligned topic match: dative
+> - [ULP 2-52 Buying a phone in Ukraine + Dative case](https://www.ukrainianlessons.com/lesson/52/) — Level-aligned topic match: dative
+> - [ULP 2-53 Social Media in Ukrainian + Dative case](https://www.ukrainianlessons.com/lesson/53/) — Level-aligned topic match: dative
+> - [ULP 2-58 Inviting to a party + Accusative case of pronouns](https://www.ukrainianlessons.com/lesson/58/) — Level-aligned topic match: nouns
+>
+> **📺 YouTube:**
+> - [Dative Case Practice](https://www.youtube.com/watch?v=Cm0Ay7NEOlw) — Let's Learn Ukrainian
+>
+> **📖 Articles:**
+> - [Dative Case Guide](https://www.ukrainianlessons.com/intro-cases/) — Unknown
+> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Unknown
+>
+> **🌐 Websites:**
+> - [Nouns in Dative Case](https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-dative-case/) — Unknown

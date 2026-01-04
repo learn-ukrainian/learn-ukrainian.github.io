@@ -377,7 +377,7 @@
       correct: false
     - text: Старша
       correct: false
-  - question: 'They are engaged (getting married soon). He is:'
+  - question: 'They are engaged. He is:'
     options:
     - text: Наречений
       correct: true

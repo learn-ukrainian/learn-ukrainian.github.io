@@ -18,7 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 ## Warm-up
 
@@ -323,6 +323,7 @@ Always use the correct register based on your relationship!
 ---
 
 
+
 ## 🎯 Activities
 
 ### Preposition Meaning
@@ -350,7 +351,7 @@ Always use the correct register based on your relationship!
 
 <Quiz
   title="Logical Prepositions"
-  questions={JSON.parse(`[{"question": "In Ukrainian grammar, which grammatical case does the preposition \\\"для\\\" (for) always require?", "options": [{"text": "Genitive", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Instrumental", "correct": false}, {"text": "Locative", "correct": false}]}, {"question": "When someone says \\\"Через дощ ми залишилися вдома,\\\" what does \\\"через\\\" express here?", "options": [{"text": "Because of rain", "correct": true}, {"text": "Through the rain", "correct": false}, {"text": "About rain", "correct": false}, {"text": "Without rain", "correct": false}]}, {"question": "When you receive \\\"Лист від мами,\\\" what does the preposition \\\"від\\\" indicate in this context?", "options": [{"text": "From mom (source)", "correct": true}, {"text": "For mom (benefit)", "correct": false}, {"text": "With mom (accompaniment)", "correct": false}, {"text": "About mom (topic)", "correct": false}]}, {"question": "When expressing the topic of a conversation in Ukrainian, which preposition correctly means \\\"about\\\"?", "options": [{"text": "про", "correct": true}, {"text": "для", "correct": false}, {"text": "від", "correct": false}, {"text": "через", "correct": false}]}, {"question": "When ordering \\\"Кава без цукру\\\" at a café, what does \\\"без\\\" express in this phrase?", "options": [{"text": "Without sugar", "correct": true}, {"text": "With sugar", "correct": false}, {"text": "For sugar", "correct": false}, {"text": "Instead of sugar", "correct": false}]}, {"question": "When arranging to meet \\\"О третій годині,\\\" what does the preposition \\\"о\\\" indicate here?", "options": [{"text": "Time (at 3 o'clock)", "correct": true}, {"text": "Place (at the third)", "correct": false}, {"text": "Person (about the third)", "correct": false}, {"text": "Duration (for 3 hours)", "correct": false}]}, {"question": "When someone orders \\\"Чай замість кави,\\\" what does the preposition \\\"замість\\\" express here?", "options": [{"text": "Instead of tea", "correct": true}, {"text": "About tea", "correct": false}, {"text": "Without tea", "correct": false}, {"text": "After tea", "correct": false}]}, {"question": "In Ukrainian, which preposition always requires the Instrumental case to follow it?", "options": [{"text": "з", "correct": true}, {"text": "для", "correct": false}, {"text": "про", "correct": false}, {"text": "без", "correct": false}]}]`)}
+  questions={JSON.parse(`[{"question": "In Ukrainian grammar, which grammatical case does the preposition \\\"для\\\" (for) always require?", "options": [{"text": "Genitive", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Instrumental", "correct": false}, {"text": "Locative", "correct": false}]}, {"question": "When someone says \\\"Через дощ ми залишилися вдома,\\\" what does \\\"через\\\" express here?", "options": [{"text": "Because of rain", "correct": true}, {"text": "Through the rain", "correct": false}, {"text": "About rain", "correct": false}, {"text": "Without rain", "correct": false}]}, {"question": "When you receive \\\"Лист від мами,\\\" what does the preposition \\\"від\\\" indicate in this context?", "options": [{"text": "From mom (source)", "correct": true}, {"text": "For mom (benefit)", "correct": false}, {"text": "With mom", "correct": false}, {"text": "About mom (topic)", "correct": false}]}, {"question": "When expressing the topic of a conversation in Ukrainian, which preposition correctly means \\\"about\\\"?", "options": [{"text": "про", "correct": true}, {"text": "для", "correct": false}, {"text": "від", "correct": false}, {"text": "через", "correct": false}]}, {"question": "When ordering \\\"Кава без цукру\\\" at a café, what does \\\"без\\\" express in this phrase?", "options": [{"text": "Without sugar", "correct": true}, {"text": "With sugar", "correct": false}, {"text": "For sugar", "correct": false}, {"text": "Instead of sugar", "correct": false}]}, {"question": "When arranging to meet \\\"О третій годині,\\\" what does the preposition \\\"о\\\" indicate here?", "options": [{"text": "Time (at 3 o'clock)", "correct": true}, {"text": "Place", "correct": false}, {"text": "Person", "correct": false}, {"text": "Duration (for 3 hours)", "correct": false}]}, {"question": "When someone orders \\\"Чай замість кави,\\\" what does the preposition \\\"замість\\\" express here?", "options": [{"text": "Instead of tea", "correct": true}, {"text": "About tea", "correct": false}, {"text": "Without tea", "correct": false}, {"text": "After tea", "correct": false}]}, {"question": "In Ukrainian, which preposition always requires the Instrumental case to follow it?", "options": [{"text": "з", "correct": true}, {"text": "для", "correct": false}, {"text": "про", "correct": false}, {"text": "без", "correct": false}]}]`)}
 />
 
 ### Story Gaps
@@ -392,7 +393,7 @@ ___ роботу вона не їздить часто додому.
 
 <Unjumble
   title="Logical Sentences"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Кава без цукру і молока будь ласка мені"}, {"jumbled": "", "answer": "Це подарунок для тебе я купив у магазині"}, {"jumbled": "", "answer": "Лист від мами прийшов вчора з нашого села"}, {"jumbled": "", "answer": "Через дощ я залишився вдома і читав книгу"}, {"jumbled": "", "answer": "Ми говорили про тебе і твою нову роботу"}, {"jumbled": "", "answer": "Кава з молоком і цукром будь ласка мені"}, {"jumbled": "", "answer": "Зустрінемось о третій годині біля входу в метро"}, {"jumbled": "", "answer": "Чай замість кави будь ласка і з лимоном"}]`)}
+  items={JSON.parse(`[{"jumbled": "цукру / Кава / без / і / молока / будь / ласка / мені", "answer": "Кава без цукру і молока будь ласка мені"}, {"jumbled": "тебе / Це / для / я / купив / подарунок / у / магазині", "answer": "Це подарунок для тебе я купив у магазині"}, {"jumbled": "мами / Лист / від / прийшов / вчора / з / села / нашого", "answer": "Лист від мами прийшов вчора з нашого села"}, {"jumbled": "дощ / залишився / Через / я / вдома / і / читав / книгу", "answer": "Через дощ я залишився вдома і читав книгу"}, {"jumbled": "про / говорили / Ми / тебе / і / твою / нову / роботу", "answer": "Ми говорили про тебе і твою нову роботу"}, {"jumbled": "молоком / Кава / з / і / цукром / будь / ласка / мені", "answer": "Кава з молоком і цукром будь ласка мені"}, {"jumbled": "третій / о / Зустрінемось / годині / біля / входу / в / метро", "answer": "Зустрінемось о третій годині біля входу в метро"}, {"jumbled": "кави / Чай / замість / будь / ласка / і / з / лимоном", "answer": "Чай замість кави будь ласка і з лимоном"}]`)}
 />
 
 ### Wrong Preposition
@@ -446,7 +447,7 @@ ___ роботу вона не їздить часто додому.
 
 <TrueFalse
   title="Preposition Rules"
-  items={JSON.parse(`[{"statement": "\\\"Для\\\" always takes the genitive case.", "isTrue": true, "explanation": "Correct! Для + Gen: для мами, для тебе."}, {"statement": "\\\"Про\\\" takes the genitive case.", "isTrue": false, "explanation": "False! \\\"Про\\\" takes accusative: про тебе, про книгу."}, {"statement": "\\\"Через\\\" can mean both \\\"because of\\\" and \\\"through.\\\"", "isTrue": true, "explanation": "Yes! Через дощ (because of rain), через парк (through the park)."}, {"statement": "\\\"Від\\\" is used for receiving something from a person.", "isTrue": true, "explanation": "Correct! Лист від мами = a letter from mom."}, {"statement": "\\\"З\\\" always means \\\"from.\\\"", "isTrue": false, "explanation": "False! \\\"З\\\" with instrumental means \\\"with\\\": з другом."}, {"statement": "\\\"Після\\\" means \\\"after\\\" and takes genitive.", "isTrue": true, "explanation": "Yes! Після роботи = after work."}, {"statement": "\\\"Для\\\" and \\\"на\\\" mean the same thing.", "isTrue": false, "explanation": "False! Для = benefit (для тебе), На = payment (на каву)."}, {"statement": "\\\"Крім\\\" means \\\"except\\\" and takes genitive.", "isTrue": true, "explanation": "Correct! Всі прийшли, крім Олега."}, {"statement": "\\\"О/об\\\" is used for clock time.", "isTrue": true, "explanation": "Yes! О третій = at three o'clock."}, {"statement": "\\\"Через + noun\\\" and \\\"тому що + clause\\\" are interchangeable.", "isTrue": false, "explanation": "They both mean \\\"because\\\" but have different grammar: через дощ vs тому що йде дощ."}, {"statement": "\\\"Замість\\\" means \\\"instead of.\\\"", "isTrue": true, "explanation": "Correct! Чай замість кави = tea instead of coffee."}, {"statement": "\\\"Без\\\" expresses absence.", "isTrue": true, "explanation": "Yes! Кава без цукру = coffee without sugar."}]`)}
+  items={JSON.parse(`[{"statement": "\\\"Для\\\" always takes the genitive case.", "isTrue": true, "explanation": "Correct! Для + Gen: для мами, для тебе."}, {"statement": "\\\"Про\\\" takes the genitive case.", "isTrue": false, "explanation": "False! \\\"Про\\\" takes accusative: про тебе, про книгу."}, {"statement": "\\\"Через\\\" can mean both \\\"because of\\\" and \\\"through.\\\"", "isTrue": true, "explanation": "Yes! Через дощ, через парк."}, {"statement": "\\\"Від\\\" is used for receiving something from a person.", "isTrue": true, "explanation": "Correct! Лист від мами = a letter from mom."}, {"statement": "\\\"З\\\" always means \\\"from.\\\"", "isTrue": false, "explanation": "False! \\\"З\\\" with instrumental means \\\"with\\\": з другом."}, {"statement": "\\\"Після\\\" means \\\"after\\\" and takes genitive.", "isTrue": true, "explanation": "Yes! Після роботи = after work."}, {"statement": "\\\"Для\\\" and \\\"на\\\" mean the same thing.", "isTrue": false, "explanation": "False! Для = benefit (для тебе), На = payment (на каву)."}, {"statement": "\\\"Крім\\\" means \\\"except\\\" and takes genitive.", "isTrue": true, "explanation": "Correct! Всі прийшли, крім Олега."}, {"statement": "\\\"О/об\\\" is used for clock time.", "isTrue": true, "explanation": "Yes! О третій = at three o'clock."}, {"statement": "\\\"Через + noun\\\" and \\\"тому що + clause\\\" are interchangeable.", "isTrue": false, "explanation": "They both mean \\\"because\\\" but have different grammar: через дощ vs тому що йде дощ."}, {"statement": "\\\"Замість\\\" means \\\"instead of.\\\"", "isTrue": true, "explanation": "Correct! Чай замість кави = tea instead of coffee."}, {"statement": "\\\"Без\\\" expresses absence.", "isTrue": true, "explanation": "Yes! Кава без цукру = coffee without sugar."}]`)}
 />
 
 ### English to Ukrainian
@@ -487,6 +488,37 @@ ___ дорослих. І щось ___ кашлю.
   pairs={JSON.parse(`[{"left": "- для мам__", "right": "для мами"}, {"left": "- без цукр__", "right": "без цукру"}, {"left": "- про книг__", "right": "про книгу"}, {"left": "- через дощ__", "right": "через дощ"}, {"left": "- з молок__", "right": "з молоком"}, {"left": "- від друг__", "right": "від друга"}, {"left": "- після робот__", "right": "після роботи"}, {"left": "- о трет__", "right": "о третій"}]`)}
 />
 
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| акцент | ɐkˈt͡sɛnt | accent | noun | ч |  |
+| варення | ʋɐˈrɛnʲːɐ | jam | noun | с |  |
+| вишень | ˈvɪʃenʲ | cherries (genitive pl) | noun | с |  |
+| виїжджати | vijiʒˈdʒɑte | to depart; to drive out | verb |  |  |
+| відпустка | vidˈpustkɐ | vacation; leave | noun | ж |  |
+| глютен | hlʲuˈtɛn | gluten | noun | ч |  |
+| домовитися | doˈmɔʋɪtɪsʲɐ | to agree; to arrange | verb |  |  |
+| дорослий | doˈrɔslei̯ | adult | noun | ч |  |
+| жартувати | ʒɐrtuˈʋɑte | to joke | verb |  |  |
+| зайти | zɐi̯ˈtɪ | to enter; to stop by | verb | ж |  |
+| закритися | zɐˈkrɪtɪsʲɐ | to close; to be closed | verb | с |  |
+| запросити | zɐproˈsɪte | to invite | verb | ж |  |
+| кашля | ˈkɑʃlʲɐ | cough (genitive) | noun | ч |  |
+| легше | ˈlɛɦʃe | easier | adv |  |  |
+| мало | ˈmɑlo | little; few | adv |  |  |
+| масло | ˈmɑslo | butter; oil | noun | ч |  |
+| надіслати | nɐdisˈlɑte | to send | verb | ж |  |
+| неважливо | neʋɐʒˈlɪʋo | unimportant; it doesn't matter | adv |  |  |
+| палатка | pɐˈlɑtkɐ | tent | noun | ж |  |
+| почитати | pot͡ʃɪˈtɑte | to read (for a while) | verb |  |  |
+| підійти | pidiˈi̯tɪ | to approach; to suit | verb |  |  |
+| раптом | ˈrɑptom | suddenly | adv |  |  |
+| рекомендувати | rekomenduˈʋɑte | to recommend | verb |  |  |
+| скло | sklɔ | glass (material) | noun | с |  |
+| хвороба | xʋoˈrɔbɐ | illness; disease | noun | ж |  |
+| хотітися | xoˈtitusʲɐ | to want (impersonal) | verb |  |  |
+
 ## 📋 Summary
 
 Today you learned 10 logical prepositions:
@@ -513,25 +545,40 @@ Key distinctions:
 
 ## Need More Practice?
 
-:::info[🔗 External Resources]
-
-**YouTube:** [Ukrainian prepositions У, В and НА and the differe...]( https://www.youtube.com/watch?v=aqKdvKXPCMo) — Speak Ukrainian
-
-**Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
-
-**Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
-:::
-
-
 ---
 
 ---
 
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Case |
-|------|-----|---------|-----|--------|------|
-| хвороба | /xʋɔrˈɔbɑ/ | illness | noun | - | - |
-| відпустка | /ʋidpˈustkɑ/ | vacation | noun | - | - |
-| мета | /mˈɛtɑ/ | goal | noun | - | - |
-| відсутність | /ʋidsˈutnʲistʲ/ | absence | noun | - | - |
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions](https://www.ukrainianlessons.com/lesson/57/) — Level-aligned topic match: prepositions
+>
+> **📺 YouTube:**
+> - [Ukrainian prepositions У, В and НА and the differe...](https://www.youtube.com/watch?v=aqKdvKXPCMo) — Speak Ukrainian
+>
+> **📖 Articles:**
+> - [Accusative Case in Ukrainian](https://www.ukrainianlessons.com/accusativecase/) — Ukrainian Lessons
+> - [Genitive Case in Ukrainian](https://www.ukrainianlessons.com/genitive-case/) — Ukrainian Lessons
+> - [ULP 1-32 Shopping for clothes – Accusative case in Ukrainian](https://www.ukrainianlessons.com/lesson/32/) — Ukrainian Lessons
+> - [ULP 1-33 Talking about books in Ukrainian – Accusative case of people](https://www.ukrainianlessons.com/lesson/33/) — Ukrainian Lessons
+> - [ULP 2-46 At the grocery store + Genitive case](https://www.ukrainianlessons.com/lesson/46/) — Ukrainian Lessons
+> - [ULP 2-47 Food festivals + Genitive case](https://www.ukrainianlessons.com/lesson/47/) — Ukrainian Lessons
+> - [ULP 2-48 Eating habits + Genitive case](https://www.ukrainianlessons.com/lesson/48/) — Ukrainian Lessons
+> - [ULP 2-49 Syrnyky recipe + Genitive case](https://www.ukrainianlessons.com/lesson/49/) — Ukrainian Lessons
+> - [ULP 2-51 Electronics and technology + Dative case](https://www.ukrainianlessons.com/lesson/51/) — Ukrainian Lessons
+> - [ULP 2-52 Buying a phone in Ukraine + Dative case](https://www.ukrainianlessons.com/lesson/52/) — Ukrainian Lessons
+> - [ULP 2-53 Social Media in Ukrainian + Dative case](https://www.ukrainianlessons.com/lesson/53/) — Ukrainian Lessons
+> - [ULP 2-56 Asking for an advice + Accusative case](https://www.ukrainianlessons.com/lesson/56/) — Ukrainian Lessons
+> - [ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions](https://www.ukrainianlessons.com/lesson/57/) — Ukrainian Lessons
+> - [ULP 2-58 Inviting to a party + Accusative case of pronouns](https://www.ukrainianlessons.com/lesson/58/) — Ukrainian Lessons
+> - [ULP 2-61 Christmas dinner in Ukraine + Instrumental case](https://www.ukrainianlessons.com/lesson/61/) — Ukrainian Lessons
+> - [ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns](https://www.ukrainianlessons.com/lesson/62/) — Ukrainian Lessons
+> - [ULP 2-66 Sharing memories + Locative case with places](https://www.ukrainianlessons.com/lesson/66/) — Ukrainian Lessons
+> - [ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case](https://www.ukrainianlessons.com/lesson/67/) — Ukrainian Lessons
+> - [ULP 2-68 Making a hair appointment + Dates & Locative case](https://www.ukrainianlessons.com/lesson/68/) — Ukrainian Lessons
+> - [ULP 2-69 Ukrainian Children's Poem + Vocative case](https://www.ukrainianlessons.com/lesson/69/) — Ukrainian Lessons
+> - [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
+>
+> **🌐 Websites:**
+> - [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises

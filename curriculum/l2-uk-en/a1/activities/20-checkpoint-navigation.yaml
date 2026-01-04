@@ -296,7 +296,7 @@
       correct: false
     - text: Genitive
       correct: false
-    explanation: Accusative case shows the direct object (what or whom you see).
+    explanation: Accusative case shows the direct object.
   - question: What preposition requires the locative case for "inside"?
     options:
     - text: на
@@ -441,7 +441,7 @@
     explanation: False! "його" NEVER changes - it's a frozen form.
   - statement: '"на" can mean both "on" and "at".'
     correct: true
-    explanation: True! на столі (on the table), на роботі (at work).
+    explanation: True! на столі, на роботі.
   - statement: Numbers 2-4 use genitive plural.
     correct: false
     explanation: False! Numbers 2-4 use nominative plural. 5+ use genitive plural.
@@ -453,7 +453,7 @@
     explanation: 'False! "їхній" DOES change: їхній/їхня/їхнє/їхні.'
   - statement: '"без" + genitive means "without".'
     correct: true
-    explanation: True! без цукру (without sugar), без молока (without milk).
+    explanation: True! без цукру, без молока.
   - statement: Neuter nouns don't change in accusative.
     correct: true
     explanation: True! вікно → вікно, місто → місто.

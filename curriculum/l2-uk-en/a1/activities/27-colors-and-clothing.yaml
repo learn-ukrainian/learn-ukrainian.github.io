@@ -395,7 +395,7 @@
   - statement: '"Сукня" is neuter.'
     correct: false
     explanation: Incorrect! it's feminine
-  - statement: '"Світлий" means "light" (as in bright).'
+  - statement: '"Світлий" means "light".'
     correct: true
   - statement: '"Темна" is the masculine form.'
     correct: false

@@ -18,9 +18,8 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
-
-# Checkpoint - A2 Final Review
 
 **Вітаємо!** Ви закінчили A2! This checkpoint reviews all vocabulary from Modules 44-54.
 
@@ -396,6 +395,7 @@ Read the story and answer the questions:
 ---
 
 
+
 ## 🎯 Activities
 
 ### Vocabulary Categories
@@ -409,14 +409,14 @@ Read the story and answer the questions:
 
 <FillIn
   title="Vocabulary Test"
-  items={JSON.parse(`[{"sentence": "Вранці я ___ о 7:00. (wake up)", "answer": "прокидаюся", "options": ["прокидаюся", "засинаю", "сплю"]}, {"sentence": "Він працює ___. (as a doctor)", "answer": "лікарем", "options": ["лікарем", "лікар", "лікаря"]}, {"sentence": "У мене болить ___. (head)", "answer": "голова", "options": ["голова", "голову", "голові"]}, {"sentence": "Скільки це ___? (costs)", "answer": "коштує", "options": ["коштує", "коштувати", "коштував"]}, {"sentence": "Можна заплатити ___? (by card)", "answer": "карткою", "options": ["карткою", "картку", "картка"]}, {"sentence": "Я хочу купити ___. (ticket)", "answer": "квиток", "options": ["квиток", "квитка", "квитку"]}, {"sentence": "Вона ___ в університеті. (studies)", "answer": "вчиться", "options": ["вчиться", "вчить", "вче"]}, {"sentence": "Я ___ українську мову. (learn)", "answer": "вивчаю", "options": ["вивчаю", "вчуся", "вивчити"]}, {"sentence": "Де тут ___? (pharmacy)", "answer": "аптека", "options": ["аптека", "аптеку", "аптеці"]}, {"sentence": "Яка у вас ___? (temperature)", "answer": "температура", "options": ["температура", "температуру", "температурі"]}, {"sentence": "Він живе у великому ___. (city-LOC)", "answer": "місті", "options": ["місті", "місто", "місту"]}, {"sentence": "Ввечері я йду в ___. (gym-ACC)", "answer": "спортзал", "options": ["спортзал", "спортзалі", "спортзалу"]}]`)}
+  items={JSON.parse(`[{"sentence": "Вранці я ___ о 7:00.", "answer": "прокидаюся", "options": ["прокидаюся", "засинаю", "сплю"]}, {"sentence": "Він працює ___.", "answer": "лікарем", "options": ["лікарем", "лікар", "лікаря"]}, {"sentence": "У мене болить ___. (head)", "answer": "голова", "options": ["голова", "голову", "голові"]}, {"sentence": "Скільки це ___? (costs)", "answer": "коштує", "options": ["коштує", "коштувати", "коштував"]}, {"sentence": "Можна заплатити ___?", "answer": "карткою", "options": ["карткою", "картку", "картка"]}, {"sentence": "Я хочу купити ___. (ticket)", "answer": "квиток", "options": ["квиток", "квитка", "квитку"]}, {"sentence": "Вона ___ в університеті. (studies)", "answer": "вчиться", "options": ["вчиться", "вчить", "вче"]}, {"sentence": "Я ___ українську мову. (learn)", "answer": "вивчаю", "options": ["вивчаю", "вчуся", "вивчити"]}, {"sentence": "Де тут ___? (pharmacy)", "answer": "аптека", "options": ["аптека", "аптеку", "аптеці"]}, {"sentence": "Яка у вас ___?", "answer": "температура", "options": ["температура", "температуру", "температурі"]}, {"sentence": "Він живе у великому ___. (city-LOC)", "answer": "місті", "options": ["місті", "місто", "місту"]}, {"sentence": "Ввечері я йду в ___. (gym-ACC)", "answer": "спортзал", "options": ["спортзал", "спортзалі", "спортзалу"]}]`)}
 />
 
 ### A2 Vocabulary Quiz
 
 <Quiz
   title="A2 Vocabulary Quiz"
-  questions={JSON.parse(`[{"question": "What is the meaning of the reflexive verb \\\"прокидатися\\\" in English?", "options": [{"text": "To wake up", "correct": true}, {"text": "To fall asleep", "correct": false}, {"text": "To eat breakfast", "correct": false}, {"text": "To get dressed", "correct": false}]}, {"question": "Which grammatical case is used in the phrase \\\"працювати лікарем\\\"?", "options": [{"text": "Instrumental case", "correct": true}, {"text": "Accusative case", "correct": false}, {"text": "Nominative case", "correct": false}, {"text": "Genitive case", "correct": false}]}, {"question": "In the phrase \\\"У мене болить голова\\\", what is the grammatical role of \\\"голова\\\"?", "options": [{"text": "Nominative (subject)", "correct": true}, {"text": "Accusative (object)", "correct": false}, {"text": "Genitive (possession)", "correct": false}, {"text": "Dative (recipient)", "correct": false}]}, {"question": "In the phrase \\\"Заплатити карткою\\\", what case is \\\"карткою\\\" in?", "options": [{"text": "Instrumental (means)", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Dative", "correct": false}, {"text": "Locative", "correct": false}]}, {"question": "What is the primary meaning of the verb \\\"вчитися\\\" in an educational context?", "options": [{"text": "To study (as student)", "correct": true}, {"text": "To teach a class", "correct": false}, {"text": "To learn a subject", "correct": false}, {"text": "To read a book", "correct": false}]}, {"question": "What does the verb \\\"вивчати\\\" specifically mean when talking about education?", "options": [{"text": "To learn (a subject)", "correct": true}, {"text": "To be a student", "correct": false}, {"text": "To teach", "correct": false}, {"text": "To write", "correct": false}]}, {"question": "What is the English translation of the travel word \\\"квиток\\\"?", "options": [{"text": "Ticket", "correct": true}, {"text": "Key", "correct": false}, {"text": "Bag", "correct": false}, {"text": "Map", "correct": false}]}, {"question": "What does the shopping word \\\"знижка\\\" mean in a store?", "options": [{"text": "Discount", "correct": true}, {"text": "Receipt", "correct": false}, {"text": "Price", "correct": false}, {"text": "Change", "correct": false}]}, {"question": "What part of the body is \\\"горло\\\" in English?", "options": [{"text": "Throat", "correct": true}, {"text": "Head", "correct": false}, {"text": "Leg", "correct": false}, {"text": "Arm", "correct": false}]}, {"question": "What is the correct translation for the word \\\"подорож\\\"?", "options": [{"text": "Trip/journey", "correct": true}, {"text": "Work/job", "correct": false}, {"text": "Food/meal", "correct": false}, {"text": "Rest/sleep", "correct": false}]}, {"question": "What kind of establishment is a \\\"готель\\\" for travelers?", "options": [{"text": "Hotel", "correct": true}, {"text": "House", "correct": false}, {"text": "Restaurant", "correct": false}, {"text": "Hospital", "correct": false}]}, {"question": "Which room in the house is called \\\"вітальня\\\" in Ukrainian?", "options": [{"text": "Living room", "correct": true}, {"text": "Bedroom", "correct": false}, {"text": "Kitchen", "correct": false}, {"text": "Bathroom", "correct": false}]}]`)}
+  questions={JSON.parse(`[{"question": "What is the meaning of the reflexive verb \\\"прокидатися\\\" in English?", "options": [{"text": "To wake up", "correct": true}, {"text": "To fall asleep", "correct": false}, {"text": "To eat breakfast", "correct": false}, {"text": "To get dressed", "correct": false}]}, {"question": "Which grammatical case is used in the phrase \\\"працювати лікарем\\\"?", "options": [{"text": "Instrumental case", "correct": true}, {"text": "Accusative case", "correct": false}, {"text": "Nominative case", "correct": false}, {"text": "Genitive case", "correct": false}]}, {"question": "In the phrase \\\"У мене болить голова\\\", what is the grammatical role of \\\"голова\\\"?", "options": [{"text": "Nominative (subject)", "correct": true}, {"text": "Accusative (object)", "correct": false}, {"text": "Genitive", "correct": false}, {"text": "Dative", "correct": false}]}, {"question": "In the phrase \\\"Заплатити карткою\\\", what case is \\\"карткою\\\" in?", "options": [{"text": "Instrumental (means)", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Dative", "correct": false}, {"text": "Locative", "correct": false}]}, {"question": "What is the primary meaning of the verb \\\"вчитися\\\" in an educational context?", "options": [{"text": "To study", "correct": true}, {"text": "To teach a class", "correct": false}, {"text": "To learn a subject", "correct": false}, {"text": "To read a book", "correct": false}]}, {"question": "What does the verb \\\"вивчати\\\" specifically mean when talking about education?", "options": [{"text": "To learn", "correct": true}, {"text": "To be a student", "correct": false}, {"text": "To teach", "correct": false}, {"text": "To write", "correct": false}]}, {"question": "What is the English translation of the travel word \\\"квиток\\\"?", "options": [{"text": "Ticket", "correct": true}, {"text": "Key", "correct": false}, {"text": "Bag", "correct": false}, {"text": "Map", "correct": false}]}, {"question": "What does the shopping word \\\"знижка\\\" mean in a store?", "options": [{"text": "Discount", "correct": true}, {"text": "Receipt", "correct": false}, {"text": "Price", "correct": false}, {"text": "Change", "correct": false}]}, {"question": "What part of the body is \\\"горло\\\" in English?", "options": [{"text": "Throat", "correct": true}, {"text": "Head", "correct": false}, {"text": "Leg", "correct": false}, {"text": "Arm", "correct": false}]}, {"question": "What is the correct translation for the word \\\"подорож\\\"?", "options": [{"text": "Trip/journey", "correct": true}, {"text": "Work/job", "correct": false}, {"text": "Food/meal", "correct": false}, {"text": "Rest/sleep", "correct": false}]}, {"question": "What kind of establishment is a \\\"готель\\\" for travelers?", "options": [{"text": "Hotel", "correct": true}, {"text": "House", "correct": false}, {"text": "Restaurant", "correct": false}, {"text": "Hospital", "correct": false}]}, {"question": "Which room in the house is called \\\"вітальня\\\" in Ukrainian?", "options": [{"text": "Living room", "correct": true}, {"text": "Bedroom", "correct": false}, {"text": "Kitchen", "correct": false}, {"text": "Bathroom", "correct": false}]}]`)}
 />
 
 ### Vocabulary Domains
@@ -430,7 +430,7 @@ Read the story and answer the questions:
 
 <TrueFalse
   title="Vocabulary Rules"
-  items={JSON.parse(`[{"statement": "\\\"Працювати + Instrumental\\\" describes profession.", "isTrue": true, "explanation": "Correct! Працювати лікарем."}, {"statement": "\\\"У мене болить\\\" = my... hurts.", "isTrue": true, "explanation": "Yes! У мене болить голова."}, {"statement": "\\\"Голову\\\" is correct after \\\"болить\\\".", "isTrue": false, "explanation": "No! \\\"Голова\\\" (nominative) — it's the subject."}, {"statement": "\\\"Вчитися\\\" = to be a student.", "isTrue": true, "explanation": "Correct! Вона вчиться в університеті."}, {"statement": "\\\"Вивчати\\\" = to learn a subject.", "isTrue": true, "explanation": "Yes! Я вивчаю українську."}, {"statement": "\\\"Картка\\\" in Instrumental is \\\"картку\\\".", "isTrue": false, "explanation": "No! Instrumental is \\\"карткою\\\"."}, {"statement": "\\\"Знижка\\\" means discount.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Reflexive verbs end in \\\"-ся\\\".", "isTrue": true, "explanation": "Yes! Прокидатися, вмиватися."}, {"statement": "\\\"Квиток\\\" and \\\"готель\\\" are health vocabulary.", "isTrue": false, "explanation": "No! They are travel vocabulary."}, {"statement": "\\\"Скільки це коштує?\\\" asks the price.", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Поїзд\\\" means train.", "isTrue": true, "explanation": "Yes!"}, {"statement": "\\\"Вітальня\\\" is the kitchen.", "isTrue": false, "explanation": "No! Вітальня = living room, кухня = kitchen."}]`)}
+  items={JSON.parse(`[{"statement": "\\\"Працювати + Instrumental\\\" describes profession.", "isTrue": true, "explanation": "Correct! Працювати лікарем."}, {"statement": "\\\"У мене болить\\\" = my... hurts.", "isTrue": true, "explanation": "Yes! У мене болить голова."}, {"statement": "\\\"Голову\\\" is correct after \\\"болить\\\".", "isTrue": false, "explanation": "No! \\\"Голова\\\" — it's the subject."}, {"statement": "\\\"Вчитися\\\" = to be a student.", "isTrue": true, "explanation": "Correct! Вона вчиться в університеті."}, {"statement": "\\\"Вивчати\\\" = to learn a subject.", "isTrue": true, "explanation": "Yes! Я вивчаю українську."}, {"statement": "\\\"Картка\\\" in Instrumental is \\\"картку\\\".", "isTrue": false, "explanation": "No! Instrumental is \\\"карткою\\\"."}, {"statement": "\\\"Знижка\\\" means discount.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Reflexive verbs end in \\\"-ся\\\".", "isTrue": true, "explanation": "Yes! Прокидатися, вмиватися."}, {"statement": "\\\"Квиток\\\" and \\\"готель\\\" are health vocabulary.", "isTrue": false, "explanation": "No! They are travel vocabulary."}, {"statement": "\\\"Скільки це коштує?\\\" asks the price.", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Поїзд\\\" means train.", "isTrue": true, "explanation": "Yes!"}, {"statement": "\\\"Вітальня\\\" is the kitchen.", "isTrue": false, "explanation": "No! Вітальня = living room, кухня = kitchen."}]`)}
 />
 
 ### A Day in Life
@@ -454,32 +454,56 @@ Read the story and answer the questions:
 
 ### At the Store
 
-<DialogueReorder
+<Cloze
   title="At the Store"
-  lines={JSON.parse(`[{"text": "Добрий день! Чим можу допомогти?", "order": 1, "speaker": ""}, {"text": "Скільки коштує ця футболка?", "order": 2, "speaker": ""}, {"text": "500 гривень.", "order": 3, "speaker": ""}, {"text": "Можна заплатити карткою?", "order": 4, "speaker": ""}, {"text": "Так, звичайно.", "order": 5, "speaker": ""}, {"text": "Дайте чек, будь ласка.", "order": 6, "speaker": ""}, {"text": "--", "order": 7, "speaker": ""}, {"text": "Добрий день, лікарю.", "order": 8, "speaker": ""}, {"text": "Добрий день. Що у вас болить?", "order": 9, "speaker": ""}, {"text": "У мене болить голова і горло.", "order": 10, "speaker": ""}, {"text": "Яка у вас температура?", "order": 11, "speaker": ""}, {"text": "37.5.", "order": 12, "speaker": ""}, {"text": "Це застуда. Вам треба пити чай.", "order": 13, "speaker": ""}]`)}
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "Добрий день! Чим можу допомогти?", "options": ["Добрий день! Чим можу допомогти?", "Скільки коштує ця футболка?", "У мене болить голова і горло."]}, {"answer": "Скільки коштує ця футболка?", "options": ["Скільки коштує ця футболка?", "Дайте чек, будь ласка.", "Можна заплатити карткою?"]}, {"answer": "500 гривень.", "options": ["500 гривень.", "Можна заплатити карткою?", "Добрий день, лікарю."]}, {"answer": "Можна заплатити карткою?", "options": ["Можна заплатити карткою?", "Дайте чек, будь ласка.", "Скільки коштує ця футболка?"]}, {"answer": "Так, звичайно.", "options": ["Так, звичайно.", "--", "Це застуда. Вам треба пити чай."]}, {"answer": "Дайте чек, будь ласка.", "options": ["Дайте чек, будь ласка.", "37.5.", "--"]}, {"answer": "--", "options": ["--", "500 гривень.", "Скільки коштує ця футболка?"]}, {"answer": "Добрий день, лікарю.", "options": ["Добрий день, лікарю.", "У мене болить голова і горло.", "37.5."]}, {"answer": "Добрий день. Що у вас болить?", "options": ["Добрий день. Що у вас болить?", "--", "Дайте чек, будь ласка."]}, {"answer": "У мене болить голова і горло.", "options": ["У мене болить голова і горло.", "500 гривень.", "Яка у вас температура?"]}, {"answer": "Яка у вас температура?", "options": ["Яка у вас температура?", "500 гривень.", "Можна заплатити карткою?"]}, {"answer": "37.5.", "options": ["37.5.", "Так, звичайно.", "Добрий день! Чим можу допомогти?"]}, {"answer": "Це застуда. Вам треба пити чай.", "options": ["Це застуда. Вам треба пити чай.", "37.5.", "--"]}]`)}
 />
 
 ### Daily Routines
 
 <Unjumble
   title="Daily Routines"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Вранці я завжди прокидаюся дуже рано о сьомій"}, {"jumbled": "", "answer": "Мій старший брат зараз успішно працює програмістом"}, {"jumbled": "", "answer": "Сьогодні у мене дуже сильно болить голова"}, {"jumbled": "", "answer": "Скажіть будь ласка чи можна тут заплатити карткою"}, {"jumbled": "", "answer": "Вона зараз дуже старанно вчиться в національному університеті"}, {"jumbled": "", "answer": "Вибачте скажіть де тут є найближча аптека"}]`)}
+  items={JSON.parse(`[{"jumbled": "Вранці / я / завжди / прокидаюся / дуже / рано / о / сьомій", "answer": "Вранці я завжди прокидаюся дуже рано о сьомій"}, {"jumbled": "Мій / старший / брат / зараз / успішно / працює / програмістом", "answer": "Мій старший брат зараз успішно працює програмістом"}, {"jumbled": "Сьогодні / у / мене / дуже / сильно / болить / голова", "answer": "Сьогодні у мене дуже сильно болить голова"}, {"jumbled": "Скажіть / будь ласка / чи / можна / тут / заплатити / карткою", "answer": "Скажіть будь ласка чи можна тут заплатити карткою"}, {"jumbled": "Вона / зараз / дуже / старанно / вчиться / в / національному / університеті", "answer": "Вона зараз дуже старанно вчиться в національному університеті"}, {"jumbled": "Вибачте / скажіть / де / тут / є / найближча / аптека", "answer": "Вибачте скажіть де тут є найближча аптека"}]`)}
 />
 
 ### Find the Vocabulary
 
-<MarkTheWords>
-  <MarkTheWordsActivity
-    instruction={`Click the correct words.`}
-    text={`Click on the key vocabulary words.
-Вранці я прокидаюся(correct) о 7:00 і йду до кухні(correct), щоб снідати(correct).
+<HighlightMorphemes>
+  <HighlightMorphemesActivity
+  instruction={`Click on the key vocabulary words.`}
+    text={`Вранці я прокидаюся о 7:00 і йду до кухні, щоб снідати.
 ---
-Моя сестра працює(correct) лікаркою(correct). Вона вчилася(correct) в університеті(correct) 6 років.
+Моя сестра працює лікаркою. Вона вчилася в університеті 6 років.
 ---
-У мене болить голова(correct) і горло(correct). Де тут аптека(correct)?`}
-    correctWords={JSON.parse(`["прокидаюся", "кухні", "снідати", "працює", "лікаркою", "вчилася", "університеті", "голова", "горло", "аптека"]`)}
+У мене болить голова і горло. Де тут аптека?`}
+    morphemes={[
+    { word: `прокидаюся`, morpheme: `прокидаюся`, type: `whole` },
+    { word: `кухні`, morpheme: `кухні`, type: `whole` },
+    { word: `снідати`, morpheme: `снідати`, type: `whole` },
+    { word: `працює`, morpheme: `працює`, type: `whole` },
+    { word: `лікаркою`, morpheme: `лікаркою`, type: `whole` },
+    { word: `вчилася`, morpheme: `вчилася`, type: `whole` },
+    { word: `університеті`, morpheme: `університеті`, type: `whole` },
+    { word: `голова`, morpheme: `голова`, type: `whole` },
+    { word: `горло`, morpheme: `горло`, type: `whole` },
+    { word: `аптека`, morpheme: `аптека`, type: `whole` }
+  ]}
   />
-</MarkTheWords>
+</HighlightMorphemes>
 
 ### English to Ukrainian
 
@@ -487,6 +511,15 @@ Read the story and answer the questions:
   title="English to Ukrainian"
   questions={JSON.parse(`[{"source": "", "options": []}, {"source": "", "options": []}, {"source": "", "options": []}, {"source": "", "options": []}, {"source": "", "options": []}, {"source": "", "options": []}]`)}
 />
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| горище | /hoˈrɪʃt͡ʃe/ | attic | noun | с |  |
+| застудитися | /zɐstuˈdɪtɪsʲɐ/ | to catch a cold | verb | ч |  |
+| світлиця | /sʲvitˈlɪt͡sʲɐ/ | best room; parlor | noun | ж |  |
+| щоденний | /ʃt͡ʃoˈdɛnːɪj/ | daily | adj | с |  |
 
 ## 📋 Summary
 
@@ -504,25 +537,17 @@ Read the story and answer the questions:
 
 ---
 
-:::info[🔗 External Resources]
-
-**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
-
-**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-:::
-
-
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| поїзд       | /ˈpɔjizd/       | train      | noun | m      | travel     |
-| квиток      | /kvɪˈtɔk/       | ticket     | noun | m      | travel     |
-| готель      | /ɦɔˈtɛlʲ/       | hotel      | noun | m      | travel     |
-| знижка      | /ˈznɪʒka/       | discount   | noun | f      | shopping   |
-| аптека      | /apˈtɛka/       | pharmacy   | noun | f      | health     |
-| голова      | /ɦɔlɔˈʋɑ/       | head       | noun | f      | body part  |
-| лікар       | /ˈlʲikɑr/       | doctor     | noun | m      | profession |
-| вчитися     | /ˈwtʃɪtɪsʲɑ/    | to study   | verb | -      | education  |
-| працювати   | /pratsʲuˈʋɑtɪ/  | to work    | verb | -      | work       |
-| прокидатися | /prɔkɪˈdɑtɪsʲɑ/ | to wake up | verb | -      | routine    |
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [Vocabulary booster! Beverages / Drinks in Ukrainian](https://www.ukrainianlessons.com/fmu12/) — Listening review (A1): vocabulary
+> - [Vocabulary booster! Hobbies in Ukrainian](https://www.ukrainianlessons.com/fmu23/) — Listening review (A1): vocabulary
+> - [Vocabulary booster! Shopping Vocabulary in Ukrainian](https://www.ukrainianlessons.com/fmu18/) — Listening review (A1): vocabulary
+> - [Vocabulary booster! Sports in Ukrainian](https://www.ukrainianlessons.com/fmu25/) — Listening review (A1): vocabulary
+> - [Vocabulary booster! Transport in Ukrainian](https://www.ukrainianlessons.com/fmu4/) — Listening review (A1): vocabulary
+>
+> **📖 Articles:**
+> - [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **🌐 Websites:**
+> - [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

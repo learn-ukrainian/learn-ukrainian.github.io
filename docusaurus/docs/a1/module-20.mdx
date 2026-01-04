@@ -18,6 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 
 **Вітаємо!** (vitayemo) You've completed Phase A1.2 — Navigation! Now let's check: **can you DO the skills?**
@@ -414,7 +415,7 @@ Fill in the gaps:
 
 <TrueFalse
   title="Grammar Rules Review"
-  items={JSON.parse(`[{"statement": "Accusative case is used for direct objects.", "isTrue": true, "explanation": "True! Accusative shows what or whom the action affects directly."}, {"statement": "Locative case is used with the preposition \\\"до\\\".", "isTrue": false, "explanation": "False! \\\"до\\\" uses genitive. Locative uses \\\"у/в\\\" and \\\"на\\\"."}, {"statement": "Genitive case is used after \\\"немає\\\".", "isTrue": true, "explanation": "True! немає + genitive: немає часу, немає води."}, {"statement": "Masculine animate accusative has no change from nominative.", "isTrue": false, "explanation": "False! Animate masculine accusative = genitive: студент → студента."}, {"statement": "Feminine nouns ending in -а change to -у in accusative.", "isTrue": true, "explanation": "True! книга → книгу, сумка → сумку."}, {"statement": "\\\"його\\\" changes to \\\"його\\\" for different genders.", "isTrue": false, "explanation": "False! \\\"його\\\" NEVER changes - it's a frozen form."}, {"statement": "\\\"на\\\" can mean both \\\"on\\\" and \\\"at\\\".", "isTrue": true, "explanation": "True! на столі (on the table), на роботі (at work)."}, {"statement": "Numbers 2-4 use genitive plural.", "isTrue": false, "explanation": "False! Numbers 2-4 use nominative plural. 5+ use genitive plural."}, {"statement": "\\\"у/в\\\" and \\\"на\\\" both require locative case for location.", "isTrue": true, "explanation": "True! Both prepositions use locative to show where something is."}, {"statement": "\\\"їхній\\\" never changes form.", "isTrue": false, "explanation": "False! \\\"їхній\\\" DOES change: їхній/їхня/їхнє/їхні."}, {"statement": "\\\"без\\\" + genitive means \\\"without\\\".", "isTrue": true, "explanation": "True! без цукру (without sugar), без молока (without milk)."}, {"statement": "Neuter nouns don't change in accusative.", "isTrue": true, "explanation": "True! вікно → вікно, місто → місто."}]`)}
+  items={JSON.parse(`[{"statement": "Accusative case is used for direct objects.", "isTrue": true, "explanation": "True! Accusative shows what or whom the action affects directly."}, {"statement": "Locative case is used with the preposition \\\"до\\\".", "isTrue": false, "explanation": "False! \\\"до\\\" uses genitive. Locative uses \\\"у/в\\\" and \\\"на\\\"."}, {"statement": "Genitive case is used after \\\"немає\\\".", "isTrue": true, "explanation": "True! немає + genitive: немає часу, немає води."}, {"statement": "Masculine animate accusative has no change from nominative.", "isTrue": false, "explanation": "False! Animate masculine accusative = genitive: студент → студента."}, {"statement": "Feminine nouns ending in -а change to -у in accusative.", "isTrue": true, "explanation": "True! книга → книгу, сумка → сумку."}, {"statement": "\\\"його\\\" changes to \\\"його\\\" for different genders.", "isTrue": false, "explanation": "False! \\\"його\\\" NEVER changes - it's a frozen form."}, {"statement": "\\\"на\\\" can mean both \\\"on\\\" and \\\"at\\\".", "isTrue": true, "explanation": "True! на столі, на роботі."}, {"statement": "Numbers 2-4 use genitive plural.", "isTrue": false, "explanation": "False! Numbers 2-4 use nominative plural. 5+ use genitive plural."}, {"statement": "\\\"у/в\\\" and \\\"на\\\" both require locative case for location.", "isTrue": true, "explanation": "True! Both prepositions use locative to show where something is."}, {"statement": "\\\"їхній\\\" never changes form.", "isTrue": false, "explanation": "False! \\\"їхній\\\" DOES change: їхній/їхня/їхнє/їхні."}, {"statement": "\\\"без\\\" + genitive means \\\"without\\\".", "isTrue": true, "explanation": "True! без цукру, без молока."}, {"statement": "Neuter nouns don't change in accusative.", "isTrue": true, "explanation": "True! вікно → вікно, місто → місто."}]`)}
 />
 
 ### Preposition Usage
@@ -483,6 +484,26 @@ Fill in the gaps:
 > - [FMU 1-18: Shopping](https://www.ukrainianlessons.com/fmu18/)
 >
 > **📖 Articles:**
+> - [Accusative Case in Ukrainian](https://www.ukrainianlessons.com/accusativecase/) — Ukrainian Lessons
+> - [Genitive Case in Ukrainian](https://www.ukrainianlessons.com/genitive-case/) — Ukrainian Lessons
+> - [ULP 1-32 Shopping for clothes – Accusative case in Ukrainian](https://www.ukrainianlessons.com/lesson/32/) — Ukrainian Lessons
+> - [ULP 1-33 Talking about books in Ukrainian – Accusative case of people](https://www.ukrainianlessons.com/lesson/33/) — Ukrainian Lessons
+> - [ULP 2-46 At the grocery store + Genitive case](https://www.ukrainianlessons.com/lesson/46/) — Ukrainian Lessons
+> - [ULP 2-47 Food festivals + Genitive case](https://www.ukrainianlessons.com/lesson/47/) — Ukrainian Lessons
+> - [ULP 2-48 Eating habits + Genitive case](https://www.ukrainianlessons.com/lesson/48/) — Ukrainian Lessons
+> - [ULP 2-49 Syrnyky recipe + Genitive case](https://www.ukrainianlessons.com/lesson/49/) — Ukrainian Lessons
+> - [ULP 2-51 Electronics and technology + Dative case](https://www.ukrainianlessons.com/lesson/51/) — Ukrainian Lessons
+> - [ULP 2-52 Buying a phone in Ukraine + Dative case](https://www.ukrainianlessons.com/lesson/52/) — Ukrainian Lessons
+> - [ULP 2-53 Social Media in Ukrainian + Dative case](https://www.ukrainianlessons.com/lesson/53/) — Ukrainian Lessons
+> - [ULP 2-56 Asking for an advice + Accusative case](https://www.ukrainianlessons.com/lesson/56/) — Ukrainian Lessons
+> - [ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions](https://www.ukrainianlessons.com/lesson/57/) — Ukrainian Lessons
+> - [ULP 2-58 Inviting to a party + Accusative case of pronouns](https://www.ukrainianlessons.com/lesson/58/) — Ukrainian Lessons
+> - [ULP 2-61 Christmas dinner in Ukraine + Instrumental case](https://www.ukrainianlessons.com/lesson/61/) — Ukrainian Lessons
+> - [ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns](https://www.ukrainianlessons.com/lesson/62/) — Ukrainian Lessons
+> - [ULP 2-66 Sharing memories + Locative case with places](https://www.ukrainianlessons.com/lesson/66/) — Ukrainian Lessons
+> - [ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case](https://www.ukrainianlessons.com/lesson/67/) — Ukrainian Lessons
+> - [ULP 2-68 Making a hair appointment + Dates & Locative case](https://www.ukrainianlessons.com/lesson/68/) — Ukrainian Lessons
+> - [ULP 2-69 Ukrainian Children's Poem + Vocative case](https://www.ukrainianlessons.com/lesson/69/) — Ukrainian Lessons
 > - [Introduction to Cases](https://www.ukrainianlessons.com/intro-cases/) — Quick strategies
 > - [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Which preposition uses which case
 > - [Ukrainian Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/) — All 7 cases in one table

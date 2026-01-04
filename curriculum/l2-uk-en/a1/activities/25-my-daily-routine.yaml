@@ -326,9 +326,9 @@
       correct: false
   - question: 'Which reflexive ending is correct: "ми вмиваємо___"?'
     options:
-    - text: -ся (after consonant)
+    - text: -ся
       correct: true
-    - text: -сь (after vowel)
+    - text: -сь
       correct: false
     - text: No ending needed
       correct: false

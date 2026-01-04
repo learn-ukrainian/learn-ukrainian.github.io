@@ -18,6 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 
 ## Warm-up
@@ -312,14 +313,14 @@ These words take **plural adjectives**:
 
 <Unjumble
   title="Опис одягу"
-  items={JSON.parse(`[{"jumbled": "", "answer": "У мене біла сорочка"}, {"jumbled": "", "answer": "Мій светр чорний"}, {"jumbled": "", "answer": "Нові сині штани"}, {"jumbled": "", "answer": "Гарна червона сукня"}, {"jumbled": "", "answer": "Це білі кросівки"}, {"jumbled": "", "answer": "Його куртка синя"}]`)}
+  items={JSON.parse(`[{"jumbled": "сорочка / біла / у мене", "answer": "У мене біла сорочка"}, {"jumbled": "чорний / светр / мій", "answer": "Мій светр чорний"}, {"jumbled": "сині / штани / нові", "answer": "Нові сині штани"}, {"jumbled": "червона / гарна / сукня", "answer": "Гарна червона сукня"}, {"jumbled": "білі / кросівки / це", "answer": "Це білі кросівки"}, {"jumbled": "синя / куртка / його", "answer": "Його куртка синя"}]`)}
 />
 
 ### Color Rules
 
 <TrueFalse
   title="Color Rules"
-  items={JSON.parse(`[{"statement": "\\\"Біла\\\" is the feminine form of \\\"white\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Синій\\\" is the neuter form.", "isTrue": false, "explanation": "Incorrect! it's masculine"}, {"statement": "\\\"Штани\\\" is always plural in Ukrainian.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Пальто\\\" is masculine.", "isTrue": false, "explanation": "Incorrect! it's neuter"}, {"statement": "\\\"Блакитний\\\" means light blue.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Чорне\\\" is masculine.", "isTrue": false, "explanation": "Incorrect! it's neuter"}, {"statement": "\\\"Джинси\\\" is always plural.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Біле\\\" is feminine.", "isTrue": false, "explanation": "Incorrect! it's neuter"}, {"statement": "Colors are adjectives and must agree with nouns.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Сукня\\\" is neuter.", "isTrue": false, "explanation": "Incorrect! it's feminine"}, {"statement": "\\\"Світлий\\\" means \\\"light\\\" (as in bright).", "isTrue": true, "explanation": ""}, {"statement": "\\\"Темна\\\" is the masculine form.", "isTrue": false, "explanation": "Incorrect! it's feminine"}]`)}
+  items={JSON.parse(`[{"statement": "\\\"Біла\\\" is the feminine form of \\\"white\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Синій\\\" is the neuter form.", "isTrue": false, "explanation": "Incorrect! it's masculine"}, {"statement": "\\\"Штани\\\" is always plural in Ukrainian.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Пальто\\\" is masculine.", "isTrue": false, "explanation": "Incorrect! it's neuter"}, {"statement": "\\\"Блакитний\\\" means light blue.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Чорне\\\" is masculine.", "isTrue": false, "explanation": "Incorrect! it's neuter"}, {"statement": "\\\"Джинси\\\" is always plural.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Біле\\\" is feminine.", "isTrue": false, "explanation": "Incorrect! it's neuter"}, {"statement": "Colors are adjectives and must agree with nouns.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Сукня\\\" is neuter.", "isTrue": false, "explanation": "Incorrect! it's feminine"}, {"statement": "\\\"Світлий\\\" means \\\"light\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Темна\\\" is the masculine form.", "isTrue": false, "explanation": "Incorrect! it's feminine"}]`)}
 />
 
 ## 📚 Vocabulary

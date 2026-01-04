@@ -23,49 +23,49 @@
 - type: fill-in
   title: Choose the Prefix
   items:
-  - sentence: '[___]йти вулицю (to cross the street)'
+  - sentence: '[___]йти вулицю'
     answer: Пере
     options:
     - Пере
     - Про
     - За
-  - sentence: '[___]їхати через місто (to drive through the city)'
+  - sentence: '[___]їхати через місто'
     answer: Про
     options:
     - Про
     - Пере
     - За
-  - sentence: '[___]йти в кафе (to stop by the cafe)'
+  - sentence: '[___]йти в кафе'
     answer: За
     options:
     - За
     - Про
     - До
-  - sentence: '[___]йти до парку (to reach the park)'
+  - sentence: '[___]йти до парку'
     answer: До
     options:
     - До
     - За
     - Про
-  - sentence: '[___]йти озеро (to walk around the lake)'
+  - sentence: '[___]йти озеро'
     answer: Об
     options:
     - Об
     - Про
     - Пере
-  - sentence: '[___]йти ближче (to approach)'
+  - sentence: '[___]йти ближче'
     answer: Під
     options:
     - Під
     - До
     - Про
-  - sentence: '[___]їхати зупинку (to miss the stop)'
+  - sentence: '[___]їхати зупинку'
     answer: Про
     options:
     - Про
     - Пере
     - За
-  - sentence: '[___]їхати за хлібом (to stop by for bread)'
+  - sentence: '[___]їхати за хлібом'
     answer: За
     options:
     - За
@@ -361,7 +361,7 @@
     - виходить
     - заходить
     - проходить
-  - sentence: Він [___] до зупинки. (approaches)
+  - sentence: Він [___] до зупинки.
     answer: підходить
     options:
     - підходить
@@ -385,13 +385,13 @@
     - доходить
     - заходить
     - проходить
-  - sentence: У обід він [___] квартал. (walks around)
+  - sentence: У обід він [___] квартал.
     answer: обходить
     options:
     - обходить
     - проходить
     - переходить
-  - sentence: Він [___] в кафе. (stops by)
+  - sentence: Він [___] в кафе.
     answer: заходить
     options:
     - заходить
