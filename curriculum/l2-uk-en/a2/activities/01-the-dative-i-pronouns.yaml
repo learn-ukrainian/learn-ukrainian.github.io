@@ -29,7 +29,7 @@
   - left: холодно (кому?)
     right: йому холодно
 - type: group-sort
-  title: 'Pronoun Cases [stage: recognition]'
+  title: 'Pronoun Cases'
   groups:
   - name: Називний
     items:
@@ -59,7 +59,7 @@
     - вас
     - їх
 - type: true-false
-  title: 'Dative Rules [stage: discrimination]'
+  title: 'Dative Rules'
   items:
   - statement: «Мені подобається» дослівно означає «мені це приємно».
     correct: true
@@ -98,7 +98,7 @@
     correct: false
     explanation: Ні! Кажуть «Тобі подобається Україна?» з давальним відмінком.
 - type: fill-in
-  title: 'Dative Pronouns [stage: controlled-production]'
+  title: 'Dative Pronouns'
   items:
   - sentence: ___ подобається музика.
     answer: Мені
@@ -320,7 +320,7 @@
       correct: false
     explanation: «Вам» + іменник — типова формула гостинності для пропозицій.
 - type: error-correction
-  title: 'Find the Mistake [stage: controlled-production]'
+  title: 'Find the Mistake'
   items:
   - sentence: Я подобається музика.
     error: Я
@@ -431,7 +431,7 @@
     - Ваш
     explanation: '«Вас» — родовий/знахідний. Для «потрібно» — давальний: вам.'
 - type: cloze
-  title: 'Complete the Story [stage: controlled-production]'
+  title: 'Complete the Story'
   passage: 'Марія і Петро в Одесі. {Їм|Їх|Вони} подобається море. {Їм|Їх|Вони} тепло і весело. Погода чудова!
 
     Офіціант запитує: «{Вам|Вас|Ви} каву?» Марія каже: «Так, {мені|мене|я} каву, будь ласка.» А Петро каже: «Ні, {мені|мене|я}
@@ -442,7 +442,7 @@
     Увечері {їм|їх|вони} холодно. Вони йдуть додому. На вулиці {їм|їх|вони} весело. {Їм|Їх|Вони} подобається Одеса! {Їм|Їх|Вони}
     потрібно приїхати знову.'
 - type: unjumble
-  title: 'Dative Sentences [stage: free-production]'
+  title: 'Dative Sentences '
   items:
   - words:
     - подобається
@@ -565,28 +565,22 @@
     - тюльпани
     answer: Їй подобаються червоні квіти, особливо троянди і тюльпани
 - type: dialogue-reorder
-  title: 'At the Restaurant [stage: free-production]'
+  title: 'At the Restaurant '
   lines:
   - order: 1
     text: Добрий вечір! Вам меню?
-    speaker: A
   - order: 2
     text: Так, дякую. Нам меню, будь ласка.
-    speaker: B
   - order: 3
     text: Вам подобається риба?
-    speaker: A
   - order: 4
     text: Так, мені подобається. А йому більше подобається м'ясо.
-    speaker: B
   - order: 5
     text: Зрозуміло. Йому м'ясо, вам рибу?
-    speaker: A
   - order: 6
     text: Так, дякую. І нам воду, будь ласка.
-    speaker: B
 - type: translate
-  title: 'English to Ukrainian [stage: free-production]'
+  title: 'English to Ukrainian '
   items:
   - source: I like Ukrainian music.
     options:
