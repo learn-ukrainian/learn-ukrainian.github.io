@@ -510,15 +510,6 @@
     - взяти
     - забрати
     explanation: Suppletive pair — different roots!
-- type: cloze
-  title: Pattern Recognition
-  passage: 'Коли я {гукав|гукати|гукнув} (process) книгу, я {гукнув|гукнути} її. Коли вона {вчили|вчити|вивчити} (process)
-    листа, вона {вивчили|вивчити} його. Ми {готувала|готувати|приготувала} (process) роботу і {приготувала|приготувати} завдання.
-
-    ---
-
-    Він часто {гукав|гукати|гукнув}, але вчора він {гукнув|гукнути}. Коли вони {вчили|вчити|вивчити} (duration), ми {вивчили|вивчити}
-    (result). Вона {готувала|готувати|приготувала} (activity) три години і {приготувала|приготувати} проект.'
 - type: mark-the-words
   title: Identify Perfective Verbs
   text: 'Click on PERFECTIVE verbs only.
