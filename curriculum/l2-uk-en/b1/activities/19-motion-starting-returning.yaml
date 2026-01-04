@@ -98,17 +98,17 @@
   - left: Українське
     right: Англійське
   - left: піти
-    right: to leave (on foot), to set off
+    right: to leave, to set off
   - left: зайти
-    right: to drop by (on foot), to stop in
+    right: to drop by, to stop in
   - left: розійтися
-    right: to disperse (on foot), to scatter
+    right: to disperse, to scatter
   - left: поїхати
-    right: to leave (by vehicle), to drive off
+    right: to leave, to drive off
   - left: заїхати
-    right: to drop by (by vehicle), to stop by
+    right: to drop by, to stop by
   - left: роз'їхатися
-    right: to disperse (by vehicle), to scatter
+    right: to disperse, to scatter
   - left: полетіти
     right: to fly off, to take off
   - left: залетіти
@@ -116,11 +116,11 @@
   - left: понести
     right: to start carrying
   - left: занести
-    right: to bring by (while visiting)
+    right: to bring by
   - left: повезти
     right: to start transporting
   - left: завезти
-    right: to deliver by (while visiting)
+    right: to deliver by
 - type: fill-in
   title: Вибір префікса в реченнях
   items:
@@ -444,24 +444,14 @@
   text: Вони *пішли* на роботу рано вранці, а після обіду *зайшли* до кафе на каву. Ввечері колеги *розійшлися* по домівках.
     Хтось *поїхав* на метро, хтось *пішов* пішки. Один колега *заїхав* до супермаркету, щоб купити продукти. Це був звичайний
     робочий день.
-- type: dialogue-reorder
+- type: cloze
   title: Розставте репліки в правильному порядку
-  lines:
-  - order: 1
-    text: Дякую за чудовий вечір! Нам уже пора йти.
-    speaker: Гість
-  - order: 2
-    text: Уже так пізно?
-    speaker: Господар
-  - order: 3
-    text: Так, ми поїдемо додому, бо завтра рано вставати.
-    speaker: Гість
-  - order: 4
-    text: Добре, тоді розходимось!
-    speaker: Господар
-  - order: 5
-    text: Щасливої дороги! Заїдьте до нас знову!
-    speaker: Гість
+  passage: |
+    — {Дякую за чудовий вечір! Нам уже пора йти.|Добре, тоді розходимось!|Уже так пізно?}
+    — {Уже так пізно?|Щасливої дороги! Заїдьте до нас знову!|Так, ми поїдемо додому, бо завтра рано вставати.}
+    — {Так, ми поїдемо додому, бо завтра рано вставати.|Уже так пізно?|Дякую за чудовий вечір! Нам уже пора йти.}
+    — {Добре, тоді розходимось!|Уже так пізно?|Щасливої дороги! Заїдьте до нас знову!}
+    — {Щасливої дороги! Заїдьте до нас знову!|Дякую за чудовий вечір! Нам уже пора йти.|Добре, тоді розходимось!}
 - type: select
   title: Множинний вибір — які речення правильні?
   items:

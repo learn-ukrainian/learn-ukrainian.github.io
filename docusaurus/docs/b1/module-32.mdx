@@ -18,7 +18,7 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
-
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
 :::note[Motivation]
 Як би ви сказали «якби я був мільйонером...»? Нереальні умови дозволяють нам мріяти, уявляти альтернативні сценарії, аналізувати минулі помилки та висловлювати жаль. Це потужний інструмент для вираження гіпотез, бажань і контрфактичних припущень. Без «якби» неможливо говорити про те, що **могло б** статися, але не сталося.
@@ -73,7 +73,7 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 - **Якби** ми **жили** в Києві, ми **б ходили** в театр. (Але ми не живемо)
 
 > 💡 **Цікавий факт**
-> Українське «якби» — це злиття «якщо» + «би». Частка «б» (або «би») — це скорочена форма давнього допоміжного дієслова «бути» в оптативному (бажальному) способі. Ця частка сигналізує нереальність ситуації в усіх слов'янських мовах! У польській це «-by», у чеській — «-by», у російській — «бы». Якби ви відвідали Острозьку академію — найстарішу вищу школу східних слов'ян (1576) — побачили б, як розвивалася українська граматична традиція.
+> Українське «якби» — це злиття «якщо» + «би». Частка «б» (або «би») — це скорочена форма давнього допоміжного дієслова «бути» в оптативному (бажальному) способі. Ця частка сигналізує нереальність ситуації в усіх слов'янських мовах! У польській це «-by», у чеській — «-by», у російській — «би». Якби ви відвідали Острозьку академію — найстарішу вищу школу східних слов'ян (1576) — побачили б, як розвивалася українська граматична традиція.
 
 ### Форми частки «б»
 
@@ -328,6 +328,7 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 ---
 
 
+
 ## 🎯 Activities
 
 ### Виберіть правильну відповідь
@@ -369,7 +370,7 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 <Unjumble
   title="Складіть речення з розсипаних слів"
-  items={JSON.parse(`[{"jumbled": "", "answer": "Якби я мав час, я б допоміг тобі з цим великим важливим проєктом."}, {"jumbled": "", "answer": "Якби вона знала правду, вона б чесно сказала мені про все відразу."}, {"jumbled": "", "answer": "Якби ми жили в Україні, ми б вільно розмовляли українською мовою щодня."}, {"jumbled": "", "answer": "Якби я прийшов раніше, я б встиг на останній потяг до Києва."}, {"jumbled": "", "answer": "Якби він мав великі гроші, він б купив новий красивий будинок."}, {"jumbled": "", "answer": "Якби я була президентом, я б змінила освіту в усій країні."}]`)}
+  items={JSON.parse(`[{"jumbled": "час / мав / я / б / тобі / , / допоміг / якби / з / проєктом / великим / цим / важливим / я", "answer": "Якби я мав час, я б допоміг тобі з цим великим важливим проєктом."}, {"jumbled": "знала / правду / вона / якби / сказала / , / мені / б / вона / про / все / відразу / чесно", "answer": "Якби вона знала правду, вона б чесно сказала мені про все відразу."}, {"jumbled": "жили / ми / якби / Україні / в / , / щодня / б / розмовляли / ми / українською / мовою / вільно", "answer": "Якби ми жили в Україні, ми б вільно розмовляли українською мовою щодня."}, {"jumbled": "раніше / прийшов / я / якби / , / б / встиг / я / на / потяг / останній / до / Києва", "answer": "Якби я прийшов раніше, я б встиг на останній потяг до Києва."}, {"jumbled": "гроші / мав / він / якби / великі / , / б / новий / купив / він / будинок / красивий", "answer": "Якби він мав великі гроші, він б купив новий красивий будинок."}, {"jumbled": "президентом / була / б / я / змінила / якби / я / , / освіту / в / країні / усій", "answer": "Якби я була президентом, я б змінила освіту в усій країні."}]`)}
 />
 
 ### Знайдіть і виправте помилку
@@ -429,19 +430,40 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 ### Позначте частку «б» або «би» та сполучник «якби»
 
-<MarkTheWords>
-  <MarkTheWordsActivity
-    instruction={`Click the correct words.`}
+<HighlightMorphemes>
+  <HighlightMorphemesActivity
     text={`Якби я мав час, я б допоміг тобі. Якби вона знала правду, вона б сказала. Він би поїхав до Львова, якби мав гроші. Якби ми жили в Україні, ми б розмовляли українською. Вона б стала лікарем, якби вчилася старанніше. Якби я міг літати, я б полетів до зірок. Ми б поговорили, якби він прийшов вчасно.`}
-    correctWords={JSON.parse(`["Якби", "б", "Якби", "б", "би", "якби", "Якби", "б", "б", "якби", "Якби", "б", "б", "якби"]`)}
+    morphemes={[
+    { word: `Якби`, morpheme: `Якби`, type: `whole` },
+    { word: `б`, morpheme: `б`, type: `whole` },
+    { word: `Якби`, morpheme: `Якби`, type: `whole` },
+    { word: `б`, morpheme: `б`, type: `whole` },
+    { word: `би`, morpheme: `би`, type: `whole` },
+    { word: `якби`, morpheme: `якби`, type: `whole` },
+    { word: `Якби`, morpheme: `Якби`, type: `whole` },
+    { word: `б`, morpheme: `б`, type: `whole` },
+    { word: `б`, morpheme: `б`, type: `whole` },
+    { word: `якби`, morpheme: `якби`, type: `whole` },
+    { word: `Якби`, morpheme: `Якби`, type: `whole` },
+    { word: `б`, morpheme: `б`, type: `whole` },
+    { word: `б`, morpheme: `б`, type: `whole` },
+    { word: `якби`, morpheme: `якби`, type: `whole` }
+  ]}
   />
-</MarkTheWords>
+</HighlightMorphemes>
 
 ### Впорядкуйте діалог
 
-<DialogueReorder
+<Cloze
   title="Впорядкуйте діалог"
-  lines={JSON.parse(`[{"text": "Якби мав мільйон, що б ти зробив?", "order": 1, "speaker": ""}, {"text": "Якби я мав мільйон, купив би будинок біля моря.", "order": 2, "speaker": ""}, {"text": "Якби ти мала такі гроші, куди б поїхала?", "order": 3, "speaker": ""}, {"text": "Якби я могла вибирати, поїхала б до Японії.", "order": 4, "speaker": ""}, {"text": "А якби могла жити в будь-якій країні?", "order": 5, "speaker": ""}, {"text": "Якби могла вибирати, жила б у Канаді.", "order": 6, "speaker": ""}]`)}
+  passage={`— ___
+— ___
+— ___
+— ___
+— ___
+— ___
+`}
+  blanks={JSON.parse(`[{"answer": "Якби мав мільйон, що б ти зробив?", "options": ["Якби мав мільйон, що б ти зробив?", "Якби ти мала такі гроші, куди б поїхала?", "А якби могла жити в будь-якій країні?"]}, {"answer": "Якби я мав мільйон, купив би будинок біля моря.", "options": ["Якби я мав мільйон, купив би будинок біля моря.", "Якби я могла вибирати, поїхала б до Японії.", "Якби могла вибирати, жила б у Канаді."]}, {"answer": "Якби ти мала такі гроші, куди б поїхала?", "options": ["Якби ти мала такі гроші, куди б поїхала?", "Якби могла вибирати, жила б у Канаді.", "Якби я мав мільйон, купив би будинок біля моря."]}, {"answer": "Якби я могла вибирати, поїхала б до Японії.", "options": ["Якби я могла вибирати, поїхала б до Японії.", "Якби мав мільйон, що б ти зробив?", "А якби могла жити в будь-якій країні?"]}, {"answer": "А якби могла жити в будь-якій країні?", "options": ["А якби могла жити в будь-якій країні?", "Якби я могла вибирати, поїхала б до Японії.", "Якби я мав мільйон, купив би будинок біля моря."]}, {"answer": "Якби могла вибирати, жила б у Канаді.", "options": ["Якби могла вибирати, жила б у Канаді.", "А якби могла жити в будь-якій країні?", "Якби мав мільйон, що б ти зробив?"]}]`)}
 />
 
 ### Виберіть усі граматично правильні речення
@@ -457,6 +479,36 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
   title="Перекладіть на українську мову"
   questions={JSON.parse(`[{"source": "If I were rich, I would buy a big beautiful house.", "options": [{"text": "Якби я був багатий, я б купив великий красивий будинок.", "correct": true}, {"text": "Якщо я багатий, я куплю будинок.", "correct": false}, {"text": "Якби я є багатий, куплю будинок.", "correct": false}, {"text": "Коли я буду багатий, купив би будинок.", "correct": false}]}, {"source": "If she had known the truth, she would have helped him.", "options": [{"text": "Якби вона знала правду, вона б допомогла йому.", "correct": true}, {"text": "Якщо вона знала правду, допомогла йому.", "correct": false}, {"text": "Якби вона знає правду, допоможе йому.", "correct": false}, {"text": "Коли вона знала правду, б допомогла.", "correct": false}]}, {"source": "If we lived in Ukraine, we would speak Ukrainian every day.", "options": [{"text": "Якби ми жили в Україні, ми б розмовляли українською щодня.", "correct": true}, {"text": "Якщо ми живемо в Україні, розмовляємо українською.", "correct": false}, {"text": "Якби ми живемо в Україні, б розмовляємо.", "correct": false}, {"text": "Коли б ми жили, розмовляємо українською.", "correct": false}]}, {"source": "I wish I had more time to help you with the project.", "options": [{"text": "Якби я мав більше часу, я б допоміг тобі з проєктом.", "correct": true}, {"text": "Якщо матиму час, допоможу тобі.", "correct": false}, {"text": "Якби маю час, би допоможу.", "correct": false}, {"text": "Коли мав час, допоміг би тобі.", "correct": false}]}, {"source": "If I could fly, I would travel around the world.", "options": [{"text": "Якби я міг літати, я б подорожував по всьому світу.", "correct": true}, {"text": "Якщо можу літати, подорожую світом.", "correct": false}, {"text": "Якби я можу літати, би подорожую.", "correct": false}, {"text": "Коли б міг літати, подорожую світом.", "correct": false}]}, {"source": "If he had studied harder, he would have become a doctor.", "options": [{"text": "Якби він вчився старанніше, він би став лікарем.", "correct": true}, {"text": "Якщо він вчився, став лікарем.", "correct": false}, {"text": "Якби вчиться, стане лікарем.", "correct": false}, {"text": "Коли вчився, би став лікарем.", "correct": false}]}]`)}
 />
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| аналітично | /analʲiˈtɪt͡ʃnɔ/ | analytically | adv |  |  |
+| бажальний | /baˈʒalʲnɪj/ | optative | adj | ч |  |
+| беркуті | /ˈbɛrkutʲi/ | Berkut (loc.) | name | ч |  |
+| би | /bɪ/ | would | other |  |  |
+| гравець | /hraˈvɛt͡sʲ/ | player | noun | ч |  |
+| жалкувати | /ʒalkuˈvatɪ/ | to regret | verb |  |  |
+| захарі | /zaˈxarʲi/ | Zakhar (loc.) | name | ч |  |
+| зволікання | /zvɔlʲiˈkanʲːa/ | delay | noun | с |  |
+| зразу | /ˈzrazu/ | at once | adv |  |  |
+| кайдашевий | /kajdaˈʃɛvɪj/ | Kaydash (adj) | adj | ж |  |
+| кондиціонал | /kɔndɪt͡sʲiɔˈnal/ | conditional | noun | ч |  |
+| криленя | /krɪlɛˈnʲa/ | little wing | noun | ж |  |
+| кінцівка | /kʲinˈt͡sʲiu̯ka/ | ending | noun | ж |  |
+| логічніший | /lɔˈhʲit͡ʃnʲiʃɪj/ | more logical | adj | ч |  |
+| найпоширеніше | /najpɔˈʃɪrɛnʲiʃɛ/ | most common | adv |  |  |
+| нереальність | /nɛrɛˈalʲnʲisʲtʲ/ | unreality | noun | ж |  |
+| оптативний | /ɔptaˈtɪvnɪj/ | optative | adj | ч |  |
+| психотерапій | /psɪxɔtɛraˈpij/ | psychotherapies (gen. pl.) | noun | ж |  |
+| розмежування | /rɔzmɛʒuˈvanʲːa/ | demarcation | noun | с |  |
+| ролевий | /rɔlɛˈvɪj/ | role (adj) | adj |  |  |
+| старанніше | /staˈranʲːiʃɛ/ | more diligently | adv |  |  |
+| травматичний | /trau̯maˈtɪt͡ʃnɪj/ | traumatic | adj |  |  |
+| хворій | /xvɔˈrʲij/ | be sick (imp.) | adj | ж |  |
+| щасливіший | /ʃt͡ʃaslɪˈvʲiʃɪj/ | happier | adj | ж |  |
+| ґеральт | /ˈgɛralʲt/ | Geralt | name | ч |  |
 
 ## 📋 Підсумок
 
@@ -487,47 +539,13 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 ---
 
-:::info[🎧 Зовнішні ресурси]
-
-**Додаткові матеріали для вивчення:**
-- 📖 [Умовний спосіб](https://uk.wikipedia.org/wiki/Умовний_спосіб) — Вікіпедія
-- 📺 [Ukrainian Grammar](https://www.youtube.com/@ukrainianlesson) — відеоуроки
-- 🎧 [Ukrainian Lessons Podcast](https://ukrainianlessons.com/) — подкаст для вивчення
-:::
-
-
 ---
 
-
-
-## 📚 Словник
-
-| Слово | Вимова | Переклад | ЧМ | Рід | Примітка |
-| --- | --- | --- | --- | --- | --- |
-| академія |  |  | noun | ж |  |
-| аналітично |  |  | adv | - |  |
-| бажальний |  |  | adj | ч |  |
-| бажання |  |  | noun | с |  |
-| бы |  |  | other | - |  |
-| висловлювати |  |  | verb | - |  |
-| відрізняти |  |  | verb | - |  |
-| гіпотеза |  |  | noun | ж |  |
-| закріплення |  |  | noun | с |  |
-| злиття |  |  | noun | с |  |
-| кондиціонал |  |  | noun | ч |  |
-| контрфактичний |  |  | adj | - |  |
-| криленя |  |  | noun | ж |  |
-| логічніший |  |  | adj | ч |  |
-| милий |  |  | adj | ч |  |
-| мрійливий |  |  | adj | - |  |
-| мільйонер |  |  | noun | ч |  |
-| нездійсненний |  |  | adj | - |  |
-| нереальність |  |  | noun | ж |  |
-| оптативний |  |  | adj | ч |  |
-| острозький |  |  | adj | ж |  |
-| приголосне |  |  | noun | ч |  |
-| припущення |  |  | noun | с |  |
-| реально |  |  | adv | - |  |
-| романський |  |  | adj | - |  |
-| сформулювати |  |  | verb | - |  |
-| уявляти |  |  | verb | - |  |
+> [!resources] 🔗 External Resources
+>
+> **📖 Articles:**
+> - [Ukrainian Lessons Podcast](https://ukrainianlessons.com/) — подкаст для вивчення
+> - [Умовний спосіб](https://uk.wikipedia.org/wiki/Умовний_спосіб) — Вікіпедія
+>
+> **🌐 Websites:**
+> - [Ukrainian Grammar](https://www.youtube.com/@ukrainianlesson) — відеоуроки

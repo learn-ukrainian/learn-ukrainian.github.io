@@ -18,9 +18,8 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
-
-# Синоніми: Дія та Перетворення
 
 > 🎯 **Чому це важливо?**
 >
@@ -216,6 +215,7 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 ---
 
 
+
 ## 🎯 Activities
 
 ### Знайдіть характер дії
@@ -372,62 +372,74 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
   questions={JSON.parse(`[{"question": "Яка лексика вказує на творення? (6+)", "options": [{"text": "творити", "correct": true}, {"text": "інтегрувати", "correct": true}, {"text": "модернізувати", "correct": true}, {"text": "реформувати", "correct": true}, {"text": "оптимізувати", "correct": true}, {"text": "вдосконалювати", "correct": true}]}, {"question": "Оберіть характеристики ефективної дії:", "options": [{"text": "результативна", "correct": true}, {"text": "оперативна", "correct": true}, {"text": "виважена", "correct": true}, {"text": "повільна", "correct": false}]}, {"question": "Які слова описують етапи проєкту?", "options": [{"text": "запуск", "correct": true}, {"text": "фіналізація", "correct": true}, {"text": "координація", "correct": true}, {"text": "застій", "correct": false}]}, {"question": "Оберіть терміни для соціальної активності:", "options": [{"text": "акція", "correct": true}, {"text": "ініціатива", "correct": true}, {"text": "спротив", "correct": true}, {"text": "втома", "correct": false}]}, {"question": "Які дієслова стосуються мрій?", "options": [{"text": "втілювати", "correct": true}, {"text": "здійснювати", "correct": true}, {"text": "реалізовувати", "correct": true}, {"text": "хапати", "correct": false}]}, {"question": "Оберіть ознаки 'людини чину':", "options": [{"text": "активна", "correct": true}, {"text": "відповідальна", "correct": true}, {"text": "сумлінна", "correct": true}, {"text": "пасивна", "correct": false}]}]`)}
 />
 
-## 📚 Словник
+## 📚 Vocabulary
 
-| Слово | Вимова | Переклад | ЧМ | Рід | Примітка |
+| Word | IPA | English | POS | Gender | Note |
 | --- | --- | --- | --- | --- | --- |
-| алгорит |  |  | noun | ч |  |
-| втілений |  |  | adj | ч |  |
-| втілити |  |  | verb | ч |  |
-| вчинити |  |  | verb | - |  |
-| відбудовувати |  |  | verb | - |  |
-| генія |  |  | noun | ч |  |
-| досконало |  |  | adv | - |  |
-| злагоджений |  |  | adj | ж |  |
-| злагоджено |  |  | adv | - |  |
-| кадр |  |  | noun | ч |  |
-| кодити |  |  | verb | - |  |
-| конструкторський |  |  | adj | с |  |
-| координація |  |  | noun | ж |  |
-| легітимність |  |  | noun | ж |  |
-| лупати |  |  | verb | - |  |
-| майбутні |  |  | noun | с |  |
-| меседж |  |  | noun | ч |  |
-| модернізувати |  |  | verb | - |  |
-| модулювати |  |  | verb | - |  |
-| мотор |  |  | noun | ч |  |
-| місцями |  |  | adv | - |  |
-| переможний |  |  | adj | ж |  |
-| перформанс |  |  | noun | ч |  |
-| по-людськи |  |  | adv | - |  |
-| поклик |  |  | noun | ч |  |
-| просувати |  |  | verb | - |  |
-| реалізовувати |  |  | verb | - |  |
-| режисувати |  |  | verb | - |  |
-| результативний |  |  | adj | ж |  |
-| результативність |  |  | noun | ж |  |
-| реформувати |  |  | verb | - |  |
-| розбудова |  |  | noun | ж |  |
-| самовіддано |  |  | adv | - |  |
-| спонукати |  |  | verb | - |  |
-| спостерігач |  |  | noun | ч |  |
-| суб'єктність |  |  | noun | ж |  |
-| твар |  |  | noun | ч |  |
-| удосконалювати |  |  | verb | - |  |
-| учинити |  |  | verb | - |  |
-| філігранно |  |  | adv | - |  |
-| фіналізація |  |  | noun | ж |  |
-| хапата |  |  | noun | ч |  |
-| хапати |  |  | verb | - |  |
-| ціннісний |  |  | adj | ж |  |
-| чиний |  |  | adj | ч |  |
-| ювелірно |  |  | adv | - |  |
-
-## 📋 Підсумок
-
-Сьогодні ми відкрили для себе динамічний світ української дії.
-- **Праця:** Ми навчилися розрізняти нейтральне «робити», офіційне «здійснювати» та творче «творити».
-- **Взаємодія:** Ми побачили різницю між ввічливим «отримувати» та різким «хапати».
-- **Аналіз:** Ми вивчили терміни, що описують вчинок, процес та його наслідок.
-
-Пам'ятайте: дієслово — це мотор речення. Обирайте потужні та точні дієслова, щоб ваше життя та мова завжди були сповнені енергії та змісту!
+| алгорит | /ɑlɦoˈrɪt/ | algorithm (genitive plural) | noun | ч |  |
+| асортимент | /ɐsortɪˈmɛnt/ | assortment, range | noun | ч |  |
+| буга | /buˈɦɑ/ | Buh (river, genitive) | name | ч |  |
+| вихопити | /wɪˈxopɪtɪ/ | to snatch, to grab | verb | ч |  |
+| вихоплювати | /wɪxopˈlʲuwɑtɪ/ | to snatch (imperfective) | verb |  |  |
+| втілений | /wtʲiˈlɛnɪj/ | embodied, implemented | adj | ч |  |
+| втілити | /wtʲiˈlɪtɪ/ | to embody, to implement | verb | ч |  |
+| вхопити | /wxoˈpɪtɪ/ | to grab, to seize | verb | ж |  |
+| відбудовувати | /wʲidbudoˈwuwɑtɪ/ | to rebuild | verb |  |  |
+| генія | /ˈɦɛnʲijɑ/ | genius (genitive) | noun | ч |  |
+| докладання | /doklɐˈdɑnʲːɑ/ | application, effort | noun | с |  |
+| досконало | /doskoˈnɑlo/ | perfectly | adv |  |  |
+| енергетичний | /ɛnɛrɦɛˈtɪt͡ʃnɪj/ | energy (adj.) | adj | ж |  |
+| забирання | /zɐbɪˈrɑnʲːɑ/ | taking away | noun | с |  |
+| злагоджений | /zlɐˈɦodʒɛnɪj/ | coordinated, harmonious | adj | ж |  |
+| злагоджено | /zlɐˈɦodʒɛno/ | coordinately, harmoniously | adv |  |  |
+| кадр | /kɑdr/ | frame, personnel | noun | ч |  |
+| кодити | /koˈdɪtɪ/ | to code | verb |  |  |
+| конструкторський | /konstrukˈtorsʲkɪj/ | design, engineering (adj.) | adj | с |  |
+| координація | /koordɪˈnɑt͡sʲijɑ/ | coordination | noun | ж |  |
+| легітимність | /lɛɦʲitɪmnʲistʲ/ | legitimacy | noun | ж |  |
+| лупати | /luˈpɑtɪ/ | to shell, to peel | verb |  |  |
+| майбутні | /mɐjˈbutnʲi/ | future (things/people) | noun | с |  |
+| меседж | /mɛˈsɛdʒ/ | message | noun | ч |  |
+| модернізувати | /modɛrnʲizuˈwɑtɪ/ | to modernize | verb |  |  |
+| модулювати | /modulʲuˈwɑtɪ/ | to modulate | verb |  |  |
+| найвіддаленіший | /nɐjwʲiddɐˈlɛnʲiʃɪj/ | most remote | adj |  |  |
+| наставати | /nɐstɐˈwɑtɪ/ | to come, to arrive (of time) | verb |  |  |
+| нащадок | /nɐˈʃt͡ʃɑdok/ | descendant | noun | ч |  |
+| незабутній | /nɛzɐbutˈnʲij/ | unforgettable | adj | с |  |
+| обстріл | /obˈstrʲil/ | shelling, bombardment | noun | ч |  |
+| оточуючий | /otot͡ʃuˈjut͡ʃɪj/ | surrounding | adj | ч |  |
+| переможний | /pɛrɛˈmoʒnɪj/ | victorious | adj | ж |  |
+| перформанс | /pɛrforˈmɑns/ | performance (art) | noun | ч |  |
+| поклик | /ˈpoklɪk/ | calling, vocation | noun | ч |  |
+| просувати | /prosuˈwɑtɪ/ | to advance, to promote | verb |  |  |
+| піклуватися | /pʲikluˈwɑtɪsʲɑ/ | to care for, to look after | verb |  |  |
+| реалізовувати | /rɛɐlʲizowuˈwɑtɪ/ | to realize, to implement | verb |  |  |
+| режисувати | /rɛʒɪsuˈwɑtɪ/ | to direct (film, theater) | verb |  |  |
+| результативний | /rɛzulʲtɐˈtɪwnɪj/ | effective, productive | adj | ж |  |
+| результативність | /rɛzulʲtɐˈtɪwnʲistʲ/ | effectiveness, productivity | noun | ж |  |
+| реформувати | /rɛformuˈwɑtɪ/ | to reform | verb |  |  |
+| розбудова | /rozbuˈdowɑ/ | development, construction | noun | ж |  |
+| рутина | /ruˈtɪnɑ/ | routine | noun | ж |  |
+| різкість | /ˈrʲizkʲistʲ/ | sharpness, abruptness | noun | ж |  |
+| самовіддано | /sɐmowʲidˈdɑno/ | selflessly, devotedly | adv |  |  |
+| свідий | /ˈswʲidɪj/ | conscious, aware | adj | ж |  |
+| силовий | /sɪloˈwɪj/ | force (adj.), power | adj | ж |  |
+| спланований | /splɐnoˈwɑnɪj/ | planned | adj | ж |  |
+| спонукати | /sponu ˈkɑtɪ/ | to prompt, to motivate | verb |  |  |
+| спостерігач | /spostɛrʲiˈɦɑt͡ʃ/ | observer | noun | ч |  |
+| справляти | /sprɐwˈlʲɑtɪ/ | to make, to cause | verb |  |  |
+| спритно | /ˈsprɪtno/ | deftly, nimbly | adv |  |  |
+| суб'єктність | /subjɛktnʲistʲ/ | subjectivity, agency | noun | ж |  |
+| твар | /twɑr/ | creature, being | noun | ч |  |
+| транслювати | /trɑnslʲuˈwɑtɪ/ | to broadcast, to transmit | verb |  |  |
+| удосконалювати | /udoskonɐlʲuˈwɑtɪ/ | to improve, to perfect | verb |  |  |
+| учинити | /ut͡ʃɪˈnɪtɪ/ | to commit, to do | verb |  |  |
+| філігранно | /fʲilʲiˈɦrɑnːo/ | delicately, with precision | adv |  |  |
+| хапата | /xɐˈpɑtɑ/ | grabbing (genitive) | noun | ч |  |
+| хапати | /xɐˈpɑtɪ/ | to grab, to seize | verb |  |  |
+| ціннісний | /t͡sʲinːʲisnɪj/ | value (adj.) | adj | ж |  |
+| чернігів | /t͡ʃɛrˈnʲiɦʲiw/ | Chernihiv (city) | name | ч |  |
+| чиний | /t͡ʃɪnɪj/ | valid, current | adj | ч |  |
+| шахра | /ʃɐxˈrɑ/ | swindler (genitive) | noun | ч |  |
+| ювелірно | /juwɛˈlʲirno/ | with jeweler's precision | adv |  |  |
+| ініціатив | /ʲinʲit͡sʲiɐˈtɪw/ | initiatives (genitive plural) | noun | ж |  |

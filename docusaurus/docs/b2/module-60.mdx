@@ -18,9 +18,8 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
-
-# Синоніми: Характер та Особистість
 
 > 🎯 **Чому це важливо?**
 >
@@ -288,6 +287,7 @@ Character (характер) — це не вирок, це шлях. Украї
 ---
 
 
+
 ## 🎯 Activities
 
 ### Знайдіть точне слово
@@ -444,93 +444,122 @@ Character (характер) — це не вирок, це шлях. Украї
   questions={JSON.parse(`[{"question": "Які слова описують шляхетну людину? (6+)", "options": [{"text": "милосердний", "correct": true}, {"text": "чуйний", "correct": true}, {"text": "щедрий", "correct": true}, {"text": "принциповий", "correct": true}, {"text": "незламний", "correct": true}, {"text": "сумлінний", "correct": true}, {"text": "турботливий", "correct": true}]}, {"question": "Оберіть вади характеру:", "options": [{"text": "байдужість", "correct": true}, {"text": "егоїзм", "correct": true}, {"text": "жорстокість", "correct": true}, {"text": "мудрість", "correct": false}]}, {"question": "Які слова описують активну доброту?", "options": [{"text": "жертовний", "correct": true}, {"text": "невтомний", "correct": true}, {"text": "дбайливий", "correct": true}, {"text": "пасивний", "correct": false}]}, {"question": "Оберіть ознаки емоційного інтелекту:", "options": [{"text": "емпатія", "correct": true}, {"text": "співпереживання", "correct": true}, {"text": "чуйність", "correct": true}, {"text": "агресія", "correct": false}]}, {"question": "Які слова вказують на професійний характер?", "options": [{"text": "пунктуальний", "correct": true}, {"text": "відповідальний", "correct": true}, {"text": "сумлінний", "correct": true}, {"text": "лінивий", "correct": false}]}, {"question": "Оберіть риси сучасного лідера:", "options": [{"text": "харизматичний", "correct": true}, {"text": "далекоглядний", "correct": true}, {"text": "гнучкий", "correct": true}, {"text": "жорсткий", "correct": false}]}]`)}
 />
 
-## 📚 Словник
+## 📚 Vocabulary
 
-| Слово | Вимова | Переклад | ЧМ | Рід | Примітка |
+| Word | IPA | English | POS | Gender | Note |
 | --- | --- | --- | --- | --- | --- |
-| апелювати |  |  | verb | - |  |
-| безсердечний |  |  | adj | ч |  |
-| благо |  |  | noun | с |  |
-| болючіше |  |  | adv | - |  |
-| вдач |  |  | noun | ж |  |
-| вдача |  |  | noun | ж |  |
-| вдяч |  |  | noun | ж |  |
-| виваженість |  |  | noun | ж |  |
-| викристалізувати |  |  | verb | - |  |
-| винятковість |  |  | noun | ж |  |
-| володар |  |  | noun | ч |  |
-| волонтерство |  |  | noun | с |  |
-| вроджений |  |  | adj | ч |  |
-| втовити |  |  | verb | - |  |
-| гартованість |  |  | noun | ж |  |
-| гартувати |  |  | verb | - |  |
-| героїнь |  |  | noun | ж |  |
-| гуманний |  |  | adj | ч |  |
-| дбайливий |  |  | adj | ч |  |
-| деструктивний |  |  | adj | ч |  |
-| егоїзм |  |  | noun | ч |  |
-| егоїстичний |  |  | adj | ч |  |
-| експедиція |  |  | noun | ж |  |
-| ерудиція |  |  | noun | ж |  |
-| ерудований |  |  | adj | ч |  |
-| жертовний |  |  | adj | ч |  |
-| застиглий |  |  | adj | ж |  |
-| злома |  |  | noun | с |  |
-| змалечку |  |  | adv | - |  |
-| зіткнення |  |  | noun | с |  |
-| кмітливий |  |  | adj | ч |  |
-| комунікабеність |  |  | noun | ж |  |
-| лагідність |  |  | noun | ж |  |
-| лисичка |  |  | noun | ж |  |
-| лідерський |  |  | adj | - |  |
-| милосердний |  |  | adj | ч |  |
-| милосердя |  |  | noun | с |  |
-| мужний |  |  | adj | ч |  |
-| мужність |  |  | noun | ж |  |
-| найстрашніше |  |  | noun | с |  |
-| натур |  |  | noun | ж |  |
-| нездатний |  |  | adj | ж |  |
-| нездатність |  |  | noun | ж |  |
-| обраний |  |  | adj | с |  |
-| переймати |  |  | verb | - |  |
-| перекритий |  |  | adj | ж |  |
-| портрет |  |  | noun | ч |  |
-| приземлений |  |  | adj | ж |  |
-| проактивність |  |  | noun | ж |  |
-| програмувати |  |  | verb | - |  |
-| проявитися |  |  | verb | ч |  |
-| ранити |  |  | verb | - |  |
-| репост |  |  | noun | ч |  |
-| самокритичний |  |  | adj | ч |  |
-| самоповаг |  |  | noun | ж |  |
-| симфонія |  |  | noun | ж |  |
-| синонімічний |  |  | adj | - |  |
-| скрут |  |  | noun | ж |  |
-| солідарність |  |  | noun | ж |  |
-| стрижня |  |  | noun | ч |  |
-| ступ |  |  | noun | ч |  |
-| сумлінний |  |  | adj | ч |  |
-| сумлінність |  |  | noun | ж |  |
-| суспільно |  |  | adv | - |  |
-| сяйво |  |  | noun | с |  |
-| темперамент |  |  | noun | ч |  |
-| турботливий |  |  | adj | ч |  |
-| тямати |  |  | verb | - |  |
-| тямущий |  |  | adj | ч |  |
-| тямущість |  |  | noun | ж |  |
-| харизм |  |  | noun | ж |  |
-| харизматичний |  |  | adj | ч |  |
-| чеснота |  |  | noun | ж |  |
-| чуйний |  |  | adj | ж |  |
-| чуйність |  |  | noun | ж |  |
-| шляхетний |  |  | adj | ч |  |
-| щедрість |  |  | noun | ж |  |
-
-## 📋 Підсумок
-
-Сьогодні ми занурилися в океан українських синонімів на позначення характеру.
-- **Розум:** Ми навчилися розрізняти теоретичну ерудицію та практичну кмітливість.
-- **Серце:** Ми побачили різницю між загальною добротою та глибоким милосердям.
-- **Тіні:** Ми вивчили слова для опису егоїзму та байдужості.
-
-Пам'ятайте: характер людини — це динамічна система. Використовуйте ці слова, щоб зробити свої описи живими, точними та глибокими. Ваша мова — це дзеркало вашого власного характеру!
+| апелювати | /ɐpɛlʲuˈwɑtɪ/ | to appeal | verb |  |  |
+| безсердечний | /bɛzsɛrˈdɛt͡ʃnɪj/ | heartless | adj | ч |  |
+| благо | /blɐˈɦo/ | good, benefit | noun | ч |  |
+| болючіше | /bolʲuˈt͡ʃʲiʃɛ/ | more painfully | adv |  |  |
+| валентин | /wɐlɛnˈtɪn/ | Valentyn (name) | name | ч |  |
+| вдач | /wdɑt͡ʃ/ | disposition (genitive plural) | noun | ж |  |
+| вдача | /wdɐˈt͡ʃɑ/ | disposition, temperament | noun | ж |  |
+| вдяч | /wdʲɑt͡ʃ/ | grateful (genitive plural) | noun | ж |  |
+| виваженість | /wɪˈwɑʒɛnʲistʲ/ | balance, poise | noun | ж |  |
+| визнавати | /wɪznɐˈwɑtɪ/ | to recognize, to acknowledge | verb |  |  |
+| викристалізувати | /wɪkrɪstɐlʲizuˈwɑtɪ/ | to crystallize, to form | verb |  |  |
+| винятковість | /wɪnʲɑtˈkowʲistʲ/ | exceptionality | noun | ж |  |
+| володар | /woloˈdɑr/ | ruler, master | noun | ч |  |
+| волонтерство | /wolontɛrstwo/ | volunteering | noun | с |  |
+| вроджений | /ˈwrodʒɛnɪj/ | innate, congenital | adj | ч |  |
+| втовити | /wtoˈwɪtɪ/ | to drive in, to instill | verb |  |  |
+| вчизати | /wt͡ʃɪˈzɑtɪ/ | to rush in, to burst in | verb |  |  |
+| відгукуватися | /wʲidɦukuˈwɑtɪsʲɑ/ | to respond, to resonate | verb |  |  |
+| відображення | /wʲidobrɐˈʒɛnʲːɑ/ | reflection, representation | noun | с |  |
+| віра | /ˈwʲirɑ/ | faith, belief | noun | ж |  |
+| гартованість | /ɦɑrtoˈwɑnʲistʲ/ | tempered character, hardiness | noun | ж |  |
+| героїнь | /ɦɛroˈjinʲ/ | heroine (genitive plural) | noun | ж |  |
+| гнучкий | /ɦnut͡ʃkɪj/ | flexible | adj | с |  |
+| гуманний | /ɦumɐnːɪj/ | humane | adj | ч |  |
+| далекоглядний | /dɐlɛkoˈɦlʲɑdnɪj/ | farsighted, visionary | adj | ч |  |
+| дбайливий | /dbɐjlɪwɪj/ | caring, attentive | adj | ч |  |
+| дбати | /ˈdbɑtɪ/ | to care for, to look after | verb |  |  |
+| деструктивний | /dɛstrukˈtɪwnɪj/ | destructive | adj | ч |  |
+| егоїстичний | /ɛɦoˈjistɪt͡ʃnɪj/ | selfish, egoistic | adj | ч |  |
+| експедиція | /ɛkspɛˈdɪt͡sʲijɑ/ | expedition | noun | ж |  |
+| емпатія | /ɛmˈpɑtʲijɑ/ | empathy | noun | ж |  |
+| енергійний | /ɛnɛrˈɦʲijnɪj/ | energetic | adj | ч |  |
+| ерудований | /ɛrudoˈwɑnɪj/ | erudite, learned | adj | ч |  |
+| етимологічно | /ɛtɪmoloˈɦʲit͡ʃno/ | etymologically | adv |  |  |
+| жертовний | /ʒɛrˈtownɪj/ | sacrificial | adj | ч |  |
+| заспокоювати | /zɐspokojuˈwɑtɪ/ | to calm, to soothe | verb | ч |  |
+| застиглий | /zɐsˈtɪɦlɪj/ | frozen, stiff | adj | ж |  |
+| зауважувати | /zɐuwɐˈʒuwɑtɪ/ | to notice, to remark | verb |  |  |
+| злома | /zloˈmɑ/ | scrap metal (genitive) | noun | с |  |
+| змалечку | /zmɐˈlɛt͡ʃku/ | from childhood | adv |  |  |
+| зруйнувати | /zrujnuˈwɑtɪ/ | to destroy, to ruin | verb |  |  |
+| зрілий | /ˈzrʲilɪj/ | mature, ripe | adj | ж |  |
+| зіткнення | /zʲitˈknɛnʲːɑ/ | collision, clash | noun | с |  |
+| кваліфікований | /kwɑlʲifʲikoˈwɑnɪj/ | qualified | adj | ч |  |
+| кмітити | /ˈkmʲitɪtɪ/ | to grasp, to understand quickly | verb |  |  |
+| кмітливий | /ˈkmʲitlɪwɪj/ | clever, quick-witted | adj | ч |  |
+| кобилянськ | /kobɪlʲɑnsʲk/ | Kobylianska (writer) | name | ж |  |
+| комунікабеність | /komˌunʲikɐˈbɛnʲistʲ/ | sociability | noun | ж |  |
+| котигорошко | /kotɪɦoˈroʃko/ | Kotyhoroshko (folk hero) | name | ч |  |
+| креативність | /krɛɐˈtɪwnʲistʲ/ | creativity | noun | ж |  |
+| лагідність | /lɐˈɦʲidnʲistʲ/ | gentleness, mildness | noun | ж |  |
+| лисичка | /lɪˈsɪt͡ʃkɑ/ | little fox | noun | ж |  |
+| лідера | /lʲiˈdɛrɑ/ | leader (genitive) | noun | ч |  |
+| лідерський | /lʲiˈdɛrsʲkɪj/ | leadership (adj.) | adj |  |  |
+| лічений | /lʲiˈt͡ʃɛnɪj/ | counted, numbered | adj |  |  |
+| майн | /mɐjn/ | property (genitive plural) | noun | ч |  |
+| милосердний | /mɪlosɛrdnɪj/ | merciful | adj | ч |  |
+| милосердя | /mɪloˈsɛrdʲɑ/ | mercy, compassion | noun | с |  |
+| мрійливий | /mˈrʲijlɪwɪj/ | dreamy | adj | ч |  |
+| мужний | /ˈmuʒnɪj/ | courageous, brave | adj | ч |  |
+| мужність | /muʒnʲistʲ/ | courage, bravery | noun | ж |  |
+| найсильніший | /nɐjsɪlʲˈnʲiʃɪj/ | strongest | adj |  |  |
+| найстрашніше | /nɐjstrɑʃˈnʲiʃɛ/ | scariest thing | noun | с |  |
+| насильство | /nɐˈsɪlʲstwo/ | violence | noun | с |  |
+| натур | /nɐˈtur/ | nature (genitive plural) | noun | ж |  |
+| нездатний | /nɛˈzdɑtnɪj/ | incapable | adj | ж |  |
+| нездатність | /nɛˈzdɑtnʲistʲ/ | inability, incapacity | noun | ж |  |
+| охоче | /oˈxot͡ʃɛ/ | willingly, eagerly | adv |  |  |
+| палагна | /pɐlɐɦˈnɑ/ | Palahna (name) | name | ж |  |
+| переймати | /pɛrɛjˈmɑtɪ/ | to worry, to take to heart | verb |  |  |
+| перекритий | /pɛrɛˈkrɪtɪj/ | blocked, covered | adj | ж |  |
+| полонені | /polonɛnʲi/ | prisoners, captives | noun | ч |  |
+| портрет | /porˈtrɛt/ | portrait | noun | ч |  |
+| постраждал | /postrɐʒˈdɑl/ | victim (genitive plural) | noun | ч |  |
+| приземлений | /prɪzɛmˈlɛnɪj/ | grounded, down-to-earth | adj | ж |  |
+| проактивність | /proɐktɪwnʲistʲ/ | proactivity | noun | ж |  |
+| програмувати | /proɦrɐmuˈwɑtɪ/ | to program | verb |  |  |
+| прощення | /proʃt͡ʃɛnʲːɑ/ | forgiveness | noun | с |  |
+| проявитися | /projɐˈwɪtɪsʲɑ/ | to appear, to manifest | verb | ч |  |
+| проявляти | /projɐwˈlʲɑtɪ/ | to show, to display | verb |  |  |
+| пізнати | /pʲizˈnɑtɪ/ | to know, to learn | verb |  |  |
+| ранити | /rɐˈnɪtɪ/ | to wound | verb |  |  |
+| репост | /rɛˈpost/ | repost | noun | ч |  |
+| рис | /rɪs/ | trait, feature (genitive plural) | noun | ч |  |
+| самокритичний | /sɐmokrɪˈtɪt͡ʃnɪj/ | self-critical | adj | ч |  |
+| самоповаг | /sɐmopoˈwɑɦ/ | self-respect (genitive plural) | noun | ж |  |
+| сильвестров | /sɪlʲwɛsˈtrow/ | Sylvestrov (composer) | name | ч |  |
+| симфонія | /sɪmˈfonʲijɑ/ | symphony | noun | ж |  |
+| синонімічний | /sɪnonʲimʲit͡ʃnɪj/ | synonymous | adj |  |  |
+| скрут | /skrut/ | difficulty, hardship (genitive plural) | noun | ж |  |
+| солідарність | /solʲidɑrnʲistʲ/ | solidarity | noun | ж |  |
+| співпереживання | /spʲiwpɛrɛʒɪˈwɑnʲːɑ/ | empathy, compassion | noun | с |  |
+| стрижня | /strɪʒˈnʲɑ/ | core, backbone (genitive) | noun | ч |  |
+| ступ | /stup/ | degree, level (genitive plural) | noun | ч |  |
+| сумлінний | /sumlʲinːɪj/ | conscientious | adj | ч |  |
+| сумлінність | /sumlʲinːʲistʲ/ | conscientiousness | noun | ж |  |
+| суспільно | /susˈpʲilʲno/ | socially | adv |  |  |
+| сяйво | /sʲɑjˈwo/ | radiance, glow | noun | с |  |
+| темперамент | /tɛmpɛrɐˈmɛnt/ | temperament | noun | ч |  |
+| турботливий | /turbotlɪwɪj/ | caring, concerned | adj | ч |  |
+| тямати | /tʲɑˈmɑtɪ/ | to understand, to grasp | verb |  |  |
+| тямущий | /tʲɑˈmuʃt͡ʃɪj/ | clever, smart | adj | ч |  |
+| тямущість | /tʲɑˈmuʃt͡ʃʲistʲ/ | cleverness, wit | noun | ж |  |
+| уважність | /uˈwɑʒnʲistʲ/ | attentiveness | noun | ж |  |
+| харизм | /xɐˈrɪzm/ | charisma (genitive plural) | noun | ж |  |
+| харизматичний | /xɑrɪzmɐˈtɪt͡ʃnɪj/ | charismatic | adj | ч |  |
+| херсон | /xɛrˈson/ | Kherson (city) | name | ч |  |
+| цивілізованість | /t͡sɪwʲilʲizoˈwɑnʲistʲ/ | civilization, being civilized | noun | ж |  |
+| цілеспрямованість | /t͡sʲilɛsprʲɑmoˈwɑnʲistʲ/ | purposefulness, determination | noun | ж |  |
+| чеснота | /t͡ʃɛsnoˈtɑ/ | virtue | noun | ж |  |
+| чуйний | /t͡ʃujnɪj/ | sensitive, responsive | adj | ж |  |
+| чуйність | /t͡ʃujnʲistʲ/ | sensitivity, responsiveness | noun | ж |  |
+| шляхетний | /ʃlʲɑˈxɛtnɪj/ | noble | adj | ч |  |
+| шляхетність | /ʃlʲɑˈxɛtnʲistʲ/ | nobility | noun | ж |  |
+| щедрий | /ʃt͡ʃɛdrɪj/ | generous | adj | ч |  |

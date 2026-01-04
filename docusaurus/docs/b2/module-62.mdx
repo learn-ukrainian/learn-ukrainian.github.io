@@ -18,9 +18,8 @@ import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 
-
-# Синоніми: Місце та Простір
 
 > 🎯 **Чому це важливо?**
 >
@@ -235,6 +234,7 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 ---
 
 
+
 ## 🎯 Activities
 
 ### Знайдіть місце
@@ -391,64 +391,70 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
   questions={JSON.parse(`[{"question": "Які терміни вказують на масштабну територію? (6+)", "options": [{"text": "область", "correct": true}, {"text": "територія", "correct": true}, {"text": "простір", "correct": true}, {"text": "країна", "correct": true}, {"text": "регіон", "correct": true}, {"text": "материк", "correct": true}]}, {"question": "Оберіть одиниці адміністративного поділу:", "options": [{"text": "область", "correct": true}, {"text": "район", "correct": true}, {"text": "громада", "correct": true}, {"text": "ліс", "correct": false}]}, {"question": "Які слова описують закритий простір?", "options": [{"text": "кімната", "correct": true}, {"text": "кабінет", "correct": true}, {"text": "приміщення", "correct": true}, {"text": "степ", "correct": false}]}, {"question": "Оберіть терміни для природних зон:", "options": [{"text": "заповідник", "correct": true}, {"text": "парк", "correct": true}, {"text": "лісництво", "correct": true}, {"text": "завод", "correct": false}]}, {"question": "Які слова вказують на вертикальний простір?", "options": [{"text": "вгору", "correct": true}, {"text": "вниз", "correct": true}, {"text": "над", "correct": true}, {"text": "поруч", "correct": false}]}, {"question": "Оберіть характеристики 'міської' локації:", "options": [{"text": "урбаністична", "correct": true}, {"text": "центральна", "correct": true}, {"text": "багатолюдна", "correct": true}, {"text": "дика", "correct": false}]}]`)}
 />
 
-## 📚 Словник
+## 📚 Vocabulary
 
-| Слово | Вимова | Переклад | ЧМ | Рід | Примітка |
+| Word | IPA | English | POS | Gender | Note |
 | --- | --- | --- | --- | --- | --- |
-| бабин |  |  | adj | ч |  |
-| безмежність |  |  | noun | ж |  |
-| безцінний |  |  | adj | ч |  |
-| вдалині |  |  | adv | - |  |
-| висотній |  |  | adj | - |  |
-| вказування |  |  | noun | с |  |
-| вшанування |  |  | noun | с |  |
-| відвойовувати |  |  | verb | - |  |
-| віддаленість |  |  | noun | ж |  |
-| відчутний |  |  | adj | ж |  |
-| візій |  |  | noun | ж |  |
-| віртуальний |  |  | adj | - |  |
-| галас |  |  | noun | ч |  |
-| ген-ген |  |  | noun | ч |  |
-| географ |  |  | noun | ч |  |
-| геометрія |  |  | noun | ж |  |
-| гніздечко |  |  | noun | с |  |
-| гористий |  |  | adj | ч |  |
-| далечний |  |  | adj | ж |  |
-| дбайливо |  |  | adv | - |  |
-| діагонально |  |  | adv | - |  |
-| жест |  |  | noun | ч |  |
-| затишка |  |  | noun | ч |  |
-| згуртованість |  |  | noun | ж |  |
-| зручніший |  |  | adj | ч |  |
-| кіберпростір |  |  | noun | ч |  |
-| лабіринт |  |  | noun | ч |  |
-| логістик |  |  | noun | ж |  |
-| місток |  |  | noun | ч |  |
-| народжувати |  |  | verb | - |  |
-| неозорість |  |  | noun | ж |  |
-| обрій |  |  | noun | ч |  |
-| он |  |  | part | - |  |
-| орієнтація |  |  | noun | ж |  |
-| перпендикулярно |  |  | adv | - |  |
-| поблиз |  |  | noun | ч |  |
-| подоланий |  |  | adj | ч |  |
-| покращений |  |  | adj | с |  |
-| прагнення |  |  | noun | с |  |
-| рекреаційний |  |  | adj | - |  |
-| розташовуватися |  |  | verb | - |  |
-| рівнинний |  |  | adj | ч |  |
-| сусідство |  |  | noun | с |  |
-| тутечко |  |  | noun | ч |  |
-| тутешній |  |  | adj | - |  |
-| тутешність |  |  | noun | ж |  |
-| шепотати |  |  | verb | - |  |
-| інклюзивний |  |  | adj | - |  |
+| безмежність | /bɛzˈmɛʒnʲistʲ/ | boundlessness, infinity | noun | ж |  |
+| безпосередній | /bɛzposɛˈrɛdnʲij/ | direct, immediate | adj | ж |  |
+| безцінний | /bɛzˈt͡sʲinːɪj/ | priceless, invaluable | adj | ч |  |
+| вдалині | /wdɐlɪˈnʲi/ | in the distance | adv |  |  |
+| висотній | /wɪˈsotnʲij/ | high-altitude | adj |  |  |
+| вказування | /wkɐzuˈwɑnʲːɑ/ | indication, pointing | noun | с |  |
+| всюдити | /wsʲuˈdɪtɪ/ | to be everywhere | verb |  |  |
+| вшанування | /wʃɐnuˈwɑnʲːɑ/ | honoring, commemoration | noun | с |  |
+| відвойовувати | /wʲidwojoˈwuwɑtɪ/ | to reconquer, to win back | verb |  |  |
+| віддаленість | /wʲiddɐˈlɛnʲistʲ/ | remoteness, distance | noun | ж |  |
+| відчутний | /wʲidt͡ʃutnɪj/ | tangible, noticeable | adj | ж |  |
+| візій | /wʲiˈzʲij/ | vision (genitive plural) | noun | ж |  |
+| віртуальний | /wʲirtuˈɑlʲnɪj/ | virtual | adj |  |  |
+| галас | /ɦɐˈlɑs/ | noise, din | noun | ч |  |
+| ген | /ɦɛn/ | gene | noun | ч |  |
+| географ | /ɦɛoˈɦrɑf/ | geographer | noun | ч |  |
+| геометрія | /ɦɛomɛˈtrʲijɑ/ | geometry | noun | ж |  |
+| гніздечко | /ɦnʲizˈdɛt͡ʃko/ | little nest | noun | с |  |
+| гористий | /ɦorɪstɪj/ | mountainous | adj | ч |  |
+| далечний | /dɐˈlɛt͡ʃnɪj/ | distant, faraway | adj | ж |  |
+| дбайливо | /dbɐjlɪwo/ | carefully, attentively | adv |  |  |
+| дистанційний | /dɪstɐnˈt͡sʲijnɪj/ | remote, distance | adj |  |  |
+| діагонально | /dʲiɐɦoˈnɑlʲno/ | diagonally | adv |  |  |
+| жест | /ʒɛst/ | gesture | noun | ч |  |
+| затишка | /zɐˈtɪʃkɑ/ | cozy corner, nook | noun | ч |  |
+| звідкись | /zwʲidˈkɪsʲ/ | from somewhere | adv |  |  |
+| згуртованість | /zɦurtoˈwɑnʲistʲ/ | cohesion, unity | noun | ж |  |
+| здалеку | /zdɐlɛˈku/ | from afar | adv |  |  |
+| зручніший | /zrut͡ʃˈnʲiʃɪj/ | more convenient | adj | ч |  |
+| кіберпростір | /kʲibɛrˈprostʲir/ | cyberspace | noun | ч |  |
+| лабіринт | /lɐbʲiˈrɪnt/ | labyrinth, maze | noun | ч |  |
+| логістик | /loˈɦʲistɪk/ | logistics (genitive plural) | noun | ж |  |
+| локація | /loˈkɑt͡sʲijɑ/ | location | noun | ж |  |
+| миколаєва | /mɪkoˈlɑjɛwɑ/ | Mykolaiv (city, genitive) | name | ч |  |
+| місток | /mʲisˈtok/ | little bridge | noun | ч |  |
+| навігація | /nɐwʲiˈɦɑt͡sʲijɑ/ | navigation | noun | ж |  |
+| найзагальніший | /nɐjzɐˈɦɑlʲnʲiʃɪj/ | most general | adj | ж |  |
+| народжувати | /nɐrodʒuˈwɑtɪ/ | to give birth | verb |  |  |
+| неозорість | /nɛozoˈrʲistʲ/ | vastness, immensity | noun | ж |  |
+| обрій | /oˈbrʲij/ | horizon | noun | ч |  |
+| орієнтація | /orʲijɛnˈtɑt͡sʲijɑ/ | orientation | noun | ж |  |
+| орієнтування | /orʲijɛntuˈwɑnʲːɑ/ | orientation, navigation | noun | с |  |
+| охоплення | /oxopˈlɛnʲːɑ/ | coverage, scope | noun | с |  |
+| паралельно | /pɑrɑˈlɛlʲno/ | in parallel | adv |  |  |
+| перпендикулярно | /pɛrpɛndɪkuˈlʲɑrno/ | perpendicularly | adv |  |  |
+| планета | /plɐˈnɛtɑ/ | planet | noun | ж |  |
+| покращений | /pokrɐˈʃɛnɪj/ | improved | adj | с |  |
+| рекреаційний | /rɛkrɛɐˈt͡sʲijnɪj/ | recreational | adj |  |  |
+| розташовуватися | /roztɐˈʃowuwɑtɪsʲɑ/ | to be located | verb |  |  |
+| рівнинний | /rʲiwˈnɪnːɪj/ | flat, plain | adj | ч |  |
+| статика | /stɐˈtɪkɑ/ | statics | noun | ж |  |
+| сусідство | /suˈsʲidstwo/ | neighborhood, proximity | noun | с |  |
+| тутечко | /tuˈtɛt͡ʃko/ | right here | noun | ч |  |
+| тутешній | /tuˈtɛʃnʲij/ | local | adj |  |  |
+| тутешність | /tuˈtɛʃnʲistʲ/ | localness | noun | ж |  |
+| шепотати | /ʃɛpoˈtɑtɪ/ | to whisper | verb |  |  |
+| інклюзивний | /ʲinklʲuˈzɪwnɪj/ | inclusive | adj |  |  |
 
-## 📋 Підсумок
-
-Сьогодні ми дослідили світ українських просторових синонімів.
-- **Вказівка:** Ми навчилися розрізняти «тут», «тутечки» та «на цьому місці».
-- **Дистанція:** Ми побачили різницю між «поруч», «близько» та «далеко».
-- **Масштаби:** Ми вивчили слова для опису точки, зони та цілої території.
-
-Пам'ятайте: мова — це ваш внутрішній компас. Використовуйте ці синоніми, щоб ніколи не губитися у просторі думок та життєвих шляхів. Ваша майстерність росте з кожним подоланим кілометром у світі слів!
+> [!resources] 🔗 External Resources
+>
+> **🎧 Podcasts:**
+> - [How to look for a place to rent in Ukraine](https://www.ukrainianlessons.com/fmu41/) — Listening review (A1): place
+> - [ULP 2-66 Sharing memories + Locative case with places](https://www.ukrainianlessons.com/lesson/66/) — Cross-level topic match: place

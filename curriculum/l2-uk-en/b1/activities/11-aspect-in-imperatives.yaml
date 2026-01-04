@@ -508,27 +508,15 @@
   instruction: Клікніть на всі дієслова в наказовому способі (імперативи).
   text: "Мама сказала синові: [Допоможи] мені з обідом. [Наріж] овочі для салату, [помий] руки перед тим, і [поклади] все на великий стіл. Потім вона додала: [Не забудь] про хліб і [принеси] води з холодильника!"
 
-- type: dialogue-reorder
+- type: cloze
   title: Розмова у ресторані
-  lines:
-    - speaker: Гість
-      text: Добрий день! Мені потрібен столик на двох біля вікна.
-      order: 1
-    - speaker: Офіціант
-      text: Звичайно, заходьте, сідайте ось тут! Це найкраще місце!
-      order: 2
-    - speaker: Офіціант
-      text: Ось меню. Дивіться, вибирайте, питайте, якщо щось незрозуміло!
-      order: 3
-    - speaker: Гість
-      text: Дякую! Принесіть, будь ласка, воду без газу для початку.
-      order: 4
-    - speaker: Офіціант
-      text: Зачекайте хвилинку, зараз принесу меню з десертами також!
-      order: 5
-    - speaker: Гість
-      text: Добре, візьміть замовлення — два салати і дві кави!
-      order: 6
+  passage: |
+    — {Добрий день! Мені потрібен столик на двох біля вікна.|Ось меню. Дивіться, вибирайте, питайте, якщо щось незрозуміло!|Дякую! Принесіть, будь ласка, воду без газу для початку.}
+    — {Звичайно, заходьте, сідайте ось тут! Це найкраще місце!|Добрий день! Мені потрібен столик на двох біля вікна.|Ось меню. Дивіться, вибирайте, питайте, якщо щось незрозуміло!}
+    — {Ось меню. Дивіться, вибирайте, питайте, якщо щось незрозуміло!|Звичайно, заходьте, сідайте ось тут! Це найкраще місце!|Добре, візьміть замовлення — два салати і дві кави!}
+    — {Дякую! Принесіть, будь ласка, воду без газу для початку.|Добре, візьміть замовлення — два салати і дві кави!|Ось меню. Дивіться, вибирайте, питайте, якщо щось незрозуміло!}
+    — {Зачекайте хвилинку, зараз принесу меню з десертами також!|Звичайно, заходьте, сідайте ось тут! Це найкраще місце!|Добре, візьміть замовлення — два салати і дві кави!}
+    — {Добре, візьміть замовлення — два салати і дві кави!|Добрий день! Мені потрібен столик на двох біля вікна.|Зачекайте хвилинку, зараз принесу меню з десертами також!}
 
 - type: select
   title: Оберіть всі правильні варіанти для кожної ситуації
@@ -632,7 +620,7 @@
 - type: translate
   title: Перекладіть українською з правильним аспектом
   items:
-    - prompt: "Come in and sit down, please! (polite invitation to guests)"
+    - prompt: "Come in and sit down, please!"
       options:
         - text: Зайдіть і сядьте, будь ласка!
           correct: false
@@ -644,7 +632,7 @@
           correct: false
       explanation: Гостинне запрошення потребує НДВ множини — заходьте, сідайте.
 
-    - prompt: "Read this book and tell me your opinion! (specific task)"
+    - prompt: "Read this book and tell me your opinion!"
       options:
         - text: Прочитай цю книгу і скажи мені свою думку!
           correct: true
@@ -656,7 +644,7 @@
           correct: false
       explanation: Конкретне завдання з результатом потребує ДВ — прочитай, скажи.
 
-    - prompt: "Call me every evening when you finish work! (regular action)"
+    - prompt: "Call me every evening when you finish work!"
       options:
         - text: Зателефонуй мені щовечора, коли закінчиш роботу!
           correct: false
@@ -680,7 +668,7 @@
           correct: false
       explanation: Одноразова конкретна дія потребує ДВ — закрий.
 
-    - prompt: "Help your brother with homework every day! (regular advice)"
+    - prompt: "Help your brother with homework every day!"
       options:
         - text: Допоможи братові з уроками щодня!
           correct: false
@@ -692,7 +680,7 @@
           correct: false
       explanation: 'Регулярна порада ("щодня") потребує НДВ: допомагай.'
 
-    - prompt: "Send me the document immediately! (urgent specific action)"
+    - prompt: "Send me the document immediately!"
       options:
         - text: Надішли мені документ негайно!
           correct: true
@@ -704,7 +692,7 @@
           correct: false
       explanation: 'Термінове прохання ("негайно") з конкретним результатом потребує ДВ: надішли.'
 
-    - prompt: "Listen carefully to the teacher during the lesson! (ongoing attention)"
+    - prompt: "Listen carefully to the teacher during the lesson!"
       options:
         - text: Слухай уважно вчителя на уроці!
           correct: true
@@ -716,7 +704,7 @@
           correct: false
       explanation: 'Тривала увага протягом уроку потребує НДВ: слухай.'
 
-    - prompt: "Write the report and submit it by Friday! (specific completed tasks)"
+    - prompt: "Write the report and submit it by Friday!"
       options:
         - text: Напиши звіт і здай його до п'ятниці!
           correct: true
