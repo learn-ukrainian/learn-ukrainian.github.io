@@ -1,32 +1,42 @@
 # Audit Report: 91-ruina-ii-doroshenko.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "CBI" | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.3b | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Граматика в історичних реченнях' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 1/16 items with placeholders/missing errors.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1716/1750 (34 short)
-- **Activities:** ✅ 14/14
-- **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Words:** ✅ 1616/1400
+- **Activities:** ✅ 13/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/6
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/35
+- **Vocab:** ✅ 80/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.9% (target 98-100% (vocab))
-- **Richness:** ✅ 95% (history)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ⚠️ Too many activities: 13 (target 10-12); 1 cloze with year blanks
+- **Immersion:** 🇺🇦 99.9% (target 98-100% (history))
+- **Richness:** ✅ 98% (history)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
+**Score:** 98% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 11 | 3 | 100% | 24% | 23.8% |
-| engagement | 5 | 6 | 83% | 14% | 11.9% |
+| engagement | 7 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 5 | 4 | 100% | 10% | 9.5% |
@@ -34,18 +44,12 @@
 | variety | 0.95 | - | 95% | 5% | 4.5% |
 | paragraph_var | 0.67 | - | 67% | 5% | 3.2% |
 | questions | 6 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **95.8%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
+| **TOTAL** | | | | | **98.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Руїна II: Дорошенко і надія** | ⚪️ | 80 | Skipped |
+| **Intro/Narrative** | ✅ | 80 | Included in Core |
 | **Вступ** | ⚪️ | 143 | Skipped |
 | **Петро Дорошенко: гетьман обох берегів** | ⚪️ | 232 | Skipped |
 | **Турецький союз: відчайдушний крок** | ⚪️ | 312 | Skipped |
@@ -54,5 +58,3 @@
 | **Капітуляція та фінал** | ⚪️ | 189 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 141 | Skipped |
 | **Підсумок** | ✅ | 125 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |
-| **Ресурси** | ⚪️ | 100 | Skipped |

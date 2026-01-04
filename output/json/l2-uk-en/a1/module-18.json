@@ -9,239 +9,109 @@
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A1",
-    "phase": "A1.2",
+    "phase": "A1.1",
     "moduleNumber": 18,
-    "moduleType": "vocabulary",
+    "moduleType": "grammar",
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
-    "title": "Food & Shopping",
+    "title": "Module 18",
     "titleUk": null,
-    "subtitle": "Practical vocabulary for market and store",
-    "description": "Learner can order food items using accusative case",
-    "objectives": [
-      "Learner can order food items using accusative case",
-      "Learner can request quantities using genitive case",
-      "Learner can ask prices and make purchases",
-      "Learner can distinguish between food and non-food items"
-    ],
+    "subtitle": null,
+    "description": "Module 18",
+    "objectives": [],
     "objectivesUk": null,
-    "grammarFocus": [
-      "Accusative case for direct objects (review)",
-      "Genitive case for quantities (review)",
-      "Price questions with Скільки коштує"
-    ],
-    "tags": [
-      "food",
-      "shopping",
-      "vocabulary",
-      "accusative",
-      "genitive"
-    ],
-    "totalDuration": "60 min",
-    "transliterationMode": "vocab-only",
+    "grammarFocus": [],
+    "tags": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "sections": [
       {
         "id": "section-1",
         "name": "Food & Shopping",
         "nameEn": null,
         "type": "content",
-        "content": "## Warm-up\n\nYou're in Kyiv, and your fridge is empty. Time to go shopping! In Ukraine, you have many choices: the **супермаркет** (supermarket), a traditional **ринок** (market), or small **магазини** (stores) scattered throughout every neighborhood. Each place has its own character and culture.\n\nToday, you'll learn how to navigate Ukrainian stores and cafés with confidence. You'll order food, ask for prices, and even do some everyday shopping beyond the grocery aisle.\n\n> 💡 **Did You Know?**\n>\n> Ukrainians love their **ринки** (markets)! Fresh produce, homemade cheeses, and seasonal fruits are sold by vendors who've been selling at the same spot for decades. It's not just shopping—it's a social experience. You greet the vendors, they remember your preferences, and you bargain a little. Try saying \"Скільки коштує?\" (How much is it?) at Besarabsky Market in Kyiv!\n## Presentation\n\n### Grammar Review: Accusative and Genitive Together\n\nYou've already learned the **accusative case** (M11: direct objects) and the **genitive case** (M16: absence and possession). Now you'll use BOTH in real shopping situations.\n\n**Патерн 1: Знахідний відмінок (Accusative for \"I want X\")**\n\nЯ хочу **каву**. (I want coffee.)\nВона бере **хліб**. (She takes bread.)\nМи купуємо **рибу**. (We buy fish.)\nТи візьмеш **салат**? (Will you take a salad?)\nВони купують **овочі**. (They buy vegetables.)\nЯ хочу **суп** та **хліб**. (I want soup and bread.)\n\n**Патерн 2: Родовий відмінок для кількості (Genitive for quantities)**\n\nСклянку **води**, будь ласка. (A glass **of water**, please.)\nКілограм **яблук**. (A kilogram **of apples**.)\nПачку **цукру**. (A pack **of sugar**.)\nПляшку **вина**. (A bottle **of wine**.)\nЧашку **кави**. (A cup **of coffee**.)\n\n**Патерн 3: Питання про ціну (Asking prices)**\n\nСкільки коштує **мило**? (How much is the soap?)\nСкільки коштує **сир**? (How much is the cheese?)\nСкільки коштує **хліб**? (How much is the bread?)\nСкільки коштує **кава**? (How much is the coffee?)\n\nNotice: After \"скільки коштує\" (how much is/does it cost?), the noun stays in **nominative** because the question is \"What costs how much?\"\n\n> 🌍 **Реальний світ: У супермаркеті (Real World: At the Supermarket)**\n>\n> Супермаркети в Україні працюють як у всьому світі. (Supermarkets in Ukraine work like everywhere in the world.) You grab a **пакет** (bag) or basket at the entrance, pick your items, and pay at the **каса** (checkout). Але є культурна порада: українські касири дуже швидкі! (But here's a cultural tip: Ukrainian cashiers are VERY fast!) Have your money ready! Багато магазинів мають ваги для овочів окремо. (Many stores have scales for vegetables separately.) Look for the digital scales in the produce section.\n\n> 💡 **Чи знаєте ви? (Did You Know?)**\n>\n> Популярні українські супермаркети: **Сільпо** (Silpo), **АТБ** (ATB), **Новус** (Novus), **Фора** (Fora). (Popular Ukrainian supermarkets: Silpo, ATB, Novus, Fora.) Кожен має свою атмосферу! (Each has its own atmosphere!) ATB is budget-friendly, Silpo is mid-range with good quality, and Novus is more upscale. Де ви любите робити покупки? (Where do you like to shop?)\n\n### Vocabulary Groups\n\nLet's organize the vocabulary into practical categories you'll encounter when shopping.\n\n**Їжа (Food Items)**\n\n| Українською | What It Means |\n|-------------|---------------|\n| Я хочу **страву**. | I want a dish. |\n| Це **закуска**. | This is an appetizer. |\n| **Борщ** дуже смачний. | Borscht is very tasty. |\n| У меню є **десерт**? | Is there dessert on the menu? |\n| **М'ясо** свіже. | The meat is fresh. |\n| **Овочі** тут дешеві. | Vegetables are cheap here. |\n\n**Напої (Beverages)**\n\n| Українською | What It Means |\n|-------------|---------------|\n| Склянку **води**, будь ласка. | A glass of water, please. |\n| **Кава** чи **чай**? | Coffee or tea? |\n| **Сік** апельсиновий. | Orange juice. |\n| Пляшку **вина**. | A bottle of wine. |\n| **Пиво** холодне. | The beer is cold. |\n\n**Продукти (Basic Groceries)**\n\n| Українською | What It Means |\n|-------------|---------------|\n| Я купую **хліб**. | I buy bread. |\n| **Сир** дуже смачний. | The cheese is very tasty. |\n| **Яйця** в холодильнику. | Eggs are in the fridge. |\n| **Картопля** свіжа. | The potatoes are fresh. |\n| **Курка** дешева. | The chicken is cheap. |\n\n**Інше (Non-Food Items)**\n\n| Українською | What It Means |\n|-------------|---------------|\n| Скільки коштує **мило**? | How much is the soap? |\n| Я шукаю **зубну пасту**. | I'm looking for toothpaste. |\n| Я хочу **ручку**. | I want a pen. |\n| Де **папір**? | Where is paper? |\n| **Шампунь** дорогий. | The shampoo is expensive. |\n\n> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R. – Grocery Run Edition**\n>\n> In the iconic Ukrainian game *S.T.A.L.K.E.R.*, your character scavenges for supplies in the Chornobyl zone. Imagine if you could just go to a **магазин** instead! \"Я хочу **консерви** та **хліб**!\" (I want canned food and bread!). Sadly, no cashiers in the Zone—just mutants and radiation. Real-life Ukrainian stores are much friendlier, we promise.\n\n## Practice\n\n### Mini-Dialogue 1: At the Café\n\n**Context:** Марія and Іван are at a cozy café in Lviv.\n\n— Що ти будеш замовляти? (What will you order?)\n— Я візьму **каву** та **десерт**. А ти? (I'll take coffee and dessert. And you?)\n— Я хочу **чай** та **салат**, будь ласка. (I want tea and salad, please.)\n— **Офіціант**! Можна **меню**? (Waiter! Can we have the menu?)\n— Так, зараз принесу. (Yes, I'll bring it now.)\n\n> **Grammar Note:** Візьму = \"I'll take\" (future tense, perfective). Don't worry about aspect yet—just learn it as a useful phrase for ordering.\n\n### Mini-Dialogue 2: At the Store\n\n**Context:** Олег is buying groceries at a neighborhood магазин.\n\n— Добрий день! Скільки коштує **хліб**? (Good day! How much is the bread?)\n— 25 гривень. (25 hryvnias.)\n— Добре. Ще **молоко** та **сир**. (Good. Also milk and cheese.)\n— Разом 120 гривень. (120 hryvnias total.)\n— Ось **гроші**. Дякую! (Here's the money. Thank you!)\n— Дякую! До побачення! (Thank you! Goodbye!)\n\n> **Cultural Tip:** In small Ukrainian stores, it's polite to greet the **продавець** (salesperson) when you enter and say \"Дякую, до побачення\" when you leave—even if you don't buy anything!\n\n### Mini-Dialogue 3: Asking for Help\n\n**Context:** Anna is looking for hygiene products at a супермаркет.\n\n— Вибачте, де **мило** та **шампунь**? (Excuse me, where are soap and shampoo?)\n— Другий поверх, секція \"Гігієна\". (Second floor, \"Hygiene\" section.)\n— А **зубна паста** там теж? (Is toothpaste there too?)\n— Так, все там. (Yes, everything is there.)\n— Дякую! (Thank you!)\n\n### Mini-Dialogue 4: At the Market\n\n**Context:** Petro is shopping at a Kyiv ринок (market).\n\n— Добрий день! Скільки коштує **картопля**? (Good day! How much are the potatoes?)\n— Двадцять гривень кілограм. Дуже свіжа! (Twenty hryvnias per kilogram. Very fresh!)\n— Добре. Я візьму два кілограми. (Good. I'll take two kilograms.)\n— А **овочі**? **Помідори** дуже смачні! (And vegetables? The tomatoes are very tasty!)\n— Ні, дякую. Тільки **картопля**. (No, thank you. Just potatoes.)\n— Сорок гривень, будь ласка. (Forty hryvnias, please.)\n— Ось гроші. Дякую! (Here's the money. Thank you!)\n— Дякую! Хорошого дня! (Thank you! Have a good day!)\n\n> 🎯 **Fun Fact: Supermarket Floors**\n>\n> Larger Ukrainian супермаркети often have multiple floors. Food is usually on the ground floor (перший поверх), and household goods upstairs. Escalators often have flat sections—perfect for rolling shopping carts up!\n\n## Production\n\n### Usage Patterns: How to Order Like a Local\n\n**У ресторані/кафе (At a restaurant/café):**\n1. **Привіт! Можна меню?** (Hi! Can I have the menu?)\n2. **Я візьму...** (I'll take...)\n3. **Рахунок, будь ласка.** (The bill, please.)\n4. **Смачного!** (Enjoy your meal!)\n5. **Було дуже смачно!** (It was very tasty!)\n\n**У магазині (At a store):**\n1. **Скільки коштує [item]?** (How much is [item]?)\n2. **Я хочу [item], будь ласка.** (I want [item], please.)\n3. **Ще щось?** — **Ні, дякую, все.** (Anything else? — No, thank you, that's all.)\n4. **Де овочі?** (Where are the vegetables?)\n5. **Це свіже?** (Is this fresh?)\n\n**Поширені помилки (Common mistakes):**\n- ❌ \"Я хочу кава\" → ✅ \"Я хочу **каву**\" (знахідний відмінок! / accusative!)\n- ❌ \"Скільки є хліб?\" → ✅ \"Скільки **коштує** хліб?\" (використовуйте \"коштує\" для ціни / use \"коштує\" for price)\n- ❌ \"Одна вода\" → ✅ \"Склянку **води**\" (родовий відмінок для кількості / genitive for quantities)\n- ❌ \"Каса там\" → ✅ \"Каса там?\" (не забувайте знак питання! / don't forget the question mark!)\n- ❌ \"Хліб дорого\" → ✅ \"Хліб дорогий\" (дорогий = adjective, not adverb)\n\n### Real-World Scenarios\n\n**Scenario 1: Ordering Lunch**\n\nYou're at a Ukrainian **їдальня** (canteen). The menu board lists: борщ (30 грн), вареники (45 грн), салат (25 грн), компот (15 грн).\n\nWhat you say:\n\"Добрий день! Я візьму **борщ**, **вареники** та **компот**. Скільки разом?\"\n\n**Scenario 2: Grocery Shopping**\n\nYou need: bread, milk, eggs, cheese. You're at a **магазин** near your apartment.\n\nWhat you say:\n\"Я хочу **хліб**, **молоко**, десять **яєць** та **сир**, будь ласка.\"\n\n**Scenario 3: Buying Supplies**\n\nYou're a student and need: notebook, 2 pens, paper.\n\nWhat you say:\n\"Я хочу **зошит**, дві **ручки** та **папір**.\"\n\n> 📜 **History Bite: Ukrainian Cuisine Heritage**\n>\n> Ukrainian food culture is ancient! Borsch appears in 16th-century cookbooks. Varenyky (dumplings) have been a staple for centuries. During Soviet times, Ukrainian dishes were often rebranded as \"Russian,\" but they originated in Ukrainian villages and Cossack kitchens. Today, UNESCO recognizes Ukrainian **borsch culture** as endangered heritage (2022), protecting its authenticity.\n\n## Cultural Insight\n\n### The Ukrainian Shopping Experience\n\n**Markets vs. Supermarkets**\n\n**Ринок (Market):**\n- Fresh, seasonal produce\n- Personal relationships with vendors\n- Bargaining is acceptable\n- Cash only, usually\n- Open mornings (7 AM–2 PM peak)\n\n**Супермаркет:**\n- Western-style shopping\n- Fixed prices\n- Card payments accepted\n- Open late (some 24/7)\n- Self-service\n\n**Local магазин:**\n- Neighborhood stores\n- Personal service (you ask, they get it)\n- Good for quick purchases\n- Often family-run\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Ukrainians only shop at markets.\"\n> **Fact:** While traditional **ринки** remain popular—especially for fresh produce—modern Ukrainians shop at supermarkets like Silpo, ATB, and Novus just like people everywhere. The mix of old and new is what makes Ukrainian shopping culture unique!\n\n### Food as Identity\n\nFor Ukrainians, food is deeply connected to **identity** and **home**. Борщ isn't just soup—it's a symbol of family, tradition, and survival. During the Holodomor (1932-33 famine-genocide), millions of Ukrainians starved while grain was exported. Today, every bowl of borsch carries that historical memory.\n\nWhen you order Ukrainian food, you're participating in a living tradition that survived empires, wars, and attempts to erase it.\n\n**Українська кухня (Ukrainian cuisine):**\n- **Борщ** – червоний суп (beet soup with sour cream)\n- **Вареники** – дуже смачно! (dumplings: potato, cheese, or cherry)\n- **Сало** – національна страва (cured pork fat, a delicacy!)\n- **Голубці** – рис у капусті (cabbage rolls with rice)\n- **Деруни** – картопляна страва (potato pancakes)\n- **Сирники** – сирна страва (cheese pancakes)\n- **Холодець** – традиційна страва (meat jelly)\n- **Пампушки** – дуже смачно! (garlic rolls with borscht)\n\n> 🎭 **Folklore Corner: Bread as Sacred**\n>\n> In Ukrainian tradition, **хліб** (bread) is sacred. Guests are greeted with **хліб-сіль** (bread and salt) as a sign of hospitality. Dropping bread on the floor requires picking it up and kissing it as an apology. This reverence comes from centuries of agricultural culture where grain was life itself.\n\n---\n\n## Підсумок (Summary)\n\nВи навчилися робити покупки українською! (You've learned to shop in Ukrainian!)\n\n**Тепер ви можете (Now you can):**\n- Замовляти їжу та напої (Order food and drinks)\n- Питати про ціни: \"Скільки коштує?\" (Ask prices)\n- Просити кількість: \"Склянку води\" (Request quantities)\n- Розуміти культуру покупок (Understand shopping culture)\n\n**Key phrases to remember:**\n- Я хочу... (I want...)\n- Скільки коштує...? (How much is...?)\n- Я візьму... (I'll take...)\n- Рахунок, будь ласка. (The bill, please.)\n\n**Cultural insights gained:**\n- Markets vs. supermarkets in Ukraine\n- Bread as sacred in Ukrainian culture\n- Food as identity and historical memory\n- How to shop like a local\n\nNext module (M19: At the Café), you'll practice full café dialogues using all the cases you've learned!\n\n---\n\n## Need More Practice?\n\n---\n\n> [!resources] 🔗 External Resources\n>\n> **YouTube:** [Basic shopping words #  89](https://www.youtube.com/watch?v=xdepcyiaKd4) — Ukrainian Language\n>\n>\n> **Shopping Vocabulary:** [FMU 1-18 | Shopping Vocabulary](https://www.ukrainianlessons.com/fmu18/) — Essential store vocabulary\n>\n> **Grocery Store:** [ULP 2-46 | At the Grocery Store](https://www.ukrainianlessons.com/episode46/) — Food shopping + genitive\n>\n> **Food Guide:** [40+ Ukrainian Dishes](https://www.ukrainianlessons.com/ukrainian-food/) — Visual guide to Ukrainian cuisine"
+        "content": "## Warm-up\n\nYou're in Kyiv, and your fridge is empty. Time to go shopping! In Ukraine, you have many choices: the **супермаркет** (supermarket), a traditional **ринок** (market), or small **магазини** (stores) scattered throughout every neighborhood. Each place has its own character and culture.\n\nToday, you'll learn how to navigate Ukrainian stores and cafés with confidence. You'll order food, ask for prices, and even do some everyday shopping beyond the grocery aisle.\n\n> 💡 **Did You Know?**\n>\n> Ukrainians love their **ринки** (markets)! Fresh produce, homemade cheeses, and seasonal fruits are sold by vendors who've been selling at the same spot for decades. It's not just shopping—it's a social experience. You greet the vendors, they remember your preferences, and you bargain a little. Try saying \"Скільки коштує?\" (How much is it?) at Besarabsky Market in Kyiv!\n\n## Presentation\n\n### Grammar Review: Accusative and Genitive Together\n\nYou've already learned the **accusative case** (M11: direct objects) and the **genitive case** (M16: absence and possession). Now you'll use BOTH in real shopping situations.\n\n**Патерн 1: Знахідний відмінок (Accusative for \"I want X\")**\n\nЯ хочу **каву**. (I want coffee.)\nВона бере **хліб**. (She takes bread.)\nМи купуємо **рибу**. (We buy fish.)\nТи візьмеш **салат**? (Will you take a salad?)\nВони купують **овочі**. (They buy vegetables.)\nЯ хочу **суп** та **хліб**. (I want soup and bread.)\n\n**Патерн 2: Родовий відмінок для кількості (Genitive for quantities)**\n\nСклянку **води**, будь ласка. (A glass **of water**, please.)\nКілограм **яблук**. (A kilogram **of apples**.)\nПачку **цукру**. (A pack **of sugar**.)\nПляшку **вина**. (A bottle **of wine**.)\nЧашку **кави**. (A cup **of coffee**.)\n\n**Патерн 3: Питання про ціну (Asking prices)**\n\nСкільки коштує **мило**? (How much is the soap?)\nСкільки коштує **сир**? (How much is the cheese?)\nСкільки коштує **хліб**? (How much is the bread?)\nСкільки коштує **кава**? (How much is the coffee?)\n\nNotice: After \"скільки коштує\" (how much is/does it cost?), the noun stays in **nominative** because the question is \"What costs how much?\"\n\n> 🌍 **Реальний світ: У супермаркеті (Real World: At the Supermarket)**\n>\n> Супермаркети в Україні працюють як у всьому світі. (Supermarkets in Ukraine work like everywhere in the world.) You grab a **пакет** (bag) or basket at the entrance, pick your items, and pay at the **каса** (checkout). Але є культурна порада: українські касири дуже швидкі! (But here's a cultural tip: Ukrainian cashiers are VERY fast!) Have your money ready! Багато магазинів мають ваги для овочів окремо. (Many stores have scales for vegetables separately.) Look for the digital scales in the produce section.\n\n> 💡 **Чи знаєте ви? (Did You Know?)**\n>\n> Популярні українські супермаркети: **Сільпо** (Silpo), **АТБ** (ATB), **Новус** (Novus), **Фора** (Fora). (Popular Ukrainian supermarkets: Silpo, ATB, Novus, Fora.) Кожен має свою атмосферу! (Each has its own atmosphere!) ATB is budget-friendly, Silpo is mid-range with good quality, and Novus is more upscale. Де ви любите робити покупки? (Where do you like to shop?)\n\n---\n\n## Dialogues\n\n> [!conversation] У супермаркеті (At the Supermarket)\n>\n> — Доброго дня! Скільки коштує сир?\n> — Сир коштує сорок гривень за кілограм.\n> — Добре. Дайте півкілограма, будь ласка.\n> — Щось ще?\n> — Так. Я хочу хліб.\n> — Білий чи чорний?\n> — Білий, будь ласка.\n> — Ось ваш хліб. Двадцять гривень.\n> — Дякую!\n>\n> — Good day! How much is the cheese?\n> — Cheese costs forty hryvnias per kilogram.\n> — Good. Give me half a kilogram, please.\n> — Anything else?\n> — Yes. I want bread.\n> — White or black?\n> — White, please.\n> — Here's your bread. Twenty hryvnias.\n> — Thank you!\n\n> [!conversation] На ринку (At the Market)\n>\n> — Доброго ранку! Які красиві помідори!\n> — Доброго ранку! Свіжі, з городу!\n> — Скільки коштує кілограм?\n> — Тридцять гривень.\n> — Я хочу два кілограми. Яка ціна?\n> — П'ятдесят гривень. Для вас — знижка!\n> — Чудово! Беру два.\n> — Ще щось? Маємо свіжі огірки.\n> — Ні, дякую. Тільки помідори.\n>\n> — Good morning! What beautiful tomatoes!\n> — Good morning! Fresh, from the garden!\n> — How much is a kilogram?\n> — Thirty hryvnias.\n> — I want two kilograms. What's the price?\n> — Fifty hryvnias. A discount for you!\n> — Wonderful! I'll take two.\n> — Anything else? We have fresh cucumbers.\n> — No, thank you. Just tomatoes.\n\n---\n\n## Practice\n\n### Using Accusative and Genitive\n\nComplete these shopping phrases with the correct case:\n\nЯ хочу _____ (кава). → Я хочу **каву**. (Accusative for \"what I want\")\n\nДайте склянку _____ (вода). → Дайте склянку **води**. (Genitive for \"of what\")\n\nЯ хочу _____ (хліб). → Я хочу **хліб**. (Accusative for masculine nouns - \"I want bread\")\n\nКілограм _____ (яблуко). → Кілограм **яблук**. (Genitive plural for quantity)\n\n> 🎯 **Remember the Pattern!**\n>\n> **Accusative** for direct objects: Я купую **каву**, **хліб**, **молоко**.\n> **Genitive** for quantities: пляшку **води**, кілограм **сиру**, пачку **цукру**.\n\n### Ordering at a Store\n\nPractice these common shopping phrases:\n\n**Asking prices:**\n- Скільки коштує ___? (How much does ___ cost?)\n- Скільки це коштує? (How much does this cost?)\n- Яка ціна? (What's the price?)\n\n**Making requests:**\n- Дайте, будь ласка... (Give me, please...)\n- Я хочу... (I want...)\n- Можна...? (May I have...?)\n\n**Quantities:**\n- Один кілограм (one kilogram)\n- Півкілограма (half a kilogram)\n- Пляшку (a bottle)\n- Пачку (a pack)\n\n---"
       },
       {
         "id": "section-2",
-        "name": "Vocabulary",
+        "name": "Summary",
         "nameEn": null,
-        "type": "vocabulary",
-        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| страва | /ˈstrɑvɑ/ | dish | noun | f | |\n| закуска | /zɑˈkuskɑ/ | appetizer | noun | f | |\n| десерт | /dɛˈsɛrt/ | dessert | noun | m | |\n| напій | /nɑˈpij/ | beverage | noun | m | |\n| вино | /vɪˈnɔ/ | wine | noun | n | |\n| пиво | /ˈpɪvɔ/ | beer | noun | n | |\n| меню | /mɛˈnju/ | menu | noun | n | |\n| мило | /ˈmɪlɔ/ | soap | noun | n | |\n| шампунь | /ʃɑmˈpunʲ/ | shampoo | noun | m | |\n| зубна паста | /zubˈnɑ ˈpɑstɑ/ | toothpaste | noun | f | |\n| папір | /pɑˈpir/ | paper | noun | m | |\n| ручка | /ˈrut͡ʃkɑ/ | pen | noun | f | |\n| олівець | /ɔlʲiˈvɛt͡sʲ/ | pencil | noun | m | |\n| зошит | /ˈzɔʃɪt/ | notebook | noun | m | |\n| супермаркет | /supɛrˈmɑrkɛt/ | supermarket | noun | m | |\n| пакет | /pɑˈkɛt/ | bag | noun | m | |\n| відчинено | /vidˈt͡ʃɪnɛnɔ/ | open | adv | - | |\n| зачинено | /zɑˈt͡ʃɪnɛnɔ/ | closed | adv | - | |\n| свіжий | /ˈsʲvʲiʒɪj/ | fresh | adj | m | |\n\n---"
+        "type": "summary",
+        "content": "In this module, you practiced using the accusative and genitive cases together for shopping. You learned how to ask prices with \"Скільки коштує?\" and request quantities with genitive (\"склянку води\", \"кілограм яблук\"). You also learned vocabulary for Ukrainian supermarkets like Сільпо, АТБ, Новус, and Фора. Now you can navigate Ukrainian stores with confidence!"
       }
     ],
-    "rawMarkdown": "---\n\nmodule: a1-18\ntitle: \"Food & Shopping\"\nsubtitle: \"Practical vocabulary for market and store\"\nversion: \"1.0\"\nphase: \"A1.2\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: \"vocab-only\"\ntags:\n  - food\n  - shopping\n  - vocabulary\n  - accusative\n  - genitive\ngrammar:\n  - \"Accusative case for direct objects (review)\"\n  - \"Genitive case for quantities (review)\"\n  - \"Price questions with Скільки коштує\"\nobjectives:\n  - \"Learner can order food items using accusative case\"\n  - \"Learner can request quantities using genitive case\"\n  - \"Learner can ask prices and make purchases\"\n  - \"Learner can distinguish between food and non-food items\"\nvocabulary_count: 46\n---\n\n# Food & Shopping\n\n## Warm-up\n\nYou're in Kyiv, and your fridge is empty. Time to go shopping! In Ukraine, you have many choices: the **супермаркет** (supermarket), a traditional **ринок** (market), or small **магазини** (stores) scattered throughout every neighborhood. Each place has its own character and culture.\n\nToday, you'll learn how to navigate Ukrainian stores and cafés with confidence. You'll order food, ask for prices, and even do some everyday shopping beyond the grocery aisle.\n\n> 💡 **Did You Know?**\n>\n> Ukrainians love their **ринки** (markets)! Fresh produce, homemade cheeses, and seasonal fruits are sold by vendors who've been selling at the same spot for decades. It's not just shopping—it's a social experience. You greet the vendors, they remember your preferences, and you bargain a little. Try saying \"Скільки коштує?\" (How much is it?) at Besarabsky Market in Kyiv!\n## Presentation\n\n### Grammar Review: Accusative and Genitive Together\n\nYou've already learned the **accusative case** (M11: direct objects) and the **genitive case** (M16: absence and possession). Now you'll use BOTH in real shopping situations.\n\n**Патерн 1: Знахідний відмінок (Accusative for \"I want X\")**\n\nЯ хочу **каву**. (I want coffee.)\nВона бере **хліб**. (She takes bread.)\nМи купуємо **рибу**. (We buy fish.)\nТи візьмеш **салат**? (Will you take a salad?)\nВони купують **овочі**. (They buy vegetables.)\nЯ хочу **суп** та **хліб**. (I want soup and bread.)\n\n**Патерн 2: Родовий відмінок для кількості (Genitive for quantities)**\n\nСклянку **води**, будь ласка. (A glass **of water**, please.)\nКілограм **яблук**. (A kilogram **of apples**.)\nПачку **цукру**. (A pack **of sugar**.)\nПляшку **вина**. (A bottle **of wine**.)\nЧашку **кави**. (A cup **of coffee**.)\n\n**Патерн 3: Питання про ціну (Asking prices)**\n\nСкільки коштує **мило**? (How much is the soap?)\nСкільки коштує **сир**? (How much is the cheese?)\nСкільки коштує **хліб**? (How much is the bread?)\nСкільки коштує **кава**? (How much is the coffee?)\n\nNotice: After \"скільки коштує\" (how much is/does it cost?), the noun stays in **nominative** because the question is \"What costs how much?\"\n\n> 🌍 **Реальний світ: У супермаркеті (Real World: At the Supermarket)**\n>\n> Супермаркети в Україні працюють як у всьому світі. (Supermarkets in Ukraine work like everywhere in the world.) You grab a **пакет** (bag) or basket at the entrance, pick your items, and pay at the **каса** (checkout). Але є культурна порада: українські касири дуже швидкі! (But here's a cultural tip: Ukrainian cashiers are VERY fast!) Have your money ready! Багато магазинів мають ваги для овочів окремо. (Many stores have scales for vegetables separately.) Look for the digital scales in the produce section.\n\n> 💡 **Чи знаєте ви? (Did You Know?)**\n>\n> Популярні українські супермаркети: **Сільпо** (Silpo), **АТБ** (ATB), **Новус** (Novus), **Фора** (Fora). (Popular Ukrainian supermarkets: Silpo, ATB, Novus, Fora.) Кожен має свою атмосферу! (Each has its own atmosphere!) ATB is budget-friendly, Silpo is mid-range with good quality, and Novus is more upscale. Де ви любите робити покупки? (Where do you like to shop?)\n\n### Vocabulary Groups\n\nLet's organize the vocabulary into practical categories you'll encounter when shopping.\n\n**Їжа (Food Items)**\n\n| Українською | What It Means |\n|-------------|---------------|\n| Я хочу **страву**. | I want a dish. |\n| Це **закуска**. | This is an appetizer. |\n| **Борщ** дуже смачний. | Borscht is very tasty. |\n| У меню є **десерт**? | Is there dessert on the menu? |\n| **М'ясо** свіже. | The meat is fresh. |\n| **Овочі** тут дешеві. | Vegetables are cheap here. |\n\n**Напої (Beverages)**\n\n| Українською | What It Means |\n|-------------|---------------|\n| Склянку **води**, будь ласка. | A glass of water, please. |\n| **Кава** чи **чай**? | Coffee or tea? |\n| **Сік** апельсиновий. | Orange juice. |\n| Пляшку **вина**. | A bottle of wine. |\n| **Пиво** холодне. | The beer is cold. |\n\n**Продукти (Basic Groceries)**\n\n| Українською | What It Means |\n|-------------|---------------|\n| Я купую **хліб**. | I buy bread. |\n| **Сир** дуже смачний. | The cheese is very tasty. |\n| **Яйця** в холодильнику. | Eggs are in the fridge. |\n| **Картопля** свіжа. | The potatoes are fresh. |\n| **Курка** дешева. | The chicken is cheap. |\n\n**Інше (Non-Food Items)**\n\n| Українською | What It Means |\n|-------------|---------------|\n| Скільки коштує **мило**? | How much is the soap? |\n| Я шукаю **зубну пасту**. | I'm looking for toothpaste. |\n| Я хочу **ручку**. | I want a pen. |\n| Де **папір**? | Where is paper? |\n| **Шампунь** дорогий. | The shampoo is expensive. |\n\n> 🎬 **Pop Culture Moment: S.T.A.L.K.E.R. – Grocery Run Edition**\n>\n> In the iconic Ukrainian game *S.T.A.L.K.E.R.*, your character scavenges for supplies in the Chornobyl zone. Imagine if you could just go to a **магазин** instead! \"Я хочу **консерви** та **хліб**!\" (I want canned food and bread!). Sadly, no cashiers in the Zone—just mutants and radiation. Real-life Ukrainian stores are much friendlier, we promise.\n\n## Practice\n\n### Mini-Dialogue 1: At the Café\n\n**Context:** Марія and Іван are at a cozy café in Lviv.\n\n— Що ти будеш замовляти? (What will you order?)\n— Я візьму **каву** та **десерт**. А ти? (I'll take coffee and dessert. And you?)\n— Я хочу **чай** та **салат**, будь ласка. (I want tea and salad, please.)\n— **Офіціант**! Можна **меню**? (Waiter! Can we have the menu?)\n— Так, зараз принесу. (Yes, I'll bring it now.)\n\n> **Grammar Note:** Візьму = \"I'll take\" (future tense, perfective). Don't worry about aspect yet—just learn it as a useful phrase for ordering.\n\n### Mini-Dialogue 2: At the Store\n\n**Context:** Олег is buying groceries at a neighborhood магазин.\n\n— Добрий день! Скільки коштує **хліб**? (Good day! How much is the bread?)\n— 25 гривень. (25 hryvnias.)\n— Добре. Ще **молоко** та **сир**. (Good. Also milk and cheese.)\n— Разом 120 гривень. (120 hryvnias total.)\n— Ось **гроші**. Дякую! (Here's the money. Thank you!)\n— Дякую! До побачення! (Thank you! Goodbye!)\n\n> **Cultural Tip:** In small Ukrainian stores, it's polite to greet the **продавець** (salesperson) when you enter and say \"Дякую, до побачення\" when you leave—even if you don't buy anything!\n\n### Mini-Dialogue 3: Asking for Help\n\n**Context:** Anna is looking for hygiene products at a супермаркет.\n\n— Вибачте, де **мило** та **шампунь**? (Excuse me, where are soap and shampoo?)\n— Другий поверх, секція \"Гігієна\". (Second floor, \"Hygiene\" section.)\n— А **зубна паста** там теж? (Is toothpaste there too?)\n— Так, все там. (Yes, everything is there.)\n— Дякую! (Thank you!)\n\n### Mini-Dialogue 4: At the Market\n\n**Context:** Petro is shopping at a Kyiv ринок (market).\n\n— Добрий день! Скільки коштує **картопля**? (Good day! How much are the potatoes?)\n— Двадцять гривень кілограм. Дуже свіжа! (Twenty hryvnias per kilogram. Very fresh!)\n— Добре. Я візьму два кілограми. (Good. I'll take two kilograms.)\n— А **овочі**? **Помідори** дуже смачні! (And vegetables? The tomatoes are very tasty!)\n— Ні, дякую. Тільки **картопля**. (No, thank you. Just potatoes.)\n— Сорок гривень, будь ласка. (Forty hryvnias, please.)\n— Ось гроші. Дякую! (Here's the money. Thank you!)\n— Дякую! Хорошого дня! (Thank you! Have a good day!)\n\n> 🎯 **Fun Fact: Supermarket Floors**\n>\n> Larger Ukrainian супермаркети often have multiple floors. Food is usually on the ground floor (перший поверх), and household goods upstairs. Escalators often have flat sections—perfect for rolling shopping carts up!\n\n## Production\n\n### Usage Patterns: How to Order Like a Local\n\n**У ресторані/кафе (At a restaurant/café):**\n1. **Привіт! Можна меню?** (Hi! Can I have the menu?)\n2. **Я візьму...** (I'll take...)\n3. **Рахунок, будь ласка.** (The bill, please.)\n4. **Смачного!** (Enjoy your meal!)\n5. **Було дуже смачно!** (It was very tasty!)\n\n**У магазині (At a store):**\n1. **Скільки коштує [item]?** (How much is [item]?)\n2. **Я хочу [item], будь ласка.** (I want [item], please.)\n3. **Ще щось?** — **Ні, дякую, все.** (Anything else? — No, thank you, that's all.)\n4. **Де овочі?** (Where are the vegetables?)\n5. **Це свіже?** (Is this fresh?)\n\n**Поширені помилки (Common mistakes):**\n- ❌ \"Я хочу кава\" → ✅ \"Я хочу **каву**\" (знахідний відмінок! / accusative!)\n- ❌ \"Скільки є хліб?\" → ✅ \"Скільки **коштує** хліб?\" (використовуйте \"коштує\" для ціни / use \"коштує\" for price)\n- ❌ \"Одна вода\" → ✅ \"Склянку **води**\" (родовий відмінок для кількості / genitive for quantities)\n- ❌ \"Каса там\" → ✅ \"Каса там?\" (не забувайте знак питання! / don't forget the question mark!)\n- ❌ \"Хліб дорого\" → ✅ \"Хліб дорогий\" (дорогий = adjective, not adverb)\n\n### Real-World Scenarios\n\n**Scenario 1: Ordering Lunch**\n\nYou're at a Ukrainian **їдальня** (canteen). The menu board lists: борщ (30 грн), вареники (45 грн), салат (25 грн), компот (15 грн).\n\nWhat you say:\n\"Добрий день! Я візьму **борщ**, **вареники** та **компот**. Скільки разом?\"\n\n**Scenario 2: Grocery Shopping**\n\nYou need: bread, milk, eggs, cheese. You're at a **магазин** near your apartment.\n\nWhat you say:\n\"Я хочу **хліб**, **молоко**, десять **яєць** та **сир**, будь ласка.\"\n\n**Scenario 3: Buying Supplies**\n\nYou're a student and need: notebook, 2 pens, paper.\n\nWhat you say:\n\"Я хочу **зошит**, дві **ручки** та **папір**.\"\n\n> 📜 **History Bite: Ukrainian Cuisine Heritage**\n>\n> Ukrainian food culture is ancient! Borsch appears in 16th-century cookbooks. Varenyky (dumplings) have been a staple for centuries. During Soviet times, Ukrainian dishes were often rebranded as \"Russian,\" but they originated in Ukrainian villages and Cossack kitchens. Today, UNESCO recognizes Ukrainian **borsch culture** as endangered heritage (2022), protecting its authenticity.\n\n## Cultural Insight\n\n### The Ukrainian Shopping Experience\n\n**Markets vs. Supermarkets**\n\n**Ринок (Market):**\n- Fresh, seasonal produce\n- Personal relationships with vendors\n- Bargaining is acceptable\n- Cash only, usually\n- Open mornings (7 AM–2 PM peak)\n\n**Супермаркет:**\n- Western-style shopping\n- Fixed prices\n- Card payments accepted\n- Open late (some 24/7)\n- Self-service\n\n**Local магазин:**\n- Neighborhood stores\n- Personal service (you ask, they get it)\n- Good for quick purchases\n- Often family-run\n\n> 🔍 **Myth Buster**\n>\n> **Myth:** \"Ukrainians only shop at markets.\"\n> **Fact:** While traditional **ринки** remain popular—especially for fresh produce—modern Ukrainians shop at supermarkets like Silpo, ATB, and Novus just like people everywhere. The mix of old and new is what makes Ukrainian shopping culture unique!\n\n### Food as Identity\n\nFor Ukrainians, food is deeply connected to **identity** and **home**. Борщ isn't just soup—it's a symbol of family, tradition, and survival. During the Holodomor (1932-33 famine-genocide), millions of Ukrainians starved while grain was exported. Today, every bowl of borsch carries that historical memory.\n\nWhen you order Ukrainian food, you're participating in a living tradition that survived empires, wars, and attempts to erase it.\n\n**Українська кухня (Ukrainian cuisine):**\n- **Борщ** – червоний суп (beet soup with sour cream)\n- **Вареники** – дуже смачно! (dumplings: potato, cheese, or cherry)\n- **Сало** – національна страва (cured pork fat, a delicacy!)\n- **Голубці** – рис у капусті (cabbage rolls with rice)\n- **Деруни** – картопляна страва (potato pancakes)\n- **Сирники** – сирна страва (cheese pancakes)\n- **Холодець** – традиційна страва (meat jelly)\n- **Пампушки** – дуже смачно! (garlic rolls with borscht)\n\n> 🎭 **Folklore Corner: Bread as Sacred**\n>\n> In Ukrainian tradition, **хліб** (bread) is sacred. Guests are greeted with **хліб-сіль** (bread and salt) as a sign of hospitality. Dropping bread on the floor requires picking it up and kissing it as an apology. This reverence comes from centuries of agricultural culture where grain was life itself.\n\n---\n\n## Підсумок (Summary)\n\nВи навчилися робити покупки українською! (You've learned to shop in Ukrainian!)\n\n**Тепер ви можете (Now you can):**\n- Замовляти їжу та напої (Order food and drinks)\n- Питати про ціни: \"Скільки коштує?\" (Ask prices)\n- Просити кількість: \"Склянку води\" (Request quantities)\n- Розуміти культуру покупок (Understand shopping culture)\n\n**Key phrases to remember:**\n- Я хочу... (I want...)\n- Скільки коштує...? (How much is...?)\n- Я візьму... (I'll take...)\n- Рахунок, будь ласка. (The bill, please.)\n\n**Cultural insights gained:**\n- Markets vs. supermarkets in Ukraine\n- Bread as sacred in Ukrainian culture\n- Food as identity and historical memory\n- How to shop like a local\n\nNext module (M19: At the Café), you'll practice full café dialogues using all the cases you've learned!\n\n---\n\n## Need More Practice?\n\n---\n\n> [!resources] 🔗 External Resources\n>\n> **YouTube:** [Basic shopping words #  89](https://www.youtube.com/watch?v=xdepcyiaKd4) — Ukrainian Language\n>\n>\n> **Shopping Vocabulary:** [FMU 1-18 | Shopping Vocabulary](https://www.ukrainianlessons.com/fmu18/) — Essential store vocabulary\n>\n> **Grocery Store:** [ULP 2-46 | At the Grocery Store](https://www.ukrainianlessons.com/episode46/) — Food shopping + genitive\n>\n> **Food Guide:** [40+ Ukrainian Dishes](https://www.ukrainianlessons.com/ukrainian-food/) — Visual guide to Ukrainian cuisine\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| страва | /ˈstrɑvɑ/ | dish | noun | f | |\n| закуска | /zɑˈkuskɑ/ | appetizer | noun | f | |\n| десерт | /dɛˈsɛrt/ | dessert | noun | m | |\n| напій | /nɑˈpij/ | beverage | noun | m | |\n| вино | /vɪˈnɔ/ | wine | noun | n | |\n| пиво | /ˈpɪvɔ/ | beer | noun | n | |\n| меню | /mɛˈnju/ | menu | noun | n | |\n| мило | /ˈmɪlɔ/ | soap | noun | n | |\n| шампунь | /ʃɑmˈpunʲ/ | shampoo | noun | m | |\n| зубна паста | /zubˈnɑ ˈpɑstɑ/ | toothpaste | noun | f | |\n| папір | /pɑˈpir/ | paper | noun | m | |\n| ручка | /ˈrut͡ʃkɑ/ | pen | noun | f | |\n| олівець | /ɔlʲiˈvɛt͡sʲ/ | pencil | noun | m | |\n| зошит | /ˈzɔʃɪt/ | notebook | noun | m | |\n| супермаркет | /supɛrˈmɑrkɛt/ | supermarket | noun | m | |\n| пакет | /pɑˈkɛt/ | bag | noun | m | |\n| відчинено | /vidˈt͡ʃɪnɛnɔ/ | open | adv | - | |\n| зачинено | /zɑˈt͡ʃɪnɛnɔ/ | closed | adv | - | |\n| свіжий | /ˈsʲvʲiʒɪj/ | fresh | adj | m | |\n\n---\n",
-    "createdAt": "2025-12-31T22:03:34.525514Z",
-    "modifiedAt": "2025-12-31T22:03:34.525514Z",
+    "rawMarkdown": "# Food & Shopping\n\n## Warm-up\n\nYou're in Kyiv, and your fridge is empty. Time to go shopping! In Ukraine, you have many choices: the **супермаркет** (supermarket), a traditional **ринок** (market), or small **магазини** (stores) scattered throughout every neighborhood. Each place has its own character and culture.\n\nToday, you'll learn how to navigate Ukrainian stores and cafés with confidence. You'll order food, ask for prices, and even do some everyday shopping beyond the grocery aisle.\n\n> 💡 **Did You Know?**\n>\n> Ukrainians love their **ринки** (markets)! Fresh produce, homemade cheeses, and seasonal fruits are sold by vendors who've been selling at the same spot for decades. It's not just shopping—it's a social experience. You greet the vendors, they remember your preferences, and you bargain a little. Try saying \"Скільки коштує?\" (How much is it?) at Besarabsky Market in Kyiv!\n\n## Presentation\n\n### Grammar Review: Accusative and Genitive Together\n\nYou've already learned the **accusative case** (M11: direct objects) and the **genitive case** (M16: absence and possession). Now you'll use BOTH in real shopping situations.\n\n**Патерн 1: Знахідний відмінок (Accusative for \"I want X\")**\n\nЯ хочу **каву**. (I want coffee.)\nВона бере **хліб**. (She takes bread.)\nМи купуємо **рибу**. (We buy fish.)\nТи візьмеш **салат**? (Will you take a salad?)\nВони купують **овочі**. (They buy vegetables.)\nЯ хочу **суп** та **хліб**. (I want soup and bread.)\n\n**Патерн 2: Родовий відмінок для кількості (Genitive for quantities)**\n\nСклянку **води**, будь ласка. (A glass **of water**, please.)\nКілограм **яблук**. (A kilogram **of apples**.)\nПачку **цукру**. (A pack **of sugar**.)\nПляшку **вина**. (A bottle **of wine**.)\nЧашку **кави**. (A cup **of coffee**.)\n\n**Патерн 3: Питання про ціну (Asking prices)**\n\nСкільки коштує **мило**? (How much is the soap?)\nСкільки коштує **сир**? (How much is the cheese?)\nСкільки коштує **хліб**? (How much is the bread?)\nСкільки коштує **кава**? (How much is the coffee?)\n\nNotice: After \"скільки коштує\" (how much is/does it cost?), the noun stays in **nominative** because the question is \"What costs how much?\"\n\n> 🌍 **Реальний світ: У супермаркеті (Real World: At the Supermarket)**\n>\n> Супермаркети в Україні працюють як у всьому світі. (Supermarkets in Ukraine work like everywhere in the world.) You grab a **пакет** (bag) or basket at the entrance, pick your items, and pay at the **каса** (checkout). Але є культурна порада: українські касири дуже швидкі! (But here's a cultural tip: Ukrainian cashiers are VERY fast!) Have your money ready! Багато магазинів мають ваги для овочів окремо. (Many stores have scales for vegetables separately.) Look for the digital scales in the produce section.\n\n> 💡 **Чи знаєте ви? (Did You Know?)**\n>\n> Популярні українські супермаркети: **Сільпо** (Silpo), **АТБ** (ATB), **Новус** (Novus), **Фора** (Fora). (Popular Ukrainian supermarkets: Silpo, ATB, Novus, Fora.) Кожен має свою атмосферу! (Each has its own atmosphere!) ATB is budget-friendly, Silpo is mid-range with good quality, and Novus is more upscale. Де ви любите робити покупки? (Where do you like to shop?)\n\n---\n\n## Dialogues\n\n> [!conversation] У супермаркеті (At the Supermarket)\n>\n> — Доброго дня! Скільки коштує сир?\n> — Сир коштує сорок гривень за кілограм.\n> — Добре. Дайте півкілограма, будь ласка.\n> — Щось ще?\n> — Так. Я хочу хліб.\n> — Білий чи чорний?\n> — Білий, будь ласка.\n> — Ось ваш хліб. Двадцять гривень.\n> — Дякую!\n>\n> — Good day! How much is the cheese?\n> — Cheese costs forty hryvnias per kilogram.\n> — Good. Give me half a kilogram, please.\n> — Anything else?\n> — Yes. I want bread.\n> — White or black?\n> — White, please.\n> — Here's your bread. Twenty hryvnias.\n> — Thank you!\n\n> [!conversation] На ринку (At the Market)\n>\n> — Доброго ранку! Які красиві помідори!\n> — Доброго ранку! Свіжі, з городу!\n> — Скільки коштує кілограм?\n> — Тридцять гривень.\n> — Я хочу два кілограми. Яка ціна?\n> — П'ятдесят гривень. Для вас — знижка!\n> — Чудово! Беру два.\n> — Ще щось? Маємо свіжі огірки.\n> — Ні, дякую. Тільки помідори.\n>\n> — Good morning! What beautiful tomatoes!\n> — Good morning! Fresh, from the garden!\n> — How much is a kilogram?\n> — Thirty hryvnias.\n> — I want two kilograms. What's the price?\n> — Fifty hryvnias. A discount for you!\n> — Wonderful! I'll take two.\n> — Anything else? We have fresh cucumbers.\n> — No, thank you. Just tomatoes.\n\n---\n\n## Practice\n\n### Using Accusative and Genitive\n\nComplete these shopping phrases with the correct case:\n\nЯ хочу _____ (кава). → Я хочу **каву**. (Accusative for \"what I want\")\n\nДайте склянку _____ (вода). → Дайте склянку **води**. (Genitive for \"of what\")\n\nЯ хочу _____ (хліб). → Я хочу **хліб**. (Accusative for masculine nouns - \"I want bread\")\n\nКілограм _____ (яблуко). → Кілограм **яблук**. (Genitive plural for quantity)\n\n> 🎯 **Remember the Pattern!**\n>\n> **Accusative** for direct objects: Я купую **каву**, **хліб**, **молоко**.\n> **Genitive** for quantities: пляшку **води**, кілограм **сиру**, пачку **цукру**.\n\n### Ordering at a Store\n\nPractice these common shopping phrases:\n\n**Asking prices:**\n- Скільки коштує ___? (How much does ___ cost?)\n- Скільки це коштує? (How much does this cost?)\n- Яка ціна? (What's the price?)\n\n**Making requests:**\n- Дайте, будь ласка... (Give me, please...)\n- Я хочу... (I want...)\n- Можна...? (May I have...?)\n\n**Quantities:**\n- Один кілограм (one kilogram)\n- Півкілограма (half a kilogram)\n- Пляшку (a bottle)\n- Пачку (a pack)\n\n---\n\n# Summary\n\nIn this module, you practiced using the accusative and genitive cases together for shopping. You learned how to ask prices with \"Скільки коштує?\" and request quantities with genitive (\"склянку води\", \"кілограм яблук\"). You also learned vocabulary for Ukrainian supermarkets like Сільпо, АТБ, Новус, and Фора. Now you can navigate Ukrainian stores with confidence!\n",
+    "createdAt": "2026-01-04T21:33:28.248384Z",
+    "modifiedAt": "2026-01-04T21:33:28.248384Z",
     "version": 2
   },
   "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A1-18",
     "level": "A1",
-    "phase": "A1.2",
-    "wordCount": 19,
-    "newWordCount": 19,
+    "phase": "A1.1",
+    "wordCount": 0,
+    "newWordCount": 0,
     "reviewWordCount": 0,
-    "transliterationMode": "vocab-only",
-    "words": [
+    "transliterationMode": "none",
+    "words": [],
+    "reviewWords": []
+  },
+  "external_resources": {
+    "podcasts": [
       {
-        "id": "vocab-1",
-        "uk": "страва",
-        "ipa": "/ˈstrɑvɑ/",
-        "en": "dish",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
+        "episode_id": "FMU-016",
+        "title": "How to ORDER at the restaurant in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/fmu16/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: restaurant"
       },
       {
-        "id": "vocab-2",
-        "uk": "закуска",
-        "ipa": "/zɑˈkuskɑ/",
-        "en": "appetizer",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
+        "episode_id": "ULP-012",
+        "title": "ULP 1-12 Ordering food in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/12/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: food"
       },
       {
-        "id": "vocab-3",
-        "uk": "десерт",
-        "ipa": "/dɛˈsɛrt/",
-        "en": "dessert",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
+        "episode_id": "ULP-013",
+        "title": "ULP 1-13 More about food in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/13/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: food"
       },
       {
-        "id": "vocab-4",
-        "uk": "напій",
-        "ipa": "/nɑˈpij/",
-        "en": "beverage",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
+        "episode_id": "ULP-031",
+        "title": "ULP 1-31 Shopping in Ukrainian – At the shoe shop",
+        "url": "https://www.ukrainianlessons.com/lesson/31/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: shopping"
       },
       {
-        "id": "vocab-5",
-        "uk": "вино",
-        "ipa": "/vɪˈnɔ/",
-        "en": "wine",
-        "pos": "noun",
-        "gender": "n",
-        "note": ""
-      },
-      {
-        "id": "vocab-6",
-        "uk": "пиво",
-        "ipa": "/ˈpɪvɔ/",
-        "en": "beer",
-        "pos": "noun",
-        "gender": "n",
-        "note": ""
-      },
-      {
-        "id": "vocab-7",
-        "uk": "меню",
-        "ipa": "/mɛˈnju/",
-        "en": "menu",
-        "pos": "noun",
-        "gender": "n",
-        "note": ""
-      },
-      {
-        "id": "vocab-8",
-        "uk": "мило",
-        "ipa": "/ˈmɪlɔ/",
-        "en": "soap",
-        "pos": "noun",
-        "gender": "n",
-        "note": ""
-      },
-      {
-        "id": "vocab-9",
-        "uk": "шампунь",
-        "ipa": "/ʃɑmˈpunʲ/",
-        "en": "shampoo",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-10",
-        "uk": "зубна паста",
-        "ipa": "/zubˈnɑ ˈpɑstɑ/",
-        "en": "toothpaste",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-11",
-        "uk": "папір",
-        "ipa": "/pɑˈpir/",
-        "en": "paper",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-12",
-        "uk": "ручка",
-        "ipa": "/ˈrut͡ʃkɑ/",
-        "en": "pen",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-13",
-        "uk": "олівець",
-        "ipa": "/ɔlʲiˈvɛt͡sʲ/",
-        "en": "pencil",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-14",
-        "uk": "зошит",
-        "ipa": "/ˈzɔʃɪt/",
-        "en": "notebook",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-15",
-        "uk": "супермаркет",
-        "ipa": "/supɛrˈmɑrkɛt/",
-        "en": "supermarket",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-16",
-        "uk": "пакет",
-        "ipa": "/pɑˈkɛt/",
-        "en": "bag",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-17",
-        "uk": "відчинено",
-        "ipa": "/vidˈt͡ʃɪnɛnɔ/",
-        "en": "open",
-        "pos": "adv",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-18",
-        "uk": "зачинено",
-        "ipa": "/zɑˈt͡ʃɪnɛnɔ/",
-        "en": "closed",
-        "pos": "adv",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-19",
-        "uk": "свіжий",
-        "ipa": "/ˈsʲvʲiʒɪj/",
-        "en": "fresh",
-        "pos": "adj",
-        "gender": "m",
-        "note": ""
+        "episode_id": "ULP-032",
+        "title": "ULP 1-32 Shopping for clothes – Accusative case in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/32/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: shopping"
       }
     ],
-    "reviewWords": []
+    "youtube": [
+      {
+        "title": "Shopping in Ukraine",
+        "url": "https://www.youtube.com/watch?v=2tEPOopp7-I",
+        "relevance": "high",
+        "channel": "Real Ukrainian shopping situations"
+      }
+    ],
+    "articles": [
+      {
+        "title": "Ukrainian Lessons - At the Market",
+        "url": "https://www.ukrainianlessons.com/thepodcast/",
+        "relevance": "high",
+        "source": "Shopping vocabulary practice"
+      }
+    ],
+    "books": [],
+    "websites": []
   }
 }

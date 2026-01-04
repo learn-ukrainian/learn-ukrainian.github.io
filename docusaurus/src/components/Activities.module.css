@@ -1016,6 +1016,13 @@
 }
 
 /* ============= MARK THE WORDS ============= */
+.activityInstruction {
+  font-size: 1rem;
+  color: var(--ifm-color-emphasis-700);
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
 .markWordsText {
   font-size: 1.15rem;
   line-height: 2.2;
@@ -1053,6 +1060,15 @@
 .markableWord.wrongMark {
   background: #EA4335;
   color: white;
+}
+
+/* ============= HIGHLIGHT MORPHEMES ============= */
+.morphemeHighlighted {
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--ifm-color-primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
 }
 
 /* ============= DIALOGUE REORDER ============= */

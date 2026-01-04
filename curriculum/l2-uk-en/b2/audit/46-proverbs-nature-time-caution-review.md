@@ -1,12 +1,17 @@
 # Audit Report: 46-proverbs-nature-time-caution.md
 **Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 2760/1750
-- **Activities:** ✅ 15/14
-- **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Activities:** ✅ 14/14
+- **Density:** ❌ 1 < 16
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 15/6
 - **Audio:** ℹ️ No audio
@@ -14,6 +19,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.8% (target 98-100% (vocab))
 - **Richness:** ✅ 97% (content)
 - **Grammar:** ⏳ Pending validation
@@ -34,6 +40,12 @@
 | paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
 | questions | 11 | 4 | 100% | 6% | 6.2% |
 | **TOTAL** | | | | | **97.0%** |
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Вставте прислів'я в контекст | cloze | 10 | 16 | Add 6 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

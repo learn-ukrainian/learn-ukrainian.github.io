@@ -1,0 +1,23 @@
+module: 04-analysis-vocab
+title: "Лексика аналізу"
+subtitle: "Analysis Vocabulary"
+level: C1
+version: "2.0"
+phase: "C1.1 Academic Foundations"
+focus: vocabulary
+pedagogy: "Lexical Approach"
+duration: 120
+transliteration: none
+tags:
+  - vocabulary
+  - academic
+  - analysis
+grammar:
+  - "Abstract Noun Phrases"
+  - "Adjective-Noun Collocations"
+objectives:
+  - "Master key abstract nouns (аспект, фактор, тенденція)"
+  - "Use evaluative adjectives correctly (суттєвий, вирішальний)"
+  - "Construct complex noun phrases"
+vocabulary_count: 25
+slug: 04-analysis-vocab

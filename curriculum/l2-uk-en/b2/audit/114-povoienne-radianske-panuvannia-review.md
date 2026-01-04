@@ -1,20 +1,21 @@
 # Audit Report: 114-povoienne-radianske-panuvannia.md
-**Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1870/1750
-- **Activities:** ✅ 14/14
-- **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Words:** ✅ 1820/1400
+- **Activities:** ✅ 13/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 17/6
+- **Engagement:** ✅ 17/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 25 < 35 (soft target)
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 100.0% (target 98-100% (vocab))
+- **Content_heavy:** ⚠️ Too many activities: 13 (target 10-12)
+- **Immersion:** 🇺🇦 100.0% (target 98-100% (history))
 - **Richness:** ✅ 96% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -30,11 +31,11 @@
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 3 | 4 | 75% | 10% | 7.1% |
-| visual | 18 | 4 | 100% | 10% | 9.5% |
-| variety | 0.95 | - | 95% | 5% | 4.5% |
-| paragraph_var | 0.84 | - | 84% | 5% | 4.0% |
-| questions | 10 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **96.6%** |
+| visual | 17 | 4 | 100% | 10% | 9.5% |
+| variety | 0.96 | - | 96% | 5% | 4.6% |
+| paragraph_var | 0.85 | - | 85% | 5% | 4.0% |
+| questions | 9 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **96.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -47,4 +48,4 @@
 | **Хельсінкський рух та Чорнобиль** | ⚪️ | 217 | Skipped |
 | **Первинні джерела** | ⚪️ | 157 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 136 | Skipped |
-| **Підсумок** | ✅ | 110 | Included in Core |
+| **Підсумок** | ✅ | 60 | Included in Core |

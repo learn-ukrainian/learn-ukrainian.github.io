@@ -9,38 +9,20 @@
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A2",
-    "phase": "A2",
+    "phase": "A2.1",
     "moduleNumber": 48,
-    "moduleType": "vocabulary",
-    "pedagogy": "Narrative",
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
     "immersionLevel": 0.4,
-    "title": "Work & Professions",
+    "title": "Module 48",
     "titleUk": null,
-    "subtitle": "Building a Career in Ukrainian",
-    "description": {
-      "Name common professions": "лікар, вчитель, інженер"
-    },
-    "objectives": [
-      {
-        "Name common professions": "лікар, вчитель, інженер"
-      },
-      {
-        "Describe workplaces": "офіс, школа, лікарня"
-      },
-      "Discuss career and salary",
-      "Use verbs for work activities"
-    ],
+    "subtitle": null,
+    "description": "Module 48",
+    "objectives": [],
     "objectivesUk": null,
-    "grammarFocus": [
-      "noun-gender-professions"
-    ],
-    "tags": [
-      "vocabulary",
-      "work",
-      "professions",
-      "business"
-    ],
-    "totalDuration": 60,
+    "grammarFocus": [],
+    "tags": [],
+    "totalDuration": 45,
     "transliterationMode": "none",
     "sections": [
       {
@@ -55,131 +37,67 @@
         "name": "Summary",
         "nameEn": null,
         "type": "summary",
-        "content": "You learned to:\n- Name professions: **лікар**, **вчитель**, **інженер**, **програміст**\n- Describe workplaces: **офіс**, **школа**, **лікарня**, **фабрика**\n- Use work verbs: **працювати**, **заробляти**, **керувати**\n- Discuss career: **зарплата**, **відпустка**, **колега**\n\nWork is not just about money; it's about passion and contribution. Whether you are a lawyer or a driver, your work matters. Keep learning Ukrainian to expand your professional horizons!\n\n> [!resources] 🔗 External Resources\n>\n> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview\n>\n> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises"
-      },
-      {
-        "id": "section-3",
-        "name": "Vocabulary",
-        "nameEn": null,
-        "type": "vocabulary",
-        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| фабрика | /ˈfɑbrɪkɑ/ | factory | noun | f | |\n| компанія | /komˈpɑnʲijɑ/ | company | noun | f | |\n| керувати | /keruˈwɑtɪ/ | to manage | verb | - | + instr |\n| звільнити | /zwilʲˈnɪtɪ/ | to fire | verb | - | |\n| найняти | /nɑjˈnʲɑtɪ/ | to hire | verb | - | |\n| кар'єра | /kɑrˈjɛrɑ/ | career | noun | f | |\n| зарплата | /zɑrˈplɑtɑ/ | salary | noun | f | |\n| професія | /proˈfɛsʲijɑ/ | profession | noun | f | |\n| клієнт | /klʲiˈjɛnt/ | client | noun | m | |\n| начальник | /nɑˈtʃɑlʲnɪk/ | boss | noun | m | |\n| зайнятий | /ˈzɑjnʲɑtɪj/ | busy/occupied | adj | m | |"
+        "content": "You learned to:\n- Name professions: **лікар**, **вчитель**, **інженер**, **програміст**\n- Describe workplaces: **офіс**, **школа**, **лікарня**, **фабрика**\n- Use work verbs: **працювати**, **заробляти**, **керувати**\n- Discuss career: **зарплата**, **відпустка**, **колега**\n\nWork is not just about money; it's about passion and contribution. Whether you are a lawyer or a driver, your work matters. Keep learning Ukrainian to expand your professional horizons!"
       }
     ],
-    "rawMarkdown": "---\nmodule: a2-48\ntitle: Work & Professions\nsubtitle: \"Building a Career in Ukrainian\"\nversion: \"1.0\"\nphase: \"A2\"\npedagogy: \"Narrative\"\nduration: 60\ntransliteration: none\ntags: [\"vocabulary\", \"work\", \"professions\", \"business\"]\ngrammar: [\"noun-gender-professions\"]\nobjectives:\n  - Name common professions: лікар, вчитель, інженер\n  - Describe workplaces: офіс, школа, лікарня\n  - Discuss career and salary\n  - Use verbs for work activities\nvocab_count: 30\n---\n\n# Work & Professions\n\n## Warm-up\n\nДе ви працюєте? Яка ваша професія? Ви любите свою роботу?\n\nРобота займає велику частину нашого життя. Ми працюємо, щоб заробляти гроші, але також щоб реалізувати свої таланти. В Україні люди дуже працьовиті. Кожен хоче мати хорошу кар'єру і високу зарплату. Сьогодні ми поговоримо про професії, офісне життя і бізнес.\n\nWork is universally important. In this module, you'll learn to talk about what you do, where you work, and your professional goals in Ukrainian. You will master vocabulary for modern professions, traditional jobs, and workplace interactions.\n\n> [!important] **Myth Buster** \"Job Stability\"\n> Russian propaganda often portrays Ukraine as economically unstable. In reality, Ukraine has a booming IT sector and diverse industries. Many Ukrainians build successful international careers.\n\n## Presentation\n\n### Common Professions\n\nLet's start with the most common jobs. In Ukrainian, profession names often have gender forms, but masculine is used for general reference.\n\n| Професія | Приклад |\n|----------|---------|\n| **лікар** | Лікар лікує людей. |\n| **вчитель** | Вчитель навчає дітей. |\n| **інженер** | Інженер будує мости. |\n| **програміст** | Програміст пише код. |\n| **юрист** | Юрист знає закони. |\n| **менеджер** | Менеджер керує командою. |\n| **водій** | Водій керує автобусом. |\n| **продавець** | Продавець продає товари. |\n\n**Лікар** (doctor) is a respected profession. **Вчитель** (teacher) shapes the future. **Інженер** (engineer) creates technology. **Програміст** (programmer) is a very popular job in Kyiv and Lviv. **Юрист** (lawyer) helps with legal issues. **Водій** (driver) is essential for transport.\n\n### The Workplace\n\nWhere do people work?\n\n- **офіс** — office: *Я працюю в офісі.*\n- **школа** — school: *Вона працює в школі.*\n- **лікарня** — hospital: *Він працює в лікарні.*\n- **фабрика** — factory: *Вони працюють на фабриці.*\n- **магазин** — shop/store: *Я йду в магазин.*\n- **компанія** — company: *Це велика компанія.*\n\nNotice the prepositions: **в** офісі, **в** школі, **в** лікарні, але **на** фабриці (open space/process).\n\n> [!cultural] **History Bite** The Antonov Giants\n> Ukraine is the home of the world's largest aircraft, the **An-225 Mriya** (\"Dream\"). It was designed and built by the Antonov Design Bureau in Kyiv. This engineering marvel symbolizes Ukrainian technical prowess and ambition.\n\n### Work Verbs\n\nTo describe what you do, use these verbs:\n\n- **працювати** — to work: *Я працюю багато.*\n- **заробляти** — to earn: *Він заробляє добре.*\n- **керувати** — to manage/drive: *Директор керує компанією.*\n- **звільнити** — to fire: *Його звільнили.*\n- **найняти** — to hire: *Компанія найняла нових людей.*\n\n### Career & Business\n\n- **кар'єра** — career: *Вона будує кар'єру.*\n- **зарплата** — salary: *У мене висока зарплата.*\n- **відпустка** — vacation/leave: *Я хочу у відпустку.*\n- **колега** — colleague: *Мій колега допоміг мені.*\n- **клієнт** — client: *Клієнт завжди правий.*\n- **начальник** — boss: *Мій начальник суворий.*\n\n> [!cultural] **Cultural Insight** Salary Talk\n> In Ukraine, it is not taboo to discuss **зарплата** (salary) with close friends, but avoided in polite formal conversation. However, complaining about low salary is a national sport!\n\n### Business Etiquette\n\nWhen working in Ukraine, formality is often valued. In a corporate setting, use **Ви** (formal You) with colleagues until invited to use **ти** (informal You). Handshakes are firm. Direct eye contact shows confidence and honesty (**чесність**).\n\nPunctuality is expected, though social meetings might have a \"flexible\" start time. Gifts (like chocolates or alcohol) are common for business partners, but strictly optional. Understanding these nuances will help you build strong professional relationships.\n\n### Dialogue: At the Interview\n\n— Доброго дня. Розкажіть про себе.\n— Доброго дня. Мене звати Андрій. Я — програміст.\n— Де ви працювали раніше?\n— Я працював у великій ІТ-компанії.\n— Чому ви хочете працювати у нас?\n— Ваша компанія дуже успішна. Мені подобаються ваші проєкти.\n— Чудово. Яка зарплата вас цікавить?\n— Я хочу заробляти гідно.\n— Ми пропонуємо хороші умови і відпустку.\n— Дякую. Коли я можу почати?\n\n## Practice\n\n### Describing Your Job\n\nUse **працювати** + **ким** (instrumental):\n- *Я працюю лікарем.* (I work as a doctor.)\n- *Вона працює вчителем.* (She works as a teacher.)\n\nOr simply **бути** + **ким** (instrumental):\n- *Він є директором.* (He is a director.)\n\nWait, normally we say: *Я — лікар* (Nominative) for simple ID. But describing function/status often involves Instrumental.\n\n> [!note] Nominative vs Instrumental\n> *Я — лікар* (Nominative) names who you are.\n> *Я працюю лікарем* (Instrumental) describes your function.\n> Both are common, but Instrumental is safer with verbs.\n\n### Story Time: The Successful Start-up\n\nОлег був талановитим інженером. Він працював на заводі, але мріяв про власний бізнес. Його друг, Максим, був програмістом. Він працював в офісі і отримував високу зарплату.\n\nОдного дня Олег сказав:\n— Максиме, давай відкриємо свою компанію!\n— Але це ризик, — відповів Максим. — Нам потрібен хороший менеджер.\n\nВони знайшли Ірину. Вона була чудовим менеджером. Разом вони створили стартап. Вони працювали вдень і вночі.\n\nСпочатку було важко. Клієнтів було мало. Зарплата була низька. Але вони вірили в успіх. Ірина знайшла першого великого клієнта. Це був закордонний магазин.\n\n— Ми це зробили! — раділи колеги.\n\nТепер їхня компанія відома. Вони наймають нових працівників. У них гарний офіс і довга відпустка. Успішна кар'єра — це результат важкої праці!\n\n### Story Time: A Day at the Hospital\n\nОлена працює лікарем у міській лікарні. Її робота дуже важлива і відповідальна. Щоранку вона приходить у свій кабінет.\n\n— Доброго ранку, колего! — вітає її медсестра.\n— Доброго ранку! Скільки у нас пацієнтів сьогодні?\n— Дуже багато. Всі хочуть бути здоровими.\n\nОлена оглядає хворих. Вона уважна і добра. Пацієнти люблять її.\n\n— Дякую, лікарю! — каже старенька жінка. — Ви мені дуже допомогли.\n\nОлена любить свою професію. Зарплата не дуже висока, але моральне задоволення — величезне. Допомагати людям — це найкраща робота у світі.\n\nВвечері Олена йде додому втомлена, але щаслива. Завтра буде новий день і нові виклики.\n\n### Story Time: The Dream Job\n\nАндрій завжди хотів бути пілотом. У дитинстві він дивився на небо і мріяв.\n\n— Я буду літати! — казав він мамі.\n— Це хороша мрія, — відповідала вона. — Але треба багато вчитися.\n\nАндрій вчився старанно. Він знав математику і фізику. Після школи він пішов в університет. Це було важко. Інші студенти гуляли, а Андрій читав книги.\n\nРоки минали. Андрій став дорослим. Він знайшов роботу в авіакомпанії. Спочатку він був помічником. Він працював в офісі в аеропорту. Зарплата була мала, але він був близько до літаків.\n\nОдного разу головний пілот захворів.\n\n— Хто може допомогти? — запитав директор.\n— Я знаю систему! — сказав Андрій.\n\nВін не полетів (він ще не був пілотом), але він допоміг команді на землі. Директор побачив його талант.\n\n— Ти розумний хлопець, — сказав начальник. — Ми оплатимо твоє навчання на пілота.\n\nАндрій був щасливий! Його кар'єра почалася. Тепер він літає в різні країни. Він бачить світ. Він любить свою роботу. Коли він у небі, він відчуває свободу.\n\nЙого колеги поважають його. Він — професіонал. Іноді він згадує той день в офісі. Шлях до мрії був довгим, але результат того вартий.\n\n> [!tip] Talking about Future Plans\n> Use **хотіти бути** + instrumental: *Я хочу бути лікарем*. This expresses your professional goal.\n\n# Summary\n\nYou learned to:\n- Name professions: **лікар**, **вчитель**, **інженер**, **програміст**\n- Describe workplaces: **офіс**, **школа**, **лікарня**, **фабрика**\n- Use work verbs: **працювати**, **заробляти**, **керувати**\n- Discuss career: **зарплата**, **відпустка**, **колега**\n\nWork is not just about money; it's about passion and contribution. Whether you are a lawyer or a driver, your work matters. Keep learning Ukrainian to expand your professional horizons!\n\n> [!resources] 🔗 External Resources\n>\n> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview\n>\n> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| фабрика | /ˈfɑbrɪkɑ/ | factory | noun | f | |\n| компанія | /komˈpɑnʲijɑ/ | company | noun | f | |\n| керувати | /keruˈwɑtɪ/ | to manage | verb | - | + instr |\n| звільнити | /zwilʲˈnɪtɪ/ | to fire | verb | - | |\n| найняти | /nɑjˈnʲɑtɪ/ | to hire | verb | - | |\n| кар'єра | /kɑrˈjɛrɑ/ | career | noun | f | |\n| зарплата | /zɑrˈplɑtɑ/ | salary | noun | f | |\n| професія | /proˈfɛsʲijɑ/ | profession | noun | f | |\n| клієнт | /klʲiˈjɛnt/ | client | noun | m | |\n| начальник | /nɑˈtʃɑlʲnɪk/ | boss | noun | m | |\n| зайнятий | /ˈzɑjnʲɑtɪj/ | busy/occupied | adj | m | |\n",
-    "createdAt": "2025-12-31T22:48:42.035803Z",
-    "modifiedAt": "2025-12-31T22:48:42.035803Z",
+    "rawMarkdown": "# Work & Professions\n\n## Warm-up\n\nДе ви працюєте? Яка ваша професія? Ви любите свою роботу?\n\nРобота займає велику частину нашого життя. Ми працюємо, щоб заробляти гроші, але також щоб реалізувати свої таланти. В Україні люди дуже працьовиті. Кожен хоче мати хорошу кар'єру і високу зарплату. Сьогодні ми поговоримо про професії, офісне життя і бізнес.\n\nWork is universally important. In this module, you'll learn to talk about what you do, where you work, and your professional goals in Ukrainian. You will master vocabulary for modern professions, traditional jobs, and workplace interactions.\n\n> [!important] **Myth Buster** \"Job Stability\"\n> Russian propaganda often portrays Ukraine as economically unstable. In reality, Ukraine has a booming IT sector and diverse industries. Many Ukrainians build successful international careers.\n\n## Presentation\n\n### Common Professions\n\nLet's start with the most common jobs. In Ukrainian, profession names often have gender forms, but masculine is used for general reference.\n\n| Професія | Приклад |\n|----------|---------|\n| **лікар** | Лікар лікує людей. |\n| **вчитель** | Вчитель навчає дітей. |\n| **інженер** | Інженер будує мости. |\n| **програміст** | Програміст пише код. |\n| **юрист** | Юрист знає закони. |\n| **менеджер** | Менеджер керує командою. |\n| **водій** | Водій керує автобусом. |\n| **продавець** | Продавець продає товари. |\n\n**Лікар** (doctor) is a respected profession. **Вчитель** (teacher) shapes the future. **Інженер** (engineer) creates technology. **Програміст** (programmer) is a very popular job in Kyiv and Lviv. **Юрист** (lawyer) helps with legal issues. **Водій** (driver) is essential for transport.\n\n### The Workplace\n\nWhere do people work?\n\n- **офіс** — office: *Я працюю в офісі.*\n- **школа** — school: *Вона працює в школі.*\n- **лікарня** — hospital: *Він працює в лікарні.*\n- **фабрика** — factory: *Вони працюють на фабриці.*\n- **магазин** — shop/store: *Я йду в магазин.*\n- **компанія** — company: *Це велика компанія.*\n\nNotice the prepositions: **в** офісі, **в** школі, **в** лікарні, але **на** фабриці (open space/process).\n\n> [!cultural] **History Bite** The Antonov Giants\n> Ukraine is the home of the world's largest aircraft, the **An-225 Mriya** (\"Dream\"). It was designed and built by the Antonov Design Bureau in Kyiv. This engineering marvel symbolizes Ukrainian technical prowess and ambition.\n\n### Work Verbs\n\nTo describe what you do, use these verbs:\n\n- **працювати** — to work: *Я працюю багато.*\n- **заробляти** — to earn: *Він заробляє добре.*\n- **керувати** — to manage/drive: *Директор керує компанією.*\n- **звільнити** — to fire: *Його звільнили.*\n- **найняти** — to hire: *Компанія найняла нових людей.*\n\n### Career & Business\n\n- **кар'єра** — career: *Вона будує кар'єру.*\n- **зарплата** — salary: *У мене висока зарплата.*\n- **відпустка** — vacation/leave: *Я хочу у відпустку.*\n- **колега** — colleague: *Мій колега допоміг мені.*\n- **клієнт** — client: *Клієнт завжди правий.*\n- **начальник** — boss: *Мій начальник суворий.*\n\n> [!cultural] **Cultural Insight** Salary Talk\n> In Ukraine, it is not taboo to discuss **зарплата** (salary) with close friends, but avoided in polite formal conversation. However, complaining about low salary is a national sport!\n\n### Business Etiquette\n\nWhen working in Ukraine, formality is often valued. In a corporate setting, use **Ви** (formal You) with colleagues until invited to use **ти** (informal You). Handshakes are firm. Direct eye contact shows confidence and honesty (**чесність**).\n\nPunctuality is expected, though social meetings might have a \"flexible\" start time. Gifts (like chocolates or alcohol) are common for business partners, but strictly optional. Understanding these nuances will help you build strong professional relationships.\n\n### Dialogue: At the Interview\n\n— Доброго дня. Розкажіть про себе.\n— Доброго дня. Мене звати Андрій. Я — програміст.\n— Де ви працювали раніше?\n— Я працював у великій ІТ-компанії.\n— Чому ви хочете працювати у нас?\n— Ваша компанія дуже успішна. Мені подобаються ваші проєкти.\n— Чудово. Яка зарплата вас цікавить?\n— Я хочу заробляти гідно.\n— Ми пропонуємо хороші умови і відпустку.\n— Дякую. Коли я можу почати?\n\n## Practice\n\n### Describing Your Job\n\nUse **працювати** + **ким** (instrumental):\n- *Я працюю лікарем.* (I work as a doctor.)\n- *Вона працює вчителем.* (She works as a teacher.)\n\nOr simply **бути** + **ким** (instrumental):\n- *Він є директором.* (He is a director.)\n\nWait, normally we say: *Я — лікар* (Nominative) for simple ID. But describing function/status often involves Instrumental.\n\n> [!note] Nominative vs Instrumental\n> *Я — лікар* (Nominative) names who you are.\n> *Я працюю лікарем* (Instrumental) describes your function.\n> Both are common, but Instrumental is safer with verbs.\n\n### Story Time: The Successful Start-up\n\nОлег був талановитим інженером. Він працював на заводі, але мріяв про власний бізнес. Його друг, Максим, був програмістом. Він працював в офісі і отримував високу зарплату.\n\nОдного дня Олег сказав:\n— Максиме, давай відкриємо свою компанію!\n— Але це ризик, — відповів Максим. — Нам потрібен хороший менеджер.\n\nВони знайшли Ірину. Вона була чудовим менеджером. Разом вони створили стартап. Вони працювали вдень і вночі.\n\nСпочатку було важко. Клієнтів було мало. Зарплата була низька. Але вони вірили в успіх. Ірина знайшла першого великого клієнта. Це був закордонний магазин.\n\n— Ми це зробили! — раділи колеги.\n\nТепер їхня компанія відома. Вони наймають нових працівників. У них гарний офіс і довга відпустка. Успішна кар'єра — це результат важкої праці!\n\n### Story Time: A Day at the Hospital\n\nОлена працює лікарем у міській лікарні. Її робота дуже важлива і відповідальна. Щоранку вона приходить у свій кабінет.\n\n— Доброго ранку, колего! — вітає її медсестра.\n— Доброго ранку! Скільки у нас пацієнтів сьогодні?\n— Дуже багато. Всі хочуть бути здоровими.\n\nОлена оглядає хворих. Вона уважна і добра. Пацієнти люблять її.\n\n— Дякую, лікарю! — каже старенька жінка. — Ви мені дуже допомогли.\n\nОлена любить свою професію. Зарплата не дуже висока, але моральне задоволення — величезне. Допомагати людям — це найкраща робота у світі.\n\nВвечері Олена йде додому втомлена, але щаслива. Завтра буде новий день і нові виклики.\n\n### Story Time: The Dream Job\n\nАндрій завжди хотів бути пілотом. У дитинстві він дивився на небо і мріяв.\n\n— Я буду літати! — казав він мамі.\n— Це хороша мрія, — відповідала вона. — Але треба багато вчитися.\n\nАндрій вчився старанно. Він знав математику і фізику. Після школи він пішов в університет. Це було важко. Інші студенти гуляли, а Андрій читав книги.\n\nРоки минали. Андрій став дорослим. Він знайшов роботу в авіакомпанії. Спочатку він був помічником. Він працював в офісі в аеропорту. Зарплата була мала, але він був близько до літаків.\n\nОдного разу головний пілот захворів.\n\n— Хто може допомогти? — запитав директор.\n— Я знаю систему! — сказав Андрій.\n\nВін не полетів (він ще не був пілотом), але він допоміг команді на землі. Директор побачив його талант.\n\n— Ти розумний хлопець, — сказав начальник. — Ми оплатимо твоє навчання на пілота.\n\nАндрій був щасливий! Його кар'єра почалася. Тепер він літає в різні країни. Він бачить світ. Він любить свою роботу. Коли він у небі, він відчуває свободу.\n\nЙого колеги поважають його. Він — професіонал. Іноді він згадує той день в офісі. Шлях до мрії був довгим, але результат того вартий.\n\n> [!tip] Talking about Future Plans\n> Use **хотіти бути** + instrumental: *Я хочу бути лікарем*. This expresses your professional goal.\n\n# Summary\n\nYou learned to:\n- Name professions: **лікар**, **вчитель**, **інженер**, **програміст**\n- Describe workplaces: **офіс**, **школа**, **лікарня**, **фабрика**\n- Use work verbs: **працювати**, **заробляти**, **керувати**\n- Discuss career: **зарплата**, **відпустка**, **колега**\n\nWork is not just about money; it's about passion and contribution. Whether you are a lawyer or a driver, your work matters. Keep learning Ukrainian to expand your professional horizons!\n",
+    "createdAt": "2026-01-04T21:33:28.297415Z",
+    "modifiedAt": "2026-01-04T21:33:28.297415Z",
     "version": 2
   },
   "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A2-48",
     "level": "A2",
-    "phase": "A2",
-    "wordCount": 11,
-    "newWordCount": 11,
+    "phase": "A2.1",
+    "wordCount": 0,
+    "newWordCount": 0,
     "reviewWordCount": 0,
     "transliterationMode": "none",
-    "words": [
+    "words": [],
+    "reviewWords": []
+  },
+  "external_resources": {
+    "podcasts": [
       {
-        "id": "vocab-1",
-        "uk": "фабрика",
-        "ipa": "/ˈfɑbrɪkɑ/",
-        "en": "factory",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
+        "episode_id": "FMU-034",
+        "title": "Professions in Ukrainian (male and female forms)",
+        "url": "https://www.ukrainianlessons.com/fmu34/",
+        "relevance": "medium",
+        "match_reason": "Listening review (A1): professions"
       },
       {
-        "id": "vocab-2",
-        "uk": "компанія",
-        "ipa": "/komˈpɑnʲijɑ/",
-        "en": "company",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
+        "episode_id": "ULP-008",
+        "title": "ULP 1-08 Talking about jobs and professions in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/8/",
+        "relevance": "medium",
+        "match_reason": "Listening review (A1): professions"
       },
       {
-        "id": "vocab-3",
-        "uk": "керувати",
-        "ipa": "/keruˈwɑtɪ/",
-        "en": "to manage",
-        "pos": "verb",
-        "gender": null,
-        "note": "+ instr"
-      },
-      {
-        "id": "vocab-4",
-        "uk": "звільнити",
-        "ipa": "/zwilʲˈnɪtɪ/",
-        "en": "to fire",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-5",
-        "uk": "найняти",
-        "ipa": "/nɑjˈnʲɑtɪ/",
-        "en": "to hire",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-6",
-        "uk": "кар'єра",
-        "ipa": "/kɑrˈjɛrɑ/",
-        "en": "career",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-7",
-        "uk": "зарплата",
-        "ipa": "/zɑrˈplɑtɑ/",
-        "en": "salary",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-8",
-        "uk": "професія",
-        "ipa": "/proˈfɛsʲijɑ/",
-        "en": "profession",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-9",
-        "uk": "клієнт",
-        "ipa": "/klʲiˈjɛnt/",
-        "en": "client",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-10",
-        "uk": "начальник",
-        "ipa": "/nɑˈtʃɑlʲnɪk/",
-        "en": "boss",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-11",
-        "uk": "зайнятий",
-        "ipa": "/ˈzɑjnʲɑtɪj/",
-        "en": "busy/occupied",
-        "pos": "adj",
-        "gender": "m",
-        "note": ""
+        "episode_id": "FMU-035",
+        "title": "Vocabulary booster! Jobs and professions in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/fmu35/",
+        "relevance": "medium",
+        "match_reason": "Listening review (A1): professions"
       }
     ],
-    "reviewWords": []
+    "youtube": [],
+    "articles": [
+      {
+        "title": "Ukrainian Grammar",
+        "url": "https://www.ukrainianlessons.com/ukrainian-tenses/",
+        "relevance": "high",
+        "source": "Grammar overview"
+      }
+    ],
+    "books": [],
+    "websites": [
+      {
+        "title": "Talk Ukrainian",
+        "url": "https://talkukrainian.com/",
+        "relevance": "high",
+        "source": "Practice exercises"
+      }
+    ]
   }
 }

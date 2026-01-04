@@ -121,6 +121,11 @@ items:
   translation: grandeur, greatness
   pos: noun
   gender: f
+- lemma: читач
+  ipa: /t͡ʃɪˈtat͡ʃ/
+  translation: reader
+  pos: noun
+  gender: m
 - lemma: слухач
   ipa: /sluˈxat͡ʃ/
   translation: listener, student

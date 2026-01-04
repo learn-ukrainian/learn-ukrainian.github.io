@@ -1,19 +1,30 @@
 # Audit Report: 43-correlative-constructions.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "TTT" | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.2 | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (4 words): тоді, стільки, неначе, туди...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 1 pedagogical violations (minor)
+- Activity count below minimum
 
 ## Gates
-- **Words:** ✅ 1815/1750
-- **Activities:** ✅ 14/14
+- **Words:** ✅ 1784/1750
+- **Activities:** ❌ 13/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 36/35
+- **Vocab:** ✅ 53/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.6% (target 98-100% (vocab))
 - **Richness:** ✅ 95% (grammar)
 - **Grammar:** ⏳ Pending validation
@@ -31,22 +42,16 @@
 | variety | 0.92 | - | 92% | 10% | 9.2% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 15 | 3 | 100% | 5% | 5.0% |
+| visual | 14 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 13 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.9%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Співвідносні конструкції** | ⚪️ | 87 | Skipped |
+| **Intro/Narrative** | ✅ | 56 | Included in Core |
 | **Тест: Прочитайте текст** | ✅ | 210 | Included in Core |
 | **Пояснення** | ⚪️ | 751 | Skipped |
 | **Практика** | ⚪️ | 358 | Skipped |
@@ -54,4 +59,3 @@
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Ключові моменти** | ⚪️ | 75 | Skipped |
 | **Самооцінка** | ⚪️ | 74 | Skipped |
-| **Словник** | ⚪️ | 0 | Skipped |

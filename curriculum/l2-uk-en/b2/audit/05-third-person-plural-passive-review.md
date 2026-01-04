@@ -1,19 +1,29 @@
 # Audit Report: 05-third-person-plural-passive.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "TTT" | **Target:** 1750
+**Phase:** B2.1a | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): показали, вручили, дозволили, написали, порадили...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
-- **Words:** ✅ 1811/1750
-- **Activities:** ✅ 16/14
+- **Words:** ✅ 1794/1750
+- **Activities:** ✅ 15/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 123/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.7% (target 98-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
 - **Grammar:** ⏳ Pending validation
@@ -31,26 +41,19 @@
 | variety | 0.97 | - | 97% | 10% | 9.7% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 9 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
+| visual | 6 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.77 | - | 77% | 5% | 3.9% |
 | questions | 48 | 5 | 100% | 5% | 5.0% |
 | proverbs | 3 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **98.5%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (16 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Третя особа множини як пасив** | ⚪️ | 62 | Skipped |
+| **Intro/Narrative** | ✅ | 45 | Included in Core |
 | **Тест: Прочитайте текст** | ✅ | 158 | Included in Core |
 | **Пояснення** | ⚪️ | 612 | Skipped |
 | **Практика** | ⚪️ | 311 | Skipped |
 | **Діалоги** | ✅ | 524 | Included in Core |
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Що ви вивчили** | ⚪️ | 144 | Skipped |
-| **Словник** | ⚪️ | 0 | Skipped |

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 3602/3500
+- **Words:** ✅ 3649/3500
 - **Activities:** ✅ 0/0
 - **Density:** ✅ All > 0
 - **Unique_types:** ✅ 0/0 types
@@ -14,6 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 95-100%)
 - **Richness:** ✅ 97% (literature)
 - **Grammar:** ⏳ Pending validation
@@ -41,7 +42,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 34 | Included in Core |
-| **Summary** | ✅ | 66 | Included in Core |
+| **Підсумок** | ✅ | 113 | Included in Core |
 | **Частина I: Час Руїни: Анатомія Національної Катастрофи** | ⚪️ | 51 | Skipped |
 | **1. Політична Смерть: Хроніка Вбивства (1764–1783) 🕯️** | ⚪️ | 460 | Skipped |
 | **2. Інтелектуальний Вакуум і Мовна Шизофренія** | ⚪️ | 189 | Skipped |

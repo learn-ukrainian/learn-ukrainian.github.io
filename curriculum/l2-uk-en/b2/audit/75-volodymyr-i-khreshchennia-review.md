@@ -1,20 +1,30 @@
 # Audit Report: 75-volodymyr-i-khreshchennia.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "CBI" | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.3a | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Граматика в історичних реченнях' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 4/16 items with placeholders/missing errors.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1821/1750
-- **Activities:** ✅ 14/14
-- **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Words:** ✅ 1756/1400
+- **Activities:** ✅ 13/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/6
+- **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/35
+- **Vocab:** ✅ 122/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.8% (target 98-100% (vocab))
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ⚠️ Too many activities: 13 (target 10-12)
+- **Immersion:** 🇺🇦 99.8% (target 98-100% (history))
 - **Richness:** ✅ 98% (content)
 - **Grammar:** ⏳ Pending validation
 
@@ -26,7 +36,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 33 | 15 | 100% | 25% | 25.0% |
-| engagement | 8 | 5 | 100% | 19% | 18.7% |
+| engagement | 11 | 5 | 100% | 19% | 18.7% |
 | variety | 0.95 | - | 95% | 12% | 11.9% |
 | cultural | 5 | 4 | 100% | 12% | 12.5% |
 | realworld | 6 | 3 | 100% | 12% | 12.5% |
@@ -38,7 +48,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Володимир і хрещення — 988 рік** | ⚪️ | 57 | Skipped |
+| **Intro/Narrative** | ✅ | 57 | Included in Core |
 | **Вступ** | ⚪️ | 163 | Skipped |
 | **Князь Володимир: від язичника до святого** | ⚪️ | 365 | Skipped |
 | **Корсунський похід і шлюб із Анною** | ⚪️ | 264 | Skipped |
@@ -46,5 +56,3 @@
 | **Деколонізаційний погляд** | ⚪️ | 278 | Skipped |
 | **Значення хрещення для культури** | ✅ | 291 | Included in Core |
 | **Підсумок** | ✅ | 87 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |
-| **Ресурси** | ⚪️ | 65 | Skipped |

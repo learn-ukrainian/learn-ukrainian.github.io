@@ -1,28 +1,32 @@
 # Audit Report: 51-idioms-body.md
 **Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): щирий, брати, п'ята, емоція, серце...
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Знайди помилку' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 1/8 items with placeholders/missing errors.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): камінь, щирий, душа, емоція, біль...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 10/100)
+**📝 UPDATE** (severity 25/100)
 
-- 1 pedagogical violations (minor)
+- 2 pedagogical violations (minor)
+- Activity count below minimum
 
 ## Gates
 - **Words:** ✅ 1865/1750
-- **Activities:** ✅ 14/14
+- **Activities:** ❌ 13/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 102/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.7% (target 98-100% (vocab))
 - **Richness:** ✅ 99% (content)
 - **Grammar:** ⏳ Pending validation
@@ -49,8 +53,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 64 | Included in Core |
 | **Вступ: Емоційний ландшафт** | ⚪️ | 238 | Skipped |
-| **Частина 1: Душа — Дзеркало внутрішнього світу** | ⚪️ | 411 | Skipped |
-| **Частина 2: Серце — Центр болю та співчуття** | ⚪️ | 179 | Skipped |
+| **Частина 1: Душа — Дзеркало внутрішнього світу** | ✅ | 411 | Included in Core |
+| **Частина 2: Серце — Центр болю та співчуття** | ✅ | 179 | Included in Core |
 | **Культурний код: Кордоцентризм** | ✅ | 160 | Included in Core |
 | **Фольклор і Пісні** | ⚪️ | 113 | Skipped |
 | **Вживання у контексті: Практика** | ✅ | 317 | Included in Core |

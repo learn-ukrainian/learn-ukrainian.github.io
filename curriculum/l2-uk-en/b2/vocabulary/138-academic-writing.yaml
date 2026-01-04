@@ -1,0 +1,128 @@
+config:
+  standard: '2024'
+items:
+  - lemma: есе
+    ipa: /ɛˈsɛ/
+    translation: essay
+    pos: noun
+    gender: n
+  - lemma: твір
+    ipa: /tʋʲir/
+    translation: work, composition
+    pos: noun
+    gender: m
+  - lemma: структура
+    ipa: /strukˈturɐ/
+    translation: structure
+    pos: noun
+    gender: f
+  - lemma: вступ
+    ipa: /ʍstup/
+    translation: introduction
+    pos: noun
+    gender: m
+  - lemma: основна частина
+    ipa: /osˈnɔu̯nɐ t͡ʃɐsˈtɪnɐ/
+    translation: body (of a text)
+    pos: noun
+    gender: f
+  - lemma: висновок
+    ipa: /ˈʋɪsnɔʋok/
+    translation: conclusion
+    pos: noun
+    gender: m
+  - lemma: теза
+    ipa: /ˈtɛzɐ/
+    translation: thesis, point
+    pos: noun
+    gender: f
+  - lemma: аргумент
+    ipa: /ɐrɦuˈmɛnt/
+    translation: argument
+    pos: noun
+    gender: m
+  - lemma: контраргумент
+    ipa: /kontrɐrɦuˈmɛnt/
+    translation: counterargument
+    pos: noun
+    gender: m
+  - lemma: приклад
+    ipa: /ˈprɪkɫɐd/
+    translation: example
+    pos: noun
+    gender: m
+  - lemma: цитата
+    ipa: /t͡sɪˈtɑtɐ/
+    translation: quotation, citation
+    pos: noun
+    gender: f
+  - lemma: джерело
+    ipa: /d͡ʒɛˈrɛɫɔ/
+    translation: source
+    pos: noun
+    gender: n
+  - lemma: посилання
+    ipa: /poˈsɪɫɐnnʲɐ/
+    translation: reference, link
+    pos: noun
+    gender: n
+  - lemma: плагіат
+    ipa: /pɫɐɦʲiˈɑt/
+    translation: plagiarism
+    pos: noun
+    gender: m
+  - lemma: академічна доброчесність
+    ipa: /ɐkɐdɛˈmʲit͡ʃnɐ dɔbrɔˈt͡ʃɛsʲnʲisʲtʲ/
+    translation: academic integrity
+    pos: noun
+    gender: f
+  - lemma: методологія
+    ipa: /mɛtɔdɔˈɫɔɦʲijɐ/
+    translation: methodology
+    pos: noun
+    gender: f
+  - lemma: гіпотеза
+    ipa: /ɦʲiˈpɔtɛzɐ/
+    translation: hypothesis
+    pos: noun
+    gender: f
+  - lemma: аналіз
+    ipa: /ɐˈnɑlʲiz/
+    translation: analysis
+    pos: noun
+    gender: m
+  - lemma: синтез
+    ipa: /ˈsɪntɛz/
+    translation: synthesis
+    pos: noun
+    gender: m
+  - lemma: об’єктивність
+    ipa: /obɛkˈtɪu̯nʲisʲtʲ/
+    translation: objectivity
+    pos: noun
+    gender: f
+  - lemma: суб’єктивність
+    ipa: /subɛkˈtɪu̯nʲisʲtʲ/
+    translation: subjectivity
+    pos: noun
+    gender: f
+  - lemma: актуальність
+    ipa: /ɐktuˈalʲnʲisʲtʲ/
+    translation: relevance, topicality
+    pos: noun
+    gender: f
+  - lemma: анотація
+    ipa: /ɐnɔˈtɑt͡sʲijɐ/
+    translation: annotation, abstract
+    pos: noun
+    gender: f
+  - lemma: резюме
+    ipa: /rɛzʲuˈmɛ/
+    translation: summary, resume
+    pos: noun
+    gender: n
+  - lemma: бібліографія
+    ipa: /bʲiblʲiɔˈɦrɑfʲijɐ/
+    translation: bibliography
+    pos: noun
+    gender: f

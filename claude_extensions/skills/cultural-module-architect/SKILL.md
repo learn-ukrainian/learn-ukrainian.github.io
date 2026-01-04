@@ -21,10 +21,10 @@ Create or review cultural modules using the appropriate level-specific template.
 
 ## Template Locations
 
-| Level | Template | Modules |
-|-------|----------|---------|
-| B1 | `docs/l2-uk-en/templates/b1-cultural-module-template.md` | M71-80 |
-| C1 | `docs/l2-uk-en/templates/c1-folk-culture-module-template.md` | Various |
+| Level | Template                                                     | Modules |
+| ----- | ------------------------------------------------------------ | ------- |
+| B1    | `docs/l2-uk-en/templates/b1-cultural-module-template.md`     | M71-80  |
+| C1    | `docs/l2-uk-en/templates/c1-folk-culture-module-template.md` | Various |
 
 **CRITICAL:** Read the template BEFORE creating a module.
 
@@ -44,13 +44,13 @@ Detects: Russianisms, surzhyk, calques, agreement/case errors.
 
 ## Cultural Module Characteristics
 
-| Aspect | Grammar/Vocab Module | Cultural Module |
-|--------|---------------------|-----------------|
-| Focus | Language structure | Cultural content |
-| Content | Constructed examples | Authentic materials |
-| Reading | Short examples | Extended passages (3+) |
-| Activities | All types | Comprehension emphasis |
-| Resources | Optional | **MANDATORY** |
+| Aspect     | Grammar/Vocab Module | Cultural Module        |
+| ---------- | -------------------- | ---------------------- |
+| Focus      | Language structure   | Cultural content       |
+| Content    | Constructed examples | Authentic materials    |
+| Reading    | Short examples       | Extended passages (3+) |
+| Activities | All types            | Comprehension emphasis |
+| Resources  | Optional             | **MANDATORY**          |
 
 ---
 
@@ -59,6 +59,7 @@ Detects: Russianisms, surzhyk, calques, agreement/case errors.
 ### 1. Contemporary Focus
 
 Focus on modern Ukraine (post-1991, especially 2014-present):
+
 - Eurovision victories
 - IT sector achievements
 - Contemporary artists and filmmakers
@@ -67,6 +68,7 @@ Focus on modern Ukraine (post-1991, especially 2014-present):
 ### 2. Regional Balance
 
 Include all regions of Ukraine:
+
 - West (Lviv, Zakarpattia)
 - East (Kharkiv, Donetsk)
 - South (Odesa, Kherson)
@@ -75,6 +77,7 @@ Include all regions of Ukraine:
 ### 3. Authentic Materials
 
 Use real Ukrainian sources:
+
 - Wikipedia (Ukrainian)
 - News articles
 - Cultural commentary
@@ -83,11 +86,13 @@ Use real Ukrainian sources:
 ### 4. No Stereotypes
 
 **Avoid:**
+
 - "All Ukrainians love borscht"
 - Oversimplified national character
 - Soviet-era framing
 
 **Do:**
+
 - Show diversity and complexity
 - Name real people and achievements
 - Present multiple perspectives
@@ -96,15 +101,49 @@ Use real Ukrainian sources:
 
 ## Activity Priorities
 
-| Priority | Activity Types | Purpose |
-|----------|---------------|---------|
-| **HIGH** | quiz (10+) | Reading comprehension |
-| **HIGH** | true-false (10+) | Fact verification |
-| **HIGH** | match-up (12+) | People/places/terms |
-| **HIGH** | cloze (14+) | Extended passage |
-| **MEDIUM** | group-sort (16+) | Categorization |
-| **MEDIUM** | select (8+) | Multiple correct |
-| **LOW** | unjumble, translate | Production |
+| Priority   | Activity Types      | Purpose               |
+| ---------- | ------------------- | --------------------- |
+| **HIGH**   | quiz (10+)          | Reading comprehension |
+| **HIGH**   | true-false (10+)    | Fact verification     |
+| **HIGH**   | match-up (12+)      | People/places/terms   |
+| **HIGH**   | cloze (14+)         | Extended passage      |
+| **MEDIUM** | group-sort (16+)    | Categorization        |
+| **MEDIUM** | select (8+)         | Multiple correct      |
+| **LOW**    | unjumble, translate | Production            |
+
+---
+
+## CRITICAL: Language Testing, Not Content Recall
+
+<critical>
+
+**The Golden Rule:** "Can the learner answer this without reading the Ukrainian text?"
+
+- **If YES** → Rewrite (tests cultural knowledge)
+- **If NO** → Keep (tests Ukrainian comprehension)
+
+</critical>
+
+### Activity Requirements (10-12 total for C1 Folk/Arts)
+
+| Activity Type    | Count | Key Requirement                              |
+| ---------------- | ----- | -------------------------------------------- |
+| quiz             | 4-5   | MUST start with "Згідно з текстом..."        |
+| fill-in/cloze    | 3-4   | Test collocations from cultural vocabulary   |
+| error-correction | 2-3   | Fix GRAMMAR errors, NOT factual inaccuracies |
+| match-up         | 1-2   | Ukrainian term ↔ Ukrainian definition        |
+
+### Forbidden Patterns
+
+❌ "У якому році [event]?"  
+❌ "Хто створив [work]?"  
+❌ "Де розташований [place]?"
+
+### Required Patterns
+
+✅ "Згідно з текстом, як автор характеризує..."  
+✅ "У тексті модуля автор підкреслює..."  
+✅ "Які особливості автор виділяє..."
 
 ---
 

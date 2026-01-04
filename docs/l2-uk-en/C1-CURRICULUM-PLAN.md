@@ -22,6 +22,16 @@ At C1, the learner is no longer "studying" Ukrainian but "studying IN" Ukrainian
 2.  **Comparative Analysis:** A core pedagogical tool. Learners must compare multiple texts (e.g., a poem vs. a critique, or two opposing political articles) to develop critical thinking.
 3.  **Writing Support:** All writing tasks (Essays, Critiques, Reports) **MUST include a Model Answer** to demonstrate the expected C1 register and structure.
 
+### Advanced Activity Types (C1 Standard)
+To meet the "Studying IN Ukrainian" philosophy, C1 modules must integrate these advanced production tasks:
+
+| Type | Description | Requirement |
+|------|-------------|-------------|
+| **[essay-response]** | Long-form argumentation (400+ words) | Must include Rubric & Model Answer |
+| **[critical-analysis]** | Deconstructs bias, tone, and rhetorical structure | Focus on "how" not just "what" |
+| **[comparative-study]** | Side-by-side analysis of 2+ texts/perspectives | Mandatory for all LIT modules |
+| **[authorial-intent]** | Evaluates author's purpose and hidden agendas | Uses "Prosecutor's Voice" strategy |
+
 > **Note on Activities:** The "Signature Activity Concepts" listed below are **mandatory pedagogical anchors**. The Module Architect must generate additional activities to meet the **minimum target of 16+ activities per module** (C1 standard).
 
 ---

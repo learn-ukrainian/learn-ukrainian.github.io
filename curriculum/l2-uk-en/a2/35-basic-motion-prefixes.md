@@ -1,100 +1,278 @@
-# Summary
+# Вступ
 
-## The Logic of Movement 🌍
+## Система префіксів руху
 
-> 🧭
+> 🧭 **Префікси = GPS для дієслів**
 
-In English, we often rely on separate adverbs or prepositions to show direction: we "go **in**", "walk **out**", or "drive **into**" a parking lot. In Ukrainian, this logic is encapsulated within the verb itself through a powerful system of **prefixes**. This is the core of Slavic word formation. By snapping a small block (the prefix) onto the front of a base verb, you create a new, precise concept with its own directional vector. Think of the prefix as the "GPS instruction" built into the DNA of the action. This allows for extreme precision in describing spatial transitions without needing a huge vocabulary of separate roots.
+English uses separate words for direction: go **in**, walk **out**, drive **into**.
+Ukrainian builds direction INTO the verb with prefixes!
 
-Today, we focus on the most fundamental pair of opposites in the directional universe: **В- (Into)** and **ВИ- (Out)**. 
-
-### Core Prefixes: The Inbound/Outbound Switch
+**Базова пара: В- (into) і ВИ- (out)**
 
 | Prefix | Meaning | Base Verb | New Verb | Result |
 | :--- | :--- | :--- | :--- | :--- |
-| **В- / У-** | **Into** | йти/їхати | **в**війти / **в**'їхати | Inside the space |
-| **ВИ-** | **Out** | йти/їхати | **ви**йти / **ви**їхати | Outside the space |
+| **В- / У-** | **Into** | йти/їхати | **в**війти / **в**'їхати | Усередині |
+| **ВИ-** | **Out** | йти/їхати | **ви**йти / **ви**їхати | Назовні |
 
-### The "Apostrophe" Rule for Wheels
-When you add the prefix **в-** to the verb **їхати** (to drive), the meeting of the consonant "в" and the vowel "ї" requires a hard stop in pronunciation. We represent this with an apostrophe: **в'їхати**. Without it, the sounds would blur together in a way that is unnatural to the Ukrainian phonetic system. When you say **в'їхати**, imagine hitting a tiny pause right after the "v" before saying "yi-khaty." This preserves the independence of the prefix and the root, which is a key feature of Ukrainian phonetics.
+**Приклади:**
+- Я **ввійшов** у кімнату. (I entered the room.)
+- Він **вийшов** з будинку. (He exited the house.)
+- Машина **в'їхала** на парковку. (Car drove onto parking lot.)
+- Вона **виїхала** з міста. (She drove out of the city.)
 
----
+### Апостроф з їхати
 
-## The Morphological Shift: From Process to Result
+**в** + **їхати** = **в'їхати** (apostrophe needed!)
 
-What is the deeper reason for using these prefixes? Can't we just use the base verbs and add prepositions like in English? While "Я йшов у будинок" (I was walking into the house) is grammatically possible, it sounds incomplete and focuses only on the journey, not the transition. In Ukrainian, the goal of movement is usually shown by a deliberate shift in **Aspect**.
-
-1. **The Base Verb (Imperfective):** Verbs like **йти** (to walk) or **їхати** (to drive) describe the *process* of movement. They are like a continuous video stream. If you say "Я йшов," you are describing the act of moving your legs without telling us if you ever reached a destination or crossed a specific threshold. It is a state of being "in motion."
-2. **The Prefixed Verb (Perfective):** Adding a directional prefix such as **в-** or **ви-** does more than just add a vector; it flips the linguistic switch from "process" to "completion." These verbs are almost always **perfective**. They focus on the **boundary crossing** itself. You are either inside or outside. There is no middle ground in a perfective prefix; the moment you cross the line, the action is done and a new state is achieved.
-
-> [!important] The Perfective Power
-> A prefixed motion verb is a "result machine." If you use the word **вийшов** (exited), the listener immediately understands that you have successfully completed the act and are no longer in the room. This makes your communication much more efficient than in English, where you might need extra sentences or adverbs to prove you actually reached the outside and aren't still standing in the doorway.
+Апостроф зберігає чіткість вимови між префіксом і коренем.
 
 ---
 
-## Spatial Mapping: Prepositions & Cases
+## Aspect: Process → Result
 
-Directional prefixes are not solo players; they participate in a strict grammatical "agreement" with prepositions and cases. They act as signals for the noun (the destination) that follows, providing a triple-layered system of clarity.
+Why use prefixed verbs instead of just the base verb? The prefix changes the aspect from imperfective (process) to perfective (completed result).
 
-### 1. The Inbound Agreement (The "B" Path)
-Movement **into** something typically requires the preposition **в/на** followed by the **Accusative Case** (showing the target destination). This is the case of "Motion Toward."
-- **Ввійти в** кімнат**у** (Focus on the entry point into the enclosed room)
-- **В'їхати на** парковк**у** (Focus on the arrival on the open surface of the parking lot)
+**Base verbs (Imperfective):**
+- **йти** = walking process (ongoing action)
+- **їхати** = driving process (ongoing action)
+- Я **йшов** у будинок. (I was walking... but did I arrive? Unknown!)
 
-### 2. The Exit Pattern (ВИ- + з/із + Genitive)
-Movement **out of** something requires the preposition **з/із** followed by the **Genitive Case** (showing the point of separation or origin). This is the case of "Movement From."
-- **Вийти з** кімнат**и** (The physical separation from the enclosed room)
-- **Виїхати з** парковк**и** (The departure from the open parking area)
+**Prefixed verbs (Perfective):**
+- **ввійти** = RESULT: now inside! (action completed)
+- **вийти** = RESULT: now outside! (action completed)
+- Я **ввійшов** у будинок. (I entered = I'm now inside! Result achieved!)
 
-### The Harmonic Logic of Prepositions
+> [!important] Prefix = Result Machine
+>
+> **вийшов** (exited) → Listener understands: you are ALREADY outside, action complete!
+>
+> This is more efficient than English, which needs extra words to explain that you actually exited.
 
-Ukrainian grammar is not a collection of random rules; it is a system of **harmonic logic**. The directional prefix acts as a "pre-signal" to the brain, preparing it for the specific preposition and case that will follow. This redundancy ensures that the meaning is clear even in noisy environments.
+**Comparison:**
+- Я **йшов** з кімнати. (I was walking from the room — still walking?)
+- Я **вийшов** з кімнати. (I exited the room — I'm outside now!)
 
-| Vector | Prefix | Preposition | Case | Logic |
+---
+
+## Prefixes + Prepositions + Cases
+
+**Agreement system:** prefix signals which preposition and case come next.
+
+### 1. Motion INWARD (В- + в/на + Accusative)
+
+When moving INTO something, use prefix **В-** with preposition **в** or **на** + Accusative case.
+
+**В- + в + Accusative** (enclosed spaces like rooms, buildings, cities):
+- **Ввійти в** кімнат**у** (enter the room)
+- **Ввійти в** буд**инок** (enter the building)
+- **Ввійти в** мі́**сто** (enter the city)
+
+**В- + на + Accusative** (open spaces like streets, squares, parking lots):
+- **В'їхати на** парковк**у** (drive onto parking lot)
+- **Війти на** площ**у** (walk onto square)
+- **Ввійти на** вулиц**ю** (walk onto street)
+
+### 2. Motion OUTWARD (ВИ- + з/із + Genitive)
+
+When moving OUT OF something, use prefix **ВИ-** with preposition **з/із** + Genitive case.
+
+**ВИ- + з + Genitive** (both enclosed and open spaces):
+- **Вийти з** кімнат**и** (exit the room)
+- **Вийти з** буд**инку** (exit the building)
+- **Виїхати з** парковк**и** (drive out of parking lot)
+- **Вийти з** мі́**ста** (leave the city)
+
+### Таблиця узгодження
+
+| Direction | Prefix | Preposition | Case | Logic |
 | :--- | :--- | :--- | :--- | :--- |
-| **Inbound** | **В-** | **В / У** | Accusative | Movement into a container |
-| **Outbound** | **ВИ-** | **З / ІЗ** | Genitive | Movement out of a container |
-| **Onward** | **В'** | **НА** | Accusative | Movement onto a surface |
-| **Offward** | **ВИ-** | **З** | Genitive | Movement off a surface/area |
+| **Into** | **В-** | **В / У** | Accusative | Motion to target |
+| **Out of** | **ВИ-** | **З / ІЗ** | Genitive | Motion from source |
 
-> [!important] Case Hierarchy and Meta-Logic
-> Notice that for **ingress** (moving into), we use the **Accusative**, which is the case of direct impact and target. For **egress** (moving out), we use the **Genitive**, which is the case of origin and non-existence. Once you leave a room, you are "no longer of" that room. This logical alignment between prefix, preposition, and case is what gives Ukrainian its structural beauty and mathematical precision.
+> 💡 **Case Logic**
+>
+> **В + Accusative** = target, where we go (direct target)
+> **З + Genitive** = source, where we leave from (origin, "no longer of")
 
-### Which Preposition? Open vs. Enclosed Spaces
+### В or НА? Enclosed vs. Open Spaces
 
-A common challenge for learners is choosing between **В** and **На**. This distinction is often more psychological than physical in Ukrainian culture.
-- Use **В / З** for enclosed spaces like buildings, cities, countries, or forests. These are "vessels" you can be inside.
-- Use **На / З** for open spaces (the street, the square), events (concerts, meetings, work), or elevated surfaces (mountains, islands).
-- For people, we use **До / Від** (I go **to** Mom), as you cannot conceptually "enter" or "exit" a person's physical space with these prefixes without changing the fundamental meaning of the verbs.
+A common question: when to use **В** and when **НА**?
+
+**В / З** — enclosed spaces (containers you're inside):
+- будинок, кімната, місто, ліс, країна
+
+**НА / З** — open spaces, surfaces, events:
+- вулиця, площа, парковка
+- концерт, робота, гора, острів
+
+**Examples:**
+- Я **ввійшов** **у** будинок. (I entered the building.)
+- Він **вийшов** **з** будинку. (He exited the building.)
+- Вона **в'їхала** **на** парковку. (She drove onto the parking lot.)
+- Ми **виїхали** **з** парковки. (We drove out of the parking lot.)
 
 ---
 
-## Anti-Propaganda Showcase: The Urban Complexity
+## Urban Complexity
 
-> [!myth] Myth: "Ukrainian is just a simple rural dialect of Russian or Polish."
-> **The Verdict: Absolute Fiction.**
+### Міська складність
+
+Ukrainian's motion prefix system is sophisticated enough to describe complex navigation in modern cities like Kyiv. This is NOT a "simple village language"!
+
+Система префіксів руху в українській мові достатньо складна. Вона може описати складну навігацію в сучасних містах, як-от Київ. Це НЕ "проста сільська мова"!
+
+> 🌍 **Myth vs. Reality — Міф і реальність**
 >
-> **Linguistic Fact:** Ukrainian possesses a highly sophisticated and ancient system of motion prefixes that is far more nuanced than many dialects of other Slavic languages. This system allows for precise distinctions between "entering briefly" (**зайти**), "entering formally" (**увійти**), and "entering by transport" (**в'їхати**). This is the hallmark of a language developed for both complex rural logistics and high-level urban navigation.
+> **Myth:** "Ukrainian is a simple rural language."
 >
-> During the 19th and 20th centuries, imperial powers (both Tsarist and Soviet) attempted to marginalize Ukrainian as a "peasant language" by banning its use in urban science, engineering, and administration. However, the language's complex urban grammar—including its ability to describe intricate mechanical and logistical movements in a modern city like Kyiv—remained intact. When you ask a stranger, "**Як пройти до метро?**" (How to get to the metro?), you are using high-level prefix logic that proves the language's inherent status as a sophisticated urban and national tongue, capable of describing the most advanced modern infrastructure.
+> **Міф:** "Українська — проста сільська мова."
+>
+> **Fact:** Ukrainian has a highly developed motion prefix system!
+>
+> **Факт:** Українська має високорозвинену систему префіксів руху!
+>
+> **Examples of nuanced motion verbs:**
+>
+> **Приклади відтінкових дієслів руху:**
+>
+> - **зайти** — enter briefly, quick visit — увійти на коротко, швидкий візит
+> - **увійти** — enter formally, official entry — увійти офіційно, формальний вхід
+> - **в'їхати** — enter by vehicle, driving in — в'їхати на транспорті
+>
+> This system allows precise description of complex movements in modern cities like Kyiv.
+>
+> Ця система дозволяє точно описати складні рухи в сучасному місті як Київ.
+>
+> **Kyiv Dialogue — Київський діалог:**
+>
+> Real navigation in the city uses multiple prefixed verbs:
+>
+> Реальна навігація в місті використовує багато дієслів із префіксами:
+>
+> - Як **пройти** до метро? — How to get to the metro?
+> - **Ввійдіть** у той будинок, **підіть** на другий поверх, **вийдіть** через чорний вхід. — Enter that building, go to the 2nd floor, exit through the back entrance.
 
 ---
 
-## Narrative Context: The Great Departure
+## Практика
 
-**Read the story of a busy morning in Kyiv. Notice how every movement is defined by its boundary.**
+### Вправа 1: Формуйте дієслова з префіксами
 
-Сьогодні вранці Марко прокинувся пізно. Він швидко **вмився** і **зібрався**. О восьмій годині він **вийшов** зі своєї квартири. Він хотів піти в парк, але згадав, що в нього немає кави. Тому він **зайшов** у маленьке кафе на розі. В Україні "зайти" в кафе — це короткий візит, часто просто на п'ять хвилин, щоб щось купити або дізнатися.
+**Модель:** йти + В- → **ввійти** (to enter)
+
+1. йти + ВИ- → **вийти** (to exit)
+2. їхати + В'- → **в'їхати** (to drive in)
+3. їхати + ВИ- → **виїхати** (to drive out)
+4. йти + ЗА- → **зайти** (to pop in, quick visit)
+
+### Exercise 2: Choose the correct case
+
+**Model:** Я ввійшов ____ кімнату (у + Accusative)
+
+1. Він вийшов ____ будинку (з + Genitive)
+2. Вона в'їхала ____ парковку (на + Accusative)
+3. Ми виїхали ____ міста (з + Genitive)
+4. Вони ввійшли ____ магазин (у + Accusative)
+
+### Діалог: На вулиці
+
+— Вибачте, як **пройти** до метро?
+— **Ввійдіть** у той будинок, **підніміться** на другий поверх, потім **вийдіть** через задній вхід.
+— А потім?
+— **Вийдете** на площу. Метро прямо там.
+— Дякую!
+
+---
+
+## Morning in Kyiv 🌆
+
+## Ранок у Києві
+
+**Read the story. Pay attention to motion prefixes.**
+
+**Прочитайте оповідання. Зверніть увагу на префікси руху.**
+
+Сьогодні вранці Марко прокинувся пізно. Він швидко **вмився** і **зібрався**. О восьмій годині він **вийшов** зі своєї квартири.
+
+This morning Marko woke up late. He quickly washed up and got ready. At eight o'clock he **exited** his apartment.
+
+Він хотів піти в парк, але згадав, що в нього немає кави. Тому він **зайшов** у маленьке кафе на розі.
+
+He wanted to go to the park, but remembered he didn't have coffee. So he **popped into** a small cafe on the corner.
+
+> 💡 **зайти** — quick visit, brief entry — короткий візит, швидкий вхід (5 minutes)
 
 — Добрий день! — сказав він баристі. — Мені, будь ласка, велике лате.
 — Звичайно! — відповів хлопець.
 
-Раптом на вулиці почався дощ. Марко подивився у вікно. Люди швидко **заходили** в магазини та аптеки, щоб не змокнути. Велика машина **в'їхала** на тротуар, і водій почав вивантажувати продукти. Марко чекав, поки дощ закінчиться.
+"Good morning!" he said to the barista. "A large latte, please."
+"Of course!" the guy replied.
 
-Коли небо стало світлим, Марко **вийшов** з кафе зі своєю кавою. Тепер йому треба було поспішати. Він **увійшов** у метро "Золоті ворота". Це дуже глибока станція, тому він довго **спускався** ескалатором. Коли він приїхав на свою зупинку, він **вийшов** з вагону і **піднявся** на вулицю. День нарешті почався по-справжньому.
+Раптом на вулиці почався дощ. Марко подивився у вікно. Люди швидко **заходили** в магазини та аптеки, щоб не змокнути. Велика машина **в'їхала** на тротуар, і водій почав вивантажувати продукти.
 
-> [!cultural] History Bite: The Architecture of Entry
-> Many historical gates in Ukraine, like the **Golden Gate** (Золоті Ворота) in Kyiv, were designed not just for defense, but as symbolic points of **entry** for royalty and ambassadors. To **увійти** (enter) through these gates was a symbol of being accepted by the city's heart.
+Suddenly it started raining outside. Marko looked out the window. People quickly **ducked into** shops and pharmacies to avoid getting wet. A big truck **drove up onto** the sidewalk, and the driver started unloading products.
+
+Коли небо стало світлим, Марко **вийшов** з кафе зі своєю кавою. Тепер йому треба було поспішати.
+
+When the sky cleared up, Marko **exited** the cafe with his coffee. Now he needed to hurry.
+
+Він **увійшов** у метро "Золоті ворота". Це дуже глибока станція, тому він довго **спускався** ескалатором. Коли він приїхав на свою зупинку, він **вийшов** з вагону і **піднявся** на вулицю.
+
+He **entered** the "Golden Gate" metro station. It's a very deep station, so he rode the escalator down for a long time. When he arrived at his stop, he **exited** the train car and **went up** to the street.
+
+День нарешті почався по-справжньому! ☕
+
+The day had finally really begun! ☕
+
+> 🏛️ **Historical Note — Історична довідка**
+>
+> **Golden Gate** in Kyiv — a historic gateway for royal visits. To **enter** through these gates meant to be accepted by the city.
+>
+> **Золоті Ворота** в Києві — історична брама для королівських візитів. **Увійти** через ці ворота означало бути прийнятим містом.
+
+---
+
+# Summary
+
+## Що ви вивчили
+
+У цьому модулі ви опанували базові префікси руху **В-** (into) та **ВИ-** (out).
+
+**Ключові префікси:**
+
+| Префікс | Значення | Приклад | Переклад |
+| :--- | :--- | :--- | :--- |
+| **В- / У-** | Into | **ввійти** | enter |
+| **ВИ-** | Out | **вийти** | exit |
+| **В'-** | Drive into | **в'їхати** | drive in |
+| **ВИ-** | Drive out | **виїхати** | drive out |
+
+**Система узгодження:**
+
+**Рух УСЕРЕДИНУ:**
+- В- + **в/на** + **Accusative**
+- Я **ввійшов** **у** кімнату.
+- Машина **в'їхала** **на** парковку.
+
+**Рух НАЗОВНІ:**
+- ВИ- + **з/із** + **Genitive**
+- Він **вийшов** **з** будинку.
+- Ми **виїхали** **з** міста.
+
+**В чи НА?**
+- **В/У** + Accusative → закриті простори (будинок, місто, ліс)
+- **НА** + Accusative → відкриті простори (вулиця, площа, парковка)
+
+**Aspect:**
+- Base verb = PROCESS (йти, їхати)
+- Prefixed verb = RESULT (ввійти, вийти)
+
+> 💡 **Remember**
+>
+> Prefix + preposition + case = triple confirmation of direction!
+> This makes Ukrainian very precise and efficient.
+
+Тепер ви можете описати складні рухи в місті українською! 🚗🚶
 
 ---
 

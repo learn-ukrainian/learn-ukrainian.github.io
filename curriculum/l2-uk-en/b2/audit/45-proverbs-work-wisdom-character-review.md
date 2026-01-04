@@ -1,21 +1,22 @@
 # Audit Report: 45-proverbs-work-wisdom-character.md
 **Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): мудрість, плід, мовчання, терпіння, золото...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): терпіння, мудрість, робота, мовчання, характер...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 10/100)
+**📝 UPDATE** (severity 20/100)
 
 - 1 pedagogical violations (minor)
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1992/1750
-- **Activities:** ✅ 15/14
-- **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Activities:** ✅ 14/14
+- **Density:** ❌ 1 < 16
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/6
 - **Audio:** ℹ️ No audio
@@ -23,6 +24,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 98-100% (vocab))
 - **Richness:** ✅ 95% (content)
 - **Grammar:** ⏳ Pending validation
@@ -43,6 +45,12 @@
 | paragraph_var | 0.74 | - | 74% | 6% | 4.6% |
 | questions | 10 | 4 | 100% | 6% | 6.2% |
 | **TOTAL** | | | | | **95.5%** |
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Вставте прислів'я в контекст | cloze | 10 | 16 | Add 6 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

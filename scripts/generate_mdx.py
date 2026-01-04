@@ -401,8 +401,10 @@ def _yaml_cloze_to_jsx(activity: dict, title: str) -> str:
     # Parse blanks from passage: {answer|opt1|opt2|opt3}
     blanks = []
     blank_pattern = r'\{([^}]+)\}'
+    blank_counter = [0]  # Mutable counter for closure
 
     def replace_blank(match):
+        blank_counter[0] += 1
         parts = match.group(1).split('|')
         answer = parts[0] if parts else ''
         options = parts[1:] if len(parts) > 1 else [answer]
@@ -410,10 +412,11 @@ def _yaml_cloze_to_jsx(activity: dict, title: str) -> str:
         if answer not in options:
             options.insert(0, answer)
         blanks.append({
+            "index": blank_counter[0] - 1,  # 0-based index for React component
             "answer": escape_jsx(answer),
             "options": [escape_jsx(opt) for opt in options]
         })
-        return '___'
+        return f'[___:{blank_counter[0]}]'
 
     clean_passage = re.sub(blank_pattern, replace_blank, passage)
 
@@ -1284,13 +1287,34 @@ def has_morpheme_patterns(content: str) -> bool:
     Supports pattern types:
     - *prefix*rest (e.g., *при*йшов)
     - rest*suffix* (e.g., Чит*ач*)
-    - *wholeWord* (e.g., *Читач*)
-    - *multi-word phrase* (e.g., *Мені більше подобається*)
+
+    DOES NOT match mark-the-words patterns:
+    - space *word* space (e.g., " *другові* ")
+
+    Key distinction: Morpheme patterns have Cyrillic letters touching at least one asterisk.
     """
-    # Pattern: optional prefix + *morpheme/phrase* + optional suffix
-    # Morpheme can contain spaces for multi-word phrases
-    pattern = r'[а-яіїєґА-ЯІЇЄҐ]*\*[а-яіїєґА-ЯІЇЄҐ\s]+\*[а-яіїєґА-ЯІЇЄҐ]*'
-    return bool(re.search(pattern, content))
+    # Find all *...* patterns with context
+    # Check if Cyrillic letters are adjacent to the asterisks
+    # Morpheme: [а-я]*X* or *X*[а-я] (Cyrillic touching asterisk)
+    # Mark-the-words: [^а-я]*X*[^а-я] (no Cyrillic touching asterisks)
+
+    # Pattern: match *...* with one character before and after for context
+    matches = list(re.finditer(r'(.?)\*([а-яіїєґА-ЯІЇЄҐ\s]+)\*(.?)', content, re.IGNORECASE))
+
+    for match in matches:
+        before = match.group(1)  # Character before opening *
+        inside = match.group(2)  # Content between * *
+        after = match.group(3)   # Character after closing *
+
+        # Check if Cyrillic letter touches either asterisk
+        before_is_cyrillic = before and re.match(r'[а-яіїєґА-ЯІЇЄҐ]', before, re.IGNORECASE)
+        after_is_cyrillic = after and re.match(r'[а-яіїєґА-ЯІЇЄҐ]', after, re.IGNORECASE)
+
+        # Morpheme pattern: at least one side has Cyrillic touching the asterisk
+        if before_is_cyrillic or after_is_cyrillic:
+            return True
+
+    return False
 
 def parse_highlight_morphemes(content: str) -> HighlightMorphemesItem:
     """Parse morpheme highlighting content.
@@ -1494,6 +1518,16 @@ CALLOUT_MAP = {
     'conversation': {'type': 'note', 'icon': '💬', 'title': 'Conversation'},
     'summary': {'type': 'note', 'icon': '📋', 'title': 'Summary'},
     'solution': {'type': 'solution'},  # Collapsible answer reveal for checkpoints
+    'model-answer': {'type': 'success', 'icon': '✅', 'title': 'Model Answer'},
+    'rubric': {'type': 'info', 'icon': '📊', 'title': 'Rubric'},
+    'analysis': {'type': 'info', 'icon': '🧐', 'title': 'Analysis'},
+    'history-bite': {'type': 'info', 'icon': '🕰️', 'title': 'History Bite'},
+    'myth-buster': {'type': 'danger', 'icon': '🛡️', 'title': 'Myth Buster'},
+    'quote': {'type': 'note', 'icon': '📜', 'title': 'Quote'},
+    'context': {'type': 'info', 'icon': '🌍', 'title': 'Context'},
+    'legacy': {'type': 'tip', 'icon': '💎', 'title': 'Legacy'},
+    'reflection': {'type': 'info', 'icon': '🤔', 'title': 'Reflection'},
+    'source': {'type': 'note', 'icon': '📖', 'title': 'Source'},
 }
 
 def convert_callouts(content: str) -> str:
@@ -1506,7 +1540,8 @@ def convert_callouts(content: str) -> str:
         line = lines[i]
 
         # Check for callout start: > [!type] (may have leading whitespace)
-        callout_match = re.match(r'^(\s*)>\s*\[!(\w+)\]\s*(.*)', line)
+        # Allow hyphens in type (e.g. model-answer)
+        callout_match = re.match(r'^(\s*)>\s*\[!([\w-]+)\]\s*(.*)', line)
         if callout_match:
             indent = callout_match.group(1)  # Preserve indentation for output
             callout_type = callout_match.group(2).lower()
@@ -1739,12 +1774,8 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
         else:
             vocab_md = _vocab_items_to_markdown(vocab_items)
             
-        # Inject before Summary or at end
-        inject_match = re.search(r'\n(#{1,2}\s+(?:Summary|Підсумок))', body)
-        if inject_match:
-             body = body[:inject_match.start()] + '\n\n' + vocab_md + '\n' + body[inject_match.start():]
-        else:
-             body = body + '\n\n' + vocab_md
+        # Append to end of body (Standard Layout: Content -> Activities -> Vocabulary)
+        body = body + '\n\n' + vocab_md
 
     # Process activities
     if yaml_activities:
@@ -1757,8 +1788,9 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
             body,
             flags=re.MULTILINE
         )
-        # Find where to inject activities (before Vocabulary/Словник or Summary/Підсумок)
-        inject_match = re.search(r'\n(#{1,2}\s+(?:Vocabulary|Словник|Summary|Підсумок))', body)
+        # Find where to inject activities (before Vocabulary/Словник or Self-Assessment/External)
+        # Avoid injecting before Summary (Intro)
+        inject_match = re.search(r'\n(#{1,2}\s+(?:Vocabulary|Словник|Self-Assessment|Самооцінка|External|Зовнішні))', body)
         if inject_match:
             processed = body[:inject_match.start()] + '\n\n' + activities_jsx + '\n' + body[inject_match.start():]
         else:

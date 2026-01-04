@@ -127,7 +127,8 @@
 - type: quiz
   title: Aspect Formation
   items:
-  - question: Which common prefix is most frequently used to form the perfective aspect of the verb "читати"?
+  - question: Which common prefix is most frequently used to form the perfective aspect
+      of the verb "читати"?
     options:
     - text: про- (прочитати)
       correct: true
@@ -137,7 +138,8 @@
       correct: false
     - text: по- (почитати)
       correct: false
-  - question: Which common prefix is most frequently used to form the perfective aspect of the verb "писати"?
+  - question: Which common prefix is most frequently used to form the perfective aspect
+      of the verb "писати"?
     options:
     - text: на- (написати)
       correct: true
@@ -147,7 +149,8 @@
       correct: false
     - text: по- (пописати)
       correct: false
-  - question: What suffix is typically removed or changed to turn the imperfective verb "відкривати" into its perfective form?
+  - question: What suffix is typically removed or changed to turn the imperfective
+      verb "відкривати" into its perfective form?
     options:
     - text: -ва- (відкрити)
       correct: true
@@ -157,7 +160,8 @@
       correct: false
     - text: -а- (відкривати)
       correct: false
-  - question: Which of the following examples shows the "-ну-" suffix being used to indicate a single, quick action?
+  - question: Which of the following examples shows the "-ну-" suffix being used to
+      indicate a single, quick action?
     options:
     - text: гукнути (from гукати)
       correct: true
@@ -167,8 +171,8 @@
       correct: false
     - text: писати (from написати)
       correct: false
-  - question: What specific change occurs to the root vowel when transforming the imperfective verb "допомагати" into its
-      perfective form?
+  - question: What specific change occurs to the root vowel when transforming the
+      imperfective verb "допомагати" into its perfective form?
     options:
     - text: а → о (допомогти)
       correct: true
@@ -178,8 +182,8 @@
       correct: false
     - text: о → а (допомогти)
       correct: false
-  - question: What specific vowel change is observed when the imperfective verb "замітати" is transformed into the perfective
-      "замести"?
+  - question: What specific vowel change is observed when the imperfective verb "замітати"
+      is transformed into the perfective "замести"?
     options:
     - text: і → е (замести)
       correct: true
@@ -189,7 +193,8 @@
       correct: false
     - text: о → а (замести)
       correct: false
-  - question: Which of the following pairs is a classic example of a "suppletive pair" used to express aspect in Ukrainian?
+  - question: Which of the following pairs is a classic example of a "suppletive pair"
+      used to express aspect in Ukrainian?
     options:
     - text: говорити / сказати
       correct: true
@@ -199,7 +204,8 @@
       correct: false
     - text: робити / зробити
       correct: false
-  - question: What is the perfective counterpart of the irregular aspect pair involving the common Ukrainian verb "брати"?
+  - question: What is the perfective counterpart of the irregular aspect pair involving
+      the common Ukrainian verb "брати"?
     options:
     - text: взяти
       correct: true
@@ -209,8 +215,8 @@
       correct: false
     - text: заберу
       correct: false
-  - question: In the verb pair "купувати" and "купити," what morphological change is primarily responsible for the aspectual
-      difference?
+  - question: In the verb pair "купувати" and "купити," what morphological change
+      is primarily responsible for the aspectual difference?
     options:
     - text: Suffix change (-ува- vs -и-)
       correct: true
@@ -220,7 +226,8 @@
       correct: false
     - text: Consonant change in root
       correct: false
-  - question: What is the correct perfective form of the Ukrainian verb "бачити," meaning "to see" or "to catch sight of"?
+  - question: What is the correct perfective form of the Ukrainian verb "бачити,"
+      meaning "to see" or "to catch sight of"?
     options:
     - text: побачити
       correct: true
@@ -230,8 +237,8 @@
       correct: false
     - text: добачити
       correct: false
-  - question: What is the correct imperfective form that corresponds to the perfective Ukrainian verb "дати," meaning "to
-      give"?
+  - question: What is the correct imperfective form that corresponds to the perfective
+      Ukrainian verb "дати," meaning "to give"?
     options:
     - text: давати
       correct: true
@@ -241,7 +248,8 @@
       correct: false
     - text: наддати
       correct: false
-  - question: Which category of aspectual transformation does the verb pair "стрибати" and "стрибнути" belong to?
+  - question: Which category of aspectual transformation does the verb pair "стрибати"
+      and "стрибнути" belong to?
     options:
     - text: Aspectual Suffixes (-ну-)
       correct: true
@@ -453,68 +461,57 @@
     - цій
     - вулиці
     answer: Він раптом гукнув свого старого друга на цій вулиці
-- type: error-correction
+- type: fill-in
   title: Find the Perfective
   items:
   - sentence: читати → ___
-    error: ___
     answer: прочитати
     options:
     - читати
     - прочитати
     - начитати
     - зачитати
-    explanation: Про- prefix for completion.
   - sentence: писати → ___
-    error: ___
     answer: написати
     options:
     - писати
     - написати
     - пописати
     - списати
-    explanation: На- prefix for writing/creating.
   - sentence: робити → ___
-    error: ___
     answer: зробити
     options:
     - робити
     - зробити
     - проробити
     - наробити
-    explanation: З- prefix for completion.
   - sentence: давати → ___
-    error: ___
     answer: дати
     options:
     - давати
     - дати
     - подавати
     - надавати
-    explanation: Remove -ва-.
   - sentence: говорити → ___
-    error: ___
     answer: сказати
     options:
     - говорити
     - проговорити
     - сказати
     - заговорити
-    explanation: Suppletive pair — different roots!
   - sentence: брати → ___
-    error: ___
     answer: взяти
     options:
     - брати
     - пробрати
     - взяти
     - забрати
-    explanation: Suppletive pair — different roots!
 - type: mark-the-words
   title: Identify Perfective Verbs
   text: 'Click on PERFECTIVE verbs only.
 
-    Я *прочитав* книгу. Потім я *написав* рецензію. Він *сказав* правду. Вона довго говорила.
+    Я *прочитав* книгу. Потім я *написав* рецензію. Він *сказав* правду. Вона довго
+    говорила.
 
     ---
 

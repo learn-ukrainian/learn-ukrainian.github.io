@@ -1,0 +1,128 @@
+config:
+  standard: '2024'
+items:
+  - lemma: релігія
+    ipa: /rɛˈlʲiɦʲijɐ/
+    translation: religion
+    pos: noun
+    gender: f
+  - lemma: конфесія
+    ipa: /konˈfɛsʲijɐ/
+    translation: denomination, confession
+    pos: noun
+    gender: f
+  - lemma: християнство
+    ipa: /xrɪstɪˈjɑnstʋo/
+    translation: Christianity
+    pos: noun
+    gender: n
+  - lemma: православ’я
+    ipa: /prɐʋoˈsɫɑu̯jɐ/
+    translation: Orthodoxy
+    pos: noun
+    gender: n
+  - lemma: католицизм
+    ipa: /kɐtoɫɪˈt͡sɪzm/
+    translation: Catholicism
+    pos: noun
+    gender: m
+  - lemma: греко-католики
+    ipa: /ˈɦrɛko kɐˈtɔɫɪkɪ/
+    translation: Greek Catholics
+    pos: noun
+    gender: pl
+  - lemma: протестанти
+    ipa: /protɛˈstɑntɪ/
+    translation: Protestants
+    pos: noun
+    gender: pl
+  - lemma: іслам
+    ipa: /isˈɫɑm/
+    translation: Islam
+    pos: noun
+    gender: m
+  - lemma: юдаїзм
+    ipa: /judɐˈjizm/
+    translation: Judaism
+    pos: noun
+    gender: m
+  - lemma: віруючий
+    ipa: /ʋʲiˈrujut͡ʃɪj/
+    translation: believer
+    pos: noun
+    gender: m
+  - lemma: атеїст
+    ipa: /ɐtɛˈjist/
+    translation: atheist
+    pos: noun
+    gender: m
+  - lemma: свобода
+    ipa: /sʋoˈbɔdɐ/
+    translation: freedom
+    pos: noun
+    gender: f
+  - lemma: совість
+    ipa: /ˈsɔʋʲisʲtʲ/
+    translation: conscience
+    pos: noun
+    gender: f
+  - lemma: свято
+    ipa: /ˈsʋʲɑto/
+    translation: holiday, feast
+    pos: noun
+    gender: n
+  - lemma: Різдво
+    ipa: /rizˈdʋɔ/
+    translation: Christmas
+    pos: noun
+    gender: n
+  - lemma: Великдень
+    ipa: /ʋɛˈɫɪkdɛnʲ/
+    translation: Easter
+    pos: noun
+    gender: m
+  - lemma: піст
+    ipa: /pʲist/
+    translation: fast, Lent
+    pos: noun
+    gender: m
+  - lemma: молитва
+    ipa: /moˈɫɪtʋɐ/
+    translation: prayer
+    pos: noun
+    gender: f
+  - lemma: служба
+    ipa: /ˈsɫuʒbɐ/
+    translation: service, worship
+    pos: noun
+    gender: f
+  - lemma: літургія
+    ipa: /lʲiˈturɦʲijɐ/
+    translation: liturgy
+    pos: noun
+    gender: f
+  - lemma: храм
+    ipa: /xrɑm/
+    translation: temple, church
+    pos: noun
+    gender: m
+  - lemma: синагога
+    ipa: /sɪnɐˈɦɔɦɐ/
+    translation: synagogue
+    pos: noun
+    gender: f
+  - lemma: мечеть
+    ipa: /mɛˈt͡ʃɛtʲ/
+    translation: mosque
+    pos: noun
+    gender: f
+  - lemma: толерантність
+    ipa: /toɫɛˈrɑntnʲisʲtʲ/
+    translation: tolerance
+    pos: noun
+    gender: f
+  - lemma: Рада церков
+    ipa: /ˈrɑdɐ t͡sɛrˈkɔu̯/
+    translation: Council of Churches
+    pos: noun
+    gender: f

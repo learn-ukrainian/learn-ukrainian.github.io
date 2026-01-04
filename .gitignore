@@ -56,3 +56,6 @@ gha-creds-*.json
 # ULP mapping intermediate files (build artifacts)
 docs/resources/ukrainianlessons/resource_module_scores.json
 docs/resources/ukrainianlessons/resource_module_scores_v*.json
+
+# Dobra Forma local copy
+docs/references/dobra-forma/opentext.ku.edu/

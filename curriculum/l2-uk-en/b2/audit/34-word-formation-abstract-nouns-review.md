@@ -1,19 +1,30 @@
 # Audit Report: 34-word-formation-abstract-nouns.md
 **Phase:** B2.1c | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Виправте помилки у словотворенні' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 2/16 items with placeholders/missing errors.
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 1 pedagogical violations (minor)
+- Activity count below minimum
 
 ## Gates
 - **Words:** ✅ 1909/1750
-- **Activities:** ✅ 14/14
+- **Activities:** ❌ 13/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 87/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.7% (target 98-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation

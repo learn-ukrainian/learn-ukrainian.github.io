@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): увагу, форма, чином, показує, отже...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): суфікс, показує, порівняйте, подібно, основа...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 2358/1200 (>2200 may be too long)
+- **Words:** ✅ 2322/1200
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/5 types
@@ -23,7 +23,8 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 35.9% (B1.1 Aspect)
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 36.3% (B1.1 Aspect)
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ✅ Validated (14/113 confirmed)
 
@@ -40,9 +41,9 @@
 | variety | 0.91 | - | 91% | 10% | 9.1% |
 | cultural | 5 | 3 | 100% | 10% | 10.0% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 5% | 5.0% |
+| visual | 9 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 25 | 5 | 100% | 5% | 5.0% |
+| questions | 24 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.1%** |
 
@@ -59,4 +60,4 @@
 | **Style and Register: Стиль і регістр** | ⚪️ | 161 | Skipped |
 | **Practice** | ⚪️ | 408 | Skipped |
 | **Mini-Dialogues** | ✅ | 337 | Included in Core |
-| **Підсумок** | ✅ | 400 | Included in Core |
+| **Підсумок** | ✅ | 364 | Included in Core |

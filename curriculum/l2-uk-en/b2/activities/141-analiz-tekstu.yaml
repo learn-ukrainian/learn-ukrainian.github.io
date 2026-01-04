@@ -1,0 +1,454 @@
+module: 141-analiz-tekstu
+level: B2
+version: '2.0'
+activities:
+  - type: match-up
+    id: 141-01-vocab-def
+    title: "Термінологія аналізу"
+    pairs:
+      - left: "Підтекст"
+        right: "Прихований зміст, який не висловлений прямо"
+      - left: "Контекст"
+        right: "Умови та обставини, в яких існує текст"
+      - left: "Упередженість"
+        right: "Суб'єктивне, необ'єктивне ставлення до чогось"
+      - left: "Плагіат"
+        right: "Привласнення чужого авторства"
+      - left: "Достовірність"
+        right: "Правдивість і точність інформації"
+      - left: "Аргументація"
+        right: "Процес наведення доказів"
+      - left: "Маніпуляція"
+        right: "Прихований вплив на свідомість"
+      - left: "Цитата"
+        right: "Дослівний уривок з іншого тексту"
+      - left: "Теза"
+        right: "Коротко сформульована основна думка"
+      - left: "Висновок"
+        right: "Логічний підсумок міркувань"
+      - left: "Джерело"
+        right: "Походження інформації"
+      - left: "Аудиторія"
+        right: "Група людей, для яких призначений текст"
+
+  - type: quiz
+    id: 141-02-style-id
+    title: "Визначення стилю тексту"
+    items:
+      - question: "Згідно з чинним законодавством, особи, які не сплатили податки..."
+        options:
+          - { text: "Офіційно-діловий", correct: true }
+          - { text: "Художній", correct: false }
+          - { text: "Розмовний", correct: false }
+          - { text: "Науковий", correct: false }
+      - question: "Сонце сідало за обрій, фарбуючи небо у багряні тони, наче пролита кров..."
+        options:
+          - { text: "Художній", correct: true }
+          - { text: "Науковий", correct: false }
+          - { text: "Публіцистичний", correct: false }
+          - { text: "Офіційно-діловий", correct: false }
+      - question: "Результати експерименту підтверджують гіпотезу про кореляцію між..."
+        options:
+          - { text: "Науковий", correct: true }
+          - { text: "Розмовний", correct: false }
+          - { text: "Художній", correct: false }
+          - { text: "Публіцистичний", correct: false }
+      - question: "Чуєш, а ти бачив, що там у центрі робиться? Капець просто!"
+        options:
+          - { text: "Розмовний", correct: true }
+          - { text: "Офіційно-діловий", correct: false }
+          - { text: "Науковий", correct: false }
+          - { text: "Художній", correct: false }
+      - question: "Шокуюча правда! Тільки сьогодні ви дізнаєтесь, хто вкрав гроші!"
+        options:
+          - { text: "Публіцистичний (жовта преса)", correct: true }
+          - { text: "Науковий", correct: false }
+          - { text: "Офіційно-діловий", correct: false }
+          - { text: "Художній", correct: false }
+      - question: "Шановний пане Директоре, прошу надати мені відпустку..."
+        options:
+          - { text: "Офіційно-діловий", correct: true }
+          - { text: "Розмовний", correct: false }
+          - { text: "Науковий", correct: false }
+          - { text: "Публіцистичний", correct: false }
+      - question: "Він стояв і дивився, як падає листя, і думав про вічність."
+        options:
+          - { text: "Художній", correct: true }
+          - { text: "Науковий", correct: false }
+          - { text: "Офіційно-діловий", correct: false }
+          - { text: "Публіцистичний", correct: false }
+      - question: "За даними опитування, 60% громадян підтримують реформи."
+        options:
+          - { text: "Публіцистичний", correct: true }
+          - { text: "Художній", correct: false }
+          - { text: "Розмовний", correct: false }
+          - { text: "Офіційно-діловий", correct: false }
+
+  - type: match-up
+    id: 141-03-purpose
+    title: "Мета автора"
+    pairs:
+      - left: "Інструкція до приладу"
+        right: "Інформувати"
+      - left: "Передвиборча промова"
+        right: "Переконати"
+      - left: "Гумористичне оповідання"
+        right: "Розважити"
+      - left: "Наукова стаття"
+        right: "Довести"
+      - left: "Рекламний слоган"
+        right: "Продати"
+      - left: "Щоденник"
+        right: "Висловити почуття"
+      - left: "Поезія"
+        right: "Створити образ"
+      - left: "Новинний репортаж"
+        right: "Повідомити факти"
+
+  - type: quiz
+    id: 141-04-bias-detect
+    title: "Виявлення упередженості"
+    items:
+      - question: "Яке речення є НЕЙТРАЛЬНИМ?"
+        options:
+          - { text: "Політик виступив із промовою про податки.", correct: true }
+          - { text: "Політик нахабно брехав про податки.", correct: false }
+          - { text: "Мудрий політик пояснив нам про податки.", correct: false }
+          - { text: "Політик нарешті сказав правду.", correct: false }
+      - question: "Яке речення містить ЕМОЦІЙНЕ ЗАБАРВЛЕННЯ?"
+        options:
+          - { text: "Цей жахливий закон знищить економіку!", correct: true }
+          - { text: "Закон передбачає зміни в оподаткуванні.", correct: false }
+          - { text: "Парламент ухвалив закон у другому читанні.", correct: false }
+          - { text: "Президент підписав закон вчора.", correct: false }
+      - question: "Яке слово вказує на СУБ'ЄКТИВНУ думку?"
+        options:
+          - { text: "На жаль", correct: true }
+          - { text: "Вчора", correct: false }
+          - { text: "П'ять", correct: false }
+          - { text: "Київ", correct: false }
+      - question: "Виберіть об'єктивний заголовок."
+        options:
+          - { text: "Ціни на паливо зросли на 10%.", correct: true }
+          - { text: "Грабіжницькі ціни на паливо шокують водіїв!", correct: false }
+          - { text: "Нарешті гідні ціни на паливо!", correct: false }
+          - { text: "Влада знову грабує народ!", correct: false }
+      - question: "Яке джерело є найбільш надійним?"
+        options:
+          - { text: "Наукова стаття", correct: true }
+          - { text: "Коментар у Фейсбуці", correct: false }
+          - { text: "Блог невідомого автора", correct: false }
+          - { text: "Рекламний буклет", correct: false }
+      - question: "Що є фактом, а не думкою?"
+        options:
+          - { text: "Вода кипить при 100°C.", correct: true }
+          - { text: "Кава смачніша за чай.", correct: false }
+          - { text: "Літо — найкраща пора року.", correct: false }
+          - { text: "Ця книга нудна.", correct: false }
+      - question: "Яка фраза є узагальненням?"
+        options:
+          - { text: "Всі чоловіки однакові.", correct: true }
+          - { text: "Мій сусід — чоловік.", correct: false }
+          - { text: "Багато чоловіків люблять футбол.", correct: false }
+          - { text: "Деякі чоловіки носять окуляри.", correct: false }
+      - question: "Що таке 'ad hominem'?"
+        options:
+          - { text: "Атака на особу, а не на аргумент.", correct: true }
+          - { text: "Використання статистики.", correct: false }
+          - { text: "Логічний висновок.", correct: false }
+          - { text: "Цитата відомої людини.", correct: false }
+
+  - type: match-up
+    id: 141-05-subtext
+    title: "Читаємо підтекст"
+    pairs:
+      - left: "Він 'дуже' поспішав. (у лапках)"
+        right: "Він насправді не поспішав"
+      - left: "Ну, ти як завжди..."
+        right: "Ти знову зробив помилку"
+      - left: "Цікава ідея, але ми повернемося до неї пізніше."
+        right: "Відмова"
+      - left: "Вона сьогодні виглядає... здорово."
+        right: "Сумнів або іронія"
+      - left: "Двері там."
+        right: "Вийди геть"
+      - left: "У нас вільна країна."
+        right: "Роби що хочеш, але наслідки твої"
+      - left: "Я вас почув."
+        right: "Розмова закінчена, я не згоден"
+      - left: "Це дуже сміливе рішення."
+        right: "Це дурне або ризиковане рішення"
+
+  - type: fill-in
+    id: 141-06-rhetoric-structure
+    title: "Структура аргументації"
+    items:
+      - sentence: "У першій частині есе, яка називається ___, автор знайомить читача з темою."
+        answer: "вступ"
+        options: ["вступ", "висновок", "теза", "аргумент"]
+      - sentence: "Головна ідея тексту називається ___."
+        answer: "теза"
+        options: ["теза", "цитата", "контекст", "стиль"]
+      - sentence: "Для доведення своєї думки автор наводить ___."
+        answer: "аргументи"
+        options: ["аргументи", "емоції", "помилки", "запитання"]
+      - sentence: "У кінці тексту автор робить ___."
+        answer: "висновок"
+        options: ["висновок", "вступ", "початок", "заголовок"]
+      - sentence: "Щоб показати об'єктивність, варто згадати ___."
+        answer: "контраргументи"
+        options: ["контраргументи", "образи", "чутки", "міфи"]
+      - sentence: "Для підтвердження фактів використовують ___."
+        answer: "джерела"
+        options: ["джерела", "здогадки", "фантазії", "сни"]
+      - sentence: "Використання чужих слів без посилання — це ___."
+        answer: "плагіат"
+        options: ["плагіат", "цитування", "аналіз", "творчість"]
+      - sentence: "Точне відтворення слів автора — це ___."
+        answer: "цитата"
+        options: ["цитата", "парафраз", "плагіат", "теза"]
+
+  - type: match-up
+    id: 141-07-essay-order-match
+    title: "Порядок частин есе"
+    pairs:
+      - left: "Крок 1"
+        right: "Заголовок"
+      - left: "Крок 2"
+        right: "Вступ"
+      - left: "Крок 3"
+        right: "Теза"
+      - left: "Крок 4"
+        right: "Аргумент 1"
+      - left: "Крок 5"
+        right: "Аргумент 2"
+      - left: "Крок 6"
+        right: "Контраргумент"
+      - left: "Крок 7"
+        right: "Спростування"
+      - left: "Крок 8"
+        right: "Висновок"
+
+  - type: group-sort
+    id: 141-08-sources-cred-sort
+    title: "Сортування джерел"
+    groups:
+      - name: "Достовірні"
+        items:
+          - "Наукова стаття"
+          - "Офіційний сайт .gov.ua"
+          - "Енциклопедія"
+          - "Монографія професора"
+          - "Підручник, затверджений МОН"
+          - "Дисертація в бібліотеці"
+          - "Сайт BBC/CNN (відомі медіа)"
+          - "Офіційна статистика Держстату"
+      - name: "Сумнівні"
+        items:
+          - "Блог невідомого автора"
+          - "Коментар у соцмережі"
+          - "Жовта преса"
+          - "Повідомлення в месенджері"
+          - "Рекламний сайт"
+          - "Відео в ТікТоці без джерел"
+          - "Сайт 'Правда' без контактів"
+          - "Листівка на стовпі"
+          - "Анонімний Телеграм-канал"
+
+  - type: match-up
+    id: 141-09-manipulation
+    title: "Техніки маніпуляції"
+    pairs:
+      - left: "Всі так роблять!"
+        right: "Ефект натовпу"
+      - left: "Якщо не купиш, ти погана мати."
+        right: "Тиск на провину"
+      - left: "Експерт (актор) радить."
+        right: "Апеляція до авторитету"
+      - left: "Ти невдаха, якщо не згоден."
+        right: "Наклеювання ярликів"
+      - left: "Тільки 5 хвилин!"
+        right: "Дефіцит часу"
+      - left: "Опонент — дурень."
+        right: "Ad hominem"
+      - left: "Це ж традиція!"
+        right: "Апеляція до традиції"
+      - left: "Або ми, або вони."
+        right: "Хибна дилема"
+
+  - type: quiz
+    id: 141-10-plagiarism
+    title: "Плагіат чи ні?"
+    items:
+      - question: "Студент скопіював текст без посилання."
+        options:
+          - { text: "Це плагіат", correct: true }
+          - { text: "Це нормально", correct: false }
+          - { text: "Це цитування", correct: false }
+          - { text: "Це парафраз", correct: false }
+      - question: "Студент переказав ідею своїми словами і вказав автора."
+        options:
+          - { text: "Це не плагіат", correct: true }
+          - { text: "Це плагіат", correct: false }
+          - { text: "Це помилка", correct: false }
+          - { text: "Це крадіжка", correct: false }
+      - question: "Студент використав загальновідомий факт (Київ — столиця)."
+        options:
+          - { text: "Це не плагіат", correct: true }
+          - { text: "Це плагіат", correct: false }
+          - { text: "Це помилка", correct: false }
+          - { text: "Потрібне посилання", correct: false }
+      - question: "Студент здав свою стару роботу знову."
+        options:
+          - { text: "Це самоплагіат", correct: true }
+          - { text: "Це нормально", correct: false }
+          - { text: "Це економія часу", correct: false }
+          - { text: "Це дозволено", correct: false }
+      - question: "Студент вставив цитату в лапки і вказав джерело."
+        options:
+          - { text: "Це правильно", correct: true }
+          - { text: "Це плагіат", correct: false }
+          - { text: "Це зайве", correct: false }
+          - { text: "Це помилка", correct: false }
+      - question: "Студент змінив два слова в реченні і не вказав автора."
+        options:
+          - { text: "Це плагіат", correct: true }
+          - { text: "Це парафраз", correct: false }
+          - { text: "Це оригінальний текст", correct: false }
+          - { text: "Це редагування", correct: false }
+      - question: "Студент купив роботу в інтернеті."
+        options:
+          - { text: "Це грубе порушення", correct: true }
+          - { text: "Це допомога", correct: false }
+          - { text: "Це навчання", correct: false }
+          - { text: "Це нормально", correct: false }
+      - question: "Студент переклав текст з англійської і підписав своїм ім'ям."
+        options:
+          - { text: "Це плагіат", correct: true }
+          - { text: "Це переклад", correct: false }
+          - { text: "Це творчість", correct: false }
+          - { text: "Це адаптація", correct: false }
+
+  - type: fill-in
+    id: 141-11-vocab-context
+    title: "Лексика в контексті"
+    items:
+      - sentence: "Перед написанням роботи потрібно провести ретельний ___ теми."
+        answer: "аналіз"
+        options: ["аналіз", "плагіат", "стиль", "вступ"]
+      - sentence: "Кожне твердження має бути підкріплене ___."
+        answer: "аргументами"
+        options: ["аргументами", "емоціями", "чутками", "снами"]
+      - sentence: "Авторська ___ повинна бути чіткою та зрозумілою."
+        answer: "позиція"
+        options: ["позиція", "теза", "цитата", "книга"]
+      - sentence: "Необхідно перевіряти ___ кожного джерела."
+        answer: "достовірність"
+        options: ["достовірність", "красу", "ціну", "довжину"]
+      - sentence: "Маніпулятори часто використовують прихований ___."
+        answer: "вплив"
+        options: ["вплив", "аналіз", "стиль", "текст"]
+      - sentence: "Науковий ___ вимагає точності та об'єктивності."
+        answer: "стиль"
+        options: ["стиль", "гумор", "сюжет", "автор"]
+      - sentence: "Читаючи новини, звертайте увагу на ___."
+        answer: "заголовок"
+        options: ["заголовок", "папір", "шрифт", "колір"]
+      - sentence: "Важливо розуміти, хто є цільовою ___ тексту."
+        answer: "аудиторією"
+        options: ["аудиторією", "проблемою", "метою", "ідеєю"]
+
+  - type: match-up
+    id: 141-12-citations
+    title: "Види посилань"
+    pairs:
+      - left: "Пряма мова"
+        right: "Цитата"
+      - left: "Переказ"
+        right: "Парафраз"
+      - left: "[1]"
+        right: "Посилання"
+      - left: "Список джерел"
+        right: "Бібліографія"
+      - left: "Ibid."
+        right: "Там само"
+      - left: "et al."
+        right: "та інші"
+      - left: "Op. cit."
+        right: "У цитованій праці"
+      - left: "URL"
+        right: "Електронна адреса"
+
+  - type: quiz
+    id: 141-13-fact-vs-opinion
+    title: "Факт чи думка?"
+    items:
+      - question: "Київ — столиця України."
+        options:
+          - { text: "Факт", correct: true }
+          - { text: "Думка", correct: false }
+          - { text: "Гіпотеза", correct: false }
+          - { text: "Міф", correct: false }
+      - question: "Київ — найкраще місто."
+        options:
+          - { text: "Думка", correct: true }
+          - { text: "Факт", correct: false }
+          - { text: "Статистика", correct: false }
+          - { text: "Аксіома", correct: false }
+      - question: "Земля обертається навколо Сонця."
+        options:
+          - { text: "Факт", correct: true }
+          - { text: "Думка", correct: false }
+          - { text: "Помилка", correct: false }
+          - { text: "Вигадка", correct: false }
+      - question: "Цей фільм нудний."
+        options:
+          - { text: "Думка", correct: true }
+          - { text: "Факт", correct: false }
+          - { text: "Доказ", correct: false }
+          - { text: "Закон", correct: false }
+      - question: "В Україні проживає понад 30 млн людей."
+        options:
+          - { text: "Факт", correct: true }
+          - { text: "Думка", correct: false }
+          - { text: "Емоція", correct: false }
+          - { text: "Смак", correct: false }
+      - question: "Податки занадто високі."
+        options:
+          - { text: "Думка", correct: true }
+          - { text: "Факт", correct: false }
+          - { text: "Число", correct: false }
+          - { text: "Дата", correct: false }
+      - question: "День Незалежності — 24 серпня."
+        options:
+          - { text: "Факт", correct: true }
+          - { text: "Думка", correct: false }
+          - { text: "Прогноз", correct: false }
+          - { text: "План", correct: false }
+      - question: "Математика — складна наука."
+        options:
+          - { text: "Думка", correct: true }
+          - { text: "Факт", correct: false }
+          - { text: "Об'єкт", correct: false }
+          - { text: "Вимір", correct: false }
+
+  - type: match-up
+    id: 141-14-logical-fallacies
+    title: "Логічні хиби"
+    pairs:
+      - left: "Після — отже внаслідок"
+        right: "Post hoc"
+      - left: "Сам такий"
+        right: "Tu quoque"
+      - left: "Хибна дилема"
+        right: "Або-або"
+      - left: "Всі так думають"
+        right: "Апеляція до натовпу"
+      - left: "Ми так завжди робили"
+        right: "Апеляція до традиції"
+      - left: "Підміна тези"
+        right: "Солом'яне опудало"
+      - left: "Слизький схил"
+        right: "Перебільшення наслідків"
+      - left: "Поспішне узагальнення"
+        right: "Висновок з одного прикладу"

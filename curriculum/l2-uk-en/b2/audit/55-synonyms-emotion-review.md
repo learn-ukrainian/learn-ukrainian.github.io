@@ -1,20 +1,31 @@
 # Audit Report: 55-synonyms-emotion.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "CBI" | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): щастя, радість, депресія, задоволення, біль...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 1 pedagogical violations (minor)
+- Activity count below minimum
 
 ## Gates
-- **Words:** ✅ 1807/1750
-- **Activities:** ✅ 14/14
+- **Words:** ✅ 1773/1750
+- **Activities:** ❌ 13/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 36/35
+- **Vocab:** ✅ 104/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.7% (target 98-100% (vocab))
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.8% (target 98-100% (vocab))
 - **Richness:** ✅ 99% (content)
 - **Grammar:** ⏳ Pending validation
 
@@ -38,13 +49,12 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Синоніми: Емоції та почуття** | ⚪️ | 87 | Skipped |
+| **Intro/Narrative** | ✅ | 87 | Included in Core |
 | **Вступ: Мова як інструмент душі та дзеркало серця** | ⚪️ | 220 | Skipped |
-| **Частина 1: Світло радості — Від задоволення до екстазу** | ⚪️ | 238 | Skipped |
-| **Частина 2: Сутінки суму — Від печалі до повного розпачу** | ⚪️ | 237 | Skipped |
-| **Частина 3: Вогонь гніву та Тінь паралізуючого страху** | ⚪️ | 286 | Skipped |
+| **Частина 1: Світло радості — Від задоволення до екстазу** | ✅ | 238 | Included in Core |
+| **Частина 2: Сутінки суму — Від печалі до повного розпачу** | ✅ | 237 | Included in Core |
+| **Частина 3: Вогонь гніву та Тінь паралізуючого страху** | ✅ | 286 | Included in Core |
 | **Культурний код: Емоції в українській ментальності та філософії** | ✅ | 423 | Included in Core |
 | **Емоції та почуття в українській класичній літературі** | ⚪️ | 124 | Skipped |
 | **Практичний додаток: Таблиця інтенсивності та Регістрів** | ⚪️ | 68 | Skipped |
 | **Підсумок** | ✅ | 90 | Included in Core |
-| **Словник** | ⚪️ | 34 | Skipped |

@@ -1,19 +1,32 @@
 # Audit Report: 54-idioms-nature.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "CBI" | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Виправте помилки стихій' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 2/8 items with placeholders/missing errors.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): серйозність, вогонь, сухий, вийти, дивитися...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 2 pedagogical violations (minor)
+- Activity count below minimum
 
 ## Gates
-- **Words:** ✅ 1841/1750
-- **Activities:** ✅ 14/14
+- **Words:** ✅ 1807/1750
+- **Activities:** ❌ 13/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 38/35
+- **Vocab:** ✅ 101/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.8% (target 98-100% (vocab))
 - **Richness:** ✅ 99% (content)
 - **Grammar:** ⏳ Pending validation
@@ -38,14 +51,13 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Фразеологізми: Природа (Вода, Вогонь, Земля, Вітер)** | ⚪️ | 82 | Skipped |
+| **Intro/Narrative** | ✅ | 82 | Included in Core |
 | **Вступ: Життя в обіймах стихій** | ⚪️ | 248 | Skipped |
-| **Частина 1: Вода — Дзеркало правди та зайвих слів** | ⚪️ | 261 | Skipped |
-| **Частина 2: Вогонь — Ризик та вище загартування** | ⚪️ | 253 | Skipped |
-| **Частина 3: Земля та Вітер — Пошук опори та Легковажність** | ⚪️ | 154 | Skipped |
+| **Частина 1: Вода — Дзеркало правди та зайвих слів** | ✅ | 261 | Included in Core |
+| **Частина 2: Вогонь — Ризик та вище загартування** | ✅ | 253 | Included in Core |
+| **Частина 3: Земля та Вітер — Пошук опори та Легковажність** | ✅ | 154 | Included in Core |
 | **Культурний код: Стихії в українському світогляді** | ✅ | 366 | Included in Core |
 | **Природа та стихії в українському фольклорі** | ⚪️ | 109 | Skipped |
 | **Практичний додаток: Стилістичні нюанси** | ⚪️ | 107 | Skipped |
 | **Стихії та емоційний інтелект** | ⚪️ | 158 | Skipped |
 | **Підсумок** | ✅ | 69 | Included in Core |
-| **Словник** | ⚪️ | 34 | Skipped |

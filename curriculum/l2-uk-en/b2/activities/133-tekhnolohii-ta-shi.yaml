@@ -1,0 +1,814 @@
+module: 133-tekhnolohii-ta-shi
+level: B2
+version: '2.0'
+activities:
+
+# Activity 1: IT terms match-up
+- id: match-it-terms
+  type: match-up
+  title: "Знайдіть відповідність: IT-терміни"
+  instruction: "Поєднайте український термін з його значенням."
+  pairs:
+    - left: "штучний інтелект"
+      right: "системи, що імітують людський інтелект"
+    - left: "нейромережа"
+      right: "математична модель, натхненна мозком"
+    - left: "хмарні технології"
+      right: "зберігання даних на віддалених серверах"
+    - left: "кіберзахист"
+      right: "захист від кібератак"
+    - left: "фішинг"
+      right: "обманні листи для викрадення даних"
+    - left: "резервна копія"
+      right: "запасна копія важливих файлів"
+    - left: "аутентифікація"
+      right: "перевірка особи користувача"
+    - left: "алгоритм"
+      right: "послідовність кроків для виконання задачі"
+    - left: "база даних"
+      right: "структуроване сховище інформації"
+    - left: "інтерфейс"
+      right: "спосіб взаємодії з програмою"
+    - left: "оновлення"
+      right: "нова версія програми"
+    - left: "шифрування"
+      right: "перетворення даних у нечитабельний формат"
+
+# Activity 2: Fill-in IT dialogue
+- id: fill-in-it
+  type: fill-in
+  title: "Заповніть пропуски: розмова розробників"
+  instruction: "Оберіть правильне слово для кожного пропуску."
+  items:
+    - prompt: "Потрібно пофіксити цей ___ перед релізом."
+      answer: "баг"
+      options: ["баг", "код", "сервер", "файл"]
+    - prompt: "Я вже замержив зміни в головну ___."
+      answer: "гілку"
+      options: ["гілку", "базу", "програму", "мережу"]
+    - prompt: "Давай задеплоїмо на ___ для тестування."
+      answer: "стейджинг"
+      options: ["стейджинг", "продакшн", "бекенд", "хмару"]
+    - prompt: "Яку ___ ти використовуєш для цього проєкту?"
+      answer: "мову"
+      options: ["мову", "хмару", "програму", "базу"]
+    - prompt: "Потрібно оновити ___ до останньої версії."
+      answer: "бібліотеку"
+      options: ["бібліотеку", "сервер", "код", "файл"]
+    - prompt: "Цей ___ виводить неправильний результат."
+      answer: "алгоритм"
+      options: ["алгоритм", "сервер", "файл", "інтерфейс"]
+    - prompt: "Зроби ___ коду перед мержем."
+      answer: "рев'ю"
+      options: ["рев'ю", "оновлення", "копію", "фікс"]
+    - prompt: "Дані зберігаються в ___ на AWS."
+      answer: "хмарі"
+      options: ["хмарі", "файлі", "коді", "мережі"]
+    - prompt: "Увімкни двофакторну ___ для безпеки."
+      answer: "аутентифікацію"
+      options: ["аутентифікацію", "авторизацію", "реєстрацію", "верифікацію"]
+    - prompt: "Забув зробити ___ копію перед оновленням."
+      answer: "резервну"
+      options: ["резервну", "локальну", "хмарну", "повну"]
+    - prompt: "Цей ___ навчається на великих масивах даних."
+      answer: "ШІ"
+      options: ["ШІ", "код", "сервер", "алгоритм"]
+    - prompt: "Потрібно ___ конфіденційні дані."
+      answer: "зашифрувати"
+      options: ["зашифрувати", "завантажити", "видалити", "скопіювати"]
+
+# Activity 3: Quiz on IT knowledge
+- id: quiz-it
+  type: quiz
+  title: "Тест: технології та ШІ"
+  instruction: "Оберіть правильну відповідь."
+  items:
+    - question: "Яку компанію заснували українці Олексій Шевченко та Макс Литвин?"
+      options:
+        - text: "Grammarly"
+          correct: true
+        - text: "Google"
+          correct: false
+        - text: "Microsoft"
+          correct: false
+        - text: "Apple"
+          correct: false
+      explanation: "Grammarly — популярний сервіс перевірки граматики, заснований українцями."
+    - question: "Хто створив перший програмований комп'ютер у континентальній Європі?"
+      options:
+        - text: "Сергій Лебедєв"
+          correct: true
+        - text: "Алан Тюрінг"
+          correct: false
+        - text: "Стів Джобс"
+          correct: false
+        - text: "Білл Гейтс"
+          correct: false
+      explanation: "Сергій Лебедєв створив МЭСМ у Києві в 1951 році."
+    - question: "Що означає абревіатура ШІ?"
+      options:
+        - text: "Штучний інтелект"
+          correct: true
+        - text: "Швидкий інтернет"
+          correct: false
+        - text: "Шифрована інформація"
+          correct: false
+        - text: "Широка інтеграція"
+          correct: false
+      explanation: "ШІ — це штучний інтелект (artificial intelligence)."
+    - question: "Що таке фішинг?"
+      options:
+        - text: "Вид риболовлі"
+          correct: false
+        - text: "Обманні листи для викрадення даних"
+          correct: true
+        - text: "Тип програмування"
+          correct: false
+        - text: "Хмарна технологія"
+          correct: false
+      explanation: "Фішинг — це кібератака через підроблені листи чи сайти."
+    - question: "Яка платформа є найбільшою хмарною у світі?"
+      options:
+        - text: "AWS (Amazon Web Services)"
+          correct: true
+        - text: "Google Drive"
+          correct: false
+        - text: "Dropbox"
+          correct: false
+        - text: "iCloud"
+          correct: false
+      explanation: "AWS — найбільша платформа хмарних обчислень у світі."
+    - question: "Що таке нейронна мережа?"
+      options:
+        - text: "Тип комп'ютерного вірусу"
+          correct: false
+        - text: "Математична модель, натхненна мозком"
+          correct: true
+        - text: "Соціальна мережа для вчених"
+          correct: false
+        - text: "Тип інтернет-з'єднання"
+          correct: false
+      explanation: "Нейромережа — модель машинного навчання з «нейронами»."
+    - question: "DOU — це:"
+      options:
+        - text: "Українська IT-спільнота"
+          correct: true
+        - text: "Мова програмування"
+          correct: false
+        - text: "Тип кібератаки"
+          correct: false
+        - text: "Хмарна платформа"
+          correct: false
+      explanation: "DOU (dou.ua) — найбільша українська IT-спільнота."
+    - question: "Що означає «задеплоїти»?"
+      options:
+        - text: "Видалити код"
+          correct: false
+        - text: "Розгорнути програму на сервері"
+          correct: true
+        - text: "Знайти помилку"
+          correct: false
+        - text: "Написати документацію"
+          correct: false
+      explanation: "Деплой — розгортання програми на робочому сервері."
+    - question: "Скільки мільярдів доларів склав експорт IT-послуг України у 2021 році?"
+      options:
+        - text: "Понад 6 мільярдів"
+          correct: true
+        - text: "1 мільярд"
+          correct: false
+        - text: "500 мільйонів"
+          correct: false
+        - text: "20 мільярдів"
+          correct: false
+      explanation: "Експорт IT-послуг у 2021 році перевищив 6 млрд доларів."
+    - question: "Яка архітектура використовується в сучасних мовних моделях як GPT?"
+      options:
+        - text: "Трансформер"
+          correct: true
+        - text: "CNN"
+          correct: false
+        - text: "RNN"
+          correct: false
+        - text: "GAN"
+          correct: false
+      explanation: "Трансформери — основа сучасних великих мовних моделей."
+    - question: "Що таке двофакторна аутентифікація?"
+      options:
+        - text: "Пароль + додатковий код"
+          correct: true
+        - text: "Два різних паролі"
+          correct: false
+        - text: "Два облікових записи"
+          correct: false
+        - text: "Два сервера"
+          correct: false
+      explanation: "2FA — пароль плюс код з SMS або застосунку."
+    - question: "Prometheus — це:"
+      options:
+        - text: "Платформа безкоштовних онлайн-курсів"
+          correct: true
+        - text: "Мова програмування"
+          correct: false
+        - text: "Хмарний сервіс"
+          correct: false
+        - text: "Антивірусна програма"
+          correct: false
+      explanation: "Prometheus — українська платформа безкоштовної онлайн-освіти."
+
+# Activity 4: True-false IT facts
+- id: true-false-it
+  type: true-false
+  title: "Правда чи ні: факти про IT"
+  instruction: "Визначте, чи правдиве кожне твердження."
+  items:
+    - statement: "Grammarly — це українська компанія."
+      correct: true
+      explanation: "Так, Grammarly заснували українці у Києві."
+    - statement: "ШІ може повністю замінити програмістів."
+      correct: false
+      explanation: "ШІ — інструмент, що підвищує продуктивність, але не замінює розробників."
+    - statement: "Фішинг — це тип кібератаки."
+      correct: true
+      explanation: "Фішинг — обман через підроблені листи чи сайти."
+    - statement: "AWS — це продукт компанії Microsoft."
+      correct: false
+      explanation: "AWS — хмарна платформа Amazon, не Microsoft."
+    - statement: "Перший комп'ютер у континентальній Європі створено в Україні."
+      correct: true
+      explanation: "МЭСМ створив Сергій Лебедєв у Києві в 1951 році."
+    - statement: "«Баг» — це офіційний український термін."
+      correct: false
+      explanation: "«Баг» — це сленг. Офіційно: «помилка», «збій»."
+    - statement: "DDoS-атака перевантажує сервер запитами."
+      correct: true
+      explanation: "DDoS — атака через масове надсилання запитів."
+    - statement: "Усі дані в хмарі зберігаються в Україні."
+      correct: false
+      explanation: "Хмарні дата-центри розташовані по всьому світу."
+    - statement: "Двофакторна аутентифікація підвищує безпеку."
+      correct: true
+      explanation: "2FA додає рівень захисту понад пароль."
+    - statement: "Нейромережі створені на основі людського мозку."
+      correct: true
+      explanation: "Нейромережі математично моделюють роботу нейронів."
+    - statement: "DevOps — це мова програмування."
+      correct: false
+      explanation: "DevOps — методологія розробки та операцій."
+    - statement: "Після 2022 року кількість кібератак на Україну зменшилась."
+      correct: false
+      explanation: "Після вторгнення кількість кібератак різко зросла."
+
+# Activity 5: Group-sort IT roles
+- id: group-sort-roles
+  type: group-sort
+  title: "Розподіліть професії за категоріями"
+  instruction: "Визначте, чи позиція є технічною чи нетехнічною."
+  groups:
+    - name: "Технічні позиції"
+      items:
+        - "Frontend-розробник"
+        - "Backend-розробник"
+        - "DevOps-інженер"
+        - "Data Scientist"
+        - "Mobile-розробник"
+        - "QA Engineer"
+        - "Full-stack розробник"
+        - "Системний адміністратор"
+    - name: "Нетехнічні позиції"
+      items:
+        - "Project Manager"
+        - "Business Analyst"
+        - "UI/UX Designer"
+        - "Technical Writer"
+        - "HR-менеджер"
+        - "Sales Manager"
+        - "Product Owner"
+        - "Scrum Master"
+
+# Activity 6: Unjumble IT sentences
+- id: unjumble-it
+  type: unjumble
+  title: "Складіть речення правильно"
+  instruction: "Розташуйте слова у правильному порядку."
+  items:
+    - jumbled: "баг / знайшов / у коді / я"
+      answer: "Я знайшов баг у коді."
+    - jumbled: "оновлення / встановити / потрібно"
+      answer: "Потрібно встановити оновлення."
+    - jumbled: "пароль / складний / використовуй"
+      answer: "Використовуй складний пароль."
+    - jumbled: "хмарі / в / зберігаються / дані"
+      answer: "Дані зберігаються в хмарі."
+    - jumbled: "українці / компанію / заснували / цю"
+      answer: "Цю компанію заснували українці."
+    - jumbled: "нейромережа / навчається / даних / на"
+      answer: "Нейромережа навчається на даних."
+    - jumbled: "релізу / перед / тестування / потрібне"
+      answer: "Перед релізу потрібне тестування."
+    - jumbled: "резервну / зроби / копію"
+      answer: "Зроби резервну копію."
+    - jumbled: "фішинг / це / кібератака"
+      answer: "Фішинг — це кібератака."
+    - jumbled: "розробники / IT / українські / працюють / глобально"
+      answer: "Українські IT-розробники працюють глобально."
+    - jumbled: "сервер / впав / продакшн"
+      answer: "Продакшн-сервер впав."
+    - jumbled: "мердж / конфліктів / без / пройшов"
+      answer: "Мердж пройшов без конфліктів."
+
+# Activity 7: Cloze IT passage
+- id: cloze-it-text
+  type: cloze
+  title: "Заповніть текст про кіберзахист"
+  instruction: "Заповніть пропуски у тексті."
+  passage: "Кіберзахист стає все {важливішим|легшим|дорожчим} в сучасному світі. Щоб захистити свої {дані|файли|програми}, використовуйте складні {паролі|логіни|імена}. Увімкніть двофакторну {аутентифікацію|реєстрацію|авторизацію} для додаткового захисту. Регулярно {оновлюйте|видаляйте|копіюйте} операційну систему та програми. Не відкривайте підозрілих {посилань|файлів|листів} від незнайомих відправників. Робіть {резервні|хмарні|локальні} копії важливих даних. {Шифруйте|Видаляйте|Копіюйте} конфіденційну інформацію. Уникайте використання {публічних|домашніх|офісних} Wi-Fi мереж для важливих операцій. Використовуйте надійний {антивірус|браузер|пароль} та регулярно скануйте комп'ютер. Пам'ятайте: кіберзахист — це постійний {процес|результат|звіт}, а не одноразова дія. {Навчайте|Ігноруйте|Приховуйте} співробітників розпізнавати фішинг та соціальну інженерію. Інвестуйте в {безпеку|швидкість|дизайн} — це збереже ваші дані та репутацію. Україна щодня відбиває тисячі {кібератак|вірусів|хакерів}. Кібербезпека — пріоритет для кожної {організації|людини|країни}. Захист починається з {вас|них|системи}."
+
+# Activity 8: Error correction IT
+- id: error-correction-it
+  type: error-correction
+  title: "Виправте помилки в IT-реченнях"
+  instruction: "Знайдіть помилку та оберіть правильний варіант."
+  items:
+    - sentence: "Потрібно апдейтнути систему до слідуючої версії."
+      error: "слідуючої"
+      answer: "наступної"
+      options: ["наступної", "нової", "іншої", "останньої"]
+      explanation: "«Слідуючий» — русизм. Правильно: наступний."
+    - sentence: "Я скачав нову програму з інтернету."
+      error: "скачав"
+      answer: "завантажив"
+      options: ["завантажив", "закачав", "викачав", "скопіював"]
+      explanation: "«Скачати» — русизм. Правильно: завантажити."
+    - sentence: "Ця фіча ще не заімплементована."
+      error: "заімплементована"
+      answer: "реалізована"
+      options: ["реалізована", "впроваджена", "додана", "створена"]
+      explanation: "Офіційно: «реалізована» або «впроваджена»."
+    - sentence: "Мені потрібен доступ до цьому серверу."
+      error: "цьому серверу"
+      answer: "цього сервера"
+      options: ["цього сервера", "того сервера", "даного сервера", "вашого сервера"]
+      explanation: "Доступ до (чого?) — родовий відмінок: до цього сервера."
+    - sentence: "Компанія наняла нові програмісти."
+      error: "програмісти"
+      answer: "програмістів"
+      options: ["програмістів", "програміста", "програмістами", "програміст"]
+      explanation: "Найняти (кого?) — знахідний відмінок: програмістів."
+    - sentence: "Дані зберігаються на протязі року."
+      error: "на протязі"
+      answer: "протягом"
+      options: ["протягом", "упродовж", "на протязі", "за"]
+      explanation: "«На протязі» — русизм. Правильно: протягом."
+    - sentence: "Він працює в IT вже п'ять год."
+      error: "год"
+      answer: "років"
+      options: ["років", "рок", "роки", "годин"]
+      explanation: "Порівняйте: п'ять років (не «год» — це години)."
+    - sentence: "Стартап отримав інвестицію у мільйон долларів."
+      error: "долларів"
+      answer: "доларів"
+      options: ["доларів", "долярів", "долларів", "долларей"]
+      explanation: "Правильно: доларів (одна «л»)."
+    - sentence: "Цей код написаний на Python."
+      error: "написаний"
+      answer: "написаний"
+      options: ["написаний", "написано", "написали", "написанний"]
+      explanation: "«Написаний» — правильно (дієприкметник)."
+    - sentence: "Треба перевірити всі функціонали програми."
+      error: "функціонали"
+      answer: "функції"
+      options: ["функції", "функціонал", "функціональності", "функціональні"]
+      explanation: "«Функціонали» — неправильна множина. Правильно: функції."
+    - sentence: "Пароль повинен содержати спецсимволи."
+      error: "содержати"
+      answer: "містити"
+      options: ["містити", "включати", "мати", "утримувати"]
+      explanation: "«Содержати» — русизм. Правильно: містити."
+    - sentence: "Компанія реалізує проект по кібербезпеці."
+      error: "по кібербезпеці"
+      answer: "з кібербезпеки"
+      options: ["з кібербезпеки", "про кібербезпеку", "для кібербезпеки", "на кібербезпеку"]
+      explanation: "«По» — часто русизм. Правильно: проект з кібербезпеки."
+
+# Activity 9: Translate IT terms
+- id: translate-it
+  type: translate
+  title: "Перекладіть IT-терміни"
+  instruction: "Оберіть найкращий переклад."
+  items:
+    - source: "software update"
+      options:
+        - text: "оновлення програмного забезпечення"
+          correct: true
+        - text: "софтверний апдейт"
+          correct: false
+        - text: "програмне поновлення"
+          correct: false
+        - text: "софт-оновлення"
+          correct: false
+      explanation: "Офіційно: оновлення програмного забезпечення."
+    - source: "cloud computing"
+      options:
+        - text: "хмарні обчислення"
+          correct: true
+        - text: "клауд компʼютинг"
+          correct: false
+        - text: "обчислення в хмарах"
+          correct: false
+        - text: "хмарне рахування"
+          correct: false
+      explanation: "«Хмарні обчислення» — офіційний термін."
+    - source: "artificial intelligence"
+      options:
+        - text: "штучний інтелект"
+          correct: true
+        - text: "артифіціальний інтелект"
+          correct: false
+        - text: "неприродний розум"
+          correct: false
+        - text: "синтетичний інтелект"
+          correct: false
+      explanation: "ШІ — штучний інтелект."
+    - source: "database"
+      options:
+        - text: "база даних"
+          correct: true
+        - text: "датабейз"
+          correct: false
+        - text: "сховище даних"
+          correct: false
+        - text: "банк даних"
+          correct: false
+      explanation: "База даних — стандартний термін."
+    - source: "cybersecurity"
+      options:
+        - text: "кібербезпека"
+          correct: true
+        - text: "кібер-захист"
+          correct: false
+        - text: "інтернет-безпека"
+          correct: false
+        - text: "цифровий захист"
+          correct: false
+      explanation: "Кібербезпека (одне слово, без дефіса)."
+    - source: "machine learning"
+      options:
+        - text: "машинне навчання"
+          correct: true
+        - text: "машинний лернінг"
+          correct: false
+        - text: "комп'ютерне навчання"
+          correct: false
+        - text: "автоматичне навчання"
+          correct: false
+      explanation: "Машинне навчання — офіційний термін."
+    - source: "password"
+      options:
+        - text: "пароль"
+          correct: true
+        - text: "пассворд"
+          correct: false
+        - text: "секретне слово"
+          correct: false
+        - text: "код доступу"
+          correct: false
+      explanation: "Пароль — стандартний термін."
+    - source: "backup"
+      options:
+        - text: "резервна копія"
+          correct: true
+        - text: "бекап"
+          correct: false
+        - text: "запасна копія"
+          correct: false
+        - text: "дублікат"
+          correct: false
+      explanation: "Резервна копія — офіційний термін."
+    - source: "to download"
+      options:
+        - text: "завантажити"
+          correct: true
+        - text: "скачати"
+          correct: false
+        - text: "даунлоадити"
+          correct: false
+        - text: "закачати"
+          correct: false
+      explanation: "Завантажити — правильний переклад."
+    - source: "network"
+      options:
+        - text: "мережа"
+          correct: true
+        - text: "нетворк"
+          correct: false
+        - text: "сітка"
+          correct: false
+        - text: "система"
+          correct: false
+      explanation: "Мережа — стандартний термін."
+    - source: "authentication"
+      options:
+        - text: "аутентифікація"
+          correct: true
+        - text: "автентикація"
+          correct: false
+        - text: "авторизація"
+          correct: false
+        - text: "ідентифікація"
+          correct: false
+      explanation: "Аутентифікація — перевірка особи."
+    - source: "encryption"
+      options:
+        - text: "шифрування"
+          correct: true
+        - text: "енкрипція"
+          correct: false
+        - text: "кодування"
+          correct: false
+        - text: "захист"
+          correct: false
+      explanation: "Шифрування — перетворення даних у нечитабельний формат."
+
+# Activity 10: Mark-the-words IT
+- id: mark-it-terms
+  type: mark-the-words
+  title: "Позначте IT-терміни"
+  instruction: "Позначте всі IT-терміни у тексті."
+  text: "Українські *розробники* створюють *стартапи* зі *штучним інтелектом* та *хмарними* технологіями. Вони використовують *Python* та *JavaScript* для написання *коду*. *Кіберзахист* став пріоритетом після 2022 року. *Сервери* потрібно регулярно *оновлювати*. *Дані* зберігаються в *базах даних*. Кожен *програміст* повинен вміти працювати з *Git*."
+
+# Activity 11: Dialogue reorder IT
+- id: dialogue-reorder-it
+  type: dialogue-reorder
+  title: "Поставте репліки у правильному порядку"
+  instruction: "Розташуйте репліки чату розробників у логічній послідовності."
+  lines:
+    - order: 1
+      speaker: "Олексій"
+      text: "Привіт! Бачив останній коміт у репозиторії?"
+    - order: 2
+      speaker: "Марина"
+      text: "Привіт! Ні, ще не дивилась. Щось серйозне?"
+    - order: 3
+      speaker: "Олексій"
+      text: "Так, є баг у формі реєстрації. Валідація не працює."
+    - order: 4
+      speaker: "Марина"
+      text: "Ой, це з моєї гілки? Я вчора мержила зміни."
+    - order: 5
+      speaker: "Олексій"
+      text: "Схоже, що так. Можеш глянути?"
+    - order: 6
+      speaker: "Марина"
+      text: "Так, зараз подивлюсь. Де саме помилка?"
+    - order: 7
+      speaker: "Олексій"
+      text: "При відправці форми без email-адреси не показує помилку."
+    - order: 8
+      speaker: "Марина"
+      text: "Зрозуміло. Знайшла — забула перевірку на порожнє поле."
+    - order: 9
+      speaker: "Олексій"
+      text: "Супер! Скільки часу займе фікс?"
+    - order: 10
+      speaker: "Марина"
+      text: "5 хвилин. Зараз пушну фікс."
+    - order: 11
+      speaker: "Олексій"
+      text: "Чудово! Потім потрібно задеплоїти на стейджинг для тестування."
+    - order: 12
+      speaker: "Марина"
+      text: "Готово! PR створено. Можеш зааппрувити?"
+    - order: 13
+      speaker: "Олексій"
+      text: "Так, дивлюсь. Все ок, мержу."
+    - order: 14
+      speaker: "Марина"
+      text: "Дякую! Деплоїмо на стейджинг?"
+    - order: 15
+      speaker: "Олексій"
+      text: "Так, давай. Перевіримо та потім на продакшн."
+    - order: 16
+      speaker: "Марина"
+      text: "Зроблено! Тепер все працює як треба."
+
+# Activity 12: Select IT security practices
+- id: select-security
+  type: select
+  title: "Оберіть правила кібербезпеки"
+  instruction: "Позначте всі варіанти, що є хорошими практиками безпеки."
+  items:
+    - text: "Використовувати складний пароль мінімум 12 символів"
+      correct: true
+    - text: "Записувати паролі на стікерах біля монітора"
+      correct: false
+    - text: "Увімкнути двофакторну аутентифікацію"
+      correct: true
+    - text: "Використовувати один пароль для всіх сервісів"
+      correct: false
+    - text: "Регулярно оновлювати програмне забезпечення"
+      correct: true
+    - text: "Відкривати всі вкладення з невідомих листів"
+      correct: false
+    - text: "Робити резервні копії важливих даних"
+      correct: true
+    - text: "Підключатися до будь-яких публічних Wi-Fi"
+      correct: false
+    - text: "Шифрувати конфіденційні файли"
+      correct: true
+    - text: "Ділитися паролями з колегами"
+      correct: false
+    - text: "Використовувати VPN для захисту"
+      correct: true
+    - text: "Ігнорувати оновлення антивіруса"
+      correct: false
+    - text: "Перевіряти URL перед введенням даних"
+      correct: true
+    - text: "Встановлювати програми з неперевірених джерел"
+      correct: false
+    - text: "Виходити з акаунтів на чужих пристроях"
+      correct: true
+    - text: "Використовувати менеджер паролів"
+      correct: true
+
+# Activity 13: Fill-in Ukrainian IT companies
+- id: fill-in-companies
+  type: fill-in
+  title: "Заповніть факти про українські IT-компанії"
+  instruction: "Оберіть правильну інформацію про українські технологічні компанії."
+  items:
+    - prompt: "___ — сервіс перевірки граматики, заснований українцями."
+      answer: "Grammarly"
+      options: ["Grammarly", "Google", "DeepL", "Ginger"]
+    - prompt: "Перший комп'ютер у континентальній Європі створив ___."
+      answer: "Сергій Лебедєв"
+      options: ["Сергій Лебедєв", "Алан Тюрінг", "Стів Джобс", "Білл Гейтс"]
+    - prompt: "___ — українська платформа для вивчення мов."
+      answer: "Preply"
+      options: ["Preply", "Duolingo", "Babbel", "Rosetta Stone"]
+    - prompt: "Ajax Systems виробляє розумні системи ___."
+      answer: "безпеки"
+      options: ["безпеки", "опалення", "освітлення", "розваг"]
+    - prompt: "___ — технологія клонування голосу від української компанії."
+      answer: "Respeecher"
+      options: ["Respeecher", "Deepfake", "Voice.ai", "Synthesia"]
+    - prompt: "Головна українська IT-спільнота — ___."
+      answer: "DOU"
+      options: ["DOU", "Reddit", "Habr", "Stack Overflow"]
+    - prompt: "Безкоштовні онлайн-курси пропонує платформа ___."
+      answer: "Prometheus"
+      options: ["Prometheus", "Coursera", "Udemy", "Khan Academy"]
+    - prompt: "GitLab має ___ коріння."
+      answer: "українське"
+      options: ["українське", "американське", "німецьке", "ірландське"]
+    - prompt: "Reface — додаток для заміни ___ у відео."
+      answer: "обличчя"
+      options: ["обличчя", "голосу", "тексту", "фону"]
+    - prompt: "CERT-UA — це урядова ___ реагування на кіберінциденти."
+      answer: "команда"
+      options: ["команда", "агенція", "служба", "міністерство"]
+    - prompt: "Експорт IT-послуг у 2021 році перевищив ___ мільярдів доларів."
+      answer: "6"
+      options: ["6", "1", "10", "20"]
+    - prompt: "Віктор ___ заснував Інститут кібернетики в Києві."
+      answer: "Глушков"
+      options: ["Глушков", "Лебедєв", "Королев", "Патон"]
+
+# Activity 14: Quiz AI concepts
+- id: quiz-ai
+  type: quiz
+  title: "Тест: штучний інтелект"
+  instruction: "Оберіть правильну відповідь про ШІ та машинне навчання."
+  items:
+    - question: "CNN у контексті нейромереж — це:"
+      options:
+        - text: "Згорткова нейронна мережа"
+          correct: true
+        - text: "Американський телеканал"
+          correct: false
+        - text: "Комп'ютерна новинна мережа"
+          correct: false
+        - text: "Централізована нейронна мережа"
+          correct: false
+      explanation: "CNN (Convolutional Neural Network) — для обробки зображень."
+    - question: "GPT використовує архітектуру:"
+      options:
+        - text: "Трансформер"
+          correct: true
+        - text: "CNN"
+          correct: false
+        - text: "RNN"
+          correct: false
+        - text: "GAN"
+          correct: false
+      explanation: "GPT базується на архітектурі трансформера."
+    - question: "Машинне навчання — це:"
+      options:
+        - text: "Алгоритми, що навчаються на даних"
+          correct: true
+        - text: "Навчання комп'ютерів людьми"
+          correct: false
+        - text: "Онлайн-курси для програмістів"
+          correct: false
+        - text: "Автоматичне програмування"
+          correct: false
+      explanation: "ML — алгоритми, що самостійно покращуються на даних."
+    - question: "GAN використовуються для:"
+      options:
+        - text: "Генерації нового контенту"
+          correct: true
+        - text: "Захисту від вірусів"
+          correct: false
+        - text: "Стиснення даних"
+          correct: false
+        - text: "Прискорення інтернету"
+          correct: false
+      explanation: "Generative Adversarial Networks генерують нові зображення, тексти тощо."
+    - question: "Обробка природної мови (NLP) — це:"
+      options:
+        - text: "Аналіз та генерація людського тексту"
+          correct: true
+        - text: "Переклад мов програмування"
+          correct: false
+        - text: "Обробка звукових файлів"
+          correct: false
+        - text: "Написання документації"
+          correct: false
+      explanation: "NLP працює з людською мовою: переклад, аналіз, генерація."
+    - question: "Deep Learning — це:"
+      options:
+        - text: "Нейромережі з багатьма шарами"
+          correct: true
+        - text: "Поглиблене вивчення програмування"
+          correct: false
+        - text: "Аналіз глибоких даних"
+          correct: false
+        - text: "Віддалене навчання"
+          correct: false
+      explanation: "Deep Learning — глибоке навчання з багатошаровими нейромережами."
+    - question: "Комп'ютерний зір використовується для:"
+      options:
+        - text: "Аналізу зображень та відео"
+          correct: true
+        - text: "Створення віртуальної реальності"
+          correct: false
+        - text: "Покращення якості монітора"
+          correct: false
+        - text: "Захисту очей"
+          correct: false
+      explanation: "Computer Vision аналізує візуальну інформацію."
+    - question: "Рекомендаційні системи Netflix базуються на:"
+      options:
+        - text: "Машинному навчанні"
+          correct: true
+        - text: "Випадковому виборі"
+          correct: false
+        - text: "Алфавітному порядку"
+          correct: false
+        - text: "Даті випуску"
+          correct: false
+      explanation: "ML аналізує вподобання та рекомендує контент."
+    - question: "BERT — це модель для:"
+      options:
+        - text: "Розуміння контексту тексту"
+          correct: true
+        - text: "Генерації зображень"
+          correct: false
+        - text: "Розпізнавання музики"
+          correct: false
+        - text: "Шифрування даних"
+          correct: false
+      explanation: "BERT (Google) розуміє контекст слів у реченні."
+    - question: "Безпілотні автомобілі використовують:"
+      options:
+        - text: "Комп'ютерний зір та ШІ"
+          correct: true
+        - text: "Тільки GPS"
+          correct: false
+        - text: "Радіохвилі"
+          correct: false
+        - text: "Супутникове керування"
+          correct: false
+      explanation: "Автопілот поєднує сенсори, камери та ШІ."
+    - question: "ChatGPT — це приклад:"
+      options:
+        - text: "Великої мовної моделі"
+          correct: true
+        - text: "Пошукової системи"
+          correct: false
+        - text: "Соціальної мережі"
+          correct: false
+        - text: "Операційної системи"
+          correct: false
+      explanation: "ChatGPT — LLM (Large Language Model) від OpenAI."
+    - question: "Reinforcement Learning — це навчання через:"
+      options:
+        - text: "Винагороди та покарання"
+          correct: true
+        - text: "Копіювання даних"
+          correct: false
+        - text: "Читання книг"
+          correct: false
+        - text: "Спостереження"
+          correct: false
+      explanation: "Навчання з підкріпленням — через feedback від середовища."

@@ -1,0 +1,21 @@
+id: 138
+slug: '138-academic-writing'
+title: 'Академічне письмо'
+subtitle: 'Academic Writing'
+version: '2.0'
+phase: 'B2.4 Skills & Capstone'
+focus: 'skills'
+pedagogy: 'TTT'
+duration: 120
+transliteration: none
+tags:
+  - skills
+  - academic
+  - writing
+grammar:
+  - 'Структура аргументативного есе'
+  - 'Використання вставних слів для зв’язку думок (отже, по-перше, з іншого боку)'
+objectives:
+  - 'Учень знає структуру академічного есе та правила цитування'
+  - 'Учень може будувати логічну аргументацію з використанням тез та доказів'
+  - 'Учень розуміє принципи академічної доброчесності'

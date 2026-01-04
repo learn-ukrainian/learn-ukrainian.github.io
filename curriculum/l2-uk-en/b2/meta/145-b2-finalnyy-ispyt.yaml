@@ -1,0 +1,20 @@
+module: b2-145
+title: "B2 Фінальний іспит"
+subtitle: "B2 Final Exam"
+version: "2.0"
+phase: "B2.4 Skills & Capstone"
+focus: checkpoint
+pedagogy: "Test"
+duration: 180
+transliteration: none
+tags:
+  - exam
+  - assessment
+  - certification
+grammar:
+  - "Comprehensive B2 Grammar"
+objectives:
+  - "Demonstrate B2 level proficiency"
+  - "Pass final comprehensive assessment"
+vocabulary_count: 25
+slug: 145-b2-finalnyy-ispyt

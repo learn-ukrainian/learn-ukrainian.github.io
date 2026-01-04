@@ -1,19 +1,33 @@
 # Audit Report: 03-impersonal-passive.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "TTT" | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.1a | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Виправлення відмінкових помилок' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 4/16 items with placeholders/missing errors.
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Виправлення стилістичних помилок' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 8/16 items with placeholders/missing errors.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): скасовано, припинено, змінено, виправлено, вирішено...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 3 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1849/1750
-- **Activities:** ✅ 15/14
+- **Words:** ✅ 1815/1750
+- **Activities:** ✅ 14/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 210/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 100.0% (target 98-100% (grammar))
 - **Richness:** ✅ 98% (grammar)
 - **Grammar:** ⏳ Pending validation
@@ -31,22 +45,16 @@
 | variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 10 | 3 | 100% | 5% | 5.0% |
+| visual | 9 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 0.90 | - | 90% | 5% | 4.5% |
-| questions | 30 | 5 | 100% | 5% | 5.0% |
+| questions | 29 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.0%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (15 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Безособові конструкції з -но/-то** | ⚪️ | 79 | Skipped |
+| **Intro/Narrative** | ✅ | 45 | Included in Core |
 | **Тест: Прочитайте текст** | ✅ | 162 | Included in Core |
 | **Пояснення** | ⚪️ | 458 | Skipped |
 | **Регістрова варіація** | ⚪️ | 466 | Skipped |
@@ -58,4 +66,3 @@
 | **Що ви вивчили** | ⚪️ | 34 | Skipped |
 | **Самоперевірка** | ⚪️ | 45 | Skipped |
 | **Зв'язок з попередніми модулями** | ⚪️ | 0 | Skipped |
-| **Словник** | ⚪️ | 0 | Skipped |

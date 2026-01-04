@@ -9,43 +9,20 @@
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A2",
-    "phase": "A2",
+    "phase": "A2.1",
     "moduleNumber": 52,
-    "moduleType": "vocabulary",
-    "pedagogy": "Narrative",
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
     "immersionLevel": 0.4,
-    "title": "Shopping & Services",
+    "title": "Module 52",
     "titleUk": null,
-    "subtitle": "Buying and Selling in Ukrainian",
-    "description": {
-      "Buy items in a shop": "купувати, платити"
-    },
-    "objectives": [
-      {
-        "Buy items in a shop": "купувати, платити"
-      },
-      {
-        "Use services": "банк, пошта, перукарня"
-      },
-      {
-        "Talk about money": "готівка, картка, ціна"
-      },
-      {
-        "Ask for price": "скільки коштує?"
-      }
-    ],
+    "subtitle": null,
+    "description": "Module 52",
+    "objectives": [],
     "objectivesUk": null,
-    "grammarFocus": [
-      "accusative-inanimate",
-      "genitive-quantities"
-    ],
-    "tags": [
-      "vocabulary",
-      "shopping",
-      "money",
-      "services"
-    ],
-    "totalDuration": 60,
+    "grammarFocus": [],
+    "tags": [],
+    "totalDuration": 45,
     "transliterationMode": "none",
     "sections": [
       {
@@ -60,104 +37,74 @@
         "name": "Summary",
         "nameEn": null,
         "type": "summary",
-        "content": "You learned to:\n- Use shop types: **магазин**, **ринок**, **супермаркет**, **аптека**\n- Use services: **банк**, **пошта**, **перукарня**\n- Money words: **готівка**, **картка**, **решта**, **знижка**\n- Shopping actions: **купувати**, **платити**, **міряти**\n\nShopping in Ukraine is easy and modern. Don't be afraid to ask the price!\n\n> 💡 **Культура покупок**\n>\n> «На базарі торгуються, у супермаркеті — ні. Це українська традиція!»\n>\n> *Translation: \"At the bazaar, you bargain; at the supermarket, you don't.\"*\n\n> 🇺🇦 **Покупки в Україні**\n>\n> Корисні фрази для покупок:\n> - «Скільки коштує?» — How much does it cost?\n> - «Дайте, будь ласка...» — Please give me...\n> - «Я хочу купити...» — I want to buy...\n> - «Це занадто дорого!» — That's too expensive!\n>\n> На базарі можна торгуватися! Питайте: «А дешевше можна?»\n\n> 🛒 **Сучасний шопінг в Україні**\n>\n> Україна — сучасна країна! Тут працюють Apple Pay, Google Pay, безконтактна оплата. Нова Пошта доставляє посилки за один день. Rozetka — український Amazon. Інтернет-шопінг дуже популярний!\n>\n> Основні слова для покупок:\n> - **магазин** — будь-який магазин\n> - **супермаркет** — великий магазин для продуктів\n> - **ринок** — традиційний базар зі свіжими продуктами\n> - **торговий центр** — сучасний молл для шопінгу\n>\n> Запрошуємо до покупок! Шопінг в Україні — це зручно та швидко!\n\n> [!resources] 🔗 External Resources\n>\n> **YouTube:** [UKRAINIAN DIALOGUES for beginners. Episode #3 At the coffee shop](https://www.youtube.com/watch?v=YLBABZIOoo0) — Speak Ukrainian\n>\n> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview\n>\n> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises"
-      },
-      {
-        "id": "section-3",
-        "name": "Vocabulary",
-        "nameEn": null,
-        "type": "vocabulary",
-        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| перукарня | /peruˈkarnʲa/ | hairdresser's | noun | f | |\n| хімчистка | /ximˈtʃɪstka/ | dry cleaner's | noun | f | |\n| міряти | /ˈmirʲatɪ/ | to try on | verb | - | |\n| торговий центр | /torˈhɔʋɪj ˈtsɛntr/ | shopping mall | phrase | m | |\n| відділення | /vidˈdilennʲa/ | branch/office | noun | n | |\n| одяг | /ˈɔdʲaɦ/ | clothes | noun | m | |\n| продукти | /proˈduktɪ/ | groceries | noun | pl | |\n| сервіс | /ˈsɛrvis/ | service | noun | m | |"
+        "content": "You learned to:\n- Use shop types: **магазин**, **ринок**, **супермаркет**, **аптека**\n- Use services: **банк**, **пошта**, **перукарня**\n- Money words: **готівка**, **картка**, **решта**, **знижка**\n- Shopping actions: **купувати**, **платити**, **міряти**\n\nShopping in Ukraine is easy and modern. Don't be afraid to ask the price!\n\n> 💡 **Культура покупок**\n>\n> «На базарі торгуються, у супермаркеті — ні. Це українська традиція!»\n>\n> *Translation: \"At the bazaar, you bargain; at the supermarket, you don't.\"*\n\n> 🇺🇦 **Покупки в Україні**\n>\n> Корисні фрази для покупок:\n> - «Скільки коштує?» — How much does it cost?\n> - «Дайте, будь ласка...» — Please give me...\n> - «Я хочу купити...» — I want to buy...\n> - «Це занадто дорого!» — That's too expensive!\n>\n> На базарі можна торгуватися! Питайте: «А дешевше можна?»\n\n> 🛒 **Сучасний шопінг в Україні**\n>\n> Україна — сучасна країна! Тут працюють Apple Pay, Google Pay, безконтактна оплата. Нова Пошта доставляє посилки за один день. Rozetka — український Amazon. Інтернет-шопінг дуже популярний!\n>\n> Основні слова для покупок:\n> - **магазин** — будь-який магазин\n> - **супермаркет** — великий магазин для продуктів\n> - **ринок** — традиційний базар зі свіжими продуктами\n> - **торговий центр** — сучасний молл для шопінгу\n>\n> Запрошуємо до покупок! Шопінг в Україні — це зручно та швидко!"
       }
     ],
-    "rawMarkdown": "---\nmodule: a2-52\ntitle: Shopping & Services\nsubtitle: \"Buying and Selling in Ukrainian\"\nversion: \"1.0\"\nphase: \"A2\"\npedagogy: \"Narrative\"\nduration: 60\ntransliteration: none\ntags: [\"vocabulary\", \"shopping\", \"money\", \"services\"]\ngrammar: [\"accusative-inanimate\", \"genitive-quantities\"]\nobjectives:\n  - Buy items in a shop: купувати, платити\n  - Use services: банк, пошта, перукарня\n  - Talk about money: готівка, картка, ціна\n  - Ask for price: скільки коштує?\nvocab_count: 30\n---\n\n# Shopping & Services\n\n## Warm-up\n\nВи любите ходити по магазинах? Де ви купуєте продукти: у супермаркеті чи на ринку? Як ви платите: карткою чи готівкою?\n\nВ Україні шопінг — це і сучасні торгові центри, і традиційні базари. А сервіс, як банк чи пошта, став дуже цифровим і зручним. Давайте навчимося робити покупки українською!\n\nShopping is a daily necessity. In this module, you'll master three key areas:\n1. **Shop vocabulary** — supermarkets, markets, and malls\n2. **Service vocabulary** — banks, post offices, and salons\n3. **Money talk** — prices, payments, and bargaining\n\n> [!important] **Myth Buster** \"Cash Only?\"\n> Think you need a suitcase of cash in Eastern Europe? Wrong! Ukraine is a leader in cashless payments. You can pay with Apple Pay or Google Pay almost everywhere — in the subway, at a tiny coffee kiosk, and often even at the market. **Готівка** (cash) is becoming rare!\n\n## Presentation\n\n### Shops (Магазини)\n\nWhere do we buy things?\n\n| Слово | Переклад | Приклад |\n|-------|----------|---------|\n| **магазин** | shop/store | Продуктовий магазин. |\n| **супермаркет** | supermarket | Великий супермаркет. |\n| **ринок** | market/bazaar | Свіжі овочі на ринку. |\n| **торговий центр** | shopping mall | Ми йдемо в торговий центр. |\n| **аптека** | pharmacy | Купити ліки в аптеці. |\n| **каса** | checkout/cashier | Платити на касі. |\n| **черга** | queue/line | Довга черга. |\n| **ціна** | price | Висока ціна. |\n\n### Services (Послуги)\n\n- **банк** — bank: *Я йду в банк.*\n- **пошта** — post office: *Надіслати лист на пошті.*\n- **перукарня** — hairdresser's: *Мені треба в перукарню.*\n- **хімчистка** — dry cleaner's: *Здати пальто в хімчистку.*\n- **ресторан** — restaurant: *Вечеря в ресторані.*\n- **готель** — hotel: *Забронювати готель.*\n\n### Actions & Money\n\n- **купувати** — to buy: *Я купую хліб.*\n- **платити** — to pay: *Я плачу карткою.*\n- **замовляти** — to order: *Ми замовляємо піцу.*\n- **міряти** — to try on: *Міряти сукню.*\n- **коштувати** — to cost: *Скільки це коштує?*\n- **готівка** — cash: *У мене тільки готівка.*\n- **картка** — card: *Оплата карткою.*\n- **решта** — change (money back): *Ваша решта.*\n- **знижка** — discount: *Сьогодні знижка 50%!*\n- **чек** — receipt/check: *Візьміть чек.*\n\n> [!note] Grammar Point: Asking Price\n> To ask \"How much is it?\", we say:\n> - **Скільки це коштує?** (How much does this cost?)\n> - **Яка ціна?** (What is the price?)\n> The verb **коштувати** agrees with the item:\n> - *Скільки коштує хліб?* (Singular)\n> - *Скільки коштують банани?* (Plural)\n\n> [!cultural] **Cultural Insight** The Market (Ринок/Базар)\n> The **ринок** is the heart of Ukrainian food culture. Here you buy the freshest vegetables, fruits, meat, and cheese (especially **творог**). It's normal to taste (\"попробовать\") products before buying. And yes, you can bargain (\"торгуватися\"), but politely!\n\n> [!tip] **Common Mistakes to Avoid**\n> ❌ *Скільки коштує банани?* — Wrong! (Plural subject)\n> ✅ *Скільки коштують банани?* — Correct! (коштують for plural)\n>\n> ❌ *Я платю готівка.* — Wrong! (Case error)\n> ✅ *Я плачу готівкою.* — Correct! (Instrumental: with what?)\n>\n> ❌ *Я йду в магазині.* — Wrong! (Location vs. direction)\n> ✅ *Я йду в магазин.* — Correct! (Accusative for direction)\n> ✅ *Я в магазині.* — Correct! (Locative for location)\n\n## Practice\n\nNow let's put these words into action with stories about shopping adventures across Ukraine — from traditional markets to modern malls.\n\n### Story Time: At the Market\n\nСьогодні субота. Бабуся Марія йде на **ринок**. Вона не любить **супермаркети**.\n— На ринку все свіже, — каже вона.\n\nВона підходить до продавця овочів.\n— Добрий день! Скільки **коштують** помідори?\n— 50 гривень за кілограм, — відповідає продавець. — Дуже солодкі, спробуйте!\nМарія куштує.\n— Смачні. Але чому так дорого? Давайте за 45?\n— Добре, для вас — 45.\n\nМарія бере два кілограми. Вона дає **готівку**.\n— Ось ваші 100 гривень.\n— Дякую, ось ваша **решта** — 10 гривень, — каже продавець.\nБабуся задоволена. Вона любить **купувати** на ринку.\n\n### Story Time: Shopping Mall\n\nАндрій і Олена йдуть у **торговий центр**. Це велика сучасна будівля.\nТут є одяг, техніка, кіно і кафе.\n\nОлена хоче купити нову сукню. Вони заходять у брендовий **магазин**.\n— Дивись, яка гарна сукня! — каже Олена. — І тут є **знижка**!\nВона йде **міряти** сукню. Вона їй пасує.\n\n— Ми беремо цю сукню, — каже Андрій на **касі**. — Можна заплатити **карткою**?\n— Так, звичайно прикладіть картку, — каже касир. — Ось ваш **чек**.\n\nПісля шопінгу вони йдуть у кафе. Андрій **замовляє** каву і тістечка.\nВони витратили багато грошей, але вони щасливі.\n\n### Story Time: Nova Poshta Revolution\n\nІван живе в Києві. Його мама живе в Одесі.\nМама приготувала варення і хоче передати його сину.\nРаніше це було довго. Але тепер є \"Нова Пошта\".\n\nМама йде на **пошту**. Це світле і чисте відділення. Немає **черги**.\n— Я хочу відправити посилку в Київ, — каже вона.\nОператор швидко оформлює замовлення.\n— Це буде **коштувати** 80 гривень. Оплата тут чи одержувач?\n— Одержувач, — каже мама.\n\nНа наступний день Іван отримує смс: \"Ваша посилка прибула\".\nВін заходить у відділення біля свого дому. Він сканує додаток у смартфоні, платить через Apple Pay і забирає варення.\nВсе зайняло 2 хвилини. Це магія українського сервісу.\n\n### Ukrainian Banking\n\nUkraine has a very advanced banking system.\nTraditional banks usually focus on physical branches. But modern neo-banks live in your phone.\nThe most famous is **Monobank** (symbolized by a cat). It has no branches. You open an account via app in 10 minutes.\nYou can send money to friends instantly using their phone number or card number. Everyone splits restaurant bills (\"скинутися на карту\") using apps.\nNobody writes paper checks. It's all digital.\n\nAlso, currency exchange (**обмін валют**) is strictly regulated but accessible. You can buy Dollars or Euros in the app or at bank branches.\n\n### Story Time: At the Hairdresser\n\nОльга хоче нову зачіску. Вона йде в **перукарню** \"Красуня\".\n— Добрий день, я записана на 14:00, — каже вона.\n— Добрий день, сідайте, будь ласка, — каже перукар Наталя. — Що будемо робити?\n— Я хочу стрижку і фарбування, — каже Ольга. — Скільки це буде **коштувати**?\n— Стрижка — 500 гривень, фарбування — 1500.\n— Добре.\n\nВони розмовляють про моду і життя.\nЧерез дві години Ольга дивиться у дзеркало.\n— Чудово! Мені дуже подобається.\nВона платить адміністратору на **касі** і залишає чайові.\n\n### Online Shopping in Ukraine\n\nUkrainians love online shopping (\"Інтернет-шопінг\").\n- **Rozetka**: The \"Amazon of Ukraine\". You can buy everything from electronics to pasta.\n- **Prom.ua**: A marketplace for small sellers.\n- **Zakaz.ua**: Grocery delivery from big supermarkets like Auchan or Metro.\n- **OLX**: For buying used items (second-hand).\n\nMost people order delivery to a \"Nova Poshta\" branch, not to their home address, because it's cheaper and more convenient. You come, check the item, and then pay (**оплата при отриманні**).\n\n### Story Time: Taxi\n\nАндрій викликав таксі через додаток Uklon.\n— Добрий день. Ви де? — дзвонить водій.\n— Я біля банку \"ПриватБанк\", — каже Андрій.\n— Буду через 5 хвилин. Яка у вас машина?\n— Сіра Тойота. Номер 4567.\n— Добре, чекаю на вулиці.\nАндрій сідає в машину.\n— На вокзал, будь ласка. Я поспішаю.\n— Не хвилюйтеся, встигнемо.\n\n### Food Delivery\n\nIf you are hungry, you don't need to cook.\nIn big cities like Kyiv or Lviv, you will see many couriers with yellow or green backpacks.\nApps like **Glovo** or **Bolt Food** work 24/7. You can order sushi, burgers, or even borscht from your favorite restaurant. Just open the app, choose the food, and wait 30 minutes. It is fast and tasty.\n\n> [!tip] **Tip** \"Sales\"\n> Black Friday is popular in Ukraine, but big **розпродаж** (sales) also happen in January and July. Look for signs saying **\"Знижки до -70%\"**. It's the best time to buy clothes!\n\n# Summary\n\nYou learned to:\n- Use shop types: **магазин**, **ринок**, **супермаркет**, **аптека**\n- Use services: **банк**, **пошта**, **перукарня**\n- Money words: **готівка**, **картка**, **решта**, **знижка**\n- Shopping actions: **купувати**, **платити**, **міряти**\n\nShopping in Ukraine is easy and modern. Don't be afraid to ask the price!\n\n> 💡 **Культура покупок**\n>\n> «На базарі торгуються, у супермаркеті — ні. Це українська традиція!»\n>\n> *Translation: \"At the bazaar, you bargain; at the supermarket, you don't.\"*\n\n> 🇺🇦 **Покупки в Україні**\n>\n> Корисні фрази для покупок:\n> - «Скільки коштує?» — How much does it cost?\n> - «Дайте, будь ласка...» — Please give me...\n> - «Я хочу купити...» — I want to buy...\n> - «Це занадто дорого!» — That's too expensive!\n>\n> На базарі можна торгуватися! Питайте: «А дешевше можна?»\n\n> 🛒 **Сучасний шопінг в Україні**\n>\n> Україна — сучасна країна! Тут працюють Apple Pay, Google Pay, безконтактна оплата. Нова Пошта доставляє посилки за один день. Rozetka — український Amazon. Інтернет-шопінг дуже популярний!\n>\n> Основні слова для покупок:\n> - **магазин** — будь-який магазин\n> - **супермаркет** — великий магазин для продуктів\n> - **ринок** — традиційний базар зі свіжими продуктами\n> - **торговий центр** — сучасний молл для шопінгу\n>\n> Запрошуємо до покупок! Шопінг в Україні — це зручно та швидко!\n\n> [!resources] 🔗 External Resources\n>\n> **YouTube:** [UKRAINIAN DIALOGUES for beginners. Episode #3 At the coffee shop](https://www.youtube.com/watch?v=YLBABZIOoo0) — Speak Ukrainian\n>\n> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview\n>\n> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| перукарня | /peruˈkarnʲa/ | hairdresser's | noun | f | |\n| хімчистка | /ximˈtʃɪstka/ | dry cleaner's | noun | f | |\n| міряти | /ˈmirʲatɪ/ | to try on | verb | - | |\n| торговий центр | /torˈhɔʋɪj ˈtsɛntr/ | shopping mall | phrase | m | |\n| відділення | /vidˈdilennʲa/ | branch/office | noun | n | |\n| одяг | /ˈɔdʲaɦ/ | clothes | noun | m | |\n| продукти | /proˈduktɪ/ | groceries | noun | pl | |\n| сервіс | /ˈsɛrvis/ | service | noun | m | |\n",
-    "createdAt": "2025-12-31T22:53:06.330529Z",
-    "modifiedAt": "2025-12-31T22:53:06.330529Z",
+    "rawMarkdown": "# Shopping & Services\n\n## Warm-up\n\nВи любите ходити по магазинах? Де ви купуєте продукти: у супермаркеті чи на ринку? Як ви платите: карткою чи готівкою?\n\nВ Україні шопінг — це і сучасні торгові центри, і традиційні базари. А сервіс, як банк чи пошта, став дуже цифровим і зручним. Давайте навчимося робити покупки українською!\n\nShopping is a daily necessity. In this module, you'll master three key areas:\n1. **Shop vocabulary** — supermarkets, markets, and malls\n2. **Service vocabulary** — banks, post offices, and salons\n3. **Money talk** — prices, payments, and bargaining\n\n> [!important] **Myth Buster** \"Cash Only?\"\n> Think you need a suitcase of cash in Eastern Europe? Wrong! Ukraine is a leader in cashless payments. You can pay with Apple Pay or Google Pay almost everywhere — in the subway, at a tiny coffee kiosk, and often even at the market. **Готівка** (cash) is becoming rare!\n\n## Presentation\n\n### Shops (Магазини)\n\nWhere do we buy things?\n\n| Слово | Переклад | Приклад |\n|-------|----------|---------|\n| **магазин** | shop/store | Продуктовий магазин. |\n| **супермаркет** | supermarket | Великий супермаркет. |\n| **ринок** | market/bazaar | Свіжі овочі на ринку. |\n| **торговий центр** | shopping mall | Ми йдемо в торговий центр. |\n| **аптека** | pharmacy | Купити ліки в аптеці. |\n| **каса** | checkout/cashier | Платити на касі. |\n| **черга** | queue/line | Довга черга. |\n| **ціна** | price | Висока ціна. |\n\n### Services (Послуги)\n\n- **банк** — bank: *Я йду в банк.*\n- **пошта** — post office: *Надіслати лист на пошті.*\n- **перукарня** — hairdresser's: *Мені треба в перукарню.*\n- **хімчистка** — dry cleaner's: *Здати пальто в хімчистку.*\n- **ресторан** — restaurant: *Вечеря в ресторані.*\n- **готель** — hotel: *Забронювати готель.*\n\n### Actions & Money\n\n- **купувати** — to buy: *Я купую хліб.*\n- **платити** — to pay: *Я плачу карткою.*\n- **замовляти** — to order: *Ми замовляємо піцу.*\n- **міряти** — to try on: *Міряти сукню.*\n- **коштувати** — to cost: *Скільки це коштує?*\n- **готівка** — cash: *У мене тільки готівка.*\n- **картка** — card: *Оплата карткою.*\n- **решта** — change (money back): *Ваша решта.*\n- **знижка** — discount: *Сьогодні знижка 50%!*\n- **чек** — receipt/check: *Візьміть чек.*\n\n> [!note] Grammar Point: Asking Price\n> To ask \"How much is it?\", we say:\n> - **Скільки це коштує?** (How much does this cost?)\n> - **Яка ціна?** (What is the price?)\n> The verb **коштувати** agrees with the item:\n> - *Скільки коштує хліб?* (Singular)\n> - *Скільки коштують банани?* (Plural)\n\n> [!cultural] **Cultural Insight** The Market (Ринок/Базар)\n> The **ринок** is the heart of Ukrainian food culture. Here you buy the freshest vegetables, fruits, meat, and cheese (especially **творог**). It's normal to taste (\"попробовать\") products before buying. And yes, you can bargain (\"торгуватися\"), but politely!\n\n> [!tip] **Common Mistakes to Avoid**\n> ❌ *Скільки коштує банани?* — Wrong! (Plural subject)\n> ✅ *Скільки коштують банани?* — Correct! (коштують for plural)\n>\n> ❌ *Я платю готівка.* — Wrong! (Case error)\n> ✅ *Я плачу готівкою.* — Correct! (Instrumental: with what?)\n>\n> ❌ *Я йду в магазині.* — Wrong! (Location vs. direction)\n> ✅ *Я йду в магазин.* — Correct! (Accusative for direction)\n> ✅ *Я в магазині.* — Correct! (Locative for location)\n\n## Practice\n\nNow let's put these words into action with stories about shopping adventures across Ukraine — from traditional markets to modern malls.\n\n### Story Time: At the Market\n\nСьогодні субота. Бабуся Марія йде на **ринок**. Вона не любить **супермаркети**.\n— На ринку все свіже, — каже вона.\n\nВона підходить до продавця овочів.\n— Добрий день! Скільки **коштують** помідори?\n— 50 гривень за кілограм, — відповідає продавець. — Дуже солодкі, спробуйте!\nМарія куштує.\n— Смачні. Але чому так дорого? Давайте за 45?\n— Добре, для вас — 45.\n\nМарія бере два кілограми. Вона дає **готівку**.\n— Ось ваші 100 гривень.\n— Дякую, ось ваша **решта** — 10 гривень, — каже продавець.\nБабуся задоволена. Вона любить **купувати** на ринку.\n\n### Story Time: Shopping Mall\n\nАндрій і Олена йдуть у **торговий центр**. Це велика сучасна будівля.\nТут є одяг, техніка, кіно і кафе.\n\nОлена хоче купити нову сукню. Вони заходять у брендовий **магазин**.\n— Дивись, яка гарна сукня! — каже Олена. — І тут є **знижка**!\nВона йде **міряти** сукню. Вона їй пасує.\n\n— Ми беремо цю сукню, — каже Андрій на **касі**. — Можна заплатити **карткою**?\n— Так, звичайно прикладіть картку, — каже касир. — Ось ваш **чек**.\n\nПісля шопінгу вони йдуть у кафе. Андрій **замовляє** каву і тістечка.\nВони витратили багато грошей, але вони щасливі.\n\n### Story Time: Nova Poshta Revolution\n\nІван живе в Києві. Його мама живе в Одесі.\nМама приготувала варення і хоче передати його сину.\nРаніше це було довго. Але тепер є \"Нова Пошта\".\n\nМама йде на **пошту**. Це світле і чисте відділення. Немає **черги**.\n— Я хочу відправити посилку в Київ, — каже вона.\nОператор швидко оформлює замовлення.\n— Це буде **коштувати** 80 гривень. Оплата тут чи одержувач?\n— Одержувач, — каже мама.\n\nНа наступний день Іван отримує смс: \"Ваша посилка прибула\".\nВін заходить у відділення біля свого дому. Він сканує додаток у смартфоні, платить через Apple Pay і забирає варення.\nВсе зайняло 2 хвилини. Це магія українського сервісу.\n\n### Ukrainian Banking\n\nUkraine has a very advanced banking system.\nTraditional banks usually focus on physical branches. But modern neo-banks live in your phone.\nThe most famous is **Monobank** (symbolized by a cat). It has no branches. You open an account via app in 10 minutes.\nYou can send money to friends instantly using their phone number or card number. Everyone splits restaurant bills (\"скинутися на карту\") using apps.\nNobody writes paper checks. It's all digital.\n\nAlso, currency exchange (**обмін валют**) is strictly regulated but accessible. You can buy Dollars or Euros in the app or at bank branches.\n\n### Story Time: At the Hairdresser\n\nОльга хоче нову зачіску. Вона йде в **перукарню** \"Красуня\".\n— Добрий день, я записана на 14:00, — каже вона.\n— Добрий день, сідайте, будь ласка, — каже перукар Наталя. — Що будемо робити?\n— Я хочу стрижку і фарбування, — каже Ольга. — Скільки це буде **коштувати**?\n— Стрижка — 500 гривень, фарбування — 1500.\n— Добре.\n\nВони розмовляють про моду і життя.\nЧерез дві години Ольга дивиться у дзеркало.\n— Чудово! Мені дуже подобається.\nВона платить адміністратору на **касі** і залишає чайові.\n\n### Online Shopping in Ukraine\n\nUkrainians love online shopping (\"Інтернет-шопінг\").\n- **Rozetka**: The \"Amazon of Ukraine\". You can buy everything from electronics to pasta.\n- **Prom.ua**: A marketplace for small sellers.\n- **Zakaz.ua**: Grocery delivery from big supermarkets like Auchan or Metro.\n- **OLX**: For buying used items (second-hand).\n\nMost people order delivery to a \"Nova Poshta\" branch, not to their home address, because it's cheaper and more convenient. You come, check the item, and then pay (**оплата при отриманні**).\n\n### Story Time: Taxi\n\nАндрій викликав таксі через додаток Uklon.\n— Добрий день. Ви де? — дзвонить водій.\n— Я біля банку \"ПриватБанк\", — каже Андрій.\n— Буду через 5 хвилин. Яка у вас машина?\n— Сіра Тойота. Номер 4567.\n— Добре, чекаю на вулиці.\nАндрій сідає в машину.\n— На вокзал, будь ласка. Я поспішаю.\n— Не хвилюйтеся, встигнемо.\n\n### Food Delivery\n\nIf you are hungry, you don't need to cook.\nIn big cities like Kyiv or Lviv, you will see many couriers with yellow or green backpacks.\nApps like **Glovo** or **Bolt Food** work 24/7. You can order sushi, burgers, or even borscht from your favorite restaurant. Just open the app, choose the food, and wait 30 minutes. It is fast and tasty.\n\n> [!tip] **Tip** \"Sales\"\n> Black Friday is popular in Ukraine, but big **розпродаж** (sales) also happen in January and July. Look for signs saying **\"Знижки до -70%\"**. It's the best time to buy clothes!\n\n# Summary\n\nYou learned to:\n- Use shop types: **магазин**, **ринок**, **супермаркет**, **аптека**\n- Use services: **банк**, **пошта**, **перукарня**\n- Money words: **готівка**, **картка**, **решта**, **знижка**\n- Shopping actions: **купувати**, **платити**, **міряти**\n\nShopping in Ukraine is easy and modern. Don't be afraid to ask the price!\n\n> 💡 **Культура покупок**\n>\n> «На базарі торгуються, у супермаркеті — ні. Це українська традиція!»\n>\n> *Translation: \"At the bazaar, you bargain; at the supermarket, you don't.\"*\n\n> 🇺🇦 **Покупки в Україні**\n>\n> Корисні фрази для покупок:\n> - «Скільки коштує?» — How much does it cost?\n> - «Дайте, будь ласка...» — Please give me...\n> - «Я хочу купити...» — I want to buy...\n> - «Це занадто дорого!» — That's too expensive!\n>\n> На базарі можна торгуватися! Питайте: «А дешевше можна?»\n\n> 🛒 **Сучасний шопінг в Україні**\n>\n> Україна — сучасна країна! Тут працюють Apple Pay, Google Pay, безконтактна оплата. Нова Пошта доставляє посилки за один день. Rozetka — український Amazon. Інтернет-шопінг дуже популярний!\n>\n> Основні слова для покупок:\n> - **магазин** — будь-який магазин\n> - **супермаркет** — великий магазин для продуктів\n> - **ринок** — традиційний базар зі свіжими продуктами\n> - **торговий центр** — сучасний молл для шопінгу\n>\n> Запрошуємо до покупок! Шопінг в Україні — це зручно та швидко!\n",
+    "createdAt": "2026-01-04T21:33:28.300491Z",
+    "modifiedAt": "2026-01-04T21:33:28.300491Z",
     "version": 2
   },
   "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A2-52",
     "level": "A2",
-    "phase": "A2",
-    "wordCount": 8,
-    "newWordCount": 8,
+    "phase": "A2.1",
+    "wordCount": 0,
+    "newWordCount": 0,
     "reviewWordCount": 0,
     "transliterationMode": "none",
-    "words": [
+    "words": [],
+    "reviewWords": []
+  },
+  "external_resources": {
+    "podcasts": [
       {
-        "id": "vocab-1",
-        "uk": "перукарня",
-        "ipa": "/peruˈkarnʲa/",
-        "en": "hairdresser's",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
+        "episode_id": "ULP-031",
+        "title": "ULP 1-31 Shopping in Ukrainian – At the shoe shop",
+        "url": "https://www.ukrainianlessons.com/lesson/31/",
+        "relevance": "medium",
+        "match_reason": "Listening review (A1): shopping"
       },
       {
-        "id": "vocab-2",
-        "uk": "хімчистка",
-        "ipa": "/ximˈtʃɪstka/",
-        "en": "dry cleaner's",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
+        "episode_id": "ULP-032",
+        "title": "ULP 1-32 Shopping for clothes – Accusative case in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/32/",
+        "relevance": "medium",
+        "match_reason": "Listening review (A1): shopping"
       },
       {
-        "id": "vocab-3",
-        "uk": "міряти",
-        "ipa": "/ˈmirʲatɪ/",
-        "en": "to try on",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-4",
-        "uk": "торговий центр",
-        "ipa": "/torˈhɔʋɪj ˈtsɛntr/",
-        "en": "shopping mall",
-        "pos": "phrase",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-5",
-        "uk": "відділення",
-        "ipa": "/vidˈdilennʲa/",
-        "en": "branch/office",
-        "pos": "noun",
-        "gender": "n",
-        "note": ""
-      },
-      {
-        "id": "vocab-6",
-        "uk": "одяг",
-        "ipa": "/ˈɔdʲaɦ/",
-        "en": "clothes",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-7",
-        "uk": "продукти",
-        "ipa": "/proˈduktɪ/",
-        "en": "groceries",
-        "pos": "noun",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-8",
-        "uk": "сервіс",
-        "ipa": "/ˈsɛrvis/",
-        "en": "service",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
+        "episode_id": "FMU-018",
+        "title": "Vocabulary booster! Shopping Vocabulary in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/fmu18/",
+        "relevance": "medium",
+        "match_reason": "Listening review (A1): shopping"
       }
     ],
-    "reviewWords": []
+    "youtube": [
+      {
+        "title": "UKRAINIAN DIALOGUES for beginners. Episode #3 At the coffee shop",
+        "url": "https://www.youtube.com/watch?v=YLBABZIOoo0",
+        "relevance": "high",
+        "channel": "Speak Ukrainian"
+      }
+    ],
+    "articles": [
+      {
+        "title": "Ukrainian Grammar",
+        "url": "https://www.ukrainianlessons.com/ukrainian-tenses/",
+        "relevance": "high",
+        "source": "Grammar overview"
+      }
+    ],
+    "books": [],
+    "websites": [
+      {
+        "title": "Talk Ukrainian",
+        "url": "https://talkukrainian.com/",
+        "relevance": "high",
+        "source": "Practice exercises"
+      }
+    ]
   }
 }

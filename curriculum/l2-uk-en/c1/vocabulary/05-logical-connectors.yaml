@@ -1,0 +1,124 @@
+module: 05-logical-connectors
+level: C1
+version: '2.0'
+items:
+  - lemma: оскільки
+    ipa: /ɔsˈkʲilʲkɪ/
+    translation: since / inasmuch as
+    pos: conj
+  - lemma: позаяк
+    ipa: /pɔzɑˈjɑk/
+    translation: as / since (formal)
+    pos: conj
+  - lemma: адже
+    ipa: /ɑdˈʒɛ/
+    translation: after all / for / since
+    pos: conj
+  - lemma: бо
+    ipa: /bɔ/
+    translation: because / for
+    pos: conj
+  - lemma: тому що
+    ipa: /tɔˈmu ʃt͡ʃɔ/
+    translation: because
+    pos: conj
+  - lemma: через те що
+    ipa: /t͡ʃɛrɛz tɛ ʃt͡ʃɔ/
+    translation: due to the fact that
+    pos: conj
+  - lemma: у зв'язку з тим що
+    ipa: /u zʋjɑzˈku z tɪm ʃt͡ʃɔ/
+    translation: in connection with the fact that
+    pos: conj
+  - lemma: завдяки тому що
+    ipa: /zɑʋdʲɑˈkɪ tɔˈmu ʃt͡ʃɔ/
+    translation: thanks to the fact that
+    pos: conj
+  - lemma: отже
+    ipa: /ɔtˈʒɛ/
+    translation: therefore / thus
+    pos: conj
+  - lemma: таким чином
+    ipa: /tɑˈkɪm ˈt͡ʃɪnɔm/
+    translation: thus / in this way
+    pos: adv
+  - lemma: тому
+    ipa: /tɔˈmu/
+    translation: therefore / that's why
+    pos: adv
+  - lemma: внаслідок цього
+    ipa: /ʋnɑsl⁽ʲ⁾idɔk ˈt͡sʲɔɦɔ/
+    translation: consequently / as a result
+    pos: adv
+  - lemma: у результаті
+    ipa: /u rɛzulʲˈtɑt⁽ʲ⁾i/
+    translation: as a result
+    pos: adv
+  - lemma: відтак
+    ipa: /ʋ⁽ʲ⁾idˈtɑk/
+    translation: consequently / thus / then
+    pos: adv
+  - lemma: хоча
+    ipa: /xɔˈt͡ʃɑ/
+    translation: although
+    pos: conj
+  - lemma: незважаючи на те що
+    ipa: /nɛzʋɑˈʒɑjut͡ʃɪ nɑ tɛ ʃt͡ʃɔ/
+    translation: despite the fact that
+    pos: conj
+  - lemma: попри те що
+    ipa: /pɔprɪ tɛ ʃt͡ʃɔ/
+    translation: in spite of the fact that
+    pos: conj
+  - lemma: проте
+    ipa: /prɔˈtɛ/
+    translation: however / nevertheless
+    pos: conj
+  - lemma: однак
+    ipa: /ɔdˈnɑk/
+    translation: however
+    pos: conj
+  - lemma: втім
+    ipa: /u̯t⁽ʲ⁾im/
+    translation: however / though
+    pos: conj
+  - lemma: тим не менш
+    ipa: /tɪm nɛ mɛnʃ/
+    translation: nevertheless
+    pos: adv
+  - lemma: натомість
+    ipa: /nɑˈtɔm⁽ʲ⁾istʲ/
+    translation: instead / on the other hand
+    pos: adv
+  - lemma: навпаки
+    ipa: /nɑʋpɑˈkɪ/
+    translation: on the contrary
+    pos: adv
+  - lemma: на противагу
+    ipa: /nɑ prɔtɪˈʋɑɦu/
+    translation: unlike / in contrast to
+    pos: prep
+  - lemma: з іншого боку
+    ipa: /z ˈinʃɔɦɔ ˈbɔku/
+    translation: on the other hand
+    pos: adv
+  - lemma: водночас
+    ipa: /ʋɔdnɔˈt͡ʃɑs/
+    translation: at the same time
+    pos: adv
+  - lemma: крім того
+    ipa: /kr⁽ʲ⁾im ˈtɔɦɔ/
+    translation: besides / moreover
+    pos: adv
+  - lemma: більше того
+    ipa: /b⁽ʲ⁾ilʲʃɛ ˈtɔɦɔ/
+    translation: moreover / furthermore
+    pos: adv
+  - lemma: до того ж
+    ipa: /dɔ ˈtɔɦɔ ʒ/
+    translation: in addition
+    pos: adv
+  - lemma: зрештою
+    ipa: /zrɛʃtɔju/
+    translation: eventually / after all
+    pos: adv

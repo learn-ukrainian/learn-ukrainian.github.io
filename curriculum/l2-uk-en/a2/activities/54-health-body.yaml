@@ -1,7 +1,8 @@
 - type: quiz
   title: Health Quiz
   items:
-  - question: Що найкраще зробити, якщо у вас висока температура і ви погано себе почуваєте?
+  - question: Що найкраще зробити, якщо у вас висока температура і ви погано себе
+      почуваєте?
     options:
     - text: Викликати лікаря і залишитися вдома
       correct: true
@@ -11,7 +12,8 @@
       correct: false
     - text: Піти плавати
       correct: false
-  - question: Який номер екстреної медичної допомоги "Швидка" потрібно набирати в Україні?
+  - question: Який номер екстреної медичної допомоги "Швидка" потрібно набирати в
+      Україні?
     options:
     - text: '103'
       correct: true
@@ -31,7 +33,8 @@
       correct: false
     - text: Давальний
       correct: false
-  - question: Чим відома лікувальна мінеральна вода "Нафтуся" з курорту Трускавець в Україні?
+  - question: Чим відома лікувальна мінеральна вода "Нафтуся" з курорту Трускавець
+      в Україні?
     options:
     - text: Лікувальними властивостями
       correct: true
@@ -148,105 +151,22 @@
     right: fever
   - left: '- біль'
     right: pain
-- type: fill-in
+- type: cloze
   title: My Symptoms
-  items:
-  - sentence: У мене болить ____. (head)
-    answer: голова
-    options:
-    - голова
-    - голову
-    - головою
-    - голові
-    explanation: Nominative subject.
-  - sentence: У нього висока ____.
-    answer: температура
-    options:
-    - температура
-    - температуру
-    - температурою
-    - температури
-    explanation: Nominative.
-  - sentence: Мені треба купити ____. (medicine)
-    answer: ліки
-    options:
-    - ліки
-    - лікаря
-    - ліків
-    - ліками
-    explanation: Accusative (plural).
-  - sentence: У неї болить ____. (tooth)
-    answer: зуб
-    options:
-    - зуб
-    - зуби
-    - зуба
-    - зубом
-    explanation: Nominative subject.
-  - sentence: Викличіть ____! (doctor - Acc)
-    answer: лікаря
-    options:
-    - лікаря
-    - лікар
-    - лікарем
-    - лікарю
-    explanation: Call whom? Accusative (animate).
-  - sentence: Я п'ю ____. (pills)
-    answer: таблетки
-    options:
-    - таблетки
-    - таблетка
-    - таблеток
-    - таблетками
-    explanation: Accusative plural.
-  - sentence: У мене сильний ____. (cough)
-    answer: кашель
-    options:
-    - кашель
-    - кашлю
-    - кашлем
-    - нежить
-    explanation: Nominative subject.
-  - sentence: Болять ____. (eyes)
-    answer: очі
-    options:
-    - очі
-    - око
-    - очам
-    - очима
-    explanation: Plural subject.
-  - sentence: Це ____ від грипу. (medicine/cure)
-    answer: ліки
-    options:
-    - ліки
-    - таблетка
-    - мазь
-    - сироп
-    explanation: General term.
-  - sentence: Де тут ____? (pharmacy)
-    answer: аптека
-    options:
-    - аптека
-    - аптеку
-    - аптеки
-    - аптекою
-    explanation: Subject.
-  - sentence: Лікар дав ____.
-    answer: рецепт
-    options:
-    - рецепт
-    - рецепту
-    - рецептом
-    - рецепти
-    explanation: Accusative inanimate.
-  - sentence: У мене болить ____. (back)
-    answer: спина
-    options:
-    - спина
-    - спину
-    - спиною
-    - спині
-    explanation: Subject.
+  passage: 'У мене болить {голова|голову|головою|голові}_. (head) У нього висока {температура|температуру|температурою|температури}_.
+    Мені треба купити {ліки|лікаря|ліків|ліками}_. (medicine)
+
+
+    У неї болить {зуб|зуби|зуба|зубом}_. (tooth) Викличіть {лікаря|лікар|лікарем|лікарю}_!
+    (doctor - Acc) Я п''ю {таблетки|таблетка|таблеток|таблетками}_. (pills)
+
+
+    У мене сильний {кашель|кашлю|кашлем|нежить}_. (cough) Болять {очі|око|очам|очима}_.
+    (eyes) Це {ліки|таблетка|мазь|сироп}_ від грипу. (medicine/cure)
+
+
+    Де тут {аптека|аптеку|аптеки|аптекою}_? (pharmacy) Лікар дав {рецепт|рецепту|рецептом|рецепти}_.
+    У мене болить {спина|спину|спиною|спині}_. (back)'
 - type: true-false
   title: Medical Beliefs
   items:
@@ -465,7 +385,8 @@
     - температура
     - температури
     - температурою
-    explanation: 'Accusative object: має (що?) температуру. OR better: У нього температура. But focusing on case error here.'
+    explanation: 'Accusative object: має (що?) температуру. OR better: У нього температура.
+      But focusing on case error here.'
   - sentence: Це таблетка для голову.
     error: для
     answer: від
@@ -474,7 +395,8 @@
     - для
     - з
     - про
-    explanation: 'Pills "from" pain: від голови. "Для" means "for benefit of". A pill *for benefit of* a headache sounds wrong.'
+    explanation: 'Pills "from" pain: від голови. "Для" means "for benefit of". A pill
+      *for benefit of* a headache sounds wrong.'
   - sentence: Лікар дав рецепта.
     error: рецепта
     answer: рецепт
@@ -542,7 +464,8 @@
   title: Call the Doctor
   passage: '— Алло, це {швидка|піца|таксі}? Так, оператор слухає. Що сталося?
 
-    — Моєму чоловіку {погано|добре|весело}. У нього сильний {біль|сміх|сон} в грудях і важко дихати.
+    — Моєму чоловіку {погано|добре|весело}. У нього сильний {біль|сміх|сон} в грудях
+    і важко дихати.
 
     — Яка у нього {температура|машина|зарплата}? Нормальна.
 
@@ -550,7 +473,8 @@
 
     — Дякую, ми чекаємо {лікаря|поштаря|кухаря}.
 
-    Лікар приїхав через 10 {хвилин|годин|днів}. Він послухав {серце|ногу|руку} і поміряв {тиск|зріст|вагу}.
+    Лікар приїхав через 10 {хвилин|годин|днів}. Він послухав {серце|ногу|руку} і поміряв
+    {тиск|зріст|вагу}.
 
     — Це не {інфаркт|грип|спорт}, — сказав лікар. — Це просто стрес.
 
@@ -559,8 +483,9 @@
     — Ось цей {рецепт|квиток|чек}. Відпочивайте.'
 - type: mark-the-words
   title: Body Parts
-  text: У людини є одна *голова*, дві *руки* і дві *ноги*. На обличчі є *очі*, ніс і рот. У роті є *зуби*. У грудях б'ється
-    *серце*. Коли ми їмо, працює *шлунок*. Якщо ми носимо важке, болить *спина*.
+  text: У людини є одна *голова*, дві *руки* і дві *ноги*. На обличчі є *очі*, ніс
+    і рот. У роті є *зуби*. У грудях б'ється *серце*. Коли ми їмо, працює *шлунок*.
+    Якщо ми носимо важке, болить *спина*.
 - type: select
   title: Medical Choice
   items:

@@ -1,0 +1,129 @@
+module: 141-analiz-tekstu
+level: B2
+version: '2.0'
+items:
+  - lemma: аналіз
+    ipa: /ɐˈnalʲiz/
+    translation: analysis
+    pos: noun
+    gender: m
+  - lemma: розбір
+    ipa: /roˈzb⁽ʲ⁾ir/
+    translation: breakdown/detailed analysis
+    pos: noun
+    gender: m
+  - lemma: текст
+    ipa: /tɛkst/
+    translation: text
+    pos: noun
+    gender: m
+  - lemma: контекст
+    ipa: /kɔnˈtɛkst/
+    translation: context
+    pos: noun
+    gender: m
+  - lemma: підтекст
+    ipa: /pidˈtɛkst/
+    translation: subtext
+    pos: noun
+    gender: m
+  - lemma: зміст
+    ipa: /zmist/
+    translation: content/meaning
+    pos: noun
+    gender: m
+  - lemma: форма
+    ipa: /ˈfɔrmɐ/
+    translation: form
+    pos: noun
+    gender: f
+  - lemma: стиль
+    ipa: /stɪlʲ/
+    translation: style
+    pos: noun
+    gender: m
+  - lemma: автор
+    ipa: /ˈɑu̯tɔr/
+    translation: author
+    pos: noun
+    gender: m
+  - lemma: мета
+    ipa: /meˈtɑ/
+    translation: goal/purpose
+    pos: noun
+    gender: f
+  - lemma: аудиторія
+    ipa: /ɐʊ̯dɪˈtɔrʲijɐ/
+    translation: audience
+    pos: noun
+    gender: f
+  - lemma: ідея
+    ipa: /iˈdɛjɐ/
+    translation: idea
+    pos: noun
+    gender: f
+  - lemma: тема
+    ipa: /ˈtɛmɐ/
+    translation: theme/topic
+    pos: noun
+    gender: f
+  - lemma: проблема
+    ipa: /proˈblɛmɐ/
+    translation: problem/issue
+    pos: noun
+    gender: f
+  - lemma: позиція
+    ipa: /poˈzɪt͡sʲijɐ/
+    translation: position/stance
+    pos: noun
+    gender: f
+  - lemma: заголовок
+    ipa: /zɐɦoˈlɔvok/
+    translation: headline/title
+    pos: noun
+    gender: m
+  - lemma: вступ
+    ipa: /wstup/
+    translation: introduction
+    pos: noun
+    gender: m
+  - lemma: аргументація
+    ipa: /ɐrɦʊmenˈtɑt͡sʲijɐ/
+    translation: argumentation
+    pos: noun
+    gender: f
+  - lemma: висновок
+    ipa: /ˈvɪsnovok/
+    translation: conclusion
+    pos: noun
+    gender: m
+  - lemma: цитування
+    ipa: /t͡sɪtʊˈvɑnʲːɐ/
+    translation: citation
+    pos: noun
+    gender: n
+  - lemma: плагіат
+    ipa: /plɐɦiˈɑt/
+    translation: plagiarism
+    pos: noun
+    gender: m
+  - lemma: джерело
+    ipa: /d͡ʒereˈlɔ/
+    translation: source
+    pos: noun
+    gender: n
+  - lemma: достовірність
+    ipa: /dostoˈvirnisʲtʲ/
+    translation: credibility/authenticity
+    pos: noun
+    gender: f
+  - lemma: упередженість
+    ipa: /ʊpeˈrɛd͡ʒenisʲtʲ/
+    translation: bias/prejudice
+    pos: noun
+    gender: f
+  - lemma: маніпуляція
+    ipa: /mɐnʲipuˈlʲɑt͡sʲijɐ/
+    translation: manipulation
+    pos: noun
+    gender: f

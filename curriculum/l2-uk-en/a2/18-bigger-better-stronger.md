@@ -1,18 +1,22 @@
-## Warm-up
+## Вступ
 
-Time to make comparisons! In this module, you'll learn to say things like "bigger," "better," "more interesting," and "faster" in Ukrainian. Comparing things is essential for everyday conversation — choosing products, describing people, expressing preferences, and giving opinions.
+Робимо порівняння! (Making comparisons!)
 
-**Why comparatives matter:**
-Every time you shop, you compare prices and quality. Every time you describe someone, you might compare their height, age, or other characteristics. And when expressing opinions about ideas, places, or experiences, comparatives help you articulate your preferences clearly. Mastering comparatives will make your Ukrainian significantly more expressive and practical.
+У магазині:
+- Цей телефон **кращий** або той? (This phone better or that one?)
+- Який **дешевший**? (Which cheaper?)
+- Ця сумка **більша** за ту. (This bag bigger than that one.)
 
-**What you'll learn in this module:**
-- How to form comparative adjectives (adding -ший/-іший to stems)
-- Irregular comparatives — the most common ones don't follow the regular pattern
-- Two different ways to make comparisons using "ніж" (than) and "за" (than + accusative)
-- Expressions of preference and intensity (набагато — much, трохи — a little)
+У щоденному житті:
+- Мій брат **старіший** за мене. (My brother older than me.)
+- Літо **тепліше** за зиму. (Summer warmer than winter.)
+- Ця книга **цікавіша**! (This book more interesting!)
 
-**Important Note About English vs Ukrainian:**
-Unlike English, which uses "more + adjective" for longer adjectives (more interesting, more comfortable), Ukrainian almost always uses the single-word comparative form (цікавіший, комфортніший). The "більш + adjective" construction exists but is less common in everyday speech.
+**У цьому модулі:**
+- Forms: -ший/-іший (новий → новіший)
+- Irregular forms: добрий → **кращий**, великий → **більший**
+- Comparison structures: **ніж** and **за** + Accusative
+- Intensifiers: **набагато**, **трохи**, **значно**
 
 ## Presentation
 
@@ -104,76 +108,137 @@ There are TWO ways to compare in Ukrainian:
 
 ---
 
-## Cultural Insight
+## Культурний контекст
 
-## Comparatives in Daily Life
+## Comparisons in Daily Life
 
-Ukrainians use comparatives constantly for shopping, planning, and expressing opinions:
+### Порівняння в повсякденному житті
 
-**Shopping:**
-- Цей телефон **кращий**, але **дорожчий**. (This phone is better but more expensive.)
-- Є щось **дешевше**? (Is there something cheaper?)
+Comparatives are everywhere in Ukrainian conversations! Let's see how they're used in real-life situations.
 
-**Preferences:**
-- Мені подобається каву **більше**, ніж чай. (I like coffee more than tea.)
-- Літо **тепліше** за зиму. (Summer is warmer than winter.)
+Порівняльні форми присутні всюди в українських розмовах! Подивімося, як їх використовують у реальних ситуаціях.
 
-**Opinions:**
-- Він **розумніший** за мене. (He's smarter than me.)
-- Ця ідея **краща**! (This idea is better!)
+**Shopping — У магазині:**
 
-> [!tip] Intensifying Comparatives
-> Use **набагато** (much), **трохи** (a little), **значно** (significantly):
-> - Він набагато кращий. (He's much better.)
-> - Вона трохи старша. (She's a little older.)
+When comparing products, Ukrainians naturally use comparatives to make decisions:
 
-## Compliments and Softening
+Коли порівнюють товари, українці природно використовують порівняльні форми для прийняття рішень:
 
-Ukrainians often use comparatives to pay compliments or to soften a statement.
+- Цей телефон **кращий**, але **дорожчий**. — This phone is better, but more expensive.
+- Є щось **дешевше**? — Is there something cheaper?
+- Ця модель **новіша** і **швидша**. — This model is newer and faster.
+- Той трохи **старіший**, але набагато **надійніший**. — That one is a bit older, but much more reliable.
 
-**Compliments:**
-- Ти виглядаєш **молодшою**! (You look younger! - *using Instrumental case context*)
-- Ця сукня робить тебе **стрункішою**. (This dress makes you slimmer.)
-- Сьогодні погода **краща**, ніж учора. (The weather today is better than yesterday.)
+**Preferences — Вподобання:**
 
-**Softening criticism:**
-Instead of saying "This is bad" (Це погано), you might say:
-- Це могло б бути **кращим**. (It could be better.)
-- Я очікував чогось **більшого**. (I expected something bigger.)
+Expressing what you like better is a key use of comparatives:
 
-Using these comparative structures makes your speech sound more nuanced and polite, rather than just stating blunt facts.
+Висловлення того, що вам більше подобається - ключове використання порівняльного ступеня:
+
+- Мені подобається кава **більше**, ніж чай. — I like coffee more than tea.
+- Літо **тепліше** за зиму. — Summer is warmer than winter.
+- Українська музика **цікавіша**! — Ukrainian music is more interesting!
+- Ця книга **краща** за фільм. — This book is better than the movie.
+
+**Opinions — Думки:**
+
+Share your thoughts and judgments using comparatives:
+
+Діліться своїми думками та судженнями, використовуючи порівняльний ступінь:
+
+- Він **розумніший** за мене. — He's smarter than me.
+- Ця ідея **краща**! — This idea is better!
+- Київ **більший** за Львів, але Львів **старіший**. — Kyiv is bigger than Lviv, but Lviv is older.
+
+> 💡 **Intensifiers — Інтенсифікатори**
+>
+> Add intensity to your comparisons with these words:
+>
+> Додайте інтенсивності до своїх порівнянь за допомогою цих слів:
+>
+> - **набагато** + comparative = much ___ — (Він набагато кращий.)
+> - **трохи** + comparative = a little ___ — (Вона трохи старша.)
+> - **значно** + comparative = significantly ___ — (Це значно дорожче.)
+
+## Compliments and Soft Expression
+
+### Компліменти та м'яке висловлювання
+
+Ukrainians often use comparatives to give compliments and soften criticism - it's more polite than direct statements!
+
+Українці часто використовують порівняльний ступінь для компліментів і пом'якшення критики — це ввічливіше, ніж прямі твердження!
+
+**Compliments — Компліменти:**
+
+Make someone's day with these comparative compliments:
+
+Зробіть комусь приємно за допомогою цих порівняльних компліментів:
+
+- Ти виглядаєш **молодшою**! — You look younger!
+- Ця сукня робить тебе **стрункішою**. — This dress makes you look slimmer.
+- Сьогодні погода **краща**, ніж учора. — Today's weather is better than yesterday.
+- Твоя українська **кращає**! — Your Ukrainian is getting better!
+
+**Soft Criticism — М'яка критика:**
+
+Instead of saying "Це погано" (This is bad), use comparatives to be more diplomatic:
+
+Замість того, щоб казати "Це погано", використовуйте порівняльні форми, щоб бути більш дипломатичними:
+
+- Це могло б бути **кращим**. — This could be better.
+- Я очікував чогось **більшого**. — I expected something bigger/more.
+- Є варіанти **цікавіші**. — There are more interesting options.
+
+> 🌍 **In the Real World — У реальному світі**
+>
+> Ukrainians frequently use the comparative degree to be polite. Instead of saying "Це погано" (This is bad), they say "Є варіанти кращі" (There are better options) — it sounds softer and more professional!
+>
+> Українці часто використовують порівняльний ступінь, щоб бути ввічливими. Замість "Це погано" кажуть "Є варіанти кращі" — це звучить м'якше і професійніше!
 
 ---
 
-## Practice
+## Практика
 
-## Practice Examples
+## Вправа 1: Формуйте порівняльний ступінь
 
-Form the comparative:
+1. новий → **новіший**
+2. старий → **старіший**
+3. добрий → **кращий** (irregular!)
+4. великий → **більший** (irregular!)
+5. цікавий → **цікавіший**
+6. дорогий → **дорожчий** (irregular!)
+7. високий → **вищий** (irregular!)
+8. холодний → **холодніший**
 
-1. **новий** → **новіший** (newer)
-2. **старий** → **старіший** (older)
-3. **добрий** → **кращий** (better) — irregular!
-4. **великий** → **більший** (bigger) — irregular!
-5. **цікавий** → **цікавіший** (more interesting)
+## Вправа 2: Складіть порівняння
 
-Make comparisons:
+Модель: Лев | кіт | великий
+- Лев **більший за кота**.
+- Лев **більший ніж кіт**.
 
-6. Лев | кіт | великий → Лев **більший за кота**. OR Лев **більший ніж кіт**.
-7. Зима | літо | холодний → Зима **холодніша за літо**.
+1. Зима | літо | холодний → Зима **холодніша за літо**.
+2. Київ | Львів | великий → Київ **більший за Львів**.
+3. Кава | чай | гарячий → Кава **гарячіша за чай**.
+4. Машина | велосипед | швидкий → Машина **швидша за велосипед**.
 
-**Additional Practice with Intensifiers:**
+## Діалоги
 
-When you want to emphasize how much more something is, use intensifiers before the comparative:
+**У магазині:**
+- — Який телефон **кращий**?
+- — Цей **новіший** і **швидший**, але він **дорожчий**.
+- — А є щось **дешевше**?
+- — Так, той. Він трохи **старіший**, але набагато **дешевший**.
 
-8. **набагато кращий** — much better (e.g., Цей ресторан набагато кращий.)
-9. **трохи дорожчий** — a little more expensive (e.g., Час від часу, якість коштує трохи дорожче.)
-10. **значно швидший** — significantly faster (e.g., Новий комп'ютер значно швидший.)
+**Про родину:**
+- — Ти **старіший** за брата?
+- — Ні, я **молодший**. Він **вищий** і **розумніший** за мене.
+- — А хто **кращий** у спорті?
+- — Я **швидший**, а він **сильніший**.
 
-**Common Mistakes to Avoid:**
-- Don't use both ніж and за in the same comparison — choose one.
-- Remember that irregular comparatives don't add -іший: добрий → кращий (not *добріший).
-- After за, always use Accusative case: вищий за **мене** (not *за я).
+**Common Mistakes:**
+- ❌ добріший → ✅ кращий (irregular!)
+- ❌ за я → ✅ за мене (Accusative!)
+- ❌ більший за ніж → ✅ більший ніж OR більший за (choose one!)
 
 ---
 

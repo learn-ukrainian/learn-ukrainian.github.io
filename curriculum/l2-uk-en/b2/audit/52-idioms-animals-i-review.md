@@ -1,19 +1,30 @@
 # Audit Report: 52-idioms-animals-i.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "CBI" | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): приховуваний, характер, сила, символ, смерть...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 1 pedagogical violations (minor)
+- Activity count below minimum
 
 ## Gates
-- **Words:** ⚠️ 1745/1750 (5 short)
-- **Activities:** ✅ 14/14
+- **Words:** ⚠️ 1706/1750 (44 short)
+- **Activities:** ❌ 13/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 38/35
+- **Vocab:** ✅ 107/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 98-100% (vocab))
 - **Richness:** ✅ 97% (content)
 - **Grammar:** ⏳ Pending validation
@@ -38,13 +49,12 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Фразеологізми: Тварини I (Вовк, Собака, Кінь)** | ⚪️ | 75 | Skipped |
+| **Intro/Narrative** | ✅ | 75 | Included in Core |
 | **Вступ: Тварини як символи нашої ідентичності** | ⚪️ | 190 | Skipped |
-| **Частина 1: Вовк — Символ дикості та раптовості** | ⚪️ | 181 | Skipped |
-| **Частина 2: Собака — Експертність та сувора доля** | ⚪️ | 162 | Skipped |
-| **Частина 3: Кінь — Робота та таємниці** | ⚪️ | 291 | Skipped |
+| **Частина 1: Вовк — Символ дикості та раптовості** | ✅ | 181 | Included in Core |
+| **Частина 2: Собака — Експертність та сувора доля** | ✅ | 162 | Included in Core |
+| **Частина 3: Кінь — Робота та таємниці** | ✅ | 291 | Included in Core |
 | **Культурний код: Тварини в українському житті** | ✅ | 453 | Included in Core |
 | **Тварини в українській літературі та класиці** | ⚪️ | 150 | Skipped |
 | **Практичний додаток: Регістри та нюанси** | ⚪️ | 133 | Skipped |
 | **Підсумок** | ✅ | 71 | Included in Core |
-| **Словник** | ⚪️ | 39 | Skipped |

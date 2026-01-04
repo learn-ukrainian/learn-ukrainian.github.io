@@ -9,281 +9,196 @@
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A1",
-    "phase": "A1.3 - Consolidation",
+    "phase": "A1.1",
     "moduleNumber": 22,
     "moduleType": "grammar",
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
-    "title": "Tomorrow - Future Tense",
+    "title": "Module 22",
     "titleUk": null,
-    "subtitle": "Talking About What Will Happen",
-    "description": "Learner can form compound future using буду + infinitive",
-    "objectives": [
-      "Learner can form compound future using буду + infinitive",
-      "Learner can conjugate буду for all persons",
-      "Learner can express plans, intentions, and hopes",
-      "Learner can use future time expressions correctly"
-    ],
+    "subtitle": null,
+    "description": "Module 22",
+    "objectives": [],
     "objectivesUk": null,
-    "grammarFocus": [
-      "Compound future tense (буду + infinitive)",
-      "буду conjugation (буду, будеш, буде, будемо, будете, будуть)",
-      "Planning and intention expressions"
-    ],
-    "tags": [
-      "future-tense",
-      "compound-future",
-      "time-expressions",
-      "planning"
-    ],
-    "totalDuration": "60 min",
-    "transliterationMode": "first-occurrence",
+    "grammarFocus": [],
+    "tags": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "sections": [
       {
         "id": "section-1",
         "name": "Tomorrow - Future Tense",
         "nameEn": null,
         "type": "content",
-        "content": "> [!summary] Learning Goals\n> - Express future actions using буду + infinitive\n> - Use time expressions for future events\n> - Talk about plans, intentions, and hopes\n\n---\n\n## Grammar\n\n## The Compound Future Tense\n\n> [!observe] Pattern Discovery\n>\n> Look at these sentences:\n> - Я **буду читати**. (I will read.)\n> - Вона **буде працювати**. (She will work.)\n> - Ми **будемо вивчати** українську. (We will study Ukrainian.)\n>\n> The future = буду/будеш/буде... + infinitive (-ти form)\n\nUkrainian uses **буду** (future of \"to be\") + infinitive to form the compound future. This works with imperfective verbs.\n\n### Conjugation of буду\n\n| Person | Singular | Plural |\n|--------|----------|--------|\n| 1st | буду | будемо |\n| 2nd | будеш | будете |\n| 3rd | буде | будуть |\n\n### Examples with Different Verbs\n\n| Subject | буду form | + Infinitive | Full Sentence |\n|---------|-----------|--------------|---------------|\n| Я | буду | читати | Я буду читати. (I will read.) |\n| Ти | будеш | працювати | Ти будеш працювати. (You will work.) |\n| Він | буде | вчитися | Він буде вчитися. (He will study.) |\n| Вона | буде | готувати | Вона буде готувати. (She will cook.) |\n| Ми | будемо | грати | Ми будемо грати. (We will play.) |\n| Ви | будете | їхати | Ви будете їхати. (You will go.) |\n| Вони | будуть | співати | Вони будуть співати. (They will sing.) |\n\n---\n\n## Expressing Plans and Intentions\n\n> [!tip] Levels of Certainty\n>\n> Different verbs express different levels of commitment:\n> - **обов'язково буду** — definitely will\n> - **планую** — I plan to\n> - **збираюся** — I'm going to\n> - **сподіваюся** — I hope to\n> - **мрію** — I dream of\n\n### Common Patterns\n\n**Strong intention:**\n- Я **обов'язково** буду там. (I will definitely be there.)\n- Я **вирішив** вчити українську. (I decided to learn Ukrainian.)\n- Я **обіцяю** допомогти. (I promise to help.)\n\n**Planning:**\n- Я **планую** поїхати в Київ. (I plan to go to Kyiv.)\n- Я **збираюся** купити книгу. (I'm going to buy a book.)\n- Я **маю намір** почати завтра. (I intend to start tomorrow.)\n\n**Hoping/dreaming:**\n- Я **сподіваюся** побачити тебе. (I hope to see you.)\n- Я **мрію** жити в Україні. (I dream of living in Ukraine.)\n\n**Trying:**\n- Я **спробую** зробити це. (I will try to do this.)\n- Я **постараюся** прийти вчасно. (I'll try my best to come on time.)\n\n---\n\n## Time Expressions for the Future\n\n> [!observe] Pattern Discovery\n>\n> Notice the pattern with \"next\":\n> - наступного **тижня** (next week)\n> - наступного **місяця** (next month)\n> - наступного **року** (next year)\n>\n> All use genitive case with **наступного**!\n\n### Timeline\n\n| When? | Ukrainian | Example |\n|-------|-----------|---------|\n| Tomorrow | завтра | Завтра я буду працювати. |\n| Day after tomorrow | післязавтра | Післязавтра ми поїдемо. |\n| Soon | скоро | Скоро буде весна. |\n| Later | пізніше | Пізніше я подзвоню. |\n| Then/afterwards | потім | Потім ми будемо обідати. |\n| Eventually | згодом | Згодом він зрозуміє. |\n| Next week | наступного тижня | Наступного тижня я починаю курс. |\n| Next month | наступного місяця | Наступного місяця вона приїде. |\n| Next year | наступного року | Наступного року ми одружимося. |\n\n---\n\n## Useful Adverbs\n\n**вже** (already) — something happened or will happen sooner than expected:\n- Я **вже** вирішив. (I have already decided.)\n- Завтра він **вже** буде тут. (Tomorrow he will already be here.)\n\n**ще** (still/yet) — something continues or hasn't happened:\n- Я **ще** не знаю. (I don't know yet.)\n- Вона **ще** буде працювати. (She will still be working.)\n\n**ніколи** (never) — negation of future:\n- Я **ніколи** не забуду. (I will never forget.)\n- Він **ніколи** не запізнюється. (He is never late.)\n\n---\n\n## Examples in Context\n\n> [!example] Making Plans\n>\n> - **Завтра** я **буду** готувати вечерю. (Tomorrow I will cook dinner.)\n> - **Скоро** ми **будемо** святкувати. (Soon we will celebrate.)\n> - Я **планую** відвідати музей **наступного тижня**. (I plan to visit the museum next week.)\n> - Вона **збирається** купити нову машину. (She's going to buy a new car.)\n> - Ми **сподіваємося** побачити вас **скоро**. (We hope to see you soon.)\n\n> [!example] Talking About Hopes and Dreams\n>\n> - Я **мрію** подорожувати світом. (I dream of traveling the world.)\n> - Він **хоче** стати лікарем. (He wants to become a doctor.)\n> - Вона **має намір** вивчити три мови. (She intends to learn three languages.)\n> - Ми **обіцяємо** допомогти. (We promise to help.)\n\n> [!example] More Future Sentences\n>\n> - Наступного місяця вони будуть жити в Києві. (Next month they will live in Kyiv.)\n> - Пізніше я буду читати книгу. (Later I will read a book.)\n> - Скоро буде весна! (Soon it will be spring!)\n> - Я обов'язково зроблю це завтра. (I will definitely do this tomorrow.)\n> - Потім ми будемо обідати разом. (Then we will have lunch together.)\n> - Вона ще не вирішила, куди поїде. (She hasn't decided yet where she will go.)\n> - Я ніколи не забуду цей день. (I will never forget this day.)\n> - Наступного року вони планують одружитися. (Next year they plan to get married.)\n\n---\n\n## Dialogues\n\n> [!conversation] Planning the Weekend\n>\n> — Що ти **будеш** робити **завтра**?\n> — **Завтра** я **буду** прибирати квартиру. А **потім** я **планую** піти в кіно.\n> — Добре! А що **післязавтра**?\n> — **Післязавтра** я **збираюся** відвідати бабусю.\n> — Чудово! Я **сподіваюся**, погода **буде** гарна.\n>\n> — What will you do tomorrow?\n> — Tomorrow I will clean the apartment. And then I plan to go to the cinema.\n> — Good! And the day after tomorrow?\n> — The day after tomorrow I'm going to visit grandma.\n> — Wonderful! I hope the weather will be nice.\n\n> [!conversation] New Year Resolutions\n>\n> — Що ти **плануєш** робити **наступного року**?\n> — Я **обов'язково буду** більше читати. І я **спробую** вивчити нову мову.\n> — Яку мову?\n> — Я **ще** не **вирішив**. Може, японську. Я **мрію** поїхати в Японію.\n> — Це гарна ідея! Я **думаю**, ти **зможеш**.\n>\n> — What do you plan to do next year?\n> — I will definitely read more. And I will try to learn a new language.\n> — Which language?\n> — I haven't decided yet. Maybe Japanese. I dream of going to Japan.\n> — That's a good idea! I think you will be able to.\n\n---\n\n> 💡 **Future in Song**\n>\n> Many Ukrainian songs use the future tense to express hopes and dreams. The famous song \"Все буде добре\" (Everything will be fine) became an anthem of optimism during difficult times.\n\n> 🌍 **Making Appointments**\n>\n> When scheduling in Ukrainian:\n> - \"Я буду о третій\" = I'll be there at three\n> - \"Зателефоную пізніше\" = I'll call later\n> - \"Побачимось завтра!\" = See you tomorrow!\n\n> 💡 **Two Futures**\n>\n> Ukrainian actually has two ways to express future! The compound future (буду + infinitive) we learned today is for ongoing/repeated actions. For single completed actions, Ukrainian uses the perfective future (which looks like present tense of perfective verbs). You'll master both as you progress!\n\n---"
+        "content": "> [!summary] Learning Goals\n>\n> - Express future actions using буду + infinitive\n> - Use time expressions for future events\n> - Talk about plans, intentions, and hopes\n\n---\n\n## Grammar\n\n## The Compound Future Tense\n\n> [!observe] Pattern Discovery\n>\n> Look at these sentences:\n>\n> - Я **буду читати**. (I will read.)\n> - Вона **буде працювати**. (She will work.)\n> - Ми **будемо вивчати** українську. (We will study Ukrainian.)\n>\n> The future = буду/будеш/буде... + infinitive (-ти form)\n\nUkrainian uses **буду** (future of \"to be\") + infinitive to form the compound future. This works with imperfective verbs.\n\n### Conjugation of буду\n\n| Person | Singular | Plural |\n| ------ | -------- | ------ |\n| 1st    | буду     | будемо |\n| 2nd    | будеш    | будете |\n| 3rd    | буде     | будуть |\n\n### Examples with Different Verbs\n\n| Subject | буду form | + Infinitive | Full Sentence                          |\n| ------- | --------- | ------------ | -------------------------------------- |\n| Я       | буду      | читати       | Я буду читати. (I will read.)          |\n| Ти      | будеш     | працювати    | Ти будеш працювати. (You will work.)   |\n| Він     | буде      | вчитися      | Він буде вчитися. (He will study.)     |\n| Вона    | буде      | готувати     | Вона буде готувати. (She will cook.)   |\n| Ми      | будемо    | грати        | Ми будемо грати. (We will play.)       |\n| Ви      | будете    | їхати        | Ви будете їхати. (You will go.)        |\n| Вони    | будуть    | співати      | Вони будуть співати. (They will sing.) |\n\n---\n\n## Expressing Plans and Intentions\n\n> [!tip] Levels of Certainty\n>\n> Different verbs express different levels of commitment:\n>\n> - **обов'язково буду** — definitely will\n> - **планую** — I plan to\n> - **збираюся** — I'm going to\n> - **сподіваюся** — I hope to\n> - **мрію** — I dream of\n\n### Common Patterns\n\n**Strong intention:**\n\n- Я **обов'язково** буду там. (I will definitely be there.)\n- Я **вирішив** вчити українську. (I decided to learn Ukrainian.)\n- Я **обіцяю** допомогти. (I promise to help.)\n\n**Planning:**\n\n- Я **планую** поїхати в Київ. (I plan to go to Kyiv.)\n- Я **збираюся** купити книгу. (I'm going to buy a book.)\n- Я **маю намір** почати завтра. (I intend to start tomorrow.)\n\n**Hoping/dreaming:**\n\n- Я **сподіваюся** побачити тебе. (I hope to see you.)\n- Я **мрію** жити в Україні. (I dream of living in Ukraine.)\n\n**Trying:**\n\n- Я **спробую** зробити це. (I will try to do this.)\n- Я **постараюся** прийти вчасно. (I'll try my best to come on time.)\n\n---\n\n## Time Expressions for the Future\n\n> [!observe] Pattern Discovery\n>\n> Notice the pattern with \"next\":\n>\n> - наступного **тижня** (next week)\n> - наступного **місяця** (next month)\n> - наступного **року** (next year)\n>\n> All use genitive case with **наступного**!\n\n### Timeline\n\n| When?              | Ukrainian         | Example                          |\n| ------------------ | ----------------- | -------------------------------- |\n| Tomorrow           | завтра            | Завтра я буду працювати.         |\n| Day after tomorrow | післязавтра       | Післязавтра ми поїдемо.          |\n| Soon               | скоро             | Скоро буде весна.                |\n| Later              | пізніше           | Пізніше я подзвоню.              |\n| Then/afterwards    | потім             | Потім ми будемо обідати.         |\n| Eventually         | згодом            | Згодом він зрозуміє.             |\n| Next week          | наступного тижня  | Наступного тижня я починаю курс. |\n| Next month         | наступного місяця | Наступного місяця вона приїде.   |\n| Next year          | наступного року   | Наступного року ми одружимося.   |\n\n---\n\n## Useful Adverbs\n\n**вже** (already) — something happened or will happen sooner than expected:\n\n- Я **вже** вирішив. (I have already decided.)\n- Завтра він **вже** буде тут. (Tomorrow he will already be here.)\n\n**ще** (still/yet) — something continues or hasn't happened:\n\n- Я **ще** не знаю. (I don't know yet.)\n- Вона **ще** буде працювати. (She will still be working.)\n\n**ніколи** (never) — negation of future:\n\n- Я **ніколи** не забуду. (I will never forget.)\n- Він **ніколи** не запізнюється. (He is never late.)\n\n---\n\n## Examples in Context\n\n> [!example] Making Plans\n>\n> - **Завтра** я **буду** готувати вечерю. (Tomorrow I will cook dinner.)\n> - **Скоро** ми **будемо** святкувати. (Soon we will celebrate.)\n> - Я **планую** відвідати музей **наступного тижня**. (I plan to visit the museum next week.)\n> - Вона **збирається** купити нову машину. (She's going to buy a new car.)\n> - Ми **сподіваємося** побачити вас **скоро**. (We hope to see you soon.)\n\n> [!example] Talking About Hopes and Dreams\n>\n> - Я **мрію** подорожувати світом. (I dream of traveling the world.)\n> - Він **хоче** стати лікарем. (He wants to become a doctor.)\n> - Вона **має намір** вивчити три мови. (She intends to learn three languages.)\n> - Ми **обіцяємо** допомогти. (We promise to help.)\n\n> [!example] More Future Sentences\n>\n> - Наступного місяця вони будуть жити в Києві. (Next month they will live in Kyiv.)\n> - Пізніше я буду читати книгу. (Later I will read a book.)\n> - Скоро буде весна! (Soon it will be spring!)\n> - Я обов'язково зроблю це завтра. (I will definitely do this tomorrow.)\n> - Потім ми будемо обідати разом. (Then we will have lunch together.)\n> - Вона ще не вирішила, куди поїде. (She hasn't decided yet where she will go.)\n> - Я ніколи не забуду цей день. (I will never forget this day.)\n> - Наступного року вони планують одружитися. (Next year they plan to get married.)\n\n---\n\n## Dialogues\n\n> [!conversation] Planning the Weekend\n>\n> — Що ти **будеш** робити **завтра**?\n> — **Завтра** я **буду** прибирати квартиру. А **потім** я **планую** піти в кіно.\n> — Добре! А що **післязавтра**?\n> — **Післязавтра** я **збираюся** відвідати бабусю.\n> — Чудово! Я **сподіваюся**, погода **буде** гарна.\n>\n> — What will you do tomorrow?\n> — Tomorrow I will clean the apartment. And then I plan to go to the cinema.\n> — Good! And the day after tomorrow?\n> — The day after tomorrow I'm going to visit grandma.\n> — Wonderful! I hope the weather will be nice.\n\n> [!conversation] New Year Resolutions\n>\n> — Що ти **плануєш** робити **наступного року**?\n> — Я **обов'язково буду** більше читати. І я **спробую** вивчити нову мову.\n> — Яку мову?\n> — Я **ще** не **вирішив**. Може, японську. Я **мрію** поїхати в Японію.\n> — Це гарна ідея! Я **думаю**, ти **зможеш**.\n>\n> — What do you plan to do next year?\n> — I will definitely read more. And I will try to learn a new language.\n> — Which language?\n> — I haven't decided yet. Maybe Japanese. I dream of going to Japan.\n> — That's a good idea! I think you will be able to.\n\n---\n\n> 💡 **Future in Song**\n>\n> Many Ukrainian songs use the future tense to express hopes and dreams. The famous song \"Все буде добре\" (Everything will be fine) became an anthem of optimism during difficult times.\n\n> 🌍 **Making Appointments**\n>\n> When scheduling in Ukrainian:\n>\n> - \"Я буду о третій\" = I'll be there at three\n> - \"Зателефоную пізніше\" = I'll call later\n> - \"Побачимось завтра!\" = See you tomorrow!\n\n> 💡 **Two Futures**\n>\n> Ukrainian actually has two ways to express future! The compound future (буду + infinitive) we learned today is for ongoing/repeated actions. For single completed actions, Ukrainian uses the perfective future (which looks like present tense of perfective verbs). You'll master both as you progress!\n\n---"
       },
       {
         "id": "section-2",
         "name": "Summary",
         "nameEn": null,
         "type": "summary",
-        "content": "Ви навчилися говорити про майбутнє! (You've learned to talk about the future!)\n\n**Що ви вивчили (What you learned):**\n\n- **Майбутній час з \"буду\" (Future with \"буду\"):** буду/будеш/буде/будемо/будете/будуть + інфінітив\n- **Часові вирази (Time expressions):** завтра, післязавтра, скоро, пізніше\n- **Планування (Planning):** планую, збираюся, маю намір\n- **Надії та мрії (Hopes and dreams):** сподіваюся, мрію, хочу\n- **Рівні впевненості (Certainty):** обов'язково, обіцяю, спробую\n- **Прислівники (Adverbs):** вже (already), ще (still/yet), ніколи (never)\n\n### Швидка довідка (Quick Reference)\n\n| Особа | Дієслово \"бути\" | Приклад |\n|-------|-----------------|---------|\n| я | буду | Я буду читати книгу. |\n| ти | будеш | Ти будеш працювати завтра? |\n| він/вона | буде | Вона буде вивчати українську. |\n| ми | будемо | Ми будемо готувати вечерю. |\n| ви | будете | Що ви будете робити? |\n| вони | будуть | Вони будуть грати у футбол. |\n\n**Приклади (Examples):**\n\nЗавтра буде гарний день. Ми будемо гуляти в парку. Вони будуть готувати українські страви. Я буду вчити нові слова. Ти будеш відпочивати? Вона буде працювати вдома. Він буде читати книгу. Ми будемо слухати музику разом.\n\n---\n\n**Наступний урок:** Котра година? Дні тижня та місяці!\n\n> [!resources] External Resources\n>\n> **YouTube:** [Future Tense in Ukrainian](https://www.youtube.com/watch?v=kY67m6y6Oyc) — Speak Ukrainian\n>\n> **Grammar:** [Ukrainian Future Tense Guide](https://www.ukrainianlessons.com/future-tense/) — Ukrainian Lessons\n>\n> **Podcast:** [ULP Episode 27 | Future Tense](https://www.ukrainianlessons.com/episode27/) — Ukrainian Lessons Podcast"
-      },
-      {
-        "id": "section-3",
-        "name": "Vocabulary",
-        "nameEn": null,
-        "type": "vocabulary",
-        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| завтра | /ˈzɑvtrɑ/ | tomorrow | adv | - | - |\n| післязавтра | /pisʲlʲɑˈzɑvtrɑ/ | day after tomorrow | adv | - | - |\n| наступного тижня | /nɑˈstupnɔɦɔ ˈtɪʒnʲɑ/ | next week | phrase | - | genitive |\n| наступного місяця | /nɑˈstupnɔɦɔ ˈmisʲɑt͡sʲɑ/ | next month | phrase | - | genitive |\n| наступного року | /nɑˈstupnɔɦɔ ˈrɔku/ | next year | phrase | - | genitive |\n| скоро | /ˈskɔrɔ/ | soon | adv | - | - |\n| пізніше | /pizˈnʲiʃe/ | later | adv | - | comparative |\n| потім | /ˈpɔtim/ | then, afterwards | adv | - | - |\n| згодом | /ˈzɦɔdɔm/ | eventually, later | adv | - | - |\n| буду | /ˈbudu/ | I will be | verb | - | future of бути |\n| збираюся | /zbɪˈrɑjusʲɑ/ | I am going to | verb | - | reflexive |\n| планую | /plɑˈnuju/ | I plan | verb | - | Class I |\n| хочу | /ˈxɔt͡ʃu/ | I want | verb | - | irregular |\n| маю намір | /ˈmɑju ˈnɑmir/ | I intend | phrase | - | - |\n| сподіваюся | /spɔdʲiˈvɑjusʲɑ/ | I hope | verb | - | reflexive |\n| обіцяю | /ɔbiˈt͡sʲɑju/ | I promise | verb | - | Class I |\n| спробую | /ˈsprɔbuju/ | I will try | verb | - | perfective |\n| постараюся | /pɔstɑˈrɑjusʲɑ/ | I will try (my best) | verb | - | perfective, reflexive |\n| мрію | /ˈmriju/ | I dream | verb | - | Class I |\n| думаю | /ˈdumɑju/ | I think | verb | - | Class I |\n| вирішив | /ˈvɪriʃɪv/ | I decided (m) | verb | - | past, perfective |\n| вже | /vʒɛ/ | already | adv | - | - |\n| обов'язково | /ɔbɔvjɑzˈkɔvɔ/ | definitely, must | adv | - | - |\n\n---"
+        "content": "Ви навчилися говорити про майбутнє! (You've learned to talk about the future!)\n\n**Що ви вивчили (What you learned):**\n\n- **Майбутній час з \"буду\" (Future with \"буду\"):** буду/будеш/буде/будемо/будете/будуть + інфінітив\n- **Часові вирази (Time expressions):** завтра, післязавтра, скоро, пізніше\n- **Планування (Planning):** планую, збираюся, маю намір\n- **Надії та мрії (Hopes and dreams):** сподіваюся, мрію, хочу\n- **Рівні впевненості (Certainty):** обов'язково, обіцяю, спробую\n- **Прислівники (Adverbs):** вже (already), ще (still/yet), ніколи (never)\n\n### Швидка довідка (Quick Reference)\n\n| Особа    | Дієслово \"бути\" | Приклад                       |\n| -------- | --------------- | ----------------------------- |\n| я        | буду            | Я буду читати книгу.          |\n| ти       | будеш           | Ти будеш працювати завтра?    |\n| він/вона | буде            | Вона буде вивчати українську. |\n| ми       | будемо          | Ми будемо готувати вечерю.    |\n| ви       | будете          | Що ви будете робити?          |\n| вони     | будуть          | Вони будуть грати у футбол.   |\n\n**Приклади (Examples):**\n\nЗавтра буде гарний день. Ми будемо гуляти в парку. Вони будуть готувати українські страви. Я буду вчити нові слова. Ти будеш відпочивати? Вона буде працювати вдома. Він буде читати книгу. Ми будемо слухати музику разом.\n\n---\n\n**Наступний урок:** Котра година? Дні тижня та місяці!"
       }
     ],
-    "rawMarkdown": "---\n\nmodule: a1-22\ntitle: \"Tomorrow - Future Tense\"\nsubtitle: \"Talking About What Will Happen\"\nversion: \"1.0\"\nphase: \"A1.3 - Consolidation\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: \"first-occurrence\"\ntags:\n  - future-tense\n  - compound-future\n  - time-expressions\n  - planning\ngrammar:\n  - Compound future tense (буду + infinitive)\n  - буду conjugation (буду, будеш, буде, будемо, будете, будуть)\n  - Planning and intention expressions\nobjectives:\n  - \"Learner can form compound future using буду + infinitive\"\n  - \"Learner can conjugate буду for all persons\"\n  - \"Learner can express plans, intentions, and hopes\"\n  - \"Learner can use future time expressions correctly\"\nvocabulary_count: 25\n---\n\n# Tomorrow - Future Tense\n\n> [!summary] Learning Goals\n> - Express future actions using буду + infinitive\n> - Use time expressions for future events\n> - Talk about plans, intentions, and hopes\n\n---\n\n## Grammar\n\n## The Compound Future Tense\n\n> [!observe] Pattern Discovery\n>\n> Look at these sentences:\n> - Я **буду читати**. (I will read.)\n> - Вона **буде працювати**. (She will work.)\n> - Ми **будемо вивчати** українську. (We will study Ukrainian.)\n>\n> The future = буду/будеш/буде... + infinitive (-ти form)\n\nUkrainian uses **буду** (future of \"to be\") + infinitive to form the compound future. This works with imperfective verbs.\n\n### Conjugation of буду\n\n| Person | Singular | Plural |\n|--------|----------|--------|\n| 1st | буду | будемо |\n| 2nd | будеш | будете |\n| 3rd | буде | будуть |\n\n### Examples with Different Verbs\n\n| Subject | буду form | + Infinitive | Full Sentence |\n|---------|-----------|--------------|---------------|\n| Я | буду | читати | Я буду читати. (I will read.) |\n| Ти | будеш | працювати | Ти будеш працювати. (You will work.) |\n| Він | буде | вчитися | Він буде вчитися. (He will study.) |\n| Вона | буде | готувати | Вона буде готувати. (She will cook.) |\n| Ми | будемо | грати | Ми будемо грати. (We will play.) |\n| Ви | будете | їхати | Ви будете їхати. (You will go.) |\n| Вони | будуть | співати | Вони будуть співати. (They will sing.) |\n\n---\n\n## Expressing Plans and Intentions\n\n> [!tip] Levels of Certainty\n>\n> Different verbs express different levels of commitment:\n> - **обов'язково буду** — definitely will\n> - **планую** — I plan to\n> - **збираюся** — I'm going to\n> - **сподіваюся** — I hope to\n> - **мрію** — I dream of\n\n### Common Patterns\n\n**Strong intention:**\n- Я **обов'язково** буду там. (I will definitely be there.)\n- Я **вирішив** вчити українську. (I decided to learn Ukrainian.)\n- Я **обіцяю** допомогти. (I promise to help.)\n\n**Planning:**\n- Я **планую** поїхати в Київ. (I plan to go to Kyiv.)\n- Я **збираюся** купити книгу. (I'm going to buy a book.)\n- Я **маю намір** почати завтра. (I intend to start tomorrow.)\n\n**Hoping/dreaming:**\n- Я **сподіваюся** побачити тебе. (I hope to see you.)\n- Я **мрію** жити в Україні. (I dream of living in Ukraine.)\n\n**Trying:**\n- Я **спробую** зробити це. (I will try to do this.)\n- Я **постараюся** прийти вчасно. (I'll try my best to come on time.)\n\n---\n\n## Time Expressions for the Future\n\n> [!observe] Pattern Discovery\n>\n> Notice the pattern with \"next\":\n> - наступного **тижня** (next week)\n> - наступного **місяця** (next month)\n> - наступного **року** (next year)\n>\n> All use genitive case with **наступного**!\n\n### Timeline\n\n| When? | Ukrainian | Example |\n|-------|-----------|---------|\n| Tomorrow | завтра | Завтра я буду працювати. |\n| Day after tomorrow | післязавтра | Післязавтра ми поїдемо. |\n| Soon | скоро | Скоро буде весна. |\n| Later | пізніше | Пізніше я подзвоню. |\n| Then/afterwards | потім | Потім ми будемо обідати. |\n| Eventually | згодом | Згодом він зрозуміє. |\n| Next week | наступного тижня | Наступного тижня я починаю курс. |\n| Next month | наступного місяця | Наступного місяця вона приїде. |\n| Next year | наступного року | Наступного року ми одружимося. |\n\n---\n\n## Useful Adverbs\n\n**вже** (already) — something happened or will happen sooner than expected:\n- Я **вже** вирішив. (I have already decided.)\n- Завтра він **вже** буде тут. (Tomorrow he will already be here.)\n\n**ще** (still/yet) — something continues or hasn't happened:\n- Я **ще** не знаю. (I don't know yet.)\n- Вона **ще** буде працювати. (She will still be working.)\n\n**ніколи** (never) — negation of future:\n- Я **ніколи** не забуду. (I will never forget.)\n- Він **ніколи** не запізнюється. (He is never late.)\n\n---\n\n## Examples in Context\n\n> [!example] Making Plans\n>\n> - **Завтра** я **буду** готувати вечерю. (Tomorrow I will cook dinner.)\n> - **Скоро** ми **будемо** святкувати. (Soon we will celebrate.)\n> - Я **планую** відвідати музей **наступного тижня**. (I plan to visit the museum next week.)\n> - Вона **збирається** купити нову машину. (She's going to buy a new car.)\n> - Ми **сподіваємося** побачити вас **скоро**. (We hope to see you soon.)\n\n> [!example] Talking About Hopes and Dreams\n>\n> - Я **мрію** подорожувати світом. (I dream of traveling the world.)\n> - Він **хоче** стати лікарем. (He wants to become a doctor.)\n> - Вона **має намір** вивчити три мови. (She intends to learn three languages.)\n> - Ми **обіцяємо** допомогти. (We promise to help.)\n\n> [!example] More Future Sentences\n>\n> - Наступного місяця вони будуть жити в Києві. (Next month they will live in Kyiv.)\n> - Пізніше я буду читати книгу. (Later I will read a book.)\n> - Скоро буде весна! (Soon it will be spring!)\n> - Я обов'язково зроблю це завтра. (I will definitely do this tomorrow.)\n> - Потім ми будемо обідати разом. (Then we will have lunch together.)\n> - Вона ще не вирішила, куди поїде. (She hasn't decided yet where she will go.)\n> - Я ніколи не забуду цей день. (I will never forget this day.)\n> - Наступного року вони планують одружитися. (Next year they plan to get married.)\n\n---\n\n## Dialogues\n\n> [!conversation] Planning the Weekend\n>\n> — Що ти **будеш** робити **завтра**?\n> — **Завтра** я **буду** прибирати квартиру. А **потім** я **планую** піти в кіно.\n> — Добре! А що **післязавтра**?\n> — **Післязавтра** я **збираюся** відвідати бабусю.\n> — Чудово! Я **сподіваюся**, погода **буде** гарна.\n>\n> — What will you do tomorrow?\n> — Tomorrow I will clean the apartment. And then I plan to go to the cinema.\n> — Good! And the day after tomorrow?\n> — The day after tomorrow I'm going to visit grandma.\n> — Wonderful! I hope the weather will be nice.\n\n> [!conversation] New Year Resolutions\n>\n> — Що ти **плануєш** робити **наступного року**?\n> — Я **обов'язково буду** більше читати. І я **спробую** вивчити нову мову.\n> — Яку мову?\n> — Я **ще** не **вирішив**. Може, японську. Я **мрію** поїхати в Японію.\n> — Це гарна ідея! Я **думаю**, ти **зможеш**.\n>\n> — What do you plan to do next year?\n> — I will definitely read more. And I will try to learn a new language.\n> — Which language?\n> — I haven't decided yet. Maybe Japanese. I dream of going to Japan.\n> — That's a good idea! I think you will be able to.\n\n---\n\n> 💡 **Future in Song**\n>\n> Many Ukrainian songs use the future tense to express hopes and dreams. The famous song \"Все буде добре\" (Everything will be fine) became an anthem of optimism during difficult times.\n\n> 🌍 **Making Appointments**\n>\n> When scheduling in Ukrainian:\n> - \"Я буду о третій\" = I'll be there at three\n> - \"Зателефоную пізніше\" = I'll call later\n> - \"Побачимось завтра!\" = See you tomorrow!\n\n> 💡 **Two Futures**\n>\n> Ukrainian actually has two ways to express future! The compound future (буду + infinitive) we learned today is for ongoing/repeated actions. For single completed actions, Ukrainian uses the perfective future (which looks like present tense of perfective verbs). You'll master both as you progress!\n\n---\n\n# Summary\n\nВи навчилися говорити про майбутнє! (You've learned to talk about the future!)\n\n**Що ви вивчили (What you learned):**\n\n- **Майбутній час з \"буду\" (Future with \"буду\"):** буду/будеш/буде/будемо/будете/будуть + інфінітив\n- **Часові вирази (Time expressions):** завтра, післязавтра, скоро, пізніше\n- **Планування (Planning):** планую, збираюся, маю намір\n- **Надії та мрії (Hopes and dreams):** сподіваюся, мрію, хочу\n- **Рівні впевненості (Certainty):** обов'язково, обіцяю, спробую\n- **Прислівники (Adverbs):** вже (already), ще (still/yet), ніколи (never)\n\n### Швидка довідка (Quick Reference)\n\n| Особа | Дієслово \"бути\" | Приклад |\n|-------|-----------------|---------|\n| я | буду | Я буду читати книгу. |\n| ти | будеш | Ти будеш працювати завтра? |\n| він/вона | буде | Вона буде вивчати українську. |\n| ми | будемо | Ми будемо готувати вечерю. |\n| ви | будете | Що ви будете робити? |\n| вони | будуть | Вони будуть грати у футбол. |\n\n**Приклади (Examples):**\n\nЗавтра буде гарний день. Ми будемо гуляти в парку. Вони будуть готувати українські страви. Я буду вчити нові слова. Ти будеш відпочивати? Вона буде працювати вдома. Він буде читати книгу. Ми будемо слухати музику разом.\n\n---\n\n**Наступний урок:** Котра година? Дні тижня та місяці!\n\n> [!resources] External Resources\n>\n> **YouTube:** [Future Tense in Ukrainian](https://www.youtube.com/watch?v=kY67m6y6Oyc) — Speak Ukrainian\n>\n> **Grammar:** [Ukrainian Future Tense Guide](https://www.ukrainianlessons.com/future-tense/) — Ukrainian Lessons\n>\n> **Podcast:** [ULP Episode 27 | Future Tense](https://www.ukrainianlessons.com/episode27/) — Ukrainian Lessons Podcast\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| завтра | /ˈzɑvtrɑ/ | tomorrow | adv | - | - |\n| післязавтра | /pisʲlʲɑˈzɑvtrɑ/ | day after tomorrow | adv | - | - |\n| наступного тижня | /nɑˈstupnɔɦɔ ˈtɪʒnʲɑ/ | next week | phrase | - | genitive |\n| наступного місяця | /nɑˈstupnɔɦɔ ˈmisʲɑt͡sʲɑ/ | next month | phrase | - | genitive |\n| наступного року | /nɑˈstupnɔɦɔ ˈrɔku/ | next year | phrase | - | genitive |\n| скоро | /ˈskɔrɔ/ | soon | adv | - | - |\n| пізніше | /pizˈnʲiʃe/ | later | adv | - | comparative |\n| потім | /ˈpɔtim/ | then, afterwards | adv | - | - |\n| згодом | /ˈzɦɔdɔm/ | eventually, later | adv | - | - |\n| буду | /ˈbudu/ | I will be | verb | - | future of бути |\n| збираюся | /zbɪˈrɑjusʲɑ/ | I am going to | verb | - | reflexive |\n| планую | /plɑˈnuju/ | I plan | verb | - | Class I |\n| хочу | /ˈxɔt͡ʃu/ | I want | verb | - | irregular |\n| маю намір | /ˈmɑju ˈnɑmir/ | I intend | phrase | - | - |\n| сподіваюся | /spɔdʲiˈvɑjusʲɑ/ | I hope | verb | - | reflexive |\n| обіцяю | /ɔbiˈt͡sʲɑju/ | I promise | verb | - | Class I |\n| спробую | /ˈsprɔbuju/ | I will try | verb | - | perfective |\n| постараюся | /pɔstɑˈrɑjusʲɑ/ | I will try (my best) | verb | - | perfective, reflexive |\n| мрію | /ˈmriju/ | I dream | verb | - | Class I |\n| думаю | /ˈdumɑju/ | I think | verb | - | Class I |\n| вирішив | /ˈvɪriʃɪv/ | I decided (m) | verb | - | past, perfective |\n| вже | /vʒɛ/ | already | adv | - | - |\n| обов'язково | /ɔbɔvjɑzˈkɔvɔ/ | definitely, must | adv | - | - |\n\n---\n",
-    "createdAt": "2025-12-31T22:04:36.886902Z",
-    "modifiedAt": "2025-12-31T22:04:36.886902Z",
+    "rawMarkdown": "# Tomorrow - Future Tense\n\n> [!summary] Learning Goals\n>\n> - Express future actions using буду + infinitive\n> - Use time expressions for future events\n> - Talk about plans, intentions, and hopes\n\n---\n\n## Grammar\n\n## The Compound Future Tense\n\n> [!observe] Pattern Discovery\n>\n> Look at these sentences:\n>\n> - Я **буду читати**. (I will read.)\n> - Вона **буде працювати**. (She will work.)\n> - Ми **будемо вивчати** українську. (We will study Ukrainian.)\n>\n> The future = буду/будеш/буде... + infinitive (-ти form)\n\nUkrainian uses **буду** (future of \"to be\") + infinitive to form the compound future. This works with imperfective verbs.\n\n### Conjugation of буду\n\n| Person | Singular | Plural |\n| ------ | -------- | ------ |\n| 1st    | буду     | будемо |\n| 2nd    | будеш    | будете |\n| 3rd    | буде     | будуть |\n\n### Examples with Different Verbs\n\n| Subject | буду form | + Infinitive | Full Sentence                          |\n| ------- | --------- | ------------ | -------------------------------------- |\n| Я       | буду      | читати       | Я буду читати. (I will read.)          |\n| Ти      | будеш     | працювати    | Ти будеш працювати. (You will work.)   |\n| Він     | буде      | вчитися      | Він буде вчитися. (He will study.)     |\n| Вона    | буде      | готувати     | Вона буде готувати. (She will cook.)   |\n| Ми      | будемо    | грати        | Ми будемо грати. (We will play.)       |\n| Ви      | будете    | їхати        | Ви будете їхати. (You will go.)        |\n| Вони    | будуть    | співати      | Вони будуть співати. (They will sing.) |\n\n---\n\n## Expressing Plans and Intentions\n\n> [!tip] Levels of Certainty\n>\n> Different verbs express different levels of commitment:\n>\n> - **обов'язково буду** — definitely will\n> - **планую** — I plan to\n> - **збираюся** — I'm going to\n> - **сподіваюся** — I hope to\n> - **мрію** — I dream of\n\n### Common Patterns\n\n**Strong intention:**\n\n- Я **обов'язково** буду там. (I will definitely be there.)\n- Я **вирішив** вчити українську. (I decided to learn Ukrainian.)\n- Я **обіцяю** допомогти. (I promise to help.)\n\n**Planning:**\n\n- Я **планую** поїхати в Київ. (I plan to go to Kyiv.)\n- Я **збираюся** купити книгу. (I'm going to buy a book.)\n- Я **маю намір** почати завтра. (I intend to start tomorrow.)\n\n**Hoping/dreaming:**\n\n- Я **сподіваюся** побачити тебе. (I hope to see you.)\n- Я **мрію** жити в Україні. (I dream of living in Ukraine.)\n\n**Trying:**\n\n- Я **спробую** зробити це. (I will try to do this.)\n- Я **постараюся** прийти вчасно. (I'll try my best to come on time.)\n\n---\n\n## Time Expressions for the Future\n\n> [!observe] Pattern Discovery\n>\n> Notice the pattern with \"next\":\n>\n> - наступного **тижня** (next week)\n> - наступного **місяця** (next month)\n> - наступного **року** (next year)\n>\n> All use genitive case with **наступного**!\n\n### Timeline\n\n| When?              | Ukrainian         | Example                          |\n| ------------------ | ----------------- | -------------------------------- |\n| Tomorrow           | завтра            | Завтра я буду працювати.         |\n| Day after tomorrow | післязавтра       | Післязавтра ми поїдемо.          |\n| Soon               | скоро             | Скоро буде весна.                |\n| Later              | пізніше           | Пізніше я подзвоню.              |\n| Then/afterwards    | потім             | Потім ми будемо обідати.         |\n| Eventually         | згодом            | Згодом він зрозуміє.             |\n| Next week          | наступного тижня  | Наступного тижня я починаю курс. |\n| Next month         | наступного місяця | Наступного місяця вона приїде.   |\n| Next year          | наступного року   | Наступного року ми одружимося.   |\n\n---\n\n## Useful Adverbs\n\n**вже** (already) — something happened or will happen sooner than expected:\n\n- Я **вже** вирішив. (I have already decided.)\n- Завтра він **вже** буде тут. (Tomorrow he will already be here.)\n\n**ще** (still/yet) — something continues or hasn't happened:\n\n- Я **ще** не знаю. (I don't know yet.)\n- Вона **ще** буде працювати. (She will still be working.)\n\n**ніколи** (never) — negation of future:\n\n- Я **ніколи** не забуду. (I will never forget.)\n- Він **ніколи** не запізнюється. (He is never late.)\n\n---\n\n## Examples in Context\n\n> [!example] Making Plans\n>\n> - **Завтра** я **буду** готувати вечерю. (Tomorrow I will cook dinner.)\n> - **Скоро** ми **будемо** святкувати. (Soon we will celebrate.)\n> - Я **планую** відвідати музей **наступного тижня**. (I plan to visit the museum next week.)\n> - Вона **збирається** купити нову машину. (She's going to buy a new car.)\n> - Ми **сподіваємося** побачити вас **скоро**. (We hope to see you soon.)\n\n> [!example] Talking About Hopes and Dreams\n>\n> - Я **мрію** подорожувати світом. (I dream of traveling the world.)\n> - Він **хоче** стати лікарем. (He wants to become a doctor.)\n> - Вона **має намір** вивчити три мови. (She intends to learn three languages.)\n> - Ми **обіцяємо** допомогти. (We promise to help.)\n\n> [!example] More Future Sentences\n>\n> - Наступного місяця вони будуть жити в Києві. (Next month they will live in Kyiv.)\n> - Пізніше я буду читати книгу. (Later I will read a book.)\n> - Скоро буде весна! (Soon it will be spring!)\n> - Я обов'язково зроблю це завтра. (I will definitely do this tomorrow.)\n> - Потім ми будемо обідати разом. (Then we will have lunch together.)\n> - Вона ще не вирішила, куди поїде. (She hasn't decided yet where she will go.)\n> - Я ніколи не забуду цей день. (I will never forget this day.)\n> - Наступного року вони планують одружитися. (Next year they plan to get married.)\n\n---\n\n## Dialogues\n\n> [!conversation] Planning the Weekend\n>\n> — Що ти **будеш** робити **завтра**?\n> — **Завтра** я **буду** прибирати квартиру. А **потім** я **планую** піти в кіно.\n> — Добре! А що **післязавтра**?\n> — **Післязавтра** я **збираюся** відвідати бабусю.\n> — Чудово! Я **сподіваюся**, погода **буде** гарна.\n>\n> — What will you do tomorrow?\n> — Tomorrow I will clean the apartment. And then I plan to go to the cinema.\n> — Good! And the day after tomorrow?\n> — The day after tomorrow I'm going to visit grandma.\n> — Wonderful! I hope the weather will be nice.\n\n> [!conversation] New Year Resolutions\n>\n> — Що ти **плануєш** робити **наступного року**?\n> — Я **обов'язково буду** більше читати. І я **спробую** вивчити нову мову.\n> — Яку мову?\n> — Я **ще** не **вирішив**. Може, японську. Я **мрію** поїхати в Японію.\n> — Це гарна ідея! Я **думаю**, ти **зможеш**.\n>\n> — What do you plan to do next year?\n> — I will definitely read more. And I will try to learn a new language.\n> — Which language?\n> — I haven't decided yet. Maybe Japanese. I dream of going to Japan.\n> — That's a good idea! I think you will be able to.\n\n---\n\n> 💡 **Future in Song**\n>\n> Many Ukrainian songs use the future tense to express hopes and dreams. The famous song \"Все буде добре\" (Everything will be fine) became an anthem of optimism during difficult times.\n\n> 🌍 **Making Appointments**\n>\n> When scheduling in Ukrainian:\n>\n> - \"Я буду о третій\" = I'll be there at three\n> - \"Зателефоную пізніше\" = I'll call later\n> - \"Побачимось завтра!\" = See you tomorrow!\n\n> 💡 **Two Futures**\n>\n> Ukrainian actually has two ways to express future! The compound future (буду + infinitive) we learned today is for ongoing/repeated actions. For single completed actions, Ukrainian uses the perfective future (which looks like present tense of perfective verbs). You'll master both as you progress!\n\n---\n\n# Summary\n\nВи навчилися говорити про майбутнє! (You've learned to talk about the future!)\n\n**Що ви вивчили (What you learned):**\n\n- **Майбутній час з \"буду\" (Future with \"буду\"):** буду/будеш/буде/будемо/будете/будуть + інфінітив\n- **Часові вирази (Time expressions):** завтра, післязавтра, скоро, пізніше\n- **Планування (Planning):** планую, збираюся, маю намір\n- **Надії та мрії (Hopes and dreams):** сподіваюся, мрію, хочу\n- **Рівні впевненості (Certainty):** обов'язково, обіцяю, спробую\n- **Прислівники (Adverbs):** вже (already), ще (still/yet), ніколи (never)\n\n### Швидка довідка (Quick Reference)\n\n| Особа    | Дієслово \"бути\" | Приклад                       |\n| -------- | --------------- | ----------------------------- |\n| я        | буду            | Я буду читати книгу.          |\n| ти       | будеш           | Ти будеш працювати завтра?    |\n| він/вона | буде            | Вона буде вивчати українську. |\n| ми       | будемо          | Ми будемо готувати вечерю.    |\n| ви       | будете          | Що ви будете робити?          |\n| вони     | будуть          | Вони будуть грати у футбол.   |\n\n**Приклади (Examples):**\n\nЗавтра буде гарний день. Ми будемо гуляти в парку. Вони будуть готувати українські страви. Я буду вчити нові слова. Ти будеш відпочивати? Вона буде працювати вдома. Він буде читати книгу. Ми будемо слухати музику разом.\n\n---\n\n**Наступний урок:** Котра година? Дні тижня та місяці!\n",
+    "createdAt": "2026-01-04T21:33:28.251343Z",
+    "modifiedAt": "2026-01-04T21:33:28.251343Z",
     "version": 2
   },
   "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A1-22",
     "level": "A1",
-    "phase": "A1.3 - Consolidation",
-    "wordCount": 23,
-    "newWordCount": 23,
+    "phase": "A1.1",
+    "wordCount": 0,
+    "newWordCount": 0,
     "reviewWordCount": 0,
-    "transliterationMode": "first-occurrence",
-    "words": [
+    "transliterationMode": "none",
+    "words": [],
+    "reviewWords": []
+  },
+  "external_resources": {
+    "podcasts": [
       {
-        "id": "vocab-1",
-        "uk": "завтра",
-        "ipa": "/ˈzɑvtrɑ/",
-        "en": "tomorrow",
-        "pos": "adv",
-        "gender": null,
-        "note": "-"
+        "episode_id": "ULP-026",
+        "title": "ULP 1-26 Talking about traveling – Past tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/26/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: tense"
       },
       {
-        "id": "vocab-2",
-        "uk": "післязавтра",
-        "ipa": "/pisʲlʲɑˈzɑvtrɑ/",
-        "en": "day after tomorrow",
-        "pos": "adv",
-        "gender": null,
-        "note": "-"
+        "episode_id": "ULP-027",
+        "title": "ULP 1-27 Traveling in Ukraine in winter – More Past tense",
+        "url": "https://www.ukrainianlessons.com/lesson/27/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: tense"
       },
       {
-        "id": "vocab-3",
-        "uk": "наступного тижня",
-        "ipa": "/nɑˈstupnɔɦɔ ˈtɪʒnʲɑ/",
-        "en": "next week",
-        "pos": "phrase",
-        "gender": null,
-        "note": "genitive"
+        "episode_id": "ULP-028",
+        "title": "ULP 1-28 Making plans for the weekend – Future tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/28/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: future, tense"
       },
       {
-        "id": "vocab-4",
-        "uk": "наступного місяця",
-        "ipa": "/nɑˈstupnɔɦɔ ˈmisʲɑt͡sʲɑ/",
-        "en": "next month",
-        "pos": "phrase",
-        "gender": null,
-        "note": "genitive"
+        "episode_id": "ULP-096",
+        "title": "ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/96/",
+        "relevance": "medium",
+        "match_reason": "Cross-level topic match: future, tense"
       },
       {
-        "id": "vocab-5",
-        "uk": "наступного року",
-        "ipa": "/nɑˈstupnɔɦɔ ˈrɔku/",
-        "en": "next year",
-        "pos": "phrase",
-        "gender": null,
-        "note": "genitive"
-      },
-      {
-        "id": "vocab-6",
-        "uk": "скоро",
-        "ipa": "/ˈskɔrɔ/",
-        "en": "soon",
-        "pos": "adv",
-        "gender": null,
-        "note": "-"
-      },
-      {
-        "id": "vocab-7",
-        "uk": "пізніше",
-        "ipa": "/pizˈnʲiʃe/",
-        "en": "later",
-        "pos": "adv",
-        "gender": null,
-        "note": "comparative"
-      },
-      {
-        "id": "vocab-8",
-        "uk": "потім",
-        "ipa": "/ˈpɔtim/",
-        "en": "then, afterwards",
-        "pos": "adv",
-        "gender": null,
-        "note": "-"
-      },
-      {
-        "id": "vocab-9",
-        "uk": "згодом",
-        "ipa": "/ˈzɦɔdɔm/",
-        "en": "eventually, later",
-        "pos": "adv",
-        "gender": null,
-        "note": "-"
-      },
-      {
-        "id": "vocab-10",
-        "uk": "буду",
-        "ipa": "/ˈbudu/",
-        "en": "I will be",
-        "pos": "verb",
-        "gender": null,
-        "note": "future of бути"
-      },
-      {
-        "id": "vocab-11",
-        "uk": "збираюся",
-        "ipa": "/zbɪˈrɑjusʲɑ/",
-        "en": "I am going to",
-        "pos": "verb",
-        "gender": null,
-        "note": "reflexive"
-      },
-      {
-        "id": "vocab-12",
-        "uk": "планую",
-        "ipa": "/plɑˈnuju/",
-        "en": "I plan",
-        "pos": "verb",
-        "gender": null,
-        "note": "Class I"
-      },
-      {
-        "id": "vocab-13",
-        "uk": "хочу",
-        "ipa": "/ˈxɔt͡ʃu/",
-        "en": "I want",
-        "pos": "verb",
-        "gender": null,
-        "note": "irregular"
-      },
-      {
-        "id": "vocab-14",
-        "uk": "маю намір",
-        "ipa": "/ˈmɑju ˈnɑmir/",
-        "en": "I intend",
-        "pos": "phrase",
-        "gender": null,
-        "note": "-"
-      },
-      {
-        "id": "vocab-15",
-        "uk": "сподіваюся",
-        "ipa": "/spɔdʲiˈvɑjusʲɑ/",
-        "en": "I hope",
-        "pos": "verb",
-        "gender": null,
-        "note": "reflexive"
-      },
-      {
-        "id": "vocab-16",
-        "uk": "обіцяю",
-        "ipa": "/ɔbiˈt͡sʲɑju/",
-        "en": "I promise",
-        "pos": "verb",
-        "gender": null,
-        "note": "Class I"
-      },
-      {
-        "id": "vocab-17",
-        "uk": "спробую",
-        "ipa": "/ˈsprɔbuju/",
-        "en": "I will try",
-        "pos": "verb",
-        "gender": null,
-        "note": "perfective"
-      },
-      {
-        "id": "vocab-18",
-        "uk": "постараюся",
-        "ipa": "/pɔstɑˈrɑjusʲɑ/",
-        "en": "I will try (my best)",
-        "pos": "verb",
-        "gender": null,
-        "note": "perfective, reflexive"
-      },
-      {
-        "id": "vocab-19",
-        "uk": "мрію",
-        "ipa": "/ˈmriju/",
-        "en": "I dream",
-        "pos": "verb",
-        "gender": null,
-        "note": "Class I"
-      },
-      {
-        "id": "vocab-20",
-        "uk": "думаю",
-        "ipa": "/ˈdumɑju/",
-        "en": "I think",
-        "pos": "verb",
-        "gender": null,
-        "note": "Class I"
-      },
-      {
-        "id": "vocab-21",
-        "uk": "вирішив",
-        "ipa": "/ˈvɪriʃɪv/",
-        "en": "I decided (m)",
-        "pos": "verb",
-        "gender": null,
-        "note": "past, perfective"
-      },
-      {
-        "id": "vocab-22",
-        "uk": "вже",
-        "ipa": "/vʒɛ/",
-        "en": "already",
-        "pos": "adv",
-        "gender": null,
-        "note": "-"
-      },
-      {
-        "id": "vocab-23",
-        "uk": "обов'язково",
-        "ipa": "/ɔbɔvjɑzˈkɔvɔ/",
-        "en": "definitely, must",
-        "pos": "adv",
-        "gender": null,
-        "note": "-"
+        "episode_id": "ULP-097",
+        "title": "ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion",
+        "url": "https://www.ukrainianlessons.com/lesson/97/",
+        "relevance": "medium",
+        "match_reason": "Cross-level topic match: future, tense"
       }
     ],
-    "reviewWords": []
+    "youtube": [
+      {
+        "title": "Future Tense in Ukrainian",
+        "url": "https://www.youtube.com/watch?v=kY67m6y6Oyc",
+        "relevance": "high",
+        "channel": "Speak Ukrainian"
+      }
+    ],
+    "articles": [
+      {
+        "id": "ulp-blog-005",
+        "title": "Future Tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/grammar-future/",
+        "priority": 1,
+        "relevance": "high",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'present', 'tense', 'future', 'past'} (Score: 100, Priority: 1)"
+      },
+      {
+        "id": "ulp-blog-004",
+        "title": "Past Tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/grammar-past-tense/",
+        "priority": 1,
+        "relevance": "high",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'present', 'tense', 'future', 'past'} (Score: 100, Priority: 1)"
+      },
+      {
+        "id": "ULP-026",
+        "title": "ULP 1-26 Talking about traveling – Past tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/26/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Core match for {'present', 'tense', 'future', 'past'} (Score: 85, Priority: 2)"
+      },
+      {
+        "id": "ULP-027",
+        "title": "ULP 1-27 Traveling in Ukraine in winter – More Past tense",
+        "url": "https://www.ukrainianlessons.com/lesson/27/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Core match for {'present', 'tense', 'future', 'past'} (Score: 85, Priority: 2)"
+      },
+      {
+        "id": "ULP-028",
+        "title": "ULP 1-28 Making plans for the weekend – Future tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/28/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Core match for {'present', 'tense', 'future', 'past'} (Score: 85, Priority: 2)"
+      },
+      {
+        "id": "ULP-096",
+        "title": "ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/96/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Partial match for {'tense', 'future', 'present', 'past'} (Score: 75, Priority: 2)"
+      },
+      {
+        "id": "ULP-097",
+        "title": "ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion",
+        "url": "https://www.ukrainianlessons.com/lesson/97/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Core match for {'present', 'tense', 'future', 'past'} (Score: 80, Priority: 2)"
+      },
+      {
+        "id": "ULP-098",
+        "title": "ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/98/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Partial match for {'tense', 'future', 'present', 'past'} (Score: 75, Priority: 2)"
+      },
+      {
+        "id": "ULP-118",
+        "title": "ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/118/",
+        "priority": 3,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Core match for {'present', 'tense', 'future', 'past'} (Score: 70, Priority: 3)"
+      },
+      {
+        "title": "Ukrainian Future Tense Guide",
+        "url": "https://www.ukrainianlessons.com/future-tense/",
+        "relevance": "high",
+        "source": "Ukrainian Lessons"
+      },
+      {
+        "title": "ULP Episode 27 | Future Tense",
+        "url": "https://www.ukrainianlessons.com/episode27/",
+        "relevance": "high",
+        "source": "Ukrainian Lessons Podcast"
+      }
+    ],
+    "books": [],
+    "websites": []
   }
 }

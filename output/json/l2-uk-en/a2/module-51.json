@@ -9,43 +9,20 @@
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A2",
-    "phase": "A2",
+    "phase": "A2.1",
     "moduleNumber": 51,
-    "moduleType": "vocabulary",
-    "pedagogy": "Narrative",
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
     "immersionLevel": 0.4,
-    "title": "Education & Learning",
+    "title": "Module 51",
     "titleUk": null,
-    "subtitle": "Studying in Ukrainian",
-    "description": {
-      "Talk about school": "урок, клас, вчитель"
-    },
-    "objectives": [
-      {
-        "Talk about school": "урок, клас, вчитель"
-      },
-      {
-        "Discuss university life": "лекція, іспит, студент"
-      },
-      {
-        "Differentiate study verbs": "вчитися, вивчати"
-      },
-      {
-        "Describe learning materials": "підручник, зошит"
-      }
-    ],
+    "subtitle": null,
+    "description": "Module 51",
+    "objectives": [],
     "objectivesUk": null,
-    "grammarFocus": [
-      "verb-aspect-introduction",
-      "locative-places"
-    ],
-    "tags": [
-      "vocabulary",
-      "education",
-      "school",
-      "university"
-    ],
-    "totalDuration": 60,
+    "grammarFocus": [],
+    "tags": [],
+    "totalDuration": 45,
     "transliterationMode": "none",
     "sections": [
       {
@@ -60,86 +37,88 @@
         "name": "Summary",
         "nameEn": null,
         "type": "summary",
-        "content": "You learned to:\n- Talk about school: **школа**, **урок**, **вчитель**, **оцінка**\n- Talk about university: **лекція**, **іспит**, **студент**, **факультет**\n- Use study materials: **підручник**, **зошит**, **ручка**\n- Distinguish verbs: **вчитися** (place/process) vs **вивчати** (subject)\n\nKeep learning! Education is the key to the future. Good luck on your path to fluency!\n\n> [!resources] 🔗 External Resources\n>\n> **YouTube:** [Most interesting Facts about Ukrainian Schools/ #ukraineeducation #ukr...](https://www.youtube.com/watch?v=m2KybmMH1pE) — Ukrainian Guy\n>\n> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview\n>\n> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises"
-      },
-      {
-        "id": "section-3",
-        "name": "Vocabulary",
-        "nameEn": null,
-        "type": "vocabulary",
-        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| час | /tʃas/ | tense, time | noun | m | grammar term |\n| клас | /klas/ | class/grade | noun | m | |\n| урок | /uˈrɔk/ | lesson | noun | m | |\n| учень | /ˈutʃenʲ/ | pupil | noun | m | |\n| факультет | /fakulʲˈtɛt/ | faculty | noun | m | |\n| лекція | /ˈlɛktsʲija/ | lecture | noun | f | |\n\n| семінар | /semiˈnar/ | seminar | noun | m | |\n| іспит | /ˈispɪt/ | exam | noun | m | |\n| залік | /ˈzalik/ | credit/test | noun | m | |\n| диплом | /dɪˈplɔm/ | diploma | noun | m | |\n| підручник | /pidˈrutʃnɪk/ | textbook | noun | m | |\n| дошка | /ˈdɔʃka/ | board | noun | f | |\n| предмет | /predˈmɛt/ | subject | noun | m | |\n\n| навчатися | /naʋˈtʃatɪsʲa/ | to learn/study | verb | - | |\n| складати | /sklaˈdatɪ/ | to take (exam) | verb | - | |\n| конспект | /konˈspɛkt/ | notes | noun | m | |\n| бібліотека | /biblioˈtɛka/ | library | noun | f | |\n| парта | /ˈparta/ | school desk | noun | f | |\n| сесія | /ˈsɛsʲija/ | exam period | noun | f | |"
+        "content": "You learned to:\n- Talk about school: **школа**, **урок**, **вчитель**, **оцінка**\n- Talk about university: **лекція**, **іспит**, **студент**, **факультет**\n- Use study materials: **підручник**, **зошит**, **ручка**\n- Distinguish verbs: **вчитися** (place/process) vs **вивчати** (subject)\n\nKeep learning! Education is the key to the future. Good luck on your path to fluency!"
       }
     ],
-    "rawMarkdown": "---\nmodule: a2-51\ntitle: Education & Learning\nsubtitle: \"Studying in Ukrainian\"\nversion: \"1.0\"\nphase: \"A2\"\npedagogy: \"Narrative\"\nduration: 60\ntransliteration: none\ntags: [\"vocabulary\", \"education\", \"school\", \"university\"]\ngrammar: [\"verb-aspect-introduction\", \"locative-places\"]\nobjectives:\n  - Talk about school: урок, клас, вчитель\n  - Discuss university life: лекція, іспит, студент\n  - Differentiate study verbs: вчитися, вивчати\n  - Describe learning materials: підручник, зошит\nvocab_count: 30\n---\n\n# Education & Learning\n\n## Warm-up\n\nДе ви вчилися? Який предмет у школі ви любили найбільше? Ви любите вчитися зараз?\n\nОсвіта — це шлях до успіху. Українці дуже поважають знання. Від першого дзвоника у школі до диплома університету — це велика пригода. Давайте вивчимо слова про навчання!\n\nEducation is a lifelong journey. In this module, you'll master three key areas:\n1. **School vocabulary** — classrooms, teachers, and grades\n2. **University life** — lectures, exams, and diplomas\n3. **The crucial difference** — *вчитися* (where you study) vs. *вивчати* (what you study)\n\n> [!important] **Myth Buster** \"Soviet Legacy?\"\n> While Soviet education was strong in math/physics, Ukraine has a much older tradition. The **Ostroh Academy** (1576) and **Kyiv-Mohyla Academy** (1615) were among the first universities in Eastern Europe, long before many \"imperial\" institutions. Ukraine has always been a center of European learning.\n\n## Presentation\n\n### School (Школа)\n\nWhere it all begins:\n\n| Слово | Переклад | Приклад |\n|-------|----------|---------|\n| **школа** | school | Я йду в школу. |\n| **клас** | class/grade | Це мій клас. |\n| **урок** | lesson | Урок математики. |\n| **вчитель** | teacher (m) | Мій вчитель добрий. |\n| **вчителька** | teacher (f) | Моя вчителька сувора. |\n| **учень** | pupil/student | Розумний учень. |\n| **предмет** | subject | Цікавий предмет. |\n| **оцінка** | grade/mark | Гарна оцінка (12). |\n\n### University (Університет)\n\nHigher education:\n\n- **університет** — university: *Студенти в університеті.*\n- **факультет** — faculty/department: *Юридичний факультет.*\n- **лекція** — lecture: *Нудна лекція.*\n- **семінар** — seminar: *Активний семінар.*\n- **іспит** — exam: *Складний іспит.*\n- **залік** — credit/test: *Скласти залік.*\n- **студент** — student: *Бідний студент.*\n- **диплом** — diploma: *Отримати диплом.*\n\n### Materials & Actions\n\n- **підручник** — textbook: *Відкрийте підручник.*\n- **зошит** — notebook: *Пишіть у зошит.*\n- **ручка** — pen: *Синя ручка.*\n- **олівець** — pencil: *Малювати олівцем.*\n- **дошка** — blackboard/whiteboard: *Дивіться на дошку.*\n- **знання** — knowledge: *Знання — це сила.*\n\n> [!note] Grammar Point: Two ways to \"Study\"\n> This is tricky!\n> 1. **Вчитися** (to study/learn generally): Focus on the process or place.\n>    * *Я вчуся в школі.* (I study at school).\n>    * *Він добре вчиться.* (He studies well).\n> 2. **Вивчати** (to study/learn something specific): Needs an object (Accusative).\n>    * *Я вивчаю українську мову.* (I study Ukrainian language).\n>    * *Ми вивчаємо історію.* (We study history).\n\n> [!cultural] **Cultural Insight** 12-Point System\n> Unlike the A-F or 1-5 systems, Ukrainian schools use a **12-point scale**.\n> - 10-12: High (Відмінно)\n> - 7-9: Good (Добре)\n> - 4-6: Satisfactory (Задовільно)\n> - 1-3: Low (Незадовільно)\n> So getting a \"12\" is perfect!\n\n> [!tip] **Common Mistakes to Avoid**\n> ❌ *Я вивчаю в школі.* — Wrong! (вивчати needs an object)\n> ✅ *Я вчуся в школі.* — Correct! (вчитися for place)\n>\n> ❌ *Я вчуся українську мову.* — Wrong! (вчитися can't take an object)\n> ✅ *Я вивчаю українську мову.* — Correct! (вивчати + Accusative)\n>\n> **Memory trick:** \"вчуся\" ends in reflexive \"-ся\" → the action stays \"inside\" (process). \"Вивчаю\" has no \"-ся\" → the action goes \"outside\" to an object.\n\n## Practice\n\nNow let's see these words in action through stories about Ukrainian educational life — from a child's first day at school to a university student's exam season.\n\n### Story Time: First Grade\n\nСьогодні перше вересня. Це свято — День знань.\nМаленький Тарас йде у **школу**. У нього новий рюкзак і красива форма. В руках він несе квіти для **вчительки**.\n\n— Мамо, я боюся, — каже Тарас.\n— Не бійся, синку. **Школа** — це цікаво, — каже мама.\nУ класі багато дітей. Вчителька пані Надія усміхається.\n— Добрий день, **учні**! — каже вона. — Це ваш перший **урок**.\nТарас сідає за парту. Він відкриває **зошит** і бере **ручку**. Він пише перше слово: \"Мама\".\nВін отримує наклейку — це його перша **оцінка**.\n\n### Story Time: The Exchange Student\n\nДжон — студент з Америки. Він приїхав у Львів **вивчати** історію.\n— Чому Україна? — питають його нові друзі.\n— Тут цікава історія і смачна кава, — сміється Джон.\n\nВін живе в гуртожитку. Його сусід — Максим. Максим допомагає Джону **вчити** українські слова.\n— Як буде \"good morning\"? — питає Джон.\n— \"Доброго ранку\", — каже Максим.\n\nДжон ходить на **лекції**. Він розуміє не все. Професор говорить швидко.\nАле Джон має гарний **зошит**, де він пише всі нові слова. Він дуже старанний **студент**.\nВвечері вони з Максимом ходять у піцерію.\n— Українська мова складна, але красива, — каже Джон.\n— Ти молодець, — відповідає Максим. — Ти вже гарно говориш.\n\n### Ukrainian Education System\n\nEducation in Ukraine has three stages:\n1.  **Primary School** (Початкова школа): Grades 1-4. Focus on basics.\n2.  **Basic Secondary School** (Базова середня школа): Grades 5-9. More subjects.\n3.  **High School** (Профільна середня школа): Grades 10-12 (reform in progress). Preparation for university.\n\nAfter school, students pass **ZNO** (External Independent Evaluation) — a very important national test. Based on the **оцінка** from ZNO, they enter university.\n\n> [!important] **Tip** \"Student Day\"\n> November 17th is International Students' Day. In Ukraine, it's a huge party. Universities often have concerts, shortened classes, and even \"Student Rectors\" for a day. If you are a student, don't miss it!\n\n### Story Time: The Session\n\nОлег — **студент**. Зараз у нього сесія (exam period). Це важкий час.\nЗавтра у нього **іспит** з історії.\nВін сидить у бібліотеці. На столі лежать книги, **підручник** і **конспект** (notes).\n\n— Привіт, Олег! — каже його друг Андрій. — Йдемо на каву?\n— Не можу, — відповідає Олег. — Я мушу **вчитися**. Професор дуже суворий.\n— Ти все знаєш! Ти добре **навчаєшся**.\n— Я не пам'ятаю дати, — зітхає Олег.\n\nОлег повертається додому пізно. Він читає конспект всю ніч.\nЗранку він йде в **університет**. Він бере білет. Питання про козаків. Олег знає все!\nВін отримує \"відмінно\". Тепер можна спати!\n\n### Story Time: Never Too Late\n\nМарина працює в банку. Їй 40 років. Але вона вирішила **вивчати** іспанську мову.\nДвічі на тиждень вона ходить на курси.\n\n— Чому іспанська? — питають колеги.\n— Я хочу поїхати в Іспанію, — каже Марина. — І мені подобається **вчитися** нового.\n\nНа уроці вони багато говорять, читають тексти і пишуть вправи.\nВчитель Карлос каже:\n— Марина, у вас талант! Ви швидко **вивчаєте** слова.\n\nВдома Марина робить домашнє завдання. Вона пише слова в **зошит**. Її дочка сміється:\n— Мамо, ти як школярка!\n— Так, — каже Марина. — **Знання** роблять нас молодими.\n\n### Story Time: Prom Night\n\nВипускний вечір — це особливий момент.\nОлена закінчує школу. Вона одягла красиву сукню.\n— Ти така доросла, — плаче її мама.\n\nУ **школі** грає музика. Всі **учні** танцюють вальс.\nДиректор школи говорить промову:\n— Ви маєте **знання**. Тепер ви йдете у великий світ. Не забувайте своїх вчителів!\n\nОлена танцює з Андрієм.\n— Куди ти будеш вступати? — питає Андрій.\n— Я хочу **вивчати** медицину. Я буду лікарем. А ти?\n— Я буду **вчити** комп'ютери. Я хочу бути айтішником.\n\nВони дивляться на школу.\n— Ми будемо сумувати, — каже Олена.\nСонце сходить. Новий день, нове життя.\n\n> [!cultural] **Cultural Insight** Teachers' Day\n> On the first Sunday of October, Ukraine celebrates Teachers' Day. Students bring huge bouquets of flowers and chocolate to school. Sometimes senior students teach classes for the younger ones (\"Self-Governance Day\"). It's a fun and respectful tradition.\n\n# Summary\n\nYou learned to:\n- Talk about school: **школа**, **урок**, **вчитель**, **оцінка**\n- Talk about university: **лекція**, **іспит**, **студент**, **факультет**\n- Use study materials: **підручник**, **зошит**, **ручка**\n- Distinguish verbs: **вчитися** (place/process) vs **вивчати** (subject)\n\nKeep learning! Education is the key to the future. Good luck on your path to fluency!\n\n> [!resources] 🔗 External Resources\n>\n> **YouTube:** [Most interesting Facts about Ukrainian Schools/ #ukraineeducation #ukr...](https://www.youtube.com/watch?v=m2KybmMH1pE) — Ukrainian Guy\n>\n> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview\n>\n> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| час | /tʃas/ | tense, time | noun | m | grammar term |\n| клас | /klas/ | class/grade | noun | m | |\n| урок | /uˈrɔk/ | lesson | noun | m | |\n| учень | /ˈutʃenʲ/ | pupil | noun | m | |\n| факультет | /fakulʲˈtɛt/ | faculty | noun | m | |\n| лекція | /ˈlɛktsʲija/ | lecture | noun | f | |\n\n| семінар | /semiˈnar/ | seminar | noun | m | |\n| іспит | /ˈispɪt/ | exam | noun | m | |\n| залік | /ˈzalik/ | credit/test | noun | m | |\n| диплом | /dɪˈplɔm/ | diploma | noun | m | |\n| підручник | /pidˈrutʃnɪk/ | textbook | noun | m | |\n| дошка | /ˈdɔʃka/ | board | noun | f | |\n| предмет | /predˈmɛt/ | subject | noun | m | |\n\n| навчатися | /naʋˈtʃatɪsʲa/ | to learn/study | verb | - | |\n| складати | /sklaˈdatɪ/ | to take (exam) | verb | - | |\n| конспект | /konˈspɛkt/ | notes | noun | m | |\n| бібліотека | /biblioˈtɛka/ | library | noun | f | |\n| парта | /ˈparta/ | school desk | noun | f | |\n| сесія | /ˈsɛsʲija/ | exam period | noun | f | |\n\n",
-    "createdAt": "2025-12-31T22:52:29.942686Z",
-    "modifiedAt": "2025-12-31T22:52:29.942686Z",
+    "rawMarkdown": "# Education & Learning\n\n## Warm-up\n\nДе ви вчилися? Який предмет у школі ви любили найбільше? Ви любите вчитися зараз?\n\nОсвіта — це шлях до успіху. Українці дуже поважають знання. Від першого дзвоника у школі до диплома університету — це велика пригода. Давайте вивчимо слова про навчання!\n\nEducation is a lifelong journey. In this module, you'll master three key areas:\n1. **School vocabulary** — classrooms, teachers, and grades\n2. **University life** — lectures, exams, and diplomas\n3. **The crucial difference** — *вчитися* (where you study) vs. *вивчати* (what you study)\n\n> [!important] **Myth Buster** \"Soviet Legacy?\"\n> While Soviet education was strong in math/physics, Ukraine has a much older tradition. The **Ostroh Academy** (1576) and **Kyiv-Mohyla Academy** (1615) were among the first universities in Eastern Europe, long before many \"imperial\" institutions. Ukraine has always been a center of European learning.\n\n## Presentation\n\n### School (Школа)\n\nWhere it all begins:\n\n| Слово | Переклад | Приклад |\n|-------|----------|---------|\n| **школа** | school | Я йду в школу. |\n| **клас** | class/grade | Це мій клас. |\n| **урок** | lesson | Урок математики. |\n| **вчитель** | teacher (m) | Мій вчитель добрий. |\n| **вчителька** | teacher (f) | Моя вчителька сувора. |\n| **учень** | pupil/student | Розумний учень. |\n| **предмет** | subject | Цікавий предмет. |\n| **оцінка** | grade/mark | Гарна оцінка (12). |\n\n### University (Університет)\n\nHigher education:\n\n- **університет** — university: *Студенти в університеті.*\n- **факультет** — faculty/department: *Юридичний факультет.*\n- **лекція** — lecture: *Нудна лекція.*\n- **семінар** — seminar: *Активний семінар.*\n- **іспит** — exam: *Складний іспит.*\n- **залік** — credit/test: *Скласти залік.*\n- **студент** — student: *Бідний студент.*\n- **диплом** — diploma: *Отримати диплом.*\n\n### Materials & Actions\n\n- **підручник** — textbook: *Відкрийте підручник.*\n- **зошит** — notebook: *Пишіть у зошит.*\n- **ручка** — pen: *Синя ручка.*\n- **олівець** — pencil: *Малювати олівцем.*\n- **дошка** — blackboard/whiteboard: *Дивіться на дошку.*\n- **знання** — knowledge: *Знання — це сила.*\n\n> [!note] Grammar Point: Two ways to \"Study\"\n> This is tricky!\n> 1. **Вчитися** (to study/learn generally): Focus on the process or place.\n>    * *Я вчуся в школі.* (I study at school).\n>    * *Він добре вчиться.* (He studies well).\n> 2. **Вивчати** (to study/learn something specific): Needs an object (Accusative).\n>    * *Я вивчаю українську мову.* (I study Ukrainian language).\n>    * *Ми вивчаємо історію.* (We study history).\n\n> [!cultural] **Cultural Insight** 12-Point System\n> Unlike the A-F or 1-5 systems, Ukrainian schools use a **12-point scale**.\n> - 10-12: High (Відмінно)\n> - 7-9: Good (Добре)\n> - 4-6: Satisfactory (Задовільно)\n> - 1-3: Low (Незадовільно)\n> So getting a \"12\" is perfect!\n\n> [!tip] **Common Mistakes to Avoid**\n> ❌ *Я вивчаю в школі.* — Wrong! (вивчати needs an object)\n> ✅ *Я вчуся в школі.* — Correct! (вчитися for place)\n>\n> ❌ *Я вчуся українську мову.* — Wrong! (вчитися can't take an object)\n> ✅ *Я вивчаю українську мову.* — Correct! (вивчати + Accusative)\n>\n> **Memory trick:** \"вчуся\" ends in reflexive \"-ся\" → the action stays \"inside\" (process). \"Вивчаю\" has no \"-ся\" → the action goes \"outside\" to an object.\n\n## Practice\n\nNow let's see these words in action through stories about Ukrainian educational life — from a child's first day at school to a university student's exam season.\n\n### Story Time: First Grade\n\nСьогодні перше вересня. Це свято — День знань.\nМаленький Тарас йде у **школу**. У нього новий рюкзак і красива форма. В руках він несе квіти для **вчительки**.\n\n— Мамо, я боюся, — каже Тарас.\n— Не бійся, синку. **Школа** — це цікаво, — каже мама.\nУ класі багато дітей. Вчителька пані Надія усміхається.\n— Добрий день, **учні**! — каже вона. — Це ваш перший **урок**.\nТарас сідає за парту. Він відкриває **зошит** і бере **ручку**. Він пише перше слово: \"Мама\".\nВін отримує наклейку — це його перша **оцінка**.\n\n### Story Time: The Exchange Student\n\nДжон — студент з Америки. Він приїхав у Львів **вивчати** історію.\n— Чому Україна? — питають його нові друзі.\n— Тут цікава історія і смачна кава, — сміється Джон.\n\nВін живе в гуртожитку. Його сусід — Максим. Максим допомагає Джону **вчити** українські слова.\n— Як буде \"good morning\"? — питає Джон.\n— \"Доброго ранку\", — каже Максим.\n\nДжон ходить на **лекції**. Він розуміє не все. Професор говорить швидко.\nАле Джон має гарний **зошит**, де він пише всі нові слова. Він дуже старанний **студент**.\nВвечері вони з Максимом ходять у піцерію.\n— Українська мова складна, але красива, — каже Джон.\n— Ти молодець, — відповідає Максим. — Ти вже гарно говориш.\n\n### Ukrainian Education System\n\nEducation in Ukraine has three stages:\n1.  **Primary School** (Початкова школа): Grades 1-4. Focus on basics.\n2.  **Basic Secondary School** (Базова середня школа): Grades 5-9. More subjects.\n3.  **High School** (Профільна середня школа): Grades 10-12 (reform in progress). Preparation for university.\n\nAfter school, students pass **ZNO** (External Independent Evaluation) — a very important national test. Based on the **оцінка** from ZNO, they enter university.\n\n> [!important] **Tip** \"Student Day\"\n> November 17th is International Students' Day. In Ukraine, it's a huge party. Universities often have concerts, shortened classes, and even \"Student Rectors\" for a day. If you are a student, don't miss it!\n\n### Story Time: The Session\n\nОлег — **студент**. Зараз у нього сесія (exam period). Це важкий час.\nЗавтра у нього **іспит** з історії.\nВін сидить у бібліотеці. На столі лежать книги, **підручник** і **конспект** (notes).\n\n— Привіт, Олег! — каже його друг Андрій. — Йдемо на каву?\n— Не можу, — відповідає Олег. — Я мушу **вчитися**. Професор дуже суворий.\n— Ти все знаєш! Ти добре **навчаєшся**.\n— Я не пам'ятаю дати, — зітхає Олег.\n\nОлег повертається додому пізно. Він читає конспект всю ніч.\nЗранку він йде в **університет**. Він бере білет. Питання про козаків. Олег знає все!\nВін отримує \"відмінно\". Тепер можна спати!\n\n### Story Time: Never Too Late\n\nМарина працює в банку. Їй 40 років. Але вона вирішила **вивчати** іспанську мову.\nДвічі на тиждень вона ходить на курси.\n\n— Чому іспанська? — питають колеги.\n— Я хочу поїхати в Іспанію, — каже Марина. — І мені подобається **вчитися** нового.\n\nНа уроці вони багато говорять, читають тексти і пишуть вправи.\nВчитель Карлос каже:\n— Марина, у вас талант! Ви швидко **вивчаєте** слова.\n\nВдома Марина робить домашнє завдання. Вона пише слова в **зошит**. Її дочка сміється:\n— Мамо, ти як школярка!\n— Так, — каже Марина. — **Знання** роблять нас молодими.\n\n### Story Time: Prom Night\n\nВипускний вечір — це особливий момент.\nОлена закінчує школу. Вона одягла красиву сукню.\n— Ти така доросла, — плаче її мама.\n\nУ **школі** грає музика. Всі **учні** танцюють вальс.\nДиректор школи говорить промову:\n— Ви маєте **знання**. Тепер ви йдете у великий світ. Не забувайте своїх вчителів!\n\nОлена танцює з Андрієм.\n— Куди ти будеш вступати? — питає Андрій.\n— Я хочу **вивчати** медицину. Я буду лікарем. А ти?\n— Я буду **вчити** комп'ютери. Я хочу бути айтішником.\n\nВони дивляться на школу.\n— Ми будемо сумувати, — каже Олена.\nСонце сходить. Новий день, нове життя.\n\n> [!cultural] **Cultural Insight** Teachers' Day\n> On the first Sunday of October, Ukraine celebrates Teachers' Day. Students bring huge bouquets of flowers and chocolate to school. Sometimes senior students teach classes for the younger ones (\"Self-Governance Day\"). It's a fun and respectful tradition.\n\n# Summary\n\nYou learned to:\n- Talk about school: **школа**, **урок**, **вчитель**, **оцінка**\n- Talk about university: **лекція**, **іспит**, **студент**, **факультет**\n- Use study materials: **підручник**, **зошит**, **ручка**\n- Distinguish verbs: **вчитися** (place/process) vs **вивчати** (subject)\n\nKeep learning! Education is the key to the future. Good luck on your path to fluency!\n",
+    "createdAt": "2026-01-04T21:33:28.299820Z",
+    "modifiedAt": "2026-01-04T21:33:28.299820Z",
     "version": 2
   },
   "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A2-51",
     "level": "A2",
-    "phase": "A2",
-    "wordCount": 6,
-    "newWordCount": 6,
+    "phase": "A2.1",
+    "wordCount": 0,
+    "newWordCount": 0,
     "reviewWordCount": 0,
     "transliterationMode": "none",
-    "words": [
+    "words": [],
+    "reviewWords": []
+  },
+  "external_resources": {
+    "podcasts": [
       {
-        "id": "vocab-1",
-        "uk": "час",
-        "ipa": "/tʃas/",
-        "en": "tense, time",
-        "pos": "noun",
-        "gender": "m",
-        "note": "grammar term"
+        "episode_id": "ULP-088",
+        "title": "ULP 3-88 Вища освіта – Higher education in Ukraine + Prefixes з-, с-",
+        "url": "https://www.ukrainianlessons.com/lesson/88/",
+        "relevance": "medium",
+        "match_reason": "Challenge listening (B1): education"
       },
       {
-        "id": "vocab-2",
-        "uk": "клас",
-        "ipa": "/klas/",
-        "en": "class/grade",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
+        "episode_id": "ULP-089",
+        "title": "ULP 3-89 Навчання в аспірантурі – Postgraduate education in Ukraine + Prefixes на-, за-",
+        "url": "https://www.ukrainianlessons.com/lesson/89/",
+        "relevance": "medium",
+        "match_reason": "Challenge listening (B1): навчання, education"
       },
       {
-        "id": "vocab-3",
-        "uk": "урок",
-        "ipa": "/uˈrɔk/",
-        "en": "lesson",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
+        "episode_id": "ULP-090",
+        "title": "ULP 3-90 Освіта в Україні – Education in Ukraine (Голосове повідомлення №2 – Voice message №2)",
+        "url": "https://www.ukrainianlessons.com/lesson/90/",
+        "relevance": "medium",
+        "match_reason": "Challenge listening (B1): education"
       },
       {
-        "id": "vocab-4",
-        "uk": "учень",
-        "ipa": "/ˈutʃenʲ/",
-        "en": "pupil",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
+        "episode_id": "ULP-171",
+        "title": "ULP 5-171 Інтерв'ю з Міленою про навчання в музичному коледжі",
+        "url": "https://www.ukrainianlessons.com/lesson-171/",
+        "relevance": "medium",
+        "match_reason": "Cross-level topic match: навчання"
       },
       {
-        "id": "vocab-5",
-        "uk": "факультет",
-        "ipa": "/fakulʲˈtɛt/",
-        "en": "faculty",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-6",
-        "uk": "лекція",
-        "ipa": "/ˈlɛktsʲija/",
-        "en": "lecture",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
+        "episode_id": "FMU-002",
+        "title": "Useful phrases for learning Ukrainian",
+        "url": "https://www.ukrainianlessons.com/fmu2/",
+        "relevance": "medium",
+        "match_reason": "Listening review (A1): learning"
       }
     ],
-    "reviewWords": []
+    "youtube": [
+      {
+        "title": "Most interesting Facts about Ukrainian Schools/ #ukraineeducation #ukr...",
+        "url": "https://www.youtube.com/watch?v=m2KybmMH1pE",
+        "relevance": "high",
+        "channel": "Ukrainian Guy"
+      }
+    ],
+    "articles": [
+      {
+        "title": "Ukrainian Grammar",
+        "url": "https://www.ukrainianlessons.com/ukrainian-tenses/",
+        "relevance": "high",
+        "source": "Grammar overview"
+      }
+    ],
+    "books": [],
+    "websites": [
+      {
+        "title": "Talk Ukrainian",
+        "url": "https://talkukrainian.com/",
+        "relevance": "high",
+        "source": "Practice exercises"
+      }
+    ]
   }
 }

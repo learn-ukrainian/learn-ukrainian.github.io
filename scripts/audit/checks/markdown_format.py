@@ -515,6 +515,70 @@ def check_heading_levels(content: str) -> list[dict]:
     return violations
 
 
+def check_table_column_consistency(content: str) -> list[dict]:
+    """
+    Check that markdown tables have consistent column counts.
+
+    Detects:
+    - Header row and separator row have different column counts
+    - Data rows have different column counts than header
+    """
+    violations = []
+
+    lines = content.split('\n')
+    i = 0
+
+    while i < len(lines):
+        line = lines[i].strip()
+
+        # Detect start of a table (line starting and ending with |)
+        if line.startswith('|') and line.endswith('|'):
+            table_start_line = i + 1  # 1-indexed
+            table_lines = [line]
+
+            # Collect all consecutive table lines
+            j = i + 1
+            while j < len(lines) and lines[j].strip().startswith('|') and lines[j].strip().endswith('|'):
+                table_lines.append(lines[j].strip())
+                j += 1
+
+            # Analyze table structure
+            if len(table_lines) >= 2:
+                # Count columns in each row (split by | and filter empty strings at edges)
+                def count_columns(row):
+                    cells = row.split('|')
+                    # Remove first and last empty strings from leading/trailing |
+                    return len([c for c in cells[1:-1]])
+
+                header_cols = count_columns(table_lines[0])
+
+                for row_idx, row in enumerate(table_lines[1:], start=1):
+                    row_cols = count_columns(row)
+
+                    if row_cols != header_cols:
+                        # Determine row type for better error message
+                        is_separator = bool(re.match(r'^\|[\s\-:|]+\|$', row))
+                        row_type = "separator" if is_separator else f"row {row_idx}"
+
+                        # Get context (first few words of header)
+                        header_preview = table_lines[0][:60] + ('...' if len(table_lines[0]) > 60 else '')
+
+                        violations.append({
+                            'type': 'TABLE_COLUMN_MISMATCH',
+                            'line': table_start_line + row_idx,
+                            'issue': f"Table {row_type} has {row_cols} columns but header has {header_cols}",
+                            'context': header_preview,
+                            'fix': f"Ensure all rows have exactly {header_cols} columns (cells separated by |)"
+                        })
+
+            # Skip past this table
+            i = j
+        else:
+            i += 1
+
+    return violations
+
+
 def check_markdown_format(content: str) -> list[dict]:
     """
     Run all markdown format validation checks.
@@ -530,7 +594,8 @@ def check_markdown_format(content: str) -> list[dict]:
     # Structure checks (run first)
     violations.extend(check_frontmatter_spacing(content))
     violations.extend(check_heading_levels(content))
-    
+    violations.extend(check_table_column_consistency(content))
+
     # Activity format checks
     violations.extend(check_quiz_format(content))
     violations.extend(check_true_false_format(content))

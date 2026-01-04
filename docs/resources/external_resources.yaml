@@ -9092,3 +9092,22 @@ resources:
       url: https://www.ukrainianlessons.com/lesson/71/
       relevance: medium
       match_reason: 'Cross-level topic match: ivan'
+  c1-02-academic-style-markers:
+    articles:
+    - title: "Внесок Галичини у формування української літературної мови"
+      url: https://litopys.org.ua/shevelov/shev.htm
+      relevance: high
+      source: Шевельов Ю., приклад класичного академічного стилю
+    - title: "Науковий стиль сучасної української літературної мови"
+      url: http://litmisto.org.ua/?p=5932
+      relevance: high
+      source: Коваль А.П., фундаментальна праця
+    - title: "Стилістика української мови"
+      url: https://pidruchniki.com/15840720/ukrayinska_mova/stilistika_ukrayinskoyi_movi
+      relevance: high
+      source: Мацько Л.І., підручник для ВНЗ
+    websites:
+    - title: Словник української наукової термінології
+      url: http://www1.nas.gov.ua/institutes/ium/Pages/default.aspx
+      relevance: high
+      source: Ресурс НАН України

@@ -25,81 +25,22 @@
     right: Health
   - left: '- знижка'
     right: Shopping
-- type: fill-in
+- type: cloze
   title: Vocabulary Test
-  items:
-  - sentence: Вранці я ___ о 7:00.
-    answer: прокидаюся
-    options:
-    - прокидаюся
-    - засинаю
-    - сплю
-  - sentence: Він працює ___.
-    answer: лікарем
-    options:
-    - лікарем
-    - лікар
-    - лікаря
-  - sentence: У мене болить ___. (head)
-    answer: голова
-    options:
-    - голова
-    - голову
-    - голові
-  - sentence: Скільки це ___? (costs)
-    answer: коштує
-    options:
-    - коштує
-    - коштувати
-    - коштував
-  - sentence: Можна заплатити ___?
-    answer: карткою
-    options:
-    - карткою
-    - картку
-    - картка
-  - sentence: Я хочу купити ___. (ticket)
-    answer: квиток
-    options:
-    - квиток
-    - квитка
-    - квитку
-  - sentence: Вона ___ в університеті. (studies)
-    answer: вчиться
-    options:
-    - вчиться
-    - вчить
-    - вче
-  - sentence: Я ___ українську мову. (learn)
-    answer: вивчаю
-    options:
-    - вивчаю
-    - вчуся
-    - вивчити
-  - sentence: Де тут ___? (pharmacy)
-    answer: аптека
-    options:
-    - аптека
-    - аптеку
-    - аптеці
-  - sentence: Яка у вас ___?
-    answer: температура
-    options:
-    - температура
-    - температуру
-    - температурі
-  - sentence: Він живе у великому ___. (city-LOC)
-    answer: місті
-    options:
-    - місті
-    - місто
-    - місту
-  - sentence: Ввечері я йду в ___. (gym-ACC)
-    answer: спортзал
-    options:
-    - спортзал
-    - спортзалі
-    - спортзалу
+  passage: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00. Він працює {лікарем|лікар|лікаря}.
+    У мене болить {голова|голову|голові}. (head)
+
+
+    Скільки це {коштує|коштувати|коштував}? (costs) Можна заплатити {карткою|картку|картка}?
+    Я хочу купити {квиток|квитка|квитку}. (ticket)
+
+
+    Вона {вчиться|вчить|вче} в університеті. (studies) Я {вивчаю|вчуся|вивчити} українську
+    мову. (learn) Де тут {аптека|аптеку|аптеці}? (pharmacy)
+
+
+    Яка у вас {температура|температуру|температурі}? Він живе у великому {місті|місто|місту}.
+    (city-LOC) Ввечері я йду в {спортзал|спортзалі|спортзалу}. (gym-ACC)'
 - type: quiz
   title: A2 Vocabulary Quiz
   items:
@@ -123,7 +64,8 @@
       correct: false
     - text: Genitive case
       correct: false
-  - question: In the phrase "У мене болить голова", what is the grammatical role of "голова"?
+  - question: In the phrase "У мене болить голова", what is the grammatical role of
+      "голова"?
     options:
     - text: Nominative (subject)
       correct: true
@@ -143,7 +85,8 @@
       correct: false
     - text: Locative
       correct: false
-  - question: What is the primary meaning of the verb "вчитися" in an educational context?
+  - question: What is the primary meaning of the verb "вчитися" in an educational
+      context?
     options:
     - text: To study
       correct: true

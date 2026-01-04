@@ -1,20 +1,32 @@
 # Audit Report: 30-b21-checkpoint.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "checkpoint" | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Phase:** B2.1 | **Level:** B2 | **Pedagogy:** checkpoint | **Target:** 1000
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Виправлення помилок у пасивних конструкціях' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 1/12 items with placeholders/missing errors.
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Виправлення регістрових помилок' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 2/10 items with placeholders/missing errors.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 2 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 2032/1000 (>2000 may be too long)
-- **Activities:** ✅ 20/15
+- **Words:** ✅ 2009/1000
+- **Activities:** ✅ 19/15
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 47/10
+- **Vocab:** ✅ 31/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.6% (checkpoint - no gate)
+- **Pedagogy:** ❌ 2 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.8% (checkpoint - no gate)
 - **Richness:** ✅ 88% (checkpoint)
 - **Grammar:** ⏳ Pending validation
 
@@ -25,25 +37,19 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| activity_types | 12 | 8 | 100% | 25% | 25.0% |
+| activity_types | 11 | 8 | 100% | 25% | 25.0% |
 | review_sections | 30 | 3 | 100% | 20% | 20.0% |
-| variety | 0.90 | - | 90% | 15% | 13.5% |
+| variety | 0.89 | - | 89% | 15% | 13.4% |
 | engagement | 4 | 3 | 100% | 10% | 10.0% |
 | cultural | 0 | - | 0% | 10% | 0.0% |
-| visual | 10 | 3 | 100% | 10% | 10.0% |
+| visual | 9 | 3 | 100% | 10% | 10.0% |
 | paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **88.5%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (20 interactive elements)
+| **TOTAL** | | | | | **88.3%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Контрольна точка: B2.1 Завершення** | ⚪️ | 81 | Skipped |
+| **Intro/Narrative** | ✅ | 58 | Included in Core |
 | **Огляд** | ⚪️ | 88 | Skipped |
 | **Навичка 1: Пасивний стан (M01-06)** | ⚪️ | 216 | Skipped |
 | **Навичка 2: Активні дієприкметники (M07-08)** | ⚪️ | 196 | Skipped |
@@ -54,11 +60,3 @@
 | **Навичка 7: Доменна лексика (M26-29)** | ⚪️ | 206 | Skipped |
 | **Інтеграційне завдання** | ⚪️ | 237 | Skipped |
 | **Підсумок** | ✅ | 127 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |
-| **Група 1: Пасивний стан (M01-06)** | ⚪️ | 0 | Skipped |
-| **Група 2: Активні дієприкметники (M07-08)** | ⚪️ | 0 | Skipped |
-| **Група 3: Пасивні дієприкметники (M02-03)** | ⚪️ | 0 | Skipped |
-| **Група 4: Дієприслівники (M10)** | ⚪️ | 0 | Skipped |
-| **Група 5: Складний синтаксис (M11-14)** | ⚪️ | 0 | Skipped |
-| **Група 6: Регістри (M15-24)** | ⚪️ | 0 | Skipped |
-| **Група 7: Доменна лексика (M26-29)** | ⚪️ | 0 | Skipped |

@@ -1,20 +1,21 @@
 # Audit Report: 73-sloviany-na-ukrainskykh-zemliakh.md
-**Phase:** B2.3a | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Phase:** B2.3a | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1836/1750
-- **Activities:** ✅ 14/14
-- **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Words:** ✅ 1836/1400
+- **Activities:** ✅ 13/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/6
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 116/35
+- **Vocab:** ✅ 116/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.7% (target 98-100% (vocab))
+- **Content_heavy:** ⚠️ Too many activities: 13 (target 10-12)
+- **Immersion:** 🇺🇦 99.7% (target 98-100% (history))
 - **Richness:** ✅ 97% (content)
 - **Grammar:** ⏳ Pending validation
 

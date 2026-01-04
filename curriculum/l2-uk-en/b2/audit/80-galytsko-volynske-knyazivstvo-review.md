@@ -1,20 +1,30 @@
 # Audit Report: 80-galytsko-volynske-knyazivstvo.md
-**Phase:** B2.3a | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.3a | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Виправте помилки в історичних реченнях' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 6/16 items with placeholders/missing errors.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1708/1750 (42 short)
-- **Activities:** ✅ 14/14
-- **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Words:** ✅ 1708/1400
+- **Activities:** ✅ 13/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/6
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 87/35
+- **Vocab:** ✅ 87/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.4% (target 98-100% (vocab))
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ⚠️ Too many activities: 13 (target 10-12); 1 cloze with year blanks
+- **Immersion:** 🇺🇦 99.4% (target 98-100% (history))
 - **Richness:** ✅ 97% (content)
 - **Grammar:** ⏳ Pending validation
 

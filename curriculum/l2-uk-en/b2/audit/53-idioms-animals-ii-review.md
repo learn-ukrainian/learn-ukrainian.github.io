@@ -1,19 +1,30 @@
 # Audit Report: 53-idioms-animals-ii.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "CBI" | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): літати, птах, жертва, повзати, плавати...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 1 pedagogical violations (minor)
+- Activity count below minimum
 
 ## Gates
-- **Words:** ✅ 1754/1750
-- **Activities:** ✅ 14/14
+- **Words:** ⚠️ 1719/1750 (31 short)
+- **Activities:** ❌ 13/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 38/35
+- **Vocab:** ✅ 112/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 98-100% (vocab))
 - **Richness:** ✅ 98% (content)
 - **Grammar:** ⏳ Pending validation
@@ -38,13 +49,12 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Фразеологізми: Тварини II (Птахи, Риби, Комахи)** | ⚪️ | 77 | Skipped |
+| **Intro/Narrative** | ✅ | 77 | Included in Core |
 | **Вступ: Світ навколо нас як джерело мудрості** | ⚪️ | 209 | Skipped |
-| **Частина 1: Птахи та Ссавці — Неуважність та Стратегія** | ⚪️ | 247 | Skipped |
-| **Частина 2: Риби — Майстерність та Хаос у водній стихії** | ⚪️ | 244 | Skipped |
-| **Частина 3: Комахи — Від ідеальної чистоти до перебільшення** | ⚪️ | 149 | Skipped |
+| **Частина 1: Птахи та Ссавці — Неуважність та Стратегія** | ✅ | 247 | Included in Core |
+| **Частина 2: Риби — Майстерність та Хаос у водній стихії** | ✅ | 244 | Included in Core |
+| **Частина 3: Комахи — Від ідеальної чистоти до перебільшення** | ✅ | 149 | Included in Core |
 | **Культурний код: Тварини, Стихії та Українська ментальність** | ✅ | 445 | Included in Core |
 | **Природа в українській класичній поезії** | ⚪️ | 117 | Skipped |
 | **Практичний додаток: Нюанси використання та Регістри** | ⚪️ | 141 | Skipped |
 | **Підсумок** | ✅ | 90 | Included in Core |
-| **Словник** | ⚪️ | 35 | Skipped |

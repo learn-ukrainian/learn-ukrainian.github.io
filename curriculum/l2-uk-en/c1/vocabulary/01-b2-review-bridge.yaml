@@ -1,0 +1,101 @@
+module: 01-b2-review-bridge
+level: C1
+version: '1.0'
+items:
+  - lemma: повторення
+    ipa: /pɔu̯ˈtɔrenʲːɐ/
+    translation: repetition; review
+    pos: noun
+    gender: n
+  - lemma: узагальнення
+    ipa: /ʊzɐˈɦɑlʲnenʲːɐ/
+    translation: generalization; summary
+    pos: noun
+    gender: n
+  - lemma: систематизація
+    ipa: /sɪstemɐtɪˈzɑt͡sʲijɐ/
+    translation: systematization
+    pos: noun
+    gender: f
+  - lemma: консолідація
+    ipa: /kɔnsɔlʲiˈdɑt͡sʲijɐ/
+    translation: consolidation
+    pos: noun
+    gender: f
+  - lemma: перехід
+    ipa: /pereˈxid/
+    translation: transition
+    pos: noun
+    gender: m
+  - lemma: просунутий
+    ipa: /prɔˈsunʊtɪj/
+    translation: advanced
+    pos: adj
+  - lemma: академічний
+    ipa: /ɐkɐdeˈmʲit͡ʃnɪj/
+    translation: academic
+    pos: adj
+  - lemma: фаховий
+    ipa: /fɐxoˈʋɪj/
+    translation: professional; specialist
+    pos: adj
+  - lemma: досконалість
+    ipa: /dɔskɔˈnɑlʲisʲtʲ/
+    translation: perfection; excellence
+    pos: noun
+    gender: f
+  - lemma: майстерність
+    ipa: /mɐi̯ˈstɛrnʲisʲtʲ/
+    translation: mastery
+    pos: noun
+    gender: f
+  - lemma: опанування
+    ipa: /ɔpɐˈnuʋɐnʲːɐ/
+    translation: mastering
+    pos: noun
+    gender: n
+  - lemma: вдосконалення
+    ipa: /wdɔskɔˈnɑlenʲːɐ/
+    translation: improvement
+    pos: noun
+    gender: n
+  - lemma: поглиблення
+    ipa: /pɔˈɦlɪblenʲːɐ/
+    translation: deepening
+    pos: noun
+    gender: n
+  - lemma: розширення
+    ipa: /rɔzˈʃɪrenʲːɐ/
+    translation: expansion
+    pos: noun
+    gender: n
+  - lemma: закріплення
+    ipa: /zɐˈkripɫenʲːɐ/
+    translation: consolidation; fixing
+    pos: noun
+    gender: n
+  - lemma: застосування
+    ipa: /zɐstɔsuˈʋɑnʲːɐ/
+    translation: application
+    pos: noun
+    gender: n
+  - lemma: інтеграція
+    ipa: /inteˈɦrɑt͡sʲijɐ/
+    translation: integration
+    pos: noun
+    gender: f
+  - lemma: синтез
+    ipa: /sɪnˈtɛz/
+    translation: synthesis
+    pos: noun
+    gender: m
+  - lemma: аналіз
+    ipa: /ɐˈnɑlʲiz/
+    translation: analysis
+    pos: noun
+    gender: m
+  - lemma: оцінювання
+    ipa: /ɔˈt͡sʲinʲuʋɐnʲːɐ/
+    translation: assessment; evaluation
+    pos: noun
+    gender: n

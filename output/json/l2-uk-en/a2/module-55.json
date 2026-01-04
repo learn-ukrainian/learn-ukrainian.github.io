@@ -9,33 +9,20 @@
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A2",
-    "phase": "A2.5",
+    "phase": "A2.1",
     "moduleNumber": 55,
-    "moduleType": "checkpoint",
-    "pedagogy": "Review",
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
     "immersionLevel": 0.4,
-    "title": "Checkpoint - Vocabulary Expansion",
+    "title": "Module 55",
     "titleUk": null,
-    "subtitle": "Review of Modules 44-54",
-    "description": "Learner can use daily life vocabulary fluently",
-    "objectives": [
-      "Learner can use daily life vocabulary fluently",
-      "Learner can integrate health, shopping, and work vocabulary",
-      "Learner can recall key verbs and nouns"
-    ],
+    "subtitle": null,
+    "description": "Module 55",
+    "objectives": [],
     "objectivesUk": null,
-    "grammarFocus": [
-      "case review",
-      "reflexive verbs",
-      "impersonal constructions"
-    ],
-    "tags": [
-      "review",
-      "checkpoint",
-      "vocabulary",
-      "assessment"
-    ],
-    "totalDuration": "60 min",
+    "grammarFocus": [],
+    "tags": [],
+    "totalDuration": 45,
     "transliterationMode": "none",
     "sections": [
       {
@@ -50,122 +37,81 @@
         "name": "Summary",
         "nameEn": null,
         "type": "summary",
-        "content": "| Skill           | Key Pattern         | Example               |\n| --------------- | ------------------- | --------------------- |\n| Daily Life      | Routine verbs       | прокидатися, снідати  |\n| Work/Education  | працювати + Instr   | працює лікарем        |\n| Health          | У мене болить + Nom | болить голова         |\n| Shopping/Travel | Transaction vocab   | квиток, гроші, картка |\n\n> 💡 **Успіхи!**\n>\n> Ви закінчили рівень A2! Тепер ви можете говорити про щоденне життя, роботу, здоров'я і подорожі.\n> _You finished A2 level! Now you can talk about daily life, work, health, and travel._\n\n---\n\n> [!resources] 🔗 External Resources\n>\n> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview\n>\n> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises"
-      },
-      {
-        "id": "section-3",
-        "name": "Vocabulary",
-        "nameEn": null,
-        "type": "vocabulary",
-        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| поїзд       | /ˈpɔjizd/       | train      | noun | m      | travel     |\n| квиток      | /kvɪˈtɔk/       | ticket     | noun | m      | travel     |\n| готель      | /ɦɔˈtɛlʲ/       | hotel      | noun | m      | travel     |\n| знижка      | /ˈznɪʒka/       | discount   | noun | f      | shopping   |\n| аптека      | /apˈtɛka/       | pharmacy   | noun | f      | health     |\n| голова      | /ɦɔlɔˈʋɑ/       | head       | noun | f      | body part  |\n| лікар       | /ˈlʲikɑr/       | doctor     | noun | m      | profession |\n| вчитися     | /ˈwtʃɪtɪsʲɑ/    | to study   | verb | -      | education  |\n| працювати   | /pratsʲuˈʋɑtɪ/  | to work    | verb | -      | work       |\n| прокидатися | /prɔkɪˈdɑtɪsʲɑ/ | to wake up | verb | -      | routine    |"
+        "content": "| Skill           | Key Pattern         | Example               |\n| --------------- | ------------------- | --------------------- |\n| Daily Life      | Routine verbs       | прокидатися, снідати  |\n| Work/Education  | працювати + Instr   | працює лікарем        |\n| Health          | У мене болить + Nom | болить голова         |\n| Shopping/Travel | Transaction vocab   | квиток, гроші, картка |\n\n> 💡 **Успіхи!**\n>\n> Ви закінчили рівень A2! Тепер ви можете говорити про щоденне життя, роботу, здоров'я і подорожі.\n> _You finished A2 level! Now you can talk about daily life, work, health, and travel._\n\n---"
       }
     ],
-    "rawMarkdown": "---\nmodule: a2-55\ntitle: 'Checkpoint - Vocabulary Expansion'\nsubtitle: 'Review of Modules 44-54'\nversion: '2.0'\nphase: 'A2.5'\nfocus: checkpoint\npedagogy: 'Review'\nduration: '60 min'\ntransliteration: none\ntags:\n  - review\n  - checkpoint\n  - vocabulary\n  - assessment\ngrammar:\n  - case review\n  - reflexive verbs\n  - impersonal constructions\nobjectives:\n  - 'Learner can use daily life vocabulary fluently'\n  - 'Learner can integrate health, shopping, and work vocabulary'\n  - 'Learner can recall key verbs and nouns'\nvocabulary_count: 25\n---\n\n# Checkpoint - A2 Final Review\n\n**Вітаємо!** Ви закінчили A2! This checkpoint reviews all vocabulary from Modules 44-54.\n\n**Skills tested:**\n\n1. **Daily Life** - Can you talk about home, routines, and hobbies?\n2. **Work & Education** - Can you describe jobs and studies?\n3. **Health & Body** - Can you discuss health and symptoms?\n4. **Shopping & Travel** - Can you handle transactions and trips?\n\n## Skill 1: Daily Life\n\n**Can you talk about home, routines, and hobbies?**\n\n### Model: Home & Routine Vocabulary\n\n> **Квартира** — apartment, **вітальня** — living room, **кухня** — kitchen\n> **Прокидатися** — to wake up, **снідати** — to have breakfast\n> **Вечеряти** — to have dinner, **засинати** — to fall asleep\n\n**Daily routine verbs:**\n| Verb | Meaning |\n|------|---------|\n| прокидатися | to wake up |\n| вмиватися | to wash face |\n| одягатися | to get dressed |\n| снідати | to have breakfast |\n| обідати | to have lunch |\n| вечеряти | to have dinner |\n\n**Hobby vocabulary:**\n\n- подорожувати — to travel\n- малювати — to draw\n- грати в футбол — to play football\n- читати книги — to read books\n\n### Practice: Complete the Routine\n\n1. Вранці я \\_\\_\\_ о 7:00. (wake up)\n\n   > [!solution] Перевірити\n   > прокидаюся — reflexive verb for waking up\n\n2. Потім я \\_\\_\\_ і йду на роботу. (have breakfast)\n\n   > [!solution] Перевірити\n   > снідаю — breakfast verb\n\n3. Ввечері я люблю \\_\\_\\_ книги. (read)\n   > [!solution] Перевірити\n   > читати — reading as a hobby\n\n### Self-Check\n\n- Can you describe your morning routine in Ukrainian?\n- Do you know room names: кухня, спальня, вітальня, ванна?\n- Can you talk about hobbies: подорожувати, малювати, грати?\n\n> [!myth-buster] 🔍 Myth Buster\n>\n> **Myth:** \"Ukrainian daily vocabulary is just like Russian.\"\n>\n> **Truth:** While some words overlap due to shared Slavic origins, Ukrainian has unique daily vocabulary. For example, **вітальня** (living room), **снідати** (breakfast), and **вечеряти** (dinner) showcase Ukrainian's distinct lexicon!\n\n> [!history-bite] 📜 History Bite\n>\n> **Home vocabulary survived!** During Russification, Ukrainian families preserved household words orally. Words like **хата** (traditional house), **світлиця** (bright room), and **горище** (attic) remained in use for generations, keeping Ukrainian alive in the home.\n\n---\n\n## Skill 2: Work & Education\n\n**Can you describe jobs and studies?**\n\n### Model: Professional Vocabulary\n\n> **Працювати** + Instrumental = what you work AS\n> Він працює **лікарем**. (He works as a doctor.)\n> Вона працює **вчителькою**. (She works as a teacher.)\n\n**Key professions:**\n| Ukrainian | English |\n|-----------|---------|\n| лікар | doctor |\n| вчитель | teacher |\n| програміст | programmer |\n| менеджер | manager |\n| інженер | engineer |\n\n**Education vocabulary:**\n\n- університет — university\n- школа — school\n- студент — student\n- вчитися — to study (as student)\n- вивчати — to learn (subject)\n\n### Practice: Work & Study\n\n1. Він \\_\\_\\_ програмістом. (works as)\n\n   > [!solution] Перевірити\n   > працює — work + instrumental\n\n2. Вона \\_\\_\\_ в університеті. (studies)\n\n   > [!solution] Перевірити\n   > вчиться — to study as a student\n\n3. Я \\_\\_\\_ українську мову. (learn)\n   > [!solution] Перевірити\n   > вивчаю — to learn a subject\n\n### Self-Check\n\n- Can you use \"працювати + Instrumental\" for professions?\n- Do you know the difference: вчитися (be a student) vs вивчати (learn subject)?\n- Can you name 5 professions in Ukrainian?\n\n> [!tip] 🎯 Pro Tip: Profession Formula\n>\n> **Працювати + Instrumental** is the key formula!\n>\n> - Працювати + **лікарем** = work as a doctor\n> - Працювати + **вчителькою** = work as a teacher\n> - Працювати + **програмістом** = work as a programmer\n>\n> Never use Nominative after \"працювати\"!\n\n---\n\n## Skill 3: Health & Body\n\n**Can you discuss health and symptoms?**\n\n### Model: Health Expressions\n\n> **У мене болить голова.** (My head hurts.)\n> **Я застудився.** (I caught a cold.)\n> **Мені погано.** (I feel bad.)\n\n**Body parts:**\n| Ukrainian | English |\n|-----------|---------|\n| голова | head |\n| горло | throat |\n| живіт | stomach |\n| рука | arm/hand |\n| нога | leg/foot |\n\n**At the doctor:**\n\n- лікар — doctor\n- аптека — pharmacy\n- ліки — medicine\n- температура — temperature\n- застуда — cold\n\n### Practice: At the Doctor\n\n1. У мене болить \\_\\_\\_. (head)\n\n   > [!solution] Перевірити\n   > голова — body part in NOMINATIVE (it's the subject doing the hurting)\n\n2. Яка у вас \\_\\_\\_? (temperature)\n\n   > [!solution] Перевірити\n   > температура — asking about fever\n\n3. Де тут \\_\\_\\_? (pharmacy)\n   > [!solution] Перевірити\n   > аптека — location for medicine\n\n### Self-Check\n\n- Can you say \"something hurts\" using \"У мене болить...\"?\n- Do you know body parts: голова, горло, рука, нога?\n- Can you describe symptoms and ask for medicine?\n\n> [!note] 📝 Health Expression Patterns\n>\n> **Pattern 1:** У мене болить + NOMINATIVE\n>\n> - У мене болить **голова** (NOT голову!)\n>\n> **Pattern 2:** Мені + ADVERB\n>\n> - Мені **погано** (I feel bad)\n> - Мені **холодно** (I'm cold)\n>\n> **Pattern 3:** Я + VERB\n>\n> - Я **застудився** (I caught a cold)\n\n---\n\n## Skill 4: Shopping & Travel\n\n**Can you handle transactions and travel?**\n\n### Model: Shopping Expressions\n\n> **Скільки це коштує?** (How much is this?)\n> **Можна заплатити карткою?** (Can I pay by card?)\n> **Чи є знижка?** (Is there a discount?)\n\n**Shopping vocabulary:**\n| Ukrainian | English |\n|-----------|---------|\n| гроші | money |\n| картка | card |\n| готівка | cash |\n| чек | receipt |\n| знижка | discount |\n\n**Travel vocabulary:**\n\n- подорож — trip\n- квиток — ticket\n- поїзд — train\n- літак — plane\n- готель — hotel\n\n### Practice: Shopping & Travel\n\n1. Скільки це \\_\\_\\_? (costs)\n\n   > [!solution] Перевірити\n   > коштує — asking price\n\n2. Можна заплатити \\_\\_\\_? (by card)\n\n   > [!solution] Перевірити\n   > карткою — instrumental for payment method\n\n3. Я хочу купити \\_\\_\\_ на поїзд. (ticket)\n   > [!solution] Перевірити\n   > квиток — train ticket\n\n### Self-Check\n\n- Can you ask prices and pay in Ukrainian?\n- Do you know: гроші, картка, чек, знижка?\n- Can you book travel: квиток, поїзд, готель, літак?\n\n> [!warning] ⚠️ Common Shopping Mistake\n>\n> Don't say: \"Скільки це коштує\" (missing question mark intonation)\n> Say: \"Скільки це коштує?\" with rising intonation!\n>\n> Also: \"Можна заплатити **карткою**?\" (Instrumental!) NOT \"картку\"!\n\n---\n\n## Integration Challenge\n\nRead the story and answer the questions:\n\n> Олег живе у Києві. Він працює **програмістом** в IT-компанії.\n> Вранці він **прокидається** о 8:00, снідає і їде на роботу.\n> Вчора у нього боліла **голова**. Він пішов до **лікаря**.\n> Лікар сказав, що це застуда, і треба пити чай.\n> У вихідні Олег хоче поїхати в **подорож** до Карпат.\n> Він вже купив **квитки** на поїзд і забронював **готель**.\n\n1. Ким працює Олег?\n\n   > [!solution] Перевірити\n   > Програмістом — profession in instrumental\n\n2. Що у нього боліло?\n\n   > [!solution] Перевірити\n   > Голова — head\n\n3. Куди він хоче поїхати?\n\n   > [!solution] Перевірити\n   > У Карпати — to the Carpathians\n\n4. Що він купив?\n   > [!solution] Перевірити\n   > Квитки — tickets\n\n---\n\n# Summary\n\n| Skill           | Key Pattern         | Example               |\n| --------------- | ------------------- | --------------------- |\n| Daily Life      | Routine verbs       | прокидатися, снідати  |\n| Work/Education  | працювати + Instr   | працює лікарем        |\n| Health          | У мене болить + Nom | болить голова         |\n| Shopping/Travel | Transaction vocab   | квиток, гроші, картка |\n\n> 💡 **Успіхи!**\n>\n> Ви закінчили рівень A2! Тепер ви можете говорити про щоденне життя, роботу, здоров'я і подорожі.\n> _You finished A2 level! Now you can talk about daily life, work, health, and travel._\n\n---\n\n> [!resources] 🔗 External Resources\n>\n> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview\n>\n> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| поїзд       | /ˈpɔjizd/       | train      | noun | m      | travel     |\n| квиток      | /kvɪˈtɔk/       | ticket     | noun | m      | travel     |\n| готель      | /ɦɔˈtɛlʲ/       | hotel      | noun | m      | travel     |\n| знижка      | /ˈznɪʒka/       | discount   | noun | f      | shopping   |\n| аптека      | /apˈtɛka/       | pharmacy   | noun | f      | health     |\n| голова      | /ɦɔlɔˈʋɑ/       | head       | noun | f      | body part  |\n| лікар       | /ˈlʲikɑr/       | doctor     | noun | m      | profession |\n| вчитися     | /ˈwtʃɪtɪsʲɑ/    | to study   | verb | -      | education  |\n| працювати   | /pratsʲuˈʋɑtɪ/  | to work    | verb | -      | work       |\n| прокидатися | /prɔkɪˈdɑtɪsʲɑ/ | to wake up | verb | -      | routine    |\n",
-    "createdAt": "2025-12-31T22:55:31.266428Z",
-    "modifiedAt": "2025-12-31T22:55:31.266428Z",
+    "rawMarkdown": "# Checkpoint - A2 Final Review\n\n**Вітаємо!** Ви закінчили A2! This checkpoint reviews all vocabulary from Modules 44-54.\n\n**Skills tested:**\n\n1. **Daily Life** - Can you talk about home, routines, and hobbies?\n2. **Work & Education** - Can you describe jobs and studies?\n3. **Health & Body** - Can you discuss health and symptoms?\n4. **Shopping & Travel** - Can you handle transactions and trips?\n\n## Skill 1: Daily Life\n\n**Can you talk about home, routines, and hobbies?**\n\n### Model: Home & Routine Vocabulary\n\n> **Квартира** — apartment, **вітальня** — living room, **кухня** — kitchen\n> **Прокидатися** — to wake up, **снідати** — to have breakfast\n> **Вечеряти** — to have dinner, **засинати** — to fall asleep\n\n**Daily routine verbs:**\n| Verb | Meaning |\n|------|---------|\n| прокидатися | to wake up |\n| вмиватися | to wash face |\n| одягатися | to get dressed |\n| снідати | to have breakfast |\n| обідати | to have lunch |\n| вечеряти | to have dinner |\n\n**Hobby vocabulary:**\n\n- подорожувати — to travel\n- малювати — to draw\n- грати в футбол — to play football\n- читати книги — to read books\n\n### Practice: Complete the Routine\n\n1. Вранці я \\_\\_\\_ о 7:00. (wake up)\n\n   > [!solution] Перевірити\n   > прокидаюся — reflexive verb for waking up\n\n2. Потім я \\_\\_\\_ і йду на роботу. (have breakfast)\n\n   > [!solution] Перевірити\n   > снідаю — breakfast verb\n\n3. Ввечері я люблю \\_\\_\\_ книги. (read)\n   > [!solution] Перевірити\n   > читати — reading as a hobby\n\n### Self-Check\n\n- Can you describe your morning routine in Ukrainian?\n- Do you know room names: кухня, спальня, вітальня, ванна?\n- Can you talk about hobbies: подорожувати, малювати, грати?\n\n> [!myth-buster] 🔍 Myth Buster\n>\n> **Myth:** \"Ukrainian daily vocabulary is just like Russian.\"\n>\n> **Truth:** While some words overlap due to shared Slavic origins, Ukrainian has unique daily vocabulary. For example, **вітальня** (living room), **снідати** (breakfast), and **вечеряти** (dinner) showcase Ukrainian's distinct lexicon!\n\n> [!history-bite] 📜 History Bite\n>\n> **Home vocabulary survived!** During Russification, Ukrainian families preserved household words orally. Words like **хата** (traditional house), **світлиця** (bright room), and **горище** (attic) remained in use for generations, keeping Ukrainian alive in the home.\n\n---\n\n## Skill 2: Work & Education\n\n**Can you describe jobs and studies?**\n\n### Model: Professional Vocabulary\n\n> **Працювати** + Instrumental = what you work AS\n> Він працює **лікарем**. (He works as a doctor.)\n> Вона працює **вчителькою**. (She works as a teacher.)\n\n**Key professions:**\n| Ukrainian | English |\n|-----------|---------|\n| лікар | doctor |\n| вчитель | teacher |\n| програміст | programmer |\n| менеджер | manager |\n| інженер | engineer |\n\n**Education vocabulary:**\n\n- університет — university\n- школа — school\n- студент — student\n- вчитися — to study (as student)\n- вивчати — to learn (subject)\n\n### Practice: Work & Study\n\n1. Він \\_\\_\\_ програмістом. (works as)\n\n   > [!solution] Перевірити\n   > працює — work + instrumental\n\n2. Вона \\_\\_\\_ в університеті. (studies)\n\n   > [!solution] Перевірити\n   > вчиться — to study as a student\n\n3. Я \\_\\_\\_ українську мову. (learn)\n   > [!solution] Перевірити\n   > вивчаю — to learn a subject\n\n### Self-Check\n\n- Can you use \"працювати + Instrumental\" for professions?\n- Do you know the difference: вчитися (be a student) vs вивчати (learn subject)?\n- Can you name 5 professions in Ukrainian?\n\n> [!tip] 🎯 Pro Tip: Profession Formula\n>\n> **Працювати + Instrumental** is the key formula!\n>\n> - Працювати + **лікарем** = work as a doctor\n> - Працювати + **вчителькою** = work as a teacher\n> - Працювати + **програмістом** = work as a programmer\n>\n> Never use Nominative after \"працювати\"!\n\n---\n\n## Skill 3: Health & Body\n\n**Can you discuss health and symptoms?**\n\n### Model: Health Expressions\n\n> **У мене болить голова.** (My head hurts.)\n> **Я застудився.** (I caught a cold.)\n> **Мені погано.** (I feel bad.)\n\n**Body parts:**\n| Ukrainian | English |\n|-----------|---------|\n| голова | head |\n| горло | throat |\n| живіт | stomach |\n| рука | arm/hand |\n| нога | leg/foot |\n\n**At the doctor:**\n\n- лікар — doctor\n- аптека — pharmacy\n- ліки — medicine\n- температура — temperature\n- застуда — cold\n\n### Practice: At the Doctor\n\n1. У мене болить \\_\\_\\_. (head)\n\n   > [!solution] Перевірити\n   > голова — body part in NOMINATIVE (it's the subject doing the hurting)\n\n2. Яка у вас \\_\\_\\_? (temperature)\n\n   > [!solution] Перевірити\n   > температура — asking about fever\n\n3. Де тут \\_\\_\\_? (pharmacy)\n   > [!solution] Перевірити\n   > аптека — location for medicine\n\n### Self-Check\n\n- Can you say \"something hurts\" using \"У мене болить...\"?\n- Do you know body parts: голова, горло, рука, нога?\n- Can you describe symptoms and ask for medicine?\n\n> [!note] 📝 Health Expression Patterns\n>\n> **Pattern 1:** У мене болить + NOMINATIVE\n>\n> - У мене болить **голова** (NOT голову!)\n>\n> **Pattern 2:** Мені + ADVERB\n>\n> - Мені **погано** (I feel bad)\n> - Мені **холодно** (I'm cold)\n>\n> **Pattern 3:** Я + VERB\n>\n> - Я **застудився** (I caught a cold)\n\n---\n\n## Skill 4: Shopping & Travel\n\n**Can you handle transactions and travel?**\n\n### Model: Shopping Expressions\n\n> **Скільки це коштує?** (How much is this?)\n> **Можна заплатити карткою?** (Can I pay by card?)\n> **Чи є знижка?** (Is there a discount?)\n\n**Shopping vocabulary:**\n| Ukrainian | English |\n|-----------|---------|\n| гроші | money |\n| картка | card |\n| готівка | cash |\n| чек | receipt |\n| знижка | discount |\n\n**Travel vocabulary:**\n\n- подорож — trip\n- квиток — ticket\n- поїзд — train\n- літак — plane\n- готель — hotel\n\n### Practice: Shopping & Travel\n\n1. Скільки це \\_\\_\\_? (costs)\n\n   > [!solution] Перевірити\n   > коштує — asking price\n\n2. Можна заплатити \\_\\_\\_? (by card)\n\n   > [!solution] Перевірити\n   > карткою — instrumental for payment method\n\n3. Я хочу купити \\_\\_\\_ на поїзд. (ticket)\n   > [!solution] Перевірити\n   > квиток — train ticket\n\n### Self-Check\n\n- Can you ask prices and pay in Ukrainian?\n- Do you know: гроші, картка, чек, знижка?\n- Can you book travel: квиток, поїзд, готель, літак?\n\n> [!warning] ⚠️ Common Shopping Mistake\n>\n> Don't say: \"Скільки це коштує\" (missing question mark intonation)\n> Say: \"Скільки це коштує?\" with rising intonation!\n>\n> Also: \"Можна заплатити **карткою**?\" (Instrumental!) NOT \"картку\"!\n\n---\n\n## Integration Challenge\n\nRead the story and answer the questions:\n\n> Олег живе у Києві. Він працює **програмістом** в IT-компанії.\n> Вранці він **прокидається** о 8:00, снідає і їде на роботу.\n> Вчора у нього боліла **голова**. Він пішов до **лікаря**.\n> Лікар сказав, що це застуда, і треба пити чай.\n> У вихідні Олег хоче поїхати в **подорож** до Карпат.\n> Він вже купив **квитки** на поїзд і забронював **готель**.\n\n1. Ким працює Олег?\n\n   > [!solution] Перевірити\n   > Програмістом — profession in instrumental\n\n2. Що у нього боліло?\n\n   > [!solution] Перевірити\n   > Голова — head\n\n3. Куди він хоче поїхати?\n\n   > [!solution] Перевірити\n   > У Карпати — to the Carpathians\n\n4. Що він купив?\n   > [!solution] Перевірити\n   > Квитки — tickets\n\n---\n\n# Summary\n\n| Skill           | Key Pattern         | Example               |\n| --------------- | ------------------- | --------------------- |\n| Daily Life      | Routine verbs       | прокидатися, снідати  |\n| Work/Education  | працювати + Instr   | працює лікарем        |\n| Health          | У мене болить + Nom | болить голова         |\n| Shopping/Travel | Transaction vocab   | квиток, гроші, картка |\n\n> 💡 **Успіхи!**\n>\n> Ви закінчили рівень A2! Тепер ви можете говорити про щоденне життя, роботу, здоров'я і подорожі.\n> _You finished A2 level! Now you can talk about daily life, work, health, and travel._\n\n---\n",
+    "createdAt": "2026-01-04T21:33:28.302588Z",
+    "modifiedAt": "2026-01-04T21:33:28.302588Z",
     "version": 2
   },
   "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A2-55",
     "level": "A2",
-    "phase": "A2.5",
-    "wordCount": 10,
-    "newWordCount": 10,
+    "phase": "A2.1",
+    "wordCount": 0,
+    "newWordCount": 0,
     "reviewWordCount": 0,
     "transliterationMode": "none",
-    "words": [
+    "words": [],
+    "reviewWords": []
+  },
+  "external_resources": {
+    "podcasts": [
       {
-        "id": "vocab-1",
-        "uk": "поїзд",
-        "ipa": "/ˈpɔjizd/",
-        "en": "train",
-        "pos": "noun",
-        "gender": "m",
-        "note": "travel"
+        "episode_id": "FMU-012",
+        "title": "Vocabulary booster! Beverages / Drinks in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/fmu12/",
+        "relevance": "medium",
+        "match_reason": "Listening review (A1): vocabulary"
       },
       {
-        "id": "vocab-2",
-        "uk": "квиток",
-        "ipa": "/kvɪˈtɔk/",
-        "en": "ticket",
-        "pos": "noun",
-        "gender": "m",
-        "note": "travel"
+        "episode_id": "FMU-023",
+        "title": "Vocabulary booster! Hobbies in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/fmu23/",
+        "relevance": "medium",
+        "match_reason": "Listening review (A1): vocabulary"
       },
       {
-        "id": "vocab-3",
-        "uk": "готель",
-        "ipa": "/ɦɔˈtɛlʲ/",
-        "en": "hotel",
-        "pos": "noun",
-        "gender": "m",
-        "note": "travel"
+        "episode_id": "FMU-018",
+        "title": "Vocabulary booster! Shopping Vocabulary in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/fmu18/",
+        "relevance": "medium",
+        "match_reason": "Listening review (A1): vocabulary"
       },
       {
-        "id": "vocab-4",
-        "uk": "знижка",
-        "ipa": "/ˈznɪʒka/",
-        "en": "discount",
-        "pos": "noun",
-        "gender": "f",
-        "note": "shopping"
+        "episode_id": "FMU-025",
+        "title": "Vocabulary booster! Sports in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/fmu25/",
+        "relevance": "medium",
+        "match_reason": "Listening review (A1): vocabulary"
       },
       {
-        "id": "vocab-5",
-        "uk": "аптека",
-        "ipa": "/apˈtɛka/",
-        "en": "pharmacy",
-        "pos": "noun",
-        "gender": "f",
-        "note": "health"
-      },
-      {
-        "id": "vocab-6",
-        "uk": "голова",
-        "ipa": "/ɦɔlɔˈʋɑ/",
-        "en": "head",
-        "pos": "noun",
-        "gender": "f",
-        "note": "body part"
-      },
-      {
-        "id": "vocab-7",
-        "uk": "лікар",
-        "ipa": "/ˈlʲikɑr/",
-        "en": "doctor",
-        "pos": "noun",
-        "gender": "m",
-        "note": "profession"
-      },
-      {
-        "id": "vocab-8",
-        "uk": "вчитися",
-        "ipa": "/ˈwtʃɪtɪsʲɑ/",
-        "en": "to study",
-        "pos": "verb",
-        "gender": null,
-        "note": "education"
-      },
-      {
-        "id": "vocab-9",
-        "uk": "працювати",
-        "ipa": "/pratsʲuˈʋɑtɪ/",
-        "en": "to work",
-        "pos": "verb",
-        "gender": null,
-        "note": "work"
-      },
-      {
-        "id": "vocab-10",
-        "uk": "прокидатися",
-        "ipa": "/prɔkɪˈdɑtɪsʲɑ/",
-        "en": "to wake up",
-        "pos": "verb",
-        "gender": null,
-        "note": "routine"
+        "episode_id": "FMU-004",
+        "title": "Vocabulary booster! Transport in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/fmu4/",
+        "relevance": "medium",
+        "match_reason": "Listening review (A1): vocabulary"
       }
     ],
-    "reviewWords": []
+    "youtube": [],
+    "articles": [
+      {
+        "title": "Ukrainian Grammar",
+        "url": "https://www.ukrainianlessons.com/ukrainian-tenses/",
+        "relevance": "high",
+        "source": "Grammar overview"
+      }
+    ],
+    "books": [],
+    "websites": [
+      {
+        "title": "Talk Ukrainian",
+        "url": "https://talkukrainian.com/",
+        "relevance": "high",
+        "source": "Practice exercises"
+      }
+    ]
   }
 }

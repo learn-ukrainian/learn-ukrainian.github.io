@@ -1,20 +1,30 @@
 # Audit Report: 79-mongolska-navala-1240.md
-**Phase:** B2.3a | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.3a | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Граматика в історичних реченнях' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 1/16 items with placeholders/missing errors.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 2053/1750
-- **Activities:** ✅ 15/14
-- **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Words:** ✅ 2053/1400
+- **Activities:** ✅ 14/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/6
+- **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 148/35
+- **Vocab:** ✅ 148/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.9% (target 98-100% (vocab))
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ⚠️ Too many activities: 14 (target 10-12)
+- **Immersion:** 🇺🇦 99.9% (target 98-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation
 

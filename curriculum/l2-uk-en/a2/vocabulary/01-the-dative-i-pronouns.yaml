@@ -33,6 +33,11 @@ items:
     translation: case (genitive)
     pos: noun
     gender: m
+  - lemma: відмінок
+    ipa: vidˈmɪnok
+    translation: case (grammar)
+    pos: noun
+    gender: m
   - lemma: відмінковий
     ipa: vidminˈkɔvei̯
     translation: case (adj)
@@ -69,6 +74,11 @@ items:
     ipa: dopomɐˈɦɑte
     translation: to help
     pos: verb
+  - lemma: дієслово
+    ipa: dijeˈslɔʋo
+    translation: verb (grammar)
+    pos: noun
+    gender: n
   - lemma: дослівний
     ipa: doˈsliu̯nei̯
     translation: literal
@@ -117,6 +127,11 @@ items:
     ipa: zʋerˈnute
     translation: to turn; to pay attention
     pos: verb
+  - lemma: іменник
+    ipa: iˈmɛnːɪk
+    translation: noun (grammar)
+    pos: noun
+    gender: m
   - lemma: здаватися
     ipa: zdɐˈʋɑtɪsʲɐ
     translation: to seem
@@ -126,6 +141,26 @@ items:
     translation: more understandable
     pos: adj
     gender: f
+  - lemma: кличний
+    ipa: ˈklɪt͡ʃnei̯
+    translation: vocative (case)
+    pos: adj
+    gender: m
+  - lemma: знахідний
+    ipa: znɐˈxidnei̯
+    translation: accusative (case)
+    pos: adj
+    gender: m
+  - lemma: місцевий
+    ipa: misˈt͡sɛʋei̯
+    translation: locative (case)
+    pos: adj
+    gender: m
+  - lemma: родовий
+    ipa: roˈdɔʋei̯
+    translation: genitive (case)
+    pos: adj
+    gender: m
   - lemma: листівка
     ipa: lɪsˈtiu̯kɐ
     translation: postcard
@@ -319,6 +354,11 @@ items:
     ipa: fiˈzɪt͡ʃnei̯
     translation: physical
     pos: adj
+  - lemma: час
+    ipa: t͡ʃɑs
+    translation: time; tense (grammar)
+    pos: noun
+    gender: m
   - lemma: цілий
     ipa: ˈt͡sʲilei̯
     translation: whole; entire

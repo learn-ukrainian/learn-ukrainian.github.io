@@ -192,6 +192,56 @@ def evaluate_grammar(grammar_file_exists: bool, summary: dict = None) -> GateRes
     return GateResult('PASS', '✅', "Validated")
 
 
+def evaluate_content_heavy(
+    is_content_heavy: bool,
+    activity_count: int,
+    content_recall_violations: list
+) -> GateResult:
+    """Evaluate content-heavy module compliance.
+    
+    Content-heavy modules (B2 history, C1 literature/biography/folk/arts)
+    should have 10-12 activities and test language, not content recall.
+    
+    Args:
+        is_content_heavy: Whether module is content-heavy type
+        activity_count: Number of activities in module
+        content_recall_violations: List of content recall violations
+        
+    Returns:
+        GateResult with content-heavy compliance status
+    """
+    if not is_content_heavy:
+        return GateResult('INFO', 'ℹ️', "N/A (standard module)")
+    
+    issues = []
+    
+    # Check activity count (10-12 for content-heavy)
+    if activity_count > 12:
+        issues.append(f"Too many activities: {activity_count} (target 10-12)")
+    elif activity_count < 10:
+        issues.append(f"Too few activities: {activity_count} (target 10-12)")
+    
+    # Check content recall violations
+    recall_count = len([v for v in content_recall_violations if v.get('type') == 'CONTENT_RECALL'])
+    ref_missing = len([v for v in content_recall_violations if v.get('type') == 'MISSING_TEXT_REFERENCE'])
+    year_cloze = len([v for v in content_recall_violations if v.get('type') == 'CLOZE_YEAR_BLANK'])
+    year_fill_in = len([v for v in content_recall_violations if v.get('type') == 'FILL_IN_YEAR_ANSWER'])
+
+    if recall_count > 0:
+        issues.append(f"{recall_count} content recall patterns")
+    if ref_missing > 0:
+        issues.append(f"{ref_missing} quizzes missing text refs")
+    if year_cloze > 0:
+        issues.append(f"{year_cloze} cloze with year blanks")
+    if year_fill_in > 0:
+        issues.append(f"{year_fill_in} fill-in with year answers")
+    
+    if issues:
+        return GateResult('WARN', '⚠️', "; ".join(issues))
+    
+    return GateResult('PASS', '✅', f"Content-heavy OK ({activity_count} activities)")
+
+
 def compute_recommendation(
     pedagogical_violations: list,
     lint_errors: list,

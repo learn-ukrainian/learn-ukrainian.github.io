@@ -1,0 +1,128 @@
+config:
+  standard: '2024'
+items:
+  - lemma: аналіз
+    ipa: /ɐˈnɑlʲiz/
+    translation: analysis
+    pos: noun
+    gender: m
+  - lemma: розбір
+    ipa: /rozˈbʲir/
+    translation: breakdown, analysis, parsing
+    pos: noun
+    gender: m
+  - lemma: текст
+    ipa: /tɛkst/
+    translation: text
+    pos: noun
+    gender: m
+  - lemma: контекст
+    ipa: /konˈtɛkst/
+    translation: context
+    pos: noun
+    gender: m
+  - lemma: підтекст
+    ipa: /ˈpʲidtɛkst/
+    translation: subtext, underlying meaning
+    pos: noun
+    gender: m
+  - lemma: зміст
+    ipa: /zmʲist/
+    translation: content, meaning
+    pos: noun
+    gender: m
+  - lemma: форма
+    ipa: /ˈfɔrmɐ/
+    translation: form, shape
+    pos: noun
+    gender: f
+  - lemma: стиль
+    ipa: /stɪlʲ/
+    translation: style
+    pos: noun
+    gender: m
+  - lemma: автор
+    ipa: /ˈɑu̯tɔr/
+    translation: author
+    pos: noun
+    gender: m
+  - lemma: мета
+    ipa: /mɛˈtɑ/
+    translation: goal, purpose
+    pos: noun
+    gender: f
+  - lemma: аудиторія
+    ipa: /ɐu̯dɪˈtɔrʲijɐ/
+    translation: audience
+    pos: noun
+    gender: f
+  - lemma: ідея
+    ipa: /iˈdɛjɐ/
+    translation: idea
+    pos: noun
+    gender: f
+  - lemma: тема
+    ipa: /ˈtɛmɐ/
+    translation: theme, topic
+    pos: noun
+    gender: f
+  - lemma: проблема
+    ipa: /proˈblɛmɐ/
+    translation: problem, issue
+    pos: noun
+    gender: f
+  - lemma: позиція
+    ipa: /poˈzɪt͡sʲijɐ/
+    translation: position, stance
+    pos: noun
+    gender: f
+  - lemma: деконструкція
+    ipa: /dɛkonˈstrukt͡sʲijɐ/
+    translation: deconstruction
+    pos: noun
+    gender: f
+  - lemma: маніпуляція
+    ipa: /mɐnʲipuˈlʲɑt͡sʲijɐ/
+    translation: manipulation
+    pos: noun
+    gender: f
+  - lemma: риторика
+    ipa: /rɪˈtɔrɪkɐ/
+    translation: rhetoric
+    pos: noun
+    gender: f
+  - lemma: метафора
+    ipa: /mɛˈtɑforɐ/
+    translation: metaphor
+    pos: noun
+    gender: f
+  - lemma: епітет
+    ipa: /ɛˈpʲitɛt/
+    translation: epithet
+    pos: noun
+    gender: m
+  - lemma: анафора
+    ipa: /ɐˈnɑforɐ/
+    translation: anaphora
+    pos: noun
+    gender: f
+  - lemma: гіпербола
+    ipa: /ɦʲiˈpɛrboɫɐ/
+    translation: hyperbole
+    pos: noun
+    gender: f
+  - lemma: сарказм
+    ipa: /sɐrˈkɑzm/
+    translation: sarcasm
+    pos: noun
+    gender: m
+  - lemma: іронія
+    ipa: /iˈrɔnʲijɐ/
+    translation: irony
+    pos: noun
+    gender: f
+  - lemma: герменевтика
+    ipa: /ɦɛrmɛˈnɛu̯tɪkɐ/
+    translation: hermeneutics
+    pos: noun
+    gender: f

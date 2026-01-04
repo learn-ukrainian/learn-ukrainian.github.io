@@ -1,0 +1,26 @@
+module: "c1-02"
+title: "Маркери академічного стилю"
+subtitle: "Academic Style Markers"
+version: "2.0"
+phase: "C1.1 Academic Foundation"
+focus: "grammar"
+pedagogy: "ttt"
+duration: 120
+transliteration: "none"
+tags:
+  - "c1"
+  - "grammar"
+  - "academic"
+  - "style"
+grammar:
+  - "Impersonal constructions"
+  - "Nominalization"
+  - "Passive preference"
+  - "Formal connectors"
+  - "Hedging"
+objectives:
+  - "Identify markers of academic style in Ukrainian"
+  - "Transform colloquial sentences into academic ones"
+  - "Use impersonal constructions and hedging appropriately"
+vocabulary_count: 30
+slug: "02-academic-style-markers"

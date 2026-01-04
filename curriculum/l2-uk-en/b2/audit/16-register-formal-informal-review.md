@@ -1,19 +1,25 @@
 # Audit Report: 16-register-formal-informal.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "TTT" | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.1a | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Overall Status:** ❌ FAIL
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- Activity count below minimum
 
 ## Gates
-- **Words:** ✅ 1911/1750
-- **Activities:** ✅ 14/14
+- **Words:** ✅ 1876/1750
+- **Activities:** ❌ 13/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 76/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 98-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ⏳ Pending validation
@@ -31,22 +37,16 @@
 | variety | 0.94 | - | 94% | 10% | 9.4% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 6 | 3 | 100% | 10% | 10.0% |
-| visual | 9 | 3 | 100% | 5% | 5.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 59 | 5 | 100% | 5% | 5.0% |
+| questions | 57 | 5 | 100% | 5% | 5.0% |
 | proverbs | 4 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.1%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Формальне та неформальне спілкування** | ⚪️ | 102 | Skipped |
+| **Intro/Narrative** | ✅ | 67 | Included in Core |
 | **Тест: Прочитайте тексти** | ✅ | 133 | Included in Core |
 | **Пояснення** | ⚪️ | 728 | Skipped |
 | **Практика** | ⚪️ | 357 | Skipped |
@@ -54,4 +54,3 @@
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Ключові моменти** | ⚪️ | 94 | Skipped |
 | **Самооцінка** | ⚪️ | 80 | Skipped |
-| **Словник** | ⚪️ | 0 | Skipped |

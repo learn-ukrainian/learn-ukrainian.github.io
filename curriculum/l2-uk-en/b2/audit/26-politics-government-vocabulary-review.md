@@ -1,19 +1,30 @@
 # Audit Report: 26-politics-government-vocabulary.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "CLIL" | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2 | **Level:** B2 | **Pedagogy:** CLIL | **Target:** 1750
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): уряд, опозиція, права, війна, закон...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 1 pedagogical violations (minor)
+- Activity count below minimum
 
 ## Gates
-- **Words:** ⚠️ 1747/1750 (3 short)
-- **Activities:** ✅ 14/14
+- **Words:** ⚠️ 1718/1750 (32 short)
+- **Activities:** ❌ 13/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/25
+- **Vocab:** ✅ 101/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 98-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ⏳ Pending validation
@@ -31,22 +42,16 @@
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
+| visual | 6 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 28 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.5%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Політика та державне управління** | ⚪️ | 104 | Skipped |
+| **Intro/Narrative** | ✅ | 75 | Included in Core |
 | **Вступ: Політична система України** | ⚪️ | 270 | Skipped |
 | **Наратив: Парламентська сесія** | ⚪️ | 602 | Skipped |
 | **Аналіз: Два регістри політичного дискурсу** | ✅ | 119 | Included in Core |
@@ -55,4 +60,3 @@
 | **Що ми вивчили** | ⚪️ | 78 | Skipped |
 | **Самоперевірка** | ⚪️ | 55 | Skipped |
 | **Наступні кроки** | ⚪️ | 49 | Skipped |
-| **Словник** | ⚪️ | 0 | Skipped |

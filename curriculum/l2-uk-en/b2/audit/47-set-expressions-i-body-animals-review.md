@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): рука, вухо, душа, око, собака...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): кіт, вухо, око, язик, душа...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -13,9 +13,9 @@
 
 ## Gates
 - **Words:** ✅ 2009/1750
-- **Activities:** ✅ 15/14
+- **Activities:** ✅ 14/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 13/6
 - **Audio:** ℹ️ No audio
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 98-100% (vocab))
 - **Richness:** ✅ 95% (content)
 - **Grammar:** ⏳ Pending validation

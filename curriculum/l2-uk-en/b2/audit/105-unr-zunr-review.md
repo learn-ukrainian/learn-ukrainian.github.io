@@ -1,20 +1,30 @@
 # Audit Report: 105-unr-zunr.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity type 'writing' in YAML
+  - FIX: Use supported type: anagram, authorial-intent, cloze, comparative-study, critical-analysis, error-correction, essay-response, fill-in, group-sort, mark-the-words, match-up, quiz, select, translate, true-false, unjumble
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1759/1750
-- **Activities:** ✅ 14/14
-- **Density:** ✅ All > 16
-- **Unique_types:** ✅ 9/4 types
+- **Words:** ✅ 1700/1400
+- **Activities:** ✅ 13/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/6
+- **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 90/35
+- **Vocab:** ✅ 90/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.6% (target 98-100% (vocab))
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ⚠️ Too many activities: 13 (target 10-12); 1 cloze with year blanks
+- **Immersion:** 🇺🇦 99.6% (target 98-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -25,22 +35,16 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 6 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 4 | 3 | 100% | 24% | 23.8% |
 | engagement | 8 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 14 | 2 | 100% | 14% | 14.3% |
 | cultural | 9 | 4 | 100% | 10% | 9.5% |
-| visual | 12 | 4 | 100% | 10% | 9.5% |
+| visual | 11 | 4 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 6 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **100.0%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -58,4 +62,4 @@
 | **Акт Злуки: об'єднання земель** | ⚪️ | 121 | Skipped |
 | **Трагедія "Трикутника смерті"** | ⚪️ | 111 | Skipped |
 | **Еміграція: Збереження Держави** | ⚪️ | 189 | Skipped |
-| **Підсумок** | ✅ | 109 | Included in Core |
+| **Підсумок** | ✅ | 50 | Included in Core |

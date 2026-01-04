@@ -37,6 +37,7 @@ from .activities import (
     check_mark_the_words_format,
     count_items,
     check_yaml_activity_types,
+    check_advanced_activities_presence,
 )
 from .pedagogy import (
     run_pedagogical_checks,
@@ -114,6 +115,7 @@ __all__ = [
     'count_items',
     'check_mark_the_words_format',
     'check_yaml_activity_types',
+    'check_advanced_activities_presence',
     # Pedagogy
     'run_pedagogical_checks',
     'check_duplicate_content',

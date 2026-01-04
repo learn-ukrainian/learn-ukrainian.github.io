@@ -1,0 +1,151 @@
+module: 04-analysis-vocab
+level: C1
+version: '2.0'
+items:
+  - lemma: аспект
+    ipa: /ɑsˈpɛkt/
+    translation: aspect
+    pos: noun
+    gender: m
+  - lemma: фактор
+    ipa: /fɑkˈtɔr/
+    translation: factor
+    pos: noun
+    gender: m
+  - lemma: тенденція
+    ipa: /tɛnˈdɛnt͡sʲijɑ/
+    translation: tendency / trend
+    pos: noun
+    gender: f
+  - lemma: критерій
+    ipa: /krɪˈtɛrʲij/
+    translation: criterion
+    pos: noun
+    gender: m
+  - lemma: гіпотеза
+    ipa: /ɦiˈpɔtɛzɑ/
+    translation: hypothesis
+    pos: noun
+    gender: f
+  - lemma: концепція
+    ipa: /kɔnˈt͡sɛpt͡sʲijɑ/
+    translation: concept / conception
+    pos: noun
+    gender: f
+  - lemma: парадигма
+    ipa: /pɑrɑˈdɪɦmɑ/
+    translation: paradigm
+    pos: noun
+    gender: f
+  - lemma: синтез
+    ipa: /sɪnˈtɛz/
+    translation: synthesis
+    pos: noun
+    gender: m
+  - lemma: контекст
+    ipa: /kɔnˈtɛkst/
+    translation: context
+    pos: noun
+    gender: m
+  - lemma: перспектива
+    ipa: /pɛrspɛkˈtɪvɑ/
+    translation: perspective
+    pos: noun
+    gender: f
+  - lemma: компонент
+    ipa: /kɔmpɔˈnɛnt/
+    translation: component
+    pos: noun
+    gender: m
+  - lemma: показник
+    ipa: /pɔkɑzˈnɪk/
+    translation: indicator
+    pos: noun
+    gender: m
+  - lemma: суттєвий
+    ipa: /sʊtˈtɛʋɪj/
+    translation: essential / substantial
+    pos: adj
+  - lemma: вагомий
+    ipa: /ʋɑˈɦɔmɪj/
+    translation: weighty / significant
+    pos: adj
+  - lemma: значний
+    ipa: /znɑt͡ʃˈnɪj/
+    translation: significant / considerable
+    pos: adj
+  - lemma: вирішальний
+    ipa: /ʋɪr⁽ʲ⁾iˈʃɑlʲnɪj/
+    translation: decisive
+    pos: adj
+  - lemma: ключовий
+    ipa: /klʲʊt͡ʃɔˈʋɪj/
+    translation: key (adj)
+    pos: adj
+  - lemma: маргінальний
+    ipa: /mɑrɦiˈnɑlʲnɪj/
+    translation: marginal
+    pos: adj
+  - lemma: доцільний
+    ipa: /dɔˈt͡sʲilʲnɪj/
+    translation: expedient / appropriate
+    pos: adj
+  - lemma: актуальний
+    ipa: /ɑktʊˈɑlʲnɪj/
+    translation: relevant / topical
+    pos: adj
+  - lemma: потенційний
+    ipa: /pɔtɛnˈt͡sʲij nɪj/
+    translation: potential
+    pos: adj
+  - lemma: ефективний
+    ipa: /ɛfɛkˈtɪʋnɪj/
+    translation: effective
+    pos: adj
+  - lemma: явище
+    ipa: /jɑʋɪʃt͡ʃɛ/
+    translation: phenomenon
+    pos: noun
+    gender: n
+  - lemma: закономірність
+    ipa: /zɑkɔnɔˈmirnʲistʲ/
+    translation: regularity / pattern
+    pos: noun
+    gender: f
+  - lemma: середовище
+    ipa: /sɛrɛˈdɔʋɪʃt͡ʃɛ/
+    translation: environment / medium
+    pos: noun
+    gender: n
+  - lemma: об'єктивний
+    ipa: /ɔbjɛkˈtɪʋnɪj/
+    translation: objective
+    pos: adj
+  - lemma: оцінка
+    ipa: /ɔˈt͡sʲinkɑ/
+    translation: assessment / evaluation
+    pos: noun
+    gender: f
+  - lemma: ґрунтовний
+    ipa: /ɡrʊnˈtɔʋnɪj/
+    translation: thorough / solid
+    pos: adj
+  - lemma: елемент
+    ipa: /ɛlɛˈmɛnt/
+    translation: element
+    pos: noun
+    gender: m
+  - lemma: суб'єктивний
+    ipa: /subjɛkˈtɪʋnɪj/
+    translation: subjective
+    pos: adj
+  - lemma: аналіз
+    ipa: /ɑˈnɑlʲiz/
+    translation: analysis
+    pos: noun
+    gender: m
+  - lemma: складова
+    ipa: /sklɑdɔˈʋɑ/
+    translation: component / constituent
+    pos: noun
+    gender: f

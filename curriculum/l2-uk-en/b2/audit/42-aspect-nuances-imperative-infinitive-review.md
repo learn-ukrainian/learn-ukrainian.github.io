@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): варто, треба, скажіть, впадіть, проходьте...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): дозволено, впадіть, сідайте, запізніться, скажіть...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -13,9 +13,9 @@
 
 ## Gates
 - **Words:** ✅ 2141/1750
-- **Activities:** ✅ 20/14
+- **Activities:** ✅ 18/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.8% (target 98-100% (vocab))
 - **Richness:** ✅ 98% (grammar)
 - **Grammar:** ⏳ Pending validation

@@ -2,27 +2,27 @@ module: 14-son
 level: LIT
 items:
   - lemma: комедія
-    translation: comedy (here: farce, satire)
+    translation: "comedy (here: farce, satire)"
     pos: noun
     gender: f
     ipa: /koˈmɛdʲijɐ/
   - lemma: цар волі
-    translation: Tsar of Freedom (prisoner of spirit)
+    translation: "Tsar of Freedom (prisoner of spirit)"
     pos: noun
     gender: m
     ipa: /t͡sɑr ˈʋɔlʲi/
   - lemma: опеньок засушений
-    translation: dried mushroom (caricature of Empress)
+    translation: "dried mushroom (caricature of Empress)"
     pos: noun
     gender: m
     ipa: /oˈpɛnʲok zɐˈsuʃɛnɪj/
   - lemma: пика
-    translation: snout, mug (rude for face)
+    translation: "snout, mug (rude for face)"
     pos: noun
     gender: f
     ipa: /ˈpɪkɐ/
   - lemma: землячок
-    translation: fellow countryman (traitor/collaborator)
+    translation: "fellow countryman (traitor/collaborator)"
     pos: noun
     gender: m
     ipa: /zɛmlʲɐˈt͡ʃɔk/
@@ -32,7 +32,7 @@ items:
     gender: f
     ipa: /ˈmuʃtrɐ/
   - lemma: помазаник Божий
-    translation: God's anointed (Tsar)
+    translation: "God's anointed (Tsar)"
     pos: noun
     gender: m
     ipa: /poˈmɑzɐnɪk ˈbɔʒɪj/
@@ -86,7 +86,7 @@ items:
     gender: m
     ipa: /uˈpɪr/
   - lemma: прометей
-    translation: Prometheus (symbol of resistance)
+    translation: "Prometheus (symbol of resistance)"
     pos: noun
     gender: m
     ipa: /promɛˈtɛj/
@@ -96,7 +96,7 @@ items:
     gender: m
     ipa: /blʲudoˈlɪz/
   - lemma: мордобитіє
-    translation: face-beating (brutal violence)
+    translation: "face-beating (brutal violence)"
     pos: noun
     gender: n
     ipa: /mordɔˈbɪtʲijɛ/

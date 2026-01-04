@@ -9,316 +9,110 @@
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A1",
-    "phase": "A1.3 - Consolidation",
+    "phase": "A1.1",
     "moduleNumber": 32,
     "moduleType": "grammar",
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
-    "title": "My Family",
+    "title": "Module 32",
     "titleUk": null,
-    "subtitle": "Родина",
-    "description": "Learner can name family members",
-    "objectives": [
-      "Learner can name family members",
-      "Learner can describe family relationships",
-      "Learner can talk about their own family",
-      "Learner can use possessives with family terms"
-    ],
+    "subtitle": null,
+    "description": "Module 32",
+    "objectives": [],
     "objectivesUk": null,
-    "grammarFocus": [
-      "Family vocabulary",
-      "Possessives with family members",
-      "Genitive for relationships"
-    ],
-    "tags": [
-      "family",
-      "relationships",
-      "possessives"
-    ],
-    "totalDuration": "60 min",
-    "transliterationMode": "first-occurrence",
+    "grammarFocus": [],
+    "tags": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "sections": [
       {
         "id": "section-1",
         "name": "My Family",
         "nameEn": null,
         "type": "content",
-        "content": "## Warm-up\n\n> 💡 **Моя родина (My Family)**\n>\n> Family is central to Ukrainian culture! Learn how to talk about your loved ones:\n> — **У мене є брат.** (I have a brother.)\n> — **Мою маму звати Олена.** (My mom's name is Olena.)\n> — **Це моя молодша сестра.** (This is my younger sister.)\n>\n> Notice: For \"my mom's name,\" we use Accusative: Мо**ю** маму (Accusative) звати...\n\n---\n\n## Grammar\n## Talking About Family\n\n> [!observe] Спостереження (Pattern Discovery)\n>\n> Look at these patterns:\n> - **У мене є** брат. (I have a brother.)\n> - **Мого** брата звати Максим. (My brother's name is Maksym.)\n> - **Це моя** сестра. (This is my sister.)\n>\n> We use \"У мене є\" for \"I have\" and possessives (мій/моя/моє) for \"my.\"\n\n### \"I Have\" Pattern\n\n| Structure | Example |\n|-----------|---------|\n| У мене є + Nominative | У мене є **брат**. (I have a brother.) |\n| У мене є + Nominative | У мене є **сестра**. (I have a sister.) |\n| У мене немає + Genitive | У мене немає **брата**. (I don't have a brother.) |\n\n### Possessives with Family\n\n| Gender | My | Your (informal) | His/Her |\n|--------|-----|-----------------|---------|\n| Masculine | мій тато | твій тато | його/її тато |\n| Feminine | моя мама | твоя мама | його/її мама |\n| Neuter | моє ім'я | твоє ім'я | його/її ім'я |\n| Plural | мої батьки | твої батьки | його/її батьки |\n\n---\n\n## Describing Family Members\n\n### Age Order\n\n| Term | Meaning | Example |\n|------|---------|---------|\n| старший | older | Мій **старший** брат. (My older brother.) |\n| молодший | younger | Моя **молодша** сестра. (My younger sister.) |\n| середній | middle | Я **середній** у сім'ї. (I'm the middle child.) |\n| єдиний | only | Я **єдина** дитина. (I'm an only child. — f) |\n\n### Marital Status\n\n| Term | Meaning |\n|------|---------|\n| одружений/одружена | married |\n| неодружений/неодружена | unmarried |\n| наречений/наречена | engaged (fiancé/fiancée) |\n\n### Vocative Case (Кличний відмінок)\n\nWhen calling someone directly, Ukrainian changes the word ending. This is the **Vocative case** — used for direct address:\n\n> [!observe] Спостереження (Pattern Discovery)\n>\n> Look at these pairs:\n> - мама → **Мамо!** (Mom!)\n> - тато → **Тату!** (Dad!)\n> - бабуся → **Бабусю!** (Grandma!)\n> - дідусь → **Дідусю!** (Grandpa!)\n>\n> The ending changes when you're calling TO someone!\n\n| Nominative | Vocative | Use |\n|------------|----------|-----|\n| мама | Мамо! | calling mom |\n| тато | Тату! | calling dad |\n| бабуся | Бабусю! | calling grandma |\n| дідусь | Дідусю! | calling grandpa |\n| брат | Брате! | calling brother |\n| сестра | Сестро! | calling sister |\n| Оксана | Оксано! | calling Oksana |\n| Іван | Іване! | calling Ivan |\n\n**Common patterns:**\n- -а → -о (мама → мамо, сестра → сестро)\n- -о → -у (тато → тату)\n- -я → -ю (бабуся → бабусю)\n- consonant → -е (брат → брате, Іван → Іване)\n\n> 💡 **When to Use Vocative**\n>\n> Use vocative when:\n> - Calling someone: **Мамо**, де ти? (Mom, where are you?)\n> - Getting attention: **Тату**, допоможи! (Dad, help!)\n> - In exclamations: **Боже!** (God!/Oh my God!)\n>\n> Don't use with titles: Пане Іване! (Mr. Ivan!) — not \"Пан Іване!\"\n\n---\n\n## Examples in Context\n\n> [!example] Моя сім'я (My Family)\n>\n> - **У мене є** мама і тато. (I have a mom and dad.)\n> - **У мене є** старший брат і молодша сестра. (I have an older brother and younger sister.)\n> - **Мого тата** звати Іван. (My dad's name is Ivan.)\n> - **Мою маму** звати Марія. (My mom's name is Maria.)\n> - **Мої батьки** живуть у Києві. (My parents live in Kyiv.)\n> - **Моя бабуся** дуже добра. (My grandmother is very kind.)\n\n> [!example] Родичі (Relatives)\n>\n> - **Мій дідусь** з Львова. (My grandfather is from Lviv.)\n> - **Моя тітка** — вчителька. (My aunt is a teacher.)\n> - **Мій дядько** працює в банку. (My uncle works at a bank.)\n> - У мене є **двоюрідний брат**. (I have a male cousin.)\n> - Моя **двоюрідна сестра** живе в Одесі. (My female cousin lives in Odesa.)\n> - **Онуки** люблять бабусю. (The grandchildren love grandma.)\n\n> [!example] Стосунки (Relationships)\n>\n> - Він **одружений**. (He is married.)\n> - Вона **не одружена**. (She is not married.)\n> - Це мій **хлопець**. (This is my boyfriend.)\n> - Це моя **дівчина**. (This is my girlfriend.)\n> - Вони **наречені**. (They are engaged.)\n> - У них двоє **дітей**. (They have two children.)\n\n---\n\n## Dialogues\n\n> [!conversation] Розкажи про свою сім'ю (Tell Me About Your Family)\n>\n> — Розкажи про свою сім'ю!\n> — У мене велика сім'я: мама, тато, старший брат і молодша сестра.\n> — Як їх звати?\n> — Маму звати Олена, тата — Петро, брата — Андрій, сестру — Ганна.\n> — А бабуся і дідусь?\n> — Так, вони живуть у селі.\n>\n> — Tell me about your family!\n> — I have a big family: mom, dad, older brother and younger sister.\n> — What are their names?\n> — Mom's name is Olena, dad's — Petro, brother's — Andriy, sister's — Hanna.\n> — And grandma and grandpa?\n> — Yes, they live in a village.\n\n> [!conversation] Ти одружений? (Are You Married?)\n>\n> — Ти одружений?\n> — Ні, я неодружений. А ти?\n> — Я одружена. У мене чоловік і дочка.\n> — О, як гарно! Скільки років твоя дочка?\n> — Дочка має п'ять років.\n>\n> — Are you married? (to a man)\n> — No, I'm not married. And you?\n> — I'm married (woman speaking). I have a husband and daughter.\n> — Oh, how nice! How old is your daughter?\n> — My daughter is five years old.\n\n> [!conversation] Чиє це фото? (Whose Photo Is This?)\n>\n> — Чиє це фото?\n> — Це фото моєї родини.\n> — Хто тут?\n> — Це мій тато, моя мама, мій брат і я.\n> — Гарна родина!\n>\n> — Whose photo is this?\n> — This is a photo of my family.\n> — Who is here?\n> — This is my dad, my mom, my brother and me.\n> — Nice family!\n\n---\n\n> 💡 **Батько vs Тато (Father vs Dad)**\n>\n> **Батько** is formal (like \"father\"), **тато** is informal (like \"dad\").\n> **Мати** is formal (like \"mother\"), **мама** is informal (like \"mom\").\n> In everyday speech, Ukrainians use тато and мама!\n\n> 🌍 **Українська родина (Ukrainian Family)**\n>\n> Family ties are very important in Ukraine! Many families are close-knit, and it's common for grandparents (бабуся і дідусь) to help raise grandchildren. Extended family (дядьки, тітки, двоюрідні) often gather for holidays!\n\n> ⚡ **Myth vs Fact**\n>\n> **Myth:** \"Ukrainian family structures are the same as in English\"\n> **Fact:** Ukrainian distinguishes cousins by gender (двоюрідний брат / двоюрідна сестра), has distinct words for in-laws, and uses different words for \"brother/sister of parent\" (дядько/тітка) vs. \"sibling\" (брат/сестра).\n\n> 🎭 **Сімейні традиції (Family Traditions)**\n>\n> At Christmas (Різдво), Ukrainian families gather for a 12-dish dinner (Свята вечеря). On Easter (Великдень), families take food baskets to church to be blessed. Family meals often include several generations together!\n\n---"
+        "content": "## Warm-up\n\n> 💡 **Моя родина (My Family)**\n>\n> Family is central to Ukrainian culture! Learn how to talk about your loved ones:\n> — **У мене є брат.** (I have a brother.)\n> — **Мою маму звати Олена.** (My mom's name is Olena.)\n> — **Це моя молодша сестра.** (This is my younger sister.)\n>\n> Notice: For \"my mom's name,\" we use Accusative: Мо**ю** маму (Accusative) звати...\n\n---\n\n## Grammar\n\n## Talking About Family\n\n> [!observe] Спостереження (Pattern Discovery)\n>\n> Look at these patterns:\n>\n> - **У мене є** брат. (I have a brother.)\n> - **Мого** брата звати Максим. (My brother's name is Maksym.)\n> - **Це моя** сестра. (This is my sister.)\n>\n> We use \"У мене є\" for \"I have\" and possessives (мій/моя/моє) for \"my.\"\n\n### \"I Have\" Pattern\n\n| Structure               | Example                                           |\n| ----------------------- | ------------------------------------------------- |\n| У мене є + Nominative   | У мене є **брат**. (I have a brother.)            |\n| У мене є + Nominative   | У мене є **сестра**. (I have a sister.)           |\n| У мене немає + Genitive | У мене немає **брата**. (I don't have a brother.) |\n\n### Possessives with Family\n\n| Gender    | My         | Your (informal) | His/Her        |\n| --------- | ---------- | --------------- | -------------- |\n| Masculine | мій тато   | твій тато       | його/її тато   |\n| Feminine  | моя мама   | твоя мама       | його/її мама   |\n| Neuter    | моє ім'я   | твоє ім'я       | його/її ім'я   |\n| Plural    | мої батьки | твої батьки     | його/її батьки |\n\n---\n\n## Describing Family Members\n\n### Age Order\n\n| Term     | Meaning | Example                                         |\n| -------- | ------- | ----------------------------------------------- |\n| старший  | older   | Мій **старший** брат. (My older brother.)       |\n| молодший | younger | Моя **молодша** сестра. (My younger sister.)    |\n| середній | middle  | Я **середній** у сім'ї. (I'm the middle child.) |\n| єдиний   | only    | Я **єдина** дитина. (I'm an only child. — f)    |\n\n### Marital Status\n\n| Term                   | Meaning                  |\n| ---------------------- | ------------------------ |\n| одружений/одружена     | married                  |\n| неодружений/неодружена | unmarried                |\n| розлучений/розлучена   | divorced                 |\n| вдівець/вдова          | widower/widow            |\n| наречений/наречена     | engaged (fiancé/fiancée) |\n\n### Vocative Case (Кличний відмінок)\n\nWhen calling someone directly, Ukrainian changes the word ending. This is the **Vocative case** — used for direct address:\n\n> [!observe] Спостереження (Pattern Discovery)\n>\n> Look at these pairs:\n>\n> - мама → **Мамо!** (Mom!)\n> - тато → **Тату!** (Dad!)\n> - бабуся → **Бабусю!** (Grandma!)\n> - дідусь → **Дідусю!** (Grandpa!)\n>\n> The ending changes when you're calling TO someone!\n\n| Nominative | Vocative | Use             |\n| ---------- | -------- | --------------- |\n| мама       | Мамо!    | calling mom     |\n| тато       | Тату!    | calling dad     |\n| бабуся     | Бабусю!  | calling grandma |\n| дідусь     | Дідусю!  | calling grandpa |\n| брат       | Брате!   | calling brother |\n| сестра     | Сестро!  | calling sister  |\n| Оксана     | Оксано!  | calling Oksana  |\n| Іван       | Іване!   | calling Ivan    |\n\n**Common patterns:**\n\n- -а → -о (мама → мамо, сестра → сестро)\n- -о → -у (тато → тату)\n- -я → -ю (бабуся → бабусю)\n- consonant → -е (брат → брате, Іван → Іване)\n\n> 💡 **When to Use Vocative**\n>\n> Use vocative when:\n>\n> - Calling someone: **Мамо**, де ти? (Mom, where are you?)\n> - Getting attention: **Тату**, допоможи! (Dad, help!)\n> - In exclamations: **Боже!** (God!/Oh my God!)\n>\n> Don't use with titles: Пане Іване! (Mr. Ivan!) — not \"Пан Іване!\"\n\n---\n\n## Examples in Context\n\n> [!example] Моя сім'я (My Family)\n>\n> - **У мене є** мама і тато. (I have a mom and dad.)\n> - **У мене є** старший брат і молодша сестра. (I have an older brother and younger sister.)\n> - **Мого тата** звати Іван. (My dad's name is Ivan.)\n> - **Мою маму** звати Марія. (My mom's name is Maria.)\n> - **Мої батьки** живуть у Києві. (My parents live in Kyiv.)\n> - **Моя бабуся** дуже добра. (My grandmother is very kind.)\n\n> [!example] Родичі (Relatives)\n>\n> - **Мій дідусь** з Львова. (My grandfather is from Lviv.)\n> - **Моя тітка** — вчителька. (My aunt is a teacher.)\n> - **Мій дядько** працює в банку. (My uncle works at a bank.)\n> - У мене є **двоюрідний брат**. (I have a male cousin.)\n> - Моя **двоюрідна сестра** живе в Одесі. (My female cousin lives in Odesa.)\n> - **Онуки** люблять бабусю. (The grandchildren love grandma.)\n\n> [!example] Стосунки (Relationships)\n>\n> - Він **одружений**. (He is married.)\n> - Вона **не одружена**. (She is not married.)\n> - Мій брат **розлучений**. (My brother is divorced.)\n> - Вона **вдова**. (She is a widow.)\n> - Це мій **хлопець**. (This is my boyfriend.)\n> - Це моя **дівчина**. (This is my girlfriend.)\n> - Вони **наречені**. (They are engaged.)\n> - У них двоє **дітей**. (They have two children.)\n\n---\n\n## Dialogues\n\n> [!conversation] Розкажи про свою сім'ю (Tell Me About Your Family)\n>\n> — Розкажи про свою сім'ю!\n> — У мене велика сім'я: мама, тато, старший брат і молодша сестра.\n> — Як їх звати?\n> — Маму звати Олена, тата — Петро, брата — Андрій, сестру — Ганна.\n> — А бабуся і дідусь?\n> — Так, вони живуть у селі.\n>\n> — Tell me about your family!\n> — I have a big family: mom, dad, older brother and younger sister.\n> — What are their names?\n> — Mom's name is Olena, dad's — Petro, brother's — Andriy, sister's — Hanna.\n> — And grandma and grandpa?\n> — Yes, they live in a village.\n\n> [!conversation] Ти одружений? (Are You Married?)\n>\n> — Ти одружений?\n> — Ні, я неодружений. А ти?\n> — Я одружена. У мене чоловік і дочка.\n> — О, як гарно! Скільки років твоя дочка?\n> — Дочка має п'ять років.\n>\n> — Are you married? (to a man)\n> — No, I'm not married. And you?\n> — I'm married (woman speaking). I have a husband and daughter.\n> — Oh, how nice! How old is your daughter?\n> — My daughter is five years old.\n\n> [!conversation] Чиє це фото? (Whose Photo Is This?)\n>\n> — Чиє це фото?\n> — Це фото моєї родини.\n> — Хто тут?\n> — Це мій тато, моя мама, мій брат і я.\n> — Гарна родина!\n>\n> — Whose photo is this?\n> — This is a photo of my family.\n> — Who is here?\n> — This is my dad, my mom, my brother and me.\n> — Nice family!\n\n---\n\n> 💡 **Батько vs Тато (Father vs Dad)**\n>\n> **Батько** is formal (like \"father\"), **тато** is informal (like \"dad\").\n> **Мати** is formal (like \"mother\"), **мама** is informal (like \"mom\").\n> In everyday speech, Ukrainians use тато and мама!\n\n> 🌍 **Українська родина (Ukrainian Family)**\n>\n> Family ties are very important in Ukraine! Many families are close-knit, and it's common for grandparents (бабуся і дідусь) to help raise grandchildren. Extended family (дядьки, тітки, двоюрідні) often gather for holidays!\n\n> ⚡ **Myth vs Fact**\n>\n> **Myth:** \"Ukrainian family structures are the same as in English\"\n> **Fact:** Ukrainian distinguishes cousins by gender (двоюрідний брат / двоюрідна сестра), has distinct words for in-laws, and uses different words for \"brother/sister of parent\" (дядько/тітка) vs. \"sibling\" (брат/сестра).\n\n> 🎭 **Сімейні традиції (Family Traditions)**\n>\n> At Christmas (Різдво), Ukrainian families gather for a 12-dish dinner (Свята вечеря). On Easter (Великдень), families take food baskets to church to be blessed. Family meals often include several generations together!\n\n---"
       },
       {
         "id": "section-2",
         "name": "Summary",
         "nameEn": null,
         "type": "summary",
-        "content": "Ви вивчили багато слів про сім'ю! Тепер ви знаєте, як звати ваших батьків, братів та сестер. (You learned many words about family! Now you know how to name your parents, brothers and sisters.) Ви знаєте, як сказати \"у мене є\" або \"у мене немає\". Це був чудовий урок! Ви любите свою родину? (This was a great lesson! Do you love your family?)\n\n---\n\n> [!resources] External Resources\n>\n> **Media:**\n> - [Family Vocabulary](https://www.ukrainianlessons.com/vocabulary-family/) — Сім'я\n> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/family\n> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons"
-      },
-      {
-        "id": "section-3",
-        "name": "Vocabulary",
-        "nameEn": null,
-        "type": "vocabulary",
-        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| сім'я | /sʲimˈjɑ/ | family | n | f | |\n| родина | /rɔˈdɪnɑ/ | family/kin | n | f | |\n| батьки | /bɑtʲˈkɪ/ | parents | n | pl | |\n| дядько | /ˈdʲɑdʲkɔ/ | uncle | n | m | |\n| брат | /brɑt/ | brother | n | m | |\n| сестра | /sɛsˈtrɑ/ | sister | n | f | |\n| дідусь | /dʲiˈdusʲ/ | grandfather | n | m | |\n| бабуся | /bɑˈbusʲɑ/ | grandmother | n | f | |\n| онук | /ɔˈnuk/ | grandson | n | m | |\n| онучка | /ɔˈnut͡ʃkɑ/ | granddaughter | n | f | |\n| тітка | /ˈtʲitkɑ/ | aunt | n | f | |\n| двоюрідний брат | /dvɔˈjurʲidnɪj brɑt/ | cousin (m) | n | m | lit. \"second-born brother\" |\n| двоюрідна сестра | /dvɔˈjurʲidnɑ sɛsˈtrɑ/ | cousin (f) | n | f | lit. \"second-born sister\" |\n| син | /sɪn/ | son | n | m | |\n| дочка | /ˈdɔt͡ʃkɑ/ | daughter | n | f | |\n| дружина | /druˈʒɪnɑ/ | wife | n | f | |\n| наречений | /nɑˈrɛt͡ʃɛnɪj/ | fiancé | n | m | |\n| наречена | /nɑˈrɛt͡ʃɛnɑ/ | fiancée | n | f | |\n| старший | /ˈstɑrʃɪj/ | older | adj | m | |\n| молодший | /mɔˈlɔdʃɪj/ | younger | adj | m | |\n| єдиний | /jɛˈdɪnɪj/ | only | adj | m | only child |\n| одружений | /ɔˈdruʒɛnɪj/ | married (m) | adj | m | |\n| одружена | /ɔˈdruʒɛnɑ/ | married (f) | adj | f | |\n| неодружений | /nɛɔˈdruʒɛnɪj/ | unmarried (m) | adj | m | |\n| неодружена | /nɛɔˈdruʒɛnɑ/ | unmarried (f) | adj | f | |\n| дитина | /dɪˈtɪnɑ/ | child | n | f | |\n| діти | /ˈdʲitɪ/ | children | n | pl | |\n\n---"
+        "content": "Ви вивчили багато слів про сім'ю! Тепер ви знаєте, як звати ваших батьків, братів та сестер. (You learned many words about family! Now you know how to name your parents, brothers and sisters.) Ви знаєте, як сказати \"у мене є\" або \"у мене немає\". Це був чудовий урок! Ви любите свою родину? (This was a great lesson! Do you love your family?)\n\n---"
       }
     ],
-    "rawMarkdown": "---\n\nmodule: a1-32\ntitle: \"My Family\"\nsubtitle: \"Родина\"\nversion: \"1.0\"\nphase: \"A1.3 - Consolidation\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: \"first-occurrence\"\ntags:\n  - family\n  - relationships\n  - possessives\ngrammar:\n  - Family vocabulary\n  - Possessives with family members\n  - Genitive for relationships\nobjectives:\n  - \"Learner can name family members\"\n  - \"Learner can describe family relationships\"\n  - \"Learner can talk about their own family\"\n  - \"Learner can use possessives with family terms\"\nvocabulary_count: 35\n---\n\n# My Family\n\n## Warm-up\n\n> 💡 **Моя родина (My Family)**\n>\n> Family is central to Ukrainian culture! Learn how to talk about your loved ones:\n> — **У мене є брат.** (I have a brother.)\n> — **Мою маму звати Олена.** (My mom's name is Olena.)\n> — **Це моя молодша сестра.** (This is my younger sister.)\n>\n> Notice: For \"my mom's name,\" we use Accusative: Мо**ю** маму (Accusative) звати...\n\n---\n\n## Grammar\n## Talking About Family\n\n> [!observe] Спостереження (Pattern Discovery)\n>\n> Look at these patterns:\n> - **У мене є** брат. (I have a brother.)\n> - **Мого** брата звати Максим. (My brother's name is Maksym.)\n> - **Це моя** сестра. (This is my sister.)\n>\n> We use \"У мене є\" for \"I have\" and possessives (мій/моя/моє) for \"my.\"\n\n### \"I Have\" Pattern\n\n| Structure | Example |\n|-----------|---------|\n| У мене є + Nominative | У мене є **брат**. (I have a brother.) |\n| У мене є + Nominative | У мене є **сестра**. (I have a sister.) |\n| У мене немає + Genitive | У мене немає **брата**. (I don't have a brother.) |\n\n### Possessives with Family\n\n| Gender | My | Your (informal) | His/Her |\n|--------|-----|-----------------|---------|\n| Masculine | мій тато | твій тато | його/її тато |\n| Feminine | моя мама | твоя мама | його/її мама |\n| Neuter | моє ім'я | твоє ім'я | його/її ім'я |\n| Plural | мої батьки | твої батьки | його/її батьки |\n\n---\n\n## Describing Family Members\n\n### Age Order\n\n| Term | Meaning | Example |\n|------|---------|---------|\n| старший | older | Мій **старший** брат. (My older brother.) |\n| молодший | younger | Моя **молодша** сестра. (My younger sister.) |\n| середній | middle | Я **середній** у сім'ї. (I'm the middle child.) |\n| єдиний | only | Я **єдина** дитина. (I'm an only child. — f) |\n\n### Marital Status\n\n| Term | Meaning |\n|------|---------|\n| одружений/одружена | married |\n| неодружений/неодружена | unmarried |\n| наречений/наречена | engaged (fiancé/fiancée) |\n\n### Vocative Case (Кличний відмінок)\n\nWhen calling someone directly, Ukrainian changes the word ending. This is the **Vocative case** — used for direct address:\n\n> [!observe] Спостереження (Pattern Discovery)\n>\n> Look at these pairs:\n> - мама → **Мамо!** (Mom!)\n> - тато → **Тату!** (Dad!)\n> - бабуся → **Бабусю!** (Grandma!)\n> - дідусь → **Дідусю!** (Grandpa!)\n>\n> The ending changes when you're calling TO someone!\n\n| Nominative | Vocative | Use |\n|------------|----------|-----|\n| мама | Мамо! | calling mom |\n| тато | Тату! | calling dad |\n| бабуся | Бабусю! | calling grandma |\n| дідусь | Дідусю! | calling grandpa |\n| брат | Брате! | calling brother |\n| сестра | Сестро! | calling sister |\n| Оксана | Оксано! | calling Oksana |\n| Іван | Іване! | calling Ivan |\n\n**Common patterns:**\n- -а → -о (мама → мамо, сестра → сестро)\n- -о → -у (тато → тату)\n- -я → -ю (бабуся → бабусю)\n- consonant → -е (брат → брате, Іван → Іване)\n\n> 💡 **When to Use Vocative**\n>\n> Use vocative when:\n> - Calling someone: **Мамо**, де ти? (Mom, where are you?)\n> - Getting attention: **Тату**, допоможи! (Dad, help!)\n> - In exclamations: **Боже!** (God!/Oh my God!)\n>\n> Don't use with titles: Пане Іване! (Mr. Ivan!) — not \"Пан Іване!\"\n\n---\n\n## Examples in Context\n\n> [!example] Моя сім'я (My Family)\n>\n> - **У мене є** мама і тато. (I have a mom and dad.)\n> - **У мене є** старший брат і молодша сестра. (I have an older brother and younger sister.)\n> - **Мого тата** звати Іван. (My dad's name is Ivan.)\n> - **Мою маму** звати Марія. (My mom's name is Maria.)\n> - **Мої батьки** живуть у Києві. (My parents live in Kyiv.)\n> - **Моя бабуся** дуже добра. (My grandmother is very kind.)\n\n> [!example] Родичі (Relatives)\n>\n> - **Мій дідусь** з Львова. (My grandfather is from Lviv.)\n> - **Моя тітка** — вчителька. (My aunt is a teacher.)\n> - **Мій дядько** працює в банку. (My uncle works at a bank.)\n> - У мене є **двоюрідний брат**. (I have a male cousin.)\n> - Моя **двоюрідна сестра** живе в Одесі. (My female cousin lives in Odesa.)\n> - **Онуки** люблять бабусю. (The grandchildren love grandma.)\n\n> [!example] Стосунки (Relationships)\n>\n> - Він **одружений**. (He is married.)\n> - Вона **не одружена**. (She is not married.)\n> - Це мій **хлопець**. (This is my boyfriend.)\n> - Це моя **дівчина**. (This is my girlfriend.)\n> - Вони **наречені**. (They are engaged.)\n> - У них двоє **дітей**. (They have two children.)\n\n---\n\n## Dialogues\n\n> [!conversation] Розкажи про свою сім'ю (Tell Me About Your Family)\n>\n> — Розкажи про свою сім'ю!\n> — У мене велика сім'я: мама, тато, старший брат і молодша сестра.\n> — Як їх звати?\n> — Маму звати Олена, тата — Петро, брата — Андрій, сестру — Ганна.\n> — А бабуся і дідусь?\n> — Так, вони живуть у селі.\n>\n> — Tell me about your family!\n> — I have a big family: mom, dad, older brother and younger sister.\n> — What are their names?\n> — Mom's name is Olena, dad's — Petro, brother's — Andriy, sister's — Hanna.\n> — And grandma and grandpa?\n> — Yes, they live in a village.\n\n> [!conversation] Ти одружений? (Are You Married?)\n>\n> — Ти одружений?\n> — Ні, я неодружений. А ти?\n> — Я одружена. У мене чоловік і дочка.\n> — О, як гарно! Скільки років твоя дочка?\n> — Дочка має п'ять років.\n>\n> — Are you married? (to a man)\n> — No, I'm not married. And you?\n> — I'm married (woman speaking). I have a husband and daughter.\n> — Oh, how nice! How old is your daughter?\n> — My daughter is five years old.\n\n> [!conversation] Чиє це фото? (Whose Photo Is This?)\n>\n> — Чиє це фото?\n> — Це фото моєї родини.\n> — Хто тут?\n> — Це мій тато, моя мама, мій брат і я.\n> — Гарна родина!\n>\n> — Whose photo is this?\n> — This is a photo of my family.\n> — Who is here?\n> — This is my dad, my mom, my brother and me.\n> — Nice family!\n\n---\n\n> 💡 **Батько vs Тато (Father vs Dad)**\n>\n> **Батько** is formal (like \"father\"), **тато** is informal (like \"dad\").\n> **Мати** is formal (like \"mother\"), **мама** is informal (like \"mom\").\n> In everyday speech, Ukrainians use тато and мама!\n\n> 🌍 **Українська родина (Ukrainian Family)**\n>\n> Family ties are very important in Ukraine! Many families are close-knit, and it's common for grandparents (бабуся і дідусь) to help raise grandchildren. Extended family (дядьки, тітки, двоюрідні) often gather for holidays!\n\n> ⚡ **Myth vs Fact**\n>\n> **Myth:** \"Ukrainian family structures are the same as in English\"\n> **Fact:** Ukrainian distinguishes cousins by gender (двоюрідний брат / двоюрідна сестра), has distinct words for in-laws, and uses different words for \"brother/sister of parent\" (дядько/тітка) vs. \"sibling\" (брат/сестра).\n\n> 🎭 **Сімейні традиції (Family Traditions)**\n>\n> At Christmas (Різдво), Ukrainian families gather for a 12-dish dinner (Свята вечеря). On Easter (Великдень), families take food baskets to church to be blessed. Family meals often include several generations together!\n\n---\n\n# Summary\n\nВи вивчили багато слів про сім'ю! Тепер ви знаєте, як звати ваших батьків, братів та сестер. (You learned many words about family! Now you know how to name your parents, brothers and sisters.) Ви знаєте, як сказати \"у мене є\" або \"у мене немає\". Це був чудовий урок! Ви любите свою родину? (This was a great lesson! Do you love your family?)\n\n---\n\n> [!resources] External Resources\n>\n> **Media:**\n> - [Family Vocabulary](https://www.ukrainianlessons.com/vocabulary-family/) — Сім'я\n> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/family\n> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| сім'я | /sʲimˈjɑ/ | family | n | f | |\n| родина | /rɔˈdɪnɑ/ | family/kin | n | f | |\n| батьки | /bɑtʲˈkɪ/ | parents | n | pl | |\n| дядько | /ˈdʲɑdʲkɔ/ | uncle | n | m | |\n| брат | /brɑt/ | brother | n | m | |\n| сестра | /sɛsˈtrɑ/ | sister | n | f | |\n| дідусь | /dʲiˈdusʲ/ | grandfather | n | m | |\n| бабуся | /bɑˈbusʲɑ/ | grandmother | n | f | |\n| онук | /ɔˈnuk/ | grandson | n | m | |\n| онучка | /ɔˈnut͡ʃkɑ/ | granddaughter | n | f | |\n| тітка | /ˈtʲitkɑ/ | aunt | n | f | |\n| двоюрідний брат | /dvɔˈjurʲidnɪj brɑt/ | cousin (m) | n | m | lit. \"second-born brother\" |\n| двоюрідна сестра | /dvɔˈjurʲidnɑ sɛsˈtrɑ/ | cousin (f) | n | f | lit. \"second-born sister\" |\n| син | /sɪn/ | son | n | m | |\n| дочка | /ˈdɔt͡ʃkɑ/ | daughter | n | f | |\n| дружина | /druˈʒɪnɑ/ | wife | n | f | |\n| наречений | /nɑˈrɛt͡ʃɛnɪj/ | fiancé | n | m | |\n| наречена | /nɑˈrɛt͡ʃɛnɑ/ | fiancée | n | f | |\n| старший | /ˈstɑrʃɪj/ | older | adj | m | |\n| молодший | /mɔˈlɔdʃɪj/ | younger | adj | m | |\n| єдиний | /jɛˈdɪnɪj/ | only | adj | m | only child |\n| одружений | /ɔˈdruʒɛnɪj/ | married (m) | adj | m | |\n| одружена | /ɔˈdruʒɛnɑ/ | married (f) | adj | f | |\n| неодружений | /nɛɔˈdruʒɛnɪj/ | unmarried (m) | adj | m | |\n| неодружена | /nɛɔˈdruʒɛnɑ/ | unmarried (f) | adj | f | |\n| дитина | /dɪˈtɪnɑ/ | child | n | f | |\n| діти | /ˈdʲitɪ/ | children | n | pl | |\n\n---\n",
-    "createdAt": "2025-12-31T22:07:31.788502Z",
-    "modifiedAt": "2025-12-31T22:07:31.788502Z",
+    "rawMarkdown": "# My Family\n\n## Warm-up\n\n> 💡 **Моя родина (My Family)**\n>\n> Family is central to Ukrainian culture! Learn how to talk about your loved ones:\n> — **У мене є брат.** (I have a brother.)\n> — **Мою маму звати Олена.** (My mom's name is Olena.)\n> — **Це моя молодша сестра.** (This is my younger sister.)\n>\n> Notice: For \"my mom's name,\" we use Accusative: Мо**ю** маму (Accusative) звати...\n\n---\n\n## Grammar\n\n## Talking About Family\n\n> [!observe] Спостереження (Pattern Discovery)\n>\n> Look at these patterns:\n>\n> - **У мене є** брат. (I have a brother.)\n> - **Мого** брата звати Максим. (My brother's name is Maksym.)\n> - **Це моя** сестра. (This is my sister.)\n>\n> We use \"У мене є\" for \"I have\" and possessives (мій/моя/моє) for \"my.\"\n\n### \"I Have\" Pattern\n\n| Structure               | Example                                           |\n| ----------------------- | ------------------------------------------------- |\n| У мене є + Nominative   | У мене є **брат**. (I have a brother.)            |\n| У мене є + Nominative   | У мене є **сестра**. (I have a sister.)           |\n| У мене немає + Genitive | У мене немає **брата**. (I don't have a brother.) |\n\n### Possessives with Family\n\n| Gender    | My         | Your (informal) | His/Her        |\n| --------- | ---------- | --------------- | -------------- |\n| Masculine | мій тато   | твій тато       | його/її тато   |\n| Feminine  | моя мама   | твоя мама       | його/її мама   |\n| Neuter    | моє ім'я   | твоє ім'я       | його/її ім'я   |\n| Plural    | мої батьки | твої батьки     | його/її батьки |\n\n---\n\n## Describing Family Members\n\n### Age Order\n\n| Term     | Meaning | Example                                         |\n| -------- | ------- | ----------------------------------------------- |\n| старший  | older   | Мій **старший** брат. (My older brother.)       |\n| молодший | younger | Моя **молодша** сестра. (My younger sister.)    |\n| середній | middle  | Я **середній** у сім'ї. (I'm the middle child.) |\n| єдиний   | only    | Я **єдина** дитина. (I'm an only child. — f)    |\n\n### Marital Status\n\n| Term                   | Meaning                  |\n| ---------------------- | ------------------------ |\n| одружений/одружена     | married                  |\n| неодружений/неодружена | unmarried                |\n| розлучений/розлучена   | divorced                 |\n| вдівець/вдова          | widower/widow            |\n| наречений/наречена     | engaged (fiancé/fiancée) |\n\n### Vocative Case (Кличний відмінок)\n\nWhen calling someone directly, Ukrainian changes the word ending. This is the **Vocative case** — used for direct address:\n\n> [!observe] Спостереження (Pattern Discovery)\n>\n> Look at these pairs:\n>\n> - мама → **Мамо!** (Mom!)\n> - тато → **Тату!** (Dad!)\n> - бабуся → **Бабусю!** (Grandma!)\n> - дідусь → **Дідусю!** (Grandpa!)\n>\n> The ending changes when you're calling TO someone!\n\n| Nominative | Vocative | Use             |\n| ---------- | -------- | --------------- |\n| мама       | Мамо!    | calling mom     |\n| тато       | Тату!    | calling dad     |\n| бабуся     | Бабусю!  | calling grandma |\n| дідусь     | Дідусю!  | calling grandpa |\n| брат       | Брате!   | calling brother |\n| сестра     | Сестро!  | calling sister  |\n| Оксана     | Оксано!  | calling Oksana  |\n| Іван       | Іване!   | calling Ivan    |\n\n**Common patterns:**\n\n- -а → -о (мама → мамо, сестра → сестро)\n- -о → -у (тато → тату)\n- -я → -ю (бабуся → бабусю)\n- consonant → -е (брат → брате, Іван → Іване)\n\n> 💡 **When to Use Vocative**\n>\n> Use vocative when:\n>\n> - Calling someone: **Мамо**, де ти? (Mom, where are you?)\n> - Getting attention: **Тату**, допоможи! (Dad, help!)\n> - In exclamations: **Боже!** (God!/Oh my God!)\n>\n> Don't use with titles: Пане Іване! (Mr. Ivan!) — not \"Пан Іване!\"\n\n---\n\n## Examples in Context\n\n> [!example] Моя сім'я (My Family)\n>\n> - **У мене є** мама і тато. (I have a mom and dad.)\n> - **У мене є** старший брат і молодша сестра. (I have an older brother and younger sister.)\n> - **Мого тата** звати Іван. (My dad's name is Ivan.)\n> - **Мою маму** звати Марія. (My mom's name is Maria.)\n> - **Мої батьки** живуть у Києві. (My parents live in Kyiv.)\n> - **Моя бабуся** дуже добра. (My grandmother is very kind.)\n\n> [!example] Родичі (Relatives)\n>\n> - **Мій дідусь** з Львова. (My grandfather is from Lviv.)\n> - **Моя тітка** — вчителька. (My aunt is a teacher.)\n> - **Мій дядько** працює в банку. (My uncle works at a bank.)\n> - У мене є **двоюрідний брат**. (I have a male cousin.)\n> - Моя **двоюрідна сестра** живе в Одесі. (My female cousin lives in Odesa.)\n> - **Онуки** люблять бабусю. (The grandchildren love grandma.)\n\n> [!example] Стосунки (Relationships)\n>\n> - Він **одружений**. (He is married.)\n> - Вона **не одружена**. (She is not married.)\n> - Мій брат **розлучений**. (My brother is divorced.)\n> - Вона **вдова**. (She is a widow.)\n> - Це мій **хлопець**. (This is my boyfriend.)\n> - Це моя **дівчина**. (This is my girlfriend.)\n> - Вони **наречені**. (They are engaged.)\n> - У них двоє **дітей**. (They have two children.)\n\n---\n\n## Dialogues\n\n> [!conversation] Розкажи про свою сім'ю (Tell Me About Your Family)\n>\n> — Розкажи про свою сім'ю!\n> — У мене велика сім'я: мама, тато, старший брат і молодша сестра.\n> — Як їх звати?\n> — Маму звати Олена, тата — Петро, брата — Андрій, сестру — Ганна.\n> — А бабуся і дідусь?\n> — Так, вони живуть у селі.\n>\n> — Tell me about your family!\n> — I have a big family: mom, dad, older brother and younger sister.\n> — What are their names?\n> — Mom's name is Olena, dad's — Petro, brother's — Andriy, sister's — Hanna.\n> — And grandma and grandpa?\n> — Yes, they live in a village.\n\n> [!conversation] Ти одружений? (Are You Married?)\n>\n> — Ти одружений?\n> — Ні, я неодружений. А ти?\n> — Я одружена. У мене чоловік і дочка.\n> — О, як гарно! Скільки років твоя дочка?\n> — Дочка має п'ять років.\n>\n> — Are you married? (to a man)\n> — No, I'm not married. And you?\n> — I'm married (woman speaking). I have a husband and daughter.\n> — Oh, how nice! How old is your daughter?\n> — My daughter is five years old.\n\n> [!conversation] Чиє це фото? (Whose Photo Is This?)\n>\n> — Чиє це фото?\n> — Це фото моєї родини.\n> — Хто тут?\n> — Це мій тато, моя мама, мій брат і я.\n> — Гарна родина!\n>\n> — Whose photo is this?\n> — This is a photo of my family.\n> — Who is here?\n> — This is my dad, my mom, my brother and me.\n> — Nice family!\n\n---\n\n> 💡 **Батько vs Тато (Father vs Dad)**\n>\n> **Батько** is formal (like \"father\"), **тато** is informal (like \"dad\").\n> **Мати** is formal (like \"mother\"), **мама** is informal (like \"mom\").\n> In everyday speech, Ukrainians use тато and мама!\n\n> 🌍 **Українська родина (Ukrainian Family)**\n>\n> Family ties are very important in Ukraine! Many families are close-knit, and it's common for grandparents (бабуся і дідусь) to help raise grandchildren. Extended family (дядьки, тітки, двоюрідні) often gather for holidays!\n\n> ⚡ **Myth vs Fact**\n>\n> **Myth:** \"Ukrainian family structures are the same as in English\"\n> **Fact:** Ukrainian distinguishes cousins by gender (двоюрідний брат / двоюрідна сестра), has distinct words for in-laws, and uses different words for \"brother/sister of parent\" (дядько/тітка) vs. \"sibling\" (брат/сестра).\n\n> 🎭 **Сімейні традиції (Family Traditions)**\n>\n> At Christmas (Різдво), Ukrainian families gather for a 12-dish dinner (Свята вечеря). On Easter (Великдень), families take food baskets to church to be blessed. Family meals often include several generations together!\n\n---\n\n# Summary\n\nВи вивчили багато слів про сім'ю! Тепер ви знаєте, як звати ваших батьків, братів та сестер. (You learned many words about family! Now you know how to name your parents, brothers and sisters.) Ви знаєте, як сказати \"у мене є\" або \"у мене немає\". Це був чудовий урок! Ви любите свою родину? (This was a great lesson! Do you love your family?)\n\n---\n",
+    "createdAt": "2026-01-04T21:33:28.258267Z",
+    "modifiedAt": "2026-01-04T21:33:28.258267Z",
     "version": 2
   },
   "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A1-32",
     "level": "A1",
-    "phase": "A1.3 - Consolidation",
-    "wordCount": 27,
-    "newWordCount": 27,
+    "phase": "A1.1",
+    "wordCount": 0,
+    "newWordCount": 0,
     "reviewWordCount": 0,
-    "transliterationMode": "first-occurrence",
-    "words": [
+    "transliterationMode": "none",
+    "words": [],
+    "reviewWords": []
+  },
+  "external_resources": {
+    "podcasts": [
       {
-        "id": "vocab-1",
-        "uk": "сім'я",
-        "ipa": "/sʲimˈjɑ/",
-        "en": "family",
-        "pos": "n",
-        "gender": "f",
-        "note": ""
+        "episode_id": "ULP-006",
+        "title": "ULP 1-06 Talking about your family in Ukrainian + I have, you have",
+        "url": "https://www.ukrainianlessons.com/lesson/6/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: family"
       },
       {
-        "id": "vocab-2",
-        "uk": "родина",
-        "ipa": "/rɔˈdɪnɑ/",
-        "en": "family/kin",
-        "pos": "n",
-        "gender": "f",
-        "note": ""
+        "episode_id": "ULP-007",
+        "title": "ULP 1-07 More about your family in Ukrainian + Possessive Pronouns",
+        "url": "https://www.ukrainianlessons.com/lesson/7/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: family"
       },
       {
-        "id": "vocab-3",
-        "uk": "батьки",
-        "ipa": "/bɑtʲˈkɪ/",
-        "en": "parents",
-        "pos": "n",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-4",
-        "uk": "дядько",
-        "ipa": "/ˈdʲɑdʲkɔ/",
-        "en": "uncle",
-        "pos": "n",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-5",
-        "uk": "брат",
-        "ipa": "/brɑt/",
-        "en": "brother",
-        "pos": "n",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-6",
-        "uk": "сестра",
-        "ipa": "/sɛsˈtrɑ/",
-        "en": "sister",
-        "pos": "n",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-7",
-        "uk": "дідусь",
-        "ipa": "/dʲiˈdusʲ/",
-        "en": "grandfather",
-        "pos": "n",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-8",
-        "uk": "бабуся",
-        "ipa": "/bɑˈbusʲɑ/",
-        "en": "grandmother",
-        "pos": "n",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-9",
-        "uk": "онук",
-        "ipa": "/ɔˈnuk/",
-        "en": "grandson",
-        "pos": "n",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-10",
-        "uk": "онучка",
-        "ipa": "/ɔˈnut͡ʃkɑ/",
-        "en": "granddaughter",
-        "pos": "n",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-11",
-        "uk": "тітка",
-        "ipa": "/ˈtʲitkɑ/",
-        "en": "aunt",
-        "pos": "n",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-12",
-        "uk": "двоюрідний брат",
-        "ipa": "/dvɔˈjurʲidnɪj brɑt/",
-        "en": "cousin (m)",
-        "pos": "n",
-        "gender": "m",
-        "note": "lit. \"second-born brother\""
-      },
-      {
-        "id": "vocab-13",
-        "uk": "двоюрідна сестра",
-        "ipa": "/dvɔˈjurʲidnɑ sɛsˈtrɑ/",
-        "en": "cousin (f)",
-        "pos": "n",
-        "gender": "f",
-        "note": "lit. \"second-born sister\""
-      },
-      {
-        "id": "vocab-14",
-        "uk": "син",
-        "ipa": "/sɪn/",
-        "en": "son",
-        "pos": "n",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-15",
-        "uk": "дочка",
-        "ipa": "/ˈdɔt͡ʃkɑ/",
-        "en": "daughter",
-        "pos": "n",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-16",
-        "uk": "дружина",
-        "ipa": "/druˈʒɪnɑ/",
-        "en": "wife",
-        "pos": "n",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-17",
-        "uk": "наречений",
-        "ipa": "/nɑˈrɛt͡ʃɛnɪj/",
-        "en": "fiancé",
-        "pos": "n",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-18",
-        "uk": "наречена",
-        "ipa": "/nɑˈrɛt͡ʃɛnɑ/",
-        "en": "fiancée",
-        "pos": "n",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-19",
-        "uk": "старший",
-        "ipa": "/ˈstɑrʃɪj/",
-        "en": "older",
-        "pos": "adj",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-20",
-        "uk": "молодший",
-        "ipa": "/mɔˈlɔdʃɪj/",
-        "en": "younger",
-        "pos": "adj",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-21",
-        "uk": "єдиний",
-        "ipa": "/jɛˈdɪnɪj/",
-        "en": "only",
-        "pos": "adj",
-        "gender": "m",
-        "note": "only child"
-      },
-      {
-        "id": "vocab-22",
-        "uk": "одружений",
-        "ipa": "/ɔˈdruʒɛnɪj/",
-        "en": "married (m)",
-        "pos": "adj",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-23",
-        "uk": "одружена",
-        "ipa": "/ɔˈdruʒɛnɑ/",
-        "en": "married (f)",
-        "pos": "adj",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-24",
-        "uk": "неодружений",
-        "ipa": "/nɛɔˈdruʒɛnɪj/",
-        "en": "unmarried (m)",
-        "pos": "adj",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-25",
-        "uk": "неодружена",
-        "ipa": "/nɛɔˈdruʒɛnɑ/",
-        "en": "unmarried (f)",
-        "pos": "adj",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-26",
-        "uk": "дитина",
-        "ipa": "/dɪˈtɪnɑ/",
-        "en": "child",
-        "pos": "n",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-27",
-        "uk": "діти",
-        "ipa": "/ˈdʲitɪ/",
-        "en": "children",
-        "pos": "n",
-        "gender": null,
-        "note": ""
+        "episode_id": "FMU-033",
+        "title": "Vocabulary booster! Family members in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/fmu33/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: family"
       }
     ],
-    "reviewWords": []
+    "youtube": [],
+    "articles": [
+      {
+        "id": "ULP-006",
+        "title": "ULP 1-06 Talking about your family in Ukrainian + I have, you have",
+        "url": "https://www.ukrainianlessons.com/lesson/6/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Partial match for {'about', 'family', 'talking'} (Score: 80, Priority: 2)"
+      },
+      {
+        "title": "Family Vocabulary",
+        "url": "https://www.ukrainianlessons.com/vocabulary-family/",
+        "relevance": "high",
+        "source": "Сім'я"
+      },
+      {
+        "title": "Ukrainian Lessons Podcast",
+        "url": "https://www.ukrainianlessons.com/podcast/",
+        "relevance": "high",
+        "source": "Audio lessons/family"
+      }
+    ],
+    "books": [],
+    "websites": [
+      {
+        "title": "Speak Ukrainian YouTube",
+        "url": "https://www.youtube.com/@SpeakUkrainian",
+        "relevance": "high",
+        "source": "Video lessons"
+      }
+    ]
   }
 }

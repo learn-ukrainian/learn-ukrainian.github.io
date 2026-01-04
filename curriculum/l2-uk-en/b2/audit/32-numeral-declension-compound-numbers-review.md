@@ -1,12 +1,17 @@
 # Audit Report: 32-numeral-declension-compound-numbers.md
 **Phase:** B2.1c | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1818/1750
-- **Activities:** ✅ 16/14
-- **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Activities:** ✅ 15/14
+- **Density:** ❌ 1 < 16
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 16/6
 - **Audio:** ℹ️ No audio
@@ -14,6 +19,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 98-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
@@ -36,6 +42,12 @@
 | questions | 26 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.7%** |
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Заповніть правильною формою числівника | cloze | 10 | 16 | Add 6 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

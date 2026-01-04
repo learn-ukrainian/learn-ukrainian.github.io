@@ -310,9 +310,9 @@ ACTIVITY_COMPLEXITY = {
         'C2': {'min_len': 18, 'max_len': 28, 'options': 5, 'min_items': 6},
     },
     'essay-response': {
-        'B2': {'min_words': 250},
-        'C1': {'min_words': 400},
-        'C2': {'min_words': 600},
+        'B2': {'min_words': 250, 'min_items': 1},
+        'C1': {'min_words': 400, 'min_items': 1},
+        'C2': {'min_words': 600, 'min_items': 1},
     },
     'critical-analysis': {
         'C1': {'min_items': 1},

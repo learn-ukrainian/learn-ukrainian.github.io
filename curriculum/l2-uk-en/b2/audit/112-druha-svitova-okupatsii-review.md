@@ -1,20 +1,30 @@
 # Audit Report: 112-druha-svitova-okupatsii.md
-**Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Граматика та стиль' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 1/16 items with placeholders/missing errors.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 2646/1750
-- **Activities:** ✅ 19/14
-- **Density:** ✅ All > 16
+- **Words:** ✅ 2558/1400
+- **Activities:** ✅ 19/10
+- **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 17/6
+- **Engagement:** ✅ 17/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 27 < 35 (soft target)
+- **Vocab:** ✅ 27/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 98.8% (target 98-100% (vocab))
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ⚠️ Too many activities: 19 (target 10-12)
+- **Immersion:** 🇺🇦 98.8% (target 98-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -50,5 +60,5 @@
 | **Граматика в контексті** | ✅ | 148 | Included in Core |
 | **Підсумок** | ✅ | 112 | Included in Core |
 | **Словник** | ⚪️ | 0 | Skipped |
-| **Зовнішні ресурси** | ⚪️ | 88 | Skipped |
+| **Зовнішні ресурси** | ⚪️ | 0 | Skipped |
 | **Активності** | ⚪️ | 6 | Skipped |

@@ -1,20 +1,26 @@
 # Audit Report: 111-holodomor-ii-pamiat.md
-**Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Overall Status:** ❌ FAIL
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1796/1750
-- **Activities:** ✅ 14/14
-- **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Words:** ✅ 1748/1400
+- **Activities:** ✅ 14/10
+- **Density:** ❌ 1 < 14
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/6
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 16 < 35 (soft target)
+- **Vocab:** ⚠️ 16 < 20 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 98.8% (target 98-100% (vocab))
+- **Content_heavy:** ⚠️ Too many activities: 14 (target 10-12); 2 cloze with year blanks; 1 fill-in with year answers
+- **Immersion:** 🇺🇦 98.9% (target 98-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -28,26 +34,26 @@
 | primary_sources | 14 | 3 | 100% | 24% | 23.8% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
-| decolonization | 7 | 2 | 100% | 14% | 14.3% |
+| decolonization | 6 | 2 | 100% | 14% | 14.3% |
 | cultural | 3 | 4 | 75% | 10% | 7.1% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
+| variety | 0.97 | - | 97% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 5 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **97.5%** |
 
-## MDX VALIDATION
-✅ No issues found
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Хронологія правди | cloze | 8 | 14 | Add 6 more items |
 
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 95 | Included in Core |
 | **Вступ** | ⚪️ | 170 | Skipped |
-| **Частина 1: Механізм Заперечення** | ⚪️ | 548 | Skipped |
-| **Частина 2: Первинні джерела та свідчення** | ⚪️ | 308 | Skipped |
-| **Частина 3: Деколонізація пам'яті та сучасність** | ⚪️ | 550 | Skipped |
-| **Підсумок** | ✅ | 125 | Included in Core |
+| **Частина 1: Механізм Заперечення** | ✅ | 548 | Included in Core |
+| **Частина 2: Первинні джерела та свідчення** | ✅ | 308 | Included in Core |
+| **Частина 3: Деколонізація пам'яті та сучасність** | ✅ | 550 | Included in Core |
+| **Підсумок** | ✅ | 77 | Included in Core |

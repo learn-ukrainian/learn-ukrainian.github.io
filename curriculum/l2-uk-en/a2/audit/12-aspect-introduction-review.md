@@ -2,32 +2,31 @@
 **Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
+## PEDAGOGICAL VIOLATIONS
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Fix the Aspect' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 6/8 items with placeholders/missing errors.
+
 ## Recommendation
 **📝 UPDATE** (severity 25/100)
 
+- 1 pedagogical violations (minor)
 - Immersion 11% off target
-- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1104/1000
-- **Activities:** ✅ 11/10
-- **Density:** ❌ 1 < 12
-- **Unique_types:** ✅ 11/4 types
+- **Activities:** ✅ 10/10
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 14/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** ❌ 24.2% LOW (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| English to Ukrainian | translate | 0 | 6 | Add 6 more items |
-
 
 ## Section Audit
 | Section | Status | Count | Notes |

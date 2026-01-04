@@ -1,20 +1,30 @@
 # Audit Report: 117-chornobyl.md
-**Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Untitled' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 6/6 items with placeholders/missing errors.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 2159/1750
-- **Activities:** ✅ 14/14
-- **Density:** ✅ All > 16
+- **Words:** ✅ 2118/1400
+- **Activities:** ✅ 14/10
+- **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 21/6
+- **Engagement:** ✅ 21/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/35
+- **Vocab:** ✅ 35/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 100.0% (target 98-100% (vocab))
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ⚠️ Too many activities: 14 (target 10-12)
+- **Immersion:** 🇺🇦 100.0% (target 98-100% (history))
 - **Richness:** ✅ 95% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -30,7 +40,7 @@
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 2 | 4 | 50% | 10% | 4.8% |
-| visual | 22 | 4 | 100% | 10% | 9.5% |
+| visual | 21 | 4 | 100% | 10% | 9.5% |
 | variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 9 | 3 | 100% | 5% | 4.8% |
@@ -46,4 +56,4 @@
 | **Чорнобиль як каталізатор деколонізації** | ⚪️ | 608 | Skipped |
 | **Первинні джерела** | ⚪️ | 242 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 92 | Skipped |
-| **Підсумок** | ✅ | 103 | Included in Core |
+| **Підсумок** | ✅ | 62 | Included in Core |

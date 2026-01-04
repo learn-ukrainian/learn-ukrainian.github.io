@@ -1,0 +1,169 @@
+module: 06-hedging-modality
+level: C1
+version: '1.0'
+items:
+  - lemma: можливо
+    ipa: /mɔʒˈlɪvɔ/
+    translation: possibly
+    pos: adv
+    gender: n
+  - lemma: ймовірно
+    ipa: /jmɔˈvʲirnɔ/
+    translation: probably/likely
+    pos: adv
+    gender: n
+  - lemma: очевидно
+    ipa: /ɔtʃeˈvɪdnɔ/
+    translation: obviously
+    pos: adv
+    gender: n
+  - lemma: напевно
+    ipa: /nɐˈpɛvnɔ/
+    translation: for sure/certainly
+    pos: adv
+    gender: n
+  - lemma: безперечно
+    ipa: /bezpeˈrɛtʃnɔ/
+    translation: undoubtedly
+    pos: adv
+    gender: n
+  - lemma: безсумнівно
+    ipa: /bezsumˈnʲiu̯nɔ/
+    translation: undoubtedly
+    pos: adv
+    gender: n
+  - lemma: вочевидь
+    ipa: /vɔtʃeˈvɪdʲ/
+    translation: evidently
+    pos: adv
+    gender: n
+  - lemma: мабуть
+    ipa: /mɐˈbutʲ/
+    translation: perhaps/maybe
+    pos: adv
+    gender: n
+  - lemma: либонь
+    ipa: /lɪˈbɔnʲ/
+    translation: probably (colloquial/literary)
+    pos: adv
+    gender: n
+  - lemma: певне
+    ipa: /ˈpɛu̯ne/
+    translation: surely/probably
+    pos: adv
+    gender: n
+  - lemma: певною мірою
+    ipa: /ˈpɛu̯noju ˈmʲiroju/
+    translation: to a certain extent
+    pos: phrase
+    gender: n
+  - lemma: деякою мірою
+    ipa: /ˈdɛjɐkoju ˈmʲiroju/
+    translation: to some extent
+    pos: phrase
+    gender: n
+  - lemma: значною мірою
+    ipa: /znɐtʃˈnɔju ˈmʲiroju/
+    translation: largely/significantly
+    pos: phrase
+    gender: n
+  - lemma: великою мірою
+    ipa: /veˈlɪkoju ˈmʲiroju/
+    translation: to a great extent
+    pos: phrase
+    gender: n
+  - lemma: здається
+    ipa: /zdɐˈjɛtʲsʲɐ/
+    translation: it seems
+    pos: verb
+    aspect: imperfective
+  - lemma: видається
+    ipa: /vɪdɐˈjɛtʲsʲɐ/
+    translation: it appears
+    pos: verb
+    aspect: imperfective
+  - lemma: вважається
+    ipa: /vvɐˈʒɑjetʲsʲɐ/
+    translation: it is considered
+    pos: verb
+    aspect: imperfective
+  - lemma: припускається
+    ipa: /prɪpuˈskɑjetʲsʲɐ/
+    translation: it is assumed
+    pos: verb
+    aspect: imperfective
+  - lemma: передбачається
+    ipa: /peredbɐˈtʃɑjetʲsʲɐ/
+    translation: it is foreseen/anticipated
+    pos: verb
+    aspect: imperfective
+  - lemma: є підстави вважати
+    ipa: /jɛ pidˈstɑvɪ vvɐˈʒɑtɪ/
+    translation: there are grounds to believe
+    pos: phrase
+    gender: n
+  - lemma: можна припустити
+    ipa: /ˈmɔʒnɐ prɪpuˈstɪtɪ/
+    translation: one can assume
+    pos: phrase
+    gender: n
+  - lemma: не виключено що
+    ipa: /nɛ vɪˈklʲutʃenɔ ʃtʃɔ/
+    translation: it is not excluded that
+    pos: phrase
+    gender: n
+  - lemma: слід зазначити
+    ipa: /sʲlʲid zɐznɐˈtʃɪtɪ/
+    translation: it should be noted
+    pos: phrase
+    gender: n
+  - lemma: варто підкреслити
+    ipa: /ˈvɑrtɔ pidˈkrɛslɪtɪ/
+    translation: it is worth emphasizing
+    pos: phrase
+    gender: n
+  - lemma: доречно згадати
+    ipa: /dɔˈrɛtʃnɔ zɦɐˈdɑtɪ/
+    translation: it is appropriate to mention
+    pos: phrase
+    gender: n
+  - lemma: необхідно наголосити
+    ipa: /neɔbˈxʲidnɔ nɐɦɔlɔˈsɪtɪ/
+    translation: it is necessary to stress
+    pos: phrase
+    gender: n
+  - lemma: важливо зауважити
+    ipa: /vɐʒˈlɪvɔ zɐuˈvɑʒɪtɪ/
+    translation: it is important to note
+    pos: phrase
+    gender: n
+  - lemma: цікаво відзначити
+    ipa: /t͡sʲiˈkɑvɔ vidˈznɑtʃɪtɪ/
+    translation: it is interesting to note
+    pos: phrase
+    gender: n
+  - lemma: показово що
+    ipa: /pɔkɐˈzɔvɔ ʃtʃɔ/
+    translation: it is indicative that
+    pos: phrase
+    gender: n
+  - lemma: характерно що
+    ipa: /xɐrɐkˈtɛrnɔ ʃtʃɔ/
+    translation: it is characteristic that
+    pos: phrase
+    gender: n
+  - lemma: виключено
+    ipa: /vɪˈklʲutʃenɔ/
+    translation: excluded
+    pos: adv
+    gender: n
+  - lemma: зауважити
+    ipa: /zɐuˈvɑʒɪtɪ/
+    translation: to note/remark
+    pos: verb
+    aspect: perfective
+  - lemma: згадати
+    ipa: /zɦɐˈdɑtɪ/
+    translation: to mention/recall
+    pos: verb
+    aspect: perfective

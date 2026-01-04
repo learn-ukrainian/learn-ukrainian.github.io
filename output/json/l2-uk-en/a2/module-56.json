@@ -9,34 +9,20 @@
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A2",
-    "phase": "A2",
+    "phase": "A2.1",
     "moduleNumber": 56,
-    "moduleType": "checkpoint",
-    "pedagogy": "Review",
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
     "immersionLevel": 0.4,
-    "title": "A2 Grammar Review",
+    "title": "Module 56",
     "titleUk": null,
-    "subtitle": "Mastering the Rules",
-    "description": "Consolidate understanding of all 7 cases",
-    "objectives": [
-      "Consolidate understanding of all 7 cases",
-      "Master Perfective vs Imperfective aspect",
-      "Build complex sentences with connectors",
-      "Fix common grammatical errors"
-    ],
+    "subtitle": null,
+    "description": "Module 56",
+    "objectives": [],
     "objectivesUk": null,
-    "grammarFocus": [
-      "review-cases",
-      "review-aspect",
-      "complex-sentences"
-    ],
-    "tags": [
-      "review",
-      "grammar",
-      "cases",
-      "syntax"
-    ],
-    "totalDuration": 60,
+    "grammarFocus": [],
+    "tags": [],
+    "totalDuration": 45,
     "transliterationMode": "none",
     "sections": [
       {
@@ -44,419 +30,88 @@
         "name": "Summary",
         "nameEn": null,
         "type": "summary",
-        "content": "This review covered:\n\n- **Cases**: The backbone of the sentence (Subj, Obj, Loc, Instr...).\n- **Aspect**: The timeline of the verb (Process vs Result).\n- **Structure**: Complex sentences make you sound smart.\n\nYou are now ready for the **Final Checkpoint**. Good luck!\n\n> [!resources] 🔗 External Resources\n>\n> **YouTube:** [Ukrainian Cases Explained](https://www.youtube.com/watch?v=xVD1GRxnvNw) — Ukrainian Lessons\n>\n> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview\n>\n> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises"
-      },
-      {
-        "id": "section-2",
-        "name": "Vocabulary",
-        "nameEn": null,
-        "type": "vocabulary",
-        "content": "| Word | IPA | English | POS | Gender | Note |\n| --- | --- | --- | --- | --- | --- |\n| аудиторія |  |  | noun | ж |  |\n| бариста |  |  | noun | ч |  |\n| біб |  |  | noun | ч |  |\n| випрасти |  |  | verb | - |  |\n| ворон |  |  | noun | ж |  |\n| воронень |  |  | noun | ч |  |\n| засміятися |  |  | verb | ж |  |\n| злочинець |  |  | noun | ч |  |\n| злочинка |  |  | noun | ч |  |\n| зникнути |  |  | verb | с |  |\n| зустрічати |  |  | verb | - |  |\n| кохати |  |  | verb | - |  |\n| легко | /ˈlɛɦkɔ/ | easily | adv | - | from легкий |\n| лінуватися |  |  | verb | - |  |\n| література |  |  | noun | ж |  |\n| мозок |  |  | noun | ч |  |\n| морок |  |  | noun | ч |  |\n| міцний |  |  | adj | ч |  |\n| надихати |  |  | verb | - |  |\n| найскладніший |  |  | adj | - |  |\n| нота |  |  | noun | ж |  |\n| перехожий |  |  | noun | ч |  |\n| по-новому |  |  | adv | - |  |\n| поетка |  |  | noun | ж |  |\n| практикуватися |  |  | verb | - |  |\n| прилетіти |  |  | verb | ж |  |\n| проводжати |  |  | verb | - |  |\n| проворонити |  |  | verb | ж |  |\n| простіше |  |  | adv | - |  |\n| піднімати |  |  | verb | - |  |\n| розслідувати |  |  | verb | - |  |\n| розцвіти |  |  | verb | ч |  |\n| скелет |  |  | noun | ч |  |\n| сполучник |  |  | noun | ч |  |\n| створювати |  |  | verb | - |  |\n| том |  |  | noun | ч |  |\n| томе |  |  | interj | - |  |\n| хитр |  |  | noun | ж |  |\n| цеглина |  |  | noun | ж |  |\n| цемент |  |  | noun | ч |  |\n| частий |  |  | adj | - |  |\n| ідеально |  |  | adv | - |  |\n| інспектор |  |  | noun | ч |  |"
+        "content": "This review covered:\n\n- **Cases**: The backbone of the sentence (Subj, Obj, Loc, Instr...).\n- **Aspect**: The timeline of the verb (Process vs Result).\n- **Structure**: Complex sentences make you sound smart.\n\nYou are now ready for the **Final Checkpoint**. Good luck!"
       }
     ],
-    "rawMarkdown": "---\nmodule: a2-56\ntitle: A2 Grammar Review\nsubtitle: 'Mastering the Rules'\nversion: '1.0'\nphase: 'A2'\npedagogy: 'Review'\nduration: 60\ntransliteration: none\ntags: ['review', 'grammar', 'cases', 'syntax']\ngrammar: ['review-cases', 'review-aspect', 'complex-sentences']\nobjectives:\n  - Consolidate understanding of all 7 cases\n  - Master Perfective vs Imperfective aspect\n  - Build complex sentences with connectors\n  - Fix common grammatical errors\nvocab_count: 43\n---\n\n## Warm-up: Knowledge Check\n\n**Congratulations! You are almost at the finish line of the A2 level.**\n\nBy now, you know many words, can communicate on basic topics, and understand spoken Ukrainian. But are you speaking _correctly_? Grammar is the skeleton of a language. If the skeleton is strong, you can express complex thoughts accurately and beautifully.\n\nToday we will review the most challenging and important topics:\n\n1. **The Seven Cases** - From Nominative to Vocative.\n2. **Verb Aspect** - How to distinguish between process and result.\n3. **Complex Sentences** - Using connectors like _тому що_, _якщо_, and _щоб_.\n\n> [!important] **Advice**\n> Don't be afraid to make mistakes. Even native speakers stumble sometimes. The key is to practice every day and pay attention to the patterns you hear!\n\n## Presentation: Grammar Guide\n\n### The 7 Cases: Quick Guide\n\nUkrainian has seven cases that change the endings of nouns, adjectives, and pronouns to show their role in a sentence.\n\n| Case             | Question           | Function                  | Prepositions       | Example                                  |\n| ---------------- | ------------------ | ------------------------- | ------------------ | ---------------------------------------- |\n| **Nominative**   | Хто? Що?           | Subject                   | -                  | **Студент** читає.                       |\n| **Genitive**     | Кого? Чого?        | Possession, Absence, From | без, до, від, з, у | Немає **грошей**. З **Києва**.           |\n| **Dative**       | Кому? Чому?        | Recipient, Feeling, Age   | для (Gen!), -      | **Мені** холодно. **Студенту** 20 років. |\n| **Accusative**   | Кого? Що?          | Object, Direction         | в, про, через      | Я бачу **сестру**. Я йду в **кіно**.     |\n| **Instrumental** | Ким? Чим?          | With, By, As              | з, над, під        | Я пишу **ручкою**. Я працюю **лікарем**. |\n| **Locative**     | (на/у) Кому? Чому? | Location                  | в, на, по          | Я в **кімнаті**. На **столі**.           |\n| **Vocative**     | -                  | Addressing                | -                  | **Мамо!** **Андрію!**                    |\n\n### Aspect: Process vs Result\n\nVerbs in Ukrainian come in pairs. One shows the process (Imperfective), and the other shows the completed result (Perfective).\n\n- **Imperfective (Недоконаний вид)**: Process, Habit, Duration.\n  - _Я писав лист 2 години._ (I was writing).\n  - _Я часто купував каву._ (I often bought).\n- **Perfective (Доконаний вид)**: Result, One-time completed action.\n  - _Я написав лист._ (I wrote/have written).\n  - _Я купив каву._ (I bought).\n\n### Complex Sentences\n\nTo speak fluently, connect your ideas using these logical connectors:\n\n- **тому що** (because): _Я не пішов, тому що я захворів._\n- **щоб** (in order to): _Я вчуся, щоб знайти роботу._\n- **який** (which/who): _Це друг, який живе в Києві._\n- **коли** (when): _Коли я прийшов, вона спала._\n- **якщо** (if): _Якщо буде дощ, ми будемо вдома._\n\n## Practice\n\n### Story Time: The Grammar Detective\n\nAn inspector is investigating a case. Notice how the endings change based on the roles of the words:\n\nІнспектор Граматика розслідує справу. Він прийшов у **кімнату** (Знахідний - Direction). Там він побачив **студента** (Знахідний - Object).\n— Що ви робили вчора о 5-й годині? — запитав інспектор.\n— Я **писав** (Недоконаний - Process) тест, — відповів студент.\n— Ви **написали** (Доконаний - Result) його?\n— Ні, я не **дописав**, тому що **світло** (Називний - Subject) зникло.\n— З ким ви були?\n— Я був з **другом** (Орудний - With).\n— Де ви були?\n— Ми були в **бібліотеці** (Місцевий - Location).\n\nІнспектор подумав. Все було правильно. Студент знав відмінки. Він не міг бути злочинцем. Злочинці не знають граматику!\n\n> [!important] **Tip** \"Word Order\"\n> Ukrainian word order is flexible but not random. Changing the order changes the emphasis:\n>\n> - Neutral: Subject - Verb - Object (_Я люблю каву_).\n> - Emphasis: Object - Verb - Subject (_Каву люблю я_ - It is ME who loves coffee).\n> - Question: Verb - Subject? (_Любиш ти каву?_).\n\n### Story Time: A Letter Home (Correct the Mistakes)\n\nHi Mom! Here is a letter with typical learner mistakes. Can you find them?\n\n\"Привіт, **мама** (Error: Vocative -> Мамо)!\nЯ живу в **Київ** (Error: Loc -> Києві).\nУ мене є **кіт** (Correct). Його звати Мурчик.\nЯ працюю **програміст** (Error: Instr -> програмістом).\nЯ люблю **Україна** (Error: Acc -> Україну).\nВчора я **купував** (Context: bought and finished -> купив) машину.\nВона **червоний** (Error: Fem -> червона).\nЯ щасливий!\"\n\n(In the activities, you will fix these!)\n\n### Review in Dialogue\n\n— Привіт! Ти **зробив** домашнє завдання? (Result)\n— Ні, я ще **роблю**. (Process)\n— Чому? Це ж легко.\n— Тому що я не розумію **відмінки** (Acc).\n— Давай я допоможу **тобі** (Dat).\n— Дякую! Ти справжній друг.\n— Без **проблем**. Для цього є друзі.\n\n> [!important] **Important** \"Grammar is Fun!\"\n> Do not be afraid of grammar. It is a logic puzzle. Ukrainian grammar is very logical. Once you understand the pattern, you can build any sentence.\n\n### Story Time: The Grammar Fairy\n\nOnce upon a time, there was a student named Tom who struggled with grammar...\n\nЖив-був студент Том. Він не любив граматику. Він говорив: \"Моя твоя не розуміти\". Одного разу до нього прилетіла Граматична Фея.\n— Томе! — сказала вона. — Чому ти говориш як робот?\n— Я не знаю **відмінки**, — зітхнув Том.\n— Це просто, — сказала Фея. — Дивись.\nВона дала йому чарівні окуляри. Том одягнув їх і побачив світ по-новому.\nВін побачив, що **книга** (Називний) лежить на **столі** (Місцевий). Він побачив, що він пише **ручкою** (Орудний). Він побачив, що він йде до **друга** (Родовий).\n— Ого! — вигукнув Том. — Тепер я бачу зв'язки!\nЗ того дня Том говорив **правильно** і красиво. Він зрозумів, що граматика — це магія, яка з'єднує слова.\n\n### Story Time: Grammar in Action\n\nJohn moved to Kyiv knowing only words but no grammar. Let's see how he improved...\n\nОдного разу іноземець Джон приїхав у Київ. Він знав слова, але не знав граматику. Він хотів купити **каву** (Знахідний). Він зайшов у кав'ярню і сказав:\n— Я хотіти кава. (Nom/Inf error).\nБариста усміхнувся, але зрозумів. Потім Джон хотів знайти **метро** (Знахідний). Він запитав перехожого: \"Де є метро?\". \"Прямо і наліво\", — відповів перехожий. Джон сів у **поїзд** (Знахідний) і поїхав у **парк** (Знахідний).\nУ парку він зустрів дівчину. Вона читала **книгу** (Знахідний).\n— Привіт, — сказав Джон. — Ти читати книга? (Error).\nДівчина засміялася. \"Ні, я читаю книгу\", — виправила вона. Джон зрозумів, що треба вчити відмінки. Через рік він говорив ідеально: \"Я читаю українську літературу і спілкуюся з цікавими людьми\".\n\n### Story Time: The Grammar Exam\n\nСьогодні у студентів іспит з граматики. Професор дає завдання.\n— Слухайте уважно, — каже він.\n— Студент **Іван** (Називний) пише **вправу** (Знахідний) **ручкою** (Орудний).\n— Студентка **Марія** (Називний) мріє про **відпустку** (Знахідний).\n— Вони сидять в **аудиторії** (Місцевий).\nПрофесор запитує: \"Хто знає, де помилка?\".\nІван піднімає руку. \"Я не пишу, я думаю!\" — каже він. Професор сміється: \"Правильно. 'Думати' — це теж дія. Це Недоконаний вид\".\nВсі студенти здали іспит на \"відмінно\".\n\n### Dialogue: Grammar Debate\n\n— Чому українська мова така складна? — питає Джон.\n— Вона не складна, вона багата, — каже Марія.\n— Але ці відмінки... Навіщо їх так багато?\n— Щоб бути точним. Дивись: \"Я кохаю тебе\" (I love you) і \"Тебе я кохаю\" (It is YOU I love) — це різні акценти.\n— Так, але в англійській простіше.\n— Простіше не означає краще. Українська мова — як музика. Кожне закінчення — це нота.\n— Красиво сказано. Ти поетка?\n— Ні, я просто люблю свою мову.\n— Добре, я буду вчити ноти.\n\n### Why Grammar Matters?\n\nGrammar is the cement that holds the bricks of language together. Without it, your \"house\" of communication will fall apart. In Ukraine, they say: \"Зустрічають по одягу, а проводжають по розуму\" (They meet you by your clothes, but see you off by your mind). Grammar is your intellectual \"clothing.\"\nЯкщо ви говорите правильно, люди вас поважають.\nТому не лінуйтеся. Вчіть правила!\n\n### Tongue Twisters (Скоромовки) for Grammar\n\nPracticing these helps with endings:\n\n1. **Ворона** проворонила **вороненя**. (Crow missed the baby crow).\n2. **Бабин** біб розцвів у **дощ** - буде **бабі** біб у **борщ**. (Bean in rain, bean for grandma in borscht).\n3. **Хитру** сороку спіймати **мороку**, а на сорок сорок - сорок **морок**. (Catching a magpie is trouble).\n\n### Story Time: The Lost Tourist\n\nМайкл гуляв по **Львову** (Місцевий). Він шукав **Оперний театр** (Знахідний). Він запитав у бабусі: \"Вибачте, де театр?\". \"Іди прямо по **вулиці** (Місцевий), потім поверни на **площу** (Знахідний)\". Майкл подякував **бабусі** (Давальний). Він знайшов театр. Це була красива будівля.\nВін купив **квиток** (Знахідний) на балет і дивився виставу з великим **задоволенням** (Орудний).\nЛьвів — це місто, яке надихає.\n\n### Useful Phrases for Communication\n\nIf you make a mistake, don't worry! Use these phrases:\n\n- Вибачте, я тільки вчуся. (_Sorry, I am just learning_).\n- Виправте мене, будь ласка. (_Correct me, please_).\n- Як правильно сказати...? (_How to say correctly...?_).\n- Я не розумію, повторіть будь ласка. (_I don't understand, repeat please_).\n\n> [!cultural] **Cultural Insight** \"Surzhyk\"\n> You might hear people mixing Ukrainian and Russian. This is called **Surzhyk**. It often ignores grammar rules of both languages. As a learner, stick to standard Ukrainian (_літературна мова_) to gain respect and clarity.\n\n### Common Mistakes (Часті помилки)\n\nHere are errors that students often make:\n\n1. **Walking IN the park.** (Я гуляю в парку — Locative).\n2. **Thanking.** (Дякую тобі — Dative).\n3. **Playing games.** (Грати у футбол — Accusative).\n4. **My name is...** (Мене звати Том — Accusative).\n\n# Summary\n\nThis review covered:\n\n- **Cases**: The backbone of the sentence (Subj, Obj, Loc, Instr...).\n- **Aspect**: The timeline of the verb (Process vs Result).\n- **Structure**: Complex sentences make you sound smart.\n\nYou are now ready for the **Final Checkpoint**. Good luck!\n\n> [!resources] 🔗 External Resources\n>\n> **YouTube:** [Ukrainian Cases Explained](https://www.youtube.com/watch?v=xVD1GRxnvNw) — Ukrainian Lessons\n>\n> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview\n>\n> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n| --- | --- | --- | --- | --- | --- |\n| аудиторія |  |  | noun | ж |  |\n| бариста |  |  | noun | ч |  |\n| біб |  |  | noun | ч |  |\n| випрасти |  |  | verb | - |  |\n| ворон |  |  | noun | ж |  |\n| воронень |  |  | noun | ч |  |\n| засміятися |  |  | verb | ж |  |\n| злочинець |  |  | noun | ч |  |\n| злочинка |  |  | noun | ч |  |\n| зникнути |  |  | verb | с |  |\n| зустрічати |  |  | verb | - |  |\n| кохати |  |  | verb | - |  |\n| легко | /ˈlɛɦkɔ/ | easily | adv | - | from легкий |\n| лінуватися |  |  | verb | - |  |\n| література |  |  | noun | ж |  |\n| мозок |  |  | noun | ч |  |\n| морок |  |  | noun | ч |  |\n| міцний |  |  | adj | ч |  |\n| надихати |  |  | verb | - |  |\n| найскладніший |  |  | adj | - |  |\n| нота |  |  | noun | ж |  |\n| перехожий |  |  | noun | ч |  |\n| по-новому |  |  | adv | - |  |\n| поетка |  |  | noun | ж |  |\n| практикуватися |  |  | verb | - |  |\n| прилетіти |  |  | verb | ж |  |\n| проводжати |  |  | verb | - |  |\n| проворонити |  |  | verb | ж |  |\n| простіше |  |  | adv | - |  |\n| піднімати |  |  | verb | - |  |\n| розслідувати |  |  | verb | - |  |\n| розцвіти |  |  | verb | ч |  |\n| скелет |  |  | noun | ч |  |\n| сполучник |  |  | noun | ч |  |\n| створювати |  |  | verb | - |  |\n| том |  |  | noun | ч |  |\n| томе |  |  | interj | - |  |\n| хитр |  |  | noun | ж |  |\n| цеглина |  |  | noun | ж |  |\n| цемент |  |  | noun | ч |  |\n| частий |  |  | adj | - |  |\n| ідеально |  |  | adv | - |  |\n| інспектор |  |  | noun | ч |  |\n",
-    "createdAt": "2025-12-31T22:57:03.607310Z",
-    "modifiedAt": "2025-12-31T22:57:03.607310Z",
+    "rawMarkdown": "## Warm-up: Knowledge Check\n\n**Congratulations! You are almost at the finish line of the A2 level.**\n\nBy now, you know many words, can communicate on basic topics, and understand spoken Ukrainian. But are you speaking _correctly_? Grammar is the skeleton of a language. If the skeleton is strong, you can express complex thoughts accurately and beautifully.\n\nToday we will review the most challenging and important topics:\n\n1. **The Seven Cases** - From Nominative to Vocative.\n2. **Verb Aspect** - How to distinguish between process and result.\n3. **Complex Sentences** - Using connectors like _тому що_, _якщо_, and _щоб_.\n\n> [!important] **Advice**\n> Don't be afraid to make mistakes. Even native speakers stumble sometimes. The key is to practice every day and pay attention to the patterns you hear!\n\n## Presentation: Grammar Guide\n\n### The 7 Cases: Quick Guide\n\nUkrainian has seven cases that change the endings of nouns, adjectives, and pronouns to show their role in a sentence.\n\n| Case             | Question           | Function                  | Prepositions       | Example                                  |\n| ---------------- | ------------------ | ------------------------- | ------------------ | ---------------------------------------- |\n| **Nominative**   | Хто? Що?           | Subject                   | -                  | **Студент** читає.                       |\n| **Genitive**     | Кого? Чого?        | Possession, Absence, From | без, до, від, з, у | Немає **грошей**. З **Києва**.           |\n| **Dative**       | Кому? Чому?        | Recipient, Feeling, Age   | для (Gen!), -      | **Мені** холодно. **Студенту** 20 років. |\n| **Accusative**   | Кого? Що?          | Object, Direction         | в, про, через      | Я бачу **сестру**. Я йду в **кіно**.     |\n| **Instrumental** | Ким? Чим?          | With, By, As              | з, над, під        | Я пишу **ручкою**. Я працюю **лікарем**. |\n| **Locative**     | (на/у) Кому? Чому? | Location                  | в, на, по          | Я в **кімнаті**. На **столі**.           |\n| **Vocative**     | -                  | Addressing                | -                  | **Мамо!** **Андрію!**                    |\n\n### Aspect: Process vs Result\n\nVerbs in Ukrainian come in pairs. One shows the process (Imperfective), and the other shows the completed result (Perfective).\n\n- **Imperfective (Недоконаний вид)**: Process, Habit, Duration.\n  - _Я писав лист 2 години._ (I was writing).\n  - _Я часто купував каву._ (I often bought).\n- **Perfective (Доконаний вид)**: Result, One-time completed action.\n  - _Я написав лист._ (I wrote/have written).\n  - _Я купив каву._ (I bought).\n\n### Complex Sentences\n\nTo speak fluently, connect your ideas using these logical connectors:\n\n- **тому що** (because): _Я не пішов, тому що я захворів._\n- **щоб** (in order to): _Я вчуся, щоб знайти роботу._\n- **який** (which/who): _Це друг, який живе в Києві._\n- **коли** (when): _Коли я прийшов, вона спала._\n- **якщо** (if): _Якщо буде дощ, ми будемо вдома._\n\n## Practice\n\n### Story Time: The Grammar Detective\n\nAn inspector is investigating a case. Notice how the endings change based on the roles of the words:\n\nІнспектор Граматика розслідує справу. Він прийшов у **кімнату** (Знахідний - Direction). Там він побачив **студента** (Знахідний - Object).\n— Що ви робили вчора о 5-й годині? — запитав інспектор.\n— Я **писав** (Недоконаний - Process) тест, — відповів студент.\n— Ви **написали** (Доконаний - Result) його?\n— Ні, я не **дописав**, тому що **світло** (Називний - Subject) зникло.\n— З ким ви були?\n— Я був з **другом** (Орудний - With).\n— Де ви були?\n— Ми були в **бібліотеці** (Місцевий - Location).\n\nІнспектор подумав. Все було правильно. Студент знав відмінки. Він не міг бути злочинцем. Злочинці не знають граматику!\n\n> [!important] **Tip** \"Word Order\"\n> Ukrainian word order is flexible but not random. Changing the order changes the emphasis:\n>\n> - Neutral: Subject - Verb - Object (_Я люблю каву_).\n> - Emphasis: Object - Verb - Subject (_Каву люблю я_ - It is ME who loves coffee).\n> - Question: Verb - Subject? (_Любиш ти каву?_).\n\n### Story Time: A Letter Home (Correct the Mistakes)\n\nHi Mom! Here is a letter with typical learner mistakes. Can you find them?\n\n\"Привіт, **мама** (Error: Vocative -> Мамо)!\nЯ живу в **Київ** (Error: Loc -> Києві).\nУ мене є **кіт** (Correct). Його звати Мурчик.\nЯ працюю **програміст** (Error: Instr -> програмістом).\nЯ люблю **Україна** (Error: Acc -> Україну).\nВчора я **купував** (Context: bought and finished -> купив) машину.\nВона **червоний** (Error: Fem -> червона).\nЯ щасливий!\"\n\n(In the activities, you will fix these!)\n\n### Review in Dialogue\n\n— Привіт! Ти **зробив** домашнє завдання? (Result)\n— Ні, я ще **роблю**. (Process)\n— Чому? Це ж легко.\n— Тому що я не розумію **відмінки** (Acc).\n— Давай я допоможу **тобі** (Dat).\n— Дякую! Ти справжній друг.\n— Без **проблем**. Для цього є друзі.\n\n> [!important] **Important** \"Grammar is Fun!\"\n> Do not be afraid of grammar. It is a logic puzzle. Ukrainian grammar is very logical. Once you understand the pattern, you can build any sentence.\n\n### Story Time: The Grammar Fairy\n\nOnce upon a time, there was a student named Tom who struggled with grammar...\n\nЖив-був студент Том. Він не любив граматику. Він говорив: \"Моя твоя не розуміти\". Одного разу до нього прилетіла Граматична Фея.\n— Томе! — сказала вона. — Чому ти говориш як робот?\n— Я не знаю **відмінки**, — зітхнув Том.\n— Це просто, — сказала Фея. — Дивись.\nВона дала йому чарівні окуляри. Том одягнув їх і побачив світ по-новому.\nВін побачив, що **книга** (Називний) лежить на **столі** (Місцевий). Він побачив, що він пише **ручкою** (Орудний). Він побачив, що він йде до **друга** (Родовий).\n— Ого! — вигукнув Том. — Тепер я бачу зв'язки!\nЗ того дня Том говорив **правильно** і красиво. Він зрозумів, що граматика — це магія, яка з'єднує слова.\n\n### Story Time: Grammar in Action\n\nJohn moved to Kyiv knowing only words but no grammar. Let's see how he improved...\n\nОдного разу іноземець Джон приїхав у Київ. Він знав слова, але не знав граматику. Він хотів купити **каву** (Знахідний). Він зайшов у кав'ярню і сказав:\n— Я хотіти кава. (Nom/Inf error).\nБариста усміхнувся, але зрозумів. Потім Джон хотів знайти **метро** (Знахідний). Він запитав перехожого: \"Де є метро?\". \"Прямо і наліво\", — відповів перехожий. Джон сів у **поїзд** (Знахідний) і поїхав у **парк** (Знахідний).\nУ парку він зустрів дівчину. Вона читала **книгу** (Знахідний).\n— Привіт, — сказав Джон. — Ти читати книга? (Error).\nДівчина засміялася. \"Ні, я читаю книгу\", — виправила вона. Джон зрозумів, що треба вчити відмінки. Через рік він говорив ідеально: \"Я читаю українську літературу і спілкуюся з цікавими людьми\".\n\n### Story Time: The Grammar Exam\n\nСьогодні у студентів іспит з граматики. Професор дає завдання.\n— Слухайте уважно, — каже він.\n— Студент **Іван** (Називний) пише **вправу** (Знахідний) **ручкою** (Орудний).\n— Студентка **Марія** (Називний) мріє про **відпустку** (Знахідний).\n— Вони сидять в **аудиторії** (Місцевий).\nПрофесор запитує: \"Хто знає, де помилка?\".\nІван піднімає руку. \"Я не пишу, я думаю!\" — каже він. Професор сміється: \"Правильно. 'Думати' — це теж дія. Це Недоконаний вид\".\nВсі студенти здали іспит на \"відмінно\".\n\n### Dialogue: Grammar Debate\n\n— Чому українська мова така складна? — питає Джон.\n— Вона не складна, вона багата, — каже Марія.\n— Але ці відмінки... Навіщо їх так багато?\n— Щоб бути точним. Дивись: \"Я кохаю тебе\" (I love you) і \"Тебе я кохаю\" (It is YOU I love) — це різні акценти.\n— Так, але в англійській простіше.\n— Простіше не означає краще. Українська мова — як музика. Кожне закінчення — це нота.\n— Красиво сказано. Ти поетка?\n— Ні, я просто люблю свою мову.\n— Добре, я буду вчити ноти.\n\n### Why Grammar Matters?\n\nGrammar is the cement that holds the bricks of language together. Without it, your \"house\" of communication will fall apart. In Ukraine, they say: \"Зустрічають по одягу, а проводжають по розуму\" (They meet you by your clothes, but see you off by your mind). Grammar is your intellectual \"clothing.\"\nЯкщо ви говорите правильно, люди вас поважають.\nТому не лінуйтеся. Вчіть правила!\n\n### Tongue Twisters (Скоромовки) for Grammar\n\nPracticing these helps with endings:\n\n1. **Ворона** проворонила **вороненя**. (Crow missed the baby crow).\n2. **Бабин** біб розцвів у **дощ** - буде **бабі** біб у **борщ**. (Bean in rain, bean for grandma in borscht).\n3. **Хитру** сороку спіймати **мороку**, а на сорок сорок - сорок **морок**. (Catching a magpie is trouble).\n\n### Story Time: The Lost Tourist\n\nМайкл гуляв по **Львову** (Місцевий). Він шукав **Оперний театр** (Знахідний). Він запитав у бабусі: \"Вибачте, де театр?\". \"Іди прямо по **вулиці** (Місцевий), потім поверни на **площу** (Знахідний)\". Майкл подякував **бабусі** (Давальний). Він знайшов театр. Це була красива будівля.\nВін купив **квиток** (Знахідний) на балет і дивився виставу з великим **задоволенням** (Орудний).\nЛьвів — це місто, яке надихає.\n\n### Useful Phrases for Communication\n\nIf you make a mistake, don't worry! Use these phrases:\n\n- Вибачте, я тільки вчуся. (_Sorry, I am just learning_).\n- Виправте мене, будь ласка. (_Correct me, please_).\n- Як правильно сказати...? (_How to say correctly...?_).\n- Я не розумію, повторіть будь ласка. (_I don't understand, repeat please_).\n\n> [!cultural] **Cultural Insight** \"Surzhyk\"\n> You might hear people mixing Ukrainian and Russian. This is called **Surzhyk**. It often ignores grammar rules of both languages. As a learner, stick to standard Ukrainian (_літературна мова_) to gain respect and clarity.\n\n### Common Mistakes (Часті помилки)\n\nHere are errors that students often make:\n\n1. **Walking IN the park.** (Я гуляю в парку — Locative).\n2. **Thanking.** (Дякую тобі — Dative).\n3. **Playing games.** (Грати у футбол — Accusative).\n4. **My name is...** (Мене звати Том — Accusative).\n\n# Summary\n\nThis review covered:\n\n- **Cases**: The backbone of the sentence (Subj, Obj, Loc, Instr...).\n- **Aspect**: The timeline of the verb (Process vs Result).\n- **Structure**: Complex sentences make you sound smart.\n\nYou are now ready for the **Final Checkpoint**. Good luck!\n",
+    "createdAt": "2026-01-04T21:33:28.303182Z",
+    "modifiedAt": "2026-01-04T21:33:28.303182Z",
     "version": 2
   },
   "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A2-56",
     "level": "A2",
-    "phase": "A2",
-    "wordCount": 43,
-    "newWordCount": 43,
+    "phase": "A2.1",
+    "wordCount": 0,
+    "newWordCount": 0,
     "reviewWordCount": 0,
     "transliterationMode": "none",
-    "words": [
+    "words": [],
+    "reviewWords": []
+  },
+  "external_resources": {
+    "podcasts": [
       {
-        "id": "vocab-1",
-        "uk": "аудиторія",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
+        "episode_id": "ULP-041",
+        "title": "ULP 2-41 Review: Season 1",
+        "url": "https://www.ukrainianlessons.com/lesson/41/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: review"
       },
       {
-        "id": "vocab-2",
-        "uk": "бариста",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
+        "episode_id": "ULP-045",
+        "title": "ULP 2-45 Review: 41-44 + My home",
+        "url": "https://www.ukrainianlessons.com/lesson/45/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: review"
       },
       {
-        "id": "vocab-3",
-        "uk": "біб",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
+        "episode_id": "ULP-050",
+        "title": "ULP 2-50 Review: 46-49 + What I eat in a day in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/50/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: review"
       },
       {
-        "id": "vocab-4",
-        "uk": "випрасти",
-        "ipa": "",
-        "en": "",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
+        "episode_id": "ULP-055",
+        "title": "ULP 2-55 Review: 51-54 – What's on my phone",
+        "url": "https://www.ukrainianlessons.com/lesson/55/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: review"
       },
       {
-        "id": "vocab-5",
-        "uk": "ворон",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-6",
-        "uk": "воронень",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-7",
-        "uk": "засміятися",
-        "ipa": "",
-        "en": "",
-        "pos": "verb",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-8",
-        "uk": "злочинець",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-9",
-        "uk": "злочинка",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-10",
-        "uk": "зникнути",
-        "ipa": "",
-        "en": "",
-        "pos": "verb",
-        "gender": "n",
-        "note": ""
-      },
-      {
-        "id": "vocab-11",
-        "uk": "зустрічати",
-        "ipa": "",
-        "en": "",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-12",
-        "uk": "кохати",
-        "ipa": "",
-        "en": "",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-13",
-        "uk": "легко",
-        "ipa": "/ˈlɛɦkɔ/",
-        "en": "easily",
-        "pos": "adv",
-        "gender": null,
-        "note": "from легкий"
-      },
-      {
-        "id": "vocab-14",
-        "uk": "лінуватися",
-        "ipa": "",
-        "en": "",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-15",
-        "uk": "література",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-16",
-        "uk": "мозок",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-17",
-        "uk": "морок",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-18",
-        "uk": "міцний",
-        "ipa": "",
-        "en": "",
-        "pos": "adj",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-19",
-        "uk": "надихати",
-        "ipa": "",
-        "en": "",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-20",
-        "uk": "найскладніший",
-        "ipa": "",
-        "en": "",
-        "pos": "adj",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-21",
-        "uk": "нота",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-22",
-        "uk": "перехожий",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-23",
-        "uk": "по-новому",
-        "ipa": "",
-        "en": "",
-        "pos": "adv",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-24",
-        "uk": "поетка",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-25",
-        "uk": "практикуватися",
-        "ipa": "",
-        "en": "",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-26",
-        "uk": "прилетіти",
-        "ipa": "",
-        "en": "",
-        "pos": "verb",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-27",
-        "uk": "проводжати",
-        "ipa": "",
-        "en": "",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-28",
-        "uk": "проворонити",
-        "ipa": "",
-        "en": "",
-        "pos": "verb",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-29",
-        "uk": "простіше",
-        "ipa": "",
-        "en": "",
-        "pos": "adv",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-30",
-        "uk": "піднімати",
-        "ipa": "",
-        "en": "",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-31",
-        "uk": "розслідувати",
-        "ipa": "",
-        "en": "",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-32",
-        "uk": "розцвіти",
-        "ipa": "",
-        "en": "",
-        "pos": "verb",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-33",
-        "uk": "скелет",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-34",
-        "uk": "сполучник",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-35",
-        "uk": "створювати",
-        "ipa": "",
-        "en": "",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-36",
-        "uk": "том",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-37",
-        "uk": "томе",
-        "ipa": "",
-        "en": "",
-        "pos": "interj",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-38",
-        "uk": "хитр",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-39",
-        "uk": "цеглина",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-40",
-        "uk": "цемент",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-41",
-        "uk": "частий",
-        "ipa": "",
-        "en": "",
-        "pos": "adj",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-42",
-        "uk": "ідеально",
-        "ipa": "",
-        "en": "",
-        "pos": "adv",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-43",
-        "uk": "інспектор",
-        "ipa": "",
-        "en": "",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
+        "episode_id": "ULP-060",
+        "title": "ULP 2-60 Review: 56-60 – My week in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/60/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: review"
       }
     ],
-    "reviewWords": []
+    "youtube": [
+      {
+        "title": "Ukrainian Cases Explained",
+        "url": "https://www.youtube.com/watch?v=xVD1GRxnvNw",
+        "relevance": "high",
+        "channel": "Ukrainian Lessons"
+      }
+    ],
+    "articles": [
+      {
+        "title": "Ukrainian Grammar",
+        "url": "https://www.ukrainianlessons.com/ukrainian-tenses/",
+        "relevance": "high",
+        "source": "Grammar overview"
+      }
+    ],
+    "books": [],
+    "websites": [
+      {
+        "title": "Talk Ukrainian",
+        "url": "https://talkukrainian.com/",
+        "relevance": "high",
+        "source": "Practice exercises"
+      }
+    ]
   }
 }

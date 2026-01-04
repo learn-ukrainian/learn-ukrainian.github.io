@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): запізнюватися, починати, програвати, вставати, згадувати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): вставати, відвідувати, починати, вигравати, запізнюватися...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -13,9 +13,9 @@
 
 ## Gates
 - **Words:** ✅ 1790/1750
-- **Activities:** ✅ 16/14
+- **Activities:** ✅ 15/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 98-100% (vocab))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ⏳ Pending validation

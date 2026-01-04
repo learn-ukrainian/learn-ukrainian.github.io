@@ -1,0 +1,21 @@
+module: c1-03
+title: "Дієслова наукового дослідження"
+subtitle: "Research Verbs"
+version: "1.0"
+phase: "C1.1 Academic Foundation"
+focus: grammar
+pedagogy: "grammar"
+duration: 120
+transliteration: none
+tags:
+  - academic
+  - verbs
+  - research
+grammar:
+  - "Research verbs (Investigative, Argumentative, Presentation, Conclusion)"
+objectives:
+  - "Master verbs for describing research processes"
+  - "Learn to distinguish between investigative and argumentative verbs"
+  - "Practice using presentation and conclusion verbs in academic context"
+vocabulary_count: 30
+slug: 03-research-verbs

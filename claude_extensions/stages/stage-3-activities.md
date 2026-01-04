@@ -113,6 +113,72 @@ See `docs/ACTIVITY-MARKDOWN-REFERENCE.md` for complete cloze syntax.
 
 **WARN** = Passes with warning. **FAIL** = Blocks approval.
 
+## Special Requirements: Content-Heavy Modules
+
+**Content-heavy modules** (B2 History, C1 Literature/Biography/Folk/Arts) have **different requirements**:
+
+| Aspect         | Standard Module | Content-Heavy Module        |
+| -------------- | --------------- | --------------------------- |
+| Activity Count | 14+ (B2/C1)     | **10-12** (reduced)         |
+| Activity Mix   | All types       | **Comprehension-focused**   |
+| Quiz Questions | General         | **MUST reference text**     |
+| Purpose        | Drill practice  | **Language comprehension**  |
+
+### The Golden Rule for Content-Heavy Modules
+
+<critical>
+
+**"Can the learner answer this without reading the Ukrainian text?"**
+
+- **If YES** → Rewrite (tests content knowledge, not language)
+- **If NO** → Keep (tests Ukrainian comprehension)
+
+</critical>
+
+### Activity Mix for Content-Heavy Modules (10-12 total)
+
+| Activity Type        | Count | Key Requirement                                                  |
+| -------------------- | ----- | ---------------------------------------------------------------- |
+| quiz                 | 4-5   | MUST start with "Згідно з текстом..."                            |
+| fill-in / cloze      | 3-4   | Test collocations (чинити спротив, відіграти роль, брати участь) |
+| error-correction     | 2-3   | Fix GRAMMAR errors, NOT factual inaccuracies                     |
+| match-up             | 1-2   | Ukrainian term ↔ Ukrainian definition                            |
+| select / mark-words  | 1-2   | Find grammatical features in text                                |
+
+### Forbidden vs Required Patterns (Quiz Questions)
+
+❌ **FORBIDDEN** (Tests Content Recall):
+- "У якому році..." (dates)
+- "Хто був..." (names)
+- "Скільки..." (numbers)
+- "Що символізує..." (interpretation without text reference)
+
+✅ **REQUIRED** (Tests Ukrainian Language):
+- "Згідно з текстом, як автор..."
+- "У тексті модуля автор характеризує..."
+- "Яку функцію автор підкреслює..."
+- "Який аргумент автор наводить..."
+
+### Self-Check Before Delivering
+
+For EVERY quiz question in content-heavy modules:
+
+1. Can learner answer without reading Ukrainian module text?
+2. If YES → You're testing history/literature. STOP and rewrite.
+3. If NO → You're testing Ukrainian. Proceed.
+
+### Applies To
+
+| Level  | Module Range | Focus                     |
+| ------ | ------------ | ------------------------- |
+| **B2** | M71-131      | History (61 modules)      |
+| **C1** | M146-160     | Literature (15 modules)   |
+| **C1** | M36-100      | Biography (65 modules)    |
+| **C1** | M121-145     | Folk Culture (25 modules) |
+| **C1** | Various      | Fine Arts expansion       |
+
+---
+
 ## Activity Matrix by Level
 
 | Activity         | A1          | A2  | B1  | B2  | C1  | C2  |

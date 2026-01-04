@@ -6,22 +6,21 @@
 - ❌ Line 206: Empty Header detected (Lonely '#'). Remove or add title.
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): невигідний, доступний, ціна, акція, якість...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): вибирати, рекомендувати, порівнювати, вигідний, дорогий...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 40/100)
+**📝 UPDATE** (severity 30/100)
 
-- Borderline case (severity 40/100)
+- Borderline case (severity 30/100)
 - 1 pedagogical violations (minor)
 - Immersion 18% off target
-- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1242/1000
-- **Activities:** ✅ 11/10
-- **Density:** ❌ 1 < 12
-- **Unique_types:** ✅ 11/4 types
+- **Activities:** ✅ 10/10
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
@@ -29,14 +28,9 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ❌ 1 Format Errors
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** ❌ 22.1% LOW (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| English to Ukrainian | translate | 0 | 6 | Add 6 more items |
-
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -148,106 +148,22 @@
     right: to inspect/sightsee
   - left: '- писати'
     right: to write
-- type: fill-in
+- type: cloze
   title: My Hobbies
-  items:
-  - sentence: Я люблю ____ на гітарі.
-    answer: грати
-    options:
-    - грати
-    - спати
-    - їсти
-    - йти
-    explanation: I like to play guitar.
-  - sentence: Вона ____ красиві картини.
-    answer: малює
-    options:
-    - малює
-    - співає
-    - читає
-    - п'є
-    explanation: She paints pictures.
-  - sentence: Ми йдемо в ____ на новий фільм.
-    answer: кіно
-    options:
-    - кіно
-    - театр
-    - музей
-    - парк
-    explanation: To the cinema for a movie.
-  - sentence: Це моє улюблене ____.
-    answer: хобі
-    options:
-    - хобі
-    - хоббі
-    - хобба
-    - хобу
-    explanation: Hobby.
-  - sentence: У мене є два ____ на концерт.
-    answer: квитки
-    options:
-    - квитки
-    - намети
-    - сцени
-    - поїзди
-    explanation: 'Tickets (plural 2-4: nom pl often used in early A2, or gen sg. Wait, 2 requires Nom Plural stress/form.
-      Квитки is correct).'
-  - sentence: Ми ____ старий замок.
-    answer: оглядаємо
-    options:
-    - оглядаємо
-    - співаємо
-    - малюємо
-    - спимо
-    explanation: We are sightseeing/inspecting the castle.
-  - sentence: Він ____ марки.
-    answer: колекціонує
-    options:
-    - колекціонує
-    - грає
-    - танцює
-    - йде
-    explanation: He collects stamps.
-  - sentence: Я хочу ____ світом.
-    answer: подорожувати
-    options:
-    - подорожувати
-    - малювати
-    - грати
-    - читати
-    explanation: To travel the world (Instr).
-  - sentence: Артист стоїть на ____.
-    answer: сцені
-    options:
-    - сцені
-    - наметі
-    - квитку
-    - лісі
-    explanation: On stage (Locative).
-  - sentence: Ми спимо в ____.
-    answer: наметі
-    options:
-    - наметі
-    - кіно
-    - театрі
-    - сцені
-    explanation: In a tent.
-  - sentence: Це цікава ____.
-    answer: виставка
-    options:
-    - виставка
-    - квиток
-    - намет
-    - хобі
-    explanation: Interaction exhibition (feminine).
-  - sentence: ____ аплодують.
-    answer: Глядачі
-    options:
-    - Глядачі
-    - Квитки
-    - Намети
-    - Музеї
-    explanation: Spectators applaud.
+  passage: 'Я люблю {грати|спати|їсти|йти}_ на гітарі. Вона {малює|співає|читає|п''є}_
+    красиві картини. Ми йдемо в {кіно|театр|музей|парк}_ на новий фільм.
+
+
+    Це моє улюблене {хобі|хоббі|хобба|хобу}_. У мене є два {квитки|намети|сцени|поїзди}_
+    на концерт. Ми {оглядаємо|співаємо|малюємо|спимо}_ старий замок.
+
+
+    Він {колекціонує|грає|танцює|йде}_ марки. Я хочу {подорожувати|малювати|грати|читати}_
+    світом. Артист стоїть на {сцені|наметі|квитку|лісі}_.
+
+
+    Ми спимо в {наметі|кіно|театрі|сцені}_. Це цікава {виставка|квиток|намет|хобі}_.
+    {Глядачі|Квитки|Намети|Музеї}_ аплодують.'
 - type: true-false
   title: Cultural Leisure
   items:
@@ -557,8 +473,9 @@
     Ввечері ми обговорювали {враження|проблеми|гроші} і пили {чай|воду|суп}.'
 - type: mark-the-words
   title: Hobbies Search
-  text: Мій брат любить *подорожувати*. Він бере *намет* і йде в гори. Моя сестра любить *малювати*. Вона завжди купує фарби.
-    Я люблю *театр*. Я часто купую *квитки* на вистави. Мій батько любить *риболовлю*. Це його *хобі*. Мама любить *співати*
+  text: Мій брат любить *подорожувати*. Він бере *намет* і йде в гори. Моя сестра
+    любить *малювати*. Вона завжди купує фарби. Я люблю *театр*. Я часто купую *квитки*
+    на вистави. Мій батько любить *риболовлю*. Це його *хобі*. Мама любить *співати*
     в хорі. У кожного свій *відпочинок*.
 - type: select
   title: Choose Correct Verb
@@ -590,7 +507,8 @@
       correct: true
     - text: Писати
       correct: false
-    explanation: 'Paint pictures (Малювати). Note: artists say "писати картину", but "малювати" is standard for learners.'
+    explanation: 'Paint pictures (Малювати). Note: artists say "писати картину", but
+      "малювати" is standard for learners.'
   - question: __ гопак.
     options:
     - text: Танцювати

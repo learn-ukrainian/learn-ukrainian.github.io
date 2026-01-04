@@ -1,40 +1,50 @@
 # Audit Report: 122-pomarancheva-revoliutsiia.md
-**Phase:** B2.3d | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.3d | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Untitled' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 6/6 items with placeholders/missing errors.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1981/1750
-- **Activities:** ✅ 14/14
-- **Density:** ✅ All > 16
+- **Words:** ✅ 1930/1400
+- **Activities:** ✅ 14/10
+- **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/6
+- **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/35
+- **Vocab:** ✅ 35/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 100.0% (target 98-100% (vocab))
-- **Richness:** ✅ 95% (history)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ⚠️ Too many activities: 14 (target 10-12)
+- **Immersion:** 🇺🇦 100.0% (target 98-100% (history))
+- **Richness:** ❌ 92% < 95% min (history)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 95% (minimum: 95%)
+**Score:** 92% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 7 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 4 | 3 | 100% | 24% | 23.8% |
 | engagement | 6 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| timeline_markers | 27 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 3 | 4 | 75% | 10% | 7.1% |
-| visual | 3 | 4 | 75% | 10% | 7.1% |
+| visual | 2 | 4 | 50% | 10% | 4.8% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 4 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **95.2%** |
+| **TOTAL** | | | | | **92.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -46,4 +56,4 @@
 | **Аналіз політичної стратегії** | ✅ | 530 | Included in Core |
 | **Первинні джерела** | ⚪️ | 259 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 109 | Skipped |
-| **Підсумок** | ✅ | 108 | Included in Core |
+| **Підсумок** | ✅ | 57 | Included in Core |

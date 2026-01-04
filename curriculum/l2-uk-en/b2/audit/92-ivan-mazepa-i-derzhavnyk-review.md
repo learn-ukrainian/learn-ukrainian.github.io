@@ -1,20 +1,21 @@
 # Audit Report: 92-ivan-mazepa-i-derzhavnyk.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "CBI" | **Target:** 1750
+**Phase:** B2.3b | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1968/1750
-- **Activities:** ✅ 14/14
-- **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Words:** ✅ 1878/1400
+- **Activities:** ✅ 13/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/6
+- **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 35/35
+- **Vocab:** ✅ 92/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.8% (target 98-100% (vocab))
+- **Content_heavy:** ⚠️ Too many activities: 13 (target 10-12)
+- **Immersion:** 🇺🇦 99.9% (target 98-100% (history))
 - **Richness:** ✅ 98% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -26,7 +27,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 9 | 3 | 100% | 24% | 23.8% |
-| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 7 | 4 | 100% | 10% | 9.5% |
@@ -36,16 +37,10 @@
 | questions | 5 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **98.2%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Іван Мазепа I: державник** | ⚪️ | 86 | Skipped |
+| **Intro/Narrative** | ✅ | 86 | Included in Core |
 | **Вступ** | ⚪️ | 201 | Skipped |
 | **Шлях до булави: молодість і освіта** | ⚪️ | 341 | Skipped |
 | **Коломацька рада 1687 року** | ⚪️ | 285 | Skipped |
@@ -53,5 +48,3 @@
 | **Стабільність і порядок** | ⚪️ | 237 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 244 | Skipped |
 | **Підсумок** | ✅ | 156 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |
-| **Ресурси** | ⚪️ | 90 | Skipped |

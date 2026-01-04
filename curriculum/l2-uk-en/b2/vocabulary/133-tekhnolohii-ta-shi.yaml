@@ -1,0 +1,129 @@
+module: 133-tekhnolohii-ta-shi
+level: B2
+version: '2.0'
+items:
+- lemma: технологія
+  ipa: /texnoˈlɔɦʲija/
+  translation: technology
+  pos: noun
+  gender: f
+- lemma: програма
+  ipa: /proˈɦrama/
+  translation: program, application
+  pos: noun
+  gender: f
+- lemma: додаток
+  ipa: /doˈdatok/
+  translation: app, application
+  pos: noun
+  gender: m
+- lemma: код
+  ipa: /ˈkɔd/
+  translation: code
+  pos: noun
+  gender: m
+- lemma: алгоритм
+  ipa: /alɦoˈrɪtm/
+  translation: algorithm
+  pos: noun
+  gender: m
+- lemma: дані
+  ipa: /ˈdanʲi/
+  translation: data
+  pos: noun
+  gender: pl
+- lemma: хмара
+  ipa: /ˈxmara/
+  translation: cloud (computing)
+  pos: noun
+  gender: f
+- lemma: сервер
+  ipa: /ˈserwer/
+  translation: server
+  pos: noun
+  gender: m
+- lemma: мережа
+  ipa: /meˈreʒa/
+  translation: network
+  pos: noun
+  gender: f
+- lemma: кіберзахист
+  ipa: /kʲiberˈzaxɪst/
+  translation: cybersecurity
+  pos: noun
+  gender: m
+- lemma: штучний інтелект
+  ipa: /ˈʃtutʃnɪj inteˈlekt/
+  translation: artificial intelligence
+  pos: noun
+  gender: m
+- lemma: нейромережа
+  ipa: /ˈnejromeˈreʒa/
+  translation: neural network
+  pos: noun
+  gender: f
+- lemma: інтерфейс
+  ipa: /interˈfejs/
+  translation: interface
+  pos: noun
+  gender: m
+- lemma: оновлення
+  ipa: /oˈnɔwlenʲːa/
+  translation: update
+  pos: noun
+  gender: n
+- lemma: баг
+  ipa: /ˈbaɦ/
+  translation: bug
+  pos: noun
+  gender: m
+- lemma: розробник
+  ipa: /rozˈrɔbnɪk/
+  translation: developer
+  pos: noun
+  gender: m
+- lemma: програміст
+  ipa: /proɦraˈmʲist/
+  translation: programmer
+  pos: noun
+  gender: m
+- lemma: завантажувати
+  ipa: /zawantaˈʒuwatɪ/
+  translation: to download/upload
+  pos: verb
+  aspect: impf
+- lemma: посилання
+  ipa: /posɪˈlanʲːa/
+  translation: link
+  pos: noun
+  gender: n
+- lemma: база даних
+  ipa: /ˈbaza ˈdanɪx/
+  translation: database
+  pos: noun
+  gender: f
+- lemma: зашифрувати
+  ipa: /zaʃɪfruˈwatɪ/
+  translation: to encrypt
+  pos: verb
+  aspect: pf
+- lemma: пароль
+  ipa: /paˈrolʲ/
+  translation: password
+  pos: noun
+  gender: m
+- lemma: аутентифікація
+  ipa: /autentɪfʲiˈkatsʲija/
+  translation: authentication
+  pos: noun
+  gender: f
+- lemma: резервна копія
+  ipa: /reˈzerwna ˈkɔpʲija/
+  translation: backup
+  pos: noun
+  gender: f
+- lemma: стартап
+  ipa: /starˈtap/
+  translation: startup
+  pos: noun
+  gender: m

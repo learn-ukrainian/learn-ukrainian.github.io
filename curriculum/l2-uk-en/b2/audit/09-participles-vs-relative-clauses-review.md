@@ -1,20 +1,26 @@
 # Audit Report: 09-participles-vs-relative-clauses.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "TTT" | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.1a | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Overall Status:** ❌ FAIL
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- Activity count below minimum
 
 ## Gates
-- **Words:** ✅ 2037/1750
-- **Activities:** ✅ 14/14
+- **Words:** ✅ 1988/1750
+- **Activities:** ❌ 13/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 112/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.3% (target 98-100% (grammar))
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.9% (target 98-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -31,27 +37,20 @@
 | variety | 0.97 | - | 97% | 10% | 9.7% |
 | cultural | 5 | 3 | 100% | 10% | 10.0% |
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 4 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.92 | - | 92% | 5% | 4.6% |
+| visual | 3 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.91 | - | 91% | 5% | 4.6% |
 | questions | 29 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.3%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
+| **TOTAL** | | | | | **99.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Дієприкметники проти підрядних речень** | ⚪️ | 5 | Skipped |
+| **Intro/Narrative** | ✅ | 5 | Included in Core |
 | **Тест: Прочитайте текст** | ✅ | 239 | Included in Core |
 | **Пояснення** | ⚪️ | 971 | Skipped |
 | **Практика** | ⚪️ | 251 | Skipped |
-| **Діалоги** | ✅ | 401 | Included in Core |
+| **Діалоги** | ✅ | 352 | Included in Core |
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Що ми вивчили** | ⚪️ | 110 | Skipped |
 | **Самоперевірка** | ⚪️ | 60 | Skipped |
-| **Словник** | ⚪️ | 0 | Skipped |

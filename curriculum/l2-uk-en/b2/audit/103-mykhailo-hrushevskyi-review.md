@@ -1,20 +1,21 @@
 # Audit Report: 103-mykhailo-hrushevskyi.md
-**Phase:** B2.3b | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Phase:** B2.3b | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1821/1750
-- **Activities:** ✅ 14/14
-- **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Words:** ✅ 1821/1400
+- **Activities:** ✅ 13/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/6
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 54/35
+- **Vocab:** ✅ 54/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 100.0% (target 98-100% (vocab))
+- **Content_heavy:** ⚠️ Too many activities: 13 (target 10-12); 1 cloze with year blanks
+- **Immersion:** 🇺🇦 100.0% (target 98-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation
 

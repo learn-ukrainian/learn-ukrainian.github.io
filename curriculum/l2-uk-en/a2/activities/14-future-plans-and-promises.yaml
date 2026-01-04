@@ -25,83 +25,32 @@
     right: will be drinking
   - left: '- вип''ю'
     right: will drink up
-- type: fill-in
+- type: cloze
   title: Choose the Correct Future
-  items:
-  - sentence: Я ___ книгу завтра.
-    answer: прочитаю
-    options:
-    - буду читати
-    - прочитаю
-  - sentence: Вона ___ цілий день.
-    answer: буде працювати
-    options:
-    - буде працювати
-    - попрацює
-  - sentence: Він ___ тобі! (will write — promise)
-    answer: напише
-    options:
-    - буде писати
-    - напише
-  - sentence: Ми ___ щодня. (will read — habit)
-    answer: будемо читати
-    options:
-    - будемо читати
-    - прочитаємо
-  - sentence: Я ___ це! (will do — promise)
-    answer: зроблю
-    options:
-    - буду робити
-    - зроблю
-  - sentence: Вони ___ увечері.
-    answer: будуть їсти
-    options:
-    - будуть їсти
-    - з'їдять
-  - sentence: Я ___ завтра.
-    answer: зроблю
-    options:
-    - робитиму
-    - зроблю
-  - sentence: Вона ___ кожного дня.
-    answer: читатиме
-    options:
-    - читатиме
-    - прочитає
-  - sentence: Ти ___ правду? (will you tell — ask for result)
-    answer: скажеш
-    options:
-    - будеш говорити
-    - скажеш
-  - sentence: Ми ___ в понеділок. (will arrive — result)
-    answer: приїдемо
-    options:
-    - будемо їхати
-    - приїдемо
-  - sentence: Вона ___ три години. (will be writing — duration)
-    answer: буде писати
-    options:
-    - буде писати
-    - напише
-  - sentence: Я ___ тебе! (I will see you)
-    answer: побачу
-    options:
-    - буду бачити
-    - побачу
-  - sentence: Він ___ українську. (will be learning — process)
-    answer: буде вчити
-    options:
-    - буде вчити
-    - вивчить
-  - sentence: Ми ___ цей урок! (will master — completion)
-    answer: вивчимо
-    options:
-    - будемо вчити
-    - вивчимо
+  passage: 'Я {прочитаю|буду читати} книгу завтра. Вона {буде працювати|попрацює}
+    цілий день. Він {напише|буде писати} тобі! (will write — promise)
+
+
+    Ми {будемо читати|прочитаємо} щодня. (will read — habit) Я {зроблю|буду робити}
+    це! (will do — promise) Вони {будуть їсти|з''їдять} увечері.
+
+
+    Я {зроблю|робитиму} завтра. Вона {читатиме|прочитає} кожного дня. Ти {скажеш|будеш
+    говорити} правду? (will you tell — ask for result)
+
+
+    Ми {приїдемо|будемо їхати} в понеділок. (will arrive — result) Вона {буде писати|напише}
+    три години. (will be writing — duration) Я {побачу|буду бачити} тебе! (I will
+    see you)
+
+
+    Він {буде вчити|вивчить} українську. (will be learning — process) Ми {вивчимо|будемо
+    вчити} цей урок! (will master — completion)'
 - type: quiz
   title: Future Tense
   items:
-  - question: Which of the following correctly describes how the imperfective future is formed in Ukrainian?
+  - question: Which of the following correctly describes how the imperfective future
+      is formed in Ukrainian?
     options:
     - text: буду + infinitive
       correct: true
@@ -111,7 +60,8 @@
       correct: false
     - text: conjugated perfective verb
       correct: false
-  - question: Which of the following correctly describes how the perfective future is formed in Ukrainian?
+  - question: Which of the following correctly describes how the perfective future
+      is formed in Ukrainian?
     options:
     - text: conjugated perfective verb
       correct: true
@@ -121,7 +71,8 @@
       correct: false
     - text: will + perfective
       correct: false
-  - question: What is the specific meaning of the Ukrainian future tense phrase "Я буду читати"?
+  - question: What is the specific meaning of the Ukrainian future tense phrase "Я
+      буду читати"?
     options:
     - text: I will be reading (process)
       correct: true
@@ -131,7 +82,8 @@
       correct: false
     - text: I am reading now
       correct: false
-  - question: What is the specific meaning of the Ukrainian perfective future verb "Я прочитаю"?
+  - question: What is the specific meaning of the Ukrainian perfective future verb
+      "Я прочитаю"?
     options:
     - text: I will read/finish (result)
       correct: true
@@ -141,7 +93,8 @@
       correct: false
     - text: I read every day
       correct: false
-  - question: Which of these future tense forms carries a stronger sense of commitment for promises?
+  - question: Which of these future tense forms carries a stronger sense of commitment
+      for promises?
     options:
     - text: Perfective future (Я зроблю!)
       correct: true
@@ -151,7 +104,8 @@
       correct: false
     - text: Past tense
       correct: false
-  - question: Which personal pronoun corresponds to the Ukrainian perfective future verb form "Прочитаю"?
+  - question: Which personal pronoun corresponds to the Ukrainian perfective future
+      verb form "Прочитаю"?
     options:
     - text: я
       correct: true
@@ -161,7 +115,8 @@
       correct: false
     - text: ми
       correct: false
-  - question: Which personal pronoun corresponds to the Ukrainian perfective future verb form "Напишемо"?
+  - question: Which personal pronoun corresponds to the Ukrainian perfective future
+      verb form "Напишемо"?
     options:
     - text: ми
       correct: true
@@ -171,7 +126,8 @@
       correct: false
     - text: я
       correct: false
-  - question: What is the correct future form of the auxiliary verb "бути" for the pronoun "я"?
+  - question: What is the correct future form of the auxiliary verb "бути" for the
+      pronoun "я"?
     options:
     - text: буду
       correct: true
@@ -181,7 +137,8 @@
       correct: false
     - text: буде
       correct: false
-  - question: What is the correct future form of the auxiliary verb "бути" for the pronoun "ви"?
+  - question: What is the correct future form of the auxiliary verb "бути" for the
+      pronoun "ви"?
     options:
     - text: будете
       correct: true
@@ -191,7 +148,8 @@
       correct: false
     - text: будеш
       correct: false
-  - question: From which type of Ukrainian verbs can the perfective future tense be technically formed?
+  - question: From which type of Ukrainian verbs can the perfective future tense be
+      technically formed?
     options:
     - text: Only perfective verbs
       correct: true
@@ -201,7 +159,8 @@
       correct: false
     - text: Only modal verbs
       correct: false
-  - question: In the Ukrainian sentence "Вона буде писати," what is the grammatical aspect being used?
+  - question: In the Ukrainian sentence "Вона буде писати," what is the grammatical
+      aspect being used?
     options:
     - text: Imperfective
       correct: true
@@ -211,7 +170,8 @@
       correct: false
     - text: Habitual
       correct: false
-  - question: In the Ukrainian sentence "Вона напише," what is the grammatical aspect being used?
+  - question: In the Ukrainian sentence "Вона напише," what is the grammatical aspect
+      being used?
     options:
     - text: Perfective
       correct: true
@@ -462,18 +422,21 @@
     explanation: Definite commitment = perfective.
 - type: cloze
   title: Future Plans
-  passage: 'Завтра я {поїдемо|їхати} рано. Я {будемо їхати|їхати|поїдемо} каву і {побачу|бачити} на роботу. На роботі я {зроблю|робити}
-    цілий день. Увечері я {повернуся|повернутися} і {розповім|розповідати} книгу.
+  passage: 'Завтра я {поїдемо|їхати} рано. Я {будемо їхати|їхати|поїдемо} каву і {побачу|бачити}
+    на роботу. На роботі я {зроблю|робити} цілий день. Увечері я {повернуся|повернутися}
+    і {розповім|розповідати} книгу.
 
     ---
 
-    Наступного тижня ми {поїдемо|їхати} до України! Ми {будемо їхати|їхати|поїдемо} три дні. Я {побачу|бачити} нові місця
-    і {зроблю|робити} багато фотографій. Коли я {повернуся|повернутися}, я {розповім|розповідати} вам про нашу подорож!'
+    Наступного тижня ми {поїдемо|їхати} до України! Ми {будемо їхати|їхати|поїдемо}
+    три дні. Я {побачу|бачити} нові місця і {зроблю|робити} багато фотографій. Коли
+    я {повернуся|повернутися}, я {розповім|розповідати} вам про нашу подорож!'
 - type: mark-the-words
   title: Find Perfective Future
   text: 'Click on PERFECTIVE FUTURE forms only.
 
-    Завтра я *прочитаю* книгу. Потім я *напишу* рецензію. Я буду писати цілий день, але *закінчу*!
+    Завтра я *прочитаю* книгу. Потім я *напишу* рецензію. Я буду писати цілий день,
+    але *закінчу*!
 
     ---
 

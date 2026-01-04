@@ -1,19 +1,30 @@
 # Audit Report: 04-reflexive-passive.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "TTT" | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.1a | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): використовуватися, погіршуватися, створюватися, купуватися, змінюватися...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 1 pedagogical violations (minor)
+- Activity count below minimum
 
 ## Gates
-- **Words:** ✅ 1898/1750
-- **Activities:** ✅ 14/14
+- **Words:** ✅ 1852/1750
+- **Activities:** ❌ 13/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 190/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 98-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ⏳ Pending validation
@@ -31,25 +42,18 @@
 | variety | 0.99 | - | 99% | 10% | 9.9% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 5% | 5.0% |
+| visual | 7 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 39 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.9%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Рефлексивний пасив з -ся** | ⚪️ | 55 | Skipped |
+| **Intro/Narrative** | ✅ | 55 | Included in Core |
 | **Тест: Прочитайте текст** | ✅ | 260 | Included in Core |
 | **Пояснення** | ⚪️ | 780 | Skipped |
 | **Практика** | ⚪️ | 237 | Skipped |
 | **Діалоги** | ✅ | 284 | Included in Core |
-| **Підсумок** | ✅ | 282 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |
+| **Підсумок** | ✅ | 236 | Included in Core |

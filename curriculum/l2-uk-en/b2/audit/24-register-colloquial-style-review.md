@@ -1,19 +1,30 @@
 # Audit Report: 24-register-colloquial-style.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "TTT" | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.1b | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): от, ну, нормально, бувай, ого...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 1 pedagogical violations (minor)
+- Activity count below minimum
 
 ## Gates
-- **Words:** ✅ 1788/1750
-- **Activities:** ✅ 14/14
+- **Words:** ✅ 1758/1750
+- **Activities:** ❌ 13/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 27/25
+- **Vocab:** ✅ 75/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 98-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ⏳ Pending validation
@@ -31,22 +42,16 @@
 | variety | 0.97 | - | 97% | 10% | 9.7% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 12 | 3 | 100% | 5% | 5.0% |
+| visual | 11 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 42 | 5 | 100% | 5% | 5.0% |
+| questions | 40 | 5 | 100% | 5% | 5.0% |
 | proverbs | 4 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.4%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Розмовний стиль** | ⚪️ | 98 | Skipped |
+| **Intro/Narrative** | ✅ | 68 | Included in Core |
 | **Тест: Прочитайте тексти** | ✅ | 112 | Included in Core |
 | **Пояснення** | ⚪️ | 675 | Skipped |
 | **Практика** | ⚪️ | 308 | Skipped |
@@ -54,4 +59,3 @@
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Ключові моменти** | ⚪️ | 84 | Skipped |
 | **Самооцінка** | ⚪️ | 81 | Skipped |
-| **Словник** | ⚪️ | 0 | Skipped |

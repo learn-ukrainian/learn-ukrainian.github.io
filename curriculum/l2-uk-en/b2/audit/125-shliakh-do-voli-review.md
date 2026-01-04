@@ -1,40 +1,50 @@
 # Audit Report: 125-shliakh-do-voli.md
-**Phase:** B2.3d | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.3d | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[INVALID_ACTIVITY_TYPE]** Invalid activity type 'production' in YAML
+  - FIX: Use supported type: anagram, authorial-intent, cloze, comparative-study, critical-analysis, error-correction, essay-response, fill-in, group-sort, mark-the-words, match-up, quiz, select, translate, true-false, unjumble
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1864/1750
-- **Activities:** ✅ 14/14
-- **Density:** ✅ All > 16
-- **Unique_types:** ✅ 11/4 types
+- **Words:** ✅ 1815/1400
+- **Activities:** ✅ 13/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/6
+- **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 25 < 35 (soft target)
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 98.7% (target 98-100% (vocab))
-- **Richness:** ✅ 97% (history)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ⚠️ Too many activities: 13 (target 10-12)
+- **Immersion:** 🇺🇦 99.9% (target 98-100% (history))
+- **Richness:** ❌ 89% < 95% min (history)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 89% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 4 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 2 | 3 | 67% | 24% | 16.0% |
 | engagement | 5 | 6 | 83% | 14% | 11.9% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 7 | 4 | 100% | 10% | 9.5% |
-| variety | 0.99 | - | 99% | 5% | 4.7% |
+| visual | 6 | 4 | 100% | 10% | 9.5% |
+| variety | 1.00 | - | 100% | 5% | 4.8% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 5 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.5%** |
+| **TOTAL** | | | | | **89.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -45,4 +55,4 @@
 | **Міжнародний контекст: Україна як фактор європейської безпеки** | ✅ | 174 | Included in Core |
 | **Деколонізаційний синтез** | ⚪️ | 226 | Skipped |
 | **Історіографічна рефлексія** | ⚪️ | 190 | Skipped |
-| **Summary** | ✅ | 134 | Included in Core |
+| **Summary** | ✅ | 85 | Included in Core |

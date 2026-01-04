@@ -1,21 +1,22 @@
 # Audit Report: 27-law-justice-vocabulary.md
 **Phase:** B2 | **Level:** B2 | **Pedagogy:** CLIL | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): свідок, обов'язок, ув'язнення, слухання, адвокат...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): помилування, слухання, ув'язнення, обов'язок, амністія...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 10/100)
+**📝 UPDATE** (severity 20/100)
 
 - 1 pedagogical violations (minor)
+- Activity density below minimum
 
 ## Gates
 - **Words:** ⚠️ 1738/1750 (12 short)
 - **Activities:** ✅ 14/14
-- **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Density:** ❌ 1 < 16
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
@@ -23,6 +24,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 98-100% (grammar))
 - **Richness:** ✅ 95% (grammar)
 - **Grammar:** ⏳ Pending validation
@@ -45,6 +47,12 @@
 | questions | 17 | 5 | 100% | 5% | 5.0% |
 | proverbs | 3 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.8%** |
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| У адвоката | cloze | 6 | 16 | Add 10 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

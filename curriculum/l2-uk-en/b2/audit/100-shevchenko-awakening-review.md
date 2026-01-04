@@ -1,20 +1,21 @@
 # Audit Report: 100-shevchenko-awakening.md
-**Phase:** B2.3b | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Phase:** B2.3b | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 1714/1750 (36 short)
-- **Activities:** ✅ 14/14
-- **Density:** ✅ All > 16
-- **Unique_types:** ✅ 10/4 types
+- **Words:** ✅ 1714/1400
+- **Activities:** ✅ 13/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/6
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 153/35
+- **Vocab:** ✅ 153/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.8% (target 98-100% (vocab))
+- **Content_heavy:** ⚠️ Too many activities: 13 (target 10-12)
+- **Immersion:** 🇺🇦 99.8% (target 98-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -35,12 +36,6 @@
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 4 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **100.0%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -9,224 +9,277 @@
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A1",
-    "phase": "A1.2",
+    "phase": "A1.1",
     "moduleNumber": 20,
-    "moduleType": "checkpoint",
-    "pedagogy": "Review",
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
     "immersionLevel": 0.3,
-    "title": "Checkpoint - Navigation",
+    "title": "Module 20",
     "titleUk": null,
-    "subtitle": "Can you do the A1.2 skills?",
-    "description": "Demonstrate accusative case usage for direct objects",
-    "objectives": [
-      "Demonstrate accusative case usage for direct objects",
-      "Use locative case correctly for location expressions",
-      "Apply genitive case for absence and quantities",
-      "Match possessive pronouns to noun gender",
-      "Navigate practical scenarios: directions, shopping, cafés"
-    ],
+    "subtitle": null,
+    "description": "Module 20",
+    "objectives": [],
     "objectivesUk": null,
-    "grammarFocus": [
-      "Accusative case (inanimate + animate)",
-      "Locative case with у/в and на",
-      "Genitive case (absence, quantities)",
-      "Possessive pronouns (all forms)"
-    ],
-    "tags": [
-      "checkpoint",
-      "review",
-      "accusative",
-      "locative",
-      "genitive",
-      "possessives",
-      "navigation",
-      "restaurant"
-    ],
-    "totalDuration": "60 min",
-    "transliterationMode": "vocab-only",
+    "grammarFocus": [],
+    "tags": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "sections": [
       {
         "id": "section-1",
         "name": "Checkpoint - Navigation",
         "nameEn": null,
         "type": "content",
-        "content": "**Вітаємо!** (vitayemo) You've completed Phase A1.2 — Navigation! Now let's check: **can you DO the skills?**\n\nThis checkpoint tests five core abilities from Modules 11-19:\n\n1. **Accusative Case** - Can you use direct objects correctly?\n2. **Locative Case** - Can you say where things are?\n3. **Genitive Case** - Can you express absence and quantities?\n4. **Possessive Pronouns** - Can you match мій/моя/моє to nouns?\n5. **Practical Navigation** - Can you navigate a Ukrainian city and café?\n\n> 💡 **Did You Know?**\n>\n> With just three cases (Accusative, Locative, Genitive) plus Nominative from A1.1, you can now handle most daily situations in Ukraine — ordering food, asking directions, shopping, and more!\n\n---\n\n## Skill 1: Accusative Case\n\n**Can you form direct objects correctly?**\n\n### Model: The Accusative Pattern\n\n> **Я бачу книгу.** (I see a book.) - книга → книгу (f: -а → -у)\n> **Я бачу студента.** (I see a student.) - студент → студента (m animate: +а)\n> **Я бачу вікно.** (I see a window.) - вікно → вікно (n: no change)\n\n**The Pattern:**\n- **Feminine (-а)** → **-у**: книга → книгу, кава → каву\n- **Feminine (-я)** → **-ю**: земля → землю\n- **Masculine inanimate** → **no change**: стіл → стіл, хліб → хліб\n- **Masculine animate** → **= genitive (-а)**: студент → студента, брат → брата\n- **Neuter** → **no change**: вікно → вікно, місто → місто\n\n### Practice: Form the Accusative\n\nWhat's the accusative form of each noun?\n\n1. **книга** (book) → _____\n2. **брат** (brother, animate) → _____\n3. **стіл** (table, inanimate) → _____\n4. **кава** (coffee) → _____\n5. **місто** (city) → _____\n\n> [!solution] Перевірити (Check)\n> 1. книгу (feminine -а → -у)\n> 2. брата (masculine animate = genitive)\n> 3. стіл (masculine inanimate: no change)\n> 4. каву (feminine -а → -у)\n> 5. місто (neuter: no change)\n\n### Self-Check\n\n- Do you apply the animate/inanimate distinction for masculine nouns?\n- Does **\"Я бачу студент\"** sound wrong to you? (It should — animate masculine needs -а!)\n- Can you form accusative for common verbs? (бачити, любити, хотіти, читати)\n\n---\n\n## Skill 2: Locative Case\n\n**Can you say where things are?**\n\n### Model: Location with у/в and на\n\n> **Книга на столі.** (The book is on the table.) - стіл → столі (м: -і)\n> **Я живу в Україні.** (I live in Ukraine.) - Україна → Україні (ж: -а → -і)\n> **Вона у школі.** (She's at school.) - школа → школі (ж: -а → -і)\n\n**The Prepositions:**\n- **у/в** (in, inside): у магазині, в кімнаті, у Києві\n- **на** (on, at): на столі, на вулиці, на роботі\n\n**When to use which:**\n- **у/в**: enclosed spaces (у банку, в офісі, у парку)\n- **на**: surfaces, open areas, events (на столі, на вулиці, на концерті)\n\n> 🎮 **Gamer's Corner**\n>\n> S.T.A.L.K.E.R. players: \"Я **в Зоні**\" (I'm in the Zone) vs \"Артефакт **на землі**\" (The artifact is on the ground). Location vs surface!\n\n### Practice: Choose the Preposition\n\nWhich preposition fits — **у/в** or **на**?\n\n1. Книга ___ столі.\n2. Ми живемо ___ Україні.\n3. Студенти ___ бібліотеці.\n4. Вона ___ роботі.\n5. Кава ___ чашці.\n\n> [!solution] Перевірити (Check)\n> 1. на (surface)\n> 2. у/в (country = enclosed space)\n> 3. у/в (building)\n> 4. на (at work — fixed expression)\n> 5. у/в (inside the cup)\n\n### Self-Check\n\n- Do you know the в/у euphony rule? (в before consonants, у before vowels)\n- Can you list fixed expressions with **на**? (на роботі, на концерті, на вулиці)\n- Does **\"Я в роботі\"** sound wrong? (It should — \"на роботі\" is correct!)\n\n---\n\n## Skill 3: Genitive Case\n\n**Can you express absence and quantities?**\n\n### Model: Genitive for Absence\n\n> **Немає часу.** (There's no time.) - час → часу (м: -у)\n> **У мене немає машини.** (I don't have a car.) - машина → машини (ж: -а → -и)\n> **Тут немає води.** (There's no water here.) - вода → води (ж: -а → -и)\n\n**The Pattern:**\n- **Masculine** → **-а/-у**: час → часу, брат → брата\n- **Feminine (-а)** → **-и**: книга → книги, вода → води\n- **Feminine (-я)** → **-і**: земля → землі\n- **Neuter** → **-а**: вікно → вікна, місто → міста\n\n**Key Triggers:**\n- **немає** + genitive: Немає молока.\n- **без** + genitive: Без цукру. (Without sugar.)\n- **Numbers 5+** + genitive plural: П'ять гривень.\n\n### Practice: Form the Genitive\n\nWhat's the genitive form?\n\n1. **немає + час** → Немає _____\n2. **немає + кава** → Немає _____\n3. **без + молоко** → Без _____\n4. **немає + вода** → Немає _____\n5. **без + цукор** → Без _____\n\n> [!solution] Перевірити (Check)\n> 1. часу (masculine -у)\n> 2. кави (feminine -а → -и)\n> 3. молока (neuter → -а)\n> 4. води (feminine -а → -и)\n> 5. цукру (masculine -у)\n\n### Self-Check\n\n- Do you automatically use genitive after **немає**?\n- Can you order coffee \"без цукру, без молока\"?\n- Do you know which masculine nouns take -а vs -у in genitive?\n\n---\n\n## Skill 4: Possessive Pronouns\n\n**Can you match possessives to noun gender?**\n\n### Model: Agreement Pattern\n\n> **Це мій телефон.** (This is my phone.) - телефон = masculine → мій\n> **Де твоя сумка?** (Where is your bag?) - сумка = feminine → твоя\n> **Наше місто велике.** (Our city is big.) - місто = neuter → наше\n\n**The Full Table:**\n\n| Pronoun | Masculine | Feminine | Neuter | Plural |\n|---------|-----------|----------|--------|--------|\n| my | мій | моя | моє | мої |\n| your (sg) | твій | твоя | твоє | твої |\n| his | його | його | його | його |\n| her | її | її | її | її |\n| our | наш | наша | наше | наші |\n| your (pl) | ваш | ваша | ваше | ваші |\n| their | їхній | їхня | їхнє | їхні |\n\n> ⚠️ **Common Mistake**\n>\n> **його** and **її** NEVER change! They're frozen forms.\n> - Його книга, його друг, його місто — always **його**\n> - But: їхній друг, їхня книга, їхнє місто — **їхній** DOES change!\n\n### Practice: Choose the Possessive\n\nWhat's the correct form?\n\n1. Це ___ (my) книга.\n2. Де ___ (your, sg) телефон?\n3. ___ (our) місто красиве.\n4. ___ (their) друзі в Києві.\n5. Це ___ (her) сумка.\n\n> [!solution] Перевірити (Check)\n> 1. моя (книга = feminine)\n> 2. твій (телефон = masculine)\n> 3. Наше (місто = neuter)\n> 4. Їхні (друзі = plural)\n> 5. її (never changes)\n\n### Self-Check\n\n- Can you identify noun gender before choosing the possessive?\n- Do you remember that **його/її** never change?\n- Does **\"мій книга\"** sound wrong? (It should!)\n\n---\n\n## Skill 5: Practical Navigation\n\n**Can you navigate a Ukrainian city and café?**\n\n### Model: At the Café\n\n> — Добрий день! Що бажаєте?\n> — Каву, будь ласка.\n> — Велику чи маленьку?\n> — Велику. Без цукру.\n> — Ще щось?\n> — Ні, дякую. Скільки коштує?\n> — Сорок гривень.\n\n**Key Phrases:**\n- **Що бажаєте?** = What would you like?\n- **будь ласка** = please\n- **Ще щось?** = Anything else?\n- **Скільки коштує?** = How much does it cost?\n\n### Model: Asking Directions\n\n> — Вибачте, де станція метро?\n> — Ідіть прямо, потім наліво.\n> — Це далеко?\n> — Ні, п'ять хвилин пішки.\n> — Дякую!\n\n**Key Phrases:**\n- **Де...?** = Where is...?\n- **Ідіть прямо** = Go straight\n- **наліво / праворуч** = left / right\n- **Це далеко?** = Is it far?\n\n### Practice: Complete the Dialogue\n\nFill in the gaps:\n\n— Добрий день! _____ бажаєте? (What)\n— Чай, _____ _____. (please)\n— Чорний чи зелений?\n— Чорний. _____ цукру. (without)\n— _____ коштує? (How much)\n— Двадцять гривень.\n\n> [!solution] Перевірити (Check)\n> — Добрий день! **Що** бажаєте?\n> — Чай, **будь ласка**.\n> — Чорний чи зелений?\n> — Чорний. **Без** цукру.\n> — **Скільки** коштує?\n> — Двадцять гривень.\n\n### Self-Check\n\n- Can you order at a café confidently?\n- Can you ask for directions and understand the response?\n- Do you know how to ask prices and pay?\n\n> 🌍 **Real World Tip**\n>\n> In Ukrainian cafés, you can say \"Можна рахунок?\" (Can I have the check?) or just \"Рахунок, будь ласка\" (The check, please). Tipping ~10% is standard!\n\n---\n\n## Integration Challenge\n\n**Read this text, then answer the questions.**\n\n> Привіт! Мене звати Оксана. Я живу у Львові — це моє улюблене місто. Вчора я була в кав'ярні з моєю подругою. Я замовила каву без молока, а подруга — чай без цукру. Кава коштувала сорок гривень. У мене не було готівки, тому я платила карткою.\n\n**Questions:**\n\n1. What case is **у Львові**? Why?\n2. What form is **моє місто**? Why not **мій**?\n3. What case is **без молока** and **без цукру**?\n4. Find an example of **немає** structure (absence) in the text.\n\n> [!solution] Перевірити (Check)\n> 1. Locative — after **у** for location (where she lives)\n> 2. Neuter possessive — **місто** is neuter, so **моє** (not мій which is masculine)\n> 3. Genitive — **без** always requires genitive\n> 4. \"У мене не було готівки\" — absence structure (I didn't have cash)\n\n---"
+        "content": "**Вітаємо!** (vitayemo) You've completed Phase A1.2 — Navigation! Now let's check: **can you DO the skills?**\n\nThis checkpoint tests five core abilities from Modules 11-19:\n\n1. **Accusative Case** - Can you use direct objects correctly?\n2. **Locative Case** - Can you say where things are?\n3. **Genitive Case** - Can you express absence and quantities?\n4. **Possessive Pronouns** - Can you match мій/моя/моє to nouns?\n5. **Practical Navigation** - Can you navigate a Ukrainian city and café?\n\n> 💡 **Did You Know?**\n>\n> With just three cases (Accusative, Locative, Genitive) plus Nominative from A1.1, you can now handle most daily situations in Ukraine — ordering food, asking directions, shopping, and more!\n\n---\n\n## Skill 1: Accusative Case\n\n**Can you form direct objects correctly?**\n\n### Model: The Accusative Pattern\n\n> **Я бачу книгу.** (I see a book.) - книга → книгу (f: -а → -у)\n> **Я бачу студента.** (I see a student.) - студент → студента (m animate: +а)\n> **Я бачу вікно.** (I see a window.) - вікно → вікно (n: no change)\n\n**The Pattern:**\n\n- **Feminine (-а)** → **-у**: книга → книгу, кава → каву\n- **Feminine (-я)** → **-ю**: земля → землю\n- **Masculine inanimate** → **no change**: стіл → стіл, хліб → хліб\n- **Masculine animate** → **= genitive (-а)**: студент → студента, брат → брата\n- **Neuter** → **no change**: вікно → вікно, місто → місто\n\n### Practice: Form the Accusative\n\nWhat's the accusative form of each noun?\n\n1. **книга** (book) → **\\_**\n2. **брат** (brother, animate) → **\\_**\n3. **стіл** (table, inanimate) → **\\_**\n4. **кава** (coffee) → **\\_**\n5. **місто** (city) → **\\_**\n\n> [!solution] Перевірити (Check)\n>\n> 1. книгу (feminine -а → -у)\n> 2. брата (masculine animate = genitive)\n> 3. стіл (masculine inanimate: no change)\n> 4. каву (feminine -а → -у)\n> 5. місто (neuter: no change)\n\n### Self-Check\n\n- Do you apply the animate/inanimate distinction for masculine nouns?\n- Does **\"Я бачу студент\"** sound wrong to you? (It should — animate masculine needs -а!)\n- Can you form accusative for common verbs? (бачити, любити, хотіти, читати)\n\n---\n\n## Skill 2: Locative Case\n\n**Can you say where things are?**\n\n### Model: Location with у/в and на\n\n> **Книга на столі.** (The book is on the table.) - стіл → столі (м: -і)\n> **Я живу в Україні.** (I live in Ukraine.) - Україна → Україні (ж: -а → -і)\n> **Вона у школі.** (She's at school.) - школа → школі (ж: -а → -і)\n\n**The Prepositions:**\n\n- **у/в** (in, inside): у магазині, в кімнаті, у Києві\n- **на** (on, at): на столі, на вулиці, на роботі\n\n**When to use which:**\n\n- **у/в**: enclosed spaces (у банку, в офісі, у парку)\n- **на**: surfaces, open areas, events (на столі, на вулиці, на концерті)\n\n> 🎮 **Gamer's Corner**\n>\n> S.T.A.L.K.E.R. players: \"Я **в Зоні**\" (I'm in the Zone) vs \"Артефакт **на землі**\" (The artifact is on the ground). Location vs surface!\n\n### Practice: Choose the Preposition\n\nWhich preposition fits — **у/в** or **на**?\n\n1. Книга \\_\\_\\_ столі.\n2. Ми живемо \\_\\_\\_ Україні.\n3. Студенти \\_\\_\\_ бібліотеці.\n4. Вона \\_\\_\\_ роботі.\n5. Кава \\_\\_\\_ чашці.\n\n> [!solution] Перевірити (Check)\n>\n> 1. на (surface)\n> 2. у/в (country = enclosed space)\n> 3. у/в (building)\n> 4. на (at work — fixed expression)\n> 5. у/в (inside the cup)\n\n### Self-Check\n\n- Do you know the в/у euphony rule? (в before consonants, у before vowels)\n- Can you list fixed expressions with **на**? (на роботі, на концерті, на вулиці)\n- Does **\"Я в роботі\"** sound wrong? (It should — \"на роботі\" is correct!)\n\n---\n\n## Skill 3: Genitive Case\n\n**Can you express absence and quantities?**\n\n### Model: Genitive for Absence\n\n> **Немає часу.** (There's no time.) - час → часу (м: -у)\n> **У мене немає машини.** (I don't have a car.) - машина → машини (ж: -а → -и)\n> **Тут немає води.** (There's no water here.) - вода → води (ж: -а → -и)\n\n**The Pattern:**\n\n- **Masculine** → **-а/-у**: час → часу, брат → брата\n- **Feminine (-а)** → **-и**: книга → книги, вода → води\n- **Feminine (-я)** → **-і**: земля → землі\n- **Neuter** → **-а**: вікно → вікна, місто → міста\n\n**Key Triggers:**\n\n- **немає** + genitive: Немає молока.\n- **без** + genitive: Без цукру. (Without sugar.)\n- **Numbers 5+** + genitive plural: П'ять гривень.\n\n### Practice: Form the Genitive\n\nWhat's the genitive form?\n\n1. **немає + час** → Немає **\\_**\n2. **немає + кава** → Немає **\\_**\n3. **без + молоко** → Без **\\_**\n4. **немає + вода** → Немає **\\_**\n5. **без + цукор** → Без **\\_**\n\n> [!solution] Перевірити (Check)\n>\n> 1. часу (masculine -у)\n> 2. кави (feminine -а → -и)\n> 3. молока (neuter → -а)\n> 4. води (feminine -а → -и)\n> 5. цукру (masculine -у)\n\n### Self-Check\n\n- Do you automatically use genitive after **немає**?\n- Can you order coffee \"без цукру, без молока\"?\n- Do you know which masculine nouns take -а vs -у in genitive?\n\n---\n\n## Skill 4: Possessive Pronouns\n\n**Can you match possessives to noun gender?**\n\n### Model: Agreement Pattern\n\n> **Це мій телефон.** (This is my phone.) - телефон = masculine → мій\n> **Де твоя сумка?** (Where is your bag?) - сумка = feminine → твоя\n> **Наше місто велике.** (Our city is big.) - місто = neuter → наше\n\n**The Full Table:**\n\n| Pronoun   | Masculine | Feminine | Neuter | Plural |\n| --------- | --------- | -------- | ------ | ------ |\n| my        | мій       | моя      | моє    | мої    |\n| your (sg) | твій      | твоя     | твоє   | твої   |\n| his       | його      | його     | його   | його   |\n| her       | її        | її       | її     | її     |\n| our       | наш       | наша     | наше   | наші   |\n| your (pl) | ваш       | ваша     | ваше   | ваші   |\n| their     | їхній     | їхня     | їхнє   | їхні   |\n\n> ⚠️ **Common Mistake**\n>\n> **його** and **її** NEVER change! They're frozen forms.\n>\n> - Його книга, його друг, його місто — always **його**\n> - But: їхній друг, їхня книга, їхнє місто — **їхній** DOES change!\n\n### Practice: Choose the Possessive\n\nWhat's the correct form?\n\n1. Це \\_\\_\\_ (my) книга.\n2. Де \\_\\_\\_ (your, sg) телефон?\n3. \\_\\_\\_ (our) місто красиве.\n4. \\_\\_\\_ (their) друзі в Києві.\n5. Це \\_\\_\\_ (her) сумка.\n\n> [!solution] Перевірити (Check)\n>\n> 1. моя (книга = feminine)\n> 2. твій (телефон = masculine)\n> 3. Наше (місто = neuter)\n> 4. Їхні (друзі = plural)\n> 5. її (never changes)\n\n### Self-Check\n\n- Can you identify noun gender before choosing the possessive?\n- Do you remember that **його/її** never change?\n- Does **\"мій книга\"** sound wrong? (It should!)\n\n---\n\n## Skill 5: Practical Navigation\n\n**Can you navigate a Ukrainian city and café?**\n\n### Model: At the Café\n\n> — Добрий день! Що бажаєте?\n> — Каву, будь ласка.\n> — Велику чи маленьку?\n> — Велику. Без цукру.\n> — Ще щось?\n> — Ні, дякую. Скільки коштує?\n> — Сорок гривень.\n\n**Key Phrases:**\n\n- **Що бажаєте?** = What would you like?\n- **будь ласка** = please\n- **Ще щось?** = Anything else?\n- **Скільки коштує?** = How much does it cost?\n\n### Model: Asking Directions\n\n> — Вибачте, де станція метро?\n> — Ідіть прямо, потім наліво.\n> — Це далеко?\n> — Ні, п'ять хвилин пішки.\n> — Дякую!\n\n**Key Phrases:**\n\n- **Де...?** = Where is...?\n- **Ідіть прямо** = Go straight\n- **наліво / праворуч** = left / right\n- **Це далеко?** = Is it far?\n\n### Practice: Complete the Dialogue\n\nFill in the gaps:\n\n— Добрий день! **\\_** бажаєте? (What)\n— Чай, **\\_** **\\_**. (please)\n— Чорний чи зелений?\n— Чорний. **\\_** цукру. (without)\n— **\\_** коштує? (How much)\n— Двадцять гривень.\n\n> [!solution] Перевірити (Check)\n> — Добрий день! **Що** бажаєте?\n> — Чай, **будь ласка**.\n> — Чорний чи зелений?\n> — Чорний. **Без** цукру.\n> — **Скільки** коштує?\n> — Двадцять гривень.\n\n### Self-Check\n\n- Can you order at a café confidently?\n- Can you ask for directions and understand the response?\n- Do you know how to ask prices and pay?\n\n> 🌍 **Real World Tip**\n>\n> In Ukrainian cafés, you can say \"Можна рахунок?\" (Can I have the check?) or just \"Рахунок, будь ласка\" (The check, please). Tipping ~10% is standard!\n\n---\n\n## Integration Challenge\n\n**Read this text, then answer the questions.**\n\n> Привіт! Мене звати Оксана. Я живу у Львові — це моє улюблене місто. Вчора я була в кав'ярні з моєю подругою. Я замовила каву без молока, а подруга — чай без цукру. Кава коштувала сорок гривень. У мене не було готівки, тому я платила карткою.\n\n**Questions:**\n\n1. What case is **у Львові**? Why?\n2. What form is **моє місто**? Why not **мій**?\n3. What case is **без молока** and **без цукру**?\n4. Find an example of **немає** structure (absence) in the text.\n\n> [!solution] Перевірити (Check)\n>\n> 1. Locative — after **у** for location (where she lives)\n> 2. Neuter possessive — **місто** is neuter, so **моє** (not мій which is masculine)\n> 3. Genitive — **без** always requires genitive\n> 4. \"У мене не було готівки\" — absence structure (I didn't have cash)\n\n---"
       },
       {
         "id": "section-2",
         "name": "Summary",
         "nameEn": null,
         "type": "summary",
-        "content": "| Skill | Key Pattern | Quick Test |\n|-------|-------------|------------|\n| **Accusative** | f: -а→-у, m animate: +а | \"Я бачу книгу\" or \"книга\"? |\n| **Locative** | у/в (inside), на (surface/at) | \"Я на роботі\" or \"в роботі\"? |\n| **Genitive** | немає + gen, без + gen | \"Немає часу\" or \"час\"? |\n| **Possessives** | мій/моя/моє match gender | \"моя книга\" or \"мій книга\"? |\n| **Navigation** | Де? Скільки? Без цукру. | Can you order at a café? |\n\n**Ready for A1.3?** If you can do all five skills, you're ready for Modules 21-33: past and future tense, time expressions, weather, health, and holidays!\n\n---\n\n## Need More Practice?\n\n---\n\n> [!resources] External Resources\n>\n> **Cases Deep Dive:**\n> - 📖 [Ukrainian Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/) — All 7 cases in one table\n> - 📖 [Introduction to Cases](https://www.ukrainianlessons.com/intro-cases/) — Quick strategies\n> - 📖 [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Which preposition uses which case\n>\n> **Practical Situations:**\n> - 🎙️ [FMU 1-11: Ordering Coffee](https://www.ukrainianlessons.com/fmu11/) — Café vocabulary\n> - 🎙️ [FMU 1-18: Shopping](https://www.ukrainianlessons.com/fmu18/) — Market conversations\n> - 📖 [Vocabulary: Around Town](https://www.ukrainianlessons.com/vocabulary-town/) — Navigation words\n>\n> **Struggling with a skill?** Go back to:\n> - Accusative → Modules 11-12\n> - Locative → Module 13\n> - Possessives → Module 14\n> - Navigation → Module 15\n> - Genitive → Module 16\n> - Numbers → Module 17\n> - Shopping/Café → Modules 18-19"
-      },
-      {
-        "id": "section-3",
-        "name": "Vocabulary",
-        "nameEn": null,
-        "type": "vocabulary",
-        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| повторення | /pɔvˈtɔrɛnʲːɑ/ | repetition, review | noun | n | |\n| правило | /ˈprɑvɪlɔ/ | rule | noun | n | |\n| помилка | /pɔˈmɪlkɑ/ | mistake | noun | f | |\n| вправа | /ˈvprɑvɑ/ | exercise | noun | f | |\n| перевірка | /pɛrɛˈvirkɑ/ | check, test | noun | f | |\n| успіх | /ˈuspix/ | success | noun | m | |\n| вміти | /ˈvmitɪ/ | to be able to, to know how | verb | - | вмію, вмієш |\n| використовувати | /vɪkɔrɪˈstɔvuvɑtɪ/ | to use | verb | - | використовую, використовуєш |\n| чудово | /t͡ʃuˈdɔvɔ/ | wonderfully, excellently | adverb | - | |\n| неправильно | /nɛˈprɑvɪlʲnɔ/ | incorrectly | adverb | - | |\n| майже | /ˈmɑjʒɛ/ | almost | adverb | - | |\n| зовсім | /ˈzɔvsim/ | completely | adverb | - | |\n| ще раз | /ʃt͡ʃɛ rɑz/ | once more, again | phrase | - | |\n| молодець | /mɔlɔˈdɛt͡sʲ/ | well done (to male) | exclamation | m | |\n| молодчина | /mɔlɔdˈt͡ʃɪnɑ/ | well done (general) | exclamation | - | |\n| продовжуємо | /prɔˈdɔvʒujɛmɔ/ | we continue, let's continue | verb form | - | from продовжувати |\n\n---"
+        "content": "| Skill           | Key Pattern                   | Quick Test                   |\n| --------------- | ----------------------------- | ---------------------------- |\n| **Accusative**  | f: -а→-у, m animate: +а       | \"Я бачу книгу\" or \"книга\"?   |\n| **Locative**    | у/в (inside), на (surface/at) | \"Я на роботі\" or \"в роботі\"? |\n| **Genitive**    | немає + gen, без + gen        | \"Немає часу\" or \"час\"?       |\n| **Possessives** | мій/моя/моє match gender      | \"моя книга\" or \"мій книга\"?  |\n| **Navigation**  | Де? Скільки? Без цукру.       | Can you order at a café?     |\n\n**Ready for A1.3?** If you can do all five skills, you're ready for Modules 21-33: past and future tense, time expressions, weather, health, and holidays!\n\n---\n\n## Need More Practice?\n\n---"
       }
     ],
-    "rawMarkdown": "---\n\nmodule: a1-20\ntitle: \"Checkpoint - Navigation\"\nsubtitle: \"Can you do the A1.2 skills?\"\nversion: \"2.0\"\nphase: \"A1.2\"\nfocus: checkpoint\npedagogy: \"Review\"\nduration: \"60 min\"\ntransliteration: \"vocab-only\"\ntags:\n  - checkpoint\n  - review\n  - accusative\n  - locative\n  - genitive\n  - possessives\n  - navigation\n  - restaurant\ngrammar:\n  - \"Accusative case (inanimate + animate)\"\n  - \"Locative case with у/в and на\"\n  - \"Genitive case (absence, quantities)\"\n  - \"Possessive pronouns (all forms)\"\nobjectives:\n  - \"Demonstrate accusative case usage for direct objects\"\n  - \"Use locative case correctly for location expressions\"\n  - \"Apply genitive case for absence and quantities\"\n  - \"Match possessive pronouns to noun gender\"\n  - \"Navigate practical scenarios: directions, shopping, cafés\"\nvocabulary_count: 20\n---\n\n# Checkpoint - Navigation\n\n**Вітаємо!** (vitayemo) You've completed Phase A1.2 — Navigation! Now let's check: **can you DO the skills?**\n\nThis checkpoint tests five core abilities from Modules 11-19:\n\n1. **Accusative Case** - Can you use direct objects correctly?\n2. **Locative Case** - Can you say where things are?\n3. **Genitive Case** - Can you express absence and quantities?\n4. **Possessive Pronouns** - Can you match мій/моя/моє to nouns?\n5. **Practical Navigation** - Can you navigate a Ukrainian city and café?\n\n> 💡 **Did You Know?**\n>\n> With just three cases (Accusative, Locative, Genitive) plus Nominative from A1.1, you can now handle most daily situations in Ukraine — ordering food, asking directions, shopping, and more!\n\n---\n\n## Skill 1: Accusative Case\n\n**Can you form direct objects correctly?**\n\n### Model: The Accusative Pattern\n\n> **Я бачу книгу.** (I see a book.) - книга → книгу (f: -а → -у)\n> **Я бачу студента.** (I see a student.) - студент → студента (m animate: +а)\n> **Я бачу вікно.** (I see a window.) - вікно → вікно (n: no change)\n\n**The Pattern:**\n- **Feminine (-а)** → **-у**: книга → книгу, кава → каву\n- **Feminine (-я)** → **-ю**: земля → землю\n- **Masculine inanimate** → **no change**: стіл → стіл, хліб → хліб\n- **Masculine animate** → **= genitive (-а)**: студент → студента, брат → брата\n- **Neuter** → **no change**: вікно → вікно, місто → місто\n\n### Practice: Form the Accusative\n\nWhat's the accusative form of each noun?\n\n1. **книга** (book) → _____\n2. **брат** (brother, animate) → _____\n3. **стіл** (table, inanimate) → _____\n4. **кава** (coffee) → _____\n5. **місто** (city) → _____\n\n> [!solution] Перевірити (Check)\n> 1. книгу (feminine -а → -у)\n> 2. брата (masculine animate = genitive)\n> 3. стіл (masculine inanimate: no change)\n> 4. каву (feminine -а → -у)\n> 5. місто (neuter: no change)\n\n### Self-Check\n\n- Do you apply the animate/inanimate distinction for masculine nouns?\n- Does **\"Я бачу студент\"** sound wrong to you? (It should — animate masculine needs -а!)\n- Can you form accusative for common verbs? (бачити, любити, хотіти, читати)\n\n---\n\n## Skill 2: Locative Case\n\n**Can you say where things are?**\n\n### Model: Location with у/в and на\n\n> **Книга на столі.** (The book is on the table.) - стіл → столі (м: -і)\n> **Я живу в Україні.** (I live in Ukraine.) - Україна → Україні (ж: -а → -і)\n> **Вона у школі.** (She's at school.) - школа → школі (ж: -а → -і)\n\n**The Prepositions:**\n- **у/в** (in, inside): у магазині, в кімнаті, у Києві\n- **на** (on, at): на столі, на вулиці, на роботі\n\n**When to use which:**\n- **у/в**: enclosed spaces (у банку, в офісі, у парку)\n- **на**: surfaces, open areas, events (на столі, на вулиці, на концерті)\n\n> 🎮 **Gamer's Corner**\n>\n> S.T.A.L.K.E.R. players: \"Я **в Зоні**\" (I'm in the Zone) vs \"Артефакт **на землі**\" (The artifact is on the ground). Location vs surface!\n\n### Practice: Choose the Preposition\n\nWhich preposition fits — **у/в** or **на**?\n\n1. Книга ___ столі.\n2. Ми живемо ___ Україні.\n3. Студенти ___ бібліотеці.\n4. Вона ___ роботі.\n5. Кава ___ чашці.\n\n> [!solution] Перевірити (Check)\n> 1. на (surface)\n> 2. у/в (country = enclosed space)\n> 3. у/в (building)\n> 4. на (at work — fixed expression)\n> 5. у/в (inside the cup)\n\n### Self-Check\n\n- Do you know the в/у euphony rule? (в before consonants, у before vowels)\n- Can you list fixed expressions with **на**? (на роботі, на концерті, на вулиці)\n- Does **\"Я в роботі\"** sound wrong? (It should — \"на роботі\" is correct!)\n\n---\n\n## Skill 3: Genitive Case\n\n**Can you express absence and quantities?**\n\n### Model: Genitive for Absence\n\n> **Немає часу.** (There's no time.) - час → часу (м: -у)\n> **У мене немає машини.** (I don't have a car.) - машина → машини (ж: -а → -и)\n> **Тут немає води.** (There's no water here.) - вода → води (ж: -а → -и)\n\n**The Pattern:**\n- **Masculine** → **-а/-у**: час → часу, брат → брата\n- **Feminine (-а)** → **-и**: книга → книги, вода → води\n- **Feminine (-я)** → **-і**: земля → землі\n- **Neuter** → **-а**: вікно → вікна, місто → міста\n\n**Key Triggers:**\n- **немає** + genitive: Немає молока.\n- **без** + genitive: Без цукру. (Without sugar.)\n- **Numbers 5+** + genitive plural: П'ять гривень.\n\n### Practice: Form the Genitive\n\nWhat's the genitive form?\n\n1. **немає + час** → Немає _____\n2. **немає + кава** → Немає _____\n3. **без + молоко** → Без _____\n4. **немає + вода** → Немає _____\n5. **без + цукор** → Без _____\n\n> [!solution] Перевірити (Check)\n> 1. часу (masculine -у)\n> 2. кави (feminine -а → -и)\n> 3. молока (neuter → -а)\n> 4. води (feminine -а → -и)\n> 5. цукру (masculine -у)\n\n### Self-Check\n\n- Do you automatically use genitive after **немає**?\n- Can you order coffee \"без цукру, без молока\"?\n- Do you know which masculine nouns take -а vs -у in genitive?\n\n---\n\n## Skill 4: Possessive Pronouns\n\n**Can you match possessives to noun gender?**\n\n### Model: Agreement Pattern\n\n> **Це мій телефон.** (This is my phone.) - телефон = masculine → мій\n> **Де твоя сумка?** (Where is your bag?) - сумка = feminine → твоя\n> **Наше місто велике.** (Our city is big.) - місто = neuter → наше\n\n**The Full Table:**\n\n| Pronoun | Masculine | Feminine | Neuter | Plural |\n|---------|-----------|----------|--------|--------|\n| my | мій | моя | моє | мої |\n| your (sg) | твій | твоя | твоє | твої |\n| his | його | його | його | його |\n| her | її | її | її | її |\n| our | наш | наша | наше | наші |\n| your (pl) | ваш | ваша | ваше | ваші |\n| their | їхній | їхня | їхнє | їхні |\n\n> ⚠️ **Common Mistake**\n>\n> **його** and **її** NEVER change! They're frozen forms.\n> - Його книга, його друг, його місто — always **його**\n> - But: їхній друг, їхня книга, їхнє місто — **їхній** DOES change!\n\n### Practice: Choose the Possessive\n\nWhat's the correct form?\n\n1. Це ___ (my) книга.\n2. Де ___ (your, sg) телефон?\n3. ___ (our) місто красиве.\n4. ___ (their) друзі в Києві.\n5. Це ___ (her) сумка.\n\n> [!solution] Перевірити (Check)\n> 1. моя (книга = feminine)\n> 2. твій (телефон = masculine)\n> 3. Наше (місто = neuter)\n> 4. Їхні (друзі = plural)\n> 5. її (never changes)\n\n### Self-Check\n\n- Can you identify noun gender before choosing the possessive?\n- Do you remember that **його/її** never change?\n- Does **\"мій книга\"** sound wrong? (It should!)\n\n---\n\n## Skill 5: Practical Navigation\n\n**Can you navigate a Ukrainian city and café?**\n\n### Model: At the Café\n\n> — Добрий день! Що бажаєте?\n> — Каву, будь ласка.\n> — Велику чи маленьку?\n> — Велику. Без цукру.\n> — Ще щось?\n> — Ні, дякую. Скільки коштує?\n> — Сорок гривень.\n\n**Key Phrases:**\n- **Що бажаєте?** = What would you like?\n- **будь ласка** = please\n- **Ще щось?** = Anything else?\n- **Скільки коштує?** = How much does it cost?\n\n### Model: Asking Directions\n\n> — Вибачте, де станція метро?\n> — Ідіть прямо, потім наліво.\n> — Це далеко?\n> — Ні, п'ять хвилин пішки.\n> — Дякую!\n\n**Key Phrases:**\n- **Де...?** = Where is...?\n- **Ідіть прямо** = Go straight\n- **наліво / праворуч** = left / right\n- **Це далеко?** = Is it far?\n\n### Practice: Complete the Dialogue\n\nFill in the gaps:\n\n— Добрий день! _____ бажаєте? (What)\n— Чай, _____ _____. (please)\n— Чорний чи зелений?\n— Чорний. _____ цукру. (without)\n— _____ коштує? (How much)\n— Двадцять гривень.\n\n> [!solution] Перевірити (Check)\n> — Добрий день! **Що** бажаєте?\n> — Чай, **будь ласка**.\n> — Чорний чи зелений?\n> — Чорний. **Без** цукру.\n> — **Скільки** коштує?\n> — Двадцять гривень.\n\n### Self-Check\n\n- Can you order at a café confidently?\n- Can you ask for directions and understand the response?\n- Do you know how to ask prices and pay?\n\n> 🌍 **Real World Tip**\n>\n> In Ukrainian cafés, you can say \"Можна рахунок?\" (Can I have the check?) or just \"Рахунок, будь ласка\" (The check, please). Tipping ~10% is standard!\n\n---\n\n## Integration Challenge\n\n**Read this text, then answer the questions.**\n\n> Привіт! Мене звати Оксана. Я живу у Львові — це моє улюблене місто. Вчора я була в кав'ярні з моєю подругою. Я замовила каву без молока, а подруга — чай без цукру. Кава коштувала сорок гривень. У мене не було готівки, тому я платила карткою.\n\n**Questions:**\n\n1. What case is **у Львові**? Why?\n2. What form is **моє місто**? Why not **мій**?\n3. What case is **без молока** and **без цукру**?\n4. Find an example of **немає** structure (absence) in the text.\n\n> [!solution] Перевірити (Check)\n> 1. Locative — after **у** for location (where she lives)\n> 2. Neuter possessive — **місто** is neuter, so **моє** (not мій which is masculine)\n> 3. Genitive — **без** always requires genitive\n> 4. \"У мене не було готівки\" — absence structure (I didn't have cash)\n\n---\n\n# Summary\n\n| Skill | Key Pattern | Quick Test |\n|-------|-------------|------------|\n| **Accusative** | f: -а→-у, m animate: +а | \"Я бачу книгу\" or \"книга\"? |\n| **Locative** | у/в (inside), на (surface/at) | \"Я на роботі\" or \"в роботі\"? |\n| **Genitive** | немає + gen, без + gen | \"Немає часу\" or \"час\"? |\n| **Possessives** | мій/моя/моє match gender | \"моя книга\" or \"мій книга\"? |\n| **Navigation** | Де? Скільки? Без цукру. | Can you order at a café? |\n\n**Ready for A1.3?** If you can do all five skills, you're ready for Modules 21-33: past and future tense, time expressions, weather, health, and holidays!\n\n---\n\n## Need More Practice?\n\n---\n\n> [!resources] External Resources\n>\n> **Cases Deep Dive:**\n> - 📖 [Ukrainian Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/) — All 7 cases in one table\n> - 📖 [Introduction to Cases](https://www.ukrainianlessons.com/intro-cases/) — Quick strategies\n> - 📖 [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Which preposition uses which case\n>\n> **Practical Situations:**\n> - 🎙️ [FMU 1-11: Ordering Coffee](https://www.ukrainianlessons.com/fmu11/) — Café vocabulary\n> - 🎙️ [FMU 1-18: Shopping](https://www.ukrainianlessons.com/fmu18/) — Market conversations\n> - 📖 [Vocabulary: Around Town](https://www.ukrainianlessons.com/vocabulary-town/) — Navigation words\n>\n> **Struggling with a skill?** Go back to:\n> - Accusative → Modules 11-12\n> - Locative → Module 13\n> - Possessives → Module 14\n> - Navigation → Module 15\n> - Genitive → Module 16\n> - Numbers → Module 17\n> - Shopping/Café → Modules 18-19\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| повторення | /pɔvˈtɔrɛnʲːɑ/ | repetition, review | noun | n | |\n| правило | /ˈprɑvɪlɔ/ | rule | noun | n | |\n| помилка | /pɔˈmɪlkɑ/ | mistake | noun | f | |\n| вправа | /ˈvprɑvɑ/ | exercise | noun | f | |\n| перевірка | /pɛrɛˈvirkɑ/ | check, test | noun | f | |\n| успіх | /ˈuspix/ | success | noun | m | |\n| вміти | /ˈvmitɪ/ | to be able to, to know how | verb | - | вмію, вмієш |\n| використовувати | /vɪkɔrɪˈstɔvuvɑtɪ/ | to use | verb | - | використовую, використовуєш |\n| чудово | /t͡ʃuˈdɔvɔ/ | wonderfully, excellently | adverb | - | |\n| неправильно | /nɛˈprɑvɪlʲnɔ/ | incorrectly | adverb | - | |\n| майже | /ˈmɑjʒɛ/ | almost | adverb | - | |\n| зовсім | /ˈzɔvsim/ | completely | adverb | - | |\n| ще раз | /ʃt͡ʃɛ rɑz/ | once more, again | phrase | - | |\n| молодець | /mɔlɔˈdɛt͡sʲ/ | well done (to male) | exclamation | m | |\n| молодчина | /mɔlɔdˈt͡ʃɪnɑ/ | well done (general) | exclamation | - | |\n| продовжуємо | /prɔˈdɔvʒujɛmɔ/ | we continue, let's continue | verb form | - | from продовжувати |\n\n---\n",
-    "createdAt": "2025-12-31T22:04:03.988170Z",
-    "modifiedAt": "2025-12-31T22:04:03.988170Z",
+    "rawMarkdown": "# Checkpoint - Navigation\n\n**Вітаємо!** (vitayemo) You've completed Phase A1.2 — Navigation! Now let's check: **can you DO the skills?**\n\nThis checkpoint tests five core abilities from Modules 11-19:\n\n1. **Accusative Case** - Can you use direct objects correctly?\n2. **Locative Case** - Can you say where things are?\n3. **Genitive Case** - Can you express absence and quantities?\n4. **Possessive Pronouns** - Can you match мій/моя/моє to nouns?\n5. **Practical Navigation** - Can you navigate a Ukrainian city and café?\n\n> 💡 **Did You Know?**\n>\n> With just three cases (Accusative, Locative, Genitive) plus Nominative from A1.1, you can now handle most daily situations in Ukraine — ordering food, asking directions, shopping, and more!\n\n---\n\n## Skill 1: Accusative Case\n\n**Can you form direct objects correctly?**\n\n### Model: The Accusative Pattern\n\n> **Я бачу книгу.** (I see a book.) - книга → книгу (f: -а → -у)\n> **Я бачу студента.** (I see a student.) - студент → студента (m animate: +а)\n> **Я бачу вікно.** (I see a window.) - вікно → вікно (n: no change)\n\n**The Pattern:**\n\n- **Feminine (-а)** → **-у**: книга → книгу, кава → каву\n- **Feminine (-я)** → **-ю**: земля → землю\n- **Masculine inanimate** → **no change**: стіл → стіл, хліб → хліб\n- **Masculine animate** → **= genitive (-а)**: студент → студента, брат → брата\n- **Neuter** → **no change**: вікно → вікно, місто → місто\n\n### Practice: Form the Accusative\n\nWhat's the accusative form of each noun?\n\n1. **книга** (book) → **\\_**\n2. **брат** (brother, animate) → **\\_**\n3. **стіл** (table, inanimate) → **\\_**\n4. **кава** (coffee) → **\\_**\n5. **місто** (city) → **\\_**\n\n> [!solution] Перевірити (Check)\n>\n> 1. книгу (feminine -а → -у)\n> 2. брата (masculine animate = genitive)\n> 3. стіл (masculine inanimate: no change)\n> 4. каву (feminine -а → -у)\n> 5. місто (neuter: no change)\n\n### Self-Check\n\n- Do you apply the animate/inanimate distinction for masculine nouns?\n- Does **\"Я бачу студент\"** sound wrong to you? (It should — animate masculine needs -а!)\n- Can you form accusative for common verbs? (бачити, любити, хотіти, читати)\n\n---\n\n## Skill 2: Locative Case\n\n**Can you say where things are?**\n\n### Model: Location with у/в and на\n\n> **Книга на столі.** (The book is on the table.) - стіл → столі (м: -і)\n> **Я живу в Україні.** (I live in Ukraine.) - Україна → Україні (ж: -а → -і)\n> **Вона у школі.** (She's at school.) - школа → школі (ж: -а → -і)\n\n**The Prepositions:**\n\n- **у/в** (in, inside): у магазині, в кімнаті, у Києві\n- **на** (on, at): на столі, на вулиці, на роботі\n\n**When to use which:**\n\n- **у/в**: enclosed spaces (у банку, в офісі, у парку)\n- **на**: surfaces, open areas, events (на столі, на вулиці, на концерті)\n\n> 🎮 **Gamer's Corner**\n>\n> S.T.A.L.K.E.R. players: \"Я **в Зоні**\" (I'm in the Zone) vs \"Артефакт **на землі**\" (The artifact is on the ground). Location vs surface!\n\n### Practice: Choose the Preposition\n\nWhich preposition fits — **у/в** or **на**?\n\n1. Книга \\_\\_\\_ столі.\n2. Ми живемо \\_\\_\\_ Україні.\n3. Студенти \\_\\_\\_ бібліотеці.\n4. Вона \\_\\_\\_ роботі.\n5. Кава \\_\\_\\_ чашці.\n\n> [!solution] Перевірити (Check)\n>\n> 1. на (surface)\n> 2. у/в (country = enclosed space)\n> 3. у/в (building)\n> 4. на (at work — fixed expression)\n> 5. у/в (inside the cup)\n\n### Self-Check\n\n- Do you know the в/у euphony rule? (в before consonants, у before vowels)\n- Can you list fixed expressions with **на**? (на роботі, на концерті, на вулиці)\n- Does **\"Я в роботі\"** sound wrong? (It should — \"на роботі\" is correct!)\n\n---\n\n## Skill 3: Genitive Case\n\n**Can you express absence and quantities?**\n\n### Model: Genitive for Absence\n\n> **Немає часу.** (There's no time.) - час → часу (м: -у)\n> **У мене немає машини.** (I don't have a car.) - машина → машини (ж: -а → -и)\n> **Тут немає води.** (There's no water here.) - вода → води (ж: -а → -и)\n\n**The Pattern:**\n\n- **Masculine** → **-а/-у**: час → часу, брат → брата\n- **Feminine (-а)** → **-и**: книга → книги, вода → води\n- **Feminine (-я)** → **-і**: земля → землі\n- **Neuter** → **-а**: вікно → вікна, місто → міста\n\n**Key Triggers:**\n\n- **немає** + genitive: Немає молока.\n- **без** + genitive: Без цукру. (Without sugar.)\n- **Numbers 5+** + genitive plural: П'ять гривень.\n\n### Practice: Form the Genitive\n\nWhat's the genitive form?\n\n1. **немає + час** → Немає **\\_**\n2. **немає + кава** → Немає **\\_**\n3. **без + молоко** → Без **\\_**\n4. **немає + вода** → Немає **\\_**\n5. **без + цукор** → Без **\\_**\n\n> [!solution] Перевірити (Check)\n>\n> 1. часу (masculine -у)\n> 2. кави (feminine -а → -и)\n> 3. молока (neuter → -а)\n> 4. води (feminine -а → -и)\n> 5. цукру (masculine -у)\n\n### Self-Check\n\n- Do you automatically use genitive after **немає**?\n- Can you order coffee \"без цукру, без молока\"?\n- Do you know which masculine nouns take -а vs -у in genitive?\n\n---\n\n## Skill 4: Possessive Pronouns\n\n**Can you match possessives to noun gender?**\n\n### Model: Agreement Pattern\n\n> **Це мій телефон.** (This is my phone.) - телефон = masculine → мій\n> **Де твоя сумка?** (Where is your bag?) - сумка = feminine → твоя\n> **Наше місто велике.** (Our city is big.) - місто = neuter → наше\n\n**The Full Table:**\n\n| Pronoun   | Masculine | Feminine | Neuter | Plural |\n| --------- | --------- | -------- | ------ | ------ |\n| my        | мій       | моя      | моє    | мої    |\n| your (sg) | твій      | твоя     | твоє   | твої   |\n| his       | його      | його     | його   | його   |\n| her       | її        | її       | її     | її     |\n| our       | наш       | наша     | наше   | наші   |\n| your (pl) | ваш       | ваша     | ваше   | ваші   |\n| their     | їхній     | їхня     | їхнє   | їхні   |\n\n> ⚠️ **Common Mistake**\n>\n> **його** and **її** NEVER change! They're frozen forms.\n>\n> - Його книга, його друг, його місто — always **його**\n> - But: їхній друг, їхня книга, їхнє місто — **їхній** DOES change!\n\n### Practice: Choose the Possessive\n\nWhat's the correct form?\n\n1. Це \\_\\_\\_ (my) книга.\n2. Де \\_\\_\\_ (your, sg) телефон?\n3. \\_\\_\\_ (our) місто красиве.\n4. \\_\\_\\_ (their) друзі в Києві.\n5. Це \\_\\_\\_ (her) сумка.\n\n> [!solution] Перевірити (Check)\n>\n> 1. моя (книга = feminine)\n> 2. твій (телефон = masculine)\n> 3. Наше (місто = neuter)\n> 4. Їхні (друзі = plural)\n> 5. її (never changes)\n\n### Self-Check\n\n- Can you identify noun gender before choosing the possessive?\n- Do you remember that **його/її** never change?\n- Does **\"мій книга\"** sound wrong? (It should!)\n\n---\n\n## Skill 5: Practical Navigation\n\n**Can you navigate a Ukrainian city and café?**\n\n### Model: At the Café\n\n> — Добрий день! Що бажаєте?\n> — Каву, будь ласка.\n> — Велику чи маленьку?\n> — Велику. Без цукру.\n> — Ще щось?\n> — Ні, дякую. Скільки коштує?\n> — Сорок гривень.\n\n**Key Phrases:**\n\n- **Що бажаєте?** = What would you like?\n- **будь ласка** = please\n- **Ще щось?** = Anything else?\n- **Скільки коштує?** = How much does it cost?\n\n### Model: Asking Directions\n\n> — Вибачте, де станція метро?\n> — Ідіть прямо, потім наліво.\n> — Це далеко?\n> — Ні, п'ять хвилин пішки.\n> — Дякую!\n\n**Key Phrases:**\n\n- **Де...?** = Where is...?\n- **Ідіть прямо** = Go straight\n- **наліво / праворуч** = left / right\n- **Це далеко?** = Is it far?\n\n### Practice: Complete the Dialogue\n\nFill in the gaps:\n\n— Добрий день! **\\_** бажаєте? (What)\n— Чай, **\\_** **\\_**. (please)\n— Чорний чи зелений?\n— Чорний. **\\_** цукру. (without)\n— **\\_** коштує? (How much)\n— Двадцять гривень.\n\n> [!solution] Перевірити (Check)\n> — Добрий день! **Що** бажаєте?\n> — Чай, **будь ласка**.\n> — Чорний чи зелений?\n> — Чорний. **Без** цукру.\n> — **Скільки** коштує?\n> — Двадцять гривень.\n\n### Self-Check\n\n- Can you order at a café confidently?\n- Can you ask for directions and understand the response?\n- Do you know how to ask prices and pay?\n\n> 🌍 **Real World Tip**\n>\n> In Ukrainian cafés, you can say \"Можна рахунок?\" (Can I have the check?) or just \"Рахунок, будь ласка\" (The check, please). Tipping ~10% is standard!\n\n---\n\n## Integration Challenge\n\n**Read this text, then answer the questions.**\n\n> Привіт! Мене звати Оксана. Я живу у Львові — це моє улюблене місто. Вчора я була в кав'ярні з моєю подругою. Я замовила каву без молока, а подруга — чай без цукру. Кава коштувала сорок гривень. У мене не було готівки, тому я платила карткою.\n\n**Questions:**\n\n1. What case is **у Львові**? Why?\n2. What form is **моє місто**? Why not **мій**?\n3. What case is **без молока** and **без цукру**?\n4. Find an example of **немає** structure (absence) in the text.\n\n> [!solution] Перевірити (Check)\n>\n> 1. Locative — after **у** for location (where she lives)\n> 2. Neuter possessive — **місто** is neuter, so **моє** (not мій which is masculine)\n> 3. Genitive — **без** always requires genitive\n> 4. \"У мене не було готівки\" — absence structure (I didn't have cash)\n\n---\n\n# Summary\n\n| Skill           | Key Pattern                   | Quick Test                   |\n| --------------- | ----------------------------- | ---------------------------- |\n| **Accusative**  | f: -а→-у, m animate: +а       | \"Я бачу книгу\" or \"книга\"?   |\n| **Locative**    | у/в (inside), на (surface/at) | \"Я на роботі\" or \"в роботі\"? |\n| **Genitive**    | немає + gen, без + gen        | \"Немає часу\" or \"час\"?       |\n| **Possessives** | мій/моя/моє match gender      | \"моя книга\" or \"мій книга\"?  |\n| **Navigation**  | Де? Скільки? Без цукру.       | Can you order at a café?     |\n\n**Ready for A1.3?** If you can do all five skills, you're ready for Modules 21-33: past and future tense, time expressions, weather, health, and holidays!\n\n---\n\n## Need More Practice?\n\n---\n",
+    "createdAt": "2026-01-04T21:33:28.249767Z",
+    "modifiedAt": "2026-01-04T21:33:28.249767Z",
     "version": 2
   },
   "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A1-20",
     "level": "A1",
-    "phase": "A1.2",
-    "wordCount": 16,
-    "newWordCount": 16,
+    "phase": "A1.1",
+    "wordCount": 0,
+    "newWordCount": 0,
     "reviewWordCount": 0,
-    "transliterationMode": "vocab-only",
-    "words": [
+    "transliterationMode": "none",
+    "words": [],
+    "reviewWords": []
+  },
+  "external_resources": {
+    "podcasts": [
       {
-        "id": "vocab-1",
-        "uk": "повторення",
-        "ipa": "/pɔvˈtɔrɛnʲːɑ/",
-        "en": "repetition, review",
-        "pos": "noun",
-        "gender": "n",
-        "note": ""
+        "title": "FMU 1-11: Ordering Coffee",
+        "url": "https://www.ukrainianlessons.com/fmu11/",
+        "relevance": "high",
+        "episode_id": "FMU-011"
       },
       {
-        "id": "vocab-2",
-        "uk": "правило",
-        "ipa": "/ˈprɑvɪlɔ/",
-        "en": "rule",
-        "pos": "noun",
-        "gender": "n",
-        "note": ""
-      },
-      {
-        "id": "vocab-3",
-        "uk": "помилка",
-        "ipa": "/pɔˈmɪlkɑ/",
-        "en": "mistake",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-4",
-        "uk": "вправа",
-        "ipa": "/ˈvprɑvɑ/",
-        "en": "exercise",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-5",
-        "uk": "перевірка",
-        "ipa": "/pɛrɛˈvirkɑ/",
-        "en": "check, test",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-6",
-        "uk": "успіх",
-        "ipa": "/ˈuspix/",
-        "en": "success",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-7",
-        "uk": "вміти",
-        "ipa": "/ˈvmitɪ/",
-        "en": "to be able to, to know how",
-        "pos": "verb",
-        "gender": null,
-        "note": "вмію, вмієш"
-      },
-      {
-        "id": "vocab-8",
-        "uk": "використовувати",
-        "ipa": "/vɪkɔrɪˈstɔvuvɑtɪ/",
-        "en": "to use",
-        "pos": "verb",
-        "gender": null,
-        "note": "використовую, використовуєш"
-      },
-      {
-        "id": "vocab-9",
-        "uk": "чудово",
-        "ipa": "/t͡ʃuˈdɔvɔ/",
-        "en": "wonderfully, excellently",
-        "pos": "adverb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-10",
-        "uk": "неправильно",
-        "ipa": "/nɛˈprɑvɪlʲnɔ/",
-        "en": "incorrectly",
-        "pos": "adverb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-11",
-        "uk": "майже",
-        "ipa": "/ˈmɑjʒɛ/",
-        "en": "almost",
-        "pos": "adverb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-12",
-        "uk": "зовсім",
-        "ipa": "/ˈzɔvsim/",
-        "en": "completely",
-        "pos": "adverb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-13",
-        "uk": "ще раз",
-        "ipa": "/ʃt͡ʃɛ rɑz/",
-        "en": "once more, again",
-        "pos": "phrase",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-14",
-        "uk": "молодець",
-        "ipa": "/mɔlɔˈdɛt͡sʲ/",
-        "en": "well done (to male)",
-        "pos": "exclamation",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-15",
-        "uk": "молодчина",
-        "ipa": "/mɔlɔdˈt͡ʃɪnɑ/",
-        "en": "well done (general)",
-        "pos": "exclamation",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-16",
-        "uk": "продовжуємо",
-        "ipa": "/prɔˈdɔvʒujɛmɔ/",
-        "en": "we continue, let's continue",
-        "pos": "verb form",
-        "gender": null,
-        "note": "from продовжувати"
+        "title": "FMU 1-18: Shopping",
+        "url": "https://www.ukrainianlessons.com/fmu18/",
+        "relevance": "high",
+        "episode_id": "FMU-018"
       }
     ],
-    "reviewWords": []
+    "youtube": [],
+    "articles": [
+      {
+        "id": "ulp-blog-002",
+        "title": "Accusative Case in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/accusativecase/",
+        "priority": 1,
+        "relevance": "high",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 90, Priority: 1)"
+      },
+      {
+        "id": "ulp-blog-003",
+        "title": "Genitive Case in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/genitive-case/",
+        "priority": 1,
+        "relevance": "high",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'genitive', 'vocative', 'locative', 'accusative'} (Score: 90, Priority: 1)"
+      },
+      {
+        "id": "ULP-032",
+        "title": "ULP 1-32 Shopping for clothes – Accusative case in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/32/",
+        "priority": 1,
+        "relevance": "high",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 90, Priority: 1)"
+      },
+      {
+        "id": "ULP-033",
+        "title": "ULP 1-33 Talking about books in Ukrainian – Accusative case of people",
+        "url": "https://www.ukrainianlessons.com/lesson/33/",
+        "priority": 1,
+        "relevance": "high",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 90, Priority: 1)"
+      },
+      {
+        "id": "ULP-046",
+        "title": "ULP 2-46 At the grocery store + Genitive case",
+        "url": "https://www.ukrainianlessons.com/lesson/46/",
+        "priority": 1,
+        "relevance": "high",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 90, Priority: 1)"
+      },
+      {
+        "id": "ULP-047",
+        "title": "ULP 2-47 Food festivals + Genitive case",
+        "url": "https://www.ukrainianlessons.com/lesson/47/",
+        "priority": 1,
+        "relevance": "high",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 90, Priority: 1)"
+      },
+      {
+        "id": "ULP-048",
+        "title": "ULP 2-48 Eating habits + Genitive case",
+        "url": "https://www.ukrainianlessons.com/lesson/48/",
+        "priority": 1,
+        "relevance": "high",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 90, Priority: 1)"
+      },
+      {
+        "id": "ULP-049",
+        "title": "ULP 2-49 Syrnyky recipe + Genitive case",
+        "url": "https://www.ukrainianlessons.com/lesson/49/",
+        "priority": 1,
+        "relevance": "high",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 90, Priority: 1)"
+      },
+      {
+        "id": "ULP-051",
+        "title": "ULP 2-51 Electronics and technology + Dative case",
+        "url": "https://www.ukrainianlessons.com/lesson/51/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 85, Priority: 2)"
+      },
+      {
+        "id": "ULP-052",
+        "title": "ULP 2-52 Buying a phone in Ukraine + Dative case",
+        "url": "https://www.ukrainianlessons.com/lesson/52/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 85, Priority: 2)"
+      },
+      {
+        "id": "ULP-053",
+        "title": "ULP 2-53 Social Media in Ukrainian + Dative case",
+        "url": "https://www.ukrainianlessons.com/lesson/53/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 85, Priority: 2)"
+      },
+      {
+        "id": "ULP-056",
+        "title": "ULP 2-56 Asking for an advice + Accusative case",
+        "url": "https://www.ukrainianlessons.com/lesson/56/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 85, Priority: 2)"
+      },
+      {
+        "id": "ULP-057",
+        "title": "ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions",
+        "url": "https://www.ukrainianlessons.com/lesson/57/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 85, Priority: 2)"
+      },
+      {
+        "id": "ULP-058",
+        "title": "ULP 2-58 Inviting to a party + Accusative case of pronouns",
+        "url": "https://www.ukrainianlessons.com/lesson/58/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 85, Priority: 2)"
+      },
+      {
+        "id": "ULP-061",
+        "title": "ULP 2-61 Christmas dinner in Ukraine + Instrumental case",
+        "url": "https://www.ukrainianlessons.com/lesson/61/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 85, Priority: 2)"
+      },
+      {
+        "id": "ULP-062",
+        "title": "ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns",
+        "url": "https://www.ukrainianlessons.com/lesson/62/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 85, Priority: 2)"
+      },
+      {
+        "id": "ULP-066",
+        "title": "ULP 2-66 Sharing memories + Locative case with places",
+        "url": "https://www.ukrainianlessons.com/lesson/66/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 85, Priority: 2)"
+      },
+      {
+        "id": "ULP-067",
+        "title": "ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case",
+        "url": "https://www.ukrainianlessons.com/lesson/67/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 85, Priority: 2)"
+      },
+      {
+        "id": "ULP-068",
+        "title": "ULP 2-68 Making a hair appointment + Dates & Locative case",
+        "url": "https://www.ukrainianlessons.com/lesson/68/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 85, Priority: 2)"
+      },
+      {
+        "id": "ULP-069",
+        "title": "ULP 2-69 Ukrainian Children's Poem + Vocative case",
+        "url": "https://www.ukrainianlessons.com/lesson/69/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'dative', 'instrumental', 'vocative', 'genitive', 'locative', 'accusative'} (Score: 85, Priority: 2)"
+      },
+      {
+        "title": "Introduction to Cases",
+        "url": "https://www.ukrainianlessons.com/intro-cases/",
+        "relevance": "high",
+        "source": "Quick strategies"
+      },
+      {
+        "title": "Prepositions with Cases",
+        "url": "https://www.ukrainianlessons.com/prepositions-cases/",
+        "relevance": "high",
+        "source": "Which preposition uses which case"
+      },
+      {
+        "title": "Ukrainian Cases Chart",
+        "url": "https://www.ukrainianlessons.com/ukrainian-cases-chart/",
+        "relevance": "high",
+        "source": "All 7 cases in one table"
+      },
+      {
+        "title": "Vocabulary: Around Town",
+        "url": "https://www.ukrainianlessons.com/vocabulary-town/",
+        "relevance": "high",
+        "source": "Navigation words"
+      }
+    ],
+    "books": [],
+    "websites": []
   }
 }

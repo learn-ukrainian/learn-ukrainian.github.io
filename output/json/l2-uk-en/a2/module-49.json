@@ -9,41 +9,20 @@
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A2",
-    "phase": "A2",
+    "phase": "A2.1",
     "moduleNumber": 49,
-    "moduleType": "vocabulary",
-    "pedagogy": "Narrative",
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
     "immersionLevel": 0.4,
-    "title": "Technology & Media",
+    "title": "Module 49",
     "titleUk": null,
-    "subtitle": "Digital Life in Ukrainian",
-    "description": {
-      "Name common devices": "комп'ютер, смартфон, планшет"
-    },
-    "objectives": [
-      {
-        "Name common devices": "комп'ютер, смартфон, планшет"
-      },
-      {
-        "Discuss internet activities": "шукати, завантажувати"
-      },
-      {
-        "Talk about media": "новини, блог, соціальні мережі"
-      },
-      "Describe digital habits"
-    ],
+    "subtitle": null,
+    "description": "Module 49",
+    "objectives": [],
     "objectivesUk": null,
-    "grammarFocus": [
-      "accusative-inanimate",
-      "locative-places"
-    ],
-    "tags": [
-      "vocabulary",
-      "technology",
-      "internet",
-      "media"
-    ],
-    "totalDuration": 60,
+    "grammarFocus": [],
+    "tags": [],
+    "totalDuration": 45,
     "transliterationMode": "none",
     "sections": [
       {
@@ -58,248 +37,74 @@
         "name": "Summary",
         "nameEn": null,
         "type": "summary",
-        "content": "You learned to:\n- Name tech: **комп'ютер**, **смартфон**, **планшет**, **ноутбук**\n- Talk about internet: **вебсайт**, **посилання**, **пароль**\n- Consume media: **новини**, **блог**, **стаття**\n- Use verbs: **шукати**, **завантажувати**, **публікувати**\n\nDigital literacy is key in modern Ukrainian society. Use these words to stay connected!\n\n> [!resources] 🔗 External Resources\n>\n> **YouTube:** [100 basic Ukrainian IT terms | Ukrainian vocabulary: IT, Technologies,...](https://www.youtube.com/watch?v=BAuSNnrkCKM) — Red Purple Ukrainian\n>\n> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview\n>\n> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises"
-      },
-      {
-        "id": "section-3",
-        "name": "Vocabulary",
-        "nameEn": null,
-        "type": "vocabulary",
-        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| смартфон | /smartˈfɔn/ | smartphone | noun | m | |\n| планшет | /planˈʃɛt/ | tablet | noun | m | |\n| ноутбук | /noutˈbuk/ | laptop | noun | m | |\n| гаджет | /ˈɡadʒet/ | gadget | noun | m | |\n| екран | /eˈkran/ | screen | noun | m | |\n| клавіатура | /klavijaˈtura/ | keyboard | noun | f | |\n| мишка | /ˈmɪʃka/ | mouse | noun | f | |\n| навушники | /naˈvuʃnɪkɪ/ | headphones | noun | pl | |\n| вебсайт | /vɛbˈsajt/ | website | noun | m | |\n| посилання | /posɪˈlanʲːa/ | link | noun | n | |\n| пароль | /paˈrɔlʲ/ | password | noun | m | |\n| логін | /loˈɡin/ | login | noun | m | |\n| мережа | /meˈrɛʒa/ | network | noun | f | |\n| зв'язок | /zʋjɐˈzɔk/ | connection | noun | m | |\n| новини | /noˈvɪnɪ/ | news | noun | pl | |\n| стаття | /statˈtʲa/ | article | noun | f | |\n| блог | /blɔh/ | blog | noun | m | |\n| блогер | /ˈblɔher/ | blogger | noun | m | |\n| подкаст | /podˈkast/ | podcast | noun | m | |\n| коментар | /komenˈtar/ | comment | noun | m | |\n| лайк | /lajk/ | like | noun | m | slang |\n| повідомлення | /poviˈdɔmlenʲːa/ | message | noun | n | |\n| завантажувати | /zavanˈtaʒuvatɪ/ | to download | verb | - | |\n| публікувати | /publikuˈvatɪ/ | to publish | verb | - | |"
+        "content": "You learned to:\n- Name tech: **комп'ютер**, **смартфон**, **планшет**, **ноутбук**\n- Talk about internet: **вебсайт**, **посилання**, **пароль**\n- Consume media: **новини**, **блог**, **стаття**\n- Use verbs: **шукати**, **завантажувати**, **публікувати**\n\nDigital literacy is key in modern Ukrainian society. Use these words to stay connected!"
       }
     ],
-    "rawMarkdown": "---\nmodule: a2-49\ntitle: Technology & Media\nsubtitle: \"Digital Life in Ukrainian\"\nversion: \"1.0\"\nphase: \"A2\"\npedagogy: \"Narrative\"\nduration: 60\ntransliteration: none\ntags: [\"vocabulary\", \"technology\", \"internet\", \"media\"]\ngrammar: [\"accusative-inanimate\", \"locative-places\"]\nobjectives:\n  - Name common devices: комп'ютер, смартфон, планшет\n  - Discuss internet activities: шукати, завантажувати\n  - Talk about media: новини, блог, соціальні мережі\n  - Describe digital habits\nvocab_count: 30\n---\n\n# Technology & Media\n\n## Warm-up\n\nЯкий ваш кращий гаджет? Ви часто сидите в інтернеті? Де ви читаєте новини?\n\nСьогодні технології всюди. Ми працюємо онлайн, спілкуємося в чатах і читаємо новини на смартфоні. Україна — це сучасна цифрова країна. Давайте вивчимо слова, щоб говорити про наше цифрове життя!\n\nTechnology connects us. In this module, you'll learn to talk about your devices, internet habits, and how you consume media in Ukrainian. From \"downloading\" files to \"liking\" posts, you will master the digital vocabulary.\n\n> [!important] **Myth Buster** \"Paper Bureaucracy\"\n> Forget the stereotype of endless paperwork! Ukraine is a world leader in digital governance. The app **Дія** (Action) allows citizens to carry digital passports, pay taxes, and access services on their smartphones. Ukraine was the first country to equate digital passports to physical ones!\n\n## Presentation\n\n### Devices (Гаджети)\n\nWe use different devices every day:\n\n| Пристрій | Приклад |\n|----------|---------|\n| **комп'ютер** | Мій комп'ютер старий, але швидкий. |\n| **ноутбук** | Я беру ноутбук в кафе. |\n| **смартфон** | Він не може жити без смартфона. |\n| **планшет** | Діти грають на планшеті. |\n| **екран** | Екран дуже яскравий. |\n| **клавіатура** | Це зручна клавіатура. |\n| **мишка** | Де моя мишка? |\n| **навушники** | Я слухаю музику через навушники. |\n\n**Комп'ютер** and **ноутбук** are masculine. **Смартфон** and **планшет** are also masculine. Notice **навушники** (headphones) is always plural.\n\n### The Internet (Інтернет)\n\nGoing online is essential:\n\n- **інтернет** — internet: *У нас є швидкий інтернет.*\n- **вебсайт** — website: *Це корисний вебсайт.*\n- **посилання** — link: *Надішли мені посилання.*\n- **пароль** — password: *Це надійний пароль.*\n- **логін** — login: *Я забув свій логін.*\n- **мережа** — network: *Соціальна мережа.*\n- **зв'язок** — connection: *Тут поганий зв'язок.*\n- **онлайн | офлайн** — online | offline: *Він зараз онлайн.*\n\n> [!cultural] **History Bite** The Cybernetic Pioneer\n> Did you know the first computer in continental Europe was built in Kyiv? In 1951, **MESM** was created by Serhiy Lebedev. Later, Victor Glushkov founded the Institute of Cybernetics in Kyiv, pioneering early concepts of the internet and digital economy (\"OGAS\"). Kyiv has deep cybernetic roots!\n\n### Media & Content\n\nWhat do we consume?\n\n- **новини** (pl) — news: *Я читаю новини вранці.*\n- **стаття** — article: *Цікава стаття про історію.*\n- **блог** — blog: *Вона пише блог про моду.*\n- **блогер** — blogger: *Відомий український блогер.*\n- **подкаст** — podcast: *Я слухаю подкаст в машині.*\n- **відео** — video: *Смішне відео.*\n- **коментар** — comment: *Залиште коментар.*\n- **лайк** — like: *Поставте лайк!*\n\n### Actions\n\nVerbs for the digital age:\n\n- **шукати** — to search: *Я шукаю інформацію.*\n- **завантажувати** — to download/upload: *Він завантажує фільм.*\n- **публікувати** — to publish/post: *Вона публікує фото.*\n- **надсилати** — to send: *Я надсилаю повідомлення.*\n- **коментувати** — to comment: *Ми коментуємо новини.*\n\n> [!cultural] **Cultural Insight** Telegram Nation\n> While Facebook and Instagram are popular, **Telegram** is critical in Ukraine. It's not just a messenger; it's the primary source of news, air raid alerts, and community organization. Everyone has \"TG\" channels they follow religiously.\n\n## Practice\n\n### Story Time: The Remote Worker\n\nАндрій — програміст. Він працює вдома. Його робоче місце дуже зручне. На столі стоїть потужний **комп'ютер** і два великі **екрани**.\n\nВранці Андрій вмикає **ноутбук**. Він перевіряє **пошту** і читає **новини**. Потім він заходить у робочий чат.\n— Привіт всім! Я **онлайн**, — пише він.\n\n### Digital Safety\n\nBeing online requires safety (**безпека**). The internet is wonderful, but it can also be dangerous. Here are important rules for staying safe online.\n\n- **пароль** (password) must be strong. \"123456\" is a bad password. Use letters, numbers, and symbols.\n- **приватність** (privacy) is important. Don't share your address or phone number with strangers.\n- **шахрай** (scammer) wants your money. Never send money to people you don't know.\n- **вірус** (virus) can damage your computer. Don't click on suspicious links.\n- **резервна копія** (backup) saves your files. Make copies of important documents.\n\nАндрій continues working. He writes code, **завантажує** (uploads) files to the server, and **публікує** (publishes) updates. If he has a question, he **шукає** (searches) the answer on the internet. His work requires attention. One wrong symbol — and the program doesn't work!\n\nAt lunch, he calls his mom via video call (**відеозв'язок**).\n— Привіт, мамо! Як справи?\n— Привіт, синку. Я не можу знайти свій серіал.\n— Зараз я тобі скину **посилання**, — says Андрій.\n\nIn the evening, he turns off the computer. His eyes are tired from the screen. He takes his **навушники** (headphones) and goes running. Music helps him relax. Without technology, he cannot work, but without sport, he cannot live.\n\n> [!tip] **Tip** \"Like\" in Ukrainian\n> While **лайк** is common, the proper Ukrainian word is **вподобайка** (from *вподобати* - to like). You might see both!\n\n### Story Time: The Food Blogger\n\nОксана любить готувати. Вона вирішила створити **блог** про їжу. Вона купила нову камеру і мікрофон.\n\nВона готує борщ і знімає **відео**.\n— Всім привіт! Сьогодні ми варимо борщ! — каже вона у мікрофон.\n\nПотім вона монтує відео на ноутбуці. Це довгий процес. Треба вибрати музику і написати текст. Вона **публікує** відео на Ютуб.\n\nЗранку вона перевіряє **коментарі**.\n— Дякую за рецепт! Дуже смачно! — пишуть люди.\nОксана щаслива. Вона відповідає на коментарі і ставить **лайки**.\n\nАле є і погані коментарі.\n— Це не справжній борщ! — пише \"Експерт123\".\nОксана не сумує. Вона знає, що хейтери (**haters**) завжди будуть. Вона блокує його і йде готувати вареники.\n\n### Story Time: Lost Connection\n\nІван поїхав у Карпати. Він хотів відпочити від технологій. Він взяв тільки старий телефон (\"цегла\").\n\nПерший день був чудовий. Гори, ліс, повітря. Але ввечері він захотів подивитися погоду.\n— Де мій смартфон? — подумав він. — А, я його не взяв.\n\nВін спробував знайти **зв'язок** на старому телефоні. Нічого.\n— Ну і добре, — сказав Іван.\n\nАле на третій день він захотів показати фото друзям.\n— Дивіться, яка гора! Ой, у мене немає камери.\n\nІван зрозумів, що технології — це не тільки інтернет, але й можливість ділитися моментами. Коли він повернувся додому, він обійняв свій комп'ютер.\n— Привіт, мій електронний друже. Я сумував.\n\nВін відкрив **ноутбук**, зайшов у **мережу** і написав великий пост про свою подорож. Всі його друзі поставили лайки.\n\n### Story Time: Grandma Online\n\nБабуся Галина купила **планшет**. Вона хоче бути сучасною. Її онук, Максим, допомагає їй.\n\n— Бабусю, це твій **логін**, а це **пароль**, — пояснює Максим. — Не забудь їх!\n— Добре, а як знайти рецепт борщу? — питає Галина.\n— Треба відкрити **вебсайт** або Гугл і написати \"борщ\".\n\nГалина швидко вчиться. Тепер вона має профіль у Фейсбуці. Вона **публікує** фото своїх пирогів. Сусіди пишуть їй гарні **коментарі**. Вона навіть слухає **подкаст** про садівництво!\nІнтернет — це цікаво, навіть якщо тобі 70 років.\n\n# Summary\n\nYou learned to:\n- Name tech: **комп'ютер**, **смартфон**, **планшет**, **ноутбук**\n- Talk about internet: **вебсайт**, **посилання**, **пароль**\n- Consume media: **новини**, **блог**, **стаття**\n- Use verbs: **шукати**, **завантажувати**, **публікувати**\n\nDigital literacy is key in modern Ukrainian society. Use these words to stay connected!\n\n> [!resources] 🔗 External Resources\n>\n> **YouTube:** [100 basic Ukrainian IT terms | Ukrainian vocabulary: IT, Technologies,...](https://www.youtube.com/watch?v=BAuSNnrkCKM) — Red Purple Ukrainian\n>\n> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview\n>\n> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| смартфон | /smartˈfɔn/ | smartphone | noun | m | |\n| планшет | /planˈʃɛt/ | tablet | noun | m | |\n| ноутбук | /noutˈbuk/ | laptop | noun | m | |\n| гаджет | /ˈɡadʒet/ | gadget | noun | m | |\n| екран | /eˈkran/ | screen | noun | m | |\n| клавіатура | /klavijaˈtura/ | keyboard | noun | f | |\n| мишка | /ˈmɪʃka/ | mouse | noun | f | |\n| навушники | /naˈvuʃnɪkɪ/ | headphones | noun | pl | |\n| вебсайт | /vɛbˈsajt/ | website | noun | m | |\n| посилання | /posɪˈlanʲːa/ | link | noun | n | |\n| пароль | /paˈrɔlʲ/ | password | noun | m | |\n| логін | /loˈɡin/ | login | noun | m | |\n| мережа | /meˈrɛʒa/ | network | noun | f | |\n| зв'язок | /zʋjɐˈzɔk/ | connection | noun | m | |\n| новини | /noˈvɪnɪ/ | news | noun | pl | |\n| стаття | /statˈtʲa/ | article | noun | f | |\n| блог | /blɔh/ | blog | noun | m | |\n| блогер | /ˈblɔher/ | blogger | noun | m | |\n| подкаст | /podˈkast/ | podcast | noun | m | |\n| коментар | /komenˈtar/ | comment | noun | m | |\n| лайк | /lajk/ | like | noun | m | slang |\n| повідомлення | /poviˈdɔmlenʲːa/ | message | noun | n | |\n| завантажувати | /zavanˈtaʒuvatɪ/ | to download | verb | - | |\n| публікувати | /publikuˈvatɪ/ | to publish | verb | - | |\n",
-    "createdAt": "2025-12-31T22:48:53.957354Z",
-    "modifiedAt": "2025-12-31T22:48:53.957354Z",
+    "rawMarkdown": "# Technology & Media\n\n## Warm-up\n\nЯкий ваш кращий гаджет? Ви часто сидите в інтернеті? Де ви читаєте новини?\n\nСьогодні технології всюди. Ми працюємо онлайн, спілкуємося в чатах і читаємо новини на смартфоні. Україна — це сучасна цифрова країна. Давайте вивчимо слова, щоб говорити про наше цифрове життя!\n\nTechnology connects us. In this module, you'll learn to talk about your devices, internet habits, and how you consume media in Ukrainian. From \"downloading\" files to \"liking\" posts, you will master the digital vocabulary.\n\n> [!important] **Myth Buster** \"Paper Bureaucracy\"\n> Forget the stereotype of endless paperwork! Ukraine is a world leader in digital governance. The app **Дія** (Action) allows citizens to carry digital passports, pay taxes, and access services on their smartphones. Ukraine was the first country to equate digital passports to physical ones!\n\n## Presentation\n\n### Devices (Гаджети)\n\nWe use different devices every day:\n\n| Пристрій | Приклад |\n|----------|---------|\n| **комп'ютер** | Мій комп'ютер старий, але швидкий. |\n| **ноутбук** | Я беру ноутбук в кафе. |\n| **смартфон** | Він не може жити без смартфона. |\n| **планшет** | Діти грають на планшеті. |\n| **екран** | Екран дуже яскравий. |\n| **клавіатура** | Це зручна клавіатура. |\n| **мишка** | Де моя мишка? |\n| **навушники** | Я слухаю музику через навушники. |\n\n**Комп'ютер** and **ноутбук** are masculine. **Смартфон** and **планшет** are also masculine. Notice **навушники** (headphones) is always plural.\n\n### The Internet (Інтернет)\n\nGoing online is essential:\n\n- **інтернет** — internet: *У нас є швидкий інтернет.*\n- **вебсайт** — website: *Це корисний вебсайт.*\n- **посилання** — link: *Надішли мені посилання.*\n- **пароль** — password: *Це надійний пароль.*\n- **логін** — login: *Я забув свій логін.*\n- **мережа** — network: *Соціальна мережа.*\n- **зв'язок** — connection: *Тут поганий зв'язок.*\n- **онлайн | офлайн** — online | offline: *Він зараз онлайн.*\n\n> [!cultural] **History Bite** The Cybernetic Pioneer\n> Did you know the first computer in continental Europe was built in Kyiv? In 1951, **MESM** was created by Serhiy Lebedev. Later, Victor Glushkov founded the Institute of Cybernetics in Kyiv, pioneering early concepts of the internet and digital economy (\"OGAS\"). Kyiv has deep cybernetic roots!\n\n### Media & Content\n\nWhat do we consume?\n\n- **новини** (pl) — news: *Я читаю новини вранці.*\n- **стаття** — article: *Цікава стаття про історію.*\n- **блог** — blog: *Вона пише блог про моду.*\n- **блогер** — blogger: *Відомий український блогер.*\n- **подкаст** — podcast: *Я слухаю подкаст в машині.*\n- **відео** — video: *Смішне відео.*\n- **коментар** — comment: *Залиште коментар.*\n- **лайк** — like: *Поставте лайк!*\n\n### Actions\n\nVerbs for the digital age:\n\n- **шукати** — to search: *Я шукаю інформацію.*\n- **завантажувати** — to download/upload: *Він завантажує фільм.*\n- **публікувати** — to publish/post: *Вона публікує фото.*\n- **надсилати** — to send: *Я надсилаю повідомлення.*\n- **коментувати** — to comment: *Ми коментуємо новини.*\n\n> [!cultural] **Cultural Insight** Telegram Nation\n> While Facebook and Instagram are popular, **Telegram** is critical in Ukraine. It's not just a messenger; it's the primary source of news, air raid alerts, and community organization. Everyone has \"TG\" channels they follow religiously.\n\n## Practice\n\n### Story Time: The Remote Worker\n\nАндрій — програміст. Він працює вдома. Його робоче місце дуже зручне. На столі стоїть потужний **комп'ютер** і два великі **екрани**.\n\nВранці Андрій вмикає **ноутбук**. Він перевіряє **пошту** і читає **новини**. Потім він заходить у робочий чат.\n— Привіт всім! Я **онлайн**, — пише він.\n\n### Digital Safety\n\nBeing online requires safety (**безпека**). The internet is wonderful, but it can also be dangerous. Here are important rules for staying safe online.\n\n- **пароль** (password) must be strong. \"123456\" is a bad password. Use letters, numbers, and symbols.\n- **приватність** (privacy) is important. Don't share your address or phone number with strangers.\n- **шахрай** (scammer) wants your money. Never send money to people you don't know.\n- **вірус** (virus) can damage your computer. Don't click on suspicious links.\n- **резервна копія** (backup) saves your files. Make copies of important documents.\n\nАндрій continues working. He writes code, **завантажує** (uploads) files to the server, and **публікує** (publishes) updates. If he has a question, he **шукає** (searches) the answer on the internet. His work requires attention. One wrong symbol — and the program doesn't work!\n\nAt lunch, he calls his mom via video call (**відеозв'язок**).\n— Привіт, мамо! Як справи?\n— Привіт, синку. Я не можу знайти свій серіал.\n— Зараз я тобі скину **посилання**, — says Андрій.\n\nIn the evening, he turns off the computer. His eyes are tired from the screen. He takes his **навушники** (headphones) and goes running. Music helps him relax. Without technology, he cannot work, but without sport, he cannot live.\n\n> [!tip] **Tip** \"Like\" in Ukrainian\n> While **лайк** is common, the proper Ukrainian word is **вподобайка** (from *вподобати* - to like). You might see both!\n\n### Story Time: The Food Blogger\n\nОксана любить готувати. Вона вирішила створити **блог** про їжу. Вона купила нову камеру і мікрофон.\n\nВона готує борщ і знімає **відео**.\n— Всім привіт! Сьогодні ми варимо борщ! — каже вона у мікрофон.\n\nПотім вона монтує відео на ноутбуці. Це довгий процес. Треба вибрати музику і написати текст. Вона **публікує** відео на Ютуб.\n\nЗранку вона перевіряє **коментарі**.\n— Дякую за рецепт! Дуже смачно! — пишуть люди.\nОксана щаслива. Вона відповідає на коментарі і ставить **лайки**.\n\nАле є і погані коментарі.\n— Це не справжній борщ! — пише \"Експерт123\".\nОксана не сумує. Вона знає, що хейтери (**haters**) завжди будуть. Вона блокує його і йде готувати вареники.\n\n### Story Time: Lost Connection\n\nІван поїхав у Карпати. Він хотів відпочити від технологій. Він взяв тільки старий телефон (\"цегла\").\n\nПерший день був чудовий. Гори, ліс, повітря. Але ввечері він захотів подивитися погоду.\n— Де мій смартфон? — подумав він. — А, я його не взяв.\n\nВін спробував знайти **зв'язок** на старому телефоні. Нічого.\n— Ну і добре, — сказав Іван.\n\nАле на третій день він захотів показати фото друзям.\n— Дивіться, яка гора! Ой, у мене немає камери.\n\nІван зрозумів, що технології — це не тільки інтернет, але й можливість ділитися моментами. Коли він повернувся додому, він обійняв свій комп'ютер.\n— Привіт, мій електронний друже. Я сумував.\n\nВін відкрив **ноутбук**, зайшов у **мережу** і написав великий пост про свою подорож. Всі його друзі поставили лайки.\n\n### Story Time: Grandma Online\n\nБабуся Галина купила **планшет**. Вона хоче бути сучасною. Її онук, Максим, допомагає їй.\n\n— Бабусю, це твій **логін**, а це **пароль**, — пояснює Максим. — Не забудь їх!\n— Добре, а як знайти рецепт борщу? — питає Галина.\n— Треба відкрити **вебсайт** або Гугл і написати \"борщ\".\n\nГалина швидко вчиться. Тепер вона має профіль у Фейсбуці. Вона **публікує** фото своїх пирогів. Сусіди пишуть їй гарні **коментарі**. Вона навіть слухає **подкаст** про садівництво!\nІнтернет — це цікаво, навіть якщо тобі 70 років.\n\n# Summary\n\nYou learned to:\n- Name tech: **комп'ютер**, **смартфон**, **планшет**, **ноутбук**\n- Talk about internet: **вебсайт**, **посилання**, **пароль**\n- Consume media: **новини**, **блог**, **стаття**\n- Use verbs: **шукати**, **завантажувати**, **публікувати**\n\nDigital literacy is key in modern Ukrainian society. Use these words to stay connected!\n",
+    "createdAt": "2026-01-04T21:33:28.298487Z",
+    "modifiedAt": "2026-01-04T21:33:28.298487Z",
     "version": 2
   },
   "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A2-49",
     "level": "A2",
-    "phase": "A2",
-    "wordCount": 24,
-    "newWordCount": 24,
+    "phase": "A2.1",
+    "wordCount": 0,
+    "newWordCount": 0,
     "reviewWordCount": 0,
     "transliterationMode": "none",
-    "words": [
+    "words": [],
+    "reviewWords": []
+  },
+  "external_resources": {
+    "podcasts": [
       {
-        "id": "vocab-1",
-        "uk": "смартфон",
-        "ipa": "/smartˈfɔn/",
-        "en": "smartphone",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
+        "episode_id": "ULP-051",
+        "title": "ULP 2-51 Electronics and technology + Dative case",
+        "url": "https://www.ukrainianlessons.com/lesson/51/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: technology"
       },
       {
-        "id": "vocab-2",
-        "uk": "планшет",
-        "ipa": "/planˈʃɛt/",
-        "en": "tablet",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
+        "episode_id": "ULP-053",
+        "title": "ULP 2-53 Social Media in Ukrainian + Dative case",
+        "url": "https://www.ukrainianlessons.com/lesson/53/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: media"
       },
       {
-        "id": "vocab-3",
-        "uk": "ноутбук",
-        "ipa": "/noutˈbuk/",
-        "en": "laptop",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-4",
-        "uk": "гаджет",
-        "ipa": "/ˈɡadʒet/",
-        "en": "gadget",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-5",
-        "uk": "екран",
-        "ipa": "/eˈkran/",
-        "en": "screen",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-6",
-        "uk": "клавіатура",
-        "ipa": "/klavijaˈtura/",
-        "en": "keyboard",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-7",
-        "uk": "мишка",
-        "ipa": "/ˈmɪʃka/",
-        "en": "mouse",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-8",
-        "uk": "навушники",
-        "ipa": "/naˈvuʃnɪkɪ/",
-        "en": "headphones",
-        "pos": "noun",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-9",
-        "uk": "вебсайт",
-        "ipa": "/vɛbˈsajt/",
-        "en": "website",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-10",
-        "uk": "посилання",
-        "ipa": "/posɪˈlanʲːa/",
-        "en": "link",
-        "pos": "noun",
-        "gender": "n",
-        "note": ""
-      },
-      {
-        "id": "vocab-11",
-        "uk": "пароль",
-        "ipa": "/paˈrɔlʲ/",
-        "en": "password",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-12",
-        "uk": "логін",
-        "ipa": "/loˈɡin/",
-        "en": "login",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-13",
-        "uk": "мережа",
-        "ipa": "/meˈrɛʒa/",
-        "en": "network",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-14",
-        "uk": "зв'язок",
-        "ipa": "/zʋjɐˈzɔk/",
-        "en": "connection",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-15",
-        "uk": "новини",
-        "ipa": "/noˈvɪnɪ/",
-        "en": "news",
-        "pos": "noun",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-16",
-        "uk": "стаття",
-        "ipa": "/statˈtʲa/",
-        "en": "article",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-17",
-        "uk": "блог",
-        "ipa": "/blɔh/",
-        "en": "blog",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-18",
-        "uk": "блогер",
-        "ipa": "/ˈblɔher/",
-        "en": "blogger",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-19",
-        "uk": "подкаст",
-        "ipa": "/podˈkast/",
-        "en": "podcast",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-20",
-        "uk": "коментар",
-        "ipa": "/komenˈtar/",
-        "en": "comment",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-21",
-        "uk": "лайк",
-        "ipa": "/lajk/",
-        "en": "like",
-        "pos": "noun",
-        "gender": "m",
-        "note": "slang"
-      },
-      {
-        "id": "vocab-22",
-        "uk": "повідомлення",
-        "ipa": "/poviˈdɔmlenʲːa/",
-        "en": "message",
-        "pos": "noun",
-        "gender": "n",
-        "note": ""
-      },
-      {
-        "id": "vocab-23",
-        "uk": "завантажувати",
-        "ipa": "/zavanˈtaʒuvatɪ/",
-        "en": "to download",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-24",
-        "uk": "публікувати",
-        "ipa": "/publikuˈvatɪ/",
-        "en": "to publish",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
+        "episode_id": "ULP-166",
+        "title": "ULP 5-166 Український інтернет-сленг",
+        "url": "https://www.ukrainianlessons.com/lesson-166/",
+        "relevance": "medium",
+        "match_reason": "Cross-level topic match: інтернет"
       }
     ],
-    "reviewWords": []
+    "youtube": [
+      {
+        "title": "100 basic Ukrainian IT terms | Ukrainian vocabulary: IT, Technologies,...",
+        "url": "https://www.youtube.com/watch?v=BAuSNnrkCKM",
+        "relevance": "high",
+        "channel": "Red Purple Ukrainian"
+      }
+    ],
+    "articles": [
+      {
+        "title": "Ukrainian Grammar",
+        "url": "https://www.ukrainianlessons.com/ukrainian-tenses/",
+        "relevance": "high",
+        "source": "Grammar overview"
+      }
+    ],
+    "books": [],
+    "websites": [
+      {
+        "title": "Talk Ukrainian",
+        "url": "https://talkukrainian.com/",
+        "relevance": "high",
+        "source": "Practice exercises"
+      }
+    ]
   }
 }

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (24 words): речення, дієслово, відмінок, особа, займенник...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (24 words): вигук, сполучник, прийменник, давальний, дієслово...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1952/1200
+- **Words:** ✅ 1913/1200
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/5 types
@@ -23,7 +23,8 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 28.8% (B1.1 Aspect)
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 29.3% (B1.1 Aspect)
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ✅ Validated (14/98 confirmed)
 
@@ -37,14 +38,21 @@
 | examples | 30 | 24 | 100% | 20% | 20.0% |
 | engagement | 6 | 5 | 100% | 15% | 15.0% |
 | dialogues | 9 | 4 | 100% | 15% | 15.0% |
-| variety | 0.97 | - | 97% | 10% | 9.7% |
+| variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 12 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
+| visual | 6 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| questions | 41 | 5 | 100% | 5% | 5.0% |
+| questions | 40 | 5 | 100% | 5% | 5.0% |
 | proverbs | 3 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.7%** |
+| **TOTAL** | | | | | **99.8%** |
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+### Errors
+- ❌ Activity not rendering: Знайдіть частини мови​ (Find Word Parts)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -56,4 +64,4 @@
 | **Basic Sentence Terms** | ⚪️ | 440 | Skipped |
 | **Practice** | ⚪️ | 120 | Skipped |
 | **Mini-Dialogues** | ✅ | 205 | Included in Core |
-| **Підсумок** | ✅ | 141 | Included in Core |
+| **Підсумок** | ✅ | 102 | Included in Core |

@@ -1,0 +1,24 @@
+module: c1-06
+title: "Хеджування та модальність"
+subtitle: "Hedging & Modality"
+version: "1.0"
+phase: "C1.1 Academic Foundation"
+pedagogy: "Academic"
+duration: 120
+transliteration: none
+immersion: 100
+tags:
+  - academic
+  - grammar
+  - writing
+grammar:
+  - "Hedging strategies"
+  - "Modal verbs for probability"
+objectives:
+  - "Learner can use hedging devices to express uncertainty in academic texts"
+  - "Learner can distinguish degrees of certainty (modal verbs, adverbs)"
+  - "Learner can produce nuanced academic arguments"
+vocabulary_count: 30
+register: "науковий"
+text_type: "academic"
+slug: 06-hedging-modality

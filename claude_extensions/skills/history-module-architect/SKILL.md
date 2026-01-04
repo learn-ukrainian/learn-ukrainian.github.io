@@ -22,11 +22,11 @@ Create or review history (B2) and biography (C1) modules using the appropriate t
 
 ## Template Locations
 
-| Level | Template | Modules |
-|-------|----------|---------|
-| B2 History | `docs/l2-uk-en/templates/b2-history-module-template.md` | M71-131 (excl. synthesis) |
+| Level        | Template                                                          | Modules                     |
+| ------------ | ----------------------------------------------------------------- | --------------------------- |
+| B2 History   | `docs/l2-uk-en/templates/b2-history-module-template.md`           | M71-131 (excl. synthesis)   |
 | B2 Synthesis | `docs/l2-uk-en/templates/b2-history-synthesis-module-template.md` | M83, M108, M119, M125, M131 |
-| C1 Biography | `docs/l2-uk-en/templates/c1-biography-module-template.md` | M36-100 |
+| C1 Biography | `docs/l2-uk-en/templates/c1-biography-module-template.md`         | M36-100                     |
 
 **CRITICAL:** Read the template BEFORE creating a module.
 
@@ -50,22 +50,23 @@ Detects: Russianisms, surzhyk, calques, agreement/case errors.
 
 ### 1. Ukrainian Perspective (Decolonization)
 
-| Colonial Myth | Ukrainian Reality |
-|---------------|-------------------|
+| Colonial Myth               | Ukrainian Reality                           |
+| --------------------------- | ------------------------------------------- |
 | Shevchenko = "Russian poet" | Ukrainian poet persecuted by Russian Empire |
-| Mazepa = "traitor" | Defender of Ukrainian autonomy |
-| Hrushevsky = "nationalist" | Historian documenting Ukrainian statehood |
+| Mazepa = "traitor"          | Defender of Ukrainian autonomy              |
+| Hrushevsky = "nationalist"  | Historian documenting Ukrainian statehood   |
 
 ### 2. Historical Terminology
 
-| Before 1721 | After 1721 |
-|-------------|------------|
-| Московське царство | Російська імперія |
+| Before 1721                                                | After 1721        |
+| ---------------------------------------------------------- | ----------------- |
+| Московське царство                                         | Російська імперія |
 | **Never use:** Malorossiya, Little Russia, Russian framing |
 
 ### 3. Primary Sources
 
 Include authentic historical documents:
+
 - Quotes from letters and speeches
 - Excerpts from treaties and declarations
 - Literary passages
@@ -73,6 +74,7 @@ Include authentic historical documents:
 ### 4. Era Context
 
 Every historical/biographical module must include:
+
 - Political situation of the era
 - Cultural movements
 - Language situation (Russification, national revival, etc.)
@@ -81,25 +83,70 @@ Every historical/biographical module must include:
 
 ## B2 History Focus Areas
 
-| Phase | Modules | Era |
-|-------|---------|-----|
-| B2.3a | M71-83 | Origins → Commonwealth (Trypillia to Lithuania) |
-| B2.3b | M84-107 | Cossack Era & Empire (Sich to 1920s) |
+| Phase | Modules  | Era                                                    |
+| ----- | -------- | ------------------------------------------------------ |
+| B2.3a | M71-83   | Origins → Commonwealth (Trypillia to Lithuania)        |
+| B2.3b | M84-107  | Cossack Era & Empire (Sich to 1920s)                   |
 | B2.3c | M108-119 | Trauma & Resistance (Executed Renaissance to Diaspora) |
-| B2.3d | M120-125 | Independence Era (1991-2013) |
-| B2.3e | M126-131 | Revolution & War (2014-present) |
+| B2.3d | M120-125 | Independence Era (1991-2013)                           |
+| B2.3e | M126-131 | Revolution & War (2014-present)                        |
 
 **Synthesis Modules:** M83, M108, M119, M125, M131 — cross-era thematic analysis (NOT quiz-style checkpoints)
 
+---
+
+## CRITICAL: Language Testing, Not Content Recall
+
+<critical>
+
+**The Golden Rule:** "Can the learner answer this without reading the Ukrainian text?"
+
+- **If YES** → Rewrite (tests history knowledge)
+- **If NO** → Keep (tests Ukrainian comprehension)
+
+</critical>
+
+### Activity Requirements (10-12 total)
+
+| Activity Type         | Count | Key Requirement                                                  |
+| --------------------- | ----- | ---------------------------------------------------------------- |
+| quiz                  | 4-5   | MUST start with "Згідно з текстом..."                            |
+| fill-in/cloze         | 3-4   | Test collocations (чинити спротив, відіграти роль, брати участь) |
+| error-correction      | 2-3   | Fix GRAMMAR errors, NOT factual inaccuracies                     |
+| match-up              | 1-2   | Ukrainian term ↔ Ukrainian definition                            |
+| select/mark-the-words | 1-2   | Find grammatical features in text                                |
+
+### Forbidden Patterns
+
+❌ "У якому році [event]?"  
+❌ "Хто був [person]?"  
+❌ "Скільки [number]?"  
+❌ "Що символізує [symbol]?" (without "як автор тлумачить")
+
+### Required Patterns
+
+✅ "Згідно з текстом, як автор пояснює причини..."  
+✅ "У тексті модуля автор характеризує..."  
+✅ "Яку функцію автор підкреслює..."  
+✅ "Який аргумент автор наводить..."
+
+### Self-Check Before Delivering
+
+For EVERY quiz question:
+
+1. Can learner answer without reading Ukrainian module text?
+2. If YES → You're testing history. STOP and rewrite.
+3. If NO → You're testing Ukrainian. Proceed.
+
 ### Synthesis Module Structure (Different from Regular History)
 
-| Section | Purpose |
-|---------|---------|
-| **Узагальнення епохи** | 500+ word synthesis connecting all modules in era |
-| **Хронологія** | Timeline reconstruction activity (12+ events) |
-| **Словник епохи** | Era vocabulary REVIEW (not new vocab) |
-| **Есе-аналіз** | 250-400 word analytical essay with model answer |
-| **Зв'язок із сьогоденням** | Connection to modern Ukraine |
+| Section                    | Purpose                                           |
+| -------------------------- | ------------------------------------------------- |
+| **Узагальнення епохи**     | 500+ word synthesis connecting all modules in era |
+| **Хронологія**             | Timeline reconstruction activity (12+ events)     |
+| **Словник епохи**          | Era vocabulary REVIEW (not new vocab)             |
+| **Есе-аналіз**             | 250-400 word analytical essay with model answer   |
+| **Зв'язок із сьогоденням** | Connection to modern Ukraine                      |
 
 See `b2-history-synthesis-module-template.md` for full structure and example essay prompts
 
@@ -107,14 +154,14 @@ See `b2-history-synthesis-module-template.md` for full structure and example ess
 
 ## C1 Biography Distribution
 
-| Era | Modules | Count |
-|-----|---------|-------|
-| Pre-modern | M36-45 | 10 |
-| Cossack | M46-55 | 10 |
-| Imperial | M56-70 | 15 |
-| Revolutionary | M71-78 | 8 |
-| Soviet | M79-88 | 10 |
-| Independence | M89-100 | 12 |
+| Era           | Modules | Count |
+| ------------- | ------- | ----- |
+| Pre-modern    | M36-45  | 10    |
+| Cossack       | M46-55  | 10    |
+| Imperial      | M56-70  | 15    |
+| Revolutionary | M71-78  | 8     |
+| Soviet        | M79-88  | 10    |
+| Independence  | M89-100 | 12    |
 
 **Gender balance:** Minimum 30% women (20+ modules)
 

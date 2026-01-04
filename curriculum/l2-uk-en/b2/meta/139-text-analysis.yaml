@@ -1,0 +1,21 @@
+id: 139
+slug: '139-text-analysis'
+title: 'Аналіз тексту'
+subtitle: 'Text Analysis'
+version: '2.0'
+phase: 'B2.4 Skills & Capstone'
+focus: 'skills'
+pedagogy: 'TTT'
+duration: 120
+transliteration: none
+tags:
+  - skills
+  - analysis
+  - reading
+grammar:
+  - 'Аналіз підтексту та авторської позиції'
+  - 'Риторичні фігури та засоби виразності'
+objectives:
+  - 'Учень вміє розрізняти факти та судження у тексті'
+  - 'Учень може виявити маніпулятивні прийоми та прихований підтекст'
+  - 'Учень володіє інструментами аналізу риторичних пристроїв у промовах'

@@ -1,7 +1,8 @@
 - type: quiz
   title: Grammar Master
   items:
-  - question: Which grammatical case is primarily used for indicating a location in Ukrainian?
+  - question: Which grammatical case is primarily used for indicating a location in
+      Ukrainian?
     options:
     - text: Locative
       correct: true
@@ -11,7 +12,8 @@
       correct: false
     - text: Genitive
       correct: false
-  - question: Which case correctly completes the phrase "Я працюю..." to mean "I work as"?
+  - question: Which case correctly completes the phrase "Я працюю..." to mean "I work
+      as"?
     options:
     - text: Instrumental (менеджером)
       correct: true
@@ -51,7 +53,8 @@
       correct: false
     - text: Wish / Desire
       correct: false
-  - question: What is the meaning and function of the connector "щоб" in a complex sentence?
+  - question: What is the meaning and function of the connector "щоб" in a complex
+      sentence?
     options:
     - text: In order to / Purpose
       correct: true
@@ -81,7 +84,8 @@
       correct: false
     - text: Accusative (олівець)
       correct: false
-  - question: Which case is used with the preposition "з" meaning "from" in "Він прийшов з..."?
+  - question: Which case is used with the preposition "з" meaning "from" in "Він прийшов
+      з..."?
     options:
     - text: Genitive (магазину)
       correct: true
@@ -91,7 +95,8 @@
       correct: false
     - text: Instrumental (магазином)
       correct: false
-  - question: Which case follows the preposition "про" in the phrase "Ми говоримо про..."?
+  - question: Which case follows the preposition "про" in the phrase "Ми говоримо
+      про..."?
     options:
     - text: Accusative (політику)
       correct: true
@@ -111,7 +116,8 @@
       correct: false
     - text: Accusative (Україну)
       correct: false
-  - question: Which special case form is used when addressing someone directly, like "Привіт, ..."?
+  - question: Which special case form is used when addressing someone directly, like
+      "Привіт, ..."?
     options:
     - text: Vocative (друже)
       correct: true
@@ -148,104 +154,22 @@
     right: Орудний (Транспорт)
   - left: '- Мрію про відпустку'
     right: Місцевий (Об'єкт думки)
-- type: fill-in
+- type: cloze
   title: Case Challenge
-  items:
-  - sentence: Я йду в ____. (park)
-    answer: парк
-    options:
-    - парк
-    - парку
-    - парком
-    - паркі
-    explanation: Accusative (Direction).
-  - sentence: Я гуляю в ____. (park)
-    answer: парку
-    options:
-    - парку
-    - парк
-    - парком
-    - парка
-    explanation: Locative (Location).
-  - sentence: Я не бачу ____. (bus)
-    answer: автобуса
-    options:
-    - автобуса
-    - автобус
-    - автобусом
-    - автобусі
-  - sentence: Я їм ____. (soup)
-    answer: суп
-    options:
-    - суп
-    - супу
-    - супом
-    - супі
-    explanation: Accusative.
-  - sentence: Я їм суп ____. (spoon)
-    answer: ложкою
-    options:
-    - ложкою
-    - ложка
-    - ложку
-    - ложці
-    explanation: Instrumental (Tool).
-  - sentence: Я телефоную ____. (dad)
-    answer: татові
-    options:
-    - татові
-    - тато
-    - тата
-    - татом
-    explanation: Dative (Recipient).
-  - sentence: Ми з ____. (brother)
-    answer: братом
-    options:
-    - братом
-    - брат
-    - брата
-    - брату
-    explanation: Instrumental (With).
-  - sentence: Книга лежить на ____. (table)
-    answer: столі
-    options:
-    - столі
-    - стіл
-    - столу
-    - столом
-    explanation: Locative.
-  - sentence: У ____ є ідея. (me)
-    answer: мене
-    options:
-    - мене
-    - мені
-    - я
-    - мною
-    explanation: Genitive.
-  - sentence: Це подарунок для ____. (sister)
-    answer: сестри
-    options:
-    - сестри
-    - сестрі
-    - сестру
-    - сестра
-    explanation: Genitive (After preposition 'для').
-  - sentence: Я хочу стати ____. (artist)
-    answer: художником
-    options:
-    - художником
-    - художник
-    - художника
-    - художнику
-    explanation: Instrumental.
-  - sentence: Привіт, ____! (Ivan)
-    answer: Іване
-    options:
-    - Іване
-    - Іван
-    - Івана
-    - Іваном
-    explanation: Vocative.
+  passage: 'Я йду в {парк|парку|парком|паркі}_. (park) Я гуляю в {парку|парк|парком|парка}_.
+    (park) Я не бачу {автобуса|автобус|автобусом|автобусі}_. (bus)
+
+
+    Я їм {суп|супу|супом|супі}_. (soup) Я їм суп {ложкою|ложка|ложку|ложці}_. (spoon)
+    Я телефоную {татові|тато|тата|татом}_. (dad)
+
+
+    Ми з {братом|брат|брата|брату}_. (brother) Книга лежить на {столі|стіл|столу|столом}_.
+    (table) У {мене|мені|я|мною}_ є ідея. (me)
+
+
+    Це подарунок для {сестри|сестрі|сестру|сестра}_. (sister) Я хочу стати {художником|художник|художника|художнику}_.
+    (artist) Привіт, {Іване|Іван|Івана|Іваном}_! (Ivan)'
 - type: true-false
   title: Grammar Truths
   items:
@@ -575,8 +499,9 @@
     Ми хочемо {побачити|бачити|дивитися} світ.'
 - type: mark-the-words
   title: Identification
-  text: Вчора я *встав* о 7:00. Я *поснідав* і *випив* каву. Потім я *пішов* на роботу. Я *зробив* важливий звіт. Ввечері
-    я *купив* продукти і *приготував* вечерю. Я швидко *заснув*.
+  text: Вчора я *встав* о 7:00. Я *поснідав* і *випив* каву. Потім я *пішов* на роботу.
+    Я *зробив* важливий звіт. Ввечері я *купив* продукти і *приготував* вечерю. Я
+    швидко *заснув*.
 - type: select
   title: Case Detector
   items:

@@ -194,6 +194,17 @@ def count_yaml_activity_items(activity: dict) -> int:
         return asterisk_marks + bracket_marks
     elif act_type == 'dialogue-reorder':
         return len(activity.get('lines', []))
+    elif act_type in ('essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'):
+        # For essay/analysis tasks, count prompts or items
+        # If 'items' exists, count it. If 'prompts' exists, count it.
+        # If neither, return 1 if instructions exist (assumed single task)
+        items = activity.get('items', [])
+        prompts = activity.get('prompts', [])
+        if items:
+            return len(items)
+        if prompts:
+            return len(prompts)
+        return 1 if activity.get('instructions') else 0
 
     return 0
 

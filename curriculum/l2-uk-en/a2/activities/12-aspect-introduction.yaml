@@ -25,73 +25,28 @@
     right: вивчити
   - left: '- купувати'
     right: купити
-- type: fill-in
+- type: cloze
   title: Choose the Correct Aspect
-  items:
-  - sentence: Я ___ книгу дві години. (читав | прочитав)
-    answer: читав
-    options:
-    - читав
-    - прочитав
-  - sentence: Вона ___ листа вчора. (писала | написала)
-    answer: написала
-    options:
-    - писала
-    - написала
-  - sentence: Він ___ картину. (малював | намалював) — it's finished and hanging on the wall
-    answer: намалював
-    options:
-    - малював
-    - намалював
-  - sentence: Ми ___ щодня. (читаємо | прочитаємо)
-    answer: читаємо
-    options:
-    - читаємо
-    - прочитаємо
-  - sentence: Вона завжди ___ правду. (говорить | скаже)
-    answer: говорить
-    options:
-    - говорить
-    - скаже
-  - sentence: Я вже ___ цю книгу. (читав | прочитав)
-    answer: прочитав
-    options:
-    - читав
-    - прочитав
-  - sentence: Що ти ___ увечері? (робив | зробив)
-    answer: робив
-    options:
-    - робив
-    - зробив
-  - sentence: Я ___ домашнє завдання! (робив | зробив) — just finished
-    answer: зробив
-    options:
-    - робив
-    - зробив
-  - sentence: Він довго ___. (говорив | сказав)
-    answer: говорив
-    options:
-    - говорив
-    - сказав
-  - sentence: Він ___ "ні." (говорив | сказав)
-    answer: сказав
-    options:
-    - говорив
-    - сказав
-  - sentence: Ми ___ три години. (їхали | приїхали)
-    answer: їхали
-    options:
-    - їхали
-    - приїхали
-  - sentence: Ми нарешті ___! (їхали | приїхали)
-    answer: приїхали
-    options:
-    - їхали
-    - приїхали
+  passage: 'Я {читав|прочитав} книгу дві години. (читав | прочитав) Вона {написала|писала}
+    листа вчора. (писала | написала) Він {намалював|малював} картину. (малював | намалював)
+    — it''s finished and hanging on the wall
+
+
+    Ми {читаємо|прочитаємо} щодня. (читаємо | прочитаємо) Вона завжди {говорить|скаже}
+    правду. (говорить | скаже) Я вже {прочитав|читав} цю книгу. (читав | прочитав)
+
+
+    Що ти {робив|зробив} увечері? (робив | зробив) Я {зробив|робив} домашнє завдання!
+    (робив | зробив) — just finished Він довго {говорив|сказав}. (говорив | сказав)
+
+
+    Він {сказав|говорив} "ні." (говорив | сказав) Ми {їхали|приїхали} три години.
+    (їхали | приїхали) Ми нарешті {приїхали|їхали}! (їхали | приїхали)'
 - type: quiz
   title: Process or Result?
   items:
-  - question: When you say "Я читав книгу цілий вечір," which aspectual focus are you emphasizing?
+  - question: When you say "Я читав книгу цілий вечір," which aspectual focus are
+      you emphasizing?
     options:
     - text: Process
       correct: true
@@ -101,7 +56,8 @@
       correct: false
     - text: Single event
       correct: false
-  - question: When a speaker says "Я прочитав книгу," what is the primary focus of the action?
+  - question: When a speaker says "Я прочитав книгу," what is the primary focus of
+      the action?
     options:
     - text: Result
       correct: true
@@ -111,7 +67,8 @@
       correct: false
     - text: Ongoing duration
       correct: false
-  - question: In the sentence "Вона завжди говорить правду," what kind of action is being described?
+  - question: In the sentence "Вона завжди говорить правду," what kind of action is
+      being described?
     options:
     - text: Habitual action
       correct: true
@@ -121,7 +78,8 @@
       correct: false
     - text: Completed result
       correct: false
-  - question: When someone says "Він сказав 'так'," what characterizes the nature of this specific action?
+  - question: When someone says "Він сказав 'так'," what characterizes the nature
+      of this specific action?
     options:
     - text: Single completed event
       correct: true
@@ -131,7 +89,8 @@
       correct: false
     - text: Long duration
       correct: false
-  - question: Which of these options correctly identifies the perfective aspect of the verb "читати"?
+  - question: Which of these options correctly identifies the perfective aspect of
+      the verb "читати"?
     options:
     - text: прочитати
       correct: true
@@ -141,7 +100,8 @@
       correct: false
     - text: зачитати
       correct: false
-  - question: Which of these options correctly identifies the imperfective aspect of the verb "написати"?
+  - question: Which of these options correctly identifies the imperfective aspect
+      of the verb "написати"?
     options:
     - text: писати
       correct: true
@@ -151,7 +111,8 @@
       correct: false
     - text: дописати
       correct: false
-  - question: When you say "Я писав три години," which aspectual meaning are you emphasizing here?
+  - question: When you say "Я писав три години," which aspectual meaning are you emphasizing
+      here?
     options:
     - text: Duration
       correct: true
@@ -171,7 +132,8 @@
       correct: false
     - text: Future intent
       correct: false
-  - question: What term describes the relationship between the Ukrainian verb pairs "говорити" and "сказати"?
+  - question: What term describes the relationship between the Ukrainian verb pairs
+      "говорити" and "сказати"?
     options:
     - text: Suppletive pairs
       correct: true
@@ -181,7 +143,8 @@
       correct: false
     - text: Soft endings
       correct: false
-  - question: Which specific prefix is commonly used to make the verb "читати" into its perfective form?
+  - question: Which specific prefix is commonly used to make the verb "читати" into
+      its perfective form?
     options:
     - text: про-
       correct: true
@@ -191,7 +154,8 @@
       correct: false
     - text: по-
       correct: false
-  - question: Which specific prefix is commonly used to make the verb "писати" into its perfective form?
+  - question: Which specific prefix is commonly used to make the verb "писати" into
+      its perfective form?
     options:
     - text: на-
       correct: true
@@ -201,7 +165,8 @@
       correct: false
     - text: ви-
       correct: false
-  - question: In Ukrainian grammar, the concept of verbal aspect is primarily concerned with emphasizing what?
+  - question: In Ukrainian grammar, the concept of verbal aspect is primarily concerned
+      with emphasizing what?
     options:
     - text: Process vs. result
       correct: true
@@ -214,40 +179,51 @@
 - type: true-false
   title: Aspect Rules
   items:
-  - statement: Недоконаний вид фокусується на процесі та тривалості. | Imperfective verbs focus on process and duration.
+  - statement: Недоконаний вид фокусується на процесі та тривалості. | Imperfective
+      verbs focus on process and duration.
     correct: true
     explanation: Correct!
-  - statement: Доконаний вид вказує на завершені дії. | Perfective verbs indicate completed actions.
+  - statement: Доконаний вид вказує на завершені дії. | Perfective verbs indicate
+      completed actions.
     correct: true
     explanation: Yes!
-  - statement: Усі видові пари мають один корінь. | All aspect pairs use the same root.
+  - statement: Усі видові пари мають один корінь. | All aspect pairs use the same
+      root.
     correct: false
     explanation: Some pairs like говорити/сказати use different roots.
-  - statement: Більшість дієслів доконаного виду утворюються за допомогою префіксів. | Most perfective verbs are formed with prefixes.
+  - statement: Більшість дієслів доконаного виду утворюються за допомогою префіксів.
+      | Most perfective verbs are formed with prefixes.
     correct: true
     explanation: Correct! Prefixes like про-, на-, з-, по-.
-  - statement: Можна використовувати доконаний вид для звичних дій. | You can use perfective for habitual actions.
+  - statement: Можна використовувати доконаний вид для звичних дій. | You can use
+      perfective for habitual actions.
     correct: false
     explanation: Habitual actions require imperfective.
-  - statement: '"Я читав" може означати "I was reading". | "Я читав" can mean "I was reading."'
+  - statement: '"Я читав" може означати "I was reading". | "Я читав" can mean "I was
+      reading."'
     correct: true
     explanation: Yes! Imperfective shows ongoing process.
-  - statement: '"Я прочитав" означає "I finished reading". | "Я прочитав" means "I finished reading."'
+  - statement: '"Я прочитав" означає "I finished reading". | "Я прочитав" means "I
+      finished reading."'
     correct: true
     explanation: Correct!
-  - statement: Вид має значення лише в минулому часі. | Aspect only matters in past tense.
+  - statement: Вид має значення лише в минулому часі. | Aspect only matters in past
+      tense.
     correct: false
     explanation: Aspect matters in all tenses!
   - statement: Брати/взяти мають різні корені. | Брати/взяти use different roots.
     correct: true
     explanation: Yes! They're suppletive pairs.
-  - statement: Слова тривалості часто вживаються з недоконаним видом. | Duration words often appear with imperfective.
+  - statement: Слова тривалості часто вживаються з недоконаним видом. | Duration words
+      often appear with imperfective.
     correct: true
     explanation: Correct! Words like "довго," "три години."
-  - statement: Англійська мова має таку ж систему виду. | English has the same aspect system.
+  - statement: Англійська мова має таку ж систему виду. | English has the same aspect
+      system.
     correct: false
     explanation: English uses verb forms, not separate verbs.
-  - statement: Питання "Що ти робив?" використовує недоконаний вид. | The question "Що ти робив?" uses imperfective.
+  - statement: Питання "Що ти робив?" використовує недоконаний вид. | The question
+      "Що ти робив?" uses imperfective.
     correct: true
     explanation: Yes! Asking about activities/process.
 - type: group-sort
@@ -401,7 +377,8 @@
     options:
     - читав
     - прочитав
-    explanation: Duration (три години) requires imperfective even if context seems "completed."
+    explanation: Duration (три години) requires imperfective even if context seems
+      "completed."
   - sentence: Вона ___ листа.
     error: just finished
     answer: написала
@@ -453,27 +430,45 @@
     explanation: Duration marker (цілий вечір) → imperfective.
 - type: cloze
   title: Complete the Story
-  passage: 'Учора я {встав|встати|вставати} цілий день. Спочатку я {випив|пити|випити} статтю для роботи. Потім я {з''їв|їсти|з''їсти} кілька листів. Увечері я нарешті {пішов|іти|піти} книгу, яку {працював|працювати|попрацювати} цілий місяць.
+  passage: 'Учора я {встав|встати|вставати} цілий день. Спочатку я {випив|пити|випити}
+    статтю для роботи. Потім я {з''їв|їсти|з''їсти} кілька листів. Увечері я нарешті
+    {пішов|іти|піти} книгу, яку {працював|працювати|попрацювати} цілий місяць.
 
     ---
 
-    Сьогодні вранці я {встав|встати|вставати}. Я {випив|пити|випити} каву і {з''їв|їсти|з''їсти} сніданок. Потім я {пішов|іти|піти} до роботи. На роботі я {працював|працювати|попрацювати} цілий день. Увечері я {прийшов|йти|прийти} додому і {приготував|готувати|приготувати} смачну вечерю.'
+    Сьогодні вранці я {встав|встати|вставати}. Я {випив|пити|випити} каву і {з''їв|їсти|з''їсти}
+    сніданок. Потім я {пішов|іти|піти} до роботи. На роботі я {працював|працювати|попрацювати}
+    цілий день. Увечері я {прийшов|йти|прийти} додому і {приготував|готувати|приготувати}
+    смачну вечерю.'
 - type: cloze
   title: Aspect in Conversation
-  passage: |
-    — {Що ти робив учора?|Скоро напишу!|Ти прочитав її?}
+  passage: '— {Що ти робив учора?|Скоро напишу!|Ти прочитав її?}
+
     — {Я читав книгу.|Ні, ще читаю.|Коли закінчиш?}
+
     — {Ти прочитав її?|Думаю, завтра закінчу.|Що ти робив учора?}
+
     — {Ні, ще читаю.|Що ти робив учора?|Ти написав листа?}
+
     — {А коли прочитаєш?|Що ти робив учора?|Ні, ще читаю.}
+
     — {Думаю, завтра закінчу.|--|Довго ти вже пишеш?}
+
     — {--|Ні, ще читаю.|Скоро напишу!}
+
     — {Ти написав листа?|А коли прочитаєш?|Думаю, завтра закінчу.}
+
     — {Ні, ще пишу.|Коли закінчиш?|Скоро напишу!}
+
     — {Довго ти вже пишеш?|Ні, ще читаю.|Коли закінчиш?}
+
     — {Дві години.|Скоро напишу!|Думаю, завтра закінчу.}
+
     — {Коли закінчиш?|--|А коли прочитаєш?}
+
     — {Скоро напишу!|--|А коли прочитаєш?}
+
+    '
 - type: mark-the-words
   title: Identify Aspect
   text: 'Click on PERFECTIVE verbs only.

@@ -9,41 +9,20 @@
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A2",
-    "phase": "A2",
+    "phase": "A2.1",
     "moduleNumber": 50,
-    "moduleType": "vocabulary",
-    "pedagogy": "Narrative",
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
     "immersionLevel": 0.4,
-    "title": "Hobbies & Leisure",
+    "title": "Module 50",
     "titleUk": null,
-    "subtitle": "Free Time in Ukrainian",
-    "description": {
-      "Discuss hobbies": "малювати, співати, танцювати"
-    },
-    "objectives": [
-      {
-        "Discuss hobbies": "малювати, співати, танцювати"
-      },
-      {
-        "Talk about travel": "подорожувати, відвідувати"
-      },
-      {
-        "Describe entertainment": "кіно, театр, концерт"
-      },
-      "Plan free time"
-    ],
+    "subtitle": null,
+    "description": "Module 50",
+    "objectives": [],
     "objectivesUk": null,
-    "grammarFocus": [
-      "verb-conjugation-imperative",
-      "accusative-activities"
-    ],
-    "tags": [
-      "vocabulary",
-      "hobbies",
-      "travel",
-      "entertainment"
-    ],
-    "totalDuration": 60,
+    "grammarFocus": [],
+    "tags": [],
+    "totalDuration": 45,
     "transliterationMode": "none",
     "sections": [
       {
@@ -58,221 +37,60 @@
         "name": "Summary",
         "nameEn": null,
         "type": "summary",
-        "content": "You learned to:\n\n- Discuss creative hobbies: **малювати**, **грати**, **співати**\n- Travel words: **подорожувати**, **намет**, **квиток**\n- Entertainment places: **кіно**, **театр**, **музей**\n- General terms: **хобі**, **вільний час**, **відпочинок**\n\nLife is not only work. Ukrainians value their rest highly. Make sure you rest well and find a hobby that makes you truly happy! Don't forget to invite friends!\n\n> [!resources] 🔗 External Resources\n>\n> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview\n>\n> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises"
-      },
-      {
-        "id": "section-3",
-        "name": "Vocabulary",
-        "nameEn": null,
-        "type": "vocabulary",
-        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| фотографувати  | /fotoɦrafuˈvatɪ/    | to photograph     | verb   | -      |              |\n| колекціонувати | /kolektsʲionuˈvatɪ/ | to collect        | verb   | -      |              |\n| подорожувати   | /podoroʒuˈvatɪ/     | to travel         | verb   | -      |              |\n| відвідувати    | /vidˈviduvatɪ/      | to visit          | verb   | -      |              |\n| збирати        | /zbɪˈratɪ/          | to gather/collect | verb   | -      |              |\n| кіно           | /kiˈnɔ/             | cinema            | noun   | n      | indecl.      |\n| концерт        | /konˈtsɛrt/         | concert           | noun   | m      |              |\n| виставка       | /ˈvɪstavka/         | exhibition        | noun   | f      |              |\n| намет          | /naˈmɛt/            | tent              | noun   | m      |              |\n| сцена          | /ˈstsɛna/           | stage             | noun   | f      |              |\n| хобі           | /ˈxɔbi/             | hobby             | noun   | n      | indecl.      |\n| захоплення     | /zaˈxɔplenʲːa/      | passion/hobby     | noun   | n      |              |\n| відпочинок     | /vidpoˈtʃɪnok/      | rest/leisure      | noun   | m      |              |\n| вільний час    | /ˈvilʲnɪj tʃas/     | free time         | phrase | m      |              |\n| подорож        | /ˈpɔdoroʒ/          | trip/journey      | noun   | f      |              |\n| дача           | /ˈdatʃa/            | summer house      | noun   | f      |              |\n| шашлик         | /ʃaʃˈlɪk/           | BBQ (meat)        | noun   | m      |              |\n| вечорниці      | /vetʃorˈnɪtsʲi/     | evening gathering | noun   | pl     |              |\n| дієслово       | /diˈjɛslɔʋɔ/        | verb              | noun   | n      | grammar term |\n| прикметник     | /prɪkˈmɛtnɪk/       | adjective         | noun   | m      | grammar term |\n| іменник        | /iˈmɛnːɪk/          | noun              | noun   | m      | grammar term |"
+        "content": "You learned to:\n\n- Discuss creative hobbies: **малювати**, **грати**, **співати**\n- Travel words: **подорожувати**, **намет**, **квиток**\n- Entertainment places: **кіно**, **театр**, **музей**\n- General terms: **хобі**, **вільний час**, **відпочинок**\n\nLife is not only work. Ukrainians value their rest highly. Make sure you rest well and find a hobby that makes you truly happy! Don't forget to invite friends!"
       }
     ],
-    "rawMarkdown": "---\nmodule: a2-50\ntitle: Hobbies & Leisure\nsubtitle: 'Free Time in Ukrainian'\nversion: '1.0'\nphase: 'A2'\npedagogy: 'Narrative'\nduration: 60\ntransliteration: none\ntags: ['vocabulary', 'hobbies', 'travel', 'entertainment']\ngrammar: ['verb-conjugation-imperative', 'accusative-activities']\nobjectives:\n  - Discuss hobbies: малювати, співати, танцювати\n  - Talk about travel: подорожувати, відвідувати\n  - Describe entertainment: кіно, театр, концерт\n  - Plan free time\nvocab_count: 30\n---\n\n# Hobbies & Leisure\n\n## Warm-up\n\nЩо ви робите у вільний час? Ви любите спорт чи мистецтво? Ви подорожуєте?\n\nFree time is a vital part of happiness and mental well-being. Ukrainians take their leisure seriously, often spending it with music, dance, and close friends. Let's explore how people spend their quality time! In this module, you'll learn to talk about your hobbies, from painting to traveling. You'll learn verbs for creative activities and nouns for entertainment.\n\n> [!important] **Myth Buster** \"The Gloomy Slav\"\n> Stereotypes say Eastern Europeans are gloomy. False! Ukraine has a vibrant culture of music, dance, and festivals. From traditional **вечорниці** (evening gatherings) to modern techno raves in Kyiv, Ukrainians know how to party and enjoy life.\n\n## Presentation\n\n### Creative Hobbies\n\nDeveloping creative skills is a popular hobby. Here are some key verbs for artistic activities:\n\n| Дієслово           | Приклад                 |\n| ------------------ | ----------------------- |\n| **малювати**       | Вона гарно малює.       |\n| **співати**        | Ми любимо співати.      |\n| **танцювати**      | Вони танцюють гопак.    |\n| **грати**          | Я граю на гітарі.       |\n| **фотографувати**  | Він фотографує природу. |\n| **писати**         | Вона пише вірші.        |\n| **читати**         | Я читаю багато книг.    |\n| **колекціонувати** | Він колекціонує монети. |\n\nNote: **Грати** takes **на** + Locative for instruments (_на гітарі_) but **в** + Accusative for sports/games (_в футбол_).\n\n> [!note] Grammar Point: Playing\n> In Ukrainian, the verb **грати** changes prepositions based on context:\n>\n> - **Music**: грати **на** + Instrument (Locative case). _Я граю на гітарі, на піаніно._\n> - **Sports/Games**: грати **в** + Game (Accusative case). _Ми граємо в футбол, в шахи, в теніс._\n>   Don't mix them up! You cannot \"play into a guitar\" or \"play on football\".\n\n### Travel\n\nExploring the world is a great way to use your Ukrainian. Whether it is a weekend trip to a **дача** or a trek in the mountains, these words will help:\n\n- **подорожувати** — to travel: _Я хочу подорожувати світом._\n- **відвідувати** — to visit (places): _Ми відвідуємо музеї._\n- **оглядати** — to sightsee/inspect: _Туристи оглядають замок._\n- **збирати** — to gather/collect (or pack): _Я збираю валізу._\n- **подорож** — trip/journey: _Це була довга подорож._\n- **намет** — tent: _Ми спимо в наметі._\n- **квиток** — ticket: _У мене є квиток на поїзд._\n\n> [!cultural] **Cultural Insight** The Dacha\n> Many Ukrainians have a **дача** (summer house) or a garden outside the city. On weekends, families go there to relax, grow vegetables (esp. potatoes!), and make BBQ (**шашлик**). It's a national ritual.\n\n### Entertainment\n\nWhere do we go for fun? Ukrainian cities have a rich cultural life with many venues for performance and art:\n\n- **кіно** — cinema: _Йдемо в кіно!_\n- **театр** — theater: _Вона любить театр._\n- **концерт** — concert: _Гучний концерт._\n- **виставка** — exhibition: _Цікава виставка картин._\n- **музей** — museum: _Історичний музей._\n- **сцена** — stage: _Актор на сцені._\n- **глядач** — spectator/viewer: _Глядачі аплодують._\n\n### General Terms\n\nHere are some general terms for discussing your free time and leisure activities:\n\n- **вільний час** — free time: _У мене мало вільного часу._\n- **хобі** — hobby (indeclinable!): _Це моє хобі._\n- **захоплення** — passion/hobby: _Його захоплення — спорт._\n- **відпочинок** — rest/leisure: _Активний відпочинок._\n\n> [!tip] **Tip** \"Visiting\"\n> In Ukraine, **ходити в гості** (to go visiting) is huge. If you are invited, never come empty-handed. Bring creative sweets, cake (\"to tea\"), or flowers. Hospitality (**гостинність**) is sacred.\n\n## Practice\n\n### Story Time: The Artist and The Musician\n\nОлена і Дмитро — творчі люди. Олена любить **малювати**.\n— Це моє **хобі**, — каже вона. — Це мій відпочинок.\nВона **малює** пейзажі. Влітку вона їде на дачу і малює природу.\n\nДмитро любить музику. Він **грає** на гітарі і **співає**.\n— У мене є гурт, — каже він. — Ми даємо **концерти**.\nДмитро часто **виступає** на **сцені**. **Глядачі** люблять його пісні.\n\nОдного разу вони зустрілися на виставці.\n— Твої картини чудові! — сказав Дмитро.\n— А твій концерт був супер! — відповіла Олена.\nТепер вони разом ходять у **театр** і на **концерти**. Мистецтво об'єднує!\n\n### Story Time: The Traveler\n\nМаксим не любить сидіти вдома. Він любить **подорожувати**. Його **захоплення** — це гори.\n\nМинулого літа він поїхав у Карпати. Він взяв великий рюкзак і **намет**.\n— Я буду спати під зорями, — вирішив Максим.\n\nВін **оглядав** старі церкви і **відвідував** гуцульські села. Вдень він йшов горами, а ввечері розпалював вогонь.\nОдного разу він зустрів туристів.\n— Привіт! Куди йдете?\n— Ми йдемо на Говерлу, — відповіли вони.\n\nМаксим пішов з ними. Вони разом піднялися на найвищу гору України. Там було холодно, але красиво. Максим зробив багато фото.\n— Це найкраща **подорож** у моєму житті! — сказав він.\n\n### Story Time: Weekend Plans\n\nСьогодні п'ятниця. Наталя і Ігор планують вихідні.\n\n— Що будемо робити? — питає Ігор. — У мене є **вільний час**.\n— Може, підемо в **кіно**? — пропонує Наталя. — Там новий фільм.\n— Я не хочу в кіно. Я хочу на природу.\n— Але на вулиці дощ!\n— Тоді давай підемо в **музей**. Там нова **виставка**.\n— Це нудно, — каже Наталя. — Я хочу веселощів.\n— Добре, а як щодо театру?\n— **Театр**? Це цікаво. А є **квитки**?\n— Зараз подивлюся онлайн. О, є два квитки на комедію!\n— Чудово! Я люблю сміятися.\n\nВони замовили квитки. Вечір буде культурним. Ігор радий, що Наталя задоволена.\n\n### Story Time: A Night at the Opera\n\nЛьвів — це місто музики. Тут є чудовий Оперний **театр**.\nАндрій вирішив зробити сюрприз для Оксани. Він купив дорогі **квитки** на балет.\n\nВони одягли красивий одяг. Оксана була у вечірній сукні.\n— Ти виглядаєш як принцеса, — сказав Андрій.\n\nКоли вони зайшли у залу, Оксана була в захваті.\n— Яка краса! Яка **сцена**! — шепотіла вона.\n**Глядачі** займали свої місця. Скоро почалася вистава.\nТанцюристи були неймовірні. Музика була чарівною. Оксана плакала від емоцій.\n\nВ антракті вони пили шампанське.\n— Дякую за цей вечір, — сказала Оксана. — Це найкращий **відпочинок**.\n\n> [!cultural] **Cultural Insight** Opera Houses\n> Ukraine has stunning opera houses in Kyiv, Lviv, and Odesa. The Odesa Opera House is considered one of the most beautiful in the world. Going to the opera is a popular and relatively affordable activity for Ukrainians.\n\n### Story Time: The Collector\n\nБорис має незвичайне **хобі**. Він **колекціонує** старі фотоапарати.\nВін часто ходить на ринок і **шукає** рідкісні моделі.\n— Це фотоапарат \"Київ\" 1960 року, — каже продавець. — Він працює!\n\nБорис купує його. Вдома він чистить його і ставить на полицю.\n— Кожен фотоапарат має історію, — каже Борис.\nІноді він бере плівку і йде **фотографувати** місто. Стара техніка робить унікальні фото. Він любить чорно-білий стиль.\nЙого друзі кажуть, що це дивне хобі, але Борису подобається. Це його пристрасть.\n\n### Story Time: Singing Nation\n\nУкраїнці кажуть: \"Пісня — це душа народу\".\nМарія любить **співати**. Вона не професійна співачка, але у неї гарний голос.\nКоли у неї **вільний час**, вона йде в караоке з друзями.\n\n— Що будемо співати? — питають друзі.\n— Звичайно, \"Червону руту\"! — відповідає Марія.\nВони співають голосно і весело. Інші люди аплодують.\n\nВдома Марія співає, коли готує їжу. Її чоловік сміється:\n— Ти можеш виступати на концерті!\n— Може, колись, — усміхається вона. — А поки я співаю для тебе.\n\n# Summary\n\nYou learned to:\n\n- Discuss creative hobbies: **малювати**, **грати**, **співати**\n- Travel words: **подорожувати**, **намет**, **квиток**\n- Entertainment places: **кіно**, **театр**, **музей**\n- General terms: **хобі**, **вільний час**, **відпочинок**\n\nLife is not only work. Ukrainians value their rest highly. Make sure you rest well and find a hobby that makes you truly happy! Don't forget to invite friends!\n\n> [!resources] 🔗 External Resources\n>\n> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview\n>\n> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| фотографувати  | /fotoɦrafuˈvatɪ/    | to photograph     | verb   | -      |              |\n| колекціонувати | /kolektsʲionuˈvatɪ/ | to collect        | verb   | -      |              |\n| подорожувати   | /podoroʒuˈvatɪ/     | to travel         | verb   | -      |              |\n| відвідувати    | /vidˈviduvatɪ/      | to visit          | verb   | -      |              |\n| збирати        | /zbɪˈratɪ/          | to gather/collect | verb   | -      |              |\n| кіно           | /kiˈnɔ/             | cinema            | noun   | n      | indecl.      |\n| концерт        | /konˈtsɛrt/         | concert           | noun   | m      |              |\n| виставка       | /ˈvɪstavka/         | exhibition        | noun   | f      |              |\n| намет          | /naˈmɛt/            | tent              | noun   | m      |              |\n| сцена          | /ˈstsɛna/           | stage             | noun   | f      |              |\n| хобі           | /ˈxɔbi/             | hobby             | noun   | n      | indecl.      |\n| захоплення     | /zaˈxɔplenʲːa/      | passion/hobby     | noun   | n      |              |\n| відпочинок     | /vidpoˈtʃɪnok/      | rest/leisure      | noun   | m      |              |\n| вільний час    | /ˈvilʲnɪj tʃas/     | free time         | phrase | m      |              |\n| подорож        | /ˈpɔdoroʒ/          | trip/journey      | noun   | f      |              |\n| дача           | /ˈdatʃa/            | summer house      | noun   | f      |              |\n| шашлик         | /ʃaʃˈlɪk/           | BBQ (meat)        | noun   | m      |              |\n| вечорниці      | /vetʃorˈnɪtsʲi/     | evening gathering | noun   | pl     |              |\n| дієслово       | /diˈjɛslɔʋɔ/        | verb              | noun   | n      | grammar term |\n| прикметник     | /prɪkˈmɛtnɪk/       | adjective         | noun   | m      | grammar term |\n| іменник        | /iˈmɛnːɪk/          | noun              | noun   | m      | grammar term |\n",
-    "createdAt": "2025-12-31T22:51:52.511669Z",
-    "modifiedAt": "2025-12-31T22:51:52.511669Z",
+    "rawMarkdown": "# Hobbies & Leisure\n\n## Warm-up\n\nЩо ви робите у вільний час? Ви любите спорт чи мистецтво? Ви подорожуєте?\n\nFree time is a vital part of happiness and mental well-being. Ukrainians take their leisure seriously, often spending it with music, dance, and close friends. Let's explore how people spend their quality time! In this module, you'll learn to talk about your hobbies, from painting to traveling. You'll learn verbs for creative activities and nouns for entertainment.\n\n> [!important] **Myth Buster** \"The Gloomy Slav\"\n> Stereotypes say Eastern Europeans are gloomy. False! Ukraine has a vibrant culture of music, dance, and festivals. From traditional **вечорниці** (evening gatherings) to modern techno raves in Kyiv, Ukrainians know how to party and enjoy life.\n\n## Presentation\n\n### Creative Hobbies\n\nDeveloping creative skills is a popular hobby. Here are some key verbs for artistic activities:\n\n| Дієслово           | Приклад                 |\n| ------------------ | ----------------------- |\n| **малювати**       | Вона гарно малює.       |\n| **співати**        | Ми любимо співати.      |\n| **танцювати**      | Вони танцюють гопак.    |\n| **грати**          | Я граю на гітарі.       |\n| **фотографувати**  | Він фотографує природу. |\n| **писати**         | Вона пише вірші.        |\n| **читати**         | Я читаю багато книг.    |\n| **колекціонувати** | Він колекціонує монети. |\n\nNote: **Грати** takes **на** + Locative for instruments (_на гітарі_) but **в** + Accusative for sports/games (_в футбол_).\n\n> [!note] Grammar Point: Playing\n> In Ukrainian, the verb **грати** changes prepositions based on context:\n>\n> - **Music**: грати **на** + Instrument (Locative case). _Я граю на гітарі, на піаніно._\n> - **Sports/Games**: грати **в** + Game (Accusative case). _Ми граємо в футбол, в шахи, в теніс._\n>   Don't mix them up! You cannot \"play into a guitar\" or \"play on football\".\n\n### Travel\n\nExploring the world is a great way to use your Ukrainian. Whether it is a weekend trip to a **дача** or a trek in the mountains, these words will help:\n\n- **подорожувати** — to travel: _Я хочу подорожувати світом._\n- **відвідувати** — to visit (places): _Ми відвідуємо музеї._\n- **оглядати** — to sightsee/inspect: _Туристи оглядають замок._\n- **збирати** — to gather/collect (or pack): _Я збираю валізу._\n- **подорож** — trip/journey: _Це була довга подорож._\n- **намет** — tent: _Ми спимо в наметі._\n- **квиток** — ticket: _У мене є квиток на поїзд._\n\n> [!cultural] **Cultural Insight** The Dacha\n> Many Ukrainians have a **дача** (summer house) or a garden outside the city. On weekends, families go there to relax, grow vegetables (esp. potatoes!), and make BBQ (**шашлик**). It's a national ritual.\n\n### Entertainment\n\nWhere do we go for fun? Ukrainian cities have a rich cultural life with many venues for performance and art:\n\n- **кіно** — cinema: _Йдемо в кіно!_\n- **театр** — theater: _Вона любить театр._\n- **концерт** — concert: _Гучний концерт._\n- **виставка** — exhibition: _Цікава виставка картин._\n- **музей** — museum: _Історичний музей._\n- **сцена** — stage: _Актор на сцені._\n- **глядач** — spectator/viewer: _Глядачі аплодують._\n\n### General Terms\n\nHere are some general terms for discussing your free time and leisure activities:\n\n- **вільний час** — free time: _У мене мало вільного часу._\n- **хобі** — hobby (indeclinable!): _Це моє хобі._\n- **захоплення** — passion/hobby: _Його захоплення — спорт._\n- **відпочинок** — rest/leisure: _Активний відпочинок._\n\n> [!tip] **Tip** \"Visiting\"\n> In Ukraine, **ходити в гості** (to go visiting) is huge. If you are invited, never come empty-handed. Bring creative sweets, cake (\"to tea\"), or flowers. Hospitality (**гостинність**) is sacred.\n\n## Practice\n\n### Story Time: The Artist and The Musician\n\nОлена і Дмитро — творчі люди. Олена любить **малювати**.\n— Це моє **хобі**, — каже вона. — Це мій відпочинок.\nВона **малює** пейзажі. Влітку вона їде на дачу і малює природу.\n\nДмитро любить музику. Він **грає** на гітарі і **співає**.\n— У мене є гурт, — каже він. — Ми даємо **концерти**.\nДмитро часто **виступає** на **сцені**. **Глядачі** люблять його пісні.\n\nОдного разу вони зустрілися на виставці.\n— Твої картини чудові! — сказав Дмитро.\n— А твій концерт був супер! — відповіла Олена.\nТепер вони разом ходять у **театр** і на **концерти**. Мистецтво об'єднує!\n\n### Story Time: The Traveler\n\nМаксим не любить сидіти вдома. Він любить **подорожувати**. Його **захоплення** — це гори.\n\nМинулого літа він поїхав у Карпати. Він взяв великий рюкзак і **намет**.\n— Я буду спати під зорями, — вирішив Максим.\n\nВін **оглядав** старі церкви і **відвідував** гуцульські села. Вдень він йшов горами, а ввечері розпалював вогонь.\nОдного разу він зустрів туристів.\n— Привіт! Куди йдете?\n— Ми йдемо на Говерлу, — відповіли вони.\n\nМаксим пішов з ними. Вони разом піднялися на найвищу гору України. Там було холодно, але красиво. Максим зробив багато фото.\n— Це найкраща **подорож** у моєму житті! — сказав він.\n\n### Story Time: Weekend Plans\n\nСьогодні п'ятниця. Наталя і Ігор планують вихідні.\n\n— Що будемо робити? — питає Ігор. — У мене є **вільний час**.\n— Може, підемо в **кіно**? — пропонує Наталя. — Там новий фільм.\n— Я не хочу в кіно. Я хочу на природу.\n— Але на вулиці дощ!\n— Тоді давай підемо в **музей**. Там нова **виставка**.\n— Це нудно, — каже Наталя. — Я хочу веселощів.\n— Добре, а як щодо театру?\n— **Театр**? Це цікаво. А є **квитки**?\n— Зараз подивлюся онлайн. О, є два квитки на комедію!\n— Чудово! Я люблю сміятися.\n\nВони замовили квитки. Вечір буде культурним. Ігор радий, що Наталя задоволена.\n\n### Story Time: A Night at the Opera\n\nЛьвів — це місто музики. Тут є чудовий Оперний **театр**.\nАндрій вирішив зробити сюрприз для Оксани. Він купив дорогі **квитки** на балет.\n\nВони одягли красивий одяг. Оксана була у вечірній сукні.\n— Ти виглядаєш як принцеса, — сказав Андрій.\n\nКоли вони зайшли у залу, Оксана була в захваті.\n— Яка краса! Яка **сцена**! — шепотіла вона.\n**Глядачі** займали свої місця. Скоро почалася вистава.\nТанцюристи були неймовірні. Музика була чарівною. Оксана плакала від емоцій.\n\nВ антракті вони пили шампанське.\n— Дякую за цей вечір, — сказала Оксана. — Це найкращий **відпочинок**.\n\n> [!cultural] **Cultural Insight** Opera Houses\n> Ukraine has stunning opera houses in Kyiv, Lviv, and Odesa. The Odesa Opera House is considered one of the most beautiful in the world. Going to the opera is a popular and relatively affordable activity for Ukrainians.\n\n### Story Time: The Collector\n\nБорис має незвичайне **хобі**. Він **колекціонує** старі фотоапарати.\nВін часто ходить на ринок і **шукає** рідкісні моделі.\n— Це фотоапарат \"Київ\" 1960 року, — каже продавець. — Він працює!\n\nБорис купує його. Вдома він чистить його і ставить на полицю.\n— Кожен фотоапарат має історію, — каже Борис.\nІноді він бере плівку і йде **фотографувати** місто. Стара техніка робить унікальні фото. Він любить чорно-білий стиль.\nЙого друзі кажуть, що це дивне хобі, але Борису подобається. Це його пристрасть.\n\n### Story Time: Singing Nation\n\nУкраїнці кажуть: \"Пісня — це душа народу\".\nМарія любить **співати**. Вона не професійна співачка, але у неї гарний голос.\nКоли у неї **вільний час**, вона йде в караоке з друзями.\n\n— Що будемо співати? — питають друзі.\n— Звичайно, \"Червону руту\"! — відповідає Марія.\nВони співають голосно і весело. Інші люди аплодують.\n\nВдома Марія співає, коли готує їжу. Її чоловік сміється:\n— Ти можеш виступати на концерті!\n— Може, колись, — усміхається вона. — А поки я співаю для тебе.\n\n# Summary\n\nYou learned to:\n\n- Discuss creative hobbies: **малювати**, **грати**, **співати**\n- Travel words: **подорожувати**, **намет**, **квиток**\n- Entertainment places: **кіно**, **театр**, **музей**\n- General terms: **хобі**, **вільний час**, **відпочинок**\n\nLife is not only work. Ukrainians value their rest highly. Make sure you rest well and find a hobby that makes you truly happy! Don't forget to invite friends!\n",
+    "createdAt": "2026-01-04T21:33:28.299254Z",
+    "modifiedAt": "2026-01-04T21:33:28.299254Z",
     "version": 2
   },
   "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A2-50",
     "level": "A2",
-    "phase": "A2",
-    "wordCount": 21,
-    "newWordCount": 21,
+    "phase": "A2.1",
+    "wordCount": 0,
+    "newWordCount": 0,
     "reviewWordCount": 0,
     "transliterationMode": "none",
-    "words": [
+    "words": [],
+    "reviewWords": []
+  },
+  "external_resources": {
+    "podcasts": [
       {
-        "id": "vocab-1",
-        "uk": "фотографувати",
-        "ipa": "/fotoɦrafuˈvatɪ/",
-        "en": "to photograph",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
+        "episode_id": "ULP-115",
+        "title": "ULP 3-115 Мої нові захоплення (Голосове повідомлення №7) – My new hobbies (Voice message №7)",
+        "url": "https://www.ukrainianlessons.com/lesson/115/",
+        "relevance": "medium",
+        "match_reason": "Challenge listening (B1): hobbies"
       },
       {
-        "id": "vocab-2",
-        "uk": "колекціонувати",
-        "ipa": "/kolektsʲionuˈvatɪ/",
-        "en": "to collect",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-3",
-        "uk": "подорожувати",
-        "ipa": "/podoroʒuˈvatɪ/",
-        "en": "to travel",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-4",
-        "uk": "відвідувати",
-        "ipa": "/vidˈviduvatɪ/",
-        "en": "to visit",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-5",
-        "uk": "збирати",
-        "ipa": "/zbɪˈratɪ/",
-        "en": "to gather/collect",
-        "pos": "verb",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-6",
-        "uk": "кіно",
-        "ipa": "/kiˈnɔ/",
-        "en": "cinema",
-        "pos": "noun",
-        "gender": "n",
-        "note": "indecl."
-      },
-      {
-        "id": "vocab-7",
-        "uk": "концерт",
-        "ipa": "/konˈtsɛrt/",
-        "en": "concert",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-8",
-        "uk": "виставка",
-        "ipa": "/ˈvɪstavka/",
-        "en": "exhibition",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-9",
-        "uk": "намет",
-        "ipa": "/naˈmɛt/",
-        "en": "tent",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-10",
-        "uk": "сцена",
-        "ipa": "/ˈstsɛna/",
-        "en": "stage",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-11",
-        "uk": "хобі",
-        "ipa": "/ˈxɔbi/",
-        "en": "hobby",
-        "pos": "noun",
-        "gender": "n",
-        "note": "indecl."
-      },
-      {
-        "id": "vocab-12",
-        "uk": "захоплення",
-        "ipa": "/zaˈxɔplenʲːa/",
-        "en": "passion/hobby",
-        "pos": "noun",
-        "gender": "n",
-        "note": ""
-      },
-      {
-        "id": "vocab-13",
-        "uk": "відпочинок",
-        "ipa": "/vidpoˈtʃɪnok/",
-        "en": "rest/leisure",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-14",
-        "uk": "вільний час",
-        "ipa": "/ˈvilʲnɪj tʃas/",
-        "en": "free time",
-        "pos": "phrase",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-15",
-        "uk": "подорож",
-        "ipa": "/ˈpɔdoroʒ/",
-        "en": "trip/journey",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-16",
-        "uk": "дача",
-        "ipa": "/ˈdatʃa/",
-        "en": "summer house",
-        "pos": "noun",
-        "gender": "f",
-        "note": ""
-      },
-      {
-        "id": "vocab-17",
-        "uk": "шашлик",
-        "ipa": "/ʃaʃˈlɪk/",
-        "en": "BBQ (meat)",
-        "pos": "noun",
-        "gender": "m",
-        "note": ""
-      },
-      {
-        "id": "vocab-18",
-        "uk": "вечорниці",
-        "ipa": "/vetʃorˈnɪtsʲi/",
-        "en": "evening gathering",
-        "pos": "noun",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-19",
-        "uk": "дієслово",
-        "ipa": "/diˈjɛslɔʋɔ/",
-        "en": "verb",
-        "pos": "noun",
-        "gender": "n",
-        "note": "grammar term"
-      },
-      {
-        "id": "vocab-20",
-        "uk": "прикметник",
-        "ipa": "/prɪkˈmɛtnɪk/",
-        "en": "adjective",
-        "pos": "noun",
-        "gender": "m",
-        "note": "grammar term"
-      },
-      {
-        "id": "vocab-21",
-        "uk": "іменник",
-        "ipa": "/iˈmɛnːɪk/",
-        "en": "noun",
-        "pos": "noun",
-        "gender": "m",
-        "note": "grammar term"
+        "episode_id": "FMU-023",
+        "title": "Vocabulary booster! Hobbies in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/fmu23/",
+        "relevance": "medium",
+        "match_reason": "Listening review (A1): hobbies"
       }
     ],
-    "reviewWords": []
+    "youtube": [],
+    "articles": [
+      {
+        "title": "Ukrainian Grammar",
+        "url": "https://www.ukrainianlessons.com/ukrainian-tenses/",
+        "relevance": "high",
+        "source": "Grammar overview"
+      }
+    ],
+    "books": [],
+    "websites": [
+      {
+        "title": "Talk Ukrainian",
+        "url": "https://talkukrainian.com/",
+        "relevance": "high",
+        "source": "Practice exercises"
+      }
+    ]
   }
 }

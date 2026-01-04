@@ -9,299 +9,188 @@
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A1",
-    "phase": "A1.3 - Consolidation",
+    "phase": "A1.1",
     "moduleNumber": 21,
     "moduleType": "grammar",
     "pedagogy": "PPP",
     "immersionLevel": 0.3,
-    "title": "Yesterday - Past Tense",
+    "title": "Module 21",
     "titleUk": null,
-    "subtitle": "Talking About What Happened",
-    "description": "Learner can form past tense using L-participle",
-    "objectives": [
-      "Learner can form past tense using L-participle",
-      "Learner can use correct gender ending (-в/-ла/-ло/-ли)",
-      "Learner can describe past events using time expressions",
-      "Learner can talk about what they did yesterday"
-    ],
+    "subtitle": null,
+    "description": "Module 21",
+    "objectives": [],
     "objectivesUk": null,
-    "grammarFocus": [
-      "Past tense formation with L-participle",
-      "Gender agreement in past tense (-в/-ла/-ло/-ли)",
-      "Time expressions for past events"
-    ],
-    "tags": [
-      "past-tense",
-      "l-participle",
-      "time-expressions",
-      "verbs"
-    ],
-    "totalDuration": "60 min",
-    "transliterationMode": "first-occurrence",
+    "grammarFocus": [],
+    "tags": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "sections": [
       {
         "id": "section-1",
         "name": "Yesterday - Past Tense",
         "nameEn": null,
         "type": "content",
-        "content": "## Warm-up\n\nWhat did you do yesterday? Last week? A long time ago? Every language needs a way to talk about the past, and Ukrainian's solution is elegant: take the verb stem and add a special ending that shows **who** did the action.\n\nUnlike English, where \"I worked\" and \"she worked\" look the same, Ukrainian past tense changes based on **gender**, not person. \"I worked\" is different for men (я працював) and women (я працювала). Once you see the pattern, it's surprisingly easy!\n\n> [!tip] **Чи знаєте ви? (Did You Know?)**\n>\n> Минулий час (past tense) часто має букву **л**! Вона читала. Воно читало. Ми читали. Feminine, neuter, and plural forms always contain the letter **л**. Masculine forms usually end in **в** (Я читав), which historically evolved from an *l* sound!\n\n## Presentation\n\n### How Ukrainian Past Tense Works\n\nThe past tense in Ukrainian is beautifully simple. You take the infinitive (like читати — to read), remove -ти, and add:\n\n| Who | Ending | Example |\n|-----|--------|---------|\n| він (he) | -**в** | читав |\n| вона (she) | -**ла** | читала |\n| воно (it) | -**ло** | читало |\n| вони / ми / ви (they/we/you) | -**ли** | читали |\n\n**Key insight:** The ending matches the **gender of the subject**, not the person. So \"I read\" is:\n- Я читав (if you're male)\n- Я читала (if you're female)\n\n### Formation Step by Step\n\n**Step 1:** Take the infinitive\n- читати (to read)\n- працювати (to work)\n- говорити (to speak)\n\n**Step 2:** Remove -ти\n- чита-\n- працюва-\n- говори-\n\n**Step 3:** Add gender ending\n- читав / читала / читало / читали\n- працював / працювала / працювало / працювали\n- говорив / говорила / говорило / говорили\n\n> [!observe] Pattern Discovery\n>\n> Look at these sentences. What do you notice about the verb endings?\n>\n> - Він читав книгу. (He was reading a book.)\n> - Вона читала книгу. (She was reading a book.)\n> - Ми читали книгу. (We were reading a book.)\n>\n> The verb changes based on who is speaking, not what tense it is!\n\n### Time Expressions for the Past\n\nWhen did it happen? Use these words:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| вчора | yesterday | Вчора я працював. |\n| позавчора | day before yesterday | Позавчора вона приїхала. |\n| минулого тижня | last week | Минулого тижня ми говорили. |\n| минулого місяця | last month | Минулого місяця він поїхав. |\n| минулого року | last year | Минулого року вони зустрілися. |\n| давно | long ago | Давно це було. |\n| недавно | recently | Недавно я почув новину. |\n| раніше | earlier, before | Раніше тут був ресторан. |\n| колись | once, sometime | Колись я був там. |\n\n> [!example] **Pop Culture Moment**\n>\n> In the famous Ukrainian song \"Червона рута\" (Red Rue), the singer reminisces about finding a magical flower: \"Я знайшов її колись...\" (I found it once...). Past tense + колись = perfect for nostalgic stories!\n\n### Key Verbs in Past Tense\n\nHere are essential verbs you'll use often:\n\n| Infinitive | він | вона | вони | Meaning |\n|------------|-----|------|------|---------|\n| бути | був | була | були | was/were |\n| робити | робив | робила | робили | was doing |\n| говорити | говорив | говорила | говорили | was speaking |\n| їсти | їв | їла | їли | was eating |\n| пити | пив | пила | пили | was drinking |\n| писати | писав | писала | писали | was writing |\n| слухати | слухав | слухала | слухали | was listening |\n| дивитися | дивився | дивилася | дивилися | was watching |\n| жити | жив | жила | жили | was living |\n| працювати | працював | працювала | працювали | was working |\n| відпочивати | відпочивав | відпочивала | відпочивали | was resting |\n| чекати | чекав | чекала | чекали | was waiting |\n\n> [!warning] **Watch Out!**\n>\n> Some verbs change their stem in past tense:\n> - їсти → їв/їла/їли (not \"їстив\")\n> - пити → пив/пила/пили (not \"питив\")\n>\n> The stem changes, but the endings stay regular!\n\n### Example Sentences\n\n1. **Вчора я працював.**\n   Yesterday I worked. (male speaker)\n\n2. **Вчора я працювала.**\n   Yesterday I worked. (female speaker)\n\n3. **Він читав книгу.**\n   He was reading a book.\n\n4. **Вона говорила по телефону.**\n   She was talking on the phone.\n\n5. **Ми говорили українською.**\n   We were speaking Ukrainian.\n\n6. **Вони жили в Києві.**\n   They lived in Kyiv.\n\n7. **Колись тут був ресторан.**\n   Once there was a restaurant here.\n\n8. **Я слухав музику.**\n   I was listening to music. (male speaker)\n\n9. **Позавчора вона писала листи.**\n   Day before yesterday she was writing letters.\n\n10. **Давно він жив тут.**\n    Long ago he lived here.\n\n11. **Минулого року ми були в Україні.**\n    Last year we were in Ukraine.\n\n12. **Недавно я слухав цю пісню.**\n    Recently I was listening to this song.\n\n13. **Раніше тут було тихо.**\n    Earlier it was quiet here.\n\n14. **Він чекав на автобус.**\n    He was waiting for the bus.\n\n15. **Вона дивилася фільм.**\n    She was watching a movie.\n\n> [!info] **Real World Usage**\n>\n> When Ukrainians ask \"Що ти робив вчора?\" (What did you do yesterday?), they're using the masculine form. If asking a woman, they'll say \"Що ти робила вчора?\" — the question itself changes based on who you're talking to!\n\n### Міні-діалог 1: Після вихідних (After the Weekend)\n\n**Місце дії:** Офіс у понеділок вранці\n**Setting:** Office on Monday morning\n\n**Марія:** Привіт, Андрію! Що ти робив у вихідні?\n**Андрій:** Привіт! Я був у Львові.\n**Марія:** О, круто! Що ти там робив?\n**Андрій:** Я гуляв по старому місту.\n**Марія:** А я працювала. Нудно!\n**Андрій:** Минулого тижня ти була на морі!\n**Марія:** Так, це правда. Там було чудово!\n\nTranslation:\n— Hi, Andriy! What did you do on the weekend?\n— Hi! I was in Lviv.\n— Oh, cool! What did you do there?\n— I was walking around the old town.\n— And I worked. Boring!\n— Last week you were at the sea!\n— Yes, that's true. It was wonderful there!\n\n### Міні-діалог 2: Спогади (Memories)\n\n**Місце дії:** Бабусин дім\n**Setting:** Grandmother's house\n\n**Онук:** Бабусю, що тут було раніше?\n**Бабуся:** Колись тут був великий сад.\n**Онук:** Хто тут жив?\n**Бабуся:** Твій дідусь жив тут давно.\n**Онук:** Я не знав! Коли?\n**Бабуся:** Давно. Він був молодий.\n**Онук:** Вау! Це так давно!\n\nTranslation:\n— Grandma, what was here before?\n— Once there was a big garden here.\n— Who lived here?\n— Your grandfather lived here long ago.\n— I didn't know! When?\n— Long ago. He was young.\n— Wow! That's so long ago!\n\n> [!tip] **Language Elegance**\n>\n> Notice how Ukrainian uses був/була/було for \"was\" depending on the gender of the noun:\n> - Тут **був** сад. (The garden is masculine.)\n> - Тут **була** школа. (The school is feminine.)\n> - Тут **було** тихо. (General statements use neuter.)\n\n## Підсумок (Summary)\n\nВи навчилися говорити про минуле українською! (You've learned to talk about the past!)\n\n**Запам'ятайте основні шаблони (Key patterns):**\n\n1. **Утворення (Formation):** Основа дієслова + -в/-ла/-ло/-ли\n   - читати → читав / читала / читало / читали\n\n2. **Рід (Gender agreement):** Закінчення відповідає роду\n   - Він працював. (He worked.)\n   - Вона працювала. (She worked.)\n   - Вони працювали. (They worked.)\n\n3. **Часові вирази (Time expressions):** вчора, позавчора, минулого тижня, давно, колись\n\n**Неправильні дієслова (Irregular verbs):**\n- піти → пішов/пішла\n- прийти → прийшов/прийшла\n\nНаступний урок: майбутній час! Завтра ми будемо вивчати, як говорити про плани!\n\n---"
+        "content": "## Warm-up\n\nWhat did you do yesterday? Last week? A long time ago? Every language needs a way to talk about the past, and Ukrainian's solution is elegant: take the verb stem and add a special ending that shows **who** did the action.\n\nUnlike English, where \"I worked\" and \"she worked\" look the same, Ukrainian past tense changes based on **gender**, not person. \"I worked\" is different for men (я працював) and women (я працювала). Once you see the pattern, it's surprisingly easy!\n\n> [!tip] **Чи знаєте ви? (Did You Know?)**\n>\n> Минулий час (past tense) часто має букву **л**! Вона читала. Воно читало. Ми читали. Feminine, neuter, and plural forms always contain the letter **л**. Masculine forms usually end in **в** (Я читав), which historically evolved from an _l_ sound!\n\n## Presentation\n\n### How Ukrainian Past Tense Works\n\nThe past tense in Ukrainian is beautifully simple. You take the infinitive (like читати — to read), remove -ти, and add:\n\n| Who                          | Ending  | Example |\n| ---------------------------- | ------- | ------- |\n| він (he)                     | -**в**  | читав   |\n| вона (she)                   | -**ла** | читала  |\n| воно (it)                    | -**ло** | читало  |\n| вони / ми / ви (they/we/you) | -**ли** | читали  |\n\n**Key insight:** The ending matches the **gender of the subject**, not the person. So \"I read\" is:\n\n- Я читав (if you're male)\n- Я читала (if you're female)\n\n### Formation Step by Step\n\n**Step 1:** Take the infinitive\n\n- читати (to read)\n- працювати (to work)\n- говорити (to speak)\n\n**Step 2:** Remove -ти\n\n- чита-\n- працюва-\n- говори-\n\n**Step 3:** Add gender ending\n\n- читав / читала / читало / читали\n- працював / працювала / працювало / працювали\n- говорив / говорила / говорило / говорили\n\n> [!observe] Pattern Discovery\n>\n> Look at these sentences. What do you notice about the verb endings?\n>\n> - Він читав книгу. (He was reading a book.)\n> - Вона читала книгу. (She was reading a book.)\n> - Ми читали книгу. (We were reading a book.)\n>\n> The verb changes based on who is speaking, not what tense it is!\n\n### Time Expressions for the Past\n\nWhen did it happen? Use these words:\n\n| Ukrainian       | English              | Example                        |\n| --------------- | -------------------- | ------------------------------ |\n| вчора           | yesterday            | Вчора я працював.              |\n| позавчора       | day before yesterday | Позавчора вона приїхала.       |\n| минулого тижня  | last week            | Минулого тижня ми говорили.    |\n| минулого місяця | last month           | Минулого місяця він поїхав.    |\n| минулого року   | last year            | Минулого року вони зустрілися. |\n| давно           | long ago             | Давно це було.                 |\n| недавно         | recently             | Недавно я почув новину.        |\n| раніше          | earlier, before      | Раніше тут був ресторан.       |\n| колись          | once, sometime       | Колись я був там.              |\n\n> [!example] **Pop Culture Moment**\n>\n> In the famous Ukrainian song \"Червона рута\" (Red Rue), the singer reminisces about finding a magical flower: \"Я знайшов її колись...\" (I found it once...). Past tense + колись = perfect for nostalgic stories!\n\n### Key Verbs in Past Tense\n\nHere are essential verbs you'll use often:\n\n| Infinitive  | він        | вона        | вони        | Meaning       |\n| ----------- | ---------- | ----------- | ----------- | ------------- |\n| бути        | був        | була        | були        | was/were      |\n| робити      | робив      | робила      | робили      | was doing     |\n| говорити    | говорив    | говорила    | говорили    | was speaking  |\n| їсти        | їв         | їла         | їли         | was eating    |\n| пити        | пив        | пила        | пили        | was drinking  |\n| писати      | писав      | писала      | писали      | was writing   |\n| слухати     | слухав     | слухала     | слухали     | was listening |\n| дивитися    | дивився    | дивилася    | дивилися    | was watching  |\n| жити        | жив        | жила        | жили        | was living    |\n| працювати   | працював   | працювала   | працювали   | was working   |\n| відпочивати | відпочивав | відпочивала | відпочивали | was resting   |\n| чекати      | чекав      | чекала      | чекали      | was waiting   |\n\n> [!warning] **Watch Out!**\n>\n> Some verbs change their stem in past tense:\n>\n> - їсти → їв/їла/їли (not \"їстив\")\n> - пити → пив/пила/пили (not \"питив\")\n>\n> The stem changes, but the endings stay regular!\n\n### Example Sentences\n\n1. **Вчора я працював.**\n   Yesterday I worked. (male speaker)\n\n2. **Вчора я працювала.**\n   Yesterday I worked. (female speaker)\n\n3. **Він читав книгу.**\n   He was reading a book.\n\n4. **Вона говорила по телефону.**\n   She was talking on the phone.\n\n5. **Ми говорили українською.**\n   We were speaking Ukrainian.\n\n6. **Вони жили в Києві.**\n   They lived in Kyiv.\n\n7. **Колись тут був ресторан.**\n   Once there was a restaurant here.\n\n8. **Я слухав музику.**\n   I was listening to music. (male speaker)\n\n9. **Позавчора вона писала листи.**\n   Day before yesterday she was writing letters.\n\n10. **Давно він жив тут.**\n    Long ago he lived here.\n\n11. **Минулого року ми були в Україні.**\n    Last year we were in Ukraine.\n\n12. **Недавно я слухав цю пісню.**\n    Recently I was listening to this song.\n\n13. **Раніше тут було тихо.**\n    Earlier it was quiet here.\n\n14. **Він чекав на автобус.**\n    He was waiting for the bus.\n\n15. **Вона дивилася фільм.**\n    She was watching a movie.\n\n> [!info] **Real World Usage**\n>\n> When Ukrainians ask \"Що ти робив вчора?\" (What did you do yesterday?), they're using the masculine form. If asking a woman, they'll say \"Що ти робила вчора?\" — the question itself changes based on who you're talking to!\n\n### Міні-діалог 1: Після вихідних (After the Weekend)\n\n**Місце дії:** Офіс у понеділок вранці\n**Setting:** Office on Monday morning\n\n**Марія:** Привіт, Андрію! Що ти робив у вихідні?\n**Андрій:** Привіт! Я був у Львові.\n**Марія:** О, круто! Що ти там робив?\n**Андрій:** Я гуляв по старому місту.\n**Марія:** А я працювала. Нудно!\n**Андрій:** Минулого тижня ти була на морі!\n**Марія:** Так, це правда. Там було чудово!\n\nTranslation:\n— Hi, Andriy! What did you do on the weekend?\n— Hi! I was in Lviv.\n— Oh, cool! What did you do there?\n— I was walking around the old town.\n— And I worked. Boring!\n— Last week you were at the sea!\n— Yes, that's true. It was wonderful there!\n\n### Міні-діалог 2: Спогади (Memories)\n\n**Місце дії:** Бабусин дім\n**Setting:** Grandmother's house\n\n**Онук:** Бабусю, що тут було раніше?\n**Бабуся:** Колись тут був великий сад.\n**Онук:** Хто тут жив?\n**Бабуся:** Твій дідусь жив тут давно.\n**Онук:** Я не знав! Коли?\n**Бабуся:** Давно. Він був молодий.\n**Онук:** Вау! Це так давно!\n\nTranslation:\n— Grandma, what was here before?\n— Once there was a big garden here.\n— Who lived here?\n— Your grandfather lived here long ago.\n— I didn't know! When?\n— Long ago. He was young.\n— Wow! That's so long ago!\n\n> [!tip] **Language Elegance**\n>\n> Notice how Ukrainian uses був/була/було for \"was\" depending on the gender of the noun:\n>\n> - Тут **був** сад. (The garden is masculine.)\n> - Тут **була** школа. (The school is feminine.)\n> - Тут **було** тихо. (General statements use neuter.)\n\n## Підсумок (Summary)\n\nВи навчилися говорити про минуле українською! (You've learned to talk about the past!)\n\n**Запам'ятайте основні шаблони (Key patterns):**\n\n1. **Утворення (Formation):** Основа дієслова + -в/-ла/-ло/-ли\n   - читати → читав / читала / читало / читали\n\n2. **Рід (Gender agreement):** Закінчення відповідає роду\n   - Він працював. (He worked.)\n   - Вона працювала. (She worked.)\n   - Вони працювали. (They worked.)\n\n3. **Часові вирази (Time expressions):** вчора, позавчора, минулого тижня, давно, колись\n\n**Неправильні дієслова (Irregular verbs):**\n\n- піти → пішов/пішла\n- прийти → прийшов/прийшла\n\nНаступний урок: майбутній час! Завтра ми будемо вивчати, як говорити про плани!\n\n---"
       },
       {
         "id": "section-2",
         "name": "Summary",
         "nameEn": null,
         "type": "summary",
-        "content": "Ви вивчили минулий час в українській мові. Ви знаєте закінчення -в, -ла, -ло та -ли. Ви знаєте слова \"вчора\" та \"давно\". Це була гарна робота (This was good work).\n\n> [!resources] External Resources\n>\n> **YouTube:** [The Past Tense in Ukrainian](https://www.youtube.com/watch?v=SUx5xUfABIc) — Speak Ukrainian\n>\n> **Grammar Guide:** [Ukrainian Past Tense](https://www.ukrainianlessons.com/grammar-past-tense/) — Ukrainian Lessons\n>\n> **Practice:** [Past Tense Exercises](https://ukrainianlanguage.uk/exercise-past-tense/) — Ukrainian Language"
-      },
-      {
-        "id": "section-3",
-        "name": "Vocabulary",
-        "nameEn": null,
-        "type": "vocabulary",
-        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| вчора | /ˈvt͡ʃɔrɑ/ | yesterday | adverb | - | time expression |\n| позавчора | /pɔzɑˈvt͡ʃɔrɑ/ | day before yesterday | adverb | - | time expression |\n| минулого тижня | /mɪˈnulɔɦɔ ˈtɪʒnʲɑ/ | last week | phrase | - | genitive construction |\n| минулого місяця | /mɪˈnulɔɦɔ ˈmisʲɑt͡sʲɑ/ | last month | phrase | - | genitive construction |\n| минулого року | /mɪˈnulɔɦɔ ˈrɔku/ | last year | phrase | - | genitive construction |\n| давно | /dɑvˈnɔ/ | long ago | adverb | - | time expression |\n| недавно | /nɛˈdɑvnɔ/ | recently | adverb | - | time expression |\n| раніше | /rɑˈnʲiʃe/ | earlier, before | adverb | - | time expression |\n| колись | /kɔˈlɪsʲ/ | once, sometime | adverb | - | time expression |\n| був | /buv/ | was (m) | verb | m | past of бути |\n| була | /buˈlɑ/ | was (f) | verb | f | past of бути |\n| було | /buˈlɔ/ | was (n) | verb | n | past of бути |\n| були | /buˈlɪ/ | were (pl) | verb | pl | past of бути |\n| робив | /rɔˈbɪv/ | was doing (m) | verb | m | past of робити |\n| говорив | /ɦɔvɔˈrɪv/ | was speaking (m) | verb | m | past of говорити |\n| писав | /pɪˈsɑv/ | was writing (m) | verb | m | past of писати |\n| читав | /t͡ʃɪˈtɑv/ | was reading (m) | verb | m | past of читати |\n| слухав | /ˈsluxɑv/ | was listening (m) | verb | m | past of слухати |\n| дивився | /dɪˈvɪvsʲɑ/ | was watching (m) | verb | m | past of дивитися |\n| жив | /ʒɪv/ | was living (m) | verb | m | past of жити |\n| працював | /prɑt͡sʲuˈvɑv/ | was working (m) | verb | m | past of працювати |\n| їв | /jiv/ | was eating (m) | verb | m | past of їсти |\n| пив | /pɪv/ | was drinking (m) | verb | m | past of пити |\n| чекав | /t͡ʃeˈkɑv/ | was waiting (m) | verb | m | past of чекати |\n| гуляв | /ɦuˈlʲɑv/ | was walking (m) | verb | m | past of гуляти |\n\n---"
+        "content": "Ви вивчили минулий час в українській мові. Ви знаєте закінчення -в, -ла, -ло та -ли. Ви знаєте слова \"вчора\" та \"давно\". Це була гарна робота (This was good work)."
       }
     ],
-    "rawMarkdown": "---\n\nmodule: a1-21\ntitle: \"Yesterday - Past Tense\"\nsubtitle: \"Talking About What Happened\"\nversion: \"1.0\"\nphase: \"A1.3 - Consolidation\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: \"first-occurrence\"\ntags:\n  - past-tense\n  - l-participle\n  - time-expressions\n  - verbs\ngrammar:\n  - Past tense formation with L-participle\n  - Gender agreement in past tense (-в/-ла/-ло/-ли)\n  - Time expressions for past events\nobjectives:\n  - \"Learner can form past tense using L-participle\"\n  - \"Learner can use correct gender ending (-в/-ла/-ло/-ли)\"\n  - \"Learner can describe past events using time expressions\"\n  - \"Learner can talk about what they did yesterday\"\nvocabulary_count: 25\n---\n\n# Yesterday - Past Tense\n\n## Warm-up\n\nWhat did you do yesterday? Last week? A long time ago? Every language needs a way to talk about the past, and Ukrainian's solution is elegant: take the verb stem and add a special ending that shows **who** did the action.\n\nUnlike English, where \"I worked\" and \"she worked\" look the same, Ukrainian past tense changes based on **gender**, not person. \"I worked\" is different for men (я працював) and women (я працювала). Once you see the pattern, it's surprisingly easy!\n\n> [!tip] **Чи знаєте ви? (Did You Know?)**\n>\n> Минулий час (past tense) часто має букву **л**! Вона читала. Воно читало. Ми читали. Feminine, neuter, and plural forms always contain the letter **л**. Masculine forms usually end in **в** (Я читав), which historically evolved from an *l* sound!\n\n## Presentation\n\n### How Ukrainian Past Tense Works\n\nThe past tense in Ukrainian is beautifully simple. You take the infinitive (like читати — to read), remove -ти, and add:\n\n| Who | Ending | Example |\n|-----|--------|---------|\n| він (he) | -**в** | читав |\n| вона (she) | -**ла** | читала |\n| воно (it) | -**ло** | читало |\n| вони / ми / ви (they/we/you) | -**ли** | читали |\n\n**Key insight:** The ending matches the **gender of the subject**, not the person. So \"I read\" is:\n- Я читав (if you're male)\n- Я читала (if you're female)\n\n### Formation Step by Step\n\n**Step 1:** Take the infinitive\n- читати (to read)\n- працювати (to work)\n- говорити (to speak)\n\n**Step 2:** Remove -ти\n- чита-\n- працюва-\n- говори-\n\n**Step 3:** Add gender ending\n- читав / читала / читало / читали\n- працював / працювала / працювало / працювали\n- говорив / говорила / говорило / говорили\n\n> [!observe] Pattern Discovery\n>\n> Look at these sentences. What do you notice about the verb endings?\n>\n> - Він читав книгу. (He was reading a book.)\n> - Вона читала книгу. (She was reading a book.)\n> - Ми читали книгу. (We were reading a book.)\n>\n> The verb changes based on who is speaking, not what tense it is!\n\n### Time Expressions for the Past\n\nWhen did it happen? Use these words:\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| вчора | yesterday | Вчора я працював. |\n| позавчора | day before yesterday | Позавчора вона приїхала. |\n| минулого тижня | last week | Минулого тижня ми говорили. |\n| минулого місяця | last month | Минулого місяця він поїхав. |\n| минулого року | last year | Минулого року вони зустрілися. |\n| давно | long ago | Давно це було. |\n| недавно | recently | Недавно я почув новину. |\n| раніше | earlier, before | Раніше тут був ресторан. |\n| колись | once, sometime | Колись я був там. |\n\n> [!example] **Pop Culture Moment**\n>\n> In the famous Ukrainian song \"Червона рута\" (Red Rue), the singer reminisces about finding a magical flower: \"Я знайшов її колись...\" (I found it once...). Past tense + колись = perfect for nostalgic stories!\n\n### Key Verbs in Past Tense\n\nHere are essential verbs you'll use often:\n\n| Infinitive | він | вона | вони | Meaning |\n|------------|-----|------|------|---------|\n| бути | був | була | були | was/were |\n| робити | робив | робила | робили | was doing |\n| говорити | говорив | говорила | говорили | was speaking |\n| їсти | їв | їла | їли | was eating |\n| пити | пив | пила | пили | was drinking |\n| писати | писав | писала | писали | was writing |\n| слухати | слухав | слухала | слухали | was listening |\n| дивитися | дивився | дивилася | дивилися | was watching |\n| жити | жив | жила | жили | was living |\n| працювати | працював | працювала | працювали | was working |\n| відпочивати | відпочивав | відпочивала | відпочивали | was resting |\n| чекати | чекав | чекала | чекали | was waiting |\n\n> [!warning] **Watch Out!**\n>\n> Some verbs change their stem in past tense:\n> - їсти → їв/їла/їли (not \"їстив\")\n> - пити → пив/пила/пили (not \"питив\")\n>\n> The stem changes, but the endings stay regular!\n\n### Example Sentences\n\n1. **Вчора я працював.**\n   Yesterday I worked. (male speaker)\n\n2. **Вчора я працювала.**\n   Yesterday I worked. (female speaker)\n\n3. **Він читав книгу.**\n   He was reading a book.\n\n4. **Вона говорила по телефону.**\n   She was talking on the phone.\n\n5. **Ми говорили українською.**\n   We were speaking Ukrainian.\n\n6. **Вони жили в Києві.**\n   They lived in Kyiv.\n\n7. **Колись тут був ресторан.**\n   Once there was a restaurant here.\n\n8. **Я слухав музику.**\n   I was listening to music. (male speaker)\n\n9. **Позавчора вона писала листи.**\n   Day before yesterday she was writing letters.\n\n10. **Давно він жив тут.**\n    Long ago he lived here.\n\n11. **Минулого року ми були в Україні.**\n    Last year we were in Ukraine.\n\n12. **Недавно я слухав цю пісню.**\n    Recently I was listening to this song.\n\n13. **Раніше тут було тихо.**\n    Earlier it was quiet here.\n\n14. **Він чекав на автобус.**\n    He was waiting for the bus.\n\n15. **Вона дивилася фільм.**\n    She was watching a movie.\n\n> [!info] **Real World Usage**\n>\n> When Ukrainians ask \"Що ти робив вчора?\" (What did you do yesterday?), they're using the masculine form. If asking a woman, they'll say \"Що ти робила вчора?\" — the question itself changes based on who you're talking to!\n\n### Міні-діалог 1: Після вихідних (After the Weekend)\n\n**Місце дії:** Офіс у понеділок вранці\n**Setting:** Office on Monday morning\n\n**Марія:** Привіт, Андрію! Що ти робив у вихідні?\n**Андрій:** Привіт! Я був у Львові.\n**Марія:** О, круто! Що ти там робив?\n**Андрій:** Я гуляв по старому місту.\n**Марія:** А я працювала. Нудно!\n**Андрій:** Минулого тижня ти була на морі!\n**Марія:** Так, це правда. Там було чудово!\n\nTranslation:\n— Hi, Andriy! What did you do on the weekend?\n— Hi! I was in Lviv.\n— Oh, cool! What did you do there?\n— I was walking around the old town.\n— And I worked. Boring!\n— Last week you were at the sea!\n— Yes, that's true. It was wonderful there!\n\n### Міні-діалог 2: Спогади (Memories)\n\n**Місце дії:** Бабусин дім\n**Setting:** Grandmother's house\n\n**Онук:** Бабусю, що тут було раніше?\n**Бабуся:** Колись тут був великий сад.\n**Онук:** Хто тут жив?\n**Бабуся:** Твій дідусь жив тут давно.\n**Онук:** Я не знав! Коли?\n**Бабуся:** Давно. Він був молодий.\n**Онук:** Вау! Це так давно!\n\nTranslation:\n— Grandma, what was here before?\n— Once there was a big garden here.\n— Who lived here?\n— Your grandfather lived here long ago.\n— I didn't know! When?\n— Long ago. He was young.\n— Wow! That's so long ago!\n\n> [!tip] **Language Elegance**\n>\n> Notice how Ukrainian uses був/була/було for \"was\" depending on the gender of the noun:\n> - Тут **був** сад. (The garden is masculine.)\n> - Тут **була** школа. (The school is feminine.)\n> - Тут **було** тихо. (General statements use neuter.)\n\n## Підсумок (Summary)\n\nВи навчилися говорити про минуле українською! (You've learned to talk about the past!)\n\n**Запам'ятайте основні шаблони (Key patterns):**\n\n1. **Утворення (Formation):** Основа дієслова + -в/-ла/-ло/-ли\n   - читати → читав / читала / читало / читали\n\n2. **Рід (Gender agreement):** Закінчення відповідає роду\n   - Він працював. (He worked.)\n   - Вона працювала. (She worked.)\n   - Вони працювали. (They worked.)\n\n3. **Часові вирази (Time expressions):** вчора, позавчора, минулого тижня, давно, колись\n\n**Неправильні дієслова (Irregular verbs):**\n- піти → пішов/пішла\n- прийти → прийшов/прийшла\n\nНаступний урок: майбутній час! Завтра ми будемо вивчати, як говорити про плани!\n\n---\n\n# Summary\n\nВи вивчили минулий час в українській мові. Ви знаєте закінчення -в, -ла, -ло та -ли. Ви знаєте слова \"вчора\" та \"давно\". Це була гарна робота (This was good work).\n\n> [!resources] External Resources\n>\n> **YouTube:** [The Past Tense in Ukrainian](https://www.youtube.com/watch?v=SUx5xUfABIc) — Speak Ukrainian\n>\n> **Grammar Guide:** [Ukrainian Past Tense](https://www.ukrainianlessons.com/grammar-past-tense/) — Ukrainian Lessons\n>\n> **Practice:** [Past Tense Exercises](https://ukrainianlanguage.uk/exercise-past-tense/) — Ukrainian Language\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| вчора | /ˈvt͡ʃɔrɑ/ | yesterday | adverb | - | time expression |\n| позавчора | /pɔzɑˈvt͡ʃɔrɑ/ | day before yesterday | adverb | - | time expression |\n| минулого тижня | /mɪˈnulɔɦɔ ˈtɪʒnʲɑ/ | last week | phrase | - | genitive construction |\n| минулого місяця | /mɪˈnulɔɦɔ ˈmisʲɑt͡sʲɑ/ | last month | phrase | - | genitive construction |\n| минулого року | /mɪˈnulɔɦɔ ˈrɔku/ | last year | phrase | - | genitive construction |\n| давно | /dɑvˈnɔ/ | long ago | adverb | - | time expression |\n| недавно | /nɛˈdɑvnɔ/ | recently | adverb | - | time expression |\n| раніше | /rɑˈnʲiʃe/ | earlier, before | adverb | - | time expression |\n| колись | /kɔˈlɪsʲ/ | once, sometime | adverb | - | time expression |\n| був | /buv/ | was (m) | verb | m | past of бути |\n| була | /buˈlɑ/ | was (f) | verb | f | past of бути |\n| було | /buˈlɔ/ | was (n) | verb | n | past of бути |\n| були | /buˈlɪ/ | were (pl) | verb | pl | past of бути |\n| робив | /rɔˈbɪv/ | was doing (m) | verb | m | past of робити |\n| говорив | /ɦɔvɔˈrɪv/ | was speaking (m) | verb | m | past of говорити |\n| писав | /pɪˈsɑv/ | was writing (m) | verb | m | past of писати |\n| читав | /t͡ʃɪˈtɑv/ | was reading (m) | verb | m | past of читати |\n| слухав | /ˈsluxɑv/ | was listening (m) | verb | m | past of слухати |\n| дивився | /dɪˈvɪvsʲɑ/ | was watching (m) | verb | m | past of дивитися |\n| жив | /ʒɪv/ | was living (m) | verb | m | past of жити |\n| працював | /prɑt͡sʲuˈvɑv/ | was working (m) | verb | m | past of працювати |\n| їв | /jiv/ | was eating (m) | verb | m | past of їсти |\n| пив | /pɪv/ | was drinking (m) | verb | m | past of пити |\n| чекав | /t͡ʃeˈkɑv/ | was waiting (m) | verb | m | past of чекати |\n| гуляв | /ɦuˈlʲɑv/ | was walking (m) | verb | m | past of гуляти |\n\n---\n",
-    "createdAt": "2025-12-31T22:04:20.590948Z",
-    "modifiedAt": "2025-12-31T22:04:20.590948Z",
+    "rawMarkdown": "# Yesterday - Past Tense\n\n## Warm-up\n\nWhat did you do yesterday? Last week? A long time ago? Every language needs a way to talk about the past, and Ukrainian's solution is elegant: take the verb stem and add a special ending that shows **who** did the action.\n\nUnlike English, where \"I worked\" and \"she worked\" look the same, Ukrainian past tense changes based on **gender**, not person. \"I worked\" is different for men (я працював) and women (я працювала). Once you see the pattern, it's surprisingly easy!\n\n> [!tip] **Чи знаєте ви? (Did You Know?)**\n>\n> Минулий час (past tense) часто має букву **л**! Вона читала. Воно читало. Ми читали. Feminine, neuter, and plural forms always contain the letter **л**. Masculine forms usually end in **в** (Я читав), which historically evolved from an _l_ sound!\n\n## Presentation\n\n### How Ukrainian Past Tense Works\n\nThe past tense in Ukrainian is beautifully simple. You take the infinitive (like читати — to read), remove -ти, and add:\n\n| Who                          | Ending  | Example |\n| ---------------------------- | ------- | ------- |\n| він (he)                     | -**в**  | читав   |\n| вона (she)                   | -**ла** | читала  |\n| воно (it)                    | -**ло** | читало  |\n| вони / ми / ви (they/we/you) | -**ли** | читали  |\n\n**Key insight:** The ending matches the **gender of the subject**, not the person. So \"I read\" is:\n\n- Я читав (if you're male)\n- Я читала (if you're female)\n\n### Formation Step by Step\n\n**Step 1:** Take the infinitive\n\n- читати (to read)\n- працювати (to work)\n- говорити (to speak)\n\n**Step 2:** Remove -ти\n\n- чита-\n- працюва-\n- говори-\n\n**Step 3:** Add gender ending\n\n- читав / читала / читало / читали\n- працював / працювала / працювало / працювали\n- говорив / говорила / говорило / говорили\n\n> [!observe] Pattern Discovery\n>\n> Look at these sentences. What do you notice about the verb endings?\n>\n> - Він читав книгу. (He was reading a book.)\n> - Вона читала книгу. (She was reading a book.)\n> - Ми читали книгу. (We were reading a book.)\n>\n> The verb changes based on who is speaking, not what tense it is!\n\n### Time Expressions for the Past\n\nWhen did it happen? Use these words:\n\n| Ukrainian       | English              | Example                        |\n| --------------- | -------------------- | ------------------------------ |\n| вчора           | yesterday            | Вчора я працював.              |\n| позавчора       | day before yesterday | Позавчора вона приїхала.       |\n| минулого тижня  | last week            | Минулого тижня ми говорили.    |\n| минулого місяця | last month           | Минулого місяця він поїхав.    |\n| минулого року   | last year            | Минулого року вони зустрілися. |\n| давно           | long ago             | Давно це було.                 |\n| недавно         | recently             | Недавно я почув новину.        |\n| раніше          | earlier, before      | Раніше тут був ресторан.       |\n| колись          | once, sometime       | Колись я був там.              |\n\n> [!example] **Pop Culture Moment**\n>\n> In the famous Ukrainian song \"Червона рута\" (Red Rue), the singer reminisces about finding a magical flower: \"Я знайшов її колись...\" (I found it once...). Past tense + колись = perfect for nostalgic stories!\n\n### Key Verbs in Past Tense\n\nHere are essential verbs you'll use often:\n\n| Infinitive  | він        | вона        | вони        | Meaning       |\n| ----------- | ---------- | ----------- | ----------- | ------------- |\n| бути        | був        | була        | були        | was/were      |\n| робити      | робив      | робила      | робили      | was doing     |\n| говорити    | говорив    | говорила    | говорили    | was speaking  |\n| їсти        | їв         | їла         | їли         | was eating    |\n| пити        | пив        | пила        | пили        | was drinking  |\n| писати      | писав      | писала      | писали      | was writing   |\n| слухати     | слухав     | слухала     | слухали     | was listening |\n| дивитися    | дивився    | дивилася    | дивилися    | was watching  |\n| жити        | жив        | жила        | жили        | was living    |\n| працювати   | працював   | працювала   | працювали   | was working   |\n| відпочивати | відпочивав | відпочивала | відпочивали | was resting   |\n| чекати      | чекав      | чекала      | чекали      | was waiting   |\n\n> [!warning] **Watch Out!**\n>\n> Some verbs change their stem in past tense:\n>\n> - їсти → їв/їла/їли (not \"їстив\")\n> - пити → пив/пила/пили (not \"питив\")\n>\n> The stem changes, but the endings stay regular!\n\n### Example Sentences\n\n1. **Вчора я працював.**\n   Yesterday I worked. (male speaker)\n\n2. **Вчора я працювала.**\n   Yesterday I worked. (female speaker)\n\n3. **Він читав книгу.**\n   He was reading a book.\n\n4. **Вона говорила по телефону.**\n   She was talking on the phone.\n\n5. **Ми говорили українською.**\n   We were speaking Ukrainian.\n\n6. **Вони жили в Києві.**\n   They lived in Kyiv.\n\n7. **Колись тут був ресторан.**\n   Once there was a restaurant here.\n\n8. **Я слухав музику.**\n   I was listening to music. (male speaker)\n\n9. **Позавчора вона писала листи.**\n   Day before yesterday she was writing letters.\n\n10. **Давно він жив тут.**\n    Long ago he lived here.\n\n11. **Минулого року ми були в Україні.**\n    Last year we were in Ukraine.\n\n12. **Недавно я слухав цю пісню.**\n    Recently I was listening to this song.\n\n13. **Раніше тут було тихо.**\n    Earlier it was quiet here.\n\n14. **Він чекав на автобус.**\n    He was waiting for the bus.\n\n15. **Вона дивилася фільм.**\n    She was watching a movie.\n\n> [!info] **Real World Usage**\n>\n> When Ukrainians ask \"Що ти робив вчора?\" (What did you do yesterday?), they're using the masculine form. If asking a woman, they'll say \"Що ти робила вчора?\" — the question itself changes based on who you're talking to!\n\n### Міні-діалог 1: Після вихідних (After the Weekend)\n\n**Місце дії:** Офіс у понеділок вранці\n**Setting:** Office on Monday morning\n\n**Марія:** Привіт, Андрію! Що ти робив у вихідні?\n**Андрій:** Привіт! Я був у Львові.\n**Марія:** О, круто! Що ти там робив?\n**Андрій:** Я гуляв по старому місту.\n**Марія:** А я працювала. Нудно!\n**Андрій:** Минулого тижня ти була на морі!\n**Марія:** Так, це правда. Там було чудово!\n\nTranslation:\n— Hi, Andriy! What did you do on the weekend?\n— Hi! I was in Lviv.\n— Oh, cool! What did you do there?\n— I was walking around the old town.\n— And I worked. Boring!\n— Last week you were at the sea!\n— Yes, that's true. It was wonderful there!\n\n### Міні-діалог 2: Спогади (Memories)\n\n**Місце дії:** Бабусин дім\n**Setting:** Grandmother's house\n\n**Онук:** Бабусю, що тут було раніше?\n**Бабуся:** Колись тут був великий сад.\n**Онук:** Хто тут жив?\n**Бабуся:** Твій дідусь жив тут давно.\n**Онук:** Я не знав! Коли?\n**Бабуся:** Давно. Він був молодий.\n**Онук:** Вау! Це так давно!\n\nTranslation:\n— Grandma, what was here before?\n— Once there was a big garden here.\n— Who lived here?\n— Your grandfather lived here long ago.\n— I didn't know! When?\n— Long ago. He was young.\n— Wow! That's so long ago!\n\n> [!tip] **Language Elegance**\n>\n> Notice how Ukrainian uses був/була/було for \"was\" depending on the gender of the noun:\n>\n> - Тут **був** сад. (The garden is masculine.)\n> - Тут **була** школа. (The school is feminine.)\n> - Тут **було** тихо. (General statements use neuter.)\n\n## Підсумок (Summary)\n\nВи навчилися говорити про минуле українською! (You've learned to talk about the past!)\n\n**Запам'ятайте основні шаблони (Key patterns):**\n\n1. **Утворення (Formation):** Основа дієслова + -в/-ла/-ло/-ли\n   - читати → читав / читала / читало / читали\n\n2. **Рід (Gender agreement):** Закінчення відповідає роду\n   - Він працював. (He worked.)\n   - Вона працювала. (She worked.)\n   - Вони працювали. (They worked.)\n\n3. **Часові вирази (Time expressions):** вчора, позавчора, минулого тижня, давно, колись\n\n**Неправильні дієслова (Irregular verbs):**\n\n- піти → пішов/пішла\n- прийти → прийшов/прийшла\n\nНаступний урок: майбутній час! Завтра ми будемо вивчати, як говорити про плани!\n\n---\n\n# Summary\n\nВи вивчили минулий час в українській мові. Ви знаєте закінчення -в, -ла, -ло та -ли. Ви знаєте слова \"вчора\" та \"давно\". Це була гарна робота (This was good work).\n",
+    "createdAt": "2026-01-04T21:33:28.250571Z",
+    "modifiedAt": "2026-01-04T21:33:28.250571Z",
     "version": 2
   },
   "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A1-21",
     "level": "A1",
-    "phase": "A1.3 - Consolidation",
-    "wordCount": 25,
-    "newWordCount": 25,
+    "phase": "A1.1",
+    "wordCount": 0,
+    "newWordCount": 0,
     "reviewWordCount": 0,
-    "transliterationMode": "first-occurrence",
-    "words": [
+    "transliterationMode": "none",
+    "words": [],
+    "reviewWords": []
+  },
+  "external_resources": {
+    "podcasts": [
       {
-        "id": "vocab-1",
-        "uk": "вчора",
-        "ipa": "/ˈvt͡ʃɔrɑ/",
-        "en": "yesterday",
-        "pos": "adverb",
-        "gender": null,
-        "note": "time expression"
+        "episode_id": "ULP-026",
+        "title": "ULP 1-26 Talking about traveling – Past tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/26/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: past, tense"
       },
       {
-        "id": "vocab-2",
-        "uk": "позавчора",
-        "ipa": "/pɔzɑˈvt͡ʃɔrɑ/",
-        "en": "day before yesterday",
-        "pos": "adverb",
-        "gender": null,
-        "note": "time expression"
+        "episode_id": "ULP-027",
+        "title": "ULP 1-27 Traveling in Ukraine in winter – More Past tense",
+        "url": "https://www.ukrainianlessons.com/lesson/27/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: past, tense"
       },
       {
-        "id": "vocab-3",
-        "uk": "минулого тижня",
-        "ipa": "/mɪˈnulɔɦɔ ˈtɪʒnʲɑ/",
-        "en": "last week",
-        "pos": "phrase",
-        "gender": null,
-        "note": "genitive construction"
+        "episode_id": "ULP-028",
+        "title": "ULP 1-28 Making plans for the weekend – Future tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/28/",
+        "relevance": "high",
+        "match_reason": "Level-aligned topic match: tense"
       },
       {
-        "id": "vocab-4",
-        "uk": "минулого місяця",
-        "ipa": "/mɪˈnulɔɦɔ ˈmisʲɑt͡sʲɑ/",
-        "en": "last month",
-        "pos": "phrase",
-        "gender": null,
-        "note": "genitive construction"
+        "episode_id": "ULP-096",
+        "title": "ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/96/",
+        "relevance": "medium",
+        "match_reason": "Cross-level topic match: tense"
       },
       {
-        "id": "vocab-5",
-        "uk": "минулого року",
-        "ipa": "/mɪˈnulɔɦɔ ˈrɔku/",
-        "en": "last year",
-        "pos": "phrase",
-        "gender": null,
-        "note": "genitive construction"
-      },
-      {
-        "id": "vocab-6",
-        "uk": "давно",
-        "ipa": "/dɑvˈnɔ/",
-        "en": "long ago",
-        "pos": "adverb",
-        "gender": null,
-        "note": "time expression"
-      },
-      {
-        "id": "vocab-7",
-        "uk": "недавно",
-        "ipa": "/nɛˈdɑvnɔ/",
-        "en": "recently",
-        "pos": "adverb",
-        "gender": null,
-        "note": "time expression"
-      },
-      {
-        "id": "vocab-8",
-        "uk": "раніше",
-        "ipa": "/rɑˈnʲiʃe/",
-        "en": "earlier, before",
-        "pos": "adverb",
-        "gender": null,
-        "note": "time expression"
-      },
-      {
-        "id": "vocab-9",
-        "uk": "колись",
-        "ipa": "/kɔˈlɪsʲ/",
-        "en": "once, sometime",
-        "pos": "adverb",
-        "gender": null,
-        "note": "time expression"
-      },
-      {
-        "id": "vocab-10",
-        "uk": "був",
-        "ipa": "/buv/",
-        "en": "was (m)",
-        "pos": "verb",
-        "gender": "m",
-        "note": "past of бути"
-      },
-      {
-        "id": "vocab-11",
-        "uk": "була",
-        "ipa": "/buˈlɑ/",
-        "en": "was (f)",
-        "pos": "verb",
-        "gender": "f",
-        "note": "past of бути"
-      },
-      {
-        "id": "vocab-12",
-        "uk": "було",
-        "ipa": "/buˈlɔ/",
-        "en": "was (n)",
-        "pos": "verb",
-        "gender": "n",
-        "note": "past of бути"
-      },
-      {
-        "id": "vocab-13",
-        "uk": "були",
-        "ipa": "/buˈlɪ/",
-        "en": "were (pl)",
-        "pos": "verb",
-        "gender": null,
-        "note": "past of бути"
-      },
-      {
-        "id": "vocab-14",
-        "uk": "робив",
-        "ipa": "/rɔˈbɪv/",
-        "en": "was doing (m)",
-        "pos": "verb",
-        "gender": "m",
-        "note": "past of робити"
-      },
-      {
-        "id": "vocab-15",
-        "uk": "говорив",
-        "ipa": "/ɦɔvɔˈrɪv/",
-        "en": "was speaking (m)",
-        "pos": "verb",
-        "gender": "m",
-        "note": "past of говорити"
-      },
-      {
-        "id": "vocab-16",
-        "uk": "писав",
-        "ipa": "/pɪˈsɑv/",
-        "en": "was writing (m)",
-        "pos": "verb",
-        "gender": "m",
-        "note": "past of писати"
-      },
-      {
-        "id": "vocab-17",
-        "uk": "читав",
-        "ipa": "/t͡ʃɪˈtɑv/",
-        "en": "was reading (m)",
-        "pos": "verb",
-        "gender": "m",
-        "note": "past of читати"
-      },
-      {
-        "id": "vocab-18",
-        "uk": "слухав",
-        "ipa": "/ˈsluxɑv/",
-        "en": "was listening (m)",
-        "pos": "verb",
-        "gender": "m",
-        "note": "past of слухати"
-      },
-      {
-        "id": "vocab-19",
-        "uk": "дивився",
-        "ipa": "/dɪˈvɪvsʲɑ/",
-        "en": "was watching (m)",
-        "pos": "verb",
-        "gender": "m",
-        "note": "past of дивитися"
-      },
-      {
-        "id": "vocab-20",
-        "uk": "жив",
-        "ipa": "/ʒɪv/",
-        "en": "was living (m)",
-        "pos": "verb",
-        "gender": "m",
-        "note": "past of жити"
-      },
-      {
-        "id": "vocab-21",
-        "uk": "працював",
-        "ipa": "/prɑt͡sʲuˈvɑv/",
-        "en": "was working (m)",
-        "pos": "verb",
-        "gender": "m",
-        "note": "past of працювати"
-      },
-      {
-        "id": "vocab-22",
-        "uk": "їв",
-        "ipa": "/jiv/",
-        "en": "was eating (m)",
-        "pos": "verb",
-        "gender": "m",
-        "note": "past of їсти"
-      },
-      {
-        "id": "vocab-23",
-        "uk": "пив",
-        "ipa": "/pɪv/",
-        "en": "was drinking (m)",
-        "pos": "verb",
-        "gender": "m",
-        "note": "past of пити"
-      },
-      {
-        "id": "vocab-24",
-        "uk": "чекав",
-        "ipa": "/t͡ʃeˈkɑv/",
-        "en": "was waiting (m)",
-        "pos": "verb",
-        "gender": "m",
-        "note": "past of чекати"
-      },
-      {
-        "id": "vocab-25",
-        "uk": "гуляв",
-        "ipa": "/ɦuˈlʲɑv/",
-        "en": "was walking (m)",
-        "pos": "verb",
-        "gender": "m",
-        "note": "past of гуляти"
+        "episode_id": "ULP-097",
+        "title": "ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion",
+        "url": "https://www.ukrainianlessons.com/lesson/97/",
+        "relevance": "medium",
+        "match_reason": "Cross-level topic match: tense"
       }
     ],
-    "reviewWords": []
+    "youtube": [
+      {
+        "title": "The Past Tense in Ukrainian",
+        "url": "https://www.youtube.com/watch?v=SUx5xUfABIc",
+        "relevance": "high",
+        "channel": "Speak Ukrainian"
+      }
+    ],
+    "articles": [
+      {
+        "id": "ulp-blog-005",
+        "title": "Future Tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/grammar-future/",
+        "priority": 1,
+        "relevance": "high",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'present', 'tense', 'future', 'past'} (Score: 100, Priority: 1)"
+      },
+      {
+        "id": "ULP-026",
+        "title": "ULP 1-26 Talking about traveling – Past tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/26/",
+        "priority": 1,
+        "relevance": "high",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'present', 'tense', 'future', 'past'} (Score: 90, Priority: 1)"
+      },
+      {
+        "id": "ULP-027",
+        "title": "ULP 1-27 Traveling in Ukraine in winter – More Past tense",
+        "url": "https://www.ukrainianlessons.com/lesson/27/",
+        "priority": 1,
+        "relevance": "high",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'present', 'tense', 'future', 'past'} (Score: 90, Priority: 1)"
+      },
+      {
+        "id": "ULP-028",
+        "title": "ULP 1-28 Making plans for the weekend – Future tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/28/",
+        "priority": 1,
+        "relevance": "high",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Exact match for {'present', 'tense', 'future', 'past'} (Score: 90, Priority: 1)"
+      },
+      {
+        "id": "ULP-096",
+        "title": "ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/96/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Core match for {'present', 'tense', 'future', 'past'} (Score: 80, Priority: 2)"
+      },
+      {
+        "id": "ULP-097",
+        "title": "ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion",
+        "url": "https://www.ukrainianlessons.com/lesson/97/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Core match for {'present', 'tense', 'future', 'past'} (Score: 80, Priority: 2)"
+      },
+      {
+        "id": "ULP-098",
+        "title": "ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/98/",
+        "priority": 2,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Core match for {'present', 'tense', 'future', 'past'} (Score: 80, Priority: 2)"
+      },
+      {
+        "id": "ULP-118",
+        "title": "ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/118/",
+        "priority": 3,
+        "relevance": "medium",
+        "source": "Ukrainian Lessons",
+        "match_reason": "Core match for {'present', 'tense', 'future', 'past'} (Score: 70, Priority: 3)"
+      },
+      {
+        "title": "Ukrainian Past Tense",
+        "url": "https://www.ukrainianlessons.com/grammar-past-tense/",
+        "relevance": "high",
+        "source": "Ukrainian Lessons"
+      }
+    ],
+    "books": [],
+    "websites": [
+      {
+        "title": "Past Tense Exercises",
+        "url": "https://ukrainianlanguage.uk/exercise-past-tense/",
+        "relevance": "high",
+        "source": "Ukrainian Language"
+      }
+    ]
   }
 }

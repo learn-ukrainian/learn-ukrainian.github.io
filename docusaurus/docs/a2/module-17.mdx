@@ -302,9 +302,14 @@ This efficiency is part of what makes Ukrainian beautiful to speak.
 
 ### Choose Свій or Його
 
-<FillIn
+<Cloze
   title="Choose Свій or Його"
-  items={JSON.parse(`[{"sentence": "Він читає [___] книгу.", "answer": "свою", "options": ["свою", "його"]}, {"sentence": "Вона любить [___] маму.", "answer": "свою", "options": ["свою", "її"]}, {"sentence": "Я бачив [___] друга. (his friend, not mine)", "answer": "його", "options": ["його", "свого"]}, {"sentence": "Вони живуть у [___] домі.", "answer": "своєму", "options": ["своєму", "їхньому"]}, {"sentence": "Марія взяла [___] сумку.", "answer": "свою", "options": ["свою", "її"]}, {"sentence": "Він допоміг [___] сестрі.", "answer": "своїй", "options": ["своїй", "її"]}, {"sentence": "Я люблю [___] батьків. (her parents, not mine)", "answer": "її", "options": ["її", "своїх"]}, {"sentence": "Вона говорить про [___] роботу.", "answer": "свою", "options": ["свою", "її"]}]`)}
+  passage={`Він читає [[___:1]] книгу. Вона любить [[___:2]] маму. Я бачив [[___:3]] друга. (his friend, not mine)
+
+Вони живуть у [[___:4]] домі. Марія взяла [[___:5]] сумку. Він допоміг [[___:6]] сестрі.
+
+Я люблю [[___:7]] батьків. (her parents, not mine) Вона говорить про [[___:8]] роботу.`}
+  blanks={JSON.parse(`[{"index": 0, "answer": "свою", "options": ["свою", "його"]}, {"index": 1, "answer": "свою", "options": ["свою", "її"]}, {"index": 2, "answer": "його", "options": ["його", "свого"]}, {"index": 3, "answer": "своєму", "options": ["своєму", "їхньому"]}, {"index": 4, "answer": "свою", "options": ["свою", "її"]}, {"index": 5, "answer": "своїй", "options": ["своїй", "її"]}, {"index": 6, "answer": "її", "options": ["її", "своїх"]}, {"index": 7, "answer": "свою", "options": ["свою", "її"]}]`)}
 />
 
 ### Concept Check

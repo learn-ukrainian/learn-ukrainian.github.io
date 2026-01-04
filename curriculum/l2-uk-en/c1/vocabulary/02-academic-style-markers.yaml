@@ -1,0 +1,154 @@
+module: 02-academic-style-markers
+level: C1
+version: '2.0'
+items:
+  - lemma: вважається
+    ipa: /vvaˈʒajetʲsʲa/
+    translation: it is considered
+    pos: verb
+    gender: ""
+  - lemma: зазначається
+    ipa: /zaznaˈt͡ʃajetʲsʲa/
+    translation: it is noted
+    pos: verb
+    gender: ""
+  - lemma: стверджується
+    ipa: /stverˈdʒujetʲsʲa/
+    translation: it is claimed
+    pos: verb
+    gender: ""
+  - lemma: наголошується
+    ipa: /nahoˈloʃujetʲsʲa/
+    translation: it is emphasized
+    pos: verb
+    gender: ""
+  - lemma: підкреслюється
+    ipa: /pidˈkreslʲujetʲsʲa/
+    translation: it is underlined / stressed
+    pos: verb
+    gender: ""
+  - lemma: констатується
+    ipa: /konstaˈtujetʲsʲa/
+    translation: it is stated / established
+    pos: verb
+    gender: ""
+  - lemma: аргументується
+    ipa: /arhumɛnˈtujetʲsʲa/
+    translation: it is argued
+    pos: verb
+    gender: ""
+  - lemma: обґрунтовується
+    ipa: /obɡrunˈtɔvujetʲsʲa/
+    translation: it is substantiated
+    pos: verb
+    gender: ""
+  - lemma: припускається
+    ipa: /prɪpuˈskajetʲsʲa/
+    translation: it is assumed
+    pos: verb
+    gender: ""
+  - lemma: передбачається
+    ipa: /pɛrɛdbaˈt͡ʃajetʲsʲa/
+    translation: it is foreseen / expected
+    pos: verb
+    gender: ""
+  - lemma: досліджується
+    ipa: /doˈslidʒujetʲsʲa/
+    translation: it is researched
+    pos: verb
+    gender: ""
+  - lemma: аналізується
+    ipa: /analiˈzujetʲsʲa/
+    translation: it is analyzed
+    pos: verb
+    gender: ""
+  - lemma: розглядається
+    ipa: /rozhlʲaˈdajetʲsʲa/
+    translation: it is considered / examined
+    pos: verb
+    gender: ""
+  - lemma: висвітлюється
+    ipa: /vɪˈsvitlʲujetʲsʲa/
+    translation: it is highlighted / covered
+    pos: verb
+    gender: ""
+  - lemma: характеризується
+    ipa: /xaraktɛrɪˈzujetʲsʲa/
+    translation: it is characterized
+    pos: verb
+    gender: ""
+  - lemma: визначається
+    ipa: /vɪznaˈt͡ʃajetʲsʲa/
+    translation: it is defined
+    pos: verb
+    gender: ""
+  - lemma: описується
+    ipa: /oˈpɪsujetʲsʲa/
+    translation: it is described
+    pos: verb
+    gender: ""
+  - lemma: пояснюється
+    ipa: /poˈjasnʲujetʲsʲa/
+    translation: it is explained
+    pos: verb
+    gender: ""
+  - lemma: інтерпретується
+    ipa: /intɛrprɛˈtujetʲsʲa/
+    translation: it is interpreted
+    pos: verb
+    gender: ""
+  - lemma: узагальнюється
+    ipa: /uzaˈhalʲnʲujetʲsʲa/
+    translation: it is generalized
+    pos: verb
+    gender: ""
+  - lemma: систематизується
+    ipa: /sɪstɛmatɪˈzujetʲsʲa/
+    translation: it is systematized
+    pos: verb
+    gender: ""
+  - lemma: класифікується
+    ipa: /klasɪfiˈkujetʲsʲa/
+    translation: it is classified
+    pos: verb
+    gender: ""
+  - lemma: порівнюється
+    ipa: /poˈrivnʲujetʲsʲa/
+    translation: it is compared
+    pos: verb
+    gender: ""
+  - lemma: зіставляється
+    ipa: /zistavˈlʲajetʲsʲa/
+    translation: it is juxtaposed
+    pos: verb
+    gender: ""
+  - lemma: оцінюється
+    ipa: /oˈt͡sinʲujetʲsʲa/
+    translation: it is evaluated
+    pos: verb
+    gender: ""
+  - lemma: критикується
+    ipa: /krɪtɪˈkujetʲsʲa/
+    translation: it is criticized
+    pos: verb
+    gender: ""
+  - lemma: спростовується
+    ipa: /sproˈstovujetʲsʲa/
+    translation: it is refuted
+    pos: verb
+    gender: ""
+  - lemma: підтверджується
+    ipa: /pidˈtvɛrdʒujetʲsʲa/
+    translation: it is confirmed
+    pos: verb
+    gender: ""
+  - lemma: доводиться
+    ipa: /doˈvodytʲsʲa/
+    translation: it is proven
+    pos: verb
+    gender: ""
+  - lemma: виводиться
+    ipa: /vɪˈvodytʲsʲa/
+    translation: it is deduced
+    pos: verb
+    gender: ""

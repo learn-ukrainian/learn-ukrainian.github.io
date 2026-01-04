@@ -1,20 +1,33 @@
 # Audit Report: 07-active-participles-present.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** "TTT" | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** B2.1a | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Виправте помилки' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 12/16 items with placeholders/missing errors.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): з'являючийся, спадаючий, змінюючийся, їдучий, рухомий...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 2 pedagogical violations (minor)
+- Activity count below minimum
 
 ## Gates
-- **Words:** ✅ 1782/1750
-- **Activities:** ✅ 14/14
+- **Words:** ⚠️ 1743/1750 (7 short)
+- **Activities:** ❌ 13/14
 - **Density:** ✅ All > 16
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 210/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 98.8% (target 98-100% (grammar))
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.6% (target 98-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -31,22 +44,16 @@
 | variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
+| visual | 6 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 30 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.5%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Дієприкметники активні теперішнього часу (-учий/-ючий)** | ⚪️ | 168 | Skipped |
+| **Intro/Narrative** | ✅ | 129 | Included in Core |
 | **Тест: Прочитайте текст** | ✅ | 151 | Included in Core |
 | **Пояснення** | ⚪️ | 628 | Skipped |
 | **Практика** | ⚪️ | 178 | Skipped |
@@ -55,4 +62,3 @@
 | **Культурний контекст** | ✅ | 115 | Included in Core |
 | **Типові помилки та як їх уникнути** | ✅ | 114 | Included in Core |
 | **Підсумок** | ✅ | 79 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |

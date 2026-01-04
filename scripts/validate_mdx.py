@@ -126,6 +126,98 @@ def extract_activity_content(content: str) -> dict[str, set[str]]:
 
     return activities
 
+
+def validate_cloze_components(mdx_content: str) -> list[str]:
+    """
+    Validate that Cloze components have properly structured blanks.
+
+    Checks:
+    1. Each blank object has 'index', 'answer', and 'options' properties
+    2. Number of [___:N] markers matches number of blanks
+    3. Indices are sequential (0, 1, 2, ...)
+    """
+    import json
+    errors = []
+
+    # Find all <Cloze components - extract title, passage, and blanks separately
+    cloze_starts = list(re.finditer(r'<Cloze\s+', mdx_content))
+
+    for match in cloze_starts:
+        start_pos = match.end()
+        # Find component end
+        end_pos = mdx_content.find('/>', start_pos)
+        if end_pos == -1:
+            continue
+        component = mdx_content[match.start():end_pos + 2]
+
+        # Extract title
+        title_match = re.search(r'title="([^"]+)"', component)
+        title = title_match.group(1) if title_match else "Unknown"
+
+        # Extract passage
+        passage_match = re.search(r'passage=\{`([^`]*)`\}', component)
+        passage = passage_match.group(1) if passage_match else ""
+
+        # Extract blanks JSON - find JSON.parse(` and then count brackets to find the array end
+        blanks_start = component.find('blanks={JSON.parse(`')
+        if blanks_start == -1:
+            continue
+        json_start = blanks_start + len('blanks={JSON.parse(`')
+
+        # Find the matching closing bracket by counting
+        bracket_count = 0
+        json_end = json_start
+        started = False
+        for i in range(json_start, len(component)):
+            char = component[i]
+            if char == '[':
+                bracket_count += 1
+                started = True
+            elif char == ']':
+                bracket_count -= 1
+            if started and bracket_count == 0:
+                json_end = i + 1
+                break
+
+        blanks_json = component[json_start:json_end]
+
+        # Validate this cloze component
+        try:
+            blanks = json.loads(blanks_json)
+        except json.JSONDecodeError as e:
+            errors.append(f"Cloze '{title}': Invalid JSON in blanks array: {e}")
+            continue
+
+        # Count [___:N] markers in passage
+        markers = re.findall(r'\[___:(\d+)\]', passage)
+        num_markers = len(markers)
+        num_blanks = len(blanks)
+
+        if num_markers != num_blanks:
+            errors.append(f"Cloze '{title}': {num_markers} markers but {num_blanks} blanks defined")
+
+        # Validate each blank has required properties
+        required_props = {'index', 'answer', 'options'}
+        for i, blank in enumerate(blanks):
+            missing = required_props - set(blank.keys())
+            if missing:
+                errors.append(f"Cloze '{title}': blank {i} missing properties: {', '.join(missing)}")
+
+            # Validate index is correct
+            if 'index' in blank and blank['index'] != i:
+                errors.append(f"Cloze '{title}': blank {i} has wrong index {blank['index']} (expected {i})")
+
+            # Validate options is a list
+            if 'options' in blank and not isinstance(blank['options'], list):
+                errors.append(f"Cloze '{title}': blank {i} options is not a list")
+
+            # Validate answer is in options
+            if 'answer' in blank and 'options' in blank:
+                if blank['answer'] not in blank['options']:
+                    errors.append(f"Cloze '{title}': blank {i} answer '{blank['answer']}' not in options")
+
+    return errors
+
 def validate_module(md_path: Path, mdx_path: Path) -> ValidationResult:
     """Validate that MDX contains all content from MD."""
     errors = []
@@ -183,6 +275,10 @@ def validate_module(md_path: Path, mdx_path: Path) -> ValidationResult:
     missing_activities = md_activity_types - mdx_component_types
     if missing_activities:
         errors.append(f"Activity types missing in MDX: {', '.join(missing_activities)}")
+
+    # Validate Cloze components have properly structured blanks
+    cloze_errors = validate_cloze_components(mdx_content)
+    errors.extend(cloze_errors)
 
     # Check [!solution] callouts are converted to <details> elements (may have leading whitespace)
     md_solution_count = len(re.findall(r'^\s*>\s*\[!solution\]', md_content, re.IGNORECASE | re.MULTILINE))

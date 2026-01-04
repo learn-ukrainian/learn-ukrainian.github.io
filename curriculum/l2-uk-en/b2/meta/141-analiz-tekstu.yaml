@@ -1,0 +1,22 @@
+module: b2-141
+title: "Аналіз тексту"
+subtitle: "Text Analysis"
+version: "2.0"
+phase: "B2.4 Skills & Capstone"
+focus: skills
+pedagogy: "CBI"
+duration: 120
+transliteration: none
+tags:
+  - skills
+  - analysis
+  - reading
+grammar:
+  - "Rhetorical analysis methods"
+  - "Identifying bias and subtext"
+objectives:
+  - "Analyze texts for subtext and author intent"
+  - "Identify bias and manipulation in media"
+  - "Understand rhetorical structure of arguments"
+vocabulary_count: 25
+slug: 141-analiz-tekstu

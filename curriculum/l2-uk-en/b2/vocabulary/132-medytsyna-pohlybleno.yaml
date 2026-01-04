@@ -1,0 +1,129 @@
+module: 132-medytsyna-pohlybleno
+level: B2
+version: '2.0'
+items:
+- lemma: діагноз
+  ipa: /dʲiaɦˈnɔz/
+  translation: diagnosis
+  pos: noun
+  gender: m
+- lemma: симптом
+  ipa: /sɪmpˈtɔm/
+  translation: symptom
+  pos: noun
+  gender: m
+- lemma: скарга
+  ipa: /ˈskarɦa/
+  translation: complaint
+  pos: noun
+  gender: f
+- lemma: огляд
+  ipa: /ˈɔɦlʲad/
+  translation: examination
+  pos: noun
+  gender: m
+- lemma: терапевт
+  ipa: /teraˈpɛwt/
+  translation: general practitioner
+  pos: noun
+  gender: m
+- lemma: хірург
+  ipa: /xʲiˈrurɦ/
+  translation: surgeon
+  pos: noun
+  gender: m
+- lemma: кардіолог
+  ipa: /kardʲiˈɔlɔɦ/
+  translation: cardiologist
+  pos: noun
+  gender: m
+- lemma: тиск
+  ipa: /ˈtɪsk/
+  translation: blood pressure
+  pos: noun
+  gender: m
+- lemma: пульс
+  ipa: /ˈpulʲs/
+  translation: pulse
+  pos: noun
+  gender: m
+- lemma: аналіз
+  ipa: /aˈnalʲiz/
+  translation: test, analysis
+  pos: noun
+  gender: m
+- lemma: рентген
+  ipa: /rentˈɦen/
+  translation: X-ray
+  pos: noun
+  gender: m
+- lemma: запалення
+  ipa: /zapaˈlʲenʲːa/
+  translation: inflammation
+  pos: noun
+  gender: n
+- lemma: інфекція
+  ipa: /inˈfektsʲija/
+  translation: infection
+  pos: noun
+  gender: f
+- lemma: імунітет
+  ipa: /imunʲiˈtɛt/
+  translation: immunity
+  pos: noun
+  gender: m
+- lemma: ліки
+  ipa: /ˈlʲikɪ/
+  translation: medicine, medication
+  pos: noun
+  gender: pl
+- lemma: рецепт
+  ipa: /reˈtsɛpt/
+  translation: prescription
+  pos: noun
+  gender: m
+- lemma: дозування
+  ipa: /dozuˈwanʲːa/
+  translation: dosage
+  pos: noun
+  gender: n
+- lemma: побічна дія
+  ipa: /poˈbʲitʃna ˈdʲija/
+  translation: side effect
+  pos: noun
+  gender: f
+- lemma: алергія
+  ipa: /alerˈɦʲija/
+  translation: allergy
+  pos: noun
+  gender: f
+- lemma: щеплення
+  ipa: /ʃtʃɛˈplʲenʲːa/
+  translation: vaccination
+  pos: noun
+  gender: n
+- lemma: обстеження
+  ipa: /obstɛˈʒenʲːa/
+  translation: medical examination
+  pos: noun
+  gender: n
+- lemma: госпіталізація
+  ipa: /ɦospʲitalʲizaˈtsʲija/
+  translation: hospitalization
+  pos: noun
+  gender: f
+- lemma: реабілітація
+  ipa: /reabʲilʲitaˈtsʲija/
+  translation: rehabilitation
+  pos: noun
+  gender: f
+- lemma: профілактика
+  ipa: /profʲilakˈtɪka/
+  translation: prevention
+  pos: noun
+  gender: f
+- lemma: медична карта
+  ipa: /mɛˈdɪtʃna ˈkarta/
+  translation: medical record
+  pos: noun
+  gender: f

@@ -5,312 +5,70 @@
     "moduleId": "mod-uk-A2-13",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "owner": "curricula-opus",
+    "owner": "learn-ukrainian",
     "visibility": "public",
     "language": "uk",
     "targetLevel": "A2",
-    "phase": "A2.2",
+    "phase": "A2.1",
     "moduleNumber": 13,
     "moduleType": "grammar",
     "pedagogy": "PPP",
     "immersionLevel": 0.4,
-    "title": "The Completed Past",
+    "title": "Module 13",
     "titleUk": null,
-    "subtitle": "Perfective Verbs in Past Tense",
-    "description": "Learner can conjugate perfective verbs in past tense",
-    "objectives": [
-      "Learner can conjugate perfective verbs in past tense",
-      "Learner understands when to use perfective past",
-      "Learner can express completed actions",
-      "Learner can distinguish process from result in past"
-    ],
+    "subtitle": null,
+    "description": "Module 13",
+    "objectives": [],
     "objectivesUk": null,
-    "grammarFocus": [
-      "perfective past tense",
-      "completion vs process",
-      "aspect choice in past"
-    ],
-    "tags": [
-      "grammar",
-      "aspect",
-      "past-tense",
-      "perfective"
-    ],
-    "totalDuration": "60 min",
+    "grammarFocus": [],
+    "tags": [],
+    "totalDuration": 45,
     "transliterationMode": "none",
-    "sections": [
-      {
-        "id": "section-1",
-        "name": "Summary",
-        "nameEn": null,
-        "type": "summary",
-        "content": "## What You Learned\n\nThis module focused on using perfective verbs in past tense to express completed actions. This is one of the most practical applications of aspect — every time you tell a story or describe what happened, you'll use these patterns.\n\n**The Big Picture:**\nPast tense is where aspect becomes most visible. When you say \"Я прочитав книгу,\" native speakers understand immediately that you finished the book. When you say \"Я читав книгу,\" they understand you were engaged in reading but may not have finished. This distinction doesn't exist in English in the same way, so you're learning to think about time and action in a new way.\n\n**Key Points:**\n- Perfective and imperfective use the SAME past tense endings (-в, -ла, -ло, -ли)\n- The difference is in the verb stem, not the ending\n- Use **perfective past** for completed actions with clear results\n- Use **imperfective past** for processes, duration, or repeated actions\n- Signal words: вже, нарешті = usually perfective; довго, часто = usually imperfective\n\n**Common Mistakes to Avoid:**\n1. Don't translate directly from English — \"I read a book\" could be either aspect in Ukrainian\n2. Duration + perfective is usually wrong: \"Я читав три години\" (not *Я прочитав три години*)\n3. Remember: perfective questions ask about completion, imperfective questions ask about activities\n\n**Next Steps:**\nIn the following modules, you'll learn how perfective verbs work in future tense and how to choose the right aspect in more complex situations. Practice the aspect pairs you've learned until they become automatic.\n\n> 📜 **Пам'ятайте!**\n>\n> Вибір аспекту — це вибір фокусу. Доконаний вид показує результат: «Я прочитав книгу» означає, що книга закінчена. Недоконаний вид показує процес: «Я читав книгу» означає, що ви були зайняті читанням.\n\nТепер ви можете говорити про завершені дії! ✅\n\n## Need More Practice?\n\n> [!resources] External Resources\n> - 🎥 [50 Verb Pairs](https://www.youtube.com/watch?v=iK4uNlozmFE) — Let's Learn Ukrainian\n> - 📖 [Perfective Verbs](https://www.ukrainianlessons.com/perfective-verbs/)\n> - 📝 [Aspect Differences](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/)\n> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)\n\n---"
-      },
-      {
-        "id": "section-2",
-        "name": "Activities",
-        "nameEn": null,
-        "type": "activities",
-        "content": "## match-up: Past Tense Forms\n> З'єднайте форми минулого часу. | Match the past tense forms.\n\n- зробив :: did/finished\n- написав :: wrote/finished\n- прочитав :: read/finished\n- сказав :: said\n- побачив :: saw\n- почув :: heard\n- взяв :: took\n- дав :: gave\n- пішов :: went/left\n- прийшов :: came/arrived\n- закінчив :: finished\n- почав :: began\n\n## fill-in: Perfective or Imperfective Past\n\n> Choose the correct verb form for each context.\n\n1. Він ___ книгу вчора. (finished reading)\n   > [!answer] прочитав\n   > [!options] читав | прочитав\n\n2. Вона ___ три години. (was writing)\n   > [!answer] писала\n   > [!options] писала | написала\n\n3. Я вже ___ це! (already did)\n   > [!answer] зробив\n   > [!options] робив | зробив\n\n4. Ми ___ щодня. (read every day)\n   > [!answer] читали\n   > [!options] читали | прочитали\n\n5. Він ___ \"привіт.\" (said)\n   > [!answer] сказав\n   > [!options] говорив | сказав\n\n6. Вона довго ___. (was speaking)\n   > [!answer] говорила\n   > [!options] говорила | сказала\n\n7. Ми нарешті ___! (finally arrived)\n   > [!answer] приїхали\n   > [!options] їхали | приїхали\n\n8. Він ___ весь день. (was working)\n   > [!answer] працював\n   > [!options] працював | попрацював\n\n9. Вона ___ роботу. (finished)\n   > [!answer] закінчила\n   > [!options] закінчувала | закінчила\n\n10. Я ___ його часто. (saw often)\n    > [!answer] бачив\n    > [!options] бачив | побачив\n\n11. Він раптом ___ шум. (suddenly heard)\n    > [!answer] почув\n    > [!options] чув | почув\n\n12. Ми ___ листа. (wrote/finished)\n    > [!answer] написали\n    > [!options] писали | написали\n\n## quiz: Aspect in Past Tense\n> Виберіть правильний вид у минулому часі. | Choose the correct aspect in past tense.\n\n1. In the Ukrainian sentence \"Я прочитав книгу,\" which grammatical aspectual focus is emphasized?\n\n- [x] Completed result\n- [ ] Ongoing process\n- [ ] Future intent\n- [ ] Habitual action\n\n---\n\n2. When a speaker says \"Я читав книгу,\" what is the primary focus of the action?\n\n- [x] Process\n- [ ] Completed result\n- [ ] Single event\n- [ ] Future goal\n\n---\n\n3. Which of the following Ukrainian words typically signals that the perfective past should be used?\n\n- [x] вже\n- [ ] довго\n- [ ] часто\n- [ ] зазвичай\n\n---\n\n4. In the sentence \"Вона писала три години,\" what is the grammatical aspect of the verb used?\n\n- [x] Imperfective\n- [ ] Perfective\n- [ ] Future\n- [ ] Conditional\n\n---\n\n5. In the sentence \"Він написав листа вчора,\" what is the grammatical aspect of the verb used?\n\n- [x] Perfective\n- [ ] Imperfective\n- [ ] Present\n- [ ] Habitual\n\n---\n\n6. Which statement best describes the past tense endings for perfective and imperfective verbs in Ukrainian?\n\n- [x] The same for both aspects\n- [ ] Different for each aspect\n- [ ] Only used for perfective\n- [ ] Only used for imperfective\n\n---\n\n7. Which of the following options represents the correct masculine past tense ending for Ukrainian verbs?\n\n- [x] -в | -∅\n- [ ] -ла\n- [ ] -ли\n- [ ] -ло\n\n---\n\n8. Which of the following options represents the correct feminine past tense ending for Ukrainian verbs?\n\n- [x] -ла\n- [ ] -в\n- [ ] -ли\n- [ ] -ло\n\n---\n\n9. The common Ukrainian question \"Що ти робив?\" typically uses which grammatical aspect for inquiry?\n\n- [x] Imperfective (asking about activities)\n- [ ] Perfective\n- [ ] Future\n- [ ] Imperative\n\n---\n\n10. The common Ukrainian question \"Ти зробив це?\" typically uses which grammatical aspect for inquiry?\n\n- [x] Perfective (asking about completion)\n- [ ] Imperfective\n- [ ] Present\n- [ ] Habitual\n\n---\n\n11. Which of the following represents the correct masculine past form of the perfective verb \"піти\"?\n\n- [x] пішов\n- [ ] пів\n- [ ] пишов\n- [ ] пішовла\n\n---\n\n12. Which of the following represents the correct masculine past form of the perfective verb \"прийти\"?\n\n- [x] прийшов\n- [ ] прийв\n- [ ] прив\n- [ ] прийшла\n\n## true-false: Past Tense Rules\n\n> Decide if each statement is true or false.\n\n- [x] Perfective past shows completed actions.\n  > Correct!\n\n- [x] Imperfective past can show duration.\n  > Yes! \"Він читав три години.\"\n\n- [ ] Past endings are different for each aspect.\n  > No, the endings are the same — the stems are different.\n\n- [x] \"Вже\" usually appears with perfective.\n  > Correct! \"Я вже зробив.\"\n\n- [x] \"Довго\" usually appears with imperfective.\n  > Yes! \"Він довго працював.\"\n\n- [ ] \"Писав\" is perfective past.\n  > \"Писав\" is imperfective. \"Написав\" is perfective.\n\n- [x] \"Прочитав\" means \"finished reading.\"\n  > Correct!\n\n- [x] \"Пішов\" is the past of \"піти.\"\n  > Yes!\n\n- [ ] Repeated actions use perfective.\n  > Repeated actions use imperfective.\n\n- [x] \"Що ти робив?\" asks about activities.\n  > Yes, using imperfective to ask about process.\n\n- [x] \"Нарешті\" signals perfective.\n  > Correct! \"Нарешті зробив!\"\n\n- [ ] \"Сказав\" is imperfective.\n  > \"Сказав\" is perfective. \"Говорив\" is imperfective.\n\n## group-sort: Verb Aspect\n> Розсортуйте ці форми минулого часу за видом. | Sort these past tense forms by aspect.\n\n> Sort these past tense forms by aspect.\n\n### Imperfective\n- читав\n- писав\n- робив\n- говорив\n- бачив\n- їхав\n\n### Perfective\n- прочитав\n- написав\n- зробив\n- сказав\n- побачив\n- приїхав\n\n## unjumble: Past Tense Sentences\n\n> Put the words in the correct order.\n\n1. він / прочитав / цю / нову / цікаву / книгу / вчора / ввечері\n   > [!answer] Він прочитав цю нову цікаву книгу вчора ввечері\n\n2. вона / писала / цього / довгого / листа / додому / три / години\n   > [!answer] Вона писала цього довгого листа додому три години\n\n3. я / вже / зробив / це / складне / домашнє / завдання / сьогодні\n   > [!answer] Я вже зробив це складне домашнє завдання сьогодні\n\n4. ми / нарешті / приїхали / до / Києва / дуже / пізно / вчора\n   > [!answer] Ми нарешті приїхали до Києва дуже пізно вчора\n\n5. він / сказав / мені / всю / щиру / правду / про / це\n   > [!answer] Він сказав мені всю щиру правду про це\n\n6. вона / довго / говорила / по / телефону / зі / своєю / мамою\n   > [!answer] Вона довго говорила по телефону зі своєю мамою\n\n7. ти / прочитав / ту / велику / статтю / в / новій / газеті\n   > [!answer] Ти прочитав ту велику статтю в новій газеті\n\n8. він / пішов / додому / відразу / після / нашої / цікавої / роботи\n   > [!answer] Він пішов додому відразу після нашої цікавої роботи\n\n9. вона / побачила / прекрасне / синє / море / вперше / у / житті\n   > [!answer] Вона побачила прекрасне синє море вперше у житті\n\n10. ми / закінчили / нашу / важку / роботу / о / восьмій / годині\n    > [!answer] Ми закінчили нашу важку роботу о восьмій годині\n\n11. він / раптом / почув / якийсь / дивний / шум / на / вулиці\n    > [!answer] Він раптом почув якийсь дивний шум на вулиці\n\n12. я / взяв / свою / стару / книгу / зі / шкоди / вчора\n    > [!answer] Я взяв свою стару книгу зі шкоди вчора\n\n## error-correction: Choose Correct Aspect\n\n> Select the correct aspect for each context.\n\n1. Він ___ книгу весь вечір. (duration)\n   > [!error] duration\n   > [!answer] читав\n   > [!explanation] Duration (весь вечір) requires imperfective.\n   > [!options] читав | прочитав\n\n2. Вона ___ листа і пішла. (completed then left)\n   > [!error] completed then left\n   > [!answer] написала\n   > [!explanation] Completed action before next action = perfective.\n   > [!options] писала | написала\n\n3. Я вже ___ це! (already)\n   > [!error] already\n   > [!answer] зробив\n   > [!explanation] \"Вже\" signals completion = perfective.\n   > [!options] робив | зробив\n\n4. Він ___ часто. (often)\n   > [!error] often\n   > [!answer] приходив\n   > [!explanation] Repeated action (часто) = imperfective.\n   > [!options] приходив | прийшов\n\n5. Вона нарешті ___! (finally)\n   > [!error] finally\n   > [!answer] зробила\n   > [!explanation] \"Нарешті\" signals completion = perfective.\n   > [!options] робила | зробила\n\n6. Що ти ___ учора? (activities)\n   > [!error] activities\n   > [!answer] робив\n   > [!explanation] Asking about activities = imperfective.\n   > [!options] робив | зробив\n\n## cloze: Aspect in Context\n\n> Fill in the correct past tense form.\n\nУчора я [___:1] рано. Я [___:2] каву і [___:3] сніданок. Потім я [___:4] на роботу. На роботі я [___:5] цілий день. Увечері я [___:6] додому і [___:7] телевізор.\n\n1. встати: встав | вставав\n> [!answer] встав\n\n2. випити: пив | випив\n> [!answer] випив\n\n3. з'їсти: їв | з'їв\n> [!answer] з'їв\n\n4. піти: ходив | пішов\n> [!answer] пішов\n\n5. працювати: працював | попрацював\n> [!answer] працював\n\n6. прийти: приходив | прийшов\n> [!answer] прийшов\n\n7. дивитися: дивився | подивився\n> [!answer] дивився\n\n---\n\nМинулого тижня я [___:1] нову книгу. Я [___:2] її три дні. Вчора я нарешті [___:3] читати. Книга була дуже цікава! Після того як я [___:4] книгу, я [___:5] рецензію.\n\n1. купити: купував | купив\n> [!answer] купив\n\n2. читати: читав | прочитав\n> [!answer] читав\n\n3. закінчити: закінчував | закінчив\n> [!answer] закінчив\n\n4. читати: читав | прочитав\n> [!answer] прочитав\n\n5. писати: писав | написав\n> [!answer] написав\n\n## dialogue-reorder: Completed vs Process\n\n- Що ти робив учора?\n- Я працював цілий день.\n- Ти закінчив проект?\n- Так, нарешті закінчив!\n- А що робила Оля?\n- Вона теж працювала, але не закінчила.\n\n> [!answer]\n> 1. Що ти робив учора?\n> 2. Я працював цілий день.\n> 3. Ти закінчив проект?\n> 4. Так, нарешті закінчив!\n> 5. А що робила Оля?\n> 6. Вона теж працювала, але не закінчила.\n\n---\n\n- Ти прочитав книгу?\n- Ні, я читав, але не закінчив.\n- Скільки часу ти читав?\n- Дві години.\n- А коли закінчиш?\n- Думаю, сьогодні прочитаю.\n\n> [!answer]\n> 1. Ти прочитав книгу?\n> 2. Ні, я читав, але не закінчив.\n> 3. Скільки часу ти читав?\n> 4. Дві години.\n> 5. А коли закінчиш?\n> 6. Думаю, сьогодні прочитаю.\n\n## mark-the-words: Find Perfective Past\n\nClick on PERFECTIVE PAST forms only.\n\nУчора я [прочитав](correct) книгу. Потім я [написав](correct) листа. Я довго писав, але нарешті [закінчив](correct).\n\n---\n\nВона [сказала](correct) правду. Ми [почули](correct) шум. Він [взяв](correct) книгу і [пішов](correct).\n\n---\n\nВін працював цілий день. Потім він [закінчив](correct) і [пішов](correct) додому. Вдома він [відпочив](correct).\n\n## translate: English to Ukrainian\n\nHe finished reading the book.\n\n- [x] Він прочитав книгу.\n- [ ] Він читав книгу.\n\n---\n\nShe was writing for 3 hours.\n\n- [x] Вона писала три години.\n- [ ] Вона написала три години.\n\n---\n\nI already did this!\n\n- [x] Я вже зробив це!\n- [ ] Я вже робив це!\n\n---\n\nWe finally arrived.\n\n- [x] Ми нарешті приїхали.\n- [ ] Ми нарешті їхали.\n\n---\n\nHe said \"yes.\"\n\n- [x] Він сказав \"так.\"\n- [ ] Він говорив \"так.\"\n\n---\n\nShe was speaking loudly.\n\n- [x] Вона голосно говорила.\n- [ ] Вона голосно сказала.\n\n---\n\nThey saw the movie.\n\n- [x] Вони побачили фільм.\n- [ ] Вони бачили фільм.\n\n---\n\nI was working all day.\n\n- [x] Я працював цілий день.\n- [ ] Я попрацював цілий день.\n\n---\n\nHe took the book and left.\n\n- [x] Він взяв книгу і пішов.\n- [ ] Він брав книгу і йшов.\n\n---\n\nShe heard the news.\n\n- [x] Вона почула новини.\n- [ ] Вона чула новини.\n\n---\n\nWhat were you doing yesterday?\n\n- [x] Що ти робив учора?\n- [ ] Що ти зробив учора?\n\n---\n\nDid you finish? (asking about completion)\n\n- [x] Ти закінчив?\n- [ ] Ти закінчував?\n\n---"
-      },
-      {
-        "id": "section-3",
-        "name": "Vocabulary",
-        "nameEn": null,
-        "type": "vocabulary",
-        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| зробив | /zrɔˈbɪʋ/ | did, made | verb | m | perf. past masc. |\n| написав | /nɑpɪˈsɑʋ/ | wrote | verb | m | perf. past masc. |\n| прочитав | /prɔt͡ʃɪˈtɑʋ/ | read, finished | verb | m | perf. past masc. |\n| сказав | /skɑˈzɑʋ/ | said | verb | m | perf. past masc. |\n| побачив | /pɔˈbɑt͡ʃɪʋ/ | saw | verb | m | perf. past masc. |\n| почув | /pɔˈt͡ʃuʋ/ | heard | verb | m | perf. past masc. |\n| взяв | /ˈʋzʲɑʋ/ | took | verb | m | perf. past masc. |\n| дав | /dɑʋ/ | gave | verb | m | perf. past masc. |\n| пішов | /piˈʃɔʋ/ | went, left | verb | m | perf. past masc. |\n| прийшов | /prɪjˈʃɔʋ/ | came | verb | m | perf. past masc. |\n| приїхав | /prɪˈjixɑʋ/ | arrived | verb | m | perf. past masc. |\n| вийшов | /ˈʋɪjʃɔʋ/ | went out | verb | m | perf. past masc. |\n| увійшов | /uˈʋijʃɔʋ/ | entered | verb | m | perf. past masc. |\n| почав | /pɔˈt͡ʃɑʋ/ | began | verb | m | perf. past masc. |\n| закінчив | /zɑˈkint͡ʃɪʋ/ | finished | verb | m | perf. past masc. |\n| зрозумів | /zrɔzuˈmiʋ/ | understood | verb | m | perf. past masc. |\n| забув | /zɑˈbuʋ/ | forgot | verb | m | perf. past masc. |\n| знайшов | /znɑjˈʃɔʋ/ | found | verb | m | perf. past masc. |\n| загубив | /zɑɦuˈbɪʋ/ | lost | verb | m | perf. past masc. |\n| раптом | /ˈrɑptɔm/ | suddenly | adv | — | signals sudden action |\n| купив | /kuˈpɪʋ/ | bought | verb | m | perf. past masc. |\n| продав | /prɔˈdɑʋ/ | sold | verb | m | perf. past masc. |\n| відкрив | /ʋidˈkrɪʋ/ | opened | verb | m | perf. past masc. |\n| закрив | /zɑˈkrɪʋ/ | closed | verb | m | perf. past masc. |\n| запам'ятав | /zɑpɑˈmʲɑtɑʋ/ | remembered | verb | m | perf. past masc. |\n| вид | /ʋɪd/ | aspect | noun | m | grammar term |\n\n---"
-      }
-    ],
-    "rawMarkdown": "---\nmodule: a2-13\ntitle: \"The Completed Past\"\nsubtitle: \"Perfective Verbs in Past Tense\"\nversion: \"1.0\"\nphase: \"A2.2\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - grammar\n  - aspect\n  - past-tense\n  - perfective\ngrammar:\n  - perfective past tense\n  - completion vs process\n  - aspect choice in past\nobjectives:\n  - \"Learner can conjugate perfective verbs in past tense\"\n  - \"Learner understands when to use perfective past\"\n  - \"Learner can express completed actions\"\n  - \"Learner can distinguish process from result in past\"\nvocabulary_count: 20\n---\n\n## Warm-up\n\n**Тепер, коли ви розумієте аспект, давайте навчимося використовувати доконаний вид у минулому часі!**\n\nNow that you understand the concept of aspect from Module 11, let's focus on using perfective verbs in the past tense. This is where aspect becomes most critical for communication — choosing perfective or imperfective past can completely change your meaning!\n\nWhen you tell a story in Ukrainian, you constantly make choices: do you emphasize what happened (result) or what was happening (process)? These choices aren't random — they follow patterns that native speakers use automatically. By the end of this module, you'll begin to develop this intuition too.\n\n**Why past tense is special for aspect:**\nThe past tense is where aspect differences are most visible and most important. In present tense, many contexts allow either aspect. But in past tense, the wrong choice can make your sentence confusing or even nonsensical to a native speaker.\n\n**What you'll master in this module:**\n- How to form perfective past tense (it's easier than you think!)\n- When to choose perfective over imperfective in past contexts\n- Key signal words that indicate completed actions\n- Common perfective verbs in their past forms\n\n**The Core Principle:** Perfective past = completed action with a clear result. If you can point to the result of the action, use perfective. If you're describing the process or duration, use imperfective.\n\n> 💡 **Запам'ятайте!**\n>\n> Доконаний вид у минулому часі = закінчена дія з чітким результатом. Якщо можна вказати на результат — використовуйте доконаний вид!\n\n\n## Presentation\n\n## Forming the Perfective Past\n\nThe good news: perfective verbs conjugate in past tense exactly like imperfective verbs! The past tense endings are the same for both aspects.\n\n### Past Tense Endings (Same for Both Aspects)\n\n| Gender/Number | Ending | Example (прочитати) |\n|---------------|--------|---------------------|\n| Masculine | -в | -∅ | прочитав |\n| Feminine | -ла | прочитала |\n| Neuter | -ло | прочитало |\n| Plural | -ли | прочитали |\n\n**Examples:**\n- Він **прочитав** книгу. (He read/finished the book.)\n- Вона **прочитала** статтю. (She read/finished the article.)\n- Вони **прочитали** все. (They read/finished everything.)\n\n> 💡 **Key Point**\n>\n> The difference isn't in the endings — it's in the verb itself. Прочитав and читав have the same endings, but different stems. Прочитав is perfective (completed), читав is imperfective (ongoing).\n\n## Imperfective vs. Perfective Past: Side by Side\n\nLet's compare the same verb pair in past tense:\n\n| Aspect | Masculine | Feminine | Plural | Meaning |\n|--------|-----------|----------|--------|---------|\n| Impf. | писав | писала | писали | was writing |\n| Perf. | написав | написала | написали | wrote/finished |\n| Impf. | читав | читала | читали | was reading |\n| Perf. | прочитав | прочитала | прочитали | read/finished |\n| Impf. | робив | робила | робили | was doing |\n| Perf. | зробив | зробила | зробили | did/finished |\n\n## When to Use Perfective Past\n\n### 1. Single Completed Action\n\nWhen something happened once and is finished:\n- Я **прочитав** книгу вчора. (I finished the book yesterday.)\n- Вона **написала** листа. (She wrote/finished the letter.)\n- Він **з'їв** сніданок. (He ate breakfast.)\n\n### 2. Result Matters More Than Process\n\nFocus on what got accomplished:\n- Хто **написав** цю книгу? (Who wrote this book?)\n- Вони **побудували** новий міст. (They built a new bridge.)\n\n### 3. With \"Already\" (вже) and \"Finally\" (нарешті)\n\nThese words almost always signal perfective:\n- Я **вже прочитав** цю книгу. (I've already read this book.)\n- Вона **нарешті зробила** домашнє завдання. (She finally did her homework.)\n\n> 📜 **Pattern Recognition**\n>\n> Words like вже, нарешті, раптом, несподівано often appear with perfective verbs because they emphasize completed events or results.\n\n## When to Use Imperfective Past\n\n### 1. Duration or Process\n\nWhen the action lasted for some time:\n- Я **читав** книгу три години. (I was reading for 3 hours.)\n- Вона **писала** весь день. (She was writing all day.)\n\n### 2. Repeated Actions\n\nWhen something happened multiple times:\n- Він **читав** цю книгу багато разів. (He read this book many times.)\n- Ми **бачили** його часто. (We saw him often.)\n\n### 3. Asking About Activities\n\nWhen asking \"what were you doing?\":\n- Що ти **робив** учора? (What were you doing yesterday?)\n- Що вона **читала**? (What was she reading?)\n\n> [!tip] Decision Guide\n> Ask yourself: \"Am I focusing on what got done (perfective) or what someone was doing (imperfective)?\"\n\n> 🌍 **Cultural Connection**\n>\n> Українська мова чітко розрізняє процес і результат. Це важлива частина слов'янського світогляду — ми цікавимось не лише ЩО сталось, але і ЯК це відбувалось!\n\n---\n\n## Cultural Insight\n\n## Common Perfective Past Forms\n\nHere are the most common perfective verbs in past tense:\n\n| Perfective | Past (masc.) | English |\n|------------|--------------|---------|\n| зробити | зробив | did/made |\n| написати | написав | wrote |\n| прочитати | прочитав | read/finished |\n| сказати | сказав | said |\n| побачити | побачив | saw |\n| почути | почув | heard |\n| взяти | взяв | took |\n| дати | дав | gave |\n| піти | пішов | went/left |\n| прийти | прийшов | came |\n| приїхати | приїхав | arrived |\n| вийти | вийшов | went out |\n| увійти | увійшов | entered |\n| почати | почав | began |\n| закінчити | закінчив | finished |\n\n> 🔍 **Irregular Forms**\n>\n> Some perfective verbs have irregular past forms: піти → пішов (not \"пів\"), прийти → прийшов.\n\n---\n\n## Practice\n\n## Practice Examples\n\nChoose perfective or imperfective for these contexts:\n\n1. **I finished writing the letter.** → Я **написав** листа. (perf.)\n2. **I was writing for 2 hours.** → Я **писав** дві години. (impf.)\n3. **She said \"yes.\"** → Вона **сказала** \"так.\" (perf.)\n4. **He was speaking loudly.** → Він голосно **говорив**. (impf.)\n5. **We already read this.** → Ми вже це **прочитали**. (perf.)\n6. **They were reading all evening.** → Вони **читали** весь вечір. (impf.)\n\n**Self-Test Questions:**\nBefore moving to the activities, make sure you can answer these questions:\n- What is the masculine past tense ending? Answer: -в or zero (consonant)\n- What feminine ending do all past tense verbs use? Answer: -ла\n- Does \"пішов\" come from \"іти\" or \"піти\"? Answer: піти — the perfective form\n\n---\n\n# Summary\n\n## What You Learned\n\nThis module focused on using perfective verbs in past tense to express completed actions. This is one of the most practical applications of aspect — every time you tell a story or describe what happened, you'll use these patterns.\n\n**The Big Picture:**\nPast tense is where aspect becomes most visible. When you say \"Я прочитав книгу,\" native speakers understand immediately that you finished the book. When you say \"Я читав книгу,\" they understand you were engaged in reading but may not have finished. This distinction doesn't exist in English in the same way, so you're learning to think about time and action in a new way.\n\n**Key Points:**\n- Perfective and imperfective use the SAME past tense endings (-в, -ла, -ло, -ли)\n- The difference is in the verb stem, not the ending\n- Use **perfective past** for completed actions with clear results\n- Use **imperfective past** for processes, duration, or repeated actions\n- Signal words: вже, нарешті = usually perfective; довго, часто = usually imperfective\n\n**Common Mistakes to Avoid:**\n1. Don't translate directly from English — \"I read a book\" could be either aspect in Ukrainian\n2. Duration + perfective is usually wrong: \"Я читав три години\" (not *Я прочитав три години*)\n3. Remember: perfective questions ask about completion, imperfective questions ask about activities\n\n**Next Steps:**\nIn the following modules, you'll learn how perfective verbs work in future tense and how to choose the right aspect in more complex situations. Practice the aspect pairs you've learned until they become automatic.\n\n> 📜 **Пам'ятайте!**\n>\n> Вибір аспекту — це вибір фокусу. Доконаний вид показує результат: «Я прочитав книгу» означає, що книга закінчена. Недоконаний вид показує процес: «Я читав книгу» означає, що ви були зайняті читанням.\n\nТепер ви можете говорити про завершені дії! ✅\n\n## Need More Practice?\n\n> [!resources] External Resources\n> - 🎥 [50 Verb Pairs](https://www.youtube.com/watch?v=iK4uNlozmFE) — Let's Learn Ukrainian\n> - 📖 [Perfective Verbs](https://www.ukrainianlessons.com/perfective-verbs/)\n> - 📝 [Aspect Differences](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/)\n> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)\n\n---\n\n# Activities\n\n## match-up: Past Tense Forms\n> З'єднайте форми минулого часу. | Match the past tense forms.\n\n- зробив :: did/finished\n- написав :: wrote/finished\n- прочитав :: read/finished\n- сказав :: said\n- побачив :: saw\n- почув :: heard\n- взяв :: took\n- дав :: gave\n- пішов :: went/left\n- прийшов :: came/arrived\n- закінчив :: finished\n- почав :: began\n\n## fill-in: Perfective or Imperfective Past\n\n> Choose the correct verb form for each context.\n\n1. Він ___ книгу вчора. (finished reading)\n   > [!answer] прочитав\n   > [!options] читав | прочитав\n\n2. Вона ___ три години. (was writing)\n   > [!answer] писала\n   > [!options] писала | написала\n\n3. Я вже ___ це! (already did)\n   > [!answer] зробив\n   > [!options] робив | зробив\n\n4. Ми ___ щодня. (read every day)\n   > [!answer] читали\n   > [!options] читали | прочитали\n\n5. Він ___ \"привіт.\" (said)\n   > [!answer] сказав\n   > [!options] говорив | сказав\n\n6. Вона довго ___. (was speaking)\n   > [!answer] говорила\n   > [!options] говорила | сказала\n\n7. Ми нарешті ___! (finally arrived)\n   > [!answer] приїхали\n   > [!options] їхали | приїхали\n\n8. Він ___ весь день. (was working)\n   > [!answer] працював\n   > [!options] працював | попрацював\n\n9. Вона ___ роботу. (finished)\n   > [!answer] закінчила\n   > [!options] закінчувала | закінчила\n\n10. Я ___ його часто. (saw often)\n    > [!answer] бачив\n    > [!options] бачив | побачив\n\n11. Він раптом ___ шум. (suddenly heard)\n    > [!answer] почув\n    > [!options] чув | почув\n\n12. Ми ___ листа. (wrote/finished)\n    > [!answer] написали\n    > [!options] писали | написали\n\n## quiz: Aspect in Past Tense\n> Виберіть правильний вид у минулому часі. | Choose the correct aspect in past tense.\n\n1. In the Ukrainian sentence \"Я прочитав книгу,\" which grammatical aspectual focus is emphasized?\n\n- [x] Completed result\n- [ ] Ongoing process\n- [ ] Future intent\n- [ ] Habitual action\n\n---\n\n2. When a speaker says \"Я читав книгу,\" what is the primary focus of the action?\n\n- [x] Process\n- [ ] Completed result\n- [ ] Single event\n- [ ] Future goal\n\n---\n\n3. Which of the following Ukrainian words typically signals that the perfective past should be used?\n\n- [x] вже\n- [ ] довго\n- [ ] часто\n- [ ] зазвичай\n\n---\n\n4. In the sentence \"Вона писала три години,\" what is the grammatical aspect of the verb used?\n\n- [x] Imperfective\n- [ ] Perfective\n- [ ] Future\n- [ ] Conditional\n\n---\n\n5. In the sentence \"Він написав листа вчора,\" what is the grammatical aspect of the verb used?\n\n- [x] Perfective\n- [ ] Imperfective\n- [ ] Present\n- [ ] Habitual\n\n---\n\n6. Which statement best describes the past tense endings for perfective and imperfective verbs in Ukrainian?\n\n- [x] The same for both aspects\n- [ ] Different for each aspect\n- [ ] Only used for perfective\n- [ ] Only used for imperfective\n\n---\n\n7. Which of the following options represents the correct masculine past tense ending for Ukrainian verbs?\n\n- [x] -в | -∅\n- [ ] -ла\n- [ ] -ли\n- [ ] -ло\n\n---\n\n8. Which of the following options represents the correct feminine past tense ending for Ukrainian verbs?\n\n- [x] -ла\n- [ ] -в\n- [ ] -ли\n- [ ] -ло\n\n---\n\n9. The common Ukrainian question \"Що ти робив?\" typically uses which grammatical aspect for inquiry?\n\n- [x] Imperfective (asking about activities)\n- [ ] Perfective\n- [ ] Future\n- [ ] Imperative\n\n---\n\n10. The common Ukrainian question \"Ти зробив це?\" typically uses which grammatical aspect for inquiry?\n\n- [x] Perfective (asking about completion)\n- [ ] Imperfective\n- [ ] Present\n- [ ] Habitual\n\n---\n\n11. Which of the following represents the correct masculine past form of the perfective verb \"піти\"?\n\n- [x] пішов\n- [ ] пів\n- [ ] пишов\n- [ ] пішовла\n\n---\n\n12. Which of the following represents the correct masculine past form of the perfective verb \"прийти\"?\n\n- [x] прийшов\n- [ ] прийв\n- [ ] прив\n- [ ] прийшла\n\n## true-false: Past Tense Rules\n\n> Decide if each statement is true or false.\n\n- [x] Perfective past shows completed actions.\n  > Correct!\n\n- [x] Imperfective past can show duration.\n  > Yes! \"Він читав три години.\"\n\n- [ ] Past endings are different for each aspect.\n  > No, the endings are the same — the stems are different.\n\n- [x] \"Вже\" usually appears with perfective.\n  > Correct! \"Я вже зробив.\"\n\n- [x] \"Довго\" usually appears with imperfective.\n  > Yes! \"Він довго працював.\"\n\n- [ ] \"Писав\" is perfective past.\n  > \"Писав\" is imperfective. \"Написав\" is perfective.\n\n- [x] \"Прочитав\" means \"finished reading.\"\n  > Correct!\n\n- [x] \"Пішов\" is the past of \"піти.\"\n  > Yes!\n\n- [ ] Repeated actions use perfective.\n  > Repeated actions use imperfective.\n\n- [x] \"Що ти робив?\" asks about activities.\n  > Yes, using imperfective to ask about process.\n\n- [x] \"Нарешті\" signals perfective.\n  > Correct! \"Нарешті зробив!\"\n\n- [ ] \"Сказав\" is imperfective.\n  > \"Сказав\" is perfective. \"Говорив\" is imperfective.\n\n## group-sort: Verb Aspect\n> Розсортуйте ці форми минулого часу за видом. | Sort these past tense forms by aspect.\n\n> Sort these past tense forms by aspect.\n\n### Imperfective\n- читав\n- писав\n- робив\n- говорив\n- бачив\n- їхав\n\n### Perfective\n- прочитав\n- написав\n- зробив\n- сказав\n- побачив\n- приїхав\n\n## unjumble: Past Tense Sentences\n\n> Put the words in the correct order.\n\n1. він / прочитав / цю / нову / цікаву / книгу / вчора / ввечері\n   > [!answer] Він прочитав цю нову цікаву книгу вчора ввечері\n\n2. вона / писала / цього / довгого / листа / додому / три / години\n   > [!answer] Вона писала цього довгого листа додому три години\n\n3. я / вже / зробив / це / складне / домашнє / завдання / сьогодні\n   > [!answer] Я вже зробив це складне домашнє завдання сьогодні\n\n4. ми / нарешті / приїхали / до / Києва / дуже / пізно / вчора\n   > [!answer] Ми нарешті приїхали до Києва дуже пізно вчора\n\n5. він / сказав / мені / всю / щиру / правду / про / це\n   > [!answer] Він сказав мені всю щиру правду про це\n\n6. вона / довго / говорила / по / телефону / зі / своєю / мамою\n   > [!answer] Вона довго говорила по телефону зі своєю мамою\n\n7. ти / прочитав / ту / велику / статтю / в / новій / газеті\n   > [!answer] Ти прочитав ту велику статтю в новій газеті\n\n8. він / пішов / додому / відразу / після / нашої / цікавої / роботи\n   > [!answer] Він пішов додому відразу після нашої цікавої роботи\n\n9. вона / побачила / прекрасне / синє / море / вперше / у / житті\n   > [!answer] Вона побачила прекрасне синє море вперше у житті\n\n10. ми / закінчили / нашу / важку / роботу / о / восьмій / годині\n    > [!answer] Ми закінчили нашу важку роботу о восьмій годині\n\n11. він / раптом / почув / якийсь / дивний / шум / на / вулиці\n    > [!answer] Він раптом почув якийсь дивний шум на вулиці\n\n12. я / взяв / свою / стару / книгу / зі / шкоди / вчора\n    > [!answer] Я взяв свою стару книгу зі шкоди вчора\n\n## error-correction: Choose Correct Aspect\n\n> Select the correct aspect for each context.\n\n1. Він ___ книгу весь вечір. (duration)\n   > [!error] duration\n   > [!answer] читав\n   > [!explanation] Duration (весь вечір) requires imperfective.\n   > [!options] читав | прочитав\n\n2. Вона ___ листа і пішла. (completed then left)\n   > [!error] completed then left\n   > [!answer] написала\n   > [!explanation] Completed action before next action = perfective.\n   > [!options] писала | написала\n\n3. Я вже ___ це! (already)\n   > [!error] already\n   > [!answer] зробив\n   > [!explanation] \"Вже\" signals completion = perfective.\n   > [!options] робив | зробив\n\n4. Він ___ часто. (often)\n   > [!error] often\n   > [!answer] приходив\n   > [!explanation] Repeated action (часто) = imperfective.\n   > [!options] приходив | прийшов\n\n5. Вона нарешті ___! (finally)\n   > [!error] finally\n   > [!answer] зробила\n   > [!explanation] \"Нарешті\" signals completion = perfective.\n   > [!options] робила | зробила\n\n6. Що ти ___ учора? (activities)\n   > [!error] activities\n   > [!answer] робив\n   > [!explanation] Asking about activities = imperfective.\n   > [!options] робив | зробив\n\n## cloze: Aspect in Context\n\n> Fill in the correct past tense form.\n\nУчора я [___:1] рано. Я [___:2] каву і [___:3] сніданок. Потім я [___:4] на роботу. На роботі я [___:5] цілий день. Увечері я [___:6] додому і [___:7] телевізор.\n\n1. встати: встав | вставав\n> [!answer] встав\n\n2. випити: пив | випив\n> [!answer] випив\n\n3. з'їсти: їв | з'їв\n> [!answer] з'їв\n\n4. піти: ходив | пішов\n> [!answer] пішов\n\n5. працювати: працював | попрацював\n> [!answer] працював\n\n6. прийти: приходив | прийшов\n> [!answer] прийшов\n\n7. дивитися: дивився | подивився\n> [!answer] дивився\n\n---\n\nМинулого тижня я [___:1] нову книгу. Я [___:2] її три дні. Вчора я нарешті [___:3] читати. Книга була дуже цікава! Після того як я [___:4] книгу, я [___:5] рецензію.\n\n1. купити: купував | купив\n> [!answer] купив\n\n2. читати: читав | прочитав\n> [!answer] читав\n\n3. закінчити: закінчував | закінчив\n> [!answer] закінчив\n\n4. читати: читав | прочитав\n> [!answer] прочитав\n\n5. писати: писав | написав\n> [!answer] написав\n\n## dialogue-reorder: Completed vs Process\n\n- Що ти робив учора?\n- Я працював цілий день.\n- Ти закінчив проект?\n- Так, нарешті закінчив!\n- А що робила Оля?\n- Вона теж працювала, але не закінчила.\n\n> [!answer]\n> 1. Що ти робив учора?\n> 2. Я працював цілий день.\n> 3. Ти закінчив проект?\n> 4. Так, нарешті закінчив!\n> 5. А що робила Оля?\n> 6. Вона теж працювала, але не закінчила.\n\n---\n\n- Ти прочитав книгу?\n- Ні, я читав, але не закінчив.\n- Скільки часу ти читав?\n- Дві години.\n- А коли закінчиш?\n- Думаю, сьогодні прочитаю.\n\n> [!answer]\n> 1. Ти прочитав книгу?\n> 2. Ні, я читав, але не закінчив.\n> 3. Скільки часу ти читав?\n> 4. Дві години.\n> 5. А коли закінчиш?\n> 6. Думаю, сьогодні прочитаю.\n\n## mark-the-words: Find Perfective Past\n\nClick on PERFECTIVE PAST forms only.\n\nУчора я [прочитав](correct) книгу. Потім я [написав](correct) листа. Я довго писав, але нарешті [закінчив](correct).\n\n---\n\nВона [сказала](correct) правду. Ми [почули](correct) шум. Він [взяв](correct) книгу і [пішов](correct).\n\n---\n\nВін працював цілий день. Потім він [закінчив](correct) і [пішов](correct) додому. Вдома він [відпочив](correct).\n\n## translate: English to Ukrainian\n\nHe finished reading the book.\n\n- [x] Він прочитав книгу.\n- [ ] Він читав книгу.\n\n---\n\nShe was writing for 3 hours.\n\n- [x] Вона писала три години.\n- [ ] Вона написала три години.\n\n---\n\nI already did this!\n\n- [x] Я вже зробив це!\n- [ ] Я вже робив це!\n\n---\n\nWe finally arrived.\n\n- [x] Ми нарешті приїхали.\n- [ ] Ми нарешті їхали.\n\n---\n\nHe said \"yes.\"\n\n- [x] Він сказав \"так.\"\n- [ ] Він говорив \"так.\"\n\n---\n\nShe was speaking loudly.\n\n- [x] Вона голосно говорила.\n- [ ] Вона голосно сказала.\n\n---\n\nThey saw the movie.\n\n- [x] Вони побачили фільм.\n- [ ] Вони бачили фільм.\n\n---\n\nI was working all day.\n\n- [x] Я працював цілий день.\n- [ ] Я попрацював цілий день.\n\n---\n\nHe took the book and left.\n\n- [x] Він взяв книгу і пішов.\n- [ ] Він брав книгу і йшов.\n\n---\n\nShe heard the news.\n\n- [x] Вона почула новини.\n- [ ] Вона чула новини.\n\n---\n\nWhat were you doing yesterday?\n\n- [x] Що ти робив учора?\n- [ ] Що ти зробив учора?\n\n---\n\nDid you finish? (asking about completion)\n\n- [x] Ти закінчив?\n- [ ] Ти закінчував?\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| зробив | /zrɔˈbɪʋ/ | did, made | verb | m | perf. past masc. |\n| написав | /nɑpɪˈsɑʋ/ | wrote | verb | m | perf. past masc. |\n| прочитав | /prɔt͡ʃɪˈtɑʋ/ | read, finished | verb | m | perf. past masc. |\n| сказав | /skɑˈzɑʋ/ | said | verb | m | perf. past masc. |\n| побачив | /pɔˈbɑt͡ʃɪʋ/ | saw | verb | m | perf. past masc. |\n| почув | /pɔˈt͡ʃuʋ/ | heard | verb | m | perf. past masc. |\n| взяв | /ˈʋzʲɑʋ/ | took | verb | m | perf. past masc. |\n| дав | /dɑʋ/ | gave | verb | m | perf. past masc. |\n| пішов | /piˈʃɔʋ/ | went, left | verb | m | perf. past masc. |\n| прийшов | /prɪjˈʃɔʋ/ | came | verb | m | perf. past masc. |\n| приїхав | /prɪˈjixɑʋ/ | arrived | verb | m | perf. past masc. |\n| вийшов | /ˈʋɪjʃɔʋ/ | went out | verb | m | perf. past masc. |\n| увійшов | /uˈʋijʃɔʋ/ | entered | verb | m | perf. past masc. |\n| почав | /pɔˈt͡ʃɑʋ/ | began | verb | m | perf. past masc. |\n| закінчив | /zɑˈkint͡ʃɪʋ/ | finished | verb | m | perf. past masc. |\n| зрозумів | /zrɔzuˈmiʋ/ | understood | verb | m | perf. past masc. |\n| забув | /zɑˈbuʋ/ | forgot | verb | m | perf. past masc. |\n| знайшов | /znɑjˈʃɔʋ/ | found | verb | m | perf. past masc. |\n| загубив | /zɑɦuˈbɪʋ/ | lost | verb | m | perf. past masc. |\n| раптом | /ˈrɑptɔm/ | suddenly | adv | — | signals sudden action |\n| купив | /kuˈpɪʋ/ | bought | verb | m | perf. past masc. |\n| продав | /prɔˈdɑʋ/ | sold | verb | m | perf. past masc. |\n| відкрив | /ʋidˈkrɪʋ/ | opened | verb | m | perf. past masc. |\n| закрив | /zɑˈkrɪʋ/ | closed | verb | m | perf. past masc. |\n| запам'ятав | /zɑpɑˈmʲɑtɑʋ/ | remembered | verb | m | perf. past masc. |\n| вид | /ʋɪd/ | aspect | noun | m | grammar term |\n\n---\n\n\n",
-    "createdAt": "2025-12-28T13:45:23.891644Z",
-    "modifiedAt": "2025-12-28T13:45:23.891644Z",
+    "sections": [],
+    "rawMarkdown": "## Warm-up\n\n**Тепер, коли ви розумієте аспект, давайте навчимося використовувати доконаний вид у минулому часі!**\n\nNow that you understand the concept of aspect from Module 11, let's focus on using perfective verbs in the past tense. This is where aspect becomes most critical for communication — choosing perfective or imperfective past can completely change your meaning!\n\nWhen you tell a story in Ukrainian, you constantly make choices: do you emphasize what happened (result) or what was happening (process)? These choices aren't random — they follow patterns that native speakers use automatically. By the end of this module, you'll begin to develop this intuition too.\n\n**Why past tense is special for aspect:**\nThe past tense is where aspect differences are most visible and most important. In present tense, many contexts allow either aspect. But in past tense, the wrong choice can make your sentence confusing or even nonsensical to a native speaker.\n\n**What you'll master in this module:**\n- How to form perfective past tense (it's easier than you think!)\n- When to choose perfective over imperfective in past contexts\n- Key signal words that indicate completed actions\n- Common perfective verbs in their past forms\n\n**The Core Principle:** Perfective past = completed action with a clear result. If you can point to the result of the action, use perfective. If you're describing the process or duration, use imperfective.\n\n> 💡 **Запам'ятайте!**\n>\n> Доконаний вид у минулому часі = закінчена дія з чітким результатом. Якщо можна вказати на результат — використовуйте доконаний вид!\n\n## Presentation\n\n## Forming the Perfective Past\n\nThe good news: perfective verbs conjugate in past tense exactly like imperfective verbs! The past tense endings are the same for both aspects.\n\n### Past Tense Endings (Same for Both Aspects)\n\n| Gender/Number | Ending | Example (прочитати) |\n|---------------|--------|---------------------|\n| Masculine | -в | -∅ | прочитав |\n| Feminine | -ла | прочитала |\n| Neuter | -ло | прочитало |\n| Plural | -ли | прочитали |\n\n**Examples:**\n- Він **прочитав** книгу. (He read/finished the book.)\n- Вона **прочитала** статтю. (She read/finished the article.)\n- Вони **прочитали** все. (They read/finished everything.)\n\n> 💡 **Key Point**\n>\n> The difference isn't in the endings — it's in the verb itself. Прочитав and читав have the same endings, but different stems. Прочитав is perfective (completed), читав is imperfective (ongoing).\n\n## Imperfective vs. Perfective Past: Side by Side\n\nLet's compare the same verb pair in past tense:\n\n| Aspect | Masculine | Feminine | Plural | Meaning |\n|--------|-----------|----------|--------|---------|\n| Impf. | писав | писала | писали | was writing |\n| Perf. | написав | написала | написали | wrote/finished |\n| Impf. | читав | читала | читали | was reading |\n| Perf. | прочитав | прочитала | прочитали | read/finished |\n| Impf. | робив | робила | робили | was doing |\n| Perf. | зробив | зробила | зробили | did/finished |\n\n## When to Use Perfective Past\n\n### 1. Single Completed Action\n\nWhen something happened once and is finished:\n- Я **прочитав** книгу вчора. (I finished the book yesterday.)\n- Вона **написала** листа. (She wrote/finished the letter.)\n- Він **з'їв** сніданок. (He ate breakfast.)\n\n### 2. Result Matters More Than Process\n\nFocus on what got accomplished:\n- Хто **написав** цю книгу? (Who wrote this book?)\n- Вони **побудували** новий міст. (They built a new bridge.)\n\n### 3. With \"Already\" (вже) and \"Finally\" (нарешті)\n\nThese words almost always signal perfective:\n- Я **вже прочитав** цю книгу. (I've already read this book.)\n- Вона **нарешті зробила** домашнє завдання. (She finally did her homework.)\n\n> 📜 **Pattern Recognition**\n>\n> Words like вже, нарешті, раптом, несподівано often appear with perfective verbs because they emphasize completed events or results.\n\n## When to Use Imperfective Past\n\n### 1. Duration or Process\n\nWhen the action lasted for some time:\n- Я **читав** книгу три години. (I was reading for 3 hours.)\n- Вона **писала** весь день. (She was writing all day.)\n\n### 2. Repeated Actions\n\nWhen something happened multiple times:\n- Він **читав** цю книгу багато разів. (He read this book many times.)\n- Ми **бачили** його часто. (We saw him often.)\n\n### 3. Asking About Activities\n\nWhen asking \"what were you doing?\":\n- Що ти **робив** учора? (What were you doing yesterday?)\n- Що вона **читала**? (What was she reading?)\n\n> [!tip] Decision Guide\n> Ask yourself: \"Am I focusing on what got done (perfective) or what someone was doing (imperfective)?\"\n\n> 🌍 **Cultural Connection**\n>\n> Українська мова чітко розрізняє процес і результат. Це важлива частина слов'янського світогляду — ми цікавимось не лише ЩО сталось, але і ЯК це відбувалось!\n\n---\n\n## Cultural Insight\n\n## Common Perfective Past Forms\n\nHere are the most common perfective verbs in past tense:\n\n| Perfective | Past (masc.) | English |\n|------------|--------------|---------|\n| зробити | зробив | did/made |\n| написати | написав | wrote |\n| прочитати | прочитав | read/finished |\n| сказати | сказав | said |\n| побачити | побачив | saw |\n| почути | почув | heard |\n| взяти | взяв | took |\n| дати | дав | gave |\n| піти | пішов | went/left |\n| прийти | прийшов | came |\n| приїхати | приїхав | arrived |\n| вийти | вийшов | went out |\n| увійти | увійшов | entered |\n| почати | почав | began |\n| закінчити | закінчив | finished |\n\n> 🔍 **Irregular Forms**\n>\n> Some perfective verbs have irregular past forms: піти → пішов (not \"пів\"), прийти → прийшов.\n\n---\n\n## Practice\n\n## Practice Examples\n\nChoose perfective or imperfective for these contexts:\n\n1. **I finished writing the letter.** → Я **написав** листа. (perf.)\n2. **I was writing for 2 hours.** → Я **писав** дві години. (impf.)\n3. **She said \"yes.\"** → Вона **сказала** \"так.\" (perf.)\n4. **He was speaking loudly.** → Він голосно **говорив**. (impf.)\n5. **We already read this.** → Ми вже це **прочитали**. (perf.)\n6. **They were reading all evening.** → Вони **читали** весь вечір. (impf.)\n\n**Self-Test Questions:**\nBefore moving to the activities, make sure you can answer these questions:\n- What is the masculine past tense ending? Answer: -в or zero (consonant)\n- What feminine ending do all past tense verbs use? Answer: -ла\n- Does \"пішов\" come from \"іти\" or \"піти\"? Answer: піти — the perfective form\n\n**Question:** Ти зробив це? (Did you do it?)\n**Positive:** Так, я зробив це. (Yes, I did it.)\n**Negative:** Ні, я не зробив це. (No, I didn't do it.)\n\n##\n",
+    "createdAt": "2026-01-04T21:33:28.272008Z",
+    "modifiedAt": "2026-01-04T21:33:28.272008Z",
     "version": 2
   },
   "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-A2-13",
     "level": "A2",
-    "phase": "A2.2",
-    "wordCount": 26,
-    "newWordCount": 26,
+    "phase": "A2.1",
+    "wordCount": 0,
+    "newWordCount": 0,
     "reviewWordCount": 0,
     "transliterationMode": "none",
-    "words": [
+    "words": [],
+    "reviewWords": []
+  },
+  "external_resources": {
+    "podcasts": [
       {
-        "id": "vocab-1",
-        "uk": "зробив",
-        "ipa": "/zrɔˈbɪʋ/",
-        "en": "did, made",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
+        "episode_id": "ULP-026",
+        "title": "ULP 1-26 Talking about traveling – Past tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/26/",
+        "relevance": "medium",
+        "match_reason": "Listening review (A1): past"
       },
       {
-        "id": "vocab-2",
-        "uk": "написав",
-        "ipa": "/nɑpɪˈsɑʋ/",
-        "en": "wrote",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
+        "episode_id": "ULP-027",
+        "title": "ULP 1-27 Traveling in Ukraine in winter – More Past tense",
+        "url": "https://www.ukrainianlessons.com/lesson/27/",
+        "relevance": "medium",
+        "match_reason": "Listening review (A1): past"
       },
       {
-        "id": "vocab-3",
-        "uk": "прочитав",
-        "ipa": "/prɔt͡ʃɪˈtɑʋ/",
-        "en": "read, finished",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-4",
-        "uk": "сказав",
-        "ipa": "/skɑˈzɑʋ/",
-        "en": "said",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-5",
-        "uk": "побачив",
-        "ipa": "/pɔˈbɑt͡ʃɪʋ/",
-        "en": "saw",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-6",
-        "uk": "почув",
-        "ipa": "/pɔˈt͡ʃuʋ/",
-        "en": "heard",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-7",
-        "uk": "взяв",
-        "ipa": "/ˈʋzʲɑʋ/",
-        "en": "took",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-8",
-        "uk": "дав",
-        "ipa": "/dɑʋ/",
-        "en": "gave",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-9",
-        "uk": "пішов",
-        "ipa": "/piˈʃɔʋ/",
-        "en": "went, left",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-10",
-        "uk": "прийшов",
-        "ipa": "/prɪjˈʃɔʋ/",
-        "en": "came",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-11",
-        "uk": "приїхав",
-        "ipa": "/prɪˈjixɑʋ/",
-        "en": "arrived",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-12",
-        "uk": "вийшов",
-        "ipa": "/ˈʋɪjʃɔʋ/",
-        "en": "went out",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-13",
-        "uk": "увійшов",
-        "ipa": "/uˈʋijʃɔʋ/",
-        "en": "entered",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-14",
-        "uk": "почав",
-        "ipa": "/pɔˈt͡ʃɑʋ/",
-        "en": "began",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-15",
-        "uk": "закінчив",
-        "ipa": "/zɑˈkint͡ʃɪʋ/",
-        "en": "finished",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-16",
-        "uk": "зрозумів",
-        "ipa": "/zrɔzuˈmiʋ/",
-        "en": "understood",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-17",
-        "uk": "забув",
-        "ipa": "/zɑˈbuʋ/",
-        "en": "forgot",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-18",
-        "uk": "знайшов",
-        "ipa": "/znɑjˈʃɔʋ/",
-        "en": "found",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-19",
-        "uk": "загубив",
-        "ipa": "/zɑɦuˈbɪʋ/",
-        "en": "lost",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-20",
-        "uk": "раптом",
-        "ipa": "/ˈrɑptɔm/",
-        "en": "suddenly",
-        "pos": "adv",
-        "gender": null,
-        "note": "signals sudden action"
-      },
-      {
-        "id": "vocab-21",
-        "uk": "купив",
-        "ipa": "/kuˈpɪʋ/",
-        "en": "bought",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-22",
-        "uk": "продав",
-        "ipa": "/prɔˈdɑʋ/",
-        "en": "sold",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-23",
-        "uk": "відкрив",
-        "ipa": "/ʋidˈkrɪʋ/",
-        "en": "opened",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-24",
-        "uk": "закрив",
-        "ipa": "/zɑˈkrɪʋ/",
-        "en": "closed",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-25",
-        "uk": "запам'ятав",
-        "ipa": "/zɑpɑˈmʲɑtɑʋ/",
-        "en": "remembered",
-        "pos": "verb",
-        "gender": "m",
-        "note": "perf. past masc."
-      },
-      {
-        "id": "vocab-26",
-        "uk": "вид",
-        "ipa": "/ʋɪd/",
-        "en": "aspect",
-        "pos": "noun",
-        "gender": "m",
-        "note": "grammar term"
+        "episode_id": "ULP-118",
+        "title": "ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian",
+        "url": "https://www.ukrainianlessons.com/lesson/118/",
+        "relevance": "medium",
+        "match_reason": "Challenge listening (B1): past"
       }
     ],
-    "reviewWords": []
+    "youtube": [],
+    "articles": [],
+    "books": [],
+    "websites": []
   }
 }

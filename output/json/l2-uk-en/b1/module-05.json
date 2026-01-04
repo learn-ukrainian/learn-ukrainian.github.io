@@ -5,40 +5,24 @@
     "moduleId": "mod-uk-B1-05",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "owner": "curricula-opus",
+    "owner": "learn-ukrainian",
     "visibility": "public",
     "language": "uk",
     "targetLevel": "B1",
-    "phase": "B1.0 Bridge",
+    "phase": "B1.1",
     "moduleNumber": 5,
-    "moduleType": "checkpoint",
-    "pedagogy": "TTT",
+    "moduleType": "grammar",
+    "pedagogy": "PPP",
     "immersionLevel": 0.6,
-    "title": "Готові до занурення",
+    "title": "Module 5",
     "titleUk": null,
-    "subtitle": "Metalanguage mastery checkpoint",
-    "description": "Learner can read and understand grammar explanations in Ukrainian",
-    "objectives": [
-      "Learner can read and understand grammar explanations in Ukrainian",
-      "Learner can answer questions about grammar rules in Ukrainian",
-      "Learner can demonstrate metalanguage mastery for full immersion",
-      "Learner can use negation and verb form terminology",
-      "Learner can understand activity instruction verbs",
-      "Learner can apply analytical terms and style/register concepts"
-    ],
+    "subtitle": null,
+    "description": "Module 5",
+    "objectives": [],
     "objectivesUk": null,
-    "grammarFocus": [
-      "Integration of all metalanguage from M01-04",
-      "Reading grammar in Ukrainian",
-      "Comprehension test"
-    ],
-    "tags": [
-      "grammar",
-      "metalanguage",
-      "checkpoint",
-      "bridge"
-    ],
-    "totalDuration": 75,
+    "grammarFocus": [],
+    "tags": [],
+    "totalDuration": 45,
     "transliterationMode": "none",
     "sections": [
       {
@@ -53,464 +37,51 @@
         "name": "Підсумок",
         "nameEn": null,
         "type": "summary",
-        "content": "You've completed the Bridge phase! You now know:\n\n**Vocabulary for Full Immersion:**\n- ~100 grammatical terms in Ukrainian\n- Explanation and instruction patterns\n- Word formation terminology\n- Sentence analysis vocabulary\n\n**Your Grammar Metalanguage Arsenal:**\n- **10 частин мови** — іменник, дієслово, прикметник, прислівник, займенник, числівник, прийменник, сполучник, частка, вигук\n- **7 відмінків** — називний, родовий, давальний, знахідний, орудний, місцевий, кличний\n- **2 види дієслова** — доконаний (результат), недоконаний (процес)\n- **3 часи** — теперішній, минулий, майбутній\n- **5 членів речення** — підмет, присудок, додаток, означення, обставина\n- **4 частини слова** — корінь, суфікс, префікс, закінчення\n\n**What Changes After This Module:**\n- Grammar explanations will be entirely in Ukrainian\n- Instructions and examples will be in Ukrainian\n- You'll learn NEW grammar concepts using UKRAINIAN terminology\n- No more English scaffolding — true immersion begins now\n\n> ✅ **Self-Check: Готові до занурення?**\n>\n> Can you:\n> - [ ] Name all 10 parts of speech in Ukrainian?\n> - [ ] Name all 7 cases in Ukrainian?\n> - [ ] Explain the difference between ДВ and НДВ?\n> - [ ] Identify підмет, присудок, додаток in a sentence?\n> - [ ] Understand patterns like \"використовується для...\"?\n> - [ ] Read a Ukrainian grammar explanation?\n>\n> If you checked all boxes: **Вітаємо! Ви готові!** (Congratulations! You're ready!)\n\n---\n\n> [!resources] 🎧 External Resources\n>\n> **Ukrainian Grammar Resources (Now Accessible!):**\n> - 📖 [Ukrainian Grammar in Ukrainian](https://uk.wikipedia.org/wiki/Граматика_української_мови) — Wikipedia\n> - 📺 [Ukrainian Lessons](https://www.youtube.com/c/UkrainianLessons) — YouTube channel\n> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/the-podcast/) — Advanced episodes\n\n---"
-      },
-      {
-        "id": "section-3",
-        "name": "Словник",
-        "nameEn": null,
-        "type": "vocabulary",
-        "content": "| Слово | Вимова | Переклад | ЧМ | Примітка |\n|-------|--------|----------|-----|----------|\n| граматичне поняття | /ɦrɑmɑˈtɪt͡ʃnɛ pɔˈnʲɑtʲːɑ/ | grammatical concept | вираз | с.р. |\n| мовознавство | /mɔwɔˈznɑwstwɔ/ | linguistics | ім. | с.р. |\n| морфологія | /mɔrfɔˈlɔɦʲijɑ/ | morphology | ім. | ж.р. |\n| синтаксис | /sɪnˈtɑksɪs/ | syntax | ім. | ч.р. |\n| правопис | /ˈprɑwɔpɪs/ | spelling, orthography | ім. | ч.р. |\n| наголос | /ˈnɑɦɔlɔs/ | stress, accent | ім. | ч.р. |\n| вимова | /ˈwɪmɔwɑ/ | pronunciation | ім. | ж.р. |\n| правило | /ˈprɑwɪlɔ/ | rule | ім. | с.р. |\n| закономірність | /zɑkɔnɔˈmʲirnʲistʲ/ | pattern, regularity | ім. | ж.р. |\n| система | /sɪsˈtɛmɑ/ | system | ім. | ж.р. |\n| категорія | /kɑtɛˈɦɔrʲijɑ/ | category | ім. | ж.р. |\n| ознака | /ɔˈznɑkɑ/ | feature, characteristic | ім. | ж.р. |\n| властивість | /ˈwlɑstɪwʲistʲ/ | property | ім. | ж.р. |\n| значення | /ˈznɑt͡ʃɛnʲːɑ/ | meaning | ім. | с.р. |\n| функція | /ˈfunkt͡sʲijɑ/ | function | ім. | ж.р. |\n| занурення | /zɑnuˈrɛnʲːɑ/ | immersion | ім. | с.р. |\n| термінологія | /tɛrmʲinɔˈlɔɦʲijɑ/ | terminology | ім. | ж.р. |\n| підручник | /pʲidˈrut͡ʃnɪk/ | textbook | ім. | ч.р. |\n| пояснення | /pɔˈjɑsnɛnʲːɑ/ | explanation | ім. | с.р. |\n| самостійно | /sɑmɔsˈtʲijnɔ/ | independently | присл. | без допомоги |\n| заперечення | /zɑpɛˈrɛt͡ʃɛnʲːɑ/ | negation | ім. | с.р. |\n| загальне заперечення | /zɑˈɦɑlʲnɛ zɑpɛˈrɛt͡ʃɛnʲːɑ/ | general negation | вираз | граматичний термін |\n| очікувана дія | /ɔt͡ʃiˈkuwɑnɑ ˈdʲijɑ/ | expected action | вираз | граматичний термін |\n| попередження | /pɔpɛˈrɛdʒɛnʲːɑ/ | warning | ім. | с.р. |\n| заборона | /zɑbɔˈrɔnɑ/ | prohibition | ім. | ж.р. |\n| складна форма | /ˈsklɑdnɑ ˈfɔrmɑ/ | compound form | вираз | граматичний термін |\n| синтетична форма | /sɪntɛˈtɪt͡ʃnɑ ˈfɔrmɑ/ | synthetic form | вираз | граматичний термін |\n| наказова форма | /nɑˈkɑzɔwɑ ˈfɔrmɑ/ | imperative form | вираз | граматичний термін |\n| парадигма | /pɑrɑˈdɪɦmɑ/ | paradigm | ім. | ж.р. |\n| виберіть | /ˈwɪbɛrʲitʲ/ | choose | дієсл. | інструкція вправи |\n| оберіть | /ɔˈbɛrʲitʲ/ | select | дієсл. | інструкція вправи |\n| знайдіть | /znɑjˈdʲitʲ/ | find | дієсл. | інструкція вправи |\n| з'єднайте | /zʲjɛdˈnɑjtɛ/ | match, connect | дієсл. | інструкція вправи |\n| розташуйте | /rɔztɑʃˈujtɛ/ | arrange | дієсл. | інструкція вправи |\n| доповніть | /dɔˈpɔwnʲitʲ/ | complete | дієсл. | інструкція вправи |\n| натисніть | /nɑtɪsˈnʲitʲ/ | click | дієсл. | інструкція вправи |\n| перекладіть | /pɛrɛklɑˈdʲitʲ/ | translate | дієсл. | інструкція вправи |\n| складіть | /sklɑˈdʲitʲ/ | compose | дієсл. | інструкція вправи |\n| контекст | /kɔnˈtɛkst/ | context | ім. | ч.р. |\n| маркер | /ˈmɑrkɛr/ | marker | ім. | ч.р. |\n| частота | /t͡ʃɑsˈtɔtɑ/ | frequency | ім. | ж.р. |\n| аспектуальна пара | /ɑspɛktuˈɑlʲnɑ ˈpɑrɑ/ | aspectual pair | вираз | граматичний термін |\n| стиль | /stilʲ/ | style | ім. | ч.р. |\n| регістр | /rɛˈɦʲistr/ | register | ім. | ч.р. |\n| розмовна мова | /rɔzˈmɔwnɑ ˈmɔwɑ/ | colloquial language | вираз | стиль мовлення |\n| літературна мова | /lʲitɛrɑˈturnɑ ˈmɔwɑ/ | literary language | вираз | стиль мовлення |\n| формальна мова | /fɔrˈmɑlʲnɑ ˈmɔwɑ/ | formal language | вираз | стиль мовлення |\n| нейтральна мова | /nɛjtrɑlʲˈnɑ ˈmɔwɑ/ | neutral language | вираз | стиль мовлення |\n\n---"
+        "content": "You've completed the Bridge phase! You now know:\n\n**Vocabulary for Full Immersion:**\n- ~100 grammatical terms in Ukrainian\n- Explanation and instruction patterns\n- Word formation terminology\n- Sentence analysis vocabulary\n\n**Your Grammar Metalanguage Arsenal:**\n- **10 частин мови** — іменник, дієслово, прикметник, прислівник, займенник, числівник, прийменник, сполучник, частка, вигук\n- **7 відмінків** — називний, родовий, давальний, знахідний, орудний, місцевий, кличний\n- **2 види дієслова** — доконаний (результат), недоконаний (процес)\n- **3 часи** — теперішній, минулий, майбутній\n- **5 членів речення** — підмет, присудок, додаток, означення, обставина\n- **4 частини слова** — корінь, суфікс, префікс, закінчення\n\n**What Changes After This Module:**\n- Grammar explanations will be entirely in Ukrainian\n- Instructions and examples will be in Ukrainian\n- You'll learn NEW grammar concepts using UKRAINIAN terminology\n- No more English scaffolding — true immersion begins now\n\n> ✅ **Self-Check: Готові до занурення?**\n>\n> Can you:\n> - [ ] Name all 10 parts of speech in Ukrainian?\n> - [ ] Name all 7 cases in Ukrainian?\n> - [ ] Explain the difference between ДВ and НДВ?\n> - [ ] Identify підмет, присудок, додаток in a sentence?\n> - [ ] Understand patterns like \"використовується для...\"?\n> - [ ] Read a Ukrainian grammar explanation?\n>\n> If you checked all boxes: **Вітаємо! Ви готові!** (Congratulations! You're ready!)\n\n---\n\n---"
       }
     ],
-    "rawMarkdown": "---\nmodule: b1-05\ntitle: \"Готові до занурення\"\nsubtitle: \"Metalanguage mastery checkpoint\"\nversion: \"1.0\"\nphase: \"B1.0 Bridge\"\npedagogy: \"TTT\"\nduration: 75\ntransliteration: none\ntags:\n  - grammar\n  - metalanguage\n  - checkpoint\n  - bridge\ngrammar:\n  - \"Integration of all metalanguage from M01-04\"\n  - \"Reading grammar in Ukrainian\"\n  - \"Comprehension test\"\nobjectives:\n  - \"Learner can read and understand grammar explanations in Ukrainian\"\n  - \"Learner can answer questions about grammar rules in Ukrainian\"\n  - \"Learner can demonstrate metalanguage mastery for full immersion\"\n  - \"Learner can use negation and verb form terminology\"\n  - \"Learner can understand activity instruction verbs\"\n  - \"Learner can apply analytical terms and style/register concepts\"\nvocabulary_count: 44\n---\n\n# Готові до занурення\n\n> 🎯 **Why This Module Matters**\n>\n> This is your final checkpoint before full immersion. After this module, all grammar explanations will be in Ukrainian. You've learned parts of speech, cases, aspect, tense, sentence structure, and grammar explanation patterns. Now it's time to prove you can understand Ukrainian grammar resources independently.\n\nUkrainians have a proverb: **«Хто мову знає, той усюди буває.»** — \"Whoever knows the language, goes everywhere.\" You now have the metalanguage to go everywhere in Ukrainian grammar!\n\nWhere does this metalanguage come from? Київ is home to the Institute of Ukrainian Language at the Academy of Sciences, which defines standard terminology. Львів has the oldest Ukrainian-language university, where philologists refined these terms over centuries. Одеса universities train teachers who spread this metalanguage across the country. From Харків to Ужгород, all use the same grammatical terms you've now mastered.\n\n## Діагностика\n\n### Тест: Чи готові ви?\n\nRead this Ukrainian grammar text and answer the questions that follow:\n\n> *Дієслово \"читати\" — недоконаного виду. Воно використовується, коли дія триває або повторюється. Доконана пара — \"прочитати\". Доконаний вид означає завершену дію з результатом.*\n>\n> *У реченні \"Студент читає книгу\" підмет — \"студент\", присудок — \"читає\", додаток — \"книгу\". Це просте речення.*\n>\n> *У складнопідрядному реченні \"Студент читає, бо любить книги\" головне речення — \"Студент читає\", підрядне речення — \"бо любить книги\". Сполучник \"бо\" — сполучник підрядності. Перед ним ставимо кому.*\n\n**Comprehension Check — Перевірка розуміння:**\n\n1. Яким видом є дієслово \"читати\" в українській мові?\n   - Answer: Недоконаного виду.\n\n2. Що означає доконаний вид дієслова?\n   - Answer: Завершену дію з результатом.\n\n3. Який підмет у реченні \"Студент читає книгу\"?\n   - Answer: \"Студент\".\n\n4. Чому перед \"бо\" ставимо кому в складному реченні?\n   - Answer: Бо \"бо\" — сполучник підрядності.\n\nIf you answered all four questions correctly, you're ready for full immersion in Ukrainian!\n\n**Дієслово \"читати\" є недоконаного виду.** (The verb \"chytaty\" is imperfective aspect.)\n\n**Доконаний вид означає завершену дію.** (Perfective aspect means a completed action.)\n\n**Підмет у реченні вказує на виконавця дії.** (The subject in a sentence indicates the performer of the action.)\n\n**Перед сполучником підрядності ставимо кому.** (Before a subordinating conjunction, we place a comma.)\n\n---\n\n## Аналіз\n\n### What You've Learned\n\nIn the Bridge phase (M01-05), you learned:\n\n**Module 01: Parts of Speech & Cases**\n- 10 частин мови: іменник, дієслово, прикметник, прислівник, займенник, числівник, прийменник, сполучник, частка, вигук\n- 7 відмінків: називний, родовий, давальний, знахідний, орудний, місцевий, кличний\n- Basic sentence terms: слово, речення, рід, число, особа, закінчення\n\n**Module 02: Verb Terminology**\n- Вид: доконаний, недоконаний\n- Час: теперішній, минулий, майбутній\n- Дія, процес, результат, тривалість, повторення\n- Спосіб: наказовий, умовний\n- Negation: заперечення, загальне заперечення, очікувана дія, попередження, заборона\n- Verb forms: складна форма, синтетична форма, наказова форма, парадигма\n\n**Module 03: Grammar Patterns**\n- Explanation patterns: використовується, означає, показує, виражає\n- Instructions: порівняйте, зверніть увагу, наприклад, тобто, отже\n- Activity instruction verbs: виберіть/оберіть, знайдіть, з'єднайте, розташуйте, доповніть, натисніть, перекладіть, складіть\n- Analytical terms: контекст, маркер, частота, аспектуальна пара\n- Style and register: стиль, регістр, розмовна мова, літературна мова, формальна мова, нейтральна мова\n- Comparison: на відміну від, подібно до\n- Word parts: корінь, суфікс, префікс, основа\n\n**Module 04: Sentence Structure**\n- Члени речення: підмет, присудок, додаток, означення, обставина\n- Види речень: просте, складне, складносурядне, складнопідрядне\n- Частини: головне речення, підрядне речення\n- Пунктуація: кома, крапка, двокрапка, тире, лапки\n\n**Module 05: This Module — Final Integration**\n- Complete review of all terminology from M01-04\n- Reading comprehension of Ukrainian grammar texts\n- Self-assessment and readiness check\n- Preparation for full Ukrainian immersion\n\n> 💡 **Did You Know?**\n>\n> You now have approximately 100 grammatical terms in Ukrainian. This is the same metalanguage that Ukrainian schoolchildren learn between ages 7-12. With this foundation, you can understand any Ukrainian grammar resource.\n\n**Частини мови поділяються на самостійні та службові.** (Parts of speech are divided into content and function words.)\n\n**Сім відмінків української мови мають різні функції.** (The seven cases of Ukrainian have different functions.)\n\n**Вид дієслова визначає характер дії.** (Verb aspect determines the character of action.)\n\n> 🎬 **Pop Culture Moment: Language Learning Apps**\n>\n> Most language apps teach words and phrases, but never teach you the metalanguage. That's why advanced learners hit a wall — they can't read grammar resources. You've broken through that wall! Now you can learn from any Ukrainian source.\n\n---\n\n## Поглиблення\n\n### Reading a Real Grammar Explanation\n\nHere's an excerpt adapted from a Ukrainian grammar textbook. Read it and test your comprehension:\n\n> *Дієслова в українській мові мають дві граматичні категорії: вид і час. Категорія виду поділяє дієслова на дві групи: дієслова недоконаного виду (НДВ) і дієслова доконаного виду (ДВ).*\n>\n> *Недоконаний вид виражає процес дії, її тривалість або повторення. Наприклад: \"Я читав книгу дві години\" — тривала дія. \"Я читав книги щодня\" — повторювана дія.*\n>\n> *Доконаний вид виражає результат дії, її завершення. Наприклад: \"Я прочитав книгу\" — дія завершена, є результат.*\n>\n> *Зверніть увагу: дієслова доконаного виду не мають теперішнього часу. Форма \"прочитаю\" — це майбутній час, не теперішній.*\n\n**Test Your Understanding:**\n\nCan you identify:\n- Which terms are used for aspect? (вид, доконаний, недоконаний)\n- What explanation pattern is used? (виражає, означає)\n- What instruction is given? (зверніть увагу)\n- What is the key grammatical rule at the end? (ДВ не має теперішнього часу)\n\n**Категорія виду є однією з найважливіших в українській мові.** (The category of aspect is one of the most important in Ukrainian.)\n\n**Недоконаний вид виражає процес або повторення дії.** (Imperfective expresses a process or repetition of action.)\n\n**Доконаний вид виражає завершеність дії з результатом.** (Perfective expresses completion of action with a result.)\n\n**Дієслова доконаного виду не мають форми теперішнього часу.** (Perfective verbs don't have a present tense form.)\n\n| Термін | Значення | Приклад |\n|--------|----------|---------|\n| вид | aspect category | читати — прочитати |\n| НДВ | imperfective | читати, писати |\n| ДВ | perfective | прочитати, написати |\n\n---\n\n## Практика\n\n### The Real Test: Can You Learn From This?\n\nFrom this point forward, grammar explanations will look like this:\n\n> *Відмінювання іменників жіночого роду*\n>\n> *Іменники жіночого роду на -а/-я відмінюються за першою відміною. Порівняйте форми слова \"книга\":*\n>\n> | Відмінок | Форма |\n> |----------|-------|\n> | Називний | книга |\n> | Родовий | книги |\n> | Давальний | книзі |\n> | Знахідний | книгу |\n> | Орудний | книгою |\n> | Місцевий | на книзі |\n> | Кличний | книго! |\n>\n> *Зверніть увагу на чергування приголосних у давальному та місцевому відмінках: г → з (книга → книзі).*\n\nIf you can understand this explanation — congratulations! You're ready for full immersion.\n\n**Іменники жіночого роду відмінюються за першою відміною.** (Feminine nouns decline according to the first declension.)\n\n**Чергування приголосних відбувається в давальному відмінку.** (Consonant alternation occurs in the dative case.)\n\n**Закінчення іменника змінюється залежно від відмінка.** (The noun ending changes depending on the case.)\n\n> 🎬 **Pop Culture Moment**\n>\n> In Ukrainian TV series like \"Слуга народу\" (Servant of the People), characters often discuss complex topics using formal language. Now that you know Ukrainian grammar terminology, you can understand linguistic humor and wordplay that relies on grammatical knowledge — like jokes about \"відмінювання\" (declension) or \"правильний наголос\" (correct stress)!\n\n---\n\n## Mini-Dialogues\n\n### Діалог 1: Підсумок\n\n**Вчитель:** Ми завершили основи граматичної термінології. Тепер ви можете читати українські підручники.\n\n**Студент:** Я розумію терміни, але чи зможу я читати справжні граматики?\n\n**Вчитель:** Так! Ви знаєте частини мови, відмінки, вид, час, члени речення.\n\n**Студент:** І граматичні конструкції — \"використовується\", \"означає\"...\n\n**Вчитель:** Саме так. Ви готові!\n\n---\n\n### Діалог 2: Занурення\n\n**Андрій:** З наступного модуля все буде українською?\n\n**Марія:** Так, повне занурення. Пояснення, інструкції, приклади.\n\n**Андрій:** Це трохи страшно...\n\n**Марія:** Не хвилюйся! Ти знаєш усю термінологію. Просто читай уважно.\n\n---\n\n### Діалог 3: Перевірка знань\n\n**Професор:** Скажіть, що таке \"підрядне речення\"?\n\n**Студентка:** Це залежна частина складнопідрядного речення.\n\n**Професор:** А які сполучники його вводять?\n\n**Студентка:** Сполучники підрядності: що, бо, коли, якщо.\n\n**Професор:** Молодець! Ви готові до занурення.\n\n---\n\n### Діалог 4: Самоперевірка\n\n**Ігор:** Я перевіряю себе. Що означає \"НДВ\"?\n\n**Тетяна:** Недоконаний вид — процес, тривалість, повторення.\n\n**Ігор:** А \"ДВ\"?\n\n**Тетяна:** Доконаний вид — результат, завершення.\n\n**Ігор:** Здається, я готовий!\n\n---\n\n### Діалог 5: Терміни в дії\n\n**Олена:** Я бачила в підручнику слово \"морфологія\". Це що?\n\n**Павло:** Морфологія — це частина граматики про форми слів: відмінювання, дієвідмінювання.\n\n**Олена:** А синтаксис?\n\n**Павло:** Синтаксис — про будову речень: підмет, присудок, додаток.\n\n**Олена:** Тепер зрозуміло! Ми вчили обидва напрямки.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian universities teach linguistics courses entirely in Ukrainian. Students discuss морфологія, синтаксис, фонетика using the same terms you've learned. You now have the foundation for academic Ukrainian language study!\n\n**Морфологія вивчає форми слів і словозміну.** (Morphology studies word forms and inflection.)\n\n**Синтаксис досліджує будову речень і словосполучень.** (Syntax investigates sentence and phrase structure.)\n\n**Фонетика описує звуки мови та їхні властивості.** (Phonetics describes language sounds and their properties.)\n\n**Ви тепер володієте основами української лінгвістичної термінології.** (You now command the basics of Ukrainian linguistic terminology.)\n\n---\n\n# Підсумок\n\nYou've completed the Bridge phase! You now know:\n\n**Vocabulary for Full Immersion:**\n- ~100 grammatical terms in Ukrainian\n- Explanation and instruction patterns\n- Word formation terminology\n- Sentence analysis vocabulary\n\n**Your Grammar Metalanguage Arsenal:**\n- **10 частин мови** — іменник, дієслово, прикметник, прислівник, займенник, числівник, прийменник, сполучник, частка, вигук\n- **7 відмінків** — називний, родовий, давальний, знахідний, орудний, місцевий, кличний\n- **2 види дієслова** — доконаний (результат), недоконаний (процес)\n- **3 часи** — теперішній, минулий, майбутній\n- **5 членів речення** — підмет, присудок, додаток, означення, обставина\n- **4 частини слова** — корінь, суфікс, префікс, закінчення\n\n**What Changes After This Module:**\n- Grammar explanations will be entirely in Ukrainian\n- Instructions and examples will be in Ukrainian\n- You'll learn NEW grammar concepts using UKRAINIAN terminology\n- No more English scaffolding — true immersion begins now\n\n> ✅ **Self-Check: Готові до занурення?**\n>\n> Can you:\n> - [ ] Name all 10 parts of speech in Ukrainian?\n> - [ ] Name all 7 cases in Ukrainian?\n> - [ ] Explain the difference between ДВ and НДВ?\n> - [ ] Identify підмет, присудок, додаток in a sentence?\n> - [ ] Understand patterns like \"використовується для...\"?\n> - [ ] Read a Ukrainian grammar explanation?\n>\n> If you checked all boxes: **Вітаємо! Ви готові!** (Congratulations! You're ready!)\n\n---\n\n> [!resources] 🎧 External Resources\n>\n> **Ukrainian Grammar Resources (Now Accessible!):**\n> - 📖 [Ukrainian Grammar in Ukrainian](https://uk.wikipedia.org/wiki/Граматика_української_мови) — Wikipedia\n> - 📺 [Ukrainian Lessons](https://www.youtube.com/c/UkrainianLessons) — YouTube channel\n> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/the-podcast/) — Advanced episodes\n\n---\n\n\n\n# Словник\n\n| Слово | Вимова | Переклад | ЧМ | Примітка |\n|-------|--------|----------|-----|----------|\n| граматичне поняття | /ɦrɑmɑˈtɪt͡ʃnɛ pɔˈnʲɑtʲːɑ/ | grammatical concept | вираз | с.р. |\n| мовознавство | /mɔwɔˈznɑwstwɔ/ | linguistics | ім. | с.р. |\n| морфологія | /mɔrfɔˈlɔɦʲijɑ/ | morphology | ім. | ж.р. |\n| синтаксис | /sɪnˈtɑksɪs/ | syntax | ім. | ч.р. |\n| правопис | /ˈprɑwɔpɪs/ | spelling, orthography | ім. | ч.р. |\n| наголос | /ˈnɑɦɔlɔs/ | stress, accent | ім. | ч.р. |\n| вимова | /ˈwɪmɔwɑ/ | pronunciation | ім. | ж.р. |\n| правило | /ˈprɑwɪlɔ/ | rule | ім. | с.р. |\n| закономірність | /zɑkɔnɔˈmʲirnʲistʲ/ | pattern, regularity | ім. | ж.р. |\n| система | /sɪsˈtɛmɑ/ | system | ім. | ж.р. |\n| категорія | /kɑtɛˈɦɔrʲijɑ/ | category | ім. | ж.р. |\n| ознака | /ɔˈznɑkɑ/ | feature, characteristic | ім. | ж.р. |\n| властивість | /ˈwlɑstɪwʲistʲ/ | property | ім. | ж.р. |\n| значення | /ˈznɑt͡ʃɛnʲːɑ/ | meaning | ім. | с.р. |\n| функція | /ˈfunkt͡sʲijɑ/ | function | ім. | ж.р. |\n| занурення | /zɑnuˈrɛnʲːɑ/ | immersion | ім. | с.р. |\n| термінологія | /tɛrmʲinɔˈlɔɦʲijɑ/ | terminology | ім. | ж.р. |\n| підручник | /pʲidˈrut͡ʃnɪk/ | textbook | ім. | ч.р. |\n| пояснення | /pɔˈjɑsnɛnʲːɑ/ | explanation | ім. | с.р. |\n| самостійно | /sɑmɔsˈtʲijnɔ/ | independently | присл. | без допомоги |\n| заперечення | /zɑpɛˈrɛt͡ʃɛnʲːɑ/ | negation | ім. | с.р. |\n| загальне заперечення | /zɑˈɦɑlʲnɛ zɑpɛˈrɛt͡ʃɛnʲːɑ/ | general negation | вираз | граматичний термін |\n| очікувана дія | /ɔt͡ʃiˈkuwɑnɑ ˈdʲijɑ/ | expected action | вираз | граматичний термін |\n| попередження | /pɔpɛˈrɛdʒɛnʲːɑ/ | warning | ім. | с.р. |\n| заборона | /zɑbɔˈrɔnɑ/ | prohibition | ім. | ж.р. |\n| складна форма | /ˈsklɑdnɑ ˈfɔrmɑ/ | compound form | вираз | граматичний термін |\n| синтетична форма | /sɪntɛˈtɪt͡ʃnɑ ˈfɔrmɑ/ | synthetic form | вираз | граматичний термін |\n| наказова форма | /nɑˈkɑzɔwɑ ˈfɔrmɑ/ | imperative form | вираз | граматичний термін |\n| парадигма | /pɑrɑˈdɪɦmɑ/ | paradigm | ім. | ж.р. |\n| виберіть | /ˈwɪbɛrʲitʲ/ | choose | дієсл. | інструкція вправи |\n| оберіть | /ɔˈbɛrʲitʲ/ | select | дієсл. | інструкція вправи |\n| знайдіть | /znɑjˈdʲitʲ/ | find | дієсл. | інструкція вправи |\n| з'єднайте | /zʲjɛdˈnɑjtɛ/ | match, connect | дієсл. | інструкція вправи |\n| розташуйте | /rɔztɑʃˈujtɛ/ | arrange | дієсл. | інструкція вправи |\n| доповніть | /dɔˈpɔwnʲitʲ/ | complete | дієсл. | інструкція вправи |\n| натисніть | /nɑtɪsˈnʲitʲ/ | click | дієсл. | інструкція вправи |\n| перекладіть | /pɛrɛklɑˈdʲitʲ/ | translate | дієсл. | інструкція вправи |\n| складіть | /sklɑˈdʲitʲ/ | compose | дієсл. | інструкція вправи |\n| контекст | /kɔnˈtɛkst/ | context | ім. | ч.р. |\n| маркер | /ˈmɑrkɛr/ | marker | ім. | ч.р. |\n| частота | /t͡ʃɑsˈtɔtɑ/ | frequency | ім. | ж.р. |\n| аспектуальна пара | /ɑspɛktuˈɑlʲnɑ ˈpɑrɑ/ | aspectual pair | вираз | граматичний термін |\n| стиль | /stilʲ/ | style | ім. | ч.р. |\n| регістр | /rɛˈɦʲistr/ | register | ім. | ч.р. |\n| розмовна мова | /rɔzˈmɔwnɑ ˈmɔwɑ/ | colloquial language | вираз | стиль мовлення |\n| літературна мова | /lʲitɛrɑˈturnɑ ˈmɔwɑ/ | literary language | вираз | стиль мовлення |\n| формальна мова | /fɔrˈmɑlʲnɑ ˈmɔwɑ/ | formal language | вираз | стиль мовлення |\n| нейтральна мова | /nɛjtrɑlʲˈnɑ ˈmɔwɑ/ | neutral language | вираз | стиль мовлення |\n\n---\n",
-    "createdAt": "2025-12-28T23:24:52.653330Z",
-    "modifiedAt": "2025-12-28T23:24:52.653330Z",
+    "rawMarkdown": "# Готові до занурення\n\n> 🎯 **Why This Module Matters**\n>\n> This is your final checkpoint before full immersion. After this module, all grammar explanations will be in Ukrainian. You've learned parts of speech, cases, aspect, tense, sentence structure, and grammar explanation patterns. Now it's time to prove you can understand Ukrainian grammar resources independently.\n\nUkrainians have a proverb: **«Хто мову знає, той усюди буває.»** — \"Whoever knows the language, goes everywhere.\" You now have the metalanguage to go everywhere in Ukrainian grammar!\n\nWhere does this metalanguage come from? Київ is home to the Institute of Ukrainian Language at the Academy of Sciences, which defines standard terminology. Львів has the oldest Ukrainian-language university, where philologists refined these terms over centuries. Одеса universities train teachers who spread this metalanguage across the country. From Харків to Ужгород, all use the same grammatical terms you've now mastered.\n\n## Діагностика\n\n### Тест: Чи готові ви?\n\nRead this Ukrainian grammar text and answer the questions that follow:\n\n> *Дієслово \"читати\" — недоконаного виду. Воно використовується, коли дія триває або повторюється. Доконана пара — \"прочитати\". Доконаний вид означає завершену дію з результатом.*\n>\n> *У реченні \"Студент читає книгу\" підмет — \"студент\", присудок — \"читає\", додаток — \"книгу\". Це просте речення.*\n>\n> *У складнопідрядному реченні \"Студент читає, бо любить книги\" головне речення — \"Студент читає\", підрядне речення — \"бо любить книги\". Сполучник \"бо\" — сполучник підрядності. Перед ним ставимо кому.*\n\n**Comprehension Check — Перевірка розуміння:**\n\n1. Яким видом є дієслово \"читати\" в українській мові?\n   - Answer: Недоконаного виду.\n\n2. Що означає доконаний вид дієслова?\n   - Answer: Завершену дію з результатом.\n\n3. Який підмет у реченні \"Студент читає книгу\"?\n   - Answer: \"Студент\".\n\n4. Чому перед \"бо\" ставимо кому в складному реченні?\n   - Answer: Бо \"бо\" — сполучник підрядності.\n\nIf you answered all four questions correctly, you're ready for full immersion in Ukrainian!\n\n**Дієслово \"читати\" є недоконаного виду.** (The verb \"chytaty\" is imperfective aspect.)\n\n**Доконаний вид означає завершену дію.** (Perfective aspect means a completed action.)\n\n**Підмет у реченні вказує на виконавця дії.** (The subject in a sentence indicates the performer of the action.)\n\n**Перед сполучником підрядності ставимо кому.** (Before a subordinating conjunction, we place a comma.)\n\n---\n\n## Аналіз\n\n### What You've Learned\n\nIn the Bridge phase (M01-05), you learned:\n\n**Module 01: Parts of Speech & Cases**\n- 10 частин мови: іменник, дієслово, прикметник, прислівник, займенник, числівник, прийменник, сполучник, частка, вигук\n- 7 відмінків: називний, родовий, давальний, знахідний, орудний, місцевий, кличний\n- Basic sentence terms: слово, речення, рід, число, особа, закінчення\n\n**Module 02: Verb Terminology**\n- Вид: доконаний, недоконаний\n- Час: теперішній, минулий, майбутній\n- Дія, процес, результат, тривалість, повторення\n- Спосіб: наказовий, умовний\n- Negation: заперечення, загальне заперечення, очікувана дія, попередження, заборона\n- Verb forms: складна форма, синтетична форма, наказова форма, парадигма\n\n**Module 03: Grammar Patterns**\n- Explanation patterns: використовується, означає, показує, виражає\n- Instructions: порівняйте, зверніть увагу, наприклад, тобто, отже\n- Activity instruction verbs: виберіть/оберіть, знайдіть, з'єднайте, розташуйте, доповніть, натисніть, перекладіть, складіть\n- Analytical terms: контекст, маркер, частота, аспектуальна пара\n- Style and register: стиль, регістр, розмовна мова, літературна мова, формальна мова, нейтральна мова\n- Comparison: на відміну від, подібно до\n- Word parts: корінь, суфікс, префікс, основа\n\n**Module 04: Sentence Structure**\n- Члени речення: підмет, присудок, додаток, означення, обставина\n- Види речень: просте, складне, складносурядне, складнопідрядне\n- Частини: головне речення, підрядне речення\n- Пунктуація: кома, крапка, двокрапка, тире, лапки\n\n**Module 05: This Module — Final Integration**\n- Complete review of all terminology from M01-04\n- Reading comprehension of Ukrainian grammar texts\n- Self-assessment and readiness check\n- Preparation for full Ukrainian immersion\n\n> 💡 **Did You Know?**\n>\n> You now have approximately 100 grammatical terms in Ukrainian. This is the same metalanguage that Ukrainian schoolchildren learn between ages 7-12. With this foundation, you can understand any Ukrainian grammar resource.\n\n**Частини мови поділяються на самостійні та службові.** (Parts of speech are divided into content and function words.)\n\n**Сім відмінків української мови мають різні функції.** (The seven cases of Ukrainian have different functions.)\n\n**Вид дієслова визначає характер дії.** (Verb aspect determines the character of action.)\n\n> 🎬 **Pop Culture Moment: Language Learning Apps**\n>\n> Most language apps teach words and phrases, but never teach you the metalanguage. That's why advanced learners hit a wall — they can't read grammar resources. You've broken through that wall! Now you can learn from any Ukrainian source.\n\n---\n\n## Поглиблення\n\n### Reading a Real Grammar Explanation\n\nHere's an excerpt adapted from a Ukrainian grammar textbook. Read it and test your comprehension:\n\n> *Дієслова в українській мові мають дві граматичні категорії: вид і час. Категорія виду поділяє дієслова на дві групи: дієслова недоконаного виду (НДВ) і дієслова доконаного виду (ДВ).*\n>\n> *Недоконаний вид виражає процес дії, її тривалість або повторення. Наприклад: \"Я читав книгу дві години\" — тривала дія. \"Я читав книги щодня\" — повторювана дія.*\n>\n> *Доконаний вид виражає результат дії, її завершення. Наприклад: \"Я прочитав книгу\" — дія завершена, є результат.*\n>\n> *Зверніть увагу: дієслова доконаного виду не мають теперішнього часу. Форма \"прочитаю\" — це майбутній час, не теперішній.*\n\n**Test Your Understanding:**\n\nCan you identify:\n- Which terms are used for aspect? (вид, доконаний, недоконаний)\n- What explanation pattern is used? (виражає, означає)\n- What instruction is given? (зверніть увагу)\n- What is the key grammatical rule at the end? (ДВ не має теперішнього часу)\n\n**Категорія виду є однією з найважливіших в українській мові.** (The category of aspect is one of the most important in Ukrainian.)\n\n**Недоконаний вид виражає процес або повторення дії.** (Imperfective expresses a process or repetition of action.)\n\n**Доконаний вид виражає завершеність дії з результатом.** (Perfective expresses completion of action with a result.)\n\n**Дієслова доконаного виду не мають форми теперішнього часу.** (Perfective verbs don't have a present tense form.)\n\n| Термін | Значення | Приклад |\n|--------|----------|---------|\n| вид | aspect category | читати — прочитати |\n| НДВ | imperfective | читати, писати |\n| ДВ | perfective | прочитати, написати |\n\n---\n\n## Практика\n\n### The Real Test: Can You Learn From This?\n\nFrom this point forward, grammar explanations will look like this:\n\n> *Відмінювання іменників жіночого роду*\n>\n> *Іменники жіночого роду на -а/-я відмінюються за першою відміною. Порівняйте форми слова \"книга\":*\n>\n> | Відмінок | Форма |\n> |----------|-------|\n> | Називний | книга |\n> | Родовий | книги |\n> | Давальний | книзі |\n> | Знахідний | книгу |\n> | Орудний | книгою |\n> | Місцевий | на книзі |\n> | Кличний | книго! |\n>\n> *Зверніть увагу на чергування приголосних у давальному та місцевому відмінках: г → з (книга → книзі).*\n\nIf you can understand this explanation — congratulations! You're ready for full immersion.\n\n**Іменники жіночого роду відмінюються за першою відміною.** (Feminine nouns decline according to the first declension.)\n\n**Чергування приголосних відбувається в давальному відмінку.** (Consonant alternation occurs in the dative case.)\n\n**Закінчення іменника змінюється залежно від відмінка.** (The noun ending changes depending on the case.)\n\n> 🎬 **Pop Culture Moment**\n>\n> In Ukrainian TV series like \"Слуга народу\" (Servant of the People), characters often discuss complex topics using formal language. Now that you know Ukrainian grammar terminology, you can understand linguistic humor and wordplay that relies on grammatical knowledge — like jokes about \"відмінювання\" (declension) or \"правильний наголос\" (correct stress)!\n\n---\n\n## Mini-Dialogues\n\n### Діалог 1: Підсумок\n\n**Вчитель:** Ми завершили основи граматичної термінології. Тепер ви можете читати українські підручники.\n\n**Студент:** Я розумію терміни, але чи зможу я читати справжні граматики?\n\n**Вчитель:** Так! Ви знаєте частини мови, відмінки, вид, час, члени речення.\n\n**Студент:** І граматичні конструкції — \"використовується\", \"означає\"...\n\n**Вчитель:** Саме так. Ви готові!\n\n---\n\n### Діалог 2: Занурення\n\n**Андрій:** З наступного модуля все буде українською?\n\n**Марія:** Так, повне занурення. Пояснення, інструкції, приклади.\n\n**Андрій:** Це трохи страшно...\n\n**Марія:** Не хвилюйся! Ти знаєш усю термінологію. Просто читай уважно.\n\n---\n\n### Діалог 3: Перевірка знань\n\n**Професор:** Скажіть, що таке \"підрядне речення\"?\n\n**Студентка:** Це залежна частина складнопідрядного речення.\n\n**Професор:** А які сполучники його вводять?\n\n**Студентка:** Сполучники підрядності: що, бо, коли, якщо.\n\n**Професор:** Молодець! Ви готові до занурення.\n\n---\n\n### Діалог 4: Самоперевірка\n\n**Ігор:** Я перевіряю себе. Що означає \"НДВ\"?\n\n**Тетяна:** Недоконаний вид — процес, тривалість, повторення.\n\n**Ігор:** А \"ДВ\"?\n\n**Тетяна:** Доконаний вид — результат, завершення.\n\n**Ігор:** Здається, я готовий!\n\n---\n\n### Діалог 5: Терміни в дії\n\n**Олена:** Я бачила в підручнику слово \"морфологія\". Це що?\n\n**Павло:** Морфологія — це частина граматики про форми слів: відмінювання, дієвідмінювання.\n\n**Олена:** А синтаксис?\n\n**Павло:** Синтаксис — про будову речень: підмет, присудок, додаток.\n\n**Олена:** Тепер зрозуміло! Ми вчили обидва напрямки.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian universities teach linguistics courses entirely in Ukrainian. Students discuss морфологія, синтаксис, фонетика using the same terms you've learned. You now have the foundation for academic Ukrainian language study!\n\n**Морфологія вивчає форми слів і словозміну.** (Morphology studies word forms and inflection.)\n\n**Синтаксис досліджує будову речень і словосполучень.** (Syntax investigates sentence and phrase structure.)\n\n**Фонетика описує звуки мови та їхні властивості.** (Phonetics describes language sounds and their properties.)\n\n**Ви тепер володієте основами української лінгвістичної термінології.** (You now command the basics of Ukrainian linguistic terminology.)\n\n---\n\n# Підсумок\n\nYou've completed the Bridge phase! You now know:\n\n**Vocabulary for Full Immersion:**\n- ~100 grammatical terms in Ukrainian\n- Explanation and instruction patterns\n- Word formation terminology\n- Sentence analysis vocabulary\n\n**Your Grammar Metalanguage Arsenal:**\n- **10 частин мови** — іменник, дієслово, прикметник, прислівник, займенник, числівник, прийменник, сполучник, частка, вигук\n- **7 відмінків** — називний, родовий, давальний, знахідний, орудний, місцевий, кличний\n- **2 види дієслова** — доконаний (результат), недоконаний (процес)\n- **3 часи** — теперішній, минулий, майбутній\n- **5 членів речення** — підмет, присудок, додаток, означення, обставина\n- **4 частини слова** — корінь, суфікс, префікс, закінчення\n\n**What Changes After This Module:**\n- Grammar explanations will be entirely in Ukrainian\n- Instructions and examples will be in Ukrainian\n- You'll learn NEW grammar concepts using UKRAINIAN terminology\n- No more English scaffolding — true immersion begins now\n\n> ✅ **Self-Check: Готові до занурення?**\n>\n> Can you:\n> - [ ] Name all 10 parts of speech in Ukrainian?\n> - [ ] Name all 7 cases in Ukrainian?\n> - [ ] Explain the difference between ДВ and НДВ?\n> - [ ] Identify підмет, присудок, додаток in a sentence?\n> - [ ] Understand patterns like \"використовується для...\"?\n> - [ ] Read a Ukrainian grammar explanation?\n>\n> If you checked all boxes: **Вітаємо! Ви готові!** (Congratulations! You're ready!)\n\n---\n\n---\n",
+    "createdAt": "2026-01-04T21:33:28.309427Z",
+    "modifiedAt": "2026-01-04T21:33:28.309427Z",
     "version": 2
   },
   "activities": [],
   "vocabulary": {
     "moduleId": "mod-uk-B1-05",
     "level": "B1",
-    "phase": "B1.0 Bridge",
-    "wordCount": 48,
-    "newWordCount": 48,
+    "phase": "B1.1",
+    "wordCount": 0,
+    "newWordCount": 0,
     "reviewWordCount": 0,
     "transliterationMode": "none",
-    "words": [
+    "words": [],
+    "reviewWords": []
+  },
+  "external_resources": {
+    "podcasts": [],
+    "youtube": [],
+    "articles": [
       {
-        "id": "vocab-1",
-        "uk": "граматичне поняття",
-        "ipa": "/ɦrɑmɑˈtɪt͡ʃnɛ pɔˈnʲɑtʲːɑ/",
-        "en": "grammatical concept",
-        "pos": "вираз",
-        "gender": null,
-        "note": ""
+        "title": "Ukrainian Grammar in Ukrainian",
+        "url": "https://uk.wikipedia.org/wiki/Граматика_української_мови",
+        "relevance": "high",
+        "source": "Wikipedia"
       },
       {
-        "id": "vocab-2",
-        "uk": "мовознавство",
-        "ipa": "/mɔwɔˈznɑwstwɔ/",
-        "en": "linguistics",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-3",
-        "uk": "морфологія",
-        "ipa": "/mɔrfɔˈlɔɦʲijɑ/",
-        "en": "morphology",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-4",
-        "uk": "синтаксис",
-        "ipa": "/sɪnˈtɑksɪs/",
-        "en": "syntax",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-5",
-        "uk": "правопис",
-        "ipa": "/ˈprɑwɔpɪs/",
-        "en": "spelling, orthography",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-6",
-        "uk": "наголос",
-        "ipa": "/ˈnɑɦɔlɔs/",
-        "en": "stress, accent",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-7",
-        "uk": "вимова",
-        "ipa": "/ˈwɪmɔwɑ/",
-        "en": "pronunciation",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-8",
-        "uk": "правило",
-        "ipa": "/ˈprɑwɪlɔ/",
-        "en": "rule",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-9",
-        "uk": "закономірність",
-        "ipa": "/zɑkɔnɔˈmʲirnʲistʲ/",
-        "en": "pattern, regularity",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-10",
-        "uk": "система",
-        "ipa": "/sɪsˈtɛmɑ/",
-        "en": "system",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-11",
-        "uk": "категорія",
-        "ipa": "/kɑtɛˈɦɔrʲijɑ/",
-        "en": "category",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-12",
-        "uk": "ознака",
-        "ipa": "/ɔˈznɑkɑ/",
-        "en": "feature, characteristic",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-13",
-        "uk": "властивість",
-        "ipa": "/ˈwlɑstɪwʲistʲ/",
-        "en": "property",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-14",
-        "uk": "значення",
-        "ipa": "/ˈznɑt͡ʃɛnʲːɑ/",
-        "en": "meaning",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-15",
-        "uk": "функція",
-        "ipa": "/ˈfunkt͡sʲijɑ/",
-        "en": "function",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-16",
-        "uk": "занурення",
-        "ipa": "/zɑnuˈrɛnʲːɑ/",
-        "en": "immersion",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-17",
-        "uk": "термінологія",
-        "ipa": "/tɛrmʲinɔˈlɔɦʲijɑ/",
-        "en": "terminology",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-18",
-        "uk": "підручник",
-        "ipa": "/pʲidˈrut͡ʃnɪk/",
-        "en": "textbook",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-19",
-        "uk": "пояснення",
-        "ipa": "/pɔˈjɑsnɛnʲːɑ/",
-        "en": "explanation",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-20",
-        "uk": "самостійно",
-        "ipa": "/sɑmɔsˈtʲijnɔ/",
-        "en": "independently",
-        "pos": "присл.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-21",
-        "uk": "заперечення",
-        "ipa": "/zɑpɛˈrɛt͡ʃɛnʲːɑ/",
-        "en": "negation",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-22",
-        "uk": "загальне заперечення",
-        "ipa": "/zɑˈɦɑlʲnɛ zɑpɛˈrɛt͡ʃɛnʲːɑ/",
-        "en": "general negation",
-        "pos": "вираз",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-23",
-        "uk": "очікувана дія",
-        "ipa": "/ɔt͡ʃiˈkuwɑnɑ ˈdʲijɑ/",
-        "en": "expected action",
-        "pos": "вираз",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-24",
-        "uk": "попередження",
-        "ipa": "/pɔpɛˈrɛdʒɛnʲːɑ/",
-        "en": "warning",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-25",
-        "uk": "заборона",
-        "ipa": "/zɑbɔˈrɔnɑ/",
-        "en": "prohibition",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-26",
-        "uk": "складна форма",
-        "ipa": "/ˈsklɑdnɑ ˈfɔrmɑ/",
-        "en": "compound form",
-        "pos": "вираз",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-27",
-        "uk": "синтетична форма",
-        "ipa": "/sɪntɛˈtɪt͡ʃnɑ ˈfɔrmɑ/",
-        "en": "synthetic form",
-        "pos": "вираз",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-28",
-        "uk": "наказова форма",
-        "ipa": "/nɑˈkɑzɔwɑ ˈfɔrmɑ/",
-        "en": "imperative form",
-        "pos": "вираз",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-29",
-        "uk": "парадигма",
-        "ipa": "/pɑrɑˈdɪɦmɑ/",
-        "en": "paradigm",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-30",
-        "uk": "виберіть",
-        "ipa": "/ˈwɪbɛrʲitʲ/",
-        "en": "choose",
-        "pos": "дієсл.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-31",
-        "uk": "оберіть",
-        "ipa": "/ɔˈbɛrʲitʲ/",
-        "en": "select",
-        "pos": "дієсл.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-32",
-        "uk": "знайдіть",
-        "ipa": "/znɑjˈdʲitʲ/",
-        "en": "find",
-        "pos": "дієсл.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-33",
-        "uk": "з'єднайте",
-        "ipa": "/zʲjɛdˈnɑjtɛ/",
-        "en": "match, connect",
-        "pos": "дієсл.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-34",
-        "uk": "розташуйте",
-        "ipa": "/rɔztɑʃˈujtɛ/",
-        "en": "arrange",
-        "pos": "дієсл.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-35",
-        "uk": "доповніть",
-        "ipa": "/dɔˈpɔwnʲitʲ/",
-        "en": "complete",
-        "pos": "дієсл.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-36",
-        "uk": "натисніть",
-        "ipa": "/nɑtɪsˈnʲitʲ/",
-        "en": "click",
-        "pos": "дієсл.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-37",
-        "uk": "перекладіть",
-        "ipa": "/pɛrɛklɑˈdʲitʲ/",
-        "en": "translate",
-        "pos": "дієсл.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-38",
-        "uk": "складіть",
-        "ipa": "/sklɑˈdʲitʲ/",
-        "en": "compose",
-        "pos": "дієсл.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-39",
-        "uk": "контекст",
-        "ipa": "/kɔnˈtɛkst/",
-        "en": "context",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-40",
-        "uk": "маркер",
-        "ipa": "/ˈmɑrkɛr/",
-        "en": "marker",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-41",
-        "uk": "частота",
-        "ipa": "/t͡ʃɑsˈtɔtɑ/",
-        "en": "frequency",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-42",
-        "uk": "аспектуальна пара",
-        "ipa": "/ɑspɛktuˈɑlʲnɑ ˈpɑrɑ/",
-        "en": "aspectual pair",
-        "pos": "вираз",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-43",
-        "uk": "стиль",
-        "ipa": "/stilʲ/",
-        "en": "style",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-44",
-        "uk": "регістр",
-        "ipa": "/rɛˈɦʲistr/",
-        "en": "register",
-        "pos": "ім.",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-45",
-        "uk": "розмовна мова",
-        "ipa": "/rɔzˈmɔwnɑ ˈmɔwɑ/",
-        "en": "colloquial language",
-        "pos": "вираз",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-46",
-        "uk": "літературна мова",
-        "ipa": "/lʲitɛrɑˈturnɑ ˈmɔwɑ/",
-        "en": "literary language",
-        "pos": "вираз",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-47",
-        "uk": "формальна мова",
-        "ipa": "/fɔrˈmɑlʲnɑ ˈmɔwɑ/",
-        "en": "formal language",
-        "pos": "вираз",
-        "gender": null,
-        "note": ""
-      },
-      {
-        "id": "vocab-48",
-        "uk": "нейтральна мова",
-        "ipa": "/nɛjtrɑlʲˈnɑ ˈmɔwɑ/",
-        "en": "neutral language",
-        "pos": "вираз",
-        "gender": null,
-        "note": ""
+        "title": "Ukrainian Lessons Podcast",
+        "url": "https://www.ukrainianlessons.com/the-podcast/",
+        "relevance": "high",
+        "source": "Advanced episodes"
       }
     ],
-    "reviewWords": []
+    "books": [],
+    "websites": [
+      {
+        "title": "Ukrainian Lessons",
+        "url": "https://www.youtube.com/c/UkrainianLessons",
+        "relevance": "high",
+        "source": "YouTube channel"
+      }
+    ]
   }
 }

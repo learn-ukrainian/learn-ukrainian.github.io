@@ -22,6 +22,16 @@ At C2, the learner acts as a creator and expert user of the language.
 2.  **Domain-Agnostic Professionalism:** For Phase C2.3, modules must provide **Universal Templates** (e.g., "Structure of an Annual Report") that apply to *any* field (Law, Medicine, IT), rather than teaching specific jargon only.
 3.  **Stylistic Precision:** Activities must focus on the *nuance* between synonyms and register shifts (e.g., rewriting a text from "Neutral" to "Ironic").
 
+### Advanced Activity Types (C2 Standard)
+C2 modules require creative production and deep analysis. Use these specific types:
+
+| Type | Description | Requirement |
+|------|-------------|-------------|
+| **[essay-response]** | Publication-ready academic/professional writing | Strict Rubric & Model Answer |
+| **[critical-analysis]** | Scholar-level critique of style and substance | Focus on intertextuality & context |
+| **[comparative-study]** | Synthesis of multiple complex sources | Required for Research/Lit modules |
+| **[authorial-intent]** | Reconstruction of creative decisions | "Reverse-engineering" the text |
+
 > **Note on Activities:** The "Signature Activity Concepts" listed below are **mandatory pedagogical anchors**. The Module Architect must generate additional activities to meet the **minimum target of 16+ activities per module** (C2 standard).
 
 ---
