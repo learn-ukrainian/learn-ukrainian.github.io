@@ -195,7 +195,8 @@
       correct: false
     - text: possible to do
       correct: false
-  - question: To express a formal preference for something specific, which of the following grammatical structures should be utilized?
+  - question: To express a formal preference for something specific, which of the following grammatical structures should
+      be utilized?
     options:
     - text: Я віддаю перевагу + Dative
       correct: true
@@ -515,22 +516,6 @@
     — Мені {більше|великий|багато} подобаються розумні книги.
 
     — Кожному своє! Ми всі {маємо|маєте|маєш} вибір.'
-- type: cloze
-  title: Making Choices
-  passage: |
-    — {кава чи чай?|--|Краще купити дешевший.}
-    — {Мені більше подобається кава.|Але він дорожчий!|Кожному своє!}
-    — {Чому?|Кожному своє!|А я віддаю перевагу чаю.}
-    — {Тому що кава смачніша і бадьоріша.|Я б вибрав цей.|Мені більше подобається кава.}
-    — {А я віддаю перевагу чаю.|Який телефон ти б вибрав?|--}
-    — {Кожному своє!|Чому?|--}
-    — {--|кава чи чай?|А я віддаю перевагу чаю.}
-    — {Який телефон ти б вибрав?|Ні, краще заплатити більше за якість.|Мені більше подобається кава.}
-    — {Я б вибрав цей.|Мені більше подобається кава.|Ні, краще заплатити більше за якість.}
-    — {Але він дорожчий!|А я віддаю перевагу чаю.|--}
-    — {Так, але він кращий.|Я б вибрав цей.|А я віддаю перевагу чаю.}
-    — {Краще купити дешевший.|кава чи чай?|Ні, краще заплатити більше за якість.}
-    — {Ні, краще заплатити більше за якість.|Мені більше подобається кава.|кава чи чай?}
 - type: mark-the-words
   title: Find Preference Words
   text: 'Click on PREFERENCE expressions.
