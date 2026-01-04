@@ -1220,7 +1220,7 @@ def audit_module(file_path: str) -> bool:
         })
 
     # 12. Check for missing advanced activities in C1/C2
-    advanced_presence_violations = check_advanced_activities_presence(found_activity_types, level_code)
+    advanced_presence_violations = check_advanced_activities_presence(found_activity_types, level_code, module_focus)
     for v in advanced_presence_violations:
         pedagogical_violations.append({
             'type': v['type'],

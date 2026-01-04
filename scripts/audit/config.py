@@ -770,7 +770,7 @@ LEVEL_CONFIG = {
 # Activity level restrictions
 ACTIVITY_RESTRICTIONS = {
     'A1': {
-        'forbidden': ['error-correction', 'cloze', 'mark-the-words', 'select', 'translate', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'],
+        'forbidden': ['error-correction', 'cloze', 'mark-the-words', 'dialogue-reorder', 'select', 'translate', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'],
         'anagram_limit': 10
     },
     'A2': {
@@ -784,6 +784,18 @@ ACTIVITY_RESTRICTIONS = {
     'B2': {'forbidden': [], 'anagram_forbidden': True},
     'C1': {'forbidden': [], 'anagram_forbidden': True},
     'C2': {'forbidden': [], 'anagram_forbidden': True},
+}
+
+# Required advanced activities by module focus (C1/C2)
+REQUIRED_ADVANCED_TYPES = {
+    'biography': ['essay-response', 'comparative-study'],
+    'history': ['essay-response', 'comparative-study'],
+    'literature': ['essay-response', 'critical-analysis'],
+    'fine-arts': ['essay-response', 'critical-analysis'],
+    'folk-culture': ['essay-response', 'comparative-study'],
+    'academic': ['essay-response', 'authorial-intent'],
+    'checkpoint': ['essay-response', 'comparative-study'],
+    'default': ['essay-response']  # Fallback for grammar/vocab modules
 }
 
 # Common words that don't need to be in vocabulary section

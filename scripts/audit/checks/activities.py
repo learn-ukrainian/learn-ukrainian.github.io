@@ -6,7 +6,7 @@ Validates activity sequencing, structure, variety, and level restrictions.
 
 import re
 from collections import Counter
-from ..config import STAGE_ORDER, ACTIVITY_RESTRICTIONS, ACTIVITY_COMPLEXITY, VALID_ACTIVITY_TYPES
+from ..config import STAGE_ORDER, ACTIVITY_RESTRICTIONS, ACTIVITY_COMPLEXITY, VALID_ACTIVITY_TYPES, REQUIRED_ADVANCED_TYPES
 
 def check_activity_complexity(content: str, level_code: str, module_num: int = 1) -> list[dict]:
     """
@@ -37,6 +37,29 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
         # If no specific rules for this level (e.g. anagram in A2), restrictions check handles it
         if not rules:
             continue
+
+        # --- New Activity Type Structural Checks ---
+        if act_type == 'essay-response':
+            if '> [!model-answer]' not in body:
+                violations.append({
+                    'type': 'STRUCTURE_MISSING',
+                    'issue': f"essay-response '{title.strip()}' missing mandatory > [!model-answer]",
+                    'fix': "All essay responses must include a model answer."
+                })
+            if '> [!rubric]' not in body:
+                violations.append({
+                    'type': 'STRUCTURE_MISSING',
+                    'issue': f"essay-response '{title.strip()}' missing mandatory > [!rubric]",
+                    'fix': "All essay responses must include a rubric."
+                })
+        
+        if act_type in ('critical-analysis', 'comparative-study', 'authorial-intent'):
+             if '> [!model-answer]' not in body:
+                violations.append({
+                    'type': 'STRUCTURE_MISSING',
+                    'issue': f"{act_type} '{title.strip()}' missing mandatory > [!model-answer]",
+                    'fix': f"All {act_type} activities must include a model answer."
+                })
             
         # Apply A1 Early Relaxations
         if is_a1_early:
@@ -1137,35 +1160,44 @@ def check_error_correction_format(activities: list[dict]) -> list[dict]:
     return violations
 
 
-def check_advanced_activities_presence(found_types: list[str], level_code: str) -> list[dict]:
-    """Check if C1/C2 modules include at least one advanced production activity.
+def check_advanced_activities_presence(found_types: list[str], level_code: str, module_focus: str = None) -> list[dict]:
+    """Check if C1/C2 modules include specific advanced production activities based on focus.
 
-    Advanced activities: essay-response, critical-analysis, comparative-study, authorial-intent.
+    Uses REQUIRED_ADVANCED_TYPES from config.
 
     Args:
         found_types: List of activity type strings found in the module
         level_code: Level code (C1, C2, etc.)
+        module_focus: Focus of the module (biography, history, etc.)
 
     Returns:
-        List of violations (warnings) if advanced activities are missing
+        List of violations (warnings) if required activities are missing
     """
     violations = []
 
     if level_code not in ('C1', 'C2'):
         return violations
 
-    advanced_types = {'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'}
-    
-    # Check if any found types are in the advanced set
-    has_advanced = any(t.lower() in advanced_types for t in found_types)
+    # Normalize focus
+    focus = module_focus.lower() if module_focus else 'default'
+    if focus not in REQUIRED_ADVANCED_TYPES:
+        focus = 'default'
 
-    if not has_advanced:
+    required = REQUIRED_ADVANCED_TYPES[focus]
+    found_lower = [t.lower() for t in found_types]
+    
+    missing = []
+    for req_type in required:
+        if req_type not in found_lower:
+            missing.append(req_type)
+
+    if missing:
         violations.append({
             'type': 'MISSING_ADVANCED_ACTIVITY',
             'severity': 'warning',
             'blocking': False,
-            'issue': f"C1/C2 module is missing advanced production activities (essay-response, etc.)",
-            'fix': f"Add at least one advanced production activity: {', '.join(sorted(advanced_types))}. C1/C2 standards require deep analysis and long-form production."
+            'issue': f"C1/C2 {focus.upper()} module missing required activities: {', '.join(missing)}",
+            'fix': f"Add the required advanced activities for this module type: {', '.join(required)}"
         })
 
     return violations
