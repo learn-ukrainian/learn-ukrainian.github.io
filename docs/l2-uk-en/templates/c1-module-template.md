@@ -310,11 +310,15 @@ C1 modules teach both Ukrainian AND subject matter (academic, literary, cultural
 11. **archaic-forms** (Recognize старі forms in literature)
 12. **translation-comparison** (Compare translations, discuss choices)
 
-#### Advanced Writing/Production
-13. **Academic essay with Model Answer** (400+ words)
-14. **Critical review** (Compare multiple sources)
-15. **Research abstract** (Academic register, structured)
-16. **Register transformation** (Rewrite text in different register)
+#### Advanced Writing/Production (Use new Schema types)
+13. **[essay-response]** (400+ words, Argumentative/Academic)
+    *   *Must include `rubric` and `model_answer` in YAML.*
+14. **[comparative-study]** (Compare 2+ texts/perspectives)
+    *   *Define `items_to_compare` and `criteria`.*
+15. **[critical-analysis]** (Deconstruct bias/tone)
+    *   *Use `focus_points` to guide analysis.*
+16. **[authorial-intent]** (Evaluate purpose)
+    *   *Identify specific techniques used by the author.*
 
 ### Activity Format Quick Reference
 
@@ -323,6 +327,7 @@ C1 modules teach both Ukrainian AND subject matter (academic, literary, cultural
 | Activity | Format |
 |----------|--------|
 | **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
+| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
 | **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
 | **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
 | **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |

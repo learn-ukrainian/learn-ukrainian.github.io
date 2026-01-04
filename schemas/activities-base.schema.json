@@ -417,6 +417,105 @@
           }
         }
       }
+    },
+
+    "essay-response": {
+      "type": "object",
+      "description": "Long-form writing task with model answer and rubric",
+      "required": ["type", "title", "prompt", "model_answer"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "essay-response" },
+        "title": { "type": "string", "minLength": 1 },
+        "prompt": { "type": "string", "minLength": 10 },
+        "min_words": { "type": "integer", "minimum": 100 },
+        "model_answer": { "type": "string", "minLength": 50 },
+        "rubric": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["criteria", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "criteria": { "type": "string", "minLength": 1 },
+              "description": { "type": "string", "minLength": 1 },
+              "points": { "type": "integer" }
+            }
+          }
+        },
+        "peer_review_guidelines": { "type": "string" }
+      }
+    },
+
+    "critical-analysis": {
+      "type": "object",
+      "description": "Deep analysis of a text or concept",
+      "required": ["type", "title", "target_text", "questions", "model_answers"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "critical-analysis" },
+        "title": { "type": "string", "minLength": 1 },
+        "target_text": { "type": "string", "description": "The text or excerpt to analyze" },
+        "questions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "model_answers": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "focus_points": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Key elements to analyze (e.g. tone, bias)"
+        }
+      }
+    },
+
+    "comparative-study": {
+      "type": "object",
+      "description": "Comparison of two or more texts/concepts",
+      "required": ["type", "title", "items_to_compare", "criteria", "model_answer"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "comparative-study" },
+        "title": { "type": "string", "minLength": 1 },
+        "items_to_compare": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "string" },
+          "description": "Titles or excerpts of items"
+        },
+        "criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "description": "Dimensions of comparison (e.g. style, theme)"
+        },
+        "prompt": { "type": "string" },
+        "model_answer": { "type": "string" }
+      }
+    },
+
+    "authorial-intent": {
+      "type": "object",
+      "description": "Evaluation of author's purpose and techniques",
+      "required": ["type", "title", "text_excerpt", "prompt", "model_answer"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "authorial-intent" },
+        "title": { "type": "string", "minLength": 1 },
+        "text_excerpt": { "type": "string" },
+        "prompt": { "type": "string" },
+        "techniques_to_identify": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "model_answer": { "type": "string" }
+      }
     }
   }
 }

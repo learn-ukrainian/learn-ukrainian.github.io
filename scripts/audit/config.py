@@ -314,6 +314,23 @@ ACTIVITY_COMPLEXITY = {
         'B2': {'min_len': 12, 'max_len': 18, 'options': 4, 'min_items': 6},
         'C1': {'min_len': 16, 'max_len': 22, 'options': 5, 'min_items': 6},
         'C2': {'min_len': 18, 'max_len': 28, 'options': 5, 'min_items': 6},
+    },
+    'essay-response': {
+        'B2': {'min_words': 250},
+        'C1': {'min_words': 400},
+        'C2': {'min_words': 600},
+    },
+    'critical-analysis': {
+        'C1': {'min_items': 1},
+        'C2': {'min_items': 1},
+    },
+    'comparative-study': {
+        'C1': {'min_items': 1},
+        'C2': {'min_items': 1},
+    },
+    'authorial-intent': {
+        'C1': {'min_items': 1},
+        'C2': {'min_items': 1},
     }
 }
 
@@ -321,14 +338,16 @@ ACTIVITY_COMPLEXITY = {
 VALID_ACTIVITY_TYPES = [
     "match-up", "fill-in", "quiz", "true-false", "group-sort", "unjumble",
     "error-correction", "anagram", "select", "translate", "cloze",
-    "dialogue-reorder", "mark-the-words"
+    "dialogue-reorder", "mark-the-words",
+    "essay-response", "critical-analysis", "comparative-study", "authorial-intent"
 ]
 
 # Activity keywords for detection
 ACTIVITY_KEYWORDS = [
     "match-up", "gap-fill", "quiz", "true-false", "group-sort", "unjumble",
     "fill-in", "error-correction", "anagram", "cloze",
-    "select", "translate", "dialogue-reorder", "mark-the-words"
+    "select", "translate", "dialogue-reorder", "mark-the-words",
+    "essay-response", "critical-analysis", "comparative-study", "authorial-intent"
 ]
 
 # Core section keywords (not activities)
@@ -340,7 +359,7 @@ CORE_KEYWORDS = [
     "pattern", "summary",
     # Ukrainian equivalents for B1+ modules
     "діагностика", "аналіз", "занурення", "глибоке", "помилки",
-    "культур", "розмова", "текст", "діалог", "читання", "підсумок"
+    "частина", "культур", "розмова", "текст", "діалог", "читання", "підсумок"
 ]
 
 # Section keywords to exclude from core word count
@@ -757,11 +776,17 @@ LEVEL_CONFIG = {
 # Activity level restrictions
 ACTIVITY_RESTRICTIONS = {
     'A1': {
-        'forbidden': ['error-correction', 'cloze', 'mark-the-words', 'dialogue-reorder', 'select', 'translate'],
+        'forbidden': ['error-correction', 'cloze', 'mark-the-words', 'dialogue-reorder', 'select', 'translate', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'],
         'anagram_limit': 10
     },
-    'A2': {'forbidden': [], 'anagram_forbidden': True},
-    'B1': {'forbidden': [], 'anagram_forbidden': True},
+    'A2': {
+        'forbidden': ['essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'],
+        'anagram_forbidden': True
+    },
+    'B1': {
+        'forbidden': ['essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'],
+        'anagram_forbidden': True
+    },
     'B2': {'forbidden': [], 'anagram_forbidden': True},
     'C1': {'forbidden': [], 'anagram_forbidden': True},
     'C2': {'forbidden': [], 'anagram_forbidden': True},

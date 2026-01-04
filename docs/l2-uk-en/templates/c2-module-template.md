@@ -295,12 +295,17 @@ style_focus: "ironic"  # Options: formal, colloquial, ironic, archaic, euphonic,
 4. **cloze** (20+ blanks, 600+ word passage)
 5. **transformation** (8+ items: register shift, style change)
 
-#### C2-Specific Creative Activities
-6. **Creative writing** (Poetry, prose, essay — with Model Answer)
-7. **Translation** (Ukrainian ↔ English, literary/professional — with commentary)
-8. **Style transformation** (Formal → Ironic, Neutral → Literary, etc.)
-9. **Register shifting** (Same content, 3+ different registers)
-10. **Synonym nuance** (Choose between near-synonyms based on context)
+#### C2-Specific Creative Activities (Use new Schema types)
+6. **[essay-response]** (Publication-ready writing)
+    *   *Requires `rubric` and `model_answer` in YAML.*
+7. **[comparative-study]** (Synthesis of multiple sources)
+    *   *Complex comparison of 3+ texts or translations.*
+8. **[critical-analysis]** (Scholar-level critique)
+    *   *Analyze style, tone, and intertextuality.*
+9. **[authorial-intent]** (Reconstruction of creative choices)
+    *   *Reverse-engineer the author's stylistic decisions.*
+10. **Style transformation** (Formal → Ironic, Neutral → Literary, etc.)
+    *   *Use `essay-response` type with specific prompt.*
 
 #### Meta-Linguistic Activities
 11. **Stylistic analysis** (Identify all devices in passage, explain function)
@@ -319,6 +324,7 @@ style_focus: "ironic"  # Options: formal, colloquial, ironic, archaic, euphonic,
 | Activity | Format |
 |----------|--------|
 | **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
+| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
 | **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
 | **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
 | **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
