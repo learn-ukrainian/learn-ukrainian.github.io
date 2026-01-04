@@ -1137,6 +1137,40 @@ def check_error_correction_format(activities: list[dict]) -> list[dict]:
     return violations
 
 
+def check_advanced_activities_presence(found_types: list[str], level_code: str) -> list[dict]:
+    """Check if C1/C2 modules include at least one advanced production activity.
+
+    Advanced activities: essay-response, critical-analysis, comparative-study, authorial-intent.
+
+    Args:
+        found_types: List of activity type strings found in the module
+        level_code: Level code (C1, C2, etc.)
+
+    Returns:
+        List of violations (warnings) if advanced activities are missing
+    """
+    violations = []
+
+    if level_code not in ('C1', 'C2'):
+        return violations
+
+    advanced_types = {'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'}
+    
+    # Check if any found types are in the advanced set
+    has_advanced = any(t.lower() in advanced_types for t in found_types)
+
+    if not has_advanced:
+        violations.append({
+            'type': 'MISSING_ADVANCED_ACTIVITY',
+            'severity': 'warning',
+            'blocking': False,
+            'issue': f"C1/C2 module is missing advanced production activities (essay-response, etc.)",
+            'fix': f"Add at least one advanced production activity: {', '.join(sorted(advanced_types))}. C1/C2 standards require deep analysis and long-form production."
+        })
+
+    return violations
+
+
 def check_yaml_activity_types(activities: list[dict]) -> list[dict]:
     """Check if all activity types in YAML are valid.
 

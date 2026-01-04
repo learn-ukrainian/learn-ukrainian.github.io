@@ -44,7 +44,7 @@ from .checks import (
     check_content_quality,
     check_activity_header_format,
 )
-from .checks.activities import check_mark_the_words_format, check_hints_in_activities, check_malformed_cloze_activities, check_cloze_syntax_errors, check_error_correction_format, check_yaml_activity_types
+from .checks.activities import check_mark_the_words_format, check_hints_in_activities, check_malformed_cloze_activities, check_cloze_syntax_errors, check_error_correction_format, check_yaml_activity_types, check_advanced_activities_presence
 from .checks.activity_validation import (
     check_morpheme_patterns,
     check_morpheme_pedagogy,
@@ -1215,6 +1215,17 @@ def audit_module(file_path: str) -> bool:
         pedagogical_violations.append({
             'type': v['type'],
             'severity': v['severity'],
+            'issue': v['issue'],
+            'fix': v['fix']
+        })
+
+    # 12. Check for missing advanced activities in C1/C2
+    advanced_presence_violations = check_advanced_activities_presence(found_activity_types, level_code)
+    for v in advanced_presence_violations:
+        pedagogical_violations.append({
+            'type': v['type'],
+            'severity': v['severity'],
+            'blocking': v.get('blocking', True),
             'issue': v['issue'],
             'fix': v['fix']
         })
