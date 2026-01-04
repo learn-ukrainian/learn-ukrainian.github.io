@@ -270,7 +270,7 @@ The lesson teaches both Ukrainian AND academic concepts. Activities practice onl
 | **select** | Multiple `- [x]` for all correct options |
 | **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
 | **mark-the-words** | `*marked*` words in blockquote passage |
-| **dialogue-reorder** | `- [N]` numbered lines (N = correct order) |
+| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
 
 ---
 

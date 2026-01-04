@@ -398,7 +398,8 @@ Why GOOD: Tests fixed collocation (відіграти роль), requires unders
 | **select** | Multiple `- [x]` for all correct options |
 | **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
 | **mark-the-words** | `*marked*` words in blockquote passage |
-| **dialogue-reorder** | `- [N]` numbered lines (N = correct order) |
+| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
+| **comparative-study** | `> [!instruction] Compare...` + `> [!model-answer] ...` |
 
 ---
 

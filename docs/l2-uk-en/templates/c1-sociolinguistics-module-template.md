@@ -398,7 +398,8 @@ The lesson teaches both Ukrainian AND stylistic/sociolinguistic concepts. Activi
 | **select** | Multiple `- [x]` for all correct options |
 | **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
 | **mark-the-words** | `*marked*` words in blockquote passage |
-| **dialogue-reorder** | `- [N]` numbered lines (N = correct order) |
+| **critical-analysis** | `> [!instruction] Analyze...` + `> [!model-answer] ...` |
+| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
 
 ---
 
