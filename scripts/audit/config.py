@@ -295,12 +295,6 @@ ACTIVITY_COMPLEXITY = {
         'C1': {'min_len': 18, 'max_len': 25, 'marks': [5, 8], 'min_items': 6},
         'C2': {'min_len': 20, 'max_len': 30, 'marks': [6, 10], 'min_items': 6},
     },
-    'dialogue-reorder': {
-        'A2': {'lines': [4, 5, 6], 'speakers': 2, 'min_items': 4},
-        'B1': {'lines': [6, 7, 8], 'speakers': [2, 3], 'min_items': 4},
-        'B2': {'lines': [8, 9, 10], 'speakers': [2, 3], 'min_items': 4},
-        'C1': {'lines': [10, 11, 12], 'speakers': [2, 3, 4], 'min_items': 4},
-    },
     'select': {
         'A2': {'min_len': 6, 'max_len': 10, 'options': [4, 5], 'correct': [2, 3], 'min_items': 6},
         'B1': {'min_len': 10, 'max_len': 14, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},
@@ -338,7 +332,7 @@ ACTIVITY_COMPLEXITY = {
 VALID_ACTIVITY_TYPES = [
     "match-up", "fill-in", "quiz", "true-false", "group-sort", "unjumble",
     "error-correction", "anagram", "select", "translate", "cloze",
-    "dialogue-reorder", "mark-the-words",
+    "mark-the-words",
     "essay-response", "critical-analysis", "comparative-study", "authorial-intent"
 ]
 
@@ -346,7 +340,7 @@ VALID_ACTIVITY_TYPES = [
 ACTIVITY_KEYWORDS = [
     "match-up", "gap-fill", "quiz", "true-false", "group-sort", "unjumble",
     "fill-in", "error-correction", "anagram", "cloze",
-    "select", "translate", "dialogue-reorder", "mark-the-words",
+    "select", "translate", "mark-the-words",
     "essay-response", "critical-analysis", "comparative-study", "authorial-intent"
 ]
 
@@ -776,7 +770,7 @@ LEVEL_CONFIG = {
 # Activity level restrictions
 ACTIVITY_RESTRICTIONS = {
     'A1': {
-        'forbidden': ['error-correction', 'cloze', 'mark-the-words', 'dialogue-reorder', 'select', 'translate', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'],
+        'forbidden': ['error-correction', 'cloze', 'mark-the-words', 'select', 'translate', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'],
         'anagram_limit': 10
     },
     'A2': {
