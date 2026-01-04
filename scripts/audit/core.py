@@ -44,7 +44,14 @@ from .checks import (
     check_content_quality,
     check_activity_header_format,
 )
-from .checks.activities import check_mark_the_words_format
+from .checks.activities import check_mark_the_words_format, check_hints_in_activities, check_malformed_cloze_activities, check_cloze_syntax_errors, check_error_correction_format, check_yaml_activity_types
+from .checks.activity_validation import (
+    check_morpheme_patterns,
+    check_morpheme_pedagogy,
+    check_english_hints_in_activities,
+    check_unjumble_empty_jumbled,
+    check_mdx_unjumble_rendering,
+)
 from .checks.vocabulary import (
     count_vocab_rows,
     extract_vocab_items,
@@ -74,8 +81,8 @@ from .gates import (
     compute_recommendation,
 )
 from .checks.content_recall_detection import (
-    check_content_recall_violations,
     is_content_heavy_module,
+    run_all_content_recall_checks,
 )
 
 # Import richness calculation
@@ -247,10 +254,11 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int]:
 
 
 def detect_focus(frontmatter_str: str, level_code: str, module_num: int, title: str = "") -> str | None:
-    """Detect module focus (grammar, vocab, checkpoint, skills, cultural, etc.)."""
+    """Detect module focus (grammar, vocab, checkpoint, skills, cultural, history, etc.)."""
     # Check frontmatter for explicit focus - recognize all valid config types
+    # Including content-heavy types: history, literature, biography, folk-culture, fine-arts
     focus_match = re.search(
-        r'^focus:\s*["\']?(grammar|vocab|vocabulary|checkpoint|skills|cultural|capstone|bridge)["\']?$',
+        r'^focus:\s*["\']?(grammar|vocab|vocabulary|checkpoint|skills|cultural|capstone|bridge|history|literature|biography|folk-culture|fine-arts)["\']?$',
         frontmatter_str, re.MULTILINE | re.IGNORECASE
     )
     if focus_match:
@@ -278,7 +286,14 @@ def detect_focus(frontmatter_str: str, level_code: str, module_num: int, title: 
         else:
             return 'skills'  # M82-86: Integration/Skills modules
     elif level_code == 'B2':
-        return 'grammar' if module_num <= 40 else 'vocab'
+        if module_num <= 40:
+            return 'grammar'  # M01-40: Grammar modules
+        elif module_num <= 70:
+            return 'vocab'  # M41-70: Vocabulary modules
+        elif module_num <= 131:
+            return 'history'  # M71-131: Ukrainian History modules
+        else:
+            return 'skills'  # M132-145: Skills & Capstone
 
     return None
 
@@ -760,6 +775,100 @@ def audit_module(file_path: str) -> bool:
             for v in mark_words_violations:
                 print(f"     → {v['issue']}")
 
+    # Check for hints in activities (all should be removed)
+    hint_violations = []
+    if yaml_activities:
+        hint_violations = check_hints_in_activities(yaml_activities)
+        if hint_violations:
+            print(f"  ⚠️  hint violations: {len(hint_violations)}")
+            for v in hint_violations:
+                print(f"     → {v['issue']}")
+
+    # Check for malformed cloze activities (dialogue lines as blanks)
+    malformed_cloze_violations = []
+    if yaml_activities:
+        malformed_cloze_violations = check_malformed_cloze_activities(yaml_activities)
+        if malformed_cloze_violations:
+            print(f"  ⚠️  malformed cloze violations: {len(malformed_cloze_violations)}")
+            for v in malformed_cloze_violations:
+                print(f"     → {v['issue']}")
+
+    # Check for cloze syntax errors (colons inside blanks)
+    cloze_syntax_violations = []
+    if yaml_activities:
+        cloze_syntax_violations = check_cloze_syntax_errors(yaml_activities)
+        if cloze_syntax_violations:
+            print(f"  ⚠️  cloze syntax violations: {len(cloze_syntax_violations)}")
+            for v in cloze_syntax_violations:
+                print(f"     → {v['issue']}")
+
+    # Check for malformed error-correction activities (placeholder syntax)
+    error_correction_violations = []
+    if yaml_activities:
+        error_correction_violations = check_error_correction_format(yaml_activities)
+        if error_correction_violations:
+            print(f"  ⚠️  malformed error-correction violations: {len(error_correction_violations)}")
+            for v in error_correction_violations:
+                print(f"     → {v['issue']}")
+
+    # Check for invalid activity types in YAML
+    invalid_type_violations = []
+    if yaml_activities:
+        invalid_type_violations = check_yaml_activity_types(yaml_activities)
+        if invalid_type_violations:
+            print(f"  ⚠️  invalid activity types in YAML: {len(invalid_type_violations)}")
+            for v in invalid_type_violations:
+                print(f"     → {v['issue']}")
+
+    # Check morpheme patterns (Issue #363: validate *morpheme*word patterns)
+    morpheme_violations = []
+    if yaml_activities:
+        morpheme_violations = check_morpheme_patterns(yaml_activities)
+        if morpheme_violations:
+            print(f"  ⚠️  morpheme pattern violations: {len(morpheme_violations)}")
+            for v in morpheme_violations:
+                print(f"     → {v['activity']}: {v['message']}")
+
+    # Check morpheme pedagogy (detect vague/weak morpheme activities)
+    morpheme_pedagogy_violations = []
+    if yaml_activities:
+        morpheme_pedagogy_violations = check_morpheme_pedagogy(yaml_activities)
+        if morpheme_pedagogy_violations:
+            print(f"  ⚠️  pedagogically weak morpheme activities: {len(morpheme_pedagogy_violations)}")
+            for v in morpheme_pedagogy_violations:
+                severity = "🔴" if v['severity'] == 'critical' else "⚠️"
+                print(f"     {severity} [{v['type']}] {v['activity']}")
+                print(f"        Issue: {v['message']}")
+                print(f"        Fix: {v['suggestion']}")
+                if 'pedagogical_issue' in v:
+                    print(f"        Why: {v['pedagogical_issue']}")
+
+    # Check for inappropriate English hints in A2+ activities
+    english_hint_violations = []
+    if yaml_activities:
+        english_hint_violations = check_english_hints_in_activities(yaml_activities, level_code, module_num)
+        if english_hint_violations:
+            print(f"  ⚠️  English hints in A2+ activities: {len(english_hint_violations)}")
+            for v in english_hint_violations:
+                severity = "🔴" if v['severity'] == 'critical' else "⚠️"
+                print(f"     {severity} [{v['type']}] {v['activity']} ({v['activity_type']})")
+                print(f"        Issue: {v['message']}")
+                print(f"        Fix: {v['suggestion']}")
+                if 'pedagogical_issue' in v:
+                    print(f"        Why: {v['pedagogical_issue']}")
+
+    # Check for empty jumbled fields in unjumble activities (Issue #362)
+    unjumble_violations = []
+    if yaml_activities:
+        unjumble_violations = check_unjumble_empty_jumbled(yaml_activities)
+        if unjumble_violations:
+            print(f"  ⚠️  unjumble activities with empty jumbled fields: {len(unjumble_violations)}")
+            for v in unjumble_violations:
+                severity = "🔴" if v['severity'] == 'critical' else "⚠️"
+                print(f"     {severity} [{v['type']}] {v['activity']}")
+                print(f"        Issue: {v['message']}")
+                print(f"        Fix: {v['suggestion']}")
+
     if use_yaml_activities:
         print(f"  📋 Found YAML activities file ({len(yaml_activities)} activities)")
         # Process YAML activities
@@ -1065,6 +1174,51 @@ def audit_module(file_path: str) -> bool:
             'fix': v['fix']
         })
 
+    # 7. Check for hints in activities (all should be removed)
+    for v in hint_violations:
+        pedagogical_violations.append({
+            'type': v['type'],
+            'severity': v['severity'],
+            'issue': v['issue'],
+            'fix': v['fix']
+        })
+
+    # 8. Check for malformed cloze activities (dialogue lines as blanks)
+    for v in malformed_cloze_violations:
+        pedagogical_violations.append({
+            'type': v['type'],
+            'severity': v['severity'],
+            'issue': v['issue'],
+            'fix': v['fix']
+        })
+
+    # 9. Check for cloze syntax errors (colons inside blanks)
+    for v in cloze_syntax_violations:
+        pedagogical_violations.append({
+            'type': v['type'],
+            'severity': v['severity'],
+            'issue': v['issue'],
+            'fix': v['fix']
+        })
+
+    # 10. Check for malformed error-correction activities (placeholder syntax)
+    for v in error_correction_violations:
+        pedagogical_violations.append({
+            'type': v['type'],
+            'severity': v['severity'],
+            'issue': v['issue'],
+            'fix': v['fix']
+        })
+
+    # 11. Check for invalid activity types in YAML
+    for v in invalid_type_violations:
+        pedagogical_violations.append({
+            'type': v['type'],
+            'severity': v['severity'],
+            'issue': v['issue'],
+            'fix': v['fix']
+        })
+
     blocking_pedagogy = [v for v in pedagogical_violations if v.get('blocking', True)]
     results['pedagogy'] = evaluate_pedagogy(len(blocking_pedagogy))
     if results['pedagogy'].status == 'FAIL':
@@ -1162,7 +1316,12 @@ def audit_module(file_path: str) -> bool:
     is_content_heavy = is_content_heavy_module(level_code, module_num, module_focus or "")
     content_recall_violations = []
     if is_content_heavy:
-        content_recall_violations = check_content_recall_violations(content, level_code, module_focus or "")
+        # Run all content recall checks (quiz patterns, fill-in years, cloze years)
+        # Pass YAML activities if available for YAML-based detection
+        content_recall_violations = run_all_content_recall_checks(
+            content, level_code, module_focus or "",
+            yaml_activities=yaml_activities
+        )
     results['content_heavy'] = evaluate_content_heavy(
         is_content_heavy,
         activity_count,

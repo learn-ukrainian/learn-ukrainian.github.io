@@ -36,6 +36,7 @@ from .activities import (
     check_activity_header_format,
     check_mark_the_words_format,
     count_items,
+    check_yaml_activity_types,
 )
 from .pedagogy import (
     run_pedagogical_checks,
@@ -70,6 +71,19 @@ from .content_recall_detection import (
     check_content_recall_violations,
     check_content_heavy_activity_count,
     is_content_heavy_module,
+    check_fill_in_year_answers,
+    check_cloze_year_answers,
+    check_yaml_cloze_year_blanks,
+    check_yaml_fill_in_year_answers,
+    run_all_content_recall_checks,
+)
+from .activity_validation import (
+    check_unjumble_empty_jumbled,
+    check_mdx_unjumble_rendering,
+    check_morpheme_patterns,
+    check_mark_the_words_format,
+    check_morpheme_pedagogy,
+    check_english_hints_in_activities,
 )
 
 __all__ = [
@@ -99,6 +113,7 @@ __all__ = [
     'check_activity_header_format',
     'count_items',
     'check_mark_the_words_format',
+    'check_yaml_activity_types',
     # Pedagogy
     'run_pedagogical_checks',
     'check_duplicate_content',
@@ -127,4 +142,15 @@ __all__ = [
     'check_content_recall_violations',
     'check_content_heavy_activity_count',
     'is_content_heavy_module',
+    'check_fill_in_year_answers',
+    'check_cloze_year_answers',
+    'check_yaml_cloze_year_blanks',
+    'check_yaml_fill_in_year_answers',
+    'run_all_content_recall_checks',
+    # Activity Validation
+    'check_unjumble_empty_jumbled',
+    'check_mdx_unjumble_rendering',
+    'check_morpheme_patterns',
+    'check_morpheme_pedagogy',
+    'check_english_hints_in_activities',
 ]

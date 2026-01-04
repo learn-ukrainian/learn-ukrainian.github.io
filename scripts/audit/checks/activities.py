@@ -874,5 +874,303 @@ def check_mark_the_words_format(activities: list[dict]) -> list[dict]:
                 'issue': f"mark-the-words '{title}' contains (correct)/(wrong) annotations",
                 'fix': "Run: .venv/bin/python scripts/fix_mark_the_words.py"
             })
-    
+
+    return violations
+
+
+def check_hints_in_activities(activities: list[dict]) -> list[dict]:
+    """Check for hint fields in activities (all should be removed).
+
+    Hints break activities and don't provide real pedagogical value.
+    All hints should be removed from all activity types.
+
+    Args:
+        activities: List of activity dicts from YAML
+
+    Returns:
+        List of violations
+    """
+    violations = []
+
+    if not activities or not isinstance(activities, list):
+        return violations
+
+    for activity in activities:
+        if not isinstance(activity, dict):
+            continue
+
+        activity_type = activity.get('type', 'unknown')
+        title = activity.get('title', 'Untitled')
+
+        # Check activity-level hint
+        if 'hint' in activity:
+            violations.append({
+                'type': 'HINT_IN_ACTIVITY',
+                'severity': 'critical',
+                'issue': f"{activity_type} activity '{title}' has activity-level hint field",
+                'fix': "Remove all 'hint' fields from activities (they break activities and provide no real pedagogical value)"
+            })
+            continue
+
+        # Check item-level hints
+        items = activity.get('items', [])
+        for idx, item in enumerate(items):
+            if isinstance(item, dict) and 'hint' in item:
+                violations.append({
+                    'type': 'HINT_IN_ACTIVITY',
+                    'severity': 'critical',
+                    'issue': f"{activity_type} activity '{title}' has item-level hint in item {idx + 1}",
+                    'fix': "Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)"
+                })
+                break  # One violation per activity is enough
+
+    return violations
+
+
+def check_malformed_cloze_activities(activities: list[dict]) -> list[dict]:
+    """Check for cloze activities with complete sentences as blanks.
+
+    Malformed pattern: Cloze where each blank is a complete dialogue line
+    (e.g., {Full sentence option 1|Full sentence option 2|Full sentence option 3})
+
+    This breaks the cloze format which should have word/phrase blanks, not entire sentences.
+
+    Common signs:
+    - All options contain 5+ words
+    - All options end with punctuation (., ?, !)
+    - All options contain dialogue markers («», —)
+
+    Args:
+        activities: List of activity dicts from YAML
+
+    Returns:
+        List of violations
+    """
+    violations = []
+
+    if not activities or not isinstance(activities, list):
+        return violations
+
+    for activity in activities:
+        if not isinstance(activity, dict):
+            continue
+
+        if activity.get('type') != 'cloze':
+            continue
+
+        title = activity.get('title', 'Untitled')
+        passage = activity.get('passage', '')
+
+        if not passage:
+            continue
+
+        # Extract all blanks from passage: {option1|option2|option3}
+        import re
+        blank_pattern = r'\{([^}]+)\}'
+        blanks = re.findall(blank_pattern, passage)
+
+        if not blanks:
+            continue
+
+        # Check if this looks like a malformed dialogue-line cloze
+        dialogue_line_count = 0
+        complete_sentence_count = 0
+
+        for blank in blanks:
+            options = [opt.strip() for opt in blank.split('|')]
+
+            # Check each option in this blank
+            for opt in options:
+                # Check if it's a complete sentence (5+ words)
+                word_count = len(opt.split())
+
+                # Check if it contains dialogue markers or ends with sentence punctuation
+                has_dialogue_marker = '—' in opt or '«' in opt or '»' in opt
+                ends_with_punctuation = opt.endswith(('.', '?', '!'))
+
+                if word_count >= 5 and (has_dialogue_marker or ends_with_punctuation):
+                    dialogue_line_count += 1
+                    break  # One option is enough to flag this blank
+
+                if word_count >= 5:
+                    complete_sentence_count += 1
+                    break
+
+        # If most blanks look like complete dialogue lines, flag it
+        total_blanks = len(blanks)
+        if dialogue_line_count >= total_blanks * 0.5:  # 50% or more
+            violations.append({
+                'type': 'MALFORMED_CLOZE',
+                'severity': 'critical',
+                'issue': f"Cloze activity '{title}' has dialogue lines as blanks (should be word/phrase blanks)",
+                'fix': f"Convert to proper cloze format with word/phrase blanks, or use a different activity type. Found {dialogue_line_count}/{total_blanks} blanks with complete dialogue lines."
+            })
+
+    return violations
+
+
+def check_cloze_syntax_errors(activities: list[dict]) -> list[dict]:
+    """Check for cloze activities with invalid syntax in blanks.
+
+    Common syntax errors:
+    - Colons inside blanks: {option1|infinitive: option2|option3}
+    - This breaks the parser which expects: {option1|option2|option3}
+
+    Args:
+        activities: List of activity dicts from YAML
+
+    Returns:
+        List of violations
+    """
+    violations = []
+
+    if not activities or not isinstance(activities, list):
+        return violations
+
+    for activity in activities:
+        if not isinstance(activity, dict):
+            continue
+
+        if activity.get('type') != 'cloze':
+            continue
+
+        title = activity.get('title', 'Untitled')
+        passage = activity.get('passage', '')
+
+        if not passage:
+            continue
+
+        # Extract all blanks from passage: {option1|option2|option3}
+        import re
+        blank_pattern = r'\{([^}]+)\}'
+        blanks = re.findall(blank_pattern, passage)
+
+        if not blanks:
+            continue
+
+        # Check for invalid colon syntax inside blanks
+        invalid_blanks = []
+        for blank in blanks:
+            # Check if blank contains a colon (invalid syntax)
+            if ':' in blank:
+                # Extract a sample for error message
+                sample = blank[:50] + '...' if len(blank) > 50 else blank
+                invalid_blanks.append(sample)
+
+        if invalid_blanks:
+            violations.append({
+                'type': 'CLOZE_SYNTAX_ERROR',
+                'severity': 'critical',
+                'issue': f"Cloze activity '{title}' has invalid syntax with colons inside blanks",
+                'fix': f"Remove colons from blanks. Use format {{option1|option2|option3}} not {{option1|word: option2}}. Found {len(invalid_blanks)} invalid blanks."
+            })
+
+    return violations
+
+
+def check_error_correction_format(activities: list[dict]) -> list[dict]:
+    """Check for malformed error-correction activities.
+
+    Common issues:
+    - Using ___ placeholders instead of actual errors
+    - Error word not present in sentence
+    - This is actually a fill-in activity disguised as error-correction
+
+    Correct format:
+    - sentence: "Я читати книгу вчора."
+    - error: "читати"
+    - answer: "прочитав"
+
+    Wrong format:
+    - sentence: "читати → ___"
+    - error: "___"
+
+    Args:
+        activities: List of activity dicts from YAML
+
+    Returns:
+        List of violations
+    """
+    violations = []
+
+    if not activities or not isinstance(activities, list):
+        return violations
+
+    for activity in activities:
+        if not isinstance(activity, dict):
+            continue
+
+        if activity.get('type') != 'error-correction':
+            continue
+
+        title = activity.get('title', 'Untitled')
+        items = activity.get('items', [])
+
+        placeholder_count = 0
+
+        for idx, item in enumerate(items):
+            if not isinstance(item, dict):
+                continue
+
+            sentence = item.get('sentence', '')
+            error = item.get('error', '')
+
+            # Check if using placeholder syntax
+            if error == '___' or error.strip() == '':
+                placeholder_count += 1
+            # Check if sentence contains → ___ pattern (transformation exercise, not error-correction)
+            elif '→' in sentence and '___' in sentence:
+                placeholder_count += 1
+            # Check if error word is not in sentence
+            elif error and error not in sentence:
+                placeholder_count += 1
+
+        # If most items use placeholders, flag it
+        if placeholder_count > 0:
+            violations.append({
+                'type': 'MALFORMED_ERROR_CORRECTION',
+                'severity': 'critical',
+                'issue': f"Error-correction activity '{title}' uses placeholder syntax instead of real errors",
+                'fix': f"Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found {placeholder_count}/{len(items)} items with placeholders/missing errors."
+            })
+
+    return violations
+
+
+def check_yaml_activity_types(activities: list[dict]) -> list[dict]:
+    """Check if all activity types in YAML are valid.
+
+    Args:
+        activities: List of activity dicts from YAML
+
+    Returns:
+        List of violations for invalid activity types
+    """
+    violations = []
+
+    if not activities or not isinstance(activities, list):
+        return violations
+
+    for i, activity in enumerate(activities):
+        if not isinstance(activity, dict):
+            continue
+
+        act_type = activity.get('type', '').lower()
+        if not act_type:
+            violations.append({
+                'type': 'INVALID_ACTIVITY_TYPE',
+                'severity': 'error',
+                'issue': f"Activity #{i+1} missing 'type' field",
+                'fix': "Add 'type' field to activity"
+            })
+            continue
+
+        if act_type not in VALID_ACTIVITY_TYPES:
+            violations.append({
+                'type': 'INVALID_ACTIVITY_TYPE',
+                'severity': 'error',
+                'issue': f"Invalid activity type '{act_type}' in YAML",
+                'fix': f"Use supported type: {', '.join(sorted(VALID_ACTIVITY_TYPES))}"
+            })
+
     return violations
