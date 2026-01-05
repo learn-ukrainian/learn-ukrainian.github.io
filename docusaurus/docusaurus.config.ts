@@ -11,6 +11,8 @@ const config: Config = {
     v4: true,
   },
 
+  trailingSlash: true,  // Ensure URLs match sitemap format
+
   clientModules: [],
 
   // Algolia site verification
