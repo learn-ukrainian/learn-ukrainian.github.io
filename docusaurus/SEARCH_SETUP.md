@@ -19,6 +19,28 @@ themeConfig: {
 }
 ```
 
+## Frontend Configuration (Critical)
+
+In `docusaurus.config.ts`, we explicitly **DISABLE** `contextualSearch` and set manual filters.
+
+**Why?**
+- By default, `contextualSearch: true` uses the page's locale (always `en` in our setup) to filter results.
+- This hides all Ukrainian records (tagged as `uk` by our crawler).
+- We must manually allow BOTH `language:en` AND `language:uk`.
+
+```typescript
+algolia: {
+  // ...
+  contextualSearch: false, // DISABLE THIS
+  searchParameters: {
+    facetFilters: [
+      ['language:en', 'language:uk'],       // OR condition: Find English OR Ukrainian
+      ['docusaurus_tag:docs-default-current'], // AND condition: Only current version
+    ],
+  },
+}
+```
+
 ## Crawler Configuration (Critical)
 
 To ensure Ukrainian content is indexed and large pages (Grammar/History modules) are split correctly, we use a custom **JavaScript-based Crawler Configuration**.

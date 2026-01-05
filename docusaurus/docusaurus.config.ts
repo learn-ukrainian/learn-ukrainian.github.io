@@ -178,12 +178,14 @@ const config: Config = {
       appId: 'MFWOKG2YFD',
       apiKey: '4413bc11f7878cb2605766f6a050bdcc',
       indexName: 'https_learn_ukrainian_github_io_pages',
-      contextualSearch: true,
+      // CRITICAL: Disable contextualSearch because it forces 'language:en'
+      // We need to search BOTH 'en' and 'uk' manually
+      contextualSearch: false,
       searchParameters: {
-        // Temporarily disabled facetFilters to debug - crawler may not be setting language facet yet
-        // facetFilters: [
-        //   ['language:en', 'language:uk'],
-        // ],
+        facetFilters: [
+          ['language:en', 'language:uk'],       // Search both languages (OR condition)
+          ['docusaurus_tag:docs-default-current'], // Filter by version
+        ],
         hitsPerPage: 10,
       },
       searchPagePath: 'search',

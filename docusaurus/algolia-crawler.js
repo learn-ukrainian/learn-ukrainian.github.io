@@ -48,6 +48,18 @@ new Crawler({
           aggregateContent: true,
           recordVersion: 'v3',
         });
+
+        // Post-processing: Detect Ukrainian content and override language
+        // This is critical because Docusaurus sets lang="en" globally
+        records.forEach(record => {
+          // Check if Title (lvl1) or Header (lvl2) contains Cyrillic characters
+          if (/[а-яА-ЯґҐєЄіІїЇ]/.test(record.hierarchy.lvl1) || /[а-яА-ЯґҐєЄіІїЇ]/.test(record.hierarchy.lvl2)) {
+            record.lang = 'uk';
+            record.language = 'uk';
+          }
+        });
+
+        return records;
       },
     },
   ],
