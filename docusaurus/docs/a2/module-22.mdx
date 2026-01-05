@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Warm-up
@@ -241,6 +243,7 @@ The conditional mood is also perfect for saying sorry and soft refusals.
 
 <MatchUp
   title="Conditional Forms"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- якщо", "right": "if (real)"}, {"left": "- якби", "right": "if (unreal)"}, {"left": "- б/би", "right": "would (particle)"}, {"left": "- мав би", "right": "would have"}, {"left": "- був би", "right": "would be"}, {"left": "- знав би", "right": "would know"}, {"left": "- міг би", "right": "would be able"}, {"left": "- хотів би", "right": "would want"}, {"left": "- сказав би", "right": "would say"}, {"left": "- зробив би", "right": "would do"}, {"left": "- пішов би", "right": "would go"}, {"left": "- купив би", "right": "would buy"}]`)}
 />
 
@@ -248,6 +251,7 @@ The conditional mood is also perfect for saying sorry and soft refusals.
 
 <Cloze
   title="Conditional Sentences"
+  isUkrainian={false}
   passage={`[___:1] я мав гроші, я б купив машину. (If — unreal) Якби я [___:2] час, я б прочитав. (had — unreal) Я [___:3] хотів відвідати Україну. (would)
 
 Якби вона [___:4] , вона б сказала. (knew) [___:5] буде сонячно, підемо на прогулянку. (If — real) Це [___:6] б чудово!
@@ -262,20 +266,23 @@ The conditional mood is also perfect for saying sorry and soft refusals.
 
 <Quiz
   title="Conditional Mood"
-  questions={JSON.parse(`[{"question": "У реченні \\\"Якщо завтра буде сонце\\\", яка граматична функція сполучника \\\"якщо\\\"?", "options": [{"text": "Реальна і можлива умова", "correct": true}, {"text": "Нереальна гіпотетична умова", "correct": false}, {"text": "Опис минулого часу", "correct": false}, {"text": "Причинно-наслідковий зв'язок", "correct": false}]}, {"question": "Який сполучник ми використовуємо у фразі \\\"Якби я мав крила\\\" для нереальної умови?", "options": [{"text": "якби", "correct": true}, {"text": "якщо", "correct": false}, {"text": "коли", "correct": false}, {"text": "тому що", "correct": false}]}, {"question": "З яких частин складається форма умовного способу \\\"читав би\\\" або \\\"купила б\\\"?", "options": [{"text": "Частка б/би + минулий час", "correct": true}, {"text": "Частка б/би + майбутній час", "correct": false}, {"text": "Сполучник якщо + дієслово", "correct": false}, {"text": "Просте дієслово минулого часу", "correct": false}]}, {"question": "Перекладіть гіпотезу: \\\"If I had enough money, I would buy it\\\".", "options": [{"text": "Якби я мав гроші, я б це купив", "correct": true}, {"text": "Якщо я маю гроші, я це купую", "correct": false}, {"text": "Коли я мав гроші, я це купив", "correct": false}, {"text": "Тому що у мене є гроші", "correct": false}]}, {"question": "Що означає ввічливе прохання \\\"Я б хотів замовити каву\\\" в українській мові?", "options": [{"text": "Я б хотів", "correct": true}, {"text": "Я хочу", "correct": false}, {"text": "Я хотів", "correct": false}, {"text": "Я буду хотіти", "correct": false}]}, {"question": "Яка форма дієслова стає базою для виразу \\\"він робив би\\\"?", "options": [{"text": "Форма минулого часу", "correct": true}, {"text": "Форма теперішнього часу", "correct": false}, {"text": "Форма майбутнього часу", "correct": false}, {"text": "Форма наказового способу", "correct": false}]}, {"question": "Який точний переклад української фрази \\\"Це було б надзвичайно чудово для нас\\\"?", "options": [{"text": "That would be extraordinarily wonderful", "correct": true}, {"text": "That was extraordinarily wonderful", "correct": false}, {"text": "That is being wonderfully", "correct": false}, {"text": "That will be wonderful", "correct": false}]}, {"question": "До якої категорії належить питання \\\"Чи могли б ви мені допомогти?\\\"", "options": [{"text": "Ввічливе та формальне прохання", "correct": true}, {"text": "Пряма команда або наказ", "correct": false}, {"text": "Проста констатація факту", "correct": false}, {"text": "Питання про здібності", "correct": false}]}, {"question": "Що ми можемо сказати про ситуацію \\\"Якби я був дуже багатим\\\"?", "options": [{"text": "Це нереальна гіпотетична умова", "correct": true}, {"text": "Це мій реальний стан", "correct": false}, {"text": "Це сталося дуже давно", "correct": false}, {"text": "Це мій план на завтра", "correct": false}]}, {"question": "Де зазвичай стоїть частка \\\"б\\\" у реченні \\\"Я б купив цей будинок\\\"?", "options": [{"text": "Перед або після дієслова", "correct": true}, {"text": "Тільки перед дієсловом", "correct": false}, {"text": "Тільки в кінці речення", "correct": false}, {"text": "Тільки після сполучника", "correct": false}]}, {"question": "Яку ситуацію описує речення \\\"Якщо я матиму час, я обов'язково зателефоную\\\"?", "options": [{"text": "Реальну умову в майбутньому", "correct": true}, {"text": "Неможливу мрію або бажання", "correct": false}, {"text": "Дію, яка вже закінчилася", "correct": false}, {"text": "Наказ іншій людині", "correct": false}]}, {"question": "Як використання умовного способу впливає на тон українського прохання?", "options": [{"text": "Робить прохання значно ввічливішим", "correct": true}, {"text": "Робить прохання більш прямим", "correct": false}, {"text": "Звучить дуже неввічливо", "correct": false}, {"text": "Не впливає на тон", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "У реченні \\\\\\"Якщо завтра буде сонце\\\\\\", яка граматична функція сполучника \\\\\\"якщо\\\\\\"?", "options": [{"text": "Реальна і можлива умова", "correct": true}, {"text": "Нереальна гіпотетична умова", "correct": false}, {"text": "Опис минулого часу", "correct": false}, {"text": "Причинно-наслідковий зв'язок", "correct": false}]}, {"question": "Який сполучник ми використовуємо у фразі \\\\\\"Якби я мав крила\\\\\\" для нереальної умови?", "options": [{"text": "якби", "correct": true}, {"text": "якщо", "correct": false}, {"text": "коли", "correct": false}, {"text": "тому що", "correct": false}]}, {"question": "З яких частин складається форма умовного способу \\\\\\"читав би\\\\\\" або \\\\\\"купила б\\\\\\"?", "options": [{"text": "Частка б/би + минулий час", "correct": true}, {"text": "Частка б/би + майбутній час", "correct": false}, {"text": "Сполучник якщо + дієслово", "correct": false}, {"text": "Просте дієслово минулого часу", "correct": false}]}, {"question": "Перекладіть гіпотезу: \\\\\\"If I had enough money, I would buy it\\\\\\".", "options": [{"text": "Якби я мав гроші, я б це купив", "correct": true}, {"text": "Якщо я маю гроші, я це купую", "correct": false}, {"text": "Коли я мав гроші, я це купив", "correct": false}, {"text": "Тому що у мене є гроші", "correct": false}]}, {"question": "Що означає ввічливе прохання \\\\\\"Я б хотів замовити каву\\\\\\" в українській мові?", "options": [{"text": "Я б хотів", "correct": true}, {"text": "Я хочу", "correct": false}, {"text": "Я хотів", "correct": false}, {"text": "Я буду хотіти", "correct": false}]}, {"question": "Яка форма дієслова стає базою для виразу \\\\\\"він робив би\\\\\\"?", "options": [{"text": "Форма минулого часу", "correct": true}, {"text": "Форма теперішнього часу", "correct": false}, {"text": "Форма майбутнього часу", "correct": false}, {"text": "Форма наказового способу", "correct": false}]}, {"question": "Який точний переклад української фрази \\\\\\"Це було б надзвичайно чудово для нас\\\\\\"?", "options": [{"text": "That would be extraordinarily wonderful", "correct": true}, {"text": "That was extraordinarily wonderful", "correct": false}, {"text": "That is being wonderfully", "correct": false}, {"text": "That will be wonderful", "correct": false}]}, {"question": "До якої категорії належить питання \\\\\\"Чи могли б ви мені допомогти?\\\\\\"", "options": [{"text": "Ввічливе та формальне прохання", "correct": true}, {"text": "Пряма команда або наказ", "correct": false}, {"text": "Проста констатація факту", "correct": false}, {"text": "Питання про здібності", "correct": false}]}, {"question": "Що ми можемо сказати про ситуацію \\\\\\"Якби я був дуже багатим\\\\\\"?", "options": [{"text": "Це нереальна гіпотетична умова", "correct": true}, {"text": "Це мій реальний стан", "correct": false}, {"text": "Це сталося дуже давно", "correct": false}, {"text": "Це мій план на завтра", "correct": false}]}, {"question": "Де зазвичай стоїть частка \\\\\\"б\\\\\\" у реченні \\\\\\"Я б купив цей будинок\\\\\\"?", "options": [{"text": "Перед або після дієслова", "correct": true}, {"text": "Тільки перед дієсловом", "correct": false}, {"text": "Тільки в кінці речення", "correct": false}, {"text": "Тільки після сполучника", "correct": false}]}, {"question": "Яку ситуацію описує речення \\\\\\"Якщо я матиму час, я обов'язково зателефоную\\\\\\"?", "options": [{"text": "Реальну умову в майбутньому", "correct": true}, {"text": "Неможливу мрію або бажання", "correct": false}, {"text": "Дію, яка вже закінчилася", "correct": false}, {"text": "Наказ іншій людині", "correct": false}]}, {"question": "Як використання умовного способу впливає на тон українського прохання?", "options": [{"text": "Робить прохання значно ввічливішим", "correct": true}, {"text": "Робить прохання більш прямим", "correct": false}, {"text": "Звучить дуже неввічливо", "correct": false}, {"text": "Не впливає на тон", "correct": false}]}]`)}
 />
 
 ### Conditional Rules
 
 <TrueFalse
   title="Conditional Rules"
-  items={JSON.parse(`[{"statement": "\\\"Якщо\\\" is for real, possible conditions.", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Якби\\\" is for unreal, hypothetical conditions.", "isTrue": true, "explanation": "Yes!"}, {"statement": "\\\"Б\\\" and \\\"би\\\" are different particles.", "isTrue": false, "explanation": "They're the same! \\\"Б\\\" after vowels, \\\"би\\\" after consonants."}, {"statement": "Conditional uses past tense verb forms.", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Я б хотів\\\" = I would like.", "isTrue": true, "explanation": "Yes!"}, {"statement": "\\\"Якби я був\\\" means \\\"When I was.\\\"", "isTrue": false, "explanation": "\\\"Якби я був\\\" means \\\"If I were\\\"."}, {"statement": "\\\"Б\\\" makes requests more polite.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Position of \\\"б\\\" is flexible.", "isTrue": true, "explanation": "Yes! \\\"Я б читав\\\" = \\\"Я читав би.\\\""}, {"statement": "Real conditions use \\\"якби.\\\"", "isTrue": false, "explanation": "Real conditions use \\\"якщо.\\\""}, {"statement": "\\\"Це було б чудово\\\" = That would be wonderful.", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Чи могли б ви\\\" is a polite request.", "isTrue": true, "explanation": "Yes!"}, {"statement": "Conditional meaning is past.", "isTrue": false, "explanation": "Conditional meaning is hypothetical present or future!"}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "\\\\\\"Якщо\\\\\\" is for real, possible conditions.", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\\\\"Якби\\\\\\" is for unreal, hypothetical conditions.", "isTrue": true, "explanation": "Yes!"}, {"statement": "\\\\\\"Б\\\\\\" and \\\\\\"би\\\\\\" are different particles.", "isTrue": false, "explanation": "They're the same! \\\\\\"Б\\\\\\" after vowels, \\\\\\"би\\\\\\" after consonants."}, {"statement": "Conditional uses past tense verb forms.", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\\\\"Я б хотів\\\\\\" = I would like.", "isTrue": true, "explanation": "Yes!"}, {"statement": "\\\\\\"Якби я був\\\\\\" means \\\\\\"When I was.\\\\\\"", "isTrue": false, "explanation": "\\\\\\"Якби я був\\\\\\" means \\\\\\"If I were\\\\\\"."}, {"statement": "\\\\\\"Б\\\\\\" makes requests more polite.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Position of \\\\\\"б\\\\\\" is flexible.", "isTrue": true, "explanation": "Yes! \\\\\\"Я б читав\\\\\\" = \\\\\\"Я читав би.\\\\\\""}, {"statement": "Real conditions use \\\\\\"якби.\\\\\\"", "isTrue": false, "explanation": "Real conditions use \\\\\\"якщо.\\\\\\""}, {"statement": "\\\\\\"Це було б чудово\\\\\\" = That would be wonderful.", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\\\\"Чи могли б ви\\\\\\" is a polite request.", "isTrue": true, "explanation": "Yes!"}, {"statement": "Conditional meaning is past.", "isTrue": false, "explanation": "Conditional meaning is hypothetical present or future!"}]`)}
 />
 
 ### Real vs Unreal Conditions
 
 <GroupSort
   title="Real vs Unreal Conditions"
+  isUkrainian={false}
   groups={JSON.parse(`{"Real Condition (якщо + future)": ["Якщо матиму час, я обов'язково прочитаю.", "Якщо завтра буде сонячно, ми підемо.", "Якщо він прийде вчасно, я скажу.", "Якщо я зможу це зробити сам.", "Якщо ви допоможете мені зараз.", "Якщо ми купимо цей великий білет."], "Unreal Condition (якби + past + би)": ["Якби я мав час, я б прочитав.", "Якби я був багатий, я б купив.", "Якби вона знала правду, сказала б.", "Якби я була там разом з вами.", "Якби ми мали більше вільних грошей.", "Якби ви бачили цей чудовий фільм."]}`)}
 />
 
@@ -283,12 +290,13 @@ The conditional mood is also perfect for saying sorry and soft refusals.
 
 <Unjumble
   title="Conditional Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "якби / я / мав / достатньо / грошей / я / б / купив / цю / нову / машину", "answer": "Якби я мав достатньо грошей я б купив цю нову машину"}, {"jumbled": "вона / б / дуже / хотіла / поїхати / у / велику / подорож / наступного / року", "answer": "Вона б дуже хотіла поїхати у велику подорож наступного року"}, {"jumbled": "це / було / б / надзвичайно / чудово / для / всієї / нашої / великої / родини", "answer": "Це було б надзвичайно чудово для всієї нашої родини"}, {"jumbled": "чи / могли / б / ви / зараз / сказати / мені / точну / адресу / цього / будинку", "answer": "Чи могли б ви зараз сказати мені точну адресу цього будинку"}, {"jumbled": "я / б / дуже / хотів / відвідати / старовинне / українське / місто / Львів / весною", "answer": "Я б дуже хотів відвідати старовинне українське місто Львів весною"}, {"jumbled": "якщо / матиму / вільний / час / я / обов'язково / прочитати / цю / нову / цікаву / книгу", "answer": "Якщо матиму вільний час я обов'язково прочитаю цю нову цікаву книгу"}, {"jumbled": "я / б / справді / хотів / сьогодні / побачити / прекрасний / центр / міста / Києва", "answer": "Я б справді хотів сьогодні побачити прекрасний центр міста Києва"}, {"jumbled": "якби / вона / зараз / була / тут / ми / б / разом / пішли / в / кіно", "answer": "Якби вона зараз була тут ми б разом пішли в кіно"}, {"jumbled": "він / обов'язково / сказав / би / нам / всю / правду / про / цю / справу", "answer": "Він обов'язково сказав би нам всю правду про цю справу"}, {"jumbled": "якби / я / міг / сам / вибирати / я / б / поїхав / до / моря", "answer": "Якби я міг сам вибирати я б поїхав до моря"}, {"jumbled": "що / саме / ти / б / зараз / зробив / на / моєму / важкому / місці", "answer": "Що саме ти б зараз зробив на моєму важкому місці"}, {"jumbled": "було / б / дуже / добре / поїсти / сьогодні / смачних / гарячих / вареників", "answer": "Було б дуже добре поїсти сьогодні смачних гарячих вареників"}]`)}
 />
 
 ### Real or Unreal
 
-<ErrorCorrection title="Real or Unreal">
+<ErrorCorrection title="Real or Unreal" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`___ я мав гроші ... (If — I don't have money)`}
     errorWord={`I don't have money`}
@@ -337,6 +345,7 @@ The conditional mood is also perfect for saying sorry and soft refusals.
 
 <Cloze
   title="Dreams and Wishes"
+  isUkrainian={false}
   passage={`— Що ти б зробив, [___:1] виграв у лотерею?
 — Ой, [___:2] я виграв великі гроші, я [___:3] відразу купив великий будинок біля моря.
 — Я теж [___:4] хотів жити там, де сонце. Це [___:5] б дуже чудово!
@@ -350,7 +359,7 @@ The conditional mood is also perfect for saying sorry and soft refusals.
 
 ### Find Conditional
 
-<MarkTheWords>
+<MarkTheWords isUkrainian={false}>
   <MarkTheWordsActivity
     instruction={`Mark the correct words.`}
     text={`Click on CONDITIONAL forms.

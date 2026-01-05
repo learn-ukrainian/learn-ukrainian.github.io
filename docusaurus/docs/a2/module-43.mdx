@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 **Вітаємо!** Ви вивчили словотвір! Word formation is one of the most powerful tools in Ukrainian.
@@ -94,15 +96,19 @@ import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/compon
 - Can you use пере- for "across" or "re-do"?
 - Do you know від- (away) vs у- (into)?
 
-> [!myth-buster] 🔍 Myth Buster
->
-> **Myth:** "Ukrainian prefixes are the same as Russian."
->
-> **Truth:** While some prefixes look similar, Ukrainian has unique prefix patterns. For example, Ukrainian **від-** (away) is distinct from Russian, and forms like **відійти** show authentic Ukrainian phonology with the soft і. These prefixes trace back to Proto-Slavic, preserved independently in Ukrainian!
+:::danger[🔍 Myth Buster]
 
-> [!history-bite] 📜 History Bite
->
-> **Prefixes preserved our literature!** When the Ems Ukaz (1876) banned Ukrainian printing, writers used prefixes creatively. Ivan Franko's poetry is rich with **пере-**, **роз-**, **від-** combinations that carry uniquely Ukrainian meaning. Today, learning prefixes connects you to this literary heritage!
+**Myth:** "Ukrainian prefixes are the same as Russian."
+
+**Truth:** While some prefixes look similar, Ukrainian has unique prefix patterns. For example, Ukrainian **від-** (away) is distinct from Russian, and forms like **відійти** show authentic Ukrainian phonology with the soft і. These prefixes trace back to Proto-Slavic, preserved independently in Ukrainian!
+:::
+
+
+:::info[📜 History Bite]
+
+**Prefixes preserved our literature!** When the Ems Ukaz (1876) banned Ukrainian printing, writers used prefixes creatively. Ivan Franko's poetry is rich with **пере-**, **роз-**, **від-** combinations that carry uniquely Ukrainian meaning. Today, learning prefixes connects you to this literary heritage!
+:::
+
 
 ---
 
@@ -394,6 +400,20 @@ All from root **ход-** (walk), but prefix changes meaning completely!
 
 ---
 
+## 📋 Summary
+
+| Skill | Key Pattern | Example |
+|-------|-------------|---------|
+| Prefixes | Change verb meaning | при-/ви-/пере- + йти |
+| Noun Suffixes | -ння, -ість, -ач | читання, важливість, читач |
+| Adj Suffixes | -ний, -овий, -ський | музичний, український |
+| Root Families | Core meaning shared | ход-, пис-, бач- |
+
+> 💡 **Лінгвістичний Інсайт**
+>
+> Якщо ви знаєте корінь, ви можете зрозуміти багато споріднених слів.
+> *If you know the root, you can understand many related words.*
+
 
 
 ## 🎯 Activities
@@ -402,6 +422,7 @@ All from root **ход-** (walk), but prefix changes meaning completely!
 
 <MatchUp
   title="Word Formation Pairs"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- прийти", "right": "при- prefix"}, {"left": "- вийти", "right": "ви- prefix"}, {"left": "- читання", "right": "-ння suffix"}, {"left": "- важливість", "right": "-ість suffix"}, {"left": "- читач", "right": "-ач suffix"}, {"left": "- музичний", "right": "-ний suffix"}, {"left": "- український", "right": "-ський suffix"}, {"left": "- словниковий", "right": "-овий suffix"}, {"left": "- вхід", "right": "ход- root"}, {"left": "- письменник", "right": "пис- root"}, {"left": "- побачення", "right": "бач- root"}, {"left": "- слухач", "right": "слух- root"}]`)}
 />
 
@@ -409,6 +430,7 @@ All from root **ход-** (walk), but prefix changes meaning completely!
 
 <Cloze
   title="Formation Test"
+  isUkrainian={false}
   passage={`Місце, де входять = [___:1] Місце, де виходять = [___:2] Людина, яка читає = [___:3]
 
 Дія читання = [___:4] Якість бути важливим = [___:5] Прикметник від \\\"музика\\\" = [___:6]
@@ -423,13 +445,15 @@ All from root **ход-** (walk), but prefix changes meaning completely!
 
 <Quiz
   title="Word Formation Quiz"
-  questions={JSON.parse(`[{"question": "What is the primary meaning of the prefix \\\"При-\\\"?", "options": [{"text": "Arrival", "correct": true}, {"text": "Exit", "correct": false}, {"text": "Re-do", "correct": false}, {"text": "Under", "correct": false}]}, {"question": "What is the primary meaning of the prefix \\\"Ви-\\\"?", "options": [{"text": "Exit", "correct": true}, {"text": "Arrival", "correct": false}, {"text": "Entering", "correct": false}, {"text": "Over", "correct": false}]}, {"question": "What kind of words do you form with the suffix \\\"-ння\\\"?", "options": [{"text": "Verbal nouns (Process)", "correct": true}, {"text": "Adjectives (Qualities)", "correct": false}, {"text": "Agent nouns (People)", "correct": false}, {"text": "Verbs (Actions)", "correct": false}]}, {"question": "What kind of words do you form with the suffix \\\"-ість\\\"?", "options": [{"text": "Abstract nouns (Qualities)", "correct": true}, {"text": "Verbs (Actions)", "correct": false}, {"text": "Adjectives (Descriptions)", "correct": false}, {"text": "Agent nouns (People)", "correct": false}]}, {"question": "What kind of words do you form with the suffix \\\"-ач\\\"?", "options": [{"text": "Agent nouns (Person who does)", "correct": true}, {"text": "Abstract nouns (Concepts)", "correct": false}, {"text": "Verbal nouns (Processes)", "correct": false}, {"text": "Adjectives (Qualities)", "correct": false}]}, {"question": "What is the main use of the suffix \\\"-ський\\\"?", "options": [{"text": "Nationality/place adjectives", "correct": true}, {"text": "Abstract nouns", "correct": false}, {"text": "Verbs", "correct": false}, {"text": "Verbal nouns", "correct": false}]}, {"question": "What is the core meaning of the root \\\"ход-\\\"?", "options": [{"text": "Walk/go (Movement)", "correct": true}, {"text": "Write (Text)", "correct": false}, {"text": "See (Vision)", "correct": false}, {"text": "Speak (Language)", "correct": false}]}, {"question": "What is the core meaning of the root \\\"пис-\\\"?", "options": [{"text": "Write (Text)", "correct": true}, {"text": "Walk (Movement)", "correct": false}, {"text": "Hear (Audio)", "correct": false}, {"text": "Read (Text)", "correct": false}]}, {"question": "Can you identify how the Ukrainian word **\\\"Перехід\\\"** (Crossing) is structurally formed?", "options": [{"text": "пере- + ход-", "correct": true}, {"text": "при- + хід", "correct": false}, {"text": "ви- + хід", "correct": false}, {"text": "під- + хід", "correct": false}]}, {"question": "What are the specific components that form the Ukrainian word **\\\"Читання\\\"** (Reading)?", "options": [{"text": "чита- + -ння", "correct": true}, {"text": "чита- + -ач", "correct": false}, {"text": "чита- + -ість", "correct": false}, {"text": "чита- + -ник", "correct": false}]}, {"question": "Which suffix is used in the word \\\"Український\\\"?", "options": [{"text": "-ський", "correct": true}, {"text": "-ний", "correct": false}, {"text": "-овий", "correct": false}, {"text": "-ість", "correct": false}]}, {"question": "Which suffix is used in the word \\\"Музичний\\\"?", "options": [{"text": "-ний", "correct": true}, {"text": "-ський", "correct": false}, {"text": "-овий", "correct": false}, {"text": "-ач", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "What is the primary meaning of the prefix \\\\\\"При-\\\\\\"?", "options": [{"text": "Arrival", "correct": true}, {"text": "Exit", "correct": false}, {"text": "Re-do", "correct": false}, {"text": "Under", "correct": false}]}, {"question": "What is the primary meaning of the prefix \\\\\\"Ви-\\\\\\"?", "options": [{"text": "Exit", "correct": true}, {"text": "Arrival", "correct": false}, {"text": "Entering", "correct": false}, {"text": "Over", "correct": false}]}, {"question": "What kind of words do you form with the suffix \\\\\\"-ння\\\\\\"?", "options": [{"text": "Verbal nouns (Process)", "correct": true}, {"text": "Adjectives (Qualities)", "correct": false}, {"text": "Agent nouns (People)", "correct": false}, {"text": "Verbs (Actions)", "correct": false}]}, {"question": "What kind of words do you form with the suffix \\\\\\"-ість\\\\\\"?", "options": [{"text": "Abstract nouns (Qualities)", "correct": true}, {"text": "Verbs (Actions)", "correct": false}, {"text": "Adjectives (Descriptions)", "correct": false}, {"text": "Agent nouns (People)", "correct": false}]}, {"question": "What kind of words do you form with the suffix \\\\\\"-ач\\\\\\"?", "options": [{"text": "Agent nouns (Person who does)", "correct": true}, {"text": "Abstract nouns (Concepts)", "correct": false}, {"text": "Verbal nouns (Processes)", "correct": false}, {"text": "Adjectives (Qualities)", "correct": false}]}, {"question": "What is the main use of the suffix \\\\\\"-ський\\\\\\"?", "options": [{"text": "Nationality/place adjectives", "correct": true}, {"text": "Abstract nouns", "correct": false}, {"text": "Verbs", "correct": false}, {"text": "Verbal nouns", "correct": false}]}, {"question": "What is the core meaning of the root \\\\\\"ход-\\\\\\"?", "options": [{"text": "Walk/go (Movement)", "correct": true}, {"text": "Write (Text)", "correct": false}, {"text": "See (Vision)", "correct": false}, {"text": "Speak (Language)", "correct": false}]}, {"question": "What is the core meaning of the root \\\\\\"пис-\\\\\\"?", "options": [{"text": "Write (Text)", "correct": true}, {"text": "Walk (Movement)", "correct": false}, {"text": "Hear (Audio)", "correct": false}, {"text": "Read (Text)", "correct": false}]}, {"question": "Can you identify how the Ukrainian word **\\\\\\"Перехід\\\\\\"** (Crossing) is structurally formed?", "options": [{"text": "пере- + ход-", "correct": true}, {"text": "при- + хід", "correct": false}, {"text": "ви- + хід", "correct": false}, {"text": "під- + хід", "correct": false}]}, {"question": "What are the specific components that form the Ukrainian word **\\\\\\"Читання\\\\\\"** (Reading)?", "options": [{"text": "чита- + -ння", "correct": true}, {"text": "чита- + -ач", "correct": false}, {"text": "чита- + -ість", "correct": false}, {"text": "чита- + -ник", "correct": false}]}, {"question": "Which suffix is used in the word \\\\\\"Український\\\\\\"?", "options": [{"text": "-ський", "correct": true}, {"text": "-ний", "correct": false}, {"text": "-овий", "correct": false}, {"text": "-ість", "correct": false}]}, {"question": "Which suffix is used in the word \\\\\\"Музичний\\\\\\"?", "options": [{"text": "-ний", "correct": true}, {"text": "-ський", "correct": false}, {"text": "-овий", "correct": false}, {"text": "-ач", "correct": false}]}]`)}
 />
 
 ### Word Parts
 
 <GroupSort
   title="Word Parts"
+  isUkrainian={false}
   groups={JSON.parse(`{"Prefixes": ["при-", "ви-", "пере-", "від-", "на-", "роз-"], "Noun Suffixes": ["-ння", "-ість", "-ач", "-ник"], "Adjective Suffixes": ["-ний", "-овий", "-ський"], "Roots": ["ход-", "пис-", "бач-", "слух-"]}`)}
 />
 
@@ -437,13 +461,15 @@ All from root **ход-** (walk), but prefix changes meaning completely!
 
 <TrueFalse
   title="Formation Rules"
-  items={JSON.parse(`[{"statement": "\\\"При-\\\" = arrival.", "isTrue": true, "explanation": "Correct! прийти = to arrive"}, {"statement": "\\\"-ння\\\" forms verbal nouns.", "isTrue": true, "explanation": "Yes! читання = reading"}, {"statement": "\\\"-ість\\\" forms verbs.", "isTrue": false, "explanation": "No! -ість forms abstract nouns"}, {"statement": "\\\"Ход-\\\" relates to movement.", "isTrue": true, "explanation": "Correct! вхід, вихід, перехід"}, {"statement": "\\\"-ач\\\" forms agent nouns.", "isTrue": true, "explanation": "Yes! читач = reader"}, {"statement": "\\\"Ви-\\\" means \\\"entry.\\\"", "isTrue": false, "explanation": "No! Ви- means exit"}, {"statement": "\\\"Пере-\\\" means \\\"across\\\" or \\\"re-do.\\\"", "isTrue": true, "explanation": "Correct! перехід, переписати"}, {"statement": "\\\"-ський\\\" relates to place/nationality.", "isTrue": true, "explanation": "Yes! український, київський"}, {"statement": "\\\"Слух-\\\" means seeing.", "isTrue": false, "explanation": "No! Слух- means hearing"}, {"statement": "Prefixes change verb meaning.", "isTrue": true, "explanation": "Correct! при- vs ви- vs пере-"}, {"statement": "Suffixes do not change part of speech.", "isTrue": false, "explanation": "No! Suffixes create new POS"}, {"statement": "Root families share core meaning.", "isTrue": true, "explanation": "Yes! ход- = all about walking"}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "\\\\\\"При-\\\\\\" = arrival.", "isTrue": true, "explanation": "Correct! прийти = to arrive"}, {"statement": "\\\\\\"-ння\\\\\\" forms verbal nouns.", "isTrue": true, "explanation": "Yes! читання = reading"}, {"statement": "\\\\\\"-ість\\\\\\" forms verbs.", "isTrue": false, "explanation": "No! -ість forms abstract nouns"}, {"statement": "\\\\\\"Ход-\\\\\\" relates to movement.", "isTrue": true, "explanation": "Correct! вхід, вихід, перехід"}, {"statement": "\\\\\\"-ач\\\\\\" forms agent nouns.", "isTrue": true, "explanation": "Yes! читач = reader"}, {"statement": "\\\\\\"Ви-\\\\\\" means \\\\\\"entry.\\\\\\"", "isTrue": false, "explanation": "No! Ви- means exit"}, {"statement": "\\\\\\"Пере-\\\\\\" means \\\\\\"across\\\\\\" or \\\\\\"re-do.\\\\\\"", "isTrue": true, "explanation": "Correct! перехід, переписати"}, {"statement": "\\\\\\"-ський\\\\\\" relates to place/nationality.", "isTrue": true, "explanation": "Yes! український, київський"}, {"statement": "\\\\\\"Слух-\\\\\\" means seeing.", "isTrue": false, "explanation": "No! Слух- means hearing"}, {"statement": "Prefixes change verb meaning.", "isTrue": true, "explanation": "Correct! при- vs ви- vs пере-"}, {"statement": "Suffixes do not change part of speech.", "isTrue": false, "explanation": "No! Suffixes create new POS"}, {"statement": "Root families share core meaning.", "isTrue": true, "explanation": "Yes! ход- = all about walking"}]`)}
 />
 
 ### Word Formation Rules
 
 <Unjumble
   title="Word Formation Rules"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "префікс / змінює / значення / слова / і / стоїть / на / початку", "answer": "Префікс змінює значення слова і стоїть на початку"}, {"jumbled": "суфікс / стоїть / в / кінці / слова / і / створює / нові / частини / мови", "answer": "Суфікс стоїть в кінці слова і створює нові частини мови"}, {"jumbled": "корінь / це / головна / частина / слова / яка / має / основне / значення", "answer": "Корінь це головна частина слова яка має основне значення"}, {"jumbled": "ми / вживаємо / суфікс / ач / для / назви / людей / які / діють", "answer": "Ми вживаємо суфікс ач для назви людей які діють"}, {"jumbled": "українська / мова / має / дуже / багату / систему / словотвору / слів", "answer": "Українська мова має дуже багату систему словотвору слів"}, {"jumbled": "треба / знати / корені / слів / щоб / розуміти / нові / слова", "answer": "Треба знати корені слів щоб розуміти нові слова"}]`)}
 />
 
@@ -451,6 +477,7 @@ All from root **ход-** (walk), but prefix changes meaning completely!
 
 <Cloze
   title="Complete the Words"
+  isUkrainian={false}
   passage={`Він [___:1] до класу.
 Вона [___:2] з кімнати.
 [___:3] — це людина, яка читає.
@@ -468,7 +495,7 @@ All from root **ход-** (walk), but prefix changes meaning completely!
 
 ### Find Word Parts
 
-<HighlightMorphemes>
+<HighlightMorphemes isUkrainian={false}>
   <HighlightMorphemesActivity
   instruction={`Click on all words with marked word parts.`}
     text={`Він прийшов до школи. Потім вийшов з неї.
@@ -493,6 +520,7 @@ All from root **ход-** (walk), but prefix changes meaning completely!
 
 <Translate
   title="English to Ukrainian"
+  isUkrainian={false}
   questions={JSON.parse(`[{"source": "Entrance", "options": [{"text": "вхід", "correct": true}, {"text": "вихід", "correct": false}]}, {"source": "Exit", "options": [{"text": "вихід", "correct": true}, {"text": "вхід", "correct": false}]}, {"source": "Reading", "options": [{"text": "читання", "correct": true}, {"text": "читач", "correct": false}]}, {"source": "Reader", "options": [{"text": "читач", "correct": true}, {"text": "читання", "correct": false}]}, {"source": "Importance", "options": [{"text": "важливість", "correct": true}, {"text": "важливий", "correct": false}]}, {"source": "Musical", "options": [{"text": "музичний", "correct": true}, {"text": "музика", "correct": false}]}, {"source": "Ukrainian", "options": [{"text": "український", "correct": true}, {"text": "Україна", "correct": false}]}, {"source": "Writer", "options": [{"text": "письменник", "correct": true}, {"text": "писання", "correct": false}]}, {"source": "To arrive", "options": [{"text": "прийти", "correct": true}, {"text": "вийти", "correct": false}]}, {"source": "To exit", "options": [{"text": "вийти", "correct": true}, {"text": "прийти", "correct": false}]}, {"source": "To rewrite", "options": [{"text": "переписати", "correct": true}, {"text": "написати", "correct": false}]}, {"source": "Crossing", "options": [{"text": "перехід", "correct": true}, {"text": "вихід", "correct": false}]}]`)}
 />
 
@@ -533,20 +561,6 @@ All from root **ход-** (walk), but prefix changes meaning completely!
 | учитель | uˈt͡ʃɪtelʲ | teacher | noun | ч |  |
 | європейський | jeu̯roˈpɛjsʲkɪj | European | adj | ч |  |
 | інсайт | inˈsɑjt | insight | noun | ч |  |
-
-## 📋 Summary
-
-| Skill | Key Pattern | Example |
-|-------|-------------|---------|
-| Prefixes | Change verb meaning | при-/ви-/пере- + йти |
-| Noun Suffixes | -ння, -ість, -ач | читання, важливість, читач |
-| Adj Suffixes | -ний, -овий, -ський | музичний, український |
-| Root Families | Core meaning shared | ход-, пис-, бач- |
-
-> 💡 **Лінгвістичний Інсайт**
->
-> Якщо ви знаєте корінь, ви можете зрозуміти багато споріднених слів.
-> *If you know the root, you can understand many related words.*
 
 > [!resources] 🔗 External Resources
 >

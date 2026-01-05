@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Warm-up
@@ -299,6 +301,18 @@ If yes, welcome to B1!
 :::
 
 
+## 📋 Summary
+
+You have officially completed A2!
+You can:
+- Read texts about everyday life.
+- Understand conversations about plans and biography.
+- Write simple emails and stories.
+- Use basic grammar correctly.
+
+You are ready for **Level B1**.
+Success! (*Успіхів!*)
+
 
 
 ## 🎯 Activities
@@ -309,6 +323,8 @@ If yes, welcome to B1!
 <Quiz
 
   title="Reading Comprehension (Text 1)"
+
+  isUkrainian={false}
 
   questions={JSON.parse(`[{"question": "Де саме географічно знаходяться гори Карпати на території сучасної України?", "options": [{"text": "На заході країни", "correct": true}, {"text": "На півдні країни", "correct": false}, {"text": "На сході країни", "correct": false}, {"text": "На півночі країни", "correct": false}]}, {"question": "Скільки приблизно років місту Києву згідно з інформацією у тексті?", "options": [{"text": "Понад 1500 років", "correct": true}, {"text": "Рівно 100 років", "correct": false}, {"text": "Майже 500 років", "correct": false}, {"text": "Лише 50 років", "correct": false}]}, {"question": "Яка саме велика річка ділить місто Київ на дві рівні частини?", "options": [{"text": "Річка Дніпро", "correct": true}, {"text": "Річка Дунай", "correct": false}, {"text": "Річка Темза", "correct": false}, {"text": "Річка Тиса", "correct": false}]}, {"question": "Що зазвичай роблять люди на березі Чорного моря влітку?", "options": [{"text": "Відпочивають і плавають", "correct": true}, {"text": "Багато працюють", "correct": false}, {"text": "Цілий день сплять", "correct": false}, {"text": "Катаються на лижах", "correct": false}]}, {"question": "Які саме дві українські страви були названі нашими кулінарними символами?", "options": [{"text": "Борщ і вареники", "correct": true}, {"text": "Піца і паста", "correct": false}, {"text": "Суші і роли", "correct": false}, {"text": "Гамбургер і картопля", "correct": false}]}, {"question": "Чого найбільше хочуть українці для своєї рідної країни прямо зараз?", "options": [{"text": "Жити в мирі", "correct": true}, {"text": "Жити на Марсі", "correct": false}, {"text": "Багато спати", "correct": false}, {"text": "Купити машину", "correct": false}]}, {"question": "Як офіційно називається найвища гора на всій нинішній території України?", "options": [{"text": "Гора Говерла", "correct": true}, {"text": "Гора Еверест", "correct": false}, {"text": "Гора Монблан", "correct": false}, {"text": "Гора Кіліманджаро", "correct": false}]}, {"question": "Де українці найчастіше відпочивають під час своєї щорічної літньої відпустки?", "options": [{"text": "На Чорному морі", "correct": true}, {"text": "В Антарктиді", "correct": false}, {"text": "В бібліотеці", "correct": false}, {"text": "В офісі", "correct": false}]}]`)}
 
@@ -321,6 +337,8 @@ If yes, welcome to B1!
 
   title="Reading Comprehension (Text 2 & 3)"
 
+  isUkrainian={false}
+
   questions={JSON.parse(`[{"question": "В якому саме великому українському місті зараз живе студентка Оксана?", "options": [{"text": "В місті Одеса", "correct": true}, {"text": "В місті Київ", "correct": false}, {"text": "В місті Львів", "correct": false}, {"text": "В місті Харків", "correct": false}]}, {"question": "Ким саме планує успішно працювати Оксана після закінчення свого університету?", "options": [{"text": "Лікарем", "correct": true}, {"text": "Вчителем", "correct": false}, {"text": "Інженером", "correct": false}, {"text": "Програмістом", "correct": false}]}, {"question": "Що саме робить Оксана кожного ранку для отримання бадьорої енергії?", "options": [{"text": "Бігає біля моря", "correct": true}, {"text": "Довго спить", "correct": false}, {"text": "Багато їсть", "correct": false}, {"text": "Дивиться телевізор", "correct": false}]}, {"question": "В яке саме велике місто світу Оксана дуже мріє поїхати?", "options": [{"text": "В Лондон", "correct": true}, {"text": "В Париж", "correct": false}, {"text": "В Нью-Йорк", "correct": false}, {"text": "В Токіо", "correct": false}]}, {"question": "Чому саме Оксана завжди буде з великим задоволенням повертатися в Одесу?", "options": [{"text": "Це її рідне місто", "correct": true}, {"text": "Вона любить піцу", "correct": false}, {"text": "Там завжди тепло", "correct": false}, {"text": "Там дешево", "correct": false}]}, {"question": "Куди саме поїхав Микола з найкращими друзями під час літньої відпустки?", "options": [{"text": "В гори Карпати", "correct": true}, {"text": "На Чорне море", "correct": false}, {"text": "В маленьке село", "correct": false}, {"text": "В іншу країну", "correct": false}]}, {"question": "Що саме робив Микола пізно увечері біля теплого вогню з друзями?", "options": [{"text": "Грав на гітарі", "correct": true}, {"text": "Міцно спав", "correct": false}, {"text": "Багато працював", "correct": false}, {"text": "Читав книгу", "correct": false}]}, {"question": "Що саме їли Микола і його близькі друзі в горах біля вогню?", "options": [{"text": "Туристичну кашу", "correct": true}, {"text": "Японські суші", "correct": false}, {"text": "Італійську піцу", "correct": false}, {"text": "Французький суп", "correct": false}]}]`)}
 
 />
@@ -329,13 +347,15 @@ If yes, welcome to B1!
 
 <TrueFalse
   title="Listening Check"
-  items={JSON.parse(`[{"statement": "Марк приїхав у Львів саме у відпустку, щоб трохи відпочити.", "isTrue": false, "explanation": "Business trip (*відрядження*). Mark is working, not on holiday."}, {"statement": "Марк зараз відкриває свій власний новий офіс у місті Львові.", "isTrue": true, "explanation": "Yes, he mentions opening an office there."}, {"statement": "Аліна сказала Марку, що вона дуже скоро виходить заміж.", "isTrue": true, "explanation": "Yes, she is getting married to Igor."}, {"statement": "Ігор був раніше суворим босом Марка на їхній попередній роботі.", "isTrue": false, "explanation": "Schoolmate. They studied together at school (*вчилися в школі*)."}, {"statement": "Весілля Аліни та Ігоря заплановане саме на теплий місяць червень.", "isTrue": true, "explanation": "Yes, \\\"у червні\\\". June is the wedding month."}, {"statement": "Марк сказав, що він точно не зможе прийти на весілля.", "isTrue": false, "explanation": "He said he will come (*обов'язково прийду*)."}, {"statement": "Марк тепер має свою власну успішну ІТ-компанію в Україні.", "isTrue": true, "explanation": "Yes, he has his own company now."}, {"statement": "Аліна та Ігор вперше зустрілися, коли вчилися разом в університеті.", "isTrue": false, "explanation": "At school (*вчилися в школі*). They are childhood acquaintances."}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Марк приїхав у Львів саме у відпустку, щоб трохи відпочити.", "isTrue": false, "explanation": "Business trip (*відрядження*). Mark is working, not on holiday."}, {"statement": "Марк зараз відкриває свій власний новий офіс у місті Львові.", "isTrue": true, "explanation": "Yes, he mentions opening an office there."}, {"statement": "Аліна сказала Марку, що вона дуже скоро виходить заміж.", "isTrue": true, "explanation": "Yes, she is getting married to Igor."}, {"statement": "Ігор був раніше суворим босом Марка на їхній попередній роботі.", "isTrue": false, "explanation": "Schoolmate. They studied together at school (*вчилися в школі*)."}, {"statement": "Весілля Аліни та Ігоря заплановане саме на теплий місяць червень.", "isTrue": true, "explanation": "Yes, \\\\\\"у червні\\\\\\". June is the wedding month."}, {"statement": "Марк сказав, що він точно не зможе прийти на весілля.", "isTrue": false, "explanation": "He said he will come (*обов'язково прийду*)."}, {"statement": "Марк тепер має свою власну успішну ІТ-компанію в Україні.", "isTrue": true, "explanation": "Yes, he has his own company now."}, {"statement": "Аліна та Ігор вперше зустрілися, коли вчилися разом в університеті.", "isTrue": false, "explanation": "At school (*вчилися в школі*). They are childhood acquaintances."}]`)}
 />
 
 ### Grammar Final Test
 
 <Cloze
   title="Grammar Final Test"
+  isUkrainian={false}
   passage={`Я зараз живу в [___:1]_. (Ukraine) Я вранці ніколи не п'ю [___:2]_. (coffee) Я зараз йду в [___:3]_. (shop)
 
 Я часто розмовляю з [___:4]_. (friend) Мені терміново потрібна [___:5]_. (help) Дай мені будь ласка [___:6]_. (pen)
@@ -350,6 +370,7 @@ If yes, welcome to B1!
 
 <GroupSort
   title="Skill Sort"
+  isUkrainian={false}
   groups={JSON.parse(`{"Groups": ["Writing", "Reading", "Listening", "Speaking"], "Items": ["писати листа: Writing", "читати книгу: Reading", "слухати новини: Listening", "говорити з другом: Speaking", "заповнювати анкету: Writing", "розуміти текст: Reading", "дивитися фільм: Listening", "розповідати історію: Speaking", "питати дорогу: Speaking", "чути музику: Listening", "бачити рекламу: Reading", "надсилати смс: Writing"]}`)}
 />
 
@@ -357,6 +378,7 @@ If yes, welcome to B1!
 
 <MatchUp
   title="Definitions"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- Столиця", "right": "Capital city"}, {"left": "- Мрія", "right": "Dream"}, {"left": "- Майбутнє", "right": "Future"}, {"left": "- Свобода", "right": "Freedom"}, {"left": "- Відрядження", "right": "Business trip"}, {"left": "- Весілля", "right": "Wedding"}, {"left": "- Рідне місто", "right": "Native city"}, {"left": "- Південь", "right": "South"}, {"left": "- Захід", "right": "West"}, {"left": "- Берег", "right": "Bank/Shore"}, {"left": "- Пам'ятати", "right": "To remember"}, {"left": "- Розуміти", "right": "To understand"}]`)}
 />
 
@@ -364,12 +386,13 @@ If yes, welcome to B1!
 
 <Unjumble
   title="Final Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "Я / ніколи / в житті / не / забуду / цей / чудовий / день", "answer": "Я ніколи в житті не забуду цей чудовий день"}, {"jumbled": "Ми / дуже / хочемо / жити / у / вільній / та / красивій / країні", "answer": "Ми дуже хочемо жити у вільній та красивій країні"}, {"jumbled": "Ти / любиш / читати / цікаві / українські / історичні / книги", "answer": "Ти любиш читати цікаві українські історичні книги"}, {"jumbled": "Вчора / ввечері / я / був / на / чудовому / рок / концерті", "answer": "Вчора ввечері я був на чудовому рок концерті"}, {"jumbled": "Завтра / зранку / ми / поїдемо / відпочивати / на / дачу", "answer": "Завтра зранку ми поїдемо відпочивати на дачу"}, {"jumbled": "Ця / молода / дівчина / дуже / гарно / і / голосно / співає", "answer": "Ця молода дівчина дуже гарно і голосно співає"}, {"jumbled": "Я / зараз / шукаю / нову / цікаву / роботу / в / офісі", "answer": "Я зараз шукаю нову цікаву роботу в офісі"}, {"jumbled": "Де / ти / купив / ці / нові / білі / кросівки", "answer": "Де ти купив ці нові білі кросівки"}, {"jumbled": "Мені / треба / більше / практикувати / українську / мову / з / друзями", "answer": "Мені треба більше практикувати українську мову з друзями"}, {"jumbled": "У / нас / є / великі / плани / на / наступний / рік", "answer": "У нас є великі плани на наступний рік"}, {"jumbled": "Наше / життя / — / це / завжди / найцікавіша / та / найдовша / у / світі / подорож", "answer": "Наше життя це завжди найцікавіша та найдовша у світі подорож"}, {"jumbled": "На / мою / власну / думку / все / обов'язково / буде / дуже / добре / вже / скоро", "answer": "На мою власну думку все обов'язково буде дуже добре вже скоро"}]`)}
 />
 
 ### Final Check
 
-<MarkTheWords>
+<MarkTheWords isUkrainian={false}>
   <MarkTheWordsActivity
     instruction={`Mark the correct words.`}
     text={`Україна — це країна. Київ — це столиця. Дніпро — це річка. Люди люблять свободу. Студент читає книгу. Лікар лікує хворих. Мама готує обід. Сонце світить. Дощ іде.`}
@@ -381,7 +404,8 @@ If yes, welcome to B1!
 
 <Select
   title="Fluency Test"
-  questions={JSON.parse(`[{"question": "Can you confidently introduce yourself in Ukrainian to a stranger?", "options": [{"text": "Так, я можу.", "correct": true}, {"text": "Ні, я не знаю.", "correct": false}, {"text": "Трішки.", "correct": false}, {"text": "Не хочу.", "correct": false}]}, {"question": "Can you order food in a restaurant without using English?", "options": [{"text": "Так, я голодний і можу.", "correct": true}, {"text": "Я не їм.", "correct": false}, {"text": "Тільки воду.", "correct": false}, {"text": "Ні, це важко.", "correct": false}]}, {"question": "Can you buy a train ticket at the station by yourself?", "options": [{"text": "Так, без проблем.", "correct": true}, {"text": "Ні, не можу.", "correct": false}, {"text": "Я ходжу пішки.", "correct": false}, {"text": "Можливо.", "correct": false}]}, {"question": "Can you describe your pain symptoms to a doctor?", "options": [{"text": "Так, у мене болить...", "correct": true}, {"text": "Я здоровий.", "correct": false}, {"text": "Лікар не знає.", "correct": false}, {"text": "Ні.", "correct": false}]}, {"question": "Can you talk about your family members and their professions?", "options": [{"text": "Так, у мене є мама...", "correct": true}, {"text": "Хто це?", "correct": false}, {"text": "Я один.", "correct": false}, {"text": "Ні.", "correct": false}]}, {"question": "Can you understand street signs and directions in the city?", "options": [{"text": "Так, я читаю.", "correct": true}, {"text": "Ні.", "correct": false}, {"text": "Я гублюся.", "correct": false}, {"text": "Не бачу.", "correct": false}]}, {"question": "What is the correct English translation for \\\"Річка\\\"?", "options": [{"text": "River", "correct": true}, {"text": "Lake", "correct": false}, {"text": "Ocean", "correct": false}, {"text": "Pool", "correct": false}]}, {"question": "What is the correct English translation for \\\"Мрія\\\"?", "options": [{"text": "Dream", "correct": true}, {"text": "Nightmare", "correct": false}, {"text": "Plan", "correct": false}, {"text": "Sleep", "correct": false}]}, {"question": "What is the correct English translation for \\\"Свобода\\\"?", "options": [{"text": "Freedom", "correct": true}, {"text": "Prison", "correct": false}, {"text": "Wall", "correct": false}, {"text": "Law", "correct": false}]}, {"question": "What is the correct English translation for \\\"Майбутнє\\\"?", "options": [{"text": "Future", "correct": true}, {"text": "Past", "correct": false}, {"text": "Present", "correct": false}, {"text": "Time", "correct": false}]}, {"question": "What is the correct English translation for \\\"Мир\\\"?", "options": [{"text": "Peace", "correct": true}, {"text": "War", "correct": false}, {"text": "Fight", "correct": false}, {"text": "Quiet", "correct": false}]}, {"question": "Are you ready to move to the next level B1?", "options": [{"text": "Так, я готовий!", "correct": true}, {"text": "Ні, ще рано...", "correct": false}, {"text": "Я не знаю.", "correct": false}, {"text": "Можливо пізніше.", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Can you confidently introduce yourself in Ukrainian to a stranger?", "options": [{"text": "Так, я можу.", "correct": true}, {"text": "Ні, я не знаю.", "correct": false}, {"text": "Трішки.", "correct": false}, {"text": "Не хочу.", "correct": false}]}, {"question": "Can you order food in a restaurant without using English?", "options": [{"text": "Так, я голодний і можу.", "correct": true}, {"text": "Я не їм.", "correct": false}, {"text": "Тільки воду.", "correct": false}, {"text": "Ні, це важко.", "correct": false}]}, {"question": "Can you buy a train ticket at the station by yourself?", "options": [{"text": "Так, без проблем.", "correct": true}, {"text": "Ні, не можу.", "correct": false}, {"text": "Я ходжу пішки.", "correct": false}, {"text": "Можливо.", "correct": false}]}, {"question": "Can you describe your pain symptoms to a doctor?", "options": [{"text": "Так, у мене болить...", "correct": true}, {"text": "Я здоровий.", "correct": false}, {"text": "Лікар не знає.", "correct": false}, {"text": "Ні.", "correct": false}]}, {"question": "Can you talk about your family members and their professions?", "options": [{"text": "Так, у мене є мама...", "correct": true}, {"text": "Хто це?", "correct": false}, {"text": "Я один.", "correct": false}, {"text": "Ні.", "correct": false}]}, {"question": "Can you understand street signs and directions in the city?", "options": [{"text": "Так, я читаю.", "correct": true}, {"text": "Ні.", "correct": false}, {"text": "Я гублюся.", "correct": false}, {"text": "Не бачу.", "correct": false}]}, {"question": "What is the correct English translation for \\\\\\"Річка\\\\\\"?", "options": [{"text": "River", "correct": true}, {"text": "Lake", "correct": false}, {"text": "Ocean", "correct": false}, {"text": "Pool", "correct": false}]}, {"question": "What is the correct English translation for \\\\\\"Мрія\\\\\\"?", "options": [{"text": "Dream", "correct": true}, {"text": "Nightmare", "correct": false}, {"text": "Plan", "correct": false}, {"text": "Sleep", "correct": false}]}, {"question": "What is the correct English translation for \\\\\\"Свобода\\\\\\"?", "options": [{"text": "Freedom", "correct": true}, {"text": "Prison", "correct": false}, {"text": "Wall", "correct": false}, {"text": "Law", "correct": false}]}, {"question": "What is the correct English translation for \\\\\\"Майбутнє\\\\\\"?", "options": [{"text": "Future", "correct": true}, {"text": "Past", "correct": false}, {"text": "Present", "correct": false}, {"text": "Time", "correct": false}]}, {"question": "What is the correct English translation for \\\\\\"Мир\\\\\\"?", "options": [{"text": "Peace", "correct": true}, {"text": "War", "correct": false}, {"text": "Fight", "correct": false}, {"text": "Quiet", "correct": false}]}, {"question": "Are you ready to move to the next level B1?", "options": [{"text": "Так, я готовий!", "correct": true}, {"text": "Ні, ще рано...", "correct": false}, {"text": "Я не знаю.", "correct": false}, {"text": "Можливо пізніше.", "correct": false}]}]`)}
 />
 
 ## 📚 Vocabulary
@@ -434,18 +458,6 @@ If yes, welcome to B1!
 | церков | /t͡sɛrˈkɔu̯/ | church (gen pl) | noun | ж |  |
 | ігоря | /ˈiɦorʲɐ/ | Ihor (gen) | name | ч |  |
 | італія | /iˈtɑlʲijɐ/ | Italy | name | ж |  |
-
-## 📋 Summary
-
-You have officially completed A2!
-You can:
-- Read texts about everyday life.
-- Understand conversations about plans and biography.
-- Write simple emails and stories.
-- Use basic grammar correctly.
-
-You are ready for **Level B1**.
-Success! (*Успіхів!*)
 
 > [!resources] 🔗 External Resources
 >

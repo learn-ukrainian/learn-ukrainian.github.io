@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 ## Warm-up
 
@@ -203,111 +205,6 @@ When you encounter a new verb, follow this decision tree:
 
 ---
 
-
-
-## 🎯 Activities
-
-### Aspect Pairs
-
-<MatchUp
-  title="Aspect Pairs"
-  pairs={JSON.parse(`[{"left": "- читати", "right": "прочитати"}, {"left": "- писати", "right": "написати"}, {"left": "- робити", "right": "зробити"}, {"left": "- їсти", "right": "з'їсти"}, {"left": "- бачити", "right": "побачити"}, {"left": "- чути", "right": "почути"}, {"left": "- давати", "right": "дати"}, {"left": "- вставати", "right": "встати"}, {"left": "- відпочивати", "right": "відпочити"}, {"left": "- говорити", "right": "сказати"}, {"left": "- брати", "right": "взяти"}, {"left": "- показувати", "right": "показати"}]`)}
-/>
-
-### Identify the Pattern
-
-<FillIn
-  title="Identify the Pattern"
-  items={JSON.parse(`[{"sentence": "читати → прочитати: ___", "answer": "про- prefix", "options": ["про- prefix", "на- prefix", "-ва- removal", "suppletive"]}, {"sentence": "читати → ___", "answer": "прочитати", "options": ["прочитати", "почитати", "зачитати"]}, {"sentence": "писати → ___", "answer": "написати", "options": ["написати", "пописати", "виписати"]}, {"sentence": "писати → написати: ___", "answer": "на- prefix", "options": ["про- prefix", "на- prefix", "-ва- removal", "suppletive"]}, {"sentence": "давати → дати: ___", "answer": "-ва- removal", "options": ["про- prefix", "з- prefix", "-ва- removal", "suppletive"]}, {"sentence": "говорити → сказати: ___", "answer": "suppletive", "options": ["по- prefix", "с- prefix", "-ва- removal", "suppletive"]}, {"sentence": "робити → зробити: ___", "answer": "з- prefix", "options": ["про- prefix", "на- prefix", "з- prefix", "suppletive"]}, {"sentence": "бачити → побачити: ___", "answer": "по- prefix", "options": ["про- prefix", "на- prefix", "по- prefix", "suppletive"]}, {"sentence": "вчити → вивчити: ___", "answer": "ви- prefix", "options": ["про- prefix", "ви- prefix", "-ва- removal", "suppletive"]}, {"sentence": "брати → взяти: ___", "answer": "suppletive", "options": ["в- prefix", "ви- prefix", "-ва- removal", "suppletive"]}, {"sentence": "вставати → встати: ___", "answer": "-ва- removal", "options": ["про- prefix", "з- prefix", "-ва- removal", "suppletive"]}, {"sentence": "їсти → з'їсти: ___", "answer": "з- prefix", "options": ["про- prefix", "на- prefix", "з- prefix", "suppletive"]}, {"sentence": "показувати → показати: ___", "answer": "-ува- removal", "options": ["по- prefix", "на- prefix", "-ува- removal", "suppletive"]}, {"sentence": "чути → почути: ___", "answer": "по- prefix", "options": ["про- prefix", "на- prefix", "по- prefix", "suppletive"]}]`)}
-/>
-
-### Aspect Formation
-
-<Quiz
-  title="Aspect Formation"
-  questions={JSON.parse(`[{"question": "Which common prefix is most frequently used to form the perfective aspect of the verb \\\"читати\\\"?", "options": [{"text": "про- (прочитати)", "correct": true}, {"text": "на- (начитати)", "correct": false}, {"text": "з- (зчитати)", "correct": false}, {"text": "по- (почитати)", "correct": false}]}, {"question": "Which common prefix is most frequently used to form the perfective aspect of the verb \\\"писати\\\"?", "options": [{"text": "на- (написати)", "correct": true}, {"text": "про- (прописати)", "correct": false}, {"text": "з- (списати)", "correct": false}, {"text": "по- (пописати)", "correct": false}]}, {"question": "What suffix is typically removed or changed to turn the imperfective verb \\\"відкривати\\\" into its perfective form?", "options": [{"text": "-ва- (відкрити)", "correct": true}, {"text": "-ну- (відкринути)", "correct": false}, {"text": "-и- (відкрити)", "correct": false}, {"text": "-а- (відкривати)", "correct": false}]}, {"question": "Which of the following examples shows the \\\"-ну-\\\" suffix being used to indicate a single, quick action?", "options": [{"text": "гукнути (from гукати)", "correct": true}, {"text": "читати (from прочитати)", "correct": false}, {"text": "робити (from зробити)", "correct": false}, {"text": "писати (from написати)", "correct": false}]}, {"question": "What specific change occurs to the root vowel when transforming the imperfective verb \\\"допомагати\\\" into its perfective form?", "options": [{"text": "а → о (допомогти)", "correct": true}, {"text": "е → і (допомогти)", "correct": false}, {"text": "и → і (допомогти)", "correct": false}, {"text": "о → а (допомогти)", "correct": false}]}, {"question": "What specific vowel change is observed when the imperfective verb \\\"замітати\\\" is transformed into the perfective \\\"замести\\\"?", "options": [{"text": "і → е (замести)", "correct": true}, {"text": "а → о (замести)", "correct": false}, {"text": "е → і (замести)", "correct": false}, {"text": "о → а (замести)", "correct": false}]}, {"question": "Which of the following pairs is a classic example of a \\\"suppletive pair\\\" used to express aspect in Ukrainian?", "options": [{"text": "говорити / сказати", "correct": true}, {"text": "читати / прочитати", "correct": false}, {"text": "писати / написати", "correct": false}, {"text": "робити / зробити", "correct": false}]}, {"question": "What is the perfective counterpart of the irregular aspect pair involving the common Ukrainian verb \\\"брати\\\"?", "options": [{"text": "взяти", "correct": true}, {"text": "побрати", "correct": false}, {"text": "зібрати", "correct": false}, {"text": "заберу", "correct": false}]}, {"question": "In the verb pair \\\"купувати\\\" and \\\"купити,\\\" what morphological change is primarily responsible for the aspectual difference?", "options": [{"text": "Suffix change (-ува- vs -и-)", "correct": true}, {"text": "Prefix addition", "correct": false}, {"text": "Vowel change in root", "correct": false}, {"text": "Consonant change in root", "correct": false}]}, {"question": "What is the correct perfective form of the Ukrainian verb \\\"бачити,\\\" meaning \\\"to see\\\" or \\\"to catch sight of\\\"?", "options": [{"text": "побачити", "correct": true}, {"text": "бачити", "correct": false}, {"text": "перебачити", "correct": false}, {"text": "добачити", "correct": false}]}, {"question": "What is the correct imperfective form that corresponds to the perfective Ukrainian verb \\\"дати,\\\" meaning \\\"to give\\\"?", "options": [{"text": "давати", "correct": true}, {"text": "додав", "correct": false}, {"text": "даяти", "correct": false}, {"text": "наддати", "correct": false}]}, {"question": "Which category of aspectual transformation does the verb pair \\\"стрибати\\\" and \\\"стрибнути\\\" belong to?", "options": [{"text": "Aspectual Suffixes (-ну-)", "correct": true}, {"text": "Prefixation", "correct": false}, {"text": "Root vowel change", "correct": false}, {"text": "Suppletive pairs", "correct": false}]}]`)}
-/>
-
-### Formation Rules
-
-<TrueFalse
-  title="Formation Rules"
-  items={JSON.parse(`[{"statement": "Most perfective verbs are formed with prefixes.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Verbs with -ва-/-ува- are usually imperfective.", "isTrue": true, "explanation": "Yes!"}, {"statement": "All aspect pairs use the same root.", "isTrue": false, "explanation": "Suppletive pairs like говорити/сказати use different roots."}, {"statement": "\\\"про-\\\" often means through or completion.", "isTrue": true, "explanation": "Correct! Прочитати = read through."}, {"statement": "Suppletive pairs must be memorized.", "isTrue": true, "explanation": "Yes, no pattern to predict them."}, {"statement": "\\\"сказати\\\" is imperfective.", "isTrue": false, "explanation": "\\\"Сказати\\\" is perfective. \\\"Говорити\\\" is imperfective."}, {"statement": "\\\"Давати → дати\\\" shows -ва- removal.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Prefix changes can change verb meaning.", "isTrue": true, "explanation": "Yes! Писати, написати, переписати, підписати all differ!"}, {"statement": "\\\"Вставати\\\" is perfective.", "isTrue": false, "explanation": "\\\"Вставати\\\" has -ва-, so it's imperfective."}, {"statement": "\\\"По-\\\" can mark moment of perception.", "isTrue": true, "explanation": "Yes! Побачити = to catch sight of."}, {"statement": "Prefixed verbs can have their own imperfective forms.", "isTrue": true, "explanation": "Correct! Переписати → переписувати."}, {"statement": "All prefixes perfectivize without changing meaning.", "isTrue": false, "explanation": "Different prefixes add different meanings!"}]`)}
-/>
-
-### Formation Patterns
-
-<GroupSort
-  title="Formation Patterns"
-  groups={JSON.parse(`{"Prefixation": ["читати / прочитати", "писати / написати", "бачити / побачити", "робити / зробити"], "Suffix Changes": ["відкривати / відкрити", "купувати / купити", "давати / дати", "розповідати / розповісти"], "Root Changes": ["допомагати / допомогти", "замітати / замести", "лягати / лягти"], "Suppletive / Semelfactive": ["говорити / сказати", "брати / взяти", "гукати / гукнути", "стрибати / стрибнути"]}`)}
-/>
-
-### Aspect Pattern Sentences
-
-<Unjumble
-  title="Aspect Pattern Sentences"
-  items={JSON.parse(`[{"jumbled": "я / обов'язково / прочитаю / цю / нову / цікаву / книгу / завтра / ввечері", "answer": "Я прочитаю цю нову цікаву книгу завтра ввечері"}, {"jumbled": "вона / написала / дуже / великого / листа / до / своєї / мами / вчора", "answer": "Вона написала дуже великого листа до своєї мами вчора"}, {"jumbled": "ми / нарешті / зробили / все / це / складне / домашнє / завдання / сьогодні", "answer": "Ми зробили все складне домашнє завдання сьогодні"}, {"jumbled": "він / сказав / мені / всю / щиру / правду / про / цю / ситуацію", "answer": "Він сказав мені всю щиру правду про цю ситуацію"}, {"jumbled": "я / вже / бачив / це / синє / прекрасне / море / у / своєму / житті", "answer": "Я вже бачив це синє прекрасне море у своєму житті"}, {"jumbled": "вона / взяла / свою / нову / книгу / зі / столу / сьогодні / вранці", "answer": "Вона взяла свою нову книгу зі столу сьогодні вранці"}, {"jumbled": "ми / часто / бачили / його / у / цьому / великому / парку / влітку", "answer": "Ми часто бачили його у цьому великому парку влітку"}, {"jumbled": "він / швидко / відкрив / це / велике / вікно / у / своїй / кімнаті", "answer": "Він швидко відкрив це велике вікно у своїй кімнаті"}, {"jumbled": "я / вже / купив / ці / дуже / смачні / яблука / в / новому / магазині", "answer": "Я вже купив ці дуже смачні яблука в новому магазині"}, {"jumbled": "вона / завжди / говорить / тільки / українською / мовою / з / нами / вдома", "answer": "Вона завжди говорить тільки українською мовою з нами вдома"}, {"jumbled": "ми / нарешті / почули / цей / гарний / новий / український / голос / сьогодні", "answer": "Ми нарешті почули цей гарний новий український голос сьогодні"}, {"jumbled": "він / раптом / гукнув / свого / старого / друга / на / цій / вулиці", "answer": "Він раптом гукнув свого старого друга на цій вулиці"}]`)}
-/>
-
-### Find the Perfective
-
-<FillIn
-  title="Find the Perfective"
-  items={JSON.parse(`[{"sentence": "читати → ___", "answer": "прочитати", "options": ["читати", "прочитати", "начитати", "зачитати"]}, {"sentence": "писати → ___", "answer": "написати", "options": ["писати", "написати", "пописати", "списати"]}, {"sentence": "робити → ___", "answer": "зробити", "options": ["робити", "зробити", "проробити", "наробити"]}, {"sentence": "давати → ___", "answer": "дати", "options": ["давати", "дати", "подавати", "надавати"]}, {"sentence": "говорити → ___", "answer": "сказати", "options": ["говорити", "проговорити", "сказати", "заговорити"]}, {"sentence": "брати → ___", "answer": "взяти", "options": ["брати", "пробрати", "взяти", "забрати"]}]`)}
-/>
-
-### Identify Perfective Verbs
-
-<MarkTheWords>
-  <MarkTheWordsActivity
-    instruction={`Mark the correct words.`}
-    text={`Click on PERFECTIVE verbs only.
-Я прочитав книгу. Потім я написав рецензію. Він сказав правду. Вона довго говорила.
----
-Ми вивчили урок. Вона встала рано. Він давав книгу, а потім дав.
----
-Вони побачили море! Він почув шум. Я взяв книгу і пішов.`}
-    correctWords={JSON.parse(`["прочитав", "написав", "сказав", "вивчили", "встала", "дав", "побачили", "почув", "взяв", "пішов"]`)}
-  />
-</MarkTheWords>
-
-## 📚 Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| аспектний | ɐsˈpɛktnɪj | aspectual | adj | ч |  |
-| більшість | ˈbilʲʃisʲtʲ | majority | noun | ж |  |
-| -увати | uʋɐte | -uvaty (suffix) | suffix |  |  |
-| вивчення | ˈvɪu̯t͡ʃenʲːɐ | learning; study | noun | с |  |
-| встати | ˈvstɑte | to get up; to stand up | verb |  |  |
-| глибокий | hlɪˈbɔkɪj | deep | adj | ч |  |
-| дієслово | dijesˈlɔʋo | verb | noun | с |  |
-| з'їсти | ˈzjiste | to eat up (perf) | verb |  |  |
-| запас | zɐˈpɑs | reserve; supply | noun | ч |  |
-| сказати | skɐˈzɑte | to say (perf) | verb |  |  |
-| зламати | zlɐˈmɑte | to break (perf) | verb |  |  |
-| створити | stvoˈrɪte | to create (perf) | verb |  |  |
-| ламати | lɐˈmɑte | to break (imp) | verb |  |  |
-| морфологія | morfoˈlɔhʲijɐ | morphology | noun | ж |  |
-| намалювати | nɐmɐlʲuˈʋɑte | to draw (perf) | verb |  |  |
-| пара | ˈpɑrɐ | pair | noun | ж |  |
-| передбачати | peredbɐˈt͡ʃɑte | to foresee; to predict | verb |  |  |
-| переписати | perepɪˈsɑte | to rewrite (perf) | verb |  |  |
-| переписувати | pereˈpɪsuʋɐte | to rewrite (imp) | verb |  |  |
-| писання | pɪˈsɑnʲːɐ | writing | noun | с |  |
-| полюбити | polʲuˈbɪte | to fall in love (perf) | verb |  |  |
-| префікс | ˈprɛfiks | prefix | noun | ч |  |
-| пролежати | proleˈʒɑte | to lie (for a while) | verb |  |  |
-| прослухати | proˈsluxɐte | to listen through/to | verb |  |  |
-| підписати | pidpɪˈsɑte | to sign (perf) | verb |  |  |
-| підписувати | pidˈpɪsuʋɐte | to sign (imp) | verb |  |  |
-| розпізнавати | rozpiznɐˈʋɑte | to recognize | verb |  |  |
-| системно | sɪsˈtɛmno | systematically | adv |  |  |
-| словниковий | slou̯nɪˈkɔʋɪj | lexical; dictionary | adj | ч |  |
-| творення | ˈtʋɔrenʲːɐ | formation; creation | noun | с |  |
-| хаотично | xɐoˈtɪt͡ʃno | chaotically | adv |  |  |
-| читання | t͡ʃɪˈtɑnʲːɐ | reading | noun | с |  |
-
 ## 📋 Summary
 
 ## What You Learned
@@ -369,6 +266,118 @@ Adding different prefixes to the same root creates different perfective verbs wi
 ## Need More Practice?
 
 ---
+
+
+
+## 🎯 Activities
+
+### Aspect Pairs
+
+<MatchUp
+  title="Aspect Pairs"
+  isUkrainian={false}
+  pairs={JSON.parse(`[{"left": "- читати", "right": "прочитати"}, {"left": "- писати", "right": "написати"}, {"left": "- робити", "right": "зробити"}, {"left": "- їсти", "right": "з'їсти"}, {"left": "- бачити", "right": "побачити"}, {"left": "- чути", "right": "почути"}, {"left": "- давати", "right": "дати"}, {"left": "- вставати", "right": "встати"}, {"left": "- відпочивати", "right": "відпочити"}, {"left": "- говорити", "right": "сказати"}, {"left": "- брати", "right": "взяти"}, {"left": "- показувати", "right": "показати"}]`)}
+/>
+
+### Identify the Pattern
+
+<FillIn
+  title="Identify the Pattern"
+  isUkrainian={false}
+  items={JSON.parse(`[{"sentence": "читати → прочитати: ___", "answer": "про- prefix", "options": ["про- prefix", "на- prefix", "-ва- removal", "suppletive"]}, {"sentence": "читати → ___", "answer": "прочитати", "options": ["прочитати", "почитати", "зачитати"]}, {"sentence": "писати → ___", "answer": "написати", "options": ["написати", "пописати", "виписати"]}, {"sentence": "писати → написати: ___", "answer": "на- prefix", "options": ["про- prefix", "на- prefix", "-ва- removal", "suppletive"]}, {"sentence": "давати → дати: ___", "answer": "-ва- removal", "options": ["про- prefix", "з- prefix", "-ва- removal", "suppletive"]}, {"sentence": "говорити → сказати: ___", "answer": "suppletive", "options": ["по- prefix", "с- prefix", "-ва- removal", "suppletive"]}, {"sentence": "робити → зробити: ___", "answer": "з- prefix", "options": ["про- prefix", "на- prefix", "з- prefix", "suppletive"]}, {"sentence": "бачити → побачити: ___", "answer": "по- prefix", "options": ["про- prefix", "на- prefix", "по- prefix", "suppletive"]}, {"sentence": "вчити → вивчити: ___", "answer": "ви- prefix", "options": ["про- prefix", "ви- prefix", "-ва- removal", "suppletive"]}, {"sentence": "брати → взяти: ___", "answer": "suppletive", "options": ["в- prefix", "ви- prefix", "-ва- removal", "suppletive"]}, {"sentence": "вставати → встати: ___", "answer": "-ва- removal", "options": ["про- prefix", "з- prefix", "-ва- removal", "suppletive"]}, {"sentence": "їсти → з'їсти: ___", "answer": "з- prefix", "options": ["про- prefix", "на- prefix", "з- prefix", "suppletive"]}, {"sentence": "показувати → показати: ___", "answer": "-ува- removal", "options": ["по- prefix", "на- prefix", "-ува- removal", "suppletive"]}, {"sentence": "чути → почути: ___", "answer": "по- prefix", "options": ["про- prefix", "на- prefix", "по- prefix", "suppletive"]}]`)}
+/>
+
+### Aspect Formation
+
+<Quiz
+  title="Aspect Formation"
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Which common prefix is most frequently used to form the perfective aspect of the verb \\\\\\"читати\\\\\\"?", "options": [{"text": "про- (прочитати)", "correct": true}, {"text": "на- (начитати)", "correct": false}, {"text": "з- (зчитати)", "correct": false}, {"text": "по- (почитати)", "correct": false}]}, {"question": "Which common prefix is most frequently used to form the perfective aspect of the verb \\\\\\"писати\\\\\\"?", "options": [{"text": "на- (написати)", "correct": true}, {"text": "про- (прописати)", "correct": false}, {"text": "з- (списати)", "correct": false}, {"text": "по- (пописати)", "correct": false}]}, {"question": "What suffix is typically removed or changed to turn the imperfective verb \\\\\\"відкривати\\\\\\" into its perfective form?", "options": [{"text": "-ва- (відкрити)", "correct": true}, {"text": "-ну- (відкринути)", "correct": false}, {"text": "-и- (відкрити)", "correct": false}, {"text": "-а- (відкривати)", "correct": false}]}, {"question": "Which of the following examples shows the \\\\\\"-ну-\\\\\\" suffix being used to indicate a single, quick action?", "options": [{"text": "гукнути (from гукати)", "correct": true}, {"text": "читати (from прочитати)", "correct": false}, {"text": "робити (from зробити)", "correct": false}, {"text": "писати (from написати)", "correct": false}]}, {"question": "What specific change occurs to the root vowel when transforming the imperfective verb \\\\\\"допомагати\\\\\\" into its perfective form?", "options": [{"text": "а → о (допомогти)", "correct": true}, {"text": "е → і (допомогти)", "correct": false}, {"text": "и → і (допомогти)", "correct": false}, {"text": "о → а (допомогти)", "correct": false}]}, {"question": "What specific vowel change is observed when the imperfective verb \\\\\\"замітати\\\\\\" is transformed into the perfective \\\\\\"замести\\\\\\"?", "options": [{"text": "і → е (замести)", "correct": true}, {"text": "а → о (замести)", "correct": false}, {"text": "е → і (замести)", "correct": false}, {"text": "о → а (замести)", "correct": false}]}, {"question": "Which of the following pairs is a classic example of a \\\\\\"suppletive pair\\\\\\" used to express aspect in Ukrainian?", "options": [{"text": "говорити / сказати", "correct": true}, {"text": "читати / прочитати", "correct": false}, {"text": "писати / написати", "correct": false}, {"text": "робити / зробити", "correct": false}]}, {"question": "What is the perfective counterpart of the irregular aspect pair involving the common Ukrainian verb \\\\\\"брати\\\\\\"?", "options": [{"text": "взяти", "correct": true}, {"text": "побрати", "correct": false}, {"text": "зібрати", "correct": false}, {"text": "заберу", "correct": false}]}, {"question": "In the verb pair \\\\\\"купувати\\\\\\" and \\\\\\"купити,\\\\\\" what morphological change is primarily responsible for the aspectual difference?", "options": [{"text": "Suffix change (-ува- vs -и-)", "correct": true}, {"text": "Prefix addition", "correct": false}, {"text": "Vowel change in root", "correct": false}, {"text": "Consonant change in root", "correct": false}]}, {"question": "What is the correct perfective form of the Ukrainian verb \\\\\\"бачити,\\\\\\" meaning \\\\\\"to see\\\\\\" or \\\\\\"to catch sight of\\\\\\"?", "options": [{"text": "побачити", "correct": true}, {"text": "бачити", "correct": false}, {"text": "перебачити", "correct": false}, {"text": "добачити", "correct": false}]}, {"question": "What is the correct imperfective form that corresponds to the perfective Ukrainian verb \\\\\\"дати,\\\\\\" meaning \\\\\\"to give\\\\\\"?", "options": [{"text": "давати", "correct": true}, {"text": "додав", "correct": false}, {"text": "даяти", "correct": false}, {"text": "наддати", "correct": false}]}, {"question": "Which category of aspectual transformation does the verb pair \\\\\\"стрибати\\\\\\" and \\\\\\"стрибнути\\\\\\" belong to?", "options": [{"text": "Aspectual Suffixes (-ну-)", "correct": true}, {"text": "Prefixation", "correct": false}, {"text": "Root vowel change", "correct": false}, {"text": "Suppletive pairs", "correct": false}]}]`)}
+/>
+
+### Formation Rules
+
+<TrueFalse
+  title="Formation Rules"
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Most perfective verbs are formed with prefixes.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Verbs with -ва-/-ува- are usually imperfective.", "isTrue": true, "explanation": "Yes!"}, {"statement": "All aspect pairs use the same root.", "isTrue": false, "explanation": "Suppletive pairs like говорити/сказати use different roots."}, {"statement": "\\\\\\"про-\\\\\\" often means through or completion.", "isTrue": true, "explanation": "Correct! Прочитати = read through."}, {"statement": "Suppletive pairs must be memorized.", "isTrue": true, "explanation": "Yes, no pattern to predict them."}, {"statement": "\\\\\\"сказати\\\\\\" is imperfective.", "isTrue": false, "explanation": "\\\\\\"Сказати\\\\\\" is perfective. \\\\\\"Говорити\\\\\\" is imperfective."}, {"statement": "\\\\\\"Давати → дати\\\\\\" shows -ва- removal.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Prefix changes can change verb meaning.", "isTrue": true, "explanation": "Yes! Писати, написати, переписати, підписати all differ!"}, {"statement": "\\\\\\"Вставати\\\\\\" is perfective.", "isTrue": false, "explanation": "\\\\\\"Вставати\\\\\\" has -ва-, so it's imperfective."}, {"statement": "\\\\\\"По-\\\\\\" can mark moment of perception.", "isTrue": true, "explanation": "Yes! Побачити = to catch sight of."}, {"statement": "Prefixed verbs can have their own imperfective forms.", "isTrue": true, "explanation": "Correct! Переписати → переписувати."}, {"statement": "All prefixes perfectivize without changing meaning.", "isTrue": false, "explanation": "Different prefixes add different meanings!"}]`)}
+/>
+
+### Formation Patterns
+
+<GroupSort
+  title="Formation Patterns"
+  isUkrainian={false}
+  groups={JSON.parse(`{"Prefixation": ["читати / прочитати", "писати / написати", "бачити / побачити", "робити / зробити"], "Suffix Changes": ["відкривати / відкрити", "купувати / купити", "давати / дати", "розповідати / розповісти"], "Root Changes": ["допомагати / допомогти", "замітати / замести", "лягати / лягти"], "Suppletive / Semelfactive": ["говорити / сказати", "брати / взяти", "гукати / гукнути", "стрибати / стрибнути"]}`)}
+/>
+
+### Aspect Pattern Sentences
+
+<Unjumble
+  title="Aspect Pattern Sentences"
+  isUkrainian={false}
+  items={JSON.parse(`[{"jumbled": "я / обов'язково / прочитаю / цю / нову / цікаву / книгу / завтра / ввечері", "answer": "Я прочитаю цю нову цікаву книгу завтра ввечері"}, {"jumbled": "вона / написала / дуже / великого / листа / до / своєї / мами / вчора", "answer": "Вона написала дуже великого листа до своєї мами вчора"}, {"jumbled": "ми / нарешті / зробили / все / це / складне / домашнє / завдання / сьогодні", "answer": "Ми зробили все складне домашнє завдання сьогодні"}, {"jumbled": "він / сказав / мені / всю / щиру / правду / про / цю / ситуацію", "answer": "Він сказав мені всю щиру правду про цю ситуацію"}, {"jumbled": "я / вже / бачив / це / синє / прекрасне / море / у / своєму / житті", "answer": "Я вже бачив це синє прекрасне море у своєму житті"}, {"jumbled": "вона / взяла / свою / нову / книгу / зі / столу / сьогодні / вранці", "answer": "Вона взяла свою нову книгу зі столу сьогодні вранці"}, {"jumbled": "ми / часто / бачили / його / у / цьому / великому / парку / влітку", "answer": "Ми часто бачили його у цьому великому парку влітку"}, {"jumbled": "він / швидко / відкрив / це / велике / вікно / у / своїй / кімнаті", "answer": "Він швидко відкрив це велике вікно у своїй кімнаті"}, {"jumbled": "я / вже / купив / ці / дуже / смачні / яблука / в / новому / магазині", "answer": "Я вже купив ці дуже смачні яблука в новому магазині"}, {"jumbled": "вона / завжди / говорить / тільки / українською / мовою / з / нами / вдома", "answer": "Вона завжди говорить тільки українською мовою з нами вдома"}, {"jumbled": "ми / нарешті / почули / цей / гарний / новий / український / голос / сьогодні", "answer": "Ми нарешті почули цей гарний новий український голос сьогодні"}, {"jumbled": "він / раптом / гукнув / свого / старого / друга / на / цій / вулиці", "answer": "Він раптом гукнув свого старого друга на цій вулиці"}]`)}
+/>
+
+### Find the Perfective
+
+<FillIn
+  title="Find the Perfective"
+  isUkrainian={false}
+  items={JSON.parse(`[{"sentence": "читати → ___", "answer": "прочитати", "options": ["читати", "прочитати", "начитати", "зачитати"]}, {"sentence": "писати → ___", "answer": "написати", "options": ["писати", "написати", "пописати", "списати"]}, {"sentence": "робити → ___", "answer": "зробити", "options": ["робити", "зробити", "проробити", "наробити"]}, {"sentence": "давати → ___", "answer": "дати", "options": ["давати", "дати", "подавати", "надавати"]}, {"sentence": "говорити → ___", "answer": "сказати", "options": ["говорити", "проговорити", "сказати", "заговорити"]}, {"sentence": "брати → ___", "answer": "взяти", "options": ["брати", "пробрати", "взяти", "забрати"]}]`)}
+/>
+
+### Identify Perfective Verbs
+
+<MarkTheWords isUkrainian={false}>
+  <MarkTheWordsActivity
+    instruction={`Mark the correct words.`}
+    text={`Click on PERFECTIVE verbs only.
+Я прочитав книгу. Потім я написав рецензію. Він сказав правду. Вона довго говорила.
+---
+Ми вивчили урок. Вона встала рано. Він давав книгу, а потім дав.
+---
+Вони побачили море! Він почув шум. Я взяв книгу і пішов.`}
+    correctWords={JSON.parse(`["прочитав", "написав", "сказав", "вивчили", "встала", "дав", "побачили", "почув", "взяв", "пішов"]`)}
+  />
+</MarkTheWords>
+
+## 📚 Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| аспектний | ɐsˈpɛktnɪj | aspectual | adj | ч |  |
+| більшість | ˈbilʲʃisʲtʲ | majority | noun | ж |  |
+| -увати | uʋɐte | -uvaty (suffix) | suffix |  |  |
+| вивчення | ˈvɪu̯t͡ʃenʲːɐ | learning; study | noun | с |  |
+| встати | ˈvstɑte | to get up; to stand up | verb |  |  |
+| глибокий | hlɪˈbɔkɪj | deep | adj | ч |  |
+| дієслово | dijesˈlɔʋo | verb | noun | с |  |
+| з'їсти | ˈzjiste | to eat up (perf) | verb |  |  |
+| запас | zɐˈpɑs | reserve; supply | noun | ч |  |
+| сказати | skɐˈzɑte | to say (perf) | verb |  |  |
+| зламати | zlɐˈmɑte | to break (perf) | verb |  |  |
+| створити | stvoˈrɪte | to create (perf) | verb |  |  |
+| ламати | lɐˈmɑte | to break (imp) | verb |  |  |
+| морфологія | morfoˈlɔhʲijɐ | morphology | noun | ж |  |
+| намалювати | nɐmɐlʲuˈʋɑte | to draw (perf) | verb |  |  |
+| пара | ˈpɑrɐ | pair | noun | ж |  |
+| передбачати | peredbɐˈt͡ʃɑte | to foresee; to predict | verb |  |  |
+| переписати | perepɪˈsɑte | to rewrite (perf) | verb |  |  |
+| переписувати | pereˈpɪsuʋɐte | to rewrite (imp) | verb |  |  |
+| писання | pɪˈsɑnʲːɐ | writing | noun | с |  |
+| полюбити | polʲuˈbɪte | to fall in love (perf) | verb |  |  |
+| префікс | ˈprɛfiks | prefix | noun | ч |  |
+| пролежати | proleˈʒɑte | to lie (for a while) | verb |  |  |
+| прослухати | proˈsluxɐte | to listen through/to | verb |  |  |
+| підписати | pidpɪˈsɑte | to sign (perf) | verb |  |  |
+| підписувати | pidˈpɪsuʋɐte | to sign (imp) | verb |  |  |
+| розпізнавати | rozpiznɐˈʋɑte | to recognize | verb |  |  |
+| системно | sɪsˈtɛmno | systematically | adv |  |  |
+| словниковий | slou̯nɪˈkɔʋɪj | lexical; dictionary | adj | ч |  |
+| творення | ˈtʋɔrenʲːɐ | formation; creation | noun | с |  |
+| хаотично | xɐoˈtɪt͡ʃno | chaotically | adv |  |  |
+| читання | t͡ʃɪˈtɑnʲːɐ | reading | noun | с |  |
 
 > [!resources] 🔗 External Resources
 >

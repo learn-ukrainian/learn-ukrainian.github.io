@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 ## Warm-up
 
@@ -251,6 +253,7 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 
 <MatchUp
   title="Time Connectors"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- Коли", "right": "When"}, {"left": "- Поки", "right": "While"}, {"left": "- Після того як", "right": "After"}, {"left": "- Перед тим як", "right": "Before"}, {"left": "- Як тільки", "right": "As soon as"}, {"left": "- Щойно", "right": "Just now/As soon as"}, {"left": "- Доки", "right": "While/Until"}, {"left": "- Перш ніж", "right": "Before (Literary)"}, {"left": "- Тим часом як", "right": "Meanwhile"}, {"left": "- Кожного разу коли", "right": "Every time when"}]`)}
 />
 
@@ -258,6 +261,7 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 
 <Cloze
   title="Select the Connector"
+  isUkrainian={false}
   passage={`Я подзвоню, [___:1] приїду. (Sequence) Ми говорили, [___:2] їли піцу. (Simultaneous) Я пішов спати [___:3] подивився фільм. (Sequence: after reading)
 
 Мий руки [___:4] їсти. (Before) [___:5] він зайшов, усі замовкли. (Instant) Я чекав, [___:6] вона не прийшла. (Until)
@@ -270,13 +274,15 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 
 <Quiz
   title="Time Logic"
-  questions={JSON.parse(`[{"question": "Слово \\\"поки\\\" зазвичай вимагає якого виду дієслова в українській мові для процесу?", "options": [{"text": "Imperfective (недоконаний вид для процесу)", "correct": true}, {"text": "Perfective (доконаний вид для результату)", "correct": false}, {"text": "Both equally (обидва однаково)", "correct": false}, {"text": "Neither (жоден з них)", "correct": false}]}, {"question": "Слово \\\"коли\\\" для послідовності подій зазвичай вимагає якого виду дієслова в українській?", "options": [{"text": "Perfective (доконаний вид для результату)", "correct": true}, {"text": "Imperfective (недоконаний вид для процесу)", "correct": false}, {"text": "Both equally (обидва однаково)", "correct": false}, {"text": "Neither (жоден з них)", "correct": false}]}, {"question": "Що означає конструкція \\\"після того як\\\" в українській мові для послідовності дій?", "options": [{"text": "One action strictly follows another (одна дія строго слідує за іншою)", "correct": true}, {"text": "Actions happen together (дії відбуваються разом)", "correct": false}, {"text": "Actions are unrelated (дії не пов'язані)", "correct": false}, {"text": "Actions happen before (дії відбуваються раніше)", "correct": false}]}, {"question": "Як правильно перекласти англійською \\\"Before I go\\\" українською мовою з правильною граматикою?", "options": [{"text": "Перед тим як я піду", "correct": true}, {"text": "Перед я піду", "correct": false}, {"text": "Перед піду", "correct": false}, {"text": "Тим як я піду", "correct": false}]}, {"question": "Що означає конструкція \\\"поки не\\\" в українській мові для часових відношень?", "options": [{"text": "Until (до того часу поки)", "correct": true}, {"text": "While (в той час як)", "correct": false}, {"text": "Because (тому що)", "correct": false}, {"text": "After (після того)", "correct": false}]}, {"question": "Чи потрібна кома перед словом \\\"коли\\\" в середині речення в українській мові?", "options": [{"text": "Yes always (так завжди)", "correct": true}, {"text": "No never (ні ніколи)", "correct": false}, {"text": "Sometimes (іноді)", "correct": false}, {"text": "Only in formal writing (тільки в офіційному письмі)", "correct": false}]}, {"question": "Що показує конструкція \\\"як тільки\\\" в українській мові для часових відношень?", "options": [{"text": "Instant reaction (миттєва реакція)", "correct": true}, {"text": "Long wait (довге очікування)", "correct": false}, {"text": "Parallel action (паралельна дія)", "correct": false}, {"text": "Repeated action (повторювана дія)", "correct": false}]}, {"question": "Синонімом якого виразу є \\\"перш ніж\\\" в українській мові для часових відношень?", "options": [{"text": "Перед тим як", "correct": true}, {"text": "Після того як", "correct": false}, {"text": "Поки не", "correct": false}, {"text": "Як тільки", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Слово \\\\\\"поки\\\\\\" зазвичай вимагає якого виду дієслова в українській мові для процесу?", "options": [{"text": "Imperfective (недоконаний вид для процесу)", "correct": true}, {"text": "Perfective (доконаний вид для результату)", "correct": false}, {"text": "Both equally (обидва однаково)", "correct": false}, {"text": "Neither (жоден з них)", "correct": false}]}, {"question": "Слово \\\\\\"коли\\\\\\" для послідовності подій зазвичай вимагає якого виду дієслова в українській?", "options": [{"text": "Perfective (доконаний вид для результату)", "correct": true}, {"text": "Imperfective (недоконаний вид для процесу)", "correct": false}, {"text": "Both equally (обидва однаково)", "correct": false}, {"text": "Neither (жоден з них)", "correct": false}]}, {"question": "Що означає конструкція \\\\\\"після того як\\\\\\" в українській мові для послідовності дій?", "options": [{"text": "One action strictly follows another (одна дія строго слідує за іншою)", "correct": true}, {"text": "Actions happen together (дії відбуваються разом)", "correct": false}, {"text": "Actions are unrelated (дії не пов'язані)", "correct": false}, {"text": "Actions happen before (дії відбуваються раніше)", "correct": false}]}, {"question": "Як правильно перекласти англійською \\\\\\"Before I go\\\\\\" українською мовою з правильною граматикою?", "options": [{"text": "Перед тим як я піду", "correct": true}, {"text": "Перед я піду", "correct": false}, {"text": "Перед піду", "correct": false}, {"text": "Тим як я піду", "correct": false}]}, {"question": "Що означає конструкція \\\\\\"поки не\\\\\\" в українській мові для часових відношень?", "options": [{"text": "Until (до того часу поки)", "correct": true}, {"text": "While (в той час як)", "correct": false}, {"text": "Because (тому що)", "correct": false}, {"text": "After (після того)", "correct": false}]}, {"question": "Чи потрібна кома перед словом \\\\\\"коли\\\\\\" в середині речення в українській мові?", "options": [{"text": "Yes always (так завжди)", "correct": true}, {"text": "No never (ні ніколи)", "correct": false}, {"text": "Sometimes (іноді)", "correct": false}, {"text": "Only in formal writing (тільки в офіційному письмі)", "correct": false}]}, {"question": "Що показує конструкція \\\\\\"як тільки\\\\\\" в українській мові для часових відношень?", "options": [{"text": "Instant reaction (миттєва реакція)", "correct": true}, {"text": "Long wait (довге очікування)", "correct": false}, {"text": "Parallel action (паралельна дія)", "correct": false}, {"text": "Repeated action (повторювана дія)", "correct": false}]}, {"question": "Синонімом якого виразу є \\\\\\"перш ніж\\\\\\" в українській мові для часових відношень?", "options": [{"text": "Перед тим як", "correct": true}, {"text": "Після того як", "correct": false}, {"text": "Поки не", "correct": false}, {"text": "Як тільки", "correct": false}]}]`)}
 />
 
 ### Time Lines
 
 <Unjumble
   title="Time Lines"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "кожного / разу / коли / я / дзвоню / він / завжди / зайнятий / дуже", "answer": "Кожного разу, коли я дзвоню, він завжди зайнятий дуже"}, {"jumbled": "ми / гуляли / тим / часом / як / йшов / дощ / сильний / вчора", "answer": "Ми гуляли, тим часом як йшов дощ сильний вчора"}, {"jumbled": "я / заснув / після / того / як / прочитав / книгу / цікаву / вчора", "answer": "Я заснув після того, як прочитав книгу цікаву вчора"}, {"jumbled": "подзвони / мені / як / тільки / будеш / вдома / сьогодні / ввечері", "answer": "Подзвони мені, як тільки будеш вдома сьогодні ввечері"}, {"jumbled": "перед / тим / як / сказати / щось / подумай / добре / завжди", "answer": "Перед тим як сказати щось, подумай добре завжди"}, {"jumbled": "я / чекав / тут / поки / ти / не / прийшов / нарешті / додому", "answer": "Я чекав тут, поки ти не прийшов нарешті додому"}]`)}
 />
 
@@ -284,6 +290,7 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 
 <GroupSort
   title="Process vs Point"
+  isUkrainian={false}
   groups={JSON.parse(`{"Point (Sequencing/Instant)": ["Коли я прийшов...", "Як тільки я побачив...", "Після того як я з'їв...", "Перед тим як вийти...", "Щойно я встав...", "Того дня, коли він народився..."], "Process (Duration)": ["Поки я читав...", "Поки ми йшли...", "Доки я чекав...", "В той час як я спав...", "Тим часом як він говорив...", "Відколи ми дружимо..."]}`)}
 />
 
@@ -291,13 +298,15 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 
 <TrueFalse
   title="Connector Check"
-  items={JSON.parse(`[{"statement": "\\\"Поки\\\" means \\\"After\\\".", "isTrue": false, "explanation": ""}, {"statement": "\\\"Перед тим як\\\" needs a verb or clause.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Коли\\\" can express simultaneous action too (\\\"When I was walking...\\\").", "isTrue": true, "explanation": "Yes, aspect determines it."}, {"statement": "\\\"Як тільки\\\" implies a delay.", "isTrue": false, "explanation": "Speed/Immediacy."}, {"statement": "\\\"Після того як\\\" is very clear about order.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Поки не\\\" means \\\"While not\\\" or \\\"Until\\\".", "isTrue": true, "explanation": ""}, {"statement": "You never use commas with time clauses.", "isTrue": false, "explanation": ""}, {"statement": "\\\"В той час як\\\" is used for Parallel actions.", "isTrue": true, "explanation": ""}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "\\\\\\"Поки\\\\\\" means \\\\\\"After\\\\\\".", "isTrue": false, "explanation": ""}, {"statement": "\\\\\\"Перед тим як\\\\\\" needs a verb or clause.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Коли\\\\\\" can express simultaneous action too (\\\\\\"When I was walking...\\\\\\").", "isTrue": true, "explanation": "Yes, aspect determines it."}, {"statement": "\\\\\\"Як тільки\\\\\\" implies a delay.", "isTrue": false, "explanation": "Speed/Immediacy."}, {"statement": "\\\\\\"Після того як\\\\\\" is very clear about order.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Поки не\\\\\\" means \\\\\\"While not\\\\\\" or \\\\\\"Until\\\\\\".", "isTrue": true, "explanation": ""}, {"statement": "You never use commas with time clauses.", "isTrue": false, "explanation": ""}, {"statement": "\\\\\\"В той час як\\\\\\" is used for Parallel actions.", "isTrue": true, "explanation": ""}]`)}
 />
 
 ### The Narrative
 
 <Cloze
   title="The Narrative"
+  isUkrainian={false}
   passage={`[___:1] я був малим, я любив літо.
 Я грав у футбол, [___:2] мама готувала обід.
 [___:3] ми їли, я йшов читати.
@@ -315,7 +324,7 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 
 ### Time Markers
 
-<MarkTheWords>
+<MarkTheWords isUkrainian={false}>
   <MarkTheWordsActivity
     instruction={`Mark the correct words.`}
     text={`Ми пішли гуляти, коли закінчився дощ. Я читав книгу, поки їхав у метро. Як тільки я побачив тебе, я зрадів. Перш ніж купити це, подумай. Ми їли торт після того як задули свічки.
@@ -327,7 +336,7 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 
 ### Fix the Logic
 
-<ErrorCorrection title="Fix the Logic">
+<ErrorCorrection title="Fix the Logic" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Я спав, **коли** я читав. (While)`}
     errorWord={`коли`}
@@ -376,6 +385,7 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 
 <Translate
   title="English to Ukrainian"
+  isUkrainian={false}
   questions={JSON.parse(`[{"source": "While I sleep, you work.", "options": [{"text": "Поки я сплю, ти працюєш.", "correct": true}, {"text": "Коли я сплю, ти працюєш.", "correct": false}]}, {"source": "Before I ask...", "options": [{"text": "Перед тим як я запитаю...", "correct": true}, {"text": "Перед я запитаю...", "correct": false}]}, {"source": "After I finish...", "options": [{"text": "Після того як я закінчу...", "correct": true}, {"text": "Після закінчу...", "correct": false}]}, {"source": "As soon as I see him.", "options": [{"text": "Як тільки я побачу його.", "correct": true}, {"text": "Поки я побачу його.", "correct": false}]}, {"source": "Whenever I see him...", "options": [{"text": "Кожного разу, коли я бачу його...", "correct": true}, {"text": "Поки я бачу його...", "correct": false}]}, {"source": "Wait until I return.", "options": [{"text": "Чекай, поки я не повернуся.", "correct": true}, {"text": "Чекай, як я повернуся.", "correct": false}]}]`)}
 />
 

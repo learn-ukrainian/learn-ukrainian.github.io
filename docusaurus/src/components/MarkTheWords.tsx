@@ -5,9 +5,10 @@ import ActivityHelp from './ActivityHelp';
 interface MarkTheWordsActivityProps {
   text: string;
   correctWords: string[];
+  isUkrainian?: boolean;
 }
 
-export function MarkTheWordsActivity({ text, correctWords }: MarkTheWordsActivityProps) {
+export function MarkTheWordsActivity({ text, correctWords, isUkrainian }: MarkTheWordsActivityProps) {
   const [markedWords, setMarkedWords] = useState<Set<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
 
@@ -72,6 +73,14 @@ export function MarkTheWordsActivity({ text, correctWords }: MarkTheWordsActivit
   ).length;
 
   const isFullyCorrect = correctMarks === correctWords.length && wrongMarks === 0;
+  
+  const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answer';
+  const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
+  const successLabel = isUkrainian ? '✓ Чудово! Ви знайшли всі правильні слова.' : '✓ Perfect! You found all the correct words.';
+  const correctPlural = isUkrainian ? 'правильно' : 'correct';
+  const incorrectPlural = isUkrainian ? 'неправильно' : 'incorrect';
+  const missedLabel = isUkrainian ? 'Пропущено' : 'Missed';
+  const correctWordsLabel = isUkrainian ? 'Правильні слова:' : 'Correct words:';
 
   return (
     <div>
@@ -102,7 +111,7 @@ export function MarkTheWordsActivity({ text, correctWords }: MarkTheWordsActivit
             className={styles.submitButton}
             onClick={handleSubmit}
           >
-            Check Answer
+            {checkBtnLabel}
           </button>
         </div>
       )}
@@ -111,20 +120,20 @@ export function MarkTheWordsActivity({ text, correctWords }: MarkTheWordsActivit
         <>
           <div className={`${styles.feedback} ${isFullyCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
             {isFullyCorrect ? (
-              '✓ Perfect! You found all the correct words.'
+              successLabel
             ) : (
               <>
-                {correctMarks > 0 && <span>✓ {correctMarks} correct. </span>}
-                {wrongMarks > 0 && <span>✗ {wrongMarks} incorrect. </span>}
-                {missedMarks > 0 && <span>Missed: {missedMarks}. </span>}
+                {correctMarks > 0 && <span>✓ {correctMarks} {correctPlural}. </span>}
+                {wrongMarks > 0 && <span>✗ {wrongMarks} {incorrectPlural}. </span>}
+                {missedMarks > 0 && <span>{missedLabel}: {missedMarks}. </span>}
                 <br />
-                <span>Correct words: <strong>{correctWords.join(', ')}</strong></span>
+                <span>{correctWordsLabel} <strong>{correctWords.join(', ')}</strong></span>
               </>
             )}
           </div>
           <div className={styles.buttonRow}>
             <button className={styles.resetButton} onClick={handleReset}>
-              Try Again
+              {retryBtnLabel}
             </button>
           </div>
         </>
@@ -135,18 +144,26 @@ export function MarkTheWordsActivity({ text, correctWords }: MarkTheWordsActivit
 
 interface MarkTheWordsProps {
   children: React.ReactNode;
+  isUkrainian?: boolean;
 }
 
-export default function MarkTheWords({ children }: MarkTheWordsProps) {
+export default function MarkTheWords({ children, isUkrainian }: MarkTheWordsProps) {
+  const headerLabel = isUkrainian ? 'Відмітьте слова' : 'Mark the Words';
+
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🎯</span>
-        <span>Mark the Words</span>
-        <ActivityHelp activityType="mark-the-words" />
+        <span>{headerLabel}</span>
+        <ActivityHelp activityType="mark-the-words" isUkrainian={isUkrainian} />
       </div>
       <div className={styles.activityContent}>
-        {children}
+        {React.Children.map(children, (child) => {
+          if (React.isValidElement(child)) {
+            return React.cloneElement(child as React.ReactElement<any>, { isUkrainian });
+          }
+          return child;
+        })}
       </div>
     </div>
   );

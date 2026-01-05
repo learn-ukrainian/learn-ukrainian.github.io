@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Checkpoint - Aspect & Comparison
@@ -224,11 +226,13 @@ Duration (три години) requires imperfective! Perfective = result, not d
 - Do you know the difference: якщо (реальна умова) vs якби (нереальна умова)?
 - Can you make polite requests: "Я б хотів...", "Чи могли б ви..."?
 
-> [!myth-buster] 🔍 Myth Buster
->
-> **Myth:** "Ukrainian conditional is just copied from Russian."
->
-> **Truth:** Both languages use past tense + particle for conditional, but this is a common Slavic feature from Proto-Slavic, NOT borrowing. Ukrainian's **би** particle and the distinction between **якщо/якби** shows independent development. Say "Якби я був птахом..." — pure Ukrainian!
+:::danger[🔍 Myth Buster]
+
+**Myth:** "Ukrainian conditional is just copied from Russian."
+
+**Truth:** Both languages use past tense + particle for conditional, but this is a common Slavic feature from Proto-Slavic, NOT borrowing. Ukrainian's **би** particle and the distinction between **якщо/якби** shows independent development. Say "Якби я був птахом..." — pure Ukrainian!
+:::
+
 
 ---
 
@@ -372,6 +376,38 @@ Conditional — "would walk"
 
 ---
 
+## 📋 Summary Table
+
+| Skill | Key Pattern | Example |
+|-------|-------------|---------|
+| Aspect | Process vs Result | читав (процес) vs прочитав (результат) |
+| Comparison | -ший/-іший, най- | новіший, найновіший |
+| Conditional | Past + б/би | Я б хотів, Якби я мав |
+| Shopping | Apply all skills | Який найкращий? Я б хотів цей. |
+
+> 💡 **Українська мудрість**
+>
+> «Повторення — мати навчання.»
+> *Translation: "Repetition is the mother of learning."*
+
+:::info[📜 History Bite]
+
+**Comparatives saved our identity!** During Russification, bureaucrats tried to claim Ukrainian comparatives were "corrupted Russian." But forms like **кращий** (better) and **гірший** (worse) follow Old Church Slavonic patterns preserved in literary Ukrainian since Kotlyarevsky's *Eneïda* (1798). When you say "Цей кращий!", you speak authentic Ukrainian — not a dialect of anything!
+:::
+
+
+:::tip[🎯 Pro Tip: Aspect Pairs]
+
+Create flashcards with aspect pairs:
+- Front: Читати — недоконаний → ?
+- Back: Прочитати
+
+Practice daily! The more pairs you memorize, the more natural your Ukrainian becomes. Focus on the 20 most common verbs first.
+:::
+
+
+---
+
 
 
 ## 🎯 Activities
@@ -380,6 +416,7 @@ Conditional — "would walk"
 
 <MatchUp
   title="Aspect Pairs Review"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- читати", "right": "прочитати"}, {"left": "- писати", "right": "написати"}, {"left": "- робити", "right": "зробити"}, {"left": "- говорити", "right": "сказати"}, {"left": "- бачити", "right": "побачити"}, {"left": "- брати", "right": "взяти"}, {"left": "- давати", "right": "дати"}, {"left": "- вставати", "right": "встати"}, {"left": "- купувати", "right": "купити"}, {"left": "- відпочивати", "right": "відпочити"}, {"left": "- починати", "right": "почати"}, {"left": "- закінчувати", "right": "закінчити"}]`)}
 />
 
@@ -387,6 +424,7 @@ Conditional — "would walk"
 
 <Cloze
   title="Comprehensive Review"
+  isUkrainian={false}
   passage={`Я [___:1] книгу вчора. Вона [___:2] за мене. (older) Це [___:3] книга. (best)
 
 [___:4] я мав гроші... (If — unreal) Я [___:5] хотів поїхати. (would) Він [___:6] три години. (was writing — duration)
@@ -401,20 +439,23 @@ Conditional — "would walk"
 
 <Quiz
   title="Phase A2.2 Review"
-  questions={JSON.parse(`[{"question": "У реченні \\\"Він прочитав книгу за дві години\\\", яка це граматична форма?", "options": [{"text": "Форма доконаного виду минулого часу", "correct": true}, {"text": "Форма недоконаного виду минулого часу", "correct": false}, {"text": "Форма теперішнього часу дієслова", "correct": false}, {"text": "Форма майбутнього часу дієслова", "correct": false}]}, {"question": "Як правильно утворити майбутній час недоконаного виду для дієслова \\\"читати\\\"?", "options": [{"text": "Я буду читати цікаву книгу завтра", "correct": true}, {"text": "Я прочитаю цю книгу завтра обов'язково", "correct": false}, {"text": "Я вже читав цю книгу вчора ввечері", "correct": false}, {"text": "Я хочу читати цю нову книгу зараз", "correct": false}]}, {"question": "Яким буде правильний ступінь порівняння для прикметника \\\"добрий\\\" у значенні \\\"кращий\\\"?", "options": [{"text": "Цей варіант значно кращий за попередній", "correct": true}, {"text": "Цей варіант значно добріший за попередній", "correct": false}, {"text": "Цей варіант є найбільш добрішим сьогодні", "correct": false}, {"text": "Це просто дуже добра книга для нас", "correct": false}]}, {"question": "Яке слово є правильним найвищим ступенем порівняння для прикметника \\\"великий\\\"?", "options": [{"text": "Це найбільший будинок у нашому місті", "correct": true}, {"text": "Це значно більший будинок, ніж той", "correct": false}, {"text": "Це дуже великіший будинок для нас", "correct": false}, {"text": "Це просто великий будинок у місті", "correct": false}]}, {"question": "Яке слово ми використовуємо в українській мові для нереальної умови?", "options": [{"text": "Якби я мав час, я б прийшов", "correct": true}, {"text": "Якщо я матиму час, я прийду", "correct": false}, {"text": "Коли я мав час, я завжди приходив", "correct": false}, {"text": "Тому що у мене був вільний час", "correct": false}]}, {"question": "Що означає ввічливий вираз \\\"Я б хотів замовити чаю\\\" в ресторані?", "options": [{"text": "Це ввічливе прохання в умовному способі", "correct": true}, {"text": "Це пряма вимога клієнта зараз", "correct": false}, {"text": "Це розповідь про те, що я хотів учора", "correct": false}, {"text": "Це складний план на далеке майбутнє", "correct": false}]}, {"question": "Як правильно побудувати порівняння: \\\"He is older than me\\\" з \\\"за\\\"?", "options": [{"text": "Він значно старший за мене сьогодні", "correct": true}, {"text": "Він значно старший ніж мене сьогодні", "correct": false}, {"text": "Він значно старіший за мене вчора", "correct": false}, {"text": "Він дуже старий за мене зараз тут", "correct": false}]}, {"question": "До якої граматичної категорії належить українське слово \\\"найкращий\\\"?", "options": [{"text": "Найвищий ступінь порівняння", "correct": true}, {"text": "Вищий ступінь порівняння", "correct": false}, {"text": "Початкова форма прикметника", "correct": false}, {"text": "Форма умовного способу дієслова", "correct": false}]}, {"question": "Чому ми кажемо \\\"Він писав лист три години\\\", а не \\\"написав\\\"?", "options": [{"text": "Бо ми описуємо тривалий процес", "correct": true}, {"text": "Бо ми описуємо завершений результат", "correct": false}, {"text": "Бо це відбувалося в майбутньому часі", "correct": false}, {"text": "Бо це ввічливе прохання до когось", "correct": false}]}, {"question": "Яка граматична конструкція використана у запитанні \\\"Чи могли б ви допомогти?\\\"", "options": [{"text": "Умовний спосіб для ввічливого прохання", "correct": true}, {"text": "Наказовий спосіб для прямої команди", "correct": false}, {"text": "Питання про фізичні здібності людини", "correct": false}, {"text": "Майбутній час для планової дії", "correct": false}]}, {"question": "Яке з цих дієслів належить до доконаного виду результату?", "options": [{"text": "написати", "correct": true}, {"text": "писати", "correct": false}, {"text": "пишу", "correct": false}, {"text": "буду писати", "correct": false}]}, {"question": "Коли ми зазвичай використовуємо сполучник \\\"якщо\\\" в українській мові?", "options": [{"text": "Для введення реальної умови в майбутньому", "correct": true}, {"text": "Для введення нереальної гіпотетичної умови", "correct": false}, {"text": "Для опису подій, що сталися давно", "correct": false}, {"text": "Для вираження вдячності іншій людині", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "У реченні \\\\\\"Він прочитав книгу за дві години\\\\\\", яка це граматична форма?", "options": [{"text": "Форма доконаного виду минулого часу", "correct": true}, {"text": "Форма недоконаного виду минулого часу", "correct": false}, {"text": "Форма теперішнього часу дієслова", "correct": false}, {"text": "Форма майбутнього часу дієслова", "correct": false}]}, {"question": "Як правильно утворити майбутній час недоконаного виду для дієслова \\\\\\"читати\\\\\\"?", "options": [{"text": "Я буду читати цікаву книгу завтра", "correct": true}, {"text": "Я прочитаю цю книгу завтра обов'язково", "correct": false}, {"text": "Я вже читав цю книгу вчора ввечері", "correct": false}, {"text": "Я хочу читати цю нову книгу зараз", "correct": false}]}, {"question": "Яким буде правильний ступінь порівняння для прикметника \\\\\\"добрий\\\\\\" у значенні \\\\\\"кращий\\\\\\"?", "options": [{"text": "Цей варіант значно кращий за попередній", "correct": true}, {"text": "Цей варіант значно добріший за попередній", "correct": false}, {"text": "Цей варіант є найбільш добрішим сьогодні", "correct": false}, {"text": "Це просто дуже добра книга для нас", "correct": false}]}, {"question": "Яке слово є правильним найвищим ступенем порівняння для прикметника \\\\\\"великий\\\\\\"?", "options": [{"text": "Це найбільший будинок у нашому місті", "correct": true}, {"text": "Це значно більший будинок, ніж той", "correct": false}, {"text": "Це дуже великіший будинок для нас", "correct": false}, {"text": "Це просто великий будинок у місті", "correct": false}]}, {"question": "Яке слово ми використовуємо в українській мові для нереальної умови?", "options": [{"text": "Якби я мав час, я б прийшов", "correct": true}, {"text": "Якщо я матиму час, я прийду", "correct": false}, {"text": "Коли я мав час, я завжди приходив", "correct": false}, {"text": "Тому що у мене був вільний час", "correct": false}]}, {"question": "Що означає ввічливий вираз \\\\\\"Я б хотів замовити чаю\\\\\\" в ресторані?", "options": [{"text": "Це ввічливе прохання в умовному способі", "correct": true}, {"text": "Це пряма вимога клієнта зараз", "correct": false}, {"text": "Це розповідь про те, що я хотів учора", "correct": false}, {"text": "Це складний план на далеке майбутнє", "correct": false}]}, {"question": "Як правильно побудувати порівняння: \\\\\\"He is older than me\\\\\\" з \\\\\\"за\\\\\\"?", "options": [{"text": "Він значно старший за мене сьогодні", "correct": true}, {"text": "Він значно старший ніж мене сьогодні", "correct": false}, {"text": "Він значно старіший за мене вчора", "correct": false}, {"text": "Він дуже старий за мене зараз тут", "correct": false}]}, {"question": "До якої граматичної категорії належить українське слово \\\\\\"найкращий\\\\\\"?", "options": [{"text": "Найвищий ступінь порівняння", "correct": true}, {"text": "Вищий ступінь порівняння", "correct": false}, {"text": "Початкова форма прикметника", "correct": false}, {"text": "Форма умовного способу дієслова", "correct": false}]}, {"question": "Чому ми кажемо \\\\\\"Він писав лист три години\\\\\\", а не \\\\\\"написав\\\\\\"?", "options": [{"text": "Бо ми описуємо тривалий процес", "correct": true}, {"text": "Бо ми описуємо завершений результат", "correct": false}, {"text": "Бо це відбувалося в майбутньому часі", "correct": false}, {"text": "Бо це ввічливе прохання до когось", "correct": false}]}, {"question": "Яка граматична конструкція використана у запитанні \\\\\\"Чи могли б ви допомогти?\\\\\\"", "options": [{"text": "Умовний спосіб для ввічливого прохання", "correct": true}, {"text": "Наказовий спосіб для прямої команди", "correct": false}, {"text": "Питання про фізичні здібності людини", "correct": false}, {"text": "Майбутній час для планової дії", "correct": false}]}, {"question": "Яке з цих дієслів належить до доконаного виду результату?", "options": [{"text": "написати", "correct": true}, {"text": "писати", "correct": false}, {"text": "пишу", "correct": false}, {"text": "буду писати", "correct": false}]}, {"question": "Коли ми зазвичай використовуємо сполучник \\\\\\"якщо\\\\\\" в українській мові?", "options": [{"text": "Для введення реальної умови в майбутньому", "correct": true}, {"text": "Для введення нереальної гіпотетичної умови", "correct": false}, {"text": "Для опису подій, що сталися давно", "correct": false}, {"text": "Для вираження вдячності іншій людині", "correct": false}]}]`)}
 />
 
 ### Grammar Rules
 
 <TrueFalse
   title="Grammar Rules"
-  items={JSON.parse(`[{"statement": "Perfective verbs have no present tense.", "isTrue": true, "explanation": "Correct! \\\"Прочитаю\\\" = future, not present."}, {"statement": "\\\"Якби\\\" is used for impossible conditions.", "isTrue": true, "explanation": "Yes! \\\"Якби я був птахом...\\\""}, {"statement": "\\\"Більший\\\" is superlative.", "isTrue": false, "explanation": "\\\"Більший\\\" is comparative. \\\"Найбільший\\\" is superlative."}, {"statement": "Duration uses imperfective aspect.", "isTrue": true, "explanation": "Correct! \\\"Читав три години.\\\""}, {"statement": "\\\"Краще\\\" is the base form.", "isTrue": false, "explanation": "\\\"Краще\\\" is comparative. Base form is \\\"добре/гарно\\\"."}, {"statement": "\\\"Б\\\" comes after the verb in conditionals.", "isTrue": true, "explanation": "Yes! \\\"Хотів би\\\" or \\\"Я б хотів\\\"."}, {"statement": "\\\"За\\\" takes accusative in comparisons.", "isTrue": true, "explanation": "Correct! \\\"Старший за мене.\\\""}, {"statement": "All perfective verbs use prefixes.", "isTrue": false, "explanation": "No! Some use suffix changes (купувати→купити) or different roots (брати→взяти)."}, {"statement": "\\\"Ніж\\\" takes nominative in comparisons.", "isTrue": true, "explanation": "Correct! \\\"Старший, ніж я.\\\""}, {"statement": "Polite requests use conditional mood.", "isTrue": true, "explanation": "Yes! \\\"Я б хотів...\\\", \\\"Чи могли б ви...\\\""}, {"statement": "\\\"Якщо\\\" and \\\"Якби\\\" are the same.", "isTrue": false, "explanation": "No! Якщо = real possibility, Якби = unreal/hypothetical."}, {"statement": "Shopping uses all three skills: aspect, comparison, conditional.", "isTrue": true, "explanation": "Correct! \\\"Який найкращий? Я б хотів. Я візьму.\\\""}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Perfective verbs have no present tense.", "isTrue": true, "explanation": "Correct! \\\\\\"Прочитаю\\\\\\" = future, not present."}, {"statement": "\\\\\\"Якби\\\\\\" is used for impossible conditions.", "isTrue": true, "explanation": "Yes! \\\\\\"Якби я був птахом...\\\\\\""}, {"statement": "\\\\\\"Більший\\\\\\" is superlative.", "isTrue": false, "explanation": "\\\\\\"Більший\\\\\\" is comparative. \\\\\\"Найбільший\\\\\\" is superlative."}, {"statement": "Duration uses imperfective aspect.", "isTrue": true, "explanation": "Correct! \\\\\\"Читав три години.\\\\\\""}, {"statement": "\\\\\\"Краще\\\\\\" is the base form.", "isTrue": false, "explanation": "\\\\\\"Краще\\\\\\" is comparative. Base form is \\\\\\"добре/гарно\\\\\\"."}, {"statement": "\\\\\\"Б\\\\\\" comes after the verb in conditionals.", "isTrue": true, "explanation": "Yes! \\\\\\"Хотів би\\\\\\" or \\\\\\"Я б хотів\\\\\\"."}, {"statement": "\\\\\\"За\\\\\\" takes accusative in comparisons.", "isTrue": true, "explanation": "Correct! \\\\\\"Старший за мене.\\\\\\""}, {"statement": "All perfective verbs use prefixes.", "isTrue": false, "explanation": "No! Some use suffix changes (купувати→купити) or different roots (брати→взяти)."}, {"statement": "\\\\\\"Ніж\\\\\\" takes nominative in comparisons.", "isTrue": true, "explanation": "Correct! \\\\\\"Старший, ніж я.\\\\\\""}, {"statement": "Polite requests use conditional mood.", "isTrue": true, "explanation": "Yes! \\\\\\"Я б хотів...\\\\\\", \\\\\\"Чи могли б ви...\\\\\\""}, {"statement": "\\\\\\"Якщо\\\\\\" and \\\\\\"Якби\\\\\\" are the same.", "isTrue": false, "explanation": "No! Якщо = real possibility, Якби = unreal/hypothetical."}, {"statement": "Shopping uses all three skills: aspect, comparison, conditional.", "isTrue": true, "explanation": "Correct! \\\\\\"Який найкращий? Я б хотів. Я візьму.\\\\\\""}]`)}
 />
 
 ### Aspect Classification
 
 <GroupSort
   title="Aspect Classification"
+  isUkrainian={false}
   groups={JSON.parse(`{"Imperfective (Недоконаний вид)": ["читати", "писати", "робити", "говорити", "купувати", "брати"], "Perfective (Доконаний вид)": ["прочитати", "написати", "зробити", "сказати", "купити", "взяти"]}`)}
 />
 
@@ -422,6 +463,7 @@ Conditional — "would walk"
 
 <Unjumble
   title="Sentence Building"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "я / обов'язково / б / хотів / замовити / чашку / чорної / кави / зараз", "answer": "Я обов'язково б хотів замовити чашку чорної кави зараз"}, {"jumbled": "цей / старий / фільм / є / найкращий / у / всій / моїй / колекції", "answer": "Це найкращий фільм у всій моїй колекції"}, {"jumbled": "мій / молодший / брат / значно / старіший / за / мене / на / три / роки", "answer": "Мій молодший брат значно старіший за мене на три роки"}, {"jumbled": "якби / я / справді / мав / вільний / час / сьогодні / ввечері", "answer": "Якби я справді мав вільний час сьогодні ввечері"}, {"jumbled": "я / повністю / прочитав / цю / цікаву / книгу / ще / вчора / вночі", "answer": "Я повністю прочитав цю цікаву книгу ще вчора вночі"}, {"jumbled": "чи / є / сьогодні / у / вашому / магазині / велика / знижка / на / товари", "answer": "Чи є сьогодні у вашому магазині велика знижка на товари"}]`)}
 />
 
@@ -429,6 +471,7 @@ Conditional — "would walk"
 
 <Cloze
   title="Shopping Dialogue Mastery"
+  isUkrainian={false}
   passage={`Добрий день! Чим можу вам сьогодні [___:1]?
 Я [___:2] подивитися нові сучасні смартфони.
 Ось цей варіант значно [___:3], а той трохи дешевший.
@@ -444,7 +487,7 @@ Conditional — "would walk"
 
 ### Grammar Spotting
 
-<MarkTheWords>
+<MarkTheWords isUkrainian={false}>
   <MarkTheWordsActivity
     instruction={`Mark the correct words.`}
     text={`Click on aspect pairs/comparatives/conditionals.
@@ -459,7 +502,7 @@ Conditional — "would walk"
 
 ### Grammar Review
 
-<ErrorCorrection title="Grammar Review">
+<ErrorCorrection title="Grammar Review" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Я прочитаю книгу вчора.`}
     errorWord={`прочитаю`}
@@ -555,36 +598,6 @@ Conditional — "would walk"
 | собор | soˈbɔr | cathedral | noun | ч |  |
 | софійський | soˈfʲijsʲkɪj | Sophia (adj) | adj | ч |  |
 | умова | uˈmɔʋɐ | condition | noun | ж |  |
-
-## 📋 Summary Table
-
-| Skill | Key Pattern | Example |
-|-------|-------------|---------|
-| Aspect | Process vs Result | читав (процес) vs прочитав (результат) |
-| Comparison | -ший/-іший, най- | новіший, найновіший |
-| Conditional | Past + б/би | Я б хотів, Якби я мав |
-| Shopping | Apply all skills | Який найкращий? Я б хотів цей. |
-
-> 💡 **Українська мудрість**
->
-> «Повторення — мати навчання.»
-> *Translation: "Repetition is the mother of learning."*
-
-> [!history-bite] 📜 History Bite
->
-> **Comparatives saved our identity!** During Russification, bureaucrats tried to claim Ukrainian comparatives were "corrupted Russian." But forms like **кращий** (better) and **гірший** (worse) follow Old Church Slavonic patterns preserved in literary Ukrainian since Kotlyarevsky's *Eneïda* (1798). When you say "Цей кращий!", you speak authentic Ukrainian — not a dialect of anything!
-
-:::tip[🎯 Pro Tip: Aspect Pairs]
-
-Create flashcards with aspect pairs:
-- Front: Читати — недоконаний → ?
-- Back: Прочитати
-
-Practice daily! The more pairs you memorize, the more natural your Ukrainian becomes. Focus on the 20 most common verbs first.
-:::
-
-
----
 
 > [!resources] 🔗 External Resources
 >

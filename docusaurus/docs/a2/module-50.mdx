@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Warm-up
@@ -264,6 +266,17 @@ Ukraine has stunning opera houses in Kyiv, Lviv, and Odesa. The Odesa Opera Hous
 
 </div>
 
+## 📋 Summary
+
+You learned to:
+
+- Discuss creative hobbies: **малювати**, **грати**, **співати**
+- Travel words: **подорожувати**, **намет**, **квиток**
+- Entertainment places: **кіно**, **театр**, **музей**
+- General terms: **хобі**, **вільний час**, **відпочинок**
+
+Life is not only work. Ukrainians value their rest highly. Make sure you rest well and find a hobby that makes you truly happy! Don't forget to invite friends!
+
 
 
 ## 🎯 Activities
@@ -272,13 +285,15 @@ Ukraine has stunning opera houses in Kyiv, Lviv, and Odesa. The Odesa Opera Hous
 
 <Quiz
   title="Hobby Quiz"
-  questions={JSON.parse(`[{"question": "Which Ukrainian verb implies creating a picture or drawing?", "options": [{"text": "малювати", "correct": true}, {"text": "співати", "correct": false}, {"text": "грати", "correct": false}, {"text": "писати", "correct": false}]}, {"question": "Where would you typically sleep when you are camping in the forest?", "options": [{"text": "у наметі", "correct": true}, {"text": "у театрі", "correct": false}, {"text": "у музеї", "correct": false}, {"text": "у школі", "correct": false}]}, {"question": "What document do you necessarily need to enter a cinema or theater?", "options": [{"text": "квиток", "correct": true}, {"text": "намет", "correct": false}, {"text": "сцену", "correct": false}, {"text": "паспорт", "correct": false}]}, {"question": "What do we call a person who watches a performance or show?", "options": [{"text": "глядач", "correct": true}, {"text": "актор", "correct": false}, {"text": "співак", "correct": false}, {"text": "водій", "correct": false}]}, {"question": "Which phrase correctly describes playing a musical instrument in Ukrainian?", "options": [{"text": "грати на гітарі", "correct": true}, {"text": "грати в гітару", "correct": false}, {"text": "грати з гітарою", "correct": false}, {"text": "грати про гітару", "correct": false}]}, {"question": "Is the word \\\"хобі\\\" declinable in the Ukrainian language cases?", "options": [{"text": "No, it is indeclinable", "correct": true}, {"text": "Yes, хобі, хоббі, хоббю", "correct": false}, {"text": "Yes, but only in plural", "correct": false}, {"text": "Depends on the gender", "correct": false}]}, {"question": "Which verb involves gathering a set of similar items over time?", "options": [{"text": "колекціонувати", "correct": true}, {"text": "співати", "correct": false}, {"text": "бігати", "correct": false}, {"text": "спати", "correct": false}]}, {"question": "Where can you see actors performing a play on stage?", "options": [{"text": "в театрі", "correct": true}, {"text": "в наметі", "correct": false}, {"text": "в лісі", "correct": false}, {"text": "в офісі", "correct": false}]}, {"question": "What is the general Ukrainian term for \\\"rest\\\" or \\\"leisure\\\"?", "options": [{"text": "відпочинок", "correct": true}, {"text": "робота", "correct": false}, {"text": "сон", "correct": false}, {"text": "стрес", "correct": false}]}, {"question": "Which word describes a long trip or the act of traveling?", "options": [{"text": "подорож", "correct": true}, {"text": "квиток", "correct": false}, {"text": "сцена", "correct": false}, {"text": "дім", "correct": false}]}, {"question": "Which verb means \\\"to take photos\\\" of people or nature?", "options": [{"text": "фотографувати", "correct": true}, {"text": "малювати", "correct": false}, {"text": "писати", "correct": false}, {"text": "читати", "correct": false}]}, {"question": "Which verb specifically implies inspecting sights or a city as a tourist?", "options": [{"text": "оглядати", "correct": true}, {"text": "спати", "correct": false}, {"text": "їсти", "correct": false}, {"text": "бігати", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Which Ukrainian verb implies creating a picture or drawing?", "options": [{"text": "малювати", "correct": true}, {"text": "співати", "correct": false}, {"text": "грати", "correct": false}, {"text": "писати", "correct": false}]}, {"question": "Where would you typically sleep when you are camping in the forest?", "options": [{"text": "у наметі", "correct": true}, {"text": "у театрі", "correct": false}, {"text": "у музеї", "correct": false}, {"text": "у школі", "correct": false}]}, {"question": "What document do you necessarily need to enter a cinema or theater?", "options": [{"text": "квиток", "correct": true}, {"text": "намет", "correct": false}, {"text": "сцену", "correct": false}, {"text": "паспорт", "correct": false}]}, {"question": "What do we call a person who watches a performance or show?", "options": [{"text": "глядач", "correct": true}, {"text": "актор", "correct": false}, {"text": "співак", "correct": false}, {"text": "водій", "correct": false}]}, {"question": "Which phrase correctly describes playing a musical instrument in Ukrainian?", "options": [{"text": "грати на гітарі", "correct": true}, {"text": "грати в гітару", "correct": false}, {"text": "грати з гітарою", "correct": false}, {"text": "грати про гітару", "correct": false}]}, {"question": "Is the word \\\\\\"хобі\\\\\\" declinable in the Ukrainian language cases?", "options": [{"text": "No, it is indeclinable", "correct": true}, {"text": "Yes, хобі, хоббі, хоббю", "correct": false}, {"text": "Yes, but only in plural", "correct": false}, {"text": "Depends on the gender", "correct": false}]}, {"question": "Which verb involves gathering a set of similar items over time?", "options": [{"text": "колекціонувати", "correct": true}, {"text": "співати", "correct": false}, {"text": "бігати", "correct": false}, {"text": "спати", "correct": false}]}, {"question": "Where can you see actors performing a play on stage?", "options": [{"text": "в театрі", "correct": true}, {"text": "в наметі", "correct": false}, {"text": "в лісі", "correct": false}, {"text": "в офісі", "correct": false}]}, {"question": "What is the general Ukrainian term for \\\\\\"rest\\\\\\" or \\\\\\"leisure\\\\\\"?", "options": [{"text": "відпочинок", "correct": true}, {"text": "робота", "correct": false}, {"text": "сон", "correct": false}, {"text": "стрес", "correct": false}]}, {"question": "Which word describes a long trip or the act of traveling?", "options": [{"text": "подорож", "correct": true}, {"text": "квиток", "correct": false}, {"text": "сцена", "correct": false}, {"text": "дім", "correct": false}]}, {"question": "Which verb means \\\\\\"to take photos\\\\\\" of people or nature?", "options": [{"text": "фотографувати", "correct": true}, {"text": "малювати", "correct": false}, {"text": "писати", "correct": false}, {"text": "читати", "correct": false}]}, {"question": "Which verb specifically implies inspecting sights or a city as a tourist?", "options": [{"text": "оглядати", "correct": true}, {"text": "спати", "correct": false}, {"text": "їсти", "correct": false}, {"text": "бігати", "correct": false}]}]`)}
 />
 
 ### Hobby Vocabulary
 
 <MatchUp
   title="Hobby Vocabulary"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- малювати", "right": "to draw/paint"}, {"left": "- співати", "right": "to sing"}, {"left": "- танцювати", "right": "to dance"}, {"left": "- подорожувати", "right": "to travel"}, {"left": "- збирати", "right": "to gather/collect"}, {"left": "- грати", "right": "to play"}, {"left": "- читати", "right": "to read"}, {"left": "- відвідувати", "right": "to visit"}, {"left": "- фотографувати", "right": "to photograph"}, {"left": "- колекціонувати", "right": "to collect (items)"}, {"left": "- оглядати", "right": "to inspect/sightsee"}, {"left": "- писати", "right": "to write"}]`)}
 />
 
@@ -286,6 +301,7 @@ Ukraine has stunning opera houses in Kyiv, Lviv, and Odesa. The Odesa Opera Hous
 
 <Cloze
   title="My Hobbies"
+  isUkrainian={false}
   passage={`Я люблю [___:1]_ на гітарі. Вона [___:2]_ красиві картини. Ми йдемо в [___:3]_ на новий фільм.
 
 Це моє улюблене [___:4]_. У мене є два [___:5]_ на концерт. Ми [___:6]_ старий замок.
@@ -300,13 +316,15 @@ Ukraine has stunning opera houses in Kyiv, Lviv, and Odesa. The Odesa Opera Hous
 
 <TrueFalse
   title="Cultural Leisure"
-  items={JSON.parse(`[{"statement": "Ukrainians rarely sing.", "isTrue": false, "explanation": "Singing is huge in UA culture."}, {"statement": "A \\\"дача\\\" is a winter ski resort.", "isTrue": false, "explanation": "It's a summer house/garden."}, {"statement": "\\\"Шашлик\\\" is a popular weekend food.", "isTrue": true, "explanation": "BBQ is a ritual."}, {"statement": "You should bring gifts when visiting.", "isTrue": true, "explanation": "Never empty-handed."}, {"statement": "\\\"Кіно\\\" means theater.", "isTrue": false, "explanation": "Кіно = cinema. Театр = theater."}, {"statement": "\\\"Хобі\\\" changes case endings.", "isTrue": false, "explanation": "It never changes."}, {"statement": "\\\"Грати на\\\" is used for sports.", "isTrue": false, "explanation": "\\\"Грати на\\\" + Instr = Music. \\\"Грати в\\\" + Acc = Sports."}, {"statement": "Carpathians are popular for hiking.", "isTrue": true, "explanation": "Yes, mountains."}, {"statement": "\\\"Вільний час\\\" means busy time.", "isTrue": false, "explanation": "Free time."}, {"statement": "Museums are places to see exhibitions.", "isTrue": true, "explanation": "Yes."}, {"statement": "\\\"Намет\\\" is good for hotels.", "isTrue": false, "explanation": "Tent is for camping."}, {"statement": "\\\"Гопак\\\" is a Ukrainian dance.", "isTrue": true, "explanation": "Famous energetic dance."}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Ukrainians rarely sing.", "isTrue": false, "explanation": "Singing is huge in UA culture."}, {"statement": "A \\\\\\"дача\\\\\\" is a winter ski resort.", "isTrue": false, "explanation": "It's a summer house/garden."}, {"statement": "\\\\\\"Шашлик\\\\\\" is a popular weekend food.", "isTrue": true, "explanation": "BBQ is a ritual."}, {"statement": "You should bring gifts when visiting.", "isTrue": true, "explanation": "Never empty-handed."}, {"statement": "\\\\\\"Кіно\\\\\\" means theater.", "isTrue": false, "explanation": "Кіно = cinema. Театр = theater."}, {"statement": "\\\\\\"Хобі\\\\\\" changes case endings.", "isTrue": false, "explanation": "It never changes."}, {"statement": "\\\\\\"Грати на\\\\\\" is used for sports.", "isTrue": false, "explanation": "\\\\\\"Грати на\\\\\\" + Instr = Music. \\\\\\"Грати в\\\\\\" + Acc = Sports."}, {"statement": "Carpathians are popular for hiking.", "isTrue": true, "explanation": "Yes, mountains."}, {"statement": "\\\\\\"Вільний час\\\\\\" means busy time.", "isTrue": false, "explanation": "Free time."}, {"statement": "Museums are places to see exhibitions.", "isTrue": true, "explanation": "Yes."}, {"statement": "\\\\\\"Намет\\\\\\" is good for hotels.", "isTrue": false, "explanation": "Tent is for camping."}, {"statement": "\\\\\\"Гопак\\\\\\" is a Ukrainian dance.", "isTrue": true, "explanation": "Famous energetic dance."}]`)}
 />
 
 ### Activity Types
 
 <GroupSort
   title="Activity Types"
+  isUkrainian={false}
   groups={JSON.parse(`{"Groups": ["Creative", "Active/Travel", "Places"], "Items": ["малювати: Creative", "співати: Creative", "писати: Creative", "фотографувати: Creative", "подорожувати: Active/Travel", "ходити: Active/Travel", "збирати: Active/Travel", "танцювати: Active/Travel", "кіно: Places", "театр: Places", "музей: Places", "сцена: Places"]}`)}
 />
 
@@ -314,12 +332,13 @@ Ukraine has stunning opera houses in Kyiv, Lviv, and Odesa. The Odesa Opera Hous
 
 <Unjumble
   title="Weekend Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "Ми / завтра / з / друзями / йдемо / дивитися / кіно", "answer": "Ми завтра з друзями йдемо дивитися кіно"}, {"jumbled": "Я / дуже / люблю / грати / нові / пісні / на / гітарі", "answer": "Я дуже люблю грати нові пісні на гітарі"}, {"jumbled": "Вона / часто / і / з / радістю / подорожує / цікавим / світом", "answer": "Вона часто і з радістю подорожує цікавим світом"}, {"jumbled": "У / мене / нарешті / з'явилося / нове / і / цікаве / хобі", "answer": "У мене нарешті з'явилося нове і цікаве хобі"}, {"jumbled": "Ми / вже / купили / дорогі / квитки / в / оперний / театр", "answer": "Ми вже купили дорогі квитки в оперний театр"}, {"jumbled": "Він / давно / колекціонує / старі / та / рідкісні / картини", "answer": "Він давно колекціонує старі та рідкісні картини"}, {"jumbled": "Глядачі / дуже / люблять / цей / гучний / і / веселий / концерт", "answer": "Глядачі дуже люблять цей гучний і веселий концерт"}, {"jumbled": "Вони / зараз / спокійно / відпочивають / на / своїй / літній / дачі", "answer": "Вони зараз спокійно відпочивають на своїй літній дачі"}, {"jumbled": "Олена / дуже / гарно / і / енергійно / танцює / український / гопак", "answer": "Олена дуже гарно і енергійно танцює український гопак"}, {"jumbled": "Це / був / наш / найкращий / і / незабутній / літній / відпочинок", "answer": "Це був наш найкращий і незабутній літній відпочинок"}, {"jumbled": "Я / часто / відвідую / цікаві / історичні / музеї / влітку", "answer": "Я часто відвідую цікаві історичні музеї влітку"}, {"jumbled": "Наш / великий / намет / стоїть / у / зеленому / сосновому / лісі", "answer": "Наш великий намет стоїть у зеленому сосновому лісі"}]`)}
 />
 
 ### Fix the Hobby
 
-<ErrorCorrection title="Fix the Hobby">
+<ErrorCorrection title="Fix the Hobby" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Я граю в гітарі.`}
     errorWord={`в`}
@@ -410,6 +429,7 @@ Ukraine has stunning opera houses in Kyiv, Lviv, and Odesa. The Odesa Opera Hous
 
 <Cloze
   title="Cultural Weekend"
+  isUkrainian={false}
   passage={`У суботу ми поїхали на [___:1]. Там ми робили шашлик.
 Ми [___:2] пісні і [___:3] на гітарі.
 У неділю ми пішли в [___:4]. Ми купили [___:5] онлайн.
@@ -422,7 +442,7 @@ Ukraine has stunning opera houses in Kyiv, Lviv, and Odesa. The Odesa Opera Hous
 
 ### Hobbies Search
 
-<MarkTheWords>
+<MarkTheWords isUkrainian={false}>
   <MarkTheWordsActivity
     instruction={`Mark the correct words.`}
     text={`Мій брат любить подорожувати. Він бере намет і йде в гори. Моя сестра любить малювати. Вона завжди купує фарби. Я люблю театр. Я часто купую квитки на вистави. Мій батько любить риболовлю. Це його хобі. Мама любить співати в хорі. У кожного свій відпочинок.`}
@@ -434,6 +454,7 @@ Ukraine has stunning opera houses in Kyiv, Lviv, and Odesa. The Odesa Opera Hous
 
 <Select
   title="Choose Correct Verb"
+  isUkrainian={false}
   questions={JSON.parse(`[{"question": "__ на гітарі.", "options": [{"text": "Грати", "correct": true}, {"text": "Гратися", "correct": false}]}, {"question": "__ пісні.", "options": [{"text": "Співати", "correct": true}, {"text": "Спати", "correct": false}]}, {"question": "__ марки.", "options": [{"text": "Колекціонувати", "correct": true}, {"text": "Читати", "correct": false}]}, {"question": "__ картини.", "options": [{"text": "Малювати", "correct": true}, {"text": "Писати", "correct": false}]}, {"question": "__ гопак.", "options": [{"text": "Танцювати", "correct": true}, {"text": "Співати", "correct": false}]}, {"question": "__ місто.", "options": [{"text": "Оглядати", "correct": true}, {"text": "Дивитися", "correct": false}]}, {"question": "__ у наметі.", "options": [{"text": "Спати", "correct": true}, {"text": "Грати", "correct": false}]}, {"question": "__ квиток.", "options": [{"text": "Купувати", "correct": true}, {"text": "Продавати", "correct": false}]}, {"question": "__ музеї.", "options": [{"text": "Відвідувати", "correct": true}, {"text": "Жити", "correct": false}]}, {"question": "__ фото.", "options": [{"text": "Робити", "correct": true}, {"text": "Грати", "correct": false}]}, {"question": "__ вірші.", "options": [{"text": "Писати", "correct": true}, {"text": "Читати", "correct": false}]}, {"question": "__ валізу.", "options": [{"text": "Збирати", "correct": true}, {"text": "Розкидати", "correct": false}]}]`)}
 />
 
@@ -487,17 +508,6 @@ Ukraine has stunning opera houses in Kyiv, Lviv, and Odesa. The Odesa Opera Hous
 | шашлик | ʃɐʃˈlɪk | shashlyk | noun | ч |  |
 | шепотіти | ʃepoˈtʲite | to whisper | verb | ж |  |
 | щодо | ˈʃt͡ʃɔdo | regarding | other |  |  |
-
-## 📋 Summary
-
-You learned to:
-
-- Discuss creative hobbies: **малювати**, **грати**, **співати**
-- Travel words: **подорожувати**, **намет**, **квиток**
-- Entertainment places: **кіно**, **театр**, **музей**
-- General terms: **хобі**, **вільний час**, **відпочинок**
-
-Life is not only work. Ukrainians value their rest highly. Make sure you rest well and find a hobby that makes you truly happy! Don't forget to invite friends!
 
 > [!resources] 🔗 External Resources
 >

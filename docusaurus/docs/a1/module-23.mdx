@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Warm-up
@@ -334,6 +336,23 @@ Or in conversation:
 
 ---
 
+## 📋 Summary
+
+Ви навчилися говорити про час українською! (You've learned to tell time in Ukrainian!)
+
+**Що ви вивчили (What you learned):**
+
+- **Час (Time):** Котра година? — Друга година / Пів на третю
+- **Одиниці часу (Time units):** година, хвилина, секунда
+- **Вирази (Expressions):** рано (early), пізно (late), вчасно (on time)
+- **Дні тижня (Days):** понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя
+- **Місяці (Months):** січень...грудень (з природними назвами!)
+- **Прийменники (Prepositions):** о/об, до, після, перед, з...до
+
+---
+
+**Наступний урок:** Модальні дієслова — можна, треба, хочу!
+
 
 
 ## 🎯 Activities
@@ -342,6 +361,7 @@ Or in conversation:
 
 <MatchUp
   title="Days of the Week"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- понеділок", "right": "Monday"}, {"left": "- вівторок", "right": "Tuesday"}, {"left": "- середа", "right": "Wednesday"}, {"left": "- четвер", "right": "Thursday"}, {"left": "- п'ятниця", "right": "Friday"}, {"left": "- субота", "right": "Saturday"}, {"left": "- неділя", "right": "Sunday"}, {"left": "- тиждень", "right": "week"}, {"left": "- вихідні", "right": "weekend"}, {"left": "- робочий день", "right": "workday"}, {"left": "- сьогодні", "right": "today"}, {"left": "- завтра", "right": "tomorrow"}]`)}
 />
 
@@ -349,6 +369,7 @@ Or in conversation:
 
 <MatchUp
   title="Months of the Year"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- січень", "right": "January"}, {"left": "- лютий", "right": "February"}, {"left": "- березень", "right": "March"}, {"left": "- квітень", "right": "April"}, {"left": "- травень", "right": "May"}, {"left": "- червень", "right": "June"}, {"left": "- липень", "right": "July"}, {"left": "- серпень", "right": "August"}, {"left": "- вересень", "right": "September"}, {"left": "- жовтень", "right": "October"}, {"left": "- листопад", "right": "November"}, {"left": "- грудень", "right": "December"}]`)}
 />
 
@@ -356,6 +377,7 @@ Or in conversation:
 
 <GroupSort
   title="Time Units"
+  isUkrainian={false}
   groups={JSON.parse(`{"Days (Дні)": ["понеділок", "вівторок", "середа", "четвер"], "Months (Місяці)": ["січень", "квітень", "липень", "грудень"], "Time Words (Час)": ["година", "хвилина", "секунда", "чверть", "--"]}`)}
 />
 
@@ -363,6 +385,7 @@ Or in conversation:
 
 <FillIn
   title="Telling Time"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Зараз ___ година.", "answer": "друга", "options": ["друга", "два", "другий", "друге"]}, {"sentence": "О котрій зустріч? — О ___.", "answer": "п'ятій", "options": ["п'ятій", "п'ять", "п'ятого", "п'яти"]}, {"sentence": "Магазин працює з дев'ятої ___ шостої.", "answer": "до", "options": ["до", "о", "на", "в"]}, {"sentence": "___ обіду я відпочиваю.", "answer": "Після", "options": ["Після", "До", "О", "На"]}, {"sentence": "Я приїду ___ третій.", "answer": "о", "options": ["о", "до", "з", "на"]}, {"sentence": "Зараз пів ___ третю.", "answer": "на", "options": ["на", "до", "о", "в"]}, {"sentence": "Зустріч ___ дванадцятій.", "answer": "о", "options": ["о", "до", "на", "в"]}, {"sentence": "Ти прийшов ___!", "answer": "вчасно", "options": ["вчасно", "рано", "пізно", "зараз"]}]`)}
 />
 
@@ -370,6 +393,7 @@ Or in conversation:
 
 <FillIn
   title="Days and Months"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Сьогодні ___. Завтра буде субота.", "answer": "п'ятниця", "options": ["п'ятниця", "четвер", "середа", "неділя"]}, {"sentence": "Мій день народження в ___.", "answer": "травні", "options": ["травні", "травень", "травня", "травню"]}, {"sentence": "Перший день тижня — це ___.", "answer": "понеділок", "options": ["понеділок", "неділя", "субота", "вівторок"]}, {"sentence": "___ — це пора листопаду.", "answer": "Листопад", "options": ["Листопад", "Жовтень", "Вересень", "Грудень"]}, {"sentence": "Новий рік — це перше ___.", "answer": "січня", "options": ["січня", "січень", "січню", "січні"]}, {"sentence": "У ___ я відпочиваю.", "answer": "вихідні", "options": ["вихідні", "понеділок", "робочий день", "тиждень"]}, {"sentence": "Літо — це червень, липень і ___.", "answer": "серпень", "options": ["серпень", "вересень", "травень", "квітень"]}, {"sentence": "Сьогодні ___, це середина тижня.", "answer": "середа", "options": ["середа", "четвер", "п'ятниця", "понеділок"]}]`)}
 />
 
@@ -377,20 +401,23 @@ Or in conversation:
 
 <Quiz
   title="Time Expressions"
-  questions={JSON.parse(`[{"question": "Which English phrase represents \\\"Котра година?\\\" correctly?", "options": [{"text": "What time is it?", "correct": true}, {"text": "Which day is it?", "correct": false}, {"text": "What date is it?", "correct": false}, {"text": "How long is it?", "correct": false}]}, {"question": "How do you accurately translate \\\"Зустріч о третій\\\" into English?", "options": [{"text": "The meeting is at three.", "correct": true}, {"text": "The meeting is at third.", "correct": false}, {"text": "The meeting lasts three hours.", "correct": false}, {"text": "Three meetings today.", "correct": false}]}, {"question": "What does accurately the phrase \\\"Він приходить рано\\\" mean?", "options": [{"text": "He comes early.", "correct": true}, {"text": "He comes late.", "correct": false}, {"text": "He comes on time.", "correct": false}, {"text": "He comes now.", "correct": false}]}, {"question": "How do you correctly translate \\\"Магазин працює з дев'ятої до шостої\\\"?", "options": [{"text": "The store works from nine to six.", "correct": true}, {"text": "The store works until nine.", "correct": false}, {"text": "The store works at six.", "correct": false}, {"text": "The store is closed from nine to six.", "correct": false}]}, {"question": "Which English sentence represents \\\"Зараз половина на другу\\\"?", "options": [{"text": "It's half past one now.", "correct": true}, {"text": "It's two o'clock now.", "correct": false}, {"text": "It's one o'clock now.", "correct": false}, {"text": "It's half past two now.", "correct": false}]}, {"question": "How do you accurately say \\\"Я приїхав вчасно\\\" in English?", "options": [{"text": "I arrived on time.", "correct": true}, {"text": "I arrived early.", "correct": false}, {"text": "I arrived late.", "correct": false}, {"text": "I will arrive.", "correct": false}]}, {"question": "What is accurately the English translation of \\\"Після обіду я відпочиваю\\\"?", "options": [{"text": "After lunch I rest.", "correct": true}, {"text": "Before lunch I rest.", "correct": false}, {"text": "During lunch I rest.", "correct": false}, {"text": "At lunch I rest.", "correct": false}]}, {"question": "Which translation is correct for \\\"Урок триває годину\\\" now?", "options": [{"text": "The lesson lasts an hour.", "correct": true}, {"text": "The lesson starts in an hour.", "correct": false}, {"text": "The lesson ends in an hour.", "correct": false}, {"text": "The lesson is at one.", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Which English phrase represents \\\\\\"Котра година?\\\\\\" correctly?", "options": [{"text": "What time is it?", "correct": true}, {"text": "Which day is it?", "correct": false}, {"text": "What date is it?", "correct": false}, {"text": "How long is it?", "correct": false}]}, {"question": "How do you accurately translate \\\\\\"Зустріч о третій\\\\\\" into English?", "options": [{"text": "The meeting is at three.", "correct": true}, {"text": "The meeting is at third.", "correct": false}, {"text": "The meeting lasts three hours.", "correct": false}, {"text": "Three meetings today.", "correct": false}]}, {"question": "What does accurately the phrase \\\\\\"Він приходить рано\\\\\\" mean?", "options": [{"text": "He comes early.", "correct": true}, {"text": "He comes late.", "correct": false}, {"text": "He comes on time.", "correct": false}, {"text": "He comes now.", "correct": false}]}, {"question": "How do you correctly translate \\\\\\"Магазин працює з дев'ятої до шостої\\\\\\"?", "options": [{"text": "The store works from nine to six.", "correct": true}, {"text": "The store works until nine.", "correct": false}, {"text": "The store works at six.", "correct": false}, {"text": "The store is closed from nine to six.", "correct": false}]}, {"question": "Which English sentence represents \\\\\\"Зараз половина на другу\\\\\\"?", "options": [{"text": "It's half past one now.", "correct": true}, {"text": "It's two o'clock now.", "correct": false}, {"text": "It's one o'clock now.", "correct": false}, {"text": "It's half past two now.", "correct": false}]}, {"question": "How do you accurately say \\\\\\"Я приїхав вчасно\\\\\\" in English?", "options": [{"text": "I arrived on time.", "correct": true}, {"text": "I arrived early.", "correct": false}, {"text": "I arrived late.", "correct": false}, {"text": "I will arrive.", "correct": false}]}, {"question": "What is accurately the English translation of \\\\\\"Після обіду я відпочиваю\\\\\\"?", "options": [{"text": "After lunch I rest.", "correct": true}, {"text": "Before lunch I rest.", "correct": false}, {"text": "During lunch I rest.", "correct": false}, {"text": "At lunch I rest.", "correct": false}]}, {"question": "Which translation is correct for \\\\\\"Урок триває годину\\\\\\" now?", "options": [{"text": "The lesson lasts an hour.", "correct": true}, {"text": "The lesson starts in an hour.", "correct": false}, {"text": "The lesson ends in an hour.", "correct": false}, {"text": "The lesson is at one.", "correct": false}]}]`)}
 />
 
 ### Months and Seasons
 
 <Quiz
   title="Months and Seasons"
-  questions={JSON.parse(`[{"question": "Which set of months accurately represents \\\"зима\\\" (winter)?", "options": [{"text": "Грудень, січень, лютий", "correct": true}, {"text": "Березень, квітень, травень", "correct": false}, {"text": "Червень, липень, серпень", "correct": false}, {"text": "Вересень, жовтень, листопад", "correct": false}]}, {"question": "When exactly do the leaves usually fall from trees?", "options": [{"text": "У листопаді", "correct": true}, {"text": "У травні", "correct": false}, {"text": "У січні", "correct": false}, {"text": "У липні", "correct": false}]}, {"question": "Which Ukrainian month is named accurately after the birch tree?", "options": [{"text": "Березень", "correct": true}, {"text": "Квітень", "correct": false}, {"text": "Травень", "correct": false}, {"text": "Липень", "correct": false}]}, {"question": "Which day of the week comes immediately after Thursday?", "options": [{"text": "П'ятниця", "correct": true}, {"text": "Середа", "correct": false}, {"text": "Субота", "correct": false}, {"text": "Вівторок", "correct": false}]}, {"question": "Which months accurately represent the \\\"весна\\\" (spring) season?", "options": [{"text": "Березень, квітень, травень", "correct": true}, {"text": "Грудень, січень, лютий", "correct": false}, {"text": "Червень, липень, серпень", "correct": false}, {"text": "Вересень, жовтень, листопад", "correct": false}]}, {"question": "Which month is named accurately after the linden tree?", "options": [{"text": "Липень", "correct": true}, {"text": "Березень", "correct": false}, {"text": "Вересень", "correct": false}, {"text": "Травень", "correct": false}]}, {"question": "Which is accurately the first day of the week?", "options": [{"text": "Понеділок", "correct": true}, {"text": "Неділя", "correct": false}, {"text": "Субота", "correct": false}, {"text": "Вівторок", "correct": false}]}, {"question": "Which days accurately represent the \\\"вихідні\\\" (weekend) in Ukraine?", "options": [{"text": "Субота і неділя", "correct": true}, {"text": "Понеділок і вівторок", "correct": false}, {"text": "П'ятниця і субота", "correct": false}, {"text": "Четвер і п'ятниця", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Which set of months accurately represents \\\\\\"зима\\\\\\" (winter)?", "options": [{"text": "Грудень, січень, лютий", "correct": true}, {"text": "Березень, квітень, травень", "correct": false}, {"text": "Червень, липень, серпень", "correct": false}, {"text": "Вересень, жовтень, листопад", "correct": false}]}, {"question": "When exactly do the leaves usually fall from trees?", "options": [{"text": "У листопаді", "correct": true}, {"text": "У травні", "correct": false}, {"text": "У січні", "correct": false}, {"text": "У липні", "correct": false}]}, {"question": "Which Ukrainian month is named accurately after the birch tree?", "options": [{"text": "Березень", "correct": true}, {"text": "Квітень", "correct": false}, {"text": "Травень", "correct": false}, {"text": "Липень", "correct": false}]}, {"question": "Which day of the week comes immediately after Thursday?", "options": [{"text": "П'ятниця", "correct": true}, {"text": "Середа", "correct": false}, {"text": "Субота", "correct": false}, {"text": "Вівторок", "correct": false}]}, {"question": "Which months accurately represent the \\\\\\"весна\\\\\\" (spring) season?", "options": [{"text": "Березень, квітень, травень", "correct": true}, {"text": "Грудень, січень, лютий", "correct": false}, {"text": "Червень, липень, серпень", "correct": false}, {"text": "Вересень, жовтень, листопад", "correct": false}]}, {"question": "Which month is named accurately after the linden tree?", "options": [{"text": "Липень", "correct": true}, {"text": "Березень", "correct": false}, {"text": "Вересень", "correct": false}, {"text": "Травень", "correct": false}]}, {"question": "Which is accurately the first day of the week?", "options": [{"text": "Понеділок", "correct": true}, {"text": "Неділя", "correct": false}, {"text": "Субота", "correct": false}, {"text": "Вівторок", "correct": false}]}, {"question": "Which days accurately represent the \\\\\\"вихідні\\\\\\" (weekend) in Ukraine?", "options": [{"text": "Субота і неділя", "correct": true}, {"text": "Понеділок і вівторок", "correct": false}, {"text": "П'ятниця і субота", "correct": false}, {"text": "Четвер і п'ятниця", "correct": false}]}]`)}
 />
 
 ### Time Sentences
 
 <Unjumble
   title="Time Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "година / котра / зараз / ?", "answer": "Котра зараз година"}, {"jumbled": "о / зустріч / третій / наша", "answer": "Наша зустріч о третій"}, {"jumbled": "понеділок / сьогодні / робочий день / це", "answer": "Сьогодні понеділок, це робочий день"}, {"jumbled": "вихідні / я / у / відпочиваю", "answer": "У вихідні я відпочиваю"}, {"jumbled": "працює / магазин / до / дев'ятої / шостої / з", "answer": "Магазин працює з дев'ятої до шостої"}, {"jumbled": "народження / травні / мій / у / день", "answer": "Мій день народження у травні"}]`)}
 />
 
@@ -398,7 +425,8 @@ Or in conversation:
 
 <TrueFalse
   title="Calendar Knowledge"
-  items={JSON.parse(`[{"statement": "Понеділок — перший день тижня в Україні.", "isTrue": true, "explanation": "Correct! The Ukrainian week starts on Monday."}, {"statement": "Тиждень має шість днів.", "isTrue": false, "explanation": "Incorrect! A week has seven days."}, {"statement": "Листопад названий від \\\"листя падає\\\".", "isTrue": true, "explanation": "Correct! Listopad means \\\"leaves fall.\\\""}, {"statement": "Субота — це робочий день.", "isTrue": false, "explanation": "Incorrect! Saturday is a weekend day."}, {"statement": "Червень, липень, серпень — це літо.", "isTrue": true, "explanation": "Correct! These are the summer months."}, {"statement": "Січень — це весняний місяць.", "isTrue": false, "explanation": "Incorrect! January is a winter month."}, {"statement": "Неділя означає \\\"немає діла\\\".", "isTrue": true, "explanation": "Correct! Nedilya means \\\"no work.\\\""}, {"statement": "Середа — це останній день тижня.", "isTrue": false, "explanation": "Incorrect! Wednesday is the middle of the week."}, {"statement": "Україна використовує 24-годинний формат часу.", "isTrue": true, "explanation": "Correct! Ukraine uses 24-hour time officially."}, {"statement": "\\\"Рано\\\" означає \\\"late\\\".", "isTrue": false, "explanation": "Incorrect! \\\"Рано\\\" means \\\"early.\\\""}, {"statement": "\\\"Вчасно\\\" означає \\\"on time\\\".", "isTrue": true, "explanation": "Correct!"}, {"statement": "Вихідні — це понеділок і вівторок.", "isTrue": false, "explanation": "Incorrect! Weekend is Saturday and Sunday."}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Понеділок — перший день тижня в Україні.", "isTrue": true, "explanation": "Correct! The Ukrainian week starts on Monday."}, {"statement": "Тиждень має шість днів.", "isTrue": false, "explanation": "Incorrect! A week has seven days."}, {"statement": "Листопад названий від \\\\\\"листя падає\\\\\\".", "isTrue": true, "explanation": "Correct! Listopad means \\\\\\"leaves fall.\\\\\\""}, {"statement": "Субота — це робочий день.", "isTrue": false, "explanation": "Incorrect! Saturday is a weekend day."}, {"statement": "Червень, липень, серпень — це літо.", "isTrue": true, "explanation": "Correct! These are the summer months."}, {"statement": "Січень — це весняний місяць.", "isTrue": false, "explanation": "Incorrect! January is a winter month."}, {"statement": "Неділя означає \\\\\\"немає діла\\\\\\".", "isTrue": true, "explanation": "Correct! Nedilya means \\\\\\"no work.\\\\\\""}, {"statement": "Середа — це останній день тижня.", "isTrue": false, "explanation": "Incorrect! Wednesday is the middle of the week."}, {"statement": "Україна використовує 24-годинний формат часу.", "isTrue": true, "explanation": "Correct! Ukraine uses 24-hour time officially."}, {"statement": "\\\\\\"Рано\\\\\\" означає \\\\\\"late\\\\\\".", "isTrue": false, "explanation": "Incorrect! \\\\\\"Рано\\\\\\" means \\\\\\"early.\\\\\\""}, {"statement": "\\\\\\"Вчасно\\\\\\" означає \\\\\\"on time\\\\\\".", "isTrue": true, "explanation": "Correct!"}, {"statement": "Вихідні — це понеділок і вівторок.", "isTrue": false, "explanation": "Incorrect! Weekend is Saturday and Sunday."}]`)}
 />
 
 ## 📚 Vocabulary
@@ -462,23 +490,6 @@ Or in conversation:
 | четвер | /t͡ʃɛtˈvɛr/ | Thursday | noun | ч |  |
 | четвертий | /t͡ʃɛtˈvɛrtɪj/ | fourth | adj | ч |  |
 | шостий | /ˈʃɔstɪj/ | sixth | adj | ч |  |
-
-## 📋 Summary
-
-Ви навчилися говорити про час українською! (You've learned to tell time in Ukrainian!)
-
-**Що ви вивчили (What you learned):**
-
-- **Час (Time):** Котра година? — Друга година / Пів на третю
-- **Одиниці часу (Time units):** година, хвилина, секунда
-- **Вирази (Expressions):** рано (early), пізно (late), вчасно (on time)
-- **Дні тижня (Days):** понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя
-- **Місяці (Months):** січень...грудень (з природними назвами!)
-- **Прийменники (Prepositions):** о/об, до, після, перед, з...до
-
----
-
-**Наступний урок:** Модальні дієслова — можна, треба, хочу!
 
 > [!resources] 🔗 External Resources
 >

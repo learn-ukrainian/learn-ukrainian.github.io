@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): доставлений, відправлений, розв'язаний...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): розв'язаний, відправлений, доставлений...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -13,7 +13,7 @@
 
 ## Gates
 - **Words:** ✅ 1991/1750
-- **Activities:** ✅ 17/14
+- **Activities:** ✅ 17/13
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used

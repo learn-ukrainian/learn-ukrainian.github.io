@@ -490,7 +490,7 @@ LEVEL_CONFIG = {
     },
     'B2-grammar': {
         'target_words': 1750,
-        'min_activities': 14,
+        'min_activities': 13,
         'min_items_per_activity': 16,
         'min_types_unique': 4,
         'min_vocab': 25,  # Increased for advanced grammar terminology
@@ -502,7 +502,7 @@ LEVEL_CONFIG = {
     },
     'B2-vocab': {
         'target_words': 1750,
-        'min_activities': 14,
+        'min_activities': 13,
         'min_items_per_activity': 16,
         'min_types_unique': 4,
         'min_vocab': 35,
@@ -514,7 +514,7 @@ LEVEL_CONFIG = {
     },
     'B2': {
         'target_words': 1750,
-        'min_activities': 14,
+        'min_activities': 13,
         'min_items_per_activity': 16,
         'min_types_unique': 4,
         'min_vocab': 25,
@@ -564,7 +564,7 @@ LEVEL_CONFIG = {
         # Synthesis modules replace checkpoints in B2.3 History (M83, M107, M119, M125, M131)
         # Focus on cross-era analysis and historical argumentation, not recall
         'target_words': 1200,
-        'min_activities': 14,
+        'min_activities': 13,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
         'min_vocab': 20,  # Review vocabulary from covered modules

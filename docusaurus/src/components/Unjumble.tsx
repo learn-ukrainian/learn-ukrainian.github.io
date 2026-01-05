@@ -19,9 +19,10 @@ interface UnjumbleQuestionProps {
   words: string;
   answer: string;
   hint?: string;
+  isUkrainian?: boolean;
 }
 
-export function UnjumbleQuestion({ words, answer, hint }: UnjumbleQuestionProps) {
+export function UnjumbleQuestion({ words, answer, hint, isUkrainian }: UnjumbleQuestionProps) {
   // Parse words (can be separated by /, |, or ,) and shuffle so they're never in correct order
   const wordList = useMemo(() => {
     const rawWords = words.split(/[\/|,]\s*/).map(w => w.trim());
@@ -131,6 +132,12 @@ export function UnjumbleQuestion({ words, answer, hint }: UnjumbleQuestionProps)
   const userAnswer = selectedWords.map(w => w.text).join(' ');
   const isCorrect = userAnswer.toLowerCase().trim() === answer.toLowerCase().trim();
 
+  const placeholderLabel = isUkrainian ? 'Перетягніть слова сюди, щоб скласти речення...' : 'Drag words here to build the sentence...';
+  const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answer';
+  const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
+  const correctLabel = isUkrainian ? '✓ Правильно!' : '✓ Correct!';
+  const incorrectLabel = isUkrainian ? '✗ Правильне речення:' : '✗ The correct sentence is:';
+
   return (
     <div className={styles.unjumbleQuestion}>
       {/* Sentence Builder Zone */}
@@ -160,7 +167,7 @@ export function UnjumbleQuestion({ words, answer, hint }: UnjumbleQuestionProps)
             </button>
           ))
         ) : (
-          <span className={styles.placeholder}>Drag words here to build the sentence...</span>
+          <span className={styles.placeholder}>{placeholderLabel}</span>
         )}
       </div>
 
@@ -196,18 +203,18 @@ export function UnjumbleQuestion({ words, answer, hint }: UnjumbleQuestionProps)
             onClick={handleCheck}
             disabled={availableWords.length > 0}
           >
-            Check Answer
+            {checkBtnLabel}
           </button>
         ) : (
           <button className={styles.resetButton} onClick={handleReset}>
-            Try Again
+            {retryBtnLabel}
           </button>
         )}
       </div>
 
       {showResult && (
         <div className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
-          {isCorrect ? '✓ Correct!' : `✗ The correct sentence is: ${answer}`}
+          {isCorrect ? correctLabel : `${incorrectLabel} ${answer}`}
         </div>
       )}
     </div>
@@ -224,15 +231,18 @@ interface UnjumbleItem {
 interface UnjumbleProps {
   items?: UnjumbleItem[];
   children?: React.ReactNode;
+  isUkrainian?: boolean;
 }
 
-export default function Unjumble({ items, children }: UnjumbleProps) {
+export default function Unjumble({ items, children, isUkrainian }: UnjumbleProps) {
+  const headerLabel = isUkrainian ? 'Складіть речення' : 'Build the Sentence';
+
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🧩</span>
-        <span>Build the Sentence</span>
-        <ActivityHelp activityType="unjumble" />
+        <span>{headerLabel}</span>
+        <ActivityHelp activityType="unjumble" isUkrainian={isUkrainian} />
       </div>
       <div className={styles.activityContent}>
         {items ? items.map((item, index) => (
@@ -241,6 +251,7 @@ export default function Unjumble({ items, children }: UnjumbleProps) {
             words={item.words || item.jumbled || ''}
             answer={item.answer}
             hint={item.hint}
+            isUkrainian={isUkrainian}
           />
         )) : children}
       </div>

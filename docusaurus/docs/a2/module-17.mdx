@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 ## Warm-up
 
@@ -297,6 +299,7 @@ This efficiency is part of what makes Ukrainian beautiful to speak.
 
 <MatchUp
   title="Свій vs Його"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- Subject owns it", "right": "свій"}, {"left": "- Someone else owns it", "right": "його/її/їхній"}, {"left": "- He loves his own car", "right": "свою"}, {"left": "- He loves her car", "right": "її"}, {"left": "- She washed her own hands", "right": "свої"}, {"left": "- She washed his hands", "right": "його"}, {"left": "- We love our own country", "right": "свою"}, {"left": "- They love her country", "right": "її"}]`)}
 />
 
@@ -304,6 +307,7 @@ This efficiency is part of what makes Ukrainian beautiful to speak.
 
 <Cloze
   title="Choose Свій or Його"
+  isUkrainian={false}
   passage={`Він читає [[___:1]] книгу. Вона любить [[___:2]] маму. Я бачив [[___:3]] друга. (his friend, not mine)
 
 Вони живуть у [[___:4]] домі. Марія взяла [[___:5]] сумку. Він допоміг [[___:6]] сестрі.
@@ -316,13 +320,15 @@ This efficiency is part of what makes Ukrainian beautiful to speak.
 
 <Quiz
   title="Concept Check"
-  questions={JSON.parse(`[{"question": "Which scenario best describes the primary grammatical function of the reflexive possessive pronoun \\\"свій\\\" in Ukrainian?", "options": [{"text": "Refers back to the subject of the same sentence", "correct": true}, {"text": "Refers to someone else's property only", "correct": false}, {"text": "Used only with masculine singular subjects", "correct": false}, {"text": "Replaces only the second person plural possessive", "correct": false}]}, {"question": "In the sentence \\\"Я люблю свою маму,\\\" which of the following English phrases correctly captures the intended meaning?", "options": [{"text": "I love my (own) mother", "correct": true}, {"text": "I love your mother", "correct": false}, {"text": "I love her mother", "correct": false}, {"text": "I love his mother", "correct": false}]}, {"question": "What is the subtle but important difference between \\\"Він любить його маму\\\" and \\\"Він любить свою маму\\\"?", "options": [{"text": "\\\"Його\\\" means someone else's mother; \\\"своя\\\" means his own", "correct": true}, {"text": "There is no functional difference in standard Ukrainian", "correct": false}, {"text": "\\\"Його\\\" is formal; \\\"своя\\\" is familiar and casual", "correct": false}, {"text": "\\\"Його\\\" is only for objects; \\\"своя\\\" is for people", "correct": false}]}, {"question": "Which of the following statements correctly identifies how the pronoun \\\"свій\\\" is declined in a Ukrainian sentence?", "options": [{"text": "It declines exactly like the possessive pronoun \\\"мій\\\"", "correct": true}, {"text": "It has only one fixed form for all genders", "correct": false}, {"text": "It never changes its ending regardless of the case", "correct": false}, {"text": "it declines like a regular non-possessive adjective", "correct": false}]}, {"question": "Can the pronoun \\\"свій\\\" be used grammatically as part of the subject in a main clause?", "options": [{"text": "No, it usually refers to something the subject possesses", "correct": true}, {"text": "Yes, it is common to start sentences with \\\"Свій батько...\\\"", "correct": false}, {"text": "Only when the verb is in the past tense", "correct": false}, {"text": "Only in the third person plural form", "correct": false}]}, {"question": "Which of the following is the correct feminine accusative form of \\\"свій\\\" to match the noun \\\"книгу\\\"?", "options": [{"text": "свою ( accusative feminine singular)", "correct": true}, {"text": "своєї", "correct": false}, {"text": "своїй", "correct": false}, {"text": "своєю", "correct": false}]}, {"question": "When using the first or second person, are both \\\"мій\\\" and \\\"свій\\\" generally considered acceptable in standard Ukrainian?", "options": [{"text": "Yes, both are common, but \\\"свій\\\" is very natural", "correct": true}, {"text": "No, \\\"мій\\\" is considered grammatically incorrect", "correct": false}, {"text": "Only \\\"мій\\\" is used for family members", "correct": false}, {"text": "Only \\\"свій\\\" is used for inanimate objects", "correct": false}]}, {"question": "To which personal pronoun refers \\\"свої\\\" in the following sentence: \\\"Ми любимо свої традиції\\\"?", "options": [{"text": "ми", "correct": true}, {"text": "ви", "correct": false}, {"text": "вони", "correct": false}, {"text": "я", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Which scenario best describes the primary grammatical function of the reflexive possessive pronoun \\\\\\"свій\\\\\\" in Ukrainian?", "options": [{"text": "Refers back to the subject of the same sentence", "correct": true}, {"text": "Refers to someone else's property only", "correct": false}, {"text": "Used only with masculine singular subjects", "correct": false}, {"text": "Replaces only the second person plural possessive", "correct": false}]}, {"question": "In the sentence \\\\\\"Я люблю свою маму,\\\\\\" which of the following English phrases correctly captures the intended meaning?", "options": [{"text": "I love my (own) mother", "correct": true}, {"text": "I love your mother", "correct": false}, {"text": "I love her mother", "correct": false}, {"text": "I love his mother", "correct": false}]}, {"question": "What is the subtle but important difference between \\\\\\"Він любить його маму\\\\\\" and \\\\\\"Він любить свою маму\\\\\\"?", "options": [{"text": "\\\\\\"Його\\\\\\" means someone else's mother; \\\\\\"своя\\\\\\" means his own", "correct": true}, {"text": "There is no functional difference in standard Ukrainian", "correct": false}, {"text": "\\\\\\"Його\\\\\\" is formal; \\\\\\"своя\\\\\\" is familiar and casual", "correct": false}, {"text": "\\\\\\"Його\\\\\\" is only for objects; \\\\\\"своя\\\\\\" is for people", "correct": false}]}, {"question": "Which of the following statements correctly identifies how the pronoun \\\\\\"свій\\\\\\" is declined in a Ukrainian sentence?", "options": [{"text": "It declines exactly like the possessive pronoun \\\\\\"мій\\\\\\"", "correct": true}, {"text": "It has only one fixed form for all genders", "correct": false}, {"text": "It never changes its ending regardless of the case", "correct": false}, {"text": "it declines like a regular non-possessive adjective", "correct": false}]}, {"question": "Can the pronoun \\\\\\"свій\\\\\\" be used grammatically as part of the subject in a main clause?", "options": [{"text": "No, it usually refers to something the subject possesses", "correct": true}, {"text": "Yes, it is common to start sentences with \\\\\\"Свій батько...\\\\\\"", "correct": false}, {"text": "Only when the verb is in the past tense", "correct": false}, {"text": "Only in the third person plural form", "correct": false}]}, {"question": "Which of the following is the correct feminine accusative form of \\\\\\"свій\\\\\\" to match the noun \\\\\\"книгу\\\\\\"?", "options": [{"text": "свою ( accusative feminine singular)", "correct": true}, {"text": "своєї", "correct": false}, {"text": "своїй", "correct": false}, {"text": "своєю", "correct": false}]}, {"question": "When using the first or second person, are both \\\\\\"мій\\\\\\" and \\\\\\"свій\\\\\\" generally considered acceptable in standard Ukrainian?", "options": [{"text": "Yes, both are common, but \\\\\\"свій\\\\\\" is very natural", "correct": true}, {"text": "No, \\\\\\"мій\\\\\\" is considered grammatically incorrect", "correct": false}, {"text": "Only \\\\\\"мій\\\\\\" is used for family members", "correct": false}, {"text": "Only \\\\\\"свій\\\\\\" is used for inanimate objects", "correct": false}]}, {"question": "To which personal pronoun refers \\\\\\"свої\\\\\\" in the following sentence: \\\\\\"Ми любимо свої традиції\\\\\\"?", "options": [{"text": "ми", "correct": true}, {"text": "ви", "correct": false}, {"text": "вони", "correct": false}, {"text": "я", "correct": false}]}]`)}
 />
 
 ### Family Story
 
 <Cloze
   title="Family Story"
+  isUkrainian={false}
   passage={`Марія готує у [своїй:1] кухні. Її мама приїхала зі [своїм:2] чоловіком. Марія показала [свою:3] квартиру. Батько говорив про [свою:4] роботу. Мама взяла [свою:5] сумку. Марія слухала [своїх:6] батьків.
 ---
 Мій брат розповів про [свій:1] день. Максим любить [свою:2] роботу. Ми цінуємо [свою:3] родину. Ви бачите [свої:4] помилки. Вони шукають [свої:5] речі. Сестра миє [своє:6] обличчя.`}
@@ -333,12 +339,13 @@ This efficiency is part of what makes Ukrainian beautiful to speak.
 
 <Unjumble
   title="Possessive Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "він / дуже / часто / читає / свою / нову / цікаву / книгу", "answer": "Він дуже часто читає свою нову цікаву книгу"}, {"jumbled": "вона / дуже / сильно / любить / свою / рідну / добру / маму", "answer": "Вона дуже сильно любить свою рідну добру маму"}, {"jumbled": "вони / зараз / живуть / у / своєму / великому / білому / домі", "answer": "Вони зараз живуть у своєму великому домі"}, {"jumbled": "Марія / швидко / взяла / свою / синю / сумку / зі / столу", "answer": "Марія швидко взяла свою синю сумку зі столу"}, {"jumbled": "він / довго / говорить / зі / своїм / старшим / розумним / братом", "answer": "Він довго говорить зі своїм старшим братом"}, {"jumbled": "я / завжди / думаю / про / своє / прекрасне / щасливе / майбутнє", "answer": "Я завжди думаю про своє прекрасне щасливе майбутнє"}, {"jumbled": "вона / міцно / спить / у / своїй / новій / тихій / кімнаті", "answer": "Вона міцно спить у своїй новій тихій кімнаті"}, {"jumbled": "ми / дуже / щиро / любимо / своїх / добрих / старих / батьків", "answer": "Ми щиро любимо своїх добрих старих батьків"}]`)}
 />
 
 ### Wrong Possessive
 
-<ErrorCorrection title="Wrong Possessive">
+<ErrorCorrection title="Wrong Possessive" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Він любить його маму. (Intended: his own mom)`}
     errorWord={`його`}
@@ -387,6 +394,7 @@ This efficiency is part of what makes Ukrainian beautiful to speak.
 
 <GroupSort
   title="Declension Forms"
+  isUkrainian={false}
   groups={JSON.parse(`{"Masculine (свій, свого, своєму)": ["свій дім", "свого брата", "своєму батькові", "своїм братом", "свого тата", "своєму другові"], "Feminine (своя, своєї, своїй, свою)": ["своя сестра", "своєї мами", "своїй подрузі", "свою книгу", "свою статтю", "своєї родини"], "Neuter / Plural": ["своє майбутнє", "свої речі", "своїх батьків", "своїми друзями", "своє обличчя", "своїх успіхів"]}`)}
 />
 
@@ -394,6 +402,7 @@ This efficiency is part of what makes Ukrainian beautiful to speak.
 
 <MatchUp
   title="Case Selection"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- у + своя (кімната)", "right": "своїй кімнаті"}, {"left": "- без + свій (брат)", "right": "свого брата"}, {"left": "- про + своя (робота)", "right": "свою роботу"}, {"left": "- з + свій (друг)", "right": "своїм другом"}, {"left": "- для + своя (мама)", "right": "своєї мами"}, {"left": "- на + своє (місце)", "right": "своєму місці"}, {"left": "- під + свій (стіл)", "right": "своїм столом"}, {"left": "- біля + свій (дім)", "right": "свого дому"}]`)}
 />
 
@@ -401,6 +410,7 @@ This efficiency is part of what makes Ukrainian beautiful to speak.
 
 <FillIn
   title="Interview Story"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Петро надів [___] костюм.", "answer": "свій", "options": ["свій", "його"]}, {"sentence": "Він взяв [___] папку.", "answer": "свою", "options": ["свою", "її"]}, {"sentence": "Менеджер запитав про [___] досвід. (Petro's)", "answer": "його", "options": ["його", "свій"]}, {"sentence": "Петро розповів про [___] роботу.", "answer": "свою", "options": ["свою", "його"]}, {"sentence": "Він показав [___] рекомендації.", "answer": "свої", "options": ["свої", "його"]}, {"sentence": "Менеджер подивився на [___] колегу.", "answer": "свого", "options": ["свого", "його"]}, {"sentence": "Петро обійняв [___] дружину.", "answer": "свою", "options": ["свою", "її"]}, {"sentence": "Вони святкували [___] успіх.", "answer": "свій", "options": ["свій", "їхній"]}]`)}
 />
 
@@ -408,6 +418,7 @@ This efficiency is part of what makes Ukrainian beautiful to speak.
 
 <Cloze
   title="Edge Cases"
+  isUkrainian={false}
   passage={`Він попросив мене взяти [свою:1] книгу. Треба любити [свою:2] країну. (one's own) Марія знає, що Петро любить [свою:3] роботу. Добре мати [своє:4] житло. (one's own) Вона хоче, щоб я прочитав [свою:5] статтю. Він допоміг [своєму:6] братові.
 ---
 Я бачу [свій:1] дім. Ти відкрив [своє:2] вікно. Ми знаємо [свої:3] цілі. Ви купили [свою:4] машину. Вони чекають [своїх:5] друзів. Вона миє [свої:6] руки.

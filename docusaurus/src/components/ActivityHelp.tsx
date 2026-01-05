@@ -3,6 +3,7 @@ import styles from './Activities.module.css';
 
 interface ActivityHelpProps {
   activityType: string;
+  isUkrainian?: boolean;
 }
 
 const HELP_TEXT: Record<string, { title: string; description: string }> = {
@@ -62,13 +63,90 @@ const HELP_TEXT: Record<string, { title: string; description: string }> = {
     title: 'Observe the Pattern',
     description: 'Study the examples carefully and try to discover the grammar pattern before it\'s explained. Look for similarities in word endings, structure, or meaning.',
   },
+  'essay-response': {
+    title: 'Essay Response',
+    description: 'Write a structured essay in response to the prompt. Use the rubric to guide your writing and compare with the model answer.',
+  },
+  'comparative-study': {
+    title: 'Comparative Study',
+    description: 'Analyze and compare the provided materials. Identify similarities, differences, and patterns.',
+  },
 };
 
-export default function ActivityHelp({ activityType }: ActivityHelpProps) {
+const HELP_TEXT_UA: Record<string, { title: string; description: string }> = {
+  'quiz': {
+    title: 'Вибір відповіді',
+    description: 'Виберіть правильну відповідь із запропонованих варіантів. Лише одна відповідь є правильною.',
+  },
+  'fill-in': {
+    title: 'Заповніть пропуски',
+    description: 'Виберіть правильне слово або фразу з випадаючого списку, щоб доповнити речення.',
+  },
+  'match-up': {
+    title: 'Знайдіть пару',
+    description: 'З’єднайте елементи з лівої колонки з відповідними елементами праворуч, натискаючи на них.',
+  },
+  'true-false': {
+    title: 'Правда чи хибність',
+    description: 'Визначте, чи є кожне твердження правдивим чи хибним на основі вивченого матеріалу.',
+  },
+  'anagram': {
+    title: 'Переставте літери',
+    description: 'Переставте переплутані літери, щоб утворити правильне українське слово.',
+  },
+  'unjumble': {
+    title: 'Складіть речення',
+    description: 'Натискайте на слова, щоб розташувати їх у правильному порядку та утворити граматично правильне речення.',
+  },
+  'group-sort': {
+    title: 'Розподіліть за категоріями',
+    description: 'Перетягніть або натисніть на кожне слово, щоб помістити його у відповідний кошик категорії.',
+  },
+  'error-correction': {
+    title: 'Знайдіть і виправте помилку',
+    description: 'Кожне речення містить помилку. Знайдіть неправильне слово та виберіть правильну форму з варіантів.',
+  },
+  'cloze': {
+    title: 'Заповніть текст',
+    description: 'Прочитайте текст і заповніть пропуски, вибираючи правильне слово з кожного випадаючого списку.',
+  },
+  'mark-the-words': {
+    title: 'Відмітьте слова',
+    description: 'Натисніть на всі слова в тексті, які відповідають заданим критеріям (наприклад, іменники, дієслова, певний відмінок).',
+  },
+  'dialogue-reorder': {
+    title: 'Впорядкуйте діалог',
+    description: 'Розташуйте репліки розмови в правильному порядку, щоб створити природний діалог.',
+  },
+  'select': {
+    title: 'Виберіть усі варіанти',
+    description: 'Виберіть УСІ правильні відповіді. Правильних варіантів може бути декілька.',
+  },
+  'translate': {
+    title: 'Виберіть переклад',
+    description: 'Виберіть правильний переклад поданого речення або фрази.',
+  },
+  'observe': {
+    title: 'Спостереження за мовою',
+    description: 'Уважно вивчіть приклади та спробуйте самостійно знайти граматичну закономірність. Звертайте увагу на закінчення слів, структуру або значення.',
+  },
+  'essay-response': {
+    title: 'Есе-відповідь',
+    description: 'Напишіть структуроване есе у відповідь на завдання. Використовуйте критерії оцінювання та порівняйте свою відповідь зі зразком.',
+  },
+  'comparative-study': {
+    title: 'Порівняльний аналіз',
+    description: 'Проаналізуйте та порівняйте надані матеріали. Визначте схожості, відмінності та закономірності.',
+  },
+};
+
+export default function ActivityHelp({ activityType, isUkrainian }: ActivityHelpProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const help = HELP_TEXT[activityType];
+  const help = isUkrainian ? HELP_TEXT_UA[activityType] : HELP_TEXT[activityType];
   if (!help) return null;
+
+  const btnTitle = isUkrainian ? 'Як працює ця вправа?' : 'How does this activity work?';
 
   return (
     <div className={styles.helpContainer}>
@@ -76,7 +154,7 @@ export default function ActivityHelp({ activityType }: ActivityHelpProps) {
         className={styles.helpButton}
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Activity help"
-        title="How does this activity work?"
+        title={btnTitle}
       >
         ?
       </button>

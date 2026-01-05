@@ -4,7 +4,7 @@
 
 ## PEDAGOGICAL VIOLATIONS
 - **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Виправте граматичні помилки' uses placeholder syntax instead of real errors
-  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 2/8 items with placeholders/missing errors.
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 1/8 items with placeholders/missing errors.
 
 ## Recommendation
 **📝 UPDATE** (severity 10/100)

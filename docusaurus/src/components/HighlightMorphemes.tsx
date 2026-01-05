@@ -12,12 +12,14 @@ interface HighlightMorphemesActivityProps {
   instruction?: string;
   text: string;
   morphemes: MorphemeItem[];
+  isUkrainian?: boolean;
 }
 
 export function HighlightMorphemesActivity({
   instruction,
   text,
-  morphemes
+  morphemes,
+  isUkrainian
 }: HighlightMorphemesActivityProps) {
   // Track clicks by token INDEX, not word text (fixes duplicate word bug)
   const [clickedIndices, setClickedIndices] = useState<Set<number>>(new Set());
@@ -165,6 +167,12 @@ export function HighlightMorphemesActivity({
   const totalExpected = expectedIndices.size;
   const isFullyCorrect = correctClicks === totalExpected && wrongClicks === 0;
 
+  const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answer';
+  const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
+  const successLabel = isUkrainian ? '✓ Чудово! Ви правильно знайшли всі частини слів.' : '✓ Perfect! You found all the word parts correctly.';
+  const correctLabel = isUkrainian ? 'правильно' : 'correct';
+  const incorrectSelectionsLabel = isUkrainian ? 'неправильних варіантів' : 'incorrect selection(s)';
+
   return (
     <div>
       {instruction && <p className={styles.activityInstruction}>{instruction}</p>}
@@ -178,7 +186,7 @@ export function HighlightMorphemesActivity({
             className={styles.submitButton}
             onClick={handleSubmit}
           >
-            Check Answer
+            {checkBtnLabel}
           </button>
         </div>
       )}
@@ -187,19 +195,19 @@ export function HighlightMorphemesActivity({
         <>
           <div className={`${styles.feedback} ${isFullyCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
             {isFullyCorrect ? (
-              '✓ Perfect! You found all the word parts correctly.'
+              successLabel
             ) : (
               <>
-                <span>✓ {correctClicks} / {totalExpected} correct. </span>
+                <span>✓ {correctClicks} / {totalExpected} {correctLabel}. </span>
                 {wrongClicks > 0 && (
-                  <span>{wrongClicks} incorrect selection(s).</span>
+                  <span>{wrongClicks} {incorrectSelectionsLabel}.</span>
                 )}
               </>
             )}
           </div>
           <div className={styles.buttonRow}>
             <button className={styles.resetButton} onClick={handleReset}>
-              Try Again
+              {retryBtnLabel}
             </button>
           </div>
         </>
@@ -210,18 +218,26 @@ export function HighlightMorphemesActivity({
 
 interface HighlightMorphemesProps {
   children: React.ReactNode;
+  isUkrainian?: boolean;
 }
 
-export default function HighlightMorphemes({ children }: HighlightMorphemesProps) {
+export default function HighlightMorphemes({ children, isUkrainian }: HighlightMorphemesProps) {
+  const headerLabel = isUkrainian ? 'Знайдіть частини слова' : 'Find Word Parts';
+
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🔍</span>
-        <span>Find Word Parts</span>
-        <ActivityHelp activityType="highlight-morphemes" />
+        <span>{headerLabel}</span>
+        <ActivityHelp activityType="highlight-morphemes" isUkrainian={isUkrainian} />
       </div>
       <div className={styles.activityContent}>
-        {children}
+        {React.Children.map(children, (child) => {
+          if (React.isValidElement(child)) {
+            return React.cloneElement(child as React.ReactElement<any>, { isUkrainian });
+          }
+          return child;
+        })}
       </div>
     </div>
   );

@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Warm-up
@@ -332,6 +334,21 @@ These are impersonal — the "subject" is optional:
 
 ---
 
+## 📋 Summary
+
+Ви вивчили модальні дієслова. Тепер ви знаєте українську краще! Ви знаєте, як сказати "я можу", "я вмію" та "я хочу". Ви також знаєте слова "треба", "можна" та "заборонено". Тепер ви можете планувати свій день! Це була гарна робота (This was good work). Українська мова дуже гарна!
+
+:::note[**Міф про українську мову (Myth about Ukrainian language)**]
+
+**Міф:** Українська мова — це діалект.
+**Факт:** Це неправда! Українська — це окрема солов'їна мова (separate nightingale language). Вона має свою граматику та історію.
+:::
+
+
+---
+
+**Coming up:** Module 25 will teach you reflexive verbs for daily routines!
+
 
 
 ## 🎯 Activities
@@ -340,6 +357,7 @@ These are impersonal — the "subject" is optional:
 
 <MatchUp
   title="Modal Meanings"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- могти", "right": "can, be able to"}, {"left": "- вміти", "right": "know how to"}, {"left": "- повинен", "right": "must (personal)"}, {"left": "- треба", "right": "need to"}, {"left": "- можна", "right": "may, allowed"}, {"left": "- не можна", "right": "not allowed"}, {"left": "- заборонено", "right": "forbidden"}, {"left": "- дозволено", "right": "permitted"}, {"left": "- слід", "right": "should, ought to"}, {"left": "- варто", "right": "worth, advisable"}, {"left": "- готовий", "right": "ready"}, {"left": "- здатний", "right": "capable"}]`)}
 />
 
@@ -347,6 +365,7 @@ These are impersonal — the "subject" is optional:
 
 <GroupSort
   title="Modal Categories"
+  isUkrainian={false}
   groups={JSON.parse(`{"Ability (Здатність)": ["могти", "вміти", "здатний", "мати змогу"], "Obligation (Обов'язок)": ["повинен", "мусити", "треба", "потрібно"], "Permission (Дозвіл)": ["можна", "дозволено", "не можна", "заборонено", "--"]}`)}
 />
 
@@ -354,6 +373,7 @@ These are impersonal — the "subject" is optional:
 
 <FillIn
   title="могти Conjugation"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Я ___ говорити українською.", "answer": "можу", "options": ["можу", "можеш", "може", "можуть"]}, {"sentence": "Ти ___ допомогти?", "answer": "можеш", "options": ["можу", "можеш", "може", "можете"]}, {"sentence": "Вона ___ прийти завтра.", "answer": "може", "options": ["можу", "можеш", "може", "можуть"]}, {"sentence": "Ми ___ зробити це разом.", "answer": "можемо", "options": ["можемо", "можете", "можуть", "можу"]}, {"sentence": "Ви ___ почекати трохи?", "answer": "можете", "options": ["можете", "можемо", "можуть", "можеш"]}, {"sentence": "Вони ___ грати на гітарі.", "answer": "можуть", "options": ["можуть", "можемо", "можете", "може"]}, {"sentence": "Він ___ плавати дуже швидко.", "answer": "може", "options": ["може", "можу", "можеш", "можуть"]}, {"sentence": "Я не ___ прийти сьогодні.", "answer": "можу", "options": ["можу", "можеш", "може", "можемо"]}]`)}
 />
 
@@ -361,6 +381,7 @@ These are impersonal — the "subject" is optional:
 
 <FillIn
   title="Obligation Words"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Я ___ працювати завтра.", "answer": "повинен", "options": ["повинен", "можу", "вмію", "хочу"]}, {"sentence": "___ вчитися кожен день.", "answer": "Треба", "options": ["Треба", "Можна", "Вмію", "Готовий"]}, {"sentence": "Вона ___ закінчити проект.", "answer": "мусить", "options": ["мусить", "вміє", "може", "готова"]}, {"sentence": "___ відповісти на лист.", "answer": "Потрібно", "options": ["Потрібно", "Можна", "Дозволено", "Готовий"]}, {"sentence": "Він ___ прийти вчасно.", "answer": "повинен", "options": ["повинен", "вміє", "може", "хоче"]}, {"sentence": "Тут ___ палити.", "answer": "заборонено", "options": ["заборонено", "дозволено", "можна", "треба"]}, {"sentence": "___ подивитися цей фільм.", "answer": "Варто", "options": ["Варто", "Треба", "Не можна", "Заборонено"]}, {"sentence": "___ відпочити після роботи.", "answer": "Слід", "options": ["Слід", "Можна", "Дозволено", "Вмію"]}]`)}
 />
 
@@ -368,20 +389,23 @@ These are impersonal — the "subject" is optional:
 
 <Quiz
   title="Ability or Skill?"
-  questions={JSON.parse(`[{"question": "Does the sentence \\\"Я вмію плавати\\\" express ability or skill?", "options": [{"text": "Skill", "correct": true}, {"text": "Physical ability", "correct": false}, {"text": "Permission", "correct": false}, {"text": "Obligation", "correct": false}]}, {"question": "How do you categorize the sentence \\\"Я не можу прийти сьогодні\\\"?", "options": [{"text": "Physical ability", "correct": true}, {"text": "Skill", "correct": false}, {"text": "Permission", "correct": false}, {"text": "Obligation", "correct": false}]}, {"question": "What category does \\\"Вона вміє готувати українські страви\\\" specifically belong to?", "options": [{"text": "Skill", "correct": true}, {"text": "Physical ability", "correct": false}, {"text": "Permission", "correct": false}, {"text": "Obligation", "correct": false}]}, {"question": "Which category matches the question \\\"Ти можеш відкрити ці двері?\\\" accurately?", "options": [{"text": "Physical ability (request)", "correct": true}, {"text": "Skill", "correct": false}, {"text": "Obligation", "correct": false}, {"text": "Prohibition", "correct": false}]}, {"question": "Does the sentence \\\"Він вміє грати на гітарі\\\" mean skill or ability?", "options": [{"text": "Skill", "correct": true}, {"text": "Physical ability", "correct": false}, {"text": "Permission", "correct": false}, {"text": "Obligation", "correct": false}]}, {"question": "How is the sentence \\\"Ми можемо почати зараз\\\" correctly categorized here?", "options": [{"text": "Physical ability", "correct": true}, {"text": "Skill", "correct": false}, {"text": "Permission", "correct": false}, {"text": "Obligation", "correct": false}]}, {"question": "What does the sentence \\\"Вони вміють танцювати сальсу\\\" actually express?", "options": [{"text": "Skill", "correct": true}, {"text": "Physical ability", "correct": false}, {"text": "Permission", "correct": false}, {"text": "Obligation", "correct": false}]}, {"question": "Which category fits \\\"Я не можу знайти свої ключі\\\" accurately?", "options": [{"text": "Physical ability", "correct": true}, {"text": "Skill", "correct": false}, {"text": "Permission", "correct": false}, {"text": "Obligation", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Does the sentence \\\\\\"Я вмію плавати\\\\\\" express ability or skill?", "options": [{"text": "Skill", "correct": true}, {"text": "Physical ability", "correct": false}, {"text": "Permission", "correct": false}, {"text": "Obligation", "correct": false}]}, {"question": "How do you categorize the sentence \\\\\\"Я не можу прийти сьогодні\\\\\\"?", "options": [{"text": "Physical ability", "correct": true}, {"text": "Skill", "correct": false}, {"text": "Permission", "correct": false}, {"text": "Obligation", "correct": false}]}, {"question": "What category does \\\\\\"Вона вміє готувати українські страви\\\\\\" specifically belong to?", "options": [{"text": "Skill", "correct": true}, {"text": "Physical ability", "correct": false}, {"text": "Permission", "correct": false}, {"text": "Obligation", "correct": false}]}, {"question": "Which category matches the question \\\\\\"Ти можеш відкрити ці двері?\\\\\\" accurately?", "options": [{"text": "Physical ability (request)", "correct": true}, {"text": "Skill", "correct": false}, {"text": "Obligation", "correct": false}, {"text": "Prohibition", "correct": false}]}, {"question": "Does the sentence \\\\\\"Він вміє грати на гітарі\\\\\\" mean skill or ability?", "options": [{"text": "Skill", "correct": true}, {"text": "Physical ability", "correct": false}, {"text": "Permission", "correct": false}, {"text": "Obligation", "correct": false}]}, {"question": "How is the sentence \\\\\\"Ми можемо почати зараз\\\\\\" correctly categorized here?", "options": [{"text": "Physical ability", "correct": true}, {"text": "Skill", "correct": false}, {"text": "Permission", "correct": false}, {"text": "Obligation", "correct": false}]}, {"question": "What does the sentence \\\\\\"Вони вміють танцювати сальсу\\\\\\" actually express?", "options": [{"text": "Skill", "correct": true}, {"text": "Physical ability", "correct": false}, {"text": "Permission", "correct": false}, {"text": "Obligation", "correct": false}]}, {"question": "Which category fits \\\\\\"Я не можу знайти свої ключі\\\\\\" accurately?", "options": [{"text": "Physical ability", "correct": true}, {"text": "Skill", "correct": false}, {"text": "Permission", "correct": false}, {"text": "Obligation", "correct": false}]}]`)}
 />
 
 ### Modal Meanings
 
 <Quiz
   title="Modal Meanings"
-  questions={JSON.parse(`[{"question": "Which English phrase represents \\\"Можна увійти?\\\" accurately today?", "options": [{"text": "May I enter?", "correct": true}, {"text": "Must I enter?", "correct": false}, {"text": "Can I swim?", "correct": false}, {"text": "Should I leave?", "correct": false}]}, {"question": "What isaccurately the English meaning of \\\"Тут заборонено палити\\\"?", "options": [{"text": "Smoking is forbidden here.", "correct": true}, {"text": "Smoking is allowed here.", "correct": false}, {"text": "You must smoke here.", "correct": false}, {"text": "You should smoke here.", "correct": false}]}, {"question": "How do you accurately say \\\"Я повинен працювати\\\" in English?", "options": [{"text": "I must work.", "correct": true}, {"text": "I can work.", "correct": false}, {"text": "I want to work.", "correct": false}, {"text": "I know how to work.", "correct": false}]}, {"question": "What doesaccurately the phrase \\\"Варто подивитися цей фільм\\\" mean?", "options": [{"text": "This movie is worth watching.", "correct": true}, {"text": "You must watch this movie.", "correct": false}, {"text": "You can't watch this movie.", "correct": false}, {"text": "This movie is forbidden.", "correct": false}]}, {"question": "How do you accurately translate \\\"Треба вчитися кожен день\\\"?", "options": [{"text": "One must study every day.", "correct": true}, {"text": "One can study every day.", "correct": false}, {"text": "One wants to study every day.", "correct": false}, {"text": "One is allowed to study every day.", "correct": false}]}, {"question": "What does precisely the sentence \\\"Вона готова почати\\\" mean?", "options": [{"text": "She is ready to start.", "correct": true}, {"text": "She must start.", "correct": false}, {"text": "She can start.", "correct": false}, {"text": "She wants to start.", "correct": false}]}, {"question": "Which English translation is correct for \\\"Тут дозволено фотографувати\\\"?", "options": [{"text": "Photography is permitted here.", "correct": true}, {"text": "Photography is forbidden here.", "correct": false}, {"text": "You must take photos here.", "correct": false}, {"text": "You should take photos here.", "correct": false}]}, {"question": "Which phrase accurately translates \\\"Слід відпочити\\\" into English?", "options": [{"text": "One should rest.", "correct": true}, {"text": "One must rest.", "correct": false}, {"text": "One can rest.", "correct": false}, {"text": "One is forbidden to rest.", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Which English phrase represents \\\\\\"Можна увійти?\\\\\\" accurately today?", "options": [{"text": "May I enter?", "correct": true}, {"text": "Must I enter?", "correct": false}, {"text": "Can I swim?", "correct": false}, {"text": "Should I leave?", "correct": false}]}, {"question": "What isaccurately the English meaning of \\\\\\"Тут заборонено палити\\\\\\"?", "options": [{"text": "Smoking is forbidden here.", "correct": true}, {"text": "Smoking is allowed here.", "correct": false}, {"text": "You must smoke here.", "correct": false}, {"text": "You should smoke here.", "correct": false}]}, {"question": "How do you accurately say \\\\\\"Я повинен працювати\\\\\\" in English?", "options": [{"text": "I must work.", "correct": true}, {"text": "I can work.", "correct": false}, {"text": "I want to work.", "correct": false}, {"text": "I know how to work.", "correct": false}]}, {"question": "What doesaccurately the phrase \\\\\\"Варто подивитися цей фільм\\\\\\" mean?", "options": [{"text": "This movie is worth watching.", "correct": true}, {"text": "You must watch this movie.", "correct": false}, {"text": "You can't watch this movie.", "correct": false}, {"text": "This movie is forbidden.", "correct": false}]}, {"question": "How do you accurately translate \\\\\\"Треба вчитися кожен день\\\\\\"?", "options": [{"text": "One must study every day.", "correct": true}, {"text": "One can study every day.", "correct": false}, {"text": "One wants to study every day.", "correct": false}, {"text": "One is allowed to study every day.", "correct": false}]}, {"question": "What does precisely the sentence \\\\\\"Вона готова почати\\\\\\" mean?", "options": [{"text": "She is ready to start.", "correct": true}, {"text": "She must start.", "correct": false}, {"text": "She can start.", "correct": false}, {"text": "She wants to start.", "correct": false}]}, {"question": "Which English translation is correct for \\\\\\"Тут дозволено фотографувати\\\\\\"?", "options": [{"text": "Photography is permitted here.", "correct": true}, {"text": "Photography is forbidden here.", "correct": false}, {"text": "You must take photos here.", "correct": false}, {"text": "You should take photos here.", "correct": false}]}, {"question": "Which phrase accurately translates \\\\\\"Слід відпочити\\\\\\" into English?", "options": [{"text": "One should rest.", "correct": true}, {"text": "One must rest.", "correct": false}, {"text": "One can rest.", "correct": false}, {"text": "One is forbidden to rest.", "correct": false}]}]`)}
 />
 
 ### Modal Sentences
 
 <Unjumble
   title="Modal Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "можу / я / українською / говорити", "answer": "Я можу говорити українською"}, {"jumbled": "вмієш / ти / плавати / ?", "answer": "Ти вмієш плавати"}, {"jumbled": "повинен / він / працювати / завтра", "answer": "Він повинен працювати завтра"}, {"jumbled": "можна / тут / сісти / ?", "answer": "Можна тут сісти"}, {"jumbled": "заборонено / палити / тут", "answer": "Тут заборонено палити"}, {"jumbled": "готова / вона / почати", "answer": "Вона готова почати"}]`)}
 />
 
@@ -389,7 +413,8 @@ These are impersonal — the "subject" is optional:
 
 <TrueFalse
   title="Modal Understanding"
-  items={JSON.parse(`[{"statement": "\\\"Вміти\\\" means \\\"to know how to\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Могти\\\" means \\\"must\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\"can\\\""}, {"statement": "\\\"Можна\\\" is used to ask permission.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Заборонено\\\" means \\\"allowed\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\"forbidden\\\""}, {"statement": "\\\"Треба\\\" is an impersonal word for necessity.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Повинен\\\" changes gender: повинен/повинна.", "isTrue": false, "explanation": ""}, {"statement": "\\\"Варто\\\" means \\\"worth\\\" or \\\"advisable\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Мусити\\\" means \\\"to want\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\"must\\\""}, {"statement": "\\\"Готовий\\\" means \\\"ready\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Слід\\\" means \\\"forbidden\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\"should\\\""}, {"statement": "\\\"Здатний\\\" means \\\"capable\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Не можна\\\" means \\\"you can\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\"not allowed\\\""}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "\\\\\\"Вміти\\\\\\" means \\\\\\"to know how to\\\\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Могти\\\\\\" means \\\\\\"must\\\\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\\\\"can\\\\\\""}, {"statement": "\\\\\\"Можна\\\\\\" is used to ask permission.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Заборонено\\\\\\" means \\\\\\"allowed\\\\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\\\\"forbidden\\\\\\""}, {"statement": "\\\\\\"Треба\\\\\\" is an impersonal word for necessity.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Повинен\\\\\\" changes gender: повинен/повинна.", "isTrue": false, "explanation": ""}, {"statement": "\\\\\\"Варто\\\\\\" means \\\\\\"worth\\\\\\" or \\\\\\"advisable\\\\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Мусити\\\\\\" means \\\\\\"to want\\\\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\\\\"must\\\\\\""}, {"statement": "\\\\\\"Готовий\\\\\\" means \\\\\\"ready\\\\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Слід\\\\\\" means \\\\\\"forbidden\\\\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\\\\"should\\\\\\""}, {"statement": "\\\\\\"Здатний\\\\\\" means \\\\\\"capable\\\\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Не можна\\\\\\" means \\\\\\"you can\\\\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\\\\"not allowed\\\\\\""}]`)}
 />
 
 ## 📚 Vocabulary
@@ -447,21 +472,6 @@ These are impersonal — the "subject" is optional:
 | факт | /fɑkt/ | fact | noun | ч |  |
 | фотографувати | /fɔtɔhrɑfuˈvɑtɪ/ | to photograph | verb |  |  |
 | холодний | /xɔˈlɔdnɪj/ | cold | adj | ч |  |
-
-## 📋 Summary
-
-Ви вивчили модальні дієслова. Тепер ви знаєте українську краще! Ви знаєте, як сказати "я можу", "я вмію" та "я хочу". Ви також знаєте слова "треба", "можна" та "заборонено". Тепер ви можете планувати свій день! Це була гарна робота (This was good work). Українська мова дуже гарна!
-
-:::note[**Міф про українську мову (Myth about Ukrainian language)**]
-
-**Міф:** Українська мова — це діалект.
-**Факт:** Це неправда! Українська — це окрема солов'їна мова (separate nightingale language). Вона має свою граматику та історію.
-:::
-
-
----
-
-**Coming up:** Module 25 will teach you reflexive verbs for daily routines!
 
 > [!resources] 🔗 External Resources
 >

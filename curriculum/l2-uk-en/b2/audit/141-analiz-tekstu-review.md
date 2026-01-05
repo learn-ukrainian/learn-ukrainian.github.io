@@ -4,7 +4,7 @@
 
 ## Gates
 - **Words:** ✅ 1883/1750
-- **Activities:** ✅ 14/14
+- **Activities:** ✅ 14/13
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 4/4 types
 - **Priority:** ✅ Priority types used

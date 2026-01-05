@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 ## Warm-up: Knowledge Check
 
@@ -302,6 +304,16 @@ Here are errors that students often make:
 3. **Playing games.** (Грати у футбол — Accusative).
 4. **My name is...** (Мене звати Том — Accusative).
 
+## 📋 Summary
+
+This review covered:
+
+- **Cases**: The backbone of the sentence (Subj, Obj, Loc, Instr...).
+- **Aspect**: The timeline of the verb (Process vs Result).
+- **Structure**: Complex sentences make you sound smart.
+
+You are now ready for the **Final Checkpoint**. Good luck!
+
 
 
 ## 🎯 Activities
@@ -310,13 +322,15 @@ Here are errors that students often make:
 
 <Quiz
   title="Grammar Master"
-  questions={JSON.parse(`[{"question": "Which grammatical case is primarily used for indicating a location in Ukrainian?", "options": [{"text": "Locative", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Dative", "correct": false}, {"text": "Genitive", "correct": false}]}, {"question": "Which case correctly completes the phrase \\\"Я працюю...\\\" to mean \\\"I work as\\\"?", "options": [{"text": "Instrumental (менеджером)", "correct": true}, {"text": "Nominative (менеджер)", "correct": false}, {"text": "Genitive (менеджера)", "correct": false}, {"text": "Locative (менеджері)", "correct": false}]}, {"question": "Which case is required after the phrase \\\"У мене немає...\\\" (I don't have)?", "options": [{"text": "Genitive (часу)", "correct": true}, {"text": "Accusative (час)", "correct": false}, {"text": "Instrumental (часом)", "correct": false}, {"text": "Dative (часу)", "correct": false}]}, {"question": "Which case is used for the direct object in the phrase \\\"Я бачу...\\\"?", "options": [{"text": "Accusative (сестру)", "correct": true}, {"text": "Nominative (сестра)", "correct": false}, {"text": "Dative (сестрі)", "correct": false}, {"text": "Locative (сестрі)", "correct": false}]}, {"question": "What does the \\\"Imperfective\\\" verb aspect typically describe in a sentence?", "options": [{"text": "Process / Habit / Duration", "correct": true}, {"text": "Result / Completion", "correct": false}, {"text": "Command / Order", "correct": false}, {"text": "Wish / Desire", "correct": false}]}, {"question": "What is the meaning and function of the connector \\\"щоб\\\" in a complex sentence?", "options": [{"text": "In order to / Purpose", "correct": true}, {"text": "Because / Reason", "correct": false}, {"text": "But / Contrast", "correct": false}, {"text": "And / Addition", "correct": false}]}, {"question": "Which case is used for the recipient in the phrase \\\"Я даю подарунок...\\\"?", "options": [{"text": "Dative (мамі)", "correct": true}, {"text": "Nominative (мама)", "correct": false}, {"text": "Genitive (мами)", "correct": false}, {"text": "Accusative (маму)", "correct": false}]}, {"question": "Which case is used to describe the tool in the phrase \\\"Я пишу...\\\"?", "options": [{"text": "Instrumental (олівцем)", "correct": true}, {"text": "Nominative (олівець)", "correct": false}, {"text": "Genitive (олівця)", "correct": false}, {"text": "Accusative (олівець)", "correct": false}]}, {"question": "Which case is used with the preposition \\\"з\\\" meaning \\\"from\\\" in \\\"Він прийшов з...\\\"?", "options": [{"text": "Genitive (магазину)", "correct": true}, {"text": "Nominative (магазин)", "correct": false}, {"text": "Locative (магазині)", "correct": false}, {"text": "Instrumental (магазином)", "correct": false}]}, {"question": "Which case follows the preposition \\\"про\\\" in the phrase \\\"Ми говоримо про...\\\"?", "options": [{"text": "Accusative (політику)", "correct": true}, {"text": "Nominative (політика)", "correct": false}, {"text": "Genitive (політики)", "correct": false}, {"text": "Instrumental (політикою)", "correct": false}]}, {"question": "Which case is used for location in the phrase \\\"Я живу в...\\\"?", "options": [{"text": "Locative (Україні)", "correct": true}, {"text": "Nominative (Україна)", "correct": false}, {"text": "Genitive (України)", "correct": false}, {"text": "Accusative (Україну)", "correct": false}]}, {"question": "Which special case form is used when addressing someone directly, like \\\"Привіт, ...\\\"?", "options": [{"text": "Vocative (друже)", "correct": true}, {"text": "Nominative (друг)", "correct": false}, {"text": "Genitive (друга)", "correct": false}, {"text": "Dative (другу)", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Which grammatical case is primarily used for indicating a location in Ukrainian?", "options": [{"text": "Locative", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Dative", "correct": false}, {"text": "Genitive", "correct": false}]}, {"question": "Which case correctly completes the phrase \\\\\\"Я працюю...\\\\\\" to mean \\\\\\"I work as\\\\\\"?", "options": [{"text": "Instrumental (менеджером)", "correct": true}, {"text": "Nominative (менеджер)", "correct": false}, {"text": "Genitive (менеджера)", "correct": false}, {"text": "Locative (менеджері)", "correct": false}]}, {"question": "Which case is required after the phrase \\\\\\"У мене немає...\\\\\\" (I don't have)?", "options": [{"text": "Genitive (часу)", "correct": true}, {"text": "Accusative (час)", "correct": false}, {"text": "Instrumental (часом)", "correct": false}, {"text": "Dative (часу)", "correct": false}]}, {"question": "Which case is used for the direct object in the phrase \\\\\\"Я бачу...\\\\\\"?", "options": [{"text": "Accusative (сестру)", "correct": true}, {"text": "Nominative (сестра)", "correct": false}, {"text": "Dative (сестрі)", "correct": false}, {"text": "Locative (сестрі)", "correct": false}]}, {"question": "What does the \\\\\\"Imperfective\\\\\\" verb aspect typically describe in a sentence?", "options": [{"text": "Process / Habit / Duration", "correct": true}, {"text": "Result / Completion", "correct": false}, {"text": "Command / Order", "correct": false}, {"text": "Wish / Desire", "correct": false}]}, {"question": "What is the meaning and function of the connector \\\\\\"щоб\\\\\\" in a complex sentence?", "options": [{"text": "In order to / Purpose", "correct": true}, {"text": "Because / Reason", "correct": false}, {"text": "But / Contrast", "correct": false}, {"text": "And / Addition", "correct": false}]}, {"question": "Which case is used for the recipient in the phrase \\\\\\"Я даю подарунок...\\\\\\"?", "options": [{"text": "Dative (мамі)", "correct": true}, {"text": "Nominative (мама)", "correct": false}, {"text": "Genitive (мами)", "correct": false}, {"text": "Accusative (маму)", "correct": false}]}, {"question": "Which case is used to describe the tool in the phrase \\\\\\"Я пишу...\\\\\\"?", "options": [{"text": "Instrumental (олівцем)", "correct": true}, {"text": "Nominative (олівець)", "correct": false}, {"text": "Genitive (олівця)", "correct": false}, {"text": "Accusative (олівець)", "correct": false}]}, {"question": "Which case is used with the preposition \\\\\\"з\\\\\\" meaning \\\\\\"from\\\\\\" in \\\\\\"Він прийшов з...\\\\\\"?", "options": [{"text": "Genitive (магазину)", "correct": true}, {"text": "Nominative (магазин)", "correct": false}, {"text": "Locative (магазині)", "correct": false}, {"text": "Instrumental (магазином)", "correct": false}]}, {"question": "Which case follows the preposition \\\\\\"про\\\\\\" in the phrase \\\\\\"Ми говоримо про...\\\\\\"?", "options": [{"text": "Accusative (політику)", "correct": true}, {"text": "Nominative (політика)", "correct": false}, {"text": "Genitive (політики)", "correct": false}, {"text": "Instrumental (політикою)", "correct": false}]}, {"question": "Which case is used for location in the phrase \\\\\\"Я живу в...\\\\\\"?", "options": [{"text": "Locative (Україні)", "correct": true}, {"text": "Nominative (Україна)", "correct": false}, {"text": "Genitive (України)", "correct": false}, {"text": "Accusative (Україну)", "correct": false}]}, {"question": "Which special case form is used when addressing someone directly, like \\\\\\"Привіт, ...\\\\\\"?", "options": [{"text": "Vocative (друже)", "correct": true}, {"text": "Nominative (друг)", "correct": false}, {"text": "Genitive (друга)", "correct": false}, {"text": "Dative (другу)", "correct": false}]}]`)}
 />
 
 ### Case Functions
 
 <MatchUp
   title="Case Functions"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- Студент читає книгу", "right": "Називний (Суб'єкт)"}, {"left": "- Немає вільного часу", "right": "Родовий (Відсутність)"}, {"left": "- Даю подарунок мамі", "right": "Давальний (Адресат)"}, {"left": "- Бачу гарну дівчину", "right": "Знахідний (Об'єкт)"}, {"left": "- Пишу гострою ручкою", "right": "Орудний (Інструмент)"}, {"left": "- Я працюю інженером", "right": "Орудний (Роль)"}, {"left": "- Живу в центрі міста", "right": "Місцевий (Місце)"}, {"left": "- Привіт, мій друже!", "right": "Кличний (Звертання)"}, {"left": "- Машина стоїть біля", "right": "Родовий (Прийменник)"}, {"left": "- Ми йдемо до театру", "right": "Родовий (Напрямок)"}, {"left": "- Їду автобусом на", "right": "Орудний (Транспорт)"}, {"left": "- Мрію про відпустку", "right": "Місцевий (Об'єкт думки)"}]`)}
 />
 
@@ -324,6 +338,7 @@ Here are errors that students often make:
 
 <Cloze
   title="Case Challenge"
+  isUkrainian={false}
   passage={`Я йду в [___:1]_. (park) Я гуляю в [___:2]_. (park) Я не бачу [___:3]_. (bus)
 
 Я їм [___:4]_. (soup) Я їм суп [___:5]_. (spoon) Я телефоную [___:6]_. (dad)
@@ -338,13 +353,15 @@ Here are errors that students often make:
 
 <TrueFalse
   title="Grammar Truths"
-  items={JSON.parse(`[{"statement": "\\\"Dative\\\" case is used for \\\"Where?\\\".", "isTrue": false, "explanation": "Locative is for Where."}, {"statement": "\\\"Accusative\\\" is used for Direct Object.", "isTrue": true, "explanation": "Yes (I see WHOM/WHAT)."}, {"statement": "Negative sentences (Немає...) usually take Genitive.", "isTrue": true, "explanation": "Yes."}, {"statement": "\\\"With my friend\\\" uses Instrumental.", "isTrue": true, "explanation": "З другом."}, {"statement": "\\\"Я працюю...\\\" takes Instrumental case.", "isTrue": true, "explanation": "Я працюю лікарем."}, {"statement": "Perfective verbs explain a process.", "isTrue": false, "explanation": "Imperfective explain process."}, {"statement": "\\\"Тому що\\\" means \\\"Although\\\".", "isTrue": false, "explanation": "Because."}, {"statement": "Neuter nouns end in -а usually.", "isTrue": false, "explanation": "-о or -е. -а is Feminine."}, {"statement": "\\\"Vocative\\\" is for calling someone.", "isTrue": true, "explanation": "Yes."}, {"statement": "Adjectives agree with nouns in gender/number/case.", "isTrue": true, "explanation": "Yes."}, {"statement": "\\\"Мені треба\\\" uses Nominative \\\"Я\\\".", "isTrue": false, "explanation": "Dative \\\"Мені\\\"."}, {"statement": "\\\"У мене є\\\" uses Genitive \\\"мене\\\".", "isTrue": true, "explanation": "Yes."}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "\\\\\\"Dative\\\\\\" case is used for \\\\\\"Where?\\\\\\".", "isTrue": false, "explanation": "Locative is for Where."}, {"statement": "\\\\\\"Accusative\\\\\\" is used for Direct Object.", "isTrue": true, "explanation": "Yes (I see WHOM/WHAT)."}, {"statement": "Negative sentences (Немає...) usually take Genitive.", "isTrue": true, "explanation": "Yes."}, {"statement": "\\\\\\"With my friend\\\\\\" uses Instrumental.", "isTrue": true, "explanation": "З другом."}, {"statement": "\\\\\\"Я працюю...\\\\\\" takes Instrumental case.", "isTrue": true, "explanation": "Я працюю лікарем."}, {"statement": "Perfective verbs explain a process.", "isTrue": false, "explanation": "Imperfective explain process."}, {"statement": "\\\\\\"Тому що\\\\\\" means \\\\\\"Although\\\\\\".", "isTrue": false, "explanation": "Because."}, {"statement": "Neuter nouns end in -а usually.", "isTrue": false, "explanation": "-о or -е. -а is Feminine."}, {"statement": "\\\\\\"Vocative\\\\\\" is for calling someone.", "isTrue": true, "explanation": "Yes."}, {"statement": "Adjectives agree with nouns in gender/number/case.", "isTrue": true, "explanation": "Yes."}, {"statement": "\\\\\\"Мені треба\\\\\\" uses Nominative \\\\\\"Я\\\\\\".", "isTrue": false, "explanation": "Dative \\\\\\"Мені\\\\\\"."}, {"statement": "\\\\\\"У мене є\\\\\\" uses Genitive \\\\\\"мене\\\\\\".", "isTrue": true, "explanation": "Yes."}]`)}
 />
 
 ### Aspect Sort
 
 <GroupSort
   title="Aspect Sort"
+  isUkrainian={false}
   groups={JSON.parse(`{"Groups": ["Imperfective (Process)", "Perfective (Result)", "Connectors"], "Items": ["писав: Imperfective (Process)", "читав: Imperfective (Process)", "робив: Imperfective (Process)", "написав: Perfective (Result)", "прочитав: Perfective (Result)", "зробив: Perfective (Result)", "купував: Imperfective (Process)", "купив: Perfective (Result)", "тому що: Connectors", "якщо: Connectors", "коли: Connectors", "щоб: Connectors"]}`)}
 />
 
@@ -352,12 +369,13 @@ Here are errors that students often make:
 
 <Unjumble
   title="Sentence Builder"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "Я / не / пішов / у / кіно / тому / що / працював", "answer": "Я не пішов у кіно тому що працював"}, {"jumbled": "Коли / ми / прийшли / додому / він / вже / давно / спав", "answer": "Коли ми прийшли додому він вже давно спав"}, {"jumbled": "Я / дуже / хочу / щоб / ти / купив / свіжий / хліб", "answer": "Я дуже хочу щоб ти купив свіжий хліб"}, {"jumbled": "Цей / молодий / студент / який / читає / книгу / мій / друг", "answer": "Цей молодий студент який читає книгу мій друг"}, {"jumbled": "Якщо / завтра / буде / гарне / сонце / ми / підемо / гуляти", "answer": "Якщо завтра буде гарне сонце ми підемо гуляти"}, {"jumbled": "Він / мені / сказав / що / дуже / сильно / любить / Україну", "answer": "Він мені сказав що дуже сильно любить Україну"}, {"jumbled": "Я / зараз / пишу / довгого / листа / своєму / найкращому / другу", "answer": "Я зараз пишу довгого листа своєму найкращому другу"}, {"jumbled": "Ми / їдемо / цим / великим / автобусом / до / міста / Львова", "answer": "Ми їдемо цим великим автобусом до міста Львова"}, {"jumbled": "На / жаль / у / мене / сьогодні / немає / вільного / часу", "answer": "На жаль у мене сьогодні немає вільного часу"}, {"jumbled": "Мені / дуже / подобається / ця / весела / українська / народна / музика", "answer": "Мені дуже подобається ця весела українська народна музика"}, {"jumbled": "Скажи / мені / де / ти / був / вчора / пізно / ввечері", "answer": "Скажи мені де ти був вчора пізно ввечері"}, {"jumbled": "Мамо / скажи / де / лежать / мої / теплі / зимові / шкарпетки", "answer": "Мамо скажи де лежать мої теплі зимові шкарпетки"}]`)}
 />
 
 ### Fix the Letter
 
-<ErrorCorrection title="Fix the Letter">
+<ErrorCorrection title="Fix the Letter" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Привіт мама!`}
     errorWord={`мама`}
@@ -455,6 +473,7 @@ Here are errors that students often make:
 
 <Cloze
   title="Grammar Fill"
+  isUkrainian={false}
   passage={`Я [___:1] студент. Я [___:2] в університеті.
 Вчора я [___:3] книгу.
 Книга [___:4] дуже цікава.
@@ -471,7 +490,7 @@ Here are errors that students often make:
 
 ### Identification
 
-<MarkTheWords>
+<MarkTheWords isUkrainian={false}>
   <MarkTheWordsActivity
     instruction={`Mark the correct words.`}
     text={`Вчора я встав о 7:00. Я поснідав і випив каву. Потім я пішов на роботу. Я зробив важливий звіт. Ввечері я купив продукти і приготував вечерю. Я швидко заснув.`}
@@ -483,7 +502,8 @@ Here are errors that students often make:
 
 <Select
   title="Case Detector"
-  questions={JSON.parse(`[{"question": "\\\"Мамо!\\\"", "options": [{"text": "Vocative", "correct": true}, {"text": "Nominative", "correct": false}]}, {"question": "\\\"У Києві\\\"", "options": [{"text": "Locative", "correct": true}, {"text": "Dative", "correct": false}]}, {"question": "\\\"З другом\\\"", "options": [{"text": "Instrumental", "correct": true}, {"text": "Genitive", "correct": false}]}, {"question": "\\\"Немає води\\\"", "options": [{"text": "Genitive", "correct": true}, {"text": "Accusative", "correct": false}]}, {"question": "\\\"Пишу листа\\\"", "options": [{"text": "Accusative", "correct": true}, {"text": "Nominative", "correct": false}]}, {"question": "\\\"Даю брату\\\"", "options": [{"text": "Dative", "correct": true}, {"text": "Locative", "correct": false}]}, {"question": "\\\"Я - студент\\\"", "options": [{"text": "Nominative", "correct": true}, {"text": "Instrumental", "correct": false}]}, {"question": "\\\"Працюю лікарем\\\"", "options": [{"text": "Instrumental", "correct": true}, {"text": "Accusative", "correct": false}]}, {"question": "\\\"Після уроку\\\"", "options": [{"text": "Genitive", "correct": true}, {"text": "Dative", "correct": false}]}, {"question": "\\\"Через ліс\\\"", "options": [{"text": "Accusative", "correct": true}, {"text": "Locative", "correct": false}]}, {"question": "\\\"На столі\\\"", "options": [{"text": "Locative", "correct": true}, {"text": "Nominative", "correct": false}]}, {"question": "\\\"Бачу маму\\\"", "options": [{"text": "Accusative", "correct": true}, {"text": "Genitive", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "\\\\\\"Мамо!\\\\\\"", "options": [{"text": "Vocative", "correct": true}, {"text": "Nominative", "correct": false}]}, {"question": "\\\\\\"У Києві\\\\\\"", "options": [{"text": "Locative", "correct": true}, {"text": "Dative", "correct": false}]}, {"question": "\\\\\\"З другом\\\\\\"", "options": [{"text": "Instrumental", "correct": true}, {"text": "Genitive", "correct": false}]}, {"question": "\\\\\\"Немає води\\\\\\"", "options": [{"text": "Genitive", "correct": true}, {"text": "Accusative", "correct": false}]}, {"question": "\\\\\\"Пишу листа\\\\\\"", "options": [{"text": "Accusative", "correct": true}, {"text": "Nominative", "correct": false}]}, {"question": "\\\\\\"Даю брату\\\\\\"", "options": [{"text": "Dative", "correct": true}, {"text": "Locative", "correct": false}]}, {"question": "\\\\\\"Я - студент\\\\\\"", "options": [{"text": "Nominative", "correct": true}, {"text": "Instrumental", "correct": false}]}, {"question": "\\\\\\"Працюю лікарем\\\\\\"", "options": [{"text": "Instrumental", "correct": true}, {"text": "Accusative", "correct": false}]}, {"question": "\\\\\\"Після уроку\\\\\\"", "options": [{"text": "Genitive", "correct": true}, {"text": "Dative", "correct": false}]}, {"question": "\\\\\\"Через ліс\\\\\\"", "options": [{"text": "Accusative", "correct": true}, {"text": "Locative", "correct": false}]}, {"question": "\\\\\\"На столі\\\\\\"", "options": [{"text": "Locative", "correct": true}, {"text": "Nominative", "correct": false}]}, {"question": "\\\\\\"Бачу маму\\\\\\"", "options": [{"text": "Accusative", "correct": true}, {"text": "Genitive", "correct": false}]}]`)}
 />
 
 ## 📚 Vocabulary
@@ -530,16 +550,6 @@ Here are errors that students often make:
 | частий | /ˈt͡ʃɑstɪj/ | frequent | adj |  |  |
 | ідеально | /ideˈɑlʲno/ | perfectly | adv |  |  |
 | інспектор | /inˈspɛktor/ | inspector | noun | ч |  |
-
-## 📋 Summary
-
-This review covered:
-
-- **Cases**: The backbone of the sentence (Subj, Obj, Loc, Instr...).
-- **Aspect**: The timeline of the verb (Process vs Result).
-- **Structure**: Complex sentences make you sound smart.
-
-You are now ready for the **Final Checkpoint**. Good luck!
 
 > [!resources] 🔗 External Resources
 >

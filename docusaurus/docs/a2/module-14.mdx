@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 ## Warm-up
 
@@ -186,6 +188,7 @@ Choose the correct future form:
 
 <MatchUp
   title="Future Forms"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- буду читати", "right": "will be reading"}, {"left": "- прочитаю", "right": "will read/finish"}, {"left": "- буду писати", "right": "will be writing"}, {"left": "- напишу", "right": "will write/finish"}, {"left": "- буду робити", "right": "will be doing"}, {"left": "- зроблю", "right": "will do/finish"}, {"left": "- буду говорити", "right": "will be speaking"}, {"left": "- скажу", "right": "will say"}, {"left": "- буду їсти", "right": "will be eating"}, {"left": "- з'їм", "right": "will eat up"}, {"left": "- буду пити", "right": "will be drinking"}, {"left": "- вип'ю", "right": "will drink up"}]`)}
 />
 
@@ -193,6 +196,7 @@ Choose the correct future form:
 
 <Cloze
   title="Choose the Correct Future"
+  isUkrainian={false}
   passage={`Я [___:1] книгу завтра. Вона [___:2] цілий день. Він [___:3] тобі! (will write — promise)
 
 Ми [___:4] щодня. (will read — habit) Я [___:5] це! (will do — promise) Вони [___:6] увечері.
@@ -209,20 +213,23 @@ Choose the correct future form:
 
 <Quiz
   title="Future Tense"
-  questions={JSON.parse(`[{"question": "Which of the following correctly describes how the imperfective future is formed in Ukrainian?", "options": [{"text": "буду + infinitive", "correct": true}, {"text": "conjugated imperfective verb", "correct": false}, {"text": "will + infinitive", "correct": false}, {"text": "conjugated perfective verb", "correct": false}]}, {"question": "Which of the following correctly describes how the perfective future is formed in Ukrainian?", "options": [{"text": "conjugated perfective verb", "correct": true}, {"text": "буду + infinitive", "correct": false}, {"text": "conjugated imperfective verb", "correct": false}, {"text": "will + perfective", "correct": false}]}, {"question": "What is the specific meaning of the Ukrainian future tense phrase \\\"Я буду читати\\\"?", "options": [{"text": "I will be reading (process)", "correct": true}, {"text": "I will finish reading (result)", "correct": false}, {"text": "I read yesterday", "correct": false}, {"text": "I am reading now", "correct": false}]}, {"question": "What is the specific meaning of the Ukrainian perfective future verb \\\"Я прочитаю\\\"?", "options": [{"text": "I will read/finish (result)", "correct": true}, {"text": "I will be reading (process)", "correct": false}, {"text": "I have read", "correct": false}, {"text": "I read every day", "correct": false}]}, {"question": "Which of these future tense forms carries a stronger sense of commitment for promises?", "options": [{"text": "Perfective future (Я зроблю!)", "correct": true}, {"text": "Imperfective future (Я буду робити)", "correct": false}, {"text": "Present tense", "correct": false}, {"text": "Past tense", "correct": false}]}, {"question": "Which personal pronoun corresponds to the Ukrainian perfective future verb form \\\"Прочитаю\\\"?", "options": [{"text": "я", "correct": true}, {"text": "ти", "correct": false}, {"text": "він", "correct": false}, {"text": "ми", "correct": false}]}, {"question": "Which personal pronoun corresponds to the Ukrainian perfective future verb form \\\"Напишемо\\\"?", "options": [{"text": "ми", "correct": true}, {"text": "вони", "correct": false}, {"text": "ви", "correct": false}, {"text": "я", "correct": false}]}, {"question": "What is the correct future form of the auxiliary verb \\\"бути\\\" for the pronoun \\\"я\\\"?", "options": [{"text": "буду", "correct": true}, {"text": "будеш", "correct": false}, {"text": "будуть", "correct": false}, {"text": "буде", "correct": false}]}, {"question": "What is the correct future form of the auxiliary verb \\\"бути\\\" for the pronoun \\\"ви\\\"?", "options": [{"text": "будете", "correct": true}, {"text": "будемо", "correct": false}, {"text": "будуть", "correct": false}, {"text": "будеш", "correct": false}]}, {"question": "From which type of Ukrainian verbs can the perfective future tense be technically formed?", "options": [{"text": "Only perfective verbs", "correct": true}, {"text": "Only imperfective verbs", "correct": false}, {"text": "Both aspects equally", "correct": false}, {"text": "Only modal verbs", "correct": false}]}, {"question": "In the Ukrainian sentence \\\"Вона буде писати,\\\" what is the grammatical aspect being used?", "options": [{"text": "Imperfective", "correct": true}, {"text": "Perfective", "correct": false}, {"text": "Progressive", "correct": false}, {"text": "Habitual", "correct": false}]}, {"question": "In the Ukrainian sentence \\\"Вона напише,\\\" what is the grammatical aspect being used?", "options": [{"text": "Perfective", "correct": true}, {"text": "Imperfective", "correct": false}, {"text": "Continuous", "correct": false}, {"text": "Present", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Which of the following correctly describes how the imperfective future is formed in Ukrainian?", "options": [{"text": "буду + infinitive", "correct": true}, {"text": "conjugated imperfective verb", "correct": false}, {"text": "will + infinitive", "correct": false}, {"text": "conjugated perfective verb", "correct": false}]}, {"question": "Which of the following correctly describes how the perfective future is formed in Ukrainian?", "options": [{"text": "conjugated perfective verb", "correct": true}, {"text": "буду + infinitive", "correct": false}, {"text": "conjugated imperfective verb", "correct": false}, {"text": "will + perfective", "correct": false}]}, {"question": "What is the specific meaning of the Ukrainian future tense phrase \\\\\\"Я буду читати\\\\\\"?", "options": [{"text": "I will be reading (process)", "correct": true}, {"text": "I will finish reading (result)", "correct": false}, {"text": "I read yesterday", "correct": false}, {"text": "I am reading now", "correct": false}]}, {"question": "What is the specific meaning of the Ukrainian perfective future verb \\\\\\"Я прочитаю\\\\\\"?", "options": [{"text": "I will read/finish (result)", "correct": true}, {"text": "I will be reading (process)", "correct": false}, {"text": "I have read", "correct": false}, {"text": "I read every day", "correct": false}]}, {"question": "Which of these future tense forms carries a stronger sense of commitment for promises?", "options": [{"text": "Perfective future (Я зроблю!)", "correct": true}, {"text": "Imperfective future (Я буду робити)", "correct": false}, {"text": "Present tense", "correct": false}, {"text": "Past tense", "correct": false}]}, {"question": "Which personal pronoun corresponds to the Ukrainian perfective future verb form \\\\\\"Прочитаю\\\\\\"?", "options": [{"text": "я", "correct": true}, {"text": "ти", "correct": false}, {"text": "він", "correct": false}, {"text": "ми", "correct": false}]}, {"question": "Which personal pronoun corresponds to the Ukrainian perfective future verb form \\\\\\"Напишемо\\\\\\"?", "options": [{"text": "ми", "correct": true}, {"text": "вони", "correct": false}, {"text": "ви", "correct": false}, {"text": "я", "correct": false}]}, {"question": "What is the correct future form of the auxiliary verb \\\\\\"бути\\\\\\" for the pronoun \\\\\\"я\\\\\\"?", "options": [{"text": "буду", "correct": true}, {"text": "будеш", "correct": false}, {"text": "будуть", "correct": false}, {"text": "буде", "correct": false}]}, {"question": "What is the correct future form of the auxiliary verb \\\\\\"бути\\\\\\" for the pronoun \\\\\\"ви\\\\\\"?", "options": [{"text": "будете", "correct": true}, {"text": "будемо", "correct": false}, {"text": "будуть", "correct": false}, {"text": "будеш", "correct": false}]}, {"question": "From which type of Ukrainian verbs can the perfective future tense be technically formed?", "options": [{"text": "Only perfective verbs", "correct": true}, {"text": "Only imperfective verbs", "correct": false}, {"text": "Both aspects equally", "correct": false}, {"text": "Only modal verbs", "correct": false}]}, {"question": "In the Ukrainian sentence \\\\\\"Вона буде писати,\\\\\\" what is the grammatical aspect being used?", "options": [{"text": "Imperfective", "correct": true}, {"text": "Perfective", "correct": false}, {"text": "Progressive", "correct": false}, {"text": "Habitual", "correct": false}]}, {"question": "In the Ukrainian sentence \\\\\\"Вона напише,\\\\\\" what is the grammatical aspect being used?", "options": [{"text": "Perfective", "correct": true}, {"text": "Imperfective", "correct": false}, {"text": "Continuous", "correct": false}, {"text": "Present", "correct": false}]}]`)}
 />
 
 ### Future Rules
 
 <TrueFalse
   title="Future Rules"
-  items={JSON.parse(`[{"statement": "Imperfective future uses буду + infinitive.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Perfective future uses conjugated verb.", "isTrue": true, "explanation": "Yes!"}, {"statement": "Perfective verbs can have true present tense.", "isTrue": false, "explanation": "No, their \\\"present\\\" conjugation means future!"}, {"statement": "\\\"Я зроблю\\\" expresses a promise.", "isTrue": true, "explanation": "Correct! Perfective = commitment to complete."}, {"statement": "\\\"Я буду робити\\\" focuses on process.", "isTrue": true, "explanation": "Yes!"}, {"statement": "\\\"Прочитаю\\\" means \\\"I am reading.\\\"", "isTrue": false, "explanation": "\\\"Прочитаю\\\" means \\\"I will read/finish.\\\""}, {"statement": "Duration in future = imperfective.", "isTrue": true, "explanation": "Correct! \\\"Буду читати цілий день.\\\""}, {"statement": "Completion in future = perfective.", "isTrue": true, "explanation": "Yes! \\\"Прочитаю книгу.\\\""}, {"statement": "Both aspects form future the same way.", "isTrue": false, "explanation": "No, they have different formations!"}, {"statement": "\\\"Будеш\\\" is future of \\\"ти\\\" + \\\"бути.\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "Perfective future sounds more definite.", "isTrue": true, "explanation": "Yes, it's like a promise."}, {"statement": "\\\"Буду читати\\\" = I finished reading.", "isTrue": false, "explanation": "\\\"Буду читати\\\" = I will be reading."}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Imperfective future uses буду + infinitive.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Perfective future uses conjugated verb.", "isTrue": true, "explanation": "Yes!"}, {"statement": "Perfective verbs can have true present tense.", "isTrue": false, "explanation": "No, their \\\\\\"present\\\\\\" conjugation means future!"}, {"statement": "\\\\\\"Я зроблю\\\\\\" expresses a promise.", "isTrue": true, "explanation": "Correct! Perfective = commitment to complete."}, {"statement": "\\\\\\"Я буду робити\\\\\\" focuses on process.", "isTrue": true, "explanation": "Yes!"}, {"statement": "\\\\\\"Прочитаю\\\\\\" means \\\\\\"I am reading.\\\\\\"", "isTrue": false, "explanation": "\\\\\\"Прочитаю\\\\\\" means \\\\\\"I will read/finish.\\\\\\""}, {"statement": "Duration in future = imperfective.", "isTrue": true, "explanation": "Correct! \\\\\\"Буду читати цілий день.\\\\\\""}, {"statement": "Completion in future = perfective.", "isTrue": true, "explanation": "Yes! \\\\\\"Прочитаю книгу.\\\\\\""}, {"statement": "Both aspects form future the same way.", "isTrue": false, "explanation": "No, they have different formations!"}, {"statement": "\\\\\\"Будеш\\\\\\" is future of \\\\\\"ти\\\\\\" + \\\\\\"бути.\\\\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "Perfective future sounds more definite.", "isTrue": true, "explanation": "Yes, it's like a promise."}, {"statement": "\\\\\\"Буду читати\\\\\\" = I finished reading.", "isTrue": false, "explanation": "\\\\\\"Буду читати\\\\\\" = I will be reading."}]`)}
 />
 
 ### Future Formation
 
 <GroupSort
   title="Future Formation"
+  isUkrainian={false}
   groups={JSON.parse(`{"Imperfective (буду + inf.)": ["буду читати", "будеш писати", "буде працювати", "будемо вчити", "будете їсти", "будуть говорити"], "Perfective": ["прочитаю", "напишеш", "зробить", "скажемо", "візьмете", "дадуть"]}`)}
 />
 
@@ -230,12 +237,13 @@ Choose the correct future form:
 
 <Unjumble
   title="Future Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "я / обов'язково / прочитаю / цю / нову / цікаву / книгу / завтра / вранці", "answer": "Я прочитаю цю нову цікаву книгу завтра вранці"}, {"jumbled": "вона / буде / працювати / у / цьому / великому / офісі / завтра / ввечері", "answer": "Вона буде працювати у цьому великому офісі завтра ввечері"}, {"jumbled": "він / обов'язково / напише / довгого / листа / додому / вже / сьогодні / ввечері", "answer": "Він напише довгого листа додому вже сьогодні ввечері"}, {"jumbled": "ми / будемо / вчити / цю / гарну / українську / мову / кожного / нового / дня", "answer": "Ми будемо вчити цю гарну українську мову кожного дня"}, {"jumbled": "я / зроблю / все / це / складне / домашнє / завдання / дуже / скоро", "answer": "Я зроблю це складне домашнє завдання дуже скоро"}, {"jumbled": "вони / приїдуть / до / нашого / міста / завтра / дуже / рано / вранці", "answer": "Вони приїдуть до нашого міста завтра вранці"}, {"jumbled": "ти / обов'язково / будеш / читати / нову / книгу / щодня / після / роботи", "answer": "Ти будеш читати нову книгу щодня після роботи"}, {"jumbled": "вона / скаже / нам / всю / правду / про / цю / складну / ситуацію", "answer": "Вона скаже нам всю правду про цю ситуацію"}, {"jumbled": "ми / побачимо / прекрасне / синє / море / вже / наступного / теплого / літа", "answer": "Ми побачимо прекрасне синє море наступного літа"}, {"jumbled": "він / буде / старанно / писати / статтю / цілий / день / у / бібліотеці", "answer": "Він буде писати цю статтю цілий день у бібліотеці"}, {"jumbled": "я / візьму / цю / стару / книгу / зі / свого / столу / завтра", "answer": "Я візьму цю стару книгу зі свого столу завтра"}, {"jumbled": "вони / будуть / вчитися / в / університеті / ще / три / довгі / роки", "answer": "Вони будуть вчитися в університеті ще три роки"}]`)}
 />
 
 ### Choose Correct Future
 
-<ErrorCorrection title="Choose Correct Future">
+<ErrorCorrection title="Choose Correct Future" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Я ___ цілий день. (duration)`}
     errorWord={`duration`}
@@ -284,6 +292,7 @@ Choose the correct future form:
 
 <Cloze
   title="Future Plans"
+  isUkrainian={false}
   passage={`Завтра я [___:1] рано. Я [___:2] каву і [___:3] на роботу. На роботі я [___:4] цілий день. Увечері я [___:5] і [___:6] книгу.
 ---
 Наступного тижня ми [___:7] до України! Ми [___:8] три дні. Я [___:9] нові місця і [___:10] багато фотографій. Коли я [___:11], я [___:12] вам про нашу подорож!`}
@@ -292,7 +301,7 @@ Choose the correct future form:
 
 ### Find Perfective Future
 
-<MarkTheWords>
+<MarkTheWords isUkrainian={false}>
   <MarkTheWordsActivity
     instruction={`Mark the correct words.`}
     text={`Click on PERFECTIVE FUTURE forms only.

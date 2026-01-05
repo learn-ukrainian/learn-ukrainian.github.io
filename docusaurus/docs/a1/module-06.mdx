@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 До цього моменту ми говорили: це книга, то стіл. (This is a book. That is a table.). Але життя — це рух, дія! Час навчитися: я читаю, ти пишеш, ми працюємо.
@@ -238,6 +240,21 @@ I have breakfast. Then I work. I have lunch. I walk to the park. I read a book. 
 
 ---
 
+## 📋 Summary
+
+You've unlocked **Class I verbs** (-ати/-яти)! You can now:
+
+- Conjugate verbs like **читати, писати, працювати, грати**
+- Describe daily routines and actions
+- Form basic sentences like "Я читаю книгу" (I read a book)
+- Understand the **-аю, -аєш, -ає, -аємо, -аєте, -ають** pattern
+
+**Key Insight:** The verb ending tells you WHO is acting, so you can often drop the pronoun. "Читаю" = "I read." Elegant, efficient, Ukrainian.
+
+**Next up:** Module 07 — Questions & Negation. You learn questions and negation!
+
+---
+
 
 
 ## 🎯 Activities
@@ -246,6 +263,7 @@ I have breakfast. Then I work. I have lunch. I walk to the park. I read a book. 
 
 <MatchUp
   title="Infinitive to English"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "Infinitive", "right": "English"}, {"left": "читати", "right": "to read"}, {"left": "знати", "right": "to know"}, {"left": "слухати", "right": "to listen"}, {"left": "писати", "right": "to write"}, {"left": "питати", "right": "to ask"}, {"left": "відповідати", "right": "to answer"}, {"left": "думати", "right": "to think"}, {"left": "грати", "right": "to play"}]`)}
 />
 
@@ -253,13 +271,15 @@ I have breakfast. Then I work. I have lunch. I walk to the park. I read a book. 
 
 <Quiz
   title="Conjugation Recognition"
-  questions={JSON.parse(`[{"question": "Which form means \\\"I read\\\"?", "options": [{"text": "читаю", "correct": false}, {"text": "читаю", "correct": true}, {"text": "читаєш", "correct": false}, {"text": "читають", "correct": false}]}, {"question": "What does \\\"ти пишеш\\\" mean?", "options": [{"text": "I write", "correct": false}, {"text": "you write", "correct": true}, {"text": "he writes", "correct": false}, {"text": "they write", "correct": false}]}, {"question": "Which verb ending implies the pronouns \\\"we\\\"?", "options": [{"text": "-ю", "correct": false}, {"text": "-єш", "correct": false}, {"text": "-є", "correct": false}, {"text": "-ємо", "correct": true}]}, {"question": "What is the infinitive of \\\"працюю\\\"?", "options": [{"text": "працюти", "correct": false}, {"text": "працювати", "correct": true}, {"text": "працюєти", "correct": false}, {"text": "працю", "correct": false}]}, {"question": "Which verb means \\\"to rest\\\"?", "options": [{"text": "працювати", "correct": false}, {"text": "гуляти", "correct": false}, {"text": "відпочивати", "correct": true}, {"text": "чекати", "correct": false}]}, {"question": "What does the phrase \\\"Вони читають\\\" mean?", "options": [{"text": "I read", "correct": false}, {"text": "you read", "correct": false}, {"text": "we read", "correct": false}, {"text": "they read", "correct": true}]}, {"question": "Which form is used for \\\"він\\\" (he)?", "options": [{"text": "читаю", "correct": false}, {"text": "читаєш", "correct": false}, {"text": "читає", "correct": true}, {"text": "читають", "correct": false}]}, {"question": "What does \\\"ми граємо\\\" mean?", "options": [{"text": "I play", "correct": false}, {"text": "you play", "correct": false}, {"text": "we play", "correct": true}, {"text": "they play", "correct": false}]}, {"question": "Which verb means \\\"to sing\\\"?", "options": [{"text": "грати", "correct": false}, {"text": "співати", "correct": true}, {"text": "танцювати", "correct": false}, {"text": "малювати", "correct": false}]}, {"question": "What is the meaning of \\\"Ви знаєте\\\"?", "options": [{"text": "I know", "correct": false}, {"text": "you know (informal)", "correct": false}, {"text": "you know (formal/plural)", "correct": true}, {"text": "they know", "correct": false}]}, {"question": "Which ending is used for \\\"ти\\\" (you, informal)?", "options": [{"text": "-ю", "correct": false}, {"text": "-єш", "correct": true}, {"text": "-є", "correct": false}, {"text": "-ють", "correct": false}]}, {"question": "What is the stem of \\\"писати\\\"?", "options": [{"text": "писа-", "correct": false}, {"text": "пиш-", "correct": true}, {"text": "пис-", "correct": false}, {"text": "писат-", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Which form means \\\\\\"I read\\\\\\"?", "options": [{"text": "читаю", "correct": false}, {"text": "читаю", "correct": true}, {"text": "читаєш", "correct": false}, {"text": "читають", "correct": false}]}, {"question": "What does \\\\\\"ти пишеш\\\\\\" mean?", "options": [{"text": "I write", "correct": false}, {"text": "you write", "correct": true}, {"text": "he writes", "correct": false}, {"text": "they write", "correct": false}]}, {"question": "Which verb ending implies the pronouns \\\\\\"we\\\\\\"?", "options": [{"text": "-ю", "correct": false}, {"text": "-єш", "correct": false}, {"text": "-є", "correct": false}, {"text": "-ємо", "correct": true}]}, {"question": "What is the infinitive of \\\\\\"працюю\\\\\\"?", "options": [{"text": "працюти", "correct": false}, {"text": "працювати", "correct": true}, {"text": "працюєти", "correct": false}, {"text": "працю", "correct": false}]}, {"question": "Which verb means \\\\\\"to rest\\\\\\"?", "options": [{"text": "працювати", "correct": false}, {"text": "гуляти", "correct": false}, {"text": "відпочивати", "correct": true}, {"text": "чекати", "correct": false}]}, {"question": "What does the phrase \\\\\\"Вони читають\\\\\\" mean?", "options": [{"text": "I read", "correct": false}, {"text": "you read", "correct": false}, {"text": "we read", "correct": false}, {"text": "they read", "correct": true}]}, {"question": "Which form is used for \\\\\\"він\\\\\\" (he)?", "options": [{"text": "читаю", "correct": false}, {"text": "читаєш", "correct": false}, {"text": "читає", "correct": true}, {"text": "читають", "correct": false}]}, {"question": "What does \\\\\\"ми граємо\\\\\\" mean?", "options": [{"text": "I play", "correct": false}, {"text": "you play", "correct": false}, {"text": "we play", "correct": true}, {"text": "they play", "correct": false}]}, {"question": "Which verb means \\\\\\"to sing\\\\\\"?", "options": [{"text": "грати", "correct": false}, {"text": "співати", "correct": true}, {"text": "танцювати", "correct": false}, {"text": "малювати", "correct": false}]}, {"question": "What is the meaning of \\\\\\"Ви знаєте\\\\\\"?", "options": [{"text": "I know", "correct": false}, {"text": "you know (informal)", "correct": false}, {"text": "you know (formal/plural)", "correct": true}, {"text": "they know", "correct": false}]}, {"question": "Which ending is used for \\\\\\"ти\\\\\\" (you, informal)?", "options": [{"text": "-ю", "correct": false}, {"text": "-єш", "correct": true}, {"text": "-є", "correct": false}, {"text": "-ють", "correct": false}]}, {"question": "What is the stem of \\\\\\"писати\\\\\\"?", "options": [{"text": "писа-", "correct": false}, {"text": "пиш-", "correct": true}, {"text": "пис-", "correct": false}, {"text": "писат-", "correct": false}]}]`)}
 />
 
 ### Person and Form
 
 <GroupSort
   title="Person and Form"
+  isUkrainian={false}
   groups={JSON.parse(`{"1st Person (I/We)": ["я читаю", "ми читаємо", "я знаю", "ми знаємо"], "2nd Person (You)": ["ти читаєш", "ви читаєте", "ти знаєш", "ви знаєте"], "3rd Person (He/She)": ["він читає", "вона читає", "він знає", "вона знає"]}`)}
 />
 
@@ -267,6 +287,7 @@ I have breakfast. Then I work. I have lunch. I walk to the park. I read a book. 
 
 <FillIn
   title="Complete the Sentence"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Я ___ книгу.", "answer": "читаю", "options": ["читаю", "читаєш", "читає", "читають"]}, {"sentence": "Ти ___ у Києві?", "answer": "працюєш", "options": ["працюю", "працюєш", "працює", "працюють"]}, {"sentence": "Вона ___ в парку.", "answer": "гуляє", "options": ["гуляю", "гуляєш", "гуляє", "гуляють"]}, {"sentence": "Ми ___ пісню.", "answer": "співаємо", "options": ["співаю", "співаєш", "співає", "співаємо"]}, {"sentence": "Ви ___ українською?", "answer": "читаєте", "options": ["читаю", "читаєш", "читає", "читаєте"]}, {"sentence": "Скажіть, що вони роблять? Вони ___ про Україну.", "answer": "думають", "options": ["думаю", "думаєш", "думає", "думають"]}, {"sentence": "Я ___ музику.", "answer": "слухаю", "options": ["слухаю", "слухаєш", "слухає", "слухають"]}, {"sentence": "Ти ___ друга?", "answer": "чекаєш", "options": ["чекаю", "чекаєш", "чекає", "чекають"]}, {"sentence": "Він ___ картину.", "answer": "малює", "options": ["малюю", "малюєш", "малює", "малюють"]}, {"sentence": "Скажіть, що ми робимо? Ми ___ о дванадцятій.", "answer": "обідаємо", "options": ["обідаю", "обідаєш", "обідає", "обідаємо"]}, {"sentence": "Ви ___ роботу о дев'ятій.", "answer": "починаєте", "options": ["починаю", "починаєш", "починає", "починаєте"]}, {"sentence": "Вони ___ після роботи.", "answer": "відпочивають", "options": ["відпочиваю", "відпочиваєш", "відпочиває", "відпочивають"]}]`)}
 />
 
@@ -274,13 +295,15 @@ I have breakfast. Then I work. I have lunch. I walk to the park. I read a book. 
 
 <TrueFalse
   title="Verb Rules"
-  items={JSON.parse(`[{"statement": "Class I verbs end in -ати or -яти in the infinitive.", "isTrue": true, "explanation": "Correct! читати, писати, працювати all end in -ати."}, {"statement": "The ending -ю is used for \\\"ти\\\" (you).", "isTrue": false, "explanation": "Incorrect! -ю is for \\\"я\\\" (I). \\\"Ти\\\" uses -єш."}, {"statement": "You can often drop the pronoun in Ukrainian because the verb ending shows who's acting.", "isTrue": true, "explanation": "Correct! \\\"Читаю\\\" = \\\"I read\\\" — the ending -ю tells you it's \\\"я\\\"."}, {"statement": "\\\"Писати\\\" keeps the stem \\\"писа-\\\" in all forms.", "isTrue": false, "explanation": "Incorrect! It changes to \\\"пиш-\\\": пишу, пишеш, пише."}, {"statement": "The ending -ють is used for \\\"вони\\\" (they).", "isTrue": true, "explanation": "Correct! вони читають, працюють, гуляють."}, {"statement": "\\\"Ми читаєте\\\" is the correct form for \\\"we read\\\".", "isTrue": false, "explanation": "Incorrect! \\\"Ми читаємо\\\" (not -єте). -єте is for \\\"ви\\\"."}, {"statement": "Verbs like читати, писати, працювати all follow the same conjugation pattern.", "isTrue": true, "explanation": "Correct! They're all Class I and share the same endings."}, {"statement": "Class I verbs use the ending -ить for третя особа (він/вона).", "isTrue": false, "explanation": "Incorrect! -ить is Class II. Class I uses -є: він читає."}, {"statement": "\\\"Снідати\\\", \\\"обідати\\\", \\\"вечеряти\\\" are all Class I verbs related to meals.", "isTrue": true, "explanation": "Correct! All three end in -ати and mean breakfast, lunch, dinner."}, {"statement": "The stem of \\\"грати\\\" is \\\"гра-\\\".", "isTrue": false, "explanation": "Correct! грати → граю, граєш, грає. The stem is \\\"гра-\\\"."}, {"statement": "\\\"Співати\\\" means \\\"to sing\\\".", "isTrue": true, "explanation": "Correct! співати = to sing."}, {"statement": "You must always use a pronoun with Ukrainian verbs.", "isTrue": false, "explanation": "Incorrect! Pronouns are optional — the verb ending is enough."}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Class I verbs end in -ати or -яти in the infinitive.", "isTrue": true, "explanation": "Correct! читати, писати, працювати all end in -ати."}, {"statement": "The ending -ю is used for \\\\\\"ти\\\\\\" (you).", "isTrue": false, "explanation": "Incorrect! -ю is for \\\\\\"я\\\\\\" (I). \\\\\\"Ти\\\\\\" uses -єш."}, {"statement": "You can often drop the pronoun in Ukrainian because the verb ending shows who's acting.", "isTrue": true, "explanation": "Correct! \\\\\\"Читаю\\\\\\" = \\\\\\"I read\\\\\\" — the ending -ю tells you it's \\\\\\"я\\\\\\"."}, {"statement": "\\\\\\"Писати\\\\\\" keeps the stem \\\\\\"писа-\\\\\\" in all forms.", "isTrue": false, "explanation": "Incorrect! It changes to \\\\\\"пиш-\\\\\\": пишу, пишеш, пише."}, {"statement": "The ending -ють is used for \\\\\\"вони\\\\\\" (they).", "isTrue": true, "explanation": "Correct! вони читають, працюють, гуляють."}, {"statement": "\\\\\\"Ми читаєте\\\\\\" is the correct form for \\\\\\"we read\\\\\\".", "isTrue": false, "explanation": "Incorrect! \\\\\\"Ми читаємо\\\\\\" (not -єте). -єте is for \\\\\\"ви\\\\\\"."}, {"statement": "Verbs like читати, писати, працювати all follow the same conjugation pattern.", "isTrue": true, "explanation": "Correct! They're all Class I and share the same endings."}, {"statement": "Class I verbs use the ending -ить for третя особа (він/вона).", "isTrue": false, "explanation": "Incorrect! -ить is Class II. Class I uses -є: він читає."}, {"statement": "\\\\\\"Снідати\\\\\\", \\\\\\"обідати\\\\\\", \\\\\\"вечеряти\\\\\\" are all Class I verbs related to meals.", "isTrue": true, "explanation": "Correct! All three end in -ати and mean breakfast, lunch, dinner."}, {"statement": "The stem of \\\\\\"грати\\\\\\" is \\\\\\"гра-\\\\\\".", "isTrue": false, "explanation": "Correct! грати → граю, граєш, грає. The stem is \\\\\\"гра-\\\\\\"."}, {"statement": "\\\\\\"Співати\\\\\\" means \\\\\\"to sing\\\\\\".", "isTrue": true, "explanation": "Correct! співати = to sing."}, {"statement": "You must always use a pronoun with Ukrainian verbs.", "isTrue": false, "explanation": "Incorrect! Pronouns are optional — the verb ending is enough."}]`)}
 />
 
 ### Build the Verb
 
 <Anagram
   title="Build the Verb"
+  isUkrainian={false}
   items={JSON.parse(`[{"scrambled": "ч и т а т и", "answer": "читати", "hint": ""}, {"scrambled": "п и с а т и", "answer": "писати", "hint": ""}, {"scrambled": "з н а т и", "answer": "знати", "hint": ""}, {"scrambled": "г р а т и", "answer": "грати", "hint": ""}, {"scrambled": "с п і в а т и", "answer": "співати", "hint": ""}, {"scrambled": "д у м а т и", "answer": "думати", "hint": ""}, {"scrambled": "г у л я т и", "answer": "гуляти", "hint": ""}, {"scrambled": "м а л ю в а т и", "answer": "малювати", "hint": ""}, {"scrambled": "п р а ц ю в а т и", "answer": "працювати", "hint": ""}, {"scrambled": "с л у х а т и", "answer": "слухати", "hint": ""}, {"scrambled": "ч е к а т и", "answer": "чекати", "hint": ""}, {"scrambled": "с н і д а т и", "answer": "снідати", "hint": ""}]`)}
 />
 
@@ -288,6 +311,7 @@ I have breakfast. Then I work. I have lunch. I walk to the park. I read a book. 
 
 <Anagram
   title="Build the Conjugated Form"
+  isUkrainian={false}
   items={JSON.parse(`[{"scrambled": "ч и т а ю", "answer": "читаю", "hint": ""}, {"scrambled": "п и ш е ш", "answer": "пишеш", "hint": ""}, {"scrambled": "п р а ц ю є", "answer": "працює", "hint": ""}, {"scrambled": "г р а є м о", "answer": "граємо", "hint": ""}, {"scrambled": "с п і в а є т е", "answer": "співаєте", "hint": ""}, {"scrambled": "д у м а ю т ь", "answer": "думають", "hint": ""}, {"scrambled": "г у л я ю", "answer": "гуляю", "hint": ""}, {"scrambled": "з н а є ш", "answer": "знаєш", "hint": ""}, {"scrambled": "ч и т а є", "answer": "читає", "hint": ""}, {"scrambled": "с л у х а є м о", "answer": "слухаємо", "hint": ""}, {"scrambled": "ч е к а є т е", "answer": "чекаєте", "hint": ""}, {"scrambled": "с н і д а ю т ь", "answer": "снідають", "hint": ""}]`)}
 />
 
@@ -295,6 +319,7 @@ I have breakfast. Then I work. I have lunch. I walk to the park. I read a book. 
 
 <Unjumble
   title="Build Verb Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "читаю / Я / книгу", "answer": "Я читаю книгу"}, {"jumbled": "працює / Він / добре", "answer": "Він працює добре"}, {"jumbled": "співає / Вона / українською", "answer": "Вона співає українською"}, {"jumbled": "граємо / Ми / футбол", "answer": "Ми граємо футбол"}, {"jumbled": "слухаєте / Ви / музику", "answer": "Ви слухаєте музику"}, {"jumbled": "думають / Вони / багато", "answer": "Вони думають багато"}, {"jumbled": "пишеш / Ти / листа", "answer": "Ти пишеш листа"}, {"jumbled": "співає / Вона / пісню", "answer": "Вона співає пісню"}]`)}
 />
 
@@ -350,21 +375,6 @@ I have breakfast. Then I work. I have lunch. I walk to the park. I read a book. 
 | чекати | /t͡ʃɛˈkɑtɪ/ | to wait | verb |  |  |
 | чи | /t͡ʃɪ/ | if/whether | other |  |  |
 | читати | /t͡ʃɪˈtɑtɪ/ | to read | verb |  |  |
-
-## 📋 Summary
-
-You've unlocked **Class I verbs** (-ати/-яти)! You can now:
-
-- Conjugate verbs like **читати, писати, працювати, грати**
-- Describe daily routines and actions
-- Form basic sentences like "Я читаю книгу" (I read a book)
-- Understand the **-аю, -аєш, -ає, -аємо, -аєте, -ають** pattern
-
-**Key Insight:** The verb ending tells you WHO is acting, so you can often drop the pronoun. "Читаю" = "I read." Elegant, efficient, Ukrainian.
-
-**Next up:** Module 07 — Questions & Negation. You learn questions and negation!
-
----
 
 > [!resources] 🔗 External Resources
 >

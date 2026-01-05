@@ -16,9 +16,10 @@ function getWordColor(word: string, index: number): string {
 
 interface GroupSortProps {
   groups: { [key: string]: string[] };
+  isUkrainian?: boolean;
 }
 
-export default function GroupSort({ groups }: GroupSortProps) {
+export default function GroupSort({ groups, isUkrainian }: GroupSortProps) {
   const groupNames = Object.keys(groups);
 
   // Flatten and shuffle all items with colors
@@ -162,12 +163,20 @@ export default function GroupSort({ groups }: GroupSortProps) {
     return remaining.length === 0;
   };
 
+  const headerLabel = isUkrainian ? 'Розподіліть за категоріями' : 'Group Sort';
+  const poolEmptyLabel = isUkrainian ? 'Всі слова розподілено!' : 'All words sorted!';
+  const bucketPlaceholderLabel = isUkrainian ? 'Перетягніть слова сюди' : 'Drop words here';
+  const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answers';
+  const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
+  const successLabel = isUkrainian ? '✓ Все розподілено правильно!' : '✓ All sorted correctly!';
+  const errorLabel = isUkrainian ? '✗ Деякі слова в неправильних групах.' : '✗ Some items are in the wrong group.';
+
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>📊</span>
-        <span>Group Sort</span>
-        <ActivityHelp activityType="group-sort" />
+        <span>{headerLabel}</span>
+        <ActivityHelp activityType="group-sort" isUkrainian={isUkrainian} />
       </div>
 
       <div className={styles.groupSortContainer}>
@@ -196,7 +205,7 @@ export default function GroupSort({ groups }: GroupSortProps) {
               </button>
             ))
           ) : (
-            <span className={styles.poolEmpty}>All words sorted!</span>
+            <span className={styles.poolEmpty}>{poolEmptyLabel}</span>
           )}
         </div>
 
@@ -234,7 +243,7 @@ export default function GroupSort({ groups }: GroupSortProps) {
                   );
                 })}
                 {sorted[groupName].length === 0 && !showResult && (
-                  <span className={styles.bucketPlaceholder}>Drop words here</span>
+                  <span className={styles.bucketPlaceholder}>{bucketPlaceholderLabel}</span>
                 )}
               </div>
             </div>
@@ -245,19 +254,19 @@ export default function GroupSort({ groups }: GroupSortProps) {
       <div className={styles.buttonRow}>
         {remaining.length === 0 && !showResult && (
           <button className={styles.submitButton} onClick={handleCheck}>
-            Check Answers
+            {checkBtnLabel}
           </button>
         )}
         {showResult && (
           <button className={styles.resetButton} onClick={handleReset}>
-            Try Again
+            {retryBtnLabel}
           </button>
         )}
       </div>
 
       {showResult && (
         <div className={`${styles.feedback} ${isAllCorrect() ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
-          {isAllCorrect() ? '✓ All sorted correctly!' : '✗ Some items are in the wrong group.'}
+          {isAllCorrect() ? successLabel : errorLabel}
         </div>
       )}
     </div>

@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 ## Warm-up
 
@@ -230,6 +232,16 @@ A detective interviews a witness about a robbery.
 
 ---
 
+## 📋 Summary
+
+1.  **Agreement:** *Який* matches the gender/number of the word it describes (Antecedent).
+2.  **Case:** *Який* changes case based on its function inside the relative clause.
+3.  **Punctuation:** Always use a comma before *який*.
+4.  **Usage:** Used for both people and things.
+5.  **Complexity:** Look at the clause as a mini-sentence to find the right case.
+
+---
+
 
 
 ## 🎯 Activities
@@ -238,6 +250,7 @@ A detective interviews a witness about a robbery.
 
 <MatchUp
   title="Noun-Pronoun Link"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- Чоловік", "right": "який"}, {"left": "- Жінка", "right": "яка"}, {"left": "- Місто", "right": "яке"}, {"left": "- Люди", "right": "які"}, {"left": "- Парк", "right": "який"}, {"left": "- Книга", "right": "яка"}, {"left": "- Вікно", "right": "яке"}, {"left": "- Друзі", "right": "які"}, {"left": "- Стіл", "right": "який"}, {"left": "- Лампа", "right": "яка"}, {"left": "- Дерево", "right": "яке"}, {"left": "- Гроші", "right": "які"}]`)}
 />
 
@@ -245,6 +258,7 @@ A detective interviews a witness about a robbery.
 
 <Cloze
   title="Choose the Form"
+  isUkrainian={false}
   passage={`Це дівчина, [___:1] танцює. (Subj, f) Це дівчина, [___:2] я люблю. (Obj, f) Це хлопець, [___:3] живе тут. (Subj, m)
 
 Це хлопець, [___:4] я знаю. (Obj, m - Live Animate/Genitive form) Це місто, [___:5] ми любимо. (Obj, n) Це люди, з [___:6] я працюю. (Instr, pl)
@@ -257,13 +271,15 @@ A detective interviews a witness about a robbery.
 
 <Quiz
   title="Detective Works"
-  questions={JSON.parse(`[{"question": "У реченні \\\"Людина, яку я бачу\\\", який відмінок має слово \\\"яку\\\" згідно з правилами?", "options": [{"text": "Accusative (знахідний відмінок)", "correct": true}, {"text": "Nominative (називний відмінок)", "correct": false}, {"text": "Genitive (родовий відмінок)", "correct": false}, {"text": "Dative (давальний відмінок)", "correct": false}]}, {"question": "У реченні \\\"Людина, яка бачить мене\\\", який відмінок має слово \\\"яка\\\" згідно з правилами?", "options": [{"text": "Nominative (називний відмінок)", "correct": true}, {"text": "Accusative (знахідний відмінок)", "correct": false}, {"text": "Dative (давальний відмінок)", "correct": false}, {"text": "Genitive (родовий відмінок)", "correct": false}]}, {"question": "Слово \\\"який\\\" повинно узгоджуватися за родом з яким словом у реченні?", "options": [{"text": "The word before the comma (слово перед комою)", "correct": true}, {"text": "The verb after the comma (дієслово після коми)", "correct": false}, {"text": "The speaker (той хто говорить)", "correct": false}, {"text": "The object of the sentence (додаток речення)", "correct": false}]}, {"question": "Як перекласти англійською \\\"The friends I live with\\\" українською мовою правильно?", "options": [{"text": "Друзі, з якими я живу", "correct": true}, {"text": "Друзі, з які я живу", "correct": false}, {"text": "Друзі, які я живу", "correct": false}, {"text": "Друзі, з яких я живу", "correct": false}]}, {"question": "Якщо слово \\\"книгу\\\" жіночого роду то відносний займенник починається як яка форма?", "options": [{"text": "Яка (жіночий рід)", "correct": true}, {"text": "Який (чоловічий рід)", "correct": false}, {"text": "Яке (середній рід)", "correct": false}, {"text": "Які (множина)", "correct": false}]}, {"question": "Прийменник \\\"про\\\" зазвичай вимагає якого відмінка після себе в українській мові?", "options": [{"text": "Accusative (знахідний відмінок)", "correct": true}, {"text": "Dative (давальний відмінок)", "correct": false}, {"text": "Instrumental (орудний відмінок)", "correct": false}, {"text": "Genitive (родовий відмінок)", "correct": false}]}, {"question": "Прийменник \\\"у\\\" або \\\"в\\\" для позначення місця вимагає якого відмінка в українській?", "options": [{"text": "Locative (місцевий відмінок)", "correct": true}, {"text": "Nominative (називний відмінок)", "correct": false}, {"text": "Genitive (родовий відмінок)", "correct": false}, {"text": "Accusative (знахідний відмінок)", "correct": false}]}, {"question": "Чи використовується слово \\\"який\\\" для позначення людей в українській мові правильно?", "options": [{"text": "Yes, for everyone (так для всіх)", "correct": true}, {"text": "No, only for things (ні тільки для речей)", "correct": false}, {"text": "Only for animals (тільки для тварин)", "correct": false}, {"text": "Only in formal speech (тільки в офіційному мовленні)", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "У реченні \\\\\\"Людина, яку я бачу\\\\\\", який відмінок має слово \\\\\\"яку\\\\\\" згідно з правилами?", "options": [{"text": "Accusative (знахідний відмінок)", "correct": true}, {"text": "Nominative (називний відмінок)", "correct": false}, {"text": "Genitive (родовий відмінок)", "correct": false}, {"text": "Dative (давальний відмінок)", "correct": false}]}, {"question": "У реченні \\\\\\"Людина, яка бачить мене\\\\\\", який відмінок має слово \\\\\\"яка\\\\\\" згідно з правилами?", "options": [{"text": "Nominative (називний відмінок)", "correct": true}, {"text": "Accusative (знахідний відмінок)", "correct": false}, {"text": "Dative (давальний відмінок)", "correct": false}, {"text": "Genitive (родовий відмінок)", "correct": false}]}, {"question": "Слово \\\\\\"який\\\\\\" повинно узгоджуватися за родом з яким словом у реченні?", "options": [{"text": "The word before the comma (слово перед комою)", "correct": true}, {"text": "The verb after the comma (дієслово після коми)", "correct": false}, {"text": "The speaker (той хто говорить)", "correct": false}, {"text": "The object of the sentence (додаток речення)", "correct": false}]}, {"question": "Як перекласти англійською \\\\\\"The friends I live with\\\\\\" українською мовою правильно?", "options": [{"text": "Друзі, з якими я живу", "correct": true}, {"text": "Друзі, з які я живу", "correct": false}, {"text": "Друзі, які я живу", "correct": false}, {"text": "Друзі, з яких я живу", "correct": false}]}, {"question": "Якщо слово \\\\\\"книгу\\\\\\" жіночого роду то відносний займенник починається як яка форма?", "options": [{"text": "Яка (жіночий рід)", "correct": true}, {"text": "Який (чоловічий рід)", "correct": false}, {"text": "Яке (середній рід)", "correct": false}, {"text": "Які (множина)", "correct": false}]}, {"question": "Прийменник \\\\\\"про\\\\\\" зазвичай вимагає якого відмінка після себе в українській мові?", "options": [{"text": "Accusative (знахідний відмінок)", "correct": true}, {"text": "Dative (давальний відмінок)", "correct": false}, {"text": "Instrumental (орудний відмінок)", "correct": false}, {"text": "Genitive (родовий відмінок)", "correct": false}]}, {"question": "Прийменник \\\\\\"у\\\\\\" або \\\\\\"в\\\\\\" для позначення місця вимагає якого відмінка в українській?", "options": [{"text": "Locative (місцевий відмінок)", "correct": true}, {"text": "Nominative (називний відмінок)", "correct": false}, {"text": "Genitive (родовий відмінок)", "correct": false}, {"text": "Accusative (знахідний відмінок)", "correct": false}]}, {"question": "Чи використовується слово \\\\\\"який\\\\\\" для позначення людей в українській мові правильно?", "options": [{"text": "Yes, for everyone (так для всіх)", "correct": true}, {"text": "No, only for things (ні тільки для речей)", "correct": false}, {"text": "Only for animals (тільки для тварин)", "correct": false}, {"text": "Only in formal speech (тільки в офіційному мовленні)", "correct": false}]}]`)}
 />
 
 ### Building Bridges
 
 <Unjumble
   title="Building Bridges"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "це / чоловік / який / тут / працює / дуже / добре / зараз", "answer": "Це чоловік, який тут працює дуже добре зараз"}, {"jumbled": "книга / яку / я / читаю / зараз / дуже / цікава / справді", "answer": "Книга, яку я читаю зараз, дуже цікава справді"}, {"jumbled": "ми / любимо / місто / в / якому / живемо / вже / давно", "answer": "Ми любимо місто, в якому живемо вже давно"}, {"jumbled": "дівчина / з / якою / я / говорив / вчора / дуже / розумна", "answer": "Дівчина, з якою я говорив вчора, дуже розумна"}, {"jumbled": "люди / які / знають / все / тут / живуть / дуже / давно", "answer": "Люди, які знають все, тут живуть дуже давно"}, {"jumbled": "це / дім / який / я / купив / минулого / року / тут", "answer": "Це дім, який я купив минулого року тут"}]`)}
 />
 
@@ -271,6 +287,7 @@ A detective interviews a witness about a robbery.
 
 <GroupSort
   title="Which Case?"
+  isUkrainian={false}
   groups={JSON.parse(`{"Nominative (Subject)": ["Чоловік, який спить.", "Жінка, яка йде.", "Авто, яке їде.", "Люди, які стоять.", "Пес, який гавкає.", "Кіт, який їсть."], "Oblique (Obj/Prep)": ["Чоловік, якого я знаю.", "Жінка, яку я бачу.", "Авто, у якому я сиджу.", "Люди, з якими я говорю.", "Пес, якого я годую.", "Кіт, про якого я думаю."]}`)}
 />
 
@@ -278,13 +295,15 @@ A detective interviews a witness about a robbery.
 
 <TrueFalse
   title="Grammar Truths"
-  items={JSON.parse(`[{"statement": "Слово \\\"який\\\" ніколи не змінює свою форму в українській мові.", "isTrue": false, "explanation": ""}, {"statement": "Потрібна кома перед словом \\\"який\\\" у відносних реченнях.", "isTrue": true, "explanation": ""}, {"statement": "У фразі \\\"будинок, у якому я живу\\\" використовується місцевий відмінок.", "isTrue": true, "explanation": ""}, {"statement": "У фразі \\\"дівчина, яка співає\\\" слово \\\"яка\\\" має знахідний відмінок.", "isTrue": false, "explanation": ""}, {"statement": "Слова \\\"який\\\" та \\\"хто\\\" це різні слова в українській мові.", "isTrue": false, "explanation": ""}, {"statement": "Прийменник \\\"про\\\" вимагає давального відмінка після себе.", "isTrue": false, "explanation": ""}, {"statement": "Прийменник \\\"з\\\" вимагає орудного відмінка після себе.", "isTrue": true, "explanation": ""}, {"statement": "Слово \\\"який\\\" використовується тільки для чоловічого роду.", "isTrue": false, "explanation": ""}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Слово \\\\\\"який\\\\\\" ніколи не змінює свою форму в українській мові.", "isTrue": false, "explanation": ""}, {"statement": "Потрібна кома перед словом \\\\\\"який\\\\\\" у відносних реченнях.", "isTrue": true, "explanation": ""}, {"statement": "У фразі \\\\\\"будинок, у якому я живу\\\\\\" використовується місцевий відмінок.", "isTrue": true, "explanation": ""}, {"statement": "У фразі \\\\\\"дівчина, яка співає\\\\\\" слово \\\\\\"яка\\\\\\" має знахідний відмінок.", "isTrue": false, "explanation": ""}, {"statement": "Слова \\\\\\"який\\\\\\" та \\\\\\"хто\\\\\\" це різні слова в українській мові.", "isTrue": false, "explanation": ""}, {"statement": "Прийменник \\\\\\"про\\\\\\" вимагає давального відмінка після себе.", "isTrue": false, "explanation": ""}, {"statement": "Прийменник \\\\\\"з\\\\\\" вимагає орудного відмінка після себе.", "isTrue": true, "explanation": ""}, {"statement": "Слово \\\\\\"який\\\\\\" використовується тільки для чоловічого роду.", "isTrue": false, "explanation": ""}]`)}
 />
 
 ### My Dream House
 
 <Cloze
   title="My Dream House"
+  isUkrainian={false}
   passage={`Я мрію про дім, [___:1] стоїть у лісі.
 Це дім, [___:2] має великі вікна.
 Я хочу кухню, [___:3] я буду готувати.
@@ -302,7 +321,7 @@ A detective interviews a witness about a robbery.
 
 ### Find Relative Clauses
 
-<MarkTheWords>
+<MarkTheWords isUkrainian={false}>
   <MarkTheWordsActivity
     instruction={`Mark the correct words.`}
     text={`Це фільм, який я люблю. Я знаю дівчину, яка тут живе. Це місце, де ми зустрілися.
@@ -315,7 +334,7 @@ A detective interviews a witness about a robbery.
 
 ### Fix the Link
 
-<ErrorCorrection title="Fix the Link">
+<ErrorCorrection title="Fix the Link" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Це жінка, **який** співає. (Gender mismatch)`}
     errorWord={`який`}
@@ -364,6 +383,7 @@ A detective interviews a witness about a robbery.
 
 <Translate
   title="English to Ukrainian"
+  isUkrainian={false}
   questions={JSON.parse(`[{"source": "The man who sleeps.", "options": [{"text": "Чоловік, який спить.", "correct": true}, {"text": "Чоловік, якого спить.", "correct": false}]}, {"source": "The book which I read.", "options": [{"text": "Книга, яку я читаю.", "correct": true}, {"text": "Книга, яка я читаю.", "correct": false}]}, {"source": "The city in which I live.", "options": [{"text": "Місто, у якому я живу.", "correct": true}, {"text": "Місто, який я живу.", "correct": false}]}, {"source": "The friends with whom I speak.", "options": [{"text": "Друзі, з якими я говорю.", "correct": true}, {"text": "Друзі, з які я говорю.", "correct": false}]}, {"source": "The girl who helps me.", "options": [{"text": "Дівчина, яка допомагає мені.", "correct": true}, {"text": "Дівчина, яку допомагає мені.", "correct": false}]}, {"source": "The house that stands there.", "options": [{"text": "Будинок, який стоїть там.", "correct": true}, {"text": "Будинок, якого стоїть там.", "correct": false}]}]`)}
 />
 
@@ -383,16 +403,6 @@ A detective interviews a witness about a robbery.
 | рог | rɔh | horn; corner (typo for ріг?) | noun | ч |  |
 | цікавити | t͡sʲiˈkɑʋɪte | to interest (imp) | verb |  |  |
 | шапка | ˈʃɑpkɐ | hat | noun | ж |  |
-
-## 📋 Summary
-
-1.  **Agreement:** *Який* matches the gender/number of the word it describes (Antecedent).
-2.  **Case:** *Який* changes case based on its function inside the relative clause.
-3.  **Punctuation:** Always use a comma before *який*.
-4.  **Usage:** Used for both people and things.
-5.  **Complexity:** Look at the clause as a mini-sentence to find the right case.
-
----
 
 > [!resources] 🔗 External Resources
 >

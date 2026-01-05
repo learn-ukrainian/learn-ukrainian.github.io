@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Warm-up
@@ -265,6 +267,16 @@ The body part is the SUBJECT (nominative), not the object!
 
 ---
 
+## 📋 Summary
+
+In this module, you learned:
+
+## 📋 Summary
+
+Ви вивчили частини тіла та здоров'я! Тепер ви можете описати свій біль. (You learned body parts and health! Now you can describe your pain.) Ви знаєте, як купити ліки в аптеці або викликати швидку допомогу. Ви також знаєте, як почувається хворий або здоровий. Це чудовий результат! (This is a great result!)
+
+---
+
 
 
 ## 🎯 Activities
@@ -273,6 +285,7 @@ The body part is the SUBJECT (nominative), not the object!
 
 <MatchUp
   title="Body Parts"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- голова", "right": "head"}, {"left": "- рука", "right": "hand/arm"}, {"left": "- нога", "right": "leg/foot"}, {"left": "- живіт", "right": "stomach"}, {"left": "- спина", "right": "back"}, {"left": "- горло", "right": "throat"}, {"left": "- око", "right": "eye"}, {"left": "- вухо", "right": "ear"}, {"left": "- ніс", "right": "nose"}, {"left": "- рот", "right": "mouth"}, {"left": "- зуб", "right": "tooth"}, {"left": "- тіло", "right": "body"}]`)}
 />
 
@@ -280,6 +293,7 @@ The body part is the SUBJECT (nominative), not the object!
 
 <MatchUp
   title="Health Vocabulary"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- лікар", "right": "doctor"}, {"left": "- лікарня", "right": "hospital"}, {"left": "- аптека", "right": "pharmacy"}, {"left": "- ліки", "right": "medicine"}, {"left": "- таблетка", "right": "pill"}, {"left": "- температура", "right": "fever"}, {"left": "- кашель", "right": "cough"}, {"left": "- нежить", "right": "runny nose"}, {"left": "- застуда", "right": "cold (illness)"}, {"left": "- швидка допомога", "right": "ambulance"}, {"left": "- здоров'я", "right": "health"}, {"left": "- хворий", "right": "sick"}]`)}
 />
 
@@ -287,6 +301,7 @@ The body part is the SUBJECT (nominative), not the object!
 
 <GroupSort
   title="Body Parts"
+  isUkrainian={false}
   groups={JSON.parse(`{"Голова (Head)": ["очі", "вуха", "ніс", "рот", "зуби"], "Тіло (Body)": ["живіт", "спина", "горло"], "Кінцівки (Limbs)": ["руки", "ноги", "палець", "коліно", "--"]}`)}
 />
 
@@ -294,6 +309,7 @@ The body part is the SUBJECT (nominative), not the object!
 
 <GroupSort
   title="Болить vs Болять"
+  isUkrainian={false}
   groups={JSON.parse(`{"Болить (singular)": ["голова", "горло", "живіт", "спина", "ніс", "рот"], "Болять (plural)": ["очі", "вуха", "зуби", "ноги", "руки", "пальці", "--"]}`)}
 />
 
@@ -301,6 +317,7 @@ The body part is the SUBJECT (nominative), not the object!
 
 <FillIn
   title="Що болить? (What Hurts?)"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "У мене болить ___.", "answer": "голова", "options": ["голова", "очі", "зуби", "ноги"]}, {"sentence": "У мене ___ горло.", "answer": "болить", "options": ["болить", "болять", "болю", "болять"]}, {"sentence": "У мене болять ___.", "answer": "зуби", "options": ["зуби", "горло", "голова", "спина"]}, {"sentence": "У мене ___ живіт.", "answer": "болить", "options": ["болить", "болять", "болю", "болінь"]}, {"sentence": "У мене болять ___.", "answer": "очі", "options": ["очі", "око", "горло", "ніс"]}, {"sentence": "У мене болить ___.", "answer": "спина", "options": ["спина", "руки", "ноги", "очі"]}, {"sentence": "У мене ___ ноги.", "answer": "болять", "options": ["болять", "болить", "болю", "болінь"]}, {"sentence": "У мене болить ___.", "answer": "вухо", "options": ["вухо", "вуха", "зуби", "очі"]}, {"sentence": "У мене болять ___.", "answer": "вуха", "options": ["вуха", "вухо", "горло", "ніс"]}, {"sentence": "У мене ___ зуб.", "answer": "болить", "options": ["болить", "болять", "болю", "болінь"]}, {"sentence": "У мене болить ___.", "answer": "ніс", "options": ["ніс", "очі", "зуби", "вуха"]}, {"sentence": "У мене болять ___.", "answer": "руки", "options": ["руки", "рука", "живіт", "горло"]}]`)}
 />
 
@@ -308,6 +325,7 @@ The body part is the SUBJECT (nominative), not the object!
 
 <FillIn
   title="У лікаря (At the Doctor's)"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Як ви себе ___?", "answer": "почуваєте", "options": ["почуваєте", "болить", "хворий", "здоров'я"]}, {"sentence": "Мені ___.", "answer": "погано", "options": ["погано", "болить", "хворий", "лікар"]}, {"sentence": "У мене висока ___.", "answer": "температура", "options": ["температура", "голова", "лікар", "аптека"]}, {"sentence": "Я ___ застудою.", "answer": "хворий", "options": ["хворий", "болить", "погано", "температура"]}, {"sentence": "У мене сильний ___.", "answer": "кашель", "options": ["кашель", "аптека", "лікар", "таблетка"]}, {"sentence": "У мене ___.", "answer": "нежить", "options": ["нежить", "голова", "спина", "живіт"]}, {"sentence": "Мені потрібні ___.", "answer": "ліки", "options": ["ліки", "аптека", "лікарня", "лікар"]}, {"sentence": "Ось рецепт на ___.", "answer": "таблетки", "options": ["таблетки", "лікаря", "аптеку", "лікарню"]}, {"sentence": "Викличте ___ допомогу!", "answer": "швидку", "options": ["швидку", "аптеку", "лікарню", "таблетку"]}, {"sentence": "Я йду в ___.", "answer": "аптеку", "options": ["аптеку", "лікаря", "таблетку", "ліки"]}, {"sentence": "Я здоровий, мені ___.", "answer": "добре", "options": ["добре", "погано", "болить", "хворий"]}, {"sentence": "У вас є ліки від ___?", "answer": "застуди", "options": ["застуди", "аптека", "лікаря", "таблетка"]}]`)}
 />
 
@@ -315,20 +333,23 @@ The body part is the SUBJECT (nominative), not the object!
 
 <Quiz
   title="Болить or Болять?"
-  questions={JSON.parse(`[{"question": "Which verb form is correct for \\\"Голова\\\" in a sentence?", "options": [{"text": "болить (singular)", "correct": true}, {"text": "болять (plural)", "correct": false}, {"text": "болю", "correct": false}, {"text": "болі", "correct": false}]}, {"question": "How should you correctly describe if your \\\"Зуби\\\" are currently hurting?", "options": [{"text": "болять (plural)", "correct": true}, {"text": "болить (singular)", "correct": false}, {"text": "болі", "correct": false}, {"text": "болю", "correct": false}]}, {"question": "What is the correct form to use for the word \\\"Горло\\\"?", "options": [{"text": "болить (singular)", "correct": true}, {"text": "болять (plural)", "correct": false}, {"text": "болі", "correct": false}, {"text": "болить-не", "correct": false}]}, {"question": "Which word correctly matches the plural noun \\\"Очі\\\" in Ukrainian?", "options": [{"text": "болять (plural)", "correct": true}, {"text": "болить (singular)", "correct": false}, {"text": "болі", "correct": false}, {"text": "болю", "correct": false}]}, {"question": "How do you accurately say that your \\\"Живіт\\\" hurts today?", "options": [{"text": "болить (singular)", "correct": true}, {"text": "болять (plural)", "correct": false}, {"text": "болю", "correct": false}, {"text": "болі", "correct": false}]}, {"question": "What is the right form for describing if \\\"Ноги\\\" hurt?", "options": [{"text": "болять (plural)", "correct": true}, {"text": "болить (singular)", "correct": false}, {"text": "болі", "correct": false}, {"text": "болю", "correct": false}]}, {"question": "Which verb should you choose for the singular noun \\\"Спина\\\"?", "options": [{"text": "болить (singular)", "correct": true}, {"text": "болять (plural)", "correct": false}, {"text": "болю", "correct": false}, {"text": "болі", "correct": false}]}, {"question": "How would you correctly say that your \\\"Руки\\\" are hurting?", "options": [{"text": "болять (plural)", "correct": true}, {"text": "болить (singular)", "correct": false}, {"text": "болю", "correct": false}, {"text": "болі", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Which verb form is correct for \\\\\\"Голова\\\\\\" in a sentence?", "options": [{"text": "болить (singular)", "correct": true}, {"text": "болять (plural)", "correct": false}, {"text": "болю", "correct": false}, {"text": "болі", "correct": false}]}, {"question": "How should you correctly describe if your \\\\\\"Зуби\\\\\\" are currently hurting?", "options": [{"text": "болять (plural)", "correct": true}, {"text": "болить (singular)", "correct": false}, {"text": "болі", "correct": false}, {"text": "болю", "correct": false}]}, {"question": "What is the correct form to use for the word \\\\\\"Горло\\\\\\"?", "options": [{"text": "болить (singular)", "correct": true}, {"text": "болять (plural)", "correct": false}, {"text": "болі", "correct": false}, {"text": "болить-не", "correct": false}]}, {"question": "Which word correctly matches the plural noun \\\\\\"Очі\\\\\\" in Ukrainian?", "options": [{"text": "болять (plural)", "correct": true}, {"text": "болить (singular)", "correct": false}, {"text": "болі", "correct": false}, {"text": "болю", "correct": false}]}, {"question": "How do you accurately say that your \\\\\\"Живіт\\\\\\" hurts today?", "options": [{"text": "болить (singular)", "correct": true}, {"text": "болять (plural)", "correct": false}, {"text": "болю", "correct": false}, {"text": "болі", "correct": false}]}, {"question": "What is the right form for describing if \\\\\\"Ноги\\\\\\" hurt?", "options": [{"text": "болять (plural)", "correct": true}, {"text": "болить (singular)", "correct": false}, {"text": "болі", "correct": false}, {"text": "болю", "correct": false}]}, {"question": "Which verb should you choose for the singular noun \\\\\\"Спина\\\\\\"?", "options": [{"text": "болить (singular)", "correct": true}, {"text": "болять (plural)", "correct": false}, {"text": "болю", "correct": false}, {"text": "болі", "correct": false}]}, {"question": "How would you correctly say that your \\\\\\"Руки\\\\\\" are hurting?", "options": [{"text": "болять (plural)", "correct": true}, {"text": "болить (singular)", "correct": false}, {"text": "болю", "correct": false}, {"text": "болі", "correct": false}]}]`)}
 />
 
 ### Health Situations
 
 <Quiz
   title="Health Situations"
-  questions={JSON.parse(`[{"question": "You feel sick. What do you say?", "options": [{"text": "Я хворий.", "correct": true}, {"text": "Я здоровий.", "correct": false}, {"text": "Я добре.", "correct": false}, {"text": "Дякую.", "correct": false}]}, {"question": "You have a headache. What do you say?", "options": [{"text": "У мене болить голова.", "correct": true}, {"text": "У мене болять голова.", "correct": false}, {"text": "Мені болить голова.", "correct": false}, {"text": "Я болить голова.", "correct": false}]}, {"question": "You need to find a pharmacy. What are you looking for?", "options": [{"text": "Аптека", "correct": true}, {"text": "Лікарня", "correct": false}, {"text": "Лікар", "correct": false}, {"text": "Швидка", "correct": false}]}, {"question": "You need to call emergency services in Ukraine. What number?", "options": [{"text": "103", "correct": true}, {"text": "911", "correct": false}, {"text": "112", "correct": false}, {"text": "999", "correct": false}]}, {"question": "You have a fever. What do you say?", "options": [{"text": "У мене температура.", "correct": true}, {"text": "У мене болить температура.", "correct": false}, {"text": "Мені температура.", "correct": false}, {"text": "Я температура.", "correct": false}]}, {"question": "Where do you go to buy medicine?", "options": [{"text": "В аптеку.", "correct": true}, {"text": "В лікарню.", "correct": false}, {"text": "До лікаря.", "correct": false}, {"text": "На швидку.", "correct": false}]}, {"question": "You have a cough. How do you say it?", "options": [{"text": "У мене кашель.", "correct": true}, {"text": "Мені кашель.", "correct": false}, {"text": "Я кашель.", "correct": false}, {"text": "У мене болить кашель.", "correct": false}]}, {"question": "What does \\\"швидка допомога\\\" mean?", "options": [{"text": "Ambulance", "correct": true}, {"text": "Pharmacy", "correct": false}, {"text": "Hospital", "correct": false}, {"text": "Doctor", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "You feel sick. What do you say?", "options": [{"text": "Я хворий.", "correct": true}, {"text": "Я здоровий.", "correct": false}, {"text": "Я добре.", "correct": false}, {"text": "Дякую.", "correct": false}]}, {"question": "You have a headache. What do you say?", "options": [{"text": "У мене болить голова.", "correct": true}, {"text": "У мене болять голова.", "correct": false}, {"text": "Мені болить голова.", "correct": false}, {"text": "Я болить голова.", "correct": false}]}, {"question": "You need to find a pharmacy. What are you looking for?", "options": [{"text": "Аптека", "correct": true}, {"text": "Лікарня", "correct": false}, {"text": "Лікар", "correct": false}, {"text": "Швидка", "correct": false}]}, {"question": "You need to call emergency services in Ukraine. What number?", "options": [{"text": "103", "correct": true}, {"text": "911", "correct": false}, {"text": "112", "correct": false}, {"text": "999", "correct": false}]}, {"question": "You have a fever. What do you say?", "options": [{"text": "У мене температура.", "correct": true}, {"text": "У мене болить температура.", "correct": false}, {"text": "Мені температура.", "correct": false}, {"text": "Я температура.", "correct": false}]}, {"question": "Where do you go to buy medicine?", "options": [{"text": "В аптеку.", "correct": true}, {"text": "В лікарню.", "correct": false}, {"text": "До лікаря.", "correct": false}, {"text": "На швидку.", "correct": false}]}, {"question": "You have a cough. How do you say it?", "options": [{"text": "У мене кашель.", "correct": true}, {"text": "Мені кашель.", "correct": false}, {"text": "Я кашель.", "correct": false}, {"text": "У мене болить кашель.", "correct": false}]}, {"question": "What does \\\\\\"швидка допомога\\\\\\" mean?", "options": [{"text": "Ambulance", "correct": true}, {"text": "Pharmacy", "correct": false}, {"text": "Hospital", "correct": false}, {"text": "Doctor", "correct": false}]}]`)}
 />
 
 ### Health Sentences
 
 <Unjumble
   title="Health Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "болить / у мене / голова", "answer": "У мене болить голова"}, {"jumbled": "дуже / сьогодні / я / хворий", "answer": "Сьогодні я дуже хворий"}, {"jumbled": "є / у вас / ліки", "answer": "У вас є ліки"}, {"jumbled": "температура / у мене / висока", "answer": "У мене висока температура"}, {"jumbled": "болять / зуби / у мене", "answer": "У мене болять зуби"}, {"jumbled": "застуда / у мене", "answer": "У мене застуда"}, {"jumbled": "допомогу / швидку / викличте", "answer": "Викличте швидку допомогу"}, {"jumbled": "лікар / дуже / потрібен / мені", "answer": "Мені дуже потрібен лікар"}, {"jumbled": "аптеку / йду / я / в", "answer": "Я йду в аптеку"}, {"jumbled": "болить / горло / у неї", "answer": "У неї болить горло"}, {"jumbled": "таблетки / ось / ваші", "answer": "Ось ваші таблетки"}, {"jumbled": "мені / погано / дуже", "answer": "Мені дуже погано"}]`)}
 />
 
@@ -336,7 +357,8 @@ The body part is the SUBJECT (nominative), not the object!
 
 <TrueFalse
   title="Health Facts"
-  items={JSON.parse(`[{"statement": "\\\"Болить\\\" is used for singular body parts.", "isTrue": true, "explanation": "Correct! Use болить for one body part."}, {"statement": "\\\"Болять\\\" is used for plural body parts.", "isTrue": true, "explanation": "Correct! Use болять for multiple body parts."}, {"statement": "\\\"Аптека\\\" means \\\"hospital.\\\"", "isTrue": false, "explanation": "Incorrect! Аптека means \\\"pharmacy.\\\" Hospital is \\\"лікарня.\\\""}, {"statement": "\\\"Лікарня\\\" means \\\"hospital.\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Швидка допомога\\\" means \\\"pharmacy.\\\"", "isTrue": false, "explanation": "Incorrect! It means \\\"ambulance\\\" (literally \\\"fast help\\\")."}, {"statement": "\\\"У мене температура\\\" means \\\"I have a fever.\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Головні болі\\\" uses \\\"болить.\\\"", "isTrue": false, "explanation": "Incorrect! It uses \\\"болять\\\" because болі is plural."}, {"statement": "\\\"Я хворий\\\" means \\\"I'm sick.\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "In Ukraine, you call 103 for an ambulance.", "isTrue": true, "explanation": "Correct! 103 is the emergency number for medical help."}, {"statement": "\\\"Хвора\\\" is for men.", "isTrue": false, "explanation": "Incorrect! Хвора is feminine. Men use \\\"хворий.\\\""}, {"statement": "\\\"Ліки\\\" is always plural.", "isTrue": true, "explanation": "Correct! Ліки has no singular form."}, {"statement": "\\\"Зуб\\\" is singular, \\\"зуби\\\" is plural.", "isTrue": true, "explanation": "Correct!"}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "\\\\\\"Болить\\\\\\" is used for singular body parts.", "isTrue": true, "explanation": "Correct! Use болить for one body part."}, {"statement": "\\\\\\"Болять\\\\\\" is used for plural body parts.", "isTrue": true, "explanation": "Correct! Use болять for multiple body parts."}, {"statement": "\\\\\\"Аптека\\\\\\" means \\\\\\"hospital.\\\\\\"", "isTrue": false, "explanation": "Incorrect! Аптека means \\\\\\"pharmacy.\\\\\\" Hospital is \\\\\\"лікарня.\\\\\\""}, {"statement": "\\\\\\"Лікарня\\\\\\" means \\\\\\"hospital.\\\\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\\\\"Швидка допомога\\\\\\" means \\\\\\"pharmacy.\\\\\\"", "isTrue": false, "explanation": "Incorrect! It means \\\\\\"ambulance\\\\\\" (literally \\\\\\"fast help\\\\\\")."}, {"statement": "\\\\\\"У мене температура\\\\\\" means \\\\\\"I have a fever.\\\\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\\\\"Головні болі\\\\\\" uses \\\\\\"болить.\\\\\\"", "isTrue": false, "explanation": "Incorrect! It uses \\\\\\"болять\\\\\\" because болі is plural."}, {"statement": "\\\\\\"Я хворий\\\\\\" means \\\\\\"I'm sick.\\\\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "In Ukraine, you call 103 for an ambulance.", "isTrue": true, "explanation": "Correct! 103 is the emergency number for medical help."}, {"statement": "\\\\\\"Хвора\\\\\\" is for men.", "isTrue": false, "explanation": "Incorrect! Хвора is feminine. Men use \\\\\\"хворий.\\\\\\""}, {"statement": "\\\\\\"Ліки\\\\\\" is always plural.", "isTrue": true, "explanation": "Correct! Ліки has no singular form."}, {"statement": "\\\\\\"Зуб\\\\\\" is singular, \\\\\\"зуби\\\\\\" is plural.", "isTrue": true, "explanation": "Correct!"}]`)}
 />
 
 ## 📚 Vocabulary
@@ -374,16 +396,6 @@ The body part is the SUBJECT (nominative), not the object!
 | температура | /tɛmpɛrɑˈturɑ/ | temperature/fever | noun | ж |  |
 | тіло | /ˈtilɔ/ | body | noun | с |  |
 | хворий | /ˈxvɔrɪj/ | sick | adj | ч |  |
-
-## 📋 Summary
-
-In this module, you learned:
-
-## 📋 Summary
-
-Ви вивчили частини тіла та здоров'я! Тепер ви можете описати свій біль. (You learned body parts and health! Now you can describe your pain.) Ви знаєте, як купити ліки в аптеці або викликати швидку допомогу. Ви також знаєте, як почувається хворий або здоровий. Це чудовий результат! (This is a great result!)
-
----
 
 > [!resources] 🔗 External Resources
 >

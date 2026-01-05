@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 ## Warm-up
 
@@ -257,6 +259,16 @@ In Ukraine, normal temperature is 36.6°C.
 
 ---
 
+## 📋 Summary
+
+1.  **Botlily:** *У мене болить [Subject].*
+2.  **Part of Body:** Learner nouns (голова, горло, живіт).
+3.  **Symptoms:** Температура, кашель, нежить.
+4.  **Action:** Приймати ліки, пити чай, лежати.
+5.  **Place:** Лікарня, Поліклініка, Аптека.
+
+---
+
 
 
 ## 🎯 Activities
@@ -265,6 +277,7 @@ In Ukraine, normal temperature is 36.6°C.
 
 <MatchUp
   title="Body & Pain"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- Голова", "right": "Head"}, {"left": "- Горло", "right": "Throat"}, {"left": "- Живіт", "right": "Stomach"}, {"left": "- Спина", "right": "Back"}, {"left": "- Нога", "right": "Leg"}, {"left": "- Рука", "right": "Arm/Hand"}, {"left": "- Око", "right": "Eye"}, {"left": "- Вухо", "right": "Ear"}, {"left": "- Серце", "right": "Heart"}, {"left": "- Зуб", "right": "Tooth"}]`)}
 />
 
@@ -272,6 +285,7 @@ In Ukraine, normal temperature is 36.6°C.
 
 <Cloze
   title="Diagnosis"
+  isUkrainian={false}
   passage={`У мене [___:1] голова. (Hurts sing.) У мене [___:2] ноги. (Hurts pl.) У нього висока [___:3]. (Fever)
 
 Треба купити ліки в [___:4]. (Pharmacy) Лікар виписал [___:5]. (Prescription) Що вас [___:6]? (Bothers)
@@ -284,13 +298,15 @@ In Ukraine, normal temperature is 36.6°C.
 
 <Quiz
   title="Medical Expert"
-  questions={JSON.parse(`[{"question": "Якщо у вас є \\\"нежить\\\" то що це означає в українській мові для симптомів?", "options": [{"text": "A runny nose (нежить це нежить)", "correct": true}, {"text": "A broken leg (зламана нога)", "correct": false}, {"text": "A headache (головний біль)", "correct": false}, {"text": "A fever (температура)", "correct": false}]}, {"question": "Що означає фраза \\\"у мене болить живіт\\\" в українській мові правильно?", "options": [{"text": "My stomach hurts (мій живіт болить)", "correct": true}, {"text": "My life hurts (моє життя болить)", "correct": false}, {"text": "I am hungry (я голодний)", "correct": false}, {"text": "I am tired (я втомлений)", "correct": false}]}, {"question": "Де можна купити ліки в Україні зазвичай для лікування?", "options": [{"text": "В аптеці (в аптеці)", "correct": true}, {"text": "В лікарні (в лікарні)", "correct": false}, {"text": "В бібліотеці (в бібліотеці)", "correct": false}, {"text": "В магазині (в магазині)", "correct": false}]}, {"question": "Яка нормальна температура тіла в Україні згідно з медичними стандартами?", "options": [{"text": "Normal temperature (36.6°C нормальна)", "correct": true}, {"text": "High fever (38.0°C висока)", "correct": false}, {"text": "Low temperature (35.0°C низька)", "correct": false}, {"text": "Critical (40.0°C критична)", "correct": false}]}, {"question": "Що означає слово \\\"видужуйте\\\" в українській мові для побажання?", "options": [{"text": "Get well soon (одужуйте швидко)", "correct": true}, {"text": "Good bye (до побачення)", "correct": false}, {"text": "Pay here (платіть тут)", "correct": false}, {"text": "Thank you (дякую)", "correct": false}]}, {"question": "Що означає дієслово \\\"хворіти\\\" в українській мові для стану здоров'я?", "options": [{"text": "To be ill process (бути хворим процес)", "correct": true}, {"text": "To hurt pain (боліти біль)", "correct": false}, {"text": "To heal (лікувати)", "correct": false}, {"text": "To recover (одужувати)", "correct": false}]}, {"question": "Чи можна сказати \\\"я болю голову\\\" в українській мові правильно граматично?", "options": [{"text": "No incorrect (ні неправильно)", "correct": true}, {"text": "Yes correct (так правильно)", "correct": false}, {"text": "Sometimes (іноді)", "correct": false}, {"text": "Only formal (тільки офіційно)", "correct": false}]}, {"question": "Який відмінок використовується в питанні \\\"що вас турбує\\\" для слова \\\"вас\\\"?", "options": [{"text": "Accusative (знахідний відмінок)", "correct": true}, {"text": "Dative (давальний відмінок)", "correct": false}, {"text": "Genitive (родовий відмінок)", "correct": false}, {"text": "Nominative (називний відмінок)", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Якщо у вас є \\\\\\"нежить\\\\\\" то що це означає в українській мові для симптомів?", "options": [{"text": "A runny nose (нежить це нежить)", "correct": true}, {"text": "A broken leg (зламана нога)", "correct": false}, {"text": "A headache (головний біль)", "correct": false}, {"text": "A fever (температура)", "correct": false}]}, {"question": "Що означає фраза \\\\\\"у мене болить живіт\\\\\\" в українській мові правильно?", "options": [{"text": "My stomach hurts (мій живіт болить)", "correct": true}, {"text": "My life hurts (моє життя болить)", "correct": false}, {"text": "I am hungry (я голодний)", "correct": false}, {"text": "I am tired (я втомлений)", "correct": false}]}, {"question": "Де можна купити ліки в Україні зазвичай для лікування?", "options": [{"text": "В аптеці (в аптеці)", "correct": true}, {"text": "В лікарні (в лікарні)", "correct": false}, {"text": "В бібліотеці (в бібліотеці)", "correct": false}, {"text": "В магазині (в магазині)", "correct": false}]}, {"question": "Яка нормальна температура тіла в Україні згідно з медичними стандартами?", "options": [{"text": "Normal temperature (36.6°C нормальна)", "correct": true}, {"text": "High fever (38.0°C висока)", "correct": false}, {"text": "Low temperature (35.0°C низька)", "correct": false}, {"text": "Critical (40.0°C критична)", "correct": false}]}, {"question": "Що означає слово \\\\\\"видужуйте\\\\\\" в українській мові для побажання?", "options": [{"text": "Get well soon (одужуйте швидко)", "correct": true}, {"text": "Good bye (до побачення)", "correct": false}, {"text": "Pay here (платіть тут)", "correct": false}, {"text": "Thank you (дякую)", "correct": false}]}, {"question": "Що означає дієслово \\\\\\"хворіти\\\\\\" в українській мові для стану здоров'я?", "options": [{"text": "To be ill process (бути хворим процес)", "correct": true}, {"text": "To hurt pain (боліти біль)", "correct": false}, {"text": "To heal (лікувати)", "correct": false}, {"text": "To recover (одужувати)", "correct": false}]}, {"question": "Чи можна сказати \\\\\\"я болю голову\\\\\\" в українській мові правильно граматично?", "options": [{"text": "No incorrect (ні неправильно)", "correct": true}, {"text": "Yes correct (так правильно)", "correct": false}, {"text": "Sometimes (іноді)", "correct": false}, {"text": "Only formal (тільки офіційно)", "correct": false}]}, {"question": "Який відмінок використовується в питанні \\\\\\"що вас турбує\\\\\\" для слова \\\\\\"вас\\\\\\"?", "options": [{"text": "Accusative (знахідний відмінок)", "correct": true}, {"text": "Dative (давальний відмінок)", "correct": false}, {"text": "Genitive (родовий відмінок)", "correct": false}, {"text": "Nominative (називний відмінок)", "correct": false}]}]`)}
 />
 
 ### Doctors Orders
 
 <Unjumble
   title="Doctors Orders"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "що / вас / турбує / сьогодні / дуже / зранку / вже", "answer": "Що вас турбує сьогодні дуже зранку вже"}, {"jumbled": "у / мене / дуже / болить / голова / сильно / зараз / вже", "answer": "У мене дуже болить голова сильно зараз вже"}, {"jumbled": "цю / таблетку / прийміть / після / їжі / завжди / тричі / на / день", "answer": "Прийміть цю таблетку після їжі завжди тричі на день"}, {"jumbled": "мені / лікаря / викликати / треба / зараз / дуже / швидко / будь / ласка", "answer": "Мені треба викликати лікаря зараз дуже швидко будь ласка"}, {"jumbled": "я / ліки / купив / в / аптеці / вчора / ввечері / пізно", "answer": "Я купив ліки в аптеці вчора ввечері пізно"}, {"jumbled": "вам / бажаю / міцного / здоров'я / завжди / від / щирого / серця", "answer": "Бажаю вам міцного здоров'я завжди від щирого серця"}]`)}
 />
 
@@ -298,6 +314,7 @@ In Ukraine, normal temperature is 36.6°C.
 
 <GroupSort
   title="Symptoms vs Remedies"
+  isUkrainian={false}
   groups={JSON.parse(`{"Symptoms (Problems)": ["Кашель", "Нежить", "Температура", "Біль", "Грип", "Слабкість"], "Remedies (Solutions)": ["Таблетка", "Ліки", "Чай з лимоном", "Рецепт", "Лікар", "Аптека"]}`)}
 />
 
@@ -305,13 +322,15 @@ In Ukraine, normal temperature is 36.6°C.
 
 <TrueFalse
   title="Medical Truths"
-  items={JSON.parse(`[{"statement": "\\\"Аптека\\\" is where you see a doctor.", "isTrue": false, "explanation": "Pharmacy."}, {"statement": "\\\"У мене болить рука\\\" uses Nominative for \\\"Hand\\\".", "isTrue": true, "explanation": ""}, {"statement": "You should call 103 for pizza.", "isTrue": false, "explanation": "Ambulance."}, {"statement": "38.5 is a normal temperature.", "isTrue": false, "explanation": ""}, {"statement": "\\\"Одужувати\\\" involves getting better.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Ліки\\\" means \\\"Doctors\\\".", "isTrue": false, "explanation": "Medicine."}, {"statement": "\\\"Серце\\\" is \\\"Heart\\\".", "isTrue": true, "explanation": ""}, {"statement": "Tea with lemon is a standard Ukrainian cure.", "isTrue": true, "explanation": ""}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "\\\\\\"Аптека\\\\\\" is where you see a doctor.", "isTrue": false, "explanation": "Pharmacy."}, {"statement": "\\\\\\"У мене болить рука\\\\\\" uses Nominative for \\\\\\"Hand\\\\\\".", "isTrue": true, "explanation": ""}, {"statement": "You should call 103 for pizza.", "isTrue": false, "explanation": "Ambulance."}, {"statement": "38.5 is a normal temperature.", "isTrue": false, "explanation": ""}, {"statement": "\\\\\\"Одужувати\\\\\\" involves getting better.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Ліки\\\\\\" means \\\\\\"Doctors\\\\\\".", "isTrue": false, "explanation": "Medicine."}, {"statement": "\\\\\\"Серце\\\\\\" is \\\\\\"Heart\\\\\\".", "isTrue": true, "explanation": ""}, {"statement": "Tea with lemon is a standard Ukrainian cure.", "isTrue": true, "explanation": ""}]`)}
 />
 
 ### The Appointment
 
 <Cloze
   title="The Appointment"
+  isUkrainian={false}
   passage={`Я прийшов у [___:1], тому що я захворів.
 Лікар запитав: \"Що вас [___:2]?\"
 Я сказав, що у мене болить [___:3].
@@ -329,7 +348,7 @@ In Ukraine, normal temperature is 36.6°C.
 
 ### Medical Terms
 
-<MarkTheWords>
+<MarkTheWords isUkrainian={false}>
   <MarkTheWordsActivity
     instruction={`Mark the correct words.`}
     text={`У мене температура і кашель. Я йду до лікаря. Мені треба купити ліки. Моє здоров'я важливе. Аптека за рогом.
@@ -341,7 +360,7 @@ In Ukraine, normal temperature is 36.6°C.
 
 ### Fix the Complaint
 
-<ErrorCorrection title="Fix the Complaint">
+<ErrorCorrection title="Fix the Complaint" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Я **болю** голова. (Grammar)`}
     errorWord={`Я болю`}
@@ -390,6 +409,7 @@ In Ukraine, normal temperature is 36.6°C.
 
 <Translate
   title="English to Ukrainian"
+  isUkrainian={false}
   questions={JSON.parse(`[{"source": "My head hurts.", "options": [{"text": "У мене болить голова.", "correct": true}, {"text": "Я болю голову.", "correct": false}]}, {"source": "I have a fever.", "options": [{"text": "У мене температура.", "correct": true}, {"text": "Я є температура.", "correct": false}]}, {"source": "I need a doctor.", "options": [{"text": "Мені потрібен лікар.", "correct": true}, {"text": "Я треба лікар.", "correct": false}]}, {"source": "Where is the pharmacy?", "options": [{"text": "Де аптека?", "correct": true}, {"text": "Де лікар?", "correct": false}]}, {"source": "Get well soon!", "options": [{"text": "Видужуйте!", "correct": true}, {"text": "Хворійте!", "correct": false}]}, {"source": "I am sick.", "options": [{"text": "Я хворий | Я хворію.", "correct": true}, {"text": "У мене хворий.", "correct": false}]}]`)}
 />
 
@@ -436,16 +456,6 @@ In Ukraine, normal temperature is 36.6°C.
 | фарба | ˈfɑrbɐ | paint | noun | ж |  |
 | фонтан | fonˈtɑn | fountain | noun | ч |  |
 | хворіти | xvoˈrʲite | to be sick | verb |  |  |
-
-## 📋 Summary
-
-1.  **Botlily:** *У мене болить [Subject].*
-2.  **Part of Body:** Learner nouns (голова, горло, живіт).
-3.  **Symptoms:** Температура, кашель, нежить.
-4.  **Action:** Приймати ліки, пити чай, лежати.
-5.  **Place:** Лікарня, Поліклініка, Аптека.
-
----
 
 > [!resources] 🔗 External Resources
 >

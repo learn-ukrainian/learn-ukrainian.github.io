@@ -4,7 +4,7 @@
 
 ## Gates
 - **Words:** ⚠️ 1693/1750 (57 short)
-- **Activities:** ✅ 14/14
+- **Activities:** ✅ 14/13
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used

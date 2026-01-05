@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Warm-up
@@ -299,6 +301,12 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 ---
 
+## 📋 Summary
+
+Ви вивчили прийменники місця та напрямку! Тепер ви знаєте, як запитати "Де?" або "Куди?". (You learned prepositions of location and direction! Now you know how to ask "Where?" or "Where to?") Ви знаєте різницю між "вдома" та "додому". Ви також знаєте, як сказати "звідки" ви приїхали. Також ви вивчили прийменники: з, від, до. Це була чудова робота! Ви великі молодці! Гуляйте в парку та говоріть українською! Супер! (This was great work! You are great! Walk in the park and speak Ukrainian! Super!)
+
+---
+
 
 
 ## 🎯 Activities
@@ -307,6 +315,7 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 <MatchUp
   title="Question Words"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- Де?", "right": "Where? (location)"}, {"left": "- Куди?", "right": "Where to?"}, {"left": "- Звідки?", "right": "Where from? (origin)"}, {"left": "- Тут", "right": "Here"}, {"left": "- Там", "right": "There"}, {"left": "- Сюди", "right": "To here"}, {"left": "- Туди", "right": "To there"}, {"left": "- Вдома", "right": "At home"}, {"left": "- Додому", "right": "Home"}, {"left": "- Прямо", "right": "Straight"}, {"left": "- Ліворуч", "right": "On the left"}, {"left": "- Праворуч", "right": "On the right"}]`)}
 />
 
@@ -314,6 +323,7 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 <GroupSort
   title="Location vs Direction"
+  isUkrainian={false}
   groups={JSON.parse(`{"Location (Де?)": ["в парку", "на столі", "вдома", "тут", "там", "близько"], "Direction (Куди?)": ["в парк", "на роботу", "додому", "сюди", "туди", "до лікаря", "--"]}`)}
 />
 
@@ -321,6 +331,7 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 <GroupSort
   title="Preposition Usage"
+  isUkrainian={false}
   groups={JSON.parse(`{"From Place (з)": ["з України", "з Києва", "з магазину", "з парку"], "From Person (від)": ["від мами", "від друга", "від лікаря", "від татка"], "To Person (до)": ["до лікаря", "до друга", "до бабусі", "до вчителя", "--"]}`)}
 />
 
@@ -328,6 +339,7 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 <FillIn
   title="Де чи Куди? (Where or Where to?)"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "___ ти зараз?", "answer": "Де", "options": ["Де", "Куди", "Звідки", "Як"]}, {"sentence": "___ ти йдеш?", "answer": "Куди", "options": ["Куди", "Де", "Звідки", "Хто"]}, {"sentence": "___ ти приїхав?", "answer": "Звідки", "options": ["Звідки", "Де", "Куди", "Коли"]}, {"sentence": "___ знаходиться банк?", "answer": "Де", "options": ["Де", "Куди", "Звідки", "Як"]}, {"sentence": "___ їде автобус?", "answer": "Куди", "options": ["Куди", "Де", "Звідки", "Хто"]}, {"sentence": "___ ти родом?", "answer": "Звідки", "options": ["Звідки", "Куди", "Де", "Як"]}, {"sentence": "___ твоя мама?", "answer": "Де", "options": ["Де", "Куди", "Звідки", "Хто"]}, {"sentence": "___ йде поїзд?", "answer": "Куди", "options": ["Куди", "Де", "Звідки", "Як"]}, {"sentence": "___ цей подарунок?", "answer": "Звідки", "options": ["Звідки", "Де", "Куди", "Який"]}, {"sentence": "___ знаходиться аптека?", "answer": "Де", "options": ["Де", "Куди", "Звідки", "Яка"]}, {"sentence": "___ вони їдуть на канікули?", "answer": "Куди", "options": ["Куди", "Де", "Звідки", "Коли"]}, {"sentence": "___ він повернувся?", "answer": "Звідки", "options": ["Звідки", "Де", "Куди", "Коли"]}]`)}
 />
 
@@ -335,6 +347,7 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 <FillIn
   title="Choose the Preposition"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Я йду ___ магазин.", "answer": "в", "options": ["в", "з", "від", "на"]}, {"sentence": "Я ___ України.", "answer": "з", "options": ["з", "в", "до", "на"]}, {"sentence": "Це лист ___ мами.", "answer": "від", "options": ["від", "з", "в", "до"]}, {"sentence": "Вона йде ___ лікаря.", "answer": "до", "options": ["до", "з", "від", "в"]}, {"sentence": "Книга ___ столі.", "answer": "на", "options": ["на", "в", "до", "з"]}, {"sentence": "Я ___ парку.", "answer": "в", "options": ["в", "до", "з", "на"]}, {"sentence": "Він їде ___ роботу.", "answer": "на", "options": ["на", "в", "з", "до"]}, {"sentence": "Ми приїхали ___ Львова.", "answer": "з", "options": ["з", "в", "до", "на"]}, {"sentence": "Подарунок ___ татка.", "answer": "від", "options": ["від", "з", "до", "в"]}, {"sentence": "Вона йде ___ школи.", "answer": "до", "options": ["до", "в", "з", "на"]}, {"sentence": "Я ___ школі.", "answer": "в", "options": ["в", "до", "з", "на"]}, {"sentence": "Він приїхав ___ Одеси.", "answer": "з", "options": ["з", "в", "до", "від"]}]`)}
 />
 
@@ -342,20 +355,23 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 <Quiz
   title="Location or Direction?"
-  questions={JSON.parse(`[{"question": "Which category correctly describes the sentence \\\"Я в парку\\\"?", "options": [{"text": "I'm from the park (origin)", "correct": false}, {"text": "I am in the park (location)", "correct": true}, {"text": "I'm going to the park", "correct": false}, {"text": "I was in the park (past)", "correct": false}]}, {"question": "How do you categorize \\\"Я йду в парк\\\"?", "options": [{"text": "I am in the park (location)", "correct": false}, {"text": "I'm from the park (origin)", "correct": false}, {"text": "I'm going to the park", "correct": true}, {"text": "I was in the park (past)", "correct": false}]}, {"question": "What is the meaning of \\\"Вдома\\\"?", "options": [{"text": "To home", "correct": false}, {"text": "At home (location)", "correct": true}, {"text": "From home (origin)", "correct": false}, {"text": "About home", "correct": false}]}, {"question": "Which category summarizes the term \\\"Додому\\\"?", "options": [{"text": "At home (location)", "correct": false}, {"text": "From home (origin)", "correct": false}, {"text": "Home (direction - going home)", "correct": true}, {"text": "About home", "correct": false}]}, {"question": "How is the phrase \\\"Я з України\\\" described?", "options": [{"text": "I'm in Ukraine", "correct": false}, {"text": "I'm going to Ukraine", "correct": false}, {"text": "I'm from Ukraine", "correct": true}, {"text": "I was in Ukraine", "correct": false}]}, {"question": "What is the description for \\\"До лікаря\\\"?", "options": [{"text": "At the doctor's", "correct": false}, {"text": "To the doctor", "correct": true}, {"text": "From the doctor", "correct": false}, {"text": "About the doctor", "correct": false}]}, {"question": "Which category correctly represents the word \\\"Тут\\\"?", "options": [{"text": "Here (location)", "correct": true}, {"text": "To here", "correct": false}, {"text": "From here (origin)", "correct": false}, {"text": "About here", "correct": false}]}, {"question": "How would you accurately describe \\\"Сюди\\\"?", "options": [{"text": "Here (location)", "correct": false}, {"text": "To here", "correct": true}, {"text": "From here (origin)", "correct": false}, {"text": "About here", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Which category correctly describes the sentence \\\\\\"Я в парку\\\\\\"?", "options": [{"text": "I'm from the park (origin)", "correct": false}, {"text": "I am in the park (location)", "correct": true}, {"text": "I'm going to the park", "correct": false}, {"text": "I was in the park (past)", "correct": false}]}, {"question": "How do you categorize \\\\\\"Я йду в парк\\\\\\"?", "options": [{"text": "I am in the park (location)", "correct": false}, {"text": "I'm from the park (origin)", "correct": false}, {"text": "I'm going to the park", "correct": true}, {"text": "I was in the park (past)", "correct": false}]}, {"question": "What is the meaning of \\\\\\"Вдома\\\\\\"?", "options": [{"text": "To home", "correct": false}, {"text": "At home (location)", "correct": true}, {"text": "From home (origin)", "correct": false}, {"text": "About home", "correct": false}]}, {"question": "Which category summarizes the term \\\\\\"Додому\\\\\\"?", "options": [{"text": "At home (location)", "correct": false}, {"text": "From home (origin)", "correct": false}, {"text": "Home (direction - going home)", "correct": true}, {"text": "About home", "correct": false}]}, {"question": "How is the phrase \\\\\\"Я з України\\\\\\" described?", "options": [{"text": "I'm in Ukraine", "correct": false}, {"text": "I'm going to Ukraine", "correct": false}, {"text": "I'm from Ukraine", "correct": true}, {"text": "I was in Ukraine", "correct": false}]}, {"question": "What is the description for \\\\\\"До лікаря\\\\\\"?", "options": [{"text": "At the doctor's", "correct": false}, {"text": "To the doctor", "correct": true}, {"text": "From the doctor", "correct": false}, {"text": "About the doctor", "correct": false}]}, {"question": "Which category correctly represents the word \\\\\\"Тут\\\\\\"?", "options": [{"text": "Here (location)", "correct": true}, {"text": "To here", "correct": false}, {"text": "From here (origin)", "correct": false}, {"text": "About here", "correct": false}]}, {"question": "How would you accurately describe \\\\\\"Сюди\\\\\\"?", "options": [{"text": "Here (location)", "correct": false}, {"text": "To here", "correct": true}, {"text": "From here (origin)", "correct": false}, {"text": "About here", "correct": false}]}]`)}
 />
 
 ### Which Preposition?
 
 <Quiz
   title="Which Preposition?"
-  questions={JSON.parse(`[{"question": "What is the translation for \\\"I'm FROM Kyiv\\\"?", "options": [{"text": "в Києві", "correct": false}, {"text": "з Києва", "correct": true}, {"text": "до Києва", "correct": false}, {"text": "від Києва", "correct": false}]}, {"question": "Which Ukrainian phrase translates \\\"A gift FROM mom\\\"?", "options": [{"text": "з мами", "correct": false}, {"text": "до мами", "correct": false}, {"text": "від мами", "correct": true}, {"text": "в мами", "correct": false}]}, {"question": "How do you say \\\"Going TO the doctor\\\" in Ukrainian?", "options": [{"text": "в лікаря", "correct": false}, {"text": "з лікаря", "correct": false}, {"text": "до лікаря", "correct": true}, {"text": "від лікаря", "correct": false}]}, {"question": "What is the phrase for \\\"Going TO the store\\\"?", "options": [{"text": "в магазин", "correct": true}, {"text": "до магазин", "correct": false}, {"text": "з магазину", "correct": false}, {"text": "від магазину", "correct": false}]}, {"question": "Which phrase represents \\\"I'm IN the park\\\"?", "options": [{"text": "в парк", "correct": false}, {"text": "в парку", "correct": true}, {"text": "з парку", "correct": false}, {"text": "до парку", "correct": false}]}, {"question": "How is \\\"Coming FROM school\\\" translated?", "options": [{"text": "в школі", "correct": false}, {"text": "з школи", "correct": true}, {"text": "до школи", "correct": false}, {"text": "від школи", "correct": false}]}, {"question": "What is the Ukrainian term for \\\"Going TO work\\\"?", "options": [{"text": "в роботу", "correct": false}, {"text": "до роботи", "correct": false}, {"text": "на роботу", "correct": true}, {"text": "з роботи", "correct": false}]}, {"question": "How should you translate \\\"Letter FROM dad\\\"?", "options": [{"text": "з татка", "correct": false}, {"text": "від татка", "correct": true}, {"text": "до татка", "correct": false}, {"text": "в татка", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "What is the translation for \\\\\\"I'm FROM Kyiv\\\\\\"?", "options": [{"text": "в Києві", "correct": false}, {"text": "з Києва", "correct": true}, {"text": "до Києва", "correct": false}, {"text": "від Києва", "correct": false}]}, {"question": "Which Ukrainian phrase translates \\\\\\"A gift FROM mom\\\\\\"?", "options": [{"text": "з мами", "correct": false}, {"text": "до мами", "correct": false}, {"text": "від мами", "correct": true}, {"text": "в мами", "correct": false}]}, {"question": "How do you say \\\\\\"Going TO the doctor\\\\\\" in Ukrainian?", "options": [{"text": "в лікаря", "correct": false}, {"text": "з лікаря", "correct": false}, {"text": "до лікаря", "correct": true}, {"text": "від лікаря", "correct": false}]}, {"question": "What is the phrase for \\\\\\"Going TO the store\\\\\\"?", "options": [{"text": "в магазин", "correct": true}, {"text": "до магазин", "correct": false}, {"text": "з магазину", "correct": false}, {"text": "від магазину", "correct": false}]}, {"question": "Which phrase represents \\\\\\"I'm IN the park\\\\\\"?", "options": [{"text": "в парк", "correct": false}, {"text": "в парку", "correct": true}, {"text": "з парку", "correct": false}, {"text": "до парку", "correct": false}]}, {"question": "How is \\\\\\"Coming FROM school\\\\\\" translated?", "options": [{"text": "в школі", "correct": false}, {"text": "з школи", "correct": true}, {"text": "до школи", "correct": false}, {"text": "від школи", "correct": false}]}, {"question": "What is the Ukrainian term for \\\\\\"Going TO work\\\\\\"?", "options": [{"text": "в роботу", "correct": false}, {"text": "до роботи", "correct": false}, {"text": "на роботу", "correct": true}, {"text": "з роботи", "correct": false}]}, {"question": "How should you translate \\\\\\"Letter FROM dad\\\\\\"?", "options": [{"text": "з татка", "correct": false}, {"text": "від татка", "correct": true}, {"text": "до татка", "correct": false}, {"text": "в татка", "correct": false}]}]`)}
 />
 
 ### Preposition Sentences
 
 <Unjumble
   title="Preposition Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "ти / де / зараз / є", "answer": "Де ти зараз є"}, {"jumbled": "йду / я / в / магазин", "answer": "Я йду в магазин"}, {"jumbled": "з / я / родом / України", "answer": "Я родом з України"}, {"jumbled": "куди / йдеш / ти / зараз", "answer": "Куди ти зараз йдеш"}, {"jumbled": "додому / йде / він / вже", "answer": "Він вже йде додому"}, {"jumbled": "лікаря / йду / до / я", "answer": "Я йду до лікаря"}, {"jumbled": "від / це / мами / подарунок", "answer": "Це подарунок від мами"}, {"jumbled": "вдома / вона / є / зараз", "answer": "Вона зараз є вдома"}, {"jumbled": "прямо / потім / ідіть / праворуч", "answer": "Ідіть прямо, потім праворуч"}, {"jumbled": "аптека / навпроти / знаходиться / банку", "answer": "Аптека знаходиться навпроти банку"}, {"jumbled": "цей / аеропорт / дуже / далеко", "answer": "Цей аеропорт дуже далеко"}, {"jumbled": "ти / звідки / родом / скажи", "answer": "Скажи, звідки ти родом"}]`)}
 />
 
@@ -363,7 +379,8 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 <TrueFalse
   title="Preposition Rules"
-  items={JSON.parse(`[{"statement": "\\\"Де?\\\" asks about location.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Куди?\\\" asks about location.", "isTrue": false, "explanation": "Incorrect! it asks about direction"}, {"statement": "\\\"Звідки?\\\" asks about origin.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Вдома\\\" means \\\"at home.\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Додому\\\" means \\\"at home.\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\"to home\\\""}, {"statement": "\\\"З\\\" is used for \\\"from places.\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Від\\\" is used for \\\"from people.\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"До\\\" is used for \\\"from people.\\\".", "isTrue": false, "explanation": "Incorrect! it's used for \\\"to\\\""}, {"statement": "Location uses Locative case.", "isTrue": true, "explanation": ""}, {"statement": "Direction uses Locative case.", "isTrue": false, "explanation": "Incorrect! it uses Accusative/Genitive"}, {"statement": "\\\"Тут\\\" means \\\"here.\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Сюди\\\" means \\\"to here.\\\".", "isTrue": true, "explanation": ""}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "\\\\\\"Де?\\\\\\" asks about location.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Куди?\\\\\\" asks about location.", "isTrue": false, "explanation": "Incorrect! it asks about direction"}, {"statement": "\\\\\\"Звідки?\\\\\\" asks about origin.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Вдома\\\\\\" means \\\\\\"at home.\\\\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Додому\\\\\\" means \\\\\\"at home.\\\\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\\\\"to home\\\\\\""}, {"statement": "\\\\\\"З\\\\\\" is used for \\\\\\"from places.\\\\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Від\\\\\\" is used for \\\\\\"from people.\\\\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"До\\\\\\" is used for \\\\\\"from people.\\\\\\".", "isTrue": false, "explanation": "Incorrect! it's used for \\\\\\"to\\\\\\""}, {"statement": "Location uses Locative case.", "isTrue": true, "explanation": ""}, {"statement": "Direction uses Locative case.", "isTrue": false, "explanation": "Incorrect! it uses Accusative/Genitive"}, {"statement": "\\\\\\"Тут\\\\\\" means \\\\\\"here.\\\\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Сюди\\\\\\" means \\\\\\"to here.\\\\\\".", "isTrue": true, "explanation": ""}]`)}
 />
 
 ## 📚 Vocabulary
@@ -380,12 +397,6 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 | сюди | /sʲuˈdɪ/ | here (directional) | adv |  |  |
 | татко | /ˈtɑtkɔ/ | dad (affectionate) | noun | ч |  |
 | туди | /tuˈdɪ/ | there (directional) | adv |  |  |
-
-## 📋 Summary
-
-Ви вивчили прийменники місця та напрямку! Тепер ви знаєте, як запитати "Де?" або "Куди?". (You learned prepositions of location and direction! Now you know how to ask "Where?" or "Where to?") Ви знаєте різницю між "вдома" та "додому". Ви також знаєте, як сказати "звідки" ви приїхали. Також ви вивчили прийменники: з, від, до. Це була чудова робота! Ви великі молодці! Гуляйте в парку та говоріть українською! Супер! (This was great work! You are great! Walk in the park and speak Ukrainian! Super!)
-
----
 
 > [!resources] 🔗 External Resources
 >

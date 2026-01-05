@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Warm-up
@@ -293,6 +295,33 @@ Saying "Я українець" or "Я українка" isn't just a statement o
 
 ---
 
+## 📋 Summary
+
+**What You Learned:**
+
+- ✅ Personal pronouns: я, ти, він, вона, воно, ми, ви, вони
+- ✅ Zero copula: no "am/is/are" in present tense (Я студент, not Я є студент)
+- ✅ Using "це" to point out people and things
+- ✅ Masculine/feminine forms of nationalities and professions
+- ✅ When to use "ти" (informal) vs "Ви" (formal/plural)
+
+**You Can Now:**
+
+- Introduce yourself: Я [name]. Я [nationality/profession].
+- Introduce others: Це мій друг. Він студент.
+- Ask someone's identity: Ти хто? Ви студент?
+- Show respect by choosing the right "you"
+
+**Next Steps:**
+
+In Module 05, you'll learn demonstratives (цей, ця, це, ці) to be even more specific about pointing out objects. But first, solidify this module—practice introducing yourself and imaginary friends until it feels natural!
+
+---
+
+## Need More Practice?
+
+---
+
 
 
 ## 🎯 Activities
@@ -301,13 +330,15 @@ Saying "Я українець" or "Я українка" isn't just a statement o
 
 <Quiz
   title="Personal Pronouns"
-  questions={JSON.parse(`[{"question": "___ студент. (I am a student.)", "options": [{"text": "Я", "correct": true}, {"text": "Ти", "correct": false}, {"text": "Він", "correct": false}, {"text": "Вона", "correct": false}]}, {"question": "___ лікар. (He is a doctor.)", "options": [{"text": "Я", "correct": false}, {"text": "Ти", "correct": false}, {"text": "Він", "correct": true}, {"text": "Вона", "correct": false}]}, {"question": "___ студенти. (They are students.)", "options": [{"text": "Я", "correct": false}, {"text": "Ти", "correct": false}, {"text": "Він", "correct": false}, {"text": "Вони", "correct": true}]}, {"question": "___ українка. (She is Ukrainian.)", "options": [{"text": "Я", "correct": false}, {"text": "Ти", "correct": false}, {"text": "Він", "correct": false}, {"text": "Вона", "correct": true}]}, {"question": "Which pronoun is both plural AND formal singular?", "options": [{"text": "Я", "correct": false}, {"text": "Ти", "correct": false}, {"text": "Ми", "correct": false}, {"text": "Ви", "correct": true}]}, {"question": "Which pronoun would you use with your friend?", "options": [{"text": "Я", "correct": false}, {"text": "Ти", "correct": true}, {"text": "Він", "correct": false}, {"text": "Ви", "correct": false}]}, {"question": "Which pronoun would you use with your professor?", "options": [{"text": "Я", "correct": false}, {"text": "Ти", "correct": false}, {"text": "Він", "correct": false}, {"text": "Ви", "correct": true}]}, {"question": "___ студенти. (We are students.)", "options": [{"text": "Я", "correct": false}, {"text": "Ти", "correct": false}, {"text": "Ми", "correct": true}, {"text": "Вони", "correct": false}]}, {"question": "What does \\\"воно\\\" mean?", "options": [{"text": "he", "correct": false}, {"text": "she", "correct": false}, {"text": "it", "correct": true}, {"text": "they", "correct": false}]}, {"question": "Which pronoun is always lowercase?", "options": [{"text": "я", "correct": true}, {"text": "ти", "correct": false}, {"text": "він", "correct": false}, {"text": "вони", "correct": false}]}, {"question": "What's the plural of \\\"він\\\"?", "options": [{"text": "ви", "correct": false}, {"text": "ми", "correct": false}, {"text": "вони", "correct": true}, {"text": "воно", "correct": false}]}, {"question": "You meet a stranger. Which do you use?", "options": [{"text": "ти", "correct": false}, {"text": "Ви", "correct": true}, {"text": "він", "correct": false}, {"text": "вони", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "___ студент. (I am a student.)", "options": [{"text": "Я", "correct": true}, {"text": "Ти", "correct": false}, {"text": "Він", "correct": false}, {"text": "Вона", "correct": false}]}, {"question": "___ лікар. (He is a doctor.)", "options": [{"text": "Я", "correct": false}, {"text": "Ти", "correct": false}, {"text": "Він", "correct": true}, {"text": "Вона", "correct": false}]}, {"question": "___ студенти. (They are students.)", "options": [{"text": "Я", "correct": false}, {"text": "Ти", "correct": false}, {"text": "Він", "correct": false}, {"text": "Вони", "correct": true}]}, {"question": "___ українка. (She is Ukrainian.)", "options": [{"text": "Я", "correct": false}, {"text": "Ти", "correct": false}, {"text": "Він", "correct": false}, {"text": "Вона", "correct": true}]}, {"question": "Which pronoun is both plural AND formal singular?", "options": [{"text": "Я", "correct": false}, {"text": "Ти", "correct": false}, {"text": "Ми", "correct": false}, {"text": "Ви", "correct": true}]}, {"question": "Which pronoun would you use with your friend?", "options": [{"text": "Я", "correct": false}, {"text": "Ти", "correct": true}, {"text": "Він", "correct": false}, {"text": "Ви", "correct": false}]}, {"question": "Which pronoun would you use with your professor?", "options": [{"text": "Я", "correct": false}, {"text": "Ти", "correct": false}, {"text": "Він", "correct": false}, {"text": "Ви", "correct": true}]}, {"question": "___ студенти. (We are students.)", "options": [{"text": "Я", "correct": false}, {"text": "Ти", "correct": false}, {"text": "Ми", "correct": true}, {"text": "Вони", "correct": false}]}, {"question": "What does \\\\\\"воно\\\\\\" mean?", "options": [{"text": "he", "correct": false}, {"text": "she", "correct": false}, {"text": "it", "correct": true}, {"text": "they", "correct": false}]}, {"question": "Which pronoun is always lowercase?", "options": [{"text": "я", "correct": true}, {"text": "ти", "correct": false}, {"text": "він", "correct": false}, {"text": "вони", "correct": false}]}, {"question": "What's the plural of \\\\\\"він\\\\\\"?", "options": [{"text": "ви", "correct": false}, {"text": "ми", "correct": false}, {"text": "вони", "correct": true}, {"text": "воно", "correct": false}]}, {"question": "You meet a stranger. Which do you use?", "options": [{"text": "ти", "correct": false}, {"text": "Ви", "correct": true}, {"text": "він", "correct": false}, {"text": "вони", "correct": false}]}]`)}
 />
 
 ### Pronouns and Meanings
 
 <MatchUp
   title="Pronouns and Meanings"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "я", "right": "I"}, {"left": "ти", "right": "you (informal)"}, {"left": "він", "right": "he"}, {"left": "вона", "right": "she"}, {"left": "воно", "right": "it"}, {"left": "ми", "right": "we"}, {"left": "ви", "right": "you (formal/plural)"}, {"left": "вони", "right": "they"}]`)}
 />
 
@@ -315,6 +346,7 @@ Saying "Я українець" or "Я українка" isn't just a statement o
 
 <FillIn
   title="Complete the Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "___ студент. (I am a student)", "answer": "Я", "options": ["Я", "Ти", "Він", "Вона"]}, {"sentence": "___ українка. (She is Ukrainian)", "answer": "Вона", "options": ["Я", "Ти", "Він", "Вона"]}, {"sentence": "___ професор? (Are you a professor?)", "answer": "Ти", "options": ["Я", "Ти", "Він", "Ми"]}, {"sentence": "___ лікар. (He is a doctor)", "answer": "Він", "options": ["Я", "Він", "Вона", "Воно"]}, {"sentence": "___ студенти. (We are students)", "answer": "Ми", "options": ["Я", "Ти", "Ми", "Ви"]}, {"sentence": "___ українці. (They are Ukrainians)", "answer": "Вони", "options": ["Він", "Вона", "Ми", "Вони"]}, {"sentence": "___ професорка? (Are you a professor? - formal)", "answer": "Ви", "options": ["Ти", "Він", "Ви", "Вони"]}, {"sentence": "___ друг. (He is a friend)", "answer": "Він", "options": ["Я", "Він", "Ми", "Вони"]}, {"sentence": "___ людина. (She is a person)", "answer": "Вона", "options": ["Він", "Вона", "Воно", "Вони"]}, {"sentence": "___ подруга? (Is she a friend?)", "answer": "Вона", "options": ["Я", "Він", "Вона", "Ви"]}, {"sentence": "___ англієць. (I am English)", "answer": "Я", "options": ["Я", "Ти", "Він", "Ми"]}, {"sentence": "___ канадці. (You all are Canadians)", "answer": "Ви", "options": ["Ти", "Ми", "Ви", "Вони"]}]`)}
 />
 
@@ -322,13 +354,15 @@ Saying "Я українець" or "Я українка" isn't just a statement o
 
 <TrueFalse
   title="Grammar Rules"
-  items={JSON.parse(`[{"statement": "Ukrainian does not use \\\"am/is/are\\\" in present tense statements.", "isTrue": true, "explanation": "Correct! This is called \\\"zero copula.\\\""}, {"statement": "The pronoun \\\"я\\\" is always capitalized like English \\\"I.\\\"", "isTrue": false, "explanation": "Incorrect! \\\"я\\\" is lowercase unless it starts a sentence."}, {"statement": "\\\"Ви\\\" can mean both \\\"you all\\\" and formal \\\"you\\\" (singular).", "isTrue": true, "explanation": "Correct! Context tells you which."}, {"statement": "\\\"Це\\\" changes form for plural.", "isTrue": false, "explanation": "Incorrect! \\\"Це\\\" works for both singular and plural."}, {"statement": "Feminine professions typically add \\\"-ка\\\" to the masculine form.", "isTrue": true, "explanation": "Correct! студент → студентка, лікар → лікарка"}, {"statement": "You should always use \\\"ти\\\" with strangers to be friendly.", "isTrue": false, "explanation": "Incorrect! Use \\\"Ви\\\" with strangers—it's respectful."}, {"statement": "\\\"Людина\\\" is grammatically feminine but refers to any person.", "isTrue": true, "explanation": "Correct! It's a feminine noun but gender-neutral in meaning."}, {"statement": "Ukrainian has more pronouns than English.", "isTrue": false, "explanation": "Incorrect! Same number, but \\\"ви\\\" has dual function."}, {"statement": "\\\"Він\\\" is used for masculine nouns, not just male people.", "isTrue": true, "explanation": "Correct! All masculine nouns use \\\"він.\\\""}, {"statement": "In Ukrainian, you must say \\\"Я є студент\\\" to mean \\\"I am a student.\\\"", "isTrue": false, "explanation": "Incorrect! Just say \\\"Я студент.\\\" The \\\"є\\\" is dropped."}, {"statement": "\\\"Друг\\\" and \\\"подруга\\\" can mean both friend and romantic partner.", "isTrue": true, "explanation": "Correct! Context is key."}, {"statement": "Saying \\\"Я українець/українка\\\" is an important identity statement in Ukrainian culture.", "isTrue": true, "explanation": "Correct! It's a proud affirmation of national identity."}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Ukrainian does not use \\\\\\"am/is/are\\\\\\" in present tense statements.", "isTrue": true, "explanation": "Correct! This is called \\\\\\"zero copula.\\\\\\""}, {"statement": "The pronoun \\\\\\"я\\\\\\" is always capitalized like English \\\\\\"I.\\\\\\"", "isTrue": false, "explanation": "Incorrect! \\\\\\"я\\\\\\" is lowercase unless it starts a sentence."}, {"statement": "\\\\\\"Ви\\\\\\" can mean both \\\\\\"you all\\\\\\" and formal \\\\\\"you\\\\\\" (singular).", "isTrue": true, "explanation": "Correct! Context tells you which."}, {"statement": "\\\\\\"Це\\\\\\" changes form for plural.", "isTrue": false, "explanation": "Incorrect! \\\\\\"Це\\\\\\" works for both singular and plural."}, {"statement": "Feminine professions typically add \\\\\\"-ка\\\\\\" to the masculine form.", "isTrue": true, "explanation": "Correct! студент → студентка, лікар → лікарка"}, {"statement": "You should always use \\\\\\"ти\\\\\\" with strangers to be friendly.", "isTrue": false, "explanation": "Incorrect! Use \\\\\\"Ви\\\\\\" with strangers—it's respectful."}, {"statement": "\\\\\\"Людина\\\\\\" is grammatically feminine but refers to any person.", "isTrue": true, "explanation": "Correct! It's a feminine noun but gender-neutral in meaning."}, {"statement": "Ukrainian has more pronouns than English.", "isTrue": false, "explanation": "Incorrect! Same number, but \\\\\\"ви\\\\\\" has dual function."}, {"statement": "\\\\\\"Він\\\\\\" is used for masculine nouns, not just male people.", "isTrue": true, "explanation": "Correct! All masculine nouns use \\\\\\"він.\\\\\\""}, {"statement": "In Ukrainian, you must say \\\\\\"Я є студент\\\\\\" to mean \\\\\\"I am a student.\\\\\\"", "isTrue": false, "explanation": "Incorrect! Just say \\\\\\"Я студент.\\\\\\" The \\\\\\"є\\\\\\" is dropped."}, {"statement": "\\\\\\"Друг\\\\\\" and \\\\\\"подруга\\\\\\" can mean both friend and romantic partner.", "isTrue": true, "explanation": "Correct! Context is key."}, {"statement": "Saying \\\\\\"Я українець/українка\\\\\\" is an important identity statement in Ukrainian culture.", "isTrue": true, "explanation": "Correct! It's a proud affirmation of national identity."}]`)}
 />
 
 ### Formal vs Informal
 
 <GroupSort
   title="Formal vs Informal"
+  isUkrainian={false}
   groups={JSON.parse(`{"Use Ти (Informal)": ["Talking to your younger brother", "Talking to your classmate", "Talking to your pet dog", "Talking to a child", "Talking to God", "Talking to yourself in a mirror"], "Use Ви (Formal)": ["Talking to your professor", "Talking to a stranger on the street", "Talking to your friend's grandmother", "Talking to a doctor you just met", "Talking to the President", "Talking to a cashier in a shop"]}`)}
 />
 
@@ -336,13 +370,15 @@ Saying "Я українець" or "Я українка" isn't just a statement o
 
 <Quiz
   title="Gender Forms"
-  questions={JSON.parse(`[{"question": "What is the feminine form of \\\"українець\\\"?", "options": [{"text": "українець", "correct": false}, {"text": "українка", "correct": true}, {"text": "україна", "correct": false}, {"text": "україниця", "correct": false}]}, {"question": "What is the feminine form of \\\"американець\\\"?", "options": [{"text": "америка", "correct": false}, {"text": "американиця", "correct": false}, {"text": "американка", "correct": true}, {"text": "американець", "correct": false}]}, {"question": "What is the feminine form of \\\"англієць\\\"?", "options": [{"text": "англійка", "correct": true}, {"text": "англійця", "correct": false}, {"text": "англія", "correct": false}, {"text": "англієць", "correct": false}]}, {"question": "What is the feminine form of \\\"канадець\\\"?", "options": [{"text": "канада", "correct": false}, {"text": "канадка", "correct": true}, {"text": "канадиця", "correct": false}, {"text": "канадець", "correct": false}]}, {"question": "What is the feminine form of \\\"студент\\\"?", "options": [{"text": "студент", "correct": false}, {"text": "студентиня", "correct": false}, {"text": "студентка", "correct": true}, {"text": "студента", "correct": false}]}, {"question": "What is the feminine form of \\\"професор\\\"?", "options": [{"text": "професор", "correct": false}, {"text": "професорка", "correct": true}, {"text": "професориха", "correct": false}, {"text": "професора", "correct": false}]}, {"question": "What is the feminine form of \\\"лікар\\\"?", "options": [{"text": "лікар", "correct": false}, {"text": "лікарка", "correct": true}, {"text": "лікариня", "correct": false}, {"text": "лікаря", "correct": false}]}, {"question": "What is the feminine form of \\\"друг\\\"?", "options": [{"text": "дружка", "correct": false}, {"text": "подруга", "correct": true}, {"text": "друга", "correct": false}, {"text": "друг", "correct": false}]}, {"question": "Which ending do most feminine nationality forms add?", "options": [{"text": "-а", "correct": false}, {"text": "-ка", "correct": true}, {"text": "-иня", "correct": false}, {"text": "-иця", "correct": false}]}, {"question": "\\\"Він українець, вона ___.\\\"", "options": [{"text": "українець", "correct": false}, {"text": "українка", "correct": true}, {"text": "український", "correct": false}, {"text": "україна", "correct": false}]}, {"question": "\\\"Я студент\\\" is said by a ___.", "options": [{"text": "male", "correct": true}, {"text": "female", "correct": false}, {"text": "neuter", "correct": false}, {"text": "plural", "correct": false}]}, {"question": "\\\"Я студентка\\\" is said by a ___.", "options": [{"text": "male", "correct": false}, {"text": "female", "correct": true}, {"text": "neuter", "correct": false}, {"text": "plural", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "What is the feminine form of \\\\\\"українець\\\\\\"?", "options": [{"text": "українець", "correct": false}, {"text": "українка", "correct": true}, {"text": "україна", "correct": false}, {"text": "україниця", "correct": false}]}, {"question": "What is the feminine form of \\\\\\"американець\\\\\\"?", "options": [{"text": "америка", "correct": false}, {"text": "американиця", "correct": false}, {"text": "американка", "correct": true}, {"text": "американець", "correct": false}]}, {"question": "What is the feminine form of \\\\\\"англієць\\\\\\"?", "options": [{"text": "англійка", "correct": true}, {"text": "англійця", "correct": false}, {"text": "англія", "correct": false}, {"text": "англієць", "correct": false}]}, {"question": "What is the feminine form of \\\\\\"канадець\\\\\\"?", "options": [{"text": "канада", "correct": false}, {"text": "канадка", "correct": true}, {"text": "канадиця", "correct": false}, {"text": "канадець", "correct": false}]}, {"question": "What is the feminine form of \\\\\\"студент\\\\\\"?", "options": [{"text": "студент", "correct": false}, {"text": "студентиня", "correct": false}, {"text": "студентка", "correct": true}, {"text": "студента", "correct": false}]}, {"question": "What is the feminine form of \\\\\\"професор\\\\\\"?", "options": [{"text": "професор", "correct": false}, {"text": "професорка", "correct": true}, {"text": "професориха", "correct": false}, {"text": "професора", "correct": false}]}, {"question": "What is the feminine form of \\\\\\"лікар\\\\\\"?", "options": [{"text": "лікар", "correct": false}, {"text": "лікарка", "correct": true}, {"text": "лікариня", "correct": false}, {"text": "лікаря", "correct": false}]}, {"question": "What is the feminine form of \\\\\\"друг\\\\\\"?", "options": [{"text": "дружка", "correct": false}, {"text": "подруга", "correct": true}, {"text": "друга", "correct": false}, {"text": "друг", "correct": false}]}, {"question": "Which ending do most feminine nationality forms add?", "options": [{"text": "-а", "correct": false}, {"text": "-ка", "correct": true}, {"text": "-иня", "correct": false}, {"text": "-иця", "correct": false}]}, {"question": "\\\\\\"Він українець, вона ___.\\\\\\"", "options": [{"text": "українець", "correct": false}, {"text": "українка", "correct": true}, {"text": "український", "correct": false}, {"text": "україна", "correct": false}]}, {"question": "\\\\\\"Я студент\\\\\\" is said by a ___.", "options": [{"text": "male", "correct": true}, {"text": "female", "correct": false}, {"text": "neuter", "correct": false}, {"text": "plural", "correct": false}]}, {"question": "\\\\\\"Я студентка\\\\\\" is said by a ___.", "options": [{"text": "male", "correct": false}, {"text": "female", "correct": true}, {"text": "neuter", "correct": false}, {"text": "plural", "correct": false}]}]`)}
 />
 
 ### Build the Words
 
 <Anagram
   title="Build the Words"
+  isUkrainian={false}
   items={JSON.parse(`[{"scrambled": "в і н", "answer": "він", "hint": ""}, {"scrambled": "в о н а", "answer": "вона", "hint": ""}, {"scrambled": "в о н о", "answer": "воно", "hint": ""}, {"scrambled": "в о н и", "answer": "вони", "hint": ""}, {"scrambled": "д р у г", "answer": "друг", "hint": ""}, {"scrambled": "л і к а р", "answer": "лікар", "hint": ""}, {"scrambled": "с т у д е н т", "answer": "студент", "hint": ""}, {"scrambled": "у ч и т е л ь", "answer": "учитель", "hint": ""}, {"scrambled": "х л о п е ц ь", "answer": "хлопець", "hint": ""}, {"scrambled": "д і в ч и н а", "answer": "дівчина", "hint": ""}, {"scrambled": "л ю д и н а", "answer": "людина", "hint": ""}, {"scrambled": "п о д р у г а", "answer": "подруга", "hint": ""}]`)}
 />
 
@@ -350,6 +386,7 @@ Saying "Я українець" or "Я українка" isn't just a statement o
 
 <FillIn
   title="Identity Statements"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Я ___.", "answer": "студент", "options": ["студент", "студентка", "професор", "лікар"]}, {"sentence": "Вона ___.", "answer": "студентка", "options": ["студент", "студентка", "українець", "американець"]}, {"sentence": "Він ___. (Ukrainian male)", "answer": "українець", "options": ["українець", "українка", "студент", "професор"]}, {"sentence": "Я ___. (American female)", "answer": "американка", "options": ["американець", "американка", "англієць", "канадець"]}, {"sentence": "Це мій ___.", "answer": "друг", "options": ["друг", "подруга", "студент", "лікар"]}, {"sentence": "Це моя ___.", "answer": "подруга", "options": ["друг", "подруга", "студентка", "українка"]}, {"sentence": "Вони ___.", "answer": "студенти", "options": ["студент", "студентка", "студенти", "професор"]}, {"sentence": "Вона ___.", "answer": "лікарка", "options": ["лікар", "лікарка", "професорка", "студентка"]}, {"sentence": "Він ___. (boy/guy)", "answer": "хлопець", "options": ["хлопець", "дівчина", "чоловік", "студент"]}, {"sentence": "___ книга. (This is)", "answer": "Це", "options": ["Це", "Той", "Ось", "То"]}, {"sentence": "Вона ___. (person)", "answer": "людина", "options": ["людина", "жінка", "дівчина", "студентка"]}, {"sentence": "Я ___. (Canadian male)", "answer": "канадець", "options": ["канадець", "канадка", "американець", "англієць"]}]`)}
 />
 
@@ -399,33 +436,6 @@ Saying "Я українець" or "Я українка" isn't just a statement o
 | я | /jɑ/ | I | pron |  |  |
 | іван | /iˈvɑn/ | Ivan | name | ч |  |
 | ґрут | /grunt/ | Groot | name | ч |  |
-
-## 📋 Summary
-
-**What You Learned:**
-
-- ✅ Personal pronouns: я, ти, він, вона, воно, ми, ви, вони
-- ✅ Zero copula: no "am/is/are" in present tense (Я студент, not Я є студент)
-- ✅ Using "це" to point out people and things
-- ✅ Masculine/feminine forms of nationalities and professions
-- ✅ When to use "ти" (informal) vs "Ви" (formal/plural)
-
-**You Can Now:**
-
-- Introduce yourself: Я [name]. Я [nationality/profession].
-- Introduce others: Це мій друг. Він студент.
-- Ask someone's identity: Ти хто? Ви студент?
-- Show respect by choosing the right "you"
-
-**Next Steps:**
-
-In Module 05, you'll learn demonstratives (цей, ця, це, ці) to be even more specific about pointing out objects. But first, solidify this module—practice introducing yourself and imaginary friends until it feels natural!
-
----
-
-## Need More Practice?
-
----
 
 > [!resources] 🔗 External Resources
 >

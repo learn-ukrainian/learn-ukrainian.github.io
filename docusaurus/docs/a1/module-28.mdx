@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Warm-up
@@ -269,6 +271,14 @@ Notice: We use ADVERBS, not adjectives, to answer "Як справи?"
 
 ---
 
+## 📋 Summary
+
+## 📋 Summary
+
+Ви вивчили українські прислівники! Тепер ви можете описати, як ви щось робите. (You learned Ukrainian adverbs! Now you can describe how you do something.) Ви знаєте слова: швидко, повільно, добре. Ви також знаєте, як часто ви це робите: завжди або часто. Це був чудовий урок! (This was a great lesson!)
+
+---
+
 
 
 ## 🎯 Activities
@@ -277,6 +287,7 @@ Notice: We use ADVERBS, not adjectives, to answer "Як справи?"
 
 <MatchUp
   title="Adjective → Adverb"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- гарний", "right": "гарно"}, {"left": "- швидкий", "right": "швидко"}, {"left": "- повільний", "right": "повільно"}, {"left": "- тихий", "right": "тихо"}, {"left": "- голосний", "right": "голосно"}, {"left": "- веселий", "right": "весело"}, {"left": "- сумний", "right": "сумно"}, {"left": "- легкий", "right": "легко"}, {"left": "- важкий", "right": "важко"}, {"left": "- чесний", "right": "чесно"}, {"left": "- ввічливий", "right": "ввічливо"}, {"left": "- серйозний", "right": "серйозно"}]`)}
 />
 
@@ -284,6 +295,7 @@ Notice: We use ADVERBS, not adjectives, to answer "Як справи?"
 
 <GroupSort
   title="Frequency Scale"
+  isUkrainian={false}
   groups={JSON.parse(`{"Always / Often (75-100%)": ["завжди", "часто", "постійно", "дуже часто"], "Usually / Sometimes (25-60%)": ["зазвичай", "іноді", "деколи", "час від часу"], "Rarely / Never (0-10%)": ["рідко", "майже ніколи", "зовсім не часто", "ніколи", "--"]}`)}
 />
 
@@ -291,6 +303,7 @@ Notice: We use ADVERBS, not adjectives, to answer "Як справи?"
 
 <GroupSort
   title="Type of Adverb"
+  isUkrainian={false}
   groups={JSON.parse(`{"Manner (How?)": ["гарно", "погано", "швидко", "повільно"], "Frequency (How often?)": ["завжди", "часто", "іноді", "рідко"], "Degree (How much?)": ["дуже", "занадто", "трохи", "зовсім", "--"]}`)}
 />
 
@@ -298,6 +311,7 @@ Notice: We use ADVERBS, not adjectives, to answer "Як справи?"
 
 <FillIn
   title="Як ти це робиш? (How Do You Do It?)"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Вона співає дуже ___.", "answer": "гарно", "options": ["гарно", "гарний", "гарна", "гарне"]}, {"sentence": "Він говорить дуже ___.", "answer": "тихо", "options": ["тихо", "тихий", "тиха", "тихе"]}, {"sentence": "Бабуся готує дуже ___.", "answer": "смачно", "options": ["смачно", "смачний", "смачна", "смачне"]}, {"sentence": "Діти грають дуже ___.", "answer": "голосно", "options": ["голосно", "голосний", "голосна", "голосне"]}, {"sentence": "Він біжить дуже ___.", "answer": "швидко", "options": ["швидко", "швидкий", "швидка", "швидке"]}, {"sentence": "Вона читає дуже ___.", "answer": "повільно", "options": ["повільно", "повільний", "повільна", "повільне"]}, {"sentence": "Я розумію це ___.", "answer": "добре", "options": ["добре", "добрий", "добра", "добро"]}, {"sentence": "Він танцює дуже ___.", "answer": "погано", "options": ["погано", "поганий", "погана", "погане"]}, {"sentence": "Вона працює дуже ___.", "answer": "важко", "options": ["важко", "важкий", "важка", "важке"]}, {"sentence": "Він говорить ___.", "answer": "чесно", "options": ["чесно", "чесний", "чесна", "чесне"]}, {"sentence": "Вона відповідає ___.", "answer": "ввічливо", "options": ["ввічливо", "ввічливий", "ввічлива", "ввічливе"]}, {"sentence": "Він жартує ___.", "answer": "весело", "options": ["весело", "веселий", "весела", "веселе"]}]`)}
 />
 
@@ -305,6 +319,7 @@ Notice: We use ADVERBS, not adjectives, to answer "Як справи?"
 
 <FillIn
   title="Як часто? (How Often?)"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Я ___ снідаю о сьомій.", "answer": "завжди", "options": ["завжди", "ніколи", "рідко", "погано"]}, {"sentence": "Вона ___ читає книжки.", "answer": "часто", "options": ["часто", "ніколи", "швидко", "добре"]}, {"sentence": "Ми ___ їмо в ресторані.", "answer": "іноді", "options": ["іноді", "завжди", "добре", "смачно"]}, {"sentence": "Він ___ запізнюється.", "answer": "рідко", "options": ["рідко", "завжди", "часто", "швидко"]}, {"sentence": "Вона ___ не п'є каву.", "answer": "ніколи", "options": ["ніколи", "завжди", "часто", "дуже"]}, {"sentence": "Ми ___ гуляємо в парку.", "answer": "зазвичай", "options": ["зазвичай", "ніколи", "погано", "важко"]}, {"sentence": "Він ___ обідає о першій.", "answer": "завжди", "options": ["завжди", "ніколи", "рідко", "легко"]}, {"sentence": "Вона ___ працює вдома.", "answer": "часто", "options": ["часто", "ніколи", "рідко", "повільно"]}, {"sentence": "Вони ___ дивляться телевізор.", "answer": "рідко", "options": ["рідко", "завжди", "ніколи", "голосно"]}, {"sentence": "Я ___ приходжу о дев'ятій.", "answer": "зазвичай", "options": ["зазвичай", "ніколи", "рідко", "тихо"]}, {"sentence": "Він ___ не курить.", "answer": "ніколи", "options": ["ніколи", "завжди", "іноді", "дуже"]}, {"sentence": "Ми ___ їмо вдома.", "answer": "зазвичай", "options": ["зазвичай", "ніколи", "рідко", "весело"]}]`)}
 />
 
@@ -312,20 +327,23 @@ Notice: We use ADVERBS, not adjectives, to answer "Як справи?"
 
 <Quiz
   title="Adverb or Adjective?"
-  questions={JSON.parse(`[{"question": "Does the sentence \\\"Він ___ хлопець\\\" require an adjective or adverb?", "options": [{"text": "добрий", "correct": true}, {"text": "добре (adverb)", "correct": false}, {"text": "добро", "correct": false}, {"text": "добра", "correct": false}]}, {"question": "Which form is correct for \\\"Він говорить ___\\\" in English?", "options": [{"text": "добре (adverb)", "correct": true}, {"text": "добрий", "correct": false}, {"text": "добра", "correct": false}, {"text": "добро", "correct": false}]}, {"question": "How should you describe \\\"Це ___ машина\\\" using masculine/feminine forms?", "options": [{"text": "швидка", "correct": true}, {"text": "швидко (adverb)", "correct": false}, {"text": "швидкий", "correct": false}, {"text": "швидке", "correct": false}]}, {"question": "What is the correct form for \\\"Вона біжить ___\\\" here?", "options": [{"text": "швидко (adverb)", "correct": true}, {"text": "швидка", "correct": false}, {"text": "швидкий", "correct": false}, {"text": "швидке", "correct": false}]}, {"question": "Which word correctly completes \\\"У неї ___ голос\\\" in Ukrainian?", "options": [{"text": "тихий", "correct": true}, {"text": "тихо (adverb)", "correct": false}, {"text": "тиха", "correct": false}, {"text": "тихе", "correct": false}]}, {"question": "How should you accurately translate \\\"He speaks quietly\\\" into Ukrainian?", "options": [{"text": "тихо (adverb)", "correct": true}, {"text": "тихий", "correct": false}, {"text": "тиха", "correct": false}, {"text": "тихе", "correct": false}]}, {"question": "What is the right adjective for \\\"Вона ___ людина\\\" here?", "options": [{"text": "весела", "correct": true}, {"text": "весело (adverb)", "correct": false}, {"text": "веселий", "correct": false}, {"text": "веселе", "correct": false}]}, {"question": "Which form correctly represents \\\"The children sing loudly\\\"?", "options": [{"text": "голосно (adverb)", "correct": true}, {"text": "голосний", "correct": false}, {"text": "голосна", "correct": false}, {"text": "голосне", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Does the sentence \\\\\\"Він ___ хлопець\\\\\\" require an adjective or adverb?", "options": [{"text": "добрий", "correct": true}, {"text": "добре (adverb)", "correct": false}, {"text": "добро", "correct": false}, {"text": "добра", "correct": false}]}, {"question": "Which form is correct for \\\\\\"Він говорить ___\\\\\\" in English?", "options": [{"text": "добре (adverb)", "correct": true}, {"text": "добрий", "correct": false}, {"text": "добра", "correct": false}, {"text": "добро", "correct": false}]}, {"question": "How should you describe \\\\\\"Це ___ машина\\\\\\" using masculine/feminine forms?", "options": [{"text": "швидка", "correct": true}, {"text": "швидко (adverb)", "correct": false}, {"text": "швидкий", "correct": false}, {"text": "швидке", "correct": false}]}, {"question": "What is the correct form for \\\\\\"Вона біжить ___\\\\\\" here?", "options": [{"text": "швидко (adverb)", "correct": true}, {"text": "швидка", "correct": false}, {"text": "швидкий", "correct": false}, {"text": "швидке", "correct": false}]}, {"question": "Which word correctly completes \\\\\\"У неї ___ голос\\\\\\" in Ukrainian?", "options": [{"text": "тихий", "correct": true}, {"text": "тихо (adverb)", "correct": false}, {"text": "тиха", "correct": false}, {"text": "тихе", "correct": false}]}, {"question": "How should you accurately translate \\\\\\"He speaks quietly\\\\\\" into Ukrainian?", "options": [{"text": "тихо (adverb)", "correct": true}, {"text": "тихий", "correct": false}, {"text": "тиха", "correct": false}, {"text": "тихе", "correct": false}]}, {"question": "What is the right adjective for \\\\\\"Вона ___ людина\\\\\\" here?", "options": [{"text": "весела", "correct": true}, {"text": "весело (adverb)", "correct": false}, {"text": "веселий", "correct": false}, {"text": "веселе", "correct": false}]}, {"question": "Which form correctly represents \\\\\\"The children sing loudly\\\\\\"?", "options": [{"text": "голосно (adverb)", "correct": true}, {"text": "голосний", "correct": false}, {"text": "голосна", "correct": false}, {"text": "голосне", "correct": false}]}]`)}
 />
 
 ### Frequency Meaning
 
 <Quiz
   title="Frequency Meaning"
-  questions={JSON.parse(`[{"question": "What is the English translation of \\\"Завжди\\\"?", "options": [{"text": "Always", "correct": true}, {"text": "Sometimes", "correct": false}, {"text": "Never", "correct": false}, {"text": "Rarely", "correct": false}]}, {"question": "Which English word represents the adverb \\\"Часто\\\"?", "options": [{"text": "Often", "correct": true}, {"text": "Never", "correct": false}, {"text": "Rarely", "correct": false}, {"text": "Always", "correct": false}]}, {"question": "How do you translate \\\"Іноді\\\" into English?", "options": [{"text": "Sometimes", "correct": true}, {"text": "Always", "correct": false}, {"text": "Never", "correct": false}, {"text": "Often", "correct": false}]}, {"question": "What is the meaning of \\\"Рідко\\\" in English?", "options": [{"text": "Rarely", "correct": true}, {"text": "Always", "correct": false}, {"text": "Often", "correct": false}, {"text": "Never", "correct": false}]}, {"question": "Which English term matches \\\"Ніколи\\\"?", "options": [{"text": "Never", "correct": true}, {"text": "Sometimes", "correct": false}, {"text": "Often", "correct": false}, {"text": "Always", "correct": false}]}, {"question": "How is \\\"Зазвичай\\\" translated into English?", "options": [{"text": "Usually", "correct": true}, {"text": "Never", "correct": false}, {"text": "Rarely", "correct": false}, {"text": "Sometimes", "correct": false}]}, {"question": "What is the English meaning of \\\"Дуже\\\"?", "options": [{"text": "Very", "correct": true}, {"text": "Sometimes", "correct": false}, {"text": "Never", "correct": false}, {"text": "Rarely", "correct": false}]}, {"question": "Which phrase translates the word \\\"Трохи\\\" into English?", "options": [{"text": "A little", "correct": true}, {"text": "Very much", "correct": false}, {"text": "Never", "correct": false}, {"text": "Always", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "What is the English translation of \\\\\\"Завжди\\\\\\"?", "options": [{"text": "Always", "correct": true}, {"text": "Sometimes", "correct": false}, {"text": "Never", "correct": false}, {"text": "Rarely", "correct": false}]}, {"question": "Which English word represents the adverb \\\\\\"Часто\\\\\\"?", "options": [{"text": "Often", "correct": true}, {"text": "Never", "correct": false}, {"text": "Rarely", "correct": false}, {"text": "Always", "correct": false}]}, {"question": "How do you translate \\\\\\"Іноді\\\\\\" into English?", "options": [{"text": "Sometimes", "correct": true}, {"text": "Always", "correct": false}, {"text": "Never", "correct": false}, {"text": "Often", "correct": false}]}, {"question": "What is the meaning of \\\\\\"Рідко\\\\\\" in English?", "options": [{"text": "Rarely", "correct": true}, {"text": "Always", "correct": false}, {"text": "Often", "correct": false}, {"text": "Never", "correct": false}]}, {"question": "Which English term matches \\\\\\"Ніколи\\\\\\"?", "options": [{"text": "Never", "correct": true}, {"text": "Sometimes", "correct": false}, {"text": "Often", "correct": false}, {"text": "Always", "correct": false}]}, {"question": "How is \\\\\\"Зазвичай\\\\\\" translated into English?", "options": [{"text": "Usually", "correct": true}, {"text": "Never", "correct": false}, {"text": "Rarely", "correct": false}, {"text": "Sometimes", "correct": false}]}, {"question": "What is the English meaning of \\\\\\"Дуже\\\\\\"?", "options": [{"text": "Very", "correct": true}, {"text": "Sometimes", "correct": false}, {"text": "Never", "correct": false}, {"text": "Rarely", "correct": false}]}, {"question": "Which phrase translates the word \\\\\\"Трохи\\\\\\" into English?", "options": [{"text": "A little", "correct": true}, {"text": "Very much", "correct": false}, {"text": "Never", "correct": false}, {"text": "Always", "correct": false}]}]`)}
 />
 
 ### Describing Actions
 
 <Unjumble
   title="Describing Actions"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "швидко / бігає / він", "answer": "Він швидко бігає"}, {"jumbled": "добре / вона / співає", "answer": "Вона добре співає"}, {"jumbled": "читаю / я / повільно", "answer": "Я читаю повільно"}, {"jumbled": "часто / ми / гуляємо", "answer": "Ми часто гуляємо"}, {"jumbled": "завжди / снідаю / я / вранці", "answer": "Я завжди снідаю вранці"}, {"jumbled": "не / він / курить / ніколи", "answer": "Він ніколи не курить"}, {"jumbled": "голосно / діти / грають", "answer": "Діти голосно грають"}, {"jumbled": "тихо / вона / говорить", "answer": "Вона тихо говорить"}, {"jumbled": "добре / справи / як", "answer": "Як справи? Добре"}, {"jumbled": "іноді / ми / піцу / їмо", "answer": "Ми іноді їмо піцу"}, {"jumbled": "рідко / телевізор / дивлюсь / я", "answer": "Я рідко дивлюсь телевізор"}, {"jumbled": "весело / вони / танцюють", "answer": "Вони весело танцюють"}]`)}
 />
 
@@ -333,7 +351,8 @@ Notice: We use ADVERBS, not adjectives, to answer "Як справи?"
 
 <TrueFalse
   title="Adverb Rules"
-  items={JSON.parse(`[{"statement": "Adverbs describe verbs (actions).", "isTrue": true, "explanation": ""}, {"statement": "Adverbs describe nouns.", "isTrue": false, "explanation": "Incorrect! that's adjectives"}, {"statement": "Most adverbs end in -о.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Добрий\\\" is an adverb.", "isTrue": false, "explanation": "Incorrect! it's an adjective"}, {"statement": "\\\"Добре\\\" is an adverb.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Ніколи\\\" doesn't need \\\"не\\\" before the verb.", "isTrue": false, "explanation": "Incorrect! you need two negatives"}, {"statement": "\\\"Завжди\\\" means \\\"always\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Дуже\\\" can modify adverbs (дуже добре).", "isTrue": true, "explanation": ""}, {"statement": "\\\"Швидкий\\\" describes how you do something.", "isTrue": false, "explanation": "Incorrect! it's an adjective"}, {"statement": "\\\"Швидко\\\" describes how you do something.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Як справи?\\\" — \\\"Добрий!\\\".", "isTrue": false, "explanation": "Incorrect! should be \\\"Добре!\\\""}, {"statement": "\\\"Як справи?\\\" — \\\"Добре!\\\".", "isTrue": true, "explanation": ""}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Adverbs describe verbs (actions).", "isTrue": true, "explanation": ""}, {"statement": "Adverbs describe nouns.", "isTrue": false, "explanation": "Incorrect! that's adjectives"}, {"statement": "Most adverbs end in -о.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Добрий\\\\\\" is an adverb.", "isTrue": false, "explanation": "Incorrect! it's an adjective"}, {"statement": "\\\\\\"Добре\\\\\\" is an adverb.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Ніколи\\\\\\" doesn't need \\\\\\"не\\\\\\" before the verb.", "isTrue": false, "explanation": "Incorrect! you need two negatives"}, {"statement": "\\\\\\"Завжди\\\\\\" means \\\\\\"always\\\\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Дуже\\\\\\" can modify adverbs (дуже добре).", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Швидкий\\\\\\" describes how you do something.", "isTrue": false, "explanation": "Incorrect! it's an adjective"}, {"statement": "\\\\\\"Швидко\\\\\\" describes how you do something.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Як справи?\\\\\\" — \\\\\\"Добрий!\\\\\\".", "isTrue": false, "explanation": "Incorrect! should be \\\\\\"Добре!\\\\\\""}, {"statement": "\\\\\\"Як справи?\\\\\\" — \\\\\\"Добре!\\\\\\".", "isTrue": true, "explanation": ""}]`)}
 />
 
 ## 📚 Vocabulary
@@ -364,14 +383,6 @@ Notice: We use ADVERBS, not adjectives, to answer "Як справи?"
 | частота | /t͡ʃɑstɔˈtɑ/ | frequency | noun | ж |  |
 | частотність | /t͡ʃɑsˈtɔtnisʲtʲ/ | frequency | noun | ж |  |
 | шкала | /ʃkɑˈlɑ/ | scale | noun | ж |  |
-
-## 📋 Summary
-
-## 📋 Summary
-
-Ви вивчили українські прислівники! Тепер ви можете описати, як ви щось робите. (You learned Ukrainian adverbs! Now you can describe how you do something.) Ви знаєте слова: швидко, повільно, добре. Ви також знаєте, як часто ви це робите: завжди або часто. Це був чудовий урок! (This was a great lesson!)
-
----
 
 > [!resources] 🔗 External Resources
 >

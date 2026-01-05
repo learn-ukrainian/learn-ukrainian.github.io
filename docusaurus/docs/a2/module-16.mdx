@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 ## Warm-up
 
@@ -276,6 +278,7 @@ Remember: Making mistakes is part of learning. Native speakers will understand y
 
 <MatchUp
   title="Tier 1 Pairs"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- читати", "right": "прочитати"}, {"left": "- писати", "right": "написати"}, {"left": "- робити", "right": "зробити"}, {"left": "- говорити", "right": "сказати"}, {"left": "- бачити", "right": "побачити"}, {"left": "- чути", "right": "почути"}, {"left": "- брати", "right": "взяти"}, {"left": "- давати", "right": "дати"}]`)}
 />
 
@@ -283,6 +286,7 @@ Remember: Making mistakes is part of learning. Native speakers will understand y
 
 <MatchUp
   title="Tier 2 Pairs"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- вчити", "right": "вивчити"}, {"left": "- вчитися", "right": "навчитися"}, {"left": "- розуміти", "right": "зрозуміти"}, {"left": "- питати", "right": "запитати"}, {"left": "- відповідати", "right": "відповісти"}, {"left": "- пояснювати", "right": "пояснити"}, {"left": "- пам'ятати", "right": "запам'ятати"}, {"left": "- забувати", "right": "забути"}]`)}
 />
 
@@ -290,6 +294,7 @@ Remember: Making mistakes is part of learning. Native speakers will understand y
 
 <MatchUp
   title="Tier 3 Pairs"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- купувати", "right": "купити"}, {"left": "- продавати", "right": "продати"}, {"left": "- відкривати", "right": "відкрити"}, {"left": "- закривати", "right": "закрити"}, {"left": "- починати", "right": "почати"}, {"left": "- закінчувати", "right": "закінчити"}, {"left": "- готувати", "right": "приготувати"}, {"left": "- знаходити", "right": "знайти"}]`)}
 />
 
@@ -297,6 +302,7 @@ Remember: Making mistakes is part of learning. Native speakers will understand y
 
 <FillIn
   title="Transform to Perfective"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "читати → [___]", "answer": "прочитати", "options": ["прочитати", "читати", "почитати"]}, {"sentence": "писати → [___]", "answer": "написати", "options": ["написати", "писати", "пописати"]}, {"sentence": "робити → [___]", "answer": "зробити", "options": ["зробити", "робити", "поробити"]}, {"sentence": "бачити → [___]", "answer": "побачити", "options": ["побачити", "бачити", "пробачити"]}, {"sentence": "чути → [___]", "answer": "почути", "options": ["почути", "чути", "прочути"]}, {"sentence": "вчити → [___]", "answer": "вивчити", "options": ["вивчити", "вчити", "повчити"]}, {"sentence": "говорити | ___", "answer": "сказати", "options": ["сказати", "поговорити", "заговорити"]}, {"sentence": "брати | ___", "answer": "взяти", "options": ["взяти", "побрати", "забрати"]}, {"sentence": "розуміти → [___]", "answer": "зрозуміти", "options": ["зрозуміти", "розуміти", "прозуміти"]}, {"sentence": "готувати → [___]", "answer": "приготувати", "options": ["приготувати", "готувати", "заготувати"]}]`)}
 />
 
@@ -304,6 +310,7 @@ Remember: Making mistakes is part of learning. Native speakers will understand y
 
 <FillIn
   title="Transform to Imperfective"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "взяти → [___]", "answer": "брати", "options": ["брати", "взяти", "взятися"]}, {"sentence": "сказати → [___]", "answer": "говорити", "options": ["говорити", "сказати", "казати"]}, {"sentence": "дати → [___]", "answer": "давати", "options": ["давати", "дати", "дадати"]}, {"sentence": "знайти → [___]", "answer": "знаходити", "options": ["знаходити", "знайти", "шукати"]}, {"sentence": "почати → [___]", "answer": "починати", "options": ["починати", "почати", "почитати"]}, {"sentence": "закінчити → [___]", "answer": "закінчувати", "options": ["закінчувати", "закінчити", "кінчати"]}, {"sentence": "відповісти → [___]", "answer": "відповідати", "options": ["відповідати", "відповісти", "повідати"]}, {"sentence": "запам'ятати → [___]", "answer": "пам'ятати", "options": ["пам'ятати", "запам'ятати", "пам'ятка"]}]`)}
 />
 
@@ -311,13 +318,15 @@ Remember: Making mistakes is part of learning. Native speakers will understand y
 
 <Quiz
   title="Aspect Selection"
-  questions={JSON.parse(`[{"question": "In the Ukrainian sentence \\\"Я прочитав книгу,\\\" what is the grammatical aspect of the verb?", "options": [{"text": "Доконаний", "correct": true}, {"text": "Недоконаний", "correct": false}, {"text": "Теперішній", "correct": false}, {"text": "Майбутній", "correct": false}]}, {"question": "In the sentence \\\"Я читав книгу, коли ти подзвонив,\\\" what is the focus of the first verb?", "options": [{"text": "Недоконаний", "correct": true}, {"text": "Доконаний", "correct": false}, {"text": "Теперішній", "correct": false}, {"text": "Наказ", "correct": false}]}, {"question": "When a speaker says \\\"Я читаю книгу щодня,\\\" what grammatical aspect are they using?", "options": [{"text": "Недоконаний", "correct": true}, {"text": "Доконаний", "correct": false}, {"text": "Майбутній", "correct": false}, {"text": "Наказ", "correct": false}]}, {"question": "In the sentence \\\"Вона написала листа,\\\" which grammatical aspect describes the action's completion?", "options": [{"text": "Доконаний", "correct": true}, {"text": "Недоконаний", "correct": false}, {"text": "Тривалий", "correct": false}, {"text": "Початковий", "correct": false}]}, {"question": "In the sentence \\\"Ми зробимо це завтра,\\\" what is the grammatical aspect of the future verb?", "options": [{"text": "Доконаний", "correct": true}, {"text": "Недоконаний", "correct": false}, {"text": "Теперішній", "correct": false}, {"text": "Минулий", "correct": false}]}, {"question": "In the sentence \\\"Я буду читати книгу ввечері,\\\" which future formation type is being used?", "options": [{"text": "Недоконаний", "correct": true}, {"text": "Доконаний", "correct": false}, {"text": "Теперішній", "correct": false}, {"text": "Наказ", "correct": false}]}, {"question": "When asking someone \\\"Ти закінчив це завдання?\\\" what aspectual focus are you inquiring about?", "options": [{"text": "Доконаний", "correct": true}, {"text": "Недоконаний", "correct": false}, {"text": "Теперішній", "correct": false}, {"text": "Майбутній", "correct": false}]}, {"question": "In the sentence \\\"Він вчиться щодня,\\\" what grammatical category describes this repeated action?", "options": [{"text": "Недоконаний", "correct": true}, {"text": "Доконаний", "correct": false}, {"text": "Майбутній", "correct": false}, {"text": "Наказ", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "In the Ukrainian sentence \\\\\\"Я прочитав книгу,\\\\\\" what is the grammatical aspect of the verb?", "options": [{"text": "Доконаний", "correct": true}, {"text": "Недоконаний", "correct": false}, {"text": "Теперішній", "correct": false}, {"text": "Майбутній", "correct": false}]}, {"question": "In the sentence \\\\\\"Я читав книгу, коли ти подзвонив,\\\\\\" what is the focus of the first verb?", "options": [{"text": "Недоконаний", "correct": true}, {"text": "Доконаний", "correct": false}, {"text": "Теперішній", "correct": false}, {"text": "Наказ", "correct": false}]}, {"question": "When a speaker says \\\\\\"Я читаю книгу щодня,\\\\\\" what grammatical aspect are they using?", "options": [{"text": "Недоконаний", "correct": true}, {"text": "Доконаний", "correct": false}, {"text": "Майбутній", "correct": false}, {"text": "Наказ", "correct": false}]}, {"question": "In the sentence \\\\\\"Вона написала листа,\\\\\\" which grammatical aspect describes the action's completion?", "options": [{"text": "Доконаний", "correct": true}, {"text": "Недоконаний", "correct": false}, {"text": "Тривалий", "correct": false}, {"text": "Початковий", "correct": false}]}, {"question": "In the sentence \\\\\\"Ми зробимо це завтра,\\\\\\" what is the grammatical aspect of the future verb?", "options": [{"text": "Доконаний", "correct": true}, {"text": "Недоконаний", "correct": false}, {"text": "Теперішній", "correct": false}, {"text": "Минулий", "correct": false}]}, {"question": "In the sentence \\\\\\"Я буду читати книгу ввечері,\\\\\\" which future formation type is being used?", "options": [{"text": "Недоконаний", "correct": true}, {"text": "Доконаний", "correct": false}, {"text": "Теперішній", "correct": false}, {"text": "Наказ", "correct": false}]}, {"question": "When asking someone \\\\\\"Ти закінчив це завдання?\\\\\\" what aspectual focus are you inquiring about?", "options": [{"text": "Доконаний", "correct": true}, {"text": "Недоконаний", "correct": false}, {"text": "Теперішній", "correct": false}, {"text": "Майбутній", "correct": false}]}, {"question": "In the sentence \\\\\\"Він вчиться щодня,\\\\\\" what grammatical category describes this repeated action?", "options": [{"text": "Недоконаний", "correct": true}, {"text": "Доконаний", "correct": false}, {"text": "Майбутній", "correct": false}, {"text": "Наказ", "correct": false}]}]`)}
 />
 
 ### Context Selection
 
 <Cloze
   title="Context Selection"
+  isUkrainian={false}
   passage={`Я вже [___:1] цю дуже цікаву книгу. (finished)
 Вона [___:2] довгі листи додому щодня.
 Ми [___:3] все складне домашнє завдання вчора.
@@ -333,12 +342,13 @@ Remember: Making mistakes is part of learning. Native speakers will understand y
 
 <Unjumble
   title="Aspect Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "я / обов'язково / прочитав / цю / цікаву / книгу / вчора / ввечері", "answer": "Я прочитав цю цікаву книгу вчора ввечері"}, {"jumbled": "вона / написала / дуже / великого / листа / до / своєї / мами", "answer": "Вона написала дуже великого листа до своєї мами"}, {"jumbled": "ми / зробили / все / це / складне / домашнє / завдання / сьогодні", "answer": "Ми зробили все складне домашнє завдання сьогодні"}, {"jumbled": "він / побачив / її / у / цьому / великому / парку / вчора / вранці", "answer": "Він побачив її у цьому великому парку вчора вранці"}, {"jumbled": "вона / почула / якийсь / дуже / дивний / шум / на / нашій / вулиці", "answer": "Вона почула якийсь дуже дивний шум на нашій вулиці"}, {"jumbled": "я / випив / смачну / гарячу / каву / сьогодні / дуже / рано / вранці", "answer": "Я випив гарячу каву сьогодні дуже рано вранці"}, {"jumbled": "він / зрозумів / все / це / нове / правило / тільки / вчора / вранці", "answer": "Він зрозумів все це нове правило тільки вчора вранці"}, {"jumbled": "вона / швидко / відкрила / ці / великі / білі / двері / у / кімнаті", "answer": "Вона відкрила ці великі білі двері у кімнаті"}]`)}
 />
 
 ### Wrong Aspect
 
-<ErrorCorrection title="Wrong Aspect">
+<ErrorCorrection title="Wrong Aspect" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Я читав книгу вчора і закінчив.`}
     errorWord={`читав`}
@@ -387,6 +397,7 @@ Remember: Making mistakes is part of learning. Native speakers will understand y
 
 <GroupSort
   title="Formation Pattern"
+  isUkrainian={false}
   groups={JSON.parse(`{"Prefix (про-, на-, з-, по-, ви-)": ["читати → прочитати", "писати → написати", "робити → зробити", "бачити → побачити", "вчити → вивчити", "готувати → приготувати"], "Suppletive / Variable": ["говорити → сказати", "брати → взяти", "шукати → знайти", "класти → покласти", "купувати → купити", "давати → дати", "вставати → встати", "відкривати → відкрити", "--"]}`)}
 />
 

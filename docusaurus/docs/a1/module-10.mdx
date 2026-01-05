@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 **Вітаємо!** (vitayemo) You've completed nine modules of Ukrainian. Now let's check: **can you DO the skills?**
@@ -321,6 +323,24 @@ Fill in the customer's responses:
 
 ---
 
+## 📋 Summary
+
+| Skill                | Key Pattern                                    | Quick Test                        |
+| -------------------- | ---------------------------------------------- | --------------------------------- |
+| **Reading Cyrillic** | Recognize all 33 letters                       | Can you read "борщ" without help? |
+| **Gender ID**        | -а/-я = f, consonant = m, -о/-е = n            | What gender is "вікно"?           |
+| **Verb Conjugation** | Class I: -ю, -єш, -є / Class II: -ю, -иш, -ить | "Вона читає" or "читаєть"?        |
+| **Questions**        | що/хто/де/як + word order                      | How do you ask "Where are you?"   |
+| **Food Ordering**    | будь ласка, дякую, Смачного!                   | Can you order кава at a кафе?     |
+
+**Ready for A1.2?** If you can do all five skills, you're ready for Modules 11-20: the accusative case, possessives, and navigating cities!
+
+---
+
+## Need More Practice?
+
+---
+
 
 
 ## 🎯 Activities
@@ -329,13 +349,15 @@ Fill in the customer's responses:
 
 <Quiz
   title="Cyrillic Reading"
-  questions={JSON.parse(`[{"question": "What is the English translation of \\\"хліб\\\"?", "options": [{"text": "bread", "correct": true}, {"text": "tea", "correct": false}, {"text": "water", "correct": false}, {"text": "coffee", "correct": false}]}, {"question": "How do you translate \\\"вареники\\\" to English?", "options": [{"text": "soup", "correct": false}, {"text": "dumplings", "correct": true}, {"text": "meat", "correct": false}, {"text": "milk", "correct": false}]}, {"question": "What does the word \\\"дякую\\\" mean?", "options": [{"text": "hello", "correct": false}, {"text": "goodbye", "correct": false}, {"text": "thank you", "correct": true}, {"text": "please", "correct": false}]}, {"question": "What is the meaning of \\\"добрий день\\\"?", "options": [{"text": "good day", "correct": true}, {"text": "good night", "correct": false}, {"text": "good evening", "correct": false}, {"text": "goodbye", "correct": false}]}, {"question": "How do you translate \\\"вікно\\\" to English?", "options": [{"text": "table", "correct": false}, {"text": "chair", "correct": false}, {"text": "window", "correct": true}, {"text": "door", "correct": false}]}, {"question": "What is the English translation of \\\"молоко\\\"?", "options": [{"text": "water", "correct": false}, {"text": "milk", "correct": true}, {"text": "juice", "correct": false}, {"text": "coffee", "correct": false}]}, {"question": "What does the word \\\"книга\\\" mean?", "options": [{"text": "newspaper", "correct": false}, {"text": "book", "correct": true}, {"text": "magazine", "correct": false}, {"text": "letter", "correct": false}]}, {"question": "What is the meaning of \\\"будь ласка\\\"?", "options": [{"text": "thank you", "correct": false}, {"text": "please", "correct": true}, {"text": "hello", "correct": false}, {"text": "goodbye", "correct": false}]}, {"question": "How do you translate \\\"кава\\\" to English?", "options": [{"text": "tea", "correct": false}, {"text": "water", "correct": false}, {"text": "coffee", "correct": true}, {"text": "juice", "correct": false}]}, {"question": "What is the English translation of \\\"місто\\\"?", "options": [{"text": "country", "correct": false}, {"text": "city", "correct": true}, {"text": "village", "correct": false}, {"text": "street", "correct": false}]}, {"question": "What does the word \\\"студент\\\" mean?", "options": [{"text": "student", "correct": true}, {"text": "teacher", "correct": false}, {"text": "doctor", "correct": false}, {"text": "worker", "correct": false}]}, {"question": "How do you translate \\\"українська\\\" to English?", "options": [{"text": "English", "correct": false}, {"text": "Ukrainian", "correct": true}, {"text": "Polish", "correct": false}, {"text": "German", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "What is the English translation of \\\\\\"хліб\\\\\\"?", "options": [{"text": "bread", "correct": true}, {"text": "tea", "correct": false}, {"text": "water", "correct": false}, {"text": "coffee", "correct": false}]}, {"question": "How do you translate \\\\\\"вареники\\\\\\" to English?", "options": [{"text": "soup", "correct": false}, {"text": "dumplings", "correct": true}, {"text": "meat", "correct": false}, {"text": "milk", "correct": false}]}, {"question": "What does the word \\\\\\"дякую\\\\\\" mean?", "options": [{"text": "hello", "correct": false}, {"text": "goodbye", "correct": false}, {"text": "thank you", "correct": true}, {"text": "please", "correct": false}]}, {"question": "What is the meaning of \\\\\\"добрий день\\\\\\"?", "options": [{"text": "good day", "correct": true}, {"text": "good night", "correct": false}, {"text": "good evening", "correct": false}, {"text": "goodbye", "correct": false}]}, {"question": "How do you translate \\\\\\"вікно\\\\\\" to English?", "options": [{"text": "table", "correct": false}, {"text": "chair", "correct": false}, {"text": "window", "correct": true}, {"text": "door", "correct": false}]}, {"question": "What is the English translation of \\\\\\"молоко\\\\\\"?", "options": [{"text": "water", "correct": false}, {"text": "milk", "correct": true}, {"text": "juice", "correct": false}, {"text": "coffee", "correct": false}]}, {"question": "What does the word \\\\\\"книга\\\\\\" mean?", "options": [{"text": "newspaper", "correct": false}, {"text": "book", "correct": true}, {"text": "magazine", "correct": false}, {"text": "letter", "correct": false}]}, {"question": "What is the meaning of \\\\\\"будь ласка\\\\\\"?", "options": [{"text": "thank you", "correct": false}, {"text": "please", "correct": true}, {"text": "hello", "correct": false}, {"text": "goodbye", "correct": false}]}, {"question": "How do you translate \\\\\\"кава\\\\\\" to English?", "options": [{"text": "tea", "correct": false}, {"text": "water", "correct": false}, {"text": "coffee", "correct": true}, {"text": "juice", "correct": false}]}, {"question": "What is the English translation of \\\\\\"місто\\\\\\"?", "options": [{"text": "country", "correct": false}, {"text": "city", "correct": true}, {"text": "village", "correct": false}, {"text": "street", "correct": false}]}, {"question": "What does the word \\\\\\"студент\\\\\\" mean?", "options": [{"text": "student", "correct": true}, {"text": "teacher", "correct": false}, {"text": "doctor", "correct": false}, {"text": "worker", "correct": false}]}, {"question": "How do you translate \\\\\\"українська\\\\\\" to English?", "options": [{"text": "English", "correct": false}, {"text": "Ukrainian", "correct": true}, {"text": "Polish", "correct": false}, {"text": "German", "correct": false}]}]`)}
 />
 
 ### Gender Recognition
 
 <MatchUp
   title="Gender Recognition"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "книга", "right": "feminine"}, {"left": "стіл", "right": "masculine"}, {"left": "вікно", "right": "neuter"}, {"left": "кава", "right": "feminine"}, {"left": "хліб", "right": "masculine"}, {"left": "місто", "right": "neuter"}, {"left": "вода", "right": "feminine"}, {"left": "чай", "right": "masculine"}]`)}
 />
 
@@ -343,6 +365,7 @@ Fill in the customer's responses:
 
 <FillIn
   title="Demonstrative Agreement"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "___ книга цікава.", "answer": "Ця", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ стіл новий.", "answer": "Цей", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ вікно велике.", "answer": "Це", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ книги нові.", "answer": "Ці", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ кава гаряча.", "answer": "Ця", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ чай холодний.", "answer": "Цей", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ місто гарне.", "answer": "Це", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ двері старі.", "answer": "Ці", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ хлопець студент.", "answer": "Цей", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ дівчина українка.", "answer": "Ця", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ слово нове.", "answer": "Це", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ студенти працюють.", "answer": "Ці", "options": ["Цей", "Ця", "Це", "Ці"]}]`)}
 />
 
@@ -350,6 +373,7 @@ Fill in the customer's responses:
 
 <FillIn
   title="Verb Conjugation Class I"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Я ___ книгу.", "answer": "читаю", "options": ["читаю", "читаєш", "читає", "читають"]}, {"sentence": "Ти ___ газету.", "answer": "читаєш", "options": ["читаю", "читаєш", "читає", "читають"]}, {"sentence": "Він ___ журнал.", "answer": "читає", "options": ["читаю", "читаєш", "читає", "читають"]}, {"sentence": "Ми ___ українською.", "answer": "читаємо", "options": ["читаємо", "читаєте", "читають", "читаю"]}, {"sentence": "Ви ___ англійською.", "answer": "читаєте", "options": ["читаємо", "читаєте", "читають", "читаю"]}, {"sentence": "Вони ___ багато.", "answer": "читають", "options": ["читаємо", "читаєте", "читають", "читаю"]}, {"sentence": "Вона ___ книгу про Україну.", "answer": "читає", "options": ["читаю", "читаєш", "читає", "читають"]}, {"sentence": "Ти ___ цікаві книги?", "answer": "читаєш", "options": ["читаю", "читаєш", "читає", "читають"]}, {"sentence": "Я ___ щодня.", "answer": "читаю", "options": ["читаю", "читаєш", "читає", "читають"]}, {"sentence": "Вони ___ українські книги.", "answer": "читають", "options": ["читаємо", "читаєте", "читають", "читаю"]}, {"sentence": "Ми ___ українською мовою.", "answer": "читаємо", "options": ["читаємо", "читаєте", "читають", "читаю"]}, {"sentence": "Ви ___ швидко?", "answer": "читаєте", "options": ["читаємо", "читаєте", "читають", "читаю"]}]`)}
 />
 
@@ -357,6 +381,7 @@ Fill in the customer's responses:
 
 <FillIn
   title="Verb Conjugation Class II"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Я ___ українською.", "answer": "говорю", "options": ["говорю", "говориш", "говорить", "говорять"]}, {"sentence": "Ти ___ англійською.", "answer": "говориш", "options": ["говорю", "говориш", "говорить", "говорять"]}, {"sentence": "Він ___ швидко.", "answer": "говорить", "options": ["говорю", "говориш", "говорить", "говорять"]}, {"sentence": "Ми ___ повільно.", "answer": "говоримо", "options": ["говоримо", "говорите", "говорять", "говорю"]}, {"sentence": "Ви ___ добре.", "answer": "говорите", "options": ["говоримо", "говорите", "говорять", "говорю"]}, {"sentence": "Вони ___ тихо.", "answer": "говорять", "options": ["говоримо", "говорите", "говорять", "говорю"]}, {"sentence": "Вона ___ українською і англійською.", "answer": "говорить", "options": ["говорю", "говориш", "говорить", "говорять"]}, {"sentence": "Ти ___ добре українською?", "answer": "говориш", "options": ["говорю", "говориш", "говорить", "говорять"]}, {"sentence": "Я ___ з друзями.", "answer": "говорю", "options": ["говорю", "говориш", "говорить", "говорять"]}, {"sentence": "Вони ___ багато.", "answer": "говорять", "options": ["говоримо", "говорите", "говорять", "говорю"]}, {"sentence": "Ми ___ українською мовою.", "answer": "говоримо", "options": ["говоримо", "говорите", "говорять", "говорю"]}, {"sentence": "Ви ___ правильно?", "answer": "говорите", "options": ["говоримо", "говорите", "говорять", "говорю"]}]`)}
 />
 
@@ -364,6 +389,7 @@ Fill in the customer's responses:
 
 <GroupSort
   title="Verb Classes"
+  isUkrainian={false}
   groups={JSON.parse(`{"Class I (-ати)": ["читати", "писати", "знати", "працювати", "снідати"], "Class II (-ити)": ["говорити", "робити", "любити", "ходити"], "Irregular": ["їсти", "пити", "бути"]}`)}
 />
 
@@ -371,6 +397,7 @@ Fill in the customer's responses:
 
 <Quiz
   title="Question Words"
+  isUkrainian={false}
   questions={JSON.parse(`[{"question": "___ це? (What is this?)", "options": [{"text": "Що", "correct": true}, {"text": "Хто", "correct": false}, {"text": "Де", "correct": false}, {"text": "Як", "correct": false}]}, {"question": "___ він? (Who is he?)", "options": [{"text": "Що", "correct": false}, {"text": "Хто", "correct": true}, {"text": "Де", "correct": false}, {"text": "Коли", "correct": false}]}, {"question": "___ ти живеш? (Where do you live?)", "options": [{"text": "Що", "correct": false}, {"text": "Хто", "correct": false}, {"text": "Де", "correct": true}, {"text": "Куди", "correct": false}]}, {"question": "___ справи? (How are things?)", "options": [{"text": "Що", "correct": false}, {"text": "Де", "correct": false}, {"text": "Коли", "correct": false}, {"text": "Як", "correct": true}]}, {"question": "___ ти вдома? (When are you home?)", "options": [{"text": "Що", "correct": false}, {"text": "Де", "correct": false}, {"text": "Коли", "correct": true}, {"text": "Як", "correct": false}]}, {"question": "___ ти тут? (Why are you here?)", "options": [{"text": "Що", "correct": false}, {"text": "Хто", "correct": false}, {"text": "Де", "correct": false}, {"text": "Чому", "correct": true}]}, {"question": "___ це коштує? (How much does this cost?)", "options": [{"text": "Що", "correct": false}, {"text": "Як", "correct": false}, {"text": "Коли", "correct": false}, {"text": "Скільки", "correct": true}]}, {"question": "___ ти йдеш? (Where are you going?)", "options": [{"text": "Де", "correct": false}, {"text": "Куди", "correct": true}, {"text": "Коли", "correct": false}, {"text": "Що", "correct": false}]}, {"question": "___ ти робиш? (What are you doing?)", "options": [{"text": "Що", "correct": true}, {"text": "Хто", "correct": false}, {"text": "Де", "correct": false}, {"text": "Як", "correct": false}]}, {"question": "___ ти вивчаєш українську? (Why do you study Ukrainian?)", "options": [{"text": "Що", "correct": false}, {"text": "Як", "correct": false}, {"text": "Чому", "correct": true}, {"text": "Коли", "correct": false}]}, {"question": "___ ти? (Who are you?)", "options": [{"text": "Що", "correct": false}, {"text": "Хто", "correct": true}, {"text": "Де", "correct": false}, {"text": "Як", "correct": false}]}, {"question": "___ ти говориш українською? (How do you speak Ukrainian?)", "options": [{"text": "Що", "correct": false}, {"text": "Де", "correct": false}, {"text": "Коли", "correct": false}, {"text": "Як", "correct": true}]}]`)}
 />
 
@@ -378,13 +405,15 @@ Fill in the customer's responses:
 
 <TrueFalse
   title="Grammar Rules"
-  items={JSON.parse(`[{"statement": "Ukrainian has 33 letters in its alphabet.", "isTrue": true, "explanation": "Correct! 33 letters total."}, {"statement": "The letter \\\"Г\\\" sounds like hard \\\"g\\\" in \\\"go\\\".", "isTrue": false, "explanation": "Incorrect! Г = /ɦ/. Hard /g/ is Ґ."}, {"statement": "Feminine nouns typically end in -а or -я.", "isTrue": true, "explanation": "Correct! Examples: книга, земля, кава."}, {"statement": "Ukrainian uses \\\"to be\\\" (є) in all present tense sentences.", "isTrue": false, "explanation": "Incorrect! Ukrainian has zero copula: \\\"Я студент\\\" (no є needed)."}, {"statement": "\\\"Це\\\" can mean both \\\"this\\\" (neuter) and \\\"this is\\\".", "isTrue": true, "explanation": "Correct! Це вікно, Це книга (This is a book)."}, {"statement": "Class I verbs end in -ати or -яти.", "isTrue": true, "explanation": "Correct! Examples: читати, писати, знати."}, {"statement": "Class II verbs use -ють in the 3rd person plural.", "isTrue": false, "explanation": "Incorrect! Class II uses -ять: говорять, роблять."}, {"statement": "Questions can be formed by adding \\\"чи\\\" at the beginning.", "isTrue": true, "explanation": "Correct! Чи ти студент? (Are you a student?)"}, {"statement": "Negation in Ukrainian uses \\\"ні\\\" before the verb.", "isTrue": false, "explanation": "Incorrect! Negation uses \\\"не\\\": Я не читаю (I don't read)."}, {"statement": "\\\"Борщ\\\" is a traditional Ukrainian soup.", "isTrue": true, "explanation": "Correct! UNESCO recognized Ukrainian borsch culture!"}, {"statement": "\\\"Смачного!\\\" means \\\"Bon appétit!\\\" in Ukrainian.", "isTrue": true, "explanation": "Correct! Used when someone starts eating."}, {"statement": "All Ukrainian verbs are regular.", "isTrue": false, "explanation": "Incorrect! Irregulars include їсти (їм, їси) and пити (п'ю, п'єш)."}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Ukrainian has 33 letters in its alphabet.", "isTrue": true, "explanation": "Correct! 33 letters total."}, {"statement": "The letter \\\\\\"Г\\\\\\" sounds like hard \\\\\\"g\\\\\\" in \\\\\\"go\\\\\\".", "isTrue": false, "explanation": "Incorrect! Г = /ɦ/. Hard /g/ is Ґ."}, {"statement": "Feminine nouns typically end in -а or -я.", "isTrue": true, "explanation": "Correct! Examples: книга, земля, кава."}, {"statement": "Ukrainian uses \\\\\\"to be\\\\\\" (є) in all present tense sentences.", "isTrue": false, "explanation": "Incorrect! Ukrainian has zero copula: \\\\\\"Я студент\\\\\\" (no є needed)."}, {"statement": "\\\\\\"Це\\\\\\" can mean both \\\\\\"this\\\\\\" (neuter) and \\\\\\"this is\\\\\\".", "isTrue": true, "explanation": "Correct! Це вікно, Це книга (This is a book)."}, {"statement": "Class I verbs end in -ати or -яти.", "isTrue": true, "explanation": "Correct! Examples: читати, писати, знати."}, {"statement": "Class II verbs use -ють in the 3rd person plural.", "isTrue": false, "explanation": "Incorrect! Class II uses -ять: говорять, роблять."}, {"statement": "Questions can be formed by adding \\\\\\"чи\\\\\\" at the beginning.", "isTrue": true, "explanation": "Correct! Чи ти студент? (Are you a student?)"}, {"statement": "Negation in Ukrainian uses \\\\\\"ні\\\\\\" before the verb.", "isTrue": false, "explanation": "Incorrect! Negation uses \\\\\\"не\\\\\\": Я не читаю (I don't read)."}, {"statement": "\\\\\\"Борщ\\\\\\" is a traditional Ukrainian soup.", "isTrue": true, "explanation": "Correct! UNESCO recognized Ukrainian borsch culture!"}, {"statement": "\\\\\\"Смачного!\\\\\\" means \\\\\\"Bon appétit!\\\\\\" in Ukrainian.", "isTrue": true, "explanation": "Correct! Used when someone starts eating."}, {"statement": "All Ukrainian verbs are regular.", "isTrue": false, "explanation": "Incorrect! Irregulars include їсти (їм, їси) and пити (п'ю, п'єш)."}]`)}
 />
 
 ### Food and Drinks
 
 <MatchUp
   title="Food and Drinks"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "борщ", "right": "borsch"}, {"left": "вареники", "right": "varenyky"}, {"left": "хліб", "right": "bread"}, {"left": "кава", "right": "coffee"}, {"left": "чай", "right": "tea"}, {"left": "вода", "right": "water"}, {"left": "молоко", "right": "milk"}, {"left": "сік", "right": "juice"}]`)}
 />
 
@@ -392,6 +421,7 @@ Fill in the customer's responses:
 
 <Anagram
   title="Cyrillic Practice"
+  isUkrainian={false}
   items={JSON.parse(`[{"scrambled": "к н и г а", "answer": "книга", "hint": ""}, {"scrambled": "с т і л", "answer": "стіл", "hint": ""}, {"scrambled": "в і к н о", "answer": "вікно", "hint": ""}, {"scrambled": "к а в а", "answer": "кава", "hint": ""}, {"scrambled": "ч а й", "answer": "чай", "hint": ""}, {"scrambled": "х л і б", "answer": "хліб", "hint": ""}, {"scrambled": "в о д а", "answer": "вода", "hint": ""}, {"scrambled": "м і с т о", "answer": "місто", "hint": ""}, {"scrambled": "б о р щ", "answer": "борщ", "hint": ""}, {"scrambled": "д я к у ю", "answer": "дякую", "hint": ""}, {"scrambled": "м о в а", "answer": "мова", "hint": ""}, {"scrambled": "с л о в о", "answer": "слово", "hint": ""}]`)}
 />
 
@@ -399,6 +429,7 @@ Fill in the customer's responses:
 
 <FillIn
   title="Negation Practice"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Я ___ читаю газету.", "answer": "не", "options": ["не", "ні", "ніколи", "немає"]}, {"sentence": "Вона ___ говорить англійською.", "answer": "не", "options": ["не", "ні", "ніколи", "немає"]}, {"sentence": "Ми ___ п'ємо каву.", "answer": "не", "options": ["не", "ні", "ніколи", "немає"]}, {"sentence": "Ти ___ їси м'ясо?", "answer": "не", "options": ["не", "ні", "ніколи", "немає"]}, {"sentence": "Він ___ студент.", "answer": "не", "options": ["не", "ні", "ніколи", "немає"]}, {"sentence": "Вони ___ живуть тут.", "answer": "не", "options": ["не", "ні", "ніколи", "немає"]}, {"sentence": "Я ___ знаю цього слова.", "answer": "не", "options": ["не", "ні", "ніколи", "немає"]}, {"sentence": "Це ___ моя книга.", "answer": "не", "options": ["не", "ні", "ніколи", "немає"]}, {"sentence": "Ви ___ працюєте сьогодні?", "answer": "не", "options": ["не", "ні", "ніколи", "немає"]}, {"sentence": "Вона ___ українка.", "answer": "не", "options": ["не", "ні", "ніколи", "немає"]}, {"sentence": "Я ___ вчу цю мову.", "answer": "не", "options": ["не", "ні", "ніколи", "немає"]}, {"sentence": "Ти ___ любиш борщ?", "answer": "не", "options": ["не", "ні", "ніколи", "немає"]}]`)}
 />
 
@@ -422,24 +453,6 @@ Fill in the customer's responses:
 | швидко | /ˈʃvɪdkɔ/ | fast/quickly | adv |  |  |
 | ще | /ʃt͡ʃɛ/ | more/yet/still | adv |  |  |
 | щось | /ʃt͡ʃɔsʲ/ | something | pron | с |  |
-
-## 📋 Summary
-
-| Skill                | Key Pattern                                    | Quick Test                        |
-| -------------------- | ---------------------------------------------- | --------------------------------- |
-| **Reading Cyrillic** | Recognize all 33 letters                       | Can you read "борщ" without help? |
-| **Gender ID**        | -а/-я = f, consonant = m, -о/-е = n            | What gender is "вікно"?           |
-| **Verb Conjugation** | Class I: -ю, -єш, -є / Class II: -ю, -иш, -ить | "Вона читає" or "читаєть"?        |
-| **Questions**        | що/хто/де/як + word order                      | How do you ask "Where are you?"   |
-| **Food Ordering**    | будь ласка, дякую, Смачного!                   | Can you order кава at a кафе?     |
-
-**Ready for A1.2?** If you can do all five skills, you're ready for Modules 11-20: the accusative case, possessives, and navigating cities!
-
----
-
-## Need More Practice?
-
----
 
 > [!resources] 🔗 External Resources
 >

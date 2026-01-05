@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Warm-up
@@ -277,6 +279,44 @@ A unique Soviet legacy is the **Sanatorium**. It is a mix of a hospital and a ho
 :::
 
 
+## 📋 Summary
+
+You learned to:
+- Be anatomy savvy: **голова**, **рука**, **спина**, **серце**
+- Describe pain: **болить**, **температура**, **нежить**, **кашель**
+- Navigate medical help: **лікар**, **аптека**, **ліки**, **таблетка**
+- Wish health: **Одужуйте!** (Get well soon), **Будьте здорові!**
+
+Take care and stay healthy!
+
+> 💡 **Здоров'я — багатство**
+>
+> «Здоровий дух у здоровому тілі!» (Доглядайте за собою!)
+>
+> *Translation: "A healthy mind in a healthy body!"*
+
+> 🇺🇦 **Здоров'я в Україні**
+>
+> Корисні фрази для поліклініки:
+> - «Як ви себе почуваєте?» — How are you feeling?
+> - «У мене болить голова» — I have a headache
+> - «Мені потрібні ліки» — I need medicine
+> - «Де тут аптека?» — Where is the pharmacy here?
+>
+> Українці кажуть: «Здоров'я — найбільше багатство!»
+
+> 🏥 **Медицина в Україні**
+>
+> Українська медична система включає поліклініки, лікарні та аптеки. Лікарі допомагають пацієнтам одужати. Медсестри роблять уколи та дають ліки. Аптека працює щодня, часто цілодобово.
+>
+> Частини тіла українською:
+> - **голова** — head (болить голова — headache)
+> - **горло** — throat (болить горло — sore throat)
+> - **живіт** — stomach (болить живіт — stomachache)
+> - **спина** — back (болить спина — backache)
+>
+> Бережіть своє здоров'я! Здорове харчування, спорт і достатній сон — запорука довгого життя!
+
 
 
 ## 🎯 Activities
@@ -285,13 +325,15 @@ A unique Soviet legacy is the **Sanatorium**. It is a mix of a hospital and a ho
 
 <Quiz
   title="Health Quiz"
-  questions={JSON.parse(`[{"question": "Що найкраще зробити, якщо у вас висока температура і ви погано себе почуваєте?", "options": [{"text": "Викликати лікаря і залишитися вдома", "correct": true}, {"text": "Піти на дискотеку", "correct": false}, {"text": "Їсти морозиво", "correct": false}, {"text": "Піти плавати", "correct": false}]}, {"question": "Який номер екстреної медичної допомоги \\\"Швидка\\\" потрібно набирати в Україні?", "options": [{"text": "103", "correct": true}, {"text": "911", "correct": false}, {"text": "101", "correct": false}, {"text": "104", "correct": false}]}, {"question": "Який відмінок потрібен у фразі \\\"У мене болить голова\\\"?", "options": [{"text": "Називний (голова)", "correct": true}, {"text": "Знахідний", "correct": false}, {"text": "Орудний", "correct": false}, {"text": "Давальний", "correct": false}]}, {"question": "Чим відома лікувальна мінеральна вода \\\"Нафтуся\\\" з курорту Трускавець в Україні?", "options": [{"text": "Лікувальними властивостями", "correct": true}, {"text": "Солодким смаком", "correct": false}, {"text": "Високою ціною", "correct": false}, {"text": "Червоним кольором", "correct": false}]}, {"question": "Що продають в аптеці для лікування різних хвороб?", "options": [{"text": "Ліки", "correct": true}, {"text": "Хліб", "correct": false}, {"text": "Одяг", "correct": false}, {"text": "Меблі", "correct": false}]}, {"question": "Як правильно сказати \\\"I have a headache\\\" українською?", "options": [{"text": "У мене болить голова", "correct": true}, {"text": "Я болю голову", "correct": false}, {"text": "Мені голова", "correct": false}, {"text": "Я маю головний біль", "correct": false}]}, {"question": "Що треба робити щодня, щоб бути здоровим і мати гарне самопочуття?", "options": [{"text": "Займатися спортом і добре харчуватися", "correct": true}, {"text": "Багато спати і нічого не робити", "correct": false}, {"text": "Їсти тільки солодке", "correct": false}, {"text": "Не ходити до лікаря", "correct": false}]}, {"question": "Який лікар лікує зуби і допомагає з проблемами в роті?", "options": [{"text": "Стоматолог", "correct": true}, {"text": "Кардіолог", "correct": false}, {"text": "Окуліст", "correct": false}, {"text": "Терапевт", "correct": false}]}, {"question": "Що означає українське слово \\\"одужати\\\" в контексті здоров'я?", "options": [{"text": "Стати здоровим після хвороби", "correct": true}, {"text": "Захворіти", "correct": false}, {"text": "Піти до лікаря", "correct": false}, {"text": "Купити ліки", "correct": false}]}, {"question": "Де можна купити ліки цілодобово в будь-який час дня і ночі?", "options": [{"text": "У цілодобовій аптеці", "correct": true}, {"text": "У магазині", "correct": false}, {"text": "У школі", "correct": false}, {"text": "У парку", "correct": false}]}, {"question": "Яка важлива частина тіла б'ється в грудях і качає кров?", "options": [{"text": "Серце", "correct": true}, {"text": "Печінка", "correct": false}, {"text": "Легені", "correct": false}, {"text": "Шлунок", "correct": false}]}, {"question": "Що робить лікар, коли слухає пацієнта за допомогою спеціального приладу?", "options": [{"text": "Перевіряє серце і легені", "correct": true}, {"text": "Готує їжу", "correct": false}, {"text": "Співає пісні", "correct": false}, {"text": "Грає на гітарі", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Що найкраще зробити, якщо у вас висока температура і ви погано себе почуваєте?", "options": [{"text": "Викликати лікаря і залишитися вдома", "correct": true}, {"text": "Піти на дискотеку", "correct": false}, {"text": "Їсти морозиво", "correct": false}, {"text": "Піти плавати", "correct": false}]}, {"question": "Який номер екстреної медичної допомоги \\\\\\"Швидка\\\\\\" потрібно набирати в Україні?", "options": [{"text": "103", "correct": true}, {"text": "911", "correct": false}, {"text": "101", "correct": false}, {"text": "104", "correct": false}]}, {"question": "Який відмінок потрібен у фразі \\\\\\"У мене болить голова\\\\\\"?", "options": [{"text": "Називний (голова)", "correct": true}, {"text": "Знахідний", "correct": false}, {"text": "Орудний", "correct": false}, {"text": "Давальний", "correct": false}]}, {"question": "Чим відома лікувальна мінеральна вода \\\\\\"Нафтуся\\\\\\" з курорту Трускавець в Україні?", "options": [{"text": "Лікувальними властивостями", "correct": true}, {"text": "Солодким смаком", "correct": false}, {"text": "Високою ціною", "correct": false}, {"text": "Червоним кольором", "correct": false}]}, {"question": "Що продають в аптеці для лікування різних хвороб?", "options": [{"text": "Ліки", "correct": true}, {"text": "Хліб", "correct": false}, {"text": "Одяг", "correct": false}, {"text": "Меблі", "correct": false}]}, {"question": "Як правильно сказати \\\\\\"I have a headache\\\\\\" українською?", "options": [{"text": "У мене болить голова", "correct": true}, {"text": "Я болю голову", "correct": false}, {"text": "Мені голова", "correct": false}, {"text": "Я маю головний біль", "correct": false}]}, {"question": "Що треба робити щодня, щоб бути здоровим і мати гарне самопочуття?", "options": [{"text": "Займатися спортом і добре харчуватися", "correct": true}, {"text": "Багато спати і нічого не робити", "correct": false}, {"text": "Їсти тільки солодке", "correct": false}, {"text": "Не ходити до лікаря", "correct": false}]}, {"question": "Який лікар лікує зуби і допомагає з проблемами в роті?", "options": [{"text": "Стоматолог", "correct": true}, {"text": "Кардіолог", "correct": false}, {"text": "Окуліст", "correct": false}, {"text": "Терапевт", "correct": false}]}, {"question": "Що означає українське слово \\\\\\"одужати\\\\\\" в контексті здоров'я?", "options": [{"text": "Стати здоровим після хвороби", "correct": true}, {"text": "Захворіти", "correct": false}, {"text": "Піти до лікаря", "correct": false}, {"text": "Купити ліки", "correct": false}]}, {"question": "Де можна купити ліки цілодобово в будь-який час дня і ночі?", "options": [{"text": "У цілодобовій аптеці", "correct": true}, {"text": "У магазині", "correct": false}, {"text": "У школі", "correct": false}, {"text": "У парку", "correct": false}]}, {"question": "Яка важлива частина тіла б'ється в грудях і качає кров?", "options": [{"text": "Серце", "correct": true}, {"text": "Печінка", "correct": false}, {"text": "Легені", "correct": false}, {"text": "Шлунок", "correct": false}]}, {"question": "Що робить лікар, коли слухає пацієнта за допомогою спеціального приладу?", "options": [{"text": "Перевіряє серце і легені", "correct": true}, {"text": "Готує їжу", "correct": false}, {"text": "Співає пісні", "correct": false}, {"text": "Грає на гітарі", "correct": false}]}]`)}
 />
 
 ### Body & Health
 
 <MatchUp
   title="Body & Health"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- голова", "right": "head"}, {"left": "- рука", "right": "hand/arm"}, {"left": "- нога", "right": "leg/foot"}, {"left": "- спина", "right": "back"}, {"left": "- живіт", "right": "stomach"}, {"left": "- серце", "right": "heart"}, {"left": "- зуб", "right": "tooth"}, {"left": "- лікар", "right": "doctor"}, {"left": "- ліки", "right": "medicine"}, {"left": "- аптека", "right": "pharmacy"}, {"left": "- температура", "right": "fever"}, {"left": "- біль", "right": "pain"}]`)}
 />
 
@@ -299,6 +341,7 @@ A unique Soviet legacy is the **Sanatorium**. It is a mix of a hospital and a ho
 
 <Cloze
   title="My Symptoms"
+  isUkrainian={false}
   passage={`У мене болить [___:1]_. (head) У нього висока [___:2]_. Мені треба купити [___:3]_. (medicine)
 
 У неї болить [___:4]_. (tooth) Викличіть [___:5]_! (doctor - Acc) Я п'ю [___:6]_. (pills)
@@ -313,13 +356,15 @@ A unique Soviet legacy is the **Sanatorium**. It is a mix of a hospital and a ho
 
 <TrueFalse
   title="Medical Beliefs"
-  items={JSON.parse(`[{"statement": "Tea with lemon and honey is popular for colds.", "isTrue": true, "explanation": "Traditional remedy."}, {"statement": "You buy bread in \\\"аптека\\\".", "isTrue": false, "explanation": "Pharmacy sells medicine."}, {"statement": "\\\"Швидка\\\" means fast.", "isTrue": true, "explanation": "Ambulance (Fast Help)."}, {"statement": "Truskavets is a ski resort.", "isTrue": false, "explanation": "Mineral water resort. Bukovel is for skiing."}, {"statement": "\\\"Мені погано\\\" means \\\"I feel bad\\\".", "isTrue": true, "explanation": "Yes."}, {"statement": "If your head hurts, you say \\\"Я болю голову\\\".", "isTrue": false, "explanation": "\\\"У мене болить голова\\\"."}, {"statement": "\\\"Одужуйте\\\" is an insult.", "isTrue": false, "explanation": "It's a kind wish (Get well)."}, {"statement": "36.6 is a normal temperature.", "isTrue": true, "explanation": "Celsius standard."}, {"statement": "\\\"Грип\\\" is dangerous.", "isTrue": true, "explanation": "Flu."}, {"statement": "Cats can cure diseases.", "isTrue": false, "explanation": "Myth, but they comfort you!"}, {"statement": "You need a recipe to cook soup, and a \\\"рецепт\\\" to buy strong pills.", "isTrue": true, "explanation": "Word is same (recipe/prescription)."}, {"statement": "\\\"Серце\\\" is on the right side.", "isTrue": false, "explanation": "Left usually."}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Tea with lemon and honey is popular for colds.", "isTrue": true, "explanation": "Traditional remedy."}, {"statement": "You buy bread in \\\\\\"аптека\\\\\\".", "isTrue": false, "explanation": "Pharmacy sells medicine."}, {"statement": "\\\\\\"Швидка\\\\\\" means fast.", "isTrue": true, "explanation": "Ambulance (Fast Help)."}, {"statement": "Truskavets is a ski resort.", "isTrue": false, "explanation": "Mineral water resort. Bukovel is for skiing."}, {"statement": "\\\\\\"Мені погано\\\\\\" means \\\\\\"I feel bad\\\\\\".", "isTrue": true, "explanation": "Yes."}, {"statement": "If your head hurts, you say \\\\\\"Я болю голову\\\\\\".", "isTrue": false, "explanation": "\\\\\\"У мене болить голова\\\\\\"."}, {"statement": "\\\\\\"Одужуйте\\\\\\" is an insult.", "isTrue": false, "explanation": "It's a kind wish (Get well)."}, {"statement": "36.6 is a normal temperature.", "isTrue": true, "explanation": "Celsius standard."}, {"statement": "\\\\\\"Грип\\\\\\" is dangerous.", "isTrue": true, "explanation": "Flu."}, {"statement": "Cats can cure diseases.", "isTrue": false, "explanation": "Myth, but they comfort you!"}, {"statement": "You need a recipe to cook soup, and a \\\\\\"рецепт\\\\\\" to buy strong pills.", "isTrue": true, "explanation": "Word is same (recipe/prescription)."}, {"statement": "\\\\\\"Серце\\\\\\" is on the right side.", "isTrue": false, "explanation": "Left usually."}]`)}
 />
 
 ### Body vs Illness
 
 <GroupSort
   title="Body vs Illness"
+  isUkrainian={false}
   groups={JSON.parse(`{"Groups": ["Body Parts", "Symptoms", "Medicine/Help"], "Items": ["голова: Body Parts", "рука: Body Parts", "нога: Body Parts", "спина: Body Parts", "серце: Body Parts", "температура: Symptoms", "кашель: Symptoms", "біль: Symptoms", "нежить: Symptoms", "таблетка: Medicine/Help", "лікар: Medicine/Help", "аптека: Medicine/Help", "рецепт: Medicine/Help"]}`)}
 />
 
@@ -327,12 +372,13 @@ A unique Soviet legacy is the **Sanatorium**. It is a mix of a hospital and a ho
 
 <Unjumble
   title="Health Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "У / мене / сьогодні / зранку / дуже / сильно / болить / голова", "answer": "У мене сьогодні зранку дуже сильно болить голова"}, {"jumbled": "Будь / ласка / терміново / викличіть / сюди / когось / із / лікарів", "answer": "Будь ласка терміново викличіть сюди когось із лікарів"}, {"jumbled": "Я / хочу / купити / в / аптеці / якісні / та / ефективні / ліки", "answer": "Я хочу купити в аптеці якісні та ефективні ліки"}, {"jumbled": "У / вас / сьогодні / є / висока / температура / чи / ні", "answer": "У вас сьогодні є висока температура чи ні"}, {"jumbled": "Пийте / багато / теплої / води / з / лимоном / щодня", "answer": "Пийте багато теплої води з лимоном щодня"}, {"jumbled": "Де / знаходиться / найближча / цілодобова / аптека / у / цьому / районі", "answer": "Де знаходиться найближча цілодобова аптека у цьому районі"}, {"jumbled": "Мені / терміново / треба / піти / до / хорошого / стоматолога", "answer": "Мені терміново треба піти до хорошого стоматолога"}, {"jumbled": "Як / ви / себе / сьогодні / почуваєте / після / ліків", "answer": "Як ви себе сьогодні почуваєте після ліків"}, {"jumbled": "Активний / спорт / завжди / дуже / корисний / для / вашого / здоров'я", "answer": "Активний спорт завжди дуже корисний для вашого здоров'я"}, {"jumbled": "Я / бажаю / вам / міцного / здоров'я / та / довгого / життя", "answer": "Я бажаю вам міцного здоров'я та довгого життя"}, {"jumbled": "Ця / маленька / біла / таблетка / допомагає / від / голови", "answer": "Ця маленька біла таблетка допомагає від голови"}, {"jumbled": "Скажіть / будь / ласка / ви / вже / повністю / одужали", "answer": "Скажіть будь ласка ви вже повністю одужали"}]`)}
 />
 
 ### Grammar Clinic
 
-<ErrorCorrection title="Grammar Clinic">
+<ErrorCorrection title="Grammar Clinic" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Я болю голову.`}
     errorWord={`Я болю голову`}
@@ -423,6 +469,7 @@ A unique Soviet legacy is the **Sanatorium**. It is a mix of a hospital and a ho
 
 <Cloze
   title="Call the Doctor"
+  isUkrainian={false}
   passage={`— Алло, це [___:1]? Так, оператор слухає. Що сталося?
 — Моєму чоловіку [___:2]. У нього сильний [___:3] в грудях і важко дихати.
 — Яка у нього [___:4]? Нормальна.
@@ -437,7 +484,7 @@ A unique Soviet legacy is the **Sanatorium**. It is a mix of a hospital and a ho
 
 ### Body Parts
 
-<MarkTheWords>
+<MarkTheWords isUkrainian={false}>
   <MarkTheWordsActivity
     instruction={`Mark the correct words.`}
     text={`У людини є одна голова, дві руки і дві ноги. На обличчі є очі, ніс і рот. У роті є зуби. У грудях б'ється серце. Коли ми їмо, працює шлунок. Якщо ми носимо важке, болить спина.`}
@@ -449,6 +496,7 @@ A unique Soviet legacy is the **Sanatorium**. It is a mix of a hospital and a ho
 
 <Select
   title="Medical Choice"
+  isUkrainian={false}
   questions={JSON.parse(`[{"question": "Headache.", "options": [{"text": "Головний біль.", "correct": true}, {"text": "Головний убір.", "correct": false}]}, {"question": "Pharmacy.", "options": [{"text": "Аптека.", "correct": true}, {"text": "Оптика.", "correct": false}]}, {"question": "Doctor.", "options": [{"text": "Лікар.", "correct": true}, {"text": "Лікеро.", "correct": false}]}, {"question": "To recover.", "options": [{"text": "Одужувати.", "correct": true}, {"text": "Вмирати.", "correct": false}]}, {"question": "Cold (illness).", "options": [{"text": "Застуда.", "correct": true}, {"text": "Посуда.", "correct": false}]}, {"question": "Pill.", "options": [{"text": "Таблетка.", "correct": true}, {"text": "Серветка.", "correct": false}]}, {"question": "Eye.", "options": [{"text": "Око.", "correct": true}, {"text": "Вікно.", "correct": false}]}, {"question": "Heart.", "options": [{"text": "Серце.", "correct": true}, {"text": "Сонце.", "correct": false}]}, {"question": "Pain.", "options": [{"text": "Біль.", "correct": true}, {"text": "Біл.", "correct": false}]}, {"question": "Fever/Temp.", "options": [{"text": "Температура.", "correct": true}, {"text": "Література.", "correct": false}]}, {"question": "Ambulance.", "options": [{"text": "Швидка.", "correct": true}, {"text": "Повільна.", "correct": false}]}, {"question": "To cough.", "options": [{"text": "Кашляти.", "correct": true}, {"text": "Коштувати.", "correct": false}]}]`)}
 />
 
@@ -513,44 +561,6 @@ A unique Soviet legacy is the **Sanatorium**. It is a mix of a hospital and a ho
 | чхати | /ˈt͡ʃxɑte/ | to sneeze | verb |  |  |
 | шлунок | /ˈʃlunok/ | stomach | noun | ч |  |
 | імунітет | /imuniˈtɛt/ | immunity | noun | ч |  |
-
-## 📋 Summary
-
-You learned to:
-- Be anatomy savvy: **голова**, **рука**, **спина**, **серце**
-- Describe pain: **болить**, **температура**, **нежить**, **кашель**
-- Navigate medical help: **лікар**, **аптека**, **ліки**, **таблетка**
-- Wish health: **Одужуйте!** (Get well soon), **Будьте здорові!**
-
-Take care and stay healthy!
-
-> 💡 **Здоров'я — багатство**
->
-> «Здоровий дух у здоровому тілі!» (Доглядайте за собою!)
->
-> *Translation: "A healthy mind in a healthy body!"*
-
-> 🇺🇦 **Здоров'я в Україні**
->
-> Корисні фрази для поліклініки:
-> - «Як ви себе почуваєте?» — How are you feeling?
-> - «У мене болить голова» — I have a headache
-> - «Мені потрібні ліки» — I need medicine
-> - «Де тут аптека?» — Where is the pharmacy here?
->
-> Українці кажуть: «Здоров'я — найбільше багатство!»
-
-> 🏥 **Медицина в Україні**
->
-> Українська медична система включає поліклініки, лікарні та аптеки. Лікарі допомагають пацієнтам одужати. Медсестри роблять уколи та дають ліки. Аптека працює щодня, часто цілодобово.
->
-> Частини тіла українською:
-> - **голова** — head (болить голова — headache)
-> - **горло** — throat (болить горло — sore throat)
-> - **живіт** — stomach (болить живіт — stomachache)
-> - **спина** — back (болить спина — backache)
->
-> Бережіть своє здоров'я! Здорове харчування, спорт і достатній сон — запорука довгого життя!
 
 > [!resources] 🔗 External Resources
 >

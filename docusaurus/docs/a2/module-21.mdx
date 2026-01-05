@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Warm-up
@@ -307,6 +309,38 @@ Practice by counting objects around you. The more you practice, the more automat
 
 ---
 
+## 📋 Summary Table
+
+Today you learned numeral-noun agreement:
+
+| Zone | Numbers | Noun Form |
+|------|---------|-----------|
+| 1 | 1, 21, 31... | Nominative Singular |
+| 2 | 2-4, 22-24, 32-34... | Genitive Singular |
+| 3 | 5-20, 25-30... | Genitive Plural |
+
+**Ключові правила | Key Rules:**
+- "Two" has gender: **два** for masculine/neuter, **дві** for feminine.
+- Look at the last digit for compound numbers.
+- 11-19 always use Zone 3 (Genitive Plural).
+
+---
+
+> 💡 **Українське прислів'я**
+>
+> «Один за всіх, і всі за одного!» (Один — називний однини, всі — множина.)
+>
+> *Translation: "One for all, and all for one!"*
+
+> 🇺🇦 **Числівники змінюють все!**
+>
+> Запам'ятайте правила:
+> - **1**: один студент, одна книга, одне вікно
+> - **2, 3, 4**: два студенти, три книги, чотири вікна
+> - **5-20**: п'ять студентів, десять книг, двадцять вікон
+>
+> Ці правила здаються складними, але вони логічні! Практикуйте з реальними предметами навколо вас.
+
 
 
 ## 🎯 Activities
@@ -315,6 +349,7 @@ Practice by counting objects around you. The more you practice, the more automat
 
 <MatchUp
   title="Zone Identification"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- одна книга", "right": "Zone 1 (Nominative Singular)"}, {"left": "- три книги", "right": "Zone 2 (Genitive Singular)"}, {"left": "- сім книг", "right": "Zone 3 (Genitive Plural)"}, {"left": "- одинадцять книг", "right": "Zone 3 (Genitive Plural)"}, {"left": "- двадцять одна книга", "right": "Zone 1 (Nominative Singular)"}, {"left": "- двадцять чотири книги", "right": "Zone 2 (Genitive Singular)"}, {"left": "- тридцять книг", "right": "Zone 3 (Genitive Plural)"}, {"left": "- тридцять три книги", "right": "Zone 2 (Genitive Singular)"}]`)}
 />
 
@@ -322,6 +357,7 @@ Practice by counting objects around you. The more you practice, the more automat
 
 <FillIn
   title="Complete the Phrase"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "один [___]", "answer": "студент", "options": ["студент", "студенти", "студентів"]}, {"sentence": "два [___]", "answer": "студенти", "options": ["студенти", "студент", "студентів"]}, {"sentence": "п'ять [___]", "answer": "студентів", "options": ["студентів", "студенти", "студент"]}, {"sentence": "одна [___]", "answer": "книга", "options": ["книга", "книги", "книг"]}, {"sentence": "три [___]", "answer": "книги", "options": ["книги", "книга", "книг"]}, {"sentence": "десять [___]", "answer": "книг", "options": ["книг", "книги", "книга"]}, {"sentence": "Два ___ (2 + nominative singular)", "answer": "столи", "options": ["столи", "стола", "столів"]}, {"sentence": "П'ять ___ (5 + genitive plural)", "answer": "столів", "options": ["столів", "столи", "стола"]}, {"sentence": "дві [___]", "answer": "вікна", "options": ["вікна", "вікно", "вікон"]}, {"sentence": "шість [___]", "answer": "вікон", "options": ["вікон", "вікна", "вікно"]}]`)}
 />
 
@@ -329,13 +365,15 @@ Practice by counting objects around you. The more you practice, the more automat
 
 <Quiz
   title="Agreement Rules"
-  questions={JSON.parse(`[{"question": "Which grammatical case is used for a noun that immediately follows the numeral \\\"один\\\" (one)?", "options": [{"text": "Nominative Singular (Називний однини)", "correct": true}, {"text": "Genitive Singular (Родовий однини)", "correct": false}, {"text": "Genitive Plural (Родовий множини)", "correct": false}, {"text": "Instrumental Singular (Орудний однини)", "correct": false}]}, {"question": "What is the correct grammatical form of the noun when it follows the numerals 2, 3, or 4?", "options": [{"text": "Nominative Singular (Називний однини)", "correct": false}, {"text": "Genitive Singular (Родовий однини)", "correct": true}, {"text": "Genitive Plural (Родовий множини)", "correct": false}, {"text": "Nominative Plural (Називний множини)", "correct": false}]}, {"question": "Which grammatical case must follow the numerals from 5 through 20 in a standard Ukrainian sentence?", "options": [{"text": "Nominative Singular (Називний однини)", "correct": false}, {"text": "Genitive Singular (Родовий однини)", "correct": false}, {"text": "Genitive Plural (Родовий множини)", "correct": true}, {"text": "Accusative Plural (Знахідний множини)", "correct": false}]}, {"question": "In which of the following situations should you use the specific feminine form of the number \\\"two\\\" (дві)?", "options": [{"text": "When counting feminine nouns like \\\"книга\\\" or \\\"студентка\\\"", "correct": true}, {"text": "When counting masculine nouns like \\\"студент\\\" or \\\"стіл\\\"", "correct": false}, {"text": "When counting neuter nouns like \\\"вікно\\\" or \\\"яблуко\\\"", "correct": false}, {"text": "In all counting situations regardless of the noun's gender", "correct": false}]}, {"question": "Which Zone rules apply to the compound number \\\"двадцять один\\\" (21) when determining noun agreement?", "options": [{"text": "Zone 1 (Agreement based on the last digit 1)", "correct": true}, {"text": "Zone 2 (Agreement based on the total value)", "correct": false}, {"text": "Zone 3 (Agreement based on the first word)", "correct": false}, {"text": "Special exceptions for all compound numbers", "correct": false}]}, {"question": "Why does the number \\\"п'ятнадцять\\\" (15) always require the Genitive Plural form of the following noun?", "options": [{"text": "Because it is a prime number in the Ukrainian system", "correct": false}, {"text": "Because all numbers ending in 5 require this form", "correct": false}, {"text": "Because all numbers from 11 to 19 follow Zone 3 rules", "correct": true}, {"text": "Because it is a compound historical exception", "correct": false}]}, {"question": "How would you correctly classify the phrase \\\"чотири книги\\\" within the Ukrainian grammatical zone system?", "options": [{"text": "Zone 1: Nominative Singular", "correct": false}, {"text": "Zone 2: Genitive Singular", "correct": true}, {"text": "Zone 3: Genitive Plural", "correct": false}, {"text": "Zone 4: Dative Singular", "correct": false}]}, {"question": "Which of the following lists correctly identifies the genders that use the numeral form \\\"два\\\" (two)?", "options": [{"text": "Masculine and Neuter genders only", "correct": true}, {"text": "Feminine and Neuter genders only", "correct": false}, {"text": "Feminine nouns exclusively", "correct": false}, {"text": "All three genders use the same form", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Which grammatical case is used for a noun that immediately follows the numeral \\\\\\"один\\\\\\" (one)?", "options": [{"text": "Nominative Singular (Називний однини)", "correct": true}, {"text": "Genitive Singular (Родовий однини)", "correct": false}, {"text": "Genitive Plural (Родовий множини)", "correct": false}, {"text": "Instrumental Singular (Орудний однини)", "correct": false}]}, {"question": "What is the correct grammatical form of the noun when it follows the numerals 2, 3, or 4?", "options": [{"text": "Nominative Singular (Називний однини)", "correct": false}, {"text": "Genitive Singular (Родовий однини)", "correct": true}, {"text": "Genitive Plural (Родовий множини)", "correct": false}, {"text": "Nominative Plural (Називний множини)", "correct": false}]}, {"question": "Which grammatical case must follow the numerals from 5 through 20 in a standard Ukrainian sentence?", "options": [{"text": "Nominative Singular (Називний однини)", "correct": false}, {"text": "Genitive Singular (Родовий однини)", "correct": false}, {"text": "Genitive Plural (Родовий множини)", "correct": true}, {"text": "Accusative Plural (Знахідний множини)", "correct": false}]}, {"question": "In which of the following situations should you use the specific feminine form of the number \\\\\\"two\\\\\\" (дві)?", "options": [{"text": "When counting feminine nouns like \\\\\\"книга\\\\\\" or \\\\\\"студентка\\\\\\"", "correct": true}, {"text": "When counting masculine nouns like \\\\\\"студент\\\\\\" or \\\\\\"стіл\\\\\\"", "correct": false}, {"text": "When counting neuter nouns like \\\\\\"вікно\\\\\\" or \\\\\\"яблуко\\\\\\"", "correct": false}, {"text": "In all counting situations regardless of the noun's gender", "correct": false}]}, {"question": "Which Zone rules apply to the compound number \\\\\\"двадцять один\\\\\\" (21) when determining noun agreement?", "options": [{"text": "Zone 1 (Agreement based on the last digit 1)", "correct": true}, {"text": "Zone 2 (Agreement based on the total value)", "correct": false}, {"text": "Zone 3 (Agreement based on the first word)", "correct": false}, {"text": "Special exceptions for all compound numbers", "correct": false}]}, {"question": "Why does the number \\\\\\"п'ятнадцять\\\\\\" (15) always require the Genitive Plural form of the following noun?", "options": [{"text": "Because it is a prime number in the Ukrainian system", "correct": false}, {"text": "Because all numbers ending in 5 require this form", "correct": false}, {"text": "Because all numbers from 11 to 19 follow Zone 3 rules", "correct": true}, {"text": "Because it is a compound historical exception", "correct": false}]}, {"question": "How would you correctly classify the phrase \\\\\\"чотири книги\\\\\\" within the Ukrainian grammatical zone system?", "options": [{"text": "Zone 1: Nominative Singular", "correct": false}, {"text": "Zone 2: Genitive Singular", "correct": true}, {"text": "Zone 3: Genitive Plural", "correct": false}, {"text": "Zone 4: Dative Singular", "correct": false}]}, {"question": "Which of the following lists correctly identifies the genders that use the numeral form \\\\\\"два\\\\\\" (two)?", "options": [{"text": "Masculine and Neuter genders only", "correct": true}, {"text": "Feminine and Neuter genders only", "correct": false}, {"text": "Feminine nouns exclusively", "correct": false}, {"text": "All three genders use the same form", "correct": false}]}]`)}
 />
 
 ### Shopping at the Market
 
 <Cloze
   title="Shopping at the Market"
+  isUkrainian={false}
   passage={`— Дайте, будь ласка, один [___:1] яблук.
 — Ось, візьміть. Що ще бажаєте купити?
 — Будь ласка, два [___:2] картоплі і три [___:3] цибулі.
@@ -352,12 +390,13 @@ Practice by counting objects around you. The more you practice, the more automat
 
 <Unjumble
   title="Counting Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "сьогодні / я / маю / тільки / одну / дуже / цікаву / нову / книгу", "answer": "Сьогодні я маю тільки одну дуже цікаву нову книгу"}, {"jumbled": "у / нашому / великому / класі / зараз / є / два / нові / іноземні / студенти", "answer": "У нашому великому класі зараз є два нові іноземні студенти"}, {"jumbled": "він / вже / прочитав / п'ять / великих / та / дуже / цікавих / детективних / книг", "answer": "Він вже прочитав п'ять великих та дуже цікавих детективних книг"}, {"jumbled": "у / цій / маленькій / затишній / кімнаті / є / три / старі / дерев'яні / вікна", "answer": "У цій маленькій затишній кімнаті є три старі дерев'яні вікна"}, {"jumbled": "цей / новий / чорний / телефон / зараз / коштує / рівно / сто / двадцять / гривень", "answer": "Цей новий чорний телефон зараз коштує сто двадцять гривень"}, {"jumbled": "вона / купила / на / ринку / чотири / великі / та / дуже / солодкі / яблука", "answer": "Вона купила на ринку чотири великі та дуже солодкі яблука"}, {"jumbled": "мені / сьогодні / виповнилося / рівно / двадцять / один / довгий / та / щасливий / рік", "answer": "Мені сьогодні виповнилося рівно двадцять один довгий рік"}, {"jumbled": "у / нашій / новій / групі / зараз / є / рівно / двадцять / три / активні / студенти", "answer": "У нашій новій групі зараз є двадцять три активні студенти"}, {"jumbled": "ми / маємо / купити / шість / великих / помідорів / та / сім / зелених / огірків", "answer": "Ми маємо купити шість великих помідорів та сім зелених огірків"}, {"jumbled": "на / полиці / стоїть / десять / старих / книг / та / двадцять / один / новий / журнал", "answer": "На полиці стоїть десять старих книг та двадцять один новий журнал"}, {"jumbled": "завтра / Петро / хоче / купити / чотири / нові / комікси / та / п'ять / романів", "answer": "Завтра Петро хоче купити чотири нові комікси та п'ять романів"}, {"jumbled": "у / цьому / великому / будинку / є / рівно / тридцять / два / широкі / вікна", "answer": "У цьому великому будинку є тридцять два широкі вікна"}]`)}
 />
 
 ### Wrong Agreement
 
-<ErrorCorrection title="Wrong Agreement">
+<ErrorCorrection title="Wrong Agreement" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Я маю **п'ять книги**.`}
     errorWord={`книги`}
@@ -406,6 +445,7 @@ Practice by counting objects around you. The more you practice, the more automat
 
 <GroupSort
   title="Zone Classification"
+  isUkrainian={false}
   groups={JSON.parse(`{"Zone 1 (Nominative Singular)": ["двадцять один", "одна диня", "п'ятдесят один", "сто один"], "Zone 2 (Genitive Singular)": ["три книги", "два студенти", "чотири вікна", "двадцять дві", "тридцять чотири"], "Zone 3 (Genitive Plural)": ["п'ять книг", "одинадцять років", "п'ятнадцять", "двадцять", "сто гривень"]}`)}
 />
 
@@ -413,6 +453,7 @@ Practice by counting objects around you. The more you practice, the more automat
 
 <MatchUp
   title="Noun Forms"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- один студент", "right": "Nominative Singular"}, {"left": "- два студенти", "right": "Genitive Singular"}, {"left": "- п'ять студентів", "right": "Genitive Plural"}, {"left": "- одна книга", "right": "Nominative Singular"}, {"left": "- три книги", "right": "Genitive Singular"}, {"left": "- десять книг", "right": "Genitive Plural"}, {"left": "- двадцять один рік", "right": "Nominative Singular"}, {"left": "- двадцять два роки", "right": "Genitive Singular"}]`)}
 />
 
@@ -420,6 +461,7 @@ Practice by counting objects around you. The more you practice, the more automat
 
 <Cloze
   title="The Modern Bookstore"
+  isUkrainian={false}
   passage={`Петро зайшов у книгарню. Сьогодні він хоче купити багато подарунків. Для мами він вибрав одну [___:1] про сад. Для батька він знайшов дві цікаві [___:2] про історію Києва. Його сестра любить романи, тому він купив три [___:3]. Молодший брат просив чотири нові [___:4]. А собі Петро вибрав п'ять [___:5]. Коли він підійшов до каси, продавець сказав: \"Ви берете багато речей! У вас одинадцять [___:6] і шість [___:7]. Всього у вас є сімнадцять [___:8]. Це коштує дев'ятсот [___:9]. Ви маєте десять [___:10] гривень знижки?\" Петро відповів: \"Ні, але я маю двадцять [___:11] одну гривню в гаманці і одну сто [___:12] гривень\".`}
   blanks={JSON.parse(`[{"index": 0, "answer": "книгу", "options": ["книгу", "книга → книгу", "книги"]}, {"index": 1, "answer": "книги", "options": ["книги", "книга → книги", "книг"]}, {"index": 2, "answer": "романи", "options": ["романи", "роман → романи", "романів"]}, {"index": 3, "answer": "комікси", "options": ["комікси", "комікс → комікси", "коміксів"]}, {"index": 4, "answer": "детективів", "options": ["детективів", "детектив → детективів", "детективи"]}, {"index": 5, "answer": "журналів", "options": ["журналів", "журнал → журналів", "журнали"]}, {"index": 6, "answer": "газет", "options": ["газет", "газета → газет", "газети"]}, {"index": 7, "answer": "подарунків", "options": ["подарунків", "подарунок → подарунків", "подарунки"]}, {"index": 8, "answer": "гривень", "options": ["гривень", "гривня → гривень", "гривні"]}, {"index": 9, "answer": "відсотків", "options": ["відсотків", "відсоток → відсотків", "відсотки"]}, {"index": 10, "answer": "одна", "options": ["одна", "одна гривня → одна", "одну"]}, {"index": 11, "answer": "купюру", "options": ["купюру", "купюра → купюру", "купюри"]}]`)}
 />
@@ -428,6 +470,7 @@ Practice by counting objects around you. The more you practice, the more automat
 
 <Cloze
   title="Age Expressions"
+  isUkrainian={false}
   passage={`Мені зараз двадцять один [___:1]. Моєму братові виповнилося двадцять два [___:2]. Нашій сестрі вже двадцять п'ять [___:3]. Моїй мамі скоро буде п'ятдесят один [___:4]. А татові вже п'ятдесят чотири [___:5]. Ми знаємо одну дитину, якій тільки один [___:6]. Її друзям по три [___:7]. У школі вчаться діти, яким по десять [___:8]. Директору школи шістдесят один [___:9]. Його колезі шістдесят три [___:10]. Вони працюють разом уже тридцять [___:11] років. А університет вони закінчили сорок один [___:12] тому.
 ---`}
   blanks={JSON.parse(`[{"index": 0, "answer": "рік", "options": ["рік", "рік → рік", "роки"]}, {"index": 1, "answer": "роки", "options": ["роки", "рік → роки", "років"]}, {"index": 2, "answer": "років", "options": ["років", "рік → років", "роки"]}, {"index": 3, "answer": "рік", "options": ["рік", "рік → рік", "років"]}, {"index": 4, "answer": "роки", "options": ["роки", "рік → роки", "років"]}, {"index": 5, "answer": "рік", "options": ["рік", "рік → рік", "років"]}, {"index": 6, "answer": "роки", "options": ["роки", "рік → роки", "років"]}, {"index": 7, "answer": "років", "options": ["років", "рік → років", "роки"]}, {"index": 8, "answer": "рік", "options": ["рік", "рік → рік", "роки"]}, {"index": 9, "answer": "роки", "options": ["роки", "рік → роки", "років"]}, {"index": 10, "answer": "тридцять", "options": ["тридцять", "число → тридцять", "тридцяти"]}, {"index": 11, "answer": "рік", "options": ["рік", "рік → рік", "років"]}]`)}
@@ -458,38 +501,6 @@ Practice by counting objects around you. The more you practice, the more automat
 | цінність | ˈt͡sʲinʲːisʲtʲ | value | noun | ж |  |
 | числівник | t͡ʃɪsˈlʲiʋnɪk | numeral | noun | ч |  |
 | якийсь | jɐˈkɪjsʲ | some; a certain | other |  |  |
-
-## 📋 Summary Table
-
-Today you learned numeral-noun agreement:
-
-| Zone | Numbers | Noun Form |
-|------|---------|-----------|
-| 1 | 1, 21, 31... | Nominative Singular |
-| 2 | 2-4, 22-24, 32-34... | Genitive Singular |
-| 3 | 5-20, 25-30... | Genitive Plural |
-
-**Ключові правила | Key Rules:**
-- "Two" has gender: **два** for masculine/neuter, **дві** for feminine.
-- Look at the last digit for compound numbers.
-- 11-19 always use Zone 3 (Genitive Plural).
-
----
-
-> 💡 **Українське прислів'я**
->
-> «Один за всіх, і всі за одного!» (Один — називний однини, всі — множина.)
->
-> *Translation: "One for all, and all for one!"*
-
-> 🇺🇦 **Числівники змінюють все!**
->
-> Запам'ятайте правила:
-> - **1**: один студент, одна книга, одне вікно
-> - **2, 3, 4**: два студенти, три книги, чотири вікна
-> - **5-20**: п'ять студентів, десять книг, двадцять вікон
->
-> Ці правила здаються складними, але вони логічні! Практикуйте з реальними предметами навколо вас.
 
 > [!resources] 🔗 External Resources
 >

@@ -134,27 +134,85 @@ interface FillInItem {
 }
 
 interface FillInProps {
-  items?: FillInItem[];
-  children?: React.ReactNode;
+  items: FillInItem[];
+  isUkrainian?: boolean;
 }
 
-export default function FillIn({ items, children }: FillInProps) {
+export default function FillIn({ items, isUkrainian }: FillInProps) {
+  const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [showResults, setShowResults] = useState(false);
+
+  const handleSelect = (index: number, value: string) => {
+    setAnswers({ ...answers, [index]: value });
+  };
+
+  const allAnswered = Object.keys(answers).length === items.length;
+  const headerLabel = isUkrainian ? 'Заповніть пропуски' : 'Fill in the Blank';
+  const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answers';
+  const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
+
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
-        <span className={styles.activityIcon}>✏️</span>
-        <span>Fill in the Blank</span>
-        <ActivityHelp activityType="fill-in" />
+        <span className={styles.activityIcon}>✍️</span>
+        <span>{headerLabel}</span>
+        <ActivityHelp activityType="fill-in" isUkrainian={isUkrainian} />
       </div>
       <div className={styles.activityContent}>
-        {items ? items.map((item, index) => (
-          <FillInQuestion
-            key={index}
-            sentence={item.sentence}
-            answer={item.answer}
-            options={item.options}
-          />
-        )) : children}
+        {items.map((item, index) => {
+          const parts = item.sentence.split('___');
+          const isCorrect = answers[index] === item.answer;
+
+          return (
+            <div key={index} className={styles.fillInRow}>
+              <span className={styles.fillInText}>
+                {parseMarkdown(parts[0])}
+                <select
+                  className={`${styles.fillInSelect} ${showResults ? (isCorrect ? styles.correct : styles.incorrect) : ''
+                    }`}
+                  value={answers[index] || ''}
+                  onChange={(e) => handleSelect(index, e.target.value)}
+                  disabled={showResults}
+                >
+                  <option value=""></option>
+                  {shuffle(item.options).map((opt, i) => (
+                    <option key={i} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+                {parseMarkdown(parts[1])}
+              </span>
+              {showResults && !isCorrect && (
+                <span className={styles.correctHint}>
+                  {isUkrainian ? 'Правильно:' : 'Correct:'} {item.answer}
+                </span>
+              )}
+            </div>
+          );
+        })}
+
+        <div className={styles.controls}>
+          {!showResults ? (
+            <button
+              className={styles.checkButton}
+              onClick={() => setShowResults(true)}
+              disabled={!allAnswered}
+            >
+              {checkBtnLabel}
+            </button>
+          ) : (
+            <button
+              className={styles.retryButton}
+              onClick={() => {
+                setShowResults(false);
+                setAnswers({});
+              }}
+            >
+              {retryBtnLabel}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

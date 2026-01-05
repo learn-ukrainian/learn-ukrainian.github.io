@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 ## Warm-up
 
@@ -181,6 +183,50 @@ Now try these more challenging examples. Think about WHY each aspect is used:
 
 ---
 
+## 📋 Summary
+
+## What You Learned
+
+In this module, you learned about verbal aspect — one of the most important features of Ukrainian grammar. This concept distinguishes Slavic languages from most other language families and is essential for natural-sounding Ukrainian speech.
+
+**Understanding Aspect:**
+Verbal aspect is about HOW you conceptualize an action, not WHEN it happened. The same event can be described with either aspect depending on what you want to emphasize. Consider the difference between "I wrote a letter" (completed, result-focused) and "I was writing a letter for two hours" (process-focused, duration-emphasized).
+
+**Key Points:**
+- Ukrainian verbs come in pairs: imperfective and perfective
+- **Imperfective** (недоконаний вид) = process, repetition, duration, ongoing states
+- **Perfective** (доконаний вид) = completion, result, single completed events, beginning or end of action
+- Most perfective verbs are formed by adding prefixes (про-, на-, з-, по-, ви-)
+- Some pairs use different roots entirely (говорити/сказати, брати/взяти) — these are called suppletive pairs
+
+**Common Aspect-Triggering Contexts:**
+- Questions about activities: "Що ти робив?" (imperfective — asking about process)
+- Questions about completion: "Ти зробив?" (perfective — asking about result)
+- Duration markers (три години, довго, весь день) → usually imperfective
+- Completion markers (вже, нарешті, раптом) → usually perfective
+
+**The Golden Rule:** Ask yourself — "Do I care about the process or the result?"
+- Process → Imperfective
+- Result → Perfective
+
+> 🌍 **Культурний контекст**
+>
+> Аспект — це не просто граматика, це спосіб мислення! Українці бачать дії як процеси або результати. Коли ви вибираєте аспект, ви думаєте як носій мови.
+>
+> *Translation: Aspect is not just grammar, it's a way of thinking! Ukrainians see actions as processes or results. When you choose aspect, you think like a native speaker.*
+
+> 💡 **Українське прислів'я**
+>
+> «Говорити — не робити.» (Говорити — недоконаний, робити — недоконаний: обидва показують процес, не результат!)
+>
+> *Translation: "Talking is not doing." (Both verbs are imperfective — process, not result!)*
+
+Тепер ви розумієте основи аспекту! Продовжуйте практикувати — це найважливіша граматична тема для природного мовлення українською. Пам'ятайте: кожен день ви **читаєте** (процес), і колись ви **прочитаєте** всю книгу (результат)! 📚
+
+## Need More Practice?
+
+---
+
 
 
 ## 🎯 Activities
@@ -189,6 +235,7 @@ Now try these more challenging examples. Think about WHY each aspect is used:
 
 <MatchUp
   title="Aspect Pairs"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- читати", "right": "прочитати"}, {"left": "- писати", "right": "написати"}, {"left": "- робити", "right": "зробити"}, {"left": "- бачити", "right": "побачити"}, {"left": "- чути", "right": "почути"}, {"left": "- говорити", "right": "сказати"}, {"left": "- брати", "right": "взяти"}, {"left": "- давати", "right": "дати"}, {"left": "- їсти", "right": "з'їсти"}, {"left": "- пити", "right": "випити"}, {"left": "- вчити", "right": "вивчити"}, {"left": "- купувати", "right": "купити"}]`)}
 />
 
@@ -196,6 +243,7 @@ Now try these more challenging examples. Think about WHY each aspect is used:
 
 <Cloze
   title="Choose the Correct Aspect"
+  isUkrainian={false}
   passage={`Я [___:1] книгу дві години. (читав | прочитав) Вона [___:2] листа вчора. (писала | написала) Він [___:3] картину. (малював | намалював) — it's finished and hanging on the wall
 
 Ми [___:4] щодня. (читаємо | прочитаємо) Вона завжди [___:5] правду. (говорить | скаже) Я вже [___:6] цю книгу. (читав | прочитав)
@@ -210,20 +258,23 @@ Now try these more challenging examples. Think about WHY each aspect is used:
 
 <Quiz
   title="Process or Result?"
-  questions={JSON.parse(`[{"question": "When you say \\\"Я читав книгу цілий вечір,\\\" which aspectual focus are you emphasizing?", "options": [{"text": "Process", "correct": true}, {"text": "Result", "correct": false}, {"text": "Future intent", "correct": false}, {"text": "Single event", "correct": false}]}, {"question": "When a speaker says \\\"Я прочитав книгу,\\\" what is the primary focus of the action?", "options": [{"text": "Result", "correct": true}, {"text": "Process", "correct": false}, {"text": "Habitual action", "correct": false}, {"text": "Ongoing duration", "correct": false}]}, {"question": "In the sentence \\\"Вона завжди говорить правду,\\\" what kind of action is being described?", "options": [{"text": "Habitual action", "correct": true}, {"text": "Single event", "correct": false}, {"text": "Future promise", "correct": false}, {"text": "Completed result", "correct": false}]}, {"question": "When someone says \\\"Він сказав 'так',\\\" what characterizes the nature of this specific action?", "options": [{"text": "Single completed event", "correct": true}, {"text": "Ongoing process", "correct": false}, {"text": "Repeated habit", "correct": false}, {"text": "Long duration", "correct": false}]}, {"question": "Which of these options correctly identifies the perfective aspect of the verb \\\"читати\\\"?", "options": [{"text": "прочитати", "correct": true}, {"text": "читати", "correct": false}, {"text": "читавати", "correct": false}, {"text": "зачитати", "correct": false}]}, {"question": "Which of these options correctly identifies the imperfective aspect of the verb \\\"написати\\\"?", "options": [{"text": "писати", "correct": true}, {"text": "написати", "correct": false}, {"text": "пописати", "correct": false}, {"text": "дописати", "correct": false}]}, {"question": "When you say \\\"Я писав три години,\\\" which aspectual meaning are you emphasizing here?", "options": [{"text": "Duration", "correct": true}, {"text": "Completion", "correct": false}, {"text": "Future goal", "correct": false}, {"text": "Single result", "correct": false}]}, {"question": "When you say \\\"Я написав листа,\\\" what is the main point you are communicating?", "options": [{"text": "Completion", "correct": true}, {"text": "Duration", "correct": false}, {"text": "Habitual writing", "correct": false}, {"text": "Future intent", "correct": false}]}, {"question": "What term describes the relationship between the Ukrainian verb pairs \\\"говорити\\\" and \\\"сказати\\\"?", "options": [{"text": "Suppletive pairs", "correct": true}, {"text": "Prefixed pairs", "correct": false}, {"text": "Identical roots", "correct": false}, {"text": "Soft endings", "correct": false}]}, {"question": "Which specific prefix is commonly used to make the verb \\\"читати\\\" into its perfective form?", "options": [{"text": "про-", "correct": true}, {"text": "на-", "correct": false}, {"text": "з-", "correct": false}, {"text": "по-", "correct": false}]}, {"question": "Which specific prefix is commonly used to make the verb \\\"писати\\\" into its perfective form?", "options": [{"text": "на-", "correct": true}, {"text": "про-", "correct": false}, {"text": "по-", "correct": false}, {"text": "ви-", "correct": false}]}, {"question": "In Ukrainian grammar, the concept of verbal aspect is primarily concerned with emphasizing what?", "options": [{"text": "Process vs. result", "correct": true}, {"text": "Past vs. future", "correct": false}, {"text": "First vs. third person", "correct": false}, {"text": "Singular vs. plural", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "When you say \\\\\\"Я читав книгу цілий вечір,\\\\\\" which aspectual focus are you emphasizing?", "options": [{"text": "Process", "correct": true}, {"text": "Result", "correct": false}, {"text": "Future intent", "correct": false}, {"text": "Single event", "correct": false}]}, {"question": "When a speaker says \\\\\\"Я прочитав книгу,\\\\\\" what is the primary focus of the action?", "options": [{"text": "Result", "correct": true}, {"text": "Process", "correct": false}, {"text": "Habitual action", "correct": false}, {"text": "Ongoing duration", "correct": false}]}, {"question": "In the sentence \\\\\\"Вона завжди говорить правду,\\\\\\" what kind of action is being described?", "options": [{"text": "Habitual action", "correct": true}, {"text": "Single event", "correct": false}, {"text": "Future promise", "correct": false}, {"text": "Completed result", "correct": false}]}, {"question": "When someone says \\\\\\"Він сказав 'так',\\\\\\" what characterizes the nature of this specific action?", "options": [{"text": "Single completed event", "correct": true}, {"text": "Ongoing process", "correct": false}, {"text": "Repeated habit", "correct": false}, {"text": "Long duration", "correct": false}]}, {"question": "Which of these options correctly identifies the perfective aspect of the verb \\\\\\"читати\\\\\\"?", "options": [{"text": "прочитати", "correct": true}, {"text": "читати", "correct": false}, {"text": "читавати", "correct": false}, {"text": "зачитати", "correct": false}]}, {"question": "Which of these options correctly identifies the imperfective aspect of the verb \\\\\\"написати\\\\\\"?", "options": [{"text": "писати", "correct": true}, {"text": "написати", "correct": false}, {"text": "пописати", "correct": false}, {"text": "дописати", "correct": false}]}, {"question": "When you say \\\\\\"Я писав три години,\\\\\\" which aspectual meaning are you emphasizing here?", "options": [{"text": "Duration", "correct": true}, {"text": "Completion", "correct": false}, {"text": "Future goal", "correct": false}, {"text": "Single result", "correct": false}]}, {"question": "When you say \\\\\\"Я написав листа,\\\\\\" what is the main point you are communicating?", "options": [{"text": "Completion", "correct": true}, {"text": "Duration", "correct": false}, {"text": "Habitual writing", "correct": false}, {"text": "Future intent", "correct": false}]}, {"question": "What term describes the relationship between the Ukrainian verb pairs \\\\\\"говорити\\\\\\" and \\\\\\"сказати\\\\\\"?", "options": [{"text": "Suppletive pairs", "correct": true}, {"text": "Prefixed pairs", "correct": false}, {"text": "Identical roots", "correct": false}, {"text": "Soft endings", "correct": false}]}, {"question": "Which specific prefix is commonly used to make the verb \\\\\\"читати\\\\\\" into its perfective form?", "options": [{"text": "про-", "correct": true}, {"text": "на-", "correct": false}, {"text": "з-", "correct": false}, {"text": "по-", "correct": false}]}, {"question": "Which specific prefix is commonly used to make the verb \\\\\\"писати\\\\\\" into its perfective form?", "options": [{"text": "на-", "correct": true}, {"text": "про-", "correct": false}, {"text": "по-", "correct": false}, {"text": "ви-", "correct": false}]}, {"question": "In Ukrainian grammar, the concept of verbal aspect is primarily concerned with emphasizing what?", "options": [{"text": "Process vs. result", "correct": true}, {"text": "Past vs. future", "correct": false}, {"text": "First vs. third person", "correct": false}, {"text": "Singular vs. plural", "correct": false}]}]`)}
 />
 
 ### Aspect Rules
 
 <TrueFalse
   title="Aspect Rules"
-  items={JSON.parse(`[{"statement": "Недоконаний вид фокусується на процесі та тривалості. | Imperfective verbs focus on process and duration.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Доконаний вид вказує на завершені дії. | Perfective verbs indicate completed actions.", "isTrue": true, "explanation": "Yes!"}, {"statement": "Усі видові пари мають один корінь. | All aspect pairs use the same root.", "isTrue": false, "explanation": "Some pairs like говорити/сказати use different roots."}, {"statement": "Більшість дієслів доконаного виду утворюються за допомогою префіксів. | Most perfective verbs are formed with prefixes.", "isTrue": true, "explanation": "Correct! Prefixes like про-, на-, з-, по-."}, {"statement": "Можна використовувати доконаний вид для звичних дій. | You can use perfective for habitual actions.", "isTrue": false, "explanation": "Habitual actions require imperfective."}, {"statement": "\\\"Я читав\\\" може означати \\\"I was reading\\\". | \\\"Я читав\\\" can mean \\\"I was reading.\\\"", "isTrue": true, "explanation": "Yes! Imperfective shows ongoing process."}, {"statement": "\\\"Я прочитав\\\" означає \\\"I finished reading\\\". | \\\"Я прочитав\\\" means \\\"I finished reading.\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "Вид має значення лише в минулому часі. | Aspect only matters in past tense.", "isTrue": false, "explanation": "Aspect matters in all tenses!"}, {"statement": "Брати/взяти мають різні корені. | Брати/взяти use different roots.", "isTrue": true, "explanation": "Yes! They're suppletive pairs."}, {"statement": "Слова тривалості часто вживаються з недоконаним видом. | Duration words often appear with imperfective.", "isTrue": true, "explanation": "Correct! Words like \\\"довго,\\\" \\\"три години.\\\""}, {"statement": "Англійська мова має таку ж систему виду. | English has the same aspect system.", "isTrue": false, "explanation": "English uses verb forms, not separate verbs."}, {"statement": "Питання \\\"Що ти робив?\\\" використовує недоконаний вид. | The question \\\"Що ти робив?\\\" uses imperfective.", "isTrue": true, "explanation": "Yes! Asking about activities/process."}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Недоконаний вид фокусується на процесі та тривалості. | Imperfective verbs focus on process and duration.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Доконаний вид вказує на завершені дії. | Perfective verbs indicate completed actions.", "isTrue": true, "explanation": "Yes!"}, {"statement": "Усі видові пари мають один корінь. | All aspect pairs use the same root.", "isTrue": false, "explanation": "Some pairs like говорити/сказати use different roots."}, {"statement": "Більшість дієслів доконаного виду утворюються за допомогою префіксів. | Most perfective verbs are formed with prefixes.", "isTrue": true, "explanation": "Correct! Prefixes like про-, на-, з-, по-."}, {"statement": "Можна використовувати доконаний вид для звичних дій. | You can use perfective for habitual actions.", "isTrue": false, "explanation": "Habitual actions require imperfective."}, {"statement": "\\\\\\"Я читав\\\\\\" може означати \\\\\\"I was reading\\\\\\". | \\\\\\"Я читав\\\\\\" can mean \\\\\\"I was reading.\\\\\\"", "isTrue": true, "explanation": "Yes! Imperfective shows ongoing process."}, {"statement": "\\\\\\"Я прочитав\\\\\\" означає \\\\\\"I finished reading\\\\\\". | \\\\\\"Я прочитав\\\\\\" means \\\\\\"I finished reading.\\\\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "Вид має значення лише в минулому часі. | Aspect only matters in past tense.", "isTrue": false, "explanation": "Aspect matters in all tenses!"}, {"statement": "Брати/взяти мають різні корені. | Брати/взяти use different roots.", "isTrue": true, "explanation": "Yes! They're suppletive pairs."}, {"statement": "Слова тривалості часто вживаються з недоконаним видом. | Duration words often appear with imperfective.", "isTrue": true, "explanation": "Correct! Words like \\\\\\"довго,\\\\\\" \\\\\\"три години.\\\\\\""}, {"statement": "Англійська мова має таку ж систему виду. | English has the same aspect system.", "isTrue": false, "explanation": "English uses verb forms, not separate verbs."}, {"statement": "Питання \\\\\\"Що ти робив?\\\\\\" використовує недоконаний вид. | The question \\\\\\"Що ти робив?\\\\\\" uses imperfective.", "isTrue": true, "explanation": "Yes! Asking about activities/process."}]`)}
 />
 
 ### Imperfective vs Perfective
 
 <GroupSort
   title="Imperfective vs Perfective"
+  isUkrainian={false}
   groups={JSON.parse(`{"Imperfective": ["читати", "писати", "робити", "говорити", "бачити", "брати"], "Perfective": ["прочитати", "написати", "зробити", "сказати", "побачити", "взяти"]}`)}
 />
 
@@ -231,12 +282,13 @@ Now try these more challenging examples. Think about WHY each aspect is used:
 
 <Unjumble
   title="Aspect Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "я / читав / цікаву / книгу / дві / години / вчора / ввечері", "answer": "Я читав цікаву книгу дві години вчора ввечері"}, {"jumbled": "вона / прочитала / всю / нову / книгу / дуже / швидко / вчора", "answer": "Вона прочитала всю нову книгу дуже швидко вчора"}, {"jumbled": "він / написав / довгого / листа / до / своєї / мами / вчора", "answer": "Він написав довгого листа до своєї мами вчора"}, {"jumbled": "ми / читаємо / українські / книги / та / газети / щодня / вдома", "answer": "Ми читаємо українські книги та газети щодня вдома"}, {"jumbled": "вона / сказала / щиру / правду / про / всю / цю / ситуацію", "answer": "Вона сказала щиру правду про всю цю ситуацію"}, {"jumbled": "я / бачив / синє / море / вперше / у / моєму / житті", "answer": "Я бачив синє море вперше у моєму житті"}, {"jumbled": "він / зробив / все / домашнє / завдання / дуже / добре / вчора", "answer": "Він зробив все домашнє завдання дуже добре вчора"}, {"jumbled": "вона / завжди / говорить / українською / мовою / зі / своєю / сестрою", "answer": "Вона завжди говорить українською мовою зі своєю сестрою"}, {"jumbled": "я / вже / прочитав / цю / цікаву / книгу / до / кінця", "answer": "Я вже прочитав цю цікаву книгу до кінця"}, {"jumbled": "він / довго / і / уважно / писав / цю / нову / статтю", "answer": "Він довго і уважно писав цю нову статтю"}, {"jumbled": "ми / нарешті / приїхали / до / Києва / сьогодні / дуже / рано", "answer": "Ми нарешті приїхали до Києва сьогодні дуже рано"}, {"jumbled": "я / взяв / свою / стару / книгу / зі / столу / вчора", "answer": "Я взяв свою стару книгу зі столу вчора"}]`)}
 />
 
 ### Fix the Aspect
 
-<ErrorCorrection title="Fix the Aspect">
+<ErrorCorrection title="Fix the Aspect" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Я ___ книгу три години.`}
     errorWord={`completed action — but duration = imperfective`}
@@ -299,6 +351,7 @@ Now try these more challenging examples. Think about WHY each aspect is used:
 
 <Cloze
   title="Complete the Story"
+  isUkrainian={false}
   passage={`Учора я [___:1] цілий день. Спочатку я [___:2] статтю для роботи. Потім я [___:3] кілька листів. Увечері я нарешті [___:4] книгу, яку [___:5] цілий місяць.
 ---
 Сьогодні вранці я [___:6]. Я [___:7] каву і [___:8] сніданок. Потім я [___:9] до роботи. На роботі я [___:10] цілий день. Увечері я [___:11] додому і [___:12] смачну вечерю.`}
@@ -309,6 +362,7 @@ Now try these more challenging examples. Think about WHY each aspect is used:
 
 <Cloze
   title="Aspect in Conversation"
+  isUkrainian={false}
   passage={`— [___:1]
 — [___:2]
 — [___:3]
@@ -328,7 +382,7 @@ Now try these more challenging examples. Think about WHY each aspect is used:
 
 ### Identify Aspect
 
-<MarkTheWords>
+<MarkTheWords isUkrainian={false}>
   <MarkTheWordsActivity
     instruction={`Mark the correct words.`}
     text={`Click on PERFECTIVE verbs only.
@@ -359,50 +413,6 @@ Now try these more challenging examples. Think about WHY each aspect is used:
 | помітний | poˈmitnɪj | noticeable; distinct | adj | ч |  |
 | природніший | prɪˈrɔdnis̬hɪj | more natural | adj | ч |  |
 | процес | proˈt͡sɛs | process | noun | ч |  |
-
-## 📋 Summary
-
-## What You Learned
-
-In this module, you learned about verbal aspect — one of the most important features of Ukrainian grammar. This concept distinguishes Slavic languages from most other language families and is essential for natural-sounding Ukrainian speech.
-
-**Understanding Aspect:**
-Verbal aspect is about HOW you conceptualize an action, not WHEN it happened. The same event can be described with either aspect depending on what you want to emphasize. Consider the difference between "I wrote a letter" (completed, result-focused) and "I was writing a letter for two hours" (process-focused, duration-emphasized).
-
-**Key Points:**
-- Ukrainian verbs come in pairs: imperfective and perfective
-- **Imperfective** (недоконаний вид) = process, repetition, duration, ongoing states
-- **Perfective** (доконаний вид) = completion, result, single completed events, beginning or end of action
-- Most perfective verbs are formed by adding prefixes (про-, на-, з-, по-, ви-)
-- Some pairs use different roots entirely (говорити/сказати, брати/взяти) — these are called suppletive pairs
-
-**Common Aspect-Triggering Contexts:**
-- Questions about activities: "Що ти робив?" (imperfective — asking about process)
-- Questions about completion: "Ти зробив?" (perfective — asking about result)
-- Duration markers (три години, довго, весь день) → usually imperfective
-- Completion markers (вже, нарешті, раптом) → usually perfective
-
-**The Golden Rule:** Ask yourself — "Do I care about the process or the result?"
-- Process → Imperfective
-- Result → Perfective
-
-> 🌍 **Культурний контекст**
->
-> Аспект — це не просто граматика, це спосіб мислення! Українці бачать дії як процеси або результати. Коли ви вибираєте аспект, ви думаєте як носій мови.
->
-> *Translation: Aspect is not just grammar, it's a way of thinking! Ukrainians see actions as processes or results. When you choose aspect, you think like a native speaker.*
-
-> 💡 **Українське прислів'я**
->
-> «Говорити — не робити.» (Говорити — недоконаний, робити — недоконаний: обидва показують процес, не результат!)
->
-> *Translation: "Talking is not doing." (Both verbs are imperfective — process, not result!)*
-
-Тепер ви розумієте основи аспекту! Продовжуйте практикувати — це найважливіша граматична тема для природного мовлення українською. Пам'ятайте: кожен день ви **читаєте** (процес), і колись ви **прочитаєте** всю книгу (результат)! 📚
-
-## Need More Practice?
-
----
 
 > [!resources] 🔗 External Resources
 >

@@ -20,9 +20,10 @@ interface AnagramQuestionProps {
   scrambled: string;
   answer: string;
   hint?: string;
+  isUkrainian?: boolean;
 }
 
-export function AnagramQuestion({ scrambled, answer, hint }: AnagramQuestionProps) {
+export function AnagramQuestion({ scrambled, answer, hint, isUkrainian }: AnagramQuestionProps) {
   // Parse scrambled letters (space-separated) and shuffle so they're never in correct order
   const letters = useMemo(() => {
     const rawLetters = scrambled.split(' ').filter(l => l.trim());
@@ -104,6 +105,12 @@ export function AnagramQuestion({ scrambled, answer, hint }: AnagramQuestionProp
   const userAnswer = selectedLetters.map(l => l.char).join('');
   const isCorrect = userAnswer.toLowerCase() === answer.toLowerCase();
 
+  const placeholderLabel = isUkrainian ? 'Перетягніть літери сюди, щоб скласти слово...' : 'Drag letters here to form the word...';
+  const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answer';
+  const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
+  const correctLabel = isUkrainian ? '✓ Правильно!' : '✓ Correct!';
+  const incorrectLabel = isUkrainian ? '✗ Неправильно. Відповідь:' : '✗ The answer is:';
+
   return (
     <div className={styles.anagramQuestion}>
       {/* Answer Zone */}
@@ -131,7 +138,7 @@ export function AnagramQuestion({ scrambled, answer, hint }: AnagramQuestionProp
             </button>
           ))
         ) : (
-          <span className={styles.placeholder}>Drag letters here to form the word...</span>
+          <span className={styles.placeholder}>{placeholderLabel}</span>
         )}
       </div>
 
@@ -167,18 +174,18 @@ export function AnagramQuestion({ scrambled, answer, hint }: AnagramQuestionProp
             onClick={handleCheck}
             disabled={availableLetters.length > 0}
           >
-            Check Answer
+            {checkBtnLabel}
           </button>
         ) : (
           <button className={styles.resetButton} onClick={handleReset}>
-            Try Again
+            {retryBtnLabel}
           </button>
         )}
       </div>
 
       {showResult && (
         <div className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
-          {isCorrect ? '✓ Correct!' : `✗ The answer is: ${answer}`}
+          {isCorrect ? correctLabel : `${incorrectLabel} ${answer}`}
         </div>
       )}
     </div>
@@ -194,15 +201,18 @@ interface AnagramItem {
 interface AnagramProps {
   items?: AnagramItem[];
   children?: React.ReactNode;
+  isUkrainian?: boolean;
 }
 
-export default function Anagram({ items, children }: AnagramProps) {
+export default function Anagram({ items, children, isUkrainian }: AnagramProps) {
+  const headerLabel = isUkrainian ? 'Переставте літери' : 'Unscramble the Letters';
+
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🔤</span>
-        <span>Unscramble the Letters</span>
-        <ActivityHelp activityType="anagram" />
+        <span>{headerLabel}</span>
+        <ActivityHelp activityType="anagram" isUkrainian={isUkrainian} />
       </div>
       <div className={styles.activityContent}>
         {items ? items.map((item, index) => (
@@ -211,6 +221,7 @@ export default function Anagram({ items, children }: AnagramProps) {
             scrambled={item.scrambled}
             answer={item.answer}
             hint={item.hint}
+            isUkrainian={isUkrainian}
           />
         )) : children}
       </div>

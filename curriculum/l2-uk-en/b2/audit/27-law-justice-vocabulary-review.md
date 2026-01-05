@@ -3,7 +3,7 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): помилування, слухання, ув'язнення, обов'язок, амністія...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): амністія, ув'язнення, слухання, обов'язок, помилування...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -14,7 +14,7 @@
 
 ## Gates
 - **Words:** ⚠️ 1738/1750 (12 short)
-- **Activities:** ✅ 14/14
+- **Activities:** ✅ 14/13
 - **Density:** ❌ 1 < 16
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used

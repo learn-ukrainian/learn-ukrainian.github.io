@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): дозволено, впадіть, сідайте, запізніться, скажіть...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): сідайте, дозволено, хвилюйтеся, заборонено, запізніться...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -13,7 +13,7 @@
 
 ## Gates
 - **Words:** ✅ 2141/1750
-- **Activities:** ✅ 18/14
+- **Activities:** ✅ 18/13
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used

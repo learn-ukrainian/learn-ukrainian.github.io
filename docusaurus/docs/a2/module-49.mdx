@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Warm-up
@@ -205,6 +207,16 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
 
 Інтернет — це цікаво, навіть якщо тобі 70 років.
 
+## 📋 Summary
+
+You learned to:
+- Name tech: **комп'ютер**, **смартфон**, **планшет**, **ноутбук**
+- Talk about internet: **вебсайт**, **посилання**, **пароль**
+- Consume media: **новини**, **блог**, **стаття**
+- Use verbs: **шукати**, **завантажувати**, **публікувати**
+
+Digital literacy is key in modern Ukrainian society. Use these words to stay connected!
+
 
 
 ## 🎯 Activities
@@ -213,6 +225,7 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
 
 <Quiz
   title="Tech Quiz"
+  isUkrainian={false}
   questions={JSON.parse(`[{"question": "Which device do you primarily use to type text on a computer?", "options": [{"text": "клавіатура", "correct": true}, {"text": "мишка", "correct": false}, {"text": "екран", "correct": false}, {"text": "стіл", "correct": false}]}, {"question": "Where can you usually read the latest news articles online?", "options": [{"text": "на вебсайті", "correct": true}, {"text": "в навушниках", "correct": false}, {"text": "на мишці", "correct": false}, {"text": "під столом", "correct": false}]}, {"question": "What fits easily in your pocket and makes calls?", "options": [{"text": "смартфон", "correct": true}, {"text": "комп'ютер", "correct": false}, {"text": "телевізор", "correct": false}, {"text": "стіл", "correct": false}]}, {"question": "What security code do you need to log in to an account?", "options": [{"text": "пароль", "correct": true}, {"text": "лайк", "correct": false}, {"text": "коментар", "correct": false}, {"text": "смайл", "correct": false}]}, {"question": "Who is a person that writes articles or posts online regularly?", "options": [{"text": "блогер", "correct": true}, {"text": "лікар", "correct": false}, {"text": "водій", "correct": false}, {"text": "продавець", "correct": false}]}, {"question": "Which action means transferring a file from the internet to your device?", "options": [{"text": "завантажувати", "correct": true}, {"text": "шукати", "correct": false}, {"text": "надсилати", "correct": false}, {"text": "видаляти", "correct": false}]}, {"question": "How do you listen to music without disturbing other people?", "options": [{"text": "у навушниках", "correct": true}, {"text": "на екрані", "correct": false}, {"text": "в новинах", "correct": false}, {"text": "голосно", "correct": false}]}, {"question": "What do you click to go to another webpage?", "options": [{"text": "посилання", "correct": true}, {"text": "повідомлення", "correct": false}, {"text": "стаття", "correct": false}, {"text": "книга", "correct": false}]}]`)}
 />
 
@@ -220,6 +233,7 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
 
 <MatchUp
   title="Digital Terms"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- комп'ютер", "right": "computer"}, {"left": "- мишка", "right": "mouse"}, {"left": "- екран", "right": "screen"}, {"left": "- пароль", "right": "password"}, {"left": "- новини", "right": "news (pl)"}, {"left": "- стаття", "right": "article"}, {"left": "- посилання", "right": "link"}, {"left": "- мережа", "right": "network"}, {"left": "- зв'язок", "right": "connection (signal)"}, {"left": "- навушники", "right": "headphones"}, {"left": "- повідомлення", "right": "message"}, {"left": "- блогер", "right": "blogger"}]`)}
 />
 
@@ -227,6 +241,7 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
 
 <Cloze
   title="Tech Sentences"
+  isUkrainian={false}
   passage={`Я забув свій [___:1]_. Надішли мені [___:2]_ на це відео. Він купив новий [___:3]_.
 
 Вона пише цікавий [___:4]_. Ми читаємо [___:5]_ в інтернеті. У мене розбився [___:6]_ телефона.
@@ -241,13 +256,15 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
 
 <TrueFalse
   title="Tech Facts"
-  items={JSON.parse(`[{"statement": "\\\"Мишка\\\" is an animal and a computer device.", "isTrue": true, "explanation": "Yes, mouse (animal) and mouse (device) are both мишка."}, {"statement": "\\\"Новини\\\" is a singular noun.", "isTrue": false, "explanation": "Новини is plural (news). One piece of news = новина."}, {"statement": "\\\"Завантажувати\\\" means to delete.", "isTrue": false, "explanation": "It means to download/upload. Delete is видаляти."}, {"statement": "Ukrainians use Telegram for news frequently.", "isTrue": true, "explanation": "Telegram is a major news source."}, {"statement": "\\\"Скріншот\\\" is used in Ukrainian.", "isTrue": true, "explanation": "Yes, it's a loan word. Also знімок екрана."}, {"statement": "Diia (Дія) is a paper document.", "isTrue": false, "explanation": "Diia is a digital app for government services."}, {"statement": "\\\"Навушники\\\" is always plural.", "isTrue": true, "explanation": "Like \\\"headphones\\\" or \\\"pants\\\", it's plural only."}, {"statement": "\\\"Пароль\\\" usually needs to be secret.", "isTrue": true, "explanation": "Passwords should be secret."}, {"statement": "First computer in continental Europe was built in Paris.", "isTrue": false, "explanation": "It was built in Kyiv (MESM)."}, {"statement": "\\\"Публікувати\\\" means to read.", "isTrue": false, "explanation": "To publish/post. To read is читати."}, {"statement": "A \\\"блогер\\\" writes blogs or makes vlogs.", "isTrue": true, "explanation": "Yes, blogger/vlogger."}, {"statement": "Wifi is \\\"вайфай\\\" in Ukrainian.", "isTrue": true, "explanation": "Phonetic borrowing: вайфай."}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "\\\\\\"Мишка\\\\\\" is an animal and a computer device.", "isTrue": true, "explanation": "Yes, mouse (animal) and mouse (device) are both мишка."}, {"statement": "\\\\\\"Новини\\\\\\" is a singular noun.", "isTrue": false, "explanation": "Новини is plural (news). One piece of news = новина."}, {"statement": "\\\\\\"Завантажувати\\\\\\" means to delete.", "isTrue": false, "explanation": "It means to download/upload. Delete is видаляти."}, {"statement": "Ukrainians use Telegram for news frequently.", "isTrue": true, "explanation": "Telegram is a major news source."}, {"statement": "\\\\\\"Скріншот\\\\\\" is used in Ukrainian.", "isTrue": true, "explanation": "Yes, it's a loan word. Also знімок екрана."}, {"statement": "Diia (Дія) is a paper document.", "isTrue": false, "explanation": "Diia is a digital app for government services."}, {"statement": "\\\\\\"Навушники\\\\\\" is always plural.", "isTrue": true, "explanation": "Like \\\\\\"headphones\\\\\\" or \\\\\\"pants\\\\\\", it's plural only."}, {"statement": "\\\\\\"Пароль\\\\\\" usually needs to be secret.", "isTrue": true, "explanation": "Passwords should be secret."}, {"statement": "First computer in continental Europe was built in Paris.", "isTrue": false, "explanation": "It was built in Kyiv (MESM)."}, {"statement": "\\\\\\"Публікувати\\\\\\" means to read.", "isTrue": false, "explanation": "To publish/post. To read is читати."}, {"statement": "A \\\\\\"блогер\\\\\\" writes blogs or makes vlogs.", "isTrue": true, "explanation": "Yes, blogger/vlogger."}, {"statement": "Wifi is \\\\\\"вайфай\\\\\\" in Ukrainian.", "isTrue": true, "explanation": "Phonetic borrowing: вайфай."}]`)}
 />
 
 ### Hardware vs Software
 
 <GroupSort
   title="Hardware vs Software"
+  isUkrainian={false}
   groups={JSON.parse(`{"Groups": ["Hardware (Gadjety)", "Software/Internet", "Actions"], "Items": ["комп'ютер: Hardware (Gadjety)", "мишка: Hardware (Gadjety)", "клавіатура: Hardware (Gadjety)", "екран: Hardware (Gadjety)", "вебсайт: Software/Internet", "блог: Software/Internet", "пароль: Software/Internet", "посилання: Software/Internet", "завантажувати: Actions", "шукати: Actions", "публікувати: Actions", "коментувати: Actions"]}`)}
 />
 
@@ -255,12 +272,13 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
 
 <Unjumble
   title="Digital Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "Я / хочу / купити / собі / новий / і / потужний / планшет", "answer": "Я хочу купити собі новий і потужний планшет"}, {"jumbled": "Надішли / мені / будь ласка / це / цікаве / посилання / в / Телеграм", "answer": "Надішли мені будь ласка це цікаве посилання в Телеграм"}, {"jumbled": "Вона / щодня / читає / свіжі / новини / онлайн / на / цьому / сайті", "answer": "Вона щодня читає свіжі новини онлайн на цьому сайті"}, {"jumbled": "Мій / старий / домашній / комп'ютер / працює / дуже / повільно / сьогодні", "answer": "Мій старий домашній комп'ютер працює дуже повільно сьогодні"}, {"jumbled": "Я / нажаль / зовсім / не / пам'ятаю / свій / новий / складний / пароль", "answer": "Я нажаль зовсім не пам'ятаю свій новий складний пароль"}, {"jumbled": "Ми / зараз / дивимося / дуже / смішне / і / популярне / відео", "answer": "Ми зараз дивимося дуже смішне і популярне відео"}, {"jumbled": "Він / часто / пише / негативний / коментар / під / кожним / новим / фото", "answer": "Він часто пише негативний коментар під кожним новим фото"}, {"jumbled": "Моя / старенька / бабуся / тепер / має / сучасний / і / дорогий / смартфон", "answer": "Моя старенька бабуся тепер має сучасний і дорогий смартфон"}]`)}
 />
 
 ### Fix the Tech
 
-<ErrorCorrection title="Fix the Tech">
+<ErrorCorrection title="Fix the Tech" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Я читаю новина.`}
     errorWord={`новина`}
@@ -351,6 +369,7 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
 
 <Cloze
   title="Digital Morning"
+  isUkrainian={false}
   passage={`Мій ранок починається зі [___:1]. Я вимикаю будильник на [___:2].
 Потім я перевіряю [___:3] і читаю [___:4].
 Я п'ю каву і гортаю [___:5] в Інстаграмі.
@@ -363,7 +382,7 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
 
 ### Find the Gadgets
 
-<MarkTheWords>
+<MarkTheWords isUkrainian={false}>
   <MarkTheWordsActivity
     instruction={`Mark the correct words.`}
     text={`Я люблю свій смартфон. Це мій головний гаджет. Вдома у мене є ноутбук і планшет. Я люблю грати в ігри на планшеті. Для роботи мені потрібен комп'ютер. У нього великий екран і зручна клавіатура. Я також маю бездротові навушники. Техніка допомагає мені бути онлайн.`}
@@ -375,6 +394,7 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
 
 <Select
   title="Choose Best Word"
+  isUkrainian={false}
   questions={JSON.parse(`[{"question": "I need to enter my...", "options": [{"text": "пароль", "correct": true}, {"text": "паспорт", "correct": false}]}, {"question": "Click on the...", "options": [{"text": "посилання", "correct": true}, {"text": "пошту", "correct": false}]}, {"question": "Read the...", "options": [{"text": "статтю", "correct": true}, {"text": "стілець", "correct": false}]}, {"question": "Connect to the...", "options": [{"text": "мережі", "correct": true}, {"text": "вулиці", "correct": false}]}, {"question": "Send a...", "options": [{"text": "повідомлення", "correct": true}, {"text": "книгу", "correct": false}]}, {"question": "Watch a...", "options": [{"text": "відео", "correct": true}, {"text": "радіо", "correct": false}]}, {"question": "Write a...", "options": [{"text": "коментар", "correct": true}, {"text": "роман", "correct": false}]}, {"question": "Buy a...", "options": [{"text": "ноутбук", "correct": true}, {"text": "вікно", "correct": false}]}, {"question": "Search in...", "options": [{"text": "Гуглі", "correct": true}, {"text": "кишені", "correct": false}]}, {"question": "Charge the...", "options": [{"text": "смартфон", "correct": true}, {"text": "стіл", "correct": false}]}, {"question": "Listen to a...", "options": [{"text": "подкаст", "correct": true}, {"text": "газету", "correct": false}]}, {"question": "Work...", "options": [{"text": "онлайн", "correct": true}, {"text": "у лісі", "correct": false}]}]`)}
 />
 
@@ -439,16 +459,6 @@ While **лайк** is common, the proper Ukrainian word is **вподобайк�
 | чат | t͡ʃɑt | chat | noun | ч |  |
 | шахрай | ʃɐxˈrɑj | scammer | noun | ч |  |
 | ютуб | juˈtub | YouTube | name | ч |  |
-
-## 📋 Summary
-
-You learned to:
-- Name tech: **комп'ютер**, **смартфон**, **планшет**, **ноутбук**
-- Talk about internet: **вебсайт**, **посилання**, **пароль**
-- Consume media: **новини**, **блог**, **стаття**
-- Use verbs: **шукати**, **завантажувати**, **публікувати**
-
-Digital literacy is key in modern Ukrainian society. Use these words to stay connected!
 
 > [!resources] 🔗 External Resources
 >

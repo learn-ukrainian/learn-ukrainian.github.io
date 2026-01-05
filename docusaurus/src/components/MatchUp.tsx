@@ -10,9 +10,10 @@ interface MatchPair {
 
 interface MatchUpProps {
   pairs: MatchPair[];
+  isUkrainian?: boolean;
 }
 
-export default function MatchUp({ pairs }: MatchUpProps) {
+export default function MatchUp({ pairs, isUkrainian }: MatchUpProps) {
   const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
   const [matched, setMatched] = useState<Set<number>>(new Set());
   const [wrongPair, setWrongPair] = useState<{ left: number; right: number } | null>(null);
@@ -51,13 +52,15 @@ export default function MatchUp({ pairs }: MatchUpProps) {
   };
 
   const allMatched = matched.size === pairs.length;
+  const headerLabel = isUkrainian ? 'Знайдіть пару' : 'Match Up';
+  const successLabel = isUkrainian ? '✓ Все з’єднано правильно!' : '✓ All matched correctly!';
 
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🔗</span>
-        <span>Match Up</span>
-        <ActivityHelp activityType="match-up" />
+        <span>{headerLabel}</span>
+        <ActivityHelp activityType="match-up" isUkrainian={isUkrainian} />
       </div>
       <div className={styles.matchUpContainer}>
         <div className={styles.matchColumn}>
@@ -90,7 +93,7 @@ export default function MatchUp({ pairs }: MatchUpProps) {
       </div>
       {allMatched && (
         <div className={`${styles.feedback} ${styles.feedbackCorrect}`}>
-          ✓ All matched correctly!
+          {successLabel}
         </div>
       )}
     </div>

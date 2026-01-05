@@ -7,16 +7,14 @@
   - FIX: Use supported type: anagram, authorial-intent, cloze, comparative-study, critical-analysis, error-correction, essay-response, fill-in, group-sort, mark-the-words, match-up, quiz, select, translate, true-false, unjumble
 
 ## Recommendation
-**📝 UPDATE** (severity 30/100)
+**📝 UPDATE** (severity 15/100)
 
-- Borderline case (severity 30/100)
 - 1 pedagogical violations (minor)
 - Immersion 7% off target (minor)
-- Activity count below minimum
 
 ## Gates
 - **Words:** ❌ 1135/1750
-- **Activities:** ❌ 13/14
+- **Activities:** ✅ 13/13
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used

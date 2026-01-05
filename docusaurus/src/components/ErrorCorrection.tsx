@@ -9,6 +9,7 @@ interface ErrorCorrectionItemProps {
   correctForm: string;
   options: string[];
   explanation: string;
+  isUkrainian?: boolean;
 }
 
 type Step = 'identify' | 'fix' | 'complete';
@@ -19,6 +20,7 @@ export function ErrorCorrectionItem({
   correctForm,
   options,
   explanation,
+  isUkrainian
 }: ErrorCorrectionItemProps) {
   // Shuffle options on mount
   const shuffledOptions = useMemo(() => shuffle([...options]), [options]);
@@ -76,13 +78,20 @@ export function ErrorCorrectionItem({
   const isFixCorrect = selectedFix === correctForm;
   const isNoErrorCorrect = errorWord === null && step === 'complete';
 
+  const step1Label = isUkrainian ? 'Крок 1: Знайдіть помилку' : 'Step 1: Find the error';
+  const step2Label = isUkrainian ? 'Крок 2: Оберіть правильну форму' : 'Step 2: Choose the correct form';
+  const completeLabel = isUkrainian ? 'Завершено' : 'Complete';
+  const noErrorLabel = isUkrainian ? '✓ У цьому реченні немає помилок' : '✓ No error in this sentence';
+  const fixPromptLabel = isUkrainian ? 'Оберіть правильну форму для' : 'Choose the correct form for';
+  const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
+
   return (
     <div className={styles.errorCorrectionItem}>
       {/* Step indicator */}
       <div className={styles.stepIndicator}>
-        {step === 'identify' && <span className={styles.stepBadge}>Step 1: Find the error</span>}
-        {step === 'fix' && <span className={styles.stepBadge}>Step 2: Choose the correct form</span>}
-        {step === 'complete' && <span className={styles.stepBadgeComplete}>Complete</span>}
+        {step === 'identify' && <span className={styles.stepBadge}>{step1Label}</span>}
+        {step === 'fix' && <span className={styles.stepBadge}>{step2Label}</span>}
+        {step === 'complete' && <span className={styles.stepBadgeComplete}>{completeLabel}</span>}
       </div>
 
       {/* Sentence with clickable words */}
@@ -128,14 +137,14 @@ export function ErrorCorrectionItem({
           className={`${styles.noErrorButton} ${wrongAttempts.includes('__no_error__') ? styles.noErrorWrong : ''}`}
           onClick={handleNoError}
         >
-          ✓ No error in this sentence
+          {noErrorLabel}
         </button>
       )}
 
       {/* Options - only in fix step */}
       {step === 'fix' && shuffledOptions.length > 0 && (
         <div className={styles.fixOptions}>
-          <p className={styles.fixPrompt}>Choose the correct form for "<strong>{selectedWord}</strong>":</p>
+          <p className={styles.fixPrompt}>{fixPromptLabel} "<strong>{selectedWord}</strong>":</p>
           <div className={styles.optionChips}>
             {shuffledOptions.map((option, idx) => (
               <button
@@ -155,11 +164,11 @@ export function ErrorCorrectionItem({
         <>
           <div className={`${styles.feedback} ${(isFixCorrect || isNoErrorCorrect) ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
             {isNoErrorCorrect ? (
-              '✓ Correct! There was no error in this sentence.'
+              isUkrainian ? '✓ Правильно! У цьому реченні не було помилок.' : '✓ Correct! There was no error in this sentence.'
             ) : isFixCorrect ? (
-              `✓ Correct! "${errorWord}" → "${correctForm}"`
+              `✓ ${isUkrainian ? 'Правильно!' : 'Correct!'} "${errorWord}" → "${correctForm}"`
             ) : (
-              `✗ The correct answer is: "${errorWord}" → "${correctForm}"`
+              `${isUkrainian ? '✗ Правильна відповідь:' : '✗ The correct answer is:'} "${errorWord}" → "${correctForm}"`
             )}
             {explanation && (
               <div className={styles.explanation}>{explanation}</div>
@@ -167,7 +176,7 @@ export function ErrorCorrectionItem({
           </div>
           <div className={styles.buttonRow}>
             <button className={styles.resetButton} onClick={handleReset}>
-              Try Again
+              {retryBtnLabel}
             </button>
           </div>
         </>
@@ -178,18 +187,26 @@ export function ErrorCorrectionItem({
 
 interface ErrorCorrectionProps {
   children: React.ReactNode;
+  isUkrainian?: boolean;
 }
 
-export default function ErrorCorrection({ children }: ErrorCorrectionProps) {
+export default function ErrorCorrection({ children, isUkrainian }: ErrorCorrectionProps) {
+  const headerLabel = isUkrainian ? 'Знайдіть і виправте помилку' : 'Find and Fix';
+
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🔍</span>
-        <span>Find and Fix</span>
-        <ActivityHelp activityType="error-correction" />
+        <span>{headerLabel}</span>
+        <ActivityHelp activityType="error-correction" isUkrainian={isUkrainian} />
       </div>
       <div className={styles.activityContent}>
-        {children}
+        {React.Children.map(children, (child) => {
+          if (React.isValidElement(child)) {
+            return React.cloneElement(child as React.ReactElement<any>, { isUkrainian });
+          }
+          return child;
+        })}
       </div>
     </div>
   );

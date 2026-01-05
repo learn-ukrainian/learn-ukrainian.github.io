@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 ## Warm-up
 
@@ -263,6 +265,18 @@ One root "говорити" creates dozens of distinct concepts. This is linguis
 
 ---
 
+## 📋 Summary
+
+1.  **Prefixes transform meaning.** They act like modifiers (Re-, Sub-, Out-).
+2.  **Пере-** = Redo | Across.
+3.  **До-** = Finish.
+4.  **За-** = Close | Record | Start | Excess.
+5.  **Від-** = Open | Away.
+6.  **По-** = A bit | Start.
+7.  **На-** = Accumulate | Create.
+
+---
+
 
 
 ## 🎯 Activities
@@ -271,13 +285,15 @@ One root "говорити" creates dozens of distinct concepts. This is linguis
 
 <MatchUp
   title="The Transformers"
-  pairs={JSON.parse(`[{"left": "Excess\n- Від- :: Open", "right": "Away\n- Під- :: Under"}]`)}
+  isUkrainian={false}
+  pairs={JSON.parse(`[{"left": "Excess\\n- Від- :: Open", "right": "Away\\n- Під- :: Under"}]`)}
 />
 
 ### The Editor
 
 <Cloze
   title="The Editor"
+  isUkrainian={false}
   passage={`Я хочу [___:1] цей текст. Ми повинні [___:2] цю роботу. Треба [___:3] книгу ще раз.
 
 Стіна погана, треба [___:4]. Посуд брудний, треба [___:5]. Я хочу [___:6] цей фільм.
@@ -290,6 +306,7 @@ One root "говорити" creates dozens of distinct concepts. This is linguis
 
 <FillIn
   title="The Perfectionist"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Цей текст поганий. Треба його ___.", "answer": "переписати", "options": ["переписати", "дописати", "записати"]}, {"sentence": "Я не ___ книгу, вона нудна.", "answer": "дочитав", "options": ["дочитав", "перечитав", "почитав"]}, {"sentence": "Будь ласка, ___ двері. Холодно.", "answer": "закрий", "options": ["закрий", "відкрий", "розкрий"]}, {"sentence": "Я хочу ___ твій номер телефону.", "answer": "записати", "options": ["записати", "підписати", "написати"]}, {"sentence": "Де тут можна ___ документи?", "answer": "підписати", "options": ["підписати", "описати", "виписати"]}, {"sentence": "Мама попросила ___ посуд.", "answer": "перемити", "options": ["перемити", "домити", "замити"]}, {"sentence": "Треба ___ роботу до вечора.", "answer": "доробити", "options": ["доробити", "переробити", "зробити"]}, {"sentence": "Він ___ двері ключем.", "answer": "відкрив", "options": ["відкрив", "закрив", "розкрив"]}]`)}
 />
 
@@ -297,6 +314,7 @@ One root "говорити" creates dozens of distinct concepts. This is linguis
 
 <GroupSort
   title="Open vs Close"
+  isUkrainian={false}
   groups={JSON.parse(`{"Opening (Від-/Роз-)": ["Відкрити вікно", "Розгорнути книгу", "Відчинити двері", "Розплющити очі", "Відкоркувати вино", "Відімкнути замок"], "Closing (За-)": ["Закрити вікно", "Згорнути книгу", "Зачинити двері", "Заплющити очі", "Закоркувати вино", "Замкнути замок"]}`)}
 />
 
@@ -304,20 +322,23 @@ One root "говорити" creates dozens of distinct concepts. This is linguis
 
 <Quiz
   title="Meaning Check"
-  questions={JSON.parse(`[{"question": "Яке значення має дієслово \\\"доробити\\\" в українській мові?", "options": [{"text": "Finish doing (завершити дію)", "correct": true}, {"text": "Redo (переробити знову)", "correct": false}, {"text": "Do a little (трохи зробити)", "correct": false}, {"text": "Start doing (почати робити)", "correct": false}]}, {"question": "Що означає дієслово \\\"почитати\\\" з префіксом \\\"по-\\\" в контексті?", "options": [{"text": "Read a little bit (трохи почитати)", "correct": true}, {"text": "Finish reading (дочитати до кінця)", "correct": false}, {"text": "Reread (перечитати знову)", "correct": false}, {"text": "Start reading (почати читати)", "correct": false}]}, {"question": "Де саме ви ставите свій підпис коли \\\"підписуєте\\\" документ?", "options": [{"text": "Under the text (під текстом)", "correct": true}, {"text": "Over the text (над текстом)", "correct": false}, {"text": "Inside the text (всередині тексту)", "correct": false}, {"text": "Next to the text (поруч з текстом)", "correct": false}]}, {"question": "Якою була перша спроба якщо ви вирішили щось \\\"переробити\\\"?", "options": [{"text": "Bad or wrong (погана або неправильна)", "correct": true}, {"text": "Perfect (ідеальна і бездоганна)", "correct": false}, {"text": "Non-existent (її не було взагалі)", "correct": false}, {"text": "Good enough (достатньо хороша)", "correct": false}]}, {"question": "Яку кількість зазвичай означає дієслово \\\"наробити\\\" з префіксом \\\"на-\\\"?", "options": [{"text": "A large quantity (велика кількість)", "correct": true}, {"text": "A small quantity (мала кількість)", "correct": false}, {"text": "A specific quality (певна якість)", "correct": false}, {"text": "Medium amount (середня кількість)", "correct": false}]}, {"question": "З якою логікою прийменника пов'язане дієслово \\\"відкрити\\\" в українській?", "options": [{"text": "Від: Away (віддалення, відкриття)", "correct": true}, {"text": "До: To (наближення до мети)", "correct": false}, {"text": "В: In (входження всередину)", "correct": false}, {"text": "На: On (розміщення на поверхні)", "correct": false}]}, {"question": "Яке буквальне значення має дієслово \\\"здати\\\" в контексті зради?", "options": [{"text": "To give up/away (віддати геть)", "correct": true}, {"text": "To give in (піддатися тиску)", "correct": false}, {"text": "To give under (віддати під щось)", "correct": false}, {"text": "To give back (повернути назад)", "correct": false}]}, {"question": "Що означає дієслово \\\"наїстися\\\" з префіксом \\\"на-\\\" для їжі?", "options": [{"text": "To eat until full (наїстися досхочу)", "correct": true}, {"text": "To eat a little (трохи поїсти)", "correct": false}, {"text": "To start eating (почати їсти)", "correct": false}, {"text": "To eat again (поїсти знову)", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Яке значення має дієслово \\\\\\"доробити\\\\\\" в українській мові?", "options": [{"text": "Finish doing (завершити дію)", "correct": true}, {"text": "Redo (переробити знову)", "correct": false}, {"text": "Do a little (трохи зробити)", "correct": false}, {"text": "Start doing (почати робити)", "correct": false}]}, {"question": "Що означає дієслово \\\\\\"почитати\\\\\\" з префіксом \\\\\\"по-\\\\\\" в контексті?", "options": [{"text": "Read a little bit (трохи почитати)", "correct": true}, {"text": "Finish reading (дочитати до кінця)", "correct": false}, {"text": "Reread (перечитати знову)", "correct": false}, {"text": "Start reading (почати читати)", "correct": false}]}, {"question": "Де саме ви ставите свій підпис коли \\\\\\"підписуєте\\\\\\" документ?", "options": [{"text": "Under the text (під текстом)", "correct": true}, {"text": "Over the text (над текстом)", "correct": false}, {"text": "Inside the text (всередині тексту)", "correct": false}, {"text": "Next to the text (поруч з текстом)", "correct": false}]}, {"question": "Якою була перша спроба якщо ви вирішили щось \\\\\\"переробити\\\\\\"?", "options": [{"text": "Bad or wrong (погана або неправильна)", "correct": true}, {"text": "Perfect (ідеальна і бездоганна)", "correct": false}, {"text": "Non-existent (її не було взагалі)", "correct": false}, {"text": "Good enough (достатньо хороша)", "correct": false}]}, {"question": "Яку кількість зазвичай означає дієслово \\\\\\"наробити\\\\\\" з префіксом \\\\\\"на-\\\\\\"?", "options": [{"text": "A large quantity (велика кількість)", "correct": true}, {"text": "A small quantity (мала кількість)", "correct": false}, {"text": "A specific quality (певна якість)", "correct": false}, {"text": "Medium amount (середня кількість)", "correct": false}]}, {"question": "З якою логікою прийменника пов'язане дієслово \\\\\\"відкрити\\\\\\" в українській?", "options": [{"text": "Від: Away (віддалення, відкриття)", "correct": true}, {"text": "До: To (наближення до мети)", "correct": false}, {"text": "В: In (входження всередину)", "correct": false}, {"text": "На: On (розміщення на поверхні)", "correct": false}]}, {"question": "Яке буквальне значення має дієслово \\\\\\"здати\\\\\\" в контексті зради?", "options": [{"text": "To give up/away (віддати геть)", "correct": true}, {"text": "To give in (піддатися тиску)", "correct": false}, {"text": "To give under (віддати під щось)", "correct": false}, {"text": "To give back (повернути назад)", "correct": false}]}, {"question": "Що означає дієслово \\\\\\"наїстися\\\\\\" з префіксом \\\\\\"на-\\\\\\" для їжі?", "options": [{"text": "To eat until full (наїстися досхочу)", "correct": true}, {"text": "To eat a little (трохи поїсти)", "correct": false}, {"text": "To start eating (почати їсти)", "correct": false}, {"text": "To eat again (поїсти знову)", "correct": false}]}]`)}
 />
 
 ### Propaganda Check
 
 <TrueFalse
   title="Propaganda Check"
-  items={JSON.parse(`[{"statement": "Ukrainian vocabulary is limited.", "isTrue": false, "explanation": ""}, {"statement": "\\\"Заговорити\\\" can mean \\\"to charm\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Наговорити\\\" means to stop talking.", "isTrue": false, "explanation": ""}, {"statement": "One root can produce dozens of words.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Видати\\\" means to keep a secret.", "isTrue": false, "explanation": ""}, {"statement": "\\\"Віддати\\\" means to take something.", "isTrue": false, "explanation": ""}, {"statement": "\\\"Донести\\\" means to carry to the end.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Перенести\\\" means to move something to a new place.", "isTrue": true, "explanation": ""}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Ukrainian vocabulary is limited.", "isTrue": false, "explanation": ""}, {"statement": "\\\\\\"Заговорити\\\\\\" can mean \\\\\\"to charm\\\\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Наговорити\\\\\\" means to stop talking.", "isTrue": false, "explanation": ""}, {"statement": "One root can produce dozens of words.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Видати\\\\\\" means to keep a secret.", "isTrue": false, "explanation": ""}, {"statement": "\\\\\\"Віддати\\\\\\" means to take something.", "isTrue": false, "explanation": ""}, {"statement": "\\\\\\"Донести\\\\\\" means to carry to the end.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Перенести\\\\\\" means to move something to a new place.", "isTrue": true, "explanation": ""}]`)}
 />
 
 ### The Test
 
 <Cloze
   title="The Test"
+  isUkrainian={false}
   passage={`Студент складав іспит.
 Він [___:1]йшов в аудиторію.
 Він [___:2]тягнув білет.
@@ -335,7 +356,7 @@ One root "говорити" creates dozens of distinct concepts. This is linguis
 
 ### Fix the Verb
 
-<ErrorCorrection title="Fix the Verb">
+<ErrorCorrection title="Fix the Verb" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Я хочу **переписати** це яблуко. (Context: eat finishes it)`}
     errorWord={`переписати`}
@@ -384,6 +405,7 @@ One root "говорити" creates dozens of distinct concepts. This is linguis
 
 <MatchUp
   title="Give and Take"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- Віддати", "right": "Give back (Return)"}, {"left": "- Передати", "right": "Pass (Salt/Message)"}, {"left": "- Здати", "right": "Turn in | Rent out"}, {"left": "- Видати", "right": "Publish | Reveal"}, {"left": "- Подати", "right": "Serve (Food/Hand)"}, {"left": "- Роздати", "right": "Distribute (To many)"}, {"left": "- Надати", "right": "Provide (Official)"}, {"left": "- Продати", "right": "Sell (Give for money)"}]`)}
 />
 
@@ -391,6 +413,7 @@ One root "говорити" creates dozens of distinct concepts. This is linguis
 
 <Unjumble
   title="The Office"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "документ / він / підписав / вчора / ввечері / в / офісі / дуже / швидко", "answer": "Він підписав документ вчора ввечері в офісі дуже швидко"}, {"jumbled": "звіт / ми / переробили / сьогодні / вранці / бо / він / був / поганий", "answer": "Ми переробили звіт сьогодні вранці бо він був поганий"}, {"jumbled": "двері / секретар / відкрив / ключем / коли / прийшов / на / роботу / рано", "answer": "Секретар відкрив двері ключем коли прийшов на роботу рано"}, {"jumbled": "картку / банк / видав / мені / нову / після / того / як / я / подав / заяву", "answer": "Банк видав мені нову картку після того як я подав заяву"}, {"jumbled": "книгу / я / дочитав / нарешті / вчора / ввечері / після / довгого / часу / читання", "answer": "Я дочитав книгу нарешті вчора ввечері після довгого часу читання"}, {"jumbled": "інтернет / ми / під'єднали / сьогодні / вранці / в / новому / офісі / успішно", "answer": "Ми під'єднали інтернет сьогодні вранці в новому офісі успішно"}]`)}
 />
 
@@ -471,18 +494,6 @@ One root "говорити" creates dozens of distinct concepts. This is linguis
 | шпалер | ʃpɐˈlɛr | wallpaper (gen?) | noun | ж |  |
 | шума | ˈʃumɐ | noise (gen?) | noun | ч |  |
 | єднати | jɛdˈnɑte | to unite (imp) | verb |  |  |
-
-## 📋 Summary
-
-1.  **Prefixes transform meaning.** They act like modifiers (Re-, Sub-, Out-).
-2.  **Пере-** = Redo | Across.
-3.  **До-** = Finish.
-4.  **За-** = Close | Record | Start | Excess.
-5.  **Від-** = Open | Away.
-6.  **По-** = A bit | Start.
-7.  **На-** = Accumulate | Create.
-
----
 
 > [!resources] 🔗 External Resources
 >

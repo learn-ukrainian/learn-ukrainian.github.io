@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): оглядач, інтерв'ю, факт, маніпуляція, рейтинг...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): спростування, експерт, інтерв'ю, думка, ексклюзив...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -13,7 +13,7 @@
 
 ## Gates
 - **Words:** ✅ 1972/1750
-- **Activities:** ✅ 14/14
+- **Activities:** ✅ 14/13
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used

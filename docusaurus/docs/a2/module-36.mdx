@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 ## Warm-up
 
@@ -299,6 +301,23 @@ When you hear a motion verb, visualize the path first. This will help you unders
 
 ---
 
+## 📋 Summary
+
+Today you learned advanced motion prefixes:
+
+| Prefix | Core Meaning | Example |
+|--------|--------------|---------|
+| **пере-** | across, over | перейти вулицю |
+| **про-** | through, past | пройти парк |
+| **за-** | behind, stopping by | зайти в магазин |
+| **до-** | reaching destination | дійти до парку |
+| **об-** | around | обійти озеро |
+| **під-** | approaching | підійти ближче |
+
+These prefixes combine with motion verbs to create precise navigation instructions.
+
+---
+
 
 
 ## 🎯 Activities
@@ -307,6 +326,7 @@ When you hear a motion verb, visualize the path first. This will help you unders
 
 <MatchUp
   title="Prefix Meanings"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- пере-", "right": "across, over"}, {"left": "- про-", "right": "through, past"}, {"left": "- за-", "right": "behind, stopping by"}, {"left": "- до-", "right": "reaching destination"}, {"left": "- об-", "right": "around"}, {"left": "- під-", "right": "approaching"}, {"left": "- ви-", "right": "out"}, {"left": "- в-/у-", "right": "into"}]`)}
 />
 
@@ -314,6 +334,7 @@ When you hear a motion verb, visualize the path first. This will help you unders
 
 <FillIn
   title="Choose the Prefix"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "[___]йти вулицю", "answer": "Пере", "options": ["Пере", "Про", "За"]}, {"sentence": "[___]їхати через місто", "answer": "Про", "options": ["Про", "Пере", "За"]}, {"sentence": "[___]йти в кафе", "answer": "За", "options": ["За", "Про", "До"]}, {"sentence": "[___]йти до парку", "answer": "До", "options": ["До", "За", "Про"]}, {"sentence": "[___]йти озеро", "answer": "Об", "options": ["Об", "Про", "Пере"]}, {"sentence": "[___]йти ближче", "answer": "Під", "options": ["Під", "До", "Про"]}, {"sentence": "[___]їхати зупинку", "answer": "Про", "options": ["Про", "Пере", "За"]}, {"sentence": "[___]їхати за хлібом", "answer": "За", "options": ["За", "До", "Про"]}]`)}
 />
 
@@ -321,13 +342,15 @@ When you hear a motion verb, visualize the path first. This will help you unders
 
 <Quiz
   title="Prefix Concepts"
-  questions={JSON.parse(`[{"question": "Що означає фраза \\\"перейти вулицю\\\" в українській мові для руху через вулицю?", "options": [{"text": "To cross the street (перейти на інший бік)", "correct": true}, {"text": "To walk along the street (йти вздовж вулиці)", "correct": false}, {"text": "To approach the street (підійти до вулиці)", "correct": false}, {"text": "To go around the street (обійти вулицю)", "correct": false}]}, {"question": "Що означає фраза \\\"зайти до друга\\\" в українській мові для відвідування?", "options": [{"text": "To stop by a friend's place (завітати до друга)", "correct": true}, {"text": "To leave a friend's place (піти від друга)", "correct": false}, {"text": "To walk past a friend (пройти повз друга)", "correct": false}, {"text": "To cross to a friend (перейти до друга)", "correct": false}]}, {"question": "Що означає фраза \\\"пройти парк\\\" в українській мові для руху через парк?", "options": [{"text": "To walk through/along the park (пройти через парк)", "correct": true}, {"text": "To cross the park to the other side (перейти парк)", "correct": false}, {"text": "To go around the park (обійти парк)", "correct": false}, {"text": "To reach the park (дійти до парку)", "correct": false}]}, {"question": "Що означає фраза \\\"доїхати до Києва\\\" в українській мові для досягнення місця?", "options": [{"text": "To reach Kyiv (досягти Києва)", "correct": true}, {"text": "To leave Kyiv (виїхати з Києва)", "correct": false}, {"text": "To drive through Kyiv (проїхати Київ)", "correct": false}, {"text": "To go around Kyiv (об'їхати Київ)", "correct": false}]}, {"question": "Що означає фраза \\\"обійти озеро\\\" в українській мові для руху навколо озера?", "options": [{"text": "To walk around the lake (обійти навколо)", "correct": true}, {"text": "To cross the lake (перейти озеро)", "correct": false}, {"text": "To reach the lake (дійти до озера)", "correct": false}, {"text": "To walk through the lake (пройти озеро)", "correct": false}]}, {"question": "Що означає фраза \\\"підійти ближче\\\" в українській мові для наближення до когось?", "options": [{"text": "To come closer (підійти ближче)", "correct": true}, {"text": "To go away (піти геть)", "correct": false}, {"text": "To walk around (обійти навколо)", "correct": false}, {"text": "To cross over (перейти)", "correct": false}]}, {"question": "Що означає фраза \\\"проїхати зупинку\\\" в українській мові для проїзду повз зупинку?", "options": [{"text": "To miss/pass the stop (проїхати повз)", "correct": true}, {"text": "To reach the stop (доїхати до зупинки)", "correct": false}, {"text": "To cross the stop (переїхати зупинку)", "correct": false}, {"text": "To go around the stop (об'їхати зупинку)", "correct": false}]}, {"question": "Що означає слово \\\"заходь\\\" в українській мові як запрошення до когось?", "options": [{"text": "Come in! (заходь всередину)", "correct": true}, {"text": "Go away! (іди геть)", "correct": false}, {"text": "Wait here! (чекай тут)", "correct": false}, {"text": "Cross over! (переходь)", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Що означає фраза \\\\\\"перейти вулицю\\\\\\" в українській мові для руху через вулицю?", "options": [{"text": "To cross the street (перейти на інший бік)", "correct": true}, {"text": "To walk along the street (йти вздовж вулиці)", "correct": false}, {"text": "To approach the street (підійти до вулиці)", "correct": false}, {"text": "To go around the street (обійти вулицю)", "correct": false}]}, {"question": "Що означає фраза \\\\\\"зайти до друга\\\\\\" в українській мові для відвідування?", "options": [{"text": "To stop by a friend's place (завітати до друга)", "correct": true}, {"text": "To leave a friend's place (піти від друга)", "correct": false}, {"text": "To walk past a friend (пройти повз друга)", "correct": false}, {"text": "To cross to a friend (перейти до друга)", "correct": false}]}, {"question": "Що означає фраза \\\\\\"пройти парк\\\\\\" в українській мові для руху через парк?", "options": [{"text": "To walk through/along the park (пройти через парк)", "correct": true}, {"text": "To cross the park to the other side (перейти парк)", "correct": false}, {"text": "To go around the park (обійти парк)", "correct": false}, {"text": "To reach the park (дійти до парку)", "correct": false}]}, {"question": "Що означає фраза \\\\\\"доїхати до Києва\\\\\\" в українській мові для досягнення місця?", "options": [{"text": "To reach Kyiv (досягти Києва)", "correct": true}, {"text": "To leave Kyiv (виїхати з Києва)", "correct": false}, {"text": "To drive through Kyiv (проїхати Київ)", "correct": false}, {"text": "To go around Kyiv (об'їхати Київ)", "correct": false}]}, {"question": "Що означає фраза \\\\\\"обійти озеро\\\\\\" в українській мові для руху навколо озера?", "options": [{"text": "To walk around the lake (обійти навколо)", "correct": true}, {"text": "To cross the lake (перейти озеро)", "correct": false}, {"text": "To reach the lake (дійти до озера)", "correct": false}, {"text": "To walk through the lake (пройти озеро)", "correct": false}]}, {"question": "Що означає фраза \\\\\\"підійти ближче\\\\\\" в українській мові для наближення до когось?", "options": [{"text": "To come closer (підійти ближче)", "correct": true}, {"text": "To go away (піти геть)", "correct": false}, {"text": "To walk around (обійти навколо)", "correct": false}, {"text": "To cross over (перейти)", "correct": false}]}, {"question": "Що означає фраза \\\\\\"проїхати зупинку\\\\\\" в українській мові для проїзду повз зупинку?", "options": [{"text": "To miss/pass the stop (проїхати повз)", "correct": true}, {"text": "To reach the stop (доїхати до зупинки)", "correct": false}, {"text": "To cross the stop (переїхати зупинку)", "correct": false}, {"text": "To go around the stop (об'їхати зупинку)", "correct": false}]}, {"question": "Що означає слово \\\\\\"заходь\\\\\\" в українській мові як запрошення до когось?", "options": [{"text": "Come in! (заходь всередину)", "correct": true}, {"text": "Go away! (іди геть)", "correct": false}, {"text": "Wait here! (чекай тут)", "correct": false}, {"text": "Cross over! (переходь)", "correct": false}]}]`)}
 />
 
 ### Tour Guide Instructions
 
 <Cloze
   title="Tour Guide Instructions"
+  isUkrainian={false}
   passage={`Спочатку ми [___:1] вулицю.
 Потім [___:2] до площі.
 Ми [___:3] в музей.
@@ -347,12 +370,13 @@ When you hear a motion verb, visualize the path first. This will help you unders
 
 <Unjumble
   title="Motion Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "вулицю / Перейди / зараз / обережно / тут / дуже / швидко / машини", "answer": "Перейди вулицю зараз обережно тут дуже швидко машини"}, {"jumbled": "до / парку / дійшли / Ми / нарешті / після / довгої / прогулянки / вчора", "answer": "Ми дійшли до парку нарешті після довгої прогулянки вчора"}, {"jumbled": "зупинку / Автобус / проїхав / знову / сьогодні / вранці / дуже / швидко", "answer": "Автобус проїхав зупинку знову сьогодні вранці дуже швидко"}, {"jumbled": "озеро / Обійди / справа / повільно / щоб / побачити / краєвид / гарний", "answer": "Обійди озеро справа повільно щоб побачити краєвид гарний"}, {"jumbled": "до / мене / Зайди / ввечері / будь / ласка / після / роботи / сьогодні", "answer": "Зайди до мене ввечері будь ласка після роботи сьогодні"}, {"jumbled": "ближче / Підійди / зараз / щоб / я / міг / тебе / бачити / краще", "answer": "Підійди ближче зараз щоб я міг тебе бачити краще"}, {"jumbled": "парк / через / Ми / пройшли / вчора / ввечері / коли / йшли / додому", "answer": "Ми пройшли через парк вчора ввечері коли йшли додому"}, {"jumbled": "хлібом / за / Заїдь / будь / ласка / по / дорозі / додому / сьогодні", "answer": "Заїдь за хлібом будь ласка по дорозі додому сьогодні"}]`)}
 />
 
 ### Wrong Prefix
 
-<ErrorCorrection title="Wrong Prefix">
+<ErrorCorrection title="Wrong Prefix" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Я **проїхав** вулицю на інший бік.`}
     errorWord={`проїхав`}
@@ -401,6 +425,7 @@ When you hear a motion verb, visualize the path first. This will help you unders
 
 <GroupSort
   title="Prefix Categories"
+  isUkrainian={false}
   groups={JSON.parse(`{"Crossing/Over (пере-)": ["перейти", "переїхати", "переплисти", "перебігти"], "Through/Past (про-)": ["пройти", "проїхати", "пролетіти", "пробігти"], "Stopping By (за-)": ["зайти", "заїхати", "забігти", "заскочити"]}`)}
 />
 
@@ -408,6 +433,7 @@ When you hear a motion verb, visualize the path first. This will help you unders
 
 <MatchUp
   title="Directions"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- Перейди вулицю", "right": "Cross the street"}, {"left": "- Пройди через парк", "right": "Walk through the park"}, {"left": "- Зайди до друга", "right": "Stop by your friend's"}, {"left": "- Дійди до кінця", "right": "Reach the end"}, {"left": "- Обійди будинок", "right": "Go around the building"}, {"left": "- Підійди ближче", "right": "Come closer"}, {"left": "- Проїдь зупинку", "right": "Pass the stop"}, {"left": "- Заїдь за молоком", "right": "Stop by for milk"}]`)}
 />
 
@@ -415,6 +441,7 @@ When you hear a motion verb, visualize the path first. This will help you unders
 
 <Cloze
   title="Daily Commute"
+  isUkrainian={false}
   passage={`Олег [[___:1]] з дому о сьомій. (exits) Він [[___:2]] до зупинки. Автобус [[___:3]] три зупинки. (passes)
 
 Олег [[___:4]] вулицю. (crosses) Він [[___:5]] до офісу. (reaches) У обід він [[___:6]] квартал.
@@ -427,6 +454,7 @@ When you hear a motion verb, visualize the path first. This will help you unders
 
 <Cloze
   title="Carpathians Trip"
+  isUkrainian={false}
   passage={`Родина [___:1] з Києва вранці.
 По дорозі вони [___:2] багато сіл.
 Вони [___:3] в село за сиром.
@@ -518,23 +546,6 @@ When you hear a motion verb, visualize the path first. This will help you unders
 | фініш | ˈfʲinʲiʃ | finish | noun | ч |  |
 | хмара | ˈxmɑrɐ | cloud | noun | ж |  |
 | інше | ˈinʃe | other (neut) | pron | с |  |
-
-## 📋 Summary
-
-Today you learned advanced motion prefixes:
-
-| Prefix | Core Meaning | Example |
-|--------|--------------|---------|
-| **пере-** | across, over | перейти вулицю |
-| **про-** | through, past | пройти парк |
-| **за-** | behind, stopping by | зайти в магазин |
-| **до-** | reaching destination | дійти до парку |
-| **об-** | around | обійти озеро |
-| **під-** | approaching | підійти ближче |
-
-These prefixes combine with motion verbs to create precise navigation instructions.
-
----
 
 > [!resources] 🔗 External Resources
 >

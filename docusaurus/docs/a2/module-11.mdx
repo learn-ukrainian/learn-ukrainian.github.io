@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 **Вітаємо!** Ви завершили Фазу A2.1! Цей контрольний модуль перевіряє все, що ви вивчили в Модулях 01-09.
@@ -138,15 +140,19 @@ Complete with the correct instrumental form:
 - Do you know instrumental endings: -ом/-ем (ч.р.), -ою/-ею (ж.р.)?
 - Can you use spatial prepositions: над столом, під ліжком?
 
-> [!myth-buster] 🔍 Myth Buster
->
-> **Myth:** "Ukrainian cases are just like Russian cases."
->
-> **Truth:** While both languages have 7 cases, Ukrainian preserved the **Vocative case** (кличний відмінок) in full active use: **Мамо! Друже! Україно!** Russian lost vocative centuries ago, using nominative instead. When you say "Друже!", you're speaking authentic Ukrainian — not a "dialect" of anything!
+:::danger[🔍 Myth Buster]
 
-> [!history-bite] 📜 History Bite
->
-> **The Ems Ukaz (1876)**: Tsar Alexander II banned Ukrainian-language education and publications. The goal? Destroy Ukrainian grammar, including our beautiful case system. They failed. Today, millions learn "Я даю книгу **другові**" — Dative case alive and thriving!
+**Myth:** "Ukrainian cases are just like Russian cases."
+
+**Truth:** While both languages have 7 cases, Ukrainian preserved the **Vocative case** (кличний відмінок) in full active use: **Мамо! Друже! Україно!** Russian lost vocative centuries ago, using nominative instead. When you say "Друже!", you're speaking authentic Ukrainian — not a "dialect" of anything!
+:::
+
+
+:::info[📜 History Bite]
+
+**The Ems Ukaz (1876)**: Tsar Alexander II banned Ukrainian-language education and publications. The goal? Destroy Ukrainian grammar, including our beautiful case system. They failed. Today, millions learn "Я даю книгу **другові**" — Dative case alive and thriving!
+:::
+
 
 ---
 
@@ -354,6 +360,40 @@ Instrumental — profession with "працює"
 
 ---
 
+## 📋 Summary
+
+| Skill | Key Pattern | Example |
+|-------|-------------|---------|
+| Dative | TO someone (recipient) | Даю книгу **другові** |
+| Instrumental | WITH/BY means of | Пишу **ручкою** |
+| Prepositions | Each has its case | до школ**и** (Gen), в школ**і** (Loc) |
+| Services | Real-world application | Відправити **листа** (Acc) |
+
+:::tip[💡 Time Expressions]
+
+The word **час** (time) appears in many case forms:
+- Nominative: **Час** летить! (Time flies!)
+- Genitive: Немає **часу** (No time)
+- Dative: **Часу** — not commonly used
+- Accusative: Знаю **час** зустрічі (I know the meeting time)
+- Instrumental: Працюю над **часом** (Working on timing)
+- Locative: У вільному **часі** (In free time)
+
+Master this word to practice all cases!
+:::
+
+
+> 🌍 **Cultural Connection**
+> Україна має багату граматичну традицію. Сім відмінків — це частина давньої слов'янської спадщини. Коли ви вивчаєте відмінки, ви торкаєтесь тисячолітньої історії української мови!
+
+---
+
+## Need More Practice?
+
+---
+
+---
+
 
 
 ## 🎯 Activities
@@ -362,6 +402,7 @@ Instrumental — profession with "працює"
 
 <MatchUp
   title="Case Questions"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- Nominative", "right": "хто? що?"}, {"left": "- Genitive", "right": "кого? чого?"}, {"left": "- Dative", "right": "кому? чому?"}, {"left": "- Accusative", "right": "кого? що?"}, {"left": "- Instrumental", "right": "ким? чим?"}, {"left": "- Locative", "right": "де? на чому?"}, {"left": "- Vocative", "right": "addressing someone"}, {"left": "- до", "right": "Genitive"}, {"left": "- про", "right": "Accusative"}, {"left": "- з — with", "right": "Instrumental"}, {"left": "- в for location", "right": "Locative"}, {"left": "- для", "right": "Genitive"}]`)}
 />
 
@@ -369,6 +410,7 @@ Instrumental — profession with "працює"
 
 <FillIn
   title="Case Selection"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Я даю книгу ___.", "answer": "другові", "options": ["друг", "друга", "другові", "другом"]}, {"sentence": "Він їде ___.", "answer": "автобусом", "options": ["автобус", "автобуса", "автобусу", "автобусом"]}, {"sentence": "Немає ___.", "answer": "часу", "options": ["час", "часу", "часом", "часі"]}, {"sentence": "Вона в ___.", "answer": "університеті", "options": ["університет", "університету", "університетом", "університеті"]}, {"sentence": "Я йду до ___.", "answer": "школи", "options": ["школа", "школи", "школі", "школою"]}, {"sentence": "Кава без ___.", "answer": "цукру", "options": ["цукор", "цукру", "цукром", "цукрі"]}, {"sentence": "Мені потрібно зняти ___.", "answer": "гроші", "options": ["гроші", "грошей", "грошам", "грошима"]}, {"sentence": "Подарунок для ___.", "answer": "мами", "options": ["мама", "мами", "мамі", "мамою"]}, {"sentence": "Платити ___.", "answer": "карткою", "options": ["картка", "картки", "картку", "карткою"]}, {"sentence": "Лист від ___.", "answer": "брата", "options": ["брат", "брата", "братові", "братом"]}, {"sentence": "Вона стала ___.", "answer": "лікаркою", "options": ["лікарка", "лікарки", "лікарці", "лікаркою"]}, {"sentence": "___, привіт!", "answer": "Друже", "options": ["Друг", "Друга", "Друже", "Другом"]}]`)}
 />
 
@@ -376,20 +418,23 @@ Instrumental — profession with "працює"
 
 <Quiz
   title="Comprehensive Case Quiz"
-  questions={JSON.parse(`[{"question": "When identifying the grammatical function of a sentence's subject, which case is used?", "options": [{"text": "Nominative", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Genitive", "correct": false}, {"text": "Dative", "correct": false}]}, {"question": "In the expression \\\"Мені холодно\\\" the pronoun \\\"мені\\\" is in which grammatical case?", "options": [{"text": "Dative", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Genitive", "correct": false}, {"text": "Locative", "correct": false}]}, {"question": "In the sentence \\\"Працювати лікарем,\\\" which grammatical case is used for the profession?", "options": [{"text": "Instrumental", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Nominative", "correct": false}, {"text": "Genitive", "correct": false}]}, {"question": "When using the preposition \\\"до\\\" as in \\\"до школи,\\\" which grammatical case follows?", "options": [{"text": "Genitive", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Locative", "correct": false}, {"text": "Dative", "correct": false}]}, {"question": "When speaking about something, as in \\\"про книгу,\\\" which grammatical case follows \\\"про\\\"?", "options": [{"text": "Accusative", "correct": true}, {"text": "Genitive", "correct": false}, {"text": "Instrumental", "correct": false}, {"text": "Dative", "correct": false}]}, {"question": "When expressing accompaniment \\\"with a friend\\\" as in \\\"з другом,\\\" which case is used?", "options": [{"text": "Instrumental", "correct": true}, {"text": "Genitive", "correct": false}, {"text": "Dative", "correct": false}, {"text": "Accusative", "correct": false}]}, {"question": "In the phrase \\\"в школі\\\" expressing location at school, which grammatical case is used?", "options": [{"text": "Locative", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Genitive", "correct": false}, {"text": "Instrumental", "correct": false}]}, {"question": "In the expression \\\"Немає часу\\\" meaning there's no time, which grammatical case is used?", "options": [{"text": "Genitive", "correct": true}, {"text": "Nominative", "correct": false}, {"text": "Accusative", "correct": false}, {"text": "Dative", "correct": false}]}, {"question": "When addressing someone directly, as in \\\"Мамо!\\\", which grammatical case is this example of?", "options": [{"text": "Vocative", "correct": true}, {"text": "Nominative", "correct": false}, {"text": "Dative", "correct": false}, {"text": "Accusative", "correct": false}]}, {"question": "In the sentence \\\"Я бачу маму,\\\" the word \\\"маму\\\" functions as what grammatical case?", "options": [{"text": "Accusative", "correct": true}, {"text": "Nominative", "correct": false}, {"text": "Genitive", "correct": false}, {"text": "Dative", "correct": false}]}, {"question": "When paying by card, as in \\\"Платити карткою,\\\" which grammatical case expresses the method?", "options": [{"text": "Instrumental", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Dative", "correct": false}, {"text": "Genitive", "correct": false}]}, {"question": "In the request \\\"Допоможіть мені,\\\" which grammatical case is the pronoun \\\"мені\\\" in?", "options": [{"text": "Dative", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Instrumental", "correct": false}, {"text": "Genitive", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "When identifying the grammatical function of a sentence's subject, which case is used?", "options": [{"text": "Nominative", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Genitive", "correct": false}, {"text": "Dative", "correct": false}]}, {"question": "In the expression \\\\\\"Мені холодно\\\\\\" the pronoun \\\\\\"мені\\\\\\" is in which grammatical case?", "options": [{"text": "Dative", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Genitive", "correct": false}, {"text": "Locative", "correct": false}]}, {"question": "In the sentence \\\\\\"Працювати лікарем,\\\\\\" which grammatical case is used for the profession?", "options": [{"text": "Instrumental", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Nominative", "correct": false}, {"text": "Genitive", "correct": false}]}, {"question": "When using the preposition \\\\\\"до\\\\\\" as in \\\\\\"до школи,\\\\\\" which grammatical case follows?", "options": [{"text": "Genitive", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Locative", "correct": false}, {"text": "Dative", "correct": false}]}, {"question": "When speaking about something, as in \\\\\\"про книгу,\\\\\\" which grammatical case follows \\\\\\"про\\\\\\"?", "options": [{"text": "Accusative", "correct": true}, {"text": "Genitive", "correct": false}, {"text": "Instrumental", "correct": false}, {"text": "Dative", "correct": false}]}, {"question": "When expressing accompaniment \\\\\\"with a friend\\\\\\" as in \\\\\\"з другом,\\\\\\" which case is used?", "options": [{"text": "Instrumental", "correct": true}, {"text": "Genitive", "correct": false}, {"text": "Dative", "correct": false}, {"text": "Accusative", "correct": false}]}, {"question": "In the phrase \\\\\\"в школі\\\\\\" expressing location at school, which grammatical case is used?", "options": [{"text": "Locative", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Genitive", "correct": false}, {"text": "Instrumental", "correct": false}]}, {"question": "In the expression \\\\\\"Немає часу\\\\\\" meaning there's no time, which grammatical case is used?", "options": [{"text": "Genitive", "correct": true}, {"text": "Nominative", "correct": false}, {"text": "Accusative", "correct": false}, {"text": "Dative", "correct": false}]}, {"question": "When addressing someone directly, as in \\\\\\"Мамо!\\\\\\", which grammatical case is this example of?", "options": [{"text": "Vocative", "correct": true}, {"text": "Nominative", "correct": false}, {"text": "Dative", "correct": false}, {"text": "Accusative", "correct": false}]}, {"question": "In the sentence \\\\\\"Я бачу маму,\\\\\\" the word \\\\\\"маму\\\\\\" functions as what grammatical case?", "options": [{"text": "Accusative", "correct": true}, {"text": "Nominative", "correct": false}, {"text": "Genitive", "correct": false}, {"text": "Dative", "correct": false}]}, {"question": "When paying by card, as in \\\\\\"Платити карткою,\\\\\\" which grammatical case expresses the method?", "options": [{"text": "Instrumental", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Dative", "correct": false}, {"text": "Genitive", "correct": false}]}, {"question": "In the request \\\\\\"Допоможіть мені,\\\\\\" which grammatical case is the pronoun \\\\\\"мені\\\\\\" in?", "options": [{"text": "Dative", "correct": true}, {"text": "Accusative", "correct": false}, {"text": "Instrumental", "correct": false}, {"text": "Genitive", "correct": false}]}]`)}
 />
 
 ### Case Rules Review
 
 <TrueFalse
   title="Case Rules Review"
-  items={JSON.parse(`[{"statement": "Dative is used for the recipient of an action.", "isTrue": true, "explanation": "Correct! Даю книгу другові."}, {"statement": "Instrumental case expresses \\\"with\\\" someone.", "isTrue": true, "explanation": "Yes! Йду з другом."}, {"statement": "Locative case can be used without a preposition.", "isTrue": false, "explanation": "Locative ALWAYS needs a preposition."}, {"statement": "Genitive is used after \\\"без\\\" (without).", "isTrue": true, "explanation": "Correct! Кава без цукру."}, {"statement": "\\\"В школу\\\" and \\\"в школі\\\" are the same case.", "isTrue": false, "explanation": "No! В школу = Accusative (motion); в школі = Locative (location)."}, {"statement": "Vocative is used when addressing someone directly.", "isTrue": true, "explanation": "Yes! Мамо! Друже!"}, {"statement": "\\\"Про\\\" takes accusative case.", "isTrue": true, "explanation": "Correct! Про книгу, про тебе."}, {"statement": "All prepositions take the same case.", "isTrue": false, "explanation": "Different prepositions require different cases."}, {"statement": "\\\"Мені\\\" in \\\"Мені подобається\\\" is dative.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Instrumental can express profession with бути.", "isTrue": true, "explanation": "Yes! Він був студентом."}, {"statement": "\\\"До\\\" takes accusative case.", "isTrue": false, "explanation": "\\\"До\\\" takes genitive: до школи."}, {"statement": "Service vocabulary uses accusative for direct objects.", "isTrue": true, "explanation": "Correct! Відправити листа, зняти гроші."}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Dative is used for the recipient of an action.", "isTrue": true, "explanation": "Correct! Даю книгу другові."}, {"statement": "Instrumental case expresses \\\\\\"with\\\\\\" someone.", "isTrue": true, "explanation": "Yes! Йду з другом."}, {"statement": "Locative case can be used without a preposition.", "isTrue": false, "explanation": "Locative ALWAYS needs a preposition."}, {"statement": "Genitive is used after \\\\\\"без\\\\\\" (without).", "isTrue": true, "explanation": "Correct! Кава без цукру."}, {"statement": "\\\\\\"В школу\\\\\\" and \\\\\\"в школі\\\\\\" are the same case.", "isTrue": false, "explanation": "No! В школу = Accusative (motion); в школі = Locative (location)."}, {"statement": "Vocative is used when addressing someone directly.", "isTrue": true, "explanation": "Yes! Мамо! Друже!"}, {"statement": "\\\\\\"Про\\\\\\" takes accusative case.", "isTrue": true, "explanation": "Correct! Про книгу, про тебе."}, {"statement": "All prepositions take the same case.", "isTrue": false, "explanation": "Different prepositions require different cases."}, {"statement": "\\\\\\"Мені\\\\\\" in \\\\\\"Мені подобається\\\\\\" is dative.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Instrumental can express profession with бути.", "isTrue": true, "explanation": "Yes! Він був студентом."}, {"statement": "\\\\\\"До\\\\\\" takes accusative case.", "isTrue": false, "explanation": "\\\\\\"До\\\\\\" takes genitive: до школи."}, {"statement": "Service vocabulary uses accusative for direct objects.", "isTrue": true, "explanation": "Correct! Відправити листа, зняти гроші."}]`)}
 />
 
 ### Preposition Cases
 
 <GroupSort
   title="Preposition Cases"
+  isUkrainian={false}
   groups={JSON.parse(`{"Genitive": ["до", "від", "для", "без", "після", "біля"], "Accusative": ["про", "через", "в/на + motion"], "Instrumental": ["з — with", "над", "під", "перед", "за", "між"], "Locative": ["в/у — location", "на — location"]}`)}
 />
 
@@ -397,6 +442,7 @@ Instrumental — profession with "працює"
 
 <Unjumble
   title="Case Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "книгу / другові / Я / даю / на / день / народження / сьогодні", "answer": "Я даю книгу другові на день народження сьогодні"}, {"jumbled": "лікарем / Він / працює / в / лікарні / вже / три / роки", "answer": "Він працює лікарем в лікарні вже три роки"}, {"jumbled": "школи / Я / до / йду / щодня / о / восьмій / годині", "answer": "Я йду до школи щодня о восьмій годині"}, {"jumbled": "холодно / Мені / взимку / коли / я / виходжу / на / вулицю", "answer": "Мені холодно взимку коли я виходжу на вулицю"}, {"jumbled": "цукру / без / Кава / і / молока / будь / ласка / мені", "answer": "Кава без цукру і молока будь ласка мені"}, {"jumbled": "столом / над / Лампа / світить / яскраво / у / моїй / кімнаті", "answer": "Лампа над столом світить яскраво у моїй кімнаті"}]`)}
 />
 
@@ -404,6 +450,7 @@ Instrumental — profession with "працює"
 
 <Cloze
   title="Service Dialogue"
+  isUkrainian={false}
   passage={`Добрий день! Я хочу відправити [___:1].
 Куди відправляти? До [___:2].
 Це з [___:3] чи за кордон?
@@ -422,7 +469,7 @@ Instrumental — profession with "працює"
 
 ### Identify Cases
 
-<MarkTheWords>
+<MarkTheWords isUkrainian={false}>
   <MarkTheWordsActivity
     instruction={`Mark the correct words.`}
     text={`Click on nouns and pronouns showing case usage.
@@ -435,7 +482,7 @@ Instrumental — profession with "працює"
 
 ### Case Errors
 
-<ErrorCorrection title="Case Errors">
+<ErrorCorrection title="Case Errors" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Я даю книгу мій друг.`}
     errorWord={`мій друг`}
@@ -544,40 +591,6 @@ Instrumental — profession with "працює"
 | Україна | ukrɐˈjinɐ | Ukraine | name | ж |  |
 | фаза | ˈfɑzɐ | phase | noun | ж |  |
 | число | t͡ʃɪsˈlɔ | number; date | noun | с |  |
-
-## 📋 Summary
-
-| Skill | Key Pattern | Example |
-|-------|-------------|---------|
-| Dative | TO someone (recipient) | Даю книгу **другові** |
-| Instrumental | WITH/BY means of | Пишу **ручкою** |
-| Prepositions | Each has its case | до школ**и** (Gen), в школ**і** (Loc) |
-| Services | Real-world application | Відправити **листа** (Acc) |
-
-:::tip[💡 Time Expressions]
-
-The word **час** (time) appears in many case forms:
-- Nominative: **Час** летить! (Time flies!)
-- Genitive: Немає **часу** (No time)
-- Dative: **Часу** — not commonly used
-- Accusative: Знаю **час** зустрічі (I know the meeting time)
-- Instrumental: Працюю над **часом** (Working on timing)
-- Locative: У вільному **часі** (In free time)
-
-Master this word to practice all cases!
-:::
-
-
-> 🌍 **Cultural Connection**
-> Україна має багату граматичну традицію. Сім відмінків — це частина давньої слов'янської спадщини. Коли ви вивчаєте відмінки, ви торкаєтесь тисячолітньої історії української мови!
-
----
-
-## Need More Practice?
-
----
-
----
 
 > [!resources] 🔗 External Resources
 >

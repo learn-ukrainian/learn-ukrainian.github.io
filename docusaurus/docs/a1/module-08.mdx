@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Warm-up
@@ -230,6 +232,23 @@ Why do some verbs change their consonant? Notice: **робити** → **роб�
 
 ---
 
+## 📋 Summary
+
+You've now mastered **Class II verbs (-ити)**! Here's what you can do:
+
+- Conjugate regular Class II verbs (говорити, робити, бачити, любити)
+- Use irregular verbs (їсти, пити, хотіти)
+- Distinguish between Class I (-ати) and Class II (-ити) patterns
+- Form sentences about daily actions
+
+**Key Pattern:**
+
+- **Class II:** Drop -ити → add -ю/-иш/-ить/-имо/-ите/-ять
+
+With Class I and Class II verbs combined, you can now express hundreds of actions in Ukrainian. Вітаю! (Congratulations!)
+
+---
+
 
 
 ## 🎯 Activities
@@ -238,6 +257,7 @@ Why do some verbs change their consonant? Notice: **робити** → **роб�
 
 <Quiz
   title="Class II or Class I?"
+  isUkrainian={false}
   questions={JSON.parse(`[{"question": "To which class does **говорити** belong?", "options": [{"text": "Class II (-ити)", "correct": true}, {"text": "Class I (-ати)", "correct": false}, {"text": "Irregular", "correct": false}, {"text": "Noun", "correct": false}]}, {"question": "To which class does **читати** belong?", "options": [{"text": "Class II (-ити)", "correct": false}, {"text": "Class I (-ати)", "correct": true}, {"text": "Irregular", "correct": false}, {"text": "Noun", "correct": false}]}, {"question": "To which class does **любити** belong?", "options": [{"text": "Class II (-ити)", "correct": true}, {"text": "Class I (-ати)", "correct": false}, {"text": "Irregular", "correct": false}, {"text": "Adjective", "correct": false}]}, {"question": "To which class does **працювати** belong?", "options": [{"text": "Class II (-ити)", "correct": false}, {"text": "Class I (-ати)", "correct": true}, {"text": "Irregular", "correct": false}, {"text": "Adverb", "correct": false}]}, {"question": "To which class does **бачити** belong?", "options": [{"text": "Class II (-ити)", "correct": true}, {"text": "Class I (-ати)", "correct": false}, {"text": "Irregular", "correct": false}, {"text": "Noun", "correct": false}]}, {"question": "To which class does **знати** belong?", "options": [{"text": "Class II (-ити)", "correct": false}, {"text": "Class I (-ати)", "correct": true}, {"text": "Irregular", "correct": false}, {"text": "Pronoun", "correct": false}]}, {"question": "To which class does **ходити** belong?", "options": [{"text": "Class II (-ити)", "correct": true}, {"text": "Class I (-ати)", "correct": false}, {"text": "Irregular", "correct": false}, {"text": "Noun", "correct": false}]}, {"question": "To which class does **писати** belong?", "options": [{"text": "Class II (-ити)", "correct": false}, {"text": "Class I (-ати)", "correct": true}, {"text": "Irregular", "correct": false}, {"text": "Noun", "correct": false}]}, {"question": "To which class does **робити** belong?", "options": [{"text": "Class II (-ити)", "correct": true}, {"text": "Class I (-ати)", "correct": false}, {"text": "Irregular", "correct": false}, {"text": "Noun", "correct": false}]}, {"question": "To which class does **дякувати** belong?", "options": [{"text": "Class II (-ити)", "correct": false}, {"text": "Class I (-ати)", "correct": true}, {"text": "Irregular", "correct": false}, {"text": "Adverb", "correct": false}]}, {"question": "To which class does **спати** belong?", "options": [{"text": "Class II (-ити)", "correct": true}, {"text": "Class I (-ати)", "correct": false}, {"text": "Irregular", "correct": false}, {"text": "Noun", "correct": false}]}, {"question": "To which class does **вчити** belong?", "options": [{"text": "Class II (-ити)", "correct": true}, {"text": "Class I (-ати)", "correct": false}, {"text": "Irregular", "correct": false}, {"text": "Noun", "correct": false}]}]`)}
 />
 
@@ -245,6 +265,7 @@ Why do some verbs change their consonant? Notice: **робити** → **роб�
 
 <MatchUp
   title="Verbs and Actions"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "говорити", "right": "to speak"}, {"left": "робити", "right": "to do, to make"}, {"left": "бачити", "right": "to see"}, {"left": "любити", "right": "to love"}, {"left": "хотіти", "right": "to want"}, {"left": "їсти", "right": "to eat"}, {"left": "пити", "right": "to drink"}, {"left": "ходити", "right": "to walk"}, {"left": "спати", "right": "to sleep"}]`)}
 />
 
@@ -252,6 +273,7 @@ Why do some verbs change their consonant? Notice: **робити** → **роб�
 
 <FillIn
   title="Conjugate the Verb"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Я ___ українською.", "answer": "говорю", "options": ["говорю", "говориш", "говорить", "говорять"]}, {"sentence": "Ти ___ каву?", "answer": "п'єш", "options": ["п'ю", "п'єш", "п'є", "п'ють"]}, {"sentence": "Вона ___ книгу.", "answer": "читає", "options": ["читаю", "читаєш", "читає", "читають"]}, {"sentence": "Ми ___ у кафе.", "answer": "сидимо", "options": ["сиджу", "сидиш", "сидить", "сидимо"]}, {"sentence": "Ви ___ фільм?", "answer": "дивитеся", "options": ["дивлюся", "дивишся", "дивиться", "дивитеся"]}, {"sentence": "Вони ___ в університет.", "answer": "ходять", "options": ["ходжу", "ходиш", "ходить", "ходять"]}, {"sentence": "Він ___ фільм.", "answer": "дивиться", "options": ["дивлюся", "дивишся", "дивиться", "дивляться"]}, {"sentence": "Я ___ Україну.", "answer": "люблю", "options": ["люблю", "любиш", "любить", "люблять"]}, {"sentence": "Ти ___ вправу?", "answer": "робиш", "options": ["роблю", "робиш", "робить", "роблять"]}, {"sentence": "Вона ___ біля вікна.", "answer": "стоїть", "options": ["стою", "стоїш", "стоїть", "стоять"]}, {"sentence": "Ми ___ вчитися.", "answer": "хочемо", "options": ["хочу", "хочеш", "хоче", "хочемо"]}, {"sentence": "Вони ___.", "answer": "сплять", "options": ["сплю", "спиш", "спить", "сплять"]}]`)}
 />
 
@@ -259,6 +281,7 @@ Why do some verbs change their consonant? Notice: **робити** → **роб�
 
 <Anagram
   title="Build the Verb"
+  isUkrainian={false}
   items={JSON.parse(`[{"scrambled": "г о в о р и т и", "answer": "говорити", "hint": ""}, {"scrambled": "р о б и т и", "answer": "робити", "hint": ""}, {"scrambled": "б а ч и т и", "answer": "бачити", "hint": ""}, {"scrambled": "л ю б и т и", "answer": "любити", "hint": ""}, {"scrambled": "х о т і т и", "answer": "хотіти", "hint": ""}, {"scrambled": "ї с т и", "answer": "їсти", "hint": ""}, {"scrambled": "п и т и", "answer": "пити", "hint": ""}, {"scrambled": "х о д и т и", "answer": "ходити", "hint": ""}, {"scrambled": "с п а т и", "answer": "спати", "hint": ""}, {"scrambled": "с т о я т и", "answer": "стояти", "hint": ""}, {"scrambled": "с и д і т и", "answer": "сидіти", "hint": ""}, {"scrambled": "в ч и т и", "answer": "вчити", "hint": ""}]`)}
 />
 
@@ -266,13 +289,15 @@ Why do some verbs change their consonant? Notice: **робити** → **роб�
 
 <TrueFalse
   title="Grammar Rules"
-  items={JSON.parse(`[{"statement": "Class II verbs end in -ити or -іти in the infinitive.", "isTrue": true, "explanation": "Correct! This is the defining feature of Class II verbs."}, {"statement": "The verb \\\"читати\\\" is Class II.", "isTrue": false, "explanation": "Incorrect! \\\"читати\\\" ends in -ати, so it's Class I."}, {"statement": "Irregular verbs like їсти and пити don't follow standard conjugation patterns.", "isTrue": true, "explanation": "Correct! These verbs have unique conjugation forms."}, {"statement": "In Class II, the first person singular ending is -ю or -у.", "isTrue": true, "explanation": "Correct! я говорю, я роблю."}, {"statement": "The verb \\\"говорити\\\" conjugates as \\\"я говорую.\\\"", "isTrue": false, "explanation": "Incorrect! It's \\\"я говорю\\\" (not \\\"говорую\\\")."}, {"statement": "\\\"Дякувати\\\" is a Class I verb.", "isTrue": true, "explanation": "Correct! It ends in -увати, which is a Class I pattern."}, {"statement": "All verbs ending in -ати are Class I.", "isTrue": false, "explanation": "Incorrect! \\\"спати\\\" ends in -ати but behaves like Class II in some forms."}, {"statement": "The third person plural ending for Class II is -ять or -ать.", "isTrue": true, "explanation": "Correct! вони говорять, вони роблять."}, {"statement": "\\\"Я хочу\\\" is an irregular form.", "isTrue": true, "explanation": "Correct! хотіти is irregular: хочу, хочеш, хоче."}, {"statement": "Class II verbs don't have consonant mutations.", "isTrue": false, "explanation": "Incorrect! Many do: робити → роблю, ходити → ходжу."}, {"statement": "\\\"П'ю\\\" is the first person singular of \\\"пити.\\\"", "isTrue": true, "explanation": "Correct! я п'ю (I drink)."}, {"statement": "Ukrainian distinguishes between ходити and їздити.", "isTrue": true, "explanation": "Correct! This precision is a beautiful feature of Ukrainian."}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Class II verbs end in -ити or -іти in the infinitive.", "isTrue": true, "explanation": "Correct! This is the defining feature of Class II verbs."}, {"statement": "The verb \\\\\\"читати\\\\\\" is Class II.", "isTrue": false, "explanation": "Incorrect! \\\\\\"читати\\\\\\" ends in -ати, so it's Class I."}, {"statement": "Irregular verbs like їсти and пити don't follow standard conjugation patterns.", "isTrue": true, "explanation": "Correct! These verbs have unique conjugation forms."}, {"statement": "In Class II, the first person singular ending is -ю or -у.", "isTrue": true, "explanation": "Correct! я говорю, я роблю."}, {"statement": "The verb \\\\\\"говорити\\\\\\" conjugates as \\\\\\"я говорую.\\\\\\"", "isTrue": false, "explanation": "Incorrect! It's \\\\\\"я говорю\\\\\\" (not \\\\\\"говорую\\\\\\")."}, {"statement": "\\\\\\"Дякувати\\\\\\" is a Class I verb.", "isTrue": true, "explanation": "Correct! It ends in -увати, which is a Class I pattern."}, {"statement": "All verbs ending in -ати are Class I.", "isTrue": false, "explanation": "Incorrect! \\\\\\"спати\\\\\\" ends in -ати but behaves like Class II in some forms."}, {"statement": "The third person plural ending for Class II is -ять or -ать.", "isTrue": true, "explanation": "Correct! вони говорять, вони роблять."}, {"statement": "\\\\\\"Я хочу\\\\\\" is an irregular form.", "isTrue": true, "explanation": "Correct! хотіти is irregular: хочу, хочеш, хоче."}, {"statement": "Class II verbs don't have consonant mutations.", "isTrue": false, "explanation": "Incorrect! Many do: робити → роблю, ходити → ходжу."}, {"statement": "\\\\\\"П'ю\\\\\\" is the first person singular of \\\\\\"пити.\\\\\\"", "isTrue": true, "explanation": "Correct! я п'ю (I drink)."}, {"statement": "Ukrainian distinguishes between ходити and їздити.", "isTrue": true, "explanation": "Correct! This precision is a beautiful feature of Ukrainian."}]`)}
 />
 
 ### Verb Types
 
 <GroupSort
   title="Verb Types"
+  isUkrainian={false}
   groups={JSON.parse(`{"Class I (-ати)": ["читати", "писати", "працювати", "знати"], "Class II (-ити)": ["говорити", "робити", "бачити", "любити", "ходити"], "Irregular": ["їсти", "пити", "хотіти"]}`)}
 />
 
@@ -280,6 +305,7 @@ Why do some verbs change their consonant? Notice: **робити** → **роб�
 
 <FillIn
   title="Complete the Dialogue"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Марія: Привіт! Ти ___ книгу?", "answer": "читаєш", "options": ["читаю", "читаєш", "читає", "читають"]}, {"sentence": "Петро: Так, я ___ книгу.", "answer": "читаю", "options": ["читаю", "читаєш", "читає", "читають"]}, {"sentence": "Марія: Я ___ каву зараз.", "answer": "п'ю", "options": ["п'ю", "п'єш", "п'є", "п'ють"]}, {"sentence": "Петро: Я ___ музику!", "answer": "люблю", "options": ["люблю", "любиш", "любить", "люблять"]}, {"sentence": "Марія: Ти ___ в університет?", "answer": "ходиш", "options": ["ходжу", "ходиш", "ходить", "ходять"]}, {"sentence": "Петро: Так, я ___ українську мову.", "answer": "вчу", "options": ["вчу", "вчиш", "вчить", "вчать"]}, {"sentence": "Марія: Ти ___ українську?", "answer": "любиш", "options": ["люблю", "любиш", "любить", "люблять"]}, {"sentence": "Петро: Так! Я ___ українську мову!", "answer": "люблю", "options": ["люблю", "любиш", "любить", "люблять"]}, {"sentence": "Марія: Я ___ вивчати більше.", "answer": "хочу", "options": ["хочу", "хочеш", "хоче", "хочуть"]}, {"sentence": "Петро: Ти ___ борщ?", "answer": "любиш", "options": ["люблю", "любиш", "любить", "люблять"]}, {"sentence": "Марія: Так, я дуже ___ борщ!", "answer": "люблю", "options": ["люблю", "любиш", "любить", "люблять"]}, {"sentence": "Петро: Ти ___ фільм сьогодні?", "answer": "дивишся", "options": ["дивлюся", "дивишся", "дивиться", "дивляться"]}, {"sentence": "Марія: Так, я ___ фільм!", "answer": "дивлюся", "options": ["дивлюся", "дивишся", "дивиться", "дивляться"]}]`)}
 />
 
@@ -287,6 +313,7 @@ Why do some verbs change their consonant? Notice: **робити** → **роб�
 
 <Quiz
   title="Choose the Right Verb"
+  isUkrainian={false}
   questions={JSON.parse(`[{"question": "Я впевнено ___ українською мовою.", "options": [{"text": "говорю", "correct": true}, {"text": "говориш", "correct": false}, {"text": "говорить", "correct": false}, {"text": "говорять", "correct": false}]}, {"question": "Скажіть, чи ти часто ___ музику?", "options": [{"text": "слухаю", "correct": false}, {"text": "слухаєш", "correct": true}, {"text": "слухає", "correct": false}, {"text": "слухають", "correct": false}]}, {"question": "Ми зазвичай ___ вдома ввечері.", "options": [{"text": "вечеряю", "correct": false}, {"text": "вечеряєш", "correct": false}, {"text": "вечеряє", "correct": false}, {"text": "вечеряємо", "correct": true}]}, {"question": "Вона зараз швидко ___ листа.", "options": [{"text": "пишеш", "correct": false}, {"text": "пише", "correct": true}, {"text": "пишуть", "correct": false}, {"text": "писати", "correct": false}]}, {"question": "Ви добре ___ це слово?", "options": [{"text": "знати", "correct": false}, {"text": "знаємо", "correct": false}, {"text": "знаєте", "correct": true}, {"text": "знають", "correct": false}]}, {"question": "Я дуже ___ свою роботу.", "options": [{"text": "люблю", "correct": true}, {"text": "любиш", "correct": false}, {"text": "любить", "correct": false}, {"text": "люблять", "correct": false}]}, {"question": "Чи ти часто ___ в університет?", "options": [{"text": "ходиш", "correct": true}, {"text": "ходжу", "correct": false}, {"text": "ходимо", "correct": false}, {"text": "ходять", "correct": false}]}, {"question": "Він зараз не ___ спати.", "options": [{"text": "хотіти", "correct": false}, {"text": "хочеш", "correct": false}, {"text": "хоче", "correct": true}, {"text": "хочуть", "correct": false}]}, {"question": "Чи ти зараз ___ вправу вдома?", "options": [{"text": "робити", "correct": false}, {"text": "робиш", "correct": true}, {"text": "робить", "correct": false}, {"text": "роблять", "correct": false}]}, {"question": "Що вона зараз робить? Вона ___ біля вікна.", "options": [{"text": "стояти", "correct": false}, {"text": "стоїш", "correct": false}, {"text": "стоїть", "correct": true}, {"text": "стоять", "correct": false}]}, {"question": "Що ці люди роблять? Вони ___ обід.", "options": [{"text": "їсти", "correct": false}, {"text": "їси", "correct": false}, {"text": "їсть", "correct": false}, {"text": "їдять", "correct": true}]}, {"question": "Що вони роблять? Вони ___.", "options": [{"text": "бачити", "correct": false}, {"text": "бачиш", "correct": false}, {"text": "бачить", "correct": false}, {"text": "бачать", "correct": true}]}]`)}
 />
 
@@ -316,23 +343,6 @@ Why do some verbs change their consonant? Notice: **робити** → **роб�
 | хід | /xid/ | move/turn | noun | ч |  |
 | їздити | /ˈjizdɪtɪ/ | to ride/drive | verb |  |  |
 | їсти | /ˈjistɪ/ | to eat | verb |  |  |
-
-## 📋 Summary
-
-You've now mastered **Class II verbs (-ити)**! Here's what you can do:
-
-- Conjugate regular Class II verbs (говорити, робити, бачити, любити)
-- Use irregular verbs (їсти, пити, хотіти)
-- Distinguish between Class I (-ати) and Class II (-ити) patterns
-- Form sentences about daily actions
-
-**Key Pattern:**
-
-- **Class II:** Drop -ити → add -ю/-иш/-ить/-имо/-ите/-ять
-
-With Class I and Class II verbs combined, you can now express hundreds of actions in Ukrainian. Вітаю! (Congratulations!)
-
----
 
 > [!resources] 🔗 External Resources
 >

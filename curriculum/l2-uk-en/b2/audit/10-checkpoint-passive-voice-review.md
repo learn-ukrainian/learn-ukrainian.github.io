@@ -2,14 +2,9 @@
 **Phase:** B2.1a | **Level:** B2 | **Pedagogy:** checkpoint | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
-## PEDAGOGICAL VIOLATIONS
-- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Помилки в дієприкметниках (M07-09)' uses placeholder syntax instead of real errors
-  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 4/8 items with placeholders/missing errors.
-
 ## Recommendation
-**📝 UPDATE** (severity 20/100)
+**📝 UPDATE** (severity 10/100)
 
-- 1 pedagogical violations (minor)
 - Activity density below minimum
 
 ## Gates
@@ -23,7 +18,7 @@
 - **Vocab:** ✅ 47/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.8% (checkpoint - no gate)
 - **Richness:** ✅ 88% (checkpoint)

@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Warm-up
@@ -397,6 +399,29 @@ Today, Ukrainian food culture is experiencing a renaissance. Chefs are reviving 
 
 ---
 
+## 📋 Summary
+
+In this module, you learned:
+
+✅ **30 food and drink words**: from борщ to банан, from чай to вода
+✅ **Meal vocabulary**: сніданок, обід, вечеря
+✅ **How to use їсти (to eat) and пити (to drink)** in present tense
+✅ **Смачного!** — the magic word for "Enjoy your meal!"
+✅ **Ukrainian food culture**: borshch, varenyky, and why food matters in Ukrainian identity
+
+**Key phrases:**
+
+- Ти їси борщ? — Are you eating borshch?
+- Ти п'єш каву? — Are you drinking coffee?
+- Я люблю борщ! — I love borshch!
+- Смачного! — Enjoy your meal!
+- Це дуже смачно! — It's very delicious!
+
+**Next steps:**
+In Module 10, you'll review everything you've learned in Modules 1-9. You're completing your first phase of Ukrainian — congratulations!
+
+---
+
 
 
 ## 🎯 Activities
@@ -405,13 +430,15 @@ Today, Ukrainian food culture is experiencing a renaissance. Chefs are reviving 
 
 <Quiz
   title="Ukrainian Cuisine Knowledge"
-  questions={JSON.parse(`[{"question": "What exactly is the traditional dish борщ?", "options": [{"text": "A beet soup", "correct": true}, {"text": "A meat dumpling", "correct": false}, {"text": "A type of bread", "correct": false}, {"text": "A fruit dessert", "correct": false}]}, {"question": "Which ingredient is essential for борщ?", "options": [{"text": "Rice", "correct": false}, {"text": "Beets (буряк)", "correct": true}, {"text": "Fish", "correct": false}, {"text": "Cheese", "correct": false}]}, {"question": "What kind of food are traditional вареники?", "options": [{"text": "Pancakes", "correct": false}, {"text": "Dumplings", "correct": true}, {"text": "Sausages", "correct": false}, {"text": "Cakes", "correct": false}]}, {"question": "When do Ukrainians say the phrase \\\"Смачного!\\\"?", "options": [{"text": "When saying hello", "correct": false}, {"text": "Before eating (Bon appétit)", "correct": true}, {"text": "When saying goodbye", "correct": false}, {"text": "While drinking", "correct": false}]}, {"question": "Which drink is very popular in Ukraine?", "options": [{"text": "Milkshake", "correct": false}, {"text": "Uzvar", "correct": true}, {"text": "Coconut water", "correct": false}, {"text": "Iced tea", "correct": false}]}, {"question": "What do Ukrainians typically eat with борщ?", "options": [{"text": "Rice", "correct": false}, {"text": "Pampushky", "correct": true}, {"text": "Pasta", "correct": false}, {"text": "Chips", "correct": false}]}, {"question": "Which meat is traditionally common in Ukrainian cuisine?", "options": [{"text": "Pork (свинина)", "correct": true}, {"text": "Camel", "correct": false}, {"text": "Kangaroo", "correct": false}, {"text": "Shark", "correct": false}]}, {"question": "What exactly is \\\"сало\\\" in Ukrainian cuisine?", "options": [{"text": "Cheese", "correct": false}, {"text": "Cured pork fat", "correct": true}, {"text": "Bread", "correct": false}, {"text": "Vegetable soup", "correct": false}]}, {"question": "Which meal is usually the largest in Ukraine?", "options": [{"text": "Breakfast", "correct": false}, {"text": "Lunch (обід)", "correct": true}, {"text": "Dinner", "correct": false}, {"text": "Midnight snack", "correct": false}]}, {"question": "What filling is popular for sweet вареники?", "options": [{"text": "Meat", "correct": false}, {"text": "Cherries (вишні)", "correct": true}, {"text": "Potatoes", "correct": false}, {"text": "Cabbage", "correct": false}]}, {"question": "What kind of dish is the traditional \\\"holubtsi\\\"?", "options": [{"text": "Fried fish", "correct": false}, {"text": "Cabbage rolls", "correct": true}, {"text": "Potato pancakes", "correct": false}, {"text": "Meat pie", "correct": false}]}, {"question": "Which bread is essential in Ukrainian culture?", "options": [{"text": "Baguette", "correct": false}, {"text": "Rye or wheat bread (хліб)", "correct": true}, {"text": "Tortilla", "correct": false}, {"text": "Naan", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "What exactly is the traditional dish борщ?", "options": [{"text": "A beet soup", "correct": true}, {"text": "A meat dumpling", "correct": false}, {"text": "A type of bread", "correct": false}, {"text": "A fruit dessert", "correct": false}]}, {"question": "Which ingredient is essential for борщ?", "options": [{"text": "Rice", "correct": false}, {"text": "Beets (буряк)", "correct": true}, {"text": "Fish", "correct": false}, {"text": "Cheese", "correct": false}]}, {"question": "What kind of food are traditional вареники?", "options": [{"text": "Pancakes", "correct": false}, {"text": "Dumplings", "correct": true}, {"text": "Sausages", "correct": false}, {"text": "Cakes", "correct": false}]}, {"question": "When do Ukrainians say the phrase \\\\\\"Смачного!\\\\\\"?", "options": [{"text": "When saying hello", "correct": false}, {"text": "Before eating (Bon appétit)", "correct": true}, {"text": "When saying goodbye", "correct": false}, {"text": "While drinking", "correct": false}]}, {"question": "Which drink is very popular in Ukraine?", "options": [{"text": "Milkshake", "correct": false}, {"text": "Uzvar", "correct": true}, {"text": "Coconut water", "correct": false}, {"text": "Iced tea", "correct": false}]}, {"question": "What do Ukrainians typically eat with борщ?", "options": [{"text": "Rice", "correct": false}, {"text": "Pampushky", "correct": true}, {"text": "Pasta", "correct": false}, {"text": "Chips", "correct": false}]}, {"question": "Which meat is traditionally common in Ukrainian cuisine?", "options": [{"text": "Pork (свинина)", "correct": true}, {"text": "Camel", "correct": false}, {"text": "Kangaroo", "correct": false}, {"text": "Shark", "correct": false}]}, {"question": "What exactly is \\\\\\"сало\\\\\\" in Ukrainian cuisine?", "options": [{"text": "Cheese", "correct": false}, {"text": "Cured pork fat", "correct": true}, {"text": "Bread", "correct": false}, {"text": "Vegetable soup", "correct": false}]}, {"question": "Which meal is usually the largest in Ukraine?", "options": [{"text": "Breakfast", "correct": false}, {"text": "Lunch (обід)", "correct": true}, {"text": "Dinner", "correct": false}, {"text": "Midnight snack", "correct": false}]}, {"question": "What filling is popular for sweet вареники?", "options": [{"text": "Meat", "correct": false}, {"text": "Cherries (вишні)", "correct": true}, {"text": "Potatoes", "correct": false}, {"text": "Cabbage", "correct": false}]}, {"question": "What kind of dish is the traditional \\\\\\"holubtsi\\\\\\"?", "options": [{"text": "Fried fish", "correct": false}, {"text": "Cabbage rolls", "correct": true}, {"text": "Potato pancakes", "correct": false}, {"text": "Meat pie", "correct": false}]}, {"question": "Which bread is essential in Ukrainian culture?", "options": [{"text": "Baguette", "correct": false}, {"text": "Rye or wheat bread (хліб)", "correct": true}, {"text": "Tortilla", "correct": false}, {"text": "Naan", "correct": false}]}]`)}
 />
 
 ### Food Categories
 
 <MatchUp
   title="Food Categories"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "Food Item", "right": "Category"}, {"left": "борщ", "right": "Main dish"}, {"left": "яблуко", "right": "Fruit"}, {"left": "картопля", "right": "Vegetable"}, {"left": "чай", "right": "Drink"}, {"left": "м'ясо", "right": "Main dish"}, {"left": "банан", "right": "Fruit"}, {"left": "помідор", "right": "Vegetable"}, {"left": "кава", "right": "Drink"}, {"left": "риба", "right": "Main dish"}]`)}
 />
 
@@ -419,6 +446,7 @@ Today, Ukrainian food culture is experiencing a renaissance. Chefs are reviving 
 
 <FillIn
   title="Complete the Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Я ___ борщ.", "answer": "їм", "options": ["їм", "п'ю", "снідаю", "вечеряю"]}, {"sentence": "Вона ___ каву.", "answer": "п'є", "options": ["їсть", "п'є", "снідає", "обідає"]}, {"sentence": "Ми ___ вранці.", "answer": "снідаємо", "options": ["снідаємо", "обідаємо", "вечеряємо", "їмо"]}, {"sentence": "Він ___ вареники.", "answer": "їсть", "options": ["їсть", "п'є", "снідає", "обідає"]}, {"sentence": "Я ___ воду.", "answer": "п'ю", "options": ["п'ю", "їм", "снідаю", "обідаю"]}, {"sentence": "Діти ___ молоко.", "answer": "п'ють", "options": ["їдять", "п'ють", "снідають", "вечеряють"]}, {"sentence": "Ти ___ яблуко?", "answer": "їси", "options": ["їси", "п'єш", "снідаєш", "обідаєш"]}, {"sentence": "Вони ___ вечором.", "answer": "вечеряють", "options": ["снідають", "обідають", "вечеряють", "їдять"]}, {"sentence": "Я ___ рибу.", "answer": "їм", "options": ["їм", "п'ю", "снідаю", "вечеряю"]}, {"sentence": "Ви ___ чай?", "answer": "п'єте", "options": ["їсте", "п'єте", "снідаєте", "обідаєте"]}, {"sentence": "Він ___ хліб.", "answer": "їсть", "options": ["їсть", "п'є", "снідає", "вечеряє"]}, {"sentence": "Ми ___ овочі.", "answer": "їмо", "options": ["їмо", "п'ємо", "снідаємо", "обідаємо"]}]`)}
 />
 
@@ -426,6 +454,7 @@ Today, Ukrainian food culture is experiencing a renaissance. Chefs are reviving 
 
 <GroupSort
   title="Sort by Food Type"
+  isUkrainian={false}
   groups={JSON.parse(`{"Food (Їжа)": ["борщ", "суп", "вареники", "м'ясо", "курка", "риба", "картопля", "яблуко"], "Drinks (Напої)": ["чай", "кава", "вода", "сік"]}`)}
 />
 
@@ -433,13 +462,15 @@ Today, Ukrainian food culture is experiencing a renaissance. Chefs are reviving 
 
 <TrueFalse
   title="Food Facts"
-  items={JSON.parse(`[{"statement": "Борщ is a traditional Ukrainian beet soup.", "isTrue": true, "explanation": "Correct! Борщ is Ukraine's most famous dish, recognized by UNESCO."}, {"statement": "Українці eat their main meal in the evening.", "isTrue": false, "explanation": "Incorrect! The main meal (обід) is traditionally at lunch, around 1-3 PM."}, {"statement": "\\\"Смачного!\\\" is said before someone starts eating.", "isTrue": true, "explanation": "Correct! It means \\\"Enjoy your meal!\\\" — like \\\"Bon appétit!\\\""}, {"statement": "Вареники are only filled with meat.", "isTrue": false, "explanation": "Incorrect! Варени can be filled with potato, cheese, cabbage, or even sweet cherries."}, {"statement": "Чай (tea) is more popular than coffee at Ukrainian breakfast.", "isTrue": true, "explanation": "Correct! Black tea is the traditional breakfast drink in Ukraine."}, {"statement": "The verb \\\"пити\\\" means \\\"to eat.\\\"", "isTrue": false, "explanation": "Incorrect! пити = to drink. їсти = to eat."}, {"statement": "Сир can mean both cheese and cottage cheese in Ukrainian.", "isTrue": true, "explanation": "Correct! Сир is used for both types, though cottage cheese is more common at breakfast."}, {"statement": "Огірок means \\\"tomato.\\\"", "isTrue": false, "explanation": "Incorrect! Огірок = cucumber. Помідор = tomato."}, {"statement": "Яблуко is a neuter noun.", "isTrue": true, "explanation": "Correct! Яблуко ends in -о, which is a neuter ending."}, {"statement": "Картопля is a masculine noun.", "isTrue": false, "explanation": "Incorrect! Картопля ends in -я, which is feminine."}, {"statement": "\\\"Я їм\\\" means \\\"I eat.\\\"", "isTrue": true, "explanation": "Correct! їсти: я їм, ти їси, він/вона їсть."}, {"statement": "Молоко means \\\"milk\\\" in English.", "isTrue": false, "explanation": "Wait, this is TRUE! Молоко = milk. (This keeps you alert!)"}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Борщ is a traditional Ukrainian beet soup.", "isTrue": true, "explanation": "Correct! Борщ is Ukraine's most famous dish, recognized by UNESCO."}, {"statement": "Українці eat their main meal in the evening.", "isTrue": false, "explanation": "Incorrect! The main meal (обід) is traditionally at lunch, around 1-3 PM."}, {"statement": "\\\\\\"Смачного!\\\\\\" is said before someone starts eating.", "isTrue": true, "explanation": "Correct! It means \\\\\\"Enjoy your meal!\\\\\\" — like \\\\\\"Bon appétit!\\\\\\""}, {"statement": "Вареники are only filled with meat.", "isTrue": false, "explanation": "Incorrect! Варени can be filled with potato, cheese, cabbage, or even sweet cherries."}, {"statement": "Чай (tea) is more popular than coffee at Ukrainian breakfast.", "isTrue": true, "explanation": "Correct! Black tea is the traditional breakfast drink in Ukraine."}, {"statement": "The verb \\\\\\"пити\\\\\\" means \\\\\\"to eat.\\\\\\"", "isTrue": false, "explanation": "Incorrect! пити = to drink. їсти = to eat."}, {"statement": "Сир can mean both cheese and cottage cheese in Ukrainian.", "isTrue": true, "explanation": "Correct! Сир is used for both types, though cottage cheese is more common at breakfast."}, {"statement": "Огірок means \\\\\\"tomato.\\\\\\"", "isTrue": false, "explanation": "Incorrect! Огірок = cucumber. Помідор = tomato."}, {"statement": "Яблуко is a neuter noun.", "isTrue": true, "explanation": "Correct! Яблуко ends in -о, which is a neuter ending."}, {"statement": "Картопля is a masculine noun.", "isTrue": false, "explanation": "Incorrect! Картопля ends in -я, which is feminine."}, {"statement": "\\\\\\"Я їм\\\\\\" means \\\\\\"I eat.\\\\\\"", "isTrue": true, "explanation": "Correct! їсти: я їм, ти їси, він/вона їсть."}, {"statement": "Молоко means \\\\\\"milk\\\\\\" in English.", "isTrue": false, "explanation": "Wait, this is TRUE! Молоко = milk. (This keeps you alert!)"}]`)}
 />
 
 ### Unscramble the Food Words
 
 <Anagram
   title="Unscramble the Food Words"
+  isUkrainian={false}
   items={JSON.parse(`[{"scrambled": "б о р щ", "answer": "борщ", "hint": ""}, {"scrambled": "х л і б", "answer": "хліб", "hint": ""}, {"scrambled": "с и р", "answer": "сир", "hint": ""}, {"scrambled": "ч а й", "answer": "чай", "hint": ""}, {"scrambled": "к а в а", "answer": "кава", "hint": ""}, {"scrambled": "в о д а", "answer": "вода", "hint": ""}, {"scrambled": "с у п", "answer": "суп", "hint": ""}, {"scrambled": "с і к", "answer": "сік", "hint": ""}, {"scrambled": "р и б а", "answer": "риба", "hint": ""}, {"scrambled": "я й ц е", "answer": "яйце", "hint": ""}, {"scrambled": "м о л о к о", "answer": "молоко", "hint": ""}, {"scrambled": "м ' я с о", "answer": "м'ясо", "hint": ""}]`)}
 />
 
@@ -447,6 +478,7 @@ Today, Ukrainian food culture is experiencing a renaissance. Chefs are reviving 
 
 <MatchUp
   title="Food Vocabulary (Ukrainian ↔ English)"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "їжа", "right": "food"}, {"left": "сніданок", "right": "breakfast"}, {"left": "обід", "right": "lunch"}, {"left": "вечеря", "right": "dinner"}, {"left": "хліб", "right": "bread"}, {"left": "м'ясо", "right": "meat"}, {"left": "курка", "right": "chicken"}, {"left": "овочі", "right": "vegetables"}, {"left": "фрукти", "right": "fruits"}]`)}
 />
 
@@ -454,7 +486,8 @@ Today, Ukrainian food culture is experiencing a renaissance. Chefs are reviving 
 
 <Quiz
   title="Food Sentence Order"
-  questions={JSON.parse(`[{"question": "Identify the correct word order for the sentence: \\\"I love borshch.\\\"", "options": [{"text": "Я люблю борщ", "correct": true}, {"text": "люблю Я борщ", "correct": false}, {"text": "борщ Я люблю", "correct": false}]}, {"question": "Identify the correct word order for the sentence: \\\"This is tasty bread.\\\"", "options": [{"text": "Це смачний хліб", "correct": true}, {"text": "смачний Це хліб", "correct": false}, {"text": "хліб Це смачний", "correct": false}]}, {"question": "Identify the correct word order for the sentence: \\\"She drinks coffee.\\\"", "options": [{"text": "Вона п'є каву", "correct": true}, {"text": "п'є Вона каву", "correct": false}, {"text": "каву Вона п'є", "correct": false}]}, {"question": "Identify the correct word order for the sentence: \\\"We eat varenyky.\\\"", "options": [{"text": "Ми їмо вареники", "correct": true}, {"text": "їмо Ми вареники", "correct": false}, {"text": "вареники Ми їмо", "correct": false}]}, {"question": "Identify the correct word order for the sentence: \\\"I have breakfast every morning.\\\"", "options": [{"text": "Я снідаю щоранку", "correct": true}, {"text": "снідаю Я щоранку", "correct": false}, {"text": "щоранку Я снідаю", "correct": false}]}, {"question": "Identify the correct word order for the sentence: \\\"He eats meat.\\\"", "options": [{"text": "Він їсть м'ясо", "correct": true}, {"text": "їсть Він м'ясо", "correct": false}, {"text": "м'ясо Він їсть", "correct": false}]}, {"question": "Identify the correct word order for the sentence: \\\"She loves vegetables.\\\"", "options": [{"text": "Вона любить овочі", "correct": true}, {"text": "любить Вона овочі", "correct": false}, {"text": "овочі Вона любить", "correct": false}]}, {"question": "Identify the correct word order for the sentence: \\\"They drink milk.\\\"", "options": [{"text": "Вони п'ють молоко", "correct": true}, {"text": "п'ють Вони молоко", "correct": false}, {"text": "молоко Вони п'ють", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Identify the correct word order for the sentence: \\\\\\"I love borshch.\\\\\\"", "options": [{"text": "Я люблю борщ", "correct": true}, {"text": "люблю Я борщ", "correct": false}, {"text": "борщ Я люблю", "correct": false}]}, {"question": "Identify the correct word order for the sentence: \\\\\\"This is tasty bread.\\\\\\"", "options": [{"text": "Це смачний хліб", "correct": true}, {"text": "смачний Це хліб", "correct": false}, {"text": "хліб Це смачний", "correct": false}]}, {"question": "Identify the correct word order for the sentence: \\\\\\"She drinks coffee.\\\\\\"", "options": [{"text": "Вона п'є каву", "correct": true}, {"text": "п'є Вона каву", "correct": false}, {"text": "каву Вона п'є", "correct": false}]}, {"question": "Identify the correct word order for the sentence: \\\\\\"We eat varenyky.\\\\\\"", "options": [{"text": "Ми їмо вареники", "correct": true}, {"text": "їмо Ми вареники", "correct": false}, {"text": "вареники Ми їмо", "correct": false}]}, {"question": "Identify the correct word order for the sentence: \\\\\\"I have breakfast every morning.\\\\\\"", "options": [{"text": "Я снідаю щоранку", "correct": true}, {"text": "снідаю Я щоранку", "correct": false}, {"text": "щоранку Я снідаю", "correct": false}]}, {"question": "Identify the correct word order for the sentence: \\\\\\"He eats meat.\\\\\\"", "options": [{"text": "Він їсть м'ясо", "correct": true}, {"text": "їсть Він м'ясо", "correct": false}, {"text": "м'ясо Він їсть", "correct": false}]}, {"question": "Identify the correct word order for the sentence: \\\\\\"She loves vegetables.\\\\\\"", "options": [{"text": "Вона любить овочі", "correct": true}, {"text": "любить Вона овочі", "correct": false}, {"text": "овочі Вона любить", "correct": false}]}, {"question": "Identify the correct word order for the sentence: \\\\\\"They drink milk.\\\\\\"", "options": [{"text": "Вони п'ють молоко", "correct": true}, {"text": "п'ють Вони молоко", "correct": false}, {"text": "молоко Вони п'ють", "correct": false}]}]`)}
 />
 
 ## 📚 Vocabulary
@@ -511,29 +544,6 @@ Today, Ukrainian food culture is experiencing a renaissance. Chefs are reviving 
 | чай | /t͡ʃɑj/ | tea | noun | ч |  |
 | яєчня | /jɑˈjɛt͡ʃnʲɑ/ | scrambled eggs | noun | ж |  |
 | їжа | /ˈjiʒɑ/ | food | noun | ж |  |
-
-## 📋 Summary
-
-In this module, you learned:
-
-✅ **30 food and drink words**: from борщ to банан, from чай to вода
-✅ **Meal vocabulary**: сніданок, обід, вечеря
-✅ **How to use їсти (to eat) and пити (to drink)** in present tense
-✅ **Смачного!** — the magic word for "Enjoy your meal!"
-✅ **Ukrainian food culture**: borshch, varenyky, and why food matters in Ukrainian identity
-
-**Key phrases:**
-
-- Ти їси борщ? — Are you eating borshch?
-- Ти п'єш каву? — Are you drinking coffee?
-- Я люблю борщ! — I love borshch!
-- Смачного! — Enjoy your meal!
-- Це дуже смачно! — It's very delicious!
-
-**Next steps:**
-In Module 10, you'll review everything you've learned in Modules 1-9. You're completing your first phase of Ukrainian — congratulations!
-
----
 
 > [!resources] 🔗 External Resources
 >

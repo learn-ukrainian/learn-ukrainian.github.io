@@ -9,6 +9,7 @@ interface DialogueLine {
 
 interface DialogueReorderActivityProps {
   lines: DialogueLine[];  // correct order
+  isUkrainian?: boolean;
 }
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -20,7 +21,7 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled;
 }
 
-export function DialogueReorderActivity({ lines }: DialogueReorderActivityProps) {
+export function DialogueReorderActivity({ lines, isUkrainian }: DialogueReorderActivityProps) {
   // Create shuffled order with indices
   const shuffledIndices = useMemo(() => {
     const indices = lines.map((_, i) => i);
@@ -69,6 +70,11 @@ export function DialogueReorderActivity({ lines }: DialogueReorderActivityProps)
     return originalIndex === position ? styles.correct : styles.incorrect;
   };
 
+  const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Order';
+  const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
+  const successLabel = isUkrainian ? '✓ Правильно! Діалог у правильному порядку.' : '✓ Correct! The dialogue is in the right order.';
+  const errorLabel = isUkrainian ? '✗ Порядок не зовсім правильний. Спробуйте ще раз!' : '✗ The order is not quite right. Try again!';
+
   return (
     <div>
       <div className={styles.dialogueContainer}>
@@ -91,7 +97,7 @@ export function DialogueReorderActivity({ lines }: DialogueReorderActivityProps)
       {!submitted && (
         <div className={styles.buttonRow}>
           <button className={styles.submitButton} onClick={handleSubmit}>
-            Check Order
+            {checkBtnLabel}
           </button>
         </div>
       )}
@@ -99,15 +105,11 @@ export function DialogueReorderActivity({ lines }: DialogueReorderActivityProps)
       {submitted && (
         <>
           <div className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
-            {isCorrect ? (
-              '✓ Correct! The dialogue is in the right order.'
-            ) : (
-              '✗ The order is not quite right. Try again!'
-            )}
+            {isCorrect ? successLabel : errorLabel}
           </div>
           <div className={styles.buttonRow}>
             <button className={styles.resetButton} onClick={handleReset}>
-              Try Again
+              {retryBtnLabel}
             </button>
           </div>
         </>
@@ -126,9 +128,10 @@ interface GeneratorDialogueLine {
 interface DialogueReorderProps {
   lines?: GeneratorDialogueLine[];
   children?: React.ReactNode;
+  isUkrainian?: boolean;
 }
 
-export default function DialogueReorder({ lines, children }: DialogueReorderProps) {
+export default function DialogueReorder({ lines, children, isUkrainian }: DialogueReorderProps) {
   // Transform generator format {text, order} to activity format {speaker, line}
   const transformedLines = useMemo(() => {
     if (!lines) return null;
@@ -141,16 +144,18 @@ export default function DialogueReorder({ lines, children }: DialogueReorderProp
     }));
   }, [lines]);
 
+  const headerLabel = isUkrainian ? 'Впорядкуйте діалог' : 'Put the Dialogue in Order';
+
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>💬</span>
-        <span>Put the Dialogue in Order</span>
-        <ActivityHelp activityType="dialogue-reorder" />
+        <span>{headerLabel}</span>
+        <ActivityHelp activityType="dialogue-reorder" isUkrainian={isUkrainian} />
       </div>
       <div className={styles.activityContent}>
         {transformedLines ? (
-          <DialogueReorderActivity lines={transformedLines} />
+          <DialogueReorderActivity lines={transformedLines} isUkrainian={isUkrainian} />
         ) : children}
       </div>
     </div>

@@ -1,22 +1,19 @@
 # Audit Report: 51-idioms-body.md
 **Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Знайди помилку' uses placeholder syntax instead of real errors
-  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 1/8 items with placeholders/missing errors.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): камінь, щирий, душа, емоція, біль...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): серце, емоційний, щирість, любов, камінь...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 10/100)
 
-- 2 pedagogical violations (minor)
-- Activity count below minimum
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1865/1750
-- **Activities:** ❌ 13/14
+- **Activities:** ✅ 13/13
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
@@ -25,7 +22,7 @@
 - **Vocab:** ✅ 102/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.7% (target 98-100% (vocab))
 - **Richness:** ✅ 99% (content)

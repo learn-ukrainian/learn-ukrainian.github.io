@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): кожен, небудь, ніхто, хтось, всього...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): чогось, будь, когось, кожен, всього...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

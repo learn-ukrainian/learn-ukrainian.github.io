@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Warm-up
@@ -268,6 +270,57 @@ This tradition of spending time outdoors helps families connect with nature and 
 
 ---
 
+## 📋 Summary
+
+**Landscape:**
+
+- гора
+- долина
+- ліс
+- озеро
+- ріка
+- море
+- поле
+- пляж
+
+**Weather:**
+
+- сонячно
+- хмарно
+- дощ
+- сніг
+- вітер
+- гроза
+- туман
+
+**Seasons:**
+
+- весна
+- літо
+- осінь
+- зима
+
+Тепер ви можете добре говорити про погоду і чудову природу українською мовою! Насолоджуйтесь чудовою природою рідної України! Вчіться нових слів і розповідайте друзям про кожен чудовий сезон! Бажаємо гарної погоди та великих успіхів у вивченні!
+
+---
+
+> 💡 **Пори року**
+>
+> «В Україні чотири пори року: весна, літо, осінь, зима. Кожна прекрасна!»
+>
+> _Translation: "Ukraine has four seasons. Each is beautiful!"_
+
+> 🇺🇦 **Погода в Україні**
+>
+> Українські пори року дуже різноманітні:
+>
+> - **Весна**: тепло, сонячно, квітнуть дерева
+> - **Літо**: жарко, часто йде дощ
+> - **Осінь**: прохолодно, золоте листя
+> - **Зима**: холодно, йде сніг
+>
+> Українці дуже люблять говорити про погоду! Це завжди гарна тема для розмови.
+
 
 
 ## 🎯 Activities
@@ -276,6 +329,7 @@ This tradition of spending time outdoors helps families connect with nature and 
 
 <MatchUp
   title="Nature Words"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- гора", "right": "mountain"}, {"left": "- долина", "right": "valley"}, {"left": "- ліс", "right": "forest"}, {"left": "- озеро", "right": "lake"}, {"left": "- ріка", "right": "river"}, {"left": "- море", "right": "sea"}, {"left": "- сонячно", "right": "sunny"}, {"left": "- хмарно", "right": "cloudy"}, {"left": "- дощ", "right": "rain"}, {"left": "- сніг", "right": "snow"}, {"left": "- весна", "right": "spring"}, {"left": "- зима", "right": "winter"}]`)}
 />
 
@@ -283,6 +337,7 @@ This tradition of spending time outdoors helps families connect with nature and 
 
 <FillIn
   title="Nature & Weather"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Сьогодні [___]. (sunny)", "answer": "сонячно", "options": ["сонячно", "хмарно", "дощ", "сніг"]}, {"sentence": "Іде [___]. (rain)", "answer": "дощ", "options": ["сонячно", "хмарно", "дощ", "сніг"]}, {"sentence": "[___] гарна. (mountain)", "answer": "Гора", "options": ["Гора", "Долина", "Ріка", "Море"]}, {"sentence": "Ми плаваємо в [___]. (lake)", "answer": "озері", "options": ["горі", "долині", "озері", "морі"]}, {"sentence": "Я люблю [___]. (spring)", "answer": "весну", "options": ["весну", "літо", "осінь", "зиму"]}, {"sentence": "[___] холодна. (Winter)", "answer": "Зима", "options": ["Весна", "Літо", "Осінь", "Зима"]}, {"sentence": "Птахи співають у [___]. (forest)", "answer": "лісі", "options": ["горі", "лісі", "морі", "полі"]}, {"sentence": "Сьогодні [___]. (windy)", "answer": "вітряно", "options": ["сонячно", "хмарно", "вітряно", "туманно"]}]`)}
 />
 
@@ -290,7 +345,8 @@ This tradition of spending time outdoors helps families connect with nature and 
 
 <Quiz
   title="Nature & Weather"
-  questions={JSON.parse(`[{"question": "Can you identify the correct translation for the Ukrainian word \\\"Гора\\\"?", "options": [{"text": "Mountain", "correct": true}, {"text": "Valley", "correct": false}, {"text": "Forest", "correct": false}, {"text": "River", "correct": false}]}, {"question": "Which Ukrainian word corresponds to the large body of water called \\\"Lake\\\"?", "options": [{"text": "Озеро", "correct": true}, {"text": "Море", "correct": false}, {"text": "Ріка", "correct": false}, {"text": "Ставок", "correct": false}]}, {"question": "If the weather is described as \\\"Сонячно\\\", what does it mean?", "options": [{"text": "Sunny", "correct": true}, {"text": "Cloudy", "correct": false}, {"text": "Rainy", "correct": false}, {"text": "Windy", "correct": false}]}, {"question": "What phenomenon is happening when Ukrainians say \\\"Іде дощ\\\"?", "options": [{"text": "It is raining", "correct": true}, {"text": "It is snowing", "correct": false}, {"text": "The sun is shining", "correct": false}, {"text": "The wind is blowing", "correct": false}]}, {"question": "Which season is characterized by blooming flowers and warming weather?", "options": [{"text": "Весна", "correct": true}, {"text": "Зима", "correct": false}, {"text": "Осінь", "correct": false}, {"text": "Літо", "correct": false}]}, {"question": "When do Ukrainians typically go to the sea for a vacation?", "options": [{"text": "Влітку", "correct": true}, {"text": "Взимку", "correct": false}, {"text": "Восени", "correct": false}, {"text": "Навесні", "correct": false}]}, {"question": "What weather condition makes it difficult to see clearly outside?", "options": [{"text": "Туман", "correct": true}, {"text": "Сонце", "correct": false}, {"text": "Вітер", "correct": false}, {"text": "Тепло", "correct": false}]}, {"question": "If you see \\\"Блискавка\\\" and hear \\\"Грім\\\", what is happening?", "options": [{"text": "A thunderstorm", "correct": true}, {"text": "A sunny day", "correct": false}, {"text": "A light rain", "correct": false}, {"text": "A snowstorm", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Can you identify the correct translation for the Ukrainian word \\\\\\"Гора\\\\\\"?", "options": [{"text": "Mountain", "correct": true}, {"text": "Valley", "correct": false}, {"text": "Forest", "correct": false}, {"text": "River", "correct": false}]}, {"question": "Which Ukrainian word corresponds to the large body of water called \\\\\\"Lake\\\\\\"?", "options": [{"text": "Озеро", "correct": true}, {"text": "Море", "correct": false}, {"text": "Ріка", "correct": false}, {"text": "Ставок", "correct": false}]}, {"question": "If the weather is described as \\\\\\"Сонячно\\\\\\", what does it mean?", "options": [{"text": "Sunny", "correct": true}, {"text": "Cloudy", "correct": false}, {"text": "Rainy", "correct": false}, {"text": "Windy", "correct": false}]}, {"question": "What phenomenon is happening when Ukrainians say \\\\\\"Іде дощ\\\\\\"?", "options": [{"text": "It is raining", "correct": true}, {"text": "It is snowing", "correct": false}, {"text": "The sun is shining", "correct": false}, {"text": "The wind is blowing", "correct": false}]}, {"question": "Which season is characterized by blooming flowers and warming weather?", "options": [{"text": "Весна", "correct": true}, {"text": "Зима", "correct": false}, {"text": "Осінь", "correct": false}, {"text": "Літо", "correct": false}]}, {"question": "When do Ukrainians typically go to the sea for a vacation?", "options": [{"text": "Влітку", "correct": true}, {"text": "Взимку", "correct": false}, {"text": "Восени", "correct": false}, {"text": "Навесні", "correct": false}]}, {"question": "What weather condition makes it difficult to see clearly outside?", "options": [{"text": "Туман", "correct": true}, {"text": "Сонце", "correct": false}, {"text": "Вітер", "correct": false}, {"text": "Тепло", "correct": false}]}, {"question": "If you see \\\\\\"Блискавка\\\\\\" and hear \\\\\\"Грім\\\\\\", what is happening?", "options": [{"text": "A thunderstorm", "correct": true}, {"text": "A sunny day", "correct": false}, {"text": "A light rain", "correct": false}, {"text": "A snowstorm", "correct": false}]}]`)}
 />
 
 ### Story Comprehension
@@ -299,6 +355,8 @@ This tradition of spending time outdoors helps families connect with nature and 
 <Cloze
 
   title="Story Comprehension"
+
+  isUkrainian={false}
 
   passage={`Україна має чудову [___:1]. На заході є високі [___:2] Карпати. Там взимку падає [___:3] і люди катаються на лижах. На півдні є Чорне [___:4]. Влітку там дуже [___:5] і тепло. Люди люблять плавати у [___:6] і засмагати на [___:7]. Через Київ тече велика [___:8] Дніпро. Навесні все цвіте і [___:9]. Восени часто йде [___:10] і стає прохолодно. Тоді буває сильний [___:11]. Але кожна [___:12] року по-своєму красива.`}
 
@@ -310,12 +368,13 @@ This tradition of spending time outdoors helps families connect with nature and 
 
 <Unjumble
   title="Weather Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "Сьогодні / на / вулиці / дуже / гарна / і / тепла / погода", "answer": "Сьогодні на вулиці дуже гарна і тепла погода"}, {"jumbled": "Влітку / ми / часто / їздимо / відпочивати / на / синє / море", "answer": "Влітку ми часто їздимо відпочивати на синє море"}, {"jumbled": "Взимку / в / горах / падає / білий / сніг / і / холодно", "answer": "Взимку в горах падає білий сніг і холодно"}, {"jumbled": "Осінь / це / золота / пора / коли / листя / стає / жовтим", "answer": "Осінь це золота пора коли листя стає жовтим"}, {"jumbled": "Навесні / птахи / повертаються / додому / і / співають / веселі / пісні", "answer": "Навесні птахи повертаються додому і співають веселі пісні"}, {"jumbled": "Яке / величезне / і / красиве / озеро / ми / бачимо / перед / собою", "answer": "Яке величезне і красиве озеро ми бачимо перед собою"}]`)}
 />
 
 ### Weather Mistakes
 
-<ErrorCorrection title="Weather Mistakes">
+<ErrorCorrection title="Weather Mistakes" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Сьогодні **сніг** і тепло.`}
     errorWord={`сніг`}
@@ -364,6 +423,7 @@ This tradition of spending time outdoors helps families connect with nature and 
 
 <MatchUp
   title="Seasons & Activities"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- весна", "right": "квіти цвітуть"}, {"left": "- літо", "right": "відпочинок на морі"}, {"left": "- осінь", "right": "листя падає"}, {"left": "- зима", "right": "катання на ковзанах"}, {"left": "- гроза", "right": "блискавка і грім"}, {"left": "- туман", "right": "погана видимість"}, {"left": "- сонячно", "right": "хороша погода"}, {"left": "- сніг", "right": "білий покрив"}]`)}
 />
 
@@ -371,6 +431,7 @@ This tradition of spending time outdoors helps families connect with nature and 
 
 <GroupSort
   title="Nature Categories"
+  isUkrainian={false}
   groups={JSON.parse(`{"Landscape": ["гора", "долина", "ліс", "озеро", "ріка", "море"], "Weather": ["сонячно", "хмарно", "дощ", "сніг", "вітер", "гроза"], "Seasons": ["весна", "літо", "осінь", "зима"]}`)}
 />
 
@@ -378,13 +439,15 @@ This tradition of spending time outdoors helps families connect with nature and 
 
 <TrueFalse
   title="Nature Facts"
-  items={JSON.parse(`[{"statement": "\\\"Гора\\\" = mountain.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Озеро\\\" = lake.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Ріка\\\" = sea.", "isTrue": false, "explanation": ""}, {"statement": "\\\"Море\\\" = sea.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Сонячно\\\" = sunny.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Хмарно\\\" = sunny.", "isTrue": false, "explanation": ""}, {"statement": "\\\"Дощ\\\" = rain.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Весна\\\" = spring.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Літо\\\" = winter.", "isTrue": false, "explanation": ""}, {"statement": "\\\"Зима\\\" = winter.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Ліс\\\" = forest.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Долина\\\" = mountain.", "isTrue": false, "explanation": ""}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "\\\\\\"Гора\\\\\\" = mountain.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Озеро\\\\\\" = lake.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Ріка\\\\\\" = sea.", "isTrue": false, "explanation": ""}, {"statement": "\\\\\\"Море\\\\\\" = sea.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Сонячно\\\\\\" = sunny.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Хмарно\\\\\\" = sunny.", "isTrue": false, "explanation": ""}, {"statement": "\\\\\\"Дощ\\\\\\" = rain.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Весна\\\\\\" = spring.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Літо\\\\\\" = winter.", "isTrue": false, "explanation": ""}, {"statement": "\\\\\\"Зима\\\\\\" = winter.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Ліс\\\\\\" = forest.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Долина\\\\\\" = mountain.", "isTrue": false, "explanation": ""}]`)}
 />
 
 ### Nature Words
 
 <Translate
   title="Nature Words"
+  isUkrainian={false}
   questions={JSON.parse(`[{"source": "Mountain", "options": [{"text": "гора", "correct": true}, {"text": "долина", "correct": false}, {"text": "ріка", "correct": false}]}, {"source": "Lake", "options": [{"text": "озеро", "correct": true}, {"text": "ріка", "correct": false}, {"text": "море", "correct": false}]}, {"source": "Forest", "options": [{"text": "ліс", "correct": true}, {"text": "поле", "correct": false}, {"text": "гора", "correct": false}]}, {"source": "Sunny", "options": [{"text": "сонячно", "correct": true}, {"text": "хмарно", "correct": false}, {"text": "дощ", "correct": false}]}, {"source": "Rain", "options": [{"text": "дощ", "correct": true}, {"text": "сніг", "correct": false}, {"text": "вітер", "correct": false}]}, {"source": "Spring", "options": [{"text": "весна", "correct": true}, {"text": "літо", "correct": false}, {"text": "зима", "correct": false}]}, {"source": "Summer", "options": [{"text": "літо", "correct": true}, {"text": "зима", "correct": false}, {"text": "осінь", "correct": false}]}, {"source": "Winter", "options": [{"text": "зима", "correct": true}, {"text": "літо", "correct": false}, {"text": "весна", "correct": false}]}]`)}
 />
 
@@ -449,57 +512,6 @@ This tradition of spending time outdoors helps families connect with nature and 
 | узбережжя | uzbeˈrɛʒːɐ | coast | noun | ч |  |
 | хмарний | ˈxmɑrnɪj | cloudy | adj | с |  |
 | яскраво | jɐˈskrɑʋo | brightly | adv |  |  |
-
-## 📋 Summary
-
-**Landscape:**
-
-- гора
-- долина
-- ліс
-- озеро
-- ріка
-- море
-- поле
-- пляж
-
-**Weather:**
-
-- сонячно
-- хмарно
-- дощ
-- сніг
-- вітер
-- гроза
-- туман
-
-**Seasons:**
-
-- весна
-- літо
-- осінь
-- зима
-
-Тепер ви можете добре говорити про погоду і чудову природу українською мовою! Насолоджуйтесь чудовою природою рідної України! Вчіться нових слів і розповідайте друзям про кожен чудовий сезон! Бажаємо гарної погоди та великих успіхів у вивченні!
-
----
-
-> 💡 **Пори року**
->
-> «В Україні чотири пори року: весна, літо, осінь, зима. Кожна прекрасна!»
->
-> _Translation: "Ukraine has four seasons. Each is beautiful!"_
-
-> 🇺🇦 **Погода в Україні**
->
-> Українські пори року дуже різноманітні:
->
-> - **Весна**: тепло, сонячно, квітнуть дерева
-> - **Літо**: жарко, часто йде дощ
-> - **Осінь**: прохолодно, золоте листя
-> - **Зима**: холодно, йде сніг
->
-> Українці дуже люблять говорити про погоду! Це завжди гарна тема для розмови.
 
 > [!resources] 🔗 External Resources
 >

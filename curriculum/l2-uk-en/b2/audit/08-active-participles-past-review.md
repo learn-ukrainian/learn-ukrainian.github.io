@@ -1,20 +1,19 @@
 # Audit Report: 08-active-participles-past.md
 **Phase:** B2.1a | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): наступний, відомий, вживаний, останній, майбутній...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): вживаний, теперішній, давній, майбутній, відомий...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 10/100)
 
 - 1 pedagogical violations (minor)
-- Activity count below minimum
 
 ## Gates
 - **Words:** ⚠️ 1738/1750 (12 short)
-- **Activities:** ❌ 13/14
+- **Activities:** ✅ 13/13
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used

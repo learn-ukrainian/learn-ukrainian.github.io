@@ -9,6 +9,7 @@ interface TranslateItemProps {
   alternatives?: string[];
   explanation?: string;
   options?: string[];  // For selection-based (no free typing)
+  isUkrainian?: boolean;
 }
 
 export function TranslateItem({
@@ -17,6 +18,7 @@ export function TranslateItem({
   alternatives = [],
   explanation,
   options = [],
+  isUkrainian,
 }: TranslateItemProps) {
   const [selected, setSelected] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -58,6 +60,11 @@ export function TranslateItem({
     return '';
   };
 
+  const correctLabel = isUkrainian ? '✓ Правильно!' : '✓ Correct!';
+  const incorrectLabel = isUkrainian ? '✗ Правильний переклад:' : '✗ The correct translation is:';
+  const alsoAcceptedLabel = isUkrainian ? 'також приймається:' : 'also accepted:';
+  const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
+
   return (
     <div className={styles.translateItem}>
       <div className={styles.sourceText}>
@@ -81,12 +88,12 @@ export function TranslateItem({
         <>
           <div className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
             {isCorrect ? (
-              '✓ Correct!'
+              correctLabel
             ) : (
               <>
-                ✗ The correct translation is: <strong>{answer}</strong>
+                {incorrectLabel} <strong>{answer}</strong>
                 {alternatives.length > 0 && (
-                  <span> (also accepted: {alternatives.join(', ')})</span>
+                  <span> ({alsoAcceptedLabel} {alternatives.join(', ')})</span>
                 )}
               </>
             )}
@@ -96,7 +103,7 @@ export function TranslateItem({
           </div>
           <div className={styles.buttonRow}>
             <button className={styles.resetButton} onClick={handleReset}>
-              Try Again
+              {retryBtnLabel}
             </button>
           </div>
         </>
@@ -116,10 +123,14 @@ interface TranslateProps {
   questions?: GeneratorTranslateQuestion[];
   direction?: 'to-uk' | 'to-en';
   children?: React.ReactNode;
+  isUkrainian?: boolean;
 }
 
-export default function Translate({ questions, direction = 'to-uk', children }: TranslateProps) {
-  const title = direction === 'to-uk' ? 'Translate to Ukrainian' : 'Translate to English';
+export default function Translate({ questions, direction = 'to-uk', children, isUkrainian }: TranslateProps) {
+  let title = direction === 'to-uk' ? 'Translate to Ukrainian' : 'Translate to English';
+  if (isUkrainian) {
+    title = direction === 'to-uk' ? 'Перекладіть на українську' : 'Перекладіть на англійську';
+  }
   const icon = direction === 'to-uk' ? '🇺🇦' : '🇬🇧';
 
   // Transform generator format to TranslateItem props
@@ -148,7 +159,7 @@ export default function Translate({ questions, direction = 'to-uk', children }: 
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>{icon}</span>
         <span>{title}</span>
-        <ActivityHelp activityType="translate" />
+        <ActivityHelp activityType="translate" isUkrainian={isUkrainian} />
       </div>
       <div className={styles.activityContent}>
         {transformedItems ? transformedItems.map((item, idx) => (
@@ -158,6 +169,7 @@ export default function Translate({ questions, direction = 'to-uk', children }: 
             answer={item.answer}
             options={item.options}
             explanation={item.explanation}
+            isUkrainian={isUkrainian}
           />
         )) : children}
       </div>

@@ -8,9 +8,10 @@ interface QuizQuestionProps {
   options: string[];
   correctIndex: number;
   explanation?: string;
+  isUkrainian?: boolean;
 }
 
-export function QuizQuestion({ question, options, correctIndex, explanation }: QuizQuestionProps) {
+export function QuizQuestion({ question, options, correctIndex, explanation, isUkrainian }: QuizQuestionProps) {
   // Shuffle options on mount, tracking original indices
   const shuffledOptions = useMemo(() => {
     const indexed = options.map((opt, i) => ({ opt, originalIndex: i }));
@@ -29,6 +30,9 @@ export function QuizQuestion({ question, options, correctIndex, explanation }: Q
   // Find the shuffled index of the correct answer
   const correctShuffledIndex = shuffledOptions.findIndex(o => o.originalIndex === correctIndex);
   const isCorrect = selected === correctShuffledIndex;
+
+  const correctLabel = isUkrainian ? '✓ Правильно!' : '✓ Correct!';
+  const incorrectLabel = isUkrainian ? '✗ Неправильно. Відповідь:' : '✗ Incorrect. The answer is:';
 
   return (
     <div className={styles.quizQuestion}>
@@ -54,7 +58,7 @@ export function QuizQuestion({ question, options, correctIndex, explanation }: Q
       </div>
       {showResult && (
         <div className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
-          {isCorrect ? '✓ Correct!' : `✗ Incorrect. The answer is: ${options[correctIndex]}`}
+          {isCorrect ? correctLabel : `${incorrectLabel} ${options[correctIndex]}`}
           {explanation && <p className={styles.explanation}>{explanation}</p>}
         </div>
       )}
@@ -70,15 +74,18 @@ interface QuizQuestionItem {
 interface QuizProps {
   questions?: QuizQuestionItem[];
   children?: React.ReactNode;
+  isUkrainian?: boolean;
 }
 
-export default function Quiz({ questions, children }: QuizProps) {
+export default function Quiz({ questions, children, isUkrainian }: QuizProps) {
+  const headerLabel = isUkrainian ? 'Тест' : 'Quiz';
+
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>📝</span>
-        <span>Quiz</span>
-        <ActivityHelp activityType="quiz" />
+        <span>{headerLabel}</span>
+        <ActivityHelp activityType="quiz" isUkrainian={isUkrainian} />
       </div>
       <div className={styles.activityContent}>
         {questions ? questions.map((item, index) => {
@@ -91,6 +98,7 @@ export default function Quiz({ questions, children }: QuizProps) {
               question={item.question}
               options={optionTexts}
               correctIndex={correctIndex >= 0 ? correctIndex : 0}
+              isUkrainian={isUkrainian}
             />
           );
         }) : children}

@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 ## Introduction
 
@@ -403,6 +405,38 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 ---
 
+## 📋 Підсумок
+
+У цьому модулі ви навчилися:
+
+- **Masculine instrumental endings**: -ом for hard stems, -ем for soft stems
+  - друг → з другом
+  - вчитель → з вчителем
+
+- **Feminine instrumental endings**: -ою for hard stems, -ею for soft stems
+  - сестра → з сестрою
+  - земля → з землею
+
+- **Neuter instrumental endings**: -ом, -ем
+  - вікно → з вікном
+  - море → з морем
+
+- **Plural instrumental ending**: -ами/-ями
+  - друзі → з друзями
+  - сестри → з сестрами
+
+- **Preposition variants**: з is default, із for consonant clusters, зі before з, с, ш, щ
+
+- **Pronoun instrumentals**: мною, тобою, ним, нею, нами, вами, ними
+
+- **Social verbs with з + Instrumental**: зустрічатися, познайомитися, одружитися, розлучитися, посваритися, помиритися
+
+Тепер ви можете розповідати, з ким ви гуляєте, живете, працюєте і п'єте каву! ☕
+
+## Need More Practice?
+
+---
+
 
 
 ## 🎯 Activities
@@ -411,6 +445,7 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 <MatchUp
   title="Nominative to Instrumental"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- друг", "right": "другом"}, {"left": "- сестра", "right": "сестрою"}, {"left": "- брат", "right": "братом"}, {"left": "- мама", "right": "мамою"}, {"left": "- батько", "right": "батьком"}, {"left": "- вчитель", "right": "вчителем"}, {"left": "- дитина", "right": "дитиною"}, {"left": "- подруга", "right": "подругою"}, {"left": "- хлопець", "right": "хлопцем"}, {"left": "- дівчина", "right": "дівчиною"}, {"left": "- собака", "right": "собакою"}, {"left": "- кіт", "right": "котом"}]`)}
 />
 
@@ -418,6 +453,7 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 <Cloze
   title="Instrumental Endings"
+  isUkrainian={false}
   passage={`Я йду в кіно з [___:1]. Вона розмовляє з [___:2]. Він гуляє з [___:3].
 
 Ми живемо з [___:4]. Я п'ю каву з [___:5]. Вона познайомилася з [___:6].
@@ -432,20 +468,23 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 <Quiz
   title="Instrumental Forms"
-  questions={JSON.parse(`[{"question": "When you want to form the Instrumental case of \\\"вчитель\\\" (teacher), which ending is correct?", "options": [{"text": "вчителя", "correct": false}, {"text": "вчителем", "correct": true}, {"text": "вчителеві", "correct": false}, {"text": "вчителю", "correct": false}]}, {"question": "How do you correctly say \\\"with my sister\\\" in Ukrainian using the Instrumental case?", "options": [{"text": "з моя сестра", "correct": false}, {"text": "з моєю сестрою", "correct": true}, {"text": "з моєї сестри", "correct": false}, {"text": "з мою сестру", "correct": false}]}, {"question": "For feminine nouns in the Instrumental case, which endings are typically correct in Ukrainian grammar?", "options": [{"text": "-ом", "correct": false}, {"text": "-ою/-ею", "correct": true}, {"text": "-ам", "correct": false}, {"text": "-ові", "correct": false}]}, {"question": "How do you correctly express \\\"with me\\\" in Ukrainian using the proper Instrumental form?", "options": [{"text": "з я", "correct": false}, {"text": "з мене", "correct": false}, {"text": "зі мною", "correct": true}, {"text": "з мою", "correct": false}]}, {"question": "When forming the Instrumental plural of \\\"діти\\\" (children), which irregular form is correct?", "options": [{"text": "дітями", "correct": false}, {"text": "дітьми", "correct": true}, {"text": "дітей", "correct": false}, {"text": "дітям", "correct": false}]}, {"question": "How do you correctly say \\\"coffee with milk\\\" in Ukrainian using the Instrumental case?", "options": [{"text": "кава з молоком", "correct": true}, {"text": "кава з молока", "correct": false}, {"text": "кава з молоко", "correct": false}, {"text": "кава з молокою", "correct": false}]}, {"question": "When using \\\"with snow\\\" in Ukrainian, which preposition variant is required before \\\"снігом\\\"?", "options": [{"text": "з", "correct": false}, {"text": "із", "correct": false}, {"text": "зі", "correct": true}, {"text": "зе", "correct": false}]}, {"question": "How do you correctly say \\\"I met him\\\" in Ukrainian using the Instrumental case?", "options": [{"text": "Я познайомився з він.", "correct": false}, {"text": "Я познайомився з ним.", "correct": true}, {"text": "Я познайомився з його.", "correct": false}, {"text": "Я познайомився з йому.", "correct": false}]}, {"question": "When forming the Instrumental plural of \\\"люди\\\" (people), which irregular form is correct?", "options": [{"text": "людями", "correct": false}, {"text": "людьми", "correct": true}, {"text": "людей", "correct": false}, {"text": "людям", "correct": false}]}, {"question": "How do you correctly express \\\"with friends\\\" in Ukrainian using the Instrumental plural?", "options": [{"text": "з друзі", "correct": false}, {"text": "з друзями", "correct": true}, {"text": "з друзів", "correct": false}, {"text": "з другами", "correct": false}]}, {"question": "When forming the Instrumental case of \\\"батько\\\" (father), which ending is correct?", "options": [{"text": "батька", "correct": false}, {"text": "батьком", "correct": true}, {"text": "батькові", "correct": false}, {"text": "батьку", "correct": false}]}, {"question": "How do you correctly say \\\"She married Petro\\\" in Ukrainian using the Instrumental case?", "options": [{"text": "Вона одружилася з Петром.", "correct": true}, {"text": "Вона одружилася Петра.", "correct": false}, {"text": "Вона одружилася з Петра.", "correct": false}, {"text": "Вона одружилася з Петрові.", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "When you want to form the Instrumental case of \\\\\\"вчитель\\\\\\" (teacher), which ending is correct?", "options": [{"text": "вчителя", "correct": false}, {"text": "вчителем", "correct": true}, {"text": "вчителеві", "correct": false}, {"text": "вчителю", "correct": false}]}, {"question": "How do you correctly say \\\\\\"with my sister\\\\\\" in Ukrainian using the Instrumental case?", "options": [{"text": "з моя сестра", "correct": false}, {"text": "з моєю сестрою", "correct": true}, {"text": "з моєї сестри", "correct": false}, {"text": "з мою сестру", "correct": false}]}, {"question": "For feminine nouns in the Instrumental case, which endings are typically correct in Ukrainian grammar?", "options": [{"text": "-ом", "correct": false}, {"text": "-ою/-ею", "correct": true}, {"text": "-ам", "correct": false}, {"text": "-ові", "correct": false}]}, {"question": "How do you correctly express \\\\\\"with me\\\\\\" in Ukrainian using the proper Instrumental form?", "options": [{"text": "з я", "correct": false}, {"text": "з мене", "correct": false}, {"text": "зі мною", "correct": true}, {"text": "з мою", "correct": false}]}, {"question": "When forming the Instrumental plural of \\\\\\"діти\\\\\\" (children), which irregular form is correct?", "options": [{"text": "дітями", "correct": false}, {"text": "дітьми", "correct": true}, {"text": "дітей", "correct": false}, {"text": "дітям", "correct": false}]}, {"question": "How do you correctly say \\\\\\"coffee with milk\\\\\\" in Ukrainian using the Instrumental case?", "options": [{"text": "кава з молоком", "correct": true}, {"text": "кава з молока", "correct": false}, {"text": "кава з молоко", "correct": false}, {"text": "кава з молокою", "correct": false}]}, {"question": "When using \\\\\\"with snow\\\\\\" in Ukrainian, which preposition variant is required before \\\\\\"снігом\\\\\\"?", "options": [{"text": "з", "correct": false}, {"text": "із", "correct": false}, {"text": "зі", "correct": true}, {"text": "зе", "correct": false}]}, {"question": "How do you correctly say \\\\\\"I met him\\\\\\" in Ukrainian using the Instrumental case?", "options": [{"text": "Я познайомився з він.", "correct": false}, {"text": "Я познайомився з ним.", "correct": true}, {"text": "Я познайомився з його.", "correct": false}, {"text": "Я познайомився з йому.", "correct": false}]}, {"question": "When forming the Instrumental plural of \\\\\\"люди\\\\\\" (people), which irregular form is correct?", "options": [{"text": "людями", "correct": false}, {"text": "людьми", "correct": true}, {"text": "людей", "correct": false}, {"text": "людям", "correct": false}]}, {"question": "How do you correctly express \\\\\\"with friends\\\\\\" in Ukrainian using the Instrumental plural?", "options": [{"text": "з друзі", "correct": false}, {"text": "з друзями", "correct": true}, {"text": "з друзів", "correct": false}, {"text": "з другами", "correct": false}]}, {"question": "When forming the Instrumental case of \\\\\\"батько\\\\\\" (father), which ending is correct?", "options": [{"text": "батька", "correct": false}, {"text": "батьком", "correct": true}, {"text": "батькові", "correct": false}, {"text": "батьку", "correct": false}]}, {"question": "How do you correctly say \\\\\\"She married Petro\\\\\\" in Ukrainian using the Instrumental case?", "options": [{"text": "Вона одружилася з Петром.", "correct": true}, {"text": "Вона одружилася Петра.", "correct": false}, {"text": "Вона одружилася з Петра.", "correct": false}, {"text": "Вона одружилася з Петрові.", "correct": false}]}]`)}
 />
 
 ### Instrumental Rules
 
 <TrueFalse
   title="Instrumental Rules"
-  items={JSON.parse(`[{"statement": "Masculine nouns always take -ом in the instrumental.", "isTrue": false, "explanation": "Soft-stem masculine nouns take -ем: вчитель → вчителем."}, {"statement": "Feminine nouns take -ою or -ею in the instrumental.", "isTrue": true, "explanation": "Correct! Hard stems take -ою, soft stems take -ею."}, {"statement": "The preposition \\\"зі\\\" is used before \\\"мною.\\\"", "isTrue": true, "explanation": "Yes! \\\"Зі мною\\\" — the зі is needed before the consonant cluster."}, {"statement": "\\\"Дітьми\\\" is the correct instrumental plural of \\\"діти.\\\"", "isTrue": true, "explanation": "Correct! Діти has an irregular instrumental plural: дітьми."}, {"statement": "All plural instrumental endings are -ами.", "isTrue": false, "explanation": "Plurals take -ами OR -ями depending on the stem: друзями, сестрами."}, {"statement": "\\\"Познайомитися\\\" requires the accusative case.", "isTrue": false, "explanation": "Познайомитися requires з + instrumental: познайомитися з ним."}, {"statement": "\\\"З\\\" and \\\"із\\\" mean the same thing.", "isTrue": true, "explanation": "Yes! Both mean \\\"with\\\" — із is used before consonant clusters."}, {"statement": "Neuter nouns take -ою in the instrumental.", "isTrue": false, "explanation": "Neuter nouns take -ом or -ем: вікном, морем."}, {"statement": "\\\"Людьми\\\" is an irregular instrumental form.", "isTrue": true, "explanation": "Correct! Люди → людьми."}, {"statement": "\\\"Одружитися\\\" means \\\"to divorce.\\\"", "isTrue": false, "explanation": "Одружитися means \\\"to marry.\\\" Розлучитися means \\\"to divorce.\\\""}, {"statement": "The instrumental pronoun for \\\"вона\\\" is \\\"нею.\\\"", "isTrue": true, "explanation": "Correct! Вона → з нею."}, {"statement": "\\\"Ім'я\\\" has an irregular instrumental form.", "isTrue": true, "explanation": "Yes! Ім'я → ім'ям."}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Masculine nouns always take -ом in the instrumental.", "isTrue": false, "explanation": "Soft-stem masculine nouns take -ем: вчитель → вчителем."}, {"statement": "Feminine nouns take -ою or -ею in the instrumental.", "isTrue": true, "explanation": "Correct! Hard stems take -ою, soft stems take -ею."}, {"statement": "The preposition \\\\\\"зі\\\\\\" is used before \\\\\\"мною.\\\\\\"", "isTrue": true, "explanation": "Yes! \\\\\\"Зі мною\\\\\\" — the зі is needed before the consonant cluster."}, {"statement": "\\\\\\"Дітьми\\\\\\" is the correct instrumental plural of \\\\\\"діти.\\\\\\"", "isTrue": true, "explanation": "Correct! Діти has an irregular instrumental plural: дітьми."}, {"statement": "All plural instrumental endings are -ами.", "isTrue": false, "explanation": "Plurals take -ами OR -ями depending on the stem: друзями, сестрами."}, {"statement": "\\\\\\"Познайомитися\\\\\\" requires the accusative case.", "isTrue": false, "explanation": "Познайомитися requires з + instrumental: познайомитися з ним."}, {"statement": "\\\\\\"З\\\\\\" and \\\\\\"із\\\\\\" mean the same thing.", "isTrue": true, "explanation": "Yes! Both mean \\\\\\"with\\\\\\" — із is used before consonant clusters."}, {"statement": "Neuter nouns take -ою in the instrumental.", "isTrue": false, "explanation": "Neuter nouns take -ом or -ем: вікном, морем."}, {"statement": "\\\\\\"Людьми\\\\\\" is an irregular instrumental form.", "isTrue": true, "explanation": "Correct! Люди → людьми."}, {"statement": "\\\\\\"Одружитися\\\\\\" means \\\\\\"to divorce.\\\\\\"", "isTrue": false, "explanation": "Одружитися means \\\\\\"to marry.\\\\\\" Розлучитися means \\\\\\"to divorce.\\\\\\""}, {"statement": "The instrumental pronoun for \\\\\\"вона\\\\\\" is \\\\\\"нею.\\\\\\"", "isTrue": true, "explanation": "Correct! Вона → з нею."}, {"statement": "\\\\\\"Ім'я\\\\\\" has an irregular instrumental form.", "isTrue": true, "explanation": "Yes! Ім'я → ім'ям."}]`)}
 />
 
 ### Gender by Instrumental Ending
 
 <GroupSort
   title="Gender by Instrumental Ending"
+  isUkrainian={false}
   groups={JSON.parse(`{"Masculine": ["другом", "братом", "вчителем", "хлопцем", "батьком"], "Feminine": ["сестрою", "мамою", "подругою", "дівчиною", "землею"], "Neuter": ["вікном", "містом", "морем", "полем", "молоком"]}`)}
 />
 
@@ -453,12 +492,13 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 <Unjumble
   title="Instrumental Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "Я / йду / в / кіно / з / другом / сьогодні / ввечері", "answer": "Я сьогодні ввечері йду в кіно з другом"}, {"jumbled": "Вона / розмовляє / з / сестрою / по / телефону / кожного / дня", "answer": "Вона кожного дня розмовляє з сестрою по телефону"}, {"jumbled": "Ми / живемо / з / батьками / в / Києві / вже / давно", "answer": "Ми вже давно живемо з батьками в Києві"}, {"jumbled": "Він / гуляє / з / собакою / в / парку / кожного / ранку", "answer": "Він кожного ранку гуляє з собакою в парку"}, {"jumbled": "Я / завжди / п'ю / каву / з / молоком / вранці / зранку", "answer": "Я завжди зранку п'ю каву з молоком вранці"}, {"jumbled": "Вона / познайомилася / з / хлопцем / на / вечірці / минулого / тижня", "answer": "Вона познайомилася з хлопцем на вечірці минулого тижня"}]`)}
 />
 
 ### Fix the Instrumental
 
-<ErrorCorrection title="Fix the Instrumental">
+<ErrorCorrection title="Fix the Instrumental" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Я йду в кіно з *друг*.`}
     errorWord={`друг`}
@@ -507,6 +547,7 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 <Cloze
   title="Complete the Story"
+  isUkrainian={false}
   passage={`У суботу ми пішли в ресторан [___:1]. Марія прийшла [___:2]. Петро прийшов [___:3]. Ми їли піцу [___:4] і пили каву [___:5]. Увечері ми [___:6] разом. Було дуже весело!
 ---
 Оленка живе [___:7]. Вона часто [___:8] з подругами. Минулого тижня вона [___:9] з хлопцем на вечірці. Тепер вони часто [___:10]. Вона [___:11] з батьками про нього. Може, вони [___:12]?`}
@@ -515,7 +556,7 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 ### Find Instrumental Forms
 
-<MarkTheWords>
+<MarkTheWords isUkrainian={false}>
   <MarkTheWordsActivity
     instruction={`Mark the correct words.`}
     text={`Click on all instrumental case forms.
@@ -532,6 +573,7 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 <Translate
   title="English to Ukrainian"
+  isUkrainian={false}
   questions={JSON.parse(`[{"source": "I am going to the cinema with a friend.", "options": [{"text": "Я йду в кіно з другом.", "correct": true}, {"text": "Я йду в кіно з друг.", "correct": false}, {"text": "Я йду в кіно з другого.", "correct": false}, {"text": "Я йду в кіно з другові.", "correct": false}]}, {"source": "She is talking with her mother.", "options": [{"text": "Вона розмовляє з мамою.", "correct": true}, {"text": "Вона розмовляє з мама.", "correct": false}, {"text": "Вона розмовляє з мамі.", "correct": false}, {"text": "Вона розмовляє з маму.", "correct": false}]}, {"source": "We live with our parents.", "options": [{"text": "Ми живемо з батьками.", "correct": true}, {"text": "Ми живемо з батьки.", "correct": false}, {"text": "Ми живемо з батьків.", "correct": false}, {"text": "Ми живемо з батькам.", "correct": false}]}, {"source": "He is walking with the dog.", "options": [{"text": "Він гуляє з собакою.", "correct": true}, {"text": "Він гуляє з собака.", "correct": false}, {"text": "Він гуляє з собаку.", "correct": false}, {"text": "Він гуляє з собаці.", "correct": false}]}, {"source": "I am drinking coffee with milk.", "options": [{"text": "Я п'ю каву з молоком.", "correct": true}, {"text": "Я п'ю каву з молоко.", "correct": false}, {"text": "Я п'ю каву з молока.", "correct": false}, {"text": "Я п'ю каву з молоці.", "correct": false}]}, {"source": "Are you going with me?", "options": [{"text": "Ти йдеш зі мною?", "correct": true}, {"text": "Ти йдеш з я?", "correct": false}, {"text": "Ти йдеш з мене?", "correct": false}, {"text": "Ти йдеш з мною?", "correct": false}]}]`)}
 />
 
@@ -591,38 +633,6 @@ This story about a surprise party is full of Instrumental examples. Every time s
 | яма | ˈjɑmɐ | ending (instr pl) or pit | noun | ж |  |
 | єм | jem | ending (instr sg) | other |  |  |
 | інструмент | instruˈmɛnt | instrument; tool | noun | ч |  |
-
-## 📋 Підсумок
-
-У цьому модулі ви навчилися:
-
-- **Masculine instrumental endings**: -ом for hard stems, -ем for soft stems
-  - друг → з другом
-  - вчитель → з вчителем
-
-- **Feminine instrumental endings**: -ою for hard stems, -ею for soft stems
-  - сестра → з сестрою
-  - земля → з землею
-
-- **Neuter instrumental endings**: -ом, -ем
-  - вікно → з вікном
-  - море → з морем
-
-- **Plural instrumental ending**: -ами/-ями
-  - друзі → з друзями
-  - сестри → з сестрами
-
-- **Preposition variants**: з is default, із for consonant clusters, зі before з, с, ш, щ
-
-- **Pronoun instrumentals**: мною, тобою, ним, нею, нами, вами, ними
-
-- **Social verbs with з + Instrumental**: зустрічатися, познайомитися, одружитися, розлучитися, посваритися, помиритися
-
-Тепер ви можете розповідати, з ким ви гуляєте, живете, працюєте і п'єте каву! ☕
-
-## Need More Practice?
-
----
 
 > [!resources] 🔗 External Resources
 >

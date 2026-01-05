@@ -3,7 +3,7 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): терпіння, мудрість, робота, мовчання, характер...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): робота, плід, золото, правда, мовчання...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -14,7 +14,7 @@
 
 ## Gates
 - **Words:** ✅ 1992/1750
-- **Activities:** ✅ 14/14
+- **Activities:** ✅ 14/13
 - **Density:** ❌ 1 < 16
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used

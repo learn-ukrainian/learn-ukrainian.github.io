@@ -59,27 +59,89 @@ interface TrueFalseItem {
 }
 
 interface TrueFalseProps {
-  items?: TrueFalseItem[];
-  children?: React.ReactNode;
+  items: TrueFalseItem[];
+  isUkrainian?: boolean;
 }
 
-export default function TrueFalse({ items, children }: TrueFalseProps) {
+export default function TrueFalse({ items, isUkrainian }: TrueFalseProps) {
+  const [selections, setSelections] = useState<Record<number, boolean>>({});
+  const [showResults, setShowResults] = useState(false);
+
+  const handleSelect = (index: number, value: boolean) => {
+    if (showResults) return;
+    setSelections({ ...selections, [index]: value });
+  };
+
+  const headerLabel = isUkrainian ? 'Правда чи хибність' : 'True or False';
+  const trueLabel = isUkrainian ? 'Правда' : 'True';
+  const falseLabel = isUkrainian ? 'Хибність' : 'False';
+  const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answers';
+  const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
+
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
-        <span className={styles.activityIcon}>✓✗</span>
-        <span>True or False</span>
-        <ActivityHelp activityType="true-false" />
+        <span className={styles.activityIcon}>⚖️</span>
+        <span>{headerLabel}</span>
+        <ActivityHelp activityType="true-false" isUkrainian={isUkrainian} />
       </div>
       <div className={styles.activityContent}>
-        {items ? items.map((item, index) => (
-          <TrueFalseQuestion
-            key={index}
-            statement={item.statement}
-            isTrue={item.isTrue}
-            explanation={item.explanation}
-          />
-        )) : children}
+        {items.map((item, index) => {
+          const isCorrect = selections[index] === item.isTrue;
+
+          return (
+            <div key={index} className={styles.trueFalseRow}>
+              <p className={styles.statementText}>{parseMarkdown(item.statement)}</p>
+              <div className={styles.trueFalseButtons}>
+                <button
+                  className={`${styles.tfButton} ${selections[index] === true ? styles.selected : ''
+                    } ${showResults && item.isTrue ? styles.correct : ''} ${showResults && selections[index] === true && !item.isTrue ? styles.incorrect : ''
+                    }`}
+                  onClick={() => handleSelect(index, true)}
+                  disabled={showResults}
+                >
+                  {trueLabel}
+                </button>
+                <button
+                  className={`${styles.tfButton} ${selections[index] === false ? styles.selected : ''
+                    } ${showResults && !item.isTrue ? styles.correct : ''} ${showResults && selections[index] === false && item.isTrue ? styles.incorrect : ''
+                    }`}
+                  onClick={() => handleSelect(index, false)}
+                  disabled={showResults}
+                >
+                  {falseLabel}
+                </button>
+              </div>
+              {showResults && (
+                <div className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
+                  {isCorrect ? '✓' : '✗'} {item.explanation}
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        <div className={styles.controls}>
+          {!showResults ? (
+            <button
+              className={styles.checkButton}
+              onClick={() => setShowResults(true)}
+              disabled={Object.keys(selections).length === 0}
+            >
+              {checkBtnLabel}
+            </button>
+          ) : (
+            <button
+              className={styles.retryButton}
+              onClick={() => {
+                setShowResults(false);
+                setSelections({});
+              }}
+            >
+              {retryBtnLabel}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 :::note[Learning Goals]
@@ -282,6 +284,38 @@ All use genitive case with **наступного**!
 
 ---
 
+## 📋 Summary
+
+Ви навчилися говорити про майбутнє! (You've learned to talk about the future!)
+
+**Що ви вивчили (What you learned):**
+
+- **Майбутній час з "буду" (Future with "буду"):** буду/будеш/буде/будемо/будете/будуть + інфінітив
+- **Часові вирази (Time expressions):** завтра, післязавтра, скоро, пізніше
+- **Планування (Planning):** планую, збираюся, маю намір
+- **Надії та мрії (Hopes and dreams):** сподіваюся, мрію, хочу
+- **Рівні впевненості (Certainty):** обов'язково, обіцяю, спробую
+- **Прислівники (Adverbs):** вже (already), ще (still/yet), ніколи (never)
+
+### Швидка довідка (Quick Reference)
+
+| Особа    | Дієслово "бути" | Приклад                       |
+| -------- | --------------- | ----------------------------- |
+| я        | буду            | Я буду читати книгу.          |
+| ти       | будеш           | Ти будеш працювати завтра?    |
+| він/вона | буде            | Вона буде вивчати українську. |
+| ми       | будемо          | Ми будемо готувати вечерю.    |
+| ви       | будете          | Що ви будете робити?          |
+| вони     | будуть          | Вони будуть грати у футбол.   |
+
+**Приклади (Examples):**
+
+Завтра буде гарний день. Ми будемо гуляти в парку. Вони будуть готувати українські страви. Я буду вчити нові слова. Ти будеш відпочивати? Вона буде працювати вдома. Він буде читати книгу. Ми будемо слухати музику разом.
+
+---
+
+**Наступний урок:** Котра година? Дні тижня та місяці!
+
 
 
 ## 🎯 Activities
@@ -290,6 +324,7 @@ All use genitive case with **наступного**!
 
 <MatchUp
   title="Time Expressions"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- завтра", "right": "tomorrow"}, {"left": "- післязавтра", "right": "day after tomorrow"}, {"left": "- скоро", "right": "soon"}, {"left": "- пізніше", "right": "later"}, {"left": "- потім", "right": "then, afterwards"}, {"left": "- згодом", "right": "eventually"}, {"left": "- наступного тижня", "right": "next week"}, {"left": "- наступного місяця", "right": "next month"}, {"left": "- наступного року", "right": "next year"}, {"left": "- вже", "right": "already"}, {"left": "- ще", "right": "still, yet"}, {"left": "- ніколи", "right": "never"}]`)}
 />
 
@@ -297,6 +332,7 @@ All use genitive case with **наступного**!
 
 <GroupSort
   title="Levels of Certainty"
+  isUkrainian={false}
   groups={JSON.parse(`{"Very Certain (Точно)": ["обов'язково", "вирішив", "обіцяю", "планую", "збираюся", "маю намір"], "Less Certain (Може бути)": ["сподіваюся", "мрію", "хочу", "спробую", "постараюся", "думаю", "--"]}`)}
 />
 
@@ -304,6 +340,7 @@ All use genitive case with **наступного**!
 
 <FillIn
   title="Future Tense Forms"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Я ___ читати цю книгу завтра.", "answer": "буду", "options": ["буду", "будеш", "буде", "будуть"]}, {"sentence": "Вона ___ працювати до вечора.", "answer": "буде", "options": ["буду", "будеш", "буде", "будуть"]}, {"sentence": "Ми ___ вивчати українську разом.", "answer": "будемо", "options": ["буду", "будемо", "будете", "будуть"]}, {"sentence": "Ти ___ готувати вечерю сьогодні?", "answer": "будеш", "options": ["буду", "будеш", "буде", "будемо"]}, {"sentence": "Вони ___ грати у футбол завтра.", "answer": "будуть", "options": ["буде", "будемо", "будете", "будуть"]}, {"sentence": "Ви ___ дивитися цей фільм?", "answer": "будете", "options": ["буду", "будемо", "будете", "будуть"]}, {"sentence": "Він ___ писати листа завтра.", "answer": "буде", "options": ["буду", "будеш", "буде", "будуть"]}, {"sentence": "Ти ___ слухати музику ввечері?", "answer": "будеш", "options": ["буду", "будеш", "буде", "будемо"]}]`)}
 />
 
@@ -311,6 +348,7 @@ All use genitive case with **наступного**!
 
 <FillIn
   title="Planning Expressions"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Я ___ поїхати в Київ наступного місяця.", "answer": "планую", "options": ["планую", "мрію", "обіцяю", "сподіваюся"]}, {"sentence": "Вона ___ стати співачкою.", "answer": "мріє", "options": ["мріє", "планує", "обіцяє", "вирішила"]}, {"sentence": "Він ___ купити нову машину.", "answer": "вирішив", "options": ["вирішив", "мріє", "сподівається", "обіцяє"]}, {"sentence": "Ми ___ побачити вас скоро.", "answer": "сподіваємося", "options": ["сподіваємося", "плануємо", "обіцяємо", "мріємо"]}, {"sentence": "Я ___ прийти вчасно.", "answer": "постараюся", "options": ["постараюся", "планую", "мрію", "вирішив"]}, {"sentence": "Вона ___ допомогти нам завтра.", "answer": "обіцяє", "options": ["обіцяє", "мріє", "думає", "сподівається"]}, {"sentence": "Він ___ вивчити японську мову.", "answer": "хоче", "options": ["хоче", "обіцяє", "планує", "мріє"]}, {"sentence": "Ми ___ почати проект наступного тижня.", "answer": "збираємося", "options": ["збираємося", "мріємо", "сподіваємося", "думаємо"]}]`)}
 />
 
@@ -318,20 +356,23 @@ All use genitive case with **наступного**!
 
 <Quiz
   title="буду Conjugation"
-  questions={JSON.parse(`[{"question": "What is the correct translation of \\\"Ми будемо вечеряти о сьомій\\\"?", "options": [{"text": "We will have dinner at seven.", "correct": true}, {"text": "We had dinner at seven.", "correct": false}, {"text": "We are having dinner at seven.", "correct": false}, {"text": "We have dinner at seven.", "correct": false}]}, {"question": "How do you accurately translate \\\"Вони будуть працювати завтра?\\\" into English?", "options": [{"text": "Will they work tomorrow?", "correct": true}, {"text": "Did they work tomorrow?", "correct": false}, {"text": "Are they working tomorrow?", "correct": false}, {"text": "Do they work tomorrow?", "correct": false}]}, {"question": "What does accurately the phrase \\\"Я обов'язково буду там\\\" mean?", "options": [{"text": "I will definitely be there.", "correct": true}, {"text": "I was definitely there.", "correct": false}, {"text": "I am definitely there.", "correct": false}, {"text": "I have definitely been there.", "correct": false}]}, {"question": "How do you correctly translate \\\"Вона збирається купити квартиру\\\" today?", "options": [{"text": "She is going to buy an apartment.", "correct": true}, {"text": "She bought an apartment.", "correct": false}, {"text": "She has an apartment.", "correct": false}, {"text": "She sells apartments.", "correct": false}]}, {"question": "Which English sentence accurately represents \\\"Ти будеш читати цю книгу?\\\"?", "options": [{"text": "Will you read this book?", "correct": true}, {"text": "Did you read this book?", "correct": false}, {"text": "Are you reading this book?", "correct": false}, {"text": "Do you read this book?", "correct": false}]}, {"question": "How do you accurately say \\\"Він буде вчитися в університеті\\\"?", "options": [{"text": "He will study at the university.", "correct": true}, {"text": "He studied at the university.", "correct": false}, {"text": "He is studying at the university.", "correct": false}, {"text": "He studies at the university.", "correct": false}]}, {"question": "Which translation is correct for \\\"Я буду готувати вечерю\\\" now?", "options": [{"text": "I will cook dinner.", "correct": true}, {"text": "I cooked dinner.", "correct": false}, {"text": "I am cooking dinner.", "correct": false}, {"text": "I cook dinner.", "correct": false}]}, {"question": "What is accurately the English translation of \\\"Ви будете дивитися фільм?\\\"?", "options": [{"text": "Will you watch the movie?", "correct": true}, {"text": "Did you watch the movie?", "correct": false}, {"text": "Are you watching the movie?", "correct": false}, {"text": "Do you watch the movie?", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "What is the correct translation of \\\\\\"Ми будемо вечеряти о сьомій\\\\\\"?", "options": [{"text": "We will have dinner at seven.", "correct": true}, {"text": "We had dinner at seven.", "correct": false}, {"text": "We are having dinner at seven.", "correct": false}, {"text": "We have dinner at seven.", "correct": false}]}, {"question": "How do you accurately translate \\\\\\"Вони будуть працювати завтра?\\\\\\" into English?", "options": [{"text": "Will they work tomorrow?", "correct": true}, {"text": "Did they work tomorrow?", "correct": false}, {"text": "Are they working tomorrow?", "correct": false}, {"text": "Do they work tomorrow?", "correct": false}]}, {"question": "What does accurately the phrase \\\\\\"Я обов'язково буду там\\\\\\" mean?", "options": [{"text": "I will definitely be there.", "correct": true}, {"text": "I was definitely there.", "correct": false}, {"text": "I am definitely there.", "correct": false}, {"text": "I have definitely been there.", "correct": false}]}, {"question": "How do you correctly translate \\\\\\"Вона збирається купити квартиру\\\\\\" today?", "options": [{"text": "She is going to buy an apartment.", "correct": true}, {"text": "She bought an apartment.", "correct": false}, {"text": "She has an apartment.", "correct": false}, {"text": "She sells apartments.", "correct": false}]}, {"question": "Which English sentence accurately represents \\\\\\"Ти будеш читати цю книгу?\\\\\\"?", "options": [{"text": "Will you read this book?", "correct": true}, {"text": "Did you read this book?", "correct": false}, {"text": "Are you reading this book?", "correct": false}, {"text": "Do you read this book?", "correct": false}]}, {"question": "How do you accurately say \\\\\\"Він буде вчитися в університеті\\\\\\"?", "options": [{"text": "He will study at the university.", "correct": true}, {"text": "He studied at the university.", "correct": false}, {"text": "He is studying at the university.", "correct": false}, {"text": "He studies at the university.", "correct": false}]}, {"question": "Which translation is correct for \\\\\\"Я буду готувати вечерю\\\\\\" now?", "options": [{"text": "I will cook dinner.", "correct": true}, {"text": "I cooked dinner.", "correct": false}, {"text": "I am cooking dinner.", "correct": false}, {"text": "I cook dinner.", "correct": false}]}, {"question": "What is accurately the English translation of \\\\\\"Ви будете дивитися фільм?\\\\\\"?", "options": [{"text": "Will you watch the movie?", "correct": true}, {"text": "Did you watch the movie?", "correct": false}, {"text": "Are you watching the movie?", "correct": false}, {"text": "Do you watch the movie?", "correct": false}]}]`)}
 />
 
 ### Time Expressions
 
 <Quiz
   title="Time Expressions"
-  questions={JSON.parse(`[{"question": "Which English phrase correctly translates \\\"Наступного року ми поїдемо до моря\\\"?", "options": [{"text": "Next year we will go to the sea.", "correct": true}, {"text": "Last year we went to the sea.", "correct": false}, {"text": "This year we go to the sea.", "correct": false}, {"text": "Every year we go to the sea.", "correct": false}]}, {"question": "How do you accurately translate \\\"Пізніше я подзвоню тобі\\\" into English?", "options": [{"text": "Later I will call you.", "correct": true}, {"text": "Earlier I called you.", "correct": false}, {"text": "Now I am calling you.", "correct": false}, {"text": "Yesterday I called you.", "correct": false}]}, {"question": "What does accurately the phrase \\\"Скоро буде літо\\\" mean today?", "options": [{"text": "Soon it will be summer.", "correct": true}, {"text": "Soon it was summer.", "correct": false}, {"text": "It is already summer.", "correct": false}, {"text": "Summer has passed.", "correct": false}]}, {"question": "Which English sentence accurately represents \\\"Я ще не вирішив\\\" now?", "options": [{"text": "I haven't decided yet.", "correct": true}, {"text": "I have already decided.", "correct": false}, {"text": "I never decide.", "correct": false}, {"text": "I always decide.", "correct": false}]}, {"question": "How do you accurately say \\\"Завтра я буду вдома\\\" in English?", "options": [{"text": "Tomorrow I will be at home.", "correct": true}, {"text": "Yesterday I was at home.", "correct": false}, {"text": "Today I am at home.", "correct": false}, {"text": "I am always at home.", "correct": false}]}, {"question": "What is the correct English translation of \\\"Післязавтра вона приїде\\\"?", "options": [{"text": "The day after tomorrow she will arrive.", "correct": true}, {"text": "Yesterday she arrived.", "correct": false}, {"text": "Today she is arriving.", "correct": false}, {"text": "She always arrives.", "correct": false}]}, {"question": "Which translation is correct for \\\"Наступного тижня ми почнемо курс\\\"?", "options": [{"text": "Next week we will start the course.", "correct": true}, {"text": "Last week we started the course.", "correct": false}, {"text": "This week we start the course.", "correct": false}, {"text": "Every week we start the course.", "correct": false}]}, {"question": "What does exactly the word \\\"Згодом він зрозуміє\\\" mean today?", "options": [{"text": "Eventually he will understand.", "correct": true}, {"text": "He already understands.", "correct": false}, {"text": "He never understands.", "correct": false}, {"text": "He understood yesterday.", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Which English phrase correctly translates \\\\\\"Наступного року ми поїдемо до моря\\\\\\"?", "options": [{"text": "Next year we will go to the sea.", "correct": true}, {"text": "Last year we went to the sea.", "correct": false}, {"text": "This year we go to the sea.", "correct": false}, {"text": "Every year we go to the sea.", "correct": false}]}, {"question": "How do you accurately translate \\\\\\"Пізніше я подзвоню тобі\\\\\\" into English?", "options": [{"text": "Later I will call you.", "correct": true}, {"text": "Earlier I called you.", "correct": false}, {"text": "Now I am calling you.", "correct": false}, {"text": "Yesterday I called you.", "correct": false}]}, {"question": "What does accurately the phrase \\\\\\"Скоро буде літо\\\\\\" mean today?", "options": [{"text": "Soon it will be summer.", "correct": true}, {"text": "Soon it was summer.", "correct": false}, {"text": "It is already summer.", "correct": false}, {"text": "Summer has passed.", "correct": false}]}, {"question": "Which English sentence accurately represents \\\\\\"Я ще не вирішив\\\\\\" now?", "options": [{"text": "I haven't decided yet.", "correct": true}, {"text": "I have already decided.", "correct": false}, {"text": "I never decide.", "correct": false}, {"text": "I always decide.", "correct": false}]}, {"question": "How do you accurately say \\\\\\"Завтра я буду вдома\\\\\\" in English?", "options": [{"text": "Tomorrow I will be at home.", "correct": true}, {"text": "Yesterday I was at home.", "correct": false}, {"text": "Today I am at home.", "correct": false}, {"text": "I am always at home.", "correct": false}]}, {"question": "What is the correct English translation of \\\\\\"Післязавтра вона приїде\\\\\\"?", "options": [{"text": "The day after tomorrow she will arrive.", "correct": true}, {"text": "Yesterday she arrived.", "correct": false}, {"text": "Today she is arriving.", "correct": false}, {"text": "She always arrives.", "correct": false}]}, {"question": "Which translation is correct for \\\\\\"Наступного тижня ми почнемо курс\\\\\\"?", "options": [{"text": "Next week we will start the course.", "correct": true}, {"text": "Last week we started the course.", "correct": false}, {"text": "This week we start the course.", "correct": false}, {"text": "Every week we start the course.", "correct": false}]}, {"question": "What does exactly the word \\\\\\"Згодом він зрозуміє\\\\\\" mean today?", "options": [{"text": "Eventually he will understand.", "correct": true}, {"text": "He already understands.", "correct": false}, {"text": "He never understands.", "correct": false}, {"text": "He understood yesterday.", "correct": false}]}]`)}
 />
 
 ### Future Plans
 
 <Unjumble
   title="Future Plans"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "буду / я / завтра / працювати", "answer": "Я буду працювати завтра"}, {"jumbled": "вивчати / будемо / ми / українську", "answer": "Ми будемо вивчати українську"}, {"jumbled": "буде / вона / готувати / вечерю / скоро", "answer": "Вона буде готувати вечерю скоро"}, {"jumbled": "будуть / вони / грати / футбол / у", "answer": "Вони будуть грати у футбол"}, {"jumbled": "ви / робити / будете / що / завтра / ?", "answer": "Що ви будете робити завтра"}, {"jumbled": "планую / я / поїхати / Київ / до", "answer": "Я планую поїхати до Києва"}]`)}
 />
 
@@ -339,7 +380,8 @@ All use genitive case with **наступного**!
 
 <TrueFalse
   title="Understanding Future Expressions"
-  items={JSON.parse(`[{"statement": "\\\"Завтра\\\" means \\\"tomorrow.\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Післязавтра\\\" means \\\"yesterday.\\\"", "isTrue": false, "explanation": "Incorrect! It means \\\"day after tomorrow.\\\""}, {"statement": "\\\"Буду читати\\\" means \\\"I will read.\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Наступного року\\\" means \\\"last year.\\\"", "isTrue": false, "explanation": "Incorrect! It means \\\"next year.\\\""}, {"statement": "\\\"Я мрію\\\" means \\\"I dream.\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Скоро\\\" means \\\"slowly.\\\"", "isTrue": false, "explanation": "Incorrect! It means \\\"soon.\\\""}, {"statement": "\\\"Обіцяю\\\" means \\\"I promise.\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Вже\\\" means \\\"never.\\\"", "isTrue": false, "explanation": "Incorrect! It means \\\"already.\\\""}, {"statement": "\\\"Пізніше\\\" means \\\"later.\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Планую\\\" means \\\"I hope.\\\"", "isTrue": false, "explanation": "Incorrect! It means \\\"I plan.\\\""}, {"statement": "\\\"Сподіваюся\\\" means \\\"I hope.\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Ніколи\\\" means \\\"always.\\\"", "isTrue": false, "explanation": "Incorrect! It means \\\"never.\\\""}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "\\\\\\"Завтра\\\\\\" means \\\\\\"tomorrow.\\\\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\\\\"Післязавтра\\\\\\" means \\\\\\"yesterday.\\\\\\"", "isTrue": false, "explanation": "Incorrect! It means \\\\\\"day after tomorrow.\\\\\\""}, {"statement": "\\\\\\"Буду читати\\\\\\" means \\\\\\"I will read.\\\\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\\\\"Наступного року\\\\\\" means \\\\\\"last year.\\\\\\"", "isTrue": false, "explanation": "Incorrect! It means \\\\\\"next year.\\\\\\""}, {"statement": "\\\\\\"Я мрію\\\\\\" means \\\\\\"I dream.\\\\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\\\\"Скоро\\\\\\" means \\\\\\"slowly.\\\\\\"", "isTrue": false, "explanation": "Incorrect! It means \\\\\\"soon.\\\\\\""}, {"statement": "\\\\\\"Обіцяю\\\\\\" means \\\\\\"I promise.\\\\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\\\\"Вже\\\\\\" means \\\\\\"never.\\\\\\"", "isTrue": false, "explanation": "Incorrect! It means \\\\\\"already.\\\\\\""}, {"statement": "\\\\\\"Пізніше\\\\\\" means \\\\\\"later.\\\\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\\\\"Планую\\\\\\" means \\\\\\"I hope.\\\\\\"", "isTrue": false, "explanation": "Incorrect! It means \\\\\\"I plan.\\\\\\""}, {"statement": "\\\\\\"Сподіваюся\\\\\\" means \\\\\\"I hope.\\\\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\\\\"Ніколи\\\\\\" means \\\\\\"always.\\\\\\"", "isTrue": false, "explanation": "Incorrect! It means \\\\\\"never.\\\\\\""}]`)}
 />
 
 ## 📚 Vocabulary
@@ -393,38 +435,6 @@ All use genitive case with **наступного**!
 | стати | /ˈstɑtɪ/ | to become | verb |  |  |
 | японський | /jɑˈpɔnsʲkɪj/ | Japanese | adj | ч |  |
 | японія | /jɑˈpɔnijɑ/ | Japan | name | ж |  |
-
-## 📋 Summary
-
-Ви навчилися говорити про майбутнє! (You've learned to talk about the future!)
-
-**Що ви вивчили (What you learned):**
-
-- **Майбутній час з "буду" (Future with "буду"):** буду/будеш/буде/будемо/будете/будуть + інфінітив
-- **Часові вирази (Time expressions):** завтра, післязавтра, скоро, пізніше
-- **Планування (Planning):** планую, збираюся, маю намір
-- **Надії та мрії (Hopes and dreams):** сподіваюся, мрію, хочу
-- **Рівні впевненості (Certainty):** обов'язково, обіцяю, спробую
-- **Прислівники (Adverbs):** вже (already), ще (still/yet), ніколи (never)
-
-### Швидка довідка (Quick Reference)
-
-| Особа    | Дієслово "бути" | Приклад                       |
-| -------- | --------------- | ----------------------------- |
-| я        | буду            | Я буду читати книгу.          |
-| ти       | будеш           | Ти будеш працювати завтра?    |
-| він/вона | буде            | Вона буде вивчати українську. |
-| ми       | будемо          | Ми будемо готувати вечерю.    |
-| ви       | будете          | Що ви будете робити?          |
-| вони     | будуть          | Вони будуть грати у футбол.   |
-
-**Приклади (Examples):**
-
-Завтра буде гарний день. Ми будемо гуляти в парку. Вони будуть готувати українські страви. Я буду вчити нові слова. Ти будеш відпочивати? Вона буде працювати вдома. Він буде читати книгу. Ми будемо слухати музику разом.
-
----
-
-**Наступний урок:** Котра година? Дні тижня та місяці!
 
 > [!resources] 🔗 External Resources
 >

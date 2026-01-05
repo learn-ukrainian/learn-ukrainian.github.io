@@ -8,9 +8,10 @@ interface SelectQuestionProps {
   options: string[];
   correctAnswers: string[];
   explanation?: string;
+  isUkrainian?: boolean;
 }
 
-export function SelectQuestion({ question, options, correctAnswers, explanation }: SelectQuestionProps) {
+export function SelectQuestion({ question, options, correctAnswers, explanation, isUkrainian }: SelectQuestionProps) {
   // Shuffle options on mount
   const shuffledOptions = useMemo(() => shuffle([...options]), [options]);
 
@@ -65,6 +66,11 @@ export function SelectQuestion({ question, options, correctAnswers, explanation 
     return '';
   };
 
+  const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answer';
+  const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
+  const successLabel = isUkrainian ? '✓ Правильно! Ви вибрали всі правильні відповіді.' : '✓ Correct! You selected all the right answers.';
+  const incorrectLabel = isUkrainian ? '✗ Правильні відповіді:' : '✗ The correct answers are:';
+
   return (
     <div className={styles.selectQuestion}>
       <p className={styles.questionText}>{question}</p>
@@ -91,7 +97,7 @@ export function SelectQuestion({ question, options, correctAnswers, explanation 
             onClick={handleSubmit}
             disabled={selected.size === 0}
           >
-            Check Answer
+            {checkBtnLabel}
           </button>
         </div>
       )}
@@ -100,15 +106,15 @@ export function SelectQuestion({ question, options, correctAnswers, explanation 
         <>
           <div className={`${styles.feedback} ${isFullyCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
             {isFullyCorrect ? (
-              '✓ Correct! You selected all the right answers.'
+              successLabel
             ) : (
-              `✗ The correct answers are: ${correctAnswers.join(', ')}`
+              `${incorrectLabel} ${correctAnswers.join(', ')}`
             )}
             {explanation && <p className={styles.explanation}>{explanation}</p>}
           </div>
           <div className={styles.buttonRow}>
             <button className={styles.resetButton} onClick={handleReset}>
-              Try Again
+              {retryBtnLabel}
             </button>
           </div>
         </>
@@ -127,9 +133,10 @@ interface GeneratorSelectQuestion {
 interface SelectProps {
   questions?: GeneratorSelectQuestion[];
   children?: React.ReactNode;
+  isUkrainian?: boolean;
 }
 
-export default function Select({ questions, children }: SelectProps) {
+export default function Select({ questions, children, isUkrainian }: SelectProps) {
   // Transform generator format to SelectQuestion props
   const transformedItems = useMemo(() => {
     if (!questions) return null;
@@ -142,12 +149,14 @@ export default function Select({ questions, children }: SelectProps) {
     }));
   }, [questions]);
 
+  const headerLabel = isUkrainian ? 'Виберіть усі варіанти' : 'Select All That Apply';
+
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>☑️</span>
-        <span>Select All That Apply</span>
-        <ActivityHelp activityType="select" />
+        <span>{headerLabel}</span>
+        <ActivityHelp activityType="select" isUkrainian={isUkrainian} />
       </div>
       <div className={styles.activityContent}>
         {transformedItems ? transformedItems.map((item, idx) => (
@@ -157,6 +166,7 @@ export default function Select({ questions, children }: SelectProps) {
             options={item.options}
             correctAnswers={item.correctAnswers}
             explanation={item.explanation}
+            isUkrainian={isUkrainian}
           />
         )) : children}
       </div>

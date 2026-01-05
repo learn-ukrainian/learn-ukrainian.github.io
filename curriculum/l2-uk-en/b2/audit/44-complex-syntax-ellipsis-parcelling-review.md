@@ -3,20 +3,18 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Виправте помилки' uses placeholder syntax instead of real errors
-  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 1/16 items with placeholders/missing errors.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): натяк, емоція, розрив...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): емоція, розрив, натяк...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 20/100)
 
-- 2 pedagogical violations (minor)
+- 1 pedagogical violations (minor)
 - Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1879/1750
-- **Activities:** ✅ 14/14
+- **Activities:** ✅ 14/13
 - **Density:** ❌ 1 < 16
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
@@ -25,7 +23,7 @@
 - **Vocab:** ✅ 76/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 98-100% (vocab))
 - **Richness:** ✅ 97% (grammar)

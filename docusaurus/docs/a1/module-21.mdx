@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 
 ## Warm-up
@@ -262,6 +264,35 @@ Notice how Ukrainian uses був/була/було for "was" depending on the ge
 :::
 
 
+## 📋 Підсумок (Summary)
+
+Ви навчилися говорити про минуле українською! (You've learned to talk about the past!)
+
+**Запам'ятайте основні шаблони (Key patterns):**
+
+1. **Утворення (Formation):** Основа дієслова + -в/-ла/-ло/-ли
+   - читати → читав / читала / читало / читали
+
+2. **Рід (Gender agreement):** Закінчення відповідає роду
+   - Він працював. (He worked.)
+   - Вона працювала. (She worked.)
+   - Вони працювали. (They worked.)
+
+3. **Часові вирази (Time expressions):** вчора, позавчора, минулого тижня, давно, колись
+
+**Неправильні дієслова (Irregular verbs):**
+
+- піти → пішов/пішла
+- прийти → прийшов/прийшла
+
+Наступний урок: майбутній час! Завтра ми будемо вивчати, як говорити про плани!
+
+---
+
+## 📋 Summary
+
+Ви вивчили минулий час в українській мові. Ви знаєте закінчення -в, -ла, -ло та -ли. Ви знаєте слова "вчора" та "давно". Це була гарна робота (This was good work).
+
 
 
 ## 🎯 Activities
@@ -270,6 +301,7 @@ Notice how Ukrainian uses був/була/було for "was" depending on the ge
 
 <MatchUp
   title="Past Tense Vocabulary"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "вчора", "right": "yesterday"}, {"left": "позавчора", "right": "day before yesterday"}, {"left": "давно", "right": "long ago"}, {"left": "недавно", "right": "recently"}, {"left": "раніше", "right": "earlier"}, {"left": "колись", "right": "once"}, {"left": "минулого тижня", "right": "last week"}, {"left": "був", "right": "was (m)"}, {"left": "читав", "right": "was reading (m)"}]`)}
 />
 
@@ -277,6 +309,7 @@ Notice how Ukrainian uses був/була/було for "was" depending on the ge
 
 <GroupSort
   title="Gender Endings"
+  isUkrainian={false}
   groups={JSON.parse(`{"Masculine (-в)": ["читав", "працював", "говорив", "був"], "Feminine (-ла)": ["читала", "працювала", "говорила", "була"], "Plural (-ли)": ["читали", "працювали", "говорили", "були"]}`)}
 />
 
@@ -284,6 +317,7 @@ Notice how Ukrainian uses був/була/було for "was" depending on the ge
 
 <FillIn
   title="Complete with Past Tense"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Вчора він ___ книгу.", "answer": "читав", "options": ["читав", "читала", "читало", "читали"]}, {"sentence": "Вона ___ по телефону вчора.", "answer": "говорила", "options": ["говорив", "говорила", "говорило", "говорили"]}, {"sentence": "Ми ___ українською вчора.", "answer": "говорили", "options": ["говорив", "говорила", "говорило", "говорили"]}, {"sentence": "Колись тут ___ школа.", "answer": "була", "options": ["був", "була", "було", "були"]}, {"sentence": "Він ___ музику весь вечір.", "answer": "слухав", "options": ["слухав", "слухала", "слухало", "слухали"]}, {"sentence": "Вона ___ листи весь день.", "answer": "писала", "options": ["писав", "писала", "писало", "писали"]}, {"sentence": "Вони ___ в Україні минулого року.", "answer": "були", "options": ["був", "була", "було", "були"]}, {"sentence": "Я ___ каву вранці.", "answer": "пив", "options": ["пив", "пила", "пило", "пили"]}, {"sentence": "Давно він ___ тут.", "answer": "жив", "options": ["жив", "жила", "жило", "жили"]}, {"sentence": "Позавчора вона ___ фільм.", "answer": "дивилася", "options": ["дивився", "дивилася", "дивилося", "дивилися"]}]`)}
 />
 
@@ -291,13 +325,15 @@ Notice how Ukrainian uses був/була/було for "was" depending on the ge
 
 <Quiz
   title="Understanding Past Tense"
-  questions={JSON.parse(`[{"question": "How do you form the past tense in Ukrainian?", "options": [{"text": "Add -ю to the infinitive", "correct": false}, {"text": "Remove -ти and add -в/-ла/-ло/-ли", "correct": true}, {"text": "Change the first letter", "correct": false}, {"text": "Add will before the verb", "correct": false}]}, {"question": "Which ending does a male speaker use for \\\"I worked\\\"?", "options": [{"text": "Я працював", "correct": true}, {"text": "Я працювала", "correct": false}, {"text": "Я працювало", "correct": false}, {"text": "Я працювали", "correct": false}]}, {"question": "What doesaccurately the word \\\"вчора\\\" mean in English?", "options": [{"text": "Tomorrow", "correct": false}, {"text": "Yesterday", "correct": true}, {"text": "Today", "correct": false}, {"text": "Last week", "correct": false}]}, {"question": "Which is the correct past tense of \\\"їсти\\\" for \\\"він\\\"?", "options": [{"text": "їстив", "correct": false}, {"text": "їтив", "correct": false}, {"text": "їв", "correct": true}, {"text": "їїв", "correct": false}]}, {"question": "How do you say accurately \\\"She was reading\\\" in Ukrainian?", "options": [{"text": "Вона читав", "correct": false}, {"text": "Вона читала", "correct": true}, {"text": "Вона читало", "correct": false}, {"text": "Вона читати", "correct": false}]}, {"question": "What does precisely the word \\\"колись\\\" mean in English?", "options": [{"text": "Never", "correct": false}, {"text": "Always", "correct": false}, {"text": "Once, sometime", "correct": true}, {"text": "Every day", "correct": false}]}, {"question": "Which verb changes its stem in past tense?", "options": [{"text": "читати → читав", "correct": false}, {"text": "працювати → працював", "correct": false}, {"text": "їсти → їв", "correct": true}, {"text": "говорити → говорив", "correct": false}]}, {"question": "How do you accurately say \\\"We were\\\" in Ukrainian?", "options": [{"text": "Ми був", "correct": false}, {"text": "Ми була", "correct": false}, {"text": "Ми було", "correct": false}, {"text": "Ми були", "correct": true}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "How do you form the past tense in Ukrainian?", "options": [{"text": "Add -ю to the infinitive", "correct": false}, {"text": "Remove -ти and add -в/-ла/-ло/-ли", "correct": true}, {"text": "Change the first letter", "correct": false}, {"text": "Add will before the verb", "correct": false}]}, {"question": "Which ending does a male speaker use for \\\\\\"I worked\\\\\\"?", "options": [{"text": "Я працював", "correct": true}, {"text": "Я працювала", "correct": false}, {"text": "Я працювало", "correct": false}, {"text": "Я працювали", "correct": false}]}, {"question": "What doesaccurately the word \\\\\\"вчора\\\\\\" mean in English?", "options": [{"text": "Tomorrow", "correct": false}, {"text": "Yesterday", "correct": true}, {"text": "Today", "correct": false}, {"text": "Last week", "correct": false}]}, {"question": "Which is the correct past tense of \\\\\\"їсти\\\\\\" for \\\\\\"він\\\\\\"?", "options": [{"text": "їстив", "correct": false}, {"text": "їтив", "correct": false}, {"text": "їв", "correct": true}, {"text": "їїв", "correct": false}]}, {"question": "How do you say accurately \\\\\\"She was reading\\\\\\" in Ukrainian?", "options": [{"text": "Вона читав", "correct": false}, {"text": "Вона читала", "correct": true}, {"text": "Вона читало", "correct": false}, {"text": "Вона читати", "correct": false}]}, {"question": "What does precisely the word \\\\\\"колись\\\\\\" mean in English?", "options": [{"text": "Never", "correct": false}, {"text": "Always", "correct": false}, {"text": "Once, sometime", "correct": true}, {"text": "Every day", "correct": false}]}, {"question": "Which verb changes its stem in past tense?", "options": [{"text": "читати → читав", "correct": false}, {"text": "працювати → працював", "correct": false}, {"text": "їсти → їв", "correct": true}, {"text": "говорити → говорив", "correct": false}]}, {"question": "How do you accurately say \\\\\\"We were\\\\\\" in Ukrainian?", "options": [{"text": "Ми був", "correct": false}, {"text": "Ми була", "correct": false}, {"text": "Ми було", "correct": false}, {"text": "Ми були", "correct": true}]}]`)}
 />
 
 ### Build Past Tense Sentences
 
 <Unjumble
   title="Build Past Tense Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "вчора / працював / я", "answer": "Я працював вчора"}, {"jumbled": "книгу / читала / вона", "answer": "Вона читала книгу"}, {"jumbled": "минулого / в / були / ми / Україні / року", "answer": "Ми були в Україні минулого року"}, {"jumbled": "жив / він / тут / давно", "answer": "Він жив тут давно"}, {"jumbled": "музику / я / слухав / вчора", "answer": "Я слухав музику вчора"}, {"jumbled": "телефону / вона / по / говорила", "answer": "Вона говорила по телефону"}]`)}
 />
 
@@ -305,13 +341,15 @@ Notice how Ukrainian uses був/була/було for "was" depending on the ge
 
 <TrueFalse
   title="Past Tense Facts"
-  items={JSON.parse(`[{"statement": "The past tense ending -в is used for masculine subjects.", "isTrue": true, "explanation": "Correct! -в is the masculine singular ending."}, {"statement": "\\\"Вона працював\\\" is grammatically correct.", "isTrue": false, "explanation": "Wrong gender! It should be \\\"Вона працювала.\\\""}, {"statement": "\\\"Вчора\\\" means \\\"tomorrow.\\\"", "isTrue": false, "explanation": "Вчора means yesterday, not tomorrow."}, {"statement": "The past tense of \\\"бути\\\" for feminine is \\\"була.\\\"", "isTrue": true, "explanation": "Correct! Був (m), була (f), було (n), були (pl)."}, {"statement": "The verb \\\"їсти\\\" becomes \\\"їв\\\" in masculine past tense.", "isTrue": true, "explanation": "Correct! Їсти → їв/їла/їло/їли."}, {"statement": "\\\"Ми\\\" uses the -ли ending in past tense.", "isTrue": true, "explanation": "Correct! All plural subjects use -ли."}, {"statement": "\\\"Давно\\\" means \\\"recently.\\\"", "isTrue": false, "explanation": "Давно means \\\"long ago.\\\" Недавно means \\\"recently.\\\""}, {"statement": "The neuter past tense ending is -ло.", "isTrue": true, "explanation": "Correct! Воно було, воно читало, воно працювало."}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "The past tense ending -в is used for masculine subjects.", "isTrue": true, "explanation": "Correct! -в is the masculine singular ending."}, {"statement": "\\\\\\"Вона працював\\\\\\" is grammatically correct.", "isTrue": false, "explanation": "Wrong gender! It should be \\\\\\"Вона працювала.\\\\\\""}, {"statement": "\\\\\\"Вчора\\\\\\" means \\\\\\"tomorrow.\\\\\\"", "isTrue": false, "explanation": "Вчора means yesterday, not tomorrow."}, {"statement": "The past tense of \\\\\\"бути\\\\\\" for feminine is \\\\\\"була.\\\\\\"", "isTrue": true, "explanation": "Correct! Був (m), була (f), було (n), були (pl)."}, {"statement": "The verb \\\\\\"їсти\\\\\\" becomes \\\\\\"їв\\\\\\" in masculine past tense.", "isTrue": true, "explanation": "Correct! Їсти → їв/їла/їло/їли."}, {"statement": "\\\\\\"Ми\\\\\\" uses the -ли ending in past tense.", "isTrue": true, "explanation": "Correct! All plural subjects use -ли."}, {"statement": "\\\\\\"Давно\\\\\\" means \\\\\\"recently.\\\\\\"", "isTrue": false, "explanation": "Давно means \\\\\\"long ago.\\\\\\" Недавно means \\\\\\"recently.\\\\\\""}, {"statement": "The neuter past tense ending is -ло.", "isTrue": true, "explanation": "Correct! Воно було, воно читало, воно працювало."}]`)}
 />
 
 ### Transform to Past Tense
 
 <FillIn
   title="Transform to Past Tense"
+  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Він (читати) ___ газету.", "answer": "читав", "options": ["читав", "читала", "читало", "читали"]}, {"sentence": "Вона (говорити) ___ по телефону.", "answer": "говорила", "options": ["говорив", "говорила", "говорило", "говорили"]}, {"sentence": "Воно (бути) ___ тут.", "answer": "було", "options": ["був", "була", "було", "були"]}, {"sentence": "Вони (працювати) ___ весь день.", "answer": "працювали", "options": ["працював", "працювала", "працювало", "працювали"]}, {"sentence": "Я (слухати) ___ музику.", "answer": "слухала", "options": ["слухав", "слухала", "слухало", "слухали"]}, {"sentence": "Ти (дивитися) ___ фільм?", "answer": "дивився", "options": ["дивився", "дивилася", "дивилося", "дивилися"]}, {"sentence": "Він (їсти) ___ сніданок.", "answer": "їв", "options": ["їв", "їла", "їло", "їли"]}, {"sentence": "Вона (пити) ___ каву.", "answer": "пила", "options": ["пив", "пила", "пило", "пили"]}]`)}
 />
 
@@ -319,7 +357,8 @@ Notice how Ukrainian uses був/була/було for "was" depending on the ge
 
 <Quiz
   title="Time Expressions"
-  questions={JSON.parse(`[{"question": "What does accurately \\\"минулого місяця\\\" mean in English?", "options": [{"text": "Next month", "correct": false}, {"text": "This month", "correct": false}, {"text": "Last month", "correct": true}, {"text": "Every month", "correct": false}]}, {"question": "Which word means accurately \\\"recently\\\" in the Ukrainian language?", "options": [{"text": "давно", "correct": false}, {"text": "недавно", "correct": true}, {"text": "раніше", "correct": false}, {"text": "колись", "correct": false}]}, {"question": "What does accurately \\\"Позавчора\\\" refer to in English?", "options": [{"text": "Tomorrow", "correct": false}, {"text": "Yesterday", "correct": false}, {"text": "Day before yesterday", "correct": true}, {"text": "Last week", "correct": false}]}, {"question": "Which word means accurately \\\"long ago\\\" in Ukrainian today?", "options": [{"text": "давно", "correct": true}, {"text": "недавно", "correct": false}, {"text": "завтра", "correct": false}, {"text": "зараз", "correct": false}]}, {"question": "What does the word \\\"раніше\\\" accurately mean today?", "options": [{"text": "Tomorrow", "correct": false}, {"text": "Now", "correct": false}, {"text": "Earlier, before", "correct": true}, {"text": "Always", "correct": false}]}, {"question": "What does accurately \\\"Минулого року\\\" mean in English?", "options": [{"text": "This year", "correct": false}, {"text": "Next year", "correct": false}, {"text": "Last year", "correct": true}, {"text": "Every year", "correct": false}]}, {"question": "What does the word \\\"колись\\\" accurately mean today?", "options": [{"text": "Never", "correct": false}, {"text": "Always", "correct": false}, {"text": "Once, sometime", "correct": true}, {"text": "Often", "correct": false}]}, {"question": "What does \\\"Минулого тижня\\\" accurately mean in English?", "options": [{"text": "This week", "correct": false}, {"text": "Next week", "correct": false}, {"text": "Last week", "correct": true}, {"text": "Every week", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "What does accurately \\\\\\"минулого місяця\\\\\\" mean in English?", "options": [{"text": "Next month", "correct": false}, {"text": "This month", "correct": false}, {"text": "Last month", "correct": true}, {"text": "Every month", "correct": false}]}, {"question": "Which word means accurately \\\\\\"recently\\\\\\" in the Ukrainian language?", "options": [{"text": "давно", "correct": false}, {"text": "недавно", "correct": true}, {"text": "раніше", "correct": false}, {"text": "колись", "correct": false}]}, {"question": "What does accurately \\\\\\"Позавчора\\\\\\" refer to in English?", "options": [{"text": "Tomorrow", "correct": false}, {"text": "Yesterday", "correct": false}, {"text": "Day before yesterday", "correct": true}, {"text": "Last week", "correct": false}]}, {"question": "Which word means accurately \\\\\\"long ago\\\\\\" in Ukrainian today?", "options": [{"text": "давно", "correct": true}, {"text": "недавно", "correct": false}, {"text": "завтра", "correct": false}, {"text": "зараз", "correct": false}]}, {"question": "What does the word \\\\\\"раніше\\\\\\" accurately mean today?", "options": [{"text": "Tomorrow", "correct": false}, {"text": "Now", "correct": false}, {"text": "Earlier, before", "correct": true}, {"text": "Always", "correct": false}]}, {"question": "What does accurately \\\\\\"Минулого року\\\\\\" mean in English?", "options": [{"text": "This year", "correct": false}, {"text": "Next year", "correct": false}, {"text": "Last year", "correct": true}, {"text": "Every year", "correct": false}]}, {"question": "What does the word \\\\\\"колись\\\\\\" accurately mean today?", "options": [{"text": "Never", "correct": false}, {"text": "Always", "correct": false}, {"text": "Once, sometime", "correct": true}, {"text": "Often", "correct": false}]}, {"question": "What does \\\\\\"Минулого тижня\\\\\\" accurately mean in English?", "options": [{"text": "This week", "correct": false}, {"text": "Next week", "correct": false}, {"text": "Last week", "correct": true}, {"text": "Every week", "correct": false}]}]`)}
 />
 
 ## 📚 Vocabulary
@@ -366,35 +405,6 @@ Notice how Ukrainian uses був/була/було for "was" depending on the ge
 | тихо | /ˈtɪxɔ/ | quietly | adv |  |  |
 | утворення | /utˈvɔrɛnʲːɑ/ | formation | noun | с |  |
 | часовий | /t͡ʃɑsɔˈvɪj/ | temporal/time | adj | ч |  |
-
-## 📋 Підсумок (Summary)
-
-Ви навчилися говорити про минуле українською! (You've learned to talk about the past!)
-
-**Запам'ятайте основні шаблони (Key patterns):**
-
-1. **Утворення (Formation):** Основа дієслова + -в/-ла/-ло/-ли
-   - читати → читав / читала / читало / читали
-
-2. **Рід (Gender agreement):** Закінчення відповідає роду
-   - Він працював. (He worked.)
-   - Вона працювала. (She worked.)
-   - Вони працювали. (They worked.)
-
-3. **Часові вирази (Time expressions):** вчора, позавчора, минулого тижня, давно, колись
-
-**Неправильні дієслова (Irregular verbs):**
-
-- піти → пішов/пішла
-- прийти → прийшов/прийшла
-
-Наступний урок: майбутній час! Завтра ми будемо вивчати, як говорити про плани!
-
----
-
-## 📋 Summary
-
-Ви вивчили минулий час в українській мові. Ви знаєте закінчення -в, -ла, -ло та -ли. Ви знаєте слова "вчора" та "давно". Це була гарна робота (This was good work).
 
 > [!resources] 🔗 External Resources
 >

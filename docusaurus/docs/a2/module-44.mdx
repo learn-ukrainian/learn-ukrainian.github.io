@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 ## Warm-up
 
@@ -246,6 +248,58 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 
 ---
 
+## 📋 Summary
+
+**Обладнання:**
+- каструля
+- сковорода
+- духовка
+- холодильник
+- плита
+- чайник
+
+**Методи:**
+- варити
+- смажити
+- пекти
+- тушкувати
+- нарізати
+- запікати
+
+**Прийоми їжі:**
+- сніданок
+- обід
+- вечеря
+- перекус
+
+**Смаки:**
+- солодкий
+- солоний
+- кислий
+- гіркий
+- гострий
+- смачний
+
+Тепер ви можете готувати разом з українцями! Успіхів на кухні! Смачного!
+
+---
+
+> 💡 **Смачна культура**
+>
+> «Борщ — це не просто їжа, це українська традиція!»
+>
+> *Translation: "Borscht is not just food, it's Ukrainian tradition!"*
+
+> 🇺🇦 **Українська кухня**
+>
+> Найпопулярніші українські страви:
+> - **борщ** — національна страва з буряком та капустою
+> - **вареники** — з картоплею, сиром або вишнею
+> - **галушки** — смачні з м'ясом або сиром
+> - **сало** — традиційна українська закуска
+>
+> Українці кажуть: «Їж, пий, та нас не забувай!» Смачного!
+
 
 
 ## 🎯 Activities
@@ -254,6 +308,7 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 
 <MatchUp
   title="Kitchen Words"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- каструля", "right": "pot"}, {"left": "- сковорода", "right": "frying pan"}, {"left": "- духовка", "right": "oven"}, {"left": "- мікрохвильовка", "right": "microwave"}, {"left": "- холодильник", "right": "refrigerator"}, {"left": "- плита", "right": "stove"}, {"left": "- варити", "right": "to boil"}, {"left": "- смажити", "right": "to fry"}, {"left": "- пекти", "right": "to bake"}, {"left": "- тушкувати", "right": "to stew"}, {"left": "- нарізати", "right": "to chop"}, {"left": "- чайник", "right": "kettle"}]`)}
 />
 
@@ -261,6 +316,7 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 
 <Cloze
   title="Cooking Methods"
+  isUkrainian={false}
   passage={`Я [[___:1]] картоплю 20 хвилин. (boil) Вона [[___:2]] м'ясо на сковороді. (fries) Він [[___:3]] хліб у духовці. (bakes)
 
 Я [[___:4]] цибулю на дошці. (chop) Суп у [[___:5]]. (pot) Смаж м'ясо на [[___:6]]. (pan)
@@ -273,6 +329,7 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 
 <Cloze
   title="Recipe Story"
+  isUkrainian={false}
   passage={`Бабуся [___:1] борщ. (cooks)
 Спочатку [___:2] овочі. (chop)
 Потім [___:3] цибулю. (fry)
@@ -292,19 +349,21 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 
 <Quiz
   title="Food & Cooking"
-  questions={JSON.parse(`[{"question": "What is the Ukrainian verb for \\\"To boil\\\", as in \\\"boil water\\\" (**Варити**)?", "options": [{"text": "Варити", "correct": true}, {"text": "Пекти", "correct": false}, {"text": "Смажити", "correct": false}, {"text": "Різати", "correct": false}]}, {"question": "Which imperative command means \\\"Slice!\\\" or \\\"Cut!\\\" in the kitchen (**Наріж**)?", "options": [{"text": "Наріж", "correct": true}, {"text": "Вари", "correct": false}, {"text": "Смаж", "correct": false}, {"text": "Їж", "correct": false}]}, {"question": "Which verb form means \\\"Fry!\\\" as a specific command (**Смаж**)?", "options": [{"text": "Смаж", "correct": true}, {"text": "Вари", "correct": false}, {"text": "Печи", "correct": false}, {"text": "Пий", "correct": false}]}, {"question": "Can you identify the imperative command form for the verb \\\"Put!\\\" (**Поклади**)?", "options": [{"text": "Поклади", "correct": true}, {"text": "Забери", "correct": false}, {"text": "Наріж", "correct": false}, {"text": "Мий", "correct": false}]}, {"question": "Which command tells someone to \\\"Stew\\\" or \\\"Simmer\\\" correctly (**Тушкуй**)?", "options": [{"text": "Тушкуй", "correct": true}, {"text": "Вари", "correct": false}, {"text": "Смаж", "correct": false}, {"text": "Печи", "correct": false}]}, {"question": "Which word refers to the morning meal (**Сніданок**) in Ukraine?", "options": [{"text": "Сніданок", "correct": true}, {"text": "Обід", "correct": false}, {"text": "Вечеря", "correct": false}, {"text": "Перекус", "correct": false}]}, {"question": "What phrase do you politely say before a meal starts (**Смачного**)?", "options": [{"text": "Смачного", "correct": true}, {"text": "Будь ласка", "correct": false}, {"text": "Дякую", "correct": false}, {"text": "Привіт", "correct": false}]}, {"question": "Which word translates to \\\"Dinner\\\" (**Вечеря**) in Ukrainian context?", "options": [{"text": "Вечеря", "correct": true}, {"text": "Сніданок", "correct": false}, {"text": "Обід", "correct": false}, {"text": "Їжа", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "What is the Ukrainian verb for \\\\\\"To boil\\\\\\", as in \\\\\\"boil water\\\\\\" (**Варити**)?", "options": [{"text": "Варити", "correct": true}, {"text": "Пекти", "correct": false}, {"text": "Смажити", "correct": false}, {"text": "Різати", "correct": false}]}, {"question": "Which imperative command means \\\\\\"Slice!\\\\\\" or \\\\\\"Cut!\\\\\\" in the kitchen (**Наріж**)?", "options": [{"text": "Наріж", "correct": true}, {"text": "Вари", "correct": false}, {"text": "Смаж", "correct": false}, {"text": "Їж", "correct": false}]}, {"question": "Which verb form means \\\\\\"Fry!\\\\\\" as a specific command (**Смаж**)?", "options": [{"text": "Смаж", "correct": true}, {"text": "Вари", "correct": false}, {"text": "Печи", "correct": false}, {"text": "Пий", "correct": false}]}, {"question": "Can you identify the imperative command form for the verb \\\\\\"Put!\\\\\\" (**Поклади**)?", "options": [{"text": "Поклади", "correct": true}, {"text": "Забери", "correct": false}, {"text": "Наріж", "correct": false}, {"text": "Мий", "correct": false}]}, {"question": "Which command tells someone to \\\\\\"Stew\\\\\\" or \\\\\\"Simmer\\\\\\" correctly (**Тушкуй**)?", "options": [{"text": "Тушкуй", "correct": true}, {"text": "Вари", "correct": false}, {"text": "Смаж", "correct": false}, {"text": "Печи", "correct": false}]}, {"question": "Which word refers to the morning meal (**Сніданок**) in Ukraine?", "options": [{"text": "Сніданок", "correct": true}, {"text": "Обід", "correct": false}, {"text": "Вечеря", "correct": false}, {"text": "Перекус", "correct": false}]}, {"question": "What phrase do you politely say before a meal starts (**Смачного**)?", "options": [{"text": "Смачного", "correct": true}, {"text": "Будь ласка", "correct": false}, {"text": "Дякую", "correct": false}, {"text": "Привіт", "correct": false}]}, {"question": "Which word translates to \\\\\\"Dinner\\\\\\" (**Вечеря**) in Ukrainian context?", "options": [{"text": "Вечеря", "correct": true}, {"text": "Сніданок", "correct": false}, {"text": "Обід", "correct": false}, {"text": "Їжа", "correct": false}]}]`)}
 />
 
 ### Cooking Sentences
 
 <Unjumble
   title="Cooking Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "Ти / маєш / покласти / свіжу / картоплю / у / велику / каструлю", "answer": "Ти маєш покласти свіжу картоплю у велику каструлю"}, {"jumbled": "Ми / будемо / смажити / смачне / м'ясо / на / великій / сковороді", "answer": "Ми будемо смажити смачне м'ясо на великій сковороді"}, {"jumbled": "Бабуся / приготувала / дуже / смачний / та / гарячий / український / борщ", "answer": "Бабуся приготувала дуже смачний та гарячий український борщ"}, {"jumbled": "Ми / поставили / солодкий / яблучний / пиріг / у / гарячу / духовку", "answer": "Ми поставили солодкий яблучний пиріг у гарячу духовку"}, {"jumbled": "Цей / овочевий / суп / на / жаль / вийшов / занадто / солоний", "answer": "Цей овочевий суп на жаль вийшов занадто солоний"}, {"jumbled": "Будь / ласка / закип'яти / чисту / воду / в / чайнику / для / чаю", "answer": "Будь ласка закип'яти чисту воду в чайнику для чаю"}, {"jumbled": "Цей / чорний / хліб / дуже / свіжий / та / смачний / до / борщу", "answer": "Цей чорний хліб дуже свіжий та смачний до борщу"}, {"jumbled": "Я / сьогодні / ввечері / готую / святкову / вечерю / для / родини", "answer": "Я сьогодні ввечері готую святкову вечерю для родини"}]`)}
 />
 
 ### Kitchen Mistakes
 
-<ErrorCorrection title="Kitchen Mistakes">
+<ErrorCorrection title="Kitchen Mistakes" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Смаж м'ясо в **каструлі**.`}
     errorWord={`каструлі`}
@@ -353,6 +412,7 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 
 <MatchUp
   title="Meals & Times"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- сніданок", "right": "7-9 ранку"}, {"left": "- обід", "right": "12-14"}, {"left": "- вечеря", "right": "18-20"}, {"left": "- перекус", "right": "будь-коли"}, {"left": "- борщ", "right": "на обід"}, {"left": "- каша", "right": "на сніданок"}, {"left": "- бутерброди", "right": "на вечерю"}, {"left": "- компот", "right": "після їжі"}]`)}
 />
 
@@ -360,6 +420,7 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 
 <GroupSort
   title="Kitchen Categories"
+  isUkrainian={false}
   groups={JSON.parse(`{"Equipment": ["каструля", "сковорода", "духовка", "холодильник", "плита", "чайник"], "Cooking Methods": ["варити", "смажити", "пекти", "тушкувати", "нарізати", "запікати"], "Tastes": ["солодкий", "солоний", "кислий", "гострий"]}`)}
 />
 
@@ -367,13 +428,15 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 
 <TrueFalse
   title="Kitchen Facts"
-  items={JSON.parse(`[{"statement": "\\\"Каструля\\\" = pot.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Сковорода\\\" = frying pan.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Варити\\\" = to bake.", "isTrue": false, "explanation": ""}, {"statement": "\\\"Варити\\\" = to boil.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Сніданок\\\" = breakfast.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Вечеря\\\" = lunch.", "isTrue": false, "explanation": ""}, {"statement": "\\\"Вечеря\\\" = dinner.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Солодкий\\\" = sweet.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Солоний\\\" = sweet.", "isTrue": false, "explanation": ""}, {"statement": "\\\"Гострий\\\" = spicy.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Духовка\\\" = oven.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Обід\\\" = dinner.", "isTrue": false, "explanation": ""}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "\\\\\\"Каструля\\\\\\" = pot.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Сковорода\\\\\\" = frying pan.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Варити\\\\\\" = to bake.", "isTrue": false, "explanation": ""}, {"statement": "\\\\\\"Варити\\\\\\" = to boil.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Сніданок\\\\\\" = breakfast.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Вечеря\\\\\\" = lunch.", "isTrue": false, "explanation": ""}, {"statement": "\\\\\\"Вечеря\\\\\\" = dinner.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Солодкий\\\\\\" = sweet.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Солоний\\\\\\" = sweet.", "isTrue": false, "explanation": ""}, {"statement": "\\\\\\"Гострий\\\\\\" = spicy.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Духовка\\\\\\" = oven.", "isTrue": true, "explanation": ""}, {"statement": "\\\\\\"Обід\\\\\\" = dinner.", "isTrue": false, "explanation": ""}]`)}
 />
 
 ### Food Words
 
 <Translate
   title="Food Words"
+  isUkrainian={false}
   questions={JSON.parse(`[{"source": "Pot", "options": [{"text": "каструля", "correct": true}, {"text": "сковорода", "correct": false}, {"text": "тарілка", "correct": false}]}, {"source": "To fry", "options": [{"text": "смажити", "correct": true}, {"text": "варити", "correct": false}, {"text": "пекти", "correct": false}]}, {"source": "Breakfast", "options": [{"text": "сніданок", "correct": true}, {"text": "обід", "correct": false}, {"text": "вечеря", "correct": false}]}, {"source": "Delicious", "options": [{"text": "смачний", "correct": true}, {"text": "солоний", "correct": false}, {"text": "гострий", "correct": false}]}, {"source": "Refrigerator", "options": [{"text": "холодильник", "correct": true}, {"text": "духовка", "correct": false}, {"text": "плита", "correct": false}]}, {"source": "Spicy", "options": [{"text": "гострий", "correct": true}, {"text": "солодкий", "correct": false}, {"text": "кислий", "correct": false}]}, {"source": "To chop", "options": [{"text": "нарізати", "correct": true}, {"text": "смажити", "correct": false}, {"text": "варити", "correct": false}]}, {"source": "Oven", "options": [{"text": "духовка", "correct": true}, {"text": "плита", "correct": false}, {"text": "холодильник", "correct": false}]}]`)}
 />
 
@@ -453,58 +516,6 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 | честь | t͡ʃɛsʲtʲ | honor | noun | ж |  |
 | юнеско | juˈnɛsko | UNESCO | name | ж |  |
 | інструкція | inˈstrukt͡sʲijɐ | instruction | noun | ж |  |
-
-## 📋 Summary
-
-**Обладнання:**
-- каструля
-- сковорода
-- духовка
-- холодильник
-- плита
-- чайник
-
-**Методи:**
-- варити
-- смажити
-- пекти
-- тушкувати
-- нарізати
-- запікати
-
-**Прийоми їжі:**
-- сніданок
-- обід
-- вечеря
-- перекус
-
-**Смаки:**
-- солодкий
-- солоний
-- кислий
-- гіркий
-- гострий
-- смачний
-
-Тепер ви можете готувати разом з українцями! Успіхів на кухні! Смачного!
-
----
-
-> 💡 **Смачна культура**
->
-> «Борщ — це не просто їжа, це українська традиція!»
->
-> *Translation: "Borscht is not just food, it's Ukrainian tradition!"*
-
-> 🇺🇦 **Українська кухня**
->
-> Найпопулярніші українські страви:
-> - **борщ** — національна страва з буряком та капустою
-> - **вареники** — з картоплею, сиром або вишнею
-> - **галушки** — смачні з м'ясом або сиром
-> - **сало** — традиційна українська закуска
->
-> Українці кажуть: «Їж, пий, та нас не забувай!» Смачного!
 
 > [!resources] 🔗 External Resources
 >

@@ -12,9 +12,10 @@ interface ClozeBlank {
 interface ClozePassageProps {
   text: string;  // Text with [___:N] markers
   blanks: ClozeBlank[];
+  isUkrainian?: boolean;
 }
 
-export function ClozePassage({ text, blanks }: ClozePassageProps) {
+export function ClozePassage({ text, blanks, isUkrainian }: ClozePassageProps) {
   // Pre-shuffle options for each blank on mount
   const shuffledBlanks = useMemo(() =>
     blanks.map(blank => ({
@@ -97,6 +98,11 @@ export function ClozePassage({ text, blanks }: ClozePassageProps) {
   };
 
   const allFilled = blanks.every(b => selections.has(b.index) && selections.get(b.index) !== '');
+  
+  const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answers';
+  const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
+  const successLabel = isUkrainian ? '✓ Всі відповіді правильні!' : '✓ All answers are correct!';
+  const errorLabel = isUkrainian ? '✗ Деякі відповіді неправильні. Правильні відповіді:' : '✗ Some answers are incorrect. Correct answers:';
 
   return (
     <div>
@@ -111,7 +117,7 @@ export function ClozePassage({ text, blanks }: ClozePassageProps) {
             onClick={handleSubmit}
             disabled={!allFilled}
           >
-            Check Answers
+            {checkBtnLabel}
           </button>
         </div>
       )}
@@ -120,10 +126,10 @@ export function ClozePassage({ text, blanks }: ClozePassageProps) {
         <>
           <div className={`${styles.feedback} ${allCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
             {allCorrect ? (
-              '✓ All answers are correct!'
+              successLabel
             ) : (
               <>
-                ✗ Some answers are incorrect. Correct answers:{' '}
+                {errorLabel}{' '}
                 {blanks.map((b, i) => (
                   <span key={i}>
                     {i > 0 && ', '}
@@ -135,7 +141,7 @@ export function ClozePassage({ text, blanks }: ClozePassageProps) {
           </div>
           <div className={styles.buttonRow}>
             <button className={styles.resetButton} onClick={handleReset}>
-              Try Again
+              {retryBtnLabel}
             </button>
           </div>
         </>
@@ -148,6 +154,7 @@ interface ClozeProps {
   passage?: string;  // MDX generator sends passage with embedded options
   blanks?: ClozeBlank[];
   children?: React.ReactNode;
+  isUkrainian?: boolean;
 }
 
 // Parse passage format with embedded numbered options:
@@ -176,7 +183,7 @@ function parsePassageWithEmbeddedOptions(passage: string): { text: string; blank
   return { text, blanks };
 }
 
-export default function Cloze({ passage, blanks = [], children }: ClozeProps) {
+export default function Cloze({ passage, blanks = [], children, isUkrainian }: ClozeProps) {
   // Parse passage if provided with embedded options
   const parsedData = useMemo(() => {
     if (passage) {
@@ -190,16 +197,18 @@ export default function Cloze({ passage, blanks = [], children }: ClozeProps) {
     return null;
   }, [passage, blanks]);
 
+  const headerLabel = isUkrainian ? 'Заповніть текст' : 'Complete the Passage';
+
   return (
     <div className={styles.activityContainer}>
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>📝</span>
-        <span>Complete the Passage</span>
-        <ActivityHelp activityType="cloze" />
+        <span>{headerLabel}</span>
+        <ActivityHelp activityType="cloze" isUkrainian={isUkrainian} />
       </div>
       <div className={styles.activityContent}>
         {parsedData ? (
-          <ClozePassage text={parsedData.text} blanks={parsedData.blanks} />
+          <ClozePassage text={parsedData.text} blanks={parsedData.blanks} isUkrainian={isUkrainian} />
         ) : children}
       </div>
     </div>

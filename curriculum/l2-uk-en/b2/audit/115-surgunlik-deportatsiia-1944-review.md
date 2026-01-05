@@ -3,8 +3,8 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Untitled' uses placeholder syntax instead of real errors
-  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 6/6 items with placeholders/missing errors.
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Знайдіть та виправте граматичні помилки у реченнях про історичні події.' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 4/6 items with placeholders/missing errors.
 
 ## Recommendation
 **📝 UPDATE** (severity 10/100)

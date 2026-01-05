@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 ## Warm-up
 
@@ -225,6 +227,41 @@ Try to translate these common superlative phrases:
 
 ---
 
+## 📋 Summary
+
+## What You Learned
+
+This module covered superlative adjectives in Ukrainian — the ultimate form of comparison.
+
+**Formation:**
+- **най- + comparative** = superlative
+- Works for ALL adjectives, including irregular ones
+- **Agreement:** Must match gender, number, and case (найкращ**а** мама, найкращ**ий** друг)
+- **One of the...:** один із найкращих + Genitive Plural
+
+**Common superlatives:**
+- найкращий — best, найгірший — worst
+- найбільший — biggest, найменший — smallest
+- найвищий — tallest, найдовший — longest
+
+**Intensifiers:**
+Use these to add emotion without comparison:
+- **дуже** (very) — neutral/common
+- **надзвичайно** (extraordinarily) — high praise
+- **неймовірно** (incredibly) — disbelief/amazement
+- **страшенно** (terribly/awfully) — colloquial, can be positive (страшенно цікаво!) or negative.
+
+**Cultural Superlatives:**
+- **Мрія** (The Dream) — biggest plane
+- **Арсенальна** — deepest metro station
+- **Оптимістична** — longest gypsum cave
+
+Тепер ви знаєте **найкращі** слова, щоб описати **найважливіші** речі у вашому житті! 🏆
+
+## Need More Practice?
+
+---
+
 
 
 ## 🎯 Activities
@@ -233,6 +270,7 @@ Try to translate these common superlative phrases:
 
 <MatchUp
   title="Superlative Forms"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- кращий", "right": "найкращий"}, {"left": "- гірший", "right": "найгірший"}, {"left": "- більший", "right": "найбільший"}, {"left": "- менший", "right": "найменший"}, {"left": "- вищий", "right": "найвищий"}, {"left": "- нижчий", "right": "найнижчий"}, {"left": "- довший", "right": "найдовший"}, {"left": "- коротший", "right": "найкоротший"}, {"left": "- дорожчий", "right": "найдорожчий"}, {"left": "- дешевший", "right": "найдешевший"}, {"left": "- старіший", "right": "найстаріший"}, {"left": "- молодший", "right": "наймолодший"}]`)}
 />
 
@@ -240,6 +278,7 @@ Try to translate these common superlative phrases:
 
 <Cloze
   title="Form the Superlative"
+  isUkrainian={false}
   passage={`Це [___:1] книга. (добрий) Він [___:2] студент. (старий) Це [___:3] місто. (великий)
 
 Вона [___:4] людина. (розумний) Це [___:5] день. (поганий) Дніпро — [___:6] річка. (довгий)
@@ -254,20 +293,23 @@ Try to translate these common superlative phrases:
 
 <Quiz
   title="Superlatives"
-  questions={JSON.parse(`[{"question": "Which of the following prefixes is universally used in Ukrainian to form the superlative degree of adjectives?", "options": [{"text": "най-", "correct": true}, {"text": "пре-", "correct": false}, {"text": "над-", "correct": false}, {"text": "ви-", "correct": false}]}, {"question": "What is the correct superlative form of the irregular Ukrainian adjective \\\"кращий\\\" to mean \\\"the best\\\"?", "options": [{"text": "найкращий", "correct": true}, {"text": "добріший", "correct": false}, {"text": "найдобрий", "correct": false}, {"text": "прегарний", "correct": false}]}, {"question": "Which of the following superlative forms corresponds to the Ukrainian comparative \\\"більший,\\\" meaning \\\"the biggest\\\"?", "options": [{"text": "найбільший", "correct": true}, {"text": "найвеликий", "correct": false}, {"text": "великший", "correct": false}, {"text": "більшавий", "correct": false}]}, {"question": "What is the specific English meaning of the Ukrainian superlative adjective \\\"найгірший\\\"?", "options": [{"text": "the worst", "correct": true}, {"text": "better", "correct": false}, {"text": "very bad", "correct": false}, {"text": "more bad", "correct": false}]}, {"question": "What is the correct English translation for the Ukrainian superlative adjective \\\"найдорожчий\\\" in a retail context?", "options": [{"text": "the most expensive", "correct": true}, {"text": "the cheapest", "correct": false}, {"text": "extremely expensive", "correct": false}, {"text": "very dear", "correct": false}]}, {"question": "Which of the following Ukrainian adverbs serves as a common intensifier for adjectives, meaning \\\"very\\\"?", "options": [{"text": "дуже", "correct": true}, {"text": "ніж", "correct": false}, {"text": "за", "correct": false}, {"text": "під", "correct": false}]}, {"question": "What is the specific meaning of the Ukrainian intensifier \\\"надзвичайно\\\" when modifying an adjective?", "options": [{"text": "extraordinarily", "correct": true}, {"text": "extraordinarily badly", "correct": false}, {"text": "very quickly", "correct": false}, {"text": "somewhat", "correct": false}]}, {"question": "In a Ukrainian sentence, which grammatical categories must a superlative adjective agree with in relation to its noun?", "options": [{"text": "Gender, number, and case", "correct": true}, {"text": "Only gender and number", "correct": false}, {"text": "Only case and gender", "correct": false}, {"text": "Only number", "correct": false}]}, {"question": "In the phrase \\\"найкраща книга,\\\" what is the grammatical gender of the superlative adjective \\\"найкраща\\\"?", "options": [{"text": "Жіночий рід", "correct": true}, {"text": "Чоловічий рід", "correct": false}, {"text": "Середній рід", "correct": false}, {"text": "Множина", "correct": false}]}, {"question": "In the Ukrainian expression \\\"найбільше місто,\\\" what is the grammatical gender of the superlative form?", "options": [{"text": "Середній рід", "correct": true}, {"text": "Чоловічий рід", "correct": false}, {"text": "Жіночий рід", "correct": false}, {"text": "Множина", "correct": false}]}, {"question": "What is the primary morphological component added to a comparative adjective to create a superlative in Ukrainian?", "options": [{"text": "The prefix \\\"най-\\\"", "correct": true}, {"text": "The suffix \\\"-ший\\\"", "correct": false}, {"text": "The ending \\\"-ий\\\"", "correct": false}, {"text": "The particle \\\"більш\\\"", "correct": false}]}, {"question": "Which statement best describes the formation of superlatives for adjectives with irregular comparative forms?", "options": [{"text": "They follow the regular rule of adding \\\"най-\\\" to the comparative", "correct": true}, {"text": "They use a completely unique word root for the superlative", "correct": false}, {"text": "They require the prefix \\\"над-\\\" instead of \\\"най-\\\"", "correct": false}, {"text": "They cannot form a superlative degree in standard Ukrainian", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "Which of the following prefixes is universally used in Ukrainian to form the superlative degree of adjectives?", "options": [{"text": "най-", "correct": true}, {"text": "пре-", "correct": false}, {"text": "над-", "correct": false}, {"text": "ви-", "correct": false}]}, {"question": "What is the correct superlative form of the irregular Ukrainian adjective \\\\\\"кращий\\\\\\" to mean \\\\\\"the best\\\\\\"?", "options": [{"text": "найкращий", "correct": true}, {"text": "добріший", "correct": false}, {"text": "найдобрий", "correct": false}, {"text": "прегарний", "correct": false}]}, {"question": "Which of the following superlative forms corresponds to the Ukrainian comparative \\\\\\"більший,\\\\\\" meaning \\\\\\"the biggest\\\\\\"?", "options": [{"text": "найбільший", "correct": true}, {"text": "найвеликий", "correct": false}, {"text": "великший", "correct": false}, {"text": "більшавий", "correct": false}]}, {"question": "What is the specific English meaning of the Ukrainian superlative adjective \\\\\\"найгірший\\\\\\"?", "options": [{"text": "the worst", "correct": true}, {"text": "better", "correct": false}, {"text": "very bad", "correct": false}, {"text": "more bad", "correct": false}]}, {"question": "What is the correct English translation for the Ukrainian superlative adjective \\\\\\"найдорожчий\\\\\\" in a retail context?", "options": [{"text": "the most expensive", "correct": true}, {"text": "the cheapest", "correct": false}, {"text": "extremely expensive", "correct": false}, {"text": "very dear", "correct": false}]}, {"question": "Which of the following Ukrainian adverbs serves as a common intensifier for adjectives, meaning \\\\\\"very\\\\\\"?", "options": [{"text": "дуже", "correct": true}, {"text": "ніж", "correct": false}, {"text": "за", "correct": false}, {"text": "під", "correct": false}]}, {"question": "What is the specific meaning of the Ukrainian intensifier \\\\\\"надзвичайно\\\\\\" when modifying an adjective?", "options": [{"text": "extraordinarily", "correct": true}, {"text": "extraordinarily badly", "correct": false}, {"text": "very quickly", "correct": false}, {"text": "somewhat", "correct": false}]}, {"question": "In a Ukrainian sentence, which grammatical categories must a superlative adjective agree with in relation to its noun?", "options": [{"text": "Gender, number, and case", "correct": true}, {"text": "Only gender and number", "correct": false}, {"text": "Only case and gender", "correct": false}, {"text": "Only number", "correct": false}]}, {"question": "In the phrase \\\\\\"найкраща книга,\\\\\\" what is the grammatical gender of the superlative adjective \\\\\\"найкраща\\\\\\"?", "options": [{"text": "Жіночий рід", "correct": true}, {"text": "Чоловічий рід", "correct": false}, {"text": "Середній рід", "correct": false}, {"text": "Множина", "correct": false}]}, {"question": "In the Ukrainian expression \\\\\\"найбільше місто,\\\\\\" what is the grammatical gender of the superlative form?", "options": [{"text": "Середній рід", "correct": true}, {"text": "Чоловічий рід", "correct": false}, {"text": "Жіночий рід", "correct": false}, {"text": "Множина", "correct": false}]}, {"question": "What is the primary morphological component added to a comparative adjective to create a superlative in Ukrainian?", "options": [{"text": "The prefix \\\\\\"най-\\\\\\"", "correct": true}, {"text": "The suffix \\\\\\"-ший\\\\\\"", "correct": false}, {"text": "The ending \\\\\\"-ий\\\\\\"", "correct": false}, {"text": "The particle \\\\\\"більш\\\\\\"", "correct": false}]}, {"question": "Which statement best describes the formation of superlatives for adjectives with irregular comparative forms?", "options": [{"text": "They follow the regular rule of adding \\\\\\"най-\\\\\\" to the comparative", "correct": true}, {"text": "They use a completely unique word root for the superlative", "correct": false}, {"text": "They require the prefix \\\\\\"над-\\\\\\" instead of \\\\\\"най-\\\\\\"", "correct": false}, {"text": "They cannot form a superlative degree in standard Ukrainian", "correct": false}]}]`)}
 />
 
 ### Superlative Rules
 
 <TrueFalse
   title="Superlative Rules"
-  items={JSON.parse(`[{"statement": "Superlatives are formed with най- + comparative.", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\"Найкращий\\\" means \\\"the best.\\\"", "isTrue": true, "explanation": "Yes!"}, {"statement": "Superlatives don't agree in gender.", "isTrue": false, "explanation": "They do agree in gender, number, and case."}, {"statement": "\\\"Дуже\\\" is an intensifier meaning \\\"very.\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "Ukrainian superlative formation is regular.", "isTrue": true, "explanation": "Yes, always най- + comparative!"}, {"statement": "\\\"Найбільший\\\" means \\\"smaller.\\\"", "isTrue": false, "explanation": "\\\"Найбільший\\\" means \\\"biggest.\\\""}, {"statement": "\\\"Найдовший\\\" means \\\"longest.\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "Irregular comparatives also use най-.", "isTrue": true, "explanation": "Yes! кращий → найкращий."}, {"statement": "\\\"Найгірший\\\" is the superlative of \\\"добрий.\\\"", "isTrue": false, "explanation": "\\\"Найгірший\\\" is from \\\"поганий.\\\" \\\"Добрий\\\" gives \\\"найкращий.\\\""}, {"statement": "\\\"Неймовірно\\\" is an intensifier.", "isTrue": true, "explanation": "Yes! It means \\\"incredibly.\\\""}, {"statement": "Говерла is the highest mountain in Ukraine.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Different prefixes are used for different adjectives.", "isTrue": false, "explanation": "Always най-, no variation."}]`)}
+  isUkrainian={false}
+  items={JSON.parse(`[{"statement": "Superlatives are formed with най- + comparative.", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\\\\"Найкращий\\\\\\" means \\\\\\"the best.\\\\\\"", "isTrue": true, "explanation": "Yes!"}, {"statement": "Superlatives don't agree in gender.", "isTrue": false, "explanation": "They do agree in gender, number, and case."}, {"statement": "\\\\\\"Дуже\\\\\\" is an intensifier meaning \\\\\\"very.\\\\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "Ukrainian superlative formation is regular.", "isTrue": true, "explanation": "Yes, always най- + comparative!"}, {"statement": "\\\\\\"Найбільший\\\\\\" means \\\\\\"smaller.\\\\\\"", "isTrue": false, "explanation": "\\\\\\"Найбільший\\\\\\" means \\\\\\"biggest.\\\\\\""}, {"statement": "\\\\\\"Найдовший\\\\\\" means \\\\\\"longest.\\\\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "Irregular comparatives also use най-.", "isTrue": true, "explanation": "Yes! кращий → найкращий."}, {"statement": "\\\\\\"Найгірший\\\\\\" is the superlative of \\\\\\"добрий.\\\\\\"", "isTrue": false, "explanation": "\\\\\\"Найгірший\\\\\\" is from \\\\\\"поганий.\\\\\\" \\\\\\"Добрий\\\\\\" gives \\\\\\"найкращий.\\\\\\""}, {"statement": "\\\\\\"Неймовірно\\\\\\" is an intensifier.", "isTrue": true, "explanation": "Yes! It means \\\\\\"incredibly.\\\\\\""}, {"statement": "Говерла is the highest mountain in Ukraine.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Different prefixes are used for different adjectives.", "isTrue": false, "explanation": "Always най-, no variation."}]`)}
 />
 
 ### Comparative vs Superlative
 
 <GroupSort
   title="Comparative vs Superlative"
+  isUkrainian={false}
   groups={JSON.parse(`{"Comparative": ["кращий", "гірший", "більший", "вищий", "довший", "дорожчий"], "Superlative": ["найкращий", "найгірший", "найбільший", "найвищий", "найдовший", "найдорожчий"]}`)}
 />
 
@@ -275,12 +317,13 @@ Try to translate these common superlative phrases:
 
 <Unjumble
   title="Superlative Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "це / безумовно / сьогодні / найкраща / нова / книга / у / цій / бібліотеці", "answer": "Це сьогодні найкраща нова книга у цій бібліотеці"}, {"jumbled": "він / зараз / найстаріший / і / найдосвідченіший / студент / у / нашому / університеті", "answer": "Він зараз найстаріший і найдосвідченіший студент у університеті"}, {"jumbled": "Україна / це / найбільша / і / найкрасивіша / країна / у / всій / Європі", "answer": "Україна найбільша і найкрасивіша країна у всій Європі"}, {"jumbled": "це / був / напевно / найгірший / і / найважчий / день / у / моєму / житті", "answer": "Це був найгірший і найважчий день у моєму житті"}, {"jumbled": "вона / справді / найрозумніша / і / найталановитіша / людина / у / нашій / команді", "answer": "Вона справді найрозумніша і найталановитіша людина у команді"}, {"jumbled": "великий / Дніпро / це / найдовша / і / найважливіша / річка / в / Україні", "answer": "Дніпро найдовша і найважливіша річка в Україні"}, {"jumbled": "цей / новий / український / фільм / дуже / цікавий / для / всіх / глядачів", "answer": "Цей новий український фільм дуже цікавий для всіх глядачів"}, {"jumbled": "він / мій / найкращий / і / найвірніший / друг / вже / багато / років", "answer": "Він мій найкращий і найвірніший друг вже багато років"}, {"jumbled": "моя / мила / мама / завжди / найкраща / і / найдобріша / у / світі", "answer": "Моя мама завжди найкраща і найдобріша у світі"}, {"jumbled": "це / був / дуже / дорогий / і / найгарніший / телефон / у / магазині", "answer": "Це був найдорожчий і найгарніший телефон у магазині"}, {"jumbled": "вона / надзвичайно / талановита / і / дуже / працьовита / молода / дівчина", "answer": "Вона надзвичайно талановита і дуже працьовита молода дівчина"}, {"jumbled": "Говерла / це / найвища / і / найпопулярніша / гора / в / українських / Карпатах", "answer": "Говерла найвища і найпопулярніша гора в українських Карпатах"}]`)}
 />
 
 ### Form the Superlative
 
-<ErrorCorrection title="Form the Superlative">
+<ErrorCorrection title="Form the Superlative" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Це ___ книга. (best)`}
     errorWord={`best`}
@@ -329,6 +372,7 @@ Try to translate these common superlative phrases:
 
 <Cloze
   title="World Records"
+  isUkrainian={false}
   passage={`Україна — [___:1] країна в Європі за територією. [___:2] річка в нашій країні — Дніпро. [___:3] гора — Говерла. [___:4] місто України — Київ. Це наше [___:5] і [___:6] серце.
 ---
 Моя мама — [___:7] людина у світі! Мій друг — [___:8] хлопець у школі! Це був [___:9] день у моєму житті! Я був [___:10] щаслива людина. Ми бачили [___:11] краєвиди і [___:12] гори.`}
@@ -337,7 +381,7 @@ Try to translate these common superlative phrases:
 
 ### Find Superlatives
 
-<MarkTheWords>
+<MarkTheWords isUkrainian={false}>
   <MarkTheWordsActivity
     instruction={`Mark the correct words.`}
     text={`Click on SUPERLATIVE forms only.
@@ -401,41 +445,6 @@ Try to translate these common superlative phrases:
 | цвіт | t͡svʲit | blossom | noun | ч |  |
 | шлях | ʃlʲɑx | way; path | noun | ч |  |
 | іра | ˈirɐ | Ira | name | ж |  |
-
-## 📋 Summary
-
-## What You Learned
-
-This module covered superlative adjectives in Ukrainian — the ultimate form of comparison.
-
-**Formation:**
-- **най- + comparative** = superlative
-- Works for ALL adjectives, including irregular ones
-- **Agreement:** Must match gender, number, and case (найкращ**а** мама, найкращ**ий** друг)
-- **One of the...:** один із найкращих + Genitive Plural
-
-**Common superlatives:**
-- найкращий — best, найгірший — worst
-- найбільший — biggest, найменший — smallest
-- найвищий — tallest, найдовший — longest
-
-**Intensifiers:**
-Use these to add emotion without comparison:
-- **дуже** (very) — neutral/common
-- **надзвичайно** (extraordinarily) — high praise
-- **неймовірно** (incredibly) — disbelief/amazement
-- **страшенно** (terribly/awfully) — colloquial, can be positive (страшенно цікаво!) or negative.
-
-**Cultural Superlatives:**
-- **Мрія** (The Dream) — biggest plane
-- **Арсенальна** — deepest metro station
-- **Оптимістична** — longest gypsum cave
-
-Тепер ви знаєте **найкращі** слова, щоб описати **найважливіші** речі у вашому житті! 🏆
-
-## Need More Practice?
-
----
 
 > [!resources] 🔗 External Resources
 >

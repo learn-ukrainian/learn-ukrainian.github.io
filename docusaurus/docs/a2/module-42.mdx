@@ -19,6 +19,8 @@ import Translate from '@site/src/components/Translate';
 import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
 
 ## Warm-up
 
@@ -353,6 +355,7 @@ Be polite, be heard!
 
 <MatchUp
   title="Root Match"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- Мова", "right": "Speech"}, {"left": "- Слух", "right": "Hearing"}, {"left": "- Думка", "right": "Thought"}, {"left": "- Вхід", "right": "Entrance (Go)"}, {"left": "- Письмо", "right": "Writing"}, {"left": "- Вигляд", "right": "Appearance (See)"}, {"left": "- Перемога", "right": "Victory (Over-power)"}, {"left": "- Розмова", "right": "Conversation"}]`)}
 />
 
@@ -360,6 +363,7 @@ Be polite, be heard!
 
 <GroupSort
   title="Family Tree"
+  isUkrainian={false}
   groups={JSON.parse(`{"МОВ - Speech": ["Мова", "Розмова", "Промова", "Замовлення", "Мовчати", "Мовлення"], "СЛУХ/ДУМ - Sense": ["Слухати", "Слухач", "Слухняний", "Думати", "Думка", "Задум"], "Review (Mix)": ["Письменник", "Переклад", "Вхід", "Науковий", "Український", "Читач"]}`)}
 />
 
@@ -367,6 +371,7 @@ Be polite, be heard!
 
 <Cloze
   title="Logic Puzzle"
+  isUkrainian={false}
   passage={`Людина, яка слухає. Це [[___:1]]. Процес обміну словами. Це [[___:2]]. Те, що ми думаємо. Це [[___:3]].
 
 Офіційний виступ. Це [[___:4]]. Те, що ми робимо в ресторані. Це [[___:5]]. Перекласти текст іншою мовою. Це [[___:6]].
@@ -379,6 +384,7 @@ Be polite, be heard!
 
 <Unjumble
   title="High Sentences"
+  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "гарна / Це / дуже / думка / про / майбутнє / проект", "answer": "Це дуже гарна думка про майбутнє проект"}, {"jumbled": "українську / Ми / мову / вивчаємо / щодня / з / радістю / в / школі", "answer": "Ми вивчаємо українську мову щодня з радістю в школі"}, {"jumbled": "уважно / Слухачі / професора / слухають / під / час / цікавої / промови", "answer": "Слухачі уважно слухають професора під час цікавої промови"}, {"jumbled": "зробив / Я / замовлення / вже / в / цьому / новому / ресторані", "answer": "Я вже зробив замовлення в цьому новому ресторані"}, {"jumbled": "була / серйозна / Це / розмова / між / двома / добрими / друзями", "answer": "Це була серйозна розмова між двома добрими друзями"}, {"jumbled": "має / Він / талант / письменницький / і / пише / чудові / книги", "answer": "Він має письменницький талант і пише чудові книги"}]`)}
 />
 
@@ -386,13 +392,15 @@ Be polite, be heard!
 
 <Quiz
   title="Formation Check"
-  questions={JSON.parse(`[{"question": "What is the literal meaning of the verb \\\"Мовчати\\\"?", "options": [{"text": "To be silent", "correct": true}, {"text": "To speak loud (shout)", "correct": false}, {"text": "To sing", "correct": false}, {"text": "To whisper", "correct": false}]}, {"question": "The Ukrainian word \\\"Замовлення\\\" (Order) contains which specific root component?", "options": [{"text": "МОВ", "correct": true}, {"text": "ДУМ", "correct": false}, {"text": "ХІД", "correct": false}, {"text": "РОБ", "correct": false}]}, {"question": "The suffix \\\"-ач\\\" in \\\"Слухач\\\" indicates what meaning?", "options": [{"text": "Person who does the action (Agent)", "correct": true}, {"text": "The process of doing action", "correct": false}, {"text": "The quality of the object", "correct": false}, {"text": "The location of the action", "correct": false}]}, {"question": "What is the literal logic of \\\"Переклад\\\" (Translation)?", "options": [{"text": "Cross-lay (Laying meaning across)", "correct": true}, {"text": "In-write", "correct": false}, {"text": "Out-speak", "correct": false}, {"text": "Re-read", "correct": false}]}, {"question": "Which adjective is correctly derived from \\\"Наука\\\" (Science)?", "options": [{"text": "Науковий", "correct": true}, {"text": "Наукний", "correct": false}, {"text": "Наукач", "correct": false}, {"text": "Наукський", "correct": false}]}, {"question": "Can you explain why the words \\\"Вхід\\\" and \\\"Вихід\\\" are typically paired together?", "options": [{"text": "They are opposites", "correct": true}, {"text": "They are synonyms", "correct": false}, {"text": "They are unrelated words", "correct": false}, {"text": "They are different spellings of one word", "correct": false}]}, {"question": "Can you identify the correct meaning of the Ukrainian verb \\\"Придумати\\\"?", "options": [{"text": "To invent", "correct": true}, {"text": "To forget", "correct": false}, {"text": "To sleep", "correct": false}, {"text": "To analyze", "correct": false}]}, {"question": "\\\"Українська мова is beautiful.\\\" Which form is correct?", "options": [{"text": "Українська мова", "correct": true}, {"text": "Український мова", "correct": false}, {"text": "Українське мова", "correct": false}, {"text": "Українські мова", "correct": false}]}]`)}
+  isUkrainian={false}
+  questions={JSON.parse(`[{"question": "What is the literal meaning of the verb \\\\\\"Мовчати\\\\\\"?", "options": [{"text": "To be silent", "correct": true}, {"text": "To speak loud (shout)", "correct": false}, {"text": "To sing", "correct": false}, {"text": "To whisper", "correct": false}]}, {"question": "The Ukrainian word \\\\\\"Замовлення\\\\\\" (Order) contains which specific root component?", "options": [{"text": "МОВ", "correct": true}, {"text": "ДУМ", "correct": false}, {"text": "ХІД", "correct": false}, {"text": "РОБ", "correct": false}]}, {"question": "The suffix \\\\\\"-ач\\\\\\" in \\\\\\"Слухач\\\\\\" indicates what meaning?", "options": [{"text": "Person who does the action (Agent)", "correct": true}, {"text": "The process of doing action", "correct": false}, {"text": "The quality of the object", "correct": false}, {"text": "The location of the action", "correct": false}]}, {"question": "What is the literal logic of \\\\\\"Переклад\\\\\\" (Translation)?", "options": [{"text": "Cross-lay (Laying meaning across)", "correct": true}, {"text": "In-write", "correct": false}, {"text": "Out-speak", "correct": false}, {"text": "Re-read", "correct": false}]}, {"question": "Which adjective is correctly derived from \\\\\\"Наука\\\\\\" (Science)?", "options": [{"text": "Науковий", "correct": true}, {"text": "Наукний", "correct": false}, {"text": "Наукач", "correct": false}, {"text": "Наукський", "correct": false}]}, {"question": "Can you explain why the words \\\\\\"Вхід\\\\\\" and \\\\\\"Вихід\\\\\\" are typically paired together?", "options": [{"text": "They are opposites", "correct": true}, {"text": "They are synonyms", "correct": false}, {"text": "They are unrelated words", "correct": false}, {"text": "They are different spellings of one word", "correct": false}]}, {"question": "Can you identify the correct meaning of the Ukrainian verb \\\\\\"Придумати\\\\\\"?", "options": [{"text": "To invent", "correct": true}, {"text": "To forget", "correct": false}, {"text": "To sleep", "correct": false}, {"text": "To analyze", "correct": false}]}, {"question": "\\\\\\"Українська мова is beautiful.\\\\\\" Which form is correct?", "options": [{"text": "Українська мова", "correct": true}, {"text": "Український мова", "correct": false}, {"text": "Українське мова", "correct": false}, {"text": "Українські мова", "correct": false}]}]`)}
 />
 
 ### The Conference
 
 <Cloze
   title="The Conference"
+  isUkrainian={false}
   passage={`На сцені стоїть [___:1].
 Він читає [___:2].
 Тема — екологія.
@@ -411,7 +419,7 @@ Be polite, be heard!
 
 ### Wrong Logic
 
-<ErrorCorrection title="Wrong Logic">
+<ErrorCorrection title="Wrong Logic" isUkrainian={false}>
   <ErrorCorrectionItem
     sentence={`Я **слухаю** книгу. (Intended: Read)`}
     errorWord={`слухаю`}
@@ -460,6 +468,7 @@ Be polite, be heard!
 
 <MatchUp
   title="Opposites"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- Вхід", "right": "Вихід"}, {"left": "- Мовчати", "right": "Говорити"}, {"left": "- Вступ", "right": "Виступ"}, {"left": "- Схід", "right": "Захід"}, {"left": "- Слухач", "right": "Мовець"}, {"left": "- Вдих", "right": "Видих"}, {"left": "- Прихід", "right": "Відхід"}, {"left": "- Запитання", "right": "Відповідь"}]`)}
 />
 
@@ -467,6 +476,7 @@ Be polite, be heard!
 
 <GroupSort
   title="Parts of Speech"
+  isUkrainian={false}
   groups={JSON.parse(`{"Noun - Object/Thing": ["Мова", "Думка", "Слух", "Вхід", "Письменник", "Погляд", "Промова", "Розмова"], "Verb - Action": ["Мовчати", "Думати", "Слухати", "Бачити", "Писати", "Говорити", "Обдумати"]}`)}
 />
 
@@ -474,6 +484,7 @@ Be polite, be heard!
 
 <MatchUp
   title="Definitions II"
+  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "- Огляд", "right": "Review"}, {"left": "- Погляд", "right": "Glance"}, {"left": "- Вигляд", "right": "Appearance"}, {"left": "- Відчуття", "right": "Sensation"}, {"left": "- Почуття", "right": "Feeling"}, {"left": "- Побачення", "right": "Date/Meeting"}, {"left": "- Передбачення", "right": "Prediction"}, {"left": "- Обдумати", "right": "To think over"}]`)}
 />
 

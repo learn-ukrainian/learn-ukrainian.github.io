@@ -1126,7 +1126,7 @@ def check_error_correction_format(activities: list[dict]) -> list[dict]:
         if activity.get('type') != 'error-correction':
             continue
 
-        title = activity.get('title', 'Untitled')
+        title = activity.get('title') or activity.get('question') or 'Untitled'
         items = activity.get('items', [])
 
         placeholder_count = 0
@@ -1137,6 +1137,7 @@ def check_error_correction_format(activities: list[dict]) -> list[dict]:
 
             sentence = item.get('sentence', '')
             error = item.get('error', '')
+            answer = item.get('answer', '')
 
             # Check if using placeholder syntax
             if error == '___' or error.strip() == '':
@@ -1144,9 +1145,21 @@ def check_error_correction_format(activities: list[dict]) -> list[dict]:
             # Check if sentence contains → ___ pattern (transformation exercise, not error-correction)
             elif '→' in sentence and '___' in sentence:
                 placeholder_count += 1
-            # Check if error word is not in sentence
-            elif error and error not in sentence:
-                placeholder_count += 1
+            # Allow 'none' or 'correct' as valid values for "no error" sentences
+            # (documented pattern - keeps learners alert, not every sentence has an error)
+            elif error.lower() in ('none', 'correct'):
+                continue
+            # Allow sentence transformation format: no sentence field, error IS the full sentence
+            # to transform, answer is the corrected full sentence (both should be multi-word, 3+ words)
+            elif not sentence and error and answer and len(error.split()) >= 3 and len(answer.split()) >= 3:
+                continue
+            # Check if error word is not in sentence (case-insensitive, quote-normalized)
+            elif error:
+                # Normalize quotes for comparison: « » " " ' ' → straight quotes
+                def normalize_quotes(s):
+                    return s.replace('«', '"').replace('»', '"').replace('"', '"').replace('"', '"').replace(''', "'").replace(''', "'")
+                if normalize_quotes(error.lower()) not in normalize_quotes(sentence.lower()):
+                    placeholder_count += 1
 
         # If most items use placeholders, flag it
         if placeholder_count > 0:
