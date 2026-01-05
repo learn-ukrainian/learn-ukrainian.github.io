@@ -1,0 +1,28 @@
+module: a1-09
+title: Reflexive Verbs (-ся)
+subtitle: Actions to Oneself & Each Other
+version: '2.0'
+phase: A1.1
+pedagogy: PPP
+duration: 60
+transliteration: full
+tags:
+  - verbs
+  - reflexive
+  - conjugation
+  - -ся-verbs
+  - third-person-rule
+grammar:
+  - reflexive-verbs
+  - -ся-conjugation
+  - -ється-rule
+  - reflexive-types
+  - lexicalized-reflexives
+objectives:
+  - Learner can conjugate -ся verbs correctly (especially third-person -ується rule)
+  - Learner understands three types of reflexive verbs (reflexive, reciprocal, lexicalized)
+  - Learner can use required verbs дивитися and сміятися
+  - Learner can handle працювати-type -ся verbs (запізнюватися)
+  - Learner recognizes past tense reflexive forms (preview for M10)
+vocabulary_count: 25
+slug: 09-reflexive-verbs

@@ -1,17 +1,24 @@
 module: c1-18
-title: C1.1 Practice I
-subtitle: Academic Foundation
-version: '2.0'
-phase: C1.1 Academic
-focus: practice
-pedagogy: academic
+title: "Практикум C1.1: Академічне есе"
+subtitle: "C1.1 Practice I: Academic Essay"
+description: "Mastering the structure and argumentation of academic essays in Ukrainian."
+version: "3.0"
+phase: "C1.1 Academic Foundation"
+focus: skill
+pedagogy: "immersion"
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- practice
-- essay
-- practice
+  - writing
+  - academic
+  - essay
+  - argumentation
+grammar:
+  - "Integrated essay writing practice"
 objectives:
-- Master C1 concepts in C1.1 Practice I
+  - "Structure an academic essay with clear introduction, body, and conclusion"
+  - "Formulate a strong, argumentative thesis statement"
+  - "Use evidence and logic to support arguments"
+  - "Maintain academic register and cohesion throughout the text"
+vocabulary_count: 15
 slug: 18-c11-practice-i

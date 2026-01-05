@@ -4,17 +4,17 @@
 
 ## Gates
 - **Words:** ✅ 1772/1400
-- **Activities:** ✅ 13/10
+- **Activities:** ✅ 10/10
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 138/20
+- **Vocab:** ✅ 123/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ 1 cloze with year blanks
+- **Content_heavy:** ✅ Content-heavy OK (10 activities)
 - **Immersion:** 🇺🇦 99.9% (target 98-100% (history))
 - **Richness:** ✅ 97% (content)
 - **Grammar:** ⏳ Pending validation

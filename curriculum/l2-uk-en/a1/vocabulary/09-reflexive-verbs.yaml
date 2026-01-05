@@ -1,0 +1,139 @@
+module: 09-reflexive-verbs
+level: A1
+version: '2.0'
+items:
+  - lemma: називатися
+    ipa: /nɑzɪˈwɑtɪsʲɑ/
+    translation: to be called
+    pos: verb
+    note: reflexive
+  - lemma: усміхатися
+    ipa: /usʲmiˈxɑtɪsʲɑ/
+    translation: to smile
+    pos: verb
+    note: lexicalized -ся
+  - lemma: сміятися
+    ipa: /sʲmiˈjɑtɪsʲɑ/
+    translation: to laugh
+    pos: verb
+    note: lexicalized -ся, required
+  - lemma: дивитися
+    ipa: /dɪˈwɪtɪsʲɑ/
+    translation: to watch
+    pos: verb
+    note: lexicalized -ся, required
+  - lemma: зустрічатися
+    ipa: /zustritʲˈʃɑtɪsʲɑ/
+    translation: to meet (each other)
+    pos: verb
+    note: reciprocal
+  - lemma: прощатися
+    ipa: /prɔʃˈtʃɑtɪsʲɑ/
+    translation: to say goodbye
+    pos: verb
+    note: reciprocal
+  - lemma: знайомитися
+    ipa: /znɑˈjɔmɪtɪsʲɑ/
+    translation: to get acquainted
+    pos: verb
+    note: reciprocal
+  - lemma: запізнюватися
+    ipa: /zɑpizʲnʲuˈwɑtɪsʲɑ/
+    translation: to be late
+    pos: verb
+    note: працювати-type, drops -ва-
+  - lemma: одягатися
+    ipa: /ɔdʲɑˈɦɑtɪsʲɑ/
+    translation: to get dressed
+    pos: verb
+    note: reflexive
+  - lemma: роздягатися
+    ipa: /rɔzdʲɑˈɦɑtɪsʲɑ/
+    translation: to get undressed
+    pos: verb
+    note: reflexive
+  - lemma: митися
+    ipa: /ˈmɪtɪsʲɑ/
+    translation: to wash (oneself)
+    pos: verb
+    note: reflexive
+  - lemma: вмиватися
+    ipa: /wmɪˈwɑtɪsʲɑ/
+    translation: to wash one's face
+    pos: verb
+    note: reflexive
+  - lemma: голитися
+    ipa: /ɦɔˈlɪtɪsʲɑ/
+    translation: to shave (oneself)
+    pos: verb
+    note: reflexive
+  - lemma: розчесуватися
+    ipa: /rɔzt͡ʃeˈsuwɑtɪsʲɑ/
+    translation: to comb one's hair
+    pos: verb
+    note: reflexive, працювати-type
+  - lemma: боятися
+    ipa: /bɔˈjɑtɪsʲɑ/
+    translation: to be afraid
+    pos: verb
+    note: lexicalized -ся
+  - lemma: радіти
+    ipa: /rɑˈditɪ/
+    translation: to rejoice
+    pos: verb
+    note: emotion verb
+  - lemma: дивуватися
+    ipa: /dɪwuˈwɑtɪsʲɑ/
+    translation: to be surprised
+    pos: verb
+    note: emotion, працювати-type
+  - lemma: турбуватися
+    ipa: /turbuwɑˈtɪsʲɑ/
+    translation: to worry
+    pos: verb
+    note: emotion, працювати-type
+  - lemma: хвилюватися
+    ipa: /xwɪlʲuˈwɑtɪsʲɑ/
+    translation: to worry/be nervous
+    pos: verb
+    note: emotion, працювати-type
+  - lemma: цікавитися
+    ipa: /t͡sikɑˈwɪtɪsʲɑ/
+    translation: to be interested
+    pos: verb
+    note: emotion
+  - lemma: займатися
+    ipa: /zɑjˈmɑtɪsʲɑ/
+    translation: to be busy with / to study
+    pos: verb
+    note: reflexive
+  - lemma: вчитися
+    ipa: /fˈt͡ʃɪtɪsʲɑ/
+    translation: to study
+    pos: verb
+    note: reflexive
+  - lemma: прокидатися
+    ipa: /prɔkɪˈdɑtɪsʲɑ/
+    translation: to wake up
+    pos: verb
+    note: reflexive
+  - lemma: сміявся
+    ipa: /sʲmiˈjɑwsʲɑ/
+    translation: laughed (he)
+    pos: verb
+    note: past tense masculine
+  - lemma: сміялася
+    ipa: /sʲmiˈjɑlɑsʲɑ/
+    translation: laughed (she)
+    pos: verb
+    note: past tense feminine
+  - lemma: сміялося
+    ipa: /sʲmiˈjɑlɔsʲɑ/
+    translation: laughed (it)
+    pos: verb
+    note: past tense neuter
+  - lemma: сміялися
+    ipa: /sʲmiˈjɑlɪsʲɑ/
+    translation: laughed (they)
+    pos: verb
+    note: past tense plural

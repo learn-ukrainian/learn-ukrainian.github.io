@@ -1,0 +1,136 @@
+module: 24-digital-communication
+level: C1
+version: '2.0'
+items:
+  - lemma: електронна пошта
+    translation: email (system)
+    pos: phrase
+  - lemma: лист
+    translation: letter/email
+    pos: noun
+    gender: m
+  - lemma: повідомлення
+    translation: message
+    pos: noun
+    gender: n
+  - lemma: вкладення
+    translation: attachment
+    pos: noun
+    gender: n
+  - lemma: файл
+    translation: file
+    pos: noun
+    gender: m
+  - lemma: посилання
+    translation: link
+    pos: noun
+    gender: n
+  - lemma: тема
+    translation: subject
+    pos: noun
+    gender: f
+  - lemma: звертання
+    translation: salutation/address
+    pos: noun
+    gender: n
+  - lemma: підпис
+    translation: signature
+    pos: noun
+    gender: m
+  - lemma: шаблон
+    translation: template
+    pos: noun
+    gender: m
+  - lemma: чернетка
+    translation: draft
+    pos: noun
+    gender: f
+  - lemma: відправити
+    translation: to send
+    pos: verb
+  - lemma: переслати
+    translation: to forward
+    pos: verb
+  - lemma: відповісти
+    translation: to reply
+    pos: verb
+  - lemma: копія
+    translation: copy (CC)
+    pos: noun
+    gender: f
+  - lemma: прихована копія
+    translation: blind copy (BCC)
+    pos: phrase
+  - lemma: терміново
+    translation: urgently
+    pos: adv
+  - lemma: важливо
+    translation: importantly/important
+    pos: adv
+  - lemma: підтвердження
+    translation: confirmation
+    pos: noun
+    gender: n
+  - lemma: отримання
+    translation: receipt/receiving
+    pos: noun
+    gender: n
+  - lemma: прохання
+    translation: request
+    pos: noun
+    gender: n
+  - lemma: запит
+    translation: inquiry
+    pos: noun
+    gender: m
+  - lemma: подяка
+    translation: gratitude/thanks
+    pos: noun
+    gender: f
+  - lemma: вибачення
+    translation: apology
+    pos: noun
+    gender: n
+  - lemma: нагадування
+    translation: reminder
+    pos: noun
+    gender: n
+  - lemma: спам
+    translation: spam
+    pos: noun
+    gender: m
+  - lemma: папка
+    translation: folder
+    pos: noun
+    gender: f
+  - lemma: доступ
+    translation: access
+    pos: noun
+    gender: m
+  - lemma: хмарне сховище
+    translation: cloud storage
+    pos: phrase
+  - lemma: автозбереження
+    translation: autosave
+    pos: noun
+    gender: n
+  - lemma: сповіщення
+    translation: notification
+    pos: noun
+    gender: n
+  - lemma: чат
+    translation: chat
+    pos: noun
+    gender: m
+  - lemma: відеозв'язок
+    translation: video connection
+    pos: noun
+    gender: m
+  - lemma: екран
+    translation: screen
+    pos: noun
+    gender: m
+  - lemma: налаштування
+    translation: settings
+    pos: noun
+    gender: p

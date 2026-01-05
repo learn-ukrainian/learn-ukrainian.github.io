@@ -1,0 +1,22 @@
+module: 20-c11-checkpoint-i
+title: "Контрольна точка C1.1"
+subtitle: "Checkpoint C1.1"
+description: "Перевірка знань за модулями 01-19 (C1.1)."
+phase: "C1.1"
+focus: checkpoint
+pedagogy: checkpoint
+duration: 45
+transliteration: none
+tags:
+  - checkpoint
+  - assessment
+  - review
+grammar:
+  - "Passive Voice (Review)"
+  - "Participles (Review)"
+  - "Stylistics (Review)"
+objectives:
+  - "Assess competence in C1.1 grammar topics"
+  - "Verify vocabulary retention from M01-19"
+vocabulary_count: 0
+slug: 20-c11-checkpoint-i

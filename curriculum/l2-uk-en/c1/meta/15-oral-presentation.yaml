@@ -1,0 +1,23 @@
+module: c1-15
+title: "Публічний виступ: Презентація"
+subtitle: "Oral Presentations"
+version: "1.0"
+phase: "C1.1 Academic Foundation"
+focus: speaking
+pedagogy: "communicative"
+duration: 120
+transliteration: none
+tags:
+  - speaking
+  - presentation
+  - academic
+  - rhetoric
+grammar:
+  - "Rhetorical questions"
+  - "Imperatives for audience engagement"
+objectives:
+  - "Learner can structure an academic presentation."
+  - "Learner can use signposting language to guide the audience."
+  - "Learner can handle Q&A sessions professionally."
+vocabulary_count: 25
+slug: 15-oral-presentation

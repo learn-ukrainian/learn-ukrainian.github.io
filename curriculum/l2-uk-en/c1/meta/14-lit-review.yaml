@@ -1,0 +1,24 @@
+module: 14-lit-review
+title: "Жанр: Огляд літератури"
+subtitle: "Synthesizing Knowledge"
+version: "1.0"
+phase: "C1.1 Academic Genres"
+focus: academic
+pedagogy: Transformation
+duration: 120
+transliteration: none
+tags:
+  - academic
+  - writing
+  - research
+  - synthesis
+grammar:
+  - "Verbs of attribution (reporting verbs)"
+  - "Cohesive devices for contrast and similarity"
+objectives:
+  - "Understand the difference between an annotated bibliography and a literature review."
+  - "Master the art of synthesis and thematic organization."
+  - "Identify research gaps."
+  - "Use appropriate reporting verbs to indicate stance."
+vocabulary_count: 30
+slug: 14-lit-review

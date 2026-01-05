@@ -1,0 +1,136 @@
+module: 21-cv-resume-writing
+level: C1
+version: '2.0'
+items:
+  - lemma: резюме
+    translation: resume/CV
+    pos: noun
+    gender: n
+  - lemma: автобіографія
+    translation: autobiography
+    pos: noun
+    gender: f
+  - lemma: мотиваційний лист
+    translation: motivation letter
+    pos: phrase
+  - lemma: супровідний лист
+    translation: cover letter
+    pos: phrase
+  - lemma: здобувач
+    translation: applicant
+    pos: noun
+    gender: m
+  - lemma: роботодавець
+    translation: employer
+    pos: noun
+    gender: m
+  - lemma: вакансія
+    translation: vacancy
+    pos: noun
+    gender: f
+  - lemma: досвід роботи
+    translation: work experience
+    pos: phrase
+  - lemma: освіта
+    translation: education
+    pos: noun
+    gender: f
+  - lemma: навички
+    translation: skills
+    pos: noun
+    gender: p
+  - lemma: досягнення
+    translation: achievements
+    pos: noun
+    gender: n
+  - lemma: обов'язки
+    translation: responsibilities
+    pos: noun
+    gender: p
+  - lemma: рекомендації
+    translation: references
+    pos: noun
+    gender: p
+  - lemma: віддієслівний іменник
+    translation: verbal noun
+    pos: phrase
+  - lemma: безособова конструкція
+    translation: impersonal construction
+    pos: phrase
+  - lemma: працевлаштування
+    translation: employment
+    pos: noun
+    gender: n
+  - lemma: співбесіда
+    translation: job interview
+    pos: noun
+    gender: f
+  - lemma: стажування
+    translation: internship
+    pos: noun
+    gender: n
+  - lemma: компетенція
+    translation: competence
+    pos: noun
+    gender: f
+  - lemma: кваліфікація
+    translation: qualification
+    pos: noun
+    gender: f
+  - lemma: рекрутер
+    translation: recruiter
+    pos: noun
+    gender: m
+  - lemma: кар'єрне зростання
+    translation: career growth
+    pos: phrase
+  - lemma: впровадження
+    translation: implementation
+    pos: noun
+    gender: n
+  - lemma: забезпечення
+    translation: provision/ensuring
+    pos: noun
+    gender: n
+  - lemma: управління
+    translation: management
+    pos: noun
+    gender: n
+  - lemma: дата
+    translation: date
+    pos: noun
+    gender: f
+  - lemma: диплом
+    translation: diploma
+    pos: noun
+    gender: m
+  - lemma: володіння
+    translation: possession/mastery
+    pos: noun
+    gender: n
+  - lemma: громадянство
+    translation: citizenship
+    pos: noun
+    gender: n
+  - lemma: адреса
+    translation: address
+    pos: noun
+    gender: f
+  - lemma: ступінь
+    translation: degree
+    pos: noun
+    gender: m
+  - lemma: сімейний
+    translation: family (adj)
+    pos: adj
+  - lemma: лист
+    translation: letter
+    pos: noun
+    gender: m
+  - lemma: вільне
+    translation: fluent/free
+    pos: adj
+  - lemma: анкета
+    translation: form/questionnaire
+    pos: noun
+    gender: f

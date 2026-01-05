@@ -1,0 +1,144 @@
+module: 23-business-etiquette
+level: C1
+version: '2.0'
+items:
+  - lemma: етикет
+    translation: etiquette
+    pos: noun
+    gender: m
+  - lemma: протокол
+    translation: protocol
+    pos: noun
+    gender: m
+  - lemma: норми
+    translation: norms
+    pos: noun
+    gender: p
+  - lemma: правила
+    translation: rules
+    pos: noun
+    gender: p
+  - lemma: звертання
+    translation: form of address
+    pos: noun
+    gender: n
+  - lemma: пан
+    translation: Mr./Sir
+    pos: noun
+    gender: m
+  - lemma: пані
+    translation: Ms./Madam
+    pos: noun
+    gender: f
+  - lemma: панове
+    translation: Ladies and Gentlemen (plural)
+    pos: noun
+    gender: p
+  - lemma: шановний
+    translation: Dear/Respected
+    pos: adj
+  - lemma: вельмишановний
+    translation: Highly respected (Very formal)
+    pos: adj
+  - lemma: вітання
+    translation: greeting
+    pos: noun
+    gender: n
+  - lemma: рукостискання
+    translation: handshake
+    pos: noun
+    gender: n
+  - lemma: візитівка
+    translation: business card
+    pos: noun
+    gender: f
+  - lemma: подарунок
+    translation: gift
+    pos: noun
+    gender: m
+  - lemma: запрошення
+    translation: invitation
+    pos: noun
+    gender: n
+  - lemma: пунктуальність
+    translation: punctuality
+    pos: noun
+    gender: f
+  - lemma: dress code
+    translation: dress code
+    pos: noun
+    gender: m
+  - lemma: діловий стиль
+    translation: business style
+    pos: phrase
+  - lemma: формальний
+    translation: formal
+    pos: adj
+  - lemma: неформальний
+    translation: informal
+    pos: adj
+  - lemma: зустріч
+    translation: meeting
+    pos: noun
+    gender: f
+  - lemma: переговори
+    translation: negotiations
+    pos: noun
+    gender: p
+  - lemma: ділова вечеря
+    translation: business dinner
+    pos: phrase
+  - lemma: прийом
+    translation: reception
+    pos: noun
+    gender: m
+  - lemma: конференція
+    translation: conference
+    pos: noun
+    gender: f
+  - lemma: субординація
+    translation: subordination/hierarchy
+    pos: noun
+    gender: f
+  - lemma: тактовність
+    translation: tact
+    pos: noun
+    gender: f
+  - lemma: ввічливість
+    translation: politeness
+    pos: noun
+    gender: f
+  - lemma: стриманість
+    translation: restraint
+    pos: noun
+    gender: f
+  - lemma: публічний виступ
+    translation: public speaking
+    pos: phrase
+  - lemma: порядок денний
+    translation: agenda
+    pos: phrase
+  - lemma: модератор
+    translation: moderator
+    pos: noun
+    gender: m
+  - lemma: учасник
+    translation: participant
+    pos: noun
+    gender: m
+  - lemma: повага
+    translation: respect
+    pos: noun
+    gender: f
+  - lemma: імідж
+    translation: image
+    pos: noun
+    gender: m
+  - lemma: стиль
+    translation: style
+    pos: noun
+    gender: m
+  - lemma: вечеря
+    translation: dinner
+    pos: noun
+    gender: f

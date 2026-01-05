@@ -1,17 +1,25 @@
-module: c1-25
-title: Political System
-subtitle: Professional & Social
-version: '2.0'
-phase: C1.2 Professional
-focus: social
-pedagogy: academic
+module: 25
+title: "Політична система України"
+subtitle: "Political System of Ukraine"
+version: "2.0"
+phase: "C1.2 Professional Communication"
+focus: professional
+pedagogy: immersion
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- social
-- politics
-- government
+  - politics
+  - society
+  - law
+  - government
+grammar:
+  - "Political discourse lexicon"
+  - "Passive voice in legislation"
+  - "Abstract nouns in political theory"
 objectives:
-- Master C1 concepts in Political System
+  - "Understand the structure of Ukrainian government (branches of power)"
+  - "Analyze political news and debates"
+  - "Discuss reforms and European integration"
+  - "Use correct terminology for legislative processes"
+vocabulary_count: 35
 slug: 25-political-system

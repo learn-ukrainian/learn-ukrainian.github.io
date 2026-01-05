@@ -97,6 +97,25 @@ Here are essential verbs you'll use often:
 | відпочивати | відпочивав | відпочивала | відпочивали | was resting   |
 | чекати      | чекав      | чекала      | чекали      | was waiting   |
 
+### Reflexive Verbs in Past Tense
+
+Reflexive verbs (those ending in -ся) follow the same pattern, with -ся attached to the past tense ending:
+
+| Infinitive    | він          | вона          | вони          | Meaning           |
+| ------------- | ------------ | ------------- | ------------- | ----------------- |
+| називатися    | називався    | називалася    | називалися    | was called        |
+| сміятися      | сміявся      | сміялася      | сміялися      | was laughing      |
+| дивитися      | дивився      | дивилася      | дивилися      | was watching      |
+| вчитися       | вчився       | вчилася       | вчилися       | was studying      |
+| зустрічатися  | зустрічався  | зустрічалася  | зустрічалися  | was meeting       |
+| одягатися     | одягався     | одягалася     | одягалися     | was getting dressed |
+
+**Example sentences:**
+
+- Він **сміявся** весь вечір. (He was laughing all evening.)
+- Вона **вчилася** в університеті. (She was studying at university.)
+- Ми **зустрічалися** в парку. (We were meeting in the park.)
+
 > [!warning] **Watch Out!**
 >
 > Some verbs change their stem in past tense:
@@ -105,6 +124,20 @@ Here are essential verbs you'll use often:
 > - пити → пив/пила/пили (not "питив")
 >
 > The stem changes, but the endings stay regular!
+
+> [!tip] **працювати-Type Verbs: -ва- Returns!**
+>
+> Remember from M06 that працювати-type verbs **DROP -ва-** in the present tense (я працюю, NOT працюваю)?
+>
+> **In the past tense, -ва- COMES BACK!**
+>
+> - Present: я працю**ю** (DROP -ва-)
+> - Past: я працю**вав** / працю**вала** (KEEP -ва-)
+>
+> Same pattern for all -ува-/-юва- verbs:
+> - дивуватися → дивувався / дивувалася
+> - хвилюватися → хвилювався / хвилювалася
+> - танцювати → танцював / танцювала
 
 ### Example Sentences
 
@@ -208,6 +241,18 @@ Translation:
 > - Тут **був** сад. (The garden is masculine.)
 > - Тут **була** школа. (The school is feminine.)
 > - Тут **було** тихо. (General statements use neuter.)
+
+> [!info] **Coming Up: Aspect (Вид)**
+>
+> The past tense forms you learned today (читав, працювала, говорили) are called **imperfective aspect** (недоконаний вид). They describe **ongoing, repeated, or habitual actions** in the past—answering "What were you doing?"
+>
+> Examples of imperfective past:
+> - Я **читав** книгу весь вечір. (I **was reading** a book all evening — ongoing)
+> - Вона **працювала** кожен день. (She **was working** every day — habitual)
+>
+> Ukrainian also has **perfective aspect** (доконаний вид) for completed actions, which you'll learn in A2. Different aspect, different meaning—but the same past tense foundation you're mastering now!
+>
+> For now, focus on these imperfective patterns. Aspect will build naturally on this foundation!
 
 ## Підсумок (Summary)
 

@@ -90,10 +90,15 @@ We do not use passive resource lists. We use **Active Reading Tasks** (`type: re
 
 <critical>
 
-**The Golden Rule:** "Can the learner answer this without reading the Ukrainian text?"
+**The Golden Rule (Issue #359):** "Can the learner answer this without reading the Ukrainian text?"
 
 - **If YES** → Rewrite (tests literary knowledge)
 - **If NO** → Keep (tests Ukrainian comprehension)
+
+**Review Impact:** Content recall violations will deduct 1-3 points from Pedagogy score during quality review:
+- 1-2 violations: -1 point
+- 3-4 violations: -2 points
+- 5+ violations: -3 points (max 5/10)
 
 </critical>
 

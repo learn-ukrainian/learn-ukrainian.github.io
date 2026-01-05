@@ -1,30 +1,29 @@
 # Audit Report: 71-emotional-intelligence.md
 **Phase:** B1.6 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1500
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
-  - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): делікатність, критика, примирення, зауваження, порозуміння...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): зобов'язання, чесність, відповідальність, компроміс, співчуття...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 10/100)
 
-- 2 pedagogical violations (minor)
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1637/1500
-- **Activities:** ✅ 13/12
+- **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 22 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (vocabulary)
 - **Grammar:** ✅ Validated (14/70 confirmed)
@@ -45,9 +44,6 @@
 | variety | 0.97 | - | 97% | 5% | 4.9% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.8%** |
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

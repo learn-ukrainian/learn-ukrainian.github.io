@@ -234,13 +234,13 @@ By module 30, learners can:
 | 03 | Noun gender & declension families | M02 | Case endings later |
 | 04 | Zero copula, Це, personal pronouns | M03 | Basic sentences |
 | 05 | Demonstratives (цей/ця/це/ці) | M03, M04 | Pointing, describing |
-| 06 | Present tense Class I (-ати) | M04 | Action statements |
+| 06 | Present tense First Conjugation (-ати) | M04 | Action statements |
 | 07 | Questions (чи, що, хто, де) + Negation | M06 | Conversations |
-| 08 | Present tense Class II (-ити) | M06 | More verbs |
-| 09 | Food vocabulary | M08 | Eating, drinking |
+| 08 | Present tense Second Conjugation (-ити) | M06 | More verbs |
+| 09 | Reflexive verbs (-ся) | M06, M08 | Reflexive actions |
 | 10 | REVIEW | M01-09 | Consolidation |
 
-### Vocabulary Plan A1.1 (240 words)
+### Vocabulary Plan A1.1 (230 words)
 
 | Module | Words | Domain | Key Items |
 |--------|-------|--------|-----------|
@@ -252,7 +252,7 @@ By module 30, learners can:
 | 06 | 25 | Action verbs | читати, писати, говорити, працювати, знати, розуміти... |
 | 07 | 20 | Question words | що, хто, де, куди, коли, чому, як, скільки, так, ні... |
 | 08 | 25 | More verbs | робити, бачити, хотіти, любити, жити, ходити... |
-| 09 | 30 | Food | їжа, сніданок, обід, вечеря, борщ, вареники, хліб... |
+| 09 | 25 | Reflexive verbs | називатися, усміхатися, сміятися, дивитися, зустрічатися... |
 | 10 | 10 | Review | (consolidation of above) |
 
 ### Module Content Specifications
@@ -343,19 +343,40 @@ By module 30, learners can:
 
 ---
 
-#### Module 06: The Living Verb I
-**Grammar:** Present tense Class I verbs (-ати/-яти)
+#### Module 06: The Living Verb I - First Conjugation: -ати Verbs
+**Grammar:** Present tense first conjugation verbs (-ати/-яти)
 
-**Conjugation pattern:**
+**Conjugation pattern (читати type):**
 читати → читаю, читаєш, читає, читаємо, читаєте, читають
 
+**працювати Type: Verbs That Drop -ва-**
+
+Verbs ending -увати/-ювати DROP the -ва- in present tense:
+
+| Infinitive | я form | Pattern |
+|-----------|--------|---------|
+| працювати | працюю | NOT працюваю ❌ |
+| танцювати | танцюю | NOT танцюваю ❌ |
+| подорожувати | подорожую | NOT подорожуваю ❌ |
+
+**Memory trick:** Cover -ва- with your thumb when conjugating!
+
+**Full conjugation:**
+- я працюю
+- ти працюєш
+- він/вона працює
+- ми працюємо
+- ви працюєте
+- вони працюють
+
 **Vocabulary (25 words):**
-читати, писати, знати, розуміти, слухати, чекати, питати, відповідати, працювати, відпочивати, снідати, обідати, вечеряти, гуляти, грати, співати, танцювати, малювати, думати, мріяти, починати, закінчувати, шукати, знаходити, називати
+читати, писати, знати, розуміти, слухати, чекати, питати, відповідати, працювати, відпочивати, снідати, обідати, вечеряти, гуляти, грати, співати, танцювати, подорожувати, малювати, думати, мріяти, починати, закінчувати, шукати, знаходити, називати
 
 **Signature Activity Concepts:**
 1. Gap-fill: Conjugate verb for pronoun
 2. Quiz: Match conjugated form → infinitive
 3. Unjumble: Build sentences with verbs
+4. Error-correction: Fix -ва- retention errors (працюваю → працюю)
 
 ---
 
@@ -377,39 +398,70 @@ By module 30, learners can:
 
 ---
 
-#### Module 08: The Living Verb II
-**Grammar:** Present tense Class II verbs (-ити/-іти)
+#### Module 08: The Living Verb II - Second Conjugation: -ити Verbs
+**Grammar:** Present tense second conjugation verbs (-ити/-іти)
 
-**Conjugation pattern:**
+**Conjugation pattern (говорити type):**
 говорити → говорю, говориш, говорить, говоримо, говорите, говорять
 
+**Alternative type (лежати type):**
+лежати → лежу, лежиш, лежить, лежимо, лежите, лежать
+
 **Common irregulars:** їсти, пити, бути
+
+**Terminology note:**
+- First conjugation (перша дієвідміна): -ати verbs (M06)
+- Second conjugation (друга дієвідміна): -ити verbs (M08)
 
 **Vocabulary (25 words):**
 говорити, робити, бачити, дивитися, ходити, їздити, летіти, бігти, сидіти, стояти, лежати, спати, любити, хотіти, вчити, вчитися, пам'ятати, забувати, їсти, пити, просити, дякувати, вітати, телефонувати, купувати
 
 **Signature Activity Concepts:**
-1. Gap-fill: Conjugate Class II verbs
-2. Quiz: Class I vs Class II identification
+1. Gap-fill: Conjugate second conjugation verbs
+2. Quiz: First conjugation vs second conjugation identification
 3. Match-up: Verb → typical object
+4. Pattern recognition: говорити type vs лежати type
 
 ---
 
-#### Module 09: Food & Drinks
-**Grammar:** None (vocabulary focus) - uses verbs їсти/пити from M08
+#### Module 09: Reflexive Verbs (-ся)
+**Grammar:** First conjugation -ся verbs, third-person -ється rule
 
-**Key patterns:**
-- Це борщ. (This is borscht.)
-- Я їм хліб. (I eat bread.)
-- Вона п'є чай. (She drinks tea.)
+**Key Concepts:**
+- Three types of -ся verbs:
+  - Reflexive (митися - wash oneself)
+  - Reciprocal (зустрічатися - meet each other)
+  - Lexicalized (усміхатися - smile, no reflexive meaning)
 
-**Vocabulary (30 words):**
-їжа, сніданок, обід, вечеря, борщ, суп, вареники, хліб, м'ясо, курка, риба, овочі, фрукти, яблуко, банан, картопля, помідор, огірок, цибуля, сир, яйце, чай, кава, вода, сік, молоко, смачний, смачно, Смачного!, їсти, пити
+- Conjugation pattern:
+  - я називаюся
+  - ти називаєшся
+  - він/вона називається ← CRITICAL: -ється (not -єся)
+  - ми називаємося
+  - ви називаєтеся
+  - вони називаються
+
+- працювати-type -ся verbs: запізнюватися → запізнююся (drops -ва-)
+
+**Required Verbs (Standard 2024):**
+- дивитися (to watch) - Standard line 709
+- сміятися (to laugh) - Standard line 714
+
+**Vocabulary (25 words):**
+називатися, усміхатися, сміятися, дивитися, зустрічатися, прощатися, знайомитися, запізнюватися, одягатися, роздягатися, митися, голитися, розчесуватися, боятися, радіти, дивуватися, турбуватися, хвилюватися, цікавитися, займатися, вчитися
+
+**Past tense forms (required for checkpoint M10):**
+- сміявся, сміялася, сміялося, сміялися
 
 **Signature Activity Concepts:**
-1. Match-up: Food → category (fruit, vegetable, meat, drink)
-2. Quiz: What do Ukrainians eat for breakfast/lunch/dinner?
-3. Gap-fill: Complete sentences with food vocabulary
+1. Conjugation drill: Full paradigm for усміхатися, дивитися
+2. Error-correction: Fix -єся → -ється mistakes (common error!)
+3. Dialogue completion: "Як ти називаєшся? - Я називаюся..."
+4. Match-up: Reflexive meaning (митися ↔ wash oneself)
+5. Gap-fill: Third-person forms practice
+6. Quiz: Conjugate -уватися verbs with -ва- dropping
+7. Transform: Non-reflexive → reflexive (мити → митися)
+8. Context: When to use reflexive vs non-reflexive
 
 ---
 
@@ -419,10 +471,15 @@ By module 30, learners can:
 **Required Skill Groups:**
 1. Cyrillic Alphabet (M01-02) - reading, false friends, letter recognition
 2. Gender Identification (M03) - masculine/feminine/neuter by ending
-3. Verb Conjugation (M06, M08) - Class I (-ати) and Class II (-ити)
+3. Verb Conjugation (M06, M08) - First conjugation (-ати) and Second conjugation (-ити)
 4. Question Formation (M07) - чи, що, хто, де, коли
-5. Food Vocabulary (M09) - basic meals, ordering
+5. Reflexive Verbs (M09) - -ся conjugation, третя особа -ється forms
 6. Basic Dialogue (M04-05) - introductions, greetings
+
+**Critical tests:**
+- Reflexive verb conjugation: називатися, дивитися, сміятися
+- Third-person -ється error correction (називається NOT називаєся)
+- Reflexive past forms: сміявся, сміялася, сміялися
 
 **Vocabulary (10 words):** Review selection
 
@@ -470,7 +527,7 @@ By module 30, learners can:
 | 15 | 40 | City | вулиця, площа, міст, зупинка, станція, напрямки... |
 | 16 | 25 | Absence | немає, нема, без + common nouns in genitive |
 | 17 | 35 | Numbers | нуль-сто, гривня, копійка, ціна, дорого, дешево... |
-| 18 | 45 | Food/Restaurant | меню, страва, напій, офіціант, рахунок... |
+| 18 | 70 | Food/Drinks/Restaurant/Shopping | їжа, напої, страви, меню, офіціант, рахунок, products... |
 | 19 | 10 | Café phrases | Що порекомендуєте? Можна рахунок?... |
 | 20 | 10 | Review | (consolidation of above) |
 
@@ -649,21 +706,27 @@ By module 30, learners can:
 
 ---
 
-#### Module 18: Food & Shopping
+#### Module 18: Food, Drinks & Shopping
 **Grammar:** Accusative + Genitive in food/shopping context
 
 **Key patterns:**
 - Я хочу каву. (I want coffee. - Acc)
 - Склянку води, будь ласка. (A glass of water, please. - Gen)
 - Скільки коштує мило? (How much is the soap?)
+- Це борщ. (This is borscht.)
+- Смачного! (Enjoy your meal!)
 
-**Vocabulary (55 words):**
-страва, закуска, салат, суп, борщ, десерт, напій, кава, чай, сік, вода, вино, пиво, м'ясо, курка, риба, овочі, картопля, хліб, сир, яйце, смачний, меню, офіціант, рахунок, мило, шампунь, зубна паста, папір, ручка, олівець, зошит, купувати, супермаркет, магазин, пакет, каса, продавець, ціна, знижка, дорого, дешево, відчинено, зачинено
+**Vocabulary (70 words - expanded from M09 merge):**
+їжа, напої, страва, закуска, салат, суп, борщ, вареники, десерт, сніданок, обід, вечеря, меню, рецепт, кава, чай, сік, вода, молоко, вино, пиво, м'ясо, курка, риба, овочі, фрукти, яблуко, банан, картопля, помідор, огірок, цибуля, хліб, сир, яйце, масло, цукор, сіль, перець, їсти, пити, снідати, обідати, вечеряти, замовляти, куштувати, готувати, варити, смачний, гіркий, солодкий, гострий, смачно, Смачного!, офіціант, рахунок, мило, шампунь, зубна паста, папір, ручка, олівець, зошит, купувати, супермаркет, магазин, пакет, каса, продавець, ціна, знижка, дорого, дешево, відчинено, зачинено
 
 **Signature Activity Concepts:**
-1. Dialogue: Order from a menu
-2. Quiz: Match items to departments (Food vs Hygiene)
-3. Gap-fill: Shopping list completion
+1. Dialogue: Order from a menu (restaurant scenario)
+2. Match-up: Food → category (fruit, vegetable, meat, drink)
+3. Quiz: Match items to departments (Food vs Hygiene vs Stationery)
+4. Gap-fill: Shopping list completion
+5. Quiz: What do Ukrainians eat for breakfast/lunch/dinner?
+6. Menu reading: Choose dishes and calculate cost
+7. Match-up: Food items with їсти vs пити verbs
 
 ---
 
@@ -759,10 +822,30 @@ By module 30, learners can:
 - Infinitive stem + -в (m), -ла (f), -ло (n), -ли (pl)
 - читати → читав, читала, читало, читали
 
+**Important: -ва- Returns in Past Tense!**
+
+Remember: працювати type verbs DROP -ва- in PRESENT tense.
+But in PAST tense, the -ва- COMES BACK:
+
+| Verb | Present (drops -ва-) | Past (keeps -ва-) |
+|------|---------------------|-------------------|
+| працювати | я працюю | я працював / працювала |
+| танцювати | я танцюю | я танцював / танцювала |
+| подорожувати | я подорожую | я подорожував / подорожувала |
+
 **Key patterns:**
 - Я читав книгу. (I was reading a book. - male)
 - Вона працювала. (She was working.)
 - Ми говорили українською. (We were speaking Ukrainian.)
+
+**Aspect awareness note:**
+
+> 💡 **Note:** This is the **imperfective past tense** (describing ongoing or repeated actions in the past).
+>
+> Ukrainian also has **perfective past tense** (for completed actions with results).
+> You'll learn about this distinction in A2 when we study "aspect"!
+>
+> For now: читав = "was reading" (ongoing)
 
 **Vocabulary (25 words):**
 вчора, позавчора, минулого тижня, минулого місяця, минулого року, давно, недавно, раніше, колись, був, була, було, були, читав, писав, робив, говорив, працював, дивився, слухав, гуляв, їв, пив, жив, чекав
@@ -771,6 +854,7 @@ By module 30, learners can:
 1. Transform: Present → Past tense
 2. Gap-fill: Choose correct gender ending
 3. Quiz: When did it happen?
+4. Error-correction: Fix -ва- retention errors in past tense
 
 ---
 
@@ -785,6 +869,32 @@ By module 30, learners can:
 - Вона буде працювати. (She will work.)
 - Ми будемо вивчати українську. (We will study Ukrainian.)
 
+**Aspect awareness note:**
+
+> 💡 **Note:** This is the **imperfective future** (буду читати = "I will be reading").
+>
+> Ukrainian also has **perfective future** forms (прочитаю = "I will finish reading / I will read [completely]").
+> Coming in A2 when we study aspect!
+
+**Literary Future: читатиму (Advanced - Recognition Only)**
+
+In formal writing and news broadcasts, you'll see another future form:
+
+- **Everyday:** Я буду жити в Києві
+- **Literary/Formal:** Я житиму в Києві
+
+Both mean exactly the same! The form "житиму" is called **synthetic future**.
+
+**Formation:** infinitive + special endings
+- я житиму
+- ти житимеш
+- він/вона житиме
+- ми житимемо
+- ви житимете
+- вони житимуть
+
+**For now:** Just recognize it when reading. Use "буду + infinitive" in your speech.
+
 **Vocabulary (25 words):**
 завтра, післязавтра, наступного тижня, наступного місяця, наступного року, скоро, пізніше, потім, згодом, буду, збираюся, планую, хочу, маю намір, сподіваюся, обіцяю, спробую, постараюся, мрію, думаю, вирішив, вже, ще, ніколи, обов'язково
 
@@ -792,6 +902,7 @@ By module 30, learners can:
 1. Transform: Present → Future tense
 2. Gap-fill: Complete future sentences
 3. Match-up: Time expression → future form
+4. Recognition: Identify synthetic future forms in text
 
 ---
 
@@ -1052,13 +1163,16 @@ By module 30, learners can:
 
 **Required Skill Groups:**
 1. Cyrillic Fluency (M01-02) - read without transliteration
-2. Verb Tenses (M21-22) - past (-в/-ла) and future (буду+)
-3. Four Cases (M11-17) - Nom/Acc/Gen/Loc endings
-4. Adjective Agreement (M26-27) - gender/number matching
-5. Adverbs (M28) - manner, frequency, formation
-6. Time & Routine (M23-25) - scheduling, daily activities
-7. Practical Contexts (M18-19, M31-32) - café, health, family
-8. Weather & Holidays (M29, M33) - seasons, celebrations
+2. Present Tense Verbs (M06, M08, M09) - -ати verbs, -ити verbs, reflexive -ся verbs
+3. Verb Tenses (M21-22) - past (-в/-ла) and future (буду+)
+4. Four Cases (M11-17) - Nom/Acc/Gen/Loc endings
+5. Possessive Pronouns (M14) - мій/твій/його/її/наш/ваш
+6. Adjective Agreement (M26-27) - gender/number matching
+7. Adverbs (M28) - manner, frequency, formation
+8. Time & Routine (M23-25) - scheduling, daily activities
+9. Motion & Location (M30) - direction (куди) vs location (де) vs origin (звідки)
+10. Practical Contexts (M18-19, M31-32) - café, health, family
+11. Weather & Holidays (M29, M33) - seasons, celebrations
 
 **Final tasks:**
 1. Self-introduction monologue

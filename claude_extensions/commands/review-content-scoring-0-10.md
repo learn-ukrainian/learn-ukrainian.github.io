@@ -99,6 +99,62 @@
 **Example justification:**
 > Pedagogy: 8/10 - Strong TTT structure (Test → Teach → Test). Discovery-based learning in Section 2 (observe-first) works well. Activities progress from recognition (quiz) to production (error-correction). However, cloze activity appears before error-correction, which reverses difficulty curve (cloze is harder). A 9/10 would sequence activities by cognitive load: quiz → match-up → fill-in → error-correction → cloze.
 
+#### 5a. CRITICAL: Content vs. Language Testing (B2/C1 History/Biography Modules)
+
+**The Golden Rule (Issue #359):** "Can the learner answer this without reading the Ukrainian text?"
+- **If YES** → FAIL (tests content recall, not language)
+- **If NO** → PASS (tests Ukrainian comprehension)
+
+**Context:** B2 History (M71-131) and C1 Literature/Biography/Folk/Arts modules must test **language skills using content as context**, NOT content knowledge taught in Ukrainian.
+
+**RED FLAGS (Auto-deduct 2-3 points from Pedagogy score):**
+
+Quiz questions asking for facts WITHOUT text reference:
+- ❌ "У якому році заснована Запорозька Січ?" (tests date recall)
+- ❌ "Хто написав 'Кобзар'?" (tests factual knowledge)
+- ❌ "Що символізує тризуб?" (tests content, not comprehension)
+
+Fill-in answers that are dates/years:
+- ❌ "Шевченко народився у ____ році." (answer: 1814)
+
+Match-up testing factual recall:
+- ❌ "Іван Франко" → "Каменярі" (tests literature knowledge, not vocabulary)
+
+**GREEN FLAGS (Good language testing):**
+
+Quiz questions WITH text reference:
+- ✅ "Згідно з текстом, як автор пояснює причини виникнення козацтва?"
+- ✅ "У тексті модуля автор характеризує Шевченка як..."
+- ✅ "Яку роль, за словами автора, відіграв тризуб у..."
+
+Fill-in testing collocations/vocabulary:
+- ✅ "Козацтво виникло внаслідок ____ соціальних та економічних факторів." (answer: поєднання)
+
+Match-up using Ukrainian definitions:
+- ✅ "Гетьман" → "Військовий і політичний провідник козацької держави"
+
+**Detection Patterns:**
+
+```
+RED FLAGS:
+- Quiz text matches: "У якому році", "Коли саме", "Хто був", "Хто написав"
+  WITHOUT: "Згідно з текстом", "У тексті", "автор описує/пояснює"
+- Fill-in answer is 4-digit year: ^\d{4}$
+- Fill-in answer is proper name without context
+```
+
+**Scoring Impact:**
+
+| Content Recall Violations | Pedagogy Deduction |
+|---------------------------|-------------------|
+| 0 violations | No deduction |
+| 1-2 violations | -1 point |
+| 3-4 violations | -2 points |
+| 5+ violations | -3 points (max 5/10) |
+
+**Example:**
+> Pedagogy: 5/10 (History module) - CBI structure is present, but **3 quiz questions test content recall without 'Згідно з текстом'**: "У якому році почався Голодомор?" (answer: 1932), "Хто був комісаром..." (factual recall). These test historical knowledge, not Ukrainian reading comprehension. A 7/10 would rewrite as: "Згідно з текстом, як автор характеризує початок Голодомору?" (-2 points for content recall violations)
+
 ---
 
 ### 6. Immersion (0-10)

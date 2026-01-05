@@ -1,0 +1,25 @@
+module: 21
+title: "Резюме та автобіографія"
+subtitle: "CV & Resume Writing"
+version: "2.0"
+phase: "C1.2 Professional Communication"
+focus: style
+pedagogy: immersion
+duration: 120
+transliteration: none
+tags:
+  - business
+  - writing
+  - career
+  - documents
+grammar:
+  - "Official-business style registers"
+  - "Impersonal constructions"
+  - "Verbal nouns"
+objectives:
+  - "Master the structure of Ukrainian professional documents"
+  - "Distinguish between narrative and functional descriptions"
+  - "Use impersonal constructions and verbal nouns"
+  - "Avoid common calques and Russianisms"
+vocabulary_count: 25
+slug: 21-cv-resume-writing

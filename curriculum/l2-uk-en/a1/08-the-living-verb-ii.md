@@ -2,13 +2,13 @@
 
 ## Warm-up
 
-You've already learned Class I verbs that end in **-ати** (читати, писати, працювати). But what about verbs like **говорити** (hovorýty) "to speak" and **робити** (róbyty) "to do"? These belong to **Class II** — the **-ити** family. They're everywhere in Ukrainian, powering actions from speaking and seeing to loving and wanting. Let's unlock this essential verb group!
+You've already learned first conjugation verbs (перша дієвідміна) that end in **-ати** (читати, писати, працювати). But what about verbs like **говорити** (hovorýty) "to speak" and **робити** (róbyty) "to do"? These belong to **second conjugation** (друга дієвідміна) — the **-ити** family. They're everywhere in Ukrainian, powering actions from speaking and seeing to loving and wanting. Let's unlock this essential verb group!
 
 ## Presentation
 
-### Class II Conjugation Pattern
+### Second Conjugation Pattern (Друга Дієвідміна)
 
-Class II verbs end in **-ити** or **-іти** in the infinitive. When you conjugate them, they follow a different pattern from Class I. Here's the key change:
+Second conjugation verbs (друга дієвідміна) end in **-ити** or **-іти** in the infinitive. When you conjugate them, they follow a different pattern from first conjugation. Here's the key change:
 
 **Conjugation formula:** Drop **-ити/-іти**, add these endings:
 
@@ -33,7 +33,7 @@ Class II verbs end in **-ити** or **-іти** in the infinitive. When you con
 >
 > The **-ити** ending is ancient! It comes from Proto-Slavic and is shared with Polish, Czech, and other Slavic languages. When you say **говорити**, you're using a verb form that's over 1,000 years old.
 
-### Key Examples with Class II Verbs
+### Key Examples with Second Conjugation Verbs
 
 Let's see these verbs in action:
 
@@ -75,7 +75,7 @@ Let's see these verbs in action:
 
 ### Irregular Verbs: їсти, пити, хотіти
 
-Some common verbs don't follow the standard pattern. Here are three essentials:
+Some common verbs don't follow the standard second conjugation pattern. Here are three essentials you'll use all the time:
 
 **їсти (jisty) — to eat**
 
@@ -137,7 +137,7 @@ _Yes, she speaks Ukrainian._
 
 ### Pattern Recognition
 
-Notice how Class II verbs change their stem slightly:
+Notice how second conjugation verbs change their stem slightly:
 
 - **робити** → роб**лю** (not "робю")
 - **ходити** → ход**жу** (not "ходю")
@@ -147,10 +147,10 @@ This is called **consonant mutation** — certain letters change before the **-�
 
 > [!warning] **Common Mistake**
 >
-> Don't confuse **Class I** and **Class II** endings! Class I uses **-аю/-ають**, Class II uses **-ю/-ять**. Compare:
+> Don't confuse **first conjugation** and **second conjugation** endings! First conjugation uses **-аю/-ають**, second conjugation uses **-ю/-ять**. Compare:
 >
-> - **читати** (Class I): читаЮ, читаЄш, читаЄ, читаЮТЬ
-> - **говорити** (Class II): говорЮ, говорИШ, говорИТЬ, говорЯТЬ
+> - **читати** (1st conj): читаЮ, читаЄш, читаЄ, читаЮТЬ
+> - **говорити** (2nd conj): говорЮ, говорИШ, говорИТЬ, говорЯТЬ
 >
 > The vowels are different!
 
@@ -201,17 +201,17 @@ Ukrainians use these constantly:
 
 # Summary
 
-You've now mastered **Class II verbs (-ити)**! Here's what you can do:
+You've now mastered **second conjugation verbs** (друга дієвідміна, -ити)! Here's what you can do:
 
-- Conjugate regular Class II verbs (говорити, робити, бачити, любити)
-- Use irregular verbs (їсти, пити, хотіти)
-- Distinguish between Class I (-ати) and Class II (-ити) patterns
+- Conjugate regular second conjugation verbs (говорити, робити, бачити, любити)
+- Use irregular verbs (їсти, пити, хотіти) — these are exceptions!
+- Distinguish between first conjugation (-ати) and second conjugation (-ити) patterns
 - Form sentences about daily actions
 
 **Key Pattern:**
 
-- **Class II:** Drop -ити → add -ю/-иш/-ить/-имо/-ите/-ять
+- **Second conjugation:** Drop -ити → add -ю/-иш/-ить/-имо/-ите/-ять
 
-With Class I and Class II verbs combined, you can now express hundreds of actions in Ukrainian. Вітаю! (Congratulations!)
+With first and second conjugation verbs combined, you can now express hundreds of actions in Ukrainian. Вітаю! (Congratulations!)
 
 ---

@@ -67,6 +67,18 @@ Write ONLY the instructional content sections. Do NOT write activities.
 
 **Note:** Templates specify exact word count requirements. These are minimums; consult the template for details.
 
+## Narrative Pacing (History/Biography)
+
+**For History or Biography modules, you MUST follow the "30-40-30" Pacing Rule:**
+
+- **30% Setup:** Early life, context, or pre-conditions.
+- **40% Conflict:** The main struggle, battle, or creative peak.
+- **30% Resolution & Legacy (The "Third Act"):**
+  - **Mandatory Section:** Must have a dedicated H2 header like `## Останні роки та Спадщина` or `## Наслідки`.
+  - **Depth:** This section must be at least 300 words with sensory details (not a summary).
+  - **Echo:** Connect the event/person to modern (2024) Ukraine.
+  - **NO Rushing:** Do not stop at the death date. The "Third Act" must be a full chapter, not a footnote.
+
 ## Immersion Targets
 
 | Level        | Ukrainian %              |
@@ -170,6 +182,7 @@ Box types:
 - [ ] Immersion percentage appropriate for level
 - [ ] Specific Ukrainian locations used
 - [ ] Grammar elegance noted
+- [ ] **NO `[!resources]` block in markdown (YAML only)**
 
 ## Vocabulary YAML Workflow (B2+)
 
@@ -187,8 +200,8 @@ level: B2
 version: '2.0'
 items:
   - lemma: слово
-    ipa: ''          # Empty - will be enriched
-    translation: ''  # Empty - will be enriched
+    ipa: '' # Empty - will be enriched
+    translation: '' # Empty - will be enriched
     pos: noun
     gender: m
 
@@ -199,11 +212,13 @@ items:
 ```
 
 **Required fields:**
+
 - `lemma` - Base form (infinitive for verbs, nominative singular for nouns)
 - `pos` - Part of speech (noun, verb, adj, adv, etc.)
 - `gender` - Required for nouns (m, f, n, pl)
 
 **Leave empty for enrichment:**
+
 - `ipa` - Filled by enrichment script
 - `translation` - Filled by enrichment script
 
@@ -227,4 +242,5 @@ items:
 - Add vocabulary not in the table
 - Use generic settings ("a shop", "a student")
 - Skip engagement boxes
+- Add `> [!resources]` block (use YAML instead)
 - Use less than target word count

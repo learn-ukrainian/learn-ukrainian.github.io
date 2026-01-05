@@ -1,0 +1,141 @@
+module: 25-political-system
+level: C1
+version: '2.0'
+items:
+  - lemma: президент
+    translation: president
+    pos: noun
+    gender: m
+  - lemma: парламент
+    translation: parliament
+    pos: noun
+    gender: m
+  - lemma: Верховна Рада
+    translation: Verkhovna Rada (Parliament)
+    pos: phrase
+  - lemma: депутат
+    translation: deputy/MP
+    pos: noun
+    gender: m
+  - lemma: народний депутат
+    translation: People's Deputy
+    pos: phrase
+  - lemma: прем'єр-міністр
+    translation: prime minister
+    pos: noun
+    gender: m
+  - lemma: міністр
+    translation: minister
+    pos: noun
+    gender: m
+  - lemma: уряд
+    translation: government
+    pos: noun
+    gender: m
+  - lemma: Кабінет Міністрів
+    translation: Cabinet of Ministers
+    pos: phrase
+  - lemma: Конституційний Суд
+    translation: Constitutional Court
+    pos: phrase
+  - lemma: суддя
+    translation: judge
+    pos: noun
+    gender: m
+  - lemma: закон
+    translation: law
+    pos: noun
+    gender: m
+  - lemma: законопроект
+    translation: draft law/bill
+    pos: noun
+    gender: m
+  - lemma: ухвалити
+    translation: to adopt/pass (law)
+    pos: verb
+  - lemma: прийняти
+    translation: to accept/adopt
+    pos: verb
+  - lemma: ветувати
+    translation: to veto
+    pos: verb
+  - lemma: вибори
+    translation: elections
+    pos: noun
+    gender: p
+  - lemma: голосування
+    translation: voting
+    pos: noun
+    gender: n
+  - lemma: референдум
+    translation: referendum
+    pos: noun
+    gender: m
+  - lemma: партія
+    translation: party
+    pos: noun
+    gender: f
+  - lemma: фракція
+    translation: faction
+    pos: noun
+    gender: f
+  - lemma: коаліція
+    translation: coalition
+    pos: noun
+    gender: f
+  - lemma: опозиція
+    translation: opposition
+    pos: noun
+    gender: f
+  - lemma: більшість
+    translation: majority
+    pos: noun
+    gender: f
+  - lemma: меншість
+    translation: minority
+    pos: noun
+    gender: f
+  - lemma: демократія
+    translation: democracy
+    pos: noun
+    gender: f
+  - lemma: свобода
+    translation: freedom
+    pos: noun
+    gender: f
+  - lemma: права
+    translation: rights
+    pos: noun
+    gender: p
+  - lemma: громадянин
+    translation: citizen
+    pos: noun
+    gender: m
+  - lemma: громадянство
+    translation: citizenship
+    pos: noun
+    gender: n
+  - lemma: Конституція
+    translation: Constitution
+    pos: noun
+    gender: f
+  - lemma: децентралізація
+    translation: decentralization
+    pos: noun
+    gender: f
+  - lemma: реформа
+    translation: reform
+    pos: noun
+    gender: f
+  - lemma: євроінтеграція
+    translation: European integration
+    pos: noun
+    gender: f
+  - lemma: НАТО
+    translation: NATO
+    pos: noun
+    gender: n
+  - lemma: рада
+    translation: council
+    pos: noun
+    gender: f

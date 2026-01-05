@@ -27,7 +27,8 @@
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
-✅ No issues found
+### Warnings
+- ⚠️ Some Ukrainian content may be missing (88/94 words)
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): господарство, степ, зерно, пшениця, пляж...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): сільське, господарство, азовське, море, одещина...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,10 +12,10 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1696/1500
-- **Activities:** ✅ 13/12
+- **Words:** ✅ 1599/1500
+- **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
@@ -23,12 +23,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.7% (target 85-100% (B1.7-8 Ukraine))
-- **Richness:** ✅ 97% (cultural)
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.9% (target 85-100% (B1.7-8 Ukraine))
+- **Richness:** ✅ 96% (cultural)
 - **Grammar:** ✅ Validated (8/50 confirmed)
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 96% (minimum: 95%)
 **Module Type:** cultural
 
 ### Score Breakdown
@@ -36,16 +37,13 @@
 |--------|-------|--------|-------|--------|--------------|
 | cultural | 10 | 5 | 100% | 33% | 33.3% |
 | engagement | 8 | 6 | 100% | 20% | 20.0% |
-| visual | 5 | 4 | 100% | 13% | 13.3% |
-| variety | 0.97 | - | 97% | 7% | 6.5% |
-| paragraph_var | 0.70 | - | 70% | 7% | 4.7% |
-| examples | 21 | - | 100% | 7% | 6.7% |
+| visual | 4 | 4 | 100% | 13% | 13.3% |
+| variety | 0.98 | - | 98% | 7% | 6.5% |
+| paragraph_var | 0.56 | - | 56% | 7% | 3.7% |
+| examples | 18 | - | 100% | 7% | 6.7% |
 | realworld | 2 | - | 100% | 7% | 6.7% |
 | questions | 24 | 4 | 100% | 7% | 6.7% |
-| **TOTAL** | | | | | **97.8%** |
-
-## MDX VALIDATION
-✅ No issues found
+| **TOTAL** | | | | | **96.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -62,4 +60,4 @@
 | **Діалог 2: Розмова про одеський гумор** | ✅ | 68 | Included in Core |
 | **Діалог 3: Обговорення сільського господарства** | ✅ | 67 | Included in Core |
 | **Діалог 4: Туристи в Миколаєві** | ✅ | 63 | Included in Core |
-| **Підсумок** | ✅ | 274 | Included in Core |
+| **Підсумок** | ✅ | 177 | Included in Core |

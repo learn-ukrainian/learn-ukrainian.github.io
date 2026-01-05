@@ -81,6 +81,35 @@ Every historical/biographical module must include:
 
 ---
 
+## Narrative Pacing: The "30-40-30" Rule
+
+**CRITICAL:** History and biography modules often suffer from "Abrupt Ending Syndrome" — too much setup, rushed resolution. Follow this structure:
+
+| Section | Allocation | Content |
+|---------|------------|---------|
+| **Setup** | 30% | Early life, context, pre-conditions |
+| **Conflict** | 40% | Main struggle, career peak, key events |
+| **Third Act** | 30% | Resolution, legacy, modern echo |
+
+### Third Act Requirements
+
+- **Minimum 300 words** with sensory details (not a Wikipedia summary)
+- **Must connect to modern (2024) Ukraine** ("Echo" requirement)
+- **NO rushing:** Death/resolution is a full chapter, not 1-2 sentences
+
+### Third Act Headers (Living vs Deceased)
+
+| Subject Type | Appropriate Headers |
+|--------------|---------------------|
+| **Deceased** | `## Останні роки та Спадщина`, `## Смерть і пам'ять`, `## Наслідки` |
+| **Living**   | `## Вплив і сучасна роль`, `## Внесок у сьогодення`, `## Значення для сучасної України` |
+
+**For living persons:** The Third Act covers their current impact and what they represent for modern Ukraine — NOT just stopping after "career achievements."
+
+**Review Flag:** `ABRUPT_ENDING` — triggered if Third Act is <15% of total length or feels rushed.
+
+---
+
 ## B2 History Focus Areas
 
 | Phase | Modules  | Era                                                    |
@@ -99,10 +128,15 @@ Every historical/biographical module must include:
 
 <critical>
 
-**The Golden Rule:** "Can the learner answer this without reading the Ukrainian text?"
+**The Golden Rule (Issue #359):** "Can the learner answer this without reading the Ukrainian text?"
 
 - **If YES** → Rewrite (tests history knowledge)
 - **If NO** → Keep (tests Ukrainian comprehension)
+
+**Review Impact:** Content recall violations will deduct 1-3 points from Pedagogy score during quality review:
+- 1-2 violations: -1 point
+- 3-4 violations: -2 points
+- 5+ violations: -3 points (max 5/10)
 
 </critical>
 
@@ -169,14 +203,18 @@ See `b2-history-synthesis-module-template.md` for full structure and example ess
 
 ## Biography Structure
 
-1. **Hook & Context** — Why this figure matters (300-400 words)
-2. **Біографія** — Main narrative (800-1000 words)
-   - Ранні роки (Early years)
+**Follow the 30-40-30 pacing rule** (see "Narrative Pacing" section above).
+
+1. **Hook & Context** — Why this figure matters (300-400 words) [~15% of 30% Setup]
+2. **Біографія** — Main narrative (800-1000 words) [40% Conflict]
+   - Ранні роки (Early years) [remaining ~15% of Setup]
    - Шлях до визнання (Rise to prominence)
    - Головні досягнення (Major achievements)
-   - Спадщина (Legacy)
-3. **Історичний контекст** — Era background (300-400 words)
-4. **Порівняльний аналіз** — Comparison with contemporaries (300-400 words)
+3. **Third Act** — Resolution & Legacy (300-400 words minimum) [30%]
+   - **Deceased:** Останні роки та Спадщина (Final years, death, posthumous legacy)
+   - **Living:** Вплив і сучасна роль (Current impact, ongoing contributions)
+4. **Історичний контекст** — Era background (300-400 words)
+5. **Порівняльний аналіз** — Comparison with contemporaries (300-400 words)
 
 ---
 
@@ -185,11 +223,13 @@ See `b2-history-synthesis-module-template.md` for full structure and example ess
 Before submitting a history/biography module:
 
 - [ ] **Template read?** — Level-specific template consulted
+- [ ] **30-40-30 pacing?** — Third Act is ≥30% of content (not rushed)
 - [ ] **Word count:** 2000+ words (biography), 1500+ words (history)
+- [ ] **Third Act:** 300+ words with sensory details; appropriate header for living vs deceased
 - [ ] **Primary sources:** Quotes, letters, or speeches included
 - [ ] **Historical context:** Era's political/cultural situation explained
 - [ ] **Decolonization:** Ukrainian perspective, not Russian framing
-- [ ] **Legacy section:** Connection to modern Ukraine
+- [ ] **Modern echo:** Connection to modern (2024) Ukraine
 - [ ] **Vocabulary:** 35+ items for biography, 25+ for history
 - [ ] **Activities:** 12+ with comprehension emphasis
 - [ ] **Era categorization:** Figures correctly placed in historical periods
@@ -200,12 +240,14 @@ Before submitting a history/biography module:
 
 ## Common History/Biography Mistakes
 
-1. **Russian framing** — Use "Російська імперія", not "Russia" for empire
-2. **Missing primary sources** — Always include quotes or documents
-3. **Ahistorical language** — Use period-appropriate terminology
-4. **No legacy connection** — Always link to modern Ukraine
-5. **Gender imbalance** — Ensure 30%+ women across biography modules
-6. **Victimhood narrative** — Emphasize Ukrainian agency and resistance
+1. **Abrupt ending** — Third Act <15% of content; death/resolution in 1-2 sentences (ABRUPT_ENDING flag)
+2. **Russian framing** — Use "Російська імперія", not "Russia" for empire
+3. **Missing primary sources** — Always include quotes or documents
+4. **Ahistorical language** — Use period-appropriate terminology
+5. **No legacy connection** — Always link to modern Ukraine
+6. **Gender imbalance** — Ensure 30%+ women across biography modules
+7. **Victimhood narrative** — Emphasize Ukrainian agency and resistance
+8. **Wrong header for living persons** — Use "Вплив і сучасна роль", not "Спадщина" for living figures
 
 ---
 

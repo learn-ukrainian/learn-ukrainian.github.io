@@ -1,0 +1,204 @@
+module: 14-lit-review
+level: C1
+version: '1.0'
+items:
+- lemma: огляд
+  ipa: /ɔˈɦlʲɑd/
+  translation: review / overview
+  pos: noun
+  gender: m
+- lemma: синтез
+  ipa: /sɪnˈtɛz/
+  translation: synthesis
+  pos: noun
+  gender: m
+- lemma: прогалина
+  ipa: /prɔˈɦɑlɪnɐ/
+  translation: gap (in knowledge)
+  pos: noun
+  gender: f
+- lemma: полеміка
+  ipa: /pɔˈlɛm⁽ʲ⁾ikɐ/
+  translation: polemic / debate
+  pos: noun
+  gender: f
+- lemma: консенсус
+  ipa: /kɔnˈsɛnsʊs/
+  translation: consensus
+  pos: noun
+  gender: m
+- lemma: розбіжність
+  ipa: /rɔzˈbʲiʒnʲisʲtʲ/
+  translation: discrepancy / divergence
+  pos: noun
+  gender: f
+- lemma: стверджувати
+  ipa: /stʋɛrˈdʒʊʋɐtɪ/
+  translation: to claim / to assert
+  pos: verb
+- lemma: спростовувати
+  ipa: /sprɔˈstɔʋʊʋɐtɪ/
+  translation: to refute
+  pos: verb
+- lemma: наголошувати
+  ipa: /nɐɦɔˈlɔʃʊʋɐtɪ/
+  translation: to emphasize
+  pos: verb
+- lemma: джерело
+  ipa: /dʒɛrɛˈlɔ/
+  translation: source
+  pos: noun
+  gender: n
+- lemma: посилатися
+  ipa: /pɔsɪˈlɑtɪsʲɐ/
+  translation: to cite / to refer to
+  pos: verb
+- lemma: цитувати
+  ipa: /t͡sɪtʊˈʋɑtɪ/
+  translation: to quote
+  pos: verb
+- lemma: узагальнення
+  ipa: /ʊzɐˈɦɑlʲnɛɲːɐ/
+  translation: generalization
+  pos: noun
+  gender: n
+- lemma: класифікація
+  ipa: /klɐsɪf⁽ʲ⁾iˈkɑt͡sʲijɐ/
+  translation: classification
+  pos: noun
+  gender: f
+- lemma: еволюція
+  ipa: /ɛʋɔˈlʲuht͡sʲijɐ/
+  translation: evolution
+  pos: noun
+  gender: f
+- lemma: підхід
+  ipa: /pidˈxid/
+  translation: approach
+  pos: noun
+  gender: m
+- lemma: методологія
+  ipa: /mɛtɔdɔˈlɔɦ⁽ʲ⁾ijɐ/
+  translation: methodology
+  pos: noun
+  gender: f
+- lemma: достовірність
+  ipa: /dɔstɔˈʋ⁽ʲ⁾irnʲisʲtʲ/
+  translation: reliability / validity
+  pos: noun
+  gender: f
+- lemma: гіпотеза
+  ipa: /ɦ⁽ʲ⁾iˈpɔtɛzɐ/
+  translation: hypothesis
+  pos: noun
+  gender: f
+- lemma: аргументація
+  ipa: /ɐrɦʊmɛnˈtɑt͡sʲijɐ/
+  translation: argumentation
+  pos: noun
+  gender: f
+- lemma: опонувати
+  ipa: /ɔpɔnʊˈʋɑtɪ/
+  translation: to oppose (in debate)
+  pos: verb
+- lemma: дискусійний
+  ipa: /dɪskʊˈsʲii̯nɪi̯/
+  translation: debatable / controversial
+  pos: adj
+- lemma: ґрунтовний
+  ipa: /ɡrʊnˈtɔu̯nɪi̯/
+  translation: thorough / solid
+  pos: adj
+- lemma: поверховий
+  ipa: /pɔʋɛrˈxɔʋɪi̯/
+  translation: superficial
+  pos: adj
+- lemma: систематичний
+  ipa: /sɪstɛmɐˈtɪt͡ʃnɪi̯/
+  translation: systematic
+  pos: adj
+- lemma: переконливий
+  ipa: /pɛrɛˈkɔnlɪʋɪi̯/
+  translation: convincing
+  pos: adj
+- lemma: публікація
+  ipa: /pʊbl⁽ʲ⁾iˈkɑt͡sʲijɐ/
+  translation: publication
+  pos: noun
+  gender: f
+- lemma: протилежний
+  ipa: /prɔtɪˈlɛʒnɪi̯/
+  translation: opposite
+  pos: adj
+- lemma: аналіз
+  ipa: /ɐˈnɑlʲiz/
+  translation: analysis
+  pos: noun
+  gender: m
+- lemma: аналогічний
+  ipa: /ɐnɐlɔˈɦ⁽ʲ⁾it͡ʃnɪi̯/
+  translation: analogous / similar
+  pos: adj
+- lemma: різноманітний
+  ipa: /r⁽ʲ⁾iznɔmɐˈn⁽ʲ⁾itnɪi̯/
+  translation: diverse / various
+  pos: adj
+- lemma: розвивати
+  ipa: /rɔzʋɪˈʋɑtɪ/
+  translation: to develop
+  pos: verb
+- lemma: подібний
+  ipa: /pɔˈd⁽ʲ⁾ibnɪi̯/
+  translation: similar
+  pos: adj
+- lemma: дослідження
+  ipa: /dɔˈsl⁽ʲ⁾idʒɛɲːɐ/
+  translation: research / study
+  pos: noun
+  gender: n
+- lemma: численний
+  ipa: /t͡ʃɪˈslɛnːɪi̯/
+  translation: numerous
+  pos: adj
+- lemma: доповнювати
+  ipa: /dɔˈpɔu̯nʲʊʋɐtɪ/
+  translation: to complement / to supplement
+  pos: verb
+- lemma: суперечливий
+  ipa: /sʊpɛˈrɛt͡ʃlɪʋɪi̯/
+  translation: contradictory / controversial
+  pos: adj
+- lemma: стаття
+  ipa: /stɐˈtʲːa/
+  translation: article
+  pos: noun
+  gender: f
+- lemma: схожий
+  ipa: /sxɔˈʒɪi̯/
+  translation: similar / alike
+  pos: adj
+- lemma: розходитися
+  ipa: /rɔzˈxɔdɪtɪsʲɐ/
+  translation: to diverge / to disagree
+  pos: verb
+- lemma: заперечувати
+  ipa: /zɐpɛˈrɛt͡ʃʊʋɐtɪ/
+  translation: to deny / to object
+  pos: verb
+- lemma: підтверджувати
+  ipa: /p⁽ʲ⁾idˈtʋɛrdʒʊʋɐtɪ/
+  translation: to confirm
+  pos: verb
+- lemma: монографія
+  ipa: /mɔnɔˈɦrɑf⁽ʲ⁾ijɐ/
+  translation: monograph
+  pos: noun
+  gender: f
+- lemma: збігатися
+  ipa: /zb⁽ʲ⁾iˈɦɑtɪsʲɐ/
+  translation: to coincide / to match
+  pos: verb
+- lemma: погоджуватися
+  ipa: /pɔˈɦɔdʒʊʋɐtɪsʲɐ/
+  translation: to agree
+  pos: verb

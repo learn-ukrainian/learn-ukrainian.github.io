@@ -19,6 +19,7 @@ curriculum/l2-uk-en/b1/
 ```
 
 **Benefits:**
+
 - Schema validation catches errors before generation
 - IDE autocomplete for activity structure
 - Easier to review/edit activities separately
@@ -32,6 +33,7 @@ curriculum/l2-uk-en/b1/
 ### Prose File (`.md`)
 
 Contains everything EXCEPT activities:
+
 - Frontmatter
 - Motivation box
 - Content sections (Вступ, Лексика, Використання, Читання, Діалоги)
@@ -84,7 +86,7 @@ Create the `.md` file with all content sections but NO activities:
 ```markdown
 ---
 module: b1-52
-title: "Абстрактні концепції: ідеї та думки"
+title: 'Абстрактні концепції: ідеї та думки'
 # ... full frontmatter
 ---
 
@@ -94,29 +96,35 @@ title: "Абстрактні концепції: ідеї та думки"
 > ...
 
 ## Вступ
+
 ...
 
 ## Лексика
+
 ...
 
 ## Використання
+
 ...
 
 ## Читання
+
 ...
 
 ## Діалоги
+
 ...
 
 # Підсумок
+
 ...
 
 # Словник
+
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 ...
 
-> [!resources] 🎧 Зовнішні ресурси
-> ...
+<!-- External resources moved to YAML -->
 ```
 
 ### Step 2: Write Activities in YAML
@@ -149,7 +157,6 @@ Create the activity file in the `activities/` subfolder:
     - left: Ukrainian term
       right: English/definition
     # ... 11+ more pairs (B1 needs 12)
-
 # ... 10+ more activities for 12 total
 ```
 
@@ -342,21 +349,21 @@ npm run pipeline l2-uk-en b1 52
 
 ## B1 Activity Requirements
 
-| Activity Type | Min Items | Notes |
-|--------------|-----------|-------|
-| Total activities | 12 | Per module |
-| quiz items | 8 | Per activity |
-| match-up pairs | 12 | Per activity |
-| fill-in items | 12 | Per activity |
-| true-false items | 12 | Per activity |
-| group-sort items | 16 | Total across groups |
-| unjumble items | 8 | 12-16 words each |
-| cloze blanks | 14 | Per passage |
-| error-correction | 8 | Per activity |
-| mark-the-words | 6 | Correct words |
-| dialogue-reorder | 6 | Lines |
-| select items | 8 | Per activity |
-| translate items | 8 | Per activity |
+| Activity Type    | Min Items | Notes               |
+| ---------------- | --------- | ------------------- |
+| Total activities | 12        | Per module          |
+| quiz items       | 8         | Per activity        |
+| match-up pairs   | 12        | Per activity        |
+| fill-in items    | 12        | Per activity        |
+| true-false items | 12        | Per activity        |
+| group-sort items | 16        | Total across groups |
+| unjumble items   | 8         | 12-16 words each    |
+| cloze blanks     | 14        | Per passage         |
+| error-correction | 8         | Per activity        |
+| mark-the-words   | 6         | Correct words       |
+| dialogue-reorder | 6         | Lines               |
+| select items     | 8         | Per activity        |
+| translate items  | 8         | Per activity        |
 
 ---
 
@@ -365,6 +372,7 @@ npm run pipeline l2-uk-en b1 52
 ### Schema Validation (IDE)
 
 With VS Code + YAML extension:
+
 - Autocomplete for activity structure
 - Errors highlighted as you type
 - Schema: `schemas/activities-b1.schema.json`
@@ -385,6 +393,7 @@ npm run validate:yaml --dir curriculum/l2-uk-en/b1/activities --level b1
 ### Audit Validation
 
 The audit script checks:
+
 1. Activity file exists in `activities/` subfolder
 2. YAML parses correctly
 3. Meets level requirements (12+ activities, correct item counts)
@@ -408,6 +417,7 @@ npm run convert:md-to-yaml path/to/module.md
 ## Generator Integration
 
 The MDX generator:
+
 1. Read prose from `.md` file
 2. Read activities from `activities/{module}.yaml` file (if exists)
 3. Fall back to embedded activities if no YAML file

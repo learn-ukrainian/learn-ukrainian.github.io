@@ -579,6 +579,22 @@ def check_table_column_consistency(content: str) -> list[dict]:
     return violations
 
 
+
+def check_forbidden_blocks(content: str) -> list[dict]:
+    """Check for forbidden callout blocks like [!resources]."""
+    violations = []
+    
+    # Check for [!resources] block (case-insensitive)
+    if re.search(r'>\s*\[!resources\]', content, re.IGNORECASE):
+        violations.append({
+            'type': 'FORBIDDEN_BLOCK',
+            'issue': "Found forbidden '> [!resources]' callout block",
+            'fix': "Remove the [!resources] block. Add external resources to 'docs/resources/external_resources.yaml' instead."
+        })
+        
+    return violations
+
+
 def check_markdown_format(content: str) -> list[dict]:
     """
     Run all markdown format validation checks.
@@ -595,6 +611,7 @@ def check_markdown_format(content: str) -> list[dict]:
     violations.extend(check_frontmatter_spacing(content))
     violations.extend(check_heading_levels(content))
     violations.extend(check_table_column_consistency(content))
+    violations.extend(check_forbidden_blocks(content))
 
     # Activity format checks
     violations.extend(check_quiz_format(content))

@@ -71,10 +71,10 @@ The soft sign appears in the word **будь ла́ска** (please): "budʲ lá
 
 The letter **И** is different from **І**. While **І** makes the soft "ee" sound (like in "meet"), **И** makes a harder sound, like "i" in "bit" or "sit":
 
-| Letter  | Sound           | Example              |
-| ------- | --------------- | -------------------- | ----- |
-| **І і** | /i/ like "meet" | п**і**ца (píttsa)    | pizza |
-| **И и** | /ɪ/ like "bit"  | джи́нс**и** (dzhýnsy) | jeans |
+| Letter  | Sound           | Example              | English |
+| ------- | --------------- | -------------------- | ------- |
+| **І і** | /i/ like "meet" | п**і**ца (píttsa)    | pizza   |
+| **И и** | /ɪ/ like "bit"  | джи́нс**и** (dzhýnsy) | jeans   |
 
 The word **джинси** (jeans) has the hard **И** at the end: "dzhýnsy." The city **Київ** has the soft **І**: "Kýyiv."
 

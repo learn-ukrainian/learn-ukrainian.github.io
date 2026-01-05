@@ -1,17 +1,25 @@
-module: c1-24
-title: Digital Communication
-subtitle: Professional & Social
-version: '2.0'
-phase: C1.2 Professional
+module: 24
+title: "Цифрова комунікація"
+subtitle: "Digital Communication"
+version: "2.0"
+phase: "C1.2 Professional Communication"
 focus: professional
-pedagogy: academic
+pedagogy: immersion
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- professional
-- email
-- digital
+  - business
+  - technology
+  - writing
+  - email
+grammar:
+  - "Email formulas and clichés"
+  - "Passive constructions in official correspondence"
+  - "Imperative mood in instructions"
 objectives:
-- Master C1 concepts in Digital Communication
+  - "Master the structure of formal Ukrainian emails"
+  - "Distinguish between email and messenger registers"
+  - "Use professional vocabulary for digital tools"
+  - "Write effective subject lines and call-to-actions"
+vocabulary_count: 35
 slug: 24-digital-communication

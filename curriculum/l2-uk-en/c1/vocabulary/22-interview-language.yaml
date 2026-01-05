@@ -1,0 +1,153 @@
+module: 22-interview-language
+level: C1
+version: '2.0'
+items:
+  - lemma: співбесіда
+    translation: job interview
+    pos: noun
+    gender: f
+  - lemma: інтерв'ю
+    translation: interview
+    pos: noun
+    gender: n
+  - lemma: кандидат
+    translation: candidate
+    pos: noun
+    gender: m
+  - lemma: претендент
+    translation: applicant/claimant
+    pos: noun
+    gender: m
+  - lemma: роботодавець
+    translation: employer
+    pos: noun
+    gender: m
+  - lemma: рекрутер
+    translation: recruiter
+    pos: noun
+    gender: m
+  - lemma: вакансія
+    translation: vacancy
+    pos: noun
+    gender: f
+  - lemma: посада
+    translation: position/post
+    pos: noun
+    gender: f
+  - lemma: умови
+    translation: conditions
+    pos: noun
+    gender: p
+  - lemma: зарплата
+    translation: salary
+    pos: noun
+    gender: f
+  - lemma: оклад
+    translation: base salary
+    pos: noun
+    gender: m
+  - lemma: бонуси
+    translation: bonuses
+    pos: noun
+    gender: p
+  - lemma: пільги
+    translation: benefits/perks
+    pos: noun
+    gender: p
+  - lemma: графік
+    translation: schedule
+    pos: noun
+    gender: m
+  - lemma: повний робочий день
+    translation: full-time
+    pos: phrase
+  - lemma: часткова зайнятість
+    translation: part-time
+    pos: phrase
+  - lemma: віддалена робота
+    translation: remote work
+    pos: phrase
+  - lemma: офіс
+    translation: office
+    pos: noun
+    gender: m
+  - lemma: команда
+    translation: team
+    pos: noun
+    gender: f
+  - lemma: колектив
+    translation: collective/staff
+    pos: noun
+    gender: m
+  - lemma: корпоративна культура
+    translation: corporate culture
+    pos: phrase
+  - lemma: випробувальний термін
+    translation: probation period
+    pos: phrase
+  - lemma: контракт
+    translation: contract
+    pos: noun
+    gender: m
+  - lemma: договір
+    translation: agreement/contract
+    pos: noun
+    gender: m
+  - lemma: оформлення
+    translation: hiring process/registration
+    pos: noun
+    gender: n
+  - lemma: сильні сторони
+    translation: strengths
+    pos: phrase
+  - lemma: слабкі сторони
+    translation: weaknesses
+    pos: phrase
+  - lemma: досвід
+    translation: experience
+    pos: noun
+    gender: m
+  - lemma: мотивація
+    translation: motivation
+    pos: noun
+    gender: f
+  - lemma: очікування
+    translation: expectations
+    pos: noun
+    gender: n
+  - lemma: амбіції
+    translation: ambitions
+    pos: noun
+    gender: p
+  - lemma: самовдосконалення
+    translation: self-improvement
+    pos: noun
+    gender: n
+  - lemma: стресостійкість
+    translation: stress resistance
+    pos: noun
+    gender: f
+  - lemma: гнучкість
+    translation: flexibility
+    pos: noun
+    gender: f
+  - lemma: ініціативність
+    translation: initiative (trait)
+    pos: noun
+    gender: f
+  - lemma: сторона
+    translation: side
+    pos: noun
+    gender: f
+  - lemma: культура
+    translation: culture
+    pos: noun
+    gender: f
+  - lemma: термін
+    translation: term/period
+    pos: noun
+    gender: m
+  - lemma: зайнятість
+    translation: employment/occupation
+    pos: noun
+    gender: f

@@ -212,8 +212,12 @@ The A2 level (Базовий рівень) per the official Ukrainian State Stan
 
 **Imperative - full range:**
 
-- 2nd person: читай/читайте
-- 1st person plural: читаймо (let's read)
+- 2nd person: читай/читайте (you read!)
+- 1st person plural: читаймо (let's read!)
+- **✅ NEW at A2 - 3rd person:** хай/нехай + 3rd person present (let him/her/them)
+  - Хай він читає. (Let him read.)
+  - Нехай вона прийде. (Let her come.)
+  - Хай живе Україна! (Long live Ukraine!)
 
 #### Syntax (Синтаксис)
 
@@ -340,29 +344,36 @@ By module 50, learners can:
 
 ---
 
-## Phase A2.1: Completing the Cases (Modules 01-10)
+## Phase A2.1: Dative + Aspect Foundation (Modules 01-15)
 
 ### Learning Goals
 
 - Master Dative case (кому? чому?)
-- Master Instrumental case (ким? чим?)
+- **Understand perfective/imperfective aspect** ← NEW priority (Standard 2024 §4.2.4)
+- **Master common aspect pairs and prefixes** ← NEW (moved from A2.2)
+- Begin Instrumental case (ким? чим?)
 - Complete the 7-case system
 - Handle preposition + case combinations
 
 ### Grammar Progression
 
-| Module | Grammar Point                | Builds On      | Enables              |
-| ------ | ---------------------------- | -------------- | -------------------- |
-| 01     | Dative pronouns              | A1 pronouns    | Indirect objects     |
-| 02     | Dative nouns                 | M01, A1 gender | Full dative system   |
-| 03     | Dative verbs                 | M01-02         | Natural expression   |
-| 04     | Instrumental: accompaniment  | A1 gender      | "with friend"        |
-| 05     | Instrumental: means/tools    | M04            | "by bus", "with pen" |
-| 06     | Instrumental with бути/стати | M04-05         | Professions          |
-| 07     | Preposition master class     | All cases      | Full prep system     |
-| 08     | All cases integration        | M01-07         | Case mastery         |
-| 09     | Functional: Post/Bank        | M01-08         | Real interaction     |
-| 10     | Checkpoint: Cases            | M01-09         | Assessment           |
+| Module | Grammar Point                | Builds On      | Enables               |
+| ------ | ---------------------------- | -------------- | --------------------- |
+| 01     | Dative pronouns              | A1 pronouns    | Indirect objects      |
+| 02     | Dative nouns                 | M01, A1 gender | Full dative system    |
+| 03     | Dative verbs                 | M01-02         | Natural expression    |
+| 04     | Instrumental: accompaniment  | A1 gender      | "with friend"         |
+| **05** | **Aspect introduction**      | **A1 verbs**   | **Concept understanding** |
+| **06** | **Perfective in past**       | **M05**        | **"I did it"**        |
+| **07** | **Perfective in future**     | **M05**        | **"I will do it"**    |
+| **08** | **Aspect morphology**        | **M05-07**     | **Prefix meaning**    |
+| **09** | **Aspect pairs drill**       | **M05-08**     | **Fluency**           |
+| 10     | Instrumental: means/tools    | M04            | "by bus", "with pen"  |
+| 11     | Instrumental with бути/стати | M04, M10       | Professions           |
+| 12     | Preposition master class     | All cases      | Full prep system      |
+| 13     | All cases practice           | M01-12         | Case mastery          |
+| 14     | Functional: Post/Bank        | M01-13         | Real interaction      |
+| 15     | Checkpoint: Cases + Aspect   | M01-14         | Assessment            |
 
 ### Module Content Specifications
 
@@ -497,228 +508,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 05: The Instrumental II - Means & Tools
-
-**Grammar:** Instrumental without preposition (means, tool, manner)
-
-**Uses without preposition:**
-
-- Transport: їхати автобусом (to go by bus)
-- Tool: писати ручкою (to write with a pen)
-- Manner: говорити голосом (to speak in a voice)
-- Body part: махати рукою (to wave with hand)
-
-**Key patterns:**
-
-- Я їду метро. (I'm going by metro.)
-- Вона пише олівцем. (She writes with a pencil.)
-- Ми їмо виделкою. (We eat with a fork.)
-
-**Vocabulary (25 words):**
-автобусом, трамваєм, тролейбусом, метро, машиною, таксі, поїздом, літаком, ручкою, олівцем, ножем, виделкою, ложкою, ножицями, голкою, молотком, пензлем, комп'ютером, телефоном, очима, руками, ногами, головою, голосом, пошепки
-
-**Signature Activity Concepts:**
-
-1. Gap-fill: Choose correct transport instrumental
-2. Match-up: Action → tool in instrumental
-3. Quiz: "How do you...?" questions
-
----
-
-#### Module 06: Being and Becoming
-
-**Grammar:** Instrumental with бути, стати, працювати, бути
-
-**Patterns:**
-
-- Він є лікарем. / Він лікар. (He is a doctor.)
-- Вона стала вчителькою. (She became a teacher.)
-- Я працюю програмістом. (I work as a programmer.)
-- Я був студентом. (I was a student.)
-
-**Past/Future бути + Instrumental:**
-
-- був/була/було/були + Instr (was)
-- буде/будуть + Instr (will be)
-
-**Vocabulary (25 words):**
-бути, стати, ставати, працювати, служити, залишатися, виявитися, здаватися, вважатися, називатися, лікар, вчитель, інженер, програміст, журналіст, юрист, економіст, художник, музикант, письменник, актор, директор, менеджер, секретар, водій
-
-**Signature Activity Concepts:**
-
-1. Transform: Present → past with instrumental
-2. Gap-fill: Profession sentences
-3. Quiz: "What does he/she work as?"
-
----
-
-#### Module 07: Spatial Prepositions
-
-**Grammar:** Location and Motion prepositions
-
-**Spatial relations:**
-| Prep | Case | Meaning | Example |
-|------|------|---------|---------|
-| в/у | Acc | into | йти в кімнату |
-| в/у | Loc | in | бути в кімнаті |
-| на | Acc | onto | класти на стіл |
-| на | Loc | on | лежати на столі |
-| під | Acc | under (motion) | лізти під стіл |
-| під | Instr | under (loc) | сидіти під столом |
-| над | Instr | above | лампа над столом |
-| перед | Instr | in front of | перед будинком |
-| за | Acc | behind (motion) | йти за хату |
-| за | Instr | behind (loc) | бути за хатою |
-| між | Instr | between | між нами |
-| до | Gen | to (direction) | йти до школи |
-| з/із | Gen | from (place) | йти з роботи |
-
-**Vocabulary (15 words):**
-в/у, на, під, над, перед, за, між, до, з/із, напроти, біля, коло, поруч, навколо, вздовж
-
-**Signature Activity Concepts:**
-1. Gap-fill: Motion vs Location cases
-2. Diagram labeling: Where is the cat?
-3. Command drill: Put it on/under/behind...
-
----
-
-#### Module 08: Logical Prepositions
-
-**Grammar:** Abstract, Temporal, and Causal prepositions
-
-**Key Prepositions:**
-| Prep | Case | Meaning | Example |
-|------|------|---------|---------|
-| для | Gen | for (benefit) | для тебе |
-| без | Gen | without | без цукру |
-| через | Acc | through/because | через ліс / через дощ |
-| про | Acc | about | про фільм |
-| від | Gen | from (source) | лист від мами |
-| з/із | Instr | with (accom) | чай з лимоном |
-| о/об | Loc | at (time) | о третій годині |
-| після | Gen | after | після уроку |
-| крім | Gen | except/besides | крім мене |
-| замість | Gen | instead of | чай замість кави |
-
-**Vocabulary (20 words):**
-для, без, через, про, від, з, о, після, крім, замість, завдяки, всупереч, незважаючи на, протягом, щодо, стосовно, заради, внаслідок, по, при
-
-**Signature Activity Concepts:**
-1. Match-up: Preposition → logical function
-2. Gap-fill: Abstract contexts
-3. Translation: "Because of", "Instead of", "About"
-
----
-
-#### Module 09: All Cases Practice
-
-**Grammar:** 7-case integration exercises
-
-**Case Summary:**
-| Case | Question | Primary Use | Example |
-|------|----------|-------------|---------|
-| Nom | хто? що? | Subject | Книга лежить. |
-| Gen | кого? чого? | Possession, absence | немає книги |
-| Dat | кому? чому? | Indirect object | давати другові |
-| Acc | кого? що? | Direct object | читати книгу |
-| Instr | ким? чим? | Means, with | писати ручкою |
-| Loc | на кому? на чому? | Location | на столі |
-| Voc | - | Address | Друже! Мамо! |
-
-**Vocabulary (15 words):**
-хто, що, кого, чого, кому, чому, кого, що, ким, чим, на кому, на чому, відмінок, називний, родовий, давальний, знахідний, орудний, місцевий, кличний
-
-**Signature Activity Concepts:**
-1. Gap-fill: Choose correct case for context
-2. Transform: Decline nouns through all 7 cases
-3. Quiz: Identify case by ending
-
----
-
-#### Module 10: At the Post Office & Bank
-
-**Grammar:** Functional application of cases in services
-
-**Post office vocabulary:**
-- лист (letter), посилка (package), марка (stamp)
-- відправляти (to send), отримувати (to receive)
-- адреса (address), індекс (postal code)
-
-**Bank vocabulary:**
-- гроші (money), рахунок (account), картка (card)
-- переказувати (to transfer), знімати (to withdraw)
-- вкладати (to deposit), обмінювати (to exchange)
-
-**Key phrases:**
-- Я хочу відправити листа друговІ. (Dat)
-- Де можна обміняти долари на гривнІ? (Acc)
-- Мені потрібно зняти грошІ з рахункУ. (Gen)
-
-**Vocabulary (30 words):**
-пошта, банк, лист, посилка, бандероль, марка, конверт, адреса, індекс, відправляти, отримувати, надсилати, гроші, рахунок, картка, готівка, валюта, переказ, переказувати, знімати, вкладати, обмінювати, курс, відсоток, кредит, позика, квитанція, чек, касир, черга
-
-**Signature Activity Concepts:**
-1. Dialogue: Post office interaction
-2. Gap-fill: Banking sentences with correct cases
-3. Quiz: "I want to..." service phrases
-
----
-
-#### Module 11: Checkpoint - Cases A2.1
-
-**Covers:** M01-10
-
-**Required Skill Groups:**
-1. Dative Case Pronouns (M01) - мені, тобі, йому, їй
-2. Dative Case Nouns (M02-03) - другові, сестрі + dative verbs
-3. Instrumental: Accompaniment (M04) - з другом, з сестрою
-4. Instrumental: Means & Tools (M05-06) - автобусом, ручкою, бути лікарем
-5. Preposition + Case Combinations (M07-08) - spatial & logical prepositions
-6. Service Interactions (M09-10) - post/bank vocabulary with all cases
-
-**Vocabulary (10 words):** Review selection
-
-**Signature Activity Concepts:**
-1. Comprehensive case quiz
-2. Sentence transformation (change case)
-3. Dialogue completion with correct cases
-
----
-
-## Phase A2.2: Aspect & Comparison (Modules 12-24)
-
-### Learning Goals
-
-- Understand perfective/imperfective aspect
-- Master common aspect pairs and prefixes
-- Use proper possessives (свій vs його)
-- Count objects correctly (numeral-noun agreement)
-- Form comparative and superlative adjectives
-- Express preferences and make comparisons
-- Use conditional constructions
-
-### Grammar Progression
-
-| Module | Grammar Point          | Builds On     | Enables               |
-| ------ | ---------------------- | ------------- | --------------------- |
-| 12     | Aspect introduction    | A1 verbs      | Concept understanding |
-| 13     | Perfective in past     | M12           | "I did it"            |
-| 14     | Perfective in future   | M12           | "I will do it"        |
-| 15     | Aspect morphology      | M12-14        | Prefix meaning        |
-| 16     | Aspect pairs drill     | M12-15        | Fluency               |
-| 17     | Possessive 'свій'      | A1 possessives| "My own" vs "His"     |
-| 18     | Comparative adjectives | A1 adjectives | "bigger, better"      |
-| 19     | Superlative adjectives | M18           | "the biggest"         |
-| 20     | Comparison structures  | M18-19        | Preferences           |
-| 21     | Numerals & Nouns       | A1 numbers    | Counting things       |
-| 22     | Conditional mood       | A1 past tense | "If I were..."        |
-| 23     | Functional: Shopping   | M18-21        | Real comparison       |
-| 24     | Checkpoint             | M12-23        | Assessment            |
-
-### Module Content Specifications
-
-#### Module 12: Aspect Introduction
+#### Module 05: Aspect Introduction
 
 **Grammar:** Perfective vs imperfective concept
 
@@ -754,7 +544,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 13: The Completed Past
+#### Module 06: The Completed Past
 
 **Grammar:** Perfective verbs in past tense
 
@@ -778,7 +568,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 14: Future Plans & Promises
+#### Module 07: Future Plans & Promises
 
 **Grammar:** Perfective future tense
 
@@ -803,7 +593,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 15: Aspect Morphology
+#### Module 08: Aspect Morphology
 
 **Grammar:** How pairs are formed (prefixes/suffixes)
 
@@ -838,7 +628,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 16: Aspect Mastery - Common Pairs
+#### Module 09: Aspect Mastery - Common Pairs
 
 **Grammar:** Drilling the 30 most common aspect pairs
 
@@ -864,7 +654,217 @@ By module 50, learners can:
 
 ---
 
-#### Module 17: Possessive: Свій vs Його
+#### Module 10: The Instrumental II - Means & Tools
+
+**Grammar:** Instrumental without preposition (means, tool, manner)
+
+**Uses without preposition:**
+
+- Transport: їхати автобусом (to go by bus)
+- Tool: писати ручкою (to write with a pen)
+- Manner: говорити голосом (to speak in a voice)
+- Body part: махати рукою (to wave with hand)
+
+**Key patterns:**
+
+- Я їду метро. (I'm going by metro.)
+- Вона пише олівцем. (She writes with a pencil.)
+- Ми їмо виделкою. (We eat with a fork.)
+
+**Vocabulary (25 words):**
+автобусом, трамваєм, тролейбусом, метро, машиною, таксі, поїздом, літаком, ручкою, олівцем, ножем, виделкою, ложкою, ножицями, голкою, молотком, пензлем, комп'ютером, телефоном, очима, руками, ногами, головою, голосом, пошепки
+
+**Signature Activity Concepts:**
+
+1. Gap-fill: Choose correct transport instrumental
+2. Match-up: Action → tool in instrumental
+3. Quiz: "How do you...?" questions
+
+---
+
+#### Module 11: Being and Becoming
+
+**Grammar:** Instrumental with бути, стати, працювати
+
+**Patterns:**
+
+- Він є лікарем. / Він лікар. (He is a doctor.)
+- Вона стала вчителькою. (She became a teacher.)
+- Я працюю програмістом. (I work as a programmer.)
+- Я був студентом. (I was a student.)
+
+**Past/Future бути + Instrumental:**
+
+- був/була/було/були + Instr (was)
+- буде/будуть + Instr (will be)
+
+**Vocabulary (25 words):**
+бути, стати, ставати, працювати, служити, залишатися, виявитися, здаватися, вважатися, називатися, лікар, вчитель, інженер, програміст, журналіст, юрист, економіст, художник, музикант, письменник, актор, директор, менеджер, секретар, водій
+
+**Signature Activity Concepts:**
+
+1. Transform: Present → past with instrumental
+2. Gap-fill: Profession sentences
+3. Quiz: "What does he/she work as?"
+
+---
+
+#### Module 12: Preposition Master Class
+
+**Grammar:** Spatial and Logical prepositions with cases
+
+**Spatial Prepositions:**
+
+| Prep | Case | Meaning | Example |
+|------|------|---------|------------|
+| в/у | Acc | into | йти в кімнату |
+| в/у | Loc | in | бути в кімнаті |
+| на | Acc | onto | класти на стіл |
+| на | Loc | on | лежати на столі |
+| під | Acc | under (motion) | лізти під стіл |
+| під | Instr | under (loc) | сидіти під столом |
+| над | Instr | above | лампа над столом |
+| перед | Instr | in front of | перед будинком |
+| за | Acc | behind (motion) | йти за хату |
+| за | Instr | behind (loc) | бути за хатою |
+| між | Instr | between | між нами |
+| до | Gen | to (direction) | йти до школи |
+| з/із | Gen | from (place) | йти з роботи |
+
+**Logical Prepositions:**
+
+| Prep | Case | Meaning | Example |
+|------|------|---------|------------|
+| для | Gen | for (benefit) | для тебе |
+| без | Gen | without | без цукру |
+| через | Acc | through/because | через ліс / через дощ |
+| про | Acc | about | про фільм |
+| від | Gen | from (source) | лист від мами |
+| з/із | Instr | with (accomp) | чай з лимоном |
+| о/об | Loc | at (time) | о третій годині |
+| після | Gen | after | після уроку |
+| крім | Gen | except/besides | крім мене |
+| замість | Gen | instead of | чай замість кави |
+
+**Vocabulary (35 words):**
+в/у, на, під, над, перед, за, між, до, з/із, напроти, біля, коло, поруч, навколо, вздовж, для, без, через, про, від, о, після, крім, замість, завдяки, всупереч, незважаючи на, протягом, щодо, стосовно, заради, внаслідок, по, при, вище
+
+**Signature Activity Concepts:**
+
+1. Gap-fill: Motion vs Location cases
+2. Match-up: Preposition → logical function
+3. Diagram labeling: Where is the cat?
+4. Translation: "Because of", "Instead of", "About"
+
+---
+
+#### Module 13: All Cases Practice
+
+**Grammar:** 7-case integration exercises
+
+**Case Summary:**
+
+| Case | Question | Primary Use | Example |
+|------|----------|-------------|---------|
+| Nom | хто? що? | Subject | Книга лежить. |
+| Gen | кого? чого? | Possession, absence | немає книги |
+| Dat | кому? чому? | Indirect object | давати другові |
+| Acc | кого? що? | Direct object | читати книгу |
+| Instr | ким? чим? | Means, with | писати ручкою |
+| Loc | на кому? на чому? | Location | на столі |
+| Voc | - | Address | Друже! Мамо! |
+
+**Vocabulary (20 words):**
+хто, що, кого, чого, кому, чому, ким, чим, на кому, на чому, відмінок, називний, родовий, давальний, знахідний, орудний, місцевий, кличний, схилятися, падіж
+
+**Signature Activity Concepts:**
+
+1. Gap-fill: Choose correct case for context
+2. Transform: Decline nouns through all 7 cases
+3. Quiz: Identify case by ending
+
+---
+
+#### Module 14: At the Post Office & Bank
+
+**Grammar:** Functional application of cases in services
+
+**Post office vocabulary:**
+- лист (letter), посилка (package), марка (stamp)
+- відправляти (to send), отримувати (to receive)
+- адреса (address), індекс (postal code)
+
+**Bank vocabulary:**
+- гроші (money), рахунок (account), картка (card)
+- переказувати (to transfer), знімати (to withdraw)
+- вкладати (to deposit), обмінювати (to exchange)
+
+**Key phrases:**
+- Я хочу відправити листа друговІ. (Dat)
+- Де можна обміняти долари на гривнІ? (Acc)
+- Мені потрібно зняти грошІ з рахункУ. (Gen)
+
+**Vocabulary (30 words):**
+пошта, банк, лист, посилка, бандероль, марка, конверт, адреса, індекс, відправляти, отримувати, надсилати, гроші, рахунок, картка, готівка, валюта, переказ, переказувати, знімати, вкладати, обмінювати, курс, відсоток, кредит, позика, квитанція, чек, касир, черга
+
+**Signature Activity Concepts:**
+1. Dialogue: Post office interaction
+2. Gap-fill: Banking sentences with correct cases
+3. Quiz: "I want to..." service phrases
+
+---
+
+#### Module 15: Checkpoint - Cases + Aspect
+
+**Covers:** M01-14
+
+**Required Skill Groups:**
+1. Dative Case (M01-03) - pronouns, nouns, dative verbs
+2. Instrumental Case (M04, M10-11) - accompaniment, means/tools, professions
+3. **Aspect Foundation (M05-09)** - perfective/imperfective distinction, common pairs
+4. Preposition + Case Mastery (M12) - spatial & logical prepositions
+5. Case Integration (M13) - all 7 cases in context
+6. Service Interactions (M14) - post/bank vocabulary with correct cases
+
+**Vocabulary (10 words):** Review selection
+
+**Signature Activity Concepts:**
+1. Comprehensive case quiz
+2. Aspect pair transformation (impf → pf)
+3. Preposition + case selection
+4. Dialogue completion with correct cases
+
+---
+
+## Phase A2.2: свій & Comparison (Modules 16-25)
+
+### Learning Goals
+
+- Use proper possessives (свій vs його)
+- Form comparative and superlative adjectives
+- Express preferences and make comparisons
+- Count objects correctly (numeral-noun agreement)
+- Use conditional constructions
+- Master 3rd person imperative (хай/нехай)
+
+### Grammar Progression
+
+| Module | Grammar Point          | Builds On      | Enables               |
+| ------ | ---------------------- | -------------- | --------------------- |
+| 16     | Possessive 'свій'      | A1 possessives | "My own" vs "His"     |
+| 17     | Comparative adjectives | A1 adjectives  | "bigger, better"      |
+| 18     | Superlative adjectives | M17            | "the biggest"         |
+| 19     | Comparison structures  | M17-18         | Preferences           |
+| 20     | Numerals & Nouns       | A1 numbers     | Counting things       |
+| 21     | Conditional mood       | A1 past tense  | "If I were..."        |
+| 22     | Functional: Shopping   | M17-20         | Real comparison       |
+| 23     | 3rd Person Imperative  | A1 imperative  | Wishes, formal requests |
+| 24     | Comparison Review      | M16-23         | Consolidation         |
+| 25     | Checkpoint             | M16-24         | Assessment            |
+
+### Module Content Specifications
+
+#### Module 16: Possessive: Свій vs Його
 
 **Grammar:** The reflexive possessive pronoun 'свій'
 
@@ -888,7 +888,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 18: Bigger, Better, Stronger
+#### Module 17: Bigger, Better, Stronger
 
 **Grammar:** Comparative adjectives
 
@@ -924,7 +924,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 19: The Best, The Worst
+#### Module 18: The Best, The Worst
 
 **Grammar:** Superlative adjectives
 
@@ -954,7 +954,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 20: Preferences & Choices
+#### Module 19: Preferences & Choices
 
 **Grammar:** Comparison structures for expressing preferences
 
@@ -983,7 +983,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 21: Numerals & Nouns
+#### Module 20: Numerals & Nouns
 
 **Grammar:** Numeral-Noun Agreement (Subject Case)
 
@@ -1008,7 +1008,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 22: If I Were...
+#### Module 21: If I Were...
 
 **Grammar:** Conditional mood (якби + past)
 
@@ -1035,7 +1035,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 23: Smart Shopping
+#### Module 22: Smart Shopping
 
 **Grammar:** Functional application of comparison & quantities
 
@@ -1060,30 +1060,95 @@ By module 50, learners can:
 
 ---
 
-#### Module 24: Checkpoint - Aspect & Comparison
+#### Module 23: 3rd Person Imperative
 
-**Covers:** M12-23
+**Grammar:** Commands and wishes with хай/нехай + 3rd person present
+
+**Formation:**
+
+- **хай** + 3rd person present form (affirmative, neutral)
+- **нехай** + 3rd person present form (more formal, emphatic)
+
+**Usage:**
+
+- Commands about third parties: Хай він читає. (Let him read.)
+- Formal wishes: Нехай вона прийде. (May she come.)
+- Exclamations: Хай живе Україна! (Long live Ukraine!)
+- Polite suggestions: Нехай вони вирішують. (Let them decide.)
+
+**Contrast with 2nd person imperative:**
+
+| Type | Formation | Example |
+|------|-----------|---------|
+| 2nd singular | Verb stem + -й/-и | Читай! (Read!) |
+| 2nd plural | Verb stem + -йте/-іть | Читайте! (Read!) |
+| 3rd person | хай/нехай + 3rd pres | Хай він читає. (Let him read.) |
+
+**Vocabulary (20 words):**
+хай, нехай, живе, вирішує, робить, знає, думає, вірить, допомагає, приходить, іде, каже, розуміє, вчить, працює, відпочиває, чекає, дивиться, слухає, бажання
+
+**Signature Activity Concepts:**
+
+1. Transform: 2nd person imperative → 3rd person with хай
+2. Gap-fill: Formal wishes and requests
+3. Quiz: Choose хай vs нехай based on context
+4. Translation: "Let him/her/them..." sentences
+
+---
+
+#### Module 24: Comparison Review
+
+**Grammar:** Consolidation of comparative structures and possessives
+
+**Review Topics:**
+
+- свій vs його/її/їх (possessive distinction)
+- Comparative adjectives (більший, кращий)
+- Superlative adjectives (найбільший, найкращий)
+- Comparison structures (ніж, від)
+- Numeral agreement (1, 2-4, 5+)
+- Conditional constructions (якби + past)
+
+**Integration:**
+
+This module integrates all comparison and possessive structures from M16-M23 through communicative tasks and error correction.
+
+**Vocabulary (15 words):**
+порівняння, порівнювати, краще, гірше, однаковий, різний, схожий, відрізнятися, перевага, недолік, вибір, вибирати, рішення, вирішувати, власний
+
+**Signature Activity Concepts:**
+
+1. Error correction: Mixed comparison errors
+2. Gap-fill: Integrated comparative dialogue
+3. Transform: Positive → comparative → superlative chains
+4. Quiz: свій vs його in complex sentences
+
+---
+
+#### Module 25: Checkpoint - Comparison & Possession
+
+**Covers:** M16-24
 
 **Required Skill Groups:**
-1. Aspect Concept & Pairs (M12) - imperfective vs perfective
-2. Perfective in Past (M13) - completed actions, result focus
-3. Perfective in Future (M14) - promises, plans
-4. Aspect Morphology (M15-16) - prefixes, aspect pair drills
-5. Reflexive Possessive 'свій' (M17) - свій vs його/її
-6. Comparative & Superlative (M18-20) - більший, найкращий, structures
-7. Numeral-Noun Agreement (M21) - 1, 2-4, 5+ patterns
-8. Conditional Constructions (M22) - якщо, якби
+1. Reflexive Possessive 'свій' (M16) - свій vs його/її/їх distinction
+2. Comparative & Superlative (M17-19) - більший, найкращий, comparison structures
+3. Numeral-Noun Agreement (M20) - 1, 2-4, 5+ patterns
+4. Conditional Constructions (M21) - якби + past tense
+5. Shopping & Preferences (M22) - practical application
+6. 3rd Person Imperative (M23) - хай/нехай commands
+7. Integrated Review (M24) - all comparison structures
 
 **Vocabulary (10 words):** Review selection
 
 **Signature Activity Concepts:**
-1. Comprehensive Aspect Quiz
+1. свій vs його comprehensive quiz
 2. Numeral Challenge: Count various items
-3. Shopping Dialogue: Integration of all skills
+3. Shopping Dialogue: Comparisons and quantities
+4. 3rd person commands in context
 
 ---
 
-## Phase A2.3: Complex Sentences (Modules 25-34)
+## Phase A2.3: Complex Sentences (Modules 26-36)
 
 ### Learning Goals
 
@@ -1109,7 +1174,7 @@ By module 50, learners can:
 
 ### Module Content Specifications
 
-#### Module 25: Telling Stories
+#### Module 26: Telling Stories
 
 **Grammar:** Sequence connectors
 
@@ -1134,7 +1199,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 26: Because and Although
+#### Module 27: Because and Although
 
 **Grammar:** Causal/concessive clauses
 
@@ -1162,7 +1227,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 27: She Said That...
+#### Module 28: She Said That...
 
 **Grammar:** Basic reported speech
 
@@ -1191,7 +1256,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 28: I Think That...
+#### Module 29: I Think That...
 
 **Grammar:** Opinion expressions
 
@@ -1217,7 +1282,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 29: I'm Happy That...
+#### Module 30: I'm Happy That...
 
 **Grammar:** Emotion expressions
 
@@ -1242,7 +1307,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 30: In Order To...
+#### Module 31: In Order To...
 
 **Grammar:** Purpose clauses (щоб)
 
@@ -1267,7 +1332,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 31: Which One?
+#### Module 32: Which One?
 
 **Grammar:** Relative clauses (який, яка, яке, які)
 
@@ -1298,7 +1363,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 32: When, While, After
+#### Module 33: When, While, After
 
 **Grammar:** Time clauses
 
@@ -1323,7 +1388,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 33: At the Doctor's
+#### Module 34: At the Doctor's
 
 **Grammar:** Functional integration for medical context
 
@@ -1349,20 +1414,20 @@ By module 50, learners can:
 
 ---
 
-#### Module 34: Checkpoint - Complex Ideas
+#### Module 35: Checkpoint - Complex Ideas
 
-**Covers:** M25-33
+**Covers:** M26-34
 
 **Required Skill Groups:**
-1. Sequence & Storytelling (M25) - потім, тоді, нарешті
-2. Causal Clauses (M26) - тому що, бо, оскільки
-3. Concessive Clauses (M27) - хоча, проте
-4. Purpose Clauses (M28) - щоб + infinitive/past
-5. Relative Clauses (M29) - який, яка, яке, які
-6. Time Clauses (M30) - коли, поки, після того як
-7. Reported Speech (M31) - сказав, що...; запитав, чи...
-8. Opinion & Emotion (M32) - думаю, що...; радий, що...
-9. Medical Vocabulary (M33) - symptoms, remedies
+1. Sequence & Storytelling (M26) - потім, тоді, нарешті
+2. Causal Clauses (M27) - тому що, бо, оскільки
+3. Concessive Clauses (M28) - хоча, проте
+4. Purpose Clauses (M29) - щоб + infinitive/past
+5. Relative Clauses (M30) - який, яка, яке, які
+6. Time Clauses (M31) - коли, поки, після того як
+7. Reported Speech (M32) - сказав, що...; запитав, чи...
+8. Opinion & Emotion (M33) - думаю, що...; радий, що...
+9. Medical Vocabulary (M34) - symptoms, remedies
 
 **Vocabulary (10 words):** Review selection
 
@@ -1373,7 +1438,7 @@ By module 50, learners can:
 
 ---
 
-## Phase A2.4: Word Formation (Modules 35-43)
+## Phase A2.4: Word Formation (Modules 36-45)
 
 ### Learning Goals
 
@@ -1386,19 +1451,20 @@ By module 50, learners can:
 
 | Module | Grammar Point              | Builds On       | Enables                 |
 | ------ | -------------------------- | --------------- | ----------------------- |
-| 35     | Basic Motion Prefixes      | A1 motion verbs | Basic Directions        |
-| 36     | Advanced Motion Prefixes   | M35             | Complex Directions      |
-| 37     | Action verb prefixes       | All verbs       | Verbal precision        |
-| 38     | Noun suffixes              | A1 nouns        | Noun formation          |
-| 39     | Adjective suffixes         | A1 adjectives   | Adjective formation     |
-| 40     | Root families I            | All vocab       | Recognition             |
-| 41     | Root families II           | All vocab       | Expansion               |
-| 42     | WF Mastery                 | M35-41          | Deep dive               |
-| 43     | Checkpoint: Word Formation | M35-42          | Assessment              |
+| 36     | Basic Motion Prefixes      | A1 motion verbs | Basic Directions        |
+| 37     | Advanced Motion Prefixes   | M36             | Complex Directions      |
+| 38     | Action verb prefixes       | All verbs       | Verbal precision        |
+| 39     | Noun suffixes              | A1 nouns        | Noun formation          |
+| 40     | Adjective suffixes         | A1 adjectives   | Adjective formation     |
+| 41     | Root families I            | All vocab       | Recognition             |
+| 42     | Root families II           | All vocab       | Expansion               |
+| 43     | WF Mastery                 | M36-42          | Deep dive               |
+| 44     | Checkpoint: Word Formation | M36-43          | Assessment              |
+| 45     | (moved to Phase A2.5)      | -               | -                       |
 
 ### Module Content Specifications
 
-#### Module 35: Basic Motion Prefixes
+#### Module 36: Basic Motion Prefixes
 
 **Grammar:** Directional entry/exit/arrival
 
@@ -1424,7 +1490,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 36: Advanced Motion Prefixes
+#### Module 37: Advanced Motion Prefixes
 
 **Grammar:** Complex paths sequences
 
@@ -1452,7 +1518,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 37: Prefixes II - Action Verbs
+#### Module 38: Prefixes II - Action Verbs
 
 **Grammar:** Prefixes with non-motion verbs
 
@@ -1481,7 +1547,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 38: Suffixes I - Nouns
+#### Module 39: Suffixes I - Nouns
 
 **Grammar:** Noun-forming suffixes
 
@@ -1512,7 +1578,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 39: Suffixes II - Adjectives
+#### Module 40: Suffixes II - Adjectives
 
 **Grammar:** Adjective-forming suffixes
 
@@ -1540,7 +1606,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 40: Root Families I
+#### Module 41: Root Families I
 
 **Grammar:** Common roots and derivatives
 
@@ -1566,7 +1632,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 41: Root Families II
+#### Module 42: Root Families II
 
 **Grammar:** Motion and perception roots
 
@@ -1592,7 +1658,7 @@ By module 50, learners can:
 
 ---
 
-#### Module 42: Word Formation Mastery
+#### Module 43: Word Formation Mastery
 
 **Grammar:** Integrated word formation practice
 
@@ -1614,9 +1680,9 @@ By module 50, learners can:
 
 ---
 
-#### Module 43: Checkpoint - Word Formation
+#### Module 44: Checkpoint - Word Formation
 
-**Covers:** M35-42
+**Covers:** M36-43
 
 **Required Skill Groups:**
 1. Motion Verb Prefixes Basic (M35) - при-, ви-, в-/у-
@@ -1635,7 +1701,7 @@ By module 50, learners can:
 
 ---
 
-## Phase A2.5: Vocabulary Expansion (Modules 44-55)
+## Phase A2.5: Vocabulary Expansion (Modules 45-56)
 
 ### Learning Goals
 
@@ -1647,101 +1713,101 @@ By module 50, learners can:
 
 | #   | Title                  | Domain       | New Words  |
 | --- | ---------------------- | ------------ | ---------- |
-| 44  | Food & Cooking         | Daily Life   | 35         |
-| 45  | Home & Furniture       | Daily Life   | 30         |
-| 46  | Nature & Weather       | Environment  | 30         |
-| 47  | Emotions & Personality | Social       | 30         |
-| 48  | Work & Professions     | Professional | 30         |
-| 49  | Technology & Media     | Modern Life  | 30         |
-| 50  | Hobbies & Leisure      | Lifestyle    | 30         |
-| 51  | Education & Learning   | Education    | 30         |
-| 52  | Shopping & Services    | Daily Life   | 30         |
-| 53  | Sports & Fitness       | Lifestyle    | 25         |
-| 54  | Health & Body          | Health       | 35         |
-| 55  | Checkpoint: Vocabulary | M44-54       | Assessment |
+| 45  | Food & Cooking         | Daily Life   | 35         |
+| 46  | Home & Furniture       | Daily Life   | 30         |
+| 47  | Nature & Weather       | Environment  | 30         |
+| 48  | Emotions & Personality | Social       | 30         |
+| 49  | Work & Professions     | Professional | 30         |
+| 50  | Technology & Media     | Modern Life  | 30         |
+| 51  | Hobbies & Leisure      | Lifestyle    | 30         |
+| 52  | Education & Learning   | Education    | 30         |
+| 53  | Shopping & Services    | Daily Life   | 30         |
+| 54  | Sports & Fitness       | Lifestyle    | 25         |
+| 55  | Health & Body          | Health       | 35         |
+| 56  | Checkpoint: Vocabulary | M44-54       | Assessment |
 
 ### Vocabulary Domains (per State Standard Каталог Б)
 
-**Module 44: Food & Cooking**
+**Module 45: Food & Cooking**
 
 - Kitchen: каструля, сковорода, духовка, мікрохвильовка
 - Cooking: нарізати, смажити, варити, пекти, тушкувати
 - Meals: сніданок, обід, вечеря, перекус
 - Tastes: солодкий, солоний, кислий, гіркий, гострий
 
-**Module 45: Home & Furniture**
+**Module 46: Home & Furniture**
 
 - Rooms: вітальня, спальня, кабінет, комора
 - Furniture: комод, полиця, шафа, крісло, диван
 - Appliances: пральна машина, посудомийка
 - Actions: прибирати, ремонтувати, облаштовувати
 
-**Module 46: Nature & Weather**
+**Module 47: Nature & Weather**
 
 - Landscape: гора, долина, озеро, ріка, море
 - Weather: хмарно, сонячно, гроза, туман
 - Seasons: весна, літо, осінь, зима
 - Flora/Fauna: дерево, квітка, птах, тварина
 
-**Module 47: Emotions & Personality**
+**Module 48: Emotions & Personality**
 
 - Emotions: радість, сум, гнів, страх, здивування
 - Personality: добрий, чесний, сміливий, терплячий
 - States: задоволений, розчарований, стурбований
 - Actions: радіти, сумувати, хвилюватися
 
-**Module 48: Work & Professions**
+**Module 49: Work & Professions**
 
 - Jobs: інженер, лікар, вчитель, програміст, юрист
 - Workplace: офіс, фабрика, майстерня
 - Actions: працювати, керувати, співпрацювати
 - Career: кар'єра, зарплата, відпустка
 
-**Module 49: Technology & Media**
+**Module 50: Technology & Media**
 
 - Devices: комп'ютер, смартфон, планшет
 - Internet: інтернет, вебсайт, соціальні мережі
 - Media: новини, стаття, блог, подкаст
 - Actions: завантажувати, публікувати, шукати
 
-**Module 50: Hobbies & Leisure**
+**Module 51: Hobbies & Leisure**
 
 - Activities: малювати, грати, співати, танцювати
 - Collecting: колекціонувати, збирати
 - Travel: подорожувати, відвідувати, оглядати
 - Entertainment: кіно, театр, концерт
 
-**Module 51: Education & Learning**
+**Module 52: Education & Learning**
 
 - School: урок, клас, предмет, вчитель
 - University: лекція, семінар, іспит, залік
 - Process: вчитися, навчатися, складати іспит
 - Materials: підручник, зошит, конспект
 
-**Module 52: Shopping & Services**
+**Module 53: Shopping & Services**
 
 - Stores: магазин, супермаркет, ринок, бутік
 - Services: банк, пошта, перукарня, хімчистка
 - Actions: купувати, платити, замовляти
 - Money: готівка, картка, рахунок, чек
 
-**Module 53: Sports & Fitness**
+**Module 54: Sports & Fitness**
 
 - Sports: футбол, баскетбол, плавання, біг
 - Activities: тренуватися, займатися, бігати
 - Places: стадіон, басейн, спортзал
 - Events: змагання, матч, чемпіонат
 
-**Module 54: Health & Body**
+**Module 55: Health & Body**
 
 - Body: серце, легені, печінка, нирки, шлунок
 - Systems: травлення, дихання, кровообіг
 - Symptoms: біль, температура, запалення, нежить
 - Treatment: ліки, таблетки, мазь, ін'єкція
 
-**Module 55: Checkpoint - Vocabulary Expansion**
+**Module 56: Checkpoint - Vocabulary Expansion**
 
-**Covers:** M44-54
+**Covers:** M45-55
 
 **Required Skill Groups:**
 1. Food & Cooking (M44) - ingredients, cooking verbs
@@ -1770,7 +1836,7 @@ By module 50, learners can:
 
 ---
 
-## Phase A2.6: Review & Consolidation (Modules 56-57)
+## Phase A2.6: Review & Consolidation (Modules 57-58)
 
 ### Learning Goals
 
@@ -1783,10 +1849,10 @@ By module 50, learners can:
 
 | #   | Title             | Focus                     | Type       |
 | --- | ----------------- | ------------------------- | ---------- |
-| 56  | A2 Grammar Review | All grammar consolidation | Review     |
-| 57  | A2 Capstone       | Comprehensive assessment  | Checkpoint |
+| 57  | A2 Grammar Review | All grammar consolidation | Review     |
+| 58  | A2 Capstone       | Comprehensive assessment  | Checkpoint |
 
-### Module 56: A2 Grammar Review
+### Module 57: A2 Grammar Review
 
 **Case system review:**
 
@@ -1812,7 +1878,7 @@ By module 50, learners can:
 - Suffix patterns
 - Root family recognition
 
-### Module 57: A2 Capstone
+### Module 58: A2 Capstone
 
 **Assessment areas:**
 

@@ -1,0 +1,154 @@
+module: 17-irregular-verbs-complete
+level: C1
+version: '2.0'
+items:
+- lemma: дати
+  ipa: /ˈdɑtɪ/
+  translation: to give
+  pos: verb
+  gender: ""
+- lemma: їсти
+  ipa: /ˈjistɪ/
+  translation: to eat
+  pos: verb
+  gender: ""
+- lemma: бути
+  ipa: /ˈbutɪ/
+  translation: to be
+  pos: verb
+  gender: ""
+- lemma: хотіти
+  ipa: /xoˈtʲitɪ/
+  translation: to want
+  pos: verb
+  gender: ""
+- lemma: могти
+  ipa: /mohˈtɪ/
+  translation: to be able
+  pos: verb
+  gender: ""
+- lemma: йти
+  ipa: /j+tɪ/
+  translation: to go (on foot, unidirectional)
+  pos: verb
+  gender: ""
+- lemma: їхати
+  ipa: /ˈjixɑtɪ/
+  translation: to go (by vehicle, unidirectional)
+  pos: verb
+  gender: ""
+- lemma: брати
+  ipa: /ˈbrɑtɪ/
+  translation: to take
+  pos: verb
+  gender: ""
+- lemma: слати
+  ipa: /ˈslɑtɪ/
+  translation: to send
+  pos: verb
+  gender: ""
+- lemma: писати
+  ipa: /pɪˈsɑtɪ/
+  translation: to write
+  pos: verb
+  gender: ""
+- lemma: возити
+  ipa: /voˈzɪtɪ/
+  translation: to transport (multidirectional)
+  pos: verb
+  gender: ""
+- lemma: носити
+  ipa: /noˈsɪtɪ/
+  translation: to carry (multidirectional)
+  pos: verb
+  gender: ""
+- lemma: водити
+  ipa: /voˈdɪtɪ/
+  translation: to lead (multidirectional)
+  pos: verb
+  gender: ""
+- lemma: ходити
+  ipa: /xoˈdɪtɪ/
+  translation: to walk (multidirectional)
+  pos: verb
+  gender: ""
+- lemma: бігти
+  ipa: /ˈbʲiɦtɪ/
+  translation: to run (unidirectional)
+  pos: verb
+  gender: ""
+- lemma: бігати
+  ipa: /ˈbʲiɦɑtɪ/
+  translation: to run (multidirectional)
+  pos: verb
+  gender: ""
+- lemma: нести
+  ipa: /neˈstɪ/
+  translation: to carry (unidirectional)
+  pos: verb
+  gender: ""
+- lemma: вести
+  ipa: /veˈstɪ/
+  translation: to lead (unidirectional)
+  pos: verb
+  gender: ""
+- lemma: везти
+  ipa: /veˈztɪ/
+  translation: to transport (unidirectional)
+  pos: verb
+  gender: ""
+- lemma: класти
+  ipa: /ˈklɑstɪ/
+  translation: to put (imperfective)
+  pos: verb
+  gender: ""
+- lemma: красти
+  ipa: /ˈkrɑstɪ/
+  translation: to steal
+  pos: verb
+  gender: ""
+- lemma: рости
+  ipa: /roˈstɪ/
+  translation: to grow
+  pos: verb
+  gender: ""
+- lemma: пасти
+  ipa: /ˈpɑstɪ/
+  translation: to graze
+  pos: verb
+  gender: ""
+- lemma: гнати
+  ipa: /ˈɦnɑtɪ/
+  translation: to chase/drive
+  pos: verb
+  gender: ""
+- lemma: стояти
+  ipa: /stoˈjɑtɪ/
+  translation: to stand
+  pos: verb
+  gender: ""
+- lemma: спати
+  ipa: /ˈspɑtɪ/
+  translation: to sleep
+  pos: verb
+  gender: ""
+- lemma: боятися
+  ipa: /boˈjɑtʲsʲɑ/
+  translation: to be afraid
+  pos: verb
+  gender: ""
+- lemma: сміятися
+  ipa: /sʲmʲiˈjɑtʲsʲɑ/
+  translation: to laugh
+  pos: verb
+  gender: ""
+- lemma: стати
+  ipa: /ˈstɑtɪ/
+  translation: to become / to stand up (perfective)
+  pos: verb
+  gender: ""
+- lemma: взяти
+  ipa: /ˈvzʲɑtɪ/
+  translation: to take (perfective)
+  pos: verb
+  gender: ""

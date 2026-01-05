@@ -1,0 +1,673 @@
+- type: match-up
+  id: 16-01-punctuation-names
+  title: "Punctuation Marks"
+  pairs:
+    - left: "."
+      right: "крапка"
+    - left: ","
+      right: "кома"
+    - left: ":"
+      right: "двокрапка"
+    - left: ";"
+      right: "крапка з комою"
+    - left: "—"
+      right: "тире"
+    - left: "-"
+      right: "дефіс"
+    - left: "«»"
+      right: "лапки"
+    - left: "()"
+      right: "дужки"
+    - left: "!"
+      right: "знак оклику"
+    - left: "?"
+      right: "знак питання"
+    - left: "..."
+      right: "три крапки"
+    - left: "'"
+      right: "апостроф"
+
+- type: quiz
+  id: 16-18-final-check
+  title: "Punctuation Mastery"
+  items:
+    - question: "Що таке 'авторська пунктуація'?"
+      options:
+        - text: "Порушення правил заради стилю"
+          correct: true
+        - text: "Помилка редактора"
+          correct: false
+    - question: "Коли востаннє змінювали правопис?"
+      options:
+        - text: "2019"
+          correct: true
+        - text: "1933"
+          correct: false
+    - question: "Що таке 'гак'?"
+      options:
+        - text: "Літера Ґ"
+          correct: true
+        - text: "Апостроф"
+          correct: false
+    - question: "Чи є смайлик розділовим знаком?"
+      options:
+        - text: "Ні, це графічний знак"
+          correct: true
+        - text: "Так, офіційно"
+          correct: false
+    - question: "Що значить '... '?"
+      options:
+        - text: "Незавершеність"
+          correct: true
+        - text: "Кінець"
+          correct: false
+    - question: "Як найкраще вивчити пунктуацію?"
+      options:
+        - text: "Багато читати"
+          correct: true
+        - text: "Вчити правила напам'ять"
+          correct: false
+    - question: "Чи можна ставити кому перед 'і'?"
+      options:
+        - text: "Іноді (повторюваний сполучник)"
+          correct: true
+        - text: "Ніколи"
+          correct: false
+    - question: "Що сильніше за паузою?"
+      options:
+        - text: "Крапка з комою"
+          correct: true
+        - text: "Кома"
+          correct: false
+
+- type: fill-in
+  id: 16-19-proverbs
+  title: "Proverbs Punctuation"
+  items:
+    - sentence: "Вік живи___ вік учись."
+      answer: "—"
+    - sentence: "Слово___ не горобець."
+      answer: "—"
+    - sentence: "Життя прожити___ не поле перейти."
+      answer: "—"
+    - sentence: "Любиш кататися___ люби і саночки возити."
+      answer: "—"
+    - sentence: "Добре там___ де нас нема."
+      answer: ","
+    - sentence: "Язик до Києва доведе___ а до ями підштовхне."
+      answer: ","
+    - sentence: "З тобою говорити___ що горох об стіну бити."
+      answer: "—"
+    - sentence: "Не кажи гоп___ поки не перескочиш."
+      answer: ","
+
+- type: quiz
+  id: 16-02-dash-hyphen
+  title: "Dash vs Hyphen"
+  items:
+    - question: "Choose the correct mark for: 'жовто[ ]блакитний'"
+      options:
+        - text: "дефіс (-)"
+          correct: true
+        - text: "тире (—)"
+          correct: false
+    - question: "Choose the correct mark for: 'Київ [ ] столиця України'"
+      options:
+        - text: "дефіс (-)"
+          correct: false
+        - text: "тире (—)"
+          correct: true
+    - question: "Choose the correct mark for: 'по[ ]перше'"
+      options:
+        - text: "дефіс (-)"
+          correct: true
+        - text: "тире (—)"
+          correct: false
+    - question: "Choose the correct mark for: 'Читати [ ] це корисно'"
+      options:
+        - text: "дефіс (-)"
+          correct: false
+        - text: "тире (—)"
+          correct: true
+    - question: "Choose the correct mark for: 'хто[ ]небудь'"
+      options:
+        - text: "дефіс (-)"
+          correct: true
+        - text: "тире (—)"
+          correct: false
+    - question: "Choose the correct mark for: 'Мова [ ] це зброя'"
+      options:
+        - text: "дефіс (-)"
+          correct: false
+        - text: "тире (—)"
+          correct: true
+    - question: "Choose the correct mark for: 'ледь[ ]ледь'"
+      options:
+        - text: "дефіс (-)"
+          correct: true
+        - text: "тире (—)"
+          correct: false
+    - question: "Choose the correct mark for: 'Я [ ] додому, ти [ ] на роботу'"
+      options:
+        - text: "дефіс (-)"
+          correct: false
+        - text: "тире (—)"
+          correct: true
+    - question: "Choose the correct mark for: 'жовто[ ]блакитний'"
+      options:
+        - text: "дефіс (-)"
+          correct: true
+        - text: "тире (—)"
+          correct: false
+    - question: "Choose the correct mark for: 'Київ [ ] столиця України'"
+      options:
+        - text: "дефіс (-)"
+          correct: false
+        - text: "тире (—)"
+          correct: true
+    - question: "Choose the correct mark for: 'по[ ]перше'"
+      options:
+        - text: "дефіс (-)"
+          correct: true
+        - text: "тире (—)"
+          correct: false
+    - question: "Choose the correct mark for: 'Читати [ ] це корисно'"
+      options:
+        - text: "дефіс (-)"
+          correct: false
+        - text: "тире (—)"
+          correct: true
+    - question: "Choose the correct mark for: 'хто[ ]небудь'"
+      options:
+        - text: "дефіс (-)"
+          correct: true
+        - text: "тире (—)"
+          correct: false
+    - question: "Choose the correct mark for: 'Мова [ ] це зброя'"
+      options:
+        - text: "дефіс (-)"
+          correct: false
+        - text: "тире (—)"
+          correct: true
+    - question: "Choose the correct mark for: 'ледь[ ]ледь'"
+      options:
+        - text: "дефіс (-)"
+          correct: true
+        - text: "тире (—)"
+          correct: false
+    - question: "Choose the correct mark for: 'Я [ ] додому, ти [ ] на роботу'"
+      options:
+        - text: "дефіс (-)"
+          correct: false
+        - text: "тире (—)"
+          correct: true
+
+- type: fill-in
+  id: 16-03-colon-usage
+  title: "Colon Usage"
+  items:
+    - sentence: "Ми купили фрукти___ яблука, груші та сливи."
+      answer: ":"
+    - sentence: "Він глянув у вікно___ там ішов сніг."
+      answer: ":"
+    - sentence: "Правило просте___ пиши грамотно."
+      answer: ":"
+    - sentence: "Вона сказала___ «Я не згодна»."
+      answer: ":"
+    - sentence: "Усе було готове___ стіл накритий, гості запрошені."
+      answer: ":"
+    - sentence: "Причина ясна___ він запізнився."
+      answer: ":"
+    - sentence: "Він побачив дивне___ сонце світило вночі."
+      answer: ":"
+    - sentence: "Його слова___ «Це перемога»."
+      answer: ":"
+
+- type: quiz
+  id: 16-05-colon-logic
+  title: "Colon Logistics"
+  items:
+    - question: "Замініть двокрапку: 'Я не пішов: захворів.'"
+      options:
+        - text: "тому що"
+          correct: true
+        - text: "а саме"
+          correct: false
+        - text: "коли"
+          correct: false
+    - question: "Замініть двокрапку: 'Правило одне: не брехати.'"
+      options:
+        - text: "а саме"
+          correct: true
+        - text: "бо"
+          correct: false
+        - text: "але"
+          correct: false
+    - question: "Замініть двокрапку: 'Мені страшно: темно.'"
+      options:
+        - text: "бо"
+          correct: true
+        - text: "а саме"
+          correct: false
+    - question: "Замініть двокрапку: 'У нас є план: працювати.'"
+      options:
+        - text: "а саме"
+          correct: true
+        - text: "тому що"
+          correct: false
+    - question: "Замініть двокрапку: 'Він радий: виграв приз.'"
+      options:
+        - text: "тому що"
+          correct: true
+        - text: "а саме"
+          correct: false
+    - question: "Замініть двокрапку: 'Мета проста: вижити.'"
+      options:
+        - text: "а саме"
+          correct: true
+        - text: "бо"
+          correct: false
+    - question: "Замініть двокрапку: 'Я бачу: ти втомився.'"
+      options:
+        - text: "що"
+          correct: true
+        - text: "бо"
+          correct: false
+    - question: "Замініть двокрапку: 'Результат: успіх.'"
+      options:
+        - text: "а саме"
+          correct: true
+        - text: "бо"
+          correct: false
+
+- type: quiz
+  id: 16-06-quotation-marks
+  title: "Quotation Marks"
+  items:
+    - question: "Which is correct for a book title?"
+      options: 
+        - text: "роман «Кобзар»"
+          correct: true
+        - text: "роман \"Кобзар\""
+          correct: false
+        - text: "роман 'Кобзар'"
+          correct: false
+    - question: "Is 'місто «Київ»' correct?"
+      options: 
+        - text: "Ні"
+          correct: true
+        - text: "Так"
+          correct: false
+    - question: "Which uses irony?"
+      options: 
+        - text: "Цей «герой» втік."
+          correct: true
+        - text: "Він герой."
+          correct: false
+    - question: "Correct format for: She said Hello."
+      options: 
+        - text: "Вона сказала: «Привіт»."
+          correct: true
+        - text: "Вона сказала «Привіт»."
+          correct: false
+    - question: "Correct format for: university name."
+      options: 
+        - text: "Університет імені Франка"
+          correct: true
+        - text: "Університет «імені Франка»"
+          correct: false
+    - question: "Correct format for: ship name."
+      options: 
+        - text: "крейсер «Україна»"
+          correct: true
+        - text: "крейсер Україна"
+          correct: false
+    - question: "Correct quote inside a quote?"
+      options: 
+        - text: "«Він читав статтю „Мова“»"
+          correct: true
+        - text: "«Він читав статтю \"Мова\"»"
+          correct: false
+    - question: "Standard Ukrainian outer quotes?"
+      options:
+        - text: "«...»"
+          correct: true
+        - text: "“...”"
+          correct: false
+
+- type: quiz
+  id: 16-07-comma-yak
+  title: "Comma with Yak"
+  items:
+    - question: "Він сильний[,] як ведмідь."
+      options: 
+        - text: "Кома потрібна"
+          correct: true
+        - text: "Кома НЕ потрібна"
+          correct: false
+    - question: "Він відомий[,] як поет."
+      options: 
+        - text: "Кома НЕ потрібна"
+          correct: true
+        - text: "Кома потрібна"
+          correct: false
+    - question: "Дощ ллє[,] як з відра."
+      options: 
+        - text: "Кома НЕ потрібна"
+          correct: true
+        - text: "Кома потрібна"
+          correct: false
+    - question: "Розглянемо це[,] як приклад."
+      options: 
+        - text: "Кома НЕ потрібна"
+          correct: true
+        - text: "Кома потрібна"
+          correct: false
+    - question: "Ти красива[,] як квітка."
+      options: 
+        - text: "Кома потрібна"
+          correct: true
+        - text: "Кома НЕ потрібна"
+          correct: false
+    - question: "Вона сиділа[,] як зачарована."
+      options: 
+        - text: "Кома НЕ потрібна"
+          correct: true
+        - text: "Кома потрібна"
+          correct: false
+    - question: "Це звучить[,] як жарт."
+      options: 
+        - text: "Кома потрібна"
+          correct: true
+        - text: "Кома НЕ потрібна"
+          correct: false
+    - question: "Берегти[,] як зіницю ока."
+      options: 
+        - text: "Кома НЕ потрібна"
+          correct: true
+        - text: "Кома потрібна"
+          correct: false
+
+- type: fill-in
+  id: 16-08-parenthetical
+  title: "Parenthetical Commas"
+  items:
+    - sentence: "Він___ мабуть___ не знав."
+      answer: ","
+    - sentence: "Це___ на мою думку___ помилка."
+      answer: ","
+    - sentence: "Отже___ ми йдемо далі."
+      answer: ","
+    - sentence: "На щастя___ дощу не було."
+      answer: ","
+    - sentence: "Ти___ звісно___ правий."
+      answer: ","
+    - sentence: "По-перше___ це зручно."
+      answer: ","
+    - sentence: "Він___ кажуть___ переїхав."
+      answer: ","
+    - sentence: "До речі___ де твій паспорт?"
+      answer: ","
+  
+- type: quiz
+  id: 16-09-false-parenthetical
+  title: "False Parentheticals"
+  items:
+    - question: "Does 'навіть' need commas?"
+      options:
+        - text: "Ні"
+          correct: true
+        - text: "Так"
+          correct: false
+    - question: "Does 'отже' need commas?"
+      options:
+        - text: "Так"
+          correct: true
+        - text: "Ні"
+          correct: false
+    - question: "Does 'майже' need commas?"
+      options:
+        - text: "Ні"
+          correct: true
+        - text: "Так"
+          correct: false
+    - question: "Does 'мабуть' need commas?"
+      options:
+        - text: "Так"
+          correct: true
+        - text: "Ні"
+          correct: false
+    - question: "Does 'приблизно' need commas?"
+      options:
+        - text: "Ні"
+          correct: true
+        - text: "Так"
+          correct: false
+    - question: "Does 'звісно' need commas?"
+      options:
+        - text: "Так"
+          correct: true
+        - text: "Ні"
+          correct: false
+    - question: "Does 'принаймні' need commas?"
+      options:
+        - text: "Ні"
+          correct: true
+        - text: "Так"
+          correct: false
+    - question: "Does 'все-таки' need commas?"
+      options:
+        - text: "Ні"
+          correct: true
+        - text: "Так"
+          correct: false
+
+- type: fill-in
+  id: 16-11-dash-ellipsis
+  title: "Dash Ellipsis"
+  items:
+    - sentence: "Зліва було море, а справа___ гори."
+      answer: "—"
+    - sentence: "Я люблю каву, ти___ чай."
+      answer: "—"
+    - sentence: "Він пішов у кіно, вона___ в театр."
+      answer: "—"
+    - sentence: "Вранці___ кава, ввечері___ вино."
+      answer: "—"
+    - sentence: "Тут___ сонце, там___ дощ."
+      answer: "—"
+    - sentence: "Мир___ хатам, війна___ палацам."
+      answer: "—"
+    - sentence: "День___ робота, ніч___ сон."
+      answer: "—"
+    - sentence: "Київ___ столиця, Львів___ душа."
+      answer: "—"
+
+- type: quiz
+  id: 16-12-date-time
+  title: "Date and Time"
+  items:
+    - question: "Standard time format?"
+      options:
+        - text: "15:30"
+          correct: true
+        - text: "15-30"
+          correct: false
+    - question: "Date format?"
+      options:
+        - text: "01.01.2023"
+          correct: true
+        - text: "01/01/2023"
+          correct: false
+    - question: "Decimal separator?"
+      options:
+        - text: "10,5 (comma)"
+          correct: true
+        - text: "10.5 (dot)"
+          correct: false
+    - question: "Thousands separator?"
+      options:
+        - text: "1 000 (space)"
+          correct: true
+        - text: "1,000 (comma)"
+          correct: false
+    - question: "Temperature?"
+      options:
+        - text: "+25 °C"
+          correct: true
+        - text: "+25°C"
+          correct: false
+    - question: "Percent?"
+      options:
+        - text: "100 % (space)"
+          correct: true
+        - text: "100% (no space)"
+          correct: false
+    - question: "Currency?"
+      options:
+        - text: "100 грн"
+          correct: true
+        - text: "100грн"
+          correct: false
+    - question: "Initials?"
+      options:
+        - text: "Т. Г. Шевченко (spaces)"
+          correct: true
+        - text: "Т.Г.Шевченко (no spaces)"
+          correct: false
+
+- type: match-up
+  id: 16-13-functions
+  title: "Punctuation Functions"
+  pairs:
+    - left: "Двокрапка"
+      right: "Пояснення причини"
+    - left: "Тире"
+      right: "Наслідок або різка зміна"
+    - left: "Крапка з комою"
+      right: "Розділення далеких частин"
+    - left: "Кома"
+      right: "Вставне слово"
+    - left: "Тире (2)"
+      right: "Пропуск члена речення"
+    - left: "Двокрапка (2)"
+      right: "Перед переліком"
+    - left: "Лапки"
+      right: "Іронія"
+    - left: "Дужки"
+      right: "Додаткова інформація"
+
+- type: quiz
+  id: 16-15-apostrophe
+  title: "Apostrophe Logic"
+  items:
+    - question: "Апостроф — це розділовий знак."
+      options:
+        - text: "Неправда"
+          correct: true
+        - text: "Правда"
+          correct: false
+    - question: "Апостроф показує твердість приголосного."
+      options:
+        - text: "Правда"
+          correct: true
+        - text: "Неправда"
+          correct: false
+    - question: "Апостроф ставиться після б, п, в, м, ф?"
+      options:
+        - text: "Правда"
+          correct: true
+        - text: "Неправда"
+          correct: false
+    - question: "Апостроф ставиться після р?"
+      options:
+        - text: "Іноді (твердий р)"
+          correct: true
+        - text: "Завжди"
+          correct: false
+    - question: "Слово 'свято' пишеться з апострофом?"
+      options:
+        - text: "Ні"
+          correct: true
+        - text: "Так"
+          correct: false
+    - question: "Слово 'м'яч' пишеться з апострофом?"
+      options:
+        - text: "Так"
+          correct: true
+        - text: "Ні"
+          correct: false
+    - question: "Апостроф позначає м'якість?"
+      options:
+        - text: "Ні"
+          correct: true
+        - text: "Так"
+          correct: false
+    - question: "Англійський апостроф (don't) має ту ж функцію?"
+      options:
+        - text: "Ні"
+          correct: true
+        - text: "Так"
+          correct: false
+
+- type: quiz
+  id: 16-16-editing
+  title: "Editing Challenge"
+  items:
+    - question: "Error: 'Київ - столиця України.'"
+      options:
+        - text: "Помилка: треба тире (—)"
+          correct: true
+        - text: "Правильно"
+          correct: false
+    - question: "Error: 'Я думаю що ні.'"
+      options:
+        - text: "Помилка: треба кома перед 'що'"
+          correct: true
+        - text: "Правильно"
+          correct: false
+    - question: "Error: 'Він сказав: «Привіт»'"
+      options:
+        - text: "Помилка: немає крапки в кінці"
+          correct: true
+        - text: "Правильно"
+          correct: false
+    - question: "Error: 'Сонце, повітря, і вода.'"
+      options:
+        - text: "Зайва кома перед 'і'"
+          correct: true
+        - text: "Правильно"
+          correct: false
+    - question: "Error: 'Він сильний як бик.'"
+      options:
+        - text: "Помилка: треба кома перед 'як'"
+          correct: true
+        - text: "Правильно"
+          correct: false
+    - question: "Error: 'Місто «Київ».'"
+      options:
+        - text: "Помилка: назви міст без лапок"
+          correct: true
+        - text: "Правильно"
+          correct: false
+    - question: "Error: '3,5 відсотки'"
+      options:
+        - text: "Правильно"
+          correct: true
+        - text: "Помилка: треба крапку"
+          correct: false
+    - question: "Error: 'кафе Мрія'"
+      options:
+        - text: "Помилка: треба лапки «Мрія»"
+          correct: true
+        - text: "Правильно"
+          correct: false
+
+- type: essay-response
+  id: 16-17-essay
+  title: "Punctuation Essay"
+  instructions: "Write a short paragraph explaining why 'Стратити не можна помилувати' is a powerful example of punctuation's importance. Use at least 3 sentences."
+  min_words: 30
+  model_answer: |
+    > [!model-answer]
+    > Приклад "Стратити не можна помилувати" яскраво демонструє силу пунктуації. Одна маленька кома може кардинально змінити зміст наказу: від смерті до життя. Це нагадує нам, що розділові знаки — це не просто декорація, а важливий інструмент комунікації.

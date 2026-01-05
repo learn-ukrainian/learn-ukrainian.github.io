@@ -24,6 +24,16 @@
 
 Ukrainian uses **буду** (future of "to be") + infinitive to form the compound future. This works with imperfective verbs.
 
+> [!info] **Aspect Awareness**
+>
+> The compound future (буду + infinitive) uses **imperfective verbs** and describes **ongoing or repeated actions** in the future, answering "What will you be doing?"
+>
+> Examples:
+> - Я **буду читати** книгу. (I **will be reading** a book — ongoing)
+> - Вона **буде працювати** кожен день. (She **will be working** every day — habitual)
+>
+> Ukrainian also has perfective future forms for completed actions, which you'll learn in A2. For now, focus on this compound future pattern—it's the most common way to talk about future plans!
+
 ### Conjugation of буду
 
 | Person | Singular | Plural |
@@ -43,6 +53,22 @@ Ukrainian uses **буду** (future of "to be") + infinitive to form the compoun
 | Ми      | будемо    | грати        | Ми будемо грати. (We will play.)       |
 | Ви      | будете    | їхати        | Ви будете їхати. (You will go.)        |
 | Вони    | будуть    | співати      | Вони будуть співати. (They will sing.) |
+
+> [!tip] **Recognizing the Synthetic Future (Optional)**
+>
+> In formal writing, literature, or older speech, you might encounter the **synthetic future** — single-word future forms like:
+>
+> - читатиму (I will read)
+> - працюватиме (he/she will work)
+> - співатимуть (they will sing)
+>
+> These forms use the suffix **-м-/-тим-** added to the infinitive stem. They're grammatically correct but **rarely used in modern spoken Ukrainian**.
+>
+> **For now:** Just recognize them when you see them! You don't need to produce these forms. The compound future (буду + infinitive) is what you'll use and hear in everyday conversation.
+>
+> Examples you might encounter:
+> - Я **читатиму** цю книгу. (I will read this book.) → Same as: Я **буду читати** цю книгу.
+> - Ми **працюватимемо** разом. (We will work together.) → Same as: Ми **будемо працювати** разом.
 
 ---
 

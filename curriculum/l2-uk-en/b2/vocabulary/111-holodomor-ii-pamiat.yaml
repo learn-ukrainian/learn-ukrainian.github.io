@@ -82,3 +82,53 @@ items:
   translation: memory
   pos: noun
   gender: f
+- lemma: колективізація
+  ipa: /kolɛktɪwizɑˈt͡sʲijɑ/
+  translation: collectivization
+  pos: noun
+  gender: f
+- lemma: упокорення
+  ipa: /upokoˈrɛnʲːɑ/
+  translation: subjugation, submission
+  pos: noun
+  gender: n
+- lemma: замовчування
+  ipa: /zɐˈmɔwt͡ʃuwɑnʲːɑ/
+  translation: silencing, keeping quiet about something
+  pos: noun
+  gender: n
+- lemma: фальсифікація
+  ipa: /fɐlʲsɪfikɑˈt͡sʲijɑ/
+  translation: falsification, forgery
+  pos: noun
+  gender: f
+- lemma: опір
+  ipa: /ˈop⁽ʲ⁾ir/
+  translation: resistance
+  pos: noun
+  gender: m
+- lemma: тяглість
+  ipa: /ˈtʲɑɦlʲistʲ/
+  translation: continuity
+  pos: noun
+  gender: f
+- lemma: дегуманізація
+  ipa: /dɛɦumɐnʲizɑˈt͡sʲijɑ/
+  translation: dehumanization
+  pos: noun
+  gender: f
+- lemma: свідчення
+  ipa: /ˈsw⁽ʲ⁾idt͡ʃɛnʲːɑ/
+  translation: testimony, evidence
+  pos: noun
+  gender: n
+- lemma: джерело
+  ipa: /dʒɛrɛˈlɔ/
+  translation: source
+  pos: noun
+  gender: n
+- lemma: осад
+  ipa: /ˈosɑd/
+  translation: residue, aftertaste (emotional)
+  pos: noun
+  gender: m

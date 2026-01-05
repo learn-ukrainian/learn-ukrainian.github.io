@@ -1,0 +1,79 @@
+module: 19-c11-practice-ii
+level: C1
+version: '3.0'
+items:
+  - lemma: упередженість
+    ipa: /ʊpeˈrɛdʒenisʲtʲ/
+    translation: bias
+    pos: noun
+    gender: f
+  - lemma: маніпуляція
+    ipa: /mɐnʲipʊˈlʲat͡sʲijɐ/
+    translation: manipulation
+    pos: noun
+    gender: f
+  - lemma: фейк
+    ipa: /fɛik/
+    translation: fake news
+    pos: noun
+    gender: m
+  - lemma: джерело
+    ipa: /dʒereˈlɔ/
+    translation: source
+    pos: noun
+    gender: n
+  - lemma: достовірність
+    ipa: /dɔstɔˈʋirnʲisʲtʲ/
+    translation: credibility/authenticity
+    pos: noun
+    gender: f
+  - lemma: спростування
+    ipa: /sprɔstʊˈʋanʲːɐ/
+    translation: refutation/debunking
+    pos: noun
+    gender: n
+  - lemma: об'єктивність
+    ipa: /ɔbjɛkˈtɪʋnʲisʲtʲ/
+    translation: objectivity
+    pos: noun
+    gender: f
+  - lemma: підтасовка
+    ipa: /pidtɐˈsɔʋkɐ/
+    translation: shuffling (facts)/rigging
+    pos: noun
+    gender: f
+  - lemma: контекст
+    ipa: /kɔnˈtɛkst/
+    translation: context
+    pos: noun
+    gender: m
+  - lemma: пропаганда
+    ipa: /prɔpɐˈɦandɐ/
+    translation: propaganda
+    pos: noun
+    gender: f
+  - lemma: клікбейт
+    ipa: /klikˈbɛit/
+    translation: clickbait
+    pos: noun
+    gender: m
+  - lemma: наратив
+    ipa: /nɐrɐˈtɪʋ/
+    translation: narrative
+    pos: noun
+    gender: m
+  - lemma: перевірка
+    ipa: /pereˈʋirkɐ/
+    translation: verification/check
+    pos: noun
+    gender: f
+  - lemma: фактчекінг
+    ipa: /fɐktˈtʃɛkinɡ/
+    translation: fact-checking
+    pos: noun
+    gender: m
+  - lemma: емоційне забарвлення
+    ipa: /emɔˈt͡sʲijnɛ zɐˈbarʋlɛnʲːɐ/
+    translation: emotional coloring
+    pos: noun
+    gender: n

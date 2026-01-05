@@ -1,0 +1,78 @@
+module: 18-c11-practice-i
+level: C1
+version: '3.0'
+items:
+- lemma: есе
+  ipa: /eˈsɛ/
+  translation: essay
+  pos: noun
+  gender: n
+- lemma: есей
+  ipa: /eˈsɛj/
+  translation: essay (literary variant)
+  pos: noun
+  gender: m
+- lemma: твір
+  ipa: /tʋ⁽ʲ⁾ir/
+  translation: composition / work
+  pos: noun
+  gender: m
+- lemma: стаття
+  ipa: /statˈtʲa/
+  translation: article
+  pos: noun
+  gender: f
+- lemma: робота
+  ipa: /roˈbɔtɐ/
+  translation: work / paper
+  pos: noun
+  gender: f
+- lemma: аргумент
+  ipa: /ɐrɦʊˈmɛnt/
+  translation: argument
+  pos: noun
+  gender: m
+- lemma: теза
+  ipa: /tɛzɐ/
+  translation: thesis
+  pos: noun
+  gender: f
+- lemma: доказ
+  ipa: /dɔkɐz/
+  translation: proof / evidence
+  pos: noun
+  gender: m
+- lemma: висновок
+  ipa: /ʋɪsnɔʋɔk/
+  translation: conclusion
+  pos: noun
+  gender: m
+- lemma: структура
+  ipa: /strʊkˈturɐ/
+  translation: structure
+  pos: noun
+  gender: f
+- lemma: вступ
+  ipa: /wstup/
+  translation: introduction
+  pos: noun
+  gender: m
+- lemma: основна частина
+  ipa: /ɔsnɔʋˈnɑ t͡ʃɐsˈtɪnɐ/
+  translation: main body
+  pos: noun phrase
+- lemma: логіка
+  ipa: /lɔɦikɐ/
+  translation: logic
+  pos: noun
+  gender: f
+- lemma: зв'язність
+  ipa: /zʋjɐzʲɲisʲtʲ/
+  translation: cohesion / coherence
+  pos: noun
+  gender: f
+- lemma: переконливість
+  ipa: /pɛrɛˈkɔnlɪʋisʲtʲ/
+  translation: persuasiveness
+  pos: noun
+  gender: f

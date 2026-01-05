@@ -1,4 +1,5 @@
 # [Title]
+
 subtitle: [Subtitle]
 phase: [Phase, e.g., A1.1, B2.1]
 transliteration: [full | partial | none]
@@ -7,13 +8,15 @@ duration: 45
 tags: [tag1, tag2]
 audio: true
 resources:
-  - "**Type:** [Title](url) — Description"
-vocabulary_count: 20
+
+- "**Type:** [Title](url) — Description"
+  vocabulary_count: 20
+
 ---
 
-<!-- 
+<!--
     🚀 UNIVERSAL MODULE SKELETON v2.1
-    
+
     🎯 TARGETS MATRIX (Text Length & New Vocabulary):
     | Level | Text Length (Words) | New Vocab (Avg) | PPP (Explained) | TTT (Analyzed) | Narrative (Immersed) |
     |-------|---------------------|-----------------|-----------------|----------------|----------------------|
@@ -39,29 +42,36 @@ vocabulary_count: 20
      ========================================================================================= -->
 
 ## Warm-up: [Scenario Title]
+
 [Set the scene. Low stakes. 50-100 words]
 
 ## Presentation: [Grammar/Concept Title]
+
 [Core explanation. Use tables, bolding for emphasis. Explain the 'Why' not just the 'How' - 200+ words]
 
 > [!tip] 💡 **Thinking Trick:** [Mental model for the learner]
 
 ### 1. [Subtopic 1]
+
 [Examples and explanation]
 
 ### 2. [Subtopic 2]
+
 [Examples and explanation]
 
 ## Cultural Insight: [Title] 🇺🇦
+
 [Deep dive into Ukrainian culture, history, or mentality related to the topic. - 100+ words]
 
 ## Dialogue: [Title] 🗣️
+
 [A realistic conversation demonstrating the grammar. - 100+ words]
 
 **Person A:** ...
 **Person B:** ...
 
 ## Story Time: [Title] 📖
+
 [A rich, immersive narrative anchoring the vocabulary. This is the core "Soul" of the module. - 250+ words]
 [Ukrainian Text with **bolded** target vocabulary]
 
@@ -72,18 +82,22 @@ vocabulary_count: 20
      ========================================================================================= -->
 
 ## Diagnostic: [Challenge Title]
+
 [A short task or text that "traps" the learner into needing the new grammar. - 100 words]
 
 > **Can you spot the difference?**
 > ...
 
 ## Analysis: [Concept Title]
+
 [Guided discovery. Ask questions about the diagnostic. Then explain the rule. - 200+ words]
 
 ## Deep Dive: [Title] 🧠
+
 [Linguistic or logical explanation of *why* the rule exists. "The Logic of Language". - 150+ words]
 
 ## Immersion: [Title] 📖
+
 [A sophisticated text applying the rules in a complex context. - 300+ words]
 
 <!-- =========================================================================================
@@ -93,17 +107,21 @@ vocabulary_count: 20
      ========================================================================================= -->
 
 ## Pre-Engagement: [Hook]
+
 [Historical context, a myth to bust, or a philosophical question. - 100 words]
 
 ## Immersive Narrative: [Title] 📖
+
 [THE CORE. A long-form text (story, biography, article). - 400-800+ words depending on level]
 
 > [Ukrainian Text]
 
 ## Analysis: [Vocabulary/Theme]
+
 [Discussing the text. Explaining nuances, synonyms, and cultural weight. - 200+ words]
 
 ## Grammar in Context: [Title]
+
 [Briefly highlighting a grammar point appearing in the text (e.g., "Note how the Genitive was used here"). - 100 words]
 
 <!-- =========================================================================================
@@ -115,11 +133,12 @@ vocabulary_count: 20
     - H1 (#) = Page title ONLY (should appear once at top)
     - H2 (##) = All section headings (Warm-up, Presentation, Summary, Activities, Vocabulary)
     - H3 (###) = Subsections within sections
-    
+
     Using H1 for sections breaks Docusaurus right sidebar (TOC)!
 -->
 
 ## Summary
+
 [Bulleted list of key takeaways. 3-5 points]
 
 1.  **Grammar:** ...
@@ -132,34 +151,10 @@ vocabulary_count: 20
 
 ---
 
-## Need More Practice?
-
-> [!resources] External Resources
->
-> **Topic Links:**
-> - 🎧 [Resource from {LEVEL}-MEDIA-ASSIGNMENT.md](URL) — Description
-> - 🎙️ [Podcast Episode](URL) — Description
->
-> **Review Previous Modules:**
-> - Topic X → Module Y
-> - Topic Z → Module W
-
 <!--
-    📚 RESOURCES SECTION (REQUIRED)
-
-    Every module MUST have this section before Activities.
-
-    Get links from: docs/l2-uk-en/{LEVEL}-MEDIA-ASSIGNMENT.md
-
-    Example (A1 M10):
-    > [!resources] External Resources
-    >
-    > **Alphabet Review:**
-    > - 🎧 [Ukrainian Alphabet Guide](https://www.ukrainianlessons.com/ukrainian-alphabet/) — All 33 letters with audio
-    >
-    > **Struggling with a skill?** Go back to:
-    > - Cyrillic → Modules 1-2
-    > - Gender → Module 3
+    📚 RESOURCES
+    External resources must be added to `docs/resources/external_resources.yaml`.
+    Do NOT add a [!resources] block here.
 -->
 
 ---
@@ -167,9 +162,11 @@ vocabulary_count: 20
 ## Activities
 
 ## [Activity Type]: [Title]
+
 ...
 
 ---
 
 ## Vocabulary
+
 [Generate Vocabulary Table matching the Level Format (Tier 1-4)]

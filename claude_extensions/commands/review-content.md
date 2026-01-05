@@ -12,17 +12,18 @@ Evaluate module content for educational quality, coherence, and pedagogical soun
 
 **Must-check sections in order of importance:**
 
-1. **Section 0:** Template Compliance (lines 148-214) → Auto-fail if violated
-2. **Section 8:** Activity Quality (lines 276-337) → AUTO-FAIL for structural errors, wrong answers
-3. **Section 15:** Richness Red Flags (lines 797-864) → AUTO-FAIL for AI slop
-4. **Section 9:** Red Flags (lines 341-349) → Multiple auto-fail conditions
-5. **Section 13:** LLM Fingerprint Detection (lines 534-762) → B1+ critical
-6. **Section 10:** Content Richness (lines 350-458) → B1+ critical
-7. **Sections 1-7:** Standard scoring criteria (lines 217-273)
-8. **Section 12:** Dryness Flags (lines 512-528) → 2+ flags = rewrite
-9. **Section 14:** Human Warmth (lines 765-793) → <2 markers = fail
+1. **Section 0:** Template Compliance → Auto-fail if violated
+2. **Section 8:** Activity Quality → AUTO-FAIL for structural errors, wrong answers
+3. **Section 15:** Richness Red Flags → AUTO-FAIL for AI slop
+4. **Section 17:** 0-10 Scoring System → Use for ALL dimension scores
+5. **Section 9:** Red Flags → Multiple auto-fail conditions
+6. **Section 13:** LLM Fingerprint Detection (10 subsections) → B1+ critical
+7. **Section 10:** Content Richness → B1+ critical
+8. **Sections 1-7:** Standard scoring criteria
+9. **Section 12:** Dryness Flags → 2+ flags = rewrite
+10. **Section 14:** Human Warmth → <2 markers = fail
 
-**⚠️ CHECKPOINT REMINDER:** Before generating your report, verify you have evaluated ALL 9 critical sections above.
+**⚠️ CHECKPOINT REMINDER:** Before generating your report, verify you have evaluated ALL 10 critical sections above.
 
 ---
 
@@ -340,6 +341,24 @@ For each activity, check:
   - Vocabulary → match-up, quiz, translate
   - Comprehension → true-false, select, cloze
 - Clear, unambiguous instructions
+
+**8d-ii. Content vs. Language Testing (B2/C1 History/Biography)**
+
+**CRITICAL for content modules (Issue #359):** Activities must test **language skills**, not content recall.
+
+**The Golden Rule:** "Can the learner answer without reading the Ukrainian text?" → If YES, FAIL
+
+**RED FLAGS (deduct from Pedagogy score):**
+- Quiz: "У якому році...", "Хто був...", "Хто написав..." WITHOUT "Згідно з текстом"
+- Fill-in: Answer is a year/date (1932, 1814)
+- Match-up: Author → Work title (tests facts, not language)
+
+**GREEN FLAGS (correct):**
+- Quiz: "Згідно з текстом, як автор пояснює..."
+- Fill-in: Collocations/vocabulary from text
+- Match-up: Ukrainian term → Ukrainian definition
+
+**Scoring deduction:** 1-2 violations (-1), 3-4 violations (-2), 5+ violations (-3 points)
 
 **8e. External Resources**
 
@@ -796,6 +815,35 @@ English doesn't force this choice. Ukrainian does. Every. Single. Time.
 
 ---
 
+### 13j. Narrative Completeness & Pacing (The "Third Act" Test)
+
+**Goal:** Prevent "Wikipedia Summary" endings where the death or resolution is rushed.
+
+**The "30-40-30" Rule:**
+- **30% Setup:** Early life / Context
+- **40% Conflict:** The Main Struggle / Career Peak
+- **30% Resolution & Legacy:** The "Third Act" (see header guidance below)
+
+**Third Act Headers (Living vs Deceased):**
+
+| Subject Type | Appropriate Headers |
+|--------------|---------------------|
+| **Deceased** | `## Останні роки та Спадщина`, `## Смерть і пам'ять`, `## Наслідки` |
+| **Living**   | `## Вплив і сучасна роль`, `## Внесок у сьогодення`, `## Значення для сучасної України` |
+
+**For living persons:** The Third Act must cover their current impact, ongoing contributions, and what they represent for modern Ukraine — NOT just stop after "career achievements."
+
+**Check:**
+- Does the final section (Legacy, Impact, or Current Role) have the same level of detail/sensory richness as the beginning?
+- Is the death/resolution/current impact summarized in 1-2 sentences while setup took 3 paragraphs? (Bad)
+- Does the Main Body Text finish the story **before** the `# Summary` (Підсумок) section starts?
+- Is there an "Echo" connecting the event/person to modern (2024) Ukraine?
+- **For living persons:** Does the Third Act show their current significance, not just past achievements?
+
+**Flag as:** **ABRUPT_ENDING** (if resolution is <15% of total length or feels rushed).
+
+---
+
 ## Section 14: Human Warmth Checklist
 
 **Goal:** Quantify teacher presence using pattern matching (not subjective judgment).
@@ -1019,6 +1067,7 @@ Ukrainians value hospitality.
 - [ ] Verify voice consistency (13g)
 - [ ] Check "why" depth (13h)
 - [ ] Assess cultural integration (13i)
+- [ ] Check narrative completeness & pacing (13j)
 
 **Step 14: Human Warmth Audit**
 - [ ] Direct address present? (14a)
@@ -1057,6 +1106,140 @@ Ukrainians value hospitality.
 
 ---
 
+## Section 17: 0-10 Scoring System
+
+**CRITICAL INSTRUCTION:** Use this 0-10 scale for ALL dimension scores. High scores require justification. Perfect scores (10/10) should be rare.
+
+### Scoring Philosophy
+
+**Score Distribution:**
+- **0-4 = FAIL** → Auto-fail gates, critical issues, must fix before passing
+- **5-6 = PASS (Minimum)** → Meets gates, acceptable quality, has noticeable weaknesses
+- **7-8 = GOOD** → Solid quality, minor improvements possible, above minimum standards
+- **9-10 = EXCELLENT** → Exceptional quality, reference-worthy, innovative or exemplary
+
+**Mandatory Justification Rule:**
+- **For scores ≥8:** Explain what would make it higher (or why it's already 10/10)
+- **For scores ≤6:** Explain specific weaknesses and what's missing
+- **For score 7:** Explain both: what's good AND what could be better
+
+### Dimension Rubrics
+
+**1. Coherence (0-10)** - Logical flow, section transitions, narrative structure
+- 0-4: Incoherent structure, contradictory statements, missing sections
+- 5-6: Basic structure, some awkward transitions, occasional jumps
+- 7-8: Clear flow, logical progression, smooth transitions
+- 9-10: Seamless narrative, perfect flow, exemplary structure
+
+**2. Relevance (0-10)** - Alignment with module goals, curriculum plan
+- 0-4: Off-topic, wrong grammar focus, doesn't match curriculum plan
+- 5-6: On-topic but loose, includes tangents
+- 7-8: Focused, follows plan, all content serves learning goals
+- 9-10: Laser-focused, every sentence advances learning, no filler
+
+**3. Educational (0-10)** - Clear explanations, useful examples
+- 0-4: Confusing or wrong information, unclear explanations
+- 5-6: Adequate but dry, examples uninspiring
+- 7-8: Strong explanations, good examples, covers edge cases
+- 9-10: Outstanding pedagogy, memorable examples, "aha moments"
+
+**4. Language (0-10)** - Ukrainian quality, euphony, naturalness
+- 0-4: Multiple Russianisms, calques, broken grammar
+- 5-6: Mostly correct, 1-2 minor Russianisms, occasional unnatural phrasing
+- 7-8: Natural Ukrainian, no Russianisms, good euphony
+- 9-10: Native-level mastery, flawless, beautiful euphony
+
+**5. Pedagogy (0-10)** - Teaching approach, scaffolding, TTT/CBI alignment
+- 0-4: Wrong approach, no scaffolding, violates TTT/CBI principles
+- 5-6: Basic pedagogy, follows template loosely
+- 7-8: Proper structure, good scaffolding, level-appropriate
+- 9-10: Exemplary teaching, perfect template adherence, innovative
+
+**5a. CRITICAL: Content vs. Language Testing (B2/C1 History/Biography)**
+
+**The Golden Rule (Issue #359):** "Can the learner answer without reading the Ukrainian text?"
+- If YES → Tests content recall (BAD) - Deduct 1-3 points from Pedagogy score
+- If NO → Tests Ukrainian comprehension (GOOD)
+
+**RED FLAGS (Content Recall):**
+- Quiz: "У якому році...", "Хто був...", "Хто написав..." WITHOUT "Згідно з текстом"
+- Fill-in: Answer is a year/date (1932, 1814, etc.)
+- Match-up: Author → Work title (tests literature facts, not language)
+
+**GREEN FLAGS (Language Testing):**
+- Quiz: "Згідно з текстом, як автор пояснює..."
+- Fill-in: Collocations/vocabulary from module text
+- Match-up: Ukrainian term → Ukrainian definition
+
+**Scoring Deduction:**
+- 1-2 violations: -1 point
+- 3-4 violations: -2 points
+- 5+ violations: -3 points (max 5/10)
+
+**6. Immersion (0-10)** - Ukrainian-to-English ratio for level
+- 0-4: Wrong immersion level (A1 with 90% UK, B2 with 30% EN)
+- 5-6: Slightly off target (within 5-10% of target)
+- 7-8: Hits target range, appropriate scaffolding
+- 9-10: Optimal balance, perfect for level
+
+**7. Activities (0-10)** - Quality, density, variety, correct answers
+- 0-4: Wrong answers, broken format, <minimum activities
+- 5-6: Meets minimum count, some low density (<14 items)
+- 7-8: Good count, all ≥14 items, good variety (6+ types)
+- 9-10: High count, high density (16+ items), exceptional variety (8+ types)
+
+**8. Richness (0-10)** - Examples, engagement, cultural refs, proverbs
+- 0-4: Below minimum richness score for module type
+- 5-6: Meets minimum, feels thin
+- 7-8: 5-10% above minimum, solid content
+- 9-10: 15%+ above minimum, exceptional variety
+
+**9. Humanity (0-10)** - Teacher voice, warmth, encouragement
+- 0-4: Robotic, zero direct address, no encouragement
+- 5-6: 5-9 direct address, minimal encouragement
+- 7-8: 10-15 direct address, good encouragement, warm voice
+- 9-10: 20+ direct address, frequent encouragement, inspiring
+
+**10. LLM Fingerprint (0-10)** - AI patterns vs authentic human writing
+- 0-4: AI slop, auto-fail patterns, zero specificity
+- 5-6: Some AI patterns, limited specificity
+- 7-8: Mostly authentic, good specifics, minimal AI patterns
+- 9-10: Zero AI fingerprint, exceptional specificity, authentic
+
+### Overall Score Calculation
+
+**Use weighted average (recommended):**
+```
+Overall = (
+    Coherence × 1.0 +
+    Relevance × 1.0 +
+    Educational × 1.2 +  // Core learning value
+    Language × 1.1 +     // Ukrainian quality critical
+    Pedagogy × 1.2 +     // Teaching approach critical
+    Immersion × 0.8 +    // Binary (right level or not)
+    Activities × 1.3 +   // Primary learning tool
+    Richness × 0.9 +
+    Humanity × 0.8 +
+    LLM Fingerprint × 1.1  // AI detection critical for B1+
+) / 10.4
+```
+
+**Rounding:** Round to nearest 0.5 (e.g., 7.3 → 7.0, 7.6 → 8.0, 7.5 → 8.0)
+
+### Common Scoring Mistakes to Avoid
+
+1. **Anchoring to 10/10** - Don't assume perfect and deduct. Start neutral.
+2. **Ignoring small issues** - "Mostly good" ≠ 9/10. Issues = 7-8/10.
+3. **Not using low scores** - If problems exist, give 5-6/10.
+4. **Missing justifications** - Every score ≥8 or ≤6 needs explanation.
+5. **False equivalence** - "Meets gates" ≠ 8/10. Gates = 5-6/10.
+
+**If you find yourself giving mostly 9-10s, you're being too generous. Recalibrate.**
+
+**For full rubrics with examples, see:** `claude_extensions/commands/review-content-scoring-0-10.md`
+
+---
+
 **Step 3: Generate Summary Report**
 
 For each module, output:
@@ -1065,7 +1248,7 @@ For each module, output:
 ## Module {num}: {title}
 
 **Template:** {template_name} | **Compliance:** ✅ PASS / ❌ FAIL
-**Scores:** Coherence {X}/5 | Relevance {X}/5 | Educational {X}/5 | Language {X}/5 | Pedagogy {X}/5 | Immersion {X}/5 | Activities {X}/5 | Richness {X}/5 | **Humanity {X}/5** | **LLM Fingerprint {X}/5** | **Overall {X}/5**
+**Scores:** Coherence {X}/10 | Relevance {X}/10 | Educational {X}/10 | Language {X}/10 | Pedagogy {X}/10 | Immersion {X}/10 | Activities {X}/10 | Richness {X}/10 | **Humanity {X}/10** | **LLM Fingerprint {X}/10** | **Overall {X}/10**
 **Status:** ✅ PASS / ⚠️ NEEDS WORK / ❌ REWRITE
 
 **AI Detection Flags:** {list any triggered: LLM_CLICHE_OVERUSE, FALSE_SPECIFICITY, OVERCONFIDENCE, NO_NARRATIVE_VOICE, PREDICTABLE_PEDAGOGY, EMOTIONAL_FLATNESS, INCONSISTENT_VOICE, MISSING_WHY_LAYER, DECORATIVE_CULTURE, COLD_PEDAGOGY}
@@ -1073,11 +1256,12 @@ For each module, output:
 {If not PASS, list 2-3 main issues}
 ```
 
-**Step 4: Apply Safe Fixes (Mandate: Aim for 5/5)**
+**Step 4: Apply Safe Fixes (Mandate: Aim for 8+/10)**
 
-> **CRITICAL MANDATE:** Your goal is a perfect **5/5** score. Do not settle for "PASS" (4/5).
+> **CRITICAL MANDATE:** Your goal is **8+/10** quality (GOOD to EXCELLENT). Do not settle for barely passing (5-6/10).
 > Humans detect even "minor" friction points (robotic transitions, slight repetition, lack of "glue").
 > **If you see a minor issue, FIX IT immediately.** Do not just report it.
+> **Note:** 10/10 is rare (exceptional, reference quality). 8-9/10 is the target for solid modules.
 
 For each module, apply fixes to elevate quality:
 
@@ -1132,9 +1316,10 @@ After reviewing all modules in scope:
 
 | Status | Count | Modules |
 |--------|-------|---------|
-| ✅ PASS (≥4/5) | {count} | {list} |
-| ⚠️ NEEDS WORK (3/5) | {count} | {list} |
-| ❌ REWRITE (<3/5) | {count} | {list} |
+| ✅ EXCELLENT (9-10/10) | {count} | {list} |
+| ✅ GOOD (7-8/10) | {count} | {list} |
+| ✅ PASS (5-6/10) | {count} | {list} |
+| ❌ FAIL (0-4/10) | {count} | {list} |
 
 ---
 
@@ -1146,21 +1331,21 @@ After reviewing all modules in scope:
 
 ## Detailed Module: {module_number} - {title}
 
-**Overall Score:** {X}/5 {stars}
+**Overall Score:** {X}/10 ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐ (show X stars)
 **Template:** {template_name} | **Compliance:** ✅ PASS / ❌ FAIL
 
 ### Scores Breakdown
 - Template Compliance: ✅ PASS / ❌ FAIL {reason}
-- Coherence: {X}/5 {reason}
-- Relevance: {X}/5 {reason}
-- Educational: {X}/5 {reason}
-- Language: {X}/5 {reason}
-- Pedagogy: {X}/5 {reason}
-- Immersion: {X}/5 {reason}
-- Activities: {X}/5 {reason}
-- Richness: {X}/5 {reason} (B1+ only, N/A for A1/A2)
-- Humanity: {X}/5 {reason}
-- LLM Fingerprint: {X}/5 {reason} (B1+ critical, A1/A2 informational)
+- **Coherence:** {X}/10 - {Brief description + justification if ≥8 or ≤6}
+- **Relevance:** {X}/10 - {Brief description + justification if ≥8 or ≤6}
+- **Educational:** {X}/10 - {Brief description + justification if ≥8 or ≤6}
+- **Language:** {X}/10 - {Brief description + justification if ≥8 or ≤6}
+- **Pedagogy:** {X}/10 - {Brief description + justification if ≥8 or ≤6}
+- **Immersion:** {X}/10 - {Brief description + immersion %}
+- **Activities:** {X}/10 - {Count, density, variety + justification if ≥8 or ≤6}
+- **Richness:** {X}/10 - {Richness % + justification if ≥8 or ≤6} (B1+ only, N/A for A1/A2)
+- **Humanity:** {X}/10 - {Pattern counts + justification if ≥8 or ≤6}
+- **LLM Fingerprint:** {X}/10 - {AI patterns + justification if ≥8 or ≤6} (B1+ critical, A1/A2 informational)
 - Word Salad: ❌ No / ⚠️ Yes
 - Dryness Flags: {list any triggered flags}
 - AI Detection Flags: {list any triggered: LLM_CLICHE_OVERUSE, FALSE_SPECIFICITY, OVERCONFIDENCE, NO_NARRATIVE_VOICE, PREDICTABLE_PEDAGOGY, EMOTIONAL_FLATNESS, INCONSISTENT_VOICE, MISSING_WHY_LAYER, DECORATIVE_CULTURE, COLD_PEDAGOGY}

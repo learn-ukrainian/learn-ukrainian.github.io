@@ -1,0 +1,188 @@
+module: 15-oral-presentation
+level: C1
+version: '1.0'
+items:
+- lemma: доповідь
+  ipa: /dɔˈpɔʋ⁽ʲ⁾idʲ/
+  translation: presentation / report
+  pos: noun
+  gender: f
+- lemma: доповідач
+  ipa: /dɔpɔʋ⁽ʲ⁾iˈdɑt͡ʃ/
+  translation: speaker / presenter
+  pos: noun
+  gender: m
+- lemma: презентація
+  ipa: /prɛzɛnˈtɑt͡sʲijɐ/
+  translation: presentation
+  pos: noun
+  gender: f
+- lemma: виступ
+  ipa: /ʋˈɪstʊp/
+  translation: speech / performance
+  pos: noun
+  gender: m
+- lemma: промова
+  ipa: /prɔˈmɔʋɐ/
+  translation: speech / address
+  pos: noun
+  gender: f
+- lemma: аудиторія
+  ipa: /ɐʊdɪˈtɔr⁽ʲ⁾ijɐ/
+  translation: audience
+  pos: noun
+  gender: f
+- lemma: слухач
+  ipa: /slʊˈxɑt͡ʃ/
+  translation: listener
+  pos: noun
+  gender: m
+- lemma: структура
+  ipa: /strʊkˈturɐ/
+  translation: structure
+  pos: noun
+  gender: f
+- lemma: план
+  ipa: /plɑn/
+  translation: plan / outline
+  pos: noun
+  gender: m
+- lemma: огляд
+  ipa: /ɔˈɦlʲɑd/
+  translation: overview / review
+  pos: noun
+  gender: m
+- lemma: вступ
+  ipa: /u̯stʊp/
+  translation: introduction
+  pos: noun
+  gender: m
+- lemma: основна частина
+  ipa: /ɔsnɔu̯ˈnɑ t͡ʃɐsˈtɪnɐ/
+  translation: main body
+  pos: phrase
+- lemma: частина
+  ipa: /t͡ʃɐsˈtɪnɐ/
+  translation: part / section
+  pos: noun
+  gender: f
+- lemma: висновок
+  ipa: /ʋˈɪsnɔʋɔk/
+  translation: conclusion
+  pos: noun
+  gender: m
+- lemma: завершити
+  ipa: /zɐˈʋɛrʃɪtɪ/
+  translation: to conclude / to finish
+  pos: verb
+- lemma: захист
+  ipa: /zɑˈxɪst/
+  translation: defense / protection
+  pos: noun
+  gender: m
+- lemma: регламент
+  ipa: /rɛˈɦlɑmɛnt/
+  translation: time limit / schedule
+  pos: noun
+  gender: m
+- lemma: слайд
+  ipa: /slɑi̯d/
+  translation: slide
+  pos: noun
+  gender: m
+- lemma: наочність
+  ipa: /nɐˈɔt͡ʃnʲisʲtʲ/
+  translation: visual aids
+  pos: noun
+  gender: f
+- lemma: звертати увагу
+  ipa: /zʋɛrˈtɑtɪ ʊˈʋɑɦʊ/
+  translation: to draw attention
+  pos: verb
+- lemma: переходити
+  ipa: /pɛrɛˈxɔdɪtɪ/
+  translation: to move on / to transition
+  pos: verb
+- lemma: підсумовувати
+  ipa: /p⁽ʲ⁾itsʊˈmɔʋʊʋɐtɪ/
+  translation: to summarize
+  pos: verb
+- lemma: уточнювати
+  ipa: /ʊˈtɔt͡ʃnʲʊʋɐtɪ/
+  translation: to clarify
+  pos: verb
+- lemma: наголошувати
+  ipa: /nɐɦɔˈlɔʃʊʋɐtɪ/
+  translation: to emphasize
+  pos: verb
+- lemma: ілюструвати
+  ipa: /ilʲʊstrʊˈʋɑtɪ/
+  translation: to illustrate
+  pos: verb
+- lemma: представити
+  ipa: /prɛdˈstɑʋɪtɪ/
+  translation: to present / to introduce
+  pos: verb
+- lemma: дозволити
+  ipa: /dɔzˈʋɔlɪtɪ/
+  translation: to allow / to permit (polite request)
+  pos: verb
+- lemma: запитання
+  ipa: /zɐpɪˈtɑɲːɐ/
+  translation: question
+  pos: noun
+  gender: n
+- lemma: відповідь
+  ipa: /ʋ⁽ʲ⁾idpɔʋ⁽ʲ⁾idʲ/
+  translation: answer / response
+  pos: noun
+  gender: f
+- lemma: дискусія
+  ipa: /dɪsˈkus⁽ʲ⁾ijɐ/
+  translation: discussion
+  pos: noun
+  gender: f
+- lemma: обговорення
+  ipa: /ɔbɦɔˈʋɔrɛɲːɐ/
+  translation: discussion / deliberation
+  pos: noun
+  gender: n
+- lemma: аргумент
+  ipa: /ɐrɦʊˈmɛnt/
+  translation: argument
+  pos: noun
+  gender: m
+- lemma: теза
+  ipa: /tˈɛzɐ/
+  translation: thesis / main point
+  pos: noun
+  gender: f
+- lemma: хвилювання
+  ipa: /xʋɪlʲʊˈʋɑɲːɐ/
+  translation: nervousness / anxiety
+  pos: noun
+  gender: n
+- lemma: контакт зоровий
+  ipa: /kɔnˈtɑkt zɔrɔˈʋɪi̯/
+  translation: eye contact
+  pos: phrase
+- lemma: жестикуляція
+  ipa: /ʒɛstɪkʊˈlʲɑt͡sʲijɐ/
+  translation: gesticulation / gestures
+  pos: noun
+  gender: f
+- lemma: інтонація
+  ipa: /intɔˈnɑt͡sʲijɐ/
+  translation: intonation
+  pos: noun
+  gender: f
+- lemma: пауза
+  ipa: /pˈɑʊzɐ/
+  translation: pause
+  pos: noun
+  gender: f
+- lemma: репетиція
+  ipa: /rɛpɛˈtɪt͡sʲijɐ/
+  translation: rehearsal
+  pos: noun
+  gender: f

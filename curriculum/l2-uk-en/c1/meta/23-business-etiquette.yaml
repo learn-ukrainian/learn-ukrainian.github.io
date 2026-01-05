@@ -1,17 +1,25 @@
-module: c1-23
-title: Business Etiquette
-subtitle: Professional & Social
-version: '2.0'
-phase: C1.2 Professional
+module: 23
+title: "Діловий етикет"
+subtitle: "Business Etiquette"
+version: "2.0"
+phase: "C1.2 Professional Communication"
 focus: professional
-pedagogy: academic
+pedagogy: immersion
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- professional
-- etiquette
-- culture
+  - business
+  - culture
+  - communication
+  - etiquette
+grammar:
+  - "Formal forms of address (Vocative case usage)"
+  - "Polite imperatives and requests"
+  - "Conditional polite structures (Could you...)"
 objectives:
-- Master C1 concepts in Business Etiquette
+  - "Master formal forms of address and greetings in Ukraine"
+  - "Understand the nuances of Ukrainian business hospitality"
+  - "Navigate dress codes and punctuality norms"
+  - "Write formal invitations and apologies"
+vocabulary_count: 35
 slug: 23-business-etiquette

@@ -5,13 +5,21 @@ version: '2.0'
 phase: C1.1 Academic
 focus: grammar
 pedagogy: academic
+transliteration: none
+grammar:
+  - Irregular verb patterns
+  - Consonant alternation
+  - Motion verbs
 duration: 120
-vocabulary_count: 24
+vocabulary_count: 30
 tags:
 - c1
 - grammar
 - verbs
 - irregular
 objectives:
-- Master C1 concepts in Irregular Verbs Complete
+- Master conjugation patterns of all major irregular verbs (e.g., дати, їсти, бути).
+- Distinguish between motion verbs (іти vs ходити, їхати vs їздити) and their irregularities.
+- Correctly apply consonant alternations in conjugation (писати - пишу, хотіти - хочу).
+- Use irregular verbs accurately in various tenses and moods in academic and formal contexts.
 slug: 17-irregular-verbs-complete

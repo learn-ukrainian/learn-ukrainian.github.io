@@ -1,0 +1,195 @@
+module: 13-abstract
+level: C1
+version: '1.0'
+items:
+- lemma: реферат
+  ipa: /rɛfɛˈrɑt/
+  translation: abstract / summary (longer form)
+  pos: noun
+  gender: m
+- lemma: анотація
+  ipa: /ɐnɔˈtɑt͡sʲijɐ/
+  translation: abstract (article summary)
+  pos: noun
+  gender: f
+- lemma: резюме
+  ipa: /rɛzʲʊˈmɛ/
+  translation: summary / résumé
+  pos: noun
+  gender: n
+- lemma: стислий
+  ipa: /stɪˈslɪi̯/
+  translation: concise / brief
+  pos: adj
+- lemma: лаконічний
+  ipa: /lɐkɔˈnʲit͡ʃnɪi̯/
+  translation: laconic / concise
+  pos: adj
+- lemma: компактний
+  ipa: /kɔmˈpɑktnɪi̯/
+  translation: compact
+  pos: adj
+- lemma: інформативний
+  ipa: /infɔrmɐˈtɪu̯nɪi̯/
+  translation: informative
+  pos: adj
+- lemma: структурований
+  ipa: /strʊktʊˈrɔʋɐnɪi̯/
+  translation: structured
+  pos: adj
+- lemma: вичерпний
+  ipa: /ʋɪˈt͡ʃɛrpnɪi̯/
+  translation: exhaustive / comprehensive
+  pos: adj
+- lemma: повний
+  ipa: /pɔu̯nɪi̯/
+  translation: full / create
+  pos: adj
+- lemma: цінність
+  ipa: /t͡sʲinːisʲtʲ/
+  translation: value
+  pos: noun
+  gender: f
+- lemma: мета
+  ipa: /mɛˈtɑ/
+  translation: goal / aim / purpose
+  pos: noun
+  gender: f
+- lemma: завдання
+  ipa: /zɐu̯ˈdɑɲːɐ/
+  translation: task / objective
+  pos: noun
+  gender: n
+- lemma: методи
+  ipa: /mɛˈtɔdɪ/
+  translation: methods
+  pos: noun
+  gender: pl
+- lemma: результати
+  ipa: /rɛzʊlʲˈtɑtɪ/
+  translation: results
+  pos: noun
+  gender: pl
+- lemma: висновки
+  ipa: /ʋɪsnɔu̯kɪ/
+  translation: conclusions
+  pos: noun
+  gender: pl
+- lemma: актуальність
+  ipa: /ɐktʊˈɑlʲnʲisʲtʲ/
+  translation: relevance / timeliness
+  pos: noun
+  gender: f
+- lemma: новизна
+  ipa: /nɔvɪzˈnɑ/
+  translation: novelty
+  pos: noun
+  gender: f
+- lemma: значення
+  ipa: /znˈɑt͡ʃɛɲːɐ/
+  translation: significance / meaning
+  pos: noun
+  gender: n
+- lemma: підходи
+  ipa: /pidˈxɔdɪ/
+  translation: approaches
+  pos: noun
+  gender: pl
+- lemma: об'єкт дослідження
+  ipa: /ɔbˈjɛkt dɔˈsʲlʲid͡ʒɛɲːɐ/
+  translation: object of research (broad topic)
+  pos: noun
+  gender: m
+- lemma: предмет дослідження
+  ipa: /prɛdˈmɛt dɔˈsʲlʲid͡ʒɛɲːɐ/
+  translation: subject of research (specific aspect)
+  pos: noun
+  gender: m
+- lemma: наукова новизна
+  ipa: /nɐʊˈkɔʋɐ nɔvɪzˈnɑ/
+  translation: scientific novelty
+  pos: noun
+  gender: f
+- lemma: теоретичне значення
+  ipa: /tɛɔrɛˈtɪt͡ʃnɛ znɑˈt͡ʃɛɲːɐ/
+  translation: theoretical significance
+  pos: noun
+  gender: n
+- lemma: практична цінність
+  ipa: /prɐkˈtɪt͡ʃnɐ ˈt͡sʲinːisʲtʲ/
+  translation: practical value
+  pos: noun
+  gender: f
+- lemma: ключові слова
+  ipa: /klʲʊt͡ʃɔˈʋi slɔˈʋɑ/
+  translation: keywords
+  pos: noun
+  gender: pl
+- lemma: узагальнювати
+  ipa: /ʊzɐˈɦɑlʲɲʊʋɐtɪ/
+  translation: to generalize / summarize
+  pos: verb
+- lemma: скорочувати
+  ipa: /skɔˈrɔt͡ʃʊʋɐtɪ/
+  translation: to shorten / abridge
+  pos: verb
+- lemma: вилучати
+  ipa: /ʋɪlʊˈt͡ʃɑtɪ/
+  translation: to remove / exlude (unnecessary info)
+  pos: verb
+- lemma: зосереджуватися
+  ipa: /zɔsɛˈrɛd͡ʒʊʋɐtɪsʲɐ/
+  translation: to focus / concentrate (on)
+  pos: verb
+- lemma: відображати
+  ipa: /ʋidɔbrɐˈʒɑtɪ/
+  translation: to reflect / display
+  pos: verb
+- lemma: обсяг
+  ipa: /ɔbˈsʲɐɦ/
+  translation: volume / scope / scope of text
+  pos: noun
+  gender: m
+- lemma: межі дослідження
+  ipa: /mɛˈʒi dɔˈsʲlʲid͡ʒɛɲːɐ/
+  translation: scope/limits of research
+  pos: noun
+  gender: pl
+- lemma: вступна частина
+  ipa: /ʍstʊpˈnɑ t͡ʃɐsˈtɪnɐ/
+  translation: introductory part
+  pos: noun
+  gender: f
+- lemma: зайвий
+  ipa: /zˈɑi̯ʋɪi̯/
+  translation: superfluous / extra
+  pos: adj
+- lemma: суттєвий
+  ipa: /sʊˈtːɛʋɪi̯/
+  translation: substantial / essential
+  pos: adj
+- lemma: другорядний
+  ipa: /drʊɦɔˈrʲɑdnɪi̯/
+  translation: secondary / minor
+  pos: adj
+- lemma: прогалина
+  ipa: /prɔˈɦɑlɪnɐ/
+  translation: gap (in knowledge)
+  pos: noun
+  gender: f
+- lemma: окреслювати
+  ipa: /ɔkˈrɛslʲʊʋɐtɪ/
+  translation: to outline / delineate
+  pos: verb
+- lemma: доводити
+  ipa: /dɔˈʋɔdɪtɪ/
+  translation: to prove
+  pos: verb
+- lemma: встановлювати
+  ipa: /wstɐˈnɔu̯lʲʊʋɐtɪ/
+  translation: to establish
+  pos: verb
+- lemma: виявляти
+  ipa: /ʋɪjɐu̯ˈlʲɑtɪ/
+  translation: to reveal / detect
+  pos: verb

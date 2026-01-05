@@ -315,6 +315,7 @@ ACTIVITY_COMPLEXITY = {
         'C2': {'min_words': 600, 'min_items': 1},
     },
     'critical-analysis': {
+        'B2': {'min_items': 1},
         'C1': {'min_items': 1},
         'C2': {'min_items': 1},
     },

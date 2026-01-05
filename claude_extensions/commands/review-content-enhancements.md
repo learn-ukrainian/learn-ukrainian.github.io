@@ -235,6 +235,49 @@ English doesn't force this choice. Ukrainian does. Every. Single. Time.
 
 ---
 
+### 13j. Narrative Completeness & Pacing (The "Third Act" Test)
+
+**Goal:** Prevent "Wikipedia Summary" endings where the death or resolution is rushed.
+
+**The "30-40-30" Rule:**
+- **30% Setup:** Early life / Context
+- **40% Conflict:** The Struggle / Main Event
+- **30% Resolution & Legacy:** The "Third Act" (Death, Aftermath, Modern Echo)
+
+**Check:**
+- Does the final section (Death, Aftermath, or Legacy) have the same level of detail/sensory richness as the beginning?
+- Is the death/resolution summarized in 1-2 sentences while setup took 3 paragraphs? (Bad)
+- Does the Main Body Text finish the story **before** the `# Summary` (Підсумок) section starts?
+- Is there an "Echo" connecting the event to modern (2024) Ukraine?
+
+❌ **Abrupt Ending (Fail):**
+```markdown
+...He fought bravely in many battles.
+## Summary
+He died in 1921. He is a hero.
+```
+
+✅ **Complete Narrative (Pass):**
+```markdown
+...He fought bravely.
+## The Final Battle
+Even in his final days... [Detailed description of end].
+## Legacy
+His death was not the end. Today, in 2024... [Detailed connection to present].
+## Summary
+[Recap]
+```
+
+**Vital Status Protocol (CRITICAL):**
+- **Verify:** Is the subject LIVING or DECEASED?
+- **For LIVING subjects:** Headers like `Останні роки` (Last Years) or `Спадщина` (Legacy) are **FORBIDDEN**. Use `Сучасний етап`, `Вплив`, `Діяльність сьогодні`.
+- **For DECEASED subjects:** `Останні роки` is appropriate.
+
+**Flag as:** **ABRUPT_ENDING** (if resolution is <15% of total length or feels rushed).
+**Flag as:** **OBITUARY_TONE_ERROR** (if "Last Years" is used for a living person).
+
+---
+
 ## Section 14: Human Warmth Checklist (NEW)
 
 **These elements make learners feel a human teacher is present:**
@@ -377,6 +420,7 @@ Ukrainians value hospitality.
 - [ ] Verify voice consistency (13g)
 - [ ] Check "why" depth (13h)
 - [ ] Assess cultural integration (13i)
+- [ ] Check narrative completeness & pacing (13j)
 
 **Step 14: Human Warmth Audit**
 - [ ] Direct address present? (14a)
@@ -449,6 +493,7 @@ Ukrainians value hospitality.
 8. **Shallow Explanation** → "What" and "How" but no "Why"
 9. **Decorative Culture** → Random Ukrainian facts, not integrated
 10. **Cold Pedagogy** → No teacher warmth, encouragement, or empathy
+11. **Abrupt Ending** → Rushed resolution/death, cliffhanger summary
 
 **Bottom Line:**
 Your modules now pass structural/grammatical audits. These enhancements ensure they also pass the **HUMAN TEST** — content that feels like a skilled teacher wrote it, not an algorithm.

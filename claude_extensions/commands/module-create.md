@@ -126,7 +126,29 @@ Stage 1 → Stage 2 → Stage 3 → Stage 4 (review/fix loop) → OUTPUT
 
 1. Load skeleton from Stage 1
 2. Write rich instructional content in `module.md`
-3. Verify word count, examples, engagement boxes
+3. **Pacing Check (History/Biography):** Ensure "30-40-30" structure (Setup/Conflict/Legacy).
+4. Verify word count, examples, engagement boxes
+
+### Narrative Pacing (History/Biography)
+
+**For History or Biography modules, you MUST follow the "30-40-30" Pacing Rule:**
+
+- **30% Setup:** Early life, context, or pre-conditions.
+- **40% Conflict:** The main struggle, battle, or creative peak.
+- **30% Resolution & Legacy (The "Third Act"):**
+  - **Mandatory Section:** Must have a dedicated H2 header (see below).
+  - **Depth:** This section must be at least 300 words with sensory details (not a summary).
+  - **Echo:** Connect the event/person to modern (2024) Ukraine.
+  - **NO Rushing:** Do not summarize the death/end in 1-2 sentences. Treat it as a full chapter.
+
+**Third Act Section Headers:**
+
+| Subject Type | Recommended Headers                                                                     | Forbidden Headers (Living)                          |
+| ------------ | --------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| **Deceased** | `## Останні роки та Спадщина`, `## Смерть і пам'ять`, `## Наслідки`                     | —                                                   |
+| **Living**   | `## Вплив і сучасна роль`, `## Внесок у сьогодення`, `## Значення для сучасної України` | `## Останні роки`, `## Спадщина`, `## Кінець шляху` |
+
+**For living persons:** The Third Act covers their current impact, ongoing contributions, and what they represent for modern Ukraine — NOT just stopping after "career achievements." **NEVER write an obituary for a living person.**
 
 **Stage 3: Activities**
 
@@ -186,8 +208,10 @@ Before writing, confirm from quick-ref:
 - [ ] Activity count + types match level requirements
 - [ ] Immersion target known
 - [ ] No duplicate explanations planned
+- [ ] **If History/Bio:** Planned "Third Act" section (300+ words) — use appropriate header for living vs deceased
 - [ ] External Resources planned (edit `docs/resources/external_resources.yaml`, NOT markdown)
 - [ ] **If checkpoint:** Read `docs/l2-uk-en/CHECKPOINT-DESIGN-GUIDE.md`
+- [ ] **CRITICAL:** Do NOT add `> [!resources]` block to `module.md`. Resources go to YAML only.
 
 ### ⚠️ CRITICAL CONSTRAINTS (Apply DURING Writing, Not After)
 
@@ -230,6 +254,12 @@ Validate ALL Ukrainian text against these sources:
 | робити сенс | мати сенс |
 | брати місце | відбуватися |
 | в кінці дня | врешті-решт |
+
+**NO Resources Block in Markdown:**
+
+- **FORBIDDEN:** `> [!resources]` callout in `module.md`
+- **REQUIRED:** Add resources to `docs/resources/external_resources.yaml`
+- **REASON:** Build process generates resources section automatically from YAML database.
 
 ### Stage Instructions (if needed)
 

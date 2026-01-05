@@ -1,0 +1,145 @@
+module: 16-advanced-punctuation
+level: C1
+version: '1.0'
+items:
+- lemma: пунктуація
+  ipa: /pʊnktʊˈɑt͡sʲijɐ/
+  translation: punctuation
+  pos: noun
+  gender: f
+- lemma: кома
+  ipa: /kˈɔmɐ/
+  translation: comma
+  pos: noun
+  gender: f
+- lemma: крапка
+  ipa: /krˈɑpkɐ/
+  translation: period / full stop / point
+  pos: noun
+  gender: f
+- lemma: двокрапка
+  ipa: /dʋɔˈkrɑpkɐ/
+  translation: colon
+  pos: noun
+  gender: f
+- lemma: крапка з комою
+  ipa: /krˈɑpkɐ z kˈɔmɔjʊ/
+  translation: semicolon
+  pos: phrase
+- lemma: тире
+  ipa: /tɪˈrɛ/
+  translation: dash
+  pos: noun
+  gender: n
+- lemma: дефіс
+  ipa: /dɛˈf⁽ʲ⁾is/
+  translation: hyphen
+  pos: noun
+  gender: m
+- lemma: лапки
+  ipa: /lɐpˈkɪ/
+  translation: quotation marks
+  pos: noun
+  gender: p
+- lemma: дужки
+  ipa: /dʊʃˈkɪ/
+  translation: parentheses / brackets
+  pos: noun
+  gender: p
+- lemma: знак оклику
+  ipa: /znɑk ˈɔklɪkʊ/
+  translation: exclamation mark
+  pos: phrase
+- lemma: знак питання
+  ipa: /znɑk pɪˈtɑɲːɐ/
+  translation: question mark
+  pos: phrase
+- lemma: три крапки
+  ipa: /trɪ krˈɑpkɪ/
+  translation: ellipsis
+  pos: phrase
+- lemma: апостроф
+  ipa: /ɐˈpɔstrɔf/
+  translation: apostrophe
+  pos: noun
+  gender: m
+- lemma: наголос
+  ipa: /nˈɑɦɔlɔs/
+  translation: stress / accent
+  pos: noun
+  gender: m
+- lemma: правопис
+  ipa: /prɐˈʋɔpɪs/
+  translation: spelling / orthography
+  pos: noun
+  gender: m
+- lemma: орфографія
+  ipa: /ɔrfɔˈɦrɑf⁽ʲ⁾ijɐ/
+  translation: orthography
+  pos: noun
+  gender: f
+- lemma: граматика
+  ipa: /hrɐˈmɑtɪkɐ/
+  translation: grammar
+  pos: noun
+  gender: f
+- lemma: скісна риска
+  ipa: /skisˈna ˈrɪska/
+  translation: slash
+  pos: noun
+  gender: f
+- lemma: абзац
+  ipa: /abˈzat͡s/
+  translation: paragraph indentation
+  pos: noun
+  gender: m
+- lemma: відступ
+  ipa: /abˈzat͡s/
+  translation: identation
+  pos: noun
+  gender: m
+- lemma: пробіл
+  ipa: /proˈbil/
+  translation: space
+  pos: noun
+  gender: m
+- lemma: інтонація
+  ipa: /intoˈnat͡sʲija/
+  translation: intonation
+  pos: noun
+  gender: f
+- lemma: вигук
+  ipa: /vɪɦuk/
+  translation: interjection
+  pos: noun
+  gender: m
+- lemma: цитата
+  ipa: /t͡sɪˈtata/
+  translation: quote
+  pos: noun
+  gender: fm
+- lemma: синтаксис
+  ipa: /sˈɪntɐksɪs/
+  translation: syntax
+  pos: noun
+  gender: m
+- lemma: правило
+  ipa: /prˈɑʋɪlɔ/
+  translation: rule
+  pos: noun
+  gender: n
+- lemma: розділовий знак
+  ipa: /rozd⁽ʲ⁾iˈlɔʋɪj znak/
+  translation: punctuation mark
+  pos: phrase
+  gender: m
+- lemma: знак питання
+  ipa: /znak pɪˈtanʲːa/
+  translation: question mark
+  pos: phrase
+  gender: m
+- lemma: знак оклику
+  ipa: /znak ˈɔklɪkʊ/
+  translation: exclamation mark
+  pos: phrase
+  gender: m
