@@ -64,18 +64,20 @@ Consider switching to Algolia when:
 1. User feedback indicates search quality issues
 2. Site grows significantly (1000+ pages)
 3. Search performance becomes a bottleneck
-4. Time available to apply and wait for approval (1-2 weeks)
+4. Ready for quick setup (approval in minutes to 1-2 days)
 
 ### How to Switch
 
-**Step 1: Apply for Algolia DocSearch**
-1. Go to: https://docsearch.algolia.com/apply/
-2. Fill out form:
-   - **Website URL:** `https://learn-ukrainian.github.io`
-   - **Email:** Maintainer email
-   - **Repository:** `https://github.com/learn-ukrainian/learn-ukrainian.github.io`
-   - **Description:** "Ukrainian language learning curriculum with 600+ modules in English and Ukrainian (Cyrillic)"
-3. Wait for approval (typically 1-2 weeks)
+**Step 1: Sign Up for Algolia DocSearch (Free)**
+1. Go to: https://dashboard.algolia.com/users/sign_up?selected_plan=docsearch
+2. Create account and submit your domain: `learn-ukrainian.github.io`
+3. Automated validation checks:
+   - ✅ Technical documentation (qualifies)
+   - ✅ Production-ready (qualifies)
+4. Verify domain ownership within 7 days
+5. Approval: Instant to 1-2 business days
+
+**Good news:** DocSearch is now free for ALL technical documentation (not just open source!)
 
 **Step 2: Update Configuration**
 Once approved, update `docusaurus.config.ts`:
@@ -115,15 +117,15 @@ npm uninstall @easyops-cn/docusaurus-search-local
 
 ## Comparison
 
-| Feature                | Local Search              | Algolia DocSearch       |
-|------------------------|---------------------------|-------------------------|
-| **Setup Time**         | ✅ Immediate              | ⏳ 1-2 weeks (approval) |
-| **Cost**               | ✅ Free                   | ✅ Free (open-source)   |
-| **Ukrainian Support**  | ❌ No (not in lunr-languages) | ✅ Yes (full Cyrillic)  |
-| **Typo Tolerance**     | ⚠️ Basic                 | ✅ Advanced             |
-| **Performance**        | ⚠️ Client-side indexing   | ✅ Cloud-based          |
-| **Maintenance**        | ✅ Zero                   | ✅ Managed by Algolia   |
-| **Offline Work**       | ✅ Yes                    | ❌ Requires internet    |
+| Feature                | Local Search              | Algolia DocSearch        |
+|------------------------|---------------------------|--------------------------|
+| **Setup Time**         | ✅ Immediate              | ✅ Minutes to 1-2 days   |
+| **Cost**               | ✅ Free                   | ✅ Free (all tech docs)  |
+| **Ukrainian Support**  | ❌ No (not in lunr-languages) | ✅ Yes (full Cyrillic)   |
+| **Typo Tolerance**     | ⚠️ Basic                 | ✅ Advanced              |
+| **Performance**        | ⚠️ Client-side indexing   | ✅ Cloud-based           |
+| **Maintenance**        | ✅ Zero                   | ✅ Managed by Algolia    |
+| **Offline Work**       | ✅ Yes                    | ❌ Requires internet     |
 
 ---
 
