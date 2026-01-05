@@ -13,6 +13,17 @@ const config: Config = {
 
   clientModules: [],
 
+  // Algolia site verification
+  headTags: [
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'algolia-site-verification',
+        content: '1DB51F4A18C9DC67',
+      },
+    },
+  ],
+
   url: 'https://learn-ukrainian.github.io',
   baseUrl: '/',
 
