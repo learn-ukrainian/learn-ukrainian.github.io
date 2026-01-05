@@ -99,3 +99,28 @@ items:
     translation: assessment; evaluation
     pos: noun
     gender: n
+  - lemma: абстракція
+    ipa: /ɐbˈstrɐkt͡sʲijɐ/
+    translation: abstraction
+    pos: noun
+    gender: f
+  - lemma: об'єктивність
+    ipa: /ɔbjɛkˈtɪu̯nʲisʲtʲ/
+    translation: objectivity
+    pos: noun
+    gender: f
+  - lemma: аргументація
+    ipa: /ɐrɦʊmentɐˈt͡sʲijɐ/
+    translation: argumentation
+    pos: noun
+    gender: f
+  - lemma: трансформація
+    ipa: /trɐnsfɔrmɐˈt͡sʲijɐ/
+    translation: transformation
+    pos: noun
+    gender: f
+  - lemma: дискурс
+    ipa: /ˈdɪskʊrs/
+    translation: discourse
+    pos: noun
+    gender: m

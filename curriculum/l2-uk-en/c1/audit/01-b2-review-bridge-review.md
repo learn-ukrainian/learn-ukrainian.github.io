@@ -4,13 +4,13 @@
 
 ## Gates
 - **Words:** ✅ 1884/1750
-- **Activities:** ✅ 16/16
+- **Activities:** ✅ 17/16
 - **Density:** ✅ All > 18
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 20 < 25 (soft target)
+- **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -38,9 +38,6 @@
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (16 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

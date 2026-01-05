@@ -196,15 +196,18 @@ def count_yaml_activity_items(activity: dict) -> int:
         return len(activity.get('lines', []))
     elif act_type in ('essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'):
         # For essay/analysis tasks, count prompts or items
-        # If 'items' exists, count it. If 'prompts' exists, count it.
+        # If 'items' exists, count it. If 'prompts' or 'prompt' exists, count it.
         # If neither, return 1 if instructions exist (assumed single task)
         items = activity.get('items', [])
         prompts = activity.get('prompts', [])
+        prompt = activity.get('prompt', '')
         if items:
             return len(items)
         if prompts:
             return len(prompts)
-        return 1 if activity.get('instructions') else 0
+        if prompt:
+            return 1
+        return 1 if activity.get('instructions') or activity.get('instruction') else 0
 
     return 0
 
