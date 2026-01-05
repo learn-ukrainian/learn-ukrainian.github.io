@@ -201,10 +201,17 @@ def count_yaml_activity_items(activity: dict) -> int:
         items = activity.get('items', [])
         prompts = activity.get('prompts', [])
         prompt = activity.get('prompt', '')
+        questions = activity.get('questions', [])
+        model_answers = activity.get('model_answers', [])
+        
         if items:
             return len(items)
         if prompts:
             return len(prompts)
+        if questions:
+            return len(questions)
+        if model_answers:
+            return len(model_answers)
         if prompt:
             return 1
         return 1 if activity.get('instructions') or activity.get('instruction') else 0

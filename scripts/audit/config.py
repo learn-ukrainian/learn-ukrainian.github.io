@@ -755,15 +755,15 @@ LEVEL_CONFIG = {
     },
     'LIT': {
         'target_words': 3500,  # 3500-4000 for substantial literary analysis
-        'min_activities': 0,
-        'min_items_per_activity': 0,
-        'min_types_unique': 0,
+        'min_activities': 5,
+        'min_items_per_activity': 1,  # Analytical tasks are single-item
+        'min_types_unique': 2,
         'min_vocab': 0,
         'min_engagement': 4,
         'min_immersion': 95,  # Allow 5% for Latin/Greek scholarly terms
         'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': set()
+        'priority_types': {'essay-response', 'critical-analysis', 'comparative-study'}
     }
 }
 
