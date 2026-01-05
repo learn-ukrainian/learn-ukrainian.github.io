@@ -33,12 +33,14 @@ new Crawler({
             // CRITICAL: Add more split points to prevent "Record too big" errors
             // - .theme-admonition > div:first-child: Splits Callout/Admonition blocks
             // - dt: Splits Definition Lists
-            // - strong: Splits long sections with bold headers (e.g. "Challenge 1:")
+            // - blockquote: Splits large quotes (e.g. C1 modules)
+            // - table: Splits large tables
             lvl6: [
               'article h6', 
               'article .theme-admonition > div:first-child', 
               'article dt', 
-              'article strong'
+              'article blockquote',
+              'article table'
             ],
             content: 'article p, article li, article td:last-child',
           },
