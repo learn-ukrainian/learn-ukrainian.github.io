@@ -1357,11 +1357,8 @@ def audit_module(file_path: str) -> bool:
     
     # Calculate limits for content-heavy gate
     min_act = config.get('min_activities', 10)
-    # Special max limit for LIT (3-6), otherwise default buffer
-    if level_code == 'LIT':
-        max_act = 6
-    else:
-        max_act = min_act + 4  # Allow some buffer above minimum
+    # Use max_activities from config if available (e.g. LIT: 6), otherwise default buffer
+    max_act = config.get('max_activities', min_act + 4)
 
     results['content_heavy'] = evaluate_content_heavy(
         is_content_heavy,

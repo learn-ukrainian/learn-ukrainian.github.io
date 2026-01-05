@@ -756,7 +756,8 @@ LEVEL_CONFIG = {
     'LIT': {
         'target_words': 3500,  # 3500-4000 for substantial literary analysis
         'min_activities': 3,
-        'min_items_per_activity': 1,  # Analytical tasks are single-item
+        'max_activities': 6,  # Set max activities to 6 for LIT modules
+        'min_items_per_activity': 1,  # Analytical tasks are deep, single-item responses are sufficient
         'min_types_unique': 2,
         'min_vocab': 0,
         'min_engagement': 4,
