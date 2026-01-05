@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): контраст, маркований, емоційний, логічний, порядок...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): емоційний, акцент, маркований, відоме, риторичний...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

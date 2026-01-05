@@ -2,20 +2,16 @@
 **Phase:** B2.4 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
 **Overall Status:** ❌ FAIL
 
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity type 'dialogue-reorder' in YAML
-  - FIX: Use supported type: anagram, authorial-intent, cloze, comparative-study, critical-analysis, error-correction, essay-response, fill-in, group-sort, mark-the-words, match-up, quiz, select, translate, true-false, unjumble
-
 ## Recommendation
 **📝 UPDATE** (severity 15/100)
 
-- 1 pedagogical violations (minor)
 - Immersion 7% off target (minor)
+- Activity density below minimum
 
 ## Gates
 - **Words:** ❌ 1135/1750
-- **Activities:** ✅ 13/13
-- **Density:** ✅ All > 16
+- **Activities:** ✅ 14/13
+- **Density:** ❌ 1 < 16
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/6
@@ -23,7 +19,7 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** ❌ 91.3% LOW (target 98-100% (skills))
 - **Richness:** ❌ 68% < 95% min (content) - REWRITE needed
@@ -61,6 +57,12 @@
     - Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
     - Ukrainian traditions or customs
     - Contemporary Ukrainian life examples
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Поставте репліки у правильному порядку | cloze | 2 | 16 | Add 14 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

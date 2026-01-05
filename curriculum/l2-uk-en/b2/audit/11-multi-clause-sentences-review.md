@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): обставинне, вставлене, речення, часове, знак...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): комою, вставне, вставлене, знак, з'ясувальне...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

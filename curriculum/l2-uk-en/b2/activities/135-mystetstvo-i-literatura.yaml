@@ -2,813 +2,920 @@ module: 135-mystetstvo-i-literatura
 level: B2
 version: '2.0'
 activities:
-
-# Activity 1: Arts terms match-up
 - id: match-arts-terms
   type: match-up
-  title: "Знайдіть відповідність: мистецькі терміни"
-  instruction: "Поєднайте термін з його визначенням."
+  title: 'Знайдіть відповідність: мистецькі терміни'
+  instruction: Поєднайте термін з його визначенням.
   pairs:
-    - left: "живопис"
-      right: "картини, створені фарбами"
-    - left: "скульптура"
-      right: "об'ємні твори з каменю чи металу"
-    - left: "поезія"
-      right: "віршована форма літератури"
-    - left: "проза"
-      right: "невіршована форма літератури"
-    - left: "метафора"
-      right: "переносне значення для яскравого образу"
-    - left: "сюжет"
-      right: "послідовність подій у творі"
-    - left: "жанр"
-      right: "різновид мистецтва чи літератури"
-    - left: "шедевр"
-      right: "видатний твір мистецтва"
-    - left: "галерея"
-      right: "заклад для виставки картин"
-    - left: "виставка"
-      right: "публічний показ творів"
-    - left: "критика"
-      right: "аналіз та оцінка твору"
-    - left: "натхнення"
-      right: "творчий імпульс"
-
-# Activity 2: Fill-in literature dialogue
+  - left: живопис
+    right: картини, створені фарбами
+  - left: скульптура
+    right: об'ємні твори з каменю чи металу
+  - left: поезія
+    right: віршована форма літератури
+  - left: проза
+    right: невіршована форма літератури
+  - left: метафора
+    right: переносне значення для яскравого образу
+  - left: сюжет
+    right: послідовність подій у творі
+  - left: жанр
+    right: різновид мистецтва чи літератури
+  - left: шедевр
+    right: видатний твір мистецтва
+  - left: галерея
+    right: заклад для виставки картин
+  - left: виставка
+    right: публічний показ творів
+  - left: критика
+    right: аналіз та оцінка твору
+  - left: натхнення
+    right: творчий імпульс
 - id: fill-in-literature
   type: fill-in
-  title: "Заповніть пропуски: розмова про літературу"
-  instruction: "Оберіть правильне слово для кожного пропуску."
+  title: 'Заповніть пропуски: розмова про літературу'
+  instruction: Оберіть правильне слово для кожного пропуску.
   items:
-    - prompt: "Шевченко — найбільший український ___."
-      answer: "поет"
-      options: ["поет", "письменник", "художник", "композитор"]
-    - prompt: "«Кобзар» — це ___ віршів Шевченка."
-      answer: "збірка"
-      options: ["збірка", "роман", "оповідання", "п'єса"]
-    - prompt: "Леся Українка написала драму «Лісова ___»."
-      answer: "пісня"
-      options: ["пісня", "казка", "балада", "поема"]
-    - prompt: "Франко володів чотирнадцятьма ___."
-      answer: "мовами"
-      options: ["мовами", "жанрами", "стилями", "техніками"]
-    - prompt: "Коцюбинський — майстер психологічної ___."
-      answer: "прози"
-      options: ["прози", "поезії", "драми", "критики"]
-    - prompt: "Андрухович — лідер групи «___»."
-      answer: "Бу-Ба-Бу"
-      options: ["Бу-Ба-Бу", "ДахаБраха", "Go_A", "Океан Ельзи"]
-    - prompt: "«Тіні забутих предків» — екранізація ___ Коцюбинського."
-      answer: "повісті"
-      options: ["повісті", "роману", "вірша", "есе"]
-    - prompt: "___ — переможниця Євробачення-2016."
-      answer: "Джамала"
-      options: ["Джамала", "Руслана", "Go_A", "Kalush"]
-    - prompt: "Малевич народився в ___."
-      answer: "Києві"
-      options: ["Києві", "Москві", "Парижі", "Варшаві"]
-    - prompt: "Довженко — геній українського ___."
-      answer: "кіно"
-      options: ["кіно", "театру", "живопису", "музики"]
-    - prompt: "Лисенко — творець української класичної ___."
-      answer: "музики"
-      options: ["музики", "опери", "балету", "симфонії"]
-    - prompt: "«20 днів у Маріуполі» отримав ___ у 2024 році."
-      answer: "Оскар"
-      options: ["Оскар", "Нобеля", "Ґреммі", "Пальму"]
-
-# Activity 3: Quiz on Ukrainian culture
+  - prompt: Шевченко — найбільший український ___.
+    answer: поет
+    options:
+    - поет
+    - письменник
+    - художник
+    - композитор
+  - prompt: «Кобзар» — це ___ віршів Шевченка.
+    answer: збірка
+    options:
+    - збірка
+    - роман
+    - оповідання
+    - п'єса
+  - prompt: Леся Українка написала драму «Лісова ___».
+    answer: пісня
+    options:
+    - пісня
+    - казка
+    - балада
+    - поема
+  - prompt: Франко володів чотирнадцятьма ___.
+    answer: мовами
+    options:
+    - мовами
+    - жанрами
+    - стилями
+    - техніками
+  - prompt: Коцюбинський — майстер психологічної ___.
+    answer: прози
+    options:
+    - прози
+    - поезії
+    - драми
+    - критики
+  - prompt: Андрухович — лідер групи «___».
+    answer: Бу-Ба-Бу
+    options:
+    - Бу-Ба-Бу
+    - ДахаБраха
+    - Go_A
+    - Океан Ельзи
+  - prompt: «Тіні забутих предків» — екранізація ___ Коцюбинського.
+    answer: повісті
+    options:
+    - повісті
+    - роману
+    - вірша
+    - есе
+  - prompt: ___ — переможниця Євробачення-2016.
+    answer: Джамала
+    options:
+    - Джамала
+    - Руслана
+    - Go_A
+    - Kalush
+  - prompt: Малевич народився в ___.
+    answer: Києві
+    options:
+    - Києві
+    - Москві
+    - Парижі
+    - Варшаві
+  - prompt: Довженко — геній українського ___.
+    answer: кіно
+    options:
+    - кіно
+    - театру
+    - живопису
+    - музики
+  - prompt: Лисенко — творець української класичної ___.
+    answer: музики
+    options:
+    - музики
+    - опери
+    - балету
+    - симфонії
+  - prompt: «20 днів у Маріуполі» отримав ___ у 2024 році.
+    answer: Оскар
+    options:
+    - Оскар
+    - Нобеля
+    - Ґреммі
+    - Пальму
 - id: quiz-culture
   type: quiz
-  title: "Тест: українська культура"
-  instruction: "Оберіть правильну відповідь."
+  title: 'Тест: українська культура'
+  instruction: Оберіть правильну відповідь.
   items:
-    - question: "Хто автор «Кобзаря»?"
-      options:
-        - text: "Тарас Шевченко"
-          correct: true
-        - text: "Іван Франко"
-          correct: false
-        - text: "Леся Українка"
-          correct: false
-        - text: "Михайло Коцюбинський"
-          correct: false
-      explanation: "«Кобзар» — знакова збірка Шевченка."
-    - question: "Яку драму написала Леся Українка?"
-      options:
-        - text: "«Лісова пісня»"
-          correct: true
-        - text: "«Наталка Полтавка»"
-          correct: false
-        - text: "«Земля»"
-          correct: false
-        - text: "«Кобзар»"
-          correct: false
-      explanation: "«Лісова пісня» — драма-феєрія Лесі Українки."
-    - question: "Хто режисер фільму «Тіні забутих предків»?"
-      options:
-        - text: "Сергій Параджанов"
-          correct: true
-        - text: "Олександр Довженко"
-          correct: false
-        - text: "Кіра Муратова"
-          correct: false
-        - text: "Мстислав Чернов"
-          correct: false
-      explanation: "Параджанов екранізував повість Коцюбинського."
-    - question: "Де народився Казимир Малевич?"
-      options:
-        - text: "У Києві"
-          correct: true
-        - text: "У Москві"
-          correct: false
-        - text: "У Парижі"
-          correct: false
-        - text: "У Варшаві"
-          correct: false
-      explanation: "Малевич народився в Києві у 1879 році."
-    - question: "Який твір Малевича найвідоміший?"
-      options:
-        - text: "«Чорний квадрат»"
-          correct: true
-        - text: "«Мона Ліза»"
-          correct: false
-        - text: "«Зоряна ніч»"
-          correct: false
-        - text: "«Крик»"
-          correct: false
-      explanation: "«Чорний квадрат» — ікона абстракціонізму."
-    - question: "Хто переможець Євробачення-2022?"
-      options:
-        - text: "Kalush Orchestra"
-          correct: true
-        - text: "Джамала"
-          correct: false
-        - text: "Go_A"
-          correct: false
-        - text: "Руслана"
-          correct: false
-      explanation: "Kalush Orchestra перемогли з піснею «Stefania»."
-    - question: "Що таке «Розстріляне Відродження»?"
-      options:
-        - text: "Генерація митців, знищених у 1930-х"
-          correct: true
-        - text: "Літературний рух 1990-х"
-          correct: false
-        - text: "Художня виставка"
-          correct: false
-        - text: "Театральна трупа"
-          correct: false
-      explanation: "Розстріляне Відродження — митці, репресовані НКВД."
-    - question: "Хто заснував театр «Березіль»?"
-      options:
-        - text: "Лесь Курбас"
-          correct: true
-        - text: "Марко Кропивницький"
-          correct: false
-        - text: "Іван Франко"
-          correct: false
-        - text: "Леся Українка"
-          correct: false
-      explanation: "Курбас — видатний режисер-новатор."
-    - question: "Яку пісню внесено до спадщини ЮНЕСКО?"
-      options:
-        - text: "Українські народні пісні"
-          correct: true
-        - text: "«Червона рута»"
-          correct: false
-        - text: "«1944»"
-          correct: false
-        - text: "«Stefania»"
-          correct: false
-      explanation: "Українські народні пісні — нематеріальна спадщина."
-    - question: "Хто автор опери «Наталка Полтавка»?"
-      options:
-        - text: "Микола Лисенко"
-          correct: true
-        - text: "Семен Гулак-Артемовський"
-          correct: false
-        - text: "Валентин Сильвестров"
-          correct: false
-        - text: "Борис Лятошинський"
-          correct: false
-      explanation: "Лисенко — «батько української класичної музики»."
-    - question: "Який фільм отримав Оскар-2024?"
-      options:
-        - text: "«20 днів у Маріуполі»"
-          correct: true
-        - text: "«Тіні забутих предків»"
-          correct: false
-        - text: "«Плем'я»"
-          correct: false
-        - text: "«Земля»"
-          correct: false
-      explanation: "Перший Оскар в історії України."
-    - question: "Хто сучасний український поет і прозаїк?"
-      options:
-        - text: "Сергій Жадан"
-          correct: true
-        - text: "Тарас Шевченко"
-          correct: false
-        - text: "Іван Франко"
-          correct: false
-        - text: "Леся Українка"
-          correct: false
-      explanation: "Жадан — один із найвідоміших сучасних авторів."
-
-# Activity 4: True-false culture facts
+  - question: Хто автор «Кобзаря»?
+    options:
+    - text: Тарас Шевченко
+      correct: true
+    - text: Іван Франко
+      correct: false
+    - text: Леся Українка
+      correct: false
+    - text: Михайло Коцюбинський
+      correct: false
+    explanation: «Кобзар» — знакова збірка Шевченка.
+  - question: Яку драму написала Леся Українка?
+    options:
+    - text: «Лісова пісня»
+      correct: true
+    - text: «Наталка Полтавка»
+      correct: false
+    - text: «Земля»
+      correct: false
+    - text: «Кобзар»
+      correct: false
+    explanation: «Лісова пісня» — драма-феєрія Лесі Українки.
+  - question: Хто режисер фільму «Тіні забутих предків»?
+    options:
+    - text: Сергій Параджанов
+      correct: true
+    - text: Олександр Довженко
+      correct: false
+    - text: Кіра Муратова
+      correct: false
+    - text: Мстислав Чернов
+      correct: false
+    explanation: Параджанов екранізував повість Коцюбинського.
+  - question: Де народився Казимир Малевич?
+    options:
+    - text: У Києві
+      correct: true
+    - text: У Москві
+      correct: false
+    - text: У Парижі
+      correct: false
+    - text: У Варшаві
+      correct: false
+    explanation: Малевич народився в Києві у 1879 році.
+  - question: Який твір Малевича найвідоміший?
+    options:
+    - text: «Чорний квадрат»
+      correct: true
+    - text: «Мона Ліза»
+      correct: false
+    - text: «Зоряна ніч»
+      correct: false
+    - text: «Крик»
+      correct: false
+    explanation: «Чорний квадрат» — ікона абстракціонізму.
+  - question: Хто переможець Євробачення-2022?
+    options:
+    - text: Kalush Orchestra
+      correct: true
+    - text: Джамала
+      correct: false
+    - text: Go_A
+      correct: false
+    - text: Руслана
+      correct: false
+    explanation: Kalush Orchestra перемогли з піснею «Stefania».
+  - question: Що таке «Розстріляне Відродження»?
+    options:
+    - text: Генерація митців, знищених у 1930-х
+      correct: true
+    - text: Літературний рух 1990-х
+      correct: false
+    - text: Художня виставка
+      correct: false
+    - text: Театральна трупа
+      correct: false
+    explanation: Розстріляне Відродження — митці, репресовані НКВД.
+  - question: Хто заснував театр «Березіль»?
+    options:
+    - text: Лесь Курбас
+      correct: true
+    - text: Марко Кропивницький
+      correct: false
+    - text: Іван Франко
+      correct: false
+    - text: Леся Українка
+      correct: false
+    explanation: Курбас — видатний режисер-новатор.
+  - question: Яку пісню внесено до спадщини ЮНЕСКО?
+    options:
+    - text: Українські народні пісні
+      correct: true
+    - text: «Червона рута»
+      correct: false
+    - text: «1944»
+      correct: false
+    - text: «Stefania»
+      correct: false
+    explanation: Українські народні пісні — нематеріальна спадщина.
+  - question: Хто автор опери «Наталка Полтавка»?
+    options:
+    - text: Микола Лисенко
+      correct: true
+    - text: Семен Гулак-Артемовський
+      correct: false
+    - text: Валентин Сильвестров
+      correct: false
+    - text: Борис Лятошинський
+      correct: false
+    explanation: Лисенко — «батько української класичної музики».
+  - question: Який фільм отримав Оскар-2024?
+    options:
+    - text: «20 днів у Маріуполі»
+      correct: true
+    - text: «Тіні забутих предків»
+      correct: false
+    - text: «Плем'я»
+      correct: false
+    - text: «Земля»
+      correct: false
+    explanation: Перший Оскар в історії України.
+  - question: Хто сучасний український поет і прозаїк?
+    options:
+    - text: Сергій Жадан
+      correct: true
+    - text: Тарас Шевченко
+      correct: false
+    - text: Іван Франко
+      correct: false
+    - text: Леся Українка
+      correct: false
+    explanation: Жадан — один із найвідоміших сучасних авторів.
 - id: true-false-culture
   type: true-false
-  title: "Правда чи ні: факти про культуру"
-  instruction: "Визначте, чи правдиве кожне твердження."
+  title: 'Правда чи ні: факти про культуру'
+  instruction: Визначте, чи правдиве кожне твердження.
   items:
-    - statement: "Шевченко був і поетом, і художником."
-      correct: true
-      explanation: "Так, він створив серію «Живописна Україна»."
-    - statement: "«Кобзар» — це роман Франка."
-      correct: false
-      explanation: "«Кобзар» — збірка віршів Шевченка."
-    - statement: "Джамала перемогла на Євробаченні-2016."
-      correct: true
-      explanation: "Так, з піснею «1944»."
-    - statement: "Малевич народився в Москві."
-      correct: false
-      explanation: "Малевич народився в Києві."
-    - statement: "Довженко — видатний кінорежисер."
-      correct: true
-      explanation: "Його фільм «Земля» — світовий шедевр."
-    - statement: "«Лісова пісня» — роман Франка."
-      correct: false
-      explanation: "Це драма-феєрія Лесі Українки."
-    - statement: "Лисенко — засновник української класичної музики."
-      correct: true
-      explanation: "Його називають «батьком української музики»."
-    - statement: "Курбаса розстріляли у 1930-х роках."
-      correct: true
-      explanation: "Він був жертвою сталінських репресій."
-    - statement: "«Чорний квадрат» написав Шевченко."
-      correct: false
-      explanation: "Це твір Казимира Малевича."
-    - statement: "«Ой у лузі червона калина» — сучасна пісня."
-      correct: false
-      explanation: "Це давня народна пісня."
-    - statement: "Франко номінувався на Нобелівську премію."
-      correct: true
-      explanation: "За літературну діяльність."
-    - statement: "PinchukArtCentre знаходиться у Львові."
-      correct: false
-      explanation: "Він у Києві."
-
-# Activity 5: Group-sort arts
+  - statement: Шевченко був і поетом, і художником.
+    correct: true
+    explanation: Так, він створив серію «Живописна Україна».
+  - statement: «Кобзар» — це роман Франка.
+    correct: false
+    explanation: «Кобзар» — збірка віршів Шевченка.
+  - statement: Джамала перемогла на Євробаченні-2016.
+    correct: true
+    explanation: Так, з піснею «1944».
+  - statement: Малевич народився в Москві.
+    correct: false
+    explanation: Малевич народився в Києві.
+  - statement: Довженко — видатний кінорежисер.
+    correct: true
+    explanation: Його фільм «Земля» — світовий шедевр.
+  - statement: «Лісова пісня» — роман Франка.
+    correct: false
+    explanation: Це драма-феєрія Лесі Українки.
+  - statement: Лисенко — засновник української класичної музики.
+    correct: true
+    explanation: Його називають «батьком української музики».
+  - statement: Курбаса розстріляли у 1930-х роках.
+    correct: true
+    explanation: Він був жертвою сталінських репресій.
+  - statement: «Чорний квадрат» написав Шевченко.
+    correct: false
+    explanation: Це твір Казимира Малевича.
+  - statement: «Ой у лузі червона калина» — сучасна пісня.
+    correct: false
+    explanation: Це давня народна пісня.
+  - statement: Франко номінувався на Нобелівську премію.
+    correct: true
+    explanation: За літературну діяльність.
+  - statement: PinchukArtCentre знаходиться у Львові.
+    correct: false
+    explanation: Він у Києві.
 - id: group-sort-arts
   type: group-sort
-  title: "Розподіліть за категоріями"
-  instruction: "Визначте, до якого виду мистецтва належить кожен термін."
+  title: Розподіліть за категоріями
+  instruction: Визначте, до якого виду мистецтва належить кожен термін.
   groups:
-    - name: "Література"
-      items:
-        - "роман"
-        - "оповідання"
-        - "вірш"
-        - "поема"
-        - "драма"
-        - "есе"
-        - "новела"
-        - "повість"
-    - name: "Образотворче мистецтво"
-      items:
-        - "живопис"
-        - "скульптура"
-        - "графіка"
-        - "інсталяція"
-        - "портрет"
-        - "пейзаж"
-        - "гравюра"
-        - "фреска"
-
-# Activity 6: Unjumble culture sentences
+  - name: Література
+    items:
+    - роман
+    - оповідання
+    - вірш
+    - поема
+    - драма
+    - есе
+    - новела
+    - повість
+  - name: Образотворче мистецтво
+    items:
+    - живопис
+    - скульптура
+    - графіка
+    - інсталяція
+    - портрет
+    - пейзаж
+    - гравюра
+    - фреска
 - id: unjumble-culture
   type: unjumble
-  title: "Складіть речення правильно"
-  instruction: "Розташуйте слова у правильному порядку."
+  title: Складіть речення правильно
+  instruction: Розташуйте слова у правильному порядку.
   items:
-    - jumbled: "поет / найбільший / український / Шевченко"
-      answer: "Шевченко — найбільший український поет."
-    - jumbled: "«Кобзар» / написав / Шевченко"
-      answer: "Шевченко написав «Кобзар»."
-    - jumbled: "фільм / геніальний / режисер / Довженко"
-      answer: "Довженко — геніальний режисер фільму."
-    - jumbled: "в / народився / Києві / Малевич"
-      answer: "Малевич народився в Києві."
-    - jumbled: "Лисенко / класичної / творець / музики"
-      answer: "Лисенко — творець класичної музики."
-    - jumbled: "перемогла / Джамала / Євробаченні / на"
-      answer: "Джамала перемогла на Євробаченні."
-    - jumbled: "виставку / відвідали / музеї / в"
-      answer: "Відвідали виставку в музеї."
-    - jumbled: "шедевр / це / справжній"
-      answer: "Це справжній шедевр."
-    - jumbled: "Оскар / отримав / фільм / український"
-      answer: "Український фільм отримав Оскар."
-    - jumbled: "написала / Леся / «Лісову пісню»"
-      answer: "Леся написала «Лісову пісню»."
-    - jumbled: "жанр / улюблений / мій / поезія"
-      answer: "Мій улюблений жанр — поезія."
-    - jumbled: "митців / Розстріляне Відродження / генерація"
-      answer: "Розстріляне Відродження — генерація митців."
-
-# Activity 7: Cloze culture passage
+  - jumbled: поет / найбільший / український / Шевченко
+    answer: Шевченко — найбільший український поет.
+  - jumbled: «Кобзар» / написав / Шевченко
+    answer: Шевченко написав «Кобзар».
+  - jumbled: фільм / геніальний / режисер / Довженко
+    answer: Довженко — геніальний режисер фільму.
+  - jumbled: в / народився / Києві / Малевич
+    answer: Малевич народився в Києві.
+  - jumbled: Лисенко / класичної / творець / музики
+    answer: Лисенко — творець класичної музики.
+  - jumbled: перемогла / Джамала / Євробаченні / на
+    answer: Джамала перемогла на Євробаченні.
+  - jumbled: виставку / відвідали / музеї / в
+    answer: Відвідали виставку в музеї.
+  - jumbled: шедевр / це / справжній
+    answer: Це справжній шедевр.
+  - jumbled: Оскар / отримав / фільм / український
+    answer: Український фільм отримав Оскар.
+  - jumbled: написала / Леся / «Лісову пісню»
+    answer: Леся написала «Лісову пісню».
+  - jumbled: жанр / улюблений / мій / поезія
+    answer: Мій улюблений жанр — поезія.
+  - jumbled: митців / Розстріляне Відродження / генерація
+    answer: Розстріляне Відродження — генерація митців.
 - id: cloze-culture
   type: cloze
-  title: "Заповніть текст про українську культуру"
-  instruction: "Заповніть пропуски у тексті."
-  passage: "Українська {культура|література|історія} має тисячолітню традицію. Найвідомішим {поетом|художником|музикантом} є Тарас Шевченко. Його {«Кобзар»|«Лісова пісня»|«Земля»} став символом української ідентичності. Леся {Українка|Косач|Франко} написала драму-феєрію «Лісова пісня». Іван {Франко|Нечуй-Левицький|Котляревський} володів 14 мовами. Олександр Довженко створив {шедеври|картини|книги} українського кіно. Сергій {Параджанов|Курбас|Лисенко} екранізував «Тіні забутих предків». Казимир {Малевич|Бойчук|Петрицький} народився в Києві. Микола Лисенко — «батько української класичної {музики|опери|балету}». Джамала {перемогла|програла|виступила} на Євробаченні-2016. «20 днів у {Маріуполі|Києві|Харкові}» отримав перший {Оскар|Греммі|Нобеля} для України. Українські народні {пісні|танці|легенди} внесено до спадщини ЮНЕСКО. Kalush Orchestra представляли Україну на {Євробаченні|Олімпіаді|Оскарі}-2022. Мистецтво {об'єднує|розділяє|ізолює} націю. Культура — це {спротив|розвага|бізнес} окупації."
-
-# Activity 8: Error correction culture
+  title: Заповніть текст про українську культуру
+  instruction: Заповніть пропуски у тексті.
+  passage: Українська {культура|література|історія} має тисячолітню традицію. Найвідомішим {поетом|художником|музикантом}
+    є Тарас Шевченко. Його {«Кобзар»|«Лісова пісня»|«Земля»} став символом української ідентичності. Леся {Українка|Косач|Франко}
+    написала драму-феєрію «Лісова пісня». Іван {Франко|Нечуй-Левицький|Котляревський} володів 14 мовами. Олександр Довженко
+    створив {шедеври|картини|книги} українського кіно. Сергій {Параджанов|Курбас|Лисенко} екранізував «Тіні забутих предків».
+    Казимир {Малевич|Бойчук|Петрицький} народився в Києві. Микола Лисенко — «батько української класичної {музики|опери|балету}».
+    Джамала {перемогла|програла|виступила} на Євробаченні-2016. «20 днів у {Маріуполі|Києві|Харкові}» отримав перший {Оскар|Греммі|Нобеля}
+    для України. Українські народні {пісні|танці|легенди} внесено до спадщини ЮНЕСКО. Kalush Orchestra представляли Україну
+    на {Євробаченні|Олімпіаді|Оскарі}-2022. Мистецтво {об'єднує|розділяє|ізолює} націю. Культура — це {спротив|розвага|бізнес}
+    окупації.
 - id: error-correction-culture
   type: error-correction
-  title: "Виправте помилки в реченнях про культуру"
-  instruction: "Знайдіть помилку та оберіть правильний варіант."
+  title: Виправте помилки в реченнях про культуру
+  instruction: Знайдіть помилку та оберіть правильний варіант.
   items:
-    - sentence: "Шевченко написав слідуючу книгу після «Кобзаря»."
-      error: "слідуючу"
-      answer: "наступну"
-      options: ["наступну", "іншу", "нову", "чергову"]
-      explanation: "«Слідуючий» — русизм. Правильно: наступний."
-    - sentence: "Картина вражає своєю красою."
-      error: "красою"
-      answer: "красою"
-      options: ["красою", "вродою", "гарністю", "естетикою"]
-      explanation: "Тут немає помилки. «Краса» — правильно."
-    - sentence: "Ми приймали участь у виставці."
-      error: "приймали участь"
-      answer: "брали участь"
-      options: ["брали участь", "взяли участь", "прийняли участь", "приймали участь"]
-      explanation: "«Приймати участь» — русизм. Правильно: брати участь."
-    - sentence: "Такий неповторимий стиль."
-      error: "неповторимий"
-      answer: "неповторний"
-      options: ["неповторний", "унікальний", "оригінальний", "самобутній"]
-      explanation: "«Неповторимий» — русизм. Правильно: неповторний."
-    - sentence: "Виставка продовжується на протязі місяця."
-      error: "на протязі"
-      answer: "протягом"
-      options: ["протягом", "упродовж", "за час", "під час"]
-      explanation: "«На протязі» — русизм. Правильно: протягом."
-    - sentence: "Співак любимий мільйонами."
-      error: "любимий"
-      answer: "улюблений"
-      options: ["улюблений", "любий", "коханий", "шанований"]
-      explanation: "«Любимий» — русизм. Правильно: улюблений."
-    - sentence: "Твір відображає дух епохи."
-      error: "відображає"
-      answer: "відображає"
-      options: ["відображає", "показує", "втілює", "представляє"]
-      explanation: "Тут немає помилки. «Відображати» — правильно."
-    - sentence: "Музей заключив договір з галереєю."
-      error: "заключив"
-      answer: "уклав"
-      options: ["уклав", "підписав", "зробив", "оформив"]
-      explanation: "«Заключити» — русизм. Правильно: укласти."
-    - sentence: "По моїй думці, це шедевр."
-      error: "По моїй думці"
-      answer: "На мою думку"
-      options: ["На мою думку", "За моєю думкою", "Думаю", "Вважаю"]
-      explanation: "«По моїй думці» — русизм. Правильно: на мою думку."
-    - sentence: "Театр рахується найкращим у місті."
-      error: "рахується"
-      answer: "вважається"
-      options: ["вважається", "називається", "є", "визнається"]
-      explanation: "«Рахуватися» — русизм. Правильно: вважатися."
-    - sentence: "Автор використовує яскраві образи."
-      error: "образи"
-      answer: "образи"
-      options: ["образи", "метафори", "символи", "алегорії"]
-      explanation: "Тут немає помилки. «Образи» — правильно."
-    - sentence: "Твір визнаний шедевром."
-      error: "визнаний"
-      answer: "визнаний"
-      options: ["визнаний", "визнано", "визнаним", "визнавати"]
-      explanation: "Тут немає помилки. «Визнаний» — правильно."
-
-# Activity 9: Translate culture terms
+  - sentence: Шевченко написав слідуючу книгу після «Кобзаря».
+    error: слідуючу
+    answer: наступну
+    options:
+    - наступну
+    - іншу
+    - нову
+    - чергову
+    explanation: '«Слідуючий» — русизм. Правильно: наступний.'
+  - sentence: Картина вражає своєю красою.
+    error: красою
+    answer: красою
+    options:
+    - красою
+    - вродою
+    - гарністю
+    - естетикою
+    explanation: Тут немає помилки. «Краса» — правильно.
+  - sentence: Ми приймали участь у виставці.
+    error: приймали участь
+    answer: брали участь
+    options:
+    - брали участь
+    - взяли участь
+    - прийняли участь
+    - приймали участь
+    explanation: '«Приймати участь» — русизм. Правильно: брати участь.'
+  - sentence: Такий неповторимий стиль.
+    error: неповторимий
+    answer: неповторний
+    options:
+    - неповторний
+    - унікальний
+    - оригінальний
+    - самобутній
+    explanation: '«Неповторимий» — русизм. Правильно: неповторний.'
+  - sentence: Виставка продовжується на протязі місяця.
+    error: на протязі
+    answer: протягом
+    options:
+    - протягом
+    - упродовж
+    - за час
+    - під час
+    explanation: '«На протязі» — русизм. Правильно: протягом.'
+  - sentence: Співак любимий мільйонами.
+    error: любимий
+    answer: улюблений
+    options:
+    - улюблений
+    - любий
+    - коханий
+    - шанований
+    explanation: '«Любимий» — русизм. Правильно: улюблений.'
+  - sentence: Твір відображає дух епохи.
+    error: відображає
+    answer: відображає
+    options:
+    - відображає
+    - показує
+    - втілює
+    - представляє
+    explanation: Тут немає помилки. «Відображати» — правильно.
+  - sentence: Музей заключив договір з галереєю.
+    error: заключив
+    answer: уклав
+    options:
+    - уклав
+    - підписав
+    - зробив
+    - оформив
+    explanation: '«Заключити» — русизм. Правильно: укласти.'
+  - sentence: По моїй думці, це шедевр.
+    error: По моїй думці
+    answer: На мою думку
+    options:
+    - На мою думку
+    - За моєю думкою
+    - Думаю
+    - Вважаю
+    explanation: '«По моїй думці» — русизм. Правильно: на мою думку.'
+  - sentence: Театр рахується найкращим у місті.
+    error: рахується
+    answer: вважається
+    options:
+    - вважається
+    - називається
+    - є
+    - визнається
+    explanation: '«Рахуватися» — русизм. Правильно: вважатися.'
+  - sentence: Автор використовує яскраві образи.
+    error: образи
+    answer: образи
+    options:
+    - образи
+    - метафори
+    - символи
+    - алегорії
+    explanation: Тут немає помилки. «Образи» — правильно.
+  - sentence: Твір визнаний шедевром.
+    error: визнаний
+    answer: визнаний
+    options:
+    - визнаний
+    - визнано
+    - визнаним
+    - визнавати
+    explanation: Тут немає помилки. «Визнаний» — правильно.
 - id: translate-culture
   type: translate
-  title: "Перекладіть культурні терміни"
-  instruction: "Оберіть найкращий переклад."
+  title: Перекладіть культурні терміни
+  instruction: Оберіть найкращий переклад.
   items:
-    - source: "masterpiece"
-      options:
-        - text: "шедевр"
-          correct: true
-        - text: "майстерня"
-          correct: false
-        - text: "майстер"
-          correct: false
-        - text: "робота"
-          correct: false
-      explanation: "Masterpiece — шедевр."
-    - source: "poetry"
-      options:
-        - text: "поезія"
-          correct: true
-        - text: "проза"
-          correct: false
-        - text: "драма"
-          correct: false
-        - text: "есе"
-          correct: false
-      explanation: "Poetry — поезія."
-    - source: "novel"
-      options:
-        - text: "роман"
-          correct: true
-        - text: "новела"
-          correct: false
-        - text: "оповідання"
-          correct: false
-        - text: "повість"
-          correct: false
-      explanation: "Novel — роман."
-    - source: "sculpture"
-      options:
-        - text: "скульптура"
-          correct: true
-        - text: "статуя"
-          correct: false
-        - text: "фігура"
-          correct: false
-        - text: "рельєф"
-          correct: false
-      explanation: "Sculpture — скульптура."
-    - source: "composer"
-      options:
-        - text: "композитор"
-          correct: true
-        - text: "диригент"
-          correct: false
-        - text: "музикант"
-          correct: false
-        - text: "співак"
-          correct: false
-      explanation: "Composer — композитор."
-    - source: "exhibition"
-      options:
-        - text: "виставка"
-          correct: true
-        - text: "експозиція"
-          correct: false
-        - text: "показ"
-          correct: false
-        - text: "демонстрація"
-          correct: false
-      explanation: "Exhibition — виставка."
-    - source: "genre"
-      options:
-        - text: "жанр"
-          correct: true
-        - text: "стиль"
-          correct: false
-        - text: "тип"
-          correct: false
-        - text: "форма"
-          correct: false
-      explanation: "Genre — жанр."
-    - source: "plot"
-      options:
-        - text: "сюжет"
-          correct: true
-        - text: "план"
-          correct: false
-        - text: "схема"
-          correct: false
-        - text: "історія"
-          correct: false
-      explanation: "Plot — сюжет."
-    - source: "metaphor"
-      options:
-        - text: "метафора"
-          correct: true
-        - text: "порівняння"
-          correct: false
-        - text: "символ"
-          correct: false
-        - text: "образ"
-          correct: false
-      explanation: "Metaphor — метафора."
-    - source: "inspiration"
-      options:
-        - text: "натхнення"
-          correct: true
-        - text: "ідея"
-          correct: false
-        - text: "творчість"
-          correct: false
-        - text: "мотивація"
-          correct: false
-      explanation: "Inspiration — натхнення."
-    - source: "criticism"
-      options:
-        - text: "критика"
-          correct: true
-        - text: "критицизм"
-          correct: false
-        - text: "рецензія"
-          correct: false
-        - text: "аналіз"
-          correct: false
-      explanation: "Criticism — критика."
-    - source: "symbol"
-      options:
-        - text: "символ"
-          correct: true
-        - text: "знак"
-          correct: false
-        - text: "образ"
-          correct: false
-        - text: "алегорія"
-          correct: false
-      explanation: "Symbol — символ."
-
-# Activity 10: Mark-the-words culture
+  - source: masterpiece
+    options:
+    - text: шедевр
+      correct: true
+    - text: майстерня
+      correct: false
+    - text: майстер
+      correct: false
+    - text: робота
+      correct: false
+    explanation: Masterpiece — шедевр.
+  - source: poetry
+    options:
+    - text: поезія
+      correct: true
+    - text: проза
+      correct: false
+    - text: драма
+      correct: false
+    - text: есе
+      correct: false
+    explanation: Poetry — поезія.
+  - source: novel
+    options:
+    - text: роман
+      correct: true
+    - text: новела
+      correct: false
+    - text: оповідання
+      correct: false
+    - text: повість
+      correct: false
+    explanation: Novel — роман.
+  - source: sculpture
+    options:
+    - text: скульптура
+      correct: true
+    - text: статуя
+      correct: false
+    - text: фігура
+      correct: false
+    - text: рельєф
+      correct: false
+    explanation: Sculpture — скульптура.
+  - source: composer
+    options:
+    - text: композитор
+      correct: true
+    - text: диригент
+      correct: false
+    - text: музикант
+      correct: false
+    - text: співак
+      correct: false
+    explanation: Composer — композитор.
+  - source: exhibition
+    options:
+    - text: виставка
+      correct: true
+    - text: експозиція
+      correct: false
+    - text: показ
+      correct: false
+    - text: демонстрація
+      correct: false
+    explanation: Exhibition — виставка.
+  - source: genre
+    options:
+    - text: жанр
+      correct: true
+    - text: стиль
+      correct: false
+    - text: тип
+      correct: false
+    - text: форма
+      correct: false
+    explanation: Genre — жанр.
+  - source: plot
+    options:
+    - text: сюжет
+      correct: true
+    - text: план
+      correct: false
+    - text: схема
+      correct: false
+    - text: історія
+      correct: false
+    explanation: Plot — сюжет.
+  - source: metaphor
+    options:
+    - text: метафора
+      correct: true
+    - text: порівняння
+      correct: false
+    - text: символ
+      correct: false
+    - text: образ
+      correct: false
+    explanation: Metaphor — метафора.
+  - source: inspiration
+    options:
+    - text: натхнення
+      correct: true
+    - text: ідея
+      correct: false
+    - text: творчість
+      correct: false
+    - text: мотивація
+      correct: false
+    explanation: Inspiration — натхнення.
+  - source: criticism
+    options:
+    - text: критика
+      correct: true
+    - text: критицизм
+      correct: false
+    - text: рецензія
+      correct: false
+    - text: аналіз
+      correct: false
+    explanation: Criticism — критика.
+  - source: symbol
+    options:
+    - text: символ
+      correct: true
+    - text: знак
+      correct: false
+    - text: образ
+      correct: false
+    - text: алегорія
+      correct: false
+    explanation: Symbol — символ.
 - id: mark-culture-terms
   type: mark-the-words
-  title: "Позначте культурні терміни"
-  instruction: "Позначте всі терміни мистецтва та літератури."
-  text: "Український *живопис* має давню традицію. *Поезія* Шевченка стала *символом* нації. *Композитор* Лисенко створив українську *оперу*. У *галереї* відкрилася нова *виставка*. *Драма* Лесі Українки вражає глибиною *образів*. Це справжній *шедевр* українського *мистецтва*."
+  title: Позначте культурні терміни
+  instruction: Позначте всі терміни мистецтва та літератури.
+  text: Український *живопис* має давню традицію. *Поезія* Шевченка стала *символом* нації. *Композитор* Лисенко створив українську
+    *оперу*. У *галереї* відкрилася нова *виставка*. *Драма* Лесі Українки вражає глибиною *образів*. Це справжній *шедевр*
+    українського *мистецтва*.
+- type: cloze
+  title: Поставте репліки у правильному порядку
+  instructions: Розташуйте репліки розмови в музеї.
+  passage: '— {Відвідувач|Працівник|Невідомий}: Добрий день! Скажіть, будь ласка, де виставка імпресіоністів?
 
-# Activity 11: Dialogue reorder museum
-- id: dialogue-reorder-culture
-  type: dialogue-reorder
-  title: "Поставте репліки у правильному порядку"
-  instruction: "Розташуйте репліки розмови в музеї."
-  lines:
-    - order: 1
-      speaker: "Відвідувач"
-      text: "Добрий день! Скажіть, будь ласка, де виставка імпресіоністів?"
-    - order: 2
-      speaker: "Працівник"
-      text: "Добрий день! Виставка на другому поверсі, зал 12."
-    - order: 3
-      speaker: "Відвідувач"
-      text: "Дякую. А є аудіогід українською?"
-    - order: 4
-      speaker: "Працівник"
-      text: "Так, є. Можете завантажити додаток або взяти пристрій."
-    - order: 5
-      speaker: "Відвідувач"
-      text: "Чудово, візьму пристрій. Скільки це коштує?"
-    - order: 6
-      speaker: "Працівник"
-      text: "80 гривень плюс заставка за пристрій."
-    - order: 7
-      speaker: "Відвідувач"
-      text: "Добре. А до котрої години працює музей?"
-    - order: 8
-      speaker: "Працівник"
-      text: "Сьогодні до 18:00. Останній вхід о 17:00."
-    - order: 9
-      speaker: "Відвідувач"
-      text: "А чи є екскурсії сьогодні?"
-    - order: 10
-      speaker: "Працівник"
-      text: "Так, наступна екскурсія о 15:00."
-    - order: 11
-      speaker: "Відвідувач"
-      text: "Чи можна фотографувати?"
-    - order: 12
-      speaker: "Працівник"
-      text: "Так, без спалаху. Відео заборонено."
-    - order: 13
-      speaker: "Відвідувач"
-      text: "Зрозуміло. А де гардероб?"
-    - order: 14
-      speaker: "Працівник"
-      text: "Ліворуч від входу. Там можна залишити речі."
-    - order: 15
-      speaker: "Відвідувач"
-      text: "Дякую за допомогу!"
-    - order: 16
-      speaker: "Працівник"
-      text: "Будь ласка! Гарного перегляду!"
+    — {Працівник|Відвідувач|Невідомий}: Добрий день! Виставка на другому поверсі, зал 12.
 
-# Activity 12: Select famous works
+    — Відвідувач: Дякую. А є аудіогід українською?
+
+    — Працівник: Так, є. Можете завантажити додаток або взяти пристрій.
+
+    — Відвідувач: Чудово, візьму пристрій. Скільки це коштує?
+
+    — Працівник: 80 гривень плюс заставка за пристрій.
+
+    — Відвідувач: Добре. А до котрої години працює музей?
+
+    — Працівник: Сьогодні до 18:00. Останній вхід о 17:00.
+
+    — Відвідувач: А чи є екскурсії сьогодні?
+
+    — Працівник: Так, наступна екскурсія о 15:00.
+
+    — Відвідувач: Чи можна фотографувати?
+
+    — Працівник: Так, без спалаху. Відео заборонено.
+
+    — Відвідувач: Зрозуміло. А де гардероб?
+
+    — Працівник: Ліворуч від входу. Там можна залишити речі.
+
+    — Відвідувач: Дякую за допомогу!
+
+    — Працівник: Будь ласка! Гарного перегляду!'
 - id: select-works
   type: select
-  title: "Оберіть українські культурні явища"
-  instruction: "Позначте все, що належить до української культури."
+  title: Оберіть українські культурні явища
+  instruction: Позначте все, що належить до української культури.
   items:
-    - text: "«Кобзар» Тараса Шевченка"
-      correct: true
-    - text: "«Війна і мир» Толстого"
-      correct: false
-    - text: "«Лісова пісня» Лесі Українки"
-      correct: true
-    - text: "«Мона Ліза» Леонардо"
-      correct: false
-    - text: "«Тіні забутих предків» Параджанова"
-      correct: true
-    - text: "«Чорний квадрат» Малевича"
-      correct: true
-    - text: "«Девʼята симфонія» Бетховена"
-      correct: false
-    - text: "«Наталка Полтавка» Лисенка"
-      correct: true
-    - text: "«Гамлет» Шекспіра"
-      correct: false
-    - text: "«Земля» Довженка"
-      correct: true
-    - text: "«1944» Джамали"
-      correct: true
-    - text: "«Червона рута» Івасюка"
-      correct: true
-    - text: "«Лебедине озеро» Чайковського"
-      correct: false
-    - text: "«Ворошиловград» Жадана"
-      correct: true
-    - text: "«Злочин і кара» Достоєвського"
-      correct: false
-    - text: "«20 днів у Маріуполі» Чернова"
-      correct: true
-
-# Activity 13: Fill-in art criticism
+  - text: «Кобзар» Тараса Шевченка
+    correct: true
+  - text: «Війна і мир» Толстого
+    correct: false
+  - text: «Лісова пісня» Лесі Українки
+    correct: true
+  - text: «Мона Ліза» Леонардо
+    correct: false
+  - text: «Тіні забутих предків» Параджанова
+    correct: true
+  - text: «Чорний квадрат» Малевича
+    correct: true
+  - text: «Девʼята симфонія» Бетховена
+    correct: false
+  - text: «Наталка Полтавка» Лисенка
+    correct: true
+  - text: «Гамлет» Шекспіра
+    correct: false
+  - text: «Земля» Довженка
+    correct: true
+  - text: «1944» Джамали
+    correct: true
+  - text: «Червона рута» Івасюка
+    correct: true
+  - text: «Лебедине озеро» Чайковського
+    correct: false
+  - text: «Ворошиловград» Жадана
+    correct: true
+  - text: «Злочин і кара» Достоєвського
+    correct: false
+  - text: «20 днів у Маріуполі» Чернова
+    correct: true
 - id: fill-in-criticism
   type: fill-in
-  title: "Заповніть мистецьку критику"
-  instruction: "Оберіть правильні слова для опису твору."
+  title: Заповніть мистецьку критику
+  instruction: Оберіть правильні слова для опису твору.
   items:
-    - prompt: "Цей твір ___ своєю глибиною."
-      answer: "вражає"
-      options: ["вражає", "дивує", "шокує", "вражає"]
-    - prompt: "Автор ___ використовує метафори."
-      answer: "майстерно"
-      options: ["майстерно", "погано", "рідко", "ніколи"]
-    - prompt: "Картина створює атмосферу ___."
-      answer: "тривоги"
-      options: ["тривоги", "веселощів", "байдужості", "нудьги"]
-    - prompt: "Композиція вдало ___."
-      answer: "збалансована"
-      options: ["збалансована", "порушена", "забута", "змінена"]
-    - prompt: "___ нагадує імпресіонізм."
-      answer: "Стиль"
-      options: ["Стиль", "Жанр", "Сюжет", "Автор"]
-    - prompt: "Твір ___ дух епохи."
-      answer: "відображає"
-      options: ["відображає", "приховує", "ігнорує", "змінює"]
-    - prompt: "Визначте головну ___ твору."
-      answer: "тему"
-      options: ["тему", "мету", "ціль", "помилку"]
-    - prompt: "Проаналізуйте ___ образів."
-      answer: "символіку"
-      options: ["символіку", "кількість", "колір", "назву"]
-    - prompt: "Автор полемізує з ___."
-      answer: "попередниками"
-      options: ["попередниками", "читачами", "критиками", "друзями"]
-    - prompt: "Це ___ підхід до традиційної форми."
-      answer: "інноваційний"
-      options: ["інноваційний", "старий", "нудний", "традиційний"]
-    - prompt: "Оцініть ___ на подальший розвиток жанру."
-      answer: "вплив"
-      options: ["вплив", "ефект", "результат", "наслідок"]
-    - prompt: "Твір залишає глибоке ___."
-      answer: "враження"
-      options: ["враження", "розчарування", "нерозуміння", "сумнів"]
-
-# Activity 14: Quiz literary genres
+  - prompt: Цей твір ___ своєю глибиною.
+    answer: вражає
+    options:
+    - вражає
+    - дивує
+    - шокує
+    - вражає
+  - prompt: Автор ___ використовує метафори.
+    answer: майстерно
+    options:
+    - майстерно
+    - погано
+    - рідко
+    - ніколи
+  - prompt: Картина створює атмосферу ___.
+    answer: тривоги
+    options:
+    - тривоги
+    - веселощів
+    - байдужості
+    - нудьги
+  - prompt: Композиція вдало ___.
+    answer: збалансована
+    options:
+    - збалансована
+    - порушена
+    - забута
+    - змінена
+  - prompt: ___ нагадує імпресіонізм.
+    answer: Стиль
+    options:
+    - Стиль
+    - Жанр
+    - Сюжет
+    - Автор
+  - prompt: Твір ___ дух епохи.
+    answer: відображає
+    options:
+    - відображає
+    - приховує
+    - ігнорує
+    - змінює
+  - prompt: Визначте головну ___ твору.
+    answer: тему
+    options:
+    - тему
+    - мету
+    - ціль
+    - помилку
+  - prompt: Проаналізуйте ___ образів.
+    answer: символіку
+    options:
+    - символіку
+    - кількість
+    - колір
+    - назву
+  - prompt: Автор полемізує з ___.
+    answer: попередниками
+    options:
+    - попередниками
+    - читачами
+    - критиками
+    - друзями
+  - prompt: Це ___ підхід до традиційної форми.
+    answer: інноваційний
+    options:
+    - інноваційний
+    - старий
+    - нудний
+    - традиційний
+  - prompt: Оцініть ___ на подальший розвиток жанру.
+    answer: вплив
+    options:
+    - вплив
+    - ефект
+    - результат
+    - наслідок
+  - prompt: Твір залишає глибоке ___.
+    answer: враження
+    options:
+    - враження
+    - розчарування
+    - нерозуміння
+    - сумнів
 - id: quiz-genres
   type: quiz
-  title: "Тест: літературні жанри"
-  instruction: "Оберіть правильну відповідь про жанри та форми."
+  title: 'Тест: літературні жанри'
+  instruction: Оберіть правильну відповідь про жанри та форми.
   items:
-    - question: "Яка різниця між романом і оповіданням?"
-      options:
-        - text: "Роман — великий, оповідання — мале"
-          correct: true
-        - text: "Роман — вірші, оповідання — проза"
-          correct: false
-        - text: "Немає різниці"
-          correct: false
-        - text: "Оповідання старіше"
-          correct: false
-      explanation: "Роман — великий прозовий жанр."
-    - question: "Що таке поезія?"
-      options:
-        - text: "Віршована форма літератури"
-          correct: true
-        - text: "Великий роман"
-          correct: false
-        - text: "Тип живопису"
-          correct: false
-        - text: "Музичний жанр"
-          correct: false
-      explanation: "Поезія — віршована форма."
-    - question: "Що таке сюжет?"
-      options:
-        - text: "Послідовність подій у творі"
-          correct: true
-        - text: "Головний герой"
-          correct: false
-        - text: "Назва книги"
-          correct: false
-        - text: "Кількість сторінок"
-          correct: false
-      explanation: "Сюжет — послідовність подій."
-    - question: "Що таке метафора?"
-      options:
-        - text: "Переносне значення"
-          correct: true
-        - text: "Пряме порівняння"
-          correct: false
-        - text: "Тип рими"
-          correct: false
-        - text: "Форма вірша"
-          correct: false
-      explanation: "Метафора — приховане порівняння."
-    - question: "Яку форму має драма?"
-      options:
-        - text: "Призначена для сцени"
-          correct: true
-        - text: "Має рими"
-          correct: false
-        - text: "Написана прозою"
-          correct: false
-        - text: "Коротка"
-          correct: false
-      explanation: "Драма — для театральної постановки."
-    - question: "Що таке есе?"
-      options:
-        - text: "Роздуми автора на певну тему"
-          correct: true
-        - text: "Тип вірша"
-          correct: false
-        - text: "Великий роман"
-          correct: false
-        - text: "Казка"
-          correct: false
-      explanation: "Есе — літературний роздум."
-    - question: "Що відрізняє новелу?"
-      options:
-        - text: "Несподіваний фінал"
-          correct: true
-        - text: "Великий обсяг"
-          correct: false
-        - text: "Наявність віршів"
-          correct: false
-        - text: "Історична тема"
-          correct: false
-      explanation: "Новела має неочікувану розв'язку."
-    - question: "Що таке симфонія?"
-      options:
-        - text: "Великий оркестровий твір"
-          correct: true
-        - text: "Тип опери"
-          correct: false
-        - text: "Народна пісня"
-          correct: false
-        - text: "Балет"
-          correct: false
-      explanation: "Симфонія — твір для симфонічного оркестру."
-    - question: "Що таке графіка?"
-      options:
-        - text: "Малюнки та гравюри"
-          correct: true
-        - text: "Картини олійними фарбами"
-          correct: false
-        - text: "Скульптури"
-          correct: false
-        - text: "Фотографії"
-          correct: false
-      explanation: "Графіка — малюнки, гравюри, ілюстрації."
-    - question: "Що таке інсталяція?"
-      options:
-        - text: "Просторова композиція з різних об'єктів"
-          correct: true
-        - text: "Тип картини"
-          correct: false
-        - text: "Установка обладнання"
-          correct: false
-        - text: "Музейний експонат"
-          correct: false
-      explanation: "Інсталяція — просторове мистецтво."
-    - question: "Хто такий композитор?"
-      options:
-        - text: "Автор музичних творів"
-          correct: true
-        - text: "Виконавець музики"
-          correct: false
-        - text: "Диригент оркестру"
-          correct: false
-        - text: "Вчитель музики"
-          correct: false
-      explanation: "Композитор пише музику."
-    - question: "Що таке критика?"
-      options:
-        - text: "Аналіз та оцінка творів мистецтва"
-          correct: true
-        - text: "Негативні коментарі"
-          correct: false
-        - text: "Тип літератури"
-          correct: false
-        - text: "Вид живопису"
-          correct: false
-      explanation: "Критика — професійний аналіз творів."
+  - question: Яка різниця між романом і оповіданням?
+    options:
+    - text: Роман — великий, оповідання — мале
+      correct: true
+    - text: Роман — вірші, оповідання — проза
+      correct: false
+    - text: Немає різниці
+      correct: false
+    - text: Оповідання старіше
+      correct: false
+    explanation: Роман — великий прозовий жанр.
+  - question: Що таке поезія?
+    options:
+    - text: Віршована форма літератури
+      correct: true
+    - text: Великий роман
+      correct: false
+    - text: Тип живопису
+      correct: false
+    - text: Музичний жанр
+      correct: false
+    explanation: Поезія — віршована форма.
+  - question: Що таке сюжет?
+    options:
+    - text: Послідовність подій у творі
+      correct: true
+    - text: Головний герой
+      correct: false
+    - text: Назва книги
+      correct: false
+    - text: Кількість сторінок
+      correct: false
+    explanation: Сюжет — послідовність подій.
+  - question: Що таке метафора?
+    options:
+    - text: Переносне значення
+      correct: true
+    - text: Пряме порівняння
+      correct: false
+    - text: Тип рими
+      correct: false
+    - text: Форма вірша
+      correct: false
+    explanation: Метафора — приховане порівняння.
+  - question: Яку форму має драма?
+    options:
+    - text: Призначена для сцени
+      correct: true
+    - text: Має рими
+      correct: false
+    - text: Написана прозою
+      correct: false
+    - text: Коротка
+      correct: false
+    explanation: Драма — для театральної постановки.
+  - question: Що таке есе?
+    options:
+    - text: Роздуми автора на певну тему
+      correct: true
+    - text: Тип вірша
+      correct: false
+    - text: Великий роман
+      correct: false
+    - text: Казка
+      correct: false
+    explanation: Есе — літературний роздум.
+  - question: Що відрізняє новелу?
+    options:
+    - text: Несподіваний фінал
+      correct: true
+    - text: Великий обсяг
+      correct: false
+    - text: Наявність віршів
+      correct: false
+    - text: Історична тема
+      correct: false
+    explanation: Новела має неочікувану розв'язку.
+  - question: Що таке симфонія?
+    options:
+    - text: Великий оркестровий твір
+      correct: true
+    - text: Тип опери
+      correct: false
+    - text: Народна пісня
+      correct: false
+    - text: Балет
+      correct: false
+    explanation: Симфонія — твір для симфонічного оркестру.
+  - question: Що таке графіка?
+    options:
+    - text: Малюнки та гравюри
+      correct: true
+    - text: Картини олійними фарбами
+      correct: false
+    - text: Скульптури
+      correct: false
+    - text: Фотографії
+      correct: false
+    explanation: Графіка — малюнки, гравюри, ілюстрації.
+  - question: Що таке інсталяція?
+    options:
+    - text: Просторова композиція з різних об'єктів
+      correct: true
+    - text: Тип картини
+      correct: false
+    - text: Установка обладнання
+      correct: false
+    - text: Музейний експонат
+      correct: false
+    explanation: Інсталяція — просторове мистецтво.
+  - question: Хто такий композитор?
+    options:
+    - text: Автор музичних творів
+      correct: true
+    - text: Виконавець музики
+      correct: false
+    - text: Диригент оркестру
+      correct: false
+    - text: Вчитель музики
+      correct: false
+    explanation: Композитор пише музику.
+  - question: Що таке критика?
+    options:
+    - text: Аналіз та оцінка творів мистецтва
+      correct: true
+    - text: Негативні коментарі
+      correct: false
+    - text: Тип літератури
+      correct: false
+    - text: Вид живопису
+      correct: false
+    explanation: Критика — професійний аналіз творів.

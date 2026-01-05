@@ -486,7 +486,7 @@
       correct: false
     - text: Микола Лисенко
       correct: false
-- type: writing
+- type: essay-response
   id: reflection-105
   title: Рефлексія
   question: Як ви думаєте, чому в 1919 році українцям не вдалося зберегти державу, а в 1991 році вдалося? Що змінилося?

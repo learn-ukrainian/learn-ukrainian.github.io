@@ -3,7 +3,7 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): робота, плід, золото, правда, мовчання...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): характер, робота, правда, золото, мовчання...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

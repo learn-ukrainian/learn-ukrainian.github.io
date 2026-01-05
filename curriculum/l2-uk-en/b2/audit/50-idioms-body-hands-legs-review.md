@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): лікоть, легкий, нога, доходити, п'ята...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): п'ята, коліно, легкий, нога, крок...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

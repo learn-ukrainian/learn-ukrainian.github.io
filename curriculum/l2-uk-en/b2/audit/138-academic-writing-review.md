@@ -2,19 +2,15 @@
 **Phase:** B2.4 | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Overall Status:** ❌ FAIL
 
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity type 'dialogue-reorder' in YAML
-  - FIX: Use supported type: anagram, authorial-intent, cloze, comparative-study, critical-analysis, error-correction, essay-response, fill-in, group-sort, mark-the-words, match-up, quiz, select, translate, true-false, unjumble
-
 ## Recommendation
 **📝 UPDATE** (severity 10/100)
 
-- 1 pedagogical violations (minor)
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 2341/1750
-- **Activities:** ✅ 13/13
-- **Density:** ✅ All > 16
+- **Activities:** ✅ 14/13
+- **Density:** ❌ 1 < 16
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/6
@@ -22,7 +18,7 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.6% (target 98-100% (skills))
 - **Richness:** ✅ 96% (grammar)
@@ -46,6 +42,12 @@
 | questions | 10 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.5%** |
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Поради викладача щодо чернетки | cloze | 2 | 16 | Add 14 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

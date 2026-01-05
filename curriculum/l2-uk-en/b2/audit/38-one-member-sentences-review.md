@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): речення, вживання, структура, вираз, модель...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): модель, структура, підмет, вираз, вживання...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

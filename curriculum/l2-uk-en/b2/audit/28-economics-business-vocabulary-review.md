@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): акція, банк, ринок, санкції, дефляція...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): акція, банк, валюта, ринок, санкції...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

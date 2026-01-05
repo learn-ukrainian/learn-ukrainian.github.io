@@ -483,7 +483,7 @@
       correct: false
     - text: На горі Маківка
       correct: false
-- type: writing
+- type: essay-response
   id: reflection
   title: Рефлексія
   question: Чому пісня 'Ой у лузі червона калина' стала символом опору і у 1914, і у 2022 році? Що спільного між цими двома

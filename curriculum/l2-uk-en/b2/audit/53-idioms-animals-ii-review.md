@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): плавати, м'ясо, птах, повзати, заєць...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): жертва, ловити, повзати, літати, м'ясо...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

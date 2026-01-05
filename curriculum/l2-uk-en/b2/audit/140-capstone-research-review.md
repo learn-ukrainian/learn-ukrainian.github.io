@@ -2,20 +2,15 @@
 **Phase:** B2.4 | **Level:** B2 | **Pedagogy:** integration | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_ACTIVITY_TYPE]** Invalid activity type 'dialogue-reorder' in YAML
-  - FIX: Use supported type: anagram, authorial-intent, cloze, comparative-study, critical-analysis, error-correction, essay-response, fill-in, group-sort, mark-the-words, match-up, quiz, select, translate, true-false, unjumble
-
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 10/100)
 
-- 1 pedagogical violations (minor)
-- Activity count below minimum
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1005/1000
-- **Activities:** ❌ 14/15
-- **Density:** ✅ All > 14
+- **Activities:** ✅ 15/15
+- **Density:** ❌ 1 < 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
@@ -23,7 +18,7 @@
 - **Vocab:** ✅ 25/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (checkpoint - no gate)
 - **Richness:** ✅ 98% (checkpoint)
@@ -44,6 +39,12 @@
 | visual | 12 | 3 | 100% | 10% | 10.0% |
 | paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
 | **TOTAL** | | | | | **99.0%** |
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Консультація щодо теми проєкту | cloze | 2 | 14 | Add 12 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

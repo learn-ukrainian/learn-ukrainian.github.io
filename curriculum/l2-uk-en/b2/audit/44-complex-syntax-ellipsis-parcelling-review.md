@@ -3,7 +3,7 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): емоція, розрив, натяк...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): розрив, емоція, натяк...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

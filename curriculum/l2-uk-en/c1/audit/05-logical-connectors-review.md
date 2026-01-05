@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): боку, зв'язку, іншого, менш, цього...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): менш, цього, боку, іншого, зв'язку...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -46,6 +46,13 @@
 | questions | 8 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.0%** |
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+### Warnings
+- ⚠️ No Activities section found
 
 ## Section Audit
 | Section | Status | Count | Notes |

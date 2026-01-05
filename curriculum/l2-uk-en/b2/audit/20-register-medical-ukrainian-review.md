@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): ліки, укол, біль, рецепт, кашель...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): кашель, імунітет, медсестра, біль, хронічний...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

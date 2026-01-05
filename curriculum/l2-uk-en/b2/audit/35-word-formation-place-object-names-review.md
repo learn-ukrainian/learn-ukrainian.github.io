@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): кімната, будівля, їдальня, лікарня, спальня...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): лікарня, офіс, спальня, бібліотека, фабрика...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

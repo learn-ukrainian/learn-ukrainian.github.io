@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): допомагати, вставати, підписувати, пояснювати, починати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): допомагати, вигравати, розрізати, заробляти, згадувати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
