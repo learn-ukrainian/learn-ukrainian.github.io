@@ -37,7 +37,12 @@
       "url",
       "url_without_anchor",
       "type"
-    ]
+    ],
+    "indexLanguages": ["en", "uk"],
+    "queryLanguages": ["en", "uk"],
+    "attributesToHighlight": ["*"],
+    "attributesToSnippet": ["*:50"],
+    "ignorePlurals": ["en"]
   },
   "conversation_id": [
     "833762294"
