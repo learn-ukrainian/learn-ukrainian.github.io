@@ -27,7 +27,17 @@ const config: Config = {
     locales: ['en'],
   },
 
-  themes: [],
+  themes: [
+    [
+      require.resolve("@easyops-cn/docusaurus-search-local"),
+      {
+        hashed: true,
+        language: ["en"],  // Note: Ukrainian not supported by lunr-languages
+        highlightSearchTermsOnTargetPage: true,
+        explicitSearchResultPath: true,
+      },
+    ],
+  ],
 
   presets: [
     [
@@ -159,27 +169,6 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
-    },
-    // Algolia DocSearch Configuration
-    // Apply for free API keys at: https://docsearch.algolia.com/apply/
-    algolia: {
-      // Application ID provided by Algolia
-      appId: 'YOUR_APP_ID',
-      // Public API key: safe to commit
-      apiKey: 'YOUR_SEARCH_API_KEY',
-      // Index name to query
-      indexName: 'learn-ukrainian',
-      // Enable contextual search (searches within current section)
-      contextualSearch: true,
-      // Multi-language search parameters for English + Ukrainian
-      searchParameters: {
-        facetFilters: [
-          ['language:en', 'language:uk'], // Search both languages
-        ],
-        hitsPerPage: 10,
-      },
-      // Enable search page
-      searchPagePath: 'search',
     },
   } satisfies Preset.ThemeConfig,
 };
