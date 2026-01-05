@@ -35,12 +35,16 @@ new Crawler({
             // - dt: Splits Definition Lists
             // - blockquote: Splits large quotes (e.g. C1 modules)
             // - table: Splits large tables
+            // - li: Splits long lists (fixes "Record too big" on vocab/example lists)
+            // - pre: Splits code blocks
             lvl6: [
               'article h6', 
               'article .theme-admonition > div:first-child', 
               'article dt', 
               'article blockquote',
-              'article table'
+              'article table',
+              'article li',
+              'article pre'
             ],
             content: 'article p, article li, article td:last-child',
           },
