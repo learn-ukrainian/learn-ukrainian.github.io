@@ -30,21 +30,22 @@ new Crawler({
             lvl3: 'article h3',
             lvl4: 'article h4',
             lvl5: 'article h5, article td:first-child',
-            // CRITICAL: Add more split points to prevent "Record too big" errors
-            // - .theme-admonition > div:first-child: Splits Callout/Admonition blocks
+            // - .theme-admonition > div:first-child: Splits Callout/Admonition titles
             // - dt: Splits Definition Lists
-            // - blockquote: Splits large quotes (e.g. C1 modules)
-            // - table: Splits large tables
-            // - li: Splits long lists (fixes "Record too big" on vocab/example lists)
-            // - pre: Splits code blocks
+            // - blockquote: Splits large quotes
+            // - tr: Splits Table Rows (CRITICAL for vocab lists)
+            // - li: Splits List Items
+            // - pre: Splits Code Blocks
+            // - p: Splits Paragraphs (CRITICAL for long texts)
             lvl6: [
               'article h6', 
               'article .theme-admonition > div:first-child', 
               'article dt', 
               'article blockquote',
-              'article table',
+              'article tr',
               'article li',
-              'article pre'
+              'article pre',
+              'article p'
             ],
             content: 'article p, article li, article td:last-child',
           },
