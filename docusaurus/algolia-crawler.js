@@ -34,7 +34,7 @@ new Crawler({
             content: 'article p, article li, article td:last-child',
           },
           indexHeadings: true,
-          aggregateContent: true,
+          aggregateContent: false,
           recordVersion: 'v3',
         });
       },
