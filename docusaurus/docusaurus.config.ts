@@ -178,9 +178,10 @@ const config: Config = {
       indexName: 'dev_learn-ukrainian',
       contextualSearch: true,
       searchParameters: {
-        facetFilters: [
-          ['language:en', 'language:uk'],
-        ],
+        // Temporarily disabled facetFilters to debug - crawler may not be setting language facet yet
+        // facetFilters: [
+        //   ['language:en', 'language:uk'],
+        // ],
         hitsPerPage: 10,
       },
       searchPagePath: 'search',
