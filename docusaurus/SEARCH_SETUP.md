@@ -1,142 +1,56 @@
 # Search Setup Guide
 
-This project uses **Local Search** with multi-language support (English + Ukrainian).
+This project uses **Algolia DocSearch** for multi-language support (English + Ukrainian).
 
-## Current Implementation: Local Search
-
-**Currently using:** `@easyops-cn/docusaurus-search-local`
+## Current Implementation: Algolia DocSearch
 
 **Configuration in `docusaurus.config.ts`:**
 ```typescript
-themes: [
-  [
-    require.resolve("@easyops-cn/docusaurus-search-local"),
-    {
-      hashed: true,
-      language: ["en"],  // Note: Ukrainian not supported by lunr-languages
-      highlightSearchTermsOnTargetPage: true,
-      explicitSearchResultPath: true,
-    },
-  ],
-],
-```
-
-### Pros
-- ✅ **No external dependencies** - Works offline, no API keys needed
-- ✅ **Fast setup** - Already configured and working
-- ✅ **Free** - No costs, no quotas
-
-### Cons
-- ❌ **NO Ukrainian language support** - lunr-languages doesn't support Ukrainian
-- ⚠️ **English-only indexing** - 70% of content (B1-C2 immersed Ukrainian) not properly searchable
-- ⚠️ **Client-side indexing** - Slower initial load for large sites
-- ⚠️ **Limited typo tolerance** - Exact matches work better
-- ⚠️ **Basic ranking** - Less sophisticated than cloud solutions
-
-**CRITICAL LIMITATION:** Local search does NOT support Ukrainian because the underlying `lunr-languages` library doesn't include Ukrainian. This means immersed Ukrainian content (B1-C2, 70% of the curriculum) is indexed as generic text without proper stemming or language-aware search.
-
-### Test Current Search
-Build and serve locally:
-```bash
-npm run build
-npm run serve
-```
-
-Test with queries:
-- **English:** "dative case", "aspect", "future tense" ✅ Works well
-- **Ukrainian:** "дієслово", "відмінок", "дативний" ⚠️ Basic matching only (no language-aware stemming)
-
----
-
-## Future Enhancement: Algolia DocSearch
-
-**Status:** 📋 Tracked in [Issue #392](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/392)
-
-### Why Upgrade to Algolia?
-- ✅ **Advanced typo tolerance** - Helps learners with Ukrainian spelling
-- ✅ **Better ranking** - AI-powered relevance
-- ✅ **Faster performance** - Cloud-based, no client-side indexing
-- ✅ **Automatic re-indexing** - Managed by Algolia weekly
-- ✅ **Free for open-source** - No cost for public documentation
-
-### When to Implement
-Consider switching to Algolia when:
-1. User feedback indicates search quality issues
-2. Site grows significantly (1000+ pages)
-3. Search performance becomes a bottleneck
-4. Ready for quick setup (approval in minutes to 1-2 days)
-
-### How to Switch
-
-**Step 1: Sign Up for Algolia DocSearch (Free)**
-1. Go to: https://dashboard.algolia.com/users/sign_up?selected_plan=docsearch
-2. Create account and submit your domain: `learn-ukrainian.github.io`
-3. Automated validation checks:
-   - ✅ Technical documentation (qualifies)
-   - ✅ Production-ready (qualifies)
-4. Verify domain ownership within 7 days
-5. Approval: Instant to 1-2 business days
-
-**Good news:** DocSearch is now free for ALL technical documentation (not just open source!)
-
-**Step 2: Update Configuration**
-Once approved, update `docusaurus.config.ts`:
-
-```typescript
-// Remove local search theme
-themes: [],
-
-// Add to themeConfig:
 themeConfig: {
-  // ... existing config
   algolia: {
-    appId: 'YOUR_APP_ID',        // From Algolia
-    apiKey: 'YOUR_SEARCH_API_KEY', // From Algolia
-    indexName: 'learn-ukrainian',  // From Algolia
+    appId: 'MFWOKG2YFD',
+    apiKey: '4413bc11f7878cb2605766f6a050bdcc', // Public Search API Key
+    indexName: 'https_learn_ukrainian_github_io_pages',
     contextualSearch: true,
     searchParameters: {
-      facetFilters: [
-        ['language:en', 'language:uk'], // Search both languages
-      ],
       hitsPerPage: 10,
     },
-    searchPagePath: 'search',
   },
 }
 ```
 
-**Step 3: Update Crawler Config**
-Algolia will use `algolia-crawler-config.json` (already prepared with Ukrainian support).
+## Crawler Configuration (Critical)
 
-**Step 4: Uninstall Local Search**
-```bash
-npm uninstall @easyops-cn/docusaurus-search-local
-```
+To ensure Ukrainian content is indexed and large pages (Grammar/History modules) are split correctly, we use a custom **JavaScript-based Crawler Configuration**.
+
+**File:** `docusaurus/algolia-crawler.js`
+
+### Instructions for Algolia Dashboard
+1. Go to the [Algolia Crawler Dashboard](https://crawler.algolia.com/).
+2. Select your crawler.
+3. Go to **Editor**.
+4. Copy the content of `docusaurus/algolia-crawler.js`.
+5. **IMPORTANT:** Replace `apiKey: 'YOUR_ADMIN_API_KEY'` with your **Algolia Admin API Key** (or a Write-enabled key). Do NOT use the Search API Key from `docusaurus.config.ts`.
+6. Click **Save** and **Restart Crawler**.
+
+### Key Features of this Config
+- **Splitting:** Uses `helpers.docsearch` to automatically chunk large content (solving "Record too big" errors).
+- **Schema:** Generates `lvl0`...`lvl6` hierarchy expected by Docusaurus.
+- **Languages:** Sets `indexLanguages: ['en', 'uk']` to properly tokenized Cyrillic content.
+- **Metadata:** Automatically extracts `docusaurus_tag` and `lang` for `contextualSearch`.
+
+## Troubleshooting
+
+### Search returns no results?
+- **Check `docusaurus_tag`**: The crawler must extract this meta tag. The provided config does this automatically via `helpers.docsearch`.
+- **Check Facets**: Ensure `contextualSearch: true` is enabled in `docusaurus.config.ts`.
+- **Check Index Name**: Must match exactly between `docusaurus.config.ts` and the Crawler.
+
+### "Record too big" errors?
+- The custom `recordExtractor` in `algolia-crawler.js` uses `aggregateContent: true` and `helpers.docsearch` to manage record sizes. If errors persist, check for single paragraphs >10KB.
 
 ---
 
-## Comparison
+## Legacy: Local Search
 
-| Feature                | Local Search              | Algolia DocSearch        |
-|------------------------|---------------------------|--------------------------|
-| **Setup Time**         | ✅ Immediate              | ✅ Minutes to 1-2 days   |
-| **Cost**               | ✅ Free                   | ✅ Free (all tech docs)  |
-| **Ukrainian Support**  | ❌ No (not in lunr-languages) | ✅ Yes (full Cyrillic)   |
-| **Typo Tolerance**     | ⚠️ Basic                 | ✅ Advanced              |
-| **Performance**        | ⚠️ Client-side indexing   | ✅ Cloud-based           |
-| **Maintenance**        | ✅ Zero                   | ✅ Managed by Algolia    |
-| **Offline Work**       | ✅ Yes                    | ❌ Requires internet     |
-
----
-
-## Current Status
-
-- ✅ **Local Search** configured and working
-- ❌ **Ukrainian language support** NOT available (lunr-languages limitation)
-- ⚠️ **English-only indexing** - B1-C2 content (70% of curriculum) not properly searchable
-- 📋 **Algolia migration** tracked in [Issue #392](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/392)
-
-**Recommendation:**
-- **Short-term:** Local search works for English content and basic Ukrainian text matching
-- **Long-term:** **Strongly recommend migrating to Algolia** to properly index Ukrainian content with Cyrillic support
-- **Priority:** Moderate - Local search provides basic functionality, but Ukrainian learners will have limited search capabilities for immersed content (B1-C2)
+*Deprecated. See git history for setup.*
