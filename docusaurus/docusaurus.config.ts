@@ -177,7 +177,7 @@ const config: Config = {
     algolia: {
       appId: 'MFWOKG2YFD',
       apiKey: '4413bc11f7878cb2605766f6a050bdcc',
-      indexName: 'dev_learn-ukrainian',
+      indexName: 'https_learn_ukrainian_github_io_pages',
       contextualSearch: true,
       searchParameters: {
         // Temporarily disabled facetFilters to debug - crawler may not be setting language facet yet
