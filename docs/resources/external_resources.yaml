@@ -2324,7 +2324,43 @@ resources:
       url: https://www.ukrainianlessons.com/perfective-verbs/
       relevance: high
       source: Unknown
-    - title: Aspect Differences
+    - module_id: 10-counterarguments
+      url: "https://owl.purdue.edu/owl/general_writing/academic_writing/logic_in_argumentative_writing/fallacies.html"
+      title: "Purdue OWL: Logical Fallacies"
+      type: article
+      relevance: 5
+      description: "Comprehensive list of logical fallacies."
+    - module_id: 10-counterarguments
+      url: "https://writingcenter.fas.harvard.edu/pages/counterargument"
+      title: "Harvard Writing Center: Counterargument"
+      type: article
+      relevance: 5
+      description: "Guide on using counterarguments effectively."
+    - module_id: 09-thesis-development
+      url: "https://writingcenter.unc.edu/tips-and-tools/thesis-statements/"
+      title: "UNC Writing Center: Thesis Statements"
+      type: article
+      relevance: 5
+      description: "Comprehensive guide on crafting strong thesis statements."
+    - module_id: 09-thesis-development
+      url: "https://writingcenter.fas.harvard.edu/pages/developing-thesis"
+      title: "Harvard Writing Center: Developing a Thesis"
+      type: article
+      relevance: 5
+      description: "Academic perspective on thesis evolution."
+    - module_id: 08-essay-structure
+      url: "https://owl.purdue.edu/owl/general_writing/academic_writing/essay_writing/argumentative_essays.html"
+      title: "Purdue OWL: Argumentative Essays"
+      type: article
+      relevance: 5
+      description: "Standard structure for academic essays."
+    - module_id: 08-essay-structure
+      url: "http://www.readwritethink.org/files/resources/interactives/essaymap/"
+      title: "Essay Map Interactive"
+      type: tool
+      relevance: 4
+      description: "Visual tool for planning essay structure."
+    - module_id: 07-citation-references
       url: https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/
       relevance: high
       source: Unknown
@@ -8830,36 +8866,20 @@ resources:
       relevance: high
       match_reason: 'Level-aligned topic match: east'
   b1-76-ukrainian-music-today:
-    podcasts:
-    - episode_id: ULP-081
-      title: ULP 3-81 Знайомство в літаку – Meeting on a plane in Ukrainian + Prefixes ви- and пере-
-      url: https://www.ukrainianlessons.com/lesson/81/
+    youtube:
+    - title: "ONUKA - Vidlik (Official Music Video)"
+      url: "https://www.youtube.com/watch?v=kYm0KqNqG5c"
       relevance: high
-      match_reason: 'Level-aligned topic match: ukrainian'
-    - episode_id: ULP-082
-      title: ULP 3-82 Таксі з аеропорту – Taking a taxi at the airport in Ukrainian + Prefixes при- and
-        по-
-      url: https://www.ukrainianlessons.com/lesson/82/
+    - title: "DakhaBrakha: NPR Music Tiny Desk Concert"
+      url: "https://www.youtube.com/watch?v=0_u6_nIuO6k"
       relevance: high
-      match_reason: 'Level-aligned topic match: ukrainian'
-    - episode_id: ULP-083
-      title: ULP 3-83 Знайомство з сусідкою – Meeting a roommate in Ukrainian + Prefixes до- and під-
-      url: https://www.ukrainianlessons.com/lesson/83/
+    - title: "Kalush Orchestra - Stefania (Eurovision 2022)"
+      url: "https://www.youtube.com/watch?v=Z8Z51no1TD0"
       relevance: high
-      match_reason: 'Level-aligned topic match: ukrainian'
-    - episode_id: ULP-091
-      title: ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb
-        aspects in Ukrainian
-      url: https://www.ukrainianlessons.com/lesson/91/
+    - title: "Jamala - 1944 (Eurovision 2016)"
+      url: "https://www.youtube.com/watch?v=B-rnM-MwRHY"
       relevance: high
-      match_reason: 'Level-aligned topic match: ukrainian'
-    - episode_id: ULP-092
-      title: ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in
-        Ukrainian
-      url: https://www.ukrainianlessons.com/lesson/92/
-      relevance: high
-      match_reason: 'Level-aligned topic match: ukrainian'
-  b1-78-technology-and-startups:
+  b1-77-ukrainian-media-landscape:
     podcasts:
     - episode_id: ULP-051
       title: ULP 2-51 Electronics and technology + Dative case

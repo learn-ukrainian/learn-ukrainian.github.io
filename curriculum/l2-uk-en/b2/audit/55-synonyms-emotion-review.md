@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): хвилювання, туга, депресія, журба, біль...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): біль, горе, захоплення, щастя, роздратування...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

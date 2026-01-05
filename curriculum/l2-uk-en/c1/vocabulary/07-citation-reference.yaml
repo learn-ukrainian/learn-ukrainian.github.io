@@ -1,0 +1,140 @@
+module: 07-citation-reference
+level: C1
+version: '1.0'
+items:
+  - lemma: цитувати
+    ipa: /t͡sɪtʊˈwatɪ/
+    translation: to quote / to cite
+    pos: verb
+    gender: ""
+  - lemma: цитата
+    ipa: /t͡sɪˈtata/
+    translation: quotation / citation
+    pos: noun
+    gender: f
+  - lemma: посилання
+    ipa: /pɔsɪˈlanʲːa/
+    translation: reference / link
+    pos: noun
+    gender: n
+  - lemma: джерело
+    ipa: /d͡ʒɛrɛˈlɔ/
+    translation: source
+    pos: noun
+    gender: n
+  - lemma: бібліографія
+    ipa: /bʲiblʲiɔˈɦrafija/
+    translation: bibliography
+    pos: noun
+    gender: f
+  - lemma: література
+    ipa: /lʲitɛraˈtura/
+    translation: literature / references
+    pos: noun
+    gender: f
+  - lemma: автор
+    ipa: /aˈwtɔr/
+    translation: author
+    pos: noun
+    gender: m
+  - lemma: дослідник
+    ipa: /dɔˈslʲidnɪk/
+    translation: researcher
+    pos: noun
+    gender: m
+  - lemma: науковець
+    ipa: /nankuˈwɛt͡sʲ/
+    translation: scientist / scholar
+    pos: noun
+    gender: m
+  - lemma: праця
+    ipa: /prat͡sʲa/
+    translation: work / labor / study
+    pos: noun
+    gender: f
+  - lemma: робота
+    ipa: /rɔˈbɔta/
+    translation: work / job / paper
+    pos: noun
+    gender: f
+  - lemma: стаття
+    ipa: /statʲˈtʲa/
+    translation: article
+    pos: noun
+    gender: f
+  - lemma: монографія
+    ipa: /mɔnɔˈɦrafija/
+    translation: monograph
+    pos: noun
+    gender: f
+  - lemma: дисертація
+    ipa: /dɪsɛrˈtat͡sija/
+    translation: dissertation / thesis
+    pos: noun
+    gender: f
+  - lemma: посилатися
+    ipa: /pɔsɪˈlatɪsʲa/
+    translation: to refer to / to cite
+    pos: verb
+    gender: ""
+  - lemma: згадувати
+    ipa: /zˈɦadʊwatɪ/
+    translation: to mention / to recall
+    pos: verb
+    gender: ""
+  - lemma: наводити
+    ipa: /naˈwɔdɪtɪ/
+    translation: to adduce / to cite / to give (an example)
+    pos: verb
+    gender: ""
+  - lemma: покликатися
+    ipa: /pɔklɪˈkatɪsʲa/
+    translation: to refer to / to appeal to
+    pos: verb
+    gender: ""
+  - lemma: слів
+    ipa: /slʲiw/
+    translation: words (gen. pl.)
+    pos: noun
+    gender: n
+    context: "за словами..."
+  - lemma: слова
+    ipa: /slɔˈwa/
+    translation: words (instr. pl.)
+    pos: noun
+    gender: n
+    context: "своїми словами..."
+  - lemma: зазначати
+    ipa: /zaznaˈt͡ʃatɪ/
+    translation: to note / to point out
+    pos: verb
+    gender: ""
+    context: "як зазначає..."
+  - lemma: думка
+    ipa: /dumka/
+    translation: thought / opinion
+    pos: noun
+    gender: f
+    context: "на думку..."
+  - lemma: згідно
+    ipa: /zˈɦidno/
+    translation: according to
+    pos: adv
+    gender: ""
+    context: "згідно з..."
+  - lemma: відповідно
+    ipa: /widpɔˈwidnɔ/
+    translation: accordingly / in accordance with
+    pos: adv
+    gender: ""
+    context: "відповідно до..."
+  - lemma: у
+    ipa: /u/
+    translation: in
+    pos: prep
+    gender: ""
+  - lemma: дослідження
+    ipa: /dɔˈslʲid͡ʒɛnʲːa/
+    translation: research / investigation
+    pos: noun
+    gender: n

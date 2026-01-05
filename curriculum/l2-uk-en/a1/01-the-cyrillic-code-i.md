@@ -130,8 +130,6 @@ Now it's time to test your decoding skills. Look at these Ukrainian words and tr
 
 Every single one of these is an international word that you already know. Just written in a different alphabet!
 
----
-
 # Summary
 
 In this module, you learned:
@@ -145,9 +143,3 @@ In this module, you learned:
 You can now read **35 international words** in Ukrainian. The key insight: many "Ukrainian" words are actually international words you already know, just written in Cyrillic.
 
 **Remember:** В is V, not B. Н is N, not H. Р is R, not P. С is S, not C. У is U, not Y. Х is like Scottish "loch."
-
----
-
-## Need More Practice?
-
----

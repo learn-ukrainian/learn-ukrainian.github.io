@@ -2,6 +2,11 @@ module: 76-ukrainian-music-today
 level: B1
 version: '2.0'
 items:
+- lemma: альбом
+  ipa: /alʲˈbɔm/
+  translation: album
+  pos: noun
+  gender: m
 - lemma: бумбокс
   ipa: /bumˈbɔks/
   translation: Boombox
@@ -11,6 +16,11 @@ items:
   ipa: /vakarˈt͡ʃuk/
   translation: Vakarchuk
   pos: propn
+  gender: m
+- lemma: виконавець
+  ipa: /vɪkɔˈnavɛt͡sʲ/
+  translation: performer (masc.)
+  pos: noun
   gender: m
 - lemma: виконавиця
   ipa: /vɪkɔˈnavɪt͡sʲa/
@@ -37,6 +47,11 @@ items:
   translation: Vidopliassova
   pos: propn
   gender: m
+- lemma: гурт
+  ipa: /hurt/
+  translation: band, group
+  pos: noun
+  gender: m
 - lemma: гімна
   ipa: /ˈhʲimna/
   translation: anthem (gen.)
@@ -62,6 +77,11 @@ items:
   translation: Jamala (acc.)
   pos: propn
   gender: m
+- lemma: євробачення
+  ipa: /jɛvrɔˈbat͡ʃɛnʲːa/
+  translation: Eurovision
+  pos: noun
+  gender: n
 - lemma: експериментальний
   ipa: /ɛkspɛrɪmɛnˈtalʲnɪj/
   translation: experimental
@@ -99,6 +119,11 @@ items:
   translation: kobzar (adj)
   pos: adj
   gender: f
+- lemma: концерт
+  ipa: /kɔnˈt͡sɛrt/
+  translation: concert
+  pos: noun
+  gender: m
 - lemma: мехенді
   ipa: /mɛˈxɛndʲi/
   translation: mehndi
@@ -122,6 +147,11 @@ items:
   ipa: /ɔdnɔjˈmɛnːɪj/
   translation: eponymous
   pos: adj
+  gender: f
+- lemma: пісня
+  ipa: /ˈpisʲnʲa/
+  translation: song
+  pos: noun
   gender: f
 - lemma: платиновий
   ipa: /plaˈtɪnɔvɪj/
@@ -198,6 +228,16 @@ items:
   translation: Skryabin
   pos: propn
   gender: m
+- lemma: співак
+  ipa: /spiˈvak/
+  translation: singer (masc.)
+  pos: noun
+  gender: m
+- lemma: співачка
+  ipa: /spiˈvat͡ʃka/
+  translation: singer (fem.)
+  pos: noun
+  gender: f
 - lemma: стадіона
   ipa: /staˈdʲiɔna/
   translation: stadium (gen.)
@@ -213,6 +253,11 @@ items:
   translation: Tartak
   pos: propn
   gender: m
+- lemma: фестиваль
+  ipa: /fɛstɪˈvalʲ/
+  translation: festival
+  pos: noun
+  gender: m
 - lemma: фолк
   ipa: /fɔlk/
   translation: folk
@@ -226,6 +271,11 @@ items:
 - lemma: фронтмен
   ipa: /frɔntˈmɛn/
   translation: frontman
+  pos: noun
+  gender: m
+- lemma: хіт
+  ipa: /xit/
+  translation: hit
   pos: noun
   gender: m
 - lemma: інді

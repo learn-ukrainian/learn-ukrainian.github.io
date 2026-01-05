@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (26 words): нарешті, жаль, власне, якому, таким...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (27 words): чином, таким, зрозуміло, очевидно, напевно...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

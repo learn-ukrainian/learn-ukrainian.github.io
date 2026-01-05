@@ -28,4 +28,3 @@
 | **Cultural Insight** | ✅ | 155 | Included in Core |
 | **Production** | ➖ | 58 | Excluded Type |
 | **Summary** | ✅ | 122 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |

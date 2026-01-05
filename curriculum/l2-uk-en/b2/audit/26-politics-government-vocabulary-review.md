@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): прем'єр, війна, закон, людини, уряд...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): парламент, закон, демократія, угода, війна...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

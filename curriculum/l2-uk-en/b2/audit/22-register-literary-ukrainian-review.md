@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): письменник, ліризм, іронія, сатира, роман...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (29 words): повість, розв'язка, алегорія, поема, драма...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

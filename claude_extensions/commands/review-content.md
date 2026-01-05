@@ -6,6 +6,26 @@
 
 Evaluate module content for educational quality, coherence, and pedagogical soundness.
 
+---
+
+## 🎯 Critical Sections Index (DO NOT SKIP)
+
+**Must-check sections in order of importance:**
+
+1. **Section 0:** Template Compliance (lines 148-214) → Auto-fail if violated
+2. **Section 8:** Activity Quality (lines 276-337) → AUTO-FAIL for structural errors, wrong answers
+3. **Section 15:** Richness Red Flags (lines 797-864) → AUTO-FAIL for AI slop
+4. **Section 9:** Red Flags (lines 341-349) → Multiple auto-fail conditions
+5. **Section 13:** LLM Fingerprint Detection (lines 534-762) → B1+ critical
+6. **Section 10:** Content Richness (lines 350-458) → B1+ critical
+7. **Sections 1-7:** Standard scoring criteria (lines 217-273)
+8. **Section 12:** Dryness Flags (lines 512-528) → 2+ flags = rewrite
+9. **Section 14:** Human Warmth (lines 765-793) → <2 markers = fail
+
+**⚠️ CHECKPOINT REMINDER:** Before generating your report, verify you have evaluated ALL 9 critical sections above.
+
+---
+
 ## Usage
 
 ```
@@ -239,6 +259,7 @@ Score each criterion 1-5:
 **4. Language Quality**
 
 - Clear, professional writing
+- **Precision Check:** Uses exact synonyms (e.g., "completed" vs "finished" where nuanced). Avoids vague terms like "thing" or "stuff."
 - No excessive repetition (same structure ≥5 times = flag)
 - Grammatically correct Ukrainian (validate against Словник.UA, Грінченка, Антоненко-Давидович)
 - Grammatically correct English explanations
@@ -252,6 +273,7 @@ Score each criterion 1-5:
 - **Scaffolding:** clear step-by-step instructions?
 - **Cognitive Load:** Is it too much at once?
 - **Accuracy:** Are grammar rules explained correctly?
+- **The "Why":** Does the module explain *why* we are learning this right now? (Motivation/Relevance).
 
 **6. Natural Immersion (Mixed Language Check)**
 
@@ -269,6 +291,14 @@ Flag if ANY true:
 - Contradictory explanations
 - Examples unrelated to explanations
 - Clear auto-generation artifacts
+
+---
+
+> **⚠️ CHECKPOINT REMINDER #1:** You are now entering **Section 8: Activity Quality** - one of the most critical sections.
+> **AUTO-FAIL conditions:** Wrong answers, multiple valid answers treated as incorrect, duplicate items, broken format.
+> **DO NOT SKIP THIS SECTION.** Activities are the primary learning tool.
+
+---
 
 **8. Activity Quality** (Critical Check)
 
@@ -349,7 +379,11 @@ Flag if:
 
 This is not about counts. This is about whether the content is ALIVE or DEAD.
 
-**10a. Engagement Quality**
+**10a. Engagement Quality (Entertainment Value)**
+
+- **Check:** Is this boring? Does it feel like a chore to read?
+- **Pass:** Uses humor, intrigue, or storytelling.
+- **Fail:** Dry recitation of rules without soul.
 
 ❌ **DRY (robot wrote this):**
 
@@ -450,23 +484,578 @@ For each section, score:
 **Total 5-7:** ⚠️ ENRICH section
 **Total 8-10:** ✅ PASS
 
-**10g. Dryness Flags**
+**11. Humanity & Flow Audit (The "Robot Test")**
+
+**Goal:** Ensure content doesn't just pass structural rules but feels like a human teacher speaking to a human learner.
+
+**11a. Cohesion Index (The "Glue" Test)**
+- **Check:** Do paragraphs flow logically or are they just stacked lists?
+- **Pass:** Uses transitional phrases (*However, For example, In this context, Consequently*).
+- **Fail:** Abrupt topic shifts without signaling. Paragraphs that start with definitions immediately after unconnected examples.
+
+**11b. Naturalness Metric (The "Uncanny Valley" Check)**
+- **Check (English Instructions):** Does it sound like a friendly tutor or a database export?
+  - ❌ *Robotic:* "Do not use this form. It is incorrect."
+  - ✅ *Human:* "Avoid this form—it sounds unnatural to native ears."
+- **Check (Ukrainian Content):** **Euphony (Милозвучність).**
+  - ❌ *Clunky:* "В учителі є..." (Vowel clash)
+  - ✅ *Euphonic:* "У вчителя є..." (Alternation rules respected)
+
+**11c. Cognitive Load (Lexical Density)**
+- **Check:** Is the text too dense with bolded terms/jargon without breathing room?
+- **Pass:** Balance of new information vs. explanations/examples.
+- **Fail:** >3 new concepts introduced in a single paragraph without example breakdown.
+
+**11d. Sentence Variety (Rhythm)**
+- **Check:** Variation in sentence length.
+- **Fail:** 5 consecutive sentences of roughly equal length (e.g., S-V-O format).
+- **Pass:** Mix of short, punchy sentences and longer, complex explanations.
+
+**11e. Figurative Language (The "Soul" Check)**
+- **Check (B1+):** Presence of idioms, metaphors, or colorful language.
+- **Fail:** 100% literal, dry description.
+- **Pass:** Uses analogies to explain grammar (e.g., "Think of cases like role tags in a play").
+
+**11f. Readability & Tone Check (English Instructions)**
+- **Contraction Usage:** Ensure natural use of contractions.
+  - ❌ *Robotic:* "It is important that you do not forget..."
+  - ✅ *Human:* "It's important that you don't forget..."
+- **Instruction Simplicity:** English explanations should be simple (B1/B2 level).
+  - ❌ *Dense:* "The semantic properties of the aspectual pair denote..."
+  - ✅ *Simple:* "This pair shows us the difference between..."
+
+**11g. Cultural Authenticity Check**
+- **Check:** Does the content reflect Ukrainian reality or is it a translated English concept?
+- **Pass:** Uses culturally relevant names (Oksana, Taras), foods (borshch, varenyky), and places (Kyiv, Carpathians).
+- **Fail:** "John eats a hamburger in New York" translated to Ukrainian.
+
+**11h. "Aha!" Moment Check**
+- **Check:** Does the module facilitate a moment of discovery?
+- **Pass:** "Now you see why..." or "That explains..." moments.
+
+**11i. Accessibility & Inclusivity Check**
+- **Check:** Is the language inclusive and avoiding stereotypes?
+- **Pass:** Gender-neutral phrasing where possible, diverse examples.
+
+**12. Dryness Flags**
 
 Flag content as DRY if ANY of these are true:
 
 | Flag                  | Pattern                                                       | Excluded Module Types                  |
 | --------------------- | ------------------------------------------------------------- | -------------------------------------- |
 | TEXTBOOK_VOICE        | No questions, metaphors, or emotional hooks in 300+ words     | —                                      |
+| ROBOTIC_TRANSITIONS   | No transitional phrases between paragraphs                    | —                                      |
 | REPETITIVE            | Same sentence structure >5 times in section                   | —                                      |
 | GENERIC_EXAMPLES      | No named people, places, or specific scenarios                | —                                      |
 | LIST_DUMP             | Explanation is just a list without narrative flow             | —                                      |
 | NO_CULTURAL_ANCHOR    | Grammar taught without Ukrainian cultural context             | —                                      |
 | ENGAGEMENT_BOX_FILLER | 💡 boxes just restate what was already said                   | —                                      |
 | WALL_OF_TEXT          | >500 words without engagement box, example block, or dialogue | History, Biography, Literature modules |
+| EUPHONY_VIOLATION     | >3 detected euphony errors (u/v, i/y alternations)            | —                                      |
 
 **If 2+ dryness flags: Section needs REWRITE, not just fix.**
 
 **Note:** A1/A2 modules focus on scaffolding (Cyrillic, basic grammar). Richness scoring applies primarily to B1+ where full immersion enables engaging content.
+
+---
+
+> **⚠️ CHECKPOINT REMINDER #2:** You are now entering **Section 13: LLM Fingerprint Detection** (9 subsections).
+> **B1+ CRITICAL:** AI-generated content that passes structural checks but lacks human voice, cultural authenticity, or pedagogical warmth.
+> **Take your time with this section.** Check ALL 9 subsections (13a-13i).
+
+---
+
+## Section 13: LLM Fingerprint Detection
+
+**Goal:** Flag content that exhibits telltale signs of lazy AI generation.
+
+### 13a. Overused AI Phrases (Auto-flag)
+
+**Common LLM Clichés to Flag:**
+
+English:
+- ❌ "It's important to note that..."
+- ❌ "It's worth noting that..."
+- ❌ "As we've seen..."
+- ❌ "Let's dive into..."
+- ❌ "In today's lesson..." (when module isn't time-bound)
+- ❌ "Mastering [X] is crucial for..."
+- ❌ "This will help you unlock..."
+- ❌ "Think of it as..." (overused analogy starter)
+- ❌ "In conclusion..." (textbook ending)
+- ❌ "To summarize..." (unless checkpoint/integration)
+- ❌ "Additionally, ..." "Furthermore, ..." "Moreover, ..." (stacked transitions without necessity)
+- ❌ "Now that we've covered..."
+
+Ukrainian:
+- ❌ "Важливо зазначити, що..."
+- ❌ "Як ми вже бачили..."
+- ❌ "Давайте заглибимось у..."
+- ❌ "У сьогоднішньому уроці..."
+- ❌ "Оволодіння [X] є важливим для..."
+
+**Check:** If 3+ of these phrases appear in one module, flag as **LLM_CLICHE_OVERUSE**.
+
+**Fix:** Rewrite with natural Ukrainian/English teaching voice.
+
+---
+
+### 13b. False Specificity (The "Generic Disguise" Test)
+
+**Pattern:** AI claims specificity but stays vague.
+
+❌ **Fake Specific (AI-generated):**
+```markdown
+Уявіть собі ситуацію: ви йдете до магазину і купуєте їжу.
+```
+- **Issue:** "магазин" (generic store), "їжа" (generic food) - no actual detail.
+
+✅ **Real Specific (Human):**
+```markdown
+Уявіть: ви на Бесарабському ринку в Києві. Продавець пропонує вам свіжу паляницю — ще теплу! Ви кажете: «Візьму дві».
+```
+- **Why it works:** Named place (Бесарабський ринок, Київ), specific item (паляниця), sensory detail (ще теплу), dialogue.
+
+**Check:**
+- Count named places, people, foods, cultural references
+- If module has <3 specific Ukrainian references (place names, traditional foods, cultural practices), flag as **FALSE_SPECIFICITY**
+
+---
+
+### 13c. Certainty Overload (The "AI Overconfidence" Test)
+
+**Pattern:** AI uses absolute statements where humans would hedge.
+
+❌ **Robotic (AI certainty):**
+```markdown
+Дієслова руху завжди використовуються з префіксами.
+Цей вираз ніколи не вживається в розмовній мові.
+```
+
+✅ **Human (natural qualification):**
+```markdown
+Дієслова руху часто використовуються з префіксами.
+Цей вираз рідко зустрічається в розмовній мові — українці віддають перевагу простішим формам.
+```
+
+**Check:** Count absolutes (завжди, ніколи, всі, жоден, кожен, must, never, always, every).
+- If >5 unqualified absolutes in a section, flag as **OVERCONFIDENCE**
+
+**Fix:** Add hedging (часто, зазвичай, generally, typically, often) and reasoning (чому? бо...).
+
+---
+
+### 13d. Anecdotal Absence (The "Teacher Story" Test)
+
+**Goal:** Real teachers tell stories. AI lists facts.
+
+**Check:**
+- Does the module include at least ONE:
+  - Personal anecdote ("Коли я вперше...") [if teacher voice]
+  - Student scenario with stakes ("Уявіть: ви на співбесіді і забули, як сказати...")
+  - Cultural story ("В Україні кажуть, що...")
+  - Historical context with narrative ("У 1991 році, коли...")
+
+**Pass:** Module has ≥1 narrative moment (story arc: setup → conflict/question → resolution).
+**Fail:** Module is 100% expository (just facts, no storytelling).
+
+**Flag as:** **NO_NARRATIVE_VOICE** (B1+ only; A1/A2 exempt due to language limitations).
+
+---
+
+### 13e. Predictability Test (The "Surprise Factor")
+
+**Pattern:** AI is formulaic. Human teaching has unexpected turns.
+
+**Check:** Does the module have ANY of these?
+- [ ] Surprising fact that challenges assumptions ("Але тут є сюрприз!")
+- [ ] Counterintuitive example ("Здається дивно, але...")
+- [ ] Playful contradiction ("Ви думаєте, що X? Насправді...")
+- [ ] Unexpected cultural insight ("Українці роблять інакше, ніж ви очікуєте...")
+- [ ] Grammar "trick" reveal ("Ось секрет, який спрощує все...")
+
+**Fail:** Module follows 100% predictable path (definition → table → example → practice). Zero surprises.
+**Pass:** Module has ≥1 moment where learner thinks "Oh! I didn't expect that!"
+
+**Flag as:** **PREDICTABLE_PEDAGOGY**
+
+---
+
+### 13f. Emotional Flatness (The "Boredom Detector")
+
+**Pattern:** AI rarely expresses emotion. Humans do.
+
+**Check for Emotional Markers:**
+- Exclamations: ! (excitement, surprise)
+- Rhetorical questions: ? (engagement, challenge)
+- Emphatic words: дуже, really, especially, particularly
+- Evaluative language: beautiful, clever, tricky, surprising
+- Direct address: ти/ви (you), давайте (let's)
+
+**Density Check:**
+- Count emotional markers per 100 words
+- **Fail:** <1 per 100 words (flat, robotic)
+- **Pass:** 2-4 per 100 words (conversational)
+- **Overboard:** >6 per 100 words (too gimmicky)
+
+**Flag as:** **EMOTIONAL_FLATNESS** (if fail threshold).
+
+---
+
+### 13g. Teacher Voice Consistency
+
+**Goal:** Ensure a consistent pedagogical persona throughout.
+
+**Check:**
+- Does the voice shift between formal/informal without reason?
+- Does the teacher persona stay consistent (encouraging vs. strict vs. playful)?
+- Are pronouns consistent (ви/formal vs. ти/informal)?
+
+❌ **Inconsistent:**
+```markdown
+Paragraph 1: "Давайте розглянемо..." (we together - inclusive)
+Paragraph 3: "Вам потрібно запам'ятати..." (you - distant)
+```
+
+✅ **Consistent:**
+```markdown
+All paragraphs: "Ми розглянемо..." "Ми запам'ятаємо..." (consistent "we" voice)
+```
+
+**Check:** Flag if pronouns/tone shift >2 times without pedagogical reason.
+
+**Flag as:** **INCONSISTENT_VOICE**
+
+---
+
+### 13h. Depth of Explanation (The "Why Depth" Test)
+
+**Pattern:** AI stops at surface. Humans dig into "why."
+
+**Example:**
+
+❌ **Shallow (AI):**
+```markdown
+Perfective aspect shows completed action. Use it for results.
+```
+
+✅ **Deep (Human):**
+```markdown
+Why do Ukrainians care so much about aspect?
+
+Because the verb form tells you whether to mentally "close the file" or not.
+
+"Я писав лист" → File still open. Maybe I'm still writing, maybe I stopped but didn't finish.
+"Я написав лист" → File closed. The letter exists now. Result achieved.
+
+English doesn't force this choice. Ukrainian does. Every. Single. Time.
+```
+
+**Check:** For each grammar concept, verify:
+- [ ] **What:** Definition provided
+- [ ] **How:** Usage examples provided
+- [ ] **Why it matters:** Cultural/linguistic reason explained
+- [ ] **Common mistake:** What learners get wrong and why
+
+**Fail:** Module teaches "what" and "how" but never "why."
+
+**Flag as:** **MISSING_WHY_LAYER**
+
+---
+
+### 13i. Cultural Resonance (The "Soul" Test)
+
+**Goal:** Ensure Ukrainian culture is woven in, not sprinkled on.
+
+**Superficial Integration (AI):**
+```markdown
+🎬 Pop Culture Moment: Ukrainians like borshch!
+```
+- **Issue:** Random fact without connection to grammar/vocab.
+
+**Deep Integration (Human):**
+```markdown
+Українці кажуть: "Не той борщ, що в горщик, а той, що в роті" (It's not the soup in the pot that counts, but the one in your mouth).
+
+Зверніть увагу: **в горщик** (Accusative), **в роті** (Locative).
+
+Чому різні відмінки? Бо один — куди кладуть (напрямок), інший — де знаходиться (місце).
+
+Ця різниця — суть української граматики.
+```
+
+**Check:**
+- [ ] Cultural content connects to grammar lesson (not random)
+- [ ] Proverbs/idioms demonstrate grammatical structure
+- [ ] Examples use Ukrainian reality (not translated Western scenarios)
+
+**Fail:** Culture is decorative (random facts in boxes). Grammar is separate.
+**Pass:** Culture IS the vehicle for teaching grammar.
+
+**Flag as:** **DECORATIVE_CULTURE** (if fail).
+
+---
+
+## Section 14: Human Warmth Checklist
+
+**Goal:** Quantify teacher presence using pattern matching (not subjective judgment).
+
+### 14a. Direct Address (Pattern Match)
+
+**Search for these patterns:**
+- English: `you`, `your`, `you'll`, `you're`, `let's`, `we'll`, `we're`, `we can`
+- Ukrainian: `ти`, `ви`, `твій`, `твоя`, `ваш`, `ваша`, `давайте`, `ми`, `можемо`
+
+**Count:** How many direct address patterns appear?
+- **Pass:** ≥10 instances in module
+- **Fail:** <10 instances
+
+**Why 10?** Average 2,000-word module should have ~1 direct address per 200 words (5% density).
+
+### 14b. Encouragement (Exact Phrase Match)
+
+**Search for encouraging phrases (case-insensitive):**
+
+English patterns:
+- `you've got this` / `you got this`
+- `don't worry` / `no worries`
+- `with practice` / `after practice`
+- `this becomes [natural/easier/clear]`
+- `you'll master this` / `you'll get it`
+
+Ukrainian patterns:
+- `не хвилю(й|йся|йтеся)`
+- `це зрозумі(є|ють) (кожен|всі)`
+- `з практикою`
+- `ви впораєтесь`
+- `ви зможете`
+
+**Count:** How many encouraging phrases?
+- **Pass:** ≥1 encouraging phrase
+- **Fail:** 0 encouraging phrases
+
+### 14c. Anticipates Confusion (Pattern Match)
+
+**Search for anticipation patterns:**
+- `you might think` / `you may think`
+- `you might be wondering` / `you may wonder`
+- `students often confuse`
+- `common mistake` / `typical error`
+- `learners usually` / `people often`
+- `don't confuse X with Y`
+- `careful:` / `watch out:` / `note:`
+
+Ukrainian:
+- `ви можливо думаєте`
+- `часто плутають`
+- `типова помилка`
+- `зверніть увагу:`
+- `обережно:`
+
+**Count:** How many anticipation patterns?
+- **Pass:** ≥2 instances
+- **Fail:** <2 instances
+
+### 14d. Real-World Validation (Pattern Match)
+
+**Search for relevance patterns:**
+- `after this module, you` / `after this lesson, you`
+- `this lets you` / `this allows you` / `this enables you`
+- `you'll be able to` / `you can now`
+- `in real life` / `in real conversation` / `in daily life`
+- `when you [visit/travel/speak]`
+
+Ukrainian:
+- `після цього модуля`
+- `це дозволить вам`
+- `ви зможете`
+- `у реальному житті`
+- `в повсякденному спілкуванні`
+
+**Count:** How many validation patterns?
+- **Pass:** ≥1 instance
+- **Fail:** 0 instances
+
+---
+
+### 14e. Human Warmth Score Calculation
+
+**Scoring Formula:**
+```
+Warmth Score = (Direct Address ≥10 ? 1 : 0) +
+               (Encouragement ≥1 ? 1 : 0) +
+               (Anticipation ≥2 ? 1 : 0) +
+               (Validation ≥1 ? 1 : 0)
+```
+
+| Score | Rating | Action         |
+|-------|--------|----------------|
+| 4/4   | ✅ Excellent | Pass - warm, human voice |
+| 3/4   | ✅ Good | Pass - acceptable warmth |
+| 2/4   | ⚠️ Adequate | ENRICH - add missing patterns |
+| 1/4   | ❌ Cold | REWRITE - lacks teacher presence |
+| 0/4   | ❌ Robotic | REWRITE - pure AI voice |
+
+**Flag as:** **COLD_PEDAGOGY** if score ≤1/4.
+
+**Example Report:**
+```
+Human Warmth: 2/4 (⚠️ ENRICH)
+- Direct Address: ✅ 15 instances
+- Encouragement: ❌ 0 instances (add encouraging phrases)
+- Anticipation: ✅ 3 instances
+- Validation: ❌ 0 instances (add real-world connection)
+```
+
+---
+
+## Section 15: Richness Red Flags (AUTO-FAIL)
+
+**These are fatal flaws that indicate AI slop:**
+
+### 15a. The "ChatGPT Default Voice"
+
+**Pattern Recognition:**
+```markdown
+Welcome to Module X! In this lesson, we'll explore...
+First, let's understand... Then, we'll dive deeper into...
+By the end of this module, you'll be able to...
+```
+
+**Why it's bad:** This is GPT's default scaffolding template. Zero personality.
+
+**Auto-fail if:** Module opens with this exact structure.
+
+### 15b. The "Bullet Point Barrage"
+
+**Pattern:**
+```markdown
+Here are 5 key points:
+- Point 1
+- Point 2
+- Point 3
+- Point 4
+- Point 5
+
+Now let's look at 3 examples:
+- Example 1
+- Example 2
+- Example 3
+```
+
+**Why it's bad:** No narrative flow. Just a list generator.
+
+**Auto-fail if:** >50% of module is bullet lists without prose paragraphs.
+
+### 15c. The "Wikipedia Copy-Paste" Syndrome
+
+**Pattern:**
+```markdown
+The Dative case (Ukrainian: давальний відмінок) is a grammatical case
+used in the Ukrainian language to indicate the indirect object of a verb.
+```
+
+**Why it's bad:** Encyclopedic tone. No teaching warmth. Passive voice overload.
+
+**Auto-fail if:** Module uses encyclopedic definitions without rewriting for learner voice.
+
+### 15d. The "Engagement Box Faker"
+
+**Pattern:**
+```markdown
+💡 Did You Know?
+Ukrainian has 7 cases!
+
+💡 Pro Tip:
+Remember to use the Dative case with these verbs.
+
+💡 Cultural Note:
+Ukrainians value hospitality.
+```
+
+**Why it's bad:** Boxes contain obvious/useless info. Padding, not value.
+
+**Auto-fail if:** >50% of engagement boxes just restate what body text already said.
+
+---
+
+## Section 16: Fix Strategies for AI-Generated Content
+
+**When you detect AI slop, apply these fixes:**
+
+### Strategy 1: Add Sensory Detail
+❌ **Generic:** "Людина готує їжу"
+✅ **Vivid:** "Запах борщу наповнює кухню — бурячки, часник, кріп"
+
+### Strategy 2: Name Everything
+❌ **Vague:** "Я купив хліб у магазині"
+✅ **Specific:** "Я купив паляницю в булочній 'Хлібний дім' на вулиці Хрещатик"
+
+### Strategy 3: Add "Why" Layer
+❌ **Shallow:** "Use perfective for results"
+✅ **Deep:** "Чому важливо? Бо українець почує 'я робив' і запитає: 'І що? Зробив чи ні?' Недоконаний вид залишає питання відкритим."
+
+### Strategy 4: Replace Certainty with Reality
+❌ **Absolute:** "Це завжди неправильно"
+✅ **Nuanced:** "Більшість українців скаже інакше. Хоч технічно обидва варіанти існують, один звучить природніше."
+
+### Strategy 5: Inject Story
+❌ **Factual:** "Genitive shows possession"
+✅ **Narrative:** "Марія йде до мами. Чому 'мами', а не 'мама'? Бо це — мамин дім, мамина вулиця, мамине місто. Родовий відмінок створює зв'язок: не просто 'йти до', а 'йти до когось свого'."
+
+---
+
+## Implementation Checklist for Sections 13-16
+
+**For each module review, add these steps AFTER Section 12:**
+
+**Step 13: Run LLM Fingerprint Detection**
+- [ ] Check for overused AI phrases (13a)
+- [ ] Verify real specificity vs. fake (13b)
+- [ ] Count certainty markers (13c)
+- [ ] Look for narrative moments (13d)
+- [ ] Check for surprises (13e)
+- [ ] Measure emotional density (13f)
+- [ ] Verify voice consistency (13g)
+- [ ] Check "why" depth (13h)
+- [ ] Assess cultural integration (13i)
+
+**Step 14: Human Warmth Audit**
+- [ ] Direct address present? (14a)
+- [ ] Encouragement included? (14b)
+- [ ] Confusion anticipated? (14c)
+- [ ] Real-world validation? (14d)
+
+**Step 15: Richness Red Flags**
+- [ ] No ChatGPT default voice? (15a)
+- [ ] No bullet barrage? (15b)
+- [ ] No Wikipedia tone? (15c)
+- [ ] Engagement boxes add value? (15d)
+
+**LLM Fingerprint Scoring:**
+- **5/5:** All checks pass. Content feels authentically human.
+- **4/5:** 1-2 minor flags. Mostly human, slight AI traces.
+- **3/5:** 3-4 flags. Noticeably AI-generated but salvageable.
+- **2/5:** 5+ flags. Heavy AI fingerprint. Needs rewrite.
+- **1/5:** Auto-fail red flags present. Pure AI slop. Complete rewrite.
+
+---
+
+> **⚠️ FINAL CHECKPOINT:** Before writing your report, verify you have completed ALL sections:
+> - ✅ Section 0: Template Compliance
+> - ✅ Sections 1-7: Standard scoring (Coherence, Relevance, Educational, Language, Pedagogy, Immersion, Word Salad)
+> - ✅ Section 8: Activity Quality (AUTO-FAIL if errors)
+> - ✅ Section 9: Red Flags
+> - ✅ Section 10: Content Richness (B1+)
+> - ✅ Section 11: Humanity & Flow
+> - ✅ Section 12: Dryness Flags
+> - ✅ Section 13: LLM Fingerprint Detection (9 subsections, B1+ critical)
+> - ✅ Section 14: Human Warmth (pattern match scoring)
+> - ✅ Section 15: Richness Red Flags (AUTO-FAIL)
+>
+> **If you skipped any section above, GO BACK NOW and complete it before proceeding.**
+
+---
 
 **Step 3: Generate Summary Report**
 
@@ -476,31 +1065,40 @@ For each module, output:
 ## Module {num}: {title}
 
 **Template:** {template_name} | **Compliance:** ✅ PASS / ❌ FAIL
-**Scores:** Coherence {X}/5 | Relevance {X}/5 | Educational {X}/5 | Language {X}/5 | Pedagogy {X}/5 | Immersion {X}/5 | Activities {X}/5 | Richness {X}/5 | **Overall {X}/5**
+**Scores:** Coherence {X}/5 | Relevance {X}/5 | Educational {X}/5 | Language {X}/5 | Pedagogy {X}/5 | Immersion {X}/5 | Activities {X}/5 | Richness {X}/5 | **Humanity {X}/5** | **LLM Fingerprint {X}/5** | **Overall {X}/5**
 **Status:** ✅ PASS / ⚠️ NEEDS WORK / ❌ REWRITE
+
+**AI Detection Flags:** {list any triggered: LLM_CLICHE_OVERUSE, FALSE_SPECIFICITY, OVERCONFIDENCE, NO_NARRATIVE_VOICE, PREDICTABLE_PEDAGOGY, EMOTIONAL_FLATNESS, INCONSISTENT_VOICE, MISSING_WHY_LAYER, DECORATIVE_CULTURE, COLD_PEDAGOGY}
 
 {If not PASS, list 2-3 main issues}
 ```
 
-**Step 4: Apply Safe Fixes**
+**Step 4: Apply Safe Fixes (Mandate: Aim for 5/5)**
 
-For each module with action items, categorize fixes:
+> **CRITICAL MANDATE:** Your goal is a perfect **5/5** score. Do not settle for "PASS" (4/5).
+> Humans detect even "minor" friction points (robotic transitions, slight repetition, lack of "glue").
+> **If you see a minor issue, FIX IT immediately.** Do not just report it.
 
-**Safe Fixes (Auto-apply):**
+For each module, apply fixes to elevate quality:
 
-- **Remove Duplicate Activities:** If YAML exists (Scenario A), DELETE the inline activities section from the Markdown file.
-- Remove leftover editing notes/meta-commentary
-- Fix typos and repetition errors
-- Delete redundant paragraphs (exact duplicates)
-- Remove factually incorrect statements
-- Clean up formatting artifacts
+**Safe Fixes (Auto-apply NOW):**
+
+- **Structure (Duplicate Activities):** If YAML activities file exists (Scenario A), **DELETE** the inline `## Activities` section from the Markdown file.
+- **Flow & Humanity:** Add transitional sentences between abrupt sections (the "Glue" test).
+- **Tone:** Rewrite robotic/dry sentences to be conversational.
+- **Euphony:** Fix vowel clashes (у/в, і/й) to ensure natural Ukrainian flow.
+- **Cleanliness:**
+  - Remove leftover editing notes/meta-commentary.
+  - Fix typos and repetition errors.
+  - Delete redundant paragraphs (exact duplicates).
+  - Clean up formatting artifacts.
+- **Accuracy:** Remove or correct factually incorrect statements.
 
 **Risky Fixes (Report only):**
 
-- Structural changes
-- Rewriting sections for clarity
-- Changing word count significantly
-- Subjective improvements
+- Major structural changes (moving entire sections).
+- Rewriting >50% of the module.
+- Changing the core pedagogical focus.
 
 For safe fixes:
 
@@ -561,8 +1159,11 @@ After reviewing all modules in scope:
 - Immersion: {X}/5 {reason}
 - Activities: {X}/5 {reason}
 - Richness: {X}/5 {reason} (B1+ only, N/A for A1/A2)
+- Humanity: {X}/5 {reason}
+- LLM Fingerprint: {X}/5 {reason} (B1+ critical, A1/A2 informational)
 - Word Salad: ❌ No / ⚠️ Yes
 - Dryness Flags: {list any triggered flags}
+- AI Detection Flags: {list any triggered: LLM_CLICHE_OVERUSE, FALSE_SPECIFICITY, OVERCONFIDENCE, NO_NARRATIVE_VOICE, PREDICTABLE_PEDAGOGY, EMOTIONAL_FLATNESS, INCONSISTENT_VOICE, MISSING_WHY_LAYER, DECORATIVE_CULTURE, COLD_PEDAGOGY}
 
 ### Strengths
 - {strength 1}
@@ -756,6 +1357,8 @@ These trigger automatic REWRITE recommendation:
 - ❌ **Incorrect "Correct" Answer:** The marked answer is grammatically wrong
 - ❌ **Unrelated Resources:** YouTube/blog links don't match module topic
 - ❌ **Dry Content (B1+):** 2+ dryness flags triggered (textbook voice, no cultural anchors, generic examples)
+- ❌ **AI Slop (Section 15):** ChatGPT default voice, bullet point barrage (>50%), Wikipedia tone, engagement box faker (>50% restate content)
+- ❌ **LLM Fingerprint Score 1/5 (B1+):** Auto-fail red flags from Section 15 detected
 
 ## Common Activity Issues (Examples)
 

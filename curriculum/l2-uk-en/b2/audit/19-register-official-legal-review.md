@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): сертифікат, виписка, довідка, відповідальність, виконання...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (24 words): дозвіл, довіреність, порушення, заява, свідоцтво...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

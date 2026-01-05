@@ -1,0 +1,563 @@
+module: 10-counterarguments
+level: C1
+version: '2.0'
+activities:
+
+  # Activity 1: Identify Counterargument
+  - id: 10-identify-counter
+    type: quiz
+    title: "Де тут контраргумент?"
+    instruction: "Знайдіть речення, яке виражає протилежну думку."
+    items:
+      - question: "Текст про електромобілі."
+        options:
+          - text: "Деякі експерти стверджують, що утилізація батарей шкодить довкіллю."
+            correct: true
+          - text: "Електромобілі стають дешевшими."
+            correct: false
+      - question: "Текст про освіту."
+        options:
+          - text: "Критики онлайн-навчання вказують на проблему соціалізації дітей."
+            correct: true
+          - text: "Школи повинні мати інтернет."
+            correct: false
+      - question: "Текст про податки."
+        options:
+          - text: "Опоненти податку на багатство побоюються відтоку капіталу."
+            correct: true
+          - text: "Бюджет потребує грошей."
+            correct: false
+      - question: "Текст про космос."
+        options:
+          - text: "Існує думка, що гроші краще витрачати на Землі, а не на Марсі."
+            correct: true
+          - text: "Ракети літають швидко."
+            correct: false
+      - question: "Текст про мову."
+        options:
+          - text: "Є побоювання, що перехід на латинку ускладнить доступ до історичних джерел."
+            correct: true
+          - text: "Мова розвивається."
+            correct: false
+      - question: "Текст про роботів."
+        options:
+          - text: "Профспілки застерігають, що автоматизація призведе до масового безробіття."
+            correct: true
+          - text: "Роботи працюють 24/7."
+            correct: false
+      - question: "Текст про дієту."
+        options:
+          - text: "Скептики наголошують, що веганство вимагає дорогих добавок."
+            correct: true
+          - text: "Овочі корисні."
+            correct: false
+      - question: "Текст про місто."
+        options:
+          - text: "Водії протестують проти звуження доріг заради велодоріжок."
+            correct: true
+          - text: "Місто має бути зручним."
+            correct: false
+
+  # Activity 2: Concession Markers
+  - id: 10-concession-markers
+    type: fill-in
+    title: "Маркери поступки"
+    instruction: "Вставте правильний маркер (Хоча, Попри, Втім, Однак)."
+    items:
+      - text: "[Хоча] (Although) ця ідея здається привабливою, вона має ризики."
+      - text: "[Попри] (Despite) критику, закон був прийнятий."
+      - text: "Економіка зростає. [Однак] (However), інфляція теж висока."
+      - text: "Ми погодилися. [Втім] (Nevertheless), деталі ще обговорюються."
+      - text: "[Хоча] (While) деякі люди проти, більшість за."
+      - text: "[Попри] (In spite of) дощ, ми пішли на парад."
+      - text: "Це складний шлях. [Однак] (However), він єдиний правильний."
+      - text: "[Незважаючи на] (Disregarding) труднощі, ми перемогли."
+
+  # Activity 3: Refutation Strategy
+  - id: 10-refutation-match
+    type: match-up
+    title: "Стратегія спростування"
+    instruction: "Як краще спростувати цей аргумент?"
+    pairs:
+      - left: "Це занадто дорого."
+        right: "Це інвестиція, яка окупиться за 5 років."
+      - left: "Це небезпечно."
+        right: "Статистика показує зниження аварійності на 20%."
+      - left: "Люди до цього не звикли."
+        right: "Звичка формується за 21 день при правильній комунікації."
+      - left: "Це зашкодить бізнесу."
+        right: "Навпаки, це відкриє нові ринки збуту."
+      - left: "Це обмежує свободу."
+        right: "Свобода одних закінчується там, де починається безпека інших."
+      - left: "Це вже пробували і не вийшло."
+        right: "Тоді були інші умови та технології."
+      - left: "Це не на часі."
+        right: "Відкладання проблеми лише поглибить кризу."
+      - left: "Це 'непопулярне рішення'."
+        right: "Лідерство полягає не в популярності, а в відповідальності."
+
+  # Activity 4: Weak vs Strong Refutation
+  - id: 10-weak-strong-refutation
+    type: quiz
+    title: "Сила спростування"
+    instruction: "Яке спростування сильніше?"
+    items:
+      - question: "Аргумент: Вакцини небезпечні."
+        options:
+          - text: "Це брехня і дурниці."
+            correct: false
+          - text: "Хоча існують поодинокі побічні ефекти, ризик ускладнень від хвороби в 1000 разів вищий."
+            correct: true
+      - question: "Аргумент: Українська мова складна."
+        options:
+          - text: "Ні, вона легка і співоча."
+            correct: false
+          - text: "Хоча граматика має нюанси, її фонетична система є логічною і послідовною."
+            correct: true
+      - question: "Аргумент: Штучний інтелект знищить мистецтво."
+        options:
+          - text: "ШІ не може відчувати, тому він ніколи не замінить справжнього митця, а стане лише інструментом."
+            correct: true
+          - text: "Я ненавиджу роботів."
+            correct: false
+      - question: "Аргумент: Читати нудно."
+        options:
+          - text: "Ти просто лінивий."
+            correct: false
+          - text: "Можливо, ви просто ще не знайшли свій жанр або автора."
+            correct: true
+      - question: "Аргумент: Історія — це минуле."
+        options:
+          - text: "Історія циклічна, і знання минулих помилок дозволяє уникнути їх у майбутньому."
+            correct: true
+          - text: "Треба поважати дідів."
+            correct: false
+      - question: "Аргумент: Глобалізація знищує нації."
+        options:
+          - text: "Це все змова масонів."
+            correct: false
+          - text: "Водночас вона дає можливість малим націям презентувати свою культуру на весь світ."
+            correct: true
+      - question: "Аргумент: Сміття сортувати важко."
+        options:
+          - text: "Це питання звички та організації простору вдома."
+            correct: true
+          - text: "Треба старатися."
+            correct: false
+      - question: "Аргумент: Вибори нічого не змінюють."
+        options:
+          - text: "Зміна влади у 2019 році показала, наскільки кардинально може змінитися курс країни через бюлетень."
+            correct: true
+          - text: "Всі вони однакові."
+            correct: false
+
+  # Activity 5: Vocabulary Definitions
+  - id: 10-vocab-def
+    type: match-up
+    title: "Визначення термінів"
+    instruction: "З'єднайте слово з визначенням."
+    pairs:
+      - left: "Контраргумент"
+        right: "Думка, що суперечить вашій тезі"
+      - left: "Поступка"
+        right: "Часткове визнання правоти опонента"
+      - left: "Спростування"
+        right: "Доказ помилковості контраргументу"
+      - left: "Упередження"
+        right: "Заздалегідь сформована, необ'єктивна думка"
+      - left: "Маніпуляція"
+        right: "Прихований вплив на свідомість"
+      - left: "Опонент"
+        right: "Людина, яка має протилежну точку зору"
+      - left: "Компроміс"
+        right: "Рішення шляхом взаємних поступок"
+      - left: "Міф"
+        right: "Поширене, але хибне уявлення"
+
+  # Activity 6: Sentence Order (Concession)
+  - id: 10-sentence-order
+    type: unjumble
+    title: "Побудова поступки"
+    instruction: "Складіть речення з поступкою."
+    items:
+      - jumbled: "Хоча / реформи / болісні / вони / необхідні."
+        answer: "Хоча реформи болісні вони необхідні."
+      - jumbled: "Ми визнаємо / що / проблема / існує / проте / ми / маємо / план."
+        answer: "Ми визнаємо що проблема існує проте ми маємо план."
+      - jumbled: "Незважаючи на / кризу / компанія / продовжує / наймати / людей."
+        answer: "Незважаючи на кризу компанія продовжує наймати людей."
+      - jumbled: "Опоненти стверджують / що / це дорого / однак / якість / вимагає / витрат."
+        answer: "Опоненти стверджують що це дорого однак якість вимагає витрат."
+      - jumbled: "Втім / варто / зазначити / що / ризики / мінімальні."
+        answer: "Втім варто зазначити що ризики мінімальні."
+      - jumbled: "Попри / скептицизм / проект / став / успішним."
+        answer: "Попри скептицизм проект став успішним."
+      - jumbled: "Безумовно / є / недоліки / але / переваги / їх / компенсують."
+        answer: "Безумовно є недоліки але переваги їх компенсують."
+      - jumbled: "Це / правда / що / ціни / зросли / проте / зросли / і / зарплати."
+        answer: "Це правда що ціни зросли проте зросли і зарплати."
+
+  # Activity 7: Logic Check
+  - id: 10-logic-check
+    type: quiz
+    title: "Логічний зв'язок"
+    instruction: "Оберіть сполучник, який найкраще підходить."
+    items:
+      - question: "Він багато працював, ____ не досяг успіху."
+        options:
+          - text: "проте (contrast)"
+            correct: true
+          - text: "тому що (cause)"
+            correct: false
+      - question: "____ погода була жахлива, ми пішли в гори."
+        options:
+          - text: "Хоча (concession)"
+            correct: true
+          - text: "Оскільки (cause)"
+            correct: false
+      - question: "Критики кажуть, що це неможливо. ____, історія знає такі приклади."
+        options:
+          - text: "Однак (transition)"
+            correct: true
+          - text: "Наприклад (illustration)"
+            correct: false
+      - question: "Ми поважаємо вашу думку, ____ не можемо погодитися."
+        options:
+          - text: "але (contrast)"
+            correct: true
+          - text: "отже (result)"
+            correct: false
+      - question: "____ дефіцит часу, ми встигли."
+        options:
+          - text: "Попри (preposition)"
+            correct: true
+          - text: "Хоча (conjunction)"
+            correct: false
+      - question: "Це рішення ризиковане. ____, воно дає шанс."
+        options:
+          - text: "Втім (transition)"
+            correct: true
+          - text: "Тому (result)"
+            correct: false
+      - question: "____ всі були проти, він зробив по-своєму."
+        options:
+          - text: "Хоч (concession)"
+            correct: true
+          - text: "Як (comparison)"
+            correct: false
+      - question: "Є багато питань, ____ головне одне."
+        options:
+          - text: "але (contrast)"
+            correct: true
+          - text: "бо (cause)"
+            correct: false
+
+  # Activity 8: Fill in Words
+  - id: 10-fill-vocab
+    type: fill-in
+    title: "Академічна лексика"
+    instruction: "Вставте пропущені слова."
+    items:
+      - text: "Ми мусимо розглянути можливий [контраргумент]."
+      - text: "Це [заперечення] не має під собою фактів."
+      - text: "Я готовий піти на [поступку] в цьому питанні."
+      - text: "Ваше [спростування] звучить переконливо."
+      - text: "Варто [визнавати] свої помилки."
+      - text: "[Однак], ми не змінимо позицію."
+      - text: "[Попри] все, ми продовжуємо."
+      - text: "Це лише [стереотип], а не правда."
+
+  # Activity 9: Fallacy Hunt
+  - id: 10-fallacy-hunt
+    type: quiz
+    title: "Полювання на хиби"
+    instruction: "Це логічний аргумент чи маніпуляція (Ad Hominem, Strawman)?"
+    items:
+      - question: "Ви так кажете, бо ви молодий і дурний."
+        options:
+          - text: "Маніпуляція (Ad Hominem)"
+            correct: true
+          - text: "Логічний аргумент"
+            correct: false
+      - question: "Ваші цифри не сходяться зі звітом МВФ."
+        options:
+          - text: "Логічний аргумент"
+            correct: true
+          - text: "Маніпуляція"
+            correct: false
+      - question: "Якщо ми дозволимо це, то завтра настане кінець світу."
+        options:
+          - text: "Маніпуляція (Slippery Slope)"
+            correct: true
+          - text: "Логічний аргумент"
+            correct: false
+      - question: "Мій опонент хоче знищити країну!"
+        options:
+          - text: "Маніпуляція (Strawman)"
+            correct: true
+          - text: "Логічний аргумент"
+            correct: false
+      - question: "Історичний досвід свідчить про зворотне."
+        options:
+          - text: "Логічний аргумент"
+            correct: true
+          - text: "Маніпуляція"
+            correct: false
+      - question: "Всі так роблять."
+        options:
+          - text: "Маніпуляція (Ad Populum)"
+            correct: true
+          - text: "Логічний аргумент"
+            correct: false
+      - question: "Це не працює, бо це нудно."
+        options:
+          - text: "Маніпуляція (Emotional)"
+            correct: true
+          - text: "Логічний аргумент"
+            correct: false
+      - question: "Ви або з нами, або проти нас."
+        options:
+          - text: "Маніпуляція (False Dichotomy)"
+            correct: true
+          - text: "Логічний аргумент"
+            correct: false
+
+  # Activity 10: Counter-Argument Match
+  - id: 10-counter-match
+    type: match-up
+    title: "Пари протилежностей"
+    instruction: "Знайдіть контраргумент до тези."
+    pairs:
+      - left: "Місто має розвивати громадський транспорт."
+        right: "Це обмежить права водіїв приватних авто."
+      - left: "Шкільна форма потрібна."
+        right: "Вона вбиває індивідуальність."
+      - left: "АЕС — це зелена енергія."
+        right: "Ризик радіації занадто високий."
+      - left: "Зоопарки треба закрити."
+        right: "Вони зберігають рідкісні види."
+      - left: "Вища освіта не обов'язкова."
+        right: "Статистика зарплат свідчить про зворотне."
+      - left: "Інтернет зближує людей."
+        right: "Він створює ілюзію спілкування."
+      - left: "ГМО — це майбутнє."
+        right: "Ми не знаємо довгострокових наслідків."
+      - left: "Смертна кара справедлива."
+        right: "Судові помилки неможливо виправити."
+
+  # Activity 11: Improve the Concession
+  - id: 10-improve-concession
+    type: quiz
+    title: "Покращення поступки"
+    instruction: "Оберіть кращий варіант поступки."
+    items:
+      - question: "Теза: Спорт корисний."
+        options:
+          - text: "Хоча спорт може призвести до травм, його користь для серця є незаперечною."
+            correct: true
+          - text: "Спорт корисний, але боляче."
+            correct: false
+      - question: "Теза: Читання важливе."
+        options:
+          - text: "Попри популярність відеоконтенту, читання розвиває уяву глибше."
+            correct: true
+          - text: "Відео це тупо, читайте книги."
+            correct: false
+      - question: "Теза: Демократія."
+        options:
+          - text: "Втім, демократичні процедури можуть бути повільними під час війни."
+            correct: true
+          - text: "Демократія повільна."
+            correct: false
+      - question: "Теза: Технології."
+        options:
+          - text: "Безумовно, гаджети відволікають, але вони дають доступ до знань."
+            correct: true
+          - text: "Гаджети — це зло, але там є Вікіпедія."
+            correct: false
+      - question: "Теза: Урбанізація."
+        options:
+          - text: "Ми визнаємо екологічні ризики, проте міста є двигунами інновацій."
+            correct: true
+          - text: "У містах брудно, але весело."
+            correct: false
+      - question: "Теза: Податки."
+        options:
+          - text: "Хоча ніхто не любить платити податки, вони фінансують нашу безпеку."
+            correct: true
+          - text: "Податки — це грабіж, але треба."
+            correct: false
+      - question: "Теза: Свобода слова."
+        options:
+          - text: "Свобода слова має межі, коли йдеться про заклики до насильства."
+            correct: true
+          - text: "Можна казати все."
+            correct: false
+      - question: "Теза: Глобалізація."
+        options:
+          - text: "Попри втрату деяких традицій, глобалізація збагачує культури."
+            correct: true
+          - text: "Глобалізація — це Макдональдс."
+            correct: false
+
+  # Activity 12: Synonym Search (Logic)
+  - id: 10-syn-logic
+    type: match-up
+    title: "Логічні синоніми"
+    instruction: "Знайдіть синонім."
+    pairs:
+      - left: "Але"
+        right: "Проте / Однак"
+      - left: "Тому що"
+        right: "Оскільки / Адже"
+      - left: "Наприклад"
+        right: "Зокрема / Як-от"
+      - left: "Думати"
+        right: "Вважати / Міркувати"
+      - left: "Сперечатися"
+        right: "Дискутувати / Опонувати"
+      - left: "Згоден"
+        right: "Поділяю думку / Солідарний"
+      - left: "Точно"
+        right: "Безперечно / Безумовно"
+      - left: "Мабуть"
+        right: "Ймовірно / Вочевидь"
+
+  # Activity 13: Tone Check
+  - id: 10-tone-check
+    type: quiz
+    title: "Тон дискусії"
+    instruction: "Яка фраза звучить академічно і ввічливо?"
+    items:
+      - question: "Незгода з опонентом."
+        options:
+          - text: "Я змушений не погодитися з цим твердженням, оскільки..."
+            correct: true
+          - text: "Ти помиляєшся!"
+            correct: false
+      - question: "Введення контраргументу."
+        options:
+          - text: "Існує протилежна точка зору, яка заслуговує на увагу."
+            correct: true
+          - text: "Деякі дурні кажуть..."
+            correct: false
+      - question: "Поступка."
+        options:
+          - text: "Варто визнати раціональне зерно в цій критиці."
+            correct: true
+          - text: "Ну ок, ти правий тут."
+            correct: false
+      - question: "Висновк."
+        options:
+          - text: "Підсумовуючи вищесказане, переваги переважають."
+            correct: true
+          - text: "Коротше, це круто."
+            correct: false
+      - question: "Введення джерела."
+        options:
+          - text: "Як зазначає професор Х..."
+            correct: true
+          - text: "Один чувак сказав..."
+            correct: false
+      - question: "Сумнів."
+        options:
+          - text: "Це твердження потребує додаткової верифікації."
+            correct: true
+          - text: "Це якась брехня."
+            correct: false
+      - question: "Підтримка."
+        options:
+          - text: "Ця статистика переконливо доводить тезу."
+            correct: true
+          - text: "Залізна інфа."
+            correct: false
+      - question: "Перехід."
+        options:
+          - text: "Розглянемо це питання під іншим кутом."
+            correct: true
+          - text: "А ще..."
+            correct: false
+
+  # Activity 14: Essay Response (Refutation)
+  - id: 10-write-refutation
+    type: essay-response
+    title: "Написання спростування"
+    instruction: "Напишіть абзац, у якому ви спростовуєте думку: 'Вивчати мови в епоху перекладачів Google — це марна трата часу'. Використайте формулу: Поступка -> Спростування."
+
+  # Activity 15: Identify Bias
+  - id: 10-identify-bias
+    type: quiz
+    title: "Виявлення упереджень"
+    instruction: "Де в цьому тексті упередження?"
+    items:
+      - question: "Всі знають, що жінки гірші водії."
+        options:
+          - text: "Гендерне упередження (Gender Bias)"
+            correct: true
+          - text: "Об'єктивний факт"
+            correct: false
+      - question: "Цей закон поганий, бо його писали ліберали."
+        options:
+          - text: "Політичне упередження (Political Bias)"
+            correct: true
+          - text: "Аналіз закону"
+            correct: false
+      - question: "Молодь нічого не розуміє в житті."
+        options:
+          - text: "Вікове упередження (Ageism)"
+            correct: true
+          - text: "Мудрість"
+            correct: false
+      - question: "Купуйте українське, бо іноземне — це отрута."
+        options:
+          - text: "Національне упередження / Ксенофобія"
+            correct: true
+          - text: "Патріотизм"
+            correct: false
+      - question: "Наука завжди права."
+        options:
+          - text: "Сцієнтизм (Dogma)"
+            correct: true
+          - text: "Науковий метод"
+            correct: false
+      - question: "Він бідний, тому лінивий."
+        options:
+          - text: "Класове упередження"
+            correct: true
+          - text: "Економічний аналіз"
+            correct: false
+      - question: "Це не мистецтво, бо це некрасиво."
+        options:
+          - text: "Естетичне упередження"
+            correct: true
+          - text: "Мистецтвознавча критика"
+            correct: false
+      - question: "Як казав мій дід..."
+        options:
+          - text: "Апеляція до традиції (Bias)"
+            correct: true
+          - text: "Авторитетне джерело"
+            correct: false
+
+  # Activity 16: Conjunction Puzzle
+  - id: 10-conj-puzzle
+    type: unjumble
+    title: "Пазл сполучників"
+    instruction: "Складіть складне речення."
+    items:
+      - jumbled: "Я / не згоден / хоча / розумію / вашу / логіку."
+        answer: "Я не згоден хоча розумію вашу логіку."
+      - jumbled: "Втім / успіх / залежить / не лише / від / таланту."
+        answer: "Втім успіх залежить не лише від таланту."
+      - jumbled: "Опоненти / помиляються / коли / ігнорують / факти."
+        answer: "Опоненти помиляються коли ігнорують факти."
+      - jumbled: "Це / не / кінець / а / лише / початок."
+        answer: "Це не кінець а лише початок."
+      - jumbled: "Попри / втрати / ми / зберегли / потенціал."
+        answer: "Попри втрати ми зберегли потенціал."
+      - jumbled: "Однак / час / покаже / хто / мав / рацію."
+        answer: "Однак час покаже хто мав рацію."
+      - jumbled: "Ми / віримо / в / перемогу / оскільки / правда / за / нами."
+        answer: "Ми віримо в перемогу оскільки правда за нами."
+      - jumbled: "Це / складне / питання / проте / ми / знайдемо / відповідь."
+        answer: "Це складне питання проте ми знайдемо відповідь."

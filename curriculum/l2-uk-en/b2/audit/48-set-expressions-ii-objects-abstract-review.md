@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): яблуко, дах, камінь, ворота, гуска...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): перо, ворота, двері, ложка, яблуко...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

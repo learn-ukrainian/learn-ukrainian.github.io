@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): суфікс, показує, порівняйте, подібно, основа...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): увагу, чином, відміну...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -13,13 +13,13 @@
 
 ## Gates
 - **Words:** ✅ 2322/1200
-- **Activities:** ✅ 16/12
+- **Activities:** ✅ 15/12
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/5 types
+- **Unique_types:** ✅ 11/5 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 12 < 20 (soft target)
+- **Vocab:** ✅ 40/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

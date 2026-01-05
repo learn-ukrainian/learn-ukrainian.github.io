@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): дозволили, показали, запитали, подзвонили, звільнили...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): порадили, прийняли, написали, дали, пообіцяли...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

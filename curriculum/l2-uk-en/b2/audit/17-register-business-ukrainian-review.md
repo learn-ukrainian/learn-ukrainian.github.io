@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): умови, презентація, корпорація, зобов'язання, директор...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (24 words): презентація, бюджет, договір, переговори, директор...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

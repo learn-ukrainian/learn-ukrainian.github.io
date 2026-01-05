@@ -1,9 +1,9 @@
 # Audit Report: 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.md
 **Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1928/1400
+- **Words:** ✅ 1892/1400
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -14,13 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 13 (target 10-12)
+- **Content_heavy:** ✅ Content-heavy OK (13 activities)
 - **Immersion:** 🇺🇦 100.0% (target 98-100% (history))
-- **Richness:** ❌ 91% < 95% min (history)
+- **Richness:** ✅ 95% (history)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 91% (minimum: 95%)
+**Score:** 95% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
@@ -31,18 +31,18 @@
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 14 | 2 | 100% | 14% | 14.3% |
 | cultural | 2 | 4 | 50% | 10% | 4.8% |
-| visual | 3 | 4 | 75% | 10% | 7.1% |
+| visual | 4 | 4 | 100% | 10% | 9.5% |
 | variety | 1.00 | - | 100% | 5% | 4.8% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 2 | 3 | 67% | 5% | 3.2% |
-| **TOTAL** | | | | | **91.3%** |
+| questions | 3 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **95.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 58 | Included in Core |
 | **Вступ** | ⚪️ | 161 | Skipped |
-| **Машина державного терору** | ⚪️ | 1238 | Skipped |
+| **Машина державного терору** | ⚪️ | 1202 | Skipped |
 | **Первинні джерела** | ⚪️ | 108 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 151 | Skipped |
 | **Підсумок** | ✅ | 212 | Included in Core |

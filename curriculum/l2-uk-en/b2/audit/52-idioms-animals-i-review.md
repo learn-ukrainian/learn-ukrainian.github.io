@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): символ, приховуваний, сила, з'їсти, характер...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): троянський, кінь, символ, небезпека, поведінка...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

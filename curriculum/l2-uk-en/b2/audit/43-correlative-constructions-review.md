@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (4 words): стільки, тоді, неначе, туди...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): ніби, тоді, неначе, туди, настільки...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 14 (target 10-12)
+- **Content_heavy:** ✅ Content-heavy OK (14 activities)
 - **Immersion:** 🇺🇦 99.9% (target 98-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation

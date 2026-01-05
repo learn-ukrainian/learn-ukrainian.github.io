@@ -1,0 +1,23 @@
+module: 11-summary-paraphrase
+title: "Мистецтво переказу"
+subtitle: "Summary & Paraphrase"
+version: "2.0"
+phase: "C1.1 Academic Foundation"
+focus: grammar
+pedagogy: "TTT"
+duration: 90
+transliteration: none
+tags:
+  - academic
+  - writing
+  - summary
+  - paraphrase
+grammar:
+  - "Summary techniques"
+  - "Paraphrase markers"
+objectives:
+  - "Master summary techniques"
+  - "Learn to paraphrase without plagiarism"
+  - "Use succinct language"
+vocabulary_count: 25
+slug: 11-summary-paraphrase

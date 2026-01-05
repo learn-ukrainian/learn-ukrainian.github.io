@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (24 words): вигук, сполучник, прийменник, давальний, дієслово...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (1 words): граматика...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,14 +12,14 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1913/1200
-- **Activities:** ✅ 16/12
+- **Words:** ✅ 1916/1200
+- **Activities:** ✅ 15/12
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/5 types
+- **Unique_types:** ✅ 11/5 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 5 < 20 (soft target)
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -47,18 +47,11 @@
 | proverbs | 3 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.8%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-### Errors
-- ❌ Activity not rendering: Знайдіть частини мови​ (Find Word Parts)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 78 | Included in Core |
-| **Presentation** | ✅ | 188 | Included in Core |
+| **Presentation** | ✅ | 191 | Included in Core |
 | **The Parts of Speech: Частини мови** | ⚪️ | 471 | Skipped |
 | **The Seven Cases: Сім відмінків** | ⚪️ | 309 | Skipped |
 | **Basic Sentence Terms** | ⚪️ | 440 | Skipped |

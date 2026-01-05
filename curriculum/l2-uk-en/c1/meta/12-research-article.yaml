@@ -1,0 +1,23 @@
+module: c1-012
+title: "Жанр: Наукова стаття"
+subtitle: "Genre: Research Article"
+version: "1.0"
+phase: "C1.1 Academic Foundation"
+focus: genre
+pedagogy: "Academic"
+duration: 120
+transliteration: none
+immersion: 100
+tags:
+  - academic
+  - writing
+  - research
+grammar:
+  - "IMRaD structure (Вступ, Методи, Результати, Обговорення)"
+  - "Impersonal academic register"
+objectives:
+  - "Learner can identify and structure the key sections of a Ukrainian research article (IMRaD)."
+  - "Learner can formulate appropriate titles and keywords for academic papers."
+  - "Learner distinguishes between personal and impersonal academic voice."
+vocabulary_count: 36
+slug: 12-research-article

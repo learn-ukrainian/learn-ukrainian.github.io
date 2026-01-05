@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1884/1750
+- **Words:** ✅ 1908/1750
 - **Activities:** ✅ 17/16
 - **Density:** ✅ All > 18
 - **Unique_types:** ✅ 11/4 types
@@ -15,7 +15,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.9% (target 98-100%)
+- **Immersion:** 🇺🇦 99.0% (target 98-100%)
 - **Richness:** ✅ 99% (academic)
 - **Grammar:** ⏳ Pending validation
 
@@ -36,15 +36,12 @@
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **100.0%** |
 
-## MDX VALIDATION
-✅ No issues found
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 84 | Included in Core |
-| **Текст 1: Від впевненого користувача до майстра слова** | ✅ | 435 | Included in Core |
-| **Текст 2: Українська мова в сучасному науковому дискурсі** | ✅ | 682 | Included in Core |
+| **Текст 1: Від впевненого користувача до майстра слова** | ✅ | 437 | Included in Core |
+| **Текст 2: Українська мова в сучасному науковому дискурсі** | ✅ | 704 | Included in Core |
 | **Порівняльний аналіз** | ✅ | 299 | Included in Core |
 | **Письмо: Академічне есе** | ⚪️ | 314 | Skipped |
 | **Підсумок** | ✅ | 70 | Included in Core |

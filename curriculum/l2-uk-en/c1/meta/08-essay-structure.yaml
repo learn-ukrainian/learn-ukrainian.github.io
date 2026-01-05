@@ -1,0 +1,24 @@
+module: 08-essay-structure
+title: "Структура есе"
+subtitle: "Essay Structure"
+version: "2.0"
+phase: "C1.1 Academic Writing"
+focus: grammar
+pedagogy: TTT
+duration: 90
+transliteration: none
+tags:
+  - writing
+  - structure
+  - essay
+  - academic
+grammar:
+  - "Paragraph structure (TEEL)"
+  - "Thesis statement formulation"
+objectives:
+  - "Understand the tripartite structure of an academic essay"
+  - "Formulate a strong thesis statement"
+  - "Develop coherent body paragraphs using TEEL (Topic sentence, Explanation, Evidence, Link)"
+  - "Write a compelling conclusion"
+vocabulary_count: 25
+slug: 08-essay-structure

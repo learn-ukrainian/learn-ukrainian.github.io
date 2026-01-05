@@ -426,7 +426,7 @@ activities:
     - тутечки
     explanation: Обрій знаходиться далеко.
   - sentence: Ідіть он там, прямо на мене, я вас бачу.
-    error: on tam
+    error: он там
     answer: сюди
     options:
     - сюди

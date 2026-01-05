@@ -1,0 +1,227 @@
+module: 12-research-article
+level: C1
+version: '1.0'
+items:
+- lemma: вісник
+  ipa: /viˈsnɪk/
+  translation: bulletin / herald (academic journal type)
+  pos: noun
+  gender: m
+- lemma: фахове видання
+  ipa: /fɐxoˈvɛ vɪdɐˈɲːɐ/
+  translation: professional/specialized publication (accredited journal)
+  pos: noun
+  gender: n
+- lemma: рецензування
+  ipa: /rɛt͡sɛnzʊˈʋɑɲːɐ/
+  translation: peer review
+  pos: noun
+  gender: n
+- lemma: рукопис
+  ipa: /rʊˈkɔpɪs/
+  translation: manuscript
+  pos: noun
+  gender: m
+- lemma: у співавторстві
+  ipa: /ʊ spiu̯ˈɑu̯tɔrstʋi/
+  translation: co-authored
+  pos: adverb
+- lemma: вступ
+  ipa: /ʍstʊp/
+  translation: introduction
+  pos: noun
+  gender: m
+- lemma: методологія
+  ipa: /mɛtɔdɔˈlɔɦijɐ/
+  translation: methodology
+  pos: noun
+  gender: f
+- lemma: результати
+  ipa: /rɛzʊlʲˈtɑtɪ/
+  translation: results
+  pos: noun
+  gender: pl
+- lemma: обговорення
+  ipa: /ɔbɦɔˈʋɔrɛɲːɐ/
+  translation: discussion
+  pos: noun
+  gender: n
+- lemma: висновки
+  ipa: /wɪsnɔu̯kɪ/
+  translation: conclusions
+  pos: noun
+  gender: pl
+- lemma: анотація
+  ipa: /ɐnɔˈtɑt͡sʲijɐ/
+  translation: abstract
+  pos: noun
+  gender: f
+- lemma: ключові слова
+  ipa: /klʲʊt͡ʃɔˈʋi slɔˈʋɑ/
+  translation: keywords
+  pos: noun
+  gender: pl
+- lemma: постановка проблеми
+  ipa: /pɔstɐˈnɔu̯kɐ prɔˈblɛmɪ/
+  translation: problem statement
+  pos: noun
+  gender: f
+- lemma: огляд літератури
+  ipa: /ɔˈɦlʲɐd lʲitɛrɐˈturɪ/
+  translation: literature review
+  pos: noun
+  gender: m
+- lemma: новизна
+  ipa: /nɔvɪzˈnɑ/
+  translation: novelty
+  pos: noun
+  gender: f
+- lemma: практичне значення
+  ipa: /prɐkˈtɪt͡ʃnɛ znɑˈt͡ʃɛɲːɐ/
+  translation: practical significance
+  pos: noun
+  gender: n
+- lemma: апробація
+  ipa: /ɐprɔˈbɑt͡sʲijɐ/
+  translation: approbation / testing of results
+  pos: noun
+  gender: f
+- lemma: плагіат
+  ipa: /plɐɦiˈɑt/
+  translation: plagiarism
+  pos: noun
+  gender: m
+- lemma: доброчесність
+  ipa: /dɔbrɔˈt͡ʃɛsʲnʲisʲtʲ/
+  translation: integrity
+  pos: noun
+  gender: f
+- lemma: запозичення
+  ipa: /zɐpɔˈzɪt͡ʃɛɲːɐ/
+  translation: borrowing (of ideas/text)
+  pos: noun
+  gender: n
+- lemma: посилання
+  ipa: /pɔsɪˈlɑɲːɐ/
+  translation: citation / reference / link
+  pos: noun
+  gender: n
+- lemma: джерело
+  ipa: /d͡ʒɛrɛˈlɔ/
+  translation: source
+  pos: noun
+  gender: n
+- lemma: бібліографія
+  ipa: /biːblʲiɔˈɦrɑfijɐ/
+  translation: bibliography
+  pos: noun
+  gender: f
+- lemma: примітки
+  ipa: /prɪˈmʲitkɪ/
+  translation: notes / footnotes
+  pos: noun
+  gender: pl
+- lemma: додаток
+  ipa: /dɔˈdɑtɔk/
+  translation: appendix
+  pos: noun
+  gender: m
+- lemma: публікувати
+  ipa: /pʊblʲikʊˈʋɑtɪ/
+  translation: to publish
+  pos: verb
+- lemma: подавати
+  ipa: /pɔdɐˈʋɑtɪ/
+  translation: to submit
+  pos: verb
+- lemma: відхилити
+  ipa: /ʋidxɪˈlɪtɪ/
+  translation: to reject
+  pos: verb
+- lemma: прийняти до друку
+  ipa: /prɪi̯ˈɲɑtɪ dɔ ˈdrʊkʊ/
+  translation: to accept for publication
+  pos: verb
+- lemma: доопрацьовувати
+  ipa: /dɔɔprɐˈt͡sʲɔʋʊʋɐtɪ/
+  translation: to revise / rework
+  pos: verb
+- lemma: виcвітлювати
+  ipa: /ʋɪˈsʲʋʲitlʲʊʋɐtɪ/
+  translation: to cover / elucidate
+  pos: verb
+- lemma: стислий
+  ipa: /stɪˈslɪi̯/
+  translation: concise
+  pos: adj
+- lemma: ґрунтовний
+  ipa: /grʊnˈtɔu̯nɪi̯/
+  translation: thorough / solid
+  pos: adj
+- lemma: суперечливий
+  ipa: /sʊpɛˈrɛt͡ʃlɪʋɪi̯/
+  translation: controversial
+  pos: adj
+- lemma: достовірний
+  ipa: /dɔstɔˈʋirnɪi̯/
+  translation: reliable / credible
+  pos: adj
+- lemma: емпіричний
+  ipa: /ɛmpiˈrɪt͡ʃnɪi̯/
+  translation: empirical
+  pos: adj
+- lemma: мета
+  ipa: /mɛˈtɑ/
+  translation: goal / aim
+  pos: noun
+  gender: f
+- lemma: видання
+  ipa: /vɪdɐˈɲːɐ/
+  translation: edition / publication
+  pos: noun
+  gender: n
+- lemma: редакція
+  ipa: /rɛdɐkˈt͡sʲijɐ/
+  translation: editorial board
+  pos: noun
+  gender: f
+- lemma: рекомендації
+  ipa: /rɛkɔmɛnˈdɑt͡sʲiji/
+  translation: recommendations
+  pos: noun
+  gender: pl
+- lemma: актуальність
+  ipa: /ɐktʊˈɑlʲnʲisʲtʲ/
+  translation: relevance / timeliness
+  pos: noun
+  gender: f
+- lemma: заголовок
+  ipa: /zɐɦɔˈlɔvɔk/
+  translation: headline / title
+  pos: noun
+  gender: m
+- lemma: дані
+  ipa: /dˈɑnʲi/
+  translation: data
+  pos: noun
+  gender: pl
+- lemma: література
+  ipa: /lʲitɛrɐˈturɐ/
+  translation: literature
+  pos: noun
+  gender: f
+- lemma: дискусія
+  ipa: /dɪsˈkusʲijɐ/
+  translation: discussion / debate
+  pos: noun
+  gender: f
+- lemma: назва
+  ipa: /nˈɑzvɐ/
+  translation: name / title
+  pos: noun
+  gender: f
+- lemma: журнал
+  ipa: /ʒʊrˈnɑl/
+  translation: journal
+  pos: noun
+  gender: m

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): кашель, імунітет, медсестра, біль, хронічний...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): процедура, скарга, імунітет, огляд, лікування...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

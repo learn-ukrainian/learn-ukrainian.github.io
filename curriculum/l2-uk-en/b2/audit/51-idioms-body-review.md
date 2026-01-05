@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): серце, емоційний, емоція, радість, любов...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): емоція, любов, емоційний, крається, камінь...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

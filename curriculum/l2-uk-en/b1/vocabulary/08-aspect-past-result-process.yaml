@@ -117,3 +117,44 @@ items:
   translation: background (adj)
   pos: adj
   gender: f
+- lemma: поступово
+  ipa: /pɔstuˈpɔvɔ/
+  translation: gradually
+  pos: adv
+- lemma: протягом
+  ipa: /prɔˈtʲaɦɔm/
+  translation: during
+  pos: prep
+- lemma: недовго
+  ipa: /nɛˈdɔu̯ɦɔ/
+  translation: not long
+  pos: adv
+- lemma: хвилину
+  ipa: /xvɪˈlɪnu/
+  translation: for a minute
+  pos: noun
+- lemma: щойно
+  ipa: /ˈʃt͡ʃɔjnɔ/
+  translation: just now
+  pos: adv
+- lemma: довго
+  ipa: /ˈdɔu̯ɦɔ/
+  translation: long time
+  pos: adv
+- lemma: досі
+  ipa: /ˈdɔsʲi/
+  translation: until now
+  pos: adv
+- lemma: нарешті
+  ipa: /naˈrɛʃtʲi/
+  translation: finally
+  pos: adv
+- lemma: годину
+  ipa: /xvɪˈlɪnu/
+  translation: for an hour
+  pos: noun
+- lemma: тиждень
+  ipa: /ˈtɪʒdɛnʲ/
+  translation: week
+  pos: noun
+  gender: m

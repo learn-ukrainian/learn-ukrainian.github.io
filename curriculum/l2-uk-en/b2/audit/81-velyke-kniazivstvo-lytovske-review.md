@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⚠️ Too many activities: 13 (target 10-12); 1 cloze with year blanks
+- **Content_heavy:** ⚠️ 1 cloze with year blanks
 - **Immersion:** 🇺🇦 99.7% (target 98-100% (history))
 - **Richness:** ✅ 97% (content)
 - **Grammar:** ⏳ Pending validation

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): контекст, аудиторія, ефект...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): ефект, версія, гнучкість, регістр, аудиторія...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

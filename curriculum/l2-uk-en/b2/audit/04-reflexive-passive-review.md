@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): виконуватися, використовуватися, купуватися, змінюватися, створюватися...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): купуватися, погіршуватися, будуватися, розвиватися, проводитися...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (4 words): неформальний, офіційно, штамп, суб'єктивність...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): публіцистичний, письмовий, суб'єктивність, науковий, точність...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

@@ -1,17 +1,22 @@
-module: c1-10
-title: Counterarguments
-subtitle: Academic Foundation
-version: '2.0'
-phase: C1.1 Academic
-focus: writing
-pedagogy: academic
+module: 10-counterarguments
+title: "Контраргументи"
+subtitle: "Counterarguments"
+version: "2.0"
+phase: "C1.1 Academic Foundation"
+focus: grammar
+pedagogy: "TTT"
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- writing
-- debate
-- counterargument
+  - essay
+  - logic
+  - debate
+grammar:
+  - "Concession (Although, Even though)"
+  - "Refutation strategies"
 objectives:
-- Master C1 concepts in Counterarguments
+  - "Learner can identify opposing viewpoints."
+  - "Learner can use concession clauses effectively."
+  - "Learner can refute counterarguments without logical fallacies."
+vocabulary_count: 25
 slug: 10-counterarguments

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): з'являючийся, їдучий, рухомий, спадаючий, змінюючийся...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): їдучий, з'являючийся, змінюючийся, спадаючий, рухомий...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

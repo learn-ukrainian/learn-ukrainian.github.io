@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): прилад, сертифікація, програма, обладнання, обслуговування...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): технологія, ремонт, керівництво, інструкція, обслуговування...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
