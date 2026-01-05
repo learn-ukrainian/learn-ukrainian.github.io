@@ -1354,10 +1354,21 @@ def audit_module(file_path: str) -> bool:
             content, level_code, module_focus or "",
             yaml_activities=yaml_activities
         )
+    
+    # Calculate limits for content-heavy gate
+    min_act = config.get('min_activities', 10)
+    # Special max limit for LIT (3-6), otherwise default buffer
+    if level_code == 'LIT':
+        max_act = 6
+    else:
+        max_act = min_act + 4  # Allow some buffer above minimum
+
     results['content_heavy'] = evaluate_content_heavy(
         is_content_heavy,
         activity_count,
-        content_recall_violations
+        content_recall_violations,
+        min_act=min_act,
+        max_act=max_act
     )
 
     # Transliteration policy

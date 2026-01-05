@@ -195,17 +195,21 @@ def evaluate_grammar(grammar_file_exists: bool, summary: dict = None) -> GateRes
 def evaluate_content_heavy(
     is_content_heavy: bool,
     activity_count: int,
-    content_recall_violations: list
+    content_recall_violations: list,
+    min_act: int = 10,
+    max_act: int = 12
 ) -> GateResult:
     """Evaluate content-heavy module compliance.
     
     Content-heavy modules (B2 history, C1 literature/biography/folk/arts)
-    should have 10-12 activities and test language, not content recall.
+    should have appropriate activity counts and test language, not recall.
     
     Args:
         is_content_heavy: Whether module is content-heavy type
         activity_count: Number of activities in module
         content_recall_violations: List of content recall violations
+        min_act: Minimum required activities (default 10)
+        max_act: Maximum allowed activities (default 12)
         
     Returns:
         GateResult with content-heavy compliance status
@@ -215,11 +219,11 @@ def evaluate_content_heavy(
     
     issues = []
     
-    # Check activity count (10-12 for content-heavy)
-    if activity_count > 12:
-        issues.append(f"Too many activities: {activity_count} (target 10-12)")
-    elif activity_count < 10:
-        issues.append(f"Too few activities: {activity_count} (target 10-12)")
+    # Check activity count
+    if activity_count > max_act:
+        issues.append(f"Too many activities: {activity_count} (target {min_act}-{max_act})")
+    elif activity_count < min_act:
+        issues.append(f"Too few activities: {activity_count} (target {min_act}-{max_act})")
     
     # Check content recall violations
     recall_count = len([v for v in content_recall_violations if v.get('type') == 'CONTENT_RECALL'])
