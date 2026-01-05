@@ -1,6 +1,9 @@
 # Learn Ukrainian - robots.txt
 # https://learn-ukrainian.github.io
 
+# Algolia Crawler Verification
+# Algolia-Crawler-Verif: 1DB51F4A18C9DC67
+
 User-agent: *
 Allow: /
 

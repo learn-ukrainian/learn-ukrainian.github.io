@@ -1,5 +1,6 @@
 {
-  "index_name": "learn-ukrainian",
+  "index_name": "dev_learn-ukrainian",
+  "app_id": "MFWOKG2YFD",
   "start_urls": [
     "https://learn-ukrainian.github.io/"
   ],
