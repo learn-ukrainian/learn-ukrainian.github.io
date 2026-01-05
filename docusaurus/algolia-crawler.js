@@ -19,7 +19,7 @@ new Crawler({
           $('.navbar__item.navbar__link--active').text() ||
           'Documentation';
 
-        return helpers.docsearch({
+        const records = helpers.docsearch({
           recordProps: {
             lvl0: {
               selectors: '',
