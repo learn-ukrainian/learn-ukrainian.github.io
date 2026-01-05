@@ -1,0 +1,48 @@
+{
+  "index_name": "https_learn_ukrainian_github_io_pages",
+  "start_urls": [
+    "https://learn-ukrainian.github.io/"
+  ],
+  "sitemap_urls": [
+    "https://learn-ukrainian.github.io/sitemap.xml"
+  ],
+  "stop_urls": [],
+  "selectors": {
+    "lvl0": {
+      "selector": ".menu__link.menu__link--sublist.menu__link--active, .navbar__item.navbar__link--active",
+      "global": true,
+      "default_value": "Documentation"
+    },
+    "lvl1": "header h1, article h1",
+    "lvl2": "article h2",
+    "lvl3": "article h3",
+    "lvl4": "article h4",
+    "lvl5": "article h5, article td:first-child",
+    "lvl6": "article h6, article .theme-admonition > div:first-child, article dt, article blockquote, article table",
+    "text": "article p, article li, article td:last-child"
+  },
+  "strip_chars": " .,;:#",
+  "custom_settings": {
+    "attributesForFaceting": [
+      "language",
+      "version",
+      "type",
+      "docusaurus_tag"
+    ],
+    "indexLanguages": ["en", "uk"],
+    "queryLanguages": ["en", "uk"],
+    "attributesToRetrieve": [
+      "hierarchy",
+      "content",
+      "anchor",
+      "url",
+      "url_without_anchor",
+      "type"
+    ]
+  },
+  "min_indexed_level": 0,
+  "conversation_id": [
+    "833762294"
+  ],
+  "nb_hits": 46250
+}
