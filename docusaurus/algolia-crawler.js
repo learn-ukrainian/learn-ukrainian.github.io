@@ -30,11 +30,22 @@ new Crawler({
             lvl3: 'article h3',
             lvl4: 'article h4',
             lvl5: 'article h5, article td:first-child',
-            lvl6: 'article h6',
+            // CRITICAL: Add more split points to prevent "Record too big" errors
+            // - .theme-admonition > div:first-child: Splits Callout/Admonition blocks
+            // - dt: Splits Definition Lists
+            // - strong: Splits long sections with bold headers (e.g. "Challenge 1:")
+            lvl6: [
+              'article h6', 
+              'article .theme-admonition > div:first-child', 
+              'article dt', 
+              'article strong'
+            ],
             content: 'article p, article li, article td:last-child',
           },
           indexHeadings: true,
-          aggregateContent: false,
+          // Re-enable aggregation to prevent "Too many records" error
+          // The enhanced lvl6 selectors above will prevent "Record too big" error
+          aggregateContent: true,
           recordVersion: 'v3',
         });
       },
@@ -96,10 +107,8 @@ new Crawler({
       advancedSyntax: true,
       attributeCriteriaComputedByMinProximity: true,
       removeWordsIfNoResults: 'allOptional',
-      // CRITICAL for Ukrainian: Add 'uk' to indexLanguages and queryLanguages
       indexLanguages: ['en', 'uk'],
       queryLanguages: ['en', 'uk'],
-      // Separators for Cyrillic (optional but helpful)
       separatorsToIndex: '_',
     },
   },

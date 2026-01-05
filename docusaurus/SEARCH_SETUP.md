@@ -34,7 +34,7 @@ To ensure Ukrainian content is indexed and large pages (Grammar/History modules)
 6. Click **Save** and **Restart Crawler**.
 
 ### Key Features of this Config
-- **Splitting:** Uses `helpers.docsearch` to automatically chunk large content (solving "Record too big" errors).
+- **Splitting:** Uses `helpers.docsearch` with `aggregateContent: true` to group text, BUT adds aggressive split points (`strong`, `dt`, `admonition-heading`) to `lvl6` to prevent "Record too big" errors.
 - **Schema:** Generates `lvl0`...`lvl6` hierarchy expected by Docusaurus.
 - **Languages:** Sets `indexLanguages: ['en', 'uk']` to properly tokenized Cyrillic content.
 - **Metadata:** Automatically extracts `docusaurus_tag` and `lang` for `contextualSearch`.
@@ -46,8 +46,11 @@ To ensure Ukrainian content is indexed and large pages (Grammar/History modules)
 - **Check Facets**: Ensure `contextualSearch: true` is enabled in `docusaurus.config.ts`.
 - **Check Index Name**: Must match exactly between `docusaurus.config.ts` and the Crawler.
 
-### "Record too big" errors?
-- The custom `recordExtractor` in `algolia-crawler.js` uses `aggregateContent: true` and `helpers.docsearch` to manage record sizes. If errors persist, check for single paragraphs >10KB.
+### "Record too big" or "Too many records"?
+- This config balances both limits:
+  - `aggregateContent: true` merges small paragraphs (solving "Too many records").
+  - Enhanced `lvl6` selectors (`article strong`, callout headers) force splits in long sections (solving "Record too big").
+- If errors persist, verify that you copied the latest `lvl6` configuration.
 
 ---
 
