@@ -2,26 +2,120 @@ module: 01-how-to-talk-about-grammar
 level: B1
 version: '2.0'
 items:
-- lemma: книго
-  ipa: /ˈknɪɦɔ/
-  translation: book (vocative)
-  pos: other
-- lemma: ковбаска
-  ipa: /kɔu̯ˈbaska/
-  translation: sausage (diminutive)
-  pos: propn
-- lemma: мнемонік
-  ipa: /mnɛˈmɔnʲik/
-  translation: mnemonic
+- lemma: іменник
+  ipa: /iˈmɛnːɪk/
+  translation: noun
+  pos: noun
+  gender: m
+- lemma: дієслово
+  ipa: /dʲijeˈslɔwo/
+  translation: verb
+  pos: noun
+  gender: n
+- lemma: прикметник
+  ipa: /prɪkˈmɛtnɪk/
+  translation: adjective
+  pos: noun
+  gender: m
+- lemma: прислівник
+  ipa: /prɪsˈlʲiu̯nɪk/
+  translation: adverb
+  pos: noun
+  gender: m
+- lemma: займенник
+  ipa: /zɐi̯ˈmɛnːɪk/
+  translation: pronoun
+  pos: noun
+  gender: m
+- lemma: числівник
+  ipa: /t͡ʃɪsˈlʲiu̯nɪk/
+  translation: numeral
+  pos: noun
+  gender: m
+- lemma: прийменник
+  ipa: /prɪi̯ˈmɛnːɪk/
+  translation: preposition
+  pos: noun
+  gender: m
+- lemma: сполучник
+  ipa: /spɔˈlut͡ʃnɪk/
+  translation: conjunction
+  pos: noun
+  gender: m
+- lemma: частка
+  ipa: /ˈt͡ʃastka/
+  translation: particle
   pos: noun
   gender: f
-- lemma: одниний
-  ipa: /ɔdnɪˈnɪj/
-  translation: singular (adj)
-  pos: adj
-  gender: f
-- lemma: орішка
-  ipa: /ɔˈrʲiʃka/
-  translation: nut (diminutive)
-  pos: propn
+- lemma: вигук
+  ipa: /ˈʋɪɦʊk/
+  translation: interjection
+  pos: noun
   gender: m
+- lemma: частина мови
+  ipa: /t͡ʃɐsˈtɪnɐ ˈmɔwɪ/
+  translation: part of speech
+  pos: phrase
+- lemma: відмінок
+  ipa: /widˈminɔk/
+  translation: grammatical case
+  pos: noun
+  gender: m
+- lemma: називний
+  ipa: /nɐzɪu̯ˈnɪi̯/
+  translation: nominative
+  pos: adj
+- lemma: родовий
+  ipa: /rɔdɔˈwɪi̯/
+  translation: genitive
+  pos: adj
+- lemma: давальний
+  ipa: /dɐˈʋalʲnɪi̯/
+  translation: dative
+  pos: adj
+- lemma: знахідний
+  ipa: /znɐxidˈnɪi̯/
+  translation: accusative
+  pos: adj
+- lemma: орудний
+  ipa: /ɔˈrudnɪi̯/
+  translation: instrumental
+  pos: adj
+- lemma: місцевий
+  ipa: /misˈt͡sɛwɪi̯/
+  translation: locative
+  pos: adj
+- lemma: кличний
+  ipa: /ˈklɪt͡ʃnɪi̯/
+  translation: vocative
+  pos: adj
+- lemma: слово
+  ipa: /ˈslɔwo/
+  translation: word
+  pos: noun
+  gender: n
+- lemma: речення
+  ipa: /ˈrɛt͡ʃenʲːɐ/
+  translation: sentence
+  pos: noun
+  gender: n
+- lemma: рід
+  ipa: /rid/
+  translation: gender
+  pos: noun
+  gender: m
+- lemma: число
+  ipa: /t͡ʃɪˈslɔ/
+  translation: number
+  pos: noun
+  gender: n
+- lemma: особа
+  ipa: /ɔˈsɔbɐ/
+  translation: person
+  pos: noun
+  gender: f
+- lemma: закінчення
+  ipa: /zɐˈkʲint͡ʃenʲːɐ/
+  translation: ending
+  pos: noun
+  gender: n

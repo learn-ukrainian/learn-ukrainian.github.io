@@ -2,55 +2,175 @@ module: 03-reading-grammar-rules
 level: B1
 version: '2.0'
 items:
-- lemma: '''без'''
-  ipa: /bɛz/
-  translation: without
-  pos: other
-- lemma: '''вже'''
-  ipa: /vʒɛ/
-  translation: already
-  pos: other
-- lemma: '''да'''
-  ipa: /da/
-  translation: yes (particle)
-  pos: other
-- lemma: '''писати'''
-  ipa: /pɪˈsatɪ/
-  translation: to write
-  pos: other
-- lemma: '''так'''
-  ipa: /tak/
-  translation: yes/so
-  pos: noun
-  gender: f
-- lemma: вже'
-  ipa: /vʒɛ/
-  translation: already
-  pos: other
-- lemma: вибрати
-  ipa: /ˈvɪbratɪ/
-  translation: to choose
+- lemma: використовується
+  ipa: /wɪkɔˈrɪstɔwujɛtʲsʲɐ/
+  translation: is used
   pos: verb
-- lemma: да'
-  ipa: /da/
-  translation: 'yes'
+- lemma: вживається
+  ipa: /wʒɪˈʋajɛtʲsʲɐ/
+  translation: is employed
+  pos: verb
+- lemma: означає
+  ipa: /ɔˈznat͡ʃajɛ/
+  translation: means
+  pos: verb
+- lemma: показує
+  ipa: /pɔˈkazujɛ/
+  translation: shows
+  pos: verb
+- lemma: виражає
+  ipa: /wɪrɐˈʒajɛ/
+  translation: expresses
+  pos: verb
+- lemma: вказує на
+  ipa: /ˈu̯kazujɛ nɐ/
+  translation: indicates
+  pos: phrase
+- lemma: порівняйте
+  ipa: /pɔrʲiu̯ˈnʲajtɛ/
+  translation: compare (imperative)
+  pos: verb
+- lemma: зверніть увагу
+  ipa: /zwɛrˈnʲitʲ ɔˈʋɐɦu/
+  translation: pay attention
+  pos: phrase
+- lemma: наприклад
+  ipa: /nɐˈprɪklad/
+  translation: for example
+  pos: adv
+- lemma: тобто
+  ipa: /ˈtɔbtɔ/
+  translation: that is
+  pos: conj
+- lemma: отже
+  ipa: /ˈɔdʒɛ/
+  translation: therefore
+  pos: conj
+- lemma: таким чином
+  ipa: /ˈtakɪm ˈt͡ʃɪnɔm/
+  translation: thus; in this way
+  pos: phrase
+- lemma: на відміну від
+  ipa: /nɐ ˈwidmʲinu wid/
+  translation: in contrast to
+  pos: phrase
+- lemma: подібно до
+  ipa: /pɔˈdʲibnɔ dɔ/
+  translation: similar to
+  pos: phrase
+- lemma: правило
+  ipa: /ˈpraʋɪɫɔ/
+  translation: rule
   pos: noun
-  gender: f
-- lemma: написа
-  ipa: /naˈpɪsa/
-  translation: wrote (incomplete)
-  pos: noun
-  gender: f
-- lemma: префікса
-  ipa: /ˈprɛfʲiksa/
-  translation: prefix (genitive)
+  gender: n
+- lemma: виняток
+  ipa: /ˈwɪnʲɐtɔk/
+  translation: exception
   pos: noun
   gender: m
-- lemma: розташувати
-  ipa: /rɔztaʃuˈvatɪ/
-  translation: to locate
+- lemma: форма
+  ipa: /ˈfɔrmɐ/
+  translation: form
+  pos: noun
+  gender: f
+- lemma: основа
+  ipa: /ɔˈsnɔʋɐ/
+  translation: stem (linguistics)
+  pos: noun
+  gender: f
+- lemma: корінь
+  ipa: /ˈkɔrʲinʲ/
+  translation: root (linguistics)
+  pos: noun
+  gender: m
+- lemma: суфікс
+  ipa: /ˈsufʲiks/
+  translation: suffix
+  pos: noun
+  gender: m
+- lemma: префікс
+  ipa: /ˈprɛfʲiks/
+  translation: prefix
+  pos: noun
+  gender: m
+- lemma: виберіть
+  ipa: /wɪˈberʲitʲ/
+  translation: choose (imperative)
   pos: verb
-- lemma: так'
-  ipa: /tak/
-  translation: so/yes
-  pos: other
+- lemma: оберіть
+  ipa: /ɔˈberʲitʲ/
+  translation: select (imperative)
+  pos: verb
+- lemma: знайдіть
+  ipa: /znɐi̯ˈdʲitʲ/
+  translation: find (imperative)
+  pos: verb
+- lemma: з'єднайте
+  ipa: /zjɛdˈnɐi̯tɛ/
+  translation: connect; match (imperative)
+  pos: verb
+- lemma: розташуйте
+  ipa: /rɔztɐˈʃujtɛ/
+  translation: arrange (imperative)
+  pos: verb
+- lemma: доповніть
+  ipa: /dɔˈpɔunʲitʲ/
+  translation: complete (imperative)
+  pos: verb
+- lemma: натисніть
+  ipa: /nɐˈtɪsʲnʲitʲ/
+  translation: click (imperative)
+  pos: verb
+- lemma: перекладіть
+  ipa: /perɛklɐˈdʲitʲ/
+  translation: translate (imperative)
+  pos: verb
+- lemma: складіть
+  ipa: /sklɐˈdʲitʲ/
+  translation: compose (imperative)
+  pos: verb
+- lemma: контекст
+  ipa: /kɔnˈtɛkst/
+  translation: context
+  pos: noun
+  gender: m
+- lemma: маркер
+  ipa: /ˈmɐrkɛr/
+  translation: marker
+  pos: noun
+  gender: m
+- lemma: частота
+  ipa: /t͡ʃɐstɔˈtɑ/
+  translation: frequency
+  pos: noun
+  gender: f
+- lemma: аспектуальна пара
+  ipa: /ɐspɛktuˈɑlʲnɐ ˈpɑrɐ/
+  translation: aspectual pair
+  pos: phrase
+- lemma: стиль
+  ipa: /stɪlʲ/
+  translation: style
+  pos: noun
+  gender: m
+- lemma: регістр
+  ipa: /reˈɦʲistr/
+  translation: register
+  pos: noun
+  gender: m
+- lemma: розмовна мова
+  ipa: /rɔzˈmɔu̯nɐ ˈmɔʋɐ/
+  translation: colloquial language
+  pos: phrase
+- lemma: літературна мова
+  ipa: /lʲitɛrɐˈturnɐ ˈmɔʋɐ/
+  translation: literary language
+  pos: phrase
+- lemma: формальна мова
+  ipa: /fɔrˈmɑlʲnɐ ˈmɔʋɐ/
+  translation: formal language
+  pos: phrase
+- lemma: нейтральна мова
+  ipa: /nɛi̯ˈtrɑlʲnɐ ˈmɔʋɐ/
+  translation: neutral language
+  pos: phrase

@@ -20,7 +20,7 @@ Every Ukrainian schoolchild learns these terms in school. When a Ukrainian teach
 
 > 💡 **Did You Know?**
 >
-> Ukrainian grammar terminology comes largely from Church Slavonic and Latin traditions. The word **відмінок** literally means "change" or "variation" — because the word *changes* form depending on its role in the sentence. The word **дієслово** literally means "action-word" (діє + слово).
+> Ukrainian grammar terminology comes largely from Church Slavonic and Latin traditions. The word **відмінок** literally means "change" or "variation" — because the word *changes* form depending on its role in the sentence. Think of **дієслово** as "action-word"—it's built from **дія** (action) and **слово** (word).
 
 ---
 
