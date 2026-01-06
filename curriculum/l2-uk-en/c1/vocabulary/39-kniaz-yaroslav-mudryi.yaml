@@ -1,0 +1,129 @@
+module: 39-kniaz-yaroslav-mudryi
+level: C1
+version: '1.0'
+items:
+- lemma: законодавець
+  ipa: /zɑkɔnɔˈdɑʋɛt͡sʲ/
+  translation: lawgiver
+  pos: noun
+  gender: m
+- lemma: мудрість
+  ipa: /ˈmudrʲisʲtʲ/
+  translation: wisdom
+  pos: noun
+  gender: f
+- lemma: усобиця
+  ipa: /ʊˈsɔbɪt͡sʲɑ/
+  translation: internal strife / feud
+  pos: noun
+  gender: f
+- lemma: розквіт
+  ipa: /rɔzˈkʋʲit/
+  translation: flourishing / heyday
+  pos: noun
+  gender: m
+- lemma: тесть
+  ipa: /tɛsʲtʲ/
+  translation: father-in-law (wife's father)
+  pos: noun
+  gender: m
+- lemma: дипломатія
+  ipa: /dɪplɔˈmɑtʲijɑ/
+  translation: diplomacy
+  pos: noun
+  gender: f
+- lemma: кодекс
+  ipa: /ˈkɔdɛks/
+  translation: code (of laws)
+  pos: noun
+  gender: m
+- lemma: звід
+  ipa: /zʋʲid/
+  translation: compendium / digest
+  pos: noun
+  gender: m
+- lemma: правда
+  ipa: /ˈprɑu̯dɑ/
+  translation: truth / justice / law (historical)
+  pos: noun
+  gender: f
+- lemma: митрополит
+  ipa: /mɪtrɔpɔˈlɪt/
+  translation: metropolitan (bishop)
+  pos: noun
+  gender: m
+- lemma: скрипторій
+  ipa: /skrɪpˈtɔrʲij/
+  translation: scriptorium
+  pos: noun
+  gender: m
+- lemma: бібліотека
+  ipa: /bʲiblʲiɔˈtɛkɑ/
+  translation: library
+  pos: noun
+  gender: f
+- lemma: династія
+  ipa: /dɪˈnɑstʲijɑ/
+  translation: dynasty
+  pos: noun
+  gender: f
+- lemma: шлюб
+  ipa: /ʃlʲub/
+  translation: marriage
+  pos: noun
+  gender: m
+- lemma: союз
+  ipa: /sɔˈjuz/
+  translation: alliance / union
+  pos: noun
+  gender: m
+- lemma: фреска
+  ipa: /ˈfrɛskɑ/
+  translation: fresco
+  pos: noun
+  gender: f
+- lemma: мозаїка
+  ipa: /mɔˈzɑjikɑ/
+  translation: mosaic
+  pos: noun
+  gender: f
+- lemma: собор
+  ipa: /sɔˈbɔr/
+  translation: cathedral
+  pos: noun
+  gender: m
+- lemma: намісник
+  ipa: /nɑˈmʲisnɪk/
+  translation: viceroy / governor
+  pos: noun
+  gender: m
+- lemma: віче
+  ipa: /ˈʋʲit͡ʃɛ/
+  translation: veche (popular assembly)
+  pos: noun
+  gender: n
+- lemma: верства
+  ipa: /ʋɛrstˈʋɑ/
+  translation: social stratum / layer
+  pos: noun
+  gender: f
+- lemma: смерд
+  ipa: /smɛrd/
+  translation: smerd (peasant)
+  pos: noun
+  gender: m
+- lemma: вира
+  ipa: /ˈʋɪrɑ/
+  translation: weregild (blood money)
+  pos: noun
+  gender: f
+- lemma: гривня
+  ipa: /ˈɦrɪʋnʲɑ/
+  translation: hryvnia (currency)
+  pos: noun
+  gender: f
+- lemma: спадщина
+  ipa: /ˈspɑdʃt͡ʃɪnɑ/
+  translation: legacy / heritage
+  pos: noun
+  gender: f
