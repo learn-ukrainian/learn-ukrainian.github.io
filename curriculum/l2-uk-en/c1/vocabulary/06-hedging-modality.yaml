@@ -72,6 +72,11 @@ items:
     translation: to a great extent
     pos: phrase
     gender: n
+  - lemma: мірою
+    ipa: /ˈmʲiroju/
+    translation: measure/extent (instrumental)
+    pos: noun
+    gender: f
   - lemma: здається
     ipa: /zdɐˈjɛtʲsʲɐ/
     translation: it seems
@@ -165,5 +170,29 @@ items:
   - lemma: згадати
     ipa: /zɦɐˈdɑtɪ/
     translation: to mention/recall
+    aspect: perfective
+  - lemma: зазначити
+    ipa: /zɐznɐˈtʃɪtɪ/
+    translation: to point out/state
+    pos: verb
+    aspect: perfective
+  - lemma: підстави
+    ipa: /pidˈstɑvɪ/
+    translation: grounds/basis
+    pos: noun
+    gender: p
+  - lemma: наголосити
+    ipa: /nɐɦɔlɔˈsɪtɪ/
+    translation: to stress/emphasize
+    pos: verb
+    aspect: perfective
+  - lemma: підкреслити
+    ipa: /pidˈkrɛslɪtɪ/
+    translation: to underline/emphasize
+    pos: verb
+    aspect: perfective
+  - lemma: відзначити
+    ipa: /vidˈznɑtʃɪtɪ/
+    translation: to note/mark
     pos: verb
     aspect: perfective

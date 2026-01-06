@@ -10,10 +10,11 @@ interface MatchPair {
 
 interface MatchUpProps {
   pairs: MatchPair[];
+  instruction?: string;
   isUkrainian?: boolean;
 }
 
-export default function MatchUp({ pairs, isUkrainian }: MatchUpProps) {
+export default function MatchUp({ pairs, instruction, isUkrainian }: MatchUpProps) {
   const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
   const [matched, setMatched] = useState<Set<number>>(new Set());
   const [wrongPair, setWrongPair] = useState<{ left: number; right: number } | null>(null);
@@ -62,6 +63,9 @@ export default function MatchUp({ pairs, isUkrainian }: MatchUpProps) {
         <span>{headerLabel}</span>
         <ActivityHelp activityType="match-up" isUkrainian={isUkrainian} />
       </div>
+      {instruction && (
+        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      )}
       <div className={styles.matchUpContainer}>
         <div className={styles.matchColumn}>
           {pairs.map((pair, index) => (

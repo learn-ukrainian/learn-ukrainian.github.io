@@ -47,4 +47,3 @@ Be careful not to confuse **щоб** (purpose) with **тому що** (reason) o
 - Я пішов у магазин, **тому що** був голодний. (Reason)
 - Я пішов у магазин, **щоб** купити хліб. (Purpose)
 
-##

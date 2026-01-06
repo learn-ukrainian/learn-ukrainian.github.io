@@ -153,4 +153,3 @@ Two colleagues, Olena and Ihor, are discussing a future trip.
 > **Myth:** Ukrainian culture is monolithic and everyone agrees on history and politics because of the war.
 > **Reality:** Ukraine is a vibrant democracy with a huge diversity of opinions. Debating historical memory and future direction is a core part of the modern Ukrainian identity. We value the right to disagree and discuss diverse perspectives openly.
 
-##

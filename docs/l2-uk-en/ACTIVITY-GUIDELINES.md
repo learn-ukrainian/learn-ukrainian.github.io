@@ -11,7 +11,7 @@ This document provides **activity templates and examples** for each CEFR level. 
 
 ---
 
-## Supported Activity Types (13 Total)
+## Supported Activity Types (12 Total)
 
 | Type | Parser | Level | Description |
 |------|--------|-------|-------------|
@@ -24,7 +24,6 @@ This document provides **activity templates and examples** for each CEFR level. 
 | `anagram` | ✅ | A1 M01-10 only | Letter unscrambling (Cyrillic scaffolding) |
 | `error-correction` | ✅ | A2+ | Find and fix errors |
 | `cloze` | ✅ | A2+ | Passage with multiple dropdown blanks |
-| `dialogue-reorder` | ✅ | A2+ | Put dialogue lines in correct order |
 | `mark-the-words` | ✅ | A2+ | Click/tap words matching criteria |
 | `select` | ✅ | A2+ | Multi-checkbox selection |
 | `translate` | ✅ | A2+ | Translation choice exercise |

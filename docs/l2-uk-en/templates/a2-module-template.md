@@ -138,7 +138,6 @@ Brief recap in Ukrainian (75-100 words):
 - `error-correction` - Find and fix errors (NEW at A2)
 - `cloze` - Passage completion (NEW at A2)
 - `mark-the-words` - Click matching words (NEW at A2)
-- `dialogue-reorder` - Conversation ordering (NEW at A2)
 
 **Activity Requirements:**
 - 12+ items per activity
@@ -226,15 +225,6 @@ Brief recap in Ukrainian (75-100 words):
 > [!instruction] Click all nouns in the sentence.
 >
 > *Мама* читає *книгу* в *кімнаті*.
-```
-
-**dialogue-reorder** (conversation ordering):
-```markdown
-## dialogue-reorder: Title
-- [4] Final response.
-- [1] Opening question.
-- [3] Follow-up answer.
-- [2] First response.
 ```
 
 ### ## Vocabulary

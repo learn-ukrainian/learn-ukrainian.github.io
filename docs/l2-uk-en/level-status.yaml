@@ -28,7 +28,7 @@ b1:
 
 b2:
   planned: 145
-  status: auto
+  status: complete  # Manually verified 2026-01-06
   description: "Upper-Intermediate — Passive voice, registers, history"
 
 c1:

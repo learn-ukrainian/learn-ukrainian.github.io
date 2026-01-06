@@ -1,22 +1,26 @@
 - type: match-up
   title: Prefix Meanings
   pairs:
-  - left: '- пере-'
+  - left: 'пере-'
     right: across, over
-  - left: '- про-'
+  - left: 'про-'
     right: through, past
-  - left: '- за-'
+  - left: 'за-'
     right: behind, stopping by
-  - left: '- до-'
+  - left: 'до-'
     right: reaching destination
-  - left: '- об-'
+  - left: 'об-'
     right: around
-  - left: '- під-'
+  - left: 'під-'
     right: approaching
-  - left: '- ви-'
+  - left: 'ви-'
     right: out
-  - left: '- в-/у-'
+  - left: 'в-/у-'
     right: into
+  - left: 'ви-'
+    right: out of
+  - left: 'пере-'
+    right: across/over
 - type: fill-in
   title: Choose the Prefix
   items:
@@ -338,22 +342,26 @@
 - type: match-up
   title: Directions
   pairs:
-  - left: '- Перейди вулицю'
+  - left: 'Перейди вулицю'
     right: Cross the street
-  - left: '- Пройди через парк'
+  - left: 'Пройди через парк'
     right: Walk through the park
-  - left: '- Зайди до друга'
+  - left: 'Зайди до друга'
     right: Stop by your friend's
-  - left: '- Дійди до кінця'
+  - left: 'Дійди до кінця'
     right: Reach the end
-  - left: '- Обійди будинок'
+  - left: 'Обійди будинок'
     right: Go around the building
-  - left: '- Підійди ближче'
+  - left: 'Підійди ближче'
     right: Come closer
-  - left: '- Проїдь зупинку'
+  - left: 'Проїдь зупинку'
     right: Pass the stop
-  - left: '- Заїдь за молоком'
+  - left: 'Заїдь за молоком'
     right: Stop by for milk
+  - left: 'вниз'
+    right: downward
+  - left: 'вгору'
+    right: upward
 - type: cloze
   title: Daily Commute
   passage: 'Олег [{виходить|заходить|проходить}] з дому о сьомій. (exits) Він [{підходить|проходить|заходить}]
@@ -365,7 +373,10 @@
 
 
     Він [{заходить|доходить|проходить}] в кафе. Увечері він [{заїжджає|проїжджає|об''їжджає}]
-    в супермаркет. (stops by, driving)'
+    в супермаркет. (stops by, driving) Після роботи він [{виходить|заходить|підходить}]
+    з офісу о п''ятій. (exits) Він [{підходить|проходить|переходить}] до метро.
+    (approaches) Поїзд [{проходить|заходить|обходить}] через тунель. (passes through)
+    Олег [{доходить|заходить|виходить}] додому о шостій. (reaches home)'
 - type: cloze
   title: Carpathians Trip
   passage: 'Родина {виїхала|заїхала|доїхала} з Києва вранці.

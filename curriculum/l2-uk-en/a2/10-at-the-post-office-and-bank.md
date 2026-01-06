@@ -202,4 +202,10 @@ Read these dialogues aloud and identify the cases used in each sentence. This ex
 >
 > When practicing service dialogues, focus on the verb-object patterns. Most service verbs like відправити, зняти, обміняти require accusative for the direct object. Quantity expressions like "сто гривень" require genitive. Master these patterns and you'll handle any service interaction!
 
-##
+# Summary
+
+У цьому модулі ви вивчили:
+- Основні поняття та правила
+- Практичне застосування
+- Вправи для закріплення
+

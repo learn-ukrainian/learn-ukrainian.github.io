@@ -150,3 +150,68 @@ items:
     translation: bright
     pos: adj
     gender: m
+  - lemma: чорний
+    ipa: /ˈt͡ʃɔrnɪj/
+    translation: black
+    pos: adj
+    gender: m
+  - lemma: сірий
+    ipa: /ˈsirɪj/
+    translation: gray
+    pos: adj
+    gender: m
+  - lemma: червоний
+    ipa: /t͡ʃɛrˈvɔnɪj/
+    translation: red
+    pos: adj
+    gender: m
+  - lemma: помаранчевий
+    ipa: /pɔmɑˈrɑnt͡ʃɛvɪj/
+    translation: orange
+    pos: adj
+    gender: m
+  - lemma: зелений
+    ipa: /zɛˈlɛnɪj/
+    translation: green
+    pos: adj
+    gender: m
+  - lemma: синій
+    ipa: /ˈsɪnʲij/
+    translation: blue
+    pos: adj
+    gender: m
+  - lemma: фіолетовий
+    ipa: /fiɔˈlɛtɔvɪj/
+    translation: purple
+    pos: adj
+    gender: m
+  - lemma: рожевий
+    ipa: /rɔˈʒɛvɪj/
+    translation: pink
+    pos: adj
+    gender: m
+  - lemma: сорочка
+    ipa: /sɔˈrɔt͡ʃkɑ/
+    translation: shirt
+    pos: noun
+    gender: f
+  - lemma: джинси
+    ipa: /ˈdʒɪnsɪ/
+    translation: jeans
+    pos: noun
+    gender: pl
+  - lemma: спідниця
+    ipa: /spidˈnɪt͡sʲɑ/
+    translation: skirt
+    pos: noun
+    gender: f
+  - lemma: капелюх
+    ipa: /kɑpɛˈlʲux/
+    translation: hat
+    pos: noun
+    gender: m
+  - lemma: шарф
+    ipa: /ʃɑrf/
+    translation: scarf
+    pos: noun
+    gender: m

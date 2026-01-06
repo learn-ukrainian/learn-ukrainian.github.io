@@ -224,3 +224,21 @@ items:
     translation: cold
     pos: adj
     gender: m
+  - lemma: можна
+    ipa: /ˈmɔʒnɑ/
+    translation: may/allowed
+    pos: adv
+  - lemma: треба
+    ipa: /ˈtrɛbɑ/
+    translation: need/must
+    pos: adv
+  - lemma: змога
+    ipa: /ˈzmɔɦɑ/
+    translation: ability
+    pos: noun
+    gender: f
+  - lemma: змозі
+    ipa: /ˈzmɔzi/
+    translation: in ability (loc)
+    pos: noun
+    gender: f

@@ -2,15 +2,6 @@
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** Narrative | **Target:** 1000
 **Overall Status:** ✅ PASS
 
-## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-
-## Recommendation
-**📝 UPDATE** (severity 10/100)
-
-- 1 pedagogical violations (minor)
-
 ## Gates
 - **Words:** ✅ 1247/1000
 - **Activities:** ✅ 10/10
@@ -19,7 +10,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 54/1
+- **Vocab:** ✅ 55/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

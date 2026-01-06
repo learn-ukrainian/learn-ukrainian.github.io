@@ -28,7 +28,7 @@
 - type: cloze
   title: 'Entry or Exit? (Concept: Contextual Logic)'
   passage: 'Машина [{в|ви|за|при}:1]їхала в гараж дуже повільно, щоб не вдарити стіну.
-    Коли ми нарешті [{ви|у|за|під}:2]йшли з кімнати, we turned off the light. Треба
+    Коли ми нарешті [{ви|у|за|під}:2]йшли з кімнати, ми вимкнули світло. Треба
     [{у|ви|пере|від}:3]війти в будівлю через головний вхід поруч з площею.
 
 
@@ -38,7 +38,10 @@
 
 
     Ми [{в|ви|об|про}:7]їхали на територію заводу о дев''ятій годині ранку. Хто останній
-    [{ви|у|за|пере}:8]йде з офісу сьогодні ввечері перед вихідними?'
+    [{ви|у|за|пере}:8]йде з офісу сьогодні ввечері перед вихідними? Лікар [{уві|ви|пере|від}:9]йшов у кабінет і почав приймати пацієнтів.
+
+
+    Автобус [{ви|в|за|при}:10]їхав зі станції рівно о восьмій ранку. Діти [{у|ви|пере|за}:11]бігли в парк і почали гратися. Вона [{ви|у|під|за}:12]йняла книгу з полиці і почала читати.'
 - type: quiz
   title: 'The Prefix Master (Concept: Morphological Awareness)'
   items:
@@ -373,9 +376,7 @@
 - type: translate
   title: Motion Prefix Translation
   items:
-  - question: The car entered the garage.
-    answer: Машина в'їхала в гараж.
-    options:
+  - options:
     - text: Машина в'їхала в гараж.
       correct: true
     - text: Машина виїхала в гараж.
@@ -384,9 +385,8 @@
       correct: false
     - text: Машина заїхала в гараж.
       correct: false
-  - question: We exited the building.
-    answer: Ми вийшли з будинку.
-    options:
+    source: The car entered the garage.
+  - options:
     - text: Ми вийшли з будинку.
       correct: true
     - text: Ми увійшли з будинку.
@@ -395,9 +395,8 @@
       correct: false
     - text: Ми прийшли з будинку.
       correct: false
-  - question: He went into the room.
-    answer: Він увійшов у кімнату.
-    options:
+    source: We exited the building.
+  - options:
     - text: Він увійшов у кімнату.
       correct: true
     - text: Він вийшов у кімнату.
@@ -406,9 +405,8 @@
       correct: true
     - text: Він підійшов у кімнату.
       correct: false
-  - question: The train left the station.
-    answer: Поїзд виїхав зі станції.
-    options:
+    source: He went into the room.
+  - options:
     - text: Поїзд виїхав зі станції.
       correct: true
     - text: Поїзд в'їхав зі станції.
@@ -417,9 +415,8 @@
       correct: false
     - text: Поїзд заїхав зі станції.
       correct: false
-  - question: She took out the key from her bag.
-    answer: Вона вийняла ключ з сумки.
-    options:
+    source: The train left the station.
+  - options:
     - text: Вона вийняла ключ з сумки.
       correct: true
     - text: Вона вставила ключ з сумки.
@@ -428,9 +425,8 @@
       correct: false
     - text: Вона витягла ключ з сумки.
       correct: true
-  - question: I inserted the card into the ATM.
-    answer: Я вставив картку в банкомат.
-    options:
+    source: She took out the key from her bag.
+  - options:
     - text: Я вставив картку в банкомат.
       correct: true
     - text: Я вийняв картку в банкомат.
@@ -439,9 +435,8 @@
       correct: false
     - text: Я поклав картку в банкомат.
       correct: false
-  - question: They went out into the street.
-    answer: Вони вийшли на вулицю.
-    options:
+    source: I inserted the card into the ATM.
+  - options:
     - text: Вони вийшли на вулицю.
       correct: true
     - text: Вони увійшли на вулицю.
@@ -450,9 +445,8 @@
       correct: false
     - text: Вони прийшли на вулицю.
       correct: false
-  - question: The bus drove into the city center.
-    answer: Автобус в'їхав у центр міста.
-    options:
+    source: They went out into the street.
+  - options:
     - text: Автобус в'їхав у центр міста.
       correct: true
     - text: Автобус виїхав у центр міста.
@@ -461,9 +455,8 @@
       correct: true
     - text: Автобус приїхав у центр міста.
       correct: false
-  - question: She poured water into the glass.
-    answer: Вона влила воду в склянку.
-    options:
+    source: The bus drove into the city center.
+  - options:
     - text: Вона влила воду в склянку.
       correct: true
     - text: Вона вилила воду в склянку.
@@ -472,9 +465,8 @@
       correct: true
     - text: Вона полила воду в склянку.
       correct: false
-  - question: He spilled the milk on the floor.
-    answer: Він вилив молоко на підлогу.
-    options:
+    source: She poured water into the glass.
+  - options:
     - text: Він вилив молоко на підлогу.
       correct: true
     - text: Він влив молоко на підлогу.
@@ -483,9 +475,8 @@
       correct: false
     - text: Він розлив молоко на підлогу.
       correct: true
-  - question: We entered the metro station.
-    answer: Ми увійшли в метро.
-    options:
+    source: He spilled the milk on the floor.
+  - options:
     - text: Ми увійшли в метро.
       correct: true
     - text: Ми вийшли в метро.
@@ -494,9 +485,8 @@
       correct: true
     - text: Ми прийшли в метро.
       correct: false
-  - question: The driver left the parking lot.
-    answer: Водій виїхав з парковки.
-    options:
+    source: We entered the metro station.
+  - options:
     - text: Водій виїхав з парковки.
       correct: true
     - text: Водій в'їхав з парковки.
@@ -505,3 +495,4 @@
       correct: true
     - text: Водій приїхав з парковки.
       correct: false
+    source: The driver left the parking lot.

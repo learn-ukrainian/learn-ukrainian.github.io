@@ -604,6 +604,7 @@ def count_examples(content: str) -> int:
     patterns = [
         r'\*\*[А-ЯІЇЄҐа-яіїєґ][^*]{5,}[.!?]\*\*',  # Bold Ukrainian sentences
         r'^\s*[-–—]\s*[А-ЯІЇЄҐа-яіїєґ][^.!?]{5,}[.!?]',  # Bulleted Ukrainian
+        r'^\s*[-–—]\s*_[А-ЯІЇЄҐа-яіїєґ][^.!?]{5,}[.!?]_',  # Bulleted Italic Ukrainian
         r'^\s*\d+\.\s*[А-ЯІЇЄҐа-яіїєґ][^.!?]{5,}[.!?]',  # Numbered Ukrainian
         r'\*[Пп]риклад[и|:]?\*[:\s]+[«"]?[А-ЯІЇЄҐа-яіїєґ]',  # *Приклад:* or *приклад:* labels
         r'>\s*\*[Пп]риклад',  # Blockquote example labels

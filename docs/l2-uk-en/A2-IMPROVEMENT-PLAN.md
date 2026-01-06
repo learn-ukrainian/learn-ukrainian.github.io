@@ -286,7 +286,7 @@ All modules meet quality standards established by M01-M05.
 
 **Quality checklist:**
 - [x] 12+ activities per module
-- [x] Full A2 activity variety (error-correction, cloze, dialogue-reorder)
+- [x] Full A2 activity variety (error-correction, cloze)
 - [x] IPA in all vocabulary tables
 - [x] Engagement boxes (cultural, pop culture, real-world)
 - [x] Cultural integration (Ukrainian context)

@@ -333,7 +333,7 @@ Overall = (
 
 **Educational:** 10/10 - Crystal-clear explanations with innovative analogies. Anticipates every learner confusion. The "time duration = imperfective" rule is explained with visual timeline. Examples are memorable and culturally grounded.
 
-**Activities:** 10/10 - 16 activities (well above minimum), all 16+ items, 10 activity types, exceptional variety. Answers verified correct. Difficulty progression is perfect. Creative activity design (dialogue-reorder uses famous Ukrainian conversation).
+**Activities:** 10/10 - 16 activities (well above minimum), all 16+ items, 10 activity types, exceptional variety. Answers verified correct. Difficulty progression is perfect. Creative activity design with famous Ukrainian conversation examples.
 
 **Humanity:** 10/10 - 23 direct address, 5 encouragement, 4 anticipation, 3 real-world validations. Teacher voice is warm, encouraging, occasionally playful. Personality shines: "Ось маленький секрет: навіть носії мови іноді плутають тут!"
 

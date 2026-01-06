@@ -1,35 +1,38 @@
 # Audit Report: 05-the-instrumental-ii-means-and-tools.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** 'PPP' | **Target:** 1000
-**Overall Status:** ❌ FAIL
+**Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
+**Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[GRAMMAR]** Participle used before B1: 'закритий'
-  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: називний, відмінок, орудний, час
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): метро, автобусом, ногами, ручкою, комп'ютером...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 10/100)
 
-- 1 pedagogical violations (minor)
+- 2 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 2141/1000 (>2000 may be too long)
-- **Activities:** ✅ 11/10
+- **Words:** ✅ 1887/1000
+- **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 64/1
+- **Vocab:** ✅ 57/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Immersion:** 🇺🇦 37.8% (target 35-50% (A2.1))
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 37.0% (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Introduction** | ✅ | 175 | Included in Core |
+| **Intro/Narrative** | ✅ | 175 | Included in Core |
 | **Warm-up** | ✅ | 79 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **Орудний відмінок без прийменника** | ⚪️ | 68 | Skipped |
@@ -43,7 +46,5 @@
 | **Choose: With or Without Preposition?** | ⚪️ | 0 | Skipped |
 | **Form the Instrumental** | ⚪️ | 0 | Skipped |
 | **Mini-Dialogues** | ✅ | 145 | Included in Core |
-| **Reading Practice: Один день у Києві** | ✅ | 324 | Included in Core |
-| **Підсумок** | ✅ | 112 | Included in Core |
-| **Need More Practice?** | ⚪️ | 30 | Skipped |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Reading Practice: Один день у Києві** | ✅ | 195 | Included in Core |
+| **Summary** | ✅ | 17 | Included in Core |

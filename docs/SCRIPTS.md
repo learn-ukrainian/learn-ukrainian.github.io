@@ -198,7 +198,7 @@ Or with issues:
 ```markdown
 ## MDX VALIDATION
 ### Errors
-- ❌ Activity types missing in MDX: dialogue-reorder
+- ❌ Activity types missing in MDX: cloze
 ### Warnings
 - ⚠️ Some Ukrainian content may be missing (15/50 words)
 ```

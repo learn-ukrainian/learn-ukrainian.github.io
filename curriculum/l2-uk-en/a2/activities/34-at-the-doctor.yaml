@@ -1,25 +1,25 @@
 - type: match-up
   title: Body & Pain
   pairs:
-  - left: '- Голова'
+  - left: 'Голова'
     right: Head
-  - left: '- Горло'
+  - left: 'Горло'
     right: Throat
-  - left: '- Живіт'
+  - left: 'Живіт'
     right: Stomach
-  - left: '- Спина'
+  - left: 'Спина'
     right: Back
-  - left: '- Нога'
+  - left: 'Нога'
     right: Leg
-  - left: '- Рука'
+  - left: 'Рука'
     right: Arm/Hand
-  - left: '- Око'
+  - left: 'Око'
     right: Eye
-  - left: '- Вухо'
+  - left: 'Вухо'
     right: Ear
-  - left: '- Серце'
+  - left: 'Серце'
     right: Heart
-  - left: '- Зуб'
+  - left: 'Зуб'
     right: Tooth
 - type: cloze
   title: Diagnosis
@@ -27,12 +27,14 @@
     ноги. (Hurts pl.) У нього висока {температура|кашель|нежить}. (Fever)
 
 
-    Треба купити ліки в {аптеці|лікарні|магазині}. (Pharmacy) Лікар виписал {рецепт|таблетку|симптом}.
+    Треба купити ліки в {аптеці|лікарні|магазині}. (Pharmacy) Лікар виписав {рецепт|таблетку|симптом}.
     (Prescription) Що вас {турбує|болить|хворіє}? (Bothers)
 
 
     Мені потрібен {лікар|пацієнт|рецепт}. (Doctor) У мене сильний {кашель|нежить|температура}.
-    (Cough)'
+    (Cough) Я {хворію|працюю|гуляю} вже три дні. (Been ill) Мені треба {лежати|бігати|танцювати}
+    вдома. (Rest) Я вже купив {таблетки|книжки|квитки} в аптеці. (Pills) Бажаю тобі
+    {здоров''я|роботи|грошей}! (Health)'
 - type: quiz
   title: Medical Expert
   items:
@@ -254,17 +256,27 @@
     ---
 
     Я люблю *спорт*. Це *мій кіт*. Сонце *світить*.'
+  answers:
+  - температура
+  - кашель
+  - лікаря
+  - ліки
+  - здоров'я
+  - Аптека
+  - спорт
+  - мій кіт
+  - світить
 - type: error-correction
   title: Fix the Complaint
   items:
-  - sentence: Я **болю** голова. (Grammar)
+  - sentence: '**Я болю** голова. (Grammar)'
     error: Я болю
     answer: У мене болить
     options:
     - У мене болить
     - Я болю
     explanation: Construction is "At me hurts head".
-  - sentence: У мене болить **ноги**. (Number)
+  - sentence: У мене **болить** ноги. (Number)
     error: болить
     answer: болять
     options:
@@ -292,7 +304,7 @@
     - рецепт
     - рецепта
     explanation: Give (what? Accusative inanimate) -> рецепт.
-  - sentence: Лікар **лікує** пацієнт. (Case)
+  - sentence: Лікар лікує **пацієнт**. (Case)
     error: пацієнт
     answer: пацієнта
     options:

@@ -94,12 +94,18 @@ def fix_yaml(file_path):
                 if local_changed:
                     activity['items'] = new_items
                     changed = True
-        elif atype == 'dialogue-reorder':
-            if 'lines' in activity:
-                new_lines = []
+        elif atype == 'match-up':
+            # No special handling needed for match-up
+            pass
+        elif atype == 'group-sort':
+            # No special handling needed for group-sort
+            pass
+        elif atype == 'fill-in':
+            if 'items' in activity:
+                new_items = []
                 local_changed = False
-                for i, line in enumerate(activity['lines']):
-                    if isinstance(line, str):
+                for i, item in enumerate(activity['items']):
+                    if isinstance(item, str):
                         new_lines.append({
                             'text': line.strip(),
                             'order': i + 1,

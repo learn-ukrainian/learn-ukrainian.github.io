@@ -135,10 +135,11 @@ interface FillInItem {
 
 interface FillInProps {
   items: FillInItem[];
+  instruction?: string;
   isUkrainian?: boolean;
 }
 
-export default function FillIn({ items, isUkrainian }: FillInProps) {
+export default function FillIn({ items, instruction, isUkrainian }: FillInProps) {
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [showResults, setShowResults] = useState(false);
 
@@ -158,6 +159,9 @@ export default function FillIn({ items, isUkrainian }: FillInProps) {
         <span>{headerLabel}</span>
         <ActivityHelp activityType="fill-in" isUkrainian={isUkrainian} />
       </div>
+      {instruction && (
+        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      )}
       <div className={styles.activityContent}>
         {items.map((item, index) => {
           const parts = item.sentence.split('___');

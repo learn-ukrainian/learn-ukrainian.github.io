@@ -28,7 +28,6 @@
 - `parse_true_false`: Parses numbered blocks with Правда/Неправда
 - `parse_cloze`: Returns inline {answer|opt1|opt2} format
 - `parse_mark_the_words`: Handles [word] and **word** formats
-- `parse_dialogue_reorder`: Matches any speaker name
 
 **Successfully converted:** M01-M16 (aspect phase + metalanguage)
 

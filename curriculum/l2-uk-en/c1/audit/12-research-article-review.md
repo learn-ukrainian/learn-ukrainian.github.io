@@ -2,24 +2,15 @@
 **Phase:** C1.1 | **Level:** C1 | **Pedagogy:** Academic | **Target:** 1750
 **Overall Status:** ✅ PASS
 
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (1 words): завдання...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 10/100)
-
-- 1 pedagogical violations (minor)
-
 ## Gates
 - **Words:** ✅ 2067/1750
-- **Activities:** ✅ 17/16
-- **Density:** ✅ All > 18
+- **Activities:** ✅ 17/12
+- **Density:** ✅ All > 12
 - **Unique_types:** ✅ 4/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 47/25
+- **Vocab:** ✅ 48/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

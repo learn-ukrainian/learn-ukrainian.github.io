@@ -263,33 +263,7 @@ curriculum/l2-uk-en/b1/
     - "трансформацію"
 ```
 
-### 11. dialogue-reorder (Conversation Ordering)
-
-```yaml
-- type: dialogue-reorder
-  title: "Бізнес-презентація"
-  lines:
-    - order: 1
-      speaker: "Директор"
-      text: "Доброго дня, колеги. Сьогодні ми розглянемо результати кварталу."
-    - order: 2
-      speaker: "Аналітик"
-      text: "Дозвольте почати з показників продажів."
-    - order: 3
-      speaker: "Директор"
-      text: "Будь ласка, продовжуйте."
-    - order: 4
-      speaker: "Аналітик"
-      text: "Спостерігається зростання на 15% порівняно з минулим кварталом."
-    - order: 5
-      speaker: "Директор"
-      text: "Чудово. Які прогнози на наступний квартал?"
-    - order: 6
-      speaker: "Аналітик"
-      text: "Очікуємо стабілізацію на поточному рівні."
-```
-
-### 12. translate (Translation Multiple Choice)
+### 11. translate (Translation Multiple Choice)
 
 ```yaml
 - type: translate
@@ -306,7 +280,7 @@ curriculum/l2-uk-en/b1/
       explanation: "'Signs' = ознаки (не знаки), 'economy' = економіка (не економія)."
 ```
 
-### 13. anagram (Letter Unscrambling - A1 Only)
+### 12. anagram (Letter Unscrambling - A1 Only)
 
 ```yaml
 - type: anagram
@@ -367,7 +341,6 @@ Create `schemas/activities.schema.json`:
       { "$ref": "#/definitions/unjumble" },
       { "$ref": "#/definitions/error-correction" },
       { "$ref": "#/definitions/mark-the-words" },
-      { "$ref": "#/definitions/dialogue-reorder" },
       { "$ref": "#/definitions/translate" },
       { "$ref": "#/definitions/anagram" }
     ]
@@ -527,7 +500,6 @@ Activity requirements vary by level. The validation system MUST enforce these co
 | error-correction | ❌ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | cloze | ❌ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | mark-the-words | ❌ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| dialogue-reorder | ❌ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | select | ❌ | opt | ✓ | ✓ | ✓ | ✓ |
 | translate | ❌ | opt | ✓ | ✓ | ✓ | ✓ |
 
@@ -545,7 +517,6 @@ Activity requirements vary by level. The validation system MUST enforce these co
 | error-correction | — | 6 | 6 |
 | cloze | — | 10 | 14 |
 | mark-the-words | — | 6 | 6 |
-| dialogue-reorder | — | 4 | 4 |
 | select | — | 6 | 6 |
 | translate | — | 6 | 6 |
 
@@ -1072,7 +1043,7 @@ Run validator with verbose output:
 | 3-4 | Matching (match-up, group-sort) | Build associations |
 | 5-6 | Production (fill-in, cloze) | Active recall |
 | 7-8 | Synthesis (unjumble, error-correction) | Apply rules |
-| 9-10 | Integration (dialogue-reorder, translate) | Real-world use |
+| 9-10 | Integration (translate) | Real-world use |
 | 11-12 | Challenge (mark-the-words, select) | Advanced practice |
 
 **Implementation:**
@@ -1089,7 +1060,7 @@ PREFERRED_ORDER = {
     'match-up': 2, 'group-sort': 2,
     'fill-in': 3, 'cloze': 3,
     'unjumble': 4, 'error-correction': 4,
-    'dialogue-reorder': 5, 'translate': 5,
+    'translate': 5,
     'mark-the-words': 6, 'select': 6
 }
 

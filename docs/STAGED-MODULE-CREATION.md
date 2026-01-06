@@ -94,7 +94,7 @@ For manual control or resuming work:
 | Level | Required | Optional |
 |-------|----------|----------|
 | A1 | fill-in, match-up, quiz, true-false, group-sort, anagram/unjumble | - |
-| A2 | fill-in, unjumble, cloze, error-correction, mark-the-words, dialogue-reorder | select, translate |
+| A2 | fill-in, unjumble, cloze, error-correction, mark-the-words | select, translate |
 | B1+ | All above + translate, select | - |
 
 ### Stage 4: Review & Fix

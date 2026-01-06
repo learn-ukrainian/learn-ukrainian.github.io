@@ -12,6 +12,11 @@ items:
   translation: evening (diminutive/typo?)
   pos: noun
   gender: f
+- lemma: відмінок
+  ipa: vʲidˈmʲinok
+  translation: grammatical case
+  pos: noun
+  gender: m
 - lemma: вислова
   ipa: ˈvɪsloʋɐ
   translation: expression (gen?)
@@ -116,6 +121,11 @@ items:
   ipa: moˈrɔz
   translation: frost
   pos: noun
+  gender: m
+- lemma: місцевий
+  ipa: mʲisˈt͡sɛvɪj
+  translation: locative (grammar), local
+  pos: adj
   gender: m
 - lemma: надвір
   ipa: nɐdˈvʲir
@@ -264,6 +274,11 @@ items:
   translation: cloudy
   pos: adj
   gender: n
+- lemma: час
+  ipa: t͡ʃɑs
+  translation: time
+  pos: noun
+  gender: m
 - lemma: яскраво
   ipa: jɐˈskrɑʋo
   translation: brightly

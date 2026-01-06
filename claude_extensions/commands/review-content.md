@@ -119,7 +119,6 @@ Parse arguments: $ARGUMENTS
    - `## error-correction`
    - `## cloze`
    - `## mark-the-words`
-   - `## dialogue-reorder`
    - `## select`
    - `## translate`
    - `## Activities`
@@ -148,7 +147,7 @@ Parse arguments: $ARGUMENTS
 
 **YAML Activity File Structure:**
 For the **COMPLETE** schema of all 12+ activity types (quiz, match-up, fill-in, etc.), you **MUST** read:
-`docs/l2-uk-en/YAML-ACTIVITY-WORKFLOW.md`
+`docs/ACTIVITY-YAML-REFERENCE.md`
 
 **Partial Example (Quiz only):**
 
@@ -159,7 +158,7 @@ activities:
   - type: quiz
     title: 'Вибір аспекту'
     items:
-# ... (see YAML-ACTIVITY-WORKFLOW.md for full syntax)
+# ... (see ACTIVITY-YAML-REFERENCE.md for full syntax)
 ```
 
 ### Evaluate Quality
@@ -273,7 +272,7 @@ Score each criterion 1-5:
 - **Scaffolding:** clear step-by-step instructions?
 - **Cognitive Load:** Is it too much at once?
 - **Accuracy:** Are grammar rules explained correctly?
-- **The "Why":** Does the module explain *why* we are learning this right now? (Motivation/Relevance).
+- **The "Why":** Does the module explain _why_ we are learning this right now? (Motivation/Relevance).
 
 **6. Natural Immersion (Mixed Language Check)**
 
@@ -313,7 +312,7 @@ For each activity, check:
 
 - No duplicate items (same question appears twice)
 - No mixed activity types (e.g., `[!error]` syntax inside a `fill-in` activity)
-- Correct callout format for activity type (see `docs/ACTIVITY-MARKDOWN-REFERENCE.md`)
+- Correct callout format for activity type (see `docs/ACTIVITY-YAML-REFERENCE.md`)
 - Item count matches level requirements
 
 **8b. Answer Validity**
@@ -365,6 +364,16 @@ If you find `> [!resources]` in a markdown file, it's stale (remove it - will be
 - ❌ Testing untaught material
 - ❌ Duplicate items in same activity
 - ❌ Broken/unrelated external resources
+
+**Exception: Gender Agreement Hints (ALLOWED)**
+
+English hints for possessives like `(my)`, `(his)`, `(her)`, `(our)`, `(their)`, `(your formal/plural)` are **allowed** when the activity tests **gender agreement**. These hints tell the student WHICH possessive to use, but they must still select the correct GENDER form (e.g., `мій` vs `моя` vs `моє`).
+
+Example of allowed hint:
+
+- `Це ___ книга. (my)` → Options: `мій`, `моя`, `моє`, `мої`
+- The hint `(my)` is needed because without it, the sentence could use any possessive
+- The student must still know that `книга` is feminine → `моя`
 
 **9. Red Flags (Auto-fail)**
 Flag if:
@@ -489,51 +498,60 @@ For each section, score:
 **Goal:** Ensure content doesn't just pass structural rules but feels like a human teacher speaking to a human learner.
 
 **11a. Cohesion Index (The "Glue" Test)**
+
 - **Check:** Do paragraphs flow logically or are they just stacked lists?
-- **Pass:** Uses transitional phrases (*However, For example, In this context, Consequently*).
+- **Pass:** Uses transitional phrases (_However, For example, In this context, Consequently_).
 - **Fail:** Abrupt topic shifts without signaling. Paragraphs that start with definitions immediately after unconnected examples.
 
 **11b. Naturalness Metric (The "Uncanny Valley" Check)**
+
 - **Check (English Instructions):** Does it sound like a friendly tutor or a database export?
-  - ❌ *Robotic:* "Do not use this form. It is incorrect."
-  - ✅ *Human:* "Avoid this form—it sounds unnatural to native ears."
+  - ❌ _Robotic:_ "Do not use this form. It is incorrect."
+  - ✅ _Human:_ "Avoid this form—it sounds unnatural to native ears."
 - **Check (Ukrainian Content):** **Euphony (Милозвучність).**
-  - ❌ *Clunky:* "В учителі є..." (Vowel clash)
-  - ✅ *Euphonic:* "У вчителя є..." (Alternation rules respected)
+  - ❌ _Clunky:_ "В учителі є..." (Vowel clash)
+  - ✅ _Euphonic:_ "У вчителя є..." (Alternation rules respected)
 
 **11c. Cognitive Load (Lexical Density)**
+
 - **Check:** Is the text too dense with bolded terms/jargon without breathing room?
 - **Pass:** Balance of new information vs. explanations/examples.
 - **Fail:** >3 new concepts introduced in a single paragraph without example breakdown.
 
 **11d. Sentence Variety (Rhythm)**
+
 - **Check:** Variation in sentence length.
 - **Fail:** 5 consecutive sentences of roughly equal length (e.g., S-V-O format).
 - **Pass:** Mix of short, punchy sentences and longer, complex explanations.
 
 **11e. Figurative Language (The "Soul" Check)**
+
 - **Check (B1+):** Presence of idioms, metaphors, or colorful language.
 - **Fail:** 100% literal, dry description.
 - **Pass:** Uses analogies to explain grammar (e.g., "Think of cases like role tags in a play").
 
 **11f. Readability & Tone Check (English Instructions)**
+
 - **Contraction Usage:** Ensure natural use of contractions.
-  - ❌ *Robotic:* "It is important that you do not forget..."
-  - ✅ *Human:* "It's important that you don't forget..."
+  - ❌ _Robotic:_ "It is important that you do not forget..."
+  - ✅ _Human:_ "It's important that you don't forget..."
 - **Instruction Simplicity:** English explanations should be simple (B1/B2 level).
-  - ❌ *Dense:* "The semantic properties of the aspectual pair denote..."
-  - ✅ *Simple:* "This pair shows us the difference between..."
+  - ❌ _Dense:_ "The semantic properties of the aspectual pair denote..."
+  - ✅ _Simple:_ "This pair shows us the difference between..."
 
 **11g. Cultural Authenticity Check**
+
 - **Check:** Does the content reflect Ukrainian reality or is it a translated English concept?
 - **Pass:** Uses culturally relevant names (Oksana, Taras), foods (borshch, varenyky), and places (Kyiv, Carpathians).
 - **Fail:** "John eats a hamburger in New York" translated to Ukrainian.
 
 **11h. "Aha!" Moment Check**
+
 - **Check:** Does the module facilitate a moment of discovery?
 - **Pass:** "Now you see why..." or "That explains..." moments.
 
 **11i. Accessibility & Inclusivity Check**
+
 - **Check:** Is the language inclusive and avoiding stereotypes?
 - **Pass:** Gender-neutral phrasing where possible, diverse examples.
 
@@ -574,6 +592,7 @@ Flag content as DRY if ANY of these are true:
 **Common LLM Clichés to Flag:**
 
 English:
+
 - ❌ "It's important to note that..."
 - ❌ "It's worth noting that..."
 - ❌ "As we've seen..."
@@ -588,6 +607,7 @@ English:
 - ❌ "Now that we've covered..."
 
 Ukrainian:
+
 - ❌ "Важливо зазначити, що..."
 - ❌ "Як ми вже бачили..."
 - ❌ "Давайте заглибимось у..."
@@ -605,18 +625,23 @@ Ukrainian:
 **Pattern:** AI claims specificity but stays vague.
 
 ❌ **Fake Specific (AI-generated):**
+
 ```markdown
 Уявіть собі ситуацію: ви йдете до магазину і купуєте їжу.
 ```
+
 - **Issue:** "магазин" (generic store), "їжа" (generic food) - no actual detail.
 
 ✅ **Real Specific (Human):**
+
 ```markdown
 Уявіть: ви на Бесарабському ринку в Києві. Продавець пропонує вам свіжу паляницю — ще теплу! Ви кажете: «Візьму дві».
 ```
+
 - **Why it works:** Named place (Бесарабський ринок, Київ), specific item (паляниця), sensory detail (ще теплу), dialogue.
 
 **Check:**
+
 - Count named places, people, foods, cultural references
 - If module has <3 specific Ukrainian references (place names, traditional foods, cultural practices), flag as **FALSE_SPECIFICITY**
 
@@ -627,18 +652,21 @@ Ukrainian:
 **Pattern:** AI uses absolute statements where humans would hedge.
 
 ❌ **Robotic (AI certainty):**
+
 ```markdown
 Дієслова руху завжди використовуються з префіксами.
 Цей вираз ніколи не вживається в розмовній мові.
 ```
 
 ✅ **Human (natural qualification):**
+
 ```markdown
 Дієслова руху часто використовуються з префіксами.
 Цей вираз рідко зустрічається в розмовній мові — українці віддають перевагу простішим формам.
 ```
 
 **Check:** Count absolutes (завжди, ніколи, всі, жоден, кожен, must, never, always, every).
+
 - If >5 unqualified absolutes in a section, flag as **OVERCONFIDENCE**
 
 **Fix:** Add hedging (часто, зазвичай, generally, typically, often) and reasoning (чому? бо...).
@@ -650,6 +678,7 @@ Ukrainian:
 **Goal:** Real teachers tell stories. AI lists facts.
 
 **Check:**
+
 - Does the module include at least ONE:
   - Personal anecdote ("Коли я вперше...") [if teacher voice]
   - Student scenario with stakes ("Уявіть: ви на співбесіді і забули, як сказати...")
@@ -668,6 +697,7 @@ Ukrainian:
 **Pattern:** AI is formulaic. Human teaching has unexpected turns.
 
 **Check:** Does the module have ANY of these?
+
 - [ ] Surprising fact that challenges assumptions ("Але тут є сюрприз!")
 - [ ] Counterintuitive example ("Здається дивно, але...")
 - [ ] Playful contradiction ("Ви думаєте, що X? Насправді...")
@@ -686,6 +716,7 @@ Ukrainian:
 **Pattern:** AI rarely expresses emotion. Humans do.
 
 **Check for Emotional Markers:**
+
 - Exclamations: ! (excitement, surprise)
 - Rhetorical questions: ? (engagement, challenge)
 - Emphatic words: дуже, really, especially, particularly
@@ -693,6 +724,7 @@ Ukrainian:
 - Direct address: ти/ви (you), давайте (let's)
 
 **Density Check:**
+
 - Count emotional markers per 100 words
 - **Fail:** <1 per 100 words (flat, robotic)
 - **Pass:** 2-4 per 100 words (conversational)
@@ -707,17 +739,20 @@ Ukrainian:
 **Goal:** Ensure a consistent pedagogical persona throughout.
 
 **Check:**
+
 - Does the voice shift between formal/informal without reason?
 - Does the teacher persona stay consistent (encouraging vs. strict vs. playful)?
 - Are pronouns consistent (ви/formal vs. ти/informal)?
 
 ❌ **Inconsistent:**
+
 ```markdown
 Paragraph 1: "Давайте розглянемо..." (we together - inclusive)
 Paragraph 3: "Вам потрібно запам'ятати..." (you - distant)
 ```
 
 ✅ **Consistent:**
+
 ```markdown
 All paragraphs: "Ми розглянемо..." "Ми запам'ятаємо..." (consistent "we" voice)
 ```
@@ -735,11 +770,13 @@ All paragraphs: "Ми розглянемо..." "Ми запам'ятаємо..."
 **Example:**
 
 ❌ **Shallow (AI):**
+
 ```markdown
 Perfective aspect shows completed action. Use it for results.
 ```
 
 ✅ **Deep (Human):**
+
 ```markdown
 Why do Ukrainians care so much about aspect?
 
@@ -752,6 +789,7 @@ English doesn't force this choice. Ukrainian does. Every. Single. Time.
 ```
 
 **Check:** For each grammar concept, verify:
+
 - [ ] **What:** Definition provided
 - [ ] **How:** Usage examples provided
 - [ ] **Why it matters:** Cultural/linguistic reason explained
@@ -768,12 +806,15 @@ English doesn't force this choice. Ukrainian does. Every. Single. Time.
 **Goal:** Ensure Ukrainian culture is woven in, not sprinkled on.
 
 **Superficial Integration (AI):**
+
 ```markdown
 🎬 Pop Culture Moment: Ukrainians like borshch!
 ```
+
 - **Issue:** Random fact without connection to grammar/vocab.
 
 **Deep Integration (Human):**
+
 ```markdown
 Українці кажуть: "Не той борщ, що в горщик, а той, що в роті" (It's not the soup in the pot that counts, but the one in your mouth).
 
@@ -785,6 +826,7 @@ English doesn't force this choice. Ukrainian does. Every. Single. Time.
 ```
 
 **Check:**
+
 - [ ] Cultural content connects to grammar lesson (not random)
 - [ ] Proverbs/idioms demonstrate grammatical structure
 - [ ] Examples use Ukrainian reality (not translated Western scenarios)
@@ -803,10 +845,12 @@ English doesn't force this choice. Ukrainian does. Every. Single. Time.
 ### 14a. Direct Address (Pattern Match)
 
 **Search for these patterns:**
+
 - English: `you`, `your`, `you'll`, `you're`, `let's`, `we'll`, `we're`, `we can`
 - Ukrainian: `ти`, `ви`, `твій`, `твоя`, `ваш`, `ваша`, `давайте`, `ми`, `можемо`
 
 **Count:** How many direct address patterns appear?
+
 - **Pass:** ≥10 instances in module
 - **Fail:** <10 instances
 
@@ -817,6 +861,7 @@ English doesn't force this choice. Ukrainian does. Every. Single. Time.
 **Search for encouraging phrases (case-insensitive):**
 
 English patterns:
+
 - `you've got this` / `you got this`
 - `don't worry` / `no worries`
 - `with practice` / `after practice`
@@ -824,6 +869,7 @@ English patterns:
 - `you'll master this` / `you'll get it`
 
 Ukrainian patterns:
+
 - `не хвилю(й|йся|йтеся)`
 - `це зрозумі(є|ють) (кожен|всі)`
 - `з практикою`
@@ -831,12 +877,14 @@ Ukrainian patterns:
 - `ви зможете`
 
 **Count:** How many encouraging phrases?
+
 - **Pass:** ≥1 encouraging phrase
 - **Fail:** 0 encouraging phrases
 
 ### 14c. Anticipates Confusion (Pattern Match)
 
 **Search for anticipation patterns:**
+
 - `you might think` / `you may think`
 - `you might be wondering` / `you may wonder`
 - `students often confuse`
@@ -846,6 +894,7 @@ Ukrainian patterns:
 - `careful:` / `watch out:` / `note:`
 
 Ukrainian:
+
 - `ви можливо думаєте`
 - `часто плутають`
 - `типова помилка`
@@ -853,12 +902,14 @@ Ukrainian:
 - `обережно:`
 
 **Count:** How many anticipation patterns?
+
 - **Pass:** ≥2 instances
 - **Fail:** <2 instances
 
 ### 14d. Real-World Validation (Pattern Match)
 
 **Search for relevance patterns:**
+
 - `after this module, you` / `after this lesson, you`
 - `this lets you` / `this allows you` / `this enables you`
 - `you'll be able to` / `you can now`
@@ -866,6 +917,7 @@ Ukrainian:
 - `when you [visit/travel/speak]`
 
 Ukrainian:
+
 - `після цього модуля`
 - `це дозволить вам`
 - `ви зможете`
@@ -873,6 +925,7 @@ Ukrainian:
 - `в повсякденному спілкуванні`
 
 **Count:** How many validation patterns?
+
 - **Pass:** ≥1 instance
 - **Fail:** 0 instances
 
@@ -881,6 +934,7 @@ Ukrainian:
 ### 14e. Human Warmth Score Calculation
 
 **Scoring Formula:**
+
 ```
 Warmth Score = (Direct Address ≥10 ? 1 : 0) +
                (Encouragement ≥1 ? 1 : 0) +
@@ -888,17 +942,18 @@ Warmth Score = (Direct Address ≥10 ? 1 : 0) +
                (Validation ≥1 ? 1 : 0)
 ```
 
-| Score | Rating | Action         |
-|-------|--------|----------------|
-| 4/4   | ✅ Excellent | Pass - warm, human voice |
-| 3/4   | ✅ Good | Pass - acceptable warmth |
-| 2/4   | ⚠️ Adequate | ENRICH - add missing patterns |
-| 1/4   | ❌ Cold | REWRITE - lacks teacher presence |
-| 0/4   | ❌ Robotic | REWRITE - pure AI voice |
+| Score | Rating       | Action                           |
+| ----- | ------------ | -------------------------------- |
+| 4/4   | ✅ Excellent | Pass - warm, human voice         |
+| 3/4   | ✅ Good      | Pass - acceptable warmth         |
+| 2/4   | ⚠️ Adequate  | ENRICH - add missing patterns    |
+| 1/4   | ❌ Cold      | REWRITE - lacks teacher presence |
+| 0/4   | ❌ Robotic   | REWRITE - pure AI voice          |
 
 **Flag as:** **COLD_PEDAGOGY** if score ≤1/4.
 
 **Example Report:**
+
 ```
 Human Warmth: 2/4 (⚠️ ENRICH)
 - Direct Address: ✅ 15 instances
@@ -916,6 +971,7 @@ Human Warmth: 2/4 (⚠️ ENRICH)
 ### 15a. The "ChatGPT Default Voice"
 
 **Pattern Recognition:**
+
 ```markdown
 Welcome to Module X! In this lesson, we'll explore...
 First, let's understand... Then, we'll dive deeper into...
@@ -929,8 +985,10 @@ By the end of this module, you'll be able to...
 ### 15b. The "Bullet Point Barrage"
 
 **Pattern:**
+
 ```markdown
 Here are 5 key points:
+
 - Point 1
 - Point 2
 - Point 3
@@ -938,6 +996,7 @@ Here are 5 key points:
 - Point 5
 
 Now let's look at 3 examples:
+
 - Example 1
 - Example 2
 - Example 3
@@ -950,6 +1009,7 @@ Now let's look at 3 examples:
 ### 15c. The "Wikipedia Copy-Paste" Syndrome
 
 **Pattern:**
+
 ```markdown
 The Dative case (Ukrainian: давальний відмінок) is a grammatical case
 used in the Ukrainian language to indicate the indirect object of a verb.
@@ -962,6 +1022,7 @@ used in the Ukrainian language to indicate the indirect object of a verb.
 ### 15d. The "Engagement Box Faker"
 
 **Pattern:**
+
 ```markdown
 💡 Did You Know?
 Ukrainian has 7 cases!
@@ -984,22 +1045,27 @@ Ukrainians value hospitality.
 **When you detect AI slop, apply these fixes:**
 
 ### Strategy 1: Add Sensory Detail
+
 ❌ **Generic:** "Людина готує їжу"
 ✅ **Vivid:** "Запах борщу наповнює кухню — бурячки, часник, кріп"
 
 ### Strategy 2: Name Everything
+
 ❌ **Vague:** "Я купив хліб у магазині"
 ✅ **Specific:** "Я купив паляницю в булочній 'Хлібний дім' на вулиці Хрещатик"
 
 ### Strategy 3: Add "Why" Layer
+
 ❌ **Shallow:** "Use perfective for results"
 ✅ **Deep:** "Чому важливо? Бо українець почує 'я робив' і запитає: 'І що? Зробив чи ні?' Недоконаний вид залишає питання відкритим."
 
 ### Strategy 4: Replace Certainty with Reality
+
 ❌ **Absolute:** "Це завжди неправильно"
 ✅ **Nuanced:** "Більшість українців скаже інакше. Хоч технічно обидва варіанти існують, один звучить природніше."
 
 ### Strategy 5: Inject Story
+
 ❌ **Factual:** "Genitive shows possession"
 ✅ **Narrative:** "Марія йде до мами. Чому 'мами', а не 'мама'? Бо це — мамин дім, мамина вулиця, мамине місто. Родовий відмінок створює зв'язок: не просто 'йти до', а 'йти до когось свого'."
 
@@ -1010,6 +1076,7 @@ Ukrainians value hospitality.
 **For each module review, add these steps AFTER Section 12:**
 
 **Step 13: Run LLM Fingerprint Detection**
+
 - [ ] Check for overused AI phrases (13a)
 - [ ] Verify real specificity vs. fake (13b)
 - [ ] Count certainty markers (13c)
@@ -1021,18 +1088,21 @@ Ukrainians value hospitality.
 - [ ] Assess cultural integration (13i)
 
 **Step 14: Human Warmth Audit**
+
 - [ ] Direct address present? (14a)
 - [ ] Encouragement included? (14b)
 - [ ] Confusion anticipated? (14c)
 - [ ] Real-world validation? (14d)
 
 **Step 15: Richness Red Flags**
+
 - [ ] No ChatGPT default voice? (15a)
 - [ ] No bullet barrage? (15b)
 - [ ] No Wikipedia tone? (15c)
 - [ ] Engagement boxes add value? (15d)
 
 **LLM Fingerprint Scoring:**
+
 - **5/5:** All checks pass. Content feels authentically human.
 - **4/5:** 1-2 minor flags. Mostly human, slight AI traces.
 - **3/5:** 3-4 flags. Noticeably AI-generated but salvageable.
@@ -1042,6 +1112,7 @@ Ukrainians value hospitality.
 ---
 
 > **⚠️ FINAL CHECKPOINT:** Before writing your report, verify you have completed ALL sections:
+>
 > - ✅ Section 0: Template Compliance
 > - ✅ Sections 1-7: Standard scoring (Coherence, Relevance, Educational, Language, Pedagogy, Immersion, Word Salad)
 > - ✅ Section 8: Activity Quality (AUTO-FAIL if errors)
@@ -1298,6 +1369,7 @@ Reviewing A1...
 ### Step: Verify Vocabulary Alignment
 
 1. **Check YAML exists:**
+
    ```bash
    ls curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml
    ```
@@ -1311,6 +1383,7 @@ Reviewing A1...
    - Flag missing terms as action items
 
 4. **Action Items for Missing Vocabulary:**
+
    ```yaml
    # Add to {level}/vocabulary/{slug}.yaml
    - lemma: missing_word
@@ -1409,9 +1482,9 @@ These trigger automatic REWRITE recommendation:
 # In external_resources.yaml
 a1-09-food-and-drinks:
   youtube:
-    - title: "Cat Videos Compilation"  # ← UNRELATED
-      url: "https://youtube.com/..."
-      relevance: "high"
+    - title: 'Cat Videos Compilation' # ← UNRELATED
+      url: 'https://youtube.com/...'
+      relevance: 'high'
 ```
 
 **Problem:** Resource has nothing to do with Ukrainian learning.

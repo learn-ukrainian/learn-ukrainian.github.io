@@ -1,29 +1,29 @@
 - type: match-up
   title: Professions Masculine and Feminine
   pairs:
-  - left: '- лікар'
+  - left: 'лікар'
     right: лікарка
-  - left: '- вчитель'
+  - left: 'вчитель'
     right: вчителька
-  - left: '- інженер'
+  - left: 'інженер'
     right: інженерка
-  - left: '- програміст'
+  - left: 'програміст'
     right: програмістка
-  - left: '- журналіст'
+  - left: 'журналіст'
     right: журналістка
-  - left: '- юрист'
+  - left: 'юрист'
     right: юристка
-  - left: '- актор'
+  - left: 'актор'
     right: акторка
-  - left: '- письменник'
+  - left: 'письменник'
     right: письменниця
-  - left: '- менеджер'
+  - left: 'менеджер'
     right: менеджерка
-  - left: '- директор'
+  - left: 'директор'
     right: директорка
-  - left: '- секретар'
+  - left: 'секретар'
     right: секретарка
-  - left: '- водій'
+  - left: 'водій'
     right: водійка
 - type: fill-in
   title: Бути/Стати + Instrumental
@@ -103,7 +103,8 @@
 - type: quiz
   title: When to Use Instrumental
   items:
-  - question: When expressing that someone was a student in the past, which Ukrainian sentence is grammatically correct?
+  - question: When expressing that someone was a student in the past, which Ukrainian
+      sentence is grammatically correct?
     options:
     - text: Він був студентом.
       correct: true
@@ -113,7 +114,8 @@
       correct: false
     - text: Він був студенту.
       correct: false
-  - question: When you want to say "She became a teacher" in Ukrainian, which sentence uses the correct form?
+  - question: When you want to say "She became a teacher" in Ukrainian, which sentence
+      uses the correct form?
     options:
     - text: Вона стала вчителькою.
       correct: true
@@ -123,7 +125,8 @@
       correct: false
     - text: Вона стала вчительці.
       correct: false
-  - question: In Ukrainian grammar, when do we use the Instrumental case with the verb "бути"?
+  - question: In Ukrainian grammar, when do we use the Instrumental case with the
+      verb "бути"?
     options:
     - text: У минулому та майбутньому часі
       correct: true
@@ -133,7 +136,8 @@
       correct: false
     - text: Тільки у питаннях
       correct: false
-  - question: When expressing that someone works as a programmer in Ukrainian, which sentence is correct?
+  - question: When expressing that someone works as a programmer in Ukrainian, which
+      sentence is correct?
     options:
     - text: Я працюю програмістом.
       correct: true
@@ -143,7 +147,8 @@
       correct: false
     - text: Я працюю програмісту.
       correct: false
-  - question: When expressing a profession in present tense in Ukrainian, which sentence structure is grammatically correct?
+  - question: When expressing a profession in present tense in Ukrainian, which sentence
+      structure is grammatically correct?
     options:
     - text: Він лікар.
       correct: true
@@ -153,7 +158,8 @@
       correct: false
     - text: Він є лікар.
       correct: false
-  - question: When asking someone about their profession in Ukrainian, which question is grammatically correct?
+  - question: When asking someone about their profession in Ukrainian, which question
+      is grammatically correct?
     options:
     - text: Ким ти працюєш?
       correct: true
@@ -163,7 +169,8 @@
       correct: false
     - text: Який ти працюєш?
       correct: false
-  - question: When expressing that someone will be an engineer in the future, which sentence is correct?
+  - question: When expressing that someone will be an engineer in the future, which
+      sentence is correct?
     options:
     - text: Він буде інженером.
       correct: true
@@ -173,7 +180,8 @@
       correct: false
     - text: Він буде інженеру.
       correct: false
-  - question: In Ukrainian grammar, which grammatical case does the verb "стати" always require?
+  - question: In Ukrainian grammar, which grammatical case does the verb "стати" always
+      require?
     options:
     - text: Орудного
       correct: true
@@ -183,7 +191,8 @@
       correct: false
     - text: Родового
       correct: false
-  - question: When expressing "We were friends" in Ukrainian, which sentence uses the correct Instrumental plural form?
+  - question: When expressing "We were friends" in Ukrainian, which sentence uses
+      the correct Instrumental plural form?
     options:
     - text: Ми були друзями.
       correct: true
@@ -193,7 +202,8 @@
       correct: false
     - text: Ми були друзям.
       correct: false
-  - question: When forming the feminine form of the profession "програміст" in Ukrainian, which ending is correct?
+  - question: When forming the feminine form of the profession "програміст" in Ukrainian,
+      which ending is correct?
     options:
     - text: програмістка
       correct: true
@@ -203,7 +213,8 @@
       correct: false
     - text: програмістиня
       correct: false
-  - question: When expressing that a woman works as a journalist in Ukrainian, which sentence is correct?
+  - question: When expressing that a woman works as a journalist in Ukrainian, which
+      sentence is correct?
     options:
     - text: Вона працює журналісткою.
       correct: true
@@ -213,7 +224,8 @@
       correct: false
     - text: Вона працює журналісткі.
       correct: false
-  - question: When expressing "He wants to become a doctor" in Ukrainian, which sentence is grammatically correct?
+  - question: When expressing "He wants to become a doctor" in Ukrainian, which sentence
+      is grammatically correct?
     options:
     - text: Він хоче стати лікарем.
       correct: true
@@ -517,31 +529,48 @@
     explanation: Future of "стати" requires instrumental plural.
 - type: cloze
   title: Complete the Story
-  passage: 'Мій друг Андрій раніше {працювала журналісткою|працювала журналістка|працювала журналістку}. Він вчився в університеті
-    п''ять років. Після університету він {стала письменницею|стала письменниця|стала письменницю}. Зараз він {відома письменниця|відома
-    журналістка|відома акторка} у великій лікарні. Він каже, що завжди мріяв {стала письменницею|стала журналісткою|працює
-    письменницею}. Його дружина Катя {працює інженером|працює інженер|працює інженера} у школі. Вона {був студентом|був студент|був
+  passage: 'Мій друг Андрій раніше {працювала журналісткою|працювала журналістка|працювала
+    журналістку}. Він вчився в університеті п''ять років. Після університету він {стала
+    письменницею|стала письменниця|стала письменницю}. Зараз він {відома письменниця|відома
+    журналістка|відома акторка} у великій лікарні. Він каже, що завжди мріяв {стала
+    письменницею|стала журналісткою|працює письменницею}. Його дружина Катя {працює
+    інженером|працює інженер|працює інженера} у школі. Вона {був студентом|був студент|був
     студента} після педагогічного університету.
 
     ---
 
-    Моя сестра Оксана {працювала журналісткою|працювала журналістка|працювала журналістку} в журналі п''ять років. Потім вона
-    {стала письменницею|стала письменниця|стала письменницю}. Тепер вона {відома письменниця|відома журналістка|відома акторка}
-    і пише книги. Я пишаюся, що моя сестра {стала письменницею|стала журналісткою|працює письменницею}! Її чоловік Борис {працює
-    інженером|працює інженер|працює інженера} на заводі. Раніше він {був студентом|був студент|був студента} у технікумі.'
+    Моя сестра Оксана {працювала журналісткою|працювала журналістка|працювала журналістку}
+    в журналі п''ять років. Потім вона {стала письменницею|стала письменниця|стала
+    письменницю}. Тепер вона {відома письменниця|відома журналістка|відома акторка}
+    і пише книги. Я пишаюся, що моя сестра {стала письменницею|стала журналісткою|працює
+    письменницею}! Її чоловік Борис {працює інженером|працює інженер|працює інженера}
+    на заводі. Раніше він {був студентом|був студент|був студента} у технікумі.'
 - type: mark-the-words
   title: Find Instrumental Forms
   text: 'Click on instrumental forms used with бути/стати/працювати.
 
-    Він раніше *був студентом*. Зараз він лікар. Він *працює лікарем* у лікарні. Його сестра *стала вчителькою*.
+    Він раніше *був студентом*. Зараз він лікар. Він *працює лікарем* у лікарні. Його
+    сестра *стала вчителькою*.
 
     ---
 
-    Вона *була журналісткою* п''ять років. Потім вона *стала письменницею*. Зараз вона письменниця. Вона *працює письменницею*.
+    Вона *була журналісткою* п''ять років. Потім вона *стала письменницею*. Зараз
+    вона письменниця. Вона *працює письменницею*.
 
     ---
 
-    Мій брат інженер. Раніше він *був студентом*. Він *хоче стати директором*. Він *працює інженером* на заводі.'
+    Мій брат інженер. Раніше він *був студентом*. Він *хоче стати директором*. Він
+    *працює інженером* на заводі.'
+  answers:
+  - був студентом
+  - працює лікарем
+  - стала вчителькою
+  - була журналісткою
+  - стала письменницею
+  - працює письменницею
+  - був студентом
+  - хоче стати директором
+  - працює інженером
 - type: translate
   title: English to Ukrainian
   items:

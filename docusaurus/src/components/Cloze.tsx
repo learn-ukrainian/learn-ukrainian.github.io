@@ -153,6 +153,7 @@ export function ClozePassage({ text, blanks, isUkrainian }: ClozePassageProps) {
 interface ClozeProps {
   passage?: string;  // MDX generator sends passage with embedded options
   blanks?: ClozeBlank[];
+  instruction?: string;
   children?: React.ReactNode;
   isUkrainian?: boolean;
 }
@@ -183,7 +184,7 @@ function parsePassageWithEmbeddedOptions(passage: string): { text: string; blank
   return { text, blanks };
 }
 
-export default function Cloze({ passage, blanks = [], children, isUkrainian }: ClozeProps) {
+export default function Cloze({ passage, blanks = [], instruction, children, isUkrainian }: ClozeProps) {
   // Parse passage if provided with embedded options
   const parsedData = useMemo(() => {
     if (passage) {
@@ -206,6 +207,9 @@ export default function Cloze({ passage, blanks = [], children, isUkrainian }: C
         <span>{headerLabel}</span>
         <ActivityHelp activityType="cloze" isUkrainian={isUkrainian} />
       </div>
+      {instruction && (
+        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      )}
       <div className={styles.activityContent}>
         {parsedData ? (
           <ClozePassage text={parsedData.text} blanks={parsedData.blanks} isUkrainian={isUkrainian} />

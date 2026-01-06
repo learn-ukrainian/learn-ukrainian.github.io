@@ -1,7 +1,9 @@
-# YAML-First Activity Workflow
+# YAML Activity Format Reference
 
-**Status:** Pilot (B1 M52-71)
-**Purpose:** Separate activities from prose for better maintainability and validation
+**Status:** CANONICAL - All levels (A1, A2, B1, B2, C1, C2)
+**Purpose:** Single source of truth for activity YAML schemas
+
+> ⚠️ **This replaces `ACTIVITY-MARKDOWN-REFERENCE.md`** - All activities MUST be in YAML format.
 
 ---
 
@@ -174,11 +176,14 @@ npm run pipeline l2-uk-en b1 52
 
 ## Activity Type Reference
 
+> **Note:** All activity types support an optional `instruction` field that displays custom instructions above the activity. Use this to provide context-specific guidance for the learner.
+
 ### quiz (8+ items for B1)
 
 ```yaml
 - type: quiz
   title: Title
+  instruction: Optional instruction text for the learner.
   items:
     - question: Question text?
       options:
@@ -198,6 +203,7 @@ npm run pipeline l2-uk-en b1 52
 ```yaml
 - type: match-up
   title: Title
+  instruction: Optional instruction text.
   pairs:
     - left: Left item
       right: Right item
@@ -208,6 +214,7 @@ npm run pipeline l2-uk-en b1 52
 ```yaml
 - type: fill-in
   title: Title
+  instruction: Optional instruction text.
   items:
     - sentence: Sentence with _____ blank.
       answer: correct
@@ -223,17 +230,21 @@ npm run pipeline l2-uk-en b1 52
 ```yaml
 - type: true-false
   title: Title
+  instruction: Optional instruction text.
   items:
-    - statement: Statement text.
+    - statement: Слово порекомендуєте є ввічливою формою.
       correct: true
-      explanation: Why true/false.
+      explanation: Так, це форма на ви.
 ```
+
+> ⚠️ **Quoting:** Avoid embedding quotes in statements. Use Ukrainian quotation marks «слово» if needed, or rephrase.
 
 ### group-sort (16+ items for B1)
 
 ```yaml
 - type: group-sort
   title: Title
+  instruction: Optional instruction text.
   groups:
     - name: Category A
       items:
@@ -250,8 +261,9 @@ npm run pipeline l2-uk-en b1 52
 ```yaml
 - type: unjumble
   title: Title
+  instruction: Optional instruction text.
   items:
-    - scrambled: words / in / disorder
+    - jumbled: words / in / disorder
       answer: Words in correct order.
 ```
 
@@ -260,15 +272,19 @@ npm run pipeline l2-uk-en b1 52
 ```yaml
 - type: cloze
   title: Title
+  instruction: Optional instruction text.
   passage: |
-    Text with {blank1|opt1|opt2|answer} and more {blank2|opt1|answer|opt3} blanks.
+    Сьогодні {гарна|гарна|погана|холодна} погода. Ми {йдемо|йдемо|їдемо|летимо} до парку.
 ```
+
+> ⚠️ **Format:** `{correct|option2|option3|option4}` - First option is ALWAYS the correct answer. NO arrows (`→`), NO labels.
 
 ### error-correction (8+ items for B1)
 
 ```yaml
 - type: error-correction
   title: Title
+  instruction: Optional instruction text.
   items:
     - sentence: Sentence with error.
       error: wrong_word
@@ -286,29 +302,22 @@ npm run pipeline l2-uk-en b1 52
 ```yaml
 - type: mark-the-words
   title: Title
-  instruction: Click all nouns.
-  text: Regular word *target* regular *target* word.
+  instruction: Знайдіть усі іменники.
+  text: Гарний день приніс радість у серце.
+  answers:
+    - день
+    - радість
+    - серце
 ```
 
-### dialogue-reorder (6+ lines for B1)
-
-```yaml
-- type: dialogue-reorder
-  title: Title
-  lines:
-    - order: 1
-      speaker: Олександр
-      text: First line.
-    - order: 2
-      speaker: Наталія
-      text: Second line.
-```
+> ⚠️ **IMPORTANT:** Do NOT use `*asterisks*` in text. Use the `answers` array to specify correct words.
 
 ### select (8+ items for B1)
 
 ```yaml
 - type: select
   title: Title
+  instruction: Optional instruction text.
   items:
     - question: Select ALL correct answers.
       options:
@@ -325,6 +334,7 @@ npm run pipeline l2-uk-en b1 52
 ```yaml
 - type: translate
   title: Title
+  instruction: Optional instruction text.
   items:
     - source: English sentence.
       options:
@@ -337,6 +347,20 @@ npm run pipeline l2-uk-en b1 52
         - text: Wrong translation
           correct: false
 ```
+
+### anagram (A1 only, modules 1-10)
+
+```yaml
+- type: anagram
+  title: Title
+  instruction: Optional instruction text.
+  items:
+    - scrambled: "л и т е р и"
+      answer: "літери"
+      hint: "Letters"
+```
+
+> ⚠️ **Level restriction:** Anagram is only allowed in A1 modules 1-10 (scaffolding for Cyrillic learners).
 
 ---
 
@@ -354,7 +378,6 @@ npm run pipeline l2-uk-en b1 52
 | cloze blanks | 14 | Per passage |
 | error-correction | 8 | Per activity |
 | mark-the-words | 6 | Correct words |
-| dialogue-reorder | 6 | Lines |
 | select items | 8 | Per activity |
 | translate items | 8 | Per activity |
 
@@ -417,5 +440,5 @@ This allows gradual migration—old modules keep working.
 
 ---
 
-**Last Updated:** 2025-12-26
-**Status:** Pilot Phase
+**Last Updated:** 2026-01-06
+**Status:** Canonical (Issue #394)

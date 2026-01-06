@@ -186,3 +186,64 @@ items:
     ipa: /ˈxmɑrnɔ/
     translation: cloudy
     pos: adv
+  - lemma: погода
+    ipa: /pɔˈɦɔdɑ/
+    translation: weather
+    pos: noun
+    gender: f
+  - lemma: температура
+    ipa: /tɛmpɛrɑˈturɑ/
+    translation: temperature
+    pos: noun
+    gender: f
+  - lemma: тепло
+    ipa: /ˈtɛplɔ/
+    translation: warm
+    pos: adv
+  - lemma: холодно
+    ipa: /ˈxɔlɔdnɔ/
+    translation: cold
+    pos: adv
+  - lemma: сонце
+    ipa: /ˈsɔnt͡sɛ/
+    translation: sun
+    pos: noun
+    gender: n
+  - lemma: хмара
+    ipa: /ˈxmɑrɑ/
+    translation: cloud
+    pos: noun
+    gender: f
+  - lemma: вітер
+    ipa: /ˈvitɛr/
+    translation: wind
+    pos: noun
+    gender: m
+  - lemma: сніг
+    ipa: /snih/
+    translation: snow
+    pos: noun
+    gender: m
+  - lemma: парк
+    ipa: /pɑrk/
+    translation: park
+    pos: noun
+    gender: m
+  - lemma: річка
+    ipa: /ˈrit͡ʃkɑ/
+    translation: river
+    pos: noun
+    gender: f
+  - lemma: море
+    ipa: /ˈmɔrɛ/
+    translation: sea
+    pos: noun
+    gender: n
+  - lemma: любити
+    ipa: /lʲuˈbɪtɪ/
+    translation: to love
+    pos: verb
+  - lemma: гуляти
+    ipa: /ɦuˈlʲɑtɪ/
+    translation: to walk
+    pos: verb

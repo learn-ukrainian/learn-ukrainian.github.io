@@ -536,7 +536,7 @@
 - type: translate
   title: Translate Shopping Phrases
   items:
-  - english: This one is better, but more expensive.
+  - source: This one is better, but more expensive.
     options:
     - text: Цей кращий, але дорожчий.
       correct: true
@@ -544,7 +544,7 @@
       correct: false
     - text: Той найкращий і найдорожчий.
       correct: false
-  - english: What do you recommend?
+  - source: What do you recommend?
     options:
     - text: Що ви порекомендуєте?
       correct: true
@@ -552,7 +552,7 @@
       correct: false
     - text: Де ви працюєте?
       correct: false
-  - english: Is there a discount?
+  - source: Is there a discount?
     options:
     - text: Чи є знижка?
       correct: true
@@ -560,7 +560,7 @@
       correct: false
     - text: Чи є якість?
       correct: false
-  - english: This is too expensive.
+  - source: This is too expensive.
     options:
     - text: Це занадто дорого.
       correct: true
@@ -568,7 +568,7 @@
       correct: false
     - text: Це гарна якість.
       correct: false
-  - english: I'll take this one.
+  - source: I'll take this one.
     options:
     - text: Я візьму цей.
       correct: true
@@ -576,7 +576,7 @@
       correct: false
     - text: Я дивлюся на це.
       correct: false
-  - english: This suits me.
+  - source: This suits me.
     options:
     - text: Це мені підходить.
       correct: true

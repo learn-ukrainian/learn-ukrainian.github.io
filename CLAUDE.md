@@ -328,7 +328,6 @@ npm run validate:html l2-uk-en a1 [moduleNum] # Browser rendering
 - `error-correction` - Find and fix grammatical errors
 - `cloze` - Passage completion with multiple blanks
 - `mark-the-words` - Click words matching criteria (nouns, verbs, etc.)
-- `dialogue-reorder` - Put conversation lines in order
 - `select` - Multi-checkbox (multiple correct answers)
 - `translate` - Translation multiple choice
 
@@ -343,7 +342,7 @@ npm run validate:html l2-uk-en a1 [moduleNum] # Browser rendering
 | quiz, match-up, fill-in, group-sort, unjumble             | ✓      | ✓   | ✓           |
 | true-false                                                | ✓      | ✓   | ✓ (opt C1+) |
 | anagram                                                   | M01-10 | ❌  | ❌          |
-| error-correction, cloze, mark-the-words, dialogue-reorder | ❌     | ✓   | ✓           |
+| error-correction, cloze, mark-the-words                   | ❌     | ✓   | ✓           |
 | select, translate                                         | ❌     | opt | ✓           |
 
 ### Anagram Phaseout (A1 Only)

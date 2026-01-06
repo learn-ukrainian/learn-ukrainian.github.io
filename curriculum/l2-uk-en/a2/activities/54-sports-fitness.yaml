@@ -11,7 +11,7 @@
       correct: false
     - text: Dancer
       correct: false
-  - question: Which grammatical case must follow **займатися**?
+  - question: When using the verb **займатися** (to practice/engage in), which grammatical case must follow?
     options:
     - text: Instrumental
       correct: true
@@ -31,7 +31,8 @@
       correct: false
     - text: coach
       correct: false
-  - question: What famous geographical feature is **Говерла** (Hoverla) typically known as in Ukraine?
+  - question: What famous geographical feature is **Говерла** (Hoverla) typically
+      known as in Ukraine?
     options:
     - text: highest mountain
       correct: true
@@ -61,7 +62,8 @@
       correct: false
     - text: sleeping
       correct: false
-  - question: What specific physical action does the Ukrainian verb **тренуватися** describe in English?
+  - question: What specific physical action does the Ukrainian verb **тренуватися**
+      describe in English?
     options:
     - text: to train/workout
       correct: true
@@ -101,7 +103,8 @@
       correct: false
     - text: ball
       correct: false
-  - question: What is the correct English translation of the important Ukrainian noun **перемога**?
+  - question: What is the correct English translation of the important Ukrainian noun
+      **перемога**?
     options:
     - text: victory
       correct: true
@@ -124,29 +127,29 @@
 - type: match-up
   title: Sports Vocab
   pairs:
-  - left: '- футбол'
+  - left: 'футбол'
     right: football
-  - left: '- бокс'
+  - left: 'бокс'
     right: boxing
-  - left: '- плавання'
+  - left: 'плавання'
     right: swimming
-  - left: '- біг'
+  - left: 'біг'
     right: running
-  - left: '- теніс'
+  - left: 'теніс'
     right: tennis
-  - left: '- стадіон'
+  - left: 'стадіон'
     right: stadium
-  - left: '- спортзал'
+  - left: 'спортзал'
     right: gym
-  - left: '- басейн'
+  - left: 'басейн'
     right: pool
-  - left: '- тренер'
+  - left: 'тренер'
     right: coach
-  - left: '- команда'
+  - left: 'команда'
     right: team
-  - left: '- гравець'
+  - left: 'гравець'
     right: player
-  - left: '- матч'
+  - left: 'матч'
     right: match
 - type: fill-in
   title: Sport Instrumental
@@ -443,7 +446,8 @@
     - футболом
     - футболу
     - футболі
-    explanation: 'Play + Acc (game name does NOT change): грати в футбол. Instrumental is wrong here.'
+    explanation: 'Play + Acc (game name does NOT change): грати в футбол. Instrumental
+      is wrong here.'
   - sentence: Ми йдемо в стадіон.
     error: в
     answer: на
@@ -565,8 +569,18 @@
     Ми пішли додому {щасливі|сумні|хворі}.'
 - type: mark-the-words
   title: Sports List
-  text: У школі ми грали в *футбол* і *баскетбол*. Мій брат любить *теніс*. Взимку ми дивимося *біатлон*. Влітку я люблю *плавання*.
-    Мій тато дивиться *бокс*. Його друг займається *карате*. *Гімнастика* — це дуже красиво.
+  text: У школі ми грали в *футбол* і *баскетбол*. Мій брат любить *теніс*. Взимку
+    ми дивимося *біатлон*. Влітку я люблю *плавання*. Мій тато дивиться *бокс*. Його
+    друг займається *карате*. *Гімнастика* — це дуже красиво.
+  answers:
+  - футбол
+  - баскетбол
+  - теніс
+  - біатлон
+  - плавання
+  - бокс
+  - карате
+  - Гімнастика
 - type: select
   title: Choose Correct Verb
   items:

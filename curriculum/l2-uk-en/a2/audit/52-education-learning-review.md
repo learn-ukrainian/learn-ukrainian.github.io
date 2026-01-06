@@ -2,6 +2,15 @@
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** Narrative | **Target:** 1000
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
 - **Words:** ✅ 1134/1000
 - **Activities:** ✅ 10/10

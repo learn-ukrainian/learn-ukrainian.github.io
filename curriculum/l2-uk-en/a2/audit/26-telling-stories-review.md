@@ -1,36 +1,30 @@
 # Audit Report: 26-telling-stories.md
 **Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Narrative Arc | **Target:** 1000
-**Overall Status:** ❌ FAIL
-
-## LINT ERRORS
-- ❌ Line 168: Empty Header detected (Lonely '#'). Remove or add title.
+**Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): незважаючи, таки, зате, якби, дарма...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): хоч, дарма, таки, оскільки, незважаючи...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 35/100)
+**📝 UPDATE** (severity 10/100)
 
-- Borderline case (severity 35/100)
 - 1 pedagogical violations (minor)
-- Immersion 9% off target (minor)
-- Activity count below minimum
 
 ## Gates
-- **Words:** ✅ 1074/1000
-- **Activities:** ❌ 9/10
+- **Words:** ✅ 1279/1000
+- **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/4
+- **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 44/1
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 1 Format Errors
+- **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 30.9% LOW (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 43.8% (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
@@ -49,3 +43,5 @@
 | **Language in Action** | ⚪️ | 0 | Skipped |
 | **A Strange Morning** | ⚪️ | 137 | Skipped |
 | **Useful Phrases for Storytellers** | ✅ | 88 | Included in Core |
+| **Story Time: Пригода в Метро** | ✅ | 169 | Included in Core |
+| **Підсумок** | ✅ | 36 | Included in Core |

@@ -2,29 +2,20 @@
 **Phase:** C1.1 | **Level:** C1 | **Pedagogy:** TTT | **Target:** 1750
 **Overall Status:** ✅ PASS
 
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (6 words): завдання, приклад, мета, розділ, частина...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 10/100)
-
-- 1 pedagogical violations (minor)
-
 ## Gates
-- **Words:** ✅ 1784/1750
+- **Words:** ✅ 1768/1750
 - **Activities:** ✅ 17/16
 - **Density:** ✅ All > 18
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 43/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (grammar))
+- **Immersion:** 🇺🇦 99.3% (target 98-100% (grammar))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -41,14 +32,11 @@
 | variety | 1.00 | - | 100% | 10% | 10.0% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 13 | 3 | 100% | 10% | 10.0% |
-| visual | 9 | 3 | 100% | 5% | 5.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 13 | 5 | 100% | 5% | 5.0% |
 | proverbs | 4 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.7%** |
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -61,4 +49,4 @@
 | **Слова-зв'язки: Цемент вашого тексту** | ✅ | 89 | Included in Core |
 | **Ситуативні діалоги** | ✅ | 293 | Included in Core |
 | **Академічний стиль: Повага до читача** | ⚪️ | 71 | Skipped |
-| **Підсумок** | ✅ | 79 | Included in Core |
+| **Підсумок** | ✅ | 63 | Included in Core |

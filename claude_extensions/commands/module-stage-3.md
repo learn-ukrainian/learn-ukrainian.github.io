@@ -85,7 +85,7 @@ From the level:
    - **Recognition stage**: match-up, group-sort, mark-the-words
    - **Discrimination stage**: quiz, true-false, select
    - **Controlled stage**: fill-in, cloze, error-correction
-   - **Production stage**: unjumble, dialogue-reorder, translate
+   - **Production stage**: unjumble, translate
 4. **Use ONLY vocabulary** from module's table + prior modules
 5. **Include required fields**: `type`, `id`, `title`, `instructions`, `items`/`groups`/`lines`/etc.
 

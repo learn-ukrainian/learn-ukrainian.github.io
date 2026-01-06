@@ -16,7 +16,7 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
@@ -259,14 +259,6 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
     correctWords={JSON.parse(`["землі", "правду", "фортеця", "щит", "творимо", "кривавий", "єдності", "стихія"]`)}
   />
 </MarkTheWords>
-
-### Обговорення підтексту у фільмі
-
-<DialogueReorder
-  title="Обговорення підтексту у фільмі"
-  isUkrainian={false}
-  lines={JSON.parse(`[{"text": "Ти бачила новий серіал про волонтерів? Як тобі їхні діалоги?", "order": 0, "speaker": "Олексій"}, {"text": "Дуже живі! Але я помітила глибокий підтекст у розмові головних героїв.", "order": 0, "speaker": "Тетяна"}, {"text": "Цікаво. Що саме ти маєш на увазі під 'прихованим сенсом'?", "order": 0, "speaker": "Олексій"}, {"text": "Вони говорять про дрібниці, але насправді йдеться про великий страх втрати.", "order": 0, "speaker": "Тетяна"}, {"text": "Так, це вдалий прийом. Образи побуту стають метафорами внутрішнього стану.", "order": 0, "speaker": "Олексій"}, {"text": "Саме так. Рівень психологізму в нашому кіно значно зріс останнім часом.", "order": 0, "speaker": "Тетяна"}, {"text": "Деконструкція таких сцен допомагає краще зрозуміти ідею автора.", "order": 0, "speaker": "Олексій"}, {"text": "Згодна. Читати між рядків — це найцікавіша частина перегляду.", "order": 0, "speaker": "Тетяна"}]`)}
-/>
 
 ### Корекція логічних пасток
 

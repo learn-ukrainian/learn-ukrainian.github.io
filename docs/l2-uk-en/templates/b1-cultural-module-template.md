@@ -182,7 +182,6 @@ immersion_target: 90-95%
 #### Lower Priority (production):
 9. **unjumble** (8+ items, 12-16 words) — Sentences about cultural content
 10. **error-correction** (8+ items) — Common misconceptions or mistakes
-11. **dialogue-reorder** (6+ turns) — Conversation about the topic
 12. **translate** (8+ items) — Cultural phrases
 
 **WHY this order:** Reading comprehension first, then analytical tasks, finally production.
@@ -290,7 +289,6 @@ The lesson teaches both Ukrainian AND cultural content. Activities practice only
 **select**: Multiple `- [x]` for correct options
 **translate**: Multi-choice with `- [x]` for correct + `> explanation`
 **mark-the-words**: `*marked*` words in blockquote
-**dialogue-reorder**: `- [N]` numbered lines
 
 See `b1-grammar-module-template.md` for full examples.
 
@@ -314,7 +312,6 @@ See `b1-grammar-module-template.md` for full examples.
 | mark-the-words | 8+ words | MEDIUM | Grammar recognition (verbs, nouns, etc.) |
 | unjumble | 8+ items | LOW | Word order and grammar |
 | error-correction | 8+ items | LOW | Grammar errors, NOT cultural mistakes |
-| dialogue-reorder | 6-8 turns | LOW | Discourse flow and logic |
 | translate | 8+ items | LOW | Vocabulary in translation context |
 
 **WHY this mix:** Cultural modules prioritize comprehension (quiz, true-false, match-up, cloze) over production (unjumble, error-correction).
@@ -501,7 +498,7 @@ Before running the audit script, manually verify:
 ### Activity Mix:
 - [ ] **High comprehension focus:** quiz (10+), true-false (10+), match-up (12+), cloze (14+)
 - [ ] **Vocabulary practice:** fill-in (12+), group-sort (16+), select (8+)
-- [ ] **Production:** unjumble (8+), error-correction (8+), dialogue-reorder (6+), translate (8+)
+- [ ] **Production:** unjumble (8+), error-correction (8+), translate (8+)
 
 ---
 
@@ -632,7 +629,6 @@ immersion_target: 90-95%
 8. mark-the-words: Знайдіть музичні терміни (passage with 10 terms)
 9. unjumble: Речення про музику (8 items, 12-16 words)
 10. error-correction: Помилки про українську музику (8 items)
-11. dialogue-reorder: Розмова про концерт (6 turns)
 12. translate: Музичні фрази (8 items)
 
 ### Section 7: Словник (25 words)

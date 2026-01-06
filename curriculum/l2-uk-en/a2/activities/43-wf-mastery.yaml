@@ -1,22 +1,26 @@
 - type: match-up
   title: Root Match
   pairs:
-  - left: '- Мова'
+  - left: 'Мова'
     right: Speech
-  - left: '- Слух'
+  - left: 'Слух'
     right: Hearing
-  - left: '- Думка'
+  - left: 'Думка'
     right: Thought
-  - left: '- Вхід'
+  - left: 'Вхід'
     right: Entrance (Go)
-  - left: '- Письмо'
+  - left: 'Письмо'
     right: Writing
-  - left: '- Вигляд'
+  - left: 'Вигляд'
     right: Appearance (See)
-  - left: '- Перемога'
+  - left: 'Перемога'
     right: Victory (Over-power)
-  - left: '- Розмова'
+  - left: 'Розмова'
     right: Conversation
+  - left: 'пис-'
+    right: писати, письмо
+  - left: 'чит-'
+    right: читати, читання
 - type: group-sort
   title: Family Tree
   groups:
@@ -54,7 +58,9 @@
     Це [{замовлення|промова|слух}]. Перекласти текст іншою мовою. Це [{переклад|перехід|перерва}].
 
 
-    Коли ти не говориш. Це [{мовчання|розмова|крик}]. Результат творчості. Це [{твір|двір|звір}].'
+    Коли ти не говориш. Це [{мовчання|розмова|крик}]. Результат творчості. Це [{твір|двір|звір}].
+    Людина, яка читає. Це [{читач|слухач|глядач}]. Місце, куди входимо. Це [{вхід|вихід|прохід}].
+    Той, хто вивчає науку. Це [{науковець|наука|наукові}]. Людина, яка говорить. Це [{мовець|слухач|мовчун}].'
 - type: unjumble
   title: High Sentences
   items:
@@ -278,22 +284,26 @@
 - type: match-up
   title: Opposites
   pairs:
-  - left: '- Вхід'
+  - left: 'Вхід'
     right: Вихід
-  - left: '- Мовчати'
+  - left: 'Мовчати'
     right: Говорити
-  - left: '- Вступ'
+  - left: 'Вступ'
     right: Виступ
-  - left: '- Схід'
+  - left: 'Схід'
     right: Захід
-  - left: '- Слухач'
+  - left: 'Слухач'
     right: Мовець
-  - left: '- Вдих'
+  - left: 'Вдих'
     right: Видих
-  - left: '- Прихід'
+  - left: 'Прихід'
     right: Відхід
-  - left: '- Запитання'
+  - left: 'Запитання'
     right: Відповідь
+  - left: 'добрий'
+    right: злий
+  - left: 'швидкий'
+    right: повільний
 - type: group-sort
   title: Parts of Speech
   groups:
@@ -319,19 +329,23 @@
 - type: match-up
   title: Definitions II
   pairs:
-  - left: '- Огляд'
+  - left: 'Огляд'
     right: Review
-  - left: '- Погляд'
+  - left: 'Погляд'
     right: Glance
-  - left: '- Вигляд'
+  - left: 'Вигляд'
     right: Appearance
-  - left: '- Відчуття'
+  - left: 'Відчуття'
     right: Sensation
-  - left: '- Почуття'
+  - left: 'Почуття'
     right: Feeling
-  - left: '- Побачення'
+  - left: 'Побачення'
     right: Date/Meeting
-  - left: '- Передбачення'
+  - left: 'Передбачення'
     right: Prediction
-  - left: '- Обдумати'
+  - left: 'Обдумати'
     right: To think over
+  - left: 'перекладач'
+    right: translator
+  - left: 'письменник'
+    right: writer

@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://learn-ukrainian.github.io/schemas/activities-a1.schema.json",
   "title": "A1 Module Activities",
-  "description": "Activity schema for A1 level modules. Allows anagram (M01-10), no cloze/error-correction/mark-the-words/dialogue-reorder.",
+  "description": "Activity schema for A1 level modules. Allows anagram (M01-10), no cloze/error-correction/mark-the-words.",
 
   "type": "array",
   "minItems": 8,

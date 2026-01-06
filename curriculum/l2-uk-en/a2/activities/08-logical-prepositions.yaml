@@ -4,22 +4,26 @@
 - type: match-up
   title: Preposition Meaning
   pairs:
-  - left: '- для'
+  - left: 'для'
     right: for (benefit)
-  - left: '- без'
+  - left: 'без'
     right: without
-  - left: '- через'
+  - left: 'через'
     right: because of
-  - left: '- про'
+  - left: 'про'
     right: about
-  - left: '- від'
+  - left: 'від'
     right: from (source)
-  - left: '- з'
+  - left: 'з'
     right: with
-  - left: '- після'
+  - left: 'після'
     right: after
-  - left: '- крім'
+  - left: 'крім'
     right: except
+  - left: 'замість'
+    right: instead of
+  - left: 'до'
+    right: to/until
 - type: group-sort
   title: Case Requirements
   groups:
@@ -442,22 +446,26 @@
 - type: match-up
   title: Contrast Pairs
   pairs:
-  - left: '- Гроші для тебе'
+  - left: 'Гроші для тебе'
     right: Gift (benefit)
-  - left: '- Гроші на каву'
+  - left: 'Гроші на каву'
     right: Payment
-  - left: '- Через дощ'
+  - left: 'Через дощ'
     right: Cause (noun)
-  - left: '- Тому що йде дощ'
+  - left: 'Тому що йде дощ'
     right: Cause (clause)
-  - left: '- Від мами'
+  - left: 'Від мами'
     right: From person
-  - left: '- З Києва'
+  - left: 'З Києва'
     right: From place
-  - left: '- Каву з молоком'
+  - left: 'Каву з молоком'
     right: With (added)
-  - left: '- Каву без цукру'
+  - left: 'Каву без цукру'
     right: Without (removed)
+  - left: 'Після обіду'
+    right: Time (after)
+  - left: 'До вечора'
+    right: Time (until)
 - type: cloze
   title: Pharmacy Dialogue
   passage: 'Мені потрібні ліки {від|для|про} головного болю.
@@ -482,19 +490,23 @@
 - type: match-up
   title: Case Endings
   pairs:
-  - left: '- для мам__'
+  - left: 'для мам__'
     right: для мами
-  - left: '- без цукр__'
+  - left: 'без цукр__'
     right: без цукру
-  - left: '- про книг__'
+  - left: 'про книг__'
     right: про книгу
-  - left: '- через дощ__'
+  - left: 'через дощ__'
     right: через дощ
-  - left: '- з молок__'
+  - left: 'з молок__'
     right: з молоком
-  - left: '- від друг__'
+  - left: 'від друг__'
     right: від друга
-  - left: '- після робот__'
+  - left: 'після робот__'
     right: після роботи
-  - left: '- о трет__'
+  - left: 'о трет__'
     right: о третій
+  - left: 'до вечор__'
+    right: до вечора
+  - left: 'замість чай__'
+    right: замість чаю

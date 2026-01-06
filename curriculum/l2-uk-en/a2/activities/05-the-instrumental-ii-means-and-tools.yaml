@@ -1,29 +1,29 @@
 - type: match-up
   title: Transport and Tools
   pairs:
-  - left: '- автобусом'
+  - left: 'автобусом'
     right: by bus
-  - left: '- поїздом'
+  - left: 'поїздом'
     right: by train
-  - left: '- ручкою'
+  - left: 'ручкою'
     right: with a pen
-  - left: '- ножем'
+  - left: 'ножем'
     right: with a knife
-  - left: '- літаком'
+  - left: 'літаком'
     right: by plane
-  - left: '- ложкою'
+  - left: 'ложкою'
     right: with a spoon
-  - left: '- машиною'
+  - left: 'машиною'
     right: by car
-  - left: '- олівцем'
+  - left: 'олівцем'
     right: with a pencil
-  - left: '- трамваєм'
+  - left: 'трамваєм'
     right: by tram
-  - left: '- виделкою'
+  - left: 'виделкою'
     right: with a fork
-  - left: '- таксі'
+  - left: 'таксі'
     right: by taxi
-  - left: '- голосом'
+  - left: 'голосом'
     right: with voice
 - type: cloze
   title: Instrumental Without Preposition
@@ -389,6 +389,16 @@
 
     Ми їмо суп *ложкою*. Він гуляє з собакою. Вона говорить тихим *голосом*. Я їду
     *поїздом*. Він живе з братом.'
+  answers:
+  - автобусом
+  - ручкою
+  - ножем
+  - літаком
+  - комп'ютером
+  - рукою
+  - ложкою
+  - голосом
+  - поїздом
 - type: translate
   title: English to Ukrainian
   items:

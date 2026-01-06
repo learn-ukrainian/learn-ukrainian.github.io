@@ -462,12 +462,16 @@
       correct: false
     - text: Ви
       correct: true
+    - text: він
+      correct: false
     explanation: Use Ви with elders as a sign of respect.
   - question: You talk to your younger brother. Which do you use?
     options:
     - text: ти
       correct: true
     - text: Ви
+      correct: false
+    - text: він
       correct: false
     explanation: Use ти with family members you're close to.
   - question: You meet a professor for the first time. Which do you use?
@@ -476,12 +480,16 @@
       correct: false
     - text: Ви
       correct: true
+    - text: він
+      correct: false
     explanation: Use Ви with authority figures.
   - question: You talk to your pet dog. Which do you use?
     options:
     - text: ти
       correct: true
     - text: Ви
+      correct: false
+    - text: він
       correct: false
     explanation: Use ти with animals.
   - question: You ask a stranger for directions. Which do you use?
@@ -490,12 +498,16 @@
       correct: false
     - text: Ви
       correct: true
+    - text: він
+      correct: false
     explanation: Use Ви with strangers.
   - question: Your classmate at university. Which do you use?
     options:
     - text: ти
       correct: true
     - text: Ви
+      correct: false
+    - text: він
       correct: false
     explanation: Use ти with peers your age.
   - question: A cashier at a shop. Which do you use?
@@ -504,12 +516,16 @@
       correct: false
     - text: Ви
       correct: true
+    - text: він
+      correct: false
     explanation: Use Ви in formal service situations.
   - question: Your best friend. Which do you use?
     options:
     - text: ти
       correct: true
     - text: Ви
+      correct: false
+    - text: він
       correct: false
     explanation: Use ти with close friends.
   - question: A doctor you just met. Which do you use?
@@ -518,12 +534,16 @@
       correct: false
     - text: Ви
       correct: true
+    - text: він
+      correct: false
     explanation: Use Ви with professionals in formal settings.
   - question: A child on the street. Which do you use?
     options:
     - text: ти
       correct: true
     - text: Ви
+      correct: false
+    - text: він
       correct: false
     explanation: Use ти with children.
   - question: Your boss at work. Which do you use?
@@ -532,11 +552,15 @@
       correct: false
     - text: Ви
       correct: true
+    - text: він
+      correct: false
     explanation: Use Ви with superiors.
   - question: Your roommate. Which do you use?
     options:
     - text: ти
       correct: true
     - text: Ви
+      correct: false
+    - text: він
       correct: false
     explanation: Use ти with people you live with casually.

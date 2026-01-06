@@ -1,29 +1,29 @@
 - type: match-up
   title: Future Forms
   pairs:
-  - left: '- буду читати'
+  - left: 'буду читати'
     right: will be reading
-  - left: '- прочитаю'
+  - left: 'прочитаю'
     right: will read/finish
-  - left: '- буду писати'
+  - left: 'буду писати'
     right: will be writing
-  - left: '- напишу'
+  - left: 'напишу'
     right: will write/finish
-  - left: '- буду робити'
+  - left: 'буду робити'
     right: will be doing
-  - left: '- зроблю'
+  - left: 'зроблю'
     right: will do/finish
-  - left: '- буду говорити'
+  - left: 'буду говорити'
     right: will be speaking
-  - left: '- скажу'
+  - left: 'скажу'
     right: will say
-  - left: '- буду їсти'
+  - left: 'буду їсти'
     right: will be eating
-  - left: '- з''їм'
+  - left: 'з''їм'
     right: will eat up
-  - left: '- буду пити'
+  - left: 'буду пити'
     right: will be drinking
-  - left: '- вип''ю'
+  - left: 'вип''ю'
     right: will drink up
 - type: cloze
   title: Choose the Correct Future
@@ -375,51 +375,132 @@
     - довгі
     - роки
     answer: Вони будуть вчитися в університеті ще три роки
-- type: error-correction
+- type: fill-in
   title: Choose Correct Future
   items:
-  - sentence: Я ___ цілий день. (duration)
-    error: duration
+  - sentence: Я [___] цілий день.
     answer: буду працювати
     options:
     - буду працювати
     - попрацюю
-    explanation: Duration (цілий день) requires imperfective future.
-  - sentence: Вона ___ книгу.
-    error: will finish
+  - sentence: Вона [___] книгу до кінця.
     answer: прочитає
     options:
     - буде читати
     - прочитає
-    explanation: Completion requires perfective future.
-  - sentence: Я ___ тобі! (promise)
-    error: promise
+  - sentence: Я обов'язково [___] тобі!
     answer: напишу
     options:
     - буду писати
     - напишу
-    explanation: Promises use perfective for definiteness.
-  - sentence: Ми ___ в Україну.
-    error: will arrive
+  - sentence: Ми завтра [___] в Україну.
     answer: приїдемо
     options:
     - будемо їхати
     - приїдемо
-    explanation: Arrival is completion = perfective.
-  - sentence: Він ___ щодня. (habit)
-    error: habit
+  - sentence: Він [___] щодня.
     answer: буде читати
     options:
     - буде читати
     - прочитає
-    explanation: Habitual action = imperfective.
-  - sentence: Вона ___ це!
-    error: definite promise
+  - sentence: Вона [___] це!
     answer: зробить
     options:
     - буде робити
     - зробить
-    explanation: Definite commitment = perfective.
+  - sentence: Ми [___] три години.
+    answer: будемо їхати
+    options:
+    - поїдемо
+    - будемо їхати
+  - sentence: Я вже [___] до вечора.
+    answer: закінчу
+    options:
+    - буду закінчувати
+    - закінчу
+- type: select
+  title: Perfective Future Forms
+  items:
+  - question: Які дієслова означають майбутній результат?
+    options:
+    - text: прочитаю
+      correct: true
+    - text: буду читати
+      correct: false
+    - text: напишу
+      correct: true
+    - text: буду писати
+      correct: false
+  - question: Які форми підходять для обіцянок?
+    options:
+    - text: Я зроблю це!
+      correct: true
+    - text: Я буду робити це.
+      correct: false
+    - text: Я напишу тобі!
+      correct: true
+    - text: Я буду писати.
+      correct: false
+  - question: Які дієслова виражають завершену дію?
+    options:
+    - text: приїду
+      correct: true
+    - text: буду їхати
+      correct: false
+    - text: закінчу
+      correct: true
+    - text: буду закінчувати
+      correct: false
+  - question: Які форми правильні для «цілий день»?
+    options:
+    - text: буду працювати цілий день
+      correct: true
+    - text: попрацюю цілий день
+      correct: false
+    - text: буду читати цілий день
+      correct: true
+    - text: прочитаю цілий день
+      correct: false
+  - question: Які форми підходять для щоденних дій?
+    options:
+    - text: буду вчити щодня
+      correct: true
+    - text: вивчу щодня
+      correct: false
+    - text: буду читати щодня
+      correct: true
+    - text: прочитаю щодня
+      correct: false
+  - question: Які дієслова описують момент завершення?
+    options:
+    - text: побачу
+      correct: true
+    - text: буду бачити
+      correct: false
+    - text: почую
+      correct: true
+    - text: буду чути
+      correct: false
+  - question: Які форми використовуються для наміру зробити?
+    options:
+    - text: візьму
+      correct: true
+    - text: буду брати
+      correct: false
+    - text: дам
+      correct: true
+    - text: буду давати
+      correct: false
+  - question: Які форми підходять для тривалої дії?
+    options:
+    - text: буду думати
+      correct: true
+    - text: подумаю
+      correct: false
+    - text: буду чекати
+      correct: true
+    - text: почекаю
+      correct: false
 - type: cloze
   title: Future Plans
   passage: 'Завтра я {поїдемо|їхати} рано. Я {будемо їхати|їхати|поїдемо} каву і {побачу|бачити}
@@ -445,3 +526,13 @@
     ---
 
     Вони будуть працювати весь день. Потім вони *закінчать* і *підуть* додому.'
+  answers:
+  - прочитаю
+  - напишу
+  - закінчу
+  - приїдемо
+  - скаже
+  - візьме
+  - піде
+  - закінчать
+  - підуть

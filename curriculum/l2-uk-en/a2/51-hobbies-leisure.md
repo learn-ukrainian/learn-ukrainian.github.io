@@ -74,6 +74,8 @@ Here are some general terms for discussing your free time and leisure activities
 > [!tip] **Tip** "Visiting"
 > In Ukraine, **ходити в гості** (to go visiting) is huge. If you are invited, never come empty-handed. Bring creative sweets, cake ("to tea"), or flowers. Hospitality (**гостинність**) is sacred.
 
+Ukrainian culture places great importance on leisure time and social connections. Unlike fast-paced Western lifestyles, Ukrainians often prioritize quality time with family and friends. Weekend gatherings, cultural events, and outdoor activities are central to the Ukrainian way of life. Understanding these leisure patterns will help you connect more deeply with native speakers.
+
 ## Practice
 
 ### Story Time: The Artist and The Musician

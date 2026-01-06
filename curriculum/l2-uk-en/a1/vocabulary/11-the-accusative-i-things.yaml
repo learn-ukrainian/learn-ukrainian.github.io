@@ -133,3 +133,56 @@ items:
     ipa: /iˈtɪ/
     translation: to go
     pos: verb
+  - lemma: бачити
+    ipa: /ˈbɑt͡ʃɪtɪ/
+    translation: to see
+    pos: verb
+  - lemma: нести
+    ipa: /nɛsˈtɪ/
+    translation: to carry
+    pos: verb
+  - lemma: класти
+    ipa: /ˈklɑstɪ/
+    translation: to put
+    pos: verb
+  - lemma: закривати
+    ipa: /zɑkrɪˈvɑtɪ/
+    translation: to close
+    pos: verb
+  - lemma: вмикати
+    ipa: /vmɪˈkɑtɪ/
+    translation: to turn on
+    pos: verb
+  - lemma: вимикати
+    ipa: /vɪmɪˈkɑtɪ/
+    translation: to turn off
+    pos: verb
+  - lemma: ховати
+    ipa: /xɔˈvɑtɪ/
+    translation: to hide
+    pos: verb
+  - lemma: газета
+    ipa: /ɦɑˈzɛtɑ/
+    translation: newspaper
+    pos: noun
+    gender: f
+  - lemma: журнал
+    ipa: /ʒurˈnɑl/
+    translation: magazine
+    pos: noun
+    gender: m
+  - lemma: лист
+    ipa: /lɪst/
+    translation: letter
+    pos: noun
+    gender: m
+  - lemma: паспорт
+    ipa: /ˈpɑspɔrt/
+    translation: passport
+    pos: noun
+    gender: m
+  - lemma: сумка
+    ipa: /ˈsumkɑ/
+    translation: bag
+    pos: noun
+    gender: f

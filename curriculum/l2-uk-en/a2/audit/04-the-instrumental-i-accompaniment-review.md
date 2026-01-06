@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: знахідний, кличний, давальний, родовий, час
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: називний, місцевий, давальний, знахідний, час
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation

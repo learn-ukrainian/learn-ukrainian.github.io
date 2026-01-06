@@ -225,3 +225,9 @@ items:
   translation: journal
   pos: noun
   gender: m
+- lemma: завдання
+  ipa: /zɐu̯ˈdɑɲːɐ/
+  translation: task/objective
+  pos: noun
+  gender: n
+

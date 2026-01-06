@@ -1,29 +1,29 @@
 - type: match-up
   title: Nominative to Instrumental
   pairs:
-  - left: '- друг'
+  - left: 'друг'
     right: другом
-  - left: '- сестра'
+  - left: 'сестра'
     right: сестрою
-  - left: '- брат'
+  - left: 'брат'
     right: братом
-  - left: '- мама'
+  - left: 'мама'
     right: мамою
-  - left: '- батько'
+  - left: 'батько'
     right: батьком
-  - left: '- вчитель'
+  - left: 'вчитель'
     right: вчителем
-  - left: '- дитина'
+  - left: 'дитина'
     right: дитиною
-  - left: '- подруга'
+  - left: 'подруга'
     right: подругою
-  - left: '- хлопець'
+  - left: 'хлопець'
     right: хлопцем
-  - left: '- дівчина'
+  - left: 'дівчина'
     right: дівчиною
-  - left: '- собака'
+  - left: 'собака'
     right: собакою
-  - left: '- кіт'
+  - left: 'кіт'
     right: котом
 - type: cloze
   title: Instrumental Endings
@@ -394,6 +394,18 @@
 
     Петро одружився *з Марією*. Вони живуть *з дітьми*. Бабуся гуляє *з онуками*.
     Він розмовляє *з колегою* про роботу.'
+  answers:
+  - з другом
+  - з сестрою
+  - з батьками
+  - з котом
+  - з дівчиною
+  - з молоком
+  - з друзями
+  - з Марією
+  - з дітьми
+  - з онуками
+  - з колегою
 - type: translate
   title: English to Ukrainian
   items:

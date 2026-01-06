@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1908/1750
+- **Words:** ✅ 2534/1750
 - **Activities:** ✅ 17/16
 - **Density:** ✅ All > 18
 - **Unique_types:** ✅ 11/4 types
@@ -15,33 +15,35 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.0% (target 98-100%)
-- **Richness:** ✅ 99% (academic)
+- **Immersion:** 🇺🇦 99.2% (target 98-100% (grammar))
+- **Richness:** ✅ 96% (grammar)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
-**Module Type:** academic
+**Score:** 96% (minimum: 95%)
+**Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| citations | 5 | 5 | 100% | 24% | 23.8% |
-| data_refs | 5 | 3 | 100% | 19% | 19.0% |
-| visual | 10 | 5 | 100% | 14% | 14.3% |
-| questions | 6 | 4 | 100% | 14% | 14.3% |
-| engagement | 7 | 5 | 100% | 10% | 9.5% |
-| variety | 1.00 | - | 100% | 10% | 9.5% |
-| cultural | 2 | - | 100% | 5% | 4.8% |
-| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **100.0%** |
+| examples | 48 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| dialogues | 9 | 4 | 100% | 15% | 15.0% |
+| variety | 0.98 | - | 98% | 10% | 9.8% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 10 | 3 | 100% | 10% | 10.0% |
+| visual | 9 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 14 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 84 | Included in Core |
-| **Текст 1: Від впевненого користувача до майстра слова** | ✅ | 437 | Included in Core |
-| **Текст 2: Українська мова в сучасному науковому дискурсі** | ✅ | 704 | Included in Core |
-| **Порівняльний аналіз** | ✅ | 299 | Included in Core |
+| **Текст 1: Від впевненого користувача до майстра слова** | ✅ | 703 | Included in Core |
+| **Текст 2: Українська мова в сучасному науковому дискурсі** | ✅ | 984 | Included in Core |
+| **Порівняльний аналіз** | ✅ | 405 | Included in Core |
 | **Письмо: Академічне есе** | ⚪️ | 314 | Skipped |
-| **Підсумок** | ✅ | 70 | Included in Core |
+| **Підсумок** | ✅ | 44 | Included in Core |

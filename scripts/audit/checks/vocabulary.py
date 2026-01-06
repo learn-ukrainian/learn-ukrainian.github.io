@@ -503,10 +503,10 @@ def check_vocab_matches_plan(
         
         if final_missing and len(final_missing) > 0:
             sample = list(final_missing)[:5]
-            # VOCAB_PLAN_MISSING is non-blocking - vocabulary plan mismatches are content issues
-            # to be addressed separately from structural validation (see Issue #340)
+            # VOCAB_PLAN_MISSING is temporarily non-blocking (Issue #387 - separate vocab issue)
+            # TODO: Re-enable blocking after vocab enrichment is complete
             is_blocking = False
-            
+
             violations.append({
                 'type': 'VOCAB_PLAN_MISSING',
                 'issue': f"Missing vocabulary from plan ({len(final_missing)} words): {', '.join(sample)}...",

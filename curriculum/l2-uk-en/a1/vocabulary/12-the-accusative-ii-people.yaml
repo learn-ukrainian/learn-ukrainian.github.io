@@ -197,3 +197,48 @@ items:
     translation: idea
     pos: noun
     gender: f
+  - lemma: менеджер
+    ipa: /mɛˈnɛdʒɛr/
+    translation: manager
+    pos: noun
+    gender: m
+  - lemma: лікар
+    ipa: /ˈlikɑr/
+    translation: doctor
+    pos: noun
+    gender: m
+  - lemma: продавець
+    ipa: /prɔdɑˈvɛt͡sʲ/
+    translation: seller
+    pos: noun
+    gender: m
+  - lemma: подруга
+    ipa: /ˈpɔdruhɑ/
+    translation: friend (f)
+    pos: noun
+    gender: f
+  - lemma: студент
+    ipa: /stuˈdɛnt/
+    translation: student (m)
+    pos: noun
+    gender: m
+  - lemma: студентка
+    ipa: /stuˈdɛntkɑ/
+    translation: student (f)
+    pos: noun
+    gender: f
+  - lemma: друг
+    ipa: /druh/
+    translation: friend (m)
+    pos: noun
+    gender: m
+  - lemma: адвокат
+    ipa: /ɑdvɔˈkɑt/
+    translation: lawyer
+    pos: noun
+    gender: m
+  - lemma: журналіст
+    ipa: /ʒurnɑˈlist/
+    translation: journalist
+    pos: noun
+    gender: m

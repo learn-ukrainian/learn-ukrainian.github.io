@@ -1,29 +1,29 @@
 - type: match-up
   title: Preference Expressions
   pairs:
-  - left: '- Мені більше подобається'
+  - left: Мені більше подобається
     right: I like more
-  - left: '- Я віддаю перевагу'
+  - left: Я віддаю перевагу
     right: I prefer
-  - left: '- Краще'
+  - left: Краще
     right: better
-  - left: '- Гірше'
+  - left: Гірше
     right: worse
-  - left: '- Легше'
+  - left: Легше
     right: easier
-  - left: '- Важче'
+  - left: Важче
     right: harder
-  - left: '- Цікавіше'
+  - left: Цікавіше
     right: more interesting
-  - left: '- Нудніше'
+  - left: Нудніше
     right: more boring
-  - left: '- Я б вибрав'
+  - left: Я б вибрав
     right: I would choose (m)
-  - left: '- Я б вибрала'
+  - left: Я б вибрала
     right: I would choose (f)
-  - left: '- корисніше'
+  - left: корисніше
     right: more useful
-  - left: '- зручніше'
+  - left: зручніше
     right: more convenient
 - type: cloze
   title: Express Preferences
@@ -474,3 +474,64 @@
     ---
 
     Він *більше* любить музику. Вона *віддає перевагу* театру. Це *цікавіше*!'
+  answers:
+  - Мені більше подобається
+  - Я віддаю перевагу
+  - Краще
+  - Легше
+  - Важче
+  - Я б вибрала
+  - більше
+  - віддає перевагу
+  - цікавіше
+- type: translate
+  title: Preference Translation
+  items:
+  - source: I prefer tea.
+    options:
+    - text: Я віддаю перевагу чаю.
+      correct: true
+    - text: Я віддаю перевага чай.
+      correct: false
+    - text: Я віддаю перевагу чай.
+      correct: false
+  - source: Coffee is better than tea.
+    options:
+    - text: Кава краща за чай.
+      correct: true
+    - text: Кава краща ніж чай.
+      correct: true
+    - text: Кава краще чай.
+      correct: false
+  - source: I like spring the most.
+    options:
+    - text: Мені найбільше подобається весна.
+      correct: true
+    - text: Мені більше подобається весна.
+      correct: false
+    - text: Мені подобається весна найбільше.
+      correct: false
+  - source: This is my favorite dish.
+    options:
+    - text: Це моя улюблена страва.
+      correct: true
+    - text: Це мій улюблений страва.
+      correct: false
+    - text: Це моє улюблене страва.
+      correct: false
+  - source: I would rather stay home.
+    options:
+    - text: Я б краще залишився вдома.
+      correct: true
+    - text: Я б краще залишатися вдома.
+      correct: false
+    - text: Я б краще дім.
+      correct: false
+  - source: What do you prefer?
+    options:
+    - text: Що ти віддаєш перевагу?
+      correct: true
+    - text: Що ти перевага?
+      correct: false
+    - text: Що ти віддаєш?
+      correct: false

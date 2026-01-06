@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 2426/1750
+- **Words:** ✅ 2373/1750
 - **Activities:** ✅ 16/16
 - **Density:** ✅ All > 18
 - **Unique_types:** ✅ 6/4 types
@@ -32,14 +32,11 @@
 | variety | 1.00 | - | 100% | 10% | 10.0% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
-| visual | 13 | 3 | 100% | 5% | 5.0% |
+| visual | 12 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 9 | 5 | 100% | 5% | 5.0% |
 | proverbs | 7 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **100.0%** |
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -51,4 +48,4 @@
 | **Культурний контекст: Джерела української науки** | ✅ | 556 | Included in Core |
 | **Мистецтво перефразування та аналізу тексту** | ✅ | 230 | Included in Core |
 | **Етика та стандарти оформлення бібліографії** | ⚪️ | 308 | Skipped |
-| **Підсумок** | ✅ | 110 | Included in Core |
+| **Підсумок** | ✅ | 57 | Included in Core |

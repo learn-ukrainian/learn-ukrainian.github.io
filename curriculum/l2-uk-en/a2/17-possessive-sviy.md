@@ -78,14 +78,14 @@ This distinction is critical in Ukrainian and must be observed in all sentences.
 
 ## Masculine
 
-| Case | Form | Example |
-|------|------|---------|
-| Nom | свій | свій дім |
-| Gen | свого | без свого дому |
-| Dat | своєму | своєму братові |
-| Acc | свій/свого | свій дім | свого брата |
-| Instr | своїм | зі своїм братом |
-| Loc | своєму | своїм | у своєму домі |
+| Case  | Form         | Example             |
+| ----- | ------------ | ------------------- |
+| Nom   | свій         | свій дім            |
+| Gen   | свого        | без свого дому      |
+| Dat   | своєму       | своєму братові      |
+| Acc   | свій / свого | свій дім, свого брата |
+| Instr | своїм        | зі своїм братом     |
+| Loc   | своєму / своїм | у своєму домі     |
 
 ## Feminine
 
@@ -111,14 +111,14 @@ This distinction is critical in Ukrainian and must be observed in all sentences.
 
 ## Plural
 
-| Case | Form | Example |
-|------|------|---------|
-| Nom | свої | свої книги |
-| Gen | своїх | без своїх книг |
-| Dat | своїм | своїм батькам |
-| Acc | свої/своїх | свої книги | своїх батьків |
-| Instr | своїми | зі своїми друзями |
-| Loc | своїх | у своїх книгах |
+| Case  | Form           | Example              |
+| ----- | -------------- | -------------------- |
+| Nom   | свої           | свої книги           |
+| Gen   | своїх          | без своїх книг       |
+| Dat   | своїм          | своїм батькам        |
+| Acc   | свої / своїх   | свої книги, своїх батьків |
+| Instr | своїми         | зі своїми друзями    |
+| Loc   | своїх          | у своїх книгах       |
 
 ---
 
@@ -255,4 +255,10 @@ This mental check will help you until the pattern becomes automatic through prac
 > Where English needs extra words ("his own"), Ukrainian uses one form.
 > This efficiency is part of what makes Ukrainian beautiful to speak.
 
-##
+# Summary
+
+У цьому модулі ви вивчили:
+- Основні поняття та правила
+- Практичне застосування
+- Вправи для закріплення
+

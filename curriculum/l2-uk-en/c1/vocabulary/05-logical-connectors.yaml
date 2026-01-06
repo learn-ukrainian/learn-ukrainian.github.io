@@ -122,3 +122,31 @@ items:
     ipa: /zrɛʃtɔju/
     translation: eventually / after all
     pos: adv
+  - lemma: чином
+    ipa: /t͡ʃɪnɔm/
+    translation: way / manner (part of phrase)
+    pos: noun
+  - lemma: іншого
+    ipa: /inʃɔɦɔ/
+    translation: other (part of phrase)
+    pos: adj
+  - lemma: того
+    ipa: /tɔɦɔ/
+    translation: that (part of phrase)
+    pos: pron
+  - lemma: цього
+    ipa: /t͡sʲɔɦɔ/
+    translation: this (part of phrase)
+    pos: pron
+  - lemma: зв'язку
+    ipa: /zʋjɑzku/
+    translation: connection (part of phrase)
+    pos: noun
+  - lemma: менш
+    ipa: /mɛnʃ/
+    translation: less (part of phrase)
+    pos: adv
+  - lemma: боку
+    ipa: /bɔku/
+    translation: side (part of phrase)
+    pos: noun

@@ -292,84 +292,54 @@ For rain and snow, Ukrainian uses "йде" (goes):
 
 ## 🎯 Activities
 
-### Weather Expressions
-
 <MatchUp
   title="Weather Expressions"
-  isUkrainian={false}
-  pairs={JSON.parse(`[{"left": "- Тепло", "right": "It's warm"}, {"left": "- Холодно", "right": "It's cold"}, {"left": "- Жарко", "right": "It's hot"}, {"left": "- Сонячно", "right": "It's sunny"}, {"left": "- Хмарно", "right": "It's cloudy"}, {"left": "- Вітряно", "right": "It's windy"}, {"left": "- Йде дощ", "right": "It's raining"}, {"left": "- Йде сніг", "right": "It's snowing"}, {"left": "- Яка погода?", "right": "What's the weather?"}, {"left": "- Як надворі?", "right": "How is it outside?"}, {"left": "- Сьогодні тепло", "right": "It's warm today"}, {"left": "- Влітку жарко", "right": "In summer it's hot"}]`)}
+  pairs={JSON.parse(`[{"left": "- Тепло", "right": "It's warm"}, {"left": "- Холодно", "right": "It's cold"}, {"left": "- Жарко", "right": "It's hot"}, {"left": "- Сонячно", "right": "It's sunny"}, {"left": "- Хмарно", "right": "It's cloudy"}, {"left": "- Вітряно", "right": "It's windy"}, {"left": "- Йде дощ", "right": "It's raining"}, {"left": "- Йде сніг", "right": "It's snowing"}, {"left": "- Яка погода?", "right": "What's the weather?"}, {"left": "- Як надворі?", "right": "How is it outside?"}]`)}
 />
-
-### Nature Vocabulary
 
 <MatchUp
   title="Nature Vocabulary"
-  isUkrainian={false}
-  pairs={JSON.parse(`[{"left": "- сонце", "right": "sun"}, {"left": "- хмара", "right": "cloud"}, {"left": "- вітер", "right": "wind"}, {"left": "- дощ", "right": "rain"}, {"left": "- сніг", "right": "snow"}, {"left": "- дерево", "right": "tree"}, {"left": "- квітка", "right": "flower"}, {"left": "- ліс", "right": "forest"}, {"left": "- річка", "right": "river"}, {"left": "- море", "right": "sea"}, {"left": "- гора", "right": "mountain"}, {"left": "- озеро", "right": "lake"}]`)}
+  pairs={JSON.parse(`[{"left": "- сонце", "right": "sun"}, {"left": "- хмара", "right": "cloud"}, {"left": "- вітер", "right": "wind"}, {"left": "- дощ", "right": "rain"}, {"left": "- сніг", "right": "snow"}, {"left": "- дерево", "right": "tree"}, {"left": "- квітка", "right": "flower"}, {"left": "- ліс", "right": "forest"}, {"left": "- річка", "right": "river"}, {"left": "- море", "right": "sea"}]`)}
 />
-
-### Seasons
 
 <GroupSort
   title="Seasons"
-  isUkrainian={false}
   groups={JSON.parse(`{"Warm / Growing (Весна/Літо)": ["сонячно", "жарко", "море", "квітки", "тепло", "трава", "зелено"], "Cold / Changing (Осінь/Зима)": ["холодно", "мороз", "йде сніг", "хмарно", "вітряно", "--"]}`)}
 />
 
-### Animals vs Plants
-
 <GroupSort
   title="Animals vs Plants"
-  isUkrainian={false}
   groups={JSON.parse(`{"Тварини (Animals)": ["собака", "кіт", "птах", "риба", "пес", "кішка"], "Рослини (Plants)": ["дерево", "квітка", "ліс", "трава", "парк", "сад", "--"]}`)}
 />
 
-### Яка погода? (What's the Weather?)
-
 <FillIn
   title="Яка погода? (What's the Weather?)"
-  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Сьогодні світить сонце. ___.", "answer": "Сонячно", "options": ["Сонячно", "Хмарно", "Холодно", "Вітряно"]}, {"sentence": "На небі багато хмар. ___.", "answer": "Хмарно", "options": ["Хмарно", "Сонячно", "Жарко", "Тепло"]}, {"sentence": "Температура +30°C! ___.", "answer": "Жарко", "options": ["Жарко", "Холодно", "Хмарно", "Вітряно"]}, {"sentence": "Температура -10°C. ___.", "answer": "Холодно", "options": ["Холодно", "Жарко", "Тепло", "Сонячно"]}, {"sentence": "Дує сильний вітер. ___.", "answer": "Вітряно", "options": ["Вітряно", "Хмарно", "Сонячно", "Тепло"]}, {"sentence": "Падає біла вода з неба. ___.", "answer": "Йде сніг", "options": ["Йде сніг", "Йде дощ", "Сонячно", "Жарко"]}, {"sentence": "Падає вода з неба. ___.", "answer": "Йде дощ", "options": ["Йде дощ", "Йде сніг", "Хмарно", "Вітряно"]}, {"sentence": "Температура +20°C. Приємна погода. ___.", "answer": "Тепло", "options": ["Тепло", "Холодно", "Жарко", "Хмарно"]}, {"sentence": "Взимку в Карпатах завжди ___.", "answer": "холодно", "options": ["холодно", "жарко", "тепло", "сонячно"]}, {"sentence": "Влітку в Одесі завжди ___.", "answer": "жарко", "options": ["жарко", "холодно", "йде сніг", "хмарно"]}, {"sentence": "Восени часто ___.", "answer": "хмарно", "options": ["хмарно", "жарко", "сонячно", "тепло"]}, {"sentence": "Весною вже не ___, а тепло.", "answer": "холодно", "options": ["холодно", "жарко", "сонячно", "вітряно"]}]`)}
 />
 
-### Природа і тварини (Nature and Animals)
-
 <FillIn
   title="Природа і тварини (Nature and Animals)"
-  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "У мене є ___ Рекс.", "answer": "пес", "options": ["пес", "кіт", "птах", "риба"]}, {"sentence": "Моя ___ — біла і пухнаста.", "answer": "кішка", "options": ["кішка", "собака", "риба", "птах"]}, {"sentence": "Дніпро — це велика ___.", "answer": "річка", "options": ["річка", "море", "гора", "озеро"]}, {"sentence": "У Карпатах є високі ___.", "answer": "гори", "options": ["гори", "річки", "озера", "моря"]}, {"sentence": "У парку багато красивих ___.", "answer": "квіток", "options": ["квіток", "гір", "морів", "птахів"]}, {"sentence": "Влітку ми їдемо на ___.", "answer": "море", "options": ["море", "гору", "ліс", "річку"]}, {"sentence": "У ___ живе багато тварин.", "answer": "лісі", "options": ["лісі", "морі", "горі", "парку"]}, {"sentence": "На дереві сидить ___.", "answer": "птах", "options": ["птах", "риба", "кіт", "собака"]}, {"sentence": "У мене є акваріум з ___.", "answer": "рибою", "options": ["рибою", "котом", "собакою", "птахом"]}, {"sentence": "___ — це найбільша річка України.", "answer": "Дніпро", "options": ["Дніпро", "Карпати", "Одеса", "Львів"]}, {"sentence": "Чорне ___ — на півдні України.", "answer": "море", "options": ["море", "озеро", "річка", "ліс"]}, {"sentence": "У парку росте багато ___.", "answer": "дерев", "options": ["дерев", "гір", "морів", "птахів"]}]`)}
 />
 
-### What Season?
-
 <Quiz
   title="What Season?"
-  isUkrainian={false}
-  questions={JSON.parse(`[{"question": "Which season correctly matches \\\\\\"Йде сніг, холодно\\\\\\" here?", "options": [{"text": "Літо", "correct": false}, {"text": "Весна", "correct": false}, {"text": "Зима", "correct": true}, {"text": "Осінь", "correct": false}]}, {"question": "How is the phrase \\\\\\"Жарко, сонячно, море\\\\\\" categorized?", "options": [{"text": "Зима", "correct": false}, {"text": "Осінь", "correct": false}, {"text": "Літо", "correct": true}, {"text": "Весна", "correct": false}]}, {"question": "What season describes \\\\\\"Тепло, квіти, йде дощ\\\\\\"?", "options": [{"text": "Весна", "correct": true}, {"text": "Літо", "correct": false}, {"text": "Зима", "correct": false}, {"text": "Осінь", "correct": false}]}, {"question": "Which category summarizes \\\\\\"Холодно, хмарно, вітряно\\\\\\"?", "options": [{"text": "Літо", "correct": false}, {"text": "Весна", "correct": false}, {"text": "Осінь", "correct": true}, {"text": "Зима", "correct": false}]}, {"question": "What is the correct season when \\\\\\"Діти грають у сніг\\\\\\"?", "options": [{"text": "Літо", "correct": false}, {"text": "Зима", "correct": true}, {"text": "Весна", "correct": false}, {"text": "Осінь", "correct": false}]}, {"question": "Which season does \\\\\\"Люди на пляжі\\\\\\" represent?", "options": [{"text": "Зима", "correct": false}, {"text": "Літо", "correct": true}, {"text": "Осінь", "correct": false}, {"text": "Весна", "correct": false}]}, {"question": "How is \\\\\\"Листя падає з дерев\\\\\\" translated into a season?", "options": [{"text": "Літо", "correct": false}, {"text": "Весна", "correct": false}, {"text": "Осінь", "correct": true}, {"text": "Зима", "correct": false}]}, {"question": "What is the season when \\\\\\"Птахи повертаються з півдня\\\\\\"?", "options": [{"text": "Осінь", "correct": false}, {"text": "Зима", "correct": false}, {"text": "Літо", "correct": false}, {"text": "Весна", "correct": true}]}]`)}
+  questions={JSON.parse(`[{"question": "Which season correctly matches \\\"Йде сніг, холодно\\\" here?", "options": [{"text": "Літо", "correct": false}, {"text": "Весна", "correct": false}, {"text": "Зима", "correct": true}, {"text": "Осінь", "correct": false}]}, {"question": "How is the phrase \\\"Жарко, сонячно, море\\\" categorized?", "options": [{"text": "Зима", "correct": false}, {"text": "Осінь", "correct": false}, {"text": "Літо", "correct": true}, {"text": "Весна", "correct": false}]}, {"question": "What season describes \\\"Тепло, квіти, йде дощ\\\"?", "options": [{"text": "Весна", "correct": true}, {"text": "Літо", "correct": false}, {"text": "Зима", "correct": false}, {"text": "Осінь", "correct": false}]}, {"question": "Which category summarizes \\\"Холодно, хмарно, вітряно\\\"?", "options": [{"text": "Літо", "correct": false}, {"text": "Весна", "correct": false}, {"text": "Осінь", "correct": true}, {"text": "Зима", "correct": false}]}, {"question": "What is the correct season when \\\"Діти грають у сніг\\\"?", "options": [{"text": "Літо", "correct": false}, {"text": "Зима", "correct": true}, {"text": "Весна", "correct": false}, {"text": "Осінь", "correct": false}]}, {"question": "Which season does \\\"Люди на пляжі\\\" represent?", "options": [{"text": "Зима", "correct": false}, {"text": "Літо", "correct": true}, {"text": "Осінь", "correct": false}, {"text": "Весна", "correct": false}]}, {"question": "How is \\\"Листя падає з дерев\\\" translated into a season?", "options": [{"text": "Літо", "correct": false}, {"text": "Весна", "correct": false}, {"text": "Осінь", "correct": true}, {"text": "Зима", "correct": false}]}, {"question": "What is the season when \\\"Птахи повертаються з півдня\\\"?", "options": [{"text": "Осінь", "correct": false}, {"text": "Зима", "correct": false}, {"text": "Літо", "correct": false}, {"text": "Весна", "correct": true}]}]`)}
 />
-
-### Animal or Plant?
 
 <Quiz
   title="Animal or Plant?"
-  isUkrainian={false}
-  questions={JSON.parse(`[{"question": "Which category does the word \\\\\\"Собака\\\\\\" belong to?", "options": [{"text": "Рослина", "correct": false}, {"text": "Тварина", "correct": true}, {"text": "Погода", "correct": false}, {"text": "Сезон", "correct": false}]}, {"question": "What is the correct category for \\\\\\"Дерево\\\\\\"?", "options": [{"text": "Тварина", "correct": false}, {"text": "Рослина", "correct": true}, {"text": "Місто", "correct": false}, {"text": "Одяг", "correct": false}]}, {"question": "Which classification accurately fits \\\\\\"Кіт\\\\\\"?", "options": [{"text": "Рослина", "correct": false}, {"text": "Тварина", "correct": true}, {"text": "Транспорт", "correct": false}, {"text": "Гроші", "correct": false}]}, {"question": "What is the group for the word \\\\\\"Квітка\\\\\\"?", "options": [{"text": "Тварина", "correct": false}, {"text": "Колір", "correct": false}, {"text": "Рослина", "correct": true}, {"text": "Прислівник", "correct": false}]}, {"question": "Which category accurately represents the word \\\\\\"Птах\\\\\\"?", "options": [{"text": "Тварина", "correct": true}, {"text": "Рослина", "correct": false}, {"text": "Будинок", "correct": false}, {"text": "Сім'я", "correct": false}]}, {"question": "How is the word \\\\\\"Ліс\\\\\\" categorized?", "options": [{"text": "Тварина", "correct": false}, {"text": "Рослина", "correct": true}, {"text": "Посуд", "correct": false}, {"text": "Робота", "correct": false}]}, {"question": "Which category matches the word \\\\\\"Риба\\\\\\"?", "options": [{"text": "Рослина", "correct": false}, {"text": "Овоч", "correct": false}, {"text": "Тварина", "correct": true}, {"text": "Фрукт", "correct": false}]}, {"question": "What is the group for the word \\\\\\"Трава\\\\\\"?", "options": [{"text": "Напій", "correct": false}, {"text": "Рослина", "correct": true}, {"text": "Тварина", "correct": false}, {"text": "Транспорт", "correct": false}]}]`)}
+  questions={JSON.parse(`[{"question": "Which category does the word \\\"Собака\\\" belong to?", "options": [{"text": "Рослина", "correct": false}, {"text": "Тварина", "correct": true}, {"text": "Погода", "correct": false}, {"text": "Сезон", "correct": false}]}, {"question": "What is the correct category for \\\"Дерево\\\"?", "options": [{"text": "Тварина", "correct": false}, {"text": "Рослина", "correct": true}, {"text": "Місто", "correct": false}, {"text": "Одяг", "correct": false}]}, {"question": "Which classification accurately fits \\\"Кіт\\\"?", "options": [{"text": "Рослина", "correct": false}, {"text": "Тварина", "correct": true}, {"text": "Транспорт", "correct": false}, {"text": "Гроші", "correct": false}]}, {"question": "What is the group for the word \\\"Квітка\\\"?", "options": [{"text": "Тварина", "correct": false}, {"text": "Колір", "correct": false}, {"text": "Рослина", "correct": true}, {"text": "Прислівник", "correct": false}]}, {"question": "Which category accurately represents the word \\\"Птах\\\"?", "options": [{"text": "Тварина", "correct": true}, {"text": "Рослина", "correct": false}, {"text": "Будинок", "correct": false}, {"text": "Сім'я", "correct": false}]}, {"question": "How is the word \\\"Ліс\\\" categorized?", "options": [{"text": "Тварина", "correct": false}, {"text": "Рослина", "correct": true}, {"text": "Посуд", "correct": false}, {"text": "Робота", "correct": false}]}, {"question": "Which category matches the word \\\"Риба\\\"?", "options": [{"text": "Рослина", "correct": false}, {"text": "Овоч", "correct": false}, {"text": "Тварина", "correct": true}, {"text": "Фрукт", "correct": false}]}, {"question": "What is the group for the word \\\"Трава\\\"?", "options": [{"text": "Напій", "correct": false}, {"text": "Рослина", "correct": true}, {"text": "Тварина", "correct": false}, {"text": "Транспорт", "correct": false}]}]`)}
 />
-
-### Weather Sentences
 
 <Unjumble
   title="Weather Sentences"
-  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "погода / яка / сьогодні / надворі", "answer": "Яка сьогодні погода надворі"}, {"jumbled": "тепло / сьогодні / і / сонячно", "answer": "Сьогодні тепло і сонячно"}, {"jumbled": "йде / взимку / часто / сніг", "answer": "Взимку часто йде сніг"}, {"jumbled": "жарко / влітку / завжди / дуже", "answer": "Влітку завжди дуже жарко"}, {"jumbled": "дощ / весною / часто / йде", "answer": "Весною часто йде дощ"}, {"jumbled": "є / у мене / собака", "answer": "У мене є собака"}, {"jumbled": "кіт / мій / дуже / білий", "answer": "Мій кіт дуже білий"}, {"jumbled": "багато / у парку / дерев", "answer": "У парку багато дерев"}, {"jumbled": "гори / в Карпатах / є", "answer": "В Карпатах є гори"}, {"jumbled": "річка / Дніпро / велика / це", "answer": "Дніпро це велика річка"}, {"jumbled": "люблю / я / дуже / море", "answer": "Я дуже люблю море"}, {"jumbled": "холодно / надворі / сьогодні / дуже", "answer": "Сьогодні надворі дуже холодно"}]`)}
 />
 
-### Weather and Nature Facts
-
 <TrueFalse
   title="Weather and Nature Facts"
-  isUkrainian={false}
-  items={JSON.parse(`[{"statement": "\\"Йде дощ\\" means \\"It's raining.\\".", "isTrue": true, "explanation": ""}, {"statement": "\\"Йде сніг\\" means \\"It's cold.\\".", "isTrue": false, "explanation": "Incorrect! it means \\"it's snowing\\""}, {"statement": "Ukrainian weather expressions don't need a subject.", "isTrue": true, "explanation": ""}, {"statement": "\\"Тепло\\" means \\"hot.\\".", "isTrue": false, "explanation": "Incorrect! it means \\"warm\\""}, {"statement": "\\"Жарко\\" means \\"hot.\\".", "isTrue": true, "explanation": ""}, {"statement": "Ukraine has only steppes.", "isTrue": false, "explanation": "Incorrect! it has mountains, forests, seas"}, {"statement": "The Carpathians are mountains in Ukraine.", "isTrue": true, "explanation": ""}, {"statement": "\\"Собака\\" and \\"пес\\" both mean \\"dog.\\".", "isTrue": true, "explanation": ""}, {"statement": "\\"Кіт\\" means \\"a female cat.\\".", "isTrue": false, "explanation": "Incorrect! it means \\"male cat\\""}, {"statement": "\\"Влітку\\" means \\"in summer.\\".", "isTrue": true, "explanation": ""}, {"statement": "\\"Взимку\\" means \\"in autumn.\\".", "isTrue": false, "explanation": "Incorrect! it means \\"in winter\\""}, {"statement": "The Dnipro is a river.", "isTrue": true, "explanation": ""}]`)}
+  items={JSON.parse(`[{"statement": "\\\"Йде дощ\\\" means \\\"It's raining.\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Йде сніг\\\" means \\\"It's cold.\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\"it's snowing\\\""}, {"statement": "Ukrainian weather expressions don't need a subject.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Тепло\\\" means \\\"hot.\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\"warm\\\""}, {"statement": "\\\"Жарко\\\" means \\\"hot.\\\".", "isTrue": true, "explanation": ""}, {"statement": "Ukraine has only steppes.", "isTrue": false, "explanation": "Incorrect! it has mountains, forests, seas"}, {"statement": "The Carpathians are mountains in Ukraine.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Собака\\\" and \\\"пес\\\" both mean \\\"dog.\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Кіт\\\" means \\\"a female cat.\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\"male cat\\\""}, {"statement": "\\\"Влітку\\\" means \\\"in summer.\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Взимку\\\" means \\\"in autumn.\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\"in winter\\\""}, {"statement": "The Dnipro is a river.", "isTrue": true, "explanation": ""}]`)}
 />
 
 ## 📚 Vocabulary
@@ -415,6 +385,19 @@ For rain and snow, Ukrainian uses "йде" (goes):
 | сонячно | /ˈsɔnʲɑt͡ʃnɔ/ | sunny | adv |  |  |
 | тварина | /tvɑˈrɪnɑ/ | animal | noun | ж |  |
 | хмарно | /ˈxmɑrnɔ/ | cloudy | adv |  |  |
+| погода | /pɔˈɦɔdɑ/ | weather | noun | ж |  |
+| температура | /tɛmpɛrɑˈturɑ/ | temperature | noun | ж |  |
+| тепло | /ˈtɛplɔ/ | warm | adv |  |  |
+| холодно | /ˈxɔlɔdnɔ/ | cold | adv |  |  |
+| сонце | /ˈsɔnt͡sɛ/ | sun | noun | с |  |
+| хмара | /ˈxmɑrɑ/ | cloud | noun | ж |  |
+| вітер | /ˈvitɛr/ | wind | noun | ч |  |
+| сніг | /snih/ | snow | noun | ч |  |
+| парк | /pɑrk/ | park | noun | ч |  |
+| річка | /ˈrit͡ʃkɑ/ | river | noun | ж |  |
+| море | /ˈmɔrɛ/ | sea | noun | с |  |
+| любити | /lʲuˈbɪtɪ/ | to love | verb |  |  |
+| гуляти | /ɦuˈlʲɑtɪ/ | to walk | verb |  |  |
 
 > [!resources] 🔗 External Resources
 >

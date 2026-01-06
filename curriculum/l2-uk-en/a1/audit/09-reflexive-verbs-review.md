@@ -1,0 +1,35 @@
+# Audit Report: 09-reflexive-verbs.md
+**Phase:** A1.1 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 500
+**Overall Status:** ✅ PASS
+
+## Gates
+- **Words:** ✅ 550/500
+- **Activities:** ✅ 8/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 4/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 3/3
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 17/1
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 26.9% (target 15-35% (M09))
+- **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (8 interactive elements)
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Warm-up** | ✅ | 105 | Included in Core |
+| **Presentation** | ✅ | 267 | Included in Core |
+| **Practice** | ⚪️ | 90 | Skipped |
+| **Cultural Insight** | ✅ | 45 | Included in Core |
+| **Summary** | ✅ | 43 | Included in Core |

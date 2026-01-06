@@ -1,29 +1,29 @@
 - type: match-up
   title: Connectors and Meanings
   pairs:
-  - left: '- Спочатку'
+  - left: Спочатку
     right: At first
-  - left: '- Потім'
+  - left: Потім
     right: Then
-  - left: '- Раптом'
+  - left: Раптом
     right: Suddenly
-  - left: '- Нарешті'
+  - left: Нарешті
     right: Finally
-  - left: '- Врешті-решт'
+  - left: Врешті-решт
     right: In the end
-  - left: '- Одного разу'
+  - left: Одного разу
     right: One day
-  - left: '- Недавно'
+  - left: Недавно
     right: Recently
-  - left: '- Давно'
+  - left: Давно
     right: Long ago
-  - left: '- Відразу'
+  - left: Відразу
     right: Immediately
-  - left: '- Щойно'
+  - left: Щойно
     right: Just now | Just recently
-  - left: '- Ледве'
+  - left: Ледве
     right: Barely
-  - left: '- Раніше'
+  - left: Раніше
     right: Before | Earlier
 - type: cloze
   title: Complete the Story
@@ -265,6 +265,19 @@
     ---
 
     *Щойно* я зайшов, як телефон задзвонив. Це було *несподівано*.'
+  answers:
+  - Одного разу
+  - Спочатку
+  - Але
+  - раптом
+  - відразу
+  - Нарешті
+  - Згодом
+  - Раніше
+  - Потім
+  - Врешті-решт
+  - Щойно
+  - несподівано
 - type: error-correction
   title: Fix the Story Flow
   items:
@@ -384,4 +397,55 @@
     - text: Перед цим я жив у Києві.
       correct: true
     - text: Після цього я жив у Києві.
+      correct: false
+- type: translate
+  title: Narrative Translation
+  items:
+  - source: Once upon a time...
+    options:
+    - text: Колись давно...
+      correct: true
+    - text: Одного разу...
+      correct: true
+    - text: В один час...
+      correct: false
+  - source: Then he said...
+    options:
+    - text: Тоді він сказав...
+      correct: true
+    - text: Потім він сказав...
+      correct: true
+    - text: Він сказав тоді...
+      correct: false
+  - source: Suddenly she saw...
+    options:
+    - text: Раптом вона побачила...
+      correct: true
+    - text: Раптово вона бачила...
+      correct: false
+    - text: Несподівано вона бачить...
+      correct: false
+  - source: Finally they arrived.
+    options:
+    - text: Нарешті вони прибули.
+      correct: true
+    - text: Врешті вони приїхали.
+      correct: true
+    - text: Останнє вони прибувають.
+      correct: false
+  - source: Meanwhile...
+    options:
+    - text: Тим часом...
+      correct: true
+    - text: В той час...
+      correct: false
+    - text: Тоді...
+      correct: false
+  - source: And they lived happily.
+    options:
+    - text: І вони жили щасливо.
+      correct: true
+    - text: І вони живуть щасливо.
+      correct: false
+    - text: І вони будуть жити щасливо.
       correct: false

@@ -49,7 +49,6 @@
     - пишіть
     - пишуть
     - пишимо
-
 - type: match-up
   title: Наказові частки
   pairs:
@@ -69,7 +68,10 @@
     right: Let her rest.
   - left: Хай там що.
     right: Whatever happens.
-
+  - left: 'Хай буде!'
+    right: Let it be!
+  - left: 'Нехай живе!'
+    right: Long live!
 - type: fill-in
   title: Доповніть хай або нехай
   items:
@@ -121,7 +123,6 @@
     - Хай
     - Говори
     - Читай
-
 - type: group-sort
   title: Розсортуйте за стилем
   groups:
@@ -141,11 +142,10 @@
     - Нехай вона відпочине.
     - Нехай студенти працюють.
     - Нехай тобі щастить!
-
 - type: quiz
   title: Розуміння наказового способу
   items:
-  - question: Які частки використовуються для 3-ї особи?
+  - question: Які українські частки використовуються для утворення наказового способу 3-ї особи?
     options:
     - text: хай / нехай
       correct: true
@@ -155,7 +155,7 @@
       correct: false
     - text: і / а
       correct: false
-  - question: Яка частка більш офіційна?
+  - question: Яка з двох часток наказового способу вважається більш офіційною та літературною?
     options:
     - text: нехай
       correct: true
@@ -165,7 +165,7 @@
       correct: false
     - text: жодна
       correct: false
-  - question: Що означає «Хай щастить!»?
+  - question: Що означає українське побажання «Хай щастить!» англійською мовою?
     options:
     - text: Good luck!
       correct: true
@@ -175,7 +175,7 @@
       correct: false
     - text: Hello!
       correct: false
-  - question: Як утворити наказовий 3-ї особи?
+  - question: Як правильно утворити наказовий спосіб для третьої особи в українській мові?
     options:
     - text: хай/нехай + теперішній час
       correct: true
@@ -185,7 +185,7 @@
       correct: false
     - text: хай/нехай + майбутній час
       correct: false
-  - question: Яка форма правильна?
+  - question: Яка форма наказового способу від дієслова «читати» для третьої особи є правильною?
     options:
     - text: Хай він читає.
       correct: true
@@ -195,7 +195,7 @@
       correct: false
     - text: Хай він читатиме.
       correct: false
-  - question: Що означає «Нехай буде так»?
+  - question: Що означає українське побажання «Нехай буде так» англійською мовою?
     options:
     - text: So be it.
       correct: true
@@ -205,7 +205,7 @@
       correct: false
     - text: Come here.
       correct: false
-  - question: Коли використовувати нехай?
+  - question: У яких ситуаціях краще використовувати частку «нехай» замість «хай»?
     options:
     - text: у літературі, офіційно
       correct: true
@@ -215,7 +215,7 @@
       correct: false
     - text: завжди
       correct: false
-  - question: Яка форма від «робити» для 3-ї особи множини?
+  - question: Яка форма наказового способу від «робити» для 3-ї особи множини є правильною?
     options:
     - text: Хай роблять!
       correct: true
@@ -225,23 +225,21 @@
       correct: false
     - text: Хай робив!
       correct: false
-
 - type: unjumble
   title: Складіть речення
   items:
-  - jumbled: він / хай / сам / вирішує
-    answer: Хай він сам вирішує.
-  - jumbled: приходять / гості / нехай / о сьомій
-    answer: Нехай гості приходять о сьомій.
-  - jumbled: діти / хай / граються / в парку
-    answer: Хай діти граються в парку.
-  - jumbled: буде / нехай / так
-    answer: Нехай буде так.
-  - jumbled: щастить / хай / тобі
-    answer: Хай тобі щастить.
-  - jumbled: вона / хай / зателефонує / пізніше
-    answer: Хай вона зателефонує пізніше.
-
+  - jumbled: він / хай / сам / вирішує / це / важливе / питання / сьогодні
+    answer: Хай він сам вирішує це важливе питання сьогодні.
+  - jumbled: приходять / гості / нехай / о сьомій / годині / на вечерю / до нас
+    answer: Нехай гості приходять до нас на вечерю о сьомій годині.
+  - jumbled: діти / хай / граються / в парку / разом / весело / після школи
+    answer: Хай діти весело граються в парку разом після школи.
+  - jumbled: буде / нехай / так / як / ми / домовилися / з тобою / вчора
+    answer: Нехай буде так, як ми домовилися з тобою вчора.
+  - jumbled: щастить / хай / тобі / на / новій / роботі / у Львові
+    answer: Хай тобі щастить на новій роботі у Львові.
+  - jumbled: вона / хай / зателефонує / пізніше / коли / буде / вільний час
+    answer: Хай вона зателефонує пізніше, коли буде вільний час.
 - type: error-correction
   title: Виправте помилки
   items:
@@ -299,28 +297,39 @@
     - спати
     - спіть
     explanation: Теперішній час, не минулий.
-
 - type: cloze
   title: Доповніть діалог
-  passage: |
-    — Директор хоче бачити Марію.
+  passage: '— Директор хоче бачити Марію.
+
     — Її зараз немає. Вона на {зустрічі|обіді|роботі|зустрічі}.
+
     — {Хай|Якщо|Коли|Хай} вона зателефонує, коли повернеться.
+
     — Добре, {передам|передаю|передати|передам}.
+
     — А що робити з {документами|книгами|листами|документами}?
+
     — {Хай|Нехай|Якби|Хай} лежать на столі. Я подивлюся пізніше.
+
     — Гаразд. {Хай|Нехай|Якщо|Хай} він сам вирішує.
+
     — Так, {нехай|хай|якби|нехай} буде так.
+
     — {Хай|Нехай|Якщо|Хай} щастить з проєктом!
+
     — Дякую! {Нехай|Хай|Якби|Нехай} все буде добре.
+
     — І {хай|нехай|якщо|хай} гості приходять вчасно.
-    — Обов'язково. {Хай|Нехай|Якби|Хай} живе наша команда!
+
+    — Обов''язково. {Хай|Нехай|Якби|Хай} живе наша команда!
+
     — {Нехай|Хай|Якщо|Нехай} здійсняться всі плани!
 
+    '
 - type: translate
   title: Перекладіть українською
   items:
-  - english: Let him decide.
+  - source: Let him decide.
     options:
     - text: Хай він вирішує.
       correct: true
@@ -328,7 +337,7 @@
       correct: false
     - text: Вирішуй!
       correct: false
-  - english: May your dream come true!
+  - source: May your dream come true!
     options:
     - text: Нехай здійсниться твоя мрія!
       correct: true
@@ -336,7 +345,7 @@
       correct: false
     - text: Мрій далі!
       correct: false
-  - english: Let them come at seven.
+  - source: Let them come at seven.
     options:
     - text: Хай вони приходять о сьомій.
       correct: true
@@ -344,7 +353,7 @@
       correct: false
     - text: Приходьте о сьомій.
       correct: false
-  - english: Good luck!
+  - source: Good luck!
     options:
     - text: Хай щастить!
       correct: true
@@ -352,7 +361,7 @@
       correct: false
     - text: До побачення!
       correct: false
-  - english: Let her rest.
+  - source: Let her rest.
     options:
     - text: Нехай вона відпочине.
       correct: true
@@ -360,7 +369,7 @@
       correct: false
     - text: Відпочинь!
       correct: false
-  - english: Let the children play.
+  - source: Let the children play.
     options:
     - text: Хай діти грають.
       correct: true
@@ -368,31 +377,30 @@
       correct: false
     - text: Грайте, діти!
       correct: false
-
 - type: true-false
   title: Правда чи ні?
   items:
   - statement: Хай використовується в офіційних документах.
-    answer: false
     explanation: У офіційних документах частіше використовується нехай.
+    correct: false
   - statement: Нехай — це літературна форма.
-    answer: true
     explanation: Нехай частіше зустрічається в літературі.
+    correct: true
   - statement: Після хай вживається інфінітив.
-    answer: false
     explanation: Після хай вживається теперішній час 3-ї особи.
+    correct: false
   - statement: «Хай щастить!» означає «Good luck!»
-    answer: true
     explanation: Це типове побажання удачі.
+    correct: true
   - statement: Хай і нехай мають різні значення.
-    answer: false
     explanation: Вони мають однакове значення, але різний стиль.
+    correct: false
   - statement: Хай він читає — правильна форма.
-    answer: true
     explanation: Це правильний наказовий спосіб 3-ї особи.
+    correct: true
   - statement: Наказовий спосіб 3-ї особи використовує минулий час.
-    answer: false
     explanation: Він використовує теперішній час.
+    correct: false
   - statement: «Хай живе!» — типовий вираз зі словом хай.
-    answer: true
     explanation: Це поширений вираз, наприклад «Хай живе Україна!»
+    correct: true

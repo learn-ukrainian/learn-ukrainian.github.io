@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://learn-ukrainian.github.io/schemas/activities-a2.schema.json",
   "title": "A2 Module Activities",
-  "description": "Activity schema for A2 level modules. No anagram. Adds cloze, error-correction, mark-the-words, dialogue-reorder. Select/translate optional.",
+  "description": "Activity schema for A2 level modules. No anagram. Adds cloze, error-correction, mark-the-words. Select/translate optional.",
 
   "type": "array",
   "minItems": 10,
@@ -17,7 +17,6 @@
       { "$ref": "#/definitions/cloze-a2" },
       { "$ref": "#/definitions/error-correction-a2" },
       { "$ref": "#/definitions/mark-the-words-a2" },
-      { "$ref": "#/definitions/dialogue-reorder-a2" },
       { "$ref": "#/definitions/select-a2" },
       { "$ref": "#/definitions/translate-a2" }
     ]
@@ -266,30 +265,6 @@
           "type": "array",
           "minItems": 6,
           "items": { "type": "string", "minLength": 1 }
-        }
-      }
-    },
-
-    "dialogue-reorder-a2": {
-      "type": "object",
-      "required": ["type", "title", "lines"],
-      "additionalProperties": false,
-      "properties": {
-        "type": { "const": "dialogue-reorder" },
-        "title": { "type": "string", "minLength": 1 },
-        "lines": {
-          "type": "array",
-          "minItems": 4,
-          "items": {
-            "type": "object",
-            "required": ["order", "text"],
-            "additionalProperties": false,
-            "properties": {
-              "order": { "type": "integer", "minimum": 1 },
-              "speaker": { "type": "string" },
-              "text": { "type": "string", "minLength": 1 }
-            }
-          }
         }
       }
     },

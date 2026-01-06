@@ -167,7 +167,6 @@ def get_activity_specs(level: str, module_type: str) -> list:
             ('error-correction', 8, 'Find and fix (REQUIRED)'),
             ('cloze', 14, 'Passage completion'),
             ('mark-the-words', 10, 'Click matching'),
-            ('dialogue-reorder', 6, 'Conversation ordering'),
         ],
         'b1': [
             ('quiz', 12, 'Multiple choice'),
@@ -179,7 +178,6 @@ def get_activity_specs(level: str, module_type: str) -> list:
             ('error-correction', 10, 'Find and fix'),
             ('cloze', 16, 'Passage completion'),
             ('mark-the-words', 12, 'Click matching'),
-            ('dialogue-reorder', 8, 'Conversation ordering'),
             ('select', 8, 'Multi-select'),
             ('translate', 8, 'Translation choice'),
         ],

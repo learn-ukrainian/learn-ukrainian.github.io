@@ -38,7 +38,7 @@ BASE_URL = "http://localhost:3000"
 ACTIVITY_COMPONENTS = [
     'quiz', 'match-up', 'fill-in', 'true-false', 'unjumble',
     'group-sort', 'anagram', 'error-correction', 'cloze',
-    'select', 'translate', 'dialogue-reorder', 'mark-the-words'
+    'select', 'translate', 'mark-the-words'
 ]
 
 

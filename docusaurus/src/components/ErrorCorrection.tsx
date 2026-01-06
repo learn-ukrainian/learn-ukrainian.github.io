@@ -187,10 +187,11 @@ export function ErrorCorrectionItem({
 
 interface ErrorCorrectionProps {
   children: React.ReactNode;
+  instruction?: string;
   isUkrainian?: boolean;
 }
 
-export default function ErrorCorrection({ children, isUkrainian }: ErrorCorrectionProps) {
+export default function ErrorCorrection({ children, instruction, isUkrainian }: ErrorCorrectionProps) {
   const headerLabel = isUkrainian ? 'Знайдіть і виправте помилку' : 'Find and Fix';
 
   return (
@@ -200,6 +201,9 @@ export default function ErrorCorrection({ children, isUkrainian }: ErrorCorrecti
         <span>{headerLabel}</span>
         <ActivityHelp activityType="error-correction" isUkrainian={isUkrainian} />
       </div>
+      {instruction && (
+        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      )}
       <div className={styles.activityContent}>
         {React.Children.map(children, (child) => {
           if (React.isValidElement(child)) {

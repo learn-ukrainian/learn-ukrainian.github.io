@@ -184,73 +184,43 @@ You can now read **35 international words** in Ukrainian. The key insight: many 
 
 ## 🎯 Activities
 
-### True Friends
-
 <MatchUp
   title="True Friends"
-  isUkrainian={false}
   pairs={JSON.parse(`[{"left": "А", "right": "A"}, {"left": "Е", "right": "E"}, {"left": "І", "right": "I"}, {"left": "О", "right": "O"}, {"left": "К", "right": "K"}, {"left": "М", "right": "M"}, {"left": "Т", "right": "T"}, {"left": "а", "right": "a"}, {"left": "е", "right": "e"}, {"left": "і", "right": "i"}, {"left": "о", "right": "o"}, {"left": "к", "right": "k"}]`)}
 />
 
-### False Friends Sound
-
 <MatchUp
   title="False Friends Sound"
-  isUkrainian={false}
-  instruction="Match the Ukrainian letter with its sound"
   pairs={JSON.parse(`[{"left": "В", "right": "/v/ as in van"}, {"left": "Н", "right": "/n/ as in no"}, {"left": "Р", "right": "/r/ as in red"}, {"left": "С", "right": "/s/ as in sun"}, {"left": "У", "right": "/u/ as in moon"}, {"left": "Х", "right": "/x/ as in loch"}, {"left": "в", "right": "/v/"}, {"left": "н", "right": "/n/"}, {"left": "р", "right": "/r/"}, {"left": "с", "right": "/s/"}, {"left": "у", "right": "/u/"}, {"left": "х", "right": "/x/"}]`)}
 />
 
-### Letter Types
-
 <GroupSort
   title="Letter Types"
-  isUkrainian={false}
   groups={JSON.parse(`{"True Friends": ["А", "О", "Е", "І", "К", "М"], "False Friends": ["В", "Н", "Р", "С", "У", "Х"], "New Letters": ["Б", "Д", "З", "Л", "П", "Ф"]}`)}
 />
 
-### Reading Words
-
-
 <Quiz
-
   title="Reading Words"
-
-  isUkrainian={false}
-
-  questions={JSON.parse(`[{"question": "How do you pronounce **банк**?", "options": [{"text": "bank", "correct": true}, {"text": "bahk", "correct": false}, {"text": "vank", "correct": false}, {"text": "bahnk", "correct": false}]}, {"question": "How do you pronounce **радіо**?", "options": [{"text": "radio", "correct": true}, {"text": "padio", "correct": false}, {"text": "radyo", "correct": false}, {"text": "paдio", "correct": false}]}, {"question": "How do you pronounce **кава**?", "options": [{"text": "kava (coffee)", "correct": true}, {"text": "kaba", "correct": false}, {"text": "cava", "correct": false}, {"text": "kaha", "correct": false}]}, {"question": "How do you pronounce **парк**?", "options": [{"text": "park", "correct": true}, {"text": "papk", "correct": false}, {"text": "pack", "correct": false}, {"text": "pank", "correct": false}]}, {"question": "How do you pronounce **суп**?", "options": [{"text": "soup", "correct": true}, {"text": "syp", "correct": false}, {"text": "sup", "correct": false}, {"text": "soop", "correct": false}]}, {"question": "How do you pronounce **футбол**?", "options": [{"text": "futbol (football)", "correct": true}, {"text": "футбол", "correct": false}, {"text": "footbol", "correct": false}, {"text": "futbol", "correct": false}]}, {"question": "What letter is **Р** equivalent to in English sound?", "options": [{"text": "R", "correct": true}, {"text": "P", "correct": false}, {"text": "N", "correct": false}, {"text": "B", "correct": false}]}, {"question": "What letter is **Н** equivalent to in English sound?", "options": [{"text": "N", "correct": true}, {"text": "H", "correct": false}, {"text": "M", "correct": false}, {"text": "X", "correct": false}]}, {"question": "What sound does **В** make?", "options": [{"text": "V as in \\\\\\"van\\\\\\"", "correct": true}, {"text": "B as in \\\\\\"ban\\\\\\"", "correct": false}, {"text": "W as in \\\\\\"wan\\\\\\"", "correct": false}, {"text": "F as in \\\\\\"fan\\\\\\"", "correct": false}]}, {"question": "How do you pronounce **метро**?", "options": [{"text": "metro", "correct": true}, {"text": "metpo", "correct": false}, {"text": "мetpo", "correct": false}, {"text": "meyтро", "correct": false}]}, {"question": "Which word means \\\\\\"tourist\\\\\\"?", "options": [{"text": "турист", "correct": true}, {"text": "тупист", "correct": false}, {"text": "тунист", "correct": false}, {"text": "турісе", "correct": false}]}, {"question": "Which word means \\\\\\"telephone\\\\\\"?", "options": [{"text": "телефон", "correct": true}, {"text": "телефоn", "correct": false}, {"text": "телефоп", "correct": false}, {"text": "тєлєфон", "correct": false}]}]`)}
-
+  questions={JSON.parse(`[{"question": "How do you pronounce **банк**?", "options": [{"text": "bank", "correct": true}, {"text": "bahk", "correct": false}, {"text": "vank", "correct": false}, {"text": "bahnk", "correct": false}]}, {"question": "How do you pronounce **радіо**?", "options": [{"text": "radio", "correct": true}, {"text": "padio", "correct": false}, {"text": "radyo", "correct": false}, {"text": "paдio", "correct": false}]}, {"question": "How do you pronounce **кава**?", "options": [{"text": "kava (coffee)", "correct": true}, {"text": "kaba", "correct": false}, {"text": "cava", "correct": false}, {"text": "kaha", "correct": false}]}, {"question": "How do you pronounce **парк**?", "options": [{"text": "park", "correct": true}, {"text": "papk", "correct": false}, {"text": "pack", "correct": false}, {"text": "pank", "correct": false}]}, {"question": "How do you pronounce **суп**?", "options": [{"text": "soup", "correct": true}, {"text": "syp", "correct": false}, {"text": "sup", "correct": false}, {"text": "soop", "correct": false}]}, {"question": "How do you pronounce **футбол**?", "options": [{"text": "futbol (football)", "correct": true}, {"text": "футбол", "correct": false}, {"text": "footbol", "correct": false}, {"text": "futbol", "correct": false}]}, {"question": "What letter is **Р** equivalent to in English sound?", "options": [{"text": "R", "correct": true}, {"text": "P", "correct": false}, {"text": "N", "correct": false}, {"text": "B", "correct": false}]}, {"question": "What letter is **Н** equivalent to in English sound?", "options": [{"text": "N", "correct": true}, {"text": "H", "correct": false}, {"text": "M", "correct": false}, {"text": "X", "correct": false}]}, {"question": "What sound does **В** make?", "options": [{"text": "V as in \\\"van\\\"", "correct": true}, {"text": "B as in \\\"ban\\\"", "correct": false}, {"text": "W as in \\\"wan\\\"", "correct": false}, {"text": "F as in \\\"fan\\\"", "correct": false}]}, {"question": "How do you pronounce **метро**?", "options": [{"text": "metro", "correct": true}, {"text": "metpo", "correct": false}, {"text": "мetpo", "correct": false}, {"text": "meyтро", "correct": false}]}, {"question": "Which word means \\\"tourist\\\"?", "options": [{"text": "турист", "correct": true}, {"text": "тупист", "correct": false}, {"text": "тунист", "correct": false}, {"text": "турісе", "correct": false}]}, {"question": "Which word means \\\"telephone\\\"?", "options": [{"text": "телефон", "correct": true}, {"text": "телефоn", "correct": false}, {"text": "телефоп", "correct": false}, {"text": "тєлєфон", "correct": false}]}]`)}
 />
-
-### Letter Recognition
 
 <TrueFalse
   title="Letter Recognition"
-  isUkrainian={false}
-  items={JSON.parse(`[{"statement": "The letter А sounds like \\"a\\" in \\"father\\".", "isTrue": true, "explanation": "Correct! А is a True Friend."}, {"statement": "The letter В sounds like \\"b\\" in \\"ball\\".", "isTrue": false, "explanation": "Incorrect! В is a False Friend. It sounds like \\"v\\" in \\"van\\"."}, {"statement": "The letter Н sounds like \\"n\\" in \\"no\\".", "isTrue": true, "explanation": "Correct! Despite looking like H, Н sounds like N."}, {"statement": "The letter Р sounds like \\"p\\" in \\"pet\\".", "isTrue": false, "explanation": "Incorrect! Р is a False Friend. It sounds like \\"r\\" in \\"red\\"."}, {"statement": "The letter С sounds like \\"s\\" in \\"sun\\".", "isTrue": true, "explanation": "Correct! Despite looking like C, С sounds like S."}, {"statement": "The letter У sounds like \\"y\\" in \\"yes\\".", "isTrue": false, "explanation": "Incorrect! У sounds like \\"oo\\" in \\"moon\\"."}, {"statement": "Cyrillic was created in Bulgaria, not Russia.", "isTrue": true, "explanation": "Correct! It was created in the 9th century in Bulgaria."}, {"statement": "Ukrainian has unique letters (Ї, Є, Ґ) that Russian doesn't have.", "isTrue": true, "explanation": "Correct! These letters make Ukrainian distinct."}, {"statement": "The word \\"метро\\" uses only False Friends.", "isTrue": false, "explanation": "Incorrect! It uses True Friends (М, Е, Т, О) and one False Friend (Р)."}, {"statement": "The letter К sounds like \\"k\\" in \\"kite\\".", "isTrue": true, "explanation": "Correct! К is a True Friend."}, {"statement": "The letter Х sounds like \\"x\\" in \\"box\\".", "isTrue": false, "explanation": "Incorrect! Х sounds like \\"ch\\" in Scottish \\"loch\\"."}, {"statement": "The letter Л sounds like \\"l\\" in \\"love\\".", "isTrue": true, "explanation": "Correct! Л is a New Letter that makes the L sound."}]`)}
+  items={JSON.parse(`[{"statement": "The letter А sounds like \\\"a\\\" in \\\"father\\\".", "isTrue": true, "explanation": "Correct! А is a True Friend."}, {"statement": "The letter В sounds like \\\"b\\\" in \\\"ball\\\".", "isTrue": false, "explanation": "Incorrect! В is a False Friend. It sounds like \\\"v\\\" in \\\"van\\\"."}, {"statement": "The letter Н sounds like \\\"n\\\" in \\\"no\\\".", "isTrue": true, "explanation": "Correct! Despite looking like H, Н sounds like N."}, {"statement": "The letter Р sounds like \\\"p\\\" in \\\"pet\\\".", "isTrue": false, "explanation": "Incorrect! Р is a False Friend. It sounds like \\\"r\\\" in \\\"red\\\"."}, {"statement": "The letter С sounds like \\\"s\\\" in \\\"sun\\\".", "isTrue": true, "explanation": "Correct! Despite looking like C, С sounds like S."}, {"statement": "The letter У sounds like \\\"y\\\" in \\\"yes\\\".", "isTrue": false, "explanation": "Incorrect! У sounds like \\\"oo\\\" in \\\"moon\\\"."}, {"statement": "Cyrillic was created in Bulgaria, not Russia.", "isTrue": true, "explanation": "Correct! It was created in the 9th century in Bulgaria."}, {"statement": "Ukrainian has unique letters (Ї, Є, Ґ) that Russian doesn't have.", "isTrue": true, "explanation": "Correct! These letters make Ukrainian distinct."}, {"statement": "The word \\\"метро\\\" uses only False Friends.", "isTrue": false, "explanation": "Incorrect! It uses True Friends (М, Е, Т, О) and one False Friend (Р)."}, {"statement": "The letter К sounds like \\\"k\\\" in \\\"kite\\\".", "isTrue": true, "explanation": "Correct! К is a True Friend."}, {"statement": "The letter Х sounds like \\\"x\\\" in \\\"box\\\".", "isTrue": false, "explanation": "Incorrect! Х sounds like \\\"ch\\\" in Scottish \\\"loch\\\"."}, {"statement": "The letter Л sounds like \\\"l\\\" in \\\"love\\\".", "isTrue": true, "explanation": "Correct! Л is a New Letter that makes the L sound."}]`)}
 />
-
-### Complete the Word
 
 <FillIn
   title="Complete the Word"
-  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "___анк (bank)", "answer": "Б", "options": ["Б", "В", "П", "Ф"]}, {"sentence": "ка___а (coffee)", "answer": "в", "options": ["в", "б", "ф", "п"]}, {"sentence": "___адіо (radio)", "answer": "Р", "options": ["Р", "П", "Н", "В"]}, {"sentence": "мет___о (metro)", "answer": "р", "options": ["р", "п", "н", "в"]}, {"sentence": "___уп (soup)", "answer": "С", "options": ["С", "З", "Ц", "Х"]}, {"sentence": "___арк (park)", "answer": "П", "options": ["П", "Р", "Б", "Ф"]}, {"sentence": "___утбол (football)", "answer": "Ф", "options": ["Ф", "П", "В", "Б"]}, {"sentence": "бана___ (banana)", "answer": "н", "options": ["н", "м", "р", "л"]}, {"sentence": "___імон (lemon)", "answer": "Л", "options": ["Л", "П", "Р", "Н"]}, {"sentence": "___октор (doctor)", "answer": "Д", "options": ["Д", "Т", "Б", "П"]}, {"sentence": "телефо___", "answer": "н", "options": ["н", "м", "р", "л"]}, {"sentence": "ка___та (map/card)", "answer": "р", "options": ["р", "п", "н", "в"]}]`)}
 />
 
-### Build the Word
-
 <Anagram
   title="Build the Word"
-  isUkrainian={false}
   items={JSON.parse(`[{"scrambled": "к а в а", "answer": "кава", "hint": ""}, {"scrambled": "б а н к", "answer": "банк", "hint": ""}, {"scrambled": "п а р к", "answer": "парк", "hint": ""}, {"scrambled": "с у п", "answer": "суп", "hint": ""}, {"scrambled": "б а р", "answer": "бар", "hint": ""}, {"scrambled": "м е т р о", "answer": "метро", "hint": ""}, {"scrambled": "р а д і о", "answer": "радіо", "hint": ""}, {"scrambled": "ф о т о", "answer": "фото", "hint": ""}, {"scrambled": "п і ц а", "answer": "піца", "hint": ""}, {"scrambled": "с а л а т", "answer": "салат", "hint": ""}, {"scrambled": "т а к с і", "answer": "таксі", "hint": ""}, {"scrambled": "м у з и к а", "answer": "музика", "hint": ""}]`)}
 />
 
-### International Words
-
 <Anagram
   title="International Words"
-  isUkrainian={false}
   items={JSON.parse(`[{"scrambled": "о п е р а", "answer": "опера", "hint": ""}, {"scrambled": "б а л е т", "answer": "балет", "hint": ""}, {"scrambled": "а к т о р", "answer": "актор", "hint": ""}, {"scrambled": "п а с п о р т", "answer": "паспорт", "hint": ""}, {"scrambled": "в і з а", "answer": "віза", "hint": ""}, {"scrambled": "к а р т а", "answer": "карта", "hint": ""}, {"scrambled": "к о м е т а", "answer": "комета", "hint": ""}, {"scrambled": "р а к е т а", "answer": "ракета", "hint": ""}, {"scrambled": "к а к а о", "answer": "какао", "hint": ""}, {"scrambled": "і н т е р н е т", "answer": "інтернет", "hint": ""}, {"scrambled": "с т у д е н т", "answer": "студент", "hint": ""}, {"scrambled": "т у р и с т", "answer": "турист", "hint": ""}]`)}
 />
 

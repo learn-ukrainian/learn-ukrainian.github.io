@@ -111,3 +111,15 @@ items:
     ipa: /jɑˈkɪj/
     translation: which
     pos: pron
+  - lemma: принесіть
+    ipa: /prɪnɛˈsitʲ/
+    translation: bring (polite)
+    pos: verb
+  - lemma: разом
+    ipa: /ˈrɑzɔm/
+    translation: together
+    pos: adv
+  - lemma: візьму
+    ipa: /ˈvizʲmu/
+    translation: I'll take
+    pos: verb

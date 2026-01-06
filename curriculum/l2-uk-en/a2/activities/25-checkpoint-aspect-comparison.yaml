@@ -1,29 +1,29 @@
 - type: match-up
   title: Aspect Pairs Review
   pairs:
-  - left: '- читати'
+  - left: читати
     right: прочитати
-  - left: '- писати'
+  - left: писати
     right: написати
-  - left: '- робити'
+  - left: робити
     right: зробити
-  - left: '- говорити'
+  - left: говорити
     right: сказати
-  - left: '- бачити'
+  - left: бачити
     right: побачити
-  - left: '- брати'
+  - left: брати
     right: взяти
-  - left: '- давати'
+  - left: давати
     right: дати
-  - left: '- вставати'
+  - left: вставати
     right: встати
-  - left: '- купувати'
+  - left: купувати
     right: купити
-  - left: '- відпочивати'
+  - left: відпочивати
     right: відпочити
-  - left: '- починати'
+  - left: починати
     right: почати
-  - left: '- закінчувати'
+  - left: закінчувати
     right: закінчити
 - type: cloze
   title: Comprehensive Review
@@ -332,6 +332,20 @@
 
     Минулого року я *їздив* до Львова. Місто *гарніше*, ніж я *думав*. *Якби* я жив
     там, я *б був* щасливий.'
+  answers:
+  - прочитав
+  - краща
+  - Якби
+  - б прочитав
+  - дорожчий
+  - найкращий
+  - б хотів
+  - вирішив
+  - їздив
+  - гарніше
+  - думав
+  - Якби
+  - б був
 - type: error-correction
   title: Grammar Review
   items:
@@ -448,3 +462,54 @@
     - купував
     explanation: Conditional mood requires "би/б" with past tense "купив би" or "б
       купив".
+- type: translate
+  title: Aspect Translation
+  items:
+  - source: I was reading a book.
+    options:
+    - text: Я читав книгу.
+      correct: true
+    - text: Я прочитав книгу.
+      correct: false
+    - text: Я читаю книгу.
+      correct: false
+  - source: I read the book (finished).
+    options:
+    - text: Я прочитав книгу.
+      correct: true
+    - text: Я читав книгу.
+      correct: false
+    - text: Я читаю книгу.
+      correct: false
+  - source: She was writing a letter.
+    options:
+    - text: Вона писала листа.
+      correct: true
+    - text: Вона написала листа.
+      correct: false
+    - text: Вона пише листа.
+      correct: false
+  - source: He ate dinner (completed).
+    options:
+    - text: Він поїв вечерю.
+      correct: true
+    - text: Він їв вечерю.
+      correct: false
+    - text: Він їсть вечерю.
+      correct: false
+  - source: They were watching TV.
+    options:
+    - text: Вони дивилися телевізор.
+      correct: true
+    - text: Вони подивилися телевізор.
+      correct: false
+    - text: Вони дивляться телевізор.
+      correct: false
+  - source: I finished the work.
+    options:
+    - text: Я закінчив роботу.
+      correct: true
+    - text: Я закінчував роботу.
+      correct: false
+    - text: Я закінчую роботу.
+      correct: false

@@ -470,46 +470,6 @@ def parse_mark_the_words(content: str) -> str:
     return '\n'.join(passage_lines)
 
 
-def parse_dialogue_reorder(content: str) -> list[dict]:
-    """Parse dialogue-reorder activity from markdown.
-
-    Input formats:
-    - A: text or - B: text (generic speakers)
-    - Олена: text (named speakers in Ukrainian)
-    - Speaker: text (named speakers in English)
-
-    Output: List of {order, text, speaker} dicts.
-    """
-    lines = []
-    order = 1
-
-    for line in content.split('\n'):
-        line = line.strip()
-
-        # Skip empty lines and callouts
-        if not line or line.startswith('>'):
-            continue
-
-        # Try to match: - Speaker: text (with any speaker name)
-        match = re.match(r'-\s*([^:]+):\s*(.+)', line)
-        if match:
-            speaker = match.group(1).strip()
-            text = match.group(2).strip()
-            item = {'order': order, 'text': text}
-            if speaker:
-                item['speaker'] = speaker
-            lines.append(item)
-            order += 1
-        # Also try without speaker: - text
-        elif line.startswith('-'):
-            text = line[1:].strip()
-            if text:
-                lines.append({'order': order, 'text': text})
-                order += 1
-
-    return lines
-
-
 def parse_select(content: str) -> list[dict]:
     """Parse select (multiple correct) activity from markdown."""
     items = []
@@ -603,7 +563,6 @@ ACTIVITY_PARSERS = {
     'error-correction': parse_error_correction,
     'cloze': parse_cloze,
     'mark-the-words': parse_mark_the_words,
-    'dialogue-reorder': parse_dialogue_reorder,
     'select': parse_select,
     'translate': parse_translate,
 }
@@ -663,12 +622,6 @@ def parse_activities_section(activities_md: str) -> list[dict]:
                     'type': activity_type,
                     'title': title,
                     'groups': parsed
-                }
-            elif activity_type in ['dialogue-reorder']:
-                activity = {
-                    'type': activity_type,
-                    'title': title,
-                    'lines': parsed
                 }
             else:
                 activity = {

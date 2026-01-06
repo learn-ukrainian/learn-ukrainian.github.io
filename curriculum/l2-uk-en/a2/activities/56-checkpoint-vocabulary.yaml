@@ -1,29 +1,29 @@
 - type: match-up
   title: Vocabulary Categories
   pairs:
-  - left: '- квартира'
+  - left: квартира
     right: Daily Life
-  - left: '- вітальня'
+  - left: вітальня
     right: Daily Life
-  - left: '- лікар'
+  - left: лікар
     right: Work
-  - left: '- програміст'
+  - left: програміст
     right: Work
-  - left: '- голова'
+  - left: голова
     right: Health
-  - left: '- горло'
+  - left: горло
     right: Health
-  - left: '- гроші'
+  - left: гроші
     right: Shopping
-  - left: '- квиток'
+  - left: квиток
     right: Travel
-  - left: '- прокидатися'
+  - left: прокидатися
     right: Daily Life
-  - left: '- вчитися'
+  - left: вчитися
     right: Education
-  - left: '- температура'
+  - left: температура
     right: Health
-  - left: '- знижка'
+  - left: знижка
     right: Shopping
 - type: cloze
   title: Vocabulary Test
@@ -329,18 +329,80 @@
     ---
 
     У мене болить *голова* і *горло*. Де тут *аптека*?'
+  answers:
+  - прокидаюся
+  - кухні
+  - снідати
+  - працює
+  - лікаркою
+  - вчилася
+  - університеті
+  - голова
+  - горло
+  - аптека
 - type: translate
   title: English to Ukrainian
   items:
-  - english: I wake up at 7:00.
+  - source: I wake up at 7:00.
     ukrainian: Я прокидаюся о сьомій годині.
-  - english: He works as a programmer.
+  - source: He works as a programmer.
     ukrainian: Він працює програмістом.
-  - english: My head hurts.
+  - source: My head hurts.
     ukrainian: У мене болить голова.
-  - english: I want to buy a ticket.
+  - source: I want to buy a ticket.
     ukrainian: Я хочу купити квиток.
-  - english: She studies at the university.
+  - source: She studies at the university.
     ukrainian: Вона вчиться в університеті.
-  - english: Can I pay by card?
+  - source: Can I pay by card?
     ukrainian: Можна заплатити карткою?
+- type: translate
+  title: Vocabulary Review Translation
+  items:
+  - source: Kitchen
+    options:
+    - text: Кухня
+      correct: true
+    - text: Кімната
+      correct: false
+    - text: Коридор
+      correct: false
+  - source: Weather
+    options:
+    - text: Погода
+      correct: true
+    - text: Природа
+      correct: false
+    - text: Пора
+      correct: false
+  - source: To cook
+    options:
+    - text: Готувати
+      correct: true
+    - text: Варити
+      correct: false
+    - text: Смажити
+      correct: false
+  - source: Mountain
+    options:
+    - text: Гора
+      correct: true
+    - text: Долина
+      correct: false
+    - text: Ріка
+      correct: false
+  - source: Summer
+    options:
+    - text: Літо
+      correct: true
+    - text: Зима
+      correct: false
+    - text: Весна
+      correct: false
+  - source: Furniture
+    options:
+    - text: Меблі
+      correct: true
+    - text: Одяг
+      correct: false
+    - text: Посуд
+      correct: false

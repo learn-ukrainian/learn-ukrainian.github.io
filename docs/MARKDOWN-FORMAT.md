@@ -546,26 +546,6 @@ Passage with multiple dropdown blanks. Use `[___:N]` markers in the text.
 > [!options] звати | є | маю   <-- WRONG! No [!options] for cloze
 ```
 
-### Dialogue Reorder Format (A2+)
-
-Learners put shuffled dialogue lines in correct order.
-
-```markdown
-## dialogue-reorder: At the Café
-
-> Put the dialogue in the correct order.
-
-- А: Привіт! Як справи?
-- B: Добре, дякую! А у тебе?
-- А: Теж добре. Що будеш замовляти?
-- B: Каву, будь ласка.
-```
-
-**Key points:**
-- Use `- Speaker: Line` format
-- Lines are presented in correct order (will be shuffled on display)
-- Speaker labels (A:, B:, etc.) help identify participants
-
 ### Mark the Words Format (A2+)
 
 Learners click/tap words matching a criterion (e.g., all nouns, all verbs).

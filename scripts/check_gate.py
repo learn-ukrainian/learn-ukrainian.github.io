@@ -131,7 +131,7 @@ def count_dialogues(content: str) -> int:
 
 def count_activities(content: str) -> tuple[int, set]:
     """Count activities and unique types."""
-    activity_pattern = r'^##\s+(quiz|match-up|fill-in|true-false|group-sort|unjumble|anagram|error-correction|cloze|mark-the-words|dialogue-reorder|select|translate):'
+    activity_pattern = r'^##\s+(quiz|match-up|fill-in|true-false|group-sort|unjumble|anagram|error-correction|cloze|mark-the-words|select|translate):'
     matches = re.findall(activity_pattern, content, re.MULTILINE | re.IGNORECASE)
     return len(matches), set(m.lower() for m in matches)
 
@@ -300,7 +300,7 @@ def check_activities_gate(file_path: Path, content: str) -> tuple[bool, list[str
 
     # 4. Activity item counts (check each activity has minimum items)
     min_items = config.get('min_items_per_activity', 12)
-    activity_sections = re.split(r'^##\s+(?:quiz|match-up|fill-in|true-false|group-sort|unjumble|anagram|error-correction|cloze|mark-the-words|dialogue-reorder|select|translate):', content, flags=re.MULTILINE | re.IGNORECASE)
+    activity_sections = re.split(r'^##\s+(?:quiz|match-up|fill-in|true-false|group-sort|unjumble|anagram|error-correction|cloze|mark-the-words|select|translate):', content, flags=re.MULTILINE | re.IGNORECASE)
 
     for i, section in enumerate(activity_sections[1:], 1):
         # Count numbered items

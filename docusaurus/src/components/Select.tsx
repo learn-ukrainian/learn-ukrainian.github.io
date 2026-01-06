@@ -132,11 +132,12 @@ interface GeneratorSelectQuestion {
 
 interface SelectProps {
   questions?: GeneratorSelectQuestion[];
+  instruction?: string;
   children?: React.ReactNode;
   isUkrainian?: boolean;
 }
 
-export default function Select({ questions, children, isUkrainian }: SelectProps) {
+export default function Select({ questions, instruction, children, isUkrainian }: SelectProps) {
   // Transform generator format to SelectQuestion props
   const transformedItems = useMemo(() => {
     if (!questions) return null;
@@ -158,6 +159,9 @@ export default function Select({ questions, children, isUkrainian }: SelectProps
         <span>{headerLabel}</span>
         <ActivityHelp activityType="select" isUkrainian={isUkrainian} />
       </div>
+      {instruction && (
+        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      )}
       <div className={styles.activityContent}>
         {transformedItems ? transformedItems.map((item, idx) => (
           <SelectQuestion

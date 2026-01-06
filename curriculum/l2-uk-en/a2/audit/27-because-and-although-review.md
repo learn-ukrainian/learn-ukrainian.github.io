@@ -2,19 +2,18 @@
 **Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Complex Sentences | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
-## LINT ERRORS
-- ❌ Line 179: Empty Header detected (Lonely '#'). Remove or add title.
-
 ## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 - **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Fix the Connector' uses placeholder syntax instead of real errors
   - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 1/6 items with placeholders/missing errors.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): критикувати, розповідати, запитати, пояснити, стверджувати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): попередити, питати, хвалити, відповідати, нагадати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 20/100)
+**📝 UPDATE** (severity 15/100)
 
-- 2 pedagogical violations (minor)
+- 3 pedagogical violations (minor)
 - Immersion 9% off target (minor)
 
 ## Gates
@@ -27,7 +26,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 35/1
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 1 Format Errors
+- **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** ❌ 30.8% LOW (target 40-55% (A2.2))

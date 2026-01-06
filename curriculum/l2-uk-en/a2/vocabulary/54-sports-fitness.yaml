@@ -46,6 +46,11 @@ items:
   translation: inhale
   pos: noun
   gender: m
+- lemma: вид
+  ipa: vɪd
+  translation: type, kind, sport discipline
+  pos: noun
+  gender: m
 - lemma: вигравати
   ipa: vɪhrɐˈʋɑte
   translation: to win (imp)

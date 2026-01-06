@@ -230,11 +230,12 @@ interface UnjumbleItem {
 
 interface UnjumbleProps {
   items?: UnjumbleItem[];
+  instruction?: string;
   children?: React.ReactNode;
   isUkrainian?: boolean;
 }
 
-export default function Unjumble({ items, children, isUkrainian }: UnjumbleProps) {
+export default function Unjumble({ items, instruction, children, isUkrainian }: UnjumbleProps) {
   const headerLabel = isUkrainian ? 'Складіть речення' : 'Build the Sentence';
 
   return (
@@ -244,6 +245,9 @@ export default function Unjumble({ items, children, isUkrainian }: UnjumbleProps
         <span>{headerLabel}</span>
         <ActivityHelp activityType="unjumble" isUkrainian={isUkrainian} />
       </div>
+      {instruction && (
+        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      )}
       <div className={styles.activityContent}>
         {items ? items.map((item, index) => (
           <UnjumbleQuestion

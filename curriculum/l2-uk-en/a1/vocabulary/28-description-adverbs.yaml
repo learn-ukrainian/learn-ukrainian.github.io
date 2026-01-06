@@ -109,3 +109,91 @@ items:
     translation: scale
     pos: noun
     gender: f
+  - lemma: добре
+    ipa: /ˈdɔbrɛ/
+    translation: well/good
+    pos: adv
+  - lemma: швидко
+    ipa: /ˈʃvɪdkɔ/
+    translation: quickly
+    pos: adv
+  - lemma: цікаво
+    ipa: /t͡sʲiˈkɑvɔ/
+    translation: interestingly
+    pos: adv
+  - lemma: нудно
+    ipa: /ˈnudnɔ/
+    translation: boringly
+    pos: adv
+  - lemma: важко
+    ipa: /ˈvɑʒkɔ/
+    translation: difficultly/hard
+    pos: adv
+  - lemma: легко
+    ipa: /ˈlɛhkɔ/
+    translation: easily
+    pos: adv
+  - lemma: смачно
+    ipa: /ˈsmɑt͡ʃnɔ/
+    translation: deliciously
+    pos: adv
+  - lemma: дорого
+    ipa: /ˈdɔrɔɦɔ/
+    translation: expensively
+    pos: adv
+  - lemma: дешево
+    ipa: /ˈdɛʃɛvɔ/
+    translation: cheaply
+    pos: adv
+  - lemma: тихо
+    ipa: /ˈtɪxɔ/
+    translation: quietly
+    pos: adv
+  - lemma: сумно
+    ipa: /ˈsumnɔ/
+    translation: sadly
+    pos: adv
+  - lemma: серйозно
+    ipa: /sɛrˈjɔznɔ/
+    translation: seriously
+    pos: adv
+  - lemma: жартома
+    ipa: /ˈʒɑrtɔmɑ/
+    translation: jokingly
+    pos: adv
+  - lemma: ввічливо
+    ipa: /ˈvvit͡ʃlɪvɔ/
+    translation: politely
+    pos: adv
+  - lemma: чесно
+    ipa: /ˈt͡ʃɛsnɔ/
+    translation: honestly
+    pos: adv
+  - lemma: завжди
+    ipa: /ˈzɑvʒdɪ/
+    translation: always
+    pos: adv
+  - lemma: часто
+    ipa: /ˈt͡ʃɑstɔ/
+    translation: often
+    pos: adv
+  - lemma: зазвичай
+    ipa: /zɑzʋɪˈt͡ʃɑj/
+    translation: usually
+    pos: adv
+  - lemma: іноді
+    ipa: /iˈnɔdi/
+    translation: sometimes
+    pos: adv
+  - lemma: рідко
+    ipa: /ˈridkɔ/
+    translation: rarely
+    pos: adv
+  - lemma: ніколи
+    ipa: /nʲiˈkɔlɪ/
+    translation: never
+    pos: adv
+  - lemma: дуже
+    ipa: /ˈduʒɛ/
+    translation: very
+    pos: adv

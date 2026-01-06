@@ -1,29 +1,29 @@
 - type: match-up
   title: Post Office Vocabulary
   pairs:
-  - left: '- лист'
+  - left: 'лист'
     right: letter
-  - left: '- посилка'
+  - left: 'посилка'
     right: package
-  - left: '- марка'
+  - left: 'марка'
     right: stamp
-  - left: '- конверт'
+  - left: 'конверт'
     right: envelope
-  - left: '- адреса'
+  - left: 'адреса'
     right: address
-  - left: '- індекс'
+  - left: 'індекс'
     right: postal code
-  - left: '- відправляти'
+  - left: 'відправляти'
     right: to send
-  - left: '- отримувати'
+  - left: 'отримувати'
     right: to receive
-  - left: '- надсилати'
+  - left: 'надсилати'
     right: to mail
-  - left: '- квитанція'
+  - left: 'квитанція'
     right: receipt
-  - left: '- рекомендований'
+  - left: 'рекомендований'
     right: registered
-  - left: '- звичайний'
+  - left: 'звичайний'
     right: regular
 - type: fill-in
   title: Complete the Sentences
@@ -135,7 +135,8 @@
       correct: false
     - text: Який сьогодні рахунок?
       correct: false
-  - question: When expressing payment method in Ukrainian, you say "платити..." with which case?
+  - question: When expressing payment method in Ukrainian, you say "платити..." with
+      which case?
     options:
     - text: Платити карткою.
       correct: true
@@ -145,7 +146,8 @@
       correct: false
     - text: Платити картка.
       correct: false
-  - question: When you need to withdraw money at a bank, which is the correct Ukrainian sentence?
+  - question: When you need to withdraw money at a bank, which is the correct Ukrainian
+      sentence?
     options:
     - text: Мені потрібно зняти гроші.
       correct: true
@@ -165,7 +167,8 @@
       correct: false
     - text: Посилка з Україні.
       correct: false
-  - question: When asking someone to "give me the receipt," which is the correct Ukrainian sentence?
+  - question: When asking someone to "give me the receipt," which is the correct Ukrainian
+      sentence?
     options:
     - text: Дайте мені квитанцію.
       correct: true
@@ -185,7 +188,8 @@
       correct: false
     - text: Скільки коштує маркою?
       correct: false
-  - question: When you want to open a bank account in Ukrainian, which sentence is correct?
+  - question: When you want to open a bank account in Ukrainian, which sentence is
+      correct?
     options:
     - text: Я хочу відкрити рахунок.
       correct: true
@@ -195,7 +199,8 @@
       correct: false
     - text: Я хочу відкрити рахунці.
       correct: false
-  - question: When asking someone to "write the address" on an envelope, which Ukrainian sentence is correct?
+  - question: When asking someone to "write the address" on an envelope, which Ukrainian
+      sentence is correct?
     options:
     - text: Напишіть адресу.
       correct: true
@@ -205,7 +210,8 @@
       correct: false
     - text: Напишіть адресою.
       correct: false
-  - question: When expressing the quantity "five hundred hryvnias" in Ukrainian, which form is correct?
+  - question: When expressing the quantity "five hundred hryvnias" in Ukrainian, which
+      form is correct?
     options:
     - text: П'ятсот гривень.
       correct: true
@@ -215,7 +221,8 @@
       correct: false
     - text: П'ятсот гривню.
       correct: false
-  - question: When saying "I lost my card" in Ukrainian, which grammatical form of "картка" is correct?
+  - question: When saying "I lost my card" in Ukrainian, which grammatical form of
+      "картка" is correct?
     options:
     - text: Я загубив картку.
       correct: true
@@ -225,7 +232,8 @@
       correct: false
     - text: Я загубив картки.
       correct: false
-  - question: What is Ukraine's national currency, which you will use at banks and post offices?
+  - question: What is Ukraine's national currency, which you will use at banks and
+      post offices?
     options:
     - text: гривня
       correct: true
@@ -569,6 +577,20 @@
     ---
 
     Напишіть *адресу* на *конверті*. Покажіть *паспорт*. Скільки коштує *марка*?'
+  answers:
+  - листа
+  - Канади
+  - мені
+  - квитанцію
+  - України
+  - гроші
+  - долари
+  - гривні
+  - карткою
+  - адресу
+  - конверті
+  - паспорт
+  - марка
 - type: translate
   title: English to Ukrainian
   items:

@@ -127,29 +127,29 @@
 - type: match-up
   title: Body & Health
   pairs:
-  - left: '- голова'
+  - left: 'голова'
     right: head
-  - left: '- рука'
+  - left: 'рука'
     right: hand/arm
-  - left: '- нога'
+  - left: 'нога'
     right: leg/foot
-  - left: '- спина'
+  - left: 'спина'
     right: back
-  - left: '- живіт'
+  - left: 'живіт'
     right: stomach
-  - left: '- серце'
+  - left: 'серце'
     right: heart
-  - left: '- зуб'
+  - left: 'зуб'
     right: tooth
-  - left: '- лікар'
+  - left: 'лікар'
     right: doctor
-  - left: '- ліки'
+  - left: 'ліки'
     right: medicine
-  - left: '- аптека'
+  - left: 'аптека'
     right: pharmacy
-  - left: '- температура'
+  - left: 'температура'
     right: fever
-  - left: '- біль'
+  - left: 'біль'
     right: pain
 - type: cloze
   title: My Symptoms
@@ -486,6 +486,15 @@
   text: У людини є одна *голова*, дві *руки* і дві *ноги*. На обличчі є *очі*, ніс
     і рот. У роті є *зуби*. У грудях б'ється *серце*. Коли ми їмо, працює *шлунок*.
     Якщо ми носимо важке, болить *спина*.
+  answers:
+  - голова
+  - руки
+  - ноги
+  - очі
+  - зуби
+  - серце
+  - шлунок
+  - спина
 - type: select
   title: Medical Choice
   items:

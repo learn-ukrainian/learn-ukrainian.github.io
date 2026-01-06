@@ -1,22 +1,21 @@
 # Audit Report: 20-preferences-and-choices.md
 **Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): перевагу, легше, повільніше, краще, дорожче...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): краще, дешевше, зручніше, подобатися, волити...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 10/100)
 
 - 1 pedagogical violations (minor)
-- Activity count below minimum
 
 ## Gates
-- **Words:** ✅ 1186/1000
-- **Activities:** ❌ 9/10
+- **Words:** ✅ 1294/1000
+- **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 8/4 types
+- **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
@@ -25,7 +24,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 32.9% LOW (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 38.8% (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
@@ -42,6 +41,7 @@
 | **Practice** | ⚪️ | 0 | Skipped |
 | **Practice Expressions** | ⚪️ | 77 | Skipped |
 | **What is your choice?** | ⚪️ | 42 | Skipped |
+| **Story Time: Вибір Подарунка** | ✅ | 108 | Included in Core |
 | **Summary** | ✅ | 0 | Included in Core |
 | **What You Learned** | ⚪️ | 79 | Skipped |
 | **Need More Practice?** | ⚪️ | 0 | Skipped |

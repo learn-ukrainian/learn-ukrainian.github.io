@@ -1,17 +1,25 @@
-module: c1-15
-title: Oral Presentations
-subtitle: Academic Foundation
-version: '2.0'
-phase: C1.1 Academic
-focus: speaking
-pedagogy: academic
+module: 15
+title: "Доповідь та Презентація"
+subtitle: "Oral Presentations"
+version: "1.0"
+phase: "C1.1 Academic Writing"
+focus: professional
+pedagogy: immersion
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- speaking
-- presentation
-- speech
+  - academic
+  - speaking
+  - presentation
+  - public-speaking
+grammar:
+  - "Academic presentation language and structure"
+  - "Signposting phrases for transitions"
+  - "Handling questions and discussion"
 objectives:
-- Master C1 concepts in Oral Presentations
+  - "Structure an academic presentation logically (Intro, Body, Conclusion)"
+  - "Use signposting phrases to guide the audience"
+  - "Prepare effective slides with academic terminology"
+  - "Confidently handle Q&A sessions in Ukrainian"
+vocabulary_count: 25
 slug: 15-oral-presentations

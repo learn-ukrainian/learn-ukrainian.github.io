@@ -1,29 +1,29 @@
 - type: match-up
   title: Comparative Forms
   pairs:
-  - left: '- добрий'
+  - left: 'добрий'
     right: кращий
-  - left: '- поганий'
+  - left: 'поганий'
     right: гірший
-  - left: '- великий'
+  - left: 'великий'
     right: більший
-  - left: '- малий'
+  - left: 'малий'
     right: менший
-  - left: '- високий'
+  - left: 'високий'
     right: вищий
-  - left: '- низький'
+  - left: 'низький'
     right: нижчий
-  - left: '- довгий'
+  - left: 'довгий'
     right: довший
-  - left: '- короткий'
+  - left: 'короткий'
     right: коротший
-  - left: '- дорогий'
+  - left: 'дорогий'
     right: дорожчий
-  - left: '- дешевий'
+  - left: 'дешевий'
     right: дешевший
-  - left: '- новий'
+  - left: 'новий'
     right: новіший
-  - left: '- старий'
+  - left: 'старий'
     right: старіший
 - type: cloze
   title: Form the Comparative
@@ -353,63 +353,93 @@
     - гіркий
     - чай
     answer: Гаряча кава завжди набагато смачніша ніж холодний гіркий чай
-- type: error-correction
-  title: Fix the Comparative
+- type: fill-in
+  title: Form the Comparative
   items:
-  - sentence: Він ___ за мене. (добрий)
-    error: good → better
+  - sentence: Він [___] за мене. (добрий)
     answer: кращий
     options:
     - добріший
     - кращий
     - добрий
     - добрійший
-    explanation: 'Irregular: добрий → кращий.'
-  - sentence: Ця машина ___. (великий)
-    error: big → bigger
+  - sentence: Ця машина [___]. (великий)
     answer: більша
     options:
     - великіша
     - більша
     - великша
     - велика
-    explanation: 'Irregular: великий → більший.'
-  - sentence: Він ___ за брата. (молодий)
-    error: young → younger
+  - sentence: Він [___] за брата. (молодий)
     answer: молодший
     options:
     - молодий
     - молодший
     - молодіший
     - молодойший
-    explanation: 'Regular: молодий → молодший.'
-  - sentence: Ця ідея ___. (поганий)
-    error: bad → worse
+  - sentence: Ця ідея [___]. (поганий)
     answer: гірша
     options:
     - поганіша
     - гірша
     - погана
-    - поганіша
-    explanation: 'Irregular: поганий → гірший.'
-  - sentence: Він ___ за мене. (високий)
-    error: tall → taller
+    - поганша
+  - sentence: Він [___] за мене. (високий)
     answer: вищий
     options:
     - високіший
     - вищий
     - високий
     - високший
-    explanation: 'Irregular: високий → вищий.'
-  - sentence: Цей телефон ___. (дорогий)
-    error: expensive → more expensive
+  - sentence: Цей телефон [___]. (дорогий)
     answer: дорожчий
     options:
     - дорогіший
     - дорожчий
     - дорогий
     - дорогійший
-    explanation: 'Irregular: дорогий → дорожчий.'
+  - sentence: Вона [___] за мене. (молодий)
+    answer: молодша
+    options:
+    - молода
+    - молодша
+    - молодіша
+    - молодша
+  - sentence: Ця книга [___]. (цікавий)
+    answer: цікавіша
+    options:
+    - цікава
+    - цікавіша
+    - цікавша
+    - цікавійша
+  - sentence: Він [___] за брата. (розумний)
+    answer: розумніший
+    options:
+    - розумний
+    - розумніший
+    - розумнійший
+    - розумнинший
+  - sentence: Ця машина [___]. (швидкий)
+    answer: швидша
+    options:
+    - швидка
+    - швидша
+    - швидкіша
+    - швидкійша
+  - sentence: Він [___] за мене. (старий)
+    answer: старіший
+    options:
+    - старий
+    - старіший
+    - старший
+    - старійший
+  - sentence: Ця ідея [___]. (добрий)
+    answer: краща
+    options:
+    - добра
+    - краща
+    - добріша
+    - добрійша
 - type: cloze
   title: Comparisons in Context
   passage: 'Цей новий ноутбук {старіша|старий → старіша|молодша} за той старий. Він
@@ -467,6 +497,17 @@
     ---
 
     Машина *більша*, але *дешевша*. Він набагато *розумніший*.'
+  answers:
+  - кращий
+  - швидший
+  - новіший
+  - дорожчий
+  - вища
+  - старіший
+  - цікавіша
+  - більша
+  - дешевша
+  - розумніший
 - type: select
   title: Comparison Patterns
   items:

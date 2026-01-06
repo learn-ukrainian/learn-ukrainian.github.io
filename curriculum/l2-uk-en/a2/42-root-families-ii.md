@@ -255,4 +255,10 @@ These words look similar but mean different things. Бачення is vision or 
 
 ✅ Його художнє бачення цікаве. (His artistic vision is interesting.)
 
-##
+# Summary
+
+У цьому модулі ви вивчили:
+- Основні поняття та правила
+- Практичне застосування
+- Вправи для закріплення
+

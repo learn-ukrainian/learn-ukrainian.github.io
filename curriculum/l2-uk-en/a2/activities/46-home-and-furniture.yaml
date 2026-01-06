@@ -1,42 +1,46 @@
 - type: match-up
   title: Home Words
   pairs:
-  - left: '- вітальня'
+  - left: 'вітальня'
     right: living room
-  - left: '- спальня'
+  - left: 'спальня'
     right: bedroom
-  - left: '- кухня'
+  - left: 'кухня'
     right: kitchen
-  - left: '- ванна'
+  - left: 'ванна'
     right: bathroom
-  - left: '- диван'
+  - left: 'диван'
     right: sofa
-  - left: '- крісло'
+  - left: 'крісло'
     right: armchair
-  - left: '- шафа'
+  - left: 'шафа'
     right: wardrobe
-  - left: '- полиця'
+  - left: 'полиця'
     right: shelf
-  - left: '- ліжко'
+  - left: 'ліжко'
     right: bed
-  - left: '- пральна машина'
+  - left: 'пральна машина'
     right: washing machine
-  - left: '- пилосос'
+  - left: 'пилосос'
     right: vacuum
-  - left: '- комод'
+  - left: 'комод'
     right: dresser
 - type: cloze
   title: Home Vocabulary
-  passage: 'Я сплю у [{спальні|вітальні|кухні|ванній}]. (bedroom) Ми їмо на [{кухні|спальні|вітальні|ванній}].
-    (kitchen) Сідай на [{диван|крісло|стіл|ліжко}]. (sofa)
+  passage: 'Я сплю у [{спальні|вітальні|кухні|ванній}]. Ми їмо на [{кухні|спальні|вітальні|ванній}].
+    Сідай на [{диван|крісло|стіл|ліжко}], там зручно.
 
 
-    Книги на [{полиці|шафі|комоді|столі}]. (shelf) Одяг у [{шафі|полиці|комоді|столі}].
-    (wardrobe) Тато працює в [{кабінеті|спальні|кухні|ванній}]. (office)
+    Книги стоять на [{полиці|шафі|комоді|столі}]. Одяг висить у [{шафі|полиці|комоді|столі}].
+    Тато працює в [{кабінеті|спальні|кухні|ванній}].
 
 
     Білизна в [{пральній машині|посудомийці|пилососі|духовці}]. Прибираю [{пилососом|пральною
-    машиною|посудомийкою|чайником}]. (vacuum)'
+    машиною|посудомийкою|чайником}]. Мама готує їжу на [{плиті|холодильнику|пральній машині|комоді}].
+
+
+    Квіти стоять на [{підвіконні|підлозі|столі|стелі}]. Діти граються на [{килимі|стелі|стіні|шафі}].
+    Посуд миємо в [{мийці|духовці|холодильнику|плиті}].'
 - type: cloze
   title: Story Comprehension
   passage: 'Ольга переїхала в нову {квартиру|будинок|кімнату}.
@@ -276,22 +280,26 @@
 - type: match-up
   title: Appliances & Decor
   pairs:
-  - left: '- пральна машина'
+  - left: 'пральна машина'
     right: washing machine
-  - left: '- посудомийка'
+  - left: 'посудомийка'
     right: dishwasher
-  - left: '- пилосос'
+  - left: 'пилосос'
     right: vacuum
-  - left: '- праска'
+  - left: 'праска'
     right: iron
-  - left: '- килим'
+  - left: 'килим'
     right: carpet
-  - left: '- штори'
+  - left: 'штори'
     right: curtains
-  - left: '- лампа'
+  - left: 'лампа'
     right: lamp
-  - left: '- дзеркало'
+  - left: 'дзеркало'
     right: mirror
+  - left: 'холодильник'
+    right: refrigerator
+  - left: 'лампа'
+    right: lamp
 - type: group-sort
   title: Home Categories
   groups:

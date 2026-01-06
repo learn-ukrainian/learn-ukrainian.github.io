@@ -1,47 +1,47 @@
 - type: match-up
   title: Conditional Forms
   pairs:
-  - left: '- якщо'
+  - left: якщо
     right: if (real)
-  - left: '- якби'
+  - left: якби
     right: if (unreal)
-  - left: '- б/би'
+  - left: б/би
     right: would (particle)
-  - left: '- мав би'
+  - left: мав би
     right: would have
-  - left: '- був би'
+  - left: був би
     right: would be
-  - left: '- знав би'
+  - left: знав би
     right: would know
-  - left: '- міг би'
+  - left: міг би
     right: would be able
-  - left: '- хотів би'
+  - left: хотів би
     right: would want
-  - left: '- сказав би'
+  - left: сказав би
     right: would say
-  - left: '- зробив би'
+  - left: зробив би
     right: would do
-  - left: '- пішов би'
+  - left: пішов би
     right: would go
-  - left: '- купив би'
+  - left: купив би
     right: would buy
 - type: cloze
   title: Conditional Sentences
-  passage: '{Якби|Якщо|Коли|Тому} я мав гроші, я б купив машину. (If — unreal) Якби
-    я {мав|маю|матиму|мати} час, я б прочитав. (had — unreal) Я {б|бути|будь|буде}
-    хотів відвідати Україну. (would)
+  passage: '{Якби|Якщо|Коли|Тому} я мав гроші, я б купив машину. Якби
+    я {мав|маю|матиму|мати} час, я б прочитав. Я {б|бути|будь|буде}
+    хотів відвідати Україну.
 
 
-    Якби вона {знала|знає|знатиме|знати} , вона б сказала. (knew) {Якщо|Якби|Коли|Тому}
-    буде сонячно, підемо на прогулянку. (If — real) Це {було|буде|є|бути} б чудово!
+    Якби вона {знала|знає|знатиме|знати}, вона б сказала. {Якщо|Якби|Коли|Тому}
+    буде сонячно, підемо на прогулянку. Це {було|буде|є|бути} б чудово!
 
 
-    Чи {могли|можете|можуть|могти} б ви допомогти? (could — polite) Якби я {був|є|буду|бути}
-    на твоєму місці... (were) Він {купив|купує|купить|купувати} би каву.
+    Чи {могли|можете|можуть|могти} б ви допомогти? Якби я {був|є|буду|бути}
+    на твоєму місці, я б допоміг. Він {купив|купує|купить|купувати} би каву.
 
 
-    Вона {б|буде|була|бути} сказала правду. (would) Я б {хотів|хочу|хочеш|хотіти}
-    подорожувати. Якби я {міг|можу|можеш|могти} , я б допоміг. (could)'
+    Вона {б|буде|була|бути} сказала правду. Я б {хотів|хочу|хочеш|хотіти}
+    подорожувати. Якби я {міг|можу|можеш|могти}, я б допоміг вам.'
 - type: quiz
   title: Conditional Mood
   items:
@@ -378,63 +378,49 @@
     - гарячих
     - вареників
     answer: Було б дуже добре поїсти сьогодні смачних гарячих вареників
-- type: error-correction
+- type: fill-in
   title: Real or Unreal
   items:
-  - sentence: ___ я мав гроші ... (If — I don't have money)
-    error: I don't have money
+  - sentence: '[___] я мав гроші, я б купив машину.'
     answer: Якби
     options:
-    - Якщо
     - Якби
-    - Коли
-    - Що
-    explanation: Unreal condition = якби.
-  - sentence: ___ буде сонячно ... (If — might happen)
-    error: might happen
+    - Якщо
+  - sentence: '[___] буде сонячно, підемо на прогулянку.'
     answer: Якщо
     options:
     - Якщо
     - Якби
-    - Коли
-    - Що
-    explanation: Real condition = якщо.
-  - sentence: Я ___ хотів поїхати. (I would like)
-    error: I would like
+  - sentence: Я [___] хотів поїхати до Франції.
     answer: б
     options:
     - б
     - був
-    - буду
-    - бути
-    explanation: Conditional particle б.
-  - sentence: Він ___ би допомогти.
-    error: would be able
+  - sentence: Він [___] би допомогти, якби знав.
     answer: міг
     options:
+    - міг
     - може
-    - міг
-    - можу
-    - міг
-    explanation: Past tense of могти = міг.
-  - sentence: Це ___ б чудово!
-    error: would be
+  - sentence: Це [___] б чудово!
     answer: було
     options:
-    - є
     - було
     - буде
-    - бути
-    explanation: Past tense of бути = було — neuter.
-  - sentence: Чи ___ б ви сказати? (could — polite)
-    error: could — polite
+  - sentence: Чи [___] б ви сказати мені правду?
     answer: могли
     options:
-    - можете
     - могли
-    - можу
-    - могти
-    explanation: 'Polite request: могли б.'
+    - можете
+  - sentence: '[___] я знав раніше, я б прийшов.'
+    answer: Якби
+    options:
+    - Якби
+    - Якщо
+  - sentence: Вона [___] хотіла поїхати в Україну.
+    answer: б
+    options:
+    - б
+    - буде
 - type: cloze
   title: Dreams and Wishes
   passage: '— Що ти б зробив, {якби|якщо} виграв у лотерею?
@@ -466,3 +452,67 @@
     ---
 
     Якщо буде сонячно, підемо. *Якби* *я був* на твоєму місці, *я б сказав* правду.'
+  answers:
+  - Якби
+  - мав
+  - б
+  - прочитав
+  - було б
+  - Я б хотів
+  - Якби
+  - я знав
+  - могли б
+  - Якби
+  - я був
+  - я б сказав
+- type: translate
+  title: Conditional Translation
+  items:
+  - source: If I were rich...
+    options:
+    - text: Якби я був багатий...
+      correct: true
+    - text: Якщо я був багатий...
+      correct: false
+    - text: Коли я був багатий...
+      correct: false
+  - source: I would travel.
+    options:
+    - text: Я б подорожував.
+      correct: true
+    - text: Я подорожував.
+      correct: false
+    - text: Я буду подорожувати.
+      correct: false
+  - source: If I had time...
+    options:
+    - text: Якби я мав час...
+      correct: true
+    - text: Якщо я маю час...
+      correct: false
+    - text: Коли я мав час...
+      correct: false
+  - source: She would help.
+    options:
+    - text: Вона б допомогла.
+      correct: true
+    - text: Вона допомогла.
+      correct: false
+    - text: Вона допоможе.
+      correct: false
+  - source: If it were possible...
+    options:
+    - text: Якби це було можливо...
+      correct: true
+    - text: Якщо це можливо...
+      correct: false
+    - text: Коли це можливо...
+      correct: false
+  - source: We would go together.
+    options:
+    - text: Ми б пішли разом.
+      correct: true
+    - text: Ми пішли разом.
+      correct: false
+    - text: Ми підемо разом.
+      correct: false

@@ -73,11 +73,12 @@ interface QuizQuestionItem {
 
 interface QuizProps {
   questions?: QuizQuestionItem[];
+  instruction?: string;
   children?: React.ReactNode;
   isUkrainian?: boolean;
 }
 
-export default function Quiz({ questions, children, isUkrainian }: QuizProps) {
+export default function Quiz({ questions, instruction, children, isUkrainian }: QuizProps) {
   const headerLabel = isUkrainian ? 'Тест' : 'Quiz';
 
   return (
@@ -87,6 +88,9 @@ export default function Quiz({ questions, children, isUkrainian }: QuizProps) {
         <span>{headerLabel}</span>
         <ActivityHelp activityType="quiz" isUkrainian={isUkrainian} />
       </div>
+      {instruction && (
+        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      )}
       <div className={styles.activityContent}>
         {questions ? questions.map((item, index) => {
           // Transform options format: {text, correct} -> string[] + correctIndex

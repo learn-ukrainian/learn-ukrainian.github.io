@@ -2,15 +2,6 @@
 **Phase:** A1.1 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 300
 **Overall Status:** ✅ PASS
 
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): джаз, київ, прошу, лондон, англійська...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 10/100)
-
-- 1 pedagogical violations (minor)
-
 ## Gates
 - **Words:** ✅ 1434/300
 - **Activities:** ✅ 9/8
@@ -19,7 +10,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 41/1
+- **Vocab:** ✅ 54/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -29,6 +20,9 @@
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (9 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

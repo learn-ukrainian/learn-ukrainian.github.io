@@ -16,7 +16,7 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
@@ -276,14 +276,6 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
     correctWords={JSON.parse(`["доброчесності", "плагіат", "цитування", "посилання", "теза", "аргумент", "контраргументу", "структура"]`)}
   />
 </MarkTheWords>
-
-### Поради викладача щодо чернетки
-
-<DialogueReorder
-  title="Поради викладача щодо чернетки"
-  isUkrainian={false}
-  lines={JSON.parse(`[{"text": "Пане професоре, я надіслав Вам чернетку свого есе. Ви вже встигли її переглянути?", "order": 0, "speaker": "Студент"}, {"text": "Так, Максиме. У Вас дуже сильна теза, але аргументація в другому розділі потребує доопрацювання.", "order": 0, "speaker": "Професор"}, {"text": "Дякую за відгук. Ви маєте на увазі, що мені потрібно додати більше доказів?", "order": 0, "speaker": "Студент"}, {"text": "Саме так. Зараз Ваші думки звучать надто суб’єктивно. Знайдіть авторитетне джерело для підтвердження.", "order": 0, "speaker": "Професор"}, {"text": "Я розумію. А що Ви скажете про стиль викладу та використання термінології?", "order": 0, "speaker": "Студент"}, {"text": "Стиль загалом непоганий, але уникайте сленгу. В академічному письмі ми цінуємо стриманість.", "order": 0, "speaker": "Професор"}, {"text": "Дякую, я врахую Ваші зауваження під час редагування. А як щодо посилань?", "order": 0, "speaker": "Студент"}, {"text": "Використовуйте стиль APA, як ми домовлялися. Перевірте список літератури наприкінці.", "order": 0, "speaker": "Професор"}, {"text": "Домовилися. Я виправлю ці моменти та надішлю фінальну версію до п’ятниці.", "order": 0, "speaker": "Студент"}, {"text": "Добре. Головне — пам’ятайте про академічну доброчесність. Удачі!", "order": 0, "speaker": "Професор"}]`)}
-/>
 
 ### Редагування академічного стилю
 

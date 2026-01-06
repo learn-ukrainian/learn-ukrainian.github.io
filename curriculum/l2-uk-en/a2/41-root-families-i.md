@@ -27,10 +27,10 @@ Verb: **Ходити** (To walk).
 | :--- | :--- | :--- | :--- |
 | **Вхід** | В-хід | In-move | Entrance |
 | **Вихід** | Ви-хід | Out-move | Exit |
-| **Перехід** | Пере-хід | Across-move | Crossing | Transition |
+| **Перехід** | Пере-хід | Across-move | Crossing / Transition |
 | **Прихід** | При-хід | Arrival-move | Arrival |
 | **Відхід** | Від-хід | Away-move | Departure |
-| **Похід** | По-хід | On-move | Hike | Campaign |
+| **Похід** | По-хід | On-move | Hike / Campaign |
 | **Пішохід** | Піш-о-хід | Foot-o-walker | Pedestrian |
 
 *Де тут вхід?* (Where is the entrance?)
@@ -48,12 +48,12 @@ Verb: **Писати** (To write).
 
 | Word | Structure | Literal Meaning | Real Meaning |
 | :--- | :--- | :--- | :--- |
-| **Письмо** | Пись-мо | Write-thing | Writing | Letter |
+| **Письмо** | Пись-мо | Write-thing | Writing / Letter |
 | **Письменник** | Пись-мен-ник | Write-man | Writer |
 | **Підпис** | Під-пис | Under-write | Signature |
-| **Запис** | За-пис | Behind/For-write | Record | Note |
+| **Запис** | За-пис | Behind/For-write | Record / Note |
 | **Опис** | О-пис | Around-write | Description |
-| **Напис** | На-пис | On-write | Inscription | Sign |
+| **Напис** | На-пис | On-write | Inscription / Sign |
 
 *Ваш підпис, будь ласка.* (Your signature, please).
 *Я зроблю запис у журналі.* (I will make a record in the journal).

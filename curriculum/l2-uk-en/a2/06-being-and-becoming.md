@@ -47,15 +47,15 @@ When you want to say "He is a doctor," "She became a teacher," or "I work as a p
 
 ### Conjugation of стати (perfective, past + future)
 
-| Past       | Future       |
-| ---------- | ------------ | --------- |
-| я став     | стала        | я стану   |
-| ти став    | стала        | ти станеш |
-| він став   | він стане    |
-| вона стала | вона стане   |
-| ми стали   | ми станемо   |
-| ви стали   | ви станете   |
-| вони стали | вони стануть |
+| Минулий (м) | Минулий (ж) | Майбутній |
+| ----------- | ----------- | --------- |
+| я став         | я стала        | я стану   |
+| ти став        | ти стала       | ти станеш |
+| він став       | —              | він стане |
+| —              | вона стала     | вона стане |
+| ми стали       | ми стали       | ми станемо |
+| ви стали       | ви стали       | ви станете |
+| вони стали     | вони стали     | вони стануть |
 
 Вона хоче стати лікаркою. (She wants to become a doctor.)
 Він мріє стати письменником. (He dreams of becoming a writer.)
@@ -133,9 +133,9 @@ When talking about a woman's profession, use the feminine form in both nominativ
 Вона працює лікаркою. (She works as a doctor.)
 Maria стала письменницею. (Maria became a writer.)
 
-> 🔍 **Myth Buster**
+> 🎯 **Fun Fact**
 >
-> Some people claim feminine profession forms like "лікарка" or "інженерка" are "new" or "artificial." This is false! Ukrainian has always had productive feminine suffixes. What IS new is their official recognition — the Ukrainian language was suppressed for centuries, so codification of natural forms was delayed. Using лікарка instead of лікар for a woman is grammatically correct and culturally authentic!
+> Ukrainian has always had productive feminine suffixes for professions like -ка, -иця, and -иня. Feminine forms like "лікарка" and "інженерка" aren't new inventions — they follow natural grammatical patterns. Using the correct gender form (лікар for men, лікарка for women) is both grammatically correct and culturally authentic!
 
 ## Famous Ukrainian Professionals
 
@@ -235,4 +235,10 @@ This reading passage demonstrates all three verbs (бути, стати, пра�
 4. Ким була сестра? — Вона була журналісткою.
 5. Ким хоче стати оповідач? — Він хоче стати вчителем.
 
-##
+# Summary
+
+У цьому модулі ви вивчили:
+- Основні поняття та правила
+- Практичне застосування
+- Вправи для закріплення
+

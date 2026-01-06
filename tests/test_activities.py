@@ -36,14 +36,14 @@ from scripts.audit.config import VALID_ACTIVITY_TYPES
 # =============================================================================
 
 class TestActivityTypeRecognition:
-    """Test that all 13 activity types are recognized."""
+    """Test that all 12 activity types are recognized."""
 
     def test_all_valid_activity_types_exist(self):
-        """Verify VALID_ACTIVITY_TYPES contains all 13 types."""
+        """Verify VALID_ACTIVITY_TYPES contains all 12 types."""
         expected = {
             'quiz', 'match-up', 'fill-in', 'true-false', 'group-sort',
             'unjumble', 'error-correction', 'anagram', 'select', 'translate',
-            'cloze', 'dialogue-reorder', 'mark-the-words'
+            'cloze', 'mark-the-words'
         }
         assert set(VALID_ACTIVITY_TYPES) == expected, f"Missing or extra types: {set(VALID_ACTIVITY_TYPES) ^ expected}"
 
@@ -419,29 +419,6 @@ class TestMarkTheWordsValidation:
         mark_violations = [v for v in violations if 'mark-the-words' in v.get('issue', '').lower()]
         # Just verify the check runs without errors
         assert isinstance(violations, list)
-
-
-# =============================================================================
-# TEST: Dialogue-Reorder Validation
-# =============================================================================
-
-class TestDialogueReorderValidation:
-    """Test dialogue-reorder line count validation."""
-
-    def test_dialogue_reorder_valid_lines(self):
-        """Dialogue-reorder should have proper line count."""
-        content = """
-## dialogue-reorder: Розмова
-
-- А: Привіт! Як справи?
-- Б: Дякую, добре. А в тебе?
-- А: Теж добре. Що робиш?
-- Б: Читаю книгу.
-- А: Цікаво. Про що вона?
-"""
-        violations = check_activity_complexity(content, 'B1', 3)
-        line_violations = [v for v in violations if 'dialogue' in v.get('issue', '').lower()]
-        assert len(line_violations) == 0
 
 
 # =============================================================================

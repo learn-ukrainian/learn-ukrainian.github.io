@@ -3,10 +3,10 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 2421/1750
-- **Activities:** ✅ 16/16
+- **Words:** ✅ 2428/1750
+- **Activities:** ✅ 18/16
 - **Density:** ✅ All > 18
-- **Unique_types:** ✅ 6/4 types
+- **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/7
 - **Audio:** ℹ️ No audio
@@ -16,17 +16,17 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.3% (target 98-100% (grammar))
-- **Richness:** ✅ 98% (grammar)
+- **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 98% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** grammar
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 23 | 24 | 96% | 20% | 19.2% |
+| examples | 30 | 24 | 100% | 20% | 20.0% |
 | engagement | 8 | 5 | 100% | 15% | 15.0% |
 | dialogues | 6 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
@@ -36,14 +36,14 @@
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 16 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.0%** |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 86 | Included in Core |
 | **Текст 1: Науковий дискурс** | ✅ | 739 | Included in Core |
-| **Академічне письмо: Теорія та Практика** | ⚪️ | 583 | Skipped |
+| **Академічне письмо: Теорія та Практика** | ⚪️ | 590 | Skipped |
 | **Порівняльний аналіз** | ✅ | 443 | Included in Core |
 | **Практика** | ⚪️ | 395 | Skipped |
 | **Підсумок** | ✅ | 175 | Included in Core |

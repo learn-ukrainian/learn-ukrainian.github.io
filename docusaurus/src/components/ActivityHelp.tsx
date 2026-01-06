@@ -47,10 +47,6 @@ const HELP_TEXT: Record<string, { title: string; description: string }> = {
     title: 'Mark the Words',
     description: 'Click on all the words in the text that match the given criteria (e.g., nouns, verbs, specific case).',
   },
-  'dialogue-reorder': {
-    title: 'Order the Dialogue',
-    description: 'Arrange the conversation lines in the correct order to create a natural dialogue flow.',
-  },
   'select': {
     title: 'Select All That Apply',
     description: 'Choose ALL correct answers. Multiple options may be correct.',
@@ -70,6 +66,18 @@ const HELP_TEXT: Record<string, { title: string; description: string }> = {
   'comparative-study': {
     title: 'Comparative Study',
     description: 'Analyze and compare the provided materials. Identify similarities, differences, and patterns.',
+  },
+  'reading': {
+    title: 'Reading Comprehension',
+    description: 'Read the text carefully and answer the questions or complete the tasks that follow.',
+  },
+  'critical-analysis': {
+    title: 'Critical Analysis',
+    description: 'Analyze the text critically, considering context, bias, and implications.',
+  },
+  'authorial-intent': {
+    title: 'Authorial Intent',
+    description: 'Examine the author\'s purpose, tone, and stylistic choices.',
   },
 };
 
@@ -114,10 +122,6 @@ const HELP_TEXT_UA: Record<string, { title: string; description: string }> = {
     title: 'Відмітьте слова',
     description: 'Натисніть на всі слова в тексті, які відповідають заданим критеріям (наприклад, іменники, дієслова, певний відмінок).',
   },
-  'dialogue-reorder': {
-    title: 'Впорядкуйте діалог',
-    description: 'Розташуйте репліки розмови в правильному порядку, щоб створити природний діалог.',
-  },
   'select': {
     title: 'Виберіть усі варіанти',
     description: 'Виберіть УСІ правильні відповіді. Правильних варіантів може бути декілька.',
@@ -137,6 +141,18 @@ const HELP_TEXT_UA: Record<string, { title: string; description: string }> = {
   'comparative-study': {
     title: 'Порівняльний аналіз',
     description: 'Проаналізуйте та порівняйте надані матеріали. Визначте схожості, відмінності та закономірності.',
+  },
+  'reading': {
+    title: 'Читання',
+    description: 'Уважно прочитайте текст та дайте відповіді на запитання або виконайте завдання.',
+  },
+  'critical-analysis': {
+    title: 'Критичний аналіз',
+    description: 'Проаналізуйте текст критично, враховуючи контекст, упередження та наслідки.',
+  },
+  'authorial-intent': {
+    title: 'Авторський задум',
+    description: 'Дослідіть мету автора, тон та стилістичні засоби.',
   },
 };
 

@@ -16,7 +16,7 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
@@ -280,14 +280,6 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
     correctWords={JSON.parse(`["план-проспект", "актуальності", "мету", "завдання", "методологію", "анотовану бібліографію", "джерело", "тези", "презентації"]`)}
   />
 </MarkTheWords>
-
-### Консультація щодо теми проєкту
-
-<DialogueReorder
-  title="Консультація щодо теми проєкту"
-  isUkrainian={false}
-  lines={JSON.parse(`[{"text": "Вітаю! Я обрав тему про сучасну українську музику для підсумкового проєкту.", "order": 0, "speaker": "Студент"}, {"text": "Добрий день! Тема цікава, але занадто широка. Що саме ви хочете дослідити?", "order": 0, "speaker": "Ментор"}, {"text": "Я б хотів проаналізувати вплив фольклору на сучасний український електро-поп.", "order": 0, "speaker": "Студент"}, {"text": "Це вже краще. Яке буде обґрунтування актуальності вашого вибору?", "order": 0, "speaker": "Ментор"}, {"text": "Це важливо для розуміння того, як модернізується наша ідентичність у світі.", "order": 0, "speaker": "Студент"}, {"text": "Згоден. Які джерела ви плануєте використовувати для аналізу?", "order": 0, "speaker": "Ментор"}, {"text": "Інтерв'ю з виконавцями, музичні огляди та культурологічні статті.", "order": 0, "speaker": "Студент"}, {"text": "Чудово. Складіть першу чернетку плану та тези до нашої наступної зустрічі.", "order": 0, "speaker": "Ментор"}, {"text": "Домовилися. Я розпочну пошук матеріалів вже сьогодні.", "order": 0, "speaker": "Студент"}, {"text": "Удачі! Пам'ятайте про академічну доброчесність та точність цитування.", "order": 0, "speaker": "Ментор"}]`)}
-/>
 
 ### Редагування дослідницьких тез
 

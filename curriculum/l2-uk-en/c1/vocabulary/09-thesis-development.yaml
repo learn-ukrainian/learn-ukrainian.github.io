@@ -207,3 +207,40 @@ items:
   translation: to validate
   pos: verb
   gender: impers
+- lemma: положення
+  ipa: /pɔlɔʒɛnʲːɑ/
+  translation: thesis / proposition
+  pos: noun
+  gender: n
+- lemma: доводити
+  ipa: /dɔvɔdɪtɪ/
+  translation: to prove
+  pos: verb
+- lemma: підтверджувати
+  ipa: /pidtvɛrdʒuvɑtɪ/
+  translation: to confirm
+  pos: verb
+- lemma: ілюструвати
+  ipa: /ilʲustruvɑtɪ/
+  translation: to illustrate
+  pos: verb
+- lemma: інтерпретувати
+  ipa: /intɛrprɛtuvɑtɪ/
+  translation: to interpret
+  pos: verb
+- lemma: тлумачити
+  ipa: /tlumɑt͡ʃɪtɪ/
+  translation: to interpret / to explain
+  pos: verb
+- lemma: верифікувати
+  ipa: /vɛrɪfikuvɑtɪ/
+  translation: to verify
+  pos: verb
+- lemma: демонструвати
+  ipa: /dɛmɔnstruvɑtɪ/
+  translation: to demonstrate
+  pos: verb
+- lemma: мотивувати
+  ipa: /mɔtɪvuvɑtɪ/
+  translation: to motivate / to justify
+  pos: verb

@@ -101,3 +101,81 @@ items:
     translation: sixth (hour)
     pos: adj
     gender: f
+  - lemma: їхати
+    ipa: /ˈjixɑtɪ/
+    translation: to go (by vehicle)
+    pos: verb
+  - lemma: приходити
+    ipa: /prɪˈxɔdɪtɪ/
+    translation: to arrive
+    pos: verb
+  - lemma: працювати
+    ipa: /prɑt͡sʲuˈvɑtɪ/
+    translation: to work
+    pos: verb
+  - lemma: обідати
+    ipa: /ɔˈbidɑtɪ/
+    translation: to have lunch
+    pos: verb
+  - lemma: вечеряти
+    ipa: /vɛt͡ʃɛˈrʲɑtɪ/
+    translation: to have dinner
+    pos: verb
+  - lemma: відпочивати
+    ipa: /vidpɔt͡ʃɪˈvɑtɪ/
+    translation: to rest
+    pos: verb
+  - lemma: читати
+    ipa: /t͡ʃɪˈtɑtɪ/
+    translation: to read
+    pos: verb
+  - lemma: гуляти
+    ipa: /ɦuˈlʲɑtɪ/
+    translation: to walk
+    pos: verb
+  - lemma: снідати
+    ipa: /sniˈdɑtɪ/
+    translation: to have breakfast
+    pos: verb
+  - lemma: звичка
+    ipa: /ˈzvɪt͡ʃkɑ/
+    translation: habit
+    pos: noun
+    gender: f
+  - lemma: щодня
+    ipa: /ʃt͡ʃɔˈdnʲɑ/
+    translation: every day
+    pos: adv
+  - lemma: зазвичай
+    ipa: /zɑzʋɪˈt͡ʃɑj/
+    translation: usually
+    pos: adv
+  - lemma: потім
+    ipa: /pɔˈtim/
+    translation: then/afterwards
+    pos: adv
+  - lemma: завжди
+    ipa: /ˈzɑvʒdɪ/
+    translation: always
+    pos: adv
+  - lemma: ніколи
+    ipa: /nʲiˈkɔlɪ/
+    translation: never
+    pos: adv
+  - lemma: дивитися
+    ipa: /dɪvɪˈtɪsʲɑ/
+    translation: to watch
+    pos: verb
+  - lemma: спати
+    ipa: /ˈspɑtɪ/
+    translation: to sleep
+    pos: verb
+  - lemma: зуби
+    ipa: /ˈzubɪ/
+    translation: teeth
+    pos: noun
+    gender: pl
+  - lemma: того
+    ipa: /tɔˈɦɔ/
+    translation: of that/then
+    pos: pron

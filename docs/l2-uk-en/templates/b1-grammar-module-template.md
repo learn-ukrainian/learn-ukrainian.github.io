@@ -305,7 +305,6 @@ Minimum 5+ engagement boxes with pedagogical value:
 7. error-correction (6+ items with all 4 callouts)
 8. cloze (14+ blanks in passage)
 9. mark-the-words (6+ markable words)
-10. dialogue-reorder (4+ lines)
 11. select (6+ multi-select questions)
 12. translate (6+ translation questions)
 
@@ -411,15 +410,6 @@ Minimum 5+ engagement boxes with pedagogical value:
 > [!instruction] Click all nouns.
 >
 > *Мама* читає *книгу*.
-```
-
-**dialogue-reorder** (numbered brackets):
-```markdown
-## dialogue-reorder: Title
-- [4] Last line.
-- [1] First line.
-- [3] Third line.
-- [2] Second line.
 ```
 
 ---

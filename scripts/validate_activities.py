@@ -25,7 +25,7 @@ import yaml
 ACTIVITY_TYPES = {
     'quiz', 'match-up', 'fill-in', 'true-false', 'group-sort', 'unjumble',
     'anagram', 'error-correction', 'cloze', 'mark-the-words',
-    'dialogue-reorder', 'select', 'translate'
+    'select', 'translate'
 }
 
 REQUIRED_FIELDS = {
@@ -39,7 +39,6 @@ REQUIRED_FIELDS = {
     'error-correction': ['title', 'items'],
     'cloze': ['title', 'passage'],
     'mark-the-words': ['title', 'text'],
-    'dialogue-reorder': ['title', 'lines'],
     'select': ['title', 'items'],
     'translate': ['title', 'items'],
 }

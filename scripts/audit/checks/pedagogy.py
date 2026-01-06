@@ -6,7 +6,15 @@ for pedagogical validation.
 """
 
 import re
+import sys
+from pathlib import Path
 from collections import Counter
+
+# Add parent dir to path for imports
+SCRIPT_DIR = Path(__file__).parent.parent.parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.append(str(SCRIPT_DIR))
+from yaml_activities import Activity
 
 from .grammar import (
     check_grammar_violations,
@@ -151,7 +159,8 @@ def run_pedagogical_checks(
     core_content: str,
     level_code: str,
     module_num: int,
-    pedagogy: str
+    pedagogy: str,
+    yaml_activities: list[Activity] | None = None
 ) -> list[dict]:
     """Run all pedagogical checks and return violations."""
     all_violations = []
@@ -219,6 +228,6 @@ def run_pedagogical_checks(
     all_violations.extend(check_content_quality(content, level_code, module_num))
     
     # 17. Activity Complexity (Strict)
-    all_violations.extend(check_activity_complexity(content, level_code, module_num))
+    all_violations.extend(check_activity_complexity(content, level_code, module_num, yaml_activities))
 
     return all_violations

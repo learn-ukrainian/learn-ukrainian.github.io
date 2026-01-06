@@ -2,7 +2,7 @@
 """Batch fix script for issue #369: Fix 323 broken activities.
 
 This script:
-1. Auto-deletes 280+ malformed cloze activities (dialogue-reorder disguised as cloze)
+1. Auto-deletes 280+ malformed cloze activities (with full dialogue lines as blanks)
 2. Auto-fixes 16 cloze syntax errors (removes colons from blanks)
 3. Generates rewrite task list for 27 error-correction activities
 

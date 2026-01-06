@@ -16,10 +16,11 @@ function getWordColor(word: string, index: number): string {
 
 interface GroupSortProps {
   groups: { [key: string]: string[] };
+  instruction?: string;
   isUkrainian?: boolean;
 }
 
-export default function GroupSort({ groups, isUkrainian }: GroupSortProps) {
+export default function GroupSort({ groups, instruction, isUkrainian }: GroupSortProps) {
   const groupNames = Object.keys(groups);
 
   // Flatten and shuffle all items with colors
@@ -178,6 +179,9 @@ export default function GroupSort({ groups, isUkrainian }: GroupSortProps) {
         <span>{headerLabel}</span>
         <ActivityHelp activityType="group-sort" isUkrainian={isUkrainian} />
       </div>
+      {instruction && (
+        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      )}
 
       <div className={styles.groupSortContainer}>
         {/* Word pool - draggable items */}

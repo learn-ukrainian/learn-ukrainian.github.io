@@ -169,7 +169,6 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Select, { SelectQuestion } from '@site/src/components/Select';
 import Translate, { TranslateItem } from '@site/src/components/Translate';
 import Cloze, { ClozePassage } from '@site/src/components/Cloze';
-import DialogueReorder, { DialogueReorderActivity } from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 ```
 

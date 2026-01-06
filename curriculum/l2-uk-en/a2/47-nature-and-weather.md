@@ -26,10 +26,10 @@ Ukrainian landscapes are diverse and beautiful. Here is the essential vocabulary
 | поле      | field    | Поле жовте влітку.     |
 
 > [!tip] Місцевий відмінок з назвами місць (Locative Case with Places)
-> Коли ми описуємо перебування В або НА місці, використовуйте місцевий відмінок:
+> When describing being IN or AT a place, use the locative case:
 > **в лісі** (in the forest), **на морі** (at the sea), **в горах** (in the mountains)
-> Примітка: «на морі» використовується, коли йдеться про відпочинок на узбережжі, а «в морі» означає під водою.
-> Місцевий відмінок є важливим для опису місця розташування в українській мові. Він завжди використовується після прийменників «в/у» та «на».
+> Note: «на морі» is used when referring to vacation by the coast, while «в морі» means underwater.
+> The locative case is essential for describing location in Ukrainian. It is always used after prepositions «в/у» and «на».
 
 Ukraine is known for its beautiful landscapes. The Carpathian Mountains in the west offer hiking and skiing. The Dnieper River flows through Kyiv, the capital city. The Black Sea coast provides beaches and resorts for summer vacations.
 
@@ -48,10 +48,10 @@ Weather vocabulary is essential for daily conversations. Ukrainian uses adverbs 
 | туман     | fog          | Вранці туман.             |
 
 > [!cultural] Вислови про погоду (Weather Expressions)
-> Українці часто запитують: «Яка сьогодні погода?»
-> Відповідь зазвичай починається зі слова «Сьогодні...»
-> Наприклад: «Сьогодні сонячно» або «Сьогодні йде дощ».
-> З опадами використовується дієслово «йти»: «Іде дощ» або «Іде сніг».
+> Ukrainians often ask: «Яка сьогодні погода?» (What's the weather today?)
+> The answer typically starts with «Сьогодні...» (Today...)
+> For example: «Сьогодні сонячно» (It's sunny today) or «Сьогодні йде дощ» (It's raining today).
+> With precipitation, the verb «йти» (to go) is used: «Іде дощ» (It's raining) or «Іде сніг» (It's snowing).
 
 Weather in Ukraine varies significantly throughout the year. Summer temperatures can reach 35 degrees Celsius in the south, while winter temperatures often drop to minus 20 in the north. Spring and autumn are mild and pleasant, making them ideal times for outdoor activities and sightseeing.
 
@@ -172,12 +172,12 @@ Each season in Ukraine has its own beauty and character:
 
 ## Weather Questions and Answers
 
-| Question             | Answer             |
-| -------------------- | ------------------ | ----------- |
-| Яка сьогодні погода? | Сьогодні сонячно.  |
-| Іде дощ?             | Так, іде дощ.      | Ні, не йде. |
-| Яка температура?     | Двадцять градусів. |
-| Буде дощ завтра?     | Так, обіцяють дощ. |
+| Question             | Answer                            |
+| -------------------- | --------------------------------- |
+| Яка сьогодні погода? | Сьогодні сонячно.                 |
+| Іде дощ?             | Так, іде дощ. / Ні, не йде.       |
+| Яка температура?     | Двадцять градусів.                |
+| Буде дощ завтра?     | Так, обіцяють дощ.                |
 
 ## Useful Phrases
 

@@ -1,26 +1,27 @@
-# Audit Report: 42-wf-mastery.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "Review/Inquiry" | **Target:** 1000
+# Audit Report: 43-wf-mastery.md
+**Phase:** A2.4 | **Level:** A2 | **Pedagogy:** Review/Inquiry | **Target:** 1000
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1446/1000
+- **Words:** ✅ 1120/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 7/4 types
+- **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/4
+- **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 75/1
+- **Vocab:** ✅ 66/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 50.7% (target 50-60% (A2.3))
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 54.7% (target 50-60% (A2.3))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 64 | Included in Core |
+| **Intro/Narrative** | ✅ | 64 | Included in Core |
 | **Part 1: New Roots** | ⚪️ | 0 | Skipped |
 | **Family 1: Speech - МОВ** | ⚪️ | 35 | Skipped |
 | **Family 2: Hearing - СЛУХ** | ⚪️ | 14 | Skipped |
@@ -42,6 +43,5 @@
 | **Dialogue: The Order** | ✅ | 38 | Included in Core |
 | **Dialogue: The Idea** | ✅ | 44 | Included in Core |
 | **Dialogue: The Look** | ✅ | 40 | Included in Core |
-| **Dialogue: The Interview** | ✅ | 204 | Included in Core |
-| **Summary** | ✅ | 246 | Included in Core |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Dialogue: The Interview** | ✅ | 107 | Included in Core |
+| **Summary** | ✅ | 17 | Included in Core |

@@ -205,3 +205,63 @@ items:
     translation: what
     pos: pron
     gender: n
+  - lemma: стіна
+    ipa: /stiˈnɑ/
+    translation: wall
+    pos: noun
+    gender: f
+  - lemma: стілець
+    ipa: /stiˈlɛt͡sʲ/
+    translation: chair
+    pos: noun
+    gender: m
+  - lemma: шафа
+    ipa: /ˈʃɑfɑ/
+    translation: wardrobe
+    pos: noun
+    gender: f
+  - lemma: ліжко
+    ipa: /ˈliʒkɔ/
+    translation: bed
+    pos: noun
+    gender: n
+  - lemma: двері
+    ipa: /ˈdvɛri/
+    translation: door
+    pos: noun
+    gender: pl
+  - lemma: вікно
+    ipa: /vikˈnɔ/
+    translation: window
+    pos: noun
+    gender: n
+  - lemma: комп'ютер
+    ipa: /kɔmpˈjutɛr/
+    translation: computer
+    pos: noun
+    gender: m
+  - lemma: телефон
+    ipa: /tɛlɛˈfɔn/
+    translation: phone
+    pos: noun
+    gender: m
+  - lemma: диван
+    ipa: /dɪˈvɑn/
+    translation: sofa
+    pos: noun
+    gender: m
+  - lemma: крісло
+    ipa: /ˈkrislɔ/
+    translation: armchair
+    pos: noun
+    gender: n
+  - lemma: стеля
+    ipa: /ˈstɛlʲɑ/
+    translation: ceiling
+    pos: noun
+    gender: f
+  - lemma: підлога
+    ipa: /pidˈlɔɦɑ/
+    translation: floor
+    pos: noun
+    gender: f

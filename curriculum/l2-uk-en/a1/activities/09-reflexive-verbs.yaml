@@ -71,7 +71,7 @@
 - type: quiz
   title: Find the Mistake
   items:
-  - question: Which sentence is correct?
+  - question: Which sentence uses the correct reflexive ending?
     options:
     - text: Він миюся вранці.
       correct: false
@@ -89,46 +89,58 @@
     - text: Я дивився
       correct: false
     explanation: "Stem change: див- -> дивл- + юсь."
-  - question: Which sentence implies 'meeting each other'?
+  - question: Which sentence uses the correct reflexive ending?
     options:
     - text: Ми зустрічаємо.
       correct: false
     - text: Ми зустрічаємось.
       correct: true
+    - text: Ми зустрічаюсь.
+      correct: false
     explanation: "-ся makes it reciprocal (each other)."
-  - question: Which sentence has a mistake?
+  - question: Which of these sentences has a verb error?
     options:
     - text: Я смієшся.
       correct: true
     - text: Я сміюсь.
       correct: false
+    - text: Я сміюся.
+      correct: false
     explanation: "Mistake: Я (I) needs -юсь, not -єшся (you)."
-  - question: Identify the error.
+  - question: Which sentence has the wrong verb ending?
     options:
     - text: Ти дивлюсь.
       correct: true
     - text: Ти дивишся.
       correct: false
+    - text: Ти дивишся на мене.
+      correct: false
     explanation: "Mistake: Ти (you) needs -ишся."
-  - question: Which is wrong?
+  - question: Which of these reflexive sentences is wrong?
     options:
     - text: Ми зустрічається.
       correct: true
     - text: Ми зустрічаємось.
       correct: false
+    - text: Ми зустрічаємося.
+      correct: false
     explanation: "Mistake: Ми (we) needs -ємось."
-  - question: Find the error.
+  - question: Which sentence uses the wrong reflexive form?
     options:
     - text: Він одягаюсь.
       correct: true
     - text: Він одягається.
       correct: false
+    - text: Він одягається швидко.
+      correct: false
     explanation: "Mistake: Він (he) needs -ється."
-  - question: Which is incorrect?
+  - question: Which of these sentences has a conjugation error?
     options:
     - text: Вони вмивається.
       correct: true
     - text: Вони вмиваються.
+      correct: false
+    - text: Вони вмиваються вранці.
       correct: false
     explanation: "Mistake: Вони (they) needs -ються."
 - type: fill-in
@@ -232,53 +244,67 @@
     - text: спите
       correct: false
     explanation: "Funny -> Laugh (сміятися)."
-  - question: You see a friend. You...
+  - question: You see a friend on the street. You...
     options:
     - text: вітаєтесь
       correct: true
     - text: прощаєтесь
       correct: false
+    - text: спите
+      correct: false
     explanation: "See friend -> Greet (вітатися)."
-  - question: You get out of bed. You...
+  - question: You get out of bed in the morning. You...
     options:
     - text: прокидаєтесь
       correct: true
     - text: засинаєте
       correct: false
+    - text: смієтесь
+      correct: false
     explanation: "Morning -> Wake up (прокидатися)."
-  - question: You put on clothes. You...
+  - question: You put on your clothes in the morning. You...
     options:
     - text: одягаєтесь
       correct: true
     - text: роздягаєтесь
       correct: false
+    - text: вмиваєтесь
+      correct: false
     explanation: "Clothes -> Dress (одягатися)."
-  - question: You wash your face. You...
+  - question: You wash your face in the morning. You...
     options:
     - text: вмиваєтесь
       correct: true
     - text: купаєтесь
       correct: false
+    - text: одягаєтесь
+      correct: false
     explanation: "Face -> Wash (вмиватися)."
-  - question: You look in a mirror. You...
+  - question: You look in a mirror before leaving. You...
     options:
     - text: дивитесь
       correct: true
     - text: слухаєте
       correct: false
+    - text: плачете
+      correct: false
     explanation: "Mirror -> Look (дивитися)."
-  - question: You are late. You...
+  - question: You are late for work or school. You...
     options:
     - text: запізнюєтесь
       correct: true
     - text: поспішаєте
       correct: false
+    - text: смієтесь
+      correct: false
     explanation: "Late -> Be late (запізнюватися)."
-  - question: You meet a friend. You...
+  - question: You meet a friend at a cafe. You...
     options:
     - text: зустрічаєтесь
       correct: true
     - text: дзвоните
+      correct: false
+    - text: прощаєтесь
       correct: false
     explanation: "Meet -> Зустрічатися."
 - type: fill-in

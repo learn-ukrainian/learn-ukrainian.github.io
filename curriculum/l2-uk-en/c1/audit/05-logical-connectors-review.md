@@ -2,24 +2,15 @@
 **Phase:** C1.1 | **Level:** C1 | **Pedagogy:** CTT | **Target:** 1750
 **Overall Status:** ✅ PASS
 
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): менш, цього, боку, іншого, зв'язку...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 10/100)
-
-- 1 pedagogical violations (minor)
-
 ## Gates
 - **Words:** ✅ 2288/1750
-- **Activities:** ✅ 17/16
-- **Density:** ✅ All > 18
+- **Activities:** ✅ 17/12
+- **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/25
+- **Vocab:** ✅ 37/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate

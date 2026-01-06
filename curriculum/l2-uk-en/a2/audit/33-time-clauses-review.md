@@ -1,26 +1,38 @@
-# Audit Report: 32-time-clauses.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "Expressive" | **Target:** 1000
-**Overall Status:** ❌ FAIL
+# Audit Report: 33-time-clauses.md
+**Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Expressive | **Target:** 1000
+**Overall Status:** ✅ PASS
+
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (30 words): горло, приймати, лікар, кашель, аптека...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 2 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1361/1000
-- **Activities:** ✅ 11/10
+- **Words:** ✅ 1376/1000
+- **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 28/1
+- **Vocab:** ✅ 25/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 37.0% LOW (target 40-55% (A2.2))
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 42.3% (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 82 | Included in Core |
+| **Intro/Narrative** | ✅ | 82 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **1. Simultaneous Actions: Поки** | ⚪️ | 73 | Skipped |
 | **2. Sequential Actions: Коли & Після того як** | ⚪️ | 68 | Skipped |
@@ -32,6 +44,5 @@
 | **Language in Action** | ⚪️ | 0 | Skipped |
 | **Dialogue: The Busy Morning** | ✅ | 125 | Included in Core |
 | **Monologue: My Strategy** | ⚪️ | 73 | Skipped |
-| **Pro-Tip: The "Until" Dual Meaning** | ✅ | 113 | Included in Core |
-| **Summary** | ✅ | 44 | Included in Core |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Pro-Tip: The "Until" Dual Meaning** | ✅ | 66 | Included in Core |
+| **Підсумок** | ✅ | 106 | Included in Core |

@@ -84,29 +84,29 @@
 - type: match-up
   title: Digital Terms
   pairs:
-  - left: '- комп''ютер'
+  - left: 'комп''ютер'
     right: computer
-  - left: '- мишка'
+  - left: 'мишка'
     right: mouse
-  - left: '- екран'
+  - left: 'екран'
     right: screen
-  - left: '- пароль'
+  - left: 'пароль'
     right: password
-  - left: '- новини'
+  - left: 'новини'
     right: news (pl)
-  - left: '- стаття'
+  - left: 'стаття'
     right: article
-  - left: '- посилання'
+  - left: 'посилання'
     right: link
-  - left: '- мережа'
+  - left: 'мережа'
     right: network
-  - left: '- зв''язок'
+  - left: 'зв''язок'
     right: connection (signal)
-  - left: '- навушники'
+  - left: 'навушники'
     right: headphones
-  - left: '- повідомлення'
+  - left: 'повідомлення'
     right: message
-  - left: '- блогер'
+  - left: 'блогер'
     right: blogger
 - type: cloze
   title: Tech Sentences
@@ -407,6 +407,17 @@
     і *планшет*. Я люблю грати в ігри на *планшеті*. Для роботи мені потрібен *комп'ютер*.
     У нього великий *екран* і зручна *клавіатура*. Я також маю бездротові *навушники*.
     Техніка допомагає мені бути *онлайн*.
+  answers:
+  - смартфон
+  - гаджет
+  - ноутбук
+  - планшет
+  - планшеті
+  - комп'ютер
+  - екран
+  - клавіатура
+  - навушники
+  - онлайн
 - type: select
   title: Choose Best Word
   items:

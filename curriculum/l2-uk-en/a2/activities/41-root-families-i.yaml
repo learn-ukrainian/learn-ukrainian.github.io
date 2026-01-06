@@ -28,22 +28,26 @@
 - type: match-up
   title: Definitions
   pairs:
-  - left: '- Вхід'
+  - left: 'Вхід'
     right: Entrance
-  - left: '- Вихід'
+  - left: 'Вихід'
     right: Exit
-  - left: '- Підпис'
+  - left: 'Підпис'
     right: Signature
-  - left: '- Письменник'
+  - left: 'Письменник'
     right: Writer
-  - left: '- Побачення'
+  - left: 'Побачення'
     right: Date | Meeting
-  - left: '- Читач'
+  - left: 'Читач'
     right: Reader
-  - left: '- Опис'
+  - left: 'Опис'
     right: Description
-  - left: '- Пішохід'
+  - left: 'Пішохід'
     right: Pedestrian
+  - left: 'писати'
+    right: to write
+  - left: 'підписати'
+    right: to sign
 - type: cloze
   title: Where to Go?
   passage: 'Де [{вхід|вихід|похід}] у метро? Це небезпечний [{перехід|захід|прихід}].
@@ -338,22 +342,26 @@
 - type: match-up
   title: Verb to Noun
   pairs:
-  - left: '- Писати'
+  - left: 'Писати'
     right: Письменник
-  - left: '- Ходити'
+  - left: 'Ходити'
     right: Пішохід
-  - left: '- Читати'
+  - left: 'Читати'
     right: Читач
-  - left: '- Бачити'
+  - left: 'Бачити'
     right: Побачення
-  - left: '- Передбачати'
+  - left: 'Передбачати'
     right: Передбачення
-  - left: '- Входити'
+  - left: 'Входити'
     right: Вхід
-  - left: '- Виходити'
+  - left: 'Виходити'
     right: Вихід
-  - left: '- Записувати'
+  - left: 'Записувати'
     right: Запис
+  - left: 'читати'
+    right: читання
+  - left: 'плавати'
+    right: плавання
 - type: fill-in
   title: Prefixes
   items:

@@ -1,0 +1,122 @@
+module: 14-literature-review
+level: C1
+version: '1.0'
+items:
+- lemma: огляд
+  ipa: /ˈɔɦlʲɐd/
+  translation: review / overview
+  pos: noun
+  gender: m
+- lemma: аналіз
+  ipa: /ɐˈnɑlʲiz/
+  translation: analysis
+  pos: noun
+  gender: m
+- lemma: синтез
+  ipa: /ˈsɪntɛz/
+  translation: synthesis
+  pos: noun
+  gender: m
+- lemma: систематизація
+  ipa: /sɪstɛmɐtɪˈzɑt͡sʲijɐ/
+  translation: systematization
+  pos: noun
+  gender: f
+- lemma: узагальнення
+  ipa: /ʊzɑˈɦɑlʲnɛɲːɐ/
+  translation: generalization / summary
+  pos: noun
+  gender: n
+- lemma: джерело
+  ipa: /d͡ʒɛˈrɛɫɔ/
+  translation: source
+  pos: noun
+  gender: n
+- lemma: праця
+  ipa: /ˈprɑt͡sʲɐ/
+  translation: work / paper
+  pos: noun
+  gender: f
+- lemma: дослідження
+  ipa: /dɔˈslʲid͡ʒɛɲːɐ/
+  translation: research / study
+  pos: noun
+  gender: n
+- lemma: публікація
+  ipa: /pʊblʲiˈkɑt͡sʲijɐ/
+  translation: publication
+  pos: noun
+  gender: f
+- lemma: стаття
+  ipa: /stɐˈtʲːɑ/
+  translation: article
+  pos: noun
+  gender: f
+- lemma: монографія
+  ipa: /mɔnɔˈɦrɑfijɐ/
+  translation: monograph
+  pos: noun
+  gender: f
+- lemma: численні
+  ipa: /t͡ʃɪsˈlɛnːi/
+  translation: numerous
+  pos: adj
+  gender: pl
+- lemma: різноманітні
+  ipa: /rʲiznɔmɐˈrʲitʲnʲi/
+  translation: various / diverse
+  pos: adj
+  gender: pl
+- lemma: суперечливі
+  ipa: /sʊpɛˈrɛt͡ʃlɪʋi/
+  translation: controversial / contradictory
+  pos: adj
+  gender: pl
+- lemma: протилежні
+  ipa: /prɔtɪˈlɛʒnʲi/
+  translation: opposite
+  pos: adj
+  gender: pl
+- lemma: схожі
+  ipa: /ˈsxɔʒi/
+  translation: similar
+  pos: adj
+  gender: pl
+- lemma: подібні
+  ipa: /pɔˈdʲibnʲi/
+  translation: like / similar
+  pos: adj
+  gender: pl
+- lemma: аналогічні
+  ipa: /ɐnɐɫɔˈɦit͡ʃnʲi/
+  translation: analogous
+  pos: adj
+  gender: pl
+- lemma: розходяться
+  ipa: /rɔzˈxɔdʲɐt͡sʲːɐ/
+  translation: diverge / differ
+  pos: verb
+- lemma: збігаються
+  ipa: /zbʲiˈɦɐjʊt͡sʲːɐ/
+  translation: coincide / match
+  pos: verb
+- lemma: погоджуються
+  ipa: /pɔˈɦɔd͡ʒʊjʊt͡sʲːɐ/
+  translation: agree
+  pos: verb
+- lemma: заперечують
+  ipa: /zɐˈpɛrɛt͡ʃʊjʊtʲ/
+  translation: deny / contradict
+  pos: verb
+- lemma: підтверджують
+  ipa: /pʲidˈtʋɛrd͡ʒʊjʊtʲ/
+  translation: confirm
+  pos: verb
+- lemma: доповнюють
+  ipa: /dɔˈpɔu̯nʲʊjʊtʲ/
+  translation: complement
+  pos: verb
+- lemma: розвивають
+  ipa: /rɔzʋɪˈʋɐjʊtʲ/
+  translation: develop
+  pos: verb

@@ -24,7 +24,7 @@ I don't "freestyle" content. Every module I write follows:
 - **Audit scripts** - Automated checks that validate my work
 
 ### Activity Creation
-I create 13 different activity types (quizzes, fill-ins, error-correction, dialogue reordering, etc.), each with specific formatting requirements. The activities aren't random - they're designed to:
+I create 12 different activity types (quizzes, fill-ins, error-correction, cloze, etc.), each with specific formatting requirements. The activities aren't random - they're designed to:
 - Target specific grammar points
 - Use vocabulary from the module's defined list
 - Meet minimum item counts (e.g., A2 fill-ins need 8-10 items, B1 needs 10-12)

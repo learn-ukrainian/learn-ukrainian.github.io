@@ -1,29 +1,29 @@
 - type: match-up
   title: Superlative Forms
   pairs:
-  - left: '- кращий'
+  - left: кращий
     right: найкращий
-  - left: '- гірший'
+  - left: гірший
     right: найгірший
-  - left: '- більший'
+  - left: більший
     right: найбільший
-  - left: '- менший'
+  - left: менший
     right: найменший
-  - left: '- вищий'
+  - left: вищий
     right: найвищий
-  - left: '- нижчий'
+  - left: нижчий
     right: найнижчий
-  - left: '- довший'
+  - left: довший
     right: найдовший
-  - left: '- коротший'
+  - left: коротший
     right: найкоротший
-  - left: '- дорожчий'
+  - left: дорожчий
     right: найдорожчий
-  - left: '- дешевший'
+  - left: дешевший
     right: найдешевший
-  - left: '- старіший'
+  - left: старіший
     right: найстаріший
-  - left: '- молодший'
+  - left: молодший
     right: наймолодший
 - type: cloze
   title: Form the Superlative
@@ -453,3 +453,63 @@
     ---
 
     Вона дуже талановита. Він *найрозумніший*. Це *найдорожчий* телефон.'
+  answers:
+  - найкраща
+  - найстаріший
+  - найбільша
+  - найдовша
+  - найвища
+  - найгірший
+  - найрозумніший
+  - найдорожчий
+- type: translate
+  title: Superlative Translation
+  items:
+  - source: The best book
+    options:
+    - text: Найкраща книга
+      correct: true
+    - text: Краща книга
+      correct: false
+    - text: Найкращий книга
+      correct: false
+  - source: The worst weather
+    options:
+    - text: Найгірша погода
+      correct: true
+    - text: Гірша погода
+      correct: false
+    - text: Найгірший погода
+      correct: false
+  - source: The most interesting film
+    options:
+    - text: Найцікавіший фільм
+      correct: true
+    - text: Цікавіший фільм
+      correct: false
+    - text: Найцікавіша фільм
+      correct: false
+  - source: The oldest building
+    options:
+    - text: Найстаріша будівля
+      correct: true
+    - text: Старіша будівля
+      correct: false
+    - text: Найстарший будівля
+      correct: false
+  - source: The most beautiful city
+    options:
+    - text: Найгарніше місто
+      correct: true
+    - text: Гарніше місто
+      correct: false
+    - text: Найгарніший місто
+      correct: false
+  - source: The tallest mountain
+    options:
+    - text: Найвища гора
+      correct: true
+    - text: Вища гора
+      correct: false
+    - text: Найвищий гора
+      correct: false

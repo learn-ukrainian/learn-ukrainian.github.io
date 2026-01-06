@@ -20,7 +20,7 @@ from md_to_yaml import (
 ACTIVITY_TYPES = [
     'match-up', 'quiz', 'fill-in', 'true-false', 'group-sort',
     'anagram', 'unjumble', 'error-correction', 'cloze',
-    'mark-the-words', 'dialogue-reorder', 'select', 'translate'
+    'mark-the-words', 'select', 'translate'
 ]
 
 

@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://learn-ukrainian.github.io/schemas/activities-b1.schema.json",
   "title": "B1+ Module Activities",
-  "description": "Activity schema for B1, B2, C1, C2 level modules. All 12 activity types (no anagram). Higher minimum item counts.",
+  "description": "Activity schema for B1, B2, C1, C2 level modules. All 11 activity types (no anagram). Higher minimum item counts.",
 
   "type": "array",
   "minItems": 12,
@@ -17,7 +17,6 @@
       { "$ref": "#/definitions/cloze-b1" },
       { "$ref": "#/definitions/error-correction-b1" },
       { "$ref": "#/definitions/mark-the-words-b1" },
-      { "$ref": "#/definitions/dialogue-reorder-b1" },
       { "$ref": "#/definitions/select-b1" },
       { "$ref": "#/definitions/translate-b1" }
     ]
@@ -266,30 +265,6 @@
           "type": "array",
           "minItems": 6,
           "items": { "type": "string", "minLength": 1 }
-        }
-      }
-    },
-
-    "dialogue-reorder-b1": {
-      "type": "object",
-      "required": ["type", "title", "lines"],
-      "additionalProperties": false,
-      "properties": {
-        "type": { "const": "dialogue-reorder" },
-        "title": { "type": "string", "minLength": 1 },
-        "lines": {
-          "type": "array",
-          "minItems": 4,
-          "items": {
-            "type": "object",
-            "required": ["order", "text"],
-            "additionalProperties": false,
-            "properties": {
-              "order": { "type": "integer", "minimum": 1 },
-              "speaker": { "type": "string" },
-              "text": { "type": "string", "minLength": 1 }
-            }
-          }
         }
       }
     },

@@ -49,6 +49,22 @@ items:
   ipa: okupˈɪtɪsʲɐ
   translation: to pay off (perf)
   pos: verb
+- lemma: доконаний
+  ipa: doˈkonɐnɪj
+  translation: perfective (grammar)
+  pos: adj
+  gender: m
+- lemma: недоконаний
+  ipa: nedoˈkonɐnɪj
+  translation: imperfective (grammar)
+  pos: adj
+  gender: m
+- lemma: вид
+  ipa: vɪd
+  translation: aspect (grammar); type, kind
+  pos: noun
+  gender: m
+  pos: verb
   gender: f
 - lemma: помити
   ipa: poˈmɪte

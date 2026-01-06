@@ -1,0 +1,129 @@
+module: 15-oral-presentations
+level: C1
+version: '1.0'
+items:
+- lemma: доповідь
+  ipa: /dɔˈpɔʋʲidʲ/
+  translation: report / presentation / talk
+  pos: noun
+  gender: f
+- lemma: презентація
+  ipa: /prɛzɛnˈtɑt͡sʲijɐ/
+  translation: presentation
+  pos: noun
+  gender: f
+- lemma: виступ
+  ipa: /ˈʋɪstʊp/
+  translation: performance / speech / appearance
+  pos: noun
+  gender: m
+- lemma: промова
+  ipa: /prɔˈmɔʋɐ/
+  translation: speech / address
+  pos: noun
+  gender: f
+- lemma: слайд
+  ipa: /slɐjd/
+  translation: slide
+  pos: noun
+  gender: m
+- lemma: слухачі
+  ipa: /sɫʊxɐˈt͡ʃi/
+  translation: listeners / audience
+  pos: noun
+  gender: pl
+- lemma: аудиторія
+  ipa: /ɐʊ̯dɪˈtɔrʲijɐ/
+  translation: audience / classroom
+  pos: noun
+  gender: f
+- lemma: структура
+  ipa: /strʊkˈturɐ/
+  translation: structure
+  pos: noun
+  gender: f
+- lemma: план
+  ipa: /pɫɑn/
+  translation: plan / outline
+  pos: noun
+  gender: m
+- lemma: огляд
+  ipa: /ˈɔɦlʲɐd/
+  translation: review / overview
+  pos: noun
+  gender: m
+- lemma: вступ
+  ipa: /ʍstʊp/
+  translation: introduction
+  pos: noun
+  gender: m
+  pos: noun
+  gender: f
+- lemma: частина
+  ipa: /t͡ʃɐsˈtɪnɐ/
+  translation: part / portion
+  pos: noun
+  gender: f
+- lemma: основна частина
+  ipa: /ɔsnɔu̯ˈnɑ t͡ʃɐsˈtɪnɐ/
+  translation: main body
+- lemma: висновки
+  ipa: /wɪsnɔu̯kɪ/
+  translation: conclusions
+  pos: noun
+  gender: pl
+- lemma: перехід
+  ipa: /pɛrɛˈxid/
+  translation: transition / crossing
+  pos: noun
+  gender: m
+- lemma: підсумок
+  ipa: /pʲidˈsʊmɔk/
+  translation: summary / result
+  pos: noun
+  gender: m
+- lemma: запитання
+  ipa: /zɐpɪˈtɑɲːɐ/
+  translation: question
+  pos: noun
+  gender: n
+- lemma: відповідь
+  ipa: /ʋʲidˈpɔʋʲidʲ/
+  translation: answer / response
+  pos: noun
+  gender: f
+- lemma: дискусія
+  ipa: /dɪsˈkusʲijɐ/
+  translation: discussion / debate
+  pos: noun
+  gender: f
+- lemma: обговорення
+  ipa: /ɔbɦɔˈʋɔrɛɲːɐ/
+  translation: discussion / consideration
+  pos: noun
+  gender: n
+- lemma: захист
+  ipa: /ˈzɑxɪst/
+  translation: defense (e.g. of a thesis)
+  pos: noun
+  gender: m
+- lemma: дозвольте
+  ipa: /dɔzˈʋɔlʲtɛ/
+  translation: allow me (imperative)
+  pos: verb
+- lemma: представити
+  ipa: /prɛdstɐˈʋɪtɪ/
+  translation: to present / introduce
+  pos: verb
+- lemma: перейти
+  ipa: /pɛrɛi̯ˈtɪ/
+  translation: to move on / transition
+  pos: verb
+- lemma: підсумувати
+  ipa: /pʲidsʊmʊˈʋɑtɪ/
+  translation: to summarize
+  pos: verb
+- lemma: завершити
+  ipa: /zɐˈʋɛrʃɪtɪ/
+  translation: to finish / complete
+  pos: verb

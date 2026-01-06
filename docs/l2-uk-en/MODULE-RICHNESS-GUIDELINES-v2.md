@@ -325,7 +325,6 @@ See `docs/dev/CONTENT_MODULE_ENHANCEMENT.md` for complete strategy.
 | **error-correction** | ❌               | 1+  | 2+  | 2+  | 3+  | 3+  |
 | **cloze**            | ❌               | 1+  | 1+  | 1+  | 3+  | 3+  |
 | **mark-the-words**   | ❌               | 1+  | 1+  | 1+  | —   | —   |
-| **dialogue-reorder** | ❌               | 1+  | 1+  | 1+  | 1+  | —   |
 | **select**           | ❌               | opt | 1+  | 1+  | 1+  | 1+  |
 | **translate**        | ❌               | opt | 1+  | 1+  | 2+  | 2+  |
 
@@ -410,7 +409,7 @@ Each B1+ grammar module MUST include at least **2 production activities** to bal
 | Recognition           | 4-5     | quiz, match-up, true-false, mark-the-words               |
 | Controlled Production | 4-5     | fill-in, cloze, error-correction                         |
 | **Free Production**   | **2-4** | **translate, transform, micro-write, dialogue-complete** |
-| Integrated            | 2-3     | unjumble, dialogue-reorder                               |
+| Integrated            | 2-3     | unjumble                               |
 
 **Audit check:** B1-grammar modules failing production balance will show warning in audit output.
 
@@ -427,7 +426,6 @@ Each B1+ grammar module MUST include at least **2 production activities** to bal
 | `group-sort`       | A1+     | Sort items into categories              |
 | `error-correction` | A2+     | Find and fix errors                     |
 | `cloze`            | A2+     | Passage with multiple dropdown blanks   |
-| `dialogue-reorder` | A2+     | Put dialogue lines in order             |
 | `mark-the-words`   | A2+     | Click/tap words matching criteria       |
 | `translate`        | A2+     | Select correct translation              |
 | `select`           | A2+     | Multi-checkbox selection                |
@@ -443,7 +441,7 @@ For A2+ modules, sequence activities by pedagogical stage:
 1. **🔍 Recognition** — mark-the-words (use `> [!observe]` callouts inline before grammar for pattern discovery)
 2. **👂 Discrimination** — select, true-false with subtle distinctions
 3. **✏️ Controlled Production** — fill-in, cloze, error-correction
-4. **✍️ Free Production** — translate, dialogue-reorder
+4. **✍️ Free Production** — translate
 
 Add `[stage: xxx]` to activity headers for visual indicators.
 
@@ -708,7 +706,6 @@ To surprise and impress students, highlighting the beautiful, melodic, and rich 
 | `error-correction` | ✗      | ✓   | ✓   | ✓   | ✓   | ✓   | Find and fix errors                             |
 | `cloze`            | ✗      | ✓   | ✓   | ✓   | ✓   | ✓   | Passage with multiple dropdown blanks           |
 | `mark-the-words`   | ✗      | ✓   | ✓   | ✓   | ✓   | ✓   | Click/tap words matching criteria               |
-| `dialogue-reorder` | ✗      | ✓   | ✓   | ✓   | ✓   | opt | Put dialogue lines in correct order             |
 | `select`           | ✗      | opt | ✓   | ✓   | ✓   | ✓   | Multi-checkbox selection                        |
 | `translate`        | ✗      | opt | ✓   | ✓   | ✓   | ✓   | Select correct translation                      |
 
@@ -726,7 +723,7 @@ To surprise and impress students, highlighting the beautiful, melodic, and rich 
 
 **A2 (Elementary):** Introduce new activity types
 
-- All A1 types + error-correction, cloze, mark-the-words, dialogue-reorder
+- All A1 types + error-correction, cloze, mark-the-words
 - Optional: select, translate
 - Error-correction: 1 obvious error per sentence
 
@@ -847,17 +844,6 @@ To surprise and impress students, highlighting the beautiful, melodic, and rich 
 | C2    | 12-18 sentences | 10-12  | Every 4-6 words  | Native-level nuance     |
 
 **Usage:** Best for testing grammar in context (case endings, verb forms, aspect), coherence, and collocations.
-
-### dialogue-reorder (A2+)
-
-| Level | Lines | Speakers | Complexity                            |
-| ----- | ----- | -------- | ------------------------------------- |
-| A2    | 4-6   | 2        | Simple greetings, basic exchanges     |
-| B1    | 6-8   | 2-3      | Topic negotiation, opinions           |
-| B2    | 8-10  | 2-3      | Argumentation, persuasion             |
-| C1    | 10-12 | 2-4      | Complex negotiation, formal registers |
-
-**Usage:** Develops pragmatic competence, turn-taking, and conversation flow understanding.
 
 ### mark-the-words (A2+)
 

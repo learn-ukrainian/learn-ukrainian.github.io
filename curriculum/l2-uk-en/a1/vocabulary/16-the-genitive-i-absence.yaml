@@ -209,3 +209,52 @@ items:
     translation: pattern/template
     pos: noun
     gender: m
+  - lemma: ідея
+    ipa: /iˈdɛjɑ/
+    translation: idea
+    pos: noun
+    gender: f
+  - lemma: увага
+    ipa: /uˈvɑɦɑ/
+    translation: attention
+    pos: noun
+    gender: f
+  - lemma: значення
+    ipa: /znɑˈt͡ʃɛnʲːɑ/
+    translation: meaning
+    pos: noun
+    gender: n
+  - lemma: немає
+    ipa: /nɛˈmɑjɛ/
+    translation: there is no
+    pos: verb
+  - lemma: допомога
+    ipa: /dɔpɔˈmɔɦɑ/
+    translation: help
+    pos: noun
+    gender: f
+  - lemma: підтримка
+    ipa: /pidˈtrɪmkɑ/
+    translation: support
+    pos: noun
+    gender: f
+  - lemma: гроші
+    ipa: /ˈɦrɔʃi/
+    translation: money
+    pos: noun
+    gender: pl
+  - lemma: користь
+    ipa: /ˈkɔrɪsʲtʲ/
+    translation: benefit
+    pos: noun
+    gender: f
+  - lemma: досвід
+    ipa: /ˈdɔsvid/
+    translation: experience
+    pos: noun
+    gender: m
+  - lemma: людей
+    ipa: /lʲuˈdɛj/
+    translation: people (gen)
+    pos: noun
+    gender: pl

@@ -1,29 +1,29 @@
 - type: match-up
   title: Case Questions
   pairs:
-  - left: '- Nominative'
+  - left: Nominative
     right: хто? що?
-  - left: '- Genitive'
+  - left: Genitive
     right: кого? чого?
-  - left: '- Dative'
+  - left: Dative
     right: кому? чому?
-  - left: '- Accusative'
+  - left: Accusative
     right: кого? що?
-  - left: '- Instrumental'
+  - left: Instrumental
     right: ким? чим?
-  - left: '- Locative'
+  - left: Locative
     right: де? на чому?
-  - left: '- Vocative'
+  - left: Vocative
     right: addressing someone
-  - left: '- до'
+  - left: до
     right: Genitive
-  - left: '- про'
+  - left: про
     right: Accusative
-  - left: '- з — with'
+  - left: з — with
     right: Instrumental
-  - left: '- в for location'
+  - left: в for location
     right: Locative
-  - left: '- для'
+  - left: для
     right: Genitive
 - type: fill-in
   title: Case Selection
@@ -115,7 +115,8 @@
 - type: quiz
   title: Comprehensive Case Quiz
   items:
-  - question: When identifying the grammatical function of a sentence's subject, which case is used?
+  - question: When identifying the grammatical function of a sentence's subject, which
+      case is used?
     options:
     - text: Nominative
       correct: true
@@ -125,7 +126,8 @@
       correct: false
     - text: Dative
       correct: false
-  - question: In the expression "Мені холодно" the pronoun "мені" is in which grammatical case?
+  - question: In the expression "Мені холодно" the pronoun "мені" is in which grammatical
+      case?
     options:
     - text: Dative
       correct: true
@@ -135,7 +137,8 @@
       correct: false
     - text: Locative
       correct: false
-  - question: In the sentence "Працювати лікарем," which grammatical case is used for the profession?
+  - question: In the sentence "Працювати лікарем," which grammatical case is used
+      for the profession?
     options:
     - text: Instrumental
       correct: true
@@ -145,7 +148,8 @@
       correct: false
     - text: Genitive
       correct: false
-  - question: When using the preposition "до" as in "до школи," which grammatical case follows?
+  - question: When using the preposition "до" as in "до школи," which grammatical
+      case follows?
     options:
     - text: Genitive
       correct: true
@@ -155,7 +159,8 @@
       correct: false
     - text: Dative
       correct: false
-  - question: When speaking about something, as in "про книгу," which grammatical case follows "про"?
+  - question: When speaking about something, as in "про книгу," which grammatical
+      case follows "про"?
     options:
     - text: Accusative
       correct: true
@@ -165,7 +170,8 @@
       correct: false
     - text: Dative
       correct: false
-  - question: When expressing accompaniment "with a friend" as in "з другом," which case is used?
+  - question: When expressing accompaniment "with a friend" as in "з другом," which
+      case is used?
     options:
     - text: Instrumental
       correct: true
@@ -175,7 +181,8 @@
       correct: false
     - text: Accusative
       correct: false
-  - question: In the phrase "в школі" expressing location at school, which grammatical case is used?
+  - question: In the phrase "в школі" expressing location at school, which grammatical
+      case is used?
     options:
     - text: Locative
       correct: true
@@ -185,7 +192,8 @@
       correct: false
     - text: Instrumental
       correct: false
-  - question: In the expression "Немає часу" meaning there's no time, which grammatical case is used?
+  - question: In the expression "Немає часу" meaning there's no time, which grammatical
+      case is used?
     options:
     - text: Genitive
       correct: true
@@ -195,7 +203,8 @@
       correct: false
     - text: Dative
       correct: false
-  - question: When addressing someone directly, as in "Мамо!", which grammatical case is this example of?
+  - question: When addressing someone directly, as in "Мамо!", which grammatical case
+      is this example of?
     options:
     - text: Vocative
       correct: true
@@ -205,7 +214,8 @@
       correct: false
     - text: Accusative
       correct: false
-  - question: In the sentence "Я бачу маму," the word "маму" functions as what grammatical case?
+  - question: In the sentence "Я бачу маму," the word "маму" functions as what grammatical
+      case?
     options:
     - text: Accusative
       correct: true
@@ -215,7 +225,8 @@
       correct: false
     - text: Dative
       correct: false
-  - question: When paying by card, as in "Платити карткою," which grammatical case expresses the method?
+  - question: When paying by card, as in "Платити карткою," which grammatical case
+      expresses the method?
     options:
     - text: Instrumental
       correct: true
@@ -225,7 +236,8 @@
       correct: false
     - text: Genitive
       correct: false
-  - question: In the request "Допоможіть мені," which grammatical case is the pronoun "мені" in?
+  - question: In the request "Допоможіть мені," which grammatical case is the pronoun
+      "мені" in?
     options:
     - text: Dative
       correct: true
@@ -401,6 +413,17 @@
     ---
 
     Я йду з *другом* для *мами*. *Друже*! Допоможи *мені* написати лист *бабусі*.'
+  answers:
+  - Мама
+  - книгу
+  - сестрі
+  - вчителькою
+  - школі
+  - другом
+  - мами
+  - Друже
+  - мені
+  - бабусі
 - type: error-correction
   title: Case Errors
   items:
@@ -512,3 +535,54 @@
     - картки
     - картці
     explanation: Instrumental case is used to express method of payment.
+- type: translate
+  title: Case Translation Practice
+  items:
+  - source: Give the book to Olena.
+    options:
+    - text: Дай книжку Олені.
+      correct: true
+    - text: Дай книжку Олена.
+      correct: false
+    - text: Дай книжка Олені.
+      correct: false
+  - source: I went with my brother.
+    options:
+    - text: Я пішов з братом.
+      correct: true
+    - text: Я пішов з брат.
+      correct: false
+    - text: Я пішов з братів.
+      correct: false
+  - source: There is no milk.
+    options:
+    - text: Немає молока.
+      correct: true
+    - text: Немає молоко.
+      correct: false
+    - text: Немає молоку.
+      correct: false
+  - source: I am thinking about vacation.
+    options:
+    - text: Я думаю про відпустку.
+      correct: true
+    - text: Я думаю про відпусток.
+      correct: false
+    - text: Я думаю про відпустка.
+      correct: false
+  - source: The cat is on the table.
+    options:
+    - text: Кіт на столі.
+      correct: true
+    - text: Кіт на стола.
+      correct: false
+    - text: Кіт на столу.
+      correct: false
+  - source: I live in Kyiv.
+    options:
+    - text: Я живу в Києві.
+      correct: true
+    - text: Я живу в Київ.
+      correct: false
+    - text: Я живу в Києва.
+      correct: false

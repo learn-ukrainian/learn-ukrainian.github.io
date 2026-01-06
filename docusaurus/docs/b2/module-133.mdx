@@ -16,7 +16,7 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
@@ -413,14 +413,6 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
   ]}
   />
 </HighlightMorphemes>
-
-### Поставте репліки у правильному порядку
-
-<DialogueReorder
-  title="Поставте репліки у правильному порядку"
-  isUkrainian={false}
-  lines={JSON.parse(`[{"text": "Привіт! Бачив останній коміт у репозиторії?", "order": 1, "speaker": "Олексій"}, {"text": "Привіт! Ні, ще не дивилась. Щось серйозне?", "order": 2, "speaker": "Марина"}, {"text": "Так, є баг у формі реєстрації. Валідація не працює.", "order": 3, "speaker": "Олексій"}, {"text": "Ой, це з моєї гілки? Я вчора мержила зміни.", "order": 4, "speaker": "Марина"}, {"text": "Схоже, що так. Можеш глянути?", "order": 5, "speaker": "Олексій"}, {"text": "Так, зараз подивлюсь. Де саме помилка?", "order": 6, "speaker": "Марина"}, {"text": "При відправці форми без email-адреси не показує помилку.", "order": 7, "speaker": "Олексій"}, {"text": "Зрозуміло. Знайшла — забула перевірку на порожнє поле.", "order": 8, "speaker": "Марина"}, {"text": "Супер! Скільки часу займе фікс?", "order": 9, "speaker": "Олексій"}, {"text": "5 хвилин. Зараз пушну фікс.", "order": 10, "speaker": "Марина"}, {"text": "Чудово! Потім потрібно задеплоїти на стейджинг для тестування.", "order": 11, "speaker": "Олексій"}, {"text": "Готово! PR створено. Можеш зааппрувити?", "order": 12, "speaker": "Марина"}, {"text": "Так, дивлюсь. Все ок, мержу.", "order": 13, "speaker": "Олексій"}, {"text": "Дякую! Деплоїмо на стейджинг?", "order": 14, "speaker": "Марина"}, {"text": "Так, давай. Перевіримо та потім на продакшн.", "order": 15, "speaker": "Олексій"}, {"text": "Зроблено! Тепер все працює як треба.", "order": 16, "speaker": "Марина"}]`)}
-/>
 
 ### Оберіть правила кібербезпеки
 

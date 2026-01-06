@@ -312,84 +312,54 @@ The ending changes when you're calling TO someone!
 
 ## 🎯 Activities
 
-### Family Members
-
 <MatchUp
   title="Family Members"
-  isUkrainian={false}
-  pairs={JSON.parse(`[{"left": "- тато", "right": "dad"}, {"left": "- мама", "right": "mom"}, {"left": "- брат", "right": "brother"}, {"left": "- сестра", "right": "sister"}, {"left": "- дідусь", "right": "grandfather"}, {"left": "- бабуся", "right": "grandmother"}, {"left": "- дядько", "right": "uncle"}, {"left": "- тітка", "right": "aunt"}, {"left": "- син", "right": "son"}, {"left": "- дочка", "right": "daughter"}, {"left": "- чоловік", "right": "husband"}, {"left": "- дружина", "right": "wife"}]`)}
+  pairs={JSON.parse(`[{"left": "- тато", "right": "dad"}, {"left": "- мама", "right": "mom"}, {"left": "- брат", "right": "brother"}, {"left": "- сестра", "right": "sister"}, {"left": "- дідусь", "right": "grandfather"}, {"left": "- бабуся", "right": "grandmother"}, {"left": "- дядько", "right": "uncle"}, {"left": "- тітка", "right": "aunt"}, {"left": "- син", "right": "son"}, {"left": "- дочка", "right": "daughter"}]`)}
 />
-
-### More Family
 
 <MatchUp
   title="More Family"
-  isUkrainian={false}
-  pairs={JSON.parse(`[{"left": "- батьки", "right": "parents"}, {"left": "- діти", "right": "children"}, {"left": "- онук", "right": "grandson"}, {"left": "- онучка", "right": "granddaughter"}, {"left": "- двоюрідний брат", "right": "cousin (male)"}, {"left": "- двоюрідна сестра", "right": "cousin (female)"}, {"left": "- наречений", "right": "fiancé"}, {"left": "- наречена", "right": "fiancée"}, {"left": "- хлопець", "right": "boyfriend"}, {"left": "- дівчина", "right": "girlfriend"}, {"left": "- старший", "right": "older"}, {"left": "- молодший", "right": "younger"}]`)}
+  pairs={JSON.parse(`[{"left": "- батьки", "right": "parents"}, {"left": "- діти", "right": "children"}, {"left": "- онук", "right": "grandson"}, {"left": "- онучка", "right": "granddaughter"}, {"left": "- двоюрідний брат", "right": "cousin (male)"}, {"left": "- двоюрідна сестра", "right": "cousin (female)"}, {"left": "- наречений", "right": "fiancé"}, {"left": "- наречена", "right": "fiancée"}, {"left": "- хлопець", "right": "boyfriend"}, {"left": "- дівчина", "right": "girlfriend"}]`)}
 />
-
-### Generations
 
 <GroupSort
   title="Generations"
-  isUkrainian={false}
   groups={JSON.parse(`{"Старше покоління (Older Generation)": ["дідусь", "бабуся", "батько", "мати"], "Моє покоління (My Generation)": ["брат", "сестра", "чоловік", "дружина"], "Молодше покоління (Younger Generation)": ["син", "дочка", "онук", "онучка", "--"]}`)}
 />
 
-### Gender of Family Terms
-
 <GroupSort
   title="Gender of Family Terms"
-  isUkrainian={false}
   groups={JSON.parse(`{"Чоловічий рід (Masculine)": ["тато", "брат", "дідусь", "дядько", "син", "чоловік"], "Жіночий рід (Feminine)": ["мама", "сестра", "бабуся", "тітка", "дочка", "дружина", "--"]}`)}
 />
 
-### Моя сім'я (My Family)
-
 <FillIn
   title="Моя сім'я (My Family)"
-  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Моя ___ дуже добра.", "answer": "мама", "options": ["мама", "тато", "брат", "дідусь"]}, {"sentence": "Мій ___ працює в банку.", "answer": "тато", "options": ["тато", "мама", "сестра", "бабуся"]}, {"sentence": "У мене є старший ___.", "answer": "брат", "options": ["брат", "сестра", "мама", "тато"]}, {"sentence": "Моя молодша ___ ходить до школи.", "answer": "сестра", "options": ["сестра", "брат", "тато", "мама"]}, {"sentence": "___ і бабуся живуть у селі.", "answer": "Дідусь", "options": ["Дідусь", "Тато", "Брат", "Мама"]}, {"sentence": "Мій ___ — брат моєї мами.", "answer": "дядько", "options": ["дядько", "тітка", "брат", "дідусь"]}, {"sentence": "Моя ___ — сестра мого тата.", "answer": "тітка", "options": ["тітка", "дядько", "сестра", "бабуся"]}, {"sentence": "Це мій ___. Його звати Максим.", "answer": "хлопець", "options": ["хлопець", "дівчина", "сестра", "мама"]}, {"sentence": "У них двоє ___.", "answer": "дітей", "options": ["дітей", "батьків", "бабусь", "дідусів"]}, {"sentence": "Вона ___, має чоловіка і сина.", "answer": "одружена", "options": ["одружена", "одружений", "неодружена", "молодша"]}, {"sentence": "Він ще ___, не має дружини.", "answer": "неодружений", "options": ["неодружений", "одружений", "неодружена", "старший"]}, {"sentence": "Я ___ дитина, у мене немає братів і сестер.", "answer": "єдина", "options": ["єдина", "старша", "молодша", "середня"]}]`)}
 />
 
-### Possessives with Family
-
 <FillIn
   title="Possessives with Family"
-  isUkrainian={false}
   items={JSON.parse(`[{"sentence": "___ мама живе в Києві.", "answer": "Моя", "options": ["Моя", "Мій", "Моє", "Мої"]}, {"sentence": "___ тато працює в банку.", "answer": "Мій", "options": ["Мій", "Моя", "Моє", "Мої"]}, {"sentence": "___ батьки приїхали з Львова.", "answer": "Мої", "options": ["Мої", "Моя", "Мій", "Моє"]}, {"sentence": "___ брат старший за мене.", "answer": "Мій", "options": ["Мій", "Моя", "Мої", "Моє"]}, {"sentence": "___ сестра вчиться в університеті.", "answer": "Моя", "options": ["Моя", "Мій", "Мої", "Моє"]}, {"sentence": "Це ___ дідусь.", "answer": "мій", "options": ["мій", "моя", "мої", "моє"]}, {"sentence": "___ бабуся готує смачно!", "answer": "Моя", "options": ["Моя", "Мій", "Мої", "Моє"]}, {"sentence": "Це фото ___ родини.", "answer": "моєї", "options": ["моєї", "мого", "моїх", "моє"]}, {"sentence": "___ ім'я — Оксана.", "answer": "Моє", "options": ["Моє", "Моя", "Мій", "Мої"]}, {"sentence": "Як звати ___ маму?", "answer": "твою", "options": ["твою", "твій", "твоє", "твої"]}, {"sentence": "Де живе ___ бабуся?", "answer": "твоя", "options": ["твоя", "твій", "твоє", "твої"]}, {"sentence": "Скільки років ___ сестрі?", "answer": "твоїй", "options": ["твоїй", "твого", "твоя", "твої"]}]`)}
 />
 
-### Who Is Who?
-
 <Quiz
   title="Who Is Who?"
-  isUkrainian={false}
   questions={JSON.parse(`[{"question": "Батько твого батька — це твій...", "options": [{"text": "Дідусь", "correct": true}, {"text": "Батько", "correct": false}, {"text": "Дядько", "correct": false}, {"text": "Брат", "correct": false}]}, {"question": "Сестра твоєї мами — це твоя...", "options": [{"text": "Тітка", "correct": true}, {"text": "Сестра", "correct": false}, {"text": "Бабуся", "correct": false}, {"text": "Дочка", "correct": false}]}, {"question": "Син твоїх батьків — це твій...", "options": [{"text": "Брат", "correct": true}, {"text": "Дядько", "correct": false}, {"text": "Онук", "correct": false}, {"text": "Тато", "correct": false}]}, {"question": "Дочка твоїх батьків — це твоя...", "options": [{"text": "Сестра", "correct": true}, {"text": "Тітка", "correct": false}, {"text": "Мама", "correct": false}, {"text": "Онучка", "correct": false}]}, {"question": "Мама твого тата — це твоя...", "options": [{"text": "Бабуся", "correct": true}, {"text": "Мама", "correct": false}, {"text": "Тітка", "correct": false}, {"text": "Сестра", "correct": false}]}, {"question": "Син твого дядька — це твій...", "options": [{"text": "Двоюрідний брат", "correct": true}, {"text": "Брат", "correct": false}, {"text": "Дядько", "correct": false}, {"text": "Онук", "correct": false}]}, {"question": "Брат твоєї мами — це твій...", "options": [{"text": "Дядько", "correct": true}, {"text": "Брат", "correct": false}, {"text": "Дідусь", "correct": false}, {"text": "Тато", "correct": false}]}, {"question": "Дочка твоїх дідуся і бабусі — це твоя...", "options": [{"text": "Мама або тітка", "correct": true}, {"text": "Сестра", "correct": false}, {"text": "Двоюрідна сестра", "correct": false}, {"text": "Онучка", "correct": false}]}]`)}
 />
 
-### Marital Status
-
 <Quiz
   title="Marital Status"
-  isUkrainian={false}
   questions={JSON.parse(`[{"question": "He has a wife. He is:", "options": [{"text": "Одружений", "correct": true}, {"text": "Неодружений", "correct": false}, {"text": "Наречений", "correct": false}, {"text": "Молодший", "correct": false}]}, {"question": "She doesn't have a husband. She is:", "options": [{"text": "Неодружена", "correct": true}, {"text": "Одружена", "correct": false}, {"text": "Наречена", "correct": false}, {"text": "Старша", "correct": false}]}, {"question": "They are engaged. He is:", "options": [{"text": "Наречений", "correct": true}, {"text": "Одружений", "correct": false}, {"text": "Неодружений", "correct": false}, {"text": "Чоловік", "correct": false}]}, {"question": "She is engaged. She is:", "options": [{"text": "Наречена", "correct": true}, {"text": "Одружена", "correct": false}, {"text": "Неодружена", "correct": false}, {"text": "Дружина", "correct": false}]}, {"question": "He has a girlfriend. He is her:", "options": [{"text": "Хлопець", "correct": true}, {"text": "Чоловік", "correct": false}, {"text": "Наречений", "correct": false}, {"text": "Брат", "correct": false}]}, {"question": "She has a boyfriend. She is his:", "options": [{"text": "Дівчина", "correct": true}, {"text": "Дружина", "correct": false}, {"text": "Наречена", "correct": false}, {"text": "Сестра", "correct": false}]}, {"question": "She has a husband. She is his:", "options": [{"text": "Дружина", "correct": true}, {"text": "Дівчина", "correct": false}, {"text": "Наречена", "correct": false}, {"text": "Сестра", "correct": false}]}, {"question": "He has a wife. He is her:", "options": [{"text": "Чоловік", "correct": true}, {"text": "Хлопець", "correct": false}, {"text": "Наречений", "correct": false}, {"text": "Брат", "correct": false}]}]`)}
 />
 
-### Family Sentences
-
 <Unjumble
   title="Family Sentences"
-  isUkrainian={false}
   items={JSON.parse(`[{"jumbled": "є / у мене / брат", "answer": "У мене є брат"}, {"jumbled": "маму / мою / Олена / звати", "answer": "Мою маму звати Олена"}, {"jumbled": "сім'я / у мене / велика", "answer": "У мене велика сім'я"}, {"jumbled": "старша / моя / сестра", "answer": "Моя сестра старша"}, {"jumbled": "в Києві / батьки / живуть / мої", "answer": "Мої батьки живуть в Києві"}, {"jumbled": "вже / дуже / одружений / він / довго", "answer": "Він вже дуже довго одружений"}, {"jumbled": "дітей / у них / двоє", "answer": "У них двоє дітей"}, {"jumbled": "бабуся / добра / моя / дуже", "answer": "Моя бабуся дуже добра"}, {"jumbled": "брат / сестра / це / мій / і", "answer": "Це мій брат і сестра"}, {"jumbled": "дочка / у неї / є", "answer": "У неї є дочка"}, {"jumbled": "тато / працює / мій / в банку", "answer": "Мій тато працює в банку"}, {"jumbled": "звати / тата / як / твого", "answer": "Як звати твого тата"}]`)}
 />
 
-### Family Facts
-
 <TrueFalse
   title="Family Facts"
-  isUkrainian={false}
-  items={JSON.parse(`[{"statement": "\\"Тато\\" is informal for \\"father.\\".", "isTrue": true, "explanation": ""}, {"statement": "\\"Батько\\" is informal for \\"father.\\".", "isTrue": false, "explanation": "Incorrect! it's formal"}, {"statement": "\\"Дідусь\\" means \\"grandfather.\\".", "isTrue": true, "explanation": ""}, {"statement": "\\"Бабуся\\" means \\"aunt.\\".", "isTrue": false, "explanation": "Incorrect! it means \\"grandmother\\""}, {"statement": "\\"Двоюрідний брат\\" means \\"male cousin.\\".", "isTrue": true, "explanation": ""}, {"statement": "Ukrainians use different words for male and female cousins.", "isTrue": true, "explanation": ""}, {"statement": "\\"Одружена\\" is for men.", "isTrue": false, "explanation": "Incorrect! it's for women"}, {"statement": "\\"Наречений\\" means \\"fiancé.\\".", "isTrue": true, "explanation": ""}, {"statement": "\\"Діти\\" is the plural of \\"дитина.\\".", "isTrue": true, "explanation": ""}, {"statement": "\\"Чоловік\\" only means \\"husband.\\".", "isTrue": false, "explanation": "Incorrect! it also means \\"man\\""}, {"statement": "\\"Сім'я\\" and \\"родина\\" both mean \\"family.\\".", "isTrue": true, "explanation": ""}, {"statement": "\\"Молодший\\" means \\"younger.\\".", "isTrue": true, "explanation": ""}]`)}
+  items={JSON.parse(`[{"statement": "\\\"Тато\\\" is informal for \\\"father.\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Батько\\\" is informal for \\\"father.\\\".", "isTrue": false, "explanation": "Incorrect! it's formal"}, {"statement": "\\\"Дідусь\\\" means \\\"grandfather.\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Бабуся\\\" means \\\"aunt.\\\".", "isTrue": false, "explanation": "Incorrect! it means \\\"grandmother\\\""}, {"statement": "\\\"Двоюрідний брат\\\" means \\\"male cousin.\\\".", "isTrue": true, "explanation": ""}, {"statement": "Ukrainians use different words for male and female cousins.", "isTrue": true, "explanation": ""}, {"statement": "\\\"Одружена\\\" is for men.", "isTrue": false, "explanation": "Incorrect! it's for women"}, {"statement": "\\\"Наречений\\\" means \\\"fiancé.\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Діти\\\" is the plural of \\\"дитина.\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Чоловік\\\" only means \\\"husband.\\\".", "isTrue": false, "explanation": "Incorrect! it also means \\\"man\\\""}, {"statement": "\\\"Сім'я\\\" and \\\"родина\\\" both mean \\\"family.\\\".", "isTrue": true, "explanation": ""}, {"statement": "\\\"Молодший\\\" means \\\"younger.\\\".", "isTrue": true, "explanation": ""}]`)}
 />
 
 ## 📚 Vocabulary
@@ -431,6 +401,19 @@ The ending changes when you're calling TO someone!
 | тато | /ˈtɑtɔ/ | dad | noun | ч |  |
 | традиція | /trɑˈdɪt͡sʲijɑ/ | tradition | noun | ж |  |
 | тітка | /ˈtitkɑ/ | aunt | noun | ж |  |
+| сім'я | /sʲimˈjɑ/ | family | noun | ж |  |
+| мати | /ˈmɑtɪ/ | mother | noun | ж |  |
+| дідусь | /diˈdusʲ/ | grandfather | noun | ч |  |
+| бабуся | /bɑˈbusʲɑ/ | grandmother | noun | ж |  |
+| онук | /ɔˈnuk/ | grandson | noun | ч |  |
+| онучка | /ɔˈnut͡ʃkɑ/ | granddaughter | noun | ж |  |
+| син | /sɪn/ | son | noun | ч |  |
+| дочка | /dɔt͡ʃˈkɑ/ | daughter | noun | ж |  |
+| чоловік | /t͡ʃɔlɔˈvik/ | husband | noun | ч |  |
+| дружина | /druˈʒɪnɑ/ | wife | noun | ж |  |
+| хлопець | /ˈxlɔpɛt͡sʲ/ | boyfriend/boy | noun | ч |  |
+| дівчина | /divˈt͡ʃɪnɑ/ | girlfriend/girl | noun | ж |  |
+| дитина | /dɪˈtɪnɑ/ | child | noun | ж |  |
 
 > [!resources] 🔗 External Resources
 >

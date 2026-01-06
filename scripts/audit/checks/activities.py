@@ -307,7 +307,7 @@ def check_activity_sequencing(content: str, pedagogy: str) -> list[dict]:
     # Extract activity stages from headers
     activity_stages = []
     for match in re.finditer(
-        r'##\s+\w+[^:]*:\s*[^\[]*\[stage:\s*([^\]]+)\]',
+        r'##\s+\w+[^:]*:\s*[^\s]*\[stage:\s*([^\s]+)\]',
         content, re.IGNORECASE
     ):
         stage = match.group(1).strip().lower()
@@ -592,7 +592,8 @@ def count_items(text: str, activity: Activity | None = None) -> int:
             QuizActivity, MatchUpActivity, GroupSortActivity, FillInActivity,
             ClozeActivity, UnjumbleActivity, ErrorCorrectionActivity,
             MarkTheWordsActivity, TranslateActivity, AnagramActivity, ReadingActivity,
-            SelectActivity, TrueFalseActivity
+            SelectActivity, TrueFalseActivity, EssayResponseActivity,
+            CriticalAnalysisActivity, ComparativeStudyActivity, AuthorialIntentActivity
         )
         
         if isinstance(activity, (QuizActivity, FillInActivity, UnjumbleActivity, 
@@ -611,9 +612,16 @@ def count_items(text: str, activity: Activity | None = None) -> int:
             # Fallback: parse passage string for {word|opt} patterns
             return len(re.findall(r'\{[^}|]+\|[^}]+\}', activity.passage))
         elif isinstance(activity, MarkTheWordsActivity):
-            return len(activity.answers)
+            # If answers array is populated, use that
+            if activity.answers:
+                return len(activity.answers)
+            # Otherwise count asterisks in text
+            return len(re.findall(r'\*([^\*]+)\*', activity.text))
         elif isinstance(activity, ReadingActivity):
             return len(activity.tasks)
+        elif isinstance(activity, (EssayResponseActivity, CriticalAnalysisActivity, 
+                                   ComparativeStudyActivity, AuthorialIntentActivity)):
+            return 1
         return 0
 
     # Legacy Markdown parsing logic (text-based)
@@ -631,7 +639,7 @@ def count_items(text: str, activity: Activity | None = None) -> int:
     checkboxes = len(re.findall(r'^\s*-\s*\[[ xX]?\]', text, re.MULTILINE))
 
     # 4. Bullets (excluding checkboxes)
-    bullets = len(re.findall(r'^\s*-\s+[^\[]', text, re.MULTILINE))
+    bullets = len(re.findall(r'^\s*-\s+[^\s]', text, re.MULTILINE))
 
     # 5. Cloze Placeholders
     # Match {1} or {1:DROPDOWN...} or {1:TEXT...} (numbered format)
@@ -644,10 +652,10 @@ def count_items(text: str, activity: Activity | None = None) -> int:
     # Match [word] brackets (original format)
     mark_words_brackets = len([
         m for m in re.findall(r'\[([^\]]+)\]', text)
-        if not m.startswith('!') and not re.match(r'[^\]]+\]\(', m)
+        if not m.startswith('!') and not re.match(r'[^\s]+\]\(', m)
     ])
     # Also match *word* asterisks (inline format)
-    mark_words_asterisks = len(re.findall(r'\*[^*]+\*', text))
+    mark_words_asterisks = len(re.findall(r'\*[^\*]+\*', text))
     mark_words = mark_words_brackets + mark_words_asterisks
 
     # Priority Logic
@@ -882,7 +890,7 @@ def check_activity_header_format(content: str) -> list[dict]:
     activity_types_pattern = '|'.join(VALID_ACTIVITY_TYPES)
 
     # Find headers WITHOUT colon (malformed)
-    malformed_pattern = rf'^##\s*({activity_types_pattern})\s*$'
+    malformed_pattern = rf'^##\s*({activity_types_pattern})\s*$' # Removed : from pattern
     malformed_matches = re.findall(malformed_pattern, content, re.MULTILINE | re.IGNORECASE)
 
     for act_type in malformed_matches:
@@ -893,7 +901,7 @@ def check_activity_header_format(content: str) -> list[dict]:
         })
 
     # Also check for headers with colon but no title
-    empty_title_pattern = rf'^##\s*({activity_types_pattern}):\s*$'
+    empty_title_pattern = rf'^##\s*({activity_types_pattern}):\s*$' # Added : to pattern
     empty_title_matches = re.findall(empty_title_pattern, content, re.MULTILINE | re.IGNORECASE)
 
     for act_type in empty_title_matches:
@@ -1226,12 +1234,17 @@ def check_advanced_activities_presence(found_types: list[str], level_code: str, 
         
     # Required for B2+ 
     if level_code in ('B2', 'C1', 'C2', 'LIT'):
-        for req_type in REQUIRED_ADVANCED_TYPES:
+        # Get required types for this specific focus
+        # Default to 'default' requirements if focus not found or None
+        req_key = module_focus if module_focus in REQUIRED_ADVANCED_TYPES else 'default'
+        required_types = REQUIRED_ADVANCED_TYPES.get(req_key, [])
+        
+        for req_type in required_types:
             if req_type not in found_types:
                 violations.append({
                     'type': 'MISSING_ADVANCED_ACTIVITY',
                     'severity': 'warning',
-                    'issue': f"B2+ module missing advanced activity type: {req_type}",
+                    'issue': f"B2+ module (focus: {module_focus}) missing advanced activity type: {req_type}",
                     'fix': f"Add a {req_type} activity to meet advanced richness standards."
                 })
                 

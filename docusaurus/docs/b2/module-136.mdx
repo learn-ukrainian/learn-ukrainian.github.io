@@ -16,7 +16,7 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
@@ -250,14 +250,6 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
     correctWords={JSON.parse(`["Конґрес", "Нью-Йорку", "організацій", "лобізм", "дезінформацією", "молодь", "асиміляції", "інтеграції"]`)}
   />
 </MarkTheWords>
-
-### Планування суботньої школи
-
-<DialogueReorder
-  title="Планування суботньої школи"
-  isUkrainian={false}
-  lines={JSON.parse(`[{"text": "Добрий день, пані Ірино! Ви вже склали розклад на новий семестр у нашій школі?", "order": 0, "speaker": "Оксана"}, {"text": "Вітаю, Оксано! Майже закінчила, якраз додаю більше уроків з історії та географії.", "order": 0, "speaker": "Ірина"}, {"text": "Це чудово. Чи буде у нас окрема група для дітей, які приїхали цього року?", "order": 0, "speaker": "Оксана"}, {"text": "Так, ми створюємо інтенсивний курс для їхньої швидкої інтеграції в громаду.", "order": 0, "speaker": "Ірина"}, {"text": "Чи потрібна допомога з підручниками? Батьківський комітет може виділити кошти.", "order": 0, "speaker": "Оксана"}, {"text": "Було б добре закупити нові книги про сучасну Україну. Це допоможе зберегти коріння.", "order": 0, "speaker": "Ірина"}, {"text": "Домовилися. Я підготую запит на фінансування до нашої волонтерської ради.", "order": 0, "speaker": "Оксана"}, {"text": "Дякую. Головне, щоб молодь пишалася своєю українською ідентичністю.", "order": 0, "speaker": "Ірина"}]`)}
-/>
 
 ### Офіційне листування (корекція)
 

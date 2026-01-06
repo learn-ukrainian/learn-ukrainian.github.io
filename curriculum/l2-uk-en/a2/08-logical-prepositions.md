@@ -300,7 +300,7 @@ Today you learned 10 logical prepositions:
 | **після** | after | Genitive |
 | **крім** | except | Genitive |
 | **замість** | instead of | Genitive |
-| **через** | because of | through | Accusative |
+| **через** | because of / through | Accusative |
 | **про** | about | Accusative |
 | **о/об** | at (time) | Locative |
 | **з** | with | Instrumental |

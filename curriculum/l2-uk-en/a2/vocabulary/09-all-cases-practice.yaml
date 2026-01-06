@@ -78,6 +78,16 @@ items:
     ipa: zɦɐˈdɑte
     translation: to recall; to mention
     pos: verb
+  - lemma: знахідний
+    ipa: znɐˈxʲidnɪj
+    translation: accusative (grammar case)
+    pos: adj
+    gender: m
+  - lemma: кличний
+    ipa: ˈklɪt͡ʃnɪj
+    translation: vocative (grammar case)
+    pos: adj
+    gender: m
   - lemma: комплексний
     ipa: ˈkɔmpleksnei̯
     translation: complex; comprehensive
@@ -96,6 +106,11 @@ items:
     ipa: nɐˈviʃt͡ʃo
     translation: why; what for
     pos: adv
+  - lemma: називний
+    ipa: nɐˈzɪʋnɪj
+    translation: nominative (grammar case)
+    pos: adj
+    gender: m
   - lemma: наприклад
     ipa: nɐˈprɪklɑd
     translation: for example
@@ -112,6 +127,31 @@ items:
     ipa: obrɐte
     translation: to choose (typo? обрати)
     pos: verb
+  - lemma: орудний
+    ipa: oˈrudnɪj
+    translation: instrumental (grammar case)
+    pos: adj
+    gender: m
+  - lemma: родовий
+    ipa: roˈdovɪj
+    translation: genitive (grammar case)
+    pos: adj
+    gender: m
+  - lemma: давальний
+    ipa: dɐˈvɑlʲnɪj
+    translation: dative (grammar case)
+    pos: adj
+    gender: m
+  - lemma: відмінок
+    ipa: vidˈminok
+    translation: grammatical case
+    pos: noun
+    gender: m
+  - lemma: місцевий
+    ipa: misˈt͡sɛvɪj
+    translation: locative (grammar case)
+    pos: adj
+    gender: m
   - lemma: перевірка
     ipa: pereˈvirkɐ
     translation: check; verification

@@ -60,10 +60,11 @@ interface TrueFalseItem {
 
 interface TrueFalseProps {
   items: TrueFalseItem[];
+  instruction?: string;
   isUkrainian?: boolean;
 }
 
-export default function TrueFalse({ items, isUkrainian }: TrueFalseProps) {
+export default function TrueFalse({ items, instruction, isUkrainian }: TrueFalseProps) {
   const [selections, setSelections] = useState<Record<number, boolean>>({});
   const [showResults, setShowResults] = useState(false);
 
@@ -85,6 +86,9 @@ export default function TrueFalse({ items, isUkrainian }: TrueFalseProps) {
         <span>{headerLabel}</span>
         <ActivityHelp activityType="true-false" isUkrainian={isUkrainian} />
       </div>
+      {instruction && (
+        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      )}
       <div className={styles.activityContent}>
         {items.map((item, index) => {
           const isCorrect = selections[index] === item.isTrue;

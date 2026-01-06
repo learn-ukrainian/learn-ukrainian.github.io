@@ -197,3 +197,61 @@ items:
     translation: eraser/rubber
     pos: noun
     gender: f
+  - lemma: вибачте
+    ipa: /vɪˈbɑt͡ʃtɛ/
+    translation: excuse me
+    pos: other
+  - lemma: джаз
+    ipa: /dʒɑz/
+    translation: jazz
+    pos: noun
+    gender: m
+  - lemma: англійська
+    ipa: /ɑnˈhlʲijsʲkɑ/
+    translation: English (language)
+    pos: adj
+    gender: f
+  - lemma: київ
+    ipa: /ˈkɪjiw/
+    translation: Kyiv
+    pos: propn
+    gender: m
+  - lemma: будь ласка
+    ipa: /budʲ ˈlɑskɑ/
+    translation: please
+    pos: other
+  - lemma: так
+    ipa: /tɑk/
+    translation: yes
+    pos: other
+  - lemma: що
+    ipa: /ʃt͡ʃɔ/
+    translation: what
+    pos: pron
+  - lemma: це
+    ipa: /t͡sɛ/
+    translation: this is
+    pos: pron
+    gender: n
+  - lemma: лондон
+    ipa: /ˈlɔndɔn/
+    translation: London
+    pos: propn
+    gender: m
+  - lemma: українська
+    ipa: /ʊkrɑˈjinsʲkɑ/
+    translation: Ukrainian (language)
+    pos: adj
+    gender: f
+  - lemma: ласкаво просимо
+    ipa: /lɑsˈkɑvɔ prɔˈsɪmɔ/
+    translation: welcome
+    pos: other
+  - lemma: прошу
+    ipa: /ˈprɔʃʊ/
+    translation: you're welcome
+    pos: other
+  - lemma: дякую
+    ipa: /ˈdʲɑkʊju/
+    translation: thank you
+    pos: other

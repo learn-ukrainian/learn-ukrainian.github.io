@@ -291,7 +291,11 @@ def check_english_hints_in_activities(yaml_activities: list, level: str, module_
             # Check all items
             items = activity.items if hasattr(activity, 'items') else activity.get('items', [])
             for item in items:
-                sentence = getattr(item, 'sentence', '') or item.get('sentence', '')
+                if isinstance(item, dict):
+                    sentence = item.get('sentence', '')
+                else:
+                    sentence = getattr(item, 'sentence', '')
+                
                 text_to_check += sentence + '\n'
 
         if not text_to_check:

@@ -1,22 +1,26 @@
 - type: match-up
   title: 'Opinion Expressions (Concept: Semantic Pairing)'
   pairs:
-  - left: '- Я думаю, що'
+  - left: 'Я думаю, що'
     right: I think that
-  - left: '- Я вважаю, що'
+  - left: 'Я вважаю, що'
     right: I consider that
-  - left: '- На мою думку'
+  - left: 'На мою думку'
     right: In my opinion
-  - left: '- На мій погляд'
+  - left: 'На мій погляд'
     right: From my view
-  - left: '- Я згоден'
+  - left: 'Я згоден'
     right: I agree
-  - left: '- Ви праві'
+  - left: 'Ви праві'
     right: You are right
-  - left: '- Навряд чи'
+  - left: 'Навряд чи'
     right: Hardly / I doubt it
-  - left: '- Я не впевнений'
+  - left: 'Я не впевнений'
     right: I am not sure
+  - left: 'думаю'
+    right: I think
+  - left: 'впевнений'
+    right: I'm sure
 - type: cloze
   title: 'Express Opinions (Concept: Contextual Usage)'
   passage: 'Я [{думаю|бачу|сплю|їм}:1], що це місто дуже красиве. (think) На [{мою|мій|моє|мої}:2]
@@ -380,6 +384,16 @@
     Я *думаю*, що це добре. На *мою думку*, це важливо. Мені *здається*, ви помиляєтеся.
     Я *вважаю*, що час іти. Я не *певний* у цьому. Ви *праві*! Навряд *чи* це допоможе.
     Я *згоден* з вами. Я *теж* так думаю.'
+  answers:
+  - думаю
+  - мою думку
+  - здається
+  - вважаю
+  - певний
+  - праві
+  - чи
+  - згоден
+  - теж
 - type: translate
   title: 'English to Ukrainian (Concept: Cross-Linguistic Transfer)'
   items:

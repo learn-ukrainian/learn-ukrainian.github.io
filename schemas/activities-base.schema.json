@@ -315,34 +315,6 @@
       }
     },
 
-    "dialogue-reorder": {
-      "type": "object",
-      "description": "Put conversation lines in correct order",
-      "required": ["type", "title", "lines"],
-      "additionalProperties": false,
-      "properties": {
-        "type": { "const": "dialogue-reorder" },
-        "title": { "type": "string", "minLength": 1 },
-        "lines": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": ["order", "text"],
-            "additionalProperties": false,
-            "properties": {
-              "order": {
-                "type": "integer",
-                "minimum": 1,
-                "description": "Correct position in dialogue (1-based)"
-              },
-              "speaker": { "type": "string" },
-              "text": { "type": "string", "minLength": 1 }
-            }
-          }
-        }
-      }
-    },
-
     "translate": {
       "type": "object",
       "description": "Translation multiple choice",

@@ -210,10 +210,13 @@ The A2 level (Базовий рівень) per the official Ukrainian State Stan
 - якби + past tense + б/би
 - Якби я знав, я б сказав. (If I knew, I would say.)
 
-**Imperative - full range:**
+**Imperative - full range (M23 - Complete Imperative):**
 
-- 2nd person: читай/читайте
-- 1st person plural: читаймо (let's read)
+- 2nd person formation: stem + endings (читай/читайте, пиши/пишіть)
+- 1st person plural: читаймо, ходімо (let's read, let's go)
+- 3rd person: хай/нехай + present tense (Хай читає! Нехай буде!)
+- Irregular forms: дай, будь, їж, візьми
+- Register: хай (conversational) vs нехай (literary)
 
 #### Syntax (Синтаксис)
 

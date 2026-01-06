@@ -4,9 +4,9 @@
 
 ## Gates
 - **Words:** ✅ 1876/1750
-- **Activities:** ✅ 16/16
+- **Activities:** ✅ 17/16
 - **Density:** ✅ All > 18
-- **Unique_types:** ✅ 5/4 types
+- **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/7
 - **Audio:** ℹ️ No audio
@@ -26,7 +26,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 28 | 24 | 100% | 20% | 20.0% |
+| examples | 32 | 24 | 100% | 20% | 20.0% |
 | engagement | 8 | 5 | 100% | 15% | 15.0% |
 | dialogues | 4 | 4 | 100% | 15% | 15.0% |
 | variety | 1.00 | - | 100% | 10% | 10.0% |

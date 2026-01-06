@@ -169,3 +169,133 @@ items:
     translation: Shevchenko
     pos: propn
     gender: m
+  - lemma: робота
+    ipa: /rɔˈbɔtɑ/
+    translation: work
+    pos: noun
+    gender: f
+  - lemma: квартира
+    ipa: /kvɑrˈtɪrɑ/
+    translation: apartment
+    pos: noun
+    gender: f
+  - lemma: коридор
+    ipa: /kɔrɪˈdɔr/
+    translation: corridor
+    pos: noun
+    gender: m
+  - lemma: будинок
+    ipa: /buˈdɪnɔk/
+    translation: building
+    pos: noun
+    gender: m
+  - lemma: церква
+    ipa: /ˈt͡sɛrkvɑ/
+    translation: church
+    pos: noun
+    gender: f
+  - lemma: кухня
+    ipa: /ˈkuxnʲɑ/
+    translation: kitchen
+    pos: noun
+    gender: f
+  - lemma: ресторан
+    ipa: /rɛstɔˈrɑn/
+    translation: restaurant
+    pos: noun
+    gender: m
+  - lemma: спальня
+    ipa: /ˈspɑlʲnʲɑ/
+    translation: bedroom
+    pos: noun
+    gender: f
+  - lemma: магазин
+    ipa: /mɑɦɑˈzɪn/
+    translation: store
+    pos: noun
+    gender: m
+  - lemma: кімната
+    ipa: /kimˈnɑtɑ/
+    translation: room
+    pos: noun
+    gender: f
+  - lemma: вітальня
+    ipa: /viˈtɑlʲnʲɑ/
+    translation: living room
+    pos: noun
+    gender: f
+  - lemma: парк
+    ipa: /pɑrk/
+    translation: park
+    pos: noun
+    gender: m
+  - lemma: аптека
+    ipa: /ɑpˈtɛkɑ/
+    translation: pharmacy
+    pos: noun
+    gender: f
+  - lemma: площа
+    ipa: /ˈplɔʃt͡ʃɑ/
+    translation: square
+    pos: noun
+    gender: f
+  - lemma: бібліотека
+    ipa: /biblʲiɔˈtɛkɑ/
+    translation: library
+    pos: noun
+    gender: f
+  - lemma: банк
+    ipa: /bɑnk/
+    translation: bank
+    pos: noun
+    gender: m
+  - lemma: театр
+    ipa: /tɛˈɑtr/
+    translation: theater
+    pos: noun
+    gender: m
+  - lemma: готель
+    ipa: /ɦɔˈtɛlʲ/
+    translation: hotel
+    pos: noun
+    gender: m
+  - lemma: ванна
+    ipa: /ˈvɑnːɑ/
+    translation: bathroom
+    pos: noun
+    gender: f
+  - lemma: школа
+    ipa: /ˈʃkɔlɑ/
+    translation: school
+    pos: noun
+    gender: f
+  - lemma: центр
+    ipa: /t͡sɛntr/
+    translation: center
+    pos: noun
+    gender: m
+  - lemma: кінотеатр
+    ipa: /kinɔtɛˈɑtr/
+    translation: cinema
+    pos: noun
+    gender: m
+  - lemma: університет
+    ipa: /univɛrsɪˈtɛt/
+    translation: university
+    pos: noun
+    gender: m
+  - lemma: стадіон
+    ipa: /stɑdiˈɔn/
+    translation: stadium
+    pos: noun
+    gender: m
+  - lemma: пошта
+    ipa: /ˈpɔʃtɑ/
+    translation: post office
+    pos: noun
+    gender: f
+  - lemma: лікарня
+    ipa: /liˈkɑrnʲɑ/
+    translation: hospital
+    pos: noun
+    gender: f

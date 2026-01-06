@@ -256,3 +256,33 @@ items:
     translation: Yaroslav
     pos: propn
     gender: m
+  - lemma: дев'яносто
+    ipa: /dɛvjɑˈnɔstɔ/
+    translation: ninety
+    pos: num
+  - lemma: сто
+    ipa: /stɔ/
+    translation: hundred
+    pos: num
+  - lemma: решта
+    ipa: /ˈrɛʃtɑ/
+    translation: change (money)
+    pos: noun
+    gender: f
+  - lemma: п'ятдесят
+    ipa: /pjɑtdɛˈsʲɑt/
+    translation: fifty
+    pos: num
+  - lemma: двадцять
+    ipa: /ˈdvɑdt͡sʲɑtʲ/
+    translation: twenty
+    pos: num
+  - lemma: коштує
+    ipa: /ˈkɔʃtujɛ/
+    translation: costs
+    pos: verb
+  - lemma: рахунок
+    ipa: /rɑˈxunɔk/
+    translation: bill/account
+    pos: noun
+    gender: m

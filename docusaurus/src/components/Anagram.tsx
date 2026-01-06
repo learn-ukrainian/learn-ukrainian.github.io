@@ -200,11 +200,12 @@ interface AnagramItem {
 
 interface AnagramProps {
   items?: AnagramItem[];
+  instruction?: string;
   children?: React.ReactNode;
   isUkrainian?: boolean;
 }
 
-export default function Anagram({ items, children, isUkrainian }: AnagramProps) {
+export default function Anagram({ items, instruction, children, isUkrainian }: AnagramProps) {
   const headerLabel = isUkrainian ? 'Переставте літери' : 'Unscramble the Letters';
 
   return (
@@ -214,6 +215,9 @@ export default function Anagram({ items, children, isUkrainian }: AnagramProps) 
         <span>{headerLabel}</span>
         <ActivityHelp activityType="anagram" isUkrainian={isUkrainian} />
       </div>
+      {instruction && (
+        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      )}
       <div className={styles.activityContent}>
         {items ? items.map((item, index) => (
           <AnagramQuestion

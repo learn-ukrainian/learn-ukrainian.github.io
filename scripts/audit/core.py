@@ -52,6 +52,7 @@ from .checks import (
     check_activity_header_format,
 )
 from .checks.activities import check_mark_the_words_format, check_hints_in_activities, check_malformed_cloze_activities, check_cloze_syntax_errors, check_error_correction_format, check_yaml_activity_types, check_advanced_activities_presence
+from .checks.vocabulary_integration import check_vocabulary_integration
 from .checks.activity_validation import (
     check_morpheme_patterns,
     check_morpheme_pedagogy,
@@ -985,6 +986,27 @@ def audit_module(file_path: str) -> bool:
     pedagogical_violations = run_pedagogical_checks(
         content, core_content, level_code, module_num, pedagogy, yaml_activities
     )
+
+    # Run vocabulary integration checks (Issue #395)
+    integration_data = check_vocabulary_integration(content, level_code, module_num, yaml_activities)
+    if integration_data['total'] > 0:
+        print(f"  📊 Vocabulary Integration: Lesson {integration_data['lesson_rate']:.1f}%, Activities {integration_data['activity_rate']:.1f}%")
+        
+        # Add violations if below thresholds
+        if integration_data['lesson_rate'] < 50:
+            pedagogical_violations.append({
+                'type': 'LOW_LESSON_INTEGRATION',
+                'severity': 'warning',
+                'issue': f"Only {integration_data['lesson_rate']:.1f}% of core vocabulary used in lesson text.",
+                'fix': f"Use more core words in the prose: {', '.join(integration_data['missing'][:5])}..."
+            })
+        if integration_data['activity_rate'] < 80:
+            pedagogical_violations.append({
+                'type': 'LOW_ACTIVITY_INTEGRATION',
+                'severity': 'warning',
+                'issue': f"Only {integration_data['activity_rate']:.1f}% of core vocabulary used in activities.",
+                'fix': f"Add activities using: {', '.join(integration_data['missing'][:5])}..."
+            })
 
     # Run vocabulary plan compliance checks
     # VOCAB_PLAN_MISSING is now BLOCKING - core vocab from plan must be present

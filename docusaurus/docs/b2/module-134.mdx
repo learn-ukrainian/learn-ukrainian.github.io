@@ -16,7 +16,7 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
@@ -528,14 +528,6 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
     correctWords={JSON.parse(`["вчені", "гіпотезу", "метод", "експериментів", "лабораторії", "результати", "Аналіз", "припущення", "рецензування", "журналі", "грант", "досліджень"]`)}
   />
 </MarkTheWords>
-
-### Поставте репліки у правильному порядку
-
-<DialogueReorder
-  title="Поставте репліки у правильному порядку"
-  isUkrainian={false}
-  lines={JSON.parse(`[{"text": "Дякую за цікаву доповідь. Є питання з залу?", "order": 1, "speaker": "Модератор"}, {"text": "Дякую. Яку методологію ви використовували?", "order": 2, "speaker": "Слухач"}, {"text": "Ми застосували кількісний аналіз з вибіркою 500 осіб.", "order": 3, "speaker": "Доповідач"}, {"text": "А як ви контролювали змінні?", "order": 4, "speaker": "Слухач"}, {"text": "Використовували рандомізацію та контрольну групу.", "order": 5, "speaker": "Доповідач"}, {"text": "Цікаво. Чи можна відтворити ваш експеримент?", "order": 6, "speaker": "Слухач"}, {"text": "Так, усі протоколи опубліковані у додатку до статті.", "order": 7, "speaker": "Доповідач"}, {"text": "Які обмеження вашого дослідження?", "order": 8, "speaker": "Слухач"}, {"text": "Основне обмеження — географія вибірки, лише Київ.", "order": 9, "speaker": "Доповідач"}, {"text": "Плануєте розширити дослідження?", "order": 10, "speaker": "Слухач"}, {"text": "Так, уже подали заявку на грант НФДУ.", "order": 11, "speaker": "Доповідач"}, {"text": "Бажаю успіхів! Дуже цінна робота.", "order": 12, "speaker": "Слухач"}, {"text": "Дякую за запитання та інтерес до нашої роботи.", "order": 13, "speaker": "Доповідач"}, {"text": "Аплодисменти доповідачу. Переходимо до наступної секції.", "order": 14, "speaker": "Модератор"}]`)}
-/>
 
 ### Оберіть правила академічної доброчесності
 

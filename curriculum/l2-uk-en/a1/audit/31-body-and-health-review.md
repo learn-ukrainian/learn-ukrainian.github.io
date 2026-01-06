@@ -2,15 +2,6 @@
 **Phase:** A1.3 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Overall Status:** ✅ PASS
 
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): зуб, ніс, допомога, здоров'я, око...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 10/100)
-
-- 1 pedagogical violations (minor)
-
 ## Gates
 - **Words:** ✅ 860/750
 - **Activities:** ✅ 10/8
@@ -19,7 +10,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 31/1
+- **Vocab:** ✅ 46/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -29,6 +20,9 @@
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

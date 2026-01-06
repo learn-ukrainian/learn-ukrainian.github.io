@@ -433,8 +433,6 @@ def print_low_density_activities(low_density_activities: list[dict]) -> None:
             print(f"     → Add {missing} more translation items")
         elif act_type == 'mark-the-words':
             print(f"     → Add {missing} more words to mark in the text")
-        elif act_type == 'dialogue-reorder':
-            print(f"     → Add {missing} more dialogue lines to reorder")
         elif act_type == 'select':
             print(f"     → Add {missing} more multi-select questions")
         else:

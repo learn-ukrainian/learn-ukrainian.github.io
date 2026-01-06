@@ -3,7 +3,7 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): показав, написав, купив, зрозумів, пояснив...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): зрозумів, принести, зробив, прийшов, дав...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

@@ -136,3 +136,104 @@ items:
     translation: sincere
     pos: adj
     gender: m
+  - lemma: традиція
+    ipa: /trɑˈdɪt͡sʲijɑ/
+    translation: tradition
+    pos: noun
+    gender: f
+  - lemma: Новий рік
+    ipa: /nɔˈvɪj rik/
+    translation: New Year
+    pos: noun
+    gender: m
+  - lemma: Різдво
+    ipa: /rizdˈvɔ/
+    translation: Christmas
+    pos: noun
+    gender: n
+  - lemma: подарунок
+    ipa: /pɔdɑˈrunɔk/
+    translation: gift
+    pos: noun
+    gender: m
+  - lemma: вітати
+    ipa: /viˈtɑtɪ/
+    translation: to greet
+    pos: verb
+  - lemma: бажати
+    ipa: /bɑˈʒɑtɪ/
+    translation: to wish
+    pos: verb
+  - lemma: здоров'я
+    ipa: /zdɔˈrɔwjɑ/
+    translation: health
+    pos: noun
+    gender: n
+  - lemma: святкувати
+    ipa: /svʲɑtkuˈvɑtɪ/
+    translation: to celebrate
+    pos: verb
+  - lemma: отримувати
+    ipa: /ɔˈtrɪmuvɑtɪ/
+    translation: to receive
+    pos: verb
+  - lemma: гості
+    ipa: /ˈɦɔsti/
+    translation: guests
+    pos: noun
+    gender: pl
+  - lemma: торт
+    ipa: /tɔrt/
+    translation: cake
+    pos: noun
+    gender: m
+  - lemma: свічка
+    ipa: /ˈsvit͡ʃkɑ/
+    translation: candle
+    pos: noun
+    gender: f
+  - lemma: квіти
+    ipa: /ˈkvitɪ/
+    translation: flowers
+    pos: noun
+    gender: pl
+  - lemma: листівка
+    ipa: /lɪsˈtivkɑ/
+    translation: greeting card
+    pos: noun
+    gender: f
+  - lemma: запрошення
+    ipa: /zɑprɔˈʃɛnʲːɑ/
+    translation: invitation
+    pos: noun
+    gender: n
+  - lemma: музика
+    ipa: /ˈmuzɪkɑ/
+    translation: music
+    pos: noun
+    gender: f
+  - lemma: танці
+    ipa: /ˈtɑnt͡si/
+    translation: dances
+    pos: noun
+    gender: pl
+  - lemma: веселий
+    ipa: /vɛˈsɛlɪj/
+    translation: cheerful
+    pos: adj
+    gender: m
+  - lemma: святковий
+    ipa: /svʲɑtˈkɔvɪj/
+    translation: festive
+    pos: adj
+    gender: m
+  - lemma: народження
+    ipa: /nɑˈrɔdʒɛnʲːɑ/
+    translation: birth
+    pos: noun
+    gender: n
+  - lemma: любові
+    ipa: /lʲuˈbɔvi/
+    translation: of love
+    pos: noun
+    gender: f

@@ -1,29 +1,29 @@
 - type: match-up
   title: Word Formation Pairs
   pairs:
-  - left: '- прийти'
+  - left: прийти
     right: при- prefix
-  - left: '- вийти'
+  - left: вийти
     right: ви- prefix
-  - left: '- читання'
+  - left: читання
     right: -ння suffix
-  - left: '- важливість'
+  - left: важливість
     right: -ість suffix
-  - left: '- читач'
+  - left: читач
     right: -ач suffix
-  - left: '- музичний'
+  - left: музичний
     right: -ний suffix
-  - left: '- український'
+  - left: український
     right: -ський suffix
-  - left: '- словниковий'
+  - left: словниковий
     right: -овий suffix
-  - left: '- вхід'
+  - left: вхід
     right: ход- root
-  - left: '- письменник'
+  - left: письменник
     right: пис- root
-  - left: '- побачення'
+  - left: побачення
     right: бач- root
-  - left: '- слухач'
+  - left: слухач
     right: слух- root
 - type: cloze
   title: Formation Test
@@ -338,6 +338,15 @@
     ---
 
     *Україн*ський письменник napisав *музич*ну п''єсу про *київ*ське життя.'
+  answers:
+  - при
+  - ви
+  - Читач
+  - читання
+  - важлив
+  - Україн
+  - музич
+  - київ
 - type: translate
   title: English to Ukrainian
   items:
@@ -412,4 +421,55 @@
     - text: перехід
       correct: true
     - text: вихід
+      correct: false
+- type: translate
+  title: Word Formation Translation
+  items:
+  - source: The writer
+    options:
+    - text: Письменник
+      correct: true
+    - text: Писати
+      correct: false
+    - text: Письмовий
+      correct: false
+  - source: Ukrainian (adj.)
+    options:
+    - text: Український
+      correct: true
+    - text: Україна
+      correct: false
+    - text: Українець
+      correct: false
+  - source: Entrance
+    options:
+    - text: Вхід
+      correct: true
+    - text: Входити
+      correct: false
+    - text: Вихід
+      correct: false
+  - source: Exit
+    options:
+    - text: Вихід
+      correct: true
+    - text: Виходити
+      correct: false
+    - text: Вхід
+      correct: false
+  - source: A listener
+    options:
+    - text: Слухач
+      correct: true
+    - text: Слухати
+      correct: false
+    - text: Слух
+      correct: false
+  - source: Scientific
+    options:
+    - text: Науковий
+      correct: true
+    - text: Наука
+      correct: false
+    - text: Науковець
       correct: false

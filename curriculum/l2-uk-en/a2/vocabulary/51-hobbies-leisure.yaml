@@ -201,6 +201,11 @@ items:
   translation: magical
   pos: adj
   gender: f
+- lemma: час
+  ipa: t͡ʃɑs
+  translation: time
+  pos: noun
+  gender: m
 - lemma: шампанський
   ipa: ʃɐmˈpɑnsʲkɪj
   translation: champagne (adj)

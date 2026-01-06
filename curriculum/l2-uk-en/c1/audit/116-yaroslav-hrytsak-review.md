@@ -2,10 +2,19 @@
 **Phase:** C1.3 | **Level:** C1 | **Pedagogy:** narrative | **Target:** 1750
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (2 words): запитання, наголос...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
 - **Words:** ✅ 1821/1750
-- **Activities:** ✅ 17/16
-- **Density:** ✅ All > 18
+- **Activities:** ✅ 17/12
+- **Density:** ✅ All > 12
 - **Unique_types:** ✅ 15/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/7
@@ -14,7 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (17 activities)
+- **Content_heavy:** ⚠️ Too many activities: 17 (target 12-16)
 - **Immersion:** 🇺🇦 99.3% (target 98-100% (biography))
 - **Richness:** ✅ 97% (biography)
 - **Grammar:** ⏳ Pending validation

@@ -151,3 +151,74 @@ items:
     translation: sick
     pos: adj
     gender: m
+  - lemma: голова
+    ipa: /ɦɔlɔˈvɑ/
+    translation: head
+    pos: noun
+    gender: f
+  - lemma: око
+    ipa: /ˈɔkɔ/
+    translation: eye
+    pos: noun
+    gender: n
+  - lemma: ніс
+    ipa: /nis/
+    translation: nose
+    pos: noun
+    gender: m
+  - lemma: рот
+    ipa: /rɔt/
+    translation: mouth
+    pos: noun
+    gender: m
+  - lemma: зуб
+    ipa: /zub/
+    translation: tooth
+    pos: noun
+    gender: m
+  - lemma: здоров'я
+    ipa: /zdɔˈrɔwjɑ/
+    translation: health
+    pos: noun
+    gender: n
+  - lemma: лікар
+    ipa: /ˈlikɑr/
+    translation: doctor
+    pos: noun
+    gender: m
+  - lemma: аптека
+    ipa: /ɑpˈtɛkɑ/
+    translation: pharmacy
+    pos: noun
+    gender: f
+  - lemma: ліки
+    ipa: /ˈlikɪ/
+    translation: medicine
+    pos: noun
+    gender: pl
+  - lemma: болить
+    ipa: /bɔˈlɪtʲ/
+    translation: hurts
+    pos: verb
+  - lemma: здоровий
+    ipa: /zdɔˈrɔvɪj/
+    translation: healthy
+    pos: adj
+    gender: m
+  - lemma: погано
+    ipa: /pɔˈhɑnɔ/
+    translation: badly
+    pos: adv
+  - lemma: добре
+    ipa: /ˈdɔbrɛ/
+    translation: well
+    pos: adv
+  - lemma: допомагати
+    ipa: /dɔpɔmɑˈɦɑtɪ/
+    translation: to help
+    pos: verb
+  - lemma: швидка
+    ipa: /ˈʃvɪdkɑ/
+    translation: ambulance
+    pos: noun
+    gender: f

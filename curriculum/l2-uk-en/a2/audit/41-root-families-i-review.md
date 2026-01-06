@@ -5,23 +5,14 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, вид
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[TABLE_COLUMN_MISMATCH]** Table row 4 has 5 columns but header has 4
-  - FIX: Ensure all rows have exactly 4 columns (cells separated by |)
-- **[TABLE_COLUMN_MISMATCH]** Table row 7 has 5 columns but header has 4
-  - FIX: Ensure all rows have exactly 4 columns (cells separated by |)
-- **[TABLE_COLUMN_MISMATCH]** Table row 2 has 5 columns but header has 4
-  - FIX: Ensure all rows have exactly 4 columns (cells separated by |)
-- **[TABLE_COLUMN_MISMATCH]** Table row 5 has 5 columns but header has 4
-  - FIX: Ensure all rows have exactly 4 columns (cells separated by |)
-- **[TABLE_COLUMN_MISMATCH]** Table row 7 has 5 columns but header has 4
-  - FIX: Ensure all rows have exactly 4 columns (cells separated by |)
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): обдумати, думати, слух, погляд, розмова...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): вигляд, слухач, мовчання, погляд, огляд...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**🔄 REWRITE** (severity 70/100)
+**📝 UPDATE** (severity 35/100)
 
-- 7 pedagogical violations (significant)
+- Borderline case (severity 35/100)
+- 2 pedagogical violations (minor)
 - Immersion 15% off target
 - Activity density below minimum
 
@@ -36,7 +27,7 @@
 - **Vocab:** ✅ 54/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 5 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** ❌ 35.5% LOW (target 50-60% (A2.3))
 - **Grammar:** ⏳ Pending validation

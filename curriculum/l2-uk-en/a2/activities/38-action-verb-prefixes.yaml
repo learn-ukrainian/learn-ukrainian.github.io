@@ -7,6 +7,24 @@
     right: 'Away
 
       - Під- :: Under'
+  - left: 'пере-'
+    right: re-/over
+  - left: 'до-'
+    right: complete to end
+  - left: 'від-'
+    right: away/back
+  - left: 'ви-'
+    right: out
+  - left: 'з-'
+    right: together/down
+  - left: 'за-'
+    right: begin/behind
+  - left: 'на-'
+    right: onto/full
+  - left: 'при-'
+    right: toward/add
+  - left: 'роз-'
+    right: apart/spread
 - type: cloze
   title: The Editor
   passage: 'Я хочу {переписати|дописати|записати} цей текст. Ми повинні {переробити|доробити|зробити}
@@ -18,7 +36,9 @@
 
 
     Він вирішив {перездати|здати|видати} екзамен. Ми {перебудували|збудували|добудували}
-    плани.'
+    плани. Треба {переставити|поставити|виставити} меблі в кімнаті. Вона хоче {перевірити|вивірити|довірити}
+    всі відповіді. Учитель попросив {переказати|розказати|сказати} оповідання своїми словами.
+    Вони вирішили {переїхати|поїхати|виїхати} в інше місто.'
 - type: fill-in
   title: The Perfectionist
   items:
@@ -266,22 +286,26 @@
 - type: match-up
   title: Give and Take
   pairs:
-  - left: '- Віддати'
+  - left: 'Віддати'
     right: Give back (Return)
-  - left: '- Передати'
+  - left: 'Передати'
     right: Pass (Salt/Message)
-  - left: '- Здати'
+  - left: 'Здати'
     right: Turn in | Rent out
-  - left: '- Видати'
+  - left: 'Видати'
     right: Publish | Reveal
-  - left: '- Подати'
+  - left: 'Подати'
     right: Serve (Food/Hand)
-  - left: '- Роздати'
+  - left: 'Роздати'
     right: Distribute (To many)
-  - left: '- Надати'
+  - left: 'Надати'
     right: Provide (Official)
-  - left: '- Продати'
+  - left: 'Продати'
     right: Sell (Give for money)
+  - left: 'передати'
+    right: to pass/hand over
+  - left: 'віддати'
+    right: to give back
 - type: unjumble
   title: The Office
   items:

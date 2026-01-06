@@ -390,7 +390,6 @@ Minimum 5+ engagement boxes focusing on USAGE:
 6. **quiz** (8+ items, 12-20 words) — Vocabulary comprehension
 7. **true-false** (8+ items) — Usage verification
 8. **unjumble** (6+ items, 12-16 words) — Sentence construction
-9. **dialogue-reorder** (4+ lines) — Conversation flow
 10. **translate** (6+ items) — Translation practice
 
 **Advanced Activities:**
@@ -495,13 +494,6 @@ Minimum 5+ engagement boxes focusing on USAGE:
 > [!instruction] Click target words.
 >
 > *Target* other *target*.
-```
-
-**dialogue-reorder** (numbered):
-```markdown
-## dialogue-reorder: Title
-- [2] Second line.
-- [1] First line.
 ```
 
 ---

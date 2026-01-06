@@ -16,7 +16,7 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
@@ -284,14 +284,6 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
     correctWords={JSON.parse(`["паска", "писанки", "сіль", "хрін", "сала", "сир"]`)}
   />
 </MarkTheWords>
-
-### Планування поїздки до Почаєва
-
-<DialogueReorder
-  title="Планування поїздки до Почаєва"
-  isUkrainian={false}
-  lines={JSON.parse(`[{"text": "Ми з родиною плануємо поїхати до Почаївської Лаври на наступні вихідні.", "order": 0, "speaker": "Андрій"}, {"text": "Це чудова ідея. Ви вже знаєте, де будете зупинятися?", "order": 0, "speaker": "Марина"}, {"text": "Так, забронювали номер у готелі для паломників прямо біля храму.", "order": 0, "speaker": "Андрій"}, {"text": "Обов’язково відвідайте святе джерело, про яке розповідали в модулі.", "order": 0, "speaker": "Марина"}, {"text": "Звісно, ми хочемо набрати води та замовити молитву за здоров’я.", "order": 0, "speaker": "Андрій"}, {"text": "А ви знаєте, що там дуже строгий дрес-код для відвідувачів?", "order": 0, "speaker": "Марина"}, {"text": "Так, ми взяли з собою відповідний одяг, щоб поважати традиції осередку.", "order": 0, "speaker": "Андрій"}, {"text": "Бажаю вам гарної подорожі та духовного оновлення.", "order": 0, "speaker": "Марина"}]`)}
-/>
 
 ### Релігійні вітання (корекція)
 

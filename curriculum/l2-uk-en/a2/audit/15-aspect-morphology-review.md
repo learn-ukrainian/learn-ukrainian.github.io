@@ -3,22 +3,21 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид, доконаний
+- **[COMPLEXITY]** fill-in 'Find the Perfective' has 6 items (minimum: 8)
+  - FIX: Add more items. A2 fill-in requires at least 8 items.
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: доконаний, недоконаний, вид
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[TABLE_COLUMN_MISMATCH]** Table row 5 has 4 columns but header has 3
-  - FIX: Ensure all rows have exactly 3 columns (cells separated by |)
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 35/100)
 
-- Borderline case (severity 50/100)
+- Borderline case (severity 35/100)
 - 2 pedagogical violations (minor)
-- Immersion 12% off target
 - Activity count below minimum
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1127/1000
+- **Words:** ✅ 1282/1000
 - **Activities:** ❌ 8/10
 - **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 7/4 types
@@ -30,7 +29,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 22.6% LOW (target 35-50% (A2.1))
+- **Immersion:** ❌ 31.4% LOW (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Low Density Activities
@@ -53,4 +52,12 @@
 | **Practice: Identify the Pattern** | ✅ | 166 | Included in Core |
 | **Summary** | ✅ | 0 | Included in Core |
 | **What You Learned** | ⚪️ | 301 | Skipped |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Підсумок** | ✅ | 13 | Included in Core |
+| **Способи творення доконаного виду** | ⚪️ | 0 | Skipped |
+| **Головні префікси** | ⚪️ | 0 | Skipped |
+| **Як розпізнати вид** | ⚪️ | 26 | Skipped |
+| **Практичні поради** | ⚪️ | 23 | Skipped |
+| **Найважливіші пари для запам'ятовування** | ⚪️ | 0 | Skipped |
+| **Приклади діалогів** | ✅ | 46 | Included in Core |
+| **Вправа: Визначте вид** | ⚪️ | 7 | Skipped |
+| **Корисні поради** | ⚪️ | 40 | Skipped |

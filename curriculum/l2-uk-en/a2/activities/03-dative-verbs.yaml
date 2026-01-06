@@ -1,29 +1,29 @@
 - type: match-up
   title: Verb + Dative Pattern
   pairs:
-  - left: '- допомагати'
+  - left: 'допомагати'
     right: to help someone (Dat only)
-  - left: '- давати'
+  - left: 'давати'
     right: to give something to someone (Dat + Acc)
-  - left: '- заважати'
+  - left: 'заважати'
     right: to bother someone (Dat only)
-  - left: '- показувати'
+  - left: 'показувати'
     right: to show something to someone (Dat + Acc)
-  - left: '- подобатися'
+  - left: 'подобатися'
     right: to please someone (Dat only)
-  - left: '- пояснювати'
+  - left: 'пояснювати'
     right: to explain something to someone (Dat + Acc)
-  - left: '- вірити'
+  - left: 'вірити'
     right: to believe someone (Dat only)
-  - left: '- дякувати'
+  - left: 'дякувати'
     right: to thank someone (Dat only)
-  - left: '- радити'
+  - left: 'радити'
     right: to advise someone something (Dat + Acc)
-  - left: '- довіряти'
+  - left: 'довіряти'
     right: to trust someone (Dat only)
-  - left: '- забороняти'
+  - left: 'забороняти'
     right: to forbid someone (Dat + Inf)
-  - left: '- дозволяти'
+  - left: 'дозволяти'
     right: to allow someone (Dat + Inf)
 - type: cloze
   title: Choose the Correct Form
@@ -391,6 +391,19 @@
 
     Бабуся розповідає *онукам* казку. Я вірю *тобі*. Лікар радить *пацієнтові* відпочивати.
     Вона заздрить *подрузі*.'
+  answers:
+  - мамі
+  - мені
+  - сусідам
+  - учням
+  - Мені
+  - другові
+  - лікареві
+  - дітям
+  - онукам
+  - тобі
+  - пацієнтові
+  - подрузі
 - type: translate
   title: English to Ukrainian
   items:

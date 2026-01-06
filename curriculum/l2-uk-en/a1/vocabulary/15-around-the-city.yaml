@@ -394,3 +394,74 @@ items:
     ipa: /ˈjixɑtɪ/
     translation: to go (vehicle)
     pos: verb
+  - lemma: автобусом
+    ipa: /ɑwˈtɔbusɔm/
+    translation: by bus
+    pos: noun
+    gender: m
+  - lemma: звідти
+    ipa: /ˈzvidtɪ/
+    translation: from there
+    pos: adv
+  - lemma: міст
+    ipa: /mist/
+    translation: bridge
+    pos: noun
+    gender: m
+  - lemma: таксі
+    ipa: /tɑkˈsi/
+    translation: taxi
+    pos: noun
+    gender: n
+  - lemma: бульвар
+    ipa: /bulʲˈvɑr/
+    translation: boulevard
+    pos: noun
+    gender: m
+  - lemma: набережна
+    ipa: /nɑˈbɛrɛʒnɑ/
+    translation: embankment
+    pos: noun
+    gender: f
+  - lemma: сюди
+    ipa: /sʲuˈdɪ/
+    translation: here (to)
+    pos: adv
+  - lemma: туди
+    ipa: /tuˈdɪ/
+    translation: there (to)
+    pos: adv
+  - lemma: метро
+    ipa: /mɛtˈrɔ/
+    translation: metro
+    pos: noun
+    gender: n
+  - lemma: вулиця
+    ipa: /ˈvulɪt͡sʲɑ/
+    translation: street
+    pos: noun
+    gender: f
+  - lemma: машиною
+    ipa: /mɑˈʃɪnɔju/
+    translation: by car
+    pos: noun
+    gender: f
+  - lemma: трамваєм
+    ipa: /trɑmˈvɑjɛm/
+    translation: by tram
+    pos: noun
+    gender: m
+  - lemma: пішки
+    ipa: /ˈpiʃkɪ/
+    translation: on foot
+    pos: adv
+  - lemma: вихід
+    ipa: /ˈvɪxid/
+    translation: exit
+    pos: noun
+    gender: m
+  - lemma: площа
+    ipa: /ˈplɔʃt͡ʃɑ/
+    translation: square
+    pos: noun
+    gender: f

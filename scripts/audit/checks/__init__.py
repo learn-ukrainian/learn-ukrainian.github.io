@@ -47,13 +47,6 @@ from .pedagogy import (
 )
 from .markdown_format import (
     check_markdown_format,
-    check_quiz_format,
-    check_true_false_format,
-    check_unjumble_format,
-    check_matchup_format,
-    check_fill_in_format,
-    check_error_correction_format,
-    check_cloze_format,
 )
 from .section_order import (
     check_section_order,
@@ -123,13 +116,6 @@ __all__ = [
     'check_topic_consistency',
     # Markdown Format
     'check_markdown_format',
-    'check_quiz_format',
-    'check_true_false_format',
-    'check_unjumble_format',
-    'check_matchup_format',
-    'check_fill_in_format',
-    'check_error_correction_format',
-    'check_cloze_format',
     # Section Order
     'check_section_order',
     'fix_section_order',

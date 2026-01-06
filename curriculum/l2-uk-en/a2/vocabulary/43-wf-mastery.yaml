@@ -225,6 +225,11 @@ items:
   translation: speech
   pos: noun
   gender: f
+- lemma: рід
+  ipa: rʲid
+  translation: lineage, genus, gender (grammar)
+  pos: noun
+  gender: m
 - lemma: психолог
   ipa: psɪˈxɔloh
   translation: psychologist

@@ -155,7 +155,7 @@ def validate_cloze_components(mdx_content: str) -> list[str]:
         title = title_match.group(1) if title_match else "Unknown"
 
         # Extract passage
-        passage_match = re.search(r'passage=\{`([^`]*)`\}', component)
+        passage_match = re.search(r'passage=\{[`"](.*?)["`]\}', component, re.DOTALL)
         passage = passage_match.group(1) if passage_match else ""
 
         # Extract blanks JSON - find JSON.parse(` and then count brackets to find the array end
@@ -265,8 +265,8 @@ def validate_module(md_path: Path, mdx_path: Path) -> ValidationResult:
         warnings.append(f"Some Ukrainian content may be missing ({len(missing_ukrainian)}/{len(ukrainian_words)} words)")
 
     # Check activities are present
-    md_activities = re.findall(r'##\s+(quiz|match-up|fill-in|true-false|unjumble|group-sort|anagram|error-correction|cloze|select|translate|dialogue-reorder):', md_content, re.IGNORECASE)
-    mdx_components = re.findall(r'<(Quiz|MatchUp|FillIn|TrueFalse|Unjumble|GroupSort|Anagram|ErrorCorrection|Cloze|Select|Translate|DialogueReorder)', mdx_content)
+    md_activities = re.findall(r'##\s+(quiz|match-up|fill-in|true-false|unjumble|group-sort|anagram|error-correction|cloze|select|translate):', md_content, re.IGNORECASE)
+    mdx_components = re.findall(r'<(Quiz|MatchUp|FillIn|TrueFalse|Unjumble|GroupSort|Anagram|ErrorCorrection|Cloze|Select|Translate)', mdx_content)
 
     # Normalize names for comparison
     md_activity_types = {a.lower().replace('-', '') for a in md_activities}

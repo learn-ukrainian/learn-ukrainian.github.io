@@ -122,11 +122,12 @@ interface GeneratorTranslateQuestion {
 interface TranslateProps {
   questions?: GeneratorTranslateQuestion[];
   direction?: 'to-uk' | 'to-en';
+  instruction?: string;
   children?: React.ReactNode;
   isUkrainian?: boolean;
 }
 
-export default function Translate({ questions, direction = 'to-uk', children, isUkrainian }: TranslateProps) {
+export default function Translate({ questions, direction = 'to-uk', instruction, children, isUkrainian }: TranslateProps) {
   let title = direction === 'to-uk' ? 'Translate to Ukrainian' : 'Translate to English';
   if (isUkrainian) {
     title = direction === 'to-uk' ? 'Перекладіть на українську' : 'Перекладіть на англійську';
@@ -161,6 +162,9 @@ export default function Translate({ questions, direction = 'to-uk', children, is
         <span>{title}</span>
         <ActivityHelp activityType="translate" isUkrainian={isUkrainian} />
       </div>
+      {instruction && (
+        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      )}
       <div className={styles.activityContent}>
         {transformedItems ? transformedItems.map((item, idx) => (
           <TranslateItem

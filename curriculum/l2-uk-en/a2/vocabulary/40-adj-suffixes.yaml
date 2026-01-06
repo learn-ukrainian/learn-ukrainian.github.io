@@ -352,6 +352,16 @@ items:
   translation: noisy
   pos: adj
   gender: m
+- lemma: чоловічий
+  ipa: t͡ʃoloˈvʲit͡ʃɪj
+  translation: male; men's (adj)
+  pos: adj
+  gender: m
+- lemma: жіночий
+  ipa: ʒʲiˈnɔt͡ʃɪj
+  translation: female; women's (adj)
+  pos: adj
+  gender: m
 - lemma: єв
   ipa: jɛʋ
   translation: suffix -yev

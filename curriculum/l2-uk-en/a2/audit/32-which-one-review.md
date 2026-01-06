@@ -1,23 +1,22 @@
 # Audit Report: 32-which-one.md
 **Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Expressive | **Target:** 1000
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Fix the Link' uses placeholder syntax instead of real errors
-  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 1/6 items with placeholders/missing errors.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): тоді, кожного, доки, раз, тим...
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: давальний, орудний, родовий, середній, називний
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): разу, часом, перш, доки, кожного...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 20/100)
+**📝 UPDATE** (severity 10/100)
 
 - 2 pedagogical violations (minor)
-- Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1266/1000
+- **Words:** ✅ 1320/1000
 - **Activities:** ✅ 10/10
-- **Density:** ❌ 1 < 12
+- **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
@@ -25,16 +24,10 @@
 - **Vocab:** ✅ 12/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 35.0% LOW (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 42.0% (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| Choose the Form | cloze | 8 | 12 | Add 4 more items |
-
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -51,4 +44,4 @@
 | **Monologue: The Object That Changed My Life** | ⚪️ | 109 | Skipped |
 | **Dialogue: The Lost Item (Revamped)** | ✅ | 155 | Included in Core |
 | **Monologue: My Ideal City** | ⚪️ | 88 | Skipped |
-| **Summary** | ✅ | 55 | Included in Core |
+| **Підсумок** | ✅ | 109 | Included in Core |

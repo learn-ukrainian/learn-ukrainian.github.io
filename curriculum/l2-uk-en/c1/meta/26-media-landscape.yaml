@@ -1,17 +1,25 @@
-module: c1-26
-title: Media Landscape
-subtitle: Professional & Social
-version: '2.0'
-phase: C1.2 Professional
-focus: social
-pedagogy: academic
+module: 26
+title: "Медіаландшафт України"
+subtitle: "Media Landscape"
+version: "2.0"
+phase: "C1.2 Professional Communication"
+focus: professional
+pedagogy: immersion
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- social
-- media
-- news
+  - media
+  - journalism
+  - society
+  - politics
+grammar:
+  - "Media literacy terminology"
+  - "Passive constructions in news reports"
+  - "Stylistics of journalistic texts"
 objectives:
-- Master C1 concepts in Media Landscape
+  - "Navigate the Ukrainian media landscape (TV, online, press)"
+  - "Distinguish between facts and opinions"
+  - "Identify bias, propaganda, and fake news"
+  - "Use critical analysis tools for information consumption"
+vocabulary_count: 35
 slug: 26-media-landscape

@@ -152,3 +152,111 @@ items:
     pos: adverbs
     gender: n/a
     context: "зокрема, слід згадати"
+  - lemma: цілісність
+    ipa: /t͡sʲilisnʲisʲtʲ/
+    translation: integrity / wholeness
+    pos: noun
+    gender: f
+    context: "цілісність тексту"
+  - lemma: завершеність
+    ipa: /zawɛrʃɛnʲisʲtʲ/
+    translation: completeness
+    pos: noun
+    gender: f
+    context: "відчуття завершеності"
+  - lemma: логіка
+    ipa: /lɔɦika/
+    translation: logic
+    pos: noun
+    gender: f
+    context: "залізна логіка"
+  - lemma: підрозділ
+    ipa: /pidrɔzdil/
+    translation: subsection / unit
+    pos: noun
+    gender: m
+    context: "новий підрозділ"
+  - lemma: значення
+    ipa: /znat͡ʃɛnʲːa/
+    translation: meaning / significance
+    pos: noun
+    gender: n
+    context: "велике значення"
+  - lemma: розділ
+    ipa: /rɔzdil/
+    translation: section / chapter
+    pos: noun
+    gender: m
+    context: "перший розділ"
+  - lemma: новизна
+    ipa: /nɔwɪˈzna/
+    translation: novelty
+    pos: noun
+    gender: f
+    context: "наукова новизна"
+  - lemma: приклад
+    ipa: /prɪklad/
+    translation: example
+    pos: noun
+    gender: m
+    context: "навести приклад"
+  - lemma: мета
+    ipa: /mɛˈta/
+    translation: goal / purpose
+    pos: noun
+    gender: f
+    context: "головна мета"
+  - lemma: актуальність
+    ipa: /aktualʲnʲisʲtʲ/
+    translation: relevance / urgency
+    pos: noun
+    gender: f
+    context: "актуальність теми"
+  - lemma: обсяг
+    ipa: /ɔbsʲaɦ/
+    translation: volume / scope
+    pos: noun
+    gender: m
+    context: "обсяг роботи"
+  - lemma: джерело
+    ipa: /dʒɛrɛˈlɔ/
+    translation: source
+    pos: noun
+    gender: n
+    context: "надійне джерело"
+  - lemma: план
+    ipa: /plan/
+    translation: plan / outline
+    pos: noun
+    gender: m
+    context: "детальний план"
+  - lemma: аналіз
+    ipa: /aˈnaliz/
+    translation: analysis
+    pos: noun
+    gender: m
+    context: "глибокий аналіз"
+  - lemma: ілюстрація
+    ipa: /ilʲustrat͡sʲija/
+    translation: illustration
+    pos: noun
+    gender: f
+    context: "яскрава ілюстрація"
+  - lemma: завдання
+    ipa: /zawdanʲːa/
+    translation: task / assignment
+    pos: noun
+    gender: n
+    context: "складне завдання"
+  - lemma: пояснення
+    ipa: /pɔjasnɛnʲːa/
+    translation: explanation
+    pos: noun
+    gender: n
+    context: "чітке пояснення"
+  - lemma: частина
+    ipa: /t͡ʃastɪna/
+    translation: part
+    pos: noun
+    gender: f
+    context: "основна частина"

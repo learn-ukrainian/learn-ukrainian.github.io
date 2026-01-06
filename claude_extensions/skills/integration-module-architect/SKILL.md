@@ -116,7 +116,6 @@ Include comprehensive "Чи можете ви..." checklists covering all level 
 | **HIGH** | translate (10+) | Productive skill test |
 | **HIGH** | error-correction (10+) | All error types from level |
 | **HIGH** | quiz (12+) | Comprehensive review |
-| **MEDIUM** | dialogue-reorder (8+) | Discourse competence |
 | **MEDIUM** | unjumble (8+) | Complex sentences |
 | **LOW** | match-up, group-sort | Quick review |
 

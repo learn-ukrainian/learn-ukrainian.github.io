@@ -266,3 +266,28 @@ items:
     translation: egg
     pos: noun
     gender: n
+  - lemma: помідор
+    ipa: /pɔˈmidɔr/
+    translation: tomato
+    pos: noun
+    gender: m
+  - lemma: м'ясо
+    ipa: /ˈmjɑsɔ/
+    translation: meat
+    pos: noun
+    gender: n
+  - lemma: огірок
+    ipa: /ɔˈɦirɔk/
+    translation: cucumber
+    pos: noun
+    gender: m
+  - lemma: риба
+    ipa: /ˈrɪbɑ/
+    translation: fish
+    pos: noun
+    gender: f
+  - lemma: чай
+    ipa: /t͡ʃɑj/
+    translation: tea
+    pos: noun
+    gender: m

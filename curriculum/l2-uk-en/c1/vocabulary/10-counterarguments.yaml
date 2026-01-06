@@ -217,3 +217,33 @@ items:
   translation: side (genitive)
   pos: noun
   gender: m
+- lemma: безперечно
+  ipa: /bɛzpɛˈrɛt͡ʃnɔ/
+  translation: undoubtedly
+  pos: adv
+  gender: ''
+- lemma: альтернатива
+  ipa: /ɑlʲtɛrnɑˈtɪvɑ/
+  translation: alternative
+  pos: noun
+  gender: f
+- lemma: суперечливий
+  ipa: /sʊpɛˈrɛt͡ʃlɪvɪj/
+  translation: contradictory / controversial
+  pos: adj
+  gender: m
+- lemma: дійсно
+  ipa: /dʲijsno/
+  translation: indeed / really
+  pos: adv
+  gender: ''
+- lemma: водночас
+  ipa: /vɔdnɔˈt͡ʃɑs/
+  translation: at the same time
+  pos: adv
+  gender: ''
+- lemma: опозиція
+  ipa: /ɔpɔˈzɪt͡sʲijɑ/
+  translation: opposition
+  pos: noun
+  gender: f

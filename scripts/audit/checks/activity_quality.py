@@ -309,7 +309,6 @@ def estimate_cognitive_load(
         'select': 3,         # Multiple selections
         'cloze': 4,          # Multiple blanks
         'translate': 4,      # Translation
-        'dialogue-reorder': 4,  # Multi-step reordering
     }
 
     activity_load = activity_complexity.get(activity_type, 2)

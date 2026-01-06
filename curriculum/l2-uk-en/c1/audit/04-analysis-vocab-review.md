@@ -2,24 +2,15 @@
 **Phase:** C1.1 | **Level:** C1 | **Pedagogy:** Lexical Approach | **Target:** 1750
 **Overall Status:** ✅ PASS
 
-## PEDAGOGICAL VIOLATIONS
-- **[MISSING_ADVANCED_ACTIVITY]** C1/C2 module is missing advanced production activities (essay-response, etc.)
-  - FIX: Add at least one advanced production activity: authorial-intent, comparative-study, critical-analysis, essay-response. C1/C2 standards require deep analysis and long-form production.
-
-## Recommendation
-**📝 UPDATE** (severity 10/100)
-
-- 1 pedagogical violations (minor)
-
 ## Gates
 - **Words:** ✅ 1984/1750
-- **Activities:** ✅ 16/16
+- **Activities:** ✅ 17/16
 - **Density:** ✅ All > 18
-- **Unique_types:** ✅ 5/4 types
+- **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 32/25
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -44,6 +35,13 @@
 | variety | 0.93 | - | 93% | 5% | 4.7% |
 | paragraph_var | 0.69 | - | 69% | 5% | 3.4% |
 | **TOTAL** | | | | | **98.1%** |
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+### Warnings
+- ⚠️ No Activities section found
 
 ## Section Audit
 | Section | Status | Count | Notes |

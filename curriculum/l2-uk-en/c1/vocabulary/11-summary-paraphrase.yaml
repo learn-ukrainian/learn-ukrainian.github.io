@@ -142,3 +142,15 @@ items:
   translation: whole
   pos: noun
   gender: m
+- lemma: суть
+  ipa: /sʊtʲ/
+  translation: essence/gist
+  pos: noun
+  gender: f
+- lemma: суті
+  ipa: /sʊtʲi/
+  translation: essence (genitive required by plan)
+  pos: noun
+  gender: f
+
+

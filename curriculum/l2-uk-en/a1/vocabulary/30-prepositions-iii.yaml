@@ -46,3 +46,27 @@ items:
     ipa: /tuˈdɪ/
     translation: there (directional)
     pos: adv
+  - lemma: вдома
+    ipa: /ˈvdɔmɑ/
+    translation: at home
+    pos: adv
+  - lemma: прямо
+    ipa: /ˈprʲɑmɔ/
+    translation: straight
+    pos: adv
+  - lemma: близько
+    ipa: /ˈblɪzʲkɔ/
+    translation: near
+    pos: adv
+  - lemma: назад
+    ipa: /nɑˈzɑd/
+    translation: back
+    pos: adv
+  - lemma: додому
+    ipa: /dɔˈdɔmu/
+    translation: homeward
+    pos: adv
+  - lemma: далеко
+    ipa: /dɑˈlɛkɔ/
+    translation: far
+    pos: adv

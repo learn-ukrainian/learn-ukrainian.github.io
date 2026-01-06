@@ -63,8 +63,7 @@ curriculum/l2-uk-en/{level}/
 | `## unjumble:` scrambled                            | Keep scrambled + answer                 | `items[].scrambled`, `items[].answer`     |
 | `## cloze:` passage with `[___:1]` blanks + options | Convert `[___:N]` → `{ans\|opt1\|opt2}` | `passage` with inline `{ans\|opt1\|opt2}` |
 | `## error-correction:`                              | Keep sentence + error + fix             | `items[].sentence/error/answer`           |
-| `## mark-the-words:`                                | Keep text + targets                     | `text` with `*marked*` words              |
-| `## dialogue-reorder:`                              | Keep lines + speakers                   | `lines[].order/speaker/text`              |
+| `## mark-the-words:`                                | Keep text + answers                     | `text` + `answers[]` array                |
 | `## select:` questions                              | Keep questions + all options            | `items[].question`, `items[].options`     |
 | `## translate:` sentences                           | Keep source + options                   | `items[].source`, `items[].options`       |
 
@@ -89,7 +88,7 @@ Passage with [___:1] blank and [___:2] another blank.
 
 **DO NOT use named blanks** like `[___:answer]` - the parser does not support this format.
 
-See `docs/ACTIVITY-MARKDOWN-REFERENCE.md` for complete cloze syntax.
+See `docs/ACTIVITY-YAML-REFERENCE.md` for complete format specifications.
 
 ---
 
@@ -193,14 +192,13 @@ For EVERY quiz question in content-heavy modules:
 | error-correction | -           | 1+  | 2+  | 2+  | 3+  | 3+  |
 | cloze            | -           | 1+  | 1+  | 1+  | 3+  | 3+  |
 | mark-the-words   | -           | 1+  | 1+  | 1+  | -   | -   |
-| dialogue-reorder | -           | 1+  | 1+  | 1+  | 1+  | -   |
 | select           | -           | opt | 1+  | 1+  | 1+  | 1+  |
 | translate        | -           | opt | 1+  | 1+  | 2+  | 2+  |
 
 ## YAML Format Reference
 
 > [!IMPORTANT]
-> See `docs/ACTIVITY-MARKDOWN-REFERENCE.md` for complete format with examples.
+> See `docs/ACTIVITY-YAML-REFERENCE.md` for complete format with examples.
 
 ### Common Activity Structures
 
@@ -324,28 +322,16 @@ For EVERY quiz question in content-heavy modules:
         - distractor2
       explanation: Why it's wrong.
 
-# Mark-the-words (6+ marked words for B1)
+# Mark-the-words (6+ correct words for B1)
 - type: mark-the-words
   id: mark-id
   title: Mark words title
-  instructions: Click all target words in the text.
-  text: 'Regular word [target] regular [target] word [target] more text.'
-  hint: Optional hint about what to mark.
-
-# Dialogue-reorder (4+ lines minimum for B1)
-- type: dialogue-reorder
-  id: dialogue-id
-  title: Dialogue title
-  instructions: Put the dialogue lines in the correct order.
-  lines:
-    - speaker: Олександр
-      text: First line.
-    - speaker: Наталія
-      text: Second line.
-    - speaker: Олександр
-      text: Third line.
-    - speaker: Наталія
-      text: Fourth line.
+  instructions: Знайдіть усі іменники.
+  text: Гарний день приніс радість у серце.
+  answers:
+    - день
+    - радість
+    - серце
 
 # Select (6+ items for B1)
 - type: select
@@ -448,7 +434,7 @@ match-up → group-sort → quiz → true-false → fill-in → anagram/unjumble
 [recognition] mark-the-words → match-up → group-sort
 [discrimination] quiz → true-false → select
 [controlled] fill-in → cloze → error-correction
-[production] unjumble → dialogue-reorder → translate
+[production] unjumble → translate
 ```
 
 ### B2-C2

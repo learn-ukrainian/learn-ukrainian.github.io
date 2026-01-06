@@ -25,16 +25,16 @@ In Ukrainian, you just click a LEGO piece (prefix) onto the verb!
 
 Let's look at the most powerful "Transformers".
 
-| Prefix | Meaning | Logic | Example |
-| :--- | :--- | :--- | :--- |
-| **На-** | **On | Accumulation** | Putting something ON | **На**писати: Write (result), **На**клеїти: Stick on |
-| **Пере-** | **Re- | Across** | Doing again or changing | **Пере**писати: Rewrite, **Пере**робити: Redo |
-| **До-** | **Finish | To the end** | Reaching the limit | **До**писати: Finish writing, **До**читати: Finish reading |
-| **За-** | **Close | Fix** | Closing or recording | **За**крити: Close, **За**писати: Record |
-| **Від-** | **Open | Away** | Opening or separating | **Від**крити: Open, **Від**різати: Cut off |
-| **По-** | **A little | Process** | Brief or limited action | **По**читати: Read a bit, **По**говорити: Chat |
-| **Під-** | **Under | Sub-** | Adding from below | **Під**писати: Sign, **Під**тримати: Support |
-| **Роз-** | **Open | Disperse** | Spreading out | **Роз**крити: Uncover, **Роз**дати: Distribute |
+| Prefix    | Meaning             | Logic                    | Example                                               |
+| --------- | ------------------- | ------------------------ | ----------------------------------------------------- |
+| **На-**   | On / Accumulation   | Putting something ON     | **На**писати: Write (result), **На**клеїти: Stick on  |
+| **Пере-** | Re- / Across        | Doing again or changing  | **Пере**писати: Rewrite, **Пере**робити: Redo         |
+| **До-**   | Finish / To the end | Reaching the limit       | **До**писати: Finish writing, **До**читати: Finish reading |
+| **За-**   | Close / Fix         | Closing or recording     | **За**крити: Close, **За**писати: Record              |
+| **Від-**  | Open / Away         | Opening or separating    | **Від**крити: Open, **Від**різати: Cut off            |
+| **По-**   | A little / Process  | Brief or limited action  | **По**читати: Read a bit, **По**говорити: Chat        |
+| **Під-**  | Under / Sub-        | Adding from below        | **Під**писати: Sign, **Під**тримати: Support          |
+| **Роз-**  | Open / Disperse     | Spreading out            | **Роз**крити: Uncover, **Роз**дати: Distribute        |
 
 ---
 
@@ -77,14 +77,14 @@ Unlike English ("turn on/off" vs "open/close"), Ukrainian logic is consistent.
 - **Turn on:** **В**микати (Move *in*).
 - **Turn off:** **Ви**микати (Move *out*).
 
-| Object | Action | Verb |
-| :--- | :--- | :--- |
-| Door/Window | Open | **Відкрити** | **Відчинити** |
-| Door/Window | Close | **Закрити** | **Зачинити** |
-| Book | Open | **Розкрити** (Spread open) |
-| Book | Close | **Закрити** | **Згорнути** |
-| Eyes | Open | **Розплющити** (Specific!) |
-| Eyes | Close | **Заплющити** |
+| Object      | Action | Verb                            |
+| ----------- | ------ | ------------------------------- |
+| Door/Window | Open   | **Відкрити** / **Відчинити**    |
+| Door/Window | Close  | **Закрити** / **Зачинити**      |
+| Book        | Open   | **Розкрити** (Spread open)      |
+| Book        | Close  | **Закрити** / **Згорнути**      |
+| Eyes        | Open   | **Розплющити** (Specific!)      |
+| Eyes        | Close  | **Заплющити**                   |
 
 > [!note] Open vs Unlock
 > **Відкрити** usually means to open access (a store, a bottle, a new land).

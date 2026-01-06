@@ -5,10 +5,11 @@ import ActivityHelp from './ActivityHelp';
 interface MarkTheWordsActivityProps {
   text: string;
   correctWords: string[];
+  instruction?: string;
   isUkrainian?: boolean;
 }
 
-export function MarkTheWordsActivity({ text, correctWords, isUkrainian }: MarkTheWordsActivityProps) {
+export function MarkTheWordsActivity({ text, correctWords, instruction, isUkrainian }: MarkTheWordsActivityProps) {
   const [markedWords, setMarkedWords] = useState<Set<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
 
@@ -84,6 +85,9 @@ export function MarkTheWordsActivity({ text, correctWords, isUkrainian }: MarkTh
 
   return (
     <div>
+      {instruction && (
+        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      )}
       <p className={styles.markWordsText}>
         {tokens.map((token, idx) => {
           const cleanWord = token.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '');

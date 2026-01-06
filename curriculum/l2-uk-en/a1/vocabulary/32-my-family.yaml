@@ -176,3 +176,68 @@ items:
     translation: aunt
     pos: noun
     gender: f
+  - lemma: сім'я
+    ipa: /sʲimˈjɑ/
+    translation: family
+    pos: noun
+    gender: f
+  - lemma: мати
+    ipa: /ˈmɑtɪ/
+    translation: mother
+    pos: noun
+    gender: f
+  - lemma: дідусь
+    ipa: /diˈdusʲ/
+    translation: grandfather
+    pos: noun
+    gender: m
+  - lemma: бабуся
+    ipa: /bɑˈbusʲɑ/
+    translation: grandmother
+    pos: noun
+    gender: f
+  - lemma: онук
+    ipa: /ɔˈnuk/
+    translation: grandson
+    pos: noun
+    gender: m
+  - lemma: онучка
+    ipa: /ɔˈnut͡ʃkɑ/
+    translation: granddaughter
+    pos: noun
+    gender: f
+  - lemma: син
+    ipa: /sɪn/
+    translation: son
+    pos: noun
+    gender: m
+  - lemma: дочка
+    ipa: /dɔt͡ʃˈkɑ/
+    translation: daughter
+    pos: noun
+    gender: f
+  - lemma: чоловік
+    ipa: /t͡ʃɔlɔˈvik/
+    translation: husband
+    pos: noun
+    gender: m
+  - lemma: дружина
+    ipa: /druˈʒɪnɑ/
+    translation: wife
+    pos: noun
+    gender: f
+  - lemma: хлопець
+    ipa: /ˈxlɔpɛt͡sʲ/
+    translation: boyfriend/boy
+    pos: noun
+    gender: m
+  - lemma: дівчина
+    ipa: /divˈt͡ʃɪnɑ/
+    translation: girlfriend/girl
+    pos: noun
+    gender: f
+  - lemma: дитина
+    ipa: /dɪˈtɪnɑ/
+    translation: child
+    pos: noun
+    gender: f

@@ -1,20 +1,23 @@
 # Audit Report: 01-how-to-talk-about-grammar.md
 **Phase:** B1.0 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** mark-the-words 'Знайдіть частини мови' has 0 items (minimum: 6)
+  - FIX: Add more items. B1 mark-the-words requires at least 6 items.
 - **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (1 words): граматика...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 10/100)
+**📝 UPDATE** (severity 20/100)
 
-- 1 pedagogical violations (minor)
+- 2 pedagogical violations (minor)
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1916/1200
 - **Activities:** ✅ 15/12
-- **Density:** ✅ All > 14
+- **Density:** ❌ 1 < 14
 - **Unique_types:** ✅ 11/5 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
@@ -22,7 +25,7 @@
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 29.3% (B1.1 Aspect)
 - **Richness:** ✅ 99% (grammar)
@@ -46,6 +49,12 @@
 | questions | 40 | 5 | 100% | 5% | 5.0% |
 | proverbs | 3 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.8%** |
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Знайдіть частини мови | mark-the-words | 0 | 6 | Add 6 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

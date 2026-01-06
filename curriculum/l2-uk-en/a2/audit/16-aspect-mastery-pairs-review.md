@@ -1,26 +1,36 @@
 # Audit Report: 16-aspect-mastery-pairs.md
-**Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
+**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): питати, побудувати, відповідати, приготувати, запам'ятати...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
-- **Words:** ✅ 1202/1000
+- **Words:** ✅ 1080/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/4
+- **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 39/1
+- **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 36.2% (target 35-50% (A2.1))
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 41.8% (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 49 | Included in Core |
+| **Intro/Narrative** | ✅ | 49 | Included in Core |
 | **The Core 30 Pairs** | ✅ | 0 | Included in Core |
 | **Tier 1: Essential Everyday Pairs** | ⚪️ | 54 | Skipped |
 | **Tier 2: Learning & Communication** | ⚪️ | 48 | Skipped |
@@ -39,7 +49,6 @@
 | **Mistake 1: Using Imperfective for Results** | ⚪️ | 20 | Skipped |
 | **Mistake 2: Using Perfective for Ongoing Actions** | ⚪️ | 26 | Skipped |
 | **Mistake 3: Using Perfective for Habits** | ⚪️ | 18 | Skipped |
-| **Language Learning Tip** | ✅ | 183 | Included in Core |
-| **Summary** | ✅ | 162 | Included in Core |
-| **Need More Practice?** | ⚪️ | 30 | Skipped |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Language Learning Tip** | ✅ | 121 | Included in Core |
+| **Story Time Part 3: Вечір з Друзями** | ✅ | 98 | Included in Core |
+| **Summary** | ✅ | 34 | Included in Core |

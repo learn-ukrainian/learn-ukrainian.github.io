@@ -57,7 +57,7 @@ Verb: **Думати** (To think).
 | :--- | :--- | :--- |
 | **Думка** | Thought | Think-ka |
 | **Роздуми** | Reflections | Out-thoughts (Spreading thoughts) |
-| **Задум** | Plan | Concept | Behind-thought (Deep idea) |
+| **Задум** | Plan / Concept | Behind-thought (Deep idea) |
 | **Обдумати** | To think over | Round-think |
 | **Придумати** | To invent | Pri-think (To think up) |
 
@@ -313,4 +313,10 @@ Combine **Roots** with **Prefixes** and **Suffixes**.
 > Even a simple **дякую** (thank you) changes the tone.
 > Be polite, be heard!
 
-##
+# Summary
+
+У цьому модулі ви вивчили:
+- Основні поняття та правила
+- Практичне застосування
+- Вправи для закріплення
+

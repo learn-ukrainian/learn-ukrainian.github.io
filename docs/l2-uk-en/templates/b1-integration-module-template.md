@@ -310,7 +310,6 @@ immersion_target: 90-95%
 **select**: Multiple `- [x]` for correct options
 **translate**: Multi-choice with `- [x]` for correct + `> explanation`
 **mark-the-words**: `*marked*` words in blockquote
-**dialogue-reorder**: `- [N]` numbered lines
 
 See `b1-grammar-module-template.md` for full examples.
 
@@ -1030,7 +1029,6 @@ immersion_target: 90-95%
 8. unjumble: Новинні речення (8 items, 12-16 words)
 9. error-correction: Помилки в новинах (8 items)
 10. mark-the-words: Ключові слова (10 words)
-11. dialogue-reorder: Розмова про новини (6 turns)
 12. translate: Новинні фрази (8 items)
 
 ### Section 7: Словник (20 words)

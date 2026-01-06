@@ -2,15 +2,6 @@
 **Phase:** C1.1 | **Level:** C1 | **Pedagogy:** TTT | **Target:** 1750
 **Overall Status:** ✅ PASS
 
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (3 words): пояснювати, валідувати, підкріплювати...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## Recommendation
-**📝 UPDATE** (severity 10/100)
-
-- 1 pedagogical violations (minor)
-
 ## Gates
 - **Words:** ✅ 2040/1750
 - **Activities:** ✅ 16/16
@@ -19,7 +10,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/7
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 33/25
+- **Vocab:** ✅ 45/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
@@ -46,13 +37,6 @@
 | questions | 33 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **100.0%** |
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-### Errors
-- ❌ HTTP 404
 
 ## Section Audit
 | Section | Status | Count | Notes |

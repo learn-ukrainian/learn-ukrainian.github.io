@@ -124,29 +124,29 @@
 - type: match-up
   title: Shop Vocabulary
   pairs:
-  - left: '- магазин'
+  - left: 'магазин'
     right: shop
-  - left: '- ринок'
+  - left: 'ринок'
     right: market
-  - left: '- аптека'
+  - left: 'аптека'
     right: pharmacy
-  - left: '- банк'
+  - left: 'банк'
     right: bank
-  - left: '- пошта'
+  - left: 'пошта'
     right: post office
-  - left: '- готівка'
+  - left: 'готівка'
     right: cash
-  - left: '- картка'
+  - left: 'картка'
     right: card
-  - left: '- ціна'
+  - left: 'ціна'
     right: price
-  - left: '- знижка'
+  - left: 'знижка'
     right: discount
-  - left: '- черга'
+  - left: 'черга'
     right: queue
-  - left: '- каса'
+  - left: 'каса'
     right: checkout
-  - left: '- перукарня'
+  - left: 'перукарня'
     right: hairdresser's
 - type: cloze
   title: Shopping Sentences
@@ -480,6 +480,16 @@
     мені треба гроші, я йду в *банк*. У неділю я йду на *ринок* за овочами. Моя мама
     працює на *пошті*. Тато стрижеться в *перукарні*. Ми любимо ходити в *кіно* і
     *ресторан*. *Лікарня* теж недалеко.
+  answers:
+  - супермаркет
+  - аптека
+  - банк
+  - ринок
+  - пошті
+  - перукарні
+  - кіно
+  - ресторан
+  - Лікарня
 - type: select
   title: Shopping Choices
   items:

@@ -272,3 +272,45 @@ items:
     translation: sixth
     pos: adj
     gender: m
+  - lemma: п'ятниця
+    ipa: /pjɑtˈnɪt͡sʲɑ/
+    translation: Friday
+    pos: noun
+    gender: f
+  - lemma: тиждень
+    ipa: /ˈtɪʒdɛnʲ/
+    translation: week
+    pos: noun
+    gender: m
+  - lemma: понеділок
+    ipa: /pɔnɛˈdilɔk/
+    translation: Monday
+    pos: noun
+    gender: m
+  - lemma: вчасно
+    ipa: /ˈvt͡ʃɑsnɔ/
+    translation: on time
+    pos: adv
+  - lemma: сьогодні
+    ipa: /sʲɔˈɦɔdɲi/
+    translation: today
+    pos: adv
+  - lemma: вихідні
+    ipa: /vɪˈxidni/
+    translation: weekend
+    pos: noun
+    gender: pl
+  - lemma: котрій
+    ipa: /ˈkɔtrij/
+    translation: which (time)
+    pos: pron
+  - lemma: хвилина
+    ipa: /xvɪˈlɪnɑ/
+    translation: minute
+    pos: noun
+    gender: f
+  - lemma: година
+    ipa: /ɦɔˈdɪnɑ/
+    translation: hour
+    pos: noun
+    gender: f

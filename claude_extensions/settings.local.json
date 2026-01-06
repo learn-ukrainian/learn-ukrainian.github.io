@@ -329,7 +329,7 @@
       "Bash(do echo \"=== Pipeline Module $m ===\")",
       "Bash(do echo \"=== Module $m ===\" python3 /Users/krisztiankoos/projects/learn-ukrainian/scripts/audit_module.py /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/$m-*.md)",
       "Bash(do npm run validate:mdx l2-uk-en b1 $m)",
-      "Bash(do echo \"=== Module $m ===\" grep \"group-sort\\|dialogue-reorder\\|translate\" /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/$m-*.md)",
+      "Bash(do echo \"=== Module $m ===\" grep \"group-sort\\||translate\" /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/$m-*.md)",
       "Bash(do echo \"=== Pipeline Module $m ===\" npm run pipeline l2-uk-en b1 $m)",
       "Bash(do f=curriculum/l2-uk-en/a2/$i-*.md)",
       "Bash(then echo \"M$i:\")",

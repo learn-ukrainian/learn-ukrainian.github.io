@@ -124,29 +124,29 @@
 - type: match-up
   title: Hobby Vocabulary
   pairs:
-  - left: '- малювати'
+  - left: 'малювати'
     right: to draw/paint
-  - left: '- співати'
+  - left: 'співати'
     right: to sing
-  - left: '- танцювати'
+  - left: 'танцювати'
     right: to dance
-  - left: '- подорожувати'
+  - left: 'подорожувати'
     right: to travel
-  - left: '- збирати'
+  - left: 'збирати'
     right: to gather/collect
-  - left: '- грати'
+  - left: 'грати'
     right: to play
-  - left: '- читати'
+  - left: 'читати'
     right: to read
-  - left: '- відвідувати'
+  - left: 'відвідувати'
     right: to visit
-  - left: '- фотографувати'
+  - left: 'фотографувати'
     right: to photograph
-  - left: '- колекціонувати'
+  - left: 'колекціонувати'
     right: to collect (items)
-  - left: '- оглядати'
+  - left: 'оглядати'
     right: to inspect/sightsee
-  - left: '- писати'
+  - left: 'писати'
     right: to write
 - type: cloze
   title: My Hobbies
@@ -477,6 +477,16 @@
     любить *малювати*. Вона завжди купує фарби. Я люблю *театр*. Я часто купую *квитки*
     на вистави. Мій батько любить *риболовлю*. Це його *хобі*. Мама любить *співати*
     в хорі. У кожного свій *відпочинок*.
+  answers:
+  - подорожувати
+  - намет
+  - малювати
+  - театр
+  - квитки
+  - риболовлю
+  - хобі
+  - співати
+  - відпочинок
 - type: select
   title: Choose Correct Verb
   items:

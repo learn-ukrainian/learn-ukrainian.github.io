@@ -204,3 +204,7 @@ items:
     translation: Groot
     pos: propn
     gender: m
+  - lemma: ось
+    ipa: /ɔsʲ/
+    translation: here (is)
+    pos: other

@@ -1,0 +1,25 @@
+module: c1-37
+title: "Князь Святослав: Воїн на Троні"
+subtitle: "Prince Sviatoslav: Warrior on the Throne"
+version: "1.0"
+phase: "C1.3 Biographies"
+focus: biography
+pedagogy: "CBI"
+duration: 120
+transliteration: none
+immersion: 100
+tags:
+  - biography
+  - history
+  - warfare
+  - expansion
+grammar:
+  - "Military narrative register"
+  - "Archaic lexicon (дружина, каганат)"
+objectives:
+  - "Understand the military achievements of Sviatoslav I"
+  - "Analyze his 'I'm coming at you' philosophy of warfare"
+  - "Evaluate his impact on the geopolitical map of Eastern Europe"
+vocabulary_count: 25
+vital_status: deceased
+slug: 37-kniaz-sviatoslav

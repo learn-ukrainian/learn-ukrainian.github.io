@@ -3,9 +3,9 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: називний, чоловічий, жіночий, множина, рід
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: жіночий, чоловічий, множина, називний, рід
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): сім, шість, дев'ять, двадцять, нуль...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): нуль, вісім, десять, сім, двадцять...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

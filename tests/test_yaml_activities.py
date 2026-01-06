@@ -20,7 +20,6 @@ from yaml_activities import (
     ClozeActivity, ClozeBlank,
     ErrorCorrectionActivity, ErrorCorrectionItem,
     MarkTheWordsActivity,
-    DialogueReorderActivity, DialogueLine,
     SelectActivity, SelectItem,
     TranslateActivity, TranslateItem,
     ValidationResult,
@@ -90,13 +89,13 @@ class TestParsing:
         assert activities[0].title == "Перевірка розуміння"
 
     def test_parse_activity_types(self, parser, sample_yaml_path):
-        """All 12 activity types are recognized."""
+        """All 11 activity types are recognized."""
         activities = parser.parse(sample_yaml_path)
         types = [a.type for a in activities]
         expected = [
             'quiz', 'match-up', 'fill-in', 'true-false',
             'group-sort', 'unjumble', 'cloze', 'error-correction',
-            'mark-the-words', 'dialogue-reorder', 'select', 'translate'
+            'mark-the-words', 'select', 'translate'
         ]
         assert types == expected
 

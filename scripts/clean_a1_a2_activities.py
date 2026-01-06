@@ -27,7 +27,6 @@ ACTIVITY_TYPES = [
     'error-correction',
     'cloze',
     'mark-the-words',
-    'dialogue-reorder',
     'select',
     'translate',
 ]

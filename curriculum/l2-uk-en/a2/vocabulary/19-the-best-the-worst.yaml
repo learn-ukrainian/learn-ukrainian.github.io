@@ -188,6 +188,11 @@ items:
   translation: cave
   pos: noun
   gender: f
+- lemma: прикметник
+  ipa: prɪkˈmɛtnɪk
+  translation: adjective (grammar)
+  pos: noun
+  gender: m
 - lemma: рідкісний
   ipa: ˈrʲidkʲisnɪj
   translation: rare

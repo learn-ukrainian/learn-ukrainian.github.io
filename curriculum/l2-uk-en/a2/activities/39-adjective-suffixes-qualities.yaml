@@ -62,13 +62,17 @@
 
     (Залізо) [{залізна|залізська|залізненька|залізинна}:4] дорога — це важливий транспорт.
     (Школа) [{шкільний|шкільський|шкільненький|шкілинний}:5] автобус приїхав о восьмій
-    ранку. (Вечір) [{вечірня|вечірська|вечірненька|вечірина}:6] Оdesa виглядає просто
+    ранку. (Вечір) [{вечірня|вечірська|вечірненька|вечірина}:6] Одеса виглядає просто
     чарівно.
 
 
     (Море) [{морський|морний|морненький|моринний}:7] берег був піщаний і дуже теплий.
     (Україна) [{український|україний|україненький|українинний}:8] прапор має синій
-    та жовтий кольори.'
+    та жовтий кольори. (Ліс) [{лісовий|лісський|лісовенький|лісинний}:9] повітря
+    завжди свіже і чисте. Це (Львів) [{львівський|львівний|львівенький|львівинний}:10]
+    шоколад, він дуже смачний. Наша сім''я живе в (село) [{сільській|сільній|сільненькій|сілинній}:11]
+    місцевості. (Зима) [{зимовий|зимський|зимовенький|зиминний}:12] ранок був дуже
+    холодний.'
 - type: quiz
   title: 'The Adjective Architect (Concept: Morphological Nuance)'
   items:
@@ -382,9 +386,7 @@
 - type: translate
   title: Adjective Suffix Translation
   items:
-  - question: A very cute little dress
-    answer: Дуже гарненька сукня
-    options:
+  - options:
     - text: Дуже гарненька сукня
       correct: true
     - text: Дуже гарна сукня
@@ -393,9 +395,8 @@
       correct: false
     - text: Дуже гарненна сукня
       correct: false
-  - question: A huge mountain
-    answer: Величезна гора
-    options:
+    source: A very cute little dress
+  - options:
     - text: Величезна гора
       correct: true
     - text: Велика гора
@@ -404,9 +405,8 @@
       correct: false
     - text: Великенька гора
       correct: false
-  - question: Kyiv theater
-    answer: Київський театр
-    options:
+    source: A huge mountain
+  - options:
     - text: Київський театр
       correct: true
     - text: Київний театр
@@ -415,9 +415,8 @@
       correct: false
     - text: Київенький театр
       correct: false
-  - question: A terrible storm
-    answer: Страшенний шторм
-    options:
+    source: Kyiv theater
+  - options:
     - text: Страшенний шторм
       correct: true
     - text: Страшний шторм
@@ -426,9 +425,8 @@
       correct: false
     - text: Страшеський шторм
       correct: false
-  - question: School uniform
-    answer: Шкільна форма
-    options:
+    source: A terrible storm
+  - options:
     - text: Шкільна форма
       correct: true
     - text: Шкільська форма
@@ -437,9 +435,8 @@
       correct: false
     - text: Шкільненька форма
       correct: false
-  - question: A sweet little puppy
-    answer: Солодненький цуценя
-    options:
+    source: School uniform
+  - options:
     - text: Солодке цуценя
       correct: false
     - text: Солодненьке цуценя
@@ -448,9 +445,8 @@
       correct: false
     - text: Солоденне цуценя
       correct: false
-  - question: Sea air
-    answer: Морське повітря
-    options:
+    source: A sweet little puppy
+  - options:
     - text: Морське повітря
       correct: true
     - text: Морний повітря
@@ -459,9 +455,8 @@
       correct: false
     - text: Морененське повітря
       correct: false
-  - question: An ancient oak tree
-    answer: Старезний дуб
-    options:
+    source: Sea air
+  - options:
     - text: Старезний дуб
       correct: true
     - text: Старий дуб
@@ -470,9 +465,8 @@
       correct: false
     - text: Стариський дуб
       correct: false
-  - question: A tiny white flower
-    answer: Біленька квіточка
-    options:
+    source: An ancient oak tree
+  - options:
     - text: Біленька квіточка
       correct: true
     - text: Біла квіточка
@@ -481,9 +475,8 @@
       correct: false
     - text: Більська квіточка
       correct: false
-  - question: Evening Lviv
-    answer: Вечірній Львів
-    options:
+    source: A tiny white flower
+  - options:
     - text: Вечірній Львів
       correct: true
     - text: Вечірній Львов
@@ -492,9 +485,8 @@
       correct: false
     - text: Вечірненький Львів
       correct: false
-  - question: A very strong athlete
-    answer: Здоровенний спортсмен
-    options:
+    source: Evening Lviv
+  - options:
     - text: Здоровенний спортсмен
       correct: true
     - text: Здоровий спортсмен
@@ -503,9 +495,8 @@
       correct: false
     - text: Здоровський спортсмен
       correct: false
-  - question: Student life
-    answer: Студентське життя
-    options:
+    source: A very strong athlete
+  - options:
     - text: Студентське життя
       correct: true
     - text: Студентний життя
@@ -514,3 +505,4 @@
       correct: false
     - text: Студентеньке життя
       correct: false
+    source: Student life

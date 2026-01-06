@@ -237,29 +237,29 @@
 - type: match-up
   title: Definitions
   pairs:
-  - left: '- Столиця'
+  - left: Столиця
     right: Capital city
-  - left: '- Мрія'
+  - left: Мрія
     right: Dream
-  - left: '- Майбутнє'
+  - left: Майбутнє
     right: Future
-  - left: '- Свобода'
+  - left: Свобода
     right: Freedom
-  - left: '- Відрядження'
+  - left: Відрядження
     right: Business trip
-  - left: '- Весілля'
+  - left: Весілля
     right: Wedding
-  - left: '- Рідне місто'
+  - left: Рідне місто
     right: Native city
-  - left: '- Південь'
+  - left: Південь
     right: South
-  - left: '- Захід'
+  - left: Захід
     right: West
-  - left: '- Берег'
+  - left: Берег
     right: Bank/Shore
-  - left: '- Пам''ятати'
+  - left: Пам'ятати
     right: To remember
-  - left: '- Розуміти'
+  - left: Розуміти
     right: To understand
 - type: unjumble
   title: Final Sentences
@@ -393,6 +393,22 @@
   text: '*Україна* — це *країна*. *Київ* — це *столиця*. *Дніпро* — це *річка*. *Люди*
     люблять *свободу*. *Студент* читає *книгу*. *Лікар* лікує хворих. *Мама* готує
     *обід*. *Сонце* світить. *Дощ* іде.'
+  answers:
+  - Україна
+  - країна
+  - Київ
+  - столиця
+  - Дніпро
+  - річка
+  - Люди
+  - свободу
+  - Студент
+  - книгу
+  - Лікар
+  - Мама
+  - обід
+  - Сонце
+  - Дощ
 - type: select
   title: Fluency Test
   items:
@@ -515,4 +531,55 @@
     - text: Я не знаю.
       correct: false
     - text: Можливо пізніше.
+      correct: false
+- type: translate
+  title: Final Translation Challenge
+  items:
+  - source: I gave him the book.
+    options:
+    - text: Я дав йому книгу.
+      correct: true
+    - text: Я давав йому книгу.
+      correct: false
+    - text: Я дам йому книгу.
+      correct: false
+  - source: If I were you...
+    options:
+    - text: Якби я був на твоєму місці...
+      correct: true
+    - text: Якщо я ти...
+      correct: false
+    - text: Коли я був ти...
+      correct: false
+  - source: The best option
+    options:
+    - text: Найкращий варіант
+      correct: true
+    - text: Кращий варіант
+      correct: false
+    - text: Добрий варіант
+      correct: false
+  - source: He entered the room.
+    options:
+    - text: Він увійшов у кімнату.
+      correct: true
+    - text: Він вийшов у кімнату.
+      correct: false
+    - text: Він пішов у кімнату.
+      correct: false
+  - source: I was reading all day.
+    options:
+    - text: Я читав увесь день.
+      correct: true
+    - text: Я прочитав увесь день.
+      correct: false
+    - text: Я читаю увесь день.
+      correct: false
+  - source: She said that...
+    options:
+    - text: Вона сказала, що...
+      correct: true
+    - text: Вона каже, що...
+      correct: false
+    - text: Вона сказати, що...
       correct: false

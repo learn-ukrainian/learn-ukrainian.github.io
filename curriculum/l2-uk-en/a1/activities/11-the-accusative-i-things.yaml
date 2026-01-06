@@ -48,7 +48,7 @@
     - text: вікном
       correct: false
     explanation: Neuter stays the same
-  - question: 'Complete: "Я читаю ___"'
+  - question: 'Complete the sentence: "Я читаю ___"'
     options:
     - text: газета
       correct: false

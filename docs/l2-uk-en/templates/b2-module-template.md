@@ -30,7 +30,6 @@ Before submitting a B2 module, verify:
   - Error-correction: 8+ items with all 4 callouts
   - Translate: 8+ items (if used)
   - Mark-the-words: 300+ word passage
-  - Dialogue-reorder: 10+ dialogue lines
 
 ### Immersion & Quality
 - [ ] **Immersion:** 100% Ukrainian (English ONLY in vocabulary translations)
@@ -239,7 +238,6 @@ register: "науковий"  # Options: офіційно-діловий, нау
 
 #### B2-Specific Activities
 7. **mark-the-words** (300+ word passage, mark target grammar/vocabulary)
-8. **dialogue-reorder** (10+ dialogue lines)
 9. **translate** (8+ items, Ukrainian ↔ English)
 10. **select** (multi-checkbox, 10+ items)
 
@@ -266,7 +264,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 | **select** | Multiple `- [x]` for all correct options |
 | **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
 | **mark-the-words** | `*marked*` words in blockquote passage |
-| **dialogue-reorder** | `- [N]` numbered lines (N = correct order) |
+
 
 ---
 

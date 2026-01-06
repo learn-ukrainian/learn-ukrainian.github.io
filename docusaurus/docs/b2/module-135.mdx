@@ -16,7 +16,7 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
+
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
@@ -550,14 +550,6 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
     correctWords={JSON.parse(`["живопис", "Поезія", "символом", "Композитор", "оперу", "галереї", "виставка", "Драма", "образів", "шедевр", "мистецтва"]`)}
   />
 </MarkTheWords>
-
-### Поставте репліки у правильному порядку
-
-<DialogueReorder
-  title="Поставте репліки у правильному порядку"
-  isUkrainian={false}
-  lines={JSON.parse(`[{"text": "Добрий день! Скажіть, будь ласка, де виставка імпресіоністів?", "order": 1, "speaker": "Відвідувач"}, {"text": "Добрий день! Виставка на другому поверсі, зал 12.", "order": 2, "speaker": "Працівник"}, {"text": "Дякую. А є аудіогід українською?", "order": 3, "speaker": "Відвідувач"}, {"text": "Так, є. Можете завантажити додаток або взяти пристрій.", "order": 4, "speaker": "Працівник"}, {"text": "Чудово, візьму пристрій. Скільки це коштує?", "order": 5, "speaker": "Відвідувач"}, {"text": "80 гривень плюс заставка за пристрій.", "order": 6, "speaker": "Працівник"}, {"text": "Добре. А до котрої години працює музей?", "order": 7, "speaker": "Відвідувач"}, {"text": "Сьогодні до 18:00. Останній вхід о 17:00.", "order": 8, "speaker": "Працівник"}, {"text": "А чи є екскурсії сьогодні?", "order": 9, "speaker": "Відвідувач"}, {"text": "Так, наступна екскурсія о 15:00.", "order": 10, "speaker": "Працівник"}, {"text": "Чи можна фотографувати?", "order": 11, "speaker": "Відвідувач"}, {"text": "Так, без спалаху. Відео заборонено.", "order": 12, "speaker": "Працівник"}, {"text": "Зрозуміло. А де гардероб?", "order": 13, "speaker": "Відвідувач"}, {"text": "Ліворуч від входу. Там можна залишити речі.", "order": 14, "speaker": "Працівник"}, {"text": "Дякую за допомогу!", "order": 15, "speaker": "Відвідувач"}, {"text": "Будь ласка! Гарного перегляду!", "order": 16, "speaker": "Працівник"}]`)}
-/>
 
 ### Оберіть українські культурні явища
 

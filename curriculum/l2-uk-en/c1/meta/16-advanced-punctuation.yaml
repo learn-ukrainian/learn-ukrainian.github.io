@@ -1,17 +1,26 @@
-module: c1-16
-title: Advanced Punctuation
-subtitle: Academic Foundation
-version: '2.0'
-phase: C1.1 Academic
+module: 16
+title: "Поглиблена Пунктуація"
+subtitle: "Advanced Punctuation"
+version: "1.0"
+phase: "C1.1 Academic Writing"
 focus: grammar
-pedagogy: academic
+pedagogy: immersion
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- grammar
-- punctuation
-- writing
+  - academic
+  - grammar
+  - punctuation
+  - syntax
+grammar:
+  - "Complex punctuation rules in Ukrainian"
+  - "Comma in complex sentences"
+  - "Dash for emphasis and structure"
+  - "Colon and semicolon usage"
 objectives:
-- Master C1 concepts in Advanced Punctuation
+  - "Master complex punctuation rules for academic writing"
+  - "Correctly use commas in various types of subordinate clauses"
+  - "Understand the stylistic function of the dash in Ukrainian"
+  - "Properly format lists and complex enumerations using colons and semicolons"
+vocabulary_count: 20
 slug: 16-advanced-punctuation
