@@ -9,6 +9,13 @@ import os
 import re
 import sys
 import yaml
+from pathlib import Path
+
+# Add project root to path for shared module imports
+SCRIPT_DIR = Path(__file__).parent.parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.append(str(SCRIPT_DIR))
+from yaml_activities import ActivityParser, Activity
 
 from .config import (
     LEVEL_CONFIG,
@@ -108,115 +115,6 @@ def parse_frontmatter(content: str) -> tuple[str, str]:
     if not match:
         return "", content
     return match.group(1), match.group(2)
-
-
-def load_yaml_activities(md_file_path: str) -> list[dict] | None:
-    """
-    Load activities from YAML file if it exists.
-
-    Checks two locations (new structure first, then legacy):
-    1. {level}/activities/{module}.yaml (new structure)
-    2. {level}/{module}.activities.yaml (legacy)
-
-    Args:
-        md_file_path: Path to the markdown file
-
-    Returns:
-        List of activity dicts if YAML file exists and is valid, None otherwise
-    """
-    from pathlib import Path
-
-    md_path = Path(md_file_path)
-
-    # New structure: activities/{module}.yaml
-    yaml_path = md_path.parent / 'activities' / (md_path.stem + '.yaml')
-
-    # Fallback to legacy: {module}.activities.yaml
-    if not yaml_path.exists():
-        yaml_path = md_path.parent / (md_path.stem + '.activities.yaml')
-
-    if not yaml_path.exists():
-        return None
-
-    try:
-        with open(yaml_path, 'r', encoding='utf-8') as f:
-            data = yaml.safe_load(f)
-        # Support both formats:
-        # 1. Root list: [{ type: quiz, ... }, ...]
-        # 2. Dict with 'activities' key: { activities: [{ type: quiz, ... }, ...] }
-        if isinstance(data, list):
-            return data
-        elif isinstance(data, dict) and 'activities' in data:
-            activities = data['activities']
-            if isinstance(activities, list):
-                return activities
-        return None
-    except (yaml.YAMLError, IOError) as e:
-        print(f"  ⚠️ Error loading YAML activities: {e}")
-        return None
-
-
-def count_yaml_activity_items(activity: dict) -> int:
-    """Count items in a YAML activity based on its type."""
-    act_type = activity.get('type', '').lower()
-
-    if act_type in ('quiz', 'fill-in', 'true-false', 'unjumble', 'error-correction', 'select', 'translate', 'anagram'):
-        return len(activity.get('items', []))
-    elif act_type == 'match-up':
-        # Support both 'pairs' (preferred) and 'items' with left/right keys
-        pairs = activity.get('pairs', [])
-        if pairs:
-            return len(pairs)
-        items = activity.get('items', [])
-        if items and isinstance(items[0], dict) and 'left' in items[0]:
-            return len(items)
-        return 0
-    elif act_type == 'group-sort':
-        total = 0
-        for group in activity.get('groups', []):
-            total += len(group.get('items', []))
-        return total
-    elif act_type == 'cloze':
-        # Support two formats:
-        # 1. Inline format in passage: {word|opt1|opt2|opt3}
-        # 2. Separate blanks array with id, answer, options
-        blanks = activity.get('blanks', [])
-        if blanks:
-            return len(blanks)
-        # Fallback to inline format
-        passage = activity.get('passage', '')
-        return len(re.findall(r'\{[^}]+\}', passage))
-    elif act_type == 'mark-the-words':
-        # Count marked words: *word* or [word]
-        text = activity.get('text', '')
-        asterisk_marks = len(re.findall(r'\*[^*]+\*', text))
-        bracket_marks = len(re.findall(r'\[[^\]]+\]', text))
-        return asterisk_marks + bracket_marks
-    elif act_type == 'dialogue-reorder':
-        return len(activity.get('lines', []))
-    elif act_type in ('essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'):
-        # For essay/analysis tasks, count prompts or items
-        # If 'items' exists, count it. If 'prompts' or 'prompt' exists, count it.
-        # If neither, return 1 if instructions exist (assumed single task)
-        items = activity.get('items', [])
-        prompts = activity.get('prompts', [])
-        prompt = activity.get('prompt', '')
-        questions = activity.get('questions', [])
-        model_answers = activity.get('model_answers', [])
-        
-        if items:
-            return len(items)
-        if prompts:
-            return len(prompts)
-        if questions:
-            return len(questions)
-        if model_answers:
-            return len(model_answers)
-        if prompt:
-            return 1
-        return 1 if activity.get('instructions') or activity.get('instruction') else 0
-
-    return 0
 
 
 def validate_required_metadata(frontmatter_str: str) -> list[str]:
@@ -783,8 +681,20 @@ def audit_module(file_path: str) -> bool:
 
     print(f"\nAuditing {file_path} (Target: {target})...\n")
 
-    # Check for YAML activities file
-    yaml_activities = load_yaml_activities(file_path)
+    # Check for YAML activities file using shared parser (Issue #394)
+    yaml_activities = None
+    # Check both new and legacy paths
+    yaml_file = Path(file_path).parent / 'activities' / (Path(file_path).stem + '.yaml')
+    if not yaml_file.exists():
+        yaml_file = Path(file_path).with_suffix('.activities.yaml')
+        
+    if yaml_file.exists():
+        parser = ActivityParser()
+        try:
+            yaml_activities = parser.parse(yaml_file)
+        except Exception as e:
+            print(f"  ❌ Error parsing YAML activities: {e}")
+            
     use_yaml_activities = yaml_activities is not None
 
     # Check mark-the-words format (Issue #361: prevent (correct)/(wrong) annotations)
@@ -894,13 +804,14 @@ def audit_module(file_path: str) -> bool:
         print(f"  📋 Found YAML activities file ({len(yaml_activities)} activities)")
         # Process YAML activities
         for activity in yaml_activities:
-            act_type = activity.get('type', '').lower()
+            act_type = activity.type.lower()
             if act_type in VALID_ACTIVITY_TYPES or act_type.replace('-', '') in [t.replace('-', '') for t in VALID_ACTIVITY_TYPES]:
                 activity_count += 1
                 total_activities += 1
                 found_activity_types.append(act_type)
 
-                items = count_yaml_activity_items(activity)
+                # Use shared count_items (Issue #394)
+                items = count_items('', activity)
                 density_target = config['min_items_per_activity']
                 if act_type in ACTIVITY_COMPLEXITY:
                     complexity_rules = ACTIVITY_COMPLEXITY[act_type].get(level_code, {})
@@ -911,13 +822,13 @@ def audit_module(file_path: str) -> bool:
                     valid_density_count += 1
                 else:
                     low_density_activities.append({
-                        'title': activity.get('title', act_type),
+                        'title': getattr(activity, 'title', act_type),
                         'type': act_type,
                         'items': items,
                         'target': density_target
                     })
 
-                print(f"  > {activity.get('title', act_type)}: {items} items (min {density_target})")
+                print(f"  > {getattr(activity, 'title', act_type)}: {items} items (min {density_target})")
 
     for title, text in section_map.items():
         title_lower = title.lower()
@@ -1072,7 +983,7 @@ def audit_module(file_path: str) -> bool:
 
     # Run pedagogical checks
     pedagogical_violations = run_pedagogical_checks(
-        content, core_content, level_code, module_num, pedagogy
+        content, core_content, level_code, module_num, pedagogy, yaml_activities
     )
 
     # Run vocabulary plan compliance checks

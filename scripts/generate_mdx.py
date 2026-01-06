@@ -198,344 +198,6 @@ def yaml_activities_to_jsx(activities: list[Activity], is_ukrainian_forced: bool
     parser = ActivityParser()
     return parser.to_mdx(activities, is_ukrainian_forced)
 
-def _yaml_fill_in_to_jsx(activity: dict, title: str, is_ukrainian_forced: bool = False) -> str:
-    """Convert YAML fill-in to JSX."""
-    instruction = activity.get('instruction', '')
-    instruction_prop = f'\n  instruction="{escape_jsx(instruction)}"' if instruction else ''
-
-    items = activity.get('items', [])
-    items_json = [
-        {
-            # Accept both 'sentence' and 'prompt' field names
-            "sentence": escape_jsx(item.get('sentence') or item.get('prompt', '')),
-            "answer": escape_jsx(item.get('answer', '')),
-            "options": [escape_jsx(opt) for opt in item.get('options', [])]
-        }
-        for item in items
-    ]
-
-    return f'''### {escape_jsx(title)}
-
-<FillIn
-  title="{escape_jsx(title)}"
-  isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop}
-  items={{JSON.parse(`{dump_json_for_jsx(items_json)}`)}}
-/>'''
-
-def _yaml_true_false_to_jsx(activity: dict, title: str, is_ukrainian_forced: bool = False) -> str:
-    """Convert YAML true-false to JSX."""
-    instruction = activity.get('instruction', '')
-    instruction_prop = f'\n  instruction="{escape_jsx(instruction)}"' if instruction else ''
-
-    items = activity.get('items', [])
-    # Note: Don't use escape_jsx() here - dump_json_for_jsx() handles escaping via json.dumps()
-    items_json = [
-        {
-            "statement": item.get('statement', ''),
-            "isTrue": item.get('correct', False),
-            "explanation": item.get('explanation', '')
-        }
-        for item in items
-    ]
-
-    return f'''### {escape_jsx(title)}
-
-<TrueFalse
-  title="{escape_jsx(title)}"
-  isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop}
-  items={{JSON.parse(`{dump_json_for_jsx(items_json)}`)}}
-/>'''
-
-def _yaml_group_sort_to_jsx(activity: dict, title: str, is_ukrainian_forced: bool = False) -> str:
-    """Convert YAML group-sort to JSX."""
-    instruction = activity.get('instruction', '')
-    instruction_prop = f'\n  instruction="{escape_jsx(instruction)}"' if instruction else ''
-
-    groups = activity.get('groups', [])
-    groups_dict = {}
-    for group in groups:
-        name = group.get('name', '')
-        items = [escape_jsx(item) for item in group.get('items', [])]
-        groups_dict[name] = items
-
-    return f'''### {escape_jsx(title)}
-
-<GroupSort
-  title="{escape_jsx(title)}"
-  isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop}
-  groups={{JSON.parse(`{dump_json_for_jsx(groups_dict)}`)}}
-/>'''
-
-def _yaml_unjumble_to_jsx(activity: dict, title: str, is_ukrainian_forced: bool = False) -> str:
-    """Convert YAML unjumble to JSX."""
-    instruction = activity.get('instruction', '')
-    instruction_prop = f'\n  instruction="{escape_jsx(instruction)}"' if instruction else ''
-
-    items = activity.get('items', [])
-    items_json = []
-
-    for item in items:
-        # Handle FOUR YAML formats:
-        # - words: [array] for unjumble (reorder words into sentence)
-        # - jumbled: "word1 / word2 / word3" for unjumble (standard format)
-        # - prompt: "word1 / word2 / word3" for unjumble (legacy format)
-        # - scrambled: "string" for anagram (unscramble letters)
-        if 'words' in item:
-            jumbled = ' / '.join(item['words'])
-        elif 'jumbled' in item:
-            jumbled = item['jumbled']  # Already formatted with " / " separators
-        elif 'prompt' in item:
-            jumbled = item['prompt']  # Already formatted with " / " separators
-        elif 'scrambled' in item:
-            jumbled = item['scrambled']
-        else:
-            jumbled = ''
-
-        items_json.append({
-            "jumbled": escape_jsx(jumbled),
-            "answer": escape_jsx(item.get('answer', ''))
-        })
-
-    return f'''### {escape_jsx(title)}
-
-<Unjumble
-  title="{escape_jsx(title)}"
-  isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop}
-  items={{JSON.parse(`{dump_json_for_jsx(items_json)}`)}}
-/>'''
-
-def _yaml_cloze_to_jsx(activity: dict, title: str, is_ukrainian_forced: bool = False) -> str:
-    """Convert YAML cloze to JSX."""
-    instruction = activity.get('instruction', '')
-    instruction_prop = f'\n  instruction="{escape_jsx(instruction)}"' if instruction else ''
-
-    passage = activity.get('passage', '')
-
-    # Parse blanks from passage: {answer|opt1|opt2|opt3}
-    blanks = []
-    blank_pattern = r'\{([^}]+)\}'
-    blank_counter = [0]  # Mutable counter for closure
-
-    def replace_blank(match):
-        blank_counter[0] += 1
-        # Split options and clean them
-        raw_parts = match.group(1).split('|')
-        
-        # Clean parts (strip arrows and whitespace)
-        parts = []
-        for p in raw_parts:
-            # If part contains arrow '→', take everything AFTER the arrow if it exists,
-            # or just take the whole thing if it's the arrow format 'correct -> correct'
-            if '→' in p:
-                p_parts = p.split('→')
-                # If it's 'ans -> ans', taking p_parts[-1] gives 'ans'
-                p = p_parts[-1].strip()
-            else:
-                p = p.strip()
-            parts.append(p)
-            
-        answer = parts[0] if parts else ''
-        options = parts[1:] if len(parts) > 1 else [answer]
-        
-        # Ensure answer is in options
-        if answer not in options:
-            options.insert(0, answer)
-        
-        blanks.append({
-            "index": blank_counter[0] - 1,  # 0-based index for React component
-            "answer": escape_jsx(answer),
-            "options": [escape_jsx(opt) for opt in options]
-        })
-        return f'[___:{blank_counter[0]}]'
-
-    clean_passage = re.sub(blank_pattern, replace_blank, passage)
-
-    # Use template literal for passage to properly handle newlines and special characters
-    return f'''### {escape_jsx(title)}
-
-<Cloze
-  title="{escape_jsx(title)}"
-  isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop}
-  passage={{`{escape_jsx(clean_passage)}`}}
-  blanks={{JSON.parse(`{dump_json_for_jsx(blanks)}`)}}
-/>'''
-
-def _yaml_error_correction_to_jsx(activity: dict, title: str, is_ukrainian_forced: bool = False) -> str:
-    """Convert YAML error-correction to JSX."""
-    instruction = activity.get('instruction', '')
-    instruction_prop = f' instruction="{escape_jsx(instruction)}"' if instruction else ''
-
-    items = activity.get('items', [])
-    jsx_items = []
-
-    for item in items:
-        options_jsx = ', '.join([f'`{escape_jsx(opt)}`' for opt in item.get('options', [])])
-        jsx_items.append(f'''  <ErrorCorrectionItem
-    sentence={{`{escape_jsx(item.get('sentence', ''))}`}}
-    errorWord={{`{escape_jsx(item.get('error', ''))}`}}
-    correctForm={{`{escape_jsx(item.get('answer', ''))}`}}
-    options={{[{options_jsx}]}}
-    explanation={{`{escape_jsx(item.get('explanation', ''))}`}}
-  />''')
-
-    return f'''### {escape_jsx(title)}
-
-<ErrorCorrection title="{escape_jsx(title)}" isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop}>
-{chr(10).join(jsx_items)}
-</ErrorCorrection>'''
-
-def _yaml_select_to_jsx(activity: dict, title: str, is_ukrainian_forced: bool = False) -> str:
-    """Convert YAML select to JSX."""
-    instruction = activity.get('instruction', '')
-    instruction_prop = f'\n  instruction="{escape_jsx(instruction)}"' if instruction else ''
-
-    items = activity.get('items', [])
-    questions_json = []
-    for item in items:
-        # Handle simple string options
-        raw_options = item.get('options', [])
-        options_list = []
-        answer = item.get('answer', '')
-        
-        for opt in raw_options:
-            if isinstance(opt, str):
-                # If option is a string, check if it matches the answer
-                is_correct = (opt.strip() == answer.strip())
-                options_list.append({"text": opt, "correct": is_correct})
-            elif isinstance(opt, dict):
-                # If option is a dict {text, correct}
-                options_list.append({
-                    "text": opt.get('text', ''),
-                    "correct": opt.get('correct', False)
-                })
-
-        q = {
-            # Accept both 'question' and 'prompt' field names
-            "question": escape_jsx(item.get('question') or item.get('prompt', '')),
-            "options": [
-                {"text": escape_jsx(o["text"]), "correct": o["correct"]}
-                for o in options_list
-            ]
-        }
-        questions_json.append(q)
-
-    return f'''### {escape_jsx(title)}
-
-<Select
-  title="{escape_jsx(title)}"
-  isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop}
-  questions={{JSON.parse(`{dump_json_for_jsx(questions_json)}`)}}
-/>'''
-
-def _yaml_translate_to_jsx(activity: dict, title: str, is_ukrainian_forced: bool = False) -> str:
-    """Convert YAML translate to JSX."""
-    instruction = activity.get('instruction', '')
-    instruction_prop = f'\n  instruction="{escape_jsx(instruction)}"' if instruction else ''
-
-    items = activity.get('items', [])
-    questions_json = []
-    # Note: Don't use escape_jsx() here - dump_json_for_jsx() handles escaping via json.dumps()
-    for item in items:
-        # Support both 'source' and 'english' field names (YAML uses 'english')
-        source = item.get('source', '') or item.get('english', '')
-        q = {
-            "source": source,
-            "options": [
-                {"text": opt.get('text', ''), "correct": opt.get('correct', False)}
-                for opt in item.get('options', [])
-            ]
-        }
-        questions_json.append(q)
-
-    return f'''### {escape_jsx(title)}
-
-<Translate
-  title="{escape_jsx(title)}"
-  isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop}
-  questions={{JSON.parse(`{dump_json_for_jsx(questions_json)}`)}}
-/>'''
-
-def _yaml_mark_the_words_to_jsx(activity: dict, title: str, is_ukrainian_forced: bool = False) -> str:
-    """Convert YAML mark-the-words to JSX."""
-    text = activity.get('text', '')
-    answers = activity.get('answers', [])
-    
-    default_instruction = 'Позначте правильні слова.' if is_ukrainian_forced else 'Mark the correct words.'
-    instruction = activity.get('instruction', default_instruction)
-
-    # Check if this uses morpheme patterns (*morpheme*word)
-    if has_morpheme_patterns(text) and not answers:
-        # Parse as morpheme highlighting
-        item = parse_highlight_morphemes(text)
-        # Only override instruction if explicitly provided in YAML
-        if 'instruction' in activity:
-            item.instruction = activity['instruction']
-        return highlight_morphemes_to_jsx(item, title)
-    else:
-        # If 'answers' array is provided, use it and treat text as clean
-        if answers:
-            correct_words = answers
-            clean_text = text
-        else:
-            # Legacy format: full word matching with *word*
-            # Extract correct words (marked with *word*)
-            correct_words = re.findall(r'\*([^*]+)\*', text)
-            clean_text = re.sub(r'\*([^*]+)\*', r'\1', text)
-
-        # Use template literals for text to properly handle special characters like ! and ?
-        return f'''### {escape_jsx(title)}
-
-<MarkTheWords isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}>
-  <MarkTheWordsActivity
-    instruction={{`{escape_jsx(instruction)}`}}
-    text={{`{escape_jsx(clean_text)}`}}
-    correctWords={{JSON.parse(`{dump_json_for_jsx(correct_words)}`)}}
-  />
-</MarkTheWords>'''
-
-def _yaml_anagram_to_jsx(activity: dict, title: str, is_ukrainian_forced: bool = False) -> str:
-    """Convert YAML anagram to JSX."""
-    instruction = activity.get('instruction', '')
-    instruction_prop = f'\n  instruction="{escape_jsx(instruction)}"' if instruction else ''
-
-    items = activity.get('items', [])
-    items_json = [
-        {
-            "scrambled": escape_jsx(item.get('scrambled', '')),
-            "answer": escape_jsx(item.get('answer', '')),
-            "hint": escape_jsx(item.get('hint', ''))
-        }
-        for item in items
-    ]
-
-    return f'''### {escape_jsx(title)}
-
-<Anagram
-  title="{escape_jsx(title)}"
-  isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop}
-  items={{JSON.parse(`{dump_json_for_jsx(items_json)}`)}}
-/>'''
-
-def extract_instruction(content: str) -> tuple[str, str]:
-    """Extract instruction blockquote from activity content."""
-    lines = content.split('\n')
-    instruction_lines = []
-    content_start = 0
-
-    for i, line in enumerate(lines):
-        stripped = line.strip()
-        if stripped.startswith('>') and not stripped.startswith('> [!'):
-            instruction_lines.append(stripped[1:].strip())
-            content_start = i + 1
-        elif stripped == '':
-            content_start = i + 1
-        else:
-            break
-
-    instruction = ' '.join(instruction_lines).strip()
-    remaining = '\n'.join(lines[content_start:])
-    return instruction, remaining
-
 # =============================================================================
 # ACTIVITY PARSERS
 # =============================================================================
@@ -936,233 +598,6 @@ def parse_translate(content: str) -> list[TranslateQuestion]:
 # JSX GENERATORS
 # =============================================================================
 
-def quiz_to_jsx(questions: list[QuizQuestion], title: str, is_ukrainian_forced: bool = False, instruction: str = '') -> str:
-    """Convert quiz questions to JSX Quiz component."""
-    if not questions:
-        return ''
-
-    instruction_prop = f' instruction="{escape_jsx(instruction)}"' if instruction else ''
-    items = []
-    for q in questions:
-        opts = ',\n      '.join([
-            f'{{ text: `{escape_jsx(o["text"])}`, correct: {"true" if o["correct"] else "false"} }}'
-            for o in q.options
-        ])
-        items.append(f'''  {{
-    question: `{escape_jsx(q.question)}`,
-    options: [
-      {opts}
-    ]
-  }}''')
-
-    return f'''### {title}
-
-<Quiz isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop} questions={{[
-{",".join(items)}
-]}} />'''
-
-def match_up_to_jsx(pairs: list[MatchPair], title: str, is_ukrainian_forced: bool = False, instruction: str = '') -> str:
-    """Convert match pairs to JSX MatchUp component."""
-    if not pairs:
-        return ''
-
-    instruction_prop = f' instruction="{escape_jsx(instruction)}"' if instruction else ''
-    items = ',\n  '.join([
-        f'{{ left: `{escape_jsx(p.left)}`, right: `{escape_jsx(p.right)}` }}'
-        for p in pairs
-    ])
-
-    return f'''### {title}
-
-<MatchUp isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop} pairs={{[
-  {items}
-]}} />'''
-
-def fill_in_to_jsx(items: list[FillInItem], title: str, is_ukrainian_forced: bool = False, instruction: str = '') -> str:
-    """Convert fill-in items to JSX FillIn component."""
-    if not items:
-        return ''
-
-    instruction_prop = f' instruction="{escape_jsx(instruction)}"' if instruction else ''
-    jsx_items = []
-    for item in items:
-        opts = ', '.join([f'`{escape_jsx(o)}`' for o in item.options])
-        jsx_items.append(f'''  {{
-    sentence: `{escape_jsx(item.sentence)}`,
-    answer: `{escape_jsx(item.answer)}`,
-    options: [{opts}]
-  }}''')
-
-    return f'''### {title}
-
-<FillIn isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop} items={{[
-{",".join(jsx_items)}
-]}} />'''
-
-def true_false_to_jsx(items: list[TrueFalseItem], title: str, is_ukrainian_forced: bool = False, instruction: str = '') -> str:
-    """Convert true-false items to JSX TrueFalse component."""
-    if not items:
-        return ''
-
-    instruction_prop = f' instruction="{escape_jsx(instruction)}"' if instruction else ''
-    jsx_items = []
-    for item in items:
-        jsx_items.append(f'''  {{
-    statement: `{escape_jsx(item.statement)}`,
-    isTrue: {"true" if item.is_true else "false"},
-    explanation: `{escape_jsx(item.explanation)}`
-  }}''')
-
-    return f'''### {title}
-
-<TrueFalse isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop} items={{[
-{",".join(jsx_items)}
-]}} />'''
-
-def unjumble_to_jsx(items: list[UnjumbleItem], title: str, is_ukrainian_forced: bool = False, instruction: str = '') -> str:
-    """Convert unjumble items to JSX Unjumble component."""
-    if not items:
-        return ''
-
-    instruction_prop = f' instruction="{escape_jsx(instruction)}"' if instruction else ''
-    jsx_items = ',\n  '.join([
-        f'{{ jumbled: `{escape_jsx(item.jumbled)}`, answer: `{escape_jsx(item.answer)}` }}'
-        for item in items
-    ])
-
-    return f'''### {title}
-
-<Unjumble isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop} items={{[
-  {jsx_items}
-]}} />'''
-
-def group_sort_to_jsx(data: GroupSortData, title: str, is_ukrainian_forced: bool = False, instruction: str = '') -> str:
-    """Convert group-sort data to JSX GroupSort component."""
-    if not data.groups:
-        return ''
-
-    instruction_prop = f' instruction="{escape_jsx(instruction)}"' if instruction else ''
-    groups_jsx = []
-    for group_name, items in data.groups.items():
-        items_str = ', '.join([f'"{escape_jsx(i)}"' for i in items])
-        groups_jsx.append(f'  "{escape_jsx(group_name)}": [{items_str}]')
-
-    groups_str = ",\n".join(groups_jsx)
-    return f'''### {title}
-
-<GroupSort isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop} groups={{{{
-{groups_str}
-}}}} />'''
-
-def anagram_to_jsx(items: list[AnagramItem], title: str, is_ukrainian_forced: bool = False, instruction: str = '') -> str:
-    """Convert anagram items to JSX Anagram component."""
-    if not items:
-        return ''
-
-    instruction_prop = f' instruction="{escape_jsx(instruction)}"' if instruction else ''
-    jsx_items = ',\n  '.join([
-        f'{{ scrambled: `{escape_jsx(item.scrambled)}`, answer: `{escape_jsx(item.answer)}`, hint: `{escape_jsx(item.hint)}` }}'
-        for item in items
-    ])
-
-    return f'''### {title}
-
-<Anagram isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop} items={{[
-  {jsx_items}
-]}} />'''
-
-def error_correction_to_jsx(items: list[ErrorCorrectionItem], title: str, is_ukrainian_forced: bool = False, instruction: str = '') -> str:
-    """Convert error-correction items to JSX ErrorCorrection component."""
-    if not items:
-        return ''
-
-    instruction_prop = f' instruction="{escape_jsx(instruction)}"' if instruction else ''
-    jsx_items = []
-    for item in items:
-        options_jsx = ', '.join([f'`{escape_jsx(o)}`' for o in item.options])
-        jsx_items.append(f'''  <ErrorCorrectionItem
-    sentence={{`{escape_jsx(item.sentence)}`}}
-    errorWord={{`{escape_jsx(item.errorWord)}`}}
-    correctForm={{`{escape_jsx(item.correctForm)}`}}
-    options={{[{options_jsx}]}}
-    explanation={{`{escape_jsx(item.explanation)}`}}
-  />''')
-
-    return f'''### {title}
-
-<ErrorCorrection isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop}>
-{chr(10).join(jsx_items)}
-</ErrorCorrection>'''
-
-def cloze_to_jsx(data: ClozeData, title: str, is_ukrainian_forced: bool = False, instruction: str = '') -> str:
-    """Convert cloze data to JSX Cloze component."""
-    if not data.passage:
-        return ''
-
-    instruction_prop = f'\n  instruction="{escape_jsx(instruction)}"' if instruction else ''
-    blanks_jsx = []
-    for idx, blank in enumerate(data.blanks):
-        opts = ', '.join([f'`{escape_jsx(o)}`' for o in blank.get("options", [])])
-        blanks_jsx.append(f'{{ index: {idx}, answer: `{escape_jsx(blank["answer"])}`, options: [{opts}] }}')
-
-    return f'''### {title}
-
-<Cloze
-  isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop}
-  passage={{`{escape_jsx(data.passage)}`}}
-  blanks={{[{", ".join(blanks_jsx)}]}}
-/>'''
-
-def select_to_jsx(questions: list[SelectQuestion], title: str, is_ukrainian_forced: bool = False, instruction: str = '') -> str:
-    """Convert select questions to JSX Select component."""
-    if not questions:
-        return ''
-
-    instruction_prop = f' instruction="{escape_jsx(instruction)}"' if instruction else ''
-    items = []
-    for q in questions:
-        opts = ',\n      '.join([
-            f'{{ text: `{escape_jsx(o["text"])}`, correct: {"true" if o["correct"] else "false"} }}'
-            for o in q.options
-        ])
-        items.append(f'''  {{
-    question: `{escape_jsx(q.question)}`,
-    options: [
-      {opts}
-    ]
-  }}''')
-
-    return f'''### {title}
-
-<Select isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop} questions={{[
-{",".join(items)}
-]}} />'''
-
-def translate_to_jsx(questions: list[TranslateQuestion], title: str, is_ukrainian_forced: bool = False, instruction: str = '') -> str:
-    """Convert translate questions to JSX Translate component."""
-    if not questions:
-        return ''
-
-    instruction_prop = f' instruction="{escape_jsx(instruction)}"' if instruction else ''
-    items = []
-    for q in questions:
-        opts = ',\n      '.join([
-            f'{{ text: `{escape_jsx(o["text"])}`, correct: {"true" if o["correct"] else "false"} }}'
-            for o in q.options
-        ])
-        items.append(f'''  {{
-    source: `{escape_jsx(q.source)}`,
-    options: [
-      {opts}
-    ]
-  }}''')
-
-    return f'''### {title}
-
-<Translate isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}{instruction_prop} questions={{[
-{",".join(items)}
-]}} />'''
-
 def parse_mark_the_words(content: str) -> list[MarkTheWordsItem]:
     """Parse mark-the-words content into items.
 
@@ -1192,25 +627,6 @@ def parse_mark_the_words(content: str) -> list[MarkTheWordsItem]:
             items.append(MarkTheWordsItem(text=plain_text, correctWords=correct_words))
 
     return items
-
-def mark_the_words_to_jsx(items: list[MarkTheWordsItem], title: str, is_ukrainian_forced: bool = False) -> str:
-    """Convert mark-the-words items to JSX MarkTheWordsActivity components."""
-    if not items:
-        return ''
-
-    jsx_parts = []
-    for item in items:
-        words_jsx = ', '.join([f'`{escape_jsx(w)}`' for w in item.correctWords])
-        jsx_parts.append(f'''<MarkTheWordsActivity
-  text={{`{escape_jsx(item.text)}`}}
-  correctWords={{[{words_jsx}]}}
-/>''')
-
-    return f'''### {title}
-
-<MarkTheWords isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}>
-{chr(10).join(jsx_parts)}
-</MarkTheWords>'''
 
 def has_morpheme_patterns(content: str) -> bool:
     """Detect if content uses morpheme highlighting patterns.
@@ -1443,120 +859,6 @@ def comparative_study_to_jsx(data: ComparativeStudyData, title: str, is_ukrainia
 # CONTENT PROCESSING
 # =============================================================================
 
-def process_advanced_activities(body: str, is_ukrainian_forced: bool = False) -> str:
-    """Convert advanced activity sections (H2) to JSX."""
-    
-    def replacer(match):
-        act_type = match.group(1).lower()
-        title = match.group(2).strip()
-        content = match.group(3)
-        
-        if act_type == 'essay-response':
-            data = parse_essay_response(content)
-            return essay_response_to_jsx(data, title, is_ukrainian_forced)
-        elif act_type == 'comparative-study':
-            data = parse_comparative_study(content)
-            return comparative_study_to_jsx(data, title, is_ukrainian_forced)
-        
-        return match.group(0)
-
-    # Matches ## type: Title \n content... until next ## or end
-    pattern = r'^##\s+(essay-response|comparative-study):\s+(.+)\n([\s\S]*?)(?=\n##|\Z)'
-    return re.sub(pattern, replacer, body, flags=re.MULTILINE)
-
-def process_activities(body: str, is_ukrainian_forced: bool = False) -> str:
-    """Convert activities section to JSX in-place, preserving document order."""
-    # Find Activities section - matches # or ## Activities, Вправи, etc.
-    match = re.search(
-        r'(^#{1,2}\s+(?:Activities|Вправи(?:\s*\(Activities\))?))\n([\s\S]*?)(?=\n#{1,2}\s+(?:Vocabulary|Словник|Summary|Підсумок|Self-Assessment|Самооцінка|External|Зовнішні)|\Z)',
-        body, re.MULTILINE
-    )
-
-    if not match:
-        return body
-
-    activities_header = match.group(1)
-    activities_section = match.group(2)
-
-    # Parse individual activities - these should remain H2
-    activity_blocks = re.split(r'\n## ', '\n' + activities_section)
-    activities_jsx_parts = []
-
-    for block in activity_blocks:
-        if not block.strip():
-            continue
-
-        # Parse activity type and title
-        type_match = re.match(r'^([\w-]+):\s*(.+?)(?:\n|$)', block.strip())
-        if not type_match:
-            continue
-
-        activity_type = type_match.group(1).lower()
-        title = type_match.group(2).strip()
-        raw_content = block.strip()[type_match.end():]
-
-        # Extract instruction
-        instruction, content = extract_instruction(raw_content)
-
-        jsx = ''
-        if activity_type == 'quiz':
-            questions = parse_quiz(content)
-            jsx = quiz_to_jsx(questions, title, is_ukrainian_forced)
-        elif activity_type == 'match-up':
-            pairs = parse_match_up(content)
-            jsx = match_up_to_jsx(pairs, title, is_ukrainian_forced)
-        elif activity_type == 'fill-in':
-            items = parse_fill_in(content)
-            jsx = fill_in_to_jsx(items, title, is_ukrainian_forced)
-        elif activity_type == 'true-false':
-            items = parse_true_false(content)
-            jsx = true_false_to_jsx(items, title, is_ukrainian_forced)
-        elif activity_type == 'unjumble':
-            items = parse_unjumble(content)
-            jsx = unjumble_to_jsx(items, title, is_ukrainian_forced)
-        elif activity_type == 'group-sort':
-            data = parse_group_sort(content)
-            jsx = group_sort_to_jsx(data, title, is_ukrainian_forced)
-        elif activity_type == 'anagram':
-            items = parse_anagram(content)
-            jsx = anagram_to_jsx(items, title, is_ukrainian_forced)
-        elif activity_type == 'error-correction':
-            items = parse_error_correction(content)
-            jsx = error_correction_to_jsx(items, title, is_ukrainian_forced)
-        elif activity_type == 'cloze':
-            data = parse_cloze(content)
-            jsx = cloze_to_jsx(data, title, is_ukrainian_forced)
-        elif activity_type == 'select':
-            questions = parse_select(content)
-            jsx = select_to_jsx(questions, title, is_ukrainian_forced)
-        elif activity_type == 'translate':
-            questions = parse_translate(content)
-            jsx = translate_to_jsx(questions, title, is_ukrainian_forced)
-        elif activity_type == 'mark-the-words':
-            # Detect if content uses morpheme patterns (*morpheme*word)
-            if has_morpheme_patterns(content):
-                item = parse_highlight_morphemes(content)
-                if instruction:
-                    item.instruction = instruction
-                jsx = highlight_morphemes_to_jsx(item, title, is_ukrainian_forced)
-            else:
-                items = parse_mark_the_words(content)
-                jsx = mark_the_words_to_jsx(items, title, is_ukrainian_forced)
-
-        if jsx:
-            activities_jsx_parts.append(jsx)
-
-    # Build activities replacement with header (Standardize to H2 for Docusaurus TOC)
-    if activities_jsx_parts:
-        header_text = '🎯 Вправи' if is_ukrainian_forced else '🎯 Activities'
-        activities_jsx = f'## {header_text}\n\n' + '\n\n'.join(activities_jsx_parts)
-    else:
-        activities_jsx = ''
-
-    # Replace activities section in-place (preserving document order)
-    result = body[:match.start()] + activities_jsx + body[match.end():]
-    return result
-
 # Callout mapping
 CALLOUT_MAP = {
     'tip': {'type': 'tip'},
@@ -1774,13 +1076,13 @@ def process_dialogues(content: str) -> str:
 # MDX GENERATOR
 # =============================================================================
 
-def generate_mdx(md_content: str, module_num: int, yaml_activities: list[dict] | None = None, meta_data: dict | None = None, vocab_items: list[dict] | None = None, external_resources: dict | None = None, level: str = 'a1') -> str:
+def generate_mdx(md_content: str, module_num: int, yaml_activities: list[Activity] | None = None, meta_data: dict | None = None, vocab_items: list[dict] | None = None, external_resources: dict | None = None, level: str = 'a1') -> str:
     """Convert markdown content to MDX.
 
     Args:
         md_content: Markdown content
         module_num: Module number for sidebar
-        yaml_activities: Optional list of activities from YAML file (takes precedence over embedded)
+        yaml_activities: Optional list of activities from ActivityParser (takes precedence over embedded)
         meta_data: Optional metadata from YAML (replaces frontmatter)
         vocab_items: Optional vocab list from YAML
         external_resources: Optional external resources dict (injected from YAML)
@@ -1840,9 +1142,6 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
         # Append to end of body (Standard Layout: Content -> Activities -> Vocabulary)
         body = body + '\n\n' + vocab_md
 
-    # Process advanced activities (standalone headers)
-    body = process_advanced_activities(body, is_ukrainian_forced)
-
     # Process activities
     if yaml_activities:
         # Use YAML activities - inject them into the body
@@ -1864,8 +1163,8 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
             # Append at end if no Vocabulary/Summary section
             processed = body + '\n\n' + activities_jsx
     else:
-        # Process embedded activities (original behavior)
-        processed = process_activities(body, is_ukrainian_forced)
+        # No YAML activities found
+        processed = body
 
     # Convert callouts
     processed = convert_callouts(processed)
@@ -2113,22 +1412,6 @@ def _vocab_items_to_markdown(items: list[dict], header_text: str = "Vocabulary")
         
     return '\n'.join(lines)
 
-def load_yaml_activities(yaml_path: Path) -> list[dict] | None:
-    """Load activities from YAML file if it exists."""
-    if not yaml_path.exists():
-        return None
-
-    try:
-        with open(yaml_path, 'r', encoding='utf-8') as f:
-            data = yaml.safe_load(f)
-        if isinstance(data, list):
-            return data
-        elif isinstance(data, dict) and 'activities' in data:
-            return data['activities']
-        return None
-    except (yaml.YAMLError, IOError):
-        return None
-
 def main():
     args = sys.argv[1:]
 
@@ -2211,9 +1494,16 @@ def main():
             yaml_file = md_file.parent / 'activities' / (md_file.stem + '.yaml')
             if not yaml_file.exists():
                 yaml_file = md_file.parent / (md_file.stem + '.activities.yaml')
-            yaml_activities = load_yaml_activities(yaml_file)
-            if yaml_activities:
-                print(f'    📋 Loading {len(yaml_activities)} activities from YAML')
+            
+            yaml_activities = None
+            if yaml_file.exists():
+                parser = ActivityParser()
+                try:
+                    yaml_activities = parser.parse(yaml_file)
+                    if yaml_activities:
+                        print(f'    📋 Loading {len(yaml_activities)} activities from YAML')
+                except Exception as e:
+                    print(f'    ⚠️ Error parsing YAML activities: {e}')
 
             # Lookup EXTERNAL RESOURCES by module_id
             # module_id format: {level}-{filename} (e.g., a1-09-food-and-drinks)

@@ -11,18 +11,32 @@ def check_unjumble_empty_jumbled(yaml_activities: list) -> list:
     violations = []
 
     for activity in yaml_activities:
-        if activity.get('type') not in ['unjumble', 'anagram']:
+        act_type = activity.type if hasattr(activity, 'type') else activity.get('type')
+        if act_type not in ['unjumble', 'anagram']:
             continue
 
-        items = activity.get('items', [])
-        title = activity.get('title', 'Untitled')
+        title = activity.title if hasattr(activity, 'title') else activity.get('title', 'Untitled')
+        items = activity.items if hasattr(activity, 'items') else activity.get('items', [])
 
         for item_idx, item in enumerate(items, 1):
             # Check if item has none of the valid field formats
-            has_words = 'words' in item and item['words']
-            has_jumbled = 'jumbled' in item and item['jumbled']
-            has_prompt = 'prompt' in item and item['prompt']
-            has_scrambled = 'scrambled' in item and item['scrambled']
+            # Handle both dataclass object and dictionary
+            if hasattr(item, 'words'):
+                has_words = bool(item.words)
+                has_jumbled = False
+                has_prompt = False
+                has_scrambled = False
+            elif hasattr(item, 'scrambled'):
+                has_words = False
+                has_jumbled = False
+                has_prompt = False
+                has_scrambled = bool(item.scrambled)
+            else:
+                # Legacy dictionary
+                has_words = 'words' in item and item['words']
+                has_jumbled = 'jumbled' in item and item['jumbled']
+                has_prompt = 'prompt' in item and item['prompt']
+                has_scrambled = 'scrambled' in item and item['scrambled']
 
             if not (has_words or has_jumbled or has_prompt or has_scrambled):
                 violations.append({
@@ -67,50 +81,49 @@ def check_mdx_unjumble_rendering(mdx_content: str) -> list:
 
 
 def check_morpheme_patterns(yaml_activities: list) -> list:
-    """Check for valid morpheme patterns in mark-the-words activities (Issue #363).
-
-    Supports three pattern types:
-    - *prefix*rest (e.g., *при*йшов)
-    - rest*suffix* (e.g., Чит*ач*)
-    - *wholeWord* (e.g., *Читач*)
-    """
+    """Check for valid morpheme patterns in mark-the-words activities (Issue #363)."""
     violations = []
 
     for activity in yaml_activities:
-        if activity.get('type') != 'mark-the-words':
+        act_type = activity.type if hasattr(activity, 'type') else activity.get('type')
+        if act_type != 'mark-the-words':
             continue
 
-        text = activity.get('text', '')
-        title = activity.get('title', 'Untitled')
+        text = getattr(activity, 'text', '') or getattr(activity, 'passage', '')
+        if not text and isinstance(activity, dict):
+            text = activity.get('text', '') or activity.get('passage', '')
+            
+        answers = getattr(activity, 'answers', [])
+        if not answers and isinstance(activity, dict):
+            answers = activity.get('answers', []) or activity.get('correct_words', [])
+            
+        title = getattr(activity, 'title', 'Untitled')
+        if not title and isinstance(activity, dict):
+            title = activity.get('title', 'Untitled')
+
+        if answers and '*' not in text:
+            # If using answers array and no asterisks, it's not a morpheme activity
+            continue
 
         # Pattern: (prefix)*morpheme*(suffix)
-        # Group 1: optional text before * (prefix of word)
-        # Group 2: morpheme inside * * (the part to highlight)
-        # Group 3: optional text after * (suffix of word)
         morpheme_pattern = r'([а-яіїєґА-ЯІЇЄҐ]*)\*([а-яіїєґА-ЯІЇЄҐ]+)\*([а-яіїєґА-ЯІЇЄҐ]*)'
         matches = list(re.finditer(morpheme_pattern, text))
 
         if not matches:
-            # No morpheme patterns found - this is fine, could be full word matching
             continue
 
-        # Validate each morpheme pattern
         for match in matches:
-            prefix = match.group(1)      # Text before morpheme
-            morpheme = match.group(2)    # The morpheme to highlight
-            suffix = match.group(3)      # Text after morpheme
+            prefix = match.group(1)
+            morpheme = match.group(2)
+            suffix = match.group(3)
             full_word = prefix + morpheme + suffix
 
-            # Skip if no word context (isolated *morpheme* without prefix or suffix)
             if not full_word or full_word == morpheme:
-                # This is a standalone morpheme like *при* - allowed
                 continue
 
-            # Remove asterisks to get the actual text
             plain_text = re.sub(r'[а-яіїєґА-ЯІЇЄҐ]*\*([а-яіїєґА-ЯІЇЄҐ]+)\*[а-яіїєґА-ЯІЇЄҐ]*',
                                lambda m: m.group(0).replace('*', ''), text)
 
-            # Verify the full word exists in the plain text
             if full_word.lower() not in plain_text.lower():
                 violations.append({
                     'type': 'INVALID_MORPHEME_WORD',
@@ -120,7 +133,6 @@ def check_morpheme_patterns(yaml_activities: list) -> list:
                     'suggestion': f'Verify morpheme pattern is correct or word "{full_word}" exists in text'
                 })
 
-            # Verify morpheme is actually part of the full word
             if morpheme.lower() not in full_word.lower():
                 violations.append({
                     'type': 'INVALID_MORPHEME_POSITION',
@@ -133,16 +145,22 @@ def check_morpheme_patterns(yaml_activities: list) -> list:
     return violations
 
 
-def check_mark_the_words_format(yaml_activities: list) -> list:
+def check_mark_the_words_format(activities: list) -> list:
     """Check mark-the-words activities have consistent format (brackets or asterisks, not both)."""
     violations = []
 
-    for activity in yaml_activities:
-        if activity.get('type') != 'mark-the-words':
+    for activity in activities:
+        act_type = activity.type if hasattr(activity, 'type') else activity.get('type')
+        if act_type != 'mark-the-words':
             continue
 
-        text = activity.get('text', '')
-        title = activity.get('title', 'Untitled')
+        text = getattr(activity, 'text', '') or getattr(activity, 'passage', '')
+        if not text and isinstance(activity, dict):
+            text = activity.get('text', '') or activity.get('passage', '')
+            
+        title = getattr(activity, 'title', 'Untitled')
+        if not title and isinstance(activity, dict):
+            title = activity.get('title', 'Untitled')
 
         # Check for old bracket format: [word](category)
         has_brackets = bool(re.search(r'\[([^\]]+)\]\([^)]+\)', text))
@@ -162,28 +180,22 @@ def check_mark_the_words_format(yaml_activities: list) -> list:
     return violations
 
 
-def check_morpheme_pedagogy(yaml_activities: list) -> list:
-    """
-    Check for pedagogically weak morpheme activities.
-
-    Detects:
-    1. Vague instructions ("prefix, suffix, or root" - unclear what to click)
-    2. Too many possible answers (>10 marked morphemes)
-    3. Inconsistent morpheme types (mixing prefixes, roots, whole words)
-
-    These activities are pedagogically weak because:
-    - Students don't know what specific pattern to look for
-    - Multiple valid interpretations exist
-    - No clear learning objective
-    """
+def check_morpheme_pedagogy(activities: list) -> list:
+    """Check for pedagogically weak morpheme activities."""
     violations = []
 
-    for activity in yaml_activities:
-        if activity.get('type') != 'mark-the-words':
+    for activity in activities:
+        act_type = activity.type if hasattr(activity, 'type') else activity.get('type')
+        if act_type != 'mark-the-words':
             continue
 
-        text = activity.get('text', '')
-        title = activity.get('title', 'Untitled')
+        text = getattr(activity, 'text', '') or getattr(activity, 'passage', '')
+        if not text and isinstance(activity, dict):
+            text = activity.get('text', '') or activity.get('passage', '')
+            
+        title = getattr(activity, 'title', 'Untitled')
+        if not title and isinstance(activity, dict):
+            title = activity.get('title', 'Untitled')
 
         # Check for vague instructions (case-insensitive)
         vague_patterns = [
@@ -250,43 +262,36 @@ def check_morpheme_pedagogy(yaml_activities: list) -> list:
 
 
 def check_english_hints_in_activities(yaml_activities: list, level: str, module_num: int) -> list:
-    """
-    Check for inappropriate English hints in activities.
-
-    English hints like "(arrived)", "(reader)", "(entrance)" make activities too easy
-    and defeat the learning objective. Students should understand meaning from context,
-    not match English translations.
-
-    Grammar annotations like "(nom.)", "(acc.)", "(adj)", "(imp)" are OK - those are
-    linguistic metadata, not translation hints.
-    """
+    """Check for inappropriate English hints in activities."""
     violations = []
 
     # Pattern for English hint: (lowercase word or phrase)
     # Excludes grammar annotations: (nom.), (acc.), (pl.), etc.
-    english_hint_pattern = r'\([a-z][a-z\s]+\)'  # (word) or (multiple words)
+    english_hint_pattern = r'\([a-z][a-z\s/]+\)'  # (word) or (multiple words)
     grammar_annotation_pattern = r'\([a-z]{2,4}\.\)'  # (nom.), (acc.), etc.
 
+    # Allowed hints for gender agreement testing (possessives)
+    # These are needed to indicate WHICH possessive, when testing gender form
+    gender_agreement_hints = {
+        '(my)', '(your)', '(his)', '(her)', '(its)', '(our)', '(their)',
+        '(your informal)', '(your formal)', '(your formal/plural)',
+        '(my book)', '(his car)', '(her house)',  # Common examples
+    }
+
     for activity in yaml_activities:
-        act_type = activity.get('type', '')
-        title = activity.get('title', 'Untitled')
+        act_type = activity.type if hasattr(activity, 'type') else activity.get('type', '')
+        title = activity.title if hasattr(activity, 'title') else activity.get('title', 'Untitled')
 
         # Check different activity structures
         text_to_check = ''
 
         if act_type == 'cloze':
-            text_to_check = activity.get('passage', '')
-        elif act_type == 'fill-in':
+            text_to_check = getattr(activity, 'passage', '') or activity.get('passage', '')
+        elif act_type in ('fill-in', 'error-correction'):
             # Check all items
-            items = activity.get('items', [])
+            items = activity.items if hasattr(activity, 'items') else activity.get('items', [])
             for item in items:
-                sentence = item.get('sentence', '')
-                text_to_check += sentence + '\n'
-        elif act_type == 'error-correction':
-            # Check all items
-            items = activity.get('items', [])
-            for item in items:
-                sentence = item.get('sentence', '')
+                sentence = getattr(item, 'sentence', '') or item.get('sentence', '')
                 text_to_check += sentence + '\n'
 
         if not text_to_check:
@@ -295,11 +300,15 @@ def check_english_hints_in_activities(yaml_activities: list, level: str, module_
         # Find all potential English hints
         hints = re.findall(english_hint_pattern, text_to_check)
 
-        # Filter out grammar annotations
+        # Filter out grammar annotations and allowed gender agreement hints
         real_hints = []
         for hint in hints:
-            if not re.match(grammar_annotation_pattern, hint):
-                real_hints.append(hint)
+            hint_lower = hint.lower()
+            if re.match(grammar_annotation_pattern, hint):
+                continue  # Grammar annotation - OK
+            if hint_lower in gender_agreement_hints:
+                continue  # Gender agreement hint - allowed
+            real_hints.append(hint)
 
         if real_hints:
             severity = 'critical' if len(real_hints) > 5 else 'warning'

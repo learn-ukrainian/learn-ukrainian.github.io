@@ -21,6 +21,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
+# Add scripts dir to path for shared module imports
+SCRIPT_DIR = Path(__file__).parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.append(str(SCRIPT_DIR))
+from yaml_activities import ActivityParser, Activity
+
 # =============================================================================
 # CONFIGURATION
 # =============================================================================
@@ -154,529 +160,126 @@ def parse_vocabulary(content: str) -> list[dict]:
     return words
 
 # =============================================================================
-# ACTIVITY PARSER
+# ACTIVITY PARSER (YAML)
 # =============================================================================
 
-ACTIVITY_PATTERNS = {
-    "quiz": r"^##\s*quiz:\s*(.+)$",
-    "match-up": r"^##\s*match(?:-up)?:\s*(.+)$",
-    "group-sort": r"^##\s*group(?:-sort)?:\s*(.+)$",
-    "fill-in": r"^##\s*fill(?:-in)?:\s*(.+)$",
-    "true-false": r"^##\s*(?:true-false|tf):\s*(.+)$",
-    "translate": r"^##\s*translate:\s*(.+)$",
-    "unjumble": r"^##\s*unjumble:\s*(.+)$",
-    "anagram": r"^##\s*anagram:\s*(.+)$",
-    "error-correction": r"^##\s*error(?:-correction)?:\s*(.+)$",
-    "select": r"^##\s*select:\s*(.+)$",
-    "cloze": r"^##\s*cloze:\s*(.+)$",
-    "dialogue-reorder": r"^##\s*dialogue(?:-reorder)?:\s*(.+)$",
-    "mark-the-words": r"^##\s*mark(?:-the-words)?:\s*(.+)$",
-}
-
-def parse_activities(content: str) -> list[dict]:
-    """Parse activity blocks from markdown."""
-    activities = []
-
-    # Find activities section
-    act_match = re.search(
-        r"^#\s*(?:Activities|Вправи)\s*\n(.*?)(?=^#[^#]|\Z)",
-        content,
-        re.MULTILINE | re.DOTALL | re.IGNORECASE
+def yaml_activity_to_vibe(act: Activity, index: int) -> dict:
+    """Convert a YAML Activity object to Vibe JSON format."""
+    from yaml_activities import (
+        QuizActivity, MatchUpActivity, GroupSortActivity, FillInActivity,
+        ClozeActivity, UnjumbleActivity, ErrorCorrectionActivity,
+        MarkTheWordsActivity, TranslateActivity, AnagramActivity, ReadingActivity,
+        SelectActivity
     )
-
-    if not act_match:
-        return activities
-
-    act_content = act_match.group(1)
-
-    # Split by ## activity headers
-    parts = re.split(r"^##\s*", act_content, flags=re.MULTILINE)
-
-    for i, part in enumerate(parts):
-        if i == 0:
-            continue
-
-        # Determine activity type
-        activity_type = None
-        title = ""
-
-        for atype, pattern in ACTIVITY_PATTERNS.items():
-            match = re.match(pattern.replace("^##\\s*", ""), part, re.IGNORECASE)
-            if match:
-                activity_type = atype
-                title = match.group(1).strip()
-                break
-
-        if not activity_type:
-            continue
-
-        # Get content after the title line
-        lines = part.split("\n", 1)
-        activity_content = lines[1] if len(lines) > 1 else ""
-
-        activity_id = f"act-{len(activities) + 1}-{activity_type}"
-
-        parsed_content = parse_activity_content(activity_type, activity_content.strip())
-
-        activities.append({
-            "id": activity_id,
-            "type": activity_type,
-            "title": title,
-            "description": f"{activity_type.replace('-', ' ').title()} activity",
-            "instructions": "",
-            "content": parsed_content,
-            "tags": [activity_type],
-        })
-
-    return activities
-
-def parse_activity_content(activity_type: str, content: str) -> dict:
-    """Parse activity-specific content."""
-
-    if activity_type == "quiz":
-        return parse_quiz_content(content)
-    elif activity_type == "match-up":
-        return parse_matchup_content(content)
-    elif activity_type == "group-sort":
-        return parse_groupsort_content(content)
-    elif activity_type == "fill-in":
-        return parse_fillin_content(content)
-    elif activity_type == "true-false":
-        return parse_truefalse_content(content)
-    elif activity_type == "translate":
-        return parse_translate_content(content)
-    elif activity_type == "unjumble":
-        return parse_unjumble_content(content)
-    elif activity_type == "anagram":
-        return parse_anagram_content(content)
-    elif activity_type == "error-correction":
-        return parse_errorcorrection_content(content)
-    elif activity_type == "select":
-        return parse_select_content(content)
-    elif activity_type == "cloze":
-        return parse_cloze_content(content)
-    else:
-        return {"type": activity_type, "raw": content}
-
-def parse_quiz_content(content: str) -> dict:
-    """Parse quiz questions."""
-    questions = []
-
-    # Split by numbered questions
-    parts = re.split(r"^\d+\.\s*", content, flags=re.MULTILINE)
-
-    for part in parts[1:]:  # Skip empty first part
-        lines = part.strip().split("\n")
-        if not lines:
-            continue
-
-        question_text = lines[0].strip()
-        options = []
-        correct_index = 0
-        explanation = ""
-
-        for j, line in enumerate(lines[1:]):
-            line = line.strip()
-            if line.startswith("- [x]"):
-                options.append(line[5:].strip())
-                correct_index = len(options) - 1
-            elif line.startswith("- [ ]"):
-                options.append(line[5:].strip())
-            elif line.startswith(">"):
-                explanation = line[1:].strip()
-
-        if question_text and options:
-            questions.append({
-                "question": question_text,
+    
+    activity_type = act.type
+    title = getattr(act, 'title', activity_type.replace('-', ' ').title())
+    
+    vibe_act = {
+        "id": f"act-{index}-{activity_type}",
+        "type": activity_type,
+        "title": title,
+        "description": f"{activity_type.replace('-', ' ').title()} activity",
+        "instructions": getattr(act, 'instruction', ""),
+        "content": {},
+        "tags": [activity_type],
+    }
+    
+    if isinstance(act, (QuizActivity, SelectActivity)):
+        items = []
+        for item in act.items:
+            options = [o.text for o in item.options]
+            correct_indices = [i for i, o in enumerate(item.options) if o.correct]
+            items.append({
+                "question": item.question,
                 "options": options,
-                "correctIndex": correct_index,
-                "explanation": explanation,
+                "correctIndex": correct_indices[0] if correct_indices and isinstance(act, QuizActivity) else None,
+                "correctAnswers": [options[i] for i in correct_indices] if isinstance(act, SelectActivity) else None,
+                "explanation": getattr(item, 'explanation', "")
             })
-
-    return {
-        "type": "quiz",
-        "questions": questions,
-        "shuffleQuestions": False,
-        "shuffleOptions": True,
-        "showCorrectAnswers": True,
-    }
-
-def parse_matchup_content(content: str) -> dict:
-    """Parse match-up pairs."""
-    pairs = []
-
-    for line in content.split("\n"):
-        line = line.strip()
-        if not line.startswith("-"):
-            continue
-
-        # Parse: - left | right
-        match = re.match(r"-\s*(.+?)\s*\|\s*(.+)", line)
-        if match:
-            pairs.append({
-                "left": match.group(1).strip(),
-                "right": match.group(2).strip(),
-            })
-
-    return {
-        "type": "match-up",
-        "pairs": pairs,
-        "shuffleRight": True,
-    }
-
-def parse_groupsort_content(content: str) -> dict:
-    """Parse group-sort groups."""
-    groups = []
-    current_group = None
-
-    for line in content.split("\n"):
-        line = line.strip()
-
-        # Group header: ### GroupName
-        if line.startswith("###"):
-            if current_group:
-                groups.append(current_group)
-            group_name = line[3:].strip()
-            current_group = {
-                "id": f"group-{len(groups) + 1}",
-                "name": group_name,
-                "items": [],
-            }
-        elif line.startswith("-") and current_group:
-            item = line[1:].strip()
-            if item:
-                current_group["items"].append(item)
-
-    if current_group:
-        groups.append(current_group)
-
-    return {
-        "type": "group-sort",
-        "groups": groups,
-        "shuffleItems": True,
-    }
-
-def parse_fillin_content(content: str) -> dict:
-    """Parse fill-in items."""
-    items = []
-
-    parts = re.split(r"^\d+\.\s*", content, flags=re.MULTILINE)
-
-    for part in parts[1:]:
-        lines = part.strip().split("\n")
-        if not lines:
-            continue
-
-        prompt = lines[0].strip()
-        answer = ""
-        options = []
-
-        for line in lines[1:]:
-            line = line.strip()
-            if line.startswith("answer:"):
-                answer = line[7:].strip()
-            elif line.startswith("options:"):
-                opts = line[8:].strip()
-                options = [o.strip() for o in opts.split(",")]
-            elif line.startswith("-"):
-                opt = line[1:].strip()
-                if opt.startswith("[x]"):
-                    answer = opt[3:].strip()
-                    options.append(answer)
-                elif opt.startswith("[ ]"):
-                    options.append(opt[3:].strip())
-                else:
-                    options.append(opt)
-
-        if prompt:
-            items.append({
-                "prompt": prompt,
-                "answer": answer or (options[0] if options else ""),
-                "options": options,
-            })
-
-    return {
-        "type": "fill-in",
-        "items": items,
-    }
-
-def parse_truefalse_content(content: str) -> dict:
-    """Parse true-false statements."""
-    statements = []
-
-    parts = re.split(r"^\d+\.\s*", content, flags=re.MULTILINE)
-
-    for part in parts[1:]:
-        lines = part.strip().split("\n")
-        if not lines:
-            continue
-
-        statement = lines[0].strip()
-        is_true = False
-        explanation = ""
-
-        for line in lines[1:]:
-            line = line.strip().lower()
-            if "true" in line and "[x]" in line:
-                is_true = True
-            elif "false" in line and "[x]" in line:
-                is_true = False
-            elif line.startswith(">"):
-                explanation = line[1:].strip()
-
-        if statement:
-            statements.append({
-                "statement": statement,
-                "isTrue": is_true,
-                "explanation": explanation,
-            })
-
-    return {
-        "type": "true-false",
-        "statements": statements,
-    }
-
-def parse_translate_content(content: str) -> dict:
-    """Parse translate items."""
-    items = []
-    direction = "to-uk"  # default
-
-    # Check for direction hint
-    if "to english" in content.lower() or "to-en" in content.lower():
-        direction = "to-en"
-
-    parts = re.split(r"^\d+\.\s*", content, flags=re.MULTILINE)
-
-    for part in parts[1:]:
-        lines = part.strip().split("\n")
-        if not lines:
-            continue
-
-        source = lines[0].strip()
-        answer = ""
-        options = []
-
-        for line in lines[1:]:
-            line = line.strip()
-            if line.startswith("-"):
-                opt = line[1:].strip()
-                if opt.startswith("[x]"):
-                    answer = opt[3:].strip()
-                    options.append(answer)
-                elif opt.startswith("[ ]"):
-                    options.append(opt[3:].strip())
-
-        if source:
-            items.append({
-                "source": source,
-                "answer": answer,
-                "options": options,
-            })
-
-    return {
-        "type": "translate",
-        "items": items,
-        "direction": direction,
-    }
-
-def parse_unjumble_content(content: str) -> dict:
-    """Parse unjumble items."""
-    items = []
-
-    parts = re.split(r"^\d+\.\s*", content, flags=re.MULTILINE)
-
-    for part in parts[1:]:
-        lines = part.strip().split("\n")
-        if not lines:
-            continue
-
-        words_line = lines[0].strip()
-        answer = ""
-        hint = ""
-
-        for line in lines[1:]:
-            line = line.strip()
-            if line.lower().startswith("answer:"):
-                answer = line[7:].strip()
-            elif line.lower().startswith("hint:"):
-                hint = line[5:].strip()
-
-        # Parse words (separated by / | or ,)
-        words = re.split(r"[/|,]\s*", words_line)
-        words = [w.strip() for w in words if w.strip()]
-
-        if words:
-            items.append({
-                "words": words,
-                "answer": answer or " ".join(words),
-                "hint": hint,
-            })
-
-    return {
-        "type": "unjumble",
-        "items": items,
-    }
-
-def parse_anagram_content(content: str) -> dict:
-    """Parse anagram items."""
-    items = []
-
-    parts = re.split(r"^\d+\.\s*", content, flags=re.MULTILINE)
-
-    for part in parts[1:]:
-        lines = part.strip().split("\n")
-        if not lines:
-            continue
-
-        letters_line = lines[0].strip()
-        answer = ""
-        hint = ""
-        translation = ""
-
-        for line in lines[1:]:
-            line = line.strip()
-            if line.lower().startswith("answer:"):
-                answer = line[7:].strip()
-            elif line.lower().startswith("hint:"):
-                hint = line[5:].strip()
-            elif line.lower().startswith("translation:"):
-                translation = line[12:].strip()
-
-        # Parse letters (space-separated)
-        letters = letters_line.split()
-
-        if letters:
-            items.append({
-                "letters": letters,
-                "answer": answer or "".join(letters),
-                "hint": hint,
-                "translation": translation,
-            })
-
-    return {
-        "type": "anagram",
-        "items": items,
-    }
-
-def parse_errorcorrection_content(content: str) -> dict:
-    """Parse error-correction items."""
-    items = []
-
-    parts = re.split(r"^\d+\.\s*", content, flags=re.MULTILINE)
-
-    for part in parts[1:]:
-        lines = part.strip().split("\n")
-        if not lines:
-            continue
-
-        sentence = lines[0].strip()
-        error_word = None
-        correct_form = ""
-        options = []
-        explanation = ""
-
-        for line in lines[1:]:
-            line = line.strip()
-            if line.lower().startswith("error:"):
-                error_word = line[6:].strip()
-                if error_word.lower() == "none":
-                    error_word = None
-            elif line.lower().startswith("correct:"):
-                correct_form = line[8:].strip()
-            elif line.lower().startswith("options:"):
-                opts = line[8:].strip()
-                options = [o.strip() for o in opts.split(",")]
-            elif line.startswith(">"):
-                explanation = line[1:].strip()
-
-        if sentence:
-            items.append({
-                "sentence": sentence,
-                "errorWord": error_word,
-                "correctForm": correct_form,
-                "options": options,
-                "explanation": explanation,
-            })
-
-    return {
-        "type": "error-correction",
-        "items": items,
-    }
-
-def parse_select_content(content: str) -> dict:
-    """Parse select (multi-choice) items."""
-    items = []
-
-    parts = re.split(r"^\d+\.\s*", content, flags=re.MULTILINE)
-
-    for part in parts[1:]:
-        lines = part.strip().split("\n")
-        if not lines:
-            continue
-
-        question = lines[0].strip()
-        options = []
-        correct_answers = []
-
-        for line in lines[1:]:
-            line = line.strip()
-            if line.startswith("-"):
-                opt = line[1:].strip()
-                if opt.startswith("[x]"):
-                    text = opt[3:].strip()
-                    options.append(text)
-                    correct_answers.append(text)
-                elif opt.startswith("[ ]"):
-                    options.append(opt[3:].strip())
-
-        if question and options:
-            items.append({
-                "question": question,
-                "options": options,
-                "correctAnswers": correct_answers,
-            })
-
-    return {
-        "type": "select",
-        "items": items,
-    }
-
-def parse_cloze_content(content: str) -> dict:
-    """Parse cloze passage."""
-    # Extract passage text and blanks
-    text = ""
-    blanks = []
-
-    lines = content.split("\n")
-    for line in lines:
-        line = line.strip()
-        if line.startswith(">"):
-            # This is the passage
-            text = line[1:].strip()
-        elif line.lower().startswith("blank"):
-            # blank1: answer, options: a, b, c
-            match = re.match(r"blank(\d+):\s*(\w+)(?:,\s*options:\s*(.+))?", line, re.IGNORECASE)
-            if match:
-                idx = int(match.group(1)) - 1
-                answer = match.group(2)
-                opts = match.group(3).split(",") if match.group(3) else [answer]
-                blanks.append({
-                    "index": idx,
-                    "answer": answer,
-                    "options": [o.strip() for o in opts],
-                })
-
-    return {
-        "type": "cloze",
-        "text": text,
-        "blanks": blanks,
-    }
+        vibe_act["content"] = {"items" if isinstance(act, SelectActivity) else "questions": items}
+        
+    elif isinstance(act, MatchUpActivity):
+        vibe_act["content"] = {
+            "pairs": [{"left": p.left, "right": p.right} for p in act.pairs]
+        }
+        
+    elif isinstance(act, GroupSortActivity):
+        groups = {}
+        for group in act.groups:
+            groups[group.name] = group.items
+        vibe_act["content"] = {"groups": groups}
+        
+    elif isinstance(act, FillInActivity):
+        vibe_act["content"] = {
+            "items": [{
+                "sentence": i.sentence,
+                "answer": i.answer,
+                "options": i.options,
+                "explanation": i.explanation
+            } for i in act.items]
+        }
+        
+    elif isinstance(act, ClozeActivity):
+        vibe_act["content"] = {
+            "text": act.passage,
+            "blanks": [{
+                "index": b.id - 1 if hasattr(b, 'id') else i,
+                "answer": b.answer,
+                "options": b.options
+            } for i, b in enumerate(act.blanks)]
+        }
+        
+    elif isinstance(act, UnjumbleActivity):
+        vibe_act["content"] = {
+            "items": [{
+                "jumbled": ' / '.join(i.words) if isinstance(i.words, list) else i.words,
+                "answer": i.answer
+            } for i in act.items]
+        }
+        
+    elif isinstance(act, ErrorCorrectionActivity):
+        vibe_act["content"] = {
+            "items": [{
+                "sentence": i.sentence,
+                "error": i.error,
+                "answer": i.answer,
+                "options": i.options,
+                "explanation": i.explanation
+            } for i in act.items]
+        }
+        
+    elif isinstance(act, MarkTheWordsActivity):
+        vibe_act["content"] = {
+            "text": act.text,
+            "answers": act.answers
+        }
+        
+    elif isinstance(act, TranslateActivity):
+        vibe_act["content"] = {
+            "items": [{
+                "source": i.source,
+                "options": [{"text": o.text, "correct": o.correct} for o in i.options],
+                "explanation": i.explanation
+            } for i in act.items]
+        }
+        
+    elif isinstance(act, AnagramActivity):
+        vibe_act["content"] = {
+            "items": [{
+                "scrambled": i.scrambled,
+                "answer": i.answer,
+                "hint": i.hint
+            } for i in act.items]
+        }
+        
+    return vibe_act
 
 # =============================================================================
 # MODULE PARSER
 # =============================================================================
 
-def parse_module(content: str, level: str, module_num: int) -> dict:
+def parse_module(content: str, level: str, module_num: int, yaml_activities: list[Activity] | None = None) -> dict:
     """Parse a complete module markdown file."""
     frontmatter, body = parse_frontmatter(content)
 
@@ -695,7 +298,12 @@ def parse_module(content: str, level: str, module_num: int) -> dict:
 
     sections = parse_sections(body)
     vocabulary = parse_vocabulary(body)
-    activities = parse_activities(body)
+    
+    # Use YAML activities if provided, otherwise parse from markdown
+    if yaml_activities:
+        activities = [yaml_activity_to_vibe(act, i+1) for i, act in enumerate(yaml_activities)]
+    else:
+        activities = parse_activities(body)
 
     return {
         "frontmatter": frontmatter,
@@ -950,8 +558,21 @@ def main():
                     md_path = level_dir / md_file
                     md_content = md_path.read_text(encoding="utf-8")
 
+                    # Check for YAML activities file
+                    yaml_activities = None
+                    yaml_file = level_dir / 'activities' / (md_path.stem + '.yaml')
+                    if not yaml_file.exists():
+                        yaml_file = md_path.with_suffix('.activities.yaml')
+                    
+                    if yaml_file.exists():
+                        parser = ActivityParser()
+                        try:
+                            yaml_activities = parser.parse(yaml_file)
+                        except Exception as e:
+                            print(f"    ⚠ Error parsing YAML activities: {e}")
+
                     # Parse module
-                    parsed = parse_module(md_content, level_folder, module_num)
+                    parsed = parse_module(md_content, level_folder, module_num, yaml_activities)
 
                     # Lookup EXTERNAL RESOURCES by module_id
                     # module_id format: {level}-{filename} (e.g., a1-09-food-and-drinks)

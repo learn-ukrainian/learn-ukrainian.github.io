@@ -1006,12 +1006,11 @@ def calculate_richness_score(content: str, level: str, file_path: Path = None, y
             'resources': count_resources(prose),
         })
     elif module_type == 'checkpoint':
-        # Use YAML activity types if provided, otherwise search markdown
+        # Use YAML activity types if provided (Preferred for YAML-First architecture)
+        activity_type_count = 0
         if yaml_activity_types:
             activity_type_count = len(yaml_activity_types)
-        else:
-            # Fallback: search markdown for activity types
-            activity_type_count = len(set(re.findall(r'^##\s*(quiz|match-up|fill-in|unjumble|cloze|error-correction|translate|mark-the-words|group-sort|true-false|select|dialogue-reorder)', content, re.MULTILINE)))
+        
         raw.update({
             'activity_types': activity_type_count,
             'review_sections': len(re.findall(r'^##\s*[^\n]+', prose, re.MULTILINE)),

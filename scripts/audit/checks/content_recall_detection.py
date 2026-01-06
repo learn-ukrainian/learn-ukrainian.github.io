@@ -311,20 +311,12 @@ def is_content_heavy_module(
 
 
 def check_yaml_cloze_year_blanks(
-    activities: List[Dict[str, Any]],
+    activities: list,
     level: str,
     module_type: str = "unknown"
 ) -> List[Dict[str, Any]]:
     """
     Check YAML cloze activities for year-based blanks.
-
-    Args:
-        activities: List of activity dicts from YAML file
-        level: Level code (e.g., 'B2', 'C1')
-        module_type: Focus type (e.g., 'history', 'literature')
-
-    Returns:
-        List of violation dicts
     """
     violations = []
 
@@ -333,15 +325,14 @@ def check_yaml_cloze_year_blanks(
         return []
 
     for activity in activities:
-        if not isinstance(activity, dict):
-            continue
-
-        act_type = activity.get('type', '').lower()
+        act_type = getattr(activity, 'type', '') or activity.get('type', '').lower()
         if act_type != 'cloze':
             continue
 
-        title = activity.get('title', 'Cloze')
-        passage = activity.get('passage', '')
+        title = getattr(activity, 'title', 'Cloze')
+        passage = getattr(activity, 'passage', '')
+        if not passage and isinstance(activity, dict):
+            passage = activity.get('passage', '')
 
         # Find cloze blanks that have years as the first option: {1861|1865|1870}
         year_blank_pattern = r'\{(\d{4})\|[^}]*\}'
@@ -357,7 +348,7 @@ def check_yaml_cloze_year_blanks(
             violations.append({
                 'type': 'CLOZE_YEAR_BLANK',
                 'severity': 'warning',
-                'activity': title[:50],
+                'activity': str(title)[:50],
                 'message': f"Cloze has {year_count} year-based blank(s) - tests factual recall, not language",
                 'suggestion': "Replace year blanks with vocabulary/collocation blanks"
             })
@@ -366,20 +357,12 @@ def check_yaml_cloze_year_blanks(
 
 
 def check_yaml_fill_in_year_answers(
-    activities: List[Dict[str, Any]],
+    activities: list,
     level: str,
     module_type: str = "unknown"
 ) -> List[Dict[str, Any]]:
     """
     Check YAML fill-in activities for year-based answers.
-
-    Args:
-        activities: List of activity dicts from YAML file
-        level: Level code (e.g., 'B2', 'C1')
-        module_type: Focus type (e.g., 'history', 'literature')
-
-    Returns:
-        List of violation dicts
     """
     violations = []
 
@@ -388,19 +371,18 @@ def check_yaml_fill_in_year_answers(
         return []
 
     for activity in activities:
-        if not isinstance(activity, dict):
-            continue
-
-        act_type = activity.get('type', '').lower()
+        act_type = getattr(activity, 'type', '') or activity.get('type', '').lower()
         if act_type != 'fill-in':
             continue
 
-        title = activity.get('title', 'Fill-in')
-        items = activity.get('items', [])
+        title = getattr(activity, 'title', 'Fill-in')
+        items = getattr(activity, 'items', [])
+        if not items and isinstance(activity, dict):
+            items = activity.get('items', [])
 
         year_count = 0
         for item in items:
-            answer = str(item.get('answer', ''))
+            answer = str(getattr(item, 'answer', '')) or str(item.get('answer', ''))
             if answer.isdigit() and len(answer) == 4:
                 year_int = int(answer)
                 if 1000 <= year_int <= 2100:
@@ -410,7 +392,7 @@ def check_yaml_fill_in_year_answers(
             violations.append({
                 'type': 'FILL_IN_YEAR_ANSWER',
                 'severity': 'warning',
-                'activity': title[:50],
+                'activity': str(title)[:50],
                 'message': f"Fill-in has {year_count} year-based answer(s) - tests factual recall, not vocabulary",
                 'suggestion': "Replace year answers with vocabulary/collocation answers"
             })
@@ -422,28 +404,16 @@ def run_all_content_recall_checks(
     content: str,
     level: str,
     module_type: str = "unknown",
-    yaml_activities: List[Dict[str, Any]] = None
+    yaml_activities: list = None
 ) -> List[Dict[str, Any]]:
     """
     Run all content recall detection checks.
-
-    Args:
-        content: Module content string
-        level: Level code (e.g., 'B2', 'C1')
-        module_type: Focus type (e.g., 'history', 'literature')
-        yaml_activities: Optional list of YAML activity dicts
-
-    Returns:
-        List of all violations found
     """
     all_violations = []
 
-    # Run markdown-based checks
-    all_violations.extend(check_content_recall_violations(content, level, module_type))
-    all_violations.extend(check_fill_in_year_answers(content, level, module_type))
-    all_violations.extend(check_cloze_year_answers(content, level, module_type))
+    # Markdown-based activity checks removed (Issue #394)
 
-    # Run YAML-based checks if activities provided
+    # Run YAML-based checks if activities provided (Now the primary source)
     if yaml_activities:
         all_violations.extend(check_yaml_cloze_year_blanks(yaml_activities, level, module_type))
         all_violations.extend(check_yaml_fill_in_year_answers(yaml_activities, level, module_type))

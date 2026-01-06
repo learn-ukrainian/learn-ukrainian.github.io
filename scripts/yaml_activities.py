@@ -172,22 +172,8 @@ class MarkTheWordsActivity:
     type: str = "mark-the-words"
     title: str = ""
     instruction: str = ""
-    passage: str = ""
-    correct_words: list[str] = field(default_factory=list)
-
-
-@dataclass
-class DialogueLine:
-    order: int
-    text: str
-    speaker: Optional[str] = None
-
-
-@dataclass
-class DialogueReorderActivity:
-    type: str = "dialogue-reorder"
-    title: str = ""
-    lines: list[DialogueLine] = field(default_factory=list)
+    text: str = ""
+    answers: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -224,12 +210,21 @@ class AnagramActivity:
     items: list[AnagramItem] = field(default_factory=list)
 
 
+@dataclass
+class ReadingActivity:
+    type: str = "reading"
+    title: str = ""
+    context: str = ""
+    resource: dict = field(default_factory=dict)
+    tasks: list[str] = field(default_factory=list)
+
+
 # Type alias for all activity types
 Activity = Union[
     QuizActivity, SelectActivity, TrueFalseActivity, FillInActivity,
     ClozeActivity, MatchUpActivity, GroupSortActivity, UnjumbleActivity,
-    ErrorCorrectionActivity, MarkTheWordsActivity, DialogueReorderActivity,
-    TranslateActivity, AnagramActivity
+    ErrorCorrectionActivity, MarkTheWordsActivity,
+    TranslateActivity, AnagramActivity, ReadingActivity
 ]
 
 
@@ -356,9 +351,9 @@ class ActivityParser:
             'unjumble': self._parse_unjumble,
             'error-correction': self._parse_error_correction,
             'mark-the-words': self._parse_mark_the_words,
-            'dialogue-reorder': self._parse_dialogue_reorder,
             'translate': self._parse_translate,
             'anagram': self._parse_anagram,
+            'reading': self._parse_reading,
         }
 
         parser = parsers.get(activity_type)
@@ -366,6 +361,14 @@ class ActivityParser:
             return parser(data)
 
         return None
+
+    def _parse_reading(self, data: dict) -> ReadingActivity:
+        return ReadingActivity(
+            title=data.get('title', ''),
+            context=data.get('context', ''),
+            resource=data.get('resource', {}),
+            tasks=data.get('tasks', [])
+        )
 
     def _parse_quiz(self, data: dict) -> QuizActivity:
         items = []
@@ -480,19 +483,9 @@ class ActivityParser:
         return MarkTheWordsActivity(
             title=data.get('title', ''),
             instruction=data.get('instruction', ''),
-            passage=data.get('passage', ''),
-            correct_words=data.get('correct_words', [])
+            text=data.get('text', ''),
+            answers=data.get('answers', [])
         )
-
-    def _parse_dialogue_reorder(self, data: dict) -> DialogueReorderActivity:
-        lines = []
-        for i, line_data in enumerate(data.get('lines', []), start=1):
-            lines.append(DialogueLine(
-                order=line_data.get('order', i),  # Use implicit order if not specified
-                text=line_data['text'],
-                speaker=line_data.get('speaker')
-            ))
-        return DialogueReorderActivity(title=data.get('title', ''), lines=lines)
 
     def _parse_translate(self, data: dict) -> TranslateActivity:
         items = []
@@ -632,8 +625,6 @@ class ActivityParser:
                 self._validate_error_correction_logic(activity, prefix, result)
             elif isinstance(activity, MarkTheWordsActivity):
                 self._validate_mark_the_words_logic(activity, prefix, result)
-            elif isinstance(activity, DialogueReorderActivity):
-                self._validate_dialogue_reorder_logic(activity, prefix, result)
             elif isinstance(activity, TranslateActivity):
                 self._validate_translate_logic(activity, prefix, result)
 
@@ -647,10 +638,10 @@ class ActivityParser:
             return base | {'anagram'}
         elif level == 'a2':
             return base | {'cloze', 'error-correction', 'mark-the-words',
-                          'dialogue-reorder', 'select', 'translate'}
+                          'select', 'translate'}
         else:  # b1+
             return base | {'cloze', 'error-correction', 'mark-the-words',
-                          'dialogue-reorder', 'select', 'translate'}
+                          'select', 'translate'}
 
     def _validate_quiz_logic(self, activity: QuizActivity, prefix: str, result: ValidationResult):
         """Validate quiz-specific logic."""
@@ -755,27 +746,14 @@ class ActivityParser:
 
     def _validate_mark_the_words_logic(self, activity: MarkTheWordsActivity, prefix: str, result: ValidationResult):
         """Validate mark-the-words-specific logic."""
-        for i, word in enumerate(activity.correct_words):
-            if word not in activity.passage:
+        for i, word in enumerate(activity.answers):
+            if word not in activity.text:
                 result.add_error(
-                    path=f"{prefix}/correct_words/{i}",
-                    message=f"Word '{word}' not found in passage",
+                    path=f"{prefix}/answers/{i}",
+                    message=f"Word '{word}' not found in text",
                     activity_type="mark-the-words",
                     activity_title=activity.title
                 )
-
-    def _validate_dialogue_reorder_logic(self, activity: DialogueReorderActivity, prefix: str, result: ValidationResult):
-        """Validate dialogue-reorder-specific logic."""
-        orders = [line.order for line in activity.lines]
-        expected = list(range(1, len(activity.lines) + 1))
-
-        if sorted(orders) != expected:
-            result.add_error(
-                path=f"{prefix}/lines",
-                message=f"Order numbers should be 1 to {len(activity.lines)}, got {sorted(orders)}",
-                activity_type="dialogue-reorder",
-                activity_title=activity.title
-            )
 
     def _validate_translate_logic(self, activity: TranslateActivity, prefix: str, result: ValidationResult):
         """Validate translate-specific logic."""
@@ -913,21 +891,8 @@ class ActivityParser:
                 'type': 'mark-the-words',
                 'title': activity.title,
                 'instruction': activity.instruction,
-                'passage': activity.passage,
-                'correct_words': activity.correct_words
-            }
-        elif isinstance(activity, DialogueReorderActivity):
-            return {
-                'type': 'dialogue-reorder',
-                'title': activity.title,
-                'lines': [
-                    {
-                        'order': line.order,
-                        'text': line.text,
-                        **(({'speaker': line.speaker} if line.speaker else {}))
-                    }
-                    for line in activity.lines
-                ]
+                'text': activity.text,
+                'answers': activity.answers
             }
         elif isinstance(activity, TranslateActivity):
             return {
@@ -983,7 +948,7 @@ class ActivityParser:
     # MDX GENERATION
     # =========================================================================
 
-    def to_mdx(self, activities: list[Activity]) -> str:
+    def to_mdx(self, activities: list[Activity], is_ukrainian_forced: bool = False) -> str:
         """
         Convert activities to MDX component format.
 
@@ -993,13 +958,13 @@ class ActivityParser:
         mdx_parts = []
 
         for activity in activities:
-            mdx = self._activity_to_mdx(activity)
+            mdx = self._activity_to_mdx(activity, is_ukrainian_forced)
             if mdx:
                 mdx_parts.append(mdx)
 
         return '\n\n'.join(mdx_parts)
 
-    def _activity_to_mdx(self, activity: Activity) -> str:
+    def _activity_to_mdx(self, activity: Activity, is_ukrainian_forced: bool = False) -> str:
         """Convert single activity to MDX."""
         if isinstance(activity, QuizActivity):
             return self._quiz_to_mdx(activity)
@@ -1021,13 +986,33 @@ class ActivityParser:
             return self._error_correction_to_mdx(activity)
         elif isinstance(activity, MarkTheWordsActivity):
             return self._mark_the_words_to_mdx(activity)
-        elif isinstance(activity, DialogueReorderActivity):
-            return self._dialogue_reorder_to_mdx(activity)
         elif isinstance(activity, TranslateActivity):
             return self._translate_to_mdx(activity)
         elif isinstance(activity, AnagramActivity):
             return self._anagram_to_mdx(activity)
+        elif isinstance(activity, ReadingActivity):
+            return self._reading_to_mdx(activity, is_ukrainian_forced)
         return ''
+
+    def _reading_to_mdx(self, activity: ReadingActivity, is_ukrainian_forced: bool = False) -> str:
+        tasks_md = '\n'.join([f"<li>{self._escape_jsx(t)}</li>" for t in activity.tasks])
+        
+        header = "Завдання для читання" if is_ukrainian_forced else "Reading Assignment"
+        source_label = "Джерело" if is_ukrainian_forced else "Source"
+        tasks_label = "Завдання" if is_ukrainian_forced else "Tasks"
+        
+        return f'''### 🏛️ {self._escape_jsx(activity.title)}
+
+:::info[{header}]
+{self._escape_jsx(activity.context)}
+
+**{source_label}:** [{self._escape_jsx(activity.resource.get('title', 'Link'))}]({activity.resource.get('url', '#')})
+
+**{tasks_label}:**
+<ul>
+{tasks_md}
+</ul>
+:::'''
 
     def _escape_jsx(self, text: str) -> str:
         """Escape text for use in JSX strings."""
@@ -1171,29 +1156,15 @@ class ActivityParser:
 
     def _mark_the_words_to_mdx(self, activity: MarkTheWordsActivity) -> str:
         correct_words_json = json.dumps(
-            [self._escape_jsx(word) for word in activity.correct_words],
+            [self._escape_jsx(word) for word in activity.answers],
             ensure_ascii=False
         )
 
         return f'''<MarkTheWords
   title="{self._escape_jsx(activity.title)}"
   instruction="{self._escape_jsx(activity.instruction)}"
-  text="{self._escape_jsx(activity.passage)}"
+  text="{self._escape_jsx(activity.text)}"
   correctWords={{JSON.parse(`{correct_words_json}`)}}
-/>'''
-
-    def _dialogue_reorder_to_mdx(self, activity: DialogueReorderActivity) -> str:
-        lines_json = json.dumps([
-            {
-                'text': self._escape_jsx(line.text),
-                'order': line.order
-            }
-            for line in activity.lines
-        ], ensure_ascii=False)
-
-        return f'''<DialogueReorder
-  title="{self._escape_jsx(activity.title)}"
-  lines={{JSON.parse(`{lines_json}`)}}
 />'''
 
     def _translate_to_mdx(self, activity: TranslateActivity) -> str:
