@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 29.0% (target 25-40% (M19))
 - **Grammar:** ⏳ Pending validation
 

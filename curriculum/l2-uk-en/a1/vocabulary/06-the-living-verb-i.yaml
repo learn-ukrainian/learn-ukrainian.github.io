@@ -72,10 +72,6 @@ items:
     ipa: /ˈznɑtɪ/
     translation: to know
     pos: verb
-  - lemma: знаходити
-    ipa: /znɑˈxɔdɪtɪ/
-    translation: to find
-    pos: verb
   - lemma: лист
     ipa: /lɪst/
     translation: letter

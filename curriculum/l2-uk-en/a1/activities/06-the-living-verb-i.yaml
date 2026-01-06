@@ -1,8 +1,7 @@
 - type: match-up
   title: Infinitive to English
+  instruction: Match Ukrainian infinitives with their English translations
   pairs:
-  - left: Infinitive
-    right: English
   - left: читати
     right: to read
   - left: знати
@@ -265,7 +264,7 @@
 - type: true-false
   title: Verb Rules
   items:
-  - statement: Class I verbs end in -ати or -яти in the infinitive.
+  - statement: First Conjugation verbs end in -ати or -яти in the infinitive.
     correct: true
     explanation: Correct! читати, писати, працювати all end in -ати.
   - statement: The ending -ю is used for "ти" (you).
@@ -287,11 +286,11 @@
   - statement: Verbs like читати, писати, працювати all follow the same conjugation
       pattern.
     correct: true
-    explanation: Correct! They're all Class I and share the same endings.
-  - statement: Class I verbs use the ending -ить for третя особа (він/вона).
+    explanation: Correct! They're all First Conjugation and share the same endings.
+  - statement: First Conjugation verbs use the ending -ить for третя особа (він/вона).
     correct: false
-    explanation: 'Incorrect! -ить is Class II. Class I uses -є: він читає.'
-  - statement: '"Снідати", "обідати", "вечеряти" are all Class I verbs related to
+    explanation: 'Incorrect! -ить is Second Conjugation. First Conjugation uses -є: він читає.'
+  - statement: '"Снідати", "обідати", "вечеряти" are all First Conjugation verbs related to
       meals.'
     correct: true
     explanation: Correct! All three end in -ати and mean breakfast, lunch, dinner.

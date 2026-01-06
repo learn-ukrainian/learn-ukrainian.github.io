@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): вода, суп, їсти, цибуля, яблуко...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): кава, фрукти, хліб, сир, вода...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1902/500 (>1500 may be too long)
+- **Words:** ✅ 1902/500
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 15.8% (target 15-35% (M09))
 - **Grammar:** ⏳ Pending validation
 

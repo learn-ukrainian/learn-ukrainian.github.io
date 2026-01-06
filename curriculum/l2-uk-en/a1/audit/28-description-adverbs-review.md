@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): серйозно, ввічливо, дешево, цікаво, важко...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): смачно, жартома, важко, серйозно, дешево...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 39.6% (target 35-55% (M28))
 - **Grammar:** ⏳ Pending validation
 

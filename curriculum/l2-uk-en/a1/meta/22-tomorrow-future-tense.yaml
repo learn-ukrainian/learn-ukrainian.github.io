@@ -1,7 +1,7 @@
 module: a1-22
 title: Tomorrow - Future Tense
 subtitle: Talking About What Will Happen
-version: '1.0'
+version: '2.0'
 phase: A1.3 - Consolidation
 pedagogy: PPP
 duration: 60 min
@@ -11,12 +11,14 @@ tags:
   - compound-future
   - time-expressions
   - planning
+  - aspect
 grammar:
-  - Compound future tense (буду + infinitive)
+  - compound-future-of-imperfective-verbs
   - буду conjugation (буду, будеш, буде, будемо, будете, будуть)
   - Planning and intention expressions
 objectives:
   - Learner can form compound future using буду + infinitive
+  - Learner understands that compound future is for ongoing actions
   - Learner can conjugate буду for all persons
   - Learner can express plans, intentions, and hopes
   - Learner can use future time expressions correctly

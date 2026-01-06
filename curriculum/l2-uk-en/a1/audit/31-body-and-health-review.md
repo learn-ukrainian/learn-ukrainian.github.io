@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): рот, здоровий, здоров'я, ніс, ліки...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): зуб, ніс, допомога, здоров'я, око...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 41.0% (target 35-55% (M31))
 - **Grammar:** ⏳ Pending validation
 

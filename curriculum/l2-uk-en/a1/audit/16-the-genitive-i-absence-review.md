@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): нема, увага, ідея, користь, гроші...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): користь, увага, значення, ідея, немає...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 30.8% (target 25-40% (M16))
 - **Grammar:** ⏳ Pending validation
 

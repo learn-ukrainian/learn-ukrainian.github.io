@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): вчасно, сьогодні, хвилина, котрій, вихідні...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): година, тиждень, вихідні, п'ятниця, котрій...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 39.5% (target 35-55% (M23))
 - **Grammar:** ⏳ Pending validation
 

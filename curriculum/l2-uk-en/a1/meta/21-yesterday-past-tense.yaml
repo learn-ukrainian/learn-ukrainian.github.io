@@ -1,7 +1,7 @@
 module: a1-21
 title: Yesterday - Past Tense
 subtitle: Talking About What Happened
-version: '1.0'
+version: '2.0'
 phase: A1.3 - Consolidation
 pedagogy: PPP
 duration: 60 min
@@ -11,13 +11,16 @@ tags:
   - l-participle
   - time-expressions
   - verbs
+  - aspect
 grammar:
   - Past tense formation with L-participle
   - Gender agreement in past tense (-в/-ла/-ло/-ли)
+  - imperfective-aspect-awareness
   - Time expressions for past events
 objectives:
   - Learner can form past tense using L-participle
   - Learner can use correct gender ending (-в/-ла/-ло/-ли)
+  - Learner understands ongoing vs completed past actions
   - Learner can describe past events using time expressions
   - Learner can talk about what they did yesterday
 vocabulary_count: 25

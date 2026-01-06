@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): тепло, вітер, річка, парку, сніг...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): річка, любити, гуляти, вітер, сніг...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 38.4% (target 35-55% (M29))
 - **Grammar:** ⏳ Pending validation
 

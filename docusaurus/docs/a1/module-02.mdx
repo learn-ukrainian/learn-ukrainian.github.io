@@ -16,7 +16,6 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
@@ -94,10 +93,10 @@ The soft sign appears in the word **будь ла́ска** (please): "budʲ lá
 
 The letter **И** is different from **І**. While **І** makes the soft "ee" sound (like in "meet"), **И** makes a harder sound, like "i" in "bit" or "sit":
 
-| Letter  | Sound           | Example              |
-| ------- | --------------- | -------------------- | ----- |
-| **І і** | /i/ like "meet" | п**і**ца (píttsa)    | pizza |
-| **И и** | /ɪ/ like "bit"  | джи́нс**и** (dzhýnsy) | jeans |
+| Letter  | Sound           | Example              | English |
+| ------- | --------------- | -------------------- | ------- |
+| **І і** | /i/ like "meet" | п**і**ца (píttsa)    | pizza   |
+| **И и** | /ɪ/ like "bit"  | джи́нс**и** (dzhýnsy) | jeans   |
 
 The word **джинси** (jeans) has the hard **И** at the end: "dzhýnsy." The city **Київ** has the soft **І**: "Kýyiv."
 
@@ -299,7 +298,7 @@ Next module, we'll start learning about noun gender and why it matters!
 <MatchUp
   title="Letter Sounds"
   isUkrainian={false}
-  pairs={JSON.parse(`[{"left": "- Г", "right": "h (like \\\\\\"ahead\\\\\\")"}, {"left": "- Ґ", "right": "g (like \\\\\\"go\\\\\\")"}, {"left": "- Ж", "right": "zh (like \\\\\\"pleasure\\\\\\")"}, {"left": "- Ш", "right": "sh (like \\\\\\"shop\\\\\\")"}, {"left": "- Щ", "right": "shch (like \\\\\\"borshch\\\\\\")"}, {"left": "- Ч", "right": "ch (like \\\\\\"church\\\\\\")"}, {"left": "- Ц", "right": "ts (like \\\\\\"cats\\\\\\")"}, {"left": "- Є", "right": "ye (like \\\\\\"yes\\\\\\")"}, {"left": "- Ї", "right": "yi (like \\\\\\"yeet\\\\\\")"}, {"left": "- Ю", "right": "yu (like \\\\\\"you\\\\\\")"}, {"left": "- Я", "right": "ya (like \\\\\\"yacht\\\\\\")"}, {"left": "- Ь", "right": "soft sign"}]`)}
+  pairs={JSON.parse(`[{"left": "- Г", "right": "h (like \\"ahead\\")"}, {"left": "- Ґ", "right": "g (like \\"go\\")"}, {"left": "- Ж", "right": "zh (like \\"pleasure\\")"}, {"left": "- Ш", "right": "sh (like \\"shop\\")"}, {"left": "- Щ", "right": "shch (like \\"borshch\\")"}, {"left": "- Ч", "right": "ch (like \\"church\\")"}, {"left": "- Ц", "right": "ts (like \\"cats\\")"}, {"left": "- Є", "right": "ye (like \\"yes\\")"}, {"left": "- Ї", "right": "yi (like \\"yeet\\")"}, {"left": "- Ю", "right": "yu (like \\"you\\")"}, {"left": "- Я", "right": "ya (like \\"yacht\\")"}, {"left": "- Ь", "right": "soft sign"}]`)}
 />
 
 ### Alphabet Knowledge
@@ -339,7 +338,7 @@ Next module, we'll start learning about noun gender and why it matters!
 <TrueFalse
   title="Alphabet Facts"
   isUkrainian={false}
-  items={JSON.parse(`[{"statement": "The letter Г makes an \\\\\\"h\\\\\\" sound, not a \\\\\\"g\\\\\\" sound.", "isTrue": true, "explanation": "Correct! Г is a soft breathy \\\\\\"h\\\\\\" sound."}, {"statement": "Ґ exists in Ukrainian but was lost in Russian.", "isTrue": true, "explanation": "Correct! Ґ is unique to Ukrainian and a few other languages."}, {"statement": "The letter Ї sounds like \\\\\\"e\\\\\\" in English.", "isTrue": false, "explanation": "Incorrect! Ї sounds like \\\\\\"yi\\\\\\" (as in Kyiv)."}, {"statement": "Щ makes the \\\\\\"shch\\\\\\" sound in борщ.", "isTrue": true, "explanation": "Correct! Щ is the distinctive \\\\\\"shch\\\\\\" blend."}, {"statement": "The soft sign Ь makes a \\\\\\"y\\\\\\" sound.", "isTrue": false, "explanation": "Incorrect! Ь has no sound of its own; it softens the consonant before it."}, {"statement": "There are four iotated vowels in Ukrainian: Є, Ї, Ю, Я.", "isTrue": true, "explanation": "Correct! These all have a built-in \\\\\\"y\\\\\\" sound."}, {"statement": "Київ should be pronounced \\\\\\"Keev\\\\\\" like in Russian.", "isTrue": false, "explanation": "Incorrect! In Ukrainian, it's Kyiv with the \\\\\\"yi\\\\\\" sound from Ї."}, {"statement": "The Ukrainian alphabet has 33 letters total.", "isTrue": true, "explanation": "Correct! 33 letters including all the unique Ukrainian ones."}, {"statement": "Italic т looks like \\\\\\"t\\\\\\" in Latin script.", "isTrue": false, "explanation": "Incorrect! Italic т looks like \\\\\\"m\\\\\\" but still sounds like \\\\\\"t.\\\\\\""}, {"statement": "UNESCO recognized Ukrainian borscht culture as endangered heritage.", "isTrue": true, "explanation": "Correct! In 2022, due to the war."}, {"statement": "Є sounds like \\\\\\"ye\\\\\\" as in \\\\\\"yes.\\\\\\"", "isTrue": true, "explanation": "Correct! Є is the iotated \\\\\\"ye\\\\\\" sound."}, {"statement": "The letter И is the same as І in Ukrainian.", "isTrue": false, "explanation": "Incorrect! И is a hard \\\\\\"i\\\\\\" sound, while І is a soft \\\\\\"ee\\\\\\" sound."}]`)}
+  items={JSON.parse(`[{"statement": "The letter Г makes an \\"h\\" sound, not a \\"g\\" sound.", "isTrue": true, "explanation": "Correct! Г is a soft breathy \\"h\\" sound."}, {"statement": "Ґ exists in Ukrainian but was lost in Russian.", "isTrue": true, "explanation": "Correct! Ґ is unique to Ukrainian and a few other languages."}, {"statement": "The letter Ї sounds like \\"e\\" in English.", "isTrue": false, "explanation": "Incorrect! Ї sounds like \\"yi\\" (as in Kyiv)."}, {"statement": "Щ makes the \\"shch\\" sound in борщ.", "isTrue": true, "explanation": "Correct! Щ is the distinctive \\"shch\\" blend."}, {"statement": "The soft sign Ь makes a \\"y\\" sound.", "isTrue": false, "explanation": "Incorrect! Ь has no sound of its own; it softens the consonant before it."}, {"statement": "There are four iotated vowels in Ukrainian: Є, Ї, Ю, Я.", "isTrue": true, "explanation": "Correct! These all have a built-in \\"y\\" sound."}, {"statement": "Київ should be pronounced \\"Keev\\" like in Russian.", "isTrue": false, "explanation": "Incorrect! In Ukrainian, it's Kyiv with the \\"yi\\" sound from Ї."}, {"statement": "The Ukrainian alphabet has 33 letters total.", "isTrue": true, "explanation": "Correct! 33 letters including all the unique Ukrainian ones."}, {"statement": "Italic т looks like \\"t\\" in Latin script.", "isTrue": false, "explanation": "Incorrect! Italic т looks like \\"m\\" but still sounds like \\"t.\\""}, {"statement": "UNESCO recognized Ukrainian borscht culture as endangered heritage.", "isTrue": true, "explanation": "Correct! In 2022, due to the war."}, {"statement": "Є sounds like \\"ye\\" as in \\"yes.\\"", "isTrue": true, "explanation": "Correct! Є is the iotated \\"ye\\" sound."}, {"statement": "The letter И is the same as І in Ukrainian.", "isTrue": false, "explanation": "Incorrect! И is a hard \\"i\\" sound, while І is a soft \\"ee\\" sound."}]`)}
 />
 
 ### Ukrainian Cities

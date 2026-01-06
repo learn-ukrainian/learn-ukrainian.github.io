@@ -100,21 +100,35 @@
 
 ---
 
-> 💡 **Reflexive Pattern**
+> 💡 **The Reflexive Pattern (-ся / -сь)**
 >
-> Many daily activities are reflexive because you do them TO YOURSELF:
+> Many daily activities are reflexive because the action is directed back at the subject (doing it TO YOURSELF).
 >
-> - вмивати (wash something) → вмиватися (wash yourself)
-> - одягати (dress someone) → одягатися (dress yourself)
-> - готувати (prepare something) → готуватися (prepare yourself)
+> **How to form it:** Take a conjugated verb and add **-ся** or **-сь**.
+> - Use **-сь** after vowels (я, ми, ви, ти, він/вона - sometimes).
+> - Use **-ся** after consonants (ми, ви, вони).
+>
+> Let's look at **вмиватися** (to wash oneself):
+>
+> | Person | Verb Form | + Reflexive | Full Form |
+> | :--- | :--- | :--- | :--- |
+> | Я | вмиваю | + **-сь** | **вмиваюся/вмиваюсь** |
+> | Ти | вмиваєш | + **-ся** | **вмиваєшся** |
+> | Він/Вона | вмиває | + **-ться** | **вмивається** |
+> | Ми | вмиваємо | + **-сь** | **вмиваємося/вмиваємось** |
+> | Ви | вмиваєте | + **-ся** | **вмиваєтеся** |
+> | Вони | вмивають | + **-ся** | **вмиваються** |
+>
+> *Note: In the 3rd person (він/вони), notice the spelling **-ться**. It sounds like a long /tsː/ sound.*
+>
+> **Common Reflexive Verbs:**
+> - вмиватися (to wash oneself)
+> - одягатися (to dress oneself)
+> - прокидатися (to wake up)
+> - готуватися (to prepare oneself)
+> - дивитися (to watch/look at)
 
 > 🌍 **Ukrainian Daily Life**
->
-> Ukrainians typically have a light breakfast (сніданок), a substantial lunch (обід), and dinner (вечеря) around 7-8 PM. Work hours are usually 9-6 with a lunch break.
-
-> 💡 **-ся or -сь?**
->
-> Remember: Use **-сь** after vowels (я вмиваю**сь**), and **-ся** after consonants (ми вмиваємо**ся**). In spoken Ukrainian, many people use -ся everywhere — both are acceptable!
 
 ---
 

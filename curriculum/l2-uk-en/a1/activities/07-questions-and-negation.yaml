@@ -135,9 +135,8 @@
     explanation: чому (chomu) = why
 - type: match-up
   title: Question Words to Context
+  instruction: Match each question word with the context where it's used
   pairs:
-  - left: Question Word
-    right: Context
   - left: що
     right: asking about objects or actions
   - left: хто

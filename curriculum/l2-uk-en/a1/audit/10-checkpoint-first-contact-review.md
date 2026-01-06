@@ -14,7 +14,8 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 30.8% (checkpoint - no gate)
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 29.9% (checkpoint - no gate)
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): двадцять, дев'яносто, сто, коштує, рахунок...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): коштує, сто, рахунок, дев'яносто, п'ятдесят...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 29.9% (target 25-40% (M17))
 - **Grammar:** ⏳ Pending validation
 

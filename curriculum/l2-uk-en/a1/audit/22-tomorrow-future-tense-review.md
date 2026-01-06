@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): спробую, буду, мрію, місяця, тижня...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): місяця, мрію, обов'язково, думаю, завтра...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,18 +12,19 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1074/750
+- **Words:** ✅ 1157/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/3
+- **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 47/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 42.3% (target 35-55% (M22))
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 39.4% (target 35-55% (M22))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
@@ -34,7 +35,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 30 | Included in Core |
 | **Grammar** | ⚪️ | 0 | Skipped |
-| **The Compound Future Tense** | ⚪️ | 66 | Skipped |
+| **The Compound Future Tense** | ⚪️ | 149 | Skipped |
 | **Expressing Plans and Intentions** | ⚪️ | 163 | Skipped |
 | **Time Expressions for the Future** | ⚪️ | 38 | Skipped |
 | **Useful Adverbs** | ⚪️ | 82 | Skipped |

@@ -96,24 +96,24 @@ Look at each word. What gender is it?
 
 ## Skill 3: Conjugating Verbs
 
-**Can you conjugate Class I and Class II verbs in present tense?**
+**Can you conjugate First Conjugation and Second Conjugation verbs in present tense?**
 
 ### Model: Two Verb Classes
 
-**Class I (читати - to read):**
+**First Conjugation (читати - to read):**
 
 > Я **читаю** книгу. Ти **читаєш** газету. Він **читає** журнал.
 > _(I read a book. You read a newspaper. He reads a magazine.)_
 
-**Class II (говорити - to speak):**
+**Second Conjugation (говорити - to speak):**
 
 > Я **говорю** українською. Ти **говориш** швидко. Вона **говорить** добре.
 > _(I speak Ukrainian. You speak fast. She speaks well.)_
 
 **Notice the pattern:**
 
-- Class I: я -**ю**, ти -**єш**, він -**є**
-- Class II: я -**ю**, ти -**иш**, він -**ить**
+- First Conjugation: я -**ю**, ти -**єш**, він -**є**
+- Second Conjugation: я -**ю**, ти -**иш**, він -**ить**
 
 ### Practice: Fill the Gaps
 
@@ -126,10 +126,10 @@ Complete with the correct verb form:
 
 > [!solution] Перевірити (Check)
 >
-> 1. читаю (Class I, я → -ю)
-> 2. говорить (Class II, вона → -ить)
-> 3. пишемо (Class I, ми → -емо)
-> 4. роблять (Class II, вони → -ять)
+> 1. читаю (First Conjugation, я → -ю)
+> 2. говорить (Second Conjugation, вона → -ить)
+> 3. пишемо (First Conjugation, ми → -емо)
+> 4. роблять (Second Conjugation, вони → -ять)
 
 ### Self-Check
 
@@ -254,7 +254,7 @@ Fill in the customer's responses:
 > [!solution] Перевірити (Check)
 >
 > 1. Feminine — ends in -а
-> 2. читаю = "I read" — 1st person singular of читати (Class I)
+> 2. читаю = "I read" — 1st person singular of читати (First Conjugation)
 > 3. "Що ти любиш?" (What do you like?)
 > 4. Де (Де живе Марко?)
 
@@ -266,7 +266,7 @@ Fill in the customer's responses:
 | -------------------- | ---------------------------------------------- | --------------------------------- |
 | **Reading Cyrillic** | Recognize all 33 letters                       | Can you read "борщ" without help? |
 | **Gender ID**        | -а/-я = f, consonant = m, -о/-е = n            | What gender is "вікно"?           |
-| **Verb Conjugation** | Class I: -ю, -єш, -є / Class II: -ю, -иш, -ить | "Вона читає" or "читаєть"?        |
+| **Verb Conjugation** | First Conjugation: -ю, -єш, -є / Second Conjugation: -ю, -иш, -ить | "Вона читає" or "читаєть"?        |
 | **Questions**        | що/хто/де/як + word order                      | How do you ask "Where are you?"   |
 | **Food Ordering**    | будь ласка, дякую, Смачного!                   | Can you order кава at a кафе?     |
 

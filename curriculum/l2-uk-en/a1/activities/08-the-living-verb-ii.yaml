@@ -1,44 +1,44 @@
 - type: quiz
-  title: Class II or Class I?
+  title: Second Conjugation or First Conjugation?
   items:
   - question: To which class does **говорити** belong?
     options:
-    - text: Class II (-ити)
+    - text: Second Conjugation (-ити)
       correct: true
-    - text: Class I (-ати)
+    - text: First Conjugation (-ати)
       correct: false
     - text: Irregular
       correct: false
     - text: Noun
       correct: false
-    explanation: говорити ends in -ити, so it's Class II.
+    explanation: говорити ends in -ити, so it's Second Conjugation.
   - question: To which class does **читати** belong?
     options:
-    - text: Class II (-ити)
+    - text: Second Conjugation (-ити)
       correct: false
-    - text: Class I (-ати)
+    - text: First Conjugation (-ати)
       correct: true
     - text: Irregular
       correct: false
     - text: Noun
       correct: false
-    explanation: читати ends in -ати, so it's Class I.
+    explanation: читати ends in -ати, so it's First Conjugation.
   - question: To which class does **любити** belong?
     options:
-    - text: Class II (-ити)
+    - text: Second Conjugation (-ити)
       correct: true
-    - text: Class I (-ати)
+    - text: First Conjugation (-ати)
       correct: false
     - text: Irregular
       correct: false
     - text: Adjective
       correct: false
-    explanation: любити ends in -ити, so it's Class II.
+    explanation: любити ends in -ити, so it's Second Conjugation.
   - question: To which class does **працювати** belong?
     options:
-    - text: Class II (-ити)
+    - text: Second Conjugation (-ити)
       correct: false
-    - text: Class I (-ати)
+    - text: First Conjugation (-ати)
       correct: true
     - text: Irregular
       correct: false
@@ -47,92 +47,92 @@
     explanation: майже всі дієслова на -ати — це I дієвідміна.
   - question: To which class does **бачити** belong?
     options:
-    - text: Class II (-ити)
+    - text: Second Conjugation (-ити)
       correct: true
-    - text: Class I (-ати)
+    - text: First Conjugation (-ати)
       correct: false
     - text: Irregular
       correct: false
     - text: Noun
       correct: false
-    explanation: бачити ends in -ити, so it's Class II.
+    explanation: бачити ends in -ити, so it's Second Conjugation.
   - question: To which class does **знати** belong?
     options:
-    - text: Class II (-ити)
+    - text: Second Conjugation (-ити)
       correct: false
-    - text: Class I (-ати)
+    - text: First Conjugation (-ати)
       correct: true
     - text: Irregular
       correct: false
     - text: Pronoun
       correct: false
-    explanation: знати to Class I.
+    explanation: знати to First Conjugation.
   - question: To which class does **ходити** belong?
     options:
-    - text: Class II (-ити)
+    - text: Second Conjugation (-ити)
       correct: true
-    - text: Class I (-ати)
+    - text: First Conjugation (-ати)
       correct: false
     - text: Irregular
       correct: false
     - text: Noun
       correct: false
-    explanation: ходити is a typical Class II verb.
+    explanation: ходити is a typical Second Conjugation verb.
   - question: To which class does **писати** belong?
     options:
-    - text: Class II (-ити)
+    - text: Second Conjugation (-ити)
       correct: false
-    - text: Class I (-ати)
+    - text: First Conjugation (-ати)
       correct: true
     - text: Irregular
       correct: false
     - text: Noun
       correct: false
-    explanation: писати is Class I (change s -> sh).
+    explanation: писати is First Conjugation (change s -> sh).
   - question: To which class does **робити** belong?
     options:
-    - text: Class II (-ити)
+    - text: Second Conjugation (-ити)
       correct: true
-    - text: Class I (-ати)
+    - text: First Conjugation (-ати)
       correct: false
     - text: Irregular
       correct: false
     - text: Noun
       correct: false
-    explanation: робити is Class II.
+    explanation: робити is Second Conjugation.
   - question: To which class does **дякувати** belong?
     options:
-    - text: Class II (-ити)
+    - text: Second Conjugation (-ити)
       correct: false
-    - text: Class I (-ати)
+    - text: First Conjugation (-ати)
       correct: true
     - text: Irregular
       correct: false
     - text: Adverb
       correct: false
-    explanation: дякувати is Class I (-увати suffix).
+    explanation: дякувати is First Conjugation (-увати suffix).
   - question: To which class does **спати** belong?
     options:
-    - text: Class II (-ити)
+    - text: Second Conjugation (-ити)
       correct: true
-    - text: Class I (-ати)
+    - text: First Conjugation (-ати)
       correct: false
     - text: Irregular
       correct: false
     - text: Noun
       correct: false
-    explanation: спати looks like Class I but conjugates as Class II (сплю, спиш).
+    explanation: спати looks like First Conjugation but conjugates as Second Conjugation (сплю, спиш).
   - question: To which class does **вчити** belong?
     options:
-    - text: Class II (-ити)
+    - text: Second Conjugation (-ити)
       correct: true
-    - text: Class I (-ати)
+    - text: First Conjugation (-ати)
       correct: false
     - text: Irregular
       correct: false
     - text: Noun
       correct: false
-    explanation: вчити is clearly Class II.
+    explanation: вчити is clearly Second Conjugation.
 - type: match-up
   title: Verbs and Actions
   pairs:
@@ -271,36 +271,36 @@
 - type: true-false
   title: Grammar Rules
   items:
-  - statement: Class II verbs end in -ити or -іти in the infinitive.
+  - statement: Second Conjugation verbs end in -ити or -іти in the infinitive.
     correct: true
-    explanation: Correct! This is the defining feature of Class II verbs.
-  - statement: The verb "читати" is Class II.
+    explanation: Correct! This is the defining feature of Second Conjugation verbs.
+  - statement: The verb "читати" is Second Conjugation.
     correct: false
-    explanation: Incorrect! "читати" ends in -ати, so it's Class I.
+    explanation: Incorrect! "читати" ends in -ати, so it's First Conjugation.
   - statement: Irregular verbs like їсти and пити don't follow standard conjugation
       patterns.
     correct: true
     explanation: Correct! These verbs have unique conjugation forms.
-  - statement: In Class II, the first person singular ending is -ю or -у.
+  - statement: In Second Conjugation, the first person singular ending is -ю or -у.
     correct: true
     explanation: Correct! я говорю, я роблю.
   - statement: The verb "говорити" conjugates as "я говорую."
     correct: false
     explanation: Incorrect! It's "я говорю" (not "говорую").
-  - statement: '"Дякувати" is a Class I verb.'
+  - statement: '"Дякувати" is a First Conjugation verb.'
     correct: true
-    explanation: Correct! It ends in -увати, which is a Class I pattern.
-  - statement: All verbs ending in -ати are Class I.
+    explanation: Correct! It ends in -увати, which is a First Conjugation pattern.
+  - statement: All verbs ending in -ати are First Conjugation.
     correct: false
-    explanation: Incorrect! "спати" ends in -ати but behaves like Class II in some
+    explanation: Incorrect! "спати" ends in -ати but behaves like Second Conjugation in some
       forms.
-  - statement: The third person plural ending for Class II is -ять or -ать.
+  - statement: The third person plural ending for Second Conjugation is -ять or -ать.
     correct: true
     explanation: Correct! вони говорять, вони роблять.
   - statement: '"Я хочу" is an irregular form.'
     correct: true
     explanation: 'Correct! хотіти is irregular: хочу, хочеш, хоче.'
-  - statement: Class II verbs don't have consonant mutations.
+  - statement: Second Conjugation verbs don't have consonant mutations.
     correct: false
     explanation: 'Incorrect! Many do: робити → роблю, ходити → ходжу.'
   - statement: '"П''ю" is the first person singular of "пити."'
@@ -312,13 +312,13 @@
 - type: group-sort
   title: Verb Types
   groups:
-  - name: Class I (-ати)
+  - name: First Conjugation (-ати)
     items:
     - читати
     - писати
     - працювати
     - знати
-  - name: Class II (-ити)
+  - name: Second Conjugation (-ити)
     items:
     - говорити
     - робити

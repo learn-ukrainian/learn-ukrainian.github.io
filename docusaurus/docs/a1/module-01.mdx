@@ -16,7 +16,6 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
@@ -167,8 +166,6 @@ Now it's time to test your decoding skills. Look at these Ukrainian words and tr
 
 Every single one of these is an international word that you already know. Just written in a different alphabet!
 
----
-
 ## 📋 Summary
 
 In this module, you learned:
@@ -182,12 +179,6 @@ In this module, you learned:
 You can now read **35 international words** in Ukrainian. The key insight: many "Ukrainian" words are actually international words you already know, just written in Cyrillic.
 
 **Remember:** В is V, not B. Н is N, not H. Р is R, not P. С is S, not C. У is U, not Y. Х is like Scottish "loch."
-
----
-
-## Need More Practice?
-
----
 
 
 
@@ -206,7 +197,8 @@ You can now read **35 international words** in Ukrainian. The key insight: many 
 <MatchUp
   title="False Friends Sound"
   isUkrainian={false}
-  pairs={JSON.parse(`[{"left": "Ukrainian Letter", "right": "Sound"}, {"left": "В", "right": "/v/ as in van"}, {"left": "Н", "right": "/n/ as in no"}, {"left": "Р", "right": "/r/ as in red"}, {"left": "С", "right": "/s/ as in sun"}, {"left": "У", "right": "/u/ as in moon"}, {"left": "Х", "right": "/x/ as in loch"}, {"left": "в", "right": "/v/"}, {"left": "н", "right": "/n/"}, {"left": "р", "right": "/r/"}, {"left": "с", "right": "/s/"}, {"left": "у", "right": "/u/"}, {"left": "х", "right": "/x/"}]`)}
+  instruction="Match the Ukrainian letter with its sound"
+  pairs={JSON.parse(`[{"left": "В", "right": "/v/ as in van"}, {"left": "Н", "right": "/n/ as in no"}, {"left": "Р", "right": "/r/ as in red"}, {"left": "С", "right": "/s/ as in sun"}, {"left": "У", "right": "/u/ as in moon"}, {"left": "Х", "right": "/x/ as in loch"}, {"left": "в", "right": "/v/"}, {"left": "н", "right": "/n/"}, {"left": "р", "right": "/r/"}, {"left": "с", "right": "/s/"}, {"left": "у", "right": "/u/"}, {"left": "х", "right": "/x/"}]`)}
 />
 
 ### Letter Types
@@ -235,7 +227,7 @@ You can now read **35 international words** in Ukrainian. The key insight: many 
 <TrueFalse
   title="Letter Recognition"
   isUkrainian={false}
-  items={JSON.parse(`[{"statement": "The letter А sounds like \\\\\\"a\\\\\\" in \\\\\\"father\\\\\\".", "isTrue": true, "explanation": "Correct! А is a True Friend."}, {"statement": "The letter В sounds like \\\\\\"b\\\\\\" in \\\\\\"ball\\\\\\".", "isTrue": false, "explanation": "Incorrect! В is a False Friend. It sounds like \\\\\\"v\\\\\\" in \\\\\\"van\\\\\\"."}, {"statement": "The letter Н sounds like \\\\\\"n\\\\\\" in \\\\\\"no\\\\\\".", "isTrue": true, "explanation": "Correct! Despite looking like H, Н sounds like N."}, {"statement": "The letter Р sounds like \\\\\\"p\\\\\\" in \\\\\\"pet\\\\\\".", "isTrue": false, "explanation": "Incorrect! Р is a False Friend. It sounds like \\\\\\"r\\\\\\" in \\\\\\"red\\\\\\"."}, {"statement": "The letter С sounds like \\\\\\"s\\\\\\" in \\\\\\"sun\\\\\\".", "isTrue": true, "explanation": "Correct! Despite looking like C, С sounds like S."}, {"statement": "The letter У sounds like \\\\\\"y\\\\\\" in \\\\\\"yes\\\\\\".", "isTrue": false, "explanation": "Incorrect! У sounds like \\\\\\"oo\\\\\\" in \\\\\\"moon\\\\\\"."}, {"statement": "Cyrillic was created in Bulgaria, not Russia.", "isTrue": true, "explanation": "Correct! It was created in the 9th century in Bulgaria."}, {"statement": "Ukrainian has unique letters (Ї, Є, Ґ) that Russian doesn't have.", "isTrue": true, "explanation": "Correct! These letters make Ukrainian distinct."}, {"statement": "The word \\\\\\"метро\\\\\\" uses only False Friends.", "isTrue": false, "explanation": "Incorrect! It uses True Friends (М, Е, Т, О) and one False Friend (Р)."}, {"statement": "The letter К sounds like \\\\\\"k\\\\\\" in \\\\\\"kite\\\\\\".", "isTrue": true, "explanation": "Correct! К is a True Friend."}, {"statement": "The letter Х sounds like \\\\\\"x\\\\\\" in \\\\\\"box\\\\\\".", "isTrue": false, "explanation": "Incorrect! Х sounds like \\\\\\"ch\\\\\\" in Scottish \\\\\\"loch\\\\\\"."}, {"statement": "The letter Л sounds like \\\\\\"l\\\\\\" in \\\\\\"love\\\\\\".", "isTrue": true, "explanation": "Correct! Л is a New Letter that makes the L sound."}]`)}
+  items={JSON.parse(`[{"statement": "The letter А sounds like \\"a\\" in \\"father\\".", "isTrue": true, "explanation": "Correct! А is a True Friend."}, {"statement": "The letter В sounds like \\"b\\" in \\"ball\\".", "isTrue": false, "explanation": "Incorrect! В is a False Friend. It sounds like \\"v\\" in \\"van\\"."}, {"statement": "The letter Н sounds like \\"n\\" in \\"no\\".", "isTrue": true, "explanation": "Correct! Despite looking like H, Н sounds like N."}, {"statement": "The letter Р sounds like \\"p\\" in \\"pet\\".", "isTrue": false, "explanation": "Incorrect! Р is a False Friend. It sounds like \\"r\\" in \\"red\\"."}, {"statement": "The letter С sounds like \\"s\\" in \\"sun\\".", "isTrue": true, "explanation": "Correct! Despite looking like C, С sounds like S."}, {"statement": "The letter У sounds like \\"y\\" in \\"yes\\".", "isTrue": false, "explanation": "Incorrect! У sounds like \\"oo\\" in \\"moon\\"."}, {"statement": "Cyrillic was created in Bulgaria, not Russia.", "isTrue": true, "explanation": "Correct! It was created in the 9th century in Bulgaria."}, {"statement": "Ukrainian has unique letters (Ї, Є, Ґ) that Russian doesn't have.", "isTrue": true, "explanation": "Correct! These letters make Ukrainian distinct."}, {"statement": "The word \\"метро\\" uses only False Friends.", "isTrue": false, "explanation": "Incorrect! It uses True Friends (М, Е, Т, О) and one False Friend (Р)."}, {"statement": "The letter К sounds like \\"k\\" in \\"kite\\".", "isTrue": true, "explanation": "Correct! К is a True Friend."}, {"statement": "The letter Х sounds like \\"x\\" in \\"box\\".", "isTrue": false, "explanation": "Incorrect! Х sounds like \\"ch\\" in Scottish \\"loch\\"."}, {"statement": "The letter Л sounds like \\"l\\" in \\"love\\".", "isTrue": true, "explanation": "Correct! Л is a New Letter that makes the L sound."}]`)}
 />
 
 ### Complete the Word

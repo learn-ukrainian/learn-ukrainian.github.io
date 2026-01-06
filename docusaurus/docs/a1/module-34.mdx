@@ -16,7 +16,6 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
@@ -174,14 +173,14 @@ What's the correct demonstrative and adjective?
 2. писав (він, past masculine)
 3. буде готувати (вона, future compound)
 4. були (ми, past plural)
-5. говорять (вони, present Class II)
+5. говорять (вони, present Second Conjugation)
 
 </details>
 
 
 ### Self-Check
 
-- Can you conjugate both Class I (-ати) and Class II (-ити) verbs?
+- Can you conjugate both First Conjugation (-ати) and Second Conjugation (-ити) verbs?
 - Do you change past tense by gender? (читав/читала/читало/читали)
 - Can you form future with буду + infinitive?
 
@@ -460,7 +459,7 @@ At a café:
 <TrueFalse
   title="A1 Knowledge Check"
   isUkrainian={false}
-  items={JSON.parse(`[{"statement": "Ukrainian has three grammatical genders.", "isTrue": true, "explanation": "True! Masculine, feminine, and neuter."}, {"statement": "All nouns ending in -а are masculine.", "isTrue": false, "explanation": "False! They're usually feminine (книга, мама)."}, {"statement": "\\\\\\"Я читав\\\\\\" indicates a male speaker.", "isTrue": true, "explanation": "True! Past tense -в ending is masculine."}, {"statement": "\\\\\\"Немає\\\\\\" requires genitive case.", "isTrue": true, "explanation": "True! Немає + genitive: немає часу."}, {"statement": "\\\\\\"Йде дощ\\\\\\" means \\\\\\"It's cold.\\\\\\"", "isTrue": false, "explanation": "False! It means \\\\\\"It's raining.\\\\\\""}, {"statement": "Animate masculine accusative = genitive.", "isTrue": true, "explanation": "True! студент → студента"}, {"statement": "\\\\\\"Вдома\\\\\\" means \\\\\\"at home.\\\\\\"", "isTrue": true, "explanation": "True! Compare: додому = \\\\\\"to home\\\\\\""}, {"statement": "Numbers 2-4 use genitive plural.", "isTrue": false, "explanation": "False! They use nominative plural. 5+ use genitive plural."}, {"statement": "Ukrainian Christmas is now December 25.", "isTrue": true, "explanation": "True! Since 2023, Ukraine celebrates on December 25."}, {"statement": "\\\\\\"Болить\\\\\\" is used for single body parts.", "isTrue": true, "explanation": "True! For plural, use \\\\\\"болять\\\\\\" (Болять очі)."}, {"statement": "\\\\\\"Його\\\\\\" changes form based on noun gender.", "isTrue": false, "explanation": "False! \\\\\\"Його\\\\\\" NEVER changes."}, {"statement": "\\\\\\"З Новим роком!\\\\\\" means \\\\\\"Happy New Year!\\\\\\"", "isTrue": true, "explanation": "True! A common holiday greeting."}]`)}
+  items={JSON.parse(`[{"statement": "Ukrainian has three grammatical genders.", "isTrue": true, "explanation": "True! Masculine, feminine, and neuter."}, {"statement": "All nouns ending in -а are masculine.", "isTrue": false, "explanation": "False! They're usually feminine (книга, мама)."}, {"statement": "\\"Я читав\\" indicates a male speaker.", "isTrue": true, "explanation": "True! Past tense -в ending is masculine."}, {"statement": "\\"Немає\\" requires genitive case.", "isTrue": true, "explanation": "True! Немає + genitive: немає часу."}, {"statement": "\\"Йде дощ\\" means \\"It's cold.\\"", "isTrue": false, "explanation": "False! It means \\"It's raining.\\""}, {"statement": "Animate masculine accusative = genitive.", "isTrue": true, "explanation": "True! студент → студента"}, {"statement": "\\"Вдома\\" means \\"at home.\\"", "isTrue": true, "explanation": "True! Compare: додому = \\"to home\\""}, {"statement": "Numbers 2-4 use genitive plural.", "isTrue": false, "explanation": "False! They use nominative plural. 5+ use genitive plural."}, {"statement": "Ukrainian Christmas is now December 25.", "isTrue": true, "explanation": "True! Since 2023, Ukraine celebrates on December 25."}, {"statement": "\\"Болить\\" is used for single body parts.", "isTrue": true, "explanation": "True! For plural, use \\"болять\\" (Болять очі)."}, {"statement": "\\"Його\\" changes form based on noun gender.", "isTrue": false, "explanation": "False! \\"Його\\" NEVER changes."}, {"statement": "\\"З Новим роком!\\" means \\"Happy New Year!\\"", "isTrue": true, "explanation": "True! A common holiday greeting."}]`)}
 />
 
 ### Sentence Building

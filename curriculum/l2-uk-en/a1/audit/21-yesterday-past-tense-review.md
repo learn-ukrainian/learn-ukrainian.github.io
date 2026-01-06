@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): їв, жив, вчора, чекав, гуляв...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): вчора, дивився, жив, місяця, гуляв...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,18 +12,19 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 961/750
+- **Words:** ✅ 1033/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/3
+- **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 40/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 39.6% (target 35-55% (M21))
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 36.9% (target 35-55% (M21))
 - **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
@@ -33,7 +34,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 130 | Included in Core |
+| **Warm-up** | ✅ | 202 | Included in Core |
 | **Presentation** | ✅ | 710 | Included in Core |
 | **Підсумок (Summary)** | ✅ | 92 | Included in Core |
 | **Summary** | ✅ | 29 | Included in Core |

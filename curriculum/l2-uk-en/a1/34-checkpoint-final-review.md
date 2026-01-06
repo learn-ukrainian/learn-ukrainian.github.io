@@ -139,11 +139,11 @@ What's the correct demonstrative and adjective?
 > 2. писав (він, past masculine)
 > 3. буде готувати (вона, future compound)
 > 4. були (ми, past plural)
-> 5. говорять (вони, present Class II)
+> 5. говорять (вони, present Second Conjugation)
 
 ### Self-Check
 
-- Can you conjugate both Class I (-ати) and Class II (-ити) verbs?
+- Can you conjugate both First Conjugation (-ати) and Second Conjugation (-ити) verbs?
 - Do you change past tense by gender? (читав/читала/читало/читали)
 - Can you form future with буду + infinitive?
 

@@ -1,7 +1,7 @@
 module: a1-06
 title: The Living Verb I
-subtitle: Present Tense Class I (-ати/-яті)
-version: '1.0'
+subtitle: First Conjugation (-ати/-яти)
+version: '2.0'
 phase: A1.1
 pedagogy: PPP
 duration: 60
@@ -9,17 +9,19 @@ transliteration: full
 tags:
   - verbs
   - conjugation
-  - class-i
+  - first-conjugation
   - present-tense
   - actions
 grammar:
-  - present-tense-class-i
+  - first-conjugation-verbs
+  - imperfective-aspect-intro
   - verb-conjugation
   - personal-endings
 objectives:
-  - Learner can conjugate Class I verbs in present tense
+  - Learner can conjugate First Conjugation verbs in present tense
   - Learner can form basic action statements
-  - Learner can describe daily activities using -ati verbs
+  - Learner can describe daily activities using -ати verbs
+  - Learner understands basic concept of imperfective aspect
 vocabulary_count: 25
 vocab_count: 63
 slug: 06-the-living-verb-i

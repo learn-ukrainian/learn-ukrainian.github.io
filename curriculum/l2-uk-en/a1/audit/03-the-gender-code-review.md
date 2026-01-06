@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): риба, огірок, м'ясо, чай, помідор...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (5 words): помідор, чай, риба, огірок, м'ясо...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 14.7% (target 10-25% (M03))
 - **Grammar:** ⏳ Pending validation
 

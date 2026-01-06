@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): комп'ютер, телефон, ліжко, стіна, вікно...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): телефон, стілець, двері, диван, стеля...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1585/300 (>1300 may be too long)
+- **Words:** ✅ 1585/300
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 15.2% (target 10-25% (M05))
 - **Grammar:** ⏳ Pending validation
 

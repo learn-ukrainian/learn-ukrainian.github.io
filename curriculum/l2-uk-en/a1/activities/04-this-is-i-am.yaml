@@ -453,90 +453,90 @@
     answer: людина
   - scrambled: п о д р у г а
     answer: подруга
-- type: fill-in
-  title: Identity Statements
+- type: quiz
+  title: Ти or Ви?
   items:
-  - sentence: Я ___.
-    answer: студент
+  - question: You meet your friend's grandmother. Which do you use?
     options:
-    - студент
-    - студентка
-    - професор
-    - лікар
-  - sentence: Вона ___.
-    answer: студентка
+    - text: ти
+      correct: false
+    - text: Ви
+      correct: true
+    explanation: Use Ви with elders as a sign of respect.
+  - question: You talk to your younger brother. Which do you use?
     options:
-    - студент
-    - студентка
-    - українець
-    - американець
-  - sentence: Він ___. (Ukrainian male)
-    answer: українець
+    - text: ти
+      correct: true
+    - text: Ви
+      correct: false
+    explanation: Use ти with family members you're close to.
+  - question: You meet a professor for the first time. Which do you use?
     options:
-    - українець
-    - українка
-    - студент
-    - професор
-  - sentence: Я ___. (American female)
-    answer: американка
+    - text: ти
+      correct: false
+    - text: Ви
+      correct: true
+    explanation: Use Ви with authority figures.
+  - question: You talk to your pet dog. Which do you use?
     options:
-    - американець
-    - американка
-    - англієць
-    - канадець
-  - sentence: Це мій ___.
-    answer: друг
+    - text: ти
+      correct: true
+    - text: Ви
+      correct: false
+    explanation: Use ти with animals.
+  - question: You ask a stranger for directions. Which do you use?
     options:
-    - друг
-    - подруга
-    - студент
-    - лікар
-  - sentence: Це моя ___.
-    answer: подруга
+    - text: ти
+      correct: false
+    - text: Ви
+      correct: true
+    explanation: Use Ви with strangers.
+  - question: Your classmate at university. Which do you use?
     options:
-    - друг
-    - подруга
-    - студентка
-    - українка
-  - sentence: Вони ___.
-    answer: студенти
+    - text: ти
+      correct: true
+    - text: Ви
+      correct: false
+    explanation: Use ти with peers your age.
+  - question: A cashier at a shop. Which do you use?
     options:
-    - студент
-    - студентка
-    - студенти
-    - професор
-  - sentence: Вона ___.
-    answer: лікарка
+    - text: ти
+      correct: false
+    - text: Ви
+      correct: true
+    explanation: Use Ви in formal service situations.
+  - question: Your best friend. Which do you use?
     options:
-    - лікар
-    - лікарка
-    - професорка
-    - студентка
-  - sentence: Він ___. (boy/guy)
-    answer: хлопець
+    - text: ти
+      correct: true
+    - text: Ви
+      correct: false
+    explanation: Use ти with close friends.
+  - question: A doctor you just met. Which do you use?
     options:
-    - хлопець
-    - дівчина
-    - чоловік
-    - студент
-  - sentence: ___ книга. (This is)
-    answer: Це
+    - text: ти
+      correct: false
+    - text: Ви
+      correct: true
+    explanation: Use Ви with professionals in formal settings.
+  - question: A child on the street. Which do you use?
     options:
-    - Це
-    - Той
-    - Ось
-    - То
-  - sentence: Вона ___. (person)
-    answer: людина
+    - text: ти
+      correct: true
+    - text: Ви
+      correct: false
+    explanation: Use ти with children.
+  - question: Your boss at work. Which do you use?
     options:
-    - людина
-    - жінка
-    - дівчина
-    - студентка
-  - sentence: Я ___. (Canadian male)
-    answer: канадець
+    - text: ти
+      correct: false
+    - text: Ви
+      correct: true
+    explanation: Use Ви with superiors.
+  - question: Your roommate. Which do you use?
     options:
-    - канадець
-    - канадка
-    - американець
-    - англієць
+    - text: ти
+      correct: true
+    - text: Ви
+      correct: false
+    explanation: Use ти with people you live with casually.

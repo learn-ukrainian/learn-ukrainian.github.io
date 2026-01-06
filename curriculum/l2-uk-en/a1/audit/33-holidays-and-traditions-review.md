@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): запрошення, любові, подарунок, свічка, народження...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): любові, запрошення, бажати, квіти, листівка...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 37.4% (target 35-55% (M33))
 - **Grammar:** ⏳ Pending validation
 

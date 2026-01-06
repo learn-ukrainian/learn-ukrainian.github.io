@@ -16,7 +16,6 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
@@ -28,6 +27,16 @@ import ComparativeStudy from '@site/src/components/ComparativeStudy';
 What did you do yesterday? Last week? A long time ago? Every language needs a way to talk about the past, and Ukrainian's solution is elegant: take the verb stem and add a special ending that shows **who** did the action.
 
 Unlike English, where "I worked" and "she worked" look the same, Ukrainian past tense changes based on **gender**, not person. "I worked" is different for men (я працював) and women (я працювала). Once you see the pattern, it's surprisingly easy!
+
+:::warning[**Grammar Insight: Ongoing vs. Completed**]
+
+All the verbs you've learned so far are **imperfective**. In the past tense, this means they often describe **ongoing or habitual actions**:
+
+- **Я читав** = I was reading (ongoing) OR I used to read (habit).
+
+Ukrainian uses a slightly different form for "I finished reading" (perfective). You'll master that in A2! For now, focus on these "storytelling" forms.
+:::
+
 
 :::tip[**Чи знаєте ви? (Did You Know?)**]
 
@@ -342,7 +351,7 @@ Notice how Ukrainian uses був/була/було for "was" depending on the ge
 <TrueFalse
   title="Past Tense Facts"
   isUkrainian={false}
-  items={JSON.parse(`[{"statement": "The past tense ending -в is used for masculine subjects.", "isTrue": true, "explanation": "Correct! -в is the masculine singular ending."}, {"statement": "\\\\\\"Вона працював\\\\\\" is grammatically correct.", "isTrue": false, "explanation": "Wrong gender! It should be \\\\\\"Вона працювала.\\\\\\""}, {"statement": "\\\\\\"Вчора\\\\\\" means \\\\\\"tomorrow.\\\\\\"", "isTrue": false, "explanation": "Вчора means yesterday, not tomorrow."}, {"statement": "The past tense of \\\\\\"бути\\\\\\" for feminine is \\\\\\"була.\\\\\\"", "isTrue": true, "explanation": "Correct! Був (m), була (f), було (n), були (pl)."}, {"statement": "The verb \\\\\\"їсти\\\\\\" becomes \\\\\\"їв\\\\\\" in masculine past tense.", "isTrue": true, "explanation": "Correct! Їсти → їв/їла/їло/їли."}, {"statement": "\\\\\\"Ми\\\\\\" uses the -ли ending in past tense.", "isTrue": true, "explanation": "Correct! All plural subjects use -ли."}, {"statement": "\\\\\\"Давно\\\\\\" means \\\\\\"recently.\\\\\\"", "isTrue": false, "explanation": "Давно means \\\\\\"long ago.\\\\\\" Недавно means \\\\\\"recently.\\\\\\""}, {"statement": "The neuter past tense ending is -ло.", "isTrue": true, "explanation": "Correct! Воно було, воно читало, воно працювало."}]`)}
+  items={JSON.parse(`[{"statement": "The past tense ending -в is used for masculine subjects.", "isTrue": true, "explanation": "Correct! -в is the masculine singular ending."}, {"statement": "\\"Вона працював\\" is grammatically correct.", "isTrue": false, "explanation": "Wrong gender! It should be \\"Вона працювала.\\""}, {"statement": "\\"Вчора\\" means \\"tomorrow.\\"", "isTrue": false, "explanation": "Вчора means yesterday, not tomorrow."}, {"statement": "The past tense of \\"бути\\" for feminine is \\"була.\\"", "isTrue": true, "explanation": "Correct! Був (m), була (f), було (n), були (pl)."}, {"statement": "The verb \\"їсти\\" becomes \\"їв\\" in masculine past tense.", "isTrue": true, "explanation": "Correct! Їсти → їв/їла/їло/їли."}, {"statement": "\\"Ми\\" uses the -ли ending in past tense.", "isTrue": true, "explanation": "Correct! All plural subjects use -ли."}, {"statement": "\\"Давно\\" means \\"recently.\\"", "isTrue": false, "explanation": "Давно means \\"long ago.\\" Недавно means \\"recently.\\""}, {"statement": "The neuter past tense ending is -ло.", "isTrue": true, "explanation": "Correct! Воно було, воно читало, воно працювало."}]`)}
 />
 
 ### Transform to Past Tense

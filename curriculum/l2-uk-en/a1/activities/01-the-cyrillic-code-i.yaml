@@ -27,9 +27,8 @@
     right: k
 - type: match-up
   title: False Friends Sound
+  instruction: Match the Ukrainian letter with its sound
   pairs:
-  - left: Ukrainian Letter
-    right: Sound
   - left: В
     right: /v/ as in van
   - left: Н

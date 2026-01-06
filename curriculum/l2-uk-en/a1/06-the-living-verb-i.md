@@ -4,19 +4,19 @@
 
 Up until now, we've talked about what things **are** (Це книга. То стіл.). But life is movement, action! It's time to learn how to talk about what we **do**.
 
-Today you unlock your first set of Ukrainian action verbs — the **Class I conjugation** pattern. These are verbs ending in **-ати** or **-яти**, and they're everywhere in daily life: читати (to read), писати (to write), працювати (to work), гуляти (to walk), грати (to play).
+Today you unlock your first set of Ukrainian action verbs — the **First Conjugation (-ати verbs)**. These are verbs ending in **-ати** or **-яти**, and they're everywhere in daily life: читати (to read), писати (to write), працювати (to work), гуляти (to walk), грати (to play).
 
 Mastering this pattern means you can suddenly talk about what you're doing **right now**. No more frozen sentences — your Ukrainian comes alive.
 
 > 💡 **Did You Know?**
 >
-> Ukrainian verb conjugations are incredibly logical. Once you learn the Class I pattern (this module), you've unlocked hundreds of verbs! They all follow the same rules, so if you know **читати → читаю**, you automatically know **працювати → працюю** and **гуляти → гуляю**. It's like getting a master key to Ukrainian action.
+> Ukrainian verb conjugations are incredibly logical. Once you learn the First Conjugation pattern (this module), you've unlocked hundreds of verbs! They all follow the same rules, so if you know **читати → читаю**, you automatically know **працювати → працюю** and **гуляти → гуляю**. It's like getting a master key to Ukrainian action.
 
 ---
 
 ## Warm-up
 
-Think about your typical day. You wake up. You eat breakfast. You read. You work. You walk. You play. Every single one of these actions uses a **Class I verb** in Ukrainian.
+Think about your typical day. You wake up. You eat breakfast. You read. You work. You walk. You play. Every single one of these actions uses an **-ати verb** in Ukrainian.
 
 **Питання:** You read. You work. You walk. Ready to say it in Ukrainian?
 
@@ -26,7 +26,17 @@ Think about your typical day. You wake up. You eat breakfast. You read. You work
 
 ### The Pattern: -ати → -аю, -аєш, -ає...
 
-Class I verbs are verbs whose infinitive (dictionary form) ends in **-ати** or **-яти**. To conjugate them in the present tense, we:
+The **First Conjugation** (sometimes called the **е-conjugation**) includes verbs whose infinitive (dictionary form) ends in **-ати** or **-яти**.
+
+> [!tip] **Grammar Secret: Aspect**
+>
+> All the verbs in this module are **imperfective** (недоконаний вид). This means they describe actions that are **ongoing, repeated, or habitual**.
+>
+> - **Я читаю** = I am reading (right now) OR I read (every day).
+>
+> In A2, you will learn "perfective" verbs for one-time completed actions (like "I finished reading"). For now, focus on these ongoing actions!
+
+To conjugate them in the present tense, we:
 
 1. Drop the **-ти** ending
 2. Add personal endings based on **who** is doing the action
@@ -48,22 +58,33 @@ Let's take **читати** (chytaty — to read) as our example:
 >
 > In Ukrainian, you often **drop the pronoun** because the verb ending already tells you who's doing the action! So instead of "Я читаю", Ukrainians often just say "Читаю" — the ending **-ю** makes it clear it's "I". This makes Ukrainian sound efficient and rhythmic.
 
-### More Examples: The Class I Family
+### More Examples: The First Conjugation Family
 
-Here are 6 more verbs that follow the **exact same pattern** as читати:
+Most First Conjugation verbs are very regular. Let's look at two common subgroups:
+
+#### 1. Regular -ати/-яти Verbs
+These verbs keep their stem exactly as it appears in the infinitive (minus -ти).
 
 | Infinitive | Stem    | я form   | English         |
 | ---------- | ------- | -------- | --------------- |
-| писати     | пиш-    | пишу     | to write        |
-| працювати  | працюв- | працюю   | to work         |
 | гуляти     | гуля-   | гуляю    | to walk, stroll |
 | грати      | гра-    | граю     | to play         |
 | співати    | співа-  | співаю   | to sing         |
 | думати     | дума-   | думаю    | to think        |
+| слухати    | слуха-  | слухаю   | to listen       |
 | розуміти   | розумі- | розумію  | to understand   |
-| знаходити  | знаход- | знаходжу | to find         |
 
-Notice how **писати** changes its stem slightly? Instead of **писа-**, the stem becomes **пиш-**. This happens with a few verbs due to sound changes, but the endings stay the same: пишу, пишеш, пише, пишемо, пишете, пишуть.
+#### 2. The Productive -ува- / -юва- Pattern
+Verbs ending in **-ува-** or **-юва-** are very common (especially for new words!). Notice how the **-ува-** changes to **-у-** in the conjugated forms:
+
+| Infinitive  | Stem    | я form    | English         |
+| ----------- | ------- | --------- | --------------- |
+| працювати   | працюв- | працюю    | to work         |
+| танцювати   | танцюв- | танцюю    | to dance        |
+| малювати    | малюв-  | малюю     | to paint, draw  |
+
+> [!important] **Consonant Mutation**
+> Some verbs like **писати** (to write) change their final consonant: **писати** → **пишу** (not "писаю"). Don't worry about the rules yet; just memorize the "я пишу" form for now!
 
 **Let's see them in action:**
 
@@ -74,7 +95,7 @@ Notice how **писати** changes its stem slightly? Instead of **писа-**,
 - Ви **співаєте**. (You sing.) — /spiˈwɑjete/
 - Вони **думають**. (They think.) — /ˈdumɑjutʲ/
 - Я **розумію** українську. (I understand Ukrainian.) — /rozuˈmiju ukrɑˈjinʲsʲku/
-- Ти **знаходиш** ключі. (You find the keys.) — /znɑˈxɔdɪʃ klʲuˈt͡ʃi/
+- Ти **слухаєш** музику. (You listen to music.) — /ˈsluxɑjeʃ ˈmuzɪku/
 
 > 🎬 **Pop Culture Moment**
 >
@@ -148,7 +169,7 @@ Here's how these verbs show up in real Ukrainian life:
 
 > ⚡ **Pro Tip**
 >
-> The verb **робити** (to do/make) is tricky! Ukrainians actually use this verb in **Class II** conjugation. We learn that in Module 08. For now, use **читаю, граю, гуляю** — those are pure Class I gold.
+> The verb **робити** (to do/make) is tricky! Ukrainians actually use this verb in the **Second Conjugation**. We learn that in Module 08. For now, use **читаю, граю, гуляю** — those are pure First Conjugation gold.
 
 ---
 
@@ -168,7 +189,7 @@ The vowels (а, є, ю) flow like a melody. The consonants (т, в, л) give str
 
 > 🎭 **Folklore Corner**
 >
-> In Ukrainian folk songs (пісні), Class I verbs appear constantly because they describe daily life: **співати** (to sing), **танцювати** (to dance), **гуляти** (to stroll). The famous folk song "Гуляла дівчина бережком" (A girl walked by the riverbank) uses the past tense of **гуляти** — but you now know the root! You're learning the verbs that built Ukrainian culture.
+> In Ukrainian folk songs (пісні), **First Conjugation** verbs appear constantly because they describe daily life: **співати** (to sing), **танцювати** (to dance), **гуляти** (to stroll). The famous folk song "Гуляла дівчина бережком" (A girl walked by the riverbank) uses the past tense of **гуляти** — but you now know the root! You're learning the verbs that built Ukrainian culture.
 
 ---
 
@@ -189,7 +210,7 @@ I have breakfast. Then I work. I have lunch. I walk to the park. I read a book. 
 
 # Summary
 
-You've unlocked **Class I verbs** (-ати/-яти)! You can now:
+You've unlocked **First Conjugation verbs** (-ати/-яти)! You can now:
 
 - Conjugate verbs like **читати, писати, працювати, грати**
 - Describe daily routines and actions

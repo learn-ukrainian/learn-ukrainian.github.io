@@ -22,7 +22,13 @@
 >
 > The future = буду/будеш/буде... + infinitive (-ти form)
 
-Ukrainian uses **буду** (future of "to be") + infinitive to form the compound future. This works with imperfective verbs.
+Ukrainian uses **буду** (future of "to be") + infinitive to form the compound future. This pattern is used specifically with **imperfective verbs** to describe actions that will be ongoing, repeated, or habitual.
+
+> [!important] **The "Ongoing" Future**
+>
+> When you say "Я буду читати," you are saying "I will be reading" (ongoing) or "I will read" (as a habit).
+>
+> For actions that will be completed once (like "I will finish reading"), Ukrainian uses a different form called the **perfective future**, which you'll encounter in A2. For now, this **буду + infinitive** pattern is your workhorse for all future plans!
 
 ### Conjugation of буду
 

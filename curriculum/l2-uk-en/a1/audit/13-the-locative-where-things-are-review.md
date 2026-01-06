@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): магазин, робота, центр, будинок, церква...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): церква, кімната, університет, коридор, будинок...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 28.7% (target 25-40% (M13))
 - **Grammar:** ⏳ Pending validation
 

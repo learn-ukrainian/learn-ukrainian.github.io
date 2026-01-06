@@ -240,7 +240,7 @@
     - Ці
     explanation: студенти = plural → ці
 - type: fill-in
-  title: Verb Conjugation Class I
+  title: Verb Conjugation First Conjugation
   items:
   - sentence: Я ___ книгу.
     answer: читаю
@@ -339,7 +339,7 @@
     - читаю
     explanation: ви → читаєте
 - type: fill-in
-  title: Verb Conjugation Class II
+  title: Verb Conjugation Second Conjugation
   items:
   - sentence: Я ___ українською.
     answer: говорю
@@ -440,14 +440,14 @@
 - type: group-sort
   title: Verb Classes
   groups:
-  - name: Class I (-ати)
+  - name: First Conjugation (-ати)
     items:
     - читати
     - писати
     - знати
     - працювати
     - снідати
-  - name: Class II (-ити)
+  - name: Second Conjugation (-ити)
     items:
     - говорити
     - робити
@@ -599,12 +599,12 @@
   - statement: '"Це" can mean both "this" (neuter) and "this is".'
     correct: true
     explanation: Correct! Це вікно, Це книга (This is a book).
-  - statement: Class I verbs end in -ати or -яти.
+  - statement: First Conjugation verbs end in -ати or -яти.
     correct: true
     explanation: 'Correct! Examples: читати, писати, знати.'
-  - statement: Class II verbs use -ють in the 3rd person plural.
+  - statement: Second Conjugation verbs use -ють in the 3rd person plural.
     correct: false
-    explanation: 'Incorrect! Class II uses -ять: говорять, роблять.'
+    explanation: 'Incorrect! Second Conjugation uses -ять: говорять, роблять.'
   - statement: Questions can be formed by adding "чи" at the beginning.
     correct: true
     explanation: Correct! Чи ти студент? (Are you a student?)

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): машиною, набережна, сюди, вулиця, звідти...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (13 words): звідти, площа, автобусом, туди, сюди...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1820/750 (>1750 may be too long)
+- **Words:** ✅ 1820/750
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 30.6% (target 25-40% (M15))
 - **Grammar:** ⏳ Pending validation
 

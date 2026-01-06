@@ -6,6 +6,14 @@ What did you do yesterday? Last week? A long time ago? Every language needs a wa
 
 Unlike English, where "I worked" and "she worked" look the same, Ukrainian past tense changes based on **gender**, not person. "I worked" is different for men (я працював) and women (я працювала). Once you see the pattern, it's surprisingly easy!
 
+> [!important] **Grammar Insight: Ongoing vs. Completed**
+>
+> All the verbs you've learned so far are **imperfective**. In the past tense, this means they often describe **ongoing or habitual actions**:
+>
+> - **Я читав** = I was reading (ongoing) OR I used to read (habit).
+>
+> Ukrainian uses a slightly different form for "I finished reading" (perfective). You'll master that in A2! For now, focus on these "storytelling" forms.
+
 > [!tip] **Чи знаєте ви? (Did You Know?)**
 >
 > Минулий час (past tense) часто має букву **л**! Вона читала. Воно читало. Ми читали. Feminine, neuter, and plural forms always contain the letter **л**. Masculine forms usually end in **в** (Я читав), which historically evolved from an _l_ sound!

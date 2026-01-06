@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): дитина, чоловік, дружина, дівчина, дідусь...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): чоловік, син, дівчина, хлопець, сім'я...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 37.5% (target 35-55% (M32))
 - **Grammar:** ⏳ Pending validation
 

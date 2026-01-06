@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (30 words): продавець, овочі, закуска, офіціант, риба...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (30 words): борщ, кава, дешево, пиво, овочі...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 32.6% (target 25-40% (M18))
 - **Grammar:** ⏳ Pending validation
 

@@ -16,7 +16,6 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-import DialogueReorder from '@site/src/components/DialogueReorder';
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
@@ -124,24 +123,24 @@ Look at each word. What gender is it?
 
 ## Skill 3: Conjugating Verbs
 
-**Can you conjugate Class I and Class II verbs in present tense?**
+**Can you conjugate First Conjugation and Second Conjugation verbs in present tense?**
 
 ### Model: Two Verb Classes
 
-**Class I (читати - to read):**
+**First Conjugation (читати - to read):**
 
 > Я **читаю** книгу. Ти **читаєш** газету. Він **читає** журнал.
 > _(I read a book. You read a newspaper. He reads a magazine.)_
 
-**Class II (говорити - to speak):**
+**Second Conjugation (говорити - to speak):**
 
 > Я **говорю** українською. Ти **говориш** швидко. Вона **говорить** добре.
 > _(I speak Ukrainian. You speak fast. She speaks well.)_
 
 **Notice the pattern:**
 
-- Class I: я -**ю**, ти -**єш**, він -**є**
-- Class II: я -**ю**, ти -**иш**, він -**ить**
+- First Conjugation: я -**ю**, ти -**єш**, він -**є**
+- Second Conjugation: я -**ю**, ти -**иш**, він -**ить**
 
 ### Practice: Fill the Gaps
 
@@ -156,10 +155,10 @@ Complete with the correct verb form:
 <summary>Перевірити (Check)</summary>
 
 
-1. читаю (Class I, я → -ю)
-2. говорить (Class II, вона → -ить)
-3. пишемо (Class I, ми → -емо)
-4. роблять (Class II, вони → -ять)
+1. читаю (First Conjugation, я → -ю)
+2. говорить (Second Conjugation, вона → -ить)
+3. пишемо (First Conjugation, ми → -емо)
+4. роблять (Second Conjugation, вони → -ять)
 
 </details>
 
@@ -314,7 +313,7 @@ Fill in the customer's responses:
 
 
 1. Feminine — ends in -а
-2. читаю = "I read" — 1st person singular of читати (Class I)
+2. читаю = "I read" — 1st person singular of читати (First Conjugation)
 3. "Що ти любиш?" (What do you like?)
 4. Де (Де живе Марко?)
 
@@ -329,7 +328,7 @@ Fill in the customer's responses:
 | -------------------- | ---------------------------------------------- | --------------------------------- |
 | **Reading Cyrillic** | Recognize all 33 letters                       | Can you read "борщ" without help? |
 | **Gender ID**        | -а/-я = f, consonant = m, -о/-е = n            | What gender is "вікно"?           |
-| **Verb Conjugation** | Class I: -ю, -єш, -є / Class II: -ю, -иш, -ить | "Вона читає" or "читаєть"?        |
+| **Verb Conjugation** | First Conjugation: -ю, -єш, -є / Second Conjugation: -ю, -иш, -ить | "Вона читає" or "читаєть"?        |
 | **Questions**        | що/хто/де/як + word order                      | How do you ask "Where are you?"   |
 | **Food Ordering**    | будь ласка, дякую, Смачного!                   | Can you order кава at a кафе?     |
 
@@ -369,18 +368,18 @@ Fill in the customer's responses:
   items={JSON.parse(`[{"sentence": "___ книга цікава.", "answer": "Ця", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ стіл новий.", "answer": "Цей", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ вікно велике.", "answer": "Це", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ книги нові.", "answer": "Ці", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ кава гаряча.", "answer": "Ця", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ чай холодний.", "answer": "Цей", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ місто гарне.", "answer": "Це", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ двері старі.", "answer": "Ці", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ хлопець студент.", "answer": "Цей", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ дівчина українка.", "answer": "Ця", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ слово нове.", "answer": "Це", "options": ["Цей", "Ця", "Це", "Ці"]}, {"sentence": "___ студенти працюють.", "answer": "Ці", "options": ["Цей", "Ця", "Це", "Ці"]}]`)}
 />
 
-### Verb Conjugation Class I
+### Verb Conjugation First Conjugation
 
 <FillIn
-  title="Verb Conjugation Class I"
+  title="Verb Conjugation First Conjugation"
   isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Я ___ книгу.", "answer": "читаю", "options": ["читаю", "читаєш", "читає", "читають"]}, {"sentence": "Ти ___ газету.", "answer": "читаєш", "options": ["читаю", "читаєш", "читає", "читають"]}, {"sentence": "Він ___ журнал.", "answer": "читає", "options": ["читаю", "читаєш", "читає", "читають"]}, {"sentence": "Ми ___ українською.", "answer": "читаємо", "options": ["читаємо", "читаєте", "читають", "читаю"]}, {"sentence": "Ви ___ англійською.", "answer": "читаєте", "options": ["читаємо", "читаєте", "читають", "читаю"]}, {"sentence": "Вони ___ багато.", "answer": "читають", "options": ["читаємо", "читаєте", "читають", "читаю"]}, {"sentence": "Вона ___ книгу про Україну.", "answer": "читає", "options": ["читаю", "читаєш", "читає", "читають"]}, {"sentence": "Ти ___ цікаві книги?", "answer": "читаєш", "options": ["читаю", "читаєш", "читає", "читають"]}, {"sentence": "Я ___ щодня.", "answer": "читаю", "options": ["читаю", "читаєш", "читає", "читають"]}, {"sentence": "Вони ___ українські книги.", "answer": "читають", "options": ["читаємо", "читаєте", "читають", "читаю"]}, {"sentence": "Ми ___ українською мовою.", "answer": "читаємо", "options": ["читаємо", "читаєте", "читають", "читаю"]}, {"sentence": "Ви ___ швидко?", "answer": "читаєте", "options": ["читаємо", "читаєте", "читають", "читаю"]}]`)}
 />
 
-### Verb Conjugation Class II
+### Verb Conjugation Second Conjugation
 
 <FillIn
-  title="Verb Conjugation Class II"
+  title="Verb Conjugation Second Conjugation"
   isUkrainian={false}
   items={JSON.parse(`[{"sentence": "Я ___ українською.", "answer": "говорю", "options": ["говорю", "говориш", "говорить", "говорять"]}, {"sentence": "Ти ___ англійською.", "answer": "говориш", "options": ["говорю", "говориш", "говорить", "говорять"]}, {"sentence": "Він ___ швидко.", "answer": "говорить", "options": ["говорю", "говориш", "говорить", "говорять"]}, {"sentence": "Ми ___ повільно.", "answer": "говоримо", "options": ["говоримо", "говорите", "говорять", "говорю"]}, {"sentence": "Ви ___ добре.", "answer": "говорите", "options": ["говоримо", "говорите", "говорять", "говорю"]}, {"sentence": "Вони ___ тихо.", "answer": "говорять", "options": ["говоримо", "говорите", "говорять", "говорю"]}, {"sentence": "Вона ___ українською і англійською.", "answer": "говорить", "options": ["говорю", "говориш", "говорить", "говорять"]}, {"sentence": "Ти ___ добре українською?", "answer": "говориш", "options": ["говорю", "говориш", "говорить", "говорять"]}, {"sentence": "Я ___ з друзями.", "answer": "говорю", "options": ["говорю", "говориш", "говорить", "говорять"]}, {"sentence": "Вони ___ багато.", "answer": "говорять", "options": ["говоримо", "говорите", "говорять", "говорю"]}, {"sentence": "Ми ___ українською мовою.", "answer": "говоримо", "options": ["говоримо", "говорите", "говорять", "говорю"]}, {"sentence": "Ви ___ правильно?", "answer": "говорите", "options": ["говоримо", "говорите", "говорять", "говорю"]}]`)}
 />
@@ -390,7 +389,7 @@ Fill in the customer's responses:
 <GroupSort
   title="Verb Classes"
   isUkrainian={false}
-  groups={JSON.parse(`{"Class I (-ати)": ["читати", "писати", "знати", "працювати", "снідати"], "Class II (-ити)": ["говорити", "робити", "любити", "ходити"], "Irregular": ["їсти", "пити", "бути"]}`)}
+  groups={JSON.parse(`{"First Conjugation (-ати)": ["читати", "писати", "знати", "працювати", "снідати"], "Second Conjugation (-ити)": ["говорити", "робити", "любити", "ходити"], "Irregular": ["їсти", "пити", "бути"]}`)}
 />
 
 ### Question Words
@@ -406,7 +405,7 @@ Fill in the customer's responses:
 <TrueFalse
   title="Grammar Rules"
   isUkrainian={false}
-  items={JSON.parse(`[{"statement": "Ukrainian has 33 letters in its alphabet.", "isTrue": true, "explanation": "Correct! 33 letters total."}, {"statement": "The letter \\\\\\"Г\\\\\\" sounds like hard \\\\\\"g\\\\\\" in \\\\\\"go\\\\\\".", "isTrue": false, "explanation": "Incorrect! Г = /ɦ/. Hard /g/ is Ґ."}, {"statement": "Feminine nouns typically end in -а or -я.", "isTrue": true, "explanation": "Correct! Examples: книга, земля, кава."}, {"statement": "Ukrainian uses \\\\\\"to be\\\\\\" (є) in all present tense sentences.", "isTrue": false, "explanation": "Incorrect! Ukrainian has zero copula: \\\\\\"Я студент\\\\\\" (no є needed)."}, {"statement": "\\\\\\"Це\\\\\\" can mean both \\\\\\"this\\\\\\" (neuter) and \\\\\\"this is\\\\\\".", "isTrue": true, "explanation": "Correct! Це вікно, Це книга (This is a book)."}, {"statement": "Class I verbs end in -ати or -яти.", "isTrue": true, "explanation": "Correct! Examples: читати, писати, знати."}, {"statement": "Class II verbs use -ють in the 3rd person plural.", "isTrue": false, "explanation": "Incorrect! Class II uses -ять: говорять, роблять."}, {"statement": "Questions can be formed by adding \\\\\\"чи\\\\\\" at the beginning.", "isTrue": true, "explanation": "Correct! Чи ти студент? (Are you a student?)"}, {"statement": "Negation in Ukrainian uses \\\\\\"ні\\\\\\" before the verb.", "isTrue": false, "explanation": "Incorrect! Negation uses \\\\\\"не\\\\\\": Я не читаю (I don't read)."}, {"statement": "\\\\\\"Борщ\\\\\\" is a traditional Ukrainian soup.", "isTrue": true, "explanation": "Correct! UNESCO recognized Ukrainian borsch culture!"}, {"statement": "\\\\\\"Смачного!\\\\\\" means \\\\\\"Bon appétit!\\\\\\" in Ukrainian.", "isTrue": true, "explanation": "Correct! Used when someone starts eating."}, {"statement": "All Ukrainian verbs are regular.", "isTrue": false, "explanation": "Incorrect! Irregulars include їсти (їм, їси) and пити (п'ю, п'єш)."}]`)}
+  items={JSON.parse(`[{"statement": "Ukrainian has 33 letters in its alphabet.", "isTrue": true, "explanation": "Correct! 33 letters total."}, {"statement": "The letter \\"Г\\" sounds like hard \\"g\\" in \\"go\\".", "isTrue": false, "explanation": "Incorrect! Г = /ɦ/. Hard /g/ is Ґ."}, {"statement": "Feminine nouns typically end in -а or -я.", "isTrue": true, "explanation": "Correct! Examples: книга, земля, кава."}, {"statement": "Ukrainian uses \\"to be\\" (є) in all present tense sentences.", "isTrue": false, "explanation": "Incorrect! Ukrainian has zero copula: \\"Я студент\\" (no є needed)."}, {"statement": "\\"Це\\" can mean both \\"this\\" (neuter) and \\"this is\\".", "isTrue": true, "explanation": "Correct! Це вікно, Це книга (This is a book)."}, {"statement": "First Conjugation verbs end in -ати or -яти.", "isTrue": true, "explanation": "Correct! Examples: читати, писати, знати."}, {"statement": "Second Conjugation verbs use -ють in the 3rd person plural.", "isTrue": false, "explanation": "Incorrect! Second Conjugation uses -ять: говорять, роблять."}, {"statement": "Questions can be formed by adding \\"чи\\" at the beginning.", "isTrue": true, "explanation": "Correct! Чи ти студент? (Are you a student?)"}, {"statement": "Negation in Ukrainian uses \\"ні\\" before the verb.", "isTrue": false, "explanation": "Incorrect! Negation uses \\"не\\": Я не читаю (I don't read)."}, {"statement": "\\"Борщ\\" is a traditional Ukrainian soup.", "isTrue": true, "explanation": "Correct! UNESCO recognized Ukrainian borsch culture!"}, {"statement": "\\"Смачного!\\" means \\"Bon appétit!\\" in Ukrainian.", "isTrue": true, "explanation": "Correct! Used when someone starts eating."}, {"statement": "All Ukrainian verbs are regular.", "isTrue": false, "explanation": "Incorrect! Irregulars include їсти (їм, їси) and пити (п'ю, п'єш)."}]`)}
 />
 
 ### Food and Drinks

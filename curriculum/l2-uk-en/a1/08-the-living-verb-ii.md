@@ -2,13 +2,16 @@
 
 ## Warm-up
 
-You've already learned Class I verbs that end in **-ати** (читати, писати, працювати). But what about verbs like **говорити** (hovorýty) "to speak" and **робити** (róbyty) "to do"? These belong to **Class II** — the **-ити** family. They're everywhere in Ukrainian, powering actions from speaking and seeing to loving and wanting. Let's unlock this essential verb group!
+You've already learned **First Conjugation** verbs that end in **-ати** (читати, писати, працювати). But what about verbs like **говорити** (hovorýty) "to speak" and **робити** (róbyty) "to do"? These belong to the **Second Conjugation** — the **-ити** family. They're everywhere in Ukrainian, powering actions from speaking and seeing to loving and wanting. Let's unlock this essential verb group!
+
+> [!tip] **Aspect Check**
+> Like the verbs from Module 06, these are **imperfective verbs** (недоконаний вид). They describe actions in progress or habits. You are building the foundation of "how" and "when" things happen in Ukrainian!
 
 ## Presentation
 
-### Class II Conjugation Pattern
+### Second Conjugation Conjugation Pattern
 
-Class II verbs end in **-ити** or **-іти** in the infinitive. When you conjugate them, they follow a different pattern from Class I. Here's the key change:
+Second Conjugation verbs end in **-ити** or **-іти** in the infinitive. When you conjugate them, they follow a different pattern from the First Conjugation. Here's the key change:
 
 **Conjugation formula:** Drop **-ити/-іти**, add these endings:
 
@@ -33,7 +36,7 @@ Class II verbs end in **-ити** or **-іти** in the infinitive. When you con
 >
 > The **-ити** ending is ancient! It comes from Proto-Slavic and is shared with Polish, Czech, and other Slavic languages. When you say **говорити**, you're using a verb form that's over 1,000 years old.
 
-### Key Examples with Class II Verbs
+### Key Examples with Second Conjugation Verbs
 
 Let's see these verbs in action:
 
@@ -135,22 +138,34 @@ _Is she calling?_
 **Марія:** Так, вона говорить українською. (Tak, voná hovóryt' ukrajíns'koju.)
 _Yes, she speaks Ukrainian._
 
-### Pattern Recognition
+### Pattern Recognition: Consonant Mutation
 
-Notice how Class II verbs change their stem slightly:
+Notice how some Second Conjugation verbs change their stem slightly in the **"я"** form:
 
 - **робити** → роб**лю** (not "робю")
 - **ходити** → ход**жу** (not "ходю")
 - **любити** → люб**лю** (not "любю")
 
-This is called **consonant mutation** — certain letters change before the **-ю** ending. You'll pick up these patterns naturally as you practice!
+This is called **consonant mutation** — certain letters change before the **-ю** ending to make pronunciation smoother. Here are the most common patterns you'll see:
+
+| Change | Pattern | Examples |
+| :--- | :--- | :--- |
+| **б → бл** | (labial) | любити → люб**лю**, робити → роб**лю** |
+| **д → ж** | (dental) | ходити → ход**жу**, сидіти → си**джу** |
+| **з → ж** | (sibilant) | возити → во**жу** |
+| **с → ш** | (sibilant) | просити → про**шу** |
+| **т → ч** | (dental) | хотіти → хо**чу**, платити → пла**чу** |
+
+You'll pick up these patterns naturally as you practice! Don't worry about memorizing the table; just notice the "extra" letters when you see them.
+
+> [!context] **Reflexive Verbs Preview**
+> Some verbs end in **-ся** or **-сь**. This usually means the action is directed back at the speaker (like "I wash *myself*"). You'll learn the full pattern in Module 25, but for now, just notice them when they appear!
 
 > [!warning] **Common Mistake**
->
-> Don't confuse **Class I** and **Class II** endings! Class I uses **-аю/-ають**, Class II uses **-ю/-ять**. Compare:
->
-> - **читати** (Class I): читаЮ, читаЄш, читаЄ, читаЮТЬ
-> - **говорити** (Class II): говорЮ, говорИШ, говорИТЬ, говорЯТЬ
+Don't confuse **First Conjugation** and **Second Conjugation** endings! First Conjugation uses **-аю/-ають**, Second Conjugation uses **-ю/-ять**. Compare:
+
+- **читати** (First Conjugation): читаЮ, читаЄш, читаЄ, читаЮТЬ
+- **говорити** (Second Conjugation): говорЮ, говорИШ, говорИТЬ, говорЯТЬ
 >
 > The vowels are different!
 
@@ -201,17 +216,17 @@ Ukrainians use these constantly:
 
 # Summary
 
-You've now mastered **Class II verbs (-ити)**! Here's what you can do:
+You've now mastered **Second Conjugation verbs (-ити)**! Here's what you can do:
 
-- Conjugate regular Class II verbs (говорити, робити, бачити, любити)
+- Conjugate regular Second Conjugation verbs (говорити, робити, бачити, любити)
 - Use irregular verbs (їсти, пити, хотіти)
-- Distinguish between Class I (-ати) and Class II (-ити) patterns
+- Distinguish between First Conjugation (-ати) and Second Conjugation (-ити) patterns
 - Form sentences about daily actions
 
 **Key Pattern:**
 
-- **Class II:** Drop -ити → add -ю/-иш/-ить/-имо/-ите/-ять
+- **Second Conjugation:** Drop -ити → add -ю/-иш/-ить/-имо/-ите/-ять
 
-With Class I and Class II verbs combined, you can now express hundreds of actions in Ukrainian. Вітаю! (Congratulations!)
+With First and Second Conjugation verbs combined, you can now express hundreds of actions in Ukrainian. Вітаю! (Congratulations!)
 
 ---

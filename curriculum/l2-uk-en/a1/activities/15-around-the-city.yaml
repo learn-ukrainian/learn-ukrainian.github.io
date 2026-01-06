@@ -160,14 +160,14 @@
 - type: fill-in
   title: Complete the Directions
   items:
-  - sentence: Іди ___, потім поверни направо. (straight)
+  - sentence: Іди ___, потім поверни направо.
     answer: прямо
     options:
     - прямо
     - наліво
     - направо
     - назад
-  - sentence: Аптека ___ банку, біля світлофора. (opposite)
+  - sentence: Аптека на іншій стороні вулиці, ___ банку.
     answer: навпроти
     options:
     - навпроти
@@ -181,21 +181,21 @@
     - направо
     - прямо
     - назад
-  - sentence: Музей ___ парку. (near)
+  - sentence: Музей дуже ___ парку, лише 2 хвилини.
     answer: біля
     options:
     - біля
     - навпроти
     - між
     - за
-  - sentence: Це далеко? — Ні, ___. (close)
+  - sentence: Це далеко? — Ні, ___.
     answer: близько
     options:
     - близько
     - далеко
     - поруч
     - туди
-  - sentence: Станція метро ___ мостом. (behind)
+  - sentence: Станція метро ___ мостом, треба перейти.
     answer: за
     options:
     - за
@@ -209,14 +209,14 @@
     - на автобусі
     - на машині
     - пішки
-  - sentence: Книгарня ___ кафе і банком. (between)
+  - sentence: Книгарня ___ кафе і банком.
     answer: між
     options:
     - між
     - біля
     - за
     - навпроти
-  - sentence: Іди ___ вулиці Шевченка. (along)
+  - sentence: Іди ___ вулиці Шевченка до кінця.
     answer: вздовж
     options:
     - вздовж
@@ -493,9 +493,8 @@
     explanation: 'Correct: Ні, це близько'
 - type: match-up
   title: Question and Answer Pairs
+  instruction: Match each question with the appropriate answer
   pairs:
-  - left: Question
-    right: Answer
   - left: Де метро?
     right: Прямо, біля банку.
   - left: Це далеко?

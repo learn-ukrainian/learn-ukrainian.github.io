@@ -12,7 +12,7 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1399/300 (>1300 may be too long)
+- **Words:** ✅ 1399/300
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 14.3% (target 10-25% (M04))
 - **Grammar:** ⏳ Pending validation
 
