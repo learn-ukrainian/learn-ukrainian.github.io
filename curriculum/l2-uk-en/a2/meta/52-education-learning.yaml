@@ -1,4 +1,4 @@
-module: a2-51
+module: a2-52
 title: Education & Learning
 subtitle: Studying in Ukrainian
 version: '1.0'
@@ -20,4 +20,4 @@ objectives:
   - Differentiate study verbs: вчитися, вивчати
   - Describe learning materials: підручник, зошит
 vocab_count: 29
-slug: 51-education-learning
+slug: 52-education-learning

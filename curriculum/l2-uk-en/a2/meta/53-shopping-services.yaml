@@ -1,4 +1,4 @@
-module: a2-52
+module: a2-53
 title: Shopping & Services
 subtitle: Buying and Selling in Ukrainian
 version: '1.0'
@@ -20,4 +20,4 @@ objectives:
   - Talk about money: готівка, картка, ціна
   - Ask for price: скільки коштує?
 vocab_count: 45
-slug: 52-shopping-services
+slug: 53-shopping-services

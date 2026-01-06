@@ -1,21 +1,40 @@
-# Audit Report: 31-which-one.md
+# Audit Report: 32-which-one.md
 **Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Expressive | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
+## PEDAGOGICAL VIOLATIONS
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Fix the Link' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 1/6 items with placeholders/missing errors.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): тоді, кожного, доки, раз, тим...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- 2 pedagogical violations (minor)
+- Activity density below minimum
+
 ## Gates
 - **Words:** ✅ 1266/1000
-- **Activities:** ✅ 11/10
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 11/4 types
+- **Activities:** ✅ 10/10
+- **Density:** ❌ 1 < 12
+- **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 12/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** ❌ 35.0% LOW (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Choose the Form | cloze | 8 | 12 | Add 4 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

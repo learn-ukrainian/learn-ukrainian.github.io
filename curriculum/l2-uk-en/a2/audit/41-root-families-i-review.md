@@ -1,22 +1,34 @@
-# Audit Report: 40-root-families-i.md
+# Audit Report: 41-root-families-i.md
 **Phase:** A2.4 | **Level:** A2 | **Pedagogy:** Inquiry | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид, місцевий
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, вид
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): ходити, дочитати, огляд, вхід, погляд...
+- **[TABLE_COLUMN_MISMATCH]** Table row 4 has 5 columns but header has 4
+  - FIX: Ensure all rows have exactly 4 columns (cells separated by |)
+- **[TABLE_COLUMN_MISMATCH]** Table row 7 has 5 columns but header has 4
+  - FIX: Ensure all rows have exactly 4 columns (cells separated by |)
+- **[TABLE_COLUMN_MISMATCH]** Table row 2 has 5 columns but header has 4
+  - FIX: Ensure all rows have exactly 4 columns (cells separated by |)
+- **[TABLE_COLUMN_MISMATCH]** Table row 5 has 5 columns but header has 4
+  - FIX: Ensure all rows have exactly 4 columns (cells separated by |)
+- **[TABLE_COLUMN_MISMATCH]** Table row 7 has 5 columns but header has 4
+  - FIX: Ensure all rows have exactly 4 columns (cells separated by |)
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): обдумати, думати, слух, погляд, розмова...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 10/100)
+**🔄 REWRITE** (severity 70/100)
 
-- 2 pedagogical violations (minor)
+- 7 pedagogical violations (significant)
+- Immersion 15% off target
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1389/1000
 - **Activities:** ✅ 10/10
-- **Density:** ✅ All > 12
+- **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
@@ -24,9 +36,16 @@
 - **Vocab:** ✅ 54/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** ❌ 35.5% LOW (target 40-55% (A2.2))
+- **Pedagogy:** ❌ 5 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** ❌ 35.5% LOW (target 50-60% (A2.3))
 - **Grammar:** ⏳ Pending validation
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Where to Go? | cloze | 8 | 12 | Add 4 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

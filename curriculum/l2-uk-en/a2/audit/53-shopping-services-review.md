@@ -1,12 +1,12 @@
-# Audit Report: 52-shopping-services.md
+# Audit Report: 53-shopping-services.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** Narrative | **Target:** 1000
 **Overall Status:** ✅ PASS
 
 ## Gates
 - **Words:** ✅ 1373/1000
-- **Activities:** ✅ 11/10
+- **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
@@ -14,6 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 56.5% (target 50-60% (A2.3))
 - **Grammar:** ⏳ Pending validation
 

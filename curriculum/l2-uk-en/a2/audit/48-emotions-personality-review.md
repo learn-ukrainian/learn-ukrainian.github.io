@@ -1,9 +1,9 @@
-# Audit Report: 47-emotions-personality.md
+# Audit Report: 48-emotions-personality.md
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: відмінок, орудний, прикметник
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: орудний, прикметник, відмінок
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
@@ -13,9 +13,9 @@
 
 ## Gates
 - **Words:** ✅ 1004/1000
-- **Activities:** ✅ 11/10
+- **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
@@ -23,6 +23,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 58.9% (target 50-60% (A2.3))
 - **Grammar:** ⏳ Pending validation
 

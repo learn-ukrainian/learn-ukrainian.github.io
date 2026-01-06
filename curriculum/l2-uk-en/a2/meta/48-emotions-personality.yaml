@@ -1,4 +1,4 @@
-module: a2-47
+module: a2-48
 title: Emotions & Personality
 subtitle: Describing feelings and character traits
 version: '1.0'
@@ -20,4 +20,4 @@ objectives:
   - Learner can express emotional states using бути + instrumental
 vocabulary_count: 30
 vocab_count: 66
-slug: 47-emotions-personality
+slug: 48-emotions-personality

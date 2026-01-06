@@ -1,4 +1,4 @@
-module: a2-44
+module: a2-45
 title: Food & Cooking
 subtitle: Kitchen Vocabulary and Cooking Expressions
 version: '2.0'
@@ -20,4 +20,4 @@ objectives:
   - Learner can follow simple recipes in Ukrainian
 vocabulary_count: 35
 vocab_count: 72
-slug: 44-food-and-cooking
+slug: 45-food-and-cooking

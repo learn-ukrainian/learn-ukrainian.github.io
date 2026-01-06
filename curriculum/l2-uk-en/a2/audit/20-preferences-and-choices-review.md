@@ -3,19 +3,20 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): перевагу, більше, комфортніше, легше, вибирати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): перевагу, легше, повільніше, краще, дорожче...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 10/100)
+**📝 UPDATE** (severity 25/100)
 
 - 1 pedagogical violations (minor)
+- Activity count below minimum
 
 ## Gates
 - **Words:** ✅ 1186/1000
-- **Activities:** ✅ 10/10
+- **Activities:** ❌ 9/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio

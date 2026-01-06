@@ -3,9 +3,9 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: множина, жіночий, чоловічий, називний, рід
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: називний, чоловічий, жіночий, множина, рід
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): одинадцять, двадцять, десять, шість, дев'ять...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): сім, шість, дев'ять, двадцять, нуль...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -25,6 +25,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 42.0% (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
 

@@ -1,12 +1,17 @@
-# Audit Report: 45-home-and-furniture.md
+# Audit Report: 46-home-and-furniture.md
 **Phase:** A2.5 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1172/1000
 - **Activities:** ✅ 10/10
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 9/4 types
+- **Density:** ❌ 1 < 12
+- **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
@@ -14,8 +19,15 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 53.1% (target 50-60% (A2.3))
 - **Grammar:** ⏳ Pending validation
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Home Vocabulary | cloze | 8 | 12 | Add 4 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

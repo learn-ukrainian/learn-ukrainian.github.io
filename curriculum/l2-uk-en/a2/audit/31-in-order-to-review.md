@@ -1,26 +1,22 @@
-# Audit Report: 30-in-order-to.md
+# Audit Report: 31-in-order-to.md
 **Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Communicative | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
 ## LINT ERRORS
 - ❌ Line 50: Empty Header detected (Lonely '#'). Remove or add title.
 
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): дав, задля, пояснив, принести, показав...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
-
 ## Recommendation
 **📝 UPDATE** (severity 45/100)
 
 - Borderline case (severity 45/100)
-- 1 pedagogical violations (minor)
 - Immersion 25% off target (major rebalancing needed)
+- Activity density below minimum
 
 ## Gates
 - **Words:** ❌ 479/1000
-- **Activities:** ✅ 11/10
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 11/4 types
+- **Activities:** ✅ 10/10
+- **Density:** ❌ 1 < 12
+- **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ❌ 2/4
 - **Audio:** ℹ️ No audio
@@ -28,8 +24,15 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ❌ 1 Format Errors
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** ❌ 14.9% LOW (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Infinitive or Past? (Concept: Contextual Selection) | cloze | 8 | 12 | Add 4 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

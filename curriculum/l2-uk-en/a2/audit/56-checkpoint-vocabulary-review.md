@@ -1,12 +1,17 @@
-# Audit Report: 55-checkpoint-vocabulary.md
+# Audit Report: 56-checkpoint-vocabulary.md
 **Phase:** A2.5 | **Level:** A2 | **Pedagogy:** Review | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- Activity count below minimum
 
 ## Gates
 - **Words:** ✅ 1001/1000
-- **Activities:** ✅ 10/10
+- **Activities:** ❌ 9/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
@@ -14,6 +19,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 39.4% (checkpoint - no gate)
 - **Grammar:** ⏳ Pending validation
 

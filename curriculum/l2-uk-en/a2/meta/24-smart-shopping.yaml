@@ -1,4 +1,4 @@
-module: a2-23
+module: a2-24
 title: Smart Shopping
 subtitle: Comparing Products and Making Decisions
 version: '1.0'
@@ -22,4 +22,4 @@ objectives:
   - Learner can make purchase decisions
 vocabulary_count: 25
 vocab_count: 18
-slug: 23-smart-shopping
+slug: 24-smart-shopping

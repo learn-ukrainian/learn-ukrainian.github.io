@@ -1,4 +1,4 @@
-module: a2-32
+module: a2-33
 title: When & While
 subtitle: Time Clauses
 version: '1.0'
@@ -21,4 +21,4 @@ objectives:
   - Learner understands 'як тільки'
 vocabulary_count: 25
 vocab_count: 25
-slug: 32-time-clauses
+slug: 33-time-clauses

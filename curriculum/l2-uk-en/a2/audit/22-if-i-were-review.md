@@ -8,28 +8,31 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): пішов, обов'язково, мабуть, можливо, поїхав...
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Real or Unreal' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 2/6 items with placeholders/missing errors.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): купив, можливо, обов'язково, поїхав, певно...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 30/100)
+**📝 UPDATE** (severity 45/100)
 
-- Borderline case (severity 30/100)
-- 2 pedagogical violations (minor)
+- Borderline case (severity 45/100)
+- 3 pedagogical violations (minor)
 - Immersion 11% off target
+- Activity count below minimum
 
 ## Gates
 - **Words:** ✅ 1164/1000
-- **Activities:** ✅ 10/10
+- **Activities:** ❌ 9/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 18/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ❌ 1 Format Errors
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** ❌ 28.8% LOW (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation

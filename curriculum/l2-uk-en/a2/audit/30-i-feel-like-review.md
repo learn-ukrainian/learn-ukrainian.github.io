@@ -1,23 +1,24 @@
-# Audit Report: 29-i-feel-like.md
+# Audit Report: 30-i-feel-like.md
 **Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Communicative | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): приємно, переляканий, нудно, щасливо, сумувати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): показав, написав, купив, зрозумів, пояснив...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 40/100)
+**📝 UPDATE** (severity 50/100)
 
-- Borderline case (severity 40/100)
+- Borderline case (severity 50/100)
 - 1 pedagogical violations (minor)
 - Immersion 21% off target (major rebalancing needed)
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1123/1000
-- **Activities:** ✅ 11/10
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 11/4 types
+- **Activities:** ✅ 10/10
+- **Density:** ❌ 1 < 12
+- **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
@@ -25,8 +26,15 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** ❌ 19.2% LOW (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Which Form? (Concept: Contextual Selection) | cloze | 8 | 12 | Add 4 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

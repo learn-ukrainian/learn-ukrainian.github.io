@@ -1,4 +1,4 @@
-module: a2-36
+module: a2-37
 title: Advanced Motion Prefixes
 subtitle: 'Complex Paths: Crossing, Stopping, Going Around'
 version: '1.0'
@@ -20,4 +20,4 @@ objectives:
   - Learner can give and follow directional instructions
 vocabulary_count: 30
 vocab_count: 71
-slug: 36-advanced-motion-prefixes
+slug: 37-advanced-motion-prefixes

@@ -1,4 +1,4 @@
-module: a2-25
+module: a2-26
 title: Telling Stories
 subtitle: First, Then, Finally
 version: '1.0'
@@ -20,4 +20,4 @@ objectives:
   - Learner can use connectors like 'suddenly' and 'finally'
 vocabulary_count: 25
 vocab_count: 44
-slug: 25-telling-stories
+slug: 26-telling-stories

@@ -1,4 +1,4 @@
-module: a2-50
+module: a2-51
 title: Hobbies & Leisure
 subtitle: Free Time in Ukrainian
 version: '1.0'
@@ -20,4 +20,4 @@ objectives:
   - Describe entertainment: кіно, театр, концерт
   - Plan free time
 vocab_count: 46
-slug: 50-hobbies-leisure
+slug: 51-hobbies-leisure

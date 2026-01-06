@@ -1,4 +1,4 @@
-# Audit Report: 27-she-said-that.md
+# Audit Report: 28-she-said-that.md
 **Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Communicative | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
@@ -6,7 +6,7 @@
 - ❌ Line 210: Empty Header detected (Lonely '#'). Remove or add title.
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (11 words): запитати, коментувати, попередити, відповідати, пояснити...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): напевно, згодна, здаватися, погляд, моєї...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -18,9 +18,9 @@
 
 ## Gates
 - **Words:** ✅ 1314/1000
-- **Activities:** ✅ 11/10
+- **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
@@ -28,6 +28,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ❌ 1 Format Errors
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** ❌ 29.0% LOW (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
 

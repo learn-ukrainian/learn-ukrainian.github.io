@@ -36,9 +36,9 @@ When using these phrases, remember that adjectives like **кращий** (better
 
 Asking for a recommendation (**рекомендація**) is a smart strategy because it shifts the responsibility of choosing onto the expert (the seller). They will often point you toward the most popular or highest quality items currently in stock.
 
-> 💡 **Shopping Tip**
+> 💡 **Порада**
 >
-> Ukrainians appreciate when you ask for advice! "Що ви порекомендуєте?" is a great way to start a conversation with a shop assistant.
+> Українці люблять, коли ви питаєте їх пораду! «Що ви порекомендуєте?» — це чудовий спосіб почати розмову з продавцем.
 
 ## Negotiation Phrases
 
@@ -56,11 +56,11 @@ In some contexts (markets, small shops), negotiation is possible:
 - Я **подумаю**. (I'll think about it.)
 - Можливо, **повернуся**. (Maybe I'll come back.)
 
-In Ukrainian culture, saying "I'll think about it" (**Я подумаю**) is a very common and polite way to leave a negotiation without making a purchase. It allows both parties to save face. If you are at a market and the price is truly too high, don't be afraid to use the word **занадто** (too/excessively) to express your hesitation clearly.
+В українській культурі фраза «Я подумаю» — це дуже ввічливий спосіб відмовитися від покупки. Якщо ціна занадто висока, сміливо використовуйте слово **занадто**.
 
-> 📜 **Cultural Note**
+> 📜 **Культурна примітка**
 >
-> Negotiation is common at markets (ринок, базар) but unusual in regular stores and supermarkets. Always be polite when asking for discounts!
+> Торгуватися можна на ринку чи базарі, але не в супермаркетах. Завжди будьте ввічливі, коли питаєте про знижки!
 
 ## Making Decisions
 
@@ -76,10 +76,10 @@ In Ukrainian culture, saying "I'll think about it" (**Я подумаю**) is a 
 - Я **ще подумаю**. (I'll still think about it.)
 - Мені не **підходить**. (It doesn't suit me.)
 
-The verb **підходити** (to suit/to fit) is very versatile in shopping. You can use it to talk about the price, the style, or even the physical fit of a piece of clothing. If something doesn't work for you, simply adding **не** (not) before the verb makes your refusal clear but remaining respectful to the seller.
+Дієслово **підходити** дуже корисне: ціна підходить, розмір підходить, стиль підходить. Якщо ні — просто додайте **не**: «Мені не підходить».
 
-> [!tip] Polite Refusal
-> "Дякую, я подумаю" (Thank you, I'll think about it) is a polite way to decline without directly saying "no."
+> [!tip] Ввічлива відмова
+> «Дякую, я подумаю» — це ввічливий спосіб відмовитися, не кажучи прямо «ні».
 
 ---
 
@@ -146,13 +146,13 @@ The Ukrainian **базар** (market) is more than a store; it's a community hub
 - **Taste it!** Sellers will often offer: "Спробуйте!" (Taste it!). Refusing can sometimes be seen as rude if you are genuinely interested.
 - **Morning Glory:** The best produce is sold by 8-9 AM. If you arrive at noon, you get leftovers.
 
-> 🧠 **Myth: "No Price Tags means Tourist Trap"**
+> 🧠 **Міф: «Немає цінника — це обман»**
 >
-> In many Western countries, no price tag is a red flag. In a Ukrainian bazar, it just means the price fluctuates based on supply, time of day, and your negotiation skills! Always ask "По чому?" (How much? - colloquial) or "Скільки коштує?". This transparency in verbal price checks is an expected part of the interaction.
+> На базарі відсутність цінника — це нормально. Ціна залежить від часу дня та вашого вміння торгуватися. Завжди питайте «По чому?» або «Скільки коштує?»
 
-> 🎭 **Roleplay Idea**
+> 🎭 **Рольова гра**
 >
-> Imagine you have 500 hryvnias. You need to buy vegetables for Borscht (potatoes, beets, carrots, cabbage, onion) and meat. Write down a shopping list and "negotiate" with a partner to see if you can fit it all in your budget!
+> Уявіть, що у вас 500 гривень. Вам потрібно купити овочі для борщу (картопля, буряк, морква, капуста, цибуля) та м'ясо. Складіть список покупок і «торгуйтеся» з партнером!
 
 ## Shopping for Clothes vs. Food
 
@@ -162,8 +162,8 @@ The Ukrainian **базар** (market) is more than a store; it's a community hub
 | **Space** | Personal space respected. | Crowded, pushy, lively. |
 | **Payment** | Card/Phone (NFC). | Cash (mostly), card-to-card transfer. |
 
-> [!tip] "Paket"
-> "Пакет потрібен?" (Do you need a bag?) is the most common phrase you will hear at any checkout. Ukrainians often carry their own reusable eco-bags.
+> [!tip] Пакет
+> «Пакет потрібен?» — найпоширеніша фраза на касі. Українці часто носять власні еко-торбинки.
 
 ---
 
@@ -184,10 +184,6 @@ The Ukrainian **базар** (market) is more than a store; it's a community hub
 - Занадто дорого. Чи можна дешевше?
 - Добре, двадцять п'ять.
 - Беру два кілограми!
-- Яка **ціна**? (What is the price?)
-- Це **дорогий** продукт. (This is an expensive product.)
-- Я хочу **шукати** **дешевий** товар. (I want to search for a cheap item.)
-- Де **знижка**? (Where is the discount?)
 
 **Dialogue: Buying Shoes**
 - **Клієнт:** Добрий день! Я шукаю зручні туфлі.
@@ -200,7 +196,40 @@ The Ukrainian **базар** (market) is more than a store; it's a community hub
 - **Продавець:** Звичайно, приміряйте. Дзеркало там.
 - **Клієнт:** Вони мені підходять. Беру!
 
-> [!tip] Sizes
-> Ukraine uses European shoe sizes (36, 37, 38...). Clothing sizes are also different from US/UK (S/M/L are common, but numbers like 44, 46, 48 are standard).
+> [!tip] Розміри
+> В Україні використовують європейські розміри взуття (36, 37, 38...). Розміри одягу: S/M/L або 44, 46, 48.
 
-##
+---
+
+# Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| знижка | ˈznɪʒkɑ | discount | noun | f | — |
+| акція | ˈɑktsijɑ | sale, promotion | noun | f | shopping context |
+| розпродаж | rɔzˈprɔdɑʒ | clearance sale | noun | m | — |
+| якість | ˈjɑkisʲtʲ | quality | noun | f | — |
+| ціна | tsiˈnɑ | price | noun | f | — |
+| вартість | ˈvɑrtisʲtʲ | cost, value | noun | f | — |
+| вигідний | vɪˈɦidnɪj | profitable, good deal | adj | — | — |
+| порівнювати | pɔrivnʲuˈvɑtɪ | to compare | verb | — | impf |
+| вибирати | vɪbɪˈrɑtɪ | to choose | verb | — | impf |
+| рекомендувати | rɛkɔmɛnduˈvɑtɪ | to recommend | verb | — | impf |
+| радити | ˈrɑdɪtɪ | to advise | verb | — | impf |
+| пропонувати | prɔpɔnuˈvɑtɪ | to offer | verb | — | impf |
+| кращий | ˈkrɑʃt͡ʃɪj | better | adj | — | comparative |
+| дешевший | dɛˈʃɛvʃɪj | cheaper | adj | — | comparative |
+| дорожчий | dɔˈrɔʒt͡ʃɪj | more expensive | adj | — | comparative |
+| торг | tɔrɦ | bargaining | noun | m | — |
+| базар | bɑˈzɑr | market | noun | m | traditional market |
+| ринок | ˈrɪnɔk | market | noun | m | — |
+
+---
+
+# Summary
+
+У цьому уроці ви навчилися:
+- Порівнювати товари (кращий, дешевший, найдешевший)
+- Питати про рекомендації («Що ви порекомендуєте?»)
+- Вести переговори про ціну («Чи можна дешевше?»)
+- Приймати рішення про покупку («Візьму!», «Я подумаю»)

@@ -1,4 +1,4 @@
-module: a2-55
+module: a2-56
 title: Checkpoint - Vocabulary Expansion
 subtitle: Review of Modules 44-54
 version: '2.0'
@@ -22,4 +22,4 @@ objectives:
   - Learner can recall key verbs and nouns
 vocabulary_count: 25
 vocab_count: 4
-slug: 55-checkpoint-vocabulary
+slug: 56-checkpoint-vocabulary

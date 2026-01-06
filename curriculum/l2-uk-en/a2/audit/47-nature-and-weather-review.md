@@ -1,15 +1,19 @@
-# Audit Report: 46-nature-and-weather.md
+# Audit Report: 47-nature-and-weather.md
 **Phase:** A2.5 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, відмінок, час, дієслово
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, відмінок
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[TABLE_COLUMN_MISMATCH]** Table separator has 3 columns but header has 2
+  - FIX: Ensure all rows have exactly 2 columns (cells separated by |)
+- **[TABLE_COLUMN_MISMATCH]** Table row 3 has 3 columns but header has 2
+  - FIX: Ensure all rows have exactly 2 columns (cells separated by |)
 
 ## Recommendation
 **📝 UPDATE** (severity 10/100)
 
-- 1 pedagogical violations (minor)
+- 3 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1044/1000
@@ -22,7 +26,8 @@
 - **Vocab:** ✅ 57/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** ❌ 61.7% HIGH (target 50-60% (A2.3))
 - **Grammar:** ⏳ Pending validation
 

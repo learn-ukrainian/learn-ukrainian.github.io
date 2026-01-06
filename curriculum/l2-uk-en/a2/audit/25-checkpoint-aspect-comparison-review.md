@@ -1,21 +1,24 @@
-# Audit Report: 24-checkpoint-aspect-comparison.md
+# Audit Report: 25-checkpoint-aspect-comparison.md
 **Phase:** A2.2 | **Level:** A2 | **Pedagogy:** Review | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, недоконаний, доконаний
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: доконаний, недоконаний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (24 words): врешті, відразу, нарешті, саме, раптом...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 10/100)
+**📝 UPDATE** (severity 25/100)
 
-- 1 pedagogical violations (minor)
+- 2 pedagogical violations (minor)
+- Activity count below minimum
 
 ## Gates
 - **Words:** ✅ 1118/1000
-- **Activities:** ✅ 10/10
+- **Activities:** ❌ 9/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio

@@ -1,4 +1,4 @@
-module: a2-34
+module: a2-35
 title: Checkpoint - Complex Ideas
 subtitle: Review of Narratives, Logic, and Health
 version: '1.0'
@@ -24,4 +24,4 @@ objectives:
   - Learner can use health-related vocabulary in dialogue
 vocabulary_count: 25
 vocab_count: 24
-slug: 34-checkpoint
+slug: 35-checkpoint

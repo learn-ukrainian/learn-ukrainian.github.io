@@ -1,12 +1,17 @@
-# Audit Report: 43-checkpoint-word-formation.md
+# Audit Report: 44-checkpoint-word-formation.md
 **Phase:** A2.4 | **Level:** A2 | **Pedagogy:** Review | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- Activity count below minimum
 
 ## Gates
 - **Words:** ⚠️ 992/1000 (8 short)
-- **Activities:** ✅ 10/10
+- **Activities:** ❌ 9/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio

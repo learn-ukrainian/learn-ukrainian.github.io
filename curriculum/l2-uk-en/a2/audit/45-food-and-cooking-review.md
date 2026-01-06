@@ -1,21 +1,22 @@
-# Audit Report: 44-food-and-cooking.md
+# Audit Report: 45-food-and-cooking.md
 **Phase:** A2.5 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: відмінок, місцевий
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, відмінок
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
-**📝 UPDATE** (severity 10/100)
+**📝 UPDATE** (severity 20/100)
 
 - 1 pedagogical violations (minor)
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 1142/1000
 - **Activities:** ✅ 10/10
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 9/4 types
+- **Density:** ❌ 1 < 12
+- **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
@@ -23,8 +24,15 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** ❌ 49.8% LOW (target 50-60% (A2.3))
 - **Grammar:** ⏳ Pending validation
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Cooking Methods | cloze | 8 | 12 | Add 4 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

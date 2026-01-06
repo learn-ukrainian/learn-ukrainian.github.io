@@ -1,4 +1,4 @@
-module: a2-45
+module: a2-46
 title: Home & Furniture
 subtitle: Household Vocabulary and Descriptions
 version: '2.0'
@@ -19,4 +19,4 @@ objectives:
   - Learner can talk about where things are located
 vocabulary_count: 30
 vocab_count: 46
-slug: 45-home-and-furniture
+slug: 46-home-and-furniture

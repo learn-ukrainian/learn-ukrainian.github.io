@@ -1,32 +1,32 @@
 - type: match-up
   title: Shopping Vocabulary
   pairs:
-  - left: '- знижка'
+  - left: знижка
     right: discount
-  - left: '- акція'
+  - left: акція
     right: sale/promotion
-  - left: '- розпродаж'
+  - left: розпродаж
     right: clearance sale
-  - left: '- якість'
+  - left: якість
     right: quality
-  - left: '- ціна'
+  - left: ціна
     right: price
-  - left: '- вартість'
+  - left: вартість
     right: cost/value
-  - left: '- вигідний'
+  - left: вигідний
     right: profitable/good deal
-  - left: '- порівнювати'
+  - left: порівнювати
     right: to compare
-  - left: '- вибирати'
+  - left: вибирати
     right: to choose
-  - left: '- рекомендувати'
+  - left: рекомендувати
     right: to recommend
-  - left: '- радити'
+  - left: радити
     right: to advise
-  - left: '- пропонувати'
+  - left: пропонувати
     right: to offer
 - type: fill-in
-  title: Shopping Phrases
+  title: Фрази для покупок
   items:
   - sentence: Що ви ___?
     answer: порекомендуєте
@@ -35,42 +35,42 @@
     - рекомендуєте
     - рекомендуєш
     - рекомендує
-  - sentence: Чи є ___? (discount)
+  - sentence: Чи є ___ на цей товар?
     answer: знижка
     options:
     - знижка
     - ціна
     - якість
     - розпродаж
-  - sentence: Цей ___ за той. (cheaper)
+  - sentence: Цей телефон ___ за той.
     answer: дешевший
     options:
     - дешевий
     - дешевший
     - найдешевший
     - дешево
-  - sentence: Чи можна ___? (cheaper)
+  - sentence: Чи можна купити ___?
     answer: дешевше
     options:
     - дешевший
     - дешевше
     - дешевий
     - дешево
-  - sentence: Є щось ___? (better)
+  - sentence: Є щось ___ за цю ціну?
     answer: краще
     options:
     - добре
     - кращий
     - краще
     - найкраще
-  - sentence: Я ___ цей.
+  - sentence: Я ___ цей телефон.
     answer: візьму
     options:
     - візьму
     - беру
     - брав
     - взяв
-  - sentence: Це мені ___. (suits)
+  - sentence: Цей розмір мені ___.
     answer: підходить
     options:
     - підходить
@@ -91,21 +91,21 @@
     - дорогий
     - дорожчий
     - дорожче
-  - sentence: Я ___. (I'll think)
+  - sentence: Дякую, я ще ___.
     answer: подумаю
     options:
     - думаю
     - подумаю
     - думав
     - подумав
-  - sentence: ___ найдешевший? (Which)
+  - sentence: ___ товар найдешевший?
     answer: Який
     options:
     - Який
     - Яка
     - Яке
     - Які
-  - sentence: Мені ___ подобається синій. (more)
+  - sentence: Мені ___ подобається синій колір.
     answer: більше
     options:
     - більше
@@ -441,91 +441,146 @@
     - ціною
     answer: Це мені ідеально підходить за розміром та за гарною ціною
 - type: error-correction
-  title: Shopping Phrases
+  title: Виправте помилки в покупках
   items:
-  - sentence: Що ви ___?
-    error: recommend
+  - sentence: Що ви рекомендуєш мені купити?
+    error: рекомендуєш
     answer: порекомендуєте
     options:
     - рекомендуєш
     - порекомендуєте
     - рекомендую
     - рекомендуємо
-    explanation: 'Formal "you" form: порекомендуєте.'
-  - sentence: Чи можна ___? (cheaper — adverb)
-    error: cheaper — adverb
-    answer: дешевше
+    explanation: З «ви» потрібна форма «порекомендуєте» (пф. майб.).
+  - sentence: Цей товар дешевий за той.
+    error: дешевий
+    answer: дешевший
     options:
     - дешевий
     - дешевший
     - дешевше
     - дешево
-    explanation: 'Comparative adverb: дешевше.'
-  - sentence: Я ___ цей.
-    error: will take
+    explanation: Порівняння потребує форми «дешевший».
+  - sentence: Я беру цей телефон завтра.
+    error: беру
     answer: візьму
     options:
     - беру
     - візьму
     - брав
     - взяв
-    explanation: 'Perfective future: візьму.'
-  - sentence: Є щось ___? (better — neuter)
-    error: better — neuter
+    explanation: Для майбутнього — доконаний вид «візьму».
+  - sentence: Є щось кращий за це?
+    error: кращий
     answer: краще
     options:
     - кращий
     - краща
     - краще
     - найкраще
-    explanation: 'Comparative adverb: краще.'
-  - sentence: Це занадто ___! (expensive — adverb)
-    error: expensive — adverb
+    explanation: «Щось» — середній рід, потрібно «краще».
+  - sentence: Це занадто дорогий для мене!
+    error: дорогий
     answer: дорого
     options:
     - дорогий
     - дорого
     - дорожчий
     - дорожче
-    explanation: 'Adverb: дорого.'
-  - sentence: Мені ___ подобається. (more)
-    error: more
+    explanation: Після «занадто» — прислівник «дорого».
+  - sentence: Мені більший подобається цей колір.
+    error: більший
     answer: більше
     options:
     - більший
     - більше
     - великий
     - багато
-    explanation: 'Comparison: більше подобається.'
+    explanation: «Більше подобається» — прислівник порівняння.
 - type: cloze
   title: Shopping Dialogue at the Center
-  passage: '— Добрий день! Чим можу вам сьогодні {допомогти|допомогти → допомогти|допомагати}?
+  passage: '— Добрий день! Чим можу вам сьогодні {допомогти|допомагати}?
 
-    — Я зараз {шукаю|шукати → шукаю|шукав} новий смартфон. Що ви порадите мені {вибрати|вибрати → вибрати|вибирати} для роботи?
+    — Я зараз {шукаю|шукав} новий смартфон. Що ви порадите мені {вибрати|вибирати} для роботи?
 
-    — Ось цей варіант зараз дуже популярний. Він набагато {кращий|кращий → кращий|краще}, але він трохи {дорожчий|дорожчий
-    → дорожчий|дорожче} за інші моделі.
+    — Ось цей варіант зараз дуже популярний. Він набагато {кращий|краще}, але він трохи {дорожчий|дорожче} за інші моделі.
 
-    — А чи {є|є → є|буде} у вашому магазині зараз щось дешевше?
+    — А чи {є|буде} у вашому магазині зараз щось дешевше?
 
-    — Так, звичайно. Подивіться на ці моделі. Вони трохи {дешевші|дешевший → дешевші|дешеві}, але якість екрана тут трохи
-    {гірша|гірший → гірша|гірше}.
+    — Так, звичайно. Подивіться на ці моделі. Вони трохи {дешевші|дешеві}, але якість екрана тут трохи {гірша|гірше}.
 
-    — Яка точна {різниця|різниця → різниця|рівність} в ціні між цими двома смартфонами?
+    — Яка точна {різниця|рівність} в ціні між цими двома смартфонами?
 
-    — Близько трьох тисяч {гривень|гривня → гривень|гривні}. Сьогодні у нас якраз діє вигідна {знижка|знижка → знижка|акція}.
+    — Близько трьох тисяч {гривень|гривні}. Сьогодні у нас якраз діє вигідна {знижка|акція}.
 
-    — Дякую, я ще трохи {подумаю|подумаю → подумаю|думаю} і, можливо, повернуся пізніше.'
+    — Дякую, я ще трохи {подумаю|думаю} і, можливо, повернуся пізніше.'
 - type: mark-the-words
   title: Find Comparison Words
-  text: 'Click on COMPARISON words.
+  instruction: Click on COMPARISON words.
+  text: 'Цей телефон кращий, але дорожчий. Є щось дешевше?
+    
+    Мені більше подобається синій. Який найдешевший? Яка різниця?
+    
+    Цей вигідніший. Якість краща. Порівняйте ціни!'
+  answers:
+  - кращий
+  - дорожчий
+  - дешевше
+  - більше
+  - найдешевший
+  - різниця
+  - вигідніший
+  - краща
+  - Порівняйте
 
-    Цей телефон *кращий*, але *дорожчий*. Є щось *дешевше*?
-
-    ---
-
-    *Мені більше подобається* синій. Який *найдешевший*? Яка *різниця*?
-
-    ---
-
-    Цей *вигідніший*. Якість *краща*. *Порівняйте* ціни!'
+- type: translate
+  title: Translate Shopping Phrases
+  items:
+  - english: This one is better, but more expensive.
+    options:
+    - text: Цей кращий, але дорожчий.
+      correct: true
+    - text: Цей гірший, але дешевший.
+      correct: false
+    - text: Той найкращий і найдорожчий.
+      correct: false
+  - english: What do you recommend?
+    options:
+    - text: Що ви порекомендуєте?
+      correct: true
+    - text: Що ви робите?
+      correct: false
+    - text: Де ви працюєте?
+      correct: false
+  - english: Is there a discount?
+    options:
+    - text: Чи є знижка?
+      correct: true
+    - text: Чи є ціна?
+      correct: false
+    - text: Чи є якість?
+      correct: false
+  - english: This is too expensive.
+    options:
+    - text: Це занадто дорого.
+      correct: true
+    - text: Це дуже дешево.
+      correct: false
+    - text: Це гарна якість.
+      correct: false
+  - english: I'll take this one.
+    options:
+    - text: Я візьму цей.
+      correct: true
+    - text: Я беру той.
+      correct: false
+    - text: Я дивлюся на це.
+      correct: false
+  - english: This suits me.
+    options:
+    - text: Це мені підходить.
+      correct: true
+    - text: Це мені не потрібно.
+      correct: false
+    - text: Це занадто дорого.
+      correct: false

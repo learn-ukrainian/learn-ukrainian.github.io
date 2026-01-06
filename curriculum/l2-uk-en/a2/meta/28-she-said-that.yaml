@@ -1,4 +1,4 @@
-module: a2-27
+module: a2-28
 title: She Said That...
 subtitle: Reporting What People Say
 version: '1.0'
@@ -20,4 +20,4 @@ objectives:
   - Learner can use verbs like 'say', 'tell', 'ask'
 vocabulary_count: 25
 vocab_count: 39
-slug: 27-she-said-that
+slug: 28-she-said-that

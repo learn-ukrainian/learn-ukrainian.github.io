@@ -1,4 +1,4 @@
-module: a2-33
+module: a2-34
 title: At the Doctor's
 subtitle: Health & Medicine
 version: '1.0'
@@ -21,4 +21,4 @@ objectives:
   - Learner can buy medicine
 vocabulary_count: 30
 vocab_count: 39
-slug: 33-at-the-doctor
+slug: 34-at-the-doctor

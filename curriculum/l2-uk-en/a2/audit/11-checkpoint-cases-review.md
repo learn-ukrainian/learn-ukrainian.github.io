@@ -1,21 +1,22 @@
 # Audit Report: 11-checkpoint-cases.md
 **Phase:** A2.1 | **Level:** A2 | **Pedagogy:** Review | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: родовий, місцевий, називний, давальний, знахідний
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: відмінок, знахідний, називний, місцевий, час
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
-**📝 UPDATE** (severity 10/100)
+**📝 UPDATE** (severity 25/100)
 
 - 1 pedagogical violations (minor)
+- Activity count below minimum
 
 ## Gates
 - **Words:** ✅ 1153/1000
-- **Activities:** ✅ 10/10
+- **Activities:** ❌ 9/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 10/4 types
+- **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio

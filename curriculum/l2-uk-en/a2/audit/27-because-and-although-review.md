@@ -1,4 +1,4 @@
-# Audit Report: 26-because-and-although.md
+# Audit Report: 27-because-and-although.md
 **Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Complex Sentences | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
@@ -6,9 +6,9 @@
 - ❌ Line 179: Empty Header detected (Lonely '#'). Remove or add title.
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): би, хай, якби, таки, нехай...
+- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Fix the Connector' uses placeholder syntax instead of real errors
+  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 1/6 items with placeholders/missing errors.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): критикувати, розповідати, запитати, пояснити, стверджувати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -19,16 +19,17 @@
 
 ## Gates
 - **Words:** ✅ 1003/1000
-- **Activities:** ✅ 11/10
+- **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 11/4 types
+- **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 35/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ❌ 1 Format Errors
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** ❌ 30.8% LOW (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
 

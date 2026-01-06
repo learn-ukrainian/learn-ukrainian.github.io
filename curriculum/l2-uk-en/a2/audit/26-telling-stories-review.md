@@ -1,4 +1,4 @@
-# Audit Report: 25-telling-stories.md
+# Audit Report: 26-telling-stories.md
 **Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Narrative Arc | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
@@ -6,22 +6,22 @@
 - ❌ Line 168: Empty Header detected (Lonely '#'). Remove or add title.
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): раптом, разу, щойно, цього, цим...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): незважаючи, таки, зате, якби, дарма...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 30/100)
+**📝 UPDATE** (severity 35/100)
 
-- Borderline case (severity 30/100)
+- Borderline case (severity 35/100)
 - 1 pedagogical violations (minor)
 - Immersion 9% off target (minor)
-- Activity density below minimum
+- Activity count below minimum
 
 ## Gates
 - **Words:** ✅ 1074/1000
-- **Activities:** ✅ 11/10
-- **Density:** ❌ 1 < 12
-- **Unique_types:** ✅ 10/4 types
+- **Activities:** ❌ 9/10
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
@@ -29,14 +29,9 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ❌ 1 Format Errors
 - **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** ❌ 30.9% LOW (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| Order the Story | dialogue-reorder | 0 | 4 | Add 4 more items |
-
 
 ## Section Audit
 | Section | Status | Count | Notes |

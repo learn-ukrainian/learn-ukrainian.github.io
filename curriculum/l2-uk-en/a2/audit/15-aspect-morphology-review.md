@@ -3,14 +3,16 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: доконаний, вид
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид, доконаний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[TABLE_COLUMN_MISMATCH]** Table row 5 has 4 columns but header has 3
+  - FIX: Ensure all rows have exactly 3 columns (cells separated by |)
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Borderline case (severity 50/100)
-- 1 pedagogical violations (minor)
+- 2 pedagogical violations (minor)
 - Immersion 12% off target
 - Activity count below minimum
 - Activity density below minimum
@@ -26,7 +28,7 @@
 - **Vocab:** ✅ 32/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** ❌ 22.6% LOW (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
