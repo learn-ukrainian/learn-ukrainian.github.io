@@ -1,0 +1,75 @@
+module: 09-reflexive-verbs
+level: A1
+version: '2.0'
+items:
+  - lemma: називатися
+    ipa: /nɑzɪˈvɑtɪsʲɑ/
+    translation: to be called
+    pos: verb
+  - lemma: сміятися
+    ipa: /smiˈjɑtɪsʲɑ/
+    translation: to laugh
+    pos: verb
+  - lemma: усміхатися
+    ipa: /usmiˈxɑtɪsʲɑ/
+    translation: to smile
+    pos: verb
+  - lemma: дивитися
+    ipa: /dɪˈvɪtɪsʲɑ/
+    translation: to watch/look
+    pos: verb
+  - lemma: зустрічатися
+    ipa: /zustriˈt͡ʃɑtɪsʲɑ/
+    translation: to meet (each other)
+    pos: verb
+  - lemma: прокидатися
+    ipa: /prɔkɪˈdɑtɪsʲɑ/
+    translation: to wake up
+    pos: verb
+  - lemma: вмиватися
+    ipa: /vmɪˈvɑtɪsʲɑ/
+    translation: to wash one's face
+    pos: verb
+  - lemma: одягатися
+    ipa: /ɔdʲɑˈɦɑtɪsʲɑ/
+    translation: to dress (oneself)
+    pos: verb
+  - lemma: запізнюватися
+    ipa: /zɑˈpiznʲuvɑtɪsʲɑ/
+    translation: to be late
+    pos: verb
+  - lemma: вітатися
+    ipa: /viˈtɑtɪsʲɑ/
+    translation: to greet (each other)
+    pos: verb
+  - lemma: дзеркало
+    ipa: /ˈdzɛrkɑlɔ/
+    translation: mirror
+    pos: noun
+    gender: n
+  - lemma: обличчя
+    ipa: /ɔbˈlɪt͡ʃʲːɑ/
+    translation: face
+    pos: noun
+    gender: n
+  - lemma: смішний
+    ipa: /smiʃˈnɪj/
+    translation: funny
+    pos: adj
+    gender: m
+  - lemma: разом
+    ipa: /ˈrɑzɔm/
+    translation: together
+    pos: adv
+  - lemma: як
+    ipa: /jɑk/
+    translation: how
+    pos: adv
+  - lemma: починатися
+    ipa: /pɔt͡ʃɪˈnɑtɪsʲɑ/
+    translation: to start (itself)
+    pos: verb
+  - lemma: закінчуватися
+    ipa: /zɑˈkint͡ʃuvɑtɪsʲɑ/
+    translation: to finish (itself)
+    pos: verb

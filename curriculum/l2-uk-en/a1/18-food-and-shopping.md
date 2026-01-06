@@ -1,146 +1,157 @@
-# Food & Shopping
+# Food, Drinks & Shopping
 
 ## Warm-up
 
-You're in Kyiv, and your fridge is empty. Time to go shopping! In Ukraine, you have many choices: the **супермаркет** (supermarket), a traditional **ринок** (market), or small **магазини** (stores) scattered throughout every neighborhood. Each place has its own character and culture.
+Food is at the heart of Ukrainian culture. From the world-famous **борщ** (borshch) to the beloved **вареники** (varenyky), Ukrainian cuisine tells stories of tradition, family, and history.
 
-Today, you'll learn how to navigate Ukrainian stores and cafés with confidence. You'll order food, ask for prices, and even do some everyday shopping beyond the grocery aisle.
+But to eat, you must shop! Whether it's a bustling **ринок** (market) full of fresh produce or a modern **супермаркет** (supermarket), shopping in Ukraine is a daily ritual. Today, you'll learn everything from reading a menu to bargaining for the best tomatoes.
 
 > 💡 **Did You Know?**
 >
-> Ukrainians love their **ринки** (markets)! Fresh produce, homemade cheeses, and seasonal fruits are sold by vendors who've been selling at the same spot for decades. It's not just shopping—it's a social experience. You greet the vendors, they remember your preferences, and you bargain a little. Try saying "Скільки коштує?" (How much is it?) at Besarabsky Market in Kyiv!
+> **Борщ** (borshch) entered English directly from Ukrainian, not Russian! UNESCO recognized Ukrainian borshch cooking culture as part of Ukraine's intangible cultural heritage in 2022. Each region has its own recipe, but beets (**буряк**) are always the star.
 
 ## Presentation
 
-### Grammar Review: Accusative and Genitive Together
+### Part 1: Food & Drinks (Їжа та Напої)
 
-You've already learned the **accusative case** (M11: direct objects) and the **genitive case** (M16: absence and possession). Now you'll use BOTH in real shopping situations.
+Ukrainians typically eat three main meals:
+- **Сніданок** (snidanok) — Breakfast.
+- **Обід** (obid) — Lunch (main meal, 1-3 PM).
+- **Вечеря** (vecherya) — Dinner (lighter, 6-8 PM).
 
-**Патерн 1: Знахідний відмінок (Accusative for "I want X")**
+#### Essential Vocabulary
 
-Я хочу **каву**. (I want coffee.)
-Вона бере **хліб**. (She takes bread.)
-Ми купуємо **рибу**. (We buy fish.)
-Ти візьмеш **салат**? (Will you take a salad?)
-Вони купують **овочі**. (They buy vegetables.)
-Я хочу **суп** та **хліб**. (I want soup and bread.)
+**1. Main Dishes (Основні страви)**
+- **Борщ** (borshch) — Beet soup.
+- **Суп** (sup) — Soup.
+- **Вареники** (varenyky) — Dumplings.
+- **М'ясо** (m'yaso) — Meat.
+- **Риба** (ryba) — Fish.
+- **Курка** (kurka) — Chicken.
 
-**Патерн 2: Родовий відмінок для кількості (Genitive for quantities)**
+**2. Basics**
+- **Хліб** (khlib) — Bread (sacred in Ukraine!).
+- **Сир** (syr) — Cheese (or cottage cheese).
+- **Яйце** (yaytse) — Egg.
 
-Склянку **води**, будь ласка. (A glass **of water**, please.)
-Кілограм **яблук**. (A kilogram **of apples**.)
-Пачку **цукру**. (A pack **of sugar**.)
-Пляшку **вина**. (A bottle **of wine**.)
-Чашку **кави**. (A cup **of coffee**.)
+**3. Fruits & Vegetables (Фрукти та Овочі)**
+- **Овочі**: Картопля (potato), Помідор (tomato), Огірок (cucumber), Цибуля (onion).
+- **Фрукти**: Яблуко (apple), Банан (banana).
 
-**Патерн 3: Питання про ціну (Asking prices)**
+**4. Drinks (Напої)**
+- **Вода** (voda) — Water.
+- **Чай** (chay) — Tea.
+- **Кава** (kava) — Coffee.
+- **Сік** (sik) — Juice.
+- **Вино** (vyno) — Wine.
+- **Пиво** (pyvo) — Beer.
 
-Скільки коштує **мило**? (How much is the soap?)
-Скільки коштує **сир**? (How much is the cheese?)
-Скільки коштує **хліб**? (How much is the bread?)
-Скільки коштує **кава**? (How much is the coffee?)
-
-Notice: After "скільки коштує" (how much is/does it cost?), the noun stays in **nominative** because the question is "What costs how much?"
-
-> 🌍 **Реальний світ: У супермаркеті (Real World: At the Supermarket)**
+> 🎬 **Pop Culture Moment**
 >
-> Супермаркети в Україні працюють як у всьому світі. (Supermarkets in Ukraine work like everywhere in the world.) You grab a **пакет** (bag) or basket at the entrance, pick your items, and pay at the **каса** (checkout). Але є культурна порада: українські касири дуже швидкі! (But here's a cultural tip: Ukrainian cashiers are VERY fast!) Have your money ready! Багато магазинів мають ваги для овочів окремо. (Many stores have scales for vegetables separately.) Look for the digital scales in the produce section.
+> In the game **S.T.A.L.K.E.R.**, **тушонка** (canned meat) is iconic. It's a survival staple every Ukrainian knows!
 
-> 💡 **Чи знаєте ви? (Did You Know?)**
+### Part 2: The Action — їсти & пити
+
+You learned these verbs in Module 08. Use them now!
+
+**їсти (to eat):** я їм, ти їси, він їсть, ми їмо, ви їсте, вони їдять.
+**пити (to drink):** я п'ю, ти п'єш, він п'є, ми п'ємо, ви п'єте, вони п'ють.
+
+**Example:**
+— Ти **їси** борщ? (Are you eating borshch?)
+— Так, я **їм** борщ і **п'ю** чай. (Yes, I'm eating borshch and drinking tea.)
+
+**The Magic Word:**
+When eating, always say **Смачного!** (Smachnoho!) — Bon appétit!
+
+### Part 3: Shopping Grammar (Accusative + Genitive)
+
+Now, let's go shopping. You need two cases here:
+
+**1. Accusative: "I want X"**
+When you want/buy something (direct object), use Accusative.
+- Я хочу **каву**. (coffee - f)
+- Я купую **хліб**. (bread - m)
+
+**2. Genitive: "Quantity OF X"**
+When you ask for a specific amount, use Genitive (of...).
+- Чашку **кави**. (A cup **of coffee**)
+- Кілограм **яблук**. (A kilo **of apples**)
+- Пляшку **води**. (A bottle **of water**)
+- Пачку **чаю**. (A pack **of tea**)
+
+**3. Asking Price**
+- **Скільки коштує** ...? (How much does ... cost?)
+- **Яка ціна?** (What is the price?)
+
+> 🌍 **Real World: Supermarkets**
 >
-> Популярні українські супермаркети: **Сільпо** (Silpo), **АТБ** (ATB), **Новус** (Novus), **Фора** (Fora). (Popular Ukrainian supermarkets: Silpo, ATB, Novus, Fora.) Кожен має свою атмосферу! (Each has its own atmosphere!) ATB is budget-friendly, Silpo is mid-range with good quality, and Novus is more upscale. Де ви любите робити покупки? (Where do you like to shop?)
-
----
+> Popular chains: **Сільпо** (Silpo), **АТБ** (ATB), **Новус** (Novus). Be ready at the **каса** (checkout) — cashiers are fast!
 
 ## Dialogues
 
-> [!conversation] У супермаркеті (At the Supermarket)
+> [!conversation] У ресторані (At the Restaurant)
 >
-> — Доброго дня! Скільки коштує сир?
-> — Сир коштує сорок гривень за кілограм.
-> — Добре. Дайте півкілограма, будь ласка.
-> — Щось ще?
-> — Так. Я хочу хліб.
-> — Білий чи чорний?
-> — Білий, будь ласка.
-> — Ось ваш хліб. Двадцять гривень.
-> — Дякую!
+> **Waiter:** Добрий день! Ось меню.
+> **You:** Дякую. Я хочу борщ і вареники.
+> **Waiter:** Що ви будете пити?
+> **You:** Чай, будь ласка.
+**Waiter:** Ви хочете цукор? (Do you want sugar?)
+**You:** Ні, без цукру.
+> **Waiter:** Добре. Смачного!
 >
-> — Good day! How much is the cheese?
-> — Cheese costs forty hryvnias per kilogram.
-> — Good. Give me half a kilogram, please.
-> — Anything else?
-> — Yes. I want bread.
-> — White or black?
-> — White, please.
-> — Here's your bread. Twenty hryvnias.
-> — Thank you!
+> **Translation:**
+> — Good day! Here is the menu.
+> — Thank you. I want borshch and varenyky.
+> — What will you drink?
+> — Tea, please.
+> — With sugar?
+> — No, without sugar.
+> — Good. Bon appétit!
 
 > [!conversation] На ринку (At the Market)
 >
-> — Доброго ранку! Які красиві помідори!
-> — Доброго ранку! Свіжі, з городу!
-> — Скільки коштує кілограм?
-> — Тридцять гривень.
-> — Я хочу два кілограми. Яка ціна?
-> — П'ятдесят гривень. Для вас — знижка!
-> — Чудово! Беру два.
-> — Ще щось? Маємо свіжі огірки.
-> — Ні, дякую. Тільки помідори.
+> **Seller:** Добрий день! Свіжі помідори!
+> **You:** Добрий день. Скільки коштує кілограм?
+> **Seller:** Тридцять гривень.
+> **You:** Дайте два кілограми, будь ласка.
+> **Seller:** Щось ще? Огірки?
+> **You:** Ні, дякую. Тільки помідори.
+> **Seller:** Дякую!
 >
-> — Good morning! What beautiful tomatoes!
-> — Good morning! Fresh, from the garden!
-> — How much is a kilogram?
+> **Translation:**
+> — Good day! Fresh tomatoes!
+> — Good day. How much is a kilo?
 > — Thirty hryvnias.
-> — I want two kilograms. What's the price?
-> — Fifty hryvnias. A discount for you!
-> — Wonderful! I'll take two.
-> — Anything else? We have fresh cucumbers.
-> — No, thank you. Just tomatoes.
-
----
+> — Give me two kilos, please.
+> — Anything else? Cucumbers?
+> — No, thanks. Only tomatoes.
+> — Thank you!
 
 ## Practice
 
-### Using Accusative and Genitive
+### Shopping List Challenge
+Translate these orders:
+1. I want water. (Accusative) -> Я хочу **воду**.
+2. A bottle of water. (Genitive) -> Пляшку **води**.
+3. I eat meat. -> Я **їм** м'ясо.
+4. How much is the coffee? -> Скільки коштує **кава**?
 
-Complete these shopping phrases with the correct case:
+### Menu Reader
+Imagine you are at a cafe. Order a full meal (soup, main, drink).
+- Я буду **борщ**, **курку** і **сік**. (I will have...)
 
-Я хочу _____ (кава). → Я хочу **каву**. (Accusative for "what I want")
+## Cultural Insight
 
-Дайте склянку _____ (вода). → Дайте склянку **води**. (Genitive for "of what")
+### Bread is Head (Хліб усьому голова)
+Bread is sacred. You'll see **коровай** (wedding bread) and be greeted with **хліб і сіль** (bread and salt). Never throw bread away!
 
-Я хочу _____ (хліб). → Я хочу **хліб**. (Accusative for masculine nouns - "I want bread")
-
-Кілограм _____ (яблуко). → Кілограм **яблук**. (Genitive plural for quantity)
-
-> 🎯 **Remember the Pattern!**
->
-> **Accusative** for direct objects: Я купую **каву**, **хліб**, **молоко**.
-> **Genitive** for quantities: пляшку **води**, кілограм **сиру**, пачку **цукру**.
-
-### Ordering at a Store
-
-Practice these common shopping phrases:
-
-**Asking prices:**
-- Скільки коштує ___? (How much does ___ cost?)
-- Скільки це коштує? (How much does this cost?)
-- Яка ціна? (What's the price?)
-
-**Making requests:**
-- Дайте, будь ласка... (Give me, please...)
-- Я хочу... (I want...)
-- Можна...? (May I have...?)
-
-**Quantities:**
-- Один кілограм (one kilogram)
-- Півкілограма (half a kilogram)
-- Пляшку (a bottle)
-- Пачку (a pack)
-
----
+Also, **борщ** is the soul of the kitchen. "Борщ — душа української кухні."
 
 # Summary
+You can now feed yourself in Ukraine!
+- **Eat & Drink**: їсти, пити, снідати, обідати, вечеряти.
+- **Shop**: Скільки коштує?, Я хочу..., кілограм...
+- **Enjoy**: Смачного!
 
-In this module, you practiced using the accusative and genitive cases together for shopping. You learned how to ask prices with "Скільки коштує?" and request quantities with genitive ("склянку води", "кілограм яблук"). You also learned vocabulary for Ukrainian supermarkets like Сільпо, АТБ, Новус, and Фора. Now you can navigate Ukrainian stores with confidence!
+Next up: Module 19 - At the Café (more conversation!).

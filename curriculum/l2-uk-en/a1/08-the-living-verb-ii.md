@@ -11,7 +11,7 @@ You've already learned **First Conjugation** verbs that end in **-ати** (чи
 
 ### Second Conjugation Conjugation Pattern
 
-Second Conjugation verbs end in **-ити** or **-іти** in the infinitive. When you conjugate them, they follow a different pattern from the First Conjugation. Here's the key change:
+The **Second Conjugation** (Ukrainian: **друга дієвідміна**) verbs end in **-ити** or **-іти** in the infinitive. When you conjugate them, they follow a different pattern from the **First Conjugation** (Ukrainian: **перша дієвідміна**). Here's the key change:
 
 **Conjugation formula:** Drop **-ити/-іти**, add these endings:
 

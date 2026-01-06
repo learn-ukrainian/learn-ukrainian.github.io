@@ -1,0 +1,24 @@
+module: a1-09
+title: Reflexive Verbs (-ся)
+subtitle: "Actions directed at oneself"
+version: '2.0'
+phase: A1.1
+pedagogy: PPP
+duration: 60
+transliteration: full
+tags:
+  - verbs
+  - reflexive
+  - grammar
+  - present-tense
+grammar:
+  - reflexive-verbs-intro
+  - conjugation-sya-verbs
+  - imperfective-aspect-intro
+objectives:
+  - Learner can identify reflexive verbs ending in -ся
+  - Learner can conjugate reflexive verbs in present and past tense
+  - Learner understands the difference between transitive and reflexive verbs
+  - Learner can use common reflexive verbs like дивитися, сміятися
+vocabulary_count: 25
+slug: 09-reflexive-verbs

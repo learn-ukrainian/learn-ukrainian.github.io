@@ -184,3 +184,83 @@ items:
     translation: temporal/time
     pos: adj
     gender: m
+  - lemma: читав
+    ipa: /t͡ʃɪˈtɑw/
+    translation: read (he)
+    pos: verb
+  - lemma: писав
+    ipa: /pɪˈsɑw/
+    translation: wrote (he)
+    pos: verb
+  - lemma: робив
+    ipa: /rɔˈbɪw/
+    translation: did (he)
+    pos: verb
+  - lemma: говорив
+    ipa: /ɦɔvɔˈrɪw/
+    translation: spoke (he)
+    pos: verb
+  - lemma: працював
+    ipa: /prɑt͡sʲuˈvɑw/
+    translation: worked (he)
+    pos: verb
+  - lemma: дивився
+    ipa: /dɪˈvɪwsʲɑ/
+    translation: watched (he)
+    pos: verb
+  - lemma: слухав
+    ipa: /ˈsluxɑw/
+    translation: listened (he)
+    pos: verb
+  - lemma: гуляв
+    ipa: /ɦuˈlʲɑw/
+    translation: walked (he)
+    pos: verb
+  - lemma: їв
+    ipa: /jiw/
+    translation: ate (he)
+    pos: verb
+  - lemma: пив
+    ipa: /pɪw/
+    translation: drank (he)
+    pos: verb
+  - lemma: жив
+    ipa: /ʒɪw/
+    translation: lived (he)
+    pos: verb
+  - lemma: чекав
+    ipa: /t͡ʃɛˈkɑw/
+    translation: waited (he)
+    pos: verb
+  - lemma: був
+    ipa: /buw/
+    translation: was (he)
+    pos: verb
+  - lemma: була
+    ipa: /buˈlɑ/
+    translation: was (she)
+    pos: verb
+  - lemma: було
+    ipa: /buˈlɔ/
+    translation: was (it)
+    pos: verb
+  - lemma: були
+    ipa: /buˈlɪ/
+    translation: were
+    pos: verb
+  - lemma: вчора
+    ipa: /wt͡ʃɔrɑ/
+    translation: yesterday
+    pos: adv
+  - lemma: тижня
+    ipa: /ˈtɪʒnʲɑ/
+    translation: of the week
+    pos: noun
+  - lemma: місяця
+    ipa: /ˈmisʲɑt͡sʲɑ/
+    translation: of the month
+    pos: noun
+  - lemma: року
+    ipa: /ˈrɔku/
+    translation: of the year
+    pos: noun

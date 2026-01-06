@@ -74,14 +74,29 @@ These verbs keep their stem exactly as it appears in the infinitive (minus -ти
 | слухати    | слуха-  | слухаю   | to listen       |
 | розуміти   | розумі- | розумію  | to understand   |
 
-#### 2. The Productive -ува- / -юва- Pattern
-Verbs ending in **-ува-** or **-юва-** are very common (especially for new words!). Notice how the **-ува-** changes to **-у-** in the conjugated forms:
+#### 2. The працювати Type (-ва- Dropping Rule)
 
-| Infinitive  | Stem    | я form    | English         |
-| ----------- | ------- | --------- | --------------- |
-| працювати   | працюв- | працюю    | to work         |
-| танцювати   | танцюв- | танцюю    | to dance        |
-| малювати    | малюв-  | малюю     | to paint, draw  |
+Many Ukrainian verbs end in **-ювати** or **-увати**. These are often new words or loanwords.
+
+**The Rule:** In the present tense, the **-ва-** syllable drops out and is replaced by **-ю-** (or -у-).
+
+This is why **працювати** becomes **працюю** (not "працюваю").
+
+**Memorize this pattern:**
+- Infinitive: ...-ювати
+- Present: ...-юю, -юєш, -ює
+
+| Infinitive | Stem Drop | Conjugation (Я) | English |
+| :--- | :--- | :--- | :--- |
+| **працювати** | працю~~ва~~- | **працюю** | to work |
+| **танцювати** | танцю~~ва~~- | **танцюю** | to dance |
+| **подорожувати** | подорожу~~ва~~- | **подорожую** | to travel |
+| **малювати** | малю~~ва~~- | **малюю** | to paint/draw |
+
+> 🧠 **Memory Trick**
+>
+> Imagine the **-ва-** is shy. It runs away when the action happens NOW (present tense)!
+> But don't worry—it comes back in the past tense (as you'll see in M21).
 
 > [!important] **Consonant Mutation**
 > Some verbs like **писати** (to write) change their final consonant: **писати** → **пишу** (not "писаю"). Don't worry about the rules yet; just memorize the "я пишу" form for now!

@@ -91,6 +91,54 @@ items:
     translation: future
     pos: noun
     gender: n
+  - lemma: буду
+    ipa: /ˈbudu/
+    translation: will be (I)
+    pos: verb
+  - lemma: обов'язково
+    ipa: /ɔbɔˈwjɑzkɔvɔ/
+    translation: definitely/necessarily
+    pos: adv
+  - lemma: наступного
+    ipa: /nɑˈstupnɔɦɔ/
+    translation: next (genitive)
+    pos: adj
+  - lemma: тижня
+    ipa: /ˈtɪʒnʲɑ/
+    translation: of the week
+    pos: noun
+  - lemma: місяця
+    ipa: /ˈmisʲɑt͡sʲɑ/
+    translation: of the month
+    pos: noun
+  - lemma: року
+    ipa: /ˈrɔku/
+    translation: of the year
+    pos: noun
+  - lemma: післязавтра
+    ipa: /pislʲɑˈzɑwtrɑ/
+    translation: day after tomorrow
+    pos: adv
+  - lemma: завтра
+    ipa: /ˈzɑwtrɑ/
+    translation: tomorrow
+    pos: adv
+  - lemma: скоро
+    ipa: /ˈskɔrɔ/
+    translation: soon
+    pos: adv
+  - lemma: пізніше
+    ipa: /pizˈniʃɛ/
+    translation: later
+    pos: adv
+  - lemma: потім
+    ipa: /ˈpɔtim/
+    translation: then/afterwards
+    pos: adv
+  - lemma: згодом
+    ipa: /ˈzɦɔdɔm/
+    translation: eventually
+    pos: adv
   - lemma: мрія
     ipa: /ˈmrijɑ/
     translation: dream
@@ -210,3 +258,15 @@ items:
     translation: Japan
     pos: propn
     gender: f
+  - lemma: мрію
+    ipa: /ˈmriju/
+    translation: I dream
+    pos: verb
+  - lemma: спробую
+    ipa: /ˈsprɔbuju/
+    translation: I will try
+    pos: verb
+  - lemma: думаю
+    ipa: /ˈdumaju/
+    translation: I think
+    pos: verb

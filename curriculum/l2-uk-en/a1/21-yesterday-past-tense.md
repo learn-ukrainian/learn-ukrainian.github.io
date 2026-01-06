@@ -6,13 +6,14 @@ What did you do yesterday? Last week? A long time ago? Every language needs a wa
 
 Unlike English, where "I worked" and "she worked" look the same, Ukrainian past tense changes based on **gender**, not person. "I worked" is different for men (я працював) and women (я працювала). Once you see the pattern, it's surprisingly easy!
 
-> [!important] **Grammar Insight: Ongoing vs. Completed**
+> [!important] **Aspect Awareness**
 >
-> All the verbs you've learned so far are **imperfective**. In the past tense, this means they often describe **ongoing or habitual actions**:
+> 💡 **Note:** This is the **imperfective past tense** (describing ongoing or repeated actions).
 >
-> - **Я читав** = I was reading (ongoing) OR I used to read (habit).
+> Ukrainian also has **perfective past tense** (for completed actions with results).
+> You'll learn about this distinction in A2 when we study "aspect"!
 >
-> Ukrainian uses a slightly different form for "I finished reading" (perfective). You'll master that in A2! For now, focus on these "storytelling" forms.
+> For now: читав = "was reading" (ongoing)
 
 > [!tip] **Чи знаєте ви? (Did You Know?)**
 >
@@ -55,6 +56,36 @@ The past tense in Ukrainian is beautifully simple. You take the infinitive (like
 - читав / читала / читало / читали
 - працював / працювала / працювало / працювали
 - говорив / говорила / говорило / говорили
+
+### The Magic Return of -ва-
+
+Remember how verbs like **працювати** lost their **-ва-** in the present tense (я працюю)?
+Good news: In the past tense, the **-ва-** comes back!
+
+The past tense is built from the **infinitive** (dictionary form), so the **-ва-** stays right there.
+
+| Verb | Present (Now) | Past (Yesterday) |
+| :--- | :--- | :--- |
+| **працювати** | я працюю (no -ва-) | я працю**ва**в (has -ва-!) |
+| **танцювати** | я танцюю | я танцю**ва**в |
+| **подорожувати** | я подорожую | я подорожу**ва**в |
+
+**Rule:** Present tense = drop -ва-. Past tense = keep -ва-.
+
+### Reflexive Verbs in the Past (-ся)
+
+Reflexive verbs (Module 09) follow the same gender rules, but you keep the **-ся** at the end.
+
+**Pattern:** Gender Ending + **-ся**.
+
+Let's look at **сміятися** (to laugh):
+
+| Who | Formation | Result |
+| :--- | :--- | :--- |
+| **Він** | сміяв + ся | **сміявся** |
+| **Вона** | сміяла + ся | **сміялася** |
+| **Воно** | сміяло + ся | **сміялося** |
+| **Вони** | сміяли + ся | **сміялися** |
 
 > [!observe] Pattern Discovery
 >

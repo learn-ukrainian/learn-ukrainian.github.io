@@ -24,11 +24,12 @@
 
 Ukrainian uses **буду** (future of "to be") + infinitive to form the compound future. This pattern is used specifically with **imperfective verbs** to describe actions that will be ongoing, repeated, or habitual.
 
-> [!important] **The "Ongoing" Future**
+> [!important] **Aspect Awareness**
 >
-> When you say "Я буду читати," you are saying "I will be reading" (ongoing) or "I will read" (as a habit).
+> 💡 **Note:** This is the **imperfective future** (буду читати = "I will be reading").
 >
-> For actions that will be completed once (like "I will finish reading"), Ukrainian uses a different form called the **perfective future**, which you'll encounter in A2. For now, this **буду + infinitive** pattern is your workhorse for all future plans!
+> Ukrainian also has **perfective future** forms (прочитаю = "I will finish reading").
+> Coming in A2 when we study aspect!
 
 ### Conjugation of буду
 
@@ -37,6 +38,21 @@ Ukrainian uses **буду** (future of "to be") + infinitive to form the compoun
 | 1st    | буду     | будемо |
 | 2nd    | будеш    | будете |
 | 3rd    | буде     | будуть |
+
+### Optional: Literary Future (читатиму)
+
+You might see a shorter future form in books or formal speech. It's called the **synthetic** or **literary** future.
+
+**Formation:** Infinitive + **-м-** endings.
+
+| Infinitive | + Endings | Result | Meaning |
+| :--- | :--- | :--- | :--- |
+| **читати** | -му, -меш, -ме | читати**му** | I will read |
+| **працювати** | -мемо, -мете, -муть | працювати**мемо** | We will work |
+
+> [!tip] **Pro Tip**
+>
+> Just recognize this when reading. In speech, stick to **буду + infinitive**—it's 100% correct and easier to use!
 
 ### Examples with Different Verbs
 
@@ -49,6 +65,7 @@ Ukrainian uses **буду** (future of "to be") + infinitive to form the compoun
 | Ми      | будемо    | грати        | Ми будемо грати. (We will play.)       |
 | Ви      | будете    | їхати        | Ви будете їхати. (You will go.)        |
 | Вони    | будуть    | співати      | Вони будуть співати. (They will sing.) |
+| Вона    | буде      | сміятися     | Вона буде сміятися. (She will laugh.)  |
 
 ---
 

@@ -207,3 +207,31 @@ items:
     ipa: /t͡ʃɪˈtɑtɪ/
     translation: to read
     pos: verb
+  - lemma: працювати
+    ipa: /prɑt͡sʲuˈvɑtɪ/
+    translation: to work
+    pos: verb
+  - lemma: подорожувати
+    ipa: /pɔdɔrɔʒuˈvɑtɪ/
+    translation: to travel
+    pos: verb
+  - lemma: називати
+    ipa: /nɑzɪˈvɑtɪ/
+    translation: to name/call
+    pos: verb
+  - lemma: закінчувати
+    ipa: /zɑˈkint͡ʃuvɑtɪ/
+    translation: to finish
+    pos: verb
+  - lemma: шукати
+    ipa: /ʃuˈkɑtɪ/
+    translation: to look for
+    pos: verb
+  - lemma: знаходити
+    ipa: /znɑˈxɔdɪtɪ/
+    translation: to find
+    pos: verb
+  - lemma: мріяти
+    ipa: /mriˈjɑtɪ/
+    translation: to dream
+    pos: verb

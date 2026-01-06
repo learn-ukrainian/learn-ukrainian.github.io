@@ -97,3 +97,43 @@ items:
     ipa: /ˈjistɪ/
     translation: to eat
     pos: verb
+  - lemma: любити
+    ipa: /lʲuˈbɪtɪ/
+    translation: to love
+    pos: verb
+  - lemma: просити
+    ipa: /prɔˈsɪtɪ/
+    translation: to ask
+    pos: verb
+  - lemma: бігти
+    ipa: /ˈbiɦtɪ/
+    translation: to run
+    pos: verb
+  - lemma: летіти
+    ipa: /lɛˈtitɪ/
+    translation: to fly
+    pos: verb
+  - lemma: забувати
+    ipa: /zɑbuˈvɑtɪ/
+    translation: to forget
+    pos: verb
+  - lemma: хотіти
+    ipa: /xɔˈtitɪ/
+    translation: to want
+    pos: verb
+  - lemma: пити
+    ipa: /ˈpɪtɪ/
+    translation: to drink
+    pos: verb
+  - lemma: пам'ятати
+    ipa: /pɑmˈjɑtɑtɪ/
+    translation: to remember
+    pos: verb
+  - lemma: дякувати
+    ipa: /ˈdʲɑkuvɑtɪ/
+    translation: to thank
+    pos: verb
+  - lemma: купувати
+    ipa: /kupuˈvɑtɪ/
+    translation: to buy
+    pos: verb

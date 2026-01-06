@@ -395,21 +395,21 @@ By module 30, learners can:
 
 ---
 
-#### Module 09: Food & Drinks
-**Grammar:** None (vocabulary focus) - uses verbs їсти/пити from M08
+#### Module 09: Reflexive Verbs (-ся)
+**Grammar:** Reflexive verbs (-ся/-сь)
 
 **Key patterns:**
-- Це борщ. (This is borscht.)
-- Я їм хліб. (I eat bread.)
-- Вона п'є чай. (She drinks tea.)
+- Я називаюсь Андрій. (I am called Andriy.)
+- Вона сміється. (She laughs.)
+- Ми зустрічаємось. (We meet.)
 
-**Vocabulary (30 words):**
-їжа, сніданок, обід, вечеря, борщ, суп, вареники, хліб, м'ясо, курка, риба, овочі, фрукти, яблуко, банан, картопля, помідор, огірок, цибуля, сир, яйце, чай, кава, вода, сік, молоко, смачний, смачно, Смачного!, їсти, пити
+**Vocabulary (25 words):**
+називатися, сміятися, усміхатися, дивитися, зустрічатися, прокидатися, вмиватися, одягатися, запізнюватися, вітатися, починатися, закінчуватися, дзеркало, обличчя, смішний, разом, як
 
 **Signature Activity Concepts:**
-1. Match-up: Food → category (fruit, vegetable, meat, drink)
-2. Quiz: What do Ukrainians eat for breakfast/lunch/dinner?
-3. Gap-fill: Complete sentences with food vocabulary
+1. Match-up: Reflexive verb → Meaning
+2. Gap-fill: Conjugate reflexive verbs
+3. Quiz: Find the mistake (conjugation)
 
 ---
 
@@ -649,7 +649,7 @@ By module 30, learners can:
 
 ---
 
-#### Module 18: Food & Shopping
+#### Module 18: Food, Drinks & Shopping
 **Grammar:** Accusative + Genitive in food/shopping context
 
 **Key patterns:**
@@ -657,8 +657,8 @@ By module 30, learners can:
 - Склянку води, будь ласка. (A glass of water, please. - Gen)
 - Скільки коштує мило? (How much is the soap?)
 
-**Vocabulary (55 words):**
-страва, закуска, салат, суп, борщ, десерт, напій, кава, чай, сік, вода, вино, пиво, м'ясо, курка, риба, овочі, картопля, хліб, сир, яйце, смачний, меню, офіціант, рахунок, мило, шампунь, зубна паста, папір, ручка, олівець, зошит, купувати, супермаркет, магазин, пакет, каса, продавець, ціна, знижка, дорого, дешево, відчинено, зачинено
+**Vocabulary (60 words):**
+їжа, сніданок, обід, вечеря, страва, закуска, салат, суп, борщ, вареники, десерт, напій, кава, чай, сік, вода, вино, пиво, молоко, м'ясо, курка, риба, овочі, фрукти, яблуко, банан, картопля, помідор, огірок, цибуля, хліб, сир, яйце, смачний, меню, офіціант, рахунок, мило, шампунь, купувати, супермаркет, магазин, пакет, каса, продавець, ціна, знижка, дорого, дешево, їсти, пити, замовляти, куштувати
 
 **Signature Activity Concepts:**
 1. Dialogue: Order from a menu
