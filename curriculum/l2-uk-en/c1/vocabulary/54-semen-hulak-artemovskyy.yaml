@@ -1,0 +1,133 @@
+module: 54-semen-hulak-artemovskyy
+level: C1
+version: "1.0"
+items:
+  - lemma: опера
+    ipa: /ˈɔpɛrɑ/
+    translation: opera
+    pos: noun
+    gender: f
+  - lemma: засновник
+    ipa: /zɑˈsnɔu̯nɪk/
+    translation: founder
+    pos: noun
+    gender: m
+  - lemma: національний
+    ipa: /nɑt͡sijɔˈnɑlʲnɪj/
+    translation: national
+    pos: adj
+  - lemma: вистава
+    ipa: /wɪˈstɑwɑ/
+    translation: performance/play
+    pos: noun
+    gender: f
+  - lemma: лібрето
+    ipa: /lʲiˈbrɛtɔ/
+    translation: libretto
+    pos: noun
+    gender: n
+  - lemma: композитор
+    ipa: /kɔmpɔˈzɪtɔr/
+    translation: composer
+    pos: noun
+    gender: m
+  - lemma: співак
+    ipa: /spiˈwɑk/
+    translation: singer
+    pos: noun
+    gender: m
+  - lemma: баритон
+    ipa: /bɑrɪˈtɔn/
+    translation: baritone
+    pos: noun
+    gender: m
+  - lemma: козацтво
+    ipa: /kɔˈzɑt͡stwɔ/
+    translation: Cossacks (collectively)
+    pos: noun
+    gender: n
+  - lemma: побут
+    ipa: /ˈpɔbut/
+    translation: way of life/daily life
+    pos: noun
+    gender: m
+  - lemma: шедевр
+    ipa: /ʃɛˈdɛwr/
+    translation: masterpiece
+    pos: noun
+    gender: m
+  - lemma: відродження
+    ipa: /widˈrɔd͡ʒːɛnʲːɑ/
+    translation: revival/renaissance
+    pos: noun
+    gender: n
+  - lemma: гумор
+    ipa: /ˈɦumɔr/
+    translation: humor
+    pos: noun
+    gender: m
+  - lemma: сатира
+    ipa: /sɑˈtɪrɑ/
+    translation: satire
+    pos: noun
+    gender: f
+  - lemma: патріотизм
+    ipa: /pɑtrijɔˈtɪzm/
+    translation: patriotism
+    pos: noun
+    gender: m
+  - lemma: вигнання
+    ipa: /wɪˈɦnɑnʲːɑ/
+    translation: exile
+    pos: noun
+    gender: n
+  - lemma: туга
+    ipa: /ˈtuɦɑ/
+    translation: longing/sorrow
+    pos: noun
+    gender: f
+  - lemma: персонаж
+    ipa: /pɛrsɔˈnɑʒ/
+    translation: character
+    pos: noun
+    gender: m
+  - lemma: дует
+    ipa: /duˈɛt/
+    translation: duet
+    pos: noun
+    gender: m
+  - lemma: хор
+    ipa: /xɔr/
+    translation: choir
+    pos: noun
+    gender: m
+  - lemma: антракт
+    ipa: /ɑnˈtrɑkt/
+    translation: intermission
+    pos: noun
+    gender: m
+  - lemma: афіша
+    ipa: /ɑˈfijʃɑ/
+    translation: poster/bill
+    pos: noun
+    gender: f
+  - lemma: сцена
+    ipa: /ˈst͡sɛnɑ/
+    translation: stage/scene
+    pos: noun
+    gender: f
+  - lemma: репертуар
+    ipa: /rɛpɛrtuˈɑr/
+    translation: repertoire
+    pos: noun
+    gender: m
+  - lemma: тріумф
+    ipa: /triˈumf/
+    translation: triumph
+    pos: noun
+    gender: m
+  - lemma: ідентичність
+    ipa: /idɛnˈtɪt͡ʃnistʲ/
+    translation: identity
+    pos: noun
+    gender: f

@@ -1,0 +1,127 @@
+module: 52-maksym-berezovskyy
+level: C1
+version: '2.0'
+items:
+- lemma: композитор
+  ipa: /kompozɪˈtɔr/
+  translation: composer
+  pos: noun
+  gender: m
+- lemma: опера
+  ipa: /ˈɔperɐ/
+  translation: opera
+  pos: noun
+  gender: f
+- lemma: бароко
+  ipa: /bɐˈrɔkɔ/
+  translation: Baroque
+  pos: noun
+  gender: n
+- lemma: шедевр
+  ipa: /ʃɛˈdɛvr/
+  translation: masterpiece
+  pos: noun
+  gender: m
+- lemma: капела
+  ipa: /kɐˈpɛlɐ/
+  translation: chapel, choir
+  pos: noun
+  gender: f
+- lemma: хорова музика
+  ipa: /xoˈrɔvɐ ˈmuzɪkɐ/
+  translation: choral music
+  pos: noun
+  gender: f
+- lemma: лібрето
+  ipa: /lʲiˈbrɛtɔ/
+  translation: libretto
+  pos: noun
+  gender: n
+- lemma: арія
+  ipa: /ˈɑrʲijɐ/
+  translation: aria
+  pos: noun
+  gender: f
+- lemma: партитура
+  ipa: /pɐrtɪˈturɐ/
+  translation: score, sheet music
+  pos: noun
+  gender: f
+- lemma: диригент
+  ipa: /dɪrɪˈɦɛnt/
+  translation: conductor
+  pos: noun
+  gender: m
+- lemma: прем'єра
+  ipa: /preˈmjerɐ/
+  translation: premiere
+  pos: noun
+  gender: f
+- lemma: віртуоз
+  ipa: /vʲirtuˈɔz/
+  translation: virtuoso
+  pos: noun
+  gender: m
+- lemma: просвітництво
+  ipa: /proˈsvʲitneɪ̯t͡stvo/
+  translation: enlightenment
+  pos: noun
+  gender: n
+- lemma: трагедія
+  ipa: /trɐˈɦɛdʲijɐ/
+  translation: tragedy
+  pos: noun
+  gender: f
+- lemma: спадщина
+  ipa: /ˈspɐdʃt͡ʃenɐ/
+  translation: legacy, heritage
+  pos: noun
+  gender: f
+- lemma: ідентичність
+  ipa: /idenˈtet͡ʃnʲistʲ/
+  translation: identity
+  pos: noun
+  gender: f
+- lemma: суб'єктність
+  ipa: /subjekˈteɪ̯vʲnʲistʲ/
+  translation: agency, subjectivity
+  pos: noun
+  gender: f
+- lemma: академія
+  ipa: /ɐkɐˈdɛmʲijɐ/
+  translation: academy
+  pos: noun
+  gender: f
+- lemma: канонізація
+  ipa: /kɐnonʲizˈɑt͡sʲijɐ/
+  translation: canonization
+  pos: noun
+  gender: f
+- lemma: незламний
+  ipa: /nezˈlɑmneɪ̯/
+  translation: unbreakable, indomitable
+  pos: adj
+- lemma: легендарний
+  ipa: /leɦenˈdɑrneɪ̯/
+  translation: legendary
+  pos: adj
+- lemma: духовність
+  ipa: /duˈxɔvnʲistʲ/
+  translation: spirituality
+  pos: noun
+  gender: f
+- lemma: талант
+  ipa: /tɐˈlɐnt/
+  translation: talent
+  pos: noun
+  gender: m
+- lemma: музикознавство
+  ipa: /muzɪkozˈnɑvstvo/
+  translation: musicology
+  pos: noun
+  gender: n
+- lemma: консерваторія
+  ipa: /konservɐˈtɔrʲijɐ/
+  translation: conservatory
+  pos: noun
+  gender: f

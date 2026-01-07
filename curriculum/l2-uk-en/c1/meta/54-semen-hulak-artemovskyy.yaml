@@ -1,17 +1,24 @@
 module: c1-54
-title: Семен Гулак-Артемовський
-subtitle: Semen Hulak-Artemovskyi
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: narrative
+title: "Семен Гулак-Артемовський: Творець Національної Опери"
+phase: "C1.3 Biographies"
 duration: 120
-vocabulary_count: 24
-tags:
-- c1
-- biography
-- history
-- culture
+transliteration: none
+pedagogy: "CBI"
+register: "публіцистичний"
+focus: biography
 objectives:
-- Master C1 concepts in Семен Гулак-Артемовський
+  - "Explore the life of Semen Hulak-Artemovskyy as a singer and composer"
+  - "Analyze the significance of 'Zaporozhets za Dunayem' as the first national opera"
+  - "Understand the cultural context of the 19th-century Ukrainian national awakening"
+  - "Identify linguistic features of 19th-century literary and operatic texts"
+tags:
+  - biography
+  - era: imperial
+  - domain: arts
+grammar:
+  - "Historical narrative tenses"
+  - "Operatic and theatrical terminology"
+vocabulary_focus:
+  - "Theatrical vocabulary"
+  - "National awakening terminology"
 slug: 54-semen-hulak-artemovskyy

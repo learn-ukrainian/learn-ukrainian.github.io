@@ -1,0 +1,129 @@
+module: 55-taras-shevchenko
+level: C1
+version: "1.0"
+items:
+  - lemma: пророк
+    ipa: /prɔˈrɔk/
+    translation: prophet
+    pos: noun
+    gender: m
+  - lemma: кобзар
+    ipa: /kɔbˈzɑr/
+    translation: kobzar (bard)
+    pos: noun
+    gender: m
+  - lemma: кріпацтво
+    ipa: /kriˈpɑt͡stwɔ/
+    translation: serfdom
+    pos: noun
+    gender: n
+  - lemma: викуп
+    ipa: /wɪˈkup/
+    translation: ransom/buyout
+    pos: noun
+    gender: m
+  - lemma: заслання
+    ipa: /zɑˈslɑnʲːɑ/
+    translation: exile
+    pos: noun
+    gender: n
+  - lemma: репресії
+    ipa: /rɛˈprɛsijɪ/
+    translation: repressions
+    pos: noun
+    gender: f
+  - lemma: незламність
+    ipa: /idɛnˈtɪt͡ʃnistʲ/
+    translation: resilience/unbreakability
+    pos: noun
+    gender: f
+  - lemma: заповіт
+    ipa: /zɑpɔˈwit/
+    translation: testament/will
+    pos: noun
+    gender: m
+  - lemma: ідентичність
+    ipa: /idɛnˈtɪt͡ʃnistʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: відродження
+    ipa: /widˈrɔd͡ʒːɛnʲːɑ/
+    translation: revival/renaissance
+    pos: noun
+    gender: n
+  - lemma: суб'єктність
+    ipa: /subˈjɛktnistʲ/
+    translation: agency/subjectivity
+    pos: noun
+    gender: f
+  - lemma: поневолення
+    ipa: /pɔnɛˈwɔlɛnʲːɑ/
+    translation: enslavement
+    pos: noun
+    gender: n
+  - lemma: визволення
+    ipa: /wɪˈzwɔlɛnʲːɑ/
+    translation: liberation
+    pos: noun
+    gender: n
+  - lemma: тиранія
+    ipa: /tɪrɑˈnijɑ/
+    translation: tyranny
+    pos: noun
+    gender: f
+  - lemma: самобутність
+    ipa: /sɑmɔˈbutʲnistʲ/
+    translation: originalty/distinctiveness
+    pos: noun
+    gender: f
+  - lemma: спадщина
+    ipa: /spɑˈdʃt͡ʃɪnɑ/
+    translation: legacy/heritage
+    pos: noun
+    gender: f
+  - lemma: постать
+    ipa: /pɔˈstɑtʲ/
+    translation: figure/personality
+    pos: noun
+    gender: f
+  - lemma: внесок
+    ipa: /vnɛˈsɔk/
+    translation: contribution
+    pos: noun
+    gender: m
+  - lemma: творчість
+    ipa: /ˈtwɔrt͡ʃistʲ/
+    translation: creativity/works
+    pos: noun
+    gender: f
+  - lemma: малярство
+    ipa: /mɑˈlʲɑrstwɔ/
+    translation: painting (art)
+    pos: noun
+    gender: n
+  - lemma: офорт
+    ipa: /ɔˈfɔrt/
+    translation: etching
+    pos: noun
+    gender: m
+  - lemma: академік
+    ipa: /ɑkɑˈdɛmik/
+    translation: academician
+    pos: noun
+    gender: m
+  - lemma: духовність
+    ipa: /dʊˈxɔu̯nistʲ/
+    translation: spirituality
+    pos: noun
+    gender: f
+  - lemma: боротьба
+    ipa: /bɔrɔˈtʲbɑ/
+    translation: struggle
+    pos: noun
+    gender: f
+  - lemma: гасло
+    ipa: /ˈɦɑslɔ/
+    translation: slogan/motto
+    pos: noun
+    gender: n

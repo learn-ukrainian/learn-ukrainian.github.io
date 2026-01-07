@@ -1,17 +1,24 @@
 module: c1-53
-title: Дмитро Бортнянський
-subtitle: Dmytro Bortnianskyi
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: narrative
+title: "Дмитро Бортнянський: Реформатор Хорового Мистецтва"
+phase: "C1.3 Biographies"
 duration: 120
-vocabulary_count: 24
-tags:
-- c1
-- biography
-- history
-- culture
+transliteration: none
+pedagogy: "CBI"
+register: "публіцистичний"
+focus: biography
 objectives:
-- Master C1 concepts in Дмитро Бортнянський
+  - "Understand the life and career of Dmytro Bortnyanskyy"
+  - "Analyze the impact of the Hlukhiv singing school on his development"
+  - "Identify the linguistic and musical features of his choral works"
+  - "Critique the imperial appropriation of Ukrainian musical heritage"
+tags:
+  - biography
+  - era: imperial
+  - domain: arts
+grammar:
+  - "Historical narrative tenses"
+  - "Quoted speech conventions"
+vocabulary_focus:
+  - "Choral terminology"
+  - "Imperial court vocabulary"
 slug: 53-dmytro-bortnyanskyy
