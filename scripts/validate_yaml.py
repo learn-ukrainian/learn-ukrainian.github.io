@@ -26,6 +26,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from yaml_activities import ActivityParser
+# Import the new schema validation function
+from audit.checks.yaml_schema_validation import validate_activity_yaml_file
 
 
 def detect_level(file_path: Path) -> str:
@@ -39,22 +41,13 @@ def detect_level(file_path: Path) -> str:
 
 def format_error(error) -> str:
     """Format a validation error for display."""
-    parts = [f"  \033[31mERROR\033[0m: {error.message}"]
-    if error.path and error.path != '/':
-        parts[0] = f"  \033[31mERROR\033[0m [{error.path}]: {error.message}"
-    if error.activity_type:
-        parts.append(f"    Activity type: {error.activity_type}")
-    if error.activity_title:
-        parts.append(f"    Activity title: {error.activity_title}")
-    return '\n'.join(parts)
+    return f"  \033[31mERROR\033[0m: {error}"
 
 
 def format_warning(warning) -> str:
     """Format a validation warning for display."""
-    parts = [f"  \033[33mWARN\033[0m: {warning.message}"]
-    if warning.path and warning.path != '/':
-        parts[0] = f"  \033[33mWARN\033[0m [{warning.path}]: {warning.message}"
-    return '\n'.join(parts)
+    # Schema validation doesn't currently produce warnings, but keeping for compatibility
+    return f"  \033[33mWARN\033[0m: {warning}"
 
 
 def validate_file(yaml_path: Path, level: str = None, verbose: bool = False) -> bool:
@@ -70,9 +63,11 @@ def validate_file(yaml_path: Path, level: str = None, verbose: bool = False) -> 
     if level is None:
         level = detect_level(yaml_path)
 
-    parser = ActivityParser()
+    # Use the new schema-based validation
+    is_valid, errors = validate_activity_yaml_file(yaml_path)
 
-    # Parse YAML
+    # We still need the parser to show activity counts and MDX preview
+    parser = ActivityParser()
     try:
         activities = parser.parse(yaml_path)
     except Exception as e:
@@ -80,16 +75,9 @@ def validate_file(yaml_path: Path, level: str = None, verbose: bool = False) -> 
         print(f"  \033[31mPARSE ERROR\033[0m: {e}")
         return False
 
-    # Validate
-    result = parser.validate(activities, level=level)
-
     # Display results
-    if result.ok:
+    if is_valid:
         print(f"\033[32m✓\033[0m {yaml_path} ({len(activities)} activities, level={level})")
-
-        if result.warnings:
-            for warning in result.warnings:
-                print(format_warning(warning))
 
         if verbose:
             print(f"\n  Activities:")
@@ -106,11 +94,8 @@ def validate_file(yaml_path: Path, level: str = None, verbose: bool = False) -> 
     else:
         print(f"\n\033[31m✗\033[0m {yaml_path} ({len(activities)} activities, level={level})")
 
-        for error in result.errors:
+        for error in errors:
             print(format_error(error))
-
-        for warning in result.warnings:
-            print(format_warning(warning))
 
         return False
 
