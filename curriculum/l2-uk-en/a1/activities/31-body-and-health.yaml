@@ -21,6 +21,7 @@
     right: nose
   - left: '- рот'
     right: mouth
+  id: body-parts
 - type: match-up
   title: Health Vocabulary
   pairs:
@@ -44,6 +45,7 @@
     right: cold (illness)
   - left: '- швидка допомога'
     right: ambulance
+  id: health-vocabulary
 - type: group-sort
   title: Body Parts
   groups:
@@ -66,6 +68,7 @@
     - палець
     - коліно
     - --
+  id: body-parts
 - type: group-sort
   title: Болить vs Болять
   groups:
@@ -86,6 +89,7 @@
     - руки
     - пальці
     - --
+  id: болить-vs-болять
 - type: fill-in
   title: Що болить? (What Hurts?)
   items:
@@ -173,6 +177,7 @@
     - рука
     - живіт
     - горло
+  id: що-болить?-(what-hurts?)
 - type: fill-in
   title: У лікаря (At the Doctor's)
   items:
@@ -260,6 +265,7 @@
     - аптека
     - лікаря
     - таблетка
+  id: у-лікаря-(at-the-doctor's)
 - type: quiz
   title: Болить or Болять?
   items:
@@ -343,6 +349,7 @@
       correct: false
     - text: болі
       correct: false
+  id: болить-or-болять?
 - type: quiz
   title: Health Situations
   items:
@@ -426,6 +433,7 @@
       correct: false
     - text: Doctor
       correct: false
+  id: health-situations
 - type: unjumble
   title: Health Sentences
   items:
@@ -491,6 +499,7 @@
     - погано
     - дуже
     answer: Мені дуже погано
+  id: health-sentences
 - type: true-false
   title: Health Facts
   items:
@@ -530,3 +539,4 @@
   - statement: '"Зуб" is singular, "зуби" is plural.'
     correct: true
     explanation: Correct!
+  id: health-facts

@@ -21,6 +21,7 @@
     right: weekend
   - left: '- робочий день'
     right: workday
+  id: days-of-the-week
 - type: match-up
   title: Months of the Year
   pairs:
@@ -44,6 +45,7 @@
     right: September
   - left: '- жовтень'
     right: October
+  id: months-of-the-year
 - type: group-sort
   title: Time Units
   groups:
@@ -66,6 +68,7 @@
     - секунда
     - чверть
     - --
+  id: time-units
 - type: fill-in
   title: Telling Time
   items:
@@ -125,6 +128,7 @@
     - рано
     - пізно
     - зараз
+  id: telling-time
 - type: fill-in
   title: Days and Months
   items:
@@ -184,6 +188,7 @@
     - четвер
     - п'ятниця
     - понеділок
+  id: days-and-months
 - type: quiz
   title: Time Expressions
   items:
@@ -267,6 +272,7 @@
       correct: false
     - text: The lesson is at one.
       correct: false
+  id: time-expressions
 - type: quiz
   title: Months and Seasons
   items:
@@ -350,6 +356,7 @@
       correct: false
     - text: Четвер і п'ятниця
       correct: false
+  id: months-and-seasons
 - type: unjumble
   title: Time Sentences
   items:
@@ -392,6 +399,7 @@
     - у
     - день
     answer: Мій день народження у травні
+  id: time-sentences
 - type: true-false
   title: Calendar Knowledge
   items:
@@ -431,3 +439,4 @@
   - statement: Вихідні — це понеділок і вівторок.
     correct: false
     explanation: Incorrect! Weekend is Saturday and Sunday.
+  id: calendar-knowledge

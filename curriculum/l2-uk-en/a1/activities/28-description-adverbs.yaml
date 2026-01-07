@@ -21,6 +21,7 @@
     right: важко
   - left: '- чесний'
     right: чесно
+  id: adjective-→-adverb
 - type: group-sort
   title: Frequency Scale
   groups:
@@ -43,6 +44,7 @@
     - зовсім не часто
     - ніколи
     - --
+  id: frequency-scale
 - type: group-sort
   title: Type of Adverb
   groups:
@@ -65,6 +67,7 @@
     - трохи
     - зовсім
     - --
+  id: type-of-adverb
 - type: fill-in
   title: Як ти це робиш? (How Do You Do It?)
   items:
@@ -152,6 +155,7 @@
     - веселий
     - весела
     - веселе
+  id: як-ти-це-робиш?-(how-do-you-do-it?)
 - type: fill-in
   title: Як часто? (How Often?)
   items:
@@ -239,6 +243,7 @@
     - ніколи
     - рідко
     - весело
+  id: як-часто?-(how-often?)
 - type: quiz
   title: Adverb or Adjective?
   items:
@@ -322,6 +327,7 @@
       correct: false
     - text: голосне
       correct: false
+  id: adverb-or-adjective?
 - type: quiz
   title: Frequency Meaning
   items:
@@ -405,6 +411,7 @@
       correct: false
     - text: Always
       correct: false
+  id: frequency-meaning
 - type: unjumble
   title: Describing Actions
   items:
@@ -472,6 +479,7 @@
     - вони
     - танцюють
     answer: Вони весело танцюють
+  id: describing-actions
 - type: true-false
   title: Adverb Rules
   items:
@@ -504,3 +512,4 @@
     explanation: Incorrect! should be "Добре!"
   - statement: '"Як справи?" — "Добре!".'
     correct: true
+  id: adverb-rules

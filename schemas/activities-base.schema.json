@@ -3,120 +3,233 @@
   "$id": "https://learn-ukrainian.github.io/schemas/activities-base.schema.json",
   "title": "Activity Definitions (Base)",
   "description": "Shared activity type definitions. Level-specific schemas reference these.",
-
   "definitions": {
     "quiz": {
       "type": "object",
       "description": "Multiple choice - single correct answer",
-      "required": ["type", "title", "items"],
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "quiz" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "quiz"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "items": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["question", "options"],
+            "required": [
+              "question",
+              "options"
+            ],
             "additionalProperties": false,
             "properties": {
-              "question": { "type": "string", "minLength": 1 },
+              "question": {
+                "type": "string",
+                "minLength": 1
+              },
               "options": {
                 "type": "array",
                 "minItems": 4,
                 "maxItems": 4,
                 "items": {
                   "type": "object",
-                  "required": ["text", "correct"],
+                  "required": [
+                    "text",
+                    "correct"
+                  ],
                   "additionalProperties": false,
                   "properties": {
-                    "text": { "type": "string", "minLength": 1 },
-                    "correct": { "type": "boolean" }
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "correct": {
+                      "type": "boolean"
+                    }
                   }
                 }
               },
-              "explanation": { "type": "string" }
+              "explanation": {
+                "type": "string"
+              }
             }
           }
         }
       }
     },
-
     "select": {
       "type": "object",
       "description": "Multiple choice - multiple correct answers",
-      "required": ["type", "title", "items"],
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "select" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "select"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "items": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["question", "options"],
+            "required": [
+              "question",
+              "options"
+            ],
             "additionalProperties": false,
             "properties": {
-              "question": { "type": "string", "minLength": 1 },
+              "question": {
+                "type": "string",
+                "minLength": 1
+              },
               "options": {
                 "type": "array",
                 "minItems": 4,
                 "maxItems": 6,
                 "items": {
                   "type": "object",
-                  "required": ["text", "correct"],
+                  "required": [
+                    "text",
+                    "correct"
+                  ],
                   "additionalProperties": false,
                   "properties": {
-                    "text": { "type": "string", "minLength": 1 },
-                    "correct": { "type": "boolean" }
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "correct": {
+                      "type": "boolean"
+                    }
                   }
                 }
               },
-              "min_correct": { "type": "integer", "minimum": 2 },
-              "explanation": { "type": "string" }
+              "min_correct": {
+                "type": "integer",
+                "minimum": 2
+              },
+              "explanation": {
+                "type": "string"
+              }
             }
           }
         }
       }
     },
-
     "true-false": {
       "type": "object",
       "description": "Statement validation - true or false",
-      "required": ["type", "title", "items"],
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "true-false" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "true-false"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "items": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["statement", "correct"],
+            "required": [
+              "statement",
+              "correct"
+            ],
             "additionalProperties": false,
             "properties": {
-              "statement": { "type": "string", "minLength": 1 },
-              "correct": { "type": "boolean" },
-              "explanation": { "type": "string" }
+              "statement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "correct": {
+                "type": "boolean"
+              },
+              "explanation": {
+                "type": "string"
+              }
             }
           }
         }
       }
     },
-
     "fill-in": {
       "type": "object",
       "description": "Gap fill with dropdown options",
-      "required": ["type", "title", "items"],
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "fill-in" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "fill-in"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "items": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["sentence", "answer", "options"],
+            "required": [
+              "sentence",
+              "answer",
+              "options"
+            ],
             "additionalProperties": false,
             "properties": {
               "sentence": {
@@ -124,28 +237,52 @@
                 "minLength": 1,
                 "description": "Sentence with ___ marking the blank"
               },
-              "answer": { "type": "string", "minLength": 1 },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
               "options": {
                 "type": "array",
                 "minItems": 4,
                 "maxItems": 4,
-                "items": { "type": "string", "minLength": 1 }
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
               },
-              "explanation": { "type": "string" }
+              "explanation": {
+                "type": "string"
+              }
             }
           }
         }
       }
     },
-
     "cloze": {
       "type": "object",
       "description": "Passage with multiple blanks",
-      "required": ["type", "title", "passage", "blanks"],
+      "required": [
+        "type",
+        "title",
+        "passage"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "cloze" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "cloze"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "passage": {
           "type": "string",
           "minLength": 1,
@@ -155,117 +292,230 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["id", "answer", "options"],
+            "required": [
+              "id",
+              "answer",
+              "options"
+            ],
             "additionalProperties": false,
             "properties": {
-              "id": { "type": "integer", "minimum": 1 },
-              "answer": { "type": "string", "minLength": 1 },
+              "id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
               "options": {
                 "type": "array",
-                "minItems": 4,
-                "maxItems": 4,
-                "items": { "type": "string", "minLength": 1 }
+                "minItems": 3,
+                "maxItems": 5,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
               }
             }
           }
         }
       }
     },
-
     "match-up": {
       "type": "object",
       "description": "Match pairs (left to right)",
-      "required": ["type", "title", "pairs"],
+      "required": [
+        "type",
+        "title",
+        "pairs"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "match-up" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "match-up"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "pairs": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["left", "right"],
+            "required": [
+              "left",
+              "right"
+            ],
             "additionalProperties": false,
             "properties": {
-              "left": { "type": "string", "minLength": 1 },
-              "right": { "type": "string", "minLength": 1 }
+              "left": {
+                "type": "string",
+                "minLength": 1
+              },
+              "right": {
+                "type": "string",
+                "minLength": 1
+              }
             }
           }
         }
       }
     },
-
     "group-sort": {
       "type": "object",
       "description": "Sort items into categories",
-      "required": ["type", "title", "groups"],
+      "required": [
+        "type",
+        "title",
+        "groups"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "group-sort" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "group-sort"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "groups": {
           "type": "array",
           "minItems": 2,
           "items": {
             "type": "object",
-            "required": ["name", "items"],
+            "required": [
+              "name",
+              "items"
+            ],
             "additionalProperties": false,
             "properties": {
-              "name": { "type": "string", "minLength": 1 },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
               "items": {
                 "type": "array",
                 "minItems": 1,
-                "items": { "type": "string", "minLength": 1 }
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
               }
             }
           }
         }
       }
     },
-
     "unjumble": {
       "type": "object",
       "description": "Reorder words into correct sentence",
-      "required": ["type", "title", "items"],
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "unjumble" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "unjumble"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "items": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["words", "answer"],
+            "required": [
+              "words",
+              "answer"
+            ],
             "additionalProperties": false,
             "properties": {
               "words": {
                 "type": "array",
                 "minItems": 3,
-                "items": { "type": "string", "minLength": 1 }
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
               },
-              "answer": { "type": "string", "minLength": 1 }
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              }
             }
           }
         }
       }
     },
-
     "error-correction": {
       "type": "object",
       "description": "Find and fix grammatical errors",
-      "required": ["type", "title", "items"],
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "error-correction" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "error-correction"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "items": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["sentence", "error", "answer", "options", "explanation"],
+            "required": [
+              "sentence",
+              "error",
+              "answer",
+              "options",
+              "explanation"
+            ],
             "additionalProperties": false,
             "properties": {
-              "sentence": { "type": "string", "minLength": 1 },
+              "sentence": {
+                "type": "string",
+                "minLength": 1
+              },
               "error": {
                 "type": "string",
                 "minLength": 1,
@@ -280,7 +530,10 @@
                 "type": "array",
                 "minItems": 4,
                 "maxItems": 4,
-                "items": { "type": "string", "minLength": 1 }
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
               },
               "explanation": {
                 "type": "string",
@@ -292,42 +545,80 @@
         }
       }
     },
-
     "mark-the-words": {
       "type": "object",
       "description": "Click/mark words matching criteria in passage",
-      "required": ["type", "title", "instruction", "passage", "correct_words"],
+      "required": [
+        "type",
+        "title",
+        "passage",
+        "correct_words"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "mark-the-words" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "mark-the-words"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "instruction": {
           "type": "string",
           "minLength": 1,
           "description": "What words to mark (e.g., 'Mark all nouns')"
         },
-        "passage": { "type": "string", "minLength": 1 },
+        "passage": {
+          "type": "string",
+          "minLength": 1
+        },
         "correct_words": {
           "type": "array",
           "minItems": 1,
-          "items": { "type": "string", "minLength": 1 }
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     },
-
     "translate": {
       "type": "object",
       "description": "Translation multiple choice",
-      "required": ["type", "title", "items"],
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "translate" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "translate"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "items": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["source", "options"],
+            "required": [
+              "source",
+              "options"
+            ],
             "additionalProperties": false,
             "properties": {
               "source": {
@@ -341,34 +632,63 @@
                 "maxItems": 4,
                 "items": {
                   "type": "object",
-                  "required": ["text", "correct"],
+                  "required": [
+                    "text",
+                    "correct"
+                  ],
                   "additionalProperties": false,
                   "properties": {
-                    "text": { "type": "string", "minLength": 1 },
-                    "correct": { "type": "boolean" }
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "correct": {
+                      "type": "boolean"
+                    }
                   }
                 }
               },
-              "explanation": { "type": "string" }
+              "explanation": {
+                "type": "string"
+              }
             }
           }
         }
       }
     },
-
     "anagram": {
       "type": "object",
       "description": "Letter unscrambling (A1 M01-10 only)",
-      "required": ["type", "title", "items"],
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "anagram" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "anagram"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "items": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["scrambled", "answer"],
+            "required": [
+              "scrambled",
+              "answer"
+            ],
             "additionalProperties": false,
             "properties": {
               "scrambled": {
@@ -390,103 +710,275 @@
         }
       }
     },
-
     "essay-response": {
       "type": "object",
       "description": "Long-form writing task with model answer and rubric",
-      "required": ["type", "title", "prompt", "model_answer"],
+      "required": [
+        "type",
+        "title",
+        "prompt",
+        "model_answer"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "essay-response" },
-        "title": { "type": "string", "minLength": 1 },
-        "prompt": { "type": "string", "minLength": 10 },
-        "min_words": { "type": "integer", "minimum": 100 },
-        "model_answer": { "type": "string", "minLength": 50 },
+        "type": {
+          "const": "essay-response"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 10
+        },
+        "min_words": {
+          "type": "integer",
+          "minimum": 100
+        },
+        "model_answer": {
+          "type": "string",
+          "minLength": 50
+        },
         "rubric": {
           "type": "array",
           "minItems": 1,
           "items": {
             "type": "object",
-            "required": ["criteria", "description"],
+            "required": [
+              "criteria",
+              "description"
+            ],
             "additionalProperties": false,
             "properties": {
-              "criteria": { "type": "string", "minLength": 1 },
-              "description": { "type": "string", "minLength": 1 },
-              "points": { "type": "integer" }
+              "criteria": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "points": {
+                "type": "integer"
+              }
             }
           }
         },
-        "peer_review_guidelines": { "type": "string" }
+        "peer_review_guidelines": {
+          "type": "string"
+        }
       }
     },
-
     "critical-analysis": {
       "type": "object",
       "description": "Deep analysis of a text or concept",
-      "required": ["type", "title", "target_text", "questions", "model_answers"],
+      "required": [
+        "type",
+        "title",
+        "target_text",
+        "questions",
+        "model_answers"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "critical-analysis" },
-        "title": { "type": "string", "minLength": 1 },
-        "target_text": { "type": "string", "description": "The text or excerpt to analyze" },
+        "type": {
+          "const": "critical-analysis"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_text": {
+          "type": "string",
+          "description": "The text or excerpt to analyze"
+        },
         "questions": {
           "type": "array",
           "minItems": 1,
-          "items": { "type": "string", "minLength": 1 }
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "model_answers": {
           "type": "array",
           "minItems": 1,
-          "items": { "type": "string", "minLength": 1 }
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "focus_points": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Key elements to analyze (e.g. tone, bias)"
         }
       }
     },
-
     "comparative-study": {
       "type": "object",
       "description": "Comparison of two or more texts/concepts",
-      "required": ["type", "title", "items_to_compare", "criteria", "model_answer"],
+      "required": [
+        "type",
+        "title",
+        "items_to_compare",
+        "criteria",
+        "model_answer"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "comparative-study" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "comparative-study"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "items_to_compare": {
           "type": "array",
           "minItems": 2,
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Titles or excerpts of items"
         },
         "criteria": {
           "type": "array",
           "minItems": 1,
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Dimensions of comparison (e.g. style, theme)"
         },
-        "prompt": { "type": "string" },
-        "model_answer": { "type": "string" }
+        "prompt": {
+          "type": "string"
+        },
+        "model_answer": {
+          "type": "string"
+        }
       }
     },
-
     "authorial-intent": {
       "type": "object",
       "description": "Evaluation of author's purpose and techniques",
-      "required": ["type", "title", "text_excerpt", "prompt", "model_answer"],
+      "required": [
+        "type",
+        "title",
+        "text_excerpt",
+        "prompt",
+        "model_answer"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "authorial-intent" },
-        "title": { "type": "string", "minLength": 1 },
-        "text_excerpt": { "type": "string" },
-        "prompt": { "type": "string" },
+        "type": {
+          "const": "authorial-intent"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text_excerpt": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
         "techniques_to_identify": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
-        "model_answer": { "type": "string" }
+        "model_answer": {
+          "type": "string"
+        }
+      }
+    },
+    "reading": {
+      "type": "object",
+      "description": "Reading comprehension task with external resource",
+      "required": [
+        "type",
+        "title",
+        "resource",
+        "tasks"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "reading"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the activity"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resource": {
+          "type": "object",
+          "required": [
+            "type",
+            "url",
+            "title"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            }
+          }
+        },
+        "tasks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
       }
     }
   }

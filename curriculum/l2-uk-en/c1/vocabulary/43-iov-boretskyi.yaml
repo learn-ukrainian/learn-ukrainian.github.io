@@ -1,0 +1,151 @@
+items:
+- lemma: митрополит
+  ipa: /mɪtrɔpɔˈɫɪt/
+  translation: metropolitan
+  pos: noun
+  gender: m
+  note: високий церковний чин
+- lemma: братство
+  ipa: /ˈbrɑtstwɔ/
+  translation: brotherhood
+  pos: noun
+  gender: n
+  note: релігійно-громадська організація
+- lemma: просвітництво
+  ipa: /prɔˈsʲʋʲitnɪtstwɔ/
+  translation: enlightenment/education
+  pos: noun
+  gender: n
+  note: діяльність, спрямована на поширення знань
+- lemma: ієрархія
+  ipa: /ijɛˈrɑrxʲijɑ/
+  translation: hierarchy
+  pos: noun
+  gender: f
+  note: система підпорядкування
+- lemma: відродження
+  ipa: /wʲidˈrɔdʒɛnʲːɑ/
+  translation: revival/renaissance
+  pos: noun
+  gender: n
+  note: відновлення чогось після занепаду
+- lemma: полеміка
+  ipa: /pɔˈɫɛmʲikɑ/
+  translation: polemics/debate
+  pos: noun
+  gender: f
+  note: гостра дискусія в пресі чи літературі
+- lemma: собор
+  ipa: /sɔˈbɔr/
+  translation: council/cathedral
+  pos: noun
+  gender: m
+  note: збори вищого духовенства
+- lemma: рукоположення
+  ipa: /rukɔpɔɫɔˈdʒɛnʲːɑ/
+  translation: ordination
+  pos: noun
+  gender: n
+  note: церковний обряд надання духовного сану
+- lemma: захисник
+  ipa: /zɑˈxɪsnɪк/
+  translation: defender
+  pos: noun
+  gender: m
+  note: той, хто боронить щось/когось
+- lemma: гуманізм
+  ipa: /ɦumɑˈnʲizm/
+  translation: humanism
+  pos: noun
+  gender: m
+  note: інтелектуальна течія епохи Відродження
+- lemma: ректор
+  ipa: /ˈrɛktɔr/
+  translation: rector
+  pos: noun
+  gender: m
+  note: керівник вищого навчального закладу
+- lemma: меценат
+  ipa: /mɛt͡sɛˈnɑt/
+  translation: patron
+  pos: noun
+  gender: m
+  note: людина, що фінансує культуру
+- lemma: опір
+  ipa: /ˈɔpʲir/
+  translation: resistance
+  pos: noun
+  gender: m
+  note: протидія тиску або загарбникам
+- lemma: єдність
+  ipa: /ˈjɛdnʲistʲ/
+  translation: unity
+  pos: noun
+  gender: f
+  note: стан згуртованості
+- lemma: патріарх
+  ipa: /pɑtrʲiˈɑrx/
+  translation: patriarch
+  pos: noun
+  gender: m
+  note: найвищий титул у православній церкві
+- lemma: козацтво
+  ipa: /kɔˈzɑtstwɔ/
+  translation: Cossacks
+  pos: noun
+  gender: n
+  note: військовий стан, опора віри
+- lemma: унія
+  ipa: /ˈunʲijɑ/
+  translation: union
+  pos: noun
+  gender: f
+  note: зазвичай Берестейська церковна унія
+- lemma: протест
+  ipa: /prɔˈtɛst/
+  translation: protest
+  pos: noun
+  gender: m
+  note: вияв незгоди
+- lemma: фундація
+  ipa: /fundɑˈt͡sʲijɑ/
+  translation: foundation
+  pos: noun
+  gender: f
+  note: заснування інституції
+- lemma: ідеолог
+  ipa: /idɛɔˈɫɔɦ/
+  translation: ideologue
+  pos: noun
+  gender: m
+  note: творець або теоретик ідеї
+- lemma: тяглість
+  ipa: /ˈtʲɑɦɫʲistʲ/
+  translation: continuity
+  pos: noun
+  gender: f
+  note: неперервність історичного процесу
+- lemma: суб'єктність
+  ipa: /subjekˈtɪunʲistʲ/
+  translation: agency/subjectivity
+  pos: noun
+  gender: f
+  note: здатність діяти самостійно
+- lemma: маніфест
+  ipa: /mɑnʲiˈfɛst/
+  translation: manifesto
+  pos: noun
+  gender: m
+  note: програмний документ
+- lemma: спадщина
+  ipa: /ˈspɑdʃt͡ʃɪnɑ/
+  translation: legacy
+  pos: noun
+  gender: f
+  note: те, що залишається нащадкам
+- lemma: канонізація
+  ipa: /kɑnɔnʲizɑˈt͡sʲijɑ/
+  translation: canonization
+  pos: noun
+  gender: f
+  note: зарахування до лику святих

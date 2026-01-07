@@ -1,17 +1,24 @@
 module: c1-46
-title: Юрій Немирич
-subtitle: Yurii Nemyrych
-version: '2.0'
-phase: C1.3 Biographies
+title: "Юрій Немирич: Дипломат і Пророк Великого Князівства Руського"
+subtitle: "Yurii Nemyrych: Diplomat and Prophet of the Grand Duchy of Ruthenia"
+version: "2.0"
+phase: "C1.3 Biographies"
 focus: biography
-pedagogy: narrative
+pedagogy: "CBI"
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- biography
-- history
-- culture
+  - biography
+  - history
+  - diplomacy
+  - hadiach-treaty
+  - european-context
+grammar:
+  - "Advanced analytical register"
+  - "Legal and diplomatic terminology"
 objectives:
-- Master C1 concepts in Юрій Немирич
+  - "Learner can analyze the role of Yurii Nemyrych in the diplomatic struggle for Ukrainian sovereignty"
+  - "Learner understands the concept of the Grand Duchy of Ruthenia and the Treaty of Hadiach"
+  - "Learner can use advanced vocabulary related to political philosophy and international law"
+vocabulary_count: 25
 slug: 46-yuriy-nemyrych

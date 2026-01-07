@@ -1,51 +1,48 @@
 - type: match-up
   title: Verb + Dative Pattern
   pairs:
-  - left: 'допомагати'
+  - left: допомагати
     right: to help someone (Dat only)
-  - left: 'давати'
+  - left: давати
     right: to give something to someone (Dat + Acc)
-  - left: 'заважати'
+  - left: заважати
     right: to bother someone (Dat only)
-  - left: 'показувати'
+  - left: показувати
     right: to show something to someone (Dat + Acc)
-  - left: 'подобатися'
+  - left: подобатися
     right: to please someone (Dat only)
-  - left: 'пояснювати'
+  - left: пояснювати
     right: to explain something to someone (Dat + Acc)
-  - left: 'вірити'
+  - left: вірити
     right: to believe someone (Dat only)
-  - left: 'дякувати'
+  - left: дякувати
     right: to thank someone (Dat only)
-  - left: 'радити'
+  - left: радити
     right: to advise someone something (Dat + Acc)
-  - left: 'довіряти'
+  - left: довіряти
     right: to trust someone (Dat only)
-  - left: 'забороняти'
+  - left: забороняти
     right: to forbid someone (Dat + Inf)
-  - left: 'дозволяти'
+  - left: дозволяти
     right: to allow someone (Dat + Inf)
+  id: verb-+-dative-pattern
 - type: cloze
   title: Choose the Correct Form
-  passage: 'Я {допомагаю|допомагати|допомагає} мамі готувати обід. Ця музика {заважає|заважати|заважаю}
-    мені спати. Мені {подобається|подобаюсь|подобатися} цей фільм.
+  passage: 'Я {допомагаю|допомагати|допомагає} мамі готувати обід. Ця музика {заважає|заважати|заважаю} мені спати. Мені {подобається|подобаюсь|подобатися} цей фільм.
 
 
-    Він {показує|показувати|показуюсь} другові свою машину. Вчитель {пояснює|пояснювати|пояснюється}
-    учням нове правило. Я {дякую|дякувати|дякуюсь} тобі за допомогу!
+    Він {показує|показувати|показуюсь} другові свою машину. Вчитель {пояснює|пояснювати|пояснюється} учням нове правило. Я {дякую|дякувати|дякуюсь} тобі за допомогу!
 
 
-    Ми не {довіряємо|довіряти|довіряється} цій людині. Батько {радить|радити|радиться}
-    синові вчитися краще. Лікар {забороняє|забороняти|забороняється} пацієнтові курити.
+    Ми не {довіряємо|довіряти|довіряється} цій людині. Батько {радить|радити|радиться} синові вчитися краще. Лікар {забороняє|забороняти|забороняється} пацієнтові курити.
 
 
-    Я {вибачаю|вибачати|вибачаюсь} тобі цю помилку. Вона {розповідає|розповідати|розповідається}
-    подрузі новину. Мама {дозволяє|дозволяти|дозволяється} дітям гратися надворі.'
+    Я {вибачаю|вибачати|вибачаюсь} тобі цю помилку. Вона {розповідає|розповідати|розповідається} подрузі новину. Мама {дозволяє|дозволяти|дозволяється} дітям гратися надворі.'
+  id: choose-the-correct-form
 - type: quiz
   title: Dative Verb Patterns
   items:
-  - question: When you want to say "I help my mother" in Ukrainian, which grammatical
-      case does the verb "допомагати" require?
+  - question: When you want to say "I help my mother" in Ukrainian, which grammatical case does the verb "допомагати" require?
     options:
     - text: Accusative
       correct: false
@@ -55,8 +52,7 @@
       correct: false
     - text: Instrumental
       correct: false
-  - question: For the verb "подобатися" (to please/like), which construction is grammatically
-      correct in Ukrainian?
+  - question: For the verb "подобатися" (to please/like), which construction is grammatically correct in Ukrainian?
     options:
     - text: Мені подобається кава.
       correct: true
@@ -66,8 +62,7 @@
       correct: false
     - text: Мене подобається кава.
       correct: false
-  - question: When expressing "I believe this person" in Ukrainian with the verb "вірити",
-      which sentence is correct?
+  - question: When expressing "I believe this person" in Ukrainian with the verb "вірити", which sentence is correct?
     options:
     - text: Я вірю цей людина.
       correct: false
@@ -77,8 +72,7 @@
       correct: true
     - text: Я вірю ця людина.
       correct: false
-  - question: The verb "давати" requires which case or cases for its objects in Ukrainian
-      grammar?
+  - question: The verb "давати" requires which case or cases for its objects in Ukrainian grammar?
     options:
     - text: тільки давального відмінка
       correct: false
@@ -88,8 +82,7 @@
       correct: true
     - text: тільки родового відмінка
       correct: false
-  - question: How do you correctly say "I thank the teacher" in Ukrainian using the
-      verb "дякувати"?
+  - question: How do you correctly say "I thank the teacher" in Ukrainian using the verb "дякувати"?
     options:
     - text: Я дякую вчитель.
       correct: false
@@ -99,8 +92,7 @@
       correct: false
     - text: Я дякую вчителем.
       correct: false
-  - question: When expressing that a mother forbids children to eat candy, which Ukrainian
-      sentence is grammatically correct?
+  - question: When expressing that a mother forbids children to eat candy, which Ukrainian sentence is grammatically correct?
     options:
     - text: Мама забороняє дітям їсти цукерки.
       correct: true
@@ -110,8 +102,7 @@
       correct: false
     - text: Мама забороняє дітьми їсти цукерки.
       correct: false
-  - question: Which grammatical case does the Ukrainian verb "заздрити" require for
-      its object?
+  - question: Which grammatical case does the Ukrainian verb "заздрити" require for its object?
     options:
     - text: давального відмінка
       correct: true
@@ -121,8 +112,7 @@
       correct: false
     - text: орудного відмінка
       correct: false
-  - question: How do you correctly express "The noise bothers me" in Ukrainian using
-      the verb "заважати"?
+  - question: How do you correctly express "The noise bothers me" in Ukrainian using the verb "заважати"?
     options:
     - text: Шум заважає мені.
       correct: true
@@ -132,8 +122,7 @@
       correct: false
     - text: Шум заважає мною.
       correct: false
-  - question: When saying "I explain the rule to students" in Ukrainian with "пояснювати",
-      which sentence is correct?
+  - question: When saying "I explain the rule to students" in Ukrainian with "пояснювати", which sentence is correct?
     options:
     - text: Я пояснюю учні правило.
       correct: false
@@ -143,8 +132,7 @@
       correct: true
     - text: Я пояснюю учнями правило.
       correct: false
-  - question: Which grammatical case does the Ukrainian verb "співчувати" (to sympathize/empathize)
-      require for its object?
+  - question: Which grammatical case does the Ukrainian verb "співчувати" (to sympathize/empathize) require for its object?
     options:
     - text: давального відмінка
       correct: true
@@ -154,8 +142,7 @@
       correct: false
     - text: родового відмінка
       correct: false
-  - question: How do you correctly say "I forgive you" in Ukrainian using the verb
-      "пробачати"?
+  - question: How do you correctly say "I forgive you" in Ukrainian using the verb "пробачати"?
     options:
     - text: Я пробачаю ти.
       correct: false
@@ -165,8 +152,7 @@
       correct: false
     - text: Я пробачаю тобою.
       correct: false
-  - question: When expressing "He advises me to rest" with the verb "радити", which
-      Ukrainian sentence is correct?
+  - question: When expressing "He advises me to rest" with the verb "радити", which Ukrainian sentence is correct?
     options:
     - text: Він радить мені відпочити.
       correct: true
@@ -176,6 +162,7 @@
       correct: false
     - text: Він радить мною відпочити.
       correct: false
+  id: dative-verb-patterns
 - type: true-false
   title: Dative Verb Rules
   items:
@@ -215,6 +202,7 @@
   - statement: Word order in Ukrainian sentences with dative is completely fixed.
     correct: false
     explanation: Word order is flexible! Case endings show grammatical roles.
+  id: dative-verb-rules
 - type: group-sort
   title: Verb Categories
   groups:
@@ -234,6 +222,7 @@
     - розповідати
     - радити
     - писати
+  id: verb-categories
 - type: unjumble
   title: Dative Verb Sentences
   items:
@@ -297,6 +286,7 @@
     - спати
     - вночі
     answer: Ця гучна музика заважає мені добре спати вночі
+  id: dative-verb-sentences
 - type: error-correction
   title: Fix the Dative Errors
   items:
@@ -308,8 +298,7 @@
     - мамі
     - мамою
     - мама
-    explanation: 'The verb «допомагати» requires Dative case. Feminine nouns ending
-      in -а take -і: мама → мамі.'
+    explanation: 'The verb «допомагати» requires Dative case. Feminine nouns ending in -а take -і: мама → мамі.'
   - sentence: Мене подобається ця книга.
     error: Мене
     answer: Мені
@@ -318,8 +307,7 @@
     - Мені
     - Мій
     - Моя
-    explanation: With «подобатися», the experiencer is in Dative. The pronoun «я»
-      becomes «мені» in Dative, not «мене» (Accusative).
+    explanation: With «подобатися», the experiencer is in Dative. The pronoun «я» becomes «мені» in Dative, not «мене» (Accusative).
   - sentence: Він показує друг свою машину.
     error: друг
     answer: другові
@@ -328,8 +316,7 @@
     - другові
     - друга
     - другом
-    explanation: 'The verb «показувати» takes Dative + Accusative. The recipient needs
-      Dative: друг → другові.'
+    explanation: 'The verb «показувати» takes Dative + Accusative. The recipient needs Dative: друг → другові.'
   - sentence: Вчитель пояснює учнів правило.
     error: учнів
     answer: учням
@@ -338,8 +325,7 @@
     - учням
     - учні
     - учнями
-    explanation: The verb «пояснювати» takes Dative + Accusative. The Dative plural
-      of «учень» is «учням», not «учнів» (Genitive).
+    explanation: The verb «пояснювати» takes Dative + Accusative. The Dative plural of «учень» is «учням», not «учнів» (Genitive).
   - sentence: Я дякую тебе за допомогу.
     error: тебе
     answer: тобі
@@ -348,8 +334,7 @@
     - тобі
     - тобою
     - ти
-    explanation: The verb «дякувати» requires Dative. The pronoun «ти» becomes «тобі»
-      in Dative, not «тебе» (Accusative).
+    explanation: The verb «дякувати» requires Dative. The pronoun «ти» becomes «тобі» in Dative, not «тебе» (Accusative).
   - sentence: Музика заважає мене спати.
     error: мене
     answer: мені
@@ -358,40 +343,31 @@
     - мені
     - мною
     - я
-    explanation: The verb «заважати» requires Dative. The pronoun «я» becomes «мені»
-      in Dative, not «мене» (Accusative).
+    explanation: The verb «заважати» requires Dative. The pronoun «я» becomes «мені» in Dative, not «мене» (Accusative).
+  id: fix-the-dative-errors
 - type: cloze
   title: Complete the Story
-  passage: 'Марія працює вчителькою. Щодня вона {Йому|Його|Він} учням нові теми. Коли
-    учень не розуміє, вона {заважає|заважати|заважається} йому. Марія {розуміє|пробачає|любить}
-    своїм учням — вони старанні. Батьки {каже|говорить|розповідає} Марії за хорошу
-    роботу. Директор {дякує|дякувати} їй нову методику. Марія {дозволяють|дозволяти|дозволяється}
-    колегам свій досвід.
+  passage: 'Марія працює вчителькою. Щодня вона {Йому|Його|Він} учням нові теми. Коли учень не розуміє, вона {заважає|заважати|заважається} йому. Марія {розуміє|пробачає|любить} своїм учням — вони старанні. Батьки {каже|говорить|розповідає} Марії за хорошу роботу. Директор {дякує|дякувати} їй нову методику. Марія {дозволяють|дозволяти|дозволяється} колегам свій досвід.
 
     ---
 
-    Мій брат Олег любить музику. {Йому|Його|Він} подобається рок. Але наша мама каже,
-    що музика {заважає|заважати|заважається} їй. Олег {розуміє|пробачає|любить} маму
-    — він слухає музику в навушниках. Тепер мама {каже|говорить|розповідає} Олегові,
-    що він уважний. Олег {дякує|дякувати} мамі за розуміння. Батьки {дозволяють|дозволяти|дозволяється}
-    Олегові слухати музику ввечері.'
+    Мій брат Олег любить музику. {Йому|Його|Він} подобається рок. Але наша мама каже, що музика {заважає|заважати|заважається} їй. Олег {розуміє|пробачає|любить} маму — він слухає музику в навушниках. Тепер мама {каже|говорить|розповідає} Олегові, що він уважний. Олег {дякує|дякувати} мамі за розуміння. Батьки {дозволяють|дозволяти|дозволяється} Олегові слухати музику ввечері.'
+  id: complete-the-story
 - type: mark-the-words
   title: Find Dative Objects
-  text: 'Click on the dative objects in these sentences.
+  id: find-dative-objects
+  passage: 'Click on the dative objects in these sentences.
 
-    Я допомагаю *мамі* готувати обід. Вона дякує *мені*. Музика заважає *сусідам*.
-    Вчитель пояснює *учням* правило.
-
-    ---
-
-    *Мені* подобається ця книга. Він показує *другові* фото. Ми довіряємо *лікареві*.
-    Батьки забороняють *дітям* гратися надворі.
+    Я допомагаю *мамі* готувати обід. Вона дякує *мені*. Музика заважає *сусідам*. Вчитель пояснює *учням* правило.
 
     ---
 
-    Бабуся розповідає *онукам* казку. Я вірю *тобі*. Лікар радить *пацієнтові* відпочивати.
-    Вона заздрить *подрузі*.'
-  answers:
+    *Мені* подобається ця книга. Він показує *другові* фото. Ми довіряємо *лікареві*. Батьки забороняють *дітям* гратися надворі.
+
+    ---
+
+    Бабуся розповідає *онукам* казку. Я вірю *тобі*. Лікар радить *пацієнтові* відпочивати. Вона заздрить *подрузі*.'
+  correct_words:
   - мамі
   - мені
   - сусідам
@@ -473,3 +449,4 @@
     - text: Вона пояснює правило учнем.
       correct: false
     explanation: Dative учневі.
+  id: english-to-ukrainian

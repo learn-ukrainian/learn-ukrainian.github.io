@@ -1,0 +1,27 @@
+module: c1-20
+title: "Контрольна точка: Академічна база"
+subtitle: "Checkpoint: Academic Foundation"
+phase: "C1.1 Academic Foundations Checkpoint"
+pedagogy: "TTT"
+register: "academic"
+tags:
+  - checkpoint
+  - integration
+  - academic
+  - review
+grammar:
+  - "Integration of M01-M19"
+  - "Comprehensive C1.1 review"
+  - "Academic style markers"
+  - "Research verbs and analysis vocabulary"
+  - "Essay structure and argumentation"
+objectives:
+  - "Learner can demonstrate mastery of academic writing foundations"
+  - "Learner can integrate knowledge from M01-M19"
+  - "Learner can apply comparative analysis skills"
+vocabulary_count: 55
+focus: checkpoint
+version: '2.0'
+immersion: 100
+duration: 120
+transliteration: none

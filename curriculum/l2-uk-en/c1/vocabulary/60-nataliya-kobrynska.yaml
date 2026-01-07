@@ -1,0 +1,103 @@
+module: 60-nataliya-kobrynska
+level: C1
+version: "1.0"
+items:
+  - lemma: рух
+    ipa: /rux/
+    translation: movement
+    pos: noun
+    gender: m
+  - lemma: емансипація
+    ipa: /ɛmɑnsɪˈpɑt͡sijɑ/
+    translation: emancipation
+    pos: noun
+    gender: f
+  - lemma: альманах
+    ipa: /ɑlʲmɑˈnɑx/
+    translation: almanac
+    pos: noun
+    gender: m
+  - lemma: активістка
+    ipa: /ɑktɪˈwistkɑ/
+    translation: activist (female)
+    pos: noun
+    gender: f
+  - lemma: соціалістка
+    ipa: /sɔt͡sijɑˈlistkɑ/
+    translation: socialist (female)
+    pos: noun
+    gender: f
+  - lemma: рівноправність
+    ipa: /riwnɔˈprɑwnistʲ/
+    translation: equality (of rights)
+    pos: noun
+    gender: f
+  - lemma: організатор
+    ipa: /ɔrɦɑnizˈɑtɔr/
+    translation: organizer
+    pos: noun
+    gender: m
+  - lemma: спілка
+    ipa: /ˈspilkɑ/
+    translation: union/alliance
+    pos: noun
+    gender: f
+  - lemma: вінок
+    ipa: /wiˈnɔk/
+    translation: wreath
+    pos: noun
+    gender: m
+  - lemma: жінка
+    ipa: /ˈʒinkɑ/
+    translation: woman
+    pos: noun
+    gender: f
+  - lemma: суспільство
+    ipa: /sʊsˈpilʲstwɔ/
+    translation: society
+    pos: noun
+    gender: n
+  - lemma: прогрес
+    ipa: /prɔˈɦrɛs/
+    translation: progress
+    pos: noun
+    gender: m
+  - lemma: виборчий
+    ipa: /wɪˈbɔrt͡ʃɪj/
+    translation: electoral
+    pos: adj
+  - lemma: право
+    ipa: /ˈprɑwɔ/
+    translation: right (legal)
+    pos: noun
+    gender: n
+  - lemma: ініціатива
+    ipa: /init͡sijɑˈtɪwɑ/
+    translation: initiative
+    pos: noun
+    gender: f
+  - lemma: збірка
+    ipa: /ˈzbirkɑ/
+    translation: collection (of works)
+    pos: noun
+    gender: f
+  - lemma: повість
+    ipa: /pɔˈwistʲ/
+    translation: novella/tale
+    pos: noun
+    gender: f
+  - lemma: ідея
+    ipa: /iˈdɛjɑ/
+    translation: idea
+    pos: noun
+    gender: f
+  - lemma: співпраця
+    ipa: /spiwˈprɑt͡sʲɑ/
+    translation: cooperation
+    pos: noun
+    gender: f
+  - lemma: лідер
+    ipa: /ˈlidɛr/
+    translation: leader
+    pos: noun
+    gender: m

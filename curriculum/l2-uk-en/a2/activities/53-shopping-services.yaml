@@ -121,49 +121,48 @@
       correct: false
     - text: Only in Kyiv
       correct: false
+  id: shopping-facts
 - type: match-up
   title: Shop Vocabulary
   pairs:
-  - left: 'магазин'
+  - left: магазин
     right: shop
-  - left: 'ринок'
+  - left: ринок
     right: market
-  - left: 'аптека'
+  - left: аптека
     right: pharmacy
-  - left: 'банк'
+  - left: банк
     right: bank
-  - left: 'пошта'
+  - left: пошта
     right: post office
-  - left: 'готівка'
+  - left: готівка
     right: cash
-  - left: 'картка'
+  - left: картка
     right: card
-  - left: 'ціна'
+  - left: ціна
     right: price
-  - left: 'знижка'
+  - left: знижка
     right: discount
-  - left: 'черга'
+  - left: черга
     right: queue
-  - left: 'каса'
+  - left: каса
     right: checkout
-  - left: 'перукарня'
+  - left: перукарня
     right: hairdresser's
+  id: shop-vocabulary
 - type: cloze
   title: Shopping Sentences
-  passage: 'Я хочу {купити|продати|міряти|спати}_ хліб. Скільки це {коштує|коштують|платить|купує}_?
-    У мене немає {готівки|готівка|картка|банку}_. (cash)
+  passage: 'Я хочу {купити|продати|міряти|спати}_ хліб. Скільки це {коштує|коштують|платить|купує}_? У мене немає {готівки|готівка|картка|банку}_. (cash)
 
 
-    Я плачу {карткою|карта|карту|картки}_. Це велика {черга|каса|ціна|знижка}_. (queue)
-    Дайте, будь ласка, {чек|чергу|гривню|решту}_. (receipt)
+    Я плачу {карткою|карта|карту|картки}_. Це велика {черга|каса|ціна|знижка}_. (queue) Дайте, будь ласка, {чек|чергу|гривню|решту}_. (receipt)
 
 
-    Ось ваша {решта|каса|ціна|пошта}_. (change) Ми йдемо на {ринок|банк|аптеку|магазин}_.
-    (market) Я хочу {поміряти|купити|з''їсти|випити}_ ці джинси.
+    Ось ваша {решта|каса|ціна|пошта}_. (change) Ми йдемо на {ринок|банк|аптеку|магазин}_. (market) Я хочу {поміряти|купити|з''їсти|випити}_ ці джинси.
 
 
-    Сьогодні у магазині {знижка|черга|ціна|каса}_. (discount) Можна {замовити|купити|міряти|платити}_
-    піцу? (order) Банк закритий, він не {працює|коштує|купує|спить}_.'
+    Сьогодні у магазині {знижка|черга|ціна|каса}_. (discount) Можна {замовити|купити|міряти|платити}_ піцу? (order) Банк закритий, він не {працює|коштує|купує|спить}_.'
+  id: shopping-sentences
 - type: true-false
   title: Ukrainian Services
   items:
@@ -203,6 +202,7 @@
   - statement: You can order delivery ("замовити").
     correct: true
     explanation: Delivery is popular (Glovo, Bolt Food).
+  id: ukrainian-services
 - type: group-sort
   title: Places vs Things
   groups:
@@ -225,6 +225,7 @@
     - 'купувати: Actions'
     - 'платити: Actions'
     - 'міряти: Actions'
+  id: places-vs-things
 - type: unjumble
   title: Shopping Dialogue
   items:
@@ -343,6 +344,7 @@
     - зручне
     - взуття
     answer: Мені терміново треба поміряти це зручне взуття
+  id: shopping-dialogue
 - type: error-correction
   title: Shop Grammar
   items:
@@ -408,8 +410,7 @@
     - хліба
     - хлібу
     - хлібом
-    explanation: 'Accusative: купую хліб. (Partitive Genitive ''хліба'' exists but
-      Accusative is standard for ''a loaf'').'
+    explanation: 'Accusative: купую хліб. (Partitive Genitive ''хліба'' exists but Accusative is standard for ''a loaf'').'
   - sentence: Це дорога магазин.
     error: дорога
     answer: дорогий
@@ -455,6 +456,7 @@
     - банку
     - банком
     explanation: 'Nominative subject: банк.'
+  id: shop-grammar
 - type: cloze
   title: At the Supermarket
   passage: 'Я беру {кошик|пакет|стіл} і йду в зал.
@@ -474,13 +476,12 @@
     Вдома я мию {овочі|руки|підлогу} і {фрукти|посуд|вікна}.
 
     Потім я {готую|купую|продаю} смачну {вечерю|воду|чергу}.'
+  id: at-the-supermarket
 - type: mark-the-words
   title: Find Services
-  text: Я живу в центрі. Біля мого дому є *супермаркет* і маленька *аптека*. Коли
-    мені треба гроші, я йду в *банк*. У неділю я йду на *ринок* за овочами. Моя мама
-    працює на *пошті*. Тато стрижеться в *перукарні*. Ми любимо ходити в *кіно* і
-    *ресторан*. *Лікарня* теж недалеко.
-  answers:
+  id: find-services
+  passage: Я живу в центрі. Біля мого дому є *супермаркет* і маленька *аптека*. Коли мені треба гроші, я йду в *банк*. У неділю я йду на *ринок* за овочами. Моя мама працює на *пошті*. Тато стрижеться в *перукарні*. Ми любимо ходити в *кіно* і *ресторан*. *Лікарня* теж недалеко.
+  correct_words:
   - супермаркет
   - аптека
   - банк
@@ -577,3 +578,4 @@
     - text: Мирити.
       correct: false
     explanation: Try on vs Reconcile.
+  id: shopping-choices

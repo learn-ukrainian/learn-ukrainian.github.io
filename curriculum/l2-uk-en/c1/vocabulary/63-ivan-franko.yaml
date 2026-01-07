@@ -1,0 +1,156 @@
+module: 063-ivan-franko
+level: C1
+version: '2.0'
+items:
+  - lemma: постать
+    ipa: /pɔˈstɑtʲ/
+    translation: figure, personality
+    pos: noun
+    gender: f
+    note: історична постать
+  - lemma: спадщина
+    ipa: /ˈspɑdʃt͡ʃɪnɑ/
+    translation: legacy, heritage
+    pos: noun
+    gender: f
+    note: творча спадщина
+  - lemma: внесок
+    ipa: /ˈwnɛsɔk/
+    translation: contribution
+    pos: noun
+    gender: m
+    note: вагомий внесок
+  - lemma: титан
+    ipa: /tɪˈtɑn/
+    translation: titan
+    pos: noun
+    gender: m
+    note: титан праці
+  - lemma: каменяр
+    ipa: /kɑmɛˈnʲɑr/
+    translation: stone-breaker (metaphor for social progress)
+    pos: noun
+    gender: m
+    note: образ Франка
+  - lemma: досягнення
+    ipa: /dɔˈsʲɑɦnɛnʲːɑ/
+    translation: achievement
+    pos: noun
+    gender: n
+  - lemma: вплив
+    ipa: /ˈwpɫɪu̯/
+    translation: influence
+    pos: noun
+    gender: m
+  - lemma: значення
+    ipa: /znɑˈt͡ʃɛnʲːɑ/
+    translation: significance, meaning
+    pos: noun
+    gender: n
+  - lemma: роль
+    ipa: /ˈrɔlʲ/
+    translation: role
+    pos: noun
+    gender: f
+    note: відіграти роль
+  - lemma: епоха
+    ipa: /ɛˈpɔxɑ/
+    translation: epoch, era
+    pos: noun
+    gender: f
+  - lemma: обставини
+    ipa: /ɔbˈstɑwɪnɪ/
+    translation: circumstances
+    pos: noun
+    gender: f
+    plural: true
+  - lemma: виклик
+    ipa: /ˈwɪkɫɪk/
+    translation: challenge
+    pos: noun
+    gender: m
+  - lemma: вшанування
+    ipa: /u̯ʃɑˈnuwɑnʲːɑ/
+    translation: honoring, commemoration
+    pos: noun
+    gender: n
+  - lemma: традиція
+    ipa: /trɑˈdɪt͡sʲijɑ/
+    translation: tradition
+    pos: noun
+    gender: f
+  - lemma: багатогранність
+    ipa: /bɑɦɑtɔˈɦrɑnʲːistʲ/
+    translation: versatility, multi-facetedness
+    pos: noun
+    gender: f
+  - lemma: енциклопедист
+    ipa: /ɛnt͡sɪkɫɔpɛˈdɪst/
+    translation: encyclopedist
+    pos: noun
+    gender: m
+  - lemma: світогляд
+    ipa: /switɔˈɦlʲɑd/
+    translation: worldview
+    pos: noun
+    gender: m
+  - lemma: діяльність
+    ipa: /dijˈɑlʲnistʲ/
+    translation: activity, work
+    pos: noun
+    gender: f
+  - lemma: громадський
+    ipa: /ɦrɔˈmɑd͡sʲkɪj/
+    translation: public, social
+    pos: adj
+  - lemma: політичний
+    ipa: /pɔɫiˈtɪt͡ʃnɪj/
+    translation: political
+    pos: adj
+  - lemma: визначний
+    ipa: /wɪznɑˈt͡ʃnɪj/
+    translation: prominent, outstanding
+    pos: adj
+  - lemma: вагомий
+    ipa: /wɑˈɦɔmɪj/
+    translation: weighty, significant
+    pos: adj
+  - lemma: невтомний
+    ipa: /nɛu̯ˈtɔmnɪj/
+    translation: tireless
+    pos: adj
+  - lemma: досліджувати
+    ipa: /dɔˈslid͡ʒuwɑtɪ/
+    translation: to research, to investigate
+    pos: verb
+    aspect: impf
+  - lemma: засновувати
+    ipa: /zɑˈsnɔwuwɑtɪ/
+    translation: to found, to establish
+    pos: verb
+    aspect: impf
+  - lemma: відігравати
+    ipa: /wid⁽ʲ⁾iɦrɑˈwɑtɪ/
+    translation: to play (a role)
+    pos: verb
+    aspect: impf
+  - lemma: присвячувати
+    ipa: /prɪˈswʲɑt͡ʃuwɑtɪ/
+    translation: to dedicate
+    pos: verb
+    aspect: impf
+  - lemma: наголошувати
+    ipa: /nɑɦɔˈɫɔʃuwɑtɪ/
+    translation: to emphasize
+    pos: verb
+    aspect: impf
+  - lemma: обґрунтовувати
+    ipa: /ɔbɦrunˈtɔwuwɑtɪ/
+    translation: to justify, to ground
+    pos: verb
+    aspect: impf
+  - lemma: уособлювати
+    ipa: /u̯ɔˈsɔblʲuwɑtɪ/
+    translation: to personify, to embody
+    pos: verb
+    aspect: impf

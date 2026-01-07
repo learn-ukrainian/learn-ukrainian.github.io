@@ -1,8 +1,7 @@
 - type: quiz
   title: Health Quiz
   items:
-  - question: Що найкраще зробити, якщо у вас висока температура і ви погано себе
-      почуваєте?
+  - question: Що найкраще зробити, якщо у вас висока температура і ви погано себе почуваєте?
     options:
     - text: Викликати лікаря і залишитися вдома
       correct: true
@@ -12,8 +11,7 @@
       correct: false
     - text: Піти плавати
       correct: false
-  - question: Який номер екстреної медичної допомоги "Швидка" потрібно набирати в
-      Україні?
+  - question: Який номер екстреної медичної допомоги "Швидка" потрібно набирати в Україні?
     options:
     - text: '103'
       correct: true
@@ -33,8 +31,7 @@
       correct: false
     - text: Давальний
       correct: false
-  - question: Чим відома лікувальна мінеральна вода "Нафтуся" з курорту Трускавець
-      в Україні?
+  - question: Чим відома лікувальна мінеральна вода "Нафтуся" з курорту Трускавець в Україні?
     options:
     - text: Лікувальними властивостями
       correct: true
@@ -124,49 +121,48 @@
       correct: false
     - text: Грає на гітарі
       correct: false
+  id: health-quiz
 - type: match-up
   title: Body & Health
   pairs:
-  - left: 'голова'
+  - left: голова
     right: head
-  - left: 'рука'
+  - left: рука
     right: hand/arm
-  - left: 'нога'
+  - left: нога
     right: leg/foot
-  - left: 'спина'
+  - left: спина
     right: back
-  - left: 'живіт'
+  - left: живіт
     right: stomach
-  - left: 'серце'
+  - left: серце
     right: heart
-  - left: 'зуб'
+  - left: зуб
     right: tooth
-  - left: 'лікар'
+  - left: лікар
     right: doctor
-  - left: 'ліки'
+  - left: ліки
     right: medicine
-  - left: 'аптека'
+  - left: аптека
     right: pharmacy
-  - left: 'температура'
+  - left: температура
     right: fever
-  - left: 'біль'
+  - left: біль
     right: pain
+  id: body-&-health
 - type: cloze
   title: My Symptoms
-  passage: 'У мене болить {голова|голову|головою|голові}_. (head) У нього висока {температура|температуру|температурою|температури}_.
-    Мені треба купити {ліки|лікаря|ліків|ліками}_. (medicine)
+  passage: 'У мене болить {голова|голову|головою|голові}_. (head) У нього висока {температура|температуру|температурою|температури}_. Мені треба купити {ліки|лікаря|ліків|ліками}_. (medicine)
 
 
-    У неї болить {зуб|зуби|зуба|зубом}_. (tooth) Викличіть {лікаря|лікар|лікарем|лікарю}_!
-    (doctor - Acc) Я п''ю {таблетки|таблетка|таблеток|таблетками}_. (pills)
+    У неї болить {зуб|зуби|зуба|зубом}_. (tooth) Викличіть {лікаря|лікар|лікарем|лікарю}_! (doctor - Acc) Я п''ю {таблетки|таблетка|таблеток|таблетками}_. (pills)
 
 
-    У мене сильний {кашель|кашлю|кашлем|нежить}_. (cough) Болять {очі|око|очам|очима}_.
-    (eyes) Це {ліки|таблетка|мазь|сироп}_ від грипу. (medicine/cure)
+    У мене сильний {кашель|кашлю|кашлем|нежить}_. (cough) Болять {очі|око|очам|очима}_. (eyes) Це {ліки|таблетка|мазь|сироп}_ від грипу. (medicine/cure)
 
 
-    Де тут {аптека|аптеку|аптеки|аптекою}_? (pharmacy) Лікар дав {рецепт|рецепту|рецептом|рецепти}_.
-    У мене болить {спина|спину|спиною|спині}_. (back)'
+    Де тут {аптека|аптеку|аптеки|аптекою}_? (pharmacy) Лікар дав {рецепт|рецепту|рецептом|рецепти}_. У мене болить {спина|спину|спиною|спині}_. (back)'
+  id: my-symptoms
 - type: true-false
   title: Medical Beliefs
   items:
@@ -206,6 +202,7 @@
   - statement: '"Серце" is on the right side.'
     correct: false
     explanation: Left usually.
+  id: medical-beliefs
 - type: group-sort
   title: Body vs Illness
   groups:
@@ -229,6 +226,7 @@
     - 'лікар: Medicine/Help'
     - 'аптека: Medicine/Help'
     - 'рецепт: Medicine/Help'
+  id: body-vs-illness
 - type: unjumble
   title: Health Sentences
   items:
@@ -348,6 +346,7 @@
     - повністю
     - одужали
     answer: Скажіть будь ласка ви вже повністю одужали
+  id: health-sentences
 - type: error-correction
   title: Grammar Clinic
   items:
@@ -385,8 +384,7 @@
     - температура
     - температури
     - температурою
-    explanation: 'Accusative object: має (що?) температуру. OR better: У нього температура.
-      But focusing on case error here.'
+    explanation: 'Accusative object: має (що?) температуру. OR better: У нього температура. But focusing on case error here.'
   - sentence: Це таблетка для голову.
     error: для
     answer: від
@@ -395,8 +393,7 @@
     - для
     - з
     - про
-    explanation: 'Pills "from" pain: від голови. "Для" means "for benefit of". A pill
-      *for benefit of* a headache sounds wrong.'
+    explanation: 'Pills "from" pain: від голови. "Для" means "for benefit of". A pill *for benefit of* a headache sounds wrong.'
   - sentence: Лікар дав рецепта.
     error: рецепта
     answer: рецепт
@@ -460,12 +457,12 @@
     - здорова
     - здорове
     explanation: 'Plural/Formal: Будьте здорові.'
+  id: grammar-clinic
 - type: cloze
   title: Call the Doctor
   passage: '— Алло, це {швидка|піца|таксі}? Так, оператор слухає. Що сталося?
 
-    — Моєму чоловіку {погано|добре|весело}. У нього сильний {біль|сміх|сон} в грудях
-    і важко дихати.
+    — Моєму чоловіку {погано|добре|весело}. У нього сильний {біль|сміх|сон} в грудях і важко дихати.
 
     — Яка у нього {температура|машина|зарплата}? Нормальна.
 
@@ -473,20 +470,19 @@
 
     — Дякую, ми чекаємо {лікаря|поштаря|кухаря}.
 
-    Лікар приїхав через 10 {хвилин|годин|днів}. Він послухав {серце|ногу|руку} і поміряв
-    {тиск|зріст|вагу}.
+    Лікар приїхав через 10 {хвилин|годин|днів}. Він послухав {серце|ногу|руку} і поміряв {тиск|зріст|вагу}.
 
     — Це не {інфаркт|грип|спорт}, — сказав лікар. — Це просто стрес.
 
     — Які {ліки|цукерки|фрукти} треба приймати?
 
     — Ось цей {рецепт|квиток|чек}. Відпочивайте.'
+  id: call-the-doctor
 - type: mark-the-words
   title: Body Parts
-  text: У людини є одна *голова*, дві *руки* і дві *ноги*. На обличчі є *очі*, ніс
-    і рот. У роті є *зуби*. У грудях б'ється *серце*. Коли ми їмо, працює *шлунок*.
-    Якщо ми носимо важке, болить *спина*.
-  answers:
+  id: body-parts
+  passage: У людини є одна *голова*, дві *руки* і дві *ноги*. На обличчі є *очі*, ніс і рот. У роті є *зуби*. У грудях б'ється *серце*. Коли ми їмо, працює *шлунок*. Якщо ми носимо важке, болить *спина*.
+  correct_words:
   - голова
   - руки
   - ноги
@@ -582,3 +578,4 @@
     - text: Коштувати.
       correct: false
     explanation: Cough vs Cost.
+  id: medical-choice

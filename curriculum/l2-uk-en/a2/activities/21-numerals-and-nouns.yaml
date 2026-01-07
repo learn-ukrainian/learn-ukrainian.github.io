@@ -1,26 +1,27 @@
 - type: match-up
   title: Zone Identification
   pairs:
-  - left: 'одна книга'
+  - left: одна книга
     right: Zone 1 (Nominative Singular)
-  - left: 'три книги'
+  - left: три книги
     right: Zone 2 (Genitive Singular)
-  - left: 'сім книг'
+  - left: сім книг
     right: Zone 3 (Genitive Plural)
-  - left: 'одинадцять книг'
+  - left: одинадцять книг
     right: Zone 3 (Genitive Plural)
-  - left: 'двадцять одна книга'
+  - left: двадцять одна книга
     right: Zone 1 (Nominative Singular)
-  - left: 'двадцять чотири книги'
+  - left: двадцять чотири книги
     right: Zone 2 (Genitive Singular)
-  - left: 'тридцять книг'
+  - left: тридцять книг
     right: Zone 3 (Genitive Plural)
-  - left: 'тридцять три книги'
+  - left: тридцять три книги
     right: Zone 2 (Genitive Singular)
-  - left: 'два'
+  - left: два
     right: Gen. sing.
-  - left: 'шість'
+  - left: шість
     right: Gen. plural
+  id: zone-identification
 - type: fill-in
   title: Complete the Phrase
   items:
@@ -84,6 +85,7 @@
     - вікон
     - вікна
     - вікно
+  id: complete-the-phrase
 - type: quiz
   title: Agreement Rules
   items:
@@ -175,6 +177,7 @@
       correct: false
     - text: All three genders use the same form
       correct: false
+  id: agreement-rules
 - type: cloze
   title: Shopping at the Market
   passage: '— Дайте, будь ласка, один {кілограм|кілограм → кілограм|кілограми} яблук.
@@ -197,6 +200,7 @@
 
     — Ні, у мене тільки двадцять {одна|одна гривня → одна|одну} гривень і два {золоті|золота
     монета → золоті|золотих} монети.'
+  id: shopping-at-the-market
 - type: unjumble
   title: Counting Sentences
   items:
@@ -345,6 +349,7 @@
     - широкі
     - вікна
     answer: У цьому великому будинку є тридцять два широкі вікна
+  id: counting-sentences
 - type: error-correction
   title: Wrong Agreement
   items:
@@ -390,6 +395,7 @@
     - студентів
     - студенти
     explanation: 11-19 always Zone 3 → Genitive Plural.
+  id: wrong-agreement
 - type: group-sort
   title: Zone Classification
   groups:
@@ -413,29 +419,31 @@
     - п'ятнадцять
     - двадцять
     - сто гривень
+  id: zone-classification
 - type: match-up
   title: Noun Forms
   pairs:
-  - left: 'один студент'
+  - left: один студент
     right: Nominative Singular
-  - left: 'два студенти'
+  - left: два студенти
     right: Genitive Singular
-  - left: 'п''ять студентів'
+  - left: п'ять студентів
     right: Genitive Plural
-  - left: 'одна книга'
+  - left: одна книга
     right: Nominative Singular
-  - left: 'три книги'
+  - left: три книги
     right: Genitive Singular
-  - left: 'десять книг'
+  - left: десять книг
     right: Genitive Plural
-  - left: 'двадцять один рік'
+  - left: двадцять один рік
     right: Nominative Singular
-  - left: 'двадцять два роки'
+  - left: двадцять два роки
     right: Genitive Singular
-  - left: 'три студенти'
+  - left: три студенти
     right: 3 students
-  - left: 'сім студентів'
+  - left: сім студентів
     right: 7 students
+  id: noun-forms
 - type: cloze
   title: The Modern Bookstore
   passage: 'Петро зайшов у книгарню. Сьогодні він хоче купити багато подарунків. Для
@@ -450,6 +458,7 @@
     → відсотків|відсотки} гривень знижки?" Петро відповів: "Ні, але я маю двадцять
     {одна|одна гривня → одна|одну} одну гривню в гаманці і одну сто {купюру|купюра
     → купюру|купюри} гривень".'
+  id: the-modern-bookstore
 - type: cloze
   title: Age Expressions
   passage: 'Мені зараз двадцять один {рік|рік → рік|роки}. Моєму братові виповнилося
@@ -463,3 +472,4 @@
     університет вони закінчили сорок один {рік|рік → рік|років} тому.
 
     ---'
+  id: age-expressions

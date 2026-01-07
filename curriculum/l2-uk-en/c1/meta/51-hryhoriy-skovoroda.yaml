@@ -1,17 +1,24 @@
 module: c1-51
-title: Григорій Сковорода
-subtitle: Hryhorii Skovoroda
-version: '2.0'
-phase: C1.3 Biographies
+title: "Григорій Сковорода: Мандрівний Філософ та Пророк Серця"
+subtitle: "Hryhoriy Skovoroda: The Wandering Philosopher and Prophet of the Heart"
+version: "2.0"
+phase: "C1.3 Biographies"
 focus: biography
-pedagogy: narrative
+pedagogy: "CBI"
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- biography
-- history
-- culture
+  - biography
+  - history
+  - philosophy
+  - enlightenment
+  - 18th-century
+grammar:
+  - "Philosophical narrative register"
+  - "Terminology of ethics and self-knowledge"
 objectives:
-- Master C1 concepts in Григорій Сковорода
+  - "Learner can analyze the life and philosophical concepts of Hryhoriy Skovoroda"
+  - "Learner understands the significance of Skovoroda in the context of the Ukrainian Enlightenment"
+  - "Learner can use advanced vocabulary related to philosophy, morality, and inner freedom"
+vocabulary_count: 25
 slug: 51-hryhoriy-skovoroda

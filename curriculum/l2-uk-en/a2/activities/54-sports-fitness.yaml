@@ -31,8 +31,7 @@
       correct: false
     - text: coach
       correct: false
-  - question: What famous geographical feature is **Говерла** (Hoverla) typically
-      known as in Ukraine?
+  - question: What famous geographical feature is **Говерла** (Hoverla) typically known as in Ukraine?
     options:
     - text: highest mountain
       correct: true
@@ -62,8 +61,7 @@
       correct: false
     - text: sleeping
       correct: false
-  - question: What specific physical action does the Ukrainian verb **тренуватися**
-      describe in English?
+  - question: What specific physical action does the Ukrainian verb **тренуватися** describe in English?
     options:
     - text: to train/workout
       correct: true
@@ -103,8 +101,7 @@
       correct: false
     - text: ball
       correct: false
-  - question: What is the correct English translation of the important Ukrainian noun
-      **перемога**?
+  - question: What is the correct English translation of the important Ukrainian noun **перемога**?
     options:
     - text: victory
       correct: true
@@ -124,33 +121,35 @@
       correct: false
     - text: doctor
       correct: false
+  id: sports-knowledge
 - type: match-up
   title: Sports Vocab
   pairs:
-  - left: 'футбол'
+  - left: футбол
     right: football
-  - left: 'бокс'
+  - left: бокс
     right: boxing
-  - left: 'плавання'
+  - left: плавання
     right: swimming
-  - left: 'біг'
+  - left: біг
     right: running
-  - left: 'теніс'
+  - left: теніс
     right: tennis
-  - left: 'стадіон'
+  - left: стадіон
     right: stadium
-  - left: 'спортзал'
+  - left: спортзал
     right: gym
-  - left: 'басейн'
+  - left: басейн
     right: pool
-  - left: 'тренер'
+  - left: тренер
     right: coach
-  - left: 'команда'
+  - left: команда
     right: team
-  - left: 'гравець'
+  - left: гравець
     right: player
-  - left: 'матч'
+  - left: матч
     right: match
+  id: sports-vocab
 - type: fill-in
   title: Sport Instrumental
   items:
@@ -250,6 +249,7 @@
     - тренера
     - тренеру
     explanation: Work as + Instrumental.
+  id: sport-instrumental
 - type: true-false
   title: Sports Rules
   items:
@@ -289,6 +289,7 @@
   - statement: Ukrainians like sports.
     correct: true
     explanation: Very much.
+  id: sports-rules
 - type: group-sort
   title: Action vs Place
   groups:
@@ -311,6 +312,7 @@
     - 'гравець: People'
     - 'вболівальник: People'
     - 'чемпіон: People'
+  id: action-vs-place
 - type: unjumble
   title: Sport Sentences
   items:
@@ -426,6 +428,7 @@
     - зеленому
     - лісі
     answer: Ми повільно бігаємо вранці в зеленому лісі
+  id: sport-sentences
 - type: error-correction
   title: Sport Mistakes
   items:
@@ -446,8 +449,7 @@
     - футболом
     - футболу
     - футболі
-    explanation: 'Play + Acc (game name does NOT change): грати в футбол. Instrumental
-      is wrong here.'
+    explanation: 'Play + Acc (game name does NOT change): грати в футбол. Instrumental is wrong here.'
   - sentence: Ми йдемо в стадіон.
     error: в
     answer: на
@@ -538,6 +540,7 @@
     - йогу
     - йозі
     explanation: Instrumental.
+  id: sport-mistakes
 - type: cloze
   title: Football Match
   passage: 'Ми на стадіоні. Сьогодні {матч|урок|обід}.
@@ -567,12 +570,12 @@
     Всі {люди|машини|дерева} аплодували.
 
     Ми пішли додому {щасливі|сумні|хворі}.'
+  id: football-match
 - type: mark-the-words
   title: Sports List
-  text: У школі ми грали в *футбол* і *баскетбол*. Мій брат любить *теніс*. Взимку
-    ми дивимося *біатлон*. Влітку я люблю *плавання*. Мій тато дивиться *бокс*. Його
-    друг займається *карате*. *Гімнастика* — це дуже красиво.
-  answers:
+  id: sports-list
+  passage: У школі ми грали в *футбол* і *баскетбол*. Мій брат любить *теніс*. Взимку ми дивимося *біатлон*. Влітку я люблю *плавання*. Мій тато дивиться *бокс*. Його друг займається *карате*. *Гімнастика* — це дуже красиво.
+  correct_words:
   - футбол
   - баскетбол
   - теніс
@@ -668,3 +671,4 @@
     - text: Спати.
       correct: false
     explanation: Become (champion).
+  id: choose-correct-verb

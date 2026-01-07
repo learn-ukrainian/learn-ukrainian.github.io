@@ -21,6 +21,7 @@
     right: What's the weather?
   - left: '- Як надворі?'
     right: How is it outside?
+  id: weather-expressions
 - type: match-up
   title: Nature Vocabulary
   pairs:
@@ -44,6 +45,7 @@
     right: river
   - left: '- море'
     right: sea
+  id: nature-vocabulary
 - type: group-sort
   title: Seasons
   groups:
@@ -64,6 +66,7 @@
     - хмарно
     - вітряно
     - --
+  id: seasons
 - type: group-sort
   title: Animals vs Plants
   groups:
@@ -84,6 +87,7 @@
     - парк
     - сад
     - --
+  id: animals-vs-plants
 - type: fill-in
   title: Яка погода? (What's the Weather?)
   items:
@@ -171,6 +175,7 @@
     - жарко
     - сонячно
     - вітряно
+  id: яка-погода?-(what's-the-weather?)
 - type: fill-in
   title: Природа і тварини (Nature and Animals)
   items:
@@ -258,6 +263,7 @@
     - гір
     - морів
     - птахів
+  id: природа-і-тварини-(nature-and-animals)
 - type: quiz
   title: What Season?
   items:
@@ -341,6 +347,7 @@
       correct: false
     - text: Весна
       correct: true
+  id: what-season?
 - type: quiz
   title: Animal or Plant?
   items:
@@ -424,6 +431,7 @@
       correct: false
     - text: Транспорт
       correct: false
+  id: animal-or-plant?
 - type: unjumble
   title: Weather Sentences
   items:
@@ -496,6 +504,7 @@
     - сьогодні
     - дуже
     answer: Сьогодні надворі дуже холодно
+  id: weather-sentences
 - type: true-false
   title: Weather and Nature Facts
   items:
@@ -528,3 +537,4 @@
     explanation: Incorrect! it means "in winter"
   - statement: The Dnipro is a river.
     correct: true
+  id: weather-and-nature-facts

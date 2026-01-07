@@ -25,22 +25,20 @@
     right: бач- root
   - left: слухач
     right: слух- root
+  id: word-formation-pairs
 - type: cloze
   title: Formation Test
-  passage: 'Місце, де входять = {вхід|вихід|перехід} Місце, де виходять = {вихід|вхід|прихід}
-    Людина, яка читає = {читач|читання|читати}
+  passage: 'Місце, де входять = {вхід|вихід|перехід} Місце, де виходять = {вихід|вхід|прихід} Людина, яка читає = {читач|читання|читати}
 
 
-    Дія читання = {читання|читач|читати} Якість бути важливим = {важливість|важливий|важливо}
-    Прикметник від \"музика\" = {музичний|музика|музикант}
+    Дія читання = {читання|читач|читати} Якість бути важливим = {важливість|важливий|важливо} Прикметник від \"музика\" = {музичний|музика|музикант}
 
 
-    Прикметник від \"Україна\" = {український|Україна|українець} Зробити ще раз =
-    пере{переписати|написати|дописати} Прийти до місця = {прийти|вийти|увійти}
+    Прикметник від \"Україна\" = {український|Україна|українець} Зробити ще раз = пере{переписати|написати|дописати} Прийти до місця = {прийти|вийти|увійти}
 
 
-    Вийти з місця = {вийти|прийти|увійти} Людина, яка слухає = {слухач|слухати|послухати}
-    Людина, яка пише = {письменник|писання|написати}'
+    Вийти з місця = {вийти|прийти|увійти} Людина, яка слухає = {слухач|слухати|послухати} Людина, яка пише = {письменник|писання|написати}'
+  id: formation-test
 - type: quiz
   title: Word Formation Quiz
   items:
@@ -124,8 +122,7 @@
       correct: false
     - text: Read (Text)
       correct: false
-  - question: Can you identify how the Ukrainian word **"Перехід"** (Crossing) is
-      structurally formed?
+  - question: Can you identify how the Ukrainian word **"Перехід"** (Crossing) is structurally formed?
     options:
     - text: пере- + ход-
       correct: true
@@ -135,8 +132,7 @@
       correct: false
     - text: під- + хід
       correct: false
-  - question: What are the specific components that form the Ukrainian word **"Читання"**
-      (Reading)?
+  - question: What are the specific components that form the Ukrainian word **"Читання"** (Reading)?
     options:
     - text: чита- + -ння
       correct: true
@@ -166,6 +162,7 @@
       correct: false
     - text: -ач
       correct: false
+  id: word-formation-quiz
 - type: group-sort
   title: Word Parts
   groups:
@@ -194,6 +191,7 @@
     - пис-
     - бач-
     - слух-
+  id: word-parts
 - type: true-false
   title: Formation Rules
   items:
@@ -233,6 +231,7 @@
   - statement: Root families share core meaning.
     correct: true
     explanation: Yes! ход- = all about walking
+  id: formation-rules
 - type: unjumble
   title: Word Formation Rules
   items:
@@ -300,6 +299,7 @@
     - нові
     - слова
     answer: Треба знати корені слів щоб розуміти нові слова
+  id: word-formation-rules
 - type: cloze
   title: Complete the Words
   passage: 'Він {прийшов|вийшов|увійшов} до класу.
@@ -325,9 +325,11 @@
     Цей інструмент — {музичний|музика|музикант}.
 
     Ось {вхід|вихід|схід} у магазин.'
+  id: complete-the-words
 - type: mark-the-words
   title: Find Word Parts
-  text: 'Click on all words with marked word parts.
+  id: find-word-parts
+  passage: 'Click on all words with marked word parts.
 
     Він *при*йшов до школи. Потім *ви*йшов з неї.
 
@@ -338,7 +340,7 @@
     ---
 
     *Україн*ський письменник napisав *музич*ну п''єсу про *київ*ське життя.'
-  answers:
+  correct_words:
   - при
   - ви
   - Читач
@@ -422,6 +424,7 @@
       correct: true
     - text: вихід
       correct: false
+  id: english-to-ukrainian
 - type: translate
   title: Word Formation Translation
   items:
@@ -473,3 +476,4 @@
       correct: false
     - text: Науковець
       correct: false
+  id: word-formation-translation

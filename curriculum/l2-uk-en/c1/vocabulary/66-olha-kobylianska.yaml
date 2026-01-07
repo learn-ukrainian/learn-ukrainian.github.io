@@ -1,0 +1,150 @@
+module: 066-olha-kobylianska
+level: C1
+version: '2.0'
+items:
+  - lemma: емансипація
+    ipa: /ɛmɑnt͡sɪpɑˈt͡sʲijɑ/
+    translation: emancipation
+    pos: noun
+    gender: f
+  - lemma: модернізм
+    ipa: /mɔdɛrˈn⁽ʲ⁾izm/
+    translation: modernism
+    pos: noun
+    gender: m
+  - lemma: фемінізм
+    ipa: /fɛmiˈn⁽ʲ⁾izm/
+    translation: feminism
+    pos: noun
+    gender: m
+  - lemma: неоромантизм
+    ipa: /nɛɔrɔmɑnˈtɪzm/
+    translation: neo-romanticism
+    pos: noun
+    gender: m
+  - lemma: аристократизм
+    ipa: /ɑrɪstɔkrɑˈtɪzm/
+    translation: aristocratism, nobility of spirit
+    pos: noun
+    gender: m
+  - lemma: інтелігентка
+    ipa: /intɛɫiˈɦɛntkɑ/
+    translation: intellectual woman
+    pos: noun
+    gender: f
+  - lemma: світовідчуття
+    ipa: /switɔwidˈt͡ʃuttʲɑ/
+    translation: world perception, worldview
+    pos: noun
+    gender: n
+  - lemma: самовдосконалення
+    ipa: /sɑmɔu̯dɔskɔˈnɑɫɛnʲːɑ/
+    translation: self-improvement
+    pos: noun
+    gender: n
+  - lemma: орлиця
+    ipa: /ɔrˈɫɪt͡sʲɑ/
+    translation: female eagle
+    pos: noun
+    gender: f
+    note: гірська орлиця
+  - lemma: витонченість
+    ipa: /wɪˈtɔnt͡ʃɛnistʲ/
+    translation: refinement, elegance
+    pos: noun
+    gender: f
+  - lemma: Буковина
+    ipa: /bukɔˈwɪnɑ/
+    translation: Bukovyna (region)
+    pos: noun
+    gender: f
+  - lemma: психологізм
+    ipa: /psɪxɔɫɔˈɦizm/
+    translation: psychologism
+    pos: noun
+    gender: m
+  - lemma: емансипований
+    ipa: /ɛmɑnt͡sɪpɔˈwɑnɪj/
+    translation: emancipated
+    pos: adj
+  - lemma: буковинський
+    ipa: /bukɔˈwɪnʲskɪj/
+    translation: Bukovynian
+    pos: adj
+  - lemma: шляхетний
+    ipa: /ʃlʲɑˈxɛtnɪj/
+    translation: noble, refined
+    pos: adj
+  - lemma: вольовий
+    ipa: /wɔlʲɔˈwɪj/
+    translation: strong-willed
+    pos: adj
+  - lemma: естетичний
+    ipa: /ɛstɛˈtɪt͡ʃnɪj/
+    translation: aesthetic
+    pos: adj
+  - lemma: обстоювати
+    ipa: /ɔbstɔˈjuwɑtɪ/
+    translation: to advocate for, to defend
+    pos: verb
+    aspect: impf
+  - lemma: еволюціонувати
+    ipa: /ɛwɔlʲut͡sʲiɔnuˈwɑtɪ/
+    translation: to evolve
+    pos: verb
+    aspect: impf
+  - lemma: творити
+    ipa: /twɔˈrɪtɪ/
+    translation: to create
+    pos: verb
+    aspect: impf
+  - lemma: надихати
+    ipa: /nɑdɪˈxɑtɪ/
+    translation: to inspire
+    pos: verb
+    aspect: impf
+  - lemma: зображувати
+    ipa: /zɔˈbrɑʒuwɑtɪ/
+    translation: to depict, to portray
+    pos: verb
+    aspect: impf
+  - lemma: перекладати
+    ipa: /pɛrɛkɫɑˈdɑtɪ/
+    translation: to translate
+    pos: verb
+    aspect: impf
+  - lemma: захоплюватися
+    ipa: /zɑˈxɔplʲuwɑtɪsʲɑ/
+    translation: to be fond of, to admire
+    pos: verb
+    aspect: impf
+  - lemma: ідентичність
+    ipa: /idɛnˈtɪt͡ʃnistʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: естет
+    ipa: /ɛsˈtɛt/
+    translation: aesthete
+    pos: noun
+    gender: m
+  - lemma: доля
+    ipa: /ˈdɔlʲɑ/
+    translation: fate, destiny
+    pos: noun
+    gender: f
+  - lemma: прагнення
+    ipa: /ˈprɑɦnɛnʲːɑ/
+    translation: aspiration, striving
+    pos: noun
+    gender: n
+  - lemma: культура
+    ipa: /kulʲˈturɑ/
+    translation: culture
+    pos: noun
+    gender: f
+  - lemma: мистецтво
+    ipa: /mɪsˈtɛt͡stwɔ/
+    translation: art
+    pos: noun
+    gender: n

@@ -2,572 +2,879 @@ module: 145-b2-finalnyy-ispyt
 level: B2
 version: '2.0'
 activities:
-  - type: quiz
-    id: 145-01-reading
-    title: "Читання: Розуміння тексту"
+- type: quiz
+  id: 145-01-reading
+  title: 'Читання: Розуміння тексту'
+  items:
+  - question: 'Текст: ''Попри складні умови, економіка демонструє зростання''. Що
+      це означає?'
+    options:
+    - text: Економіка росте, незважаючи на проблеми
+      correct: true
+    - text: Економіка впала через умови
+      correct: false
+    - text: Економіка стабільна
+      correct: false
+    - text: Умов немає
+      correct: false
+  - question: 'Текст: ''Виставка триватиме до кінця місяця''. Коли кінець?'
+    options:
+    - text: Останній день місяця
+      correct: true
+    - text: Початок наступного
+      correct: false
+    - text: Середина місяця
+      correct: false
+    - text: Через тиждень
+      correct: false
+  - question: 'Текст: ''Вхід вільний за попередньою реєстрацією''. Що треба зробити?'
+    options:
+    - text: Зареєструватися, платити не треба
+      correct: true
+    - text: Купити квиток
+      correct: false
+    - text: Просто прийти
+      correct: false
+    - text: Зареєструватися і заплатити
+      correct: false
+  - question: 'Текст: ''Автор уникає прямих відповідей''. Як він відповідає?'
+    options:
+    - text: Ухильно, непрямо
+      correct: true
+    - text: Чесно і відкрито
+      correct: false
+    - text: Грубо
+      correct: false
+    - text: Швидко
+      correct: false
+  - question: 'Текст: ''Ця думка є суперечливою''. Вона...'
+    options:
+    - text: Викликає різні оцінки (спірна)
+      correct: true
+    - text: Правильна
+      correct: false
+    - text: Хибна
+      correct: false
+    - text: Загальноприйнята
+      correct: false
+  - question: 'Текст: ''Компанія зазнала збитків''. Компанія...'
+    options:
+    - text: Втратила гроші
+      correct: true
+    - text: Заробила гроші
+      correct: false
+    - text: Відкрила філію
+      correct: false
+    - text: Закрилася
+      correct: false
+  - question: 'Текст: ''Захід скасовано через негоду''. Чому не буде заходу?'
+    options:
+    - text: Погана погода
+      correct: true
+    - text: Немає грошей
+      correct: false
+    - text: Хвороба
+      correct: false
+    - text: Карантин
+      correct: false
+  - question: 'Текст: ''Ліки вживати натщесерце''. Коли пити?'
+    options:
+    - text: Перед їжею (голодним)
+      correct: true
+    - text: Після їжі
+      correct: false
+    - text: Під час їжі
+      correct: false
+    - text: Перед сном
+      correct: false
+- type: quiz
+  id: 145-02-listening-sim
+  title: Аудіювання (Симуляція)
+  items:
+  - question: 'Ви чуєте: ''Обережно, двері зачиняються''. Де ви?'
+    options:
+    - text: У метро / транспорті
+      correct: true
+    - text: Вдома
+      correct: false
+    - text: У лісі
+      correct: false
+    - text: На вулиці
+      correct: false
+  - question: 'Ви чуєте: ''Ваше замовлення буде готове за 10 хвилин''. Де ви?'
+    options:
+    - text: У кафе / ресторані
+      correct: true
+    - text: У бібліотеці
+      correct: false
+    - text: У лікарні
+      correct: false
+    - text: На стадіоні
+      correct: false
+  - question: 'Ви чуєте: ''Наступна станція — Хрещатик''. Що робити?'
+    options:
+    - text: Готуватися до виходу
+      correct: true
+    - text: Спати далі
+      correct: false
+    - text: Купувати квиток
+      correct: false
+    - text: Дзвонити другу
+      correct: false
+  - question: 'Ви чуєте: ''Увага! Повітряна тривога!''. Що робити?'
+    options:
+    - text: Йти в укриття
+      correct: true
+    - text: Дивитися у вікно
+      correct: false
+    - text: Ігнорувати
+      correct: false
+    - text: Знімати відео
+      correct: false
+  - question: 'Ви чуєте: ''Рахунок, будь ласка''. Хто це каже?'
+    options:
+    - text: Клієнт
+      correct: true
+    - text: Офіціант
+      correct: false
+    - text: Кухар
+      correct: false
+    - text: Директор
+      correct: false
+  - question: 'Ви чуєте: ''У вас є картка нашого магазину?''. Хто це каже?'
+    options:
+    - text: Касир
+      correct: true
+    - text: Покупець
+      correct: false
+    - text: Охоронець
+      correct: false
+    - text: Власник
+      correct: false
+  - question: 'Ви чуєте: ''Вибачте, я не розчув''. Що сталося?'
+    options:
+    - text: Людина не почула
+      correct: true
+    - text: Людина не зрозуміла мову
+      correct: false
+    - text: Людина образилася
+      correct: false
+    - text: Людина пішла
+      correct: false
+  - question: 'Ви чуєте: ''Це просто жах!''. Яка емоція?'
+    options:
+    - text: Обурення / Страх
+      correct: true
+    - text: Радість
+      correct: false
+    - text: Спокій
+      correct: false
+    - text: Байдужість
+      correct: false
+- type: quiz
+  id: 145-03-passive
+  title: 'Граматика: Пасив'
+  items:
+  - question: 'Перетворіть на пасив: ''Архітектор спроектував будинок''.'
+    options:
+    - text: Будинок спроектований архітектором
+      correct: true
+    - text: Будинок спроектував архітектора
+      correct: false
+    - text: Архітектор був спроектований
+      correct: false
+    - text: Будинок проектує
+      correct: false
+  - question: 'Безособова форма: ''Ми виконали завдання''.'
+    options:
+    - text: Завдання виконано
+      correct: true
+    - text: Завдання виконане
+      correct: false
+    - text: Завдання виконується
+      correct: false
+    - text: Завдання виконали
+      correct: false
+  - question: 'Рефлексивний пасив: ''Будують школу''.'
+    options:
+    - text: Школа будується
+      correct: true
+    - text: Школа будує
+      correct: false
+    - text: Школу збудували
+      correct: false
+    - text: Школа збудована
+      correct: false
+  - question: 'Правильна форма: ''Закон (прийняти)''.'
+    options:
+    - text: Прийнято / Прийнятий
+      correct: true
+    - text: Прийняв
+      correct: false
+    - text: Приймає
+      correct: false
+    - text: Прийме
+      correct: false
+  - question: 'Правильна форма: ''Двері (зачинити)''.'
+    options:
+    - text: Зачинені
+      correct: true
+    - text: Зачинив
+      correct: false
+    - text: Зачиняють
+      correct: false
+    - text: Зачинить
+      correct: false
+  - question: 'Правильна форма: ''Лист (відправити)''.'
+    options:
+    - text: Відправлено
+      correct: true
+    - text: Відправив
+      correct: false
+    - text: Відправляє
+      correct: false
+    - text: Відправить
+      correct: false
+  - question: 'Правильна форма: ''Книга (прочитати)''.'
+    options:
+    - text: Прочитана
+      correct: true
+    - text: Прочитала
+      correct: false
+    - text: Читає
+      correct: false
+    - text: Прочитає
+      correct: false
+  - question: 'Правильна форма: ''Робота (зробити)''.'
+    options:
+    - text: Зроблена
+      correct: true
+    - text: Зробила
+      correct: false
+    - text: Робить
+      correct: false
+    - text: Зробить
+      correct: false
+- type: quiz
+  id: 145-04-participles
+  title: 'Граматика: Дієприкметники'
+  items:
+  - question: 'Активний дієприкметник (уникаємо): ''Людина, яка пише''.'
+    options:
+    - text: 'Пишуча (краще: яка пише)'
+      correct: true
+    - text: Написана
+      correct: false
+    - text: Писана
+      correct: false
+    - text: Писавша
+      correct: false
+  - question: 'Пасивний дієприкметник: ''Вікно, яке розбили''.'
+    options:
+    - text: Розбите
+      correct: true
+    - text: Розбиваючи
+      correct: false
+    - text: Розбило
+      correct: false
+    - text: Розбиває
+      correct: false
+  - question: 'Дієприкметниковий зворот: ''Читаючи книгу, я заснув''.'
+    options:
+    - text: Правильно (Я читав і Я заснув)
+      correct: true
+    - text: Неправильно (Книга заснула?)
+      correct: false
+    - text: Це не зворот
+      correct: false
+    - text: Це пасив
+      correct: false
+  - question: 'Знайдіть помилку: ''Йдучи додому, пішов дощ''.'
+    options:
+    - text: Помилка (Дощ не йшов додому)
+      correct: true
+    - text: Правильно
+      correct: false
+    - text: Це метафора
+      correct: false
+    - text: Це діалект
+      correct: false
+  - question: '''Забутий'' — це...'
+    options:
+    - text: Пасивний дієприкметник
+      correct: true
+    - text: Активний дієприкметник
+      correct: false
+    - text: Дієприслівник
+      correct: false
+    - text: Прикметник
+      correct: false
+  - question: '''Співаючи'' — це...'
+    options:
+    - text: Дієприслівник (що роблячи?)
+      correct: true
+    - text: Дієприкметник
+      correct: false
+    - text: Іменник
+      correct: false
+    - text: Дієслово
+      correct: false
+  - question: '''Зробивши'' — це...'
+    options:
+    - text: Дієприслівник (що зробивши?)
+      correct: true
+    - text: Дієприкметник
+      correct: false
+    - text: Прислівник
+      correct: false
+    - text: Частка
+      correct: false
+  - question: '''Зроблений'' — це...'
+    options:
+    - text: Пасивний дієприкметник
+      correct: true
+    - text: Активний дієприкметник
+      correct: false
+    - text: Дієприслівник
+      correct: false
+    - text: Прислівник
+      correct: false
+- type: fill-in
+  id: 145-05-aspect
+  title: 'Граматика: Вид дієслова'
+  items:
+  - sentence: Я ___ цей фільм вчора. (Процес/Факт)
+    answer: дивився
+    options:
+    - дивився
+    - подивився
+    - дивлюся
+    - подивлюся
+  - sentence: Я вже ___ цю книгу. (Результат)
+    answer: прочитав
+    options:
+    - прочитав
+    - читав
+    - читаю
+    - читатиму
+  - sentence: Завтра я ___ тобі листа. (Обіцянка/Факт)
+    answer: напишу
+    options:
+    - напишу
+    - писатиму
+    - писав
+    - написав
+  - sentence: Він часто ___ до нас. (Повторюваність)
+    answer: приходив
+    options:
+    - приходив
+    - прийшов
+    - прийде
+    - прийти
+  - sentence: Поки я їв, вона ___ музику. (Паралельний процес)
+    answer: слухала
+    options:
+    - слухала
+    - послухала
+    - слухає
+    - послухає
+  - sentence: Коли я прийшов, вона вже ___. (Попередній результат)
+    answer: пішла
+    options:
+    - пішла
+    - йшла
+    - ходить
+    - піде
+  - sentence: Не ___ мені! (Заборона - Недоконаний)
+    answer: дзвони
+    options:
+    - дзвони
+    - подзвони
+    - дзвонити
+    - подзвонити
+  - sentence: ___ мені води, будь ласка. (Прохання - Доконаний)
+    answer: дай
+    options:
+    - дай
+    - давай
+    - давати
+    - давав
+- type: fill-in
+  id: 145-06-motion
+  title: 'Граматика: Рух'
+  items:
+  - sentence: Зараз я ___ в школу. (Пішки, в один бік)
+    answer: йду
+    options:
+    - йду
+    - ходжу
+    - їду
+    - їжджу
+  - sentence: Я щодня ___ в школу. (Пішки, туди-сюди)
+    answer: ходжу
+    options:
+    - ходжу
+    - йду
+    - їду
+    - їжджу
+  - sentence: Зараз я ___ на машині. (Транспорт, в один бік)
+    answer: їду
+    options:
+    - їду
+    - їжджу
+    - йду
+    - ходжу
+  - sentence: Я часто ___ за кордон. (Транспорт, туди-сюди)
+    answer: їжджу
+    options:
+    - їжджу
+    - їду
+    - ходжу
+    - йду
+  - sentence: Птах ___. (Зараз)
+    answer: летить
+    options:
+    - летить
+    - літає
+    - біжить
+    - бігає
+  - sentence: Птахи ___ на південь. (Взагалі/Щороку)
+    answer: літають
+    options:
+    - літають
+    - летять
+    - плавають
+    - пливуть
+  - sentence: Він ___ через дорогу. (Швидко)
+    answer: біжить
+    options:
+    - біжить
+    - бігає
+    - йде
+    - ходить
+  - sentence: Діти ___ у дворі. (Бігають хаотично)
+    answer: бігають
+    options:
+    - бігають
+    - біжать
+    - йдуть
+    - ходять
+- type: fill-in
+  id: 145-07-cases
+  title: 'Граматика: Відмінки'
+  items:
+  - sentence: Я не маю ___ (час).
+    answer: часу
+    options:
+    - часу
+    - час
+    - часом
+    - часі
+  - sentence: Я дякую ___ (друг).
+    answer: другу
+    options:
+    - другу
+    - друга
+    - другом
+    - друзі
+  - sentence: Я бачу ___ (дівчина).
+    answer: дівчину
+    options:
+    - дівчину
+    - дівчини
+    - дівчині
+    - дівчиною
+  - sentence: Я пишаюся ___ (син).
+    answer: сином
+    options:
+    - сином
+    - сина
+    - сину
+    - сині
+  - sentence: Ми говоримо про ___ (політика).
+    answer: політику
+    options:
+    - політику
+    - політики
+    - політиком
+    - політика
+  - sentence: Дай мені ___ (ручка).
+    answer: ручку
+    options:
+    - ручку
+    - ручки
+    - ручці
+    - ручкою
+  - sentence: Немає ___ (вода).
+    answer: води
+    options:
+    - води
+    - воду
+    - воді
+    - водою
+  - sentence: Я йду до ___ (лікар).
+    answer: лікаря
+    options:
+    - лікаря
+    - лікарю
+    - лікарем
+    - лікар
+- type: match-up
+  id: 145-08-synonyms
+  title: 'Лексика: Синоніми'
+  pairs:
+  - left: Гарний
+    right: Чудовий
+  - left: Великий
+    right: Величезний
+  - left: Сумний
+    right: Журливий
+  - left: Йти
+    right: Крокувати
+  - left: Говорити
+    right: Розмовляти
+  - left: Думати
+    right: Міркувати
+  - left: Швидко
+    right: Миттєво
+  - left: Цікавий
+    right: Захопливий
+- type: match-up
+  id: 145-09-idioms
+  title: 'Лексика: Ідіоми'
+  pairs:
+  - left: Пекти раків
+    right: Соромитися
+  - left: Байдики бити
+    right: Лінуватися
+  - left: Як кіт наплакав
+    right: Мало
+  - left: Гріти руки
+    right: Наживатися
+  - left: Зарубати на носі
+    right: Запам'ятати
+  - left: Як сніг на голову
+    right: Раптово
+  - left: Водити за ніс
+    right: Обманювати
+  - left: Накивати п'ятами
+    right: Втекти
+- type: quiz
+  id: 145-10-definitions
+  title: 'Лексика: Визначення'
+  items:
+  - question: Що таке 'гіпотеза'?
+    options:
+    - text: Наукове припущення
+      correct: true
+    - text: Доказ
+      correct: false
+    - text: Факт
+      correct: false
+    - text: Висновок
+      correct: false
+  - question: Що таке 'менталітет'?
+    options:
+    - text: Спосіб мислення народу
+      correct: true
+    - text: Розум людини
+      correct: false
+    - text: Психічна хвороба
+      correct: false
+    - text: Культура
+      correct: false
+  - question: Що таке 'діаспора'?
+    options:
+    - text: Люди, що живуть за межами батьківщини
+      correct: true
+    - text: Іноземці в Україні
+      correct: false
+    - text: Туристи
+      correct: false
+    - text: Політики
+      correct: false
+  - question: Що таке 'плагіат'?
+    options:
+    - text: Привласнення чужого тексту
+      correct: true
+    - text: Цитування
+      correct: false
+    - text: Авторське право
+      correct: false
+    - text: Переклад
+      correct: false
+  - question: Що таке 'корупція'?
+    options:
+    - text: Зловживання владою ради грошей
+      correct: true
+    - text: Чесна праця
+      correct: false
+    - text: Податок
+      correct: false
+    - text: Бізнес
+      correct: false
+  - question: Що таке 'інфляція'?
+    options:
+    - text: Знецінення грошей
+      correct: true
+    - text: Зростання зарплат
+      correct: false
+    - text: Банкрутство
+      correct: false
+    - text: Кредит
+      correct: false
+  - question: Що таке 'суверенітет'?
+    options:
+    - text: Незалежність держави
+      correct: true
+    - text: Залежність
+      correct: false
+    - text: Влада короля
+      correct: false
+    - text: Влада народу
+      correct: false
+  - question: Що таке 'толерантність'?
+    options:
+    - text: Терпимість до іншого
+      correct: true
+    - text: Байдужість
+      correct: false
+    - text: Любов
+      correct: false
+    - text: Ненависть
+      correct: false
+- type: match-up
+  id: 145-11-history
+  title: 'Історія: Дати'
+  pairs:
+  - left: '988'
+    right: Хрещення Русі
+  - left: '1648'
+    right: Хмельниччина
+  - left: '1814'
+    right: Народження Шевченка
+  - left: '1917'
+    right: Українська революція
+  - left: '1932'
+    right: Голодомор (початок)
+  - left: '1945'
+    right: Кінець Другої світової
+  - left: '1991'
+    right: Незалежність
+  - left: '2014'
+    right: Революція Гідності
+- type: quiz
+  id: 145-12-culture
+  title: 'Культура: Факти'
+  items:
+  - question: Символ Києва — це...
+    options:
+    - text: Каштан
+      correct: true
+    - text: Дуб
+      correct: false
+    - text: Береза
+      correct: false
+    - text: Ялина
+      correct: false
+  - question: Найвищий гірський масив України — ...
+    options:
+    - text: Карпати
+      correct: true
+    - text: Кримські гори
+      correct: false
+    - text: Альпи
+      correct: false
+    - text: Анди
+      correct: false
+  - question: Автор тексту Гімну України — ...
+    options:
+    - text: Павло Чубинський
+      correct: true
+    - text: Тарас Шевченко
+      correct: false
+    - text: Іван Франко
+      correct: false
+    - text: Леся Українка
+      correct: false
+  - question: Грошова одиниця України — ...
+    options:
+    - text: Гривня
+      correct: true
+    - text: Рубль
+      correct: false
+    - text: Долар
+      correct: false
+    - text: Євро
+      correct: false
+  - question: Найбільший літак у світі (зруйнований) — ...
+    options:
+    - text: Мрія (Ан-225)
+      correct: true
+    - text: Руслан
+      correct: false
+    - text: Боїнг
+      correct: false
+    - text: Аеробус
+      correct: false
+  - question: Перша друкована книга в Україні — ...
+    options:
+    - text: Апостол
+      correct: true
+    - text: Кобзар
+      correct: false
+    - text: Біблія
+      correct: false
+    - text: Буквар
+      correct: false
+  - question: Хто намалював 'Чорний квадрат'?
+    options:
+    - text: Казимир Малевич
+      correct: true
+    - text: Тарас Шевченко
+      correct: false
+    - text: Ілля Рєпін
+      correct: false
+    - text: Марія Примаченко
+      correct: false
+  - question: Що таке 'трембіта'?
+    options:
+    - text: Музичний інструмент
+      correct: true
+    - text: Одяг
+      correct: false
+    - text: Страва
+      correct: false
+    - text: Танець
+      correct: false
+- type: group-sort
+  id: 145-13-essay-order
+  title: 'Письмо: Структура есе'
+  groups:
+  - name: Початок
     items:
-      - question: "Текст: 'Попри складні умови, економіка демонструє зростання'. Що це означає?"
-        options:
-          - { text: "Економіка росте, незважаючи на проблеми", correct: true }
-          - { text: "Економіка впала через умови", correct: false }
-          - { text: "Економіка стабільна", correct: false }
-          - { text: "Умов немає", correct: false }
-      - question: "Текст: 'Виставка триватиме до кінця місяця'. Коли кінець?"
-        options:
-          - { text: "Останній день місяця", correct: true }
-          - { text: "Початок наступного", correct: false }
-          - { text: "Середина місяця", correct: false }
-          - { text: "Через тиждень", correct: false }
-      - question: "Текст: 'Вхід вільний за попередньою реєстрацією'. Що треба зробити?"
-        options:
-          - { text: "Зареєструватися, платити не треба", correct: true }
-          - { text: "Купити квиток", correct: false }
-          - { text: "Просто прийти", correct: false }
-          - { text: "Зареєструватися і заплатити", correct: false }
-      - question: "Текст: 'Автор уникає прямих відповідей'. Як він відповідає?"
-        options:
-          - { text: "Ухильно, непрямо", correct: true }
-          - { text: "Чесно і відкрито", correct: false }
-          - { text: "Грубо", correct: false }
-          - { text: "Швидко", correct: false }
-      - question: "Текст: 'Ця думка є суперечливою'. Вона..."
-        options:
-          - { text: "Викликає різні оцінки (спірна)", correct: true }
-          - { text: "Правильна", correct: false }
-          - { text: "Хибна", correct: false }
-          - { text: "Загальноприйнята", correct: false }
-      - question: "Текст: 'Компанія зазнала збитків'. Компанія..."
-        options:
-          - { text: "Втратила гроші", correct: true }
-          - { text: "Заробила гроші", correct: false }
-          - { text: "Відкрила філію", correct: false }
-          - { text: "Закрилася", correct: false }
-      - question: "Текст: 'Захід скасовано через негоду'. Чому не буде заходу?"
-        options:
-          - { text: "Погана погода", correct: true }
-          - { text: "Немає грошей", correct: false }
-          - { text: "Хвороба", correct: false }
-          - { text: "Карантин", correct: false }
-      - question: "Текст: 'Ліки вживати натщесерце'. Коли пити?"
-        options:
-          - { text: "Перед їжею (голодним)", correct: true }
-          - { text: "Після їжі", correct: false }
-          - { text: "Під час їжі", correct: false }
-          - { text: "Перед сном", correct: false }
-
-  - type: quiz
-    id: 145-02-listening-sim
-    title: "Аудіювання (Симуляція)"
+    - Заголовок
+    - Вступ
+    - Теза
+    - Актуальність теми
+  - name: Середина
     items:
-      - question: "Ви чуєте: 'Обережно, двері зачиняються'. Де ви?"
-        options:
-          - { text: "У метро / транспорті", correct: true }
-          - { text: "Вдома", correct: false }
-          - { text: "У лісі", correct: false }
-          - { text: "На вулиці", correct: false }
-      - question: "Ви чуєте: 'Ваше замовлення буде готове за 10 хвилин'. Де ви?"
-        options:
-          - { text: "У кафе / ресторані", correct: true }
-          - { text: "У бібліотеці", correct: false }
-          - { text: "У лікарні", correct: false }
-          - { text: "На стадіоні", correct: false }
-      - question: "Ви чуєте: 'Наступна станція — Хрещатик'. Що робити?"
-        options:
-          - { text: "Готуватися до виходу", correct: true }
-          - { text: "Спати далі", correct: false }
-          - { text: "Купувати квиток", correct: false }
-          - { text: "Дзвонити другу", correct: false }
-      - question: "Ви чуєте: 'Увага! Повітряна тривога!'. Що робити?"
-        options:
-          - { text: "Йти в укриття", correct: true }
-          - { text: "Дивитися у вікно", correct: false }
-          - { text: "Ігнорувати", correct: false }
-          - { text: "Знімати відео", correct: false }
-      - question: "Ви чуєте: 'Рахунок, будь ласка'. Хто це каже?"
-        options:
-          - { text: "Клієнт", correct: true }
-          - { text: "Офіціант", correct: false }
-          - { text: "Кухар", correct: false }
-          - { text: "Директор", correct: false }
-      - question: "Ви чуєте: 'У вас є картка нашого магазину?'. Хто це каже?"
-        options:
-          - { text: "Касир", correct: true }
-          - { text: "Покупець", correct: false }
-          - { text: "Охоронець", correct: false }
-          - { text: "Власник", correct: false }
-      - question: "Ви чуєте: 'Вибачте, я не розчув'. Що сталося?"
-        options:
-          - { text: "Людина не почула", correct: true }
-          - { text: "Людина не зрозуміла мову", correct: false }
-          - { text: "Людина образилася", correct: false }
-          - { text: "Людина пішла", correct: false }
-      - question: "Ви чуєте: 'Це просто жах!'. Яка емоція?"
-        options:
-          - { text: "Обурення / Страх", correct: true }
-          - { text: "Радість", correct: false }
-          - { text: "Спокій", correct: false }
-          - { text: "Байдужість", correct: false }
-
-  - type: quiz
-    id: 145-03-passive
-    title: "Граматика: Пасив"
+    - Аргумент 1
+    - Приклад 1
+    - Аргумент 2
+    - Приклад 2
+    - Контраргумент
+    - Ілюстрація 1
+    - Ілюстрація 2
+  - name: Кінець
     items:
-      - question: "Перетворіть на пасив: 'Архітектор спроектував будинок'."
-        options:
-          - { text: "Будинок спроектований архітектором", correct: true }
-          - { text: "Будинок спроектував архітектора", correct: false }
-          - { text: "Архітектор був спроектований", correct: false }
-          - { text: "Будинок проектує", correct: false }
-      - question: "Безособова форма: 'Ми виконали завдання'."
-        options:
-          - { text: "Завдання виконано", correct: true }
-          - { text: "Завдання виконане", correct: false }
-          - { text: "Завдання виконується", correct: false }
-          - { text: "Завдання виконали", correct: false }
-      - question: "Рефлексивний пасив: 'Будують школу'."
-        options:
-          - { text: "Школа будується", correct: true }
-          - { text: "Школа будує", correct: false }
-          - { text: "Школу збудували", correct: false }
-          - { text: "Школа збудована", correct: false }
-      - question: "Правильна форма: 'Закон (прийняти)'."
-        options:
-          - { text: "Прийнято / Прийнятий", correct: true }
-          - { text: "Прийняв", correct: false }
-          - { text: "Приймає", correct: false }
-          - { text: "Прийме", correct: false }
-      - question: "Правильна форма: 'Двері (зачинити)'."
-        options:
-          - { text: "Зачинені", correct: true }
-          - { text: "Зачинив", correct: false }
-          - { text: "Зачиняють", correct: false }
-          - { text: "Зачинить", correct: false }
-      - question: "Правильна форма: 'Лист (відправити)'."
-        options:
-          - { text: "Відправлено", correct: true }
-          - { text: "Відправив", correct: false }
-          - { text: "Відправляє", correct: false }
-          - { text: "Відправить", correct: false }
-      - question: "Правильна форма: 'Книга (прочитати)'."
-        options:
-          - { text: "Прочитана", correct: true }
-          - { text: "Прочитала", correct: false }
-          - { text: "Читає", correct: false }
-          - { text: "Прочитає", correct: false }
-      - question: "Правильна форма: 'Робота (зробити)'."
-        options:
-          - { text: "Зроблена", correct: true }
-          - { text: "Зробила", correct: false }
-          - { text: "Робить", correct: false }
-          - { text: "Зробить", correct: false }
-
-  - type: quiz
-    id: 145-04-participles
-    title: "Граматика: Дієприкметники"
+    - Висновок
+    - Заклик
+    - Підпис
+    - Посилання на джерела
+- type: group-sort
+  id: 145-14-register-sort
+  title: 'Письмо: Стиль'
+  groups:
+  - name: Офіційно
     items:
-      - question: "Активний дієприкметник (уникаємо): 'Людина, яка пише'."
-        options:
-          - { text: "Пишуча (краще: яка пише)", correct: true }
-          - { text: "Написана", correct: false }
-          - { text: "Писана", correct: false }
-          - { text: "Писавша", correct: false }
-      - question: "Пасивний дієприкметник: 'Вікно, яке розбили'."
-        options:
-          - { text: "Розбите", correct: true }
-          - { text: "Розбиваючи", correct: false }
-          - { text: "Розбило", correct: false }
-          - { text: "Розбиває", correct: false }
-      - question: "Дієприкметниковий зворот: 'Читаючи книгу, я заснув'."
-        options:
-          - { text: "Правильно (Я читав і Я заснув)", correct: true }
-          - { text: "Неправильно (Книга заснула?)", correct: false }
-          - { text: "Це не зворот", correct: false }
-          - { text: "Це пасив", correct: false }
-      - question: "Знайдіть помилку: 'Йдучи додому, пішов дощ'."
-        options:
-          - { text: "Помилка (Дощ не йшов додому)", correct: true }
-          - { text: "Правильно", correct: false }
-          - { text: "Це метафора", correct: false }
-          - { text: "Це діалект", correct: false }
-      - question: "'Забутий' — це..."
-        options:
-          - { text: "Пасивний дієприкметник", correct: true }
-          - { text: "Активний дієприкметник", correct: false }
-          - { text: "Дієприслівник", correct: false }
-          - { text: "Прикметник", correct: false }
-      - question: "'Співаючи' — це..."
-        options:
-          - { text: "Дієприслівник (що роблячи?)", correct: true }
-          - { text: "Дієприкметник", correct: false }
-          - { text: "Іменник", correct: false }
-          - { text: "Дієслово", correct: false }
-      - question: "'Зробивши' — це..."
-        options:
-          - { text: "Дієприслівник (що зробивши?)", correct: true }
-          - { text: "Дієприкметник", correct: false }
-          - { text: "Прислівник", correct: false }
-          - { text: "Частка", correct: false }
-      - question: "'Зроблений' — це..."
-        options:
-          - { text: "Пасивний дієприкметник", correct: true }
-          - { text: "Активний дієприкметник", correct: false }
-          - { text: "Дієприслівник", correct: false }
-          - { text: "Прислівник", correct: false }
-
-  - type: fill-in
-    id: 145-05-aspect
-    title: "Граматика: Вид дієслова"
+    - Шановний пане
+    - З повагою
+    - Прошу повідомити
+    - Згідно з
+    - Звертаюся з проханням
+    - Прошу розглянути
+    - Відповідно до наказу
+  - name: Неофіційно
     items:
-      - sentence: "Я ___ цей фільм вчора. (Процес/Факт)"
-        answer: "дивився"
-        options: ["дивився", "подивився", "дивлюся", "подивлюся"]
-      - sentence: "Я вже ___ цю книгу. (Результат)"
-        answer: "прочитав"
-        options: ["прочитав", "читав", "читаю", "читатиму"]
-      - sentence: "Завтра я ___ тобі листа. (Обіцянка/Факт)"
-        answer: "напишу"
-        options: ["напишу", "писатиму", "писав", "написав"]
-      - sentence: "Він часто ___ до нас. (Повторюваність)"
-        answer: "приходив"
-        options: ["приходив", "прийшов", "прийде", "прийти"]
-      - sentence: "Поки я їв, вона ___ музику. (Паралельний процес)"
-        answer: "слухала"
-        options: ["слухала", "послухала", "слухає", "послухає"]
-      - sentence: "Коли я прийшов, вона вже ___. (Попередній результат)"
-        answer: "пішла"
-        options: ["пішла", "йшла", "ходить", "піде"]
-      - sentence: "Не ___ мені! (Заборона - Недоконаний)"
-        answer: "дзвони"
-        options: ["дзвони", "подзвони", "дзвонити", "подзвонити"]
-      - sentence: "___ мені води, будь ласка. (Прохання - Доконаний)"
-        answer: "дай"
-        options: ["дай", "давай", "давати", "давав"]
-
-  - type: fill-in
-    id: 145-06-motion
-    title: "Граматика: Рух"
-    items:
-      - sentence: "Зараз я ___ в школу. (Пішки, в один бік)"
-        answer: "йду"
-        options: ["йду", "ходжу", "їду", "їжджу"]
-      - sentence: "Я щодня ___ в школу. (Пішки, туди-сюди)"
-        answer: "ходжу"
-        options: ["ходжу", "йду", "їду", "їжджу"]
-      - sentence: "Зараз я ___ на машині. (Транспорт, в один бік)"
-        answer: "їду"
-        options: ["їду", "їжджу", "йду", "ходжу"]
-      - sentence: "Я часто ___ за кордон. (Транспорт, туди-сюди)"
-        answer: "їжджу"
-        options: ["їжджу", "їду", "ходжу", "йду"]
-      - sentence: "Птах ___. (Зараз)"
-        answer: "летить"
-        options: ["летить", "літає", "біжить", "бігає"]
-      - sentence: "Птахи ___ на південь. (Взагалі/Щороку)"
-        answer: "літають"
-        options: ["літають", "летять", "плавають", "пливуть"]
-      - sentence: "Він ___ через дорогу. (Швидко)"
-        answer: "біжить"
-        options: ["біжить", "бігає", "йде", "ходить"]
-      - sentence: "Діти ___ у дворі. (Бігають хаотично)"
-        answer: "бігають"
-        options: ["бігають", "біжать", "йдуть", "ходять"]
-
-  - type: fill-in
-    id: 145-07-cases
-    title: "Граматика: Відмінки"
-    items:
-      - sentence: "Я не маю ___ (час)."
-        answer: "часу"
-        options: ["часу", "час", "часом", "часі"]
-      - sentence: "Я дякую ___ (друг)."
-        answer: "другу"
-        options: ["другу", "друга", "другом", "друзі"]
-      - sentence: "Я бачу ___ (дівчина)."
-        answer: "дівчину"
-        options: ["дівчину", "дівчини", "дівчині", "дівчиною"]
-      - sentence: "Я пишаюся ___ (син)."
-        answer: "сином"
-        options: ["сином", "сина", "сину", "сині"]
-      - sentence: "Ми говоримо про ___ (політика)."
-        answer: "політику"
-        options: ["політику", "політики", "політиком", "політика"]
-      - sentence: "Дай мені ___ (ручка)."
-        answer: "ручку"
-        options: ["ручку", "ручки", "ручці", "ручкою"]
-      - sentence: "Немає ___ (вода)."
-        answer: "води"
-        options: ["води", "воду", "воді", "водою"]
-      - sentence: "Я йду до ___ (лікар)."
-        answer: "лікаря"
-        options: ["лікаря", "лікарю", "лікарем", "лікар"]
-
-  - type: match-up
-    id: 145-08-synonyms
-    title: "Лексика: Синоніми"
-    pairs:
-      - left: "Гарний"
-        right: "Чудовий"
-      - left: "Великий"
-        right: "Величезний"
-      - left: "Сумний"
-        right: "Журливий"
-      - left: "Йти"
-        right: "Крокувати"
-      - left: "Говорити"
-        right: "Розмовляти"
-      - left: "Думати"
-        right: "Міркувати"
-      - left: "Швидко"
-        right: "Миттєво"
-      - left: "Цікавий"
-        right: "Захопливий"
-
-  - type: match-up
-    id: 145-09-idioms
-    title: "Лексика: Ідіоми"
-    pairs:
-      - left: "Пекти раків"
-        right: "Соромитися"
-      - left: "Байдики бити"
-        right: "Лінуватися"
-      - left: "Як кіт наплакав"
-        right: "Мало"
-      - left: "Гріти руки"
-        right: "Наживатися"
-      - left: "Зарубати на носі"
-        right: "Запам'ятати"
-      - left: "Як сніг на голову"
-        right: "Раптово"
-      - left: "Водити за ніс"
-        right: "Обманювати"
-      - left: "Накивати п'ятами"
-        right: "Втекти"
-
-  - type: quiz
-    id: 145-10-definitions
-    title: "Лексика: Визначення"
-    items:
-      - question: "Що таке 'гіпотеза'?"
-        options:
-          - { text: "Наукове припущення", correct: true }
-          - { text: "Доказ", correct: false }
-          - { text: "Факт", correct: false }
-          - { text: "Висновок", correct: false }
-      - question: "Що таке 'менталітет'?"
-        options:
-          - { text: "Спосіб мислення народу", correct: true }
-          - { text: "Розум людини", correct: false }
-          - { text: "Психічна хвороба", correct: false }
-          - { text: "Культура", correct: false }
-      - question: "Що таке 'діаспора'?"
-        options:
-          - { text: "Люди, що живуть за межами батьківщини", correct: true }
-          - { text: "Іноземці в Україні", correct: false }
-          - { text: "Туристи", correct: false }
-          - { text: "Політики", correct: false }
-      - question: "Що таке 'плагіат'?"
-        options:
-          - { text: "Привласнення чужого тексту", correct: true }
-          - { text: "Цитування", correct: false }
-          - { text: "Авторське право", correct: false }
-          - { text: "Переклад", correct: false }
-      - question: "Що таке 'корупція'?"
-        options:
-          - { text: "Зловживання владою ради грошей", correct: true }
-          - { text: "Чесна праця", correct: false }
-          - { text: "Податок", correct: false }
-          - { text: "Бізнес", correct: false }
-      - question: "Що таке 'інфляція'?"
-        options:
-          - { text: "Знецінення грошей", correct: true }
-          - { text: "Зростання зарплат", correct: false }
-          - { text: "Банкрутство", correct: false }
-          - { text: "Кредит", correct: false }
-      - question: "Що таке 'суверенітет'?"
-        options:
-          - { text: "Незалежність держави", correct: true }
-          - { text: "Залежність", correct: false }
-          - { text: "Влада короля", correct: false }
-          - { text: "Влада народу", correct: false }
-      - question: "Що таке 'толерантність'?"
-        options:
-          - { text: "Терпимість до іншого", correct: true }
-          - { text: "Байдужість", correct: false }
-          - { text: "Любов", correct: false }
-          - { text: "Ненависть", correct: false }
-
-  - type: match-up
-    id: 145-11-history
-    title: "Історія: Дати"
-    pairs:
-      - left: "988"
-        right: "Хрещення Русі"
-      - left: "1648"
-        right: "Хмельниччина"
-      - left: "1814"
-        right: "Народження Шевченка"
-      - left: "1917"
-        right: "Українська революція"
-      - left: "1932"
-        right: "Голодомор (початок)"
-      - left: "1945"
-        right: "Кінець Другої світової"
-      - left: "1991"
-        right: "Незалежність"
-      - left: "2014"
-        right: "Революція Гідності"
-
-  - type: quiz
-    id: 145-12-culture
-    title: "Культура: Факти"
-    items:
-      - question: "Символ Києва — це..."
-        options:
-          - { text: "Каштан", correct: true }
-          - { text: "Дуб", correct: false }
-          - { text: "Береза", correct: false }
-          - { text: "Ялина", correct: false }
-      - question: "Найвищий гірський масив України — ..."
-        options:
-          - { text: "Карпати", correct: true }
-          - { text: "Кримські гори", correct: false }
-          - { text: "Альпи", correct: false }
-          - { text: "Анди", correct: false }
-      - question: "Автор тексту Гімну України — ..."
-        options:
-          - { text: "Павло Чубинський", correct: true }
-          - { text: "Тарас Шевченко", correct: false }
-          - { text: "Іван Франко", correct: false }
-          - { text: "Леся Українка", correct: false }
-      - question: "Грошова одиниця України — ..."
-        options:
-          - { text: "Гривня", correct: true }
-          - { text: "Рубль", correct: false }
-          - { text: "Долар", correct: false }
-          - { text: "Євро", correct: false }
-      - question: "Найбільший літак у світі (зруйнований) — ..."
-        options:
-          - { text: "Мрія (Ан-225)", correct: true }
-          - { text: "Руслан", correct: false }
-          - { text: "Боїнг", correct: false }
-          - { text: "Аеробус", correct: false }
-      - question: "Перша друкована книга в Україні — ..."
-        options:
-          - { text: "Апостол", correct: true }
-          - { text: "Кобзар", correct: false }
-          - { text: "Біблія", correct: false }
-          - { text: "Буквар", correct: false }
-      - question: "Хто намалював 'Чорний квадрат'?"
-        options:
-          - { text: "Казимир Малевич", correct: true }
-          - { text: "Тарас Шевченко", correct: false }
-          - { text: "Ілля Рєпін", correct: false }
-          - { text: "Марія Примаченко", correct: false }
-      - question: "Що таке 'трембіта'?"
-        options:
-          - { text: "Музичний інструмент", correct: true }
-          - { text: "Одяг", correct: false }
-          - { text: "Страва", correct: false }
-          - { text: "Танець", correct: false }
-
-  - type: group-sort
-    id: 145-13-essay-order
-    title: "Письмо: Структура есе"
-    groups:
-      - name: "Початок"
-        items:
-          - "Заголовок"
-          - "Вступ"
-          - "Теза"
-          - "Актуальність теми"
-      - name: "Середина"
-        items:
-          - "Аргумент 1"
-          - "Приклад 1"
-          - "Аргумент 2"
-          - "Приклад 2"
-          - "Контраргумент"
-          - "Ілюстрація 1"
-          - "Ілюстрація 2"
-      - name: "Кінець"
-        items:
-          - "Висновок"
-          - "Заклик"
-          - "Підпис"
-          - "Посилання на джерела"
-
-  - type: group-sort
-    id: 145-14-register-sort
-    title: "Письмо: Стиль"
-    groups:
-      - name: "Офіційно"
-        items:
-          - "Шановний пане"
-          - "З повагою"
-          - "Прошу повідомити"
-          - "Згідно з"
-          - "Звертаюся з проханням"
-          - "Прошу розглянути"
-          - "Відповідно до наказу"
-      - name: "Неофіційно"
-        items:
-          - "Привіт"
-          - "Цьом"
-          - "Як ти?"
-          - "Слухай сюди"
-          - "Як справи?"
-          - "Привіт, друже"
-          - "Давай зустрінемось"
-
-  - type: quiz
-    id: 145-15-speaking-sim
-    title: "Говоріння (Симуляція)"
-    items:
-      - question: "Вас просять представитися. Ви кажете:"
-        options:
-          - { text: "Мене звати Олена, я з Києва.", correct: true }
-          - { text: "Я є людина.", correct: false }
-          - { text: "Моє ім'я є секрет.", correct: false }
-          - { text: "Хто я?", correct: false }
-      - question: "Вам треба купити квиток. Ви кажете:"
-        options:
-          - { text: "Один квиток до Львова, будь ласка.", correct: true }
-          - { text: "Дай квиток.", correct: false }
-          - { text: "Я хочу їхати.", correct: false }
-          - { text: "Львів, швидко.", correct: false }
-      - question: "Ви не згодні з другом. Ви кажете:"
-        options:
-          - { text: "Я маю іншу думку.", correct: true }
-          - { text: "Ти дурень.", correct: false }
-          - { text: "Замовкни.", correct: false }
-          - { text: "Це брехня.", correct: false }
-      - question: "Ви запізнилися. Ви кажете:"
-        options:
-          - { text: "Вибачте за спізнення.", correct: true }
-          - { text: "Я прийшов.", correct: false }
-          - { text: "Чому ви почали без мене?", correct: false }
-          - { text: "Краще пізно, ніж ніколи.", correct: false }
-      - question: "Ви хочете їсти. Ви кажете офіціанту:"
-        options:
-          - { text: "Можна меню, будь ласка?", correct: true }
-          - { text: "Я голодний.", correct: false }
-          - { text: "Дайте їсти.", correct: false }
-          - { text: "Де моя їжа?", correct: false }
-      - question: "Вам дарують подарунок. Ви кажете:"
-        options:
-          - { text: "Дякую, це дуже приємно!", correct: true }
-          - { text: "Навіщо це?", correct: false }
-          - { text: "Скільки це коштує?", correct: false }
-          - { text: "Я це не люблю.", correct: false }
-      - question: "Ви прощаєтеся з колегою. Ви кажете:"
-        options:
-          - { text: "До побачення, гарного вечора!", correct: true }
-          - { text: "Пока.", correct: false }
-          - { text: "Йди вже.", correct: false }
-          - { text: "Чао.", correct: false }
-      - question: "Ви не зрозуміли питання. Ви кажете:"
-        options:
-          - { text: "Перепрошую, повторіть, будь ласка.", correct: true }
-          - { text: "Що?", correct: false }
-          - { text: "Га?", correct: false }
-          - { text: "Я не знаю.", correct: false }
+    - Привіт
+    - Цьом
+    - Як ти?
+    - Слухай сюди
+    - Як справи?
+    - Привіт, друже
+    - Давай зустрінемось
+- type: quiz
+  id: 145-15-speaking-sim
+  title: Говоріння (Симуляція)
+  items:
+  - question: 'Вас просять представитися. Ви кажете:'
+    options:
+    - text: Мене звати Олена, я з Києва.
+      correct: true
+    - text: Я є людина.
+      correct: false
+    - text: Моє ім'я є секрет.
+      correct: false
+    - text: Хто я?
+      correct: false
+  - question: 'Вам треба купити квиток. Ви кажете:'
+    options:
+    - text: Один квиток до Львова, будь ласка.
+      correct: true
+    - text: Дай квиток.
+      correct: false
+    - text: Я хочу їхати.
+      correct: false
+    - text: Львів, швидко.
+      correct: false
+  - question: 'Ви не згодні з другом. Ви кажете:'
+    options:
+    - text: Я маю іншу думку.
+      correct: true
+    - text: Ти дурень.
+      correct: false
+    - text: Замовкни.
+      correct: false
+    - text: Це брехня.
+      correct: false
+  - question: 'Ви запізнилися. Ви кажете:'
+    options:
+    - text: Вибачте за спізнення.
+      correct: true
+    - text: Я прийшов.
+      correct: false
+    - text: Чому ви почали без мене?
+      correct: false
+    - text: Краще пізно, ніж ніколи.
+      correct: false
+  - question: 'Ви хочете їсти. Ви кажете офіціанту:'
+    options:
+    - text: Можна меню, будь ласка?
+      correct: true
+    - text: Я голодний.
+      correct: false
+    - text: Дайте їсти.
+      correct: false
+    - text: Де моя їжа?
+      correct: false
+  - question: 'Вам дарують подарунок. Ви кажете:'
+    options:
+    - text: Дякую, це дуже приємно!
+      correct: true
+    - text: Навіщо це?
+      correct: false
+    - text: Скільки це коштує?
+      correct: false
+    - text: Я це не люблю.
+      correct: false
+  - question: 'Ви прощаєтеся з колегою. Ви кажете:'
+    options:
+    - text: До побачення, гарного вечора!
+      correct: true
+    - text: Пока.
+      correct: false
+    - text: Йди вже.
+      correct: false
+    - text: Чао.
+      correct: false
+  - question: 'Ви не зрозуміли питання. Ви кажете:'
+    options:
+    - text: Перепрошую, повторіть, будь ласка.
+      correct: true
+    - text: Що?
+      correct: false
+    - text: Га?
+      correct: false
+    - text: Я не знаю.
+      correct: false

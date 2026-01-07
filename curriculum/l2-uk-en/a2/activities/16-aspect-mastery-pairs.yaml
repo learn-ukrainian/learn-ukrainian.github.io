@@ -1,72 +1,75 @@
 - type: match-up
   title: Tier 1 Pairs
   pairs:
-  - left: 'читати'
+  - left: читати
     right: прочитати
-  - left: 'писати'
+  - left: писати
     right: написати
-  - left: 'робити'
+  - left: робити
     right: зробити
-  - left: 'говорити'
+  - left: говорити
     right: сказати
-  - left: 'бачити'
+  - left: бачити
     right: побачити
-  - left: 'чути'
+  - left: чути
     right: почути
-  - left: 'брати'
+  - left: брати
     right: взяти
-  - left: 'давати'
+  - left: давати
     right: дати
-  - left: 'читати'
+  - left: читати
     right: прочитати
-  - left: 'пити'
+  - left: пити
     right: випити
+  id: tier-1-pairs
 - type: match-up
   title: Tier 2 Pairs
   pairs:
-  - left: 'вчити'
+  - left: вчити
     right: вивчити
-  - left: 'вчитися'
+  - left: вчитися
     right: навчитися
-  - left: 'розуміти'
+  - left: розуміти
     right: зрозуміти
-  - left: 'питати'
+  - left: питати
     right: запитати
-  - left: 'відповідати'
+  - left: відповідати
     right: відповісти
-  - left: 'пояснювати'
+  - left: пояснювати
     right: пояснити
-  - left: 'пам''ятати'
+  - left: пам'ятати
     right: запам'ятати
-  - left: 'забувати'
+  - left: забувати
     right: забути
-  - left: 'лагодити'
+  - left: лагодити
     right: полагодити
-  - left: 'чистити'
+  - left: чистити
     right: почистити
+  id: tier-2-pairs
 - type: match-up
   title: Tier 3 Pairs
   pairs:
-  - left: 'купувати'
+  - left: купувати
     right: купити
-  - left: 'продавати'
+  - left: продавати
     right: продати
-  - left: 'відкривати'
+  - left: відкривати
     right: відкрити
-  - left: 'закривати'
+  - left: закривати
     right: закрити
-  - left: 'починати'
+  - left: починати
     right: почати
-  - left: 'закінчувати'
+  - left: закінчувати
     right: закінчити
-  - left: 'готувати'
+  - left: готувати
     right: приготувати
-  - left: 'знаходити'
+  - left: знаходити
     right: знайти
-  - left: 'вмирати'
+  - left: вмирати
     right: померти
-  - left: 'сідати'
+  - left: сідати
     right: сісти
+  id: tier-3-pairs
 - type: fill-in
   title: Transform to Perfective
   items:
@@ -130,6 +133,7 @@
     - приготувати
     - готувати
     - заготувати
+  id: transform-to-perfective
 - type: fill-in
   title: Transform to Imperfective
   items:
@@ -181,6 +185,7 @@
     - пам'ятати
     - запам'ятати
     - пам'ятка
+  id: transform-to-imperfective
 - type: quiz
   title: Aspect Selection
   items:
@@ -272,6 +277,7 @@
       correct: false
     - text: Наказ
       correct: false
+  id: aspect-selection
 - type: cloze
   title: Context Selection
   passage: 'Я вже {випив|пив} цю дуже цікаву книгу. (finished)
@@ -292,6 +298,7 @@
     одну годину. Ми {ходимо|пішли} в офіс щодня, але сьогодні {прийшли|приходимо}
     пізно. Вона {працювала|попрацювала} (activity) три години і нарешті {закінчила|закінчувала}
     (result) роботу.'
+  id: context-selection
 - type: unjumble
   title: Aspect Sentences
   items:
@@ -380,6 +387,7 @@
     - у
     - кімнаті
     answer: Вона відкрила ці великі білі двері у кімнаті
+  id: aspect-sentences
 - type: error-correction
   title: Wrong Aspect
   items:
@@ -425,6 +433,7 @@
     - випила
     - п'є
     explanation: Sequence of completed actions → both verbs should be perfective.
+  id: wrong-aspect
 - type: group-sort
   title: Formation Pattern
   groups:
@@ -447,3 +456,4 @@
     - вставати → встати
     - відкривати → відкрити
     - --
+  id: formation-pattern

@@ -1,30 +1,31 @@
 - type: match-up
   title: Post Office Vocabulary
   pairs:
-  - left: 'лист'
+  - left: лист
     right: letter
-  - left: 'посилка'
+  - left: посилка
     right: package
-  - left: 'марка'
+  - left: марка
     right: stamp
-  - left: 'конверт'
+  - left: конверт
     right: envelope
-  - left: 'адреса'
+  - left: адреса
     right: address
-  - left: 'індекс'
+  - left: індекс
     right: postal code
-  - left: 'відправляти'
+  - left: відправляти
     right: to send
-  - left: 'отримувати'
+  - left: отримувати
     right: to receive
-  - left: 'надсилати'
+  - left: надсилати
     right: to mail
-  - left: 'квитанція'
+  - left: квитанція
     right: receipt
-  - left: 'рекомендований'
+  - left: рекомендований
     right: registered
-  - left: 'звичайний'
+  - left: звичайний
     right: regular
+  id: post-office-vocabulary
 - type: fill-in
   title: Complete the Sentences
   items:
@@ -112,6 +113,7 @@
     - гривні
     - гривню
     - гривень
+  id: complete-the-sentences
 - type: quiz
   title: Service Situations
   items:
@@ -135,8 +137,7 @@
       correct: false
     - text: Який сьогодні рахунок?
       correct: false
-  - question: When expressing payment method in Ukrainian, you say "платити..." with
-      which case?
+  - question: When expressing payment method in Ukrainian, you say "платити..." with which case?
     options:
     - text: Платити карткою.
       correct: true
@@ -146,8 +147,7 @@
       correct: false
     - text: Платити картка.
       correct: false
-  - question: When you need to withdraw money at a bank, which is the correct Ukrainian
-      sentence?
+  - question: When you need to withdraw money at a bank, which is the correct Ukrainian sentence?
     options:
     - text: Мені потрібно зняти гроші.
       correct: true
@@ -167,8 +167,7 @@
       correct: false
     - text: Посилка з Україні.
       correct: false
-  - question: When asking someone to "give me the receipt," which is the correct Ukrainian
-      sentence?
+  - question: When asking someone to "give me the receipt," which is the correct Ukrainian sentence?
     options:
     - text: Дайте мені квитанцію.
       correct: true
@@ -188,8 +187,7 @@
       correct: false
     - text: Скільки коштує маркою?
       correct: false
-  - question: When you want to open a bank account in Ukrainian, which sentence is
-      correct?
+  - question: When you want to open a bank account in Ukrainian, which sentence is correct?
     options:
     - text: Я хочу відкрити рахунок.
       correct: true
@@ -199,8 +197,7 @@
       correct: false
     - text: Я хочу відкрити рахунці.
       correct: false
-  - question: When asking someone to "write the address" on an envelope, which Ukrainian
-      sentence is correct?
+  - question: When asking someone to "write the address" on an envelope, which Ukrainian sentence is correct?
     options:
     - text: Напишіть адресу.
       correct: true
@@ -210,8 +207,7 @@
       correct: false
     - text: Напишіть адресою.
       correct: false
-  - question: When expressing the quantity "five hundred hryvnias" in Ukrainian, which
-      form is correct?
+  - question: When expressing the quantity "five hundred hryvnias" in Ukrainian, which form is correct?
     options:
     - text: П'ятсот гривень.
       correct: true
@@ -221,8 +217,7 @@
       correct: false
     - text: П'ятсот гривню.
       correct: false
-  - question: When saying "I lost my card" in Ukrainian, which grammatical form of
-      "картка" is correct?
+  - question: When saying "I lost my card" in Ukrainian, which grammatical form of "картка" is correct?
     options:
     - text: Я загубив картку.
       correct: true
@@ -232,8 +227,7 @@
       correct: false
     - text: Я загубив картки.
       correct: false
-  - question: What is Ukraine's national currency, which you will use at banks and
-      post offices?
+  - question: What is Ukraine's national currency, which you will use at banks and post offices?
     options:
     - text: гривня
       correct: true
@@ -243,6 +237,7 @@
       correct: false
     - text: євро
       correct: false
+  id: service-situations
 - type: true-false
   title: Service Facts
   items:
@@ -282,6 +277,7 @@
   - statement: Квитанція means receipt.
     correct: true
     explanation: Correct!
+  id: service-facts
 - type: group-sort
   title: Post Office vs Bank
   groups:
@@ -301,6 +297,7 @@
     - валюта
     - переказ
     - кредит
+  id: post-office-vs-bank
 - type: unjumble
   title: Service Sentences
   items:
@@ -424,6 +421,7 @@
     - мого
     - рахунку
     answer: П'ятсот гривень будь ласка зніміть з мого рахунку
+  id: service-sentences
 - type: error-correction
   title: Fix the Case
   items:
@@ -535,6 +533,7 @@
     - Канаді
     - Канадою
     explanation: '"До" requires genitive: Канади.'
+  id: fix-the-case
 - type: cloze
   title: Complete the Dialogue
   passage: '— Добрий день! Я хочу відправити {долари|доларів|доларам}.
@@ -564,9 +563,11 @@
     — {Курс|Курси|Курсу} сьогодні — 37 {гривень|гривня|гривні} за долар.
 
     — Гаразд. Ось {долари|долар|доларів}.'
+  id: complete-the-dialogue
 - type: mark-the-words
   title: Find Case Forms
-  text: 'Click on words in a specific case.
+  id: find-case-forms
+  passage: 'Click on words in a specific case.
 
     Я хочу відправити *листа* до *Канади*. Дайте *мені* *квитанцію*. Посилка з *України*.
 
@@ -577,7 +578,7 @@
     ---
 
     Напишіть *адресу* на *конверті*. Покажіть *паспорт*. Скільки коштує *марка*?'
-  answers:
+  correct_words:
   - листа
   - Канади
   - мені
@@ -660,3 +661,4 @@
     - text: Я хочу обміняти доларами.
       correct: false
     explanation: Direct object → Accusative plural 'долари'.
+  id: english-to-ukrainian

@@ -1,0 +1,128 @@
+module: 45-bohdan-khmelnytskyy
+level: C1
+version: '2.0'
+items:
+- lemma: повстання
+  ipa: /povˈstɑnʲːɐ/
+  translation: uprising, rebellion
+  pos: noun
+  gender: n
+- lemma: державотворення
+  ipa: /derʒɐvoˈtvorerʲːɐ/
+  translation: state-building
+  pos: noun
+  gender: n
+- lemma: гетьманщина
+  ipa: /ˈɦɛtʲmɐnʃt͡ʃenɐ/
+  translation: Hetmanate (Cossack state)
+  pos: noun
+  gender: f
+- lemma: шляхта
+  ipa: /ˈʃlʲɐxtɐ/
+  translation: nobility (szlachta)
+  pos: noun
+  gender: f
+- lemma: визвольний
+  ipa: /vezˈvolʲneɪ̯/
+  translation: liberation (adj.)
+  pos: adj
+- lemma: універсал
+  ipa: /unʲiverˈsɑl/
+  translation: universal (hetman's decree)
+  pos: noun
+  gender: m
+- lemma: старшина
+  ipa: /stɐrˈʃenɐ/
+  translation: Cossack officers/elite
+  pos: noun
+  gender: f
+- lemma: протекторат
+  ipa: /protektoˈrɑt/
+  translation: protectorate
+  pos: noun
+  gender: m
+- lemma: дипломатія
+  ipa: /deploˈmɑtʲijɐ/
+  translation: diplomacy
+  pos: noun
+  gender: f
+- lemma: союзник
+  ipa: /soˈjuzneɪ̯k/
+  translation: ally
+  pos: noun
+  gender: m
+- lemma: битва
+  ipa: /ˈbetvɐ/
+  translation: battle
+  pos: noun
+  gender: f
+- lemma: перемога
+  ipa: /peremˈoɦɐ/
+  translation: victory
+  pos: noun
+  gender: f
+- lemma: поразка
+  ipa: /poˈrɑzkɐ/
+  translation: defeat
+  pos: noun
+  gender: f
+- lemma: стратегія
+  ipa: /strɐˈtɛɦʲijɐ/
+  translation: strategy
+  pos: noun
+  gender: f
+- lemma: тактика
+  ipa: /ˈtɐkteɪ̯kɐ/
+  translation: tactics
+  pos: noun
+  gender: f
+- lemma: автономія
+  ipa: /ɐvtoˈnɔmʲijɐ/
+  translation: autonomy
+  pos: noun
+  gender: f
+- lemma: суверенітет
+  ipa: /suverenʲiˈtɛt/
+  translation: sovereignty
+  pos: noun
+  gender: m
+- lemma: угода
+  ipa: /uˈɦɔdɐ/
+  translation: agreement, treaty
+  pos: noun
+  gender: f
+- lemma: присяга
+  ipa: /preˈsʲɑɦɐ/
+  translation: oath, allegiance
+  pos: noun
+  gender: f
+- lemma: зрада
+  ipa: /ˈzrɑdɐ/
+  translation: betrayal, treason
+  pos: noun
+  gender: f
+- lemma: легітимність
+  ipa: /leɦʲiˈtemʲnʲistʲ/
+  translation: legitimacy
+  pos: noun
+  gender: f
+- lemma: інституція
+  ipa: /instɪˈtut͡sʲijɐ/
+  translation: institution
+  pos: noun
+  gender: f
+- lemma: спадщина
+  ipa: /ˈspɐdʃt͡ʃenɐ/
+  translation: legacy, heritage
+  pos: noun
+  gender: f
+- lemma: постать
+  ipa: /ˈpɔstɐtʲ/
+  translation: figure, personality
+  pos: noun
+  gender: f
+- lemma: визволитель
+  ipa: /vezvoˈleɪ̯telʲ/
+  translation: liberator
+  pos: noun
+  gender: m

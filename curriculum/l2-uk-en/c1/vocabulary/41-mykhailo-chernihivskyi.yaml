@@ -1,0 +1,151 @@
+items:
+- lemma: князь
+  ipa: /knʲɑzʲ/
+  translation: prince
+  pos: noun
+  gender: m
+  note: титул правителя в Русі
+- lemma: мученик
+  ipa: /ˈmut͡ʃɛnɪk/
+  translation: martyr
+  pos: noun
+  gender: m
+  note: людина, що страждає за віру
+- lemma: опір
+  ipa: /ˈɔpʲir/
+  translation: resistance
+  pos: noun
+  gender: m
+  note: протидія загарбникам
+- lemma: орда
+  ipa: /ˈɔrdɑ/
+  translation: horde
+  pos: noun
+  gender: f
+  note: зазвичай Золота Орда
+- lemma: загарбник
+  ipa: /zɑˈɦɑrbnɪk/
+  translation: invader
+  pos: noun
+  gender: m
+  note: той, хто захоплює землі
+- lemma: вірність
+  ipa: /ˈwirnʲistʲ/
+  translation: loyalty/faithfulness
+  pos: noun
+  gender: f
+  note: відданість принципам
+- lemma: відмова
+  ipa: /wʲidˈmɔʋɑ/
+  translation: refusal
+  pos: noun
+  gender: f
+  note: акт незгоди виконати щось
+- lemma: ярлик
+  ipa: /jɑrˈɫɪk/
+  translation: yarlyk
+  pos: noun
+  gender: m
+  note: грамота на княжіння від хана
+- lemma: страта
+  ipa: /strɑˈtɑ/
+  translation: execution
+  pos: noun
+  gender: f
+  note: позбавлення життя як покарання
+- lemma: спадщина
+  ipa: /ˈspɑdʃt͡ʃɪnɑ/
+  translation: legacy/heritage
+  pos: noun
+  gender: f
+  note: те, що залишається нащадкам
+- lemma: канонізація
+  ipa: /kɑnɔnʲizɑˈt͡sʲijɑ/
+  translation: canonization
+  pos: noun
+  gender: f
+  note: зарахування до лику святих
+- lemma: стійкість
+  ipa: /ˈstʲijkʲistʲ/
+  translation: resilience/steadfastness
+  pos: noun
+  gender: f
+  note: здатність триматися до кінця
+- lemma: вимога
+  ipa: /wɪˈmɔɦɑ/
+  translation: demand
+  pos: noun
+  gender: f
+  note: наполегливе прохання або наказ
+- lemma: приниження
+  ipa: /prɪˈnɪʒɛnʲːɑ/
+  translation: humiliation
+  pos: noun
+  gender: n
+  note: акт образи гідності
+- lemma: обряд
+  ipa: /ɔˈbrʲɑd/
+  translation: rite/ritual
+  pos: noun
+  gender: m
+  note: традиційна церемонія
+- lemma: переконання
+  ipa: /pɛrɛkɔˈnɑnʲːɑ/
+  translation: conviction/belief
+  pos: noun
+  gender: n
+  note: тверда віра в щось
+- lemma: жертовність
+  ipa: /ˈʒɛrtɔunʲistʲ/
+  translation: self-sacrifice
+  pos: noun
+  gender: f
+  note: готовність до жертви
+- lemma: ідентичність
+  ipa: /idɛnˈtɪt͡ʃnʲistʲ/
+  translation: identity
+  pos: noun
+  gender: f
+  note: самоусвідомлення
+- lemma: літопис
+  ipa: /lʲiˈtɔpɪs/
+  translation: chronicle
+  pos: noun
+  gender: m
+  note: історичне джерело
+- lemma: місія
+  ipa: /ˈmʲisʲijɑ/
+  translation: mission
+  pos: noun
+  gender: f
+  note: важливе завдання
+- lemma: очільник
+  ipa: /ɔˈt͡ʃilʲnɪk/
+  translation: leader
+  pos: noun
+  gender: m
+  note: голова, керівник
+- lemma: княжіння
+  ipa: /knʲɑˈʒʲinʲːɑ/
+  translation: reign/rule
+  pos: noun
+  gender: n
+  note: період правління князя
+- lemma: пошана
+  ipa: /pɔˈʃɑnɑ/
+  translation: respect/honor
+  pos: noun
+  gender: f
+  note: вияв глибокої поваги
+- lemma: собор
+  ipa: /sɔˈbɔr/
+  translation: cathedral/council
+  pos: noun
+  gender: m
+  note: головний храм
+- lemma: святиня
+  ipa: /swʲɑˈtɪnʲɑ/
+  translation: shrine/sacred object
+  pos: noun
+  gender: f
+  note: предмет релігійного поклоніння

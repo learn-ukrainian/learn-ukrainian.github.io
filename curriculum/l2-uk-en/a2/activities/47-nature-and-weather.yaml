@@ -1,30 +1,31 @@
 - type: match-up
   title: Nature Words
   pairs:
-  - left: 'гора'
+  - left: гора
     right: mountain
-  - left: 'долина'
+  - left: долина
     right: valley
-  - left: 'ліс'
+  - left: ліс
     right: forest
-  - left: 'озеро'
+  - left: озеро
     right: lake
-  - left: 'ріка'
+  - left: ріка
     right: river
-  - left: 'море'
+  - left: море
     right: sea
-  - left: 'сонячно'
+  - left: сонячно
     right: sunny
-  - left: 'хмарно'
+  - left: хмарно
     right: cloudy
-  - left: 'дощ'
+  - left: дощ
     right: rain
-  - left: 'сніг'
+  - left: сніг
     right: snow
-  - left: 'весна'
+  - left: весна
     right: spring
-  - left: 'зима'
+  - left: зима
     right: winter
+  id: nature-words
 - type: fill-in
   title: Nature & Weather
   items:
@@ -84,6 +85,7 @@
     - хмарно
     - вітряно
     - туманно
+  id: nature-&-weather
 - type: quiz
   title: Nature & Weather
   items:
@@ -167,6 +169,7 @@
       correct: false
     - text: A snowstorm
       correct: false
+  id: nature-&-weather
 - type: cloze
   title: Story Comprehension
   passage: Україна має чудову {природу|погоду|роботу}. На заході є високі {гори|долини|міста}
@@ -176,6 +179,7 @@
     Київ тече велика {ріка|дорога|стежка} Дніпро. Навесні все цвіте і {зелене|біле|чорне}.
     Восени часто йде {дощ|сніг|сонце} і стає прохолодно. Тоді буває сильний {вітер|туман|мороз}.
     Але кожна {пора|година|хвилина} року по-своєму красива.
+  id: story-comprehension
 - type: unjumble
   title: Weather Sentences
   items:
@@ -240,6 +244,7 @@
     - перед
     - собою
     answer: Яке величезне і красиве озеро ми бачимо перед собою
+  id: weather-sentences
 - type: error-correction
   title: Weather Mistakes
   items:
@@ -286,29 +291,31 @@
     - тепло
     - холодно
     explanation: Summer is warm (тепло), not cold.
+  id: weather-mistakes
 - type: match-up
   title: Seasons & Activities
   pairs:
-  - left: 'весна'
+  - left: весна
     right: квіти цвітуть
-  - left: 'літо'
+  - left: літо
     right: відпочинок на морі
-  - left: 'осінь'
+  - left: осінь
     right: листя падає
-  - left: 'зима'
+  - left: зима
     right: катання на ковзанах
-  - left: 'гроза'
+  - left: гроза
     right: блискавка і грім
-  - left: 'туман'
+  - left: туман
     right: погана видимість
-  - left: 'сонячно'
+  - left: сонячно
     right: хороша погода
-  - left: 'сніг'
+  - left: сніг
     right: білий покрив
-  - left: 'зима'
+  - left: зима
     right: лижі
-  - left: 'літо'
+  - left: літо
     right: плавання
+  id: seasons-&-activities
 - type: group-sort
   title: Nature Categories
   groups:
@@ -334,6 +341,7 @@
     - літо
     - осінь
     - зима
+  id: nature-categories
 - type: true-false
   title: Nature Facts
   items:
@@ -361,6 +369,7 @@
     correct: true
   - statement: '"Долина" = mountain.'
     correct: false
+  id: nature-facts
 - type: translate
   title: Nature Words
   items:
@@ -428,3 +437,4 @@
       correct: false
     - text: весна
       correct: false
+  id: nature-words

@@ -25,31 +25,24 @@
     right: more useful
   - left: зручніше
     right: more convenient
+  id: preference-expressions
 - type: cloze
   title: Express Preferences
-  passage: 'Мені {більше|менше|найбільше|добре} подобається кава. (I like coffee more)
-    Я {віддаю|даю|беру|маю} перевагу книгам. (I prefer books) {Краще|Кращий|Добре|Добрий}
-    читати, ніж дивитися телевізор. (It''s better)
+  passage: 'Мені {більше|менше|найбільше|добре} подобається кава. (I like coffee more) Я {віддаю|даю|беру|маю} перевагу книгам. (I prefer books) {Краще|Кращий|Добре|Добрий} читати, ніж дивитися телевізор. (It''s better)
 
 
-    {Легше|Легкий|Легко|Легкіше} сказати, ніж зробити. (It''s easier) Мені більше
-    подобається чай, {ніж|за|від|до} кава. (than) Я б {вибрав|вибрала|вибираю|виберу}
-    зелений. (I would choose — masc.)
+    {Легше|Легкий|Легко|Легкіше} сказати, ніж зробити. (It''s easier) Мені більше подобається чай, {ніж|за|від|до} кава. (than) Я б {вибрав|вибрала|вибираю|виберу} зелений. (I would choose — masc.)
 
 
-    Вона б {вибрала|вибрав|вибираю|виберу} каву. (She would choose) {Цікавіше|Цікавий|Цікаво|Найцікавіше}
-    подорожувати, ніж сидіти вдома. (It''s more interesting) Я віддаю перевагу {книгам|книги|книгою|книг}.
-    (to books — Dative)
+    Вона б {вибрала|вибрав|вибираю|виберу} каву. (She would choose) {Цікавіше|Цікавий|Цікаво|Найцікавіше} подорожувати, ніж сидіти вдома. (It''s more interesting) Я віддаю перевагу {книгам|книги|книгою|книг}. (to books — Dative)
 
 
-    Мені {більше|великий|багато|найбільше} подобаються фільми. (more — plural verb)
-    {Гірше|Гірший|Погано|Поганий} нічого не робити. (It''s worse) Що ти б {вибрав|вибираєш|виберешся|вибір}?
-    (What would you choose?)'
+    Мені {більше|великий|багато|найбільше} подобаються фільми. (more — plural verb) {Гірше|Гірший|Погано|Поганий} нічого не робити. (It''s worse) Що ти б {вибрав|вибираєш|виберешся|вибір}? (What would you choose?)'
+  id: express-preferences
 - type: quiz
   title: Preferences
   items:
-  - question: In Ukrainian, which of the following phrases correctly translates the
-      casual expression for "I like (this) more"?
+  - question: In Ukrainian, which of the following phrases correctly translates the casual expression for "I like (this) more"?
     options:
     - text: Мені більше подобається
       correct: true
@@ -59,8 +52,7 @@
       correct: false
     - text: Мені дуже подобається
       correct: false
-  - question: When using the formal reflexive expression "Я віддаю перевагу," which
-      grammatical case must the object be in?
+  - question: When using the formal reflexive expression "Я віддаю перевагу," which grammatical case must the object be in?
     options:
     - text: Давальний відмінок
       correct: true
@@ -70,8 +62,7 @@
       correct: false
     - text: Орудний відмінок
       correct: false
-  - question: What is the most accurate English equivalent for the common Ukrainian
-      comparison "Легше сказати, ніж зробити"?
+  - question: What is the most accurate English equivalent for the common Ukrainian comparison "Легше сказати, ніж зробити"?
     options:
     - text: Easier said than done
       correct: true
@@ -81,8 +72,7 @@
       correct: false
     - text: Always easier to speak
       correct: false
-  - question: Which of these expressions would be considered the most formal way to
-      state a preference in a business meeting?
+  - question: Which of these expressions would be considered the most formal way to state a preference in a business meeting?
     options:
     - text: Я віддаю перевагу
       correct: true
@@ -92,8 +82,7 @@
       correct: false
     - text: Я люблю це більше
       correct: false
-  - question: When a male speaker uses the conditional form "Я б вибрав," what is
-      he essentially expressing to the listener?
+  - question: When a male speaker uses the conditional form "Я б вибрав," what is he essentially expressing to the listener?
     options:
     - text: I would choose
       correct: true
@@ -103,8 +92,7 @@
       correct: false
     - text: I must choose
       correct: false
-  - question: What is the specific functional meaning of the comparative adverb "цікавіше"
-      when used in a Ukrainian sentence?
+  - question: What is the specific functional meaning of the comparative adverb "цікавіше" when used in a Ukrainian sentence?
     options:
     - text: more interesting
       correct: true
@@ -114,8 +102,7 @@
       correct: false
     - text: not interesting
       correct: false
-  - question: Within the context of a logical comparison, what does the Ukrainian
-      conjunction "ніж" typically mean in English?
+  - question: Within the context of a logical comparison, what does the Ukrainian conjunction "ніж" typically mean in English?
     options:
     - text: than
       correct: true
@@ -125,8 +112,7 @@
       correct: false
     - text: although
       correct: false
-  - question: When comparing two activities, what is the correct English translation
-      for the Ukrainian phrase "важче робити"?
+  - question: When comparing two activities, what is the correct English translation for the Ukrainian phrase "важче робити"?
     options:
     - text: harder to do
       correct: true
@@ -136,8 +122,7 @@
       correct: false
     - text: possible to do
       correct: false
-  - question: To express a formal preference for something specific, which of the
-      following grammatical structures should be utilized?
+  - question: To express a formal preference for something specific, which of the following grammatical structures should be utilized?
     options:
     - text: Я віддаю перевагу + Dative
       correct: true
@@ -147,8 +132,7 @@
       correct: false
     - text: Я вибираю + Genitive
       correct: false
-  - question: In a sentence comparing two different actions, what does the phrase
-      "краще читати" specifically signify?
+  - question: In a sentence comparing two different actions, what does the phrase "краще читати" specifically signify?
     options:
     - text: It's better to read
       correct: true
@@ -158,8 +142,7 @@
       correct: false
     - text: I like reading only
       correct: false
-  - question: If a woman is speaking and says "Я б вибрала," which grammatical gender
-      form is she correctly using?
+  - question: If a woman is speaking and says "Я б вибрала," which grammatical gender form is she correctly using?
     options:
     - text: Жіночий рід
       correct: true
@@ -169,8 +152,7 @@
       correct: false
     - text: Множина
       correct: false
-  - question: To make choices sound significantly more polite and less direct in Ukrainian,
-      which particle is usually added?
+  - question: To make choices sound significantly more polite and less direct in Ukrainian, which particle is usually added?
     options:
     - text: '"б"'
       correct: true
@@ -180,6 +162,7 @@
       correct: false
     - text: '"вже" (adverb)'
       correct: false
+  id: preferences
 - type: true-false
   title: Preference Rules
   items:
@@ -219,6 +202,7 @@
   - statement: '"Важче" means "easier."'
     correct: false
     explanation: '"Важче" means "harder."'
+  id: preference-rules
 - type: group-sort
   title: Preference Expressions
   groups:
@@ -238,6 +222,7 @@
     - Мій вибір — це...
     - Чи не могли б ви...
     - Я волію (I'd rather)
+  id: preference-expressions
 - type: unjumble
   title: Preference Sentences
   items:
@@ -376,6 +361,7 @@
     - просто
     - говорити
     answer: Завжди набагато важче робити важку справу ніж просто говорити
+  id: preference-sentences
 - type: error-correction
   title: Fix Preferences
   items:
@@ -433,6 +419,7 @@
     - подобатися
     - подобаюся
     explanation: 'Plural verb agreement: подобаються фільми.'
+  id: fix-preferences
 - type: cloze
   title: Expressing Preferences
   passage: '— Що тобі {віддаю|дію|беру} подобається: кава чи чай?
@@ -460,12 +447,13 @@
     — Мені {більше|великий|багато} подобаються розумні книги.
 
     — Кожному своє! Ми всі {маємо|маєте|маєш} вибір.'
+  id: expressing-preferences
 - type: mark-the-words
   title: Find Preference Words
-  text: 'Click on PREFERENCE expressions.
+  id: find-preference-words
+  passage: 'Click on PREFERENCE expressions.
 
-    *Мені більше подобається* кава. *Я віддаю перевагу* книгам. *Краще* читати, ніж
-    дивитися.
+    *Мені більше подобається* кава. *Я віддаю перевагу* книгам. *Краще* читати, ніж дивитися.
 
     ---
 
@@ -474,7 +462,7 @@
     ---
 
     Він *більше* любить музику. Вона *віддає перевагу* театру. Це *цікавіше*!'
-  answers:
+  correct_words:
   - Мені більше подобається
   - Я віддаю перевагу
   - Краще
@@ -535,3 +523,4 @@
       correct: false
     - text: Що ти віддаєш?
       correct: false
+  id: preference-translation

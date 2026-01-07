@@ -1,0 +1,151 @@
+items:
+- lemma: митрополит
+  ipa: /mɪtrɔpɔˈɫɪt/
+  translation: metropolitan
+  pos: noun
+  gender: m
+  note: високий церковний чин
+- lemma: ієрарх
+  ipa: /ijɛˈrɑrx/
+  translation: hierarch
+  pos: noun
+  gender: m
+  note: вищий церковнослужитель
+- lemma: автономія
+  ipa: /ɑu̯tɔˈnɔmijɑ/
+  translation: autonomy
+  pos: noun
+  gender: f
+  note: самоврядування інституції
+- lemma: привілей
+  ipa: /prɪʋʲiˈɫɛj/
+  translation: privilege
+  pos: noun
+  gender: m
+  note: особливе право або пільга
+- lemma: дипломатія
+  ipa: /dɪpɫɔˈmɑtʲijɑ/
+  translation: diplomacy
+  pos: noun
+  gender: f
+  note: ведення міждержавних переговорів
+- lemma: полеміст
+  ipa: /pɔɫɛˈmʲist/
+  translation: polemicist
+  pos: noun
+  gender: m
+  note: майстер гострих дискусій
+- lemma: опозиція
+  ipa: /ɔpɔˈzɪt͡sʲijɑ/
+  translation: opposition
+  pos: noun
+  gender: f
+  note: протидія владі чи ідеям
+- lemma: висвячення
+  ipa: /ʋɪˈswʲɑt͡ʃɛnʲːɑ/
+  translation: ordination/consecration
+  pos: noun
+  gender: n
+  note: надання духовного сану
+- lemma: собор
+  ipa: /sɔˈbɔr/
+  translation: council/cathedral
+  pos: noun
+  gender: m
+  note: збори вищого духовенства
+- lemma: унія
+  ipa: /ˈunʲijɑ/
+  translation: union
+  pos: noun
+  gender: f
+  note: зазвичай Берестейська церковна унія
+- lemma: козацтво
+  ipa: /kɔˈzɑtstwɔ/
+  translation: Cossacks
+  pos: noun
+  gender: n
+  note: військовий стан, опора віри
+- lemma: гетьман
+  ipa: /ˈɦɛtʲmɑn/
+  translation: hetman
+  pos: noun
+  gender: m
+  note: керівник козацької держави
+- lemma: протест
+  ipa: /prɔˈtɛst/
+  translation: protest
+  pos: noun
+  gender: m
+  note: вияв незгоди
+- lemma: легітимність
+  ipa: /ɫɛɦʲitˈɪmnʲistʲ/
+  translation: legitimacy
+  pos: noun
+  gender: f
+  note: законність влади або статусу
+- lemma: просвітництво
+  ipa: /prɔˈsʲʋʲitnɪtstwɔ/
+  translation: enlightenment/education
+  pos: noun
+  gender: n
+  note: діяльність із поширення знань
+- lemma: агіографія
+  ipa: /ɑɦʲiɔˈɦrɑfʲijɑ/
+  translation: hagiography
+  pos: noun
+  gender: f
+  note: опис життя святих
+- lemma: патріотизм
+  ipa: /pɑtrʲiɔˈtɪzm/
+  translation: patriotism
+  pos: noun
+  gender: m
+  note: любов до батьківщини
+- lemma: суб'єктність
+  ipa: /subjekˈtɪunʲistʲ/
+  translation: agency/subjectivity
+  pos: noun
+  gender: f
+  note: здатність діяти самостійно
+- lemma: юрисдикція
+  ipa: /jurɪzdˈɪkt͡sʲijɑ/
+  translation: jurisdiction
+  pos: noun
+  gender: f
+  note: сфера повноважень суду чи влади
+- lemma: канонізація
+  ipa: /kɑnɔnʲizɑˈt͡sʲijɑ/
+  translation: canonization
+  pos: noun
+  gender: f
+  note: зарахування до лику святих
+- lemma: спадщина
+  ipa: /ˈspɑdʃt͡ʃɪnɑ/
+  translation: legacy/heritage
+  pos: noun
+  gender: f
+  note: те, що залишається нащадкам
+- lemma: переконання
+  ipa: /pɛrɛkɔˈnɑnʲːɑ/
+  translation: conviction/belief
+  pos: noun
+  gender: n
+  note: тверда віра в щось
+- lemma: компроміс
+  ipa: /kɔmprɔˈmʲis/
+  translation: compromise
+  pos: noun
+  gender: m
+  note: згода на основі поступок
+- lemma: православя
+  ipa: /prɑʋɔˈsɫɑʋjɑ/
+  translation: Orthodoxy
+  pos: noun
+  gender: n
+  note: східна гілка християнства
+- lemma: інтелектуал
+  ipa: /intɛɫɛktuˈɑɫ/
+  translation: intellectual
+  pos: noun
+  gender: m
+  note: людина розумової праці

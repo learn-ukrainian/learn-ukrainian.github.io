@@ -81,49 +81,48 @@
       correct: false
     - text: книга
       correct: false
+  id: tech-quiz
 - type: match-up
   title: Digital Terms
   pairs:
-  - left: 'комп''ютер'
+  - left: комп'ютер
     right: computer
-  - left: 'мишка'
+  - left: мишка
     right: mouse
-  - left: 'екран'
+  - left: екран
     right: screen
-  - left: 'пароль'
+  - left: пароль
     right: password
-  - left: 'новини'
+  - left: новини
     right: news (pl)
-  - left: 'стаття'
+  - left: стаття
     right: article
-  - left: 'посилання'
+  - left: посилання
     right: link
-  - left: 'мережа'
+  - left: мережа
     right: network
-  - left: 'зв''язок'
+  - left: зв'язок
     right: connection (signal)
-  - left: 'навушники'
+  - left: навушники
     right: headphones
-  - left: 'повідомлення'
+  - left: повідомлення
     right: message
-  - left: 'блогер'
+  - left: блогер
     right: blogger
+  id: digital-terms
 - type: cloze
   title: Tech Sentences
-  passage: 'Я забув свій {пароль|екран|стіл|кіт}_. Надішли мені {посилання|мишку|клавіатуру|каву}_
-    на це відео. Він купив новий {ноутбук|ноутбука|ноутбуком|ноутбуки}_.
+  passage: 'Я забув свій {пароль|екран|стіл|кіт}_. Надішли мені {посилання|мишку|клавіатуру|каву}_ на це відео. Він купив новий {ноутбук|ноутбука|ноутбуком|ноутбуки}_.
 
 
-    Вона пише цікавий {блог|блога|блогом|блогу}_. Ми читаємо {новини|новина|новиною|новин}_
-    в інтернеті. У мене розбився {екран|клавіатура|мишка|звук}_ телефона.
+    Вона пише цікавий {блог|блога|блогом|блогу}_. Ми читаємо {новини|новина|новиною|новин}_ в інтернеті. У мене розбився {екран|клавіатура|мишка|звук}_ телефона.
 
 
-    Я {завантажую|шукаю|пишу|сплю}_ файл з інтернету. Це мій улюблений {сайт|сайту|сайтом|сайти}_.
-    Ти читав цю {статтю|стаття|статті|статтею}_?
+    Я {завантажую|шукаю|пишу|сплю}_ файл з інтернету. Це мій улюблений {сайт|сайту|сайтом|сайти}_. Ти читав цю {статтю|стаття|статті|статтею}_?
 
 
-    Тут поганий {зв''язок|телефон|комп''ютер|стіл}_. Він завжди {онлайн|офлайн|вдома|спить}_.
-    Постав мені {лайк|коментар|бан|дізлайк}_!'
+    Тут поганий {зв''язок|телефон|комп''ютер|стіл}_. Він завжди {онлайн|офлайн|вдома|спить}_. Постав мені {лайк|коментар|бан|дізлайк}_!'
+  id: tech-sentences
 - type: true-false
   title: Tech Facts
   items:
@@ -163,6 +162,7 @@
   - statement: Wifi is "вайфай" in Ukrainian.
     correct: true
     explanation: 'Phonetic borrowing: вайфай.'
+  id: tech-facts
 - type: group-sort
   title: Hardware vs Software
   groups:
@@ -185,6 +185,7 @@
     - 'шукати: Actions'
     - 'публікувати: Actions'
     - 'коментувати: Actions'
+  id: hardware-vs-software
 - type: unjumble
   title: Digital Sentences
   items:
@@ -272,6 +273,7 @@
     - дорогий
     - смартфон
     answer: Моя старенька бабуся тепер має сучасний і дорогий смартфон
+  id: digital-sentences
 - type: error-correction
   title: Fix the Tech
   items:
@@ -328,8 +330,7 @@
     - чаті
     - чату
     - чатом
-    explanation: 'Direction (into where?) requires Accusative: в чат. (Locative ''в
-      чаті'' means location).'
+    explanation: 'Direction (into where?) requires Accusative: в чат. (Locative ''в чаті'' means location).'
   - sentence: Я забула свій логіну.
     error: логіну
     answer: логін
@@ -356,8 +357,7 @@
     - смартфон
     - смартфону
     - смартфоном
-    explanation: 'Genitive of negation: немає смартфона (animate-like ending often
-      used for gadgets, or standard genitive -а).'
+    explanation: 'Genitive of negation: немає смартфона (animate-like ending often used for gadgets, or standard genitive -а).'
   - sentence: Я пишу коментар палець.
     error: палець
     answer: пальцем
@@ -385,10 +385,10 @@
     - музики
     - музикою
     explanation: 'Accusative feminine: музику.'
+  id: fix-the-tech
 - type: cloze
   title: Digital Morning
-  passage: 'Мій ранок починається зі {смартфона|книги|вікна}. Я вимикаю будильник
-    на {екрані|столі|вулиці}.
+  passage: 'Мій ранок починається зі {смартфона|книги|вікна}. Я вимикаю будильник на {екрані|столі|вулиці}.
 
     Потім я перевіряю {пошту|вікно|двері} і читаю {новини|музику|ігри}.
 
@@ -401,13 +401,12 @@
     Сьогодні треба написати {код|пісню|обід} для сайту.
 
     Ввечері я вимикаю {звук|світло|газ} і лягаю спати. Без {інтернету|сну|їжі} ніяк.'
+  id: digital-morning
 - type: mark-the-words
   title: Find the Gadgets
-  text: Я люблю свій *смартфон*. Це мій головний *гаджет*. Вдома у мене є *ноутбук*
-    і *планшет*. Я люблю грати в ігри на *планшеті*. Для роботи мені потрібен *комп'ютер*.
-    У нього великий *екран* і зручна *клавіатура*. Я також маю бездротові *навушники*.
-    Техніка допомагає мені бути *онлайн*.
-  answers:
+  id: find-the-gadgets
+  passage: Я люблю свій *смартфон*. Це мій головний *гаджет*. Вдома у мене є *ноутбук* і *планшет*. Я люблю грати в ігри на *планшеті*. Для роботи мені потрібен *комп'ютер*. У нього великий *екран* і зручна *клавіатура*. Я також маю бездротові *навушники*. Техніка допомагає мені бути *онлайн*.
+  correct_words:
   - смартфон
   - гаджет
   - ноутбук
@@ -505,3 +504,4 @@
     - text: у лісі
       correct: false
     explanation: Online.
+  id: choose-best-word

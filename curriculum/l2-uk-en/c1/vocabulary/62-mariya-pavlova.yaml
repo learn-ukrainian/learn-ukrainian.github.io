@@ -1,0 +1,130 @@
+module: 62-mariya-pavlova
+level: C1
+version: "1.0"
+items:
+  - lemma: палеонтологія
+    ipa: /pɑlɛɔntɔˈlɔɦijɑ/
+    translation: paleontology
+    pos: noun
+    gender: f
+  - lemma: скам'янілість
+    ipa: /skɑmjɑˈnilistʲ/
+    translation: fossil
+    pos: noun
+    gender: f
+  - lemma: дослідження
+    ipa: /dɔˈslidʒɛnʲːɑ/
+    translation: research / investigation
+    pos: noun
+    gender: n
+  - lemma: еволюція
+    ipa: /ɛwɔˈlʲut͡sijɑ/
+    translation: evolution
+    pos: noun
+    gender: f
+  - lemma: розкопки
+    ipa: /rɔzˈkɔpkɪ/
+    translation: excavations
+    pos: noun
+    gender: m
+    note: plural only
+  - lemma: хребетні
+    ipa: /xrɛˈbɛtʲni/
+    translation: vertebrates
+    pos: noun
+    gender: m
+    note: plural
+  - lemma: викопний
+    ipa: /wɪˈkɔpnɪj/
+    translation: fossil / excavated
+    pos: adj
+  - lemma: гіпотеза
+    ipa: /ɦɪˈpɔtɛzɑ/
+    translation: hypothesis
+    pos: noun
+    gender: f
+  - lemma: науковиця
+    ipa: /nɑu̯ˈkɔwɪt͡sʲɑ/
+    translation: scientist (female)
+    pos: noun
+    gender: f
+  - lemma: монографія
+    ipa: /mɔnɔˈɦrɑfijɑ/
+    translation: monograph / scholarly book
+    pos: noun
+    gender: f
+  - lemma: класифікація
+    ipa: /klɑsɪfɪˈkɑt͡sijɑ/
+    translation: classification
+    pos: noun
+    gender: f
+  - lemma: відкриття
+    ipa: /wɪdˈkrɪtʲːɑ/
+    translation: discovery
+    pos: noun
+    gender: n
+  - lemma: експедиція
+    ipa: /ɛkspɛˈdɪt͡sijɑ/
+    translation: expedition
+    pos: noun
+    gender: f
+  - lemma: фундамент
+    ipa: /funˈdɑmɛnt/
+    translation: foundation
+    pos: noun
+    gender: m
+  - lemma: внесок
+    ipa: /vnɛˈsɔk/
+    translation: contribution
+    pos: noun
+    gender: m
+  - lemma: спадщина
+    ipa: /ˈspɑdʃt͡ʃɪnɑ/
+    translation: legacy
+    pos: noun
+    gender: f
+  - lemma: постать
+    ipa: /pɔˈstɑtʲ/
+    translation: figure
+    pos: noun
+    gender: f
+  - lemma: визнання
+    ipa: /wɪˈznɑnʲːɑ/
+    translation: recognition
+    pos: noun
+    gender: n
+  - lemma: професорка
+    ipa: /prɔˈfɛsɔrkɑ/
+    translation: professor (female)
+    pos: noun
+    gender: f
+  - lemma: академік
+    ipa: /ɑkɑˈdɛmik/
+    translation: academician / member of academy
+    pos: noun
+    gender: m
+  - lemma: геологія
+    ipa: /ɦɛɔˈlɔɦijɑ/
+    translation: geology
+    pos: noun
+    gender: f
+  - lemma: фауна
+    ipa: /ˈfɑu̯nɑ/
+    translation: fauna
+    pos: noun
+    gender: f
+  - lemma: аналіз
+    ipa: /ɑˈnɑliz/
+    translation: analysis
+    pos: noun
+    gender: m
+  - lemma: термінологія
+    ipa: /tɛrminɔˈlɔɦijɑ/
+    translation: terminology
+    pos: noun
+    gender: f
+  - lemma: обґрунтування
+    ipa: /ɔbɦrunˈtuwɑnʲːɑ/
+    translation: justification / substantiation
+    pos: noun
+    gender: n

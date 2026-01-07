@@ -25,29 +25,31 @@
     - Погляд
     - Огляд
     - Бачення
+  id: root-sorter
 - type: match-up
   title: Definitions
   pairs:
-  - left: 'Вхід'
+  - left: Вхід
     right: Entrance
-  - left: 'Вихід'
+  - left: Вихід
     right: Exit
-  - left: 'Підпис'
+  - left: Підпис
     right: Signature
-  - left: 'Письменник'
+  - left: Письменник
     right: Writer
-  - left: 'Побачення'
+  - left: Побачення
     right: Date | Meeting
-  - left: 'Читач'
+  - left: Читач
     right: Reader
-  - left: 'Опис'
+  - left: Опис
     right: Description
-  - left: 'Пішохід'
+  - left: Пішохід
     right: Pedestrian
-  - left: 'писати'
+  - left: писати
     right: to write
-  - left: 'підписати'
+  - left: підписати
     right: to sign
+  id: definitions
 - type: cloze
   title: Where to Go?
   passage: 'Де [{вхід|вихід|похід}] у метро? Це небезпечний [{перехід|захід|прихід}].
@@ -59,6 +61,7 @@
 
 
     Поїзд робить [{відхід|вхід|прихід}] зі станції. Сонце сідає. Це [{захід|схід|вихід}].'
+  id: where-to-go?
 - type: unjumble
   title: Document Logic
   items:
@@ -127,6 +130,7 @@
     - літератури
     - завтра
     answer: Це буде цікавий урок читання української літератури завтра
+  id: document-logic
 - type: quiz
   title: Root Logic
   items:
@@ -218,6 +222,7 @@
       correct: false
     - text: Це слово означає процес бачення або спостереження
       correct: false
+  id: root-logic
 - type: fill-in
   title: Medical Form
   items:
@@ -269,6 +274,7 @@
     - бачення
     - читання
     - письмо
+  id: medical-form
 - type: cloze
   title: The Date
   passage: 'Я йду на {побачення|побачити|бачення}.
@@ -294,6 +300,7 @@
     Це буде гарне {побачення|бачення|передбачення}.
 
     Ми любимо {походи|переходи|виходи} разом.'
+  id: the-date
 - type: error-correction
   title: Wrong Root
   items:
@@ -339,29 +346,31 @@
     - запис
     - захід
     explanation: A note is 'For-write' (Запис). 'Захід' is West/Sunset.
+  id: wrong-root
 - type: match-up
   title: Verb to Noun
   pairs:
-  - left: 'Писати'
+  - left: Писати
     right: Письменник
-  - left: 'Ходити'
+  - left: Ходити
     right: Пішохід
-  - left: 'Читати'
+  - left: Читати
     right: Читач
-  - left: 'Бачити'
+  - left: Бачити
     right: Побачення
-  - left: 'Передбачати'
+  - left: Передбачати
     right: Передбачення
-  - left: 'Входити'
+  - left: Входити
     right: Вхід
-  - left: 'Виходити'
+  - left: Виходити
     right: Вихід
-  - left: 'Записувати'
+  - left: Записувати
     right: Запис
-  - left: 'читати'
+  - left: читати
     right: читання
-  - left: 'плавати'
+  - left: плавати
     right: плавання
+  id: verb-to-noun
 - type: fill-in
   title: Prefixes
   items:
@@ -413,3 +422,4 @@
     - По
     - За
     - На
+  id: prefixes

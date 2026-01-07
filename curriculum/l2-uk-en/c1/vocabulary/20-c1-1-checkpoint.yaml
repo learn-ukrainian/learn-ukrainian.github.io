@@ -1,0 +1,299 @@
+module: 20-c1-1-checkpoint
+level: C1
+version: '2.0'
+items:
+  - lemma: систематизація
+    ipa: /sɪstɛmɐtɪˈzat͡sʲijɐ/
+    translation: systematization
+    pos: noun
+    note: M01
+  - lemma: вдосконалення
+    ipa: /wdɔskɔˈnaɫɛnʲːɐ/
+    translation: improvement
+    pos: noun
+    note: M01
+  - lemma: інтеграція
+    ipa: /intɛˈɦrat͡sʲijɐ/
+    translation: integration
+    pos: noun
+    note: M01
+  - lemma: вважається
+    ipa: /wːɐˈʒajɛt͡sʲːɐ/
+    translation: it is considered
+    pos: verb
+    note: M02
+  - lemma: аргументується
+    ipa: /ɐrɦʊmɛnˈtujɛt͡sʲːɐ/
+    translation: it is argued
+    pos: verb
+    note: M02
+  - lemma: інтерпретується
+    ipa: /intɛrprɛˈtujɛt͡sʲːɐ/
+    translation: it is interpreted
+    pos: verb
+    note: M02
+  - lemma: досліджувати
+    ipa: /dɔˈslʲid͡ʒʊwɐtɪ/
+    translation: to research
+    pos: verb
+    note: M03
+  - lemma: спростовувати
+    ipa: /sprɔˈstɔwʊwɐtɪ/
+    translation: to refute
+    pos: verb
+    note: M03
+  - lemma: підсумовувати
+    ipa: /pidsʊˈmɔwʊwɐtɪ/
+    translation: to summarize
+    pos: verb
+    note: M03
+  - lemma: аналіз
+    ipa: /ɐˈnalʲiz/
+    translation: analysis
+    pos: noun
+    note: M04
+  - lemma: оцінка
+    ipa: /ɔˈt͡sʲinkɐ/
+    translation: evaluation
+    pos: noun
+    note: M04
+  - lemma: критерій
+    ipa: /krɪˈtɛrʲij/
+    translation: criterion
+    pos: noun
+    note: M04
+  - lemma: оскільки
+    ipa: /ɔˈskilʲkɪ/
+    translation: since/because
+    pos: conj
+    note: M05
+  - lemma: отже
+    ipa: /ɔd͡ʒɛ/
+    translation: therefore
+    pos: conj
+    note: M05
+  - lemma: натомість
+    ipa: /nɐˈtɔmistʲ/
+    translation: instead/on the other hand
+    pos: adv
+    note: M05
+  - lemma: ймовірно
+    ipa: /jmɔˈwirnɔ/
+    translation: likely/probably
+    pos: adv
+    note: M06
+  - lemma: безперечно
+    ipa: /bɛzpɛˈrɛt͡ʃnɔ/
+    translation: undoubtedly
+    pos: adv
+    note: M06
+  - lemma: припускати
+    ipa: /prɪpʊˈskatɪ/
+    translation: to assume
+    pos: verb
+    note: M06
+  - lemma: цитувати
+    ipa: /t͡sɪtʊˈwatɪ/
+    translation: to cite
+    pos: verb
+    note: M07
+  - lemma: джерело
+    ipa: /d͡ʒɛrɛˈɫɔ/
+    translation: source
+    pos: noun
+    note: M07
+  - lemma: монографія
+    ipa: /mɔnɔˈɦrafʲijɐ/
+    translation: monograph
+    pos: noun
+    note: M07
+  - lemma: вступ
+    ipa: /wstup/
+    translation: introduction
+    pos: noun
+    note: M08
+  - lemma: теза
+    ipa: /tɛzɐ/
+    translation: thesis
+    pos: noun
+    note: M08
+  - lemma: обґрунтування
+    ipa: /ɔbɡrʊntʊˈwanʲːɐ/
+    translation: substantiation
+    pos: noun
+    note: M08
+  - lemma: гіпотеза
+    ipa: /ɦiˈpɔtɛzɐ/
+    translation: hypothesis
+    pos: noun
+    note: M09
+  - lemma: верифікувати
+    ipa: /wɛrɪfʲikʊˈwatɪ/
+    translation: to verify
+    pos: verb
+    note: M09
+  - lemma: тлумачити
+    ipa: /tɫʊˈmat͡ʃɪtɪ/
+    translation: to interpret
+    pos: verb
+    note: M09
+  - lemma: контраргумент
+    ipa: /kɔntrɐrɦʊˈmɛnt/
+    translation: counterargument
+    pos: noun
+    note: M10
+  - lemma: заперечення
+    ipa: /zɐpɛˈrɛt͡ʃɛnʲːɐ/
+    translation: objection
+    pos: noun
+    note: M10
+  - lemma: дискусійний
+    ipa: /dɪskʊˈsʲijnɪj/
+    translation: debatable
+    pos: adj
+    note: M10
+  - lemma: резюме
+    ipa: /rɛzʲuˈmɛ/
+    translation: summary
+    pos: noun
+    note: M11
+  - lemma: парафраз
+    ipa: /pɐrɐˈfrɑz/
+    translation: paraphrase
+    pos: noun
+    note: M11
+  - lemma: лаконічність
+    ipa: /ɫɐkɔˈnʲit͡ʃnʲistʲ/
+    translation: conciseness
+    pos: noun
+    note: M11
+  - lemma: анотація
+    ipa: /ɐnɔˈtɑt͡sʲijɐ/
+    translation: abstract/annotation
+    pos: noun
+    note: M12
+  - lemma: методологія
+    ipa: /mɛtɔdɔˈɫɔhʲijɐ/
+    translation: methodology
+    pos: noun
+    note: M12
+  - lemma: результати
+    ipa: /rɛzʊlʲˈtɑtɪ/
+    translation: results
+    pos: noun
+    note: M12
+  - lemma: реферат
+    ipa: /rɛfɛˈrɑt/
+    translation: abstract/paper
+    pos: noun
+    note: M13
+  - lemma: об'єкт
+    ipa: /ɔbˈjɛkt/
+    translation: object
+    pos: noun
+    note: M13
+  - lemma: новизна
+    ipa: /nɔwɪzˈnɑ/
+    translation: novelty
+    pos: noun
+    note: M13
+  - lemma: огляд
+    ipa: /ɔˈɦlʲɑd/
+    translation: review
+    pos: noun
+    note: M14
+  - lemma: синтез
+    ipa: /sɪnˈtɛz/
+    translation: synthesis
+    pos: noun
+    note: M14
+  - lemma: публікація
+    ipa: /pʊblʲiˈkɑt͡sʲijɐ/
+    translation: publication
+    pos: noun
+    note: M14
+  - lemma: доповідь
+    ipa: /dɔˈpɔwvidʲ/
+    translation: report/presentation
+    pos: noun
+    note: M15
+  - lemma: аудиторія
+    ipa: /ɐʊdɪˈtɔrʲijɐ/
+    translation: audience/auditorium
+    pos: noun
+    note: M15
+  - lemma: висновки
+    ipa: /wɪˈsnɔwkɪ/
+    translation: conclusions
+    pos: noun
+    note: M15
+  - lemma: пунктуація
+    ipa: /pʊnktʊˈɑt͡sʲijɐ/
+    translation: punctuation
+    pos: noun
+    note: M16
+  - lemma: синтаксис
+    ipa: /sɪnˈtɑksɪs/
+    translation: syntax
+    pos: noun
+    note: M16
+  - lemma: наголос
+    ipa: /nɑˈɦɔɫɔs/
+    translation: stress/accent
+    pos: noun
+    note: M16
+  - lemma: їсти
+    ipa: /jistɪ/
+    translation: to eat
+    pos: verb
+    note: M17
+  - lemma: дати
+    ipa: /dɑtɪ/
+    translation: to give
+    pos: verb
+    note: M17
+  - lemma: відповісти
+    ipa: /widpɔwiˈstɪ/
+    translation: to answer
+    pos: verb
+    note: M17
+  - lemma: рецензія
+    ipa: /rɛˈt͡sɛnzʲijɐ/
+    translation: review/critique
+    pos: noun
+    note: M18-19
+  - lemma: переконливість
+    ipa: /pɛrɛˈkɔnɫɪwistʲ/
+    translation: persuasiveness
+    pos: noun
+    note: M18-19
+  - lemma: внесок
+    ipa: /wnɛˈsɔk/
+    translation: contribution
+    pos: noun
+    note: M18-19
+  - lemma: доброчесність
+    ipa: /dɔbrɔˈt͡ʃɛsnʲistʲ/
+    translation: integrity
+    pos: noun
+    note: M18-19
+  - lemma: бал
+    ipa: /bɑl/
+    translation: grade/score
+    pos: noun
+    note: M20
+  - lemma: тестування
+    ipa: /tɛstʊˈwanʲːɐ/
+    translation: testing
+    pos: noun
+    note: M20
+  - lemma: залік
+    ipa: /zɑlʲik/
+    translation: pass/credit
+    pos: noun
+    note: M20
+  - lemma: екзамен
+    ipa: /ɛkˈzɑmɛn/
+    translation: exam
+    pos: noun
+    note: M20

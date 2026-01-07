@@ -930,66 +930,59 @@ def check_mark_the_words_format(activities: list) -> list[dict]:
         if not title and isinstance(activity, dict):
             title = activity.get('title', 'Untitled')
             
-        text = getattr(activity, 'text', '')
-        if not text and isinstance(activity, dict):
-            text = activity.get('text', '')
-            
-        answers = getattr(activity, 'answers', [])
-        if not answers and isinstance(activity, dict):
-            answers = activity.get('answers', [])
+        # Handle both dict (YAML) and object (parsed) representations
+        # Schema-compliant: passage/correct_words (in YAML dict)
+        # Object attributes: text/answers (in parsed object)
+        passage = ''
+        correct_words = []
         
-        # Check for legacy fields
         if isinstance(activity, dict):
-            if 'passage' in activity and not text:
-                text = activity.get('passage', '')
-                violations.append({
-                    'type': 'DEPRECATED_FIELD',
-                    'severity': 'warning',
-                    'issue': f"mark-the-words '{title}' uses deprecated 'passage' field",
-                    'fix': "Rename 'passage' to 'text'"
-                })
-                
-            if 'correct_words' in activity and not answers:
-                answers = activity.get('correct_words', [])
-                violations.append({
-                    'type': 'DEPRECATED_FIELD',
-                    'severity': 'warning',
-                    'issue': f"mark-the-words '{title}' uses deprecated 'correct_words' field",
-                    'fix': "Rename 'correct_words' to 'answers'"
-                })
+            # YAML dict - check for schema-compliant fields first
+            passage = activity.get('passage', '')
+            correct_words = activity.get('correct_words', [])
+            
+            # Fallback to old field names for backwards compatibility
+            if not passage:
+                passage = activity.get('text', '')
+            if not correct_words:
+                correct_words = activity.get('answers', [])
+        else:
+            # Parsed object - uses text/answers attributes
+            passage = getattr(activity, 'text', '')
+            correct_words = getattr(activity, 'answers', [])
 
-        if not text:
+        if not passage:
              violations.append({
                 'type': 'MISSING_FIELD',
                 'severity': 'critical',
-                'issue': f"mark-the-words '{title}' is missing 'text' field",
-                'fix': "Add 'text' field with the content"
+                'issue': f"mark-the-words '{title}' is missing 'passage' field",
+                'fix': "Add 'passage' field with the content"
             })
             
-        if not answers and '*' not in text:
+        if not correct_words and '*' not in passage:
              violations.append({
                 'type': 'MISSING_FIELD',
                 'severity': 'critical',
-                'issue': f"mark-the-words '{title}' is missing 'answers' array",
-                'fix': "Add 'answers' array with correct words"
+                'issue': f"mark-the-words '{title}' is missing 'correct_words' array",
+                'fix': "Add 'correct_words' array with correct words"
             })
         
-        if '(correct)' in text or '(wrong)' in text:
+        if '(correct)' in passage or '(wrong)' in passage:
             violations.append({
                 'type': 'MALFORMED_MARK_THE_WORDS',
                 'severity': 'critical',
                 'issue': f"mark-the-words '{title}' contains (correct)/(wrong) annotations",
-                'fix': "Remove (correct)/(wrong) annotations and use 'answers' array"
+                'fix': "Remove (correct)/(wrong) annotations and use 'correct_words' array"
             })
             
-        # Verify answers are in text
-        for idx, ans in enumerate(answers):
-            if ans not in text:
+        # Verify correct_words are in passage
+        for idx, ans in enumerate(correct_words):
+            if ans not in passage:
                 violations.append({
                     'type': 'INVALID_ANSWER',
                     'severity': 'critical',
-                    'issue': f"mark-the-words '{title}' answer '{ans}' not found in text",
-                    'fix': f"Ensure '{ans}' is exactly present in the text field"
+                    'issue': f"mark-the-words '{title}' answer '{ans}' not found in passage",
+                    'fix': f"Ensure '{ans}' is exactly present in the passage field"
                 })
 
     return violations

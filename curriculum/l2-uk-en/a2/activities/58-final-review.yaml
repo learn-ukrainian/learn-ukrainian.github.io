@@ -81,6 +81,7 @@
       correct: false
     - text: В офісі
       correct: false
+  id: reading-comprehension-(text-1)
 - type: quiz
   title: Reading Comprehension (Text 2 & 3)
   items:
@@ -164,6 +165,7 @@
       correct: false
     - text: Французький суп
       correct: false
+  id: reading-comprehension-(text-2-&-3)
 - type: true-false
   title: Listening Check
   items:
@@ -191,26 +193,20 @@
   - statement: Аліна та Ігор вперше зустрілися, коли вчилися разом в університеті.
     correct: false
     explanation: At school (*вчилися в школі*). They are childhood acquaintances.
+  id: listening-check
 - type: cloze
   title: Grammar Final Test
-  passage: 'Я зараз живу в {Україні|Україна|Україну|Україною}_. (Ukraine) Я вранці
-    ніколи не п''ю {кави|кава|каву|кавою}_. (coffee) Я зараз йду в {магазин|магазині|магазина|магазином}_.
-    (shop)
+  passage: 'Я зараз живу в {Україні|Україна|Україну|Україною}_. (Ukraine) Я вранці ніколи не п''ю {кави|кава|каву|кавою}_. (coffee) Я зараз йду в {магазин|магазині|магазина|магазином}_. (shop)
 
 
-    Я часто розмовляю з {другом|друзі|друга|другу}_. (friend) Мені терміново потрібна
-    {допомога|допомогу|допомоги|допомогою}_. (help) Дай мені будь ласка {ручку|ручка|ручки|ручкою}_.
-    (pen)
+    Я часто розмовляю з {другом|друзі|друга|другу}_. (friend) Мені терміново потрібна {допомога|допомогу|допомоги|допомогою}_. (help) Дай мені будь ласка {ручку|ручка|ручки|ручкою}_. (pen)
 
 
-    У мене, на жаль, немає {сестри|сестра|сестру|сестрою}_. (sister) Я люблю писати
-    {олівцем|олівець|олівця|олівцю}_. (pencil) Вчора ми були в {кіно|кіні|кіна|кіном}_.
-    (cinema)
+    У мене, на жаль, немає {сестри|сестра|сестру|сестрою}_. (sister) Я люблю писати {олівцем|олівець|олівця|олівцю}_. (pencil) Вчора ми були в {кіно|кіні|кіна|кіном}_. (cinema)
 
 
-    Він став успішним {директором|директор|директора|директору}_. (director) Я дуже
-    дякую {вам|вас|ви|вами}_. (you) Наша машина стоїть біля {будинку|будинок|будинком|будинка}_.
-    (house)'
+    Він став успішним {директором|директор|директора|директору}_. (director) Я дуже дякую {вам|вас|ви|вами}_. (you) Наша машина стоїть біля {будинку|будинок|будинком|будинка}_. (house)'
+  id: grammar-final-test
 - type: group-sort
   title: Skill Sort
   groups:
@@ -234,6 +230,7 @@
     - 'чути музику: Listening'
     - 'бачити рекламу: Reading'
     - 'надсилати смс: Writing'
+  id: skill-sort
 - type: match-up
   title: Definitions
   pairs:
@@ -261,6 +258,7 @@
     right: To remember
   - left: Розуміти
     right: To understand
+  id: definitions
 - type: unjumble
   title: Final Sentences
   items:
@@ -388,12 +386,12 @@
     - вже
     - скоро
     answer: На мою власну думку все обов'язково буде дуже добре вже скоро
+  id: final-sentences
 - type: mark-the-words
   title: Final Check
-  text: '*Україна* — це *країна*. *Київ* — це *столиця*. *Дніпро* — це *річка*. *Люди*
-    люблять *свободу*. *Студент* читає *книгу*. *Лікар* лікує хворих. *Мама* готує
-    *обід*. *Сонце* світить. *Дощ* іде.'
-  answers:
+  id: final-check
+  passage: '*Україна* — це *країна*. *Київ* — це *столиця*. *Дніпро* — це *річка*. *Люди* люблять *свободу*. *Студент* читає *книгу*. *Лікар* лікує хворих. *Мама* готує *обід*. *Сонце* світить. *Дощ* іде.'
+  correct_words:
   - Україна
   - країна
   - Київ
@@ -532,6 +530,7 @@
       correct: false
     - text: Можливо пізніше.
       correct: false
+  id: fluency-test
 - type: translate
   title: Final Translation Challenge
   items:
@@ -583,3 +582,4 @@
       correct: false
     - text: Вона сказати, що...
       correct: false
+  id: final-translation-challenge

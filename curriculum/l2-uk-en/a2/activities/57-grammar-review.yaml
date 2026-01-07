@@ -1,8 +1,7 @@
 - type: quiz
   title: Grammar Master
   items:
-  - question: Which grammatical case is primarily used for indicating a location in
-      Ukrainian?
+  - question: Which grammatical case is primarily used for indicating a location in Ukrainian?
     options:
     - text: Locative
       correct: true
@@ -12,8 +11,7 @@
       correct: false
     - text: Genitive
       correct: false
-  - question: Which case correctly completes the phrase "Я працюю..." to mean "I work
-      as"?
+  - question: Which case correctly completes the phrase "Я працюю..." to mean "I work as"?
     options:
     - text: Instrumental (менеджером)
       correct: true
@@ -53,8 +51,7 @@
       correct: false
     - text: Wish / Desire
       correct: false
-  - question: What is the meaning and function of the connector "щоб" in a complex
-      sentence?
+  - question: What is the meaning and function of the connector "щоб" in a complex sentence?
     options:
     - text: In order to / Purpose
       correct: true
@@ -84,8 +81,7 @@
       correct: false
     - text: Accusative (олівець)
       correct: false
-  - question: Which case is used with the preposition "з" meaning "from" in "Він прийшов
-      з..."?
+  - question: Which case is used with the preposition "з" meaning "from" in "Він прийшов з..."?
     options:
     - text: Genitive (магазину)
       correct: true
@@ -95,8 +91,7 @@
       correct: false
     - text: Instrumental (магазином)
       correct: false
-  - question: Which case follows the preposition "про" in the phrase "Ми говоримо
-      про..."?
+  - question: Which case follows the preposition "про" in the phrase "Ми говоримо про..."?
     options:
     - text: Accusative (політику)
       correct: true
@@ -116,8 +111,7 @@
       correct: false
     - text: Accusative (Україну)
       correct: false
-  - question: Which special case form is used when addressing someone directly, like
-      "Привіт, ..."?
+  - question: Which special case form is used when addressing someone directly, like "Привіт, ..."?
     options:
     - text: Vocative (друже)
       correct: true
@@ -127,49 +121,48 @@
       correct: false
     - text: Dative (другу)
       correct: false
+  id: grammar-master
 - type: match-up
   title: Case Functions
   pairs:
-  - left: 'Студент читає книгу'
+  - left: Студент читає книгу
     right: Називний (Суб'єкт)
-  - left: 'Немає вільного часу'
+  - left: Немає вільного часу
     right: Родовий (Відсутність)
-  - left: 'Даю подарунок мамі'
+  - left: Даю подарунок мамі
     right: Давальний (Адресат)
-  - left: 'Бачу гарну дівчину'
+  - left: Бачу гарну дівчину
     right: Знахідний (Об'єкт)
-  - left: 'Пишу гострою ручкою'
+  - left: Пишу гострою ручкою
     right: Орудний (Інструмент)
-  - left: 'Я працюю інженером'
+  - left: Я працюю інженером
     right: Орудний (Роль)
-  - left: 'Живу в центрі міста'
+  - left: Живу в центрі міста
     right: Місцевий (Місце)
-  - left: 'Привіт, мій друже!'
+  - left: Привіт, мій друже!
     right: Кличний (Звертання)
-  - left: 'Машина стоїть біля'
+  - left: Машина стоїть біля
     right: Родовий (Прийменник)
-  - left: 'Ми йдемо до театру'
+  - left: Ми йдемо до театру
     right: Родовий (Напрямок)
-  - left: 'Їду автобусом на'
+  - left: Їду автобусом на
     right: Орудний (Транспорт)
-  - left: 'Мрію про відпустку'
+  - left: Мрію про відпустку
     right: Місцевий (Об'єкт думки)
+  id: case-functions
 - type: cloze
   title: Case Challenge
-  passage: 'Я йду в {парк|парку|парком|паркі}_. (park) Я гуляю в {парку|парк|парком|парка}_.
-    (park) Я не бачу {автобуса|автобус|автобусом|автобусі}_. (bus)
+  passage: 'Я йду в {парк|парку|парком|паркі}_. (park) Я гуляю в {парку|парк|парком|парка}_. (park) Я не бачу {автобуса|автобус|автобусом|автобусі}_. (bus)
 
 
-    Я їм {суп|супу|супом|супі}_. (soup) Я їм суп {ложкою|ложка|ложку|ложці}_. (spoon)
-    Я телефоную {татові|тато|тата|татом}_. (dad)
+    Я їм {суп|супу|супом|супі}_. (soup) Я їм суп {ложкою|ложка|ложку|ложці}_. (spoon) Я телефоную {татові|тато|тата|татом}_. (dad)
 
 
-    Ми з {братом|брат|брата|брату}_. (brother) Книга лежить на {столі|стіл|столу|столом}_.
-    (table) У {мене|мені|я|мною}_ є ідея. (me)
+    Ми з {братом|брат|брата|брату}_. (brother) Книга лежить на {столі|стіл|столу|столом}_. (table) У {мене|мені|я|мною}_ є ідея. (me)
 
 
-    Це подарунок для {сестри|сестрі|сестру|сестра}_. (sister) Я хочу стати {художником|художник|художника|художнику}_.
-    (artist) Привіт, {Іване|Іван|Івана|Іваном}_! (Ivan)'
+    Це подарунок для {сестри|сестрі|сестру|сестра}_. (sister) Я хочу стати {художником|художник|художника|художнику}_. (artist) Привіт, {Іване|Іван|Івана|Іваном}_! (Ivan)'
+  id: case-challenge
 - type: true-false
   title: Grammar Truths
   items:
@@ -209,6 +202,7 @@
   - statement: '"У мене є" uses Genitive "мене".'
     correct: true
     explanation: Yes.
+  id: grammar-truths
 - type: group-sort
   title: Aspect Sort
   groups:
@@ -231,6 +225,7 @@
     - 'якщо: Connectors'
     - 'коли: Connectors'
     - 'щоб: Connectors'
+  id: aspect-sort
 - type: unjumble
   title: Sentence Builder
   items:
@@ -354,6 +349,7 @@
     - зимові
     - шкарпетки
     answer: Мамо скажи де лежать мої теплі зимові шкарпетки
+  id: sentence-builder
 - type: error-correction
   title: Fix the Letter
   items:
@@ -474,6 +470,7 @@
     - ручку
     - ручки
     explanation: Instrumental.
+  id: fix-the-letter
 - type: cloze
   title: Grammar Fill
   passage: 'Я {новий|нова|нове} студент. Я {навчаюся|навчаюсь|вчу} в університеті.
@@ -497,12 +494,12 @@
     Я {думаю|знаю|бачу}, що це важливо.
 
     Ми хочемо {побачити|бачити|дивитися} світ.'
+  id: grammar-fill
 - type: mark-the-words
   title: Identification
-  text: Вчора я *встав* о 7:00. Я *поснідав* і *випив* каву. Потім я *пішов* на роботу.
-    Я *зробив* важливий звіт. Ввечері я *купив* продукти і *приготував* вечерю. Я
-    швидко *заснув*.
-  answers:
+  id: identification
+  passage: Вчора я *встав* о 7:00. Я *поснідав* і *випив* каву. Потім я *пішов* на роботу. Я *зробив* важливий звіт. Ввечері я *купив* продукти і *приготував* вечерю. Я швидко *заснув*.
+  correct_words:
   - встав
   - поснідав
   - випив
@@ -598,3 +595,4 @@
     - text: Genitive
       correct: false
     explanation: See mom.
+  id: case-detector

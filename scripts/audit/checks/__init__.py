@@ -79,6 +79,10 @@ from .activity_validation import (
     check_morpheme_pedagogy,
     check_english_hints_in_activities,
 )
+from .yaml_schema_validation import (
+    check_activity_yaml_schema,
+    validate_activity_yaml_file,
+)
 
 __all__ = [
     # Grammar
@@ -141,4 +145,7 @@ __all__ = [
     'check_morpheme_patterns',
     'check_morpheme_pedagogy',
     'check_english_hints_in_activities',
+    # YAML Schema Validation
+    'check_activity_yaml_schema',
+    'validate_activity_yaml_file',
 ]

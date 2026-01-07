@@ -1,17 +1,24 @@
 module: c1-60
-title: Наталія Кобринська
-subtitle: Nataliia Kobrynska
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: narrative
+title: "Наталія Кобринська: Піонерка Фемінізму"
+phase: "C1.3 Biographies"
 duration: 120
-vocabulary_count: 24
-tags:
-- c1
-- biography
-- history
-- culture
+transliteration: none
+pedagogy: "CBI"
+register: "публіцистичний"
+focus: biography
 objectives:
-- Master C1 concepts in Наталія Кобринська
+  - "Analyze Kobrynska's role in founding the Ukrainian women's movement"
+  - "Understand her literary works and their social themes"
+  - "Explore her collaboration with Ivan Franko and Olena Pchilka"
+  - "Examine the almanac 'The First Wreath' ('Перший вінок') as a landmark publication"
+tags:
+  - biography
+  - era: imperial
+  - domain: politics
+grammar:
+  - "Sociopolitical terminology"
+  - "Argumentative structures"
+vocabulary_focus:
+  - "Feminist and social movement vocabulary"
+  - "Civic activism terms"
 slug: 60-nataliya-kobrynska

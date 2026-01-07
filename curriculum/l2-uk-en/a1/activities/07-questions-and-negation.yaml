@@ -133,6 +133,7 @@
     - text: чому
       correct: true
     explanation: чому (chomu) = why
+  id: question-word-meanings
 - type: match-up
   title: Question Words to Context
   instruction: Match each question word with the context where it's used
@@ -153,6 +154,7 @@
     right: asking for reason
   - left: як
     right: asking about manner or state
+  id: question-words-to-context
 - type: fill-in
   title: Complete Questions
   items:
@@ -240,6 +242,7 @@
     - Як
     - Де
     - Коли
+  id: complete-questions
 - type: true-false
   title: Question and Negation Rules
   items:
@@ -282,6 +285,7 @@
   - statement: '"Так" means yes and "ні" means no.'
     correct: true
     explanation: Correct! Basic yes/no answers.
+  id: question-and-negation-rules
 - type: group-sort
   title: Frequency Adverbs
   groups:
@@ -303,6 +307,7 @@
     - ніколи не читаю
     - ніколи не пишу
     - ніколи не сплю
+  id: frequency-adverbs
 - type: fill-in
   title: Add Negation
   items:
@@ -390,6 +395,7 @@
     - ні
     - ніколи
     - чи
+  id: add-negation
 - type: anagram
   title: Question Words
   items:
@@ -417,6 +423,7 @@
     answer: іноді
   - scrambled: н і к о л и
     answer: ніколи
+  id: question-words
 - type: anagram
   title: Frequency Words
   items:
@@ -436,6 +443,7 @@
     answer: щодня
   - scrambled: п р а в д а
     answer: правда
+  id: frequency-words
 - type: quiz
   title: Negative Sentence Order
   items:
@@ -549,3 +557,4 @@
     - text: чаю Я не хочу
       correct: false
     explanation: 'Correct order: Я не хочу чаю'
+  id: negative-sentence-order

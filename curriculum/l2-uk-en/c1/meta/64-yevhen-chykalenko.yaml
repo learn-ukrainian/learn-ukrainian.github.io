@@ -1,17 +1,28 @@
 module: c1-64
-title: Євген Чикаленко
-subtitle: Yevhen Chykalenko
+title: 'Євген Чикаленко: Меценат українського духу'
+subtitle: 'Yevhen Chykalenko: The Patron of Ukrainian Spirit'
 version: '2.0'
-phase: C1.3 Biographies
+phase: 'C1.3 Biographies'
 focus: biography
-pedagogy: narrative
+pedagogy: 'CBI'
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- biography
-- history
-- culture
+  - biography
+  - imperial
+  - literature
+  - politics
+  - agriculture
+grammar:
+  - 'Historical narrative tenses'
+  - 'Quoted speech conventions'
 objectives:
-- Master C1 concepts in Євген Чикаленко
-slug: 64-yevhen-chykalenko
+  - 'Learner understands the vital role of Yevhen Chykalenko as a patron and organizer of Ukrainian culture.'
+  - 'Learner can analyze the relationship between financial support and national movement in the late 19th and early 20th centuries.'
+  - 'Learner masters vocabulary related to patronage, agriculture, and public activism.'
+  - 'Learner can compare different forms of national contribution (creative vs. financial/organizational).'
+vocabulary_focus:
+  - 'Patronage and philanthropy terminology'
+  - 'Agricultural and economic vocabulary'
+vocabulary_count: 28
+slug: 064-yevhen-chykalenko

@@ -1,0 +1,26 @@
+module: c1-18
+title: "Практикум C1.1: Написання есе"
+subtitle: "Essay Writing Practice"
+version: "2.0"
+phase: "C1.1 Academic Foundation"
+focus: style
+pedagogy: "Task-Based"
+duration: 90
+transliteration: none
+tags:
+  - writing
+  - academic
+  - essay
+  - practice
+grammar:
+  - "Essay Structure"
+  - "Thesis Formulation"
+  - "Argumentation Strategies"
+  - "Citation Rules"
+objectives:
+  - "Master the structure of a standard academic essay"
+  - "Formulate clear and debatable thesis statements"
+  - "Support arguments with valid evidence and citations"
+  - "Maintain consistent academic register"
+vocabulary_count: 15
+slug: 18-essay-writing-practice

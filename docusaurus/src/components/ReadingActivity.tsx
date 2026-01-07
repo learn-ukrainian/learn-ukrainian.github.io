@@ -5,14 +5,20 @@ import { parseMarkdown } from './utils';
 
 interface ReadingProps {
   title: string;
-  context: string;
+  context?: string;
+  resource?: {
+    type?: string;
+    url?: string;
+    title?: string;
+  };
   tasks: string[];
   isUkrainian?: boolean;
 }
 
 export default function ReadingActivity({
   title,
-  context,
+  context = '',
+  resource,
   tasks,
   isUkrainian
 }: ReadingProps) {
@@ -35,7 +41,27 @@ export default function ReadingActivity({
       </div>
       <div className={styles.activityContent}>
         <div className={styles.readingContext}>
-           {parseMarkdown(context)}
+          {context ? (
+            parseMarkdown(context)
+          ) : resource?.url ? (
+            <div className={styles.externalResource}>
+              <p>
+                {isUkrainian ? 'Прочитайте матеріал за посиланням:' : 'Read the material at the link:'}
+              </p>
+              <a href={resource.url} target="_blank" rel="noopener noreferrer" className={styles.resourceLink}>
+                📄 {resource.title || resource.url}
+              </a>
+              {resource.type && (
+                <p className={styles.resourceType}>
+                  <em>({resource.type})</em>
+                </p>
+              )}
+            </div>
+          ) : (
+            <p className={styles.emptyContext}>
+              {isUkrainian ? 'Немає тексту для читання' : 'No reading text provided'}
+            </p>
+          )}
         </div>
 
         <div className={styles.buttonRow}>

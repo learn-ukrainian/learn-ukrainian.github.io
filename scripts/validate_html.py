@@ -181,7 +181,7 @@ async def validate_module(page: Page, level: str, module_num: int) -> Validation
             return result
 
         # Check for activities section
-        activities_section = await page.query_selector('h2:has-text("Activities")')
+        activities_section = await page.query_selector('h2:has-text("Activities")') or await page.query_selector('h2:has-text("Вправи")')
         if not activities_section:
             result.warnings.append("No Activities section found")
 

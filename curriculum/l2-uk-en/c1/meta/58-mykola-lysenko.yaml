@@ -1,17 +1,24 @@
 module: c1-58
-title: Микола Лисенко
-subtitle: Mykola Lysenko
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: narrative
+title: "Микола Лисенко: Батько Української Музики"
+phase: "C1.3 Biographies"
 duration: 120
-vocabulary_count: 24
-tags:
-- c1
-- biography
-- history
-- culture
+transliteration: none
+pedagogy: "CBI"
+register: "публіцистичний"
+focus: biography
 objectives:
-- Master C1 concepts in Микола Лисенко
+  - "Explore Lysenko's role in establishing the Ukrainian national musical school"
+  - "Analyze his major operatic and choral works"
+  - "Understand his ethnographic work and collection of folk songs"
+  - "Examine his civic activities and impact on national consciousness"
+tags:
+  - biography
+  - era: imperial
+  - domain: arts
+grammar:
+  - "Musical terminology and descriptions"
+  - "Biographical narrative tenses"
+vocabulary_focus:
+  - "Musical genres and forms"
+  - "National revival vocabulary"
 slug: 58-mykola-lysenko

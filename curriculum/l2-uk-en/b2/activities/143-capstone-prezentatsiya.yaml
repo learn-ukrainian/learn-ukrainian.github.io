@@ -2,436 +2,583 @@ module: 143-capstone-prezentatsiya
 level: B2
 version: '2.0'
 activities:
-  - type: match-up
-    id: 143-01-vocab-speech
-    title: "Термінологія виступу"
-    pairs:
-      - left: "Оратор"
-        right: "Людина, яка виступає перед публікою"
-      - left: "Аргумент"
-        right: "Доказ на користь своєї думки"
-      - left: "Жест"
-        right: "Рух тіла, що передає емоції"
-      - left: "Інтонація"
-        right: "Зміна тону голосу"
-      - left: "Слайд"
-        right: "Сторінка презентації"
-      - left: "Дискусія"
-        right: "Обговорення спірного питання"
-      - left: "Публіка"
-        right: "Слухачі, аудиторія"
-      - left: "Подяка"
-        right: "Слова вдячності в кінці"
-
-  - type: group-sort
-    id: 143-02-presentation-structure
-    title: "Структура презентації"
-    groups:
-      - name: "Початок"
-        items:
-          - "Привітання"
-          - "Представлення себе"
-          - "Оголошення теми"
-          - "Актуалізація уваги (гачок)"
-          - "Жарт (доречний)"
-          - "Історія з життя"
-      - name: "Основна частина"
-        items:
-          - "Виклад фактів"
-          - "Демонстрація графіків"
-          - "Наведення аргументів"
-          - "Порівняння даних"
-          - "Демонстрація продукту"
-          - "Аналіз кейсів"
-      - name: "Завершення"
-        items:
-          - "Висновки"
-          - "Заклик до дії"
-          - "Подяка за увагу"
-          - "Відповіді на запитання"
-          - "Роздача матеріалів"
-          - "Контакти спікера"
-
-  - type: quiz
-    id: 143-03-slide-design
-    title: "Дизайн слайдів: Так чи Ні?"
+- type: match-up
+  id: 143-01-vocab-speech
+  title: Термінологія виступу
+  pairs:
+  - left: Оратор
+    right: Людина, яка виступає перед публікою
+  - left: Аргумент
+    right: Доказ на користь своєї думки
+  - left: Жест
+    right: Рух тіла, що передає емоції
+  - left: Інтонація
+    right: Зміна тону голосу
+  - left: Слайд
+    right: Сторінка презентації
+  - left: Дискусія
+    right: Обговорення спірного питання
+  - left: Публіка
+    right: Слухачі, аудиторія
+  - left: Подяка
+    right: Слова вдячності в кінці
+- type: group-sort
+  id: 143-02-presentation-structure
+  title: Структура презентації
+  groups:
+  - name: Початок
     items:
-      - question: "Слайд, на якому 500 слів дрібним шрифтом."
-        options:
-          - { text: "Погано", correct: true }
-          - { text: "Добре", correct: false }
-          - { text: "Інформативно", correct: false }
-          - { text: "Професійно", correct: false }
-      - question: "Одне якісне зображення і короткий заголовок."
-        options:
-          - { text: "Добре", correct: true }
-          - { text: "Погано", correct: false }
-          - { text: "Замало тексту", correct: false }
-          - { text: "Несерйозно", correct: false }
-      - question: "Використання 10 різних шрифтів і кольорів."
-        options:
-          - { text: "Погано (хаос)", correct: true }
-          - { text: "Креативно", correct: false }
-          - { text: "Весело", correct: false }
-          - { text: "Цікаво", correct: false }
-      - question: "Темний текст на темному фоні."
-        options:
-          - { text: "Погано (нечитабельно)", correct: true }
-          - { text: "Стильно", correct: false }
-          - { text: "Загадково", correct: false }
-          - { text: "Економно", correct: false }
-      - question: "Графік з чіткими підписами."
-        options:
-          - { text: "Добре", correct: true }
-          - { text: "Нудно", correct: false }
-          - { text: "Складно", correct: false }
-          - { text: "Зайве", correct: false }
-      - question: "Читання тексту зі слайда спиною до публіки."
-        options:
-          - { text: "Жахливо", correct: true }
-          - { text: "Нормально", correct: false }
-          - { text: "Зручно", correct: false }
-          - { text: "Професійно", correct: false }
-      - question: "Єдиний стиль для всіх слайдів."
-        options:
-          - { text: "Добре", correct: true }
-          - { text: "Нудно", correct: false }
-          - { text: "Обмеження", correct: false }
-          - { text: "Старомодно", correct: false }
-      - question: "Контакт очей з аудиторією, а не з екраном."
-        options:
-          - { text: "Чудово", correct: true }
-          - { text: "Страшно", correct: false }
-          - { text: "Неважливо", correct: false }
-          - { text: "Помилка", correct: false }
-
-  - type: match-up
-    id: 143-04-rhetoric-devices
-    title: "Риторичні прийоми"
-    pairs:
-      - left: "Ми маємо мрію!"
-        right: "Повтор (Анафора)"
-      - left: "Він хоробрий, як лев."
-        right: "Порівняння"
-      - left: "Чи хочемо ми жити краще?"
-        right: "Риторичне запитання"
-      - left: "Це не просто крок, це стрибок."
-        right: "Протиставлення"
-      - left: "Три речі: віра, надія, любов."
-        right: "Правило трьох"
-      - left: "Море сліз."
-        right: "Гіпербола (перебільшення)"
-      - left: "Гірка правда."
-        right: "Епітет"
-      - left: "Час летить."
-        right: "Метафора"
-
-  - type: fill-in
-    id: 143-05-speech-intro
-    title: "Фрази для вступу"
+    - Привітання
+    - Представлення себе
+    - Оголошення теми
+    - Актуалізація уваги (гачок)
+    - Жарт (доречний)
+    - Історія з життя
+  - name: Основна частина
     items:
-      - sentence: "Добрий день, шановні ___!"
-        answer: "колеги"
-        options: ["колеги", "вороги", "стіни", "сни"]
-      - sentence: "Дозвольте ___ себе."
-        answer: "представити"
-        options: ["представити", "забути", "сховати", "намалювати"]
-      - sentence: "Тема моєї ___ — історія кави."
-        answer: "доповіді"
-        options: ["доповіді", "обіду", "гри", "пісні"]
-      - sentence: "Мета мого виступу — ___ вас у важливості спорту."
-        answer: "переконати"
-        options: ["переконати", "налякати", "приспати", "розсмішити"]
-      - sentence: "Я хочу звернути вашу ___ на цей графік."
-        answer: "увагу"
-        options: ["увагу", "руку", "ногу", "голову"]
-      - sentence: "Мій виступ ___ 10 хвилин."
-        answer: "триватиме"
-        options: ["триватиме", "чекатиме", "плакатиме", "співатиме"]
-      - sentence: "Якщо у вас виникнуть ___, я відповім у кінці."
-        answer: "запитання"
-        options: ["запитання", "відповіді", "проблеми", "гроші"]
-      - sentence: "Давайте ___ з історії питання."
-        answer: "почнемо"
-        options: ["почнемо", "закінчимо", "втечемо", "забудемо"]
-
-  - type: match-up
-    id: 143-06-body-language
-    title: "Мова тіла"
-    pairs:
-      - left: "Схрещені руки на грудях"
-        right: "Закритість / Захист"
-      - left: "Відкриті долоні"
-        right: "Щирість / Відкритість"
-      - left: "Погляд в очі"
-        right: "Впевненість / Контакт"
-      - left: "Погляд у підлогу"
-        right: "Невпевненість / Сором"
-      - left: "Постукування пальцями"
-        right: "Нетерпіння / Нервозність"
-      - left: "Усмішка"
-        right: "Доброзичливість"
-      - left: "Ходіння туди-сюди"
-        right: "Енергія або Хвилювання"
-      - left: "Сутулі плечі"
-        right: "Втома / Невпевненість"
-
-  - type: quiz
-    id: 143-07-qa-handling
-    title: "Складні запитання"
+    - Виклад фактів
+    - Демонстрація графіків
+    - Наведення аргументів
+    - Порівняння даних
+    - Демонстрація продукту
+    - Аналіз кейсів
+  - name: Завершення
     items:
-      - question: "Якщо ви не знаєте відповіді, що робити?"
-        options:
-          - { text: "Чесно визнати і пообіцяти дізнатися", correct: true }
-          - { text: "Брехати і вигадувати", correct: false }
-          - { text: "Ігнорувати запитання", correct: false }
-          - { text: "Образити того, хто питає", correct: false }
-      - question: "Якщо запитання агресивне?"
-        options:
-          - { text: "Зберігати спокій і відповідати по суті", correct: true }
-          - { text: "Кричати у відповідь", correct: false }
-          - { text: "Плакати", correct: false }
-          - { text: "Втекти зі сцени", correct: false }
-      - question: "Якщо запитання не по темі?"
-        options:
-          - { text: "Ввічливо запропонувати обговорити це пізніше", correct: true }
-          - { text: "Почати довгу дискусію не по темі", correct: false }
-          - { text: "Сміятися над запитанням", correct: false }
-          - { text: "Мовчати", correct: false }
-      - question: "Як краще почати відповідь?"
-        options:
-          - { text: "Дякую за цікаве запитання", correct: true }
-          - { text: "Ну що за дурне питання", correct: false }
-          - { text: "Я ж вже казав", correct: false }
-          - { text: "Ви неуважно слухали", correct: false }
-      - question: "Якщо ви не почули запитання?"
-        options:
-          - { text: "Попросити повторити", correct: true }
-          - { text: "Відповідати навмання", correct: false }
-          - { text: "Кивати головою", correct: false }
-          - { text: "Зробити вигляд, що все зрозумів", correct: false }
-      - question: "Чи можна сперечатися з публікою?"
-        options:
-          - { text: "Краще уникати конфліктів", correct: true }
-          - { text: "Так, треба довести свою правоту силою", correct: false }
-          - { text: "Так, це шоу", correct: false }
-          - { text: "Тільки якщо вони неправі", correct: false }
-      - question: "Якщо час вийшов, а питання ще є?"
-        options:
-          - { text: "Запропонувати підійти після виступу", correct: true }
-          - { text: "Продовжувати виступ ще годину", correct: false }
-          - { text: "Просто піти", correct: false }
-          - { text: "Ігнорувати організаторів", correct: false }
-      - question: "Чи варто записувати питання?"
-        options:
-          - { text: "Так, це показує повагу", correct: true }
-          - { text: "Ні, у мене ідеальна пам'ять", correct: false }
-          - { text: "Це смішно", correct: false }
-          - { text: "Тільки якщо вони від начальства", correct: false }
-
-  - type: group-sort
-    id: 143-08-prep-vs-delivery
-    title: "Підготовка vs Виступ"
-    groups:
-      - name: "Вдома (Підготовка)"
-        items:
-          - "Написання сценарію"
-          - "Створення слайдів"
-          - "Репетиція перед дзеркалом"
-          - "Перевірка таймінгу"
-          - "Вибір одягу"
-          - "Друк тез"
-          - "Пошук картинок"
-          - "Налаштування мікрофона"
-      - name: "На сцені (Виступ)"
-        items:
-          - "Зоровий контакт"
-          - "Жестикуляція"
-          - "Відповіді на питання"
-          - "Робота з мікрофоном"
-          - "Паузи для акценту"
-          - "Усмішка публіці"
-          - "Перевірка клікера"
-          - "Контроль часу"
-
-  - type: match-up
-    id: 143-09-transitions
-    title: "Фрази-переходи"
-    pairs:
-      - left: "Перейдемо до..."
-        right: "Наступна частина"
-      - left: "Як я вже казав..."
-        right: "Нагадування"
-      - left: "З іншого боку..."
-        right: "Протилежна думка"
-      - left: "Наприклад..."
-        right: "Ілюстрація"
-      - left: "Отже..."
-        right: "Підсумок"
-      - left: "По-перше..."
-        right: "Початок списку"
-      - left: "На завершення..."
-        right: "Кінець виступу"
-      - left: "Це приводить нас до..."
-        right: "Логічний зв'язок"
-
-  - type: fill-in
-    id: 143-10-conclusion
-    title: "Фрази для висновку"
+    - Висновки
+    - Заклик до дії
+    - Подяка за увагу
+    - Відповіді на запитання
+    - Роздача матеріалів
+    - Контакти спікера
+- type: quiz
+  id: 143-03-slide-design
+  title: 'Дизайн слайдів: Так чи Ні?'
+  items:
+  - question: Слайд, на якому 500 слів дрібним шрифтом.
+    options:
+    - text: Погано
+      correct: true
+    - text: Добре
+      correct: false
+    - text: Інформативно
+      correct: false
+    - text: Професійно
+      correct: false
+  - question: Одне якісне зображення і короткий заголовок.
+    options:
+    - text: Добре
+      correct: true
+    - text: Погано
+      correct: false
+    - text: Замало тексту
+      correct: false
+    - text: Несерйозно
+      correct: false
+  - question: Використання 10 різних шрифтів і кольорів.
+    options:
+    - text: Погано (хаос)
+      correct: true
+    - text: Креативно
+      correct: false
+    - text: Весело
+      correct: false
+    - text: Цікаво
+      correct: false
+  - question: Темний текст на темному фоні.
+    options:
+    - text: Погано (нечитабельно)
+      correct: true
+    - text: Стильно
+      correct: false
+    - text: Загадково
+      correct: false
+    - text: Економно
+      correct: false
+  - question: Графік з чіткими підписами.
+    options:
+    - text: Добре
+      correct: true
+    - text: Нудно
+      correct: false
+    - text: Складно
+      correct: false
+    - text: Зайве
+      correct: false
+  - question: Читання тексту зі слайда спиною до публіки.
+    options:
+    - text: Жахливо
+      correct: true
+    - text: Нормально
+      correct: false
+    - text: Зручно
+      correct: false
+    - text: Професійно
+      correct: false
+  - question: Єдиний стиль для всіх слайдів.
+    options:
+    - text: Добре
+      correct: true
+    - text: Нудно
+      correct: false
+    - text: Обмеження
+      correct: false
+    - text: Старомодно
+      correct: false
+  - question: Контакт очей з аудиторією, а не з екраном.
+    options:
+    - text: Чудово
+      correct: true
+    - text: Страшно
+      correct: false
+    - text: Неважливо
+      correct: false
+    - text: Помилка
+      correct: false
+- type: match-up
+  id: 143-04-rhetoric-devices
+  title: Риторичні прийоми
+  pairs:
+  - left: Ми маємо мрію!
+    right: Повтор (Анафора)
+  - left: Він хоробрий, як лев.
+    right: Порівняння
+  - left: Чи хочемо ми жити краще?
+    right: Риторичне запитання
+  - left: Це не просто крок, це стрибок.
+    right: Протиставлення
+  - left: 'Три речі: віра, надія, любов.'
+    right: Правило трьох
+  - left: Море сліз.
+    right: Гіпербола (перебільшення)
+  - left: Гірка правда.
+    right: Епітет
+  - left: Час летить.
+    right: Метафора
+- type: fill-in
+  id: 143-05-speech-intro
+  title: Фрази для вступу
+  items:
+  - sentence: Добрий день, шановні ___!
+    answer: колеги
+    options:
+    - колеги
+    - вороги
+    - стіни
+    - сни
+  - sentence: Дозвольте ___ себе.
+    answer: представити
+    options:
+    - представити
+    - забути
+    - сховати
+    - намалювати
+  - sentence: Тема моєї ___ — історія кави.
+    answer: доповіді
+    options:
+    - доповіді
+    - обіду
+    - гри
+    - пісні
+  - sentence: Мета мого виступу — ___ вас у важливості спорту.
+    answer: переконати
+    options:
+    - переконати
+    - налякати
+    - приспати
+    - розсмішити
+  - sentence: Я хочу звернути вашу ___ на цей графік.
+    answer: увагу
+    options:
+    - увагу
+    - руку
+    - ногу
+    - голову
+  - sentence: Мій виступ ___ 10 хвилин.
+    answer: триватиме
+    options:
+    - триватиме
+    - чекатиме
+    - плакатиме
+    - співатиме
+  - sentence: Якщо у вас виникнуть ___, я відповім у кінці.
+    answer: запитання
+    options:
+    - запитання
+    - відповіді
+    - проблеми
+    - гроші
+  - sentence: Давайте ___ з історії питання.
+    answer: почнемо
+    options:
+    - почнемо
+    - закінчимо
+    - втечемо
+    - забудемо
+- type: match-up
+  id: 143-06-body-language
+  title: Мова тіла
+  pairs:
+  - left: Схрещені руки на грудях
+    right: Закритість / Захист
+  - left: Відкриті долоні
+    right: Щирість / Відкритість
+  - left: Погляд в очі
+    right: Впевненість / Контакт
+  - left: Погляд у підлогу
+    right: Невпевненість / Сором
+  - left: Постукування пальцями
+    right: Нетерпіння / Нервозність
+  - left: Усмішка
+    right: Доброзичливість
+  - left: Ходіння туди-сюди
+    right: Енергія або Хвилювання
+  - left: Сутулі плечі
+    right: Втома / Невпевненість
+- type: quiz
+  id: 143-07-qa-handling
+  title: Складні запитання
+  items:
+  - question: Якщо ви не знаєте відповіді, що робити?
+    options:
+    - text: Чесно визнати і пообіцяти дізнатися
+      correct: true
+    - text: Брехати і вигадувати
+      correct: false
+    - text: Ігнорувати запитання
+      correct: false
+    - text: Образити того, хто питає
+      correct: false
+  - question: Якщо запитання агресивне?
+    options:
+    - text: Зберігати спокій і відповідати по суті
+      correct: true
+    - text: Кричати у відповідь
+      correct: false
+    - text: Плакати
+      correct: false
+    - text: Втекти зі сцени
+      correct: false
+  - question: Якщо запитання не по темі?
+    options:
+    - text: Ввічливо запропонувати обговорити це пізніше
+      correct: true
+    - text: Почати довгу дискусію не по темі
+      correct: false
+    - text: Сміятися над запитанням
+      correct: false
+    - text: Мовчати
+      correct: false
+  - question: Як краще почати відповідь?
+    options:
+    - text: Дякую за цікаве запитання
+      correct: true
+    - text: Ну що за дурне питання
+      correct: false
+    - text: Я ж вже казав
+      correct: false
+    - text: Ви неуважно слухали
+      correct: false
+  - question: Якщо ви не почули запитання?
+    options:
+    - text: Попросити повторити
+      correct: true
+    - text: Відповідати навмання
+      correct: false
+    - text: Кивати головою
+      correct: false
+    - text: Зробити вигляд, що все зрозумів
+      correct: false
+  - question: Чи можна сперечатися з публікою?
+    options:
+    - text: Краще уникати конфліктів
+      correct: true
+    - text: Так, треба довести свою правоту силою
+      correct: false
+    - text: Так, це шоу
+      correct: false
+    - text: Тільки якщо вони неправі
+      correct: false
+  - question: Якщо час вийшов, а питання ще є?
+    options:
+    - text: Запропонувати підійти після виступу
+      correct: true
+    - text: Продовжувати виступ ще годину
+      correct: false
+    - text: Просто піти
+      correct: false
+    - text: Ігнорувати організаторів
+      correct: false
+  - question: Чи варто записувати питання?
+    options:
+    - text: Так, це показує повагу
+      correct: true
+    - text: Ні, у мене ідеальна пам'ять
+      correct: false
+    - text: Це смішно
+      correct: false
+    - text: Тільки якщо вони від начальства
+      correct: false
+- type: group-sort
+  id: 143-08-prep-vs-delivery
+  title: Підготовка vs Виступ
+  groups:
+  - name: Вдома (Підготовка)
     items:
-      - sentence: "Дозвольте підбити ___."
-        answer: "підсумки"
-        options: ["підсумки", "рахунки", "вікна", "двері"]
-      - sentence: "Ми дійшли до ___ що гіпотеза підтвердилася."
-        answer: "висновку"
-        options: ["висновку", "магазину", "лісу", "дому"]
-      - sentence: "Дякую за вашу ___."
-        answer: "увагу"
-        options: ["увагу", "роботу", "зарплату", "каву"]
-      - sentence: "Я готовий відповісти на ваші ___."
-        answer: "запитання"
-        options: ["запитання", "листи", "дзвінки", "думки"]
-      - sentence: "Сподіваюся, ця інформація була ___."
-        answer: "корисною"
-        options: ["корисною", "смачною", "холодною", "мокрою"]
-      - sentence: "На цьому я ___ свій виступ."
-        answer: "завершую"
-        options: ["завершую", "починаю", "забуваю", "ламаю"]
-      - sentence: "Закликаю вас до ___."
-        answer: "дії"
-        options: ["дії", "сну", "їжі", "втечі"]
-      - sentence: "Бажаю всім ___."
-        answer: "успіхів"
-        options: ["успіхів", "проблем", "дощу", "хвороб"]
-
-  - type: quiz
-    id: 143-11-voice
-    title: "Голос оратора"
+    - Написання сценарію
+    - Створення слайдів
+    - Репетиція перед дзеркалом
+    - Перевірка таймінгу
+    - Вибір одягу
+    - Друк тез
+    - Пошук картинок
+    - Налаштування мікрофона
+  - name: На сцені (Виступ)
     items:
-      - question: "Говорити монотонно (на одній ноті) — це..."
-        options:
-          - { text: "Погано (присипляє)", correct: true }
-          - { text: "Добре (заспокоює)", correct: false }
-          - { text: "Професійно", correct: false }
-          - { text: "Стильно", correct: false }
-      - question: "Робити паузи — це..."
-        options:
-          - { text: "Добре (дає час подумати)", correct: true }
-          - { text: "Погано (виглядає як забув текст)", correct: false }
-          - { text: "Заборонено", correct: false }
-          - { text: "Дивно", correct: false }
-      - question: "Говорити занадто тихо — це..."
-        options:
-          - { text: "Погано (не чути)", correct: true }
-          - { text: "Скромно", correct: false }
-          - { text: "Інтимно", correct: false }
-          - { text: "Ввічливо", correct: false }
-      - question: "Змінювати темп мови — це..."
-        options:
-          - { text: "Добре (тримає увагу)", correct: true }
-          - { text: "Погано (плутає)", correct: false }
-          - { text: "Непотрібно", correct: false }
-          - { text: "Складно", correct: false }
-      - question: "Чітка дикція — це..."
-        options:
-          - { text: "Обов'язково", correct: true }
-          - { text: "Неважливо", correct: false }
-          - { text: "Тільки для акторів", correct: false }
-          - { text: "Застаріло", correct: false }
-      - question: "Пити воду під час виступу — це..."
-        options:
-          - { text: "Нормально", correct: true }
-          - { text: "Невиховано", correct: false }
-          - { text: "Слабкість", correct: false }
-          - { text: "Заборонено", correct: false }
-      - question: "Кричати в мікрофон — це..."
-        options:
-          - { text: "Погано (ріже вуха)", correct: true }
-          - { text: "Добре (всі почують)", correct: false }
-          - { text: "Енергійно", correct: false }
-          - { text: "Впевнено", correct: false }
-      - question: "Говорити з ентузіазмом — це..."
-        options:
-          - { text: "Чудово (заражає публіку)", correct: true }
-          - { text: "Непрофесійно", correct: false }
-          - { text: "Дитячо", correct: false }
-          - { text: "Смішно", correct: false }
-
-  - type: match-up
-    id: 143-12-visuals
-    title: "Візуальні засоби"
-    pairs:
-      - left: "Діаграма (Pie chart)"
-        right: "Показати частки цілого"
-      - left: "Графік (Line chart)"
-        right: "Показати динаміку в часі"
-      - left: "Таблиця"
-        right: "Показати точні цифри"
-      - left: "Фотографія"
-        right: "Викликати емоції / Показати реальність"
-      - left: "Схема / Карта думок"
-        right: "Показати зв'язки"
-      - left: "Відео"
-        right: "Показати процес або інтерв'ю"
-      - left: "Інфографіка"
-        right: "Складна інформація просто"
-      - left: "Карта"
-        right: "Показати географію"
-
-  - type: true-false
-    id: 143-13-myths
-    title: "Міфи про публічні виступи"
-    items:
-      - statement: "Гарним оратором народжуються, а не стають."
-        correct: false
-        explanation: "Це навичка, яку можна натренувати."
-      - statement: "Хвилюватися перед виступом — це нормально."
-        correct: true
-        explanation: "Навіть професіонали хвилюються."
-      - statement: "Треба вивчити текст напам'ять слово в слово."
-        correct: false
-        explanation: "Краще знати план і говорити вільно."
-      - statement: "Треба дивитися поверх голів людей, а не в очі."
-        correct: false
-        explanation: "Контакт очей важливий для довіри."
-      - statement: "Якщо ви помилилися, треба вибачатися 5 хвилин."
-        correct: false
-        explanation: "Просто виправтеся і йдіть далі."
-      - statement: "Чим більше слайдів, тим краще."
-        correct: false
-        explanation: "Якість важливіша за кількість."
-      - statement: "Жарти доречні в будь-якій презентації."
-        correct: false
-        explanation: "Залежить від контексту (на похороні — ні)."
-      - statement: "Репетиція — запорука успіху."
-        correct: true
-        explanation: "Імпровізація вимагає підготовки."
-
-  - type: true-false
-    id: 143-14-checklist
-    title: "Фінальний чек-лист"
-    items:
-      - statement: "Я знаю свою тему на 100%."
-        correct: true
-        explanation: "Компетентність — основа впевненості."
-      - statement: "Я перевірив презентацію на помилки."
-        correct: true
-        explanation: "Помилки псують враження."
-      - statement: "Я знаю, скільки часу займає мій виступ."
-        correct: true
-        explanation: "Таймінг — це повага до публіки."
-      - statement: "Я підготував відповіді на можливі питання."
-        correct: true
-        explanation: "Щоб не розгубитися."
-      - statement: "Я виспався перед виступом."
-        correct: true
-        explanation: "Втомлений оратор — нудний оратор."
-      - statement: "Я перевірив техніку (проектор, мікрофон)."
-        correct: true
-        explanation: "Техніка часто підводить."
-      - statement: "Я взяв воду."
-        correct: true
-        explanation: "Голос може сісти."
-      - statement: "Я налаштований позитивно."
-        correct: true
-        explanation: "Усмішка — ваша зброя."
+    - Зоровий контакт
+    - Жестикуляція
+    - Відповіді на питання
+    - Робота з мікрофоном
+    - Паузи для акценту
+    - Усмішка публіці
+    - Перевірка клікера
+    - Контроль часу
+- type: match-up
+  id: 143-09-transitions
+  title: Фрази-переходи
+  pairs:
+  - left: Перейдемо до...
+    right: Наступна частина
+  - left: Як я вже казав...
+    right: Нагадування
+  - left: З іншого боку...
+    right: Протилежна думка
+  - left: Наприклад...
+    right: Ілюстрація
+  - left: Отже...
+    right: Підсумок
+  - left: По-перше...
+    right: Початок списку
+  - left: На завершення...
+    right: Кінець виступу
+  - left: Це приводить нас до...
+    right: Логічний зв'язок
+- type: fill-in
+  id: 143-10-conclusion
+  title: Фрази для висновку
+  items:
+  - sentence: Дозвольте підбити ___.
+    answer: підсумки
+    options:
+    - підсумки
+    - рахунки
+    - вікна
+    - двері
+  - sentence: Ми дійшли до ___ що гіпотеза підтвердилася.
+    answer: висновку
+    options:
+    - висновку
+    - магазину
+    - лісу
+    - дому
+  - sentence: Дякую за вашу ___.
+    answer: увагу
+    options:
+    - увагу
+    - роботу
+    - зарплату
+    - каву
+  - sentence: Я готовий відповісти на ваші ___.
+    answer: запитання
+    options:
+    - запитання
+    - листи
+    - дзвінки
+    - думки
+  - sentence: Сподіваюся, ця інформація була ___.
+    answer: корисною
+    options:
+    - корисною
+    - смачною
+    - холодною
+    - мокрою
+  - sentence: На цьому я ___ свій виступ.
+    answer: завершую
+    options:
+    - завершую
+    - починаю
+    - забуваю
+    - ламаю
+  - sentence: Закликаю вас до ___.
+    answer: дії
+    options:
+    - дії
+    - сну
+    - їжі
+    - втечі
+  - sentence: Бажаю всім ___.
+    answer: успіхів
+    options:
+    - успіхів
+    - проблем
+    - дощу
+    - хвороб
+- type: quiz
+  id: 143-11-voice
+  title: Голос оратора
+  items:
+  - question: Говорити монотонно (на одній ноті) — це...
+    options:
+    - text: Погано (присипляє)
+      correct: true
+    - text: Добре (заспокоює)
+      correct: false
+    - text: Професійно
+      correct: false
+    - text: Стильно
+      correct: false
+  - question: Робити паузи — це...
+    options:
+    - text: Добре (дає час подумати)
+      correct: true
+    - text: Погано (виглядає як забув текст)
+      correct: false
+    - text: Заборонено
+      correct: false
+    - text: Дивно
+      correct: false
+  - question: Говорити занадто тихо — це...
+    options:
+    - text: Погано (не чути)
+      correct: true
+    - text: Скромно
+      correct: false
+    - text: Інтимно
+      correct: false
+    - text: Ввічливо
+      correct: false
+  - question: Змінювати темп мови — це...
+    options:
+    - text: Добре (тримає увагу)
+      correct: true
+    - text: Погано (плутає)
+      correct: false
+    - text: Непотрібно
+      correct: false
+    - text: Складно
+      correct: false
+  - question: Чітка дикція — це...
+    options:
+    - text: Обов'язково
+      correct: true
+    - text: Неважливо
+      correct: false
+    - text: Тільки для акторів
+      correct: false
+    - text: Застаріло
+      correct: false
+  - question: Пити воду під час виступу — це...
+    options:
+    - text: Нормально
+      correct: true
+    - text: Невиховано
+      correct: false
+    - text: Слабкість
+      correct: false
+    - text: Заборонено
+      correct: false
+  - question: Кричати в мікрофон — це...
+    options:
+    - text: Погано (ріже вуха)
+      correct: true
+    - text: Добре (всі почують)
+      correct: false
+    - text: Енергійно
+      correct: false
+    - text: Впевнено
+      correct: false
+  - question: Говорити з ентузіазмом — це...
+    options:
+    - text: Чудово (заражає публіку)
+      correct: true
+    - text: Непрофесійно
+      correct: false
+    - text: Дитячо
+      correct: false
+    - text: Смішно
+      correct: false
+- type: match-up
+  id: 143-12-visuals
+  title: Візуальні засоби
+  pairs:
+  - left: Діаграма (Pie chart)
+    right: Показати частки цілого
+  - left: Графік (Line chart)
+    right: Показати динаміку в часі
+  - left: Таблиця
+    right: Показати точні цифри
+  - left: Фотографія
+    right: Викликати емоції / Показати реальність
+  - left: Схема / Карта думок
+    right: Показати зв'язки
+  - left: Відео
+    right: Показати процес або інтерв'ю
+  - left: Інфографіка
+    right: Складна інформація просто
+  - left: Карта
+    right: Показати географію
+- type: true-false
+  id: 143-13-myths
+  title: Міфи про публічні виступи
+  items:
+  - statement: Гарним оратором народжуються, а не стають.
+    correct: false
+    explanation: Це навичка, яку можна натренувати.
+  - statement: Хвилюватися перед виступом — це нормально.
+    correct: true
+    explanation: Навіть професіонали хвилюються.
+  - statement: Треба вивчити текст напам'ять слово в слово.
+    correct: false
+    explanation: Краще знати план і говорити вільно.
+  - statement: Треба дивитися поверх голів людей, а не в очі.
+    correct: false
+    explanation: Контакт очей важливий для довіри.
+  - statement: Якщо ви помилилися, треба вибачатися 5 хвилин.
+    correct: false
+    explanation: Просто виправтеся і йдіть далі.
+  - statement: Чим більше слайдів, тим краще.
+    correct: false
+    explanation: Якість важливіша за кількість.
+  - statement: Жарти доречні в будь-якій презентації.
+    correct: false
+    explanation: Залежить від контексту (на похороні — ні).
+  - statement: Репетиція — запорука успіху.
+    correct: true
+    explanation: Імпровізація вимагає підготовки.
+- type: true-false
+  id: 143-14-checklist
+  title: Фінальний чек-лист
+  items:
+  - statement: Я знаю свою тему на 100%.
+    correct: true
+    explanation: Компетентність — основа впевненості.
+  - statement: Я перевірив презентацію на помилки.
+    correct: true
+    explanation: Помилки псують враження.
+  - statement: Я знаю, скільки часу займає мій виступ.
+    correct: true
+    explanation: Таймінг — це повага до публіки.
+  - statement: Я підготував відповіді на можливі питання.
+    correct: true
+    explanation: Щоб не розгубитися.
+  - statement: Я виспався перед виступом.
+    correct: true
+    explanation: Втомлений оратор — нудний оратор.
+  - statement: Я перевірив техніку (проектор, мікрофон).
+    correct: true
+    explanation: Техніка часто підводить.
+  - statement: Я взяв воду.
+    correct: true
+    explanation: Голос може сісти.
+  - statement: Я налаштований позитивно.
+    correct: true
+    explanation: Усмішка — ваша зброя.

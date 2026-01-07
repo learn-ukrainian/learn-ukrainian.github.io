@@ -1,49 +1,51 @@
 - type: match-up
   title: Perception Roots
   pairs:
-  - left: 'бачити'
+  - left: бачити
     right: to see
-  - left: 'бачення'
+  - left: бачення
     right: vision
-  - left: 'побачення'
+  - left: побачення
     right: meeting/date
-  - left: 'слухати'
+  - left: слухати
     right: to listen
-  - left: 'слух'
+  - left: слух
     right: hearing
-  - left: 'слухач'
+  - left: слухач
     right: listener
-  - left: 'чути'
+  - left: чути
     right: to hear
-  - left: 'почуття'
+  - left: почуття
     right: feeling
-  - left: 'бач- (бачити)'
+  - left: бач- (бачити)
     right: see
-  - left: 'чу- (чути)'
+  - left: чу- (чути)
     right: hear
+  id: perception-roots
 - type: match-up
   title: Speech Roots
   pairs:
-  - left: 'говорити'
+  - left: говорити
     right: to speak
-  - left: 'розмова'
+  - left: розмова
     right: conversation
-  - left: 'мова'
+  - left: мова
     right: language
-  - left: 'мовлення'
+  - left: мовлення
     right: speech
-  - left: 'мовчати'
+  - left: мовчати
     right: to be silent
-  - left: 'мовчання'
+  - left: мовчання
     right: silence
-  - left: 'думати'
+  - left: думати
     right: to think
-  - left: 'думка'
+  - left: думка
     right: thought
-  - left: 'каз- (казати)'
+  - left: каз- (казати)
     right: say
-  - left: 'мов- (мовити)'
+  - left: мов- (мовити)
     right: speak
+  id: speech-roots
 - type: cloze
   title: Root Families
   passage: 'Я хочу [{бачити|слухати|говорити|чути}] тебе. (see) [{Слухай|Бач|Говори|Пиши}]
@@ -55,6 +57,7 @@
 
 
     [{Слухачі|Мовці|Читачі|Глядачі}] були уважними. Будь ласка, [{мовчи|говори|слухай|дивись}]!'
+  id: root-families
 - type: quiz
   title: Perception Roots
   items:
@@ -156,6 +159,7 @@
       correct: false
     - text: Слово "почуття" означає слухання а "відчуття" означає бачення
       correct: false
+  id: perception-roots
 - type: cloze
   title: Story Comprehension
   passage: 'Тарас {бачив|чув|слухав} дивну річ. (saw)
@@ -181,6 +185,7 @@
     Марія записує важливу {інформацію|розмову|мову}.
 
     Вони люблять {слухати|чути|бачити} тишу в лісі.'
+  id: story-comprehension
 - type: unjumble
   title: Perception Sentences
   items:
@@ -265,6 +270,7 @@
     - на
     - лекціях
     answer: Вони завжди дуже уважні добрі слухачі на лекціях
+  id: perception-sentences
 - type: error-correction
   title: Root Usage
   items:
@@ -310,6 +316,7 @@
     - побачення
     - бачення
     explanation: Meeting/date = побачення, vision = бачення.
+  id: root-usage
 - type: group-sort
   title: Root Families
   groups:
@@ -335,6 +342,7 @@
     - мовлення
     - мовчати
     - мовчання
+  id: root-families
 - type: true-false
   title: Root Rules
   items:
@@ -362,6 +370,7 @@
     correct: true
   - statement: '"Слухач" = speaker.'
     correct: false
+  id: root-rules
 - type: translate
   title: English to Ukrainian
   items:
@@ -429,3 +438,4 @@
       correct: false
     - text: розмова
       correct: false
+  id: english-to-ukrainian

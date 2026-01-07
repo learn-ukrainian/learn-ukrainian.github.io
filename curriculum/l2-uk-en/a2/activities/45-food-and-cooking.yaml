@@ -1,39 +1,41 @@
 - type: match-up
   title: Kitchen Words
   pairs:
-  - left: 'каструля'
+  - left: каструля
     right: pot
-  - left: 'сковорода'
+  - left: сковорода
     right: frying pan
-  - left: 'духовка'
+  - left: духовка
     right: oven
-  - left: 'мікрохвильовка'
+  - left: мікрохвильовка
     right: microwave
-  - left: 'холодильник'
+  - left: холодильник
     right: refrigerator
-  - left: 'плита'
+  - left: плита
     right: stove
-  - left: 'варити'
+  - left: варити
     right: to boil
-  - left: 'смажити'
+  - left: смажити
     right: to fry
-  - left: 'пекти'
+  - left: пекти
     right: to bake
-  - left: 'тушкувати'
+  - left: тушкувати
     right: to stew
-  - left: 'нарізати'
+  - left: нарізати
     right: to chop
-  - left: 'чайник'
+  - left: чайник
     right: kettle
+  id: kitchen-words
 - type: cloze
   title: Cooking Methods
-  passage: 'Я {варю|смажу|печу|тушкую} картоплю 20 хвилин. Вона {смажить|варить|пече|тушкує}
-    м''ясо на сковороді. Він {пече|варить|смажить|тушкує} хліб у духовці. Я {нарізаю|варю|смажу|тушкую}
-    цибулю на дошці. Суп варять у {каструлі|сковороді|духовці|чайнику}. Смаж м''ясо
+  passage: Я {варю|смажу|печу|тушкую} картоплю 20 хвилин. Вона {смажить|варить|пече|тушкує}
+    м'ясо на сковороді. Він {пече|варить|смажить|тушкує} хліб у духовці. Я {нарізаю|варю|смажу|тушкую}
+    цибулю на дошці. Суп варять у {каструлі|сковороді|духовці|чайнику}. Смаж м'ясо
     на {сковороді|каструлі|духовці|чайнику}. Пиріг печуть у {духовці|каструлі|сковороді|холодильнику}.
     Молоко тримають в {холодильнику|каструлі|духовці|плиті}. Вона {тушкує|смажить|варить|пече}
-    овочі в каструлі. Ми {готуємо|нарізаємо|смажимо|варимо} вечерю разом. Він {закип''ячує|смажить|пече|тушкує}
-    воду для чаю. Бабуся {запікає|варить|смажить|нарізає} курку в духовці.'
+    овочі в каструлі. Ми {готуємо|нарізаємо|смажимо|варимо} вечерю разом. Він {закип'ячує|смажить|пече|тушкує}
+    воду для чаю. Бабуся {запікає|варить|смажить|нарізає} курку в духовці.
+  id: cooking-methods
 - type: cloze
   title: Recipe Story
   passage: 'Бабуся {готує|нарізає|смажить} борщ. (cooks)
@@ -59,6 +61,7 @@
     Це була чудова {вечеря|кухня|кімната}. (dinner)
 
     Марія каже: "{Дякую|Будь ласка|Прошу}, бабусю!" (Thank you)'
+  id: recipe-story
 - type: quiz
   title: Food & Cooking
   items:
@@ -142,6 +145,7 @@
       correct: false
     - text: Їжа
       correct: false
+  id: food-&-cooking
 - type: unjumble
   title: Cooking Sentences
   items:
@@ -227,6 +231,7 @@
     - для
     - родини
     answer: Я сьогодні ввечері готую святкову вечерю для родини
+  id: cooking-sentences
 - type: error-correction
   title: Kitchen Mistakes
   items:
@@ -272,29 +277,31 @@
     - Закип'яти
     - Тушкуй
     explanation: We boil (кип'ятити) water, not stew it.
+  id: kitchen-mistakes
 - type: match-up
   title: Meals & Times
   pairs:
-  - left: 'сніданок'
+  - left: сніданок
     right: 7-9 ранку
-  - left: 'обід'
+  - left: обід
     right: 12-14
-  - left: 'вечеря'
+  - left: вечеря
     right: 18-20
-  - left: 'перекус'
+  - left: перекус
     right: будь-коли
-  - left: 'борщ'
+  - left: борщ
     right: на обід
-  - left: 'каша'
+  - left: каша
     right: на сніданок
-  - left: 'бутерброди'
+  - left: бутерброди
     right: на вечерю
-  - left: 'компот'
+  - left: компот
     right: після їжі
-  - left: 'сніданок'
+  - left: сніданок
     right: breakfast
-  - left: 'вечеря'
+  - left: вечеря
     right: dinner
+  id: meals-&-times
 - type: group-sort
   title: Kitchen Categories
   groups:
@@ -320,6 +327,7 @@
     - солоний
     - кислий
     - гострий
+  id: kitchen-categories
 - type: true-false
   title: Kitchen Facts
   items:
@@ -347,6 +355,7 @@
     correct: true
   - statement: '"Обід" = dinner.'
     correct: false
+  id: kitchen-facts
 - type: translate
   title: Food Words
   items:
@@ -414,3 +423,4 @@
       correct: false
     - text: холодильник
       correct: false
+  id: food-words

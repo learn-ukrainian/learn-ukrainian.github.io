@@ -16,11 +16,13 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
 import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
 
 ## Introduction
 
@@ -427,7 +429,13 @@ This text describes a typical day in Kyiv, filled with bare Instrumental example
 4. Чим надсилає листи? — Електронною поштою.
 5. Чим ріже овочі? — Ножем.
 
-##
+## 📋 Summary
+
+У цьому модулі ви вивчили:
+- Основні поняття та правила
+- Практичне застосування
+- Вправи для закріплення
+
 
 
 
@@ -435,139 +443,57 @@ This text describes a typical day in Kyiv, filled with bare Instrumental example
 
 ### Transport and Tools
 
-<MatchUp
-  title="Transport and Tools"
-  isUkrainian={false}
-  pairs={JSON.parse(`[{"left": "- автобусом", "right": "by bus"}, {"left": "- поїздом", "right": "by train"}, {"left": "- ручкою", "right": "with a pen"}, {"left": "- ножем", "right": "with a knife"}, {"left": "- літаком", "right": "by plane"}, {"left": "- ложкою", "right": "with a spoon"}, {"left": "- машиною", "right": "by car"}, {"left": "- олівцем", "right": "with a pencil"}, {"left": "- трамваєм", "right": "by tram"}, {"left": "- виделкою", "right": "with a fork"}, {"left": "- таксі", "right": "by taxi"}, {"left": "- голосом", "right": "with voice"}]`)}
-/>
+<MatchUp pairs={JSON.parse(`[{"left": "автобусом", "right": "by bus"}, {"left": "поїздом", "right": "by train"}, {"left": "ручкою", "right": "with a pen"}, {"left": "ножем", "right": "with a knife"}, {"left": "літаком", "right": "by plane"}, {"left": "ложкою", "right": "with a spoon"}, {"left": "машиною", "right": "by car"}, {"left": "олівцем", "right": "with a pencil"}, {"left": "трамваєм", "right": "by tram"}, {"left": "виделкою", "right": "with a fork"}, {"left": "таксі", "right": "by taxi"}, {"left": "голосом", "right": "with voice"}]`)} />
 
 ### Instrumental Without Preposition
 
-<Cloze
-  title="Instrumental Without Preposition"
-  isUkrainian={false}
-  passage={`Ми їдемо в аеропорт [___:1]. Вона пише листа [___:2]. Він ріже хліб [___:3].
-
-Ми їмо суп [___:4]. Вона летить до Парижа [___:5]. Він говорить тихим [___:6].
-
-Я працюю [___:7] щодня. Діти малюють [___:8]. Вона махає [___:9].
-
-Ми їдемо в центр [___:10]. Я надсилаю документи [___:11]. Вона киває [___:12].`}
-  blanks={JSON.parse(`[{"index": 0, "answer": "таксі", "options": ["таксі", "з таксі", "на таксі"]}, {"index": 1, "answer": "ручкою", "options": ["ручкою", "ручка", "з ручкою"]}, {"index": 2, "answer": "ножем", "options": ["ножем", "ніж", "з ножем"]}, {"index": 3, "answer": "ложкою", "options": ["ложкою", "ложка", "з ложкою"]}, {"index": 4, "answer": "літаком", "options": ["літаком", "літак", "з літаком"]}, {"index": 5, "answer": "голосом", "options": ["голосом", "голос", "з голосом"]}, {"index": 6, "answer": "комп'ютером", "options": ["комп'ютером", "комп'ютер", "з комп'ютером"]}, {"index": 7, "answer": "олівцем", "options": ["олівцем", "олівець", "з олівцем"]}, {"index": 8, "answer": "рукою", "options": ["рукою", "рука", "з рукою"]}, {"index": 9, "answer": "трамваєм", "options": ["трамваєм", "трамвай", "з трамваєм"]}, {"index": 10, "answer": "електронною поштою", "options": ["електронною поштою", "електронна пошта", "з електронною поштою"]}, {"index": 11, "answer": "головою", "options": ["головою", "голова", "з головою"]}]`)}
-/>
+<Cloze passage={"Ми їдемо в аеропорт [___:0]. Вона пише листа [___:1]. Він ріже хліб [___:2].\n\nМи їмо суп [___:3]. Вона летить до Парижа [___:4]. Він говорить тихим [___:5].\n\nЯ працюю [___:6] щодня. Діти малюють [___:7]. Вона махає [___:8].\n\nМи їдемо в центр [___:9]. Я надсилаю документи [___:10]. Вона киває [___:11]."} blanks={JSON.parse(`[{"index": 0, "answer": "таксі", "options": ["таксі", "з таксі", "на таксі"]}, {"index": 1, "answer": "ручкою", "options": ["ручкою", "ручка", "з ручкою"]}, {"index": 2, "answer": "ножем", "options": ["ножем", "ніж", "з ножем"]}, {"index": 3, "answer": "ложкою", "options": ["ложкою", "ложка", "з ложкою"]}, {"index": 4, "answer": "літаком", "options": ["літаком", "літак", "з літаком"]}, {"index": 5, "answer": "голосом", "options": ["голосом", "голос", "з голосом"]}, {"index": 6, "answer": "комп'ютером", "options": ["комп'ютером", "комп'ютер", "з комп'ютером"]}, {"index": 7, "answer": "олівцем", "options": ["олівцем", "олівець", "з олівцем"]}, {"index": 8, "answer": "рукою", "options": ["рукою", "рука", "з рукою"]}, {"index": 9, "answer": "трамваєм", "options": ["трамваєм", "трамвай", "з трамваєм"]}, {"index": 10, "answer": "електронною поштою", "options": ["електронною поштою", "електронна пошта", "з електронною поштою"]}, {"index": 11, "answer": "головою", "options": ["головою", "голова", "з головою"]}]`)} />
 
 ### Instrumental Uses
 
-<Quiz
-  title="Instrumental Uses"
-  isUkrainian={false}
-  questions={JSON.parse(`[{"question": "When you want to say \\\\\\"by bus\\\\\\" in Ukrainian, which form correctly expresses the means of transport?", "options": [{"text": "з автобусом", "correct": false}, {"text": "автобусом", "correct": true}, {"text": "на автобус", "correct": false}, {"text": "автобуса", "correct": false}]}, {"question": "When expressing that someone writes with a pen, which Ukrainian sentence is grammatically correct?", "options": [{"text": "Я пишу ручкою.", "correct": true}, {"text": "Я пишу з ручкою.", "correct": false}, {"text": "Я пишу ручка.", "correct": false}, {"text": "Я пишу ручку.", "correct": false}]}, {"question": "In Ukrainian grammar, when do we use the Instrumental case WITHOUT a preposition (bare Instrumental)?", "options": [{"text": "Для засобу пересування та інструментів", "correct": true}, {"text": "Для супроводу (з ким?)", "correct": false}, {"text": "Для місця (де?)", "correct": false}, {"text": "Для часу (коли?)", "correct": false}]}, {"question": "When expressing that someone cuts bread with a knife, which form is correct for \\\\\\"with a knife\\\\\\"?", "options": [{"text": "ножем", "correct": true}, {"text": "з ножем", "correct": false}, {"text": "ножа", "correct": false}, {"text": "ніж", "correct": false}]}, {"question": "When someone speaks quietly, which Ukrainian sentence correctly expresses \\\\\\"in a quiet voice\\\\\\"?", "options": [{"text": "Він говорить тихим голосом.", "correct": true}, {"text": "Він говорить з тихим голосом.", "correct": false}, {"text": "Він говорить тихий голос.", "correct": false}, {"text": "Він говорить тихого голосу.", "correct": false}]}, {"question": "When expressing \\\\\\"by train\\\\\\" in Ukrainian, which form correctly shows the means of transport?", "options": [{"text": "поїздом", "correct": true}, {"text": "з поїздом", "correct": false}, {"text": "на поїзд", "correct": false}, {"text": "поїзда", "correct": false}]}, {"question": "The Ukrainian word \\\\\\"метро\\\\\\" in the Instrumental case for \\\\\\"by metro\\\\\\" takes which form?", "options": [{"text": "не змінюється", "correct": true}, {"text": "стає \\\\\\"метром\\\\\\"", "correct": false}, {"text": "стає \\\\\\"метрою\\\\\\"", "correct": false}, {"text": "стає \\\\\\"метри\\\\\\"", "correct": false}]}, {"question": "When expressing seeing \\\\\\"with eyes\\\\\\" in Ukrainian, which irregular Instrumental form is correct?", "options": [{"text": "очима", "correct": true}, {"text": "очами", "correct": false}, {"text": "з очами", "correct": false}, {"text": "очей", "correct": false}]}, {"question": "When expressing that someone cuts bread with a knife, which Ukrainian sentence is correct?", "options": [{"text": "Вона ріже хліб ножем.", "correct": true}, {"text": "Вона ріже хліб з ножем.", "correct": false}, {"text": "Вона ріже хліб ніж.", "correct": false}, {"text": "Вона ріже хліб ножа.", "correct": false}]}, {"question": "When expressing \\\\\\"by email\\\\\\" in Ukrainian, which Instrumental form is correct?", "options": [{"text": "електронною поштою", "correct": true}, {"text": "з електронною поштою", "correct": false}, {"text": "електронна пошта", "correct": false}, {"text": "електронної пошти", "correct": false}]}, {"question": "When using \\\\\\"scissors\\\\\\" in Ukrainian, which Instrumental form of \\\\\\"ножиці\\\\\\" is correct?", "options": [{"text": "ножицями", "correct": true}, {"text": "ножицею", "correct": false}, {"text": "ножицям", "correct": false}, {"text": "ножиць", "correct": false}]}, {"question": "When expressing \\\\\\"in a whisper\\\\\\" in Ukrainian, which form is correct?", "options": [{"text": "пошепки", "correct": true}, {"text": "з пошепки", "correct": false}, {"text": "пошепкою", "correct": false}, {"text": "пошепку", "correct": false}]}]`)}
-/>
+<Quiz questions={JSON.parse(`[{"question": "When you want to say &quot;by bus&quot; in Ukrainian, which form correctly expresses the means of transport?", "options": [{"text": "з автобусом", "correct": false}, {"text": "автобусом", "correct": true}, {"text": "на автобус", "correct": false}, {"text": "автобуса", "correct": false}]}, {"question": "When expressing that someone writes with a pen, which Ukrainian sentence is grammatically correct?", "options": [{"text": "Я пишу ручкою.", "correct": true}, {"text": "Я пишу з ручкою.", "correct": false}, {"text": "Я пишу ручка.", "correct": false}, {"text": "Я пишу ручку.", "correct": false}]}, {"question": "In Ukrainian grammar, when do we use the Instrumental case WITHOUT a preposition (bare Instrumental)?", "options": [{"text": "Для засобу пересування та інструментів", "correct": true}, {"text": "Для супроводу (з ким?)", "correct": false}, {"text": "Для місця (де?)", "correct": false}, {"text": "Для часу (коли?)", "correct": false}]}, {"question": "When expressing that someone cuts bread with a knife, which form is correct for &quot;with a knife&quot;?", "options": [{"text": "ножем", "correct": true}, {"text": "з ножем", "correct": false}, {"text": "ножа", "correct": false}, {"text": "ніж", "correct": false}]}, {"question": "When someone speaks quietly, which Ukrainian sentence correctly expresses &quot;in a quiet voice&quot;?", "options": [{"text": "Він говорить тихим голосом.", "correct": true}, {"text": "Він говорить з тихим голосом.", "correct": false}, {"text": "Він говорить тихий голос.", "correct": false}, {"text": "Він говорить тихого голосу.", "correct": false}]}, {"question": "When expressing &quot;by train&quot; in Ukrainian, which form correctly shows the means of transport?", "options": [{"text": "поїздом", "correct": true}, {"text": "з поїздом", "correct": false}, {"text": "на поїзд", "correct": false}, {"text": "поїзда", "correct": false}]}, {"question": "The Ukrainian word &quot;метро&quot; in the Instrumental case for &quot;by metro&quot; takes which form?", "options": [{"text": "не змінюється", "correct": true}, {"text": "стає &quot;метром&quot;", "correct": false}, {"text": "стає &quot;метрою&quot;", "correct": false}, {"text": "стає &quot;метри&quot;", "correct": false}]}, {"question": "When expressing seeing &quot;with eyes&quot; in Ukrainian, which irregular Instrumental form is correct?", "options": [{"text": "очима", "correct": true}, {"text": "очами", "correct": false}, {"text": "з очами", "correct": false}, {"text": "очей", "correct": false}]}, {"question": "When expressing that someone cuts bread with a knife, which Ukrainian sentence is correct?", "options": [{"text": "Вона ріже хліб ножем.", "correct": true}, {"text": "Вона ріже хліб з ножем.", "correct": false}, {"text": "Вона ріже хліб ніж.", "correct": false}, {"text": "Вона ріже хліб ножа.", "correct": false}]}, {"question": "When expressing &quot;by email&quot; in Ukrainian, which Instrumental form is correct?", "options": [{"text": "електронною поштою", "correct": true}, {"text": "з електронною поштою", "correct": false}, {"text": "електронна пошта", "correct": false}, {"text": "електронної пошти", "correct": false}]}, {"question": "When using &quot;scissors&quot; in Ukrainian, which Instrumental form of &quot;ножиці&quot; is correct?", "options": [{"text": "ножицями", "correct": true}, {"text": "ножицею", "correct": false}, {"text": "ножицям", "correct": false}, {"text": "ножиць", "correct": false}]}, {"question": "When expressing &quot;in a whisper&quot; in Ukrainian, which form is correct?", "options": [{"text": "пошепки", "correct": true}, {"text": "з пошепки", "correct": false}, {"text": "пошепкою", "correct": false}, {"text": "пошепку", "correct": false}]}]`)} />
 
 ### Instrumental Rules
 
-<TrueFalse
-  title="Instrumental Rules"
-  isUkrainian={false}
-  items={JSON.parse(`[{"statement": "For means of transport, we use \\\\\\"з + Instrumental.\\\\\\"", "isTrue": false, "explanation": "For transport, we use bare instrumental: їхати автобусом."}, {"statement": "\\\\\\"Метро\\\\\\" and \\\\\\"таксі\\\\\\" don't change form in the instrumental.", "isTrue": true, "explanation": "Correct! They are indeclinable: їхати метро, їхати таксі."}, {"statement": "\\\\\\"Очима\\\\\\" is the instrumental of \\\\\\"очі.\\\\\\"", "isTrue": true, "explanation": "Yes! Очі has an irregular instrumental: очима."}, {"statement": "We always use a preposition with the instrumental case.", "isTrue": false, "explanation": "The instrumental can be used without a preposition for means, tools, and manner."}, {"statement": "\\\\\\"Ручкою\\\\\\" means \\\\\\"with a pen\\\\\\" (tool).", "isTrue": true, "explanation": "Correct! Писати ручкою = to write with a pen."}, {"statement": "\\\\\\"Їхати автобусом\\\\\\" and \\\\\\"їхати на автобусі\\\\\\" mean the same thing.", "isTrue": false, "explanation": "Автобусом = by bus. На автобусі = on the bus."}, {"statement": "Body parts can be used in the instrumental to describe actions.", "isTrue": true, "explanation": "Yes! Махати рукою, кивати головою, бити ногами."}, {"statement": "\\\\\\"Голосом\\\\\\" is used to express manner of speaking.", "isTrue": true, "explanation": "Correct! Говорити тихим голосом = to speak in a quiet voice."}, {"statement": "\\\\\\"Ножиці\\\\\\" has a singular form.", "isTrue": false, "explanation": "Ножиці exists only in plural. Its instrumental is ножицями."}, {"statement": "\\\\\\"Електронною поштою\\\\\\" means \\\\\\"by email.\\\\\\"", "isTrue": true, "explanation": "Correct! Надсилати електронною поштою = to send by email."}, {"statement": "For accompaniment, we use bare instrumental.", "isTrue": false, "explanation": "For accompaniment, we use з + instrumental: з другом, з сестрою."}, {"statement": "\\\\\\"Пошепки\\\\\\" is an adverb, not a noun in instrumental.", "isTrue": true, "explanation": "Correct! Пошепки is an adverb meaning \\\\\\"in a whisper.\\\\\\""}]`)}
-/>
+<TrueFalse items={JSON.parse(`[{"statement": "For means of transport, we use &quot;з + Instrumental.&quot;", "isTrue": false, "explanation": "For transport, we use bare instrumental: їхати автобусом."}, {"statement": "&quot;Метро&quot; and &quot;таксі&quot; don't change form in the instrumental.", "isTrue": true, "explanation": "Correct! They are indeclinable: їхати метро, їхати таксі."}, {"statement": "&quot;Очима&quot; is the instrumental of &quot;очі.&quot;", "isTrue": true, "explanation": "Yes! Очі has an irregular instrumental: очима."}, {"statement": "We always use a preposition with the instrumental case.", "isTrue": false, "explanation": "The instrumental can be used without a preposition for means, tools, and manner."}, {"statement": "&quot;Ручкою&quot; means &quot;with a pen&quot; (tool).", "isTrue": true, "explanation": "Correct! Писати ручкою = to write with a pen."}, {"statement": "&quot;Їхати автобусом&quot; and &quot;їхати на автобусі&quot; mean the same thing.", "isTrue": false, "explanation": "Автобусом = by bus. На автобусі = on the bus."}, {"statement": "Body parts can be used in the instrumental to describe actions.", "isTrue": true, "explanation": "Yes! Махати рукою, кивати головою, бити ногами."}, {"statement": "&quot;Голосом&quot; is used to express manner of speaking.", "isTrue": true, "explanation": "Correct! Говорити тихим голосом = to speak in a quiet voice."}, {"statement": "&quot;Ножиці&quot; has a singular form.", "isTrue": false, "explanation": "Ножиці exists only in plural. Its instrumental is ножицями."}, {"statement": "&quot;Електронною поштою&quot; means &quot;by email.&quot;", "isTrue": true, "explanation": "Correct! Надсилати електронною поштою = to send by email."}, {"statement": "For accompaniment, we use bare instrumental.", "isTrue": false, "explanation": "For accompaniment, we use з + instrumental: з другом, з сестрою."}, {"statement": "&quot;Пошепки&quot; is an adverb, not a noun in instrumental.", "isTrue": true, "explanation": "Correct! Пошепки is an adverb meaning &quot;in a whisper.&quot;"}]`)} />
 
 ### Transport vs. Tools
 
-<GroupSort
-  title="Transport vs. Tools"
-  isUkrainian={false}
-  groups={JSON.parse(`{"Transport": ["автобусом", "трамваєм", "поїздом", "літаком", "машиною", "метро"], "Tools": ["ручкою", "олівцем", "ножем", "ложкою", "виделкою", "ножицями"]}`)}
-/>
+<GroupSort groups={JSON.parse(`{"Transport": ["автобусом", "трамваєм", "поїздом", "літаком", "машиною", "метро"], "Tools": ["ручкою", "олівцем", "ножем", "ложкою", "виделкою", "ножицями"]}`)} />
 
 ### Instrumental Sentences
 
-<Unjumble
-  title="Instrumental Sentences"
-  isUkrainian={false}
-  items={JSON.parse(`[{"jumbled": "Вона / їде / до / центру / трамваєм / щодня / вранці / швидко", "answer": "Вона щодня вранці швидко їде до центру трамваєм"}, {"jumbled": "Вона / пише / листа / ручкою / своїй / бабусі / кожного / тижня", "answer": "Вона кожного тижня пише листа своїй бабусі ручкою"}, {"jumbled": "Він / ріже / хліб / ножем / на / кухні / кожного / ранку", "answer": "Він кожного ранку ріже хліб ножем на кухні"}, {"jumbled": "Ми / їмо / суп / ложкою / на / обід / кожного / дня", "answer": "Ми кожного дня на обід їмо суп ложкою"}, {"jumbled": "Вона / летить / до / Парижа / літаком / цього / тижня / вперше", "answer": "Вона вперше цього тижня летить до Парижа літаком"}, {"jumbled": "Він / говорить / тихим / голосом / у / бібліотеці / завжди / ввічливо", "answer": "Він завжди ввічливо говорить тихим голосом у бібліотеці"}]`)}
-/>
+<Unjumble items={JSON.parse(`[{"jumbled": "Вона / їде / до / центру / трамваєм / щодня / вранці / швидко", "answer": "Вона щодня вранці швидко їде до центру трамваєм"}, {"jumbled": "Вона / пише / листа / ручкою / своїй / бабусі / кожного / тижня", "answer": "Вона кожного тижня пише листа своїй бабусі ручкою"}, {"jumbled": "Він / ріже / хліб / ножем / на / кухні / кожного / ранку", "answer": "Він кожного ранку ріже хліб ножем на кухні"}, {"jumbled": "Ми / їмо / суп / ложкою / на / обід / кожного / дня", "answer": "Ми кожного дня на обід їмо суп ложкою"}, {"jumbled": "Вона / летить / до / Парижа / літаком / цього / тижня / вперше", "answer": "Вона вперше цього тижня летить до Парижа літаком"}, {"jumbled": "Він / говорить / тихим / голосом / у / бібліотеці / завжди / ввічливо", "answer": "Він завжди ввічливо говорить тихим голосом у бібліотеці"}]`)} />
 
 ### Fix the Instrumental
 
-<ErrorCorrection title="Fix the Instrumental" isUkrainian={false}>
-  <ErrorCorrectionItem
-    sentence={`Я їду на роботу з автобусом.`}
-    errorWord={`з автобусом`}
-    correctForm={`автобусом`}
-    options={[`з автобусом`, `автобусом`, `автобус`, `на автобус`]}
-    explanation={`For means of transport, use bare Instrumental WITHOUT preposition. \"By bus\" = автобусом, not з автобусом.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона пише листа з ручкою.`}
-    errorWord={`з ручкою`}
-    correctForm={`ручкою`}
-    options={[`з ручкою`, `ручкою`, `ручка`, `ручку`]}
-    explanation={`For tools, use bare Instrumental WITHOUT preposition. \"With a pen\" = ручкою, not з ручкою.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він ріже хліб з ніж.`}
-    errorWord={`з ніж`}
-    correctForm={`ножем`}
-    options={[`з ніж`, `ножем`, `ніж`, `ножа`]}
-    explanation={`Tools use bare Instrumental: ніж → ножем. No preposition needed, and the noun must be in Instrumental case.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Ми їмо суп ложка.`}
-    errorWord={`ложка`}
-    correctForm={`ложкою`}
-    options={[`ложка`, `ложкою`, `ложки`, `ложку`]}
-    explanation={`Tools require Instrumental case. Feminine nouns ending in -а take -ою: ложка → ложкою.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона летить до Парижа з літаком.`}
-    errorWord={`з літаком`}
-    correctForm={`літаком`}
-    options={[`з літаком`, `літаком`, `літак`, `літака`]}
-    explanation={`For means of transport, use bare Instrumental WITHOUT preposition. \"By plane\" = літаком, not з літаком.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він говорить тихим з голосом.`}
-    errorWord={`з голосом`}
-    correctForm={`голосом`}
-    options={[`з голосом`, `голосом`, `голос`, `голосу`]}
-    explanation={`Manner expressions use bare Instrumental. \"In a quiet voice\" = тихим голосом, not з голосом.`}
-  />
+<ErrorCorrection>
+  <ErrorCorrectionItem sentence="Я їду на роботу з автобусом." errorWord="з автобусом" correctForm="автобусом" options={JSON.parse(`["з автобусом", "автобусом", "автобус", "на автобус"]`)} explanation="For means of transport, use bare Instrumental WITHOUT preposition. &quot;By bus&quot; = автобусом, not з автобусом." />
+  <ErrorCorrectionItem sentence="Вона пише листа з ручкою." errorWord="з ручкою" correctForm="ручкою" options={JSON.parse(`["з ручкою", "ручкою", "ручка", "ручку"]`)} explanation="For tools, use bare Instrumental WITHOUT preposition. &quot;With a pen&quot; = ручкою, not з ручкою." />
+  <ErrorCorrectionItem sentence="Він ріже хліб з ніж." errorWord="з ніж" correctForm="ножем" options={JSON.parse(`["з ніж", "ножем", "ніж", "ножа"]`)} explanation="Tools use bare Instrumental: ніж → ножем. No preposition needed, and the noun must be in Instrumental case." />
+  <ErrorCorrectionItem sentence="Ми їмо суп ложка." errorWord="ложка" correctForm="ложкою" options={JSON.parse(`["ложка", "ложкою", "ложки", "ложку"]`)} explanation="Tools require Instrumental case. Feminine nouns ending in -а take -ою: ложка → ложкою." />
+  <ErrorCorrectionItem sentence="Вона летить до Парижа з літаком." errorWord="з літаком" correctForm="літаком" options={JSON.parse(`["з літаком", "літаком", "літак", "літака"]`)} explanation="For means of transport, use bare Instrumental WITHOUT preposition. &quot;By plane&quot; = літаком, not з літаком." />
+  <ErrorCorrectionItem sentence="Він говорить тихим з голосом." errorWord="з голосом" correctForm="голосом" options={JSON.parse(`["з голосом", "голосом", "голос", "голосу"]`)} explanation="Manner expressions use bare Instrumental. &quot;In a quiet voice&quot; = тихим голосом, not з голосом." />
 </ErrorCorrection>
 
 ### Complete the Story
 
-<Cloze
-  title="Complete the Story"
-  isUkrainian={false}
-  passage={`Вранці я йду на зупинку і їду [___:1] на роботу. На роботі працюю [___:2] цілий день. Пишу листи [___:3] і надсилаю їх [___:4]. Увечері їду додому [___:5] — це швидше. Вдома розмовляю [___:6] з родиною.
----
-На кухні мама готує обід. Вона ріже м'ясо [___:7]. Салат ріже [___:8]. Потім ми сідаємо за стіл і їмо: суп [___:9], а другу страву [___:10]. Тато розповідає історію тихим [___:11]. Після обіду брат їде на тренування [___:12].`}
-  blanks={JSON.parse(`[{"index": 0, "answer": "ножем", "options": ["ножем", "з ножем", "ніж"]}, {"index": 1, "answer": "ножицями", "options": ["ножицями", "з ножицями", "ножиці"]}, {"index": 2, "answer": "ложкою", "options": ["ложкою", "з ложкою", "ложка"]}, {"index": 3, "answer": "виделкою", "options": ["виделкою", "з виделкою", "виделка"]}, {"index": 4, "answer": "голосом", "options": ["голосом", "з голосом", "голос"]}, {"index": 5, "answer": "велосипедом", "options": ["велосипедом", "з велосипедом", "велосипед"]}, {"index": 6, "answer": "ножем", "options": ["ножем", "з ножем", "ніж"]}, {"index": 7, "answer": "ножицями", "options": ["ножицями", "з ножицями", "ножиці"]}, {"index": 8, "answer": "ложкою", "options": ["ложкою", "з ложкою", "ложка"]}, {"index": 9, "answer": "виделкою", "options": ["виделкою", "з виделкою", "виделка"]}, {"index": 10, "answer": "голосом", "options": ["голосом", "з голосом", "голос"]}, {"index": 11, "answer": "велосипедом", "options": ["велосипедом", "з велосипедом", "велосипед"]}]`)}
-/>
+<Cloze passage={"Вранці я йду на зупинку і їду [___:0] на роботу. На роботі працюю [___:1] цілий день. Пишу листи [___:2] і надсилаю їх [___:3]. Увечері їду додому [___:4] — це швидше. Вдома розмовляю [___:5] з родиною.\n---\nНа кухні мама готує обід. Вона ріже м'ясо [___:6]. Салат ріже [___:7]. Потім ми сідаємо за стіл і їмо: суп [___:8], а другу страву [___:9]. Тато розповідає історію тихим [___:10]. Після обіду брат їде на тренування [___:11]."} blanks={JSON.parse(`[{"index": 0, "answer": "ножем", "options": ["ножем", "з ножем", "ніж"]}, {"index": 1, "answer": "ножицями", "options": ["ножицями", "з ножицями", "ножиці"]}, {"index": 2, "answer": "ложкою", "options": ["ложкою", "з ложкою", "ложка"]}, {"index": 3, "answer": "виделкою", "options": ["виделкою", "з виделкою", "виделка"]}, {"index": 4, "answer": "голосом", "options": ["голосом", "з голосом", "голос"]}, {"index": 5, "answer": "велосипедом", "options": ["велосипедом", "з велосипедом", "велосипед"]}, {"index": 6, "answer": "ножем", "options": ["ножем", "з ножем", "ніж"]}, {"index": 7, "answer": "ножицями", "options": ["ножицями", "з ножицями", "ножиці"]}, {"index": 8, "answer": "ложкою", "options": ["ложкою", "з ложкою", "ложка"]}, {"index": 9, "answer": "виделкою", "options": ["виделкою", "з виделкою", "виделка"]}, {"index": 10, "answer": "голосом", "options": ["голосом", "з голосом", "голос"]}, {"index": 11, "answer": "велосипедом", "options": ["велосипедом", "з велосипедом", "велосипед"]}]`)} />
 
 ### Find Bare Instrumental
 
-<MarkTheWords isUkrainian={false}>
-  <MarkTheWordsActivity
-    instruction={`Mark the correct words.`}
-    text={`Click on instrumental forms used WITHOUT a preposition (means/tools).
-Я їду на роботу автобусом. Вона пише листа ручкою. Ми живемо з батьками. Він ріже хліб ножем. Кава з молоком смачна.
+<MarkTheWords>
+  <MarkTheWordsActivity instruction="" text="Click on instrumental forms used WITHOUT a preposition (means/tools).
+Я їду на роботу *автобусом*. Вона пише листа *ручкою*. Ми живемо з батьками. Він ріже хліб *ножем*. Кава з молоком смачна.
 ---
-Вона летить літаком до Парижа. Він розмовляє з другом. Я працюю комп'ютером. Діти грають з котом. Вона махає рукою.
+Вона летить *літаком* до Парижа. Він розмовляє з другом. Я працюю *комп'ютером*. Діти грають з котом. Вона махає *рукою*.
 ---
-Ми їмо суп ложкою. Він гуляє з собакою. Вона говорить тихим голосом. Я їду поїздом. Він живе з братом.`}
-    correctWords={JSON.parse(`["автобусом", "ручкою", "ножем", "літаком", "комп'ютером", "рукою", "ложкою", "голосом", "поїздом"]`)}
-  />
+Ми їмо суп *ложкою*. Він гуляє з собакою. Вона говорить тихим *голосом*. Я їду *поїздом*. Він живе з братом." correctWords={JSON.parse(`["автобусом", "ручкою", "ножем", "літаком", "комп'ютером", "рукою", "ложкою", "голосом", "поїздом"]`)} />
 </MarkTheWords>
 
 ### English to Ukrainian
 
-<Translate
-  title="English to Ukrainian"
-  isUkrainian={false}
-  questions={JSON.parse(`[{"source": "We go to the airport by taxi.", "options": [{"text": "Ми їдемо в аеропорт таксі.", "correct": true}, {"text": "Ми їдемо в аеропорт з таксі.", "correct": false}, {"text": "Ми їдемо в аеропорт таксою.", "correct": false}, {"text": "Ми їдемо в аеропорт таксу.", "correct": false}]}, {"source": "She writes a letter with a pen.", "options": [{"text": "Вона пише листа ручкою.", "correct": true}, {"text": "Вона пише листа ручка.", "correct": false}, {"text": "Вона пише листа з ручкою.", "correct": false}, {"text": "Вона пише листа ручку.", "correct": false}]}, {"source": "He cuts bread with a knife.", "options": [{"text": "Він ріже хліб ножем.", "correct": true}, {"text": "Він ріже хліб з ножем.", "correct": false}, {"text": "Він ріже хліб ніж.", "correct": false}, {"text": "Він ріже хліб нож.", "correct": false}]}, {"source": "We eat soup with a spoon.", "options": [{"text": "Ми їмо суп ложкою.", "correct": true}, {"text": "Ми їмо суп ложка.", "correct": false}, {"text": "Ми їмо суп з ложкою.", "correct": false}, {"text": "Ми їмо суп ложкам.", "correct": false}]}, {"source": "She is flying to Paris by plane.", "options": [{"text": "Вона летить до Парижа літаком.", "correct": true}, {"text": "Вона летить до Парижа з літаком.", "correct": false}, {"text": "Вона летить до Парижа літак.", "correct": false}, {"text": "Вона летить до Парижа на літаку.", "correct": false}]}, {"source": "He speaks in a quiet voice.", "options": [{"text": "Він говорить тихим голосом.", "correct": true}, {"text": "Він говорить з тихим голосом.", "correct": false}, {"text": "Він говорить тихий голос.", "correct": false}, {"text": "Він говорить тихого голосу.", "correct": false}]}]`)}
-/>
+<Translate questions={JSON.parse(`[{"source": "We go to the airport by taxi.", "options": [{"text": "Ми їдемо в аеропорт таксі.", "correct": true}, {"text": "Ми їдемо в аеропорт з таксі.", "correct": false}, {"text": "Ми їдемо в аеропорт таксою.", "correct": false}, {"text": "Ми їдемо в аеропорт таксу.", "correct": false}]}, {"source": "She writes a letter with a pen.", "options": [{"text": "Вона пише листа ручкою.", "correct": true}, {"text": "Вона пише листа ручка.", "correct": false}, {"text": "Вона пише листа з ручкою.", "correct": false}, {"text": "Вона пише листа ручку.", "correct": false}]}, {"source": "He cuts bread with a knife.", "options": [{"text": "Він ріже хліб ножем.", "correct": true}, {"text": "Він ріже хліб з ножем.", "correct": false}, {"text": "Він ріже хліб ніж.", "correct": false}, {"text": "Він ріже хліб нож.", "correct": false}]}, {"source": "We eat soup with a spoon.", "options": [{"text": "Ми їмо суп ложкою.", "correct": true}, {"text": "Ми їмо суп ложка.", "correct": false}, {"text": "Ми їмо суп з ложкою.", "correct": false}, {"text": "Ми їмо суп ложкам.", "correct": false}]}, {"source": "She is flying to Paris by plane.", "options": [{"text": "Вона летить до Парижа літаком.", "correct": true}, {"text": "Вона летить до Парижа з літаком.", "correct": false}, {"text": "Вона летить до Парижа літак.", "correct": false}, {"text": "Вона летить до Парижа на літаку.", "correct": false}]}, {"source": "He speaks in a quiet voice.", "options": [{"text": "Він говорить тихим голосом.", "correct": true}, {"text": "Він говорить з тихим голосом.", "correct": false}, {"text": "Він говорить тихий голос.", "correct": false}, {"text": "Він говорить тихого голосу.", "correct": false}]}]`)} />
 
 ## 📚 Vocabulary
 
@@ -630,9 +556,3 @@ This text describes a typical day in Kyiv, filled with bare Instrumental example
 | яремче | jɐˈrɛmt͡ʃe | Yaremche | name | с |  |
 | іваний | iˈʋɑnei̯ | Ivan (adj? typo?) | adj |  |  |
 | історичний | istoˈrɪt͡ʃnei̯ | historical | adj |  |  |
-
-> [!resources] 🔗 External Resources
->
-> **🎧 Podcasts:**
-> - [ULP 2-61 Christmas dinner in Ukraine + Instrumental case](https://www.ukrainianlessons.com/lesson/61/) — Level-aligned topic match: instrumental
-> - [ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns](https://www.ukrainianlessons.com/lesson/62/) — Level-aligned topic match: instrumental

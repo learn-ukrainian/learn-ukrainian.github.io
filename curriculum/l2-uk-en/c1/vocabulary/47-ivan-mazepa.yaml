@@ -1,0 +1,129 @@
+module: 47-ivan-mazepa
+level: C1
+version: '2.0'
+items:
+- lemma: меценатство
+  ipa: /met͡senˈɑt͡stvo/
+  translation: patronage, philanthropy
+  pos: noun
+  gender: n
+- lemma: бароко
+  ipa: /bɐˈrɔkɔ/
+  translation: Baroque
+  pos: noun
+  gender: n
+- lemma: анатема
+  ipa: /ɐˈnɑtemɐ/
+  translation: anathema, excommunication
+  pos: noun
+  gender: f
+- lemma: повстання
+  ipa: /povˈstɑnʲːɐ/
+  translation: uprising, revolt
+  pos: noun
+  gender: n
+- lemma: протекція
+  ipa: /proˈtɛkt͡sʲijɐ/
+  translation: protection, patronage
+  pos: noun
+  gender: f
+- lemma: фундація
+  ipa: /funˈdɑt͡sʲijɐ/
+  translation: foundation, establishment
+  pos: noun
+  gender: f
+- lemma: альянс
+  ipa: /ɐlʲˈjɐns/
+  translation: alliance
+  pos: noun
+  gender: m
+- lemma: коаліція
+  ipa: /koɐˈlʲit͡sʲijɐ/
+  translation: coalition
+  pos: noun
+  gender: f
+- lemma: поразка
+  ipa: /poˈrɑzkɐ/
+  translation: defeat
+  pos: noun
+  gender: f
+- lemma: еміграція
+  ipa: /emʲiˈɦrɑt͡sʲijɐ/
+  translation: emigration
+  pos: noun
+  gender: f
+- lemma: кавалер
+  ipa: /kɐvɐˈlɛr/
+  translation: knight, cavalier (title)
+  pos: noun
+  gender: m
+- lemma: грамота
+  ipa: /ˈɦrɑmotɐ/
+  translation: charter, official letter
+  pos: noun
+  gender: f
+- lemma: булава
+  ipa: /buˈlɑvɐ/
+  translation: mace (symbol of authority)
+  pos: noun
+  gender: f
+- lemma: титулатура
+  ipa: /tetulɐˈturɐ/
+  translation: titles, titulature
+  pos: noun
+  gender: f
+- lemma: ідентичність
+  ipa: /idenˈtet͡ʃnʲistʲ/
+  translation: identity
+  pos: noun
+  gender: f
+- lemma: державність
+  ipa: /derˈʒɑvnʲistʲ/
+  translation: statehood
+  pos: noun
+  gender: f
+- lemma: просвітник
+  ipa: /proˈsvʲitneɪ̯k/
+  translation: enlightener
+  pos: noun
+  gender: m
+- lemma: архітектура
+  ipa: /ɐrxʲitekˈturɐ/
+  translation: architecture
+  pos: noun
+  gender: f
+- lemma: собор
+  ipa: /soˈbɔr/
+  translation: cathedral
+  pos: noun
+  gender: m
+- lemma: мазепинець
+  ipa: /mɐˈzɛpenet͡sʲ/
+  translation: Mazepinist (follower of Mazepa)
+  pos: noun
+  gender: m
+- lemma: суб'єктність
+  ipa: /subjekˈteɪ̯vʲnʲistʲ/
+  translation: subjectivity, agency
+  pos: noun
+  gender: f
+- lemma: стратегія
+  ipa: /strɐˈtɛɦʲijɐ/
+  translation: strategy
+  pos: noun
+  gender: f
+- lemma: дипломатія
+  ipa: /deploˈmɑtʲijɐ/
+  translation: diplomacy
+  pos: noun
+  gender: f
+- lemma: незалежність
+  ipa: /nezɐˈlɛʒnʲistʲ/
+  translation: independence
+  pos: noun
+  gender: f
+- lemma: постать
+  ipa: /ˈpɔstɐtʲ/
+  translation: figure, personality
+  pos: noun
+  gender: f

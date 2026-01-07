@@ -121,49 +121,48 @@
       correct: false
     - text: бігати
       correct: false
+  id: hobby-quiz
 - type: match-up
   title: Hobby Vocabulary
   pairs:
-  - left: 'малювати'
+  - left: малювати
     right: to draw/paint
-  - left: 'співати'
+  - left: співати
     right: to sing
-  - left: 'танцювати'
+  - left: танцювати
     right: to dance
-  - left: 'подорожувати'
+  - left: подорожувати
     right: to travel
-  - left: 'збирати'
+  - left: збирати
     right: to gather/collect
-  - left: 'грати'
+  - left: грати
     right: to play
-  - left: 'читати'
+  - left: читати
     right: to read
-  - left: 'відвідувати'
+  - left: відвідувати
     right: to visit
-  - left: 'фотографувати'
+  - left: фотографувати
     right: to photograph
-  - left: 'колекціонувати'
+  - left: колекціонувати
     right: to collect (items)
-  - left: 'оглядати'
+  - left: оглядати
     right: to inspect/sightsee
-  - left: 'писати'
+  - left: писати
     right: to write
+  id: hobby-vocabulary
 - type: cloze
   title: My Hobbies
-  passage: 'Я люблю {грати|спати|їсти|йти}_ на гітарі. Вона {малює|співає|читає|п''є}_
-    красиві картини. Ми йдемо в {кіно|театр|музей|парк}_ на новий фільм.
+  passage: 'Я люблю {грати|спати|їсти|йти}_ на гітарі. Вона {малює|співає|читає|п''є}_ красиві картини. Ми йдемо в {кіно|театр|музей|парк}_ на новий фільм.
 
 
-    Це моє улюблене {хобі|хоббі|хобба|хобу}_. У мене є два {квитки|намети|сцени|поїзди}_
-    на концерт. Ми {оглядаємо|співаємо|малюємо|спимо}_ старий замок.
+    Це моє улюблене {хобі|хоббі|хобба|хобу}_. У мене є два {квитки|намети|сцени|поїзди}_ на концерт. Ми {оглядаємо|співаємо|малюємо|спимо}_ старий замок.
 
 
-    Він {колекціонує|грає|танцює|йде}_ марки. Я хочу {подорожувати|малювати|грати|читати}_
-    світом. Артист стоїть на {сцені|наметі|квитку|лісі}_.
+    Він {колекціонує|грає|танцює|йде}_ марки. Я хочу {подорожувати|малювати|грати|читати}_ світом. Артист стоїть на {сцені|наметі|квитку|лісі}_.
 
 
-    Ми спимо в {наметі|кіно|театрі|сцені}_. Це цікава {виставка|квиток|намет|хобі}_.
-    {Глядачі|Квитки|Намети|Музеї}_ аплодують.'
+    Ми спимо в {наметі|кіно|театрі|сцені}_. Це цікава {виставка|квиток|намет|хобі}_. {Глядачі|Квитки|Намети|Музеї}_ аплодують.'
+  id: my-hobbies
 - type: true-false
   title: Cultural Leisure
   items:
@@ -203,6 +202,7 @@
   - statement: '"Гопак" is a Ukrainian dance.'
     correct: true
     explanation: Famous energetic dance.
+  id: cultural-leisure
 - type: group-sort
   title: Activity Types
   groups:
@@ -225,6 +225,7 @@
     - 'театр: Places'
     - 'музей: Places'
     - 'сцена: Places'
+  id: activity-types
 - type: unjumble
   title: Weekend Sentences
   items:
@@ -345,6 +346,7 @@
     - сосновому
     - лісі
     answer: Наш великий намет стоїть у зеленому сосновому лісі
+  id: weekend-sentences
 - type: error-correction
   title: Fix the Hobby
   items:
@@ -456,6 +458,7 @@
     - світу
     - світі
     explanation: 'Instrumental (through/by means of): світом.'
+  id: fix-the-hobby
 - type: cloze
   title: Cultural Weekend
   passage: 'У суботу ми поїхали на {дачу|роботу|школу}. Там ми робили шашлик.
@@ -471,13 +474,12 @@
     Ми любимо такий {відпочинок|урок|сон}.
 
     Ввечері ми обговорювали {враження|проблеми|гроші} і пили {чай|воду|суп}.'
+  id: cultural-weekend
 - type: mark-the-words
   title: Hobbies Search
-  text: Мій брат любить *подорожувати*. Він бере *намет* і йде в гори. Моя сестра
-    любить *малювати*. Вона завжди купує фарби. Я люблю *театр*. Я часто купую *квитки*
-    на вистави. Мій батько любить *риболовлю*. Це його *хобі*. Мама любить *співати*
-    в хорі. У кожного свій *відпочинок*.
-  answers:
+  id: hobbies-search
+  passage: Мій брат любить *подорожувати*. Він бере *намет* і йде в гори. Моя сестра любить *малювати*. Вона завжди купує фарби. Я люблю *театр*. Я часто купую *квитки* на вистави. Мій батько любить *риболовлю*. Це його *хобі*. Мама любить *співати* в хорі. У кожного свій *відпочинок*.
+  correct_words:
   - подорожувати
   - намет
   - малювати
@@ -517,8 +519,7 @@
       correct: true
     - text: Писати
       correct: false
-    explanation: 'Paint pictures (Малювати). Note: artists say "писати картину", but
-      "малювати" is standard for learners.'
+    explanation: 'Paint pictures (Малювати). Note: artists say "писати картину", but "малювати" is standard for learners.'
   - question: __ гопак.
     options:
     - text: Танцювати
@@ -575,3 +576,4 @@
     - text: Розкидати
       correct: false
     explanation: Pack (gather) suitcase.
+  id: choose-correct-verb

@@ -7,24 +7,25 @@
     right: 'Relation
 
       - -енький :: Diminutive'
-  - left: '-ий'
+  - left: -ий
     right: basic adjective
-  - left: '-ськ-'
+  - left: -ськ-
     right: belonging to
-  - left: '-н-'
+  - left: -н-
     right: quality/state
-  - left: '-ов-'
+  - left: -ов-
     right: made of/related
-  - left: '-лив-'
+  - left: -лив-
     right: inclined to
-  - left: '-уч-'
+  - left: -уч-
     right: active participle
-  - left: '-ен-'
+  - left: -ен-
     right: passive quality
-  - left: '-ист-'
+  - left: -ист-
     right: full of
-  - left: '-езн-'
+  - left: -езн-
     right: augmentative
+  id: suffix-match
 - type: group-sort
   title: Adjective Sorter
   groups:
@@ -52,6 +53,7 @@
     - Холодний
     - Старий
     - Молодий
+  id: adjective-sorter
 - type: fill-in
   title: Noun to Adjective
   items:
@@ -127,6 +129,7 @@
     - кольоровий
     - колірний
     - колірський
+  id: noun-to-adjective
 - type: fill-in
   title: Gender Match
   items:
@@ -202,29 +205,31 @@
     - звичайний
     - звичайна
     - звичайне
+  id: gender-match
 - type: match-up
   title: Opposites
   pairs:
-  - left: 'Старий'
+  - left: Старий
     right: Молодий
-  - left: 'Гарячий'
+  - left: Гарячий
     right: Холодний
-  - left: 'Міський'
+  - left: Міський
     right: Сільський
-  - left: 'Чоловічий'
+  - left: Чоловічий
     right: Жіночий
-  - left: 'Матеріальний'
+  - left: Матеріальний
     right: Духовний
-  - left: 'Теплий'
+  - left: Теплий
     right: Холодний
-  - left: 'Свіжий'
+  - left: Свіжий
     right: Старий
-  - left: 'Великий'
+  - left: Великий
     right: Маленький
-  - left: 'великий'
+  - left: великий
     right: малий
-  - left: 'гарячий'
+  - left: гарячий
     right: холодний
+  id: opposites
 - type: unjumble
   title: Scientific Talk
   items:
@@ -288,6 +293,7 @@
     - своєму
     - кабінеті
     answer: Професор читає новий науковий журнал у своєму кабінеті
+  id: scientific-talk
 - type: fill-in
   title: City Vibes
   items:
@@ -339,6 +345,7 @@
     - шкарпетки
     - шапки
     - штани
+  id: city-vibes
 - type: quiz
   title: Logic Check
   items:
@@ -428,6 +435,7 @@
       correct: false
     - text: Цей прикметник відноситься до зору та кольорів
       correct: false
+  id: logic-check
 - type: cloze
   title: The Professor's Day
   passage: 'Професор читає {науковий|науцький|науковай} журнал.
@@ -453,6 +461,7 @@
     Це {фізичний|фізиковий|фізицький} світ.
 
     Але і {духовний|духовой|духівний}.'
+  id: the-professor's-day
 - type: error-correction
   title: Wrong Suffix
   items:
@@ -498,3 +507,4 @@
     - матеріальний
     - матерільний
     explanation: Material (Матерія) -> Material (Матеріальний).
+  id: wrong-suffix

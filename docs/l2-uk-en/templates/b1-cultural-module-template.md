@@ -18,7 +18,7 @@ Before submitting your cultural module, verify:
 - [ ] **Cloze passages:** 14+ blanks
 - [ ] **Engagement boxes:** 5+ (focus on real-world cultural references)
 - [ ] **Immersion:** 90-100% Ukrainian
-- [ ] **Resources section:** Links to authentic Ukrainian materials (news, videos, websites)
+- [ ] **External resources:** Added to `docs/resources/external_resources.yaml` (NOT embedded in module)
 - [ ] **Cultural accuracy:** All facts verified, no stereotypes
 - [ ] **Regional balance:** Neutral presentation of all Ukrainian regions
 
@@ -94,20 +94,24 @@ immersion_target: 90-95%
 **Structure:**
 
 #### Opening Hook (50-100 words)
+
 - Engaging question or statement about the topic
 - Example: "Чи знаєте ви українських музикантів?" (M75)
 - Example: "Західна Україна — це регіон з унікальною історією та культурою." (M71)
 
 #### Overview (100-150 words)
+
 - What the module covers
 - Why this topic matters for Ukrainian cultural competence
 - Preview of subtopics (e.g., for M71: Lviv, Zakarpattia, Halychyna)
 
 #### Vocabulary Preview (50-100 words)
+
 - Introduce 5-8 key terms with context
 - Example: "У цьому модулі ви вивчите слова для обговорення української музики: **хіт**, **альбом**, **концерт**, **фестиваль**."
 
 **Engagement Box (1):**
+
 > 🌍 **Real World:** [Cultural fact or connection to learner's experience]
 
 ---
@@ -121,17 +125,20 @@ immersion_target: 90-95%
 **Structure:**
 
 #### Passage 1: Overview Text (200-300 words)
+
 - Introduces the topic broadly
 - Adapted from Wikipedia, cultural guides, or educational materials
 - Example (M75): History of Ukrainian music from folk to contemporary
 
 **Format:**
+
 ```markdown
 #### [Passage Title]
 
 [200-300 words of Ukrainian text]
 
 **Comprehension Questions (3-4):**
+
 1. [Question in Ukrainian]
 2. [Question in Ukrainian]
 3. [Question in Ukrainian]
@@ -140,16 +147,19 @@ immersion_target: 90-95%
 **WHY comprehension questions:** Guides reading without breaking immersion.
 
 #### Passage 2: Focused Subtopic (200-300 words)
+
 - Zooms into a specific aspect
 - Example (M71): Львів як культурна столиця
 - Example (M76): Довженко and Ukrainian cinema's golden age
 
 #### Passage 3: Contemporary Application (200-300 words)
+
 - Modern examples, current events
 - Example (M75): Eurovision 2022, contemporary Ukrainian bands
 - Example (M77): Ukrainian IT sector and startups
 
 **Engagement Boxes (2-3):**
+
 > 💡 **Did You Know:** [Interesting cultural fact]
 > 🎬 **Pop Culture Moment:** [Reference to Ukrainian films, music, games]
 > 🎯 **Fun Fact:** [Memorable trivia]
@@ -167,6 +177,7 @@ immersion_target: 90-95%
 **Activities Order (12+ total):**
 
 #### High Priority (comprehension-focused):
+
 1. **quiz** (10+ items, 12-20 words each) — Reading comprehension, cultural knowledge
 2. **true-false** (10+ items) — Fact verification from passages
 3. **match-up** (12+ items) — Match people/places/terms to descriptions
@@ -174,14 +185,16 @@ immersion_target: 90-95%
 5. **cloze** (14+ blanks) — Extended passage completion
 
 #### Medium Priority (analytical):
+
 6. **group-sort** (16+ items) — Categorize regions/genres/time periods
 7. **select** (8+ items) — Multiple correct answers (e.g., "Which are Western Ukrainian cities?")
 8. **mark-the-words** (passage with 8+ target words) — Identify cultural terms
 
 #### Lower Priority (production):
+
 9. **unjumble** (8+ items, 12-16 words) — Sentences about cultural content
 10. **error-correction** (8+ items) — Common misconceptions or mistakes
-12. **translate** (8+ items) — Cultural phrases
+11. **translate** (8+ items) — Cultural phrases
 
 **WHY this order:** Reading comprehension first, then analytical tasks, finally production.
 
@@ -194,11 +207,13 @@ immersion_target: 90-95%
 **Structure:**
 
 #### Mini-Dialogues (3-4 dialogues, 6-8 turns each)
+
 - Conversations about the cultural topic
 - Example (M75): Discussing favorite Ukrainian bands
 - Example (M71): Planning a trip to Western Ukraine
 
 **Format:**
+
 ```markdown
 #### Діалог 1: [Title]
 
@@ -212,11 +227,13 @@ immersion_target: 90-95%
 **WHY dialogues:** Shows how cultural knowledge is used in real conversations.
 
 #### Discussion Prompts (optional, 50-100 words)
+
 - Open-ended questions for learner reflection
 - Example: "Яка українська музика вам подобається? Чому?"
 - Example: "Який український регіон ви хочете відвідати?"
 
 **Engagement Box (1):**
+
 > 🌍 **Real World:** [How to use this knowledge when visiting Ukraine]
 
 ---
@@ -228,11 +245,13 @@ immersion_target: 90-95%
 **Structure:**
 
 #### What You've Learned (100-150 words)
+
 - List main topics covered
 - Example (M71): "Ви дізналися про Західну Україну: Львів, Закарпаття, Галичину..."
 - Highlight key vocabulary (8-10 words)
 
 #### Cultural Competence Reflection (50-100 words)
+
 - How this knowledge helps with Ukrainian cultural fluency
 - Connection to broader Ukrainian culture
 
@@ -253,16 +272,17 @@ The lesson teaches both Ukrainian AND cultural content. Activities practice only
 
 **Key Test:** Can the learner answer without reading the Ukrainian text? If yes, rewrite.
 
-| Component | Purpose |
-|-----------|---------|
-| **Lesson Content** | Teaches BOTH Ukrainian language AND cultural knowledge |
-| **Activities** | Practice ONLY Ukrainian language skills using cultural content as context |
+| Component          | Purpose                                                                   |
+| ------------------ | ------------------------------------------------------------------------- |
+| **Lesson Content** | Teaches BOTH Ukrainian language AND cultural knowledge                    |
+| **Activities**     | Practice ONLY Ukrainian language skills using cultural content as context |
 
 **Activity Types and Their Language Focus:**
+
 - **quiz**: Test reading comprehension — "Згідно з текстом, що автор виділяє як...?"
 - **true-false**: Test comprehension of statements in the text — "У тексті зазначено, що..."
 - **match-up**: Test vocabulary recognition — match Ukrainian terms to Ukrainian definitions
-- **fill-in**: Test vocabulary/collocations — "Цей гурт ____ популярність після..."
+- **fill-in**: Test vocabulary/collocations — "Цей гурт \_\_\_\_ популярність після..."
 - **cloze**: Test vocabulary in extended context
 - **group-sort**: Test categorization using module vocabulary
 - **select**: Test reading comprehension (multiple correct)
@@ -302,19 +322,19 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 **Activity Mix for Cultural Modules:**
 
-| Activity Type | Count | Priority | Purpose (LANGUAGE focus) |
-|--------------|-------|----------|---------|
-| quiz | 10-14 items | HIGH | Reading comprehension — "Згідно з текстом..." |
-| true-false | 10-12 items | HIGH | Comprehension of text statements |
-| match-up | 12+ items | HIGH | Vocabulary — Ukrainian terms ↔ Ukrainian definitions |
-| fill-in | 12+ items | HIGH | Vocabulary/collocations in context |
-| cloze | 14+ blanks | HIGH | Vocabulary in extended passage |
-| group-sort | 16+ items | MEDIUM | Categorization using module vocabulary |
-| select | 8+ items | MEDIUM | Multi-select reading comprehension |
-| mark-the-words | 8+ words | MEDIUM | Grammar recognition (verbs, nouns, etc.) |
-| unjumble | 8+ items | LOW | Word order and grammar |
-| error-correction | 8+ items | LOW | Grammar errors, NOT cultural mistakes |
-| translate | 8+ items | LOW | Vocabulary in translation context |
+| Activity Type    | Count       | Priority | Purpose (LANGUAGE focus)                             |
+| ---------------- | ----------- | -------- | ---------------------------------------------------- |
+| quiz             | 10-14 items | HIGH     | Reading comprehension — "Згідно з текстом..."        |
+| true-false       | 10-12 items | HIGH     | Comprehension of text statements                     |
+| match-up         | 12+ items   | HIGH     | Vocabulary — Ukrainian terms ↔ Ukrainian definitions |
+| fill-in          | 12+ items   | HIGH     | Vocabulary/collocations in context                   |
+| cloze            | 14+ blanks  | HIGH     | Vocabulary in extended passage                       |
+| group-sort       | 16+ items   | MEDIUM   | Categorization using module vocabulary               |
+| select           | 8+ items    | MEDIUM   | Multi-select reading comprehension                   |
+| mark-the-words   | 8+ words    | MEDIUM   | Grammar recognition (verbs, nouns, etc.)             |
+| unjumble         | 8+ items    | LOW      | Word order and grammar                               |
+| error-correction | 8+ items    | LOW      | Grammar errors, NOT cultural mistakes                |
+| translate        | 8+ items    | LOW      | Vocabulary in translation context                    |
 
 **WHY this mix:** Cultural modules prioritize comprehension (quiz, true-false, match-up, cloze) over production (unjumble, error-correction).
 
@@ -328,21 +348,22 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ```yaml
 items:
-- lemma: захід
-  ipa: /zɑxid/
-  translation: west
-  pos: ім. (ч.р.)
-  gender: m
-  note: напрямок або регіон
-- lemma: столиця
-  ipa: /stolɪt͡sʲɑ/
-  translation: capital
-  pos: ім. (ж.р.)
-  gender: f
-  note: головне місто країни
+  - lemma: захід
+    ipa: /zɑxid/
+    translation: west
+    pos: ім. (ч.р.)
+    gender: m
+    note: напрямок або регіон
+  - lemma: столиця
+    ipa: /stolɪt͡sʲɑ/
+    translation: capital
+    pos: ім. (ж.р.)
+    gender: f
+    note: головне місто країни
 ```
 
 **Requirements:**
+
 - **25+ items** minimum
 - **Thematic organization**
 - **IPA pronunciation** for all entries
@@ -351,109 +372,126 @@ items:
 **Vocabulary Categories for Cultural Modules:**
 
 **Regional Modules (M71-74):**
+
 - Region/direction names (захід, схід, південь, центр)
 - Cities and geographical features (Львів, Одеса, Дніпро, Карпати)
 - Historical/cultural terms (козацтво, спадщина, архітектура)
 - Adjectives for description (мальовничий, історичний, багатонаціональний)
 
 **Topical Modules (M75-80):**
+
 - Domain-specific vocabulary (музика → хіт, альбом, концерт; кіно → фільм, режисер, кінострічка)
 - Verbs for discussion (обговорювати, рекомендувати, впливати)
 - Evaluative language (талановитий, популярний, видатний)
 
 ---
 
-### Section 8: Ресурси (Resources) - REQUIRED for cultural modules
+### Section 8: External Resources
 
-**Purpose:** Direct learners to authentic Ukrainian materials
+> **⚠️ NOTE:** External resources are managed in `docs/resources/external_resources.yaml`, NOT in module markdown files. Do NOT add `[!resources]` blocks to modules.
 
-**Format:**
-```markdown
-# Ресурси
+**To add resources for a cultural module:**
 
-#### Articles and Websites
-- [Українська правда](https://www.pravda.com.ua/) - Новини про українську культуру
-- [BBC News Україна](https://www.bbc.com/ukrainian) - Культурні статті
-- [Wikipedia (Ukrainian)](https://uk.wikipedia.org/) - [Specific article relevant to module]
+1. Open `docs/resources/external_resources.yaml`
+2. Add entries with the module ID:
 
-#### Videos and Media
-- [YouTube channel or specific video]
-- [Ukrainian podcasts about the topic]
+```yaml
+- module_id: b1-75
+  url: 'https://www.eurovision.ua/'
+  title: 'Євробачення - UA:PBC'
+  type: website
+  relevance: 5
+  description: 'Official Ukrainian Eurovision site'
 
-#### Music/Films/Games (if relevant)
-- Specific recommendations with links
-
-#### Further Reading
-- Books or articles for deeper exploration
+- module_id: b1-75
+  url: 'https://uk.wikipedia.org/wiki/Українська_музика'
+  title: 'Українська музика (Wikipedia)'
+  type: article
+  relevance: 4
 ```
 
-**WHY:** B1 learners need bridges to authentic Ukrainian content beyond the textbook.
+**Resource types:** `website`, `article`, `video`, `podcast`, `book`, `music`
+
+**WHY:** Centralized resources are easier to maintain, validate links, and update.
 
 ---
 
 ## Common Pitfalls to Avoid
 
 ### 1. **Oversimplified or Stereotypical Content**
+
 **Problem:** "Ukrainians love borscht and wear vyshyvankas."
 **Fix:** Focus on contemporary, diverse Ukraine. Real achievements, real complexity.
 
 **Example:**
+
 - ❌ Bad: "Всі українці люблять борщ." (Stereotypical)
 - ✅ Good: "Українська кухня різноманітна: борщ, вареники, деруни, банош. Кожен регіон має свої страви." (Diverse, regional)
 
 ---
 
 ### 2. **Insufficient Authentic Materials**
+
 **Problem:** Only constructed texts, no real Ukrainian sources.
 **Fix:** Adapt real Ukrainian Wikipedia articles, news, blogs. Cite sources in Resources section.
 
 **Example:**
+
 - ❌ Bad: Made-up text about Ukrainian music with no real references
 - ✅ Good: Adapted Wikipedia article on "Українська музика" with comprehension activities
 
 ---
 
 ### 3. **Missing Regional Balance**
+
 **Problem:** Only focusing on Kyiv or Lviv, ignoring other regions.
 **Fix:** For regional modules (M71-74), ensure neutral, balanced coverage. For topical modules (M75-80), include examples from various regions.
 
 **Example (M75 - Music):**
+
 - ✅ Include: Kyiv bands (Okean Elzy), Lviv bands (Tartak), Kharkiv bands, etc.
 - ❌ Avoid: Only Kyiv-based artists
 
 ---
 
 ### 4. **Grammar-Heavy Approach**
+
 **Problem:** Turning cultural module into grammar lesson.
 **Fix:** Grammar is incidental. If a passage uses aspect, don't explain aspect—just use it naturally.
 
 **Example:**
+
 - ❌ Bad: "У цьому тексті ми бачимо доконаний вид..." (Grammar focus)
 - ✅ Good: Just use perfective aspect naturally in cultural text without metalinguistic commentary
 
 ---
 
 ### 5. **Outdated Cultural Information**
+
 **Problem:** Focusing on Soviet era or pre-2014 Ukraine exclusively.
 **Fix:** Contemporary Ukraine (2010s-2020s) should dominate. Mention history for context, but focus on NOW.
 
 **Example (M76 - Cinema):**
+
 - ✅ Include: Dovzhenko (historical context) → contemporary Ukrainian films (Atlantis, Donbas, Tribe)
 - ❌ Avoid: Only Soviet-era Ukrainian cinema
 
 ---
 
 ### 6. **Insufficient Reading Comprehension Activities**
+
 **Problem:** Only 1-2 quiz questions after a 300-word passage.
 **Fix:** 3-5 comprehension questions per passage, varied question types.
 
 **Example:**
+
 ```markdown
 #### Passage: Львів — культурна столиця України
 
 [300 words about Lviv]
 
 **Comprehension Questions:**
+
 1. Коли Львів було засновано?
 2. Які архітектурні стилі можна побачити у Львові?
 3. Чому Львів називають "кавовою столицею України"?
@@ -463,16 +501,19 @@ items:
 ---
 
 ### 7. **No Resources Section**
+
 **Problem:** No links to authentic Ukrainian materials.
 **Fix:** Always include Resources section with 5-10 links to real Ukrainian websites, videos, articles.
 
 ---
 
 ### 8. **Quiz Questions Too Short or Too Simple**
+
 **Problem:** "Де знаходиться Львів?" (6 words)
 **Fix:** 12-20 words with context: "Львів знаходиться в західній Україні і є одним з найбільших культурних центрів країни. Де саме розташоване місто?"
 
 **Example:**
+
 - ❌ Bad: "Хто такий Довженко?" (3 words)
 - ✅ Good: "Олександр Довженко був видатним українським режисером, який створив фільм 'Земля' у 1930 році. Чим він відомий у світовому кінематографі?" (18 words)
 
@@ -483,6 +524,7 @@ items:
 Before running the audit script, manually verify:
 
 ### Content Gates:
+
 - [ ] **3+ reading passages** of 200-300 words each (authentic or adapted)
 - [ ] **Comprehension questions** after each passage (3-5 questions)
 - [ ] **Resources section** with 5+ links to authentic Ukrainian materials
@@ -491,6 +533,7 @@ Before running the audit script, manually verify:
 - [ ] **Regional balance** - no region ignored or overrepresented
 
 ### Technical Gates:
+
 - [ ] **Word count:** 1500+ words (run `python3 scripts/audit_module.py`)
 - [ ] **Vocabulary:** 25+ items in 5-column format with IPA
 - [ ] **Activities:** 12+ activities
@@ -501,6 +544,7 @@ Before running the audit script, manually verify:
 - [ ] **Immersion:** 90-100% Ukrainian (audit script checks)
 
 ### Activity Mix:
+
 - [ ] **High comprehension focus:** quiz (10+), true-false (10+), match-up (12+), cloze (14+)
 - [ ] **Vocabulary practice:** fill-in (12+), group-sort (16+), select (8+)
 - [ ] **Production:** unjumble (8+), error-correction (8+), translate (8+)
@@ -510,6 +554,7 @@ Before running the audit script, manually verify:
 ## Creator's Pre-Submission Checklist
 
 ### Phase 1: Research and Planning
+
 - [ ] Read module specification in B1-CURRICULUM-PLAN.md
 - [ ] Research authentic Ukrainian sources (Wikipedia, news, cultural sites)
 - [ ] Identify 3-5 reading passages (adapt if needed, cite sources)
@@ -517,6 +562,7 @@ Before running the audit script, manually verify:
 - [ ] Plan activity mix (prioritize comprehension activities)
 
 ### Phase 2: Content Creation
+
 - [ ] Write Вступ (Introduction) with hook and overview
 - [ ] Write Презентація with 3 reading passages (200-300 words each)
 - [ ] Add comprehension questions after each passage
@@ -526,6 +572,7 @@ Before running the audit script, manually verify:
 - [ ] Create Resources section with 5-10 authentic links
 
 ### Phase 3: Activities
+
 - [ ] Create 12+ activities following cultural module priority mix
 - [ ] Verify quiz questions are 12-20 words each
 - [ ] Verify unjumble sentences are 12-16 words each
@@ -534,17 +581,20 @@ Before running the audit script, manually verify:
 - [ ] Verify all activities have correct item counts (see matrix)
 
 ### Phase 4: Vocabulary
+
 - [ ] Create 5-column vocabulary table (Слово | Вимова | English | PoS | Примітки)
 - [ ] Add IPA pronunciation for all 25+ words
 - [ ] Organize thematically (not alphabetically)
 - [ ] Add contextual notes in Примітки column
 
 ### Phase 5: Engagement
+
 - [ ] Add 5+ engagement boxes (💡 Did You Know, 🌍 Real World, 🎬 Pop Culture, 🎯 Fun Fact)
 - [ ] Verify cultural facts are accurate (cite sources mentally)
 - [ ] Ensure contemporary focus (post-2014 Ukraine prominent)
 
 ### Phase 6: Audit
+
 - [ ] Run `python3 scripts/audit_module.py curriculum/l2-uk-en/b1/[module-file].md`
 - [ ] Fix any gate failures (word count, vocab count, activity counts)
 - [ ] Manually verify quiz question length (12-20 words)
@@ -553,6 +603,7 @@ Before running the audit script, manually verify:
 - [ ] Verify immersion percentage (90-95%)
 
 ### Phase 7: Final Review
+
 - [ ] Read the entire module as a learner would
 - [ ] Check for stereotypes or outdated information
 - [ ] Verify regional balance (if applicable)
@@ -564,6 +615,7 @@ Before running the audit script, manually verify:
 ## Example Module Outline: M75 - Українська музика сьогодні
 
 **Specification (from B1-CURRICULUM-PLAN.md):**
+
 - **Topic:** Ukrainian music today
 - **Vocabulary:** 25 words (музика, пісня, хіт, альбом, концерт, фестиваль, виконавець, гурт, сцена, etc.)
 - **Cultural Content:** Eurovision, contemporary artists, music festivals
@@ -571,6 +623,7 @@ Before running the audit script, manually verify:
 **Implementation:**
 
 ### Frontmatter
+
 ```yaml
 ---
 module: 75
@@ -591,6 +644,7 @@ immersion_target: 90-95%
 ```
 
 ### Section 1: Вступ (200 words)
+
 "Чи знаєте ви українських музикантів? Україна має багату музичну традицію та яскраву сучасну музичну сцену..."
 
 > 🎬 **Pop Culture Moment:** Ukraine's Eurovision victories (Ruslana 2004, Jamala 2016, Kalush Orchestra 2022)
@@ -598,14 +652,17 @@ immersion_target: 90-95%
 ### Section 2: Презентація (700 words)
 
 **Passage 1:** Історія української популярної музики (250 words)
+
 - From Soviet era to independence
 - Key milestones: Okean Elzy, VV, Skryabin
 
 **Passage 2:** Євробачення та міжнародний успіх (250 words)
+
 - Ukraine's Eurovision history
 - Cultural impact of victories
 
 **Passage 3:** Сучасна українська музична сцена (200 words)
+
 - Contemporary bands and artists (Kalush Orchestra, Go_A, Onuka, The Hardkiss)
 - Music festivals (Країна Мрій, Atlas Weekend, Фестиваль польської пісні)
 
@@ -613,17 +670,21 @@ immersion_target: 90-95%
 > 🌍 **Real World:** Ukrainian music festivals attract 50,000+ attendees annually.
 
 ### Section 3: Практика (400 words)
+
 - Activity overview linking to Activities section
 
 ### Section 4: Продукція (200 words)
+
 **Dialogue 1:** Обговорення улюбленої української музики
 **Dialogue 2:** Планування відвідування концерту
 **Dialogue 3:** Розмова про Євробачення
 
 ### Section 5: Підсумок (100 words)
+
 "Ви дізналися про сучасну українську музику: від Євробачення до музичних фестивалів. Тепер ви можете обговорювати українських виконавців та їхні досягнення."
 
 ### Section 6: Вправи (12 activities)
+
 1. quiz: Українська музика (12 items, comprehension)
 2. true-false: Факти про Євробачення (10 items)
 3. match-up: Виконавці та пісні (12 items)
@@ -634,17 +695,21 @@ immersion_target: 90-95%
 8. mark-the-words: Знайдіть музичні терміни (passage with 10 terms)
 9. unjumble: Речення про музику (8 items, 12-16 words)
 10. error-correction: Помилки про українську музику (8 items)
-12. translate: Музичні фрази (8 items)
+11. translate: Музичні фрази (8 items)
 
 ### Section 7: Словник (25 words)
+
 музика, пісня, хіт, альбом, концерт, фестиваль, виконавець, гурт, сцена, публіка, аплодисменти, співак, співачка, композитор, текст, мелодія, ритм, жанр, рок, поп, фолк, електронна музика, виступ, слава, успіх
 
-### Section 8: Ресурси
-- [Євробачення - UA:PBC](https://www.eurovision.ua/)
-- [Ukrainian Music Wikipedia](https://uk.wikipedia.org/wiki/Українська_музика)
-- [Країна Мрій Festival](https://krainamriy.com/)
-- [Atlas Weekend](https://atlasweekend.ua/)
-- YouTube: Official channels for Kalush Orchestra, Go_A, Onuka
+### Section 8: External Resources
+
+_Added to `docs/resources/external_resources.yaml` with `module_id: b1-75`:_
+
+- Євробачення - UA:PBC (website)
+- Ukrainian Music Wikipedia (article)
+- Країна Мрій Festival (website)
+- Atlas Weekend (website)
+- YouTube channels: Kalush Orchestra, Go_A, Onuka (video)
 
 ---
 
@@ -659,7 +724,7 @@ immersion_target: 90-95%
 5. **Contemporary focus:** Ukraine today is dynamic, not frozen in Soviet past.
 6. **Regional diversity:** Ukraine is not monolithic. Show variety.
 7. **Real people, real achievements:** Name real Ukrainian artists, athletes, filmmakers, tech founders.
-8. **Resources matter:** The Resources section is mandatory—it's the bridge to authentic Ukrainian content.
+8. **Resources matter:** External resources in `docs/resources/external_resources.yaml` are mandatory—they bridge to authentic Ukrainian content.
 
 **Activity creation for cultural modules:**
 
@@ -675,7 +740,7 @@ immersion_target: 90-95%
 - ❌ Using only constructed texts (use adapted authentic materials)
 - ❌ Stereotyping (avoid "all Ukrainians..." statements)
 - ❌ Ignoring contemporary Ukraine (don't focus only on history/folklore)
-- ❌ Missing Resources section (it's mandatory for cultural modules)
+- ❌ Missing external resources (add to `docs/resources/external_resources.yaml`)
 
 ---
 

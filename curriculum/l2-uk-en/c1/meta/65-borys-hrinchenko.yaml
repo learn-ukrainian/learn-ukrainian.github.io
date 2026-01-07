@@ -1,17 +1,28 @@
 module: c1-65
-title: Борис Грінченко
-subtitle: Borys Hrinchenko
+title: 'Борис Грінченко: Вартовий українського слова'
+subtitle: 'Borys Hrinchenko: The Guardian of Ukrainian Word'
 version: '2.0'
-phase: C1.3 Biographies
+phase: 'C1.3 Biographies'
 focus: biography
-pedagogy: narrative
+pedagogy: 'CBI'
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- biography
-- history
-- culture
+  - biography
+  - imperial
+  - literature
+  - linguistics
+  - education
+grammar:
+  - 'Historical narrative tenses'
+  - 'Quoted speech conventions'
 objectives:
-- Master C1 concepts in Борис Грінченко
-slug: 65-borys-hrinchenko
+  - 'Learner understands the colossal lexicographical and educational contribution of Borys Hrinchenko.'
+  - 'Learner can analyze the impact of the 1907-1909 dictionary on the standardization of the Ukrainian language.'
+  - 'Learner masters vocabulary related to linguistics, education, and lexicography.'
+  - 'Learner can perform a comparative study of different forms of intellectual resistance.'
+vocabulary_focus:
+  - 'Linguistic and lexicographical terminology'
+  - 'Educational and cultural activism vocabulary'
+vocabulary_count: 30
+slug: 065-borys-hrinchenko

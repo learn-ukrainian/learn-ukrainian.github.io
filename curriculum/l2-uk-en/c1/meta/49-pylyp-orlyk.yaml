@@ -1,17 +1,24 @@
 module: c1-49
-title: Пилип Орлик
-subtitle: Pylyp Orlyk
-version: '2.0'
-phase: C1.3 Biographies
+title: "Пилип Орлик: Гетьман-Вигнанець та Батько Українського Конституціоналізму"
+subtitle: "Pylyp Orlyk: Hetman in Exile and Father of Ukrainian Constitutionalism"
+version: "2.0"
+phase: "C1.3 Biographies"
 focus: biography
-pedagogy: narrative
+pedagogy: "CBI"
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- biography
-- history
-- culture
+  - biography
+  - history
+  - constitution-1710
+  - emigration
+  - diplomacy
+grammar:
+  - "Historical legal register"
+  - "Terminology of constitutional law"
 objectives:
-- Master C1 concepts in Пилип Орлик
+  - "Learner can analyze the political legacy of Pylyp Orlyk and the 1710 Constitution"
+  - "Learner understands the challenges of the first Ukrainian political emigration"
+  - "Learner can use specialized vocabulary related to human rights and state structure"
+vocabulary_count: 25
 slug: 49-pylyp-orlyk

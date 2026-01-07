@@ -21,6 +21,7 @@
     right: низький
   - left: '- сильний'
     right: слабкий
+  id: антоніми-(antonym-pairs)
 - type: group-sort
   title: Категорії прикметників
   groups:
@@ -43,6 +44,7 @@
     - легкий
     - важкий
     - --
+  id: категорії-прикметників
 - type: fill-in
   title: Masculine Adjective Forms
   items:
@@ -102,6 +104,7 @@
     - молода
     - молоде
     - молоді
+  id: masculine-adjective-forms
 - type: fill-in
   title: Feminine and Neuter Forms
   items:
@@ -161,6 +164,7 @@
     - новий
     - нова
     - нові
+  id: feminine-and-neuter-forms
 - type: quiz
   title: Узгодження прикметників
   items:
@@ -244,6 +248,7 @@
       correct: false
     - text: Fast train (neuter)
       correct: false
+  id: узгодження-прикметників
 - type: quiz
   title: Значення прикметників
   items:
@@ -327,6 +332,7 @@
       correct: false
     - text: The street is short.
       correct: false
+  id: значення-прикметників
 - type: unjumble
   title: Складіть речення
   items:
@@ -360,6 +366,7 @@
     - це
     - питання
     answer: Це важливе питання
+  id: складіть-речення
 - type: true-false
   title: Правила прикметників
   items:
@@ -393,3 +400,4 @@
   - statement: '"Повільний" means "fast".'
     correct: false
     explanation: Incorrect! it means "slow"
+  id: правила-прикметників

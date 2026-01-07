@@ -1,30 +1,31 @@
 - type: match-up
   title: Past Tense Forms
   pairs:
-  - left: 'зробив'
+  - left: зробив
     right: did/finished
-  - left: 'написав'
+  - left: написав
     right: wrote/finished
-  - left: 'прочитав'
+  - left: прочитав
     right: read/finished
-  - left: 'сказав'
+  - left: сказав
     right: said
-  - left: 'побачив'
+  - left: побачив
     right: saw
-  - left: 'почув'
+  - left: почув
     right: heard
-  - left: 'взяв'
+  - left: взяв
     right: took
-  - left: 'дав'
+  - left: дав
     right: gave
-  - left: 'пішов'
+  - left: пішов
     right: went/left
-  - left: 'прийшов'
+  - left: прийшов
     right: came/arrived
-  - left: 'закінчив'
+  - left: закінчив
     right: finished
-  - left: 'почав'
+  - left: почав
     right: began
+  id: past-tense-forms
 - type: fill-in
   title: Perfective or Imperfective Past
   items:
@@ -88,11 +89,11 @@
     options:
     - писали
     - написали
+  id: perfective-or-imperfective-past
 - type: quiz
   title: Aspect in Past Tense
   items:
-  - question: In the Ukrainian sentence "Я прочитав книгу," which grammatical aspectual
-      focus is emphasized?
+  - question: In the Ukrainian sentence "Я прочитав книгу," which grammatical aspectual focus is emphasized?
     options:
     - text: Completed result
       correct: true
@@ -102,8 +103,7 @@
       correct: false
     - text: Habitual action
       correct: false
-  - question: When a speaker says "Я читав книгу," what is the primary focus of the
-      action?
+  - question: When a speaker says "Я читав книгу," what is the primary focus of the action?
     options:
     - text: Process
       correct: true
@@ -113,8 +113,7 @@
       correct: false
     - text: Future goal
       correct: false
-  - question: Which of the following Ukrainian words typically signals that the perfective
-      past should be used?
+  - question: Which of the following Ukrainian words typically signals that the perfective past should be used?
     options:
     - text: вже
       correct: true
@@ -124,8 +123,7 @@
       correct: false
     - text: зазвичай
       correct: false
-  - question: In the sentence "Вона писала три години," what is the grammatical aspect
-      of the verb used?
+  - question: In the sentence "Вона писала три години," what is the grammatical aspect of the verb used?
     options:
     - text: Imperfective
       correct: true
@@ -135,8 +133,7 @@
       correct: false
     - text: Conditional
       correct: false
-  - question: In the sentence "Він написав листа вчора," what is the grammatical aspect
-      of the verb used?
+  - question: In the sentence "Він написав листа вчора," what is the grammatical aspect of the verb used?
     options:
     - text: Perfective
       correct: true
@@ -146,8 +143,7 @@
       correct: false
     - text: Habitual
       correct: false
-  - question: Which statement best describes the past tense endings for perfective
-      and imperfective verbs in Ukrainian?
+  - question: Which statement best describes the past tense endings for perfective and imperfective verbs in Ukrainian?
     options:
     - text: The same for both aspects
       correct: true
@@ -157,8 +153,7 @@
       correct: false
     - text: Only used for imperfective
       correct: false
-  - question: Which of the following options represents the correct masculine past
-      tense ending for Ukrainian verbs?
+  - question: Which of the following options represents the correct masculine past tense ending for Ukrainian verbs?
     options:
     - text: -в | -∅
       correct: true
@@ -168,8 +163,7 @@
       correct: false
     - text: -ло
       correct: false
-  - question: Which of the following options represents the correct feminine past
-      tense ending for Ukrainian verbs?
+  - question: Which of the following options represents the correct feminine past tense ending for Ukrainian verbs?
     options:
     - text: -ла
       correct: true
@@ -179,8 +173,7 @@
       correct: false
     - text: -ло
       correct: false
-  - question: The common Ukrainian question "Що ти робив?" typically uses which grammatical
-      aspect for inquiry?
+  - question: The common Ukrainian question "Що ти робив?" typically uses which grammatical aspect for inquiry?
     options:
     - text: Imperfective
       correct: true
@@ -190,8 +183,7 @@
       correct: false
     - text: Imperative
       correct: false
-  - question: The common Ukrainian question "Ти зробив це?" typically uses which grammatical
-      aspect for inquiry?
+  - question: The common Ukrainian question "Ти зробив це?" typically uses which grammatical aspect for inquiry?
     options:
     - text: Perfective
       correct: true
@@ -201,8 +193,7 @@
       correct: false
     - text: Habitual
       correct: false
-  - question: Which of the following represents the correct masculine past form of
-      the perfective verb "піти"?
+  - question: Which of the following represents the correct masculine past form of the perfective verb "піти"?
     options:
     - text: пішов
       correct: true
@@ -212,8 +203,7 @@
       correct: false
     - text: пішовла
       correct: false
-  - question: Which of the following represents the correct masculine past form of
-      the perfective verb "прийти"?
+  - question: Which of the following represents the correct masculine past form of the perfective verb "прийти"?
     options:
     - text: прийшов
       correct: true
@@ -223,6 +213,7 @@
       correct: false
     - text: прийшла
       correct: false
+  id: aspect-in-past-tense
 - type: true-false
   title: Past Tense Rules
   items:
@@ -262,6 +253,7 @@
   - statement: '"Сказав" is imperfective.'
     correct: false
     explanation: '"Сказав" is perfective. "Говорив" is imperfective.'
+  id: past-tense-rules
 - type: group-sort
   title: Verb Aspect
   groups:
@@ -281,6 +273,7 @@
     - сказав
     - побачив
     - приїхав
+  id: verb-aspect
 - type: unjumble
   title: Past Tense Sentences
   items:
@@ -404,6 +397,7 @@
     - шкоди
     - вчора
     answer: Я взяв свою стару книгу зі шкоди вчора
+  id: past-tense-sentences
 - type: fill-in
   title: Choose Correct Aspect
   items:
@@ -447,17 +441,15 @@
     options:
     - працювали
     - попрацювали
+  id: choose-correct-aspect
 - type: cloze
   title: Aspect in Context
-  passage: 'Учора я {купив|купити} рано. Я {читав|читати|прочитав} каву і {закінчив|закінчити}
-    сніданок. Потім я {прочитав|читати} на роботу. На роботі я {написав|писати} цілий
-    день. Увечері я {прийшов|прийти} додому і {дивився|дивитися|подивився} телевізор.
+  passage: 'Учора я {купив|купити} рано. Я {читав|читати|прочитав} каву і {закінчив|закінчити} сніданок. Потім я {прочитав|читати} на роботу. На роботі я {написав|писати} цілий день. Увечері я {прийшов|прийти} додому і {дивився|дивитися|подивився} телевізор.
 
     ---
 
-    Минулого тижня я {купив|купити} нову книгу. Я {читав|читати|прочитав} її три дні.
-    Вчора я нарешті {закінчив|закінчити} читати. Книга була дуже цікава! Після того
-    як я {прочитав|читати} книгу, я {написав|писати} рецензію.'
+    Минулого тижня я {купив|купити} нову книгу. Я {читав|читати|прочитав} її три дні. Вчора я нарешті {закінчив|закінчити} читати. Книга була дуже цікава! Після того як я {прочитав|читати} книгу, я {написав|писати} рецензію.'
+  id: aspect-in-context
 - type: cloze
   title: Completed vs Process
   passage: '— {Що ти робив учора?|Дві години.|Ти прочитав книгу?}
@@ -487,12 +479,13 @@
     — {Думаю, сьогодні прочитаю.|Скільки часу ти читав?|А коли закінчиш?}
 
     '
+  id: completed-vs-process
 - type: mark-the-words
   title: Find Perfective Past
-  text: 'Click on PERFECTIVE PAST forms only.
+  id: find-perfective-past
+  passage: 'Click on PERFECTIVE PAST forms only.
 
-    Учора я *прочитав* книгу. Потім я *написав* листа. Я довго писав, але нарешті
-    *закінчив*.
+    Учора я *прочитав* книгу. Потім я *написав* листа. Я довго писав, але нарешті *закінчив*.
 
     ---
 
@@ -501,7 +494,7 @@
     ---
 
     Він працював цілий день. Потім він *закінчив* і *пішов* додому. Вдома він *відпочив*.'
-  answers:
+  correct_words:
   - прочитав
   - написав
   - закінчив

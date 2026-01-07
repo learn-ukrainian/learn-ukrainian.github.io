@@ -1,0 +1,104 @@
+module: 56-hanna-barvinok
+level: C1
+version: "1.0"
+items:
+  - lemma: фольклористка
+    ipa: /fɔlʲklɔˈrɪstkɑ/
+    translation: folklorist
+    pos: noun
+    gender: f
+  - lemma: псевдонім
+    ipa: /psɛu̯dɔˈnim/
+    translation: pseudonym
+    pos: noun
+    gender: m
+  - lemma: оповідання
+    ipa: /ɔpɔwiˈdɑnʲːɑ/
+    translation: short story
+    pos: noun
+    gender: n
+  - lemma: етнографія
+    ipa: /ɛtnɔˈɦrɑfijɑ/
+    translation: ethnography
+    pos: noun
+    gender: f
+  - lemma: побут
+    ipa: /ˈpɔbut/
+    translation: way of life/daily life
+    pos: noun
+    gender: m
+  - lemma: доля
+    ipa: /ˈdɔlʲɑ/
+    translation: fate/destiny
+    pos: noun
+    gender: f
+  - lemma: письменниця
+    ipa: /pɪsˈmɛnːɪt͡sʲɑ/
+    translation: writer (female)
+    pos: noun
+    gender: f
+  - lemma: звичай
+    ipa: /ˈzwɪt͡ʃɑj/
+    translation: custom
+    pos: noun
+    gender: m
+  - lemma: обряд
+    ipa: /ˈɔbrjɑd/
+    translation: ritual
+    pos: noun
+    gender: m
+  - lemma: народність
+    ipa: /nɑˈrɔdnistʲ/
+    translation: nationality/folk character
+    pos: noun
+    gender: f
+  - lemma: одруження
+    ipa: /ɔˈdruʒɛnʲːɑ/
+    translation: marriage
+    pos: noun
+    gender: n
+  - lemma: вірність
+    ipa: /ˈvirnistʲ/
+    translation: loyalty/fidelity
+    pos: noun
+    gender: f
+  - lemma: реалізм
+    ipa: /rɛɑˈlizm/
+    translation: realism
+    pos: noun
+    gender: m
+  - lemma: жіноцтво
+    ipa: /ʒiˈnɔt͡stwɔ/
+    translation: womankind/women
+    pos: noun
+    gender: n
+  - lemma: страждання
+    ipa: /strɑʒˈdɑnʲːɑ/
+    translation: suffering
+    pos: noun
+    gender: n
+  - lemma: сентименталізм
+    ipa: /sɛntɪmɛntɑˈlizm/
+    translation: sentimentalism
+    pos: noun
+    gender: m
+  - lemma: спостережливість
+    ipa: /spɔstɛˈrɛʒlɪwistʲ/
+    translation: power of observation
+    pos: noun
+    gender: f
+  - lemma: барвінок
+    ipa: /bɑrˈwinɔk/
+    translation: periwinkle
+    pos: noun
+    gender: m
+  - lemma: прізвище
+    ipa: /ˈprizwɪʃt͡ʃɛ/
+    translation: surname
+    pos: noun
+    gender: n
+  - lemma: внесок
+    ipa: /vnɛˈsɔk/
+    translation: contribution
+    pos: noun
+    gender: m

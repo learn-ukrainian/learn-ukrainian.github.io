@@ -17,6 +17,7 @@
     right: to wash face
   - left: одягатися
     right: to dress
+  id: reflexive-verbs-meanings
 - type: fill-in
   title: Conjugation Drill (Present Tense)
   items:
@@ -68,6 +69,7 @@
     - називаємось
     - називаюсь
     - називаються
+  id: conjugation-drill-(present-tense)
 - type: quiz
   title: Find the Mistake
   items:
@@ -79,7 +81,7 @@
       correct: true
     - text: Він миємось вранці.
       correct: false
-    explanation: "Third person singular (he) uses -ється."
+    explanation: Third person singular (he) uses -ється.
   - question: Which form is correct for 'I watch'?
     options:
     - text: Я дивлюсь
@@ -88,7 +90,7 @@
       correct: false
     - text: Я дивився
       correct: false
-    explanation: "Stem change: див- -> дивл- + юсь."
+    explanation: 'Stem change: див- -> дивл- + юсь.'
   - question: Which sentence uses the correct reflexive ending?
     options:
     - text: Ми зустрічаємо.
@@ -97,7 +99,7 @@
       correct: true
     - text: Ми зустрічаюсь.
       correct: false
-    explanation: "-ся makes it reciprocal (each other)."
+    explanation: -ся makes it reciprocal (each other).
   - question: Which of these sentences has a verb error?
     options:
     - text: Я смієшся.
@@ -106,7 +108,7 @@
       correct: false
     - text: Я сміюся.
       correct: false
-    explanation: "Mistake: Я (I) needs -юсь, not -єшся (you)."
+    explanation: 'Mistake: Я (I) needs -юсь, not -єшся (you).'
   - question: Which sentence has the wrong verb ending?
     options:
     - text: Ти дивлюсь.
@@ -115,7 +117,7 @@
       correct: false
     - text: Ти дивишся на мене.
       correct: false
-    explanation: "Mistake: Ти (you) needs -ишся."
+    explanation: 'Mistake: Ти (you) needs -ишся.'
   - question: Which of these reflexive sentences is wrong?
     options:
     - text: Ми зустрічається.
@@ -124,7 +126,7 @@
       correct: false
     - text: Ми зустрічаємося.
       correct: false
-    explanation: "Mistake: Ми (we) needs -ємось."
+    explanation: 'Mistake: Ми (we) needs -ємось.'
   - question: Which sentence uses the wrong reflexive form?
     options:
     - text: Він одягаюсь.
@@ -133,7 +135,7 @@
       correct: false
     - text: Він одягається швидко.
       correct: false
-    explanation: "Mistake: Він (he) needs -ється."
+    explanation: 'Mistake: Він (he) needs -ється.'
   - question: Which of these sentences has a conjugation error?
     options:
     - text: Вони вмивається.
@@ -142,9 +144,10 @@
       correct: false
     - text: Вони вмиваються вранці.
       correct: false
-    explanation: "Mistake: Вони (they) needs -ються."
+    explanation: 'Mistake: Вони (they) needs -ються.'
+  id: find-the-mistake
 - type: fill-in
-  title: "Dialogue: Morning Routine"
+  title: 'Dialogue: Morning Routine'
   items:
   - sentence: Вранці я ___ (прокидатися).
     answer: прокидаюсь
@@ -186,33 +189,35 @@
     options:
     - збираємось
     - збираються
+  id: dialogue:-morning-routine
 - type: true-false
   title: Reflexive Concepts
   items:
-  - statement: "-ся stands for 'себе' (self)."
+  - statement: -ся stands for 'себе' (self).
     correct: true
     explanation: Correct! It reflects the action back.
-  - statement: "You use -ся after vowels."
+  - statement: You use -ся after vowels.
     correct: false
-    explanation: "No, use -сь after vowels (я миюсь) and -ся after consonants (ти миєшся)."
-  - statement: "Сміятися is a reflexive verb (washing oneself)."
+    explanation: No, use -сь after vowels (я миюсь) and -ся after consonants (ти миєшся).
+  - statement: Сміятися is a reflexive verb (washing oneself).
     correct: false
-    explanation: "It has the form, but logically it just means 'to laugh'."
-  - statement: "Reflexive verbs are always 2nd conjugation."
+    explanation: It has the form, but logically it just means 'to laugh'.
+  - statement: Reflexive verbs are always 2nd conjugation.
     correct: false
-    explanation: "No, they can be 1st (-ати) or 2nd (-ити). It depends on the verb."
-  - statement: "Називатися means 'to name someone'."
+    explanation: No, they can be 1st (-ати) or 2nd (-ити). It depends on the verb.
+  - statement: Називатися means 'to name someone'.
     correct: false
-    explanation: "It means 'to be called' (name oneself)."
-  - statement: "Зустрічатися implies meeting each other (reciprocal)."
+    explanation: It means 'to be called' (name oneself).
+  - statement: Зустрічатися implies meeting each other (reciprocal).
     correct: true
-    explanation: "Correct! The action is shared."
-  - statement: "Дивитися follows a special pattern (дивл-) in 'I' form."
+    explanation: Correct! The action is shared.
+  - statement: Дивитися follows a special pattern (дивл-) in 'I' form.
     correct: true
-    explanation: "Yes, consonant mutation happens: я дивлюсь."
-  - statement: "-ся always changes to -сь after consonants."
+    explanation: 'Yes, consonant mutation happens: я дивлюсь.'
+  - statement: -ся always changes to -сь after consonants.
     correct: false
-    explanation: "Reverse! -ся after consonants, -сь after vowels."
+    explanation: Reverse! -ся after consonants, -сь after vowels.
+  id: reflexive-concepts
 - type: match-up
   title: Match Person to Verb
   pairs:
@@ -232,6 +237,7 @@
     right: дивлюсь
   - left: Ти (дивитися)
     right: дивишся
+  id: match-person-to-verb
 - type: quiz
   title: Context Quiz
   items:
@@ -243,7 +249,7 @@
       correct: false
     - text: спите
       correct: false
-    explanation: "Funny -> Laugh (сміятися)."
+    explanation: Funny -> Laugh (сміятися).
   - question: You see a friend on the street. You...
     options:
     - text: вітаєтесь
@@ -252,7 +258,7 @@
       correct: false
     - text: спите
       correct: false
-    explanation: "See friend -> Greet (вітатися)."
+    explanation: See friend -> Greet (вітатися).
   - question: You get out of bed in the morning. You...
     options:
     - text: прокидаєтесь
@@ -261,7 +267,7 @@
       correct: false
     - text: смієтесь
       correct: false
-    explanation: "Morning -> Wake up (прокидатися)."
+    explanation: Morning -> Wake up (прокидатися).
   - question: You put on your clothes in the morning. You...
     options:
     - text: одягаєтесь
@@ -270,7 +276,7 @@
       correct: false
     - text: вмиваєтесь
       correct: false
-    explanation: "Clothes -> Dress (одягатися)."
+    explanation: Clothes -> Dress (одягатися).
   - question: You wash your face in the morning. You...
     options:
     - text: вмиваєтесь
@@ -279,7 +285,7 @@
       correct: false
     - text: одягаєтесь
       correct: false
-    explanation: "Face -> Wash (вмиватися)."
+    explanation: Face -> Wash (вмиватися).
   - question: You look in a mirror before leaving. You...
     options:
     - text: дивитесь
@@ -288,7 +294,7 @@
       correct: false
     - text: плачете
       correct: false
-    explanation: "Mirror -> Look (дивитися)."
+    explanation: Mirror -> Look (дивитися).
   - question: You are late for work or school. You...
     options:
     - text: запізнюєтесь
@@ -297,7 +303,7 @@
       correct: false
     - text: смієтесь
       correct: false
-    explanation: "Late -> Be late (запізнюватися)."
+    explanation: Late -> Be late (запізнюватися).
   - question: You meet a friend at a cafe. You...
     options:
     - text: зустрічаєтесь
@@ -306,7 +312,8 @@
       correct: false
     - text: прощаєтесь
       correct: false
-    explanation: "Meet -> Зустрічатися."
+    explanation: Meet -> Зустрічатися.
+  id: context-quiz
 - type: fill-in
   title: Sentence Builder
   items:
@@ -350,3 +357,4 @@
     options:
     - дивитесь
     - дивишся
+  id: sentence-builder

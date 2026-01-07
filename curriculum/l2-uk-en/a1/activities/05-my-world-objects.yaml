@@ -27,6 +27,7 @@
     right: this window (n)
   - left: ці ключі
     right: these keys (pl)
+  id: demonstratives-and-gender
 - type: match-up
   title: Objects and Translations
   pairs:
@@ -58,6 +59,7 @@
     right: key
   - left: лампа
     right: lamp
+  id: objects-and-translations
 - type: group-sort
   title: Sort by Gender
   groups:
@@ -97,6 +99,7 @@
     - дзеркало
     - крісло
     - ліжко
+  id: sort-by-gender
 - type: quiz
   title: Choose the Correct Demonstrative
   items:
@@ -232,6 +235,7 @@
     - text: ті
       correct: true
     explanation: Plural objects use ті.
+  id: choose-the-correct-demonstrative
 - type: fill-in
   title: Complete with Demonstratives
   items:
@@ -319,6 +323,7 @@
     - Та
     - Те
     - Ті
+  id: complete-with-demonstratives
 - type: true-false
   title: Demonstrative Agreement
   items:
@@ -360,6 +365,7 @@
   - statement: Most objects ending in consonants are masculine.
     correct: true
     explanation: Correct! Ніж, стіл, телефон, ключ.
+  id: demonstrative-agreement
 - type: anagram
   title: Build the Word
   items:
@@ -387,6 +393,7 @@
     answer: ліжко
   - scrambled: т е л е ф о н
     answer: телефон
+  id: build-the-word
 - type: fill-in
   title: Complete the Dialogue
   items:
@@ -480,3 +487,4 @@
     - Ця
     - Це
     - Ці
+  id: complete-the-dialogue

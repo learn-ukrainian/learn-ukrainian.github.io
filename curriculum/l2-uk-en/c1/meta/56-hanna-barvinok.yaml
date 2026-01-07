@@ -1,17 +1,24 @@
 module: c1-56
-title: Ганна Барвінок
-subtitle: Hanna Barvinok
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: narrative
+title: "Ганна Барвінок: Перша з Жінок"
+phase: "C1.3 Biographies"
 duration: 120
-vocabulary_count: 24
-tags:
-- c1
-- biography
-- history
-- culture
+transliteration: none
+pedagogy: "CBI"
+register: "публіцистичний"
+focus: biography
 objectives:
-- Master C1 concepts in Ганна Барвінок
+  - "Understand the pioneering role of Hanna Barvinok in Ukrainian literature"
+  - "Analyze her contribution to Ukrainian folklore and ethnography"
+  - "Explore the challenges faced by female writers in the 19th century"
+  - "Examine her relationship with Panteleimon Kulish and other cultural figures"
+tags:
+  - biography
+  - era: imperial
+  - domain: literature
+grammar:
+  - "Narrative structures in biographical texts"
+  - "Stylistic features of 19th-century prose"
+vocabulary_focus:
+  - "Literary and ethnographic terminology"
+  - "Gender and social status vocabulary"
 slug: 56-hanna-barvinok

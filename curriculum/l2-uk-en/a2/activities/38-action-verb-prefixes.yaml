@@ -7,24 +7,25 @@
     right: 'Away
 
       - Під- :: Under'
-  - left: 'пере-'
+  - left: пере-
     right: re-/over
-  - left: 'до-'
+  - left: до-
     right: complete to end
-  - left: 'від-'
+  - left: від-
     right: away/back
-  - left: 'ви-'
+  - left: ви-
     right: out
-  - left: 'з-'
+  - left: з-
     right: together/down
-  - left: 'за-'
+  - left: за-
     right: begin/behind
-  - left: 'на-'
+  - left: на-
     right: onto/full
-  - left: 'при-'
+  - left: при-
     right: toward/add
-  - left: 'роз-'
+  - left: роз-
     right: apart/spread
+  id: the-transformers
 - type: cloze
   title: The Editor
   passage: 'Я хочу {переписати|дописати|записати} цей текст. Ми повинні {переробити|доробити|зробити}
@@ -37,8 +38,9 @@
 
     Він вирішив {перездати|здати|видати} екзамен. Ми {перебудували|збудували|добудували}
     плани. Треба {переставити|поставити|виставити} меблі в кімнаті. Вона хоче {перевірити|вивірити|довірити}
-    всі відповіді. Учитель попросив {переказати|розказати|сказати} оповідання своїми словами.
-    Вони вирішили {переїхати|поїхати|виїхати} в інше місто.'
+    всі відповіді. Учитель попросив {переказати|розказати|сказати} оповідання своїми
+    словами. Вони вирішили {переїхати|поїхати|виїхати} в інше місто.'
+  id: the-editor
 - type: fill-in
   title: The Perfectionist
   items:
@@ -90,6 +92,7 @@
     - відкрив
     - закрив
     - розкрив
+  id: the-perfectionist
 - type: group-sort
   title: Open vs Close
   groups:
@@ -109,6 +112,7 @@
     - Заплющити очі
     - Закоркувати вино
     - Замкнути замок
+  id: open-vs-close
 - type: quiz
   title: Meaning Check
   items:
@@ -192,6 +196,7 @@
       correct: false
     - text: To eat again (поїсти знову)
       correct: false
+  id: meaning-check
 - type: true-false
   title: Propaganda Check
   items:
@@ -211,6 +216,7 @@
     correct: true
   - statement: '"Перенести" means to move something to a new place.'
     correct: true
+  id: propaganda-check
 - type: cloze
   title: The Test
   passage: 'Студент складав іспит.
@@ -236,6 +242,7 @@
     Він {по|від|за|під}дзвонив батькам і {роз|від|по|пере}казав хороші новини.
 
     Вони були дуже раді і вирішили {від|по|роз|пере}святкувати його успіх.'
+  id: the-test
 - type: error-correction
   title: Fix the Verb
   items:
@@ -283,29 +290,31 @@
     - пописав
     - написав
     explanation: Brief process uses По-. "Написав" implies a result.
+  id: fix-the-verb
 - type: match-up
   title: Give and Take
   pairs:
-  - left: 'Віддати'
+  - left: Віддати
     right: Give back (Return)
-  - left: 'Передати'
+  - left: Передати
     right: Pass (Salt/Message)
-  - left: 'Здати'
+  - left: Здати
     right: Turn in | Rent out
-  - left: 'Видати'
+  - left: Видати
     right: Publish | Reveal
-  - left: 'Подати'
+  - left: Подати
     right: Serve (Food/Hand)
-  - left: 'Роздати'
+  - left: Роздати
     right: Distribute (To many)
-  - left: 'Надати'
+  - left: Надати
     right: Provide (Official)
-  - left: 'Продати'
+  - left: Продати
     right: Sell (Give for money)
-  - left: 'передати'
+  - left: передати
     right: to pass/hand over
-  - left: 'віддати'
+  - left: віддати
     right: to give back
+  id: give-and-take
 - type: unjumble
   title: The Office
   items:
@@ -378,3 +387,4 @@
     - офісі
     - успішно
     answer: Ми під'єднали інтернет сьогодні вранці в новому офісі успішно
+  id: the-office

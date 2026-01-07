@@ -1,17 +1,24 @@
 module: c1-61
-title: Марія Заньковецька
-subtitle: Mariia Zankovetska
-version: '2.0'
-phase: C1.3 Biographies
+title: "Марія Заньковецька: Королева Української Сцени"
+phase: "C1.3 Biographies"
+pedagogy: "CBI"
 focus: biography
-pedagogy: narrative
+register: "публіцистичний"
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- biography
-- history
-- culture
+  - biography
+  - era: imperial
+  - domain: arts
+grammar:
+  - "Historical narrative register"
+  - "Passive voice in biography"
+vocabulary_focus:
+  - "Theater and performing arts terminology"
+  - "Biographical and emotional vocabulary"
 objectives:
-- Master C1 concepts in Марія Заньковецька
+  - "Understand the life and career of Maria Zankovetska as a pioneer of Ukrainian theater"
+  - "Analyze the role of theater as a form of cultural resistance under imperial rule"
+  - "Explore the linguistic features of late 19th-century biographical and dramatic texts"
+  - "Evaluate the legacy of the 'coryphaei' in modern Ukrainian performing arts"
 slug: 61-mariya-zankovetska

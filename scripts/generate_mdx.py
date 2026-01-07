@@ -1422,11 +1422,53 @@ def main():
     validate_after = '--validate' in args
     args = [a for a in args if a != '--validate']
 
-    lang_pair = args[0] if args else 'l2-uk-en'
-    target_level = args[1].lower() if len(args) > 1 else None
-    target_module = int(args[2]) if len(args) > 2 else None
-
     print('\n🚀 MDX Generator (Python)\n', flush=True)
+
+    # Handle file path argument (e.g., generate_mdx.py curriculum/l2-uk-en/a1/01.md)
+    if args and str(args[0]).endswith('.md'):
+        file_path = Path(args[0])
+        print(f"  Detected file path argument: {file_path}")
+        
+        # Try to resolve path relative to project root if it exists
+        if not file_path.exists():
+            potential_path = PROJECT_ROOT / file_path
+            if potential_path.exists():
+                file_path = potential_path
+        
+        if file_path.exists():
+            # Expected structure: .../curriculum/l2-uk-en/a1/01-intro.md
+            try:
+                # Resolve to absolute to be safe
+                file_path = file_path.resolve()
+                
+                # Extract parts from path
+                # assumption: path ends with .../lang_pair/level/filename.md
+                if 'curriculum' in file_path.parts:
+                    curr_idx = file_path.parts.index('curriculum')
+                    if len(file_path.parts) > curr_idx + 2:
+                        lang_pair = file_path.parts[curr_idx + 1]
+                        target_level = file_path.parts[curr_idx + 2]
+                        
+                        # Extract module number
+                        match = re.match(r'^(\d+)', file_path.name)
+                        if match:
+                            target_module = int(match.group(1))
+                            print(f"  Auto-detected: lang={lang_pair}, level={target_level}, module={target_module}")
+                            args = [] # Clear args to prevent double processing
+                        else:
+                            print("  ⚠️  Could not extract module number from filename")
+            except Exception as e:
+                print(f"  ⚠️  Error parsing file path: {e}")
+
+    if args:
+        lang_pair = args[0]
+        target_level = args[1].lower() if len(args) > 1 else None
+        target_module = int(args[2]) if len(args) > 2 else None
+    elif 'lang_pair' not in locals():
+        # Fallback default if not detected from file path
+        lang_pair = 'l2-uk-en'
+        target_level = None
+        target_module = None
     print(f'Source: curriculum/{lang_pair}/', flush=True)
     print(f'Output: docusaurus/docs/\n', flush=True)
 

@@ -13,9 +13,10 @@
 Before submitting a B2 integration module, verify all items from `b2-module-template.md` PLUS:
 
 ### Integration-Specific Requirements
+
 - [ ] **No new grammar/vocabulary:** Integration modules REVIEW only
 - [ ] **Authentic materials:** 5+ authentic Ukrainian texts (news, academic, official)
-- [ ] **Resources section:** Extensive links to authentic Ukrainian materials
+- [ ] **External resources:** Added to `docs/resources/external_resources.yaml` (NOT embedded in module)
 - [ ] **C1 preview:** Explicit preparation for next level
 - [ ] **Self-assessment:** B2 mastery checklist
 - [ ] **Skills focus:** Reading, writing, listening, speaking strategies
@@ -27,26 +28,31 @@ Before submitting a B2 integration module, verify all items from `b2-module-temp
 ### Type 1: Skills Modules (M96-100)
 
 **M96: Читання академічних текстів (Academic Reading)**
+
 - Focus: Reading strategies for academic texts
 - Meta-vocabulary: анотація, висновки, методологія, посилання
 - Activities: Analyzing structure, identifying arguments, summarizing
 
 **M97: Написання формальних документів (Formal Writing)**
+
 - Focus: Official and academic writing skills
 - Meta-vocabulary: звернення, обґрунтування, резюме, висновок
 - Activities: Document structure, register control, argumentation
 
 **M98: Слухання лекцій та доповідей (Lectures & Presentations)**
+
 - Focus: Listening strategies for academic contexts
 - Meta-vocabulary: теза, аргумент, контраргумент, ключові тези
 - Activities: Note-taking, main points, speaker position
 
 **M99: Усна комунікація: дебати та дискусії**
+
 - Focus: Speaking strategies for debates
 - Meta-vocabulary: позиція, заперечення, уточнення, підсумок
 - Activities: Argument structure, counterarguments, persuasion
 
 **M100: Інтегровані навички (Integrated Skills)**
+
 - Focus: Combined reading, writing, listening, speaking
 - Activities: Multi-skill tasks simulating real-world contexts
 
@@ -57,14 +63,17 @@ Before submitting a B2 integration module, verify all items from `b2-module-temp
 ### Type 2: Review Modules (M101-105)
 
 **M101-102: Grammar Review (Passive, Participles, Register)**
+
 - Focus: All B2 grammar reviewed
 - TTT structure: Diagnostic → Review → Retest
 
 **M103-104: Vocabulary Review (Phraseology, History)**
+
 - Focus: All B2 vocabulary reviewed
 - TTT structure: Diagnostic → Review → Retest
 
 **M105: Integrated Grammar & Vocabulary**
+
 - Focus: Grammar and vocabulary working together
 - TTT structure with production tasks
 
@@ -90,21 +99,21 @@ Before submitting a B2 integration module, verify all items from `b2-module-temp
 ```yaml
 ---
 module: b2-XX
-title: "Ukrainian Title — Skills Focus"
-phase: "B2.4 [Skills & Capstone]"
-pedagogy: "CBI"  # Content-Based Instruction
-register: "varies"  # Skills modules span registers
+title: 'Ukrainian Title — Skills Focus'
+phase: 'B2.4 [Skills & Capstone]'
+pedagogy: 'CBI' # Content-Based Instruction
+register: 'varies' # Skills modules span registers
 tags:
   - skills
   - integration
   - [specific-skill]
 grammar:
-  - "All B2 grammar (integration)"
+  - 'All B2 grammar (integration)'
 objectives:
-  - "Learner can apply [skill] strategies to authentic Ukrainian texts"
-  - "Learner can produce [output] at B2 complexity"
-  - "Learner is prepared for C1 level [skill] challenges"
-vocabulary_count: 20  # Lower (meta-language + review)
+  - 'Learner can apply [skill] strategies to authentic Ukrainian texts'
+  - 'Learner can produce [output] at B2 complexity'
+  - 'Learner is prepared for C1 level [skill] challenges'
+vocabulary_count: 20 # Lower (meta-language + review)
 ---
 ```
 
@@ -158,6 +167,7 @@ vocabulary_count: 20  # Lower (meta-language + review)
 [Purpose and benefits — 50-100 words]
 
 **Як це робити?**
+
 1. [Step 1]
 2. [Step 2]
 3. [Step 3]
@@ -167,6 +177,7 @@ vocabulary_count: 20  # Lower (meta-language + review)
 > [300+ word authentic Ukrainian text demonstrating strategy]
 >
 > **Аналіз:**
+>
 > - [Point out strategy application]
 > - [Show how strategy reveals meaning]
 
@@ -197,6 +208,7 @@ vocabulary_count: 20  # Lower (meta-language + review)
 > [400+ word authentic Ukrainian text]
 
 **Завдання:**
+
 1. Застосуйте [Strategy 1] до цього тексту.
 2. Визначте [specific elements].
 3. Підсумуйте головну думку в 2-3 реченнях.
@@ -206,6 +218,7 @@ vocabulary_count: 20  # Lower (meta-language + review)
 > [400+ word authentic Ukrainian text — different register]
 
 **Завдання:**
+
 1. Порівняйте регістр цього тексту з попереднім.
 2. Застосуйте [Strategy 2].
 3. Напишіть критичний коментар (100+ слів).
@@ -225,6 +238,7 @@ vocabulary_count: 20  # Lower (meta-language + review)
 [Production prompt requiring skill application — 50-100 words]
 
 **Вимоги:**
+
 - Довжина: 250+ слів
 - Регістр: [specified register]
 - Використайте: [target strategies]
@@ -232,6 +246,7 @@ vocabulary_count: 20  # Lower (meta-language + review)
 **Зразок відповіді:**
 
 [Complete 250+ word model answer demonstrating:
+
 - Correct skill application
 - Register awareness
 - B2-level complexity
@@ -240,6 +255,7 @@ vocabulary_count: 20  # Lower (meta-language + review)
 ### Самооцінка
 
 Чи можу я:
+
 - [ ] Застосовувати [Strategy 1]?
 - [ ] Застосовувати [Strategy 2]?
 - [ ] Застосовувати [Strategy 3]?
@@ -259,21 +275,21 @@ vocabulary_count: 20  # Lower (meta-language + review)
 ```yaml
 ---
 module: b2-XX
-title: "Повторення: [Grammar/Vocabulary Area]"
-phase: "B2.4 [Skills & Capstone]"
-pedagogy: "TTT"  # Test-Teach-Test
-register: "varies"
+title: 'Повторення: [Grammar/Vocabulary Area]'
+phase: 'B2.4 [Skills & Capstone]'
+pedagogy: 'TTT' # Test-Teach-Test
+register: 'varies'
 tags:
   - integration
   - review
   - [specific-area]
 grammar:
-  - "Integration of all B2 [area]"
+  - 'Integration of all B2 [area]'
 objectives:
-  - "Learner can demonstrate mastery of all B2 [area]"
-  - "Learner can apply [area] in integrated contexts"
-  - "Learner is prepared for C1 [area] challenges"
-vocabulary_count: 15  # Lower (review only)
+  - 'Learner can demonstrate mastery of all B2 [area]'
+  - 'Learner can apply [area] in integrated contexts'
+  - 'Learner is prepared for C1 [area] challenges'
+vocabulary_count: 15 # Lower (review only)
 ---
 ```
 
@@ -293,6 +309,7 @@ vocabulary_count: 15  # Lower (review only)
 [Diagnostic test covering ALL B2 content in this area — 20-30 items]
 
 **Підрахуйте правильні відповіді:**
+
 - 25-30: Відмінно! Ви готові до C1.
 - 18-24: Добре. Повторіть розділи нижче.
 - <18: Потрібно більше практики. Прочитайте весь модуль уважно.
@@ -304,11 +321,13 @@ vocabulary_count: 15  # Lower (review only)
 ### [Area 1]: [Title]
 
 **Ключові правила:**
+
 - [Rule 1]
 - [Rule 2]
 - [Rule 3]
 
 **Приклади:**
+
 - [Example 1]
 - [Example 2]
 
@@ -325,6 +344,7 @@ vocabulary_count: 15  # Lower (review only)
 > [500+ word passage integrating ALL B2 content in this area]
 
 **Завдання:**
+
 1. Знайдіть усі приклади [structure 1].
 2. Визначте [feature] у кожному випадку.
 3. Перетворіть [transformation task].
@@ -350,16 +370,16 @@ vocabulary_count: 15  # Lower (review only)
 ```yaml
 ---
 module: b2-XX
-title: "Оцінювання: [Skill]"
-phase: "B2.4 [Skills & Capstone]"
-pedagogy: "TBL"  # Task-Based Learning
-register: "varies"
+title: 'Оцінювання: [Skill]'
+phase: 'B2.4 [Skills & Capstone]'
+pedagogy: 'TBL' # Task-Based Learning
+register: 'varies'
 tags:
   - assessment
   - [skill]
 objectives:
-  - "Learner can demonstrate B2 [skill] proficiency"
-  - "Learner can complete authentic [skill] tasks"
+  - 'Learner can demonstrate B2 [skill] proficiency'
+  - 'Learner can complete authentic [skill] tasks'
 ---
 ```
 
@@ -404,50 +424,60 @@ objectives:
 ## Результати
 
 **Підрахунок балів:**
+
 - 50-60: Відмінно (B2.2)
 - 40-49: Добре (B2.1)
 - 30-39: Задовільно (B2 мінімум)
 - <30: Потрібно більше практики
 
 **Рекомендації:**
+
 - [Recommendation based on score]
 ```
 
 ---
 
-## Resources Section (MANDATORY)
+## External Resources Section (MANDATORY)
 
-```markdown
-# Ресурси
+> **⚠️ NOTE:** External resources are managed in `docs/resources/external_resources.yaml`, NOT in module markdown files. Do NOT add `[!resources]` blocks to modules.
 
-## Для читання
+**To add resources for integration modules:**
 
-- [Українська правда](https://www.pravda.com.ua/) — Загальні новини
-- [Дзеркало тижня](https://zn.ua/) — Аналітика
-- [Критика](https://krytyka.com/) — Культура та література
-- [Тиждень](https://tyzhden.ua/) — Суспільні питання
+1. Open `docs/resources/external_resources.yaml`
+2. Add entries with the module ID:
 
-## Для слухання
+```yaml
+# For Reading Practice
+- module_id: b2-96
+  url: 'https://www.pravda.com.ua/'
+  title: 'Українська правда'
+  type: website
+  relevance: 5
+  description: 'Загальні новини'
 
-- [Громадське радіо](https://hromadske.radio/) — Новини
-- [Українське радіо](https://www.nrcu.gov.ua/) — Офіційне радіо
-- [Подкасти](https://podcasts.ua/) — Різноманітні подкасти
+- module_id: b2-96
+  url: 'https://zn.ua/'
+  title: 'Дзеркало тижня'
+  type: website
+  relevance: 5
+  description: 'Аналітика'
 
-## Для написання
-
-- [Мова - ДНК нації](https://mova.dn.ua/) — Довідник
-- [Словники України онлайн](https://lcorp.ulif.org.ua/dictua/) — Словники
-
-## Для говоріння
-
-- [Italki](https://www.italki.com/) — Розмовна практика
-- [Tandem](https://www.tandem.net/) — Мовний обмін
-
-## Підготовка до C1
-
-- [Рівень C1 вимоги](https://mon.gov.ua/) — Офіційний стандарт
-- [Академічна українська](https://ela.kpi.ua/) — Університетські матеріали
+# For Listening Practice
+- module_id: b2-98
+  url: 'https://hromadske.radio/'
+  title: 'Громадське радіо'
+  type: podcast
+  relevance: 5
 ```
+
+**Resource types:** `website`, `article`, `video`, `podcast`, `book`, `music`
+
+**Recommended resources for integration modules:**
+
+- Українська правда, Дзеркало тижня, Критика, Тиждень (reading)
+- Громадське радіо, Українське радіо, подкасти (listening)
+- Мова - ДНК нації, Словники України (writing)
+- C1 preparation materials (next level preview)
 
 ---
 
@@ -457,34 +487,36 @@ objectives:
 
 **CRITICAL:** Use these exact formats for MDX generation to work correctly.
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
+| Activity             | Format                                                                             |
+| -------------------- | ---------------------------------------------------------------------------------- |
+| **quiz**             | `- [ ] wrong` / `- [x] correct` with optional `> explanation`                      |
+| **true-false**       | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation`           |
+| **fill-in**          | `> [!answer] correct` + `> [!options] a \| b \| c \| d`                            |
 | **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
-
+| **match-up**         | Table: `\| Left \| Right \|`                                                       |
+| **group-sort**       | `### Category` headers with `- items` underneath                                   |
+| **unjumble**         | `> [!answer] Correct sentence here.`                                               |
+| **cloze**            | Inline: `{blank\|opt1\|opt2\|answer}`                                              |
+| **select**           | Multiple `- [x]` for all correct options                                           |
+| **translate**        | Multi-choice: `- [x] Correct translation.` with `> explanation`                    |
+| **mark-the-words**   | `*marked*` words in blockquote passage                                             |
 
 ---
 
 ### Skills Modules (M96-100)
+
 - **12+ activities** focused on strategy application
 - Priority: quiz, fill-in, cloze, group-sort
 - Include analysis tasks and production
 
 ### Review Modules (M101-105)
+
 - **20+ activities** (comprehensive, like checkpoints)
 - Cover ALL B2 content in the area
 - TTT structure with diagnostic and final test
 
 ### Assessment Modules (M106-109)
+
 - **5-8 formal assessment tasks**
 - Rubrics for all tasks
 - Scoring guide
@@ -494,22 +526,27 @@ objectives:
 ## Common Pitfalls to Avoid
 
 ### 1. **Teaching New Content**
+
 - ❌ Problem: Integration modules introduce new grammar/vocabulary
 - ✅ Solution: Integration modules REVIEW only. All teaching happens in M01-95.
 
-### 2. **Missing Resources Section**
-- ❌ Problem: No links to authentic Ukrainian materials
-- ✅ Solution: Extensive Resources section with 15+ working links
+### 2. **Missing External Resources**
+
+- ❌ Problem: No resources in `docs/resources/external_resources.yaml`
+- ✅ Solution: Add 15+ resources to `external_resources.yaml` with module ID
 
 ### 3. **No C1 Preview**
+
 - ❌ Problem: Modules end abruptly without C1 preparation
 - ✅ Solution: Every integration module includes "Наступний крок: C1" section
 
 ### 4. **Skills Modules Too Grammar-Heavy**
+
 - ❌ Problem: Teaching grammar instead of reading/writing/listening strategies
 - ✅ Solution: Focus on HOW to read/write/listen, not grammar rules
 
 ### 5. **Missing Model Answers**
+
 - ❌ Problem: Production tasks without examples
 - ✅ Solution: ALL writing tasks include complete model answers
 
@@ -528,4 +565,5 @@ objectives:
 **Template Version:** 1.1
 
 **Changelog:**
+
 - v1.1 (2025-12-29): Updated module range M132-145 (was M96-110)

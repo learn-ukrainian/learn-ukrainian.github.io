@@ -1,0 +1,28 @@
+module: c1-19
+title: 'Практика II: Критика статті'
+subtitle: 'Practice II: Article Critique'
+phase: 'C1.1 Academic Foundations'
+summary: |
+  Цей модуль навчає критичному аналізу наукових статей. Ви дізнаєтесь, як структурувати рецензію, оцінювати методологію та аргументацію, а також використовувати відповідну академічну лексику для вираження професійної думки.
+slug: 19-practice-ii-article-critique
+version: '2.0'
+pedagogy: academic
+immersion: 100
+duration: 90
+grammar:
+  - Critical analysis of academic texts
+  - "Structures for identifying strengths and weaknesses"
+  - "Evaluation of methodology and evidence"
+objectives:
+  - "Analyze academic articles for structure and argument"
+  - "Critique methodology and evidence base"
+  - "Write a formal article review (рецензія)"
+  - "Express critical opinions using academic hedging and boosters"
+tags:
+  - academic
+  - writing
+  - analysis
+  - critique
+vocabulary_count: 25
+transliteration: none
+focus: academic

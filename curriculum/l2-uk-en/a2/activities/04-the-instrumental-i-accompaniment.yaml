@@ -1,51 +1,48 @@
 - type: match-up
   title: Nominative to Instrumental
   pairs:
-  - left: 'друг'
+  - left: друг
     right: другом
-  - left: 'сестра'
+  - left: сестра
     right: сестрою
-  - left: 'брат'
+  - left: брат
     right: братом
-  - left: 'мама'
+  - left: мама
     right: мамою
-  - left: 'батько'
+  - left: батько
     right: батьком
-  - left: 'вчитель'
+  - left: вчитель
     right: вчителем
-  - left: 'дитина'
+  - left: дитина
     right: дитиною
-  - left: 'подруга'
+  - left: подруга
     right: подругою
-  - left: 'хлопець'
+  - left: хлопець
     right: хлопцем
-  - left: 'дівчина'
+  - left: дівчина
     right: дівчиною
-  - left: 'собака'
+  - left: собака
     right: собакою
-  - left: 'кіт'
+  - left: кіт
     right: котом
+  id: nominative-to-instrumental
 - type: cloze
   title: Instrumental Endings
-  passage: 'Я йду в кіно з {другом|друг|друга}. Вона розмовляє з {мамою|мама|мамі}.
-    Він гуляє з {собакою|собака|собаки}.
+  passage: 'Я йду в кіно з {другом|друг|друга}. Вона розмовляє з {мамою|мама|мамі}. Він гуляє з {собакою|собака|собаки}.
 
 
-    Ми живемо з {батьками|батьки|батькам}. Я п''ю каву з {молоком|молоко|молока}.
-    Вона познайомилася з {хлопцем|хлопець|хлопця}.
+    Ми живемо з {батьками|батьки|батькам}. Я п''ю каву з {молоком|молоко|молока}. Вона познайомилася з {хлопцем|хлопець|хлопця}.
 
 
-    Діти грають з {котом|кіт|кота}. Він одружився з {Марією|Марія|Марії}. Ми зустрічаємося
-    з {друзями|друзі|друзям} щотижня.
+    Діти грають з {котом|кіт|кота}. Він одружився з {Марією|Марія|Марії}. Ми зустрічаємося з {друзями|друзі|друзям} щотижня.
 
 
-    Я працюю з {колегою|колега|колегу} над проєктом. Вона п''є чай з {лимоном|лимон|лимона}.
-    Він помирився з {сестрою|сестра|сестрі}.'
+    Я працюю з {колегою|колега|колегу} над проєктом. Вона п''є чай з {лимоном|лимон|лимона}. Він помирився з {сестрою|сестра|сестрі}.'
+  id: instrumental-endings
 - type: quiz
   title: Instrumental Forms
   items:
-  - question: When you want to form the Instrumental case of "вчитель" (teacher),
-      which ending is correct?
+  - question: When you want to form the Instrumental case of "вчитель" (teacher), which ending is correct?
     options:
     - text: вчителя
       correct: false
@@ -55,8 +52,7 @@
       correct: false
     - text: вчителю
       correct: false
-  - question: How do you correctly say "with my sister" in Ukrainian using the Instrumental
-      case?
+  - question: How do you correctly say "with my sister" in Ukrainian using the Instrumental case?
     options:
     - text: з моя сестра
       correct: false
@@ -66,8 +62,7 @@
       correct: false
     - text: з мою сестру
       correct: false
-  - question: For feminine nouns in the Instrumental case, which endings are typically
-      correct in Ukrainian grammar?
+  - question: For feminine nouns in the Instrumental case, which endings are typically correct in Ukrainian grammar?
     options:
     - text: -ом
       correct: false
@@ -77,8 +72,7 @@
       correct: false
     - text: -ові
       correct: false
-  - question: How do you correctly express "with me" in Ukrainian using the proper
-      Instrumental form?
+  - question: How do you correctly express "with me" in Ukrainian using the proper Instrumental form?
     options:
     - text: з я
       correct: false
@@ -88,8 +82,7 @@
       correct: true
     - text: з мою
       correct: false
-  - question: When forming the Instrumental plural of "діти" (children), which irregular
-      form is correct?
+  - question: When forming the Instrumental plural of "діти" (children), which irregular form is correct?
     options:
     - text: дітями
       correct: false
@@ -99,8 +92,7 @@
       correct: false
     - text: дітям
       correct: false
-  - question: How do you correctly say "coffee with milk" in Ukrainian using the Instrumental
-      case?
+  - question: How do you correctly say "coffee with milk" in Ukrainian using the Instrumental case?
     options:
     - text: кава з молоком
       correct: true
@@ -110,8 +102,7 @@
       correct: false
     - text: кава з молокою
       correct: false
-  - question: When using "with snow" in Ukrainian, which preposition variant is required
-      before "снігом"?
+  - question: When using "with snow" in Ukrainian, which preposition variant is required before "снігом"?
     options:
     - text: з
       correct: false
@@ -121,8 +112,7 @@
       correct: true
     - text: зе
       correct: false
-  - question: How do you correctly say "I met him" in Ukrainian using the Instrumental
-      case?
+  - question: How do you correctly say "I met him" in Ukrainian using the Instrumental case?
     options:
     - text: Я познайомився з він.
       correct: false
@@ -132,8 +122,7 @@
       correct: false
     - text: Я познайомився з йому.
       correct: false
-  - question: When forming the Instrumental plural of "люди" (people), which irregular
-      form is correct?
+  - question: When forming the Instrumental plural of "люди" (people), which irregular form is correct?
     options:
     - text: людями
       correct: false
@@ -143,8 +132,7 @@
       correct: false
     - text: людям
       correct: false
-  - question: How do you correctly express "with friends" in Ukrainian using the Instrumental
-      plural?
+  - question: How do you correctly express "with friends" in Ukrainian using the Instrumental plural?
     options:
     - text: з друзі
       correct: false
@@ -154,8 +142,7 @@
       correct: false
     - text: з другами
       correct: false
-  - question: When forming the Instrumental case of "батько" (father), which ending
-      is correct?
+  - question: When forming the Instrumental case of "батько" (father), which ending is correct?
     options:
     - text: батька
       correct: false
@@ -165,8 +152,7 @@
       correct: false
     - text: батьку
       correct: false
-  - question: How do you correctly say "She married Petro" in Ukrainian using the
-      Instrumental case?
+  - question: How do you correctly say "She married Petro" in Ukrainian using the Instrumental case?
     options:
     - text: Вона одружилася з Петром.
       correct: true
@@ -176,6 +162,7 @@
       correct: false
     - text: Вона одружилася з Петрові.
       correct: false
+  id: instrumental-forms
 - type: true-false
   title: Instrumental Rules
   items:
@@ -215,6 +202,7 @@
   - statement: '"Ім''я" has an irregular instrumental form.'
     correct: true
     explanation: Yes! Ім'я → ім'ям.
+  id: instrumental-rules
 - type: group-sort
   title: Gender by Instrumental Ending
   groups:
@@ -239,6 +227,7 @@
     - морем
     - полем
     - молоком
+  id: gender-by-instrumental-ending
 - type: unjumble
   title: Instrumental Sentences
   items:
@@ -302,6 +291,7 @@
     - минулого
     - тижня
     answer: Вона познайомилася з хлопцем на вечірці минулого тижня
+  id: instrumental-sentences
 - type: error-correction
   title: Fix the Instrumental
   items:
@@ -313,8 +303,7 @@
     - другом
     - друга
     - другові
-    explanation: 'After the preposition «з», nouns take Instrumental case. Masculine
-      hard-stem nouns take -ом: друг → другом.'
+    explanation: 'After the preposition «з», nouns take Instrumental case. Masculine hard-stem nouns take -ом: друг → другом.'
   - sentence: Вона розмовляє з *сестра*.
     error: сестра
     answer: сестрою
@@ -323,8 +312,7 @@
     - сестрою
     - сестри
     - сестрі
-    explanation: 'After the preposition «з», nouns take Instrumental case. Feminine
-      hard-stem nouns take -ою: сестра → сестрою.'
+    explanation: 'After the preposition «з», nouns take Instrumental case. Feminine hard-stem nouns take -ою: сестра → сестрою.'
   - sentence: Він гуляє з *собака*.
     error: собака
     answer: собакою
@@ -333,8 +321,7 @@
     - собакою
     - собаки
     - собаці
-    explanation: 'After the preposition «з», nouns take Instrumental case. Feminine
-      hard-stem nouns take -ою: собака → собакою.'
+    explanation: 'After the preposition «з», nouns take Instrumental case. Feminine hard-stem nouns take -ою: собака → собакою.'
   - sentence: Ми живемо з *батьки*.
     error: батьки
     answer: батьками
@@ -343,8 +330,7 @@
     - батьками
     - батьків
     - батькам
-    explanation: 'After the preposition «з», nouns take Instrumental case. Plural
-      nouns take -ами: батьки → батьками.'
+    explanation: 'After the preposition «з», nouns take Instrumental case. Plural nouns take -ами: батьки → батьками.'
   - sentence: Я п'ю каву з *молоко*.
     error: молоко
     answer: молоком
@@ -353,8 +339,7 @@
     - молоком
     - молока
     - молоці
-    explanation: 'After the preposition «з», nouns take Instrumental case. Neuter
-      hard-stem nouns take -ом: молоко → молоком.'
+    explanation: 'After the preposition «з», nouns take Instrumental case. Neuter hard-stem nouns take -ом: молоко → молоком.'
   - sentence: Вона познайомилася з *хлопець*.
     error: хлопець
     answer: хлопцем
@@ -363,38 +348,31 @@
     - хлопцем
     - хлопця
     - хлопцеві
-    explanation: 'After the preposition «з», nouns take Instrumental case. Masculine
-      soft-stem nouns take -ем: хлопець → хлопцем.'
+    explanation: 'After the preposition «з», nouns take Instrumental case. Masculine soft-stem nouns take -ем: хлопець → хлопцем.'
+  id: fix-the-instrumental
 - type: cloze
   title: Complete the Story
-  passage: 'У суботу ми пішли в ресторан {з батьками|з батьки|з батьків}. Марія прийшла
-    {зустрічається|зустрічатися|зустрічаюсь}. Петро прийшов {познайомилася|познайомитися|познайомлюсь}.
-    Ми їли піцу {гуляють|гуляти|гуляємо} і пили каву {розмовляє|розмовляти|розмовляюсь}.
-    Увечері ми {одружаться|одружуються|одружитися} разом. Було дуже весело!
+  passage: 'У суботу ми пішли в ресторан {з батьками|з батьки|з батьків}. Марія прийшла {зустрічається|зустрічатися|зустрічаюсь}. Петро прийшов {познайомилася|познайомитися|познайомлюсь}. Ми їли піцу {гуляють|гуляти|гуляємо} і пили каву {розмовляє|розмовляти|розмовляюсь}. Увечері ми {одружаться|одружуються|одружитися} разом. Було дуже весело!
 
     ---
 
-    Оленка живе {з батьками|з батьки|з батьків}. Вона часто {зустрічається|зустрічатися|зустрічаюсь}
-    з подругами. Минулого тижня вона {познайомилася|познайомитися|познайомлюсь} з
-    хлопцем на вечірці. Тепер вони часто {гуляють|гуляти|гуляємо}. Вона {розмовляє|розмовляти|розмовляюсь}
-    з батьками про нього. Може, вони {одружаться|одружуються|одружитися}?'
+    Оленка живе {з батьками|з батьки|з батьків}. Вона часто {зустрічається|зустрічатися|зустрічаюсь} з подругами. Минулого тижня вона {познайомилася|познайомитися|познайомлюсь} з хлопцем на вечірці. Тепер вони часто {гуляють|гуляти|гуляємо}. Вона {розмовляє|розмовляти|розмовляюсь} з батьками про нього. Може, вони {одружаться|одружуються|одружитися}?'
+  id: complete-the-story
 - type: mark-the-words
   title: Find Instrumental Forms
-  text: 'Click on all instrumental case forms.
+  id: find-instrumental-forms
+  passage: 'Click on all instrumental case forms.
 
-    Я йду в кіно *з другом*. Вона розмовляє *з сестрою*. Ми живемо *з батьками*. Діти
-    грають *з котом*.
-
-    ---
-
-    Він познайомився *з дівчиною* на вечірці. Вона п''є каву *з молоком*. Ми зустрічаємося
-    *з друзями* щотижня.
+    Я йду в кіно *з другом*. Вона розмовляє *з сестрою*. Ми живемо *з батьками*. Діти грають *з котом*.
 
     ---
 
-    Петро одружився *з Марією*. Вони живуть *з дітьми*. Бабуся гуляє *з онуками*.
-    Він розмовляє *з колегою* про роботу.'
-  answers:
+    Він познайомився *з дівчиною* на вечірці. Вона п''є каву *з молоком*. Ми зустрічаємося *з друзями* щотижня.
+
+    ---
+
+    Петро одружився *з Марією*. Вони живуть *з дітьми*. Бабуся гуляє *з онуками*. Він розмовляє *з колегою* про роботу.'
+  correct_words:
   - з другом
   - з сестрою
   - з батьками
@@ -475,3 +453,4 @@
     - text: Ти йдеш з мною?
       correct: false
     explanation: Instrumental зі мною.
+  id: english-to-ukrainian

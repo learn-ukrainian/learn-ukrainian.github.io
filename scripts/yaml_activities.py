@@ -377,8 +377,26 @@ class ActivityParser:
         return FillInActivity(title=data.get('title', ''), items=items)
 
     def _parse_cloze(self, data: dict) -> ClozeActivity:
-        blanks = [ClozeBlank(id=b['id'], answer=b['answer'], options=b.get('options', [])) for b in data.get('blanks', [])]
-        return ClozeActivity(title=data.get('title', ''), passage=data.get('passage', ''), blanks=blanks)
+        passage = data.get('passage', '')
+        explicit_blanks = data.get('blanks', [])
+        
+        # If explicit blanks are provided, use them
+        if explicit_blanks:
+            blanks = [ClozeBlank(id=b['id'], answer=b['answer'], options=b.get('options', [])) for b in explicit_blanks]
+        else:
+            # Parse inline format: {option1|option2|option3} where first option is correct
+            blanks = []
+            blank_id = 0
+            for match in re.finditer(r'\{([^}]+)\}', passage):
+                options_str = match.group(1)
+                options = [opt.strip() for opt in options_str.split('|')]
+                if options:
+                    # First option is the correct answer
+                    answer = options[0]
+                    blanks.append(ClozeBlank(id=blank_id, answer=answer, options=options))
+                    blank_id += 1
+        
+        return ClozeActivity(title=data.get('title', ''), passage=passage, blanks=blanks)
 
     def _parse_match_up(self, data: dict) -> MatchUpActivity:
         pairs = [MatchPair(left=p['left'], right=p['right']) for p in data.get('pairs', [])]
@@ -401,7 +419,10 @@ class ActivityParser:
         return ErrorCorrectionActivity(title=data.get('title', ''), items=items)
 
     def _parse_mark_the_words(self, data: dict) -> MarkTheWordsActivity:
-        return MarkTheWordsActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), text=data.get('text', ''), answers=data.get('answers', []))
+        # Support both old and new field names for backwards compatibility
+        passage = data.get('passage') or data.get('text', '')
+        correct_words = data.get('correct_words') or data.get('answers', [])
+        return MarkTheWordsActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), text=passage, answers=correct_words)
 
     def _parse_translate(self, data: dict) -> TranslateActivity:
         items = [TranslateItem(source=i['source'], options=[TranslateOption(text=o['text'], correct=o.get('correct', False)) for o in i.get('options', [])], explanation=i.get('explanation')) for i in data.get('items', [])]
@@ -412,6 +433,7 @@ class ActivityParser:
         return AnagramActivity(title=data.get('title', ''), items=items)
 
     def _parse_reading(self, data: dict) -> ReadingActivity:
+        # context is optional - reading activities use external resources
         return ReadingActivity(title=data.get('title', ''), context=data.get('context', ''), resource=data.get('resource', {}), tasks=data.get('tasks', []))
 
     def _parse_essay_response(self, data: dict) -> EssayResponseActivity:
@@ -430,7 +452,8 @@ class ActivityParser:
         """Escapes characters that break JSX/JSON parsing."""
         if not text: return ""
         if not isinstance(text, str): return str(text)
-        return text.replace('{', '&#123;').replace('}', '&#125;').replace('`', '&#96;')
+        # Escape backslashes first, then quotes (to HTML entity), then curly braces and backticks
+        return text.replace('\\', '\\\\').replace('"', '&quot;').replace('{', '&#123;').replace('}', '&#125;').replace('`', '&#96;')
 
     def to_mdx(self, activities: list[Activity], is_ukrainian_forced: bool = False) -> str:
         mdx_parts = []
@@ -537,7 +560,8 @@ class ActivityParser:
 
     def _reading_to_mdx(self, activity: ReadingActivity, is_ukrainian_forced: bool = False) -> str:
         tasks = json.dumps([self._escape_jsx(t) for t in activity.tasks], ensure_ascii=False)
-        return f"### {self._escape_jsx(activity.title)}\n\n<ReadingActivity title=\"{self._escape_jsx(activity.title)}\" context=\"{self._escape_jsx(activity.context)}\" tasks={{JSON.parse(`{tasks}`)}} />"
+        resource = json.dumps(activity.resource, ensure_ascii=False) if activity.resource else '{}'
+        return f"### {self._escape_jsx(activity.title)}\n\n<ReadingActivity title=\"{self._escape_jsx(activity.title)}\" context=\"{self._escape_jsx(activity.context)}\" resource={{{resource}}} tasks={{JSON.parse(`{tasks}`)}} />"
 
     def _critical_analysis_to_mdx(self, activity: CriticalAnalysisActivity, is_ukrainian_forced: bool = False) -> str:
         return f"### {self._escape_jsx(activity.title)}\n\n<CriticalAnalysis title=\"{self._escape_jsx(activity.title)}\" context={{{json.dumps(activity.context, ensure_ascii=False)}}} question={{{json.dumps(activity.question, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"

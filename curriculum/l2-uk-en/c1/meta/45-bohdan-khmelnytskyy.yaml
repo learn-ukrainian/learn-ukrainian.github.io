@@ -1,17 +1,24 @@
 module: c1-45
-title: Богдан Хмельницький
-subtitle: Bohdan Khmelnytskyi
-version: '2.0'
-phase: C1.3 Biographies
+title: "Богдан Хмельницький: Будівничий Козацької Держави"
+subtitle: "Bohdan Khmelnytskyi: Architect of the Cossack State"
+version: "2.0"
+phase: "C1.3 Biographies"
 focus: biography
-pedagogy: narrative
+pedagogy: "CBI"
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- biography
-- history
-- culture
+  - biography
+  - history
+  - cossacks
+  - state-building
+  - 17th-century
+grammar:
+  - "Historical narrative register"
+  - "Military and diplomatic terminology"
 objectives:
-- Master C1 concepts in Богдан Хмельницький
+  - "Learner can analyze the military and diplomatic genius of Bohdan Khmelnytsky"
+  - "Learner understands the social and political transformation of Ukraine during the Khmelnytsky Uprising"
+  - "Learner can use advanced vocabulary related to statehood and geopolitics"
+vocabulary_count: 25
 slug: 45-bohdan-khmelnytskyy

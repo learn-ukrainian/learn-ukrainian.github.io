@@ -25,6 +25,7 @@
     right: o
   - left: к
     right: k
+  id: true-friends
 - type: match-up
   title: False Friends Sound
   instruction: Match the Ukrainian letter with its sound
@@ -53,6 +54,7 @@
     right: /u/
   - left: х
     right: /x/
+  id: false-friends-sound
 - type: group-sort
   title: Letter Types
   groups:
@@ -80,6 +82,7 @@
     - Л
     - П
     - Ф
+  id: letter-types
 - type: quiz
   title: Reading Words
   items:
@@ -215,6 +218,7 @@
     - text: тєлєфон
       correct: false
     explanation: телефон = telephone
+  id: reading-words
 - type: true-false
   title: Letter Recognition
   items:
@@ -255,6 +259,7 @@
   - statement: The letter Л sounds like "l" in "love".
     correct: true
     explanation: Correct! Л is a New Letter that makes the L sound.
+  id: letter-recognition
 - type: fill-in
   title: Complete the Word
   items:
@@ -342,6 +347,7 @@
     - п
     - н
     - в
+  id: complete-the-word
 - type: anagram
   title: Build the Word
   items:
@@ -369,6 +375,7 @@
     answer: таксі
   - scrambled: м у з и к а
     answer: музика
+  id: build-the-word
 - type: anagram
   title: International Words
   items:
@@ -396,3 +403,4 @@
     answer: студент
   - scrambled: т у р и с т
     answer: турист
+  id: international-words

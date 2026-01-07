@@ -1,26 +1,27 @@
 - type: match-up
   title: Root Match
   pairs:
-  - left: 'Мова'
+  - left: Мова
     right: Speech
-  - left: 'Слух'
+  - left: Слух
     right: Hearing
-  - left: 'Думка'
+  - left: Думка
     right: Thought
-  - left: 'Вхід'
+  - left: Вхід
     right: Entrance (Go)
-  - left: 'Письмо'
+  - left: Письмо
     right: Writing
-  - left: 'Вигляд'
+  - left: Вигляд
     right: Appearance (See)
-  - left: 'Перемога'
+  - left: Перемога
     right: Victory (Over-power)
-  - left: 'Розмова'
+  - left: Розмова
     right: Conversation
-  - left: 'пис-'
+  - left: пис-
     right: писати, письмо
-  - left: 'чит-'
+  - left: чит-
     right: читати, читання
+  id: root-match
 - type: group-sort
   title: Family Tree
   groups:
@@ -48,6 +49,7 @@
     - Науковий
     - Український
     - Читач
+  id: family-tree
 - type: cloze
   title: Logic Puzzle
   passage: 'Людина, яка слухає. Це [{слухач|мовець|письменник}]. Процес обміну словами.
@@ -60,7 +62,9 @@
 
     Коли ти не говориш. Це [{мовчання|розмова|крик}]. Результат творчості. Це [{твір|двір|звір}].
     Людина, яка читає. Це [{читач|слухач|глядач}]. Місце, куди входимо. Це [{вхід|вихід|прохід}].
-    Той, хто вивчає науку. Це [{науковець|наука|наукові}]. Людина, яка говорить. Це [{мовець|слухач|мовчун}].'
+    Той, хто вивчає науку. Це [{науковець|наука|наукові}]. Людина, яка говорить. Це
+    [{мовець|слухач|мовчун}].'
+  id: logic-puzzle
 - type: unjumble
   title: High Sentences
   items:
@@ -124,6 +128,7 @@
     - чудові
     - книги
     answer: Він має письменницький талант і пише чудові книги
+  id: high-sentences
 - type: quiz
   title: Formation Check
   items:
@@ -209,6 +214,7 @@
       correct: false
     - text: Українські мова
       correct: false
+  id: formation-check
 - type: cloze
   title: The Conference
   passage: 'На сцені стоїть {промовець|співак|актор}.
@@ -236,6 +242,7 @@
     Ми напишемо {статтю|книгу|листа} про цю подію.
 
     Це гарна {тема|проблема|гра} для роздумів.'
+  id: the-conference
 - type: error-correction
   title: Wrong Logic
   items:
@@ -281,29 +288,31 @@
     - промова
     - розмова
     explanation: A public speech is Pro-mova, not Roz-mova (Conversation).
+  id: wrong-logic
 - type: match-up
   title: Opposites
   pairs:
-  - left: 'Вхід'
+  - left: Вхід
     right: Вихід
-  - left: 'Мовчати'
+  - left: Мовчати
     right: Говорити
-  - left: 'Вступ'
+  - left: Вступ
     right: Виступ
-  - left: 'Схід'
+  - left: Схід
     right: Захід
-  - left: 'Слухач'
+  - left: Слухач
     right: Мовець
-  - left: 'Вдих'
+  - left: Вдих
     right: Видих
-  - left: 'Прихід'
+  - left: Прихід
     right: Відхід
-  - left: 'Запитання'
+  - left: Запитання
     right: Відповідь
-  - left: 'добрий'
+  - left: добрий
     right: злий
-  - left: 'швидкий'
+  - left: швидкий
     right: повільний
+  id: opposites
 - type: group-sort
   title: Parts of Speech
   groups:
@@ -326,26 +335,28 @@
     - Писати
     - Говорити
     - Обдумати
+  id: parts-of-speech
 - type: match-up
   title: Definitions II
   pairs:
-  - left: 'Огляд'
+  - left: Огляд
     right: Review
-  - left: 'Погляд'
+  - left: Погляд
     right: Glance
-  - left: 'Вигляд'
+  - left: Вигляд
     right: Appearance
-  - left: 'Відчуття'
+  - left: Відчуття
     right: Sensation
-  - left: 'Почуття'
+  - left: Почуття
     right: Feeling
-  - left: 'Побачення'
+  - left: Побачення
     right: Date/Meeting
-  - left: 'Передбачення'
+  - left: Передбачення
     right: Prediction
-  - left: 'Обдумати'
+  - left: Обдумати
     right: To think over
-  - left: 'перекладач'
+  - left: перекладач
     right: translator
-  - left: 'письменник'
+  - left: письменник
     right: writer
+  id: definitions-ii

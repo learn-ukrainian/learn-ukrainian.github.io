@@ -16,11 +16,13 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
 import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
 
 ## Warm-up
 
@@ -53,12 +55,12 @@ The good news: perfective verbs conjugate in past tense exactly like imperfectiv
 
 ### Past Tense Endings (Same for Both Aspects)
 
-| Gender/Number | Ending | Example (прочитати) |
-|---------------|--------|---------------------|
-| Masculine | -в | -∅ | прочитав |
-| Feminine | -ла | прочитала |
-| Neuter | -ло | прочитало |
-| Plural | -ли | прочитали |
+| Gender/Number | Ending    | Example (прочитати) |
+| ------------- | --------- | ------------------- |
+| Masculine     | -в / -∅   | прочитав            |
+| Feminine      | -ла       | прочитала           |
+| Neuter        | -ло       | прочитало           |
+| Plural        | -ли       | прочитали           |
 
 **Examples:**
 - Він **прочитав** книгу. (He read/finished the book.)
@@ -191,7 +193,91 @@ Before moving to the activities, make sure you can answer these questions:
 **Positive:** Так, я зробив це. (Yes, I did it.)
 **Negative:** Ні, я не зробив це. (No, I didn't do it.)
 
-##
+## 📋 Підсумок
+
+У цьому модулі ви вивчили доконаний вид у минулому часі.
+
+## Закінчення минулого часу
+
+| Рід | Закінчення | Приклад |
+|-----|------------|---------|
+| Чоловічий | -в / -∅ | зробив, пішов, приніс |
+| Жіночий | -ла | зробила, пішла, принесла |
+| Середній | -ло | зробило, пішло, принесло |
+| Множина | -ли | зробили, пішли, принесли |
+
+## Коли використовувати доконаний вид
+
+**Результат завершеної дії:**
+- Він **прочитав** книгу. — Книга прочитана повністю.
+- Вона **написала** листа. — Лист готовий.
+- Ми **зробили** роботу. — Робота завершена.
+
+**Одноразова дія в минулому:**
+- Він **подзвонив** мені вчора.
+- Вона **купила** новий телефон.
+- Ми **побачили** друзів на вулиці.
+
+## Порівняння видів у минулому
+
+| Недоконаний (процес) | Доконаний (результат) |
+|---------------------|----------------------|
+| Він **читав** книгу. | Він **прочитав** книгу. |
+| Вона **писала** листа. | Вона **написала** листа. |
+| Ми **робили** роботу. | Ми **зробили** роботу. |
+
+## Корисні запитання
+
+- **Що ти зробив?** — Який результат?
+- **Ти вже прочитав?** — Ти закінчив читати?
+- **Хто це написав?** — Хто автор?
+
+## Типові помилки
+
+❌ Він **читав** цю книгу. (коли результат важливий)
+✅ Він **прочитав** цю книгу.
+
+❌ Вона вже **робила** домашнє завдання.
+✅ Вона вже **зробила** домашнє завдання.
+
+## Приклади діалогів
+
+**Діалог 1: Після роботи**
+<div className="conversation">
+
+— Що ти сьогодні зробив?
+
+— Я написав три листи і прочитав звіт.
+
+— Чудово! А ти вже поїв?
+
+— Ні, ще не поїв. Чекаю на тебе.
+
+</div>
+
+**Діалог 2: У магазині**
+<div className="conversation">
+
+— Ти купив хліб?
+
+— Так, купив. І молоко теж узяв.
+
+— А овочі?
+
+— Ні, ще не купив. Забув список.
+
+</div>
+
+## Маркери доконаного виду
+
+Ці слова зазвичай вимагають доконаного виду:
+- **вже** — Ти вже зробив?
+- **нарешті** — Він нарешті прийшов!
+- **раптом** — Вона раптом згадала.
+- **одразу** — Я одразу зрозумів.
+
+Практикуйте кожен день! Вибір правильного виду — це ключ до природної української мови.
+
 
 
 
@@ -199,145 +285,49 @@ Before moving to the activities, make sure you can answer these questions:
 
 ### Past Tense Forms
 
-<MatchUp
-  title="Past Tense Forms"
-  isUkrainian={false}
-  pairs={JSON.parse(`[{"left": "- зробив", "right": "did/finished"}, {"left": "- написав", "right": "wrote/finished"}, {"left": "- прочитав", "right": "read/finished"}, {"left": "- сказав", "right": "said"}, {"left": "- побачив", "right": "saw"}, {"left": "- почув", "right": "heard"}, {"left": "- взяв", "right": "took"}, {"left": "- дав", "right": "gave"}, {"left": "- пішов", "right": "went/left"}, {"left": "- прийшов", "right": "came/arrived"}, {"left": "- закінчив", "right": "finished"}, {"left": "- почав", "right": "began"}]`)}
-/>
+<MatchUp pairs={JSON.parse(`[{"left": "зробив", "right": "did/finished"}, {"left": "написав", "right": "wrote/finished"}, {"left": "прочитав", "right": "read/finished"}, {"left": "сказав", "right": "said"}, {"left": "побачив", "right": "saw"}, {"left": "почув", "right": "heard"}, {"left": "взяв", "right": "took"}, {"left": "дав", "right": "gave"}, {"left": "пішов", "right": "went/left"}, {"left": "прийшов", "right": "came/arrived"}, {"left": "закінчив", "right": "finished"}, {"left": "почав", "right": "began"}]`)} />
 
 ### Perfective or Imperfective Past
 
-<FillIn
-  title="Perfective or Imperfective Past"
-  isUkrainian={false}
-  items={JSON.parse(`[{"sentence": "Він ___ книгу вчора.", "answer": "прочитав", "options": ["читав", "прочитав"]}, {"sentence": "Вона ___ три години.", "answer": "писала", "options": ["писала", "написала"]}, {"sentence": "Я вже ___ це!", "answer": "зробив", "options": ["робив", "зробив"]}, {"sentence": "Ми ___ щодня.", "answer": "читали", "options": ["читали", "прочитали"]}, {"sentence": "Він ___ \\\\\\"привіт.\\\\\\" (said)", "answer": "сказав", "options": ["говорив", "сказав"]}, {"sentence": "Вона довго ___.", "answer": "говорила", "options": ["говорила", "сказала"]}, {"sentence": "Ми нарешті ___!", "answer": "приїхали", "options": ["їхали", "приїхали"]}, {"sentence": "Він ___ весь день.", "answer": "працював", "options": ["працював", "попрацював"]}, {"sentence": "Вона ___ роботу. (finished)", "answer": "закінчила", "options": ["закінчувала", "закінчила"]}, {"sentence": "Я ___ його часто.", "answer": "бачив", "options": ["бачив", "побачив"]}, {"sentence": "Він раптом ___ шум.", "answer": "почув", "options": ["чув", "почув"]}, {"sentence": "Ми ___ листа. (wrote/finished)", "answer": "написали", "options": ["писали", "написали"]}]`)}
-/>
+<FillIn items={JSON.parse(`[{"sentence": "Він ___ книгу вчора.", "answer": "прочитав", "options": ["читав", "прочитав"]}, {"sentence": "Вона ___ три години.", "answer": "писала", "options": ["писала", "написала"]}, {"sentence": "Я вже ___ це!", "answer": "зробив", "options": ["робив", "зробив"]}, {"sentence": "Ми ___ щодня.", "answer": "читали", "options": ["читали", "прочитали"]}, {"sentence": "Він ___ &quot;привіт.&quot; (said)", "answer": "сказав", "options": ["говорив", "сказав"]}, {"sentence": "Вона довго ___.", "answer": "говорила", "options": ["говорила", "сказала"]}, {"sentence": "Ми нарешті ___!", "answer": "приїхали", "options": ["їхали", "приїхали"]}, {"sentence": "Він ___ весь день.", "answer": "працював", "options": ["працював", "попрацював"]}, {"sentence": "Вона ___ роботу. (finished)", "answer": "закінчила", "options": ["закінчувала", "закінчила"]}, {"sentence": "Я ___ його часто.", "answer": "бачив", "options": ["бачив", "побачив"]}, {"sentence": "Він раптом ___ шум.", "answer": "почув", "options": ["чув", "почув"]}, {"sentence": "Ми ___ листа. (wrote/finished)", "answer": "написали", "options": ["писали", "написали"]}]`)} />
 
 ### Aspect in Past Tense
 
-<Quiz
-  title="Aspect in Past Tense"
-  isUkrainian={false}
-  questions={JSON.parse(`[{"question": "In the Ukrainian sentence \\\\\\"Я прочитав книгу,\\\\\\" which grammatical aspectual focus is emphasized?", "options": [{"text": "Completed result", "correct": true}, {"text": "Ongoing process", "correct": false}, {"text": "Future intent", "correct": false}, {"text": "Habitual action", "correct": false}]}, {"question": "When a speaker says \\\\\\"Я читав книгу,\\\\\\" what is the primary focus of the action?", "options": [{"text": "Process", "correct": true}, {"text": "Completed result", "correct": false}, {"text": "Single event", "correct": false}, {"text": "Future goal", "correct": false}]}, {"question": "Which of the following Ukrainian words typically signals that the perfective past should be used?", "options": [{"text": "вже", "correct": true}, {"text": "довго", "correct": false}, {"text": "часто", "correct": false}, {"text": "зазвичай", "correct": false}]}, {"question": "In the sentence \\\\\\"Вона писала три години,\\\\\\" what is the grammatical aspect of the verb used?", "options": [{"text": "Imperfective", "correct": true}, {"text": "Perfective", "correct": false}, {"text": "Future", "correct": false}, {"text": "Conditional", "correct": false}]}, {"question": "In the sentence \\\\\\"Він написав листа вчора,\\\\\\" what is the grammatical aspect of the verb used?", "options": [{"text": "Perfective", "correct": true}, {"text": "Imperfective", "correct": false}, {"text": "Present", "correct": false}, {"text": "Habitual", "correct": false}]}, {"question": "Which statement best describes the past tense endings for perfective and imperfective verbs in Ukrainian?", "options": [{"text": "The same for both aspects", "correct": true}, {"text": "Different for each aspect", "correct": false}, {"text": "Only used for perfective", "correct": false}, {"text": "Only used for imperfective", "correct": false}]}, {"question": "Which of the following options represents the correct masculine past tense ending for Ukrainian verbs?", "options": [{"text": "-в | -∅", "correct": true}, {"text": "-ла", "correct": false}, {"text": "-ли", "correct": false}, {"text": "-ло", "correct": false}]}, {"question": "Which of the following options represents the correct feminine past tense ending for Ukrainian verbs?", "options": [{"text": "-ла", "correct": true}, {"text": "-в", "correct": false}, {"text": "-ли", "correct": false}, {"text": "-ло", "correct": false}]}, {"question": "The common Ukrainian question \\\\\\"Що ти робив?\\\\\\" typically uses which grammatical aspect for inquiry?", "options": [{"text": "Imperfective", "correct": true}, {"text": "Perfective", "correct": false}, {"text": "Future", "correct": false}, {"text": "Imperative", "correct": false}]}, {"question": "The common Ukrainian question \\\\\\"Ти зробив це?\\\\\\" typically uses which grammatical aspect for inquiry?", "options": [{"text": "Perfective", "correct": true}, {"text": "Imperfective", "correct": false}, {"text": "Present", "correct": false}, {"text": "Habitual", "correct": false}]}, {"question": "Which of the following represents the correct masculine past form of the perfective verb \\\\\\"піти\\\\\\"?", "options": [{"text": "пішов", "correct": true}, {"text": "пів", "correct": false}, {"text": "пишов", "correct": false}, {"text": "пішовла", "correct": false}]}, {"question": "Which of the following represents the correct masculine past form of the perfective verb \\\\\\"прийти\\\\\\"?", "options": [{"text": "прийшов", "correct": true}, {"text": "прийв", "correct": false}, {"text": "прив", "correct": false}, {"text": "прийшла", "correct": false}]}]`)}
-/>
+<Quiz questions={JSON.parse(`[{"question": "In the Ukrainian sentence &quot;Я прочитав книгу,&quot; which grammatical aspectual focus is emphasized?", "options": [{"text": "Completed result", "correct": true}, {"text": "Ongoing process", "correct": false}, {"text": "Future intent", "correct": false}, {"text": "Habitual action", "correct": false}]}, {"question": "When a speaker says &quot;Я читав книгу,&quot; what is the primary focus of the action?", "options": [{"text": "Process", "correct": true}, {"text": "Completed result", "correct": false}, {"text": "Single event", "correct": false}, {"text": "Future goal", "correct": false}]}, {"question": "Which of the following Ukrainian words typically signals that the perfective past should be used?", "options": [{"text": "вже", "correct": true}, {"text": "довго", "correct": false}, {"text": "часто", "correct": false}, {"text": "зазвичай", "correct": false}]}, {"question": "In the sentence &quot;Вона писала три години,&quot; what is the grammatical aspect of the verb used?", "options": [{"text": "Imperfective", "correct": true}, {"text": "Perfective", "correct": false}, {"text": "Future", "correct": false}, {"text": "Conditional", "correct": false}]}, {"question": "In the sentence &quot;Він написав листа вчора,&quot; what is the grammatical aspect of the verb used?", "options": [{"text": "Perfective", "correct": true}, {"text": "Imperfective", "correct": false}, {"text": "Present", "correct": false}, {"text": "Habitual", "correct": false}]}, {"question": "Which statement best describes the past tense endings for perfective and imperfective verbs in Ukrainian?", "options": [{"text": "The same for both aspects", "correct": true}, {"text": "Different for each aspect", "correct": false}, {"text": "Only used for perfective", "correct": false}, {"text": "Only used for imperfective", "correct": false}]}, {"question": "Which of the following options represents the correct masculine past tense ending for Ukrainian verbs?", "options": [{"text": "-в | -∅", "correct": true}, {"text": "-ла", "correct": false}, {"text": "-ли", "correct": false}, {"text": "-ло", "correct": false}]}, {"question": "Which of the following options represents the correct feminine past tense ending for Ukrainian verbs?", "options": [{"text": "-ла", "correct": true}, {"text": "-в", "correct": false}, {"text": "-ли", "correct": false}, {"text": "-ло", "correct": false}]}, {"question": "The common Ukrainian question &quot;Що ти робив?&quot; typically uses which grammatical aspect for inquiry?", "options": [{"text": "Imperfective", "correct": true}, {"text": "Perfective", "correct": false}, {"text": "Future", "correct": false}, {"text": "Imperative", "correct": false}]}, {"question": "The common Ukrainian question &quot;Ти зробив це?&quot; typically uses which grammatical aspect for inquiry?", "options": [{"text": "Perfective", "correct": true}, {"text": "Imperfective", "correct": false}, {"text": "Present", "correct": false}, {"text": "Habitual", "correct": false}]}, {"question": "Which of the following represents the correct masculine past form of the perfective verb &quot;піти&quot;?", "options": [{"text": "пішов", "correct": true}, {"text": "пів", "correct": false}, {"text": "пишов", "correct": false}, {"text": "пішовла", "correct": false}]}, {"question": "Which of the following represents the correct masculine past form of the perfective verb &quot;прийти&quot;?", "options": [{"text": "прийшов", "correct": true}, {"text": "прийв", "correct": false}, {"text": "прив", "correct": false}, {"text": "прийшла", "correct": false}]}]`)} />
 
 ### Past Tense Rules
 
-<TrueFalse
-  title="Past Tense Rules"
-  isUkrainian={false}
-  items={JSON.parse(`[{"statement": "Perfective past shows completed actions.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Imperfective past can show duration.", "isTrue": true, "explanation": "Yes! \\\\\\"Він читав три години.\\\\\\""}, {"statement": "Past endings are different for each aspect.", "isTrue": false, "explanation": "No, the endings are the same — the stems are different."}, {"statement": "\\\\\\"Вже\\\\\\" usually appears with perfective.", "isTrue": true, "explanation": "Correct! \\\\\\"Я вже зробив.\\\\\\""}, {"statement": "\\\\\\"Довго\\\\\\" usually appears with imperfective.", "isTrue": true, "explanation": "Yes! \\\\\\"Він довго працював.\\\\\\""}, {"statement": "\\\\\\"Писав\\\\\\" is perfective past.", "isTrue": false, "explanation": "\\\\\\"Писав\\\\\\" is imperfective. \\\\\\"Написав\\\\\\" is perfective."}, {"statement": "\\\\\\"Прочитав\\\\\\" means \\\\\\"finished reading.\\\\\\"", "isTrue": true, "explanation": "Correct!"}, {"statement": "\\\\\\"Пішов\\\\\\" is the past of \\\\\\"піти.\\\\\\"", "isTrue": true, "explanation": "Yes!"}, {"statement": "Repeated actions use perfective.", "isTrue": false, "explanation": "Repeated actions use imperfective."}, {"statement": "\\\\\\"Що ти робив?\\\\\\" asks about activities.", "isTrue": true, "explanation": "Yes, using imperfective to ask about process."}, {"statement": "\\\\\\"Нарешті\\\\\\" signals perfective.", "isTrue": true, "explanation": "Correct! \\\\\\"Нарешті зробив!\\\\\\""}, {"statement": "\\\\\\"Сказав\\\\\\" is imperfective.", "isTrue": false, "explanation": "\\\\\\"Сказав\\\\\\" is perfective. \\\\\\"Говорив\\\\\\" is imperfective."}]`)}
-/>
+<TrueFalse items={JSON.parse(`[{"statement": "Perfective past shows completed actions.", "isTrue": true, "explanation": "Correct!"}, {"statement": "Imperfective past can show duration.", "isTrue": true, "explanation": "Yes! &quot;Він читав три години.&quot;"}, {"statement": "Past endings are different for each aspect.", "isTrue": false, "explanation": "No, the endings are the same — the stems are different."}, {"statement": "&quot;Вже&quot; usually appears with perfective.", "isTrue": true, "explanation": "Correct! &quot;Я вже зробив.&quot;"}, {"statement": "&quot;Довго&quot; usually appears with imperfective.", "isTrue": true, "explanation": "Yes! &quot;Він довго працював.&quot;"}, {"statement": "&quot;Писав&quot; is perfective past.", "isTrue": false, "explanation": "&quot;Писав&quot; is imperfective. &quot;Написав&quot; is perfective."}, {"statement": "&quot;Прочитав&quot; means &quot;finished reading.&quot;", "isTrue": true, "explanation": "Correct!"}, {"statement": "&quot;Пішов&quot; is the past of &quot;піти.&quot;", "isTrue": true, "explanation": "Yes!"}, {"statement": "Repeated actions use perfective.", "isTrue": false, "explanation": "Repeated actions use imperfective."}, {"statement": "&quot;Що ти робив?&quot; asks about activities.", "isTrue": true, "explanation": "Yes, using imperfective to ask about process."}, {"statement": "&quot;Нарешті&quot; signals perfective.", "isTrue": true, "explanation": "Correct! &quot;Нарешті зробив!&quot;"}, {"statement": "&quot;Сказав&quot; is imperfective.", "isTrue": false, "explanation": "&quot;Сказав&quot; is perfective. &quot;Говорив&quot; is imperfective."}]`)} />
 
 ### Verb Aspect
 
-<GroupSort
-  title="Verb Aspect"
-  isUkrainian={false}
-  groups={JSON.parse(`{"Imperfective": ["читав", "писав", "робив", "говорив", "бачив", "їхав"], "Perfective": ["прочитав", "написав", "зробив", "сказав", "побачив", "приїхав"]}`)}
-/>
+<GroupSort groups={JSON.parse(`{"Imperfective": ["читав", "писав", "робив", "говорив", "бачив", "їхав"], "Perfective": ["прочитав", "написав", "зробив", "сказав", "побачив", "приїхав"]}`)} />
 
 ### Past Tense Sentences
 
-<Unjumble
-  title="Past Tense Sentences"
-  isUkrainian={false}
-  items={JSON.parse(`[{"jumbled": "він / прочитав / цю / нову / цікаву / книгу / вчора / ввечері", "answer": "Він прочитав цю нову цікаву книгу вчора ввечері"}, {"jumbled": "вона / писала / цього / довгого / листа / додому / три / години", "answer": "Вона писала цього довгого листа додому три години"}, {"jumbled": "я / вже / зробив / це / складне / домашнє / завдання / сьогодні", "answer": "Я вже зробив це складне домашнє завдання сьогодні"}, {"jumbled": "ми / нарешті / приїхали / до / Києва / дуже / пізно / вчора", "answer": "Ми нарешті приїхали до Києва дуже пізно вчора"}, {"jumbled": "він / сказав / мені / всю / щиру / правду / про / це", "answer": "Він сказав мені всю щиру правду про це"}, {"jumbled": "вона / довго / говорила / по / телефону / зі / своєю / мамою", "answer": "Вона довго говорила по телефону зі своєю мамою"}, {"jumbled": "ти / прочитав / ту / велику / статтю / в / новій / газеті", "answer": "Ти прочитав ту велику статтю в новій газеті"}, {"jumbled": "він / пішов / додому / відразу / після / нашої / цікавої / роботи", "answer": "Він пішов додому відразу після нашої цікавої роботи"}, {"jumbled": "вона / побачила / прекрасне / синє / море / вперше / у / житті", "answer": "Вона побачила прекрасне синє море вперше у житті"}, {"jumbled": "ми / закінчили / нашу / важку / роботу / о / восьмій / годині", "answer": "Ми закінчили нашу важку роботу о восьмій годині"}, {"jumbled": "він / раптом / почув / якийсь / дивний / шум / на / вулиці", "answer": "Він раптом почув якийсь дивний шум на вулиці"}, {"jumbled": "я / взяв / свою / стару / книгу / зі / шкоди / вчора", "answer": "Я взяв свою стару книгу зі шкоди вчора"}]`)}
-/>
+<Unjumble items={JSON.parse(`[{"jumbled": "він / прочитав / цю / нову / цікаву / книгу / вчора / ввечері", "answer": "Він прочитав цю нову цікаву книгу вчора ввечері"}, {"jumbled": "вона / писала / цього / довгого / листа / додому / три / години", "answer": "Вона писала цього довгого листа додому три години"}, {"jumbled": "я / вже / зробив / це / складне / домашнє / завдання / сьогодні", "answer": "Я вже зробив це складне домашнє завдання сьогодні"}, {"jumbled": "ми / нарешті / приїхали / до / Києва / дуже / пізно / вчора", "answer": "Ми нарешті приїхали до Києва дуже пізно вчора"}, {"jumbled": "він / сказав / мені / всю / щиру / правду / про / це", "answer": "Він сказав мені всю щиру правду про це"}, {"jumbled": "вона / довго / говорила / по / телефону / зі / своєю / мамою", "answer": "Вона довго говорила по телефону зі своєю мамою"}, {"jumbled": "ти / прочитав / ту / велику / статтю / в / новій / газеті", "answer": "Ти прочитав ту велику статтю в новій газеті"}, {"jumbled": "він / пішов / додому / відразу / після / нашої / цікавої / роботи", "answer": "Він пішов додому відразу після нашої цікавої роботи"}, {"jumbled": "вона / побачила / прекрасне / синє / море / вперше / у / житті", "answer": "Вона побачила прекрасне синє море вперше у житті"}, {"jumbled": "ми / закінчили / нашу / важку / роботу / о / восьмій / годині", "answer": "Ми закінчили нашу важку роботу о восьмій годині"}, {"jumbled": "він / раптом / почув / якийсь / дивний / шум / на / вулиці", "answer": "Він раптом почув якийсь дивний шум на вулиці"}, {"jumbled": "я / взяв / свою / стару / книгу / зі / шкоди / вчора", "answer": "Я взяв свою стару книгу зі шкоди вчора"}]`)} />
 
 ### Choose Correct Aspect
 
-<ErrorCorrection title="Choose Correct Aspect" isUkrainian={false}>
-  <ErrorCorrectionItem
-    sentence={`Він ___ книгу весь вечір. (duration)`}
-    errorWord={`duration`}
-    correctForm={`читав`}
-    options={[`читав`, `прочитав`]}
-    explanation={`Duration (весь вечір) requires imperfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона ___ листа і пішла.`}
-    errorWord={`completed then left`}
-    correctForm={`написала`}
-    options={[`писала`, `написала`]}
-    explanation={`Completed action before next action = perfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Я вже ___ це! (already)`}
-    errorWord={`already`}
-    correctForm={`зробив`}
-    options={[`робив`, `зробив`]}
-    explanation={`\"Вже\" signals completion = perfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Він ___ часто. (often)`}
-    errorWord={`often`}
-    correctForm={`приходив`}
-    options={[`приходив`, `прийшов`]}
-    explanation={`Repeated action (часто) = imperfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона нарешті ___! (finally)`}
-    errorWord={`finally`}
-    correctForm={`зробила`}
-    options={[`робила`, `зробила`]}
-    explanation={`\"Нарешті\" signals completion = perfective.`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Що ти ___ учора?`}
-    errorWord={`activities`}
-    correctForm={`робив`}
-    options={[`робив`, `зробив`]}
-    explanation={`Asking about activities = imperfective.`}
-  />
-</ErrorCorrection>
+<FillIn items={JSON.parse(`[{"sentence": "Він [___] книгу весь вечір.", "answer": "читав", "options": ["читав", "прочитав"]}, {"sentence": "Вона [___] листа і пішла.", "answer": "написала", "options": ["писала", "написала"]}, {"sentence": "Я вже [___] це!", "answer": "зробив", "options": ["робив", "зробив"]}, {"sentence": "Він [___] часто.", "answer": "приходив", "options": ["приходив", "прийшов"]}, {"sentence": "Вона нарешті [___]!", "answer": "зробила", "options": ["робила", "зробила"]}, {"sentence": "Що ти [___] учора?", "answer": "робив", "options": ["робив", "зробив"]}, {"sentence": "Він [___] книгу і пішов.", "answer": "прочитав", "options": ["читав", "прочитав"]}, {"sentence": "Ми [___] цілий день.", "answer": "працювали", "options": ["працювали", "попрацювали"]}]`)} />
 
 ### Aspect in Context
 
-<Cloze
-  title="Aspect in Context"
-  isUkrainian={false}
-  passage={`Учора я [___:1] рано. Я [___:2] каву і [___:3] сніданок. Потім я [___:4] на роботу. На роботі я [___:5] цілий день. Увечері я [___:6] додому і [___:7] телевізор.
----
-Минулого тижня я [___:8] нову книгу. Я [___:9] її три дні. Вчора я нарешті [___:10] читати. Книга була дуже цікава! Після того як я [___:11] книгу, я [___:12] рецензію.`}
-  blanks={JSON.parse(`[{"index": 0, "answer": "купив", "options": ["купив", "купити"]}, {"index": 1, "answer": "читав", "options": ["читав", "читати", "прочитав"]}, {"index": 2, "answer": "закінчив", "options": ["закінчив", "закінчити"]}, {"index": 3, "answer": "прочитав", "options": ["прочитав", "читати"]}, {"index": 4, "answer": "написав", "options": ["написав", "писати"]}, {"index": 5, "answer": "прийшов", "options": ["прийшов", "прийти"]}, {"index": 6, "answer": "дивився", "options": ["дивився", "дивитися", "подивився"]}, {"index": 7, "answer": "купив", "options": ["купив", "купити"]}, {"index": 8, "answer": "читав", "options": ["читав", "читати", "прочитав"]}, {"index": 9, "answer": "закінчив", "options": ["закінчив", "закінчити"]}, {"index": 10, "answer": "прочитав", "options": ["прочитав", "читати"]}, {"index": 11, "answer": "написав", "options": ["написав", "писати"]}]`)}
-/>
+<Cloze passage={"Учора я {купив|купити} рано. Я {читав|читати|прочитав} каву і {закінчив|закінчити} сніданок. Потім я {прочитав|читати} на роботу. На роботі я {написав|писати} цілий день. Увечері я {прийшов|прийти} додому і {дивився|дивитися|подивився} телевізор.\n---\nМинулого тижня я {купив|купити} нову книгу. Я {читав|читати|прочитав} її три дні. Вчора я нарешті {закінчив|закінчити} читати. Книга була дуже цікава! Після того як я {прочитав|читати} книгу, я {написав|писати} рецензію."} blanks={JSON.parse(`[]`)} />
 
 ### Completed vs Process
 
-<Cloze
-  title="Completed vs Process"
-  isUkrainian={false}
-  passage={`— [___:1]
-— [___:2]
-— [___:3]
-— [___:4]
-— [___:5]
-— [___:6]
-— [___:7]
-— [___:8]
-— [___:9]
-— [___:10]
-— [___:11]
-— [___:12]
-— [___:13]
-`}
-  blanks={JSON.parse(`[{"index": 0, "answer": "Що ти робив учора?", "options": ["Що ти робив учора?", "Дві години.", "Ти прочитав книгу?"]}, {"index": 1, "answer": "Я працював цілий день.", "options": ["Я працював цілий день.", "Скільки часу ти читав?", "Ні, я читав, але не закінчив."]}, {"index": 2, "answer": "Ти закінчив проект?", "options": ["Ти закінчив проект?", "Думаю, сьогодні прочитаю.", "Ні, я читав, але не закінчив."]}, {"index": 3, "answer": "Так, нарешті закінчив!", "options": ["Так, нарешті закінчив!", "--", "Ти прочитав книгу?"]}, {"index": 4, "answer": "А що робила Оля?", "options": ["А що робила Оля?", "Так, нарешті закінчив!", "Вона теж працювала, але не закінчила."]}, {"index": 5, "answer": "Вона теж працювала, але не закінчила.", "options": ["Вона теж працювала, але не закінчила.", "--", "Скільки часу ти читав?"]}, {"index": 6, "answer": "--", "options": ["--", "Думаю, сьогодні прочитаю.", "Дві години."]}, {"index": 7, "answer": "Ти прочитав книгу?", "options": ["Ти прочитав книгу?", "Дві години.", "Ти закінчив проект?"]}, {"index": 8, "answer": "Ні, я читав, але не закінчив.", "options": ["Ні, я читав, але не закінчив.", "Скільки часу ти читав?", "Так, нарешті закінчив!"]}, {"index": 9, "answer": "Скільки часу ти читав?", "options": ["Скільки часу ти читав?", "А що робила Оля?", "Що ти робив учора?"]}, {"index": 10, "answer": "Дві години.", "options": ["Дві години.", "--", "Думаю, сьогодні прочитаю."]}, {"index": 11, "answer": "А коли закінчиш?", "options": ["А коли закінчиш?", "Ні, я читав, але не закінчив.", "Скільки часу ти читав?"]}, {"index": 12, "answer": "Думаю, сьогодні прочитаю.", "options": ["Думаю, сьогодні прочитаю.", "Скільки часу ти читав?", "А коли закінчиш?"]}]`)}
-/>
+<Cloze passage={"— {Що ти робив учора?|Дві години.|Ти прочитав книгу?}\n— {Я працював цілий день.|Скільки часу ти читав?|Ні, я читав, але не закінчив.}\n— {Ти закінчив проект?|Думаю, сьогодні прочитаю.|Ні, я читав, але не закінчив.}\n— {Так, нарешті закінчив!|--|Ти прочитав книгу?}\n— {А що робила Оля?|Так, нарешті закінчив!|Вона теж працювала, але не закінчила.}\n— {Вона теж працювала, але не закінчила.|--|Скільки часу ти читав?}\n— {--|Думаю, сьогодні прочитаю.|Дві години.}\n— {Ти прочитав книгу?|Дві години.|Ти закінчив проект?}\n— {Ні, я читав, але не закінчив.|Скільки часу ти читав?|Так, нарешті закінчив!}\n— {Скільки часу ти читав?|А що робила Оля?|Що ти робив учора?}\n— {Дві години.|--|Думаю, сьогодні прочитаю.}\n— {А коли закінчиш?|Ні, я читав, але не закінчив.|Скільки часу ти читав?}\n— {Думаю, сьогодні прочитаю.|Скільки часу ти читав?|А коли закінчиш?}\n"} blanks={JSON.parse(`[]`)} />
 
 ### Find Perfective Past
 
-<MarkTheWords isUkrainian={false}>
-  <MarkTheWordsActivity
-    instruction={`Mark the correct words.`}
-    text={`Click on PERFECTIVE PAST forms only.
-Учора я прочитав книгу. Потім я написав листа. Я довго писав, але нарешті закінчив.
+<MarkTheWords>
+  <MarkTheWordsActivity instruction="" text="Click on PERFECTIVE PAST forms only.
+Учора я *прочитав* книгу. Потім я *написав* листа. Я довго писав, але нарешті *закінчив*.
 ---
-Вона сказала правду. Ми почули шум. Він взяв книгу і пішов.
+Вона *сказала* правду. Ми *почули* шум. Він *взяв* книгу і *пішов*.
 ---
-Він працював цілий день. Потім він закінчив і пішов додому. Вдома він відпочив.`}
-    correctWords={JSON.parse(`["прочитав", "написав", "закінчив", "сказала", "почули", "взяв", "пішов", "закінчив", "пішов", "відпочив"]`)}
-  />
+Він працював цілий день. Потім він *закінчив* і *пішов* додому. Вдома він *відпочив*." correctWords={JSON.parse(`["прочитав", "написав", "закінчив", "сказала", "почули", "взяв", "пішов", "закінчив", "пішов", "відпочив"]`)} />
 </MarkTheWords>
 
 ## 📚 Vocabulary
@@ -352,10 +342,3 @@ Before moving to the activities, make sure you can answer these questions:
 | цікавитися | t͡siˈkɑʋɪtɪsʲɐ | to be interested in | verb |  |  |
 | чіткий | t͡ʃitˈkɪj | clear; distinct | adj | ч |  |
 | чітко | ˈt͡ʃitko | clearly | adv |  |  |
-
-> [!resources] 🔗 External Resources
->
-> **🎧 Podcasts:**
-> - [ULP 1-26 Talking about traveling – Past tense in Ukrainian](https://www.ukrainianlessons.com/lesson/26/) — Listening review (A1): past
-> - [ULP 1-27 Traveling in Ukraine in winter – More Past tense](https://www.ukrainianlessons.com/lesson/27/) — Listening review (A1): past
-> - [ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian](https://www.ukrainianlessons.com/lesson/118/) — Challenge listening (B1): past

@@ -1,30 +1,31 @@
 - type: match-up
   title: Home Words
   pairs:
-  - left: 'вітальня'
+  - left: вітальня
     right: living room
-  - left: 'спальня'
+  - left: спальня
     right: bedroom
-  - left: 'кухня'
+  - left: кухня
     right: kitchen
-  - left: 'ванна'
+  - left: ванна
     right: bathroom
-  - left: 'диван'
+  - left: диван
     right: sofa
-  - left: 'крісло'
+  - left: крісло
     right: armchair
-  - left: 'шафа'
+  - left: шафа
     right: wardrobe
-  - left: 'полиця'
+  - left: полиця
     right: shelf
-  - left: 'ліжко'
+  - left: ліжко
     right: bed
-  - left: 'пральна машина'
+  - left: пральна машина
     right: washing machine
-  - left: 'пилосос'
+  - left: пилосос
     right: vacuum
-  - left: 'комод'
+  - left: комод
     right: dresser
+  id: home-words
 - type: cloze
   title: Home Vocabulary
   passage: 'Я сплю у [{спальні|вітальні|кухні|ванній}]. Ми їмо на [{кухні|спальні|вітальні|ванній}].
@@ -36,11 +37,13 @@
 
 
     Білизна в [{пральній машині|посудомийці|пилососі|духовці}]. Прибираю [{пилососом|пральною
-    машиною|посудомийкою|чайником}]. Мама готує їжу на [{плиті|холодильнику|пральній машині|комоді}].
+    машиною|посудомийкою|чайником}]. Мама готує їжу на [{плиті|холодильнику|пральній
+    машині|комоді}].
 
 
     Квіти стоять на [{підвіконні|підлозі|столі|стелі}]. Діти граються на [{килимі|стелі|стіні|шафі}].
     Посуд миємо в [{мийці|духовці|холодильнику|плиті}].'
+  id: home-vocabulary
 - type: cloze
   title: Story Comprehension
   passage: 'Ольга переїхала в нову {квартиру|будинок|кімнату}.
@@ -66,6 +69,7 @@
     На кухні працює {посудомийка|пралка|плита}.
 
     Взуття стоїть у {коридорі|ванній|кімнаті}. (hallway)'
+  id: story-comprehension
 - type: quiz
   title: Home & Furniture
   items:
@@ -149,6 +153,7 @@
       correct: false
     - text: Коридор
       correct: false
+  id: home-&-furniture
 - type: unjumble
   title: Home Sentences
   items:
@@ -232,6 +237,7 @@
     - та
     - світла
     answer: Ця нова квартира виглядає просто чудова та світла
+  id: home-sentences
 - type: error-correction
   title: Home Mistakes
   items:
@@ -277,29 +283,31 @@
     - вітальні
     - ванній
     explanation: We watch TV in the living room (вітальня).
+  id: home-mistakes
 - type: match-up
   title: Appliances & Decor
   pairs:
-  - left: 'пральна машина'
+  - left: пральна машина
     right: washing machine
-  - left: 'посудомийка'
+  - left: посудомийка
     right: dishwasher
-  - left: 'пилосос'
+  - left: пилосос
     right: vacuum
-  - left: 'праска'
+  - left: праска
     right: iron
-  - left: 'килим'
+  - left: килим
     right: carpet
-  - left: 'штори'
+  - left: штори
     right: curtains
-  - left: 'лампа'
+  - left: лампа
     right: lamp
-  - left: 'дзеркало'
+  - left: дзеркало
     right: mirror
-  - left: 'холодильник'
+  - left: холодильник
     right: refrigerator
-  - left: 'лампа'
+  - left: лампа
     right: lamp
+  id: appliances-&-decor
 - type: group-sort
   title: Home Categories
   groups:
@@ -325,6 +333,7 @@
     - посудомийка
     - пилосос
     - праска
+  id: home-categories
 - type: true-false
   title: Home Facts
   items:
@@ -352,6 +361,7 @@
     correct: true
   - statement: '"Коридор" = bedroom.'
     correct: false
+  id: home-facts
 - type: translate
   title: Home Words
   items:
@@ -419,3 +429,4 @@
       correct: false
     - text: спальня
       correct: false
+  id: home-words

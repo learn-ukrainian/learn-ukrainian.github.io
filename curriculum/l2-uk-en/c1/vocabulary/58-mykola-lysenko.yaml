@@ -1,0 +1,104 @@
+module: 58-mykola-lysenko
+level: C1
+version: "1.0"
+items:
+  - lemma: композитор
+    ipa: /kɔmpɔˈzɪtɔr/
+    translation: composer
+    pos: noun
+    gender: m
+  - lemma: етномузикологія
+    ipa: /ɛtnɔmʊzɪkɔˈlɔɦijɑ/
+    translation: ethnomusicology
+    pos: noun
+    gender: f
+  - lemma: фольклор
+    ipa: /fɔlʲˈklɔr/
+    translation: folklore
+    pos: noun
+    gender: m
+  - lemma: опера
+    ipa: /ˈɔpɛrɑ/
+    translation: opera
+    pos: noun
+    gender: f
+  - lemma: хор
+    ipa: /xɔr/
+    translation: choir
+    pos: noun
+    gender: m
+  - lemma: обробка
+    ipa: /ɔˈbrɔbkɑ/
+    translation: arrangement/processing
+    pos: noun
+    gender: f
+  - lemma: піаніст
+    ipa: /piɑˈnist/
+    translation: pianist
+    pos: noun
+    gender: m
+  - lemma: диригент
+    ipa: /dɪrɪˈɦɛnt/
+    translation: conductor
+    pos: noun
+    gender: m
+  - lemma: школа
+    ipa: /ˈʃkɔlɑ/
+    translation: school (musical/artistic)
+    pos: noun
+    gender: f
+  - lemma: спадщина
+    ipa: /ˈspɑdʃt͡ʃɪnɑ/
+    translation: legacy/heritage
+    pos: noun
+    gender: f
+  - lemma: віртуоз
+    ipa: /wirtuˈɔz/
+    translation: virtuoso
+    pos: noun
+    gender: m
+  - lemma: збирання
+    ipa: /zbɪˈrɑnʲːɑ/
+    translation: collecting/gathering
+    pos: noun
+    gender: n
+  - lemma: мелодія
+    ipa: /mɛˈlɔdijɑ/
+    translation: melody
+    pos: noun
+    gender: f
+  - lemma: засновник
+    ipa: /zɑˈsnɔu̯nɪk/
+    translation: founder
+    pos: noun
+    gender: m
+  - lemma: виконавець
+    ipa: /wɪkɔˈnɑwɛt͡sʲ/
+    translation: performer
+    pos: noun
+    gender: m
+  - lemma: кантата
+    ipa: /kɑnˈtɑtɑ/
+    translation: cantata
+    pos: noun
+    gender: f
+  - lemma: рапсодія
+    ipa: /rɑpˈsɔdijɑ/
+    translation: rhapsody
+    pos: noun
+    gender: f
+  - lemma: інститут
+    ipa: /instɪˈtut/
+    translation: institute
+    pos: noun
+    gender: m
+  - lemma: класика
+    ipa: /ˈklɑsɪkɑ/
+    translation: classics
+    pos: noun
+    gender: f
+  - lemma: репертуар
+    ipa: /rɛpɛrtuˈɑr/
+    translation: repertoire
+    pos: noun
+    gender: m

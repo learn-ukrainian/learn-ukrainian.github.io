@@ -25,6 +25,7 @@
     right: Locative
   - left: для
     right: Genitive
+  id: case-questions
 - type: fill-in
   title: Case Selection
   items:
@@ -112,11 +113,11 @@
     - Друга
     - Друже
     - Другом
+  id: case-selection
 - type: quiz
   title: Comprehensive Case Quiz
   items:
-  - question: When identifying the grammatical function of a sentence's subject, which
-      case is used?
+  - question: When identifying the grammatical function of a sentence's subject, which case is used?
     options:
     - text: Nominative
       correct: true
@@ -126,8 +127,7 @@
       correct: false
     - text: Dative
       correct: false
-  - question: In the expression "Мені холодно" the pronoun "мені" is in which grammatical
-      case?
+  - question: In the expression "Мені холодно" the pronoun "мені" is in which grammatical case?
     options:
     - text: Dative
       correct: true
@@ -137,8 +137,7 @@
       correct: false
     - text: Locative
       correct: false
-  - question: In the sentence "Працювати лікарем," which grammatical case is used
-      for the profession?
+  - question: In the sentence "Працювати лікарем," which grammatical case is used for the profession?
     options:
     - text: Instrumental
       correct: true
@@ -148,8 +147,7 @@
       correct: false
     - text: Genitive
       correct: false
-  - question: When using the preposition "до" as in "до школи," which grammatical
-      case follows?
+  - question: When using the preposition "до" as in "до школи," which grammatical case follows?
     options:
     - text: Genitive
       correct: true
@@ -159,8 +157,7 @@
       correct: false
     - text: Dative
       correct: false
-  - question: When speaking about something, as in "про книгу," which grammatical
-      case follows "про"?
+  - question: When speaking about something, as in "про книгу," which grammatical case follows "про"?
     options:
     - text: Accusative
       correct: true
@@ -170,8 +167,7 @@
       correct: false
     - text: Dative
       correct: false
-  - question: When expressing accompaniment "with a friend" as in "з другом," which
-      case is used?
+  - question: When expressing accompaniment "with a friend" as in "з другом," which case is used?
     options:
     - text: Instrumental
       correct: true
@@ -181,8 +177,7 @@
       correct: false
     - text: Accusative
       correct: false
-  - question: In the phrase "в школі" expressing location at school, which grammatical
-      case is used?
+  - question: In the phrase "в школі" expressing location at school, which grammatical case is used?
     options:
     - text: Locative
       correct: true
@@ -192,8 +187,7 @@
       correct: false
     - text: Instrumental
       correct: false
-  - question: In the expression "Немає часу" meaning there's no time, which grammatical
-      case is used?
+  - question: In the expression "Немає часу" meaning there's no time, which grammatical case is used?
     options:
     - text: Genitive
       correct: true
@@ -203,8 +197,7 @@
       correct: false
     - text: Dative
       correct: false
-  - question: When addressing someone directly, as in "Мамо!", which grammatical case
-      is this example of?
+  - question: When addressing someone directly, as in "Мамо!", which grammatical case is this example of?
     options:
     - text: Vocative
       correct: true
@@ -214,8 +207,7 @@
       correct: false
     - text: Accusative
       correct: false
-  - question: In the sentence "Я бачу маму," the word "маму" functions as what grammatical
-      case?
+  - question: In the sentence "Я бачу маму," the word "маму" functions as what grammatical case?
     options:
     - text: Accusative
       correct: true
@@ -225,8 +217,7 @@
       correct: false
     - text: Dative
       correct: false
-  - question: When paying by card, as in "Платити карткою," which grammatical case
-      expresses the method?
+  - question: When paying by card, as in "Платити карткою," which grammatical case expresses the method?
     options:
     - text: Instrumental
       correct: true
@@ -236,8 +227,7 @@
       correct: false
     - text: Genitive
       correct: false
-  - question: In the request "Допоможіть мені," which grammatical case is the pronoun
-      "мені" in?
+  - question: In the request "Допоможіть мені," which grammatical case is the pronoun "мені" in?
     options:
     - text: Dative
       correct: true
@@ -247,6 +237,7 @@
       correct: false
     - text: Genitive
       correct: false
+  id: comprehensive-case-quiz
 - type: true-false
   title: Case Rules Review
   items:
@@ -286,6 +277,7 @@
   - statement: Service vocabulary uses accusative for direct objects.
     correct: true
     explanation: Correct! Відправити листа, зняти гроші.
+  id: case-rules-review
 - type: group-sort
   title: Preposition Cases
   groups:
@@ -314,6 +306,7 @@
     items:
     - в/у — location
     - на — location
+  id: preposition-cases
 - type: unjumble
   title: Case Sentences
   items:
@@ -377,6 +370,7 @@
     - моїй
     - кімнаті
     answer: Лампа над столом світить яскраво у моїй кімнаті
+  id: case-sentences
 - type: cloze
   title: Service Dialogue
   passage: 'Добрий день! Я хочу відправити {гроші|грошей|грошам}.
@@ -404,16 +398,18 @@
     Я хочу відкрити новий {рахунок|рахунку|рахунком}.
 
     Дайте мені нову {картку|картка|карткою}, будь ласка.'
+  id: service-dialogue
 - type: mark-the-words
   title: Identify Cases
-  text: 'Click on nouns and pronouns showing case usage.
+  id: identify-cases
+  passage: 'Click on nouns and pronouns showing case usage.
 
     *Мама* дає *книгу* *сестрі*. Вона працює *вчителькою* в *школі*.
 
     ---
 
     Я йду з *другом* для *мами*. *Друже*! Допоможи *мені* написати лист *бабусі*.'
-  answers:
+  correct_words:
   - Мама
   - книгу
   - сестрі
@@ -535,6 +531,7 @@
     - картки
     - картці
     explanation: Instrumental case is used to express method of payment.
+  id: case-errors
 - type: translate
   title: Case Translation Practice
   items:
@@ -586,3 +583,4 @@
       correct: false
     - text: Я живу в Києва.
       correct: false
+  id: case-translation-practice

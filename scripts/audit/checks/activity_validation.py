@@ -286,10 +286,15 @@ def check_english_hints_in_activities(yaml_activities: list, level: str, module_
         text_to_check = ''
 
         if act_type == 'cloze':
-            text_to_check = getattr(activity, 'passage', '') or activity.get('passage', '')
+            text_to_check = getattr(activity, 'passage', '')
+            if not text_to_check and hasattr(activity, 'get'):
+                text_to_check = activity.get('passage', '')
         elif act_type in ('fill-in', 'error-correction'):
             # Check all items
-            items = activity.items if hasattr(activity, 'items') else activity.get('items', [])
+            items = getattr(activity, 'items', [])
+            if not items and hasattr(activity, 'get'):
+                items = activity.get('items', [])
+            
             for item in items:
                 if isinstance(item, dict):
                     sentence = item.get('sentence', '')

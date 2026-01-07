@@ -1,17 +1,22 @@
 # Audit Report: 05-the-instrumental-ii-means-and-tools.md
 **Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## LINT ERRORS
+- ❌ Line 77: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: називний, відмінок, орудний, час
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: називний, час, орудний, відмінок
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): метро, автобусом, ногами, ручкою, комп'ютером...
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 05-the-instrumental-ii-means-and-tools.yaml: [find-bare-instrumental] mark-the-words: 'passage' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): ногами, очима, ручкою, виделкою, руками...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
-**📝 UPDATE** (severity 10/100)
+**📝 UPDATE** (severity 15/100)
 
-- 2 pedagogical violations (minor)
+- 3 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1887/1000
@@ -23,8 +28,8 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 57/1
 - **Structure:** ✅ Valid Structure
-- **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Lint:** ❌ 1 Format Errors
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 37.0% (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation

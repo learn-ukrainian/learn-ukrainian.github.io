@@ -25,6 +25,7 @@
     - Чистесенький
     - Тоненький
     - Солодненький
+  id: adjective-categories-(concept:-suffix-function)
 - type: match-up
   title: 'Situations and Descriptions (Concept: Contextual Logic)'
   pairs:
@@ -52,6 +53,7 @@
     right: Старезний
   - left: A very healthy and strong athlete
     right: Здоровенний
+  id: situations-and-descriptions-(concept:-contextual-logic)
 - type: cloze
   title: 'Building Descriptions (Concept: Suffix Derivation)'
   passage: 'Це (Київ) [{київський|київний|київенький|київенний}:1] театр, він дуже
@@ -68,11 +70,12 @@
 
     (Море) [{морський|морний|морненький|моринний}:7] берег був піщаний і дуже теплий.
     (Україна) [{український|україний|україненький|українинний}:8] прапор має синій
-    та жовтий кольори. (Ліс) [{лісовий|лісський|лісовенький|лісинний}:9] повітря
-    завжди свіже і чисте. Це (Львів) [{львівський|львівний|львівенький|львівинний}:10]
-    шоколад, він дуже смачний. Наша сім''я живе в (село) [{сільській|сільній|сільненькій|сілинній}:11]
+    та жовтий кольори. (Ліс) [{лісовий|лісський|лісовенький|лісинний}:9] повітря завжди
+    свіже і чисте. Це (Львів) [{львівський|львівний|львівенький|львівинний}:10] шоколад,
+    він дуже смачний. Наша сім''я живе в (село) [{сільській|сільній|сільненькій|сілинній}:11]
     місцевості. (Зима) [{зимовий|зимський|зимовенький|зиминний}:12] ранок був дуже
     холодний.'
+  id: building-descriptions-(concept:-suffix-derivation)
 - type: quiz
   title: 'The Adjective Architect (Concept: Morphological Nuance)'
   items:
@@ -164,6 +167,7 @@
       correct: false
     - text: Треба просто повторити це слово два рази поспіль
       correct: false
+  id: the-adjective-architect-(concept:-morphological-nuance)
 - type: unjumble
   title: 'Descriptive Sentences (Concept: Syntax Integrity)'
   items:
@@ -227,6 +231,7 @@
     - порту
     - вчора
     answer: Ми побачили величезний корабель у морському порту вчора
+  id: descriptive-sentences-(concept:-syntax-integrity)
 - type: true-false
   title: 'Descriptive Nuances (Concept: Concept Validation)'
   items:
@@ -254,6 +259,7 @@
   - statement: Суфікс "-енн-" у слові "страшенний" подвоює літеру "н".
     correct: true
     explanation: Так, це характерна особливість цього інтенсивного суфікса.
+  id: descriptive-nuances-(concept:-concept-validation)
 - type: cloze
   title: 'The Cozy Morning (Concept: Narrative Coherence)'
   passage: 'Complete the cozy description of a morning in a Ukrainian village by choosing
@@ -269,6 +275,7 @@
     ганок. Поруч бігав {пухкенький|величезний|морський|залізний} рудий кіт. Вдалині
     було видно {височенні|маленькі|солодкі|чисті} гори, які здавалися {чарівними|страшними|шкільними|білими}
     в ранковому тумані. День обіцяв бути просто чудовим.'
+  id: the-cozy-morning-(concept:-narrative-coherence)
 - type: select
   title: 'Nuanced Qualities (Concept: Morphological Choice)'
   items:
@@ -336,6 +343,7 @@
       correct: false
     - text: залізненький
       correct: false
+  id: nuanced-qualities-(concept:-morphological-choice)
 - type: error-correction
   title: 'Suffix Fixes (Concept: Critical Proofreading)'
   items:
@@ -383,6 +391,7 @@
     - морський
     explanation: Relation to the sea uses \"-ськ-\" and must match the neuter noun
       \"повітря\".
+  id: suffix-fixes-(concept:-critical-proofreading)
 - type: translate
   title: Adjective Suffix Translation
   items:
@@ -506,3 +515,4 @@
     - text: Студентеньке життя
       correct: false
     source: Student life
+  id: adjective-suffix-translation

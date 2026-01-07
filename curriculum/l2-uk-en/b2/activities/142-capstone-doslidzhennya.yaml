@@ -2,440 +2,619 @@ module: 142-capstone-doslidzhennya
 level: B2
 version: '2.0'
 activities:
-  - type: match-up
-    id: 142-01-vocab-research
-    title: "Термінологія дослідження"
-    pairs:
-      - left: "Гіпотеза"
-        right: "Припущення, яке треба перевірити"
-      - left: "Чернетка"
-        right: "Перший, робочий варіант тексту"
-      - left: "Актуальність"
-        right: "Важливість теми саме зараз"
-      - left: "Об'єкт"
-        right: "Явище, на яке спрямоване дослідження"
-      - left: "Предмет"
-        right: "Конкретна властивість об'єкта"
-      - left: "Метод"
-        right: "Спосіб досягнення мети"
-      - left: "Бібліографія"
-        right: "Список використаної літератури"
-      - left: "Новизна"
-        right: "Те, що зроблено вперше"
-
-  - type: group-sort
-    id: 142-02-research-steps
-    title: "Етапи дослідження"
-    groups:
-      - name: "Підготовка"
-        items:
-          - "Вибір теми"
-          - "Складання плану"
-          - "Пошук джерел"
-          - "Формулювання гіпотези"
-          - "Читання оглядових статей"
-          - "Консультація з керівником"
-      - name: "Робота"
-        items:
-          - "Написання чернетки"
-          - "Проведення опитування"
-          - "Аналіз даних"
-          - "Редагування тексту"
-          - "Розшифровка інтерв'ю"
-          - "Створення графіків"
-      - name: "Завершення"
-        items:
-          - "Оформлення списку літератури"
-          - "Підготовка презентації"
-          - "Захист проекту"
-          - "Публікація результатів"
-          - "Написання анотації"
-          - "Перевірка на плагіат"
-
-  - type: quiz
-    id: 142-03-topic-selection
-    title: "Вибір теми: Добра чи Погана?"
+- type: match-up
+  id: 142-01-vocab-research
+  title: Термінологія дослідження
+  pairs:
+  - left: Гіпотеза
+    right: Припущення, яке треба перевірити
+  - left: Чернетка
+    right: Перший, робочий варіант тексту
+  - left: Актуальність
+    right: Важливість теми саме зараз
+  - left: Об'єкт
+    right: Явище, на яке спрямоване дослідження
+  - left: Предмет
+    right: Конкретна властивість об'єкта
+  - left: Метод
+    right: Спосіб досягнення мети
+  - left: Бібліографія
+    right: Список використаної літератури
+  - left: Новизна
+    right: Те, що зроблено вперше
+- type: group-sort
+  id: 142-02-research-steps
+  title: Етапи дослідження
+  groups:
+  - name: Підготовка
     items:
-      - question: "Тема: 'Історія України' (весь період)."
-        options:
-          - { text: "Занадто широка", correct: true }
-          - { text: "Добра тема", correct: false }
-          - { text: "Занадто вузька", correct: false }
-          - { text: "Неактуальна", correct: false }
-      - question: "Тема: 'Вплив соцмереж на мову підлітків Києва у 2023 році'."
-        options:
-          - { text: "Добра, конкретна тема", correct: true }
-          - { text: "Занадто широка", correct: false }
-          - { text: "Нудна тема", correct: false }
-          - { text: "Неможливо дослідити", correct: false }
-      - question: "Тема: 'Коти'."
-        options:
-          - { text: "Занадто широка і неясна", correct: true }
-          - { text: "Добра тема", correct: false }
-          - { text: "Наукова тема", correct: false }
-          - { text: "Актуальна тема", correct: false }
-      - question: "Тема: 'Образ жінки в поемі Шевченка Катерина'."
-        options:
-          - { text: "Добра, літературознавча тема", correct: true }
-          - { text: "Занадто широка", correct: false }
-          - { text: "Ненаукова", correct: false }
-          - { text: "Політична", correct: false }
-      - question: "Тема: 'Як я провів літо'."
-        options:
-          - { text: "Це шкільний твір, а не дослідження", correct: true }
-          - { text: "Добра наукова тема", correct: false }
-          - { text: "Актуальна проблема", correct: false }
-          - { text: "Складна тема", correct: false }
-      - question: "Тема: 'Чому всі політики погані'."
-        options:
-          - { text: "Упереджена і ненаукова", correct: true }
-          - { text: "Добра критична тема", correct: false }
-          - { text: "Об'єктивна тема", correct: false }
-          - { text: "Статистична тема", correct: false }
-      - question: "Тема: 'Екологічні наслідки підриву Каховської ГЕС'."
-        options:
-          - { text: "Актуальна і важлива тема", correct: true }
-          - { text: "Застаріла тема", correct: false }
-          - { text: "Занадто проста", correct: false }
-          - { text: "Абстрактна", correct: false }
-      - question: "Тема: 'Життя на Марсі'."
-        options:
-          - { text: "Гіпотетична, мало даних", correct: true }
-          - { text: "Історична тема", correct: false }
-          - { text: "Соціологічна тема", correct: false }
-          - { text: "Лінгвістична тема", correct: false }
-
-  - type: fill-in
-    id: 142-04-proposal-template
-    title: "Шаблон пропозиції"
+    - Вибір теми
+    - Складання плану
+    - Пошук джерел
+    - Формулювання гіпотези
+    - Читання оглядових статей
+    - Консультація з керівником
+  - name: Робота
     items:
-      - sentence: "Я обрав цю тему, тому що вона є ___."
-        answer: "актуальною"
-        options: ["актуальною", "старою", "нудною", "довгою"]
-      - sentence: "Метою мого дослідження є ___ причин явища."
-        answer: "аналіз"
-        options: ["аналіз", "сон", "обід", "продаж"]
-      - sentence: "Я планую використати такі ___, як опитування та спостереження."
-        answer: "методи"
-        options: ["методи", "кольори", "звуки", "смаки"]
-      - sentence: "Моя ___ полягає в тому, що соціальні мережі змінюють мову."
-        answer: "гіпотеза"
-        options: ["гіпотеза", "фантазія", "мрія", "брехня"]
-      - sentence: "Основним ___ дослідження будуть мовні помилки."
-        answer: "предметом"
-        options: ["предметом", "об'єктом", "інструментом", "автором"]
-      - sentence: "Я очікую отримати цікаві ___."
-        answer: "результати"
-        options: ["результати", "питання", "помилки", "штрафи"]
-      - sentence: "Для роботи мені потрібно знайти надійні ___."
-        answer: "джерела"
-        options: ["джерела", "відмовки", "причини", "розваги"]
-      - sentence: "Наприкінці я зроблю ___."
-        answer: "висновок"
-        options: ["висновок", "вступ", "початок", "перерву"]
-
-  - type: match-up
-    id: 142-05-sources-type
-    title: "Типи джерел"
-    pairs:
-      - left: "Щоденник очевидця"
-        right: "Первинне джерело"
-      - left: "Архівний документ"
-        right: "Первинне джерело"
-      - left: "Фотографія з місця події"
-        right: "Первинне джерело"
-      - left: "Інтерв'ю з учасником"
-        right: "Первинне джерело"
-      - left: "Підручник історії"
-        right: "Вторинне джерело"
-      - left: "Стаття в енциклопедії"
-        right: "Вторинне джерело"
-      - left: "Наукова монографія"
-        right: "Вторинне джерело"
-      - left: "Огляд літератури"
-        right: "Вторинне джерело"
-
-  - type: match-up
-    id: 142-06-method-goal
-    title: "Метод і мета"
-    pairs:
-      - left: "Дізнатися думку багатьох людей"
-        right: "Опитування / Анкетування"
-      - left: "Дізнатися глибинні мотиви однієї людини"
-        right: "Інтерв'ю"
-      - left: "Перевірити, як щось працює в реальності"
-        right: "Експеримент"
-      - left: "Вивчити поведінку людей без втручання"
-        right: "Спостереження"
-      - left: "Порівняти два явища"
-        right: "Порівняльний аналіз"
-      - left: "Вивчити цифрові дані"
-        right: "Статистичний аналіз"
-      - left: "Вивчити зміст текстів"
-        right: "Контент-аналіз"
-      - left: "Узагальнити думки вчених"
-        right: "Теоретичний аналіз"
-
-  - type: quiz
-    id: 142-07-paper-structure
-    title: "Структура роботи"
+    - Написання чернетки
+    - Проведення опитування
+    - Аналіз даних
+    - Редагування тексту
+    - Розшифровка інтерв'ю
+    - Створення графіків
+  - name: Завершення
     items:
-      - question: "З чого починається наукова робота?"
-        options:
-          - { text: "Вступ", correct: true }
-          - { text: "Висновок", correct: false }
-          - { text: "Список літератури", correct: false }
-          - { text: "Додатки", correct: false }
-      - question: "Де ми описуємо методи дослідження?"
-        options:
-          - { text: "В основній частині", correct: true }
-          - { text: "У висновку", correct: false }
-          - { text: "У списку літератури", correct: false }
-          - { text: "На титульній сторінці", correct: false }
-      - question: "Що йде після основної частини?"
-        options:
-          - { text: "Висновки", correct: true }
-          - { text: "Вступ", correct: false }
-          - { text: "План", correct: false }
-          - { text: "Титулка", correct: false }
-      - question: "Де знаходяться таблиці та діаграми, які не увійшли в текст?"
-        options:
-          - { text: "У додатках", correct: true }
-          - { text: "У вступі", correct: false }
-          - { text: "У висновках", correct: false }
-          - { text: "У бібліографії", correct: false }
-      - question: "Що таке анотація?"
-        options:
-          - { text: "Короткий опис змісту роботи", correct: true }
-          - { text: "Список джерел", correct: false }
-          - { text: "План роботи", correct: false }
-          - { text: "Відгук наукового керівника", correct: false }
-      - question: "Яким має бути стиль викладу?"
-        options:
-          - { text: "Науковим", correct: true }
-          - { text: "Художнім", correct: false }
-          - { text: "Розмовним", correct: false }
-          - { text: "Публіцистичним", correct: false }
-      - question: "Чи можна використовувати 'Я думаю' в науковому тексті?"
-        options:
-          - { text: "Краще уникати (писати безособово)", correct: true }
-          - { text: "Так, завжди", correct: false }
-          - { text: "Тільки в заголовку", correct: false }
-          - { text: "Ні, це заборонено законом", correct: false }
-      - question: "Що роблять у висновках?"
-        options:
-          - { text: "Підсумовують результати", correct: true }
-          - { text: "Починають нову тему", correct: false }
-          - { text: "Ставлять нові питання", correct: false }
-          - { text: "Дякують батькам", correct: false }
-
-  - type: fill-in
-    id: 142-08-hypothesis
-    title: "Формулювання гіпотези"
-    items:
-      - sentence: "Якщо ми збільшимо кількість уроків, то успішність ___."
-        answer: "зросте"
-        options: ["зросте", "впаде", "зникне", "позеленіє"]
-      - sentence: "Припускаємо, що існує ___ між сном і пам'яттю."
-        answer: "зв'язок"
-        options: ["зв'язок", "стіна", "війна", "договір"]
-      - sentence: "Гіпотеза: Використання ігор ___ мотивацію учнів."
-        answer: "підвищує"
-        options: ["підвищує", "знищує", "ігнорує", "ховає"]
-      - sentence: "Ми перевіримо, чи ___ реклама на вибір товару."
-        answer: "впливає"
-        options: ["впливає", "співає", "танцює", "спить"]
-      - sentence: "Дослідження має ___ або спростувати гіпотезу."
-        answer: "підтвердити"
-        options: ["підтвердити", "забути", "продати", "купити"]
-      - sentence: "Нульова гіпотеза стверджує, що зв'язку ___."
-        answer: "немає"
-        options: ["немає", "багато", "мало", "є"]
-      - sentence: "Альтернативна гіпотеза стверджує, що ефект ___."
-        answer: "існує"
-        options: ["існує", "зник", "помер", "спить"]
-      - sentence: "Гіпотеза має бути чіткою і ___."
-        answer: "перевірною"
-        options: ["перевірною", "смішною", "довгою", "таємною"]
-
-  - type: match-up
-    id: 142-09-citation-styles
-    title: "Стилі цитування (впізнавання)"
-    pairs:
-      - left: "(Petrenko, 2023)"
-        right: "APA (Автор, Рік)"
-      - left: "(Petrenko 15)"
-        right: "MLA (Автор Сторінка)"
-      - left: "[1]"
-        right: "IEEE / ДСТУ (Нумерація)"
-      - left: "Petrenko, I. (2023). Title..."
-        right: "APA (Список)"
-      - left: "Petrenko, Ivan. Title..."
-        right: "MLA (Список)"
-      - left: "Ibid."
-        right: "Повторне посилання"
-      - left: "et al."
-        right: "Колектив авторів"
-      - left: "doi:10.1000/xyz"
-        right: "Цифровий ідентифікатор"
-
-  - type: true-false
-    id: 142-10-checklist
-    title: "Чек-лист готовності"
-    items:
-      - statement: "Я обрав тему, яка мені цікава."
-        correct: true
-        explanation: "Інтерес до теми — запорука успіху."
-      - statement: "Я перевірив, чи є достатньо джерел по темі."
-        correct: true
-        explanation: "Без джерел дослідження неможливе."
-      - statement: "Я сформулював чітку мету дослідження."
-        correct: true
-        explanation: "Треба знати, куди йдеш."
-      - statement: "Я склав план роботи з дедлайнами."
-        correct: true
-        explanation: "План допомагає не панікувати."
-      - statement: "Я вирішив писати без чернетки, одразу чистовик."
-        correct: false
-        explanation: "Чернетка обов'язкова."
-      - statement: "Я буду копіювати тексти з Вікіпедії."
-        correct: false
-        explanation: "Це плагіат."
-      - statement: "Я проконсультувався з викладачем/експертом."
-        correct: true
-        explanation: "Погляд з боку дуже корисний."
-      - statement: "Я готовий до важкої, але цікавої роботи."
-        correct: true
-        explanation: "Налаштуйтеся на успіх!"
-
-  - type: quiz
-    id: 142-11-plagiarism-review
-    title: "Плагіат: Повторення"
-    items:
-      - question: "Чи можна брати картинки з Google без дозволу?"
-        options:
-          - { text: "Ні, у них може бути авторське право", correct: true }
-          - { text: "Так, все в інтернеті спільне", correct: false }
-          - { text: "Тільки якщо ніхто не бачить", correct: false }
-          - { text: "Тільки маленькі картинки", correct: false }
-      - question: "Що таке 'Fair Use' (Добросовісне використання)?"
-        options:
-          - { text: "Використання фрагментів з навчальною метою", correct: true }
-          - { text: "Крадіжка контенту", correct: false }
-          - { text: "Безкоштовне кіно", correct: false }
-          - { text: "Обман автора", correct: false }
-      - question: "Якщо я переклав статтю з англійської, чи треба посилання?"
-        options:
-          - { text: "Так, обов'язково", correct: true }
-          - { text: "Ні, це тепер мій текст", correct: false }
-          - { text: "Тільки якщо спитають", correct: false }
-          - { text: "Ні, ніхто не дізнається", correct: false }
-      - question: "Чи можна купити дипломну роботу?"
-        options:
-          - { text: "Ні, це злочин і ганьба", correct: true }
-          - { text: "Так, якщо є гроші", correct: false }
-          - { text: "Так, якщо мало часу", correct: false }
-          - { text: "Так, всі так роблять", correct: false }
-      - question: "Що буде за плагіат в університеті?"
-        options:
-          - { text: "Відрахування або незалік", correct: true }
-          - { text: "Похвала", correct: false }
-          - { text: "Премія", correct: false }
-          - { text: "Нічого", correct: false }
-      - question: "Як перевірити текст на плагіат?"
-        options:
-          - { text: "Спеціальними програмами (Unicheck тощо)", correct: true }
-          - { text: "Прочитати вголос", correct: false }
-          - { text: "Показати мамі", correct: false }
-          - { text: "Помолитися", correct: false }
-      - question: "Чи є самоцитування плагіатом?"
-        options:
-          - { text: "Так, якщо не вказати джерело", correct: true }
-          - { text: "Ні, це ж моє", correct: false }
-          - { text: "Завжди ні", correct: false }
-          - { text: "Завжди так", correct: false }
-      - question: "Найкращий захист від плагіату — це..."
-        options:
-          - { text: "Писати самостійно і чесно", correct: true }
-          - { text: "Ховати джерела", correct: false }
-          - { text: "Міняти слова місцями", correct: false }
-          - { text: "Не писати нічого", correct: false }
-
-  - type: match-up
-    id: 142-12-brainstorming
-    title: "Методи пошуку ідей"
-    pairs:
-      - left: "Мозковий штурм"
-        right: "Генерація ідей без критики"
-      - left: "Мапа думок (Mind Map)"
-        right: "Візуальна схема зв'язків"
-      - left: "Фрірайтінг (Вільне письмо)"
-        right: "Писати все, що приходить в голову"
-      - left: "Метод 5 'Чому'"
-        right: "Пошук глибинної причини"
-      - left: "SWOT-аналіз"
-        right: "Слабкі та сильні сторони"
-      - left: "SCAMPER"
-        right: "Модифікація ідеї"
-      - left: "Шість капелюхів мислення"
-        right: "Погляд з різних точок зору"
-      - left: "Випадкове слово"
-        right: "Асоціації з випадковим стимулом"
-
-  - type: fill-in
-    id: 142-13-vocab-context-2
-    title: "Лексика в контексті 2"
-    items:
-      - sentence: "Я пішов у ___ щоб знайти старі газети."
-        answer: "архів"
-        options: ["архів", "магазин", "ліс", "парк"]
-      - sentence: "Мої ___ записані в блокноті."
-        answer: "нотатки"
-        options: ["нотатки", "мрії", "гроші", "друзі"]
-      - sentence: "Вчений аналізує статистичні ___."
-        answer: "дані"
-        options: ["дані", "емоції", "пісні", "жарти"]
-      - sentence: "Цей ___ суперечить теорії."
-        answer: "факт"
-        options: ["факт", "сон", "колір", "смак"]
-      - sentence: "Складання ___ допомагає структурувати думки."
-        answer: "плану"
-        options: ["плану", "ліжка", "пазлу", "речення"]
-      - sentence: "Я зробив ___ лекції."
-        answer: "конспект"
-        options: ["конспект", "портрет", "ремонт", "обід"]
-      - sentence: "Тема має наукову ___."
-        answer: "новизну"
-        options: ["новизну", "ціну", "вагу", "висоту"]
-      - sentence: "Потрібно зробити правильний ___ літератури."
-        answer: "вибір"
-        options: ["вибір", "ремонт", "танець", "стрибок"]
-
-  - type: true-false
-    id: 142-14-final-readiness
-    title: "Чи готовий я почати?"
-    items:
-      - statement: "Я розумію різницю між об'єктом і предметом."
-        correct: true
-        explanation: "Об'єкт ширший, предмет вужчий."
-      - statement: "Я знаю, де шукати інформацію."
-        correct: true
-        explanation: "Бібліотеки, бази даних, архіви."
-      - statement: "Я вмію відрізняти фейки від фактів."
-        correct: true
-        explanation: "Критичне мислення — база."
-      - statement: "Я знаю, як оформити цитату."
-        correct: true
-        explanation: "Щоб не було плагіату."
-      - statement: "Я боюся починати."
-        correct: false
-        explanation: "Страх — це нормально, але починати треба."
-      - statement: "Я думаю, що все зроблю за одну ніч."
-        correct: false
-        explanation: "Це ілюзія. Потрібен час."
-      - statement: "Я готовий працювати систематично."
-        correct: true
-        explanation: "Дисципліна важливіша за натхнення."
-      - statement: "Дослідження — це цікава пригода."
-        correct: true
-        explanation: "Саме так!"
+    - Оформлення списку літератури
+    - Підготовка презентації
+    - Захист проекту
+    - Публікація результатів
+    - Написання анотації
+    - Перевірка на плагіат
+- type: quiz
+  id: 142-03-topic-selection
+  title: 'Вибір теми: Добра чи Погана?'
+  items:
+  - question: 'Тема: ''Історія України'' (весь період).'
+    options:
+    - text: Занадто широка
+      correct: true
+    - text: Добра тема
+      correct: false
+    - text: Занадто вузька
+      correct: false
+    - text: Неактуальна
+      correct: false
+  - question: 'Тема: ''Вплив соцмереж на мову підлітків Києва у 2023 році''.'
+    options:
+    - text: Добра, конкретна тема
+      correct: true
+    - text: Занадто широка
+      correct: false
+    - text: Нудна тема
+      correct: false
+    - text: Неможливо дослідити
+      correct: false
+  - question: 'Тема: ''Коти''.'
+    options:
+    - text: Занадто широка і неясна
+      correct: true
+    - text: Добра тема
+      correct: false
+    - text: Наукова тема
+      correct: false
+    - text: Актуальна тема
+      correct: false
+  - question: 'Тема: ''Образ жінки в поемі Шевченка Катерина''.'
+    options:
+    - text: Добра, літературознавча тема
+      correct: true
+    - text: Занадто широка
+      correct: false
+    - text: Ненаукова
+      correct: false
+    - text: Політична
+      correct: false
+  - question: 'Тема: ''Як я провів літо''.'
+    options:
+    - text: Це шкільний твір, а не дослідження
+      correct: true
+    - text: Добра наукова тема
+      correct: false
+    - text: Актуальна проблема
+      correct: false
+    - text: Складна тема
+      correct: false
+  - question: 'Тема: ''Чому всі політики погані''.'
+    options:
+    - text: Упереджена і ненаукова
+      correct: true
+    - text: Добра критична тема
+      correct: false
+    - text: Об'єктивна тема
+      correct: false
+    - text: Статистична тема
+      correct: false
+  - question: 'Тема: ''Екологічні наслідки підриву Каховської ГЕС''.'
+    options:
+    - text: Актуальна і важлива тема
+      correct: true
+    - text: Застаріла тема
+      correct: false
+    - text: Занадто проста
+      correct: false
+    - text: Абстрактна
+      correct: false
+  - question: 'Тема: ''Життя на Марсі''.'
+    options:
+    - text: Гіпотетична, мало даних
+      correct: true
+    - text: Історична тема
+      correct: false
+    - text: Соціологічна тема
+      correct: false
+    - text: Лінгвістична тема
+      correct: false
+- type: fill-in
+  id: 142-04-proposal-template
+  title: Шаблон пропозиції
+  items:
+  - sentence: Я обрав цю тему, тому що вона є ___.
+    answer: актуальною
+    options:
+    - актуальною
+    - старою
+    - нудною
+    - довгою
+  - sentence: Метою мого дослідження є ___ причин явища.
+    answer: аналіз
+    options:
+    - аналіз
+    - сон
+    - обід
+    - продаж
+  - sentence: Я планую використати такі ___, як опитування та спостереження.
+    answer: методи
+    options:
+    - методи
+    - кольори
+    - звуки
+    - смаки
+  - sentence: Моя ___ полягає в тому, що соціальні мережі змінюють мову.
+    answer: гіпотеза
+    options:
+    - гіпотеза
+    - фантазія
+    - мрія
+    - брехня
+  - sentence: Основним ___ дослідження будуть мовні помилки.
+    answer: предметом
+    options:
+    - предметом
+    - об'єктом
+    - інструментом
+    - автором
+  - sentence: Я очікую отримати цікаві ___.
+    answer: результати
+    options:
+    - результати
+    - питання
+    - помилки
+    - штрафи
+  - sentence: Для роботи мені потрібно знайти надійні ___.
+    answer: джерела
+    options:
+    - джерела
+    - відмовки
+    - причини
+    - розваги
+  - sentence: Наприкінці я зроблю ___.
+    answer: висновок
+    options:
+    - висновок
+    - вступ
+    - початок
+    - перерву
+- type: match-up
+  id: 142-05-sources-type
+  title: Типи джерел
+  pairs:
+  - left: Щоденник очевидця
+    right: Первинне джерело
+  - left: Архівний документ
+    right: Первинне джерело
+  - left: Фотографія з місця події
+    right: Первинне джерело
+  - left: Інтерв'ю з учасником
+    right: Первинне джерело
+  - left: Підручник історії
+    right: Вторинне джерело
+  - left: Стаття в енциклопедії
+    right: Вторинне джерело
+  - left: Наукова монографія
+    right: Вторинне джерело
+  - left: Огляд літератури
+    right: Вторинне джерело
+- type: match-up
+  id: 142-06-method-goal
+  title: Метод і мета
+  pairs:
+  - left: Дізнатися думку багатьох людей
+    right: Опитування / Анкетування
+  - left: Дізнатися глибинні мотиви однієї людини
+    right: Інтерв'ю
+  - left: Перевірити, як щось працює в реальності
+    right: Експеримент
+  - left: Вивчити поведінку людей без втручання
+    right: Спостереження
+  - left: Порівняти два явища
+    right: Порівняльний аналіз
+  - left: Вивчити цифрові дані
+    right: Статистичний аналіз
+  - left: Вивчити зміст текстів
+    right: Контент-аналіз
+  - left: Узагальнити думки вчених
+    right: Теоретичний аналіз
+- type: quiz
+  id: 142-07-paper-structure
+  title: Структура роботи
+  items:
+  - question: З чого починається наукова робота?
+    options:
+    - text: Вступ
+      correct: true
+    - text: Висновок
+      correct: false
+    - text: Список літератури
+      correct: false
+    - text: Додатки
+      correct: false
+  - question: Де ми описуємо методи дослідження?
+    options:
+    - text: В основній частині
+      correct: true
+    - text: У висновку
+      correct: false
+    - text: У списку літератури
+      correct: false
+    - text: На титульній сторінці
+      correct: false
+  - question: Що йде після основної частини?
+    options:
+    - text: Висновки
+      correct: true
+    - text: Вступ
+      correct: false
+    - text: План
+      correct: false
+    - text: Титулка
+      correct: false
+  - question: Де знаходяться таблиці та діаграми, які не увійшли в текст?
+    options:
+    - text: У додатках
+      correct: true
+    - text: У вступі
+      correct: false
+    - text: У висновках
+      correct: false
+    - text: У бібліографії
+      correct: false
+  - question: Що таке анотація?
+    options:
+    - text: Короткий опис змісту роботи
+      correct: true
+    - text: Список джерел
+      correct: false
+    - text: План роботи
+      correct: false
+    - text: Відгук наукового керівника
+      correct: false
+  - question: Яким має бути стиль викладу?
+    options:
+    - text: Науковим
+      correct: true
+    - text: Художнім
+      correct: false
+    - text: Розмовним
+      correct: false
+    - text: Публіцистичним
+      correct: false
+  - question: Чи можна використовувати 'Я думаю' в науковому тексті?
+    options:
+    - text: Краще уникати (писати безособово)
+      correct: true
+    - text: Так, завжди
+      correct: false
+    - text: Тільки в заголовку
+      correct: false
+    - text: Ні, це заборонено законом
+      correct: false
+  - question: Що роблять у висновках?
+    options:
+    - text: Підсумовують результати
+      correct: true
+    - text: Починають нову тему
+      correct: false
+    - text: Ставлять нові питання
+      correct: false
+    - text: Дякують батькам
+      correct: false
+- type: fill-in
+  id: 142-08-hypothesis
+  title: Формулювання гіпотези
+  items:
+  - sentence: Якщо ми збільшимо кількість уроків, то успішність ___.
+    answer: зросте
+    options:
+    - зросте
+    - впаде
+    - зникне
+    - позеленіє
+  - sentence: Припускаємо, що існує ___ між сном і пам'яттю.
+    answer: зв'язок
+    options:
+    - зв'язок
+    - стіна
+    - війна
+    - договір
+  - sentence: 'Гіпотеза: Використання ігор ___ мотивацію учнів.'
+    answer: підвищує
+    options:
+    - підвищує
+    - знищує
+    - ігнорує
+    - ховає
+  - sentence: Ми перевіримо, чи ___ реклама на вибір товару.
+    answer: впливає
+    options:
+    - впливає
+    - співає
+    - танцює
+    - спить
+  - sentence: Дослідження має ___ або спростувати гіпотезу.
+    answer: підтвердити
+    options:
+    - підтвердити
+    - забути
+    - продати
+    - купити
+  - sentence: Нульова гіпотеза стверджує, що зв'язку ___.
+    answer: немає
+    options:
+    - немає
+    - багато
+    - мало
+    - є
+  - sentence: Альтернативна гіпотеза стверджує, що ефект ___.
+    answer: існує
+    options:
+    - існує
+    - зник
+    - помер
+    - спить
+  - sentence: Гіпотеза має бути чіткою і ___.
+    answer: перевірною
+    options:
+    - перевірною
+    - смішною
+    - довгою
+    - таємною
+- type: match-up
+  id: 142-09-citation-styles
+  title: Стилі цитування (впізнавання)
+  pairs:
+  - left: (Petrenko, 2023)
+    right: APA (Автор, Рік)
+  - left: (Petrenko 15)
+    right: MLA (Автор Сторінка)
+  - left: '[1]'
+    right: IEEE / ДСТУ (Нумерація)
+  - left: Petrenko, I. (2023). Title...
+    right: APA (Список)
+  - left: Petrenko, Ivan. Title...
+    right: MLA (Список)
+  - left: Ibid.
+    right: Повторне посилання
+  - left: et al.
+    right: Колектив авторів
+  - left: doi:10.1000/xyz
+    right: Цифровий ідентифікатор
+- type: true-false
+  id: 142-10-checklist
+  title: Чек-лист готовності
+  items:
+  - statement: Я обрав тему, яка мені цікава.
+    correct: true
+    explanation: Інтерес до теми — запорука успіху.
+  - statement: Я перевірив, чи є достатньо джерел по темі.
+    correct: true
+    explanation: Без джерел дослідження неможливе.
+  - statement: Я сформулював чітку мету дослідження.
+    correct: true
+    explanation: Треба знати, куди йдеш.
+  - statement: Я склав план роботи з дедлайнами.
+    correct: true
+    explanation: План допомагає не панікувати.
+  - statement: Я вирішив писати без чернетки, одразу чистовик.
+    correct: false
+    explanation: Чернетка обов'язкова.
+  - statement: Я буду копіювати тексти з Вікіпедії.
+    correct: false
+    explanation: Це плагіат.
+  - statement: Я проконсультувався з викладачем/експертом.
+    correct: true
+    explanation: Погляд з боку дуже корисний.
+  - statement: Я готовий до важкої, але цікавої роботи.
+    correct: true
+    explanation: Налаштуйтеся на успіх!
+- type: quiz
+  id: 142-11-plagiarism-review
+  title: 'Плагіат: Повторення'
+  items:
+  - question: Чи можна брати картинки з Google без дозволу?
+    options:
+    - text: Ні, у них може бути авторське право
+      correct: true
+    - text: Так, все в інтернеті спільне
+      correct: false
+    - text: Тільки якщо ніхто не бачить
+      correct: false
+    - text: Тільки маленькі картинки
+      correct: false
+  - question: Що таке 'Fair Use' (Добросовісне використання)?
+    options:
+    - text: Використання фрагментів з навчальною метою
+      correct: true
+    - text: Крадіжка контенту
+      correct: false
+    - text: Безкоштовне кіно
+      correct: false
+    - text: Обман автора
+      correct: false
+  - question: Якщо я переклав статтю з англійської, чи треба посилання?
+    options:
+    - text: Так, обов'язково
+      correct: true
+    - text: Ні, це тепер мій текст
+      correct: false
+    - text: Тільки якщо спитають
+      correct: false
+    - text: Ні, ніхто не дізнається
+      correct: false
+  - question: Чи можна купити дипломну роботу?
+    options:
+    - text: Ні, це злочин і ганьба
+      correct: true
+    - text: Так, якщо є гроші
+      correct: false
+    - text: Так, якщо мало часу
+      correct: false
+    - text: Так, всі так роблять
+      correct: false
+  - question: Що буде за плагіат в університеті?
+    options:
+    - text: Відрахування або незалік
+      correct: true
+    - text: Похвала
+      correct: false
+    - text: Премія
+      correct: false
+    - text: Нічого
+      correct: false
+  - question: Як перевірити текст на плагіат?
+    options:
+    - text: Спеціальними програмами (Unicheck тощо)
+      correct: true
+    - text: Прочитати вголос
+      correct: false
+    - text: Показати мамі
+      correct: false
+    - text: Помолитися
+      correct: false
+  - question: Чи є самоцитування плагіатом?
+    options:
+    - text: Так, якщо не вказати джерело
+      correct: true
+    - text: Ні, це ж моє
+      correct: false
+    - text: Завжди ні
+      correct: false
+    - text: Завжди так
+      correct: false
+  - question: Найкращий захист від плагіату — це...
+    options:
+    - text: Писати самостійно і чесно
+      correct: true
+    - text: Ховати джерела
+      correct: false
+    - text: Міняти слова місцями
+      correct: false
+    - text: Не писати нічого
+      correct: false
+- type: match-up
+  id: 142-12-brainstorming
+  title: Методи пошуку ідей
+  pairs:
+  - left: Мозковий штурм
+    right: Генерація ідей без критики
+  - left: Мапа думок (Mind Map)
+    right: Візуальна схема зв'язків
+  - left: Фрірайтінг (Вільне письмо)
+    right: Писати все, що приходить в голову
+  - left: Метод 5 'Чому'
+    right: Пошук глибинної причини
+  - left: SWOT-аналіз
+    right: Слабкі та сильні сторони
+  - left: SCAMPER
+    right: Модифікація ідеї
+  - left: Шість капелюхів мислення
+    right: Погляд з різних точок зору
+  - left: Випадкове слово
+    right: Асоціації з випадковим стимулом
+- type: fill-in
+  id: 142-13-vocab-context-2
+  title: Лексика в контексті 2
+  items:
+  - sentence: Я пішов у ___ щоб знайти старі газети.
+    answer: архів
+    options:
+    - архів
+    - магазин
+    - ліс
+    - парк
+  - sentence: Мої ___ записані в блокноті.
+    answer: нотатки
+    options:
+    - нотатки
+    - мрії
+    - гроші
+    - друзі
+  - sentence: Вчений аналізує статистичні ___.
+    answer: дані
+    options:
+    - дані
+    - емоції
+    - пісні
+    - жарти
+  - sentence: Цей ___ суперечить теорії.
+    answer: факт
+    options:
+    - факт
+    - сон
+    - колір
+    - смак
+  - sentence: Складання ___ допомагає структурувати думки.
+    answer: плану
+    options:
+    - плану
+    - ліжка
+    - пазлу
+    - речення
+  - sentence: Я зробив ___ лекції.
+    answer: конспект
+    options:
+    - конспект
+    - портрет
+    - ремонт
+    - обід
+  - sentence: Тема має наукову ___.
+    answer: новизну
+    options:
+    - новизну
+    - ціну
+    - вагу
+    - висоту
+  - sentence: Потрібно зробити правильний ___ літератури.
+    answer: вибір
+    options:
+    - вибір
+    - ремонт
+    - танець
+    - стрибок
+- type: true-false
+  id: 142-14-final-readiness
+  title: Чи готовий я почати?
+  items:
+  - statement: Я розумію різницю між об'єктом і предметом.
+    correct: true
+    explanation: Об'єкт ширший, предмет вужчий.
+  - statement: Я знаю, де шукати інформацію.
+    correct: true
+    explanation: Бібліотеки, бази даних, архіви.
+  - statement: Я вмію відрізняти фейки від фактів.
+    correct: true
+    explanation: Критичне мислення — база.
+  - statement: Я знаю, як оформити цитату.
+    correct: true
+    explanation: Щоб не було плагіату.
+  - statement: Я боюся починати.
+    correct: false
+    explanation: Страх — це нормально, але починати треба.
+  - statement: Я думаю, що все зроблю за одну ніч.
+    correct: false
+    explanation: Це ілюзія. Потрібен час.
+  - statement: Я готовий працювати систематично.
+    correct: true
+    explanation: Дисципліна важливіша за натхнення.
+  - statement: Дослідження — це цікава пригода.
+    correct: true
+    explanation: Саме так!

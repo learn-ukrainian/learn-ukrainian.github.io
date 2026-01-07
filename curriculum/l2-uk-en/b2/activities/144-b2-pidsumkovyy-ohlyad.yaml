@@ -2,513 +2,723 @@ module: 144-b2-pidsumkovyy-ohlyad
 level: B2
 version: '2.0'
 activities:
-  - type: match-up
-    id: 144-01-passive-forms
-    title: "Пасивні форми"
-    pairs:
-      - left: "Книгу прочитано."
-        right: "Безособова форма (-но/-то)"
-      - left: "Книга прочитана студентом."
-        right: "Пасивний дієприкметник"
-      - left: "Книга читається легко."
-        right: "Рефлексивний пасив (-ся)"
-      - left: "Книгу прочитали вчора."
-        right: "Неозначено-особова (3 ос. мн.)"
-      - left: "Рішення прийнято."
-        right: "Офіційний стиль (-но/-то)"
-      - left: "Будинок будується."
-        right: "Процес (-ся)"
-      - left: "Закон підписаний Президентом."
-        right: "Результат (-ний)"
-      - left: "Мені сказали."
-        right: "Розмовний пасив"
-
-  - type: quiz
-    id: 144-02-participles
-    title: "Дієприкметники"
+- type: match-up
+  id: 144-01-passive-forms
+  title: Пасивні форми
+  pairs:
+  - left: Книгу прочитано.
+    right: Безособова форма (-но/-то)
+  - left: Книга прочитана студентом.
+    right: Пасивний дієприкметник
+  - left: Книга читається легко.
+    right: Рефлексивний пасив (-ся)
+  - left: Книгу прочитали вчора.
+    right: Неозначено-особова (3 ос. мн.)
+  - left: Рішення прийнято.
+    right: Офіційний стиль (-но/-то)
+  - left: Будинок будується.
+    right: Процес (-ся)
+  - left: Закон підписаний Президентом.
+    right: Результат (-ний)
+  - left: Мені сказали.
+    right: Розмовний пасив
+- type: quiz
+  id: 144-02-participles
+  title: Дієприкметники
+  items:
+  - question: Яке слово є активним дієприкметником?
+    options:
+    - text: Сяючий
+      correct: true
+    - text: Написаний
+      correct: false
+    - text: Зроблений
+      correct: false
+    - text: Відкритий
+      correct: false
+  - question: Яке слово є пасивним дієприкметником?
+    options:
+    - text: Прочитаний
+      correct: true
+    - text: Читаючий
+      correct: false
+    - text: Квітучий
+      correct: false
+    - text: Сплячий
+      correct: false
+  - question: Перекладіть 'The sleeping cat'.
+    options:
+    - text: Кіт, що спить (Сплячий кіт)
+      correct: true
+    - text: Спаний кіт
+      correct: false
+    - text: Поспаний кіт
+      correct: false
+    - text: Кіт спав
+      correct: false
+  - question: 'Оберіть правильну форму: ''Завдання (виконувати)''.'
+    options:
+    - text: Виконане
+      correct: true
+    - text: Виконуюче
+      correct: false
+    - text: Виконало
+      correct: false
+    - text: Виконуватиме
+      correct: false
+  - question: Яка форма є стилістично кращою?
+    options:
+    - text: Людина, яка йде
+      correct: true
+    - text: Йдуча людина
+      correct: false
+    - text: Ідущий чоловік
+      correct: false
+    - text: Ішовший чоловік
+      correct: false
+  - question: Утворіть пасив від 'забути'.
+    options:
+    - text: Забутий
+      correct: true
+    - text: Забувший
+      correct: false
+    - text: Забуваючий
+      correct: false
+    - text: Забудькуватий
+      correct: false
+  - question: Утворіть безособову форму від 'зробити'.
+    options:
+    - text: Зроблено
+      correct: true
+    - text: Зроблений
+      correct: false
+    - text: Зробився
+      correct: false
+    - text: Зроблять
+      correct: false
+  - question: Яке речення правильне?
+    options:
+    - text: Наказ підписано директором.
+      correct: false
+    - text: Наказ підписано.
+      correct: true
+    - text: Наказ підписаний.
+      correct: false
+    - text: Наказ підписався.
+      correct: false
+- type: group-sort
+  id: 144-03-registers
+  title: Стилі мовлення
+  groups:
+  - name: Офіційно-діловий
     items:
-      - question: "Яке слово є активним дієприкметником?"
-        options:
-          - { text: "Сяючий", correct: true }
-          - { text: "Написаний", correct: false }
-          - { text: "Зроблений", correct: false }
-          - { text: "Відкритий", correct: false }
-      - question: "Яке слово є пасивним дієприкметником?"
-        options:
-          - { text: "Прочитаний", correct: true }
-          - { text: "Читаючий", correct: false }
-          - { text: "Квітучий", correct: false }
-          - { text: "Сплячий", correct: false }
-      - question: "Перекладіть 'The sleeping cat'."
-        options:
-          - { text: "Кіт, що спить (Сплячий кіт)", correct: true }
-          - { text: "Спаний кіт", correct: false }
-          - { text: "Поспаний кіт", correct: false }
-          - { text: "Кіт спав", correct: false }
-      - question: "Оберіть правильну форму: 'Завдання (виконувати)'."
-        options:
-          - { text: "Виконане", correct: true }
-          - { text: "Виконуюче", correct: false }
-          - { text: "Виконало", correct: false }
-          - { text: "Виконуватиме", correct: false }
-      - question: "Яка форма є стилістично кращою?"
-        options:
-          - { text: "Людина, яка йде", correct: true }
-          - { text: "Йдуча людина", correct: false }
-          - { text: "Ідущий чоловік", correct: false }
-          - { text: "Ішовший чоловік", correct: false }
-      - question: "Утворіть пасив від 'забути'."
-        options:
-          - { text: "Забутий", correct: true }
-          - { text: "Забувший", correct: false }
-          - { text: "Забуваючий", correct: false }
-          - { text: "Забудькуватий", correct: false }
-      - question: "Утворіть безособову форму від 'зробити'."
-        options:
-          - { text: "Зроблено", correct: true }
-          - { text: "Зроблений", correct: false }
-          - { text: "Зробився", correct: false }
-          - { text: "Зроблять", correct: false }
-      - question: "Яке речення правильне?"
-        options:
-          - { text: "Наказ підписано директором.", correct: false }
-          - { text: "Наказ підписано.", correct: true }
-          - { text: "Наказ підписаний.", correct: false }
-          - { text: "Наказ підписався.", correct: false }
-
-  - type: group-sort
-    id: 144-03-registers
-    title: "Стилі мовлення"
-    groups:
-      - name: "Офіційно-діловий"
-        items:
-          - "Відповідно до закону"
-          - "Прошу надати відпустку"
-          - "Наказ набуває чинності"
-          - "Довідка видана"
-      - name: "Науковий"
-        items:
-          - "Результати дослідження"
-          - "Гіпотеза не підтвердилася"
-          - "Аналіз даних"
-          - "Методологія експерименту"
-      - name: "Розмовний"
-        items:
-          - "Привіт, як справи?"
-          - "Та ну його!"
-          - "Класно посиділи"
-          - "Типу того"
-      - name: "Художній"
-        items:
-          - "Сонце сміялося"
-          - "Душа співала"
-          - "Золота осінь"
-          - "Серце крається"
-
-  - type: match-up
-    id: 144-04-idioms
-    title: "Фразеологізми"
-    pairs:
-      - left: "Пекти раків"
-        right: "Червоніти від сорому"
-      - left: "Байдики бити"
-        right: "Нічого не робити"
-      - left: "Як кіт наплакав"
-        right: "Дуже мало"
-      - left: "Води в рот набрати"
-        right: "Мовчати"
-      - left: "Гріти руки"
-        right: "Наживатися на чомусь"
-      - left: "Зарубати на носі"
-        right: "Добре запам'ятати"
-      - left: "Як сніг на голову"
-        right: "Раптово"
-      - left: "Водити за ніс"
-        right: "Обманювати"
-
-  - type: fill-in
-    id: 144-05-connectors
-    title: "Слова-зв'язки"
+    - Відповідно до закону
+    - Прошу надати відпустку
+    - Наказ набуває чинності
+    - Довідка видана
+  - name: Науковий
     items:
-      - sentence: "Я хотів піти в кіно, ___ пішов дощ."
-        answer: "проте"
-        options: ["проте", "тому", "отже", "наприклад"]
-      - sentence: "Він багато працював, ___ досяг успіху."
-        answer: "тому"
-        options: ["тому", "але", "однак", "хоча"]
-      - sentence: "Ця книга цікава, ___ вона дуже дорога."
-        answer: "однак"
-        options: ["однак", "отже", "тому", "наприклад"]
-      - sentence: "Ми запізнилися, ___ не встигли на поїзд."
-        answer: "отже"
-        options: ["отже", "але", "проте", "хоча"]
-      - sentence: "___ на втому, він продовжував йти."
-        answer: "Незважаючи"
-        options: ["Незважаючи", "Завдяки", "Через", "Тому"]
-      - sentence: "Вона розумна, ___ дуже скромна."
-        answer: "до того ж"
-        options: ["до того ж", "але", "тому", "через"]
-      - sentence: "Ми виграли, ___ нашій команді."
-        answer: "завдяки"
-        options: ["завдяки", "через", "попри", "але"]
-      - sentence: "Він не прийшов ___ хворобу."
-        answer: "через"
-        options: ["через", "завдяки", "для", "щоб"]
-
-  - type: match-up
-    id: 144-06-history-dates
-    title: "Історичні дати"
-    pairs:
-      - left: "988 рік"
-        right: "Хрещення Русі"
-      - left: "1240 рік"
-        right: "Зруйнування Києва монголами"
-      - left: "1648 рік"
-        right: "Початок війни Хмельницького"
-      - left: "1709 рік"
-        right: "Битва під Полтавою (Мазепа)"
-      - left: "1814 рік"
-        right: "Народження Тараса Шевченка"
-      - left: "1917-1921 рр."
-        right: "Українська революція"
-      - left: "1932-1933 рр."
-        right: "Голодомор"
-      - left: "1991 рік"
-        right: "Незалежність України"
-
-  - type: quiz
-    id: 144-07-culture-quiz
-    title: "Культурний тест"
+    - Результати дослідження
+    - Гіпотеза не підтвердилася
+    - Аналіз даних
+    - Методологія експерименту
+  - name: Розмовний
     items:
-      - question: "Хто написав 'Кобзар'?"
-        options:
-          - { text: "Тарас Шевченко", correct: true }
-          - { text: "Іван Франко", correct: false }
-          - { text: "Леся Українка", correct: false }
-          - { text: "Григорій Сковорода", correct: false }
-      - question: "Яка страва є об'єктом спадщини ЮНЕСКО?"
-        options:
-          - { text: "Борщ", correct: true }
-          - { text: "Вареники", correct: false }
-          - { text: "Сало", correct: false }
-          - { text: "Голубці", correct: false }
-      - question: "Традиційна українська сорочка називається..."
-        options:
-          - { text: "Вишиванка", correct: true }
-          - { text: "Жупан", correct: false }
-          - { text: "Кептар", correct: false }
-          - { text: "Свитка", correct: false }
-      - question: "Хто такі козаки?"
-        options:
-          - { text: "Вільні воїни", correct: true }
-          - { text: "Селяни", correct: false }
-          - { text: "Купці", correct: false }
-          - { text: "Монахи", correct: false }
-      - question: "Головна річка України — це..."
-        options:
-          - { text: "Дніпро", correct: true }
-          - { text: "Дністер", correct: false }
-          - { text: "Дунай", correct: false }
-          - { text: "Десна", correct: false }
-      - question: "Що таке 'Щедрик'?"
-        options:
-          - { text: "Різдвяна пісня", correct: true }
-          - { text: "Веснянка", correct: false }
-          - { text: "Гімн", correct: false }
-          - { text: "Колискова", correct: false }
-      - question: "Яке місто називають містом Лева?"
-        options:
-          - { text: "Львів", correct: true }
-          - { text: "Київ", correct: false }
-          - { text: "Луцьк", correct: false }
-          - { text: "Луганськ", correct: false }
-      - question: "Хто такий Богдан Хмельницький?"
-        options:
-          - { text: "Гетьман", correct: true }
-          - { text: "Князь", correct: false }
-          - { text: "Король", correct: false }
-          - { text: "Президент", correct: false }
-
-  - type: match-up
-    id: 144-08-synonyms
-    title: "Синоніми"
-    pairs:
-      - left: "Великий"
-        right: "Величезний / Грандіозний"
-      - left: "Гарний"
-        right: "Чудовий / Прекрасний"
-      - left: "Сумний"
-        right: "Журливий / Невеселий"
-      - left: "Йти"
-        right: "Крокувати / Шкандибати"
-      - left: "Говорити"
-        right: "Розмовляти / Балакати"
-      - left: "Думати"
-        right: "Мислити / Міркувати"
-      - left: "Швидко"
-        right: "Прудко / Миттєво"
-      - left: "Цікавий"
-        right: "Захопливий / Цікавезний"
-
-  - type: fill-in
-    id: 144-09-prepositions
-    title: "Прийменники"
+    - Привіт, як справи?
+    - Та ну його!
+    - Класно посиділи
+    - Типу того
+  - name: Художній
     items:
-      - sentence: "Я йду ___ магазину."
-        answer: "до"
-        options: ["до", "в", "на", "з"]
-      - sentence: "Ми зустрінемося ___ шостій годині."
-        answer: "о"
-        options: ["о", "в", "на", "біля"]
-      - sentence: "Я думаю ___ тебе."
-        answer: "про"
-        options: ["про", "за", "на", "з"]
-      - sentence: "Книга лежить ___ столі."
-        answer: "на"
-        options: ["на", "в", "під", "над"]
-      - sentence: "Він приїхав ___ Києва."
-        answer: "з"
-        options: ["з", "від", "до", "у"]
-      - sentence: "Ми дякуємо ___ допомогу."
-        answer: "за"
-        options: ["за", "на", "про", "через"]
-      - sentence: "Він схожий ___ батька."
-        answer: "на"
-        options: ["на", "з", "до", "про"]
-      - sentence: "Я пишу листа ___ другу."
-        answer: "до"
-        options: ["до", "для", "на", "з"]
-
-  - type: quiz
-    id: 144-10-research-terms
-    title: "Терміни дослідження"
+    - Сонце сміялося
+    - Душа співала
+    - Золота осінь
+    - Серце крається
+- type: match-up
+  id: 144-04-idioms
+  title: Фразеологізми
+  pairs:
+  - left: Пекти раків
+    right: Червоніти від сорому
+  - left: Байдики бити
+    right: Нічого не робити
+  - left: Як кіт наплакав
+    right: Дуже мало
+  - left: Води в рот набрати
+    right: Мовчати
+  - left: Гріти руки
+    right: Наживатися на чомусь
+  - left: Зарубати на носі
+    right: Добре запам'ятати
+  - left: Як сніг на голову
+    right: Раптово
+  - left: Водити за ніс
+    right: Обманювати
+- type: fill-in
+  id: 144-05-connectors
+  title: Слова-зв'язки
+  items:
+  - sentence: Я хотів піти в кіно, ___ пішов дощ.
+    answer: проте
+    options:
+    - проте
+    - тому
+    - отже
+    - наприклад
+  - sentence: Він багато працював, ___ досяг успіху.
+    answer: тому
+    options:
+    - тому
+    - але
+    - однак
+    - хоча
+  - sentence: Ця книга цікава, ___ вона дуже дорога.
+    answer: однак
+    options:
+    - однак
+    - отже
+    - тому
+    - наприклад
+  - sentence: Ми запізнилися, ___ не встигли на поїзд.
+    answer: отже
+    options:
+    - отже
+    - але
+    - проте
+    - хоча
+  - sentence: ___ на втому, він продовжував йти.
+    answer: Незважаючи
+    options:
+    - Незважаючи
+    - Завдяки
+    - Через
+    - Тому
+  - sentence: Вона розумна, ___ дуже скромна.
+    answer: до того ж
+    options:
+    - до того ж
+    - але
+    - тому
+    - через
+  - sentence: Ми виграли, ___ нашій команді.
+    answer: завдяки
+    options:
+    - завдяки
+    - через
+    - попри
+    - але
+  - sentence: Він не прийшов ___ хворобу.
+    answer: через
+    options:
+    - через
+    - завдяки
+    - для
+    - щоб
+- type: match-up
+  id: 144-06-history-dates
+  title: Історичні дати
+  pairs:
+  - left: 988 рік
+    right: Хрещення Русі
+  - left: 1240 рік
+    right: Зруйнування Києва монголами
+  - left: 1648 рік
+    right: Початок війни Хмельницького
+  - left: 1709 рік
+    right: Битва під Полтавою (Мазепа)
+  - left: 1814 рік
+    right: Народження Тараса Шевченка
+  - left: 1917-1921 рр.
+    right: Українська революція
+  - left: 1932-1933 рр.
+    right: Голодомор
+  - left: 1991 рік
+    right: Незалежність України
+- type: quiz
+  id: 144-07-culture-quiz
+  title: Культурний тест
+  items:
+  - question: Хто написав 'Кобзар'?
+    options:
+    - text: Тарас Шевченко
+      correct: true
+    - text: Іван Франко
+      correct: false
+    - text: Леся Українка
+      correct: false
+    - text: Григорій Сковорода
+      correct: false
+  - question: Яка страва є об'єктом спадщини ЮНЕСКО?
+    options:
+    - text: Борщ
+      correct: true
+    - text: Вареники
+      correct: false
+    - text: Сало
+      correct: false
+    - text: Голубці
+      correct: false
+  - question: Традиційна українська сорочка називається...
+    options:
+    - text: Вишиванка
+      correct: true
+    - text: Жупан
+      correct: false
+    - text: Кептар
+      correct: false
+    - text: Свитка
+      correct: false
+  - question: Хто такі козаки?
+    options:
+    - text: Вільні воїни
+      correct: true
+    - text: Селяни
+      correct: false
+    - text: Купці
+      correct: false
+    - text: Монахи
+      correct: false
+  - question: Головна річка України — це...
+    options:
+    - text: Дніпро
+      correct: true
+    - text: Дністер
+      correct: false
+    - text: Дунай
+      correct: false
+    - text: Десна
+      correct: false
+  - question: Що таке 'Щедрик'?
+    options:
+    - text: Різдвяна пісня
+      correct: true
+    - text: Веснянка
+      correct: false
+    - text: Гімн
+      correct: false
+    - text: Колискова
+      correct: false
+  - question: Яке місто називають містом Лева?
+    options:
+    - text: Львів
+      correct: true
+    - text: Київ
+      correct: false
+    - text: Луцьк
+      correct: false
+    - text: Луганськ
+      correct: false
+  - question: Хто такий Богдан Хмельницький?
+    options:
+    - text: Гетьман
+      correct: true
+    - text: Князь
+      correct: false
+    - text: Король
+      correct: false
+    - text: Президент
+      correct: false
+- type: match-up
+  id: 144-08-synonyms
+  title: Синоніми
+  pairs:
+  - left: Великий
+    right: Величезний / Грандіозний
+  - left: Гарний
+    right: Чудовий / Прекрасний
+  - left: Сумний
+    right: Журливий / Невеселий
+  - left: Йти
+    right: Крокувати / Шкандибати
+  - left: Говорити
+    right: Розмовляти / Балакати
+  - left: Думати
+    right: Мислити / Міркувати
+  - left: Швидко
+    right: Прудко / Миттєво
+  - left: Цікавий
+    right: Захопливий / Цікавезний
+- type: fill-in
+  id: 144-09-prepositions
+  title: Прийменники
+  items:
+  - sentence: Я йду ___ магазину.
+    answer: до
+    options:
+    - до
+    - в
+    - на
+    - з
+  - sentence: Ми зустрінемося ___ шостій годині.
+    answer: о
+    options:
+    - о
+    - в
+    - на
+    - біля
+  - sentence: Я думаю ___ тебе.
+    answer: про
+    options:
+    - про
+    - за
+    - на
+    - з
+  - sentence: Книга лежить ___ столі.
+    answer: на
+    options:
+    - на
+    - в
+    - під
+    - над
+  - sentence: Він приїхав ___ Києва.
+    answer: з
+    options:
+    - з
+    - від
+    - до
+    - у
+  - sentence: Ми дякуємо ___ допомогу.
+    answer: за
+    options:
+    - за
+    - на
+    - про
+    - через
+  - sentence: Він схожий ___ батька.
+    answer: на
+    options:
+    - на
+    - з
+    - до
+    - про
+  - sentence: Я пишу листа ___ другу.
+    answer: до
+    options:
+    - до
+    - для
+    - на
+    - з
+- type: quiz
+  id: 144-10-research-terms
+  title: Терміни дослідження
+  items:
+  - question: Що таке 'плагіат'?
+    options:
+    - text: Крадіжка тексту
+      correct: true
+    - text: Цитування
+      correct: false
+    - text: Авторське право
+      correct: false
+    - text: Переклад
+      correct: false
+  - question: Що таке 'гіпотеза'?
+    options:
+    - text: Наукове припущення
+      correct: true
+    - text: Доведений факт
+      correct: false
+    - text: Вигадка
+      correct: false
+    - text: Закон
+      correct: false
+  - question: Що таке 'джерело'?
+    options:
+    - text: Звідки взята інформація
+      correct: true
+    - text: Вода
+      correct: false
+    - text: Початок річки
+      correct: false
+    - text: Кінець книги
+      correct: false
+  - question: Що таке 'анотація'?
+    options:
+    - text: Короткий опис
+      correct: true
+    - text: Довгий текст
+      correct: false
+    - text: Список літератури
+      correct: false
+    - text: Титулка
+      correct: false
+  - question: Яке джерело надійне?
+    options:
+    - text: Наукова стаття
+      correct: true
+    - text: Пост у Фейсбуці
+      correct: false
+    - text: Чутки
+      correct: false
+    - text: Реклама
+      correct: false
+  - question: Що таке 'аргумент'?
+    options:
+    - text: Доказ
+      correct: true
+    - text: Сварка
+      correct: false
+    - text: Питання
+      correct: false
+    - text: Відповідь
+      correct: false
+  - question: Що таке 'метод'?
+    options:
+    - text: Спосіб дослідження
+      correct: true
+    - text: Результат
+      correct: false
+    - text: Мета
+      correct: false
+    - text: Об'єкт
+      correct: false
+  - question: Що таке 'цитата'?
+    options:
+    - text: Точні слова автора
+      correct: true
+    - text: Переказ
+      correct: false
+    - text: Власна думка
+      correct: false
+    - text: Заголовок
+      correct: false
+- type: quiz
+  id: 144-11-mega-quiz
+  title: Мега-тест
+  items:
+  - question: Столиця України — ...
+    options:
+    - text: Київ
+      correct: true
+    - text: Харків
+      correct: false
+    - text: Львів
+      correct: false
+    - text: Одеса
+      correct: false
+  - question: 'Пасивна форма: ''Лист (написати)''.'
+    options:
+    - text: Написаний
+      correct: true
+    - text: Написав
+      correct: false
+    - text: Пише
+      correct: false
+    - text: Писатиме
+      correct: false
+  - question: Синонім до слова 'говорити'.
+    options:
+    - text: Казати
+      correct: true
+    - text: Мовчати
+      correct: false
+    - text: Слухати
+      correct: false
+    - text: Бачити
+      correct: false
+  - question: Автор 'Тіні забутих предків'.
+    options:
+    - text: Михайло Коцюбинський
+      correct: true
+    - text: Іван Франко
+      correct: false
+    - text: Тарас Шевченко
+      correct: false
+    - text: Леся Українка
+      correct: false
+  - question: 1991 рік — це...
+    options:
+    - text: Незалежність
+      correct: true
+    - text: Конституція
+      correct: false
+    - text: Революція
+      correct: false
+    - text: Війна
+      correct: false
+  - question: Антонім до слова 'день'.
+    options:
+    - text: Ніч
+      correct: true
+    - text: Ранок
+      correct: false
+    - text: Вечір
+      correct: false
+    - text: Обід
+      correct: false
+  - question: Як перекласти 'Good morning'?
+    options:
+    - text: Доброго ранку
+      correct: true
+    - text: Добрий день
+      correct: false
+    - text: Добрий вечір
+      correct: false
+    - text: На добраніч
+      correct: false
+  - question: Скільки відмінків в українській мові?
+    options:
+    - text: '7'
+      correct: true
+    - text: '6'
+      correct: false
+    - text: '5'
+      correct: false
+    - text: '10'
+      correct: false
+- type: group-sort
+  id: 144-12-formal-informal
+  title: Офіційно vs Неофіційно
+  groups:
+  - name: Офіційно
     items:
-      - question: "Що таке 'плагіат'?"
-        options:
-          - { text: "Крадіжка тексту", correct: true }
-          - { text: "Цитування", correct: false }
-          - { text: "Авторське право", correct: false }
-          - { text: "Переклад", correct: false }
-      - question: "Що таке 'гіпотеза'?"
-        options:
-          - { text: "Наукове припущення", correct: true }
-          - { text: "Доведений факт", correct: false }
-          - { text: "Вигадка", correct: false }
-          - { text: "Закон", correct: false }
-      - question: "Що таке 'джерело'?"
-        options:
-          - { text: "Звідки взята інформація", correct: true }
-          - { text: "Вода", correct: false }
-          - { text: "Початок річки", correct: false }
-          - { text: "Кінець книги", correct: false }
-      - question: "Що таке 'анотація'?"
-        options:
-          - { text: "Короткий опис", correct: true }
-          - { text: "Довгий текст", correct: false }
-          - { text: "Список літератури", correct: false }
-          - { text: "Титулка", correct: false }
-      - question: "Яке джерело надійне?"
-        options:
-          - { text: "Наукова стаття", correct: true }
-          - { text: "Пост у Фейсбуці", correct: false }
-          - { text: "Чутки", correct: false }
-          - { text: "Реклама", correct: false }
-      - question: "Що таке 'аргумент'?"
-        options:
-          - { text: "Доказ", correct: true }
-          - { text: "Сварка", correct: false }
-          - { text: "Питання", correct: false }
-          - { text: "Відповідь", correct: false }
-      - question: "Що таке 'метод'?"
-        options:
-          - { text: "Спосіб дослідження", correct: true }
-          - { text: "Результат", correct: false }
-          - { text: "Мета", correct: false }
-          - { text: "Об'єкт", correct: false }
-      - question: "Що таке 'цитата'?"
-        options:
-          - { text: "Точні слова автора", correct: true }
-          - { text: "Переказ", correct: false }
-          - { text: "Власна думка", correct: false }
-          - { text: "Заголовок", correct: false }
-
-  - type: quiz
-    id: 144-11-mega-quiz
-    title: "Мега-тест"
+    - Доброго дня
+    - Шановний пане
+    - Дякую за увагу
+    - Вибачте за турботу
+    - До побачення
+    - З повагою
+    - Згідно з постановою
+    - Прошу повідомити
+  - name: Неофіційно
     items:
-      - question: "Столиця України — ..."
-        options:
-          - { text: "Київ", correct: true }
-          - { text: "Харків", correct: false }
-          - { text: "Львів", correct: false }
-          - { text: "Одеса", correct: false }
-      - question: "Пасивна форма: 'Лист (написати)'."
-        options:
-          - { text: "Написаний", correct: true }
-          - { text: "Написав", correct: false }
-          - { text: "Пише", correct: false }
-          - { text: "Писатиме", correct: false }
-      - question: "Синонім до слова 'говорити'."
-        options:
-          - { text: "Казати", correct: true }
-          - { text: "Мовчати", correct: false }
-          - { text: "Слухати", correct: false }
-          - { text: "Бачити", correct: false }
-      - question: "Автор 'Тіні забутих предків'."
-        options:
-          - { text: "Михайло Коцюбинський", correct: true }
-          - { text: "Іван Франко", correct: false }
-          - { text: "Тарас Шевченко", correct: false }
-          - { text: "Леся Українка", correct: false }
-      - question: "1991 рік — це..."
-        options:
-          - { text: "Незалежність", correct: true }
-          - { text: "Конституція", correct: false }
-          - { text: "Революція", correct: false }
-          - { text: "Війна", correct: false }
-      - question: "Антонім до слова 'день'."
-        options:
-          - { text: "Ніч", correct: true }
-          - { text: "Ранок", correct: false }
-          - { text: "Вечір", correct: false }
-          - { text: "Обід", correct: false }
-      - question: "Як перекласти 'Good morning'?"
-        options:
-          - { text: "Доброго ранку", correct: true }
-          - { text: "Добрий день", correct: false }
-          - { text: "Добрий вечір", correct: false }
-          - { text: "На добраніч", correct: false }
-      - question: "Скільки відмінків в українській мові?"
-        options:
-          - { text: "7", correct: true }
-          - { text: "6", correct: false }
-          - { text: "5", correct: false }
-          - { text: "10", correct: false }
-
-  - type: group-sort
-    id: 144-12-formal-informal
-    title: "Офіційно vs Неофіційно"
-    groups:
-      - name: "Офіційно"
-        items:
-          - "Доброго дня"
-          - "Шановний пане"
-          - "Дякую за увагу"
-          - "Вибачте за турботу"
-          - "До побачення"
-          - "З повагою"
-          - "Згідно з постановою"
-          - "Прошу повідомити"
-      - name: "Неофіційно"
-        items:
-          - "Привіт"
-          - "Гей, ти"
-          - "Дякс"
-          - "Сорі"
-          - "Бувай"
-          - "Па-па"
-          - "Шо там?"
-          - "Ну давай"
-
-  - type: true-false
-    id: 144-13-grammar-check
-    title: "Граматична перевірка"
-    items:
-      - statement: "Я дякую тебе. (Правильно?)"
-        correct: false
-        explanation: "Дякую (кому?) тобі."
-      - statement: "Я йду в кіно. (Правильно?)"
-        correct: true
-        explanation: "Правильно."
-      - statement: "Він сміється з мене. (Правильно?)"
-        correct: true
-        explanation: "Сміятися з когось."
-      - statement: "Я вибачаюсь. (Правильно?)"
-        correct: false
-        explanation: "Краще: Перепрошую / Вибачте."
-      - statement: "Приймати участь. (Правильно?)"
-        correct: false
-        explanation: "Правильно: Брати участь."
-      - statement: "Самий кращий. (Правильно?)"
-        correct: false
-        explanation: "Правильно: Найкращий."
-      - statement: "Протягом дня. (Правильно?)"
-        correct: true
-        explanation: "Протягом = during."
-      - statement: "На протязі дня. (Правильно?)"
-        correct: false
-        explanation: "На протязі = in a draft (wind)."
-
-  - type: match-up
-    id: 144-14-ukrainian-symbols
-    title: "Символи України"
-    pairs:
-      - left: "Тризуб"
-        right: "Герб"
-      - left: "Синьо-жовтий"
-        right: "Прапор"
-      - left: "Ще не вмерла..."
-        right: "Гімн"
-      - left: "Калина"
-        right: "Рослинний символ"
-      - left: "Лелека"
-        right: "Птах-символ"
-      - left: "Вишиванка"
-        right: "Національний одяг"
-      - left: "Писанка"
-        right: "Великоднє яйце"
-      - left: "Кобзар"
-        right: "Народний співець"
-
-  - type: quiz
-    id: 144-15-error-type
-    title: "Тип помилки"
-    items:
-      - question: "Я рахую, що це правильно."
-        options:
-          - { text: "Лексична (калька)", correct: true }
-          - { text: "Граматична", correct: false }
-          - { text: "Орфографічна", correct: false }
-          - { text: "Правильно", correct: false }
-      - question: "Я поїхав до Львову."
-        options:
-          - { text: "Граматична (до Львова)", correct: true }
-          - { text: "Лексична", correct: false }
-          - { text: "Стилістична", correct: false }
-          - { text: "Правильно", correct: false }
-      - question: "Він являється директором."
-        options:
-          - { text: "Лексична (є директором)", correct: true }
-          - { text: "Граматична", correct: false }
-          - { text: "Орфографічна", correct: false }
-          - { text: "Правильно", correct: false }
-      - question: "Доброго дня!"
-        options:
-          - { text: "Правильно", correct: true }
-          - { text: "Помилка", correct: false }
-          - { text: "Сленг", correct: false }
-          - { text: "Архаїзм", correct: false }
-      - question: "Він самий розумний."
-        options:
-          - { text: "Граматична (найрозумніший)", correct: true }
-          - { text: "Лексична", correct: false }
-          - { text: "Стилістична", correct: false }
-          - { text: "Правильно", correct: false }
-      - question: "Я вибачаюсь."
-        options:
-          - { text: "Стилістична/Граматична (постфікс -ся)", correct: true }
-          - { text: "Орфографічна", correct: false }
-          - { text: "Правильно", correct: false }
-          - { text: "Діалектизм", correct: false }
-      - question: "Зробити висновки."
-        options:
-          - { text: "Правильно", correct: true }
-          - { text: "Помилка", correct: false }
-          - { text: "Калька", correct: false }
-          - { text: "Русизм", correct: false }
-      - question: "Приймати участь."
-        options:
-          - { text: "Лексична (брати участь)", correct: true }
-          - { text: "Граматична", correct: false }
-          - { text: "Стилістична", correct: false }
-          - { text: "Правильно", correct: false }
+    - Привіт
+    - Гей, ти
+    - Дякс
+    - Сорі
+    - Бувай
+    - Па-па
+    - Шо там?
+    - Ну давай
+- type: true-false
+  id: 144-13-grammar-check
+  title: Граматична перевірка
+  items:
+  - statement: Я дякую тебе. (Правильно?)
+    correct: false
+    explanation: Дякую (кому?) тобі.
+  - statement: Я йду в кіно. (Правильно?)
+    correct: true
+    explanation: Правильно.
+  - statement: Він сміється з мене. (Правильно?)
+    correct: true
+    explanation: Сміятися з когось.
+  - statement: Я вибачаюсь. (Правильно?)
+    correct: false
+    explanation: 'Краще: Перепрошую / Вибачте.'
+  - statement: Приймати участь. (Правильно?)
+    correct: false
+    explanation: 'Правильно: Брати участь.'
+  - statement: Самий кращий. (Правильно?)
+    correct: false
+    explanation: 'Правильно: Найкращий.'
+  - statement: Протягом дня. (Правильно?)
+    correct: true
+    explanation: Протягом = during.
+  - statement: На протязі дня. (Правильно?)
+    correct: false
+    explanation: На протязі = in a draft (wind).
+- type: match-up
+  id: 144-14-ukrainian-symbols
+  title: Символи України
+  pairs:
+  - left: Тризуб
+    right: Герб
+  - left: Синьо-жовтий
+    right: Прапор
+  - left: Ще не вмерла...
+    right: Гімн
+  - left: Калина
+    right: Рослинний символ
+  - left: Лелека
+    right: Птах-символ
+  - left: Вишиванка
+    right: Національний одяг
+  - left: Писанка
+    right: Великоднє яйце
+  - left: Кобзар
+    right: Народний співець
+- type: quiz
+  id: 144-15-error-type
+  title: Тип помилки
+  items:
+  - question: Я рахую, що це правильно.
+    options:
+    - text: Лексична (калька)
+      correct: true
+    - text: Граматична
+      correct: false
+    - text: Орфографічна
+      correct: false
+    - text: Правильно
+      correct: false
+  - question: Я поїхав до Львову.
+    options:
+    - text: Граматична (до Львова)
+      correct: true
+    - text: Лексична
+      correct: false
+    - text: Стилістична
+      correct: false
+    - text: Правильно
+      correct: false
+  - question: Він являється директором.
+    options:
+    - text: Лексична (є директором)
+      correct: true
+    - text: Граматична
+      correct: false
+    - text: Орфографічна
+      correct: false
+    - text: Правильно
+      correct: false
+  - question: Доброго дня!
+    options:
+    - text: Правильно
+      correct: true
+    - text: Помилка
+      correct: false
+    - text: Сленг
+      correct: false
+    - text: Архаїзм
+      correct: false
+  - question: Він самий розумний.
+    options:
+    - text: Граматична (найрозумніший)
+      correct: true
+    - text: Лексична
+      correct: false
+    - text: Стилістична
+      correct: false
+    - text: Правильно
+      correct: false
+  - question: Я вибачаюсь.
+    options:
+    - text: Стилістична/Граматична (постфікс -ся)
+      correct: true
+    - text: Орфографічна
+      correct: false
+    - text: Правильно
+      correct: false
+    - text: Діалектизм
+      correct: false
+  - question: Зробити висновки.
+    options:
+    - text: Правильно
+      correct: true
+    - text: Помилка
+      correct: false
+    - text: Калька
+      correct: false
+    - text: Русизм
+      correct: false
+  - question: Приймати участь.
+    options:
+    - text: Лексична (брати участь)
+      correct: true
+    - text: Граматична
+      correct: false
+    - text: Стилістична
+      correct: false
+    - text: Правильно
+      correct: false

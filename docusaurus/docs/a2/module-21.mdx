@@ -16,11 +16,13 @@ import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/Error
 import Cloze from '@site/src/components/Cloze';
 import Select from '@site/src/components/Select';
 import Translate from '@site/src/components/Translate';
-
 import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
 import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
 import EssayResponse from '@site/src/components/EssayResponse';
 import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
 
 
 ## Warm-up
@@ -347,134 +349,50 @@ Today you learned numeral-noun agreement:
 
 ### Zone Identification
 
-<MatchUp
-  title="Zone Identification"
-  isUkrainian={false}
-  pairs={JSON.parse(`[{"left": "- одна книга", "right": "Zone 1 (Nominative Singular)"}, {"left": "- три книги", "right": "Zone 2 (Genitive Singular)"}, {"left": "- сім книг", "right": "Zone 3 (Genitive Plural)"}, {"left": "- одинадцять книг", "right": "Zone 3 (Genitive Plural)"}, {"left": "- двадцять одна книга", "right": "Zone 1 (Nominative Singular)"}, {"left": "- двадцять чотири книги", "right": "Zone 2 (Genitive Singular)"}, {"left": "- тридцять книг", "right": "Zone 3 (Genitive Plural)"}, {"left": "- тридцять три книги", "right": "Zone 2 (Genitive Singular)"}]`)}
-/>
+<MatchUp pairs={JSON.parse(`[{"left": "одна книга", "right": "Zone 1 (Nominative Singular)"}, {"left": "три книги", "right": "Zone 2 (Genitive Singular)"}, {"left": "сім книг", "right": "Zone 3 (Genitive Plural)"}, {"left": "одинадцять книг", "right": "Zone 3 (Genitive Plural)"}, {"left": "двадцять одна книга", "right": "Zone 1 (Nominative Singular)"}, {"left": "двадцять чотири книги", "right": "Zone 2 (Genitive Singular)"}, {"left": "тридцять книг", "right": "Zone 3 (Genitive Plural)"}, {"left": "тридцять три книги", "right": "Zone 2 (Genitive Singular)"}, {"left": "два", "right": "Gen. sing."}, {"left": "шість", "right": "Gen. plural"}]`)} />
 
 ### Complete the Phrase
 
-<FillIn
-  title="Complete the Phrase"
-  isUkrainian={false}
-  items={JSON.parse(`[{"sentence": "один [___]", "answer": "студент", "options": ["студент", "студенти", "студентів"]}, {"sentence": "два [___]", "answer": "студенти", "options": ["студенти", "студент", "студентів"]}, {"sentence": "п'ять [___]", "answer": "студентів", "options": ["студентів", "студенти", "студент"]}, {"sentence": "одна [___]", "answer": "книга", "options": ["книга", "книги", "книг"]}, {"sentence": "три [___]", "answer": "книги", "options": ["книги", "книга", "книг"]}, {"sentence": "десять [___]", "answer": "книг", "options": ["книг", "книги", "книга"]}, {"sentence": "Два ___ (2 + nominative singular)", "answer": "столи", "options": ["столи", "стола", "столів"]}, {"sentence": "П'ять ___ (5 + genitive plural)", "answer": "столів", "options": ["столів", "столи", "стола"]}, {"sentence": "дві [___]", "answer": "вікна", "options": ["вікна", "вікно", "вікон"]}, {"sentence": "шість [___]", "answer": "вікон", "options": ["вікон", "вікна", "вікно"]}]`)}
-/>
+<FillIn items={JSON.parse(`[{"sentence": "один [___]", "answer": "студент", "options": ["студент", "студенти", "студентів"]}, {"sentence": "два [___]", "answer": "студенти", "options": ["студенти", "студент", "студентів"]}, {"sentence": "п'ять [___]", "answer": "студентів", "options": ["студентів", "студенти", "студент"]}, {"sentence": "одна [___]", "answer": "книга", "options": ["книга", "книги", "книг"]}, {"sentence": "три [___]", "answer": "книги", "options": ["книги", "книга", "книг"]}, {"sentence": "десять [___]", "answer": "книг", "options": ["книг", "книги", "книга"]}, {"sentence": "Два ___ (2 + nominative singular)", "answer": "столи", "options": ["столи", "стола", "столів"]}, {"sentence": "П'ять ___ (5 + genitive plural)", "answer": "столів", "options": ["столів", "столи", "стола"]}, {"sentence": "дві [___]", "answer": "вікна", "options": ["вікна", "вікно", "вікон"]}, {"sentence": "шість [___]", "answer": "вікон", "options": ["вікон", "вікна", "вікно"]}]`)} />
 
 ### Agreement Rules
 
-<Quiz
-  title="Agreement Rules"
-  isUkrainian={false}
-  questions={JSON.parse(`[{"question": "Which grammatical case is used for a noun that immediately follows the numeral \\\\\\"один\\\\\\" (one)?", "options": [{"text": "Nominative Singular (Називний однини)", "correct": true}, {"text": "Genitive Singular (Родовий однини)", "correct": false}, {"text": "Genitive Plural (Родовий множини)", "correct": false}, {"text": "Instrumental Singular (Орудний однини)", "correct": false}]}, {"question": "What is the correct grammatical form of the noun when it follows the numerals 2, 3, or 4?", "options": [{"text": "Nominative Singular (Називний однини)", "correct": false}, {"text": "Genitive Singular (Родовий однини)", "correct": true}, {"text": "Genitive Plural (Родовий множини)", "correct": false}, {"text": "Nominative Plural (Називний множини)", "correct": false}]}, {"question": "Which grammatical case must follow the numerals from 5 through 20 in a standard Ukrainian sentence?", "options": [{"text": "Nominative Singular (Називний однини)", "correct": false}, {"text": "Genitive Singular (Родовий однини)", "correct": false}, {"text": "Genitive Plural (Родовий множини)", "correct": true}, {"text": "Accusative Plural (Знахідний множини)", "correct": false}]}, {"question": "In which of the following situations should you use the specific feminine form of the number \\\\\\"two\\\\\\" (дві)?", "options": [{"text": "When counting feminine nouns like \\\\\\"книга\\\\\\" or \\\\\\"студентка\\\\\\"", "correct": true}, {"text": "When counting masculine nouns like \\\\\\"студент\\\\\\" or \\\\\\"стіл\\\\\\"", "correct": false}, {"text": "When counting neuter nouns like \\\\\\"вікно\\\\\\" or \\\\\\"яблуко\\\\\\"", "correct": false}, {"text": "In all counting situations regardless of the noun's gender", "correct": false}]}, {"question": "Which Zone rules apply to the compound number \\\\\\"двадцять один\\\\\\" (21) when determining noun agreement?", "options": [{"text": "Zone 1 (Agreement based on the last digit 1)", "correct": true}, {"text": "Zone 2 (Agreement based on the total value)", "correct": false}, {"text": "Zone 3 (Agreement based on the first word)", "correct": false}, {"text": "Special exceptions for all compound numbers", "correct": false}]}, {"question": "Why does the number \\\\\\"п'ятнадцять\\\\\\" (15) always require the Genitive Plural form of the following noun?", "options": [{"text": "Because it is a prime number in the Ukrainian system", "correct": false}, {"text": "Because all numbers ending in 5 require this form", "correct": false}, {"text": "Because all numbers from 11 to 19 follow Zone 3 rules", "correct": true}, {"text": "Because it is a compound historical exception", "correct": false}]}, {"question": "How would you correctly classify the phrase \\\\\\"чотири книги\\\\\\" within the Ukrainian grammatical zone system?", "options": [{"text": "Zone 1: Nominative Singular", "correct": false}, {"text": "Zone 2: Genitive Singular", "correct": true}, {"text": "Zone 3: Genitive Plural", "correct": false}, {"text": "Zone 4: Dative Singular", "correct": false}]}, {"question": "Which of the following lists correctly identifies the genders that use the numeral form \\\\\\"два\\\\\\" (two)?", "options": [{"text": "Masculine and Neuter genders only", "correct": true}, {"text": "Feminine and Neuter genders only", "correct": false}, {"text": "Feminine nouns exclusively", "correct": false}, {"text": "All three genders use the same form", "correct": false}]}]`)}
-/>
+<Quiz questions={JSON.parse(`[{"question": "Which grammatical case is used for a noun that immediately follows the numeral &quot;один&quot; (one)?", "options": [{"text": "Nominative Singular (Називний однини)", "correct": true}, {"text": "Genitive Singular (Родовий однини)", "correct": false}, {"text": "Genitive Plural (Родовий множини)", "correct": false}, {"text": "Instrumental Singular (Орудний однини)", "correct": false}]}, {"question": "What is the correct grammatical form of the noun when it follows the numerals 2, 3, or 4?", "options": [{"text": "Nominative Singular (Називний однини)", "correct": false}, {"text": "Genitive Singular (Родовий однини)", "correct": true}, {"text": "Genitive Plural (Родовий множини)", "correct": false}, {"text": "Nominative Plural (Називний множини)", "correct": false}]}, {"question": "Which grammatical case must follow the numerals from 5 through 20 in a standard Ukrainian sentence?", "options": [{"text": "Nominative Singular (Називний однини)", "correct": false}, {"text": "Genitive Singular (Родовий однини)", "correct": false}, {"text": "Genitive Plural (Родовий множини)", "correct": true}, {"text": "Accusative Plural (Знахідний множини)", "correct": false}]}, {"question": "In which of the following situations should you use the specific feminine form of the number &quot;two&quot; (дві)?", "options": [{"text": "When counting feminine nouns like &quot;книга&quot; or &quot;студентка&quot;", "correct": true}, {"text": "When counting masculine nouns like &quot;студент&quot; or &quot;стіл&quot;", "correct": false}, {"text": "When counting neuter nouns like &quot;вікно&quot; or &quot;яблуко&quot;", "correct": false}, {"text": "In all counting situations regardless of the noun's gender", "correct": false}]}, {"question": "Which Zone rules apply to the compound number &quot;двадцять один&quot; (21) when determining noun agreement?", "options": [{"text": "Zone 1 (Agreement based on the last digit 1)", "correct": true}, {"text": "Zone 2 (Agreement based on the total value)", "correct": false}, {"text": "Zone 3 (Agreement based on the first word)", "correct": false}, {"text": "Special exceptions for all compound numbers", "correct": false}]}, {"question": "Why does the number &quot;п'ятнадцять&quot; (15) always require the Genitive Plural form of the following noun?", "options": [{"text": "Because it is a prime number in the Ukrainian system", "correct": false}, {"text": "Because all numbers ending in 5 require this form", "correct": false}, {"text": "Because all numbers from 11 to 19 follow Zone 3 rules", "correct": true}, {"text": "Because it is a compound historical exception", "correct": false}]}, {"question": "How would you correctly classify the phrase &quot;чотири книги&quot; within the Ukrainian grammatical zone system?", "options": [{"text": "Zone 1: Nominative Singular", "correct": false}, {"text": "Zone 2: Genitive Singular", "correct": true}, {"text": "Zone 3: Genitive Plural", "correct": false}, {"text": "Zone 4: Dative Singular", "correct": false}]}, {"question": "Which of the following lists correctly identifies the genders that use the numeral form &quot;два&quot; (two)?", "options": [{"text": "Masculine and Neuter genders only", "correct": true}, {"text": "Feminine and Neuter genders only", "correct": false}, {"text": "Feminine nouns exclusively", "correct": false}, {"text": "All three genders use the same form", "correct": false}]}]`)} />
 
 ### Shopping at the Market
 
-<Cloze
-  title="Shopping at the Market"
-  isUkrainian={false}
-  passage={`— Дайте, будь ласка, один [___:1] яблук.
-— Ось, візьміть. Що ще бажаєте купити?
-— Будь ласка, два [___:2] картоплі і три [___:3] цибулі.
-— Добре. А помідори будете брати сьогодні?
-— Так, дайте п'ять [___:4] і шість [___:5].
-— А фрукти? У нас є чотири [___:6] і сім [___:7].
-— Одна [___:8] і дві [___:9], будь ласка.
-— Маєте десять [___:10] гривень решти від ста?
-— Ні, у мене тільки двадцять [___:11] гривень і два [___:12] монети.`}
-  blanks={JSON.parse(`[{"index": 0, "answer": "кілограм", "options": ["кілограм", "кілограм → кілограм", "кілограми"]}, {"index": 1, "answer": "кілограми", "options": ["кілограми", "кілограм → кілограми", "кілограм"]}, {"index": 2, "answer": "кілограми", "options": ["кілограми", "кілограм → кілограми"]}, {"index": 3, "answer": "помідорів", "options": ["помідорів", "помідор → помідорів", "помідори"]}, {"index": 4, "answer": "огірків", "options": ["огірків", "огірок → огірків", "огірки"]}, {"index": 5, "answer": "груші", "options": ["груші", "груша → груші", "груша"]}, {"index": 6, "answer": "яблук", "options": ["яблук", "яблуко → яблук", "яблука"]}, {"index": 7, "answer": "диня", "options": ["диня", "диня → диня", "дині"]}, {"index": 8, "answer": "груші", "options": ["груші", "груша → груші", "груша"]}, {"index": 9, "answer": "гривень", "options": ["гривень", "гривня → гривень", "гривні"]}, {"index": 10, "answer": "одна", "options": ["одна", "одна гривня → одна", "одну"]}, {"index": 11, "answer": "золоті", "options": ["золоті", "золота монета → золоті", "золотих"]}]`)}
-/>
+<Cloze passage={"— Дайте, будь ласка, один {кілограм|кілограм → кілограм|кілограми} яблук.\n— Ось, візьміть. Що ще бажаєте купити?\n— Будь ласка, два {кілограми|кілограм → кілограми|кілограм} картоплі і три {кілограми|кілограм → кілограми} цибулі.\n— Добре. А помідори будете брати сьогодні?\n— Так, дайте п'ять {помідорів|помідор → помідорів|помідори} і шість {огірків|огірок → огірків|огірки}.\n— А фрукти? У нас є чотири {груші|груша → груші|груша} і сім {яблук|яблуко → яблук|яблука}.\n— Одна {диня|диня → диня|дині} і дві {груші|груша → груші|груша}, будь ласка.\n— Маєте десять {гривень|гривня → гривень|гривні} гривень решти від ста?\n— Ні, у мене тільки двадцять {одна|одна гривня → одна|одну} гривень і два {золоті|золота монета → золоті|золотих} монети."} blanks={JSON.parse(`[]`)} />
 
 ### Counting Sentences
 
-<Unjumble
-  title="Counting Sentences"
-  isUkrainian={false}
-  items={JSON.parse(`[{"jumbled": "сьогодні / я / маю / тільки / одну / дуже / цікаву / нову / книгу", "answer": "Сьогодні я маю тільки одну дуже цікаву нову книгу"}, {"jumbled": "у / нашому / великому / класі / зараз / є / два / нові / іноземні / студенти", "answer": "У нашому великому класі зараз є два нові іноземні студенти"}, {"jumbled": "він / вже / прочитав / п'ять / великих / та / дуже / цікавих / детективних / книг", "answer": "Він вже прочитав п'ять великих та дуже цікавих детективних книг"}, {"jumbled": "у / цій / маленькій / затишній / кімнаті / є / три / старі / дерев'яні / вікна", "answer": "У цій маленькій затишній кімнаті є три старі дерев'яні вікна"}, {"jumbled": "цей / новий / чорний / телефон / зараз / коштує / рівно / сто / двадцять / гривень", "answer": "Цей новий чорний телефон зараз коштує сто двадцять гривень"}, {"jumbled": "вона / купила / на / ринку / чотири / великі / та / дуже / солодкі / яблука", "answer": "Вона купила на ринку чотири великі та дуже солодкі яблука"}, {"jumbled": "мені / сьогодні / виповнилося / рівно / двадцять / один / довгий / та / щасливий / рік", "answer": "Мені сьогодні виповнилося рівно двадцять один довгий рік"}, {"jumbled": "у / нашій / новій / групі / зараз / є / рівно / двадцять / три / активні / студенти", "answer": "У нашій новій групі зараз є двадцять три активні студенти"}, {"jumbled": "ми / маємо / купити / шість / великих / помідорів / та / сім / зелених / огірків", "answer": "Ми маємо купити шість великих помідорів та сім зелених огірків"}, {"jumbled": "на / полиці / стоїть / десять / старих / книг / та / двадцять / один / новий / журнал", "answer": "На полиці стоїть десять старих книг та двадцять один новий журнал"}, {"jumbled": "завтра / Петро / хоче / купити / чотири / нові / комікси / та / п'ять / романів", "answer": "Завтра Петро хоче купити чотири нові комікси та п'ять романів"}, {"jumbled": "у / цьому / великому / будинку / є / рівно / тридцять / два / широкі / вікна", "answer": "У цьому великому будинку є тридцять два широкі вікна"}]`)}
-/>
+<Unjumble items={JSON.parse(`[{"jumbled": "сьогодні / я / маю / тільки / одну / дуже / цікаву / нову / книгу", "answer": "Сьогодні я маю тільки одну дуже цікаву нову книгу"}, {"jumbled": "у / нашому / великому / класі / зараз / є / два / нові / іноземні / студенти", "answer": "У нашому великому класі зараз є два нові іноземні студенти"}, {"jumbled": "він / вже / прочитав / п'ять / великих / та / дуже / цікавих / детективних / книг", "answer": "Він вже прочитав п'ять великих та дуже цікавих детективних книг"}, {"jumbled": "у / цій / маленькій / затишній / кімнаті / є / три / старі / дерев'яні / вікна", "answer": "У цій маленькій затишній кімнаті є три старі дерев'яні вікна"}, {"jumbled": "цей / новий / чорний / телефон / зараз / коштує / рівно / сто / двадцять / гривень", "answer": "Цей новий чорний телефон зараз коштує сто двадцять гривень"}, {"jumbled": "вона / купила / на / ринку / чотири / великі / та / дуже / солодкі / яблука", "answer": "Вона купила на ринку чотири великі та дуже солодкі яблука"}, {"jumbled": "мені / сьогодні / виповнилося / рівно / двадцять / один / довгий / та / щасливий / рік", "answer": "Мені сьогодні виповнилося рівно двадцять один довгий рік"}, {"jumbled": "у / нашій / новій / групі / зараз / є / рівно / двадцять / три / активні / студенти", "answer": "У нашій новій групі зараз є двадцять три активні студенти"}, {"jumbled": "ми / маємо / купити / шість / великих / помідорів / та / сім / зелених / огірків", "answer": "Ми маємо купити шість великих помідорів та сім зелених огірків"}, {"jumbled": "на / полиці / стоїть / десять / старих / книг / та / двадцять / один / новий / журнал", "answer": "На полиці стоїть десять старих книг та двадцять один новий журнал"}, {"jumbled": "завтра / Петро / хоче / купити / чотири / нові / комікси / та / п'ять / романів", "answer": "Завтра Петро хоче купити чотири нові комікси та п'ять романів"}, {"jumbled": "у / цьому / великому / будинку / є / рівно / тридцять / два / широкі / вікна", "answer": "У цьому великому будинку є тридцять два широкі вікна"}]`)} />
 
 ### Wrong Agreement
 
-<ErrorCorrection title="Wrong Agreement" isUkrainian={false}>
-  <ErrorCorrectionItem
-    sentence={`Я маю **п'ять книги**.`}
-    errorWord={`книги`}
-    correctForm={`книг`}
-    options={[`книг`, `книги`]}
-    explanation={`After 5+ → Genitive Plural (книг).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`У класі **два студент**.`}
-    errorWord={`студент`}
-    correctForm={`студенти`}
-    options={[`студенти`, `студент`]}
-    explanation={`After 2-4 → Genitive Singular (студенти).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Вона купила **дві яблука**.`}
-    errorWord={`дві`}
-    correctForm={`два`}
-    options={[`два`, `дві`]}
-    explanation={`\"Яблуко\" is neuter → два (not дві).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Мені **двадцять один років**.`}
-    errorWord={`років`}
-    correctForm={`рік`}
-    options={[`рік`, `років`]}
-    explanation={`Ends in 1 → Zone 1 → Nominative Singular (рік).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`У мене **три книга**.`}
-    errorWord={`книга`}
-    correctForm={`книги`}
-    options={[`книги`, `книга`]}
-    explanation={`After 2-4 → Genitive Singular (книги).`}
-  />
-  <ErrorCorrectionItem
-    sentence={`Тут є **одинадцять студенти**.`}
-    errorWord={`студенти`}
-    correctForm={`студентів`}
-    options={[`студентів`, `студенти`]}
-    explanation={`11-19 always Zone 3 → Genitive Plural.`}
-  />
+<ErrorCorrection>
+  <ErrorCorrectionItem sentence="Я маю **п'ять книги**." errorWord="книги" correctForm="книг" options={JSON.parse(`["книг", "книги"]`)} explanation="After 5+ → Genitive Plural (книг)." />
+  <ErrorCorrectionItem sentence="У класі **два студент**." errorWord="студент" correctForm="студенти" options={JSON.parse(`["студенти", "студент"]`)} explanation="After 2-4 → Genitive Singular (студенти)." />
+  <ErrorCorrectionItem sentence="Вона купила **дві яблука**." errorWord="дві" correctForm="два" options={JSON.parse(`["два", "дві"]`)} explanation="&quot;Яблуко&quot; is neuter → два (not дві)." />
+  <ErrorCorrectionItem sentence="Мені **двадцять один років**." errorWord="років" correctForm="рік" options={JSON.parse(`["рік", "років"]`)} explanation="Ends in 1 → Zone 1 → Nominative Singular (рік)." />
+  <ErrorCorrectionItem sentence="У мене **три книга**." errorWord="книга" correctForm="книги" options={JSON.parse(`["книги", "книга"]`)} explanation="After 2-4 → Genitive Singular (книги)." />
+  <ErrorCorrectionItem sentence="Тут є **одинадцять студенти**." errorWord="студенти" correctForm="студентів" options={JSON.parse(`["студентів", "студенти"]`)} explanation="11-19 always Zone 3 → Genitive Plural." />
 </ErrorCorrection>
 
 ### Zone Classification
 
-<GroupSort
-  title="Zone Classification"
-  isUkrainian={false}
-  groups={JSON.parse(`{"Zone 1 (Nominative Singular)": ["двадцять один", "одна диня", "п'ятдесят один", "сто один"], "Zone 2 (Genitive Singular)": ["три книги", "два студенти", "чотири вікна", "двадцять дві", "тридцять чотири"], "Zone 3 (Genitive Plural)": ["п'ять книг", "одинадцять років", "п'ятнадцять", "двадцять", "сто гривень"]}`)}
-/>
+<GroupSort groups={JSON.parse(`{"Zone 1 (Nominative Singular)": ["двадцять один", "одна диня", "п'ятдесят один", "сто один"], "Zone 2 (Genitive Singular)": ["три книги", "два студенти", "чотири вікна", "двадцять дві", "тридцять чотири"], "Zone 3 (Genitive Plural)": ["п'ять книг", "одинадцять років", "п'ятнадцять", "двадцять", "сто гривень"]}`)} />
 
 ### Noun Forms
 
-<MatchUp
-  title="Noun Forms"
-  isUkrainian={false}
-  pairs={JSON.parse(`[{"left": "- один студент", "right": "Nominative Singular"}, {"left": "- два студенти", "right": "Genitive Singular"}, {"left": "- п'ять студентів", "right": "Genitive Plural"}, {"left": "- одна книга", "right": "Nominative Singular"}, {"left": "- три книги", "right": "Genitive Singular"}, {"left": "- десять книг", "right": "Genitive Plural"}, {"left": "- двадцять один рік", "right": "Nominative Singular"}, {"left": "- двадцять два роки", "right": "Genitive Singular"}]`)}
-/>
+<MatchUp pairs={JSON.parse(`[{"left": "один студент", "right": "Nominative Singular"}, {"left": "два студенти", "right": "Genitive Singular"}, {"left": "п'ять студентів", "right": "Genitive Plural"}, {"left": "одна книга", "right": "Nominative Singular"}, {"left": "три книги", "right": "Genitive Singular"}, {"left": "десять книг", "right": "Genitive Plural"}, {"left": "двадцять один рік", "right": "Nominative Singular"}, {"left": "двадцять два роки", "right": "Genitive Singular"}, {"left": "три студенти", "right": "3 students"}, {"left": "сім студентів", "right": "7 students"}]`)} />
 
 ### The Modern Bookstore
 
-<Cloze
-  title="The Modern Bookstore"
-  isUkrainian={false}
-  passage={`Петро зайшов у книгарню. Сьогодні він хоче купити багато подарунків. Для мами він вибрав одну [___:1] про сад. Для батька він знайшов дві цікаві [___:2] про історію Києва. Його сестра любить романи, тому він купив три [___:3]. Молодший брат просив чотири нові [___:4]. А собі Петро вибрав п'ять [___:5]. Коли він підійшов до каси, продавець сказав: \"Ви берете багато речей! У вас одинадцять [___:6] і шість [___:7]. Всього у вас є сімнадцять [___:8]. Це коштує дев'ятсот [___:9]. Ви маєте десять [___:10] гривень знижки?\" Петро відповів: \"Ні, але я маю двадцять [___:11] одну гривню в гаманці і одну сто [___:12] гривень\".`}
-  blanks={JSON.parse(`[{"index": 0, "answer": "книгу", "options": ["книгу", "книга → книгу", "книги"]}, {"index": 1, "answer": "книги", "options": ["книги", "книга → книги", "книг"]}, {"index": 2, "answer": "романи", "options": ["романи", "роман → романи", "романів"]}, {"index": 3, "answer": "комікси", "options": ["комікси", "комікс → комікси", "коміксів"]}, {"index": 4, "answer": "детективів", "options": ["детективів", "детектив → детективів", "детективи"]}, {"index": 5, "answer": "журналів", "options": ["журналів", "журнал → журналів", "журнали"]}, {"index": 6, "answer": "газет", "options": ["газет", "газета → газет", "газети"]}, {"index": 7, "answer": "подарунків", "options": ["подарунків", "подарунок → подарунків", "подарунки"]}, {"index": 8, "answer": "гривень", "options": ["гривень", "гривня → гривень", "гривні"]}, {"index": 9, "answer": "відсотків", "options": ["відсотків", "відсоток → відсотків", "відсотки"]}, {"index": 10, "answer": "одна", "options": ["одна", "одна гривня → одна", "одну"]}, {"index": 11, "answer": "купюру", "options": ["купюру", "купюра → купюру", "купюри"]}]`)}
-/>
+<Cloze passage={"Петро зайшов у книгарню. Сьогодні він хоче купити багато подарунків. Для мами він вибрав одну {книгу|книга → книгу|книги} про сад. Для батька він знайшов дві цікаві {книги|книга → книги|книг} про історію Києва. Його сестра любить романи, тому він купив три {романи|роман → романи|романів}. Молодший брат просив чотири нові {комікси|комікс → комікси|коміксів}. А собі Петро вибрав п'ять {детективів|детектив → детективів|детективи}. Коли він підійшов до каси, продавець сказав: \"Ви берете багато речей! У вас одинадцять {журналів|журнал → журналів|журнали} і шість {газет|газета → газет|газети}. Всього у вас є сімнадцять {подарунків|подарунок → подарунків|подарунки}. Це коштує дев'ятсот {гривень|гривня → гривень|гривні}. Ви маєте десять {відсотків|відсоток → відсотків|відсотки} гривень знижки?\" Петро відповів: \"Ні, але я маю двадцять {одна|одна гривня → одна|одну} одну гривню в гаманці і одну сто {купюру|купюра → купюру|купюри} гривень\"."} blanks={JSON.parse(`[]`)} />
 
 ### Age Expressions
 
-<Cloze
-  title="Age Expressions"
-  isUkrainian={false}
-  passage={`Мені зараз двадцять один [___:1]. Моєму братові виповнилося двадцять два [___:2]. Нашій сестрі вже двадцять п'ять [___:3]. Моїй мамі скоро буде п'ятдесят один [___:4]. А татові вже п'ятдесят чотири [___:5]. Ми знаємо одну дитину, якій тільки один [___:6]. Її друзям по три [___:7]. У школі вчаться діти, яким по десять [___:8]. Директору школи шістдесят один [___:9]. Його колезі шістдесят три [___:10]. Вони працюють разом уже тридцять [___:11] років. А університет вони закінчили сорок один [___:12] тому.
----`}
-  blanks={JSON.parse(`[{"index": 0, "answer": "рік", "options": ["рік", "рік → рік", "роки"]}, {"index": 1, "answer": "роки", "options": ["роки", "рік → роки", "років"]}, {"index": 2, "answer": "років", "options": ["років", "рік → років", "роки"]}, {"index": 3, "answer": "рік", "options": ["рік", "рік → рік", "років"]}, {"index": 4, "answer": "роки", "options": ["роки", "рік → роки", "років"]}, {"index": 5, "answer": "рік", "options": ["рік", "рік → рік", "років"]}, {"index": 6, "answer": "роки", "options": ["роки", "рік → роки", "років"]}, {"index": 7, "answer": "років", "options": ["років", "рік → років", "роки"]}, {"index": 8, "answer": "рік", "options": ["рік", "рік → рік", "роки"]}, {"index": 9, "answer": "роки", "options": ["роки", "рік → роки", "років"]}, {"index": 10, "answer": "тридцять", "options": ["тридцять", "число → тридцять", "тридцяти"]}, {"index": 11, "answer": "рік", "options": ["рік", "рік → рік", "років"]}]`)}
-/>
+<Cloze passage={"Мені зараз двадцять один {рік|рік → рік|роки}. Моєму братові виповнилося двадцять два {роки|рік → роки|років}. Нашій сестрі вже двадцять п'ять {років|рік → років|роки}. Моїй мамі скоро буде п'ятдесят один {рік|рік → рік|років}. А татові вже п'ятдесят чотири {роки|рік → роки|років}. Ми знаємо одну дитину, якій тільки один {рік|рік → рік|років}. Її друзям по три {роки|рік → роки|років}. У школі вчаться діти, яким по десять {років|рік → років|роки}. Директору школи шістдесят один {рік|рік → рік|роки}. Його колезі шістдесят три {роки|рік → роки|років}. Вони працюють разом уже тридцять {тридцять|число → тридцять|тридцяти} років. А університет вони закінчили сорок один {рік|рік → рік|років} тому.\n---"} blanks={JSON.parse(`[]`)} />
 
 ## 📚 Vocabulary
 
@@ -501,21 +419,3 @@ Today you learned numeral-noun agreement:
 | цінність | ˈt͡sʲinʲːisʲtʲ | value | noun | ж |  |
 | числівник | t͡ʃɪsˈlʲiʋnɪk | numeral | noun | ч |  |
 | якийсь | jɐˈkɪjsʲ | some; a certain | other |  |  |
-
-> [!resources] 🔗 External Resources
->
-> **🎧 Podcasts:**
-> - [ULP 2-42My Room + Plural nouns in Ukrainian](https://www.ukrainianlessons.com/lesson/42/) — Level-aligned topic match: nouns
-> - [ULP 2-58 Inviting to a party + Accusative case of pronouns](https://www.ukrainianlessons.com/lesson/58/) — Level-aligned topic match: nouns
-> - [ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns](https://www.ukrainianlessons.com/lesson/62/) — Level-aligned topic match: nouns
-> - [ULP 1-02 Formal Greetings and Saying Goodbye in Ukrainian + Pronouns](https://www.ukrainianlessons.com/lesson/2/) — Listening review (A1): nouns
-> - [ULP 1-07 More about your family in Ukrainian + Possessive Pronouns](https://www.ukrainianlessons.com/lesson/7/) — Listening review (A1): nouns
->
-> **📺 YouTube:**
-> - [How to use numbers 1,2,3,4,5, etc. with the nouns...](https://www.youtube.com/watch?v=SJPr-ilnIV0) — Speak Ukrainian
->
-> **📖 Articles:**
-> - [Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/) — Ukrainian Lessons
->
-> **🌐 Websites:**
-> - [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

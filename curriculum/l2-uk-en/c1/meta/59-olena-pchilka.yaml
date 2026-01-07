@@ -1,17 +1,24 @@
 module: c1-59
-title: Олена Пчілка
-subtitle: Olena Pchilka
-version: '2.0'
-phase: C1.3 Biographies
-focus: biography
-pedagogy: narrative
+title: "Олена Пчілка: Мати Українського Націоналізму"
+phase: "C1.3 Biographies"
 duration: 120
-vocabulary_count: 24
-tags:
-- c1
-- biography
-- history
-- culture
+transliteration: none
+pedagogy: "CBI"
+register: "публіцистичний"
+focus: biography
 objectives:
-- Master C1 concepts in Олена Пчілка
+  - "Understand Olena Pchilka's multifaceted contribution as a writer, publisher, and activist"
+  - "Analyze her role in the feminist movement and education"
+  - "Explore her influence on her daughter, Lesia Ukrainka, and Ukrainian culture"
+  - "Examine her uncompromising stance on the Ukrainian language and identity"
+tags:
+  - biography
+  - era: imperial
+  - domain: literature
+grammar:
+  - "Literary criticism terminology"
+  - "Gender and social discourse"
+vocabulary_focus:
+  - "Publishing and educational vocabulary"
+  - "Feminist and nationalist terminology"
 slug: 59-olena-pchilka

@@ -25,22 +25,20 @@
     right: Health
   - left: знижка
     right: Shopping
+  id: vocabulary-categories
 - type: cloze
   title: Vocabulary Test
-  passage: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00. Він працює {лікарем|лікар|лікаря}.
-    У мене болить {голова|голову|голові}. (head)
+  passage: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00. Він працює {лікарем|лікар|лікаря}. У мене болить {голова|голову|голові}. (head)
 
 
-    Скільки це {коштує|коштувати|коштував}? (costs) Можна заплатити {карткою|картку|картка}?
-    Я хочу купити {квиток|квитка|квитку}. (ticket)
+    Скільки це {коштує|коштувати|коштував}? (costs) Можна заплатити {карткою|картку|картка}? Я хочу купити {квиток|квитка|квитку}. (ticket)
 
 
-    Вона {вчиться|вчить|вче} в університеті. (studies) Я {вивчаю|вчуся|вивчити} українську
-    мову. (learn) Де тут {аптека|аптеку|аптеці}? (pharmacy)
+    Вона {вчиться|вчить|вче} в університеті. (studies) Я {вивчаю|вчуся|вивчити} українську мову. (learn) Де тут {аптека|аптеку|аптеці}? (pharmacy)
 
 
-    Яка у вас {температура|температуру|температурі}? Він живе у великому {місті|місто|місту}.
-    (city-LOC) Ввечері я йду в {спортзал|спортзалі|спортзалу}. (gym-ACC)'
+    Яка у вас {температура|температуру|температурі}? Він живе у великому {місті|місто|місту}. (city-LOC) Ввечері я йду в {спортзал|спортзалі|спортзалу}. (gym-ACC)'
+  id: vocabulary-test
 - type: quiz
   title: A2 Vocabulary Quiz
   items:
@@ -64,8 +62,7 @@
       correct: false
     - text: Genitive case
       correct: false
-  - question: In the phrase "У мене болить голова", what is the grammatical role of
-      "голова"?
+  - question: In the phrase "У мене болить голова", what is the grammatical role of "голова"?
     options:
     - text: Nominative (subject)
       correct: true
@@ -85,8 +82,7 @@
       correct: false
     - text: Locative
       correct: false
-  - question: What is the primary meaning of the verb "вчитися" in an educational
-      context?
+  - question: What is the primary meaning of the verb "вчитися" in an educational context?
     options:
     - text: To study
       correct: true
@@ -166,6 +162,7 @@
       correct: false
     - text: Bathroom
       correct: false
+  id: a2-vocabulary-quiz
 - type: group-sort
   title: Vocabulary Domains
   groups:
@@ -193,6 +190,7 @@
     - квиток
     - готель
     - знижка
+  id: vocabulary-domains
 - type: true-false
   title: Vocabulary Rules
   items:
@@ -232,6 +230,7 @@
   - statement: '"Вітальня" is the kitchen.'
     correct: false
     explanation: No! Вітальня = living room, кухня = kitchen.
+  id: vocabulary-rules
 - type: cloze
   title: A Day in Life
   passage: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00.
@@ -257,6 +256,7 @@
     Я люблю {вивчати|забувати|втрачати} нові місця.
 
     Це буде чудова {поїздка|робота|хвороба}!'
+  id: a-day-in-life
 - type: unjumble
   title: Daily Routines
   items:
@@ -316,9 +316,11 @@
     - найближча
     - аптека
     answer: Вибачте скажіть де тут є найближча аптека
+  id: daily-routines
 - type: mark-the-words
   title: Find the Vocabulary
-  text: 'Click on the key vocabulary words.
+  id: find-the-vocabulary
+  passage: 'Click on the key vocabulary words.
 
     Вранці я *прокидаюся* о 7:00 і йду до *кухні*, щоб *снідати*.
 
@@ -329,7 +331,7 @@
     ---
 
     У мене болить *голова* і *горло*. Де тут *аптека*?'
-  answers:
+  correct_words:
   - прокидаюся
   - кухні
   - снідати
@@ -355,6 +357,7 @@
     ukrainian: Вона вчиться в університеті.
   - source: Can I pay by card?
     ukrainian: Можна заплатити карткою?
+  id: english-to-ukrainian
 - type: translate
   title: Vocabulary Review Translation
   items:
@@ -406,3 +409,4 @@
       correct: false
     - text: Посуд
       correct: false
+  id: vocabulary-review-translation

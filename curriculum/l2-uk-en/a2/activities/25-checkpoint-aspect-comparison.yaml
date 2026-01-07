@@ -25,22 +25,20 @@
     right: почати
   - left: закінчувати
     right: закінчити
+  id: aspect-pairs-review
 - type: cloze
   title: Comprehensive Review
-  passage: 'Я {прочитав|читав|читаю|прочитаю} книгу вчора. Вона {старіша|стара|старша|найстаріша}
-    за мене. (older) Це {найкраща|краща|добра|найдобріша} книга. (best)
+  passage: 'Я {прочитав|читав|читаю|прочитаю} книгу вчора. Вона {старіша|стара|старша|найстаріша} за мене. (older) Це {найкраща|краща|добра|найдобріша} книга. (best)
 
 
-    {Якби|Якщо|Коли|Тому} я мав гроші... (If — unreal) Я {б|буду|був|бути} хотів поїхати.
-    (would) Він {писав|написав|пише|напише} три години. (was writing — duration)
+    {Якби|Якщо|Коли|Тому} я мав гроші... (If — unreal) Я {б|буду|був|бути} хотів поїхати. (would) Він {писав|написав|пише|напише} три години. (was writing — duration)
 
 
-    Я {візьму|беру|брав|взяв} цей телефон. Мені {більше|більший|великий|багато} подобається
-    чай. (more) {Краще|Кращий|Добре|Добрий} читати, ніж дивитися. (better)
+    Я {візьму|беру|брав|взяв} цей телефон. Мені {більше|більший|великий|багато} подобається чай. (more) {Краще|Кращий|Добре|Добрий} читати, ніж дивитися. (better)
 
 
-    Чи є {знижка|ціна|якість|покупка}? (discount) Він {сказав|говорив|говорить|скаже}
-    "так." (said — completed) Що ви {порекомендуєте|рекомендую|рекомендував|порекомендував}?'
+    Чи є {знижка|ціна|якість|покупка}? (discount) Він {сказав|говорив|говорить|скаже} "так." (said — completed) Що ви {порекомендуєте|рекомендую|рекомендував|порекомендував}?'
+  id: comprehensive-review
 - type: quiz
   title: Phase A2.2 Review
   items:
@@ -64,8 +62,7 @@
       correct: false
     - text: Я хочу читати цю нову книгу зараз
       correct: false
-  - question: Яким буде правильний ступінь порівняння для прикметника "добрий" у значенні
-      "кращий"?
+  - question: Яким буде правильний ступінь порівняння для прикметника "добрий" у значенні "кращий"?
     options:
     - text: Цей варіант значно кращий за попередній
       correct: true
@@ -75,8 +72,7 @@
       correct: false
     - text: Це просто дуже добра книга для нас
       correct: false
-  - question: Яке слово є правильним найвищим ступенем порівняння для прикметника
-      "великий"?
+  - question: Яке слово є правильним найвищим ступенем порівняння для прикметника "великий"?
     options:
     - text: Це найбільший будинок у нашому місті
       correct: true
@@ -166,6 +162,7 @@
       correct: false
     - text: Для вираження вдячності іншій людині
       correct: false
+  id: phase-a2.2-review
 - type: true-false
   title: Grammar Rules
   items:
@@ -192,8 +189,7 @@
     explanation: Correct! "Старший за мене."
   - statement: All perfective verbs use prefixes.
     correct: false
-    explanation: No! Some use suffix changes (купувати→купити) or different roots
-      (брати→взяти).
+    explanation: No! Some use suffix changes (купувати→купити) or different roots (брати→взяти).
   - statement: '"Ніж" takes nominative in comparisons.'
     correct: true
     explanation: Correct! "Старший, ніж я."
@@ -206,6 +202,7 @@
   - statement: 'Shopping uses all three skills: aspect, comparison, conditional.'
     correct: true
     explanation: Correct! "Який найкращий? Я б хотів. Я візьму."
+  id: grammar-rules
 - type: group-sort
   title: Aspect Classification
   groups:
@@ -225,6 +222,7 @@
     - сказати
     - купити
     - взяти
+  id: aspect-classification
 - type: unjumble
   title: Sentence Building
   items:
@@ -295,6 +293,7 @@
     - на
     - товари
     answer: Чи є сьогодні у вашому магазині велика знижка на товари
+  id: sentence-building
 - type: cloze
   title: Shopping Dialogue Mastery
   passage: 'Добрий день! Чим можу вам сьогодні {допомогти|допомогти → допомогти|допомогу}?
@@ -307,8 +306,7 @@
 
     На мою думку, Samsung. Ви вже {вирішили|вирішили → вирішили|вирішуєте} щодо кольору?
 
-    Так, я {візьму|візьму → візьму|беру} цей синій. Чи є сьогодні {знижка|знижка →
-    знижка|акція} на цей товар?
+    Так, я {візьму|візьму → візьму|беру} цей синій. Чи є сьогодні {знижка|знижка → знижка|акція} на цей товар?
 
     Знижка становить рівно {п''ять|п''ять → п''ять|п''ятьох} відсотків для вас.
 
@@ -317,12 +315,13 @@
     Чи {могли б|могли б → могли б|можете} ви мені також показати чохол?
 
     Так, {якби|якби → якби|якщо} я мав більше часу, я {би|би → би|б} показав усе.'
+  id: shopping-dialogue-mastery
 - type: mark-the-words
   title: Grammar Spotting
-  text: 'Click on aspect pairs/comparatives/conditionals.
+  id: grammar-spotting
+  passage: 'Click on aspect pairs/comparatives/conditionals.
 
-    Я *прочитав* книгу за три дні. Вона *краща*, ніж попередня. *Якби* я мав час,
-    я *б прочитав* ще одну.
+    Я *прочитав* книгу за три дні. Вона *краща*, ніж попередня. *Якби* я мав час, я *б прочитав* ще одну.
 
     ---
 
@@ -330,9 +329,8 @@
 
     ---
 
-    Минулого року я *їздив* до Львова. Місто *гарніше*, ніж я *думав*. *Якби* я жив
-    там, я *б був* щасливий.'
-  answers:
+    Минулого року я *їздив* до Львова. Місто *гарніше*, ніж я *думав*. *Якби* я жив там, я *б був* щасливий.'
+  correct_words:
   - прочитав
   - краща
   - Якби
@@ -357,8 +355,7 @@
     - прочитаю
     - читав
     - читаю
-    explanation: Past tense is required with "вчора" (yesterday). Use perfective past
-      "прочитав".
+    explanation: Past tense is required with "вчора" (yesterday). Use perfective past "прочитав".
   - sentence: Він добріший за мене.
     error: добріший
     answer: кращий
@@ -394,8 +391,7 @@
     - ніж
     - від
     - за
-    explanation: Superlative doesn't use "ніж". Say "Це найбільша книга" or use comparative
-      "більша, ніж та".
+    explanation: Superlative doesn't use "ніж". Say "Це найбільша книга" or use comparative "більша, ніж та".
   - sentence: Я буду читати книгу і прочитаю її за годину.
     error: буду читати
     answer: прочитаю
@@ -404,8 +400,7 @@
     - буду читати
     - читаю
     - читав
-    explanation: Completed future action uses simple perfective "прочитаю", not "буду
-      читати".
+    explanation: Completed future action uses simple perfective "прочитаю", not "буду читати".
   - sentence: Вона старша ніж я.
     error: я
     answer: мене
@@ -414,8 +409,7 @@
     - я
     - мені
     - мною
-    explanation: After "ніж" use Nominative (я), but after "за" use Accusative (мене).
-      Both are correct in different constructions.
+    explanation: After "ніж" use Nominative (я), but after "за" use Accusative (мене). Both are correct in different constructions.
   - sentence: Він великіший за брата.
     error: великіший
     answer: більший
@@ -460,8 +454,8 @@
     - купую
     - куплю
     - купував
-    explanation: Conditional mood requires "би/б" with past tense "купив би" or "б
-      купив".
+    explanation: Conditional mood requires "би/б" with past tense "купив би" or "б купив".
+  id: grammar-review
 - type: translate
   title: Aspect Translation
   items:
@@ -513,3 +507,4 @@
       correct: false
     - text: Я закінчую роботу.
       correct: false
+  id: aspect-translation

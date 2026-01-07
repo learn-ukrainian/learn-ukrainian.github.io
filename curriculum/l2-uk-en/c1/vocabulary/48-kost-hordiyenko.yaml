@@ -1,0 +1,126 @@
+module: 48-kost-hordiyenko
+level: C1
+version: '2.0'
+items:
+- lemma: кошовий отаман
+  ipa: /koʃoˈveɪ̯ oˈtɑmɐn/
+  translation: Koshovyi Otaman (supreme leader of the Sich)
+  pos: noun
+  gender: m
+- lemma: непокора
+  ipa: /nepoˈkɔrɐ/
+  translation: defiance, disobedience
+  pos: noun
+  gender: f
+- lemma: лицарство
+  ipa: /ˈleɪ̯t͡sɐrstvo/
+  translation: knighthood, chivalry
+  pos: noun
+  gender: n
+- lemma: вольність
+  ipa: /ˈvɔlʲnʲistʲ/
+  translation: freedom, liberty (Cossack privilege)
+  pos: noun
+  gender: f
+- lemma: альянс
+  ipa: /ɐlʲˈjɐns/
+  translation: alliance
+  pos: noun
+  gender: m
+- lemma: опозиція
+  ipa: /opoˈzet͡sʲijɐ/
+  translation: opposition
+  pos: noun
+  gender: f
+- lemma: деспотія
+  ipa: /desˈpɔtʲijɐ/
+  translation: despotism
+  pos: noun
+  gender: f
+- lemma: автономія
+  ipa: /ɐvtoˈnɔmʲijɐ/
+  translation: autonomy
+  pos: noun
+  gender: f
+- lemma: протекція
+  ipa: /proˈtɛkt͡sʲijɐ/
+  translation: protection, patronage
+  pos: noun
+  gender: f
+- lemma: ратифікація
+  ipa: /rɐtɪfʲiˈkɑt͡sʲijɐ/
+  translation: ratification
+  pos: noun
+  gender: f
+- lemma: мазепинець
+  ipa: /mɐˈzɛpenet͡sʲ/
+  translation: Mazepinist (follower of Mazepa)
+  pos: noun
+  gender: m
+- lemma: вигнання
+  ipa: /vezˈɦnɐnʲːɐ/
+  translation: exile, banishment
+  pos: noun
+  gender: n
+- lemma: коаліція
+  ipa: /koɐˈlʲit͡sʲijɐ/
+  translation: coalition
+  pos: noun
+  gender: f
+- lemma: суб'єктність
+  ipa: /subjekˈteɪ̯vʲnʲistʲ/
+  translation: agency, subjectivity
+  pos: noun
+  gender: f
+- lemma: ідеолог
+  ipa: /ideˈɔlɔɦ/
+  translation: ideologue
+  pos: noun
+  gender: m
+- lemma: спротив
+  ipa: /ˈsprɔteɪ̯v/
+  translation: resistance
+  pos: noun
+  gender: m
+- lemma: бастіон
+  ipa: /bɐsˈtʲijɔn/
+  translation: bastion
+  pos: noun
+  gender: m
+- lemma: канонізація
+  ipa: /kɐnonʲizˈɑt͡sʲijɐ/
+  translation: canonization
+  pos: noun
+  gender: f
+- lemma: легендарний
+  ipa: /leɦenˈdɑrneɪ̯/
+  translation: legendary
+  pos: adj
+- lemma: незламний
+  ipa: /nezˈlɑmneɪ̯/
+  translation: unbreakable, indomitable
+  pos: adj
+- lemma: пророчий
+  ipa: /proˈrɔt͡ʃeɪ̯/
+  translation: prophetic
+  pos: adj
+- lemma: дипломатія
+  ipa: /deploˈmɑtʲijɐ/
+  translation: diplomacy
+  pos: noun
+  gender: f
+- lemma: соратник
+  ipa: /soˈrɑtneɪ̯k/
+  translation: associate, comrade-in-arms
+  pos: noun
+  gender: m
+- lemma: легітимність
+  ipa: /leɦʲiˈtemʲnʲistʲ/
+  translation: legitimacy
+  pos: noun
+  gender: f
+- lemma: зрада
+  ipa: /ˈzrɑdɐ/
+  translation: betrayal, treason
+  pos: noun
+  gender: f

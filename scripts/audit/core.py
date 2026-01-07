@@ -60,6 +60,9 @@ from .checks.activity_validation import (
     check_unjumble_empty_jumbled,
     check_mdx_unjumble_rendering,
 )
+from .checks.yaml_schema_validation import (
+    check_activity_yaml_schema,
+)
 from .checks.vocabulary import (
     count_vocab_rows,
     extract_vocab_items,
@@ -235,9 +238,30 @@ def parse_sections(body: str) -> dict[str, str]:
     return section_map
 
 
+
+def check_typography(content: str) -> list[str]:
+    """Check for incorrect typography usage (ASCII quotes)."""
+    errors = []
+    lines = content.split('\n')
+    for i, line in enumerate(lines):
+        # Skip frontmatter/code/HTML
+        stripped = line.strip()
+        if stripped.startswith('---') or stripped.startswith('```') or '<' in line or '>' in line:
+            continue
+            
+        # Match ASCII quote followed or preceded by Cyrillic letter
+        # This regex catches: (Cyrillic)" or "(Cyrillic)
+        if re.search(r'[а-яА-ЯіІїЇєЄґҐ]"|"[а-яА-ЯіІїЇєЄґҐ]', line):
+            errors.append(f"Line {i+1}: Use Ukrainian angular quotes («...») instead of ASCII quotes (\").")
+    return errors
+
 def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[str]:
     """Run markdown lint checks."""
     lint_errors = []
+    
+    # Typography Check
+    lint_errors.extend(check_typography(content))
+    
     lines_raw = content.split('\n')
 
     in_activities = False
@@ -697,6 +721,16 @@ def audit_module(file_path: str) -> bool:
             print(f"  ❌ Error parsing YAML activities: {e}")
             
     use_yaml_activities = yaml_activities is not None
+
+    # Check YAML schema compliance (Issue #397: validate all activity types)
+    yaml_schema_violations = []
+    if yaml_file.exists():
+        yaml_schema_violations = check_activity_yaml_schema(file_path, level_code, module_num)
+        if yaml_schema_violations:
+            print(f"  ❌ YAML schema violations: {len(yaml_schema_violations)}")
+            for v in yaml_schema_violations:
+                severity_icon = "❌" if v['severity'] == 'error' else "⚠️"
+                print(f"     {severity_icon} [{v['type']}] {v['message']}")
 
     # Check mark-the-words format (Issue #361: prevent (correct)/(wrong) annotations)
     mark_words_violations = []
@@ -1171,6 +1205,16 @@ def audit_module(file_path: str) -> bool:
             'severity': v['severity'],
             'issue': v['issue'],
             'fix': v['fix']
+        })
+
+    # 12. Check for YAML schema violations (Issue #397)
+    for v in yaml_schema_violations:
+        pedagogical_violations.append({
+            'type': v['type'],
+            'severity': v['severity'],
+            'issue': v['message'],
+            'fix': 'Fix the activity YAML to match the schema in schemas/activities-base.schema.json',
+            'blocking': True  # Schema violations are blocking errors
         })
 
     # 12. Check for missing advanced activities in C1/C2

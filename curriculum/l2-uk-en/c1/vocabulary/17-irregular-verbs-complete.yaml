@@ -1,0 +1,184 @@
+module: 17-irregular-verbs-complete
+level: C1
+version: '1.0'
+items:
+- lemma: дати
+  ipa: /dɑˈtɪ/
+  translation: to give
+  pos: дієсл.
+  gender: ''
+  note: irregular conjugation (дам, даси)
+- lemma: їсти
+  ipa: /jˈistɪ/
+  translation: to eat
+  pos: дієсл.
+  gender: ''
+  note: irregular conjugation (їм, їси)
+- lemma: бути
+  ipa: /butɪ/
+  translation: to be
+  pos: дієсл.
+  gender: ''
+  note: future tense irregular
+- lemma: хотіти
+  ipa: /xɔˈtʲitɪ/
+  translation: to want
+  pos: дієсл.
+  gender: ''
+  note: alternation т/ч (хочу, хочеш)
+- lemma: могти
+  ipa: /mɔɦˈtɪ/
+  translation: to be able to
+  pos: дієсл.
+  gender: ''
+  note: alternation г/ж (можу, можеш)
+- lemma: йти
+  ipa: /jˈtɪ/
+  translation: to go (on foot)
+  pos: дієсл.
+  gender: ''
+  note: suppletive stem (йду, йдеш)
+- lemma: їхати
+  ipa: /jˈixɑtɪ/
+  translation: to go (by vehicle)
+  pos: дієсл.
+  gender: ''
+  note: alternation х/д (їду, їдеш)
+- lemma: брати
+  ipa: /brˈɑtɪ/
+  translation: to take
+  pos: дієсл.
+  gender: ''
+  note: vowel insertion (беру, береш)
+- lemma: слати
+  ipa: /slˈɑtɪ/
+  translation: to send (archaic/poetic)
+  pos: дієсл.
+  gender: ''
+  note: alternation s-shl (шлю, шлеш)
+- lemma: писати
+  ipa: /pɪˈsɑtɪ/
+  translation: to write
+  pos: дієсл.
+  gender: ''
+  note: alternation с/ш (пишу, пишеш)
+- lemma: возити
+  ipa: /vɔˈzɪtɪ/
+  translation: to transport (by vehicle)
+  pos: дієсл.
+  gender: ''
+  note: alternation з/ж (вожу, возиш)
+- lemma: носити
+  ipa: /nɔˈsɪtɪ/
+  translation: to carry (on foot)
+  pos: дієсл.
+  gender: ''
+  note: alternation с/ш (ношу, носиш)
+- lemma: водити
+  ipa: /vɔˈdɪtɪ/
+  translation: to lead/drive
+  pos: дієсл.
+  gender: ''
+  note: alternation д/дж (воджу, водиш)
+- lemma: ходити
+  ipa: /xɔˈdɪtɪ/
+  translation: to walk/go
+  pos: дієсл.
+  gender: ''
+  note: alternation д/дж (ходжу, ходиш)
+- lemma: бігти
+  ipa: /bˈiɦtɪ/
+  translation: to run (uni-directional)
+  pos: дієсл.
+  gender: ''
+  note: alternation г/ж (біжу, біжиш)
+- lemma: бігати
+  ipa: /bˈiɦɑtɪ/
+  translation: to run (multi-directional)
+  pos: дієсл.
+  gender: ''
+  note: regular (-аю)
+- lemma: нести
+  ipa: /nɛˈstɪ/
+  translation: to carry (uni-directional)
+  pos: дієсл.
+  gender: ''
+  note: alternation с/ш (несу, несеш)
+- lemma: вести
+  ipa: /vɛˈstɪ/
+  translation: to lead (uni-directional)
+  pos: дієсл.
+  gender: ''
+  note: alternation с/ш (веду, ведеш)
+- lemma: везти
+  ipa: /vɛˈztɪ/
+  translation: to transport (uni-directional)
+  pos: дієсл.
+  gender: ''
+  note: alternation з/ж (везу, везеш)
+- lemma: класти
+  ipa: /klˈɑstɪ/
+  translation: to put/lay
+  pos: дієсл.
+  gender: ''
+  note: stem change (кладу, кладеш)
+- lemma: красти
+  ipa: /krˈɑstɪ/
+  translation: to steal
+  pos: дієсл.
+  gender: ''
+  note: stem change (краду, крадеш)
+- lemma: рости
+  ipa: /rɔˈstɪ/
+  translation: to grow
+  pos: дієсл.
+  gender: ''
+  note: stem change (росту, ростеш)
+- lemma: пасти
+  ipa: /pˈɑstɪ/
+  translation: to graze/herd
+  pos: дієсл.
+  gender: ''
+  note: stem change (пасу, пасеш)
+- lemma: гнати
+  ipa: /ɦnˈɑtɪ/
+  translation: to drive/chase
+  pos: дієсл.
+  gender: ''
+  note: alternation (жену, женеш)
+- lemma: стояти
+  ipa: /stɔˈjɑtɪ/
+  translation: to stand
+  pos: дієсл.
+  gender: ''
+  note: conjugation pattern (стою, стоїш)
+- lemma: спати
+  ipa: /spˈɑtɪ/
+  translation: to sleep
+  pos: дієсл.
+  gender: ''
+  note: l-epenthesis (сплю, спиш)
+- lemma: боятися
+  ipa: /bɔˈjɑtɪsʲɑ/
+  translation: to be afraid
+  pos: дієсл.
+  gender: ''
+  note: reflexive (боюся, боїшся)
+- lemma: сміятися
+  ipa: /smiˈjɑtɪsʲɑ/
+  translation: to laugh
+  pos: дієсл.
+  gender: ''
+  note: reflexive (сміюся, смієшся)
+- lemma: стати
+  ipa: /stˈɑtɪ/
+  translation: to become/stand up
+  pos: дієсл.
+  gender: ''
+  note: alternation (стану, станеш)
+- lemma: взяти
+  ipa: /vzʲˈɑtɪ/
+  translation: to take (perfective)
+  pos: дієсл.
+  gender: ''
+  note: alternation (візьму, візьмеш)

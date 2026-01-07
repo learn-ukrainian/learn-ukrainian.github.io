@@ -2,10 +2,8 @@ activities:
 - type: quiz
   id: explanatory-constructions
   title: Пояснювальні конструкції
-  instructions: Оберіть правильну відповідь.
   items:
-  - prompt: Коли граматика каже "родовий відмінок використовується після 'без'", що вона пояснює?
-    options:
+  - options:
     - text: коли вживати родовий відмінок
       correct: true
     - text: що означає родовий відмінок
@@ -15,8 +13,8 @@ activities:
     - text: чому існує родовий відмінок
       correct: false
     explanation: '"Використовується" пояснює, коли вживати форму.'
-  - prompt: Якщо підручник пише "доконаний вид означає завершену дію", що він пояснює?
-    options:
+    question: Коли граматика каже "родовий відмінок використовується після 'без'", що вона пояснює?
+  - options:
     - text: коли вживати доконаний вид
       correct: false
     - text: що означає доконаний вид
@@ -26,8 +24,8 @@ activities:
     - text: де вживати доконаний вид
       correct: false
     explanation: '"Означає" пояснює значення.'
-  - prompt: Інструкція "порівняйте ці два речення" просить вас зробити що?
-    options:
+    question: Якщо підручник пише "доконаний вид означає завершену дію", що він пояснює?
+  - options:
     - text: порівняти речення
       correct: true
     - text: написати речення
@@ -37,8 +35,8 @@ activities:
     - text: перекласти речення
       correct: false
     explanation: '"Порівняйте" = compare.'
-  - prompt: Коли бачите "зверніть увагу на закінчення", що від вас очікують?
-    options:
+    question: Інструкція "порівняйте ці два речення" просить вас зробити що?
+  - options:
     - text: уважно подивитися на закінчення
       correct: true
     - text: змінити закінчення
@@ -48,8 +46,8 @@ activities:
     - text: додати закінчення
       correct: false
     explanation: '"Зверніть увагу" = pay attention.'
-  - prompt: Слово "наприклад" у граматичному тексті підручника означає яку конструкцію?
-    options:
+    question: Коли бачите "зверніть увагу на закінчення", що від вас очікують?
+  - options:
     - text: for example
       correct: true
     - text: in contrast
@@ -59,8 +57,8 @@ activities:
     - text: however
       correct: false
     explanation: '"Наприклад" = for example.'
-  - prompt: Фраза "на відміну від англійської" у граматичному поясненні показує що?
-    options:
+    question: Слово "наприклад" у граматичному тексті підручника означає яку конструкцію?
+  - options:
     - text: контраст з англійською
       correct: true
     - text: схожість з англійською
@@ -70,8 +68,8 @@ activities:
     - text: походження з англійської
       correct: false
     explanation: '"На відміну від" = in contrast to.'
-  - prompt: Коли підручник пише "отже, це іменник", що означає слово "отже"?
-    options:
+    question: Фраза "на відміну від англійської" у граматичному поясненні показує що?
+  - options:
     - text: for example
       correct: false
     - text: however
@@ -81,8 +79,8 @@ activities:
     - text: similar to
       correct: false
     explanation: '"Отже" = therefore, so.'
-  - prompt: Фраза "подібно до російської" у граматичному поясненні показує яке відношення?
-    options:
+    question: Коли підручник пише "отже, це іменник", що означає слово "отже"?
+  - options:
     - text: контраст з російською
       correct: false
     - text: схожість з російською
@@ -92,8 +90,8 @@ activities:
     - text: походження з російської
       correct: false
     explanation: '"Подібно до" = similar to.'
-  - prompt: Слово "тобто" у граматичному тексті означає яку конструкцію англійською?
-    options:
+    question: Фраза "подібно до російської" у граматичному поясненні показує яке відношення?
+  - options:
     - text: for example
       correct: false
     - text: that is, in other words
@@ -103,8 +101,8 @@ activities:
     - text: however
       correct: false
     explanation: '"Тобто" = that is.'
-  - prompt: Фраза "таким чином утворюється множина" у підручнику означає що?
-    options:
+    question: Слово "тобто" у граматичному тексті означає яку конструкцію англійською?
+  - options:
     - text: thus the plural is formed
       correct: true
     - text: the plural does not form
@@ -114,8 +112,8 @@ activities:
     - text: note the plural
       correct: false
     explanation: '"Таким чином" = thus, in this way.'
-  - prompt: Коли граматика пише "виражає адресата", вона пояснює що?
-    options:
+    question: Фраза "таким чином утворюється множина" у підручнику означає що?
+  - options:
     - text: коли вживати форму
       correct: false
     - text: що форма означає
@@ -125,8 +123,8 @@ activities:
     - text: де знайти форму
       correct: false
     explanation: '"Виражає" пояснює значення.'
-  - prompt: Інструкція "вживається для опису" у граматиці пояснює яку функцію?
-    options:
+    question: Коли граматика пише "виражає адресата", вона пояснює що?
+  - options:
     - text: коли використовувати форму
       correct: true
     - text: що означає форма
@@ -136,8 +134,8 @@ activities:
     - text: чому існує форма
       correct: false
     explanation: '"Вживається для" = is used for.'
-  - prompt: Слово "вказує на" у граматичному тексті означає яку конструкцію?
-    options:
+    question: Інструкція "вживається для опису" у граматиці пояснює яку функцію?
+  - options:
     - text: is used
       correct: false
     - text: means
@@ -147,8 +145,8 @@ activities:
     - text: compares
       correct: false
     explanation: '"Вказує на" = indicates.'
-  - prompt: Фраза "показує зменшувальне значення" у граматиці пояснює яку характеристику?
-    options:
+    question: Слово "вказує на" у граматичному тексті означає яку конструкцію?
+  - options:
     - text: коли використовувати
       correct: false
     - text: яке значення має
@@ -158,13 +156,13 @@ activities:
     - text: де знайти
       correct: false
     explanation: '"Показує" = shows.'
+    question: Фраза "показує зменшувальне значення" у граматиці пояснює яку характеристику?
+  instruction: Оберіть правильну відповідь.
 - type: quiz
   id: word-formation
   title: Словотвір
-  instructions: Оберіть правильну відповідь про частини слова.
   items:
-  - prompt: Найменша значуща частина слова, від якої утворюються інші слова — це що?
-    options:
+  - options:
     - text: корінь
       correct: true
     - text: суфікс
@@ -174,8 +172,8 @@ activities:
     - text: закінчення
       correct: false
     explanation: Корінь — найменша частина.
-  - prompt: Частина слова, яка стоїть перед коренем і змінює значення — це що?
-    options:
+    question: Найменша значуща частина слова, від якої утворюються інші слова — це що?
+  - options:
     - text: корінь
       correct: false
     - text: суфікс
@@ -185,8 +183,8 @@ activities:
     - text: закінчення
       correct: false
     explanation: Префікс стоїть перед коренем.
-  - prompt: Частина слова, яка стоїть після кореня і утворює нові слова — це що?
-    options:
+    question: Частина слова, яка стоїть перед коренем і змінює значення — це що?
+  - options:
     - text: корінь
       correct: false
     - text: суфікс
@@ -196,8 +194,8 @@ activities:
     - text: основа
       correct: false
     explanation: Суфікс стоїть після кореня.
-  - prompt: Частина слова без закінчення у словотворенні — це яка частина?
-    options:
+    question: Частина слова, яка стоїть після кореня і утворює нові слова — це що?
+  - options:
     - text: корінь
       correct: false
     - text: суфікс
@@ -207,8 +205,8 @@ activities:
     - text: основа
       correct: true
     explanation: Основа = слово без закінчення.
-  - prompt: Англійське граматичне слово "root" українською перекладається як що?
-    options:
+    question: Частина слова без закінчення у словотворенні — це яка частина?
+  - options:
     - text: корінь
       correct: true
     - text: суфікс
@@ -218,8 +216,8 @@ activities:
     - text: основа
       correct: false
     explanation: Root = корінь.
-  - prompt: Англійське граматичне слово "suffix" українською перекладається як що?
-    options:
+    question: Англійське граматичне слово "root" українською перекладається як що?
+  - options:
     - text: корінь
       correct: false
     - text: суфікс
@@ -229,8 +227,8 @@ activities:
     - text: основа
       correct: false
     explanation: Suffix = суфікс.
-  - prompt: Англійське граматичне слово "prefix" українською перекладається як що?
-    options:
+    question: Англійське граматичне слово "suffix" українською перекладається як що?
+  - options:
     - text: корінь
       correct: false
     - text: суфікс
@@ -240,8 +238,8 @@ activities:
     - text: основа
       correct: false
     explanation: Prefix = префікс.
-  - prompt: Коли граматика каже "це виняток", що вона означає?
-    options:
+    question: Англійське граматичне слово "prefix" українською перекладається як що?
+  - options:
     - text: це не підпорядковується правилу
       correct: true
     - text: це підпорядковується правилу
@@ -251,8 +249,8 @@ activities:
     - text: це старе правило
       correct: false
     explanation: Виняток = exception.
-  - prompt: Коли граматика каже "це правило", що вона означає?
-    options:
+    question: Коли граматика каже "це виняток", що вона означає?
+  - options:
     - text: це виняток
       correct: false
     - text: це закономірність
@@ -262,8 +260,8 @@ activities:
     - text: це питання
       correct: false
     explanation: Правило = rule, pattern.
-  - prompt: У дієслові "написати" яка частина слова є коренем?
-    options:
+    question: Коли граматика каже "це правило", що вона означає?
+  - options:
     - text: на-
       correct: false
     - text: -пис-
@@ -273,8 +271,8 @@ activities:
     - text: -ти
       correct: false
     explanation: Корінь "пис-" (писати, пишу).
-  - prompt: У дієслові "написати" яка частина слова є префіксом?
-    options:
+    question: У дієслові "написати" яка частина слова є коренем?
+  - options:
     - text: на-
       correct: true
     - text: -пис-
@@ -284,8 +282,8 @@ activities:
     - text: -ти
       correct: false
     explanation: Префікс "на-" перед коренем.
-  - prompt: Англійське граматичне слово "stem" українською перекладається як що?
-    options:
+    question: У дієслові "написати" яка частина слова є префіксом?
+  - options:
     - text: корінь
       correct: false
     - text: суфікс
@@ -295,8 +293,8 @@ activities:
     - text: основа
       correct: true
     explanation: Stem = основа.
-  - prompt: Слово "форма" у граматичному контексті означає яке поняття?
-    options:
+    question: Англійське граматичне слово "stem" українською перекладається як що?
+  - options:
     - text: exception
       correct: false
     - text: form
@@ -306,8 +304,8 @@ activities:
     - text: suffix
       correct: false
     explanation: Форма = form.
-  - prompt: Коли інструкція каже "утворіть форму", вона просить що?
-    options:
+    question: Слово "форма" у граматичному контексті означає яке поняття?
+  - options:
     - text: create the form
       correct: true
     - text: find the form
@@ -317,11 +315,13 @@ activities:
     - text: compare the form
       correct: false
     explanation: '"Утворіть форму" = create the form.'
+    question: Коли інструкція каже "утворіть форму", вона просить що?
+  instruction: Оберіть правильну відповідь про частини слова.
 - type: match-up
   id: explanatory-constructions-match
   title: Пояснювальні конструкції
-  instructions: З'єднайте український термін з англійським.
-  items:
+  instruction: З'єднайте український термін з англійським.
+  pairs:
   - left: використовується
     right: is used
   - left: означає
@@ -345,8 +345,8 @@ activities:
 - type: match-up
   id: word-formation-comparison-match
   title: Словотвір і порівняння
-  instructions: З'єднайте український термін з англійським.
-  items:
+  instruction: З'єднайте український термін з англійським.
+  pairs:
   - left: на відміну від
     right: in contrast to
   - left: подібно до
@@ -370,213 +370,212 @@ activities:
 - type: fill-in
   id: explanatory-constructions-fill
   title: Пояснювальні конструкції
-  instructions: Заповніть пропуски правильним терміном.
   items:
-  - prompt: '"X ___ після прийменника" означає "is used".'
-    answer: використовується
+  - answer: використовується
     options:
     - використовується
     - означає
     - показує
     - виражає
-  - prompt: '"X ___ завершену дію" означає "means".'
-    answer: означає
+    sentence: '"X ___ після прийменника" означає "is used".'
+  - answer: означає
     options:
     - використовується
     - означає
     - показує
     - виражає
-  - prompt: '"Цей суфікс ___ зменшення" означає "shows".'
-    answer: показує
+    sentence: '"X ___ завершену дію" означає "means".'
+  - answer: показує
     options:
     - використовується
     - означає
     - показує
     - виражає
-  - prompt: '"Давальний відмінок ___ адресата" означає "expresses".'
-    answer: виражає
+    sentence: '"Цей суфікс ___ зменшення" означає "shows".'
+  - answer: виражає
     options:
     - використовується
     - означає
     - показує
     - виражає
-  - prompt: '"Закінчення ___ жіночий рід" означає "indicates".'
-    answer: вказує на
+    sentence: '"Давальний відмінок ___ адресата" означає "expresses".'
+  - answer: вказує на
     options:
     - вказує на
     - означає
     - показує
     - виражає
-  - prompt: '"___ ці два речення" означає "compare".'
-    answer: Порівняйте
+    sentence: '"Закінчення ___ жіночий рід" означає "indicates".'
+  - answer: Порівняйте
     options:
     - Порівняйте
     - Напишіть
     - Прочитайте
     - Знайдіть
-  - prompt: '"___ на закінчення" означає "pay attention".'
-    answer: Зверніть увагу
+    sentence: '"___ ці два речення" означає "compare".'
+  - answer: Зверніть увагу
     options:
     - Зверніть увагу
     - Порівняйте
     - Напишіть
     - Знайдіть
-  - prompt: '"___, це прислівник" означає "that is".'
-    answer: Тобто
+    sentence: '"___ на закінчення" означає "pay attention".'
+  - answer: Тобто
     options:
     - Тобто
     - Отже
     - Наприклад
     - Однак
-  - prompt: '"___ англійської" означає "in contrast to".'
-    answer: На відміну від
+    sentence: '"___, це прислівник" означає "that is".'
+  - answer: На відміну від
     options:
     - На відміну від
     - Подібно до
     - Наприклад
     - Тобто
-  - prompt: '"___ російської" означає "similar to".'
-    answer: Подібно до
+    sentence: '"___ англійської" означає "in contrast to".'
+  - answer: Подібно до
     options:
     - На відміну від
     - Подібно до
     - Наприклад
     - Тобто
-  - prompt: '"___, це іменник" означає "therefore".'
-    answer: Отже
+    sentence: '"___ російської" означає "similar to".'
+  - answer: Отже
     options:
     - Тобто
     - Отже
     - Наприклад
     - Однак
-  - prompt: '"___: книга → книги" означає "for example".'
-    answer: Наприклад
+    sentence: '"___, це іменник" означає "therefore".'
+  - answer: Наприклад
     options:
     - Тобто
     - Отже
     - Наприклад
     - Однак
-  - prompt: '"___ утворюється множина" означає "thus".'
-    answer: Таким чином
+    sentence: '"___: книга → книги" означає "for example".'
+  - answer: Таким чином
     options:
     - Таким чином
     - Тобто
     - Наприклад
     - Однак
-  - prompt: '"Ця форма ___ для опису" означає "is used".'
-    answer: вживається
+    sentence: '"___ утворюється множина" означає "thus".'
+  - answer: вживається
     options:
     - вживається
     - означає
     - показує
     - виражає
+    sentence: '"Ця форма ___ для опису" означає "is used".'
+  instruction: Заповніть пропуски правильним терміном.
 - type: fill-in
   id: word-parts-fill
   title: Частини слова
-  instructions: Заповніть пропуски правильним терміном.
   items:
-  - prompt: Найменша частина слова — ___.
-    answer: корінь
+  - answer: корінь
     options:
     - корінь
     - суфікс
     - префікс
     - основа
-  - prompt: Частина перед коренем — ___.
-    answer: префікс
+    sentence: Найменша частина слова — ___.
+  - answer: префікс
     options:
     - корінь
     - суфікс
     - префікс
     - основа
-  - prompt: Частина після кореня — ___.
-    answer: суфікс
+    sentence: Частина перед коренем — ___.
+  - answer: суфікс
     options:
     - корінь
     - суфікс
     - префікс
     - основа
-  - prompt: Слово без закінчення — ___.
-    answer: основа
+    sentence: Частина після кореня — ___.
+  - answer: основа
     options:
     - корінь
     - суфікс
     - префікс
     - основа
-  - prompt: '"Root" українською — ___.'
-    answer: корінь
+    sentence: Слово без закінчення — ___.
+  - answer: корінь
     options:
     - корінь
     - суфікс
     - префікс
     - основа
-  - prompt: '"Suffix" українською — ___.'
-    answer: суфікс
+    sentence: '"Root" українською — ___.'
+  - answer: суфікс
     options:
     - корінь
     - суфікс
     - префікс
     - основа
-  - prompt: '"Prefix" українською — ___.'
-    answer: префікс
+    sentence: '"Suffix" українською — ___.'
+  - answer: префікс
     options:
     - корінь
     - суфікс
     - префікс
     - основа
-  - prompt: '"Exception" українською — ___.'
-    answer: виняток
+    sentence: '"Prefix" українською — ___.'
+  - answer: виняток
     options:
     - правило
     - виняток
     - форма
     - основа
-  - prompt: '"Rule" українською — ___.'
-    answer: правило
+    sentence: '"Exception" українською — ___.'
+  - answer: правило
     options:
     - правило
     - виняток
     - форма
     - основа
-  - prompt: '"Form" українською — ___.'
-    answer: форма
+    sentence: '"Rule" українською — ___.'
+  - answer: форма
     options:
     - правило
     - виняток
     - форма
     - основа
-  - prompt: '"Stem" українською — ___.'
-    answer: основа
+    sentence: '"Form" українською — ___.'
+  - answer: основа
     options:
     - корінь
     - суфікс
     - префікс
     - основа
-  - prompt: У слові "прочитати" ___ — "про-".
-    answer: префікс
+    sentence: '"Stem" українською — ___.'
+  - answer: префікс
     options:
     - корінь
     - суфікс
     - префікс
     - основа
-  - prompt: У слові "прочитати" ___ — "чит-".
-    answer: корінь
+    sentence: У слові "прочитати" ___ — "про-".
+  - answer: корінь
     options:
     - корінь
     - суфікс
     - префікс
     - основа
-  - prompt: Це не правило, а ___.
-    answer: виняток
+    sentence: У слові "прочитати" ___ — "чит-".
+  - answer: виняток
     options:
     - правило
     - виняток
     - форма
     - суфікс
+    sentence: Це не правило, а ___.
+  instruction: Заповніть пропуски правильним терміном.
 - type: true-false
   id: grammar-constructions-tf
   title: Граматичні конструкції
-  instructions: Визначте, чи правильне твердження.
   items:
   - statement: '"Використовується" означає "is used".'
     correct: true
@@ -620,10 +619,10 @@ activities:
   - statement: '"Префікс" стоїть після кореня.'
     correct: false
     explanation: Неправильно! Префікс — перед коренем.
+  instruction: Визначте, чи правильне твердження.
 - type: group-sort
   id: terms-by-function
   title: Терміни за функцією
-  instructions: Розподіліть терміни за категоріями.
   groups:
   - name: Пояснення значення
     items:
@@ -647,10 +646,10 @@ activities:
     - суфікс
     - префікс
     - основа
+  instruction: Розподіліть терміни за категоріями.
 - type: group-sort
   id: comparison-logic
   title: Порівняння і логіка
-  instructions: Розподіліть терміни за категоріями.
   groups:
   - name: Порівняння
     items:
@@ -674,43 +673,192 @@ activities:
     - означає
     - виражає
     - показує
+  instruction: Розподіліть терміни за категоріями.
 - type: unjumble
   id: grammar-explanations-unjumble
   title: Граматичні пояснення
-  instructions: Розташуйте слова в правильному порядку.
   items:
-  - words: використовується / родовий / після / відмінок / прийменника / без / для / позначення / відсутності / чогось
+  - words:
+    - використовується
+    - родовий
+    - після
+    - відмінок
+    - прийменника
+    - без
+    - для
+    - позначення
+    - відсутності
+    - чогось
     answer: Родовий відмінок використовується після прийменника без для позначення відсутності чогось.
-  - words: доконаний / вид / означає / що / дія / завершена / і / має / результат
+  - words:
+    - доконаний
+    - вид
+    - означає
+    - що
+    - дія
+    - завершена
+    - і
+    - має
+    - результат
     answer: Доконаний вид означає, що дія завершена і має результат.
-  - words: порівняйте / ці / два / речення / і / зверніть / увагу / на / відмінності / у / закінченнях / слів
+  - words:
+    - порівняйте
+    - ці
+    - два
+    - речення
+    - і
+    - зверніть
+    - увагу
+    - на
+    - відмінності
+    - у
+    - закінченнях
+    - слів
     answer: Порівняйте ці два речення і зверніть увагу на відмінності у закінченнях слів.
-  - words: корінь / найменша / є / значуща / частина / від / слова / якої / утворюються / інші / споріднені / слова
+  - words:
+    - корінь
+    - найменша
+    - є
+    - значуща
+    - частина
+    - від
+    - слова
+    - якої
+    - утворюються
+    - інші
+    - споріднені
+    - слова
     answer: Корінь є найменша значуща частина слова, від якої утворюються інші споріднені слова.
-  - words: префікс / це / частина / слова / яка / стоїть / перед / коренем / і / змінює / значення / дієслова
+  - words:
+    - префікс
+    - це
+    - частина
+    - слова
+    - яка
+    - стоїть
+    - перед
+    - коренем
+    - і
+    - змінює
+    - значення
+    - дієслова
     answer: Префікс — це частина слова, яка стоїть перед коренем і змінює значення дієслова.
-  - words: суфікс / стоїть / після / кореня / і / утворює / нові / слова
+  - words:
+    - суфікс
+    - стоїть
+    - після
+    - кореня
+    - і
+    - утворює
+    - нові
+    - слова
     answer: Суфікс стоїть після кореня і утворює нові слова.
-  - words: наприклад / слово / книга / у / родовому / відмінку / має / форму / книги / із / закінченням / и
+  - words:
+    - наприклад
+    - слово
+    - книга
+    - у
+    - родовому
+    - відмінку
+    - має
+    - форму
+    - книги
+    - із
+    - закінченням
+    - и
     answer: Наприклад, слово книга у родовому відмінку має форму книги із закінченням -и.
-  - words: на / відміну / від / англійської / українська / мова / має / сім / відмінків / для / іменників
+  - words:
+    - на
+    - відміну
+    - від
+    - англійської
+    - українська
+    - мова
+    - має
+    - сім
+    - відмінків
+    - для
+    - іменників
     answer: На відміну від англійської, українська мова має сім відмінків для іменників.
-  - words: подібно / до / інших / слов'янських / мов / українська / має / розвинену / систему / дієслівного / виду
+  - words:
+    - подібно
+    - до
+    - інших
+    - слов'янських
+    - мов
+    - українська
+    - має
+    - розвинену
+    - систему
+    - дієслівного
+    - виду
     answer: Подібно до інших слов'янських мов, українська має розвинену систему дієслівного виду.
-  - words: тобто / прислівник / це / частина / мови / яка / описує / дію / або / прикметник / наприклад / швидко
+  - words:
+    - тобто
+    - прислівник
+    - це
+    - частина
+    - мови
+    - яка
+    - описує
+    - дію
+    - або
+    - прикметник
+    - наприклад
+    - швидко
     answer: Тобто прислівник — це частина мови, яка описує дію або прикметник, наприклад швидко.
-  - words: отже / це / іменник / жіночого / роду / бо / закінчується / на / а
+  - words:
+    - отже
+    - це
+    - іменник
+    - жіночого
+    - роду
+    - бо
+    - закінчується
+    - на
+    - а
     answer: Отже, це іменник жіночого роду, бо закінчується на -а.
-  - words: таким / чином / утворюється / множина / іменників / чоловічого / роду / додаванням / закінчення / и / або / і
+  - words:
+    - таким
+    - чином
+    - утворюється
+    - множина
+    - іменників
+    - чоловічого
+    - роду
+    - додаванням
+    - закінчення
+    - и
+    - або
+    - і
     answer: Таким чином утворюється множина іменників чоловічого роду додаванням закінчення -и або -і.
-  - words: це / виняток / із / загального / правила / тому / потрібно / запам'ятати / цю / форму / окремо
+  - words:
+    - це
+    - виняток
+    - із
+    - загального
+    - правила
+    - тому
+    - потрібно
+    - запам'ятати
+    - цю
+    - форму
+    - окремо
     answer: Це виняток із загального правила, тому потрібно запам'ятати цю форму окремо.
-  - words: основа / слова / це / слово / без / закінчення / наприклад / книг
+  - words:
+    - основа
+    - слова
+    - це
+    - слово
+    - без
+    - закінчення
+    - наприклад
+    - книг
     answer: Основа слова — це слово без закінчення, наприклад книг-.
+  instruction: Розташуйте слова в правильному порядку.
 - type: error-correction
   id: error-correction-1
   title: Виправлення помилок
-  instructions: У кожному реченні є ОДНА помилка. Знайдіть і виправте.
   items:
   - sentence: '"Використовується" означає "means".'
     error: means
@@ -838,113 +986,22 @@ activities:
     - means
     - indicates
     explanation: '"Показує" = shows.'
+  instruction: У кожному реченні є ОДНА помилка. Знайдіть і виправте.
 - type: cloze
   id: grammar-text-reading
   title: Читання граматичного тексту
-  instructions: Заповніть пропуски правильними термінами.
-  passage: 'Прикметник {узгоджується} з іменником за родом, числом і відмінком. {Наприклад}, «гарна книга» — жіночий рід.
-    {Зверніть увагу} на закінчення: -а для жіночого роду. {На відміну від} англійської, українська має граматичний рід. {Подібно
-    до} російської, українська має сім відмінків. Це загальне {правило}, але є {винятки}. {Отже}, це стандартна {форма} для
-    прикметника. {Таким чином} утворюється узгодження. Доконаний вид {означає} завершену дію. Давальний відмінок {виражає}
-    адресата. Закінчення -а {вказує на} жіночий рід. {Порівняйте} ці два речення і знайдіть відмінності.'
-  blanks:
-  - id: 1
-    answer: узгоджується
-    options:
-    - узгоджується
-    - відрізняється
-    - змінюється
-  - id: 2
-    answer: Наприклад
-    options:
-    - Наприклад
-    - Отже
-    - Тобто
-  - id: 3
-    answer: Зверніть увагу
-    options:
-    - Зверніть увагу
-    - Порівняйте
-    - Напишіть
-  - id: 4
-    answer: На відміну від
-    options:
-    - На відміну від
-    - Подібно до
-    - Наприклад
-  - id: 5
-    answer: Подібно до
-    options:
-    - Подібно до
-    - На відміну від
-    - Тобто
-  - id: 6
-    answer: правило
-    options:
-    - правило
-    - виняток
-    - форма
-  - id: 7
-    answer: винятки
-    options:
-    - винятки
-    - правила
-    - форми
-  - id: 8
-    answer: Отже
-    options:
-    - Отже
-    - Наприклад
-    - Однак
-  - id: 9
-    answer: форма
-    options:
-    - форма
-    - виняток
-    - правило
-  - id: 10
-    answer: Таким чином
-    options:
-    - Таким чином
-    - Наприклад
-    - Тобто
-  - id: 11
-    answer: означає
-    options:
-    - означає
-    - використовується
-    - показує
-  - id: 12
-    answer: виражає
-    options:
-    - виражає
-    - показує
-    - означає
-  - id: 13
-    answer: вказує на
-    options:
-    - вказує на
-    - означає
-    - показує
-  - id: 14
-    answer: Порівняйте
-    options:
-    - Порівняйте
-    - Напишіть
-    - Прочитайте
+  passage: 'Прикметник {узгоджується} з іменником за родом, числом і відмінком. {Наприклад}, «гарна книга» — жіночий рід. {Зверніть увагу} на закінчення: -а для жіночого роду. {На відміну від} англійської, українська має граматичний рід. {Подібно до} російської, українська має сім відмінків. Це загальне {правило}, але є {винятки}. {Отже}, це стандартна {форма} для прикметника. {Таким чином} утворюється узгодження. Доконаний вид {означає} завершену дію. Давальний відмінок {виражає} адресата. Закінчення -а {вказує на} жіночий рід. {Порівняйте} ці два речення і знайдіть відмінності.'
+  instruction: Заповніть пропуски правильними термінами.
 - type: mark-the-words
   id: find-terms
   title: Знайдіть терміни
-  instructions: Натисніть на ВСІ пояснювальні конструкції та інструкції в тексті.
-  text: Родовий відмінок [використовується] після прийменника «без». Доконаний вид [означає] завершену дію. [Порівняйте] ці
-    приклади. [Зверніть увагу] на закінчення. [Наприклад], «книги» — родовий. [Тобто] це зміна форми. [Отже], правило працює.
+  instruction: Натисніть на ВСІ пояснювальні конструкції та інструкції в тексті.
+  passage: Родовий відмінок [використовується] після прийменника «без». Доконаний вид [означає] завершену дію. [Порівняйте] ці приклади. [Зверніть увагу] на закінчення. [Наприклад], «книги» — родовий. [Тобто] це зміна форми. [Отже], правило працює.
 - type: select
   id: multiple-choice
   title: Множинний вибір
-  instructions: Оберіть ВСІ правильні відповіді.
   items:
-  - prompt: Які слова пояснюють "коли вживати"?
-    options:
+  - options:
     - text: використовується
       correct: true
     - text: вживається
@@ -954,8 +1011,8 @@ activities:
     - text: показує
       correct: false
     explanation: '"Використовується/вживається" = is used.'
-  - prompt: Які слова пояснюють "що означає"?
-    options:
+    question: Які слова пояснюють "коли вживати"?
+  - options:
     - text: означає
       correct: true
     - text: показує
@@ -965,8 +1022,8 @@ activities:
     - text: використовується
       correct: false
     explanation: 'Значення: означає, показує, виражає.'
-  - prompt: Які слова є інструкціями?
-    options:
+    question: Які слова пояснюють "що означає"?
+  - options:
     - text: порівняйте
       correct: true
     - text: зверніть увагу
@@ -976,8 +1033,8 @@ activities:
     - text: використовується
       correct: false
     explanation: 'Інструкції: порівняйте, зверніть увагу.'
-  - prompt: Які слова означають частини слова?
-    options:
+    question: Які слова є інструкціями?
+  - options:
     - text: корінь
       correct: true
     - text: суфікс
@@ -987,8 +1044,8 @@ activities:
     - text: правило
       correct: false
     explanation: 'Частини слова: корінь, суфікс, префікс.'
-  - prompt: Які слова показують порівняння?
-    options:
+    question: Які слова означають частини слова?
+  - options:
     - text: на відміну від
       correct: true
     - text: подібно до
@@ -998,8 +1055,8 @@ activities:
     - text: тобто
       correct: false
     explanation: 'Порівняння: на відміну від, подібно до.'
-  - prompt: Які слова є логічними зв'язками?
-    options:
+    question: Які слова показують порівняння?
+  - options:
     - text: отже
       correct: true
     - text: тобто
@@ -1009,8 +1066,8 @@ activities:
     - text: корінь
       correct: false
     explanation: 'Логіка: отже, тобто, таким чином.'
-  - prompt: Які терміни пов'язані з правилами?
-    options:
+    question: Які слова є логічними зв'язками?
+  - options:
     - text: правило
       correct: true
     - text: виняток
@@ -1020,8 +1077,8 @@ activities:
     - text: суфікс
       correct: false
     explanation: 'Правила: правило, виняток, закономірність.'
-  - prompt: Які слова означають "means"?
-    options:
+    question: Які терміни пов'язані з правилами?
+  - options:
     - text: означає
       correct: true
     - text: використовується
@@ -1031,8 +1088,8 @@ activities:
     - text: наприклад
       correct: false
     explanation: Means = означає.
-  - prompt: Які слова означають "is used"?
-    options:
+    question: Які слова означають "means"?
+  - options:
     - text: використовується
       correct: true
     - text: вживається
@@ -1042,8 +1099,8 @@ activities:
     - text: показує
       correct: false
     explanation: Is used = використовується, вживається.
-  - prompt: Які частини слова змінюють значення?
-    options:
+    question: Які слова означають "is used"?
+  - options:
     - text: префікс
       correct: true
     - text: суфікс
@@ -1053,8 +1110,8 @@ activities:
     - text: корінь
       correct: true
     explanation: Усі ці частини впливають на значення.
-  - prompt: Що означає "indicates"?
-    options:
+    question: Які частини слова змінюють значення?
+  - options:
     - text: вказує на
       correct: true
     - text: означає
@@ -1064,8 +1121,8 @@ activities:
     - text: виражає
       correct: false
     explanation: Indicates = вказує на.
-  - prompt: Що означає "expresses"?
-    options:
+    question: Що означає "indicates"?
+  - options:
     - text: вказує на
       correct: false
     - text: означає
@@ -1075,8 +1132,8 @@ activities:
     - text: виражає
       correct: true
     explanation: Expresses = виражає.
-  - prompt: Що означає "for example"?
-    options:
+    question: Що означає "expresses"?
+  - options:
     - text: наприклад
       correct: true
     - text: тобто
@@ -1086,8 +1143,8 @@ activities:
     - text: таким чином
       correct: false
     explanation: For example = наприклад.
-  - prompt: Що означає "that is"?
-    options:
+    question: Що означає "for example"?
+  - options:
     - text: наприклад
       correct: false
     - text: тобто
@@ -1097,13 +1154,13 @@ activities:
     - text: таким чином
       correct: false
     explanation: That is = тобто.
+    question: Що означає "that is"?
+  instruction: Оберіть ВСІ правильні відповіді.
 - type: translate
   id: term-translation
   title: Переклад термінів
-  instructions: Оберіть правильний переклад.
   items:
-  - prompt: is used
-    options:
+  - options:
     - text: використовується
       correct: true
     - text: означає
@@ -1113,8 +1170,8 @@ activities:
     - text: виражає
       correct: false
     explanation: Is used = використовується.
-  - prompt: means
-    options:
+    source: is used
+  - options:
     - text: використовується
       correct: false
     - text: означає
@@ -1124,8 +1181,8 @@ activities:
     - text: виражає
       correct: false
     explanation: Means = означає.
-  - prompt: compare
-    options:
+    source: means
+  - options:
     - text: порівняйте
       correct: true
     - text: напишіть
@@ -1135,8 +1192,8 @@ activities:
     - text: знайдіть
       correct: false
     explanation: Compare = порівняйте.
-  - prompt: pay attention
-    options:
+    source: compare
+  - options:
     - text: зверніть увагу
       correct: true
     - text: порівняйте
@@ -1146,8 +1203,8 @@ activities:
     - text: знайдіть
       correct: false
     explanation: Pay attention = зверніть увагу.
-  - prompt: for example
-    options:
+    source: pay attention
+  - options:
     - text: наприклад
       correct: true
     - text: тобто
@@ -1157,8 +1214,8 @@ activities:
     - text: однак
       correct: false
     explanation: For example = наприклад.
-  - prompt: therefore
-    options:
+    source: for example
+  - options:
     - text: наприклад
       correct: false
     - text: тобто
@@ -1168,8 +1225,8 @@ activities:
     - text: однак
       correct: false
     explanation: Therefore = отже.
-  - prompt: in contrast to
-    options:
+    source: therefore
+  - options:
     - text: на відміну від
       correct: true
     - text: подібно до
@@ -1179,8 +1236,8 @@ activities:
     - text: тобто
       correct: false
     explanation: In contrast to = на відміну від.
-  - prompt: similar to
-    options:
+    source: in contrast to
+  - options:
     - text: на відміну від
       correct: false
     - text: подібно до
@@ -1190,8 +1247,8 @@ activities:
     - text: тобто
       correct: false
     explanation: Similar to = подібно до.
-  - prompt: root
-    options:
+    source: similar to
+  - options:
     - text: корінь
       correct: true
     - text: суфікс
@@ -1201,8 +1258,8 @@ activities:
     - text: основа
       correct: false
     explanation: Root = корінь.
-  - prompt: suffix
-    options:
+    source: root
+  - options:
     - text: корінь
       correct: false
     - text: суфікс
@@ -1212,8 +1269,8 @@ activities:
     - text: основа
       correct: false
     explanation: Suffix = суфікс.
-  - prompt: prefix
-    options:
+    source: suffix
+  - options:
     - text: корінь
       correct: false
     - text: суфікс
@@ -1223,8 +1280,8 @@ activities:
     - text: основа
       correct: false
     explanation: Prefix = префікс.
-  - prompt: exception
-    options:
+    source: prefix
+  - options:
     - text: правило
       correct: false
     - text: виняток
@@ -1234,8 +1291,8 @@ activities:
     - text: основа
       correct: false
     explanation: Exception = виняток.
-  - prompt: rule
-    options:
+    source: exception
+  - options:
     - text: правило
       correct: true
     - text: виняток
@@ -1245,8 +1302,8 @@ activities:
     - text: основа
       correct: false
     explanation: Rule = правило.
-  - prompt: stem
-    options:
+    source: rule
+  - options:
     - text: корінь
       correct: false
     - text: суфікс
@@ -1256,3 +1313,5 @@ activities:
     - text: основа
       correct: true
     explanation: Stem = основа.
+    source: stem
+  instruction: Оберіть правильний переклад.
