@@ -5,6 +5,7 @@
 **Based on:** B1 Curriculum Plan specifications for Phase B1.5-B1.6 vocabulary modules
 
 **Key Differences from Grammar Template:**
+
 - Less grammar explanation, more lexical depth
 - Thematic vocabulary presentation (25-30 words per theme)
 - Contextual usage patterns (collocations, synonyms, register)
@@ -45,27 +46,28 @@ Before submitting a B1 vocabulary module, verify:
 ```yaml
 ---
 module: b1-XX
-title: "Ukrainian Title"
-subtitle: "English subtitle"
-version: "1.0"
-phase: "B1.5 Vocabulary Expansion I"  # or "B1.6 Vocabulary Expansion II"
-pedagogy: "PPP"  # Presentation-Practice-Production for vocab modules
-duration: 90  # minutes
+title: 'Ukrainian Title'
+subtitle: 'English subtitle'
+version: '1.0'
+phase: 'B1.5 Vocabulary Expansion I' # or "B1.6 Vocabulary Expansion II"
+pedagogy: 'PPP' # Presentation-Practice-Production for vocab modules
+duration: 90 # minutes
 transliteration: none
 tags:
   - vocabulary
-  - [thematic-tag]  # e.g., abstract, opinions, discourse, synonymy
+  - [thematic-tag] # e.g., abstract, opinions, discourse, synonymy
 grammar:
-  - "Vocabulary focus: [theme]"
+  - 'Vocabulary focus: [theme]'
 objectives:
-  - "Learner can use [vocabulary group] in context"
-  - "Learner can distinguish [synonyms/register]"
-  - "Learner can form natural collocations with [key words]"
-vocabulary_count: 25  # 25-30 for vocab modules
+  - 'Learner can use [vocabulary group] in context'
+  - 'Learner can distinguish [synonyms/register]'
+  - 'Learner can form natural collocations with [key words]'
+vocabulary_count: 25 # 25-30 for vocab modules
 ---
 ```
 
 **Why these fields:**
+
 - `phase`: "B1.5 Vocabulary Expansion I" (M51-60) or "B1.6 Vocabulary Expansion II" (M61-70)
 - `pedagogy`: "PPP" for vocabulary (Present vocabulary → Practice in context → Produce in writing/speaking)
 - `vocabulary_count`: 25-30 items (higher density than grammar modules)
@@ -85,6 +87,7 @@ vocabulary_count: 25  # 25-30 for vocab modules
 ```
 
 **Example for Abstract Concepts module:**
+
 ```markdown
 # Абстрактні концепції: ідеї та думки
 
@@ -94,6 +97,7 @@ vocabulary_count: 25  # 25-30 for vocab modules
 ```
 
 **Why this works:**
+
 - Establishes practical value immediately
 - Shows WHERE vocabulary is used
 - Motivates learners with real-world relevance
@@ -105,6 +109,7 @@ vocabulary_count: 25  # 25-30 for vocab modules
 **Structure for PPP pedagogy:**
 
 #### Section 1: Вступ (Introduction Phase)
+
 - Present target vocabulary in semantic groups
 - Show authentic examples in context
 - NO translation lists yet — contextual discovery first
@@ -123,11 +128,13 @@ vocabulary_count: 25  # 25-30 for vocab modules
 ```
 
 **Why this works:**
+
 - Authentic text shows vocabulary in natural context
 - Learners discover meaning from context before definitions
 - Sets the semantic field clearly
 
 #### Section 2: Лексика (Presentation Phase)
+
 - Present vocabulary in THEMATIC GROUPS (not alphabetical)
 - Each group: 6-10 words with collocations
 - Tables showing word + common collocations
@@ -142,12 +149,12 @@ vocabulary_count: 25  # 25-30 for vocab modules
 
 **Основні слова:**
 
-| Слово | Типові колокації | Приклад |
-|-------|------------------|---------|
-| **ідея** | мати ідею, цікава ідея, головна ідея | У мене є **ідея**, як розв'язати цю проблему. |
-| **думка** | на мою думку, особиста думка, змінити думку | **На мою думку**, це правильний підхід. |
-| **концепція** | нова концепція, складна концепція, розвивати концепцію | Він розробив нову **концепцію** навчання. |
-| **теорія** | наукова теорія, перевірити теорію | Ця **теорія** ще не підтверджена. |
+| Слово         | Типові колокації                                       | Приклад                                       |
+| ------------- | ------------------------------------------------------ | --------------------------------------------- |
+| **ідея**      | мати ідею, цікава ідея, головна ідея                   | У мене є **ідея**, як розв'язати цю проблему. |
+| **думка**     | на мою думку, особиста думка, змінити думку            | **На мою думку**, це правильний підхід.       |
+| **концепція** | нова концепція, складна концепція, розвивати концепцію | Він розробив нову **концепцію** навчання.     |
+| **теорія**    | наукова теорія, перевірити теорію                      | Ця **теорія** ще не підтверджена.             |
 
 **Важливі відмінності:**
 
@@ -166,6 +173,7 @@ vocabulary_count: 25  # 25-30 for vocab modules
 ```
 
 **Why this structure:**
+
 - Groups by FUNCTION (how words are used), not just meaning
 - Shows COLLOCATIONS (natural word combinations)
 - Differentiates SYNONYMS by register/nuance
@@ -185,6 +193,7 @@ Minimum 5+ engagement boxes focusing on USAGE:
 ```
 
 #### Section 3: Використання (Practice Phase)
+
 - Collocation patterns
 - Register differentiation (formal/informal)
 - Synonymy distinctions
@@ -196,12 +205,14 @@ Minimum 5+ engagement boxes focusing on USAGE:
 ### Колокації: як поєднувати слова?
 
 **З дієсловом "мати":**
+
 - мати **ідею** ✅
 - мати **думку** ✅
 - мати **концепцію** ❌ (use "розробити концепцію")
 - мати **теорію** ❌ (use "висунути теорію")
 
 **З дієсловом "вирішити":**
+
 - вирішити **проблему** ✅
 - вирішити **питання** ✅
 - вирішити **завдання** ✅
@@ -212,11 +223,13 @@ Minimum 5+ engagement boxes focusing on USAGE:
 ### Реєстр: формальне чи розмовне?
 
 **Розмовна мова:**
+
 - У мене є **ідея**!
 - Це **проблема**.
 - Треба щось **придумати**.
 
 **Формальна мова / Академічна:**
+
 - Висуваю **гіпотезу**, що...
 - Існує **проблематика**...
 - Необхідно **розробити концептуальний підхід**.
@@ -239,11 +252,13 @@ Minimum 5+ engagement boxes focusing on USAGE:
   - "Концепція сталого розвитку." (The concept of sustainable development.)
 
 **When to use which:**
+
 - Everyday conversation → **ідея, думка**
 - Academic/professional → **концепція, підхід**
 ```
 
 **Why this works:**
+
 - Teaches COLLOCATIONS explicitly (not just words in isolation)
 - Shows REGISTER differences (formal vs informal)
 - Differentiates SYNONYMS by usage context
@@ -280,6 +295,7 @@ Minimum 5+ engagement boxes focusing on USAGE:
 ```
 
 **Why this works:**
+
 - Shows vocabulary in AUTHENTIC contexts
 - Different text types demonstrate REGISTER variation
 - Comprehension questions verify understanding
@@ -320,6 +336,7 @@ Minimum 5+ engagement boxes focusing on USAGE:
 ```
 
 **Why this works:**
+
 - Shows REGISTER contrast (formal vs informal vocabulary)
 - Demonstrates natural COLLOCATION use in speech
 - Provides SPEAKING models for learners
@@ -349,6 +366,7 @@ Minimum 5+ engagement boxes focusing on USAGE:
 > ✅ **Самоперевірка**
 >
 > Чи можете ви:
+>
 > - [ ] Відрізнити ідею від думки та концепції?
 > - [ ] Утворити правильні колокації (мати ідею, вирішити проблему)?
 > - [ ] Обрати формальний чи розмовний варіант залежно від ситуації?
@@ -359,17 +377,9 @@ Minimum 5+ engagement boxes focusing on USAGE:
 
 ---
 
-### 7. Resources Callout
+### 7. External Resources
 
-```markdown
-> [!resources] 🎧 Зовнішні ресурси
->
-> **Додаткові матеріали:**
-> - 📖 [Тематична стаття на Вікіпедії](https://uk.wikipedia.org/...) — Вікіпедія
-> - 📺 [Новинний випуск з використанням цієї лексики](https://www.youtube.com/...) — відео
-> - 🎧 [Подкаст про суспільні теми](https://...) — подкаст
-> - 📰 [Українські новини](https://www.pravda.com.ua) — для практики читання
-```
+> **⚠️ NOTE:** External resources are managed in `docs/resources/external_resources.yaml`, NOT in module markdown files. Do NOT add `[!resources]` blocks to modules.
 
 ---
 
@@ -380,120 +390,47 @@ Minimum 5+ engagement boxes focusing on USAGE:
 **Recommended activities for B1 Vocabulary modules (12+ total):**
 
 **High Priority (vocab-focused):**
+
 1. **match-up** (12+ items) — Collocations, synonyms, definitions
 2. **group-sort** (16+ items) — Semantic fields, register, word formation
 3. **select** (8+ items) — Multiple correct collocations
 4. **fill-in** (12+ items) — Contextual usage in sentences
 5. **cloze** (14+ blanks) — Reading passage with target vocabulary
 
-**Standard Activities:**
-6. **quiz** (8+ items, 12-20 words) — Vocabulary comprehension
-7. **true-false** (8+ items) — Usage verification
-8. **unjumble** (6+ items, 12-16 words) — Sentence construction
-10. **translate** (6+ items) — Translation practice
+**Standard Activities:** 6. **quiz** (8+ items, 12-20 words) — Vocabulary comprehension 7. **true-false** (8+ items) — Usage verification 8. **unjumble** (6+ items, 12-16 words) — Sentence construction 10. **translate** (6+ items) — Translation practice
 
-**Advanced Activities:**
-11. **error-correction** (6+ items) — Wrong collocations
-12. **mark-the-words** (6+ markable words) — Identify semantic field
+**Advanced Activities:** 11. **error-correction** (6+ items) — Wrong collocations 12. **mark-the-words** (6+ markable words) — Identify semantic field
 
 ---
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-**quiz** (checkbox, single answer):
-```markdown
-## quiz: Title
-1. Question text (12-20 words)?
-   - [ ] Wrong answer
-   - [x] Correct answer
-   - [ ] Wrong answer
-   - [ ] Wrong answer
-```
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
 
-**match-up** (table):
-```markdown
-## match-up: Title
-| Left | Right |
-|------|-------|
-| term | definition |
-```
+**Example `activities/b1-52-abstract-concepts.yaml`:**
 
-**fill-in** (callouts):
-```markdown
-## fill-in: Title
-1. Sentence with _____ blank.
-   > [!answer] correct
-   > [!options] wrong1 | correct | wrong2 | wrong3
-```
+```yaml
+- type: match-up
+  title: Колокації — Іменник + Дієслово
+  pairs:
+    - left: ідею
+      right: мати
+    - left: проблему
+      right: вирішити
+    - left: теорію
+      right: висунути
 
-**true-false** (checkbox with explanations):
-```markdown
-## true-false: Title
-- [x] True statement.
-  > Explanation.
-- [ ] False statement.
-  > Explanation.
-```
-
-**group-sort** (category headers):
-```markdown
-## group-sort: Title
-### Category A
-- item1
-### Category B
-- item2
-```
-
-**select** (multi-checkbox):
-```markdown
-## select: Title
-1. Question (select ALL correct):
-   - [x] Correct 1
-   - [x] Correct 2
-   - [ ] Wrong
-```
-
-**cloze** (inline blanks):
-```markdown
-## cloze: Title
-> Text with {blank|opt1|opt2|answer} blanks.
-```
-
-**unjumble** (answer callout):
-```markdown
-## unjumble: Title
-1. words / in / order
-   > [!answer] Correct sentence.
-```
-
-**error-correction** (4 callouts):
-```markdown
-## error-correction: Title
-1. Sentence with error.
-   > [!error] wrong
-   > [!answer] correct
-   > [!options] wrong | correct | d1 | d2
-   > [!explanation] Why wrong.
-```
-
-**translate** (multi-choice):
-```markdown
-## translate: Title
-1. English sentence.
-   - [ ] Wrong
-   - [x] Correct
-   - [ ] Wrong
-   - [ ] Wrong
-```
-
-**mark-the-words** (asterisks):
-```markdown
-## mark-the-words: Title
-> [!instruction] Click target words.
->
-> *Target* other *target*.
+- type: fill-in
+  title: Вибір слова з контексту
+  items:
+    - sentence: На мою _____, це правильний підхід.
+      answer: думку
+      options:
+        - думку
+        - ідею
+        - концепцію
 ```
 
 ---
@@ -518,6 +455,7 @@ Minimum 5+ engagement boxes focusing on USAGE:
 ```
 
 **Why this is critical:**
+
 - Vocabulary modules MUST teach COLLOCATIONS, not just isolated words
 - Match-up is the best activity type for practicing word combinations
 - 12+ items ensure comprehensive coverage
@@ -534,11 +472,13 @@ Minimum 5+ engagement boxes focusing on USAGE:
 Розподіліть слова за групами:
 
 **Групи:**
+
 1. **Ідеї та думки** (Ideas and Thoughts)
 2. **Проблеми та виклики** (Problems and Challenges)
 3. **Рішення та підходи** (Solutions and Approaches)
 
 **Слова для сортування:**
+
 - ідея → Ідеї та думки
 - проблема → Проблеми та виклики
 - рішення → Рішення та підходи
@@ -558,6 +498,7 @@ Minimum 5+ engagement boxes focusing on USAGE:
 ```
 
 **Why 16+ items:**
+
 - Sufficient coverage of semantic categories
 - Reinforces thematic organization from Лексика section
 - Tests conceptual understanding, not just memorization
@@ -591,6 +532,7 @@ Minimum 5+ engagement boxes focusing on USAGE:
 ```
 
 **Why this works:**
+
 - Trains PRODUCTIVE collocation knowledge
 - Multiple correct answers reflect real language flexibility
 - Tests both correct and incorrect combinations
@@ -628,34 +570,37 @@ Minimum 5+ engagement boxes focusing on USAGE:
 ```
 
 **Why 12+ items:**
+
 - Each item tests CONTEXTUAL appropriateness
 - Forces learners to distinguish synonyms by usage
 - Reinforces collocation patterns ("На мою думку", "висунути теорію")
 
 ---
 
-## Vocabulary Section Template (25-30 items, 5 columns)
+## Vocabulary Section Template
 
-**✅ CORRECT FORMAT (5 columns with IPA) — AUDIT PASSES:**
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-```markdown
-# Словник
+**Example `vocabulary/b1-52-abstract-concepts.yaml`:**
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-|-------|--------|----------|-----|----------|
-| **ідея** | /iˈdɛjɑ/ | idea | ім. (ж.р.) | мати ідею, цікава ідея |
-| **думка** | /ˈdumkɑ/ | opinion, thought | ім. (ж.р.) | на мою думку, висловити думку |
-| **концепція** | /kɔnˈt͡sɛpt͡sijɑ/ | concept | ім. (ж.р.) | розробити концепцію (formal) |
-| **теорія** | /tɛˈɔrijɑ/ | theory | ім. (ж.р.) | наукова теорія, висунути теорію |
-| **проблема** | /prɔˈblɛmɑ/ | problem | ім. (ж.р.) | вирішити проблему, серйозна проблема |
-| **рішення** | /riˈʃɛnːɑ/ | solution, decision | ім. (с.р.) | знайти рішення, прийняти рішення |
-| **вважати** | /vːɑˈʒɑtɪ/ | to believe, consider | дієсл. (НДВ) | я вважаю, що... |
-| **погоджуватися** | /pɔɦɔˈdʒuvɑtɪsʲɑ/ | to agree | дієсл. (НДВ) | погоджуватися з думкою |
-[... 17-22 more entries for total of 25-30]
+```yaml
+items:
+- lemma: ідея
+  ipa: /iˈdɛjɑ/
+  translation: idea
+  pos: ім. (ж.р.)
+  gender: f
+  note: мати ідею, цікава ідея
+- lemma: думка
+  ipa: /ˈdumkɑ/
+  translation: opinion/thought
+  pos: ім. (ж.р.)
+  gender: f
+  note: на мою думку, висловити думку
 ```
 
 **CRITICAL for Vocabulary Modules:**
-- **Примітка column**: MUST include common collocations
+- **Note field**: MUST include common collocations
 - 25-30 items (higher than grammar modules' 25)
 - Group vocabulary thematically in the table if possible
 
@@ -664,26 +609,32 @@ Minimum 5+ engagement boxes focusing on USAGE:
 ## Common Pitfalls to Avoid
 
 ### 1. **Teaching Words in Isolation**
+
 - ❌ Problem: Just listing words with translations, no collocations
 - ✅ Solution: ALWAYS teach collocations: "мати ідею", "вирішити проблему", "висловити думку"
 
 ### 2. **Ignoring Register Differences**
+
 - ❌ Problem: Not distinguishing formal vs informal vocabulary
 - ✅ Solution: Mark register in Примітка column and explain in content
 
 ### 3. **Not Differentiating Synonyms**
+
 - ❌ Problem: Teaching ідея/думка/концепція as identical
 - ✅ Solution: Explicitly show USAGE differences in "Використання" section
 
 ### 4. **Insufficient Collocation Practice**
+
 - ❌ Problem: Only 1-2 match-up activities for collocations
 - ✅ Solution: Use match-up, select, and fill-in to reinforce collocations from multiple angles
 
 ### 5. **No Authentic Reading**
+
 - ❌ Problem: All examples are constructed sentences
 - ✅ Solution: Include 2-3 authentic passages (news, blogs, academic) showing vocabulary in real context
 
 ### 6. **Wrong Activity Mix**
+
 - ❌ Problem: Too many quiz/true-false, not enough match-up/group-sort/select
 - ✅ Solution: Emphasize vocabulary-focused activity types:
   - Match-up: 2-3 activities (collocations, synonyms)
@@ -692,23 +643,27 @@ Minimum 5+ engagement boxes focusing on USAGE:
   - Fill-in: 2 activities (contextual usage)
 
 ### 7. **Alphabetical Organization**
+
 - ❌ Problem: Vocabulary presented alphabetically (defeats semantic learning)
 - ✅ Solution: Organize by SEMANTIC GROUPS in Лексика section
 
 ### 8. **Missing Resources**
+
 - ❌ Problem: No authentic materials for learners to practice with
-- ✅ Solution: Include [!resources] callout with news sites, podcasts, blogs using this vocabulary
+- ✅ Solution: Add resources to `docs/resources/external_resources.yaml` with news sites, podcasts, blogs using this vocabulary
 
 ---
 
 ## Audit Validation
 
 Before submitting, run:
+
 ```bash
 python3 scripts/audit_module.py curriculum/l2-uk-en/b1/XX-your-module.md
 ```
 
 **Target output:**
+
 ```
 ✅ Words: 1500+/1500
 ✅ Activities: 12/12
@@ -726,6 +681,7 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/b1/XX-your-module.md
 When M51 (Abstract Concepts I) is created, it will serve as the reference implementation for vocabulary modules.
 
 **Expected M51 specs:**
+
 - ✅ Words: 1500+
 - ✅ Vocabulary: 30 items
 - ✅ Thematic groups: 5 semantic fields

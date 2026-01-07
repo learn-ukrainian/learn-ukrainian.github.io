@@ -201,31 +201,6 @@ The Ukrainian **базар** (market) is more than a store; it's a community hub
 
 ---
 
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| знижка | ˈznɪʒkɑ | discount | noun | f | — |
-| акція | ˈɑktsijɑ | sale, promotion | noun | f | shopping context |
-| розпродаж | rɔzˈprɔdɑʒ | clearance sale | noun | m | — |
-| якість | ˈjɑkisʲtʲ | quality | noun | f | — |
-| ціна | tsiˈnɑ | price | noun | f | — |
-| вартість | ˈvɑrtisʲtʲ | cost, value | noun | f | — |
-| вигідний | vɪˈɦidnɪj | profitable, good deal | adj | — | — |
-| порівнювати | pɔrivnʲuˈvɑtɪ | to compare | verb | — | impf |
-| вибирати | vɪbɪˈrɑtɪ | to choose | verb | — | impf |
-| рекомендувати | rɛkɔmɛnduˈvɑtɪ | to recommend | verb | — | impf |
-| радити | ˈrɑdɪtɪ | to advise | verb | — | impf |
-| пропонувати | prɔpɔnuˈvɑtɪ | to offer | verb | — | impf |
-| кращий | ˈkrɑʃt͡ʃɪj | better | adj | — | comparative |
-| дешевший | dɛˈʃɛvʃɪj | cheaper | adj | — | comparative |
-| дорожчий | dɔˈrɔʒt͡ʃɪj | more expensive | adj | — | comparative |
-| торг | tɔrɦ | bargaining | noun | m | — |
-| базар | bɑˈzɑr | market | noun | m | traditional market |
-| ринок | ˈrɪnɔk | market | noun | m | — |
-
----
-
 # Summary
 
 У цьому уроці ви навчилися:

@@ -271,23 +271,23 @@ vocabulary_focus:
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
-| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
-| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
-| **critical-analysis** | `> [!instruction] Analyze...` + `> [!model-answer] ...` |
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
+
+**Example `activities/c2-46-meta-skills.yaml`:**
+
+```yaml
+- type: fill-in
+  title: Термінологія за контекстом
+  instruction: Визначте значення терміна з контексту.
+  items:
+    - sentence: Позивач вимагає [___] моральної шкоди.
+      answer: відшкодування
+      options:
+        - відшкодування
+        - нанесення
+```
 
 ---
 
@@ -425,27 +425,22 @@ vocabulary_focus:
 
 ## Vocabulary Section for Professional Modules
 
-```markdown
-# Словник
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **термін** | term | фахове слово |
-| **терміносистема** | terminology system | система термінів галузі |
-| **галузь** | field, domain | сфера діяльності |
-| **фах** | profession, specialty | професія |
-| **експертиза** | expertise, expert opinion | фахова оцінка |
-| **доповідь** | report, presentation | усний виступ |
-| **звіт** | report (written) | письмовий документ |
-| **реферат** | abstract, summary | стислий виклад |
-| **анотація** | annotation | коротка характеристика |
-| **конференція** | conference | наукова/ділова зустріч |
-| **переговори** | negotiations | ділове обговорення |
-| **угода** | agreement | домовленість |
-| **компроміс** | compromise | взаємна поступка |
-| **резюме** | CV, resume | професійна біографія |
-| **портфоліо** | portfolio | збірка робіт |
-| [40+ professional terms] | | |
+**Example `vocabulary/c2-46-meta-skills.yaml`:**
+
+```yaml
+items:
+- lemma: термін
+  ipa: /tɛrmin/
+  translation: term
+  pos: ім.
+  note: фахове слово
+- lemma: галузь
+  ipa: /ɦɑluzʲ/
+  translation: field/domain
+  pos: ім.
+  note: сфера діяльності
 ```
 
 ---

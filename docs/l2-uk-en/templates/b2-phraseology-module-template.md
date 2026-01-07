@@ -166,129 +166,42 @@ vocabulary_focus:
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
-| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
 
+**Example `activities/b2-41-idioms.yaml`:**
+
+```yaml
+- type: match-up
+  title: Фразеологізм та значення
+  pairs:
+    - left: рукою подати
+      right: дуже близько
+    - left: як кіт наплакав
+      right: дуже мало
+
+- type: fill-in
+  title: Фразеологізми в контексті
+  items:
+    - sentence: Магазин зовсім поруч, [___].
+      answer: рукою подати
+      options:
+        - рукою подати
+        - на носі
+```
 
 ---
 
-### Idiom Matching
+### Activity Examples (Conceptual)
 
-```markdown
-## match-up: Фразеологізм та значення
+*Note: These activities must be implemented in YAML.*
 
-- рукою подати | дуже близько
-- як кіт наплакав | дуже мало
-- ні пуху ні пера | побажання успіху
-- брати бика за роги | рішуче діяти
-- як у воду дивитися | правильно передбачити
-- тримати руку на пульсі | бути в курсі подій
-- біла ворона | не такий як усі
-- після дощику в четвер | ніколи
-
-[12+ matches]
-```
-
-### Context Completion
-
-```markdown
-## fill-in: Фразеологізми в контексті
-
-1. Магазин зовсім поруч, [___].
-   - [x] рукою подати
-   - [ ] на носі
-   - [ ] під боком
-   > "Рукою подати" = дуже близько (можна дістати рукою).
-
-2. Грошей у нас [___], ледве на їжу вистачає.
-   - [x] як кіт наплакав
-   - [ ] хоч греблю гати
-   - [ ] повні кишені
-   > "Як кіт наплакав" = дуже мало (коти не плачуть).
-
-[10+ items]
-```
-
-### Synonym Nuance
-
-```markdown
-## group-sort: Відтінки значення
-
-Розподіліть слова за ступенем інтенсивності:
-
-- group: Слабкий ступінь
-  - сердитий
-  - незадоволений
-  - роздратований
-
-- group: Середній ступінь
-  - злий
-  - розгніваний
-  - обурений
-
-- group: Сильний ступінь
-  - лютий
-  - шаленій
-  - скаженій
-
-[16+ items across 3-4 intensity levels]
-```
-
-### Register Sorting
-
-```markdown
-## group-sort: Регістр фразеологізмів
-
-- group: Розмовний
-  - ні пуху ні пера
-  - купити кота в мішку
-  - сісти в калюжу
-
-- group: Нейтральний
-  - рукою подати
-  - як у воду дивитися
-  - тримати руку на пульсі
-
-- group: Книжний/урочистий
-  - стовп суспільства
-  - нести хрест
-  - каменем спотикання
-
-[16+ items]
-```
-
-### Proverb Completion
-
-```markdown
-## fill-in: Закінчіть прислів'я
-
-1. Без труда [___].
-   - [x] нема плода
-   - [ ] нема ліда
-   - [ ] нема роду
-   > Прислів'я про цінність праці.
-
-2. Як посієш, [___].
-   - [x] так і пожнеш
-   - [ ] так і виросте
-   - [ ] так і буде
-   > Прислів'я про наслідки вчинків.
-
-[10+ proverb completions]
-```
+1. **Idiom Matching (match-up):** Match phrase to meaning.
+2. **Context Completion (fill-in):** Choose phrase for context.
+3. **Synonym Nuance (group-sort):** Sort by intensity.
+4. **Register Sorting (group-sort):** Sort by register.
+5. **Proverb Completion (fill-in):** Finish the proverb.
 
 ---
 
@@ -324,20 +237,20 @@ vocabulary_focus:
 
 ## Vocabulary Section for Phraseology Modules
 
-```markdown
-# Словник
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-| Слово / Вираз | Переклад | Примітки |
-|---------------|----------|----------|
-| **рукою подати** | very close, a stone's throw | соматичний; "можна дістати рукою" |
-| **як кіт наплакав** | very little | зоологічний; іронія — коти не плачуть |
-| **біла ворона** | odd one out, black sheep | зоологічний + кольоровий |
-| **ні пуху ні пера** | break a leg, good luck | мисливський вираз; відповідь: "До біса!" |
-| **фразеологізм** | idiom, set expression | лінгвістичний термін |
-| **прислів'я** | proverb | народна мудрість; завершена думка |
-| **приказка** | saying | незавершена думка, порівняння |
-| **крилатий вислів** | winged word | вираз із відомим джерелом |
-| [30+ items] | | |
+**Example `vocabulary/b2-41-idioms.yaml`:**
+
+```yaml
+items:
+- lemma: рукою подати
+  translation: very close
+  pos: фраза
+  note: соматичний; "можна дістати рукою"
+- lemma: біла ворона
+  translation: black sheep
+  pos: фраза
+  note: зоологічний + кольоровий
 ```
 
 ---

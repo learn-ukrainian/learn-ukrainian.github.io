@@ -67,9 +67,7 @@ objectives:
   - "Learner can analyze [concept] in authentic Ukrainian academic/literary texts"
   - "Learner can compare [multiple perspectives/texts]"
   - "Learner can produce [academic writing type] at C1 level"
-vocabulary_count: 35  # Must match actual count
-register: "науковий"  # Options: офіційно-діловий, науковий, публіцистичний, художній, розмовний
-text_type: "academic"  # academic, literary, journalistic, professional
+vocabulary_count: 35  # Must match count in vocabulary/{slug}.yaml
 ---
 ```
 
@@ -232,27 +230,28 @@ text_type: "academic"  # academic, literary, journalistic, professional
 
 ### 4. Vocabulary Section (Словник)
 
-**Format:** 3-column table (C1 standard)
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-```markdown
-# Словник
+**Example `vocabulary/c1-XX-academic.yaml`:**
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| метафора | metaphor | stylistic device: figurative language |
-| іронія | irony | stylistic device: saying opposite of meaning |
-| алюзія | allusion | reference to other texts/events |
-| архаїзм | archaism | outdated word used for stylistic effect |
-| евфемізм | euphemism | mild expression replacing harsh one |
-| літота | litotes | understatement for emphasis |
-| гіпербола | hyperbole | exaggeration for effect |
-| [35+ items] | | |
+```yaml
+items:
+- lemma: метафора
+  ipa: /mɛˈtɑfɔrɑ/
+  translation: metaphor
+  pos: ім. (ж.р.)
+  note: stylistic device
+- lemma: іронія
+  ipa: /iˈrɔnʲijɑ/
+  translation: irony
+  pos: ім. (ж.р.)
+  note: stylistic device
 ```
 
 **C1 Vocabulary Notes:**
 - **35+ items minimum** (vs. 30+ for B2)
 - **Specialized terminology:** Literary, academic, professional domains
-- **Примітки column:** Etymology, collocations, register notes, usage examples
+- **Note field:** Etymology, collocations, register notes, usage examples
 - **Context-rich:** Vocabulary should reflect module's academic/professional focus
 
 ---
@@ -322,22 +321,30 @@ C1 modules teach both Ukrainian AND subject matter (academic, literary, cultural
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
-| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
-| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
+
+**Example `activities/c1-XX-academic.yaml`:**
+
+```yaml
+- type: quiz
+  title: Розуміння тексту
+  items:
+    - question: Згідно з текстом, як автор аналізує метафору?
+      options:
+        - text: Як засіб образності
+          correct: true
+        - text: Як помилку
+          correct: false
+
+- type: essay-response
+  title: Критичне есе
+  instruction: Напишіть есе (400+ слів), порівнюючи два тексти.
+  prompt: Порівняйте використання іронії в текстах А і Б.
+  model_answer: (Sample essay...)
+  rubric: (Evaluation criteria...)
+```
 
 ---
 

@@ -79,7 +79,7 @@ objectives:
   - "Learner can synthesize historical themes across eras"
   - "Learner can construct historical arguments with evidence"
   - "Learner can identify continuities in Ukrainian history"
-vocabulary_count: 25  # Review vocabulary from covered modules
+vocabulary_count: 25  # Must match count in vocabulary/{slug}.yaml
 ---
 ```
 
@@ -338,24 +338,17 @@ B) Проаналізуйте, як культурний опір допомаг
 
 ## Vocabulary for Synthesis Modules
 
-Synthesis vocabulary focuses on analytical and historiographical terms:
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-```markdown
-# Словник
+**Example `vocabulary/b2-XX-synthesis.yaml`:**
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **синтез** | synthesis | об'єднання ідей з різних джерел |
-| **патерн** | pattern | повторюваний зразок |
-| **безперервність** | continuity | неперервність у часі |
-| **паралель** | parallel | схожість між епохами |
-| **аргумент** | argument | обґрунтована позиція |
-| **доказ** | evidence | підтвердження з джерел |
-| **історіографія** | historiography | наука про написання історії |
-| **наратив** | narrative | історичний виклад |
-| **деконструкція** | deconstruction | розбір міфів |
-| **контекстуалізація** | contextualization | розміщення в контексті |
-| [15+ synthesis/analysis terms from covered modules]
+```yaml
+items:
+- lemma: синтез
+  ipa: /sɪnˈtɛz/
+  translation: synthesis
+  pos: ім.
+  note: об'єднання ідей
 ```
 
 ---

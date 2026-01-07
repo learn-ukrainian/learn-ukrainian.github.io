@@ -123,7 +123,7 @@ objectives:
   - Learner can produce [output] based on authentic input
   - Learner is prepared for autonomous [skill] practice at B2
 word_target: 1500
-vocab_target: 15-20
+vocab_target: 15-20 # Must match count in vocabulary/{slug}.yaml
 immersion_target: 90-95%
 ---
 ```
@@ -297,47 +297,48 @@ immersion_target: 90-95%
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-**quiz**: `- [ ] wrong` / `- [x] correct` with optional `> explanation`
-**true-false**: `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation`
-**fill-in**: `> [!answer]` + `> [!options] a | b | c | d`
-**error-correction**: ALL 4: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]`
-**match-up**: Table format `| Left | Right |`
-**group-sort**: `### Category` headers with `- items`
-**unjumble**: `> [!answer] Correct sentence.`
-**cloze**: `{blank|opt1|opt2|answer}` inline
-**select**: Multiple `- [x]` for correct options
-**translate**: Multi-choice with `- [x]` for correct + `> explanation`
-**mark-the-words**: `*marked*` words in blockquote
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
 
-See `b1-grammar-module-template.md` for full examples.
+**Example `activities/b1-81-news-reading.yaml`:**
+
+```yaml
+- type: quiz
+  title: Розуміння заголовків
+  instruction: Прочитайте заголовок і виберіть правильну інтерпретацію.
+  items:
+    - question: Що означає заголовок "Україна здобула перемогу"?
+      options:
+        - text: Україна виграла
+          correct: true
+        - text: Україна програла
+          correct: false
+```
 
 ---
 
 #### Section 7: Словник (Vocabulary)
 
-**Format:** 5-column table (B1 standard)
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-```markdown
-# Словник
+**Example `vocabulary/b1-81-news-reading.yaml`:**
 
-| Слово | Вимова | English | PoS | Примітки |
-|-------|--------|---------|-----|----------|
-| заголовок | [zɑhoˈlɔvɔk] | headline | noun (m) | перший рядок новини |
-| лід | [lid] | lead (journalism) | noun (m) | перший абзац, головна інформація |
-| підзаголовок | [pidˈzɑholovok] | subheading | noun (m) | вторинний заголовок |
-| факт | [fɑkt] | fact | noun (m) | перевірена інформація |
-| думка | [ˈdumkɑ] | opinion | noun (f) | суб'єктивна оцінка |
-| ... | ... | ... | ... | ... |
+```yaml
+items:
+- lemma: заголовок
+  ipa: /zɑhoˈlɔvɔk/
+  translation: headline
+  pos: ім. (ч.р.)
+  gender: m
+  note: перший рядок новини
+- lemma: лід
+  ipa: /lid/
+  translation: lead (journalism)
+  pos: ім. (ч.р.)
+  gender: m
+  note: перший абзац, головна інформація
 ```
-
-**Requirements:**
-- **15-20 items** (lower than regular modules)
-- **Meta-language focus** (terms about reading, listening, analysis)
-- **IPA pronunciation** for all entries
-
-**WHY lower vocabulary:** These modules review existing vocabulary + add meta-language, not domain vocabulary.
 
 ---
 

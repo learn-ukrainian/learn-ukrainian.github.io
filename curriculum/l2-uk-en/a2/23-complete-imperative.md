@@ -322,33 +322,6 @@ Let's review all forms one more time with the verb **робити** (to do):
 
 ---
 
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| хай | xɑj | let (particle) | part | — | conversational |
-| нехай | nɛˈxɑj | let (particle) | part | — | literary/formal |
-| будь | budʲ | be (imperative) | verb | — | irregular |
-| будьте | ˈbudʲtɛ | be (imperative pl.) | verb | — | irregular |
-| дай | dɑj | give (imperative) | verb | — | irregular |
-| візьми | ˈvizʲmɪ | take (imperative) | verb | — | irregular |
-| їж | jiʒ | eat (imperative) | verb | — | irregular |
-| ходімо | xɔˈdimɔ | let's go | verb | — | 1st plural |
-| щастити | ʃt͡ʃɑˈstɪtɪ | to be lucky | verb | — | Хай щастить! |
-| вирішувати | vɪriˈʃuvɑtɪ | to decide | verb | — | imperfective |
-| здійснюватися | zd͡ʒijsʲnʲuˈvɑtɪsʲɑ | to come true | verb | — | for dreams |
-| передавати | pɛrɛdɑˈvɑtɪ | to pass on, convey | verb | — | — |
-| залишатися | zɑlɪˈʃɑtɪsʲɑ | to stay, remain | verb | — | imperfective |
-| допомагати | dɔpɔmɑˈɦɑtɪ | to help | verb | — | imperfective |
-| починати | pɔt͡ʃɪˈnɑtɪ | to begin | verb | — | imperfective |
-| наказовий | nɑkɑˈzɔvɪj | imperative (adj.) | adj | — | grammatical term |
-| спосіб | ˈspɔsib | mood; way | noun | m | grammatical term |
-| основа | ɔsˈnɔvɑ | stem; basis | noun | f | grammatical term |
-| закінчення | zɑkinˈt͡ʃɛnʲːɑ | ending | noun | n | grammatical term |
-| дієслово | diˈjɛslɔvɔ | verb | noun | n | grammatical term |
-
----
-
 # Summary
 
 You've learned the complete Ukrainian imperative system!

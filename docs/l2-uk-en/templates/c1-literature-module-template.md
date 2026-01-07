@@ -399,24 +399,32 @@ Why GOOD: Tests fixed collocation (відіграти роль), requires unders
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
-| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
-| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
-| **critical-analysis** | `> [!instruction] Analyze...` + `> [!model-answer] ...` |
-| **authorial-intent** | `> [!instruction] Evaluate...` + `> [!model-answer] ...` |
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
+
+**Example `activities/c1-146-shevchenko.yaml`:**
+
+```yaml
+- type: quiz
+  title: Розуміння літературознавчого тексту
+  items:
+    - question: Згідно з текстом модуля, який стилістичний засіб автор виділяє?
+      options:
+        - text: персоніфікацію
+          correct: true
+        - text: метафору
+          correct: false
+
+- type: fill-in
+  title: Аналіз цитати
+  items:
+    - sentence: '"Реве та стогне Дніпр широкий" — це приклад [___].'
+      answer: персоніфікації
+      options:
+        - персоніфікації
+        - метафори
+```
 
 ---
 
@@ -538,24 +546,22 @@ Why GOOD: Tests fixed collocation (відіграти роль), requires unders
 
 ## Vocabulary Section for Literature Modules
 
-```markdown
-# Словник
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **ліричний герой** | lyrical persona | не автор, а голос у вірші |
-| **наратор** | narrator | той, хто розповідає |
-| **фабула** | plot, fabula | що відбувається |
-| **сюжет** | narrative, sujet | як розповідається |
-| **метафора** | metaphor | неявне порівняння |
-| **символ** | symbol | образ із глибшим значенням |
-| **алегорія** | allegory | розгорнута метафора |
-| **іронія** | irony | протилежне значення |
-| **класицизм** | classicism | літературний напрям |
-| **романтизм** | romanticism | літературний напрям |
-| **модернізм** | modernism | літературний напрям |
-| **розстріляне відродження** | Executed Renaissance | покоління 1920-х |
-| [35+ literary terms] | | |
+**Example `vocabulary/c1-146-shevchenko.yaml`:**
+
+```yaml
+items:
+- lemma: метафора
+  ipa: /mɛˈtɑfɔrɑ/
+  translation: metaphor
+  pos: noun
+  note: неявне порівняння
+- lemma: ліричний герой
+  ipa: /lʲiˈrɪt͡ʃnɪj ɦɛˈrɔj/
+  translation: lyrical persona
+  pos: phrase
+  note: голос у вірші
 ```
 
 ---

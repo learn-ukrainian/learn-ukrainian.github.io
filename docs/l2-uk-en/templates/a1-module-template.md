@@ -44,7 +44,7 @@ objectives:
   - "Learner can {objective 1}"
   - "Learner can {objective 2}"
   - "Learner can {objective 3}"
-vocabulary_count: {N}
+vocabulary_count: 25 # Must match count in vocabulary/{slug}.yaml
 ---
 ```
 
@@ -139,75 +139,44 @@ Brief recap (50-75 words):
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-**quiz** (multiple choice - single answer):
-```markdown
-## quiz: Title
-1. Question text?
-   - [ ] Wrong answer
-   - [x] Correct answer
-   - [ ] Wrong answer
-   - [ ] Wrong answer
-```
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
 
-**match-up** (pair matching):
-```markdown
-## match-up: Title
-| Left | Right |
-|------|-------|
-| слово | word |
-| книга | book |
-```
+**Example `activities/a1-XX-module.yaml`:**
 
-**fill-in** (gap fill with options):
-```markdown
-## fill-in: Title
-1. Sentence with _____ blank.
-   > [!answer] correct
-   > [!options] wrong1 | correct | wrong2 | wrong3
-```
+```yaml
+- type: quiz
+  title: Number Recognition
+  items:
+    - question: What number is "п'ять"?
+      options:
+        - text: "3"
+          correct: false
+        - text: "5"
+          correct: true
 
-**true-false** (checkbox format with explanations):
-```markdown
-## true-false: Title
-- [x] True statement here.
-  > Explanation why it's true.
-- [ ] False statement here.
-  > Explanation why it's false.
-```
-
-**group-sort** (category headers with bullets):
-```markdown
-## group-sort: Title
-### Category A
-- item1
-- item2
-### Category B
-- item3
-- item4
-```
-
-**unjumble** (word reordering):
-```markdown
-## unjumble: Title
-1. слово / інше / ще
-   > [!answer] Правильне речення тут.
-```
-
-**anagram** (M01-10 only - letter unscrambling):
-```markdown
-## anagram: Title
-1. овсло
-   > [!answer] слово
+- type: match-up
+  title: Numbers and Words
+  pairs:
+    - left: один
+      right: "1"
 ```
 
 ### ## Vocabulary
 
-```markdown
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| слово | /ˈslɔwɔ/ | word | noun | n | — |
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
+
+**Example `vocabulary/a1-XX-module.yaml`:**
+
+```yaml
+items:
+- lemma: слово
+  ipa: /slɔwɔ/
+  translation: word
+  pos: noun
+  gender: n
+  note: —
 ```
 
 ---
@@ -298,28 +267,9 @@ vocabulary_count: 25
 
 ## Activities
 
-## quiz: Number Recognition
-1. What number is "п'ять"?
-   - [ ] 3
-   - [x] 5
-   - [ ] 7
-   - [ ] 9
-{... 11 more items}
-
-## match-up: Numbers and Words
-| Left | Right |
-|------|-------|
-| один | 1 |
-| два | 2 |
-{... 10 more pairs}
-
-{... more activities}
+(See `activities/a1-05-numbers.yaml`)
 
 ## Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| нуль | /nulʲ/ | zero | noun | m | — |
-| один | /oˈdɪn/ | one | num | m | — |
-{... more vocabulary}
+(See `vocabulary/a1-05-numbers.yaml`)
 ```

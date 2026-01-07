@@ -255,22 +255,32 @@ The lesson teaches both Ukrainian AND academic concepts. Activities practice onl
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
-| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
-| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
+
+**Example `activities/c1-01-academic.yaml`:**
+
+```yaml
+- type: quiz
+  title: Розуміння тексту
+  items:
+    - question: Згідно з текстом, яка мета статті?
+      options:
+        - text: Аналіз проблеми
+          correct: true
+        - text: Опис експерименту
+          correct: false
+
+- type: fill-in
+  title: Цитування джерел
+  items:
+    - sentence: На [___] дослідника, це важливо.
+      answer: думку
+      options:
+        - думку
+        - слова
+```
 
 ---
 
@@ -369,22 +379,22 @@ The lesson teaches both Ukrainian AND academic concepts. Activities practice onl
 
 ## Vocabulary Section for Academic Modules
 
-```markdown
-# Словник
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **анотація** | abstract | науковий термін |
-| **дослідження** | research, study | n.; може бути verb: досліджувати |
-| **гіпотеза** | hypothesis | грецьке походження |
-| **методологія** | methodology | наукова дисципліна |
-| **актуальність** | relevance, timeliness | ключове слово у вступі |
-| **висновок** | conclusion | pl.: висновки |
-| **джерело** | source | pl.: джерела |
-| **посилання** | reference, citation | також: цитата |
-| **аргумент** | argument | логічний доказ |
-| **теза** | thesis | центральна думка |
-| [35+ academic terms] | | |
+**Example `vocabulary/c1-01-academic.yaml`:**
+
+```yaml
+items:
+- lemma: анотація
+  ipa: /ɑnɔˈtɑt͡sʲijɑ/
+  translation: abstract
+  pos: ім.
+  note: науковий термін
+- lemma: гіпотеза
+  ipa: /ɦipɔˈtɛzɑ/
+  translation: hypothesis
+  pos: ім.
+  note: наукове припущення
 ```
 
 ---

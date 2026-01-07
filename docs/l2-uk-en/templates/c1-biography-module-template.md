@@ -326,21 +326,34 @@ Why GOOD: Requires understanding how the MODULE describes the figure's influence
 
 ### Activity Format Quick Reference
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
-| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
-| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
-| **comparative-study** | `> [!instruction] Compare items...` + `> [!model-answer] ...` |
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
+
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
+
+**Example `activities/c1-XX-biography.yaml`:**
+
+```yaml
+- type: quiz
+  title: Розуміння біографії
+  items:
+    - question: Згідно з текстом, який головний внесок цієї постаті?
+      options:
+        - text: Розвиток літератури
+          correct: true
+        - text: Військові перемоги
+          correct: false
+      explanation: Текст наголошує на літературній спадщині.
+
+- type: fill-in
+  title: Біографічна лексика
+  items:
+    - sentence: Ця постать _____ визначну роль в історії.
+      answer: відіграла
+      options:
+        - відіграла
+        - зробила
+        - мала
+```
 
 ---
 
@@ -513,23 +526,31 @@ Why GOOD: Requires understanding how the MODULE describes the figure's influence
 
 ## Vocabulary Section for Biography Modules
 
-```markdown
-# Словник
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **постать** | figure, personality | історична постать — historical figure |
-| **спадщина** | legacy, heritage | інтелектуальна спадщина |
-| **внесок** | contribution | зробити внесок у... |
-| **діяльність** | activity, work | громадська діяльність — public activity |
-| **сучасник** | contemporary | pl.: сучасники |
-| **послідовник** | follower, successor | ідейний послідовник |
-| **світогляд** | worldview | філософський світогляд |
-| **доля** | fate, destiny | трагічна доля |
-| **вшанування** | commemoration | вшанування пам'яті |
-| **пам'ятник** | monument | пам'ятник [кому? — Dative] |
-| [35+ biographical terms] | | |
+**Example `vocabulary/c1-XX-biography.yaml`:**
+
+```yaml
+items:
+- lemma: постать
+  ipa: /pɔˈstɑtʲ/
+  translation: figure/personality
+  pos: noun
+  gender: f
+  note: історична постать
+- lemma: спадщина
+  ipa: /spɑˈdʃt͡ʃɪnɑ/
+  translation: legacy/heritage
+  pos: noun
+  gender: f
+  note: інтелектуальна спадщина
 ```
+
+**Why YAML sidecar:**
+- Validates schema automatically
+- Ensures consistent formatting
+- Enables programmatic processing
+- Audit validates this exact format for C1+
 
 ---
 

@@ -126,7 +126,7 @@ objectives:
   - "Learner can demonstrate mastery of [phase topic]"
   - "Learner can integrate knowledge from M[start]-M[end]"
   - "Learner can self-assess readiness for next phase"
-vocabulary_count: 35  # Higher than regular modules (review vocabulary)
+vocabulary_count: 35  # Must match count in vocabulary/{slug}.yaml
 ---
 ```
 
@@ -256,22 +256,24 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **true-false** | `- [x] True statement.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
-| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
 
+**Example `activities/b1-15-checkpoint.yaml`:**
+
+```yaml
+- type: quiz
+  title: Аспект у минулому часі (M06-07)
+  instruction: Перевірте ваше розуміння аспекту в минулому часі.
+  items:
+    - question: Я вчора _____ книгу.
+      options:
+        - text: читав
+          correct: true
+        - text: прочитав
+          correct: false
+```
 
 ---
 
@@ -346,27 +348,17 @@ Checkpoints must test ALL skill groups from the phase:
 
 ## Vocabulary Section for Checkpoints
 
-**30-40 items organized by module:**
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-```markdown
-# Словник
+**Example `vocabulary/b1-15-checkpoint.yaml`:**
 
-## Модуль [X]: [Title]
-
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **[term1]** | ... | з модуля [X] |
-| **[term2]** | ... | з модуля [X] |
-[... key vocabulary from M[X]]
-
-## Модуль [Y]: [Title]
-
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **[term1]** | ... | з модуля [Y] |
-[... key vocabulary from M[Y]]
-
-[Continue for ALL modules in phase]
+```yaml
+items:
+- lemma: читати
+  ipa: /t͡ʃɪˈtɑtɪ/
+  translation: to read
+  pos: дієсл.
+  note: з модуля 06
 ```
 
 ---

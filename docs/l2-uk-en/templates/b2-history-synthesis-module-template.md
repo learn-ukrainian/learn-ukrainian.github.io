@@ -82,7 +82,7 @@ objectives:
   - "Синтезувати знання з модулів [XX]-[YY]"
   - "Аналізувати причинно-наслідкові зв'язки в історичному контексті"
   - "Формулювати аргументовані висновки про історичні події"
-vocabulary_count: 30
+vocabulary_count: 30  # Must match count in vocabulary/{slug}.yaml
 ---
 ```
 
@@ -339,19 +339,17 @@ vocabulary_count: 30
 
 ### 8. Vocabulary Section
 
-```markdown
----
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-# Словник
+**Example `vocabulary/b2-83-synthesis.yaml`:**
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **синтез** | synthesis | об'єднання знань |
-| **узагальнення** | generalization | загальний висновок |
-| **причинно-наслідковий** | cause-and-effect | зв'язок причини та наслідку |
-| **аргументація** | argumentation | система доказів |
-| **теза** | thesis | головна думка |
-[... 25-30 items: mix of historiographical, argumentative, and era-specific terms]
+```yaml
+items:
+- lemma: синтез
+  ipa: /sɪnˈtɛz/
+  translation: synthesis
+  pos: ім.
+  note: об'єднання знань
 ```
 
 ---

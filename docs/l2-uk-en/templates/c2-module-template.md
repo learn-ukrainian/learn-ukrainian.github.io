@@ -65,9 +65,7 @@ objectives:
   - "Learner can produce [creative/professional work] at native-like level"
   - "Learner can transform [text] across styles/registers with precision"
   - "Learner can analyze [linguistic phenomenon] at expert level"
-vocabulary_count: 40  # Must match actual count
-register: "художній"  # Options: розмовний, офіційний, науковий, публіцистичний, художній, релігійний, епістолярний
-style_focus: "ironic"  # Options: formal, colloquial, ironic, archaic, euphonic, etc.
+vocabulary_count: 40  # Must match count in vocabulary/{slug}.yaml
 ---
 ```
 
@@ -255,29 +253,28 @@ style_focus: "ironic"  # Options: formal, colloquial, ironic, archaic, euphonic,
 
 ### 4. Vocabulary Section (Словник)
 
-**Format:** 3-column table (C2 standard)
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-```markdown
-# Словник
+**Example `vocabulary/c2-XX-style.yaml`:**
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| евфемізм | euphemism | stylistic device: mild expression replacing harsh one |
-| літота | litotes | stylistic device: understatement for emphatic effect |
-| гіпербола | hyperbole | stylistic device: deliberate exaggeration |
-| іронія | irony | stylistic tone: saying opposite of what is meant |
-| сарказм | sarcasm | bitter, cutting irony |
-| підтекст | subtext | implied meaning beneath surface |
-| алюзія | allusion | indirect reference to other text/event |
-| інверсія | inversion | reversed word order for stylistic effect |
-| риторичне питання | rhetorical question | question asked for effect, not answer |
-| [40+ items] | | |
+```yaml
+items:
+- lemma: евфемізм
+  ipa: /ɛu̯fɛˈmʲizm/
+  translation: euphemism
+  pos: ім. (ч.р.)
+  note: stylistic device: mild expression
+- lemma: іронія
+  ipa: /iˈrɔnʲijɑ/
+  translation: irony
+  pos: ім. (ж.р.)
+  note: stylistic tone
 ```
 
 **C2 Vocabulary Notes:**
 - **40+ items minimum** (vs. 35+ for C1)
 - **Highly specialized:** Literary, stylistic, professional, meta-linguistic terminology
-- **Примітки column:** Etymology, usage examples, collocations, stylistic effects, cultural notes
+- **Note field:** Etymology, usage examples, collocations, stylistic effects, cultural notes
 - **Native-level nuance:** Synonyms with subtle differences, register-specific variants
 
 ---
@@ -319,22 +316,26 @@ style_focus: "ironic"  # Options: formal, colloquial, ironic, archaic, euphonic,
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
-| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
-| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
+
+**Example `activities/c2-XX-style.yaml`:**
+
+```yaml
+- type: essay-response
+  title: Стилістична трансформація
+  instruction: Трансформуйте текст в іронічний регістр.
+  prompt: Візьміть формальний текст і змініть тон на іронічний.
+  model_answer: (Sample ironic text...)
+  rubric: (Evaluation criteria...)
+
+- type: comparative-study
+  title: Порівняння перекладів
+  content: (Two translations of Hamlet)
+  task: Порівняйте вибір лексики у двох перекладах.
+  model_answer: (Detailed analysis...)
+```
 
 ---
 

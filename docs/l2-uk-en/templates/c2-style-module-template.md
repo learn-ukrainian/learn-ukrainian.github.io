@@ -234,23 +234,28 @@ vocabulary_focus:
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
-| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
-| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
-| **critical-analysis** | `> [!instruction] Analyze...` + `> [!model-answer] ...` |
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
+
+**Example `activities/c2-01-style-mastery.yaml`:**
+
+```yaml
+- type: quiz
+  title: Визначення стилю
+  items:
+    - question: Визначте стиль: "Згідно з пунктом 5.2 Угоди..."
+      options:
+        - text: Офіційно-діловий
+          correct: true
+        - text: Науковий
+          correct: false
+
+- type: essay-response
+  title: Стилістична трансформація
+  prompt: "Трансформуйте речення в офіційний стиль: 'Ми домовились, що він прийде завтра.'"
+  model_answer: "Сторонами досягнуто домовленості про зустріч."
+```
 
 ---
 
@@ -379,24 +384,22 @@ vocabulary_focus:
 
 ## Vocabulary Section for Style Modules
 
-```markdown
-# Словник
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **регістр** | register | функціональний стиль мовлення |
-| **тон** | tone | емоційне забарвлення тексту |
-| **офіційно-діловий** | official/bureaucratic | стиль документів |
-| **науковий** | academic/scientific | стиль наукових праць |
-| **публіцистичний** | journalistic | стиль ЗМІ |
-| **художній** | literary/artistic | стиль художньої літератури |
-| **розмовний** | colloquial | стиль усного спілкування |
-| **релігійний** | religious/liturgical | стиль церковних текстів |
-| **епістолярний** | epistolary | стиль листування |
-| **милозвучність** | euphony | благозвучність мовлення |
-| **трансформація** | transformation | зміна стилю тексту |
-| **індивідуальний голос** | individual voice | авторський стиль |
-| [40+ stylistic terms] | | |
+**Example `vocabulary/c2-01-style-mastery.yaml`:**
+
+```yaml
+items:
+- lemma: регістр
+  ipa: /rɛˈɦʲistr/
+  translation: register
+  pos: ім.
+  note: функціональний стиль
+- lemma: тон
+  ipa: /tɔn/
+  translation: tone
+  pos: ім.
+  note: емоційне забарвлення
 ```
 
 ---

@@ -86,7 +86,7 @@ objectives:
   - "Learner can identify [X] using Ukrainian terminology"
   - "Learner can name [Y] in Ukrainian"
   - "Learner can understand [Z] when reading Ukrainian grammar"
-vocabulary_count: 25  # 25-45 for metalanguage modules
+vocabulary_count: 25  # Must match count in vocabulary/{slug}.yaml
 ---
 ```
 
@@ -252,25 +252,23 @@ You can now read Ukrainian grammar independently!
 
 ### 4. Vocabulary Section (Словник)
 
-**Format:** 5-column table (B1 standard)
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-```markdown
-# Словник
+**Example `vocabulary/b1-01-grammar.yaml`:**
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-|-------|--------|----------|-----|----------|
-| частина мови | [ˈt͡ʃɑstɪnɑ ˈmɔʋɪ] | part of speech | phrase | grammar term |
-| іменник | [iˈmɛnːɪk] | noun | noun | from "ім'я" (name) |
-| дієслово | [ˈd⁽ʲ⁾ijɛsɫɔʋɔ] | verb | noun | literally "action-word" |
-| прикметник | [prɪkˈmɛtnɪk] | adjective | noun | from "прикмета" (characteristic) |
-| [25-45 items total] | | | | |
+```yaml
+items:
+- lemma: іменник
+  ipa: /iˈmɛnːɪk/
+  translation: noun
+  pos: noun
+  note: from "ім'я" (name)
+- lemma: дієслово
+  ipa: /dijɛˈslɔwɔ/
+  translation: verb
+  pos: noun
+  note: literally "action-word"
 ```
-
-**Metalanguage Vocabulary Notes:**
-- Include ALL grammar terms introduced in the module
-- Add etymology notes in Примітка column (e.g., "literally 'action-word'")
-- Mark as "grammar term" or "terminology"
-- 25-45 items (higher than grammar modules due to term density)
 
 ---
 
@@ -294,85 +292,30 @@ You can now read Ukrainian grammar independently!
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-**quiz**: `- [ ] wrong` / `- [x] correct` with optional `> explanation`
-**true-false**: `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation`
-**fill-in**: `> [!answer]` + `> [!options] a | b | c | d`
-**error-correction**: ALL 4: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]`
-**match-up**: Table format `| Left | Right |`
-**group-sort**: `### Category` headers with `- items`
-**unjumble**: `> [!answer] Correct sentence.`
-**translate**: Multi-choice with `- [x]` for correct + `> explanation`
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
 
-See `b1-grammar-module-template.md` for full examples.
+**Example `activities/b1-01-grammar.yaml`:**
 
-#### Sample Quiz Activity
+```yaml
+- type: quiz
+  title: Тест на термінологію
+  items:
+    - question: Яка частина мови слово "книга"?
+      options:
+        - text: іменник
+          correct: true
+        - text: дієслово
+          correct: false
 
-```markdown
-## Активність 1: Тест на термінологію
-
-> [!quiz]
-> Яка частина мови слово "книга"?
-
-1. іменник
-   > [!answer]
-2. дієслово
-3. прикметник
-4. прислівник
-
-> [!quiz]
-> Який відмінок у реченні "Я читаю книгу"? (слово "книгу")
-
-1. називний
-2. родовий
-3. давальний
-4. знахідний
-   > [!answer]
-
-[8+ questions total]
-```
-
-#### Sample Match-Up Activity
-
-```markdown
-## Активність 2: З'єднайте терміни
-
-> [!match-up]
-> З'єднайте українські терміни з англійськими еквівалентами.
-
-| Ukrainian | English |
-|-----------|---------|
-| іменник | noun |
-| дієслово | verb |
-| прикметник | adjective |
-| прислівник | adverb |
-| займенник | pronoun |
-| числівник | numeral |
-| прийменник | preposition |
-| сполучник | conjunction |
-
-[8+ pairs total]
-```
-
-#### Sample Translate Activity
-
-```markdown
-## Активність 3: Перекладіть пояснення
-
-> [!translate]
-> Перекладіть українське граматичне пояснення англійською.
-
-1. Дієслово "писати" — недоконаного виду.
-   > [!question] Translate to English:
-
-   A) The verb "писати" is imperfective aspect.
-      > [!answer]
-   B) The verb "писати" is perfective aspect.
-   C) The verb "писати" is a noun.
-   D) The verb "писати" is in past tense.
-
-[6+ translation items]
+- type: match-up
+  title: З'єднайте терміни
+  pairs:
+    - left: іменник
+      right: noun
+    - left: дієслово
+      right: verb
 ```
 
 ---

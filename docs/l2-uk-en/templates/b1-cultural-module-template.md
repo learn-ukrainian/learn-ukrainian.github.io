@@ -75,9 +75,8 @@ objectives:
   - Learner can discuss [topic] in Ukrainian
   - Learner can understand authentic texts about [topic]
   - Learner can use [topic]-specific vocabulary in context
-  - Learner can compare Ukrainian [topic] with their own culture
 word_target: 1500
-vocab_target: 25
+vocab_target: 25 # Must match count in vocabulary/{slug}.yaml
 immersion_target: 90-95%
 ---
 ```
@@ -276,21 +275,24 @@ The lesson teaches both Ukrainian AND cultural content. Activities practice only
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-**quiz**: `- [ ] wrong` / `- [x] correct` with optional `> explanation`
-**true-false**: `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation`
-**fill-in**: `> [!answer]` + `> [!options] a | b | c | d`
-**error-correction**: ALL 4: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]`
-**match-up**: Table format `| Left | Right |`
-**group-sort**: `### Category` headers with `- items`
-**unjumble**: `> [!answer] Correct sentence.`
-**cloze**: `{blank|opt1|opt2|answer}` inline
-**select**: Multiple `- [x]` for correct options
-**translate**: Multi-choice with `- [x]` for correct + `> explanation`
-**mark-the-words**: `*marked*` words in blockquote
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
 
-See `b1-grammar-module-template.md` for full examples.
+**Example `activities/b1-75-ukrainian-music.yaml`:**
+
+```yaml
+- type: quiz
+  title: Українська музика (Reading Comprehension)
+  instruction: Відповідайте на питання на основі прочитаного тексту.
+  items:
+    - question: Згідно з текстом, який гурт переміг на Євробаченні у 2022 році?
+      options:
+        - text: Kalush Orchestra
+          correct: true
+        - text: Go_A
+          correct: false
+```
 
 ---
 
@@ -320,28 +322,31 @@ See `b1-grammar-module-template.md` for full examples.
 
 ### Section 7: Словник (Vocabulary)
 
-**Format:** 5-column table (B1 standard)
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-```markdown
-# Словник
+**Example `vocabulary/b1-75-ukrainian-music.yaml`:**
 
-| Слово | Вимова | English | PoS | Примітки |
-|-------|--------|---------|-----|----------|
-| захід | [ˈzɑxid] | west | noun (m) | напрямок або регіон |
-| західний | [zɑˈxidnɪj] | western | adj | прикметник від "захід" |
-| столиця | [stoˈlɪt͡sʲɑ] | capital | noun (f) | головне місто країни |
-| культурний | [kulʲˈturnɪj] | cultural | adj | пов'язаний з культурою |
-| спадщина | [ˈspɑd͡ʃːɪnɑ] | heritage | noun (f) | культурна або історична спадщина |
-| ... | ... | ... | ... | ... |
+```yaml
+items:
+- lemma: захід
+  ipa: /zɑxid/
+  translation: west
+  pos: ім. (ч.р.)
+  gender: m
+  note: напрямок або регіон
+- lemma: столиця
+  ipa: /stolɪt͡sʲɑ/
+  translation: capital
+  pos: ім. (ж.р.)
+  gender: f
+  note: головне місто країни
 ```
 
 **Requirements:**
 - **25+ items** minimum
-- **Thematic organization** (not alphabetical)
+- **Thematic organization**
 - **IPA pronunciation** for all entries
-- **Contextual notes** in Примітки column
-
-**WHY thematic:** Cultural vocabulary clusters around topics (region names, cultural terms, genres).
+- **Contextual notes** in `note` field
 
 **Vocabulary Categories for Cultural Modules:**
 

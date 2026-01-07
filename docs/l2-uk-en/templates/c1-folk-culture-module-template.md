@@ -383,119 +383,47 @@ Why GOOD: Tests fixed collocation (відіграти роль), requires unders
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
-| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
-| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
-| **comparative-study** | `> [!instruction] Compare...` + `> [!model-answer] ...` |
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
+
+**Example `activities/c1-121-folk-songs.yaml`:**
+
+```yaml
+- type: cloze
+  title: Народна пісня
+  passage: Ой у [___:1] та й при [___:2]...
+  blanks:
+    - id: 1
+      answer: лузі
+      options:
+        - лузі
+        - полі
+    - id: 2
+      answer: долині
+      options:
+        - долині
+        - горі
+
+- type: match-up
+  title: Фольклорна термінологія
+  pairs:
+    - left: веснянка
+      right: spring song
+    - left: колядка
+      right: Christmas carol
+```
 
 ---
 
-### Folk Song Analysis
+### Activity Examples (Conceptual)
 
-```markdown
-## cloze: Народна пісня
+*Note: These activities must be implemented in YAML.*
 
-Заповніть пропуски у народній пісні:
-
-> Ой у [___] та й при [___]
-> Там [___] [___] сіно косить,
-> А [___] [___] граблі носить,
-> А [___] [___] обід носить...
-
-[!blanks] лузі, долині, козак, молодий, дівчина, чорноброва, матінка, старенька
-
-> Пояснення: Ця веснянка описує традиційний розподіл праці у сільській родині.
-
-[20+ blanks in authentic folk text]
-```
-
-### Terminology Matching
-
-```markdown
-## match-up: Фольклорна термінологія
-
-- колисанка | lullaby
-- веснянка | spring song
-- колядка | Christmas carol
-- щедрівка | New Year carol
-- гаївка | Easter song
-- весільна пісня | wedding song
-- думка | epic song (kobzar)
-- коломийка | Hutsul dance song
-- вишиванка | embroidered shirt
-- писанка | decorated Easter egg
-- рушник | ritual towel
-- піч | traditional stove
-
-[14+ folk terminology matches]
-```
-
-### Regional Variation
-
-```markdown
-## group-sort: Регіональні традиції
-
-Розподіліть елементи за регіонами:
-
-- group: Полісся
-  - пісні з укання
-  - архаїчні веснянки
-  - чорна кераміка
-
-- group: Галичина
-  - коломийки
-  - гуцульські мотиви
-  - різьблення
-
-- group: Поділля
-  - петриківський розпис
-  - подільська вишивка
-  - білі орнаменти
-
-- group: Слобожанщина
-  - опішнянська кераміка
-  - близькість до літературної мови
-  - степові мотиви
-
-[20+ regional elements across 4-5 regions]
-```
-
-### Reading Comprehension (Language-Focused)
-
-```markdown
-## quiz: Розуміння тексту
-
-> **Instruction:** Відповідайте на питання на основі прочитаного тексту модуля.
-
-1. Згідно з текстом, як автор характеризує роль калини в українській культурі?
-   - [ ] Автор зазначає, що калина має лише декоративне значення
-   - [x] Автор виділяє калину як один із найголовніших національних символів
-   - [ ] Автор пише, що символіка калини прийшла з інших культур
-   - [ ] Автор не згадує калину в тексті
-   > Текст чітко формулює значення калини в розділі про символіку.
-
-2. Як у тексті модуля описано функцію рушника у весільному обряді?
-   - [ ] Текст зосереджується лише на практичній функції
-   - [ ] Автор називає рушник сучасним винаходом
-   - [x] Автор підкреслює символічну функцію — поєднання молодих та оберіг
-   - [ ] У тексті не згадується рушник
-   > У розділі про весільні обряди автор детально пояснює символіку рушника.
-
-[All questions must begin with "Згідно з текстом" — tests READING COMPREHENSION, not cultural recall]
-```
+1. **Folk Song Analysis (cloze):** Fill in the blanks in a song.
+2. **Terminology Matching (match-up):** Match phrase to meaning.
+3. **Regional Variation (group-sort):** Sort by region.
+4. **Reading Comprehension (quiz):** Test understanding of text.
 
 ---
 
@@ -531,22 +459,22 @@ Why GOOD: Tests fixed collocation (відіграти роль), requires unders
 
 ## Vocabulary Section for Folk Culture Modules
 
-```markdown
-# Словник
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **веснянка** | spring song | обрядова пісня весняного циклу |
-| **колядка** | Christmas carol | пісня, яку співають на Різдво |
-| **щедрівка** | New Year carol | пісня на Старий Новий рік |
-| **вишиванка** | embroidered shirt | традиційний одяг з вишивкою |
-| **писанка** | decorated Easter egg | яйце, розписане воском |
-| **рушник** | ritual towel | вишитий рушник для обрядів |
-| **піч** | traditional stove | центр української хати |
-| **оберіг** | talisman, protective charm | захисний символ |
-| **кобзар** | kobzar, blind minstrel | мандрівний співець із кобзою |
-| **бандура** | bandura | український струнний інструмент |
-| [35+ folk culture terms] | | |
+**Example `vocabulary/c1-121-folk-songs.yaml`:**
+
+```yaml
+items:
+- lemma: веснянка
+  ipa: /vɛsˈnʲɑnkɑ/
+  translation: spring song
+  pos: ім. (ж.р.)
+  note: обрядова пісня
+- lemma: колядка
+  ipa: /kɔˈlʲɑdkɑ/
+  translation: carol
+  pos: ім. (ж.р.)
+  note: пісня на Різдво
 ```
 
 ---

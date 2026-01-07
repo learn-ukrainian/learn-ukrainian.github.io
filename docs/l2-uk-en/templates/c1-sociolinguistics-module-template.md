@@ -383,118 +383,63 @@ The lesson teaches both Ukrainian AND stylistic/sociolinguistic concepts. Activi
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
-| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
-| **critical-analysis** | `> [!instruction] Analyze...` + `> [!model-answer] ...` |
-| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
+
+**Example `activities/c1-101-stylistics.yaml`:**
+
+```yaml
+- type: quiz
+  title: Розуміння тексту
+  items:
+    - question: Згідно з текстом, яка функція метафори?
+      options:
+        - text: Створення образу
+          correct: true
+        - text: Перебільшення
+          correct: false
+
+- type: error-correction
+  title: Виправлення суржику
+  items:
+    - sentence: Мені кажеться, що це правильно.
+      error: кажеться
+      answer: здається
+      explanation: Рос. калька "кажется".
+```
 
 ---
 
-### Device Identification
+### Activity Examples (Conceptual)
 
-```markdown
-## mark-the-words: Стилістичні засоби
+*Note: These activities must be implemented in YAML.*
 
-Відзначте всі метафори у тексті:
-
-> [400-500 word literary passage with multiple metaphors to mark]
-
-[!markable] [list of metaphors in passage]
-```
-
-### Dialect Recognition
-
-```markdown
-## group-sort: Діалектні маркери
-
-Визначте, до якого діалекту належить кожна риса:
-
-- group: Північне
-  - укання (високий → висукий)
-  - тверде р
-  - [feature]
-
-- group: Південно-західне
-  - ікання
-  - бараболя замість картопля
-  - [feature]
-
-- group: Південно-східне
-  - близькість до літературної мови
-  - [feature]
-
-[18+ features across 3-4 dialect groups]
-```
-
-### Surzhyk Correction
-
-```markdown
-## error-correction: Виправлення суржику
-
-1. Мені *кажеться, що він правий.
-   > [!error] кажеться
-   > [!answer] здається
-   > [!options] кажеться | здається | видається | уявляється
-   > [!explanation] Рос. "кажется" → укр. "здається". Типова лексична інтерференція.
-
-2. Я *понімаю тебе.
-   > [!error] понімаю
-   > [!answer] розумію
-   > [!options] понімаю | розумію | знаю | бачу
-   > [!explanation] Рос. "понимаю" → укр. "розумію". Базова лексична помилка.
-
-[12+ Surzhyk correction items]
-```
-
-### Register Transformation
-
-```markdown
-## transform: Регістрова трансформація
-
-Перепишіть розмовний текст у [target register]:
-
-1. "Ти бачив? Там такий прикол — машина влетіла в стовп!" → [публіцистичний]
-   > [!answer] На перехресті вулиць [X] та [Y] сталася ДТП: автомобіль зіткнувся з опорою освітлення.
-
-2. "Шеф сказав, що треба все переробити." → [офіційно-діловий]
-   > [!answer] Керівництвом прийнято рішення про необхідність внесення змін до проєкту.
-
-[10+ register transformation items]
-```
+1. **Device Identification (mark-the-words):** Find stylistic devices in text.
+2. **Dialect Recognition (group-sort):** Classify features by dialect.
+3. **Surzhyk Correction (error-correction):** Fix Surzhyk errors.
+4. **Register Transformation (essay-response):** Rewrite text in a different register.
 
 ---
 
 ## Vocabulary Section for Sociolinguistics Modules
 
-```markdown
-# Словник
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **стилістичний засіб** | stylistic device | троп, фігура |
-| **метафора** | metaphor | неявне порівняння |
-| **іронія** | irony | протилежне значення |
-| **гіпербола** | hyperbole | перебільшення |
-| **літота** | litotes | применшення |
-| **діалект** | dialect | територіальний варіант мови |
-| **суржик** | Surzhyk | українсько-російське змішування |
-| **регістр** | register | функціональний стиль |
-| **мовна інтерференція** | language interference | вплив однієї мови на іншу |
-| **де-суржикізація** | de-Surzhykization | очищення від суржику |
-| [35+ sociolinguistic terms] | | |
+**Example `vocabulary/c1-101-stylistics.yaml`:**
+
+```yaml
+items:
+- lemma: суржик
+  ipa: /surʒɪk/
+  translation: Surzhyk
+  pos: ім. (ч.р.)
+  note: змішана мова
+- lemma: інтерференція
+  ipa: /intɛrfɛˈrɛnt͡sʲijɑ/
+  translation: interference
+  pos: ім. (ж.р.)
+  note: вплив однієї мови
 ```
 
 ---

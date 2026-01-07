@@ -185,7 +185,7 @@ objectives:
   - "Learner can demonstrate mastery of [phase topic]"
   - "Learner can integrate knowledge from M[start]-M[end]"
   - "Learner can apply comparative analysis skills"
-vocabulary_count: 55  # Higher than regular modules (review vocabulary)
+vocabulary_count: 55  # Must match count in vocabulary/{slug}.yaml
 ---
 ```
 
@@ -357,23 +357,31 @@ Checkpoints assess whether learners can USE Ukrainian at C1 level, not whether t
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
-| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
-| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
-| **comparative-study** | `> [!instruction] Compare...` + `> [!model-answer] ...` |
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
+
+**Example `activities/c1-20-academic-checkpoint.yaml`:**
+
+```yaml
+- type: quiz
+  title: Академічний стиль (M02-06)
+  items:
+    - question: Визначте правильний академічний варіант.
+      options:
+        - text: Ми дослідили проблему
+          correct: false
+        - text: Було досліджено проблему
+          correct: true
+
+- type: match-up
+  title: Дослідницькі дієслова (M03)
+  pairs:
+    - left: досліджувати
+      right: investigation
+    - left: стверджувати
+      right: argumentation
+```
 
 ---
 
@@ -431,35 +439,17 @@ Checkpoints assess whether learners can USE Ukrainian at C1 level, not whether t
 
 ## Vocabulary Section for Checkpoints
 
-**50-60 items organized by topic area:**
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-```markdown
-# Словник
+**Example `vocabulary/c1-20-academic-checkpoint.yaml`:**
 
-## [Topic Area 1]: M[X]-M[Y]
-
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **[term1]** | ... | з модулів [X]-[Y] |
-| **[term2]** | ... | з модулів [X]-[Y] |
-[15-20 items from this topic area]
-
-## [Topic Area 2]: M[X]-M[Y]
-
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **[term1]** | ... | з модулів [X]-[Y] |
-[15-20 items from this topic area]
-
-## [Topic Area 3]: M[X]-M[Y]
-
-[Continue for all topic areas in phase]
-
-## Інтеграційна термінологія
-
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| [Cross-cutting terms] | | |
+```yaml
+items:
+- lemma: дослідження
+  ipa: /dɔˈslʲid͡ʒɛnʲːɑ/
+  translation: research
+  pos: ім.
+  note: з модуля 03
 ```
 
 ---

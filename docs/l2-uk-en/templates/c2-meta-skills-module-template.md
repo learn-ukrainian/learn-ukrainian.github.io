@@ -297,23 +297,31 @@ vocabulary_focus:
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
-| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
-| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
-| **comparative-study** | `> [!instruction] Compare...` + `> [!model-answer] ...` |
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
+
+**Example `activities/c2-76-grammar-mastery.yaml`:**
+
+```yaml
+- type: quiz
+  title: Граматична верифікація
+  items:
+    - question: Яка правильна форма родового множини від "стаття"?
+      options:
+        - text: статей
+          correct: true
+        - text: статтів
+          correct: false
+
+- type: match-up
+  title: Архаїзми та сучасні відповідники
+  pairs:
+    - left: глас
+      right: голос
+    - left: врата
+      right: ворота
+```
 
 ---
 
@@ -461,26 +469,22 @@ vocabulary_focus:
 
 ## Vocabulary Section for Meta-Skills Modules
 
-```markdown
-# Словник
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **архаїзм** | archaism | застаріле слово |
-| **діалект** | dialect | територіальний варіант |
-| **наріччя** | dialect, adverb | також: прислівник |
-| **говірка** | subdialect, local speech | місцевий варіант |
-| **варіант** | variant | різновид |
-| **норма** | norm | літературний стандарт |
-| **кодифікація** | codification | встановлення норми |
-| **узус** | usage | мовна практика |
-| **метамова** | metalanguage | мова про мову |
-| **педагогіка** | pedagogy | наука про навчання |
-| **методика** | methodology | система методів |
-| **капстоун** | capstone | підсумковий проєкт |
-| **захист** | defense | презентація проєкту |
-| **сертифікація** | certification | підтвердження рівня |
-| [40+ meta-linguistic terms] | | |
+**Example `vocabulary/c2-76-grammar-mastery.yaml`:**
+
+```yaml
+items:
+- lemma: архаїзм
+  ipa: /ɑrxɑˈjizm/
+  translation: archaism
+  pos: ім.
+  note: застаріле слово
+- lemma: діалект
+  ipa: /dʲiɑˈlɛkt/
+  translation: dialect
+  pos: ім.
+  note: територіальний варіант
 ```
 
 ---

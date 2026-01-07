@@ -151,81 +151,41 @@ grammar:
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
-| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
 
+**Example `activities/b2-01-passive.yaml`:**
+
+```yaml
+- type: essay-response
+  title: Активний → Пасивний стан
+  prompt: "Трансформуйте в пасивний стан: Уряд прийняв закон."
+  model_answer: "Закон прийнято урядом."
+- type: group-sort
+  title: Регістрова класифікація
+  groups:
+    - name: Офіційно-діловий
+      items:
+        - Наказ видано.
+    - name: Розмовний
+      items:
+        - Мені сказали.
+```
 
 ---
 
 ### Transformation Activities (CRITICAL for Grammar)
 
-```markdown
-## transform: Активний → Пасивний стан
-
-Трансформуйте активні речення в пасивні, обираючи форму відповідно до регістру:
-
-1. Уряд прийняв закон. (офіційний регістр)
-   > [!answer] Закон прийнято урядом. / Закон було прийнято урядом.
-   > [!register] Офіційно-діловий стиль вимагає -но/-то форми.
-
-2. Науковці досліджують проблему. (науковий регістр)
-   > [!answer] Проблема досліджується науковцями.
-   > [!register] Науковий стиль часто використовує -ся форму.
-
-[8+ more transformation items]
-```
+**Defined in YAML as `type: essay-response` (for text) or `type: fill-in` (for sentences).**
 
 ### Register Identification Activities
 
-```markdown
-## group-sort: Регістрова класифікація
-
-Розподіліть речення за регістрами:
-
-- group: Офіційно-діловий
-  - Наказ видано.
-  - Рішення прийнято.
-  - Угоду укладено.
-
-- group: Науковий
-  - Експеримент проводиться.
-  - Дані аналізуються.
-  - Гіпотеза перевіряється.
-
-- group: Розмовний
-  - Мені сказали.
-  - Йому показали.
-  - Нам пояснили.
-
-[16+ items across 4-5 register categories]
-```
+**Defined in YAML as `type: group-sort`.**
 
 ### Error-Correction with Register Explanation
 
-```markdown
-## error-correction: Регістрові помилки
-
-1. Засідання оголосили закритим. (офіційний документ)
-   > [!error] оголосили
-   > [!answer] оголошено
-   > [!options] оголосили | оголошено | оголошують | оголошувалося
-   > [!explanation] В офіційно-діловому стилі використовується -но/-то форма, а не 3-тя особа множини.
-
-[8+ items testing register-appropriate grammar]
-```
+**Defined in YAML as `type: error-correction`.**
 
 ---
 
@@ -291,10 +251,28 @@ grammar:
 [Summary with self-assessment checklist]
 
 # Словник
-[30+ terms: grammar terminology + register vocabulary]
+
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
+
+**Example `vocabulary/b2-01-passive.yaml`:**
+
+```yaml
+items:
+- lemma: прийняти
+  ipa: /prjɪjˈnʲɑtɪ/
+  translation: to adopt (law)
+  pos: дієсл.
+  note: офіційно-діловий
+- lemma: закон
+  ipa: /zɑˈkɔn/
+  translation: law
+  pos: ім.
+  note: прийняти закон
+```
 
 # Активності
-[14+ activities: quiz, fill-in, transform, group-sort, error-correction, cloze, etc.]
+
+(See `activities/b2-01-passive.yaml`)
 ```
 
 ---

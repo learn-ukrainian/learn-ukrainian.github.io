@@ -506,112 +506,44 @@ activities:
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
-| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
-| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
-| **critical-analysis** | `> [!instruction] Analyze...` + `> [!model-answer] ...` |
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
+
+**Example `activities/c1-144-opera.yaml`:**
+
+```yaml
+- type: reading
+  title: Аналіз мистецької рецензії
+  resource:
+    type: authentic_text
+    url: https://example.com/review
+    title: Рецензія на оперу
+  tasks:
+    - Знайдіть приклади оцінної лексики.
+    - Як автор характеризує постановку?
+
+- type: quiz
+  title: Розуміння тексту модуля
+  items:
+    - question: Згідно з текстом, яке значення опери "Запорожець за Дунаєм"?
+      options:
+        - text: Перша національна опера
+          correct: true
+        - text: Невдалий експеримент
+          correct: false
+```
 
 ---
 
-### Arts Terminology Matching
+### Activity Examples (Conceptual)
 
-```markdown
-## match-up: Музична термінологія
+*Note: These activities must be implemented in YAML.*
 
-| Термін | Значення |
-|--------|----------|
-| опера | сценічний жанр, що поєднує музику, спів і драму |
-| симфонія | великий оркестровий твір у кількох частинах |
-| кантата | вокально-інструментальний твір для солістів і хору |
-| увертюра | оркестровий вступ до опери чи балету |
-| арія | сольний вокальний номер в опері |
-| лібрето | текст опери чи музичного твору |
-| партитура | нотний запис усіх голосів оркестру |
-| диригент | музикант, який керує оркестром |
-| прем'єра | перше публічне виконання твору |
-| репертуар | сукупність творів, які виконує театр чи музикант |
-
-[14+ fine arts terminology matches per module]
-```
-
-### Era/Style Classification
-
-```markdown
-## group-sort: Музичні епохи
-
-Розподіліть композиторів за епохами:
-
-- group: Бароко та класицизм
-  - Дмитро Бортнянський
-  - Максим Березовський
-  - Артемій Ведель
-
-- group: Романтизм / Національна школа
-  - Микола Лисенко
-  - Семен Гулак-Артемовський
-  - Кирило Стеценко
-
-- group: Модернізм (XX століття)
-  - Борис Лятошинський
-  - Левко Ревуцький
-  - Мирослав Скорик
-
-- group: Сучасність
-  - Валентин Сильвестров
-  - Євген Станкович
-  - Вікторія Полєвá
-
-[20+ items across 3-4 categories]
-```
-
-### Reading Comprehension (Language-Focused)
-
-```markdown
-## quiz: Розуміння тексту
-
-> **Instruction:** Відповідайте на питання на основі прочитаного тексту модуля.
-
-1. Згідно з текстом, як автор характеризує внесок Миколи Лисенка в українську музику?
-   - [ ] Автор зазначає, що Лисенко лише обробляв народні пісні
-   - [x] Автор виділяє Лисенка як засновника української національної музичної школи
-   - [ ] Автор пише, що творчість Лисенка не мала впливу на наступні покоління
-   - [ ] Автор не згадує Лисенка в тексті
-   > У тексті чітко формулюється роль Лисенка в розділі про національну школу.
-
-2. Як у тексті модуля описано значення опери "Запорожець за Дунаєм"?
-   - [ ] Текст зосереджується лише на музичних аспектах
-   - [ ] Автор називає оперу невдалою спробою
-   - [x] Автор підкреслює, що це перша українська опера, яка мала світовий успіх
-   - [ ] У тексті не згадується ця опера
-   > У розділі про українську оперу автор детально пояснює історичне значення твору.
-
-[All questions must begin with "Згідно з текстом" — tests READING COMPREHENSION, not arts knowledge recall]
-```
-
-### Arts Review Cloze
-
-```markdown
-## cloze: Мистецька рецензія
-
-Заповніть пропуски у рецензії:
-
-> Вчорашня {прем'єра|виставка|концерт|прем'єра} опери "Наталка Полтавка" у {Національній|Київській|Харківській|Національній} опері стала справжньою подією сезону. {Диригент|Режисер|Композитор|Диригент} майстерно {інтерпретував|написав|переклав|інтерпретував} партитуру Лисенка, надаючи їй сучасного {звучання|вигляду|змісту|звучання}. Особливо вразила {арія|сцена|п'єса|арія} головної героїні у другому {акті|дії|розділі|акті}.
-
-[15+ blanks in authentic arts review context]
-```
+1. **Arts Terminology Matching (match-up):** Match phrase to meaning.
+2. **Era/Style Classification (group-sort):** Sort by era/style.
+3. **Reading Comprehension (quiz):** Test understanding of text.
+4. **Arts Review Cloze (cloze):** Fill in the blanks.
 
 ---
 
@@ -647,27 +579,22 @@ activities:
 
 ## Vocabulary Section for Fine Arts Modules
 
-```markdown
-# Словник
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **опера** | opera | сценічний музично-драматичний жанр |
-| **симфонія** | symphony | великий оркестровий твір |
-| **диригент** | conductor | керівник оркестру |
-| **лібрето** | libretto | текст опери |
-| **партитура** | score | нотний запис для всіх інструментів |
-| **прем'єра** | premiere | перше виконання |
-| **репертуар** | repertoire | сукупність виконуваних творів |
-| **композитор** | composer | автор музичних творів |
-| **виконавець** | performer | музикант, співак |
-| **ансамбль** | ensemble | група виконавців |
-| **соліст** | soloist | виконавець сольних партій |
-| **хор** | choir, chorus | колектив співаків |
-| **оркестр** | orchestra | колектив музикантів |
-| **арія** | aria | сольний номер в опері |
-| **увертюра** | overture | вступ до опери |
-| [35+ fine arts terms per module] | | |
+**Example `vocabulary/c1-144-opera.yaml`:**
+
+```yaml
+items:
+- lemma: опера
+  ipa: /ɔpɛrɑ/
+  translation: opera
+  pos: ім. (ж.р.)
+  note: музично-драматичний жанр
+- lemma: лібрето
+  ipa: /lʲibrɛtɔ/
+  translation: libretto
+  pos: ім. (с.р.)
+  note: текст опери
 ```
 
 ---

@@ -316,24 +316,28 @@ The lesson teaches both Ukrainian AND literary mastery. Activities practice only
 
 ### Activity Format Quick Reference
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
 
-| Activity | Format |
-|----------|--------|
-| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
-| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
-| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
-| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
-| **match-up** | Table: `\| Left \| Right \|` |
-| **group-sort** | `### Category` headers with `- items` underneath |
-| **unjumble** | `> [!answer] Correct sentence here.` |
-| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
-| **select** | Multiple `- [x]` for all correct options |
-| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
-| **mark-the-words** | `*marked*` words in blockquote passage |
-| **essay-response** | `> [!instruction] Prompt...` + `> [!model-answer] ...` + `> [!rubric] ...` |
-| **critical-analysis** | `> [!instruction] Analyze...` + `> [!model-answer] ...` |
-| **authorial-intent** | `> [!instruction] Evaluate...` + `> [!model-answer] ...` |
+See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
+
+**Example `activities/c2-26-theory.yaml`:**
+
+```yaml
+- type: quiz
+  title: Літературознавчий аналіз
+  items:
+    - question: Що таке "фокалізація" у наратології?
+      options:
+        - text: Точка зору оповіді
+          correct: true
+        - text: Головний герой
+          correct: false
+
+- type: essay-response
+  title: Поетична майстерня
+  instruction: Напишіть сонет на тему природи.
+  model_answer: (Sample sonnet...)
+```
 
 ---
 
@@ -453,26 +457,22 @@ The lesson teaches both Ukrainian AND literary mastery. Activities practice only
 
 ## Vocabulary Section for Literary Modules
 
-```markdown
-# Словник
+**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **наратологія** | narratology | наука про оповідь |
-| **фокалізація** | focalization | точка зору оповіді |
-| **інтертекстуальність** | intertextuality | зв'язки між текстами |
-| **деконструкція** | deconstruction | критичний метод |
-| **верлібр** | free verse | вільний вірш |
-| **катрен** | quatrain | чотиривірш |
-| **терцина** | terza rima | тривірш |
-| **сонет** | sonnet | 14-рядковий вірш |
-| **новела** | novella | коротка проза |
-| **оповідач** | narrator | той, хто розповідає |
-| **протагоніст** | protagonist | головний герой |
-| **антагоніст** | antagonist | противник героя |
-| **хронотоп** | chronotope | час-простір у творі |
-| **еквівалентність** | equivalence | перекладознавчий термін |
-| [40+ literary terms] | | |
+**Example `vocabulary/c2-26-theory.yaml`:**
+
+```yaml
+items:
+- lemma: наратологія
+  ipa: /nɑrɑtɔˈlɔɦʲijɑ/
+  translation: narratology
+  pos: ім.
+  note: наука про оповідь
+- lemma: фокалізація
+  ipa: /fɔkɑlʲiˈzɑt͡sʲijɑ/
+  translation: focalization
+  pos: ім.
+  note: точка зору оповіді
 ```
 
 ---
