@@ -1,0 +1,119 @@
+module: 92-les-kurbas
+level: C1
+version: '2.0'
+items:
+  - lemma: режисер
+    ipa: /rɛʒɪˈsɛr/
+    translation: director
+    pos: noun
+    gender: m
+  - lemma: постановка
+    ipa: /pɔstɐˈnɔwkɐ/
+    translation: staging/production
+    pos: noun
+    gender: f
+  - lemma: вистава
+    ipa: /wɪˈstɑwɐ/
+    translation: performance/play
+    pos: noun
+    gender: f
+  - lemma: репертуар
+    ipa: /rɛpɛrtʊˈɑr/
+    translation: repertoire
+    pos: noun
+    gender: m
+  - lemma: акторська майстерність
+    ipa: /ɐkˈtɔrsʲkɐ mɐi̯stɛrˈnistʲ/
+    translation: acting skills/mastery
+    pos: noun
+    gender: f
+  - lemma: новаторство
+    ipa: /nɔˈwɑtɔrstwɔ/
+    translation: innovation
+    pos: noun
+    gender: n
+  - lemma: Розстріляне відродження
+    ipa: /rɔzˈstr⁽ʲ⁾ilʲɐnɛ widˈrɔdʒːɛnʲːɐ/
+    translation: Executed Renaissance
+    pos: noun
+    gender: n
+  - lemma: сценографія
+    ipa: /st͡sɛnɔˈɦrɑf⁽ʲ⁾ijɐ/
+    translation: scenography
+    pos: noun
+    gender: f
+  - lemma: мізансцена
+    ipa: /mizɐnˈst͡sɛnɐ/
+    translation: mise-en-scène
+    pos: noun
+    gender: f
+  - lemma: інтелектуальний
+    ipa: /intɛlɛktʊˈɑlʲnɪi̯/
+    translation: intellectual
+    pos: adj
+  - lemma: авангардний
+    ipa: /ɐwɐnˈɦɑrdnɪi̯/
+    translation: avant-garde
+    pos: adj
+  - lemma: естетика
+    ipa: /ɛsˈtɛtɪkɐ/
+    translation: aesthetics
+    pos: noun
+    gender: f
+  - lemma: діяч
+    ipa: /d⁽ʲ⁾iˈjɑt͡ʃ/
+    translation: figure/activist
+    pos: noun
+    gender: m
+  - lemma: прем'єра
+    ipa: /prɛmˈjɛrɐ/
+    translation: premiere
+    pos: noun
+    gender: f
+  - lemma: глядач
+    ipa: /ɦlʲɐˈdɑt͡ʃ/
+    translation: spectator/viewer
+    pos: noun
+    gender: m
+  - lemma: сценічний
+    ipa: /st͡sɛˈn⁽ʲ⁾it͡ʃnɪi̯/
+    translation: scenic/stage (adj)
+    pos: adj
+  - lemma: експериментальний
+    ipa: /ɛkspɛrɪmɛnˈtɑlʲnɪi̯/
+    translation: experimental
+    pos: adj
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɐ/
+    translation: legacy/heritage
+    pos: noun
+    gender: f
+  - lemma: трагедія
+    ipa: /trɐˈɦɛd⁽ʲ⁾ijɐ/
+    translation: tragedy
+    pos: noun
+    gender: f
+  - lemma: мистецтво
+    ipa: /mɪˈstɛt͡stwɔ/
+    translation: art
+    pos: noun
+    gender: n
+  - lemma: заснувати
+    ipa: /zɐsnʊˈwɑtɪ/
+    translation: to found/establish
+    pos: verb
+    aspect: pf
+  - lemma: реформатор
+    ipa: /rɛfɔrˈmɑtɔr/
+    translation: reformer
+    pos: noun
+    gender: m
+  - lemma: філософський
+    ipa: /f⁽ʲ⁾ilɔˈsɔfsʲkɪi̯/
+    translation: philosophical
+    pos: adj
+  - lemma: репресія
+    ipa: /rɛˈprɛsʲijɐ/
+    translation: repression
+    pos: noun
+    gender: f

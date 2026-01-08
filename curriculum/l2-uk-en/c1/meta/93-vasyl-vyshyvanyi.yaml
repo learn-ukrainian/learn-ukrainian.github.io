@@ -1,0 +1,23 @@
+module: c1-93
+title: 'Василь Вишиваний: Ерцгерцог, що обрав Україну'
+subtitle: 'Vasyl Vyshyvanyi: The Archduke Who Chose Ukraine'
+version: '2.0'
+phase: 'C1.3 Biographies'
+focus: biography
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - biography
+  - military
+  - politics
+  - habsburg
+grammar:
+  - 'Historical narrative tenses'
+  - 'Quoted speech conventions'
+objectives:
+  - "Learner understands the unique life path of Wilhelm von Habsburg (Vasyl Vyshyvanyi)."
+  - 'Learner can discuss identity, military history, and diplomatic relations in Ukrainian.'
+  - 'Learner masters vocabulary for nobility, military service, and national choice.'
+vocabulary_count: 24
+slug: 93-vasyl-vyshyvanyi

@@ -1,0 +1,122 @@
+module: 91-oleksandr-arkhypenko
+level: C1
+version: '2.0'
+items:
+  - lemma: скульптор
+    ipa: /ˈskulʲptɔr/
+    translation: sculptor
+    pos: noun
+    gender: m
+  - lemma: авангард
+    ipa: /ɐwɐnˈɦɑrd/
+    translation: avant-garde
+    pos: noun
+    gender: m
+  - lemma: кубізм
+    ipa: /kʊˈbizm/
+    translation: cubism
+    pos: noun
+    gender: m
+  - lemma: тривимірний
+    ipa: /trɪˈwɪm⁽ʲ⁾irnɪi̯/
+    translation: three-dimensional
+    pos: adj
+  - lemma: порожнеча
+    ipa: /pɔrɔʒˈnɛt͡ʃɐ/
+    translation: emptiness/void
+    pos: noun
+    gender: f
+  - lemma: інновація
+    ipa: /inɔˈwɑt͡sʲijɐ/
+    translation: innovation
+    pos: noun
+    gender: f
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɐ/
+    translation: legacy/heritage
+    pos: noun
+    gender: f
+  - lemma: внесок
+    ipa: /ˈwnɛsɔk/
+    translation: contribution
+    pos: noun
+    gender: m
+  - lemma: митець
+    ipa: /mɪˈtɛt͡sʲ/
+    translation: artist
+    pos: noun
+    gender: m
+  - lemma: шедевр
+    ipa: /ʃɛˈdɛwr/
+    translation: masterpiece
+    pos: noun
+    gender: m
+  - lemma: визнання
+    ipa: /wɪˈznɑnʲːɐ/
+    translation: recognition
+    pos: noun
+    gender: n
+  - lemma: оселитися
+    ipa: /ɔsɛˈlɪtɪsʲɐ/
+    translation: to settle/dwell
+    pos: verb
+    aspect: pf
+  - lemma: виставка
+    ipa: /ˈwɪstɐwkɐ/
+    translation: exhibition
+    pos: noun
+    gender: f
+  - lemma: моделювання
+    ipa: /mɔdɛˈlʲʊwɐnʲːɐ/
+    translation: modeling
+    pos: noun
+    gender: n
+  - lemma: революційний
+    ipa: /rɛwɔlʲʊˈt͡sʲii̯nɪi̯/
+    translation: revolutionary
+    pos: adj
+  - lemma: динаміка
+    ipa: /dɪˈnɑmikɐ/
+    translation: dynamics
+    pos: noun
+    gender: f
+  - lemma: ракурс
+    ipa: /ˈrɑkʊrs/
+    translation: angle/perspective
+    pos: noun
+    gender: m
+  - lemma: площина
+    ipa: /plɔˈʃt͡ʃɪnɐ/
+    translation: plane/surface
+    pos: noun
+    gender: f
+  - lemma: композиція
+    ipa: /kɔmpɔˈzɪt͡sʲijɐ/
+    translation: composition
+    pos: noun
+    gender: f
+  - lemma: матеріал
+    ipa: /mɐtɛr⁽ʲ⁾iˈɑl/
+    translation: material
+    pos: noun
+    gender: m
+  - lemma: еміграція
+    ipa: /ɛmiˈɦrɑt͡sʲijɐ/
+    translation: emigration
+    pos: noun
+    gender: f
+  - lemma: творчість
+    ipa: /ˈtwɔrt͡ʃistʲ/
+    translation: creativity/works
+    pos: noun
+    gender: f
+  - lemma: поєднання
+    ipa: /pɔˈjɛdnɐnʲːɐ/
+    translation: combination
+    pos: noun
+    gender: n
+  - lemma: вплив
+    ipa: /ˈwplɪw/
+    translation: influence
+    pos: noun
+    gender: m

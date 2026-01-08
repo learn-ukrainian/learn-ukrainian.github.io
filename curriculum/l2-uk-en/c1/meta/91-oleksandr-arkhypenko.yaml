@@ -1,0 +1,23 @@
+module: c1-91
+title: 'Олександр Архипенко: Маг тривимірного простору'
+subtitle: 'Oleksandr Arkhypenko: Mage of 3D Space'
+version: '2.0'
+phase: 'C1.3 Biographies'
+focus: biography
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - biography
+  - arts
+  - avant-garde
+  - sculpture
+grammar:
+  - 'Historical narrative tenses'
+  - 'Quoted speech conventions'
+objectives:
+  - 'Learner understands the life and artistic innovation of Oleksandr Arkhypenko.'
+  - 'Learner can analyze artistic styles in Ukrainian.'
+  - 'Learner masters biographical vocabulary for arts and innovation.'
+vocabulary_count: 24
+slug: 91-oleksandr-arkhypenko

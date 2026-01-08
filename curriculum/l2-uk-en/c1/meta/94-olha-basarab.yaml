@@ -1,0 +1,23 @@
+module: c1-94
+title: 'Ольга Басараб: Муза і сталь українського підпілля'
+subtitle: 'Olha Basarab: Muse and Steel of the Ukrainian Underground'
+version: '2.0'
+phase: 'C1.3 Biographies'
+focus: biography
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - biography
+  - resistance
+  - politics
+  - women
+grammar:
+  - 'Historical narrative tenses'
+  - 'Quoted speech conventions'
+objectives:
+  - 'Learner understands the life and heroic death of Olha Basarab.'
+  - 'Learner can discuss political activism, underground movements, and human rights in Ukrainian.'
+  - 'Learner analyzes the role of women in the Ukrainian independence struggle.'
+vocabulary_count: 24
+slug: 94-olha-basarab

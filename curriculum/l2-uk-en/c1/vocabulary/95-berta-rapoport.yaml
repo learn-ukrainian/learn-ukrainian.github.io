@@ -1,0 +1,124 @@
+module: 95-berta-rapoport
+level: C1
+version: '2.0'
+items:
+  - lemma: капітан
+    ipa: /kɐp⁽ʲ⁾iˈtɑn/
+    translation: captain
+    pos: noun
+    gender: m
+  - lemma: штурман
+    ipa: /ˈʃtʊrmɐn/
+    translation: navigator/helmsman
+    pos: noun
+    gender: m
+  - lemma: судно
+    ipa: /ˈsudnɔ/
+    translation: vessel/ship
+    pos: noun
+    gender: n
+  - lemma: плавання
+    ipa: /ˈplɑwɐnʲːɐ/
+    translation: sailing/swimming/voyage
+    pos: noun
+    gender: n
+  - lemma: флот
+    ipa: /flɔt/
+    translation: fleet
+    pos: noun
+    gender: m
+  - lemma: рейс
+    ipa: /rɛi̯s/
+    translation: voyage/trip/flight
+    pos: noun
+    gender: m
+  - lemma: мореплавство
+    ipa: /mɔrɛˈplɑwstwɔ/
+    translation: seafaring/navigation
+    pos: noun
+    gender: n
+  - lemma: бар'єр
+    ipa: /bɐrˈjɛr/
+    translation: barrier
+    pos: noun
+    gender: m
+  - lemma: рівноправність
+    ipa: /riwnɔˈprɑwnistʲ/
+    translation: equality (of rights)
+    pos: noun
+    gender: f
+  - lemma: екіпаж
+    ipa: /ɛk⁽ʲ⁾iˈpɑʒ/
+    translation: crew
+    pos: noun
+    gender: m
+  - lemma: порт
+    ipa: /pɔrt/
+    translation: port/harbor
+    pos: noun
+    gender: m
+  - lemma: навігація
+    ipa: /nɐwiˈɦɑt͡sʲijɐ/
+    translation: navigation
+    pos: noun
+    gender: f
+  - lemma: відвага
+    ipa: /widˈwɑɦɐ/
+    translation: courage/bravery
+    pos: noun
+    gender: f
+  - lemma: покликання
+    ipa: /pɔˈklɪkɐnʲːɐ/
+    translation: calling/vocation
+    pos: noun
+    gender: n
+  - lemma: море
+    ipa: /ˈmɔrɛ/
+    translation: sea
+    pos: noun
+    gender: n
+  - lemma: шторм
+    ipa: /ʃtɔrm/
+    translation: storm
+    pos: noun
+    gender: m
+  - lemma: рейд
+    ipa: /rɛi̯d/
+    translation: roadstead/raid
+    pos: noun
+    gender: m
+  - lemma: палуба
+    ipa: /ˈpɑlʊbɐ/
+    translation: deck
+    pos: noun
+    gender: f
+  - lemma: вахта
+    ipa: /ˈwɑxtɐ/
+    translation: watch (on a ship)
+    pos: noun
+    gender: f
+  - lemma: диплом
+    ipa: /dɪˈplɔm/
+    translation: diploma/certificate
+    pos: noun
+    gender: m
+  - lemma: іспит
+    ipa: /ˈispɪt/
+    translation: exam/test
+    pos: noun
+    gender: m
+  - lemma: кар'єра
+    ipa: /kɐrˈjɛrɐ/
+    translation: career
+    pos: noun
+    gender: f
+  - lemma: Чорне море
+    ipa: /ˈt͡ʃɔrnɛ ˈmɔrɛ/
+    translation: Black Sea
+    pos: noun
+    gender: n
+  - lemma: евакуація
+    ipa: /ɛwɐkʊˈɑt͡sʲijɐ/
+    translation: evacuation
+    pos: noun
+    gender: f
