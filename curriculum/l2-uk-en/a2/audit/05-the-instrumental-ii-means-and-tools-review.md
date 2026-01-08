@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): машиною, автобусом, ложкою, виделкою, ножем...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): головою, ложкою, ручкою, голосом, ногами...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE

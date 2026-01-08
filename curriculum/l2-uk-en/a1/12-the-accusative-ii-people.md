@@ -60,7 +60,7 @@ Here's the good news: **feminine animate nouns work exactly like feminine inanim
 
 So you already know how to handle feminine animate nouns from Module 11!
 
-### Summary Table: Animate vs Inanimate
+### Підсумок Table: Animate vs Inanimate
 
 | Gender        | Type      | Nominative | Accusative    | Example               |
 | ------------- | --------- | ---------- | ------------- | --------------------- |
@@ -201,8 +201,6 @@ These verbs typically take **people** as objects (accusative case):
 - **шукати** (to search for) — Я шукаю **вчителя**.
 
 ---
-
-# Summary
 
 In this module, you learned the **animate accusative** — how Ukrainian marks people and animals as direct objects.
 

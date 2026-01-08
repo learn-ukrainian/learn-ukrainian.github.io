@@ -10,7 +10,7 @@
 
 ## Grammar
 
-## Telling Time
+### Telling Time
 
 > [!observe] Pattern Discovery
 >
@@ -245,8 +245,18 @@ Or in conversation:
 
 ---
 
-# Summary
+## Практика
 
+### Вправа 1: Переклад
+Перекладіть речення на українську мову.
+
+1. I am a student.
+2. This is my house.
+3. She is in the city.
+
+---
+
+# Підсумок
 Ви навчилися говорити про час українською! (You've learned to tell time in Ukrainian!)
 
 **Що ви вивчили (What you learned):**

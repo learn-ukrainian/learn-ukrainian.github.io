@@ -248,8 +248,17 @@ Translation:
 > - Тут **була** школа. (The school is feminine.)
 > - Тут **було** тихо. (General statements use neuter.)
 
-## Підсумок (Summary)
+## Практика
 
+### Вправа 1: Переклад
+Перекладіть речення на українську мову.
+
+1. I was in the office yesterday.
+2. She was reading a book.
+3. They were working last week.
+
+---
+# Підсумок
 Ви навчилися говорити про минуле українською! (You've learned to talk about the past!)
 
 **Запам'ятайте основні шаблони (Key patterns):**
@@ -272,8 +281,6 @@ Translation:
 Наступний урок: майбутній час! Завтра ми будемо вивчати, як говорити про плани!
 
 ---
-
-# Summary
 
 Ви вивчили минулий час в українській мові. Ви знаєте закінчення -в, -ла, -ло та -ли. Ви знаєте слова «вчора» та «давно». Це була гарна робота (This was good work).
 

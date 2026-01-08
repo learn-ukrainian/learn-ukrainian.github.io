@@ -15,7 +15,7 @@
 
 ## Grammar
 
-## Talking About Family
+### Talking About Family
 
 > [!observe] Спостереження (Pattern Discovery)
 >
@@ -214,8 +214,18 @@ When calling someone directly, Ukrainian changes the word ending. This is the **
 
 ---
 
-# Summary
+## Практика
 
+### Вправа 1: Переклад
+Перекладіть речення на українську мову.
+
+1. I am a student.
+2. This is my house.
+3. She is in the city.
+
+---
+
+# Підсумок
 Ви вивчили багато слів про сім'ю! Тепер ви знаєте, як звати ваших батьків, братів та сестер. (You learned many words about family! Now you know how to name your parents, brothers and sisters.) Ви знаєте, як сказати «у мене є» або «у мене немає». Це був чудовий урок! Ви любите свою родину? (This was a great lesson! Do you love your family?)
 
 ---

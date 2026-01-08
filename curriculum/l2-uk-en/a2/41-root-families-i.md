@@ -259,7 +259,6 @@ The writer Andrii lives in an old house. It has a separate entrance.
 > In Ukrainian schools, children learn cursive. The word **пропис** comes from the root **ПИС**. Ukrainian handwriting is quite different from print. For example, the handwritten *т* often looks like an English *m*. Mastering your own **підпис** is a true art form in Ukraine!
 
 # Підсумок
-
 We have unlocked the power of «Lego Language».
 Instead of memorizing thousands of random words, you now see the connections.
 

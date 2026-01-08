@@ -57,11 +57,11 @@ Choose the correct Dative form for the words in parentheses:
 
 > [!tip] 💡 Memory Hook
 >
-> Think of Dative as "Giving". You give a book **to someone** (Давальний). But you also "give" feelings to someone: "Coldness is given to me" (Мені холодно).
+> Think of Dative as «Giving». You give a book **to someone** (Давальний). But you also «give» feelings to someone: «Coldness is given to me» (Мені холодно).
 
 > [!tip] 🎯 Case Strategy
 >
-> Always look for the **verb** or **preposition** first. They are the "bosses" that tell the noun which case to wear!
+> Always look for the **verb** or **preposition** first. They are the «bosses» that tell the noun which case to wear!
 
 ---
 
@@ -154,7 +154,7 @@ Select the correct case form based on the preposition:
 
 > [!note] ⚠️ Preposition Trap
 >
-> Be careful with **по**. In A2, we rarely use it. Beginners often misuse it for "for" or "by". Stick to **для** (for benefit) and **через** (because of/through).
+> Be careful with **по**. In A2, we rarely use it. Beginners often misuse it for «for» or «by». Stick to **для** (for benefit) and **через** (because of/through).
 
 ---
 
@@ -219,7 +219,6 @@ Read the following narrative and identify which skill is demonstrated by each bo
 ---
 
 # Підсумок
-
 Ви зробили велику роботу! Тепер ви володієте основними інструментами української граматики.
 
 | Відмінок  | Питання     | Головна функція            |

@@ -23,9 +23,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Introduction** | ✅ | 253 | Included in Core |
-| **Presentation** | ✅ | 192 | Included in Core |
-| **Reading Practice: Листівка з Одеси** | ✅ | 398 | Included in Core |
-| **Why the Dative Case Matters** | ✅ | 65 | Included in Core |
+| **Presentation** | ✅ | 655 | Included in Core |
 | **Чому давальний відмінок важливий** | ⚪️ | 139 | Skipped |
 | **The Dative Pronouns** | ⚪️ | 35 | Skipped |
 | **Pattern 1: Expressing Likes** | ✅ | 113 | Included in Core |

@@ -3,21 +3,19 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: чоловічий, місцевий, множина, жіночий, середній
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: середній, давальний, орудний, жіночий, чоловічий
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): ніж, кожного, разу, тоді, перш...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): щойно, тим, часом, тоді, разу...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
   - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
+- 3 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1332/1000
@@ -39,8 +37,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 72 | Included in Core |
-| **Presentation** | ✅ | 0 | Included in Core |
-| **1. Simple Linking** | ⚪️ | 37 | Skipped |
+| **Presentation** | ✅ | 37 | Included in Core |
 | **2. The Case Detective** | ⚪️ | 324 | Skipped |
 | **Deep Dive: «Who» vs «Which»** | ✅ | 74 | Included in Core |
 | **Deep Dive: The «Те, що» Connector** | ✅ | 144 | Included in Core |

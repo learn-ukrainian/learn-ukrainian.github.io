@@ -293,8 +293,7 @@ Beyond official public transport, every Ukrainian city runs **маршрутки
 
 ---
 
-# Summary
-
+# Підсумок
 You now have the vocabulary to:
 
 - **Give and follow directions** using прямо, наліво, направо, назад

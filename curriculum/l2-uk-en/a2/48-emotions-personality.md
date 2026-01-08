@@ -176,7 +176,6 @@ Notice how **радість** and **сум** are fundamental opposites — the l
 Сміливість і чесність — це головні українські цінності.
 
 # Підсумок
-
 You learned to:
 
 - Name basic emotions: радість, сум, гнів, страх

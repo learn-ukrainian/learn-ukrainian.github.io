@@ -15,7 +15,7 @@
 
 ## Grammar
 
-## The Three Key Questions
+### The Three Key Questions
 
 > [!observe] Спостереження (Pattern Discovery)
 >
@@ -204,8 +204,18 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 ---
 
-# Summary
+## Практика
 
+### Вправа 1: Переклад
+Перекладіть речення на українську мову.
+
+1. I am a student.
+2. This is my house.
+3. She is in the city.
+
+---
+
+# Підсумок
 Ви вивчили прийменники місця та напрямку! Тепер ви знаєте, як запитати «Де?» або «Куди?». (You learned prepositions of location and direction! Now you know how to ask «Where?» or «Where to?») Ви знаєте різницю між «вдома» та «додому». Ви також знаєте, як сказати «звідки» ви приїхали. Також ви вивчили прийменники: з, від, до. Це була чудова робота! Ви великі молодці! Гуляйте в парку та говоріть українською! Супер! (This was great work! You are great! Walk in the park and speak Ukrainian! Super!)
 
 ---

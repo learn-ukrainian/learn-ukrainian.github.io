@@ -15,7 +15,7 @@
 
 ## Grammar
 
-## Impersonal Weather Expressions
+### Impersonal Weather Expressions
 
 > [!observe] Спостереження (Pattern Discovery)
 >
@@ -184,8 +184,18 @@ For rain and snow, Ukrainian uses «йде» (goes):
 
 ---
 
-# Summary
+## Практика
 
+### Вправа 1: Переклад
+Перекладіть речення на українську мову.
+
+1. I am a student.
+2. This is my house.
+3. She is in the city.
+
+---
+
+# Підсумок
 Ви вивчили погоду та природу! Тепер ви знаєте, як описати сонце або дощ. (You learned weather and nature! Now you know how to describe the sun or rain.) Ви знаєте пори року: весна, літо, осінь та зима. Ви можете говорити про тварин та рослини. Це була дуже цікава подорож! (This was a very interesting journey!)
 
 ---

@@ -118,8 +118,7 @@ These are **Second Conjugation** verbs, so they use **-ить/-ять** endings.
 
 In some cultures, smiling at strangers is normal. in Ukraine, a smile (**усмішка**) is often reserved for friends and genuine moments. If a stranger doesn't smile at you on the street, it's not rudeness—it's neutrality. But when Ukrainians **сміються** (laugh) with you, it's 100% sincere!
 
-# Summary
-
+# Підсумок
 You've unlocked the **-ся** verbs!
 
 - **Formula**: Conjugate verb + add **-ся** (consonants) or **-сь** (vowels).

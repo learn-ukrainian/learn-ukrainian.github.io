@@ -19,10 +19,10 @@ mappings:
   # =============================================================================
   # A2: Single template
   # =============================================================================
-  - pattern: "^a2-(11|25|35|44|56)-"
+  - pattern: "^a2-(11|25|35|44|56|57|58)-"
     level: a2
     template: a2-checkpoint-module-template.md
-    description: "A2 checkpoints (M11, M25, M35, M44, M56)"
+    description: "A2 checkpoints (M11, M25, M35, M44, M56, M57, M58)"
 
   - pattern: '^a2-'
     level: a2

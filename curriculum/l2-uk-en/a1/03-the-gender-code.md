@@ -177,8 +177,7 @@ This pattern consistency makes Ukrainian **easier to learn** than languages with
 
 ---
 
-# Summary
-
+# Підсумок
 **You've unlocked the Ukrainian Gender Code!**
 
 **Three Genders:**

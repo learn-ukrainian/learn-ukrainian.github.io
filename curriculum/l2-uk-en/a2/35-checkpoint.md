@@ -235,7 +235,6 @@ Read the story and find the logical connections.
 ---
 
 # Підсумок
-
 You have mastered the art of complex sentences!
 
 | Concept     | Connector    | Example                   |

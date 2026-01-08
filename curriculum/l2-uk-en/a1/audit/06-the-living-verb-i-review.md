@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Reading Practice: Мій день (My Day), Practice
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Practice, Reading Practice: Мій день (My Day)
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
@@ -36,5 +36,5 @@
 | **Practice** | ⚪️ | 210 | Skipped |
 | **Cultural Insight** | ✅ | 155 | Included in Core |
 | **Reading Practice: Мій день (My Day)** | ✅ | 68 | Included in Core |
-| **Summary** | ✅ | 82 | Included in Core |
+| **Підсумок** | ✅ | 82 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

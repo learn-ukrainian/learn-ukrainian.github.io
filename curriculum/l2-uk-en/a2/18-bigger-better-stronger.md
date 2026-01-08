@@ -241,7 +241,6 @@ Instead of saying «Це погано», use comparatives to be more diplomatic:
 - ❌ більший за ніж → ✅ більший ніж OR більший за (choose one!)
 
 # Підсумок
-
 ---
 
 ## Need More Practice?

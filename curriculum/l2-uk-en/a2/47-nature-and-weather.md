@@ -192,7 +192,6 @@ Each season in Ukraine has its own beauty and character:
 - **Візьми парасольку!** = Take an umbrella! A helpful reminder when rain is expected.
 
 # Підсумок
-
 **Landscape:**
 
 - гора

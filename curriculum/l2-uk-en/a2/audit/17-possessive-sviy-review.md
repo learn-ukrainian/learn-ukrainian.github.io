@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): ділитися, спільний, своя, особистий, свої...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): своє, свій, спільний, ділитися, свої...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE

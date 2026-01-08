@@ -326,7 +326,6 @@ Food and drink combinations use Instrumental too — coffee WITH milk, tea WITH 
 ---
 
 # Підсумок
-
 У цьому модулі ви навчилися:
 
 - **Masculine instrumental endings**: -ом for hard stems, -ем for soft stems

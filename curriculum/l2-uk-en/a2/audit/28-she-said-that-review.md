@@ -5,19 +5,17 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): гадати, згоден, моєї, очевидно, думати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): здаватися, погляд, очевидно, моєї, зору...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
   - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
+- 3 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1533/1000
@@ -40,15 +38,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Introduction** | ✅ | 118 | Included in Core |
-| **Presentation** | ✅ | 0 | Included in Core |
-| **1. The Golden Rule: No Backshift** | ⚪️ | 25 | Skipped |
-| **Direct → Indirect** | ⚪️ | 97 | Skipped |
-| **Future Tense** | ⚪️ | 57 | Skipped |
-| **2. Reporting Verbs** | ⚪️ | 6 | Skipped |
-| **Basic** | ⚪️ | 72 | Skipped |
-| **Information** | ⚪️ | 26 | Skipped |
-| **Argument/Emotion** | ⚪️ | 31 | Skipped |
-| **3. Asking Questions** | ⚪️ | 50 | Skipped |
+| **Presentation** | ✅ | 364 | Included in Core |
 | **Cultural Insight** | ✅ | 0 | Included in Core |
 | **«Plitky» (Gossip)** | ⚪️ | 67 | Skipped |
 | **4. Nuance of Tone** | ⚪️ | 98 | Skipped |

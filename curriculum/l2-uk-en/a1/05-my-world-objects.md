@@ -208,8 +208,7 @@ Try building full sentences: «Це моя чашка. Та чашка не мо
 
 ---
 
-# Summary
-
+# Підсумок
 In this module, you learned:
 
 **Near Demonstratives (this/these):**

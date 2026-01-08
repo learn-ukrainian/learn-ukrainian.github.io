@@ -228,7 +228,6 @@ The prefix **За-** is the trickiest one. It has three opposite meanings!
 > One root «говорити» creates dozens of distinct concepts. This is linguistic wealth, not poverty.
 
 # Підсумок
-
 1.  **Prefixes transform meaning.** They act like modifiers (Re-, Sub-, Out-).
 2.  **Пере-** = Redo | Across.
 3.  **До-** = Finish.

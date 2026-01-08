@@ -172,8 +172,7 @@ It is a birthday party in Odesa. Practice saying:
 
 ---
 
-# Summary
-
+# Підсумок
 In this module, you learned:
 
 - ✅ How to form **accusative case** for inanimate objects

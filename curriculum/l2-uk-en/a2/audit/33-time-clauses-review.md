@@ -5,19 +5,17 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (30 words): хворий, температура, горло, ліки, одужувати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (30 words): пацієнт, лікар, живіт, нежить, біль...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
   - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
+- 3 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1377/1000
@@ -39,12 +37,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 82 | Included in Core |
-| **Presentation** | ✅ | 0 | Included in Core |
-| **1. Simultaneous Actions: Поки** | ⚪️ | 68 | Skipped |
-| **2. Sequential Actions: Коли & Після того як** | ⚪️ | 0 | Skipped |
-| **A. Simple «When» (Коли)** | ⚪️ | 26 | Skipped |
-| **B. Explicit «After» (Після того як)** | ⚪️ | 35 | Skipped |
-| **3. Immediate Action: Як тільки** | ⚪️ | 38 | Skipped |
+| **Presentation** | ✅ | 167 | Included in Core |
 | **Deep Dive: Before vs After** | ✅ | 241 | Included in Core |
 | **Deep Dive: Complex Time Connectors** | ✅ | 80 | Included in Core |
 | **1. The Loop: Кожного разу, коли...** | ⚪️ | 61 | Skipped |

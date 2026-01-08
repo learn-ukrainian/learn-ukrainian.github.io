@@ -88,7 +88,7 @@ When you ask for a specific amount, use Genitive (of...).
 >
 > Popular chains: **Сільпо** (Silpo), **АТБ** (ATB), **Новус** (Novus). Be ready at the **каса** (checkout) — cashiers are fast!
 
-## Dialogues
+### Dialogues
 
 > [!conversation] У ресторані (At the Restaurant)
 >
@@ -148,7 +148,7 @@ Bread is sacred. You'll see **коровай** (wedding bread) and be greeted wi
 
 Also, **борщ** is the soul of the kitchen. «Борщ — душа української кухні.»
 
-# Summary
+# Підсумок
 You can now feed yourself in Ukraine!
 - **Eat & Drink**: їсти, пити, снідати, обідати, вечеряти.
 - **Shop**: Скільки коштує?, Я хочу..., кілограм...

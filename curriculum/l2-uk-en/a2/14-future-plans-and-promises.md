@@ -2,164 +2,185 @@
 
 **Ласкаво просимо до майбутнього часу!**
 
-Welcome to future tense with aspect! You've learned that Ukrainian verbs come in aspect pairs and how to use them in past tense. Now let's learn how aspect works in the future — it's actually even more dramatic here because the two aspects have completely different formations!
+Welcome to the future! You have already learned how to use aspect in the past tense, where you chose between "was doing" and "did." Now, it's time to see how this powerful concept works in the future. In Ukrainian, the distinction between **imperfective** (недоконаний) and **perfective** (доконаний) is even more dramatic in the future because they use completely different grammar structures!
 
-In English, we use «will + verb» for almost everything in the future. But Ukrainian speakers make a fundamental choice every time they talk about future actions: are they talking about a process that will happen, or a result that will be achieved? This choice determines not just meaning but the entire grammatical structure of the sentence.
+In English, we usually just say "I will read" or "I will be reading." In Ukrainian, every time you talk about the future, you must decide: am I talking about the **process** of doing something, or the **result** I will achieve? This choice reflects your perspective on the action and even your level of commitment to finishing the task.
 
-**Why this matters for fluency:**
-When you master both future formations, you can express subtle differences in meaning that English cannot easily capture. You can distinguish between:
-- «I will be reading tomorrow»
-- «I will read/finish this book tomorrow»
+**Чому це важливо? (Why this matters?)**
+Native speakers use this distinction to express subtle differences in meaning that are crucial for clear communication. It's the difference between saying "I will be doing it" and "I will have it done." In Ukrainian, this is not just a stylistic choice but a grammatical one that determines which verb form you use. For example:
 
-Native speakers make this distinction constantly, and learning to do the same will dramatically improve your ability to communicate naturally.
+- «Я **буду читати** книгу» (I will be reading — the focus is on how I'll spend my time).
+- «Я **прочитаю** книгу» (I will finish that book — the focus is on the completed achievement).
 
-**Key insight:** Ukrainian has TWO different ways to form future tense, depending on the aspect:
-- **Imperfective future:** буду + infinitive (will be doing — process focus)
-- **Perfective future:** conjugated verb (will do/finish — result focus)
+**Що ви вивчите в цьому модулі:**
 
-This is a crucial distinction that doesn't exist in English! By the end of this module, you'll be able to make plans, express intentions, and give promises with the appropriate level of commitment.
+- Два типи майбутнього часу: недоконаний (складний) та доконаний (простий).
+- Як утворювати майбутній час з допоміжним дієсловом **бути**.
+- Семантичну різницю між обіцянкою результату та описом планів.
+- Як правильно поєднувати час та вид для природного звучання.
 
 > 💡 **Пам'ятайте!**
 >
-> Недоконаний майбутній час (буду + інфінітив) — це процес. Доконаний майбутній час (змінене дієслово) — це результат. Цей вибір змінює значення!
-
-## Presentation
-
-## Practice
-
-Choose the correct future form:
-
-1. **I will read every day.** (habit)
-   → Я **буду читати** щодня. (impf.)
-
-2. **I will finish this book tomorrow.**
-   → Я **прочитаю** цю книгу завтра. (perf.)
-
-3. **She will be working all week.** (duration)
-   → Вона **буде працювати** цілий тиждень. (impf.)
-
-4. **He will write the letter.** (promise)
-   → Він **напише** листа. (perf.)
-
-## Two Types of Future
-
-Unlike English, which uses «will + verb» for everything, Ukrainian has completely different future formations based on aspect.
-
-## Imperfective Future: буду + Infinitive
-
-For imperfective verbs, the future is formed with the auxiliary verb **бути** + infinitive:
-
-| Person | Formation | Example |
-|--------|-----------|---------|
-| я | буду + inf. | буду читати |
-| ти | будеш + inf. | будеш читати |
-| він/вона | буде + inf. | буде читати |
-| ми | будемо + inf. | будемо читати |
-| ви | будете + inf. | будете читати |
-| вони | будуть + inf. | будуть читати |
-
-**Usage:** Ongoing or repeated future actions
-- Я **буду читати** увечері. (I will be reading in the evening.)
-- Вона **буде працювати** завтра. (She will be working tomorrow.)
-
-> 💡 **This is Like English Progressive!**
->
-> «Буду читати» is similar to «I will be reading» — it emphasizes the process or duration of the future action.
-
-## Perfective Future: Conjugated Verb
-
-For perfective verbs, the future is formed by simply conjugating the verb in its «present tense» form — but because it's perfective, it refers to the future!
-
-| Person | прочитати | написати | зробити |
-|--------|-----------|----------|---------|
-| я | прочитаю | напишу | зроблю |
-| ти | прочитаєш | напишеш | зробиш |
-| він/вона | прочитає | напише | зробить |
-| ми | прочитаємо | напишемо | зробимо |
-| ви | прочитаєте | напишете | зробите |
-| вони | прочитають | напишуть | зроблять |
-
-**Usage:** Completed future actions
-- Я **прочитаю** цю книгу. (I will read/finish this book.)
-- Вона **напише** листа. (She will write the letter.)
-
-> 📜 **Why Perfective «Present» = Future**
->
-> Perfective verbs can't have true present tense because they describe completed actions — and you can't complete something that's happening right now! So their «present» conjugation always refers to future completion.
-
-## Comparing the Two Futures
-
-Here's the same verb pair in both future forms:
-
-| Aspect | Future | Meaning |
-|--------|--------|---------|
-| Impf. | буду читати | will be reading (process) |
-| Perf. | прочитаю | will read/finish (result) |
-| Impf. | буду писати | will be writing (process) |
-| Perf. | напишу | will write/finish (result) |
-| Impf. | буду робити | will be doing (process) |
-| Perf. | зроблю | will do/finish (result) |
-
-> [!tip] Simple Rule
-> **Making plans about DOING something:** буду + infinitive
-> **Promising to COMPLETE something:** perfective form
-
-## Time Expressions with Future Tense
-
-Certain time expressions often appear with specific aspects:
-
-**With Imperfective:**
-- цілий день — all day («Я буду працювати цілий день.»)
-- весь час — all the time («Он буде весь час говорити.»)
-- щодня — every day («Ми будемо читати щодня.»)
-
-**With Perfective:**
-- завтра — tomorrow («Я прочитаю завтра.»)
-- наступного тижня — next week («Ми приїдемо наступного тижня.»)
-- о третій годині — at three o'clock («Я закінчу о третій.»)
-
-Understanding which time expressions go with which aspect will help you sound more natural when talking about future plans.
-
-> 🌍 **Real World**
->
-> In everyday Ukrainian conversation, people switch between aspects constantly. For example, when making weekend plans: «Завтра я **буду прибирати** (will be cleaning — process), а потім **приготую** вечерю (will cook — result).» Notice how the speaker uses imperfective for the ongoing task and perfective for the completed dish!
+> Недоконаний майбутній час (**буду + інфінітив**) — це процес, звичка або тривала дія. Доконаний майбутній час (змінене дієслово) — це результат або одноразовий факт.
 
 ---
 
-## Cultural Insight
+## Presentation
 
-## Promises and Intentions
+### Акцент на результаті чи на процесі?
 
-In Ukrainian culture, using perfective future often carries more commitment — it's like promising that you WILL complete the action.
+Подивіться, як змінюється логіка речення залежно від обраної форми:
 
-**Weaker commitment (process-focused):**
-- Я буду намагатися. (I will be trying.)
-- Я буду працювати над цим. (I will be working on this.)
+| Ситуація          | Вид дієслова    | Приклад                          | Значення                       |
+| ----------------- | --------------- | -------------------------------- | ------------------------------ |
+| Процес триває     | **Недоконаний** | Я **буду працювати** цілий день. | Focus on the duration of work. |
+| Результат у кінці | **Доконаний**   | Я **зроблю** проект завтра.      | Focus on the finished project. |
+| Повторювана дія   | **Недоконаний** | Він **буде писати** щотижня.     | Focus on the habit/regularity. |
+| Одноразовий факт  | **Доконаний**   | Він **напише** листа вранці.     | Focus on the specific event.   |
 
-**Stronger commitment (result-focused):**
-- Я зроблю це! (I will do it!)
-- Я напишу тобі! (I will write to you!)
-
-**Real-life example:**
-- «Ти будеш вчити українську?» → «Так, буду.» (Yes, I will be studying — ongoing commitment)
-- «Ти вивчиш цей урок?» → «Так, вивчу!» (Yes, I will learn it! — promise to complete)
-
-> 🔍 **Cultural Note**
+> 📜 **Цікавий факт**
 >
-> When making promises, Ukrainians prefer perfective: «Я зроблю» sounds more reliable than «Я буду робити.»
+> В українській мові немає окремого слова "will" для майбутнього часу доконаного виду. Сама форма дієслова вже містить у собі майбутній час. Це робить мову дуже компактною та енергійною. Коли ви кажете «Я зроблю!», це звучить як постріл — коротко і чітко.
 
-> 📜 **Українська мудрість**
+### Як обрати правильну форму в розмові?
+
+Коли ви плануєте свій день, запитайте себе: що для мене головне? Якщо ви хочете розповісти, ЧИМ ви будете зайняті — обирайте **недоконаний** вид. Якщо ви хочете повідомити, ЩО ви закінчите або чого досягнете — обирайте **доконаний** вид.
+
+1. **Недоконаний вид** (Imperfective aspect)
+   - «Я **буду вчити** слова.» (I'll be studying words — focus on the activity).
+   - «Ми **будемо дивитися** фільм.» (We'll be watching a movie — focus on the experience).
+
+2. **Доконаний вид** (Perfective aspect)
+   - «Я **вивчу** ці слова.» (I will learn these words — focus on the knowledge gained).
+   - «Ми **подивимося** цей фільм.» (We will watch/see this movie — focus on the completed viewing).
+
+---
+
+## Два типи майбутнього часу (Two Types of Future)
+
+Unlike English, which relies on "will" for both cases, Ukrainian branches out into two distinct paths.
+
+## 1. Недоконаний майбутній: буду + інфінітив
+
+This is often called the "compound future" (складний майбутній час). It's formed with the auxiliary verb **бути** in the future tense and the infinitive of the imperfective verb.
+
+| Особа    | Форма             | Приклад       |
+| -------- | ----------------- | ------------- |
+| я        | **буду** + інф.   | буду читати   |
+| ти       | **будеш** + інф.  | будеш читати  |
+| він/вона | **буде** + інф.   | буде читати   |
+| ми       | **будемо** + інф. | будемо читати |
+| ви       | **будете** + інф. | будете читати |
+| вони     | **будуть** + інф. | будуть читати |
+
+**Usage:** Use this for continuous actions, habits, and whenever you emphasize the act of doing. This structure is very similar to how we talk about future intentions in English, but remember it strictly applies to unfinished processes.
+
+If you are just describing how you will spend your afternoon, without promising any specific results, this is the form you should use. It feels more descriptive and relaxed.
+
+- Я **буду працювати** завтра з восьмої години до вечора. (I'll be working tomorrow from 8 to evening).
+- Ми **будемо вчити** українську мову кожного вівторка. (We'll be learning Ukrainian every Tuesday).
+
+## 2. Доконаний майбутній: Простий майбутній час
+
+For perfective verbs, the future is formed by conjugating the verb stem. It looks like the present tense of imperfective verbs, but for perfective verbs, it always refers to the future.
+
+| Особа    | **прочитати** | **написати** | **зробити** |
+| -------- | ------------- | ------------ | ----------- |
+| я        | прочитаю      | напишу       | зроблю      |
+| ти       | прочитаєш     | напишеш      | зробиш      |
+| він/вона | прочитає      | напише       | зробить     |
+| ми       | прочитаємо    | напишемо     | зробимо     |
+| ви       | прочитаєте    | напишете     | зробите     |
+| вони     | прочитають    | напишуть     | зроблять    |
+
+**Usage:** Use this for completed actions, specific results, and promises.
+
+- Я **прочитаю** цей лист і одразу відповім. (I'll finish reading and then reply).
+- Вона **напише** тобі, як тільки приїде. (She will write/send the message upon arrival).
+
+---
+
+## Мистецтво обіцянок (The Art of Promises)
+
+In Ukrainian culture, the choice of aspect is a social signal. If you want to sound reliable and professional, the perfective future is your best friend.
+
+### Сила доконаного виду
+
+When a boss asks if a task will be ready, answering «Я **буду робити**» (I will be doing it) might sound evasive. Answering «Я **зроблю**!» (I will do/finish it) sounds like a solid commitment to the result.
+
+**Порівняйте:**
+
+- «Я **буду малювати** твій портрет.» (I'll be painting it... maybe for years!)
+- «Я **намалюю** твій портрет.» (I will paint it — you will have a finished portrait).
+
+### Слова-маркери (Signal Words)
+
+To help you decide, look for these common words in the context:
+
+- **Imperfective Indicators:** завжди — always, часто — often, довго — long time, цілий день — all day, кожного разу — every time.
+- **Perfective Indicators:** завтра — tomorrow, нарешті — finally, відразу — immediately, наступного разу — next time.
+
+> [!tip] 🔊 Фонетична порада
+> Зверніть увагу на наголос у формах майбутнього часу доконаного виду. Наприклад, у слові **напишУ** наголос падає на останній склад, а в слові **прочитАю** він залишається в основі. Завжди перевіряйте основний наголос, щоб звучати природно.
+
+> [!important] Формула впевненості
+> В українській мові ваш вибір виду багато говорить про вашу впевненість. Якщо ви кажете «Я буду робити», ви обіцяєте процес. Якщо ви кажете «Я зроблю», ви обіцяєте результат. Будьте обережні з обіцянками!
+
+---
+
+## Практика
+
+### Завдання для селф-контролю
+
+Давайте перевіримо ваші знання. Оберіть правильну форму для кожної ситуації.
+
+1. **Тривала дія:** Я (буду писати / напишу) есе завтра цілий вечір.
+   _Відповідь: **буду писати**, бо акцент на тривалості («цілий вечір»)._
+
+2. **Конкретний результат:** Я обов'язково (буду купувати / куплю) тобі цей подарунок.
+   _Відповідь: **куплю**, бо це обіцянка кінцевого результату._
+
+3. **Регулярність:** Ми (будемо ходити / підемо) в цей парк кожного тижня.
+   _Відповідь: **будемо ходити**, бо дія повторюється («кожного тижня»)._
+
+4. **Завершення дії:** Коли я (буду читати / прочитаю) книгу, я віддам її тобі.
+   _Відповідь: **прочитаю**, бо ви віддасте книгу тільки ПІСЛЯ завершення читання._
+
+---
+
+## Діалог: Плани та обіцянки
+
+### Плани на вихідні (Weekend Plans)
+
+**Олег:** Привіт, Маріє! Чим ти **будеш займатися** в суботу?
+**Марія:** Привіт! Вранці я **буду прибирати** в квартирі, а потім **приготую** смачну вечерю.
+**Олег:** О, вечеря — це чудово! Я **прийду** до тебе о шостій?
+**Марія:** Так, **приходь**. До речі, ти **принесеш** той фільм, про який ми говорили?
+**Олег:** Звичайно! Я **завантажу** його сьогодні і **принесу** на флешці.
+**Марія:** Дякую! Я **буду чекати** на тебе.
+**Олег:** До зустрічі! Обіцяю, що не **запізнюся**.
+
+> 🌍 **Культурний контекст**
 >
-> «Обіцяти — не значить одружитися.» Ця приказка нагадує, що обіцянки потрібно виконувати! Тому, коли ви використовуєте доконаний вид («Я зроблю!»), ви берете на себе відповідальність.
+> В Україні кажуть: «Слово — не горобець, вилетить — не спіймаєш». Це означає, що потрібно бути обережним з обіцянками. Використання доконаного виду («Я прийду», «Я зроблю») — це серйозна заява.
 
 ---
 
 # Підсумок
 
-У цьому модулі ви вивчили майбутній час з обома видами дієслів.
+У цьому модулі ми розібрали складну, але дуже логічну систему майбутнього часу.
+
+| Концепція                | Статус     | Значення               |
+| ------------------------ | ---------- | ---------------------- |
+| Недоконаний майбутній    | ✅ Вивчено | Процес і тривалість    |
+| Доконаний майбутній      | ✅ Вивчено | Результат і досягнення |
+| Обіцянки та зобов'язання | ✅ Вивчено | Сила доконаного виду   |
+| Фонетика та наголос      | ✅ Вивчено | Правильна вимова форм  |
 
 ---
 
 ## Need More Practice?
 
-To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
+To fully master future plans, try writing a short paragraph about your ideal weekend. Use at least five different verbs in the future, mixing both aspects. Think about what you will BE DOING (process) and what you will FINISH (result). Using the correct aspect shows your listeners whether you're describing an activity you'll enjoy or a result you're committed to achieving.
+
+Use the vocabulary items provided in the sidecar to practice your new words in context! Every sentence you write brings you closer to thinking like a native Ukrainian speaker. Your future mastery is in your hands! Успіхів у майбутньому!

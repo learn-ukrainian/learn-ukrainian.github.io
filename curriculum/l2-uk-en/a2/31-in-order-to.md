@@ -7,9 +7,9 @@ In Ukrainian, we use the magic word **щоб** (in order to).
 This word is special because it works differently depending on *who* is doing the action.
 
 You will learn:
-- How to say "in order to" using **щоб + Infinitive**.
-- How to say "I want you to..." using **щоб + Past Tense**.
-- Why Ukrainian uses the "past" for wishes.
+- How to say «in order to» using **щоб + Infinitive**.
+- How to say «I want you to...» using **щоб + Past Tense**.
+- Why Ukrainian uses the «past» for wishes.
 
 ## Presentation
 
@@ -29,8 +29,8 @@ When **I** do something so that **I** can get a result.
 ### 2. Different Subjects: Щоб + Past Tense
 
 When **I** want **YOU** to do something.
-In English, you say "I want you *to go*".
-In Ukrainian, you say "I want that you *went*".
+In English, you say «I want you *to go*».
+In Ukrainian, you say «I want that you *went*».
 
 **Structure:**
 [Subject A] + [Want/Ask] + , + **щоб** + [Subject B] + [Past Tense Verb]
@@ -83,7 +83,6 @@ Let's practice choosing the correct form of the verb.
 **Син:** Добре, мамо. Я приберу, **щоб ти не сердилася**.
 
 # Підсумок
-
 Ви вивчили найважливішу структуру бажання! (You learned the most important desire structure!)
 
 Пам'ятайте правило:

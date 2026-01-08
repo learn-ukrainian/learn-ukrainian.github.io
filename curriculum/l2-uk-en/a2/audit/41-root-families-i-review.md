@@ -3,9 +3,9 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, доконаний, час, вид
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, доконаний, місцевий, вид
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): обдумати, мовець, роздуми, слух, мовчання...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): мовчати, слухач, погляд, послух, мовець...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE

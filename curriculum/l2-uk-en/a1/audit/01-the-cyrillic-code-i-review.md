@@ -27,5 +27,5 @@
 | **Practice** | ⚪️ | 134 | Skipped |
 | **Cultural Insight** | ✅ | 155 | Included in Core |
 | **Production** | ➖ | 58 | Excluded Type |
-| **Summary** | ✅ | 122 | Included in Core |
+| **Підсумок** | ✅ | 122 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

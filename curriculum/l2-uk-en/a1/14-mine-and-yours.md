@@ -280,8 +280,7 @@ Remember from Module 04 that Ukrainian has **ти** (informal you) and **ви** 
 
 ---
 
-# Summary
-
+# Підсумок
 In this module, you learned how to show possession in Ukrainian using two types of possessive pronouns:
 
 1. **Змінні possessives** (мій, твій, наш, ваш, їхній) — change form to match the noun's gender and number.

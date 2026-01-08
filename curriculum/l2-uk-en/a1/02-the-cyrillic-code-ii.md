@@ -213,8 +213,7 @@ You know every single one now. Congratulations!
 
 ---
 
-# Summary
-
+# Підсумок
 In this module, you learned the final 14 letters of Ukrainian Cyrillic:
 
 You learned:

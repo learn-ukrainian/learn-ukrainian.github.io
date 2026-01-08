@@ -213,7 +213,6 @@ If you are a guest in a Ukrainian home, using superlatives is the best way to sh
 ---
 
 # Підсумок
-
 ---
 
 ## Need More Practice?

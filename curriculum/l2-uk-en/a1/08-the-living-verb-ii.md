@@ -214,8 +214,7 @@ Ukrainians use these constantly:
 
 ---
 
-# Summary
-
+# Підсумок
 You've now mastered **Second Conjugation verbs (-ити)**! Here's what you can do:
 
 - Conjugate regular Second Conjugation verbs (говорити, робити, бачити, любити)

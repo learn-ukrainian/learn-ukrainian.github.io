@@ -234,7 +234,6 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 > Уявіть кімнату. Стіл **посередині**. Лампа **над** столом. Кіт **під** столом. Стілець **за** столом. Вікно **біля** стіни. Ця картинка допоможе!
 
 # Підсумок
-
 ---
 
 ## Need More Practice?

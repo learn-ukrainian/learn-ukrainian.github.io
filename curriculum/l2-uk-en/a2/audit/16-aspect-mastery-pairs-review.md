@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): будувати, пам'ятати, відповідати, готувати, знаходити...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): знайти, намалювати, губити, купити, дзвонити...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE

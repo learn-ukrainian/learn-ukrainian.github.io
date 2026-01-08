@@ -14,7 +14,7 @@ English has similar patterns: «see» gives us «sight», «seer», «foresee»,
 
 ## Presentation
 
-## бач- Family (see)
+### бач- Family (see)
 
 The root **бач-** relates to seeing and visual perception.
 
@@ -205,7 +205,6 @@ These words look similar but mean different things. **Бачення** is vision
 ✅ Його художнє бачення цікаве. (His artistic vision is interesting.)
 
 # Підсумок
-
 In this module, you have explored:
 - The core root families for seeing, hearing, and speaking.
 - How prefixes and suffixes transform basic meanings.

@@ -42,7 +42,7 @@ The host puts the guest in the Dative — the position of receiver. Refusing foo
 >
 > In Ukrainian restaurants, you'll often hear waiters ask: «Вам меню?» (Menu for you?), «Вам рахунок?» (Check for you?). These short phrases put you in the Dative — the recipient of service. Now you know why!
 
-## Reading Practice: Листівка з Одеси
+### Reading Practice: Листівка з Одеси
 
 Below is a postcard from Odesa that uses many Dative constructions you've learned. Before reading, remember:
 
@@ -99,7 +99,7 @@ Now that you understand the theory, let's practice recognizing and using Dative 
 
 Try creating similar sentences about yourself before moving to the activities below.
 
-## Why the Dative Case Matters
+### Why the Dative Case Matters
 
 The Dative case answers a fundamental question in any language: **Who receives something?** When you give a gift, tell a story, or explain an idea — someone receives it. That «someone» goes into the Dative case.
 
@@ -263,7 +263,6 @@ _(— Do you like Kyiv? — Yes, we like it very much! We find it interesting he
 | дякувати   | to thank    | Дякую тобі!       |
 
 # Підсумок
-
 У цьому модулі ви навчилися:
 
 1. **Займенники в давальному відмінку:** мені, тобі, йому, їй, нам, вам, їм

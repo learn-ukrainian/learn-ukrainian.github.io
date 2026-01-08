@@ -317,7 +317,6 @@ All logical prepositions require a specific case:
 ---
 
 # Підсумок
-
 Today you learned 10 logical prepositions:
 
 | Preposition | Meaning              | Case         |

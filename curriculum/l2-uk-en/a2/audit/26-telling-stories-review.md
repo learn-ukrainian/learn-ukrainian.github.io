@@ -3,19 +3,17 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): незважаючи, таки, якби, дарма, зате...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): би, попри, завдяки, оскільки, зате...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
   - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1294/1000
@@ -38,16 +36,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Introduction** | ✅ | 130 | Included in Core |
-| **Presentation** | ✅ | 0 | Included in Core |
-| **1. The Timeline of a Story** | ✅ | 18 | Included in Core |
-| **The Beginning** | ⚪️ | 76 | Skipped |
-| **The Middle** | ⚪️ | 18 | Skipped |
-| **The Climax (Drama!)** | ⚪️ | 15 | Skipped |
-| **The End** | ⚪️ | 71 | Skipped |
-| **2. Sequencing in Action** | ⚪️ | 62 | Skipped |
-| **3. «Before» and «Ago»** | ⚪️ | 103 | Skipped |
-| **4. Dialogue: The Fish That Got Away** | ✅ | 97 | Included in Core |
-| **5. Intonation Secrets** | ⚪️ | 58 | Skipped |
+| **Presentation** | ✅ | 518 | Included in Core |
 | **Cultural Insight** | ✅ | 0 | Included in Core |
 | **The Art of the «Anekdot»** | ⚪️ | 54 | Skipped |
 | **The «Kum» Stories** | ⚪️ | 133 | Skipped |

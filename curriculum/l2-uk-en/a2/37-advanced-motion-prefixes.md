@@ -259,7 +259,6 @@ Motion prefix mastery comes from visualization. For each prefix, create a mental
 When you hear a motion verb, visualize the path first. This will help you understand and produce the correct prefix naturally.
 
 # Підсумок
-
 Today you learned advanced motion prefixes:
 
 | Prefix | Core Meaning | Example |

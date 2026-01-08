@@ -1,212 +1,214 @@
 ## Introduction
 
-**Ласкаво просимо!** Сьогодні ви дізнаєтесь про аспект — одну з найважливіших тем української граматики.
+**Ласкаво просимо!** Сьогодні ви дізнаєтесь про **аспект** — одну з найважливіших тем української граматики.
 
-Welcome to one of the most important concepts in Ukrainian grammar — verbal aspect! While English uses different verb forms to show whether an action is complete or ongoing (I read vs. I was reading), Ukrainian uses two separate verbs with different stems.
+In Ukrainian, verbs have two aspects: **іmperfective** (недоконаний) which focuses on the process, and **perfective** (доконаний) which focuses on the result. Understanding this will help you speak naturally and sound like a native. It's not just a rule — it's a way of seeing the world! For example, you can say «Я писав листа» (you were in the process) or «Я написав листа» (you finished the task).
 
-**Чому аспект важливий?** Неправильний вибір аспекту одразу помітний для носіїв мови. Коли ви опануєте аспект, ваша українська стане набагато природнішою!
+**Що ви вивчите в цьому модулі:**
 
-**What you'll learn in this module:**
-- The difference between imperfective and perfective verbs
-- How to recognize aspect pairs
-- When to use each aspect
-- Common aspect pairs for essential verbs
+- Різницю між недоконаним та доконаним видами.
+- Як розпізнавати видові пари.
+- Коли використовувати кожен вид дієслова.
+- Найпоширеніші видові пари для повсякденного життя.
 
 ## Presentation
 
-## Aspect in Practice
+### Аспект на практиці
 
-Let's see how aspect changes meaning with the pair **читати | прочитати**:
+Let's see how the meaning changes depending on the aspect of the verb **читати | прочитати**:
 
-| Aspect | Example | Meaning |
-|--------|---------|---------|
-| Imperfective | Я читав книгу. | I was reading a book. (process, maybe not finished) |
-| Perfective | Я прочитав книгу. | I read/finished the book. |
-| Imperfective | Я читаю щодня. | I read every day. (habitual) |
-| Perfective | Я прочитаю завтра. | I will read/finish it tomorrow. |
+| Вид дієслова    | Приклад            | Значення                          |
+| --------------- | ------------------ | --------------------------------- |
+| **Недоконаний** | Я читав книгу.     | I was reading (process).          |
+| **Доконаний**   | Я прочитав книгу.  | I finished reading (result).      |
+| **Недоконаний** | Я читаю щодня.     | I read every day (habit).         |
+| **Доконаний**   | Я прочитаю завтра. | I will finish tomorrow (promise). |
 
-> 📜 **Why This Exists**
+> 📜 **Історія граматики**
 >
-> Many Slavic languages have aspect, but Ukrainian's system is particularly rich. The distinction has existed for over 1000 years and evolved from Proto-Slavic. It's not an unusual feature — it's a fundamental part of how Slavic speakers conceptualize actions!
+> Aspect has existed in Slavic languages for over 1000 years. It is a fundamental part of how we conceptualize actions. For Ukrainians, a verb is not just an action in time, but a completed or uncompleted event.
 
-Read these sentences and identify whether they use imperfective or perfective:
+Read these sentences and identify the aspect:
 
-1. Я писав листа дві години. → **Imperfective** (duration)
-2. Я написав листа вчора. → **Perfective**
-3. Вона читає кожен день. → **Imperfective** (habitual)
-4. Він прочитав усю книгу. → **Perfective**
-5. Ми завжди говоримо українською. → **Imperfective** (habitual)
-6. Вона сказала правду. → **Perfective**
+1. Я **писав** листа дві години. → **Недоконаний** (duration of process).
+2. Я **написав** листа вчора. → **Доконаний** (completion).
+3. Вона **читає** кожен день. → **Недоконаний** (habit).
+4. Він **прочитав** усю книгу. → **Доконаний** (result).
+5. Ми завжди **говоримо** українською. → **Недоконаний** (repeated action).
+6. Вона **сказала** правду. → **Доконаний** (single completed action).
 
-**Additional Practice:**
-Now try these more challenging examples. Think about WHY each aspect is used:
+**Додаткова практика:**
+Now try these more challenging examples. Why is each aspect used?
 
-7. Він довго вчився. → **Imperfective** (duration emphasized with «довго»)
-8. Він вивчив німецьку мову. → **Perfective** (achieved mastery — result)
-9. Я часто бачив його в парку. → **Imperfective** (repeated action - «часто»)
-10. Я раптом побачив знайомого. → **Perfective** (sudden single event - «раптом»)
+7. Він довго вчився. → **Недоконаний** (emphasis on duration — «довго»).
+8. Він вивчив німецьку мову. → **Доконаний** (result — he knows it now).
+9. Я часто бачив його в парку. → **Недоконаний** (repeated action — «часто»).
+10. Я раптом побачив знайомого. → **Доконаний** (sudden single event — «раптом»).
 
 ---
 
-## What is Verbal Aspect?
+## Що таке вид дієслова?
 
-Ukrainian verbs come in pairs — one **imperfective** (недоконаний вид) and one **perfective** (доконаний вид). These aren't just different conjugations of the same verb; they're actually two different verbs with related but distinct meanings.
+In Ukrainian, verbs usually exist in pairs. One is called **imperfective** (недоконаний), and the other is **perfective** (доконаний). They are often two related verbs.
 
-**Imperfective verbs** (недоконаний вид) focus on:
-- Ongoing processes
-- Repeated or habitual actions
-- Duration without a clear endpoint
+**Недоконаний вид** focuses on:
 
-**Perfective verbs** (доконаний вид) focus on:
-- Completed actions with a clear result
-- Single, one-time events
-- The beginning or end of an action
+- Ongoing processes.
+- Repeated or habitual actions.
+- Duration without a clear ending.
 
-> 💡 **Key Concept**
+**Доконаний вид** focuses on:
+
+- Completed actions with a clear result.
+- Single events.
+- The beginning or the end of an action.
+
+> 💡 **Ключова ідея**
 >
-> Think of imperfective as the «movie» of an action and perfective as the «photo» of the action.
+> Think of **іmperfective** as a «movie» (we see the process) and **perfective** as a «photo» (we see the final result).
 
-## Basic Aspect Pairs
+## Основні видові пари
 
-Most aspect pairs are formed by adding a prefix to the imperfective verb to create the perfective. Here are the most common patterns:
+Most aspect pairs are formed using prefixes. This is the simplest way to turn a process into a result.
 
-## Prefixation
+### Префіксація
 
-| Imperfective | Perfective | Meaning |
-|--------------|------------|---------|
-| читати | **про**читати | to read |
-| писати | **на**писати | to write |
-| робити | **з**робити | to do/make |
-| бачити | **по**бачити | to see |
-| чути | **по**чути | to hear |
-| вчити | **ви**вчити | to learn/study |
+| Недоконаний | Доконаний     | Переклад       |
+| ----------- | ------------- | -------------- |
+| читати      | **про**читати | to read        |
+| писати      | **на**писати  | to write       |
+| робити      | **з**робити   | to do/make     |
+| бачити      | **по**бачити  | to see         |
+| чути        | **по**чути    | to hear        |
+| вчити       | **ви**вчити   | to learn/study |
 
-## Suppletive Pairs
+### Суплетивні пари
 
-Some aspect pairs use completely different roots. You must memorize these:
+Some pairs have completely different roots. You just need to memorize them:
 
-| Imperfective | Perfective | Meaning |
-|--------------|------------|---------|
-| говорити | сказати | to say/speak |
-| брати | взяти | to take |
-| класти | покласти | to put |
+| Недоконаний | Доконаний | Переклад     |
+| ----------- | --------- | ------------ |
+| говорити    | сказати   | to say/speak |
+| брати       | взяти     | to take      |
+| класти      | покласти  | to put       |
 
-> [!tip] Memorization Strategy
-> Start with the 10 most common pairs. Use them in sentences every day. Aspect becomes natural only through practice, not memorization of rules!
+> [!tip] Стратегія навчання
+> Start with the 10 most common pairs. Use them in sentences every day. Aspect becomes natural only through practice. Try describing your morning using both aspects.
 
-## When to Use Each Aspect
+---
 
-## Use IMPERFECTIVE when:
+## Коли використовувати аспект?
+
+### Use IMPERFECTIVE when:
 
 1. **Process matters more than result:**
-   - Що ти робив учора? (What were you doing yesterday?)
-   - Я читав книгу. (I was reading a book.)
-
+   - Що ти робив учора? (What were you doing?)
+   - Я **читав** книгу. (I was busy with the process).
 2. **Action is repeated or habitual:**
-   - Я читаю щодня. (I read every day.)
-   - Вона завжди пише листи. (She always writes letters.)
+   - Я **читаю** щодня. (I do it always).
+   - Вона завжди **пише** листи. (It is her regular action).
+3. **You want to emphasize duration:**
+   - Він **писав** три години. (We see a long time).
 
-3. **Duration is emphasized:**
-   - Він писав три години. (He was writing for 3 hours.)
-
-## Use PERFECTIVE when:
+### Use PERFECTIVE when:
 
 1. **Result or completion matters:**
-   - Я прочитав книгу. (I finished reading the book.)
-   - Він написав листа. (He wrote/finished the letter.)
+   - Я **прочитав** книгу. (The book is on the shelf, I am done).
+   - Він **написав** листа. (The letter is ready to be sent).
+2. **It is a one-time completed event:**
+   - Вона **сказала** «так». (She just said it once).
+   - Ми **побачили** море. (It was a moment of discovery).
+3. **You speak about a future result:**
+   - Я **прочитаю** завтра. (Tomorrow I will have the result).
 
-2. **Single, completed event:**
-   - Вона сказала «так.» (She said «yes.»)
-   - Ми побачили море. (We saw the sea.)
-
-3. **Action will be completed:**
-   - Я прочитаю завтра. (I will finish reading tomorrow.)
-
-> 🔍 **Common Mistake**
+> 🔍 **Типова помилка**
 >
-> Don't translate directly from English! «I read the book» could be either aspect depending on context. Ask: «Am I focusing on the process or the result?»
+> Don't translate literally from English. In English, «I read the book» can be a process or a result. In Ukrainian, you MUST choose: я **читав** or я **прочитав**? Always ask: «Am I focusing on the process or the result?»
 
 ---
 
-## Cultural Insight
+## Аспект і українське мислення
 
-## Aspect and Ukrainian Thinking
+Understanding aspect helps you understand the logic of Ukrainians. When someone says «Я **читав** книгу», they invite you to a conversation about the content. When they say «Я **прочитав** книгу», they report an achievement. We value both, but it's important to know where to put the focus.
 
-Understanding aspect helps you understand how Ukrainian speakers conceptualize time and actions. When a Ukrainian says «Я читав книгу,» they're inviting you into the process — you can almost see them sitting with the book. When they say «Я прочитав книгу,» they're reporting a completed achievement.
+**Приклади в контексті:**
 
-**Examples in context:**
+**Питання:** Що ти робив учора?
 
-**Question:** Що ти робив учора? (What were you doing yesterday?)
-- Imperfective question = asking about process/activities
-- Answer: Я читав, писав, працював... (I was reading, writing, working...)
+- Question in imperfective = asking about activity and process.
+- Answer: Я **читав**, **писав**, **працював**...
 
-**Question:** Ти прочитав книгу? (Did you finish reading the book?)
-- Perfective question = asking about completion/result
-- Answer: Так, прочитав. | Ні, ще читаю. (Yes, I finished. | No, I'm still reading.)
+**Питання:** Ти **прочитав** книгу?
 
-> [!tip] Context Clue Words
-> Some words often appear with specific aspects:
-> **Imperfective:** завжди, часто, довго, кожен день
-> **Perfective:** вже, нарешті, раптом, вчора
+- Question in perfective = asking about the final result.
+- Answer: Так, **прочитав**. | Ні, ще **читаю**. (Yes, there is a result. | No, I am still in the process).
+
+> [!tip] Слова-підказки
+> These words often point to a specific aspect:
+> **Imperfective:** завжди, часто, довго, кожен день, цілий вечір.
+> **Доконаний:** вже, нарешті, раптом, сьогодні вранці (as a fact).
 
 ---
 
-## What You Learned
+## Що ви дізналися
 
-In this module, you learned about verbal aspect — one of the most important features of Ukrainian grammar. This concept distinguishes Slavic languages from most other language families and is essential for natural-sounding Ukrainian speech.
+In this module, you learned about verbal aspect — one of the most interesting features of Ukrainian. It allows us to be precise in expressing our thoughts about the completion of actions.
 
-**Understanding Aspect:**
-Verbal aspect is about HOW you conceptualize an action, not WHEN it happened. The same event can be described with either aspect depending on what you want to emphasize. Consider the difference between «I wrote a letter» (completed, result-focused) and «I was writing a letter for two hours» (process-focused, duration-emphasized).
+**Основні тези:**
 
-**Key Points:**
-- Ukrainian verbs come in pairs: imperfective and perfective
-- **Imperfective** (недоконаний вид) = process, repetition, duration, ongoing states
-- **Perfective** (доконаний вид) = completion, result, single completed events, beginning or end of action
-- Most perfective verbs are formed by adding prefixes (про-, на-, з-, по-, ви-)
-- Some pairs use different roots entirely (говорити/сказати, брати/взяти) — these are called suppletive pairs
+- Ukrainian verbs exist in pairs: imperfective and perfective.
+- **Недоконаний** (process, repetition, duration).
+- **Доконаний** (result, completion, single event).
+- Most pairs are formed by prefixes.
+- Some words change their root (говорити/сказати).
 
-**Common Aspect-Triggering Contexts:**
-- Questions about activities: «Що ти робив?» (imperfective — asking about process)
-- Questions about completion: «Ти зробив?» (perfective — asking about result)
-- Duration markers (три години, довго, весь день) → usually imperfective
-- Completion markers (вже, нарешті, раптом) → usually perfective
+**Золоте правило:** Ask yourself — «Do I want to show a MOVIE (process) or a PHOTO (result)?»
 
-**The Golden Rule:** Ask yourself — «Do I care about the process or the result?»
-- Process → Imperfective
-- Result → Perfective
+- Process → Недоконаний
+- Result → Доконаний
 
 > 🌍 **Культурний контекст**
 >
-> Аспект — це не просто граматика, це спосіб мислення! Українці бачать дії як процеси або результати. Коли ви вибираєте аспект, ви думаєте як носій мови.
->
-> *Translation: Aspect is not just grammar, it's a way of thinking! Ukrainians see actions as processes or results. When you choose aspect, you think like a native speaker.*
+> Aspect is not just grammar, it's a way of thinking! Ukrainians see actions as processes or results. When you choose aspect, you start to think like a native speaker. You become part of our world!
 
 > 💡 **Українське прислів'я**
 >
-> «Говорити — не робити.» (Говорити — недоконаний, робити — недоконаний: обидва показують процес, не результат!)
->
-> *Translation: «Talking is not doing.» (Both verbs are imperfective — process, not result!)*
+> «Говорити — не робити.» (Both verbs here are imperfective: they show an endless process that does not always lead to a result!)
 
-Тепер ви розумієте основи аспекту! Продовжуйте практикувати — це найважливіша граматична тема для природного мовлення українською. Пам'ятайте: кожен день ви **читаєте** (процес), і колись ви **прочитаєте** всю книгу (результат)! 📚
+Now you understand the basics of aspect! Keep practicing — it's the most important topic for natural speech. Remember: every day you **читаєте** (process), and one day you **прочитаєте** all the books in the world (result)! 📚
 
-## Dialogue
+## Практика
 
-### Did you finish?
+### Завдання на закріплення
 
-**Андрій:** Привіт! Що ти робив учора?
-**Олена:** Я весь день **читала** цікаву книгу.
-**Андрій:** Ого! Ти її **прочитала**?
-**Олена:** Так, я **прочитала** її до кінця.
-**Андрій:** Ти швидко читаєш! А я вчора тільки **писав** есе.
-**Олена:** Ти **написав** його?
-**Андрій:** Ні, ще не **написав**. Буду писати сьогодні.
+Тепер, коли ви знаєте теорію, спробуйте виконати вправи в додатку або напишіть власні приклади, використовуючи видові пари.
 
-# Summary
+## Діалог
 
-У цьому модулі ви вивчили основи видової системи української мови.
+### Ти закінчив?
+
+**Андрій:** Привіт! Що ти робив учора ввечері?
+**Олена:** Я весь вечір **читала** дуже цікаву книгу про історію Києва.
+**Андрій:** Ого! Ти її вже **прочитала**?
+**Олена:** Так, я **прочитала** її до кінця, було неймовірно цікаво.
+**Андрій:** Ти дуже швидко читаєш! А я вчора тільки **писав** есе для університету.
+**Олена:** Ти вже **написав** його?
+**Андрій:** Ні, ще не **написав**. Буду писати сьогодні після обіду.
+
+---
+
+# Підсумок
+
+У цьому модулі ми розібрали видову систему дієслів. Тепер ви знаєте різницю між процесом і результатом.
+
+| Концепція       | Значення                  | Статус     |
+| --------------- | ------------------------- | ---------- |
+| Недоконаний вид | Процес, тривалість        | ✅ Вивчено |
+| Доконаний вид   | Результат, кінець         | ✅ Вивчено |
+| Видові пари     | Вивчення основних дієслів | ✅ Вивчено |
 
 ---
 
 ## Need More Practice?
 
-To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context! Ви можете написати про свій день: «Вранці я **пив** каву і **прочитав** новини». Успіхів у вивченні української мови!

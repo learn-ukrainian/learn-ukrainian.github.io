@@ -298,7 +298,6 @@ Friends texting at the café — notice подрузі (to a friend, feminine) w
 ---
 
 # Підсумок
-
 У цьому модулі ви навчилися:
 
 - **Masculine dative endings**: -ові/-еві for writing, -у/-ю for speech

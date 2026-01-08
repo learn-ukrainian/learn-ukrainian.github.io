@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' found: Grammar Integration, Presentation
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' found: Presentation, Grammar Integration
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 - ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Your Turn: Practice Scenarios, Practice
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
@@ -38,5 +38,5 @@
 | **Practice** | ⚪️ | 273 | Skipped |
 | **Production** | ➖ | 103 | Excluded Type |
 | **Cultural Insight** | ✅ | 166 | Included in Core |
-| **Підсумок (Summary)** | ✅ | 79 | Included in Core |
+| **Підсумок** | ✅ | 79 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

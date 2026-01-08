@@ -319,7 +319,6 @@ Let's review all forms one more time with the verb **робити**:
 > The expression «Слава Україні! — Героям слава!» (Glory to Ukraine! — Glory to the heroes!) uses the dative case, not the imperative. But «Хай живе Україна!» (Long live Ukraine!) uses the 3rd person imperative with хай.
 
 # Підсумок
-
 You've learned the complete Ukrainian imperative system!
 
 **What you learned:**

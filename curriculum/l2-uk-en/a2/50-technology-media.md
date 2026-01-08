@@ -150,7 +150,6 @@ In the evening, he turns off the computer. His eyes are tired from the screen. H
 Інтернет — це цікаво, навіть якщо тобі 70 років.
 
 # Підсумок
-
 You learned to:
 - Name tech: **комп'ютер**, **смартфон**, **планшет**, **ноутбук**
 - Talk about internet: **вебсайт**, **посилання**, **пароль**

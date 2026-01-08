@@ -26,5 +26,5 @@
 | **Presentation** | ✅ | 267 | Included in Core |
 | **Practice** | ⚪️ | 90 | Skipped |
 | **Cultural Insight** | ✅ | 45 | Included in Core |
-| **Summary** | ✅ | 43 | Included in Core |
+| **Підсумок** | ✅ | 43 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

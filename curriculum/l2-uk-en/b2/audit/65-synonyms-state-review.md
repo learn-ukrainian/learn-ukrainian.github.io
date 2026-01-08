@@ -1,0 +1,118 @@
+# Audit Report: 65-synonyms-state.md
+**Phase:** B2.2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1750
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** match-up 'Знайдіть відтінок стану' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть точний стан' Q1 prompt length 11 (target: 15-25)
+  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть точний стан' Q2 prompt length 12 (target: 15-25)
+  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть точний стан' Q3 prompt length 11 (target: 15-25)
+  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть точний стан' Q4 prompt length 10 (target: 15-25)
+  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть точний стан' Q5 prompt length 9 (target: 15-25)
+  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть точний стан' Q6 prompt length 10 (target: 15-25)
+  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть точний стан' Q7 prompt length 10 (target: 15-25)
+  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть точний стан' Q8 prompt length 14 (target: 15-25)
+  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY]** group-sort 'Об'єктивне чи Суб'єктивне?' has 2 groups (target: 3-5)
+  - FIX: Adjust number of sorting categories to 3-5.
+- **[COMPLEXITY]** match-up 'Стан та Регістри' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY]** match-up 'Стан та Чинники' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Філософія буття' Q1 prompt length 5 (target: 15-25)
+  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Філософія буття' Q2 prompt length 5 (target: 15-25)
+  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Філософія буття' Q3 prompt length 6 (target: 15-25)
+  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Філософія буття' Q4 prompt length 6 (target: 15-25)
+  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Філософія буття' Q5 prompt length 5 (target: 15-25)
+  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Філософія буття' Q6 prompt length 3 (target: 15-25)
+  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Філософія буття' Q7 prompt length 6 (target: 15-25)
+  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Філософія буття' Q8 prompt length 5 (target: 15-25)
+  - FIX: Adjust prompt length to 15-25 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-synonyms-state.yaml: [оберіть-точний-стан] quiz: 'items.7.options.3' - 'correct' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-synonyms-state.yaml: [переклад-стану] translate: 'items.7.options.3' - 'correct' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 65-synonyms-state.yaml: [філософія-буття] quiz: 'items.7.options.3' - 'correct' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
+  - FIX: Add a essay-response activity to meet advanced richness standards.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): обставини, існування, відсутність, контекст, виглядати...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 50/100)
+
+- Revision recommended (severity 50/100)
+- 25 violations (severe - consider revision)
+
+## Gates
+- **Words:** ⚠️ 1676/1750 (74 short)
+- **Activities:** ✅ 14/13
+- **Density:** ✅ All > 16
+- **Unique_types:** ✅ 10/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 6/6
+- **Audio:** ℹ️ No audio
+- **Vocab:** ⚠️ 33 < 35 (soft target)
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ❌ 24 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.9% (target 98-100% (vocab))
+- **Richness:** ✅ 98% (content)
+- **Grammar:** ⏳ Pending validation
+
+## Richness Details
+**Score:** 98% (minimum: 95%)
+**Module Type:** content
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 41 | 15 | 100% | 25% | 25.0% |
+| engagement | 7 | 5 | 100% | 19% | 18.7% |
+| variety | 0.94 | - | 94% | 12% | 11.8% |
+| cultural | 9 | 4 | 100% | 12% | 12.5% |
+| realworld | 6 | 3 | 100% | 12% | 12.5% |
+| visual | 7 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 0.83 | - | 83% | 6% | 5.2% |
+| questions | 7 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **98.2%** |
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 80 | Included in Core |
+| **Вступ: Глибина українського буття** | ⚪️ | 100 | Skipped |
+| **Частина 1: Бути — Як ми фіксуємо існування** | ✅ | 159 | Included in Core |
+| **Частина 2: Здаватися — Світ через призму сприйняття** | ✅ | 121 | Included in Core |
+| **Частина 3: Категорії стану — Від умов до середовища** | ✅ | 116 | Included in Core |
+| **Частина 4: Стан у дзеркалі української літератури та психології** | ✅ | 55 | Included in Core |
+| **Частина 5: Практичний додаток — Тон та Аналіз** | ✅ | 9 | Included in Core |
+| **Частина 6: Стан у сучасному світі: Стабільність та Криза** | ✅ | 93 | Included in Core |
+| **Частина 7: Буття як цінність** | ✅ | 61 | Included in Core |
+| **Частина 8: Стан довкілля та Екологічне Буття** | ✅ | 81 | Included in Core |
+| **Частина 9: Історичний Стан: Між Минулим та Майбутнім** | ✅ | 84 | Included in Core |
+| **Частина 10: Стан у цифровому просторі та Майбутнє Буття** | ✅ | 95 | Included in Core |
+| **Частина 11: Стан спокою у містах Суми та Полтава** | ✅ | 79 | Included in Core |
+| **Частина 12: Естетичне Буття в Ужгород** | ✅ | 146 | Included in Core |
+| **Частина 13: Стан архітектури та Історичне Буття** | ✅ | 153 | Included in Core |
+| **Частина 14: Стан в офіційному листуванні та Звітності** | ✅ | 97 | Included in Core |
+| **Частина 15: Психологія стабільності в епоху змін** | ✅ | 99 | Included in Core |
+| **Підсумок** | ✅ | 48 | Included in Core |
+| **Need More Practice?** | ⚪️ | 0 | Skipped |

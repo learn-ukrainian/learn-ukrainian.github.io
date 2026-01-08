@@ -3,7 +3,7 @@
 ## Introduction
 
 Language is not just information; it is emotion. In this module, you will learn how to express your feelings about events.
-"I am happy that you came." "It is sad that he left."
+«I am happy that you came.» «It is sad that he left.»
 
 You will learn:
 - How to connect emotions to reasons using **що**.
@@ -31,7 +31,7 @@ To say how you feel about a fact, use an adjective (short form or regular) + **�
 
 ### Impersonal Feelings: It is...
 
-Sometimes we don't say "I am", we just describe the situation.
+Sometimes we don't say «I am», we just describe the situation.
 
 **Structure:**
 [Adverb/Noun] + , + **що** + [Fact]
@@ -51,7 +51,7 @@ Sometimes we don't say "I am", we just describe the situation.
 - Шкода (емоція), **що** ми запізнилися (факт).
 
 > [!tip] Gender Matters!
-> If you say "I am glad":
+> If you say «I am glad»:
 > - Man: Я **радий**.
 > - Woman: Я **рада**.
 > - Plural: Ми **раді**.
@@ -93,7 +93,6 @@ Combine the feeling and the fact.
 **Наталя:** **Сподіваюся, що** завтра буде сонце.
 
 # Підсумок
-
 Сьогодні ви навчилися ділитися емоціями. (Today you learned to share emotions.)
 
 Використовуйте:

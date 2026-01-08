@@ -170,7 +170,6 @@ Ukrainian culture places great importance on leisure time and social connections
 — Може, колись, — усміхається вона. — А поки я співаю для тебе.
 
 # Підсумок
-
 You learned to:
 
 - Discuss creative hobbies: **малювати**, **грати**, **співати**

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): позика, банк, готівка, гроші, адреса...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): курс, рахунок, посилка, картка, черга...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE

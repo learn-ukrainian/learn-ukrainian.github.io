@@ -1,231 +1,183 @@
-# If I Were | Якби я був
-
 ## Introduction
 
-What would you do if you won the lottery? How would life be different if you spoke Ukrainian fluently? This module teaches you to express hypothetical situations — things that could happen, might happen, or aren't real.
+**Мріяти корисно! (Dreaming is useful!)**
 
-**What you'll learn:**
+Welcome to the lesson that lets us explore alternative realities. Today we will learn the **умовний спосіб** (conditional mood). This is the way we talk about things that don't exist, but could be possible.
 
-- Real conditions with якщо — if
-- Unreal conditions with якби (if... would)
-- The conditional particle б/би
-- Common hypothetical expressions
+Сьогодні ми будемо вчити умовний спосіб. Це спосіб говорити про те, чого не існує. Можливо, це мрія, а можливо — просто припущення.
+
+In English, we use words like "would," "could," or "if I were." This is how we express our dreams, hypothetical scenarios, and polite requests. In Ukrainian, this system is very simple. You don't need to learn a whole new set of endings. You just need to know one small particle: **б** or **би**.
+
+**Чому вивчення умовного способу змінить ваше спілкування?**
+
+- You will be able to share your dreams and desires.
+- You will learn how to ask for help politely.
+- You can build complex hypothetical sentences — Like "If I had a million dollars..."
+
+**Що ви вивчите в цьому модулі:**
+
+- Різницю між реальністю (**якщо**) та гіпотезою (**якби**).
+- Як утворювати умовний спосіб. Ми використовуємо минулий час і частку **б/би**.
+- Порядок слів у реченнях з умовою.
+- Корисні фрази для висловлення припущень.
+
+> 💡 **Пам'ятайте!**
+>
+> Умовний спосіб будується просто: **Минулий час + частка Б/БИ**. Це ключ до світу мрій!
 
 ---
 
 ## Presentation
 
-## Practice
+### Реальне чи уявне? (Real or Imaginary?)
 
-4. **That would be great!**
-   → Це було б чудово!
+First, we must distinguish between two situations. One is when a condition is real. The other is when it is imaginary.
 
-5. **I would not do that.**
-   → Я б цього не робив.
+| Тип умови   | Сполучник | Приклад                                  | Значення                                              |
+| ----------- | --------- | ---------------------------------------- | ----------------------------------------------------- |
+| **Реальна** | Якщо      | Якщо я **матиму** гроші, я куплю квиток. | If I have money (it's possible), I will buy a ticket. |
+| **Уявна**   | Якби      | Якби я **мав** гроші, я б купив квиток.  | If I had money (but I don't), I would buy a ticket.   |
 
-6. **If I were you, I would ask.**
-   → Якби я був на твоєму місці, я б запитав.
-
-## Real vs. Unreal Conditions
-
-Ukrainian distinguishes between conditions that are possible (real) and conditions that are imaginary (unreal):
-
-## Real Conditions: якщо + future
-
-For things that might actually happen:
-
-- **Якщо** матиму час, прочитаю книгу.
-  (If I have time, I will read the book.)
-- Якщо буде сонячно, підемо на прогулянку.
-  (If it's sunny, we'll go for a walk.)
-
-**Formation:** якщо + future tense + future tense result.
-This structure is used for situations that are realistically possible or planned. For example, talking about the weather or your schedule for tomorrow.
-
-## Unreal Conditions: якби + past + б/би
-
-For things that are not (or probably won't be) real:
-
-- **Якби** я мав час, я **б** прочитав книгу.
-  (If I had time, I would read the book.)
-- Якби я був багатим, я б купив будинок.
-  (If I were rich, I would buy a house.)
-
-**Formation:** якби + past tense + б/би + past tense result.
-This structure describes imaginary or counterfactual scenarios. Use it when dreaming about the impossible or discussing «what if» situations that aren't true right now.
-
-> 💡 **Key Difference**
+> 📜 **Цікавий факт**
 >
-> **Якщо** = maybe true, could happen
-> **Якби** = not true, hypothetical
+> The word **якби** is a combination of **як** + **би**. The particle **би** used to be a separate verb form. Now it is just a signal of imagination.
 
-## The Conditional Particle б/би
+### Утворення умовного способу
 
-The particle **б/би** is essential for unreal conditions. It attaches to the verb or comes after the subject:
+To create a conditional sentence, take a verb in the **past tense** and add the particle **б** or **би**.
 
-| Position      | Example        | English       |
-| ------------- | -------------- | ------------- |
-| After verb    | Я читав би     | I would read  |
-| After pronoun | Я б читав      | I would read  |
-| After noun    | Мама б сказала | Mom would say |
+- Use **би** after consonants (Я знав **би**).
+- Use **б** after vowels (Я знала **б**).
 
-**Both positions are correct!** «Я б читав» and «Я читав би» mean the same thing.
+**Приклади:**
 
-## Common Patterns
+- Він **працював би** більше. — He would work more.
+- Вона **читала б** весь день. — She would read all day.
+- Ми **пішли б** у кіно. — We would go to the movies.
 
-| Pattern           | Example                | English                   |
-| ----------------- | ---------------------- | ------------------------- |
-| Якби я був...     | Якби я був богатим...  | If I were rich...         |
-| Якби я знав...    | Якби я знав...         | If I knew...              |
-| Я б хотів...      | Я б хотів побачити...  | I would like to see...    |
-| Вона б сказала... | Вона б сказала правду. | She would tell the truth. |
-
-> 📜 **Grammar Note**
+> 💡 **Секрет порядку слів**
 >
-> The conditional uses **past tense forms** for both the condition and the result, but the meaning is present or future hypothetical!
-
-## Common Conditional Expressions
-
-## Wishes and Desires
-
-- Я б хотів/хотіла... (I would like...)
-- Мені б хотілося... (I would want... — softer)
-- Було б добре... (It would be good...)
-- Це було б чудово! (That would be wonderful!)
-- Я б **обов'язково** пішов. (I would definitely go.)
-
-## Polite Requests
-
-Using conditional makes requests more polite:
-
-- Чи могли б ви допомогти? (Could you help?)
-- Ви не могли б сказати...? (Could you tell...?)
-
-## Hypothetical Situations
-
-- Якби я був на твоєму місці... (If I were in your place...)
-- Якби я міг вибирати... (If I could choose...)
-
-> [!tip] Politeness Tip
-> Using «б» makes any request softer and more polite. «Чи могли б ви...?» is more polite than «Чи можете ви...?»
-
-> 💡 **Grammar: The Particle «би»**
->
-> The particle **би** (or **б** after vowels) is the magic word that turns reality into fantasy. It signals «would».
->
-> - After consonant: **би** (Він мав **би**)
-> - After vowel: **б** (Я мала **б**)
->
-> **Placement:** It usually comes right after the verb, but can move for emphasis. The choice between «б» and «би» is entirely based on the preceding sound. If the previous word ends in a vowel, use «б» (e.g., Вона б). If it ends in a consonant, use «би» (e.g., Він би). This makes the language flow more smoothly when spoken.
->
-> - Я **хотів би** це зробити. (Neutral)
-> - Я **б хотів** це зробити. (Emphasis on «would»)
-
-## Polite Requests
-
-Using the conditional mood is the standard for politeness in Ukrainian, just like «Could you?» in English.
-
-Structure: **Чи могли б ви + infinitive?**
-Literally: «Whether could would you...?»
-This is perhaps the most useful phrase for a traveler in Ukraine. It transforms a direct command into a soft, respectful inquiry. Using the past tense form «могли» combined with the particle «б» creates a polite hypothetical space, exactly like the English «Could you possibly...»
-
-- Чи могли б ви показати дорогу? (Could you show the way?)
-- Чи могли б ви зачекати хвилину? (Could you wait a minute?)
-- Чи могли б ви повторити? (Could you repeat?)
-- Чи могли б ви дати мені води? (Could you give me some water?)
-- Чи могли б ви зателефонувати пізніше? (Could you call later?)
-- Чи хотіли б ви кави? (Would you like coffee?)
-
-## Real vs. Unreal Conditions
-
-**Real Condition (Якщо + Future):**
-
-- Якщо я матиму час, я допоможу.
-- (If I have time [reality], I will help.)
-
-**Unreal Condition (Якби + Past + би):**
-
-- Якби я мав час, я **б** допоміг.
-- (If I had time [unreal], I **would** help.)
-
-> [!observe]
-> Notice the difference:
-> «Якщо» (If) → Plan
-> «Якби» → Dream
+> Частка **б/би** стоїть після головного слова. Також вона часто стоїть після слова **якби**.
 
 ---
 
-## Cultural Insight
+## Конструкція «Якби... то...» (The Conditional Structure)
 
-## Superstitions about the Future
+The most popular conditional form has two parts. One part is the condition. The other is the result.
 
-Ukrainians can be superstitious about stating plans too definitely, fearing to «jinx» them (**наврочити**).
+### Формула:
 
-- Instead of saying «I will definitely do X», they might add «**Дасть Бог**» or «**Подивимось**» (We'll see).
-- Using the conditional («Якби...») is a safe space because it's hypothetical!
+**Якби** + [Минулий час], [Минулий час] + **б/би**.
 
-**Proverb:**
-«Якби знав, де впаду, то соломки б підстелив.»
-(If I knew where I'd fall, I would have spread some straw.)
-Meaning: You can't foresee everything, so hindsight is 20/20.
+**Приклади в контексті:**
 
-## Dialogue: Winning the Lottery!
+- **Якби** я **був** багатим, я **купив би** будинок в Австралії.
+- **Якби** ти **знала** правду, ти **не вибачилася б**.
+- **Якби** ми **мали** квиток, ми **поїхали б** у подорож.
 
-**Олег:** Уяви, **якби** ти виграла мільйон доларів. Що **б** ти зробила?
-**Марія:** Ого! Це цікаве питання. Думаю, я **б купила** великий будинок біля моря.
-**Олег:** Тільки будинок?
-**Марія:** Ні, ще я **б подорожувала** цілий рік. Я **б відвідала** Японію та Австралію. А ти?
-**Олег:** А я **б відкрив** свій ресторан української кухні в Нью-Йорку.
-**Марія:** Це чудова мрія! Але **якщо** ми не купимо лотерейний білет, ми нічого не виграємо.
-**Олег:** Ти права. Це **реальність**.
-
-> 🧠 **Language Myth: «Future in the Past»**
->
-> Unlike English «I said I _would_ go», Ukrainian uses Future tense in reported speech: «Я сказав, що _піду_» (I said that I _will_ go). You generally DON'T use the conditional **би** for reported future, only for hypotheticals. This is a common point of confusion for English speakers, as «would» in English serves both purposes, but in Ukrainian, the conditional mood is strictly for imaginary or unreal scenarios.
+> [!important] Важливе зауваження
+> We use the **PAST** tense for both parts of the sentence. This is true even if we talk about the future. For example: "If I knew, I would say." In Ukrainian, both verbs stay in the past.
 
 ---
 
-## Saying Sorry and Politeness
+## Ввічливість та припущення (Politeness and Speculation)
 
-The conditional mood is also perfect for saying sorry and soft refusals.
+We also use the conditional mood to sound polite. It helps us avoid being too direct.
 
-- **Я б хотів вибачитися.** (I would like to apologize.)
-- **Я б не хотів заважати.** (I would not want to disturb.)
-- **Це було б незручно.** (That would be inconvenient.)
+### Ввічливі прохання (Polite Requests)
 
-**Dialogue: Refusing an Invitation**
+- Я **хотів би** попросити вас... — I would like to ask you...
+- Чи **могли б** ви допомогти мені? — Could you help me?
+- Ви **не могли б** зачекати? — Could you not wait?
 
-- **Іван:** Чи хотіли б ви піти в кіно?
-- **Анна:** Я б дуже хотіла, але я зайнята. Якби я мала час, я б пішла.
-- **Іван:** Розумію. Можливо, наступного разу?
-- **Анна:** Так, це було б чудово.
+### Слова для припущень (Words for Speculation)
 
-> 🗣️ **Expression Focus: «На твоєму місці»**
+When we are not sure, we use these helpful adverbs:
+
+- **Можливо**, він прийде. — Maybe he will come.
+- **Напевно**, вона знає. — For sure she knows.
+- **Мабуть**, ми підемо раніше. — Probably we will leave earlier.
+
+> 🌍 **Культурний контекст**
 >
-> To give advice, use «**Якби я був на твоєму місці...**» (If I were in your place...).
->
-> - **Якби я був на твоєму місці, я б купив це.** (If I were you, I'd buy it.)
-> - **Якби я була на твоєму місці, я б не йшла туди.** (If I were you, I wouldn't go there.)
+> Ukrainians say: "If I knew where I'd fall, I'd spread some straw." (Якби знав, де впадеш, то й соломку б підстелив). It means we can't predict the future. We use this "якби" pattern often in proverbs.
 
 ---
 
-## Dialogue
+## Порівняння «Якщо» та «Якби» (If vs. If)
 
-### Dreams
+Choosing the right "if" is critical. It changes the tone of your whole sentence.
 
-**Ігор:** Якби я був президентом, я б змінив усе!
-**Наталя:** Справді? Що саме ти б зробив?
-**Ігор:** Я б зробив проїзд у транспорті безкоштовним.
-**Наталя:** Це було б чудово! А що ще?
-**Ігор:** Я б побудував багато парків.
-**Наталя:** Я б голосувала за тебе!
+1. **Якщо — Real Condition:** You believe the condition might actually happen.
+   - **Якщо** виграю в лотерею, я куплю машину. — If I win the lottery, I will buy a car. (Possible).
+
+2. **Якби — Unreal Condition:** You are imagining something that isn't true.
+   - **Якби** я виграв у лотерею, я б купив літак. — If I won the lottery, I would buy a plane. (Dreaming).
+
+> [!tip] 🔊 Фонетична порада
+> The particle **би** is pronounced softly. Do not put a strong stress on it. It should sound like a small part of the word before it.
+
+---
+
+## Практика
+
+### Завдання для селф-контролю
+
+Спробуйте обрати правильний сполучник та форму дієслова. Look at the situation and decide if it is real or just a dream.
+
+**1. Ви мрієте про відпустку:**
+(Якщо / Якби) я мав відпустку, я (їду / поїхав би) в гори.
+_Your dream is hypothetical._
+
+**2. Ви домовляєтесь про зустріч:**
+(Якщо / Якби) завтра буде дощ, ми нікуди не (**йдемо** / пішли б).
+_This is a real possibility for tomorrow._
+
+**3. Ви просите про допомогу:**
+Ви не (можете / **могли б**) відчинити двері?
+_Choose the polite form._
+
+> 🔍 **Зверніть увагу!**
+>
+> Don't forget to change the verb for gender in the past tense!
+>
+> - Він знав би. (Masculine)
+> - Вона знала б. (Feminine)
+> - Вони знали б. (Plural)
+
+---
+
+## Діалог: Якби та якби...
+
+### Мрії про мільйон (Dreams of a Million)
+
+**Максим:** Слухай, Андрію, а ти граєш у лотерею?
+**Андрій:** Ні, а що?
+**Максим:** Та ось, купив лотерейний білет. **Якщо** я виграю мільйон, я куплю собі нове авто.
+**Андрій:** Ого! А **якби** я мав мільйон, я **не купував би** машину.
+**Максим:** А що б ти **зробив**?
+**Андрій:** Я **поїхав би** в навколосвітню подорож. **Побачив би** Австралію, Америку...
+**Максим:** Класно. **Якби** я мав багато грошей, я **допоміг би** батькам і **відкрив би** свою кав'ярню.
+**Андрій:** Ну, **можливо**, тобі пощастить. Давай зачекаємо результатів!
+**Максим:** **Напевно**, так і буде. Обов'язково тобі розкажу!
+
+---
 
 # Підсумок
 
-У цьому модулі ви вивчили умовний спосіб в українській мові.
+У цьому модулі ми навчилися мріяти по-українськи. Ми вивчили, як будувати гіпотетичні речення та ввічливі прохання.
+
+| Навичка      | Опис                              | Статус     |
+| ------------ | --------------------------------- | ---------- |
+| Частка б/би  | Утворення умовних форм            | ✅ Вивчено |
+| Якби vs Якщо | Реальні та уявні умови            | ✅ Вивчено |
+| Ввічливість  | Використання «хотів би», «міг би» | ✅ Вивчено |
+| Словник мрій | Можливо, напевно, обов'язково     | ✅ Вивчено |
 
 ---
 
 ## Need More Practice?
 
-To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
+To fully integrate the conditional mood, try writing three sentences about your dreams. Start with «Якби я був...» or «Якби я мав...». Also, write three real plans starting with «Якщо завтра буде...». This practice distinguishes reality from imagination!
+
+Use the vocabulary items provided in the sidecar to practice your new words in context! Your Ukrainian is getting deeper and more expressive every day. Успіхів у мріях та реальності!

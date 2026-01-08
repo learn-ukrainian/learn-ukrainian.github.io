@@ -50,5 +50,5 @@
 | **Вправа 1: Визначте відмінок** | ⚪️ | 48 | Skipped |
 | **Вправа 2: Провідмінюйте слово** | ⚪️ | 6 | Skipped |
 | **Вправа 3: Оберіть правильну форму** | ⚪️ | 27 | Skipped |
-| **Summary** | ✅ | 94 | Included in Core |
+| **Підсумок** | ✅ | 94 | Included in Core |
 | **Need More Practice?** | ⚪️ | 30 | Skipped |

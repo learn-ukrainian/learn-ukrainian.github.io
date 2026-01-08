@@ -1,0 +1,170 @@
+module: 29-i-think-that
+level: A2
+version: '2.0'
+items:
+  - lemma: думати
+    ipa: ˈdumɐte
+    translation: to think
+    pos: verb
+  - lemma: вважати
+    ipa: uwɐˈʒɑte
+    translation: to believe; to consider
+    pos: verb
+  - lemma: гадати
+    ipa: ɦɐˈdɑte
+    translation: to guess; to think
+    pos: verb
+  - lemma: здаватися
+    ipa: zdɐˈʋɑtɪsʲɐ
+    translation: to seem
+    pos: verb
+  - lemma: здається
+    ipa: zdɐˈjɛtʲsʲɐ
+    translation: it seems
+    pos: other
+  - lemma: на мою думку
+    ipa: nɐ mɔˈju ˈdumku
+    translation: in my opinion
+    pos: other
+  - lemma: на мій погляд
+    ipa: nɐ mʲij ˈpɔɦlʲɐd
+    translation: in my view
+    pos: other
+  - lemma: з моєї точки зору
+    ipa: z mɔˈjejɪ ˈtɔt͡ʃke ˈzɔru
+    translation: from my point of view
+    pos: other
+  - lemma: згоден
+    ipa: ˈzɦɔden
+    translation: agree (masc)
+    pos: adj
+  - lemma: згодна
+    ipa: ˈzɦɔdnɐ
+    translation: agree (fem)
+    pos: adj
+  - lemma: погоджуватися
+    ipa: poˈɦɔdʒuʋɐtɪsʲɐ
+    translation: to agree
+    pos: verb
+  - lemma: правда
+    ipa: ˈprɑu̯dɐ
+    translation: truth; true
+    pos: noun
+    gender: f
+  - lemma: неправда
+    ipa: neˈprɑu̯dɐ
+    translation: untruth; false
+    pos: noun
+    gender: f
+  - lemma: можливо
+    ipa: moʒˈlɪʋo
+    translation: maybe; perhaps
+    pos: adv
+  - lemma: напевно
+    ipa: nɐˈpɛu̯no
+    translation: for sure; probably
+    pos: adv
+  - lemma: безумовно
+    ipa: bezuˈmɔu̯no
+    translation: absolutely; undoubtedly
+    pos: adv
+  - lemma: очевидно
+    ipa: ot͡ʃɛˈʋɪdno
+    translation: obviously
+    pos: adv
+  - lemma: радий
+    ipa: ˈrɑdɪj
+    translation: happy; glad
+    pos: adj
+  - lemma: радіти
+    ipa: rɐˈdʲite
+    translation: to rejoice; to be happy
+    pos: verb
+  - lemma: щасливий
+    ipa: ʃt͡ʃɐsˈlɪʋɪj
+    translation: happy
+    pos: adj
+  - lemma: задоволений
+    ipa: zɐdoˈʋɔlɛnɪj
+    translation: satisfied
+    pos: adj
+  - lemma: сумний
+    ipa: sumˈnɪj
+    translation: sad
+    pos: adj
+  - lemma: сумувати
+    ipa: sumuˈʋɑte
+    translation: to be sad; to miss
+    pos: verb
+  - lemma: засмучений
+    ipa: zɐsˈmut͡ʃɛnɪj
+    translation: upset; saddened
+    pos: adj
+  - lemma: здивований
+    ipa: zdɪˈʋɔʋɐnɪj
+    translation: surprised
+    pos: adj
+  - lemma: дивуватися
+    ipa: dɪʋuˈʋɑtɪsʲɐ
+    translation: to be surprised
+    pos: verb
+  - lemma: переляканий
+    ipa: perɛˈlʲɑkɐnɪj
+    translation: scared
+    pos: adj
+  - lemma: боятися
+    ipa: boˈjɑtɪsʲɐ
+    translation: to be afraid
+    pos: verb
+  - lemma: розчарований
+    ipa: rozt͡ʃɐˈrɔʋɐnɪj
+    translation: disappointed
+    pos: adj
+  - lemma: хвилюватися
+    ipa: xʋɪlʲuˈʋɑtɪsʲɐ
+    translation: to worry; to be excited
+    pos: verb
+  - lemma: турбуватися
+    ipa: turbuˈʋɑtɪsʲɐ
+    translation: to worry; to care
+    pos: verb
+  - lemma: шкода
+    ipa: ʃkɔˈdɑ
+    translation: pity; too bad
+    pos: other
+  - lemma: прикро
+    ipa: ˈprɪkro
+    translation: annoying; a pity
+    pos: adv
+  - lemma: приємно
+    ipa: prɪˈjɛmno
+    translation: pleasant; nicely
+    pos: adv
+  - lemma: цікаво
+    ipa: t͡sʲiˈkɑʋo
+    translation: interesting
+    pos: adv
+  - lemma: нудно
+    ipa: ˈnudno
+    translation: boring
+    pos: adv
+  - lemma: страшно
+    ipa: ˈstrɑʃno
+    translation: scary
+    pos: adv
+  - lemma: відмінок
+    translation: gram. case
+    pos: noun
+    gender: m
+  - lemma: час
+    translation: time; tense
+    pos: noun
+    gender: m
+  - lemma: сполучник
+    translation: conjunction; connector
+    pos: noun
+    gender: m
+  - lemma: думка
+    translation: thought; opinion
+    pos: noun
+    gender: f

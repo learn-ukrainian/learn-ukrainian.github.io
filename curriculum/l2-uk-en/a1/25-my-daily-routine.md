@@ -20,7 +20,7 @@
 
 ## Presentation
 
-## Examples in Context
+### Examples in Context
 
 > [!example] Morning Routine
 >
@@ -138,8 +138,18 @@
 
 ---
 
-# Summary
+## Практика
 
+### Вправа 1: Переклад
+Перекладіть речення на українську мову.
+
+1. I am a student.
+2. This is my house.
+3. She is in the city.
+
+---
+
+# Підсумок
 In this module, you learned:
 
 - **Reflexive verbs**: прокидатися, вмиватися, одягатися, голитися, повертатися

@@ -165,7 +165,6 @@ Wait, normally we say: *Я — лікар* for simple ID. But describing functio
 > Use **хотіти бути** + instrumental: *Я хочу бути лікарем*. This expresses your professional goal.
 
 # Підсумок
-
 In this module, we will explore the world of work and professions. Ukrainian professional life has its own unique vocabulary and cultural norms that are essential for any aspiring professional. We will learn how to describe various careers, workplaces, and the day-to-day actions that define our professional identities. Understanding these terms will help you navigate office environments and professional networking situations with confidence.
 
 **In this lesson, we will cover:**

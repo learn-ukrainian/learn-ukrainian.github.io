@@ -19,7 +19,7 @@ In Ukrainian, «that/which/who» corresponds to one flexible word: **Який**.
 
 ## Presentation
 
-## 1. Simple Linking
+### 1. Simple Linking
 
 Use **який** to explain *which* object you mean.
 It must match the **Gender** and **Number** of the main word.
@@ -198,7 +198,6 @@ A detective interviews a witness about a robbery.
 Ми будемо пити чай і говорити про життя.
 
 # Підсумок
-
 У цьому модулі ви вивчили відносні займенники:
 
 **Форми за родами:**

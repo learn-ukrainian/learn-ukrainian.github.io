@@ -10,7 +10,7 @@
 
 ## Grammar
 
-## Expressing Ability: могти vs вміти
+### Expressing Ability: могти vs вміти
 
 > [!observe] Pattern Discovery
 >
@@ -239,8 +239,18 @@ These are impersonal — the «subject» is optional:
 
 ---
 
-# Summary
+## Практика
 
+### Вправа 1: Переклад
+Перекладіть речення на українську мову.
+
+1. I am a student.
+2. This is my house.
+3. She is in the city.
+
+---
+
+# Підсумок
 Ви вивчили модальні дієслова. Тепер ви знаєте українську краще! Ви знаєте, як сказати «я можу», «я вмію» та «я хочу». Ви також знаєте слова «треба», «можна» та «заборонено». Тепер ви можете планувати свій день! Це була гарна робота (This was good work). Українська мова дуже гарна!
 
 > [!myth] **Міф про українську мову (Myth about Ukrainian language)**

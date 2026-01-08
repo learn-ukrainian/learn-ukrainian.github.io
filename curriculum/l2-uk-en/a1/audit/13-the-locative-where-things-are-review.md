@@ -35,5 +35,5 @@
 | **Presentation** | ✅ | 558 | Included in Core |
 | **Practice** | ⚪️ | 283 | Skipped |
 | **Production** | ➖ | 245 | Excluded Type |
-| **Summary** | ✅ | 128 | Included in Core |
+| **Підсумок** | ✅ | 128 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

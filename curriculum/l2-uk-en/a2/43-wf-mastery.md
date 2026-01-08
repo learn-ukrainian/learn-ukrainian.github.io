@@ -322,7 +322,6 @@ Combine **Roots** with **Prefixes** and **Suffixes**.
 > Be polite, be heard!
 
 # Підсумок
-
 У цьому модулі ви вивчили:
 - Основні поняття та правила
 - Практичне застосування

@@ -191,8 +191,7 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 
 ---
 
-# Summary
-
+# Підсумок
 **Questions with Чи:**
 
 - Чи + subject + verb? = Yes/no question

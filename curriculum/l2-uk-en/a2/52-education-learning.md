@@ -177,7 +177,6 @@ After school, students pass **ZNO** — a very important national test. Based on
 > On the first Sunday of October, Ukraine celebrates Teachers' Day. Students bring huge bouquets of flowers and chocolate to school. Sometimes senior students teach classes for the younger ones («Self-Governance Day»). It's a fun and respectful tradition.
 
 # Підсумок
-
 In this module, we will explore the world of education and learning. Ukrainian academic life has its own unique vocabulary and cultural traditions that are important for students and lifelong learners alike. We will learn how to describe schools, universities, the process of studying, and the various materials we use to acquire knowledge. Mastering these terms will help you discuss your educational background and future learning goals with ease.
 
 **In this module, we will cover:**

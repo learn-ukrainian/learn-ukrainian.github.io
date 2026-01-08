@@ -177,7 +177,6 @@ When interacting at the post office or bank, you'll use multiple cases. Here's a
 ---
 
 # Підсумок
-
 У цьому модулі ви вивчили:
 - Основні поняття та правила
 - Практичне застосування

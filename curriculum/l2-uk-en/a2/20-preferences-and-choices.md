@@ -217,7 +217,6 @@ Try to answer using different structures:
 Олег радий. Він знає, що зробив правильний вибір.
 
 # Підсумок
-
 ---
 
 ## Need More Practice?

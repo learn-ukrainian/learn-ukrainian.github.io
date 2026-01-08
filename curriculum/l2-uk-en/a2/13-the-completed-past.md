@@ -1,174 +1,183 @@
 ## Introduction
 
-**Тепер, коли ви розумієте аспект, давайте навчимося використовувати доконаний вид у минулому часі!**
+**Тепер, коли ви вже знаєте, що таке аспект, давайте навчимося використовувати доконаний вид у минулому часі!**
 
-Now that you understand the concept of aspect from Module 11, let's focus on using perfective verbs in the past tense. This is where aspect becomes most critical for communication — choosing perfective or imperfective past can completely change your meaning!
+In your previous module, you discovered the concept of **verbal aspect**. Today, we focus on using the **perfective** aspect (доконаний вид) in the past tense. This is arguably the most common context where aspect choice determines whether you sound like a native speaker or a literal translator.
 
-When you tell a story in Ukrainian, you constantly make choices: do you emphasize what happened (result) or what was happening (process)? These choices aren't random — they follow patterns that native speakers use automatically. By the end of this module, you'll begin to develop this intuition too.
+When you tell a story, you constantly choose between the **process** (what was happening) and the **result** (what finally happened). In Ukrainian, this isn't just a nuance; it's practically another tense system! By the end of this module, you will be able to report completed achievements and single events with confidence.
 
-**Why past tense is special for aspect:**
-The past tense is where aspect differences are most visible and most important. In present tense, many contexts allow either aspect. But in past tense, the wrong choice can make your sentence confusing or even nonsensical to a native speaker.
+**Чому минулий час такий особливий?**
+In the present tense, everything is usually a process (I am reading). But in the past, actions have a clear "before" and "after". If you finished your coffee, you use the perfective. If you were sitting in a cafe for an hour sipping it, you use the imperfective.
 
-**What you'll master in this module:**
-- How to form perfective past tense (it's easier than you think!)
-- When to choose perfective over imperfective in past contexts
-- Key signal words that indicate completed actions
-- Common perfective verbs in their past forms
+**Що ви опануєте в цьому модулі:**
 
-**The Core Principle:** Perfective past = completed action with a clear result. If you can point to the result of the action, use perfective. If you're describing the process or duration, use imperfective.
+- Як утворювати минулий час доконаного виду (це дуже просто!).
+- Різницю між недоконаним та доконаним видами у розповідях.
+- Слова-маркери, які підказують нам використовувати доконаний вид.
+- Найважливіші дієслова доконаного виду, які вам точно знадобляться.
+
+**Основний принцип:**
+Perfective past = **закінчена дія** з чітким результатом. If you can point to the "final product" of the action, use perfective!
 
 > 💡 **Запам'ятайте!**
 >
 > Доконаний вид у минулому часі = закінчена дія з чітким результатом. Якщо можна вказати на результат — використовуйте доконаний вид!
 
+---
+
 ## Presentation
 
-## Practice
+### Результат чи процес? (Result vs Process?)
 
-Choose perfective or imperfective for these contexts:
+Let's look at how the shift from process to result happens in real Ukrainian sentences. Notice how the perfective adds a "stamp of completion" to the action.
 
-1. **I finished writing the letter.** → Я **написав** листа. (perf.)
-2. **I was writing for 2 hours.** → Я **писав** дві години. (impf.)
-3. **She said «yes.»** → Вона **сказала** «так.» (perf.)
-4. **He was speaking loudly.** → Він голосно **говорив**. (impf.)
-5. **We already read this.** → Ми вже це **прочитали**. (perf.)
-6. **They were reading all evening.** → Вони **читали** весь вечір. (impf.)
+| Недоконаний (Процес)           | Доконаний (Результат)                 | Чому?                                            |
+| ------------------------------ | ------------------------------------- | ------------------------------------------------ |
+| Я **читав** книгу цілий вечір. | Я **прочитав** цю книгу вчора.        | In the second case, the book is finished.        |
+| Мама **готувала** обід.        | Мама **приготувала** смачний борщ.    | The dinner is now ready on the table.            |
+| Він **писав** есе дві години.  | Він нарешті **написав** есе!          | The writing process ended with a finished essay. |
+| Вони **вчили** слова вранці.   | Вони **вивчили** всі слова за планом. | Knowledge is now in their heads.                 |
 
-**Self-Test Questions:**
-Before moving to the activities, make sure you can answer these questions:
-- What is the masculine past tense ending? Answer: -в or zero
-- What feminine ending do all past tense verbs use? Answer: -ла
-- Does «пішов» come from «іти» or «піти»? Answer: піти — the perfective form
-
-**Question:** Ти зробив це? (Did you do it?)
-**Positive:** Так, я зробив це. (Yes, I did it.)
-**Negative:** Ні, я не зробив це. (No, I didn't do it.)
-
-## Forming the Perfective Past
-
-The good news: perfective verbs conjugate in past tense exactly like imperfective verbs! The past tense endings are the same for both aspects.
-
-## Past Tense Endings
-
-| Gender/Number | Ending    | Example (прочитати) |
-| ------------- | --------- | ------------------- |
-| Masculine     | -в / -∅   | прочитав            |
-| Feminine      | -ла       | прочитала           |
-| Neuter        | -ло       | прочитало           |
-| Plural        | -ли       | прочитали           |
-
-**Examples:**
-- Він **прочитав** книгу. (He read/finished the book.)
-- Вона **прочитала** статтю. (She read/finished the article.)
-- Вони **прочитали** все. (They read/finished everything.)
-
-> 💡 **Key Point**
+> 📜 **Цікавий факт**
 >
-> The difference isn't in the endings — it's in the verb itself. Прочитав and читав have the same endings, but different stems. Прочитав is perfective, читав is imperfective (ongoing).
+> In many Western languages, we use auxiliary verbs (have, been) to show completion. In Ukrainian, the "completion" is baked into the verb itself through prefixes like **на-**, **про-**, **по-**, **з-**. Once you see a prefix in the past tense, your brain should immediately think: "The task is done!"
 
-## Imperfective vs. Perfective Past: Side by Side
+### Як утворюється минулий час? (How it's formed?)
 
-Let's compare the same verb pair in past tense:
+The good news is that perfective verbs in the past tense follow the exact same rules as imperfective ones. You take the infinitive (usually the perfective one), remove the **-ти** ending, and add:
 
-| Aspect | Masculine | Feminine | Plural | Meaning |
-|--------|-----------|----------|--------|---------|
-| Impf. | писав | писала | писали | was writing |
-| Perf. | написав | написала | написали | wrote/finished |
-| Impf. | читав | читала | читали | was reading |
-| Perf. | прочитав | прочитала | прочитали | read/finished |
-| Impf. | робив | робила | робили | was doing |
-| Perf. | зробив | зробила | зробили | did/finished |
+- **-в** for masculine (він прочитав)
+- **-ла** for feminine (вона прочитала)
+- **-ло** for neuter (воно прочитало)
+- **-ли** for plural (ми/ви/вони прочитали)
 
-## When to Use Perfective Past
-
-## 1. Single Completed Action
-
-When something happened once and is finished:
-- Я **прочитав** книгу вчора. (I finished the book yesterday.)
-- Вона **написала** листа. (She wrote/finished the letter.)
-- Він **з'їв** сніданок. (He ate breakfast.)
-
-## 2. Result Matters More Than Process
-
-Focus on what got accomplished:
-- Хто **написав** цю книгу? (Who wrote this book?)
-- Вони **побудували** новий міст. (They built a new bridge.)
-
-## 3. With «Already» (вже) and «Finally» (нарешті)
-
-These words almost always signal perfective:
-- Я **вже прочитав** цю книгу. (I've already read this book.)
-- Вона **нарешті зробила** домашнє завдання. (She finally did her homework.)
-
-> 📜 **Pattern Recognition**
+> 💡 **Важливо!**
 >
-> Words like вже, нарешті, раптом, несподівано often appear with perfective verbs because they emphasize completed events or results.
+> The endings are the same! The difference is the verb stem itself. Compare: **чита-в** (was reading) vs. **про-чита-в** (finished reading).
 
-## When to Use Imperfective Past
+---
 
-## 1. Duration or Process
+## Коли використовувати доконаний вид? (When to use Perfective?)
 
-When the action lasted for some time:
-- Я **читав** книгу три години. (I was reading for 3 hours.)
-- Вона **писала** весь день. (She was writing all day.)
+There are three main scenarios where you MUST use the perfective past in Ukrainian.
 
-## 2. Repeated Actions
+### 1. Одноразова завершена дія (Single event)
 
-When something happened multiple times:
-- Він **читав** цю книгу багато разів. (He read this book many times.)
-- Ми **бачили** його часто. (We saw him often.)
+When something happened exactly once and it is over.
 
-## Cultural Insight
+- Я **забув** ключі вдома. (I forgot my keys — a single, unfortunate moment).
+- Вона **сказала** мені правду. (She said the truth — she didn't keep saying it for hours).
+- Ми **побачили** старого друга. (The moment of seeing happened once).
 
-## Common Perfective Past Forms
+### 2. Завершеність і результат (The result)
 
-Here are the most common perfective verbs in past tense:
+When you want to show that something was accomplished.
 
-| Perfective | Past (masc.) | English |
-|------------|--------------|---------|
-| зробити | зробив | did/made |
-| написати | написав | wrote |
-| прочитати | прочитав | read/finished |
-| сказати | сказав | said |
-| побачити | побачив | saw |
-| почути | почув | heard |
-| взяти | взяв | took |
-| дати | дав | gave |
-| піти | пішов | went/left |
-| прийти | прийшов | came |
-| приїхати | приїхав | arrived |
-| вийти | вийшов | went out |
-| увійти | увійшов | entered |
-| почати | почав | began |
-| закінчити | закінчив | finished |
+- Хто **зробив** цю чудову роботу? (Who produced this result?)
+- Я **знайшов** свою ручку! (I have the pen now!)
+- Він **вивчив** 20 нових слів. (The words are now memorized).
 
-> 🔍 **Irregular Forms**
->
-> Some perfective verbs have irregular past forms: піти → пішов (not «пів»), прийти → прийшов.
+### 3. Зі словами-маркерами (With Marker Words)
+
+Certain words act like magnets for perfective verbs:
+
+- **Вже** (already): «Я **вже зробив** це.»
+- **Нарешті** (finally): «Він **нарешті прийшов**.»
+- **Раптом** (suddenly): «**Раптом** я **зрозумів** усе.»
+- **Несподівано** (unexpectedly): «Вона **несподівано пішла** геть.»
+
+---
+
+## Побудова розповіді (Building a Narrative)
+
+When you tell a series of events in Ukrainian, perfective verbs act like stepping stones. Each perfective verb moves the story forward to the next point.
+
+**Спробуйте прочитати цей текст:**
+Вчора я **прокинувся** о восьмій годині. Я **випив** каву та **з'їв** сніданок. Потім я **пішов** на роботу. В офісі я **написав** три звіти та **зателефонував** клієнту. Увечері я **повернувся** додому і **відпочив**.
+
+Each verb above is perfective because they represent a sequence of completed steps in your day. If you used imperfective, it would sound like you were doing everything at the same time without finishing anything!
+
+> [!tip] Секрет майстерності (Pro Tip)
+> If you mention **how long** something took (дві години, весь день), use the **imperfective**.
+> If you mention **when** something happened (о п'ятій годині, вчора), use the **perfective** if the action was finished then.
+
+---
+
+## Важливі видові пари (Essential Pairs)
+
+Here is a list of verbs you will use in almost every conversation about the past. Notice how some roots change slightly or significantly.
+
+| Дієслово      | Минулий час (він) | Значення              |
+| ------------- | ----------------- | --------------------- |
+| **зробити**   | зробив            | finished doing        |
+| **написати**  | написав           | finished writing      |
+| **прочитати** | прочитав          | finished reading      |
+| **сказати**   | сказав            | said (once)           |
+| **побачити**  | побачив           | saw (caught sight of) |
+| **взяти**     | взяв              | took                  |
+| **дати**      | дав               | gave                  |
+| **піти**      | **пішов**         | left/went away        |
+| **прийти**    | **прийшов**       | arrived/came          |
+| **зрозумів**  | зрозумів          | understood            |
+
+> 🔍 **Зверніть увагу!**
+> |
+> Verbs of motion like **піти** and **прийти** change their stems in the past: **пішов**, **прийшов**. These are very common and very important to remember!
+
+---
+
+## Практика
+
+### Завдання для селф-контролю
+
+Тепер давайте спробуємо застосувати правила на практиці. Подивіться на ці ситуації та виберіть правильне дієслово.
+
+**Ситуація 1:** Ви закінчили читати газету.
+Варіант: Я (читав / **прочитав**) газету.
+_Правильна відповідь: **прочитав**, бо є результат._
+
+**Ситуація 2:** Ви були в процесі написання емейла 20 хвилин.
+Варіант: Я (**писав** / написав) емейл 20 хвилин.
+_Правильна відповідь: **писав**, бо ми підкреслюємо тривалість._
+
+**Ситуація 3:** Ви раптом згадали про зустріч.
+Варіант: Я раптом (**згадав** / згадував) про зустріч.
+_Правильна відповідь: **згадав**, бо це одноразова раптова подія._
+
+---
+
+## Діалог
+
+### Вчорашній вечір (Yesterday Evening)
+
+**Максим:** Привіт, Анно! Чому ти вчора не дзвонила?
+**Анна:** Привіт! Я була дуже зайнята. Я **писала** важливу статтю для блогу.
+**Максим:** Ого! Ти її вже **написала**?
+**Анна:** Так, я **написала** її о десятій вечора і нарешті **відправила** редактору.
+**Максим:** Молодець! А я вчора **дивився** новий фільм.
+**Анна:** Тобі **сподобався** фільм?
+**Максим:** Так, дуже **сподобався**. Я навіть **забув** про час!
+**Анна:** Зрозуміло. А ти вже **пообідав** сьогодні?
+**Максим:** Ще ні, я тільки **прийшов** з прогулянки.
+
+> [!tip] 🔊 Фонетична порада (Pronunciation Tip)
+> When pronouncing masculine past tense endings like **-в**, it often sounds like a short "u" or "w" (e.g., _написав_ sounds like _napys-au_). Keep it soft for a native sound!
 
 ---
 
 # Підсумок
 
-У цьому модулі ви вивчили доконаний вид у минулому часі.
+У цьому модулі ви навчилися розрізняти процес та результат у минулому часі.
+
+| Навичка             | Опис                 | Статус     |
+| ------------------- | -------------------- | ---------- |
+| Форми минулого часу | -в, -ла, -ло, -ли    | ✅ Вивчено |
+| Доконаний вид       | Акцент на результаті | ✅ Вивчено |
+| Слова-маркери       | вже, нарешті, раптом | ✅ Вивчено |
+| Видові пари         | Основні дієслова     | ✅ Вивчено |
 
 ---
 
 ## Need More Practice?
 
-To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
-
-## 3. Asking About Activities
-
-When asking «what were you doing?»:
-- Що ти **робив** учора? (What were you doing yesterday?)
-- Що вона **читала**? (What was she reading?)
-
-> [!tip] Decision Guide
-> Ask yourself: «Am I focusing on what got done or what someone was doing?»
-
-> 🌍 **Cultural Connection**
->
-> Українська мова чітко розрізняє процес і результат. Це важлива частина слов'янського світогляду — ми цікавимось не лише ЩО сталось, але і ЯК це відбувалось!
-
----
+To stabilize your knowledge of the perfective past, try describing three things you COMPLETED yesterday and three things you WERE DOING for a long time. Use the vocabulary items provided in the sidecar to practice your new verbs in context! Пам'ятайте: головне — це результат вашої праці! Успіхів!

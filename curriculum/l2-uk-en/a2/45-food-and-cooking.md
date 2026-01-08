@@ -14,7 +14,7 @@ The cooking verbs in this module are especially useful because they use the impe
 
 ## Presentation
 
-## Kitchen Equipment
+### Kitchen Equipment
 
 Every kitchen needs the right tools. Here's the essential vocabulary for kitchen equipment:
 
@@ -186,7 +186,6 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 - **Це гаряче/холодне** = This is hot/cold. Useful for describing food temperature.
 
 # Підсумок
-
 **Обладнання:**
 - каструля
 - сковорода

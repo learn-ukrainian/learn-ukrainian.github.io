@@ -3,15 +3,13 @@
 **Overall Status:** ✅ PASS
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
   - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1201/1000
@@ -33,10 +31,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 58 | Included in Core |
-| **Presentation** | ✅ | 0 | Included in Core |
-| **1. Expressing Pain: Болить** | ⚪️ | 95 | Skipped |
-| **2. Other Symptoms** | ⚪️ | 30 | Skipped |
-| **3. At the Pharmacy (Аптека)** | ⚪️ | 142 | Skipped |
+| **Presentation** | ✅ | 267 | Included in Core |
 | **Deep Dive: The Ukrainian Medical System** | ✅ | 82 | Included in Core |
 | **Deep Dive: Traditional Medicine** | ✅ | 127 | Included in Core |
 | **Story Time: The Pharmacy Mistake** | ✅ | 203 | Included in Core |

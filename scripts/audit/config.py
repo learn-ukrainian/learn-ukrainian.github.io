@@ -975,7 +975,7 @@ def get_b1_immersion_range(module_num: int) -> tuple[int, int]:
 def get_level_config(level_code: str, module_focus: str = None) -> dict:
     """Get configuration for a specific level, optionally with focus."""
     config_key = level_code
-    if module_focus and level_code in ('B1', 'B2', 'C1', 'C2'):
+    if module_focus and level_code in ('A1', 'A2', 'B1', 'B2', 'C1', 'C2'):
         specific_key = f"{level_code}-{module_focus}"
         if specific_key in LEVEL_CONFIG:
             config_key = specific_key

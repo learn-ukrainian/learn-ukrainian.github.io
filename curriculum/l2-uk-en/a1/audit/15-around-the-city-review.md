@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Practice, Task 1: Give Directions (Oral Practice), Task 2: Describe Your Commute (Writing Practice)
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Task 2: Describe Your Commute (Writing Practice), Task 1: Give Directions (Oral Practice), Practice
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
@@ -36,5 +36,5 @@
 | **Practice** | ⚪️ | 394 | Skipped |
 | **Production** | ➖ | 239 | Excluded Type |
 | **Cultural Insight** | ✅ | 207 | Included in Core |
-| **Summary** | ✅ | 128 | Included in Core |
+| **Підсумок** | ✅ | 128 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

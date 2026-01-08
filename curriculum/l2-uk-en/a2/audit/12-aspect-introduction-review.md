@@ -1,19 +1,18 @@
 # Audit Report: 12-aspect-introduction.md
 **Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Overall Status:** ❌ FAIL
+**Overall Status:** ✅ PASS
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
+  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 5/100)
 
 - 1 violations (minor)
-- Immersion 10% off target
 
 ## Gates
-- **Words:** ✅ 1123/1000
+- **Words:** ✅ 1090/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
@@ -25,24 +24,19 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 24.8% LOW (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 35.3% (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 110 | Included in Core |
-| **Presentation** | ✅ | 0 | Included in Core |
-| **Aspect in Practice** | ⚪️ | 175 | Skipped |
-| **What is Verbal Aspect?** | ⚪️ | 102 | Skipped |
-| **Basic Aspect Pairs** | ⚪️ | 23 | Skipped |
-| **Prefixation** | ⚪️ | 0 | Skipped |
-| **Suppletive Pairs** | ⚪️ | 39 | Skipped |
-| **When to Use Each Aspect** | ⚪️ | 0 | Skipped |
-| **Use IMPERFECTIVE when:** | ⚪️ | 63 | Skipped |
-| **Use PERFECTIVE when:** | ⚪️ | 87 | Skipped |
-| **Cultural Insight** | ✅ | 0 | Included in Core |
-| **Aspect and Ukrainian Thinking** | ⚪️ | 136 | Skipped |
-| **What You Learned** | ⚪️ | 348 | Skipped |
-| **Summary** | ✅ | 10 | Included in Core |
-| **Need More Practice?** | ⚪️ | 30 | Skipped |
+| **Intro/Narrative** | ✅ | 112 | Included in Core |
+| **Presentation** | ✅ | 181 | Included in Core |
+| **Що таке вид дієслова?** | ⚪️ | 91 | Skipped |
+| **Основні видові пари** | ⚪️ | 62 | Skipped |
+| **Коли використовувати аспект?** | ⚪️ | 182 | Skipped |
+| **Аспект і українське мислення** | ⚪️ | 137 | Skipped |
+| **Що ви дізналися** | ⚪️ | 199 | Skipped |
+| **Діалог** | ✅ | 62 | Included in Core |
+| **Підсумок** | ✅ | 16 | Included in Core |
+| **Need More Practice?** | ⚪️ | 48 | Skipped |

@@ -241,8 +241,7 @@ But don't expect it - Ukrainians respect fair pricing!
 
 ---
 
-# Summary
-
+# Підсумок
 In this module, you learned:
 
 - Numbers 0-100 in Ukrainian

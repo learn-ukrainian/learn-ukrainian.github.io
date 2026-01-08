@@ -160,8 +160,6 @@
 - температура — temperature
 - застуда — cold
 
-
-
 ### Practice: At the Doctor
 
 1. У мене болить \_\_\_.
@@ -228,8 +226,6 @@
 - літак — plane
 - готель — hotel
 
-
-
 ### Practice: Shopping & Travel
 
 1. Скільки це \_\_\_?
@@ -292,7 +288,6 @@ Read the story and answer the questions:
    > Квитки — tickets
 
 # Підсумок
-
 | Skill           | Key Pattern         | Example               |
 | --------------- | ------------------- | --------------------- |
 | Daily Life      | Routine verbs       | прокидатися, снідати  |

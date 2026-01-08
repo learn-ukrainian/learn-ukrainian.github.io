@@ -229,7 +229,6 @@ This suffix connects people to places and cultural identity. It's essential for 
 > Ukrainian color adjectives carry deep meaning: **блакитний** + **жовтий** (yellow) = national flag colors. With suffix **-еньк-**, colors express protective love for the land.
 
 # Підсумок
-
 ---
 
 ## Need More Practice?

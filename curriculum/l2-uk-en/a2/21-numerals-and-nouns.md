@@ -251,7 +251,6 @@ The numbers 11-19 are exceptions - they all use Zone 3 even though 11-14 contain
 Practice by counting objects around you. The more you practice, the more automatic this becomes.
 
 # Підсумок
-
 Today you learned numeral-noun agreement:
 
 | Zone | Numbers | Noun Form |

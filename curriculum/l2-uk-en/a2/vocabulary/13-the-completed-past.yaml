@@ -55,3 +55,94 @@ items:
     ipa: ˈt͡ʃitko
     translation: clearly
     pos: adv
+  - lemma: зробив
+    ipa: zroˈbɪu̯
+    translation: did/made (perf)
+    pos: verb
+  - lemma: написав
+    ipa: nɐpɪˈsɑu̯
+    translation: wrote (perf)
+    pos: verb
+  - lemma: прочитав
+    ipa: prot͡ʃɪˈtɑu̯
+    translation: read (perf)
+    pos: verb
+  - lemma: сказав
+    ipa: skɐˈzɑu̯
+    translation: said (perf)
+    pos: verb
+  - lemma: побачив
+    ipa: poˈbɑt͡ʃɪu̯
+    translation: saw (perf)
+    pos: verb
+  - lemma: почув
+    ipa: poˈt͡ʃuu̯
+    translation: heard (perf)
+    pos: verb
+  - lemma: взяв
+    ipa: wzʲɑu̯
+    translation: took (perf)
+    pos: verb
+  - lemma: дав
+    ipa: dɑu̯
+    translation: gave (perf)
+    pos: verb
+  - lemma: пішов
+    ipa: piˈʃɔu̯
+    translation: went (on foot, perf)
+    pos: verb
+  - lemma: прийшов
+    ipa: prɪjˈʃɔu̯
+    translation: arrived (on foot, perf)
+    pos: verb
+  - lemma: приїхав
+    ipa: prɪˈjixɐu̯
+    translation: arrived (by vehicle, perf)
+    pos: verb
+  - lemma: вийшов
+    ipa: ˈʋɪjʃɔu̯
+    translation: went out (perf)
+    pos: verb
+  - lemma: увійшов
+    ipa: uʋijˈʃɔu̯
+    translation: entered (perf)
+    pos: verb
+  - lemma: почав
+    ipa: poˈt͡ʃɑu̯
+    translation: started (perf)
+    pos: verb
+  - lemma: закінчив
+    ipa: zɐˈkint͡ʃɪu̯
+    translation: finished (perf)
+    pos: verb
+  - lemma: зрозумів
+    ipa: zrozuˈmʲiu̯
+    translation: understood (perf)
+    pos: verb
+  - lemma: забув
+    ipa: zɐˈbuu̯
+    translation: forgot (perf)
+    pos: verb
+  - lemma: запам'ятав
+    ipa: zɐpɐmjɐˈtɑu̯
+    translation: remembered (perf)
+    pos: verb
+  - lemma: знайшов
+    ipa: znɐjˈʃɔu̯
+    translation: found (perf)
+    pos: verb
+  - lemma: загубив
+    ipa: zɐɦuˈbɪu̯
+    translation: lost (perf)
+    pos: verb
+  - lemma: минулий
+    translation: past
+    pos: adj
+  - lemma: дієслово
+    translation: verb
+    pos: noun
+    gender: n
+  - lemma: час
+    translation: time; tense
+    pos: noun
+    gender: m

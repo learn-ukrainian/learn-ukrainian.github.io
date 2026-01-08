@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): вхід, дочитати, надпис, напис, бачення...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): огляд, ходити, бачення, прихід, дочитати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

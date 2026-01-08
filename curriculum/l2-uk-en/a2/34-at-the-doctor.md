@@ -16,7 +16,7 @@ In Ukraine, talking about health is a national sport. We love to discuss symptom
 
 ## Presentation
 
-## 1. Expressing Pain: Болить
+### 1. Expressing Pain: Болить
 
 We use the verb **боліти**.
 Construction: **У мене** (Genitive 'In me') + **болить** (hurts) + **Part**.
@@ -37,7 +37,7 @@ Construction: **У мене** (Genitive 'In me') + **болить** (hurts) + **
 > Think of it as: «There is pain in me regarding the head.»
 > The head is the *subject* of the sentence grammatically!
 
-## 2. Other Symptoms
+### 2. Other Symptoms
 
 We use «У мене...» + Noun.
 
@@ -47,7 +47,7 @@ We use «У мене...» + Noun.
 - **У мене грип.**.
 - **Мені погано.** (I feel bad | sick).
 
-## 3. At the Pharmacy (Аптека)
+### 3. At the Pharmacy (Аптека)
 
 When you need to buy medicine in Ukraine, you'll visit an «аптека» (pharmacy). Ukrainian pharmacies are well-stocked and pharmacists are knowledgeable - they can often recommend over-the-counter remedies for common ailments.
 
@@ -218,7 +218,6 @@ Don't confuse with **Боліти**.
 > 38.0°C is «high».
 
 # Підсумок
-
 1.  **Botlily:** *У мене болить [Subject].*
 2.  **Part of Body:** Learner nouns (голова, горло, живіт).
 3.  **Symptoms:** Температура, кашель, нежить.

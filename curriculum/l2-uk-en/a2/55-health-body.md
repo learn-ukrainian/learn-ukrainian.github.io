@@ -181,7 +181,6 @@ State medicine is free, but you often pay «charitable contributions» (*бла�
 > A unique Soviet legacy is the **Sanatorium**. It is a mix of a hospital and a hotel. People go there for 2-3 weeks to drink mineral water, take mud baths (*грязі*), and relax. It is not just for sick people; it is for prevention (*профілактика*).
 
 # Підсумок
-
 You learned to:
 - Be anatomy savvy: **голова**, **рука**, **спина**, **серце**
 - Describe pain: **болить**, **температура**, **нежить**, **кашель**

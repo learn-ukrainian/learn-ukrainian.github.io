@@ -15,7 +15,7 @@
 
 ## Grammar
 
-## Expressing Pain: Болить...
+### Expressing Pain: Болить...
 
 > [!observe] Спостереження (Pattern Discovery)
 >
@@ -180,11 +180,19 @@
 
 ---
 
-# Summary
+## Практика
 
+### Вправа 1: Переклад
+Перекладіть речення на українську мову.
+
+1. I am a student.
+2. This is my house.
+3. She is in the city.
+
+---
+
+# Підсумок
 In this module, you learned:
-
-# Summary
 
 Ви вивчили частини тіла та здоров'я! Тепер ви можете описати свій біль. (You learned body parts and health! Now you can describe your pain.) Ви знаєте, як купити ліки в аптеці або викликати швидку допомогу. Ви також знаєте, як почувається хворий або здоровий. Це чудовий результат! (This is a great result!)
 

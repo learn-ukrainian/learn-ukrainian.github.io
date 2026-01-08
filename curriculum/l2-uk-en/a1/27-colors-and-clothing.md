@@ -10,7 +10,7 @@
 
 ## Grammar
 
-## Color Adjectives Must Agree
+### Color Adjectives Must Agree
 
 > [!observe] Спостереження (Pattern Discovery)
 >
@@ -180,8 +180,18 @@ These words take **plural adjectives**:
 
 ---
 
-# Summary
+## Практика
 
+### Вправа 1: Переклад
+Перекладіть речення на українську мову.
+
+1. I am a student.
+2. This is my house.
+3. She is in the city.
+
+---
+
+# Підсумок
 Ви вивчили кольори та одяг. Тепер ви можете описати свою футболку або штани. (You learned colors and clothing. Now you can describe your t-shirt or pants.) Ви знаєте слова «білий» та «чорний». Тепер ви знаєте два сині кольори: синій та блакитний. Це чудова робота! (This is great work!)
 
 ---

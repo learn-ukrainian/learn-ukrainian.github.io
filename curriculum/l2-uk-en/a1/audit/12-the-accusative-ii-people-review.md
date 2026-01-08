@@ -2,15 +2,6 @@
 **Phase:** A1.2 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Summary|Підсумок' found: Summary, Summary Table: Animate vs Inanimate
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
 - **Words:** ✅ 1343/750
 - **Activities:** ✅ 8/8
@@ -35,6 +26,5 @@
 | **Presentation** | ✅ | 195 | Included in Core |
 | **Practice** | ⚪️ | 284 | Skipped |
 | **Production** | ➖ | 448 | Excluded Type |
-| **Cultural Insight** | ✅ | 173 | Included in Core |
-| **Summary** | ✅ | 123 | Included in Core |
+| **Cultural Insight** | ✅ | 296 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

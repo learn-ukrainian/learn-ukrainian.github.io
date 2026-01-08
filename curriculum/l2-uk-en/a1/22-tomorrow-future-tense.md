@@ -12,7 +12,7 @@
 
 ## Grammar
 
-## The Compound Future Tense
+### The Compound Future Tense
 
 > [!observe] Pattern Discovery
 >
@@ -236,8 +236,18 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 ---
 
-# Summary
+## Практика
 
+### Вправа 1: Переклад
+Перекладіть речення на українську мову.
+
+1. I am a student.
+2. This is my house.
+3. She is in the city.
+
+---
+
+# Підсумок
 Ви навчилися говорити про майбутнє! (You've learned to talk about the future!)
 
 **Що ви вивчили (What you learned):**

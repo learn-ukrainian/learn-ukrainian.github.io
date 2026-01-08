@@ -19,7 +19,7 @@ In Ukrainian, these structures control the flow of your story.
 
 ## Presentation
 
-## 1. Simultaneous Actions: Поки
+### 1. Simultaneous Actions: Поки
 
 When two things happen at the same time.
 Usually requires **Imperfective Aspect** (process).
@@ -31,23 +31,23 @@ Usually requires **Imperfective Aspect** (process).
 > [!tip] Comma Rule
 > Just like with «щоб» and «який», always put a comma before the connector if it's in the middle!
 
-## 2. Sequential Actions: Коли & Після того як
+### 2. Sequential Actions: Коли & Після того як
 
-## A. Simple «When» (Коли)
+### A. Simple «When» (Коли)
 
 Usually implies one thing happens after another.
 
 - **Коли** я прийшов, ми почали їсти. (When I arrived [point], we started eating).
 - Я подзвоню, **коли** закінчу..
 
-## B. Explicit «After» (Після того як)
+### B. Explicit «After» (Після того як)
 
 Used when you want to emphasize the sequence.
 
 - **Після того як** я з'їв обід, я пішов гуляти. (After I ate lunch, I went for a walk).
 - Він заснув **після того як** прочитав книгу.
 
-## 3. Immediate Action: Як тільки
+### 3. Immediate Action: Як тільки
 
 Use this for instant reaction.
 
@@ -213,7 +213,6 @@ But **поки не** means «until» (literally «while not»).
 It's logical: I stay in the state of «waiting» during the time that «finishing» has NOT happened yet.
 
 # Підсумок
-
 У цьому модулі ви вивчили часові сполучники:
 
 **Послідовність:**

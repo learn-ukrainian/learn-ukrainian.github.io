@@ -189,7 +189,6 @@ It is a celebration of willpower.
 > Ukrainian athletes love **гречка**. It acts as a superfood full of iron and protein. If you want to be strong like Klitschko, eat buckwheat porridge with meat or salads!
 
 # Підсумок
-
 You learned to:
 - Name sports: **футбол**, **теніс**, **бокс**, **плавання**
 - Describe actions: **бігати**, **плавати**, **тренуватися**, **займатися**

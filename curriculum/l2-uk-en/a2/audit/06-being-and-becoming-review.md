@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): ставати, стати, виявитися, директор, економіст...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): секретар, працювати, вважатися, ставати, здаватися...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE

@@ -14,7 +14,7 @@
 
 ## Grammar
 
-## How to Form Adverbs
+### How to Form Adverbs
 
 > [!observe] Спостереження (Pattern Discovery)
 >
@@ -180,10 +180,18 @@ Some adverbs are special:
 
 ---
 
-# Summary
+## Практика
 
-# Summary
+### Вправа 1: Переклад
+Перекладіть речення на українську мову.
 
+1. I am a student.
+2. This is my house.
+3. She is in the city.
+
+---
+
+# Підсумок
 Ви вивчили українські прислівники! Тепер ви можете описати, як ви щось робите. (You learned Ukrainian adverbs! Now you can describe how you do something.) Ви знаєте слова: швидко, повільно, добре. Ви також знаєте, як часто ви це робите: завжди або часто. Це був чудовий урок! (This was a great lesson!)
 
 ---

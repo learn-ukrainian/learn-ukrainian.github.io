@@ -2,7 +2,7 @@
 
 ## Introduction
 
-You have facts ("The sky is blue"). Now you need opinions ("I think the sky is beautiful").
+You have facts («The sky is blue»). Now you need opinions («I think the sky is beautiful»).
 In this module, you will learn how to express your thoughts, beliefs, and doubts.
 
 You will learn:
@@ -15,9 +15,9 @@ You will learn:
 
 Let's learn how to express opinions in Ukrainian.
 
-### The Magic Word "Що"
+### The Magic Word «Що»
 
-In English, we often drop "that" ("I think (that) he is nice").
+In English, we often drop «that» («I think (that) he is nice»).
 In Ukrainian, **що** is MANDATORY. You cannot drop it!
 
 **Structure:**
@@ -43,7 +43,7 @@ In Ukrainian, **що** is MANDATORY. You cannot drop it!
 
 ### Phrases for Opinions
 
-Instead of "I think", you can use these elegant phrases:
+Instead of «I think», you can use these elegant phrases:
 
 - **На мою думку...** (In my opinion...)
   - *На мою думку, цей фільм цікавий.*
@@ -94,7 +94,6 @@ Complete the sentences with your opinion.
 **Петро:** Я **вірю, що** ситуація покращиться скоро.
 
 # Підсумок
-
 Тепер ви можете ділитися своїми думками! (Now you can share your thoughts!)
 
 Головне правило: не забувайте **що** (that) і кому!

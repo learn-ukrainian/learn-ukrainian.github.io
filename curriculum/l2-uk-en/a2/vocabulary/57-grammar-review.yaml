@@ -142,6 +142,16 @@ items:
   translation: tongue twister
   pos: propn
   gender: m
+- lemma: іменник
+  ipa: /iˈmɛnːɪk/
+  translation: noun
+  pos: noun
+  gender: m
+- lemma: вид
+  ipa: /vɪd/
+  translation: aspect; view
+  pos: noun
+  gender: m
 - lemma: сорокий
   ipa: /soˈrɔkɪj/
   translation: magpie's (adj)
@@ -170,11 +180,56 @@ items:
   translation: cunning
   pos: noun
   gender: f
-- lemma: хлітературний
+- lemma: літературний
   ipa: /literɐˈturnɪj/
-  translation: literary (typo)
+  translation: literary
   pos: adj
-  gender: f
+  gender: m
+- lemma: називний
+  ipa: /nɐzɪu̯ˈnɪj/
+  translation: nominative
+  pos: adj
+  gender: m
+- lemma: родовий
+  ipa: /rodoˈʋɪj/
+  translation: genitive
+  pos: adj
+  gender: m
+- lemma: давальний
+  ipa: /dɐˈʋɑlʲnɪj/
+  translation: dative
+  pos: adj
+  gender: m
+- lemma: знахідний
+  ipa: /znɐˈxʲidnɪj/
+  translation: accusative
+  pos: adj
+  gender: m
+- lemma: орудний
+  ipa: /oˈrudnɪj/
+  translation: instrumental
+  pos: adj
+  gender: m
+- lemma: місцевий
+  ipa: /mʲisʲˈt͡sɛʋɪj/
+  translation: locative
+  pos: adj
+  gender: m
+- lemma: кличний
+  ipa: /ˈklɪt͡ʃnɪj/
+  translation: vocative
+  pos: adj
+  gender: m
+- lemma: недоконаний
+  ipa: /nedoˈkɔnɐnɪj/
+  translation: imperfective
+  pos: adj
+  gender: m
+- lemma: доконаний
+  ipa: /doˈkɔnɐnɪj/
+  translation: perfective
+  pos: adj
+  gender: m
 - lemma: частий
   ipa: /ˈt͡ʃɑstɪj/
   translation: frequent

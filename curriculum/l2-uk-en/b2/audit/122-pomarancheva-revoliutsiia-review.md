@@ -1,0 +1,118 @@
+# Audit Report: 122-pomarancheva-revoliutsiia.md
+**Phase:** B2.3d | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Overall Status:** ❌ FAIL
+
+## LINT ERRORS
+- ❌ Line 9: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 19: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 21: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 23: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 27: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 29: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 31: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 35: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 37: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 45: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 49: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 51: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 53: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 57: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 61: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 65: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 76: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 84: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 114: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 121: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 128: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 134: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+- ❌ Line 136: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [reading_comp_1] quiz: 'title' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [vocab_context_1] fill-in: 'title' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [figures_matching] match-up: 'title' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [grammar_agreement_1] error-correction: 'title' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [source_analysis_select] select: 'title' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [grammar_participles_1] mark-the-words: 'title' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [sentence_unjumble_1] unjumble: 'title' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [concepts_sorting_1] group-sort: 'title' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [text_cloze_1] cloze: 'title' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [synonyms_matching_1] match-up: 'title' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [translation_1] translate: 'title' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [linguistic_features_1] select: 'title' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [general_knowledge_1] quiz: 'title' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [content_check_2] true-false: 'title' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
+  - FIX: Add a essay-response activity to meet advanced richness standards.
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
+  - FIX: Add a comparative-study activity to meet advanced richness standards.
+
+## Recommendation
+**🔄 REWRITE** (severity 95/100)
+
+- 16 violations (severe - consider revision)
+- 23 format errors (many)
+- Activity count below minimum
+- Activity density below minimum
+
+## Gates
+- **Words:** ✅ 1948/1400
+- **Activities:** ❌ 0/10
+- **Density:** ❌ 0 < 14
+- **Unique_types:** ❌ 0/4 types
+- **Priority:** ❌ No priority types
+- **Engagement:** ✅ 7/5
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 35/20
+- **Structure:** ✅ Valid Structure
+- **Lint:** ❌ 23 Format Errors
+- **Pedagogy:** ❌ 16 violations
+- **Content_heavy:** ⚠️ Too few activities: 0 (target 10-14)
+- **Immersion:** 🇺🇦 100.0% (target 98-100% (history))
+- **Richness:** ✅ 97% (history)
+- **Grammar:** ⏳ Pending validation
+
+## Richness Details
+**Score:** 97% (minimum: 95%)
+**Module Type:** history
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| primary_sources | 5 | 3 | 100% | 24% | 23.8% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 28 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 3 | 4 | 75% | 10% | 7.1% |
+| visual | 4 | 4 | 100% | 10% | 9.5% |
+| variety | 0.99 | - | 99% | 5% | 4.7% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 5 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **97.6%** |
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 63 | Included in Core |
+| **Вступ** | ⚪️ | 129 | Skipped |
+| **Помаранчева революція: Шлях до демократичного прориву** | ⚪️ | 640 | Skipped |
+| **Персоналії революції: Творці історії** | ⚪️ | 161 | Skipped |
+| **Аналіз політичної стратегії** | ✅ | 530 | Included in Core |
+| **Первинні джерела** | ⚪️ | 259 | Skipped |
+| **Деколонізаційний погляд** | ⚪️ | 109 | Skipped |
+| **Підсумок** | ✅ | 57 | Included in Core |
+| **Need More Practice?** | ⚪️ | 0 | Skipped |

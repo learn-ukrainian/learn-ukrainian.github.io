@@ -183,7 +183,6 @@ Apps like **Glovo** or **Bolt Food** work 24/7. You can order sushi, burgers, or
 > Black Friday is popular in Ukraine, but big **розпродаж** (sales) also happen in January and July. Look for signs saying **«Знижки до -70%»**. It's the best time to buy clothes!
 
 # Підсумок
-
 You learned to:
 - Use shop types: **магазин**, **ринок**, **супермаркет**, **аптека**
 - Use services: **банк**, **пошта**, **перукарня**

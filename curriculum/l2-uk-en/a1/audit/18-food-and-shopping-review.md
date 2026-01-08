@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' found: Presentation, Part 3: Shopping Grammar (Accusative + Genitive)
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' found: Part 3: Shopping Grammar (Accusative + Genitive), Presentation
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
@@ -32,9 +32,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Warm-up** | ✅ | 113 | Included in Core |
-| **Presentation** | ✅ | 365 | Included in Core |
-| **Dialogues** | ✅ | 183 | Included in Core |
+| **Presentation** | ✅ | 548 | Included in Core |
 | **Practice** | ⚪️ | 62 | Skipped |
 | **Cultural Insight** | ✅ | 35 | Included in Core |
-| **Summary** | ✅ | 36 | Included in Core |
+| **Підсумок** | ✅ | 36 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

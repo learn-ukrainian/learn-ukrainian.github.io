@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): розпродаж, знаходити, вартість, акція, якість...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): доступний, радити, преміум, рекомендувати, порівнювати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE

@@ -215,8 +215,7 @@ Tipping is becoming more common in Ukraine, especially in cities. 10% is standar
 
 ---
 
-## Підсумок (Summary)
-
+# Підсумок
 **Тепер ви можете (Now you can):**
 
 - ✅ Попросити столик і меню (Ask for a table and menu)

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): десять, одинадцять, двадцять, нуль, шість...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): шість, вісім, дев'ять, двадцять, дванадцять...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE

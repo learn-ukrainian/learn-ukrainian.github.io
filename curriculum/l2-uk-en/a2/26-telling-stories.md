@@ -19,11 +19,11 @@ In this module, you will move beyond simple sentences like «I woke up. I ate. I
 
 ## Presentation
 
-## 1. The Timeline of a Story
+### 1. The Timeline of a Story
 
 To tell a story, you need road signs. These words tell the listener where they are in time.
 
-## The Beginning
+### The Beginning
 
 - **Спочатку** (At first | First)
 - **Одного разу** (Once | One day) — classic fairytale start («Once upon a time»).
@@ -32,20 +32,20 @@ To tell a story, you need road signs. These words tell the listener where they a
 
 Using these opening words immediately signals to your listener that a narrative is beginning. **Спочатку** is more structured and used for a list of events, while **Одного разу** creates a mystical or anecdotal atmosphere.
 
-## The Middle
+### The Middle
 
 - **Потім** (Then)
 - **Тоді** (Then | At that time)
 - **Після цього**
 - **Далі** (Further | Next)
 
-## The Climax (Drama!)
+### The Climax (Drama!)
 
 - **Раптом** (Suddenly)
 - **Несподівано**
 - **Саме тоді** (Just then | At that exact moment)
 
-## The End
+### The End
 
 - **Нарешті** (Finally | At last) — usually implies relief or long wait.
 - **Врешті-решт** (In the end | Eventually) — implies a result after complications.
@@ -53,7 +53,7 @@ Using these opening words immediately signals to your listener that a narrative 
 
 Choosing the right ending word depends on the emotional weight of your story. If you finally reached your goal after much effort, **нарешті** is the perfect choice to express your satisfaction.
 
-## 2. Sequencing in Action
+### 2. Sequencing in Action
 
 Compare these two versions:
 1.  **Robot Style:** Я встав. Я поснідав. Я пішов на роботу. (Boring!)
@@ -63,7 +63,7 @@ Compare these two versions:
 > These connectors usually come at the **very beginning** of the sentence to set the scene.
 > - **Раптом** почався дощ. (Suddenly, rain started.)
 
-## 3. «Before» and «Ago»
+### 3. «Before» and «Ago»
 
 We also need words to locate events relative to «now» or «then».
 
@@ -76,7 +76,7 @@ We also need words to locate events relative to «now» or «then».
 
 Using **давно** vs. **недавно** is a great way to provide immediate scale to your story. If you start with **давно**, your listener prepares for a historical or long-past event, whereas **недавно** suggests the information is fresh and perhaps more relevant to the present moment.
 
-## 4. Dialogue: The Fish That Got Away
+### 4. Dialogue: The Fish That Got Away
 
 Ukrainians love fishing (**риболовля**). Here is a typical exaggerated story.
 
@@ -93,7 +93,7 @@ Ukrainians love fishing (**риболовля**). Here is a typical exaggerated 
 > [!tip] Exaggeration
 > Notice how Mykola uses **«О, це була пригода!»** to set the stage. Stories are rarely just factual; they are performances.
 
-## 5. Intonation Secrets
+### 5. Intonation Secrets
 
 When you tell a story, your voice is a tool.
 - **Introduction:** Start with a mysterious tone: *«Одного разу...»*.
@@ -203,7 +203,6 @@ Read this story and notice the bold words.
 > Це означає: думай, перш ніж говорити!
 
 # Підсумок
-
 У цьому модулі ви навчилися:
 - Починати історію: **Одного разу**, **Спочатку**, **Колись**
 - Продовжувати: **Потім**, **Тоді**, **Далі**, **Після цього**

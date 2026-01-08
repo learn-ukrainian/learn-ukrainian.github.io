@@ -5,19 +5,17 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): всесвіт, природа, рідний, рід, світити...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (20 words): земний, містянин, світло, іноземець, світити...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 - ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
   - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
+- 3 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1104/1000
@@ -39,8 +37,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 183 | Included in Core |
-| **Presentation** | ✅ | 0 | Included in Core |
-| **бач- Family (see)** | ⚪️ | 137 | Skipped |
+| **Presentation** | ✅ | 137 | Included in Core |
 | **слух-/чут- Family (hear)** | ⚪️ | 46 | Skipped |
 | **говор-/мов- Family (speak)** | ⚪️ | 43 | Skipped |
 | **Story Time: Розмова між друзями** | ✅ | 176 | Included in Core |

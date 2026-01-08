@@ -42,11 +42,11 @@ This is often the most challenging concept for English speakers because English 
 - **з-** (робити → зробити)
 - **по-** (дивитися → подивитися, дзвонити → подзвонити)
 
-> [!note] 📝 Grammatical "Switch"
+> [!note] 📝 Grammatical «Switch»
 >
 > Think of aspect as a light switch.
-> **Imperfective** is the "Dimmer Switch" — you can adjust how long it takes (duration).
-> **Perfective** is the "On/Off Switch" — it's either done or not done (result). You can't say "I finished reading for 3 hours" in the same way.
+> **Imperfective** is the «Dimmer Switch» — you can adjust how long it takes (duration).
+> **Perfective** is the «On/Off Switch» — it's either done or not done (result). You can't say «I finished reading for 3 hours» in the same way.
 
 ### Practice: Choose the Aspect
 
@@ -64,7 +64,7 @@ This is often the most challenging concept for English speakers because English 
 
 ### Self-Check
 
-- ☐ Do you know the difference between "doing" (process) and "done" (result)?
+- ☐ Do you know the difference between «doing» (process) and «done» (result)?
 - ☐ Can you recognize common prefixes like *про-, на-, з-, по-*?
 - ☐ Do you remember that *брати/взяти* and *купувати/купити* are irregular pairs that change the root or suffix differently?
 
@@ -105,7 +105,7 @@ These four words change their stem completely or partially. Memorize them!
 - добрий — good → **кращий** → **найкращий**
 - поганий — bad → **гірший** → **найгірший**
 
-**Comparisons with "Than":**
+**Comparisons with «Than»:**
 You have two options:
 1. **ніж** + Nominative case: «Київ більший, ніж Львів.»
 2. **за** + Accusative case: «Київ більший за Львів.» (Note: *за* implies «bigger *than/beyond*»).
@@ -138,7 +138,7 @@ You have two options:
 
 The Conditional Mood (Умовний спосіб) is used for dreams, unreal situations («If I were...»), and softness in speech («I would like...»).
 
-### Model: "Would" and "If"
+### Model: «Would» and «If»
 
 **Polite Request:**
 Use the past tense verb + particle **б** (after vowels) or **би** (after consonants).
@@ -237,7 +237,6 @@ Read the text and identify the grammar points (1-5).
 ---
 
 # Підсумок
-
 Ви пройшли важливий рубіж рівня А2! Тепер ви володієте інструментами для вираження нюансів часу, якості та ввічливості.
 
 | Skill | Key Concept | Pattern | Example |

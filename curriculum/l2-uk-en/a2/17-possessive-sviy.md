@@ -256,7 +256,6 @@ This mental check will help you until the pattern becomes automatic through prac
 > This efficiency is part of what makes Ukrainian beautiful to speak.
 
 # Підсумок
-
 У цьому модулі ви вивчили:
 - Основні поняття та правила
 - Практичне застосування

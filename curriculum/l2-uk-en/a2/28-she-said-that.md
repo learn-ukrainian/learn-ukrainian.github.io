@@ -22,11 +22,11 @@ In Ukrainian, it's easier! You usually keep the original tense.
 
 ## Presentation
 
-## 1. The Golden Rule: No Backshift
+### 1. The Golden Rule: No Backshift
 
 In Ukrainian Reported Speech, you typically **do not change the tense** of the verb if you are reporting a fact. You only change the **pronouns**.
 
-## Direct → Indirect
+### Direct → Indirect
 
 **Direct:**
 - Вона каже: «**Я** люблю каву.» (She says: «I like coffee.»)
@@ -39,18 +39,18 @@ In Ukrainian Reported Speech, you typically **do not change the tense** of the v
 > [!important] Simplify
 > You don't need to shift «like» to «liked». The logic is: «She said: [insert her current feeling at that time].» This makes Ukrainian reporting much more intuitive for learners, as you can almost always reuse the original sentence structure without major grammatical overhaul.
 
-## Future Tense
+### Future Tense
 
 - **Direct:** Він сказав: «Я **буду** там.» (I will be there.)
 - **Indirect:** Він сказав, що він **буде** там. (He said he *will* be there.)
 
 This simplicity is a major advantage of the Ukrainian language. Once you know the present tense, you can report what anyone says without worrying about complex temporal shifts common in Germanic languages.
 
-## 2. Reporting Verbs
+### 2. Reporting Verbs
 
 You need more than just «said».
 
-## Basic
+### Basic
 
 - **Казати | Сказати**: The default.
   - *Він сказав, що...* (He said that...)
@@ -63,7 +63,7 @@ You need more than just «said».
 - **Відповідати**:
   - *Він відповідає, що зайнятий.* (He answers that he is busy.)
 
-## Information
+### Information
 
 - **Повідомити**: Formal.
   - *Лікар повідомив, що аналізи добрі.*
@@ -72,7 +72,7 @@ You need more than just «said».
 - **Нагадати**:
   - *Мама нагадала, що треба купити хліб.*
 
-## Argument/Emotion
+### Argument/Emotion
 
 - **Стверджувати**:
   - *Він стверджує, що він правий.*
@@ -83,7 +83,7 @@ You need more than just «said».
 - **Обіцяти**:
   - *Він пообіцяв, що прийде.*
 
-## 3. Asking Questions
+### 3. Asking Questions
 
 When reporting a question, we don't use «що». We use **чи** or question words.
 
@@ -254,7 +254,6 @@ Read the chain of messages. See how information changes.
 > Це означає: думай, перш ніж говорити!
 
 # Підсумок
-
 У цьому модулі ви навчилися:
 - Передавати чужі слова: **Він сказав, що...**
 - Використовувати різні дієслова: **стверджувати**, **заперечувати**, **обіцяти**

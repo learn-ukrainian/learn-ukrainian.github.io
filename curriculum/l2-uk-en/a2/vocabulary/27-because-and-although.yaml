@@ -2,162 +2,138 @@ module: 27-because-and-although
 level: A2
 version: '2.0'
 items:
-- lemma: бензин
-  ipa: benˈzɪn
-  translation: gasoline
-  pos: noun
-  gender: m
-- lemma: блищити
-  ipa: blɪˈʃt͡ʃɪte
-  translation: to shine (imp)
-  pos: verb
-- lemma: важливіший
-  ipa: vɐʒlɪˈvʲiʃɪj
-  translation: more important
-  pos: adj
-  gender: m
-- lemma: впоратися
-  ipa: ˈvpɔrɐtɪsʲɐ
-  translation: to manage/cope (perf)
-  pos: verb
-- lemma: втратити
-  ipa: ˈvtrɑtɪte
-  translation: to lose (perf)
-  pos: verb
-- lemma: вірус
-  ipa: ˈvʲirus
-  translation: virus
-  pos: noun
-  gender: m
-- lemma: гараж
-  ipa: hɐˈrɑʒ
-  translation: garage
-  pos: noun
-  gender: m
-- lemma: живий
-  ipa: ʒɪˈvɪj
-  translation: alive
-  pos: adj
-- lemma: завдяки
-  ipa: zɐwdʲɐˈkɪ
-  translation: thanks to
-  pos: other
-- lemma: зате
-  ipa: zɐˈtɛ
-  translation: but; on the other hand
-  pos: other
-- lemma: захворівати
-  ipa: zɐxvoˈrʲiʋɐte
-  translation: to fall ill (imp)
-  pos: verb
-- lemma: захворіти
-  ipa: zɐxvoˈrʲite
-  translation: to fall ill (perf)
-  pos: verb
-  gender: m
-- lemma: кататися
-  ipa: kɐˈtɑtɪsʲɐ
-  translation: to ride/skate (imp)
-  pos: verb
-- lemma: комфорт
-  ipa: komˈfɔrt
-  translation: comfort
-  pos: noun
-  gender: m
-- lemma: красномовство
-  ipa: krɐsnoˈmɔu̯stvo
-  translation: eloquence
-  pos: noun
-  gender: n
-- lemma: лижа
-  ipa: ˈlɪʒɐ
-  translation: ski
-  pos: noun
-  gender: m
-- lemma: мокрий
-  ipa: ˈmɔkrɪj
-  translation: wet
-  pos: adj
-  gender: m
-- lemma: незважаючи
-  ipa: nezvɐˈʒɑjut͡ʃɪ
-  translation: despite
-  pos: verb
-- lemma: непростий
-  ipa: neproˈstɪj
-  translation: not simple
-  pos: adj
-  gender: n
-- lemma: однак
-  ipa: odˈnɑk
-  translation: however
-  pos: other
-- lemma: одно
-  ipa: odˈnɔ
-  translation: one; same
-  pos: adv
-- lemma: оптиміст
-  ipa: optɪˈmʲist
-  translation: optimist
-  pos: noun
-  gender: m
-- lemma: переконати
-  ipa: perekɔˈnɑte
-  translation: to convince (perf)
-  pos: verb
-- lemma: песиміст
-  ipa: pesɪˈmʲist
-  translation: pessimist
-  pos: noun
-  gender: m
-- lemma: почнати
-  ipa: pot͡ʃˈnɑte
-  translation: to start (typo pot͡ʃɪnɑte?)
-  pos: verb
-- lemma: програти
-  ipa: proˈhrɑte
-  translation: to lose (game) (perf)
-  pos: verb
-- lemma: реаліст
-  ipa: reɐˈlʲist
-  translation: realist
-  pos: noun
-  gender: m
-- lemma: ремонт
-  ipa: reˈmɔnt
-  translation: repair
-  pos: noun
-  gender: m
-- lemma: рости
-  ipa: roˈstɪ
-  translation: to grow (imp)
-  pos: verb
-- lemma: сильно
-  ipa: ˈsɪlʲno
-  translation: strongly
-  pos: adv
-- lemma: скаратися
-  ipa: skɐˈrɑtɪsʲɐ
-  translation: to complain (typo for skɐrʒɪtɪsʲɐ?)
-  pos: verb
-- lemma: скаржитися
-  ipa: ˈskɑrʒɪtɪsʲɐ
-  translation: to complain
-  pos: verb
-- lemma: суперечка
-  ipa: supeˈrɛt͡ʃkɐ
-  translation: dispute; argument
-  pos: noun
-  gender: f
-- lemma: тренуватися
-  ipa: trenuˈʋɑtɪsʲɐ
-  translation: to train (imp)
-  pos: verb
-- lemma: час
-  translation: time; tense
-  pos: noun
-  gender: m
-- lemma: хоча
-  ipa: xoˈt͡ʃɑ
-  translation: although
-  pos: other
+  - lemma: тому що
+    ipa: toˈmu ʃt͡ʃɔ
+    translation: because
+    pos: other
+  - lemma: бо
+    ipa: bɔ
+    translation: because (colloquial)
+    pos: other
+  - lemma: оскільки
+    ipa: oˈskilʲkɪ
+    translation: since; as
+    pos: other
+  - lemma: через те що
+    ipa: t͡ʃɛrɛz tɛ ʃt͡ʃɔ
+    translation: due to the fact that
+    pos: other
+  - lemma: завдяки тому що
+    ipa: zɐu̯dʲɐˈke toˈmu ʃt͡ʃɔ
+    translation: thanks to the fact that
+    pos: other
+  - lemma: хоча
+    ipa: xoˈt͡ʃɑ
+    translation: although
+    pos: other
+  - lemma: незважаючи на те що
+    ipa: nezwɐˈʒɑjut͡ʃɪ nɐ tɛ ʃt͡ʃɔ
+    translation: despite the fact that
+    pos: other
+  - lemma: проте
+    ipa: proˈtɛ
+    translation: however; but
+    pos: other
+  - lemma: однак
+    ipa: odˈnɑk
+    translation: however
+    pos: other
+  - lemma: але
+    ipa: ˈɑlɛ
+    translation: but
+    pos: other
+  - lemma: зате
+    ipa: zɐˈtɛ
+    translation: on the other hand; but
+    pos: other
+  - lemma: все-таки
+    ipa: ˈwsɛ tɐkɪ
+    translation: nevertheless
+    pos: other
+  - lemma: все ж таки
+    ipa: ˈwsɛ ʒ tɐkɪ
+    translation: still; despite everything
+    pos: other
+  - lemma: попри те що
+    ipa: ˈpɔprɪ tɛ ʃt͡ʃɔ
+    translation: despite the fact that
+    pos: other
+  - lemma: хоч і
+    ipa: xɔt͡ʃ i
+    translation: even though
+    pos: other
+  - lemma: хай
+    ipa: xɑj
+    translation: let; may
+    pos: other
+  - lemma: нехай
+    ipa: neˈxɑj
+    translation: let it be; may
+    pos: other
+  - lemma: хоч би
+    ipa: xɔt͡ʃ bɪ
+    translation: if only; at least
+    pos: other
+  - lemma: дарма що
+    ipa: dɐrˈmɑ ʃt͡ʃɔ
+    translation: never mind that; even though
+    pos: other
+  - lemma: якби не
+    ipa: jɐkˈbɪ nɛ
+    translation: if not for
+    pos: other
+  - lemma: час
+    translation: time; tense
+    pos: noun
+    gender: m
+  - lemma: сказати
+    translation: to say
+    pos: verb
+  - lemma: розповідати
+    translation: to tell; to narrate
+    pos: verb
+  - lemma: запитати
+    translation: to ask (perf)
+    pos: verb
+  - lemma: коментувати
+    translation: to comment
+    pos: verb
+  - lemma: попередити
+    translation: to warn (perf)
+    pos: verb
+  - lemma: питати
+    translation: to ask
+    pos: verb
+  - lemma: відповідати
+    translation: to answer
+    pos: verb
+  - lemma: повідомити
+    translation: to inform (perf)
+    pos: verb
+  - lemma: пояснити
+    translation: to explain (perf)
+    pos: verb
+  - lemma: стверджувати
+    translation: to claim
+    pos: verb
+  - lemma: заперечувати
+    translation: to deny
+    pos: verb
+  - lemma: обіцяти
+    translation: to promise
+    pos: verb
+  - lemma: нагадати
+    translation: to remind (perf)
+    pos: verb
+  - lemma: переконувати
+    translation: to convince
+    pos: verb
+  - lemma: скаржитися
+    translation: to complain
+    pos: verb
+  - lemma: хвалити
+    translation: to praise
+    pos: verb
+  - lemma: критикувати
+    translation: to criticize
+    pos: verb

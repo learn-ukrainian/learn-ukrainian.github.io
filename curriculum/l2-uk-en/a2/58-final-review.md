@@ -46,7 +46,7 @@ In this final review, you'll demonstrate your proficiency in major skill areas. 
 Але я завжди буду повертатися в Одесу, тому що це моє рідне місто.
 
 > [!cultural] **Cultural Insight** «University Life»
-> Students in Ukraine often study in «groups» (*група*) that stay together for 4 years. They become very close friends. They celebrate «Day of the Student» (*День студента*) on November 17th.
+> Students in Ukraine often study in «groups» (_група_) that stay together for 4 years. They become very close friends. They celebrate «Day of the Student» (_День студента_) on November 17th.
 
 ### Practice: A Journey to the Mountains
 
@@ -66,6 +66,7 @@ In this final review, you'll demonstrate your proficiency in major skill areas. 
 > Many people think Ukraine is freezing like Siberia. False! Ukraine has a temperate continental climate. Summers are hot (+30°C), and winters are snowy but beautiful. The South (Crimea, Odesa) is warm.
 
 ### Self-Check
+
 - Can you identify the main topic of the text?
 - Can you find specific details (names, places)?
 
@@ -86,7 +87,23 @@ In this final review, you'll demonstrate your proficiency in major skill areas. 
 — У червні. Я запрошую тебе.
 — Дякую! Я обов'язково прийду.
 
+### Practice: Roleplay
+
+**Can you invite a friend to an event?**
+
+Imagine you are planning a trip or a celebration. Use the following patterns:
+
+- **Я запрошую тебе на...** (I invite you to...)
+- **Коли...** (When is...?)
+- **Я обов'язково прийду.** (I will definitely come.)
+
+**Scenario:** Ask your partner where they were last week and invite them to a coffee this Saturday.
+
+> [!tip] 🗣️ Speaking Goal
+> Focus on your intonation in questions. In Ukrainian, questions often end with a rising tone on the key word.
+
 ### Self-Check
+
 - Can you follow the flow of conversation?
 - Can you identify the relationship between speakers?
 
@@ -97,14 +114,16 @@ In this final review, you'll demonstrate your proficiency in major skill areas. 
 Now it is your turn to showcase your writing skills. Write a short text about yourself (5-7 sentences). This is a comprehensive task where you should use the various grammatical structures and vocabulary words you have mastered throughout Level A1 and A2. Focus on using correct case endings for your profession and hobbies.
 
 Please include the following information in your text:
-1. **Name and age** (e.g., *Мене звати... Мені... років*). Remember to use the Dative case for age!
-2. **Profession or Study** (e.g., *Я працюю...* or *Я вчуся...*). Use the Instrumental case for your profession.
-3. **Hobbies and Interests** (e.g., *Я люблю...*). Use the Accusative case for the things you like.
-4. **Family and Relations** (e.g., *У мене є...*). Use the Nominative case for family members after «є».
-5. **Future Dreams and Goals** (e.g., *Я мрію про...*). Use the Locative case after «про» when describing what you dream about.
+
+1. **Name and age** (e.g., _Мене звати... Мені... років_). Remember to use the Dative case for age!
+2. **Profession or Study** (e.g., _Я працюю..._ or _Я вчуся..._). Use the Instrumental case for your profession.
+3. **Hobbies and Interests** (e.g., _Я люблю..._). Use the Accusative case for the things you like.
+4. **Family and Relations** (e.g., _У мене є..._). Use the Nominative case for family members after «є».
+5. **Future Dreams and Goals** (e.g., _Я мрію про..._). Use the Locative case after «про» when describing what you dream about.
 
 ### Model: Example
-*Мене звати Джон. Мені 30 років. Я інженер. Я живу в Нью-Йорку. Я люблю читати книги і грати у футбол. У мене є дружина і кіт. Я мрію відвідати Україну.*
+
+_Мене звати Джон. Мені 30 років. Я інженер. Я живу в Нью-Йорку. Я люблю читати книги і грати у футбол. У мене є дружина і кіт. Я мрію відвідати Україну._
 
 > [!important] **Final Tip** «Consistency»
 > Language learning is a marathon, not a sprint. 15 minutes every day is better than 5 hours once a week. Keep listening, reading, and speaking. See you in B1!
@@ -113,10 +132,11 @@ Please include the following information in your text:
 > Ukrainians are very musical. «The Carol of the Bells» (Schedryk) is a Ukrainian song. Eurovision winners Ruslana, Jamala, and Kalush Orchestra showed Ukrainian culture to the world.
 
 ### Self-Check
+
 - Did you use Instrumental for profession?
 - Did you use Dative for age?
 
-## Skill 4: Integrated Skills
+## Інтеграційне завдання
 
 ### Model: The Quiz Show «Love Ukraine»
 
@@ -177,33 +197,35 @@ Understanding technical texts is a key skill for B1.
 
 ### Self-Check: Useful Phrases for Travel
 
-- Де знаходиться туалет? (*Where is the toilet?*)
-- Скільки це коштує? (*How much is it?*)
-- Можна меню, будь ласка? (*Menu please*)
-- Я не розмовляю українською добре. (*I don't speak Ukrainian well*)
-- Ви говорите англійською? (*Do you speak English?*)
-- Дякую за допомогу! (*Thanks for help*)
-- Гарного дня! (*Have a nice day*)
+- Де знаходиться туалет? (_Where is the toilet?_)
+- Скільки це коштує? (_How much is it?_)
+- Можна меню, будь ласка? (_Menu please_)
+- Я не розмовляю українською добре. (_I don't speak Ukrainian well_)
+- Ви говорите англійською? (_Do you speak English?_)
+- Дякую за допомогу! (_Thanks for help_)
+- Гарного дня! (_Have a nice day_)
 
 > [!check] **Check Point** «A2 Skills»
 > Before leaving A2, make sure you can:
+>
 > - Order food in a restaurant.
 > - Buy tickets at the station.
 > - Introduce yourself and your family.
 > - Understand easy stories.
-> If yes, welcome to B1!
+>   If yes, welcome to B1!
 
 # Підсумок
 
 You have officially completed A2!
 You can:
+
 - Read texts about everyday life.
 - Understand conversations about plans and biography.
 - Write simple emails and stories.
 - Use basic grammar correctly.
 
 You are ready for **Level B1**.
-Success! (*Успіхів!*)
+Success! (_Успіхів!_)
 
 ---
 

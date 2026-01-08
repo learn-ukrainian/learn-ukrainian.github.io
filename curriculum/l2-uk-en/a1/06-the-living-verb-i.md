@@ -223,8 +223,7 @@ I have breakfast. Then I work. I have lunch. I walk to the park. I read a book. 
 
 ---
 
-# Summary
-
+# Підсумок
 You've unlocked **First Conjugation verbs** (-ати/-яти)! You can now:
 
 - Conjugate verbs like **читати, писати, працювати, грати**

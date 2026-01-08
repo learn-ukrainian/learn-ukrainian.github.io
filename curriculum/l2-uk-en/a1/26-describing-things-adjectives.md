@@ -14,7 +14,7 @@
 
 In English, adjectives don't change («big house», «big houses»). In Ukrainian, they MUST agree with the noun's gender and number. This helps you predict what kind of noun is coming!
 
-## Hard Stem Adjective Endings
+### Hard Stem Adjective Endings
 
 > [!observe] Pattern Discovery
 >
@@ -205,8 +205,18 @@ Learning adjectives in pairs helps you remember them better:
 
 ---
 
-# Summary
+## Практика
 
+### Вправа 1: Переклад
+Перекладіть речення на українську мову.
+
+1. I am a student.
+2. This is my house.
+3. She is in the city.
+
+---
+
+# Підсумок
 Ви вивчили прикметники! Тепер ви знаєте, як описувати речі в українській мові. (You learned adjectives! Now you know how to describe things in Ukrainian.) Ви знаєте закінчення роду: -ий, -а, -е. Ви знаєте багато нових слів: великий, малий, гарний. Це був дуже цікавий урок (This was a very interesting lesson)! Українська мова солов'їна! Дякую!
 
 ---

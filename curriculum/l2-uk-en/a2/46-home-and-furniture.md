@@ -12,7 +12,7 @@ Ukrainian homes often differ from Western ones. Many Ukrainians live in apartmen
 
 ## Presentation
 
-## Rooms of the House
+### Rooms of the House
 
 Every home has different rooms. Here is the essential vocabulary for talking about where you live:
 
@@ -187,7 +187,6 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
 > The dacha represents an escape from city life and a deep connection to nature. Families gather there for weekends and holidays.
 
 # Підсумок
-
 **Кімнати:**
 - вітальня
 - спальня

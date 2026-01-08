@@ -189,7 +189,6 @@ When you see a new verb, follow this logic:
 3. Neither? → Check if it's a suppletive pair.
 
 # Підсумок
-
 In this module, you have explored the fascinating morphology of the Ukrainian aspect system. You've learned how most perfective verbs are built from imperfective bases using a variety of logical prefixes. You've also seen how the suffixation pattern works in reverse, and why a few essential verbs remain as unique suppletive pairs that must be memorized individually.
 
 **Основні висновки для вашого навчання (Key Takeaways):**

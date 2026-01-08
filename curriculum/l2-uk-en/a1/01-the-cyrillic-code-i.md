@@ -130,8 +130,7 @@ Now it's time to test your decoding skills. Look at these Ukrainian words and tr
 
 Every single one of these is an international word that you already know. Just written in a different alphabet!
 
-# Summary
-
+# Підсумок
 In this module, you learned:
 
 **True Friends** (7 letters): А, Е, І, О, К, М, Т. They look AND sound like English.
