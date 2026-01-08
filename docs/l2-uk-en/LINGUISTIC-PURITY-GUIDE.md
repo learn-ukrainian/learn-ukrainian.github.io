@@ -15,6 +15,8 @@ We distinguish between **Russification (Surzhyk)**, which is strictly forbidden 
 **Policy:** ZERO TOLERANCE.
 Any module containing these calques must **FAIL** the audit. We adhere to **Standard Literary Ukrainian**.
 
+**Exception:** Modules explicitly teaching about Surzhyk (e.g., C1 M29: "Surzhyk") are allowed to contain Russian characters and mixed forms for pedagogical purposes. The audit automatically exempts modules with "Surzhyk" or "Сурж" in the title/topic.
+
 #### Mandatory Surzhyk Corrections
 
 | ❌ Russian Calque / Surzhyk | ✅ Authentic Ukrainian | Context / Note |

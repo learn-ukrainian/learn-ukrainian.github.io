@@ -230,43 +230,57 @@ def check_content_quality(content: str, level_code: str, module_num: int) -> lis
     violations = []
 
     # --- Deterministic Checks (Run regardless of API Key or Enabled Flag) ---
-    
+
+    # Extract metadata first to check if this is a Surzhyk module
+    metadata = extract_module_metadata(content)
+    is_surzhyk_module = False
+
+    # Check if module is about Surzhyk (allow Russian characters for pedagogical purposes)
+    for field in ['title', 'topic', 'pedagogy']:
+        if field in metadata:
+            value = metadata[field].lower()
+            if 'surzhyk' in value or 'сурж' in value:
+                is_surzhyk_module = True
+                break
+
     # Check for Russian-only and Historical characters (ё, ъ, ы, э, ѣ, ѳ, ѵ)
-    # These are allowed in LIT track ONLY within citations (> blockquotes)
+    # These are allowed in:
+    # 1. LIT track within citations (> blockquotes)
+    # 2. Surzhyk modules (teaching about mixed Ukrainian-Russian speech)
     historical_chars = set('ёъыэѣѳѵЁЪЫЭѢѲѴ')
     lines = content.split('\n')
     bad_matches = []
-    
-    for line in lines:
-        found = [c for c in line if c in historical_chars]
-        if found:
-            is_citation = line.strip().startswith('>')
-            # Heuristic context check
-            context = line.lower()
-            has_context = 'russian' in context or 'rocійськ' in context or 'російськ' in context
-            
-            if level_code.lower() == 'lit' and is_citation:
-                # Allowed in literature citations
-                continue
-            
-            if not has_context:
-                bad_matches.extend(found)
-    
-    if bad_matches:
-         violations.append({
-            'type': 'LINGUISTIC_PURITY',
-            'severity': 'error',
-            'issue': f"Found forbidden or historical characters outside of allowed context: {', '.join(set(bad_matches))}",
-            'fix': "Remove non-Ukrainian characters (ё, ъ, ы, э, ѣ, etc.) or ensure they are inside a citation (> ) in the LIT track."
-        })
+
+    if not is_surzhyk_module:
+        for line in lines:
+            found = [c for c in line if c in historical_chars]
+            if found:
+                is_citation = line.strip().startswith('>')
+                # Heuristic context check
+                context = line.lower()
+                has_context = 'russian' in context or 'rocійськ' in context or 'російськ' in context
+
+                if level_code.lower() == 'lit' and is_citation:
+                    # Allowed in literature citations
+                    continue
+
+                if not has_context:
+                    bad_matches.extend(found)
+
+        if bad_matches:
+             violations.append({
+                'type': 'LINGUISTIC_PURITY',
+                'severity': 'error',
+                'issue': f"Found forbidden or historical characters outside of allowed context: {', '.join(set(bad_matches))}",
+                'fix': "Remove non-Ukrainian characters (ё, ъ, ы, э, ѣ, etc.) or ensure they are inside a citation (> ) in the LIT track."
+            })
 
 
     if not CONTENT_QUALITY_ENABLED:
         return violations
 
-    # Extract lesson content and metadata for LLM checks
+    # Extract lesson content for LLM checks (metadata already extracted above)
     lesson_content = extract_lesson_content(content)
-    metadata = extract_module_metadata(content)
 
     # Skip if lesson content is too short (less than 500 chars)
     if len(lesson_content) < 500:

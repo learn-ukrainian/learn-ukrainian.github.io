@@ -27,6 +27,7 @@ __pycache__/
 dist/
 build/
 *.tsbuildinfo
+output/json/
 
 # IDE
 .idea/

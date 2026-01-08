@@ -236,7 +236,7 @@ These were all documented requirements that were ignored during creation.
 **Learn Ukrainian** is a language content factory generating Ukrainian language learning curricula.
 
 - **Source of truth**: Markdown files in `curriculum/l2-uk-en/{level}/` folders
-- **Output**: HTML (web lessons) + JSON (Vibe app import)
+- **Output**: HTML (web lessons) via Docusaurus ~~+ JSON (Vibe app on hold)~~
 - **Current focus**: Ukrainian for English speakers (l2-uk-en)
   </context>
 
@@ -437,10 +437,8 @@ npm run generate l2-uk-en              # All levels
 npm run generate l2-uk-en a1           # Specific level
 npm run generate l2-uk-en a1 5         # Specific module
 
-# Generate JSON (Vibe app import) - Python
-npm run generate:json l2-uk-en         # All levels
-npm run generate:json l2-uk-en a1      # Specific level
-npm run generate:json l2-uk-en a1 5    # Specific module
+# Generate JSON (SKIP - Vibe app on hold pending redesign)
+# npm run generate:json l2-uk-en
 
 # Validation (standalone)
 npm run validate:mdx l2-uk-en a1       # Check MDX content integrity
@@ -596,7 +594,7 @@ Is this a real error or pedagogically acceptable? Respond in JSON.
 1. Build all modules (stages 1-3)
 2. Run audit, fix issues until pass
 3. Run pipeline: `npm run pipeline l2-uk-en {level}`
-4. Generate JSON: `npm run generate:json l2-uk-en {level}`
+4. ~~Generate JSON~~ (Vibe app on hold)
 5. Finalize vocabulary → `npm run vocab:rebuild`
 6. Update landing pages → `npm run sync:landing`
 

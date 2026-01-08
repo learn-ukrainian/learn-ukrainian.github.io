@@ -99,7 +99,8 @@ ls curriculum/l2-uk-en/{LEVEL}/*{MODULE_NUM}*.md 2>/dev/null
 1. Run audit: `.venv/bin/python scripts/audit_module.py ...`
 2. Fix violations until PASS
 3. Run pipeline: `npm run pipeline l2-uk-en {LEVEL} {MODULE_NUM}`
-4. Generate JSON: `npm run generate:json l2-uk-en {LEVEL} {MODULE_NUM}`
+
+**Note:** JSON generation skipped (Vibe app on hold pending redesign)
 
 ---
 
@@ -142,7 +143,8 @@ Stage 1 → Stage 2 → Stage 3 → Stage 4 (review/fix loop) → OUTPUT
 3. Run content review: `/review-content l2-uk-en {LEVEL} {MODULE_NUM}`
 4. Fix quality issues until PASS (Score: 5/5)
 5. Run pipeline: `npm run pipeline l2-uk-en {LEVEL} {MODULE_NUM}`
-6. Generate JSON: `npm run generate:json l2-uk-en {LEVEL} {MODULE_NUM}`
+
+**Note:** JSON generation skipped (Vibe app on hold pending redesign)
 
 ### Quick Reference (Read First)
 
@@ -150,6 +152,20 @@ Stage 1 → Stage 2 → Stage 3 → Stage 4 (review/fix loop) → OUTPUT
    - Frontmatter template, targets, activity mix, pre-flight checklist
 2. **Philosophy guide:** `claude_extensions/quick-ref/philosophy.md` (~150 lines)
    - Soul standard, Truth standard, cultural specificity, linguistic purity
+
+### Model Selection for C1/C2
+
+**Recommended models by level:**
+
+- **A1-B2:** Claude Sonnet 4.5 (default) OR gemini-3-flash (fast, cheap)
+- **C1-C2:** gemini-3-pro (recommended) OR Claude Opus 4.5
+- **Complex grammar (any level):** gemini-3-pro OR Claude Opus 4.5
+
+**Why gemini-3-pro for C1/C2:**
+- Better at sophisticated Ukrainian language
+- Excellent for literary analysis, stylistics, folk culture
+- Handles long biographical texts and complex cultural content
+- More cost-effective than Claude Opus for batch creation
 
 ### Module Architect Skills (Use for Focus-Area Guidance)
 
@@ -160,10 +176,10 @@ Select the appropriate architect skill based on module type:
 | Grammar (B1-B2)           | `grammar-module-architect`     | Aspect, motion verbs, participles, passive voice |
 | Vocabulary (B1)           | `vocab-module-architect`       | Abstract concepts, collocations, synonymy        |
 | Cultural (B1-C1)          | `cultural-module-architect`    | Regions, music, cinema, folk culture             |
-| History/Biography (B2-C1) | `history-module-architect`     | Ukrainian history, historical figures            |
+| History/Biography (B2-C1) | `history-module-architect`     | Ukrainian history, historical figures, biographies |
 | Integration (B1-B2)       | `integration-module-architect` | Level-end review and consolidation               |
 | Checkpoint (All)          | `checkpoint`                   | Phase-end assessment modules                     |
-| Literature (LIT)          | `literature-module-architect`  | Post-C1 Ukrainian literature track               |
+| Literature (C1-C2)        | `literature-module-architect`  | Ukrainian literature, folk culture, stylistics   |
 
 These skills provide focus-area pedagogical guidance beyond the template structure.
 
@@ -191,10 +207,25 @@ Before writing, confirm from quick-ref:
 
 ### ⚠️ CRITICAL CONSTRAINTS (Apply DURING Writing, Not After)
 
-**Quiz Prompts:**
+**Level-Specific Complexity Targets:**
 
-- Each quiz question prompt MUST be **12-20 words** (audit fails below 12)
-- Count words BEFORE writing each question
+| Level | Quiz Prompts | Fill-in Sentences | Unjumble Sentences | Word Count Target | Activities |
+|-------|--------------|-------------------|--------------------|--------------------|------------|
+| A1 | 5-10 words | 3-5 words | 4-6 words | 800-1000 | 12+ |
+| A2 | 8-15 words | 6-8 words | 8-10 words | 1200-1400 | 12+ |
+| B1 | 12-20 words | 10-14 words | 12-16 words | 1500-1700 | 12+ |
+| B2 | **10-25 words** | **10-16 words** | **10-18 words** | 1750-2000 | 14+ |
+| C1 | **8-30 words** | **8-18 words** | **12-20 words** | 2000-2500 | 16+ |
+| C2 | **10-35 words** | **10-20 words** | **14-22 words** | 2200-2700 | 16+ |
+
+**Bold** = Recently eased to match AI capabilities (B2+ minimums reduced 20-40%)
+
+**C1 Content-Heavy Modules (Biography/Folk/Literature):**
+- **Activity count:** 10-12 (not 16+) - see `claude_extensions/quick-ref/c1.md` "Content-Heavy Modules"
+- **Focus:** Language comprehension and vocabulary usage (NOT testing biographical/cultural facts)
+- **Golden Rule:** "Can the learner answer without reading the Ukrainian text?" If YES → rewrite
+
+Count words BEFORE writing each sentence to ensure compliance.
 
 **100% Ukrainian Immersion (B1+):**
 
@@ -246,7 +277,7 @@ On completion:
 
 - Module file: `curriculum/l2-uk-en/{level}/{num}-{slug}.md`
 - MDX: `docusaurus/docs/{level}/module-{num}.mdx`
-- JSON: `output/json/l2-uk-en/{level}/module-{num}.json`
+- ~~JSON: `output/json/l2-uk-en/{level}/module-{num}.json`~~ (Vibe app on hold)
 
 Status: APPROVED (pipeline passes) or NEEDS MANUAL REVIEW
 
