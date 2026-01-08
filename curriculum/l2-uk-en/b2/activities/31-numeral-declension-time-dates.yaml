@@ -91,13 +91,13 @@
     explanation: Конструкція «хвилини по» + порядковий у місцевому відмінку.
   - question: Що означає «за десять восьма»?
     options:
-    - text: 470
+    - text: "470"
       correct: true
-    - text: 490
+    - text: "490"
       correct: false
-    - text: 430
+    - text: "430"
       correct: false
-    - text: 530
+    - text: "530"
       correct: false
     explanation: «За десять восьма» означає «за десять хвилин восьма година», тобто 7:50.
   - question: Яка форма правильна для офіційного оголошення о 14:30?
@@ -124,13 +124,13 @@
     explanation: Опівночі — це прислівник, що пишеться разом.
   - question: Що означає «чверть на другу»?
     options:
-    - text: 75
+    - text: "75"
       correct: true
-    - text: 135
+    - text: "135"
       correct: false
-    - text: 105
+    - text: "105"
       correct: false
-    - text: 165
+    - text: "165"
       correct: false
     explanation: «Чверть на другу» означає чверть шляху до другої, тобто 1:15.
   - question: Яка форма правильна для «from 9 to 5»?

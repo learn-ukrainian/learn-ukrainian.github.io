@@ -3,13 +3,13 @@
   items:
   - question: Згідно з текстом, у якому році було видано Валуєвський циркуляр?
     options:
-    - text: 1876
+    - text: "1876"
       correct: false
-    - text: 1863
+    - text: "1863"
       correct: true
-    - text: 1905
+    - text: "1905"
       correct: false
-    - text: 1848
+    - text: "1848"
       correct: false
     explanation: Текст вказує, що Валуєвський циркуляр видано в 1863 році.
   - question: Як текст характеризує твердження «української мови не існує»?

@@ -3,13 +3,13 @@
   items:
   - question: Згідно з текстом, коли Пантелеймон Куліш опублікував роман «Чорна рада»?
     options:
-    - text: 1845
+    - text: "1845"
       correct: false
-    - text: 1857
+    - text: "1857"
       correct: true
-    - text: 1876
+    - text: "1876"
       correct: false
-    - text: 1880
+    - text: "1880"
       correct: false
     explanation: Текст вказує, що «Чорну раду» опубліковано в 1857 році.
   - question: Як текст характеризує головний внесок Куліша в українську культуру?

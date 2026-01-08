@@ -25,13 +25,13 @@
     explanation: Верховна Рада України — єдиний орган законодавчої влади.
   - question: Скільки депутатів входить до Верховної Ради?
     options:
-    - text: 300
+    - text: "300"
       correct: false
-    - text: 400
+    - text: "400"
       correct: false
-    - text: 450
+    - text: "450"
       correct: true
-    - text: 500
+    - text: "500"
       correct: false
     explanation: До Верховної Ради входять 450 депутатів.
   - question: Хто очолює Кабінет Міністрів України?
@@ -1111,13 +1111,13 @@
     explanation: Корупція — протиправне використання службового становища для особистої вигоди.
   - question: Скільки депутатів у Верховній Раді?
     options:
-    - text: 300
+    - text: "300"
       correct: false
-    - text: 400
+    - text: "400"
       correct: false
-    - text: 450
+    - text: "450"
       correct: true
-    - text: 500
+    - text: "500"
       correct: false
     explanation: Конституційний склад Верховної Ради — 450 народних депутатів.
   id: інтеграційний-тест

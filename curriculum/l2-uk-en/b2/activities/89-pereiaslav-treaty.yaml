@@ -135,13 +135,13 @@
     explanation: Текст цитує свідчення про бажання «приручити» козаків.
   - question: Згідно з текстом, коли було знищено Запорозьку Січ?
     options:
-    - text: 1654
+    - text: "1654"
       correct: false
-    - text: 1775
+    - text: "1775"
       correct: true
-    - text: 1667
+    - text: "1667"
       correct: false
-    - text: 1764
+    - text: "1764"
       correct: false
     explanation: Текст згадує 1775 рік як дату знищення Січі.
   - question: Як текст характеризує звернення Хмельницького до Москви?
