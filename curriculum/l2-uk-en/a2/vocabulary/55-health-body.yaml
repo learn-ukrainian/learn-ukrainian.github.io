@@ -57,6 +57,11 @@ items:
   translation: vitamin (adj)
   pos: adj
   gender: f
+- lemma: відмінок
+  ipa: vʲidˈmʲinok
+  translation: grammatical case
+  pos: noun
+  gender: m
 - lemma: головне
   ipa: holoˈu̯nɛ
   translation: mainly
@@ -150,10 +155,25 @@ items:
   translation: minimum
   pos: noun
   gender: m
+- lemma: множина
+  ipa: mnoˈʒɪnɐ
+  translation: plural (grammatical number)
+  pos: noun
+  gender: f
+- lemma: називний
+  ipa: nɐzɪˈu̯nɪj
+  translation: nominative (case)
+  pos: adj
+  gender: m
 - lemma: одужувати
   ipa: oˈduʒuʋɐte
   translation: to recover (imp)
   pos: verb
+- lemma: однина
+  ipa: odˈnɪnɐ
+  translation: singular (grammatical number)
+  pos: noun
+  gender: f
 - lemma: окуліст
   ipa: okuˈlʲist
   translation: optometrist
@@ -192,6 +212,11 @@ items:
   translation: level/equal
   pos: adj
   gender: f
+- lemma: родовий
+  ipa: roˈdou̯ɪj
+  translation: genitive (case)
+  pos: adj
+  gender: m
 - lemma: самопочуття
   ipa: sɐmopot͡ʃuˈtʲːɐ
   translation: well-being
