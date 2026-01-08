@@ -8,6 +8,20 @@
 
 **Proposed Modules:** See `C1-REVIEW-PROPOSAL.md` for the comprehensive arts expansion plan
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Аналіз мистецтва
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: Immersion
+  min_word_count: 2000
+  required_callouts: []
+  description: C1 fine arts modules analyze Ukrainian visual arts
+-->
+
 ---
 
 ## Quick Reference Checklist
@@ -577,10 +591,16 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ---
 
-## Vocabulary Section for Fine Arts Modules
+---
 
-**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
+## Content Structure Note
 
+### Vocabulary & Activities
+**CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
+- `vocabulary/{slug}.yaml`
+- `activities/{slug}.yaml`
+
+The build system will inject these sections at build time.
 **Example `vocabulary/c1-144-opera.yaml`:**
 
 ```yaml

@@ -1,14 +1,16 @@
 # Checkpoint - Navigation
 
+## Огляд
+
 **Вітаємо!** (vitayemo) You've completed Phase A1.2 — Navigation! Now let's check: **can you DO the skills?**
 
-This checkpoint tests five core abilities from Modules 11-19:
+This checkpoint reviews five core abilities from Modules 11-19:
 
-1. **Accusative Case** - Can you use direct objects correctly?
-2. **Locative Case** - Can you say where things are?
-3. **Genitive Case** - Can you express absence and quantities?
-4. **Possessive Pronouns** - Can you match мій/моя/моє to nouns?
-5. **Practical Navigation** - Can you navigate a Ukrainian city and café?
+1. **Accusative Case** - Using direct objects in daily context.
+2. **Locative Case** - Saying where things are (у vs на).
+3. **Genitive Case** - Expressing absence (немає) and quantities.
+4. **Possessive Pronouns** - Matching possessives to noun gender.
+5. **Practical Navigation** - Surviving in the city and café.
 
 > 💡 **Did You Know?**
 >
@@ -55,7 +57,7 @@ What's the accusative form of each noun?
 ### Self-Check
 
 - Do you apply the animate/inanimate distinction for masculine nouns?
-- Does **"Я бачу студент"** sound wrong to you? (It should — animate masculine needs -а!)
+- Does **«Я бачу студент»** sound wrong to you? (It should — animate masculine needs -а!)
 - Can you form accusative for common verbs? (бачити, любити, хотіти, читати)
 
 ---
@@ -82,7 +84,7 @@ What's the accusative form of each noun?
 
 > 🎮 **Gamer's Corner**
 >
-> S.T.A.L.K.E.R. players: "Я **в Зоні**" (I'm in the Zone) vs "Артефакт **на землі**" (The artifact is on the ground). Location vs surface!
+> S.T.A.L.K.E.R. players: «Я **в Зоні**» (I'm in the Zone) vs «Артефакт **на землі**» (The artifact is on the ground). Location vs surface!
 
 ### Practice: Choose the Preposition
 
@@ -106,7 +108,7 @@ Which preposition fits — **у/в** or **на**?
 
 - Do you know the в/у euphony rule? (в before consonants, у before vowels)
 - Can you list fixed expressions with **на**? (на роботі, на концерті, на вулиці)
-- Does **"Я в роботі"** sound wrong? (It should — "на роботі" is correct!)
+- Does **«Я в роботі»** sound wrong? (It should — «на роботі» is correct!)
 
 ---
 
@@ -154,7 +156,7 @@ What's the genitive form?
 ### Self-Check
 
 - Do you automatically use genitive after **немає**?
-- Can you order coffee "без цукру, без молока"?
+- Can you order coffee «без цукру, без молока»?
 - Do you know which masculine nouns take -а vs -у in genitive?
 
 ---
@@ -210,7 +212,7 @@ What's the correct form?
 
 - Can you identify noun gender before choosing the possessive?
 - Do you remember that **його/її** never change?
-- Does **"мій книга"** sound wrong? (It should!)
+- Does **«мій книга»** sound wrong? (It should!)
 
 ---
 
@@ -277,7 +279,7 @@ Fill in the gaps:
 
 > 🌍 **Real World Tip**
 >
-> In Ukrainian cafés, you can say "Можна рахунок?" (Can I have the check?) or just "Рахунок, будь ласка" (The check, please). Tipping ~10% is standard!
+> In Ukrainian cafés, you can say «Можна рахунок?» (Can I have the check?) or just «Рахунок, будь ласка» (The check, please). Tipping ~10% is standard!
 
 ---
 
@@ -299,18 +301,18 @@ Fill in the gaps:
 > 1. Locative — after **у** for location (where she lives)
 > 2. Neuter possessive — **місто** is neuter, so **моє** (not мій which is masculine)
 > 3. Genitive — **без** always requires genitive
-> 4. "У мене не було готівки" — absence structure (I didn't have cash)
+> 4. «У мене не було готівки» — absence structure (I didn't have cash)
 
 ---
 
-# Summary
+# Підсумок
 
 | Skill           | Key Pattern                   | Quick Test                   |
 | --------------- | ----------------------------- | ---------------------------- |
-| **Accusative**  | f: -а→-у, m animate: +а       | "Я бачу книгу" or "книга"?   |
-| **Locative**    | у/в (inside), на (surface/at) | "Я на роботі" or "в роботі"? |
-| **Genitive**    | немає + gen, без + gen        | "Немає часу" or "час"?       |
-| **Possessives** | мій/моя/моє match gender      | "моя книга" or "мій книга"?  |
+| **Accusative**  | f: -а→-у, m animate: +а       | «Я бачу книгу» or «книга»?   |
+| **Locative**    | у/в (inside), на (surface/at) | «Я на роботі» or «в роботі»? |
+| **Genitive**    | немає + gen, без + gen        | «Немає часу» or «час»?       |
+| **Possessives** | мій/моя/моє match gender      | «моя книга» or «мій книга»?  |
 | **Navigation**  | Де? Скільки? Без цукру.       | Can you order at a café?     |
 
 **Ready for A1.3?** If you can do all five skills, you're ready for Modules 21-33: past and future tense, time expressions, weather, health, and holidays!
@@ -319,4 +321,8 @@ Fill in the gaps:
 
 ## Need More Practice?
 
----
+**Missing a skill?**
+
+- Accusative Case → Modules 11-12
+- Genitive Case → Modules 13-14
+- Locative Case → Modules 15-16

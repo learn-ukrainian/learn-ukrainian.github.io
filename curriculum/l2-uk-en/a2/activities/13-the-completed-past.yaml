@@ -29,71 +29,96 @@
 - type: fill-in
   title: Perfective or Imperfective Past
   items:
-  - sentence: Він ___ книгу вчора.
-    answer: прочитав
+  - sentence: Я ___ книгу цілий вечір.
+    answer: читав
     options:
     - читав
     - прочитав
-  - sentence: Вона ___ три години.
-    answer: писала
+    - буду читати
+    - читаю
+  - sentence: Вона нарешті ___ всю книгу.
+    answer: прочитала
     options:
-    - писала
-    - написала
-  - sentence: Я вже ___ це!
-    answer: зробив
+    - прочитала
+    - читала
+    - читає
+    - прочитає
+  - sentence: Ми ___ листа дві години.
+    answer: писали
+    options:
+    - писали
+    - написали
+    - пишемо
+    - напишемо
+  - sentence: Він уже ___ листа братові.
+    answer: написав
+    options:
+    - написав
+    - писав
+    - пише
+    - напише
+  - sentence: Що ти ___ вчора?
+    answer: робив
     options:
     - робив
     - зробив
-  - sentence: Ми ___ щодня.
-    answer: читали
+    - робиш
+    - зробиш
+  - sentence: Ти вже ___ домашнє завдання?
+    answer: зробив
     options:
-    - читали
-    - прочитали
-  - sentence: Він ___ "привіт." (said)
+    - зробив
+    - робив
+    - зробиш
+    - робиш
+  - sentence: Ми довго ___ про це.
+    answer: говорили
+    options:
+    - говорили
+    - сказали
+    - кажемо
+    - скажемо
+  - sentence: Він раптом ___ «так».
     answer: сказав
     options:
-    - говорив
     - сказав
-  - sentence: Вона довго ___.
-    answer: говорила
-    options:
-    - говорила
-    - сказала
-  - sentence: Ми нарешті ___!
-    answer: приїхали
-    options:
-    - їхали
-    - приїхали
-  - sentence: Він ___ весь день.
-    answer: працював
-    options:
-    - працював
-    - попрацював
-  - sentence: Вона ___ роботу. (finished)
-    answer: закінчила
-    options:
-    - закінчувала
-    - закінчила
-  - sentence: Я ___ його часто.
+    - говорив
+    - каже
+    - скаже
+  - sentence: Я ___ цей фільм багато разів.
     answer: бачив
     options:
     - бачив
     - побачив
-  - sentence: Він раптом ___ шум.
-    answer: почув
+    - бачу
+    - побачу
+  - sentence: Вона нарешті ___ знайомого в черзі.
+    answer: побачила
     options:
-    - чув
-    - почув
-  - sentence: Ми ___ листа. (wrote/finished)
+    - побачила
+    - бачила
+    - бачить
+    - побачить
+  - sentence: Ми ___ книгу вчора.
+    answer: купили
+    options:
+    - купили
+    - купували
+    - купуємо
+    - куплять
+  - sentence: Вчора ввечері вони ___ статтю.
     answer: написали
     options:
-    - писали
     - написали
+    - писали
+    - пишуть
+    - напишуть
   id: perfective-or-imperfective-past
 - type: quiz
   title: Aspect in Past Tense
   items:
-  - question: In the Ukrainian sentence "Я прочитав книгу," which grammatical aspectual focus is emphasized?
+  - question: In the Ukrainian sentence «Я прочитав книгу,» which grammatical aspectual
+      focus is emphasized?
     options:
     - text: Completed result
       correct: true
@@ -103,7 +128,8 @@
       correct: false
     - text: Habitual action
       correct: false
-  - question: When a speaker says "Я читав книгу," what is the primary focus of the action?
+  - question: When a speaker says «Я читав книгу,» what is the primary focus of the
+      action?
     options:
     - text: Process
       correct: true
@@ -113,7 +139,8 @@
       correct: false
     - text: Future goal
       correct: false
-  - question: Which of the following Ukrainian words typically signals that the perfective past should be used?
+  - question: Which of the following Ukrainian words typically signals that the perfective
+      past should be used?
     options:
     - text: вже
       correct: true
@@ -123,7 +150,8 @@
       correct: false
     - text: зазвичай
       correct: false
-  - question: In the sentence "Вона писала три години," what is the grammatical aspect of the verb used?
+  - question: In the sentence «Вона писала три години,» what is the grammatical aspect
+      of the verb used?
     options:
     - text: Imperfective
       correct: true
@@ -133,7 +161,8 @@
       correct: false
     - text: Conditional
       correct: false
-  - question: In the sentence "Він написав листа вчора," what is the grammatical aspect of the verb used?
+  - question: In the sentence «Він написав листа вчора,» what is the grammatical aspect
+      of the verb used?
     options:
     - text: Perfective
       correct: true
@@ -143,7 +172,8 @@
       correct: false
     - text: Habitual
       correct: false
-  - question: Which statement best describes the past tense endings for perfective and imperfective verbs in Ukrainian?
+  - question: Which statement best describes the past tense endings for perfective
+      and imperfective verbs in Ukrainian?
     options:
     - text: The same for both aspects
       correct: true
@@ -153,7 +183,8 @@
       correct: false
     - text: Only used for imperfective
       correct: false
-  - question: Which of the following options represents the correct masculine past tense ending for Ukrainian verbs?
+  - question: Which of the following options represents the correct masculine past
+      tense ending for Ukrainian verbs?
     options:
     - text: -в | -∅
       correct: true
@@ -163,7 +194,8 @@
       correct: false
     - text: -ло
       correct: false
-  - question: Which of the following options represents the correct feminine past tense ending for Ukrainian verbs?
+  - question: Which of the following options represents the correct feminine past
+      tense ending for Ukrainian verbs?
     options:
     - text: -ла
       correct: true
@@ -173,7 +205,8 @@
       correct: false
     - text: -ло
       correct: false
-  - question: The common Ukrainian question "Що ти робив?" typically uses which grammatical aspect for inquiry?
+  - question: The common Ukrainian question «Що ти робив?» typically uses which grammatical
+      aspect for inquiry?
     options:
     - text: Imperfective
       correct: true
@@ -183,7 +216,8 @@
       correct: false
     - text: Imperative
       correct: false
-  - question: The common Ukrainian question "Ти зробив це?" typically uses which grammatical aspect for inquiry?
+  - question: The common Ukrainian question «Ти зробив це?» typically uses which grammatical
+      aspect for inquiry?
     options:
     - text: Perfective
       correct: true
@@ -193,7 +227,8 @@
       correct: false
     - text: Habitual
       correct: false
-  - question: Which of the following represents the correct masculine past form of the perfective verb "піти"?
+  - question: Which of the following represents the correct masculine past form of
+      the perfective verb «піти»?
     options:
     - text: пішов
       correct: true
@@ -203,7 +238,8 @@
       correct: false
     - text: пішовла
       correct: false
-  - question: Which of the following represents the correct masculine past form of the perfective verb "прийти"?
+  - question: Which of the following represents the correct masculine past form of
+      the perfective verb «прийти»?
     options:
     - text: прийшов
       correct: true
@@ -222,37 +258,37 @@
     explanation: Correct!
   - statement: Imperfective past can show duration.
     correct: true
-    explanation: Yes! "Він читав три години."
+    explanation: Yes! «Він читав три години.»
   - statement: Past endings are different for each aspect.
     correct: false
     explanation: No, the endings are the same — the stems are different.
-  - statement: '"Вже" usually appears with perfective.'
+  - statement: «Вже» usually appears with perfective.
     correct: true
-    explanation: Correct! "Я вже зробив."
-  - statement: '"Довго" usually appears with imperfective.'
+    explanation: Correct! «Я вже зробив.»
+  - statement: «Довго» usually appears with imperfective.
     correct: true
-    explanation: Yes! "Він довго працював."
-  - statement: '"Писав" is perfective past.'
+    explanation: Yes! «Він довго працював.»
+  - statement: «Писав» is perfective past.
     correct: false
-    explanation: '"Писав" is imperfective. "Написав" is perfective.'
-  - statement: '"Прочитав" means "finished reading."'
+    explanation: «Писав» is imperfective. «Написав» is perfective.
+  - statement: «Прочитав» means "finished reading."
     correct: true
     explanation: Correct!
-  - statement: '"Пішов" is the past of "піти."'
+  - statement: «Пішов» is the past of «піти.»
     correct: true
     explanation: Yes!
   - statement: Repeated actions use perfective.
     correct: false
     explanation: Repeated actions use imperfective.
-  - statement: '"Що ти робив?" asks about activities.'
+  - statement: «Що ти робив?» asks about activities.
     correct: true
     explanation: Yes, using imperfective to ask about process.
-  - statement: '"Нарешті" signals perfective.'
+  - statement: «Нарешті» signals perfective.
     correct: true
-    explanation: Correct! "Нарешті зробив!"
-  - statement: '"Сказав" is imperfective.'
+    explanation: Correct! «Нарешті зробив!»
+  - statement: «Сказав» is imperfective.
     correct: false
-    explanation: '"Сказав" is perfective. "Говорив" is imperfective.'
+    explanation: «Сказав» is perfective. «Говорив» is imperfective.
   id: past-tense-rules
 - type: group-sort
   title: Verb Aspect
@@ -401,54 +437,74 @@
 - type: fill-in
   title: Choose Correct Aspect
   items:
-  - sentence: Він [___] книгу весь вечір.
+  - sentence: Я прочитав книгу три години.
     answer: читав
     options:
     - читав
     - прочитав
-  - sentence: Вона [___] листа і пішла.
+    - буду читати
+    - читаю
+  - sentence: Вона писала листа і закінчила.
     answer: написала
     options:
     - писала
     - написала
-  - sentence: Я вже [___] це!
+    - пише
+    - написали
+  - sentence: Ми прочитаємо кожен день.
+    answer: читаємо
+    options:
+    - читаємо
+    - прочитаємо
+    - читали
+    - будемо читати
+  - sentence: Він говорив «привіт» один раз.
+    answer: сказав
+    options:
+    - сказав
+    - говорив
+    - каже
+    - сказала
+  - sentence: Я бачив її вчора вперше!
+    answer: побачив
+    options:
+    - бачив
+    - побачив
+    - бачу
+    - побачу
+  - sentence: Вона сказала довго.
+    answer: говорила
+    options:
+    - говорила
+    - сказала
+    - говорить
+    - говорять
+  - sentence: Ти вже робив домашнє завдання?
     answer: зробив
     options:
     - робив
     - зробив
-  - sentence: Він [___] часто.
-    answer: приходив
-    options:
-    - приходив
-    - прийшов
-  - sentence: Вона нарешті [___]!
-    answer: зробила
-    options:
-    - робила
-    - зробила
-  - sentence: Що ти [___] учора?
-    answer: робив
-    options:
-    - робив
-    - зробив
-  - sentence: Він [___] книгу і пішов.
-    answer: прочитав
-    options:
-    - читав
-    - прочитав
-  - sentence: Ми [___] цілий день.
+    - робиш
+    - зробиш
+  - sentence: Ми попрацювали цілий вечір.
     answer: працювали
     options:
     - працювали
     - попрацювали
+    - працюємо
+    - будуть працювати
   id: choose-correct-aspect
 - type: cloze
   title: Aspect in Context
-  passage: 'Учора я {купив|купити} рано. Я {читав|читати|прочитав} каву і {закінчив|закінчити} сніданок. Потім я {прочитав|читати} на роботу. На роботі я {написав|писати} цілий день. Увечері я {прийшов|прийти} додому і {дивився|дивитися|подивився} телевізор.
+  passage: 'Учора я {купив|купити} рано. Я {читав|читати|прочитав} каву і {закінчив|закінчити}
+    сніданок. Потім я {прочитав|читати} на роботу. На роботі я {написав|писати} цілий
+    день. Увечері я {прийшов|прийти} додому і {дивився|дивитися|подивився} телевізор.
 
     ---
 
-    Минулого тижня я {купив|купити} нову книгу. Я {читав|читати|прочитав} її три дні. Вчора я нарешті {закінчив|закінчити} читати. Книга була дуже цікава! Після того як я {прочитав|читати} книгу, я {написав|писати} рецензію.'
+    Минулого тижня я {купив|купити} нову книгу. Я {читав|читати|прочитав} її три дні.
+    Вчора я нарешті {закінчив|закінчити} читати. Книга була дуже цікава! Після того
+    як я {прочитав|читати} книгу, я {написав|писати} рецензію.'
   id: aspect-in-context
 - type: cloze
   title: Completed vs Process
@@ -485,7 +541,8 @@
   id: find-perfective-past
   passage: 'Click on PERFECTIVE PAST forms only.
 
-    Учора я *прочитав* книгу. Потім я *написав* листа. Я довго писав, але нарешті *закінчив*.
+    Учора я *прочитав* книгу. Потім я *написав* листа. Я довго писав, але нарешті
+    *закінчив*.
 
     ---
 
@@ -505,3 +562,4 @@
   - закінчив
   - пішов
   - відпочив
+  instruction: Натисніть на правильні слова в тексті.

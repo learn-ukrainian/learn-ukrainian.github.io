@@ -22,6 +22,21 @@ Before submitting your cultural module, verify:
 - [ ] **Cultural accuracy:** All facts verified, no stereotypes
 - [ ] **Regional balance:** Neutral presentation of all Ukrainian regions
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Історія та культура
+  - Сучасність
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: CBI
+  min_word_count: 1500
+  required_callouts: []
+  description: B1 cultural modules use CBI with regional focus
+-->
+
 ---
 
 ## Key Cultural Module Characteristics

@@ -1,14 +1,16 @@
-# Checkpoint: Final Review
+# Checkpoint - Final Review
+
+## Огляд
 
 **Вітаємо!** (vitayemo) You've completed all 33 modules of A1! Now let's check: **can you DO all the skills?**
 
-This checkpoint tests five core abilities from the entire A1 level:
+This checkpoint reviews five core abilities from the entire A1 level:
 
-1. **Reading Cyrillic** - Can you read without transliteration?
-2. **Gender & Agreement** - Can you match pronouns and adjectives to nouns?
-3. **Verb System** - Can you use present, past, and future tense?
-4. **Case System** - Can you apply all four A1 cases?
-5. **Daily Life Skills** - Can you handle real-world situations?
+1. **Reading Cyrillic** - Fluency in reading without help.
+2. **Gender & Agreement** - Matching adjectives and pronouns to nouns.
+3. **Verb System** - Mastery of Present, Past, and Future tenses.
+4. **Case System** - Using Nominative, Accusative, Genitive, and Locative.
+5. **Daily Life Skills** - Surviving at the doctor, café, and in the city.
 
 > 💡 **Did You Know?**
 >
@@ -101,7 +103,7 @@ What's the correct demonstrative and adjective?
 ### Self-Check
 
 - Do you check the **ending** to determine gender?
-- Does **"цей книга"** sound wrong? (It should — книга is feminine!)
+- Does **«цей книга»** sound wrong? (It should — книга is feminine!)
 - Can you match possessives too? (мій/моя/моє)
 
 ---
@@ -149,7 +151,7 @@ What's the correct demonstrative and adjective?
 
 > 🎬 **Pop Culture Moment**
 >
-> The song "Червона рута" uses past tense: "Я **знайшов** її колись..." (I found her once...). Past tense masculine = -в!
+> The song «Червона рута» uses past tense: «Я **знайшов** її колись...» (I found her once...). Past tense masculine = -в!
 
 ---
 
@@ -204,7 +206,7 @@ Identify the case of the underlined word:
   - Accusative: бачити, любити, хотіти + direct object
   - Genitive: немає, без, numbers 5+
   - Locative: у/в, на for location
-- Does **"Я бачу студент"** sound wrong? (It should!)
+- Does **«Я бачу студент»** sound wrong? (It should!)
 
 ---
 
@@ -225,7 +227,7 @@ Identify the case of the underlined word:
 
 - **У мене болить...** = I have ... pain / My ... hurts
 - **Що вас турбує?** = What's troubling you?
-- **Давно?** = For how long? (lit. "Long?")
+- **Давно?** = For how long? (lit. «Long?»)
 
 ### Model: Telling Time
 
@@ -237,7 +239,7 @@ Identify the case of the underlined word:
 **Time Pattern:**
 
 - 1 година, 2-4 години, 5+ годин
-- "О котрій?" (at what time?) → О + locative
+- «О котрій?» (at what time?) → О + locative
 
 ### Practice: Complete the Dialogue
 
@@ -267,7 +269,7 @@ At a café:
 
 > 🌍 **Real World Tip**
 >
-> Ukrainian holidays: Різдво (Christmas) is now December 25, День Незалежності (Independence Day) is August 24. "З Днем народження!" means "Happy Birthday!"
+> Ukrainian holidays: Різдво (Christmas) is now December 25, День Незалежності (Independence Day) is August 24. «З Днем народження!» means «Happy Birthday!»
 
 ---
 
@@ -288,17 +290,23 @@ At a café:
 > [!solution] Перевірити (Check)
 >
 > 1. Neuter — ends in -о, and uses **красиве** (neuter adjective)
-> 2. Locative — **на** + noun for "by" transport/location
+> 2. Locative — **на** + noun for «by» transport/location
 > 3. Past tense — the -в ending shows both past and masculine
-> 4. "немає часу" — genitive after немає
+> 4. «немає часу» — genitive after немає
 > 5. О шостій годині (at six o'clock)
 
 ---
 
-# Summary
+# Підсумок
 
 Ви пройшли весь рівень А1! Тепер ви знаєте основи української мови. (You finished the whole A1 level! Now you know the basics of the Ukrainian language.) Ви вмієте читати та будувати прості речення. Попереду рівень А2! Ви молодці! (You can read and build simple sentences. A2 level is ahead! You are great!)
 
 ---
 
----
+## Need More Practice?
+
+**Missing a skill?**
+
+- Verb Tenses → Modules 21, 22, 25
+- Case System → Modules 11-19
+- Health & Weather → Modules 27-29

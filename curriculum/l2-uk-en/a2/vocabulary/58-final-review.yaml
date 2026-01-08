@@ -87,7 +87,7 @@ items:
   gender: f
 - lemma: заміж
   ipa: /ˈzɑmuʒ/
-  translation: married (to get married)
+  translation: married
   pos: adv
 - lemma: кобзар
   ipa: /kobˈzɑr/
@@ -96,7 +96,7 @@ items:
   gender: m
 - lemma: кпі
   ipa: /kɐpeˈji/
-  translation: KPI (university)
+  translation: KPI
   pos: propn
   gender: f
 - lemma: лондон

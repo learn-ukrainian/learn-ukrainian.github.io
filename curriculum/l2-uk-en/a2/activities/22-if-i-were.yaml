@@ -28,21 +28,26 @@
   id: conditional-forms
 - type: cloze
   title: Conditional Sentences
-  passage: '{Якби|Якщо|Коли|Тому} я мав гроші, я б купив машину. Якби я {мав|маю|матиму|мати} час, я б прочитав. Я {б|бути|будь|буде} хотів відвідати Україну.
+  passage: '{Якби|Якщо|Коли|Тому} я мав гроші, я б купив машину. Якби я {мав|маю|матиму|мати}
+    час, я б прочитав. Я {б|бути|будь|буде} хотів відвідати Україну.
 
 
-    Якби вона {знала|знає|знатиме|знати}, вона б сказала. {Якщо|Якби|Коли|Тому} буде сонячно, підемо на прогулянку. Це {було|буде|є|бути} б чудово!
+    Якби вона {знала|знає|знатиме|знати}, вона б сказала. {Якщо|Якби|Коли|Тому} буде
+    сонячно, підемо на прогулянку. Це {було|буде|є|бути} б чудово!
 
 
-    Чи {могли|можете|можуть|могти} б ви допомогти? Якби я {був|є|буду|бути} на твоєму місці, я б допоміг. Він {купив|купує|купить|купувати} би каву.
+    Чи {могли|можете|можуть|могти} б ви допомогти? Якби я {був|є|буду|бути} на твоєму
+    місці, я б допоміг. Він {купив|купує|купить|купувати} би каву.
 
 
-    Вона {б|буде|була|бути} сказала правду. Я б {хотів|хочу|хочеш|хотіти} подорожувати. Якби я {міг|можу|можеш|могти}, я б допоміг вам.'
+    Вона {б|буде|була|бути} сказала правду. Я б {хотів|хочу|хочеш|хотіти} подорожувати.
+    Якби я {міг|можу|можеш|могти}, я б допоміг вам.'
   id: conditional-sentences
 - type: quiz
   title: Conditional Mood
   items:
-  - question: У реченні "Якщо завтра буде сонце", яка граматична функція сполучника "якщо"?
+  - question: У реченні «Якщо завтра буде сонце», яка граматична функція сполучника
+      «якщо»?
     options:
     - text: Реальна і можлива умова
       correct: true
@@ -52,7 +57,8 @@
       correct: false
     - text: Причинно-наслідковий зв'язок
       correct: false
-  - question: Який сполучник ми використовуємо у фразі "Якби я мав крила" для нереальної умови?
+  - question: Який сполучник ми використовуємо у фразі «Якби я мав крила» для нереальної
+      умови?
     options:
     - text: якби
       correct: true
@@ -62,7 +68,8 @@
       correct: false
     - text: тому що
       correct: false
-  - question: З яких частин складається форма умовного способу "читав би" або "купила б"?
+  - question: З яких частин складається форма умовного способу «читав би» або «купила
+      б»?
     options:
     - text: Частка б/би + минулий час
       correct: true
@@ -82,7 +89,8 @@
       correct: false
     - text: Тому що у мене є гроші
       correct: false
-  - question: Що означає ввічливе прохання "Я б хотів замовити каву" в українській мові?
+  - question: Що означає ввічливе прохання «Я б хотів замовити каву» в українській
+      мові?
     options:
     - text: Я б хотів
       correct: true
@@ -92,7 +100,7 @@
       correct: false
     - text: Я буду хотіти
       correct: false
-  - question: Яка форма дієслова стає базою для виразу "він робив би"?
+  - question: Яка форма дієслова стає базою для виразу «він робив би»?
     options:
     - text: Форма минулого часу
       correct: true
@@ -102,7 +110,8 @@
       correct: false
     - text: Форма наказового способу
       correct: false
-  - question: Який точний переклад української фрази "Це було б надзвичайно чудово для нас"?
+  - question: Який точний переклад української фрази «Це було б надзвичайно чудово
+      для нас»?
     options:
     - text: That would be extraordinarily wonderful
       correct: true
@@ -112,7 +121,7 @@
       correct: false
     - text: That will be wonderful
       correct: false
-  - question: До якої категорії належить питання "Чи могли б ви мені допомогти?"
+  - question: До якої категорії належить питання «Чи могли б ви мені допомогти?»
     options:
     - text: Ввічливе та формальне прохання
       correct: true
@@ -122,7 +131,7 @@
       correct: false
     - text: Питання про здібності
       correct: false
-  - question: Що ми можемо сказати про ситуацію "Якби я був дуже багатим"?
+  - question: Що ми можемо сказати про ситуацію «Якби я був дуже багатим»?
     options:
     - text: Це нереальна гіпотетична умова
       correct: true
@@ -132,7 +141,7 @@
       correct: false
     - text: Це мій план на завтра
       correct: false
-  - question: Де зазвичай стоїть частка "б" у реченні "Я б купив цей будинок"?
+  - question: Де зазвичай стоїть частка «б» у реченні «Я б купив цей будинок»?
     options:
     - text: Перед або після дієслова
       correct: true
@@ -142,7 +151,7 @@
       correct: false
     - text: Тільки після сполучника
       correct: false
-  - question: Яку ситуацію описує речення "Якщо я матиму час, я обов'язково зателефоную"?
+  - question: Яку ситуацію описує речення «Якщо я матиму час, я обов'язково зателефоную»?
     options:
     - text: Реальну умову в майбутньому
       correct: true
@@ -166,37 +175,37 @@
 - type: true-false
   title: Conditional Rules
   items:
-  - statement: '"Якщо" is for real, possible conditions.'
+  - statement: «Якщо» is for real, possible conditions.
     correct: true
     explanation: Correct!
-  - statement: '"Якби" is for unreal, hypothetical conditions.'
+  - statement: «Якби» is for unreal, hypothetical conditions.
     correct: true
     explanation: Yes!
-  - statement: '"Б" and "би" are different particles.'
+  - statement: «Б» and «би» are different particles.
     correct: false
-    explanation: They're the same! "Б" after vowels, "би" after consonants.
+    explanation: They're the same! «Б» after vowels, «би» after consonants.
   - statement: Conditional uses past tense verb forms.
     correct: true
     explanation: Correct!
-  - statement: '"Я б хотів" = I would like.'
+  - statement: «Я б хотів» = I would like.
     correct: true
     explanation: Yes!
-  - statement: '"Якби я був" means "When I was."'
+  - statement: «Якби я був» means "When I was."
     correct: false
-    explanation: '"Якби я був" means "If I were".'
-  - statement: '"Б" makes requests more polite.'
+    explanation: «Якби я був» means "If I were".
+  - statement: «Б» makes requests more polite.
     correct: true
     explanation: Correct!
-  - statement: Position of "б" is flexible.
+  - statement: Position of «б» is flexible.
     correct: true
-    explanation: Yes! "Я б читав" = "Я читав би."
-  - statement: Real conditions use "якби."
+    explanation: Yes! «Я б читав» = «Я читав би.»
+  - statement: Real conditions use «якби.»
     correct: false
-    explanation: Real conditions use "якщо."
-  - statement: '"Це було б чудово" = That would be wonderful.'
+    explanation: Real conditions use «якщо.»
+  - statement: «Це було б чудово» = That would be wonderful.
     correct: true
     explanation: Correct!
-  - statement: '"Чи могли б ви" is a polite request.'
+  - statement: «Чи могли б ви» is a polite request.
     correct: true
     explanation: Yes!
   - statement: Conditional meaning is past.
@@ -382,47 +391,64 @@
     options:
     - Якби
     - Якщо
+    - Коли
+    - Тому
   - sentence: '[___] буде сонячно, підемо на прогулянку.'
     answer: Якщо
     options:
     - Якщо
     - Якби
+    - Коли
+    - Хоча
   - sentence: Я [___] хотів поїхати до Франції.
     answer: б
     options:
     - б
     - був
+    - би
+    - буде
   - sentence: Він [___] би допомогти, якби знав.
     answer: міг
     options:
     - міг
     - може
+    - буде
+    - має
   - sentence: Це [___] б чудово!
     answer: було
     options:
     - було
     - буде
+    - є
+    - бути
   - sentence: Чи [___] б ви сказати мені правду?
     answer: могли
     options:
     - могли
     - можете
+    - хочете
+    - маєте
   - sentence: '[___] я знав раніше, я б прийшов.'
     answer: Якби
     options:
     - Якби
     - Якщо
+    - Коли
+    - Бо
   - sentence: Вона [___] хотіла поїхати в Україну.
     answer: б
     options:
     - б
     - буде
+    - була
+    - би
   id: real-or-unreal
 - type: cloze
   title: Dreams and Wishes
   passage: '— Що ти б зробив, {якби|якщо} виграв у лотерею?
 
-    — Ой, {якби|якщо} я виграв великі гроші, я {б|буде} відразу купив великий будинок біля моря.
+    — Ой, {якби|якщо} я виграв великі гроші, я {б|буде} відразу купив великий будинок
+    біля моря.
 
     — Я теж {б|би} хотів жити там, де сонце. Це {було|є} б дуже чудово!
 
@@ -463,6 +489,7 @@
   - Якби
   - я був
   - я б сказав
+  instruction: Натисніть на правильні слова в тексті.
 - type: translate
   title: Conditional Translation
   items:

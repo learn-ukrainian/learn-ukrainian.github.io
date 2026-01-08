@@ -6,6 +6,20 @@
 
 **Related Issue:** [#298](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/298)
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Термінологія
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: TTT
+  min_word_count: 1200
+  required_callouts: []
+  description: B1 metalanguage teaches linguistic terminology
+-->
+
 ---
 
 ## What Makes Metalanguage Modules Different

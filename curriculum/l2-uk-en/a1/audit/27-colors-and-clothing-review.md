@@ -2,8 +2,19 @@
 **Phase:** A1.3 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Overall Status:** ✅ PASS
 
+## TEMPLATE COMPLIANCE
+- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Grammar' is empty
+  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a1-module-template'
+  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a1-module-template.md
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 2 violations (minor)
+
 ## Gates
-- **Words:** ✅ 806/750
+- **Words:** ✅ 825/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -15,14 +26,8 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 38.2% (target 35-55% (M27))
+- **Immersion:** 🇺🇦 37.3% (target 35-55% (M27))
 - **Grammar:** ⏳ Pending validation
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -36,3 +41,4 @@
 | **Examples in Context** | ✅ | 189 | Included in Core |
 | **Dialogues** | ✅ | 325 | Included in Core |
 | **Summary** | ✅ | 48 | Included in Core |
+| **Need More Practice?** | ⚪️ | 19 | Skipped |

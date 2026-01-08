@@ -1,49 +1,99 @@
-# Summary
+# In Order To... | Expressing Purpose and Intent
 
-## Warm-up
+## Introduction
 
-Why are you learning Ukrainian? To talk to friends? To read poetry? To travel to Kyiv?
-In this module, we will learn how to explain "why" we do things using purpose clauses. The key word is **щоб** (in order to / so that). Mastering this structure allows you to express your motivations, goals, and even your wishes for other people.
+Why do we do things? To learn, to help, to live.
+In Ukrainian, we use the magic word **щоб** (in order to).
+This word is special because it works differently depending on *who* is doing the action.
 
-**In this lesson, we will cover:**
-- **Same Subject:** щоб + Infinitive (I came to help).
-- **Different Subjects:** щоб + Past Tense (I want you to come).
-- **Purpose vocabulary:** Купувати, заробляти, вчитися.
-
-> 💡 **The Goal-Oriented Language**
-> In Ukrainian, **щоб** is the bridge between an action and its goal. It is one of the most powerful connectors for moving beyond simple sentences and building complex, logical narratives.
-
----
+You will learn:
+- How to say "in order to" using **щоб + Infinitive**.
+- How to say "I want you to..." using **щоб + Past Tense**.
+- Why Ukrainian uses the "past" for wishes.
 
 ## Presentation
 
-## 1. Same Subject: In order to...
+Let's discover how to express purpose and desire.
 
-When the person doing the action and the person for whom the purpose is intended are the same, we use **щоб** followed by the **infinitive** form of the verb.
+### 1. Same Subject: Щоб + Infinitive
 
-- Я прийшов, **щоб допомогти**. (I came [in order] to help.)
-- Ми вчимося, **щоб знати** мову. (We study to know the language.)
-- Він працює, **щоб заробляти** гроші. (He works to earn money.)
+When **I** do something so that **I** can get a result.
 
-## 2. Different Subjects: So that someone else...
+**Structure:**
+[Subject A] + [Action] + , + **щоб** + [Infinitive]
 
-This is a unique feature of Ukrainian. If the subjects are different (I want YOU to do something), we use **щоб** followed by the **past tense** form of the verb. Even though the meaning might be in the future or present, the grammar requires the past form.
+- Я вчуся, **щоб знати** більше. (I study *in order to know* more.)
+- Ми прийшли, **щоб допомогти**. (We came *to help*.)
+- Він працює, **щоб мати** гроші. (He works *to have* money.)
 
-- Я хочу, **щоб ти прийшов**. (I want you to come; Literal: I want so-that you came.)
-- Вона попросила, **щоб ми мовчали**. (She asked that we be silent.)
-- Батьки хочуть, **щоб діти були** щасливі. (Parents want children to be happy.)
+### 2. Different Subjects: Щоб + Past Tense
 
-> [!important] Match the Gender!
-> Because we use the past tense form in different-subject clauses, the verb must agree in gender and number with the second subject.
-> *Я хочу, щоб вона **сказала** правду.* (I want her to tell the truth.)
+When **I** want **YOU** to do something.
+In English, you say "I want you *to go*".
+In Ukrainian, you say "I want that you *went*".
 
-Often, the best way to understand **щоб** is to look at how it connects different parts of a sentence. In Ukrainian, we don't just say "I want you to help," which uses a direct object and an infinitive. Instead, we create a secondary clause: "I want, so-that you helped." This structure highlights the importance of the second person's agency and makes the request sound more polite and indirect.
+**Structure:**
+[Subject A] + [Want/Ask] + , + **щоб** + [Subject B] + [Past Tense Verb]
 
-In daily life, you will hear **щоб** everywhere. At the supermarket (**магазин**), people buy food to cook dinner. At the university (**університет**), students study to pass exams. In the office, managers set goals so that the team achieves success. Each of these situations requires the correct form of **щоб** to be grammatically precise.
+- Я хочу, **щоб ти прийшов**. (I want you to come.)
+- Мама хоче, **щоб ми поїли**. (Mom wants us to eat.)
+- Лікар сказав, **щоб я відпочивав**. (Doctor said for me to rest.)
 
-## 3. Purpose vs. Result
+### Чому минулий час?
 
-Be careful not to confuse **щоб** (purpose) with **тому що** (reason) or **так що** (so/result).
-- Я пішов у магазин, **тому що** був голодний. (Reason)
-- Я пішов у магазин, **щоб** купити хліб. (Purpose)
+Це «умовний спосіб» (Subjunctive mood). Він показує бажання, а не реальність.
+Форма виглядає як минулий час (ходив, робив), але означає дію, яку ми *хочемо*.
 
+> [!tip] ⚡ Quick Check
+> - One person? -> Infinitive. (Я йду, щоб **спати**).
+> - Two people? -> Past Tense. (Я йду, щоб ти **спав**).
+
+## Practice
+
+Let's practice choosing the correct form of the verb.
+
+### Choose the Form
+
+1. Я дзвоню, щоб ___ (запитати / запитав).
+   -> Я дзвоню, щоб **запитати**. (I call to ask - Same subject)
+
+2. Я хочу, щоб ти ___ (подзвонити / подзвонив).
+   -> Я хочу, щоб ти **подзвонив**. (I want you to call - Different subject)
+
+3. Вона пішла в магазин, щоб ___ (купити / купила) хліб.
+   -> Вона пішла в магазин, щоб **купити** хліб.
+
+4. Ми хочемо, щоб війна ___ (закінчитися / закінчилася).
+   -> Ми хочемо, щоб війна **закінчилася**.
+
+## Dialogues
+
+### Dialogue 1: Study Plans
+
+**Олег:** Чому ти вчиш англійську?
+**Анна:** Я вчу її, **щоб отримати** нову роботу.
+**Олег:** А я вчу, **щоб подорожувати**.
+**Анна:** Це чудова мета!
+
+### Dialogue 2: Parental Advice
+
+**Мама:** Сину, я хочу, **щоб ти прибрав** у кімнаті.
+**Син:** Але я хочу грати!
+**Мама:** Спочатку прибирання. Я роблю це, **щоб ти був** дисциплінованим.
+**Син:** Добре, мамо. Я приберу, **щоб ти не сердилася**.
+
+# Підсумок
+
+Ви вивчили найважливішу структуру бажання! (You learned the most important desire structure!)
+
+Пам'ятайте правило:
+- **Сам** (Myself) -> **Інфінітив** (щоб робити).
+- **Інший** (Another) -> **Минулий час** (щоб робив).
+
+Тепер ви можете пояснити свої цілі і просити людей про щось!
+
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

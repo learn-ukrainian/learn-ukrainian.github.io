@@ -2,21 +2,21 @@
   title: Zone Identification
   pairs:
   - left: одна книга
-    right: Zone 1 (Nominative Singular)
+    right: Zone 1
   - left: три книги
-    right: Zone 2 (Genitive Singular)
+    right: Zone 2
   - left: сім книг
-    right: Zone 3 (Genitive Plural)
+    right: Zone 3
   - left: одинадцять книг
-    right: Zone 3 (Genitive Plural)
+    right: Zone 3
   - left: двадцять одна книга
-    right: Zone 1 (Nominative Singular)
+    right: Zone 1
   - left: двадцять чотири книги
-    right: Zone 2 (Genitive Singular)
+    right: Zone 2
   - left: тридцять книг
-    right: Zone 3 (Genitive Plural)
+    right: Zone 3
   - left: тридцять три книги
-    right: Zone 2 (Genitive Singular)
+    right: Zone 2
   - left: два
     right: Gen. sing.
   - left: шість
@@ -31,66 +31,76 @@
     - студент
     - студенти
     - студентів
+    - студенту
   - sentence: два [___]
     answer: студенти
     options:
     - студенти
     - студент
     - студентів
+    - студента
   - sentence: п'ять [___]
     answer: студентів
     options:
     - студентів
     - студенти
     - студент
+    - студента
   - sentence: одна [___]
     answer: книга
     options:
     - книга
     - книги
     - книг
+    - книгою
   - sentence: три [___]
     answer: книги
     options:
     - книги
     - книга
     - книг
+    - книгою
   - sentence: десять [___]
     answer: книг
     options:
     - книг
     - книги
     - книга
-  - sentence: Два ___ (2 + nominative singular)
+    - книгами
+  - sentence: Два ___ (2 + nominative plural form)
     answer: столи
     options:
     - столи
     - стола
     - столів
-  - sentence: П'ять ___ (5 + genitive plural)
+    - стіл
+  - sentence: П'ять ___ (5 + genitive plural form)
     answer: столів
     options:
     - столів
     - столи
     - стола
+    - стіл
   - sentence: дві [___]
     answer: вікна
     options:
     - вікна
     - вікно
     - вікон
+    - вікном
   - sentence: шість [___]
     answer: вікон
     options:
     - вікон
     - вікна
     - вікно
+    - вікнами
   id: complete-the-phrase
 - type: quiz
   title: Agreement Rules
   items:
   - question: Which grammatical case is used for a noun that immediately follows the
-      numeral "один" (one)?
+      numeral «один» (one)?
     options:
     - text: Nominative Singular (Називний однини)
       correct: true
@@ -125,26 +135,26 @@
   - question: In which of the following situations should you use the specific feminine
       form of the number "two" (дві)?
     options:
-    - text: When counting feminine nouns like "книга" or "студентка"
+    - text: When counting feminine nouns like «книга» or «студентка»
       correct: true
-    - text: When counting masculine nouns like "студент" or "стіл"
+    - text: When counting masculine nouns like «студент» or «стіл»
       correct: false
-    - text: When counting neuter nouns like "вікно" or "яблуко"
+    - text: When counting neuter nouns like «вікно» or «яблуко»
       correct: false
     - text: In all counting situations regardless of the noun's gender
       correct: false
-  - question: Which Zone rules apply to the compound number "двадцять один" (21) when
+  - question: Which Zone rules apply to the compound number «двадцять один» (21) when
       determining noun agreement?
     options:
     - text: Zone 1 (Agreement based on the last digit 1)
       correct: true
-    - text: Zone 2 (Agreement based on the total value)
+    - text: Zone 2
       correct: false
-    - text: Zone 3 (Agreement based on the first word)
+    - text: Zone 3
       correct: false
     - text: Special exceptions for all compound numbers
       correct: false
-  - question: Why does the number "п'ятнадцять" (15) always require the Genitive Plural
+  - question: Why does the number «п'ятнадцять» (15) always require the Genitive Plural
       form of the following noun?
     options:
     - text: Because it is a prime number in the Ukrainian system
@@ -155,7 +165,7 @@
       correct: true
     - text: Because it is a compound historical exception
       correct: false
-  - question: How would you correctly classify the phrase "чотири книги" within the
+  - question: How would you correctly classify the phrase «чотири книги» within the
       Ukrainian grammatical zone system?
     options:
     - text: 'Zone 1: Nominative Singular'
@@ -167,7 +177,7 @@
     - text: 'Zone 4: Dative Singular'
       correct: false
   - question: Which of the following lists correctly identifies the genders that use
-      the numeral form "два" (two)?
+      the numeral form «два» (two)?
     options:
     - text: Masculine and Neuter genders only
       correct: true
@@ -180,26 +190,23 @@
   id: agreement-rules
 - type: cloze
   title: Shopping at the Market
-  passage: '— Дайте, будь ласка, один {кілограм|кілограм → кілограм|кілограми} яблук.
+  passage: '— Дайте, будь ласка, один {кілограм|кілограми|кілограма|кілограмів} яблук.
 
     — Ось, візьміть. Що ще бажаєте купити?
 
-    — Будь ласка, два {кілограми|кілограм → кілограми|кілограм} картоплі і три {кілограми|кілограм
-    → кілограми} цибулі.
+    — Будь ласка, два {кілограми|кілограм|кілограми|кілограмів} картоплі і три {кілограми|кілограм|кілограмі|кілограмів} цибулі.
 
     — Добре. А помідори будете брати сьогодні?
 
-    — Так, дайте п''ять {помідорів|помідор → помідорів|помідори} і шість {огірків|огірок
-    → огірків|огірки}.
+    — Так, дайте п''ять {помідорів|помідори|помідор|помідорами} і шість {огірків|огірки|огірок|огірками}.
 
-    — А фрукти? У нас є чотири {груші|груша → груші|груша} і сім {яблук|яблуко → яблук|яблука}.
+    — А фрукти? У нас є чотири {груші|груша|груш|грушею} і сім {яблук|яблука|яблуко|яблуками}.
 
-    — Одна {диня|диня → диня|дині} і дві {груші|груша → груші|груша}, будь ласка.
+    — Одна {диня|дині|динь|динею} і дві {груші|груша|груш|грушами}, будь ласка.
 
-    — Маєте десять {гривень|гривня → гривень|гривні} гривень решти від ста?
+    — Маєте десять {гривень|гривні|гривня|гривнею} решти від ста?
 
-    — Ні, у мене тільки двадцять {одна|одна гривня → одна|одну} гривень і два {золоті|золота
-    монета → золоті|золотих} монети.'
+    — Ні, у мене тільки двадцять {одна|одну|однієї|одною} гривня і два {золоті|золотих|золота|золотою} монети.'
   id: shopping-at-the-market
 - type: unjumble
   title: Counting Sentences
@@ -353,66 +360,78 @@
 - type: error-correction
   title: Wrong Agreement
   items:
-  - sentence: Я маю **п'ять книги**.
+  - sentence: Я маю п'ять книги.
     error: книги
     answer: книг
     options:
     - книг
     - книги
+    - книга
+    - книгою
     explanation: After 5+ → Genitive Plural (книг).
-  - sentence: У класі **два студент**.
+  - sentence: У класі два студент.
     error: студент
     answer: студенти
     options:
     - студенти
     - студент
-    explanation: After 2-4 → Genitive Singular (студенти).
-  - sentence: Вона купила **дві яблука**.
+    - студентів
+    - студентам
+    explanation: After 2-4 → Nominative Plural (студенти).
+  - sentence: Вона купила дві яблука.
     error: дві
     answer: два
     options:
     - два
     - дві
-    explanation: '"Яблуко" is neuter → два (not дві).'
-  - sentence: Мені **двадцять один років**.
+    - двох
+    - двома
+    explanation: «Яблуко» is neuter → два (not дві).
+  - sentence: Мені двадцять один років.
     error: років
     answer: рік
     options:
     - рік
     - років
+    - роки
+    - року
     explanation: Ends in 1 → Zone 1 → Nominative Singular (рік).
-  - sentence: У мене **три книга**.
+  - sentence: У мене три книга.
     error: книга
     answer: книги
     options:
     - книги
     - книга
-    explanation: After 2-4 → Genitive Singular (книги).
-  - sentence: Тут є **одинадцять студенти**.
+    - книг
+    - книгою
+    explanation: After 2-4 → Nominative Plural (книги).
+  - sentence: Тут є одинадцять студенти.
     error: студенти
     answer: студентів
     options:
     - студентів
     - студенти
+    - студент
+    - студента
     explanation: 11-19 always Zone 3 → Genitive Plural.
   id: wrong-agreement
 - type: group-sort
   title: Zone Classification
   groups:
-  - name: Zone 1 (Nominative Singular)
+  - name: Zone 1
     items:
     - двадцять один
     - одна диня
     - п'ятдесят один
     - сто один
-  - name: Zone 2 (Genitive Singular)
+  - name: Zone 2
     items:
     - три книги
     - два студенти
     - чотири вікна
     - двадцять дві
     - тридцять чотири
-  - name: Zone 3 (Genitive Plural)
+  - name: Zone 3
     items:
     - п'ять книг
     - одинадцять років
@@ -447,29 +466,22 @@
 - type: cloze
   title: The Modern Bookstore
   passage: 'Петро зайшов у книгарню. Сьогодні він хоче купити багато подарунків. Для
-    мами він вибрав одну {книгу|книга → книгу|книги} про сад. Для батька він знайшов
-    дві цікаві {книги|книга → книги|книг} про історію Києва. Його сестра любить романи,
-    тому він купив три {романи|роман → романи|романів}. Молодший брат просив чотири
-    нові {комікси|комікс → комікси|коміксів}. А собі Петро вибрав п''ять {детективів|детектив
-    → детективів|детективи}. Коли він підійшов до каси, продавець сказав: "Ви берете
-    багато речей! У вас одинадцять {журналів|журнал → журналів|журнали} і шість {газет|газета
-    → газет|газети}. Всього у вас є сімнадцять {подарунків|подарунок → подарунків|подарунки}.
-    Це коштує дев''ятсот {гривень|гривня → гривень|гривні}. Ви маєте десять {відсотків|відсоток
-    → відсотків|відсотки} гривень знижки?" Петро відповів: "Ні, але я маю двадцять
-    {одна|одна гривня → одна|одну} одну гривню в гаманці і одну сто {купюру|купюра
-    → купюру|купюри} гривень".'
+    мами він вибрав одну {книгу|книга|книги|книг} про сад. Для батька він знайшов
+    дві цікаві {книги|книга|книг|книгою} про історію Києва. Його сестра любить романи,
+    тому він купив три {романи|роман|романів|романом}. Молодший брат просив чотири
+    нові {комікси|комікс|коміксів|коміксом}. А собі Петро вибрав п''ять {детективів|детектив|детективи|детективів}. Коли він підійшов до каси, продавець сказав: «Ви берете
+    багато речей! У вас одинадцять {журналів|журнал|журнали|журналом} і шість {газет|газета|газети|газетами}. Всього у вас є сімнадцять {подарунків|подарунок|подарунки|подарунком}.
+    Це коштує дев''ятсот {гривень|гривня|гривні|гривнею}. Ви маєте десять {відсотків|відсоток|відсотки|відсотком} гривень знижки?» Петро відповів: «Ні, але я маю двадцять
+    {одну|одна|одну|одна гривня} одну гривню в гаманці і одну сто {купюру|купюра|купюри|купюрою} гривень».'
   id: the-modern-bookstore
 - type: cloze
   title: Age Expressions
-  passage: 'Мені зараз двадцять один {рік|рік → рік|роки}. Моєму братові виповнилося
-    двадцять два {роки|рік → роки|років}. Нашій сестрі вже двадцять п''ять {років|рік
-    → років|роки}. Моїй мамі скоро буде п''ятдесят один {рік|рік → рік|років}. А татові
-    вже п''ятдесят чотири {роки|рік → роки|років}. Ми знаємо одну дитину, якій тільки
-    один {рік|рік → рік|років}. Її друзям по три {роки|рік → роки|років}. У школі
-    вчаться діти, яким по десять {років|рік → років|роки}. Директору школи шістдесят
-    один {рік|рік → рік|роки}. Його колезі шістдесят три {роки|рік → роки|років}.
-    Вони працюють разом уже тридцять {тридцять|число → тридцять|тридцяти} років. А
-    університет вони закінчили сорок один {рік|рік → рік|років} тому.
-
-    ---'
+  passage: 'Мені зараз двадцять один {рік|роки|років|роком}. Моєму братові виповнилося
+    двадцять два {роки|рік|років|роком}. Нашій сестрі вже двадцять п''ять {років|рік|роки|роком}. Моїй мамі скоро буде п''ятдесят один {рік|роки|років|rokom}. А татові
+    вже п''ятдесят чотири {роки|рік|років|роком}. Ми знаємо одну дитину, якій тільки
+    один {рік|роки|років|роком}. Її друзям по три {роки|рік|років|роком}. У школі
+    вчаться діти, яким по десять {років|рік|роки|роком}. Директору школи шістдесят
+    один {рік|роки|років|роком}. Його колезі шістдесят три {роки|рік|років|роком}.
+    Вони працюють разом уже тридцять {тридцять|тридцяти|тридцятьом|тридцятьма} років. А
+    університет вони закінчили сорок один {рік|роки|років|роком} тому.'
   id: age-expressions

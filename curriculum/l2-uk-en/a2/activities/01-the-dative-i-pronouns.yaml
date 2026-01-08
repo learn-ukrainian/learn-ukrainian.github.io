@@ -247,7 +247,7 @@
       correct: true
     - text: Нас потрібна допомога.
       correct: false
-    explanation: '"We" in Dative is "нам," and допомога is feminine, so потрібна.'
+    explanation: '"We" in Dative is «нам,» and допомога is feminine, so потрібна.'
   - question: To express that "They find it interesting" in Ukrainian, which sentence
       captures this meaning correctly?
     options:
@@ -260,7 +260,7 @@
     - text: Вони цікаві.
       correct: false
     explanation: Emotional states use Dative pronoun + adverb.
-  - question: When a Ukrainian speaker says "Мені здається", what meaning are they
+  - question: When a Ukrainian speaker says «Мені здається», what meaning are they
       trying to express?
     options:
     - text: I am seen
@@ -272,7 +272,7 @@
     - text: I am being
       correct: false
     explanation: «здаватися» вимагає давального відмінка.
-  - question: If someone asks you "Тобі добре?" in Ukrainian, what are they inquiring
+  - question: If someone asks you «Тобі добре?» in Ukrainian, what are they inquiring
       about?
     options:
     - text: You are good?
@@ -308,7 +308,7 @@
     - text: вонам
       correct: false
     explanation: «їм» — давальна форма від «вони».
-  - question: When a Ukrainian speaker says "Дякую тобі", what are they expressing
+  - question: When a Ukrainian speaker says «Дякую тобі», what are they expressing
       to the listener?
     options:
     - text: I thank you
@@ -320,7 +320,7 @@
     - text: Your thanks
       correct: false
     explanation: 'дякувати takes Dative: тобі = to you.'
-  - question: In the phrase "Вам каву?", what is the speaker doing or offering to
+  - question: In the phrase «Вам каву?», what is the speaker doing or offering to
       the recipient?
     options:
     - text: Asking if you have coffee

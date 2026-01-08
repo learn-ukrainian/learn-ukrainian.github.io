@@ -216,6 +216,22 @@ items:
     translation: formula
     pos: noun
     gender: f
+  - lemma: родовий
+    translation: genitive
+    pos: adj
+  - lemma: знахідний
+    translation: accusative
+    pos: adj
+  - lemma: орудний
+    translation: instrumental
+    pos: adj
+  - lemma: давальний
+    translation: dative
+    pos: adj
+  - lemma: відмінок
+    translation: case
+    pos: noun
+    gender: m
   - lemma: індекс
     ipa: ˈindeks
     translation: zip code; index

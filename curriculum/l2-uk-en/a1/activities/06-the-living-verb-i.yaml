@@ -33,7 +33,7 @@
     - text: читають
       correct: false
     explanation: я читаю = I read
-  - question: What does "ти пишеш" mean?
+  - question: What does «ти пишеш» mean?
     options:
     - text: I write
       correct: false
@@ -55,7 +55,7 @@
     - text: -ємо
       correct: true
     explanation: -ємо is the "we" ending (ми читаємо)
-  - question: What is the infinitive of "працюю"?
+  - question: What is the infinitive of «працюю»?
     options:
     - text: працюти
       correct: false
@@ -77,7 +77,7 @@
     - text: чекати
       correct: false
     explanation: відпочивати = to rest
-  - question: What does the phrase "Вони читають" mean?
+  - question: What does the phrase «Вони читають» mean?
     options:
     - text: I read
       correct: false
@@ -88,7 +88,7 @@
     - text: they read
       correct: true
     explanation: вони читають = they read
-  - question: Which form is used for "він" (he)?
+  - question: Which form is used for «він» (he)?
     options:
     - text: читаю
       correct: false
@@ -99,7 +99,7 @@
     - text: читають
       correct: false
     explanation: він читає = he reads
-  - question: What does "ми граємо" mean?
+  - question: What does «ми граємо» mean?
     options:
     - text: I play
       correct: false
@@ -121,7 +121,7 @@
     - text: малювати
       correct: false
     explanation: співати = to sing
-  - question: What is the meaning of "Ви знаєте"?
+  - question: What is the meaning of «Ви знаєте»?
     options:
     - text: I know
       correct: false
@@ -132,7 +132,7 @@
     - text: they know
       correct: false
     explanation: ви знаєте = you know
-  - question: Which ending is used for "ти" (you, informal)?
+  - question: Which ending is used for «ти» (you, informal)?
     options:
     - text: -ю
       correct: false
@@ -143,7 +143,7 @@
     - text: -ють
       correct: false
     explanation: -єш is the "you" ending (ти читаєш)
-  - question: What is the stem of "писати"?
+  - question: What is the stem of «писати»?
     options:
     - text: писа-
       correct: false
@@ -271,22 +271,22 @@
   - statement: First Conjugation verbs end in -ати or -яти in the infinitive.
     correct: true
     explanation: Correct! читати, писати, працювати all end in -ати.
-  - statement: The ending -ю is used for "ти" (you).
+  - statement: The ending -ю is used for «ти» (you).
     correct: false
-    explanation: Incorrect! -ю is for "я" (I). "Ти" uses -єш.
+    explanation: Incorrect! -ю is for «я» (I). «Ти» uses -єш.
   - statement: You can often drop the pronoun in Ukrainian because the verb ending
       shows who's acting.
     correct: true
-    explanation: Correct! "Читаю" = "I read" — the ending -ю tells you it's "я".
-  - statement: '"Писати" keeps the stem "писа-" in all forms.'
+    explanation: Correct! «Читаю» = "I read" — the ending -ю tells you it's «я».
+  - statement: '«Писати» keeps the stem «писа-» in all forms.'
     correct: false
-    explanation: 'Incorrect! It changes to "пиш-": пишу, пишеш, пише.'
-  - statement: The ending -ють is used for "вони" (they).
+    explanation: 'Incorrect! It changes to «пиш-»: пишу, пишеш, пише.'
+  - statement: The ending -ють is used for «вони» (they).
     correct: true
     explanation: Correct! вони читають, працюють, гуляють.
-  - statement: '"Ми читаєте" is the correct form for "we read".'
+  - statement: '«Ми читаєте» is the correct form for "we read".'
     correct: false
-    explanation: Incorrect! "Ми читаємо" (not -єте). -єте is for "ви".
+    explanation: Incorrect! «Ми читаємо» (not -єте). -єте is for «ви».
   - statement: Verbs like читати, писати, працювати all follow the same conjugation
       pattern.
     correct: true
@@ -295,14 +295,14 @@
     correct: false
     explanation: 'Incorrect! -ить is Second Conjugation. First Conjugation uses -є:
       він читає.'
-  - statement: '"Снідати", "обідати", "вечеряти" are all First Conjugation verbs related
+  - statement: '«Снідати», «обідати», «вечеряти» are all First Conjugation verbs related
       to meals.'
     correct: true
     explanation: Correct! All three end in -ати and mean breakfast, lunch, dinner.
-  - statement: The stem of "грати" is "гра-".
+  - statement: The stem of «грати» is «гра-».
     correct: false
-    explanation: Correct! грати → граю, граєш, грає. The stem is "гра-".
-  - statement: '"Співати" means "to sing".'
+    explanation: Correct! грати → граю, граєш, грає. The stem is «гра-».
+  - statement: '«Співати» means "to sing".'
     correct: true
     explanation: Correct! співати = to sing.
   - statement: You must always use a pronoun with Ukrainian verbs.

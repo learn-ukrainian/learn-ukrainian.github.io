@@ -1,6 +1,6 @@
 # Nature & Weather
 
-## Warm-up
+## Introduction
 
 Ukraine has beautiful nature! From the Carpathian Mountains in the west to the Black Sea coast in the south, Ukraine offers diverse landscapes and changing seasons.
 
@@ -25,9 +25,9 @@ Ukrainian landscapes are diverse and beautiful. Here is the essential vocabulary
 | пляж      | beach    | Пляж гарний.           |
 | поле      | field    | Поле жовте влітку.     |
 
-> [!tip] Місцевий відмінок з назвами місць (Locative Case with Places)
+> [!tip] Місцевий відмінок з назвами місць
 > When describing being IN or AT a place, use the locative case:
-> **в лісі** (in the forest), **на морі** (at the sea), **в горах** (in the mountains)
+> **в лісі**, **на морі**, **в горах**
 > Note: «на морі» is used when referring to vacation by the coast, while «в морі» means underwater.
 > The locative case is essential for describing location in Ukrainian. It is always used after prepositions «в/у» and «на».
 
@@ -47,11 +47,11 @@ Weather vocabulary is essential for daily conversations. Ukrainian uses adverbs 
 | гроза     | thunderstorm | Буде гроза ввечері.       |
 | туман     | fog          | Вранці туман.             |
 
-> [!cultural] Вислови про погоду (Weather Expressions)
+> [!cultural] Вислови про погоду
 > Ukrainians often ask: «Яка сьогодні погода?» (What's the weather today?)
 > The answer typically starts with «Сьогодні...» (Today...)
 > For example: «Сьогодні сонячно» (It's sunny today) or «Сьогодні йде дощ» (It's raining today).
-> With precipitation, the verb «йти» (to go) is used: «Іде дощ» (It's raining) or «Іде сніг» (It's snowing).
+> With precipitation, the verb «йти» is used: «Іде дощ» (It's raining) or «Іде сніг» (It's snowing).
 
 Weather in Ukraine varies significantly throughout the year. Summer temperatures can reach 35 degrees Celsius in the south, while winter temperatures often drop to minus 20 in the north. Spring and autumn are mild and pleasant, making them ideal times for outdoor activities and sightseeing.
 
@@ -114,9 +114,9 @@ Each season in Ukraine has its own beauty and character:
 Сім'я Петренків щаслива. Вони провели чудовий день на природі.
 
 > [!tip] Nature Vocabulary and Outdoor Activities
-> "Природа" means nature in general.
-> "На природі" means outdoors or in nature.
-> Ukrainians often go "на природу" for picnics and relaxation.
+> «Природа» means nature in general.
+> «На природі» means outdoors or in nature.
+> Ukrainians often go «на природу» for picnics and relaxation.
 > This tradition of spending time outdoors helps families connect with nature and each other.
 
 ---
@@ -184,16 +184,14 @@ Each season in Ukraine has its own beauty and character:
 Обговорюючи погоду українською мовою, ці вислови допоможуть вам спілкуватися природно:
 
 - **Яка гарна погода!** = What nice weather! Use this exclamation on beautiful days.
-- **Надворі холодно.** = It's cold outside. Надворі literally means "outdoors".
+- **Надворі холодно.** = It's cold outside. Надворі literally means «outdoors».
 - **Буде гроза.** = There will be a thunderstorm. Use this to warn about incoming storms.
-- **Падає сніг.** = It's snowing. Note that Ukrainian uses "падає" (falls) with snow.
-- **Дує вітер.** = The wind is blowing. The verb "дути" specifically means "to blow".
+- **Падає сніг.** = It's snowing. Note that Ukrainian uses «падає» (falls) with snow.
+- **Дує вітер.** = The wind is blowing. The verb «дути» specifically means «to blow».
 - **Яка погода завтра?** = What is the weather tomorrow? Useful for planning activities.
 - **Візьми парасольку!** = Take an umbrella! A helpful reminder when rain is expected.
 
----
-
-# Summary
+# Підсумок
 
 **Landscape:**
 
@@ -231,7 +229,7 @@ Each season in Ukraine has its own beauty and character:
 >
 > «В Україні чотири пори року: весна, літо, осінь, зима. Кожна прекрасна!»
 >
-> _Translation: "Ukraine has four seasons. Each is beautiful!"_
+> _Translation: «Ukraine has four seasons. Each is beautiful!»_
 
 > 🇺🇦 **Погода в Україні**
 >
@@ -243,3 +241,9 @@ Each season in Ukraine has its own beauty and character:
 > - **Зима**: холодно, йде сніг
 >
 > Українці дуже люблять говорити про погоду! Це завжди гарна тема для розмови.
+
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

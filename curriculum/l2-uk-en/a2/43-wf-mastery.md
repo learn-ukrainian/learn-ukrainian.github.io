@@ -1,13 +1,13 @@
-## Warm-up
+## Introduction
 
-Ласкаво просимо до фінального етапу "Фабрики Слів".
+Ласкаво просимо до фінального етапу «Фабрики Слів».
 Тепер ви знаєте, як будувати:
 - **Дієслова** (Напрямки: В-, Ви-, Пере-)
 - **Іменники** (Люди/Концепції: -ач, -ння, -ість)
 - **Прикметники** (Якості: -ний, -овий, -ський)
 
 Сьогодні ми додаємо останній елемент: **Комунікація**.
-Ми відкриваємо три "Соціальні Корені":
+Ми відкриваємо три «Соціальні Корені»:
 1.  **МОВ** - Мова/Мовлення
 2.  **СЛУХ** - Слух/Послух
 3.  **ДУМ** - Думка
@@ -23,81 +23,86 @@
 ## Part 1: New Roots
 
 ## Family 1: Speech - МОВ
-Verb: **Мовити** (To speak - poetic/formal). **Говорити** is more common, but **МОВ** is the heart of "Language".
+
+Verb: **Мовити** (To speak - poetic/formal). **Говорити** is more common, but **МОВ** is the heart of «Language».
 
 | Word | Meaning | Logic |
 | :--- | :--- | :--- |
 | **Мова** | Language | Speech-thing |
-| **Розмова** | Conversation | Out-speech (Spread speech) |
+| **Розмова** | Conversation | Out-speech |
 | **Мовлення** | Speech (Process) | Speaking-process |
 | **Промова** | Speech (Public) | Through/Forth-speech |
-| **Мовчати** | To be silent | To "speech-not" (Irony of roots) |
-| **Замовлення** | Order | For-speech (Speaking for something) |
+| **Мовчати** | To be silent | To «speech-not» |
+| **Замовлення** | Order | For-speech |
 
 *Українська мова — солов'їна.* (Ukrainian language is nightingale-like).
-*У нас була цікава розмова.* (We had an interesting conversation).
+*У нас була цікава розмова.*.
 
 ## Family 2: Hearing - СЛУХ
-Verb: **Слухати** (To listen).
+
+Verb: **Слухати**.
 
 | Word | Meaning | Logic |
 | :--- | :--- | :--- |
 | **Слух** | Hearing (Sense) | Root |
 | **Слухач** | Listener | Listen-er |
 | **Послуга** | Service | Po-service (Related root -sluh/slug) |
-| **Слухняний** | Obedient | Listen-y (One who listens) |
+| **Слухняний** | Obedient | Listen-y |
 | **Заслуга** | Merit | Earned service |
 
-*У нього добрий слух.* (He has good hearing/ear for music).
+*У нього добрий слух.*.
 
 ## Family 3: ДУМ
-Verb: **Думати** (To think).
+
+Verb: **Думати**.
 
 | Word | Meaning | Logic |
 | :--- | :--- | :--- |
 | **Думка** | Thought | Think-ka |
-| **Роздуми** | Reflections | Out-thoughts (Spreading thoughts) |
-| **Задум** | Plan / Concept | Behind-thought (Deep idea) |
+| **Роздуми** | Reflections | Out-thoughts |
+| **Задум** | Plan / Concept | Behind-thought |
 | **Обдумати** | To think over | Round-think |
-| **Придумати** | To invent | Pri-think (To think up) |
+| **Придумати** | To invent | Pri-think |
 
 *Це гарна думка!* (That's a good thought/idea!).
 
 ## Family 4: Kin/Nature - РІД
-Verb: **Народитися** (To be born).
+
+Verb: **Народитися**.
 
 | Word | Meaning | Logic |
 | :--- | :--- | :--- |
 | **Рід** | Lineage/Genus | Root |
 | **Рідний** | Native/Dear | Kin-adj |
-| **Природа** | Nature | By-kin (The natural world) |
-| **Народ** | People/Nation | On-kin (The born ones) |
-| **Передмістя** | Suburb | Before-town (related logic) |
-| **Земний** | Earthly | Earth-adj (often with nature) |
+| **Природа** | Nature | By-kin |
+| **Народ** | People/Nation | On-kin |
+| **Передмістя** | Suburb | Before-town |
+| **Земний** | Earthly | Earth-adj |
 | **Родина** | Family | Kin-group |
 
-*Україна — мій рідний край.* (Ukraine is my native land).
-*Ми любимо відпочивати на природі.* (We love to relax in nature).
-*Це моя **родина**.* (This is my family).
+*Україна — мій рідний край.*.
+*Ми любимо відпочивати на природі.*.
+*Це моя **родина**.*.
 
 ---
 
 ## Deep Dive: The Logic of Obedience
 
 The root **СЛУХ** - Hearing is fascinating.
-In Ukrainian culture, "Being Good" = "Listening".
+In Ukrainian culture, «Being Good» = «Listening».
 - **Слухати** = To listen.
 - **Слухатися** = To obey (Literally: To listen to oneself/reflexive).
-- **Слухняний** = Obedient (Good child).
-- **Неслухняний** = Disobedient (Naughty child).
-- **Послух** = Obedience (The noun).
+- **Слухняний** = Obedient.
+- **Неслухняний** = Disobedient.
+- **Послух** = Obedience.
 
-If a child is naughty, a parent might say: *"Ти мене не чуєш?"* (Do you not hear me?).
+If a child is naughty, a parent might say: *«Ти мене не чуєш?»* (Do you not hear me?).
 Obedience is fundamentally linked to the ability to hear and process advice from elders.
-It is not just "blind following", it is "hearing wisdom".
+It is not just «blind following», it is «hearing wisdom».
 
 ## Family 5: World & Light - СВІТ
-Verb: **Світити** (To shine).
+
+Verb: **Світити**.
 Давайте подивимось на корінь **СВІТ**.
 Світ — це все, що ми бачимо. Світло допомагає нам бачити.
 Без світла немає життя. Освіта — це світло знань.
@@ -113,7 +118,7 @@ Verb: **Світити** (To shine).
 
 ## Family 6: Earth & Place - ЗЕМ | МІСТ
 
-Слова "земля" і "місто" дуже важливі.
+Слова «земля» і «місто» дуже важливі.
 **Земля** — це наш дім. **Місто** — це місце, де живуть люди.
 Ми живемо на землі. Ми будуємо міста.
 Ми любимо нашу землю.
@@ -145,16 +150,16 @@ The root **ЧУ** - Hear/Sense gives us two important words.
 
 1.  **Почуття** (Feelings).
     This refers to **emotional** states (Love, Friendship, Hate).
-    *Це глибоке почуття.* (This is a deep feeling).
+    *Це глибоке почуття.*.
     You feel it in your heart.
 
-2.  **Відчуття** (Sensations).
+2.  **Відчуття**.
     This refers to **physical** or **intuitive** states (Cold, Hunger, Déjà vu).
-    *Я маю дивне відчуття.* (I have a strange sensation).
-    You feel it in your body or "gut".
+    *Я маю дивне відчуття.*.
+    You feel it in your body or «gut».
 
-If you "hear" (**Чути**) the world, you feel it.
-This is why the word "Hear" is so powerful.
+If you «hear» (**Чути**) the world, you feel it.
+This is why the word «Hear» is so powerful.
 
 ---
 
@@ -162,18 +167,18 @@ This is why the word "Hear" is so powerful.
 
 Stop treating words like random strings of letters.
 Treat them like Lego blocks.
-If you see a long scary word like **перерозподіл** (redistribution), break it down!
+If you see a long scary word like **перерозподіл**, break it down!
 - **Пере-** (Re/Over)
 - **Роз-** (Dis/Out)
 - **По-** (Along)
-- **Діл** (Divide/Part)
-Literally: "Re-out-along-divide".
+- **Діл**
+Literally: «Re-out-along-divide».
 
 This is the secret to mastering Slavic languages.
 Do not memorize. **Analyze**.
 
 > [!tip] Pro Tip: Roots in the City
-> When you visit Kyiv, you will walk on **Хрещатик** (Khreshchatyk).
+> When you visit Kyiv, you will walk on **Хрещатик**.
 > This comes from the root **ХРЕСТ** (Cross).
 > Why? Because it was a valley where roads crossed (**перехрестя**).
 > Roots are everywhere! Even in street names.
@@ -185,19 +190,22 @@ Do not memorize. **Analyze**.
 Let's test your logic.
 Combine **Roots** with **Prefixes** and **Suffixes**.
 
-## 1. The "In/Out" Logic
+## 1. The «In/Out» Logic
+
 - **Вхід** (In-go: Entrance).
 - **Вихід** (Out-go: Exit).
 - **Вступ** (In-step: Itroduction/Entry).
 - **Виступ** (Out-step: Performance/Speech).
 
-## 2. The "Re/Cross" Logic (Пере-)
+## 2. The «Re/Cross» Logic (Пере-)
+
 - **Перехід** (Cross-go: Crossing).
 - **Переклад** (Cross-lay: Translation).
 - **Перемога** (Over-power: Victory).
 - **Перерва** (Cross-break: Break/Recess).
 
-## 3. The "People" Suffixes (-ач, -ець, -ник)
+## 3. The «People» Suffixes (-ач, -ець, -ник)
+
 - **Слухач** (Listener).
 - **Мовець** (Speaker).
 - **Письменник** (Writer).
@@ -208,14 +216,14 @@ Combine **Roots** with **Prefixes** and **Suffixes**.
 ## Story Time: The Conference
 
 У Києві проходить велика **наукова** (science-adj) конференція.
-Тема: "Українська **мова** в світі".
+Тема: «Українська **мова** в світі».
 У залі сидять **слухачі** з різних країн.
 Ось виступає відомий **професор**.
 Його **промова** (speech) дуже цікава.
-Він говорить про **розвиток** (development) культури.
-"Мова — це код нації," — каже він.
+Він говорить про **розвиток** культури.
+«Мова — це код нації,» — каже він.
 Всі уважно **слухають**.
-Потім починається **обговорення** (discussion).
+Потім починається **обговорення**.
 У кожного є своя **думка**.
 Один **науковець** ставить складне **питання**.
 Але професор має гарну **відповідь**.
@@ -229,14 +237,14 @@ Combine **Roots** with **Prefixes** and **Suffixes**.
 Психолог слухає пацієнта.
 Пацієнт має сумний **вигляд** (look).
 Він опускає **погляд** (gaze) вниз.
-"Які у вас **почуття**?" — питає лікарь.
-"У мене погане **відчуття**," — каже пацієнт. — "Я не відчуваю радості."
+«Які у вас **почуття**?» — питає лікарь.
+«У мене погане **відчуття**,» — каже пацієнт. — «Я не відчуваю радості.»
 Психолог робить **запис** у блокноті.
 Він розуміє **стан** (state) людини.
-"Вам треба змінити **думки**," — каже він.
+«Вам треба змінити **думки**,» — каже він.
 Пацієнт мовчить. Це важке **мовчання**.
-Але **послух** (obedience) лікаря важливий.
-Він обіцяє **обдумати** (think over) ці слова.
+Але **послух** лікаря важливий.
+Він обіцяє **обдумати** ці слова.
 Це перший крок до **перемоги** над депресією.
 
 ---
@@ -246,19 +254,19 @@ Combine **Roots** with **Prefixes** and **Suffixes**.
 Через місяць пацієнт повертається.
 Тепер він має веселий **вигляд**.
 Його **погляд** ясний і **щирий** (sincere).
-"Я змінив свої **думки**," — каже він.
-"Я знайшов нову роботу. Я тепер **письменник**."
-"Це чудова **новина**!" — каже психолог.
-"Ваша **мова** стала більш позитивною."
-"Дякую за вашу **допомогу**," — відповідає пацієнт.
-"Це був правильний **вихід** із ситуації."
+«Я змінив свої **думки**,» — каже він.
+«Я знайшов нову роботу. Я тепер **письменник**.»
+«Це чудова **новина**!» — каже психолог.
+«Ваша **мова** стала більш позитивною.»
+«Дякую за вашу **допомогу**,» — відповідає пацієнт.
+«Це був правильний **вихід** із ситуації.»
 Тепер він пише книгу про свої **роздуми**.
 Це буде бестселер.
 Це справжня історія успіху.
 
 > [!cultural] Cultural Insight: Movchannya
-> There is a famous phrase: *"Слово — срібло, а мовчання — золото"* (Speech is silver, but silence is gold).
-> Paradoxically, Ukrainians love vivid **розмови** (conversations)!
+> There is a famous phrase: *«Слово — срібло, а мовчання — золото»* (Speech is silver, but silence is gold).
+> Paradoxically, Ukrainians love vivid **розмови**!
 > Silence is valued only when words are unnecessary.
 > But if you have something to say, say it beautifully.
 
@@ -283,7 +291,7 @@ Combine **Roots** with **Prefixes** and **Suffixes**.
 **Oleh:** Давай відкриємо кафе.
 **Ira:** Ого. Це серйозний **задум**. Але це дорого.
 **Oleh:** Я маю план. У мене є **бізнес-план**.
-**Ira:** Твоя **думка** мені подобається. Але треба все **обдумати** (think over).
+**Ira:** Твоя **думка** мені подобається. Але треба все **обдумати**.
 
 ## Dialogue: The Look
 
@@ -307,16 +315,21 @@ Combine **Roots** with **Prefixes** and **Suffixes**.
 **Boss:** Ми вам зателефонуємо.
 
 > [!cultural] Cultural Insight: Politeness
-> You might notice we use formal language like **замовлення** (order) instead of just "I want".
+> You might notice we use formal language like **замовлення** (order) instead of just «I want».
 > Relationships in Slavic culture are built on respect.
-> Using the correct "Social Root" words shows you are educated and polite.
-> Even a simple **дякую** (thank you) changes the tone.
+> Using the correct «Social Root» words shows you are educated and polite.
+> Even a simple **дякую** changes the tone.
 > Be polite, be heard!
 
-# Summary
+# Підсумок
 
 У цьому модулі ви вивчили:
 - Основні поняття та правила
 - Практичне застосування
 - Вправи для закріплення
 
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

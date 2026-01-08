@@ -1,7 +1,7 @@
 - type: quiz
   title: Question Word Meanings
   items:
-  - question: What is the meaning of the word "де"?
+  - question: What is the meaning of the word «де»?
     options:
     - text: what
       correct: false
@@ -34,7 +34,7 @@
     - text: скільки
       correct: false
     explanation: коли (koly) = when
-  - question: What is the meaning of the word "хто"?
+  - question: What is the meaning of the word «хто»?
     options:
     - text: what
       correct: false
@@ -67,7 +67,7 @@
     - text: коли
       correct: false
     explanation: скільки (skilky) = how much/many
-  - question: What is the meaning of the word "звідки"?
+  - question: What is the meaning of the word «звідки»?
     options:
     - text: where
       correct: false
@@ -246,43 +246,43 @@
 - type: true-false
   title: Question and Negation Rules
   items:
-  - statement: '"Чи" at the beginning of a sentence signals a yes/no question.'
+  - statement: '«Чи» at the beginning of a sentence signals a yes/no question.'
     correct: true
     explanation: Correct! Чи + subject + verb = yes/no question
   - statement: Ukrainian question words require "do/does" like English.
     correct: false
     explanation: Incorrect! Ukrainian doesn't need auxiliary verbs for questions.
-  - statement: '"Не" goes directly before the verb to make it negative.'
+  - statement: '«Не» goes directly before the verb to make it negative.'
     correct: true
     explanation: Correct! я не читаю = I don't read
-  - statement: '"Ніколи" (never) doesn''t need "не" because it''s already negative.'
+  - statement: '«Ніколи» (never) doesn''t need «не» because it''s already negative.'
     correct: false
-    explanation: 'Incorrect! Ukrainian uses double negation: "Я ніколи не..."'
-  - statement: You can skip "чи" in casual speech and use rising intonation instead.
+    explanation: 'Incorrect! Ukrainian uses double negation: «Я ніколи не...»'
+  - statement: You can skip «чи» in casual speech and use rising intonation instead.
     correct: true
-    explanation: Correct! "Ти читаєш?" ↗ is common in casual conversation.
-  - statement: '"Де" and "куди" mean exactly the same thing.'
+    explanation: Correct! «Ти читаєш?» ↗ is common in casual conversation.
+  - statement: '«Де» and «куди» mean exactly the same thing.'
     correct: false
-    explanation: Incorrect! "Де" = where (location), "куди" = where to
-  - statement: '"Звідки" asks about origin or source.'
+    explanation: Incorrect! «Де» = where (location), «куди» = where to
+  - statement: '«Звідки» asks about origin or source.'
     correct: true
     explanation: Correct! Звідки ти? = Where are you from?
-  - statement: Ukrainian uses double negation with words like "ніколи" (never).
+  - statement: Ukrainian uses double negation with words like «ніколи» (never).
     correct: true
-    explanation: Correct! "Я ніколи не п'ю каву" = I never drink coffee
-  - statement: '"Що" can only mean "what", never "that".'
+    explanation: Correct! «Я ніколи не п'ю каву» = I never drink coffee
+  - statement: '«Що» can only mean "what", never "that".'
     correct: false
-    explanation: Incorrect! "Що" means both "what" (question) and "that", depending
+    explanation: Incorrect! «Що» means both "what" (question) and "that", depending
       on context.
-  - statement: Frequency adverbs like "завжди" (always) can come before or after the
+  - statement: Frequency adverbs like «завжди» (always) can come before or after the
       verb.
     correct: true
-    explanation: Correct! Both "Я завжди читаю" and "Я читаю завжди" work.
-  - statement: To ask "how are you", Ukrainians always say "Як справи?"
+    explanation: Correct! Both «Я завжди читаю» and «Я читаю завжди» work.
+  - statement: To ask "how are you", Ukrainians always say «Як справи?»
     correct: false
-    explanation: Incorrect! They can also say "Як ти?" (How are you?) or "Як діла?"
+    explanation: Incorrect! They can also say «Як ти?» (How are you?) or «Як діла?»
       (How are things?)
-  - statement: '"Так" means yes and "ні" means no.'
+  - statement: '«Так» means yes and «ні» means no.'
     correct: true
     explanation: Correct! Basic yes/no answers.
   id: question-and-negation-rules
@@ -455,6 +455,8 @@
       correct: false
     - text: читаю Я не
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct order: Я не читаю'
   - question: 'Identify the correct word order for the sentence: "She doesn''t work."'
     options:
@@ -463,6 +465,8 @@
     - text: не Вона працює
       correct: false
     - text: працює Вона не
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct order: Вона не працює'
   - question: 'Identify the correct word order for the sentence: "We don''t know."'
@@ -473,6 +477,8 @@
       correct: false
     - text: знаємо Ми не
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct order: Ми не знаємо'
   - question: 'Identify the correct word order for the sentence: "I never drink coffee."'
     options:
@@ -481,6 +487,8 @@
     - text: ніколи Я не п'ю каву
       correct: false
     - text: каву Я ніколи не п'ю
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct order: Я ніколи не п''ю каву'
   - question: 'Identify the correct word order for the sentence: "He doesn''t speak
@@ -492,6 +500,8 @@
       correct: false
     - text: українською Він не говорить
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct order: Він не говорить українською'
   - question: 'Identify the correct word order for the sentence: "I don''t understand."'
     options:
@@ -500,6 +510,8 @@
     - text: не Я розумію
       correct: false
     - text: розумію Я не
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct order: Я не розумію'
   - question: 'Identify the correct word order for the sentence: "That''s not true."'
@@ -510,6 +522,8 @@
       correct: false
     - text: правда Це не
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct order: Це не правда'
   - question: 'Identify the correct word order for the sentence: "You don''t write."'
     options:
@@ -519,6 +533,8 @@
       correct: false
     - text: пишеш Ти не
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct order: Ти не пишеш'
   - question: 'Identify the correct word order for the sentence: "We never eat meat."'
     options:
@@ -527,6 +543,8 @@
     - text: ніколи Ми не їмо м'ясо
       correct: false
     - text: м'ясо Ми ніколи не їмо
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct order: Ми ніколи не їмо м''ясо'
   - question: 'Identify the correct word order for the sentence: "They don''t listen
@@ -538,6 +556,8 @@
       correct: false
     - text: музику Вони не слухають
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct order: Вони не слухають музику'
   - question: 'Identify the correct word order for the sentence: "I don''t work today."'
     options:
@@ -547,6 +567,8 @@
       correct: false
     - text: сьогодні Я не працюю
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct order: Я не працюю сьогодні'
   - question: 'Identify the correct word order for the sentence: "I don''t want tea."'
     options:
@@ -555,6 +577,8 @@
     - text: не Я хочу чаю
       correct: false
     - text: чаю Я не хочу
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct order: Я не хочу чаю'
   id: negative-sentence-order

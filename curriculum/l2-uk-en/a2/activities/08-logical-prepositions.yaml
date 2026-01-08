@@ -56,53 +56,61 @@
     - без
     - для
     - з
+    - про
   - sentence: Це подарунок [___] тебе.
     answer: для
     options:
     - для
     - від
     - про
+    - через
   - sentence: Ми говорили [___] тебе.
     answer: про
     options:
     - про
     - через
     - для
+    - без
   - sentence: '[___] дощ я залишився вдома.'
     answer: Через
     options:
     - Через
     - Від
     - Про
+    - Для
   - sentence: Лист [___] мами.
     answer: від
     options:
     - від
     - для
     - про
+    - через
   - sentence: Кава [___] молоком.
     answer: з
     options:
     - з
     - без
     - для
+    - про
   - sentence: Зустрінемось [___] третій.
     answer: о
     options:
     - о
     - після
     - для
+    - про
   - sentence: Всі прийшли, [___] Олега.
     answer: крім
     options:
     - крім
     - для
     - про
+    - з
   id: complete-the-sentence
 - type: quiz
   title: Logical Prepositions
   items:
-  - question: In Ukrainian grammar, which grammatical case does the preposition "для"
+  - question: In Ukrainian grammar, which grammatical case does the preposition «для»
       (for) always require?
     options:
     - text: Genitive
@@ -113,7 +121,7 @@
       correct: false
     - text: Locative
       correct: false
-  - question: When someone says "Через дощ ми залишилися вдома," what does "через"
+  - question: When someone says «Через дощ ми залишилися вдома,» what does «через»
       express here?
     options:
     - text: Because of rain
@@ -124,7 +132,7 @@
       correct: false
     - text: Without rain
       correct: false
-  - question: When you receive "Лист від мами," what does the preposition "від" indicate
+  - question: When you receive «Лист від мами,» what does the preposition «від» indicate
       in this context?
     options:
     - text: From mom (source)
@@ -146,7 +154,7 @@
       correct: false
     - text: через
       correct: false
-  - question: When ordering "Кава без цукру" at a café, what does "без" express in
+  - question: When ordering «Кава без цукру» at a café, what does «без» express in
       this phrase?
     options:
     - text: Without sugar
@@ -157,8 +165,8 @@
       correct: false
     - text: Instead of sugar
       correct: false
-  - question: When arranging to meet "О третій годині," what does the preposition
-      "о" indicate here?
+  - question: When arranging to meet «О третій годині,» what does the preposition
+      «о» indicate here?
     options:
     - text: Time (at 3 o'clock)
       correct: true
@@ -168,7 +176,7 @@
       correct: false
     - text: Duration (for 3 hours)
       correct: false
-  - question: When someone orders "Чай замість кави," what does the preposition "замість"
+  - question: When someone orders «Чай замість кави,» what does the preposition «замість»
       express here?
     options:
     - text: Instead of tea
@@ -310,6 +318,8 @@
     options:
     - для
     - від
+    - про
+    - з
     explanation: '"For mom" = benefit → для. "From mom" = від.'
   - sentence: 'Кава з цукру. (Intended: without sugar)'
     error: з
@@ -317,6 +327,8 @@
     options:
     - без
     - з
+    - для
+    - від
     explanation: '"Without" = без. "With" = з.'
   - sentence: 'Ми говорили для тебе. (Intended: about you)'
     error: для
@@ -324,6 +336,8 @@
     options:
     - про
     - для
+    - через
+    - без
     explanation: '"About" = про. "For" = для.'
   - sentence: 'Від хвороби він не прийшов. (Intended: because of)'
     error: Від
@@ -331,6 +345,8 @@
     options:
     - Через
     - Від
+    - Про
+    - Для
     explanation: '"Because of" = через. "From" (source) = від.'
   - sentence: 'Я не можу для тебе. (Intended: without you)'
     error: для
@@ -338,6 +354,8 @@
     options:
     - без
     - для
+    - про
+    - від
     explanation: '"Without" = без. "For" = для.'
   - sentence: 'Після кого? (Intended: for whom)'
     error: Після
@@ -345,46 +363,48 @@
     options:
     - Для
     - Після
+    - Про
+    - Від
     explanation: '"For whom?" = Для кого? "After" = Після.'
   id: wrong-preposition
 - type: true-false
   title: Preposition Rules
   items:
-  - statement: '"Для" always takes the genitive case.'
+  - statement: '«Для» always takes the genitive case.'
     correct: true
     explanation: 'Correct! Для + Gen: для мами, для тебе.'
-  - statement: '"Про" takes the genitive case.'
+  - statement: '«Про» takes the genitive case.'
     correct: false
-    explanation: 'False! "Про" takes accusative: про тебе, про книгу.'
-  - statement: '"Через" can mean both "because of" and "through."'
+    explanation: 'False! «Про» takes accusative: про тебе, про книгу.'
+  - statement: '«Через» can mean both "because of" and "through."'
     correct: true
     explanation: Yes! Через дощ, через парк.
-  - statement: '"Від" is used for receiving something from a person.'
+  - statement: '«Від» is used for receiving something from a person.'
     correct: true
     explanation: Correct! Лист від мами = a letter from mom.
-  - statement: '"З" always means "from."'
+  - statement: '«З» always means "from."'
     correct: false
-    explanation: 'False! "З" with instrumental means "with": з другом.'
-  - statement: '"Після" means "after" and takes genitive.'
+    explanation: 'False! «З» with instrumental means "with": з другом.'
+  - statement: '«Після» means "after" and takes genitive.'
     correct: true
     explanation: Yes! Після роботи = after work.
-  - statement: '"Для" and "на" mean the same thing.'
+  - statement: '«Для» and «на» mean the same thing.'
     correct: false
     explanation: False! Для = benefit (для тебе), На = payment (на каву).
-  - statement: '"Крім" means "except" and takes genitive.'
+  - statement: '«Крім» means "except" and takes genitive.'
     correct: true
     explanation: Correct! Всі прийшли, крім Олега.
-  - statement: '"О/об" is used for clock time.'
+  - statement: '«О/об» is used for clock time.'
     correct: true
     explanation: Yes! О третій = at three o'clock.
-  - statement: '"Через + noun" and "тому що + clause" are interchangeable.'
+  - statement: '«Через + noun» and «тому що + clause» are interchangeable.'
     correct: false
     explanation: 'They both mean "because" but have different grammar: через дощ vs
       тому що йде дощ.'
-  - statement: '"Замість" means "instead of."'
+  - statement: '«Замість» means "instead of."'
     correct: true
     explanation: Correct! Чай замість кави = tea instead of coffee.
-  - statement: '"Без" expresses absence.'
+  - statement: '«Без» expresses absence.'
     correct: true
     explanation: Yes! Кава без цукру = coffee without sugar.
   id: preposition-rules

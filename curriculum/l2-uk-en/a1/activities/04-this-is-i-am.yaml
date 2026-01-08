@@ -81,7 +81,7 @@
       correct: true
     - text: Вони
       correct: false
-  - question: What does "воно" mean?
+  - question: What does «воно» mean?
     options:
     - text: he
       correct: false
@@ -104,7 +104,7 @@
       correct: false
     explanation: я is lowercase like English "I" became uppercase—Ukrainian kept it
       lowercase!
-  - question: What's the plural of "він"?
+  - question: What's the plural of «він»?
     options:
     - text: ви
       correct: false
@@ -241,37 +241,37 @@
   - statement: Ukrainian does not use "am/is/are" in present tense statements.
     correct: true
     explanation: Correct! This is called "zero copula."
-  - statement: The pronoun "я" is always capitalized like English "I."
+  - statement: The pronoun «я» is always capitalized like English "I."
     correct: false
-    explanation: Incorrect! "я" is lowercase unless it starts a sentence.
-  - statement: '"Ви" can mean both "you all" and formal "you" (singular).'
+    explanation: Incorrect! «я» is lowercase unless it starts a sentence.
+  - statement: '«Ви» can mean both "you all" and formal "you" (singular).'
     correct: true
     explanation: Correct! Context tells you which.
-  - statement: '"Це" changes form for plural.'
+  - statement: '«Це» changes form for plural.'
     correct: false
-    explanation: Incorrect! "Це" works for both singular and plural.
+    explanation: Incorrect! «Це» works for both singular and plural.
   - statement: Feminine professions typically add "-ка" to the masculine form.
     correct: true
     explanation: Correct! студент → студентка, лікар → лікарка
-  - statement: You should always use "ти" with strangers to be friendly.
+  - statement: You should always use «ти» with strangers to be friendly.
     correct: false
-    explanation: Incorrect! Use "Ви" with strangers—it's respectful.
-  - statement: '"Людина" is grammatically feminine but refers to any person.'
+    explanation: Incorrect! Use «Ви» with strangers—it's respectful.
+  - statement: '«Людина» is grammatically feminine but refers to any person.'
     correct: true
     explanation: Correct! It's a feminine noun but gender-neutral in meaning.
   - statement: Ukrainian has more pronouns than English.
     correct: false
-    explanation: Incorrect! Same number, but "ви" has dual function.
-  - statement: '"Він" is used for masculine nouns, not just male people.'
+    explanation: Incorrect! Same number, but «ви» has dual function.
+  - statement: '«Він» is used for masculine nouns, not just male people.'
     correct: true
-    explanation: Correct! All masculine nouns use "він."
-  - statement: In Ukrainian, you must say "Я є студент" to mean "I am a student."
+    explanation: Correct! All masculine nouns use «він.»
+  - statement: In Ukrainian, you must say «Я є студент» to mean "I am a student."
     correct: false
-    explanation: Incorrect! Just say "Я студент." The "є" is dropped.
-  - statement: '"Друг" and "подруга" can mean both friend and romantic partner.'
+    explanation: Incorrect! Just say «Я студент.» The «є» is dropped.
+  - statement: '«Друг» and «подруга» can mean both friend and romantic partner.'
     correct: true
     explanation: Correct! Context is key.
-  - statement: Saying "Я українець/українка" is an important identity statement in
+  - statement: Saying «Я українець/українка» is an important identity statement in
       Ukrainian culture.
     correct: true
     explanation: Correct! It's a proud affirmation of national identity.
@@ -299,7 +299,7 @@
 - type: quiz
   title: Gender Forms
   items:
-  - question: What is the feminine form of "українець"?
+  - question: What is the feminine form of «українець»?
     options:
     - text: українець
       correct: false
@@ -310,7 +310,7 @@
     - text: україниця
       correct: false
     explanation: українець → українка (add -ка)
-  - question: What is the feminine form of "американець"?
+  - question: What is the feminine form of «американець»?
     options:
     - text: америка
       correct: false
@@ -321,7 +321,7 @@
     - text: американець
       correct: false
     explanation: американець → американка (add -ка)
-  - question: What is the feminine form of "англієць"?
+  - question: What is the feminine form of «англієць»?
     options:
     - text: англійка
       correct: true
@@ -332,7 +332,7 @@
     - text: англієць
       correct: false
     explanation: англієць → англійка (add -ка)
-  - question: What is the feminine form of "канадець"?
+  - question: What is the feminine form of «канадець»?
     options:
     - text: канада
       correct: false
@@ -343,7 +343,7 @@
     - text: канадець
       correct: false
     explanation: канадець → канадка (add -ка)
-  - question: What is the feminine form of "студент"?
+  - question: What is the feminine form of «студент»?
     options:
     - text: студент
       correct: false
@@ -354,7 +354,7 @@
     - text: студента
       correct: false
     explanation: студент → студентка (add -ка)
-  - question: What is the feminine form of "професор"?
+  - question: What is the feminine form of «професор»?
     options:
     - text: професор
       correct: false
@@ -365,7 +365,7 @@
     - text: професора
       correct: false
     explanation: професор → професорка (add -ка)
-  - question: What is the feminine form of "лікар"?
+  - question: What is the feminine form of «лікар»?
     options:
     - text: лікар
       correct: false
@@ -376,7 +376,7 @@
     - text: лікаря
       correct: false
     explanation: лікар → лікарка (add -ка)
-  - question: What is the feminine form of "друг"?
+  - question: What is the feminine form of «друг»?
     options:
     - text: дружка
       correct: false
@@ -398,7 +398,7 @@
     - text: -иця
       correct: false
     explanation: Most add -ка to the masculine stem
-  - question: '"Він українець, вона ___."'
+  - question: '«Він українець, вона ___.»'
     options:
     - text: українець
       correct: false
@@ -409,7 +409,7 @@
     - text: україна
       correct: false
     explanation: вона українка (feminine)
-  - question: '"Я студент" is said by a ___.'
+  - question: '«Я студент» is said by a ___.'
     options:
     - text: male
       correct: true
@@ -420,7 +420,7 @@
     - text: plural
       correct: false
     explanation: студент = masculine form
-  - question: '"Я студентка" is said by a ___.'
+  - question: '«Я студентка» is said by a ___.'
     options:
     - text: male
       correct: false
@@ -471,6 +471,8 @@
       correct: true
     - text: він
       correct: false
+    - text: вони
+      correct: false
     explanation: Use Ви with elders as a sign of respect.
   - question: You talk to your younger brother. Which do you use?
     options:
@@ -479,6 +481,8 @@
     - text: Ви
       correct: false
     - text: він
+      correct: false
+    - text: вони
       correct: false
     explanation: Use ти with family members you're close to.
   - question: You meet a professor for the first time. Which do you use?
@@ -489,6 +493,8 @@
       correct: true
     - text: він
       correct: false
+    - text: вони
+      correct: false
     explanation: Use Ви with authority figures.
   - question: You talk to your pet dog. Which do you use?
     options:
@@ -497,6 +503,8 @@
     - text: Ви
       correct: false
     - text: він
+      correct: false
+    - text: вони
       correct: false
     explanation: Use ти with animals.
   - question: You ask a stranger for directions. Which do you use?
@@ -507,6 +515,8 @@
       correct: true
     - text: він
       correct: false
+    - text: вони
+      correct: false
     explanation: Use Ви with strangers.
   - question: Your classmate at university. Which do you use?
     options:
@@ -515,6 +525,8 @@
     - text: Ви
       correct: false
     - text: він
+      correct: false
+    - text: вони
       correct: false
     explanation: Use ти with peers your age.
   - question: A cashier at a shop. Which do you use?
@@ -525,6 +537,8 @@
       correct: true
     - text: він
       correct: false
+    - text: вони
+      correct: false
     explanation: Use Ви in formal service situations.
   - question: Your best friend. Which do you use?
     options:
@@ -533,6 +547,8 @@
     - text: Ви
       correct: false
     - text: він
+      correct: false
+    - text: вони
       correct: false
     explanation: Use ти with close friends.
   - question: A doctor you just met. Which do you use?
@@ -543,6 +559,8 @@
       correct: true
     - text: він
       correct: false
+    - text: вони
+      correct: false
     explanation: Use Ви with professionals in formal settings.
   - question: A child on the street. Which do you use?
     options:
@@ -551,6 +569,8 @@
     - text: Ви
       correct: false
     - text: він
+      correct: false
+    - text: вони
       correct: false
     explanation: Use ти with children.
   - question: Your boss at work. Which do you use?
@@ -561,6 +581,8 @@
       correct: true
     - text: він
       correct: false
+    - text: вони
+      correct: false
     explanation: Use Ви with superiors.
   - question: Your roommate. Which do you use?
     options:
@@ -569,6 +591,8 @@
     - text: Ви
       correct: false
     - text: він
+      correct: false
+    - text: вони
       correct: false
     explanation: Use ти with people you live with casually.
   id: ти-or-ви?

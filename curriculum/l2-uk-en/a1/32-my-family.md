@@ -9,7 +9,7 @@
 > — **Мою маму звати Олена.** (My mom's name is Olena.)
 > — **Це моя молодша сестра.** (This is my younger sister.)
 >
-> Notice: For "my mom's name," we use Accusative: Мо**ю** маму (Accusative) звати...
+> Notice: For «my mom's name,» we use Accusative: Мо**ю** маму (Accusative) звати...
 
 ---
 
@@ -25,9 +25,9 @@
 > - **Мого** брата звати Максим. (My brother's name is Maksym.)
 > - **Це моя** сестра. (This is my sister.)
 >
-> We use "У мене є" for "I have" and possessives (мій/моя/моє) for "my."
+> We use «У мене є» for «I have» and possessives (мій/моя/моє) for «my.»
 
-### "I Have" Pattern
+### «I Have» Pattern
 
 | Structure               | Example                                           |
 | ----------------------- | ------------------------------------------------- |
@@ -108,7 +108,7 @@ When calling someone directly, Ukrainian changes the word ending. This is the **
 > - Getting attention: **Тату**, допоможи! (Dad, help!)
 > - In exclamations: **Боже!** (God!/Oh my God!)
 >
-> Don't use with titles: Пане Іване! (Mr. Ivan!) — not "Пан Іване!"
+> Don't use with titles: Пане Іване! (Mr. Ivan!) — not «Пан Іване!»
 
 ---
 
@@ -195,8 +195,8 @@ When calling someone directly, Ukrainian changes the word ending. This is the **
 
 > 💡 **Батько vs Тато (Father vs Dad)**
 >
-> **Батько** is formal (like "father"), **тато** is informal (like "dad").
-> **Мати** is formal (like "mother"), **мама** is informal (like "mom").
+> **Батько** is formal (like «father»), **тато** is informal (like «dad»).
+> **Мати** is formal (like «mother»), **мама** is informal (like «mom»).
 > In everyday speech, Ukrainians use тато and мама!
 
 > 🌍 **Українська родина (Ukrainian Family)**
@@ -205,8 +205,8 @@ When calling someone directly, Ukrainian changes the word ending. This is the **
 
 > ⚡ **Myth vs Fact**
 >
-> **Myth:** "Ukrainian family structures are the same as in English"
-> **Fact:** Ukrainian distinguishes cousins by gender (двоюрідний брат / двоюрідна сестра), has distinct words for in-laws, and uses different words for "brother/sister of parent" (дядько/тітка) vs. "sibling" (брат/сестра).
+> **Myth:** «Ukrainian family structures are the same as in English»
+> **Fact:** Ukrainian distinguishes cousins by gender (двоюрідний брат / двоюрідна сестра), has distinct words for in-laws, and uses different words for «brother/sister of parent» (дядько/тітка) vs. «sibling» (брат/сестра).
 
 > 🎭 **Сімейні традиції (Family Traditions)**
 >
@@ -216,6 +216,13 @@ When calling someone directly, Ukrainian changes the word ending. This is the **
 
 # Summary
 
-Ви вивчили багато слів про сім'ю! Тепер ви знаєте, як звати ваших батьків, братів та сестер. (You learned many words about family! Now you know how to name your parents, brothers and sisters.) Ви знаєте, як сказати "у мене є" або "у мене немає". Це був чудовий урок! Ви любите свою родину? (This was a great lesson! Do you love your family?)
+Ви вивчили багато слів про сім'ю! Тепер ви знаєте, як звати ваших батьків, братів та сестер. (You learned many words about family! Now you know how to name your parents, brothers and sisters.) Ви знаєте, як сказати «у мене є» або «у мене немає». Це був чудовий урок! Ви любите свою родину? (This was a great lesson! Do you love your family?)
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

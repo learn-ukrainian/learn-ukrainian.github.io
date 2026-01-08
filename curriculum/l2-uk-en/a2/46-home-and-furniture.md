@@ -1,10 +1,10 @@
-## Warm-up
+## Introduction
 
 Ласкаво просимо додому! Welcome home! This module covers rooms, furniture, and household vocabulary. Being able to describe your home is essential for daily conversations in Ukrainian.
 
 Whether you are looking for an apartment, describing your living situation, or simply chatting about home life, this vocabulary will help you communicate naturally.
 
-Ukrainian homes often differ from Western ones. Many Ukrainians live in apartments rather than houses. The concept of "дача" (country house) is also very important in Ukrainian culture.
+Ukrainian homes often differ from Western ones. Many Ukrainians live in apartments rather than houses. The concept of «дача» is also very important in Ukrainian culture.
 
 ---
 
@@ -30,7 +30,7 @@ Every home has different rooms. Here is the essential vocabulary for talking abo
 > [!tip] Locative Case for Location
 > Notice the case endings change when describing location!
 > **у вітальні**, **у спальні**, **на кухні**, **у ванній**
-> The locative case is used with "in" and "on" prepositions.
+> The locative case is used with «in» and «on» prepositions.
 > This is essential for describing where things and people are located in your home. Most feminine nouns ending in -я change to -і in the locative case. For example, вітальня becomes у вітальні.
 
 ## Furniture
@@ -107,7 +107,7 @@ Note that washing machines in Ukraine are often located in the bathroom rather t
 — Дякую! Приходь у гості! — відповідає Ольга.
 
 > [!tip] Новосілля
-> "Новосілля" — це свято переїзду в нове житло.
+> «Новосілля» — це свято переїзду в нове житло.
 > Українці запрошують друзів і родину на новосілля.
 > Гості приносять подарунки для дому.
 
@@ -146,7 +146,7 @@ Note that washing machines in Ukraine are often located in the bathroom rather t
 — Прибирання — це добра вправа, — жартує Максим.
 — Так, особливо пилососити! — сміється мама.
 
-This story demonstrates common vocabulary for household chores. Cleaning vocabulary includes пилососити (to vacuum), мити (to wash), прибирати (to clean up), and застеляти (to make the bed). These verbs are essential for describing daily routines at home. Note that in Ukrainian, you would say "Я прибираю квартиру" rather than just "I clean". The word order is flexible but the verb must be conjugated correctly.
+This story demonstrates common vocabulary for household chores. Cleaning vocabulary includes пилососити, мити, прибирати, and застеляти. These verbs are essential for describing daily routines at home. Note that in Ukrainian, you would say «Я прибираю квартиру» rather than just «I clean». The word order is flexible but the verb must be conjugated correctly.
 
 ---
 
@@ -156,7 +156,7 @@ This story demonstrates common vocabulary for household chores. Cleaning vocabul
 
 When describing where things are, use the locative case with prepositions:
 
-- **в/у** + locative = in (enclosed space)
+- **в/у** + locative = in
 - **на** + locative = on (surface)
 
 | Expression | Meaning |
@@ -180,15 +180,13 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
 - **Почувайтеся як вдома.** = Make yourself at home.
 
 > [!cultural] Дача — Улюблене Місце Відпочинку
-> "Дача" — це заміський будинок для відпочинку.
+> «Дача» — це заміський будинок для відпочинку.
 > Багато українців мають дачу за містом.
 > Там є город, де вирощують овочі та фрукти.
 > Літо на дачі — улюблена традиція.
 > The dacha represents an escape from city life and a deep connection to nature. Families gather there for weekends and holidays.
 
----
-
-# Summary
+# Підсумок
 
 **Кімнати:**
 - вітальня
@@ -218,7 +216,7 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
 >
 > «Мій дім — моя фортеця.» (Будинок — це стіни, дім — це родина. Українці люблять свій дім!)
 >
-> *Translation: "My home is my fortress." (A house is walls, a home is family. Ukrainians love their homes!)*
+> *Translation: «My home is my fortress.» (A house is walls, a home is family. Ukrainians love their homes!)*
 
 Тепер ви можете описати свій дім українською! Кімнати, меблі, затишок — все це важливо. Кажіть: «У моїй кімнаті є ліжко, шафа і стіл.» українською мовою! Запрошуйте друзів у гості та показуйте їм свою чудову квартиру. Успіхів!
 
@@ -237,3 +235,9 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
 > Український дім — це затишок, тепло та любов! Запрошуйте гостей: «Заходьте, будь ласка!»
 
 ---
+
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

@@ -64,6 +64,23 @@ items:
     translation: more natural
     pos: adj
     gender: m
+  - lemma: дієслово
+    translation: verb
+    pos: noun
+    gender: m
+  - lemma: час
+    translation: time; tense
+    pos: noun
+    gender: m
+  - lemma: майбутній
+    translation: future
+    pos: adj
+  - lemma: теперішній
+    translation: present
+    pos: adj
+  - lemma: минулий
+    translation: past
+    pos: adj
   - lemma: процес
     ipa: proˈt͡sɛs
     translation: process

@@ -246,7 +246,7 @@
   - statement: Ukrainian has unique letters (Ї, Є, Ґ) that Russian doesn't have.
     correct: true
     explanation: Correct! These letters make Ukrainian distinct.
-  - statement: The word "метро" uses only False Friends.
+  - statement: The word «метро» uses only False Friends.
     correct: false
     explanation: Incorrect! It uses True Friends (М, Е, Т, О) and one False Friend
       (Р).

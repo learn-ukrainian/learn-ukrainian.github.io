@@ -1,6 +1,6 @@
 # Education & Learning
 
-## Warm-up
+## Introduction
 
 Де ви вчилися? Який предмет у школі ви любили найбільше? Ви любите вчитися зараз?
 
@@ -9,14 +9,18 @@
 Education is a lifelong journey. In this module, you'll master three key areas:
 1. **School vocabulary** — classrooms, teachers, and grades
 2. **University life** — lectures, exams, and diplomas
-3. **The crucial difference** — *вчитися* (where you study) vs. *вивчати* (what you study)
+3. **The crucial difference** — *вчитися* vs. *вивчати*
 
-> [!important] **Myth Buster** "Soviet Legacy?"
-> While Soviet education was strong in math/physics, Ukraine has a much older tradition. The **Ostroh Academy** (1576) and **Kyiv-Mohyla Academy** (1615) were among the first universities in Eastern Europe, long before many "imperial" institutions. Ukraine has always been a center of European learning.
+> [!important] **Myth Buster** «Soviet Legacy?»
+> While Soviet education was strong in math/physics, Ukraine has a much older tradition. The **Ostroh Academy** (1576) and **Kyiv-Mohyla Academy** (1615) were among the first universities in Eastern Europe, long before many «imperial» institutions. Ukraine has always been a center of European learning.
 
 ## Presentation
 
-### School (Школа)
+## Practice
+
+Now let's see these words in action through stories about Ukrainian educational life — from a child's first day at school to a university student's exam season.
+
+## School (Школа)
 
 Where it all begins:
 
@@ -31,7 +35,7 @@ Where it all begins:
 | **предмет** | subject | Цікавий предмет. |
 | **оцінка** | grade/mark | Гарна оцінка (12). |
 
-### University (Університет)
+## University (Університет)
 
 Higher education:
 
@@ -44,7 +48,7 @@ Higher education:
 - **студент** — student: *Бідний студент.*
 - **диплом** — diploma: *Отримати диплом.*
 
-### Materials & Actions
+## Materials & Actions
 
 - **підручник** — textbook: *Відкрийте підручник.*
 - **зошит** — notebook: *Пишіть у зошит.*
@@ -53,14 +57,14 @@ Higher education:
 - **дошка** — blackboard/whiteboard: *Дивіться на дошку.*
 - **знання** — knowledge: *Знання — це сила.*
 
-> [!note] Grammar Point: Two ways to "Study"
+> [!note] Grammar Point: Two ways to «Study»
 > This is tricky!
-> 1. **Вчитися** (to study/learn generally): Focus on the process or place.
->    * *Я вчуся в школі.* (I study at school).
->    * *Він добре вчиться.* (He studies well).
-> 2. **Вивчати** (to study/learn something specific): Needs an object (Accusative).
->    * *Я вивчаю українську мову.* (I study Ukrainian language).
->    * *Ми вивчаємо історію.* (We study history).
+> 1. **Вчитися**: Focus on the process or place.
+>    * *Я вчуся в школі.*.
+>    * *Він добре вчиться.*.
+> 2. **Вивчати**: Needs an object.
+>    * *Я вивчаю українську мову.*.
+>    * *Ми вивчаємо історію.*.
 
 > [!cultural] **Cultural Insight** 12-Point System
 > Unlike the A-F or 1-5 systems, Ukrainian schools use a **12-point scale**.
@@ -68,7 +72,7 @@ Higher education:
 > - 7-9: Good (Добре)
 > - 4-6: Satisfactory (Задовільно)
 > - 1-3: Low (Незадовільно)
-> So getting a "12" is perfect!
+> So getting a «12» is perfect!
 
 > [!tip] **Common Mistakes to Avoid**
 > ❌ *Я вивчаю в школі.* — Wrong! (вивчати needs an object)
@@ -77,13 +81,9 @@ Higher education:
 > ❌ *Я вчуся українську мову.* — Wrong! (вчитися can't take an object)
 > ✅ *Я вивчаю українську мову.* — Correct! (вивчати + Accusative)
 >
-> **Memory trick:** "вчуся" ends in reflexive "-ся" → the action stays "inside" (process). "Вивчаю" has no "-ся" → the action goes "outside" to an object.
+> **Memory trick:** «вчуся» ends in reflexive «-ся» → the action stays «inside» (process). «Вивчаю» has no «-ся» → the action goes «outside» to an object.
 
-## Practice
-
-Now let's see these words in action through stories about Ukrainian educational life — from a child's first day at school to a university student's exam season.
-
-### Story Time: First Grade
+## Story Time: First Grade
 
 Сьогодні перше вересня. Це свято — День знань.
 Маленький Тарас йде у **школу**. У нього новий рюкзак і красива форма. В руках він несе квіти для **вчительки**.
@@ -92,18 +92,18 @@ Now let's see these words in action through stories about Ukrainian educational 
 — Не бійся, синку. **Школа** — це цікаво, — каже мама.
 У класі багато дітей. Вчителька пані Надія усміхається.
 — Добрий день, **учні**! — каже вона. — Це ваш перший **урок**.
-Тарас сідає за парту. Він відкриває **зошит** і бере **ручку**. Він пише перше слово: "Мама".
+Тарас сідає за парту. Він відкриває **зошит** і бере **ручку**. Він пише перше слово: «Мама».
 Він отримує наклейку — це його перша **оцінка**.
 
-### Story Time: The Exchange Student
+## Story Time: The Exchange Student
 
 Джон — студент з Америки. Він приїхав у Львів **вивчати** історію.
 — Чому Україна? — питають його нові друзі.
 — Тут цікава історія і смачна кава, — сміється Джон.
 
 Він живе в гуртожитку. Його сусід — Максим. Максим допомагає Джону **вчити** українські слова.
-— Як буде "good morning"? — питає Джон.
-— "Доброго ранку", — каже Максим.
+— Як буде «good morning»? — питає Джон.
+— «Доброго ранку», — каже Максим.
 
 Джон ходить на **лекції**. Він розуміє не все. Професор говорить швидко.
 Але Джон має гарний **зошит**, де він пише всі нові слова. Він дуже старанний **студент**.
@@ -111,21 +111,21 @@ Now let's see these words in action through stories about Ukrainian educational 
 — Українська мова складна, але красива, — каже Джон.
 — Ти молодець, — відповідає Максим. — Ти вже гарно говориш.
 
-### Ukrainian Education System
+## Ukrainian Education System
 
 Education in Ukraine has three stages:
 1.  **Primary School** (Початкова школа): Grades 1-4. Focus on basics.
 2.  **Basic Secondary School** (Базова середня школа): Grades 5-9. More subjects.
-3.  **High School** (Профільна середня школа): Grades 10-12 (reform in progress). Preparation for university.
+3.  **High School** (Профільна середня школа): Grades 10-12. Preparation for university.
 
-After school, students pass **ZNO** (External Independent Evaluation) — a very important national test. Based on the **оцінка** from ZNO, they enter university.
+After school, students pass **ZNO** — a very important national test. Based on the **оцінка** from ZNO, they enter university.
 
-> [!important] **Tip** "Student Day"
-> November 17th is International Students' Day. In Ukraine, it's a huge party. Universities often have concerts, shortened classes, and even "Student Rectors" for a day. If you are a student, don't miss it!
+> [!important] **Tip** «Student Day»
+> November 17th is International Students' Day. In Ukraine, it's a huge party. Universities often have concerts, shortened classes, and even «Student Rectors» for a day. If you are a student, don't miss it!
 
-### Story Time: The Session
+## Story Time: The Session
 
-Олег — **студент**. Зараз у нього сесія (exam period). Це важкий час.
+Олег — **студент**. Зараз у нього сесія. Це важкий час.
 Завтра у нього **іспит** з історії.
 Він сидить у бібліотеці. На столі лежать книги, **підручник** і **конспект** (notes).
 
@@ -136,9 +136,9 @@ After school, students pass **ZNO** (External Independent Evaluation) — a very
 
 Олег повертається додому пізно. Він читає конспект всю ніч.
 Зранку він йде в **університет**. Він бере білет. Питання про козаків. Олег знає все!
-Він отримує "відмінно". Тепер можна спати!
+Він отримує «відмінно». Тепер можна спати!
 
-### Story Time: Never Too Late
+## Story Time: Never Too Late
 
 Марина працює в банку. Їй 40 років. Але вона вирішила **вивчати** іспанську мову.
 Двічі на тиждень вона ходить на курси.
@@ -154,7 +154,7 @@ After school, students pass **ZNO** (External Independent Evaluation) — a very
 — Мамо, ти як школярка!
 — Так, — каже Марина. — **Знання** роблять нас молодими.
 
-### Story Time: Prom Night
+## Story Time: Prom Night
 
 Випускний вечір — це особливий момент.
 Олена закінчує школу. Вона одягла красиву сукню.
@@ -174,14 +174,22 @@ After school, students pass **ZNO** (External Independent Evaluation) — a very
 Сонце сходить. Новий день, нове життя.
 
 > [!cultural] **Cultural Insight** Teachers' Day
-> On the first Sunday of October, Ukraine celebrates Teachers' Day. Students bring huge bouquets of flowers and chocolate to school. Sometimes senior students teach classes for the younger ones ("Self-Governance Day"). It's a fun and respectful tradition.
+> On the first Sunday of October, Ukraine celebrates Teachers' Day. Students bring huge bouquets of flowers and chocolate to school. Sometimes senior students teach classes for the younger ones («Self-Governance Day»). It's a fun and respectful tradition.
 
-# Summary
+# Підсумок
 
-You learned to:
-- Talk about school: **школа**, **урок**, **вчитель**, **оцінка**
-- Talk about university: **лекція**, **іспит**, **студент**, **факультет**
-- Use study materials: **підручник**, **зошит**, **ручка**
-- Distinguish verbs: **вчитися** (place/process) vs **вивчати** (subject)
+In this module, we will explore the world of education and learning. Ukrainian academic life has its own unique vocabulary and cultural traditions that are important for students and lifelong learners alike. We will learn how to describe schools, universities, the process of studying, and the various materials we use to acquire knowledge. Mastering these terms will help you discuss your educational background and future learning goals with ease.
+
+**In this module, we will cover:**
+- **Levels of education:** школа, університет, клас.
+- **Academic activities:** лекція, семінар, іспит.
+- **The learning process:** вчитися, навчатися, складати іспит.
+- **Study materials:** підручник, зошит, конспект.
 
 Keep learning! Education is the key to the future. Good luck on your path to fluency!
+
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

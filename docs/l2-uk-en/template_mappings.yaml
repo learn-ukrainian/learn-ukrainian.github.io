@@ -1,0 +1,206 @@
+version: '1.0'
+description: 'Maps module IDs to their designated templates for structural compliance validation'
+
+# Template mapping rules are evaluated in order (first match wins)
+mappings:
+  # =============================================================================
+  # A1: Single template
+  # =============================================================================
+  - pattern: "^a1-(10|20|34)-"
+    level: a1
+    template: a1-checkpoint-module-template.md
+    description: "A1 checkpoints (M10, M20, M34)"
+
+  - pattern: '^a1-'
+    level: a1
+    template: a1-module-template.md
+    description: 'All A1 modules use standard PPP template'
+
+  # =============================================================================
+  # A2: Single template
+  # =============================================================================
+  - pattern: "^a2-(11|25|35|44|56)-"
+    level: a2
+    template: a2-checkpoint-module-template.md
+    description: "A2 checkpoints (M11, M25, M35, M44, M56)"
+
+  - pattern: '^a2-'
+    level: a2
+    template: a2-module-template.md
+    description: 'All A2 modules use standard PPP template'
+
+  # =============================================================================
+  # B1: Multi-template (by module number and type)
+  # =============================================================================
+  - pattern: '^b1-(15|25|34|41|51)$'
+    level: b1
+    template: b1-checkpoint-module-template.md
+    description: 'B1 checkpoints (M15, M25, M34, M41, M51)'
+
+  - pattern: '^b1-(71|72|73|74|75|76|77|78|79|80)$'
+    level: b1
+    template: b1-cultural-module-template.md
+    description: 'B1 cultural modules (Regions: M71-80)'
+
+  - pattern: '^b1-(52|53|54|55|56|57|58|59|60|61|62|63|64|65)$'
+    level: b1
+    template: b1-vocab-module-template.md
+    description: 'B1 vocabulary expansion (M52-65)'
+
+  - pattern: '^b1-(81|82|83|84|85|86)$'
+    level: b1
+    template: b1-integration-module-template.md
+    description: 'B1 integration modules (M81-86)'
+
+  - pattern: '^b1-'
+    level: b1
+    template: b1-grammar-module-template.md
+    description: 'B1 default grammar template (M01-51)'
+
+  # =============================================================================
+  # B2: Complex (by meta.focus field and module ranges)
+  # =============================================================================
+
+  # Checkpoints (explicit module IDs)
+  - pattern: '^b2-(10|25|40|70|95|110)$'
+    level: b2
+    template: b2-checkpoint-module-template.md
+    description: 'B2 checkpoints'
+
+  # History modules (M71-145) - requires meta.focus: history
+  - meta_field: focus
+    value: history
+    level: b2
+    template: b2-history-module-template.md
+    description: 'B2 history modules (M71-131 when focus=history)'
+
+  # History synthesis modules (specific IDs)
+  - pattern: '^b2-(83|107|119|125|131)$'
+    level: b2
+    template: b2-history-synthesis-module-template.md
+    description: 'B2 history synthesis modules'
+
+  # Phraseology modules (M41-70) - requires meta.focus: phraseology
+  - meta_field: focus
+    value: phraseology
+    level: b2
+    template: b2-phraseology-module-template.md
+    description: 'B2 phraseology modules (M41-70 when focus=phraseology)'
+
+  # Integration/Skills modules (M132-145)
+  - pattern: '^b2-(132|133|134|135|136|137|138|139|140|141|142|143|144|145)$'
+    level: b2
+    template: b2-integration-module-template.md
+    description: 'B2 integration and skills modules (M132-145)'
+
+  # Grammar modules (M01-40, non-checkpoints)
+  - pattern: '^b2-([0-9]|[1-3][0-9]|40)$'
+    level: b2
+    template: b2-grammar-module-template.md
+    description: 'B2 grammar modules (M01-40, excluding checkpoints)'
+
+  # Default B2
+  - pattern: '^b2-'
+    level: b2
+    template: b2-module-template.md
+    description: 'B2 default template'
+
+  # =============================================================================
+  # C1: By meta.focus field
+  # =============================================================================
+
+  - meta_field: focus
+    value: biography
+    level: c1
+    template: c1-biography-module-template.md
+    description: 'C1 biography modules'
+
+  - meta_field: focus
+    value: literature
+    level: c1
+    template: c1-literature-module-template.md
+    description: 'C1 literature modules'
+
+  - meta_field: focus
+    value: academic
+    level: c1
+    template: c1-academic-module-template.md
+    description: 'C1 academic modules'
+
+  - meta_field: focus
+    value: fine_arts
+    level: c1
+    template: c1-fine-arts-module-template.md
+    description: 'C1 fine arts modules'
+
+  - meta_field: focus
+    value: folk_culture
+    level: c1
+    template: c1-folk-culture-module-template.md
+    description: 'C1 folk culture modules'
+
+  - meta_field: focus
+    value: sociolinguistics
+    level: c1
+    template: c1-sociolinguistics-module-template.md
+    description: 'C1 sociolinguistics modules'
+
+  - meta_field: focus
+    value: checkpoint
+    level: c1
+    template: c1-checkpoint-module-template.md
+    description: 'C1 checkpoint modules'
+
+  # Default C1
+  - pattern: '^c1-'
+    level: c1
+    template: c1-module-template.md
+    description: 'C1 default template'
+
+  # =============================================================================
+  # C2: By meta.focus field
+  # =============================================================================
+
+  - meta_field: focus
+    value: literary
+    level: c2
+    template: c2-literary-module-template.md
+    description: 'C2 literary modules'
+
+  - meta_field: focus
+    value: professional
+    level: c2
+    template: c2-professional-module-template.md
+    description: 'C2 professional modules'
+
+  - meta_field: focus
+    value: style
+    level: c2
+    template: c2-style-module-template.md
+    description: 'C2 style modules'
+
+  - meta_field: focus
+    value: meta_skills
+    level: c2
+    template: c2-meta-skills-module-template.md
+    description: 'C2 meta-skills modules'
+
+  - meta_field: focus
+    value: checkpoint
+    level: c2
+    template: c2-checkpoint-module-template.md
+    description: 'C2 checkpoint modules'
+
+  # Default C2
+  - pattern: '^c2-'
+    level: c2
+    template: c2-module-template.md
+    description: 'C2 default template'
+
+  # =============================================================================
+  # LIT: Single template
+  # =============================================================================
+  - pattern: '^lit-'
+    level: lit
+    template: lit-module-template.md
+    description: 'LIT track modules use specialized literature seminar template'

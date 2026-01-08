@@ -2,8 +2,19 @@
 **Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ✅ PASS
 
+## TEMPLATE COMPLIANCE
+- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Презентація' is empty
+  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Practice' is empty
+  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 2 violations (minor)
+
 ## Gates
-- **Words:** ✅ 1086/1000
+- **Words:** ✅ 1109/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -15,21 +26,29 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 47.4% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 46.2% (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 161 | Included in Core |
+| **Intro/Narrative** | ✅ | 160 | Included in Core |
 | **Презентація** | ⚪️ | 0 | Skipped |
+| **Practice** | ⚪️ | 0 | Skipped |
 | **Understanding the Case System** | ⚪️ | 101 | Skipped |
-| **Case-by-Case Review** | ✅ | 524 | Included in Core |
+| **Case-by-Case Review** | ✅ | 28 | Included in Core |
+| **Nominative Case (Називний відмінок)** | ⚪️ | 69 | Skipped |
+| **Genitive Case (Родовий відмінок)** | ⚪️ | 72 | Skipped |
+| **Dative Case (Давальний відмінок)** | ⚪️ | 97 | Skipped |
+| **Accusative Case (Знахідний відмінок)** | ⚪️ | 66 | Skipped |
+| **Instrumental Case (Орудний відмінок)** | ⚪️ | 71 | Skipped |
+| **Locative Case (Місцевий відмінок)** | ⚪️ | 98 | Skipped |
+| **Кличний відмінок — Vocative Case** | ⚪️ | 17 | Skipped |
 | **Cultural Insight** | ✅ | 0 | Included in Core |
 | **Як відмінки формують речення** | ⚪️ | 46 | Skipped |
 | **Як обрати правильний відмінок** | ⚪️ | 79 | Skipped |
-| **Practice** | ⚪️ | 0 | Skipped |
-| **Практичні вправи** | ⚪️ | 81 | Skipped |
-| **Summary** | ✅ | 0 | Included in Core |
-| **Підсумок** | ✅ | 94 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Вправа 1: Визначте відмінок** | ⚪️ | 48 | Skipped |
+| **Вправа 2: Провідмінюйте слово** | ⚪️ | 6 | Skipped |
+| **Вправа 3: Оберіть правильну форму** | ⚪️ | 27 | Skipped |
+| **Summary** | ✅ | 94 | Included in Core |
+| **Need More Practice?** | ⚪️ | 30 | Skipped |

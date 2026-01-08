@@ -6,6 +6,20 @@
 
 **Related Issue:** [#292](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/292)
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Presentation|Grammar|Focus|Презентація|Граматика|Теорія
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: varies
+  min_word_count: 1800
+  required_callouts: []
+  description: B2 base template - inherits common B2 standards
+-->
+
 ---
 
 ## Quick Reference Checklist

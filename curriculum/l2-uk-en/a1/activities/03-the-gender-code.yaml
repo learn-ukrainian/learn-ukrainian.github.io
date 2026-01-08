@@ -1,7 +1,7 @@
 - type: quiz
   title: Gender Recognition
   items:
-  - question: What gender is the noun "книга"?
+  - question: What gender is the noun «книга»?
     options:
     - text: Masculine
       correct: false
@@ -12,7 +12,7 @@
     - text: Plural only
       correct: false
     explanation: Nouns ending in -а are typically feminine.
-  - question: What gender is "вікно"?
+  - question: What gender is «вікно»?
     options:
     - text: Masculine
       correct: false
@@ -23,7 +23,7 @@
     - text: No gender
       correct: false
     explanation: Nouns ending in -о are neuter.
-  - question: What gender is "стіл"?
+  - question: What gender is «стіл»?
     options:
     - text: Masculine
       correct: true
@@ -34,7 +34,7 @@
     - text: Unknown
       correct: false
     explanation: Nouns ending in a consonant are typically masculine.
-  - question: Which family does "ніч" belong to?
+  - question: Which family does «ніч» belong to?
     options:
     - text: Family 1
       correct: false
@@ -67,7 +67,7 @@
     - text: '5'
       correct: false
     explanation: There are 4 declension families.
-  - question: What gender is "море"?
+  - question: What gender is «море»?
     options:
     - text: Masculine
       correct: false
@@ -77,7 +77,7 @@
       correct: true
     - text: Plural
       correct: false
-    explanation: '"Море" ends in -е, so it''s neuter.'
+    explanation: '«Море» ends in -е, so it''s neuter.'
   - question: Which noun is masculine?
     options:
     - text: хліб
@@ -88,7 +88,7 @@
       correct: false
     - text: кімната
       correct: false
-    explanation: '"Хліб" ends in a consonant, so it''s masculine.'
+    explanation: '«Хліб» ends in a consonant, so it''s masculine.'
   - question: Which noun is feminine?
     options:
     - text: стіл
@@ -99,7 +99,7 @@
       correct: false
     - text: море
       correct: false
-    explanation: '"Школа" ends in -а, so it''s feminine.'
+    explanation: '«Школа» ends in -а, so it''s feminine.'
   - question: Can you predict gender from the ending 95% of the time?
     options:
     - text: 'Yes'
@@ -132,7 +132,7 @@
       correct: true
     - text: магазин
       correct: false
-    explanation: '"Яблуко" ends in -о, so it''s neuter.'
+    explanation: '«Яблуко» ends in -о, so it''s neuter.'
   id: gender-recognition
 - type: match-up
   title: Gender Pairs
@@ -316,16 +316,16 @@
   - statement: Gender affects case endings.
     correct: true
     explanation: Correct! Masculine, feminine, and neuter have different case patterns.
-  - statement: '"Двері" has a gender.'
+  - statement: '«Двері» has a gender.'
     correct: false
-    explanation: Incorrect! "Двері" is plural only and has no singular gender.
+    explanation: Incorrect! «Двері» is plural only and has no singular gender.
   - statement: Family 2 includes both masculine and neuter nouns.
     correct: true
     explanation: Correct! Masculine consonant endings + neuter -о/-е.
   - statement: You must memorize gender for every noun.
     correct: false
     explanation: Incorrect! You can predict gender from the ending pattern.
-  - statement: '"Ім''я" is a special neuter noun (Family 4).'
+  - statement: '«Ім''я» is a special neuter noun (Family 4).'
     correct: true
     explanation: 'Correct! It changes stem in declension: ім''я → імені.'
   id: gender-rules
@@ -396,6 +396,8 @@
       correct: false
     - text: воно
       correct: false
+    - text: вони
+      correct: false
     explanation: Стіл ends in a consonant → masculine → він
   - question: Which pronoun matches **книга** (book)?
     options:
@@ -404,6 +406,8 @@
     - text: вона
       correct: true
     - text: воно
+      correct: false
+    - text: вони
       correct: false
     explanation: Книга ends in -а → feminine → вона
   - question: Which pronoun matches **вікно** (window)?
@@ -414,6 +418,8 @@
       correct: false
     - text: воно
       correct: true
+    - text: вони
+      correct: false
     explanation: Вікно ends in -о → neuter → воно
   - question: Which pronoun matches **кімната** (room)?
     options:
@@ -422,6 +428,8 @@
     - text: вона
       correct: true
     - text: воно
+      correct: false
+    - text: вони
       correct: false
     explanation: Кімната ends in -а → feminine → вона
   - question: Which pronoun matches **дім** (house)?
@@ -432,6 +440,8 @@
       correct: false
     - text: воно
       correct: false
+    - text: вони
+      correct: false
     explanation: Дім ends in a consonant → masculine → він
   - question: Which pronoun matches **місто** (city)?
     options:
@@ -441,6 +451,8 @@
       correct: false
     - text: воно
       correct: true
+    - text: вони
+      correct: false
     explanation: Місто ends in -о → neuter → воно
   - question: Which pronoun matches **лампа** (lamp)?
     options:
@@ -449,6 +461,8 @@
     - text: вона
       correct: true
     - text: воно
+      correct: false
+    - text: вони
       correct: false
     explanation: Лампа ends in -а → feminine → вона
   - question: Which pronoun matches **крісло** (armchair)?
@@ -459,5 +473,7 @@
       correct: false
     - text: воно
       correct: true
+    - text: вони
+      correct: false
     explanation: Крісло ends in -о → neuter → воно
   id: gender-pronoun-match

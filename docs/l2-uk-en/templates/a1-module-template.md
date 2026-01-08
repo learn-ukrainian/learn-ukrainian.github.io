@@ -5,6 +5,27 @@
 > **Focus:** Cyrillic alphabet, basic vocabulary, simple phrases
 > **Immersion:** Graduated (M01-05: 20-30%, M06-20: 40-60%, M21-34: 60-80%)
 
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Presentation|Grammar|Focus|Презентація|Граматика|Теорія
+  - Practice|Exercises|Activity|Практика|Вправи
+  - Summary|Підсумок
+  - Need More Practice?
+  optional_sections:
+  - Cultural Note
+  - Pronunciation Tips
+  forbidden_headers:
+  - Activities
+  - Vocabulary
+  - External Resources
+  pedagogy: PPP
+  min_word_count: 300
+  required_callouts: []
+  description: A1 uses PPP pedagogy with graduated immersion and Cyrillic focus
+-->
+
 ---
 
 ## Template Checklist
@@ -27,34 +48,34 @@ Before submitting, verify:
 ```yaml
 ---
 module: a1-{NN}
-title: "{Title in English}"
-subtitle: "{Descriptive subtitle}"
-version: "1.0"
-phase: "A1.{1|2|3}"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "{full|partial|first-occurrence|none}"
+title: '{Title in English}'
+subtitle: '{Descriptive subtitle}'
+version: '1.0'
+phase: 'A1.{1|2|3}'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: '{full|partial|first-occurrence|none}'
 tags:
-  - {topic1}
-  - {topic2}
+  - { topic1 }
+  - { topic2 }
 grammar:
-  - {grammar point 1}
-  - {grammar point 2}
+  - { grammar point 1 }
+  - { grammar point 2 }
 objectives:
-  - "Learner can {objective 1}"
-  - "Learner can {objective 2}"
-  - "Learner can {objective 3}"
+  - 'Learner can {objective 1}'
+  - 'Learner can {objective 2}'
+  - 'Learner can {objective 3}'
 vocabulary_count: 25 # Must match count in vocabulary/{slug}.yaml
 ---
 ```
 
 ### Transliteration Rules
 
-| Modules | Phase | Transliteration | Example |
-|---------|-------|-----------------|---------|
-| 01-10 | A1.1 | `full` | Слово (Slovo) |
-| 11-20 | A1.2 | `partial` | Vocab lists only |
-| 21-34 | A1.3 | `first-occurrence` | First time only |
+| Modules | Phase | Transliteration    | Example          |
+| ------- | ----- | ------------------ | ---------------- |
+| 01-10   | A1.1  | `full`             | Слово (Slovo)    |
+| 11-20   | A1.2  | `partial`          | Vocab lists only |
+| 21-34   | A1.3  | `first-occurrence` | First time only  |
 
 ---
 
@@ -67,6 +88,7 @@ Main title matching frontmatter.
 ### ## Warm-up
 
 Brief engaging introduction (50-100 words):
+
 - Hook the learner with something relatable
 - Preview what they'll learn
 - Build confidence ("You already know...")
@@ -78,14 +100,15 @@ Core lesson content organized into subsections:
 #### ### {Subsection 1}
 
 Introduce concept with:
+
 - Clear explanation in English (A1 allows English)
 - Table showing patterns
 - 3-5 example words/phrases with transliteration (if applicable)
 
 ```markdown
-| Letter | Sound | Example | English |
-|--------|-------|---------|---------|
-| **А а** | /ɑ/ | мама | mama |
+| Letter  | Sound | Example | English |
+| ------- | ----- | ------- | ------- |
+| **А а** | /ɑ/   | мама    | mama    |
 ```
 
 #### ### {Subsection 2}
@@ -107,6 +130,7 @@ More content...
 ### ## Practice
 
 Guided practice section (optional for some modules):
+
 - Controlled exercises
 - Pattern drills
 - Guided discovery
@@ -114,6 +138,7 @@ Guided practice section (optional for some modules):
 ### ## Summary
 
 Brief recap (50-75 words):
+
 - What was learned
 - Key takeaways
 - Encouragement for next steps
@@ -123,6 +148,7 @@ Brief recap (50-75 words):
 8+ activities from allowed types:
 
 **A1 Activity Types:**
+
 - `quiz` - Multiple choice
 - `match-up` - Pair matching
 - `fill-in` - Gap fill with options
@@ -132,6 +158,7 @@ Brief recap (50-75 words):
 - `anagram` - Letter unscrambling (M01-10 only)
 
 **Activity Requirements:**
+
 - 12+ items per activity
 - 4+ unique activity types
 - Clear instructions in English
@@ -151,16 +178,16 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
   items:
     - question: What number is "п'ять"?
       options:
-        - text: "3"
+        - text: '3'
           correct: false
-        - text: "5"
+        - text: '5'
           correct: true
 
 - type: match-up
   title: Numbers and Words
   pairs:
     - left: один
-      right: "1"
+      right: '1'
 ```
 
 ### ## Vocabulary
@@ -171,12 +198,12 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ```yaml
 items:
-- lemma: слово
-  ipa: /slɔwɔ/
-  translation: word
-  pos: noun
-  gender: n
-  note: —
+  - lemma: слово
+    ipa: /slɔwɔ/
+    translation: word
+    pos: noun
+    gender: n
+    note: —
 ```
 
 ---
@@ -184,6 +211,7 @@ items:
 ## A1 Constraints
 
 ### Grammar Allowed
+
 - Nominative case (naming things)
 - Accusative case (direct objects, basic)
 - Locative case (locations with в/у/на)
@@ -193,6 +221,7 @@ items:
 - Imperfective aspect only
 
 ### Grammar Forbidden
+
 - Dative case (introduced A2)
 - Instrumental case (introduced A2)
 - Perfective aspect (introduced A2)
@@ -200,6 +229,7 @@ items:
 - Subordinate clauses (що, який, бо)
 
 ### Sentence Complexity
+
 - Maximum 10 words per sentence
 - Single clause only
 - Simple subject-verb-object patterns
@@ -208,13 +238,13 @@ items:
 
 ## Quality Targets
 
-| Metric | M01-05 | M06-10 | M11-34 |
-|--------|--------|--------|--------|
-| Words | 300+ | 500+ | 750+ |
-| Activities | 8+ | 8+ | 8+ |
-| Items/activity | 12+ | 12+ | 12+ |
-| Engagement boxes | 2+ | 3+ | 3+ |
-| Vocabulary | 15+ | 20+ | 25+ |
+| Metric           | M01-05 | M06-10 | M11-34 |
+| ---------------- | ------ | ------ | ------ |
+| Words            | 300+   | 500+   | 750+   |
+| Activities       | 8+     | 8+     | 8+     |
+| Items/activity   | 12+    | 12+    | 12+    |
+| Engagement boxes | 2+     | 3+     | 3+     |
+| Vocabulary       | 15+    | 20+    | 25+    |
 
 ---
 
@@ -223,22 +253,22 @@ items:
 ```markdown
 ---
 module: a1-05
-title: "Numbers and Counting"
-subtitle: "From Zero to Hero"
-version: "1.0"
-phase: "A1.1"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "full"
+title: 'Numbers and Counting'
+subtitle: 'From Zero to Hero'
+version: '1.0'
+phase: 'A1.1'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'full'
 tags:
   - numbers
   - counting
 grammar:
   - cardinal numbers 0-20
 objectives:
-  - "Learner can count from 0 to 20"
-  - "Learner can recognize written numbers"
-  - "Learner can use numbers in basic phrases"
+  - 'Learner can count from 0 to 20'
+  - 'Learner can recognize written numbers'
+  - 'Learner can use numbers in basic phrases'
 vocabulary_count: 25
 ---
 
@@ -265,11 +295,14 @@ vocabulary_count: 25
 
 {Brief recap}
 
-## Activities
+---
 
-(See `activities/a1-05-numbers.yaml`)
+## Content Structure Note
 
-## Vocabulary
+### Activities & Vocabulary
 
-(See `vocabulary/a1-05-numbers.yaml`)
+**CRITICAL:** Do NOT add `## Activities` or `## Vocabulary` headers. These sections are injected automatically from:
+
+- `activities/a1-05-numbers.yaml`
+- `vocabulary/a1-05-numbers.yaml`
 ```

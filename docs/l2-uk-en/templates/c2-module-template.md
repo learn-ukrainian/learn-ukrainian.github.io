@@ -6,6 +6,20 @@
 
 **Related Issue:** [#294](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/294)
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Аналіз
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: Native
+  min_word_count: 2500
+  required_callouts: []
+  description: C2 base template for native-level mastery
+-->
+
 ---
 
 ## Quick Reference Checklist

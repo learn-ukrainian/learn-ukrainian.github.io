@@ -153,6 +153,10 @@ items:
   ipa: trenuˈʋɑtɪsʲɐ
   translation: to train (imp)
   pos: verb
+- lemma: час
+  translation: time; tense
+  pos: noun
+  gender: m
 - lemma: хоча
   ipa: xoˈt͡ʃɑ
   translation: although

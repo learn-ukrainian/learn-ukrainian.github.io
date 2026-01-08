@@ -112,54 +112,58 @@
   id: digital-terms
 - type: cloze
   title: Tech Sentences
-  passage: 'Я забув свій {пароль|екран|стіл|кіт}_. Надішли мені {посилання|мишку|клавіатуру|каву}_ на це відео. Він купив новий {ноутбук|ноутбука|ноутбуком|ноутбуки}_.
+  passage: 'Я забув свій {пароль|екран|стіл|кіт}_. Надішли мені {посилання|мишку|клавіатуру|каву}_
+    на це відео. Він купив новий {ноутбук|ноутбука|ноутбуком|ноутбуки}_.
 
 
-    Вона пише цікавий {блог|блога|блогом|блогу}_. Ми читаємо {новини|новина|новиною|новин}_ в інтернеті. У мене розбився {екран|клавіатура|мишка|звук}_ телефона.
+    Вона пише цікавий {блог|блога|блогом|блогу}_. Ми читаємо {новини|новина|новиною|новин}_
+    в інтернеті. У мене розбився {екран|клавіатура|мишка|звук}_ телефона.
 
 
-    Я {завантажую|шукаю|пишу|сплю}_ файл з інтернету. Це мій улюблений {сайт|сайту|сайтом|сайти}_. Ти читав цю {статтю|стаття|статті|статтею}_?
+    Я {завантажую|шукаю|пишу|сплю}_ файл з інтернету. Це мій улюблений {сайт|сайту|сайтом|сайти}_.
+    Ти читав цю {статтю|стаття|статті|статтею}_?
 
 
-    Тут поганий {зв''язок|телефон|комп''ютер|стіл}_. Він завжди {онлайн|офлайн|вдома|спить}_. Постав мені {лайк|коментар|бан|дізлайк}_!'
+    Тут поганий {зв''язок|телефон|комп''ютер|стіл}_. Він завжди {онлайн|офлайн|вдома|спить}_.
+    Постав мені {лайк|коментар|бан|дізлайк}_!'
   id: tech-sentences
 - type: true-false
   title: Tech Facts
   items:
-  - statement: '"Мишка" is an animal and a computer device.'
+  - statement: «Мишка» is an animal and a computer device.
     correct: true
     explanation: Yes, mouse (animal) and mouse (device) are both мишка.
-  - statement: '"Новини" is a singular noun.'
+  - statement: «Новини» is a singular noun.
     correct: false
     explanation: Новини is plural (news). One piece of news = новина.
-  - statement: '"Завантажувати" means to delete.'
+  - statement: «Завантажувати» means to delete.
     correct: false
     explanation: It means to download/upload. Delete is видаляти.
   - statement: Ukrainians use Telegram for news frequently.
     correct: true
     explanation: Telegram is a major news source.
-  - statement: '"Скріншот" is used in Ukrainian.'
+  - statement: «Скріншот» is used in Ukrainian.
     correct: true
     explanation: Yes, it's a loan word. Also знімок екрана.
   - statement: Diia (Дія) is a paper document.
     correct: false
     explanation: Diia is a digital app for government services.
-  - statement: '"Навушники" is always plural.'
+  - statement: «Навушники» is always plural.
     correct: true
     explanation: Like "headphones" or "pants", it's plural only.
-  - statement: '"Пароль" usually needs to be secret.'
+  - statement: «Пароль» usually needs to be secret.
     correct: true
     explanation: Passwords should be secret.
   - statement: First computer in continental Europe was built in Paris.
     correct: false
     explanation: It was built in Kyiv (MESM).
-  - statement: '"Публікувати" means to read.'
+  - statement: «Публікувати» means to read.
     correct: false
     explanation: To publish/post. To read is читати.
-  - statement: A "блогер" writes blogs or makes vlogs.
+  - statement: A «блогер» writes blogs or makes vlogs.
     correct: true
     explanation: Yes, blogger/vlogger.
-  - statement: Wifi is "вайфай" in Ukrainian.
+  - statement: Wifi is «вайфай» in Ukrainian.
     correct: true
     explanation: 'Phonetic borrowing: вайфай.'
   id: tech-facts
@@ -330,7 +334,8 @@
     - чаті
     - чату
     - чатом
-    explanation: 'Direction (into where?) requires Accusative: в чат. (Locative ''в чаті'' means location).'
+    explanation: 'Direction (into where?) requires Accusative: в чат. (Locative ''в
+      чаті'' means location).'
   - sentence: Я забула свій логіну.
     error: логіну
     answer: логін
@@ -357,7 +362,8 @@
     - смартфон
     - смартфону
     - смартфоном
-    explanation: 'Genitive of negation: немає смартфона (animate-like ending often used for gadgets, or standard genitive -а).'
+    explanation: 'Genitive of negation: немає смартфона (animate-like ending often
+      used for gadgets, or standard genitive -а).'
   - sentence: Я пишу коментар палець.
     error: палець
     answer: пальцем
@@ -388,7 +394,8 @@
   id: fix-the-tech
 - type: cloze
   title: Digital Morning
-  passage: 'Мій ранок починається зі {смартфона|книги|вікна}. Я вимикаю будильник на {екрані|столі|вулиці}.
+  passage: 'Мій ранок починається зі {смартфона|книги|вікна}. Я вимикаю будильник
+    на {екрані|столі|вулиці}.
 
     Потім я перевіряю {пошту|вікно|двері} і читаю {новини|музику|ігри}.
 
@@ -405,7 +412,10 @@
 - type: mark-the-words
   title: Find the Gadgets
   id: find-the-gadgets
-  passage: Я люблю свій *смартфон*. Це мій головний *гаджет*. Вдома у мене є *ноутбук* і *планшет*. Я люблю грати в ігри на *планшеті*. Для роботи мені потрібен *комп'ютер*. У нього великий *екран* і зручна *клавіатура*. Я також маю бездротові *навушники*. Техніка допомагає мені бути *онлайн*.
+  passage: Я люблю свій *смартфон*. Це мій головний *гаджет*. Вдома у мене є *ноутбук*
+    і *планшет*. Я люблю грати в ігри на *планшеті*. Для роботи мені потрібен *комп'ютер*.
+    У нього великий *екран* і зручна *клавіатура*. Я також маю бездротові *навушники*.
+    Техніка допомагає мені бути *онлайн*.
   correct_words:
   - смартфон
   - гаджет
@@ -417,6 +427,7 @@
   - клавіатура
   - навушники
   - онлайн
+  instruction: Натисніть на правильні слова в тексті.
 - type: select
   title: Choose Best Word
   items:
@@ -426,12 +437,20 @@
       correct: true
     - text: паспорт
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Password.
   - question: Click on the...
     options:
     - text: посилання
       correct: true
     - text: пошту
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Link.
   - question: Read the...
@@ -440,12 +459,20 @@
       correct: true
     - text: стілець
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Article.
   - question: Connect to the...
     options:
     - text: мережі
       correct: true
     - text: вулиці
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Network.
   - question: Send a...
@@ -454,12 +481,20 @@
       correct: true
     - text: книгу
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Message.
   - question: Watch a...
     options:
     - text: відео
       correct: true
     - text: радіо
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Video.
   - question: Write a...
@@ -468,12 +503,20 @@
       correct: true
     - text: роман
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Comment.
   - question: Buy a...
     options:
     - text: ноутбук
       correct: true
     - text: вікно
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Laptop.
   - question: Search in...
@@ -482,12 +525,20 @@
       correct: true
     - text: кишені
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Google.
   - question: Charge the...
     options:
     - text: смартфон
       correct: true
     - text: стіл
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Smartphone.
   - question: Listen to a...
@@ -496,12 +547,20 @@
       correct: true
     - text: газету
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Podcast.
   - question: Work...
     options:
     - text: онлайн
       correct: true
     - text: у лісі
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Online.
   id: choose-best-word

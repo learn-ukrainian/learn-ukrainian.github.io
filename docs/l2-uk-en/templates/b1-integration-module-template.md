@@ -22,6 +22,20 @@ Before submitting your integration module, verify:
 - [ ] **Meta-level guidance:** Explicit instruction on HOW to read/listen/integrate
 - [ ] **B2 readiness check:** Explicitly prepares for next level
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Огляд
+  - Інтеграція
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: TTT
+  min_word_count: 1500
+  required_callouts: []
+  description: B1 integration combines multiple grammar points
+-->
+
 ---
 
 ## Key Integration Module Characteristics

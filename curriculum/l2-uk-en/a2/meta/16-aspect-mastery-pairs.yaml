@@ -4,19 +4,19 @@ subtitle: Drilling the 30 Most Common Pairs
 version: '1.0'
 phase: A2.2
 pedagogy: PPP
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - aspect
-  - verbs
-  - drilling
+- aspect
+- verbs
+- drilling
 grammar:
-  - perfective/imperfective pairs
-  - aspect selection in context
+- perfective/imperfective pairs
+- aspect selection in context
 objectives:
-  - Learner can recall 30+ aspect pairs automatically
-  - Learner can select correct aspect based on context
-  - Learner can transform between aspects fluently
+- Learner can recall 30+ aspect pairs automatically
+- Learner can select correct aspect based on context
+- Learner can transform between aspects fluently
 vocabulary_count: 30
-vocab_count: 20
 slug: 16-aspect-mastery-pairs
+focus: grammar

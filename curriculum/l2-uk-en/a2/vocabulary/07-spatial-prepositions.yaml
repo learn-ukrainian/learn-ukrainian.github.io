@@ -9,11 +9,11 @@ items:
     gender: n
   - lemma: висити
     ipa: ˈvɪsɪte
-    translation: to hang (intransitive) - typo? висіти
+    translation: to hang - typo? висіти
     pos: verb
   - lemma: висіти
     ipa: vɪˈsʲite
-    translation: to hang (be hanging)
+    translation: to hang
     pos: verb
   - lemma: група
     ipa: ˈɦrupɐ
@@ -30,7 +30,7 @@ items:
     pos: verb
   - lemma: зустрінутися
     ipa: zustˈrinutɪsʲɐ
-    translation: to meet (oneself/each other)
+    translation: to meet
     pos: verb
   - lemma: камінь
     ipa: ˈkɑminʲ
@@ -49,7 +49,7 @@ items:
     gender: m
   - lemma: класти
     ipa: ˈklɑste
-    translation: to put (horizontally)
+    translation: to put
     pos: verb
   - lemma: ключовий
     ipa: klʲut͡ʃoˈʋei̯
@@ -57,7 +57,7 @@ items:
     pos: adj
   - lemma: ко
     ipa: ko
-    translation: to (archaic/dialect/rare prep)
+    translation: to
     pos: pron
     gender: m
   - lemma: кошик
@@ -98,6 +98,16 @@ items:
     translation: luck (genitive pl?)
     pos: noun
     gender: f
+  - lemma: місцевий
+    translation: locative
+    pos: adj
+  - lemma: знахідний
+    translation: accusative
+    pos: adj
+  - lemma: відмінок
+    translation: case
+    pos: noun
+    gender: m
   - lemma: фотографії
     ipa: fotoˈɦrɑfiji
     translation: photos

@@ -1,5 +1,7 @@
 # Tomorrow - Future Tense
 
+## Introduction
+
 > [!summary] Learning Goals
 >
 > - Express future actions using буду + infinitive
@@ -22,13 +24,13 @@
 >
 > The future = буду/будеш/буде... + infinitive (-ти form)
 
-Ukrainian uses **буду** (future of "to be") + infinitive to form the compound future. This pattern is used specifically with **imperfective verbs** to describe actions that will be ongoing, repeated, or habitual.
+Ukrainian uses **буду** (future of «to be») + infinitive to form the compound future. This pattern is used specifically with **imperfective verbs** to describe actions that will be ongoing, repeated, or habitual.
 
 > [!important] **Aspect Awareness**
 >
-> 💡 **Note:** This is the **imperfective future** (буду читати = "I will be reading").
+> 💡 **Note:** This is the **imperfective future** (буду читати = «I will be reading»).
 >
-> Ukrainian also has **perfective future** forms (прочитаю = "I will finish reading").
+> Ukrainian also has **perfective future** forms (прочитаю = «I will finish reading»).
 > Coming in A2 when we study aspect!
 
 ### Conjugation of буду
@@ -45,9 +47,9 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 **Formation:** Infinitive + **-м-** endings.
 
-| Infinitive | + Endings | Result | Meaning |
-| :--- | :--- | :--- | :--- |
-| **читати** | -му, -меш, -ме | читати**му** | I will read |
+| Infinitive    | + Endings           | Result            | Meaning      |
+| :------------ | :------------------ | :---------------- | :----------- |
+| **читати**    | -му, -меш, -ме      | читати**му**      | I will read  |
 | **працювати** | -мемо, -мете, -муть | працювати**мемо** | We will work |
 
 > [!tip] **Pro Tip**
@@ -111,7 +113,7 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 > [!observe] Pattern Discovery
 >
-> Notice the pattern with "next":
+> Notice the pattern with «next»:
 >
 > - наступного **тижня** (next week)
 > - наступного **місяця** (next month)
@@ -218,15 +220,15 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 > 💡 **Future in Song**
 >
-> Many Ukrainian songs use the future tense to express hopes and dreams. The famous song "Все буде добре" (Everything will be fine) became an anthem of optimism during difficult times.
+> Many Ukrainian songs use the future tense to express hopes and dreams. The famous song «Все буде добре» (Everything will be fine) became an anthem of optimism during difficult times.
 
 > 🌍 **Making Appointments**
 >
 > When scheduling in Ukrainian:
 >
-> - "Я буду о третій" = I'll be there at three
-> - "Зателефоную пізніше" = I'll call later
-> - "Побачимось завтра!" = See you tomorrow!
+> - «Я буду о третій» = I'll be there at three
+> - «Зателефоную пізніше» = I'll call later
+> - «Побачимось завтра!» = See you tomorrow!
 
 > 💡 **Two Futures**
 >
@@ -240,7 +242,7 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 **Що ви вивчили (What you learned):**
 
-- **Майбутній час з "буду" (Future with "буду"):** буду/будеш/буде/будемо/будете/будуть + інфінітив
+- **Майбутній час з «буду» (Future with «буду»):** буду/будеш/буде/будемо/будете/будуть + інфінітив
 - **Часові вирази (Time expressions):** завтра, післязавтра, скоро, пізніше
 - **Планування (Planning):** планую, збираюся, маю намір
 - **Надії та мрії (Hopes and dreams):** сподіваюся, мрію, хочу
@@ -249,7 +251,7 @@ You might see a shorter future form in books or formal speech. It's called the *
 
 ### Швидка довідка (Quick Reference)
 
-| Особа    | Дієслово "бути" | Приклад                       |
+| Особа    | Дієслово «бути» | Приклад                       |
 | -------- | --------------- | ----------------------------- |
 | я        | буду            | Я буду читати книгу.          |
 | ти       | будеш           | Ти будеш працювати завтра?    |
@@ -265,3 +267,12 @@ You might see a shorter future form in books or formal speech. It's called the *
 ---
 
 **Наступний урок:** Котра година? Дні тижня та місяці!
+
+---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

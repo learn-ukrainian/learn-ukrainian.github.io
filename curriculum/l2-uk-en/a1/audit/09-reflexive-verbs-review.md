@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 550/500
+- **Words:** ✅ 569/500
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 4/4 types
@@ -15,14 +15,8 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 26.9% (target 15-35% (M09))
+- **Immersion:** 🇺🇦 26.1% (target 15-35% (M09))
 - **Grammar:** ⏳ Pending validation
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -33,3 +27,4 @@
 | **Practice** | ⚪️ | 90 | Skipped |
 | **Cultural Insight** | ✅ | 45 | Included in Core |
 | **Summary** | ✅ | 43 | Included in Core |
+| **Need More Practice?** | ⚪️ | 19 | Skipped |

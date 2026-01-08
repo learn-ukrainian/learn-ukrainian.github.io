@@ -158,7 +158,7 @@
 
 > ⚡ **Myth vs Fact**
 >
-> **Myth:** "Ukraine still celebrates Christmas on January 7th"
+> **Myth:** «Ukraine still celebrates Christmas on January 7th»
 > **Fact:** Since 2023, Ukraine officially celebrates Christmas on December 25th! The Ukrainian Orthodox Church and Greek Catholic Church switched to the Gregorian calendar. Some families still celebrate both dates, but December 25th is now the official holiday!
 
 > 🎭 **Традиційне святкування (Traditional Celebrations)**
@@ -172,3 +172,10 @@
 Ви вивчили українські свята та традиції! Тепер ви знаєте багато щирих привітань. (You learned Ukrainian holidays and traditions! Now you know many sincere greetings.) Ви знаєте слова: подарунок, торт, вечірка. Це був дуже веселий урок! (This was a very cheerful lesson!)
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

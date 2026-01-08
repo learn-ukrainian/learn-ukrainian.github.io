@@ -54,13 +54,13 @@
 
     Вже готовий {обід|сніданок|вечір}. (lunch)
 
-    Бабуся каже: "{Смачного|Привіт|Бувай}!" (Bon appetit)
+    Бабуся каже: "{Смачного|Привіт|Бувай}!"
 
-    Борщ налили у {тарілку|сковороду|духовку}. (pot/plate)
+    Борщ налили у {тарілку|сковороду|духовку}.
 
     Це була чудова {вечеря|кухня|кімната}. (dinner)
 
-    Марія каже: "{Дякую|Будь ласка|Прошу}, бабусю!" (Thank you)'
+    Марія каже: "{Дякую|Будь ласка|Прошу}, бабусю!"'
   id: recipe-story
 - type: quiz
   title: Food & Cooking
@@ -241,6 +241,8 @@
     options:
     - сковороді
     - каструлі
+    - помилка
+    - правильно
     explanation: We fry (смажити) in a pan (сковорода), not a pot.
   - sentence: '**Вари** хліб у духовці.'
     error: Вари
@@ -248,6 +250,8 @@
     options:
     - Печи
     - Вари
+    - помилка
+    - правильно
     explanation: We bake (пекти) bread in the oven, not boil.
   - sentence: Суп дуже **солодкий**.
     error: солодкий
@@ -255,6 +259,8 @@
     options:
     - солоний
     - солодкий
+    - помилка
+    - правильно
     explanation: Soup is typically described as salty (солоний), not sweet.
   - sentence: '**Обід** — це ранкова їжа.'
     error: Обід
@@ -262,6 +268,8 @@
     options:
     - Сніданок
     - Обід
+    - помилка
+    - правильно
     explanation: Morning meal = сніданок. Обід = lunch.
   - sentence: Поклади молоко в **духовку**.
     error: духовку
@@ -269,6 +277,8 @@
     options:
     - холодильник
     - духовку
+    - помилка
+    - правильно
     explanation: Milk goes in the refrigerator, not the oven!
   - sentence: '**Тушкуй** воду в чайнику.'
     error: Тушкуй
@@ -276,6 +286,8 @@
     options:
     - Закип'яти
     - Тушкуй
+    - помилка
+    - правильно
     explanation: We boil (кип'ятити) water, not stew it.
   id: kitchen-mistakes
 - type: match-up
@@ -331,29 +343,29 @@
 - type: true-false
   title: Kitchen Facts
   items:
-  - statement: '"Каструля" = pot.'
+  - statement: «Каструля» = pot.
     correct: true
-  - statement: '"Сковорода" = frying pan.'
+  - statement: «Сковорода» = frying pan.
     correct: true
-  - statement: '"Варити" = to bake.'
+  - statement: «Варити» = to bake.
     correct: false
-  - statement: '"Варити" = to boil.'
+  - statement: «Варити» = to boil.
     correct: true
-  - statement: '"Сніданок" = breakfast.'
+  - statement: «Сніданок» = breakfast.
     correct: true
-  - statement: '"Вечеря" = lunch.'
+  - statement: «Вечеря» = lunch.
     correct: false
-  - statement: '"Вечеря" = dinner.'
+  - statement: «Вечеря» = dinner.
     correct: true
-  - statement: '"Солодкий" = sweet.'
+  - statement: «Солодкий» = sweet.
     correct: true
-  - statement: '"Солоний" = sweet.'
+  - statement: «Солоний» = sweet.
     correct: false
-  - statement: '"Гострий" = spicy.'
+  - statement: «Гострий» = spicy.
     correct: true
-  - statement: '"Духовка" = oven.'
+  - statement: «Духовка» = oven.
     correct: true
-  - statement: '"Обід" = dinner.'
+  - statement: «Обід» = dinner.
     correct: false
   id: kitchen-facts
 - type: translate

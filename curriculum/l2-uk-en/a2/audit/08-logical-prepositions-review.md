@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1103/1000
+- **Words:** ✅ 1127/1000
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -15,19 +15,21 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 38.9% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 40.1% (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 68 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Вступ** | ⚪️ | 68 | Skipped |
+| **Presentation** | ✅ | 0 | Included in Core |
 | **Part 1: Benefit & Absence** | ⚪️ | 0 | Skipped |
 | **Understanding Logical Prepositions** | ⚪️ | 61 | Skipped |
 | **Для + Genitive (For)** | ⚪️ | 91 | Skipped |
 | **Без + Genitive (Without)** | ⚪️ | 29 | Skipped |
 | **Part 2: Cause & Topic** | ⚪️ | 0 | Skipped |
-| **Через + Accusative (Because of | Through)** | ⚪️ | 81 | Skipped |
+| **Через + Accusative (Because of | Through)** | ⚪️ | 78 | Skipped |
 | **Про + Accusative (About)** | ⚪️ | 15 | Skipped |
 | **Learning Note: Why Cases Matter** | ⚪️ | 177 | Skipped |
 | **Part 3: Source & Accompaniment** | ⚪️ | 0 | Skipped |
@@ -37,13 +39,14 @@
 | **О/Об + Locative (At - Time)** | ⚪️ | 9 | Skipped |
 | **Після + Genitive (After)** | ⚪️ | 7 | Skipped |
 | **Крім + Genitive (Except | Besides)** | ⚪️ | 5 | Skipped |
-| **Замість + Genitive (Instead of)** | ⚪️ | 4 | Skipped |
+| **Замість + Genitive** | ⚪️ | 4 | Skipped |
 | **Deep Dive: Case Summary** | ✅ | 39 | Included in Core |
 | **Story Time: The Letter** | ✅ | 96 | Included in Core |
 | **Story Time Part 2: The Café** | ✅ | 143 | Included in Core |
-| **Language in Action** | ⚪️ | 0 | Skipped |
+| **Practice** | ⚪️ | 31 | Skipped |
+| **Dialogues** | ✅ | 0 | Included in Core |
 | **Dialogue: At the Pharmacy** | ✅ | 45 | Included in Core |
 | **Dialogue: Planning a Trip** | ✅ | 57 | Included in Core |
 | **Dialogue: About a Book** | ✅ | 89 | Included in Core |
-| **Summary** | ✅ | 31 | Included in Core |
+| **Підсумок** | ✅ | 27 | Included in Core |
 | **Need More Practice?** | ⚪️ | 0 | Skipped |

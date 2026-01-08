@@ -7,17 +7,18 @@ pedagogy: Narrative
 duration: 60
 transliteration: none
 tags:
-  - vocabulary
-  - hobbies
-  - travel
-  - entertainment
+- vocabulary
+- hobbies
+- travel
+- entertainment
 grammar:
-  - verb-conjugation-imperative
-  - accusative-activities
+- verb-conjugation-imperative
+- accusative-activities
 objectives:
-  - Discuss hobbies: малювати, співати, танцювати
-  - Talk about travel: подорожувати, відвідувати
-  - Describe entertainment: кіно, театр, концерт
-  - Plan free time
-vocab_count: 46
+- Discuss hobbies: малювати, співати, танцювати
+- Talk about travel: подорожувати, відвідувати
+- Describe entertainment: кіно, театр, концерт
+- Plan free time
 slug: 51-hobbies-leisure
+vocabulary_count: 46
+focus: vocabulary

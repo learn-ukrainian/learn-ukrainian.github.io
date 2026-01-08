@@ -1,0 +1,133 @@
+version: '1.0'
+generated_at: '2026-01-06'
+resources:
+  c1-01-b2-review-bridge:
+    youtube:
+    - title: Лекція про культуру наукової мови
+      url: https://youtube.com/watch?v=example
+      relevance: high
+      channel: Unknown
+    websites:
+    - title: 'Академічне письмо: як писати наукові тексти українською'
+      url: https://example.com/academic-writing
+      relevance: high
+      source: Unknown
+    - title: Словник наукової термінології НАН України
+      url: https://lcorp.ulif.org.ua/dictua/
+      relevance: high
+      source: Unknown
+  c1-13-abstract-writing:
+    websites:
+    - title: 'Науковий стиль української мови: вимоги та рекомендації'
+      url: https://mon.gov.ua/
+      relevance: high
+      source: Unknown
+    - title: 'Як написати анотацію, яку помітять: поради від фахівців'
+      url: https://www.elsevier.com/
+      relevance: high
+      source: Unknown
+    - title: Приклади успішних анотацій у провідних українських часописах
+      url: https://periodicals.karazin.ua/
+      relevance: high
+      source: Unknown
+  c1-14-literature-review:
+    websites:
+    - title: 'Як писати Literature Review: посібник від Університету Единбурга'
+      url: https://www.ed.ac.uk/
+      relevance: high
+      source: Unknown
+    - title: 'Аналіз останніх досліджень: типові помилки та поради МОН України'
+      url: https://mon.gov.ua/
+      relevance: high
+      source: Unknown
+    - title: 'Інструменти для систематизації джерел: Zotero та Mendeley'
+      url: https://www.zotero.org/
+      relevance: high
+      source: Unknown
+  c1-15-oral-presentations:
+    websites:
+    - title: 'Як підготувати успішну презентацію: поради від провідних вчених'
+      url: https://mon.gov.ua/
+      relevance: high
+      source: Unknown
+    - title: 'Мистецтво публічного виступу: безкоштовний онлайн-курс на Prometheus'
+      url: https://prometheus.org.ua/
+      relevance: high
+      source: Unknown
+    - title: Приклади найкращих наукових презентацій на платформі SlideShare
+      url: https://www.slideshare.net/
+      relevance: high
+      source: Unknown
+  c1-16-advanced-punctuation:
+    websites:
+    - title: 'Український правопис 2019: повний розділ про пунктуацію'
+      url: https://mon.gov.ua/
+      relevance: high
+      source: Unknown
+    - title: Тренажер з пунктуації української мови онлайн
+      url: https://webpen.com.ua/
+      relevance: high
+      source: Unknown
+    - title: Типові помилки у вживанні розділових знаків у наукових текстах
+      url: https://ukr-mova.in.ua/
+      relevance: high
+      source: Unknown
+  c1-26-media-landscape:
+    websites:
+    - title: Детектор медіа (аналіз та критика)
+      url: https://detector.media/
+      relevance: high
+      source: Unknown
+    - title: Інститут масової інформації (ІМІ)
+      url: https://imi.org.ua/
+      relevance: high
+      source: Unknown
+    - title: По той бік новин (спростування фейків)
+      url: https://bezbrehni.com/
+      relevance: high
+      source: Unknown
+  c1-63-ivan-franko:
+    websites:
+    - title: Електронна бібліотека творів Івана Франка
+      url: https://www.i-franko.name/
+      relevance: high
+      source: Unknown
+    - title: Віртуальний музей "Дім Франка"
+      url: https://dimfranka.lviv.ua/
+      relevance: high
+      source: Unknown
+    youtube:
+    - title: Документальний фільм "Іван Франко. Листи до дружини"
+      url: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+      relevance: high
+      channel: Unknown
+  c1-64-yevhen-chykalenko:
+    websites:
+    - title: "Євген Чикаленко: життя заради нації"
+      url: https://incognita.day.kyiv.ua/yevgen-chikalenko.html
+      relevance: high
+      source: Unknown
+    - title: "Листи Євгена Чикаленка до Михайла Грушевського"
+      url: https://shron1.chtyvo.org.ua/Chykalenko_Yevhen/Lysty_do_M_Hrushevskoho.pdf
+      relevance: high
+      source: Unknown
+  c1-65-borys-hrinchenko:
+    websites:
+    - title: "Історія створення Словаря української мови"
+      url: https://r2u.org.ua/news/32
+      relevance: high
+      source: Unknown
+    - title: "Борис Грінченко: «Листи з України Наддніпрянської»"
+      url: https://shron1.chtyvo.org.ua/Hrinchenko_Borys/Lysty_z_Ukrainy_Naddniprianskoi.pdf
+      relevance: high
+      source: Unknown
+  c1-66-olha-kobylianska:
+    websites:
+    - title: "Ольга Кобилянська: Valse Mélancolique"
+      url: https://shron1.chtyvo.org.ua/Kobylianska_Olha/Valse_melancolique.pdf
+      relevance: high
+      source: Unknown
+    - title: "Листи Лесі Українки до Ольги Кобилянської"
+      url: https://shron1.chtyvo.org.ua/Ukrainka_Lesia/Lysty_do_Olhy_Kobylianskoi.pdf
+      relevance: high
+      source: Unknown

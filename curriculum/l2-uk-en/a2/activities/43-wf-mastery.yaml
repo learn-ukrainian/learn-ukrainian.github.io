@@ -132,7 +132,7 @@
 - type: quiz
   title: Formation Check
   items:
-  - question: What is the literal meaning of the verb "Мовчати"?
+  - question: What is the literal meaning of the verb «Мовчати»?
     options:
     - text: To be silent
       correct: true
@@ -142,7 +142,7 @@
       correct: false
     - text: To whisper
       correct: false
-  - question: The Ukrainian word "Замовлення" (Order) contains which specific root
+  - question: The Ukrainian word «Замовлення» (Order) contains which specific root
       component?
     options:
     - text: МОВ
@@ -153,7 +153,7 @@
       correct: false
     - text: РОБ
       correct: false
-  - question: The suffix "-ач" in "Слухач" indicates what meaning?
+  - question: The suffix "-ач" in «Слухач» indicates what meaning?
     options:
     - text: Person who does the action (Agent)
       correct: true
@@ -163,9 +163,9 @@
       correct: false
     - text: The location of the action
       correct: false
-  - question: What is the literal logic of "Переклад" (Translation)?
+  - question: What is the literal logic of the Ukrainian word «Переклад»?
     options:
-    - text: Cross-lay (Laying meaning across)
+    - text: Cross-lay
       correct: true
     - text: In-write
       correct: false
@@ -173,7 +173,7 @@
       correct: false
     - text: Re-read
       correct: false
-  - question: Which adjective is correctly derived from "Наука" (Science)?
+  - question: Which adjective is correctly derived from «Наука» (Science)?
     options:
     - text: Науковий
       correct: true
@@ -183,7 +183,7 @@
       correct: false
     - text: Наукський
       correct: false
-  - question: Can you explain why the words "Вхід" and "Вихід" are typically paired
+  - question: Can you explain why the words «Вхід» and «Вихід» are typically paired
       together?
     options:
     - text: They are opposites
@@ -194,7 +194,7 @@
       correct: false
     - text: They are different spellings of one word
       correct: false
-  - question: Can you identify the correct meaning of the Ukrainian verb "Придумати"?
+  - question: Can you identify the correct meaning of the Ukrainian verb «Придумати»?
     options:
     - text: To invent
       correct: true
@@ -204,7 +204,7 @@
       correct: false
     - text: To analyze
       correct: false
-  - question: '"Українська мова is beautiful." Which form is correct?'
+  - question: «Українська мова is beautiful.» Which form is correct?
     options:
     - text: Українська мова
       correct: true
@@ -252,6 +252,8 @@
     options:
     - читаю
     - слухаю
+    - помилка
+    - правильно
     explanation: You read books (ЧИТ). Though audiobooks exist, usually we read.
   - sentence: 'Це моя **мова**. (Intended: Opinion/Thought)'
     error: мова
@@ -259,6 +261,8 @@
     options:
     - думка
     - мова
+    - помилка
+    - правильно
     explanation: Opinion is 'Thought' (Думка), not 'Language' (Мова).
   - sentence: 'Де тут **вхід**? (Intended: Exit)'
     error: вхід
@@ -266,6 +270,8 @@
     options:
     - вихід
     - вхід
+    - помилка
+    - правильно
     explanation: Exit is Out-go (Вихід).
   - sentence: 'Він **читач** музику. (Intended: Listener)'
     error: читач
@@ -273,6 +279,8 @@
     options:
     - слухач
     - читач
+    - помилка
+    - правильно
     explanation: Music is for hearing (СЛУХ).
   - sentence: 'Це **наука** журнал. (Intended: Scientific)'
     error: наука
@@ -280,6 +288,8 @@
     options:
     - науковий
     - наука
+    - помилка
+    - правильно
     explanation: 'Adjective form needed: -овий.'
   - sentence: 'Гарна **розмова**. (Intended: Speech/Oration)'
     error: розмова
@@ -287,7 +297,9 @@
     options:
     - промова
     - розмова
-    explanation: A public speech is Pro-mova, not Roz-mova (Conversation).
+    - помилка
+    - правильно
+    explanation: A public speech is Pro-mova, not Roz-mova.
   id: wrong-logic
 - type: match-up
   title: Opposites

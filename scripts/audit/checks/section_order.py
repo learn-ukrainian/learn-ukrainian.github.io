@@ -13,26 +13,34 @@ from typing import Optional
 # Section type aliases - maps various header names to canonical types
 SECTION_ALIASES = {
     # Content sections (appear in order they're written)
-    'introduction': ['# Introduction', '# Вступ', '# Intro'],
-    'grammar': ['# Grammar', '# Граматика'],
-    'examples': ['# Examples in Context', '# Examples', '# Приклади', '# Приклади в контексті'],
-    'dialogues': ['# Dialogues', '# Діалоги', '# Dialogue'],
-    'cultural': ['# Cultural Insight', '# Cultural Notes', '# Культурні нотатки'],
-    'reading': ['# Reading Practice'],  # A2 PPP format
-    'warm_up': ['# Warm-up', '# Warm Up', '# Розминка'],  # A2 PPP format
-    'presentation': ['# Presentation', '# Презентація'],  # A2 PPP format
-    'practice': ['# Practice', '# Практика'],  # A2 PPP format
-    'review': ['# Review Sections', '# Review', '# Огляд'],
-    'checklist': ['# A1 Can-Do Checklist', '# Can-Do Checklist', '# Контрольний список'],
+    'introduction': ['# Introduction', '# Вступ', '# Intro', '## Introduction', '## Вступ'],
+    'grammar': ['# Grammar', '# Граматика', '## Grammar', '## Граматика'],
+    'examples': [
+        '# Examples in Context', '# Examples', '# Приклади', '# Приклади в контексті',
+        '## Examples in Context', '## Examples', '## Приклади', '## Приклади в контексті'
+    ],
+    'dialogues': ['# Dialogues', '# Діалоги', '# Dialogue', '## Dialogues', '## Діалоги'],
+    'cultural': [
+        '# Cultural Insight', '# Cultural Notes', '# Культурні нотатки',
+        '## Cultural Insight', '## Cultural Notes', '## Культурні нотатки'
+    ],
+    'reading': ['# Reading Practice', '## Reading Practice'],  # A2 PPP format
+    'warm_up': ['# Warm-up', '# Warm Up', '# Розминка', '## Warm-up', '## Warm Up', '## Розминка'],  # A2 PPP format
+    'presentation': ['# Presentation', '# Презентація', '## Presentation', '## Презентація'],  # A2 PPP format
+    'practice': ['# Practice', '# Практика', '## Practice', '## Практика'],  # A2 PPP format
+    'review': ['# Review Sections', '# Review', '# Огляд', '## Review Sections', '## Review', '## Огляд'],
+    'checklist': ['# A1 Can-Do Checklist', '# Can-Do Checklist', '# Контрольний список', '## Checklist', '## Контрольний список'],
 
     # End sections (fixed order: Summary → Activities → Self-Assessment → External → Vocabulary)
     'summary': [
         '## Summary', '## Підсумок', '## Підсумок (Summary)',
-        '## Резюме', '## Module Summary'
+        '## Резюме', '## Module Summary',
+        '# Summary', '# Підсумок'
     ],
     'activities': [
         '## Activities', '## Вправи', '## Вправи (Activities)',
-        '## Практичні вправи', '## Exercises'
+        '## Практичні вправи', '## Exercises',
+        '# Activities', '# Вправи'
     ],
     'self_assessment': [
         '## Self-Assessment', '## Self-Assessment Rubric', '## Самооцінка',
@@ -40,11 +48,13 @@ SECTION_ALIASES = {
     ],
     'external': [
         '## External Resources', '## Зовнішні ресурси', '## Resources',
-        '## Further Reading', '## Додаткові матеріали'
+        '## Further Reading', '## Додаткові матеріали',
+        '# External Resources', '# Зовнішні ресурси'
     ],
     'vocabulary': [
         '## Vocabulary', '## Словник', '## Vocab',
-        '## Лексика', '## Word List'
+        '## Лексика', '## Word List',
+        '# Vocabulary', '# Словник'
     ],
 }
 
@@ -86,7 +96,7 @@ def is_title_section(header: str) -> bool:
 
 
 def parse_sections(content: str) -> list[Section]:
-    """Parse module content into sections."""
+    """Parse module content into sections into sections."""
     sections = []
     lines = content.split('\n')
 
@@ -95,7 +105,9 @@ def parse_sections(content: str) -> list[Section]:
     current_content_lines = []
 
     for i, line in enumerate(lines, 1):
-        if line.startswith('# ') and not line.startswith('## '):
+        # Support both # and ## as section starts
+        # But ignore ### and deeper for top-level sectioning
+        if (line.startswith('# ') or line.startswith('## ')) and get_section_type(line):
             # Save previous section
             if current_header:
                 section_type = get_section_type(current_header)
@@ -110,8 +122,15 @@ def parse_sections(content: str) -> list[Section]:
             current_header = line
             current_line_num = i
             current_content_lines = [line]
+        elif line.startswith('# ') and not current_header:
+            # Handle the case where the very first H1 is the title and we want to start capturing
+            # actually parse_sections currently only captures "known" sections.
+            # If it's a title, we don't capture it as a "Section" object yet? 
+            # Looking at current code, it only tracks "known" sections.
+            pass
         else:
-            current_content_lines.append(line)
+            if current_header:
+                current_content_lines.append(line)
 
     # Save last section
     if current_header:

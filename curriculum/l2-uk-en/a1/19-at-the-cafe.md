@@ -32,7 +32,7 @@ When you walk into a Ukrainian café, you'll use phrases you've already learned�
 
 > [!tip] **Did You Know?**
 >
-> In Ukraine, it's common to spend HOURS at a café—reading, working, chatting with friends. Unlike in some countries where cafés rush you out, Ukrainian cafés welcome you to stay. Order one coffee, enjoy the atmosphere, and relax. This is called "кавова культура" (coffee culture).
+> In Ukraine, it's common to spend HOURS at a café—reading, working, chatting with friends. Unlike in some countries where cafés rush you out, Ukrainian cafés welcome you to stay. Order one coffee, enjoy the atmosphere, and relax. This is called «кавова культура» (coffee culture).
 
 ### Grammar Integration
 
@@ -49,7 +49,7 @@ You're not learning new grammar—you're **combining** what you know into real i
 
 > [!example] **Pop Culture Moment: Lviv's Coffee Legend**
 >
-> Lviv is Ukraine's coffee capital! Legend says the first café in Central Europe opened in Lviv in 1683. Today, Lviv has hundreds of unique coffee shops—from traditional "kavyarni" to modern third-wave cafés. If you visit, try "кава по-львівськи" (Lviv-style coffee)—strong, aromatic, and served with chocolate.
+> Lviv is Ukraine's coffee capital! Legend says the first café in Central Europe opened in Lviv in 1683. Today, Lviv has hundreds of unique coffee shops—from traditional «kavyarni» to modern third-wave cafés. If you visit, try «кава по-львівськи» (Lviv-style coffee)—strong, aromatic, and served with chocolate.
 
 ### Mini-Dialogue 1: Ordering Coffee
 
@@ -97,7 +97,7 @@ Translation:
 
 > [!info] **Real World: Paying Separately**
 >
-> In Ukraine, it's normal to ask for **окремі рахунки** (separate checks) when dining with friends. The waiter won't be surprised—it's standard practice. Just say: "Рахунок окремо, будь ласка."
+> In Ukraine, it's normal to ask for **окремі рахунки** (separate checks) when dining with friends. The waiter won't be surprised—it's standard practice. Just say: «Рахунок окремо, будь ласка.»
 
 ## Practice
 
@@ -119,16 +119,16 @@ You'll use these verb forms constantly:
 - **візьму** (I'll take) — from **взяти** (to take)
 - **порекомендуєте** (you recommend) — from **порекомендувати** (to recommend)
 - **принесіть** (bring!) — imperative from **принести** (to bring)
-- **спробувати** (to try) — "Можна спробувати?" (Can I try?)
+- **спробувати** (to try) — «Можна спробувати?» (Can I try?)
 
-> [!warning] **Common Mistake: "Я хочу" vs "Я візьму"**
+> [!warning] **Common Mistake: «Я хочу» vs «Я візьму»**
 >
-> In English, we say "I want coffee." In Ukrainian, saying **"Я хочу каву"** is grammatically correct but sounds DEMANDING—like a child wanting candy.
+> In English, we say «I want coffee.» In Ukrainian, saying **«Я хочу каву»** is grammatically correct but sounds DEMANDING—like a child wanting candy.
 >
-> **Polite way:** "Я візьму каву, будь ласка." (I'll take coffee, please.)
-> **Even more polite:** "Можна каву?" (May I have coffee?)
+> **Polite way:** «Я візьму каву, будь ласка.» (I'll take coffee, please.)
+> **Even more polite:** «Можна каву?» (May I have coffee?)
 >
-> Remember: **"візьму"** is polite, **"хочу"** is direct.
+> Remember: **«візьму»** is polite, **«хочу»** is direct.
 
 ### Mini-Dialogue 3: Sweet Tooth
 
@@ -157,7 +157,7 @@ Translation:
 > - **Наполеон** — puff pastry with custard
 > - **Київський торт** (Kyiv cake) — hazelnut meringue, a Kyiv specialty
 >
-> Fun fact: "Київський торт" was created in 1956 and became so popular that it's now exported worldwide!
+> Fun fact: «Київський торт» was created in 1956 and became so popular that it's now exported worldwide!
 
 ## Production
 
@@ -187,11 +187,11 @@ Translation:
 ### Ukrainian Café Etiquette
 
 **Tipping:**
-Tipping is becoming more common in Ukraine, especially in cities. 10% is standard for good service. You can say: **"Дякую за обслуговування"** (Thank you for the service).
+Tipping is becoming more common in Ukraine, especially in cities. 10% is standard for good service. You can say: **«Дякую за обслуговування»** (Thank you for the service).
 
 > [!tip] **Pro Tip: How to Tip**
 >
-> Leave cash on the table or tell the waiter you don't need change: **"Не треба решти"** (No need for change). Many cafés now accept card tips, but cash is still appreciated!
+> Leave cash on the table or tell the waiter you don't need change: **«Не треба решти»** (No need for change). Many cafés now accept card tips, but cash is still appreciated!
 
 **Coffee Culture:**
 
@@ -205,9 +205,9 @@ Tipping is becoming more common in Ukraine, especially in cities. 10% is standar
 - **Обід** (Lunch): 12-2 PM — the main meal
 - **Вечеря** (Dinner): 6-8 PM
 
-> [!info] **Real World: "Будь ласка" Is Magic**
+> [!info] **Real World: «Будь ласка» Is Magic**
 >
-> Add **"будь ласка"** (please) to EVERYTHING. Ukrainians appreciate politeness, and this tiny phrase makes you sound friendly and respectful:
+> Add **«будь ласка»** (please) to EVERYTHING. Ukrainians appreciate politeness, and this tiny phrase makes you sound friendly and respectful:
 >
 > - Рахунок, **будь ласка**.
 > - Каву, **будь ласка**.
@@ -226,13 +226,16 @@ Tipping is becoming more common in Ukraine, especially in cities. 10% is standar
 
 **Запам'ятайте (Remember):**
 
-- Кажіть **"візьму"**, не **"хочу"** (Say "I'll take", not "I want")
-- **"Будь ласка"** — ваш найкращий друг (Please is your best friend)
-- **"Рахунок окремо"** = separate checks
+- Кажіть **«візьму»**, не **«хочу»** (Say «I'll take», not «I want»)
+- **«Будь ласка»** — ваш найкращий друг (Please is your best friend)
+- **«Рахунок окремо»** = separate checks
 - Проводьте час у кафе — це частина української культури!
 
 ---
 
 ## Need More Practice?
 
----
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

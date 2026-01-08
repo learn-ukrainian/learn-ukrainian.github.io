@@ -3,30 +3,34 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): свій, свої, своє, ділитися, своя...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): ділитися, спільний, своя, особистий, свої...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
-## Recommendation
-**📝 UPDATE** (severity 10/100)
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' per template 'a2-module-template'
+  - FIX: Add '## Presentation' section as specified in docs/l2-uk-en/templates/a2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
+  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
-- 2 pedagogical violations (minor)
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 3 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1034/1000
+- **Words:** ✅ 1061/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/1
+- **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 36.7% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 35.6% (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
@@ -44,7 +48,7 @@
 | **Neuter** | ⚪️ | 0 | Skipped |
 | **Plural** | ⚪️ | 0 | Skipped |
 | **Common Patterns** | ✅ | 0 | Included in Core |
-| **Pattern 1: Subject = 1st/2nd Person** | ✅ | 28 | Included in Core |
+| **Pattern 1: Subject = 1st/2nd Person** | ✅ | 25 | Included in Core |
 | **Pattern 2: Subject = 3rd Person** | ✅ | 44 | Included in Core |
 | **Pattern 3: Different Subjects** | ✅ | 31 | Included in Core |
 | **Story Time: The Family Dinner** | ✅ | 152 | Included in Core |
@@ -58,4 +62,5 @@
 | **Mistake 2: Using Свій When Subject Differs** | ⚪️ | 18 | Skipped |
 | **Mistake 3: Forgetting to Decline Свій** | ⚪️ | 16 | Skipped |
 | **Language Learning Tip** | ✅ | 119 | Included in Core |
-| **Summary** | ✅ | 17 | Included in Core |
+| **Підсумок** | ✅ | 17 | Included in Core |
+| **Need More Practice?** | ⚪️ | 30 | Skipped |

@@ -4,7 +4,7 @@ version: '2.0'
 items:
   - lemma: ам
     ipa: ɑm
-    translation: ending (dative pl)
+    translation: ending
     pos: noun
     gender: m
   - lemma: бабусі
@@ -89,7 +89,7 @@ items:
     gender: f
   - lemma: еві
     ipa: ˈɛʋi
-    translation: ending (dative sg)
+    translation: ending
     pos: other
   - lemma: забруднення
     ipa: zɐˈbrudnʲenʲːɐ
@@ -194,7 +194,7 @@ items:
     pos: verb
   - lemma: ові
     ipa: ˈɔʋi
-    translation: ending (dative sg)
+    translation: ending
     pos: other
   - lemma: однина
     ipa: odnɪˈnɑ
@@ -375,7 +375,7 @@ items:
     pos: adv
   - lemma: ям
     ipa: jɑm
-    translation: pits (genitive pl) or ending
+    translation: pits or ending
     pos: other
   - lemma: із
     ipa: iz

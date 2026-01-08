@@ -1,350 +1,211 @@
-## Warm-up
+## Introduction
 
 **Ласкаво просимо до глибшого вивчення аспектних пар!**
 
-Now that you understand aspect conceptually and can use it in past and future tenses, let's go deeper into HOW aspect pairs are formed. Understanding the patterns will help you predict aspects for new verbs you encounter — a crucial skill for expanding your vocabulary efficiently.
+Now that you understand aspect conceptually, let's go deeper into how aspect pairs are formed. Understanding these models helps you predict the aspect of new verbs. This is a vital skill for expanding your vocabulary efficiently.
 
-**Why Pattern Recognition Matters:**
+**Чому розпізнавання моделей важливе:**
 
-When you learn a new verb in Ukrainian, you don't just learn one word — you potentially learn two or more related verbs. If you meet "читати" (to read), you can predict that adding "про-" will give you "прочитати" (to read through/finish). This predictability is a huge advantage for vocabulary building.
+When you learn a new verb in Ukrainian, you potentially learn a whole family of verbs. If you meet «читати», you can predict that adding «про-» will give you «прочитати». This predictability is a huge advantage for learners.
 
-However, you need to understand the patterns to make these predictions accurately. Not all prefixes work the same way, and some verb pairs don't follow any pattern at all — they simply use completely different words (called "suppletive pairs").
+However, you need to understand the patterns to make these predictions accurately. Not all prefixes work the same way. Some pairs use different words (suppletive pairs).
 
-**The Three Main Formation Patterns:**
+**Три основні моделі творення:**
 
-1. **Prefixation** — The most common method. Adding prefixes like про-, на-, з-, по-, ви- to an imperfective verb creates its perfective counterpart.
+1. **Префіксація** — найпоширеніший метод. Adding prefixes like про-, на-, з-, по-, ви- to an imperfective verb creates its perfective counterpart.
 
-2. **Suffixation** — Some pairs differ by having or removing -ва-/-ува- in the imperfective form (давати → дати).
+2. **Суфіксація** — some pairs differ by having or removing -ва-/-ува-.
 
-3. **Suppletive Pairs** — A small number of common verbs use completely different roots for different aspects (говорити → сказати, брати → взяти). These must be memorized as pairs.
+3. **Суплетивні пари** — some verbs use different roots for different aspects. You must memorize these as pairs.
 
 > 💡 **Запам'ятайте!**
->
 > Більшість українських дієслів утворюють доконаний вид за допомогою префіксів. Коли бачите дієслово з префіксом — швидше за все, це доконаний вид!
 
 ## Presentation
+
+This approach to vocabulary learning is often called morphological analysis. Instead of treating every new verb as a completely separate challenge, you learn to see the internal structure of the language. This mindset is what separates advanced learners from perpetual beginners. By looking for the root and the prefix, you're not just guessing; you're using the built-in logic of the Ukrainian language to unlock its secrets.
+
+## Практика
 
 ## Prefixation: The Most Common Pattern
 
 Most perfective verbs are formed by adding a prefix to the imperfective base. Here are the main patterns:
 
-### Prefix: про- (through, completion)
+## Prefix: про- (through, completion)
 
-| Imperfective | Perfective | Meaning |
+| Недоконаний | Доконаний | Значення |
 |--------------|------------|---------|
 | читати | **про**читати | to read (through) |
-| слухати | **про**слухати | to listen (to completion) |
-| лежати | **про**лежати | to lie (for a duration) |
+| слухати | **про**слухати | to listen |
+| лежати | **про**лежати | to lie |
 
-**Meaning:** "про-" often suggests going through something completely.
+**Meaning:** «про-» often suggests going through something completely from start to finish. It is a very common marker of total completion.
 
-### Prefix: на- (writing/filling)
+## Prefix: на- (creating, accumulation)
 
-| Imperfective | Perfective | Meaning |
+| Недоконаний | Доконаний | Значення |
 |--------------|------------|---------|
 | писати | **на**писати | to write |
 | малювати | **на**малювати | to draw/paint |
-| вчити | **на**вчити | to teach (to completion) |
+| вчити | **на**вчити | to teach |
 
-**Meaning:** "на-" often relates to creating something on a surface.
+**Meaning:** «на-» often relates to creating something on a surface or the final result of an accumulated effort.
 
-### Prefix: з-/с- (completion)
+## Prefix: з-/с- (general completion)
 
-| Imperfective | Perfective | Meaning |
+| Недоконаний | Доконаний | Значення |
 |--------------|------------|---------|
 | робити | **з**робити | to do/make |
 | їсти | **з**'їсти | to eat up |
 | ламати | **з**ламати | to break |
 
-**Meaning:** "з-" is a general completion marker.
+**Meaning:** «з-» is a very versatile and general marker of completion or connection in Ukrainian.
 
-> 💡 **Spelling Rule**
+> 💡 **Spelling Rule: The S-Prefix**
 >
-> The prefix "з-" becomes "с-" before voiceless consonants: сказати (not "зказати"), створити (not "зтворити").
+> The prefix «з-» changes to «с-» specifically when it comes before the voiceless consonants k, p, t, f, and kh. For example: сказати (not «зказати») or створити (not «зтворити»). Remember this rule to avoid common spelling mistakes!
 
-### Prefix: по- (beginning or brief action)
+## Prefix: по- (brief action or start)
 
-| Imperfective | Perfective | Meaning |
+| Недоконаний | Доконаний | Значення |
 |--------------|------------|---------|
-| бачити | **по**бачити | to see (catch sight of) |
-| чути | **по**чути | to hear (catch sound of) |
+| бачити | **по**бачити | to see |
+| чути | **по**чути | to hear |
 | любити | **по**любити | to fall in love |
 
-**Meaning:** "по-" can mark the start of a state or a brief action.
+**Meaning:** «по-» can mark the sudden start of a state or a brief, one-time action that doesn't last very long.
 
-### Prefix: ви- (out, mastery)
+## Prefix: ви- (mastery or exit)
 
-| Imperfective | Perfective | Meaning |
+| Недоконаний | Доконаний | Значення |
 |--------------|------------|---------|
 | вчити | **ви**вчити | to learn/master |
 | пити | **ви**пити | to drink up |
 | ходити | **ви**йти | to go out |
 
-**Meaning:** "ви-" often means "out" or complete mastery.
+**Meaning:** «ви-» often suggests movement outward or the absolute mastery of a difficult skill or subject.
 
 > 📜 **Pattern Recognition Tip**
 >
-> When you see a verb with a prefix, it's usually perfective. The underlying stem (without prefix) is usually imperfective. Exception: some prefixed verbs have their own imperfective forms!
+> When you see a verb with a prefix, it's usually perfective. The underlying stem is usually imperfective. Exception: some prefixed verbs have their own imperfective forms! Always look for the base word.
 
-## Suffixation Patterns
+## Suffixation Patterns (Reverse Pattern)
 
-Some aspect pairs change their suffix, typically involving -ва- or -ува-. This pattern is the reverse of prefixation — here, the imperfective is the "longer" form.
+Some aspect pairs change their suffix, typically involving -ва- or -ува-. This pattern is the reverse of prefixation — here, the imperfective is the «longer» form. This happens because the language takes a perfective verb and needs to make it imperfective again.
 
-| Imperfective | Perfective | Pattern |
+| Недоконаний | Доконаний | Модель |
 |--------------|------------|---------|
-| давати | дати | -ва- removal |
-| вставати | встати | -ва- removal |
-| відпочивати | відпочити | -ва- removal |
-| показувати | показати | -ува- removal |
+| давати | дати | видалення -ва- |
+| вставати | встати | видалення -ва- |
+| відпочивати | відпочити | видалення -ва- |
+| показувати | показати | видалення -ува- |
 
 **The pattern:** Imperfective has -ва- or -ува-; perfective doesn't.
 
 **Why this pattern exists:**
-When prefixed perfective verbs need imperfective counterparts, Ukrainian often adds -ва- or -ува- to create the imperfective. This is called "secondary imperfectivization" and is extremely common with prefixed verbs.
+When prefixed perfective verbs need imperfective counterparts, Ukrainian often adds -ва- or -ува- to create the imperfective. This is called «secondary imperfectivization» and is extremely common with prefixed verbs.
 
 For example: показати — perfective → показувати — imperfective.
 
 > [!tip] Easy Recognition
-> If a verb ends in -вати or -увати, it's almost always imperfective. Remove the suffix, and you often get the perfective!
+> If a verb ends in -вати or -увати, it's almost always imperfective. Remove the suffix, and you often get the perfective form! This is a very helpful shortcut.
 
-## Suppletive Pairs (Different Roots)
+## Suppletive Pairs (Unique Pairs)
 
-Some aspect pairs use completely different words. You must memorize these:
+Some aspect pairs use completely different words. These are often the oldest and most common verbs. You must memorize these:
 
-| Imperfective | Perfective | Meaning |
+| Недоконаний | Доконаний | Значення |
 |--------------|------------|---------|
 | говорити | сказати | to say/speak |
 | брати | взяти | to take |
 | класти | покласти | to put |
-| шукати | знайти | to look for / to find |
+| шукати | знайти | to find |
 
-**Meaning:** These pairs often have slightly different nuances — говорити (process of speaking) vs. сказати (saying something specific). Similarly, шукати means to look for or search, while знайти means specifically to find — the successful completion of searching.
+**Meaning:** These pairs often have slightly different nuances — говорити vs. сказати. Similarly, шукати means to look for or search, while знайти means specifically to find — the successful completion of searching.
 
-**Learning tip:** Prioritize memorizing these suppletive pairs since they are among the most frequently used verbs in everyday Ukrainian conversation.
-
----
-
-## Cultural Insight
-
-## Aspect and Word Formation
-
-Understanding aspect patterns helps you learn vocabulary faster. When you encounter a new verb, ask:
-
-1. **Does it have a prefix?** → Probably perfective
-2. **Does it have -ва-/-ува-?** → Probably imperfective
-3. **What's the basic meaning?** → Look for the pair!
-
-**Example:** You see "показувати" for the first time.
-- Has -ува- suffix → imperfective
-- Remove suffix → показ- → perfective: показати
-
-> 🔍 **Prefixes Can Change Meaning!**
->
-> Be careful: prefixes don't just perfectivize — they can change meaning entirely:
-> - писати (to write) → написати (to write/complete)
-> - писати (to write) → переписати (to rewrite)
-> - писати (to write) → підписати (to sign)
-> Each prefixed verb has its OWN imperfective: переписувати, підписувати.
+**Learning tip:** Prioritize memorizing these suppletive pairs since they are among the most frequently used verbs in everyday Ukrainian conversation. They appear in almost every dialogue!
 
 ---
 
-## Practice
+## Культурна нотка
 
-## Practice: Identify the Pattern
+## Вид та словотвір
 
-For each aspect pair below, identify how the perfective is formed:
+Розуміння моделей виду допомагає вчити нові слова набагато швидше. Коли ви бачите нове дієслово, запитайте себе:
 
-1. **читати → прочитати** = про- prefix (completion)
-2. **писати → написати** = на- prefix (creating)
-3. **давати → дати** = -ва- removal (suffix loss)
-4. **бачити → побачити** = по- prefix (moment of seeing)
-5. **говорити → сказати** = suppletive (different roots)
+1. **Чи є в нього префікс?** → Швидше за все, це доконаний вид.
+2. **Чи є в нього суфікс -ва-/-ува-?** → Швидше за все, це недоконаний вид.
+3. **Яке основне значення?** → Завжди шукайте його пару!
 
-**Additional Practice:**
+**Приклад:** Ви бачите слово «показувати».
+- Має суфікс -ува- → недоконаний вид.
+- Видаляємо суфікс → доконаний вид: показати.
 
-Now try these more challenging pairs. What pattern does each use?
+> 🔍 **Префікси можуть змінювати значення!**
+> Будьте уважні: префікси не тільки створюють доконаний вид. Вони можуть змінити весь зміст слова:
+> - писати → написати
+> - писати → переписати
+> - писати → підписати
+> Кожне таке дієслово має свою власну недоконану форму!
 
-6. **робити → зробити** = ? (Answer: з- prefix)
-7. **вчити → вивчити** = ? (Answer: ви- prefix for mastery)
-8. **вставати → встати** = ? (Answer: -ва- removal)
-9. **показувати → показати** = ? (Answer: -ува- removal)
-10. **брати → взяти** = ? (Answer: suppletive — different roots)
+## Логіка суфіксації
 
-**Learning Strategy:**
-When you encounter a new verb, follow this decision tree:
+Суфікси -ва- та -ува- дозволяють мові взяти завершену дію та розтягнути її назад у тривалий процес. Це важливо для опису звичок або тривалих зусиль.
 
-1. Does it have a prefix? → Probably perfective. Look for the unprefixed imperfective.
-2. Does it have -ва-/-ува-? → Probably imperfective. Remove suffix for perfective.
-3. Neither? → Check if it's a suppletive pair (memorize these separately).
+Наприклад, коли ви вже оволоділи навичкою, ви кажете «я вивчив». Але поки ви знаходитесь у процесі вивчення, ви кажете «я вивчаю». Цей ритмічний перехід між короткими та довгими формами створює унікальну текстуру української мови.
 
 ---
 
-# Summary
-
-## What You Learned
-
-This module explored how aspect pairs are formed in Ukrainian — essential knowledge for vocabulary building and accurate verb usage.
-
-**The Big Picture:**
-Ukrainian aspect is built into the verb system at a deep level. Understanding how perfective verbs are formed from imperfective ones (or vice versa) gives you the power to predict new vocabulary and recognize related verbs as members of the same "aspect family."
-
-**The Three Formation Patterns:**
-
-| Pattern | Description | Examples |
-|---------|-------------|----------|
-| **Prefixation** | Add prefix to imperfective | читати → прочитати, писати → написати |
-| **Suffixation** | Remove -ва-/-ува- | давати → дати, вставати → встати |
-| **Suppletive** | Different roots entirely | говорити → сказати, брати → взяти |
-
-**Key Prefixes and Their Meanings:**
-
-| Prefix | Core meaning | Example |
-|--------|--------------|---------|
-| про- | through, to completion | прочитати (read through) |
-| на- | writing, creating | написати (write out) |
-| з-/с- | completion, together | зробити (complete doing) |
-| по- | beginning, brief action | побачити (catch sight of) |
-| ви- | out, mastery | вивчити (master, learn) |
-
-**Recognition Tips:**
-- Prefix on a verb usually indicates perfective aspect
-- The suffix -ва- or -ува- usually indicates imperfective aspect
-- Same root with different prefixes = related but different verbs with different meanings
-- Suppletive pairs are few but very common — prioritize memorizing them
-
-**Important Warning:**
-Adding different prefixes to the same root creates different perfective verbs with related but distinct meanings. For example: написати (to write), переписати (to rewrite), підписати (to sign). Each of these has its OWN imperfective form!
-
-> 🌍 **Практична порада**
->
-> Коли вивчаєте нове дієслово, завжди питайте: "Який вид? Яка пара?" Це допоможе будувати словниковий запас системно, а не хаотично.
-
-Тепер ви можете розпізнавати аспектні пари та передбачати форми нових дієслів! 🔍
-
-> 💡 **Українське прислів'я**
->
-> «Хто рано встає, тому Бог дає.» (Встати — доконаний вид! Результат важливий!)
->
-> *Translation: "God gives to those who rise early." (Встати is perfective — result matters!)*
-
-> 🇺🇦 **Практика морфології**
->
-> Запам'ятайте основні префікси для творення доконаного виду:
-> - **про-**: читати → прочитати (закінчити читання)
-> - **на-**: писати → написати (закінчити писання)
-> - **з-/с-**: робити → зробити (закінчити роботу)
-> - **по-**: бачити → побачити (побачити щось нове)
->
-> Ці префікси — ваші найкращі друзі в українській мові! Коли ви бачите префікс перед дієсловом, це майже завжди означає доконаний вид. Практикуйте щодня!
+> [!cultural] History Bite: Еволюція виду
+> Система видів в українській мові є дуже давньою. Вона розвивалася тисячі років. Цікаво, що використання префіксів для показу завершеності схоже на англійські фразові дієслова (наприклад, «eat» проти «eat up»). Однак в українській мові це стало чіткою граматичною системою. Це дозволяє досягати надзвичайної точності в історичних розповідях та літературі.
 
 ---
+
+## Вправа: Визначте модель
+
+Визначте, як утворено доконаний вид для кожної пари:
+
+1. **читати → прочитати** = префікс про-
+2. **писати → написати** = префікс на-
+3. **давати → дати** = видалення -ва-
+4. **бачити → побачити** = префікс по-
+5. **говорити → сказати** = суплетивна пара
+
+---
+
+> [!cultural] Інтелектуальна гостинність (Intellectual Hospitality)
+> Українці люблять обговорювати нюанси слів за чаєм. Ви запитали носія мови, чому він використав саме цей префікс? Будьте готові до довгої та цікавої розповіді! Така любов до лінгвістичної точності є ознакою поваги до слухача.
+
+The logic of aspect is not just about grammar; it's about how you perceive time. When you use a perfective verb, you are focusing on the boundary or the result of an action. When you use an imperfective verb, you are living inside the action itself. This philosophical difference is reflected in the prefixation and suffixation patterns we've studied.
+
+By mastering these models, you are not just memorizing words — you are learning to see the world through the lens of Ukrainian action and result. This is a major step toward fluency!
+
+---
+
+**Стратегія навчання:**
+When you see a new verb, follow this logic:
+1. Prefix? → Probably perfective.
+2. Suffix -ва-? → Probably imperfective.
+3. Neither? → Check if it's a suppletive pair.
 
 # Підсумок
 
-У цьому модулі ви вивчили морфологію видової системи — як утворюються видові пари.
+In this module, you have explored the fascinating morphology of the Ukrainian aspect system. You've learned how most perfective verbs are built from imperfective bases using a variety of logical prefixes. You've also seen how the suffixation pattern works in reverse, and why a few essential verbs remain as unique suppletive pairs that must be memorized individually.
 
-## Способи творення доконаного виду
+**Основні висновки для вашого навчання (Key Takeaways):**
 
-### 1. Префіксація (найчастіший спосіб)
+1. **Сила префіксації (Prefixation Power):** Пам'ятайте, що префікс у дієслові є сильним сигналом доконаного виду. Префікси про-, на-, з-, по-, ви- — ваші найнадійніші індикатори.
 
-| Префікс | Недоконаний | Доконаний | Значення |
-|---------|-------------|-----------|----------|
-| **про-** | читати | прочитати | завершити |
-| **на-** | писати | написати | завершити |
-| **з-/с-** | робити | зробити | завершити |
-| **по-** | бачити | побачити | одноразово |
-| **ви-** | пити | випити | повністю |
+2. **Логіка суфіксації (Suffixation Logic):** Дієслова, що закінчуються на -вати або -увати, майже завжди недоконаного виду. Вони представляють «розтягнутий» процес дії.
 
-### 2. Суплетивні пари (різні корені)
+3. **Суплетивні пари (Suppletive Pairs):** Не дозволяйте парам говорити/сказати або брати/взяти збити вас з пантелику. Це просто давні пари, що використовують різні корені.
 
-| Недоконаний | Доконаний | Переклад |
-|-------------|-----------|----------|
-| говорити | сказати | to say |
-| брати | взяти | to take |
-| класти | покласти | to put |
-| шукати | знайти | to find |
+4. **Системна лексика (Systematic Vocabulary):** Використовуйте ці морфологічні моделі для системної побудови словникового запасу. Вчіть слова як членів «аспектних родин».
 
-### 3. Суфіксація (рідше)
-
-| Недоконаний | Доконаний | Переклад |
-|-------------|-----------|----------|
-| давати | дати | to give |
-| вставати | встати | to stand up |
-
-## Головні префікси
-
-| Префікс | Основне значення | Приклад |
-|---------|-----------------|---------|
-| **про-** | наскрізь, повністю | прочитати, пройти |
-| **на-** | накопичення | написати, наїстися |
-| **з-/с-** | завершення | зробити, спитати |
-| **по-** | початок, трохи | побачити, поїсти |
-| **ви-** | виконання | випити, вийти |
-| **при-** | наближення | прийти, принести |
-
-## Як розпізнати вид
-
-**Доконаний вид (зазвичай має):**
-- Префікс (про-, на-, з-, по-, ви-)
-- Суфікс -ну- (штовхнути)
-
-**Недоконаний вид (зазвичай):**
-- Без префіксу
-- Суфікси -ува-, -юва-, -ва-
-
-## Практичні поради
-
-Коли бачите нове дієслово:
-1. Шукайте префікс → зазвичай доконаний вид
-2. Без префіксу → зазвичай недоконаний вид
-3. Вчіть видові пари разом!
-
-## Найважливіші пари для запам'ятовування
-
-| Недоконаний | Доконаний |
-|-------------|-----------|
-| читати | прочитати |
-| писати | написати |
-| робити | зробити |
-| говорити | сказати |
-| брати | взяти |
-| йти | піти |
-| їхати | поїхати |
-| бачити | побачити |
-
-## Приклади діалогів
-
-**Діалог 1: Про книгу**
-— Ти читаєш цю книгу?
-— Так, читаю вже тиждень.
-— А коли прочитаєш?
-— Думаю, прочитаю до неділі.
-
-**Діалог 2: Про роботу**
-— Що ти робиш?
-— Пишу звіт. Довго пишу, але скоро напишу.
-— А потім?
-— Потім зроблю презентацію.
-
-## Вправа: Визначте вид
-
-Чи ці дієслова доконаного чи недоконаного виду?
-
-| Дієслово | Вид | Чому |
-|----------|-----|------|
-| прочитати | доконаний | префікс про- |
-| писати | недоконаний | без префіксу |
-| зробити | доконаний | префікс з- |
-| говорити | недоконаний | без префіксу |
-| сказати | доконаний | суплетивна пара |
-
-## Корисні поради
-
-1. **Вчіть пари разом** — читати/прочитати, писати/написати
-2. **Шукайте префікси** — про-, на-, з-, по-, ви-
-3. **Запам'ятовуйте суплетиви** — говорити/сказати, брати/взяти
-4. **Практикуйте в контексті** — не ізольовано!
-
-Морфологія — це ваш ключ до розуміння видової системи! Практикуйте щодня!
+Оволодівши цими трьома моделями творення, ви отримали значну перевагу у вивченні української мови. Тепер ви можете точніше розуміти поточні дієслова. Також ви можете передбачати форми нових дієслів у майбутньому. Практикуйте ці моделі у своїх щоденних розмовах!
 
 ---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

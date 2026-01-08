@@ -1,6 +1,6 @@
-## Warm-up
+## Introduction
 
-Now that you can make comparisons (bigger, better), let's go to the extreme! This module covers superlatives — how to say "the biggest," "the best," "the most interesting." You'll also learn intensifiers to emphasize adjectives.
+Now that you can make comparisons (bigger, better), let's go to the extreme! This module covers superlatives — how to say «the biggest,» «the best,» «the most interesting.» You'll also learn intensifiers to emphasize adjectives.
 
 **What you'll learn:**
 - How to form superlative adjectives (the best, the worst)
@@ -9,11 +9,42 @@ Now that you can make comparisons (bigger, better), let's go to the extreme! Thi
 
 ## Presentation
 
+## Practice
+
+Form the superlative:
+
+1. **більший** → **найбільший** (biggest)
+2. **кращий** → **найкращий** (best)
+3. **цікавіший** → **найцікавіший**
+4. **дорожчий** → **найдорожчий**
+5. **старіший** → **найстаріший** (oldest)
+
+Try to translate these common superlative phrases:
+
+6. «The best day of my life.»
+   → **Найкращий день мого життя.**
+
+7. «The most beautiful girl in the world.»
+   → **Найкрасивіша дівчина у світі.**
+
+8. «The fastest way to the center.»
+   → **Найшвидший шлях до центру.**
+
+9. «The most important decision.»
+   → **Найважливіше рішення.**
+
+10. «The worst weather.»
+    → **Найгірша погода.**
+
+> 🎬 **Media Recommendation**
+>
+> Watch the Ukrainian travel show **«Le Jour» (Ле Маршрутка)** with Lesia Nikitiuk. She travels across Ukraine showing real life, often visiting places that claim to be «the most» something (authentic, strange, beautiful). Listen for how she uses superlatives to describe her impressions: «**Це найдивовижніше місце!**» (This is the most amazing place!).
+
 ## Forming Superlatives
 
 The superlative in Ukrainian is wonderfully simple: just add the prefix **най-** to the comparative form!
 
-### Regular Formation: най- + Comparative
+## Regular Formation: най- + Comparative
 
 | Positive | Comparative | Superlative | English |
 |----------|-------------|-------------|---------|
@@ -31,7 +62,7 @@ The superlative in Ukrainian is wonderfully simple: just add the prefix **най
 >
 > Запам'ятайте: **най- + прикметник = найвищий ступінь**. Це дуже легко!
 
-### Irregular Superlatives
+## Irregular Superlatives
 
 The irregular comparatives simply take най-:
 
@@ -63,7 +94,7 @@ Superlatives are used like regular adjectives and agree in gender, number, and c
 - Він **найстарший** студент. (He's the oldest student.) — masculine
 - Вони **найкращі** друзі. (They're the best friends.) — plural
 
-### Agreement Examples
+## Agreement Examples
 
 | Gender | Example | English |
 |--------|---------|---------|
@@ -73,25 +104,25 @@ Superlatives are used like regular adjectives and agree in gender, number, and c
 | Plural | найкращі люди | best people |
 
 > [!tip] Plural Usage
-> Remember that superlatives in plural are very common: "найкращі хіти" (best hits), "найвідоміші люди" (most famous people). Be sure to match the plural noun ending!
+> Remember that superlatives in plural are very common: «найкращі хіти», «найвідоміші люди». Be sure to match the plural noun ending!
 
-> [!tip]> Ukrainians often use superlatives warmly about family and friends: "Моя мама найкраща!" (My mom is the best!)
+> [!tip]> Ukrainians often use superlatives warmly about family and friends: «Моя мама найкраща!» (My mom is the best!)
 
 ## Proverb Corner
 
 Superlatives often appear in wise sayings. Here are a few to remember:
 
-1. **"Найкраща оборона — це атака."**
+1. **«Найкраща оборона — це атака.»**
    (The best defense is attack.)
    
-2. **"Всюди добре, а вдома найкраще."**
+2. **«Всюди добре, а вдома найкраще.»**
    (Everywhere is good, but at home it is best.)
-   *Equivalent to: "East or West, home is best."*
+   *Equivalent to: «East or West, home is best.»*
 
-3. **"Старий друг кращий нових двох."**
+3. **«Старий друг кращий нових двох.»**
    (An old friend is better than two new ones.)
 
-## Intensifiers (Absolute Superlative)
+## Intensifiers
 
 When you want to emphasize without comparing, use intensifiers:
 
@@ -108,12 +139,12 @@ When you want to emphasize without comparing, use intensifiers:
 - Вона **надзвичайно** талановита. (She is extraordinarily talented.)
 
 > [!tip] Intensifiers vs. Superlatives
-> Use **intensifiers** when not comparing to others: "This is very good."
-> Use **superlatives** when identifying the extreme: "This is THE best."
+> Use **intensifiers** when not comparing to others: «This is very good.»
+> Use **superlatives** when identifying the extreme: «This is THE best.»
 
-## Expressing "One of the best"
+## Expressing «One of the best»
 
-Often we don't want to say something is THE single best, but "one of the best."
+Often we don't want to say something is THE single best, but «one of the best.»
 Structure: **один із найкращих + Genitive plural**
 
 - Київ — **одне з найкрасивіших** міст Європи. (Kyiv is one of the most beautiful cities in Europe.)
@@ -121,25 +152,25 @@ Structure: **один із найкращих + Genitive plural**
 - Він **один із найвідоміших** поетів. (He is one of the most famous poets.)
 
 > [!observe]
-> Notice how the adjective changes gender to match the subject (одне місто - neuter), but the noun group "найкрасивіших міст" is always in Genitive Plural ("of the most beautiful cities").
+> Notice how the adjective changes gender to match the subject (одне місто - neuter), but the noun group «найкрасивіших міст» is always in Genitive Plural («of the most beautiful cities»).
 
 ---
 
 ## Cultural Insight
 
-## Ukrainian Records: The "Mriya" and More
+## Ukrainian Records: The «Mriya» and More
 
-Ukraine is home to several "biggest" and "longest" things in the world, and knowing about them is a point of national pride.
+Ukraine is home to several «biggest» and «longest» things in the world, and knowing about them is a point of national pride.
 
 > 🌍 **World Records**
 >
-> - **Літак "Мрія" (Ан-225):** Until its destruction in 2022, "Mriya" (The Dream) was the **найбільший** (biggest) and **найпотужніший** (most powerful) transport plane in the world. It remains a symbol of Ukrainian engineering.
+> - **Літак «Мрія» (Ан-225):** Until its destruction in 2022, «Mriya» was the **найбільший** (biggest) and **найпотужніший** transport plane in the world. It remains a symbol of Ukrainian engineering.
 > - **Печера Оптимістична:** This is the **найдовша** (longest) gypsum cave in the world, located in the Ternopil region. It has over 230 km of tunnels!
-> - **Станція метро "Арсенальна":** Located in Kyiv, this is the **найглибша** (deepest) metro station in the world (105.5 meters).
+> - **Станція метро «Арсенальна»:** Located in Kyiv, this is the **найглибша** (deepest) metro station in the world (105.5 meters).
 
 ## Choosing the Best Gift
 
-When Ukrainians choose a **подарунок** (gift), they put a lot of thought into it. It doesn't have to be the **найдорожчий** (most expensive), but it should be **найщиріший** (most sincere).
+When Ukrainians choose a **подарунок** (gift), they put a lot of thought into it. It doesn't have to be the **найдорожчий**, but it should be **найщиріший**.
 
 **Dialogue: Choosing a Gift**
 
@@ -152,9 +183,10 @@ When Ukrainians choose a **подарунок** (gift), they put a lot of though
 
 > 🎭 **Folklore Corner: The Fern Flower**
 >
-> In Ukrainian mythology, there is a legend about the "Fern Flower" (Цвіт папороті), which blooms only on the night of Ivana Kupala (midsummer). It is said to be the **найрідкісніша** (rarest) and **найчарівніша** (most magical) flower. Whoever finds it understands the language of animals and finds hidden treasures. It represents the quest for **найвище** (highest) knowledge and happiness.
+> In Ukrainian mythology, there is a legend about the «Fern Flower» (Цвіт папороті), which blooms only on the night of Ivana Kupala. It is said to be the **найрідкісніша** (rarest) and **найчарівніша** flower. Whoever finds it understands the language of animals and finds hidden treasures. It represents the quest for **найвище** (highest) knowledge and happiness.
 
 ## How to Praise Hosts
+
 If you are a guest in a Ukrainian home, using superlatives is the best way to show polite appreciation:
 - Це **найсмачніший** борщ, який я коли-небудь їв! (This is the tastiest borscht I have ever eaten!)
 - Ви — **найгостинніші** господарі. (You are the most hospitable hosts.)
@@ -166,7 +198,7 @@ If you are a guest in a Ukrainian home, using superlatives is the best way to sh
 
 — Сьогодні буде **найкращий** день! — подумав він.
 
-Мама приготувала **найсмачніший** сніданок: млинці з медом і ягодами. Тато купив **найбільший** торт у місті. На торті було написано: "З Днем народження, синку!"
+Мама приготувала **найсмачніший** сніданок: млинці з медом і ягодами. Тато купив **найбільший** торт у місті. На торті було написано: «З Днем народження, синку!»
 
 Друзі прийшли о третій годині. Вони принесли **найцікавіші** подарунки. Петро подарував книгу про космос. Оксана дала квиток на концерт **найвідомішого** українського гурту.
 
@@ -180,74 +212,10 @@ If you are a guest in a Ukrainian home, using superlatives is the best way to sh
 
 ---
 
-## Practice
-
-## Practice Examples
-
-Form the superlative:
-
-1. **більший** → **найбільший** (biggest)
-2. **кращий** → **найкращий** (best)
-3. **цікавіший** → **найцікавіший** (most interesting)
-4. **дорожчий** → **найдорожчий** (most expensive)
-5. **старіший** → **найстаріший** (oldest)
-
-### Translation Practice
-
-Try to translate these common superlative phrases:
-
-6. "The best day of my life."
-   → **Найкращий день мого життя.**
-
-7. "The most beautiful girl in the world."
-   → **Найкрасивіша дівчина у світі.**
-
-8. "The fastest way to the center."
-   → **Найшвидший шлях до центру.**
-
-9. "The most important decision."
-   → **Найважливіше рішення.**
-
-10. "The worst weather."
-    → **Найгірша погода.**
-
-> 🎬 **Media Recommendation**
->
-> Watch the Ukrainian travel show **"Le Jour" (Ле Маршрутка)** with Lesia Nikitiuk. She travels across Ukraine showing real life, often visiting places that claim to be "the most" something (authentic, strange, beautiful). Listen for how she uses superlatives to describe her impressions: "**Це найдивовижніше місце!**" (This is the most amazing place!).
+# Підсумок
 
 ---
-
-# Summary
-
-## What You Learned
-
-This module covered superlative adjectives in Ukrainian — the ultimate form of comparison.
-
-**Formation:**
-- **най- + comparative** = superlative
-- Works for ALL adjectives, including irregular ones
-- **Agreement:** Must match gender, number, and case (найкращ**а** мама, найкращ**ий** друг)
-- **One of the...:** один із найкращих + Genitive Plural
-
-**Common superlatives:**
-- найкращий — best, найгірший — worst
-- найбільший — biggest, найменший — smallest
-- найвищий — tallest, найдовший — longest
-
-**Intensifiers:**
-Use these to add emotion without comparison:
-- **дуже** (very) — neutral/common
-- **надзвичайно** (extraordinarily) — high praise
-- **неймовірно** (incredibly) — disbelief/amazement
-- **страшенно** (terribly/awfully) — colloquial, can be positive (страшенно цікаво!) or negative.
-
-**Cultural Superlatives:**
-- **Мрія** (The Dream) — biggest plane
-- **Арсенальна** — deepest metro station
-- **Оптимістична** — longest gypsum cave
-
-Тепер ви знаєте **найкращі** слова, щоб описати **найважливіші** речі у вашому житті! 🏆
 
 ## Need More Practice?
 
----
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

@@ -14,7 +14,7 @@
 
 > [!observe] Спостереження (Pattern Discovery)
 >
-> Look at how "білий" (white) changes:
+> Look at how «білий» (white) changes:
 >
 > - **білий** светр (white sweater - m)
 > - **біла** сорочка (white shirt - f)
@@ -164,7 +164,7 @@ These words take **plural adjectives**:
 
 > 💡 **Два сині! (Two Blues!)**
 >
-> Ukrainian has TWO words for blue! **Синій** means dark blue (like the deep sea: синє море). **Блакитний** means light blue (like the sky: блакитне небо). English uses just "blue" for both colors!
+> Ukrainian has TWO words for blue! **Синій** means dark blue (like the deep sea: синє море). **Блакитний** means light blue (like the sky: блакитне небо). English uses just «blue» for both colors!
 
 > 🌍 **Кольори України (Color Symbolism)**
 >
@@ -172,16 +172,23 @@ These words take **plural adjectives**:
 
 > 💡 **Always Plural!**
 >
-> Just like English "pants" and "jeans," some Ukrainian clothing words are ALWAYS plural: штани, джинси, шорти, черевики, кросівки. Тому: чорні штани, сині джинси, білі кросівки!
+> Just like English «pants» and «jeans,» some Ukrainian clothing words are ALWAYS plural: штани, джинси, шорти, черевики, кросівки. Тому: чорні штани, сині джинси, білі кросівки!
 
 > 🎬 **Кіно і кольори (Cinema and Colors)**
 >
-> In the classic Ukrainian film "Тіні забутих предків" (Shadows of Forgotten Ancestors, 1965), vivid colors — червоний, білий, чорний — play a crucial role in the visual storytelling. Яскраві кольори!
+> In the classic Ukrainian film «Тіні забутих предків» (Shadows of Forgotten Ancestors, 1965), vivid colors — червоний, білий, чорний — play a crucial role in the visual storytelling. Яскраві кольори!
 
 ---
 
 # Summary
 
-Ви вивчили кольори та одяг. Тепер ви можете описати свою футболку або штани. (You learned colors and clothing. Now you can describe your t-shirt or pants.) Ви знаєте слова "білий" та "чорний". Тепер ви знаєте два сині кольори: синій та блакитний. Це чудова робота! (This is great work!)
+Ви вивчили кольори та одяг. Тепер ви можете описати свою футболку або штани. (You learned colors and clothing. Now you can describe your t-shirt or pants.) Ви знаєте слова «білий» та «чорний». Тепер ви знаєте два сині кольори: синій та блакитний. Це чудова робота! (This is great work!)
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

@@ -96,6 +96,10 @@ items:
   translation: foreign; alien; someone else's
   pos: adj
   gender: m
+- lemma: час
+  translation: time; tense
+  pos: noun
+  gender: m
 - lemma: інтерес
   ipa: inˈtɛrɛs
   translation: interest

@@ -2,7 +2,7 @@
 
 ## Warm-up
 
-In English, we say "I wash **myself**" or "We meet **each other**." Ukrainian has a superpower for this: a tiny suffix **-ся**.
+In English, we say «I wash **myself**» or «We meet **each other**.» Ukrainian has a superpower for this: a tiny suffix **-ся**.
 
 When you add **-ся** to the end of a verb, it turns the action back onto the subject.
 - **Мити** (to wash [something]) → **Митися** (to wash [oneself]).
@@ -24,8 +24,8 @@ The suffix has two forms depending on what comes before it:
 
 > ⚡ **Pronunciation Hack**
 >
-> The combination **-ться** (in "він сміється") is pronounced like a long, soft **[ц':а]** (ts'a).
-> It does NOT sound like "t-s-y-a". It's a soft buzzing TS sound.
+> The combination **-ться** (in «він сміється») is pronounced like a long, soft **[ц':а]** (ts'a).
+> It does NOT sound like «t-s-y-a». It's a soft buzzing TS sound.
 > **Сміється** = /smiˈjɛt͡sʲːɑ/
 
 ### Conjugation Pattern
@@ -55,10 +55,10 @@ Reflexive verbs follow the same First or Second Conjugation rules you already kn
 - **Зустрічатися** (to meet).
 - **Вітатися** (to greet).
 - **Цілуватися** (to kiss).
-- "Ми зустрічаємось" = We meet each other.
+- «Ми зустрічаємось» = We meet each other.
 
-**3. "Just Because" (Lexicalized)**
-Some verbs *always* have -ся. They don't imply "self," they just are.
+**3. «Just Because» (Lexicalized)**
+Some verbs *always* have -ся. They don't imply «self,» they just are.
 - **Сміятися** (to laugh).
 - **Усміхатися** (to smile).
 - **Дивитися** (to watch/look).
@@ -84,7 +84,7 @@ These are **Second Conjugation** verbs, so they use **-ить/-ять** endings.
 
 > [!important] **Usage Note: Як це називається?**
 >
-> To ask "What is this called?", use:
+> To ask «What is this called?», use:
 > **— Як це називається?** (How does this call itself?)
 > **— Це називається телефон.** (This is called a phone.)
 
@@ -114,7 +114,7 @@ These are **Second Conjugation** verbs, so they use **-ить/-ять** endings.
 
 ## Cultural Insight
 
-### The "Smile" Culture
+### The «Smile» Culture
 
 In some cultures, smiling at strangers is normal. in Ukraine, a smile (**усмішка**) is often reserved for friends and genuine moments. If a stranger doesn't smile at you on the street, it's not rudeness—it's neutrality. But when Ukrainians **сміються** (laugh) with you, it's 100% sincere!
 
@@ -127,3 +127,12 @@ You've unlocked the **-ся** verbs!
 - **Pronunciation**: -ться = [ц':а].
 
 **Next up:** Module 10 - Checkpoint! You'll review everything from M01-M09.
+
+---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

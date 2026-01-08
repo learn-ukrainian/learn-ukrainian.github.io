@@ -7,18 +7,19 @@ pedagogy: Review
 duration: 60
 transliteration: none
 tags:
-  - review
-  - grammar
-  - cases
-  - syntax
+- review
+- grammar
+- cases
+- syntax
 grammar:
-  - review-cases
-  - review-aspect
-  - complex-sentences
+- review-cases
+- review-aspect
+- complex-sentences
 objectives:
-  - Consolidate understanding of all 7 cases
-  - Master Perfective vs Imperfective aspect
-  - Build complex sentences with connectors
-  - Fix common grammatical errors
-vocab_count: 40
+- Consolidate understanding of all 7 cases
+- Master Perfective vs Imperfective aspect
+- Build complex sentences with connectors
+- Fix common grammatical errors
 slug: 57-grammar-review
+vocabulary_count: 40
+focus: checkpoint

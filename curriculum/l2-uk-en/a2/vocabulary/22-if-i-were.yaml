@@ -71,14 +71,24 @@ items:
   gender: f
 - lemma: соломка
   ipa: soˈlɔmkɐ
-  translation: straw (diminutive)
+  translation: straw
   pos: noun
   gender: f
 - lemma: уявати
   ipa: ujɐˈʋɑte
   translation: to imagine (typo for уявляти)
   pos: verb
+- lemma: майбутній
+  translation: future
+  pos: adj
+- lemma: час
+  translation: time; tense
+  pos: noun
+  gender: m
+- lemma: минулий
+  translation: past
+  pos: adj
 - lemma: якби
   ipa: jɐkˈbɪ
-  translation: if (subjunctive)
+  translation: if
   pos: other

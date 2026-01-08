@@ -1,55 +1,54 @@
 # Audit Report: 05-the-instrumental-ii-means-and-tools.md
 **Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
-**Overall Status:** ❌ FAIL
-
-## LINT ERRORS
-- ❌ Line 77: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
+**Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: називний, час, орудний, відмінок
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 05-the-instrumental-ii-means-and-tools.yaml: [find-bare-instrumental] mark-the-words: 'passage' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): ногами, очима, ручкою, виделкою, руками...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): машиною, автобусом, ложкою, виделкою, ножем...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
-## Recommendation
-**📝 UPDATE** (severity 15/100)
+## TEMPLATE COMPLIANCE
+- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
+  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 
-- 3 pedagogical violations (minor)
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1887/1000
+- **Words:** ✅ 1803/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 57/1
+- **Vocab:** ✅ 61/1
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 1 Format Errors
-- **Pedagogy:** ❌ 1 violations
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 37.0% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 38.6% (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 175 | Included in Core |
-| **Warm-up** | ✅ | 79 | Included in Core |
+| **Intro/Narrative** | ✅ | 136 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
+| **Practice** | ⚪️ | 238 | Skipped |
+| **Warm-up** | ✅ | 79 | Included in Core |
 | **Орудний відмінок без прийменника** | ⚪️ | 68 | Skipped |
-| **Засоби пересування** | ⚪️ | 276 | Skipped |
-| **Інструменти та знаряддя (Tools and Instruments)** | ⚪️ | 270 | Skipped |
-| **Communication and Technology** | ⚪️ | 138 | Skipped |
+| **Засоби пересування** | ⚪️ | 143 | Skipped |
+| **На + Accusative vs. Instrumental** | ⚪️ | 128 | Skipped |
+| **Інструменти та знаряддя** | ⚪️ | 127 | Skipped |
+| **Body Parts as Instruments** | ⚪️ | 136 | Skipped |
+| **Communication and Technology** | ⚪️ | 130 | Skipped |
 | **Cultural Insight** | ✅ | 0 | Included in Core |
-| **Manner and Voice** | ⚪️ | 140 | Skipped |
-| **Ukrainian Transport Culture** | ✅ | 313 | Included in Core |
-| **Practice** | ⚪️ | 71 | Skipped |
+| **Manner and Voice** | ⚪️ | 136 | Skipped |
+| **Ukrainian Transport Culture** | ✅ | 308 | Included in Core |
 | **Choose: With or Without Preposition?** | ⚪️ | 0 | Skipped |
 | **Form the Instrumental** | ⚪️ | 0 | Skipped |
-| **Mini-Dialogues** | ✅ | 145 | Included in Core |
-| **Reading Practice: Один день у Києві** | ✅ | 195 | Included in Core |
-| **Summary** | ✅ | 17 | Included in Core |
+| **Mini-Dialogues** | ✅ | 127 | Included in Core |
+| **Підсумок** | ✅ | 17 | Included in Core |
+| **Need More Practice?** | ⚪️ | 30 | Skipped |

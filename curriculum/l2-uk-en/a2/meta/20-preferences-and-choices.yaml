@@ -4,22 +4,22 @@ subtitle: Expressing What You Like Better
 version: '1.0'
 phase: A2.2
 pedagogy: PPP
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - grammar
-  - preferences
-  - comparison
-  - functional
+- grammar
+- preferences
+- comparison
+- functional
 grammar:
-  - preference expressions
-  - comparison of actions
-  - choice vocabulary
+- preference expressions
+- comparison of actions
+- choice vocabulary
 objectives:
-  - Learner can express preferences
-  - Learner can compare options
-  - Learner can make and explain choices
-  - Learner can discuss likes and dislikes
+- Learner can express preferences
+- Learner can compare options
+- Learner can make and explain choices
+- Learner can discuss likes and dislikes
 vocabulary_count: 25
-vocab_count: 21
 slug: 20-preferences-and-choices
+focus: grammar

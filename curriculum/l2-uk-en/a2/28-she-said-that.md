@@ -1,21 +1,21 @@
-# Summary
+# She Said That... | Reporting What People Say
 
-## Warm-up
+## Introduction
 
-"Did you hear what she said?"
+«Did you hear what she said?»
 Reporting speech is one of the most common social activities. Whether it's news, instructions, or gossip, we constantly repeat what others say.
 In English, this is tricky (He said he *was* going...).
 In Ukrainian, it's easier! You usually keep the original tense.
 
 **We will cover:**
 - **The Connector:** Що
-- **The Tense:** Keeping it real (present stays present)
+- **The Tense:** Keeping it real
 - **The Verbs:** Saying vs Telling vs Asking
 
 > 💡 **Think about it**
-> Imagine someone says **"I am hungry."**
-> In English, you report: "He said (that) he **was** hungry."
-> In Ukrainian, you report: "Він сказав, що він **голодний**" (He said that he [is] hungry).
+> Imagine someone says **«I am hungry.»**
+> In English, you report: «He said (that) he **was** hungry.»
+> In Ukrainian, you report: «Він сказав, що він **голодний**» (He said that he [is] hungry).
 > Logic: At that moment in history, he *is* hungry.
 
 ---
@@ -26,80 +26,84 @@ In Ukrainian, it's easier! You usually keep the original tense.
 
 In Ukrainian Reported Speech, you typically **do not change the tense** of the verb if you are reporting a fact. You only change the **pronouns**.
 
-### Direct → Indirect
+## Direct → Indirect
 
 **Direct:**
-- Вона каже: "**Я** люблю каву." (She says: "I like coffee.")
-- Вона сказала: "**Я** люблю каву." (She said: "I like coffee.")
+- Вона каже: «**Я** люблю каву.» (She says: «I like coffee.»)
+- Вона сказала: «**Я** люблю каву.» (She said: «I like coffee.»)
 
 **Indirect:**
 - Вона каже, що **вона** любить каву. (She says that she likes coffee.)
 - Вона сказала, що **вона** любить каву. (She said that she *likes* coffee.)
 
 > [!important] Simplify
-> You don't need to shift "like" to "liked". The logic is: "She said: [insert her current feeling at that time]." This makes Ukrainian reporting much more intuitive for learners, as you can almost always reuse the original sentence structure without major grammatical overhaul.
+> You don't need to shift «like» to «liked». The logic is: «She said: [insert her current feeling at that time].» This makes Ukrainian reporting much more intuitive for learners, as you can almost always reuse the original sentence structure without major grammatical overhaul.
 
-### Future Tense
-- **Direct:** Він сказав: "Я **буду** там." (I will be there.)
+## Future Tense
+
+- **Direct:** Він сказав: «Я **буду** там.» (I will be there.)
 - **Indirect:** Він сказав, що він **буде** там. (He said he *will* be there.)
 
 This simplicity is a major advantage of the Ukrainian language. Once you know the present tense, you can report what anyone says without worrying about complex temporal shifts common in Germanic languages.
 
 ## 2. Reporting Verbs
 
-You need more than just "said".
+You need more than just «said».
 
-### Basic
-- **Казати | Сказати** (To say): The default.
+## Basic
+
+- **Казати | Сказати**: The default.
   - *Він сказав, що...* (He said that...)
-- **Говорити** (To speak/talk): Focus on the act of speaking.
+- **Говорити**: Focus on the act of speaking.
   - *Він говорив про політику.* (He spoke about politics.)
-- **Розповідати** (To tell a story/narrate): used for "tell me about..."
+- **Розповідати**: used for «tell me about...»
   - *Вона розповіла, що сталося.* (She told [narrated] what happened.)
-- **Питати** (To ask):
+- **Питати**:
   - *Я питаю, де ти.* (I ask where you are.)
-- **Відповідати** (To answer):
+- **Відповідати**:
   - *Він відповідає, що зайнятий.* (He answers that he is busy.)
 
-### Information
-- **Повідомити** (To inform/notify): Formal.
+## Information
+
+- **Повідомити**: Formal.
   - *Лікар повідомив, що аналізи добрі.*
-- **Пояснити** (To explain):
+- **Пояснити**:
   - *Вчитель пояснив, що це помилка.*
-- **Нагадати** (To remind):
+- **Нагадати**:
   - *Мама нагадала, що треба купити хліб.*
 
-### Argument/Emotion
-- **Стверджувати** (To assert/claim):
+## Argument/Emotion
+
+- **Стверджувати**:
   - *Він стверджує, що він правий.*
-- **Заперечувати** (To deny):
+- **Заперечувати**:
   - *Вона заперечує, що брала гроші.*
-- **Скаржитися** (To complain):
+- **Скаржитися**:
   - *Сусід скаржиться, що шум заважає.*
-- **Обіцяти** (To promise):
+- **Обіцяти**:
   - *Він пообіцяв, що прийде.*
 
 ## 3. Asking Questions
 
-When reporting a question, we don't use "що". We use **чи** (if/whether) or question words.
+When reporting a question, we don't use «що». We use **чи** or question words.
 
-- **Direct:** "Ти любиш джаз?"
+- **Direct:** «Ти любиш джаз?»
 - **Indirect:** Він запитав, **чи** я люблю джаз. (He asked *if* I like jazz.)
 
-- **Direct:** "Де ти живеш?"
+- **Direct:** «Де ти живеш?»
 - **Indirect:** Вона запитала, **де** я живу. (She asked where I live.)
 
 ---
 
 ## Cultural Insight
 
-## "Plitky" (Gossip)
+## «Plitky» (Gossip)
 
 Ukrainians are social people. In villages, the **лавка** (bench) near the gate is the center of the universe. Grandmothers (**бабусі**) sit there and process all information.
-- *"Галя сказала, що її син купив машину."*
-- *"А Петро казав, що він вкрав гроші!"*
+- *«Галя сказала, що її син купив машину.»*
+- *«А Петро казав, що він вкрав гроші!»*
 
-Gossip (**плітки**) is an informal news channel. The phrase **"Кажуть, що..."** (They say that...) is very common to introduce a rumor without naming the source.
+Gossip (**плітки**) is an informal news channel. The phrase **«Кажуть, що...»** (They say that...) is very common to introduce a rumor without naming the source.
 
 ## 4. Nuance of Tone
 
@@ -107,15 +111,15 @@ How you say it matters. Ukrainian has many reporting verbs to convey attitude.
 
 | Situation | Verb | Nuance |
 |-----------|------|--------|
-| Anger | **Кричати** (To shout) | "Він кричав, що..." |
-| Secret | **Шепотіти** (To whisper) | "Вона прошепотіла, що..." |
-| Command | **Вимагати** (To demand) | "Бос вимагає, щоб..." |
-| Request | **Просити** (To ask/beg) | "Я прошу, щоб ти прийшов." |
-| Deceit | **Брехати** (To lie) | "Він бреше, що хворий." |
+| Anger | **Кричати** | «Він кричав, що...» |
+| Secret | **Шепотіти** | «Вона прошепотіла, що...» |
+| Command | **Вимагати** | «Бос вимагає, щоб...» |
+| Request | **Просити** | «Я прошу, щоб ти прийшов.» |
+| Deceit | **Брехати** | «Він бреше, що хворий.» |
 
-> When reporting a **command** or **wish** (using **щоб**), use the **past tense** of the verb! This is similar to the English subjunctive, but simpler since it always uses the standard past form. For example, "I ask that you write" becomes "Я прошу, щоб ти писав."
+> When reporting a **command** or **wish** (using **щоб**), use the **past tense** of the verb! This is similar to the English subjunctive, but simpler since it always uses the standard past form. For example, «I ask that you write» becomes «Я прошу, щоб ти писав.»
 
-Ukrainian reporting is all about maintaining the integrity of the witness. You are not changing their world; you are simply providing a window into it. This is why the tenses remain "frozen" in the state they were originally uttered.
+Ukrainian reporting is all about maintaining the integrity of the witness. You are not changing their world; you are simply providing a window into it. This is why the tenses remain «frozen» in the state they were originally uttered.
 
 ---
 
@@ -123,21 +127,21 @@ Ukrainian reporting is all about maintaining the integrity of the witness. You a
 
 ## The Grandmother News Network
 
-Ukrainians joke about the **"BBC"** (Баба Бабі Сказала - "One Grandma Said to Another").
+Ukrainians joke about the **«BBC»** (Баба Бабі Сказала - «One Grandma Said to Another»).
 This is a powerful informal network. If you live in an apartment block, the grandmothers on the bench know:
 1.  When you came home.
 2.  Who you were with.
 3.  What you were carrying.
 
-If you respect them and say "Dobryi den", you are a "good child". If not, reports will spread that you are rude or suspicious!
+If you respect them and say «Dobryi den», you are a «good child». If not, reports will spread that you are rude or suspicious!
 
 > [!cultural] The Language of Resistance
-> During the Soviet era, reported speech was often a tool of propaganda. Official reports would often start with "Повідомляють, що..." (It is reported that...) to distance the source from the information. However, the Ukrainian underground press used reporting verbs to challenge these narratives, often using "Стверджують" (Claim) to cast doubt on official lies.
+> During the Soviet era, reported speech was often a tool of propaganda. Official reports would often start with «Повідомляють, що...» (It is reported that...) to distance the source from the information. However, the Ukrainian underground press used reporting verbs to challenge these narratives, often using «Стверджують» (Claim) to cast doubt on official lies.
 >
 > Using your own voice to report the truth is a political act in Ukrainian history. When you report what someone said, you are becoming a witness and a transmitter of their story.
 
-Be careful with **"Обіцяти"** (to promise). In strict contexts, *"Обіцянка — цяцянка, а дурневі радість"* (A promise is a toy, and a fool is happy). This proverb means promises are often empty. Ukrainian culture values action over words.
-However, **"Дати слово"** (To give one's word) is serious.
+Be careful with **«Обіцяти»**. In strict contexts, *«Обіцянка — цяцянка, а дурневі радість»* (A promise is a toy, and a fool is happy). This proverb means promises are often empty. Ukrainian culture values action over words.
+However, **«Дати слово»** (To give one's word) is serious.
 * *Він дав слово, що зробить це.*
 
 > [!tip] Myth: Ukrainian is just a dialect
@@ -160,14 +164,15 @@ Two neighbors, Halyna and Oksana, are talking.
 **Oksana:** Або Світлана щось наплутала. Минулого разу вона доповіла, що я вагітна, а я просто добре поїла!
 **Halyna:** Ха-ха! Це правда. Але Іван сьогодні ходив дуже щасливий.
 **Oksana:** Треба запитати його жінку.
-**Halyna:** Вона мовчить як риба. Я питала, але вона відповіла, що це "не моя справа".
+**Halyna:** Вона мовчить як риба. Я питала, але вона відповіла, що це «не моя справа».
 **Oksana:** Ого! Це підозріло. Значить, точно виграв!
 
 *Ukrainian villages are often the source of the fastest information networks.*
 
-### Analysis of Gossip
+## Analysis of Gossip
+
 1.  **Кажуть, що...**: Initiating the rumor.
-2.  **Та ти що!**: Expression of shock ("You don't say!").
+2.  **Та ти що!**: Expression of shock («You don't say!»).
 3.  **Стверджує**: Adds authority to the source.
 4.  **Брехав**: Exploring the possibility of deceit.
 
@@ -181,15 +186,16 @@ Two neighbors, Halyna and Oksana, are talking.
 
 Read the chain of messages. See how information changes.
 
-1.  **Direct (Director):** "Завтра буде коротка нарада."
-2.  **Manager (to Team Lead):** "Директор повідомив, що завтра буде нарада."
-3.  **Team Lead (to Employee):** "Менеджер сказав, що завтра буде важлива нарада."
-4.  **Employee (to Colleague):** "Ти чув? Шеф казав, що завтра будуть проблеми!"
-5.  **Colleague (to everyone):** "Кажуть, що завтра нас звільнять!"
+1.  **Direct (Director):** «Завтра буде коротка нарада.»
+2.  **Manager:** «Директор повідомив, що завтра буде нарада.»
+3.  **Team Lead:** «Менеджер сказав, що завтра буде важлива нарада.»
+4.  **Employee:** «Ти чув? Шеф казав, що завтра будуть проблеми!»
+5.  **Colleague:** «Кажуть, що завтра нас звільнять!»
 
-### Analysis
-- **Повідомив** (Informed) -> **Сказав** (Said) -> **Кажуть** (They say).
-- The neutrality is lost. The fact ("short meeting") became a rumor ("they will fire us").
+## Analysis
+
+- **Повідомив** (Informed) -> **Сказав** (Said) -> **Кажуть**.
+- The neutrality is lost. The fact («short meeting») became a rumor («they will fire us»).
 
 ## Dialogue: Investigating
 
@@ -198,11 +204,11 @@ Read the chain of messages. See how information changes.
 **Detective:** А що вона відповіла?
 **Witness:** Вона заперечила, що вони незнайомі. Вона стверджувала, що вони працювали разом.
 **Detective:** Він це підтвердив?
-**Witness:** Ні, він почав критикувати її. Він кричав, що вона бреше (is lying).
+**Witness:** Ні, він почав критикувати її. Він кричав, що вона бреше.
 **Detective:** А потім?
 **Witness:** Потім він пообіцяв, що все пояснить пізніше.
 
-> [!tip] "Scho" vs "Scho"
+> [!tip] «Scho» vs «Scho»
 > Don't confuse **що** (what) and **що** (that).
 > *Він запитав, **що** я роблю.* (He asked **what** I am doing.)
 > *Він сказав, **що** я працюю.* (He said **that** I am working.)
@@ -247,8 +253,6 @@ Read the chain of messages. See how information changes.
 > «Слово — не горобець: вилетить — не впіймаєш.»
 > Це означає: думай, перш ніж говорити!
 
----
-
 # Підсумок
 
 У цьому модулі ви навчилися:
@@ -259,3 +263,8 @@ Read the chain of messages. See how information changes.
 
 Тепер ви можете розповідати, що сказали інші!
 
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

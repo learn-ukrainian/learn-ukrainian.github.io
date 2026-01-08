@@ -1,6 +1,6 @@
 # A2 Final Review (Skills)
 
-## Warm-up
+## Огляд
 
 Congratulations! This is the final step of your A2 journey.
 You have learned ~800 words, 7 cases, and how to survive in Ukraine.
@@ -15,11 +15,9 @@ In this final review, you'll demonstrate your proficiency in major skill areas. 
 2. **Listening Comprehension** — Following complex dialogues where people discuss their professional business plans and personal life biographies.
 3. **Writing Skills** — Creating your own cohesive autobiography in Ukrainian using clinical grammar patterns and vocabulary acquired throughout A1-A2.
 
-## Reading Practice
+## Skill 1: Reading Comprehension
 
-### Text 1: My Ukraine
-
-(Read the text and answer questions below)
+### Model: My Ukraine
 
 Україна — це велика і красива країна в центрі Європи.
 На півдні є Чорне море, де люди відпочивають влітку.
@@ -33,7 +31,7 @@ In this final review, you'll demonstrate your proficiency in major skill areas. 
 Сьогодні Україна змінюється. Ми будуємо нове майбутнє.
 Ми хочемо жити в мирі і свободі.
 
-### Text 2: A Student's Blog
+### Practice: A Student's Blog
 
 Привіт! Мене звати Оксана. Я студентка.
 Я живу в Одесі.
@@ -47,10 +45,10 @@ In this final review, you'll demonstrate your proficiency in major skill areas. 
 Я мрію поїхати в Лондон, щоб практикувати англійську мову.
 Але я завжди буду повертатися в Одесу, тому що це моє рідне місто.
 
-> [!cultural] **Cultural Insight** "University Life"
-> Students in Ukraine often study in "groups" (*група*) that stay together for 4 years. They become very close friends. They celebrate "Day of the Student" (*День студента*) on November 17th.
+> [!cultural] **Cultural Insight** «University Life»
+> Students in Ukraine often study in «groups» (*група*) that stay together for 4 years. They become very close friends. They celebrate «Day of the Student» (*День студента*) on November 17th.
 
-### Text 3: A Journey to the Mountains (Story Time)
+### Practice: A Journey to the Mountains
 
 Микола і його друзі поїхали в Карпати.
 Вони взяли намети, рюкзаки і гітару.
@@ -64,17 +62,19 @@ In this final review, you'll demonstrate your proficiency in major skill areas. 
 Вони говорили про життя і мрії.
 Це був найкращий день літа.
 
-> [!important] **Myth Buster** "Is Ukraine Cold?"
+> [!important] **Myth Buster** «Is Ukraine Cold?»
 > Many people think Ukraine is freezing like Siberia. False! Ukraine has a temperate continental climate. Summers are hot (+30°C), and winters are snowy but beautiful. The South (Crimea, Odesa) is warm.
 
-## Listening Simulation
+### Self-Check
+- Can you identify the main topic of the text?
+- Can you find specific details (names, places)?
 
-### Dialogue: Future Plans
+## Skill 2: Listening & Speaking
 
-(Imagine you hear this conversation)
+### Model: Future Plans
 
 — Привіт, Марку! Давно не бачилися.
-— Привіт, Аліно! Так, я був у відрядженні (business trip).
+— Привіт, Аліно! Так, я був у відрядженні.
 — Де саме?
 — У Львові. Я відкриваю там новий офіс.
 — Ого! Вітаю. Ти тепер бізнесмен?
@@ -86,7 +86,13 @@ In this final review, you'll demonstrate your proficiency in major skill areas. 
 — У червні. Я запрошую тебе.
 — Дякую! Я обов'язково прийду.
 
-### Task: My Autobiography
+### Self-Check
+- Can you follow the flow of conversation?
+- Can you identify the relationship between speakers?
+
+## Skill 3: Writing Skills
+
+### Practice: My Autobiography
 
 Now it is your turn to showcase your writing skills. Write a short text about yourself (5-7 sentences). This is a comprehensive task where you should use the various grammatical structures and vocabulary words you have mastered throughout Level A1 and A2. Focus on using correct case endings for your profession and hobbies.
 
@@ -94,21 +100,27 @@ Please include the following information in your text:
 1. **Name and age** (e.g., *Мене звати... Мені... років*). Remember to use the Dative case for age!
 2. **Profession or Study** (e.g., *Я працюю...* or *Я вчуся...*). Use the Instrumental case for your profession.
 3. **Hobbies and Interests** (e.g., *Я люблю...*). Use the Accusative case for the things you like.
-4. **Family and Relations** (e.g., *У мене є...*). Use the Nominative case for family members after "є".
-5. **Future Dreams and Goals** (e.g., *Я мрію про...*). Use the Locative case after "про" when describing what you dream about.
+4. **Family and Relations** (e.g., *У мене є...*). Use the Nominative case for family members after «є».
+5. **Future Dreams and Goals** (e.g., *Я мрію про...*). Use the Locative case after «про» when describing what you dream about.
 
-*Example:*
+### Model: Example
 *Мене звати Джон. Мені 30 років. Я інженер. Я живу в Нью-Йорку. Я люблю читати книги і грати у футбол. У мене є дружина і кіт. Я мрію відвідати Україну.*
 
-> [!important] **Final Tip** "Consistency"
+> [!important] **Final Tip** «Consistency»
 > Language learning is a marathon, not a sprint. 15 minutes every day is better than 5 hours once a week. Keep listening, reading, and speaking. See you in B1!
 
-> [!cultural] **Cultural Insight** "Music"
-> Ukrainians are very musical. "The Carol of the Bells" (Schedryk) is a Ukrainian song. Eurovision winners Ruslana, Jamala, and Kalush Orchestra showed Ukrainian culture to the world.
+> [!cultural] **Cultural Insight** «Music»
+> Ukrainians are very musical. «The Carol of the Bells» (Schedryk) is a Ukrainian song. Eurovision winners Ruslana, Jamala, and Kalush Orchestra showed Ukrainian culture to the world.
 
-### Dialogue: The Quiz Show "Love Ukraine"
+### Self-Check
+- Did you use Instrumental for profession?
+- Did you use Dative for age?
 
-(Телевізійна гра "Я люблю Україну")
+## Skill 4: Integrated Skills
+
+### Model: The Quiz Show «Love Ukraine»
+
+(Телевізійна гра «Я люблю Україну»)
 
 **Ведучий:** Добрий вечір! Сьогодні у нас фінал.
 Гравець Андрій проти гравця Олени.
@@ -119,7 +131,7 @@ Please include the following information in your text:
 **Ведучий:** Питання 1. Яка найбільша область України?
 **Андрій:** Одеська область.
 **Ведучий:** Правильно! 1 бал.
-**Ведучий:** Питання 2. Хто написав "Кобзар"?
+**Ведучий:** Питання 2. Хто написав «Кобзар»?
 **Олена:** Тарас Шевченко.
 **Ведучий:** Точно! 1 бал.
 **Ведучий:** Питання 3. Яка грошова одиниця України?
@@ -132,7 +144,7 @@ Please include the following information in your text:
 **Разом:** Свобода і незалежність!
 **Ведучий:** Це перемога! Дружба перемагає.
 
-### Text 4: The Future of Transport (Reading)
+### Practice: The Future of Transport
 
 In this text, we explore the ambitious plans for Ukrainian infrastructure.
 Understanding technical texts is a key skill for B1.
@@ -148,10 +160,10 @@ Understanding technical texts is a key skill for B1.
 Це не фантастика, це план на 10 років.
 
 > [!note] **Did you understand?**
-> The text mentions "залізниця" (railway) and "літаки" (planes).
-> Notice how Future Tense is used: "будуть швидкі" (will be fast), "можна буде" (it will be possible).
+> The text mentions «залізниця» (railway) and «літаки» (planes).
+> Notice how Future Tense is used: «будуть швидкі», «можна буде».
 
-### Extended Dialogue: Future Plans Part 2
+### Practice: Future Plans Continued
 
 **Марк:** А де ви будете жити після весілля?
 **Аліна:** Ми купили квартиру в новому районі. Там є парк і школа.
@@ -163,7 +175,7 @@ Understanding technical texts is a key skill for B1.
 **Аліна:** Дякую за пораду!
 **Марк:** Передавай вітання Ігорю!
 
-### Useful Phrases for Travel
+### Self-Check: Useful Phrases for Travel
 
 - Де знаходиться туалет? (*Where is the toilet?*)
 - Скільки це коштує? (*How much is it?*)
@@ -173,7 +185,7 @@ Understanding technical texts is a key skill for B1.
 - Дякую за допомогу! (*Thanks for help*)
 - Гарного дня! (*Have a nice day*)
 
-> [!check] **Check Point** "A2 Skills"
+> [!check] **Check Point** «A2 Skills»
 > Before leaving A2, make sure you can:
 > - Order food in a restaurant.
 > - Buy tickets at the station.
@@ -181,7 +193,7 @@ Understanding technical texts is a key skill for B1.
 > - Understand easy stories.
 > If yes, welcome to B1!
 
-# Summary
+# Підсумок
 
 You have officially completed A2!
 You can:
@@ -192,3 +204,9 @@ You can:
 
 You are ready for **Level B1**.
 Success! (*Успіхів!*)
+
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

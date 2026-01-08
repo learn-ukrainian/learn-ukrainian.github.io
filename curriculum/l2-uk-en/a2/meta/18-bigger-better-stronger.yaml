@@ -4,22 +4,22 @@ subtitle: Comparative Adjectives
 version: '1.0'
 phase: A2.2
 pedagogy: PPP
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - grammar
-  - adjectives
-  - comparison
+- grammar
+- adjectives
+- comparison
 grammar:
-  - comparative adjective formation
-  - regular comparatives
-  - irregular comparatives
-  - comparison structures
+- comparative adjective formation
+- regular comparatives
+- irregular comparatives
+- comparison structures
 objectives:
-  - Learner can form comparative adjectives
-  - Learner knows irregular comparatives
-  - Learner can make comparisons with ніж and за
-  - Learner can express preferences
+- Learner can form comparative adjectives
+- Learner knows irregular comparatives
+- Learner can make comparisons with ніж and за
+- Learner can express preferences
 vocabulary_count: 25
-vocab_count: 37
 slug: 18-bigger-better-stronger
+focus: grammar

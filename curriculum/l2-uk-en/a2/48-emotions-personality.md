@@ -1,5 +1,11 @@
 # Emotions & Personality
 
+## Introduction
+
+## Presentation
+
+## Practice
+
 ## Розминка (Warm-up)
 
 Як ви себе почуваєте сьогодні? Ви щасливі? Сумні? Втомлені?
@@ -8,12 +14,10 @@
 
 Емоції визначають наше повсякденне життя. У цьому модулі ви навчитеся описувати свої почуття та обговорювати риси характеру українською мовою. Ви навчитеся виражати радість, сум, страх та багато інших емоцій. Спробуйте також описати характери людей.
 
-> [!myth-buster] "Українська — бідна мова"
-> Російська пропаганда стверджує, що українська — "сільська мова" без витонченості. Насправді українська має неймовірно багатий емоційний словник. Слова **сум**, **туга** і **журба** не мають прямих російських відповідників!
+> [!myth-buster] «Українська — бідна мова»
+> Російська пропаганда стверджує, що українська — «сільська мова» без витонченості. Насправді українська має неймовірно багатий емоційний словник. Слова **сум**, **туга** і **журба** не мають прямих російських відповідників!
 
-## Presentation
-
-## Основні емоції (Basic Emotions)
+## Основні емоції
 
 Українська мова має чудові слова для вираження наших почуттів:
 
@@ -28,7 +32,7 @@
 
 **Радість** means joy — that warm feeling when you see a good friend. **Сум** is sadness, often a gentle melancholy. **Гнів** is anger — a burning fire inside. **Страх** is fear — what you feel in the dark. **Здивування** is surprise — when something unexpected happens. **Щастя** is happiness — the deep contentment of a peaceful life.
 
-## Вираження емоцій дієсловами (Expressing Emotions with Verbs)
+## Вираження емоцій дієсловами
 
 Щоб описати переживання емоцій, використовуйте ці дієслова:
 
@@ -39,9 +43,9 @@
 - **дивуватися** — to be surprised: _Ми дивувалися його таланту._
 
 > [!history-bite] The Emotional Warrior
-> Ukrainian Cossacks were famous for expressing emotions openly. Their songs (**думи**) celebrated joy in victory and openly mourned fallen comrades. This emotional honesty is a core Ukrainian cultural value — very different from the "stoic Russian" stereotype imposed during Soviet times.
+> Ukrainian Cossacks were famous for expressing emotions openly. Their songs (**думи**) celebrated joy in victory and openly mourned fallen comrades. This emotional honesty is a core Ukrainian cultural value — very different from the «stoic Russian» stereotype imposed during Soviet times.
 
-## Емоційні стани (Emotional States)
+## Емоційні стани
 
 Щоб описувати тимчасові стани, використовуйте **бути** + прикметник в орудному відмінку:
 
@@ -55,7 +59,7 @@
 
 These adjectives describe temporary emotional states. **Задоволений** means satisfied — you feel this after a good meal. **Розчарований** means disappointed — when expectations are not met. **Стурбований** means worried — concern about something. **Схвильований** means excited or agitated. **Здивований** means surprised — caught off guard.
 
-### Dialogue: How Are You Feeling?
+## Dialogue: How Are You Feeling?
 
 — Привіт, Марійко! Як справи?
 — Привіт! Чесно кажучи, я трохи стурбована.
@@ -65,12 +69,10 @@ These adjectives describe temporary emotional states. **Задоволений**
 — Дякую. Я вже спокійніша.
 — От і добре! Все буде гаразд.
 
-> [!tip] Expressing "I feel"
-> Use **Я почуваюся** + adverb: _Я почуваюся добре_ (I feel well). Don't confuse with **Я відчуваю** which means "I sense/perceive."
+> [!tip] Expressing «I feel»
+> Use **Я почуваюся** + adverb: _Я почуваюся добре_. Don't confuse with **Я відчуваю** which means «I sense/perceive.»
 
-## Practice
-
-## Риси характеру (Personality Traits)
+## Риси характеру
 
 Прикметники характеру описують постійні характеристики. Вони описують те, ким ви є, а не те, як ви почуваєтеся в даний момент.
 
@@ -102,7 +104,7 @@ These adjectives describe temporary emotional states. **Задоволений**
 > [!cultural] Ukrainian Personality Ideals
 > Ukrainian folklore celebrates courage and honesty above all. The word **козак** became synonymous with bravery throughout history. Even today, Ukrainians value **щирість** — being genuine and open-hearted. These values shaped Ukrainian identity through centuries of struggle for independence.
 
-## Опис особистості (Describing Personality)
+## Опис особистості
 
 Використовуйте **бути** + орудний відмінок для постійних характеристик:
 
@@ -110,7 +112,7 @@ These adjectives describe temporary emotional states. **Задоволений**
 - _Він був сміливим воїном._ — He was a brave warrior.
 - _Ми хочемо бути чесними._ — We want to be honest.
 
-### Dialogue: Describing a Friend
+## Dialogue: Describing a Friend
 
 — Розкажи мені про свою подругу Олену.
 — Олена — чудова людина! Вона дуже добра і щира.
@@ -121,7 +123,7 @@ These adjectives describe temporary emotional states. **Задоволений**
 — Звучить як чудова подруга!
 — Так, мені пощастило!
 
-## Протилежні емоції (Opposite Emotions)
+## Протилежні емоції
 
 Вивчення протилежностей допомагає розширити словниковий запас. Кожна емоція має свою протилежність. Розуміння цих пар допоможе вам виразити весь спектр людських почуттів. Ось найважливіші контрасти:
 
@@ -141,7 +143,7 @@ Notice how **радість** and **сум** are fundamental opposites — the l
 > [!tip] Remember the Pattern
 > Many negative traits use **не-** prefix: добрий → **не**добрий, терплячий → **не**терплячий.
 
-### Story Time: The Kind Heart
+## Story Time: The Kind Heart
 
 Жила-була дівчинка на ім'я Софійка. Вона мала добре серце. Всі в селі знали, що Софійка завжди допомагає.
 
@@ -157,7 +159,7 @@ Notice how **радість** and **сум** are fundamental opposites — the l
 
 Добрі вчинки роблять світ кращим. Коли ми допомагаємо іншим, ми самі стаємо щасливішими.
 
-### Story Time: The Brave Soldier
+## Story Time: The Brave Soldier
 
 Це історія про воїна Олексія. Він був дуже сміливим і чесним. Всі в селі поважали його.
 
@@ -173,7 +175,7 @@ Notice how **радість** and **сум** are fundamental opposites — the l
 
 Сміливість і чесність — це головні українські цінності.
 
-# Summary
+# Підсумок
 
 You learned to:
 
@@ -184,3 +186,9 @@ You learned to:
 - Form opposites with не-: терплячий → нетерплячий
 
 Remember that emotions in Ukrainian culture are often expressed openly. Use these new words to share your feelings with friends and family. Practice describing the characters in books or movies using the personality adjectives you learned. Are they сміливі or боягузливі? Чесні or нечесні? This will help you master the vocabulary.
+
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

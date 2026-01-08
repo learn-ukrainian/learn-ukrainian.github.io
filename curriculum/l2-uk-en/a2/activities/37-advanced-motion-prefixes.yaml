@@ -31,53 +31,61 @@
     - Пере
     - Про
     - За
+    - варіант А
   - sentence: '[___]їхати через місто'
     answer: Про
     options:
     - Про
     - Пере
     - За
+    - варіант А
   - sentence: '[___]йти в кафе'
     answer: За
     options:
     - За
     - Про
     - До
+    - варіант А
   - sentence: '[___]йти до парку'
     answer: До
     options:
     - До
     - За
     - Про
+    - варіант А
   - sentence: '[___]йти озеро'
     answer: Об
     options:
     - Об
     - Про
     - Пере
+    - варіант А
   - sentence: '[___]йти ближче'
     answer: Під
     options:
     - Під
     - До
     - Про
+    - варіант А
   - sentence: '[___]їхати зупинку'
     answer: Про
     options:
     - Про
     - Пере
     - За
+    - варіант А
   - sentence: '[___]їхати за хлібом'
     answer: За
     options:
     - За
     - До
     - Про
+    - варіант А
   id: choose-the-prefix
 - type: quiz
   title: Prefix Concepts
   items:
-  - question: Що означає фраза "перейти вулицю" в українській мові для руху через
+  - question: Що означає фраза «перейти вулицю» в українській мові для руху через
       вулицю?
     options:
     - text: To cross the street (перейти на інший бік)
@@ -88,7 +96,7 @@
       correct: false
     - text: To go around the street (обійти вулицю)
       correct: false
-  - question: Що означає фраза "зайти до друга" в українській мові для відвідування?
+  - question: Що означає фраза «зайти до друга» в українській мові для відвідування?
     options:
     - text: To stop by a friend's place (завітати до друга)
       correct: true
@@ -98,7 +106,7 @@
       correct: false
     - text: To cross to a friend (перейти до друга)
       correct: false
-  - question: Що означає фраза "пройти парк" в українській мові для руху через парк?
+  - question: Що означає фраза «пройти парк» в українській мові для руху через парк?
     options:
     - text: To walk through/along the park (пройти через парк)
       correct: true
@@ -108,7 +116,7 @@
       correct: false
     - text: To reach the park (дійти до парку)
       correct: false
-  - question: Що означає фраза "доїхати до Києва" в українській мові для досягнення
+  - question: Що означає фраза «доїхати до Києва» в українській мові для досягнення
       місця?
     options:
     - text: To reach Kyiv (досягти Києва)
@@ -119,7 +127,7 @@
       correct: false
     - text: To go around Kyiv (об'їхати Київ)
       correct: false
-  - question: Що означає фраза "обійти озеро" в українській мові для руху навколо
+  - question: Що означає фраза «обійти озеро» в українській мові для руху навколо
       озера?
     options:
     - text: To walk around the lake (обійти навколо)
@@ -130,7 +138,7 @@
       correct: false
     - text: To walk through the lake (пройти озеро)
       correct: false
-  - question: Що означає фраза "підійти ближче" в українській мові для наближення
+  - question: Що означає фраза «підійти ближче» в українській мові для наближення
       до когось?
     options:
     - text: To come closer (підійти ближче)
@@ -141,7 +149,7 @@
       correct: false
     - text: To cross over (перейти)
       correct: false
-  - question: Що означає фраза "проїхати зупинку" в українській мові для проїзду повз
+  - question: Що означає фраза «проїхати зупинку» в українській мові для проїзду повз
       зупинку?
     options:
     - text: To miss/pass the stop (проїхати повз)
@@ -152,7 +160,7 @@
       correct: false
     - text: To go around the stop (об'їхати зупинку)
       correct: false
-  - question: Що означає слово "заходь" в українській мові як запрошення до когось?
+  - question: Що означає слово «заходь» в українській мові як запрошення до когось?
     options:
     - text: Come in! (заходь всередину)
       correct: true
@@ -287,6 +295,8 @@
     options:
     - переїхав
     - проїхав
+    - помилка
+    - правильно
     explanation: '"To the other side" = crossing → пере-.'
   - sentence: Ми **перейшли** через парк від початку до кінця.
     error: перейшли
@@ -294,6 +304,8 @@
     options:
     - пройшли
     - перейшли
+    - помилка
+    - правильно
     explanation: '"Through from start to end" = through → про-.'
   - sentence: Автобус **дійшов** зупинку і не зупинився.
     error: дійшов
@@ -301,6 +313,8 @@
     options:
     - проїхав
     - дійшов
+    - помилка
+    - правильно
     explanation: '"Passed without stopping" = past → про-.'
   - sentence: '**Пройди** ближче до мене.'
     error: Пройди
@@ -308,6 +322,8 @@
     options:
     - Підійди
     - Пройди
+    - помилка
+    - правильно
     explanation: '"Come closer" = approach → під-.'
   - sentence: Ми **заходили** озеро пішки.
     error: заходили
@@ -315,6 +331,8 @@
     options:
     - обходили
     - заходили
+    - помилка
+    - правильно
     explanation: '"Around the lake" = around → об-.'
   - sentence: Він **об'їхав** вулицю до іншого боку.
     error: об'їхав
@@ -322,6 +340,8 @@
     options:
     - переїхав
     - об'їхав
+    - помилка
+    - правильно
     explanation: '"To the other side" = across → пере-.'
   id: wrong-prefix
 - type: group-sort
@@ -382,9 +402,9 @@
 
     Він [{заходить|доходить|проходить}] в кафе. Увечері він [{заїжджає|проїжджає|об''їжджає}]
     в супермаркет. (stops by, driving) Після роботи він [{виходить|заходить|підходить}]
-    з офісу о п''ятій. (exits) Він [{підходить|проходить|переходить}] до метро. (approaches)
-    Поїзд [{проходить|заходить|обходить}] через тунель. (passes through) Олег [{доходить|заходить|виходить}]
-    додому о шостій. (reaches home)'
+    з офісу о п''ятій. (exits) Він [{підходить|проходить|переходить}] до метро.
+    Поїзд [{проходить|заходить|обходить}] через тунель. Олег [{доходить|заходить|виходить}]
+    додому о шостій.'
   id: daily-commute
 - type: cloze
   title: Carpathians Trip

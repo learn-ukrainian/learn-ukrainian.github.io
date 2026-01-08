@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 992/1000 (8 short)
+- **Words:** ⚠️ 985/1000 (15 short)
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
@@ -15,16 +15,18 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 37.1% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 37.3% (checkpoint - no gate)
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 63 | Included in Core |
-| **Skill 1: Verb Prefixes** | ⚪️ | 235 | Skipped |
-| **Skill 2: Noun Suffixes** | ⚪️ | 179 | Skipped |
-| **Skill 3: Adjective Suffixes** | ⚪️ | 151 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Огляд** | ⚪️ | 63 | Skipped |
+| **Skill 1: Verb Prefixes** | ⚪️ | 222 | Skipped |
+| **Skill 2: Noun Suffixes** | ⚪️ | 166 | Skipped |
+| **Skill 3: Adjective Suffixes** | ⚪️ | 140 | Skipped |
 | **Skill 4: Root Families** | ⚪️ | 225 | Skipped |
 | **Integration Challenge** | ⚪️ | 111 | Skipped |
-| **Summary** | ✅ | 28 | Included in Core |
+| **Підсумок** | ✅ | 28 | Included in Core |
+| **Need More Practice?** | ⚪️ | 30 | Skipped |

@@ -510,32 +510,32 @@
 - type: true-false
   title: Family Facts
   items:
-  - statement: '"Тато" is informal for "father.".'
+  - statement: '«Тато» is informal for "father.".'
     correct: true
-  - statement: '"Батько" is informal for "father.".'
+  - statement: '«Батько» is informal for "father.".'
     correct: false
     explanation: Incorrect! it's formal
-  - statement: '"Дідусь" means "grandfather.".'
+  - statement: '«Дідусь» means "grandfather.".'
     correct: true
-  - statement: '"Бабуся" means "aunt.".'
+  - statement: '«Бабуся» means "aunt.".'
     correct: false
     explanation: Incorrect! it means "grandmother"
-  - statement: '"Двоюрідний брат" means "male cousin.".'
+  - statement: '«Двоюрідний брат» means "male cousin.".'
     correct: true
   - statement: Ukrainians use different words for male and female cousins.
     correct: true
-  - statement: '"Одружена" is for men.'
+  - statement: '«Одружена» is for men.'
     correct: false
     explanation: Incorrect! it's for women
-  - statement: '"Наречений" means "fiancé.".'
+  - statement: '«Наречений» means "fiancé.".'
     correct: true
-  - statement: '"Діти" is the plural of "дитина.".'
+  - statement: '«Діти» is the plural of «дитина.».'
     correct: true
-  - statement: '"Чоловік" only means "husband.".'
+  - statement: '«Чоловік» only means "husband.".'
     correct: false
     explanation: Incorrect! it also means "man"
-  - statement: '"Сім''я" and "родина" both mean "family.".'
+  - statement: '«Сім''я» and «родина» both mean "family.".'
     correct: true
-  - statement: '"Молодший" means "younger.".'
+  - statement: '«Молодший» means "younger.".'
     correct: true
   id: family-facts

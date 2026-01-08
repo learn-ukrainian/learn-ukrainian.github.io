@@ -24,7 +24,8 @@ def generate_report(
     severity: int,
     low_density_activities: list[dict] = None,
     richness_data: dict = None,
-    richness_flags: list = None
+    richness_flags: list = None,
+    template_violations: list[dict] = None
 ) -> str:
     """Generate markdown report content."""
     report_lines = []
@@ -43,6 +44,14 @@ def generate_report(
         report_lines.append("## PEDAGOGICAL VIOLATIONS")
         for v in pedagogical_violations:
             report_lines.append(f"- **[{v['type']}]** {v['issue']}")
+            report_lines.append(f"  - FIX: {v['fix']}")
+        report_lines.append("")
+
+    if template_violations:
+        report_lines.append("## TEMPLATE COMPLIANCE")
+        for v in template_violations:
+            severity_icon = "❌" if v['severity'] == 'CRITICAL' else "⚠️"
+            report_lines.append(f"- {severity_icon} **[{v['type']}]** {v['issue']}")
             report_lines.append(f"  - FIX: {v['fix']}")
         report_lines.append("")
 
@@ -340,6 +349,17 @@ def print_pedagogical_violations(violations: list[dict]) -> None:
         print("\n📚 PEDAGOGICAL VIOLATIONS FOUND:")
         for v in violations:
             print(f"  [{v['type']}] {v['issue']}")
+            print(f"     → FIX: {v['fix']}")
+        print("")
+
+
+def print_template_violations(violations: list[dict]) -> None:
+    """Print template compliance violations to console."""
+    if violations:
+        print("\n📋 TEMPLATE COMPLIANCE VIOLATIONS FOUND:")
+        for v in violations:
+            severity_icon = "🔴" if v['severity'] == 'CRITICAL' else "⚠️"
+            print(f"  {severity_icon} [{v['type']}] {v['issue']}")
             print(f"     → FIX: {v['fix']}")
         print("")
 

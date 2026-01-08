@@ -4,16 +4,16 @@
 
 What did you do yesterday? Last week? A long time ago? Every language needs a way to talk about the past, and Ukrainian's solution is elegant: take the verb stem and add a special ending that shows **who** did the action.
 
-Unlike English, where "I worked" and "she worked" look the same, Ukrainian past tense changes based on **gender**, not person. "I worked" is different for men (я працював) and women (я працювала). Once you see the pattern, it's surprisingly easy!
+Unlike English, where «I worked» and «she worked» look the same, Ukrainian past tense changes based on **gender**, not person. «I worked» is different for men (я працював) and women (я працювала). Once you see the pattern, it's surprisingly easy!
 
 > [!important] **Aspect Awareness**
 >
 > 💡 **Note:** This is the **imperfective past tense** (describing ongoing or repeated actions).
 >
 > Ukrainian also has **perfective past tense** (for completed actions with results).
-> You'll learn about this distinction in A2 when we study "aspect"!
+> You'll learn about this distinction in A2 when we study «aspect»!
 >
-> For now: читав = "was reading" (ongoing)
+> For now: читав = «was reading» (ongoing)
 
 > [!tip] **Чи знаєте ви? (Did You Know?)**
 >
@@ -32,7 +32,7 @@ The past tense in Ukrainian is beautifully simple. You take the infinitive (like
 | воно (it)                    | -**ло** | читало  |
 | вони / ми / ви (they/we/you) | -**ли** | читали  |
 
-**Key insight:** The ending matches the **gender of the subject**, not the person. So "I read" is:
+**Key insight:** The ending matches the **gender of the subject**, not the person. So «I read» is:
 
 - Я читав (if you're male)
 - Я читала (if you're female)
@@ -115,7 +115,7 @@ When did it happen? Use these words:
 
 > [!example] **Pop Culture Moment**
 >
-> In the famous Ukrainian song "Червона рута" (Red Rue), the singer reminisces about finding a magical flower: "Я знайшов її колись..." (I found it once...). Past tense + колись = perfect for nostalgic stories!
+> In the famous Ukrainian song «Червона рута» (Red Rue), the singer reminisces about finding a magical flower: «Я знайшов її колись...» (I found it once...). Past tense + колись = perfect for nostalgic stories!
 
 ### Key Verbs in Past Tense
 
@@ -140,8 +140,8 @@ Here are essential verbs you'll use often:
 >
 > Some verbs change their stem in past tense:
 >
-> - їсти → їв/їла/їли (not "їстив")
-> - пити → пив/пила/пили (not "питив")
+> - їсти → їв/їла/їли (not «їстив»)
+> - пити → пив/пила/пили (not «питив»)
 >
 > The stem changes, but the endings stay regular!
 
@@ -194,7 +194,7 @@ Here are essential verbs you'll use often:
 
 > [!info] **Real World Usage**
 >
-> When Ukrainians ask "Що ти робив вчора?" (What did you do yesterday?), they're using the masculine form. If asking a woman, they'll say "Що ти робила вчора?" — the question itself changes based on who you're talking to!
+> When Ukrainians ask «Що ти робив вчора?» (What did you do yesterday?), they're using the masculine form. If asking a woman, they'll say «Що ти робила вчора?» — the question itself changes based on who you're talking to!
 
 ### Міні-діалог 1: Після вихідних (After the Weekend)
 
@@ -242,7 +242,7 @@ Translation:
 
 > [!tip] **Language Elegance**
 >
-> Notice how Ukrainian uses був/була/було for "was" depending on the gender of the noun:
+> Notice how Ukrainian uses був/була/було for «was» depending on the gender of the noun:
 >
 > - Тут **був** сад. (The garden is masculine.)
 > - Тут **була** школа. (The school is feminine.)
@@ -275,4 +275,13 @@ Translation:
 
 # Summary
 
-Ви вивчили минулий час в українській мові. Ви знаєте закінчення -в, -ла, -ло та -ли. Ви знаєте слова "вчора" та "давно". Це була гарна робота (This was good work).
+Ви вивчили минулий час в українській мові. Ви знаєте закінчення -в, -ла, -ло та -ли. Ви знаєте слова «вчора» та «давно». Це була гарна робота (This was good work).
+
+---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

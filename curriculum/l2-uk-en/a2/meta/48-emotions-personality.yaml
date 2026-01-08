@@ -7,17 +7,17 @@ pedagogy: PPP
 duration: 60
 transliteration: none
 tags:
-  - vocabulary
-  - emotions
-  - personality
-  - adjectives
+- vocabulary
+- emotions
+- personality
+- adjectives
 grammar:
-  - adjective-agreement
-  - instrumental-with-бути
+- adjective-agreement
+- instrumental-with-бути
 objectives:
-  - Learner can describe basic emotions in Ukrainian
-  - Learner can describe personality traits using appropriate adjectives
-  - Learner can express emotional states using бути + instrumental
+- Learner can describe basic emotions in Ukrainian
+- Learner can describe personality traits using appropriate adjectives
+- Learner can express emotional states using бути + instrumental
 vocabulary_count: 30
-vocab_count: 66
 slug: 48-emotions-personality
+focus: grammar

@@ -222,6 +222,71 @@ def check_table_column_consistency(content: str) -> list[dict]:
     return violations
 
 
+def check_forbidden_headers(content: str) -> list[dict]:
+    """
+    Check that modules do not contain forbidden headers per Clean MD standard.
+    
+    Per Issue #398 (Jan 2026), modules must NOT contain explicit:
+    - ## Activities (or ## Вправи, ## Активності)
+    - ## Vocabulary (or ## Словник)
+    - ## External Resources (or ## Зовнішні ресурси)
+    
+    These sections are auto-injected from YAML sidecars:
+    - activities/{slug}.yaml
+    - vocabulary/{slug}.yaml
+    - docs/resources/external_resources.yaml
+    
+    Rationale: Clean MD architecture separates content (MD) from structure (YAML).
+    """
+    violations = []
+    
+    # Forbidden headers (H2 level) - both English and Ukrainian
+    forbidden_patterns = [
+        # Activities
+        (r'^##\s+Activities\s*$', 'Activities', 'activities/{slug}.yaml'),
+        (r'^##\s+Вправи\s*$', 'Вправи', 'activities/{slug}.yaml'),
+        (r'^##\s+Активності\s*$', 'Активності', 'activities/{slug}.yaml'),
+        
+        # Vocabulary
+        (r'^##\s+Vocabulary\s*$', 'Vocabulary', 'vocabulary/{slug}.yaml'),
+        (r'^##\s+Словник\s*$', 'Словник', 'vocabulary/{slug}.yaml'),
+        
+        # External Resources
+        (r'^##\s+External\s+Resources\s*$', 'External Resources', 'docs/resources/external_resources.yaml'),
+        (r'^##\s+Зовнішні\s+ресурси\s*$', 'Зовнішні ресурси', 'docs/resources/external_resources.yaml'),
+    ]
+    
+    lines = content.split('\n')
+    in_frontmatter = False
+    frontmatter_count = 0
+    
+    for line_num, line in enumerate(lines, 1):
+        # Skip frontmatter
+        if line.strip() == '---':
+            frontmatter_count += 1
+            if frontmatter_count == 1:
+                in_frontmatter = True
+            elif frontmatter_count == 2:
+                in_frontmatter = False
+            continue
+        
+        if in_frontmatter:
+            continue
+        
+        # Check for forbidden headers
+        for pattern, header_name, yaml_location in forbidden_patterns:
+            if re.match(pattern, line.strip(), re.IGNORECASE):
+                violations.append({
+                    'type': 'FORBIDDEN_HEADER',
+                    'line': line_num,
+                    'issue': f"Forbidden header '## {header_name}' violates Clean MD standard (Issue #398)",
+                    'fix': f"Remove '## {header_name}' header. This section is auto-injected from {yaml_location} at build time. See docs/l2-uk-en/templates/ for correct pattern."
+                })
+                break
+    
+    return violations
+
+
 def check_markdown_format(content: str) -> list[dict]:
     """
     Run all markdown format validation checks.
@@ -238,5 +303,8 @@ def check_markdown_format(content: str) -> list[dict]:
     violations.extend(check_frontmatter_spacing(content))
     violations.extend(check_heading_levels(content))
     violations.extend(check_table_column_consistency(content))
+    
+    # Clean MD Standard checks (Issue #398)
+    violations.extend(check_forbidden_headers(content))
 
     return violations

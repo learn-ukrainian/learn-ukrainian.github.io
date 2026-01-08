@@ -51,7 +51,7 @@
       correct: false
     - text: грати про гітару
       correct: false
-  - question: Is the word "хобі" declinable in the Ukrainian language cases?
+  - question: Is the word «хобі» declinable in the Ukrainian language cases?
     options:
     - text: No, it is indeclinable
       correct: true
@@ -152,16 +152,20 @@
   id: hobby-vocabulary
 - type: cloze
   title: My Hobbies
-  passage: 'Я люблю {грати|спати|їсти|йти}_ на гітарі. Вона {малює|співає|читає|п''є}_ красиві картини. Ми йдемо в {кіно|театр|музей|парк}_ на новий фільм.
+  passage: 'Я люблю {грати|спати|їсти|йти}_ на гітарі. Вона {малює|співає|читає|п''є}_
+    красиві картини. Ми йдемо в {кіно|театр|музей|парк}_ на новий фільм.
 
 
-    Це моє улюблене {хобі|хоббі|хобба|хобу}_. У мене є два {квитки|намети|сцени|поїзди}_ на концерт. Ми {оглядаємо|співаємо|малюємо|спимо}_ старий замок.
+    Це моє улюблене {хобі|хоббі|хобба|хобу}_. У мене є два {квитки|намети|сцени|поїзди}_
+    на концерт. Ми {оглядаємо|співаємо|малюємо|спимо}_ старий замок.
 
 
-    Він {колекціонує|грає|танцює|йде}_ марки. Я хочу {подорожувати|малювати|грати|читати}_ світом. Артист стоїть на {сцені|наметі|квитку|лісі}_.
+    Він {колекціонує|грає|танцює|йде}_ марки. Я хочу {подорожувати|малювати|грати|читати}_
+    світом. Артист стоїть на {сцені|наметі|квитку|лісі}_.
 
 
-    Ми спимо в {наметі|кіно|театрі|сцені}_. Це цікава {виставка|квиток|намет|хобі}_. {Глядачі|Квитки|Намети|Музеї}_ аплодують.'
+    Ми спимо в {наметі|кіно|театрі|сцені}_. Це цікава {виставка|квиток|намет|хобі}_.
+    {Глядачі|Квитки|Намети|Музеї}_ аплодують.'
   id: my-hobbies
 - type: true-false
   title: Cultural Leisure
@@ -169,37 +173,37 @@
   - statement: Ukrainians rarely sing.
     correct: false
     explanation: Singing is huge in UA culture.
-  - statement: A "дача" is a winter ski resort.
+  - statement: A «дача» is a winter ski resort.
     correct: false
     explanation: It's a summer house/garden.
-  - statement: '"Шашлик" is a popular weekend food.'
+  - statement: «Шашлик» is a popular weekend food.
     correct: true
     explanation: BBQ is a ritual.
   - statement: You should bring gifts when visiting.
     correct: true
     explanation: Never empty-handed.
-  - statement: '"Кіно" means theater.'
+  - statement: «Кіно» means theater.
     correct: false
     explanation: Кіно = cinema. Театр = theater.
-  - statement: '"Хобі" changes case endings.'
+  - statement: «Хобі» changes case endings.
     correct: false
     explanation: It never changes.
-  - statement: '"Грати на" is used for sports.'
+  - statement: «Грати на» is used for sports.
     correct: false
-    explanation: '"Грати на" + Instr = Music. "Грати в" + Acc = Sports.'
+    explanation: «Грати на» + Instr = Music. «Грати в» + Acc = Sports.
   - statement: Carpathians are popular for hiking.
     correct: true
     explanation: Yes, mountains.
-  - statement: '"Вільний час" means busy time.'
+  - statement: «Вільний час» means busy time.
     correct: false
     explanation: Free time.
   - statement: Museums are places to see exhibitions.
     correct: true
     explanation: Yes.
-  - statement: '"Намет" is good for hotels.'
+  - statement: «Намет» is good for hotels.
     correct: false
     explanation: Tent is for camping.
-  - statement: '"Гопак" is a Ukrainian dance.'
+  - statement: «Гопак» is a Ukrainian dance.
     correct: true
     explanation: Famous energetic dance.
   id: cultural-leisure
@@ -367,7 +371,7 @@
     - театру
     - театра
     - театром
-    explanation: 'Direction (Accusative inanimate): в театр.'
+    explanation: 'Direction: в театр.'
   - sentence: Це моє хоббі.
     error: хоббі
     answer: хобі
@@ -457,7 +461,7 @@
     - світ
     - світу
     - світі
-    explanation: 'Instrumental (through/by means of): світом.'
+    explanation: 'Instrumental: світом.'
   id: fix-the-hobby
 - type: cloze
   title: Cultural Weekend
@@ -478,7 +482,10 @@
 - type: mark-the-words
   title: Hobbies Search
   id: hobbies-search
-  passage: Мій брат любить *подорожувати*. Він бере *намет* і йде в гори. Моя сестра любить *малювати*. Вона завжди купує фарби. Я люблю *театр*. Я часто купую *квитки* на вистави. Мій батько любить *риболовлю*. Це його *хобі*. Мама любить *співати* в хорі. У кожного свій *відпочинок*.
+  passage: Мій брат любить *подорожувати*. Він бере *намет* і йде в гори. Моя сестра
+    любить *малювати*. Вона завжди купує фарби. Я люблю *театр*. Я часто купую *квитки*
+    на вистави. Мій батько любить *риболовлю*. Це його *хобі*. Мама любить *співати*
+    в хорі. У кожного свій *відпочинок*.
   correct_words:
   - подорожувати
   - намет
@@ -489,6 +496,7 @@
   - хобі
   - співати
   - відпочинок
+  instruction: Натисніть на правильні слова в тексті.
 - type: select
   title: Choose Correct Verb
   items:
@@ -498,12 +506,20 @@
       correct: true
     - text: Гратися
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Play instrument.
   - question: __ пісні.
     options:
     - text: Співати
       correct: true
     - text: Спати
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Sing songs.
   - question: __ марки.
@@ -512,6 +528,10 @@
       correct: true
     - text: Читати
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Collect stamps.
   - question: __ картини.
     options:
@@ -519,12 +539,21 @@
       correct: true
     - text: Писати
       correct: false
-    explanation: 'Paint pictures (Малювати). Note: artists say "писати картину", but "малювати" is standard for learners.'
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+    explanation: 'Paint pictures (Малювати). Note: artists say «писати картину», but
+      «малювати» is standard for learners.'
   - question: __ гопак.
     options:
     - text: Танцювати
       correct: true
     - text: Співати
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Dance hopak.
   - question: __ місто.
@@ -533,12 +562,20 @@
       correct: true
     - text: Дивитися
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Inspect/sightsee city.
   - question: __ у наметі.
     options:
     - text: Спати
       correct: true
     - text: Грати
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Sleep in a tent.
   - question: __ квиток.
@@ -547,12 +584,20 @@
       correct: true
     - text: Продавати
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Buy a ticket.
   - question: __ музеї.
     options:
     - text: Відвідувати
       correct: true
     - text: Жити
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Visit museums.
   - question: __ фото.
@@ -561,6 +606,10 @@
       correct: true
     - text: Грати
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Make (take) photos. Or Фотографувати. 'Робити фото' is common.
   - question: __ вірші.
     options:
@@ -568,12 +617,20 @@
       correct: true
     - text: Читати
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Write poems.
   - question: __ валізу.
     options:
     - text: Збирати
       correct: true
     - text: Розкидати
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Pack (gather) suitcase.
   id: choose-correct-verb

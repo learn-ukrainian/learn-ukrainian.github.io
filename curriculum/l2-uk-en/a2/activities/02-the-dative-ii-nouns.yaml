@@ -35,77 +35,90 @@
     - мамі
     - мама
     - маму
+    - мамою
   - sentence: Я пишу листа ___.
     answer: другові
     options:
     - другові
     - друг
     - друга
+    - другом
   - sentence: Вона телефонує ___ щодня.
     answer: сестрі
     options:
     - сестрі
     - сестра
     - сестру
+    - сестрою
   - sentence: Ми надсилаємо посилку ___.
     answer: бабусі
     options:
     - бабусі
     - бабуся
     - бабусю
+    - бабусею
   - sentence: Батько дарує квіти ___.
     answer: мамі
     options:
     - мамі
     - мама
     - маму
+    - мамою
   - sentence: Лікар пояснює діагноз ___.
     answer: пацієнтові
     options:
     - пацієнтові
     - пацієнт
     - пацієнта
+    - пацієнтом
   - sentence: Вчитель показує карту ___.
     answer: учням
     options:
     - учням
     - учні
     - учнів
+    - учнями
   - sentence: Я довіряю ___.
     answer: другові
     options:
     - другові
     - друг
     - друга
+    - другом
   - sentence: Це не підходить ___.
     answer: вчителеві
     options:
     - вчителеві
     - вчитель
     - вчителя
+    - вчителем
   - sentence: Мама готує сніданок ___.
     answer: дітям
     options:
     - дітям
     - діти
     - дітей
+    - дітьми
   - sentence: Він дарує книгу ___.
     answer: сестрі
     options:
     - сестрі
     - сестра
     - сестру
+    - сестрою
   - sentence: Я раджу це ___.
     answer: подрузі
     options:
     - подрузі
     - подруга
     - подругу
+    - подругою
   id: dative-noun-forms
 - type: quiz
   title: Dative or Not?
   items:
-  - question: Коли ви хочете дати книгу другові, яке речення граматично правильне в українській мові?
+  - question: Коли ви хочете дати книгу другові, яке речення граматично правильне
+      в українській мові?
     options:
     - text: Я даю книгу друг.
       correct: false
@@ -115,7 +128,8 @@
       correct: false
     - text: Я даю книгу другом.
       correct: false
-  - question: Якщо дівчина телефонує своїй мамі щодня, яке речення правильне в українській мові?
+  - question: Якщо дівчина телефонує своїй мамі щодня, яке речення правильне в українській
+      мові?
     options:
     - text: Вона телефонує мама.
       correct: false
@@ -135,7 +149,8 @@
       correct: false
     - text: Ми пишемо батьками.
       correct: false
-  - question: Якщо ви хочете сказати "She helps her sister" українською, яке речення правильне?
+  - question: Якщо ви хочете сказати "She helps her sister" українською, яке речення
+      правильне?
     options:
     - text: Вона допомагає сестра.
       correct: false
@@ -145,7 +160,8 @@
       correct: true
     - text: Вона допомагає сестрою.
       correct: false
-  - question: Коли ви хочете сказати "to the city" українською, яка форма давального відмінка правильна?
+  - question: Коли ви хочете сказати "to the city" українською, яка форма давального
+      відмінка правильна?
     options:
     - text: місто
       correct: false
@@ -155,7 +171,8 @@
       correct: false
     - text: містом
       correct: false
-  - question: Якщо ви хочете висловити довіру другові, як сказати "I believe my friend" українською?
+  - question: Якщо ви хочете висловити довіру другові, як сказати "I believe my friend"
+      українською?
     options:
     - text: Я вірю друг.
       correct: false
@@ -165,7 +182,8 @@
       correct: false
     - text: Я вірю другом.
       correct: false
-  - question: Коли вчитель показує фото своїм учням, яке речення граматично правильне в українській мові?
+  - question: Коли вчитель показує фото своїм учням, яке речення граматично правильне
+      в українській мові?
     options:
     - text: Він показує фото вчителеві.
       correct: true
@@ -175,7 +193,8 @@
       correct: false
     - text: Він показує фото вчителем.
       correct: false
-  - question: Якщо ви хочете сказати "They write to their parents" українською, яка форма правильна?
+  - question: Якщо ви хочете сказати "They write to their parents" українською, яка
+      форма правильна?
     options:
     - text: Вони пишуть батьки.
       correct: false
@@ -185,7 +204,8 @@
       correct: true
     - text: Вони пишуть батьками.
       correct: false
-  - question: Коли жіночий іменник "подруга" стоїть у давальному відмінку, яка форма правильна з урахуванням чергування?
+  - question: Коли жіночий іменник «подруга» стоїть у давальному відмінку, яка форма
+      правильна з урахуванням чергування?
     options:
     - text: подругі
       correct: false
@@ -195,7 +215,8 @@
       correct: false
     - text: подругою
       correct: false
-  - question: Якщо лікар пояснює діагноз пацієнтові в кабінеті, як це сказати правильно українською?
+  - question: Якщо лікар пояснює діагноз пацієнтові в кабінеті, як це сказати правильно
+      українською?
     options:
     - text: Лікар пояснює пацієнт.
       correct: false
@@ -205,7 +226,8 @@
       correct: true
     - text: Лікар пояснює пацієнтом.
       correct: false
-  - question: Коли ви хочете утворити давальний відмінок від слова "донька", яка форма правильна з чергуванням?
+  - question: Коли ви хочете утворити давальний відмінок від слова «донька», яка форма
+      правильна з чергуванням?
     options:
     - text: доньки
       correct: false
@@ -215,7 +237,8 @@
       correct: true
     - text: донькою
       correct: false
-  - question: Коли щось личить вашому імені або підходить до нього, яке речення граматично правильне?
+  - question: Коли щось личить вашому імені або підходить до нього, яке речення граматично
+      правильне?
     options:
     - text: Це личить твоєму імені.
       correct: true
@@ -244,25 +267,27 @@
   - statement: All genders take -ам/-ям in the plural dative.
     correct: true
     explanation: Correct! друзям, сестрам, містам — all use -ам/-ям.
-  - statement: The verb "допомагати" requires the accusative case.
+  - statement: The verb «допомагати» requires the accusative case.
     correct: false
     explanation: 'Допомагати requires the dative: допомагати мамі, допомагати другові.'
-  - statement: '"Другові" and "другу" are both correct dative forms.'
+  - statement: «Другові» and «другу» are both correct dative forms.
     correct: true
-    explanation: Yes! -ові is more formal, -у is more colloquial. Both are grammatically correct.
+    explanation: Yes! -ові is more formal, -у is more colloquial. Both are grammatically
+      correct.
   - statement: The consonant к changes to ц before -і in feminine nouns.
     correct: true
     explanation: Correct! рука → руці, донька → доньці.
-  - statement: '"Батькам" is the dative plural of "батько".'
+  - statement: «Батькам» is the dative plural of «батько».
     correct: true
     explanation: Yes! батько → батьки → батькам.
-  - statement: The verb "писати" always requires accusative.
+  - statement: The verb «писати» always requires accusative.
     correct: false
-    explanation: Писати takes dative for the recipient and accusative for what is written.
-  - statement: '"Вчителеві" is the dative form of "вчитель".'
+    explanation: Писати takes dative for the recipient and accusative for what is
+      written.
+  - statement: «Вчителеві» is the dative form of «вчитель».
     correct: true
     explanation: 'Correct! Soft-stem masculine nouns take -еві: вчитель → вчителеві.'
-  - statement: Neuter nouns ending in -я like "ім'я" have regular dative forms.
+  - statement: Neuter nouns ending in -я like «ім'я» have regular dative forms.
     correct: false
     explanation: 'These nouns are irregular: ім''я → імені.'
   id: dative-rules
@@ -363,7 +388,8 @@
     - мамі
     - маму
     - мамою
-    explanation: 'The verb «допомагати» requires Dative. Feminine nouns ending in -а take -і: мама → мамі.'
+    explanation: 'The verb «допомагати» requires Dative. Feminine nouns ending in
+      -а take -і: мама → мамі.'
   - sentence: Він телефонує друг кожного дня.
     error: друг
     answer: другові
@@ -372,7 +398,8 @@
     - другові
     - друга
     - другом
-    explanation: 'The verb «телефонувати» requires Dative. Masculine nouns take -ові/-еві: друг → другові.'
+    explanation: 'The verb «телефонувати» requires Dative. Masculine nouns take -ові/-еві:
+      друг → другові.'
   - sentence: Ми пишемо лист бабуся.
     error: бабуся
     answer: бабусі
@@ -381,7 +408,8 @@
     - бабусі
     - бабусю
     - бабусею
-    explanation: 'The verb «писати» requires Dative for recipients. Feminine -я nouns take -і: бабуся → бабусі.'
+    explanation: 'The verb «писати» requires Dative for recipients. Feminine -я nouns
+      take -і: бабуся → бабусі.'
   - sentence: Вона показує фото сестра.
     error: сестра
     answer: сестрі
@@ -390,7 +418,8 @@
     - сестрі
     - сестру
     - сестрою
-    explanation: 'The verb «показувати» requires Dative for recipients. Feminine -а nouns take -і: сестра → сестрі.'
+    explanation: 'The verb «показувати» requires Dative for recipients. Feminine -а
+      nouns take -і: сестра → сестрі.'
   - sentence: Батько дарує подарунок дочка.
     error: дочка
     answer: доньці
@@ -399,7 +428,8 @@
     - доньці
     - дочку
     - дочкою
-    explanation: 'The verb «дарувати» requires Dative. Дочка has stem change: дочка → доньці (к→ц before -і).'
+    explanation: 'The verb «дарувати» requires Dative. Дочка has stem change: дочка
+      → доньці (к→ц before -і).'
   - sentence: Лікар пояснює все пацієнт.
     error: пацієнт
     answer: пацієнтові
@@ -408,28 +438,36 @@
     - пацієнтові
     - пацієнта
     - пацієнтом
-    explanation: 'The verb «пояснювати» requires Dative. Masculine nouns take -ові: пацієнт → пацієнтові.'
+    explanation: 'The verb «пояснювати» requires Dative. Masculine nouns take -ові:
+      пацієнт → пацієнтові.'
   id: fix-the-dative
 - type: cloze
   title: Complete the Dialogue
-  passage: 'Олег: Кому ти пишеш листа? Марія: Я пишу {бабусі|сестрі|подрузі}. У неї день народження. Олег: О, а що ти їй даруєш? Марія: Я дарую їй теплий шарф. Він подобається моїй {бабусі|мамі|тітці}. Олег: Гарна ідея! Я теж хочу надіслати щось своєму {братові|другові|батькові}. Марія: А що подобається твоєму {братові|другові|дядькові}? Олег: {Йому|Їй|Їм} подобаються книги про історію. Марія: Чудово! Я впевнена, що книга {сподобається|подобається|личить} твоєму {братові|батькові|дядькові}.
+  passage: 'Олег: Кому ти пишеш листа? Марія: Я пишу {бабусі|сестрі|подрузі}. У неї
+    день народження. Олег: О, а що ти їй даруєш? Марія: Я дарую їй теплий шарф. Він
+    подобається моїй {бабусі|мамі|тітці}. Олег: Гарна ідея! Я теж хочу надіслати щось
+    своєму {братові|другові|батькові}. Марія: А що подобається твоєму {братові|другові|дядькові}?
+    Олег: {Йому|Їй|Їм} подобаються книги про історію. Марія: Чудово! Я впевнена, що
+    книга {сподобається|подобається|личить} твоєму {братові|батькові|дядькові}.
 
-    На пошті. Марія: Добрий день! Я хочу надіслати посилку {бабусі|дідусеві|тітці}. Працівник: Добре. Кому саме? Марія: Моїй {бабусі|тітці|сестрі} в Канаду. Працівник: Зрозуміло. Що ви надсилаєте? Марія: Книги. Вони дуже {подобаються|потрібні|сподобаються} моїй бабусі. Працівник: Посилка буде {готова|там|доставлена} за тиждень. Марія: {Дякую|Дякуємо|Вдячна} вам!'
+    На пошті. Марія: Добрий день! Я хочу надіслати посилку {бабусі|дідусеві|тітці}.
+    Працівник: Добре. Кому саме? Марія: Моїй {бабусі|тітці|сестрі} в Канаду. Працівник:
+    Зрозуміло. Що ви надсилаєте? Марія: Книги. Вони дуже {подобаються|потрібні|сподобаються}
+    моїй бабусі. Працівник: Посилка буде {готова|там|доставлена} за тиждень. Марія:
+    {Дякую|Дякуємо|Вдячна} вам!'
   id: complete-the-dialogue
 - type: mark-the-words
   title: Find Dative Nouns
   id: find-dative-nouns
   passage: 'Click on all the nouns in the dative case.
 
-    Я даю книгу *другові*. Він показує фото *сестрі*. Ми пишемо листи *батькам*. Лікар допомагає *пацієнтові*. Вона телефонує *мамі* щодня.
+    Я даю книгу *другові*. Він показує фото *сестрі*. Ми пишемо листи *батькам*. Лікар
+    допомагає *пацієнтові*. Вона телефонує *мамі* щодня.
 
     ---
 
-    Вчитель пояснює урок *учням*. Я надсилаю посилку *бабусі*. Він дарує квіти *дівчині*. Брат допомагає *сестрі*. Ми довіряємо цьому *лікареві*.
-
-    ---
-
-    Я пишу листа *другові*. Вона показує картину *гостям*. Батько читає казку *дітям*. Ми телефонуємо *друзям* щотижня. Він дарує подарунок *мамі*.'
+    Вчитель пояснює урок *учням*. Я надсилаю посилку *бабусі*. Він дарує квіти *дівчині*.
+    Брат допомагає *сестрі*. Ми довіряємо цьому *лікареві*.'
   correct_words:
   - другові
   - сестрі
@@ -441,11 +479,7 @@
   - дівчині
   - сестрі
   - лікареві
-  - другові
-  - гостям
-  - дітям
-  - друзям
-  - мамі
+  instruction: Натисніть на правильні слова в тексті.
 - type: translate
   title: English to Ukrainian
   items:

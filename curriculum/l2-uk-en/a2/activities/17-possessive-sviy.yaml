@@ -24,20 +24,18 @@
   id: свій-vs-його
 - type: cloze
   title: Choose Свій or Його
-  passage: Він читає {свою|його|її} книгу. (his own) Вона любить {свою|її|його} маму.
-    (her own) Я бачив {його|свого|її} друга. (his friend, not mine) Вони живуть у
-    {своєму|їхньому|моєму} домі. (their own) Марія взяла {свою|її|його} сумку. (her
-    own) Він допоміг {своїй|її|його} сестрі. (his own) Я люблю {її|своїх|його} батьків.
-    (her parents, not mine) Вона говорить про {свою|її|його} роботу. (her own) Ми
-    любимо {свою|нашу|їхню} країну. (our own) Вони шукають {свої|їхні|наші} речі.
-    (their own) Він бачить {свого|його|її} брата. (his own) Вона миє {своє|її|його}
-    обличчя. (her own)
+  passage: Він читає {свою|його|її} книгу. Вона любить {свою|її|його} маму. Я бачив
+    {його|свого|її} друга. Вони живуть у {своєму|їхньому|моєму} домі. Марія взяла
+    {свою|її|його} сумку. Він допоміг {своїй|її|його} сестрі. Я люблю {її|своїх|його}
+    батьків. Вона говорить про {свою|її|його} роботу. Ми любимо {свою|нашу|їхню}
+    країну. Вони шукають {свої|їхні|наші} речі. Він бачить {свого|його|її} брата.
+    Вона миє {своє|її|його} обличчя.
   id: choose-свій-or-його
 - type: quiz
   title: Concept Check
   items:
   - question: Which scenario best describes the primary grammatical function of the
-      reflexive possessive pronoun "свій" in Ukrainian?
+      reflexive possessive pronoun «свій» in Ukrainian?
     options:
     - text: Refers back to the subject of the same sentence
       correct: true
@@ -47,7 +45,7 @@
       correct: false
     - text: Replaces only the second person plural possessive
       correct: false
-  - question: In the sentence "Я люблю свою маму," which of the following English
+  - question: In the sentence «Я люблю свою маму,» which of the following English
       phrases correctly captures the intended meaning?
     options:
     - text: I love my (own) mother
@@ -58,21 +56,21 @@
       correct: false
     - text: I love his mother
       correct: false
-  - question: What is the subtle but important difference between "Він любить його
-      маму" and "Він любить свою маму"?
+  - question: What is the subtle but important difference between «Він любить його
+      маму» and «Він любить свою маму»?
     options:
-    - text: '"Його" means someone else''s mother; "своя" means his own'
+    - text: '«Його» means someone else''s mother; «своя» means his own'
       correct: true
     - text: There is no functional difference in standard Ukrainian
       correct: false
-    - text: '"Його" is formal; "своя" is familiar and casual'
+    - text: '«Його» is formal; «своя» is familiar and casual'
       correct: false
-    - text: '"Його" is only for objects; "своя" is for people'
+    - text: '«Його» is only for objects; «своя» is for people'
       correct: false
   - question: Which of the following statements correctly identifies how the pronoun
-      "свій" is declined in a Ukrainian sentence?
+      «свій» is declined in a Ukrainian sentence?
     options:
-    - text: It declines exactly like the possessive pronoun "мій"
+    - text: It declines exactly like the possessive pronoun «мій»
       correct: true
     - text: It has only one fixed form for all genders
       correct: false
@@ -80,19 +78,19 @@
       correct: false
     - text: it declines like a regular non-possessive adjective
       correct: false
-  - question: Can the pronoun "свій" be used grammatically as part of the subject
+  - question: Can the pronoun «свій» be used grammatically as part of the subject
       in a main clause?
     options:
     - text: No, it usually refers to something the subject possesses
       correct: true
-    - text: Yes, it is common to start sentences with "Свій батько..."
+    - text: Yes, it is common to start sentences with «Свій батько...»
       correct: false
     - text: Only when the verb is in the past tense
       correct: false
     - text: Only in the third person plural form
       correct: false
-  - question: Which of the following is the correct feminine accusative form of "свій"
-      to match the noun "книгу"?
+  - question: Which of the following is the correct feminine accusative form of «свій»
+      to match the noun «книгу»?
     options:
     - text: свою ( accusative feminine singular)
       correct: true
@@ -102,19 +100,19 @@
       correct: false
     - text: своєю
       correct: false
-  - question: When using the first or second person, are both "мій" and "свій" generally
+  - question: When using the first or second person, are both «мій» and «свій» generally
       considered acceptable in standard Ukrainian?
     options:
-    - text: Yes, both are common, but "свій" is very natural
+    - text: Yes, both are common, but «свій» is very natural
       correct: true
-    - text: No, "мій" is considered grammatically incorrect
+    - text: No, «мій» is considered grammatically incorrect
       correct: false
-    - text: Only "мій" is used for family members
+    - text: Only «мій» is used for family members
       correct: false
-    - text: Only "свій" is used for inanimate objects
+    - text: Only «свій» is used for inanimate objects
       correct: false
-  - question: 'To which personal pronoun refers "свої" in the following sentence:
-      "Ми любимо свої традиції"?'
+  - question: 'To which personal pronoun refers «свої» in the following sentence:
+      «Ми любимо свої традиції»?'
     options:
     - text: ми
       correct: true
@@ -227,6 +225,8 @@
     options:
     - свою
     - його
+    - її
+    - їхню
     explanation: '"His own" = subject owns it → свою.'
   - sentence: 'Вона взяла свою сумку Марії. (Intended: Maria''s bag)'
     error: свою
@@ -234,6 +234,8 @@
     options:
     - її
     - свою
+    - мої
+    - твою
     explanation: Maria is not the subject → її.
   - sentence: 'Я живу у свій дім. (Intended: my house)'
     error: свій
@@ -241,13 +243,17 @@
     options:
     - своєму
     - свій
-    explanation: Locative case after "у" → своєму.
+    - свого
+    - своїм
+    explanation: Locative case after «у» → своєму.
   - sentence: 'Вони говорять про їхню роботу. (Intended: their own work)'
     error: їхню
     answer: свою
     options:
     - свою
     - їхню
+    - мою
+    - нашу
     explanation: Subject = Вони, their own → свою.
   - sentence: 'Марія любить своєї мами. (Intended: her own mom)'
     error: своєї
@@ -255,13 +261,17 @@
     options:
     - свою
     - своєї
-    explanation: '"Любить" takes Accusative → свою.'
+    - своєю
+    - своїй
+    explanation: '«Любить» takes Accusative → свою.'
   - sentence: 'Петро бачив свою сестру Оксани. (Intended: Oksana''s sister)'
     error: свою
     answer: її
     options:
     - її
     - свою
+    - його
+    - моїх
     explanation: Oksana is not the subject → її.
   id: wrong-possessive
 - type: group-sort
@@ -324,41 +334,57 @@
     options:
     - свій
     - його
+    - її
+    - мої
   - sentence: Він взяв [___] папку.
     answer: свою
     options:
     - свою
     - її
+    - його
+    - мої
   - sentence: Менеджер запитав про [___] досвід. (Petro's)
     answer: його
     options:
     - його
     - свій
+    - її
+    - ваш
   - sentence: Петро розповів про [___] роботу.
     answer: свою
     options:
     - свою
     - його
+    - її
+    - мої
   - sentence: Він показав [___] рекомендації.
     answer: свої
     options:
     - свої
     - його
+    - її
+    - ваші
   - sentence: Менеджер подивився на [___] колегу.
     answer: свого
     options:
     - свого
     - його
+    - її
+    - мого
   - sentence: Петро обійняв [___] дружину.
     answer: свою
     options:
     - свою
     - її
+    - його
+    - мою
   - sentence: Вони святкували [___] успіх.
     answer: свій
     options:
     - свій
     - їхній
+    - його
+    - наш
   id: interview-story
 - type: cloze
   title: Edge Cases

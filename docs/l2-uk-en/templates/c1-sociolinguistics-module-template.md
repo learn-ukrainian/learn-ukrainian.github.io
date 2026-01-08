@@ -6,6 +6,20 @@
 
 **Related Issue:** [#306](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/306)
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Соціолінгвістичний аналіз
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: Immersion
+  min_word_count: 2000
+  required_callouts: []
+  description: C1 sociolinguistics modules examine language in society
+-->
+
 ---
 
 ## Quick Reference Checklist
@@ -422,10 +436,16 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ---
 
-## Vocabulary Section for Sociolinguistics Modules
+---
 
-**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
+## Content Structure Note
 
+### Vocabulary & Activities
+**CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
+- `vocabulary/{slug}.yaml`
+- `activities/{slug}.yaml`
+
+The build system will inject these sections at build time.
 **Example `vocabulary/c1-101-stylistics.yaml`:**
 
 ```yaml

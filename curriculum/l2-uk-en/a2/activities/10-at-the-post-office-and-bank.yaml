@@ -137,7 +137,8 @@
       correct: false
     - text: Який сьогодні рахунок?
       correct: false
-  - question: When expressing payment method in Ukrainian, you say "платити..." with which case?
+  - question: When expressing payment method in Ukrainian, you say «платити...» with
+      which case?
     options:
     - text: Платити карткою.
       correct: true
@@ -147,7 +148,8 @@
       correct: false
     - text: Платити картка.
       correct: false
-  - question: When you need to withdraw money at a bank, which is the correct Ukrainian sentence?
+  - question: When you need to withdraw money at a bank, which is the correct Ukrainian
+      sentence?
     options:
     - text: Мені потрібно зняти гроші.
       correct: true
@@ -167,7 +169,8 @@
       correct: false
     - text: Посилка з Україні.
       correct: false
-  - question: When asking someone to "give me the receipt," which is the correct Ukrainian sentence?
+  - question: When asking someone to "give me the receipt," which is the correct Ukrainian
+      sentence?
     options:
     - text: Дайте мені квитанцію.
       correct: true
@@ -187,7 +190,8 @@
       correct: false
     - text: Скільки коштує маркою?
       correct: false
-  - question: When you want to open a bank account in Ukrainian, which sentence is correct?
+  - question: When you want to open a bank account in Ukrainian, which sentence is
+      correct?
     options:
     - text: Я хочу відкрити рахунок.
       correct: true
@@ -197,7 +201,8 @@
       correct: false
     - text: Я хочу відкрити рахунці.
       correct: false
-  - question: When asking someone to "write the address" on an envelope, which Ukrainian sentence is correct?
+  - question: When asking someone to "write the address" on an envelope, which Ukrainian
+      sentence is correct?
     options:
     - text: Напишіть адресу.
       correct: true
@@ -207,7 +212,8 @@
       correct: false
     - text: Напишіть адресою.
       correct: false
-  - question: When expressing the quantity "five hundred hryvnias" in Ukrainian, which form is correct?
+  - question: When expressing the quantity "five hundred hryvnias" in Ukrainian, which
+      form is correct?
     options:
     - text: П'ятсот гривень.
       correct: true
@@ -217,7 +223,8 @@
       correct: false
     - text: П'ятсот гривню.
       correct: false
-  - question: When saying "I lost my card" in Ukrainian, which grammatical form of "картка" is correct?
+  - question: When saying "I lost my card" in Ukrainian, which grammatical form of
+      «картка» is correct?
     options:
     - text: Я загубив картку.
       correct: true
@@ -227,7 +234,8 @@
       correct: false
     - text: Я загубив картки.
       correct: false
-  - question: What is Ukraine's national currency, which you will use at banks and post offices?
+  - question: What is Ukraine's national currency, which you will use at banks and
+      post offices?
     options:
     - text: гривня
       correct: true
@@ -250,13 +258,13 @@
   - statement: Курс means "cash" in Ukrainian.
     correct: false
     explanation: Курс means exchange rate. Cash is готівка.
-  - statement: Instrumental case is used with "платити" for payment method.
+  - statement: Instrumental case is used with «платити» for payment method.
     correct: true
     explanation: Correct! Платити карткою = pay by card.
   - statement: Ukrainian banks only use hryvnia.
     correct: false
     explanation: Banks also exchange foreign currency.
-  - statement: Genitive case is used after "з" meaning "from."
+  - statement: Genitive case is used after «з» meaning "from."
     correct: true
     explanation: Yes! Посилка з України.
   - statement: Рахунок means "account" in banking context.
@@ -265,10 +273,10 @@
   - statement: Посилка means letter.
     correct: false
     explanation: Посилка means package. Letter is лист.
-  - statement: You can use "Мені потрібно" to make polite requests.
+  - statement: You can use «Мені потрібно» to make polite requests.
     correct: true
     explanation: Yes! Мені потрібно зняти гроші.
-  - statement: Дайте мені uses dative case for "мені."
+  - statement: Дайте мені uses dative case for «мені.»
     correct: true
     explanation: Correct! Дайте мені = Give to me.
   - statement: Марка means money.
@@ -281,7 +289,7 @@
 - type: group-sort
   title: Post Office vs Bank
   groups:
-  - name: Пошта (Post Office)
+  - name: Пошта
     items:
     - лист
     - посилка
@@ -451,7 +459,7 @@
     - України
     - Україні
     - Україною
-    explanation: '"З" requires genitive: України.'
+    explanation: '«З» requires genitive: України.'
   - sentence: Платити картка.
     error: картка
     answer: карткою
@@ -532,7 +540,7 @@
     - Канади
     - Канаді
     - Канадою
-    explanation: '"До" requires genitive: Канади.'
+    explanation: '«До» requires genitive: Канади.'
   id: fix-the-case
 - type: cloze
   title: Complete the Dialogue
@@ -567,31 +575,31 @@
 - type: mark-the-words
   title: Find Case Forms
   id: find-case-forms
-  passage: 'Click on words in a specific case.
+  passage: 'Click on all nouns used in any case except Nominative.
 
-    Я хочу відправити *листа* до *Канади*. Дайте *мені* *квитанцію*. Посилка з *України*.
-
-    ---
-
-    Мені потрібно зняти *гроші*. Я хочу обміняти *долари* на *гривні*. Платити *карткою*.
+    Я хочу відправити *посилку*. Напишіть вашу *адресу*. Він знімає *гроші*. Вона
+    чекає в *черзі*.
 
     ---
 
-    Напишіть *адресу* на *конверті*. Покажіть *паспорт*. Скільки коштує *марка*?'
+    Ми купуємо *марки*. Дайте мені *квитанцію*. Я відправляю лист до *Німеччини*.
+    Він обмінює *валюту*.
+
+    ---
+
+    Я поклав гроші на *рахунок*. Вона відправила лист *братові*.'
   correct_words:
-  - листа
-  - Канади
-  - мені
-  - квитанцію
-  - України
-  - гроші
-  - долари
-  - гривні
-  - карткою
+  - посилку
   - адресу
-  - конверті
-  - паспорт
-  - марка
+  - гроші
+  - черзі
+  - марки
+  - квитанцію
+  - Німеччини
+  - валюту
+  - рахунок
+  - братові
+  instruction: Натисніть на правильні слова в тексті.
 - type: translate
   title: English to Ukrainian
   items:

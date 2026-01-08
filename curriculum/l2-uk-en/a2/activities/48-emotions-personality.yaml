@@ -1,7 +1,8 @@
 - type: quiz
   title: Emotion Recognition
   items:
-  - question: What emotion does the Ukrainian word "радість" primarily express to others?
+  - question: What emotion does the Ukrainian word «радість» primarily express to
+      others?
     options:
     - text: Joy
       correct: true
@@ -11,7 +12,7 @@
       correct: false
     - text: Sadness
       correct: false
-  - question: If someone says "Я хвилююся", what state are they likely describing?
+  - question: If someone says «Я хвилююся», what state are they likely describing?
     options:
     - text: They are worried
       correct: true
@@ -21,7 +22,7 @@
       correct: false
     - text: They are sleepy
       correct: false
-  - question: What is the direct opposite personality trait of "сміливий" (brave)?
+  - question: What is the direct opposite personality trait of «сміливий» (brave)?
     options:
     - text: Боягузливий
       correct: true
@@ -41,7 +42,7 @@
       correct: false
     - text: Щасливий
       correct: false
-  - question: What does the quality of "щирість" represent in a person's character?
+  - question: What does the quality of «щирість» represent in a person's character?
     options:
     - text: Sincerity
       correct: true
@@ -61,7 +62,7 @@
       correct: false
     - text: Builders
       correct: false
-  - question: Which grammatical case is required when using the verb "боятися"?
+  - question: Which grammatical case is required when using the verb «боятися»?
     options:
     - text: Genitive
       correct: true
@@ -71,7 +72,7 @@
       correct: false
     - text: Instrumental
       correct: false
-  - question: If a person is "чесний", how do they typically behave?
+  - question: If a person is «чесний», how do they typically behave?
     options:
     - text: They are honest
       correct: true
@@ -84,16 +85,21 @@
   id: emotion-recognition
 - type: cloze
   title: Complete the Sentences
-  passage: 'Я дуже {радий|сумний|злий|веселий}_ бачити тебе! Вона {сумує|радіє|боїться|хвилюється}_ за своїм другом. Діти {раділи|сумували|боялися|хвилювалися}_ подарункам.
+  passage: 'Я дуже {радий|сумний|злий|веселий}_ бачити тебе! Вона {сумує|радіє|боїться|хвилюється}_
+    за своїм другом. Діти {раділи|сумували|боялися|хвилювалися}_ подарункам.
 
 
-    Він {боїться|радіє|сумує|хвилюється}_ темряви. Мама {хвилюється|радіє|сумує|боїться}_ за дітей. Вона дуже {добра|добрий|добре|добру}_ людина.
+    Він {боїться|радіє|сумує|хвилюється}_ темряви. Мама {хвилюється|радіє|сумує|боїться}_
+    за дітей. Вона дуже {добра|добрий|добре|добру}_ людина.
 
 
-    Він завжди {чесний|чесна|чесне|чесні}_ з друзями. {Сміливі|Сміливий|Смілива|Сміливе}_ люди змінюють світ. Я {задоволений|задоволена|задоволене|задоволені}_ результатом іспиту.
+    Він завжди {чесний|чесна|чесне|чесні}_ з друзями. {Сміливі|Сміливий|Смілива|Сміливе}_
+    люди змінюють світ. Я {задоволений|задоволена|задоволене|задоволені}_ результатом
+    іспиту.
 
 
-    Вона {стурбована|стурбований|стурбоване|стурбовані}_ новинами з дому. Ми {дивувалися|дивувався|дивувалася|дивувалося}_ його таланту. Він був {сміливим|сміливий|смілива|сміливе}_ воїном.'
+    Вона {стурбована|стурбований|стурбоване|стурбовані}_ новинами з дому. Ми {дивувалися|дивувався|дивувалася|дивувалося}_
+    його таланту. Він був {сміливим|сміливий|смілива|сміливе}_ воїном.'
   id: complete-the-sentences
 - type: match-up
   title: Emotions and Opposites
@@ -126,40 +132,40 @@
 - type: true-false
   title: Personality and Emotions
   items:
-  - statement: '"Радість" means sadness.'
+  - statement: «Радість» means sadness.
     correct: false
     explanation: Радість means joy. Сум means sadness.
-  - statement: The verb "хвилюватися" means to worry.
+  - statement: The verb «хвилюватися» means to worry.
     correct: true
     explanation: Хвилюватися means to worry or be anxious.
-  - statement: '"Добрий" is a negative personality trait.'
+  - statement: «Добрий» is a negative personality trait.
     correct: false
     explanation: Добрий is a positive trait.
   - statement: Ukrainian uses не- prefix to form negative adjectives.
     correct: true
     explanation: Терплячий → нетерплячий, добрий → недобрий.
-  - statement: '"Задоволений" means disappointed.'
+  - statement: «Задоволений» means disappointed.
     correct: false
     explanation: Задоволений means satisfied. Розчарований means disappointed.
   - statement: Cossacks were known for emotional openness.
     correct: true
     explanation: Ukrainian Cossack culture valued open emotional expression.
-  - statement: '"Боятися" requires the accusative case.'
+  - statement: «Боятися» requires the accusative case.
     correct: false
     explanation: 'Боятися requires genitive: боїться темряви.'
-  - statement: '"Сміливий" means brave.'
+  - statement: «Сміливий» means brave.
     correct: true
     explanation: Сміливий means brave or courageous.
   - statement: To express permanent traits, use бути + nominative.
     correct: false
     explanation: 'Use бути + instrumental: Він є сміливим.'
-  - statement: '"Щирість" is a valued Ukrainian cultural trait.'
+  - statement: «Щирість» is a valued Ukrainian cultural trait.
     correct: true
     explanation: Щирість is highly valued in Ukrainian culture.
-  - statement: '"Схвильований" means calm.'
+  - statement: «Схвильований» means calm.
     correct: false
     explanation: Схвильований means excited or agitated.
-  - statement: '"Почуватися" is used to express feelings.'
+  - statement: «Почуватися» is used to express feelings.
     correct: true
     explanation: Я почуваюся добре = I feel well.
   id: personality-and-emotions
@@ -385,7 +391,8 @@
   id: fix-the-mistakes
 - type: cloze
   title: Story Completion
-  passage: 'Марійка мала {чудовий|злий|лінивий} характер. Вона була дуже {доброю|злою|сумною} людиною. Всі любили її за {щирість|гнів|страх}.
+  passage: 'Марійка мала {чудовий|злий|лінивий} характер. Вона була дуже {доброю|злою|сумною}
+    людиною. Всі любили її за {щирість|гнів|страх}.
 
     Одного дня подруга Марійки {сумувала|раділа|сміялася}. Її кіт загубився.
 
@@ -393,7 +400,8 @@
 
     — Я {стурбована|щаслива|весела} своїм котом, — відповіла подруга.
 
-    {Смілива|Боягузлива|Лінива} Марійка допомогла шукати кота. Вони знайшли його за годину. Подруга дуже {раділа|сумувала|плакала}!
+    {Смілива|Боягузлива|Лінива} Марійка допомогла шукати кота. Вони знайшли його за
+    годину. Подруга дуже {раділа|сумувала|плакала}!
 
     — Ти справді {терпляча|нетерпляча|зла} і добра, — сказала подруга.
 
@@ -404,9 +412,15 @@
 - type: mark-the-words
   title: Find the Emotions
   id: find-the-emotions
-  passage: 'Марійка прокинулася з *радістю*. Сьогодні особливий день! Але потім вона відчула *страх* — екзамен о десятій. *Хвилювання* наростало. Вона згадала слова мами: "Будь *сміливою*!" Це додало їй сили. На екзамені все пішло добре. *Задоволення* і *щастя* заповнили її серце. Вона відчула *гордість* за себе.
+  passage: 'Марійка прокинулася з *радістю*. Сьогодні особливий день! Але потім вона
+    відчула *страх* — екзамен о десятій. *Хвилювання* наростало. Вона згадала слова
+    мами: «Будь *сміливою*!» Це додало їй сили. На екзамені все пішло добре. *Задоволення*
+    і *щастя* заповнили її серце. Вона відчула *гордість* за себе.
 
-    Пізніше Марійка зустріла подругу. Подруга була *сумною* — вона провалила іспит. Марійка відчула *співчуття*. Вона обійняла подругу і сказала: "Не *хвилюйся*! Наступного разу буде краще." Подруга *посміхнулася* і відчула *надію*. Дружити — це підтримувати!'
+    Пізніше Марійка зустріла подругу. Подруга була *сумною* — вона провалила іспит.
+    Марійка відчула *співчуття*. Вона обійняла подругу і сказала: «Не *хвилюйся*!
+    Наступного разу буде краще.» Подруга *посміхнулася* і відчула *надію*. Дружити
+    — це підтримувати!'
   correct_words:
   - радістю
   - страх
@@ -420,6 +434,7 @@
   - хвилюйся
   - посміхнулася
   - надію
+  instruction: Натисніть на правильні слова в тексті.
 - type: select
   title: Choose the Correct Form
   items:
@@ -429,12 +444,20 @@
       correct: true
     - text: темрява
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Боятися + genitive.
   - question: Вона сумує ____.
     options:
     - text: за домом
       correct: true
     - text: за дім
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Сумувати за + instrumental.
   - question: Діти раділи ____.
@@ -443,12 +466,20 @@
       correct: true
     - text: подарунки
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Радіти + dative.
   - question: Вона є ____ людиною.
     options:
     - text: доброю
       correct: true
     - text: добра
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: 'With бути + instrumental: доброю людиною.'
   - question: Ми дивувалися ____.
@@ -457,12 +488,20 @@
       correct: true
     - text: успіхи
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Дивуватися + dative.
   - question: Я задоволений ____.
     options:
     - text: роботою
       correct: true
     - text: робота
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Задоволений + instrumental.
   - question: Він був ____ воїном.
@@ -471,12 +510,20 @@
       correct: true
     - text: сміливий
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Instrumental after бути (минулий час).
   - question: Мама хвилюється ____.
     options:
     - text: за дітей
       correct: true
     - text: за діти
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Хвилюватися за + accusative.
   - question: Ти виглядаєш ____.
@@ -485,12 +532,20 @@
       correct: true
     - text: щасливий
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Instrumental for temporary state/appearance.
   - question: Я почуваюся ____.
     options:
     - text: добре
       correct: true
     - text: добрий
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Adverb with почуватися.
   - question: Це був ____ вчинок.
@@ -499,12 +554,20 @@
       correct: true
     - text: сміливим
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Nominative for simple definition 'It was a brave deed'.
   - question: Вона стала ____.
     options:
     - text: спокійною
       correct: true
     - text: спокійна
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Стати + instrumental.
   id: choose-the-correct-form

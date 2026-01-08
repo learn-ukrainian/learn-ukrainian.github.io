@@ -1,10 +1,10 @@
-## Warm-up
+## Introduction
 
 In Modules 12-15, you learned the theory of aspect. Now it's time to **drill** until the pairs become automatic!
 
 This module is pure practice. By the end, you should recall aspect pairs without thinking. This is essential for fluency.
 
-**Goal:** When you hear "читати" you should instantly think "прочитати".
+**Goal:** When you hear «читати» you should instantly think «прочитати».
 
 ## The Core 30 Pairs
 
@@ -94,9 +94,9 @@ Here is a simple decision process to help you choose:
 - NO → Default to Perfective
 
 **Examples:**
-- "I read the book (finished it)" → Я **прочитав** книгу. (Perfective - result)
-- "I was reading when you called" → Я **читав**, коли ти подзвонив. (Imperfective - process)
-- "I read every day" → Я **читаю** щодня. (Imperfective - habitual)
+- «I read the book» → Я **прочитав** книгу. (Perfective - result)
+- «I was reading when you called» → Я **читав**, коли ти подзвонив. (Imperfective - process)
+- «I read every day» → Я **читаю** щодня. (Imperfective - habitual)
 
 ---
 
@@ -116,7 +116,7 @@ Use **imperfective** for process/duration:
 
 ## Pattern B: Future Tense Drill
 
-**Perfective future** (single conjugated verb):
+**Perfective future**:
 - Я **прочитаю** цю книгу. (I will read this book - and finish it.)
 - Вона **напише** листа. (She will write the letter.)
 - Ми **зробимо** це завтра. (We will do this tomorrow.)
@@ -157,8 +157,8 @@ Now the opposite - perfective to imperfective:
 
 ## Drill 3: Context Switch
 
-"Did you finish?" → Perfective
-"Were you doing?" → Imperfective
+«Did you finish?» → Perfective
+«Were you doing?» → Imperfective
 
 - Ти вже **прочитав**? (Did you finish reading?)
 - Ти ще **читаєш**? (Are you still reading?)
@@ -173,9 +173,9 @@ Now the opposite - perfective to imperfective:
 
 Вранці вона **встала** рано. Вона **поснідала** швидко. Вона **випила** каву і **пішла** в університет.
 
-На іспиті вона **написала** все правильно. Викладач **прочитав** її роботу і **сказав**: "Відмінно!"
+На іспиті вона **написала** все правильно. Викладач **прочитав** її роботу і **сказав**: «Відмінно!»
 
-Оксана **зрозуміла**, що вся її робота **окупилася**. Вона **відчула** радість. Увечері вона **розповіла** мамі про успіх. Мама **привітала** її і **сказала**: "Я горджуся тобою!"
+Оксана **зрозуміла**, що вся її робота **окупилася**. Вона **відчула** радість. Увечері вона **розповіла** мамі про успіх. Мама **привітала** її і **сказала**: «Я горджуся тобою!»
 
 > [!tip] Notice the Pattern
 > The story uses mostly perfective verbs because it describes a sequence of completed actions.
@@ -249,9 +249,7 @@ Remember: Making mistakes is part of learning. Native speakers will understand y
 > [!cultural] Українське гостинство
 > Українці дуже гостинні. Гості завжди приносять щось — торт, цукерки, квіти або вино. Хазяйка готує багато їжі. Відмовитися від їжі — неввічливо!
 
----
-
-# Summary
+# Підсумок
 
 У цьому модулі ви вивчили:
 - Основні поняття та правила
@@ -260,3 +258,8 @@ Remember: Making mistakes is part of learning. Native speakers will understand y
 
 **Запам'ятайте:** Аспект — це серце української дієслівної системи. Доконаний вид показує результат, недоконаний — процес. Практикуйте щодня!
 
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

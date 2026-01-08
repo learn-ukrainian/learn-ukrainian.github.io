@@ -1,18 +1,16 @@
 # Checkpoint - First Contact
 
+## Огляд
+
 **Вітаємо!** (vitayemo) You've completed nine modules of Ukrainian. Now let's check: **can you DO the skills?**
 
-This checkpoint tests five core abilities from Modules 1-9:
+This checkpoint reviews five core abilities from Modules 1-9:
 
-1. **Reading Cyrillic** - Can you read without transliteration?
-2. **Identifying Gender** - Can you spot masculine, feminine, neuter?
-3. **Conjugating Verbs** - Can you form present tense correctly?
-4. **Asking Questions** - Can you use що, хто, де, як?
-5. **Ordering Food** - Can you survive at a Ukrainian кафе (kafe)?
-
-> 💡 **Did You Know?**
->
-> After just 9 modules, you can read signs, menus, and street names in Ukraine. That's a superpower most tourists don't have!
+1. **Reading Cyrillic** - Recognizing all 33 letters and sound patterns.
+2. **Identifying Gender** - Determining noun gender by endings.
+3. **Conjugating Verbs** - Basic present tense for -ати and -ити verbs.
+4. **Asking Questions** - Using essential question words (хто, що, де, як).
+5. **Ordering Food** - Basic survival at a Ukrainian Café.
 
 ---
 
@@ -90,7 +88,7 @@ Look at each word. What gender is it?
 
 - Do you check the **ending** first?
 - Can you match demonstratives? (цей/ця/це)
-- Does **"ця стіл"** sound wrong to you? (It should!)
+- Does **«ця стіл»** sound wrong to you? (It should!)
 
 ---
 
@@ -136,6 +134,10 @@ Complete with the correct verb form:
 - Do you know which class a verb belongs to? (-ати vs -ити)
 - Can you conjugate for all persons? (я, ти, він/вона, ми, ви, вони)
 - Do irregular verbs like **їсти** and **пити** trip you up?
+
+> [!tip] 💡 Quick Tip
+>
+> **Don't drop the pronoun!** Unlike Spanish or Italian, Ukrainian usually keeps the pronoun (Я, Ти) unless the context is super clear. "Читаю" is okay, but "Я читаю" is safer for beginners!
 
 > 🎬 **Pop Culture Moment**
 >
@@ -234,7 +236,7 @@ Fill in the customer's responses:
 
 > 🌍 **Real World Tip**
 >
-> In Ukraine, the waiter might ask **"Чай чи кава?"** (Tea or coffee?). After this checkpoint, you'll understand and answer confidently!
+> In Ukraine, the waiter might ask **«Чай чи кава?»** (Tea or coffee?). After this checkpoint, you'll understand and answer confidently!
 
 ---
 
@@ -249,26 +251,26 @@ Fill in the customer's responses:
 1. What gender is **книга**? How do you know?
 2. What verb form is **читаю**? What person?
 3. What question does Марко ask at the end?
-4. If you want to ask "Where does Марко live?", what question word do you use?
+4. If you want to ask «Where does Марко live?», what question word do you use?
 
 > [!solution] Перевірити (Check)
 >
 > 1. Feminine — ends in -а
-> 2. читаю = "I read" — 1st person singular of читати (First Conjugation)
-> 3. "Що ти любиш?" (What do you like?)
+> 2. читаю = «I read» — 1st person singular of читати (First Conjugation)
+> 3. «Що ти любиш?» (What do you like?)
 > 4. Де (Де живе Марко?)
 
 ---
 
-# Summary
+# Підсумок
 
-| Skill                | Key Pattern                                    | Quick Test                        |
-| -------------------- | ---------------------------------------------- | --------------------------------- |
-| **Reading Cyrillic** | Recognize all 33 letters                       | Can you read "борщ" without help? |
-| **Gender ID**        | -а/-я = f, consonant = m, -о/-е = n            | What gender is "вікно"?           |
-| **Verb Conjugation** | First Conjugation: -ю, -єш, -є / Second Conjugation: -ю, -иш, -ить | "Вона читає" or "читаєть"?        |
-| **Questions**        | що/хто/де/як + word order                      | How do you ask "Where are you?"   |
-| **Food Ordering**    | будь ласка, дякую, Смачного!                   | Can you order кава at a кафе?     |
+| Skill                | Key Pattern                                                        | Quick Test                        |
+| -------------------- | ------------------------------------------------------------------ | --------------------------------- |
+| **Reading Cyrillic** | Recognize all 33 letters                                           | Can you read «борщ» without help? |
+| **Gender ID**        | -а/-я = f, consonant = m, -о/-е = n                                | What gender is «вікно»?           |
+| **Verb Conjugation** | First Conjugation: -ю, -єш, -є / Second Conjugation: -ю, -иш, -ить | «Вона читає» or «читаєть»?        |
+| **Questions**        | що/хто/де/як + word order                                          | How do you ask «Where are you?»   |
+| **Food Ordering**    | будь ласка, дякую, Смачного!                                       | Can you order кава at a кафе?     |
 
 **Ready for A1.2?** If you can do all five skills, you're ready for Modules 11-20: the accusative case, possessives, and navigating cities!
 
@@ -276,4 +278,8 @@ Fill in the customer's responses:
 
 ## Need More Practice?
 
----
+**Missing a skill?**
+
+- Cyrillic Reading → Modules 01-02
+- Verb Conjugation → Modules 05-06
+- Ordering Food → Module 09

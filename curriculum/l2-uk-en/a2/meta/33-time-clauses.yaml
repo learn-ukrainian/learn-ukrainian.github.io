@@ -4,21 +4,21 @@ subtitle: Time Clauses
 version: '1.0'
 phase: A2.3
 pedagogy: Expressive
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - connectors
-  - time
-  - grammar
-  - logic
+- connectors
+- time
+- grammar
+- logic
 grammar:
-  - time clauses (коли, поки)
-  - sequence of events (після того як)
-  - simultaneous events
+- time clauses (коли, поки)
+- sequence of events (після того як)
+- simultaneous events
 objectives:
-  - Learner can express sequence (before/after)
-  - Learner can express duration (while)
-  - Learner understands 'як тільки'
+- Learner can express sequence
+- Learner can express duration (while)
+- Learner understands 'як тільки'
 vocabulary_count: 25
-vocab_count: 25
 slug: 33-time-clauses
+focus: grammar

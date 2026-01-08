@@ -79,60 +79,70 @@
     - прочитати
     - читати
     - почитати
+    - зачитати
   - sentence: писати → [___]
     answer: написати
     options:
     - написати
     - писати
     - пописати
+    - списати
   - sentence: робити → [___]
     answer: зробити
     options:
     - зробити
     - робити
     - поробити
+    - наробити
   - sentence: бачити → [___]
     answer: побачити
     options:
     - побачити
     - бачити
     - пробачити
+    - добачити
   - sentence: чути → [___]
     answer: почути
     options:
     - почути
     - чути
     - прочути
+    - дочути
   - sentence: вчити → [___]
     answer: вивчити
     options:
     - вивчити
     - вчити
     - повчити
+    - навчити
   - sentence: говорити | ___
     answer: сказати
     options:
     - сказати
     - поговорити
     - заговорити
+    - каже
   - sentence: брати | ___
     answer: взяти
     options:
     - взяти
     - побрати
     - забрати
+    - брати
   - sentence: розуміти → [___]
     answer: зрозуміти
     options:
     - зрозуміти
     - розуміти
     - прозуміти
+    - розібрати
   - sentence: готувати → [___]
     answer: приготувати
     options:
     - приготувати
     - готувати
     - заготувати
+    - підготувати
   id: transform-to-perfective
 - type: fill-in
   title: Transform to Imperfective
@@ -143,53 +153,61 @@
     - брати
     - взяти
     - взятися
+    - братися
   - sentence: сказати → [___]
     answer: говорити
     options:
     - говорити
     - сказати
     - казати
+    - переказати
   - sentence: дати → [___]
     answer: давати
     options:
     - давати
     - дати
     - дадати
+    - продати
   - sentence: знайти → [___]
-    answer: знаходити
+    answer: шукати
     options:
-    - знаходити
-    - знайти
     - шукати
+    - знайти
+    - знаходити
+    - ховатися
   - sentence: почати → [___]
     answer: починати
     options:
     - починати
     - почати
     - почитати
+    - зачинати
   - sentence: закінчити → [___]
     answer: закінчувати
     options:
     - закінчувати
     - закінчити
     - кінчати
+    - почати
   - sentence: відповісти → [___]
     answer: відповідати
     options:
     - відповідати
     - відповісти
     - повідати
+    - запитати
   - sentence: запам'ятати → [___]
     answer: пам'ятати
     options:
     - пам'ятати
     - запам'ятати
     - пам'ятка
+    - забути
   id: transform-to-imperfective
 - type: quiz
   title: Aspect Selection
   items:
-  - question: In the Ukrainian sentence "Я прочитав книгу," what is the grammatical
+  - question: In the Ukrainian sentence «Я прочитав книгу,» what is the grammatical
       aspect of the verb?
     options:
     - text: Доконаний
@@ -200,7 +218,7 @@
       correct: false
     - text: Майбутній
       correct: false
-  - question: In the sentence "Я читав книгу, коли ти подзвонив," what is the focus
+  - question: In the sentence «Я читав книгу, коли ти подзвонив,» what is the focus
       of the first verb?
     options:
     - text: Недоконаний
@@ -211,7 +229,7 @@
       correct: false
     - text: Наказ
       correct: false
-  - question: When a speaker says "Я читаю книгу щодня," what grammatical aspect are
+  - question: When a speaker says «Я читаю книгу щодня,» what grammatical aspect are
       they using?
     options:
     - text: Недоконаний
@@ -222,7 +240,7 @@
       correct: false
     - text: Наказ
       correct: false
-  - question: In the sentence "Вона написала листа," which grammatical aspect describes
+  - question: In the sentence «Вона написала листа,» which grammatical aspect describes
       the action's completion?
     options:
     - text: Доконаний
@@ -233,7 +251,7 @@
       correct: false
     - text: Початковий
       correct: false
-  - question: In the sentence "Ми зробимо це завтра," what is the grammatical aspect
+  - question: In the sentence «Ми зробимо це завтра,» what is the grammatical aspect
       of the future verb?
     options:
     - text: Доконаний
@@ -244,7 +262,7 @@
       correct: false
     - text: Минулий
       correct: false
-  - question: In the sentence "Я буду читати книгу ввечері," which future formation
+  - question: In the sentence «Я буду читати книгу ввечері,» which future formation
       type is being used?
     options:
     - text: Недоконаний
@@ -255,7 +273,7 @@
       correct: false
     - text: Наказ
       correct: false
-  - question: When asking someone "Ти закінчив це завдання?" what aspectual focus
+  - question: When asking someone «Ти закінчив це завдання?» what aspectual focus
       are you inquiring about?
     options:
     - text: Доконаний
@@ -266,7 +284,7 @@
       correct: false
     - text: Майбутній
       correct: false
-  - question: In the sentence "Він вчиться щодня," what grammatical category describes
+  - question: In the sentence «Він вчиться щодня,» what grammatical category describes
       this repeated action?
     options:
     - text: Недоконаний
@@ -280,24 +298,23 @@
   id: aspect-selection
 - type: cloze
   title: Context Selection
-  passage: 'Я вже {випив|пив} цю дуже цікаву книгу. (finished)
+  passage: 'Я вже {прочитав|читав} цю дуже цікаву книгу.
 
-    Вона {читав|прочитав} довгі листи додому щодня.
+    Вона {писала|написала} довгі листи додому щодня.
 
-    Ми {ходимо|пішли} все складне домашнє завдання вчора.
+    Ми {зробили|робили} все складне домашнє завдання вчора.
 
-    Він {прийшли|приходимо} гарячу каву кожного ранку.
+    Він {п''є|випив} гарячу каву кожного ранку.
 
-    Вона {працювала|попрацювала} смачну вечерю для нас зараз.
+    Вона {готує|приготувала} смачну вечерю для нас зараз.
 
-    Ти вже {закінчила|закінчувала} правильну відповідь на це питання? (Did you find?)
+    Ти вже {знайшла|знаходила} правильну відповідь на це питання?
 
     ---
 
-    Сьогодні зранку я {випив|пив} каву. Потім я {читав|прочитав} (process) статтю
-    одну годину. Ми {ходимо|пішли} в офіс щодня, але сьогодні {прийшли|приходимо}
-    пізно. Вона {працювала|попрацювала} (activity) три години і нарешті {закінчила|закінчувала}
-    (result) роботу.'
+    Сьогодні зранку я {випив|пив} каву. Потім я {читав|прочитав} статтю одну годину.
+    Ми {ходимо|пішли} в офіс щодня, але сьогодні {прийшли|приходимо} пізно. Вона
+    {працювала|попрацювала} три години і нарешті {закінчила|закінчувала} роботу.'
   id: context-selection
 - type: unjumble
   title: Aspect Sentences
@@ -397,20 +414,26 @@
     options:
     - прочитав
     - читав
-    explanation: '"Finished" = completed action → perfective.'
+    - читаю
+    - буду читати
+    explanation: «Finished» = completed action → perfective.
   - sentence: Вона написала листи кожного дня.
     error: написала
     answer: пише
     options:
     - пише
     - написала
-    explanation: '"Every day" = habitual → imperfective.'
+    - пишуть
+    - писали
+    explanation: «Every day» = habitual → imperfective.
   - sentence: Ми зробили це, коли ви прийшли.
     error: зробили
     answer: робили
     options:
     - робили
     - зробили
+    - зробимо
+    - робимо
     explanation: Action was in progress when interrupted → imperfective.
   - sentence: Він вивчив українську мову щодня.
     error: вивчив
@@ -418,20 +441,26 @@
     options:
     - вчить
     - вивчив
-    explanation: '"Every day" = habitual → imperfective.'
+    - вчив
+    - буде вчити
+    explanation: «Every day» = habitual → imperfective.
   - sentence: Я пишу листа і відправив.
     error: пишу
     answer: написав
     options:
     - написав
     - пишу
-    explanation: '"Sent" implies completion → both verbs should be perfective.'
+    - писав
+    - напишу
+    explanation: «Sent» implies completion → both verbs should be perfective.
   - sentence: Вона п'є каву і вийшла.
     error: п'є
     answer: випила
     options:
     - випила
     - п'є
+    - пила
+    - вип'є
     explanation: Sequence of completed actions → both verbs should be perfective.
   id: wrong-aspect
 - type: group-sort

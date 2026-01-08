@@ -4,20 +4,20 @@ subtitle: Reporting What People Say
 version: '1.0'
 phase: A2.3
 pedagogy: Communicative
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - speech
-  - dialogue
-  - gossip
+- speech
+- dialogue
+- gossip
 grammar:
-  - reported speech
-  - that-clauses
-  - speech verbs
+- reported speech
+- that-clauses
+- speech verbs
 objectives:
-  - Learner can report simple statements
-  - Learner understands tense handling in reported speech
-  - Learner can use verbs like 'say', 'tell', 'ask'
+- Learner can report simple statements
+- Learner understands tense handling in reported speech
+- Learner can use verbs like 'say', 'tell', 'ask'
 vocabulary_count: 25
-vocab_count: 39
 slug: 28-she-said-that
+focus: grammar

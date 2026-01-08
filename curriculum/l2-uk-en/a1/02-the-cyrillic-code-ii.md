@@ -14,43 +14,43 @@ These letters exist in other Slavic languages, but Ukrainian uses them in its ow
 
 | Letter  | Sound                      | Example                | English   |
 | ------- | -------------------------- | ---------------------- | --------- |
-| **Г г** | /ɦ/ like "h" in "ahead"    | **г**оловá (holová)    | head      |
-| **Ґ ґ** | /g/ like "g" in "go"       | **ґ**ума (guma)        | eraser    |
-| **Ж ж** | /ʒ/ like "s" in "pleasure" | **ж**еле (zhele)       | jelly     |
-| **Ш ш** | /ʃ/ like "sh" in "shop"    | **ш**окола́д (shokolád) | chocolate |
-| **Щ щ** | /ʃt͡ʃ/ like "shch" blend    | бо́**рщ** (borshch)     | borscht   |
-| **Ч ч** | /t͡ʃ/ like "ch" in "church" | **ч**емпіо́н (chempión) | champion  |
-| **Ц ц** | /t͡s/ like "ts" in "cats"   | **ц**ентр (tsentr)     | center    |
+| **Г г** | /ɦ/ like «h» in «ahead»    | **г**оловá (holová)    | head      |
+| **Ґ ґ** | /g/ like «g» in «go»       | **ґ**ума (guma)        | eraser    |
+| **Ж ж** | /ʒ/ like «s» in «pleasure» | **ж**еле (zhele)       | jelly     |
+| **Ш ш** | /ʃ/ like «sh» in «shop»    | **ш**окола́д (shokolád) | chocolate |
+| **Щ щ** | /ʃt͡ʃ/ like «shch» blend    | бо́**рщ** (borshch)     | borscht   |
+| **Ч ч** | /t͡ʃ/ like «ch» in «church» | **ч**емпіо́н (chempión) | champion  |
+| **Ц ц** | /t͡s/ like «ts» in «cats»   | **ц**ентр (tsentr)     | center    |
 
-The letters **Г** and **Ґ** are perhaps the most important distinction. **Г** (hook) makes a soft breathy "h" sound. **Ґ** (hook with hat) makes a hard "g" sound like in English "go." Russian lost the **Ґ** sound centuries ago, but Ukrainian kept it!
+The letters **Г** and **Ґ** are perhaps the most important distinction. **Г** (hook) makes a soft breathy «h» sound. **Ґ** (hook with hat) makes a hard «g» sound like in English «go.» Russian lost the **Ґ** sound centuries ago, but Ukrainian kept it!
 
 > 💡 **Did You Know?**
 >
 > The letter **Щ** (shcha) is one of the most recognizable sounds in Ukrainian. When foreigners hear **борщ** (borscht), they immediately recognize it as Ukrainian. The UNESCO included Ukrainian borscht culture on the endangered heritage list in 2022 to protect it during the war.
 
-**Ж** (zheh) is the voiced partner of **Ш** (shah). Think of them like "s" and "z" in English. **Шоколад** (chocolate) has the voiceless **Ш**. **Желе** (jelly) has the voiced **Ж**.
+**Ж** (zheh) is the voiced partner of **Ш** (shah). Think of them like «s» and «z» in English. **Шоколад** (chocolate) has the voiceless **Ш**. **Желе** (jelly) has the voiced **Ж**.
 
-**Ц** (tseh) makes the sharp "ts" sound. It's in words like **центр** (center) and **цукор** (sugar). This sound doesn't exist in standard English, but you hear it at the end of "cats."
+**Ц** (tseh) makes the sharp «ts» sound. It's in words like **центр** (center) and **цукор** (sugar). This sound doesn't exist in standard English, but you hear it at the end of «cats.»
 
 ### The Iotated Four (Є, Ї, Ю, Я)
 
-These are vowels that carry a built-in "y" sound (called "iotation"). They're uniquely Ukrainian and give the language its melodic quality:
+These are vowels that carry a built-in «y» sound (called «iotation»). They're uniquely Ukrainian and give the language its melodic quality:
 
 | Letter  | Sound                     | Example                | English   |
 | ------- | ------------------------- | ---------------------- | --------- |
-| **Є є** | /jɛ/ like "ye" in "yes"   | **Є**вро́па (Yevropa)   | Europe    |
-| **Ї ї** | /ji/ like "yee" in "yeet" | Ки́**ї**в (Kýyiv)       | Kyiv      |
-| **Ю ю** | /ju/ like "you"           | д**я́**к**ю** (dyákuyu) | thank you |
-| **Я я** | /jɑ/ like "ya" in "yacht" | **я**к (yak)           | how       |
+| **Є є** | /jɛ/ like «ye» in «yes»   | **Є**вро́па (Yevropa)   | Europe    |
+| **Ї ї** | /ji/ like «yee» in «yeet» | Ки́**ї**в (Kýyiv)       | Kyiv      |
+| **Ю ю** | /ju/ like «you»           | д**я́**к**ю** (dyákuyu) | thank you |
+| **Я я** | /jɑ/ like «ya» in «yacht» | **я**к (yak)           | how       |
 
-These letters are why "Kyiv" is spelled with a "y" in English. The Ukrainian name is **Київ**. That **Ї** makes a "yi" sound. So it's "Kýyiv," not "Keev."
+These letters are why «Kyiv» is spelled with a «y» in English. The Ukrainian name is **Київ**. That **Ї** makes a «yi» sound. So it's «Kýyiv,» not «Keev.»
 
-**Європа** (Europe) starts with **Є**, giving it that "Yevropa" sound. **Дякую** (thank you) has both **Я** and **Ю**, making it flow: "dyákuyu."
+**Європа** (Europe) starts with **Є**, giving it that «Yevropa» sound. **Дякую** (thank you) has both **Я** and **Ю**, making it flow: «dyákuyu.»
 
 > 🔍 **Myth Buster**
 >
-> **Myth:** "Київ" is just the Ukrainian spelling.
-> **Fact:** "Київ" (Kýyiv) is the correct Ukrainian name. "Kiev" is Russian. Since 1991, Ukraine is independent. The world now uses "Kyiv" to respect Ukrainian identity. The AP Style Guide switched in 2019!
+> **Myth:** «Київ» is just the Ukrainian spelling.
+> **Fact:** «Київ» (Kýyiv) is the correct Ukrainian name. «Kiev» is Russian. Since 1991, Ukraine is independent. The world now uses «Kyiv» to respect Ukrainian identity. The AP Style Guide switched in 2019!
 
 ### The Soft Sign (Ь)
 
@@ -58,25 +58,25 @@ The soft sign **Ь** (myakyi znak) is perhaps the strangest letter for English s
 
 | Without Ь         | With Ь             | Difference           |
 | ----------------- | ------------------ | -------------------- |
-| рис (rys) "rice"  | рись (rysʲ) "lynx" | "s" vs "sʲ" (soft s) |
-| лан (lan) "field" | лань (lanʲ) "doe"  | "n" vs "nʲ" (soft n) |
+| рис (rys) «rice»  | рись (rysʲ) «lynx» | «s» vs «sʲ» (soft s) |
+| лан (lan) «field» | лань (lanʲ) «doe»  | «n» vs «nʲ» (soft n) |
 
-The soft sign appears in the word **будь ла́ска** (please): "budʲ láska." That **Ь** softens the **Д** sound.
+The soft sign appears in the word **будь ла́ска** (please): «budʲ láska.» That **Ь** softens the **Д** sound.
 
 > 🎬 **Pop Culture Moment: The Witcher**
 >
-> In the Ukrainian dub of Netflix's "The Witcher" (Відьма́к - Vidʲmák), the title uses the soft sign! **Відьмак** means "witcher" or "sorcerer," and that **Ь** softens the **Д**. Ukrainian has a rich tradition of Slavic fantasy, and The Witcher books are hugely popular in Ukraine.
+> In the Ukrainian dub of Netflix's «The Witcher» (Відьма́к - Vidʲmák), the title uses the soft sign! **Відьмак** means «witcher» or «sorcerer,» and that **Ь** softens the **Д**. Ukrainian has a rich tradition of Slavic fantasy, and The Witcher books are hugely popular in Ukraine.
 
 ### The Hard I (И)
 
-The letter **И** is different from **І**. While **І** makes the soft "ee" sound (like in "meet"), **И** makes a harder sound, like "i" in "bit" or "sit":
+The letter **И** is different from **І**. While **І** makes the soft «ee» sound (like in «meet»), **И** makes a harder sound, like «i» in «bit» or «sit»:
 
 | Letter  | Sound           | Example              | English |
 | ------- | --------------- | -------------------- | ------- |
-| **І і** | /i/ like "meet" | п**і**ца (píttsa)    | pizza   |
-| **И и** | /ɪ/ like "bit"  | джи́нс**и** (dzhýnsy) | jeans   |
+| **І і** | /i/ like «meet» | п**і**ца (píttsa)    | pizza   |
+| **И и** | /ɪ/ like «bit»  | джи́нс**и** (dzhýnsy) | jeans   |
 
-The word **джинси** (jeans) has the hard **И** at the end: "dzhýnsy." The city **Київ** has the soft **І**: "Kýyiv."
+The word **джинси** (jeans) has the hard **И** at the end: «dzhýnsy.» The city **Київ** has the soft **І**: «Kýyiv.»
 
 > 🌍 **Real World**
 >
@@ -84,13 +84,13 @@ The word **джинси** (jeans) has the hard **И** at the end: "dzhýnsy." Th
 
 ### The Short Y (Й)
 
-The letter **Й** (yi kratke, "short i") makes a quick "y" sound like in English "boy" or "yes." It never starts words on its own in native Ukrainian words, but appears in borrowed words like **йогурт** (yogurt):
+The letter **Й** (yi kratke, «short i») makes a quick «y» sound like in English «boy» or «yes.» It never starts words on its own in native Ukrainian words, but appears in borrowed words like **йогурт** (yogurt):
 
 | Letter  | Sound                 | Example             | English |
 | ------- | --------------------- | ------------------- | ------- |
-| **Й й** | /j/ like "y" in "boy" | **й**огурт (yohurt) | yogurt  |
+| **Й й** | /j/ like «y» in «boy» | **й**огурт (yohurt) | yogurt  |
 
-You'll also see **Й** at the end of words and syllables, creating sounds like "ay," "oy," or "iy." In **Київ**, the final sound is actually **ЇВ** (yiv), but in words like **край** (edge, country), you hear the **Й** clearly: "kray."
+You'll also see **Й** at the end of words and syllables, creating sounds like «ay,» «oy,» or «iy.» In **Київ**, the final sound is actually **ЇВ** (yiv), but in words like **край** (edge, country), you hear the **Й** clearly: «kray.»
 
 ### The Italic Warning
 
@@ -98,16 +98,16 @@ When Ukrainians write in cursive or italic, some letters look COMPLETELY differe
 
 | Printed | Italic | Looks Like  | Sound          |
 | ------- | ------ | ----------- | -------------- |
-| **т**   | _т_    | Latin "m"   | "t" (not m!)   |
-| **п**   | _п_    | Latin "n"   | "p" (not n!)   |
-| **д**   | _д_    | Latin "g"   | "d" (not g!)   |
-| **и**   | _и_    | Latin "u"   | "y/i" (not u!) |
-| **л**   | _л_    | hook shape  | "l"            |
-| **г**   | _г_    | round shape | "h"            |
+| **т**   | _т_    | Latin «m»   | «t» (not m!)   |
+| **п**   | _п_    | Latin «n»   | «p» (not n!)   |
+| **д**   | _д_    | Latin «g»   | «d» (not g!)   |
+| **и**   | _и_    | Latin «u»   | «y/i» (not u!) |
+| **л**   | _л_    | hook shape  | «l»            |
+| **г**   | _г_    | round shape | «h»            |
 
-So the word **мама** (mama) in italic looks like _мама_, which might look like "mama" but with weird shapes. Don't panic. It's still "mama."
+So the word **мама** (mama) in italic looks like _мама_, which might look like «mama» but with weird shapes. Don't panic. It's still «mama.»
 
-The word **привіт** (hello) in italic is _привіт_. That italic **т** at the end looks like an "m," but it's still a "t" sound.
+The word **привіт** (hello) in italic is _привіт_. That italic **т** at the end looks like an «m,» but it's still a «t» sound.
 
 ## Practice
 
@@ -137,7 +137,7 @@ Now that you know all 33 letters, let's read some real Ukrainian phrases:
 — Добре, дякую! _(Dobre, dyakuyu!)_ — Good, thank you!
 — Ласкаво просимо! _(Laskavo prosymo!)_ — Welcome!
 
-Notice **дякую** uses the iotated **Я** (ya) and **Ю** (yu). It flows: "dya-ku-yu." This is one of the most useful words in Ukrainian!
+Notice **дякую** uses the iotated **Я** (ya) and **Ю** (yu). It flows: «dya-ku-yu.» This is one of the most useful words in Ukrainian!
 
 ### Mini-Dialogue 2: At a Café in Lviv
 
@@ -146,7 +146,7 @@ Notice **дякую** uses the iotated **Я** (ya) and **Ю** (yu). It flows: "d
 — Цукор? _(Tsukor?)_ — Sugar?
 — Ні, дякую. _(Ni, dyakuyu.)_ — No, thank you.
 
-The word **борщ** showcases the **Щ** sound perfectly. It's not "borsh," it's "borshch" — that soft "shch" blend is uniquely Ukrainian.
+The word **борщ** showcases the **Щ** sound perfectly. It's not «borsh,» it's «borshch» — that soft «shch» blend is uniquely Ukrainian.
 
 ### Reading Food Words
 
@@ -181,7 +181,7 @@ And these Ukrainian words:
 
 ### Why the Alphabet Matters
 
-Learning to read Cyrillic isn't just about decoding letters. It's about accessing a culture that has been deliberately hidden or misrepresented for centuries. When you write "Kyiv" instead of "Kiev," you're choosing the Ukrainian name over the Russian one. When you learn that **Г** makes an "h" sound (not a "g"), you're hearing how Ukrainian actually sounds, not how Russians pronounce Ukrainian words.
+Learning to read Cyrillic isn't just about decoding letters. It's about accessing a culture that has been deliberately hidden or misrepresented for centuries. When you write «Kyiv» instead of «Kiev,» you're choosing the Ukrainian name over the Russian one. When you learn that **Г** makes an «h» sound (not a «g»), you're hearing how Ukrainian actually sounds, not how Russians pronounce Ukrainian words.
 
 The Ukrainian alphabet is a tool of resistance. During Soviet times, Ukrainian language and culture were suppressed. Speaking Ukrainian in school was punished. Ukrainian books were banned. Yet people kept the language alive in villages, in songs, in secret poetry.
 
@@ -189,7 +189,7 @@ Today, when you learn Ukrainian, you're joining a tradition of preservation. Eve
 
 > 📜 **History Bite**
 >
-> In 1863, the Russian Empire issued the Valuev Circular, which banned Ukrainian-language publications. In 1876, the Ems Ukaz made it even stricter, banning Ukrainian in theaters, schools, and print. Ukrainian was called "Little Russian" and dismissed as a peasant dialect. Despite this, Ukrainian writers like Taras Shevchenko kept the language alive through poetry. Speaking Ukrainian was a revolutionary act.
+> In 1863, the Russian Empire issued the Valuev Circular, which banned Ukrainian-language publications. In 1876, the Ems Ukaz made it even stricter, banning Ukrainian in theaters, schools, and print. Ukrainian was called «Little Russian» and dismissed as a peasant dialect. Despite this, Ukrainian writers like Taras Shevchenko kept the language alive through poetry. Speaking Ukrainian was a revolutionary act.
 
 ### The Complete Alphabet
 
@@ -223,9 +223,9 @@ You learned:
 **Iotated Four:** Є (ye), Ї (yi), Ю (yu), Я (ya).
 **Soft Sign:** Ь (softens consonants).
 **Hard I:** И (hard i sound).
-**Й:** The short "y" sound.
+**Й:** The short «y» sound.
 
-You can now read any Ukrainian word in Cyrillic. You learned essential phrases like **привіт** (hello), **дякую** (thank you), **будь ласка** (please), and **до побачення** (goodbye). You understand why **Київ** is pronounced "Kýyiv" and why **борщ** has that distinctive "shch" sound.
+You can now read any Ukrainian word in Cyrillic. You learned essential phrases like **привіт** (hello), **дякую** (thank you), **будь ласка** (please), and **до побачення** (goodbye). You understand why **Київ** is pronounced «Kýyiv» and why **борщ** has that distinctive «shch» sound.
 
 Most importantly, you learned that the Ukrainian alphabet is more than letters. It's a symbol of cultural identity that survived centuries of suppression. When you read Ukrainian, you're participating in an act of cultural preservation.
 
@@ -235,4 +235,7 @@ Next module, we'll start learning about noun gender and why it matters!
 
 ## Need More Practice?
 
----
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

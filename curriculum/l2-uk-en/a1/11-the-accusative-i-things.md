@@ -26,7 +26,7 @@ In Ukrainian, when something RECEIVES the action (the direct object), it changes
 
 > [!tip] **Did You Know?**
 >
-> The accusative case is called **знахідний** (znakhidnyy) from the word **знаходити** (to find). You "find" the object of the action! This makes it one of the most frequently used cases in Ukrainian — you use it dozens of times every day.
+> The accusative case is called **знахідний** (znakhidnyy) from the word **знаходити** (to find). You «find» the object of the action! This makes it one of the most frequently used cases in Ukrainian — you use it dozens of times every day.
 
 ### Common Verbs That Take Accusative
 
@@ -44,7 +44,7 @@ These verbs need accusative case for their objects:
 
 > [!example] **Pop Culture Moment: S.T.A.L.K.E.R.**
 >
-> The iconic Ukrainian game S.T.A.L.K.E.R. has a famous phrase: "Іди своєю дорогою, сталкер". But notice **аномалію** — that is accusative case: аномалію (from аномалія). The Zone teaches grammar!
+> The iconic Ukrainian game S.T.A.L.K.E.R. has a famous phrase: «Іди своєю дорогою, сталкер». But notice **аномалію** — that is accusative case: аномалію (from аномалія). The Zone teaches grammar!
 
 ### Example Sentences
 
@@ -65,7 +65,7 @@ Let's see the accusative in action:
 
 > [!info] **Real World: Ukrainian Post Office**
 >
-> When you are at the post office in Ukraine, you'll use these words constantly: "Я відправляю посилку" (I'm sending a parcel), "Покажіть паспорт, будь ласка" (Show your passport, please), "Ви маєте конверт?" (Do you have an envelope?). All accusative!
+> When you are at the post office in Ukraine, you'll use these words constantly: «Я відправляю посилку» (I'm sending a parcel), «Покажіть паспорт, будь ласка» (Show your passport, please), «Ви маєте конверт?» (Do you have an envelope?). All accusative!
 
 ### Mini-Dialogue 1: At the Post Office
 
@@ -168,7 +168,7 @@ It is a birthday party in Odesa. Practice saying:
 >
 > - Always give and take gifts with **both hands**: **Дякую за подарунок!**
 > - Flowers: only **odd numbers** (3, 5, 7...) for celebrations. Even numbers are for funerals.
-> - When you say **"Я даю подарунок"**, you're participating in an important cultural act of generosity.
+> - When you say **«Я даю подарунок»**, you're participating in an important cultural act of generosity.
 
 ---
 
@@ -185,3 +185,10 @@ In this module, you learned:
 **Next step:** Module 12 will introduce accusative for **people**!
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

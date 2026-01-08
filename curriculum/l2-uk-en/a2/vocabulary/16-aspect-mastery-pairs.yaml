@@ -64,8 +64,6 @@ items:
   translation: aspect (grammar); type, kind
   pos: noun
   gender: m
-  pos: verb
-  gender: f
 - lemma: помити
   ipa: poˈmɪte
   translation: to wash (perf)

@@ -1,7 +1,8 @@
 - type: quiz
   title: Health Quiz
   items:
-  - question: Що найкраще зробити, якщо у вас висока температура і ви погано себе почуваєте?
+  - question: Що найкраще зробити, якщо у вас висока температура і ви погано себе
+      почуваєте?
     options:
     - text: Викликати лікаря і залишитися вдома
       correct: true
@@ -11,7 +12,8 @@
       correct: false
     - text: Піти плавати
       correct: false
-  - question: Який номер екстреної медичної допомоги "Швидка" потрібно набирати в Україні?
+  - question: Який номер екстреної медичної допомоги «Швидка» потрібно набирати в
+      Україні?
     options:
     - text: '103'
       correct: true
@@ -21,7 +23,7 @@
       correct: false
     - text: '104'
       correct: false
-  - question: Який відмінок потрібен у фразі "У мене болить голова"?
+  - question: Який відмінок потрібен у фразі «У мене болить голова»?
     options:
     - text: Називний (голова)
       correct: true
@@ -31,7 +33,8 @@
       correct: false
     - text: Давальний
       correct: false
-  - question: Чим відома лікувальна мінеральна вода "Нафтуся" з курорту Трускавець в Україні?
+  - question: Чим відома лікувальна мінеральна вода «Нафтуся» з курорту Трускавець
+      в Україні?
     options:
     - text: Лікувальними властивостями
       correct: true
@@ -81,7 +84,7 @@
       correct: false
     - text: Терапевт
       correct: false
-  - question: Що означає українське слово "одужати" в контексті здоров'я?
+  - question: Що означає українське слово «одужати» в контексті здоров'я?
     options:
     - text: Стати здоровим після хвороби
       correct: true
@@ -152,16 +155,20 @@
   id: body-&-health
 - type: cloze
   title: My Symptoms
-  passage: 'У мене болить {голова|голову|головою|голові}_. (head) У нього висока {температура|температуру|температурою|температури}_. Мені треба купити {ліки|лікаря|ліків|ліками}_. (medicine)
+  passage: 'У мене болить {голова|голову|головою|голові}_. (head) У нього висока {температура|температуру|температурою|температури}_.
+    Мені треба купити {ліки|лікаря|ліків|ліками}_. (medicine)
 
 
-    У неї болить {зуб|зуби|зуба|зубом}_. (tooth) Викличіть {лікаря|лікар|лікарем|лікарю}_! (doctor - Acc) Я п''ю {таблетки|таблетка|таблеток|таблетками}_. (pills)
+    У неї болить {зуб|зуби|зуба|зубом}_. (tooth) Викличіть {лікаря|лікар|лікарем|лікарю}_!
+    (doctor - Acc) Я п''ю {таблетки|таблетка|таблеток|таблетками}_. (pills)
 
 
-    У мене сильний {кашель|кашлю|кашлем|нежить}_. (cough) Болять {очі|око|очам|очима}_. (eyes) Це {ліки|таблетка|мазь|сироп}_ від грипу. (medicine/cure)
+    У мене сильний {кашель|кашлю|кашлем|нежить}_. (cough) Болять {очі|око|очам|очима}_.
+    (eyes) Це {ліки|таблетка|мазь|сироп}_ від грипу.
 
 
-    Де тут {аптека|аптеку|аптеки|аптекою}_? (pharmacy) Лікар дав {рецепт|рецепту|рецептом|рецепти}_. У мене болить {спина|спину|спиною|спині}_. (back)'
+    Де тут {аптека|аптеку|аптеки|аптекою}_? (pharmacy) Лікар дав {рецепт|рецепту|рецептом|рецепти}_.
+    У мене болить {спина|спину|спиною|спині}_. (back)'
   id: my-symptoms
 - type: true-false
   title: Medical Beliefs
@@ -169,37 +176,37 @@
   - statement: Tea with lemon and honey is popular for colds.
     correct: true
     explanation: Traditional remedy.
-  - statement: You buy bread in "аптека".
+  - statement: You buy bread in «аптека».
     correct: false
     explanation: Pharmacy sells medicine.
-  - statement: '"Швидка" means fast.'
+  - statement: «Швидка» means fast.
     correct: true
-    explanation: Ambulance (Fast Help).
+    explanation: Ambulance.
   - statement: Truskavets is a ski resort.
     correct: false
     explanation: Mineral water resort. Bukovel is for skiing.
-  - statement: '"Мені погано" means "I feel bad".'
+  - statement: «Мені погано» means "I feel bad".
     correct: true
     explanation: Yes.
-  - statement: If your head hurts, you say "Я болю голову".
+  - statement: If your head hurts, you say «Я болю голову».
     correct: false
-    explanation: '"У мене болить голова".'
-  - statement: '"Одужуйте" is an insult.'
+    explanation: «У мене болить голова».
+  - statement: «Одужуйте» is an insult.
     correct: false
-    explanation: It's a kind wish (Get well).
+    explanation: It's a kind wish.
   - statement: 36.6 is a normal temperature.
     correct: true
     explanation: Celsius standard.
-  - statement: '"Грип" is dangerous.'
+  - statement: «Грип» is dangerous.
     correct: true
     explanation: Flu.
   - statement: Cats can cure diseases.
     correct: false
     explanation: Myth, but they comfort you!
-  - statement: You need a recipe to cook soup, and a "рецепт" to buy strong pills.
+  - statement: You need a recipe to cook soup, and a «рецепт» to buy strong pills.
     correct: true
-    explanation: Word is same (recipe/prescription).
-  - statement: '"Серце" is on the right side.'
+    explanation: Word is same.
+  - statement: «Серце» is on the right side.
     correct: false
     explanation: Left usually.
   id: medical-beliefs
@@ -357,6 +364,7 @@
     - У мене болить голова
     - Я маю біль голови
     - Голова болить мене
+    - помилка
     explanation: 'Standard phrase: У мене болить + Nom.'
   - sentence: У мене болить зуби.
     error: болить
@@ -384,7 +392,8 @@
     - температура
     - температури
     - температурою
-    explanation: 'Accusative object: має (що?) температуру. OR better: У нього температура. But focusing on case error here.'
+    explanation: 'Accusative object: має (що?) температуру. OR better: У нього температура.
+      But focusing on case error here.'
   - sentence: Це таблетка для голову.
     error: для
     answer: від
@@ -393,7 +402,8 @@
     - для
     - з
     - про
-    explanation: 'Pills "from" pain: від голови. "Для" means "for benefit of". A pill *for benefit of* a headache sounds wrong.'
+    explanation: 'Pills "from" pain: від голови. «Для» means "for benefit of". A pill
+      *for benefit of* a headache sounds wrong.'
   - sentence: Лікар дав рецепта.
     error: рецепта
     answer: рецепт
@@ -411,7 +421,7 @@
     - Мені
     - Я
     - Мене
-    explanation: '"Мені болить" is dialect/colloquial. Standard: "У мене болить".'
+    explanation: '«Мені болить» is dialect/colloquial. Standard: «У мене болить».'
   - sentence: Я пішов в аптека.
     error: аптека
     answer: аптеку
@@ -420,7 +430,7 @@
     - аптека
     - аптеці
     - аптекою
-    explanation: 'Direction (Accusative): в аптеку.'
+    explanation: 'Direction: в аптеку.'
   - sentence: У мене немає кашель.
     error: кашель
     answer: кашлю
@@ -448,7 +458,7 @@
     - руки
     - рукою
     explanation: 'Accusative: руку.'
-  - sentence: Будьте здоровий! (to plural/polite)
+  - sentence: Будьте здоровий!
     error: здоровий
     answer: здорові
     options:
@@ -462,7 +472,8 @@
   title: Call the Doctor
   passage: '— Алло, це {швидка|піца|таксі}? Так, оператор слухає. Що сталося?
 
-    — Моєму чоловіку {погано|добре|весело}. У нього сильний {біль|сміх|сон} в грудях і важко дихати.
+    — Моєму чоловіку {погано|добре|весело}. У нього сильний {біль|сміх|сон} в грудях
+    і важко дихати.
 
     — Яка у нього {температура|машина|зарплата}? Нормальна.
 
@@ -470,7 +481,8 @@
 
     — Дякую, ми чекаємо {лікаря|поштаря|кухаря}.
 
-    Лікар приїхав через 10 {хвилин|годин|днів}. Він послухав {серце|ногу|руку} і поміряв {тиск|зріст|вагу}.
+    Лікар приїхав через 10 {хвилин|годин|днів}. Він послухав {серце|ногу|руку} і поміряв
+    {тиск|зріст|вагу}.
 
     — Це не {інфаркт|грип|спорт}, — сказав лікар. — Це просто стрес.
 
@@ -481,7 +493,9 @@
 - type: mark-the-words
   title: Body Parts
   id: body-parts
-  passage: У людини є одна *голова*, дві *руки* і дві *ноги*. На обличчі є *очі*, ніс і рот. У роті є *зуби*. У грудях б'ється *серце*. Коли ми їмо, працює *шлунок*. Якщо ми носимо важке, болить *спина*.
+  passage: У людини є одна *голова*, дві *руки* і дві *ноги*. На обличчі є *очі*,
+    ніс і рот. У роті є *зуби*. У грудях б'ється *серце*. Коли ми їмо, працює *шлунок*.
+    Якщо ми носимо важке, болить *спина*.
   correct_words:
   - голова
   - руки
@@ -491,6 +505,7 @@
   - серце
   - шлунок
   - спина
+  instruction: Натисніть на правильні слова в тексті.
 - type: select
   title: Medical Choice
   items:
@@ -500,12 +515,20 @@
       correct: true
     - text: Головний убір.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Headache vs Headgear.
   - question: Pharmacy.
     options:
     - text: Аптека.
       correct: true
     - text: Оптика.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Pharmacy.
   - question: Doctor.
@@ -514,12 +537,20 @@
       correct: true
     - text: Лікеро.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Doctor.
   - question: To recover.
     options:
     - text: Одужувати.
       correct: true
     - text: Вмирати.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Recover vs Die.
   - question: Cold (illness).
@@ -528,12 +559,20 @@
       correct: true
     - text: Посуда.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Cold vs Dishes.
   - question: Pill.
     options:
     - text: Таблетка.
       correct: true
     - text: Серветка.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Pill vs Napkin.
   - question: Eye.
@@ -542,12 +581,20 @@
       correct: true
     - text: Вікно.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Eye vs Window.
   - question: Heart.
     options:
     - text: Серце.
       correct: true
     - text: Сонце.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Heart vs Sun.
   - question: Pain.
@@ -556,12 +603,20 @@
       correct: true
     - text: Біл.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Pain.
   - question: Fever/Temp.
     options:
     - text: Температура.
       correct: true
     - text: Література.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Temperature vs Literature.
   - question: Ambulance.
@@ -570,12 +625,20 @@
       correct: true
     - text: Повільна.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Fast vs Slow.
   - question: To cough.
     options:
     - text: Кашляти.
       correct: true
     - text: Коштувати.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Cough vs Cost.
   id: medical-choice

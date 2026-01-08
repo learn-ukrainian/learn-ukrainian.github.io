@@ -3,18 +3,24 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: давальний, орудний, родовий, середній, називний
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: чоловічий, місцевий, множина, жіночий, середній
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): разу, часом, перш, доки, кожного...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): ніж, кожного, разу, тоді, перш...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
-## Recommendation
-**📝 UPDATE** (severity 10/100)
+## TEMPLATE COMPLIANCE
+- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
+  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
+  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
-- 2 pedagogical violations (minor)
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 4 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 1320/1000
+- **Words:** ✅ 1332/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -26,22 +32,24 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 42.0% (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 41.6% (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 75 | Included in Core |
+| **Intro/Narrative** | ✅ | 72 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
-| **1. Simple Linking (Nominative)** | ⚪️ | 37 | Skipped |
-| **2. The Case Detective** | ⚪️ | 339 | Skipped |
-| **Deep Dive: "Who" vs "Which"** | ✅ | 74 | Included in Core |
-| **Deep Dive: The "Те, що" Connector** | ✅ | 144 | Included in Core |
+| **1. Simple Linking** | ⚪️ | 37 | Skipped |
+| **2. The Case Detective** | ⚪️ | 324 | Skipped |
+| **Deep Dive: «Who» vs «Which»** | ✅ | 74 | Included in Core |
+| **Deep Dive: The «Те, що» Connector** | ✅ | 144 | Included in Core |
 | **Cultural Insight** | ✅ | 86 | Included in Core |
 | **Language in Action** | ⚪️ | 0 | Skipped |
 | **Dialogue: The Police Witness** | ✅ | 104 | Included in Core |
 | **Monologue: The Object That Changed My Life** | ⚪️ | 109 | Skipped |
-| **Dialogue: The Lost Item (Revamped)** | ✅ | 155 | Included in Core |
+| **Dialogue: The Lost Item (Revamped)** | ✅ | 75 | Included in Core |
+| **Analysis** | ⚪️ | 80 | Skipped |
 | **Monologue: My Ideal City** | ⚪️ | 88 | Skipped |
 | **Підсумок** | ✅ | 109 | Included in Core |
+| **Need More Practice?** | ⚪️ | 30 | Skipped |

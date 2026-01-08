@@ -8,6 +8,23 @@
 
 > **Note:** Regular history modules (M71-82, M84-107, etc.) use `b2-history-module-template.md` instead.
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Огляд періоду
+  - Ключові теми
+  - Аналіз
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: CBI
+  min_word_count: 2000
+  required_callouts:
+  - myth-buster
+  - history-bite
+  description: B2 history synthesis modules connect multiple periods or themes
+-->
+
 ---
 
 ## What is a Synthesis Module?

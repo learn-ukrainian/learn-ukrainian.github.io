@@ -11,7 +11,7 @@
       correct: false
     - text: їсти
       correct: false
-  - question: A "зошит" is primarily used for which activity?
+  - question: A «зошит» is primarily used for which activity?
     options:
     - text: writing
       correct: true
@@ -51,7 +51,7 @@
       correct: false
     - text: свято
       correct: false
-  - question: The verb "вчитися" focuses primarily on what aspect?
+  - question: The verb «вчитися» focuses primarily on what aspect?
     options:
     - text: process or place
       correct: true
@@ -61,7 +61,7 @@
       correct: false
     - text: teaching others
       correct: false
-  - question: In university slang, what does "пара" typically refer to?
+  - question: In university slang, what does «пара» typically refer to?
     options:
     - text: a double period lesson
       correct: true
@@ -91,7 +91,7 @@
       correct: false
     - text: '1800'
       correct: false
-  - question: What does the Ukrainian word "оцінка" imply in education?
+  - question: What does the Ukrainian word «оцінка» imply in education?
     options:
     - text: grade/mark
       correct: true
@@ -101,7 +101,7 @@
       correct: false
     - text: pencil
       correct: false
-  - question: What does the phrase "складати іспит" mean literally?
+  - question: What does the phrase «складати іспит» mean literally?
     options:
     - text: to take an exam (process)
       correct: true
@@ -111,7 +111,7 @@
       correct: false
     - text: to pass an exam (result)
       correct: false
-  - question: What does the word "предмет" generally mean in school?
+  - question: What does the word «предмет» generally mean in school?
     options:
     - text: subject
       correct: true
@@ -224,7 +224,7 @@
     - вивчають
     - вивчати
     - вчитися
-    explanation: Learn how to (skill/process) -> вчаться.
+    explanation: Learn how to -> вчаться.
   - sentence: Професор ____ лекцію.
     answer: читає
     options:
@@ -241,7 +241,7 @@
     - вивчаємо
     - вчать
     explanation: Memorize -> вчимо (simple 'вчити' often implies memorizing).
-  - sentence: Я ____. (I am studying/busy with studies).
+  - sentence: Я ____..
     answer: вчуся
     options:
     - вчуся
@@ -262,31 +262,31 @@
   - statement: Kyiv-Mohyla is a new university.
     correct: false
     explanation: Very old (1615).
-  - statement: '"Студент" is for school children.'
+  - statement: «Студент» is for school children.
     correct: false
-    explanation: For university. School children are "учні".
-  - statement: '"Іспит" is easy.'
+    explanation: For university. School children are «учні».
+  - statement: «Іспит» is easy.
     correct: false
     explanation: Usually hard (exam).
   - statement: Teachers in Ukraine are respected.
     correct: true
     explanation: Generally yes.
-  - statement: You write in a "підручник".
+  - statement: You write in a «підручник».
     correct: false
-    explanation: You write in a "зошит" (notebook). You read a "підручник".
+    explanation: You write in a «зошит» (notebook). You read a «підручник».
   - statement: Day of Knowledge is in September.
     correct: true
     explanation: Sept 1st.
-  - statement: '"Пара" is a type of food.'
+  - statement: «Пара» is a type of food.
     correct: false
     explanation: It's a double lesson.
-  - statement: You need a "квиток" to enter school.
+  - statement: You need a «квиток» to enter school.
     correct: false
     explanation: No ticket usually. Maybe student ID.
-  - statement: '"Вивчати" needs an object.'
+  - statement: «Вивчати» needs an object.
     correct: true
     explanation: Needs Accusative object.
-  - statement: '"Вчитися" describes where you study.'
+  - statement: «Вчитися» describes where you study.
     correct: true
     explanation: Я вчуся в школі.
   id: ukrainian-education
@@ -503,7 +503,7 @@
     - школа
     - школі
     - школою
-    explanation: 'Direction (Accusative): в школу.'
+    explanation: 'Direction: в школу.'
   - sentence: Вчитель стоїть біля дошка.
     error: дошка
     answer: дошки
@@ -564,14 +564,17 @@
 
     Треба багато {вчитися|грати|спати}. Я беру {підручник|м''яч|гітару} в бібліотеці.
 
-    Мій друг каже: "Головне — це {знання|гроші|слава}, а не оцінка".
+    Мій друг каже: «Головне — це {знання|гроші|слава}, а не оцінка».
 
-    Ввечері я йду в {гуртожиток|парк|ліс} і лягаю {рано|пізно|завтра} спати. Завтра знову {вчитися|грати|співати}.'
+    Ввечері я йду в {гуртожиток|парк|ліс} і лягаю {рано|пізно|завтра} спати. Завтра
+    знову {вчитися|грати|співати}.'
   id: university-day
 - type: mark-the-words
   title: Classroom Objects
   id: classroom-objects
-  passage: На столі лежить *підручник* і мій синій *зошит*. Я беру *ручку*, щоб писати. Де мій *олівець*? Вчитель пише на *дошці*. У класі є комп'ютер і *карта*. У мене в рюкзаку є *книга* і *лінійка*. Я люблю свій *клас*.
+  passage: На столі лежить *підручник* і мій синій *зошит*. Я беру *ручку*, щоб писати.
+    Де мій *олівець*? Вчитель пише на *дошці*. У класі є комп'ютер і *карта*. У мене
+    в рюкзаку є *книга* і *лінійка*. Я люблю свій *клас*.
   correct_words:
   - підручник
   - зошит
@@ -582,6 +585,7 @@
   - книга
   - лінійка
   - клас
+  instruction: Натисніть на правильні слова в тексті.
 - type: select
   title: Word Choice
   items:
@@ -591,12 +595,20 @@
       correct: true
     - text: Ми вчимося історію.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Object -> вивчаємо.
   - question: I am a student (uni).
     options:
     - text: Я студент.
       correct: true
     - text: Я учень.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Студент.
   - question: Teacher (female).
@@ -605,12 +617,20 @@
       correct: true
     - text: Вчитель.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Вчителька.
-  - question: To pass an exam (perfective/result).
+  - question: To pass an exam.
     options:
     - text: Скласти іспит.
       correct: true
     - text: Складати іспит.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Скласти means to successfully pass. Складати is to sit for it.
   - question: Notebook.
@@ -619,12 +639,20 @@
       correct: true
     - text: Книга.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Зошит.
   - question: Lesson.
     options:
     - text: Урок.
       correct: true
     - text: Перерва.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Урок.
   - question: Knowledge.
@@ -633,12 +661,20 @@
       correct: true
     - text: Дурниці.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Знання.
   - question: Grade/Mark.
     options:
     - text: Оцінка.
       correct: true
     - text: Ціна.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Оцінка.
   - question: Pen.
@@ -647,12 +683,20 @@
       correct: true
     - text: Ніжка.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Ручка.
   - question: Faculty.
     options:
     - text: Факультет.
       correct: true
     - text: Кафедра.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Faculty.
   - question: To read a lecture.
@@ -661,12 +705,20 @@
       correct: true
     - text: Співати лекцію.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Professors "read" lectures.
   - question: Diploma.
     options:
     - text: Диплом.
       correct: true
     - text: Папір.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Diploma.
   id: word-choice

@@ -63,7 +63,7 @@ items:
     pos: verb
   - lemma: додати
     ipa: doˈdɑte
-    translation: to add (perfective)
+    translation: to add
     pos: verb
   - lemma: додаток
     ipa: doˈdɑtok
@@ -183,7 +183,7 @@ items:
     gender: m
   - lemma: навести
     ipa: nɐˈʋɛste
-    translation: to cite; to give (an example)
+    translation: to cite; to give
     pos: verb
   - lemma: називний
     ipa: nɐzɪu̯ˈnei̯
@@ -297,7 +297,7 @@ items:
     gender: m
   - lemma: речень
     ipa: ˈrɛt͡ʃenʲ
-    translation: sentence (genitive plural)
+    translation: sentence
     pos: noun
     gender: n
   - lemma: розповідати

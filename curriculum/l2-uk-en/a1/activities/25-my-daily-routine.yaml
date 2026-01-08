@@ -168,7 +168,7 @@
 - type: quiz
   title: Daily Routine
   items:
-  - question: Which translation is correct for "Я прокидаюся о сьомій"?
+  - question: Which translation is correct for «Я прокидаюся о сьомій»?
     options:
     - text: I wake up at seven.
       correct: true
@@ -178,7 +178,7 @@
       correct: false
     - text: I eat at seven.
       correct: false
-  - question: How do you accurately translate "Спочатку я вмиваюся"?
+  - question: How do you accurately translate «Спочатку я вмиваюся»?
     options:
     - text: First I wash my face.
       correct: true
@@ -188,7 +188,7 @@
       correct: false
     - text: Never I wash my face.
       correct: false
-  - question: What is the meaning of "Вона завжди снідає"?
+  - question: What is the meaning of «Вона завжди снідає»?
     options:
     - text: She always has breakfast.
       correct: true
@@ -198,7 +198,7 @@
       correct: false
     - text: She first has breakfast.
       correct: false
-  - question: How do you translate "Вони повертаються додому"?
+  - question: How do you translate «Вони повертаються додому»?
     options:
     - text: They return home.
       correct: true
@@ -208,7 +208,7 @@
       correct: false
     - text: They sleep at home.
       correct: false
-  - question: Which English sentence means "Він одягається швидко"?
+  - question: Which English sentence means «Він одягається швидко»?
     options:
     - text: He gets dressed quickly.
       correct: true
@@ -218,7 +218,7 @@
       correct: false
     - text: He works quickly.
       correct: false
-  - question: How do you translate "Ми обідаємо опівдні"?
+  - question: How do you translate «Ми обідаємо опівдні»?
     options:
     - text: We have lunch at noon.
       correct: true
@@ -228,7 +228,7 @@
       correct: false
     - text: We work at noon.
       correct: false
-  - question: Which translation is right for "Я лягаю спати о десятій"?
+  - question: Which translation is right for «Я лягаю спати о десятій»?
     options:
     - text: I go to bed at ten.
       correct: true
@@ -238,7 +238,7 @@
       correct: false
     - text: I work at ten.
       correct: false
-  - question: What is the correct translation of "Нарешті я відпочиваю"?
+  - question: What is the correct translation of «Нарешті я відпочиваю»?
     options:
     - text: Finally I rest.
       correct: true
@@ -272,7 +272,7 @@
       correct: false
     - text: The action is negative
       correct: false
-  - question: What does the phrase "Я одягаюся" actually mean?
+  - question: What does the phrase «Я одягаюся» actually mean?
     options:
     - text: I get dressed (myself)
       correct: true
@@ -302,7 +302,7 @@
       correct: false
     - text: повертатися
       correct: false
-  - question: What does the sentence "Вона повертається" correctly mean?
+  - question: What does the sentence «Вона повертається» correctly mean?
     options:
     - text: She returns
       correct: true
@@ -312,7 +312,7 @@
       correct: false
     - text: She works
       correct: false
-  - question: What is the meaning of the verb "Голитися"?
+  - question: What is the meaning of the verb «Голитися»?
     options:
     - text: To shave (oneself)
       correct: true
@@ -322,7 +322,7 @@
       correct: false
     - text: To wash
       correct: false
-  - question: 'Which reflexive ending is correct: "ми вмиваємо___"?'
+  - question: 'Which reflexive ending is correct: «ми вмиваємо___»?'
     options:
     - text: -ся
       correct: true
@@ -376,34 +376,34 @@
 - type: true-false
   title: Daily Routine Facts
   items:
-  - statement: '"Прокидатися" is a reflexive verb.'
+  - statement: '«Прокидатися» is a reflexive verb.'
     correct: true
-  - statement: '"Снідати" is a reflexive verb.'
+  - statement: '«Снідати» is a reflexive verb.'
     correct: false
     explanation: Incorrect! it's not reflexive
-  - statement: '"Спочатку" means "first" or "at first".'
+  - statement: '«Спочатку» means "first" or "at first".'
     correct: true
-  - statement: '"Нарешті" means "never".'
+  - statement: '«Нарешті» means "never".'
     correct: false
     explanation: Incorrect! it means "finally"
   - statement: '"-Ся" is added to show an action done to oneself.'
     correct: true
-  - statement: '"Щодня" means "sometimes".'
+  - statement: '«Щодня» means "sometimes".'
     correct: false
     explanation: Incorrect! it means "every day"
-  - statement: '"Зазвичай" means "usually".'
+  - statement: '«Зазвичай» means "usually".'
     correct: true
-  - statement: '"Повертатися" means "to leave".'
+  - statement: '«Повертатися» means "to leave".'
     correct: false
     explanation: Incorrect! it means "to return"
-  - statement: '"Засинати" means "to fall asleep".'
+  - statement: '«Засинати» means "to fall asleep".'
     correct: true
-  - statement: '"Виходити" means "to enter".'
+  - statement: '«Виходити» means "to enter".'
     correct: false
     explanation: Incorrect! it means "to go out"
-  - statement: '"Звичка" means "habit".'
+  - statement: '«Звичка» means "habit".'
     correct: true
-  - statement: '"Завжди" means "never".'
+  - statement: '«Завжди» means "never".'
     correct: false
     explanation: Incorrect! it means "always"
   id: daily-routine-facts

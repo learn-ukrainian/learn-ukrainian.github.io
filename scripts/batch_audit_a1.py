@@ -6,7 +6,7 @@ import sys
 
 def main():
     a1_dir = os.path.join("curriculum", "l2-uk-en", "a1")
-    modules = sorted(glob.glob(os.path.join(a1_dir, "module-*.md")))
+    modules = sorted(glob.glob(os.path.join(a1_dir, "[0-9][0-9]-*.md")))
     
     print(f"Found {len(modules)} modules in {a1_dir}")
     print(f"{'Module':<15} | {'Status':<10} | {'Details'}")
@@ -23,7 +23,7 @@ def main():
         try:
             # Capture both stdout and stderr
             result = subprocess.run(
-                ["python3", "scripts/audit_module.py", module_path],
+                [sys.executable, "scripts/audit_module.py", module_path],
                 capture_output=True,
                 text=True
             )

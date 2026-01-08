@@ -8,6 +8,21 @@
 
 **Related Curriculum Plan:** `docs/l2-uk-en/LIT-CURRICULUM-PLAN.md`
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Текст і аналіз
+  - Обговорення
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: Seminar
+  min_word_count: 2000
+  required_callouts: []
+  description: LIT modules use graduate-level seminar approach with literary analysis
+-->
+
 ---
 
 ## ⚠️ CRITICAL: LIT Track vs C1 Literature
@@ -15,6 +30,7 @@
 **This template is ONLY for LIT track modules (LIT-001 to LIT-030).**
 
 C1 core curriculum has its own literature modules (C1.6 Phase: M146-160) which use:
+
 - Template: `c1-literature-module-template.md`
 - Location: `curriculum/l2-uk-en/c1/`
 - Different pedagogy (C1 language mastery, not graduate seminar)
@@ -30,6 +46,7 @@ C1 core curriculum has its own literature modules (C1.6 Phase: M146-160) which u
 📂 **Location:** `curriculum/l2-uk-en/lit/reference/`
 
 **Available reference modules:**
+
 - `module-LIT-001.md` - Kotliarevsky biography (~54k words)
 - `module-LIT-002.md` - Eneida Part I (~52k words)
 - `module-LIT-003.md` - Eneida vocabulary analysis (~49k words)
@@ -38,6 +55,7 @@ C1 core curriculum has its own literature modules (C1.6 Phase: M146-160) which u
 - `module-LIT-006.md` - Kvitka-Osnovianenko (~51k words)
 
 **Use these for:**
+
 1. ✅ **Historical facts** - Pre-researched biographical details, dates, events
 2. ✅ **Vocabulary lists** - Literary and historical terms already compiled
 3. ✅ **Essay topics** - Analytical questions and model answers
@@ -54,34 +72,37 @@ C1 core curriculum has its own literature modules (C1.6 Phase: M146-160) which u
 If you are compelled to create a module from scratch (e.g., Kvitka-Osnovianenko modules 07-10) without a direct 50k-word reference source:
 
 ### 1. The "Bulk Content" Strategy (Crucial for Word Count)
-*   **Problem:** It is extremely difficult to generate 3500+ words of *pure analysis* from scratch without hallucinating.
-*   **Solution:** You MUST include large blocks of the **original public domain text** (from UkrLib) directly in the `Reading Hall` or `Analysis` sections.
-*   **Quantity:** Include at least **3-4 full pages (1000-1500 words)** of the original text as indented blockquotes (`> text`) or within the `🏛️ Читальна Зала` section.
-*   **Format:** Present these as "Key Excerpts for Analysis" and intersperse them with your philological commentary.
+
+- **Problem:** It is extremely difficult to generate 3500+ words of _pure analysis_ from scratch without hallucinating.
+- **Solution:** You MUST include large blocks of the **original public domain text** (from UkrLib) directly in the `Reading Hall` or `Analysis` sections.
+- **Quantity:** Include at least **3-4 full pages (1000-1500 words)** of the original text as indented blockquotes (`> text`) or within the `🏛️ Читальна Зала` section.
+- **Format:** Present these as "Key Excerpts for Analysis" and intersperse them with your philological commentary.
 
 ### 2. Strict Transliteration/Latin Prohibition
-*   The audit script has **ZERO TOLERANCE** for Latin characters in LIT modules.
-*   **Forbidden:** `(Diminutives)`, `(Sehnsucht)`, `(humility)`, `(Innapyt)`.
-*   **Allowed:** ONLY specialized linguistic terms if absolutely necessary (e.g., `*cor*` in Latin), but better to avoid entirely.
-*   **Check:** Run `grep -P "[a-zA-Z]"` before submitting.
+
+- The audit script has **ZERO TOLERANCE** for Latin characters in LIT modules.
+- **Forbidden:** `(Diminutives)`, `(Sehnsucht)`, `(humility)`, `(Innapyt)`.
+- **Allowed:** ONLY specialized linguistic terms if absolutely necessary (e.g., `*cor*` in Latin), but better to avoid entirely.
+- **Check:** Run `grep -P "[a-zA-Z]"` before submitting.
 
 ## 🏗️ YAML Architecture (Required)
 
 LIT modules now follow a **multi-file architecture**. The Markdown file contains ONLY the lecture narrative. All other components reside in YAML sidecars.
 
-| Component | Location | Description |
-|-----------|----------|-------------|
-| **Metadata** | `lit/meta/{slug}.yaml` | Title, subtitle, tags, objectives, focus. |
-| **Vocabulary** | `lit/vocabulary/{slug}.yaml` | 3-column items (lemma, translation, notes). |
+| Component      | Location                     | Description                                        |
+| -------------- | ---------------------------- | -------------------------------------------------- |
+| **Metadata**   | `lit/meta/{slug}.yaml`       | Title, subtitle, tags, objectives, focus.          |
+| **Vocabulary** | `lit/vocabulary/{slug}.yaml` | 3-column items (lemma, translation, notes).        |
 | **Activities** | `lit/activities/{slug}.yaml` | Essays, debates, and structured **reading** tasks. |
-| **Lesson** | `lit/{slug}.md` | **CLEAN** narrative (lecture) only. |
+| **Lesson**     | `lit/{slug}.md`              | **CLEAN** narrative (lecture) only.                |
 
 ---
 
 ### 3. Header Hierarchy (Markdown)
-*   **H1 (`#`)**: ONLY for the Module Title (`# Ukrainian Title`).
-*   **H2 (`##`)**: For lesson sections (`## Частина I: ...`).
-*   **PROHIBITED**: DO NOT include `# Підсумок`, `# Словник`, `# 🏛️ Читальна Зала`, or `# ✍️ Аналітичний Практикум` in the Markdown file. These are injected automatically from YAML.
+
+- **H1 (`#`)**: ONLY for the Module Title (`# Ukrainian Title`).
+- **H2 (`##`)**: For lesson sections (`## Частина I: ...`).
+- **PROHIBITED**: DO NOT include `# Словник`, `# 🏛️ Читальна Зала`, or `# ✍️ Аналітичний Практикум` in the Markdown file. These are injected automatically from YAML.
 
 ---
 
@@ -90,28 +111,32 @@ LIT modules now follow a **multi-file architecture**. The Markdown file contains
 Before submitting a LIT module, verify:
 
 ### File Structure
+
 - [ ] **Clean Markdown:** Main file has NO frontmatter, NO vocabulary table, and NO activity lists.
 - [ ] **Meta Sidecar:** Created in `meta/` with correct `focus: literature`.
 - [ ] **Vocab Sidecar:** Created in `vocabulary/` with 30-40 items.
 - [ ] **Activities Sidecar:** Created in `activities/` containing essays and reading tasks.
 
 ### Content Requirements
+
 - [ ] **Word count:** 2200+ words (core prose narrative).
 - [ ] **Reading Hall (YAML):** Structured as `type: reading` activities with tasks and links.
 - [ ] **Analytical Workshop (YAML):** Structured as `type: essay` or `type: debate`.
 
-
 ### Essay Requirements
+
 - [ ] **Analytical essays:** 1-2 essay prompts (300-500 words each)
 - [ ] **Model answers:** ALL essay prompts include complete model answers
 - [ ] **Critical thinking:** Essays require analysis, comparison, argumentation
 
 ### Reading Resources
+
 - [ ] **External links:** UkrLib or other Ukrainian literary resources
 - [ ] **Primary texts:** Links to full original works
 - [ ] **Secondary sources:** Critical/scholarly resources
 
 ### Immersion & Quality
+
 - [ ] **Immersion:** 100% Ukrainian (English ONLY in MDX description field)
 - [ ] **Academic rigor:** University-level literary criticism
 - [ ] **Cultural accuracy:** Historical facts verified, no anachronisms
@@ -121,16 +146,16 @@ Before submitting a LIT module, verify:
 
 ## What Makes LIT Different from C1/C2
 
-| Aspect | C1/C2 Core | LIT Track |
-|--------|-----------|-----------|
-| **Philosophy** | General language mastery | Literary/cultural specialization |
-| **Word count** | 2000-2200+ | 2200+ (often 2500-3000) |
-| **Vocabulary** | 35-40 general | 30-40 literary/historical |
-| **Structure** | Grammar/vocab/activities | Pure content + essays |
-| **Activities** | 14-16 interactive | 0 traditional (essay-based only) |
-| **Focus** | Language skills | Philological analysis |
-| **Texts** | Excerpts (500-1000 words) | Full works (external links) |
-| **Pedagogy** | TTT/CBI/Creative Production | Academic seminar style |
+| Aspect         | C1/C2 Core                  | LIT Track                        |
+| -------------- | --------------------------- | -------------------------------- |
+| **Philosophy** | General language mastery    | Literary/cultural specialization |
+| **Word count** | 2000-2200+                  | 2200+ (often 2500-3000)          |
+| **Vocabulary** | 35-40 general               | 30-40 literary/historical        |
+| **Structure**  | Grammar/vocab/activities    | Pure content + essays            |
+| **Activities** | 14-16 interactive           | 0 traditional (essay-based only) |
+| **Focus**      | Language skills             | Philological analysis            |
+| **Texts**      | Excerpts (500-1000 words)   | Full works (external links)      |
+| **Pedagogy**   | TTT/CBI/Creative Production | Academic seminar style           |
 
 **Key shift:** LIT is a **graduate-level literature seminar**, not a language course. It assumes C1 mastery and focuses on cultural/historical depth.
 
@@ -142,14 +167,15 @@ Before submitting a LIT module, verify:
 
 ```yaml
 ---
-sidebar_position: X  # Sequential number (1-30)
-sidebar_label: "0X. Short Ukrainian Title"
-title: "Full Ukrainian Title"
-description: "LIT-00X: English description for metadata"
+sidebar_position: X # Sequential number (1-30)
+sidebar_label: '0X. Short Ukrainian Title'
+title: 'Full Ukrainian Title'
+description: 'LIT-00X: English description for metadata'
 ---
 ```
 
 **Notes:**
+
 - `sidebar_position`: Sequential order in LIT track (1-30)
 - `sidebar_label`: Brief Ukrainian title for navigation
 - `title`: Full Ukrainian module title
@@ -170,6 +196,7 @@ description: "LIT-00X: English description for metadata"
 ```
 
 **Example (Author Biography module):**
+
 ```markdown
 # Молодий Шевченко
 
@@ -178,6 +205,7 @@ description: "LIT-00X: English description for metadata"
 ```
 
 **Example (Literary Work module):**
+
 ```markdown
 # Заповіт
 
@@ -195,6 +223,7 @@ description: "LIT-00X: English description for metadata"
 # Підсумок
 
 [150-200 word overview IN UKRAINIAN explaining:]
+
 - What this module covers (author/work/period/theme)
 - Why it matters to Ukrainian literature/culture
 - What students will learn (historical context, literary analysis, cultural significance)
@@ -202,6 +231,7 @@ description: "LIT-00X: English description for metadata"
 ```
 
 **Example:**
+
 ```markdown
 # Підсумок
 
@@ -224,6 +254,7 @@ description: "LIT-00X: English description for metadata"
 [Historical/biographical/analytical content]
 
 **Key points:**
+
 - Point 1
 - Point 2
 - Point 3
@@ -308,6 +339,7 @@ description: "LIT-00X: English description for metadata"
 ```
 
 **Critical:** ALL engagement boxes in Ukrainian. Use to:
+
 - Break up long prose sections
 - Highlight key insights
 - Provide comparative context
@@ -324,15 +356,16 @@ description: "LIT-00X: English description for metadata"
 
 ```yaml
 items:
-- lemma: травестія
-  translation: travesty (genre)
-  note: комічне наслідування
-- lemma: бурлеск
-  translation: burlesque
-  note: стиль грубого комізму
+  - lemma: травестія
+    translation: travesty (genre)
+    note: комічне наслідування
+  - lemma: бурлеск
+    translation: burlesque
+    note: стиль грубого комізму
 ```
 
 **Vocabulary Types:**
+
 - **Literary terms:** Genre, style, device names (травестія, метафора, іронія)
 - **Historical terms:** Political/social concepts (Гетьманщина, кріпацтво, Руїна)
 - **Cultural terms:** Traditional practices, beliefs (весільний обряд, рушники)
@@ -360,6 +393,7 @@ items:
 ```
 
 **Resource Types:**
+
 - **Primary texts:** Full literary works (UkrLib links)
 - **Biographies:** Author life stories
 - **Critical essays:** Scholarly analysis
@@ -382,6 +416,7 @@ items:
 ```
 
 **Essay Requirements:**
+
 - **1-2 essays per module** (minimum 1)
 - **300-500 words** each
 - **Model answers required** for all essay prompts
@@ -395,15 +430,18 @@ items:
 ### 1. No Traditional Activities
 
 **LIT modules do NOT include:**
+
 - Quiz, fill-in, match-up, true-false, etc.
 - Interactive exercises typical of A1-C2 core
 
 **Why:**
+
 - LIT is a **graduate-level seminar**, not a language drill
 - Focus is on **reading and analysis**, not skill practice
 - Students already have C1 mastery (prerequisite)
 
 **Instead, LIT uses:**
+
 - Deep reading of primary texts (external links)
 - Analytical essay writing (300-500 words)
 - Critical discussion prompts
@@ -411,11 +449,13 @@ items:
 ### 2. Academic Rigor
 
 **LIT modules assume:**
+
 - **C1+ language proficiency** (students read university-level Ukrainian)
 - **Literary/historical knowledge** (students understand literary terms, Ukrainian history)
 - **Critical thinking skills** (students can analyze, compare, argue)
 
 **Content should:**
+
 - Provide philological analysis (style, language, devices)
 - Contextualize historically/culturally
 - Challenge students intellectually
@@ -424,9 +464,11 @@ items:
 ### 3. 100% Ukrainian Immersion
 
 **English appears ONLY in:**
+
 - MDX frontmatter `description` field (for metadata/SEO)
 
 **Everything else is Ukrainian:**
+
 - All content sections
 - Engagement boxes
 - Vocabulary definitions
@@ -438,11 +480,13 @@ items:
 ### 4. External Reading (Mandatory)
 
 **Every LIT module MUST include:**
+
 - Links to full primary texts (UkrLib or equivalent)
 - Links to biographical/critical sources
 - Guidance on what to focus on while reading
 
 **Students are expected to:**
+
 - Read full literary works (not just excerpts)
 - Engage with external scholarly sources
 - Synthesize information from multiple sources
@@ -450,25 +494,27 @@ items:
 ### 5. Cultural Sensitivity
 
 **When writing about Ukrainian literature:**
+
 - **Decolonize narratives:** Avoid Russian Imperial/Soviet perspectives
 - **Center Ukrainian experience:** Focus on Ukrainian cultural autonomy
 - **Acknowledge trauma:** Recognize historical oppression (Russification, censorship, executions)
 - **Celebrate resilience:** Show how literature resisted erasure
 
 **Example:**
+
 - ❌ "Ukrainian developed from Russian influence"
 - ✅ "Ukrainian resisted Russian imperial suppression"
 
 ### 6. Complexity Scaling (C1/C2 Core → LIT)
 
-| Feature | C1 Core | C2 Core | LIT Track |
-|---------|---------|---------|-----------|
-| Word count | 2000+ | 2200+ | 2200-3000+ |
-| Vocabulary | 35+ general | 40+ general | 30-40 literary/historical |
-| Activities | 16+ interactive | 14-16 interactive | 0 (essays only) |
-| Essays | 1 (400+ words) | 1-2 (various) | 1-2 (300-500 words) |
-| Texts | Excerpts (500-800 words) | Excerpts (600-1000 words) | Full works (external) |
-| Focus | Language mastery | Creative production | Philological analysis |
+| Feature    | C1 Core                  | C2 Core                   | LIT Track                 |
+| ---------- | ------------------------ | ------------------------- | ------------------------- |
+| Word count | 2000+                    | 2200+                     | 2200-3000+                |
+| Vocabulary | 35+ general              | 40+ general               | 30-40 literary/historical |
+| Activities | 16+ interactive          | 14-16 interactive         | 0 (essays only)           |
+| Essays     | 1 (400+ words)           | 1-2 (various)             | 1-2 (300-500 words)       |
+| Texts      | Excerpts (500-800 words) | Excerpts (600-1000 words) | Full works (external)     |
+| Focus      | Language mastery         | Creative production       | Philological analysis     |
 
 ---
 
@@ -478,13 +524,13 @@ items:
 
 **Focus:** Burlesque & folk origins, birth of modern Ukrainian literature
 
-| Module | Type | Content Focus |
-|--------|------|---------------|
-| LIT-001 | Biography | Kotliarevsky's life, historical context (Ruin period) |
-| LIT-002 | Literary Work | *Eneida* Part I - burlesque style, Trojan-Cossack parallel |
-| LIT-003 | Vocabulary Study | Food/feast vocabulary from *Eneida* |
-| LIT-004 | Vocabulary Study | Military/war vocabulary from *Eneida* |
-| LIT-005 | Literary Work | *Natalka Poltavka* - sentimentalism, theater |
+| Module  | Type             | Content Focus                                              |
+| ------- | ---------------- | ---------------------------------------------------------- |
+| LIT-001 | Biography        | Kotliarevsky's life, historical context (Ruin period)      |
+| LIT-002 | Literary Work    | _Eneida_ Part I - burlesque style, Trojan-Cossack parallel |
+| LIT-003 | Vocabulary Study | Food/feast vocabulary from _Eneida_                        |
+| LIT-004 | Vocabulary Study | Military/war vocabulary from _Eneida_                      |
+| LIT-005 | Literary Work    | _Natalka Poltavka_ - sentimentalism, theater               |
 
 **Word count:** 2200-2500 per module
 
@@ -539,6 +585,7 @@ items:
 ## Pre-Submission Checklist
 
 ### Content
+
 - [ ] 2200+ words before vocabulary/resources
 - [ ] 30-40 vocabulary items in 3-column format
 - [ ] 15-20 content sections (Частини I-XX)
@@ -547,17 +594,20 @@ items:
 - [ ] Academic rigor throughout
 
 ### Essays
+
 - [ ] 1-2 analytical essay prompts (300-500 words)
 - [ ] Model answers for ALL essay prompts
 - [ ] Critical thinking questions provided
 - [ ] Academic tone maintained
 
 ### Resources
+
 - [ ] UkrLib or equivalent links to primary texts
 - [ ] Links to biographical/critical sources
 - [ ] Reading guidance provided (what to focus on)
 
 ### Immersion & Quality
+
 - [ ] 100% Ukrainian (English only in MDX description)
 - [ ] University-level literary criticism
 - [ ] Historical accuracy verified
@@ -579,6 +629,7 @@ items:
 ## Example Module References
 
 **Existing LIT modules (for structural reference):**
+
 - `docusaurus/docs/lit/module-01.mdx` — LIT-001: Котляревський (Biography)
 - `docusaurus/docs/lit/module-05.mdx` — LIT-005: Наталка Полтавка (Literary Work)
 

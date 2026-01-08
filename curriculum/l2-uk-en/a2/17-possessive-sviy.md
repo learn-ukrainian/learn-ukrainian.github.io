@@ -1,17 +1,17 @@
-## Warm-up
+## Introduction
 
 In A1, you learned possessive pronouns: мій, твій, його, її, наш, ваш, їхній.
 
 Now you'll learn a special pronoun that causes confusion for English speakers: **свій**.
 
-English has no equivalent to свій. This single word means "one's own" and refers back to the subject of the sentence. Understanding this concept is essential for natural Ukrainian. Once you master it, your sentences will sound much more authentic to native speakers.
+English has no equivalent to свій. This single word means «one's own» and refers back to the subject of the sentence. Understanding this concept is essential for natural Ukrainian. Once you master it, your sentences will sound much more authentic to native speakers.
 
 ## The Problem: Ambiguity
 
 Look at this English sentence:
-- "He loves his mother."
+- «He loves his mother.»
 
-In English, this is ambiguous. Does "his" refer to:
+In English, this is ambiguous. Does «his» refer to:
 - His OWN mother? (He loves his own mother.)
 - Someone ELSE's mother? (He loves [another man's] mother.)
 
@@ -126,20 +126,20 @@ This distinction is critical in Ukrainian and must be observed in all sentences.
 
 ## Pattern 1: Subject = 1st/2nd Person
 
-When the subject is "я" or "ти", свій is optional but preferred.
+When the subject is «я» or «ти», свій is optional but preferred.
 
 Both are correct:
-- Я читаю **свою** книгу. (preferred)
-- Я читаю **мою** книгу. (also correct)
+- Я читаю **свою** книгу.
+- Я читаю **мою** книгу.
 
 ## Pattern 2: Subject = 3rd Person
 
-When the subject is "він/вона/вони", свій is REQUIRED to mean "one's own."
+When the subject is «він/вона/вони», свій is REQUIRED to mean «one's own.»
 
-Only correct way to say "He reads his own book":
+Only correct way to say «He reads his own book»:
 - Він читає **свою** книгу. ✓
 
-This is WRONG for "his own":
+This is WRONG for «his own»:
 - Він читає **його** книгу. ✗ (means another person's book)
 
 ## Pattern 3: Different Subjects
@@ -155,18 +155,18 @@ When possessor differs from subject, use його/її/їхній.
 
 Сьогодні у Марії сімейний обід. Вона готує вечерю у **своїй** кухні. Її мама приїхала з **своїм** чоловіком — **її** батьком.
 
-Марія показала мамі **свою** нову квартиру. Мама сказала: "Мені подобається! А де **твоя** кімната?"
+Марія показала мамі **свою** нову квартиру. Мама сказала: «Мені подобається! А де **твоя** кімната?»
 
-Марія відповіла: "Я сплю у **своїй** спальні. А гості можуть спати у **своїй** кімнаті для гостей."
+Марія відповіла: «Я сплю у **своїй** спальні. А гості можуть спати у **своїй** кімнаті для гостей.»
 
 Під час обіду всі розмовляли про **своє** життя. Батько говорив про **свою** роботу. Мама розповідала про **своїх** подруг. Марія слухала і думала про **своє** майбутнє.
 
-Після обіду мама взяла **свою** сумку і поцілувала Марію. "Дякую за **твою** гостинність!" — сказала вона.
+Після обіду мама взяла **свою** сумку і поцілувала Марію. «Дякую за **твою** гостинність!» — сказала вона.
 
 > [!tip] Notice the Pattern
-> - "своїй кухні" - Maria is the subject, so "свій" refers to HER OWN kitchen.
-> - "її батьком" - Maria is the subject, but the father belongs to Maria AND her mother, so "її" is used.
-> - "твою гостинність" - The mother is speaking TO Maria, so "твою" (your) is used, not "свою".
+> - «своїй кухні» - Maria is the subject, so «свій» refers to HER OWN kitchen.
+> - «її батьком» - Maria is the subject, but the father belongs to Maria AND her mother, so «її» is used.
+> - «твою гостинність» - The mother is speaking TO Maria, so «твою» (your) is used, not «свою».
 
 ---
 
@@ -178,7 +178,7 @@ When possessor differs from subject, use його/її/їхній.
 
 Менеджер подивився на **свого** колегу. **Його** колега кивнув. Вони вирішили взяти Петра на роботу!
 
-Петро повернувся додому і обійняв **свою** дружину. Він сказав: "Я отримав **свою** нову роботу!"
+Петро повернувся додому і обійняв **свою** дружину. Він сказав: «Я отримав **свою** нову роботу!»
 
 **Його** дружина була дуже рада. Вона приготувала **свою** найкращу страву на вечерю. Вони святкували **свій** успіх разом.
 
@@ -232,33 +232,38 @@ These advanced patterns become natural with practice. Focus first on the basic r
 ## Mistake 3: Forgetting to Decline Свій
 
 ❌ Вона говорить з свій брат.
-✅ Вона говорить зі своїм братом. (Instrumental required after "з".)
+✅ Вона говорить зі своїм братом. (Instrumental required after «з».)
 
 ---
 
 ## Language Learning Tip
 
-A helpful way to remember the rule is to ask yourself: "Is the possessor doing the action?"
+A helpful way to remember the rule is to ask yourself: «Is the possessor doing the action?»
 
 - If YES → use свій
 - If NO → use його/її/їхній
 
-Another tip: In English, try replacing the possessive with "one's own." If it makes sense, use свій in Ukrainian.
+Another tip: In English, try replacing the possessive with «one's own.» If it makes sense, use свій in Ukrainian.
 
-- "He loves his own mother" → use свій
-- "He loves one's own mother" → makes sense → свій is correct
+- «He loves his own mother» → use свій
+- «He loves one's own mother» → makes sense → свій is correct
 
 This mental check will help you until the pattern becomes automatic through practice.
 
 > [!cultural] Language Elegance
 > The свій system shows Ukrainian's grammatical elegance.
-> Where English needs extra words ("his own"), Ukrainian uses one form.
+> Where English needs extra words («his own»), Ukrainian uses one form.
 > This efficiency is part of what makes Ukrainian beautiful to speak.
 
-# Summary
+# Підсумок
 
 У цьому модулі ви вивчили:
 - Основні поняття та правила
 - Практичне застосування
 - Вправи для закріплення
 
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

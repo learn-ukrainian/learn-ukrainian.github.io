@@ -2,11 +2,11 @@
 
 ## Warm-up
 
-You're at a market in Kyiv. The vendor says "Двадцять гривень." Do you know what that means? Numbers are everywhere in daily life - prices, addresses, phone numbers, time. Today we'll unlock the Ukrainian counting system and learn to shop like a local.
+You're at a market in Kyiv. The vendor says «Двадцять гривень.» Do you know what that means? Numbers are everywhere in daily life - prices, addresses, phone numbers, time. Today we'll unlock the Ukrainian counting system and learn to shop like a local.
 
 > 💡 **Did You Know?**
 >
-> The Ukrainian currency is called **гривня** (hryvnia). It's one of the oldest currency names in Europe, dating back to Kyivan Rus' in the 11th century! The word originally meant "neck ring" - a silver ornament worn by wealthy citizens.
+> The Ukrainian currency is called **гривня** (hryvnia). It's one of the oldest currency names in Europe, dating back to Kyivan Rus' in the 11th century! The word originally meant «neck ring» - a silver ornament worn by wealthy citizens.
 
 ## Presentation
 
@@ -38,7 +38,7 @@ Let's start with the basics. Ukrainian numbers 0-20 are unique and must be memor
 | 19     | дев'ятнадцять                | /dɛvjatˈnad͡zʲatʲ/         |
 | 20     | двадцять                     | /ˈdʋad͡zʲatʲ/              |
 
-**Pattern discovery:** Notice that 11-19 end in **-надцять** (think "on-ten"). This makes them easier to remember once you know 1-9!
+**Pattern discovery:** Notice that 11-19 end in **-надцять** (think «on-ten»). This makes them easier to remember once you know 1-9!
 
 ### Tens (20-100)
 
@@ -227,7 +227,7 @@ Modern hryvnia banknotes feature Ukrainian historical figures:
 - **500 грн** - Hryhoriy Skovoroda (Григорій Сковорода)
 - **1000 грн** - Volodymyr Vernadsky (Володимир Вернадський)
 
-> 📜 **History Bite: Why "Hryvnia"?**
+> 📜 **History Bite: Why «Hryvnia»?**
 >
 > In Kyivan Rus', a **гривня** was a silver neck ring weighing about 200 grams, used as currency. The word comes from **грива** (mane), because the ring was worn around the neck like a horse's mane. This makes the hryvnia one of the oldest currency names in continuous use!
 
@@ -246,7 +246,7 @@ But don't expect it - Ukrainians respect fair pricing!
 In this module, you learned:
 
 - Numbers 0-100 in Ukrainian
-- How to ask "Скільки коштує?" (How much does it cost?)
+- How to ask «Скільки коштує?» (How much does it cost?)
 - The three number agreement patterns (1 = nom. sg., 2-4 = nom. pl., 5+ = gen. pl.)
 - Currency vocabulary (гривня, копійка, долар, євро)
 - Shopping phrases (дорого, дешево, знижка, готівка, картка)
@@ -258,4 +258,7 @@ You can now count, ask prices, and shop confidently in Ukraine!
 
 ## Need More Practice?
 
----
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

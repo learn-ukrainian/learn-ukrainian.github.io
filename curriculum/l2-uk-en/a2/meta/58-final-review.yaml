@@ -7,17 +7,19 @@ pedagogy: Simulated Immersion
 duration: 60
 transliteration: none
 tags:
-  - review
-  - skills
-  - reading
-  - writing
-  - listening
+- review
+- skills
+- reading
+- writing
+- listening
 grammar:
-  - review-skills
+- review-skills
 objectives:
-  - Demonstrate reading comprehension of longer texts
-  - Write a short autobiography
-  - Understand complex dialogues about future plans
-  - Confirm A2 proficiency
-vocab_count: 46
+- Demonstrate reading comprehension of longer texts
+- Write a short autobiography
+- Understand complex dialogues about future plans
+- Confirm A2 proficiency
 slug: 58-final-review
+vocabulary_count: 46
+focus: checkpoint
+template: a2-checkpoint-module-template.md

@@ -1,5 +1,7 @@
 # Checkpoint - Word Formation
 
+## Огляд
+
 **Вітаємо!** Ви вивчили словотвір! Word formation is one of the most powerful tools in Ukrainian.
 
 **Skills tested:**
@@ -20,12 +22,12 @@
 
 ### Model: Direction Prefixes
 
-> **при-** = arrival, toward: прийти (to arrive)
-> **ви-** = exit, out of: вийти (to exit)
-> **у-/в-** = entering: увійти (to enter)
-> **пере-** = across, re-do: перейти (to cross)
-> **від-** = away from: відійти (to walk away)
-> **роз-** = spreading: розійтися (to disperse)
+> **при-** = arrival, toward: прийти
+> **ви-** = exit, out of: вийти
+> **у-/в-** = entering: увійти
+> **пере-** = across, re-do: перейти
+> **від-** = away from: відійти
+> **роз-** = spreading: розійтися
 
 **Key patterns:**
 
@@ -55,12 +57,12 @@
 ### Self-Check
 
 - Do you know при- (arrival) vs ви- (exit)?
-- Can you use пере- for "across" or "re-do"?
+- Can you use пере- for «across» or «re-do»?
 - Do you know від- (away) vs у- (into)?
 
 > [!myth-buster] 🔍 Myth Buster
 >
-> **Myth:** "Ukrainian prefixes are the same as Russian."
+> **Myth:** «Ukrainian prefixes are the same as Russian.»
 >
 > **Truth:** While some prefixes look similar, Ukrainian has unique prefix patterns. For example, Ukrainian **від-** (away) is distinct from Russian, and forms like **відійти** show authentic Ukrainian phonology with the soft і. These prefixes trace back to Proto-Slavic, preserved independently in Ukrainian!
 
@@ -77,7 +79,7 @@
 ### Model: Suffixes That Create Nouns
 
 > **-ння** = verbal noun (action): читати → **читання** (reading)
-> **-ість** = abstract noun (quality): важливий → **важливість** (importance)
+> **-ість** = abstract noun (quality): важливий → **важливість**
 > **-ач/-ик** = agent noun (person): читати → **читач** (reader)
 
 **Patterns:**
@@ -91,15 +93,15 @@
 
 ### Practice: Form the Noun
 
-1. говорити → ___ (the action of speaking)
+1. говорити → ___
 > [!solution] Перевірити
 > говоріння — verb + -ння = verbal noun
 
-2. сильний → ___ (the quality of being strong)
+2. сильний → ___
 > [!solution] Перевірити
 > сила/сильність — adjective → abstract noun
 
-3. слухати → ___ (person who listens)
+3. слухати → ___
 > [!solution] Перевірити
 > слухач — verb + -ач = agent noun
 
@@ -126,8 +128,8 @@
 ### Model: Suffixes That Create Adjectives
 
 > **-ний** = relating to: музика → **музичний** (musical)
-> **-овий** = made of/relating to: слово → **словниковий** (dictionary)
-> **-ський** = nationality/place: Україна → **український** (Ukrainian)
+> **-овий** = made of/relating to: слово → **словниковий**
+> **-ський** = nationality/place: Україна → **український**
 
 **Patterns:**
 
@@ -139,15 +141,15 @@
 
 ### Practice: Form the Adjective
 
-1. Київ → ___ (relating to Kyiv)
+1. Київ → ___
 > [!solution] Перевірити
 > київський — place + -ський
 
-2. музика → ___ (relating to music)
+2. музика → ___
 > [!solution] Перевірити
 > музичний — noun + -ний
 
-3. колір → ___ (relating to color)
+3. колір → ___
 > [!solution] Перевірити
 > кольоровий — noun + -овий
 
@@ -273,9 +275,7 @@ Analyze these words by breaking them into parts:
 >
 > All from root **ход-** (walk), but prefix changes meaning completely!
 
----
-
-# Summary
+# Підсумок
 
 | Skill | Key Pattern | Example |
 |-------|-------------|---------|
@@ -288,3 +288,9 @@ Analyze these words by breaking them into parts:
 >
 > Якщо ви знаєте корінь, ви можете зрозуміти багато споріднених слів.
 > *If you know the root, you can understand many related words.*
+
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

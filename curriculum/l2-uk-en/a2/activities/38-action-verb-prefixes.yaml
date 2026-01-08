@@ -50,48 +50,56 @@
     - переписати
     - дописати
     - записати
+    - варіант А
   - sentence: Я не ___ книгу, вона нудна.
     answer: дочитав
     options:
     - дочитав
     - перечитав
     - почитав
+    - варіант А
   - sentence: Будь ласка, ___ двері. Холодно.
     answer: закрий
     options:
     - закрий
     - відкрий
     - розкрий
+    - варіант А
   - sentence: Я хочу ___ твій номер телефону.
     answer: записати
     options:
     - записати
     - підписати
     - написати
+    - варіант А
   - sentence: Де тут можна ___ документи?
     answer: підписати
     options:
     - підписати
     - описати
     - виписати
+    - варіант А
   - sentence: Мама попросила ___ посуд.
     answer: перемити
     options:
     - перемити
     - домити
     - замити
+    - варіант А
   - sentence: Треба ___ роботу до вечора.
     answer: доробити
     options:
     - доробити
     - переробити
     - зробити
+    - варіант А
   - sentence: Він ___ двері ключем.
     answer: відкрив
     options:
     - відкрив
     - закрив
     - розкрив
+    - варіант А
   id: the-perfectionist
 - type: group-sort
   title: Open vs Close
@@ -116,7 +124,7 @@
 - type: quiz
   title: Meaning Check
   items:
-  - question: Яке значення має дієслово "доробити" в українській мові?
+  - question: Яке значення має дієслово «доробити» в українській мові?
     options:
     - text: Finish doing (завершити дію)
       correct: true
@@ -126,7 +134,7 @@
       correct: false
     - text: Start doing (почати робити)
       correct: false
-  - question: Що означає дієслово "почитати" з префіксом "по-" в контексті?
+  - question: Що означає дієслово «почитати» з префіксом «по-» в контексті?
     options:
     - text: Read a little bit (трохи почитати)
       correct: true
@@ -136,7 +144,7 @@
       correct: false
     - text: Start reading (почати читати)
       correct: false
-  - question: Де саме ви ставите свій підпис коли "підписуєте" документ?
+  - question: Де саме ви ставите свій підпис коли «підписуєте» документ?
     options:
     - text: Under the text (під текстом)
       correct: true
@@ -146,7 +154,7 @@
       correct: false
     - text: Next to the text (поруч з текстом)
       correct: false
-  - question: Якою була перша спроба якщо ви вирішили щось "переробити"?
+  - question: Якою була перша спроба якщо ви вирішили щось «переробити»?
     options:
     - text: Bad or wrong (погана або неправильна)
       correct: true
@@ -156,7 +164,7 @@
       correct: false
     - text: Good enough (достатньо хороша)
       correct: false
-  - question: Яку кількість зазвичай означає дієслово "наробити" з префіксом "на-"?
+  - question: Яку кількість зазвичай означає дієслово «наробити» з префіксом «на-»?
     options:
     - text: A large quantity (велика кількість)
       correct: true
@@ -166,7 +174,7 @@
       correct: false
     - text: Medium amount (середня кількість)
       correct: false
-  - question: З якою логікою прийменника пов'язане дієслово "відкрити" в українській?
+  - question: З якою логікою прийменника пов'язане дієслово «відкрити» в українській?
     options:
     - text: 'Від: Away (віддалення, відкриття)'
       correct: true
@@ -176,7 +184,7 @@
       correct: false
     - text: 'На: On (розміщення на поверхні)'
       correct: false
-  - question: Яке буквальне значення має дієслово "здати" в контексті зради?
+  - question: Яке буквальне значення має дієслово «здати» в контексті зради?
     options:
     - text: To give up/away (віддати геть)
       correct: true
@@ -186,7 +194,7 @@
       correct: false
     - text: To give back (повернути назад)
       correct: false
-  - question: Що означає дієслово "наїстися" з префіксом "на-" для їжі?
+  - question: Що означає дієслово «наїстися» з префіксом «на-» для їжі?
     options:
     - text: To eat until full (наїстися досхочу)
       correct: true
@@ -202,19 +210,19 @@
   items:
   - statement: Ukrainian vocabulary is limited.
     correct: false
-  - statement: '"Заговорити" can mean "to charm".'
+  - statement: «Заговорити» can mean "to charm".
     correct: true
-  - statement: '"Наговорити" means to stop talking.'
+  - statement: «Наговорити» means to stop talking.
     correct: false
   - statement: One root can produce dozens of words.
     correct: true
-  - statement: '"Видати" means to keep a secret.'
+  - statement: «Видати» means to keep a secret.
     correct: false
-  - statement: '"Віддати" means to take something.'
+  - statement: «Віддати» means to take something.
     correct: false
-  - statement: '"Донести" means to carry to the end.'
+  - statement: «Донести» means to carry to the end.
     correct: true
-  - statement: '"Перенести" means to move something to a new place.'
+  - statement: «Перенести» means to move something to a new place.
     correct: true
   id: propaganda-check
 - type: cloze
@@ -233,7 +241,7 @@
 
     Він {з|ви|від|пере}дав роботу професору.
 
-    Професор {пере|по|про|від}вірив і сказав: "Молодець!".
+    Професор {пере|по|про|від}вірив і сказав: «Молодець!».
 
     Студент {зіт|від|роз|по}дихнув з полегшенням.
 
@@ -252,6 +260,8 @@
     options:
     - доїсти
     - переписати
+    - помилка
+    - правильно
     explanation: You finish eating (доїсти), not rewrite (переписати) an apple.
   - sentence: Треба **відкрити** вікно, бо холодно. (Logic)
     error: відкрити
@@ -259,37 +269,47 @@
     options:
     - закрити
     - відкрити
+    - помилка
+    - правильно
     explanation: If cold, close (закрити).
-  - sentence: Я **дописав** книгу три рази. (Redo context)
+  - sentence: Я **дописав** книгу три рази.
     error: дописав
     answer: перечитав
     options:
     - перечитав
     - дописав
+    - помилка
+    - правильно
     explanation: Reading 3 times is re-reading (пере-).
-  - sentence: Він **підписав** двері ключем. (Open context)
+  - sentence: Він **підписав** двері ключем.
     error: підписав
     answer: відкрив
     options:
     - відкрив
     - підписав
+    - помилка
+    - правильно
     explanation: You open (відкрити) a door with a key. Signed (підписав) makes no
       sense.
   - sentence: 'Ми **розробили** ремонт. (Context: Massive redo/work)'
     error: розробили
     answer: зробили | переробили
     options:
+    - зробили | переробили
     - зробили
     - розробили
-    explanation: Use "зробили" or "переробили" (redid). "Розробили" implies "developed/designed"
+    - помилка
+    explanation: Use «зробили» or «переробили» (redid). «Розробили» implies "developed/designed"
       which is weird for "repair".
-  - sentence: Я **написав** трохи, 5 хвилин. (Brief process)
+  - sentence: Я **написав** трохи, 5 хвилин.
     error: написав
     answer: пописав
     options:
     - пописав
     - написав
-    explanation: Brief process uses По-. "Написав" implies a result.
+    - помилка
+    - правильно
+    explanation: Brief process uses По-. «Написав» implies a result.
   id: fix-the-verb
 - type: match-up
   title: Give and Take
@@ -297,19 +317,19 @@
   - left: Віддати
     right: Give back (Return)
   - left: Передати
-    right: Pass (Salt/Message)
+    right: Pass
   - left: Здати
     right: Turn in | Rent out
   - left: Видати
     right: Publish | Reveal
   - left: Подати
-    right: Serve (Food/Hand)
+    right: Serve
   - left: Роздати
-    right: Distribute (To many)
+    right: Distribute
   - left: Надати
     right: Provide (Official)
   - left: Продати
-    right: Sell (Give for money)
+    right: Sell
   - left: передати
     right: to pass/hand over
   - left: віддати

@@ -6,6 +6,21 @@
 
 **Related Issue:** [#283](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/283)
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Presentation|Grammar|Focus|Презентація|Граматика|Теорія
+  - Practice|Exercises|Activity|Практика|Вправи
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: TTT
+  min_word_count: 1500
+  required_callouts: []
+  description: B1 grammar uses TTT (Test-Teach-Test) with guided discovery
+-->
+
 ---
 
 ## Quick Reference Checklist
@@ -347,34 +362,18 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ---
 
-## Vocabulary Section Template
+---
 
-**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
+## Content Structure Note
 
-**Example `vocabulary/b1-06-aspect-complete-system.yaml`:**
+### Vocabulary & Activities
 
-```yaml
-items:
-- lemma: вид
-  ipa: /wɪd/
-  translation: aspect
-  pos: ім. (ч.р.)
-  gender: m
-  note: граматична категорія дієслова
-- lemma: доконаний
-  ipa: /dɔˈkɔnɑnɪj/
-  translation: perfective
-  pos: прикм.
-  gender: m
-  note: вид, що виражає результат
-```
+**CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
 
-**Why YAML sidecar:**
+- `vocabulary/{slug}.yaml`
+- `activities/{slug}.yaml`
 
-- Validates schema automatically
-- Ensures consistent formatting
-- Enables programmatic processing
-- Audit validates this exact format for B1+
+The build system will inject these sections at build time.
 
 ---
 

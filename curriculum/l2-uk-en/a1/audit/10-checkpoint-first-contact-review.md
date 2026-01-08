@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1115/500
+- **Words:** ✅ 1148/500
 - **Activities:** ✅ 11/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -15,24 +15,19 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 29.9% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 29.3% (checkpoint - no gate)
 - **Grammar:** ⏳ Pending validation
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 105 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Огляд** | ⚪️ | 79 | Skipped |
 | **Skill 1: Reading Cyrillic** | ✅ | 96 | Included in Core |
 | **Skill 2: Identifying Gender** | ⚪️ | 165 | Skipped |
-| **Skill 3: Conjugating Verbs** | ⚪️ | 228 | Skipped |
+| **Skill 3: Conjugating Verbs** | ⚪️ | 266 | Skipped |
 | **Skill 4: Asking Questions** | ⚪️ | 185 | Skipped |
 | **Skill 5: Ordering Food** | ⚪️ | 191 | Skipped |
 | **Integration Challenge** | ⚪️ | 123 | Skipped |
-| **Summary** | ✅ | 22 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Підсумок** | ✅ | 22 | Included in Core |
+| **Need More Practice?** | ⚪️ | 21 | Skipped |

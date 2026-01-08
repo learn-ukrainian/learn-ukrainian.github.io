@@ -192,7 +192,7 @@
 - type: quiz
   title: Time Expressions
   items:
-  - question: Which English phrase represents "Котра година?" correctly?
+  - question: Which English phrase represents «Котра година?» correctly?
     options:
     - text: What time is it?
       correct: true
@@ -202,7 +202,7 @@
       correct: false
     - text: How long is it?
       correct: false
-  - question: How do you accurately translate "Зустріч о третій" into English?
+  - question: How do you accurately translate «Зустріч о третій» into English?
     options:
     - text: The meeting is at three.
       correct: true
@@ -212,7 +212,7 @@
       correct: false
     - text: Three meetings today.
       correct: false
-  - question: What does accurately the phrase "Він приходить рано" mean?
+  - question: What does accurately the phrase «Він приходить рано» mean?
     options:
     - text: He comes early.
       correct: true
@@ -222,7 +222,7 @@
       correct: false
     - text: He comes now.
       correct: false
-  - question: How do you correctly translate "Магазин працює з дев'ятої до шостої"?
+  - question: How do you correctly translate «Магазин працює з дев'ятої до шостої»?
     options:
     - text: The store works from nine to six.
       correct: true
@@ -232,7 +232,7 @@
       correct: false
     - text: The store is closed from nine to six.
       correct: false
-  - question: Which English sentence represents "Зараз половина на другу"?
+  - question: Which English sentence represents «Зараз половина на другу»?
     options:
     - text: It's half past one now.
       correct: true
@@ -242,7 +242,7 @@
       correct: false
     - text: It's half past two now.
       correct: false
-  - question: How do you accurately say "Я приїхав вчасно" in English?
+  - question: How do you accurately say «Я приїхав вчасно» in English?
     options:
     - text: I arrived on time.
       correct: true
@@ -252,7 +252,7 @@
       correct: false
     - text: I will arrive.
       correct: false
-  - question: What is accurately the English translation of "Після обіду я відпочиваю"?
+  - question: What is accurately the English translation of «Після обіду я відпочиваю»?
     options:
     - text: After lunch I rest.
       correct: true
@@ -262,7 +262,7 @@
       correct: false
     - text: At lunch I rest.
       correct: false
-  - question: Which translation is correct for "Урок триває годину" now?
+  - question: Which translation is correct for «Урок триває годину» now?
     options:
     - text: The lesson lasts an hour.
       correct: true
@@ -276,7 +276,7 @@
 - type: quiz
   title: Months and Seasons
   items:
-  - question: Which set of months accurately represents "зима" (winter)?
+  - question: Which set of months accurately represents «зима» (winter)?
     options:
     - text: Грудень, січень, лютий
       correct: true
@@ -316,7 +316,7 @@
       correct: false
     - text: Вівторок
       correct: false
-  - question: Which months accurately represent the "весна" (spring) season?
+  - question: Which months accurately represent the «весна» (spring) season?
     options:
     - text: Березень, квітень, травень
       correct: true
@@ -346,7 +346,7 @@
       correct: false
     - text: Вівторок
       correct: false
-  - question: Which days accurately represent the "вихідні" (weekend) in Ukraine?
+  - question: Which days accurately represent the «вихідні» (weekend) in Ukraine?
     options:
     - text: Субота і неділя
       correct: true
@@ -409,7 +409,7 @@
   - statement: Тиждень має шість днів.
     correct: false
     explanation: Incorrect! A week has seven days.
-  - statement: Листопад названий від "листя падає".
+  - statement: Листопад названий від «листя падає».
     correct: true
     explanation: Correct! Listopad means "leaves fall."
   - statement: Субота — це робочий день.
@@ -421,7 +421,7 @@
   - statement: Січень — це весняний місяць.
     correct: false
     explanation: Incorrect! January is a winter month.
-  - statement: Неділя означає "немає діла".
+  - statement: Неділя означає «немає діла».
     correct: true
     explanation: Correct! Nedilya means "no work."
   - statement: Середа — це останній день тижня.
@@ -430,10 +430,10 @@
   - statement: Україна використовує 24-годинний формат часу.
     correct: true
     explanation: Correct! Ukraine uses 24-hour time officially.
-  - statement: '"Рано" означає "late".'
+  - statement: '«Рано» означає "late".'
     correct: false
-    explanation: Incorrect! "Рано" means "early."
-  - statement: '"Вчасно" означає "on time".'
+    explanation: Incorrect! «Рано» means "early."
+  - statement: '«Вчасно» означає "on time".'
     correct: true
     explanation: Correct!
   - statement: Вихідні — це понеділок і вівторок.

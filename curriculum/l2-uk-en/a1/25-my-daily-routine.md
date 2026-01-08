@@ -1,5 +1,7 @@
 # My Day — A Typical Routine
 
+## Introduction
+
 > 🕰️ **Мій типовий день**
 >
 > **Ранок (Morning)**
@@ -15,6 +17,8 @@
 > О десятій я лягаю спати. Я засинаю швидко.
 
 ---
+
+## Presentation
 
 ## Examples in Context
 
@@ -105,23 +109,25 @@
 > Many daily activities are reflexive because the action is directed back at the subject (doing it TO YOURSELF).
 >
 > **How to form it:** Take a conjugated verb and add **-ся** or **-сь**.
+>
 > - Use **-сь** after vowels (я, ми, ви, ти, він/вона - sometimes).
 > - Use **-ся** after consonants (ми, ви, вони).
 >
 > Let's look at **вмиватися** (to wash oneself):
 >
-> | Person | Verb Form | + Reflexive | Full Form |
-> | :--- | :--- | :--- | :--- |
-> | Я | вмиваю | + **-сь** | **вмиваюся/вмиваюсь** |
-> | Ти | вмиваєш | + **-ся** | **вмиваєшся** |
-> | Він/Вона | вмиває | + **-ться** | **вмивається** |
-> | Ми | вмиваємо | + **-сь** | **вмиваємося/вмиваємось** |
-> | Ви | вмиваєте | + **-ся** | **вмиваєтеся** |
-> | Вони | вмивають | + **-ся** | **вмиваються** |
+> | Person   | Verb Form | + Reflexive | Full Form                 |
+> | :------- | :-------- | :---------- | :------------------------ |
+> | Я        | вмиваю    | + **-сь**   | **вмиваюся/вмиваюсь**     |
+> | Ти       | вмиваєш   | + **-ся**   | **вмиваєшся**             |
+> | Він/Вона | вмиває    | + **-ться** | **вмивається**            |
+> | Ми       | вмиваємо  | + **-сь**   | **вмиваємося/вмиваємось** |
+> | Ви       | вмиваєте  | + **-ся**   | **вмиваєтеся**            |
+> | Вони     | вмивають  | + **-ся**   | **вмиваються**            |
 >
-> *Note: In the 3rd person (він/вони), notice the spelling **-ться**. It sounds like a long /tsː/ sound.*
+> _Note: In the 3rd person (він/вони), notice the spelling **-ться**. It sounds like a long /tsː/ sound._
 >
 > **Common Reflexive Verbs:**
+>
 > - вмиватися (to wash oneself)
 > - одягатися (to dress oneself)
 > - прокидатися (to wake up)
@@ -145,3 +151,12 @@ In this module, you learned:
 ---
 
 **Coming up:** Module 26 will teach you adjective agreement for describing things!
+
+---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

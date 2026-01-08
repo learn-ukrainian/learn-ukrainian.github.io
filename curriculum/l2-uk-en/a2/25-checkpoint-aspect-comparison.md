@@ -1,276 +1,259 @@
-# Summary
+# Checkpoint - Aspect & Comparison | Review of Modules 11-19
 
-## Checkpoint - Aspect & Comparison
+## Огляд
 
-**Вітаємо!** Ви завершили Фазу A2.2! This checkpoint reviews everything from Modules 11-19.
+**Вітаємо!** Ви завершили дуже важливий етап. Модулі 11-19 навчили вас не просто «називати речі», а **описувати час і якість**. Тепер ви можете розповісти, *що* ви робили. Ви також можете сказати, *як довго* це тривало. Ви можете пояснити, *чи закінчили* ви справу. Ви також можете порівнювати предмети, людей та ідеї, що робить вашу мову значно багатшою.
 
-**Skills tested:**
-1. **Verbal Aspect** - Can you choose between process and result?
-2. **Comparison** - Can you form comparatives and superlatives?
-3. **Conditional Mood** - Can you say "would" and "if"?
-4. **Shopping Context** - Can you apply grammar in real situations?
+Цей контрольний модуль перевірить ваші знання про:
+1. **Вид дієслова** (Aspect) — фундаментальна категорія слов'янських мов: процес чи результат?
+2. **Порівняння** (Comparison) — як сказати, що щось є кращим, гіршим або найбільшим.
+3. **Умовний спосіб** (Conditional) — використання «якби» для гіпотез і «б» для ввічливих прохань.
+4. **Шопінг** (Shopping) — практичне використання всіх цих навичок у реальних ситуаціях магазину.
+
+> [!culture] 🇺🇦 The Art of Politeness
+>
+> In Ukrainian culture, directness can sometimes be perceived as rude, especially in service interactions. Using the conditional mood («Я б хотів...» instead of «Я хочу...») instantly elevates your speech and shows respect to the listener. It transforms a demand into a polite request.
 
 ---
 
 ## Skill 1: Verbal Aspect
 
-**Can you choose between process (imperfective) and result (perfective)?**
+**Can you distinguish between process and result?**
+
+This is often the most challenging concept for English speakers because English uses tenses (Past Continuous vs. Past Simple) to show what Ukrainian shows with **Aspect** (Вид).
 
 ### Model: Process vs. Result
 
-> Я **читав** книгу вчора. (Imperfective — I was reading, process)
-> Я **прочитав** книгу вчора. (Perfective — I finished reading, result)
+**Недоконаний вид** — Imperfective: Focuses on the **process**, **duration**, or **repetition**.
+> Я **читав** книгу вчора. (I was reading / read for a while)
+> Я **писав** листа, коли ти дзвонив. (I was writing)
+> Я **купував** хліб щодня. (I used to buy / bought repeatedly)
+> Я буду **читати** завтра. (I will be reading)
 
-> Я **буду читати** завтра. (Imperfective future — I will be reading)
-> Я **прочитаю** завтра. (Perfective future — I will finish reading)
+**Доконаний вид** — Perfective: Focuses on the **result**, **completion**, or **one-time action**.
+> Я **прочитав** книгу вчора. (I finished reading)
+> Я **написав** листа і відправив його. (I wrote and sent)
+> Я **купив** хліб сьогодні. (I bought once)
+> Я **прочитаю** завтра. (I will finish reading)
 
-**The Pattern:**
-| Imperfective (ND) | Perfective (D) | Change Type |
-|-------------------|----------------|-------------|
-| читати | про-читати | prefix |
-| писати | на-писати | prefix |
-| робити | з-робити | prefix |
-| купувати | куп-ити | suffix |
-| брати | взяти | different root |
+**Common Prefixes:**
+- **про-** (читати → прочитати)
+- **на-** (писати → написати)
+- **з-** (робити → зробити)
+- **по-** (дивитися → подивитися, дзвонити → подзвонити)
 
-### Practice: Choose the Right Aspect
+> [!note] 📝 Grammatical "Switch"
+>
+> Think of aspect as a light switch.
+> **Imperfective** is the "Dimmer Switch" — you can adjust how long it takes (duration).
+> **Perfective** is the "On/Off Switch" — it's either done or not done (result). You can't say "I finished reading for 3 hours" in the same way.
 
-1. Я ___ книгу три години. (was reading — duration)
-> [!solution] Перевірити
-> читав — Duration = imperfective
+### Practice: Choose the Aspect
 
-2. Вона ___ лист і пішла. (finished writing and left)
-> [!solution] Перевірити
-> написала — Completed action with result = perfective
+1. Я ___ цей фільм вчора. (watched completely)
+   > [!solution] Перевірити
+   > **подивився** (Result = perfective)
 
-3. Ми ___ фільм завтра. (will finish watching)
-> [!solution] Перевірити
-> подивимося — Future completion = perfective
+2. Вона ___ листа цілу годину. (was writing)
+   > [!solution] Перевірити
+   > **писала** (Duration = imperfective)
+
+3. Ми ___ це завдання завтра. (will finish)
+   > [!solution] Перевірити
+   > **зробимо** (Future result = perfective)
 
 ### Self-Check
 
-- Do you understand "process" (читав) vs "result" (прочитав)?
-- Can you form perfective with prefixes: про-, на-, з-?
-- Do you know exceptions: брати/взяти, купувати/купити?
+- ☐ Do you know the difference between "doing" (process) and "done" (result)?
+- ☐ Can you recognize common prefixes like *про-, на-, з-, по-*?
+- ☐ Do you remember that *брати/взяти* and *купувати/купити* are irregular pairs that change the root or suffix differently?
 
-> [!note] 📝 Aspect Memory Trick
+> [!tip] 💡 Aspect Tip
 >
-> **NDK** (Недоконаний) = **N**ever **D**one, **K**eeps going
-> **DK** (Доконаний) = **D**one, **K**omplete
->
-> When you see a prefix like **про-**, **на-**, **з-** — it usually signals completion!
+> If you see a **duration** phrase in the sentence (три години, довго, весь день, цілий рік), always use the **Imperfective** aspect!
+> Correct: «Я читав три години».
+> Incorrect: «Я прочитав три години».
 
-> [!warning] ⚠️ Common Mistake
+> [!important] ⚡ Decision Making
 >
-> Don't say: "Я прочитав книгу три години" ❌
-> Say: "Я читав книгу три години" ✅
->
-> Duration (три години) requires imperfective! Perfective = result, not duration.
+> When you decide to buy something, use the **Perfective Future**: «Я візьму» (I will take/buy). Using «Я буду брати» sounds like you will be taking it repeatedly or for a long time!
 
 ---
 
 ## Skill 2: Comparison
 
-**Can you form comparatives and superlatives?**
+**Can you compare objects using degrees?**
 
-### Model: The Comparison Ladder
+Comparison allows you to evaluate the world around you. In Ukrainian, we have the Comparative (вищий ступінь) and Superlative (найвищий ступінь).
 
-> **Base:** Цей телефон **гарний**. (This phone is good.)
-> **Comparative:** Цей телефон **кращий**. (This phone is better.)
-> **Superlative:** Цей телефон **найкращий**. (This phone is the best.)
+### Model: Good, Better, Best
 
-**Regular formation:**
-- Comparative: stem + **-ший/-іший** (новий → новіший)
-- Superlative: **най-** + comparative (новіший → найновіший)
+> **Base:** Цей телефон **гарний**. (Positive degree)
+> **Comparative:** Цей телефон **кращий** (за той). (Comparative degree)
+> **Superlative:** Цей телефон **найкращий**. (Superlative degree)
 
-**Irregular forms (must memorize):**
-| Base | Comparative | Superlative |
-|------|-------------|-------------|
-| великий | більший | найбільший |
-| малий | менший | найменший |
-| добрий/гарний | кращий | найкращий |
-| поганий | гірший | найгірший |
+**Regular Forms:**
+Most adjectives add **-ший** or **-іший**:
+- новий → новіший → найновіший
+- дешевий → дешевший → найдешевший
+- цікавий → цікавіший → найцікавіший
 
-**Comparison with "than":**
-- Він старший, **ніж** я. (than + nominative)
-- Він старший **за** мене. (than + accusative)
+**Irregular Forms:**
+These four words change their stem completely or partially. Memorize them!
+- великий — big → **більший** → **найбільший**
+- малий — small → **менший** → **найменший**
+- добрий — good → **кращий** → **найкращий**
+- поганий — bad → **гірший** → **найгірший**
 
-### Practice: Form Comparisons
+**Comparisons with "Than":**
+You have two options:
+1. **ніж** + Nominative case: «Київ більший, ніж Львів.»
+2. **за** + Accusative case: «Київ більший за Львів.» (Note: *за* implies «bigger *than/beyond*»).
 
-1. Цей будинок ___ (bigger), ніж той.
-> [!solution] Перевірити
-> більший — Irregular: великий → більший
+### Practice: Form the Comparison
 
-2. Це ___ (best) кафе в місті.
-> [!solution] Перевірити
-> найкраще — Superlative of добре/гарне
+1. Київ ___ (larger), ніж Львів.
+   > [!solution] Перевірити
+   > **більший**
 
-3. Чай ___ (cheaper), ніж кава.
-> [!solution] Перевірити
-> дешевший — Regular: дешевий → дешевший
+2. Це ___ (best) кава в місті.
+   > [!solution] Перевірити
+   > **найкраща**
+
+3. Цей варіант ___ (worse), ніж той.
+   > [!solution] Перевірити
+   > **гірший**
 
 ### Self-Check
 
-- Can you form regular comparatives with -ший/-іший?
-- Do you know the 4 irregular forms: більший, менший, кращий, гірший?
-- Can you use both "ніж + nom" and "за + acc"?
+- ☐ Can you form regular comparatives (-ший/-іший)?
+- ☐ Did you memorize the 4 irregulars (більший, менший, кращий, гірший)?
+- ☐ Can you use «ніж» (than) correctly with the Nominative case?
 
 ---
 
 ## Skill 3: Conditional Mood
 
-**Can you say "would" and "if (unreal)"?**
+**Can you express hypothetical situations and polite requests?**
 
-### Model: The Conditional Formula
+The Conditional Mood (Умовний спосіб) is used for dreams, unreal situations («If I were...»), and softness in speech («I would like...»).
 
-> **Formula:** Past tense verb + **б/би**
+### Model: "Would" and "If"
 
-> Я **б хотів** кави. (I would like coffee — polite request)
-> **Якби** я мав гроші, я **б купив** машину. (If I had money, I would buy a car)
+**Polite Request:**
+Use the past tense verb + particle **б** (after vowels) or **би** (after consonants).
+> Я **б хотів** кави. (I would like coffee)
+> Чи **могли б** ви допомогти? (Could you help?)
 
-**Two types of "if":**
-| Type | Word | Use | Example |
-|------|------|-----|---------|
-| Real | **Якщо** | Possible future | Якщо буде сонце, ми підемо. |
-| Unreal | **Якби** | Impossible/hypothetical | Якби я був птахом... |
+**Unreal Condition:**
+Use **Якби** (If only / If hypothetical) + past tense + **б/би**.
+> **Якби** я мав час, я **б поїхав** у Карпати.
+> (If I had time, I would go to the Carpathians - implying I don't have time now)
 
-### Practice: Form Conditionals
+**Real vs. Unreal:**
+- **Якщо** (Real): «Якщо буде дощ, ми не підемо.» (Possible future).
+- **Якби** (Unreal): «Якби був дощ, ми б не пішли.» (Hypothetical past or present).
 
-1. Я ___ поїхати до Києва. (would like)
-> [!solution] Перевірити
-> б хотів/б хотіла — Past tense + б
+### Practice: Build the Sentence
 
-2. ___ ти мав час, що ти б робив? (If — unreal)
-> [!solution] Перевірити
-> Якби — Unreal condition = якби
+1. Я ___ (would like) купити це.
+   > [!solution] Перевірити
+   > **б хотів / б хотіла**
 
-3. Чи ___ ви допомогти? (Could — polite)
-> [!solution] Перевірити
-> могли б — Past tense + б for polite request
+2. ___ (If) я знав, я б сказав.
+   > [!solution] Перевірити
+   > **Якби** (Unreal condition)
+
+3. Ми ___ (would buy) цей дім.
+   > [!solution] Перевірити
+   > **б купили / купили б**
 
 ### Self-Check
 
-- Can you form "would" with past tense + б/би?
-- Do you know the difference: якщо (реальна умова) vs якби (нереальна умова)?
-- Can you make polite requests: "Я б хотів...", "Чи могли б ви..."?
+- ☐ Do you know that *Якщо* = Real, and *Якби* = Unreal?
+- ☐ Can you be polite using «Я б хотів»?
+- ☐ Do you remember to use Past Tense with «б/би»?
 
-> [!myth-buster] 🔍 Myth Buster
+> [!myth-buster] 🔍 Slavic Conditional
 >
-> **Myth:** "Ukrainian conditional is just copied from Russian."
->
-> **Truth:** Both languages use past tense + particle for conditional, but this is a common Slavic feature from Proto-Slavic, NOT borrowing. Ukrainian's **би** particle and the distinction between **якщо/якби** shows independent development. Say "Якби я був птахом..." — pure Ukrainian!
+> You might think the particle **би** is random, but it's actually an ancient verb form! In Old East Slavic, it was part of the verb «to be» (aorist tense). Over centuries, it froze into a particle that marks unreality. So when you say «Я хотів би», you are echoing a thousand years of history!
 
 ---
 
 ## Skill 4: Shopping Context
 
-**Can you apply all grammar in shopping situations?**
+**Can you apply grammar in a store?**
 
-### Model: Shopping Dialogue
+Shopping is the perfect place to practice these skills. You need to compare items (Comparison), decide what to buy (Perfective Aspect), and ask politely (Conditional).
 
-> **Продавець:** Добрий день! Чим можу допомогти?
-> **Покупець:** Я **б хотів** (cond.) подивитися телефони.
-> **Продавець:** Цей **новіший** (comp.), а той **дешевший** (comp.).
-> **Покупець:** Який **найкращий** (superl.)?
-> **Продавець:** Samsung. Ви вже **вирішили** (perf.)?
-> **Покупець:** Так, я **візьму** (perf. future) цей.
+### Model: At the Tech Store
 
-**Key shopping expressions:**
-- Чи є знижка? (Is there a discount?)
-- Чи можна дешевше? (Can it be cheaper?)
-- Я б хотів... (I would like...)
-- Що ви порекомендуєте? (What do you recommend?)
+> **Клієнт:** Добрий день. Я **б хотів** (conditional) купити телефон.
+> **Продавець:** Який бренд вам подобається **більше** (comparative)?
+> **Клієнт:** Samsung. Але я хочу **дешевший** (comparative), ніж модель S24.
+> **Продавець:** Ось цей варіант **найкращий** (superlative) за ціною та якістю.
+> **Клієнт:** Чудово. Я його **візьму** (perfective future).
+> **Продавець:** Чи **хотіли б** (conditional) ви також чохол?
+> **Клієнт:** **Якби** (unreal) я мав більше грошей, я **б купив** (conditional) і чохол, але сьогодні тільки телефон.
 
 ### Practice: Complete the Dialogue
 
-1. Мені ___ подобається синій. (more)
-> [!solution] Перевірити
-> більше — "Більше подобається" = I like more
+**Клієнт:** Чи є у вас ___ (better) ноутбук?
+**Продавець:** Так, цей ___ (newer).
+**Клієнт:** Скільки він коштує?
+**Продавець:** 30 000 гривень.
+**Клієнт:** Добре, я його ___ (will buy - perf).
 
-2. Чи це ___ модель? (newest)
-> [!solution] Перевірити
-> найновіша — Superlative of новий
-
-3. Я ще ___ (haven't decided). Потім ___ (I'll take).
-> [!solution] Перевірити
-> не вирішив / візьму — Perfective for decision and future action
+   > [!solution] Перевірити
+   > **кращий**, **новіший**, **куплю**
 
 ### Self-Check
 
-- Can you use comparatives when shopping: дешевший, кращий?
-- Can you be polite: "Я б хотів...", "Чи можна..."?
-- Can you express decisions with perfective: вирішив, візьму?
+- ☐ Can you compare products? (дешевший, дорожчий, кращий)
+- ☐ Can you make a decision using the Perfective Future? (Я візьму / Я куплю)
+- ☐ Can you ask for recommendations politely?
 
 ---
 
-## Integration Challenge
+## Інтеграційне завдання
 
-Read this story and identify the grammar points:
+Read the text and identify the grammar points (1-5).
 
-> Минулого літа я **їздив** (1) до Києва. Це була моя **найкраща** (2) подорож!
-> Коли я **приїхав** (3), я **побачив** (4) Софійський собор. Він **більший** (5), ніж я думав!
-> У кафе офіціант запитав: «Що ви будете пити?»
-> Я відповів: «Я **б хотів** (6) кави».
-> **Якби** (7) я жив у Києві, я **б гуляв** (8) тут щодня.
+> Вчора я **ходив** (1) по магазинах увесь вечір. Я шукав **найкращий** (2) подарунок для моєї мами.
+> Я побачив гарний шарф, але він був значно **дорожчий** (3), ніж я думав.
+> **Якби** (4) у мене було більше грошей, я **б купив** (5) його одразу без вагань.
+> Але я **вирішив** (6) пошукати ще і **знайшов** (7) інший варіант.
 
-1. їздив — which aspect and why?
-> [!solution] Перевірити
-> Imperfective — general travel experience (process)
+**Analysis:**
 
-2. найкраща — what degree?
-> [!solution] Перевірити
-> Superlative — the best
-
-3. приїхав — which aspect and why?
-> [!solution] Перевірити
-> Perfective — single completed arrival (result)
-
-4. побачив — which aspect and why?
-> [!solution] Перевірити
-> Perfective — single completed seeing (result)
-
-5. більший — what degree?
-> [!solution] Перевірити
-> Comparative — bigger than expected
-
-6. б хотів — what mood?
-> [!solution] Перевірити
-> Conditional — polite "would like"
-
-7. Якби — real or unreal?
-> [!solution] Перевірити
-> Unreal — hypothetical (I don't live there)
-
-8. б гуляв — what mood?
-> [!solution] Перевірити
-> Conditional — "would walk"
+1. **ходив** — Imperfective (process/multidirectional motion/duration «увесь вечір»).
+2. **найкращий** — Superlative adjective (The best).
+3. **дорожчий** — Comparative adjective (More expensive).
+4. **Якби** — Unreal condition marker (If only).
+5. **б купив** — Conditional mood (Would buy).
+6. **вирішив** — Perfective (Result/Decision).
+7. **знайшов** — Perfective (Result/Finding).
 
 ---
 
-## Summary Table
+# Підсумок
 
-| Skill | Key Pattern | Example |
-|-------|-------------|---------|
-| Aspect | Process vs Result | читав (процес) vs прочитав (результат) |
-| Comparison | -ший/-іший, най- | новіший, найновіший |
-| Conditional | Past + б/би | Я б хотів, Якби я мав |
-| Shopping | Apply all skills | Який найкращий? Я б хотів цей. |
+Ви пройшли важливий рубіж рівня А2! Тепер ви володієте інструментами для вираження нюансів часу, якості та ввічливості.
 
-> 💡 **Українська мудрість**
->
-> «Повторення — мати навчання.»
-> *Translation: "Repetition is the mother of learning."*
+| Skill | Key Concept | Pattern | Example |
+|-------|-------------|---------|---------|
+| **Aspect** | Process vs Result | читав — process / прочитав — result | Я **прочитав** книгу. |
+| **Comparison** | Degrees | гарний → кращий → найкращий | Цей телефон **кращий**. |
+| **Conditional** | Hypothetical / Polite | Past Tense + б/би | Я **б хотів** кави. |
+| **Shopping** | Application | Integration of all skills | Я **куплю** цей **найкращий** торт. |
 
-> [!history-bite] 📜 History Bite
->
-> **Comparatives saved our identity!** During Russification, bureaucrats tried to claim Ukrainian comparatives were "corrupted Russian." But forms like **кращий** (better) and **гірший** (worse) follow Old Church Slavonic patterns preserved in literary Ukrainian since Kotlyarevsky's *Eneïda* (1798). When you say "Цей кращий!", you speak authentic Ukrainian — not a dialect of anything!
-
-> [!tip] 🎯 Pro Tip: Aspect Pairs
->
-> Create flashcards with aspect pairs:
-> - Front: Читати — недоконаний → ?
-> - Back: Прочитати
->
-> Practice daily! The more pairs you memorize, the more natural your Ukrainian becomes. Focus on the 20 most common verbs first.
+**Ready for A2.3?**
+Next, we will dive into **Motion Verbs** (going by foot vs. vehicle) and **Word Formation** (how to build words). Get ready to move and build!
 
 ---
+
+## Need More Practice?
+
+- **Aspect:** Review Module 15 & 16 for deep dives into Perfective/Imperfective.
+- **Comparison:** Review Module 18 for more adjectives.
+- **Conditional:** Review Module 19 for more examples of «Якби».

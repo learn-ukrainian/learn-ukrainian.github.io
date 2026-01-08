@@ -88,6 +88,10 @@ items:
   ipa: ˈt͡ʃɛsno
   translation: honestly
   pos: adv
+- lemma: час
+  translation: time; tense
+  pos: noun
+  gender: m
 - lemma: шкідливіший
   ipa: ʃkʲidˈlɪʋiʃɪj
   translation: more harmful

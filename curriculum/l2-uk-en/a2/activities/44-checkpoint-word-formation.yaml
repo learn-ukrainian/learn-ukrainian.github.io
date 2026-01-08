@@ -28,21 +28,25 @@
   id: word-formation-pairs
 - type: cloze
   title: Formation Test
-  passage: 'Місце, де входять = {вхід|вихід|перехід} Місце, де виходять = {вихід|вхід|прихід} Людина, яка читає = {читач|читання|читати}
+  passage: 'Місце, де входять = {вхід|вихід|перехід} Місце, де виходять = {вихід|вхід|прихід}
+    Людина, яка читає = {читач|читання|читати}
 
 
-    Дія читання = {читання|читач|читати} Якість бути важливим = {важливість|важливий|важливо} Прикметник від \"музика\" = {музичний|музика|музикант}
+    Дія читання = {читання|читач|читати} Якість бути важливим = {важливість|важливий|важливо}
+    Прикметник від \«музика\» = {музичний|музика|музикант}
 
 
-    Прикметник від \"Україна\" = {український|Україна|українець} Зробити ще раз = пере{переписати|написати|дописати} Прийти до місця = {прийти|вийти|увійти}
+    Прикметник від \«Україна\» = {український|Україна|українець} Зробити ще раз =
+    пере{переписати|написати|дописати} Прийти до місця = {прийти|вийти|увійти}
 
 
-    Вийти з місця = {вийти|прийти|увійти} Людина, яка слухає = {слухач|слухати|послухати} Людина, яка пише = {письменник|писання|написати}'
+    Вийти з місця = {вийти|прийти|увійти} Людина, яка слухає = {слухач|слухати|послухати}
+    Людина, яка пише = {письменник|писання|написати}'
   id: formation-test
 - type: quiz
   title: Word Formation Quiz
   items:
-  - question: What is the primary meaning of the prefix "При-"?
+  - question: What is the primary meaning of the prefix «При-»?
     options:
     - text: Arrival
       correct: true
@@ -52,7 +56,7 @@
       correct: false
     - text: Under
       correct: false
-  - question: What is the primary meaning of the prefix "Ви-"?
+  - question: What is the primary meaning of the prefix «Ви-»?
     options:
     - text: Exit
       correct: true
@@ -66,7 +70,7 @@
     options:
     - text: Verbal nouns (Process)
       correct: true
-    - text: Adjectives (Qualities)
+    - text: Adjectives
       correct: false
     - text: Agent nouns (People)
       correct: false
@@ -74,23 +78,23 @@
       correct: false
   - question: What kind of words do you form with the suffix "-ість"?
     options:
-    - text: Abstract nouns (Qualities)
+    - text: Abstract nouns
       correct: true
     - text: Verbs (Actions)
       correct: false
-    - text: Adjectives (Descriptions)
+    - text: Adjectives
       correct: false
     - text: Agent nouns (People)
       correct: false
   - question: What kind of words do you form with the suffix "-ач"?
     options:
-    - text: Agent nouns (Person who does)
+    - text: Agent nouns
       correct: true
     - text: Abstract nouns (Concepts)
       correct: false
-    - text: Verbal nouns (Processes)
+    - text: Verbal nouns
       correct: false
-    - text: Adjectives (Qualities)
+    - text: Adjectives
       correct: false
   - question: What is the main use of the suffix "-ський"?
     options:
@@ -102,7 +106,7 @@
       correct: false
     - text: Verbal nouns
       correct: false
-  - question: What is the core meaning of the root "ход-"?
+  - question: What is the core meaning of the root «ход-»?
     options:
     - text: Walk/go (Movement)
       correct: true
@@ -112,7 +116,7 @@
       correct: false
     - text: Speak (Language)
       correct: false
-  - question: What is the core meaning of the root "пис-"?
+  - question: What is the core meaning of the root «пис-»?
     options:
     - text: Write (Text)
       correct: true
@@ -122,7 +126,8 @@
       correct: false
     - text: Read (Text)
       correct: false
-  - question: Can you identify how the Ukrainian word **"Перехід"** (Crossing) is structurally formed?
+  - question: Can you identify how the Ukrainian word **«Перехід»** (Crossing) is
+      structurally formed?
     options:
     - text: пере- + ход-
       correct: true
@@ -132,7 +137,8 @@
       correct: false
     - text: під- + хід
       correct: false
-  - question: What are the specific components that form the Ukrainian word **"Читання"** (Reading)?
+  - question: What are the specific components that form the Ukrainian word **«Читання»**
+      (Reading)?
     options:
     - text: чита- + -ння
       correct: true
@@ -142,7 +148,7 @@
       correct: false
     - text: чита- + -ник
       correct: false
-  - question: Which suffix is used in the word "Український"?
+  - question: Which suffix is used in the word «Український»?
     options:
     - text: -ський
       correct: true
@@ -152,7 +158,7 @@
       correct: false
     - text: -ість
       correct: false
-  - question: Which suffix is used in the word "Музичний"?
+  - question: Which suffix is used in the word «Музичний»?
     options:
     - text: -ний
       correct: true
@@ -195,7 +201,7 @@
 - type: true-false
   title: Formation Rules
   items:
-  - statement: '"При-" = arrival.'
+  - statement: «При-» = arrival.
     correct: true
     explanation: Correct! прийти = to arrive
   - statement: '"-ння" forms verbal nouns.'
@@ -204,22 +210,22 @@
   - statement: '"-ість" forms verbs.'
     correct: false
     explanation: No! -ість forms abstract nouns
-  - statement: '"Ход-" relates to movement.'
+  - statement: «Ход-» relates to movement.
     correct: true
     explanation: Correct! вхід, вихід, перехід
   - statement: '"-ач" forms agent nouns.'
     correct: true
     explanation: Yes! читач = reader
-  - statement: '"Ви-" means "entry."'
+  - statement: «Ви-» means "entry."
     correct: false
     explanation: No! Ви- means exit
-  - statement: '"Пере-" means "across" or "re-do."'
+  - statement: «Пере-» means "across" or "re-do."
     correct: true
     explanation: Correct! перехід, переписати
   - statement: '"-ський" relates to place/nationality.'
     correct: true
     explanation: Yes! український, київський
-  - statement: '"Слух-" means seeing.'
+  - statement: «Слух-» means seeing.
     correct: false
     explanation: No! Слух- means hearing
   - statement: Prefixes change verb meaning.
@@ -349,6 +355,7 @@
   - Україн
   - музич
   - київ
+  instruction: Натисніть на правильні слова в тексті.
 - type: translate
   title: English to Ukrainian
   items:
@@ -358,11 +365,15 @@
       correct: true
     - text: вихід
       correct: false
+    - text: Неправильно
+      correct: false
   - source: Exit
     options:
     - text: вихід
       correct: true
     - text: вхід
+      correct: false
+    - text: Неправильно
       correct: false
   - source: Reading
     options:
@@ -370,11 +381,15 @@
       correct: true
     - text: читач
       correct: false
+    - text: Неправильно
+      correct: false
   - source: Reader
     options:
     - text: читач
       correct: true
     - text: читання
+      correct: false
+    - text: Неправильно
       correct: false
   - source: Importance
     options:
@@ -382,11 +397,15 @@
       correct: true
     - text: важливий
       correct: false
+    - text: Неправильно
+      correct: false
   - source: Musical
     options:
     - text: музичний
       correct: true
     - text: музика
+      correct: false
+    - text: Неправильно
       correct: false
   - source: Ukrainian
     options:
@@ -394,11 +413,15 @@
       correct: true
     - text: Україна
       correct: false
+    - text: Неправильно
+      correct: false
   - source: Writer
     options:
     - text: письменник
       correct: true
     - text: писання
+      correct: false
+    - text: Неправильно
       correct: false
   - source: To arrive
     options:
@@ -406,11 +429,15 @@
       correct: true
     - text: вийти
       correct: false
+    - text: Неправильно
+      correct: false
   - source: To exit
     options:
     - text: вийти
       correct: true
     - text: прийти
+      correct: false
+    - text: Неправильно
       correct: false
   - source: To rewrite
     options:
@@ -418,11 +445,15 @@
       correct: true
     - text: написати
       correct: false
+    - text: Неправильно
+      correct: false
   - source: Crossing
     options:
     - text: перехід
       correct: true
     - text: вихід
+      correct: false
+    - text: Неправильно
       correct: false
   id: english-to-ukrainian
 - type: translate

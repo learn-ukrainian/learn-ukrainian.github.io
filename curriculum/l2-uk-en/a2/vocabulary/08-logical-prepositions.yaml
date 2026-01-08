@@ -14,7 +14,7 @@ items:
     gender: n
   - lemma: вишень
     ipa: ˈvɪʃenʲ
-    translation: cherries (genitive pl)
+    translation: cherries
     pos: noun
     gender: n
   - lemma: виїжджати
@@ -93,7 +93,7 @@ items:
     gender: f
   - lemma: почитати
     ipa: pot͡ʃɪˈtɑte
-    translation: to read (for a while)
+    translation: to read
     pos: verb
   - lemma: підійти
     ipa: pidiˈi̯tɪ
@@ -119,5 +119,5 @@ items:
     gender: f
   - lemma: хотітися
     ipa: xoˈtitusʲɐ
-    translation: to want (impersonal)
+    translation: to want
     pos: verb

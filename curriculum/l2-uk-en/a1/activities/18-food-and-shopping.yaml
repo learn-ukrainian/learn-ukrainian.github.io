@@ -163,7 +163,7 @@
       correct: false
     - text: Де пакет?
       correct: false
-    explanation: '"Потрібен" for masculine "пакет".'
+    explanation: '«Потрібен» for masculine «пакет».'
   - question: How do you ask for the price?
     options:
     - text: Яка ціна?
@@ -185,7 +185,7 @@
       correct: false
     - text: Картка я плачу
       correct: false
-    explanation: Instrumental case "карткою".
+    explanation: Instrumental case «карткою».
   - question: Which phrase means accurately "The discount is 10%"?
     options:
     - text: Знижка десять відсотків
@@ -196,7 +196,7 @@
       correct: false
     - text: Чек тут
       correct: false
-    explanation: '"Знижка" is a discount.'
+    explanation: '«Знижка» is a discount.'
   - question: What do you use for a big shopping?
     options:
     - text: візок
@@ -218,7 +218,7 @@
       correct: false
     - text: Чек покажіть
       correct: false
-    explanation: Imperative "Покажіть".
+    explanation: Imperative «Покажіть».
   - question: Where is the milk usually stored?
     options:
     - text: на полиці
@@ -240,7 +240,7 @@
       correct: false
     - text: Я маю свіжі овоч
       correct: false
-    explanation: Plural agreement "свіжі овочі".
+    explanation: Plural agreement «свіжі овочі».
   - question: How do you accurately ask for cash payments?
     options:
     - text: Ви приймаєте готівку?
@@ -251,7 +251,7 @@
       correct: false
     - text: Готівка є?
       correct: false
-    explanation: Accusative "готівку" after verb.
+    explanation: Accusative «готівку» after verb.
   - question: How do you say accurately "This is cheap"?
     options:
     - text: Це дешево
@@ -262,7 +262,7 @@
       correct: false
     - text: Дешево це
       correct: false
-    explanation: '"Дешево" is the adverb for cheap.'
+    explanation: '«Дешево» is the adverb for cheap.'
   id: shopping-situations
 - type: true-false
   title: Shopping Culture
@@ -273,7 +273,7 @@
   - statement: You should never greet the salesperson in a small Ukrainian store.
     correct: false
     explanation: Incorrect! It's polite to greet them when entering and leaving.
-  - statement: '"Скільки коштує?" means "How much does it cost?"'
+  - statement: '«Скільки коштує?» means "How much does it cost?"'
     correct: true
     explanation: Correct! This is the standard phrase for asking prices.
   - statement: Bread (хліб) has no cultural significance in Ukraine.
@@ -284,23 +284,23 @@
     explanation: Correct! Larger stores put food downstairs, household goods upstairs.
   - statement: You use accusative case for quantities like "a glass of water."
     correct: false
-    explanation: 'Incorrect! You use genitive: "склянку води" (genitive of вода).'
+    explanation: 'Incorrect! You use genitive: «склянку води» (genitive of вода).'
   - statement: UNESCO recognizes Ukrainian borsch culture as endangered heritage.
     correct: true
     explanation: Correct! This recognition came in 2022.
-  - statement: '"Дешево" means "expensive."'
+  - statement: '«Дешево» means "expensive."'
     correct: false
     explanation: Incorrect! Дешево = cheap. Дорого = expensive.
-  - statement: '"Каса" is where you pay at a supermarket.'
+  - statement: '«Каса» is where you pay at a supermarket.'
     correct: true
     explanation: Correct! Каса = checkout/cashier.
   - statement: Ukrainians only use cash, never cards.
     correct: false
     explanation: Incorrect! Modern supermarkets accept card payments.
-  - statement: '"Офіціантка" is the feminine form of "waiter."'
+  - statement: '«Офіціантка» is the feminine form of "waiter."'
     correct: true
     explanation: Correct! офіціант (m), офіціантка (f).
-  - statement: It's rude to ask "Ще щось?" (Anything else?) in a store.
+  - statement: It's rude to ask «Ще щось?» (Anything else?) in a store.
     correct: false
     explanation: Incorrect! This is a standard polite question from salespeople.
   id: shopping-culture
@@ -315,6 +315,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Я хочу каву'
   - question: 'Correct sentence order for: "How much is bread?"'
     options:
@@ -323,6 +325,8 @@
     - text: коштує Скільки хліб
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Скільки коштує хліб'
   - question: 'Correct sentence order for: "I''ll take cheese, please."'
@@ -333,6 +337,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Я візьму сир, будь ласка'
   - question: 'Correct sentence order for: "A glass of water, please."'
     options:
@@ -341,6 +347,8 @@
     - text: води, Склянку будь ласка
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Склянку води, будь ласка'
   - question: 'Correct sentence order for: "We buy vegetables and meat."'
@@ -351,6 +359,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Ми купуємо овочі та м''ясо'
   - question: 'Correct sentence order for: "Is there dessert on..."'
     options:
@@ -359,6 +369,8 @@
     - text: меню У є десерт
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: У меню є десерт'
   - question: 'Correct sentence order for: "The bill, please."'
@@ -369,6 +381,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Рахунок, будь ласка'
   - question: 'Correct sentence order for: "Borscht is very tasty."'
     options:
@@ -377,6 +391,8 @@
     - text: дуже Борщ смачний
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Борщ дуже смачний'
   - question: 'Correct sentence order for: "I''m looking for toothpaste."'
@@ -387,6 +403,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Я шукаю зубну пасту'
   - question: 'Correct sentence order for: "Excuse me, where is..."'
     options:
@@ -395,6 +413,8 @@
     - text: де Вибачте, магазин
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Вибачте, де магазин'
   - question: 'Correct sentence order for: "I''ll take soup and salad."'
@@ -405,6 +425,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Я візьму суп та салат'
   - question: 'Correct sentence order for: "The store opens at 8."'
     options:
@@ -413,6 +435,8 @@
     - text: відчинено Магазин о восьмій
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Магазин відчинено о восьмій'
   id: shopping-sentences-order

@@ -26,28 +26,39 @@
   id: feelings-pairs-(concept:-semantic-pairing)
 - type: cloze
   title: 'Which Form? (Concept: Contextual Selection)'
-  passage: '[{Мені|Я|Мене|Мною}:1] дуже холодно на вулиці сьогодні. (To me) Ганна сьогодні дуже [{втомлена|втомлений|втомлене|втомлені}:2] після тренування. (tired - fem) Дітям ніколи не буває [{нудно|нудний|нудна|нудні}:3] в аквапарку. (boring)
+  passage: '[{Мені|Я|Мене|Мною}:1] дуже холодно на вулиці сьогодні. Ганна
+    сьогодні дуже [{втомлена|втомлений|втомлене|втомлені}:2] після тренування. Дітям ніколи не буває [{нудно|нудний|нудна|нудні}:3] в аквапарку.
 
 
-    Ми дуже [{раді|радий|рада|радо}:4], що ви прийшли до нас. (glad) Тобі [{боляче|біль|болить|хворий}:5] чи приємно це чути? (painful) Я почуваюся [{краще|добре|погано|гірше}:6], дякую за допомогу. (better)
+    Ми дуже [{раді|радий|рада|радо}:4], що ви прийшли до нас. Тобі [{боляче|біль|болить|хворий}:5]
+    чи приємно це чути? Я почуваюся [{краще|добре|погано|гірше}:6], дякую
+    за допомогу.
 
 
-    Йому [{сумно|сумний|сумна|сумні}:7], бо він забув телефон дома. (sad) Вибачте, я дуже [{голодний|голодна|голодні|голодне}:8], хочу пообідати. (hungry - masc)'
+    Йому [{сумно|сумний|сумна|сумні}:7], бо він забув телефон дома. Вибачте,
+    я дуже [{голодний|голодна|голодні|голодне}:8], хочу пообідати.
+
+
+    Вам [{жарко|жаркий|гаряче|гарячий}:9] у цьому пальті? Ми [{задоволені|задоволена|задоволений|задоволене}:10]
+    вашим результатом. Мені [{приємно|приємний|приємна|приємні}:11] познайомитися
+    з вами. Ти [{здивований|здивована|здивоване|здивовані}:12] цією новиною?'
   id: which-form?-(concept:-contextual-selection)
 - type: quiz
   title: 'Emotional IQ (Concept: Logical Deduction)'
   items:
-  - question: Як саме правильно та ввічливо сказати "I am bored" українською мовою, використовуючи давальний відмінок?
+  - question: Як саме правильно та ввічливо сказати "I am bored" українською мовою,
+      використовуючи давальний відмінок?
     options:
-    - text: Потрібно сказати фразу "Мені нудно" своєму співрозмовнику під час розмови
+    - text: Потрібно сказати фразу «Мені нудно» своєму співрозмовнику під час розмови
       correct: true
-    - text: Потрібно сказати "Я є нудний" як свою постійну негативну характеристику
+    - text: Потрібно сказати «Я є нудний» як свою постійну негативну характеристику
       correct: false
-    - text: Потрібно дуже голосно кричати слово "Допоможіть" на вулиці серед людей
+    - text: Потрібно дуже голосно кричати слово «Допоможіть» на вулиці серед людей
       correct: false
     - text: Потрібно просто мовчати і нічого не говорити своєму другові цілу годину
       correct: false
-  - question: Що саме ви маєте на увазі в розмові, коли кажете "Я почуваюся набагато краще сьогодні"?
+  - question: Що саме ви маєте на увазі в розмові, коли кажете «Я почуваюся набагато
+      краще сьогодні»?
     options:
     - text: Ви описуєте процес покращення вашого загального стану здоров'я або настрою
       correct: true
@@ -57,17 +68,22 @@
       correct: false
     - text: Ви кажете, що зараз на вулиці йде дуже сильний і холодний зимовий дощ
       correct: false
-  - question: Яка саме граматична форма прикметника "Втомлений" (Tired) є правильною для жінки?
+  - question: Яка саме граматична форма прикметника «Втомлений» (Tired) є правильною
+      для жінки?
     options:
-    - text: Жінка має обов'язково використовувати форму прикметника "Я втомлена" з -а
+    - text: Жінка має обов'язково використовувати форму прикметника «Я втомлена» з
+        -а
       correct: true
-    - text: Жінка має використовувати форму прикметника "Я втомлений" з нульовим закінченням
+    - text: Жінка має використовувати форму прикметника «Я втомлений» з нульовим закінченням
       correct: false
-    - text: Жінка має використовувати форму прикметника "Я втомлене" з закінченням -е
+    - text: Жінка має використовувати форму прикметника «Я втомлене» з закінченням
+        -е
       correct: false
-    - text: Жінка має використовувати форму іменника "Втома" в називному відмінку однини
+    - text: Жінка має використовувати форму іменника «Втома» в називному відмінку
+        однини
       correct: false
-  - question: Чому ми зазвичай використовуємо Давальний відмінок (Мені, Тобі) для вираження відчуттів у мові?
+  - question: Чому ми зазвичай використовуємо Давальний відмінок (Мені, Тобі) для
+      вираження відчуттів у мові?
     options:
     - text: Бо в українській логіці людина є реципієнтом (отримувачем) певного стану
       correct: true
@@ -77,7 +93,8 @@
       correct: false
     - text: Бо це офіційна вимога чинного законодавства нашої країни для всіх громадян
       correct: false
-  - question: Що саме означає українське поняття "Журба" в контексті нашої національної культури?
+  - question: Що саме означає українське поняття «Журба» в контексті нашої національної
+      культури?
     options:
     - text: Це глибоке почуття суму, тривалої туги або меланхолії в серці людини
       correct: true
@@ -87,27 +104,31 @@
       correct: false
     - text: Це спеціальний старий інструмент для швидкого будівництва дерев'яних будинків
       correct: false
-  - question: Як найкраще та найбільш природно пом'якшити вираження негативного почуття в розмові?
+  - question: Як найкраще та найбільш природно пом'якшити вираження негативного почуття
+      в розмові?
     options:
-    - text: 'Потрібно додати слово-пом''якшувач "трохи", наприклад: "Мені трохи сумно"'
+    - text: 'Потрібно додати слово-пом''якшувач «трохи», наприклад: «Мені трохи сумно»'
       correct: true
-    - text: Потрібно додати слово "дуже", щоб максимально підкреслити силу вашого болю
+    - text: Потрібно додати слово «дуже», щоб максимально підкреслити силу вашого
+        болю
       correct: false
     - text: Потрібно почати енергійно танцювати і співати веселі пісні без зупинки
       correct: false
     - text: Потрібно заплющити очі і уявити, що ви вже на теплому березі моря
       correct: false
-  - question: Яке слово є прямим антонімом (протилежним за значенням) до українського слова "Радий"?
+  - question: Яке слово є прямим антонімом (протилежним за значенням) до українського
+      слова «Радий»?
     options:
-    - text: Українське слово "Сумний" є найбільш протилежним за своїм значенням
+    - text: Українське слово «Сумний» є найбільш протилежним за своїм значенням
       correct: true
-    - text: Українське слово "Веселий" є найбільш протилежним за своїм значенням
+    - text: Українське слово «Веселий» є найбільш протилежним за своїм значенням
       correct: false
-    - text: Українське слово "Щасливий" є найбільш протилежним за своїм значенням
+    - text: Українське слово «Щасливий» є найбільш протилежним за своїм значенням
       correct: false
-    - text: Українське слово "Добрий" є найбільш протилежним за своїм значенням
+    - text: Українське слово «Добрий» є найбільш протилежним за своїм значенням
       correct: false
-  - question: Що саме ви хочете повідомити другу, коли вживаєте в розмові фразу "Мені весело"?
+  - question: Що саме ви хочете повідомити другу, коли вживаєте в розмові фразу «Мені
+      весело»?
     options:
     - text: Ви повідомляєте, що вам зараз цікаво і ви отримуєте велике задоволення
       correct: true
@@ -117,7 +138,8 @@
       correct: false
     - text: Ви повідомляєте, що вам зараз дуже холодно і ви хочете швидко піти додому
       correct: false
-  - question: У якій саме життєвій ситуації найбільш доречно вживати прикметник "Вдячний" (Grateful)?
+  - question: У якій саме життєвій ситуації найбільш доречно вживати прикметник «Вдячний»
+      (Grateful)?
     options:
     - text: Коли ви щиро хочете висловити подяку за надану вам допомогу або пораду
       correct: true
@@ -127,39 +149,41 @@
       correct: false
     - text: Коли ви наполегливо шукаєте ключі від своєї квартири в маленькій сумці
       correct: false
-  - question: Як правильно та ввічливо запитати перехожого "Are you cold?" українською мовою?
+  - question: Як правильно та ввічливо запитати перехожого "Are you cold?" українською
+      мовою?
     options:
-    - text: 'Найбільш правильно буде запитати: "Вам холодно?" у невідомої людини'
+    - text: 'Найбільш правильно буде запитати: «Вам холодно?» у невідомої людини'
       correct: true
-    - text: 'Найбільш правильно буде запитати: "Ви є холодно?" у невідомої людини'
+    - text: 'Найбільш правильно буде запитати: «Ви є холодно?» у невідомої людини'
       correct: false
-    - text: 'Найбільш правильно буде запитати: "Де є холод?" у невідомої людини'
+    - text: 'Найбільш правильно буде запитати: «Де є холод?» у невідомої людини'
       correct: false
-    - text: 'Найбільш правильно буде запитати: "Хто є холод?" у невідомої людини'
+    - text: 'Найбільш правильно буде запитати: «Хто є холод?» у невідомої людини'
       correct: false
   id: emotional-iq-(concept:-logical-deduction)
 - type: true-false
   title: 'True or False? (Concept: Concept Validation)'
   items:
-  - statement: '"Мені холодно" directly translates to "I am cold."'
+  - statement: «Мені холодно» directly translates to "I am cold."
     correct: true
     explanation: While the meaning is the same, the logic is "To me [is] cold."
-  - statement: Adjectives of feeling like "втомлений" must agree with the subject's gender.
+  - statement: Adjectives of feeling like «втомлений» must agree with the subject's
+      gender.
     correct: true
-    explanation: Yes, men say "втомлений", women say "втомлена".
-  - statement: The verb "почуватися" requires the Accusative case for the subject.
+    explanation: Yes, men say «втомлений», women say «втомлена».
+  - statement: The verb «почуватися» requires the Accusative case for the subject.
     correct: false
-    explanation: 'It uses the Nominative case: "Я почуваюся..."'
-  - statement: In the present tense, you must use the verb "є" for feelings.
+    explanation: 'It uses the Nominative case: «Я почуваюся...»'
+  - statement: In the present tense, you must use the verb «є» for feelings.
     correct: false
-    explanation: 'We omit "є" in the present tense: "Мені нудно."'
-  - statement: Adding "трохи" makes a feeling sound stronger.
+    explanation: 'We omit «є» in the present tense: «Мені нудно.»'
+  - statement: Adding «трохи» makes a feeling sound stronger.
     correct: false
     explanation: It acts as a softener, meaning "a little."
-  - statement: '"Мені погано" can mean both physical illness and emotional distress.'
+  - statement: «Мені погано» can mean both physical illness and emotional distress.
     correct: true
     explanation: It is a general term for feeling bad.
-  - statement: '"Радий" is used for temporary states of being glad.'
+  - statement: «Радий» is used for temporary states of being glad.
     correct: true
     explanation: Correct.
   - statement: Ukrainians are culturally expected to hide their true feelings.
@@ -288,13 +312,17 @@
     options:
     - Мені
     - Я
-    explanation: Impersonal feelings use the Dative "Мені".
+    - помилка
+    - правильно
+    explanation: Impersonal feelings use the Dative «Мені».
   - sentence: Вона сьогодні дуже **втомлений**.
     error: втомлений
     answer: втомлена
     options:
     - втомлена
     - втомлений
+    - помилка
+    - правильно
     explanation: Adjectives must agree with the feminine subject.
   - sentence: Мені **нудний** дивитися цей фільм.
     error: нудний
@@ -302,41 +330,63 @@
     options:
     - нудно
     - нудний
-    explanation: Use the adverbial form "нудно" for states.
+    - помилка
+    - правильно
+    explanation: Use the adverbial form «нудно» for states.
   - sentence: Ти **почуваєш** краще зараз?
     error: почуваєш
     answer: почуваєшся
     options:
     - почуваєшся
     - почуваєш
-    explanation: The verb "почуватися" is reflexive and needs -ся.
+    - помилка
+    - правильно
+    explanation: The verb «почуватися» is reflexive and needs -ся.
   - sentence: Ми були дуже **рада** вас бачити.
     error: рада
     answer: раді
     options:
     - раді
     - рада
-    explanation: '"Ми" (We) requires the plural form "раді".'
+    - помилка
+    - правильно
+    explanation: «Ми» (We) requires the plural form «раді».
   - sentence: Йому **бути** жарко вчора на пляжі.
     error: бути
     answer: було
     options:
     - було
     - бути
-    explanation: Use the past tense neuter form "було" for impersonal states.
+    - помилка
+    - правильно
+    explanation: Use the past tense neuter form «було» for impersonal states.
   id: fix-the-feelings-(concept:-critical-proofreading)
 - type: cloze
   title: 'Emotional Story (Concept: Contextual Application)'
   passage: 'Complete this story about Taras''s day in the city.
 
-    Сьогодні Тарас прокинувся рано. Надворі була зима, тому йому було дуже {холодно|весело|жарко|приємно}. Він випив гарячий чай і почувався {краще|гірше|нудно|страшно}. Потім він пішов на роботу. В офісі було дуже багато справ, і Тарасові стало {важко|легко|приємно|смачно}. Він працював вісім годин і став дуже {втомлений|щасливий|здоровий|новий}. Коли він повернувся додому, він був дуже {голодний|вдячний|спокійний|швидкий}, тому він одразу приготував вечерю. Після вечері йому стало {добре|погано|боляче|сердито}, і він вирішив подивитися фільм. Але фільм був нецікавий, і Тарасові було {нудно|весело|жарко|холодно}. Раптом йому зателефонував друг. Тарас був дуже {радий|сумний|сердитий|хворий} почути друга. Йому більше не було {важко|сумно|весело|страшно}, тепер йому було {весело|нудно|важко|страшно}. Хоча він був {втомлений|щасливий|злий|голодний}, він вирішив піти в гості. Друзі довго розмовляли, і Тарасові було дуже {приємно|боляче|страшно|холодно} з другом. Йому було {шкода|добре|легко|смачно} йти додому, але вже була пізня ніч. Він ліг спати і був дуже {щасливий|злий|голодний|нудний}.'
+    Сьогодні Тарас прокинувся рано. Надворі була зима, тому йому було дуже {холодно|весело|жарко|приємно}.
+    Він випив гарячий чай і почувався {краще|гірше|нудно|страшно}. Потім він пішов
+    на роботу. В офісі було дуже багато справ, і Тарасові стало {важко|легко|приємно|смачно}.
+    Він працював вісім годин і став дуже {втомлений|щасливий|здоровий|новий}. Коли
+    він повернувся додому, він був дуже {голодний|вдячний|спокійний|швидкий}, тому
+    він одразу приготував вечерю. Після вечері йому стало {добре|погано|боляче|сердито},
+    і він вирішив подивитися фільм. Але фільм був нецікавий, і Тарасові було {нудно|весело|жарко|холодно}.
+    Раптом йому зателефонував друг. Тарас був дуже {радий|сумний|сердитий|хворий}
+    почути друга. Йому більше не було {важко|сумно|весело|страшно}, тепер йому було
+    {весело|нудно|важко|страшно}. Хоча він був {втомлений|щасливий|злий|голодний},
+    він вирішив піти в гості. Друзі довго розмовляли, і Тарасові було дуже {приємно|боляче|страшно|холодно}
+    з другом. Йому було {шкода|добре|легко|смачно} йти додому, але вже була пізня
+    ніч. Він ліг спати і був дуже {щасливий|злий|голодний|нудний}.'
   id: emotional-story-(concept:-contextual-application)
 - type: mark-the-words
   title: 'Finding Feelings (Concept: Pattern Recognition)'
   id: finding-feelings-(concept:-pattern-recognition)
   passage: 'Identify the words and phrases that express feelings or states.
 
-    Сьогодні мені *холодно*. Я дуже *втомлений* після роботи. Ганні стало *нудно* вдома. Ми були *раді* вас бачити. Йому було *весело* на святі. Вона почувається *щасливою*. Мені *приємно* це чути. Вам *жарко* тут?'
+    Сьогодні мені *холодно*. Я дуже *втомлений* після роботи. Ганні стало *нудно*
+    вдома. Ми були *раді* вас бачити. Йому було *весело* на святі. Вона почувається
+    *щасливою*. Мені *приємно* це чути. Вам *жарко* тут?'
   correct_words:
   - холодно
   - втомлений
@@ -346,6 +396,7 @@
   - щасливою
   - приємно
   - жарко
+  instruction: Натисніть на правильні слова в тексті.
 - type: translate
   title: 'English to Ukrainian (Concept: Cross-Linguistic Transfer)'
   items:
@@ -355,11 +406,15 @@
       correct: true
     - text: Я є холодний.
       correct: false
+    - text: Неправильно
+      correct: false
   - source: She is tired.
     options:
     - text: Вона втомлена.
       correct: true
     - text: Вона втомлений.
+      correct: false
+    - text: Неправильно
       correct: false
   - source: We are happy.
     options:
@@ -367,11 +422,15 @@
       correct: true
     - text: Ми щаслива.
       correct: false
+    - text: Неправильно
+      correct: false
   - source: They are having fun.
     options:
     - text: Їм весело.
       correct: true
     - text: Вони весело.
+      correct: false
+    - text: Неправильно
       correct: false
   - source: I feel better.
     options:
@@ -379,11 +438,15 @@
       correct: true
     - text: Я почуваюся добре.
       correct: false
+    - text: Неправильно
+      correct: false
   - source: Are you bored?
     options:
     - text: Тобі нудно?
       correct: true
     - text: Ти нудно?
+      correct: false
+    - text: Неправильно
       correct: false
   - source: He is hungry.
     options:
@@ -391,11 +454,15 @@
       correct: true
     - text: Він голодна.
       correct: false
+    - text: Неправильно
+      correct: false
   - source: I am glad to see you.
     options:
     - text: Я радий вас бачити.
       correct: true
     - text: Мені радий вас бачити.
+      correct: false
+    - text: Неправильно
       correct: false
   - source: It is painful.
     options:
@@ -403,11 +470,15 @@
       correct: true
     - text: Це болить.
       correct: false
+    - text: Неправильно
+      correct: false
   - source: Why are you sad?
     options:
     - text: Чому тобі сумно?
       correct: true
     - text: Чому ти сумно?
+      correct: false
+    - text: Неправильно
       correct: false
   - source: I am not sure.
     options:
@@ -415,10 +486,14 @@
       correct: true
     - text: Я не радий.
       correct: false
+    - text: Неправильно
+      correct: false
   - source: It seems to me.
     options:
     - text: Мені здається.
       correct: true
     - text: Я здаюся.
+      correct: false
+    - text: Неправильно
       correct: false
   id: english-to-ukrainian-(concept:-cross-linguistic-transfer)

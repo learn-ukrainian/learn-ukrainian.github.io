@@ -2,41 +2,43 @@
 **Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Communicative | **Target:** 1000
 **Overall Status:** ❌ FAIL
 
+## PEDAGOGICAL VIOLATIONS
+- **[SECTION_ORDER]** Content section '## Introduction' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
+- **[SECTION_ORDER]** Content section '## Вступ' appears after end section '# Підсумок'
+  - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' per template 'a2-module-template'
+  - FIX: Add '## Presentation' section as specified in docs/l2-uk-en/templates/a2-module-template.md
+
 ## Recommendation
 **📝 UPDATE** (severity 40/100)
 
 - Borderline case (severity 40/100)
-- Immersion 25% off target (major rebalancing needed)
-- Activity density below minimum
+- 3 pedagogical violations (minor)
+- Immersion 45% off target (major rebalancing needed)
 
 ## Gates
-- **Words:** ❌ 479/1000
+- **Words:** ❌ 0/1000
 - **Activities:** ✅ 10/10
-- **Density:** ❌ 1 < 12
+- **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 2/4
+- **Engagement:** ❌ 0/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 1/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 14.9% LOW (target 40-55% (A2.2))
+- **Immersion:** ❌ 100.0% HIGH (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| Infinitive or Past? (Concept: Contextual Selection) | cloze | 8 | 12 | Add 4 more items |
-
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Warm-up** | ✅ | 130 | Included in Core |
-| **Presentation** | ✅ | 0 | Included in Core |
-| **1. Same Subject: In order to...** | ⚪️ | 63 | Skipped |
-| **2. Different Subjects: So that someone else...** | ⚪️ | 252 | Skipped |
-| **3. Purpose vs. Result** | ⚪️ | 34 | Skipped |
+| **Introduction** | ✅ | 0 | Included in Core |
+| **Вступ** | ⚪️ | 0 | Skipped |
+| **Need More Practice?** | ⚪️ | 0 | Skipped |

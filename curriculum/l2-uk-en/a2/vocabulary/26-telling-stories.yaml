@@ -200,6 +200,18 @@ items:
   translation: to hold
   pos: verb
   gender: m
+- lemma: вид
+  translation: aspect
+  pos: noun
+  gender: m
+- lemma: недоконаний
+  translation: imperfective
+  pos: adj
+  gender: m
+- lemma: доконаний
+  translation: perfective
+  pos: adj
+  gender: m
 - lemma: якось
   ipa: ˈjɑkosʲ
   translation: somehow; once

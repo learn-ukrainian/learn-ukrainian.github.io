@@ -67,7 +67,7 @@ Some adverbs are special:
 
 > 💡 **Ніколи + не!**
 >
-> With "ніколи" (never), you MUST use "не" before the verb. It's a double negative, but it's grammatically correct!
+> With «ніколи» (never), you MUST use «не» before the verb. It's a double negative, but it's grammatically correct!
 > — Я **ніколи не** запізнююсь. (I am never late.)
 
 ---
@@ -103,7 +103,7 @@ Some adverbs are special:
 > — **Нормально**. (Fine/OK.)
 > — **Погано**... (Badly...)
 >
-> Notice: We use ADVERBS, not adjectives, to answer "Як справи?"
+> Notice: We use ADVERBS, not adjectives, to answer «Як справи?»
 
 > [!example] Частота (Frequency)
 >
@@ -165,18 +165,18 @@ Some adverbs are special:
 >
 > Remember: Adjectives describe THINGS, adverbs describe ACTIONS!
 
-> 🌍 **"Як справи?" — типова українська відповідь**
+> 🌍 **«Як справи?» — типова українська відповідь**
 >
-> Ukrainians typically answer "Як справи?" with an adverb: Добре! Нормально! Чудово! Погано... This is different from English where we use adjectives: "I'm fine/good/great."
+> Ukrainians typically answer «Як справи?» with an adverb: Добре! Нормально! Чудово! Погано... This is different from English where we use adjectives: «I'm fine/good/great.»
 
 > ⚡ **Myth vs Fact**
 >
-> **Myth:** "Ukrainian grammar is random and chaotic"
+> **Myth:** «Ukrainian grammar is random and chaotic»
 > **Fact:** Ukrainian has elegant, predictable patterns! Adjective → Adverb is simply: remove ending, add -о. Гарний → гарно. Швидкий → швидко. Simple and beautiful!
 
 > 🎭 **Прислівники в українських піснях (Adverbs in Ukrainian Songs)**
 >
-> Listen for adverbs in popular Ukrainian songs! "Пісня козака" has "вранці рано" (early in the morning). Folk songs often use "тихо" (quietly), "високо" (high up), and "далеко" (far away). These words paint vivid pictures of the Ukrainian landscape and soul!
+> Listen for adverbs in popular Ukrainian songs! «Пісня козака» has «вранці рано» (early in the morning). Folk songs often use «тихо» (quietly), «високо» (high up), and «далеко» (far away). These words paint vivid pictures of the Ukrainian landscape and soul!
 
 ---
 
@@ -187,3 +187,10 @@ Some adverbs are special:
 Ви вивчили українські прислівники! Тепер ви можете описати, як ви щось робите. (You learned Ukrainian adverbs! Now you can describe how you do something.) Ви знаєте слова: швидко, повільно, добре. Ви також знаєте, як часто ви це робите: завжди або часто. Це був чудовий урок! (This was a great lesson!)
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

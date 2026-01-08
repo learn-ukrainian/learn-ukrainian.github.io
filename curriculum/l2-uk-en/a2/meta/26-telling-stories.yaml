@@ -4,20 +4,20 @@ subtitle: First, Then, Finally
 version: '1.0'
 phase: A2.3
 pedagogy: Narrative Arc
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - storytelling
-  - sequence
-  - narration
+- storytelling
+- sequence
+- narration
 grammar:
-  - sequence connectors
-  - narrative structure
-  - time markers
+- sequence connectors
+- narrative structure
+- time markers
 objectives:
-  - Learner can sequence events logically
-  - Learner can tell a simple story about the past
-  - Learner can use connectors like 'suddenly' and 'finally'
+- Learner can sequence events logically
+- Learner can tell a simple story about the past
+- Learner can use connectors like 'suddenly' and 'finally'
 vocabulary_count: 25
-vocab_count: 44
 slug: 26-telling-stories
+focus: grammar

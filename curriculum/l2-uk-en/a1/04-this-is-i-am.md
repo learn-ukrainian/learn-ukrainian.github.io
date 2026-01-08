@@ -2,9 +2,9 @@
 
 ## Warm-up
 
-Here's something that feels strange at first: Ukrainian doesn't use "am," "is," or "are" in the present tense!
+Here's something that feels strange at first: Ukrainian doesn't use «am,» «is,» or «are» in the present tense!
 
-In English, we say: "I **am** a student. She **is** Ukrainian. This **is** a book."
+In English, we say: «I **am** a student. She **is** Ukrainian. This **is** a book.»
 
 In Ukrainian, you just... skip it:
 
@@ -12,17 +12,17 @@ In Ukrainian, you just... skip it:
 - Вона українка. (She Ukrainian.)
 - Це книга. (This book.)
 
-Why? Because Ukrainian belongs to the "pro-drop" language family. The verb "to be" (бути) exists, but in present tense statements, it's invisible—like an understood handshake. You know it's there, but you don't say it.
+Why? Because Ukrainian belongs to the «pro-drop» language family. The verb «to be» (бути) exists, but in present tense statements, it's invisible—like an understood handshake. You know it's there, but you don't say it.
 
 > 💡 **Did You Know?**
 >
-> Russian and Ukrainian both drop the verb "to be" in the present tense, but this feature actually comes from ancient Proto-Slavic. It's not copying—it's inheritance! English used to do this too in Old English, but lost the pattern over time.
+> Russian and Ukrainian both drop the verb «to be» in the present tense, but this feature actually comes from ancient Proto-Slavic. It's not copying—it's inheritance! English used to do this too in Old English, but lost the pattern over time.
 
 ## Presentation
 
 ### Personal Pronouns
 
-Ukrainian has the same number of pronouns as English, but with one important split: the formal "you."
+Ukrainian has the same number of pronouns as English, but with one important split: the formal «you.»
 
 | Pronoun | IPA     | English                         | When to use                                                  |
 | ------- | ------- | ------------------------------- | ------------------------------------------------------------ |
@@ -49,15 +49,15 @@ You meet your Ukrainian teacher for the first time:
 - ❌ Як твоє ім'я? (Too informal—sounds rude!)
 - ✅ Як Ваше ім'я? (Polite and respectful)
 
-Later, after a few months, the teacher might say: "Можеш мене на 'ти'." (You can call me 'ти'.) — This is an invitation to switch to informal address.
+Later, after a few months, the teacher might say: «Можеш мене на 'ти'.» (You can call me 'ти'.) — This is an invitation to switch to informal address.
 
 > 🌍 **Real World**
 >
-> In modern Ukraine, young people often use "ти" with each other immediately, even if they just met. But when in doubt, start with "Ви"—it's always safer. Ukrainians will tell you if they prefer "ти."
+> In modern Ukraine, young people often use «ти» with each other immediately, even if they just met. But when in doubt, start with «Ви»—it's always safer. Ukrainians will tell you if they prefer «ти.»
 
 ### The Zero Copula (Нульова зв'язка)
 
-"Copula" is a grammar term for linking verbs like "am," "is," "are." In Ukrainian present tense, this verb is **zero**—it disappears.
+«Copula» is a grammar term for linking verbs like «am,» «is,» «are.» In Ukrainian present tense, this verb is **zero**—it disappears.
 
 **Pattern: Subject + Predicate (no verb)**
 
@@ -69,25 +69,25 @@ Later, after a few months, the teacher might say: "Можеш мене на 'т�
 | Вона професорка. | She professor | She is a professor |
 | Це книга.        | This book     | This is a book     |
 
-The linking verb "є" (is/are) exists, but it's only used for emphasis or in writing. In speech, you'll almost never hear it:
+The linking verb «є» (is/are) exists, but it's only used for emphasis or in writing. In speech, you'll almost never hear it:
 
 - Київ місто. (Kyiv is a city.)
 - Київ є місто. (Sounds overly formal, bookish)
 
 > 🔗 **Language Link**
 >
-> English did this too! In older English, you'd say "I student" in certain contexts. Modern English kept the verb, but Ukrainian streamlined it away. Both are logical—just different choices.
+> English did this too! In older English, you'd say «I student» in certain contexts. Modern English kept the verb, but Ukrainian streamlined it away. Both are logical—just different choices.
 
 **Using Це (This is / These are)**
 
-"Це" (tse) is the most useful word for pointing out things and people:
+«Це» (tse) is the most useful word for pointing out things and people:
 
 - Це Марко. (This is Marko.)
 - Це моя подруга. (This is my friend.)
 - Це книга. (This is a book.)
 - Це студенти. (These are students.)
 
-Notice: "це" doesn't change for plural! It works for one thing or many things. Context makes it clear.
+Notice: «це» doesn't change for plural! It works for one thing or many things. Context makes it clear.
 
 **Mini-dialogue: Meeting Someone**
 
@@ -108,7 +108,7 @@ A: Я професорка.
 
 > 🎬 **Pop Culture Moment: Groot's Perfect Ukrainian**
 >
-> In the Ukrainian dub of _Guardians of the Galaxy_, Groot says "Я Ґрут" (I Groot). No verb needed! It's grammatically perfect Ukrainian—subject + predicate. Groot would ace this module.
+> In the Ukrainian dub of _Guardians of the Galaxy_, Groot says «Я Ґрут» (I Groot). No verb needed! It's grammatically perfect Ukrainian—subject + predicate. Groot would ace this module.
 
 ### People and Professions
 
@@ -140,7 +140,7 @@ When talking about people, Ukrainian distinguishes **masculine** and **feminine*
 
 > 🎯 **Fun Fact**
 >
-> The word "лікар" comes from "ліки" (medicine) + "-ар" (one who works with). The feminine "лікарка" is now the standard term, replacing the older "лікар" (used for both genders) which some older speakers still use. Language evolves!
+> The word «лікар» comes from «ліки» (medicine) + «-ар» (one who works with). The feminine «лікарка» is now the standard term, replacing the older «лікар» (used for both genders) which some older speakers still use. Language evolves!
 
 **Mini-dialogue: Introductions**
 
@@ -172,9 +172,9 @@ Beyond nationalities and professions, here are key people words:
 
 **Notes:**
 
-- "Людина" is grammatically feminine, but refers to any person regardless of gender.
-- "Хлопець" can mean "boy" (child) or "guy" (young man), depending on context.
-- "Друг/подруга" can mean platonic friend OR romantic partner—context is key!
+- «Людина» is grammatically feminine, but refers to any person regardless of gender.
+- «Хлопець» can mean «boy» (child) or «guy» (young man), depending on context.
+- «Друг/подруга» can mean platonic friend OR romantic partner—context is key!
 
 **Usage examples:**
 
@@ -207,7 +207,7 @@ Walk around your room (mentally or actually) and practice:
 
 **Politeness Checkpoint**
 
-Who would you use "Ви" with?
+Who would you use «Ви» with?
 
 - ✅ Your professor
 - ✅ A stranger on the street
@@ -218,7 +218,7 @@ Who would you use "Ви" with?
 
 > ⚡ **Pro Tip**
 >
-> If someone older or higher-status says "Можна на 'ти'?" (Can we use 'ти'?), they're inviting informality. Say "Так, звичайно!" (Yes, of course!) and switch. But never suggest it yourself to someone older—let them decide.
+> If someone older or higher-status says «Можна на 'ти'?» (Can we use 'ти'?), they're inviting informality. Say «Так, звичайно!» (Yes, of course!) and switch. But never suggest it yourself to someone older—let them decide.
 
 ## Production
 
@@ -263,12 +263,12 @@ In modern Ukraine, patronymics are used less by young people in casual settings,
 
 **National Pride**
 
-Saying "Я українець" or "Я українка" isn't just a statement of nationality—it's an identity many Ukrainians hold with deep pride, especially after centuries of imperial suppression. Ukrainian identity was illegal to express openly during Soviet times. Today, speaking Ukrainian and affirming "Я українець/українка" is a quiet act of cultural resistance and reclamation.
+Saying «Я українець» or «Я українка» isn't just a statement of nationality—it's an identity many Ukrainians hold with deep pride, especially after centuries of imperial suppression. Ukrainian identity was illegal to express openly during Soviet times. Today, speaking Ukrainian and affirming «Я українець/українка» is a quiet act of cultural resistance and reclamation.
 
 > 🔍 **Myth Buster**
 >
-> **Myth:** "Ukrainians and Russians are basically the same people."
-> **Fact:** Ukrainians are a distinct East Slavic nation with their own language (closer to Polish than Russian), culture, history, and identity. Saying "Я українець" affirms this distinctness. Respect it!
+> **Myth:** «Ukrainians and Russians are basically the same people.»
+> **Fact:** Ukrainians are a distinct East Slavic nation with their own language (closer to Polish than Russian), culture, history, and identity. Saying «Я українець» affirms this distinctness. Respect it!
 
 ---
 
@@ -277,17 +277,17 @@ Saying "Я українець" or "Я українка" isn't just a statement o
 **What You Learned:**
 
 - ✅ Personal pronouns: я, ти, він, вона, воно, ми, ви, вони
-- ✅ Zero copula: no "am/is/are" in present tense (Я студент, not Я є студент)
-- ✅ Using "це" to point out people and things
+- ✅ Zero copula: no «am/is/are» in present tense (Я студент, not Я є студент)
+- ✅ Using «це» to point out people and things
 - ✅ Masculine/feminine forms of nationalities and professions
-- ✅ When to use "ти" (informal) vs "Ви" (formal/plural)
+- ✅ When to use «ти» (informal) vs «Ви» (formal/plural)
 
 **You Can Now:**
 
 - Introduce yourself: Я [name]. Я [nationality/profession].
 - Introduce others: Це мій друг. Він студент.
 - Ask someone's identity: Ти хто? Ви студент?
-- Show respect by choosing the right "you"
+- Show respect by choosing the right «you»
 
 **Next Steps:**
 
@@ -297,4 +297,7 @@ In Module 05, you'll learn demonstratives (цей, ця, це, ці) to be even 
 
 ## Need More Practice?
 
----
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

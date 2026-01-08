@@ -2,8 +2,19 @@
 **Phase:** A1.2 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Overall Status:** ✅ PASS
 
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' found: Grammar Integration, Presentation
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Your Turn: Practice Scenarios, Practice
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 2 violations (minor)
+
 ## Gates
-- **Words:** ✅ 1123/750
+- **Words:** ✅ 1142/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -15,14 +26,8 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 29.0% (target 25-40% (M19))
+- **Immersion:** 🇺🇦 28.6% (target 25-40% (M19))
 - **Grammar:** ⏳ Pending validation
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -34,4 +39,4 @@
 | **Production** | ➖ | 103 | Excluded Type |
 | **Cultural Insight** | ✅ | 166 | Included in Core |
 | **Підсумок (Summary)** | ✅ | 79 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Need More Practice?** | ⚪️ | 19 | Skipped |

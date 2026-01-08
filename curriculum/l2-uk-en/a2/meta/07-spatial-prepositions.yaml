@@ -4,23 +4,23 @@ subtitle: Location, Motion, and Case Combinations
 version: '1.0'
 phase: A2.1
 pedagogy: PPP
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - grammar
-  - prepositions
-  - cases
-  - spatial
+- grammar
+- prepositions
+- cases
+- spatial
 grammar:
-  - preposition + case combinations
-  - motion vs. location distinction
-  - genitive prepositions
-  - instrumental prepositions
+- preposition + case combinations
+- motion vs. location distinction
+- genitive prepositions
+- instrumental prepositions
 objectives:
-  - Learner can use prepositions with correct cases
-  - Learner can distinguish motion vs. location contexts
-  - Learner can form sentences with common preposition + case combinations
-  - Learner can understand spatial relationships in Ukrainian
+- Learner can use prepositions with correct cases
+- Learner can distinguish motion vs. location contexts
+- Learner can form sentences with common preposition + case combinations
+- Learner can understand spatial relationships in Ukrainian
 vocabulary_count: 30
-vocab_count: 22
 slug: 07-spatial-prepositions
+focus: grammar

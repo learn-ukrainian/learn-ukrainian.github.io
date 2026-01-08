@@ -4,24 +4,24 @@ subtitle: Review of Narratives, Logic, and Health
 version: '1.0'
 phase: A2.3
 pedagogy: Consolidation
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - review
-  - checkpoint
-  - health
-  - logic
+- review
+- checkpoint
+- health
+- logic
 grammar:
-  - sequence (потім, нарешті)
-  - causal (тому що, бо)
-  - concessive (хоча, проте)
-  - purpose (щоб)
-  - relative (який)
-  - time clauses (коли, поки)
+- sequence (потім, нарешті)
+- causal (тому що, бо)
+- concessive (хоча, проте)
+- purpose (щоб)
+- relative (який)
+- time clauses (коли, поки)
 objectives:
-  - Learner can synthesize complex sentence structures
-  - Learner can express cause, purpose, and concession accurately
-  - Learner can use health-related vocabulary in dialogue
+- Learner can synthesize complex sentence structures
+- Learner can express cause, purpose, and concession accurately
+- Learner can use health-related vocabulary in dialogue
 vocabulary_count: 25
-vocab_count: 24
 slug: 35-checkpoint
+focus: checkpoint

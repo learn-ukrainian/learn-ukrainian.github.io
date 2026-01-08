@@ -1,7 +1,8 @@
 - type: quiz
   title: Grammar Master
   items:
-  - question: Which grammatical case is primarily used for indicating a location in Ukrainian?
+  - question: Which grammatical case is primarily used for indicating a location in
+      Ukrainian?
     options:
     - text: Locative
       correct: true
@@ -11,7 +12,8 @@
       correct: false
     - text: Genitive
       correct: false
-  - question: Which case correctly completes the phrase "Я працюю..." to mean "I work as"?
+  - question: Which case correctly completes the phrase «Я працюю...» to mean "I work
+      as"?
     options:
     - text: Instrumental (менеджером)
       correct: true
@@ -21,7 +23,7 @@
       correct: false
     - text: Locative (менеджері)
       correct: false
-  - question: Which case is required after the phrase "У мене немає..." (I don't have)?
+  - question: Which case is required after the phrase «У мене немає...» (I don't have)?
     options:
     - text: Genitive (часу)
       correct: true
@@ -31,7 +33,7 @@
       correct: false
     - text: Dative (часу)
       correct: false
-  - question: Which case is used for the direct object in the phrase "Я бачу..."?
+  - question: Which case is used for the direct object in the phrase «Я бачу...»?
     options:
     - text: Accusative (сестру)
       correct: true
@@ -51,7 +53,8 @@
       correct: false
     - text: Wish / Desire
       correct: false
-  - question: What is the meaning and function of the connector "щоб" in a complex sentence?
+  - question: What is the meaning and function of the connector «щоб» in a complex
+      sentence?
     options:
     - text: In order to / Purpose
       correct: true
@@ -61,7 +64,7 @@
       correct: false
     - text: And / Addition
       correct: false
-  - question: Which case is used for the recipient in the phrase "Я даю подарунок..."?
+  - question: Which case is used for the recipient in the phrase «Я даю подарунок...»?
     options:
     - text: Dative (мамі)
       correct: true
@@ -71,7 +74,7 @@
       correct: false
     - text: Accusative (маму)
       correct: false
-  - question: Which case is used to describe the tool in the phrase "Я пишу..."?
+  - question: Which case is used to describe the tool in the phrase «Я пишу...»?
     options:
     - text: Instrumental (олівцем)
       correct: true
@@ -81,7 +84,8 @@
       correct: false
     - text: Accusative (олівець)
       correct: false
-  - question: Which case is used with the preposition "з" meaning "from" in "Він прийшов з..."?
+  - question: Which case is used with the preposition «з» meaning "from" in «Він прийшов
+      з...»?
     options:
     - text: Genitive (магазину)
       correct: true
@@ -91,7 +95,8 @@
       correct: false
     - text: Instrumental (магазином)
       correct: false
-  - question: Which case follows the preposition "про" in the phrase "Ми говоримо про..."?
+  - question: Which case follows the preposition «про» in the phrase «Ми говоримо
+      про...»?
     options:
     - text: Accusative (політику)
       correct: true
@@ -101,7 +106,7 @@
       correct: false
     - text: Instrumental (політикою)
       correct: false
-  - question: Which case is used for location in the phrase "Я живу в..."?
+  - question: Which case is used for location in the phrase «Я живу в...»?
     options:
     - text: Locative (Україні)
       correct: true
@@ -111,7 +116,8 @@
       correct: false
     - text: Accusative (Україну)
       correct: false
-  - question: Which special case form is used when addressing someone directly, like "Привіт, ..."?
+  - question: Which special case form is used when addressing someone directly, like
+      «Привіт, ...»?
     options:
     - text: Vocative (друже)
       correct: true
@@ -152,16 +158,20 @@
   id: case-functions
 - type: cloze
   title: Case Challenge
-  passage: 'Я йду в {парк|парку|парком|паркі}_. (park) Я гуляю в {парку|парк|парком|парка}_. (park) Я не бачу {автобуса|автобус|автобусом|автобусі}_. (bus)
+  passage: 'Я йду в {парк|парку|парком|паркі}_. (park) Я гуляю в {парку|парк|парком|парка}_.
+    (park) Я не бачу {автобуса|автобус|автобусом|автобусі}_. (bus)
 
 
-    Я їм {суп|супу|супом|супі}_. (soup) Я їм суп {ложкою|ложка|ложку|ложці}_. (spoon) Я телефоную {татові|тато|тата|татом}_. (dad)
+    Я їм {суп|супу|супом|супі}_. (soup) Я їм суп {ложкою|ложка|ложку|ложці}_. (spoon)
+    Я телефоную {татові|тато|тата|татом}_. (dad)
 
 
-    Ми з {братом|брат|брата|брату}_. (brother) Книга лежить на {столі|стіл|столу|столом}_. (table) У {мене|мені|я|мною}_ є ідея. (me)
+    Ми з {братом|брат|брата|брату}_. (brother) Книга лежить на {столі|стіл|столу|столом}_.
+    (table) У {мене|мені|я|мною}_ є ідея. (me)
 
 
-    Це подарунок для {сестри|сестрі|сестру|сестра}_. (sister) Я хочу стати {художником|художник|художника|художнику}_. (artist) Привіт, {Іване|Іван|Івана|Іваном}_! (Ivan)'
+    Це подарунок для {сестри|сестрі|сестру|сестра}_. (sister) Я хочу стати {художником|художник|художника|художнику}_.
+    (artist) Привіт, {Іване|Іван|Івана|Іваном}_! (Ivan)'
   id: case-challenge
 - type: true-false
   title: Grammar Truths
@@ -171,20 +181,20 @@
     explanation: Locative is for Where.
   - statement: '"Accusative" is used for Direct Object.'
     correct: true
-    explanation: Yes (I see WHOM/WHAT).
+    explanation: Yes.
   - statement: Negative sentences (Немає...) usually take Genitive.
     correct: true
     explanation: Yes.
   - statement: '"With my friend" uses Instrumental.'
     correct: true
     explanation: З другом.
-  - statement: '"Я працюю..." takes Instrumental case.'
+  - statement: «Я працюю...» takes Instrumental case.
     correct: true
     explanation: Я працюю лікарем.
   - statement: Perfective verbs explain a process.
     correct: false
     explanation: Imperfective explain process.
-  - statement: '"Тому що" means "Although".'
+  - statement: «Тому що» means "Although".
     correct: false
     explanation: Because.
   - statement: Neuter nouns end in -а usually.
@@ -196,10 +206,10 @@
   - statement: Adjectives agree with nouns in gender/number/case.
     correct: true
     explanation: Yes.
-  - statement: '"Мені треба" uses Nominative "Я".'
+  - statement: «Мені треба» uses Nominative «Я».
     correct: false
-    explanation: Dative "Мені".
-  - statement: '"У мене є" uses Genitive "мене".'
+    explanation: Dative «Мені».
+  - statement: «У мене є» uses Genitive «мене».
     correct: true
     explanation: Yes.
   id: grammar-truths
@@ -460,7 +470,7 @@
     - автобус
     - автобусі
     - автобусом
-    explanation: Genitive after "чекати". Or Accusative "автобус". Both are used.
+    explanation: Genitive after «чекати». Or Accusative «автобус». Both are used.
   - sentence: Я пишу ручка.
     error: ручка
     answer: ручкою
@@ -498,7 +508,9 @@
 - type: mark-the-words
   title: Identification
   id: identification
-  passage: Вчора я *встав* о 7:00. Я *поснідав* і *випив* каву. Потім я *пішов* на роботу. Я *зробив* важливий звіт. Ввечері я *купив* продукти і *приготував* вечерю. Я швидко *заснув*.
+  passage: Вчора я *встав* о 7:00. Я *поснідав* і *випив* каву. Потім я *пішов* на
+    роботу. Я *зробив* важливий звіт. Ввечері я *купив* продукти і *приготував* вечерю.
+    Я швидко *заснув*.
   correct_words:
   - встав
   - поснідав
@@ -508,91 +520,140 @@
   - купив
   - приготував
   - заснув
+  instruction: Натисніть на правильні слова в тексті.
 - type: select
   title: Case Detector
   items:
-  - question: '"Мамо!"'
+  - question: «Мамо!»
     options:
     - text: Vocative
       correct: true
     - text: Nominative
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Calling mom.
-  - question: '"У Києві"'
+  - question: «У Києві»
     options:
     - text: Locative
       correct: true
     - text: Dative
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: In Kyiv.
-  - question: '"З другом"'
+  - question: «З другом»
     options:
     - text: Instrumental
       correct: true
     - text: Genitive
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: With friend.
-  - question: '"Немає води"'
+  - question: «Немає води»
     options:
     - text: Genitive
       correct: true
     - text: Accusative
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: No water.
-  - question: '"Пишу листа"'
+  - question: «Пишу листа»
     options:
     - text: Accusative
       correct: true
     - text: Nominative
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Writing a letter.
-  - question: '"Даю брату"'
+  - question: «Даю брату»
     options:
     - text: Dative
       correct: true
     - text: Locative
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Giving to brother.
-  - question: '"Я - студент"'
+  - question: «Я - студент»
     options:
     - text: Nominative
       correct: true
     - text: Instrumental
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Subject.
-  - question: '"Працюю лікарем"'
+  - question: «Працюю лікарем»
     options:
     - text: Instrumental
       correct: true
     - text: Accusative
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Working as.
-  - question: '"Після уроку"'
+  - question: «Після уроку»
     options:
     - text: Genitive
       correct: true
     - text: Dative
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: After lesson.
-  - question: '"Через ліс"'
+  - question: «Через ліс»
     options:
     - text: Accusative
       correct: true
     - text: Locative
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Through forest.
-  - question: '"На столі"'
+  - question: «На столі»
     options:
     - text: Locative
       correct: true
     - text: Nominative
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: On table.
-  - question: '"Бачу маму"'
+  - question: «Бачу маму»
     options:
     - text: Accusative
       correct: true
     - text: Genitive
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: See mom.
   id: case-detector

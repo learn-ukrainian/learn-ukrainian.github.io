@@ -24,18 +24,22 @@
   id: body-&-pain
 - type: cloze
   title: Diagnosis
-  passage: 'У мене {болить|болять|хворіє} голова. (Hurts sing.) У мене {болять|болить|хворіють} ноги. (Hurts pl.) У нього висока {температура|кашель|нежить}. (Fever)
+  passage: 'У мене {болить|болять|хворіє} голова. (Hurts sing.) У мене {болять|болить|хворіють}
+    ноги. (Hurts pl.) У нього висока {температура|кашель|нежить}. (Fever)
 
 
-    Треба купити ліки в {аптеці|лікарні|магазині}. (Pharmacy) Лікар виписав {рецепт|таблетку|симптом}. (Prescription) Що вас {турбує|болить|хворіє}? (Bothers)
+    Треба купити ліки в {аптеці|лікарні|магазині}. (Pharmacy) Лікар виписав {рецепт|таблетку|симптом}. Що вас {турбує|болить|хворіє}? (Bothers)
 
 
-    Мені потрібен {лікар|пацієнт|рецепт}. (Doctor) У мене сильний {кашель|нежить|температура}. (Cough) Я {хворію|працюю|гуляю} вже три дні. (Been ill) Мені треба {лежати|бігати|танцювати} вдома. (Rest) Я вже купив {таблетки|книжки|квитки} в аптеці. (Pills) Бажаю тобі {здоров''я|роботи|грошей}! (Health)'
+    Мені потрібен {лікар|пацієнт|рецепт}. (Doctor) У мене сильний {кашель|нежить|температура}.
+    (Cough) Я {хворію|працюю|гуляю} вже три дні. Мені треба {лежати|бігати|танцювати}
+    вдома. (Rest) Я вже купив {таблетки|книжки|квитки} в аптеці. (Pills) Бажаю тобі
+    {здоров''я|роботи|грошей}! (Health)'
   id: diagnosis
 - type: quiz
   title: Medical Expert
   items:
-  - question: Якщо у вас є "нежить" то що це означає в українській мові для симптомів?
+  - question: Якщо у вас є «нежить» то що це означає в українській мові для симптомів?
     options:
     - text: A runny nose (нежить це нежить)
       correct: true
@@ -45,7 +49,7 @@
       correct: false
     - text: A fever (температура)
       correct: false
-  - question: Що означає фраза "у мене болить живіт" в українській мові правильно?
+  - question: Що означає фраза «у мене болить живіт» в українській мові правильно?
     options:
     - text: My stomach hurts (мій живіт болить)
       correct: true
@@ -75,7 +79,7 @@
       correct: false
     - text: Critical (40.0°C критична)
       correct: false
-  - question: Що означає слово "видужуйте" в українській мові для побажання?
+  - question: Що означає слово «видужуйте» в українській мові для побажання?
     options:
     - text: Get well soon (одужуйте швидко)
       correct: true
@@ -85,7 +89,7 @@
       correct: false
     - text: Thank you (дякую)
       correct: false
-  - question: Що означає дієслово "хворіти" в українській мові для стану здоров'я?
+  - question: Що означає дієслово «хворіти» в українській мові для стану здоров'я?
     options:
     - text: To be ill process (бути хворим процес)
       correct: true
@@ -95,7 +99,7 @@
       correct: false
     - text: To recover (одужувати)
       correct: false
-  - question: Чи можна сказати "я болю голову" в українській мові правильно граматично?
+  - question: Чи можна сказати «я болю голову» в українській мові правильно граматично?
     options:
     - text: No incorrect (ні неправильно)
       correct: true
@@ -105,7 +109,7 @@
       correct: false
     - text: Only formal (тільки офіційно)
       correct: false
-  - question: Який відмінок використовується в питанні "що вас турбує" для слова "вас"?
+  - question: Який відмінок використовується в питанні «що вас турбує» для слова «вас»?
     options:
     - text: Accusative (знахідний відмінок)
       correct: true
@@ -192,7 +196,7 @@
     - Біль
     - Грип
     - Слабкість
-  - name: Remedies (Solutions)
+  - name: Remedies
     items:
     - Таблетка
     - Ліки
@@ -204,22 +208,22 @@
 - type: true-false
   title: Medical Truths
   items:
-  - statement: '"Аптека" is where you see a doctor.'
+  - statement: «Аптека» is where you see a doctor.
     correct: false
     explanation: Pharmacy.
-  - statement: '"У мене болить рука" uses Nominative for "Hand".'
+  - statement: «У мене болить рука» uses Nominative for "Hand".
     correct: true
   - statement: You should call 103 for pizza.
     correct: false
     explanation: Ambulance.
   - statement: 38.5 is a normal temperature.
     correct: false
-  - statement: '"Одужувати" involves getting better.'
+  - statement: «Одужувати» involves getting better.
     correct: true
-  - statement: '"Ліки" means "Doctors".'
+  - statement: «Ліки» means "Doctors".
     correct: false
     explanation: Medicine.
-  - statement: '"Серце" is "Heart".'
+  - statement: «Серце» is "Heart".
     correct: true
   - statement: Tea with lemon is a standard Ukrainian cure.
     correct: true
@@ -228,7 +232,7 @@
   title: The Appointment
   passage: 'Я прийшов у {поліклініку|школу|магазин}, тому що я захворів.
 
-    Лікар запитав: "Що вас {турбує|радіє|цікавить}?"
+    Лікар запитав: «Що вас {турбує|радіє|цікавить}?»
 
     Я сказав, що у мене болить {горло|стіл|вікно}.
 
@@ -253,7 +257,8 @@
 - type: mark-the-words
   title: Medical Terms
   id: medical-terms
-  passage: 'У мене *температура* і *кашель*. Я йду до *лікаря*. Мені треба купити *ліки*. Моє *здоров''я* важливе. *Аптека* за рогом.
+  passage: 'У мене *температура* і *кашель*. Я йду до *лікаря*. Мені треба купити
+    *ліки*. Моє *здоров''я* важливе. *Аптека* за рогом.
 
     ---
 
@@ -268,6 +273,7 @@
   - спорт
   - мій кіт
   - світить
+  instruction: Натисніть на правильні слова в тексті.
 - type: error-correction
   title: Fix the Complaint
   items:
@@ -277,6 +283,8 @@
     options:
     - У мене болить
     - Я болю
+    - помилка
+    - правильно
     explanation: Construction is "At me hurts head".
   - sentence: У мене **болить** ноги. (Number)
     error: болить
@@ -284,6 +292,8 @@
     options:
     - болять
     - болить
+    - помилка
+    - правильно
     explanation: Legs are plural -> болять.
   - sentence: У мене є **кашлю**. (Case)
     error: кашлю
@@ -291,13 +301,17 @@
     options:
     - кашель
     - кашлю
-    explanation: '"У мене (є)" takes Nominative -> кашель.'
+    - помилка
+    - правильно
+    explanation: «У мене (є)» takes Nominative -> кашель.
   - sentence: Мені треба **аптека**. (Goal)
     error: аптека
     answer: аптеку
     options:
     - аптеку
     - аптека
+    - помилка
+    - правильно
     explanation: Motion into place -> Accusative.
   - sentence: Дайте **рецепта**. (Case)
     error: рецепта
@@ -305,6 +319,8 @@
     options:
     - рецепт
     - рецепта
+    - помилка
+    - правильно
     explanation: Give (what? Accusative inanimate) -> рецепт.
   - sentence: Лікар лікує **пацієнт**. (Case)
     error: пацієнт
@@ -312,7 +328,9 @@
     options:
     - пацієнта
     - пацієнт
-    explanation: Treats whom? (Accusative animate) -> пацієнта.
+    - помилка
+    - правильно
+    explanation: Treats whom? -> пацієнта.
   id: fix-the-complaint
 - type: translate
   title: English to Ukrainian
@@ -323,11 +341,15 @@
       correct: true
     - text: Я болю голову.
       correct: false
+    - text: Неправильно
+      correct: false
   - source: I have a fever.
     options:
     - text: У мене температура.
       correct: true
     - text: Я є температура.
+      correct: false
+    - text: Неправильно
       correct: false
   - source: I need a doctor.
     options:
@@ -335,11 +357,15 @@
       correct: true
     - text: Я треба лікар.
       correct: false
+    - text: Неправильно
+      correct: false
   - source: Where is the pharmacy?
     options:
     - text: Де аптека?
       correct: true
     - text: Де лікар?
+      correct: false
+    - text: Неправильно
       correct: false
   - source: Get well soon!
     options:
@@ -347,10 +373,14 @@
       correct: true
     - text: Хворійте!
       correct: false
+    - text: Неправильно
+      correct: false
   - source: I am sick.
     options:
     - text: Я хворий | Я хворію.
       correct: true
     - text: У мене хворий.
+      correct: false
+    - text: Неправильно
       correct: false
   id: english-to-ukrainian

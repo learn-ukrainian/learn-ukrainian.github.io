@@ -166,7 +166,7 @@
 - type: quiz
   title: буду Conjugation
   items:
-  - question: What is the correct translation of "Ми будемо вечеряти о сьомій"?
+  - question: What is the correct translation of «Ми будемо вечеряти о сьомій»?
     options:
     - text: We will have dinner at seven.
       correct: true
@@ -176,7 +176,7 @@
       correct: false
     - text: We have dinner at seven.
       correct: false
-  - question: How do you accurately translate "Вони будуть працювати завтра?" into
+  - question: How do you accurately translate «Вони будуть працювати завтра?» into
       English?
     options:
     - text: Will they work tomorrow?
@@ -187,7 +187,7 @@
       correct: false
     - text: Do they work tomorrow?
       correct: false
-  - question: What does accurately the phrase "Я обов'язково буду там" mean?
+  - question: What does accurately the phrase «Я обов'язково буду там» mean?
     options:
     - text: I will definitely be there.
       correct: true
@@ -197,7 +197,7 @@
       correct: false
     - text: I have definitely been there.
       correct: false
-  - question: How do you correctly translate "Вона збирається купити квартиру" today?
+  - question: How do you correctly translate «Вона збирається купити квартиру» today?
     options:
     - text: She is going to buy an apartment.
       correct: true
@@ -207,7 +207,7 @@
       correct: false
     - text: She sells apartments.
       correct: false
-  - question: Which English sentence accurately represents "Ти будеш читати цю книгу?"?
+  - question: Which English sentence accurately represents «Ти будеш читати цю книгу?»?
     options:
     - text: Will you read this book?
       correct: true
@@ -217,7 +217,7 @@
       correct: false
     - text: Do you read this book?
       correct: false
-  - question: How do you accurately say "Він буде вчитися в університеті"?
+  - question: How do you accurately say «Він буде вчитися в університеті»?
     options:
     - text: He will study at the university.
       correct: true
@@ -227,7 +227,7 @@
       correct: false
     - text: He studies at the university.
       correct: false
-  - question: Which translation is correct for "Я буду готувати вечерю" now?
+  - question: Which translation is correct for «Я буду готувати вечерю» now?
     options:
     - text: I will cook dinner.
       correct: true
@@ -237,7 +237,7 @@
       correct: false
     - text: I cook dinner.
       correct: false
-  - question: What is accurately the English translation of "Ви будете дивитися фільм?"?
+  - question: What is accurately the English translation of «Ви будете дивитися фільм?»?
     options:
     - text: Will you watch the movie?
       correct: true
@@ -251,8 +251,8 @@
 - type: quiz
   title: Time Expressions
   items:
-  - question: Which English phrase correctly translates "Наступного року ми поїдемо
-      до моря"?
+  - question: Which English phrase correctly translates «Наступного року ми поїдемо
+      до моря»?
     options:
     - text: Next year we will go to the sea.
       correct: true
@@ -262,7 +262,7 @@
       correct: false
     - text: Every year we go to the sea.
       correct: false
-  - question: How do you accurately translate "Пізніше я подзвоню тобі" into English?
+  - question: How do you accurately translate «Пізніше я подзвоню тобі» into English?
     options:
     - text: Later I will call you.
       correct: true
@@ -272,7 +272,7 @@
       correct: false
     - text: Yesterday I called you.
       correct: false
-  - question: What does accurately the phrase "Скоро буде літо" mean today?
+  - question: What does accurately the phrase «Скоро буде літо» mean today?
     options:
     - text: Soon it will be summer.
       correct: true
@@ -282,7 +282,7 @@
       correct: false
     - text: Summer has passed.
       correct: false
-  - question: Which English sentence accurately represents "Я ще не вирішив" now?
+  - question: Which English sentence accurately represents «Я ще не вирішив» now?
     options:
     - text: I haven't decided yet.
       correct: true
@@ -292,7 +292,7 @@
       correct: false
     - text: I always decide.
       correct: false
-  - question: How do you accurately say "Завтра я буду вдома" in English?
+  - question: How do you accurately say «Завтра я буду вдома» in English?
     options:
     - text: Tomorrow I will be at home.
       correct: true
@@ -302,7 +302,7 @@
       correct: false
     - text: I am always at home.
       correct: false
-  - question: What is the correct English translation of "Післязавтра вона приїде"?
+  - question: What is the correct English translation of «Післязавтра вона приїде»?
     options:
     - text: The day after tomorrow she will arrive.
       correct: true
@@ -312,7 +312,7 @@
       correct: false
     - text: She always arrives.
       correct: false
-  - question: Which translation is correct for "Наступного тижня ми почнемо курс"?
+  - question: Which translation is correct for «Наступного тижня ми почнемо курс»?
     options:
     - text: Next week we will start the course.
       correct: true
@@ -322,7 +322,7 @@
       correct: false
     - text: Every week we start the course.
       correct: false
-  - question: What does exactly the word "Згодом він зрозуміє" mean today?
+  - question: What does exactly the word «Згодом він зрозуміє» mean today?
     options:
     - text: Eventually he will understand.
       correct: true
@@ -381,40 +381,40 @@
 - type: true-false
   title: Understanding Future Expressions
   items:
-  - statement: '"Завтра" means "tomorrow."'
+  - statement: '«Завтра» means "tomorrow."'
     correct: true
     explanation: Correct!
-  - statement: '"Післязавтра" means "yesterday."'
+  - statement: '«Післязавтра» means "yesterday."'
     correct: false
     explanation: Incorrect! It means "day after tomorrow."
-  - statement: '"Буду читати" means "I will read."'
+  - statement: '«Буду читати» means "I will read."'
     correct: true
     explanation: Correct!
-  - statement: '"Наступного року" means "last year."'
+  - statement: '«Наступного року» means "last year."'
     correct: false
     explanation: Incorrect! It means "next year."
-  - statement: '"Я мрію" means "I dream."'
+  - statement: '«Я мрію» means "I dream."'
     correct: true
     explanation: Correct!
-  - statement: '"Скоро" means "slowly."'
+  - statement: '«Скоро» means "slowly."'
     correct: false
     explanation: Incorrect! It means "soon."
-  - statement: '"Обіцяю" means "I promise."'
+  - statement: '«Обіцяю» means "I promise."'
     correct: true
     explanation: Correct!
-  - statement: '"Вже" means "never."'
+  - statement: '«Вже» means "never."'
     correct: false
     explanation: Incorrect! It means "already."
-  - statement: '"Пізніше" means "later."'
+  - statement: '«Пізніше» means "later."'
     correct: true
     explanation: Correct!
-  - statement: '"Планую" means "I hope."'
+  - statement: '«Планую» means "I hope."'
     correct: false
     explanation: Incorrect! It means "I plan."
-  - statement: '"Сподіваюся" means "I hope."'
+  - statement: '«Сподіваюся» means "I hope."'
     correct: true
     explanation: Correct!
-  - statement: '"Ніколи" means "always."'
+  - statement: '«Ніколи» means "always."'
     correct: false
     explanation: Incorrect! It means "never."
   id: understanding-future-expressions

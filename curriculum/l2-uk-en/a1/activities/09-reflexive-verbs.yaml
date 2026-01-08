@@ -27,48 +27,56 @@
     - називаюсь
     - називаєшся
     - називається
+    - ми
   - sentence: Ти ___ (сміятися)?
     answer: смієшся
     options:
     - сміюсь
     - смієшся
     - сміється
+    - ми
   - sentence: Він ___ (дивитися) телевізор.
     answer: дивиться
     options:
     - дивлюсь
     - дивишся
     - дивиться
+    - ми
   - sentence: Ми ___ (зустрічатися) в парку.
     answer: зустрічаємось
     options:
     - зустрічаємось
     - зустрічаєтесь
     - зустрічаються
+    - ми
   - sentence: Вони ___ (одягатися) швидко.
     answer: одягаються
     options:
     - одягається
     - одягаємось
     - одягаються
+    - ми
   - sentence: Вони голосно ___ (сміятися).
     answer: сміються
     options:
     - сміються
     - сміємось
     - смієшся
+    - ми
   - sentence: Ви ___ (вмиватися) вранці?
     answer: вмиваєтесь
     options:
     - вмиваюсь
     - вмиваєтесь
     - вмивається
+    - ми
   - sentence: Ми ___ (називатися) студенти.
     answer: називаємось
     options:
     - називаємось
     - називаюсь
     - називаються
+    - ми
   id: conjugation-drill-(present-tense)
 - type: quiz
   title: Find the Mistake
@@ -81,6 +89,8 @@
       correct: true
     - text: Він миємось вранці.
       correct: false
+    - text: вони
+      correct: false
     explanation: Third person singular (he) uses -ється.
   - question: Which form is correct for 'I watch'?
     options:
@@ -89,6 +99,8 @@
     - text: Я дивюсь
       correct: false
     - text: Я дивився
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Stem change: див- -> дивл- + юсь.'
   - question: Which sentence uses the correct reflexive ending?
@@ -99,6 +111,8 @@
       correct: true
     - text: Ми зустрічаюсь.
       correct: false
+    - text: вони
+      correct: false
     explanation: -ся makes it reciprocal (each other).
   - question: Which of these sentences has a verb error?
     options:
@@ -107,6 +121,8 @@
     - text: Я сміюсь.
       correct: false
     - text: Я сміюся.
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Mistake: Я (I) needs -юсь, not -єшся (you).'
   - question: Which sentence has the wrong verb ending?
@@ -117,6 +133,8 @@
       correct: false
     - text: Ти дивишся на мене.
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Mistake: Ти (you) needs -ишся.'
   - question: Which of these reflexive sentences is wrong?
     options:
@@ -125,6 +143,8 @@
     - text: Ми зустрічаємось.
       correct: false
     - text: Ми зустрічаємося.
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Mistake: Ми (we) needs -ємось.'
   - question: Which sentence uses the wrong reflexive form?
@@ -135,6 +155,8 @@
       correct: false
     - text: Він одягається швидко.
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Mistake: Він (he) needs -ється.'
   - question: Which of these sentences has a conjugation error?
     options:
@@ -143,6 +165,8 @@
     - text: Вони вмиваються.
       correct: false
     - text: Вони вмиваються вранці.
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Mistake: Вони (they) needs -ються.'
   id: find-the-mistake
@@ -154,41 +178,57 @@
     options:
     - прокидаюсь
     - прокидається
+    - ми
+    - вони
   - sentence: Потім я ___ (вмиватися).
     answer: вмиваюсь
     options:
     - вмиваюсь
     - вмивається
+    - ми
+    - вони
   - sentence: Я ___ (одягатися).
     answer: одягаюсь
     options:
     - одягаюсь
     - одягається
-  - sentence: 'Мама запитує: "Ти вже ___ (збиратися)?"'
+    - ми
+    - вони
+  - sentence: 'Мама запитує: «Ти вже ___ (збиратися)?»'
     answer: збираєшся
     options:
     - збираєшся
     - збираюсь
+    - ми
+    - вони
   - sentence: Я ___ (дивитися) в дзеркало.
     answer: дивлюсь
     options:
     - дивлюсь
     - дивишся
+    - ми
+    - вони
   - sentence: Там я ___ (усміхатися) собі.
     answer: усміхаюсь
     options:
     - усміхаюсь
     - усміхається
+    - ми
+    - вони
   - sentence: Ми з братом ___ (вітатися).
     answer: вітаємось
     options:
     - вітаємось
     - вітаюсь
+    - ми
+    - вони
   - sentence: Ми ___ (збиратися) до школи.
     answer: збираємось
     options:
     - збираємось
     - збираються
+    - ми
+    - вони
   id: dialogue:-morning-routine
 - type: true-false
   title: Reflexive Concepts
@@ -249,6 +289,8 @@
       correct: false
     - text: спите
       correct: false
+    - text: вони
+      correct: false
     explanation: Funny -> Laugh (сміятися).
   - question: You see a friend on the street. You...
     options:
@@ -257,6 +299,8 @@
     - text: прощаєтесь
       correct: false
     - text: спите
+      correct: false
+    - text: вони
       correct: false
     explanation: See friend -> Greet (вітатися).
   - question: You get out of bed in the morning. You...
@@ -267,6 +311,8 @@
       correct: false
     - text: смієтесь
       correct: false
+    - text: вони
+      correct: false
     explanation: Morning -> Wake up (прокидатися).
   - question: You put on your clothes in the morning. You...
     options:
@@ -275,6 +321,8 @@
     - text: роздягаєтесь
       correct: false
     - text: вмиваєтесь
+      correct: false
+    - text: вони
       correct: false
     explanation: Clothes -> Dress (одягатися).
   - question: You wash your face in the morning. You...
@@ -285,6 +333,8 @@
       correct: false
     - text: одягаєтесь
       correct: false
+    - text: вони
+      correct: false
     explanation: Face -> Wash (вмиватися).
   - question: You look in a mirror before leaving. You...
     options:
@@ -293,6 +343,8 @@
     - text: слухаєте
       correct: false
     - text: плачете
+      correct: false
+    - text: вони
       correct: false
     explanation: Mirror -> Look (дивитися).
   - question: You are late for work or school. You...
@@ -303,6 +355,8 @@
       correct: false
     - text: смієтесь
       correct: false
+    - text: вони
+      correct: false
     explanation: Late -> Be late (запізнюватися).
   - question: You meet a friend at a cafe. You...
     options:
@@ -311,6 +365,8 @@
     - text: дзвоните
       correct: false
     - text: прощаєтесь
+      correct: false
+    - text: вони
       correct: false
     explanation: Meet -> Зустрічатися.
   id: context-quiz
@@ -322,39 +378,55 @@
     options:
     - починається
     - починаються
+    - ми
+    - вони
   - sentence: Урок ___ (закінчуватися) о 9:00.
     answer: закінчується
     options:
     - закінчується
     - закінчуються
+    - ми
+    - вони
   - sentence: Як ви ___ (називатися)?
     answer: називаєтесь
     options:
     - називаєтесь
     - називаються
+    - ми
+    - вони
   - sentence: Я ___ (називатися) Олена.
     answer: називаюсь
     options:
     - називаюсь
     - називається
+    - ми
+    - вони
   - sentence: Ми ___ (зустрічатися) у кафе.
     answer: зустрічаємось
     options:
     - зустрічаємось
     - зустрічаються
+    - ми
+    - вони
   - sentence: Вони ___ (зустрічатися) вдома.
     answer: зустрічаються
     options:
     - зустрічаються
     - зустрічаємось
+    - ми
+    - вони
   - sentence: Ти ___ (дивитися) телевізор.
     answer: дивишся
     options:
     - дивишся
     - дивитесь
+    - ми
+    - вони
   - sentence: Ви ___ (дивитися) футбол?
     answer: дивитесь
     options:
     - дивитесь
     - дивишся
+    - ми
+    - вони
   id: sentence-builder

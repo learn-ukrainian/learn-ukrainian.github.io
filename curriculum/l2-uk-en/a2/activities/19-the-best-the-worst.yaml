@@ -28,21 +28,27 @@
   id: superlative-forms
 - type: cloze
   title: Form the Superlative
-  passage: 'Це {найкраща|краща|добра|найдобріша} книга. (добрий) Він {найстаріший|старіший|старий|наймолодший} студент. (старий) Це {найбільше|більше|велике|великіше} місто. (великий)
+  passage: 'Це {найкраща|краща|добра|найдобріша} книга. (добрий) Він {найстаріший|старіший|старий|наймолодший}
+    студент. (старий) Це {найбільше|більше|велике|великіше} місто. (великий)
 
 
-    Вона {найрозумніша|розумніша|розумна|надрозумна} людина. (розумний) Це {найгірший|гірший|поганий|найпоганіший} день. (поганий) Дніпро — {найдовша|довша|довга|найдовгіша} річка. (довгий)
+    Вона {найрозумніша|розумніша|розумна|надрозумна} людина. (розумний) Це {найгірший|гірший|поганий|найпоганіший}
+    день. (поганий) Дніпро — {найдовша|довша|довга|найдовгіша} річка. (довгий)
 
 
-    Говерла — {найвища|вища|висока|найвисоча} гора. (високий) Це {найдорожчий|дорожчий|дорогий|найдорогіший} телефон. (дорогий) Він {найшвидший|швидший|швидкий|швидкіший} спортсмен. (швидкий)
+    Говерла — {найвища|вища|висока|найвисоча} гора. (високий) Це {найдорожчий|дорожчий|дорогий|найдорогіший}
+    телефон. (дорогий) Він {найшвидший|швидший|швидкий|швидкіший} спортсмен. (швидкий)
 
 
-    Це {найцікавіший|цікавіший|цікавий|надцікавий} фільм. (цікавий) Це {найважливіше|важливіше|важливе|надважливіше} рішення. (важливий) Вона {найталановитіша|талановитіша|талановита|надталановита} акторка. (талановитий)'
+    Це {найцікавіший|цікавіший|цікавий|надцікавий} фільм. (цікавий) Це {найважливіше|важливіше|важливе|надважливіше}
+    рішення. (важливий) Вона {найталановитіша|талановитіша|талановита|надталановита}
+    акторка. (талановитий)'
   id: form-the-superlative
 - type: quiz
   title: Superlatives
   items:
-  - question: Which of the following prefixes is universally used in Ukrainian to form the superlative degree of adjectives?
+  - question: Which of the following prefixes is universally used in Ukrainian to
+      form the superlative degree of adjectives?
     options:
     - text: най-
       correct: true
@@ -52,7 +58,8 @@
       correct: false
     - text: ви-
       correct: false
-  - question: What is the correct superlative form of the irregular Ukrainian adjective "кращий" to mean "the best"?
+  - question: What is the correct superlative form of the irregular Ukrainian adjective
+      «кращий» to mean "the best"?
     options:
     - text: найкращий
       correct: true
@@ -62,7 +69,8 @@
       correct: false
     - text: прегарний
       correct: false
-  - question: Which of the following superlative forms corresponds to the Ukrainian comparative "більший," meaning "the biggest"?
+  - question: Which of the following superlative forms corresponds to the Ukrainian
+      comparative «більший,» meaning "the biggest"?
     options:
     - text: найбільший
       correct: true
@@ -72,7 +80,8 @@
       correct: false
     - text: більшавий
       correct: false
-  - question: What is the specific English meaning of the Ukrainian superlative adjective "найгірший"?
+  - question: What is the specific English meaning of the Ukrainian superlative adjective
+      «найгірший»?
     options:
     - text: the worst
       correct: true
@@ -82,7 +91,8 @@
       correct: false
     - text: more bad
       correct: false
-  - question: What is the correct English translation for the Ukrainian superlative adjective "найдорожчий" in a retail context?
+  - question: What is the correct English translation for the Ukrainian superlative
+      adjective «найдорожчий» in a retail context?
     options:
     - text: the most expensive
       correct: true
@@ -92,7 +102,8 @@
       correct: false
     - text: very dear
       correct: false
-  - question: Which of the following Ukrainian adverbs serves as a common intensifier for adjectives, meaning "very"?
+  - question: Which of the following Ukrainian adverbs serves as a common intensifier
+      for adjectives, meaning "very"?
     options:
     - text: дуже
       correct: true
@@ -102,7 +113,8 @@
       correct: false
     - text: під
       correct: false
-  - question: What is the specific meaning of the Ukrainian intensifier "надзвичайно" when modifying an adjective?
+  - question: What is the specific meaning of the Ukrainian intensifier «надзвичайно»
+      when modifying an adjective?
     options:
     - text: extraordinarily
       correct: true
@@ -112,7 +124,8 @@
       correct: false
     - text: somewhat
       correct: false
-  - question: In a Ukrainian sentence, which grammatical categories must a superlative adjective agree with in relation to its noun?
+  - question: In a Ukrainian sentence, which grammatical categories must a superlative
+      adjective agree with in relation to its noun?
     options:
     - text: Gender, number, and case
       correct: true
@@ -122,7 +135,8 @@
       correct: false
     - text: Only number
       correct: false
-  - question: In the phrase "найкраща книга," what is the grammatical gender of the superlative adjective "найкраща"?
+  - question: In the phrase «найкраща книга,» what is the grammatical gender of the
+      superlative adjective «найкраща»?
     options:
     - text: Жіночий рід
       correct: true
@@ -132,7 +146,8 @@
       correct: false
     - text: Множина
       correct: false
-  - question: In the Ukrainian expression "найбільше місто," what is the grammatical gender of the superlative form?
+  - question: In the Ukrainian expression «найбільше місто,» what is the grammatical
+      gender of the superlative form?
     options:
     - text: Середній рід
       correct: true
@@ -142,23 +157,25 @@
       correct: false
     - text: Множина
       correct: false
-  - question: What is the primary morphological component added to a comparative adjective to create a superlative in Ukrainian?
+  - question: What is the primary morphological component added to a comparative adjective
+      to create a superlative in Ukrainian?
     options:
-    - text: The prefix "най-"
+    - text: The prefix «най-»
       correct: true
     - text: The suffix "-ший"
       correct: false
     - text: The ending "-ий"
       correct: false
-    - text: The particle "більш"
+    - text: The particle «більш»
       correct: false
-  - question: Which statement best describes the formation of superlatives for adjectives with irregular comparative forms?
+  - question: Which statement best describes the formation of superlatives for adjectives
+      with irregular comparative forms?
     options:
-    - text: They follow the regular rule of adding "най-" to the comparative
+    - text: They follow the regular rule of adding «най-» to the comparative
       correct: true
     - text: They use a completely unique word root for the superlative
       correct: false
-    - text: They require the prefix "над-" instead of "най-"
+    - text: They require the prefix «над-» instead of «най-»
       correct: false
     - text: They cannot form a superlative degree in standard Ukrainian
       correct: false
@@ -169,31 +186,31 @@
   - statement: Superlatives are formed with най- + comparative.
     correct: true
     explanation: Correct!
-  - statement: '"Найкращий" means "the best."'
+  - statement: «Найкращий» means "the best."
     correct: true
     explanation: Yes!
   - statement: Superlatives don't agree in gender.
     correct: false
     explanation: They do agree in gender, number, and case.
-  - statement: '"Дуже" is an intensifier meaning "very."'
+  - statement: «Дуже» is an intensifier meaning "very."
     correct: true
     explanation: Correct!
   - statement: Ukrainian superlative formation is regular.
     correct: true
     explanation: Yes, always най- + comparative!
-  - statement: '"Найбільший" means "smaller."'
+  - statement: «Найбільший» means "smaller."
     correct: false
-    explanation: '"Найбільший" means "biggest."'
-  - statement: '"Найдовший" means "longest."'
+    explanation: «Найбільший» means "biggest."
+  - statement: «Найдовший» means "longest."
     correct: true
     explanation: Correct!
   - statement: Irregular comparatives also use най-.
     correct: true
     explanation: Yes! кращий → найкращий.
-  - statement: '"Найгірший" is the superlative of "добрий."'
+  - statement: «Найгірший» is the superlative of «добрий.»
     correct: false
-    explanation: '"Найгірший" is from "поганий." "Добрий" gives "найкращий."'
-  - statement: '"Неймовірно" is an intensifier.'
+    explanation: «Найгірший» is from «поганий.» «Добрий» gives «найкращий.»
+  - statement: «Неймовірно» is an intensifier.
     correct: true
     explanation: Yes! It means "incredibly."
   - statement: Говерла is the highest mountain in Ukraine.
@@ -362,8 +379,8 @@
 - type: error-correction
   title: Form the Superlative
   items:
-  - sentence: Це ___ книга. (best)
-    error: best
+  - sentence: Це добра книга, але та — найкраща.
+    error: найкраща
     answer: найкраща
     options:
     - краща
@@ -371,8 +388,8 @@
     - добріша
     - найдобріша
     explanation: Superlative of добра is найкраща.
-  - sentence: Він ___ студент. (tallest)
-    error: tallest
+  - sentence: Він високий студент, а Петро — найвищий.
+    error: найвищий
     answer: найвищий
     options:
     - вищий
@@ -380,8 +397,8 @@
     - високий
     - найвисокий
     explanation: Superlative of високий is найвищий.
-  - sentence: Це ___ день. (worst)
-    error: worst
+  - sentence: Це поганий день, напевно найгірший.
+    error: найгірший
     answer: найгірший
     options:
     - гірший
@@ -389,8 +406,8 @@
     - поганий
     - найпоганий
     explanation: Superlative of поганий is найгірший.
-  - sentence: Вона ___ людина. (smartest)
-    error: smartest
+  - sentence: Вона розумна людина, справді найрозумніша.
+    error: найрозумніша
     answer: найрозумніша
     options:
     - розумніша
@@ -398,8 +415,8 @@
     - розумна
     - надрозумна
     explanation: Superlative of розумна is найрозумніша.
-  - sentence: Це ___ місто. (biggest)
-    error: biggest
+  - sentence: Це велике місто, фактично найбільше.
+    error: найбільше
     answer: найбільше
     options:
     - більше
@@ -407,8 +424,8 @@
     - велике
     - надбільше
     explanation: Superlative of велике is найбільше — neuter.
-  - sentence: Це ___ річка. (longest)
-    error: longest
+  - sentence: Це довга річка, напевно найдовша.
+    error: найдовша
     answer: найдовша
     options:
     - довша
@@ -419,11 +436,17 @@
   id: form-the-superlative
 - type: cloze
   title: World Records
-  passage: 'Україна — {найкраща|краща|добра} країна в Європі за територією. {найкращий|кращий|добрий} річка в нашій країні — Дніпро. {найкращий|кращий|хороший} гора — Говерла. {найщасливіша|щасливіша|щаслива} місто України — Київ. Це наше {найгарніші|гарніші|гарні} і {найвищі|вищі|високі} серце.
+  passage: 'Україна — {найкраща|краща|добра} країна в Європі за територією. {найкращий|кращий|добрий}
+    річка в нашій країні — Дніпро. {найкращий|кращий|хороший} гора — Говерла. {найщасливіша|щасливіша|щаслива}
+    місто України — Київ. Це наше {найгарніші|гарніші|гарні} і {найвищі|вищі|високі}
+    серце.
 
     ---
 
-    Моя мама — {найкраща|краща|добра} людина у світі! Мій друг — {найкращий|кращий|добрий} хлопець у школі! Це був {найкращий|кращий|хороший} день у моєму житті! Я був {найщасливіша|щасливіша|щаслива} щаслива людина. Ми бачили {найгарніші|гарніші|гарні} краєвиди і {найвищі|вищі|високі} гори.'
+    Моя мама — {найкраща|краща|добра} людина у світі! Мій друг — {найкращий|кращий|добрий}
+    хлопець у школі! Це був {найкращий|кращий|хороший} день у моєму житті! Я був {найщасливіша|щасливіша|щаслива}
+    щаслива людина. Ми бачили {найгарніші|гарніші|гарні} краєвиди і {найвищі|вищі|високі}
+    гори.'
   id: world-records
 - type: mark-the-words
   title: Find Superlatives
@@ -448,6 +471,7 @@
   - найгірший
   - найрозумніший
   - найдорожчий
+  instruction: Натисніть на правильні слова в тексті.
 - type: translate
   title: Superlative Translation
   items:

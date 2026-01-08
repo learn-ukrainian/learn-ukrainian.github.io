@@ -1,22 +1,26 @@
 # Health & Body
 
-## Warm-up
+## Introduction
 
 Як ви почуваєтеся сьогодні? Що ви робите, коли у вас болить голова? Ви часто ходите до лікаря?
 
-Здоров'я — це найважливіше. Українці часто кажуть: "Головне — це здоров'я" (*Health is the main thing*). Сьогодні ми вивчимо, як говорити про своє тіло і самопочуття.
+Здоров'я — це найважливіше. Українці часто кажуть: «Головне — це здоров'я» (*Health is the main thing*). Сьогодні ми вивчимо, як говорити про своє тіло і самопочуття.
 
 In this module, you'll master three key areas:
 1. **Body vocabulary** — голова, руки, серце and more
 2. **Symptom vocabulary** — біль, температура, and common illnesses
 3. **Medical help** — лікар, аптека, and рецепт
 
-> [!important] **Myth Buster** "Free Healthcare?"
+> [!important] **Myth Buster** «Free Healthcare?»
 > Constitutionally, healthcare in Ukraine is free. In reality, it's a mix. State clinics (*поліклініки*) are free but crowded. Private clinics (*приватні клініки*) offer modern service but cost money. Also, Ukrainians can sign a declaration with a family doctor using the electronic system **eHealth** (Helsi.me), which has modernized the system significantly.
 
 ## Presentation
 
-### Body Parts (Частини тіла)
+## Practice
+
+Now let's see these words in action through stories about health situations — from a bad cold to a pharmacy visit.
+
+## Body Parts (Частини тіла)
 
 From head to toe:
 
@@ -31,7 +35,7 @@ From head to toe:
 | **очі** (pl) | eyes | Блакитні очі. |
 | **зуб** | tooth | Болить зуб. |
 
-### Symptoms & Illness
+## Symptoms & Illness
 
 - **хворіти** — to be sick: *Я хворію.*
 - **біль** (m) — pain: *Сильний біль.*
@@ -41,45 +45,41 @@ From head to toe:
 - **грип** — flu: *Це просто грип.*
 - **застуда** — cold: *Це звичайна застуда.*
 
-### Treatment (Лікування)
+## Treatment (Лікування)
 
 - **лікар** — doctor: *Викликати лікаря.*
 - **ліки** (pl) — medicine: *Пити ліки.*
 - **таблетка** — pill/tablet: *Таблетка від голови.*
 - **аптека** — pharmacy: *Купити в аптеці.*
 - **швидка допомога** — ambulance: *Дзвонити в швидку (103).*
-- **рецепт** — prescription (or recipe): *Лікар дав рецепт.*
+- **рецепт** — prescription: *Лікар дав рецепт.*
 - **одужувати** — to recover/get well: *Швидше одужуйте!*
 
 > [!note] Grammar Point: Dative Constructions
-> To say "something hurts me", we use:
+> To say «something hurts me», we use:
 > - **У мене болить** + Nominative body part.
->   * *У мене болить голова.* (My head hurts).
+>   * *У мене болить голова.*.
 >   * *У мене болять ноги.* (My legs hurt - Plural verb).
 > Alternatively (less common for pain, more for state):
 > - **Мені** погано. (I feel bad - Dative).
-> - **Мені** холодно. (I feel cold).
+> - **Мені** холодно..
 
 > [!cultural] **Cultural Insight** Mineral Waters
-> Ukraine is famous for healing mineral waters (*мінеральні води*). Resorts like **Truskavets**, **Morshyn**, and **Myrhorod** attract thousands of people. They drink water like "Naftusya" to treat liver or kidney problems. It smells like oil but it works!
+> Ukraine is famous for healing mineral waters (*мінеральні води*). Resorts like **Truskavets**, **Morshyn**, and **Myrhorod** attract thousands of people. They drink water like «Naftusya» to treat liver or kidney problems. It smells like oil but it works!
 
 > [!tip] **Common Mistakes to Avoid**
-> ❌ *Я болю голову.* — Wrong! (Subject confusion)
-> ✅ *У мене болить голова.* — Correct! (Head is the subject that hurts)
+> ❌ *Я болю голову.* — Wrong!
+> ✅ *У мене болить голова.* — Correct!
 >
 > ❌ *У мене болить зуби.* — Wrong! (Verb doesn't match)
 > ✅ *У мене болять зуби.* — Correct! (Plural subject = болять)
 >
-> ❌ *Я треба ліки.* — Wrong! (Wrong case for "need")
+> ❌ *Я треба ліки.* — Wrong! (Wrong case for «need»)
 > ✅ *Мені треба ліки.* — Correct! (Dative: мені)
 >
 > **Memory trick:** The body part is the SUBJECT (голова болить), not the object. You are the EXPERIENCER (у мене).
 
-## Practice
-
-Now let's see these words in action through stories about health situations — from a bad cold to a pharmacy visit.
-
-### Story Time: A Bad Morning
+## Story Time: A Bad Morning
 
 Андрій прокинувся вранці і зрозумів: йому погано.
 У нього боліла **голова** і горло.
@@ -94,7 +94,7 @@ Now let's see these words in action through stories about health situations — 
 Його кіт Мурчик ліг йому на **ноги**, щоб гріти їх.
 Коти — найкращі лікарі.
 
-### Story Time: At the Pharmacy
+## Story Time: At the Pharmacy
 
 У Олени заболів **зуб**. Це був жахливий **біль**.
 Вона не могла їсти і спати.
@@ -106,7 +106,7 @@ Now let's see these words in action through stories about health situations — 
 — Я знаю, — зітхнула Олена. — Я піду завтра.
 — Ось ваша решта. Одужуйте!
 
-### Story Time: The Doctor's Visit
+## Story Time: The Doctor's Visit
 
 Іван прийшов до сімейного **лікаря**.
 — Добрий день, лікарю.
@@ -119,15 +119,15 @@ Now let's see these words in action through stories about health situations — 
 — Дякую, лікарю.
 — Бережіть себе!
 
-### Why We Say "Будьмо!"
+## Why We Say «Будьмо!»
 
-When Ukrainians toast at a party, they say "**Будьмо!**".
-It looks short, but it comes from "Будьмо здорові!" (Let us be healthy!).
+When Ukrainians toast at a party, they say «**Будьмо!**».
+It looks short, but it comes from «Будьмо здорові!» (Let us be healthy!).
 Health is the central theme of Ukrainian well-being.
-Even when someone sneezes (*чхає*), we immediately say "**Будь здоров!**" (Be healthy!).
+Even when someone sneezes (*чхає*), we immediately say «**Будь здоров!**» (Be healthy!).
 So, taking care of yourself is not just medical, it is cultural.
 
-### Story Time: Eye Test
+## Story Time: Eye Test
 
 Марія погано бачить. Вона пішла до окуліста.
 — Сядьте тут, — каже лікар. — Закрийте ліве **око**. Що ви бачите?
@@ -138,7 +138,7 @@ So, taking care of yourself is not just medical, it is cultural.
 — Вам потрібні окуляри, — каже лікар.
 Марія вибрала красиву оправу. Тепер вона виглядає дуже стильно.
 
-### 5 Rules of Healthy Life
+## 5 Rules of Healthy Life
 
 Українські лікарі радять:
 1. **Пийте воду**. Мінімум 2 літри на день. Це корисно для шкіри і **шлунка**.
@@ -147,7 +147,7 @@ So, taking care of yourself is not just medical, it is cultural.
 4. **Спіть 8 годин**. Сон лікує стрес.
 5. **Усміхайтеся**. Позитивні емоції зміцнюють імунітет.
 
-### Story Time: At the Dentist
+## Story Time: At the Dentist
 
 У Максима випала пломба. Він записався до **стоматолога**.
 Клініка була сучасна і чиста.
@@ -159,9 +159,9 @@ So, taking care of yourself is not just medical, it is cultural.
 Максим подивився у дзеркало. Його зуб був як новий.
 — Дякую! — сказав він. — Тепер я можу усміхатися.
 
-### Traditional Medicine
+## Traditional Medicine
 
-Ukrainians trust modern doctors, but they also love **народна медицина** (folk medicine).
+Ukrainians trust modern doctors, but they also love **народна медицина**.
 If you have a cold (**застуда**), grandmothers will say:
 1. Drink tea with raspberry jam (**малина**). It lowers temperature.
 2. Eat garlic (**часник**) to kill viruses.
@@ -169,24 +169,24 @@ If you have a cold (**застуда**), grandmothers will say:
 4. Put mustard plasters (*гірчичники*) on your back.
 Science says some of this works, some doesn't. But tea with raspberry is definitely delicious!
 
-### Medical Insurance in Ukraine
+## Medical Insurance in Ukraine
 
 Most big companies provide medical insurance (*медична страховка*) for employees.
 It covers private clinics and medicines.
 If you work in IT or international business, you probably have it.
 Without insurance, a visit to a private doctor costs 500-1000 UAH ($12-$25).
-State medicine is free, but you often pay "charitable contributions" (*благодійні внески*) for better service.
+State medicine is free, but you often pay «charitable contributions» (*благодійні внески*) for better service.
 
 > [!cultural] **Cultural Insight** Sanatoriums
 > A unique Soviet legacy is the **Sanatorium**. It is a mix of a hospital and a hotel. People go there for 2-3 weeks to drink mineral water, take mud baths (*грязі*), and relax. It is not just for sick people; it is for prevention (*профілактика*).
 
-# Summary
+# Підсумок
 
 You learned to:
 - Be anatomy savvy: **голова**, **рука**, **спина**, **серце**
 - Describe pain: **болить**, **температура**, **нежить**, **кашель**
 - Navigate medical help: **лікар**, **аптека**, **ліки**, **таблетка**
-- Wish health: **Одужуйте!** (Get well soon), **Будьте здорові!**
+- Wish health: **Одужуйте!**, **Будьте здорові!**
 
 Take care and stay healthy!
 
@@ -194,7 +194,7 @@ Take care and stay healthy!
 >
 > «Здоровий дух у здоровому тілі!» (Доглядайте за собою!)
 >
-> *Translation: "A healthy mind in a healthy body!"*
+> *Translation: «A healthy mind in a healthy body!»*
 
 > 🇺🇦 **Здоров'я в Україні**
 >
@@ -217,3 +217,9 @@ Take care and stay healthy!
 > - **спина** — back (болить спина — backache)
 >
 > Бережіть своє здоров'я! Здорове харчування, спорт і достатній сон — запорука довгого життя!
+
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

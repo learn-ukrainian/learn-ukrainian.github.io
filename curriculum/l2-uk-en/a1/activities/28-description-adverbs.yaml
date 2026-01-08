@@ -247,7 +247,7 @@
 - type: quiz
   title: Adverb or Adjective?
   items:
-  - question: Does the sentence "Він ___ хлопець" require an adjective or adverb?
+  - question: Does the sentence «Він ___ хлопець» require an adjective or adverb?
     options:
     - text: добрий
       correct: true
@@ -257,7 +257,7 @@
       correct: false
     - text: добра
       correct: false
-  - question: Which form is correct for "Він говорить ___" in English?
+  - question: Which form is correct for «Він говорить ___» in English?
     options:
     - text: добре (adverb)
       correct: true
@@ -267,7 +267,7 @@
       correct: false
     - text: добро
       correct: false
-  - question: How should you describe "Це ___ машина" using masculine/feminine forms?
+  - question: How should you describe «Це ___ машина» using masculine/feminine forms?
     options:
     - text: швидка
       correct: true
@@ -277,7 +277,7 @@
       correct: false
     - text: швидке
       correct: false
-  - question: What is the correct form for "Вона біжить ___" here?
+  - question: What is the correct form for «Вона біжить ___» here?
     options:
     - text: швидко (adverb)
       correct: true
@@ -287,7 +287,7 @@
       correct: false
     - text: швидке
       correct: false
-  - question: Which word correctly completes "У неї ___ голос" in Ukrainian?
+  - question: Which word correctly completes «У неї ___ голос» in Ukrainian?
     options:
     - text: тихий
       correct: true
@@ -307,7 +307,7 @@
       correct: false
     - text: тихе
       correct: false
-  - question: What is the right adjective for "Вона ___ людина" here?
+  - question: What is the right adjective for «Вона ___ людина» here?
     options:
     - text: весела
       correct: true
@@ -331,7 +331,7 @@
 - type: quiz
   title: Frequency Meaning
   items:
-  - question: What is the English translation of "Завжди"?
+  - question: What is the English translation of «Завжди»?
     options:
     - text: Always
       correct: true
@@ -341,7 +341,7 @@
       correct: false
     - text: Rarely
       correct: false
-  - question: Which English word represents the adverb "Часто"?
+  - question: Which English word represents the adverb «Часто»?
     options:
     - text: Often
       correct: true
@@ -351,7 +351,7 @@
       correct: false
     - text: Always
       correct: false
-  - question: How do you translate "Іноді" into English?
+  - question: How do you translate «Іноді» into English?
     options:
     - text: Sometimes
       correct: true
@@ -361,7 +361,7 @@
       correct: false
     - text: Often
       correct: false
-  - question: What is the meaning of "Рідко" in English?
+  - question: What is the meaning of «Рідко» in English?
     options:
     - text: Rarely
       correct: true
@@ -371,7 +371,7 @@
       correct: false
     - text: Never
       correct: false
-  - question: Which English term matches "Ніколи"?
+  - question: Which English term matches «Ніколи»?
     options:
     - text: Never
       correct: true
@@ -381,7 +381,7 @@
       correct: false
     - text: Always
       correct: false
-  - question: How is "Зазвичай" translated into English?
+  - question: How is «Зазвичай» translated into English?
     options:
     - text: Usually
       correct: true
@@ -391,7 +391,7 @@
       correct: false
     - text: Sometimes
       correct: false
-  - question: What is the English meaning of "Дуже"?
+  - question: What is the English meaning of «Дуже»?
     options:
     - text: Very
       correct: true
@@ -401,7 +401,7 @@
       correct: false
     - text: Rarely
       correct: false
-  - question: Which phrase translates the word "Трохи" into English?
+  - question: Which phrase translates the word «Трохи» into English?
     options:
     - text: A little
       correct: true
@@ -490,26 +490,26 @@
     explanation: Incorrect! that's adjectives
   - statement: Most adverbs end in -о.
     correct: true
-  - statement: '"Добрий" is an adverb.'
+  - statement: '«Добрий» is an adverb.'
     correct: false
     explanation: Incorrect! it's an adjective
-  - statement: '"Добре" is an adverb.'
+  - statement: '«Добре» is an adverb.'
     correct: true
-  - statement: '"Ніколи" doesn''t need "не" before the verb.'
+  - statement: '«Ніколи» doesn''t need «не» before the verb.'
     correct: false
     explanation: Incorrect! you need two negatives
-  - statement: '"Завжди" means "always".'
+  - statement: '«Завжди» means "always".'
     correct: true
-  - statement: '"Дуже" can modify adverbs (дуже добре).'
+  - statement: '«Дуже» can modify adverbs (дуже добре).'
     correct: true
-  - statement: '"Швидкий" describes how you do something.'
+  - statement: '«Швидкий» describes how you do something.'
     correct: false
     explanation: Incorrect! it's an adjective
-  - statement: '"Швидко" describes how you do something.'
+  - statement: '«Швидко» describes how you do something.'
     correct: true
-  - statement: '"Як справи?" — "Добрий!".'
+  - statement: '«Як справи?» — «Добрий!».'
     correct: false
-    explanation: Incorrect! should be "Добре!"
-  - statement: '"Як справи?" — "Добре!".'
+    explanation: Incorrect! should be «Добре!»
+  - statement: '«Як справи?» — «Добре!».'
     correct: true
   id: adverb-rules

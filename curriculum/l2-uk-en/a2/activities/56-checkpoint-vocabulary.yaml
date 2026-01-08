@@ -28,21 +28,25 @@
   id: vocabulary-categories
 - type: cloze
   title: Vocabulary Test
-  passage: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00. Він працює {лікарем|лікар|лікаря}. У мене болить {голова|голову|голові}. (head)
+  passage: 'Вранці я {прокидаюся|засинаю|сплю} о 7:00. Він працює {лікарем|лікар|лікаря}.
+    У мене болить {голова|голову|голові}. (head)
 
 
-    Скільки це {коштує|коштувати|коштував}? (costs) Можна заплатити {карткою|картку|картка}? Я хочу купити {квиток|квитка|квитку}. (ticket)
+    Скільки це {коштує|коштувати|коштував}? (costs) Можна заплатити {карткою|картку|картка}?
+    Я хочу купити {квиток|квитка|квитку}. (ticket)
 
 
-    Вона {вчиться|вчить|вче} в університеті. (studies) Я {вивчаю|вчуся|вивчити} українську мову. (learn) Де тут {аптека|аптеку|аптеці}? (pharmacy)
+    Вона {вчиться|вчить|вче} в університеті. (studies) Я {вивчаю|вчуся|вивчити} українську
+    мову. (learn) Де тут {аптека|аптеку|аптеці}? (pharmacy)
 
 
-    Яка у вас {температура|температуру|температурі}? Він живе у великому {місті|місто|місту}. (city-LOC) Ввечері я йду в {спортзал|спортзалі|спортзалу}. (gym-ACC)'
+    Яка у вас {температура|температуру|температурі}? Він живе у великому {місті|місто|місту}.
+    (city-LOC) Ввечері я йду в {спортзал|спортзалі|спортзалу}. (gym-ACC)'
   id: vocabulary-test
 - type: quiz
   title: A2 Vocabulary Quiz
   items:
-  - question: What is the meaning of the reflexive verb "прокидатися" in English?
+  - question: What is the meaning of the reflexive verb «прокидатися» in English?
     options:
     - text: To wake up
       correct: true
@@ -52,7 +56,7 @@
       correct: false
     - text: To get dressed
       correct: false
-  - question: Which grammatical case is used in the phrase "працювати лікарем"?
+  - question: Which grammatical case is used in the phrase «працювати лікарем»?
     options:
     - text: Instrumental case
       correct: true
@@ -62,7 +66,8 @@
       correct: false
     - text: Genitive case
       correct: false
-  - question: In the phrase "У мене болить голова", what is the grammatical role of "голова"?
+  - question: In the phrase «У мене болить голова», what is the grammatical role of
+      «голова»?
     options:
     - text: Nominative (subject)
       correct: true
@@ -72,7 +77,7 @@
       correct: false
     - text: Dative
       correct: false
-  - question: In the phrase "Заплатити карткою", what case is "карткою" in?
+  - question: In the phrase «Заплатити карткою», what case is «карткою» in?
     options:
     - text: Instrumental (means)
       correct: true
@@ -82,7 +87,8 @@
       correct: false
     - text: Locative
       correct: false
-  - question: What is the primary meaning of the verb "вчитися" in an educational context?
+  - question: What is the primary meaning of the verb «вчитися» in an educational
+      context?
     options:
     - text: To study
       correct: true
@@ -92,7 +98,7 @@
       correct: false
     - text: To read a book
       correct: false
-  - question: What does the verb "вивчати" specifically mean when talking about education?
+  - question: What does the verb «вивчати» specifically mean when talking about education?
     options:
     - text: To learn
       correct: true
@@ -102,7 +108,7 @@
       correct: false
     - text: To write
       correct: false
-  - question: What is the English translation of the travel word "квиток"?
+  - question: What is the English translation of the travel word «квиток»?
     options:
     - text: Ticket
       correct: true
@@ -112,7 +118,7 @@
       correct: false
     - text: Map
       correct: false
-  - question: What does the shopping word "знижка" mean in a store?
+  - question: What does the shopping word «знижка» mean in a store?
     options:
     - text: Discount
       correct: true
@@ -122,7 +128,7 @@
       correct: false
     - text: Change
       correct: false
-  - question: What part of the body is "горло" in English?
+  - question: What part of the body is «горло» in English?
     options:
     - text: Throat
       correct: true
@@ -132,7 +138,7 @@
       correct: false
     - text: Arm
       correct: false
-  - question: What is the correct translation for the word "подорож"?
+  - question: What is the correct translation for the word «подорож»?
     options:
     - text: Trip/journey
       correct: true
@@ -142,7 +148,7 @@
       correct: false
     - text: Rest/sleep
       correct: false
-  - question: What kind of establishment is a "готель" for travelers?
+  - question: What kind of establishment is a «готель» for travelers?
     options:
     - text: Hotel
       correct: true
@@ -152,7 +158,7 @@
       correct: false
     - text: Hospital
       correct: false
-  - question: Which room in the house is called "вітальня" in Ukrainian?
+  - question: Which room in the house is called «вітальня» in Ukrainian?
     options:
     - text: Living room
       correct: true
@@ -194,40 +200,40 @@
 - type: true-false
   title: Vocabulary Rules
   items:
-  - statement: '"Працювати + Instrumental" describes profession.'
+  - statement: «Працювати + Instrumental» describes profession.
     correct: true
     explanation: Correct! Працювати лікарем.
-  - statement: '"У мене болить" = my... hurts.'
+  - statement: «У мене болить» = my... hurts.
     correct: true
     explanation: Yes! У мене болить голова.
-  - statement: '"Голову" is correct after "болить".'
+  - statement: «Голову» is correct after «болить».
     correct: false
-    explanation: No! "Голова" — it's the subject.
-  - statement: '"Вчитися" = to be a student.'
+    explanation: No! «Голова» — it's the subject.
+  - statement: «Вчитися» = to be a student.
     correct: true
     explanation: Correct! Вона вчиться в університеті.
-  - statement: '"Вивчати" = to learn a subject.'
+  - statement: «Вивчати» = to learn a subject.
     correct: true
     explanation: Yes! Я вивчаю українську.
-  - statement: '"Картка" in Instrumental is "картку".'
+  - statement: «Картка» in Instrumental is «картку».
     correct: false
-    explanation: No! Instrumental is "карткою".
-  - statement: '"Знижка" means discount.'
+    explanation: No! Instrumental is «карткою».
+  - statement: «Знижка» means discount.
     correct: true
     explanation: Correct!
   - statement: Reflexive verbs end in "-ся".
     correct: true
     explanation: Yes! Прокидатися, вмиватися.
-  - statement: '"Квиток" and "готель" are health vocabulary.'
+  - statement: «Квиток» and «готель» are health vocabulary.
     correct: false
     explanation: No! They are travel vocabulary.
-  - statement: '"Скільки це коштує?" asks the price.'
+  - statement: «Скільки це коштує?» asks the price.
     correct: true
     explanation: Correct!
-  - statement: '"Поїзд" means train.'
+  - statement: «Поїзд» means train.
     correct: true
     explanation: Yes!
-  - statement: '"Вітальня" is the kitchen.'
+  - statement: «Вітальня» is the kitchen.
     correct: false
     explanation: No! Вітальня = living room, кухня = kitchen.
   id: vocabulary-rules
@@ -342,21 +348,58 @@
   - голова
   - горло
   - аптека
+  instruction: Натисніть на правильні слова в тексті.
 - type: translate
   title: English to Ukrainian
   items:
-  - source: I wake up at 7:00.
-    ukrainian: Я прокидаюся о сьомій годині.
-  - source: He works as a programmer.
-    ukrainian: Він працює програмістом.
-  - source: My head hurts.
-    ukrainian: У мене болить голова.
-  - source: I want to buy a ticket.
-    ukrainian: Я хочу купити квиток.
-  - source: She studies at the university.
-    ukrainian: Вона вчиться в університеті.
-  - source: Can I pay by card?
-    ukrainian: Можна заплатити карткою?
+  - source: 'I wake up at 7:00.'
+    options:
+    - text: Я прокидаюся о сьомій годині.
+      correct: true
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+  - source: 'He works as a programmer.'
+    options:
+    - text: Він працює програмістом.
+      correct: true
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+  - source: 'My head hurts.'
+    options:
+    - text: У мене болить голова.
+      correct: true
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+  - source: 'I want to buy a ticket.'
+    options:
+    - text: Я хочу купити квиток.
+      correct: true
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+  - source: 'She studies at the university.'
+    options:
+    - text: Вона вчиться в університеті.
+      correct: true
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
+  - source: 'Can I pay by card?'
+    options:
+    - text: Можна заплатити карткою?
+      correct: true
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
   id: english-to-ukrainian
 - type: translate
   title: Vocabulary Review Translation

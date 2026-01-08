@@ -449,11 +449,29 @@ class ActivityParser:
         return AuthorialIntentActivity(title=data.get('title', ''), excerpt=data.get('excerpt', ''), questions=data.get('questions', []), model_answer=data.get('model_answer', ''))
 
     def _escape_jsx(self, text: str) -> str:
-        """Escapes characters that break JSX/JSON parsing."""
+        """Escapes characters that break JSX parsing when used as a string literal attribute."""
         if not text: return ""
         if not isinstance(text, str): return str(text)
-        # Escape backslashes first, then quotes (to HTML entity), then curly braces and backticks
-        return text.replace('\\', '\\\\').replace('"', '&quot;').replace('{', '&#123;').replace('}', '&#125;').replace('`', '&#96;')
+        # Only escape what breaks JSX string attributes (", \, and backticks)
+        # We assume this is used in contexts like title="..." or similar
+        return text.replace('\\', '\\\\').replace('"', '&quot;')
+
+    def _dump_safe_json(self, data: Any) -> str:
+        """Dumps JSON safely for inclusion in a JSX template literal (backticks)."""
+        import datetime
+        def json_serial(obj):
+            if isinstance(obj, (datetime.datetime, datetime.date)):
+                return obj.isoformat()
+            raise TypeError ("Type %s not serializable" % type(obj))
+
+        s = json.dumps(data, ensure_ascii=False, default=json_serial)
+        # Escape backslashes first to avoid double escaping other chars
+        s = s.replace('\\', '\\\\')
+        # Escape backticks for template literals
+        s = s.replace('`', '\\`')
+        # Escape $ to avoid template interpolation
+        s = s.replace('${', '\\${')
+        return s
 
     def to_mdx(self, activities: list[Activity], is_ukrainian_forced: bool = False) -> str:
         mdx_parts = []
@@ -483,20 +501,20 @@ class ActivityParser:
         return ''
 
     def _quiz_to_mdx(self, activity: QuizActivity) -> str:
-        items = [{'question': self._escape_jsx(i.question), 'options': [{'text': self._escape_jsx(o.text), 'correct': o.correct} for o in i.options]} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<Quiz questions={{JSON.parse(`{json.dumps(items, ensure_ascii=False)}`)}} />"
+        items = [{'question': i.question, 'options': [{'text': o.text, 'correct': o.correct} for o in i.options]} for i in activity.items]
+        return f"### {self._escape_jsx(activity.title)}\n\n<Quiz questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _select_to_mdx(self, activity: SelectActivity) -> str:
-        items = [{'question': self._escape_jsx(i.question), 'options': [{'text': self._escape_jsx(o.text), 'correct': o.correct} for o in i.options]} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<Select questions={{JSON.parse(`{json.dumps(items, ensure_ascii=False)}`)}} />"
+        items = [{'question': i.question, 'options': [{'text': o.text, 'correct': o.correct} for o in i.options]} for i in activity.items]
+        return f"### {self._escape_jsx(activity.title)}\n\n<Select questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _true_false_to_mdx(self, activity: TrueFalseActivity) -> str:
-        items = [{'statement': self._escape_jsx(i.statement), 'isTrue': i.correct, 'explanation': self._escape_jsx(i.explanation or '')} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<TrueFalse items={{JSON.parse(`{json.dumps(items, ensure_ascii=False)}`)}} />"
+        items = [{'statement': i.statement, 'isTrue': i.correct, 'explanation': i.explanation or ''} for i in activity.items]
+        return f"### {self._escape_jsx(activity.title)}\n\n<TrueFalse items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _fill_in_to_mdx(self, activity: FillInActivity) -> str:
-        items = [{'sentence': self._escape_jsx(i.sentence), 'answer': self._escape_jsx(i.answer), 'options': [self._escape_jsx(o) for o in i.options]} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<FillIn items={{JSON.parse(`{json.dumps(items, ensure_ascii=False)}`)}} />"
+        items = [{'sentence': i.sentence, 'answer': i.answer, 'options': i.options} for i in activity.items]
+        return f"### {self._escape_jsx(activity.title)}\n\n<FillIn items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _cloze_to_mdx(self, activity: ClozeActivity) -> str:
         passage = activity.passage
@@ -518,57 +536,70 @@ class ActivityParser:
                 passage = new_passage
 
         blanks = [{'index': i, 'answer': b.answer, 'options': b.options} for i, b in enumerate(activity.blanks)]
-        return f"### {self._escape_jsx(activity.title)}\n\n<Cloze passage={{{json.dumps(passage, ensure_ascii=False)}}} blanks={{JSON.parse(`{json.dumps(blanks, ensure_ascii=False)}`)}} />"
+        return f"### {self._escape_jsx(activity.title)}\n\n<Cloze passage={{{json.dumps(passage, ensure_ascii=False)}}} blanks={{JSON.parse(`{self._dump_safe_json(blanks)}`)}} />"
 
     def _match_up_to_mdx(self, activity: MatchUpActivity) -> str:
-        pairs = [{'left': self._escape_jsx(p.left), 'right': self._escape_jsx(p.right)} for p in activity.pairs]
-        return f"### {self._escape_jsx(activity.title)}\n\n<MatchUp pairs={{JSON.parse(`{json.dumps(pairs, ensure_ascii=False)}`)}} />"
+        pairs = [{'left': p.left, 'right': p.right} for p in activity.pairs]
+        return f"### {self._escape_jsx(activity.title)}\n\n<MatchUp pairs={{JSON.parse(`{self._dump_safe_json(pairs)}`)}} />"
 
     def _group_sort_to_mdx(self, activity: GroupSortActivity) -> str:
-        groups = {g.name: [self._escape_jsx(i) for i in g.items] for g in activity.groups}
-        return f"### {self._escape_jsx(activity.title)}\n\n<GroupSort groups={{JSON.parse(`{json.dumps(groups, ensure_ascii=False)}`)}} />"
+        groups = {g.name: g.items for g in activity.groups}
+        return f"### {self._escape_jsx(activity.title)}\n\n<GroupSort groups={{JSON.parse(`{self._dump_safe_json(groups)}`)}} />"
 
     def _unjumble_to_mdx(self, activity: UnjumbleActivity) -> str:
-        items = [{'jumbled': ' / '.join(i.words), 'answer': self._escape_jsx(i.answer)} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<Unjumble items={{JSON.parse(`{json.dumps(items, ensure_ascii=False)}`)}} />"
+        items = [{'jumbled': ' / '.join(i.words), 'answer': i.answer} for i in activity.items]
+        return f"### {self._escape_jsx(activity.title)}\n\n<Unjumble items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _error_correction_to_mdx(self, activity: ErrorCorrectionActivity) -> str:
         items = []
         for i in activity.items:
-            opts = json.dumps([self._escape_jsx(o) for o in i.options], ensure_ascii=False)
+            opts = self._dump_safe_json(i.options)
             items.append(f'  <ErrorCorrectionItem sentence="{self._escape_jsx(i.sentence)}" errorWord="{self._escape_jsx(i.error)}" correctForm="{self._escape_jsx(i.answer)}" options={{JSON.parse(`{opts}`)}} explanation="{self._escape_jsx(i.explanation)}" />')
         return f"### {self._escape_jsx(activity.title)}\n\n<ErrorCorrection>\n{chr(10).join(items)}\n</ErrorCorrection>"
 
     def _mark_the_words_to_mdx(self, activity: MarkTheWordsActivity) -> str:
-        ans = json.dumps([self._escape_jsx(w) for word in activity.answers for w in (word.split() if ' ' in word else [word])], ensure_ascii=False)
+        ans = self._dump_safe_json([w for word in activity.answers for w in (word.split() if ' ' in word else [word])])
         return f"### {self._escape_jsx(activity.title)}\n\n<MarkTheWords>\n  <MarkTheWordsActivity instruction=\"{self._escape_jsx(activity.instruction)}\" text=\"{self._escape_jsx(activity.text)}\" correctWords={{JSON.parse(`{ans}`)}} />\n</MarkTheWords>"
 
     def _translate_to_mdx(self, activity: TranslateActivity) -> str:
-        items = [{'source': self._escape_jsx(i.source), 'options': [{'text': self._escape_jsx(o.text), 'correct': o.correct} for o in i.options]} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<Translate questions={{JSON.parse(`{json.dumps(items, ensure_ascii=False)}`)}} />"
+        items = [{'source': i.source, 'options': [{'text': o.text, 'correct': o.correct} for o in i.options]} for i in activity.items]
+        return f"### {self._escape_jsx(activity.title)}\n\n<Translate questions={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _anagram_to_mdx(self, activity: AnagramActivity) -> str:
-        items = [{'scrambled': self._escape_jsx(i.scrambled), 'answer': self._escape_jsx(i.answer), 'hint': self._escape_jsx(i.hint or '')} for i in activity.items]
-        return f"### {self._escape_jsx(activity.title)}\n\n<Anagram items={{JSON.parse(`{json.dumps(items, ensure_ascii=False)}`)}} />"
+        items = [{'scrambled': i.scrambled, 'answer': i.answer, 'hint': i.hint or ''} for i in activity.items]
+        return f"### {self._escape_jsx(activity.title)}\n\n<Anagram items={{JSON.parse(`{self._dump_safe_json(items)}`)}} />"
 
     def _essay_response_to_mdx(self, activity: EssayResponseActivity, is_ukrainian_forced: bool = False) -> str:
         rubric_md = ""
         if activity.rubric:
-            rows = [f"| {r.get('criteria', '')} | {r.get('description', '')} | {r.get('points', 0)} |" for r in activity.rubric]
+            rows = []
+            for r in activity.rubric:
+                if isinstance(r, dict):
+                    rows.append(f"| {r.get('criteria', '')} | {r.get('description', '')} | {r.get('points', 0)} |")
+                elif isinstance(r, str):
+                    rows.append(f"| {r} | | |")
             rubric_md = f"\n\n#### Rubric\n\n| Criteria | Description | Points |\n|---|---|---|\n" + "\n".join(rows)
-        return f"### {self._escape_jsx(activity.title)}\n\n<EssayResponse title=\"{self._escape_jsx(activity.title)}\" prompt={{{json.dumps(activity.prompt, ensure_ascii=False)} || ''}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}} rubric={{{json.dumps(rubric_md, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        # Using self._dump_safe_json for complex props might be safer than json.dumps inside {}
+        # But here we are passing strings directly, not parsing JSON inside
+        # Wait, the original code used json.dumps inside {}
+        # prompt={{{json.dumps(activity.prompt)}}}
+        # This puts "string" inside {}, resulting in prompt={"string"} which is valid JSX
+        # So we don't need _dump_safe_json here, but we DO need to NOT escape quotes inside content
+        # json.dumps does escaping correctly for a JS string literal.
+        return f"### {self._escape_jsx(activity.title)}\n\n<EssayResponse title=\"{self._escape_jsx(activity.title)}\" prompt={{{json.dumps(activity.prompt, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}} rubric={{{json.dumps(rubric_md, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _reading_to_mdx(self, activity: ReadingActivity, is_ukrainian_forced: bool = False) -> str:
-        tasks = json.dumps([self._escape_jsx(t) for t in activity.tasks], ensure_ascii=False)
-        resource = json.dumps(activity.resource, ensure_ascii=False) if activity.resource else '{}'
-        return f"### {self._escape_jsx(activity.title)}\n\n<ReadingActivity title=\"{self._escape_jsx(activity.title)}\" context=\"{self._escape_jsx(activity.context)}\" resource={{{resource}}} tasks={{JSON.parse(`{tasks}`)}} />"
+        tasks = self._dump_safe_json(activity.tasks)
+        resource = self._dump_safe_json(activity.resource) if activity.resource else '{}'
+        return f"### {self._escape_jsx(activity.title)}\n\n<ReadingActivity title=\"{self._escape_jsx(activity.title)}\" context=\"{self._escape_jsx(activity.context)}\" resource={{JSON.parse(`{resource}`)}} tasks={{JSON.parse(`{tasks}`)}} />"
 
     def _critical_analysis_to_mdx(self, activity: CriticalAnalysisActivity, is_ukrainian_forced: bool = False) -> str:
+        # Same logic as EssayResponse, passing strings directly as props via {}
         return f"### {self._escape_jsx(activity.title)}\n\n<CriticalAnalysis title=\"{self._escape_jsx(activity.title)}\" context={{{json.dumps(activity.context, ensure_ascii=False)}}} question={{{json.dumps(activity.question, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _comparative_study_to_mdx(self, activity: ComparativeStudyActivity, is_ukrainian_forced: bool = False) -> str:
         return f"### {self._escape_jsx(activity.title)}\n\n<ComparativeStudy title=\"{self._escape_jsx(activity.title)}\" sourceA={{{json.dumps(activity.source_a, ensure_ascii=False)}}} sourceB={{{json.dumps(activity.source_b, ensure_ascii=False)}}} task={{{json.dumps(activity.task, ensure_ascii=False)}}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _authorial_intent_to_mdx(self, activity: AuthorialIntentActivity, is_ukrainian_forced: bool = False) -> str:
-        questions = json.dumps([self._escape_jsx(q) for q in activity.questions], ensure_ascii=False)
+        questions = self._dump_safe_json(activity.questions)
         return f"### {self._escape_jsx(activity.title)}\n\n<AuthorialIntent title=\"{self._escape_jsx(activity.title)}\" excerpt={{{json.dumps(activity.excerpt, ensure_ascii=False)}}} questions={{JSON.parse(`{questions}`)}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"

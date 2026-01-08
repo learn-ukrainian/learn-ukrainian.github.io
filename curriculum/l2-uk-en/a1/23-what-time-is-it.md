@@ -4,7 +4,7 @@
 
 > 🕰️ **Час — це все!**
 >
-> Ukrainians often greet with "Котра година?" — literally "Which hour?" Time is central to daily life, from scheduling meetings to catching trains. Let's learn to tell time in Ukrainian!
+> Ukrainians often greet with «Котра година?» — literally «Which hour?» Time is central to daily life, from scheduling meetings to catching trains. Let's learn to tell time in Ukrainian!
 
 ---
 
@@ -16,9 +16,9 @@
 >
 > Look at how Ukrainians tell time:
 >
-> - **Котра година?** — What time is it? (lit. "Which hour?")
-> - **Перша година.** — One o'clock. (lit. "First hour.")
-> - **Друга година.** — Two o'clock. (lit. "Second hour.")
+> - **Котра година?** — What time is it? (lit. «Which hour?»)
+> - **Перша година.** — One o'clock. (lit. «First hour.»)
+> - **Друга година.** — Two o'clock. (lit. «Second hour.»)
 >
 > Ukrainians use ordinal numbers (first, second, third...) for hours!
 
@@ -43,9 +43,9 @@
 
 > [!observe] Pattern Discovery
 >
-> - **Пів на другу** — Half past one (lit. "half to second")
-> - **Чверть на третю** — Quarter past two (lit. "quarter to third")
-> - **За п'ятнадцять друга** — Quarter to two (lit. "in 15 [minutes] second")
+> - **Пів на другу** — Half past one (lit. «half to second»)
+> - **Чверть на третю** — Quarter past two (lit. «quarter to third»)
+> - **За п'ятнадцять друга** — Quarter to two (lit. «in 15 [minutes] second»)
 >
 > The hour after the current one is used!
 
@@ -79,13 +79,13 @@ Or in conversation:
 
 | Day       | Ukrainian | Origin                       |
 | --------- | --------- | ---------------------------- |
-| Monday    | понеділок | "after Sunday" (по + неділя) |
-| Tuesday   | вівторок  | "second day"                 |
-| Wednesday | середа    | "middle"                     |
-| Thursday  | четвер    | "fourth"                     |
-| Friday    | п'ятниця  | "fifth"                      |
-| Saturday  | субота    | from Hebrew "Sabbath"        |
-| Sunday    | неділя    | "no work" (не + діло)        |
+| Monday    | понеділок | «after Sunday» (по + неділя) |
+| Tuesday   | вівторок  | «second day»                 |
+| Wednesday | середа    | «middle»                     |
+| Thursday  | четвер    | «fourth»                     |
+| Friday    | п'ятниця  | «fifth»                      |
+| Saturday  | субота    | from Hebrew «Sabbath»        |
+| Sunday    | неділя    | «no work» (не + діло)        |
 
 **Useful phrases:**
 
@@ -104,18 +104,18 @@ Or in conversation:
 
 | Month     | Ukrainian | Meaning                        |
 | --------- | --------- | ------------------------------ |
-| January   | січень    | "cutting" (frost cuts)         |
-| February  | лютий     | "fierce" (fierce frost)        |
-| March     | березень  | "birch" (birch sap flows)      |
-| April     | квітень   | "flowers" (flowers bloom)      |
-| May       | травень   | "grass" (grass grows)          |
-| June      | червень   | "red" (berries ripen)          |
-| July      | липень    | "linden" (linden blooms)       |
-| August    | серпень   | "sickle" (harvest time)        |
-| September | вересень  | "heather" (heather blooms)     |
-| October   | жовтень   | "yellow" (leaves turn)         |
-| November  | листопад  | "leaf fall"                    |
-| December  | грудень   | "frozen lumps" (frozen ground) |
+| January   | січень    | «cutting» (frost cuts)         |
+| February  | лютий     | «fierce» (fierce frost)        |
+| March     | березень  | «birch» (birch sap flows)      |
+| April     | квітень   | «flowers» (flowers bloom)      |
+| May       | травень   | «grass» (grass grows)          |
+| June      | червень   | «red» (berries ripen)          |
+| July      | липень    | «linden» (linden blooms)       |
+| August    | серпень   | «sickle» (harvest time)        |
+| September | вересень  | «heather» (heather blooms)     |
+| October   | жовтень   | «yellow» (leaves turn)         |
+| November  | листопад  | «leaf fall»                    |
+| December  | грудень   | «frozen lumps» (frozen ground) |
 
 ---
 
@@ -233,7 +233,7 @@ Or in conversation:
 
 > 💡 **24-Hour Time**
 >
-> Ukraine uses 24-hour time officially (trains, TV schedules). In conversation, you can say "о третій" for both 3 AM and 3 PM — context makes it clear!
+> Ukraine uses 24-hour time officially (trains, TV schedules). In conversation, you can say «о третій» for both 3 AM and 3 PM — context makes it clear!
 
 > 🌍 **Holiday Dates**
 >
@@ -241,7 +241,7 @@ Or in conversation:
 
 > 💡 **Day Origins**
 >
-> "Неділя" (Sunday) literally means "no work" — the day of rest. The week is named "тиждень" (from "той же день" — "the same day"), meaning the weekly cycle.
+> «Неділя» (Sunday) literally means «no work» — the day of rest. The week is named «тиждень» (from «той же день» — «the same day»), meaning the weekly cycle.
 
 ---
 
@@ -261,3 +261,12 @@ Or in conversation:
 ---
 
 **Наступний урок:** Модальні дієслова — можна, треба, хочу!
+
+---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

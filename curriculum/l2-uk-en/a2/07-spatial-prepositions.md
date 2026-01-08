@@ -1,6 +1,6 @@
-## Warm-up
+## Introduction
 
-Prepositions are small but mighty words that connect nouns to the rest of the sentence. In English, prepositions like "in," "on," "to," and "from" are straightforward. But in Ukrainian, prepositions work hand-in-hand with grammatical cases — and some prepositions even change meaning depending on which case follows them!
+Prepositions are small but mighty words that connect nouns to the rest of the sentence. In English, prepositions like «in,» «on,» «to,» and «from» are straightforward. But in Ukrainian, prepositions work hand-in-hand with grammatical cases — and some prepositions even change meaning depending on which case follows them!
 
 This module is your comprehensive guide to Ukrainian prepositions. By the end, you'll understand how to combine prepositions with the correct cases to express location, motion, time, and relationships accurately.
 
@@ -8,13 +8,35 @@ This module is your comprehensive guide to Ukrainian prepositions. By the end, y
 
 ## Presentation
 
+## Practice
+
+> Моя кімната знаходиться **на** другому поверсі. Вікно виходить **на** вулицю. **Біля** вікна стоїть стіл. **На** столі лежать книги і зошити. Лампа висить **над** столом.
+>
+> **Під** столом стоїть кошик **для** паперів. **За** столом стоїть стілець. **Перед** столом лежить килим. Моя кішка любить спати **на** килимі.
+>
+> **На** стіні висять фотографії. Одна фотографія — **від** бабусі. Це подарунок **для** мене. **Між** фотографіями висить дзеркало.
+>
+> Шафа стоїть **у** кутку кімнати. **В** шафі лежить мій одяг. **На** шафі стоять коробки **з** книгами.
+>
+> Я люблю свою кімнату. **Після** роботи я відпочиваю тут. Сиджу **на** ліжку і читаю книгу **про** подорожі.
+
+**Питання до тексту:**
+
+1. Де знаходиться кімната? — На другому поверсі.
+2. Що лежить на столі? — Книги і зошити.
+3. Де спить кішка? — На килимі.
+4. Від кого фотографія? — Від бабусі.
+5. Що робить оповідач після роботи? — Відпочиває і читає книгу.
+
+---
+
 ## The Preposition-Case Connection
 
-In Ukrainian, every preposition requires a specific grammatical case — or sometimes two different cases depending on whether you're describing motion (going somewhere) or location (being somewhere). This is fundamentally different from English, where the same preposition works for both.
+In Ukrainian, every preposition requires a specific grammatical case — or sometimes two different cases depending on whether you're describing motion or location. This is fundamentally different from English, where the same preposition works for both.
 
 For example, the preposition **в/у** can take either accusative or locative case:
 
-- **В школу** (accusative) = into the school (motion, going there)
+- **В школу** = into the school (motion, going there)
 - **В школі** (locative) = in the school (location, already there)
 
 This motion-vs-location distinction applies to several Ukrainian prepositions and is crucial to understand.
@@ -38,7 +60,7 @@ This pattern applies to these prepositions: **в/у**, **на**, **під**, **�
 
 Let's organize prepositions by which case they require. This systematic approach will help you remember the patterns.
 
-### Genitive Prepositions
+## Genitive Prepositions
 
 These prepositions always take the genitive case. Many express origin, absence, or purpose:
 
@@ -55,7 +77,7 @@ These prepositions always take the genitive case. Many express origin, absence, 
 > [!tip] Порада для запам’ятовування
 > Сприймайте ці прийменники як відповіді на питання «кого/чого?» або «звідки?».
 
-### Прийменники зі знахідним відмінком (Accusative Prepositions)
+## Прийменники зі знахідним відмінком
 
 Ці прийменники завжди вимагають знахідного відмінка:
 
@@ -64,13 +86,13 @@ These prepositions always take the genitive case. Many express origin, absence, 
 | **про**     | about               | Говорити про тебе. (To talk about you.)   |
 | **через**   | through, because of | Йти через парк. (To go through the park.) |
 
-### Прийменники з орудним відмінком (Instrumental Prepositions)
+## Прийменники з орудним відмінком
 
 Ці прийменники завжди вимагають орудного відмінка:
 
 | Preposition        | Meaning              | Example Sentence                                       |
 | ------------------ | -------------------- | ------------------------------------------------------ |
-| **з/із**           | with (accompaniment) | Йти з другом. (To go with a friend.)                   |
+| **з/із**           | with | Йти з другом. (To go with a friend.)                   |
 | **над**            | above                | Лампа над столом. (A lamp above the table.)            |
 | **під** (location) | under                | Кіт під столом. (A cat under the table.)               |
 | **перед**          | in front of          | Стояти перед дверима. (To stand in front of the door.) |
@@ -79,9 +101,9 @@ These prepositions always take the genitive case. Many express origin, absence, 
 
 > 📜 **History Bite**
 >
-> The instrumental case gets its name from expressing "the instrument" used to do something. But its use with prepositions extends to spatial relationships — under, above, behind, between — all describe positions WITHOUT motion.
+> The instrumental case gets its name from expressing «the instrument» used to do something. But its use with prepositions extends to spatial relationships — under, above, behind, between — all describe positions WITHOUT motion.
 
-### Двосторонні прийменники (Two-Way Prepositions)
+## Двосторонні прийменники (Two-Way Prepositions)
 
 Це найцікавіша група: вони вимагають знахідного відмінка для руху, але місцевого або орудного — для місця.
 
@@ -97,7 +119,7 @@ These prepositions always take the genitive case. Many express origin, absence, 
 
 ## The в/у Alternation
 
-Ukrainian has two forms of "in/into": **в** and **у**. They mean exactly the same thing, but you choose between them based on surrounding sounds to make speech flow smoothly.
+Ukrainian has two forms of «in/into»: **в** and **у**. They mean exactly the same thing, but you choose between them based on surrounding sounds to make speech flow smoothly.
 
 **Use у when:**
 
@@ -111,12 +133,12 @@ Ukrainian has two forms of "in/into": **в** and **у**. They mean exactly the s
 
 Examples:
 
-- Він **у** школі. (He is in school.) — "Він" ends in consonant
-- Вона **в** університеті. (She is at university.) — "Вона" ends in vowel
+- Він **у** школі. (He is in school.) — «Він» ends in consonant
+- Вона **в** університеті. (She is at university.) — «Вона» ends in vowel
 
 > 🌍 **Real World**
 >
-> Native speakers switch between в and у naturally for euphony (pleasant sound). As a learner, don't stress too much about this — both are correct! The important thing is getting the case right.
+> Native speakers switch between в and у naturally for euphony. As a learner, don't stress too much about this — both are correct! The important thing is getting the case right.
 
 ---
 
@@ -164,11 +186,9 @@ A full address: Я живу **на** вулиці Шевченка, **в** бу�
 
 > 🔍 **Myth Buster**
 >
-> Some learners think Ukrainian prepositions are "random" or that case choice is arbitrary. This is false! Every preposition-case combination follows logical patterns based on meaning. Once you understand the underlying logic of motion vs. location and the semantic role of each case, the system becomes predictable.
+> Some learners think Ukrainian prepositions are «random» or that case choice is arbitrary. This is false! Every preposition-case combination follows logical patterns based on meaning. Once you understand the underlying logic of motion vs. location and the semantic role of each case, the system becomes predictable.
 
 ---
-
-## Practice
 
 ## Building Sentences with Prepositions
 
@@ -197,28 +217,6 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 
 ---
 
-## Reading Practice: Моя кімната
-
-> Моя кімната знаходиться **на** другому поверсі. Вікно виходить **на** вулицю. **Біля** вікна стоїть стіл. **На** столі лежать книги і зошити. Лампа висить **над** столом.
->
-> **Під** столом стоїть кошик **для** паперів. **За** столом стоїть стілець. **Перед** столом лежить килим. Моя кішка любить спати **на** килимі.
->
-> **На** стіні висять фотографії. Одна фотографія — **від** бабусі. Це подарунок **для** мене. **Між** фотографіями висить дзеркало.
->
-> Шафа стоїть **у** кутку кімнати. **В** шафі лежить мій одяг. **На** шафі стоять коробки **з** книгами.
->
-> Я люблю свою кімнату. **Після** роботи я відпочиваю тут. Сиджу **на** ліжку і читаю книгу **про** подорожі.
-
-**Питання до тексту:**
-
-1. Де знаходиться кімната? — На другому поверсі.
-2. Що лежить на столі? — Книги і зошити.
-3. Де спить кішка? — На килимі.
-4. Від кого фотографія? — Від бабусі.
-5. Що робить оповідач після роботи? — Відпочиває і читає книгу.
-
----
-
 ## Dialogue: Де що знаходиться?
 
 > — Вибачте, ви знаєте, де знаходиться банк?
@@ -235,35 +233,10 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 > [!tip] Як запам'ятати прийменники
 > Уявіть кімнату. Стіл **посередині**. Лампа **над** столом. Кіт **під** столом. Стілець **за** столом. Вікно **біля** стіни. Ця картинка допоможе!
 
+# Підсумок
+
 ---
-
-# Summary
-
-## Що ви вивчили
-
-У цьому модулі ви вивчили прийменники української мови та їхнє поєднання з відмінками.
-
-**Ключові правила:**
-
-- **Рух** (Куди?) → знахідний відмінок: Я йду **в школу**, **на роботу**.
-- **Місце** (Де?) → місцевий відмінок: Я **в школі**, **на роботі**.
-
-**Прийменники з родовим:** до, від, для, без, біля, після.
-**Прийменники з орудним:** з = with, над, під, перед, за, між.
-**Прийменники зі знахідним:** про, через.
-
-Тепер ви можете описувати місця та напрямки! 📍
-
-## Key Takeaways
-
-**Genitive Prepositions:** з/із = from, до = to, від = from someone, для = for, без = without, біля = near, після = after. These always take genitive case.
-
-**Accusative Prepositions:** про = about, через = through. These always take accusative case.
-
-**Instrumental Prepositions:** з/із = with, над = above, перед = in front, між = between. These always take instrumental case.
-
-**Two-Way Prepositions:** в/у, на, під, за — use accusative for motion (Куди?) and locative/instrumental for location (Де?).
 
 ## Need More Practice?
 
----
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

@@ -6,6 +6,20 @@
 
 **Related Issue:** [#332](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/332)
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Огляд
+  - Інтеграція
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: TTT
+  min_word_count: 1800
+  required_callouts: []
+  description: B2 synthesis modules integrate grammar, vocabulary, and skills
+-->
+
 ---
 
 ## What Are Synthesis Modules?

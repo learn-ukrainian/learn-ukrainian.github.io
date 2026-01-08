@@ -168,7 +168,7 @@
 - type: quiz
   title: Що це? (What Is It?)
   items:
-  - question: What is the English translation of "Біла сорочка"?
+  - question: What is the English translation of «Біла сорочка»?
     options:
     - text: White shirt
       correct: true
@@ -178,7 +178,7 @@
       correct: false
     - text: Red shirt
       correct: false
-  - question: How do you translate "Чорні штани" into English?
+  - question: How do you translate «Чорні штани» into English?
     options:
     - text: Black pants
       correct: true
@@ -188,7 +188,7 @@
       correct: false
     - text: Black shirt
       correct: false
-  - question: Which English term matches "Синє пальто"?
+  - question: Which English term matches «Синє пальто»?
     options:
     - text: Blue coat
       correct: true
@@ -198,7 +198,7 @@
       correct: false
     - text: Green coat
       correct: false
-  - question: How is "Червона сукня" translated into English?
+  - question: How is «Червона сукня» translated into English?
     options:
     - text: Red dress
       correct: true
@@ -208,7 +208,7 @@
       correct: false
     - text: Yellow dress
       correct: false
-  - question: What is the English meaning of "Зелена футболка"?
+  - question: What is the English meaning of «Зелена футболка»?
     options:
     - text: Green t-shirt
       correct: true
@@ -218,7 +218,7 @@
       correct: false
     - text: Yellow t-shirt
       correct: false
-  - question: Which English sentence represents "Сіра куртка"?
+  - question: Which English sentence represents «Сіра куртка»?
     options:
     - text: Gray jacket
       correct: true
@@ -228,7 +228,7 @@
       correct: false
     - text: Gray pants
       correct: false
-  - question: How do you translate "Жовті кросівки" into English?
+  - question: How do you translate «Жовті кросівки» into English?
     options:
     - text: Yellow sneakers
       correct: true
@@ -238,7 +238,7 @@
       correct: false
     - text: Yellow coat
       correct: false
-  - question: What is the English meaning of "Коричневий капелюх"?
+  - question: What is the English meaning of «Коричневий капелюх»?
     options:
     - text: Brown hat
       correct: true
@@ -370,34 +370,34 @@
 - type: true-false
   title: Color Rules
   items:
-  - statement: '"Біла" is the feminine form of "white".'
+  - statement: '«Біла» is the feminine form of "white".'
     correct: true
-  - statement: '"Синій" is the neuter form.'
+  - statement: '«Синій» is the neuter form.'
     correct: false
     explanation: Incorrect! it's masculine
-  - statement: '"Штани" is always plural in Ukrainian.'
+  - statement: '«Штани» is always plural in Ukrainian.'
     correct: true
-  - statement: '"Пальто" is masculine.'
+  - statement: '«Пальто» is masculine.'
     correct: false
     explanation: Incorrect! it's neuter
-  - statement: '"Блакитний" means light blue.'
+  - statement: '«Блакитний» means light blue.'
     correct: true
-  - statement: '"Чорне" is masculine.'
+  - statement: '«Чорне» is masculine.'
     correct: false
     explanation: Incorrect! it's neuter
-  - statement: '"Джинси" is always plural.'
+  - statement: '«Джинси» is always plural.'
     correct: true
-  - statement: '"Біле" is feminine.'
+  - statement: '«Біле» is feminine.'
     correct: false
     explanation: Incorrect! it's neuter
   - statement: Colors are adjectives and must agree with nouns.
     correct: true
-  - statement: '"Сукня" is neuter.'
+  - statement: '«Сукня» is neuter.'
     correct: false
     explanation: Incorrect! it's feminine
-  - statement: '"Світлий" means "light".'
+  - statement: '«Світлий» means "light".'
     correct: true
-  - statement: '"Темна" is the masculine form.'
+  - statement: '«Темна» is the masculine form.'
     correct: false
     explanation: Incorrect! it's feminine
   id: color-rules

@@ -5,11 +5,11 @@
 > 💡 **Що болить? (What Hurts?)**
 >
 > When you're sick in Ukraine, you need to know how to say what's wrong!
-> — **У мене болить голова.** (My head hurts. — Literally: "At me hurts head.")
+> — **У мене болить голова.** (My head hurts. — Literally: «At me hurts head.»)
 > — **Я хворий/хвора.** (I'm sick. — m/f)
 > — **У мене температура.** (I have a fever.)
 >
-> Notice: We use "болить" (3rd person singular) even though YOU are the one hurting!
+> Notice: We use «болить» (3rd person singular) even though YOU are the one hurting!
 
 ---
 
@@ -163,16 +163,16 @@
 > Use **болить** (singular) for ONE body part: голова болить, горло болить, живіт болить.
 > Use **болять** (plural) for MULTIPLE body parts: зуби болять, очі болять, ноги болять, руки болять.
 >
-> Remember: the verb agrees with the number of body parts, not with "у мене"!
+> Remember: the verb agrees with the number of body parts, not with «у мене»!
 
 > 🌍 **Українська медицина (Ukrainian Healthcare)**
 >
-> In Ukraine, you can buy many medicines without a prescription at the "аптека" (pharmacy). Every neighborhood has one! For emergencies, call 103 for "швидка допомога" (ambulance).
+> In Ukraine, you can buy many medicines without a prescription at the «аптека» (pharmacy). Every neighborhood has one! For emergencies, call 103 for «швидка допомога» (ambulance).
 
 > ⚡ **Myth vs Fact**
 >
-> **Myth:** "Ukrainian is too hard to use in emergencies"
-> **Fact:** With just a few key phrases, you can communicate at the doctor's office or pharmacy. The formula is simple: "У мене болить..." (I have pain in...) plus any body part. Add "Я хворий/хвора" (I'm sick — m/f) and "Потрібен лікар!" (A doctor is needed!) and you can handle most health situations!
+> **Myth:** «Ukrainian is too hard to use in emergencies»
+> **Fact:** With just a few key phrases, you can communicate at the doctor's office or pharmacy. The formula is simple: «У мене болить...» (I have pain in...) plus any body part. Add «Я хворий/хвора» (I'm sick — m/f) and «Потрібен лікар!» (A doctor is needed!) and you can handle most health situations!
 
 > 🎭 **Народна медицина (Folk Medicine)**
 >
@@ -189,3 +189,10 @@ In this module, you learned:
 Ви вивчили частини тіла та здоров'я! Тепер ви можете описати свій біль. (You learned body parts and health! Now you can describe your pain.) Ви знаєте, як купити ліки в аптеці або викликати швидку допомогу. Ви також знаєте, як почувається хворий або здоровий. Це чудовий результат! (This is a great result!)
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

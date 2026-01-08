@@ -34,6 +34,23 @@ items:
     translation: clear; distinct
     pos: adj
     gender: m
+  - lemma: множина
+    translation: plural
+    pos: noun
+    gender: f
+  - lemma: вид
+    translation: view; aspect (grammar)
+    pos: noun
+    gender: m
+  - lemma: недоконаний
+    translation: imperfective
+    pos: adj
+  - lemma: середній
+    translation: middle; neuter
+    pos: adj
+  - lemma: доконаний
+    translation: perfective
+    pos: adj
   - lemma: чітко
     ipa: ˈt͡ʃitko
     translation: clearly

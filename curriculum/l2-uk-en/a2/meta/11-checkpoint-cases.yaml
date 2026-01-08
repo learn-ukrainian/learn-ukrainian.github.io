@@ -5,24 +5,23 @@ version: '2.0'
 phase: A2.1
 focus: checkpoint
 pedagogy: Review
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - review
-  - checkpoint
-  - assessment
-  - cases
+- review
+- checkpoint
+- assessment
+- cases
 grammar:
-  - dative pronouns and nouns
-  - instrumental case review
-  - preposition + case combinations
-  - all 7 cases integration
-  - service vocabulary
+- dative pronouns and nouns
+- instrumental case review
+- preposition + case combinations
+- all 7 cases integration
+- service vocabulary
 objectives:
-  - Learner can demonstrate mastery of dative case
-  - Learner can use instrumental case correctly
-  - Learner can combine prepositions with correct cases
-  - Learner can apply cases in service contexts
+- Learner can demonstrate mastery of dative case
+- Learner can use instrumental case correctly
+- Learner can combine prepositions with correct cases
+- Learner can apply cases in service contexts
 vocabulary_count: 27
-vocab_count: 18
 slug: 11-checkpoint-cases

@@ -7,17 +7,18 @@ pedagogy: Narrative
 duration: 60
 transliteration: none
 tags:
-  - vocabulary
-  - health
-  - body
-  - doctor
+- vocabulary
+- health
+- body
+- doctor
 grammar:
-  - dative-subjects
-  - imperative-health
+- dative-subjects
+- imperative-health
 objectives:
-  - Name body parts: голова, рука, серце
-  - Describe symptoms: болить, температура
-  - Visit a doctor/pharmacy: ліки, рецепт
-  - Give health advice: пийте воду, не хворійте
-vocab_count: 57
+- Name body parts: голова, рука, серце
+- Describe symptoms: болить, температура
+- Visit a doctor/pharmacy: ліки, рецепт
+- Give health advice: пийте воду, не хворійте
 slug: 55-health-body
+vocabulary_count: 57
+focus: vocabulary

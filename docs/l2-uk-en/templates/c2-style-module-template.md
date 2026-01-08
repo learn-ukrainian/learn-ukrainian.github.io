@@ -6,6 +6,20 @@
 
 **Related Issue:** [#307](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/307)
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Стилістичний аналіз
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: Native
+  min_word_count: 2500
+  required_callouts: []
+  description: C2 style modules achieve stylistic perfection
+-->
+
 ---
 
 ## Quick Reference Checklist
@@ -382,10 +396,16 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ---
 
-## Vocabulary Section for Style Modules
+---
 
-**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
+## Content Structure Note
 
+### Vocabulary & Activities
+**CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
+- `vocabulary/{slug}.yaml`
+- `activities/{slug}.yaml`
+
+The build system will inject these sections at build time.
 **Example `vocabulary/c2-01-style-mastery.yaml`:**
 
 ```yaml

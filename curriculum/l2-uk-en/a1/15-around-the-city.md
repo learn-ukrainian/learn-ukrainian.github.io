@@ -2,9 +2,9 @@
 
 ## Warm-up
 
-Picture yourself in the center of Lviv, standing at the majestic Opera Theatre. A Ukrainian friend asks you: **"Як дістатися до центрального парку?"** (How do I get to the central park?). Can you answer?
+Picture yourself in the center of Lviv, standing at the majestic Opera Theatre. A Ukrainian friend asks you: **«Як дістатися до центрального парку?»** (How do I get to the central park?). Can you answer?
 
-Today you'll master the language of navigation — giving directions, describing locations, and moving confidently through Ukrainian cities. From asking **"Де метро?"** (Where is the metro?) to understanding **"Прямо, потім наліво"** (Straight, then left), you'll unlock the vocabulary that turns every street into an adventure.
+Today you'll master the language of navigation — giving directions, describing locations, and moving confidently through Ukrainian cities. From asking **«Де метро?»** (Where is the metro?) to understanding **«Прямо, потім наліво»** (Straight, then left), you'll unlock the vocabulary that turns every street into an adventure.
 
 > 💡 **Did You Know?**
 >
@@ -44,7 +44,7 @@ When Ukrainians give directions, they reference key urban features:
 > - **Синя лінія** (Blue Line) — M2, east-west
 > - **Зелена лінія** (Green Line) — M3, loop
 >
-> Locals never say "Line 1" — they say **червона** (red), **синя** (blue), or **зелена** (green). Master this, and you'll navigate Kyiv like a native!
+> Locals never say «Line 1» — they say **червона** (red), **синя** (blue), or **зелена** (green). Master this, and you'll navigate Kyiv like a native!
 
 ### Giving Directions: The Four Commands
 
@@ -97,7 +97,7 @@ Ukrainians use simple directional adverbs when guiding others:
 
 ### Distance and Proximity
 
-When asking **"Це далеко?"** (Is it far?), you'll hear responses using these key words:
+When asking **«Це далеко?»** (Is it far?), you'll hear responses using these key words:
 
 - **далеко** — far
 - **близько** — close, near
@@ -128,7 +128,7 @@ How you get there matters. Ukrainians use several transportation phrases to desc
 - **пішки** — on foot, walking
 - **на автобусі** — by bus (on the bus)
 - **на трамваї** — by tram (on the tram)
-- **метро** — by metro (indeclinable noun, used alone: "їду метро")
+- **метро** — by metro (indeclinable noun, used alone: «їду метро»)
 - **на таксі** — by taxi (in a taxi)
   _Example:_ Я їду на **таксі**. (I go by taxi.)
 - **на машині** — by car (in a car)
@@ -173,7 +173,7 @@ You: Thank you very much!
 **Ти:** Вибачте, де станція метро?
 **Киянин:** Там, прямо за тим будинком. Вхід біля книгарні.
 **Ти:** А як дістатися до Майдану Незалежності?
-**Киянин:** Синя лінія, дві зупинки. Вийдете на станції "Майдан Незалежності."
+**Киянин:** Синя лінія, дві зупинки. Вийдете на станції «Майдан Незалежності.»
 **Ти:** Дякую!
 **Киянин:** Нема за що! Гарного дня!
 
@@ -182,7 +182,7 @@ You're in Kyiv and want to get to Maidan Nezalezhnosti (Independence Square).
 You: Excuse me, where is the metro station?
 Local: There, straight behind that building. The entrance is near the bookstore.
 You: And how do I get to Maidan Nezalezhnosti?
-Local: Blue line, two stops. You'll get off at "Maidan Nezalezhnosti" station.
+Local: Blue line, two stops. You'll get off at «Maidan Nezalezhnosti» station.
 You: Thank you!
 Local: You're welcome! Have a nice day!
 
@@ -243,7 +243,7 @@ Imagine you're standing at the **Central Railway Station (Центральний
 Біля вокзалу є аптека. Прямо, потім направо. Вона поруч, біля банку.
 
 **3. Оперний театр:**
-Їдьте на трамваї до центру. Вийдете на зупинці "Площа Театральна." Театр буде там, прямо.
+Їдьте на трамваї до центру. Вийдете на зупинці «Площа Театральна.» Театр буде там, прямо.
 
 ### Task 2: Describe Your Commute (Writing Practice)
 
@@ -257,8 +257,8 @@ Write 4-5 sentences describing how you get to work or school. Use transportation
 
 > 🔍 **Myth Buster**
 >
-> **Myth:** "All Ukrainian cities have metro systems."
-> **Fact:** Only three Ukrainian cities have metro systems: **Kyiv** (oldest and largest, opened 1960), **Kharkiv** (opened 1975), and **Dnipro** (opened 1995). Other cities rely on trams, trolleybuses, and marshrutky (minibuses). Don't assume "метро" is universal when traveling!
+> **Myth:** «All Ukrainian cities have metro systems.»
+> **Fact:** Only three Ukrainian cities have metro systems: **Kyiv** (oldest and largest, opened 1960), **Kharkiv** (opened 1975), and **Dnipro** (opened 1995). Other cities rely on trams, trolleybuses, and marshrutky (minibuses). Don't assume «метро» is universal when traveling!
 
 ## Cultural Insight
 
@@ -270,13 +270,13 @@ Beyond official public transport, every Ukrainian city runs **маршрутки
 
 **Як працюють маршрутки:**
 
-- Ти хочеш вийти? Крикни **"На зупинці!"** (At the stop!)
+- Ти хочеш вийти? Крикни **«На зупинці!»** (At the stop!)
 - Передавай гроші водію через інших пасажирів.
 - Особистий простір не існує — готуйся до тісноти!
 
 **How marshrutky work:**
 
-- Shout **"На зупинці!"** when you want to get off.
+- Shout **«На зупинці!»** when you want to get off.
 - Pass money forward to the driver through other passengers.
 - Squeeze into impossibly small spaces — personal space doesn't exist here.
 
@@ -286,8 +286,8 @@ Beyond official public transport, every Ukrainian city runs **маршрутки
 >
 > Lviv isn't just a navigation challenge — it's Ukraine's coffee capital. Legend says the first coffeehouse in Eastern Europe opened in Lviv in 1574! When navigating Lviv's winding streets, locals use **кав'ярні** (coffeehouses) as landmarks:
 >
-> **"Де музей?"**
-> **"Біля кав'ярні 'Львівська копальня кави,' потім направо."**
+> **«Де музей?»**
+> **«Біля кав'ярні 'Львівська копальня кави,' потім направо.»**
 >
 > Coffee isn't just a drink — it's a navigational beacon.
 
@@ -299,7 +299,7 @@ You now have the vocabulary to:
 
 - **Give and follow directions** using прямо, наліво, направо, назад
 - **Describe locations** with prepositions (біля, навпроти, за, перед)
-- **Ask key questions**: "Де...?", "Як дістатися до...?", "Це далеко?"
+- **Ask key questions**: «Де...?», «Як дістатися до...?», «Це далеко?»
 - **Name urban features** (вулиця, площа, міст, зупинка, станція)
 - **Discuss transportation** using memorized phrases (на автобусі, пішки, метро)
 
@@ -311,6 +311,13 @@ You now have the vocabulary to:
 - **Це далеко?** — Is it far?
 - **Біля світлофора.** — Near the traffic light.
 
-Next module: **Genitive Case I — Absence and Negation** (немає, without). You'll learn to say "I don't have" and "There is no..." — essential for shopping, restaurants, and everyday problem-solving!
+Next module: **Genitive Case I — Absence and Negation** (немає, without). You'll learn to say «I don't have» and «There is no...» — essential for shopping, restaurants, and everyday problem-solving!
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

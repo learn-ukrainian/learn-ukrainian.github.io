@@ -1,7 +1,7 @@
 - type: group-sort
   title: 'Adjective Categories (Concept: Suffix Function)'
   groups:
-  - name: Відносні (Relation/Origin)
+  - name: Відносні
     items:
     - Київський
     - Шкільний
@@ -9,7 +9,7 @@
     - Залізний
     - Морський
     - Студентський
-  - name: Інтенсивні (Intensity/Large)
+  - name: Інтенсивні
     items:
     - Величезний
     - Здоровенний
@@ -17,7 +17,7 @@
     - Страшенний
     - Старезний
     - Багатенний
-  - name: Суб'єктивні (Softness/Cute)
+  - name: Суб'єктивні
     items:
     - Маленький
     - Гарненький
@@ -104,16 +104,16 @@
   - question: Який прикметник ми можемо утворити від назви столиці України за допомогою
       суфікса "-ськ-" у реченні?
     options:
-    - text: Це буде прикметник "київський"
+    - text: Це буде прикметник «київський»
       correct: true
-    - text: Це буде прикметник "київрада"
+    - text: Це буде прикметник «київрада»
       correct: false
-    - text: Це буде прикметник "київний"
+    - text: Це буде прикметник «київний»
       correct: false
-    - text: Це буде прикметник "київін"
+    - text: Це буде прикметник «київін»
       correct: false
   - question: Як саме в сучасній українській мові правильно написати професійний суфікс
-      "-ськ-" після літери "с"?
+      "-ськ-" після літери «с»?
     options:
     - text: Його обов'язково треба писати з м'яким знаком перед закінченням
       correct: true
@@ -156,7 +156,7 @@
       correct: false
     - text: Вони вказують на офіційний статус людини, з якою ми зараз розмовляємо
       correct: false
-  - question: Як перетворити звичайне слово "великий" на слово, що означає щось по-справжньому
+  - question: Як перетворити звичайне слово «великий» на слово, що означає щось по-справжньому
       гігантське зараз?
     options:
     - text: 'Треба додати суфікс "-езн-" або "-енн-": величезний'
@@ -241,22 +241,22 @@
   - statement: Суфікс "-ськ-" завжди пишеться з м'яким знаком.
     correct: true
     explanation: Так, це стандартне правило для цього суфікса (-ськ, -цьк, -зьк).
-  - statement: Прикметник "величезний" означає те саме, що й "маленький".
+  - statement: Прикметник «величезний» означає те саме, що й «маленький».
     correct: false
     explanation: Ні, він означає дуже великий, гігантський.
-  - statement: Суфікс "-н-" допомагає утворити прикметник від іменника "школа".
+  - statement: Суфікс "-н-" допомагає утворити прикметник від іменника «школа».
     correct: true
-    explanation: Так, виходить слово "шкільний".
-  - statement: Слово "свіжесенький" звучить приємніше, ніж просто слово "свіжий".
+    explanation: Так, виходить слово «шкільний».
+  - statement: Слово «свіжесенький» звучить приємніше, ніж просто слово «свіжий».
     correct: true
     explanation: Так, це форма суб'єктивної оцінки з пестливим значенням.
-  - statement: Прикметник "київська" має жіночий рід у цій формі.
+  - statement: Прикметник «київська» має жіночий рід у цій формі.
     correct: true
     explanation: Так, закінчення "-а" вказує на жіночий рід.
   - statement: Усі українські прикметники обов'язково повинні мати суфікс "-еньк-".
     correct: false
     explanation: Ні, це лише додатковий суфікс для вираження емоцій та розміру.
-  - statement: Суфікс "-енн-" у слові "страшенний" подвоює літеру "н".
+  - statement: Суфікс "-енн-" у слові «страшенний» подвоює літеру «н».
     correct: true
     explanation: Так, це характерна особливість цього інтенсивного суфікса.
   id: descriptive-nuances-(concept:-concept-validation)
@@ -279,7 +279,7 @@
 - type: select
   title: 'Nuanced Qualities (Concept: Morphological Choice)'
   items:
-  - question: (Intensity) У Карпатах ми побачили [___] смереки.
+  - question: У Карпатах ми побачили [___] смереки.
     options:
     - text: височенні
       correct: true
@@ -287,13 +287,17 @@
       correct: false
     - text: височенькі
       correct: false
-  - question: (Diminutive) Мама накрила стіл [___] скатертиною.
+    - text: Неправильно
+      correct: false
+  - question: Мама накрила стіл [___] скатертиною.
     options:
     - text: біленькою
       correct: true
     - text: білою
       correct: false
     - text: біленною
+      correct: false
+    - text: Неправильно
       correct: false
   - question: (Origin) Ми дуже любимо справжній [___] шоколад.
     options:
@@ -303,13 +307,17 @@
       correct: false
     - text: львівенний
       correct: false
-  - question: (Intensity) Після походу я відчував [___] втому.
+    - text: Неправильно
+      correct: false
+  - question: Після походу я відчував [___] втому.
     options:
     - text: страшенну
       correct: true
     - text: страшну
       correct: false
     - text: страшненьку
+      correct: false
+    - text: Неправильно
       correct: false
   - question: (Softness) На березі річки ріс [___] очерет.
     options:
@@ -319,6 +327,8 @@
       correct: false
     - text: товстенний
       correct: false
+    - text: Неправильно
+      correct: false
   - question: (Relation) Сьогодні у нас дуже важливий [___] іспит.
     options:
     - text: шкільний
@@ -327,13 +337,17 @@
       correct: false
     - text: шкіленький
       correct: false
-  - question: (Diminutive) Бабуся дала мені [___] яблучко.
+    - text: Неправильно
+      correct: false
+  - question: Бабуся дала мені [___] яблучко.
     options:
     - text: червоненьке
       correct: true
     - text: червоне
       correct: false
     - text: червоненне
+      correct: false
+    - text: Неправильно
       correct: false
   - question: (Relation) Він купив собі новий [___] годинник.
     options:
@@ -342,6 +356,8 @@
     - text: залізський
       correct: false
     - text: залізненький
+      correct: false
+    - text: Неправильно
       correct: false
   id: nuanced-qualities-(concept:-morphological-choice)
 - type: error-correction
@@ -353,6 +369,8 @@
     options:
     - київський
     - київенький
+    - помилка
+    - правильно
     explanation: Origin from a city requires the suffix \"-ськ-\".
   - sentence: Дитина тримає **гарнист** ляльку.
     error: гарнист
@@ -360,6 +378,8 @@
     options:
     - гарненьку
     - гарну
+    - помилка
+    - правильно
     explanation: To show something is cute or small, use the diminutive suffix \"-еньк-\".
   - sentence: Це був **здоровенький** камінь, він важив тонну.
     error: здоровенький
@@ -367,14 +387,18 @@
     options:
     - здоровенний
     - здоровий
+    - помилка
+    - правильно
     explanation: For massive size or intensity, use the suffix \"-енн-\" with double
-      'n'. \"Здоровенький\" means \"healthy.\"
+      'n'. \«Здоровенький\» means \"healthy.\"
   - sentence: Ми пішли в **школьський** бібліотеку.
     error: школьський
     answer: шкільну
     options:
     - шкільну
     - шкільненьку
+    - помилка
+    - правильно
     explanation: Relation to an object like a school uses the suffix \"-н-\".
   - sentence: У неї **синенька** очі, як небо.
     error: синенька
@@ -382,15 +406,19 @@
     options:
     - синенькі
     - синеньку
-    explanation: Adjectives must agree in number with the plural noun \"очі\".
+    - помилка
+    - правильно
+    explanation: Adjectives must agree in number with the plural noun \«очі\».
   - sentence: Це дуже **морсний** повітря сьогодні.
     error: морсний
     answer: морське
     options:
     - морське
     - морський
+    - помилка
+    - правильно
     explanation: Relation to the sea uses \"-ськ-\" and must match the neuter noun
-      \"повітря\".
+      \«повітря\».
   id: suffix-fixes-(concept:-critical-proofreading)
 - type: translate
   title: Adjective Suffix Translation

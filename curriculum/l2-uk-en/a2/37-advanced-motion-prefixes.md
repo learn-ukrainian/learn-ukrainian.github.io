@@ -1,4 +1,4 @@
-## Warm-up
+## Introduction
 
 In A1, you learned basic motion verbs (йти, їхати). In earlier A2 modules, you learned simple prefixes.
 
@@ -18,7 +18,7 @@ Motion prefixes are essential for everyday communication. When you give directio
 
 Understanding motion prefixes is crucial for navigating Ukrainian cities, following directions, and describing your daily routines. While English uses separate prepositions (across, through, around), Ukrainian integrates these meanings directly into the verb through prefixes. This makes Ukrainian more concise but requires mastering the prefix system.
 
-Each prefix creates a distinct mental image of the path taken. When you hear "перейти," you should visualize crossing from one side to another. When you hear "обійти," imagine walking around something in a circle. This visualization technique is key to mastering motion verbs.
+Each prefix creates a distinct mental image of the path taken. When you hear «перейти,» you should visualize crossing from one side to another. When you hear «обійти,» imagine walking around something in a circle. This visualization technique is key to mastering motion verbs.
 
 ---
 
@@ -35,13 +35,13 @@ The prefix **пере-** indicates crossing from one side to another.
 | переплисти | to swim across | Він переплив річку. |
 
 **Related Meanings:**
-- пере- can also mean "re-" (doing again): переробити = to redo
-- пере- can mean "excessively": переїсти = to overeat
+- пере- can also mean «re-»: переробити = to redo
+- пере- can mean «excessively»: переїсти = to overeat
 
 > [!tip] Візуалізуйте!
 > Уявіть, що пере- означає лінію, яку ви перетинаєте.
 > Ви починаєте з одного боку і закінчуєте з іншого.
-> Вулиця, річка, міст — всі мають "інший бік" для пере-.
+> Вулиця, річка, міст — всі мають «інший бік» для пере-.
 
 ## Про- (Through, Past)
 
@@ -58,13 +58,13 @@ The prefix **про-** indicates passing through or going past something.
 - про- = pass through/by without stopping
 
 > [!tip] Пере- vs Про-
-> **Перейти вулицю** = Cross the street (reach the other side).
-> **Пройти вулицю** = Walk through/along the street (from end to end).
+> **Перейти вулицю** = Cross the street.
+> **Пройти вулицю** = Walk through/along the street.
 > The difference is the perspective: crossing vs traversing.
 
 **Understanding the Distinction:**
 
-The difference between пере- and про- is subtle but important. Think of пере- as creating a boundary that you cross (like a bridge), while про- describes passing through or along something (like a tunnel). This distinction is crucial for giving accurate directions in Ukrainian.
+The difference between пере- and про- is subtle but important. Think of пере- as creating a boundary that you cross, while про- describes passing through or along something. This distinction is crucial for giving accurate directions in Ukrainian.
 
 ---
 
@@ -93,11 +93,11 @@ The prefix **за-** has multiple meanings related to motion:
 | заспівати | to start singing | Вона заспівала пісню. |
 
 > [!cultural] Важлива Традиція
-> Українці часто кажуть: "Заходь до нас!"
-> Це означає: "Приходь у гості!"
+> Українці часто кажуть: «Заходь до нас!»
+> Це означає: «Приходь у гості!»
 > Гостинність дуже важлива в українській культурі.
 
-## До- (Reaching Destination)
+## До-
 
 The prefix **до-** indicates reaching a destination or completing motion.
 
@@ -123,13 +123,13 @@ The prefix **об-** indicates going around something.
 | об'їхати | to drive around | Треба об'їхати пробку. |
 
 **Also used for:**
-- обійняти = to embrace (arms "around")
-- обдумати = to think over (thoughts "around" the topic)
+- обійняти = to embrace (arms «around»)
+- обдумати = to think over (thoughts «around» the topic)
 
 > [!tip] Візуалізуйте Об-
 > Уявіть коло навколо об'єкта.
 > Ви рухаєтесь по колу, не перетинаючи центр.
-> Це відрізняється від "пере-" (через) і "про-" (насквозь).
+> Це відрізняється від «пере-» (через) і «про-» (насквозь).
 
 ## Під- (Under, Approaching)
 
@@ -137,7 +137,7 @@ The prefix **під-** indicates approaching from below or getting closer.
 
 | Verb | Meaning | Example |
 |------|---------|---------|
-| підійти | to approach (on foot) | Підійди ближче! |
+| підійти | to approach | Підійди ближче! |
 | під'їхати | to approach (driving) | Таксі під'їхало до вокзалу. |
 | підлетіти | to fly up to | Птах підлетів до вікна. |
 
@@ -213,13 +213,13 @@ The prefix **під-** indicates approaching from below or getting closer.
 
 Advanced speakers combine prefixes for even more precise meanings. Here are some examples you may encounter:
 
-**Ви + за = вийти + зайти (Exit and enter):**
+**Ви + за = вийти + зайти:**
 - Він вийшов і зайшов знову. (He exited and entered again.)
 
-**Про + пере = проїхати + переїхати (Pass through and cross):**
+**Про + пере = проїхати + переїхати:**
 - Ми проїхали місто і переїхали міст. (We drove through the city and crossed the bridge.)
 
-**Під + до = підійти + дійти (Approach and reach):**
+**Під + до = підійти + дійти:**
 - Він підійшов до дверей і дійшов до кабінету. (He approached the door and reached the office.)
 
 Understanding these combinations will help you describe complex journeys with precision. This is an advanced skill that develops with time and practice.
@@ -258,9 +258,7 @@ Motion prefix mastery comes from visualization. For each prefix, create a mental
 
 When you hear a motion verb, visualize the path first. This will help you understand and produce the correct prefix naturally.
 
----
-
-# Summary
+# Підсумок
 
 Today you learned advanced motion prefixes:
 
@@ -276,3 +274,9 @@ Today you learned advanced motion prefixes:
 These prefixes combine with motion verbs to create precise navigation instructions.
 
 ---
+
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

@@ -4,20 +4,20 @@ subtitle: The Magic of Transformation
 version: '1.0'
 phase: A2.4
 pedagogy: Inquiry
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - grammar
-  - verbs
-  - prefixes
-  - word-formation
+- grammar
+- verbs
+- prefixes
+- word-formation
 grammar:
-  - action verb prefixes (на-, по-, роз-, від-, за-, пере-, до-)
-  - changing meaning vs. changing aspect
+- action verb prefixes (на-, по-, роз-, від-, за-, пере-, до-)
+- changing meaning vs. changing aspect
 objectives:
-  - Learner can understand how prefixes alter verb meaning
-  - Learner can express completion, beginning, or redo actions
-  - Learner can identify root verbs in complex forms
+- Learner can understand how prefixes alter verb meaning
+- Learner can express completion, beginning, or redo actions
+- Learner can identify root verbs in complex forms
 vocabulary_count: 30
-vocab_count: 73
 slug: 38-action-verb-prefixes
+focus: grammar

@@ -1,31 +1,71 @@
 ## Introduction
 
-Module 4 introduced the Instrumental case with the preposition **з** for accompaniment: з другом (with a friend), з сестрою (with sister). Now it's time to learn the Instrumental case **without a preposition** — the true "instrumental" use of this case!
+Module 4 introduced the Instrumental case with the preposition **з** for accompaniment: з другом, з сестрою. Now it's time to learn the Instrumental case **without a preposition** — the true «instrumental» use of this case!
 
 **What you'll learn:**
 
-- **Bare Instrumental for transport:** автобусом (by bus), поїздом (by train), літаком (by plane)
-- **Bare Instrumental for tools:** ручкою (with a pen), ножем (with a knife), ложкою (with a spoon)
-- **Bare Instrumental for body parts:** рукою (with hand), головою (with head)
-- **Bare Instrumental for manner:** голосом (with voice), пошепки (in a whisper)
+- **Bare Instrumental for transport:** автобусом, поїздом, літаком
+- **Bare Instrumental for tools:** ручкою, ножем, ложкою
+- **Bare Instrumental for body parts:** рукою, головою
+- **Bare Instrumental for manner:** голосом, пошепки
 
 **The key distinction:**
 
-- **З + Instrumental** = accompaniment (with someone/something as a companion)
+- **З + Instrumental** = accompaniment
 - **Bare Instrumental** = means, tools, manner (by what means, with what tool, in what way)
 
 **Why this matters:**
-English uses "by" for transport (by bus) and "with" for tools (with a pen), but Ukrainian uses the same grammatical case for both — the Instrumental without a preposition. This is the Instrumental in its most literal sense: the case of instruments and means.
+English uses «by» for transport and «with» for tools, but Ukrainian uses the same grammatical case for both — the Instrumental without a preposition. This is the Instrumental in its most literal sense: the case of instruments and means.
+
+## Presentation
+
+## Practice
+
+Now let's practice using the bare Instrumental for transport, tools, and manner. The key skill is distinguishing between accompaniment (з + Instrumental) and means/tools.
+
+**Quick reference:**
+
+- **Accompaniment (з + Instr):** з другом, з молоком
+- **Transport:** автобусом, поїздом
+- **Tools:** ручкою, ножем
+- **Manner:** голосом, пошепки
+
+This text describes a typical day in Kyiv, filled with bare Instrumental examples: transport (метро, автобусом, трамваєм), tools (ложкою, ножем, виделкою), and technology (комп'ютером, електронною поштою).
+
+**Reading strategy:** As you read, highlight every bare Instrumental. Then compare with the answers to verify you've found them all.
+
+**Vocabulary preview:**
+
+- прокидатися — to wake up
+- дістатися — to get to
+- терміновий — urgent
+- готувати — to cook/prepare
+
+> Ранок. Я прокидаюся о сьомій годині. Снідаю: їм кашу ложкою, п'ю каву. Потім їду на роботу.
+>
+> До станції метро йду пішки — це десять хвилин. Потім їду метро до центру. У метро читаю книгу.
+>
+> На роботі працюю комп'ютером. Пишу листи колегам електронною поштою. Якщо щось термінове — дзвоню телефоном.
+>
+> Увечері їду додому. Іноді їду автобусом, іноді — трамваєм. Коли йде дощ, їду таксі.
+>
+> Вдома готую вечерю. Ріжу овочі ножем. Їм виделкою і ложкою. Потім дивлюся фільм і йду спати.
+
+**Questions:**
+
+1. Чим їсть кашу? — Ложкою.
+2. Чим їде на роботу? — Метро.
+3. Чим працює на роботі? — Комп'ютером.
+4. Чим надсилає листи? — Електронною поштою.
+5. Чим ріже овочі? — Ножем.
 
 ## Warm-up
 
 У попередньому модулі ви вивчили орудний відмінок з прийменником **з** для супроводу: з другом, з сестрою. Тепер час дізнатися про орудний відмінок **без прийменника**!
 
-When you want to say "by bus," "with a pen," or "in a loud voice," Ukrainian uses the instrumental case WITHOUT any preposition. "I'm going **by bus**" = Я їду **автобусом**. "She writes **with a pen**" = Вона пише **ручкою**.
+When you want to say «by bus,» «with a pen,» or «in a loud voice,» Ukrainian uses the instrumental case WITHOUT any preposition. «I'm going **by bus**» = Я їду **автобусом**. «She writes **with a pen**» = Вона пише **ручкою**.
 
-This is the "instrumental" in its truest sense — the case of instruments and means!
-
-## Presentation
+This is the «instrumental» in its truest sense — the case of instruments and means!
 
 ## Орудний відмінок без прийменника
 
@@ -40,9 +80,9 @@ This is the "instrumental" in its truest sense — the case of instruments and m
 
 | З прийменником                     | Без прийменника                 |
 | ---------------------------------- | ------------------------------- |
-| йти **з** другом (with friend)     | їхати **автобусом** (by bus)    |
-| кава **з** молоком (with milk)     | писати **ручкою** (with pen)    |
-| жити **з** батьками (with parents) | говорити **голосом** (in voice) |
+| йти **з** другом     | їхати **автобусом**    |
+| кава **з** молоком     | писати **ручкою**    |
+| жити **з** батьками | говорити **голосом** |
 
 ## Засоби пересування
 
@@ -68,29 +108,29 @@ This is the "instrumental" in its truest sense — the case of instruments and m
 > [!tip] Метро і Таксі — Indeclinable Nouns
 > These are **indeclinable** — they don't change form in any case! Їхати метро, їхати таксі.
 >
-> **Why?** Both words are borrowed from other languages (French/Italian) and end in vowels that don't fit Ukrainian declension patterns. This actually makes them easier to use — no endings to memorize!
+> **Why?** Both words are borrowed from other languages and end in vowels that don't fit Ukrainian declension patterns. This actually makes them easier to use — no endings to memorize!
 >
 > **Common indeclinable nouns:** метро, таксі, кіно, кафе, меню, радіо — all borrowed words ending in vowels that don't decline.
 
-### На + Accusative vs. Instrumental
+## На + Accusative vs. Instrumental
 
-Sometimes you'll hear "на автобусі" (on the bus) — this is locative and means physically being ON the vehicle. The instrumental describes the mode of transport:
+Sometimes you'll hear «на автобусі» — this is locative and means physically being ON the vehicle. The instrumental describes the mode of transport:
 
 | Expression         | Meaning                     |
 | ------------------ | --------------------------- |
 | їхати автобусом    | to travel by bus (means)    |
-| сидіти на автобусі | to sit on (top of) the bus  |
+| сидіти на автобусі | to sit on the bus  |
 | їхати в автобусі   | to ride in the bus (inside) |
 
 > [!example] У Києві — Commute Conversation
-> This dialogue shows Ukrainians discussing their daily commute. Notice how metro and taxi don't change form (indeclinable), while автобусом is regular instrumental.
+> This dialogue shows Ukrainians discussing their daily commute. Notice how metro and taxi don't change form, while автобусом is regular instrumental.
 >
 > — Як ти добираєшся до роботи? (How do you get to work?)
 > — Зазвичай їду метро. А коли метро закрите, їду таксі. (Usually by metro. When metro is closed, by taxi.)
 > — А я їду автобусом. Автобус зупиняється біля мого будинку. (I go by bus. The bus stops near my building.)
 > — Це зручно! Мені треба йти до станції метро пішки. (That's convenient! I have to walk to the metro station.)
 
-## Інструменти та знаряддя (Tools and Instruments)
+## Інструменти та знаряддя
 
 Друге важливе застосування чистого орудного відмінка — це інструменти. Ви берете інструмент для виконання дії. У цьому випадку предмет стоїть в орудному відмінку без прийменника.
 
@@ -110,8 +150,8 @@ Sometimes you'll hear "на автобусі" (on the bus) — this is locative 
 Вона ріже хліб ножем. (She's cutting bread with a knife.)
 Ми їмо суп ложкою. (We eat soup with a spoon.)
 
-> [!info] Ножиці — Plural Only (Pluralia Tantum)
-> The word **ножиці** exists only in plural form (like English "scissors"), so its instrumental is ножицями.
+> [!info] Ножиці — Plural Only
+> The word **ножиці** exists only in plural form (like English «scissors»), so its instrumental is ножицями.
 >
 > **Other plural-only nouns in Ukrainian:**
 >
@@ -122,7 +162,7 @@ Sometimes you'll hear "на автобусі" (on the bus) — this is locative 
 >
 > **English comparison:** English also has plural-only nouns like scissors, glasses, pants, and jeans. But Ukrainian has many more!
 
-### Body Parts as Instruments
+## Body Parts as Instruments
 
 Body parts can also be used as instruments: wave with your hand, nod with your head, kick with your feet:
 
@@ -140,7 +180,7 @@ Body parts can also be used as instruments: wave with your hand, nod with your h
 > [!warning] Очі — Irregular Instrumental
 > The word **очі** has an irregular instrumental: **очима** instead of the expected _очами_.
 >
-> **Why?** This is a historical remnant from Old Ukrainian. The form очима preserves an ancient dual number pattern (for pairs of body parts).
+> **Why?** This is a historical remnant from Old Ukrainian. The form очима preserves an ancient dual number pattern.
 >
 > **Other irregular body part instrumentals:**
 >
@@ -163,17 +203,17 @@ Modern technology also uses the instrumental case. You work with a computer, sen
 Вона надсилає документи електронною поштою. (She sends documents by email.)
 
 > [!tip] Телефоном vs. По телефону — Both Are Correct
-> Both constructions mean "by phone" and are interchangeable in modern Ukrainian:
+> Both constructions mean «by phone» and are interchangeable in modern Ukrainian:
 >
-> - дзвонити **телефоном** = bare instrumental (classic pattern)
-> - дзвонити **по телефону** = preposition + locative (also common)
+> - дзвонити **телефоном** = bare instrumental
+> - дзвонити **по телефону** = preposition + locative
 >
 > **Similar alternations:**
 >
-> - надсилати поштою | надсилати по пошті (by mail)
-> - передавати радіо | передавати по радіо (by radio)
+> - надсилати поштою | надсилати по пошті
+> - передавати радіо | передавати по радіо
 >
-> **Which to use?** Both are correct. The bare instrumental is considered more traditional, while "по + locative" is common in everyday speech.
+> **Which to use?** Both are correct. The bare instrumental is considered more traditional, while «по + locative» is common in everyday speech.
 
 ---
 
@@ -194,7 +234,7 @@ The instrumental case also expresses manner — how an action is performed. This
 Дітей не варто кричати голосом. (One shouldn't shout at children.)
 
 > [!example] У бібліотеці в Одесі — Library Etiquette
-> This dialogue demonstrates manner expressions with instrumental. "Тихим голосом" (in a quiet voice) combines an adjective with instrumental noun.
+> This dialogue demonstrates manner expressions with instrumental. «Тихим голосом» combines an adjective with instrumental noun.
 >
 > — Пробачте, тут треба говорити тихим голосом. (Excuse me, you need to speak in a quiet voice here.)
 > — Вибачте! Я не помітив. (Sorry! I didn't notice.)
@@ -213,27 +253,27 @@ Ukrainian cities have extensive public transport systems. Here are interesting f
 | Харків | Друге метро в Україні    |
 
 > [!tip] Маршрутка — The Ukrainian Minibus
-> The **маршрутка** (marshrutka) is a uniquely post-Soviet phenomenon — a small minibus that runs on fixed routes throughout Ukrainian cities.
+> The **маршрутка** is a uniquely post-Soviet phenomenon — a small minibus that runs on fixed routes throughout Ukrainian cities.
 >
 > **Key facts:**
 >
-> - Faster than regular buses (fewer stops)
+> - Faster than regular buses
 > - You pay the driver directly when boarding
-> - Shout "На зупинці!" (At the stop!) when you want to get off
+> - Shout «На зупинці!» (At the stop!) when you want to get off
 > - Standing passengers hold on tight — the ride can be bumpy!
 >
-> **Instrumental:** Їхати **маршруткою** (by marshrutka)
+> **Instrumental:** Їхати **маршруткою**
 >
 > **Cultural note:** Marshrutkas are quintessentially Ukrainian/post-Soviet. You won't find them in Western Europe. They're efficient but crowded, especially during rush hour!
 
 > [!did-you-know] 💡 Did You Know
-> The Kyiv Metro has some of the deepest stations in the world! Arsenalna station is 105.5 meters below ground — the deepest metro station on Earth. This depth was originally designed for civil defense purposes during the Soviet era. When you say "Я їду метро до Арсенальної," you're traveling to a piece of engineering history!
+> The Kyiv Metro has some of the deepest stations in the world! Arsenalna station is 105.5 meters below ground — the deepest metro station on Earth. This depth was originally designed for civil defense purposes during the Soviet era. When you say «Я їду метро до Арсенальної,» you're traveling to a piece of engineering history!
 
 Я їду маршруткою на базар. (I'm going to the market by minibus.)
 У Києві зручно їздити метро. (In Kyiv it's convenient to travel by metro.)
 
 > [!example] Подорож до Карпат — Travel Story
-> This dialogue shows multiple transport modes in one trip. Notice the pattern: always bare instrumental for the transport (поїздом, автобусом), never with preposition "з".
+> This dialogue shows multiple transport modes in one trip. Notice the pattern: always bare instrumental for the transport (поїздом, автобусом), never with preposition «з».
 >
 > — Як ви добиралися до Карпат? (How did you get to the Carpathians?)
 > — Спочатку ми їхали поїздом до Івано-Франківська. (First we went by train to Ivano-Frankivsk.)
@@ -242,17 +282,6 @@ Ukrainian cities have extensive public transport systems. Here are interesting f
 > — Звучить як пригода! (Sounds like an adventure!)
 
 ---
-
-## Practice
-
-Now let's practice using the bare Instrumental for transport, tools, and manner. The key skill is distinguishing between accompaniment (з + Instrumental) and means/tools (bare Instrumental).
-
-**Quick reference:**
-
-- **Accompaniment (з + Instr):** з другом (with friend), з молоком (with milk)
-- **Transport (bare Instr):** автобусом (by bus), поїздом (by train)
-- **Tools (bare Instr):** ручкою (with pen), ножем (with knife)
-- **Manner (bare Instr):** голосом (with voice), пошепки (in whisper)
 
 ## Choose: With or Without Preposition?
 
@@ -279,9 +308,9 @@ Now let's practice using the bare Instrumental for transport, tools, and manner.
 
 The following dialogues show bare Instrumental in natural conversations about transport, tools, and everyday situations.
 
-**Dialogue 1: На зупинці (At the Bus Stop)**
+**Dialogue 1: На зупинці**
 
-Getting directions — notice both автобусом and трамваєм are bare Instrumental (no preposition).
+Getting directions — notice both автобусом and трамваєм are bare Instrumental.
 
 **На зупинці:**
 — Вибачте, як дістатися до центру?
@@ -289,9 +318,9 @@ Getting directions — notice both автобусом and трамваєм are b
 — А що швидше?
 — Трамваєм швидше, але автобусом зручніше.
 
-**Dialogue 2: На кухні (In the Kitchen)**
+**Dialogue 2: На кухні**
 
-Discussing tools — чим (with what) asks about Instrumental; ножем and ножицями are the answers.
+Discussing tools — чим asks about Instrumental; ножем and ножицями are the answers.
 
 **На кухні:**
 — Чим ти ріжеш помідори?
@@ -299,9 +328,9 @@ Discussing tools — чим (with what) asks about Instrumental; ножем and 
 — А я волію різати ножицями.
 — Ножицями? Це дивно!
 
-**Dialogue 3: В офісі (At the Office)**
+**Dialogue 3: В офісі**
 
-Modern communication — електронною поштою (by email) and голосом (by voice) are both bare Instrumental.
+Modern communication — електронною поштою and голосом are both bare Instrumental.
 
 **В офісі:**
 — Як ви надсилаєте документи?
@@ -311,41 +340,15 @@ Modern communication — електронною поштою (by email) and го
 
 ---
 
-## Reading Practice: Один день у Києві
-
-This text describes a typical day in Kyiv, filled with bare Instrumental examples: transport (метро, автобусом, трамваєм), tools (ложкою, ножем, виделкою), and technology (комп'ютером, електронною поштою).
-
-**Reading strategy:** As you read, highlight every bare Instrumental (without preposition). Then compare with the answers to verify you've found them all.
-
-**Vocabulary preview:**
-
-- прокидатися — to wake up
-- дістатися — to get to (a place)
-- терміновий — urgent
-- готувати — to cook/prepare
-
-> Ранок. Я прокидаюся о сьомій годині. Снідаю: їм кашу ложкою, п'ю каву. Потім їду на роботу.
->
-> До станції метро йду пішки — це десять хвилин. Потім їду метро до центру. У метро читаю книгу.
->
-> На роботі працюю комп'ютером. Пишу листи колегам електронною поштою. Якщо щось термінове — дзвоню телефоном.
->
-> Увечері їду додому. Іноді їду автобусом, іноді — трамваєм. Коли йде дощ, їду таксі.
->
-> Вдома готую вечерю. Ріжу овочі ножем. Їм виделкою і ложкою. Потім дивлюся фільм і йду спати.
-
-**Questions:**
-
-1. Чим їсть кашу? — Ложкою.
-2. Чим їде на роботу? — Метро.
-3. Чим працює на роботі? — Комп'ютером.
-4. Чим надсилає листи? — Електронною поштою.
-5. Чим ріже овочі? — Ножем.
-
-# Summary
+# Підсумок
 
 У цьому модулі ви вивчили:
 - Основні поняття та правила
 - Практичне застосування
 - Вправи для закріплення
 
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

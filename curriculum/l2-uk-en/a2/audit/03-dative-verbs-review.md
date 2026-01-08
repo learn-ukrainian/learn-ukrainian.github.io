@@ -3,47 +3,51 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: давальний, час, знахідний, дієслово, відмінок
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): подобатися, сподобатися, личити, вибачати, довіряти...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): належати, подобатися, сподобатися, служити, дякувати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
-## Recommendation
-**📝 UPDATE** (severity 10/100)
+## TEMPLATE COMPLIANCE
+- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
+  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 
-- 2 pedagogical violations (minor)
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1869/1000
+- **Words:** ✅ 1848/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 66/1
+- **Vocab:** ✅ 71/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 40.3% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 40.6% (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 145 | Included in Core |
-| **Warm-up** | ✅ | 83 | Included in Core |
+| **Intro/Narrative** | ✅ | 140 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
-| **Дієслова, що вимагають лише давального відмінка (Dative-Only Verbs)** | ⚪️ | 293 | Skipped |
-| **Дієслова з давальним та знахідним відмінками (Verbs with Dative + Accusative)** | ⚪️ | 202 | Skipped |
-| **Дієслова дозволу та заборони (Verbs of Permission and Prohibition)** | ⚪️ | 153 | Skipped |
-| **Cultural Insight** | ✅ | 44 | Included in Core |
-| **Дякувати — The Art of Thanking** | ⚪️ | 165 | Skipped |
-| **Вибачати і Пробачати — Two Levels of Forgiveness** | ⚪️ | 271 | Skipped |
-| **Practice** | ⚪️ | 64 | Skipped |
+| **Practice** | ⚪️ | 281 | Skipped |
+| **Warm-up** | ✅ | 83 | Included in Core |
+| **Дієслова, що вимагають лише давального відмінка (Dative-Only Verbs)** | ⚪️ | 155 | Skipped |
+| **Модель подобатися (The Подобатися Pattern)** | ✅ | 131 | Included in Core |
+| **Дієслова з давальним та знахідним відмінками (Verbs with Dative + Accusative)** | ⚪️ | 152 | Skipped |
+| **The Double Object Pattern** | ✅ | 48 | Included in Core |
+| **Дієслова дозволу та заборони** | ⚪️ | 153 | Skipped |
+| **Cultural Insight** | ✅ | 38 | Included in Core |
+| **Дякувати — The Art of Thanking** | ⚪️ | 161 | Skipped |
+| **Вибачати і Пробачати — Two Levels of Forgiveness** | ⚪️ | 267 | Skipped |
 | **Dative-Only or Dative + Accusative?** | ⚪️ | 3 | Skipped |
 | **Complete the Pattern** | ✅ | 40 | Included in Core |
-| **Mini-Dialogues** | ✅ | 172 | Included in Core |
-| **Reading Practice: Щоденник вчительки** | ✅ | 217 | Included in Core |
-| **Summary** | ✅ | 17 | Included in Core |
+| **Mini-Dialogues** | ✅ | 149 | Included in Core |
+| **Підсумок** | ✅ | 17 | Included in Core |
+| **Need More Practice?** | ⚪️ | 30 | Skipped |

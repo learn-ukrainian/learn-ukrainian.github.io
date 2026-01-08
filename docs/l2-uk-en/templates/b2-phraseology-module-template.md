@@ -6,6 +6,21 @@
 
 **Related Issue:** [#305](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/305)
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Фразеологізми
+  - Вживання у контексті
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: CBI
+  min_word_count: 1800
+  required_callouts: []
+  description: B2 phraseology uses CBI with semantic categories and cultural context
+-->
+
 ---
 
 ## Quick Reference Checklist
@@ -13,6 +28,7 @@
 Before submitting a B2 phraseology module, verify all items from `b2-module-template.md` PLUS:
 
 ### Phraseology-Specific Requirements
+
 - [ ] **CBI pedagogy:** Content-Based Instruction with Narrative Arc (NOT TTT)
 - [ ] **Idioms in context:** 15-20 phraseological units embedded in narratives
 - [ ] **Semantic categories:** Organize by meaning (somatic, animal, color, etc.)
@@ -29,19 +45,19 @@ Before submitting a B2 phraseology module, verify all items from `b2-module-temp
 ```yaml
 ---
 module: b2-XX
-title: "Ukrainian Title — Phraseology Category"
-phase: "B2.2 [Phraseology & Synonymy]"
-pedagogy: "CBI"  # Content-Based Instruction
-register: "varies"  # Phraseology spans registers
+title: 'Ukrainian Title — Phraseology Category'
+phase: 'B2.2 [Phraseology & Synonymy]'
+pedagogy: 'CBI' # Content-Based Instruction
+register: 'varies' # Phraseology spans registers
 tags:
   - phraseology
   - [category: somatic, animal, color, proverbs, synonyms, collocations]
 grammar:
-  - "Fixed expressions"
-  - "Idiom structure and variation"
+  - 'Fixed expressions'
+  - 'Idiom structure and variation'
 vocabulary_focus:
-  - "Phraseological units"
-  - "Semantic nuance"
+  - 'Phraseological units'
+  - 'Semantic nuance'
 ---
 ```
 
@@ -79,6 +95,7 @@ vocabulary_focus:
 **[Idiom 1]** — [Literal meaning] → [Figurative meaning]
 
 **Приклад у контексті:**
+
 > [2-3 sentence example showing natural usage]
 
 **Регістр:** [Register: розмовний, нейтральний, книжний, etc.]
@@ -98,13 +115,13 @@ vocabulary_focus:
 
 **Semantic category examples:**
 
-| Category | Ukrainian | Example Idioms |
-|----------|-----------|----------------|
-| Соматичні (body) | Частини тіла | рукою подати, на свої очі, мати голову на плечах |
-| Зоологічні (animal) | Тварини | вовком дивитися, як риба у воді, купити кота в мішку |
-| Кольорові (color) | Кольори | чорна заздрість, біла ворона, рожеві окуляри |
-| Природні (nature) | Природа | як грім серед ясного неба, після дощику в четвер |
-| Кількісні (quantity) | Кількість | як кіт наплакав, хоч греблю гати |
+| Category             | Ukrainian    | Example Idioms                                       |
+| -------------------- | ------------ | ---------------------------------------------------- |
+| Соматичні (body)     | Частини тіла | рукою подати, на свої очі, мати голову на плечах     |
+| Зоологічні (animal)  | Тварини      | вовком дивитися, як риба у воді, купити кота в мішку |
+| Кольорові (color)    | Кольори      | чорна заздрість, біла ворона, рожеві окуляри         |
+| Природні (nature)    | Природа      | як грім серед ясного неба, після дощику в четвер     |
+| Кількісні (quantity) | Кількість    | як кіт наплакав, хоч греблю гати                     |
 
 #### Section 3: Proverbs and Sayings — 300-400 words
 
@@ -114,12 +131,14 @@ vocabulary_focus:
 ### Про [Theme]
 
 **Без труда нема плода.**
-- *Without labor there's no fruit.* (No pain, no gain.)
+
+- _Without labor there's no fruit._ (No pain, no gain.)
 - **Вживання:** Мотивація до роботи
 - **Регістр:** Нейтральний, широковживаний
 
 **Як посієш, так і пожнеш.**
-- *As you sow, so shall you reap.*
+
+- _As you sow, so shall you reap._
 - **Вживання:** Попередження про наслідки
 - **Регістр:** Нейтральний
 
@@ -152,10 +171,12 @@ vocabulary_focus:
 ### Помилки у вживанні
 
 **Помилка:** Використання книжного фразеологізму в розмові
+
 - ❌ "Мій друг — стовп суспільства." (занадто книжно)
 - ✅ "Мій друг — надійна людина."
 
 **Помилка:** Змішування фразеологізмів
+
 - ❌ "Рукою подати на мілині" (два різні вирази)
 - ✅ "Рукою подати" АБО "сидіти на мілині"
 ```
@@ -195,7 +216,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ### Activity Examples (Conceptual)
 
-*Note: These activities must be implemented in YAML.*
+_Note: These activities must be implemented in YAML._
 
 1. **Idiom Matching (match-up):** Match phrase to meaning.
 2. **Context Completion (fill-in):** Choose phrase for context.
@@ -235,23 +256,18 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ---
 
-## Vocabulary Section for Phraseology Modules
+---
 
-**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
+## Content Structure Note
 
-**Example `vocabulary/b2-41-idioms.yaml`:**
+### Vocabulary & Activities
 
-```yaml
-items:
-- lemma: рукою подати
-  translation: very close
-  pos: фраза
-  note: соматичний; "можна дістати рукою"
-- lemma: біла ворона
-  translation: black sheep
-  pos: фраза
-  note: зоологічний + кольоровий
-```
+**CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
+
+- `vocabulary/{slug}.yaml`
+- `activities/{slug}.yaml`
+
+The build system will inject these sections at build time.
 
 ---
 
@@ -264,28 +280,35 @@ items:
 > Фразеологізми з частинами тіла — найпоширеніша категорія в українській мові...
 
 ## Вступ
+
 [Narrative using 3-4 somatic idioms]
 
 ## Голова
+
 - мати голову на плечах
 - втратити голову
 - морочити голову
 
 ## Руки
+
 - рукою подати
 - золоті руки
 - опустити руки
 
 ## Очі
+
 - на свої очі
 - закривати очі
 - відкрити комусь очі
 
 ## Вживання у контексті
+
 [Dialogues showing natural usage]
 
 # Підсумок
+
 # Словник [30+ expressions + terminology]
+
 # Активності [14+ activities]
 ```
 

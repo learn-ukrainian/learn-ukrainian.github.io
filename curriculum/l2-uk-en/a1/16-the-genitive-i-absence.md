@@ -4,21 +4,21 @@
 
 Have you ever been late because you didn't have time? Needed to buy something but didn't have money? Ukrainian has a special case just for talking about things you **don't have** or that are **missing** — the Genitive.
 
-Unlike English "I don't have X," Ukrainian says "By me there-isn't X-genitive" — У мене немає X. This pattern feels strange at first, but it's beautifully logical once you see the system.
+Unlike English «I don't have X,» Ukrainian says «By me there-isn't X-genitive» — У мене немає X. This pattern feels strange at first, but it's beautifully logical once you see the system.
 
 > [!tip] **Did You Know?**
 >
-> The word немає (there isn't) literally comes from не (not) + має (has). So "немає часу" = "doesn't-have time-genitive". This is why you need genitive here — the noun is the object of "having" that got negated!
+> The word немає (there isn't) literally comes from не (not) + має (has). So «немає часу» = «doesn't-have time-genitive». This is why you need genitive here — the noun is the object of «having» that got negated!
 
 ## Presentation
 
 ### What is Genitive Case?
 
-The genitive (родовий відмінок) is Ukraine's "of" case. It shows:
+The genitive (родовий відмінок) is Ukraine's «of» case. It shows:
 
-1. **Possession** — "the book **of** my friend"
-2. **Absence** — "there is no coffee" (our focus today)
-3. **Quantities** — "a cup **of** tea" (Module 17)
+1. **Possession** — «the book **of** my friend»
+2. **Absence** — «there is no coffee» (our focus today)
+3. **Quantities** — «a cup **of** tea» (Module 17)
 
 Today we learn **genitive for absence** — saying what you **don't have** or what **doesn't exist**.
 
@@ -30,7 +30,7 @@ Today we learn **genitive for absence** — saying what you **don't have** or wh
 | Location    | Тут **немає** кави.    | There's no coffee here. |
 | Preposition | Без цукру, будь ласка. | Without sugar, please.  |
 
-**Key insight:** In English you say "I have **no** time" (no changes "time"). In Ukrainian you say "У мене немає час**у**" — the word for "time" changes its ending. This is genitive.
+**Key insight:** In English you say «I have **no** time» (no changes «time»). In Ukrainian you say «У мене немає час**у**» — the word for «time» changes its ending. This is genitive.
 
 ### Genitive Endings for Absence
 
@@ -50,7 +50,7 @@ Today we learn **genitive for absence** — saying what you **don't have** or wh
 
 > [!example] **Pop Culture Moment**
 >
-> In the Ukrainian dub of "The Lord of the Rings," when Frodo says "I have no memory of this place," it becomes "У мене **немає** спогадів про це місце" — спогади (memory) becomes спогадів in genitive plural. Even hobbits use Ukrainian cases!
+> In the Ukrainian dub of «The Lord of the Rings,» when Frodo says «I have no memory of this place,» it becomes «У мене **немає** спогадів про це місце» — спогади (memory) becomes спогадів in genitive plural. Even hobbits use Ukrainian cases!
 
 ### Example Sentences
 
@@ -64,7 +64,7 @@ Today we learn **genitive for absence** — saying what you **don't have** or wh
    She doesn't have money.
 
 4. **Немає проблем!**
-   No problem! (lit. "there-aren't problems-genitive")
+   No problem! (lit. «there-aren't problems-genitive»)
 
 5. **У нас немає ідеї.**
    We don't have an idea.
@@ -134,27 +134,27 @@ The word **без** (without) also requires genitive:
 >
 > When ordering coffee in Lviv's famous cafés (like Lviv Coffee Manufactory), you'll hear:
 >
-> - "Каву без цукру" — Coffee without sugar
-> - "Чай без молока" — Tea without milk
+> - «Каву без цукру» — Coffee without sugar
+> - «Чай без молока» — Tea without milk
 >
-> Or if you forget your wallet: "Вибачте, у мене немає гро́шей!" (Sorry, I don't have money!)
+> Or if you forget your wallet: «Вибачте, у мене немає гро́шей!» (Sorry, I don't have money!)
 
 ## Cultural Insight
 
 ### Українці і час (Ukrainians and Time)
 
-В українській культурі фраза "немає часу" (no time) дуже поширена. Українці теплі та гостинні. Вони люблять довгі розмови. Але мешканці міст також дуже зайняті.
+В українській культурі фраза «немає часу» (no time) дуже поширена. Українці теплі та гостинні. Вони люблять довгі розмови. Але мешканці міст також дуже зайняті.
 
-In Ukrainian culture, the phrase "немає часу" (no time) is very common. Ukrainians are warm and hospitable. They love long conversations. But city dwellers are also very busy.
+In Ukrainian culture, the phrase «немає часу» (no time) is very common. Ukrainians are warm and hospitable. They love long conversations. But city dwellers are also very busy.
 
 Ви можете почути:
 You might hear:
 
-- "Вибачте, **немає часу**!" — Sorry, no time! (rushing past)
-- "У мене зараз **немає часу**" — I don't have time right now (apologetic)
-- "**Немає часу**!" — No time! (urgent situation)
+- «Вибачте, **немає часу**!» — Sorry, no time! (rushing past)
+- «У мене зараз **немає часу**» — I don't have time right now (apologetic)
+- «**Немає часу**!» — No time! (urgent situation)
 
-Але ви також почуєте: "**Час завжди є**" (There's always time) — especially in villages and with family!
+Але ви також почуєте: «**Час завжди є**» (There's always time) — especially in villages and with family!
 
 ### Міні-діалог 1: У кав'ярні (Mini-Dialogue 1: At the Café)
 
@@ -212,9 +212,9 @@ Translation:
 
 > [!tip] **Language Elegance**
 >
-> Notice the beautiful symmetry: **немає** means both "there isn't" and "don't have" depending on context. This is because Ukrainian thinks about absence as a **location** issue — "by me there-isn't time" feels more spatial than English "I don't have time."
+> Notice the beautiful symmetry: **немає** means both «there isn't» and «don't have» depending on context. This is because Ukrainian thinks about absence as a **location** issue — «by me there-isn't time» feels more spatial than English «I don't have time.»
 >
-> This spatial thinking is deeply embedded in Ukrainian grammar. Even abstract concepts like "time" and "opportunity" are treated as things that can be "present" or "absent" in a location.
+> This spatial thinking is deeply embedded in Ukrainian grammar. Even abstract concepts like «time» and «opportunity» are treated as things that can be «present» or «absent» in a location.
 
 # Summary / Підсумок
 
@@ -224,13 +224,13 @@ You've learned how to express absence in Ukrainian using the **genitive case**.
 
 Remember the key patterns / Запам'ятайте основні шаблони:
 
-1. **У + person + немає + noun-genitive** — to say "X doesn't have Y"
+1. **У + person + немає + noun-genitive** — to say «X doesn't have Y»
    У мене немає часу. (I don't have time.)
 
-2. **Немає + noun-genitive** — to say "there is no Y"
+2. **Немає + noun-genitive** — to say «there is no Y»
    Тут немає кави. (There's no coffee here.)
 
-3. **Без + noun-genitive** — to say "without Y"
+3. **Без + noun-genitive** — to say «without Y»
    Без цукру, будь ласка. (Without sugar, please.)
 
 **Genitive endings for absence:**
@@ -245,4 +245,7 @@ This case is very useful! Next module: genitive with numbers and quantities!
 
 ## Need More Practice?
 
----
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

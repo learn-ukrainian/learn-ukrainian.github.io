@@ -107,6 +107,7 @@ from .report import (
     print_gates,
     print_lint_errors,
     print_pedagogical_violations,
+    print_template_violations,
     print_recommendation,
     print_immersion_fix_hints,
     print_low_density_activities,
@@ -507,13 +508,26 @@ def validate_checkpoint_coverage(content: str, frontmatter_str: str) -> list[str
     return errors
 
 
-def check_structure(content: str) -> tuple[bool, bool, bool]:
-    """Check for required structure elements."""
+def check_structure(content: str) -> dict[str, bool]:
+    """Check for required structure elements.
+    
+    Returns a dictionary of boolean flags for each section.
+    """
     lines = content.split('\n')
     has_summary = any(re.match(r'^#+\s+(Summary|Підсумок)', l.strip(), re.IGNORECASE) for l in lines)
     has_vocab = any(re.match(r'^#+\s+(Vocabulary|Словник)', l.strip(), re.IGNORECASE) for l in lines)
+    has_activities = any(re.match(r'^#+\s+(Activities|Вправи)', l.strip(), re.IGNORECASE) for l in lines)
+    has_resources = any(re.match(r'^#+\s+(External Resources|Зовнішні ресурси|Resources)', l.strip(), re.IGNORECASE) for l in lines)
+    
     has_vocab_table = any('| Word |' in l or 'Слово' in l or 'Термін' in l or '| Ukrainian |' in l for l in lines)
-    return has_summary, has_vocab, has_vocab_table
+    
+    return {
+        'summary': has_summary,
+        'vocab_header': has_vocab,
+        'vocab_table': has_vocab_table,
+        'activities_header': has_activities,
+        'resources_header': has_resources
+    }
 
 
 
@@ -602,6 +616,53 @@ def audit_module(file_path: str) -> bool:
     vocab_target = config.get('min_vocab', 25)
     transliteration_allowed = config.get('transliteration_allowed', True)
 
+    # Template Compliance (Issue #398, #389) - Gradual rollout level-by-level
+    TEMPLATE_COMPLIANCE_ENABLED_LEVELS = ['A1', 'A2']  # Expand to B1, etc. after testing
+    
+    template_structure = None
+    template_violations = []
+    
+    if level_code in TEMPLATE_COMPLIANCE_ENABLED_LEVELS:
+        try:
+            # Import template modules - use relative imports for package context
+            from . import template_parser
+            from .checks import template_compliance as tc_module
+            
+            # Construct module ID for template mapping
+            module_slug = Path(file_path).stem
+            module_id_for_mapping = f"{level_code.lower()}-{module_slug}"
+            
+            # Resolve which template this module should follow
+            meta_for_template = meta_data if meta_data else {}
+            template_path = template_parser.resolve_template(module_id_for_mapping, meta_for_template)
+            template_structure = template_parser.parse_template(template_path)
+            
+            print(f"  📋 Template: {template_path} (pedagogy: {template_structure.pedagogy})")
+            
+            # Run compliance checks
+            template_violations = tc_module.check_template_compliance(
+                content=content,
+                meta=meta_for_template,
+                template=template_structure
+            )
+            
+            if template_violations:
+                critical_count = sum(1 for v in template_violations if v['severity'] == 'CRITICAL')
+                warning_count = sum(1 for v in template_violations if v['severity'] == 'WARNING')
+                info_count = sum(1 for v in template_violations if v['severity'] == 'INFO')
+                
+                print(f"  ⚠️  Template violations: {critical_count} critical, {warning_count} warnings, {info_count} info")
+                
+                # Show first 3 violations
+                for violation in template_violations[:3]:
+                    severity_icon = "🔴" if violation['severity'] == 'CRITICAL' else "⚠️" if violation['severity'] == 'WARNING' else "ℹ️"
+                    print(f"     {severity_icon} [{violation['type']}] {violation['issue']}")
+                    
+        except ImportError as e:
+            print(f"  ⚠️  Template compliance not available: {e}")
+        except Exception as e:
+            print(f"  ⚠️  Template resolution error: {e}")
+
     # Extract pedagogy
     pedagogy = "Not Specified"
     pedagogy_match = re.search(r'^pedagogy:\s*(.+)$', frontmatter_str, re.MULTILINE)
@@ -618,19 +679,57 @@ def audit_module(file_path: str) -> bool:
         sys.exit(1)
 
     # Summary check
-    has_summary, has_vocab, has_vocab_table = check_structure(content)
+    struct_flags = check_structure(content)
+    has_summary = struct_flags['summary']
+    has_vocab_header = struct_flags['vocab_header']
+    has_vocab_table = struct_flags['vocab_table']
+    has_activities_header = struct_flags['activities_header']
+    has_resources_header = struct_flags['resources_header']
     
-    if vocab_data:
-        has_vocab = True
-        has_vocab_table = True
+    # Sidecar Data Presence
+    has_vocab_data = vocab_data is not None
+    
+    # Check for activities YAML
+    activities_yaml_path = Path(file_path).parent / 'activities' / (Path(file_path).stem + '.yaml')
+    if not activities_yaml_path.exists():
+        activities_yaml_path = Path(file_path).with_suffix('.activities.yaml')
+    has_activities_data = activities_yaml_path.exists()
+    
+    # Check for external resources in centralized YAML
+    has_resources_data = False
+    resources_path = Path('docs/resources/external_resources.yaml')
+    if resources_path.exists():
+        with resources_path.open('r', encoding='utf-8') as f:
+            try:
+                resources_data = yaml.safe_load(f)
+                all_resources = resources_data.get('resources', {})
+                module_slug = Path(file_path).stem
+                has_resources_data = module_slug in all_resources or f"{level_code.lower()}-{module_slug}" in all_resources
+            except Exception:
+                pass
 
-    # If metadata sidecar exists, check if it handles the summary (via description or summary field)
+    # Metadata sidecar overrides for summary
     if meta_data and (meta_data.get('summary') or meta_data.get('description')):
         has_summary = True
         
-    if not has_summary:
-        print(f"❌ AUDIT FAILED: Missing 'Summary' section.")
-        print("  -> Every module must have a Summary section (in Markdown or YAML metadata).")
+    # Final structure evaluation (Clean MD Standard)
+    # Applied to all production-ready levels that use sidecars
+    is_clean_md_standard = level_code in ('A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'LIT')
+    
+    # Clean MD Logic: headers are optional IF data exists in sidecars.
+    # However, Summary (# Підсумок) is ALWAYS required in Markdown.
+    
+    structure_gate = evaluate_structure(
+        has_summary=has_summary,
+        has_vocab=has_vocab_header or has_vocab_data,
+        has_vocab_table=has_vocab_table or has_vocab_data,
+        has_activities=has_activities_header or has_activities_data,
+        has_resources=has_resources_header or has_resources_data,
+        is_a2_plus=is_clean_md_standard
+    )
+
+    if structure_gate.status == 'FAIL':
+        print(f"❌ AUDIT FAILED: {structure_gate.msg}")
         sys.exit(1)
 
     # Initialize failure flag early (checkpoint validation may set it)
@@ -1366,6 +1465,7 @@ def audit_module(file_path: str) -> bool:
     print_gates(results, level_code)
     print_lint_errors(lint_errors)
     print_pedagogical_violations(pedagogical_violations)
+    print_template_violations(template_violations)
 
     # Print vocab blocking errors (these fail the audit)
     if vocab_blocking:
@@ -1382,14 +1482,14 @@ def audit_module(file_path: str) -> bool:
             print(f"     → FIX: {v['fix']}")
 
     # Recommendation - include all vocab issues in severity
-    all_violations_for_severity = pedagogical_violations + vocab_blocking + vocab_warnings
+    all_violations_for_severity = pedagogical_violations + vocab_blocking + vocab_warnings + template_violations
     recommendation, reasons, severity = compute_recommendation(
         all_violations_for_severity, lint_errors, results, immersion_score,
         min_imm, max_imm, level_code
     )
     print_recommendation(recommendation, reasons, severity)
 
-    # Generate and save report (include all violations)
+    # Generate and save report (pedagogical, vocab, and template separated)
     all_violations_for_report = pedagogical_violations + vocab_blocking + vocab_warnings
 
     # Get richness data for report (if available)
@@ -1407,7 +1507,8 @@ def audit_module(file_path: str) -> bool:
         recommendation, reasons, severity,
         low_density_activities,
         richness_data=richness_data,
-        richness_flags=richness_flags_for_report
+        richness_flags=richness_flags_for_report,
+        template_violations=template_violations
     )
     report_path = save_report(file_path, report_content)
     print(f"\nReport: {report_path}")

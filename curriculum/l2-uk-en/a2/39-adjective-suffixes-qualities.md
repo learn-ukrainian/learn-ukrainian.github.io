@@ -1,175 +1,8 @@
 # Вступ
 
-## Палітра опису 🎨
-
-> 🧭 **Суфікси = пензлики для опису**
-
-Suffixes transform nouns and verbs into vivid descriptions. Ukrainian is famous for its rich adjectival system!
-
-**Core Adjective Suffixes:**
-
-| Suffix | Function | Root | Adjective | English |
-| :--- | :--- | :--- | :--- | :--- |
-| **-Н-** | Relational | зал- | **зальний** | hall-related |
-| **-СЬК-** | Origin | Київ- | **київський** | Kyiv-style |
-| **-ЕНЬК-** | Diminutive | мал- | **маленький** | tiny/cute |
-| **-ЕНН-** | Intensive | страх- | **страшенний** | terrifying |
-
-**Приклади:**
-- сонце → соняч**н**ий — sunny
-- Україна → україн**ськ**ий — Ukrainian
-- малий → мал**еньк**ий — tiny, cute
-- великий → велик**енн**ий — enormous
-
----
-
-## Subjective Evaluation
-
-### Суб'єктивна оцінка
-
-Ukrainian embeds emotion directly into adjectives using suffixes - no need for separate words like "very" or "cute"!
-
-Українська вбудовує емоції безпосередньо в прикметники за допомогою суфіксів — не потрібні окремі слова як "дуже" чи "милий"!
-
-### 1. Diminutive (-еньк-, -есеньк-) = Affection & Softness
-
-### Зменшувальні суфікси (-еньк-, -есеньк-) = Ніжність і м'якість
-
-These suffixes show affection, cuteness, or make requests more polite. They're very common in everyday Ukrainian speech!
-
-Ці суфікси виражають прихильність, милість або роблять прохання ввічливішими. Вони дуже поширені в щоденному українському мовленні!
-
-**Formation patterns:**
-- гарний → гарн**еньк**ий — nice → cute/nice
-- веселий → весел**еньк**ий — cheerful → sweetly cheerful
-- чистий → чист**есеньк**ий — clean → spotlessly clean
-- малий → мал**еньк**ий — small → tiny/cute
-
-**Використання в контексті:**
-- У мене **маленька** донька. — I have a little daughter. (affectionate tone)
-- Дай мені **гарненьку** чашку кави. — Give me a nice cup of coffee. (polite request)
-- Погода **сонячненька** сьогодні! — The weather is lovely and sunny today! (cheerful)
-- Який **гарненький** будинок! — What a cute little house! (admiration)
-
-> 💡 **Cultural Note**
->
-> Diminutive suffixes are MORE common in Ukrainian than in English. Using them shows warmth and creates a friendly, approachable tone!
-
-### 2. Intensive (-енн-, -езн-) = Enormous Scale
-
-### Інтенсивні суфікси (-енн-, -езн-) = Величезний масштаб
-
-When "very" isn't enough - make it HUGE! These suffixes express extreme size, intensity, or degree.
-
-Коли "дуже" недостатньо — зробіть це ВЕЛИЧЕЗНИМ! Ці суфікси виражають екстремальний розмір, інтенсивність або ступінь.
-
-**Formation patterns:**
-- здоровий → здоров**енн**ий — healthy → enormous/massive
-- високий → висок**езн**ий — tall → extremely tall
-- страшний → страш**енн**ий — scary → terrifying
-- великий → велик**енн**ий — big → gigantic
-
-**Використання в контексті:**
-- Це **здоровенний** кавун! — This is an ENORMOUS watermelon!
-- Він **страшенний** чоловік. — He's a terrifying man.
-- У них **великенна** квартира. — They have a gigantic apartment.
-- Яка **високезна** будівля! — What an extremely tall building!
-
-> 💡 **Sound Tip**
->
-> With **-енн-**, linger on the double "н" to emphasize the intensity! This makes the word sound even more dramatic.
-
----
-
-## Relational Suffixes
-
-### Відносні суфікси
-
-These suffixes connect nouns to their relationships and origins. They create descriptive adjectives from nouns.
-
-Ці суфікси поєднують слова з їхніми відношеннями та походженням. Вони створюють описові прикметники.
-
-### 1. -Н- = General Relationship
-
-### -Н- = Загальне відношення
-
-The most common suffix - creates neutral descriptive adjectives from nouns. Almost any noun can become an adjective with -н-!
-
-Найпоширеніший суфікс — створює нейтральні описові прикметники. Майже будь-яке слово може стати прикметником із -н-!
-
-**Formation patterns:**
-- сонце → соняч**н**ий — sun → sunny
-- школа → шкіль**н**ий — school → school-related
-- питання → питаль**н**ий — question → interrogative
-- зима → зим**н**ий — winter → wintry
-- робота → робоч**ий** — work → working
-- книга → книж**н**ий — book → book-related
-
-**Приклади в реченнях:**
-- **Сонячний** день — A sunny day
-- **Шкільний** рік — The school year
-- **Питальне** речення — An interrogative sentence
-- **Зимній** одяг — Winter clothing
-- **Робочий** день — A working day
-- **Книжковий** магазин — A bookstore
-
-### 2. -СЬК- = Origin & Identity
-
-### -СЬК- = Походження та ідентичність
-
-This suffix connects people to places and cultural identity. It's essential for expressing where you're from or what style something has.
-
-Цей суфікс поєднує людей із місцями та культурною ідентичністю. Він необхідний для вираження звідки ви чи який стиль має щось.
-
-**Formation patterns:**
-- Україна → україн**ськ**ий — Ukraine → Ukrainian
-- Львів → львів**ськ**ий — Lviv → Lviv-style
-- Київ → київ**ськ**ий — Kyiv → Kyiv-style
-- студент → студент**ськ**ий — student → student-related
-- село → сіль**ськ**ий — village → rural
-- місто → міськ**ий** — city → urban
-
-**Приклади в реченнях:**
-- **Українська** мова — The Ukrainian language
-- **Львівська** кава — Lviv coffee (famous regional specialty!)
-- **Студентське** життя — Student life
-- **Сільський** ярмарок — A village market
-- **Міська** рада — City council
-- **Київський** торт — Kyiv cake (classic dessert)
-
-> 💡 **Soft Sign!**
->
-> **-ськ-** is always soft (with ь). Practice: україн**ськ**ий with soft 's' and 'k'!
->
-> Notice how this suffix preserves the soft pronunciation - very important for correct speech!
-
----
-
-## Precision of Ukrainian Suffixes
-
-> 🌍 **Myth:** "Ukrainian is poetic but imprecise for science."
->
-> **Fact:** Ukrainian adjective suffixes are extremely precise!
->
-> **Examples:**
-> - **-ський** = territorial (український)
-> - **-яний** = material (дерев'яний - wooden)
-> - **-ний** = relational (соняч**н**ий)
->
-> One suffix = precise meaning! English often needs long phrases.
->
-> **Modern Ukrainian:**
-> - **напівпровідниковий** (semiconductor)
-> - **високотехнологічний** (high-tech)
-> - **електронний** (electronic)
->
-> Ukrainian works perfectly for science AND poetry!
-
----
+## Presentation
 
 ## Практика
-
-### Practice: Building Adjectives
 
 **Вправа 1: Формуйте прикметники з суфіксами**
 
@@ -208,6 +41,173 @@ Translation:
 
 ---
 
+## Палітра опису 🎨
+
+> 🧭 **Суфікси = пензлики для опису**
+
+Suffixes transform nouns and verbs into vivid descriptions. Ukrainian is famous for its rich adjectival system!
+
+**Core Adjective Suffixes:**
+
+| Suffix | Function | Root | Adjective | English |
+| :--- | :--- | :--- | :--- | :--- |
+| **-Н-** | Relational | зал- | **зальний** | hall-related |
+| **-СЬК-** | Origin | Київ- | **київський** | Kyiv-style |
+| **-ЕНЬК-** | Diminutive | мал- | **маленький** | tiny/cute |
+| **-ЕНН-** | Intensive | страх- | **страшенний** | terrifying |
+
+**Приклади:**
+- сонце → соняч**н**ий — sunny
+- Україна → україн**ськ**ий — Ukrainian
+- малий → мал**еньк**ий — tiny, cute
+- великий → велик**енн**ий — enormous
+
+---
+
+## Subjective Evaluation
+
+## Суб'єктивна оцінка
+
+Ukrainian embeds emotion directly into adjectives using suffixes - no need for separate words like «very» or «cute»!
+
+Українська вбудовує емоції безпосередньо в прикметники за допомогою суфіксів — не потрібні окремі слова як «дуже» чи «милий»!
+
+## 1. Diminutive (-еньк-, -есеньк-) = Affection & Softness
+
+## Зменшувальні суфікси (-еньк-, -есеньк-) = Ніжність і м'якість
+
+These suffixes show affection, cuteness, or make requests more polite. They're very common in everyday Ukrainian speech!
+
+Ці суфікси виражають прихильність, милість або роблять прохання ввічливішими. Вони дуже поширені в щоденному українському мовленні!
+
+**Formation patterns:**
+- гарний → гарн**еньк**ий — nice → cute/nice
+- веселий → весел**еньк**ий — cheerful → sweetly cheerful
+- чистий → чист**есеньк**ий — clean → spotlessly clean
+- малий → мал**еньк**ий — small → tiny/cute
+
+**Використання в контексті:**
+- У мене **маленька** донька. — I have a little daughter.
+- Дай мені **гарненьку** чашку кави. — Give me a nice cup of coffee.
+- Погода **сонячненька** сьогодні! — The weather is lovely and sunny today! (cheerful)
+- Який **гарненький** будинок! — What a cute little house!
+
+> 💡 **Cultural Note**
+>
+> Diminutive suffixes are MORE common in Ukrainian than in English. Using them shows warmth and creates a friendly, approachable tone!
+
+## 2. Intensive (-енн-, -езн-) = Enormous Scale
+
+## Інтенсивні суфікси (-енн-, -езн-) = Величезний масштаб
+
+When «very» isn't enough - make it HUGE! These suffixes express extreme size, intensity, or degree.
+
+Коли «дуже» недостатньо — зробіть це ВЕЛИЧЕЗНИМ! Ці суфікси виражають екстремальний розмір, інтенсивність або ступінь.
+
+**Formation patterns:**
+- здоровий → здоров**енн**ий — healthy → enormous/massive
+- високий → висок**езн**ий — tall → extremely tall
+- страшний → страш**енн**ий — scary → terrifying
+- великий → велик**енн**ий — big → gigantic
+
+**Використання в контексті:**
+- Це **здоровенний** кавун! — This is an ENORMOUS watermelon!
+- Він **страшенний** чоловік. — He's a terrifying man.
+- У них **великенна** квартира. — They have a gigantic apartment.
+- Яка **високезна** будівля! — What an extremely tall building!
+
+> 💡 **Sound Tip**
+>
+> With **-енн-**, linger on the double «н» to emphasize the intensity! This makes the word sound even more dramatic.
+
+---
+
+## Relational Suffixes
+
+## Відносні суфікси
+
+These suffixes connect nouns to their relationships and origins. They create descriptive adjectives from nouns.
+
+Ці суфікси поєднують слова з їхніми відношеннями та походженням. Вони створюють описові прикметники.
+
+## 1. -Н- = General Relationship
+
+## -Н- = Загальне відношення
+
+The most common suffix - creates neutral descriptive adjectives from nouns. Almost any noun can become an adjective with -н-!
+
+Найпоширеніший суфікс — створює нейтральні описові прикметники. Майже будь-яке слово може стати прикметником із -н-!
+
+**Formation patterns:**
+- сонце → соняч**н**ий — sun → sunny
+- школа → шкіль**н**ий — school → school-related
+- питання → питаль**н**ий — question → interrogative
+- зима → зим**н**ий — winter → wintry
+- робота → робоч**ий** — work → working
+- книга → книж**н**ий — book → book-related
+
+**Приклади в реченнях:**
+- **Сонячний** день — A sunny day
+- **Шкільний** рік — The school year
+- **Питальне** речення — An interrogative sentence
+- **Зимній** одяг — Winter clothing
+- **Робочий** день — A working day
+- **Книжковий** магазин — A bookstore
+
+## 2. -СЬК- = Origin & Identity
+
+## -СЬК- = Походження та ідентичність
+
+This suffix connects people to places and cultural identity. It's essential for expressing where you're from or what style something has.
+
+Цей суфікс поєднує людей із місцями та культурною ідентичністю. Він необхідний для вираження звідки ви чи який стиль має щось.
+
+**Formation patterns:**
+- Україна → україн**ськ**ий — Ukraine → Ukrainian
+- Львів → львів**ськ**ий — Lviv → Lviv-style
+- Київ → київ**ськ**ий — Kyiv → Kyiv-style
+- студент → студент**ськ**ий — student → student-related
+- село → сіль**ськ**ий — village → rural
+- місто → міськ**ий** — city → urban
+
+**Приклади в реченнях:**
+- **Українська** мова — The Ukrainian language
+- **Львівська** кава — Lviv coffee (famous regional specialty!)
+- **Студентське** життя — Student life
+- **Сільський** ярмарок — A village market
+- **Міська** рада — City council
+- **Київський** торт — Kyiv cake
+
+> 💡 **Soft Sign!**
+>
+> **-ськ-** is always soft (with ь). Practice: україн**ськ**ий with soft 's' and 'k'!
+>
+> Notice how this suffix preserves the soft pronunciation - very important for correct speech!
+
+---
+
+## Precision of Ukrainian Suffixes
+
+> 🌍 **Myth:** «Ukrainian is poetic but imprecise for science.»
+>
+> **Fact:** Ukrainian adjective suffixes are extremely precise!
+>
+> **Examples:**
+> - **-ський** = territorial (український)
+> - **-яний** = material (дерев'яний - wooden)
+> - **-ний** = relational (соняч**н**ий)
+>
+> One suffix = precise meaning! English often needs long phrases.
+>
+> **Modern Ukrainian:**
+> - **напівпровідниковий**
+> - **високотехнологічний** (high-tech)
+> - **електронний**
+>
+> Ukrainian works perfectly for science AND poetry!
+
+---
+
 ## На ярмарку 🌾
 
 **Прочитайте оповідання. Знайдіть описові суфікси.**
@@ -226,48 +226,12 @@ Translation:
 
 > 🎨 **Cultural Note**
 >
-> Ukrainian color adjectives carry deep meaning: **блакитний** (sky blue) + **жовтий** (yellow) = national flag colors. With suffix **-еньк-**, colors express protective love for the land.
+> Ukrainian color adjectives carry deep meaning: **блакитний** + **жовтий** (yellow) = national flag colors. With suffix **-еньк-**, colors express protective love for the land.
+
+# Підсумок
 
 ---
 
-# Summary
+## Need More Practice?
 
-## Що ви вивчили
-
-У цьому модулі ви опанували суфікси прикметників.
-
-**Ключові суфікси:**
-
-| Suffix | Function | Example |
-| :--- | :--- | :--- |
-| **-Н-** | Relational | соняч**н**ий |
-| **-СЬК-** | Origin | україн**ськ**ий |
-| **-ЕНЬК-** | Diminutive | мал**еньк**ий |
-| **-ЕНН-** | Intensive | здоров**енн**ий |
-
-**Functions:**
-
-**Relational (-Н-):**
-- сонце → соняч**н**ий — sunny
-- школа → шкіль**н**ий — school-related
-- Connects things to their relationships.
-
-**Origin (-СЬК-):**
-- Україна → україн**ськ**ий — Ukrainian
-- Львів → львів**ськ**ий — Lviv-style
-- Connects to places and identity.
-
-**Diminutive (-ЕНЬК-):**
-- малий → мал**еньк**ий — tiny/cute
-- Adds affection and softness.
-
-**Intensive (-ЕНН-):**
-- великий → велик**енн**ий — enormous
-- Emphasizes extreme scale.
-
-> 💡 **Remember**
->
-> Ukrainian embeds emotion and precision INTO the word with suffixes!
-> One suffix = clear meaning. Very efficient!
-
-Тепер ви можете створювати сотні нових описових слів! 🎨
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

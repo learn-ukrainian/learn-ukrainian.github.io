@@ -95,6 +95,23 @@ items:
   translation: value
   pos: noun
   gender: f
+- lemma: множина
+  translation: plural
+  pos: noun
+  gender: f
+- lemma: називний
+  translation: nominative
+  pos: adj
+- lemma: рід
+  translation: gender
+  pos: noun
+  gender: m
+- lemma: чоловічий
+  translation: masculine
+  pos: adj
+- lemma: жіночий
+  translation: feminine
+  pos: adj
 - lemma: числівник
   ipa: t͡ʃɪsˈlʲiʋnɪk
   translation: numeral

@@ -1,6 +1,6 @@
 # Work & Professions
 
-## Warm-up
+## Introduction
 
 Де ви працюєте? Яка ваша професія? Ви любите свою роботу?
 
@@ -8,12 +8,14 @@
 
 Work is universally important. In this module, you'll learn to talk about what you do, where you work, and your professional goals in Ukrainian. You will master vocabulary for modern professions, traditional jobs, and workplace interactions.
 
-> [!important] **Myth Buster** "Job Stability"
+> [!important] **Myth Buster** «Job Stability»
 > Russian propaganda often portrays Ukraine as economically unstable. In reality, Ukraine has a booming IT sector and diverse industries. Many Ukrainians build successful international careers.
 
 ## Presentation
 
-### Common Professions
+## Practice
+
+## Common Professions
 
 Let's start with the most common jobs. In Ukrainian, profession names often have gender forms, but masculine is used for general reference.
 
@@ -28,9 +30,9 @@ Let's start with the most common jobs. In Ukrainian, profession names often have
 | **водій** | Водій керує автобусом. |
 | **продавець** | Продавець продає товари. |
 
-**Лікар** (doctor) is a respected profession. **Вчитель** (teacher) shapes the future. **Інженер** (engineer) creates technology. **Програміст** (programmer) is a very popular job in Kyiv and Lviv. **Юрист** (lawyer) helps with legal issues. **Водій** (driver) is essential for transport.
+**Лікар** (doctor) is a respected profession. **Вчитель** (teacher) shapes the future. **Інженер** (engineer) creates technology. **Програміст** is a very popular job in Kyiv and Lviv. **Юрист** (lawyer) helps with legal issues. **Водій** (driver) is essential for transport.
 
-### The Workplace
+## The Workplace
 
 Where do people work?
 
@@ -41,12 +43,12 @@ Where do people work?
 - **магазин** — shop/store: *Я йду в магазин.*
 - **компанія** — company: *Це велика компанія.*
 
-Notice the prepositions: **в** офісі, **в** школі, **в** лікарні, але **на** фабриці (open space/process).
+Notice the prepositions: **в** офісі, **в** школі, **в** лікарні, але **на** фабриці.
 
 > [!cultural] **History Bite** The Antonov Giants
-> Ukraine is the home of the world's largest aircraft, the **An-225 Mriya** ("Dream"). It was designed and built by the Antonov Design Bureau in Kyiv. This engineering marvel symbolizes Ukrainian technical prowess and ambition.
+> Ukraine is the home of the world's largest aircraft, the **An-225 Mriya** («Dream»). It was designed and built by the Antonov Design Bureau in Kyiv. This engineering marvel symbolizes Ukrainian technical prowess and ambition.
 
-### Work Verbs
+## Work Verbs
 
 To describe what you do, use these verbs:
 
@@ -56,7 +58,7 @@ To describe what you do, use these verbs:
 - **звільнити** — to fire: *Його звільнили.*
 - **найняти** — to hire: *Компанія найняла нових людей.*
 
-### Career & Business
+## Career & Business
 
 - **кар'єра** — career: *Вона будує кар'єру.*
 - **зарплата** — salary: *У мене висока зарплата.*
@@ -68,13 +70,13 @@ To describe what you do, use these verbs:
 > [!cultural] **Cultural Insight** Salary Talk
 > In Ukraine, it is not taboo to discuss **зарплата** (salary) with close friends, but avoided in polite formal conversation. However, complaining about low salary is a national sport!
 
-### Business Etiquette
+## Business Etiquette
 
-When working in Ukraine, formality is often valued. In a corporate setting, use **Ви** (formal You) with colleagues until invited to use **ти** (informal You). Handshakes are firm. Direct eye contact shows confidence and honesty (**чесність**).
+When working in Ukraine, formality is often valued. In a corporate setting, use **Ви** with colleagues until invited to use **ти**. Handshakes are firm. Direct eye contact shows confidence and honesty (**чесність**).
 
-Punctuality is expected, though social meetings might have a "flexible" start time. Gifts (like chocolates or alcohol) are common for business partners, but strictly optional. Understanding these nuances will help you build strong professional relationships.
+Punctuality is expected, though social meetings might have a «flexible» start time. Gifts are common for business partners, but strictly optional. Understanding these nuances will help you build strong professional relationships.
 
-### Dialogue: At the Interview
+## Dialogue: At the Interview
 
 — Доброго дня. Розкажіть про себе.
 — Доброго дня. Мене звати Андрій. Я — програміст.
@@ -87,25 +89,23 @@ Punctuality is expected, though social meetings might have a "flexible" start ti
 — Ми пропонуємо хороші умови і відпустку.
 — Дякую. Коли я можу почати?
 
-## Practice
+## Describing Your Job
 
-### Describing Your Job
-
-Use **працювати** + **ким** (instrumental):
+Use **працювати** + **ким**:
 - *Я працюю лікарем.* (I work as a doctor.)
 - *Вона працює вчителем.* (She works as a teacher.)
 
-Or simply **бути** + **ким** (instrumental):
+Or simply **бути** + **ким**:
 - *Він є директором.* (He is a director.)
 
-Wait, normally we say: *Я — лікар* (Nominative) for simple ID. But describing function/status often involves Instrumental.
+Wait, normally we say: *Я — лікар* for simple ID. But describing function/status often involves Instrumental.
 
 > [!note] Nominative vs Instrumental
-> *Я — лікар* (Nominative) names who you are.
-> *Я працюю лікарем* (Instrumental) describes your function.
+> *Я — лікар* names who you are.
+> *Я працюю лікарем* describes your function.
 > Both are common, but Instrumental is safer with verbs.
 
-### Story Time: The Successful Start-up
+## Story Time: The Successful Start-up
 
 Олег був талановитим інженером. Він працював на заводі, але мріяв про власний бізнес. Його друг, Максим, був програмістом. Він працював в офісі і отримував високу зарплату.
 
@@ -121,7 +121,7 @@ Wait, normally we say: *Я — лікар* (Nominative) for simple ID. But descr
 
 Тепер їхня компанія відома. Вони наймають нових працівників. У них гарний офіс і довга відпустка. Успішна кар'єра — це результат важкої праці!
 
-### Story Time: A Day at the Hospital
+## Story Time: A Day at the Hospital
 
 Олена працює лікарем у міській лікарні. Її робота дуже важлива і відповідальна. Щоранку вона приходить у свій кабінет.
 
@@ -137,7 +137,7 @@ Wait, normally we say: *Я — лікар* (Nominative) for simple ID. But descr
 
 Ввечері Олена йде додому втомлена, але щаслива. Завтра буде новий день і нові виклики.
 
-### Story Time: The Dream Job
+## Story Time: The Dream Job
 
 Андрій завжди хотів бути пілотом. У дитинстві він дивився на небо і мріяв.
 
@@ -164,12 +164,20 @@ Wait, normally we say: *Я — лікар* (Nominative) for simple ID. But descr
 > [!tip] Talking about Future Plans
 > Use **хотіти бути** + instrumental: *Я хочу бути лікарем*. This expresses your professional goal.
 
-# Summary
+# Підсумок
 
-You learned to:
-- Name professions: **лікар**, **вчитель**, **інженер**, **програміст**
-- Describe workplaces: **офіс**, **школа**, **лікарня**, **фабрика**
-- Use work verbs: **працювати**, **заробляти**, **керувати**
-- Discuss career: **зарплата**, **відпустка**, **колега**
+In this module, we will explore the world of work and professions. Ukrainian professional life has its own unique vocabulary and cultural norms that are essential for any aspiring professional. We will learn how to describe various careers, workplaces, and the day-to-day actions that define our professional identities. Understanding these terms will help you navigate office environments and professional networking situations with confidence.
+
+**In this lesson, we will cover:**
+- **Job titles:** лікар, вчитель, програміст.
+- **Workplace locations:** офіс, фабрика, лікарня.
+- **Career actions:** працювати, керувати, співпрацювати.
+- **The professional path:** кар'єра, зарплата, відпустка.
 
 Work is not just about money; it's about passion and contribution. Whether you are a lawyer or a driver, your work matters. Keep learning Ukrainian to expand your professional horizons!
+
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

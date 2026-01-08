@@ -1,10 +1,10 @@
-# Summary
+# Telling Stories | First, Then, Finally
 
-## Warm-up
+## Introduction
 
 Everyone loves a good story. Whether you are telling a joke, explaining your weekend, or writing a report, the *order* of events matters.
 
-In this module, you will move beyond simple sentences like "I woke up. I ate. I went to work." You will learn to weave them together: "First, I woke up. Then, suddenly, the phone rang!"
+In this module, you will move beyond simple sentences like «I woke up. I ate. I went to work.» You will learn to weave them together: «First, I woke up. Then, suddenly, the phone rang!»
 
 **What you will learn:**
 - How to start a story (**Спочатку...**)
@@ -13,7 +13,7 @@ In this module, you will move beyond simple sentences like "I woke up. I ate. I 
 - How to finish strong (**Нарешті...**)
 
 > 🧠 **Think about it**
-> In your native language, how do you signal that a story is ending? Do you change your tone? Do you use a specific word like "Eventually"? Ukrainian implies this with words like **врешті-решт**.
+> In your native language, how do you signal that a story is ending? Do you change your tone? Do you use a specific word like «Eventually»? Ukrainian implies this with words like **врешті-решт**.
 
 ---
 
@@ -23,26 +23,30 @@ In this module, you will move beyond simple sentences like "I woke up. I ate. I 
 
 To tell a story, you need road signs. These words tell the listener where they are in time.
 
-### The Beginning
+## The Beginning
+
 - **Спочатку** (At first | First)
-- **Одного разу** (Once | One day) — classic fairytale start ("Once upon a time").
+- **Одного разу** (Once | One day) — classic fairytale start («Once upon a time»).
 - **Колись** (Sometime in the past | Once)
-- **Якось** (Once | Somehow) — informal storytelling start ("Once I was walking...").
+- **Якось** (Once | Somehow) — informal storytelling start («Once I was walking...»).
 
 Using these opening words immediately signals to your listener that a narrative is beginning. **Спочатку** is more structured and used for a list of events, while **Одного разу** creates a mystical or anecdotal atmosphere.
 
-### The Middle (Moving Forward)
+## The Middle
+
 - **Потім** (Then)
 - **Тоді** (Then | At that time)
-- **Після цього** (After this)
+- **Після цього**
 - **Далі** (Further | Next)
 
-### The Climax (Drama!)
+## The Climax (Drama!)
+
 - **Раптом** (Suddenly)
-- **Несподівано** (Unexpectedly)
+- **Несподівано**
 - **Саме тоді** (Just then | At that exact moment)
 
-### The End
+## The End
+
 - **Нарешті** (Finally | At last) — usually implies relief or long wait.
 - **Врешті-решт** (In the end | Eventually) — implies a result after complications.
 - **Згодом** (Later on | Subsequently) — shows passage of time after the event.
@@ -59,16 +63,16 @@ Compare these two versions:
 > These connectors usually come at the **very beginning** of the sentence to set the scene.
 > - **Раптом** почався дощ. (Suddenly, rain started.)
 
-## 3. "Before" and "Ago"
+## 3. «Before» and «Ago»
 
-We also need words to locate events relative to "now" or "then".
+We also need words to locate events relative to «now» or «then».
 
 - **Раніше** (Earlier | Before | Used to)
-  - "Раніше я не знав цього." (Before, I didn't know this.)
-- **Давно** (Long ago)
-  - "Це було давно." (It was long ago.)
+  - «Раніше я не знав цього.» (Before, I didn't know this.)
+- **Давно**
+  - «Це було давно.» (It was long ago.)
 - **Недавно | Нещодавно** (Recently | Not long ago)
-  - "Ми бачилися недавно." (We saw each other recently.)
+  - «Ми бачилися недавно.» (We saw each other recently.)
 
 Using **давно** vs. **недавно** is a great way to provide immediate scale to your story. If you start with **давно**, your listener prepares for a historical or long-past event, whereas **недавно** suggests the information is fresh and perhaps more relevant to the present moment.
 
@@ -87,15 +91,15 @@ Ukrainians love fishing (**риболовля**). Here is a typical exaggerated 
 **Petro:** Ха-ха! Як завжди. Найбільша риба — та, що втекла.
 
 > [!tip] Exaggeration
-> Notice how Mykola uses **"О, це була пригода!"** to set the stage. Stories are rarely just factual; they are performances.
+> Notice how Mykola uses **«О, це була пригода!»** to set the stage. Stories are rarely just factual; they are performances.
 
 ## 5. Intonation Secrets
 
 When you tell a story, your voice is a tool.
-- **Introduction:** Start with a mysterious tone: *"Одного разу..."* (low pitch).
-- **Process:** Speed up when listing events: *"Спочатку..., потім..., після цього..."*.
-- **Climax:** Pause before the twist: *"І раптом..."* (pause) *"Бах!"*.
-- **Conclusion:** Slow down for the ending: *"Нарешті..."*.
+- **Introduction:** Start with a mysterious tone: *«Одного разу...»*.
+- **Process:** Speed up when listing events: *«Спочатку..., потім..., після цього...»*.
+- **Climax:** Pause before the twist: *«І раптом...»* (pause) *«Бах!»*.
+- **Conclusion:** Slow down for the ending: *«Нарешті...»*.
 
 Ukrainians are very expressive storytellers. Don't be afraid to act!
 
@@ -103,26 +107,27 @@ Ukrainians are very expressive storytellers. Don't be afraid to act!
 
 ## Cultural Insight
 
-## The Art of the "Anekdot"
+## The Art of the «Anekdot»
 
-Ukrainians love to tell **анекдоти** (jokes/anecdotes). These aren't just one-liners; they are mini-stories with a setup, a conflict, and a punchline. Mastering sequence connectors is the key to telling a good *anekdot*.
+Ukrainians love to tell **анекдоти**. These aren't just one-liners; they are mini-stories with a setup, a conflict, and a punchline. Mastering sequence connectors is the key to telling a good *anekdot*.
 
 A classic structure:
-1.  **Одного разу** (Setup: "One day...")
+1.  **Одного разу** (Setup: «One day...»)
 2.  **І от** (And so | And then...)
 3.  **Раптом** (The twist!)
-4.  **Врешті-решт** (The funny conclusion).
+4.  **Врешті-решт**.
 
-### The "Kum" Stories
-Many stories feature two **куми** (godfathers/close friends). They are usually funny situations where one tries to outsmart the other.
+## The «Kum» Stories
+
+Many stories feature two **куми**. They are usually funny situations where one tries to outsmart the other.
 *Example:*
-"Одного разу кум прийшов до кума. Спочатку вони сиділи мовчки. Потім кум запитав: 'Куме, ви спите?'. 'Ні', — відповів той. 'Але чому ви закрили очі?'. 'Щоб краще бачити мрії!'"
+«Одного разу кум прийшов до кума. Спочатку вони сиділи мовчки. Потім кум запитав: 'Куме, ви спите?'. 'Ні', — відповів той. 'Але чому ви закрили очі?'. 'Щоб краще бачити мрії!'»
 
-> 🎭 **Cultural Context: "Bayky" (Fables)**
-> Ukrainian culture is rich in folklore and **байки** (fables). These stories often teach moral lessons. Writers like Hryhorii Skovoroda wrote famous fables. A typical fable starts with specific context and often ends with a clear "moral of the story," connected by words like **отже** (therefore) or **тож** (so).
+> 🎭 **Cultural Context: «Bayky» (Fables)**
+> Ukrainian culture is rich in folklore and **байки** (fables). These stories often teach moral lessons. Writers like Hryhorii Skovoroda wrote famous fables. A typical fable starts with specific context and often ends with a clear «moral of the story,» connected by words like **отже** or **тож** (so).
 
-> 🗣️ **Expression: "Ну і..."**
-> When someone is telling a story too slowly, a listener might impatiently say: "Ну і...?" (And so...?). It means: "Get to the point! What happened next?"
+> 🗣️ **Expression: «Ну і...»**
+> When someone is telling a story too slowly, a listener might impatiently say: «Ну і...?» (And so...?). It means: «Get to the point! What happened next?»
 
 ---
 
@@ -143,12 +148,12 @@ Read this story and notice the bold words.
 **Нарешті** я зрозумів: я просто забув закрити вікно ввечері!
 **Врешті-решт** я запізнився на роботу, але мав цікаву історію.
 
-### Analysis of Connectors
+## Analysis of Connectors
 
-1.  **Вже** (Already): "Я _вже_ хотів..." — action was about to happen.
-2.  **Відразу** (Immediately): Reaction to the sound.
+1.  **Вже** (Already): «Я _вже_ хотів...» — action was about to happen.
+2.  **Відразу**: Reaction to the sound.
 3.  **Тільки-но** (Just as | As soon as): Immediate sequence.
-4.  **Ледве** (Barely | Hardly): "Hardly had I approached..."
+4.  **Ледве** (Barely | Hardly): «Hardly had I approached...»
 
 ## Useful Phrases for Storytellers
 
@@ -157,13 +162,13 @@ Read this story and notice the bold words.
 - **Чесно кажучи...** (Honestly speaking...)
 - **Коротше кажучи...** (Long story short...)
 
-> [!tip] "Sche" vs "Vzhe"
-> - **Ще** (Still | Yet): "Я ще не готовий." (I am not ready yet.)
-> - **Вже** (Already): "Я вже готовий." (I am already ready.)
+> [!tip] «Sche» vs «Vzhe»
+> - **Ще** (Still | Yet): «Я ще не готовий.» (I am not ready yet.)
+> - **Вже** (Already): «Я вже готовий.» (I am already ready.)
 >
 > In stories:
-> "Я **ще** спав, коли..." (I was *still* sleeping when...)
-> "Я **вже** встав, коли..." (I had *already* gotten up when...)
+> «Я **ще** спав, коли...» (I was *still* sleeping when...)
+> «Я **вже** встав, коли...» (I had *already* gotten up when...)
 
 ---
 
@@ -183,7 +188,7 @@ Read this story and notice the bold words.
 
 Несподівано всі почали слухати! Молоді люди відклали телефони. Діти підійшли ближче.
 
-Тільки-но бабуся закінчила одну історію, хтось попросив: "Розкажіть ще!"
+Тільки-но бабуся закінчила одну історію, хтось попросив: «Розкажіть ще!»
 
 Ледве вона почала нову історію, світло увімкнулося. Поїзд поїхав далі.
 
@@ -197,8 +202,6 @@ Read this story and notice the bold words.
 > «Слово — не горобець: вилетить — не впіймаєш.»
 > Це означає: думай, перш ніж говорити!
 
----
-
 # Підсумок
 
 У цьому модулі ви навчилися:
@@ -209,3 +212,8 @@ Read this story and notice the bold words.
 
 Тепер ви готові розповідати цікаві історії українською!
 
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

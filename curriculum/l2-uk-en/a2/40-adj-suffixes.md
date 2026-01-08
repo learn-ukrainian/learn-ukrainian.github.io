@@ -1,4 +1,4 @@
-## Warm-up
+## Introduction
 
 Welcome back to the Word Factory!
 Last time, we made Nouns. Today, we make **Adjectives**.
@@ -39,8 +39,8 @@ It works for almost all abstract concepts (Theory -> Theoretical).
 
 **Rule 2: Materials use -овий**
 If something is made of distinct parts or materials, it often uses **-овий**.
-Think of "Fruit" -> "Fruit-based cake". That's a "Fruit-ov-y" cake.
-Think of "Science" -> "Science-based fact". That's a "Science-ov-y" fact.
+Think of «Fruit» -> «Fruit-based cake». That's a «Fruit-ov-y» cake.
+Think of «Science» -> «Science-based fact». That's a «Science-ov-y» fact.
 
 **Rule 3: Softness Matters**
 Sometimes **-овий** becomes **-евий** or **-євий**. Why?
@@ -48,13 +48,24 @@ Because of Ukrainian phonetics. After soft sounds or 'j' sounds (like in Жит�
 So *Житт-ов-ий* sounds hard. *Житт-єв-ий* flows like water.
 
 **Rule 4: People and Places use -ськ-**
-This is the "Belonging" suffix.
-It answers: "Whose is it?" or "Where is it from?"
+This is the «Belonging» suffix.
+It answers: «Whose is it?» or «Where is it from?»
 It is NOT about what it is made of. It is about *identity*.
 - Kyiv -> Kyiv-an identity -> Київський.
 - Student -> Student identity -> Студентський.
 
 ---
+
+## Practice Tips for Mastery
+
+The best way to internalize these patterns is through active practice. Try these exercises in your daily study routine:
+
+- **Noun-to-Adjective Drill**: Take 10 nouns from your vocabulary list each day and practice converting them to adjectives using the appropriate suffix. Say them out loud and write them down.
+- **Gender Practice**: For each adjective you create, practice all four forms (masculine, feminine, neuter, plural). This builds muscle memory for agreement patterns.
+- **Real-World Application**: When reading Ukrainian texts, circle every adjective you find and try to identify which suffix it uses and why. This helps you see the patterns in authentic context.
+- **Listening Practice**: When watching Ukrainian videos or listening to podcasts, pay special attention to adjectives. Notice how native speakers use diminutives and which suffixes appear most frequently in different contexts (news vs. casual conversation).
+
+Remember: language learning is a marathon, not a sprint. These patterns will become second nature with consistent practice over time!
 
 ## The Big Three: -Н, -ОВ, -СЬК
 
@@ -74,7 +85,7 @@ This is the default suffix. Use it for general qualities.
 
 ## Machine 2: The Relationship (-ов-ий)
 
-Use this for "made of" or "related to".
+Use this for «made of» or «related to».
 
 | Noun | Adjective | English | Note |
 | :--- | :--- | :--- | :--- |
@@ -104,20 +115,20 @@ Use this for places, groups, and people.
 
 ---
 
-## Deep Dive: Living Adjectives (The Active State)
+## Deep Dive: Living Adjectives
 
 Some adjectives describe a state or feeling.
-- **Гарячий** (Hot) — from "to burn". e.g. Гарячий чай (Hot tea).
+- **Гарячий** (Hot) — from «to burn». e.g. Гарячий чай.
 - **Свіжий** (Fresh).
-- **Чужий** (Foreign/Alien).
-- **Справжній** (Real/Genuine).
+- **Чужий**.
+- **Справжній**.
 - **Чоловічий** (Male/Men's) — e.g. Чоловічий одяг (Men's clothing).
 - **Жіночий** (Female/Women's) — e.g. Жіночий журнал (Women's magazine).
-- **Холодний** (Cold) — e.g. Холодний день (Cold day).
-- **Молодий** (Young) — e.g. Молодий хлопець (Young guy).
+- **Холодний** (Cold) — e.g. Холодний день.
+- **Молодий** (Young) — e.g. Молодий хлопець.
 
 > [!note] Why -ій?
-> Soft adjectives end in **-ій** (masculine).
+> Soft adjectives end in **-ій**.
 > - **Синій**: Blue
 > - **Вечірній**: Evening
 > - **Останній**: Last
@@ -128,16 +139,16 @@ Some adjectives describe a state or feeling.
 ## Deep Dive: The Diminutive (-еньк)
 
 Just like nouns have **-ок**, adjectives have **-еньк**.
-It means "sweet", "little", or "pleasant".
+It means «sweet», «little», or «pleasant».
 
-- **Малий** -> **Маленький** (Little/Small).
-- **Гарний** -> **Гарненький** (Pretty/Nice).
-- **Теплий** -> **Тепленький** (Nice and warm).
+- **Малий** -> **Маленький**.
+- **Гарний** -> **Гарненький**.
+- **Теплий** -> **Тепленький**.
 - **Свіжий** -> **Свіженький** (Fresh).
 - **Чистий** -> **Чистенький** (Clean).
 
 *Мама купила свіженький хліб.* (Mom bought fresh-little-bread).
-*Це мій маленький кіт.* (This is my little cat).
+*Це мій маленький кіт.*.
 
 ---
 
@@ -150,15 +161,15 @@ It means "sweet", "little", or "pleasant".
 Студенти люблять його лекції. Вони завжди **цікаві** та **живі**.
 Сьогодні він розповідає про **український** побут.
 Він показує **кольорові** мапи і **старі** фотографії.
-"Ось **типовий** будинок," — каже він.
-"Він має **дерев'яний** дах і **кам'яний** фундамент."
+«Ось **типовий** будинок,» — каже він.
+«Він має **дерев'яний** дах і **кам'яний** фундамент.»
 Студенти ставлять **розумні** питання.
 Професор дає **точні** відповіді.
 Це справжній **академічний** процес.
 
 > [!cultural] Cultural Insight: Science
 > Ukraine has a strong tradition in **математична** (math) and **фізична** (physics) science.
-> Names like Korolyov (rockets), Sikorsky (helicopters), and Paton (welding) are world-famous.
+> Names like Korolyov (rockets), Sikorsky, and Paton (welding) are world-famous.
 > The suffix **-ський** is also standard for many surnames!
 
 ---
@@ -189,15 +200,15 @@ It means "sweet", "little", or "pleasant".
 Молодий хлопець купує **гострий** перець.
 Це буде **гарячий** обід!
 Дівчина шукає **червоні** помідори.
-"Вони **українські**?" — питає вона.
-"Так, це наш **рідний** продукт," — відповідає продавець.
+«Вони **українські**?» — питає вона.
+«Так, це наш **рідний** продукт,» — відповідає продавець.
 Базар — це **веселий** і **шумний** світ.
 
 > [!cultural] Cultural Insight: Food Names
 > Many food names use standard suffixes:
-> - **Київський** торт (Kyiv cake).
-> - **Полтавська** галушка (Poltava dumpling).
-> - **Львівський** сирник (Lviv cheesecake).
+> - **Київський** торт.
+> - **Полтавська** галушка.
+> - **Львівський** сирник.
 > Regional pride is delicious!
 
 ---
@@ -260,23 +271,23 @@ It means "sweet", "little", or "pleasant".
 ## English theory
 
 We have covered the main tools for building adjectives.
-Let's review the "machine parts" one last time.
+Let's review the «machine parts» one last time.
 
 1.  **-н-ий** = The Generalist. Use this for general qualities (Musical, Tasty, Cold). It connects a noun to a quality.
 2.  **-ов-ий** = The Materialist. Use this for things made of something or related to a field (Scientific, Colorful, Apple-flavored).
 3.  **-ськ-ий** = The Identity Maker. Use this for geography, origin, and social groups (Ukrainian, Urban, Human).
 4.  **-еньк-ий** = The Sweetener. Use this to make anything cute, small, or pleasant (Small-sweet, Fresh-sweet).
-5.  **Active Adjectives** = These describe a state, like "Hot" (Burning) or "Fresh" (Blooming). They often behave like verbs frozen in time.
+5.  **Active Adjectives** = These describe a state, like «Hot» (Burning) or «Fresh» (Blooming). They often behave like verbs frozen in time.
 
 Remember: Adjectives must always agree with their noun in Gender, Number, and Case!
-A "Ukrainian book" is *Українська книга*, but a "Ukrainian passport" is *Український паспорт*.
+A «Ukrainian book» is *Українська книга*, but a «Ukrainian passport» is *Український паспорт*.
 
-### Learning Strategy: The Three-Step Method
+## Learning Strategy: The Three-Step Method
 
 When you encounter a new noun and want to turn it into an adjective, follow these three simple steps:
 
 **Step 1: Identify the Category**
-Ask yourself: "What kind of relationship am I describing?"
+Ask yourself: «What kind of relationship am I describing?»
 - Is it about WHERE something is from? → Use **-ськ-** (Kyiv → Київський)
 - Is it about WHAT FIELD it belongs to? → Use **-ов-** (Science → Науковий)  
 - Is it about a GENERAL QUALITY? → Use **-н-** (Music → Музичний)
@@ -294,24 +305,13 @@ Attach your chosen suffix, then add the gender ending:
 - Музик- + -н- + -а = Музична
 - Музик- + -н- + -е = Музичне
 
-With practice, this process becomes automatic. You'll start to "feel" which suffix sounds right, just like native speakers do. The key is to practice with real examples and pay attention to patterns you notice in Ukrainian texts, songs, and conversations.
+With practice, this process becomes automatic. You'll start to «feel» which suffix sounds right, just like native speakers do. The key is to practice with real examples and pay attention to patterns you notice in Ukrainian texts, songs, and conversations.
 
-### Common Mistakes to Avoid
+## Common Mistakes to Avoid
 
-1. **Don't mix up -ськ- and -н-**: "Київний" is wrong! Cities always use **-ськ-** → Київський.
+1. **Don't mix up -ськ- and -н-**: «Київний» is wrong! Cities always use **-ськ-** → Київський.
 2. **Don't forget gender agreement**: The suffix stays the same, but the ending must match the noun's gender.
 3. **Don't overuse diminutives**: While **-еньк-** is charming, using it too much can sound childish. Save it for when you really want to express affection or politeness.
-
-### Practice Tips for Mastery
-
-The best way to internalize these patterns is through active practice. Try these exercises in your daily study routine:
-
-- **Noun-to-Adjective Drill**: Take 10 nouns from your vocabulary list each day and practice converting them to adjectives using the appropriate suffix. Say them out loud and write them down.
-- **Gender Practice**: For each adjective you create, practice all four forms (masculine, feminine, neuter, plural). This builds muscle memory for agreement patterns.
-- **Real-World Application**: When reading Ukrainian texts, circle every adjective you find and try to identify which suffix it uses and why. This helps you see the patterns in authentic context.
-- **Listening Practice**: When watching Ukrainian videos or listening to podcasts, pay special attention to adjectives. Notice how native speakers use diminutives and which suffixes appear most frequently in different contexts (news vs. casual conversation).
-
-Remember: language learning is a marathon, not a sprint. These patterns will become second nature with consistent practice over time!
 
 ## Story Time: У Магазині Одягу
 
@@ -345,8 +345,6 @@ Remember: language learning is a marathon, not a sprint. These patterns will bec
 > «Не одяг красить людину, а людина одяг.»
 > Це означає: важливіше, яка людина, а не що вона носить.
 
----
-
 # Підсумок
 
 У цьому модулі ви вивчили:
@@ -357,3 +355,8 @@ Remember: language learning is a marathon, not a sprint. These patterns will bec
 
 Тепер ви можете утворювати прикметники від іменників!
 
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

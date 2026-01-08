@@ -33,7 +33,7 @@
       correct: false
     - text: Хто ви бажаєте?
       correct: false
-    explanation: '"Що" is used for the object of desire.'
+    explanation: '«Що» is used for the object of desire.'
   - question: How does a waiter ask accurately "Are you ready to order"?
     options:
     - text: Ви готові замовляти?
@@ -44,7 +44,7 @@
       correct: false
     - text: Ви готові йти?
       correct: false
-    explanation: '"Замовляти" means to order.'
+    explanation: '«Замовляти» means to order.'
   - question: How do you accurately ask for the bill?
     options:
     - text: Рахунок, будь ласка.
@@ -55,7 +55,7 @@
       correct: false
     - text: Де офіціант?
       correct: false
-    explanation: '"Рахунок" is the bill.'
+    explanation: '«Рахунок» is the bill.'
   - question: How do you ask for a table for two people?
     options:
     - text: Столик на двох, будь ласка.
@@ -66,7 +66,7 @@
       correct: false
     - text: Столик тут.
       correct: false
-    explanation: '"На двох" means for two.'
+    explanation: '«На двох» means for two.'
   - question: How do you accurately ask "Can I have a menu"?
     options:
     - text: Можна меню, будь ласка?
@@ -77,7 +77,7 @@
       correct: false
     - text: Я хочу меню.
       correct: false
-    explanation: Polite "Можна".
+    explanation: Polite «Можна».
   - question: How do you accurately ask for a napkin now?
     options:
     - text: Дайте серветку, будь ласка.
@@ -88,7 +88,7 @@
       correct: false
     - text: Що це серветка?
       correct: false
-    explanation: Requesting "серветку".
+    explanation: Requesting «серветку».
   - question: How does the waiter or customer say "Bon appetit" in Ukraine?
     options:
     - text: Смачного!
@@ -99,7 +99,7 @@
       correct: false
     - text: Вибачте!
       correct: false
-    explanation: '"Смачного" is the standard phrase.'
+    explanation: '«Смачного» is the standard phrase.'
   - question: How can you say accurately the phrase "The bill, please"?
     options:
     - text: Можна рахунок, будь ласка?
@@ -206,36 +206,36 @@
   - statement: In Ukraine, it's normal to spend hours at a café.
     correct: true
     explanation: Correct! Ukrainian café culture encourages lingering.
-  - statement: You should say "Я хочу каву" when ordering.
+  - statement: You should say «Я хочу каву» when ordering.
     correct: false
-    explanation: Incorrect! "Я візьму каву" is more polite. "Я хочу" sounds demanding.
+    explanation: Incorrect! «Я візьму каву» is more polite. «Я хочу» sounds demanding.
   - statement: Asking for separate checks is common in Ukraine.
     correct: true
-    explanation: Correct! "Рахунок окремо" is standard practice.
+    explanation: Correct! «Рахунок окремо» is standard practice.
   - statement: Tipping is never expected in Ukraine.
     correct: false
     explanation: Incorrect! 10% is becoming standard for good service.
   - statement: Lviv is famous for its coffee culture.
     correct: true
     explanation: Correct! Lviv has hundreds of unique cafés and a rich coffee history.
-  - statement: '"Будь ласка" should be added to most requests.'
+  - statement: '«Будь ласка» should be added to most requests.'
     correct: true
     explanation: Correct! Politeness is highly valued in Ukrainian culture.
   - statement: You should rush to leave after finishing your coffee.
     correct: false
     explanation: Incorrect! Ukrainian cafés welcome you to stay and relax.
-  - statement: '"Візьму" is the polite way to say "I''ll take."'
+  - statement: '«Візьму» is the polite way to say "I''ll take."'
     correct: true
-    explanation: Correct! It's less direct than "хочу" (I want).
-  - statement: The waiter will ask "Разом чи окремо?" when bringing the bill.
+    explanation: Correct! It's less direct than «хочу» (I want).
+  - statement: The waiter will ask «Разом чи окремо?» when bringing the bill.
     correct: true
     explanation: Correct! This means "Together or separately?"
-  - statement: '"Меню" means "table" in Ukrainian.'
+  - statement: '«Меню» means "table" in Ukrainian.'
     correct: false
-    explanation: Incorrect! "Меню" means menu. "Стіл" or "столик" means table.
-  - statement: '"Ще" means "more" or "another."'
+    explanation: Incorrect! «Меню» means menu. «Стіл» or «столик» means table.
+  - statement: '«Ще» means "more" or "another."'
     correct: true
-    explanation: Correct! "Ще один салат" = one more salad.
+    explanation: Correct! «Ще один салат» = one more salad.
   - statement: Київський торт is a famous Kyiv dessert.
     correct: true
     explanation: Correct! It's a hazelnut meringue cake created in 1956.
@@ -273,6 +273,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Столик на двох, будь ласка'
   - question: 'Correct sentence order for: "I''ll take coffee with milk."'
     options:
@@ -281,6 +283,8 @@
     - text: візьму Я каву з молоком
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Я візьму каву з молоком'
   - question: 'Correct sentence order for: "What do you recommend?"'
@@ -291,6 +295,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Що порекомендуєте'
   - question: 'Correct sentence order for: "Please bring more bread."'
     options:
@@ -299,6 +305,8 @@
     - text: будь Принесіть, ласка, ще хліб
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Принесіть, будь ласка, ще хліб'
   - question: 'Correct sentence order for: "Check separately, please."'
@@ -309,6 +317,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Рахунок окремо, будь ласка'
   - question: 'Correct sentence order for: "That''s everything."'
     options:
@@ -317,6 +327,8 @@
     - text: все Це
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Це все'
   - question: 'Correct sentence order for: "Thank you, it was..."'
@@ -327,6 +339,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Дякую, було дуже смачно'
   - question: 'Correct sentence order for: "That''s enough."'
     options:
@@ -335,6 +349,8 @@
     - text: достатньо Це
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Це достатньо'
   - question: 'Correct sentence order for: "Can I have a menu?"'
@@ -345,6 +361,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Можна меню'
   - question: 'Correct sentence order for: "Anything else?"'
     options:
@@ -354,6 +372,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Ще щось'
   - question: 'Correct sentence order for: "Please bring water."'
     options:
@@ -362,6 +382,8 @@
     - text: будь Принесіть, ласка, воду
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Принесіть, будь ласка, воду'
   id: order-the-café-sentences-order
@@ -410,7 +432,7 @@
     - Нормально.
     - Дякую, було дуже смачно!
     - Так.
-  - sentence: The waiter asks "Ще щось?" You're done. ___
+  - sentence: The waiter asks «Ще щось?» You're done. ___
     answer: Ні, це все. Дякую
     options:
     - Ні!
@@ -488,7 +510,7 @@
       correct: false
     - text: Що смачне?
       correct: false
-    explanation: '"Що порекомендуєте?" is the polite way to ask for recommendations.'
+    explanation: '«Що порекомендуєте?» is the polite way to ask for recommendations.'
   - question: You want coffee. What's the polite order?
     options:
     - text: Я хочу каву!
@@ -499,8 +521,8 @@
       correct: false
     - text: Дайте каву!
       correct: false
-    explanation: '"Візьму" is polite, "хочу" is too direct.'
-  - question: The waiter asks "З цукром?" You want sugar. What do you say?
+    explanation: '«Візьму» is polite, «хочу» is too direct.'
+  - question: The waiter asks «З цукром?» You want sugar. What do you say?
     options:
     - text: Ні
       correct: false
@@ -510,7 +532,7 @@
       correct: false
     - text: Може бути
       correct: false
-    explanation: '"Так, будь ласка" = Yes, please'
+    explanation: '«Так, будь ласка» = Yes, please'
   - question: You want more bread. What do you say?
     options:
     - text: Хліб!
@@ -521,8 +543,8 @@
       correct: true
     - text: Я хочу хліб!
       correct: false
-    explanation: '"Принесіть, будь ласка" is the polite imperative.'
-  - question: The waiter asks "Ще щось?" You're finished ordering. What do you say?
+    explanation: '«Принесіть, будь ласка» is the polite imperative.'
+  - question: The waiter asks «Ще щось?» You're finished ordering. What do you say?
     options:
     - text: Ні, це все. Дякую.
       correct: true
@@ -532,7 +554,7 @@
       correct: false
     - text: Достатньо!
       correct: false
-    explanation: Always add "Дякую" for politeness.
+    explanation: Always add «Дякую» for politeness.
   - question: You've finished eating. What do you ask for?
     options:
     - text: Меню
@@ -543,8 +565,8 @@
       correct: true
     - text: Воду
       correct: false
-    explanation: '"Рахунок" = check/bill'
-  - question: The waiter asks "Разом чи окремо?" You want to split. What do you say?
+    explanation: '«Рахунок» = check/bill'
+  - question: The waiter asks «Разом чи окремо?» You want to split. What do you say?
     options:
     - text: Разом
       correct: false
@@ -554,7 +576,7 @@
       correct: false
     - text: Так
       correct: false
-    explanation: '"Окремо" = separately'
+    explanation: '«Окремо» = separately'
   - question: You're leaving. What's a nice thing to say?
     options:
     - text: До побачення.

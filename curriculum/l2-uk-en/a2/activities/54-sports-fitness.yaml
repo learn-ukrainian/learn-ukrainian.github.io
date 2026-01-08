@@ -1,7 +1,7 @@
 - type: quiz
   title: Sports Knowledge
   items:
-  - question: Who is **Андрій Шевченко** (Andriy Shevchenko) in Ukrainian sports?
+  - question: Who is the legendary **Андрій Шевченко** in Ukrainian sports?
     options:
     - text: Football legend
       correct: true
@@ -11,7 +11,8 @@
       correct: false
     - text: Dancer
       correct: false
-  - question: When using the verb **займатися** (to practice/engage in), which grammatical case must follow?
+  - question: When using the verb **займатися**, which grammatical
+      case must follow?
     options:
     - text: Instrumental
       correct: true
@@ -31,7 +32,8 @@
       correct: false
     - text: coach
       correct: false
-  - question: What famous geographical feature is **Говерла** (Hoverla) typically known as in Ukraine?
+  - question: What famous geographical feature is **Говерла** (Hoverla) typically
+      known as in Ukraine?
     options:
     - text: highest mountain
       correct: true
@@ -41,7 +43,7 @@
       correct: false
     - text: deepest lake
       correct: false
-  - question: Who is the historic rival of **Динамо Київ** (Dynamo Kyiv)?
+  - question: Who is the historic rival of **Динамо Київ**?
     options:
     - text: Shakhtar Donetsk
       correct: true
@@ -61,7 +63,8 @@
       correct: false
     - text: sleeping
       correct: false
-  - question: What specific physical action does the Ukrainian verb **тренуватися** describe in English?
+  - question: What specific physical action does the Ukrainian verb **тренуватися**
+      describe in English?
     options:
     - text: to train/workout
       correct: true
@@ -81,7 +84,7 @@
       correct: false
     - text: money
       correct: false
-  - question: The **Клички** (Klitschko) brothers are famous for which sport?
+  - question: The **Клички** brothers are famous for which sport?
     options:
     - text: boxing
       correct: true
@@ -101,7 +104,8 @@
       correct: false
     - text: ball
       correct: false
-  - question: What is the correct English translation of the important Ukrainian noun **перемога**?
+  - question: What is the correct English translation of the important Ukrainian noun
+      **перемога**?
     options:
     - text: victory
       correct: true
@@ -253,34 +257,34 @@
 - type: true-false
   title: Sports Rules
   items:
-  - statement: You say "грати в футбол".
+  - statement: You say «грати в футбол».
     correct: true
     explanation: Play + in + Acc.
-  - statement: You say "займатися футбол".
+  - statement: You say «займатися футбол».
     correct: false
-    explanation: Must be футболом (Instrumental case).
-  - statement: '"Басейн" is a place to run.'
+    explanation: Must be футболом.
+  - statement: «Басейн» is a place to run.
     correct: false
     explanation: To swim.
   - statement: Usyk is a football player.
     correct: false
     explanation: Boxer.
-  - statement: '"Вболівальник" plays on the field.'
+  - statement: «Вболівальник» plays on the field.
     correct: false
     explanation: Spectator/fan.
-  - statement: '"Перемога" is when you lose.'
+  - statement: «Перемога» is when you lose.
     correct: false
     explanation: It means victory.
   - statement: Stadiums are for concerts and sports.
     correct: true
     explanation: Yes.
-  - statement: '"Рахунок" tells who is winning.'
+  - statement: «Рахунок» tells who is winning.
     correct: true
     explanation: Score.
-  - statement: You can "займатися" in a gym.
+  - statement: You can «займатися» in a gym.
     correct: true
     explanation: Workout/exercise.
-  - statement: '"Команда" means one person.'
+  - statement: «Команда» means one person.
     correct: false
     explanation: Team.
   - statement: Hoverla is a river in Kyiv.
@@ -449,7 +453,8 @@
     - футболом
     - футболу
     - футболі
-    explanation: 'Play + Acc (game name does NOT change): грати в футбол. Instrumental is wrong here.'
+    explanation: 'Play + Acc: грати в футбол. Instrumental
+      is wrong here.'
   - sentence: Ми йдемо в стадіон.
     error: в
     answer: на
@@ -545,11 +550,11 @@
   title: Football Match
   passage: 'Ми на стадіоні. Сьогодні {матч|урок|обід}.
 
-    Грають "Динамо" і "Шахтар".
+    Грають «Динамо» і «Шахтар».
 
-    Я — {вболівальник|гравець|лікар} "Динамо".
+    Я — {вболівальник|гравець|лікар} «Динамо».
 
-    Мій друг каже: "Дивись, який {пас|бас|час}!".
+    Мій друг каже: «Дивись, який {пас|бас|час}!».
 
     Суддя дає жовту картку.
 
@@ -557,7 +562,7 @@
 
     {рахунок|ціна|година} стає 1:0.
 
-    Ми кричимо "Ура!". Це {перемога|проблема|машина}!
+    Ми кричимо «Ура!». Це {перемога|проблема|машина}!
 
     Спорт — це сильні {емоції|порції|акції}.
 
@@ -574,7 +579,9 @@
 - type: mark-the-words
   title: Sports List
   id: sports-list
-  passage: У школі ми грали в *футбол* і *баскетбол*. Мій брат любить *теніс*. Взимку ми дивимося *біатлон*. Влітку я люблю *плавання*. Мій тато дивиться *бокс*. Його друг займається *карате*. *Гімнастика* — це дуже красиво.
+  passage: У школі ми грали в *футбол* і *баскетбол*. Мій брат любить *теніс*. Взимку
+    ми дивимося *біатлон*. Влітку я люблю *плавання*. Мій тато дивиться *бокс*. Його
+    друг займається *карате*. *Гімнастика* — це дуже красиво.
   correct_words:
   - футбол
   - баскетбол
@@ -584,6 +591,7 @@
   - бокс
   - карате
   - Гімнастика
+  instruction: Натисніть на правильні слова в тексті.
 - type: select
   title: Choose Correct Verb
   items:
@@ -593,12 +601,20 @@
       correct: true
     - text: Стрибати.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Run.
   - question: To swim.
     options:
     - text: Плавати.
       correct: true
     - text: Літати.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Swim.
   - question: To win.
@@ -607,12 +623,20 @@
       correct: true
     - text: Програвати.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Win.
   - question: To lose.
     options:
     - text: Програвати.
       correct: true
     - text: Грати.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Lose.
   - question: To train.
@@ -621,12 +645,20 @@
       correct: true
     - text: Лікуватися.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Train.
   - question: To play a game.
     options:
     - text: Грати.
       correct: true
     - text: Спати.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Play.
   - question: To cheer/support.
@@ -635,12 +667,20 @@
       correct: true
     - text: Хворіти.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Вболівати (also means to be sick, context matters!).
   - question: To score.
     options:
     - text: Забити.
       correct: true
     - text: Забути.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Score vs Forget.
   - question: To kick.
@@ -649,12 +689,20 @@
       correct: true
     - text: Пити.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Kick/Hit vs Drink.
   - question: To jump.
     options:
     - text: Стрибати.
       correct: true
     - text: Співати.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Jump.
   - question: To catch.
@@ -663,12 +711,20 @@
       correct: true
     - text: Любити.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Catch.
   - question: To become.
     options:
     - text: Стати.
       correct: true
     - text: Спати.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Become (champion).
   id: choose-correct-verb

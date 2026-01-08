@@ -1,4 +1,4 @@
-## Warm-up
+## Introduction
 
 **Тепер, коли ви розумієте аспект, давайте навчимося використовувати доконаний вид у минулому часі!**
 
@@ -23,11 +23,32 @@ The past tense is where aspect differences are most visible and most important. 
 
 ## Presentation
 
+## Practice
+
+Choose perfective or imperfective for these contexts:
+
+1. **I finished writing the letter.** → Я **написав** листа. (perf.)
+2. **I was writing for 2 hours.** → Я **писав** дві години. (impf.)
+3. **She said «yes.»** → Вона **сказала** «так.» (perf.)
+4. **He was speaking loudly.** → Він голосно **говорив**. (impf.)
+5. **We already read this.** → Ми вже це **прочитали**. (perf.)
+6. **They were reading all evening.** → Вони **читали** весь вечір. (impf.)
+
+**Self-Test Questions:**
+Before moving to the activities, make sure you can answer these questions:
+- What is the masculine past tense ending? Answer: -в or zero
+- What feminine ending do all past tense verbs use? Answer: -ла
+- Does «пішов» come from «іти» or «піти»? Answer: піти — the perfective form
+
+**Question:** Ти зробив це? (Did you do it?)
+**Positive:** Так, я зробив це. (Yes, I did it.)
+**Negative:** Ні, я не зробив це. (No, I didn't do it.)
+
 ## Forming the Perfective Past
 
 The good news: perfective verbs conjugate in past tense exactly like imperfective verbs! The past tense endings are the same for both aspects.
 
-### Past Tense Endings (Same for Both Aspects)
+## Past Tense Endings
 
 | Gender/Number | Ending    | Example (прочитати) |
 | ------------- | --------- | ------------------- |
@@ -43,7 +64,7 @@ The good news: perfective verbs conjugate in past tense exactly like imperfectiv
 
 > 💡 **Key Point**
 >
-> The difference isn't in the endings — it's in the verb itself. Прочитав and читав have the same endings, but different stems. Прочитав is perfective (completed), читав is imperfective (ongoing).
+> The difference isn't in the endings — it's in the verb itself. Прочитав and читав have the same endings, but different stems. Прочитав is perfective, читав is imperfective (ongoing).
 
 ## Imperfective vs. Perfective Past: Side by Side
 
@@ -60,20 +81,20 @@ Let's compare the same verb pair in past tense:
 
 ## When to Use Perfective Past
 
-### 1. Single Completed Action
+## 1. Single Completed Action
 
 When something happened once and is finished:
 - Я **прочитав** книгу вчора. (I finished the book yesterday.)
 - Вона **написала** листа. (She wrote/finished the letter.)
 - Він **з'їв** сніданок. (He ate breakfast.)
 
-### 2. Result Matters More Than Process
+## 2. Result Matters More Than Process
 
 Focus on what got accomplished:
 - Хто **написав** цю книгу? (Who wrote this book?)
 - Вони **побудували** новий міст. (They built a new bridge.)
 
-### 3. With "Already" (вже) and "Finally" (нарешті)
+## 3. With «Already» (вже) and «Finally» (нарешті)
 
 These words almost always signal perfective:
 - Я **вже прочитав** цю книгу. (I've already read this book.)
@@ -85,32 +106,17 @@ These words almost always signal perfective:
 
 ## When to Use Imperfective Past
 
-### 1. Duration or Process
+## 1. Duration or Process
 
 When the action lasted for some time:
 - Я **читав** книгу три години. (I was reading for 3 hours.)
 - Вона **писала** весь день. (She was writing all day.)
 
-### 2. Repeated Actions
+## 2. Repeated Actions
 
 When something happened multiple times:
 - Він **читав** цю книгу багато разів. (He read this book many times.)
 - Ми **бачили** його часто. (We saw him often.)
-
-### 3. Asking About Activities
-
-When asking "what were you doing?":
-- Що ти **робив** учора? (What were you doing yesterday?)
-- Що вона **читала**? (What was she reading?)
-
-> [!tip] Decision Guide
-> Ask yourself: "Am I focusing on what got done (perfective) or what someone was doing (imperfective)?"
-
-> 🌍 **Cultural Connection**
->
-> Українська мова чітко розрізняє процес і результат. Це важлива частина слов'янського світогляду — ми цікавимось не лише ЩО сталось, але і ЯК це відбувалось!
-
----
 
 ## Cultural Insight
 
@@ -138,101 +144,31 @@ Here are the most common perfective verbs in past tense:
 
 > 🔍 **Irregular Forms**
 >
-> Some perfective verbs have irregular past forms: піти → пішов (not "пів"), прийти → прийшов.
+> Some perfective verbs have irregular past forms: піти → пішов (not «пів»), прийти → прийшов.
 
 ---
-
-## Practice
-
-## Practice Examples
-
-Choose perfective or imperfective for these contexts:
-
-1. **I finished writing the letter.** → Я **написав** листа. (perf.)
-2. **I was writing for 2 hours.** → Я **писав** дві години. (impf.)
-3. **She said "yes."** → Вона **сказала** "так." (perf.)
-4. **He was speaking loudly.** → Він голосно **говорив**. (impf.)
-5. **We already read this.** → Ми вже це **прочитали**. (perf.)
-6. **They were reading all evening.** → Вони **читали** весь вечір. (impf.)
-
-**Self-Test Questions:**
-Before moving to the activities, make sure you can answer these questions:
-- What is the masculine past tense ending? Answer: -в or zero (consonant)
-- What feminine ending do all past tense verbs use? Answer: -ла
-- Does "пішов" come from "іти" or "піти"? Answer: піти — the perfective form
-
-**Question:** Ти зробив це? (Did you do it?)
-**Positive:** Так, я зробив це. (Yes, I did it.)
-**Negative:** Ні, я не зробив це. (No, I didn't do it.)
 
 # Підсумок
 
 У цьому модулі ви вивчили доконаний вид у минулому часі.
 
-## Закінчення минулого часу
+---
 
-| Рід | Закінчення | Приклад |
-|-----|------------|---------|
-| Чоловічий | -в / -∅ | зробив, пішов, приніс |
-| Жіночий | -ла | зробила, пішла, принесла |
-| Середній | -ло | зробило, пішло, принесло |
-| Множина | -ли | зробили, пішли, принесли |
+## Need More Practice?
 
-## Коли використовувати доконаний вид
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
 
-**Результат завершеної дії:**
-- Він **прочитав** книгу. — Книга прочитана повністю.
-- Вона **написала** листа. — Лист готовий.
-- Ми **зробили** роботу. — Робота завершена.
+## 3. Asking About Activities
 
-**Одноразова дія в минулому:**
-- Він **подзвонив** мені вчора.
-- Вона **купила** новий телефон.
-- Ми **побачили** друзів на вулиці.
+When asking «what were you doing?»:
+- Що ти **робив** учора? (What were you doing yesterday?)
+- Що вона **читала**? (What was she reading?)
 
-## Порівняння видів у минулому
+> [!tip] Decision Guide
+> Ask yourself: «Am I focusing on what got done or what someone was doing?»
 
-| Недоконаний (процес) | Доконаний (результат) |
-|---------------------|----------------------|
-| Він **читав** книгу. | Він **прочитав** книгу. |
-| Вона **писала** листа. | Вона **написала** листа. |
-| Ми **робили** роботу. | Ми **зробили** роботу. |
+> 🌍 **Cultural Connection**
+>
+> Українська мова чітко розрізняє процес і результат. Це важлива частина слов'янського світогляду — ми цікавимось не лише ЩО сталось, але і ЯК це відбувалось!
 
-## Корисні запитання
-
-- **Що ти зробив?** — Який результат?
-- **Ти вже прочитав?** — Ти закінчив читати?
-- **Хто це написав?** — Хто автор?
-
-## Типові помилки
-
-❌ Він **читав** цю книгу. (коли результат важливий)
-✅ Він **прочитав** цю книгу.
-
-❌ Вона вже **робила** домашнє завдання.
-✅ Вона вже **зробила** домашнє завдання.
-
-## Приклади діалогів
-
-**Діалог 1: Після роботи**
-— Що ти сьогодні зробив?
-— Я написав три листи і прочитав звіт.
-— Чудово! А ти вже поїв?
-— Ні, ще не поїв. Чекаю на тебе.
-
-**Діалог 2: У магазині**
-— Ти купив хліб?
-— Так, купив. І молоко теж узяв.
-— А овочі?
-— Ні, ще не купив. Забув список.
-
-## Маркери доконаного виду
-
-Ці слова зазвичай вимагають доконаного виду:
-- **вже** — Ти вже зробив?
-- **нарешті** — Він нарешті прийшов!
-- **раптом** — Вона раптом згадала.
-- **одразу** — Я одразу зрозумів.
-
-Практикуйте кожен день! Вибір правильного виду — це ключ до природної української мови.
-
+---

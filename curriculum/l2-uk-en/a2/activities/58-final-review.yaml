@@ -183,7 +183,7 @@
     explanation: Schoolmate. They studied together at school (*вчилися в школі*).
   - statement: Весілля Аліни та Ігоря заплановане саме на теплий місяць червень.
     correct: true
-    explanation: Yes, "у червні". June is the wedding month.
+    explanation: Yes, «у червні». June is the wedding month.
   - statement: Марк сказав, що він точно не зможе прийти на весілля.
     correct: false
     explanation: He said he will come (*обов'язково прийду*).
@@ -196,16 +196,20 @@
   id: listening-check
 - type: cloze
   title: Grammar Final Test
-  passage: 'Я зараз живу в {Україні|Україна|Україну|Україною}_. (Ukraine) Я вранці ніколи не п''ю {кави|кава|каву|кавою}_. (coffee) Я зараз йду в {магазин|магазині|магазина|магазином}_. (shop)
+  passage: 'Я зараз живу в {Україні|Україна|Україну|Україною}_. Я вранці ніколи не
+    п''ю {кави|кава|каву|кавою}_. Я зараз йду в {магазин|магазині|магазина|магазином}_.
 
 
-    Я часто розмовляю з {другом|друзі|друга|другу}_. (friend) Мені терміново потрібна {допомога|допомогу|допомоги|допомогою}_. (help) Дай мені будь ласка {ручку|ручка|ручки|ручкою}_. (pen)
+    Я часто розмовляю з {другом|друзі|друга|другу}_. Мені терміново потрібна {допомога|допомогу|допомоги|допомогою}_.
+    Дай мені будь ласка {ручку|ручка|ручки|ручкою}_.
 
 
-    У мене, на жаль, немає {сестри|сестра|сестру|сестрою}_. (sister) Я люблю писати {олівцем|олівець|олівця|олівцю}_. (pencil) Вчора ми були в {кіно|кіні|кіна|кіном}_. (cinema)
+    У мене, на жаль, немає {сестри|сестра|сестру|сестрою}_. Я люблю писати {олівцем|олівець|олівця|олівцю}_.
+    Вчора ми були в {кіно|кіні|кіна|кіном}_.
 
 
-    Він став успішним {директором|директор|директора|директору}_. (director) Я дуже дякую {вам|вас|ви|вами}_. (you) Наша машина стоїть біля {будинку|будинок|будинком|будинка}_. (house)'
+    Він став успішним {директором|директор|директора|директору}_. Я дуже дякую {вам|вас|ви|вами}_.
+    Наша машина стоїть біля {будинку|будинок|будинком|будинка}_.'
   id: grammar-final-test
 - type: group-sort
   title: Skill Sort
@@ -390,7 +394,9 @@
 - type: mark-the-words
   title: Final Check
   id: final-check
-  passage: '*Україна* — це *країна*. *Київ* — це *столиця*. *Дніпро* — це *річка*. *Люди* люблять *свободу*. *Студент* читає *книгу*. *Лікар* лікує хворих. *Мама* готує *обід*. *Сонце* світить. *Дощ* іде.'
+  passage: '*Україна* — це *країна*. *Київ* — це *столиця*. *Дніпро* — це *річка*.
+    *Люди* люблять *свободу*. *Студент* читає *книгу*. *Лікар* лікує хворих. *Мама*
+    готує *обід*. *Сонце* світить. *Дощ* іде.'
   correct_words:
   - Україна
   - країна
@@ -407,6 +413,7 @@
   - обід
   - Сонце
   - Дощ
+  instruction: Натисніть на правильні слова в тексті.
 - type: select
   title: Fluency Test
   items:
@@ -470,7 +477,7 @@
       correct: false
     - text: Не бачу.
       correct: false
-  - question: What is the correct English translation for "Річка"?
+  - question: What is the correct English translation for «Річка»?
     options:
     - text: River
       correct: true
@@ -480,7 +487,7 @@
       correct: false
     - text: Pool
       correct: false
-  - question: What is the correct English translation for "Мрія"?
+  - question: What is the correct English translation for «Мрія»?
     options:
     - text: Dream
       correct: true
@@ -490,7 +497,7 @@
       correct: false
     - text: Sleep
       correct: false
-  - question: What is the correct English translation for "Свобода"?
+  - question: What is the correct English translation for «Свобода»?
     options:
     - text: Freedom
       correct: true
@@ -500,7 +507,7 @@
       correct: false
     - text: Law
       correct: false
-  - question: What is the correct English translation for "Майбутнє"?
+  - question: What is the correct English translation for «Майбутнє»?
     options:
     - text: Future
       correct: true
@@ -510,7 +517,7 @@
       correct: false
     - text: Time
       correct: false
-  - question: What is the correct English translation for "Мир"?
+  - question: What is the correct English translation for «Мир»?
     options:
     - text: Peace
       correct: true

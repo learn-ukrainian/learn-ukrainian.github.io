@@ -1,5 +1,7 @@
 # Checkpoint - A2 Final Review
 
+## Огляд
+
 **Вітаємо!** Ви закінчили A2! This checkpoint reviews all vocabulary from Modules 44-54.
 
 **Skills tested:**
@@ -38,17 +40,17 @@
 
 ### Practice: Complete the Routine
 
-1. Вранці я \_\_\_ о 7:00. (wake up)
+1. Вранці я \_\_\_ о 7:00.
 
    > [!solution] Перевірити
    > прокидаюся — reflexive verb for waking up
 
-2. Потім я \_\_\_ і йду на роботу. (have breakfast)
+2. Потім я \_\_\_ і йду на роботу.
 
    > [!solution] Перевірити
    > снідаю — breakfast verb
 
-3. Ввечері я люблю \_\_\_ книги. (read)
+3. Ввечері я люблю \_\_\_ книги.
    > [!solution] Перевірити
    > читати — reading as a hobby
 
@@ -60,13 +62,13 @@
 
 > [!myth-buster] 🔍 Myth Buster
 >
-> **Myth:** "Ukrainian daily vocabulary is just like Russian."
+> **Myth:** «Ukrainian daily vocabulary is just like Russian.»
 >
-> **Truth:** While some words overlap due to shared Slavic origins, Ukrainian has unique daily vocabulary. For example, **вітальня** (living room), **снідати** (breakfast), and **вечеряти** (dinner) showcase Ukrainian's distinct lexicon!
+> **Truth:** While some words overlap due to shared Slavic origins, Ukrainian has unique daily vocabulary. For example, **вітальня**, **снідати**, and **вечеряти** (dinner) showcase Ukrainian's distinct lexicon!
 
 > [!history-bite] 📜 History Bite
 >
-> **Home vocabulary survived!** During Russification, Ukrainian families preserved household words orally. Words like **хата** (traditional house), **світлиця** (bright room), and **горище** (attic) remained in use for generations, keeping Ukrainian alive in the home.
+> **Home vocabulary survived!** During Russification, Ukrainian families preserved household words orally. Words like **хата**, **світлиця**, and **горище** (attic) remained in use for generations, keeping Ukrainian alive in the home.
 
 ---
 
@@ -94,29 +96,29 @@
 - університет — university
 - школа — school
 - студент — student
-- вчитися — to study (as student)
+- вчитися — to study
 - вивчати — to learn (subject)
 
 ### Practice: Work & Study
 
-1. Він \_\_\_ програмістом. (works as)
+1. Він \_\_\_ програмістом.
 
    > [!solution] Перевірити
    > працює — work + instrumental
 
-2. Вона \_\_\_ в університеті. (studies)
+2. Вона \_\_\_ в університеті.
 
    > [!solution] Перевірити
    > вчиться — to study as a student
 
-3. Я \_\_\_ українську мову. (learn)
+3. Я \_\_\_ українську мову.
    > [!solution] Перевірити
    > вивчаю — to learn a subject
 
 ### Self-Check
 
-- Can you use "працювати + Instrumental" for professions?
-- Do you know the difference: вчитися (be a student) vs вивчати (learn subject)?
+- Can you use «працювати + Instrumental» for professions?
+- Do you know the difference: вчитися vs вивчати?
 - Can you name 5 professions in Ukrainian?
 
 > [!tip] 🎯 Pro Tip: Profession Formula
@@ -127,7 +129,7 @@
 > - Працювати + **вчителькою** = work as a teacher
 > - Працювати + **програмістом** = work as a programmer
 >
-> Never use Nominative after "працювати"!
+> Never use Nominative after «працювати»!
 
 ---
 
@@ -158,14 +160,16 @@
 - температура — temperature
 - застуда — cold
 
+
+
 ### Practice: At the Doctor
 
-1. У мене болить \_\_\_. (head)
+1. У мене болить \_\_\_.
 
    > [!solution] Перевірити
    > голова — body part in NOMINATIVE (it's the subject doing the hurting)
 
-2. Яка у вас \_\_\_? (temperature)
+2. Яка у вас \_\_\_?
 
    > [!solution] Перевірити
    > температура — asking about fever
@@ -176,7 +180,7 @@
 
 ### Self-Check
 
-- Can you say "something hurts" using "У мене болить..."?
+- Can you say «something hurts» using «У мене болить...»?
 - Do you know body parts: голова, горло, рука, нога?
 - Can you describe symptoms and ask for medicine?
 
@@ -188,12 +192,12 @@
 >
 > **Pattern 2:** Мені + ADVERB
 >
-> - Мені **погано** (I feel bad)
+> - Мені **погано**
 > - Мені **холодно** (I'm cold)
 >
 > **Pattern 3:** Я + VERB
 >
-> - Я **застудився** (I caught a cold)
+> - Я **застудився**
 
 ---
 
@@ -224,19 +228,21 @@
 - літак — plane
 - готель — hotel
 
+
+
 ### Practice: Shopping & Travel
 
-1. Скільки це \_\_\_? (costs)
+1. Скільки це \_\_\_?
 
    > [!solution] Перевірити
    > коштує — asking price
 
-2. Можна заплатити \_\_\_? (by card)
+2. Можна заплатити \_\_\_?
 
    > [!solution] Перевірити
    > карткою — instrumental for payment method
 
-3. Я хочу купити \_\_\_ на поїзд. (ticket)
+3. Я хочу купити \_\_\_ на поїзд.
    > [!solution] Перевірити
    > квиток — train ticket
 
@@ -248,10 +254,10 @@
 
 > [!warning] ⚠️ Common Shopping Mistake
 >
-> Don't say: "Скільки це коштує" (missing question mark intonation)
-> Say: "Скільки це коштує?" with rising intonation!
+> Don't say: «Скільки це коштує»
+> Say: «Скільки це коштує?» with rising intonation!
 >
-> Also: "Можна заплатити **карткою**?" (Instrumental!) NOT "картку"!
+> Also: «Можна заплатити **карткою**?» (Instrumental!) NOT «картку»!
 
 ---
 
@@ -285,9 +291,7 @@ Read the story and answer the questions:
    > [!solution] Перевірити
    > Квитки — tickets
 
----
-
-# Summary
+# Підсумок
 
 | Skill           | Key Pattern         | Example               |
 | --------------- | ------------------- | --------------------- |
@@ -302,3 +306,9 @@ Read the story and answer the questions:
 > _You finished A2 level! Now you can talk about daily life, work, health, and travel._
 
 ---
+
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

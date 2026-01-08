@@ -8,6 +8,34 @@
 
 > **Note:** Synthesis modules (M83, M107, M119, M125, M131) use `b2-synthesis-module-template.md` instead.
 
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Читання
+  - Первинні джерела
+  - Деколонізаційний погляд
+  - Summary|Підсумок
+  - Need More Practice?
+  optional_sections:
+  - Діалоги
+  forbidden_headers:
+  - Activities
+  - Vocabulary
+  - External Resources
+  - Вправи
+  - Словник
+  - Зовнішні ресурси
+  pedagogy: CBI
+  min_word_count: 1800
+  required_callouts:
+  - myth-buster
+  - history-bite
+  - quote
+  description: History modules use Content-Based Instruction with mandatory decolonization
+    content
+-->
+
 ---
 
 ## Quick Reference Checklist
@@ -15,6 +43,7 @@
 Before submitting a B2 history module, verify all items from `b2-module-template.md` PLUS:
 
 ### History-Specific Requirements
+
 - [ ] **CBI pedagogy:** Content-Based Instruction with Narrative Arc (NOT TTT)
 - [ ] **Extended narrative:** 500+ word historical account (main text)
 - [ ] **Decolonization lens:** Ukraine-centric perspective, not Russian imperial framing
@@ -35,20 +64,20 @@ Before submitting a B2 history module, verify all items from `b2-module-template
 ```yaml
 ---
 module: b2-XX
-title: "Ukrainian Title — Historical Period/Event"
-phase: "B2.3 [Ukrainian History]"
-pedagogy: "CBI"  # Content-Based Instruction
-register: "публіцистичний"  # Historical narrative style
+title: 'Ukrainian Title — Historical Period/Event'
+phase: 'B2.3 [Ukrainian History]'
+pedagogy: 'CBI' # Content-Based Instruction
+register: 'публіцистичний' # Historical narrative style
 tags:
   - history
   - [era: medieval, cossack, imperial, soviet, independence]
   - [topic: specific-event-or-period]
 grammar:
-  - "Historical narrative tenses"
-  - "Passive voice in historical writing"
+  - 'Historical narrative tenses'
+  - 'Passive voice in historical writing'
 vocabulary_focus:
-  - "Historical terminology"
-  - "Political/military vocabulary"
+  - 'Historical terminology'
+  - 'Political/military vocabulary'
 ---
 ```
 
@@ -113,7 +142,7 @@ vocabulary_focus:
 **Контекст:** [Brief context about the document]
 
 > [Excerpt from primary source in Ukrainian — 100-200 words]
-> *— Джерело: [Attribution]*
+> _— Джерело: [Attribution]_
 
 **Лінгвістичний аналіз:**
 
@@ -124,12 +153,14 @@ Questions must analyze LINGUISTIC features, not historical meaning.
 </critical>
 
 **✅ GOOD (Linguistic Analysis):**
+
 - Який регістр використовує автор? Наведіть приклади.
 - Знайдіть три приклади пасивного стану. Чому автор їх використовує?
 - Порівняйте лексику цього тексту з лексикою модуля. Які слова застаріли?
 - Які синтаксичні конструкції характерні для офіційного стилю?
 
 **❌ BAD (Content Interpretation):**
+
 - Що автор думає про Московське царство? ← Tests interpretation
 - Чому Хмельницький прийняв це рішення? ← Tests historical knowledge
 
@@ -170,27 +201,27 @@ History modules should include **2-3 external reading tasks** for deeper engagem
 
 - type: reading
   id: b2-75-reading-01
-  title: "Аналіз первинного джерела"
+  title: 'Аналіз первинного джерела'
   resource:
     type: primary_source
-    url: "https://..."
-    title: "Універсал Богдана Хмельницького"
+    url: 'https://...'
+    title: 'Універсал Богдана Хмельницького'
   tasks:
-    - "Знайдіть у тексті три приклади офіційного регістру"
-    - "Які дієслова використовує автор для опису своїх дій?"
-    - "Порівняйте синтаксис цього документа із сучасною публіцистикою"
+    - 'Знайдіть у тексті три приклади офіційного регістру'
+    - 'Які дієслова використовує автор для опису своїх дій?'
+    - 'Порівняйте синтаксис цього документа із сучасною публіцистикою'
 
 - type: reading
   id: b2-75-reading-02
-  title: "Сучасний історичний аналіз"
+  title: 'Сучасний історичний аналіз'
   resource:
     type: article
-    url: "https://..."
+    url: 'https://...'
     title: "[Ukrainian historian's article]"
   tasks:
-    - "Як автор описує деколонізаційний підхід до цього періоду?"
-    - "Знайдіть приклади академічного регістру в тексті"
-    - "Порівняйте мову історика з мовою первинного джерела"
+    - 'Як автор описує деколонізаційний підхід до цього періоду?'
+    - 'Знайдіть приклади академічного регістру в тексті'
+    - 'Порівняйте мову історика з мовою первинного джерела'
 ```
 
 **Note:** Questions focus on LINGUISTIC analysis, not historical interpretation.
@@ -209,28 +240,31 @@ Each history module should include a **400+ word essay** with model answer and r
 Напишіть есе (400+ слів) на тему: "[Деколонізаційний аналіз історичної події]"
 
 **Вимоги:**
+
 - Використайте лексику та граматику модуля
 - Застосуйте деколонізаційний підхід до аналізу
 - Порівняйте українську та російську/радянську історіографію
 - Використайте цитати з первинних джерел
 
 **Структура:**
+
 1. Вступ (100 слів) — тема та теза
 2. Основна частина (200 слів) — аргументи з первинних джерел
 3. Висновок (100 слів) — деколонізаційна перспектива
 
 ## Критерії оцінювання
 
-| Критерій | Вага | Опис |
-|----------|------|------|
-| **Мовна якість** | 40% | Граматична правильність, багатство лексики, складність речень (B2 рівень) |
-| **Використання матеріалу** | 30% | Цитування первинних джерел, використання лексики модуля |
-| **Структура та зв'язність** | 20% | Логічна організація, дискурсивні маркери |
-| **Деколонізаційний підхід** | 10% | Критичний аналіз імперських наративів |
+| Критерій                    | Вага | Опис                                                                      |
+| --------------------------- | ---- | ------------------------------------------------------------------------- |
+| **Мовна якість**            | 40%  | Граматична правильність, багатство лексики, складність речень (B2 рівень) |
+| **Використання матеріалу**  | 30%  | Цитування первинних джерел, використання лексики модуля                   |
+| **Структура та зв'язність** | 20%  | Логічна організація, дискурсивні маркери                                  |
+| **Деколонізаційний підхід** | 10%  | Критичний аналіз імперських наративів                                     |
 
 ## Зразок відповіді
 
 [400+ word model essay demonstrating:]
+
 - B2-level grammar and syntax
 - Module vocabulary in context
 - Decolonization framework
@@ -238,6 +272,7 @@ Each history module should include a **400+ word essay** with model answer and r
 - Academic register
 
 **Мовні особливості зразка:**
+
 - Пасивні конструкції: "було засновано", "був обраний"
 - Складні речення з підрядними
 - Історична лексика модуля
@@ -254,7 +289,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ### Activity Examples (Conceptual)
 
-*Note: These activities must be implemented in YAML.*
+_Note: These activities must be implemented in YAML._
 
 1. **Reading Comprehension (quiz):** Test understanding of Ukrainian text, NOT recall of historical facts.
 2. **Vocabulary in Context (fill-in):** Test vocabulary and collocations from module.
@@ -262,7 +297,6 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 4. **Source Analysis (select):** Test close reading of primary source in Ukrainian.
 5. **Vocabulary Matching (match-up):** Test recognition of historical vocabulary.
 6. **Mark the Words (mark-the-words):** Test grammar recognition in authentic historical text.
-
 
 ---
 
@@ -296,13 +330,21 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ---
 
-## Vocabulary Section for History Modules
+---
 
-**Format:** YAML file ONLY (`vocabulary/{slug}.yaml`)
+## Content Structure Note
 
-**Do NOT include a vocabulary table in the Markdown file.**
+### Vocabulary & Activities
+
+**CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
+
+- `vocabulary/{slug}.yaml`
+- `activities/{slug}.yaml`
+
+The build system will inject these sections at build time.
 
 **History vocabulary notes:**
+
 - Include political/military terminology
 - Include historiographical terms (джерело, свідчення, інтерпретація)
 - Include fixed collocations common in historical writing
@@ -319,24 +361,35 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 > Козацька революція 1648-1657 років — це початок модерної української державності...
 
 ## Вступ
+
 [Hook with dramatic opening — perhaps Хмельницький's words]
 
 ## Хмельниччина: Повстання та війна
+
 ### Контекст [Polish-Lithuanian oppression]
+
 ### Основні події [Uprising, battles, negotiations]
+
 ### Наслідки [Hetmanate, Pereyaslav]
 
 ## Первинні джерела
+
 ### Універсал Богдана Хмельницького
+
 ### Свідчення іноземних дипломатів
 
 ## Деколонізаційний погляд
+
 ### Міфи про "возз'єднання"
+
 ### Сучасна українська історіографія
 
 # Підсумок
+
 # Словник [30+ historical terms]
+
 # Активності [10-12 language-focused activities]
+
 # Есе [400+ word decolonization analysis with rubric]
 ```
 
@@ -348,23 +401,23 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 **For each major historical period, address:**
 
-| Period | Common Myth | Ukrainian Reality |
-|--------|-------------|-------------------|
+| Period   | Common Myth                   | Ukrainian Reality                                               |
+| -------- | ----------------------------- | --------------------------------------------------------------- |
 | Medieval | Kyivan Rus = "Ancient Russia" | Rus was a multi-ethnic state; "Russia" is a later appropriation |
-| Cossack | Pereyaslav = "reunification" | Military alliance, not submission; broken by Moscow |
-| Imperial | "Little Russians" | Colonial term; Ukrainians had distinct identity and language |
-| Soviet | "Brotherly nations" | Russification, Holodomor, cultural suppression |
-| Modern | "One people" | Independent nation with separate history, language, culture |
+| Cossack  | Pereyaslav = "reunification"  | Military alliance, not submission; broken by Moscow             |
+| Imperial | "Little Russians"             | Colonial term; Ukrainians had distinct identity and language    |
+| Soviet   | "Brotherly nations"           | Russification, Holodomor, cultural suppression                  |
+| Modern   | "One people"                  | Independent nation with separate history, language, culture     |
 
 ### Decolonization Vocabulary
 
-| Term | Usage |
-|------|-------|
-| Московське царство | Use instead of "Росія" for pre-1721 period |
-| Російська імперія | Use for 1721-1917 period |
-| Русифікація | Describe policies suppressing Ukrainian language/culture |
-| Колоніальний наратив | Label Russian/Soviet historiographical distortions |
-| Українська державність | Emphasize continuous tradition of statehood |
+| Term                   | Usage                                                    |
+| ---------------------- | -------------------------------------------------------- |
+| Московське царство     | Use instead of "Росія" for pre-1721 period               |
+| Російська імперія      | Use for 1721-1917 period                                 |
+| Русифікація            | Describe policies suppressing Ukrainian language/culture |
+| Колоніальний наратив   | Label Russian/Soviet historiographical distortions       |
+| Українська державність | Emphasize continuous tradition of statehood              |
 
 ---
 
@@ -383,5 +436,6 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 **Template Version:** 1.2
 
 **Changelog:**
+
 - v1.2 (2025-12-29): Updated module range M71-131, added reference to synthesis template
 - v1.1 (2025-12-29): Added NO DIALOGS rule, made primary sources mandatory (≥2)

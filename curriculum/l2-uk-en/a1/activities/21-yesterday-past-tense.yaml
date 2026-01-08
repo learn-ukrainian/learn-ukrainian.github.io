@@ -141,7 +141,7 @@
     - text: Я працювали
       correct: false
     explanation: Male speakers use -в ending
-  - question: What doesaccurately the word "вчора" mean in English?
+  - question: What doesaccurately the word «вчора» mean in English?
     options:
     - text: Tomorrow
       correct: false
@@ -152,7 +152,7 @@
     - text: Last week
       correct: false
     explanation: Вчора = yesterday
-  - question: Which is the correct past tense of "їсти" for "він"?
+  - question: Which is the correct past tense of «їсти» for «він»?
     options:
     - text: їстив
       correct: false
@@ -174,7 +174,7 @@
     - text: Вона читати
       correct: false
     explanation: Feminine subject → -ла ending
-  - question: What does precisely the word "колись" mean in English?
+  - question: What does precisely the word «колись» mean in English?
     options:
     - text: Never
       correct: false
@@ -254,22 +254,22 @@
   - statement: The past tense ending -в is used for masculine subjects.
     correct: true
     explanation: Correct! -в is the masculine singular ending.
-  - statement: '"Вона працював" is grammatically correct.'
+  - statement: '«Вона працював» is grammatically correct.'
     correct: false
-    explanation: Wrong gender! It should be "Вона працювала."
-  - statement: '"Вчора" means "tomorrow."'
+    explanation: Wrong gender! It should be «Вона працювала.»
+  - statement: '«Вчора» means "tomorrow."'
     correct: false
     explanation: Вчора means yesterday, not tomorrow.
-  - statement: The past tense of "бути" for feminine is "була."
+  - statement: The past tense of «бути» for feminine is «була.»
     correct: true
     explanation: Correct! Був (m), була (f), було (n), були (pl).
-  - statement: The verb "їсти" becomes "їв" in masculine past tense.
+  - statement: The verb «їсти» becomes «їв» in masculine past tense.
     correct: true
     explanation: Correct! Їсти → їв/їла/їло/їли.
-  - statement: '"Ми" uses the -ли ending in past tense.'
+  - statement: '«Ми» uses the -ли ending in past tense.'
     correct: true
     explanation: Correct! All plural subjects use -ли.
-  - statement: '"Давно" means "recently."'
+  - statement: '«Давно» means "recently."'
     correct: false
     explanation: Давно means "long ago." Недавно means "recently."
   - statement: The neuter past tense ending is -ло.
@@ -339,7 +339,7 @@
 - type: quiz
   title: Time Expressions
   items:
-  - question: What does accurately "минулого місяця" mean in English?
+  - question: What does accurately «минулого місяця» mean in English?
     options:
     - text: Next month
       correct: false
@@ -361,7 +361,7 @@
     - text: колись
       correct: false
     explanation: Недавно = recently
-  - question: What does accurately "Позавчора" refer to in English?
+  - question: What does accurately «Позавчора» refer to in English?
     options:
     - text: Tomorrow
       correct: false
@@ -383,7 +383,7 @@
     - text: зараз
       correct: false
     explanation: Давно = long ago
-  - question: What does the word "раніше" accurately mean today?
+  - question: What does the word «раніше» accurately mean today?
     options:
     - text: Tomorrow
       correct: false
@@ -394,7 +394,7 @@
     - text: Always
       correct: false
     explanation: Раніше = earlier, before
-  - question: What does accurately "Минулого року" mean in English?
+  - question: What does accurately «Минулого року» mean in English?
     options:
     - text: This year
       correct: false
@@ -405,7 +405,7 @@
     - text: Every year
       correct: false
     explanation: Минулого року = last year (genitive)
-  - question: What does the word "колись" accurately mean today?
+  - question: What does the word «колись» accurately mean today?
     options:
     - text: Never
       correct: false
@@ -416,7 +416,7 @@
     - text: Often
       correct: false
     explanation: Колись = once, sometime
-  - question: What does "Минулого тижня" accurately mean in English?
+  - question: What does «Минулого тижня» accurately mean in English?
     options:
     - text: This week
       correct: false

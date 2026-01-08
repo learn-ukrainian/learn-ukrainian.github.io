@@ -33,7 +33,7 @@ items:
   gender: f
 - lemma: воронень
   ipa: /ˈvɔronenʲ/
-  translation: raven (diminutive)
+  translation: raven
   pos: noun
   gender: n
 - lemma: засміятися
@@ -167,7 +167,7 @@ items:
   gender: f
 - lemma: хитр
   ipa: /xɪtr/
-  translation: cunning (root/short)
+  translation: cunning
   pos: noun
   gender: f
 - lemma: хлітературний

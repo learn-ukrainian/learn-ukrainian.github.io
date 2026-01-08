@@ -1,0 +1,31 @@
+🚀 Learn Ukrainian Pipeline
+
+============================================================
+🚀 Learn Ukrainian Pipeline
+============================================================
+  Language pair: l2-uk-en
+  Level: c1
+  Module: 3
+  Steps: lint, generate, validate_mdx, validate_html
+
+============================================================
+📝 Step 1: Lint Markdown
+============================================================
+
+⛔ Pipeline stopped at lint: Lint failed
+   Details: 
+========================================
+  📋 Loaded Metadata from YAML sidecar
+
+Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/c1/03-research-verbs.md (Target: 1750)...
+
+  ❌ YAML schema violations: 4
+     ❌ [YAML_SCHEMA_VIOLATION] Schema error in 03-research-verbs.yaml: [fill-in-verb-gov1] fill-in: 'items.7' - 'sentence' is a required property
+     ❌ [YAML_SCHEMA_VIOLATION] Schema error in 03-research-verbs.yaml: [fill-in-verb-gov2] fill-in: 'items.7' - 'sentence' is
+
+============================================================
+📊 Pipeline Summary
+============================================================
+  ❌ lint: Lint failed
+
+❌ PIPELINE FAILED

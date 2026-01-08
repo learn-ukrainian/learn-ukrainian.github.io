@@ -30,7 +30,7 @@ This is your **foundational pattern**. Memorize it once, and you'll recognize th
 
 ### Why Gender Matters
 
-You might think: "Why do I need to know if a table is masculine?"
+You might think: «Why do I need to know if a table is masculine?»
 
 Because in Ukrainian, **gender affects everything**:
 
@@ -86,7 +86,7 @@ For now, focus on recognizing the **ending pattern**. Later modules will teach h
 
 > 🔍 **Myth Buster**
 >
-> **Myth:** "All feminine nouns end in -а or -я."
+> **Myth:** «All feminine nouns end in -а or -я.»
 > **Fact:** Most do (Family 1), but Family 3 feminines end in **consonants** like **ніч** (night) and **любов** (love). These are essential words — don't skip them!
 
 ### Common Patterns to Memorize
@@ -169,7 +169,7 @@ This pattern consistency makes Ukrainian **easier to learn** than languages with
 >
 > In Ukrainian folk songs and poetry, **nature is personified by gender**:
 >
-> - **Земля** (earth — feminine) is often called "mother" (Земля-матінка).
+> - **Земля** (earth — feminine) is often called «mother» (Земля-матінка).
 > - **Місяць** (moon — masculine) is portrayed as a protector or wanderer.
 > - **Сонце** (sun — neuter) represents life and warmth without gender.
 >
@@ -197,6 +197,13 @@ This pattern consistency makes Ukrainian **easier to learn** than languages with
 **Why It Matters:**
 Gender affects adjectives, pronouns, and case endings. Master gender now, and everything else becomes easier.
 
-**Next Module:** You'll learn how to say "This is..." and use pronouns — building on the gender foundation you just mastered.
+**Next Module:** You'll learn how to say «This is...» and use pronouns — building on the gender foundation you just mastered.
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

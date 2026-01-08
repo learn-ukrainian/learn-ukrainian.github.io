@@ -6,6 +6,20 @@
 
 **Related Issue:** [#293](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/293)
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Аналіз
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: Immersion
+  min_word_count: 2000
+  required_callouts: []
+  description: C1 base template with academic immersion and analysis
+-->
+
 ---
 
 ## Quick Reference Checklist

@@ -5,16 +5,22 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (30 words): горло, приймати, лікар, кашель, аптека...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (30 words): хворий, температура, горло, ліки, одужувати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
-## Recommendation
-**📝 UPDATE** (severity 10/100)
+## TEMPLATE COMPLIANCE
+- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
+  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
+  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
-- 2 pedagogical violations (minor)
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 4 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 1376/1000
+- **Words:** ✅ 1377/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -26,7 +32,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 42.3% (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 41.9% (target 40-55% (A2.2))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
@@ -34,15 +40,22 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 82 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
-| **1. Simultaneous Actions: Поки** | ⚪️ | 73 | Skipped |
-| **2. Sequential Actions: Коли & Після того як** | ⚪️ | 68 | Skipped |
-| **3. Immediate Action: Як тільки (As soon as)** | ⚪️ | 47 | Skipped |
-| **Deep Dive: Before vs After** | ✅ | 247 | Included in Core |
-| **Deep Dive: Complex Time Connectors** | ✅ | 314 | Included in Core |
+| **1. Simultaneous Actions: Поки** | ⚪️ | 68 | Skipped |
+| **2. Sequential Actions: Коли & Після того як** | ⚪️ | 0 | Skipped |
+| **A. Simple «When» (Коли)** | ⚪️ | 26 | Skipped |
+| **B. Explicit «After» (Після того як)** | ⚪️ | 35 | Skipped |
+| **3. Immediate Action: Як тільки** | ⚪️ | 38 | Skipped |
+| **Deep Dive: Before vs After** | ✅ | 241 | Included in Core |
+| **Deep Dive: Complex Time Connectors** | ✅ | 80 | Included in Core |
+| **1. The Loop: Кожного разу, коли...** | ⚪️ | 61 | Skipped |
+| **2. The Parallel: Тим часом як...** | ⚪️ | 68 | Skipped |
+| **3. The Date: Того дня, коли...** | ⚪️ | 105 | Skipped |
 | **Story Time: The Late Traveller** | ✅ | 133 | Included in Core |
-| **Cultural Insight** | ✅ | 42 | Included in Core |
+| **Cultural Insight** | ✅ | 40 | Included in Core |
 | **Language in Action** | ⚪️ | 0 | Skipped |
-| **Dialogue: The Busy Morning** | ✅ | 125 | Included in Core |
+| **Dialogue: The Busy Morning** | ✅ | 83 | Included in Core |
+| **Analysis** | ⚪️ | 42 | Skipped |
 | **Monologue: My Strategy** | ⚪️ | 73 | Skipped |
-| **Pro-Tip: The "Until" Dual Meaning** | ✅ | 66 | Included in Core |
+| **Pro-Tip: The «Until» Dual Meaning** | ✅ | 66 | Included in Core |
 | **Підсумок** | ✅ | 106 | Included in Core |
+| **Need More Practice?** | ⚪️ | 30 | Skipped |

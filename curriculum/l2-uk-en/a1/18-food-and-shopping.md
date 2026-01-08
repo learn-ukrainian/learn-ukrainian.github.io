@@ -68,12 +68,12 @@ When eating, always say **Смачного!** (Smachnoho!) — Bon appétit!
 
 Now, let's go shopping. You need two cases here:
 
-**1. Accusative: "I want X"**
+**1. Accusative: «I want X»**
 When you want/buy something (direct object), use Accusative.
 - Я хочу **каву**. (coffee - f)
 - Я купую **хліб**. (bread - m)
 
-**2. Genitive: "Quantity OF X"**
+**2. Genitive: «Quantity OF X»**
 When you ask for a specific amount, use Genitive (of...).
 - Чашку **кави**. (A cup **of coffee**)
 - Кілограм **яблук**. (A kilo **of apples**)
@@ -146,7 +146,7 @@ Imagine you are at a cafe. Order a full meal (soup, main, drink).
 ### Bread is Head (Хліб усьому голова)
 Bread is sacred. You'll see **коровай** (wedding bread) and be greeted with **хліб і сіль** (bread and salt). Never throw bread away!
 
-Also, **борщ** is the soul of the kitchen. "Борщ — душа української кухні."
+Also, **борщ** is the soul of the kitchen. «Борщ — душа української кухні.»
 
 # Summary
 You can now feed yourself in Ukraine!
@@ -155,3 +155,12 @@ You can now feed yourself in Ukraine!
 - **Enjoy**: Смачного!
 
 Next up: Module 19 - At the Café (more conversation!).
+
+---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

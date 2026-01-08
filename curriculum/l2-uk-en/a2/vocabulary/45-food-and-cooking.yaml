@@ -41,7 +41,7 @@ items:
   gender: m
 - lemma: виріжти
   ipa: vɪˈrʲiʒtɪ
-  translation: cut out (imperative typo)
+  translation: cut out
   pos: verb
 - lemma: внучка
   ipa: ˈvnut͡ʃkɐ
@@ -122,7 +122,7 @@ items:
   gender: f
 - lemma: кружечка
   ipa: kruˈʒɛt͡ʃkɐ
-  translation: mug (diminutive)
+  translation: mug
   pos: noun
   gender: f
 - lemma: кубик
@@ -151,12 +151,12 @@ items:
   gender: f
 - lemma: наріж
   ipa: nɐˈrʲiʒ
-  translation: cut (imperative)
+  translation: cut
   pos: noun
   gender: m
 - lemma: наріжти
   ipa: nɐˈrʲiʒtɪ
-  translation: cut (imperative typo)
+  translation: cut
   pos: verb
   gender: m
 - lemma: наріжчя
@@ -256,7 +256,7 @@ items:
   pos: verb
 - lemma: смаж
   ipa: smɑʒ
-  translation: fry (imperative)
+  translation: fry
   pos: noun
   gender: m
 - lemma: смажити

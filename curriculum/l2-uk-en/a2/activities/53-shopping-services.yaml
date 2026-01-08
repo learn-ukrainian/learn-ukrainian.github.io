@@ -11,7 +11,7 @@
       correct: false
     - text: у банку
       correct: false
-  - question: What is the Ukrainian word "готівка" used to describe?
+  - question: What is the Ukrainian word «готівка» used to describe?
     options:
     - text: cash
       correct: true
@@ -21,7 +21,7 @@
       correct: false
     - text: check
       correct: false
-  - question: What key feature is the "Нова Пошта" service most famous for?
+  - question: What key feature is the «Нова Пошта» service most famous for?
     options:
     - text: speed and modern service
       correct: true
@@ -41,7 +41,7 @@
       correct: false
     - text: Котра година?
       correct: false
-  - question: What does the word "знижка" mean when you see it in a store?
+  - question: What does the word «знижка» mean when you see it in a store?
     options:
     - text: discount
       correct: true
@@ -71,7 +71,7 @@
       correct: false
     - text: пакет
       correct: false
-  - question: What does the word "черга" mean when you see people waiting?
+  - question: What does the word «черга» mean when you see people waiting?
     options:
     - text: queue/line
       correct: true
@@ -91,7 +91,7 @@
       correct: false
     - text: traditional bank branch
       correct: false
-  - question: What is "решта" that you receive after a cash payment?
+  - question: What is «решта» that you receive after a cash payment?
     options:
     - text: change
       correct: true
@@ -101,7 +101,7 @@
       correct: false
     - text: bill
       correct: false
-  - question: What action does the verb "міряти" describe in a clothing store?
+  - question: What action does the verb «міряти» describe in a clothing store?
     options:
     - text: to try on (clothes)
       correct: true
@@ -152,30 +152,34 @@
   id: shop-vocabulary
 - type: cloze
   title: Shopping Sentences
-  passage: 'Я хочу {купити|продати|міряти|спати}_ хліб. Скільки це {коштує|коштують|платить|купує}_? У мене немає {готівки|готівка|картка|банку}_. (cash)
+  passage: 'Я хочу {купити|продати|міряти|спати}_ хліб. Скільки це {коштує|коштують|платить|купує}_?
+    У мене немає {готівки|готівка|картка|банку}_. (cash)
 
 
-    Я плачу {карткою|карта|карту|картки}_. Це велика {черга|каса|ціна|знижка}_. (queue) Дайте, будь ласка, {чек|чергу|гривню|решту}_. (receipt)
+    Я плачу {карткою|карта|карту|картки}_. Це велика {черга|каса|ціна|знижка}_. (queue)
+    Дайте, будь ласка, {чек|чергу|гривню|решту}_. (receipt)
 
 
-    Ось ваша {решта|каса|ціна|пошта}_. (change) Ми йдемо на {ринок|банк|аптеку|магазин}_. (market) Я хочу {поміряти|купити|з''їсти|випити}_ ці джинси.
+    Ось ваша {решта|каса|ціна|пошта}_. (change) Ми йдемо на {ринок|банк|аптеку|магазин}_.
+    (market) Я хочу {поміряти|купити|з''їсти|випити}_ ці джинси.
 
 
-    Сьогодні у магазині {знижка|черга|ціна|каса}_. (discount) Можна {замовити|купити|міряти|платити}_ піцу? (order) Банк закритий, він не {працює|коштує|купує|спить}_.'
+    Сьогодні у магазині {знижка|черга|ціна|каса}_. (discount) Можна {замовити|купити|міряти|платити}_
+    піцу? (order) Банк закритий, він не {працює|коштує|купує|спить}_.'
   id: shopping-sentences
 - type: true-false
   title: Ukrainian Services
   items:
-  - statement: '"Ринок" usually has fresher food than supermarkets.'
+  - statement: «Ринок» usually has fresher food than supermarkets.
     correct: true
     explanation: Generally true perception.
   - statement: You cannot pay by card in Ukraine.
     correct: false
     explanation: Very false.
-  - statement: '"Аптека" sells clothes.'
+  - statement: «Аптека» sells clothes.
     correct: false
     explanation: Medicine.
-  - statement: '"Нова Пошта" is a slow service.'
+  - statement: «Нова Пошта» is a slow service.
     correct: false
     explanation: Known for speed.
   - statement: You can bargain in a supermarket.
@@ -184,22 +188,22 @@
   - statement: Monobank has many physical buildings.
     correct: false
     explanation: It's an app-only bank.
-  - statement: '"Решта" is the money you pay.'
+  - statement: «Решта» is the money you pay.
     correct: false
     explanation: Money you get back.
-  - statement: '"Хімчистка" cleans clothes.'
+  - statement: «Хімчистка» cleans clothes.
     correct: true
     explanation: Dry cleaner.
-  - statement: '"Готівка" is paper money/coins.'
+  - statement: «Готівка» is paper money/coins.
     correct: true
     explanation: Cash.
-  - statement: Waiters bring a "чек".
+  - statement: Waiters bring a «чек».
     correct: true
     explanation: Bill/receipt is чек (or рахунок).
-  - statement: '"Черга" is good.'
+  - statement: «Черга» is good.
     correct: false
     explanation: Nobody likes a queue.
-  - statement: You can order delivery ("замовити").
+  - statement: You can order delivery («замовити»).
     correct: true
     explanation: Delivery is popular (Glovo, Bolt Food).
   id: ukrainian-services
@@ -356,7 +360,7 @@
     - магазину
     - магазина
     - магазином
-    explanation: 'Direction (Accusative): в магазин.'
+    explanation: 'Direction: в магазин.'
   - sentence: Скільки коштує банани?
     error: коштує
     answer: коштують
@@ -410,7 +414,8 @@
     - хліба
     - хлібу
     - хлібом
-    explanation: 'Accusative: купую хліб. (Partitive Genitive ''хліба'' exists but Accusative is standard for ''a loaf'').'
+    explanation: 'Accusative: купую хліб. (Partitive Genitive ''хліба'' exists but
+      Accusative is standard for ''a loaf'').'
   - sentence: Це дорога магазин.
     error: дорога
     answer: дорогий
@@ -467,7 +472,7 @@
 
     Я йду на {касу|вікно|двері}. Там велика {черга|знижка|каса}.
 
-    Касир питає: "Пакет потрібен?". Я кажу: "Ні, дякую".
+    Касир питає: «Пакет потрібен?». Я кажу: «Ні, дякую».
 
     Я плачу {карткою|готівкою|чеком}, тому що не люблю {готівку|картку|знижку}.
 
@@ -480,7 +485,10 @@
 - type: mark-the-words
   title: Find Services
   id: find-services
-  passage: Я живу в центрі. Біля мого дому є *супермаркет* і маленька *аптека*. Коли мені треба гроші, я йду в *банк*. У неділю я йду на *ринок* за овочами. Моя мама працює на *пошті*. Тато стрижеться в *перукарні*. Ми любимо ходити в *кіно* і *ресторан*. *Лікарня* теж недалеко.
+  passage: Я живу в центрі. Біля мого дому є *супермаркет* і маленька *аптека*. Коли
+    мені треба гроші, я йду в *банк*. У неділю я йду на *ринок* за овочами. Моя мама
+    працює на *пошті*. Тато стрижеться в *перукарні*. Ми любимо ходити в *кіно* і
+    *ресторан*. *Лікарня* теж недалеко.
   correct_words:
   - супермаркет
   - аптека
@@ -491,6 +499,7 @@
   - кіно
   - ресторан
   - Лікарня
+  instruction: Натисніть на правильні слова в тексті.
 - type: select
   title: Shopping Choices
   items:
@@ -500,12 +509,20 @@
       correct: true
     - text: Плакати.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Pay vs Cry.
   - question: To buy.
     options:
     - text: Купувати.
       correct: true
     - text: Купати.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Buy vs Bathe.
   - question: To order.
@@ -514,12 +531,20 @@
       correct: true
     - text: Мовчати.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Order vs Be silent.
   - question: Receipt.
     options:
     - text: Чек.
       correct: true
     - text: Чех.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Receipt vs Czech person.
   - question: Cash.
@@ -528,12 +553,20 @@
       correct: true
     - text: Готування.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Cash vs Cooking.
   - question: Price.
     options:
     - text: Ціна.
       correct: true
     - text: Стіна.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Price vs Wall.
   - question: Discount.
@@ -542,12 +575,20 @@
       correct: true
     - text: Книжка.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Discount vs Book.
   - question: Market.
     options:
     - text: Ринок.
       correct: true
     - text: Ранок.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Market vs Morning.
   - question: Shop.
@@ -556,12 +597,20 @@
       correct: true
     - text: Журнал
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Shop. False friend "Journal".
   - question: Pharmacy.
     options:
     - text: Аптека.
       correct: true
     - text: Бібліотека.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Pharmacy.
   - question: Post Office.
@@ -570,12 +619,20 @@
       correct: true
     - text: Площа.
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Post vs Square.
   - question: To try on.
     options:
     - text: Міряти.
       correct: true
     - text: Мирити.
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Try on vs Reconcile.
   id: shopping-choices

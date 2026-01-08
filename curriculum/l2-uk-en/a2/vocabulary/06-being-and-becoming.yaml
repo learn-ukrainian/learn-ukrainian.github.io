@@ -196,6 +196,41 @@ items:
     translation: engineer (female)
     pos: noun
     gender: f
+  - lemma: теперішній
+    translation: present
+    pos: adj
+  - lemma: час
+    translation: time; tense
+    pos: noun
+    gender: m
+  - lemma: майбутній
+    translation: future
+    pos: adj
+  - lemma: множина
+    translation: plural
+    pos: noun
+    gender: f
+  - lemma: однина
+    translation: singular
+    pos: noun
+    gender: f
+  - lemma: минулий
+    translation: past
+    pos: adj
+  - lemma: орудний
+    translation: instrumental
+    pos: adj
+  - lemma: дієслово
+    translation: verb
+    pos: noun
+    gender: m
+  - lemma: називний
+    translation: nominative
+    pos: adj
+  - lemma: відмінок
+    translation: case
+    pos: noun
+    gender: m
   - lemma: інститут
     ipa: instɪˈtut
     translation: institute

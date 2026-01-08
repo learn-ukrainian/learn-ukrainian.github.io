@@ -2,8 +2,17 @@
 **Phase:** A1.2 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 750
 **Overall Status:** ✅ PASS
 
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Practice Examples, Practice
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ✅ 1377/750
+- **Words:** ✅ 1396/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -15,14 +24,8 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 28.7% (target 25-40% (M13))
+- **Immersion:** 🇺🇦 28.3% (target 25-40% (M13))
 - **Grammar:** ⏳ Pending validation
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (9 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -33,3 +36,4 @@
 | **Practice** | ⚪️ | 283 | Skipped |
 | **Production** | ➖ | 245 | Excluded Type |
 | **Summary** | ✅ | 128 | Included in Core |
+| **Need More Practice?** | ⚪️ | 19 | Skipped |

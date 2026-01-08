@@ -270,7 +270,7 @@ items:
   gender: f
 - lemma: свіженький
   ipa: sʲvʲiˈʒɛnʲkɪj
-  translation: fresh (diminutive)
+  translation: fresh
   pos: adj
   gender: m
 - lemma: симпатичний
@@ -310,7 +310,7 @@ items:
   gender: m
 - lemma: тепленький
   ipa: teˈplɛnʲkɪj
-  translation: warm (diminutive)
+  translation: warm
   pos: adj
   gender: m
 - lemma: точний
@@ -344,7 +344,7 @@ items:
   gender: m
 - lemma: чистенький
   ipa: t͡ʃɪsˈtɛnʲkɪj
-  translation: clean (diminutive)
+  translation: clean
   pos: adj
   gender: m
 - lemma: шумний

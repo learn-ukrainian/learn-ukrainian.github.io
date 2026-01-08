@@ -1,29 +1,29 @@
-## Warm-up
+## Introduction
 
 In Module 31, we used prefixes to move (GPS).
 Now, we use prefixes to **transform** actions.
-Imagine the verb **писати** (to write). It's just a neutral process.
+Imagine the verb **писати**. It's just a neutral process.
 But what if you want to say:
-- "I wrote it **down**" (recorded it)?
-- "I wrote it **again**" (redid it)?
-- "I wrote **a little bit**"?
-- "I **signed** it"?
+- «I wrote it **down**»?
+- «I wrote it **again**»?
+- «I wrote **a little bit**»?
+- «I **signed** it»?
 
 In English, you use phrasal verbs or extra words.
 In Ukrainian, you just click a LEGO piece (prefix) onto the verb!
 **Писати** -> **За**писати, **Пере**писати, **По**писати, **Під**писати.
 
 > [!question] Think about it
-> A prefix changes the "angle" of the action.
-> - **Пере-** usually means "re-" (redo) or "across".
-> - **До-** usually means "finish" (to the end).
-> - **За-** usually means "close" or "fix/record".
+> A prefix changes the «angle» of the action.
+> - **Пере-** usually means «re-» (redo) or «across».
+> - **До-** usually means «finish».
+> - **За-** usually means «close» or «fix/record».
 
 ---
 
 ## The Meaning Map
 
-Let's look at the most powerful "Transformers".
+Let's look at the most powerful «Transformers».
 
 | Prefix    | Meaning             | Logic                    | Example                                               |
 | --------- | ------------------- | ------------------------ | ----------------------------------------------------- |
@@ -47,22 +47,22 @@ Let's look at the most powerful "Transformers".
 Він видалив текст і почав знову. Він вирішив усе **переписати**.
 Він **переробив** перший розділ п'ять разів!
 Потім він втомився і вирішив трохи **почитати** новини в інтернеті.
-Але раптом редактор подзвонив і закричав: "Ти маєш **дописати** розділ сьогодні!"
+Але раптом редактор подзвонив і закричав: «Ти маєш **дописати** розділ сьогодні!»
 Письменник злякався. Він зрозумів, що часу мало.
 Він **закрив** новини, **вимкнув** телефон і знову почав писати.
 Він писав швидко і натхненно.
 Ввечері він нарешті **закінчив** останню сторінку.
 Він роздрукував текст, **підписав** його своїм іменем і поклав у папку.
 Він **здав** роботу редактору вранці.
-Редактор прочитав і сказав: "Це шедевр!".
+Редактор прочитав і сказав: «Це шедевр!».
 Вранці письменник **прокинувся** відомим.
 
 > [!cultural] Cultural Insight: Hospitality
 > Prefixes are everywhere in Ukrainian culture, especially hospitality.
 > When guests arrive, you **відкрити** (open) the door and the wine.
-> You **накрити** (cover/set) the table ("накрити на стіл").
-> You **поговорити** (have a chat).
-> And when they leave, you **провести** (lead through/escort) them to the door.
+> You **накрити** the table («накрити на стіл»).
+> You **поговорити**.
+> And when they leave, you **провести** them to the door.
 > It's a sequence of prefixed actions!
 
 ---
@@ -70,7 +70,7 @@ Let's look at the most powerful "Transformers".
 ## Deep Dive - Open and Close (Відкрити | Закрити)
 
 These are the most useful practical verbs.
-Unlike English ("turn on/off" vs "open/close"), Ukrainian logic is consistent.
+Unlike English («turn on/off» vs «open/close»), Ukrainian logic is consistent.
 
 - **Open:** **Від**крити (Move *away* the cover).
 - **Close:** **За**крити (Move *behind* the cover).
@@ -81,7 +81,7 @@ Unlike English ("turn on/off" vs "open/close"), Ukrainian logic is consistent.
 | ----------- | ------ | ------------------------------- |
 | Door/Window | Open   | **Відкрити** / **Відчинити**    |
 | Door/Window | Close  | **Закрити** / **Зачинити**      |
-| Book        | Open   | **Розкрити** (Spread open)      |
+| Book        | Open   | **Розкрити**      |
 | Book        | Close  | **Закрити** / **Згорнути**      |
 | Eyes        | Open   | **Розплющити** (Specific!)      |
 | Eyes        | Close  | **Заплющити**                   |
@@ -93,35 +93,35 @@ Unlike English ("turn on/off" vs "open/close"), Ukrainian logic is consistent.
 
 ---
 
-## Deep Dive - To Give (The "Give" Family)
+## Deep Dive - To Give (The «Give» Family)
 
-The verb **Дати** (to give) is a prefix magnet.
+The verb **Дати** is a prefix magnet.
 
 1.  **Дати** = To give (simple).
 2.  **Віддати** = To give back | return.
-    *   *Я **віддав** борг.* (I returned the debt).
+    *   *Я **віддав** борг.*.
 3.  **Передати** = To pass (transmit).
-    *   *Будь ласка, **передайте** сіль.* (Please pass the salt).
+    *   *Будь ласка, **передайте** сіль.*.
 4.  **Здати** = To hand in | To betray | To rent out.
-    *   *Студент **здав** іспит.* (Handed in/Passed exam).
-    *   *Він **здав** квартиру.* (He rented out the apartment).
+    *   *Студент **здав** іспит.*.
+    *   *Він **здав** квартиру.*.
 5.  **Подати** = To serve | hand politely.
-    *   *Офіціант **подав** меню.* (served the menu).
+    *   *Офіціант **подав** меню.*.
 6.  **Видати** = To issue | publish | betray.
     *   *Банк **видав** картку.* (Issued).
-    *   *Він **видав** секрет.* (Betrayed/Leaked).
+    *   *Він **видав** секрет.*.
 
 ---
 
 ## Deep Dive - Connect and Disconnect
 
 In the age of technology, these are crucial.
-Base: **Єднати** (to unite).
+Base: **Єднати**.
 
-- **При**єднати = To attach/connect TO something. (Connect printer).
+- **При**єднати = To attach/connect TO something..
 - **Від**'єднати = To detach/disconnect FROM something. (Unplug).
-- **З**'єднати = To connect TWO things together. (Join wires).
-- **Роз**'єднати = To separate two things. (Cut connection).
+- **З**'єднати = To connect TWO things together..
+- **Роз**'єднати = To separate two things..
 
 *Ми **під'єднали** інтернет!* (We connected the internet!).
 
@@ -135,7 +135,7 @@ Base: **Єднати** (to unite).
 **Andriy:** Так, я написав його вчора.
 **Manager:** Де він? Я не можу його знайти.
 **Andriy:** Я **відправив** його тобі на пошту.
-**Manager:** Я не отримав. Ти точно **натиснув** "Відправити"?
+**Manager:** Я не отримав. Ти точно **натиснув** «Відправити»?
 **Andriy:** Ой, здається, я **забув** натиснути кнопку.
 **Manager:** Андрій! Ти маєш **надіслати** його зараз же! Клієнт чекає!
 **Andriy:** Добре, я зараз **відкрию** пошту і **перешлю**.
@@ -160,10 +160,10 @@ Base: **Єднати** (to unite).
 Ремонт — це жах!
 
 > [!tip] Learning Tip
-> When you learn a new verb, ask: "Can I add **пере-** (redo) or **до-** (finish)?"
+> When you learn a new verb, ask: «Can I add **пере-** (redo) or **до-** (finish)?»
 > Usually, the answer is Yes!
-> - Їсти -> **До**їсти (Finish eating).
-> - Мити -> **Пере**мити (Wash again).
+> - Їсти -> **До**їсти.
+> - Мити -> **Пере**мити.
 > It makes your vocabulary flexible.
 
 ---
@@ -171,9 +171,9 @@ Base: **Єднати** (to unite).
 ## Reflection Point
 
 Before we finish, answer these questions for yourself:
-1.  How do you say "Redo" in Ukrainian? (Hint: **Пере-**)
-2.  How do you say "Finish"? (Hint: **До-**)
-3.  How do you say "Close"? (Hint: **За-**)
+1.  How do you say «Redo» in Ukrainian? (Hint: **Пере-**)
+2.  How do you say «Finish»? (Hint: **До-**)
+3.  How do you say «Close»? (Hint: **За-**)
 4.  Can you feel the difference between **писати** (process) and **написати** (result)?
 
 If yes, you are ready for suffixes!
@@ -182,54 +182,52 @@ If yes, you are ready for suffixes!
 
 ---
 
-## Deep Dive - The Logic of "Na-" (Accumulation)
+## Deep Dive - The Logic of «Na-»
 
-The prefix **На-** often means "to put on" or "to accumulate/create a lot of".
-- **Писати** (write) -> **Написати** (create a written text).
-- **Малювати** (paint) -> **Намалювати** (create a painting).
-- **Робити** (do) -> **Наробити** (make a massive amount/mess).
-    *   *Ми **наробили** помилок.* (We made a ton of mistakes).
+The prefix **На-** often means «to put on» or «to accumulate/create a lot of».
+- **Писати** (write) -> **Написати**.
+- **Малювати** (paint) -> **Намалювати**.
+- **Робити** (do) -> **Наробити**.
+    *   *Ми **наробили** помилок.*.
 - **Їсти** (eat) -> **Наїстися** (To eat one's fill | accumulate food inside).
 
 ---
 
-## Deep Dive - The "Za-" Trap
+## Deep Dive - The «Za-» Trap
 
 The prefix **За-** is the trickiest one. It has three opposite meanings!
 
 1.  **Close | Behind:**
     *   **Закрити** (Close).
-    *   **Заховати** (Hide behind).
+    *   **Заховати**.
 2.  **Start (Suddenly):**
-    *   **Заспівати** (Start singing).
-    *   **Заплакати** (Burst into tears).
-    *   **Захворіти** (Get/Fall sick).
+    *   **Заспівати**.
+    *   **Заплакати**.
+    *   **Захворіти**.
 3.  **Too Much (Excess):**
     *   **Запрацюватися** (Work too much | lose track of time).
-    *   **Загулятися** (Party/Walk too long).
+    *   **Загулятися**.
     *   **Засидітися** (Sit too long | stay up late).
 
 > [!warning] Context Matters
 > - *Він **заговорив**.* = He started speaking.
 > - *Він мене **заговорив**.* = He tired me with too much talking.
-> The context tells you if it's "Start" or "Too Much".
+> The context tells you if it's «Start» or «Too Much».
 
 ---
 
 ## Anti-Propaganda Showcase
 
-> [!myth] Myth: "Ukrainian vocabulary is small."
+> [!myth] Myth: «Ukrainian vocabulary is small.»
 > **Fact:** This myth comes from Soviet dictionaries that artificially limited defining Ukrainian words to match Russian ones.
 > In reality, Ukrainian prefixation allows for nuances that English needs sentences to explain.
 > Example: **Заговорити** (to start speaking | to charm someone | to tire someone with talk).
 > **Наговорити** (to say a lot of things | to slander).
-> **Відговорити** (to dissuade).
-> **Підговорити** (to instigate).
-> One root "говорити" creates dozens of distinct concepts. This is linguistic wealth, not poverty.
+> **Відговорити**.
+> **Підговорити**.
+> One root «говорити» creates dozens of distinct concepts. This is linguistic wealth, not poverty.
 
----
-
-# Summary
+# Підсумок
 
 1.  **Prefixes transform meaning.** They act like modifiers (Re-, Sub-, Out-).
 2.  **Пере-** = Redo | Across.
@@ -240,3 +238,9 @@ The prefix **За-** is the trickiest one. It has three opposite meanings!
 7.  **На-** = Accumulate | Create.
 
 ---
+
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

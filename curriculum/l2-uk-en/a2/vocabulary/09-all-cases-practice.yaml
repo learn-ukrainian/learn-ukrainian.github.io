@@ -49,7 +49,7 @@ items:
     gender: f
   - lemma: відіграти
     ipa: vidiˈɦrɑte
-    translation: to play (a role)
+    translation: to play
     pos: verb
   - lemma: вікторе
     ipa: ˈviktore
@@ -80,12 +80,12 @@ items:
     pos: verb
   - lemma: знахідний
     ipa: znɐˈxʲidnɪj
-    translation: accusative (grammar case)
+    translation: accusative
     pos: adj
     gender: m
   - lemma: кличний
     ipa: ˈklɪt͡ʃnɪj
-    translation: vocative (grammar case)
+    translation: vocative
     pos: adj
     gender: m
   - lemma: комплексний
@@ -108,7 +108,7 @@ items:
     pos: adv
   - lemma: називний
     ipa: nɐˈzɪʋnɪj
-    translation: nominative (grammar case)
+    translation: nominative
     pos: adj
     gender: m
   - lemma: наприклад
@@ -129,17 +129,17 @@ items:
     pos: verb
   - lemma: орудний
     ipa: oˈrudnɪj
-    translation: instrumental (grammar case)
+    translation: instrumental
     pos: adj
     gender: m
   - lemma: родовий
     ipa: roˈdovɪj
-    translation: genitive (grammar case)
+    translation: genitive
     pos: adj
     gender: m
   - lemma: давальний
     ipa: dɐˈvɑlʲnɪj
-    translation: dative (grammar case)
+    translation: dative
     pos: adj
     gender: m
   - lemma: відмінок
@@ -149,7 +149,7 @@ items:
     gender: m
   - lemma: місцевий
     ipa: misˈt͡sɛvɪj
-    translation: locative (grammar case)
+    translation: locative
     pos: adj
     gender: m
   - lemma: перевірка
@@ -172,7 +172,7 @@ items:
     pos: verb
   - lemma: повторювати
     ipa: pou̯ˈtɔrʲuʋɐte
-    translation: to repeat (imperfective)
+    translation: to repeat
     pos: verb
   - lemma: позначати
     ipa: poznɐˈt͡ʃɑte

@@ -4,23 +4,23 @@ subtitle: By Bus, With a Pen
 version: '1.0'
 phase: A2.1
 pedagogy: PPP
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - grammar
-  - cases
-  - instrumental
-  - transport
-  - tools
+- grammar
+- cases
+- instrumental
+- transport
+- tools
 grammar:
-  - instrumental without preposition
-  - means of transport
-  - tools and instruments
+- instrumental without preposition
+- means of transport
+- tools and instruments
 objectives:
-  - Learner can use instrumental without preposition for means of transport
-  - Learner can use instrumental for tools and instruments
-  - Learner can express manner using instrumental case
-  - Learner can distinguish between з + Instrumental and bare Instrumental
+- Learner can use instrumental without preposition for means of transport
+- Learner can use instrumental for tools and instruments
+- Learner can express manner using instrumental case
+- Learner can distinguish between з + Instrumental and bare Instrumental
 vocabulary_count: 28
-vocab_count: 57
 slug: 05-the-instrumental-ii-means-and-tools
+focus: grammar

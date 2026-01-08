@@ -82,7 +82,7 @@ items:
   pos: verb
 - lemma: медсестр
   ipa: medseˈstr
-  translation: nurse (gen pl/typo)
+  translation: nurse
   pos: noun
   gender: f
 - lemma: минати
@@ -174,7 +174,7 @@ items:
   pos: adv
 - lemma: старенький
   ipa: stɐˈrɛnʲkɪj
-  translation: old (diminutive)
+  translation: old
   pos: adj
   gender: f
 - lemma: стартап

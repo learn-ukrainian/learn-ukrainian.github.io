@@ -7,17 +7,18 @@ pedagogy: Narrative
 duration: 60
 transliteration: none
 tags:
-  - vocabulary
-  - shopping
-  - money
-  - services
+- vocabulary
+- shopping
+- money
+- services
 grammar:
-  - accusative-inanimate
-  - genitive-quantities
+- accusative-inanimate
+- genitive-quantities
 objectives:
-  - Buy items in a shop: купувати, платити
-  - Use services: банк, пошта, перукарня
-  - Talk about money: готівка, картка, ціна
-  - Ask for price: скільки коштує?
-vocab_count: 45
+- Buy items in a shop: купувати, платити
+- Use services: банк, пошта, перукарня
+- Talk about money: готівка, картка, ціна
+- Ask for price: скільки коштує?
 slug: 53-shopping-services
+vocabulary_count: 45
+focus: vocabulary

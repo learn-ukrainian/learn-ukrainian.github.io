@@ -4,19 +4,17 @@
 
 Welcome to the sixth Ukrainian case: the **Dative** (давальний відмінок). You've already learned five cases — Nominative, Accusative, Genitive, Locative, and Vocative. The Dative completes the core case system and unlocks essential everyday expressions.
 
-In this module, you'll learn how to say "I like," "I need," and "I'm cold" in Ukrainian. These expressions all use the Dative case, which marks the **recipient** or **experiencer** of an action or state.
+In this module, you'll learn how to say «I like,» «I need,» and «I'm cold» in Ukrainian. These expressions all use the Dative case, which marks the **recipient** or **experiencer** of an action or state.
 
 **What you'll learn:**
 
 - All seven personal pronouns in the Dative case
-- How to express likes with **подобатися** (to be pleasing)
-- How to express needs with **потрібно** (to be needed)
+- How to express likes with **подобатися**
+- How to express needs with **потрібно**
 - How to describe physical and emotional states
 
 **Why the Dative matters:**
-In English, we say "I like music" — the person who likes is the subject. In Ukrainian, the structure is reversed: "Мені подобається музика" literally means "To-me is-pleasing music." The music is the grammatical subject; the person is in the Dative case. This pattern appears throughout Ukrainian.
-
-## Вступ
+In English, we say «I like music» — the person who likes is the subject. In Ukrainian, the structure is reversed: «Мені подобається музика» literally means «To-me is-pleasing music.» The music is the grammatical subject; the person is in the Dative case. This pattern appears throughout Ukrainian.
 
 Ви вже знаєте п'ять українських відмінків: називний, знахідний, родовий, місцевий і кличний. Тепер час познайомитися з шостим — **давальним відмінком**.
 
@@ -28,9 +26,82 @@ In English, we say "I like music" — the person who likes is the subject. In Uk
 
 ## Presentation
 
-### Why the Dative Case Matters
+The Dative case reveals something beautiful about Ukrainian culture: it's the grammar of giving, receiving, and caring for others.
 
-The Dative case answers a fundamental question in any language: **Who receives something?** When you give a gift, tell a story, or explain an idea — someone receives it. That "someone" goes into the Dative case.
+Ukrainians are famous for their hospitality — and hospitality is fundamentally about giving to others. That «to others» is expressed grammatically through the Dative case. When you visit a Ukrainian home, every offer of food, drink, or comfort puts you in the Dative position — the position of the honored recipient.
+
+When you visit a Ukrainian home, you'll hear:
+
+— Вам чаю? (Would you like tea? — literally: To-you tea?)
+— Тобі ще? (More for you? — literally: To-you more?)
+— Дайте йому тарілку. (Give him a plate.)
+
+The host puts the guest in the Dative — the position of receiver. Refusing food or drink is almost impossible in Ukrainian culture. «Мені не треба» (I don't need it) will be met with «Та ні, тобі треба!» (Oh yes, you do need it!).
+
+> 🌍 **Real World**
+>
+> In Ukrainian restaurants, you'll often hear waiters ask: «Вам меню?» (Menu for you?), «Вам рахунок?» (Check for you?). These short phrases put you in the Dative — the recipient of service. Now you know why!
+
+## Reading Practice: Листівка з Одеси
+
+Below is a postcard from Odesa that uses many Dative constructions you've learned. Before reading, remember:
+
+- Look for pronouns like **мені, тобі, нам, вам, їм** — these are Dative markers
+- The verb **подобається/подобалася** signals a «like» construction
+- Expressions like **тобі потрібно** mean «you need to»
+
+Read the postcard once for general meaning, then read again to identify each Dative construction. Can you find at least 8 Dative pronouns?
+
+**Vocabulary preview:**
+
+- листівка — postcard
+- сподобалося — (it) was liked (past tense of подобатися)
+- замовлення — order
+- до зустрічі — see you (goodbye)
+
+Привіт!
+
+Мені дуже подобається Одеса. Тут тепло і весело. Морю тут гарно — йому подобається сонце.
+
+Вчора ми були в ресторані. Нам подобалася риба. Офіціант запитав: «Вам ще?» Ми сказали так. Їм теж сподобалося наше замовлення.
+
+Тобі потрібно приїхати сюди! Тобі тут буде добре.
+
+До зустрічі!
+
+_(Hello! I really like Odesa. It's warm and fun here. The sea is beautiful here — it likes the sun. Yesterday we were at a restaurant. We liked the fish. The waiter asked: «More for you?» We said yes. They also liked our order. You need to come here! You'll feel good here. See you!)_
+
+> 🎭 **Folklore/Traditions Corner**
+>
+> Ukrainians traditionally wish «Щастя тобі!» (Happiness to you!) using the Dative case. Birthday wishes, wedding toasts, and New Year greetings all put the recipient in Dative. The grammar itself encodes the act of giving good wishes.
+
+Now that you understand the theory, let's practice recognizing and using Dative pronouns. The key is to internalize these patterns until they become automatic.
+
+Тепер настав час самостійно будувати речення в давальному відмінку. Це допоможе вам закріпити матеріал.
+
+**Ваші цілі:**
+
+1. Розкажіть, що вам подобається, використовуючи «мені подобається» + іменник або інфінітив.
+2. Розкажіть, що вам потрібно, використовуючи «мені потрібно» + інфінітив або іменник.
+3. Опишіть свій стан за допомогою «мені» + прислівник (холодно, тепло, добре, погано, цікаво).
+
+**Поради для успіху:**
+
+- Починайте речення з давального займенника (мені, тобі тощо).
+- Додайте дієслово або прислівник.
+- Якщо ви використовуєте «подобатися», ставте об'єкт у називний відмінок.
+- Якщо ви використовуєте «потрібно», далі додавайте інфінітив або іменник.
+
+**Example sentences:**
+Мені подобається українська мова. (I like Ukrainian.)
+Мені потрібно більше практики. (I need more practice.)
+Мені цікаво вчити нові слова. (I find it interesting to learn new words.)
+
+Try creating similar sentences about yourself before moving to the activities below.
+
+## Why the Dative Case Matters
+
+The Dative case answers a fundamental question in any language: **Who receives something?** When you give a gift, tell a story, or explain an idea — someone receives it. That «someone» goes into the Dative case.
 
 But Ukrainian Dative is even more powerful. It expresses four key functions:
 
@@ -43,7 +114,7 @@ But Ukrainian Dative is even more powerful. It expresses four key functions:
 
 The question word for Dative is **кому?** (to whom?) for people and **чому?** (to what?) for things.
 
-### Чому давальний відмінок важливий
+## Чому давальний відмінок важливий
 
 Давальний відмінок відповідає на фундаментальне питання в будь-якій мові: **Хто щось отримує?** Коли ви даруєте подарунок, розповідаєте історію або пояснюєте ідею — хтось це отримує. Цей «хтось» стоїть у давальному відмінку.
 
@@ -56,9 +127,9 @@ The question word for Dative is **кому?** (to whom?) for people and **чом
 
 > 💡 **Did You Know?**
 >
-> In Ukrainian, you don't "have" feelings — feelings "happen to you." When you're cold, sad, or happy, you put yourself in the Dative case. Мені сумно (I'm sad) literally means "to me it's sad." This structure appears in many Slavic languages and reflects a worldview where emotions are forces that act upon us rather than states we control. Learning this grammar pattern will fundamentally change how you think about expressing feelings in Ukrainian.
+> In Ukrainian, you don't «have» feelings — feelings «happen to you.» When you're cold, sad, or happy, you put yourself in the Dative case. Мені сумно (I'm sad) literally means «to me it's sad.» This structure appears in many Slavic languages and reflects a worldview where emotions are forces that act upon us rather than states we control. Learning this grammar pattern will fundamentally change how you think about expressing feelings in Ukrainian.
 
-### The Dative Pronouns
+## The Dative Pronouns
 
 Here is the complete table of personal pronouns in the Dative case:
 
@@ -75,7 +146,7 @@ Here is the complete table of personal pronouns in the Dative case:
 
 Notice that **він** and **воно** share the same dative form: **йому**. This is because neuter nouns are rare as recipients in natural speech.
 
-### Pattern 1: Expressing Likes
+## Pattern 1: Expressing Likes
 
 The verb **подобатися** (to please, to be liked) always uses the Dative case for the person who likes something:
 
@@ -93,9 +164,9 @@ The thing that is liked stays in the **Nominative** case (музика, кава
 
 > 🔗 **Language Link**
 >
-> The Ukrainian "мені подобається" structure is similar to Spanish "me gusta" or German "mir gefällt." The liked thing is the grammatical subject; the person is the indirect object (Dative). English "I like music" is actually unusual among European languages! If you've studied Spanish, German, or other European languages, you may find this pattern familiar. The key difference: in Ukrainian, case endings (not prepositions) mark the Dative relationship.
+> The Ukrainian «мені подобається» structure is similar to Spanish «me gusta» or German «mir gefällt.» The liked thing is the grammatical subject; the person is the indirect object (Dative). English «I like music» is actually unusual among European languages! If you've studied Spanish, German, or other European languages, you may find this pattern familiar. The key difference: in Ukrainian, case endings mark the Dative relationship.
 
-### Модель 2: Вираження потреб (Expressing Needs)
+## Модель 2: Вираження потреб
 
 Слово **потрібно** (needed, necessary) також вимагає давального відмінка для особи, якій щось потрібно:
 
@@ -111,7 +182,7 @@ The thing that is liked stays in the **Nominative** case (музика, кава
 
 Зверніть увагу: після слова «потрібно» використовуйте інфінітив (працювати, відпочити) або іменник (допомога, кава).
 
-### Модель 3: Фізичні та емоційні стани (Physical and Emotional States)
+## Модель 3: Фізичні та емоційні стани
 
 В українській мові багато почуттів та фізичних станів виражаються за допомогою структури «давальний відмінок + прислівник»:
 
@@ -127,35 +198,17 @@ The thing that is liked stays in the **Nominative** case (музика, кава
 
 > 🎬 **Pop Culture Moment: The Witcher**
 >
-> In the Ukrainian dub of "The Witcher" (Відьмак), Geralt often says "Мені байдуже" (I don't care | It's indifferent to me). This Dative construction shows emotional detachment — the feeling acts upon Geralt, but he remains passive. Very fitting for the stoic character! This phrase is extremely useful in casual conversation when you want to express indifference about something.
+> In the Ukrainian dub of «The Witcher» (Відьмак), Geralt often says «Мені байдуже» (I don't care | It's indifferent to me). This Dative construction shows emotional detachment — the feeling acts upon Geralt, but he remains passive. Very fitting for the stoic character! This phrase is extremely useful in casual conversation when you want to express indifference about something.
 
 ## Cultural Insight
 
-### The Grammar of Ukrainian Hospitality
+## Mini-Dialogues
 
-The Dative case reveals something beautiful about Ukrainian culture: it's the grammar of giving, receiving, and caring for others.
-
-Ukrainians are famous for their hospitality — and hospitality is fundamentally about giving to others. That "to others" is expressed grammatically through the Dative case. When you visit a Ukrainian home, every offer of food, drink, or comfort puts you in the Dative position — the position of the honored recipient.
-
-When you visit a Ukrainian home, you'll hear:
-
-— Вам чаю? (Would you like tea? — literally: To-you tea?)
-— Тобі ще? (More for you? — literally: To-you more?)
-— Дайте йому тарілку. (Give him a plate.)
-
-The host puts the guest in the Dative — the position of receiver. Refusing food or drink is almost impossible in Ukrainian culture. "Мені не треба" (I don't need it) will be met with "Та ні, тобі треба!" (Oh yes, you do need it!).
-
-> 🌍 **Real World**
->
-> In Ukrainian restaurants, you'll often hear waiters ask: "Вам меню?" (Menu for you?), "Вам рахунок?" (Check for you?). These short phrases put you in the Dative — the recipient of service. Now you know why!
-
-### Mini-Dialogues
-
-The following three mini-dialogues show Dative pronouns in natural conversation. Notice how every offer ("Would you like X?") and every expression of feeling ("I'm cold") uses the Dative case. These patterns are extremely common in daily Ukrainian.
+The following three mini-dialogues show Dative pronouns in natural conversation. Notice how every offer («Would you like X?») and every expression of feeling («I'm cold») uses the Dative case. These patterns are extremely common in daily Ukrainian.
 
 **Dialogue 1: At the Café in Lviv**
 
-This dialogue shows how waiters use Dative to make offers. Notice: Вам (to you), мені (to me), йому (to him).
+This dialogue shows how waiters use Dative to make offers. Notice: Вам, мені, йому.
 
 — Вам каву чи чай?
 — Мені каву, будь ласка.
@@ -186,44 +239,7 @@ This conversation uses подобається extensively to discuss what people
 
 _(— Do you like Kyiv? — Yes, we like it very much! We find it interesting here. — And do they like it? — They like it too. They like the metro.)_
 
-## Reading Practice: Листівка з Одеси
-
-Below is a postcard from Odesa that uses many Dative constructions you've learned. Before reading, remember:
-
-- Look for pronouns like **мені, тобі, нам, вам, їм** — these are Dative markers
-- The verb **подобається/подобалася** signals a "like" construction
-- Expressions like **тобі потрібно** mean "you need to"
-
-Read the postcard once for general meaning, then read again to identify each Dative construction. Can you find at least 8 Dative pronouns?
-
-**Vocabulary preview:**
-
-- листівка — postcard
-- сподобалося — (it) was liked (past tense of подобатися)
-- замовлення — order (in a restaurant)
-- до зустрічі — see you (goodbye)
-
-Привіт!
-
-Мені дуже подобається Одеса. Тут тепло і весело. Морю тут гарно — йому подобається сонце.
-
-Вчора ми були в ресторані. Нам подобалася риба. Офіціант запитав: "Вам ще?" Ми сказали так. Їм теж сподобалося наше замовлення.
-
-Тобі потрібно приїхати сюди! Тобі тут буде добре.
-
-До зустрічі!
-
-_(Hello! I really like Odesa. It's warm and fun here. The sea is beautiful here — it likes the sun. Yesterday we were at a restaurant. We liked the fish. The waiter asked: "More for you?" We said yes. They also liked our order. You need to come here! You'll feel good here. See you!)_
-
-> 🎭 **Folklore/Traditions Corner**
->
-> Ukrainians traditionally wish "Щастя тобі!" (Happiness to you!) using the Dative case. Birthday wishes, wedding toasts, and New Year greetings all put the recipient in Dative. The grammar itself encodes the act of giving good wishes.
-
-## Practice
-
-Now that you understand the theory, let's practice recognizing and using Dative pronouns. The key is to internalize these patterns until they become automatic.
-
-### Найбільш вживані вирази (Common Dative Expressions)
+## Найбільш вживані вирази
 
 Нижче наведено найпопулярніші вирази з давальним відмінком, які ви будете використовувати щодня. Намагайтеся запам'ятовувати їх цілими фразами:
 
@@ -234,7 +250,7 @@ Now that you understand the theory, let's practice recognizing and using Dative 
 - **Вам зрозуміло?** — Is it clear to you?
 - **Їм цікаво** — They find it interesting
 
-### Дієслова, що вимагають давальний відмінок (Verbs That Love Dative)
+## Дієслова, що вимагають давальний відмінок
 
 Певні українські дієслова завжди вимагають давального відмінка. В англійській мові дієслова «to help» або «to thank» використовують прямий додаток. В українській мові особа, якій допомагають або дякують, стоїть у давальному відмінку.
 
@@ -245,32 +261,6 @@ Now that you understand the theory, let's practice recognizing and using Dative 
 | допомагати | to help     | Я допомагаю йому. |
 | заважати   | to bother   | Не заважай мені!  |
 | дякувати   | to thank    | Дякую тобі!       |
-
-## Практика побудови речень
-
-Тепер настав час самостійно будувати речення в давальному відмінку. Це допоможе вам закріпити матеріал.
-
-**Ваші цілі:**
-
-1. Розкажіть, що вам подобається, використовуючи «мені подобається» + іменник або інфінітив.
-2. Розкажіть, що вам потрібно, використовуючи «мені потрібно» + інфінітив або іменник.
-3. Опишіть свій стан за допомогою «мені» + прислівник (холодно, тепло, добре, погано, цікаво).
-
-**Поради для успіху:**
-
-- Починайте речення з давального займенника (мені, тобі тощо).
-- Додайте дієслово або прислівник.
-- Якщо ви використовуєте «подобатися», ставте об'єкт у називний відмінок.
-- Якщо ви використовуєте «потрібно», далі додавайте інфінітив або іменник.
-
-**Example sentences:**
-Мені подобається українська мова. (I like Ukrainian.)
-Мені потрібно більше практики. (I need more practice.)
-Мені цікаво вчити нові слова. (I find it interesting to learn new words.)
-
-Try creating similar sentences about yourself before moving to the activities below.
-
----
 
 # Підсумок
 
@@ -286,6 +276,8 @@ Try creating similar sentences about yourself before moving to the activities be
 
 ---
 
+---
+
 ## Need More Practice?
 
----
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

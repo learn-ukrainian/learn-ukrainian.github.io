@@ -1,220 +1,213 @@
-## Warm-up
+## Introduction
 
-Ukrainian words are like Lego structures.
-They are built from small, reusable blocks.
-The most specific block is the **Root**.
+Українські слова схожі на конструкції Lego.
+Вони будуються з маленьких частин.
+Найважливіша частина — це **Корінь**.
 
-If you know the **Root**, you can often guess the meaning of a word you have never seen before.
-Today, we unlock four "Super Roots":
-1.  **ХІД** (Movement/Go)
-2.  **ПИС** (Writing/Marking)
-3.  **ЧИТ** (Reading)
-4.  **БАЧ** (Vision)
+Ви знаєте **Корінь**? Тоді ви часто можете вгадати значення слова, яке ніколи не бачили раніше.
+Сьогодні ми відкриваємо чотири «Супер-корені»:
+1.  **ХІД** (Рух)
+2.  **ПИС** (Писати)
+3.  **ЧИТ** (Читати)
+4.  **БАЧ** (Бачити)
 
-> [!tip] The Logic
-> - **В** + **Хід** = In + Go = Entrance
-> - **Ви** + **Хід** = Out + Go = Exit
-> - **Пере** + **Хід** = Across + Go = Crossing
+> [!tip] Логіка
+> - **В** + **Хід** = Вхід
+> - **Ви** + **Хід** = Вихід
+> - **Пере** + **Хід** = Перехід
 
 ---
 
-## Family 1: The Walkers (-ХІД-)
+## Родина 1: Мандрівники (-ХІД-)
 
-The root **ХІД** implies movement, walking, or a path.
-Verb: **Ходити** (To walk).
+Корінь **ХІД** означає рух, ходьбу або шлях.
+**Дієслово:** **Ходити**.
 
-| Word | Structure | Literal Meaning | Real Meaning |
+| Слово | Структура | Дослівне значення | Значення |
 | :--- | :--- | :--- | :--- |
-| **Вхід** | В-хід | In-move | Entrance |
-| **Вихід** | Ви-хід | Out-move | Exit |
-| **Перехід** | Пере-хід | Across-move | Crossing / Transition |
-| **Прихід** | При-хід | Arrival-move | Arrival |
-| **Відхід** | Від-хід | Away-move | Departure |
-| **Похід** | По-хід | On-move | Hike / Campaign |
-| **Пішохід** | Піш-о-хід | Foot-o-walker | Pedestrian |
-
-*Де тут вхід?* (Where is the entrance?)
-*Це підземний перехід.* (This is an underground crossing).
-*Головний **вхід**.* (Main entrance).
-*Запасний **вихід**.* (Emergency exit).
-*Я люблю **ходити**.* (I like to walk).
+| **Вхід** | В-хід | Рух всередину | Entrance |
+| **Вихід** | Ви-хід | Рух назовні | Exit |
+| **Перехід** | Пере-хід | Рух через | Crossing |
+| **Прихід** | При-хід | Прибуття | Arrival |
+| **Відхід** | Від-хід | Відбуття | Departure |
+| **Похід** | По-хід | Прогулянка | Hike |
+| **Пішохід** | Піш-о-хід | Хто йде пішки | Pedestrian |
 
 ---
 
-## Family 2: The Writers (-ПИС-)
+## Родина 2: Письменники (-ПИС-)
 
-The root **ПИС** relates to writing, recording, or marks.
-Verb: **Писати** (To write).
+Корінь **ПИС** має відношення до письма, записів або позначок.
+**Дієслово:** **Писати**.
 
-| Word | Structure | Literal Meaning | Real Meaning |
+| Слово | Структура | Дослівне значення | Значення |
 | :--- | :--- | :--- | :--- |
-| **Письмо** | Пись-мо | Write-thing | Writing / Letter |
-| **Письменник** | Пись-мен-ник | Write-man | Writer |
-| **Підпис** | Під-пис | Under-write | Signature |
-| **Запис** | За-пис | Behind/For-write | Record / Note |
-| **Опис** | О-пис | Around-write | Description |
-| **Напис** | На-пис | On-write | Inscription / Sign |
-
-*Ваш підпис, будь ласка.* (Your signature, please).
-*Я зроблю запис у журналі.* (I will make a record in the journal).
-*Це моє **письмо**.* (This is my writing).
-*Тут є **надпис**.* (Here is an inscription.)
+| **Письмо** | Пись-мо | Писана річ | Writing |
+| **Письменник** | Пись-мен-ник | Людина, що пише | Writer |
+| **Підпис** | Під-пис | Писати знизу | Signature |
+| **Запис** | За-пис | Писати для пам'яті | Record |
+| **Опис** | О-пис | Писати навколо | Description |
+| **Напис** | На-пис | Писати на поверхні | Inscription |
 
 ---
 
-## Family 3: Input (-ЧИТ- | -БАЧ-)
+## Родина 3: Сприйняття (-ЧИТ- | -БАЧ-)
 
-We perceive the world through reading and seeing.
+Ми сприймаємо світ через читання та бачення.
 
-### The Readers (-ЧИТ-)
-Verb: **Читати** (To read).
+## Читачі (-ЧИТ-)
 
-- **Читач**: Reader (Person).
-- **Читання**: Reading (Process).
-- **Прочитати**: To read through (Perfective - Finish reading).
-- **Перечитати**: To re-read (Read again).
-- **Дочитати**: To read to the end (Finish).
+**Дієслово:** **Читати**.
 
-*Читання — це корисна звичка.* (Reading is a useful habit).
-***Читання** — це цікаво.* (Reading is interesting).
+- **Читач**: Людина, яка читає.
+- **Читання**: Процес читання.
+- **Прочитати**: Прочитати до кінця (Доконаний вид).
+- **Перечитати**: Прочитати ще раз.
+- **Дочитати**: Закінчити читати.
 
-### The Seers (-БАЧ- | -ГЛЯД-)
-Verb: **Бачити** (To see). Root often swaps with **ГЛЯД** (Look).
+*Читання — це корисна звичка.*.
+***Читання** — це цікаво.*.
 
-- **Бачення**: Vision (Concept).
-- **Побачення**: Date | Meeting (Seeing each other).
-- **Передбачення**: Prediction (Fore-sight).
-- **Погляд**: Glance | View | Opinion.
-- **Вигляд**: Look | Appearance (How something looks out).
-- **Огляд**: Review | Overview (Looking around).
+## Ті, хто бачать (-БАЧ- | -ГЛЯД-)
 
-*У тебе гарний вигляд!* (You have a good look = You look great).
-*До побачення!* (Until seeing = Goodbye).
+**Дієслово:** **Бачити**. Корінь часто чергується з **ГЛЯД** (Дивитися).
+
+- **Бачення**: Концепція або бачення.
+- **Побачення**: Зустріч або побачення.
+- **Передбачення**: Прогноз (бачення наперед).
+- **Погляд**: Думка або погляд.
+- **Вигляд**: Зовнішній вигляд.
+- **Огляд**: Огляд або рецензія.
+
+*У тебе гарний вигляд!* (Ти виглядаєш чудово).
+*До побачення!* (До наступної зустрічі).
 
 ---
 
-## Deep Dive: Guessing Game
+## Глибоке занурення: Гра «Вгадай слово» (Deep Dive: Guessing Game)
 
-If you see **Захід** (West/Sunset), look at the root.
-**За** (Behind) + **Хід** (Go).
-The sun "goes behind". Sunset. West.
+Якщо ви бачите слово **Захід**, подивіться на корінь.
+**За** (За щось) + **Хід** (Рух).
+Сонце «заходить за обрій». Захід сонця. Західна сторона світу.
 
-If you see **Розпис** (Mural/Painting), look at the root.
-**Роз** (Out/Spread) + **Пис** (Write/Paint).
-Spreading paint. Painting walls.
+Якщо ви бачите слово **Розпис**, подивіться на корінь.
+**Роз** + **Пис**.
+Поширення фарби. Розписування стін.
 
-> [!note] English Theory
-> This module relies heavily on pattern recognition.
-> Do not memorize every word individually.
-> Memorize the **blocks**.
-> If you know "Ex-" means "Out" and "Port" means "Carry", you know "Export".
-> Same in Ukrainian: "Ви-" (Out) + "Хід" (Go) = Exit.
+> [!note] Теорія
+> Цей модуль базується на розпізнаванні моделей.
+> Не запам'ятовуйте кожне слово окремо.
+> Запам'ятовуйте **блоки**.
+> Якщо ви знаєте, що «Ex-» означає «Назовні», а «Port» означає «Нести», ви знаєте слово «Export».
+> Так само і в українській: «Ви-» (Назовні) + «Хід» (Рух) = Вихід.
 
-### Why Root Families Matter: A Learning Strategy
+## Чому родини слів важливі: Стратегія навчання
 
 Understanding root families is one of the most powerful techniques for rapid vocabulary expansion in Ukrainian. Instead of memorizing thousands of individual words, you learn a few dozen roots and prefixes, then combine them like Lego blocks.
 
-**The Math is Compelling:**
-- Learn 4 roots (ХІД, ПИС, ЧИТ, БАЧ) = 4 words
-- Learn 6 common prefixes (В-, Ви-, Пере-, При-, Від-, По-) = 6 words
+**Логіка проста:**
+- Learn 4 roots (ХІД, ПИС, ЧИТ, БАЧ) = 4 words.
+- Learn 6 common prefixes (В-, Ви-, Пере-, При-, Від-, По-) = 6 words.
 - Combine them = 24+ words you can understand!
 
-That's a 6x return on your learning investment. And this is just the beginning—Ukrainian has dozens of productive roots and prefixes.
+This gives a compelling return on your learning investment. And this is just the beginning—Ukrainian has dozens of productive roots and prefixes.
 
-**How to Practice Root Recognition:**
+**How to practice root recognition:**
 
-1. **Create a Root Journal**: When you encounter a new word, try to identify its root. Write down the root, the prefix, and the meaning. Over time, you'll build a personal dictionary of patterns.
+1. **Keep a root journal**: When you see a new word, try to identify its root. Write down the root, the prefix, and the meaning. Over time, you'll build a personal dictionary of patterns.
 
-2. **Play the Guessing Game**: When you see an unfamiliar word in Ukrainian text, don't immediately look it up. First, try to break it into parts and guess the meaning. You'll be surprised how often you're right!
+2. **Play the guessing game**: When you see an unfamiliar word in Ukrainian text, don't immediately look it up. First, try to break it into parts and guess the meaning. You'll be surprised how often you're right!
 
-3. **Use Flashcards Wisely**: Instead of making flashcards for individual words, make flashcards for roots and prefixes. Then practice combining them mentally.
+3. **Use flashcards wisely**: Instead of making flashcards for individual words, make flashcards for roots and prefixes. Then practice combining them mentally.
 
-4. **Look for Patterns in English**: English also uses roots (though from Latin and Greek). Recognizing this pattern in your native language makes it easier to apply the same strategy in Ukrainian. For example: "tele-" (far) + "phone" (sound) = telephone. Same logic as "Пере-" (across) + "Хід" (go) = crossing.
+4. **Look for patterns in English**: English also uses roots. Recognizing this pattern in your native language makes it easier to apply the same strategy in Ukrainian. For example: «tele-» (far) + «phone» (sound) = telephone. Same logic as «Пере-» (across) + «Хід» (move) = crossing.
 
-**Common Beginner Mistakes:**
+**Common beginner mistakes:**
 
 - **Don't assume all similar-looking words share a root.** Sometimes words that look similar are actually unrelated. Always verify the root meaning.
-- **Don't forget that roots can change slightly due to phonetics.** For example, ХІД can appear as ХОД in some words (Ходити vs Вхід). These are the same root with different vowels.
+- **Don't forget that roots can change slightly.** For example, ХІД can appear as ХОД in some words. These are the same root with different vowels.
 - **Don't ignore the prefix!** The prefix completely changes the meaning. Вхід and Вихід have the same root but opposite meanings because of the prefixes.
 
 ---
 
-## Deep Dive: The Power of 'Pere-'
+## Глибоке занурення: Сила префікса 'Пере-'
 
 One of the most useful prefixes in Ukrainian is **Пере-**.
-It corresponds to the Latin **Trans-** (Across) or **Re-** (Again).
+It corresponds to the Latin **Trans-** or **Re-**.
 
-1.  **Motion (Across):**
-    - **Хід** (Move) -> **Перехід** (Crossing/Transition).
-    - **Їхати** (Drive) -> **Переїхати** (Move house/Cross over).
+1.  **Motion:**
+    - **Хід** -> **Перехід**.
+    - **Їхати** -> **Переїхати**.
 
-2.  **Repetition (Re-):**
-    - **Писати** (Write) -> **Переписати** (Rewrite).
-    - **Читати** (Read) -> **Перечитати** (Reread).
-    - **Робити** (Do) -> **Переробити** (Redo).
+2.  **Repetition:**
+    - **Писати** -> **Переписати**.
+    - **Читати** -> **Перечитати**.
+    - **Робити** -> **Переробити**.
 
-3.  **Excess (Over-):**
-    - **Платити** (Pay) -> **Переплатити** (Overpay).
+3.  **Excess:**
+    - **Платити** -> **Переплатити**.
 
-*Я мушу переписати цей тест.* (I must rewrite the test).
+*Я мушу переписати цей тест.*.
 
 ---
 
-## Story Time: The City Walk
+## Час історії: Прогулянка містом
 
+I love walking in the city. I am an ordinary pedestrian.
 Я люблю гуляти містом.
 Я — звичайний **пішохід**.
 Сьогодні я маю **побачення** в центрі.
 Я шукаю **вхід** у метро.
 Ось він, біля великого магазину.
-На дверях є **напис**: "Відчинено".
+На дверях є **напис**: «Відчинено».
 Я роблю **перехід** на іншу лінію.
 У метро багато людей. У кожного свій **погляд** на життя.
-Я вийшов на станції "Театральна".
+Я вийшов на станції «Театральна».
 Де **вихід**? Ага, бачу знак.
 На вулиці я бачу книжковий магазин.
 Там сидить відомий **письменник**.
-Він дає **автограф** (підпис) читачам.
-Це цікаве **видовище** (spectacle - from вид/see).
+Він дає **автограф** читачам.
+Це цікаве **видовище**.
 Але я поспішаю. Мій друг чекає.
 Сподіваюсь, це буде гарний **вечір**.
 
-> [!cultural] Cultural Insight: Signs
+> [!cultural] Культурна нотка: Знаки
 > Common signs in Ukraine rely on these roots:
 > - **Вхід** - Usually Green.
 > - **Вихід** - Also Green (Safety).
-> - **Перехід** (Crossing) - Blue sign with a walking person.
-> - **Немає виходу** (No exit).
+> - **Перехід** - Blue sign with a walking person.
+> - **Немає виходу**.
 
 ---
 
-## Story Time Part 2: The Writer's House
+## Час історії Частина 2: Будинок письменника
 
+The writer Andrii lives in an old house. It has a separate entrance.
 Письменник Андрій живе у старому будинку.
 У нього окремий **вхід**.
-На столі лежить його **рукопис** (Hand-script/Manuscript).
+На столі лежить його **рукопис**.
 Це **опис** життя в Карпатах.
 Андрій робить **запис** у блокноті.
-Він любить **схід** сонця (Sunrise - East).
-Він любить **захід** сонця (Sunset - West).
+Він любить **схід** сонця.
+Він любить **захід** сонця.
 Його **погляд** дуже глибокий.
 Він має своє **бачення** світу.
 Коли він закінчує роботу, він ставить **підпис**.
-Його книги — це його **внесок** (Contribution - In-carry) у культуру.
+Його книги — це його **внесок** у культуру.
 
-> [!cultural] Cultural Insight: The Post Office
-> At "Укрпошта" (Ukrposhta), you use many PYS/KHiD words:
-> - **Написати** листа (To write a letter).
-> - **Підписати** конверт (To sign an envelope).
-> - **Відправлення** (Departure/Shipment).
-> - **Надходження** (Arrival/Receipt).
-> - **Замовний** лист (Registered letter - from 'Mova'/Speech/Order).
+> [!cultural] Культурна нотка: Пошта
+> At the post office, you will use many roots related to writing and moving:
+> - **Написати** листа.
+> - **Підписати** конверт.
+> - **Відправлення**.
+> - **Надходження**.
+> - **Замовний** лист.
 
 ---
 
-## Language in Action
+## Мова в дії
 
-### Dialogue: The Security Guard
+## Діалог: Охоронець
 
 **Visitor:** Вибачте, де тут **вихід**?
 **Guard:** **Вихід** там, де і **вхід**.
@@ -224,7 +217,7 @@ It corresponds to the Latin **Trans-** (Across) or **Re-** (Again).
 **Guard:** **Підземний перехід** ліворуч.
 **Visitor:** Дякую за допомогу.
 
-### Dialogue: The Contract
+## Діалог: Контракт
 
 **Manager:** Ви прочитали документ?
 **Client:** Так, я зробив повний **огляд**.
@@ -234,19 +227,19 @@ It corresponds to the Latin **Trans-** (Across) or **Re-** (Again).
 **Client:** Тепер все добре. Де поставити **підпис**?
 **Manager:** Ось тут, унизу сторінки.
 
-### Dialogue: Asking Directions
+## Діалог: Питаємо дорогу
 
 **Tourist:** Перепрошую, ви місцевий?
-**Local:** Так, я тут живу.
-**Tourist:** Де тут **східний** (Eastern) вхід у парк?
-**Local:** О, це далеко. Вам треба знайти **підземний перехід**.
+**Resident:** Так, я тут живу.
+**Tourist:** Де тут **східний** вхід у парк?
+**Resident:** О, це далеко. Вам треба знайти **підземний перехід**.
 **Tourist:** А потім?
-**Local:** Потім йдіть прямо, поки не побачите великий **напис** "Парк".
+**Resident:** Потім йдіть прямо, поки не побачите великий **напис** «Парк».
 **Tourist:** А там є **вихід** до річки?
-**Local:** Так, там є **вихід**. Це дуже гарне місце для **походу**.
+**Resident:** Так, там є **вихід**. Це дуже гарне місце для **походу**.
 **Tourist:** Дякую!
 
-### Dialogue: The Movie Review
+## Діалог: Відгук про фільм
 
 **Oksana:** Ти вже бачив новий фільм?
 **Petro:** Так, я ходив у кіно вчора.
@@ -256,33 +249,41 @@ It corresponds to the Latin **Trans-** (Across) or **Re-** (Again).
 **Petro:** Сюжет цікавий. Але **гра** акторів слабка.
 **Oksana:** А я читала **огляд** в інтернеті. Там пишуть, що це шедевр.
 **Petro:** У кожного свій **погляд**.
-**Oksana:** А як **візуальна** частина? Гарний **вигляд**?
+**Oksana:** А як візуальна частина? Гарний **вигляд**?
 **Petro:** Так, ефекти супер. Але сценарій треба **переписати**.
 **Oksana:** Зрозуміло. Я краще піду на **побачення** в парк.
 
 ---
 
-> [!tip] Pro Tip: Handwriting
-> In Ukrainian schools, children learn **propylys** (cursive).
-> The word **пропис** comes from **ПИС** (write).
-> Ukrainian handwriting is quite different from print.
-> For example, the handwritten *т* often looks like an English *m*.
-> Mastering the *pidpys* (signature) is a true art form in Ukraine!
+> [!tip] Порада профі: Рукопис
+> In Ukrainian schools, children learn cursive. The word **пропис** comes from the root **ПИС**. Ukrainian handwriting is quite different from print. For example, the handwritten *т* often looks like an English *m*. Mastering your own **підпис** is a true art form in Ukraine!
 
-# Summary
+# Підсумок
 
-We have unlocked the power of "Lego Language".
+We have unlocked the power of «Lego Language».
 Instead of memorizing thousands of random words, you now see the connections.
 
-1.  **ХІД** = Go/Move. (Вхід, Вихід, Перехід).
+1.  **ХІД** = Move. (Вхід, Вихід, Перехід).
 2.  **ПИС** = Write. (Письмо, Підпис, Опис).
 3.  **ЧИТ** = Read. (Читач, Читання).
 4.  **БАЧ/ГЛЯД** = See/Look. (Побачення, Вигляд, Огляд).
 
-When you see a new word like **Випис** (Extract/Discharge), don't panic.
-**Ви** (Out) + **Пис** (Write). It's a written document you take out (e.g., from a hospital).
-Logic wins!
+Логіка перемагає!
 
 ---
 
 ---
+
+---
+
+---
+
+---
+
+---
+
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

@@ -1,6 +1,6 @@
 ## Introduction
 
-In this module, you'll learn the Instrumental case — the seventh and final case in Ukrainian. While the Instrumental has several functions, this module focuses on its most common use at A2 level: expressing **accompaniment** (with whom or with what you do something).
+In this module, you'll learn the Instrumental case — the seventh and final case in Ukrainian. While the Instrumental has several functions, this module focuses on its most common use at A2 level: expressing **accompaniment**.
 
 **What you'll learn:**
 
@@ -10,24 +10,62 @@ In this module, you'll learn the Instrumental case — the seventh and final cas
 - How to describe activities with people: гуляти з другом, жити з батьками
 
 **Why the Instrumental matters:**
-Every time you want to say you're doing something "with" someone or something, you need the Instrumental case. "Coffee with milk," "going to the cinema with friends," "married to Maria" — all these expressions require mastering the Instrumental endings.
+Every time you want to say you're doing something «with» someone or something, you need the Instrumental case. «Coffee with milk,» «going to the cinema with friends,» «married to Maria» — all these expressions require mastering the Instrumental endings.
 
 **The Instrumental questions:**
 
-- **З ким?** — With whom? (for people/animals)
-- **З чим?** — With what? (for things)
+- **З ким?** — With whom?
+- **З чим?** — With what?
+
+## Presentation
+
+## Practice
+
+Now let's practice forming Instrumental endings and using them with the preposition з. The key is to identify the noun's gender and choose the correct ending:
+
+- **Masculine:** -ом for hard stems, -ем for soft stems
+- **Feminine:** -ою for hard stems, -ею for soft stems
+- **Neuter:** -ом for hard stems, -ем for soft stems
+- **Plural:** -ами or -ями
+
+This story about a surprise party is full of Instrumental examples. Every time someone arrives «with» someone else, or does something «with» someone, you'll see the Instrumental case.
+
+**Reading strategy:** As you read, highlight every instance of з + Instrumental. Then answer the comprehension questions to verify you've found them all.
+
+**Vocabulary preview:**
+
+- вечірка-сюрприз — surprise party
+- сховатися — to hide
+- торт з кремом — cake with frosting
+- попрощатися — to say goodbye
+
+> Учора була вечірка-сюрприз для Олега. Ми готували її з друзями цілий тиждень!
+>
+> О шостій годині гості почали приходити. Марія прийшла з чоловіком. Петро прийшов з дівчиною. Наталія прийшла з дітьми.
+>
+> Ми сховалися і чекали. Коли Олег увійшов з братом, ми закричали: «Сюрприз!»
+>
+> Олег не чекав цього! Він танцював з дружиною. Потім він грав з дітьми. Ми розмовляли з ним про життя.
+>
+> Було весело! Ми їли торт з кремом і пили каву з молоком. О півночі ми попрощалися з господарями і пішли додому.
+
+**Questions:**
+
+1. З ким готували вечірку? — З друзями.
+2. З ким прийшла Марія? — З чоловіком.
+3. З ким танцював Олег? — З дружиною.
+4. З ким Олег грав? — З дітьми.
+5. Який був торт? — З кремом.
 
 ## Warm-up
 
 Ви вже знаєте шість відмінків: називний, родовий, давальний, знахідний, місцевий і кличний. Тепер час вивчити сьомий — орудний відмінок!
 
-When you want to say you're doing something **with someone**, Ukrainian uses the instrumental case with the preposition **з** (with). "I'm going with a friend" = Я йду **з другом**. "She drinks coffee with milk" = Вона п'є каву **з молоком**.
+When you want to say you're doing something **with someone**, Ukrainian uses the instrumental case with the preposition **з** (with). «I'm going with a friend» = Я йду **з другом**. «She drinks coffee with milk» = Вона п'є каву **з молоком**.
 
 The instrumental case answers the questions: **З ким?** (With whom?) and **З чим?** (With what?) Learning this case opens up the ability to describe social situations and relationships in Ukrainian.
 
-## Presentation
-
-## Питання орудного відмінка: Ким? Чим? (The Instrumental Question)
+## Питання орудного відмінка: Ким? Чим?
 
 Орудний відмінок — один із семи граматичних відмінків в українській мові. Його назва походить від слова «орудувати» (діяти за допомогою інструмента). Це відображає його основну функцію: позначення засобу, за допомогою якого виконується дія. Проте на рівні A2 найчастіше він використовується для вираження супроводу — з ким або з чим ви щось робите.
 
@@ -47,7 +85,7 @@ The instrumental case answers the questions: **З ким?** (With whom?) and **�
 | сестра   | сестрою | з сестрою |
 | вікно    | вікном  | з вікном  |
 
-## Закінчення чоловічого роду в орудному відмінку (Masculine Instrumental Endings)
+## Закінчення чоловічого роду в орудному відмінку
 
 Щоб правильно утворити орудний відмінок, потрібно знати, на який приголосний закінчується основа іменника: твердий чи м'який.
 
@@ -75,13 +113,13 @@ The instrumental case answers the questions: **З ким?** (With whom?) and **�
 > - брат → братом
 > - батько → батьком
 >
-> **Soft consonants** include those followed by ь (soft sign) or the sound й. After soft consonants, use **-ем** or **-єм**:
+> **Soft consonants** include those followed by ь or the sound й. After soft consonants, use **-ем** or **-єм**:
 >
 > - вчитель → вчителем
 > - хлопець → хлопцем
 > - герой → героєм
 
-## Закінчення жіночого роду в орудному відмінку (Feminine Instrumental Endings)
+## Закінчення жіночого роду в орудному відмінку
 
 Іменники жіночого роду мають закінчення **-ою** після твердих приголосних або **-ею** після м'яких приголосних:
 
@@ -99,10 +137,10 @@ The instrumental case answers the questions: **З ким?** (With whom?) and **�
 Вона п'є чай з подругою. (She's drinking tea with her friend.)
 
 > [!warning] Fleeting Vowels — Watch for Disappearing Letters
-> Some feminine nouns have "fleeting vowels" — vowels that disappear in certain case forms. This is a common phonological pattern in Ukrainian:
+> Some feminine nouns have «fleeting vowels» — vowels that disappear in certain case forms. This is a common phonological pattern in Ukrainian:
 >
 > - донька → донькою (the о before к disappears)
-> - сестра → сестрою (follows the standard pattern)
+> - сестра → сестрою
 >
 > The good news: this pattern is predictable once you learn which nouns have fleeting vowels. Most common nouns follow regular patterns.
 
@@ -125,7 +163,7 @@ Neuter nouns take **-ом** after hard consonants or **-ем** after soft conson
 > [!info] Neuter with -я
 > Neuter nouns ending in -я (like ім'я) take -ям: ім'я → ім'ям.
 
-## Орудний відмінок у множині (Plural Instrumental Endings)
+## Орудний відмінок у множині
 
 У множині всі три роди зазвичай мають закінчення **-ами** або **-ями**:
 
@@ -157,7 +195,7 @@ Ukrainian culture places great importance on social relationships, and the langu
 
 ## З/Із/Зі — The Preposition Variants
 
-Ukrainian has three forms of "with" to ease pronunciation. This is called **phonetic alternation** — the preposition changes form to make the phrase easier to say:
+Ukrainian has three forms of «with» to ease pronunciation. This is called **phonetic alternation** — the preposition changes form to make the phrase easier to say:
 
 | Form | Use                     | Example                |
 | ---- | ----------------------- | ---------------------- |
@@ -165,9 +203,9 @@ Ukrainian has three forms of "with" to ease pronunciation. This is called **phon
 | із   | before clusters, formal | із сестрою, із зошитом |
 | зі   | before з, с, ш, щ       | зі мною, зі снігом     |
 
-Я йду з братом. (easy consonant cluster)
+Я йду з братом.
 Я йду із сестрою. (optional, formal)
-Я йду зі мною. (required before "мн-")
+Я йду зі мною. (required before «мн-»)
 
 > [!tip] Personal Pronouns in the Instrumental Case
 > Here are all the personal pronouns in Instrumental — memorize these as a set:
@@ -180,7 +218,7 @@ Ukrainian has three forms of "with" to ease pronunciation. This is called **phon
 > - **ви** → вами: з вами
 > - **вони** → ними: з ними
 >
-> Note: Always use **зі** before мною because Ukrainian avoids the consonant cluster "зм-".
+> Note: Always use **зі** before мною because Ukrainian avoids the consonant cluster «зм-».
 
 ## Social Life with Instrumental
 
@@ -228,15 +266,6 @@ Many relationship verbs use **з + Instrumental**:
 
 ---
 
-## Practice
-
-Now let's practice forming Instrumental endings and using them with the preposition з. The key is to identify the noun's gender and choose the correct ending:
-
-- **Masculine:** -ом for hard stems, -ем for soft stems
-- **Feminine:** -ою for hard stems, -ею for soft stems
-- **Neuter:** -ом for hard stems, -ем for soft stems
-- **Plural:** -ами or -ями
-
 ## Form the Instrumental
 
 Transform these nouns:
@@ -262,11 +291,11 @@ Choose з/із/зі:
 
 ## Mini-Dialogues
 
-The following dialogues demonstrate Instrumental case in natural conversation. Notice how every "with" expression uses з + Instrumental.
+The following dialogues demonstrate Instrumental case in natural conversation. Notice how every «with» expression uses з + Instrumental.
 
 **Dialogue 1: У кафе (At the Café)**
 
-This dialogue shows introductions using the Instrumental — "познайомлю тебе з" (I'll introduce you to).
+This dialogue shows introductions using the Instrumental — «познайомлю тебе з» (I'll introduce you to).
 
 **У кафе:**
 — З ким ти прийшла?
@@ -274,9 +303,9 @@ This dialogue shows introductions using the Instrumental — "познайомл
 — Привіт! Давай познайомлю тебе з моїм братом.
 — Приємно познайомитися!
 
-**Dialogue 2: На роботі (At Work)**
+**Dialogue 2: На роботі**
 
-Here we see working "with" colleagues and talking "with" the boss — all Instrumental.
+Here we see working «with» colleagues and talking «with» the boss — all Instrumental.
 
 **На роботі:**
 — З ким ти працюєш над проєктом?
@@ -284,7 +313,7 @@ Here we see working "with" colleagues and talking "with" the boss — all Instru
 — А з начальником уже говорив?
 — Так, я розмовляв з ним учора.
 
-**Dialogue 3: На кухні (In the Kitchen)**
+**Dialogue 3: На кухні**
 
 Food and drink combinations use Instrumental too — coffee WITH milk, tea WITH lemon.
 
@@ -293,39 +322,6 @@ Food and drink combinations use Instrumental too — coffee WITH milk, tea WITH 
 — Ні, я п'ю каву з цукром.
 — А чай?
 — Чай — з лимоном і з медом!
-
----
-
-## Reading Practice: Вечірка-сюрприз
-
-This story about a surprise party is full of Instrumental examples. Every time someone arrives "with" someone else, or does something "with" someone, you'll see the Instrumental case.
-
-**Reading strategy:** As you read, highlight every instance of з + Instrumental. Then answer the comprehension questions to verify you've found them all.
-
-**Vocabulary preview:**
-
-- вечірка-сюрприз — surprise party
-- сховатися — to hide
-- торт з кремом — cake with frosting
-- попрощатися — to say goodbye
-
-> Учора була вечірка-сюрприз для Олега. Ми готували її з друзями цілий тиждень!
->
-> О шостій годині гості почали приходити. Марія прийшла з чоловіком. Петро прийшов з дівчиною. Наталія прийшла з дітьми.
->
-> Ми сховалися і чекали. Коли Олег увійшов з братом, ми закричали: "Сюрприз!"
->
-> Олег не чекав цього! Він танцював з дружиною. Потім він грав з дітьми. Ми розмовляли з ним про життя.
->
-> Було весело! Ми їли торт з кремом і пили каву з молоком. О півночі ми попрощалися з господарями і пішли додому.
-
-**Questions:**
-
-1. З ким готували вечірку? — З друзями.
-2. З ким прийшла Марія? — З чоловіком.
-3. З ким танцював Олег? — З дружиною.
-4. З ким Олег грав? — З дітьми.
-5. Який був торт? — З кремом.
 
 ---
 
@@ -357,6 +353,8 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 Тепер ви можете розповідати, з ким ви гуляєте, живете, працюєте і п'єте каву! ☕
 
+---
+
 ## Need More Practice?
 
----
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

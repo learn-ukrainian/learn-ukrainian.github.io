@@ -7,17 +7,18 @@ pedagogy: Narrative
 duration: 60
 transliteration: none
 tags:
-  - vocabulary
-  - sports
-  - health
-  - hobby
+- vocabulary
+- sports
+- health
+- hobby
 grammar:
-  - instrumental-with-verbs
-  - play-prep-review
+- instrumental-with-verbs
+- play-prep-review
 objectives:
-  - Talk about sports: футбол, бокс, біг
-  - Describe fitness: тренування, спортзал
-  - Discuss watching sports: матч, вболівальник
-  - Use play verbs correctly: грати в
-vocab_count: 54
+- Talk about sports: футбол, бокс, біг
+- Describe fitness: тренування, спортзал
+- Discuss watching sports: матч, вболівальник
+- Use play verbs correctly: грати в
 slug: 54-sports-fitness
+vocabulary_count: 54
+focus: vocabulary

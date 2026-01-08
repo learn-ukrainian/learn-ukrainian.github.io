@@ -15,6 +15,21 @@
 
 **Related Issue:** [#284](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/284)
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Лексика
+  - Вживання
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: CBI
+  min_word_count: 1500
+  required_callouts: []
+  description: B1 vocabulary expansion uses CBI with thematic organization
+-->
+
 ---
 
 ## Quick Reference Checklist
@@ -577,32 +592,18 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ---
 
-## Vocabulary Section Template
+---
 
-**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
+## Content Structure Note
 
-**Example `vocabulary/b1-52-abstract-concepts.yaml`:**
+### Vocabulary & Activities
 
-```yaml
-items:
-- lemma: ідея
-  ipa: /iˈdɛjɑ/
-  translation: idea
-  pos: ім. (ж.р.)
-  gender: f
-  note: мати ідею, цікава ідея
-- lemma: думка
-  ipa: /ˈdumkɑ/
-  translation: opinion/thought
-  pos: ім. (ж.р.)
-  gender: f
-  note: на мою думку, висловити думку
-```
+**CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
 
-**CRITICAL for Vocabulary Modules:**
-- **Note field**: MUST include common collocations
-- 25-30 items (higher than grammar modules' 25)
-- Group vocabulary thematically in the table if possible
+- `vocabulary/{slug}.yaml`
+- `activities/{slug}.yaml`
+
+The build system will inject these sections at build time.
 
 ---
 

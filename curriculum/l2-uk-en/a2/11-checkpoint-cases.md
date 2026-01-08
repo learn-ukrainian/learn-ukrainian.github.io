@@ -1,272 +1,250 @@
-# Checkpoint - Cases
+# Checkpoint - Case Mastery
 
-**Вітаємо!** Ви завершили Фазу A2.1! Цей контрольний модуль перевіряє все, що ви вивчили в Модулях 01-09.
+## Огляд
 
-This checkpoint reviews all seven Ukrainian cases, prepositions, and practical vocabulary. Work through each skill section to verify your mastery.
+**Вітаємо!** Ви завершили першу частину рівня A2. Цей модуль перевірить ваші знання про відмінки. Ви вивчали їх у Модулях 01-10.
+
+This checkpoint reviews all seven Ukrainian cases, with a focus on the most complex patterns introduced in A2: the **Dative** and **Instrumental** cases, along with logical prepositions and real-world service contexts.
 
 **Skills tested:**
-1. **Dative Case** - Can you express recipients and experiencers?
-2. **Instrumental Case** - Can you express means and accompaniment?
-3. **Prepositions + Cases** - Can you choose the right case?
-4. **Service Vocabulary** - Can you use cases at the post office and bank?
 
-## Skill 1: Dative Case
-
-**Can you express recipients and experiencers with the dative case?**
-
-### Model: The Dative Pattern
-
-> Я даю **книгу** кому? → **другові** (Dative).
-> **Мені** холодно. (Dative experiencer — the cold happens TO me.)
-> **Йому** двадцять років. (Age is expressed TO him.)
-
-**Key patterns:**
-- **Recipients:** давати, дарувати, казати, писати + Dative
-- **Experiencers:** холодно, погано, тепло + Dative pronoun
-- **Dative verbs:** дзвонити, допомагати, подобатися
-
-### Practice: Complete with Dative
-
-Complete with the correct dative form:
-
-1. Я даю книгу ___ (друг).
-> [!solution] Перевірити
-> другові — The book goes TO the friend.
-
-2. ___ (Вона) холодно.
-> [!solution] Перевірити
-> Їй — The cold happens TO her.
-
-3. ___ (Ти) подобається Київ?
-> [!solution] Перевірити
-> Тобі — Do you like Kyiv? (Lit: Does Kyiv please TO you?)
-
-### Self-Check
-
-- Can you identify when to use dative vs accusative?
-- Can you form dative of common nouns: мама → мамі, друг → другові?
-- Do you know the dative pronouns: мені, тобі, йому, їй, нам, вам, їм?
+1. **Dative Case** - Expressing recipients, age, and feelings.
+2. **Instrumental Case** - Expressing tools, accompaniment, and professions.
+3. **Prepositions + Cases** - Choosing the right case for logical relationships.
+4. **Service Contexts** - Applying cases at the post office and bank.
 
 ---
 
-## Skill 2: Instrumental Case
+## Skill 1: The Dative Case (Давальний відмінок)
 
-**Can you express means, accompaniment, and profession?**
+The Dative case identifies the **recipient** of an action or the **experiencer** of a state. It answers the questions **Кому?** (To whom?) and **Чому?** (To what?).
 
-### Model: The Instrumental Pattern
+### Model: Recipients and Experiencers
 
-> Я пишу **чим?** → **ручкою** (Instrumental — the tool).
-> Він працює **ким?** → **лікарем** (Instrumental — profession).
-> Я йду **з ким?** → **з другом** (Instrumental — accompaniment).
+> 1. Я даю **книгу** (Acc) кому? → **Олегові** (Dat).
+> 2. **Мені** (Dat) подобається ця кава. (The coffee pleases **to me**).
+> 3. **Тобі** (Dat) двадцять років. (Years happen **to you**).
 
-**Key patterns:**
-- **Means/Tool:** писати ручкою, їхати машиною
-- **Profession:** бути/працювати/стати + Instrumental
-- **Accompaniment:** з + Instrumental (with someone)
-- **Spatial prepositions:** над, під, перед, за, між + Instrumental
+**Key Indicators:**
 
-### Practice: Complete with Instrumental
+- **Verbs of giving/telling:** давати, сказати, дзвонити, допомагати.
+- **Physical/Emotional states:** холодно, сумно, весело, погано.
+- **Preference:** подобатися.
 
-Complete with the correct instrumental form:
+### Practice: Case Selection
 
-1. Вона працює ___ (вчителька).
-> [!solution] Перевірити
-> вчителькою — She works AS a teacher.
+Choose the correct Dative form for the words in parentheses:
 
-2. Я їду ___ (автобус).
-> [!solution] Перевірити
-> автобусом — I go BY bus.
+1. Я телефоную \_\_\_ (мама) щодня.
 
-3. Я йду з ___ (сестра).
-> [!solution] Перевірити
-> сестрою — I go WITH my sister.
+   > [!solution] Перевірити
+   > **мамі** (Д.в.) — I call (to) mom.
 
-### Self-Check
+2. Скільки років \_\_\_ (цей хлопчик)?
 
-- Can you form instrumental of common nouns?
-- Do you know instrumental endings: -ом/-ем (ч.р.), -ою/-ею (ж.р.)?
-- Can you use spatial prepositions: над столом, під ліжком?
+   > [!solution] Перевірити
+   > **цьому хлопчикові** (Д.в.) — How many years to this boy?
 
-> [!myth-buster] 🔍 Myth Buster
+3. Студентам \_\_\_ (потрібно) більше часу.
+   > [!solution] Перевірити
+   > **потрібно** — Students need (it's necessary to them) more time.
+
+### Self-Check:
+
+- ☐ Do you know the personal pronouns: _мені, тобі, йому, їй, нам, вам, їм_?
+- ☐ Can you form masculine endings: _-ові / -еві / -у_?
+- ☐ Do you remember that _подобатися_ uses Dative for the person?
+
+> [!tip] 💡 Memory Hook
 >
-> **Myth:** "Ukrainian cases are just like Russian cases."
->
-> **Truth:** While both languages have 7 cases, Ukrainian preserved the **Vocative case** (кличний відмінок) in full active use: **Мамо! Друже! Україно!** Russian lost vocative centuries ago, using nominative instead. When you say "Друже!", you're speaking authentic Ukrainian — not a "dialect" of anything!
+> Think of Dative as "Giving". You give a book **to someone** (Давальний). But you also "give" feelings to someone: "Coldness is given to me" (Мені холодно).
 
-> [!history-bite] 📜 History Bite
+> [!tip] 🎯 Case Strategy
 >
-> **The Ems Ukaz (1876)**: Tsar Alexander II banned Ukrainian-language education and publications. The goal? Destroy Ukrainian grammar, including our beautiful case system. They failed. Today, millions learn "Я даю книгу **другові**" — Dative case alive and thriving!
+> Always look for the **verb** or **preposition** first. They are the "bosses" that tell the noun which case to wear!
 
 ---
 
-## Skill 3: Prepositions + Cases
+## Skill 2: The Instrumental Case (Орудний відмінок)
 
-**Can you choose the correct case for each preposition?**
+The Instrumental case describes **how** an action is performed (tools), **with whom** (accompaniment), or **who** someone is (identity/profession). It answers **Ким?** and **Чим?**.
 
-### Model: Preposition-Case Combinations
+### Model: Tools, Companions, and Identity
 
-| Preposition | Case | Example |
-|-------------|------|---------|
-| до | Genitive | до **школи** (to school) |
-| від | Genitive | від **мами** (from mom) |
-| про | Accusative | про **книгу** (about the book) |
-| з + accompaniment | Instrumental | з **другом** (with a friend) |
-| з + origin | Genitive | з **України** (from Ukraine) |
-| в/на + motion | Accusative | в **школу** (to school) |
-| в/на + location | Locative | в **школі** (at school) |
+> 1. Я пишу **чим?** → **ручкою** (Instrumental tool).
+> 2. Він працює **ким?** → **лікарем** (Instrumental profession).
+> 3. Я розмовляю **з ким?** → **з другом** (Instrumental accompaniment).
 
-> 📜 **Critical Rule: Motion vs. Location**
-> - **В школу** (Accusative) = going TO school
-> - **В школі** (Locative) = being AT school
+**Key Indicators:**
 
-### Practice: Choose the Correct Case
+- **Preposition «З» (with):** Always uses Instrumental for accompaniment.
+- **Verbs of being/becoming:** бути, стати, працювати.
+- **Spatial Prepositions:** над, під, перед, за, між.
 
-1. Я йду ___ магазину (до).
-> [!solution] Перевірити
-> до магазину (Р.в.) — motion TO
+### Practice: Building Sentences
 
-2. Книга ___ столі (на).
-> [!solution] Перевірити
-> на столі (М.в.) — location ON
+Transform the nouns into the correct Instrumental form:
 
-3. Кава без ___ (цукор).
-> [!solution] Перевірити
-> без цукру (Р.в.) — without
+1. Ми їдемо до Києва \_\_\_ (поїзд).
 
-### Self-Check
+   > [!solution] Перевірити
+   > **поїздом** (Ор.в.) — We go BY train.
 
-- Can you distinguish motion (Accusative) from location (Locative)?
-- Do you know which prepositions take Genitive: до, від, для, без, з?
-- Can you use spatial prepositions with Instrumental?
+2. Моя сестра хоче стати \_\_\_ (архітекторка).
+
+   > [!solution] Перевірити
+   > **архітекторкою** (Ор.в.) — My sister wants to become an architect.
+
+3. Олена гуляє в парку \_\_\_ (собака).
+   > [!solution] Перевірити
+   > **з собакою** (Ор.в.) — Olena walks WITH a dog.
+
+### Self-Check:
+
+- ☐ Can you distinguish _З_ (with) from _З_ (from/origin - Genitive)?
+- ☐ Do you know the endings: _-ом/-ем_ (masc) and _-ою/-ею_ (fem)?
+- ☐ Can you use spatial prepositions to describe a room?
+
+> [!culture] 🇺🇦 Professional Pride
+>
+> Ukrainians often define themselves by their profession using the Instrumental case: «Я працюю вчителем» (I work as a teacher). It implies current status, not just a static label.
 
 ---
 
-## Skill 4: Service Vocabulary
+## Skill 3: Prepositions and Contextual Logic
 
-**Can you apply cases in real service contexts?**
+Ukrainian prepositions are «case-locked». You must memorize which case follows which preposition.
 
-### Model: At the Post Office and Bank
+### Model: Motion vs. Location
+
+The most important distinction in A2 is between **motion toward** (Accusative) and **static location** (Locative).
+
+> - Я йду **в школу** (Accusative — Motion).
+> - Я зараз **в школі** (Locative — Location).
+
+**Common Preposition Pairs:**
+
+- **До / Від:** + Genitive (Toward / From).
+- **Про / Через:** + Accusative (About / Because of).
+- **З / Без:** + Instrumental (With) / Genitive (Without).
+
+### Practice: Preposition Choice
+
+Select the correct case form based on the preposition:
+
+1. Ми йдемо \_\_\_ (театр) о сьомій. (в / на)
+
+   > [!solution] Перевірити
+   > **в театр** (Зн.в.) — Motion into.
+
+2. Ця книга \_\_\_ (мій брат). (від / для)
+
+   > [!solution] Перевірити
+   > **для мого брата** (Р.в.) — For my brother.
+
+3. Я не можу пити чай \_\_\_ (цукор).
+   > [!solution] Перевірити
+   > **без цукру** (Р.в.) — Without sugar.
+
+### Self-Check:
+
+- ☐ Do you know which prepositions always take Genitive (до, від, для, без, після)?
+- ☐ Can you distinguish _Про_ (about) + Accusative from other languages?
+- ☐ Do you understand when to use _О / Об_ for time?
+
+> [!note] ⚠️ Preposition Trap
+>
+> Be careful with **по**. In A2, we rarely use it. Beginners often misuse it for "for" or "by". Stick to **для** (for benefit) and **через** (because of/through).
+
+---
+
+## Skill 4: Service Contexts (Post & Bank)
+
+Applying cases in real-world scenarios is the goal of A2.1.
+
+### Model: Transactions and Requests
 
 > **На пошті:**
-> Я хочу **відправити листа** (Зн.в. — прямий об'єкт).
-> Посилка **з України** (Р.в. — походження).
-> Дайте, будь ласка, **квитанцію** (Зн.в.).
-
+>
+> - Мені потрібно відправити **листа** (Acc).
+> - Посилка **для мами** (Gen).
+>
 > **У банку:**
-> Я хочу **зняти гроші** (Зн.в. — прямий об'єкт).
-> Платити **карткою** (Ор.в. — засіб).
-> Сто **гривень** (Р.в. — кількість після числа).
+>
+> - Я хочу зняти **гроші** (Acc).
+> - Я плачу **карткою** (Ins).
 
-### Practice: Choose the Correct Form
+### Practice: Roleplay Completion
 
-1. Я хочу відправити ___ (лист).
+Complete the dialogue with the correct forms:
+
+**Waiter:** Вам «рахунок»?
+**Customer:** Так, будь ласка. Чи можна платити «карткою»?
+**Waiter:** Так, звичайно.
+
 > [!solution] Перевірити
-> листа (Зн.в.) — I want to send a letter.
+> **рахунок** (Зн.в. - прямий об'єкт)
+> **карткою** (Ор.в. - засіб оплати)
 
-2. Я плачу ___ (картка).
-> [!solution] Перевірити
-> карткою (Ор.в.) — I pay BY card.
+### Self-Check:
 
-3. Скільки ___ (гривня) це коштує?
-> [!solution] Перевірити
-> гривень (Р.в. мн.) — How many hryvnias?
+- ☐ Can you ask for a menu or check using the Dative case?
+- ☐ Do you know how to specify the recipient of a package?
+- ☐ Can you express amounts of money (_п'ять гривень_) correctly?
 
-> [!note] 📝 Ukrainian Case Abbreviations
+> [!important] ⚡ Polite Requests
 >
-> When studying grammar, you'll see these abbreviations:
-> - **Н.в.** = Називний відмінок — хто? що?
-> - **Р.в.** = Родовий відмінок — кого? чого?
-> - **Д.в.** = Давальний відмінок — кому? чому?
-> - **Зн.в.** = Знахідний відмінок — кого? що?
-> - **Ор.в.** = Орудний відмінок — ким? чим?
-> - **М.в.** = Місцевий відмінок — на чому? в чому?
-> - **Кл.в.** = Кличний відмінок — Мамо! Друже!
->
-> These are used in Ukrainian grammar books and dictionaries!"
-
-### Self-Check
-
-- Can you order services at a post office?
-- Can you perform transactions at a bank?
-- Do you know quantity expressions: п'ять гривень, багато грошей?
-
-> [!tip] 💡 Practice Makes Perfect
->
-> Visit a Ukrainian online store or banking app and try to read the interface. You'll see cases everywhere:
-> - "Ваш **рахунок**" (Н.в.) — Your account
-> - "Немає **коштів**" (Р.в.) — No funds
-> - "Переказ **другові**" (Д.в.) — Transfer to a friend
-> - "Введіть **суму**" (Зн.в.) — Enter the amount
->
-> Real practice with real Ukrainian!
+> When asking for something, **«Мені потрібно...»** (I need...) is polite and neutral. **«Я хочу...»** (I want...) can sound a bit demanding in formal service situations.
 
 ---
 
-## Integration Challenge
+## Інтеграційне завдання
 
-Read this dialogue and identify the case of each bolded word:
+Read the following narrative and identify which skill is demonstrated by each bolded phrase.
 
-> **Людмила:** Привіт! Куди ти йдеш?
-> **Олег:** Я йду **до банку**. Мені потрібно зняти **гроші**.
-> **Людмила:** А потім?
-> **Олег:** Потім піду **на пошту**. Хочу відправити **листа бабусі**.
-> **Людмила:** Ти йдеш **з ким**?
-> **Олег:** **З братом**. Він працює **перекладачем** у банку.
+> Сьогодні чудовий день! **Мені дуже подобається** (1) Львів. Ранком я пішов **у кафе** (2) **з другом** (3). Ми замовили каву **з молоком** (4) і тістечка **для нас** (5). Офіціант приніс нам **рахунок** (6), і я заплатив **карткою** (7). Потім ми пішли **на пошту** (8), бо мені потрібно відправити **листа батькам** (9).
 
-1. до банку — which case?
-> [!solution] Перевірити
-> Genitive — preposition "до" requires Genitive
+**Analysis Key:**
 
-2. гроші — which case?
-> [!solution] Перевірити
-> Accusative — direct object of "зняти"
-
-3. на пошту — which case?
-> [!solution] Перевірити
-> Accusative — motion TO the post office
-
-4. бабусі — which case?
-> [!solution] Перевірити
-> Dative — recipient of the letter
-
-5. з братом — which case?
-> [!solution] Перевірити
-> Instrumental — accompaniment "with"
-
-6. перекладачем — which case?
-> [!solution] Перевірити
-> Instrumental — profession with "працює"
+1. Dative Experiencer (Skill 1)
+2. Motion Accusative (Skill 3)
+3. Instrumental Accompaniment (Skill 2)
+4. Instrumental Tool/Means (Skill 2)
+5. Genitive Purpose (Skill 3)
+6. Accusative Direct Object (Skill 4)
+7. Instrumental Means (Skill 4)
+8. Motion Accusative (Skill 4)
+9. Dative Recipient (Skill 1)
 
 ---
 
-# Summary
+# Підсумок
 
-| Skill | Key Pattern | Example |
-|-------|-------------|---------|
-| Dative | TO someone (recipient) | Даю книгу **другові** |
-| Instrumental | WITH/BY means of | Пишу **ручкою** |
-| Prepositions | Each has its case | до школ**и** (Gen), в школ**і** (Loc) |
-| Services | Real-world application | Відправити **листа** (Acc) |
+Ви зробили велику роботу! Тепер ви володієте основними інструментами української граматики.
 
-> [!tip] 💡 Time Expressions
+| Відмінок  | Питання     | Головна функція            |
+| --------- | ----------- | -------------------------- |
+| Давальний | Кому? Чому? | Отримувач, почуття, вік    |
+| Орудний   | Ким? Чим?   | Засіб, професія, компанія  |
+| Знахідний | Кого? Що?   | Об'єкт дії, напрямок       |
+| Родовий   | Кого? Чого? | Приналежність, відсутність |
+
+> ✅ **Самоперевірка**
 >
-> The word **час** (time) appears in many case forms:
-> - Nominative: **Час** летить! (Time flies!)
-> - Genitive: Немає **часу** (No time)
-> - Dative: **Часу** — not commonly used
-> - Accusative: Знаю **час** зустрічі (I know the meeting time)
-> - Instrumental: Працюю над **часом** (Working on timing)
-> - Locative: У вільному **часі** (In free time)
+> Чи можете ви:
 >
-> Master this word to practice all cases!
-
-> 🌍 **Cultural Connection**
-> Україна має багату граматичну традицію. Сім відмінків — це частина давньої слов'янської спадщини. Коли ви вивчаєте відмінки, ви торкаєтесь тисячолітньої історії української мови!
+> - [ ] Висловити свої почуття (Мені холодно, Мені подобається)?
+> - [ ] Розповісти про свою роботу або хобі?
+> - [ ] Замовити послугу в банку або на пошті?
+>
+> Якщо так — вітаємо! Ви готові до наступної фази: **Аспекти та Порівняння**.
 
 ---
 
 ## Need More Practice?
 
----
+**Struggling with a specific case?**
 
----
+- Dative help → Modules 01-03
+- Instrumental help → Modules 04-06
+- Prepositions help → Modules 07-08

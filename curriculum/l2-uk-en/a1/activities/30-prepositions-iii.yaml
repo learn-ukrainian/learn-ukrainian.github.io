@@ -245,7 +245,7 @@
 - type: quiz
   title: Location or Direction?
   items:
-  - question: Which category correctly describes the sentence "Я в парку"?
+  - question: Which category correctly describes the sentence «Я в парку»?
     options:
     - text: I'm from the park (origin)
       correct: false
@@ -255,7 +255,7 @@
       correct: false
     - text: I was in the park (past)
       correct: false
-  - question: How do you categorize "Я йду в парк"?
+  - question: How do you categorize «Я йду в парк»?
     options:
     - text: I am in the park (location)
       correct: false
@@ -265,7 +265,7 @@
       correct: true
     - text: I was in the park (past)
       correct: false
-  - question: What is the meaning of "Вдома"?
+  - question: What is the meaning of «Вдома»?
     options:
     - text: To home
       correct: false
@@ -275,7 +275,7 @@
       correct: false
     - text: About home
       correct: false
-  - question: Which category summarizes the term "Додому"?
+  - question: Which category summarizes the term «Додому»?
     options:
     - text: At home (location)
       correct: false
@@ -285,7 +285,7 @@
       correct: true
     - text: About home
       correct: false
-  - question: How is the phrase "Я з України" described?
+  - question: How is the phrase «Я з України» described?
     options:
     - text: I'm in Ukraine
       correct: false
@@ -295,7 +295,7 @@
       correct: true
     - text: I was in Ukraine
       correct: false
-  - question: What is the description for "До лікаря"?
+  - question: What is the description for «До лікаря»?
     options:
     - text: At the doctor's
       correct: false
@@ -305,7 +305,7 @@
       correct: false
     - text: About the doctor
       correct: false
-  - question: Which category correctly represents the word "Тут"?
+  - question: Which category correctly represents the word «Тут»?
     options:
     - text: Here (location)
       correct: true
@@ -315,7 +315,7 @@
       correct: false
     - text: About here
       correct: false
-  - question: How would you accurately describe "Сюди"?
+  - question: How would you accurately describe «Сюди»?
     options:
     - text: Here (location)
       correct: false
@@ -489,23 +489,23 @@
 - type: true-false
   title: Preposition Rules
   items:
-  - statement: '"Де?" asks about location.'
+  - statement: '«Де?» asks about location.'
     correct: true
-  - statement: '"Куди?" asks about location.'
+  - statement: '«Куди?» asks about location.'
     correct: false
     explanation: Incorrect! it asks about direction
-  - statement: '"Звідки?" asks about origin.'
+  - statement: '«Звідки?» asks about origin.'
     correct: true
-  - statement: '"Вдома" means "at home.".'
+  - statement: '«Вдома» means "at home.".'
     correct: true
-  - statement: '"Додому" means "at home.".'
+  - statement: '«Додому» means "at home.".'
     correct: false
     explanation: Incorrect! it means "to home"
-  - statement: '"З" is used for "from places.".'
+  - statement: '«З» is used for "from places.".'
     correct: true
-  - statement: '"Від" is used for "from people.".'
+  - statement: '«Від» is used for "from people.".'
     correct: true
-  - statement: '"До" is used for "from people.".'
+  - statement: '«До» is used for "from people.".'
     correct: false
     explanation: Incorrect! it's used for "to"
   - statement: Location uses Locative case.
@@ -513,8 +513,8 @@
   - statement: Direction uses Locative case.
     correct: false
     explanation: Incorrect! it uses Accusative/Genitive
-  - statement: '"Тут" means "here.".'
+  - statement: '«Тут» means "here.".'
     correct: true
-  - statement: '"Сюди" means "to here.".'
+  - statement: '«Сюди» means "to here.".'
     correct: true
   id: preposition-rules

@@ -1,127 +1,110 @@
-# Summary
+# I Feel Like... | Expressing Feelings and Needs
 
-## Warm-up
+## Introduction
 
-How do you feel today? Are you tired? Happy? Cold? In Ukrainian, expressing how you feel often uses a different logical structure than English. Instead of saying "I am cold," we often say "To me [is] cold." This module focuses on these "impersonal" constructions and the vocabulary of emotions. We will learn how to describe our physical state, our emotional reaction to events, and how to express deep feelings with friends.
+Language is not just information; it is emotion. In this module, you will learn how to express your feelings about events.
+"I am happy that you came." "It is sad that he left."
 
-**In this lesson, we will cover:**
-- **The Dative of Experience:** Мені холодно, йому весело.
-- **Physical States:** Голодний, втомлений, хворий.
-- **Emotional States:** Радий, сумний, злий.
-- **Verbs of Feeling:** Боятися, хвилюватися, радіти.
-- **Reporting Feelings:** Я почуваюся...
-
-> 💡 **Logic Shift: The Dative Case**
-> In English, you are the *subject* of the feeling (I am cold). 
-> In Ukrainian, you are often the *recipient* of the feeling (To me [it is] cold). This is why the **Dative case** is so crucial for emotions! By using the dative, you describe how the world "happens" to you rather than how you "are".
-
----
+You will learn:
+- How to connect emotions to reasons using **що**.
+- Adjectives for feelings: **радий**, **щасливий**, **сумний**.
+- Impersonal expressions: **шкода**, **приємно**, **важливо**.
+- How to share good and bad news.
 
 ## Presentation
 
-## 1. Impersonal States (The Dative construction)
+Here is how to express your emotions grammatically.
 
-When expressing physical or environmental sensations, Ukrainian uses the Dative case (мені, тобі, йому...) + an adverbial state word. These words don't change for gender or number because they are describing the *situation* around the person, not the person directly.
+### Personal Feelings: I am...
 
-| Ukrainian | Literal English | Natural English |
-|-----------|-----------------|-----------------|
-| **Мені холодно.** | To me [is] cold. | I am cold. |
-| **Йому жарко.** | To him [is] hot. | He is hot. |
-| **Нам сумно.** | To us [is] sad. | We are sad. |
-| **Вам весело.** | To you [is] fun. | You are having fun / happy. |
-| **Їм нудно.** | To them [is] boring. | They are bored. |
-| **Мені цікаво.** | To me [is] interesting. | It is interesting to me. |
-| **Мені нудно.** | To me [is] boring. | I am bored. |
-| **Тобі страшно?** | To you [is] scary? | Are you scared? |
-| **Мені приємно.** | To me [is] pleasant. | It's my pleasure / I'm glad. |
+To say how you feel about a fact, use an adjective (short form or regular) + **що**.
 
-> [!important] No "to be" in Present
-> Just like other present tense sentences in Ukrainian, we don't use a verb for "is" here. 
-> *Мені страшно.* (I am scared.) 
-> In the past, we use **було**: *Мені було холодно.* (I was cold.)
+**Structure:**
+[Subject] + [Adjective] + , + **що** + [Fact]
 
-## 2. Adjectival Feelings (Direct Description)
+| Expression | Meaning | Example |
+|------------|---------|---------|
+| **Я радий / рада** | I am glad | Я радий, що ти тут. |
+| **Я щасливий / щаслива** | I am happy | Я щаслива, що ми разом. |
+| **Він впевнений** | He is sure | Він впевнений, що це правда. |
+| **Ми вдячні** | We are grateful | Ми вдячні, що ви допомогли. |
 
-Some feelings are expressed as adjectives. These describe the person's own condition and MUST agree in gender and number with the person speaking or being spoken about.
+### Impersonal Feelings: It is...
 
-- **Я голодний.** (I am hungry - masc)
-- **Я голодна.** (I am hungry - fem)
-- **Я втомлена.** (I am tired - fem)
-- **Він задоволений.** (He is satisfied/pleased.)
-- **Ми щасливі.** (We are happy.)
-- **Вона здивована.** (She is surprised.)
-- **Вони розчаровані.** (They are disappointed.)
+Sometimes we don't say "I am", we just describe the situation.
 
-## 3. Emotional Verbs (Process and Action)
+**Structure:**
+[Adverb/Noun] + , + **що** + [Fact]
 
-When feelings are not just states but processes or actions directed at something, we use verbs. Many of these are reflexive (ending in **-ся**) or require specific cases.
+| Expression | Meaning | Example |
+|------------|---------|---------|
+| **Добре** | It is good | Добре, що ти подзвонив. |
+| **Погано** | It is bad | Погано, що йде дощ. |
+| **Шкода** | It is a pity | Шкода, що він не прийшов. |
+| **Цікаво** | It is interesting | Цікаво, що він сказав. |
+| **Дивно** | It is strange | Дивно, що тут нікого немає. |
 
-- **Радіти** (to rejoice / be glad). *Я радію за тебе.* (I'm happy for you.)
-- **Боятися** (to fear / be afraid). *Я боюся собак.* (I'm afraid of dogs - requires Genitive).
-- **Хвилюватися** (to worry / be excited). *Не хвилюйся!* (Don't worry!)
-- **Дивуватися** (to be surprised). *Вона дивується результату.* (She is surprised at the result.)
+### Емоції та факти
 
----
+Пам'ятайте: ми використовуємо **що**, щоб приєднати факт.
+- Я радий (емоція), **що** ти купив машину (факт).
+- Шкода (емоція), **що** ми запізнилися (факт).
 
-## The Nuance of Sincerity
+> [!tip] Gender Matters!
+> If you say "I am glad":
+> - Man: Я **радий**.
+> - Woman: Я **рада**.
+> - Plural: Ми **раді**.
 
-In many Western cultures, asking "How are you?" is just a social ritual with a standard "Good, thanks" answer. In Ukraine, the question **"Як ти?"** or **"Як почуваєшся?"** is often seen as a genuine invitation to share your state of mind. If someone is tired or worried about work, they will likely tell you. This emotional honesty is considered a sign of a "real" (справжній) person and a loyal friend. Sharing a bit of "журба" (sorrow) or "радість" (joy) over tea is the foundation of many Ukrainian friendships, creating a space where people can be vulnerable and supported by their community.
+## Practice
 
----
+Let's practice connecting your feelings to the facts.
 
-> [!cultural] History Bite: The Spirit of Resilience
-> Ukrainians have a unique concept of "cheerful resilience." Even in the darkest times of history, from the famine to the current war, the ability to find humor (**гумор**) and maintain a positive spirit is seen as a weapon of resistance. The phrase "Сміємося — отже, не здаємося" (We are laughing — therefore, we are not giving up) captures this essential national feeling.
+### Connecting Feelings
 
-> [!tip] Softening with "Трохи"
-> If a feeling is not overwhelming, use **трохи** (a little).
-> *Мені трохи холодно.* (I'm a little cold.)
-> *Я трохи засмучений сьогодні.* (I'm a little upset today.)
+Combine the feeling and the fact.
 
----
+1. Я рада + (ти прийшла).
+   -> Я рада, **що** ти прийшла.
 
-## Expressing Needs and Desires
+2. Шкода + (завтра понеділок).
+   -> Шкода, **що** завтра понеділок.
 
-Often, feelings are linked to needs. In Ukrainian, these are also frequently expressed with the Dative case + an impersonal verb or particle. This grammatical structure reflects a cultural tendency to view humans as being acted upon by internal and external forces, rather than purely as autonomous agents of their own will.
+3. Ми щасливі + (у нас є діти).
+   -> Ми щасливі, **що** у нас є діти.
 
-- **Мені хочеться...** (I feel like... / I want... - reflexive impersonal)
-- **Мені потрібно...** (I need... - impersonal)
-- **Мені шкода.** (I'm sorry / It's a pity.)
-- **Мені прикро.** (I'm annoyed / It's a pity.)
+4. Добре + (ти знаєш це).
+   -> Добре, **що** ти знаєш це.
 
-By using the Dative, you soften the ego. Instead of "I want," you say "It is wanted to me," which sounds less demanding and more like a natural state of being. This nuance is part of the linguistic "politeness" built into the Ukrainian case system, allowing speakers to express desire without coming across as overly pushy or self-centered. It is a subtle way of maintaining social harmony while still being honest about your needs.
+## Dialogues
 
----
+### Dialogue 1: Good News
 
-## Emotions in the Ukrainian Heartland
+**Олег:** Привіт! Я отримав нову роботу!
+**Ірина:** Ого! Я така **рада, що** ти знайшов роботу мрії!
+**Олег:** Дякую. Я сам **щасливий, що** все вийшло.
+**Ірина:** **Чудово, що** ми можемо це відсвяткувати.
 
-Ukrainian literature and folk songs are famous for their emotional depth. The concept of **"Туга"** (a deep, soulful longing) is something you will encounter often. It is not exactly sadness, but rather a profound yearning for home, for a loved one, or for freedom. When you learn these words, you are unlocking the emotional history of a nation that has always used its feelings as a way to connect and survive. Whether it's the epic poems of Taras Shevchenko or modern pop lyrics, the "prosecutor's voice" of emotional clarity is always present.
+### Dialogue 2: Bad Weather
 
----
+**Максим:** Ти йдеш гуляти?
+**Наталя:** Ні. **Шкода, що** на вулиці такий вітер.
+**Максим:** Так, **неприємно, що** погода зіпсувалася.
+**Наталя:** **Сподіваюся, що** завтра буде сонце.
 
-## Language in Action
+# Підсумок
 
-## Dialogue: After a Long Week
+Сьогодні ви навчилися ділитися емоціями. (Today you learned to share emotions.)
 
-**Олена:** Привіт, Іване! Як ти почуваєшся після цього важкого тижня?
-**Іван:** Чесно кажучи, я дуже втомлений. Мені хочеться просто спати.
-**Олена:** Тобі не нудно було в офісі сьогодні з цими звітами?
-**Іван:** Ні, було занадто багато роботи, тому мені було трохи страшно не встигнути.
-**Олена:** Зрозуміло. А мені дуже радісно, бо я нарешті купила нову книгу!
-**Іван:** Я справді радий за тебе. Ти завжди така щаслива, коли читаєш.
-**Олена:** Це правда. Хоча я теж хвилююся через іспити, але книга допомагає.
-**Іван:** Не турбуйся, ти все знаєш. Давай просто підемо пити чай.
+Використовуйте:
+- **Я радий/рада, що...** (I am glad that...)
+- **Шкода, що...** (It's a pity that...)
+- **Добре, що...** (It's good that...)
 
-### Analysis of the Conversation
-1.  **Я дуже втомлений**: Adjective (Masc) describing his physical condition.
-2.  **Мені було страшно**: Dative + adverbial state in the past tense.
-3.  **Мені радісно**: Adverbial state ("It is joyful to me").
-4.  **Я хвилююся**: Verb process of being anxious or excited.
-5.  **Не турбуйся**: Imperative of the verb "to worry/bother".
+Емоції роблять вашу мову живою!
 
 ---
 
-> [!important] Myth Buster: The "Frozen Face"
-> **Myth:** Ukrainians are cold and emotionless because they don't smile at strangers.
-> **Reality:** A smile in Ukraine is usually earned and reserved for those we know or have an actual reason to interact with. We don't use "polite smiles" for strangers in the street, but once a conversation starts, Ukrainians are among the most emotionally expressive and warm people in Europe. Our language is rich with diminutive forms (сонечко, матінко) that express deep affection and familial warmth. This distinction between public reserve and private warmth is a key part of the Ukrainian social code.
+## Need More Practice?
 
----
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

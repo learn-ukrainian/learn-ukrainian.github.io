@@ -4,7 +4,7 @@ version: '2.0'
 items:
   - lemma: арсенальний
     ipa: ɐrseˈnɑlʲnei̯
-    translation: Arsenalna (metro station)
+    translation: Arsenalna
     pos: adj
     gender: f
   - lemma: базар
@@ -260,6 +260,20 @@ items:
     ipa: iˈʋɑnei̯
     translation: Ivan (adj? typo?)
     pos: adj
+  - lemma: відмінок
+    translation: case
+    pos: noun
+    gender: m
+  - lemma: орудний
+    translation: instrumental
+    pos: adj
+  - lemma: називний
+    translation: nominative
+    pos: adj
+  - lemma: час
+    translation: time; tense
+    pos: noun
+    gender: m
   - lemma: історичний
     ipa: istoˈrɪt͡ʃnei̯
     translation: historical

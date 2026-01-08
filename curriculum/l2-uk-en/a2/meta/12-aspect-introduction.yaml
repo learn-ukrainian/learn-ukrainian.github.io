@@ -4,21 +4,21 @@ subtitle: Understanding Perfective and Imperfective Verbs
 version: '1.0'
 phase: A2.2
 pedagogy: PPP
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - grammar
-  - aspect
-  - verbs
+- grammar
+- aspect
+- verbs
 grammar:
-  - perfective vs imperfective concept
-  - aspect pairs
-  - basic usage patterns
+- perfective vs imperfective concept
+- aspect pairs
+- basic usage patterns
 objectives:
-  - Learner understands the concept of verbal aspect
-  - Learner can identify perfective and imperfective verbs
-  - Learner knows basic aspect pairs
-  - Learner can choose aspect based on meaning
+- Learner understands the concept of verbal aspect
+- Learner can identify perfective and imperfective verbs
+- Learner knows basic aspect pairs
+- Learner can choose aspect based on meaning
 vocabulary_count: 25
-vocab_count: 14
 slug: 12-aspect-introduction
+focus: grammar

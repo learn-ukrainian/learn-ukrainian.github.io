@@ -2,28 +2,136 @@ module: 25-checkpoint-aspect-comparison
 level: A2
 version: '2.0'
 items:
-- lemma: нереальний
-  ipa: nereˈɑlʲnɪj
-  translation: unreal
-  pos: adj
-  gender: f
-- lemma: повторення
-  ipa: poˈvtɔrenʲːɐ
-  translation: repetition
-  pos: noun
-  gender: n
-- lemma: собор
-  ipa: soˈbɔr
-  translation: cathedral
-  pos: noun
-  gender: m
-- lemma: софійський
-  ipa: soˈfʲijsʲkɪj
-  translation: Sophia (adj)
-  pos: adj
-  gender: m
-- lemma: умова
-  ipa: uˈmɔʋɐ
-  translation: condition
-  pos: noun
-  gender: f
+  - lemma: відпочивати
+    ipa: vidpot͡ʃɪˈvɑte
+    translation: to rest; to relax (imp)
+    pos: verb
+  - lemma: відпочити
+    ipa: vidpoˈt͡ʃɪte
+    translation: to rest; to relax (perf)
+    pos: verb
+  - lemma: завершувати
+    ipa: zɐˈvɛrʃuvɐte
+    translation: to complete; to finish (imp)
+    pos: verb
+  - lemma: колекція
+    ipa: koˈlɛkt͡sʲijɐ
+    translation: collection
+    pos: noun
+    gender: f
+  - lemma: молодший
+    ipa: moˈlɔdʃɪj
+    translation: younger; junior
+    pos: adj
+    gender: m
+  - lemma: написати
+    ipa: nɐpɪˈsɑte
+    translation: to write (perf)
+    pos: verb
+  - lemma: подивитися
+    ipa: podɪˈvɪtɪsʲɐ
+    translation: to watch; to look (perf)
+    pos: verb
+  - lemma: попередній
+    ipa: popeˈrɛdnʲij
+    translation: previous
+    pos: adj
+    gender: m
+  - lemma: порекомендувати
+    ipa: porekomenduˈvɑte
+    translation: to recommend (perf)
+    pos: verb
+  - lemma: починати
+    ipa: pot͡ʃɪˈnɑte
+    translation: to start; to begin (imp)
+    pos: verb
+  - lemma: почати
+    ipa: poˈt͡ʃɑte
+    translation: to start; to begin (perf)
+    pos: verb
+  - lemma: прочитати
+    ipa: prot͡ʃɪˈtɑte
+    translation: to read (perf)
+    pos: verb
+  - lemma: старіший
+    ipa: stɐˈrіʃɪj
+    translation: older
+    pos: adj
+    gender: m
+  - lemma: старший
+    ipa: ˈstɑrʃɪj
+    translation: older; senior
+    pos: adj
+    gender: m
+  - lemma: чохол
+    ipa: t͡ʃoˈxɔl
+    translation: case; cover
+    pos: noun
+    gender: m
+  - lemma: якість
+    ipa: ˈjɑkistʲ
+    translation: quality
+    pos: noun
+    gender: f
+  - lemma: разу
+    ipa: ˈrɑzu
+    translation: time (genitive of раз)
+    pos: noun
+    gender: m
+  - lemma: решт
+    ipa: rɛʃt
+    translation: rest; remainder (genitive pl)
+    pos: noun
+    gender: f
+  - lemma: якось
+    ipa: ˈjɑkosʲ
+    translation: somehow; once
+    pos: adv
+  - lemma: раптом
+    ipa: ˈrɑptom
+    translation: suddenly
+    pos: adv
+  - lemma: врешті
+    ipa: ˈvrɛʃti
+    translation: finally; in the end
+    pos: adv
+  - lemma: ледве
+    ipa: ˈlɛdve
+    translation: barely; hardly
+    pos: adv
+  - lemma: щойно
+    ipa: ˈʃt͡ʃɔjno
+    translation: just; just now
+    pos: adv
+  - lemma: набагато
+    ipa: nɐbɐˈɦɑto
+    translation: much; far (with comparatives)
+    pos: adv
+  - lemma: вдвічі
+    ipa: ˈvdvit͡ʃi
+    translation: twice; double
+    pos: adv
+  - lemma: занадто
+    ipa: zɐˈnɑdto
+    translation: too; too much
+    pos: adv
+  - lemma: вид
+    ipa: vɪd
+    translation: aspect; view; kind
+    pos: noun
+    gender: m
+  - lemma: доконаний
+    ipa: dokoˈnɑnɪj
+    translation: perfective
+    pos: adj
+    gender: m
+  - lemma: недоконаний
+    ipa: nedokoˈnɑnɪj
+    translation: imperfective
+    pos: adj
+    gender: m
+  - lemma: час
+    ipa: t͡ʃɑs
+    translation: time; tense
+    pos: noun
+    gender: m

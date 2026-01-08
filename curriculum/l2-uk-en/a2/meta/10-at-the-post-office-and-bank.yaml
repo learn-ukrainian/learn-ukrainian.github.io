@@ -4,22 +4,22 @@ subtitle: Service Interactions with Cases
 version: '1.0'
 phase: A2.1
 pedagogy: PPP
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - vocabulary
-  - services
-  - functional
-  - cases
+- vocabulary
+- services
+- functional
+- cases
 grammar:
-  - functional case application
-  - service vocabulary
-  - polite requests
+- functional case application
+- service vocabulary
+- polite requests
 objectives:
-  - Learner can navigate post office interactions
-  - Learner can perform basic banking tasks in Ukrainian
-  - Learner can use correct cases in service contexts
-  - Learner can make polite requests
+- Learner can navigate post office interactions
+- Learner can perform basic banking tasks in Ukrainian
+- Learner can use correct cases in service contexts
+- Learner can make polite requests
 vocabulary_count: 30
-vocab_count: 47
 slug: 10-at-the-post-office-and-bank
+focus: vocabulary

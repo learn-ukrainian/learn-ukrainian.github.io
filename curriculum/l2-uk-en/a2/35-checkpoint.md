@@ -1,156 +1,258 @@
-# Summary
+# Checkpoint - Complex Ideas | Review of Narratives, Logic, and Health
 
-## Overview
+## Огляд
 
-> 🌍
+**Вітаємо!** Ви перейшли від простих речень до складних думок. Тепер ви можете пояснювати причини, ставити умови та описувати людей і предмети детально. Це величезний крок уперед! Коли ви можете сказати «тому що» або «щоб», ви відкриваєте двері до справжньої розмови.
 
-This checkpoint reviews the essential skills from Modules 25-33. We have moved from simple statements to building complex, logical narratives. You can now connect ideas across time, cause, and intent. This module will diagnostic your ability to use these "bridge" structures effectively.
+Цей контрольний модуль перевірить ваші навички у:
 
-> [!tip]
-> Think of conjunctions as the "glue" of the Ukrainian language. Without them, you are just naming blocks; with them, you are building a house.
+1. **Причина і Наслідок** (Cause & Effect) — чому щось сталося? Як пояснити свої дії?
+2. **Мета і Бажання** (Purpose) — навіщо ми це робимо? У чому сенс наших дій? («Щоб»)
+3. **Опис** (Relative Clauses) — який, яка, яке? Як дати більше деталей про предмет чи людину?
+4. **Логіка розповіді** (Narrative Logic) — хоча, проте, після того як. Як зв'язати події в історію?
 
-**The Skills we are checking:**
-- **Skill 1:** Sequencing events to tell a coherent story.
-- **Skill 2:** Using logical connectors like **тому що**, **хоча**, and **щоб**.
-- **Skill 3:** Building detail with relative clauses using **який**.
-- **Skill 4:** Communicating health symptoms and medical needs accurately.
+> [!culture] 🇺🇦 The Logic of Emotion
+>
+> Ukrainians value logical connection in speech, but often start sentences with emotions. Connectors like **Тому що** help bridge the gap between «I feel» and «I do». It's not just grammar; it's how we think!
 
 ---
 
-## Skill 1: Sequencing and Storytelling
+## Skill 1: Cause & Effect
 
-The first major skill we developed in this block was the ability to lead a listener through a sequence of events. Instead of a list of facts, we now use temporal indicators to show how one action follows another. This is the foundation of effective storytelling in Ukrainian.
+**Can you explain «Why»?**
 
-### Model: A Morning Routine
+In A1, you answered «Who?» and «What?». In A2, you answer «Why?». The ability to explain reasons is crucial for adult communication.
 
-> **Спочатку** я прокинувся. **Потім** я прийняв душ. **Після того як** я поснідав, я пішов на роботу. **Нарешті** я зустрів свого колегу.
+### Model: Connecting Ideas
 
-In this model, notice how the markers create a logical flow. **Спочатку** sets the initial point, **Потім** moves the clock forward, **Після того як** establishes a specific link between two actions (finishing breakfast and leaving), and **Нарешті** provides a clear conclusion to the sequence.
+> **Тому що / Бо** (Because):
+> Я не пішов на роботу, **тому що** захворів. (Formal/Neutral)
+> Я люблю літо, **бо** тепло. (More informal/Spoken)
+>
+> _Note: Always put a comma before these connectors!_
 
-### Practice:
+> **Через + Accusative** (Because of):
+> Ми запізнилися **через** затори. (Because of traffic)
+> Я не сплю **через** шум. (Because of noise)
 
-Reorder these events to create a logical morning at the office:
-1. Потім ми почали працювати над новим проектом.
-2. Спочатку ми зібралися в офісі о дев'ятій ранку.
-3. Нарешті ми здали готовий звіт нашому директору.
-4. Після того як ми обговорили ідеї, ми пішли на обід.
+> [!note] ⚠️ Cause vs. Purpose
+>
+> Don't confuse **тому що** (looking back at the reason) with **щоб** (looking forward at the goal).
+>
+> - Я їм, **тому що** голодний. (Reason: Hunger)
+> - Я їм, **щоб** жити. (Goal: Survival)
+
+### Practice: Connect the Sentences
+
+1. Він щасливий, \_\_\_ (because) він склал іспит.
+
+   > [!solution] Перевірити
+   > **тому що / бо**
+
+2. Ми не гуляли \_\_\_ (because of) дощ.
+
+   > [!solution] Перевірити
+   > **через**
+
+3. Вона купила це, \_\_\_ (because) їй сподобалося.
+   > [!solution] Перевірити
+   > **бо / тому що**
 
 ### Self-Check
 
-> [!solution] Перевірити
-> Правильна послідовність: 2 -> 1 -> 4 -> 3.
-> Ви визначили **Спочатку** як необхідний перший крок, а **Нарешті** — як кінцевий результат?
+- ☐ Can you use _тому що_ in the middle of a sentence?
+- ☐ Do you know that _через_ is followed by a noun in Accusative?
+- ☐ Can you distinguish _чому_ (why) and _тому що_ (because)?
 
 ---
 
-## Skill 2: Expressing Logic and Intent
+## Skill 2: Purpose & Subjunctive
 
-In Ukrainian grammar, there is a sharp distinction between a **reason** (why something happened) and a **purpose** (what goal you were trying to achieve). We also learned to express **concession**—showing that something happened even if conditions were difficult.
+**Can you explain «What for» and «I want you to...»?**
 
-### Model: The Rational Speaker
+This is one of the most powerful grammatical structures in Ukrainian. The word **щоб** creates the «Subjunctive mood» — dealing with desires, goals, and possibilities.
 
-> Я вчу українську, **тому що** я люблю цю культуру. **Хоча** це важко, **проте** я роблю успіхи. Я слухаю подкасти, **щоб** розуміти живу мову.
+### Model: Two Uses of «Щоб»
 
-Connecting these ideas shows a high level of linguistic maturity. **Тому що** points backward to the cause (love for culture). **Хоча... проте...** creates a contrast between the difficulty and the success. **Щоб** points forward to the goal (understanding native speakers).
+**1. Purpose (Infinitive):** Same subject.
 
-### Practice:
+> Я вчуся, **щоб знати** більше. (I study _in order to know_ more)
+> Ми прийшли, **щоб допомогти**. (We came _to help_)
+> _Note: Subject stays the same._
 
-Complete the sentences with **бо** (reason), **щоб** (purpose), or **хоча** (concession).
-1. Я пішов у магазин, ___ купити свіже молоко.
-2. Він не прийшов учора, ___ у нього болить голова.
-3. ___ ми дуже втомилися, ми продовжили працювати.
+**2. Desire (Past Tense):** Different subjects.
+
+> Я хочу, **щоб ти прийшов**. (I want _that you came_ = I want you to come)
+> Лікар хоче, **щоб я пив** ліки. (Doctor wants _that I drank_ medicine)
+> Мама хоче, **щоб ми поїли**. (Mom wants us to eat)
+> _Note: Use Past Tense verb after «щоб» when the subject changes!_
+
+> [!important] ⚡ The «Want» Trap
+>
+> In English, you say «I want you **to go**».
+> In Ukrainian, you CANNOT say «Я хочу тебе йти». That is wrong.
+> You MUST say: «Я хочу, **щоб** ти **йшов**» (I want that you went).
+
+### Practice: Choose the Form
+
+1. Я дзвоню, щоб \_\_\_ (to ask).
+
+   > [!solution] Перевірити
+   > **запитати** (Infinitive - same subject)
+
+2. Вона хоче, щоб ми \_\_\_ (listened).
+
+   > [!solution] Перевірити
+   > **слухали** (Past tense - different subjects)
+
+3. Ми працюємо, щоб \_\_\_ (to live) краще.
+   > [!solution] Перевірити
+   > **жити** (Infinitive)
 
 ### Self-Check
 
-> [!solution] Перевірити
-> 1. **щоб** — виражає мету походу в магазин.
-> 2. **бо** — пояснює причину, чому він не прийшов.
-> 3. **Хоча** — вказує на допуск, контраст із втомою.
+- ☐ Do you use Infinitive when _you_ are doing the action?
+- ☐ Do you use Past Tense when you want _someone else_ to do it?
+- ☐ Do you remember that _щоб_ triggers this special grammar?
+
+> [!tip] 💡 Memory Hook
+>
+> **Щоб** = **Що** + **Б** (What + Would/Could). It implies something hypothetical or desired, not yet real.
 
 ---
 
-## Skill 3: Building Detail with Relative Clauses
+## Skill 3: Relative Clauses
 
-Relative clauses allow you to describe a noun without starting a new sentence. In Ukrainian, the pronoun **який** is a "chameleon"—it must change its gender and number to match the word it describes, and its case to match its role in its own clause.
+**Can you describe nouns using «which/who»?**
 
-### Model: Identifying Items
+Relative clauses allow you to combine two sentences into one. Instead of saying «I see a man. The man is tall», you say «I see a man **who** is tall».
 
-> Це будинок, **який** стоїть біля річки. Вона жінка, **яку** я бачив учора. Ми купили квитки, **які** були дуже дорогі.
+### Model: The Word «Який»
 
-Observe how **який** changes:
-- In the first sentence, it is masculine singular to match **будинок**.
-- In the second, it becomes **яку** (feminine Accusative) because it is the object of "saw".
-- In the third, it is **які** to match the plural **квитки**.
+The word **який** acts like an adjective. It must agree with the word it describes in Gender and Number.
 
-### Practice:
+> **Чоловік** (m), **який** стоїть там. (Who stands there)
+> **Книга** (f), **яка** лежить на столі. (Which lies on the table)
+> **Місто** (n), **яке** ми любимо. (Which we love)
+> **Люди** (pl), **які** працюють тут. (Who work here)
 
-Try to combine these two sentences using **який**:
-"Я бачу дівчину." + "Дівчина грає на скрипці."
+**Case Changes:**
+If «який» is an object in its own clause, it changes case!
+
+> Це друг, **якого** (Acc/Gen) я знаю давно. (Whom I know)
+> Це книга, **яку** (Acc) я читаю. (Which I read)
+> Це місто, **у якому** (Loc) я живу. (In which I live)
+
+### Practice: Choose the Form
+
+1. Дівчина, \_\_\_ (who) співає.
+
+   > [!solution] Перевірити
+   > **яка**
+
+2. Фільм, \_\_\_ (which) я бачив.
+
+   > [!solution] Перевірити
+   > **який** (Inanimate Accusative = Nominative)
+
+3. Студенти, \_\_\_ (who) вчаться.
+   > [!solution] Перевірити
+   > **які**
 
 ### Self-Check
 
-> [!solution] Перевірити
-> Я бачу дівчину, **яка** грає на скрипці.
-> Since **дівчина** is feminine and the subject of the second part, we use the feminine Nominative form **яка**.
+- ☐ Can you match _який_ to the gender of the noun?
+- ☐ Do you know that _хто/що_ are not used here? (Not «Чоловік, хто...»)
+- ☐ Can you use plural _які_?
 
 ---
 
-## Skill 4: Communicating Health and State
+## Skill 4: Logic in Narrative
 
-Finally, we integrated these structures into a vital practical context: healthcare. Discussing symptoms requires precise vocabulary for body parts and the "impersonal state" construction (**Мені боляче**, **У мене болить**).
+**Can you tell a story with contrast and sequence?**
 
-### Model: At the Clinic
+A good story flows. It doesn't just list facts («I woke up. I ate. I went.»). It connects them («After I woke up, I ate, although I wasn't hungry»).
 
-> — Що вас турбує сьогодні?
-> — У мене дуже **болить голова** і є висока **температура**.
-> — Хоча у вас є невеликий кашель, **проте** легені зараз чисті.
+### Model: Narrative Connectors
 
-The doctor uses **Що вас турбує?** (What bothers you?) as a standard opening. The patient uses the **болить** construction (Nominative subject) or **у мене є...** (I have...).
+> **Хоча... (проте/але)** (Although... still):
+> **Хоча** був дощ, ми пішли гуляти. (Contrast)
+> **Хоча** я втомився, я закінчив роботу.
 
-### Practice:
+> **Після того як** (After...):
+> **Після того як** я поїв, я пішов спати. (Sequence)
 
-Imagine you have a cold. How do you tell the doctor that your throat hurts?
+> **Коли** (When):
+> **Коли** я прийшов, вона вже була там. (Time)
+
+> **Поки** (While):
+> **Поки** я читав, він спав. (Simultaneous action)
+
+### Practice: Complete the Logic
+
+1. \_\_\_ (Although) він втомився, він працював.
+
+   > [!solution] Перевірити
+   > **Хоча**
+
+2. Ми пішли додому \_\_\_ (after) фільм закінчився.
+
+   > [!solution] Перевірити
+   > **після того як** (or _коли_)
+
+3. \_\_\_ (When) ми зустрілися, ми пішли на каву.
+   > [!solution] Перевірити
+   > **Коли**
 
 ### Self-Check
 
-> [!solution] Перевірити
-> У мене **болить горло**.
-> Пам'ятайте, що **горло** — це середній рід, але дієслово **болить** залишається однаковим для всіх іменників в однині.
+- ☐ Can you use _Хоча_ to show contrast?
+- ☐ Can you sequence events with _Після того як_?
+- ☐ Do you use commas before these connectors?
+
+> [!tip] 💡 Comma Rule
+>
+> In Ukrainian, we almost ALWAYS put a comma before logical connectors like _що, щоб, який, тому що, коли, але_. It helps separate the thoughts!
 
 ---
 
-## Integration Challenge: The Difficult Journey
+## Інтеграційне завдання
 
-**Read the text and answer the questions below to see how these skills blend together.**
+Read the story and find the logical connections.
 
-> Спочатку ми планували поїхати в Карпати, **щоб** відпочити. **Після того як** ми купили квитки, погода несподівано змінилася. **Хоча** йшов сильний дощ, **проте** ми все одно вирішили поїхати в гори. Потім ми зустріли досвідченого гіда, **який** розповів нам багато цікавого про ці гори. У горах мені стало трохи погано, **тому що** там було дуже холодно. Тепер у мене болить горло, і **щоб** швидко одужати, я зараз п'ю теплі ліки.
+> Минулого тижня я ходив до лікаря, **тому що** (1) у мене боліло горло.
+> **Хоча** (2) я не люблю лікарень, я мусив піти.
+> Лікар, **який** (3) мене оглядав, був дуже уважним.
+> Він сказав: «Я хочу, **щоб ви пили** (4) цей чай тричі на день».
+> **Після того як** (5) я почав лікування, мені стало краще.
 
-1. Чому вони поїхали в гори?
-2. Яка була погода спочатку?
-3. Хто такий гід у цій історії?
-4. Що робить автор зараз?
-
-### Self-Check
-
-> [!solution] Перевірити
-> 1. Вони поїхали, **щоб відпочити**.
-> 2. Йшов **сильний дощ**.
-> 3. Це людина, **яка розповіла цікаве про гори**.
-> 4. Автор **п'є ліки**, **щоб одужати**.
+1. **тому що** — Cause (Why did I go? Reason).
+2. **Хоча** — Concession (Contrast: dislike vs necessity).
+3. **який** — Relative Clause (Describing the doctor).
+4. **щоб ви пили** — Desire/Subjunctive (Doctor wants me to act - Past Tense!).
+5. **Після того як** — Time Sequence (Event A -> Event B).
 
 ---
 
-## Conclusion of this Block
+# Підсумок
 
-Mastering complex sentences is the most significant leap you have made since starting your Ukrainian journey. You are no longer just naming things or stating simple facts. You are now communicating logic, intent, and relationships between ideas. This ability to synthesize information is what makes your speech feel natural and purposeful.
+You have mastered the art of complex sentences!
 
-In the next block, we will explore Word Formation. You will learn how to "multiply" your vocabulary by understanding how prefixes and suffixes change the core meaning of roots. This will give you the power to guess the meaning of thousands of new words without a dictionary. We will also introduce very basic motion prefixes to describe directional movement with precision.
+| Concept     | Connector    | Example                   |
+| ----------- | ------------ | ------------------------- |
+| Cause       | Тому що / Бо | Я пішов, бо хотів спати.  |
+| Purpose     | Щоб + Inf    | Я прийшов, щоб допомогти. |
+| Desire      | Щоб + Past   | Я хочу, щоб ти допоміг.   |
+| Description | Який / Яка   | Це місто, яке я люблю.    |
+| Contrast    | Хоча         | Хоча холодно, я гуляю.    |
 
-> 🎯
-
-> [!important]
-> Word formation is the key to reaching A2+ and B1 levels, as it reduces your reliance on pure rote memorization.
+**Ready for Phase A2.4?**
+Now that you can connect ideas logically, you are ready for the final push: **Prefixes of Motion** and **Advanced Vocabulary**!
 
 ---
 
 ## Need More Practice?
+
+- **Connectors:** Review Module 24.
+- **Relative Clauses:** Review Module 28.
+- **Subjunctive:** Review Module 30.

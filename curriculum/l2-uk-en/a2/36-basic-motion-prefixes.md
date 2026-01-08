@@ -1,5 +1,9 @@
 # Вступ
 
+## Presentation
+
+## Практика
+
 ## Система префіксів руху
 
 > 🧭 **Префікси = GPS для дієслів**
@@ -20,7 +24,7 @@ Ukrainian builds direction INTO the verb with prefixes!
 - Машина **в'їхала** на парковку. (Car drove onto parking lot.)
 - Вона **виїхала** з міста. (She drove out of the city.)
 
-### Апостроф з їхати
+## Апостроф з їхати
 
 **в** + **їхати** = **в'їхати** (apostrophe needed!)
 
@@ -30,16 +34,16 @@ Ukrainian builds direction INTO the verb with prefixes!
 
 ## Aspect: Process → Result
 
-Why use prefixed verbs instead of just the base verb? The prefix changes the aspect from imperfective (process) to perfective (completed result).
+Why use prefixed verbs instead of just the base verb? The prefix changes the aspect from imperfective (process) to perfective.
 
-**Base verbs (Imperfective):**
-- **йти** = walking process (ongoing action)
-- **їхати** = driving process (ongoing action)
+**Base verbs:**
+- **йти** = walking process
+- **їхати** = driving process
 - Я **йшов** у будинок. (I was walking... but did I arrive? Unknown!)
 
-**Prefixed verbs (Perfective):**
-- **ввійти** = RESULT: now inside! (action completed)
-- **вийти** = RESULT: now outside! (action completed)
+**Prefixed verbs:**
+- **ввійти** = RESULT: now inside!
+- **вийти** = RESULT: now outside!
 - Я **ввійшов** у будинок. (I entered = I'm now inside! Result achieved!)
 
 > [!important] Prefix = Result Machine
@@ -58,31 +62,31 @@ Why use prefixed verbs instead of just the base verb? The prefix changes the asp
 
 **Agreement system:** prefix signals which preposition and case come next.
 
-### 1. Motion INWARD (В- + в/на + Accusative)
+## 1. Motion INWARD (В- + в/на + Accusative)
 
 When moving INTO something, use prefix **В-** with preposition **в** or **на** + Accusative case.
 
 **В- + в + Accusative** (enclosed spaces like rooms, buildings, cities):
-- **Ввійти в** кімнат**у** (enter the room)
-- **Ввійти в** буд**инок** (enter the building)
-- **Ввійти в** мі́**сто** (enter the city)
+- **Ввійти в** кімнат**у**
+- **Ввійти в** буд**инок**
+- **Ввійти в** мі́**сто**
 
 **В- + на + Accusative** (open spaces like streets, squares, parking lots):
-- **В'їхати на** парковк**у** (drive onto parking lot)
-- **Війти на** площ**у** (walk onto square)
-- **Ввійти на** вулиц**ю** (walk onto street)
+- **В'їхати на** парковк**у**
+- **Війти на** площ**у**
+- **Ввійти на** вулиц**ю**
 
-### 2. Motion OUTWARD (ВИ- + з/із + Genitive)
+## 2. Motion OUTWARD (ВИ- + з/із + Genitive)
 
 When moving OUT OF something, use prefix **ВИ-** with preposition **з/із** + Genitive case.
 
-**ВИ- + з + Genitive** (both enclosed and open spaces):
-- **Вийти з** кімнат**и** (exit the room)
-- **Вийти з** буд**инку** (exit the building)
-- **Виїхати з** парковк**и** (drive out of parking lot)
-- **Вийти з** мі́**ста** (leave the city)
+**ВИ- + з + Genitive**:
+- **Вийти з** кімнат**и**
+- **Вийти з** буд**инку**
+- **Виїхати з** парковк**и**
+- **Вийти з** мі́**ста**
 
-### Таблиця узгодження
+## Таблиця узгодження
 
 | Direction | Prefix | Preposition | Case | Logic |
 | :--- | :--- | :--- | :--- | :--- |
@@ -91,10 +95,10 @@ When moving OUT OF something, use prefix **ВИ-** with preposition **з/із** 
 
 > 💡 **Case Logic**
 >
-> **В + Accusative** = target, where we go (direct target)
-> **З + Genitive** = source, where we leave from (origin, "no longer of")
+> **В + Accusative** = target, where we go
+> **З + Genitive** = source, where we leave from (origin, «no longer of»)
 
-### В or НА? Enclosed vs. Open Spaces
+## В or НА? Enclosed vs. Open Spaces
 
 A common question: when to use **В** and when **НА**?
 
@@ -115,17 +119,17 @@ A common question: when to use **В** and when **НА**?
 
 ## Urban Complexity
 
-### Міська складність
+## Міська складність
 
-Ukrainian's motion prefix system is sophisticated enough to describe complex navigation in modern cities like Kyiv. This is NOT a "simple village language"!
+Ukrainian's motion prefix system is sophisticated enough to describe complex navigation in modern cities like Kyiv. This is NOT a «simple village language»!
 
-Система префіксів руху в українській мові достатньо складна. Вона може описати складну навігацію в сучасних містах, як-от Київ. Це НЕ "проста сільська мова"!
+Система префіксів руху в українській мові достатньо складна. Вона може описати складну навігацію в сучасних містах, як-от Київ. Це НЕ «проста сільська мова»!
 
 > 🌍 **Myth vs. Reality — Міф і реальність**
 >
-> **Myth:** "Ukrainian is a simple rural language."
+> **Myth:** «Ukrainian is a simple rural language.»
 >
-> **Міф:** "Українська — проста сільська мова."
+> **Міф:** «Українська — проста сільська мова.»
 >
 > **Fact:** Ukrainian has a highly developed motion prefix system!
 >
@@ -154,18 +158,16 @@ Ukrainian's motion prefix system is sophisticated enough to describe complex nav
 
 ---
 
-## Практика
+## Вправа 1: Формуйте дієслова з префіксами
 
-### Вправа 1: Формуйте дієслова з префіксами
+**Модель:** йти + В- → **ввійти**
 
-**Модель:** йти + В- → **ввійти** (to enter)
-
-1. йти + ВИ- → **вийти** (to exit)
-2. їхати + В'- → **в'їхати** (to drive in)
-3. їхати + ВИ- → **виїхати** (to drive out)
+1. йти + ВИ- → **вийти**
+2. їхати + В'- → **в'їхати**
+3. їхати + ВИ- → **виїхати**
 4. йти + ЗА- → **зайти** (to pop in, quick visit)
 
-### Exercise 2: Choose the correct case
+## Exercise 2: Choose the correct case
 
 **Model:** Я ввійшов ____ кімнату (у + Accusative)
 
@@ -174,7 +176,7 @@ Ukrainian's motion prefix system is sophisticated enough to describe complex nav
 3. Ми виїхали ____ міста (з + Genitive)
 4. Вони ввійшли ____ магазин (у + Accusative)
 
-### Діалог: На вулиці
+## Діалог: На вулиці
 
 — Вибачте, як **пройти** до метро?
 — **Ввійдіть** у той будинок, **підніміться** на другий поверх, потім **вийдіть** через задній вхід.
@@ -205,8 +207,8 @@ He wanted to go to the park, but remembered he didn't have coffee. So he **poppe
 — Добрий день! — сказав він баристі. — Мені, будь ласка, велике лате.
 — Звичайно! — відповів хлопець.
 
-"Good morning!" he said to the barista. "A large latte, please."
-"Of course!" the guy replied.
+«Good morning!» he said to the barista. «A large latte, please.»
+«Of course!» the guy replied.
 
 Раптом на вулиці почався дощ. Марко подивився у вікно. Люди швидко **заходили** в магазини та аптеки, щоб не змокнути. Велика машина **в'їхала** на тротуар, і водій почав вивантажувати продукти.
 
@@ -216,9 +218,9 @@ Suddenly it started raining outside. Marko looked out the window. People quickly
 
 When the sky cleared up, Marko **exited** the cafe with his coffee. Now he needed to hurry.
 
-Він **увійшов** у метро "Золоті ворота". Це дуже глибока станція, тому він довго **спускався** ескалатором. Коли він приїхав на свою зупинку, він **вийшов** з вагону і **піднявся** на вулицю.
+Він **увійшов** у метро «Золоті ворота». Це дуже глибока станція, тому він довго **спускався** ескалатором. Коли він приїхав на свою зупинку, він **вийшов** з вагону і **піднявся** на вулицю.
 
-He **entered** the "Golden Gate" metro station. It's a very deep station, so he rode the escalator down for a long time. When he arrived at his stop, he **exited** the train car and **went up** to the street.
+He **entered** the «Golden Gate» metro station. It's a very deep station, so he rode the escalator down for a long time. When he arrived at his stop, he **exited** the train car and **went up** to the street.
 
 День нарешті почався по-справжньому! ☕
 
@@ -230,52 +232,10 @@ The day had finally really begun! ☕
 >
 > **Золоті Ворота** в Києві — історична брама для королівських візитів. **Увійти** через ці ворота означало бути прийнятим містом.
 
----
-
-# Summary
-
-## Що ви вивчили
-
-У цьому модулі ви опанували базові префікси руху **В-** (into) та **ВИ-** (out).
-
-**Ключові префікси:**
-
-| Префікс | Значення | Приклад | Переклад |
-| :--- | :--- | :--- | :--- |
-| **В- / У-** | Into | **ввійти** | enter |
-| **ВИ-** | Out | **вийти** | exit |
-| **В'-** | Drive into | **в'їхати** | drive in |
-| **ВИ-** | Drive out | **виїхати** | drive out |
-
-**Система узгодження:**
-
-**Рух УСЕРЕДИНУ:**
-- В- + **в/на** + **Accusative**
-- Я **ввійшов** **у** кімнату.
-- Машина **в'їхала** **на** парковку.
-
-**Рух НАЗОВНІ:**
-- ВИ- + **з/із** + **Genitive**
-- Він **вийшов** **з** будинку.
-- Ми **виїхали** **з** міста.
-
-**В чи НА?**
-- **В/У** + Accusative → закриті простори (будинок, місто, ліс)
-- **НА** + Accusative → відкриті простори (вулиця, площа, парковка)
-
-**Aspect:**
-- Base verb = PROCESS (йти, їхати)
-- Prefixed verb = RESULT (ввійти, вийти)
-
-> 💡 **Remember**
->
-> Prefix + preposition + case = triple confirmation of direction!
-> This makes Ukrainian very precise and efficient.
-
-Тепер ви можете описати складні рухи в місті українською! 🚗🚶
+# Підсумок
 
 ---
 
 ## Need More Practice?
 
----
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

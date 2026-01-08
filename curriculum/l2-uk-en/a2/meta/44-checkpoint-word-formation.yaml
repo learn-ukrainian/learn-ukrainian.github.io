@@ -5,22 +5,21 @@ version: '2.0'
 phase: A2.4
 focus: checkpoint
 pedagogy: Review
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - review
-  - checkpoint
-  - assessment
+- review
+- checkpoint
+- assessment
 grammar:
-  - motion prefixes
-  - action prefixes
-  - noun suffixes
-  - adjective suffixes
-  - root families
+- motion prefixes
+- action prefixes
+- noun suffixes
+- adjective suffixes
+- root families
 objectives:
-  - Learner demonstrates mastery of word formation
-  - Learner can analyze word components
-  - Learner can derive new words from roots
+- Learner demonstrates mastery of word formation
+- Learner can analyze word components
+- Learner can derive new words from roots
 vocabulary_count: 25
-vocab_count: 33
 slug: 44-checkpoint-word-formation

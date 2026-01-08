@@ -6,6 +6,21 @@
 
 **Related Issue:** [#305](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/305)
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Стратегії
+  - Practice|Exercises|Activity|Практика|Вправи
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: CBI
+  min_word_count: 1500
+  required_callouts: []
+  description: B2 integration modules teach skills and strategies with authentic materials
+-->
+
 ---
 
 ## Quick Reference Checklist
@@ -437,42 +452,26 @@ objectives:
 
 ---
 
-## External Resources Section (MANDATORY)
+---
 
-> **⚠️ NOTE:** External resources are managed in `docs/resources/external_resources.yaml`, NOT in module markdown files. Do NOT add `[!resources]` blocks to modules.
+## Content Structure Note
+
+### Vocabulary, Activities & External Resources
+
+**CRITICAL:** Do NOT add `## Vocabulary`, `## Activities`, or `## External Resources` headers. These sections are injected automatically from:
+
+- `vocabulary/{slug}.yaml`
+- `activities/{slug}.yaml`
+- `docs/resources/external_resources.yaml`
+
+The build system will inject these sections at build time.
 
 **To add resources for integration modules:**
 
 1. Open `docs/resources/external_resources.yaml`
-2. Add entries with the module ID:
+2. Add entries with the module ID and appropriate metadata
 
-```yaml
-# For Reading Practice
-- module_id: b2-96
-  url: 'https://www.pravda.com.ua/'
-  title: 'Українська правда'
-  type: website
-  relevance: 5
-  description: 'Загальні новини'
-
-- module_id: b2-96
-  url: 'https://zn.ua/'
-  title: 'Дзеркало тижня'
-  type: website
-  relevance: 5
-  description: 'Аналітика'
-
-# For Listening Practice
-- module_id: b2-98
-  url: 'https://hromadske.radio/'
-  title: 'Громадське радіо'
-  type: podcast
-  relevance: 5
-```
-
-**Resource types:** `website`, `article`, `video`, `podcast`, `book`, `music`
-
-**Recommended resources for integration modules:**
+**Recommended resources:**
 
 - Українська правда, Дзеркало тижня, Критика, Тиждень (reading)
 - Громадське радіо, Українське радіо, подкасти (listening)

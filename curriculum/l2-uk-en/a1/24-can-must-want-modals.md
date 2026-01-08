@@ -67,7 +67,7 @@ This is an adjective that agrees in gender:
 
 ### треба / потрібно — Need To (Impersonal)
 
-These are impersonal — the "subject" is optional:
+These are impersonal — the «subject» is optional:
 
 - **Треба** працювати. (One needs to work. / It's necessary to work.)
 - **Потрібно** вчитися. (One needs to study.)
@@ -227,11 +227,11 @@ These are impersonal — the "subject" is optional:
 
 > 💡 **могти vs вміти**
 >
-> Remember: **могти** is about possibility ("I can do it now"), while **вміти** is about skill ("I know how to do it"). A swimmer might say "Я вмію плавати" (I know how to swim) but "Я не можу плавати сьогодні — вода холодна!" (I can't swim today — the water is cold!)
+> Remember: **могти** is about possibility («I can do it now»), while **вміти** is about skill («I know how to do it»). A swimmer might say «Я вмію плавати» (I know how to swim) but «Я не можу плавати сьогодні — вода холодна!» (I can't swim today — the water is cold!)
 
 > 🌍 **Permission in Practice**
 >
-> In Ukraine, you'll often see signs with **заборонено** (forbidden): "Палити заборонено" (Smoking forbidden), "Вхід заборонено" (Entry forbidden). For polite requests, use "Можна...?" — it's universal!
+> In Ukraine, you'll often see signs with **заборонено** (forbidden): «Палити заборонено» (Smoking forbidden), «Вхід заборонено» (Entry forbidden). For polite requests, use «Можна...?» — it's universal!
 
 > 💡 **Regional Variation**
 >
@@ -241,7 +241,7 @@ These are impersonal — the "subject" is optional:
 
 # Summary
 
-Ви вивчили модальні дієслова. Тепер ви знаєте українську краще! Ви знаєте, як сказати "я можу", "я вмію" та "я хочу". Ви також знаєте слова "треба", "можна" та "заборонено". Тепер ви можете планувати свій день! Це була гарна робота (This was good work). Українська мова дуже гарна!
+Ви вивчили модальні дієслова. Тепер ви знаєте українську краще! Ви знаєте, як сказати «я можу», «я вмію» та «я хочу». Ви також знаєте слова «треба», «можна» та «заборонено». Тепер ви можете планувати свій день! Це була гарна робота (This was good work). Українська мова дуже гарна!
 
 > [!myth] **Міф про українську мову (Myth about Ukrainian language)**
 >
@@ -251,3 +251,12 @@ These are impersonal — the "subject" is optional:
 ---
 
 **Coming up:** Module 25 will teach you reflexive verbs for daily routines!
+
+---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

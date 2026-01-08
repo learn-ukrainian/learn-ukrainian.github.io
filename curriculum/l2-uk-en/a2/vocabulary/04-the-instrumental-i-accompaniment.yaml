@@ -4,12 +4,12 @@ version: '2.0'
 items:
   - lemma: ама
     ipa: ˈɑmɐ
-    translation: ending (instr pl)
+    translation: ending
     pos: noun
     gender: m
   - lemma: ами
     ipa: ˈɑmɪ
-    translation: ending (instr pl)
+    translation: ending
     pos: other
   - lemma: виконуватися
     ipa: vɪˈkɔnuʋɐtɪsʲɐ
@@ -39,7 +39,7 @@ items:
     gender: m
   - lemma: ем
     ipa: em
-    translation: ending (instr sg)
+    translation: ending
     pos: other
   - lemma: закохатися
     ipa: zɐkoˈxɑtɪsʲɐ
@@ -60,7 +60,7 @@ items:
     gender: m
   - lemma: зм
     ipa: zm
-    translation: change? (likely typo or grammar marker)
+    translation: change?
     pos: other
   - lemma: зі
     ipa: zi
@@ -92,7 +92,7 @@ items:
     gender: f
   - lemma: мн
     ipa: mn
-    translation: pl (abbreviation)
+    translation: pl
     pos: other
   - lemma: над
     ipa: nɑd
@@ -119,7 +119,7 @@ items:
     gender: m
   - lemma: ом
     ipa: om
-    translation: ending (instr sg)
+    translation: ending
     pos: noun
     gender: m
   - lemma: орудний
@@ -221,13 +221,39 @@ items:
     gender: f
   - lemma: яма
     ipa: ˈjɑmɐ
-    translation: ending (instr pl) or pit
+    translation: ending or pit
     pos: noun
     gender: f
   - lemma: єм
     ipa: jem
-    translation: ending (instr sg)
+    translation: ending
     pos: other
+  - lemma: відмінок
+    translation: case
+    pos: noun
+    gender: m
+  - lemma: час
+    translation: time; tense
+    pos: noun
+    gender: m
+  - lemma: давальний
+    translation: dative
+    pos: adj
+  - lemma: називний
+    translation: nominative
+    pos: adj
+  - lemma: родовий
+    translation: genitive
+    pos: adj
+  - lemma: місцевий
+    translation: locative
+    pos: adj
+  - lemma: кличний
+    translation: vocative
+    pos: adj
+  - lemma: знахідний
+    translation: accusative
+    pos: adj
   - lemma: інструмент
     ipa: instruˈmɛnt
     translation: instrument; tool

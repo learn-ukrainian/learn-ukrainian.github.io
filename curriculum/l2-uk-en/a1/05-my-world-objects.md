@@ -2,9 +2,9 @@
 
 ## Warm-up
 
-Imagine you're in a new Ukrainian apartment. You're standing in the kitchen. Your friend hands you a phone. "Це телефон," they say. You point to a cup on the table: "Ця чашка?" They nod. You gesture to a window across the room: "Те вікно?" Again, they agree.
+Imagine you're in a new Ukrainian apartment. You're standing in the kitchen. Your friend hands you a phone. «Це телефон,» they say. You point to a cup on the table: «Ця чашка?» They nod. You gesture to a window across the room: «Те вікно?» Again, they agree.
 
-You've just used Ukrainian demonstratives. Words that point to things. Words that say "this one" or "that one." In Ukrainian, these pointing words change based on what you're pointing at. Not just near or far, but masculine, feminine, or neuter.
+You've just used Ukrainian demonstratives. Words that point to things. Words that say «this one» or «that one.» In Ukrainian, these pointing words change based on what you're pointing at. Not just near or far, but masculine, feminine, or neuter.
 
 By the end of this module, you'll be able to navigate your entire living space in Ukrainian, pointing to objects and naming them with confidence. Let's start with the closest things around you.
 
@@ -53,8 +53,8 @@ Notice the pattern: **той** (m), **та** (f), **те** (n), **ті** (pl). S
 
 > 🔍 **Myth Buster**
 >
-> **Myth:** "Це is always 'this.'"
-> **Fact:** **Це** has two jobs! It's the neuter form of "this" (це вікно = this window). But it also means "this is" in general statements (Це книга = This is a book). Context tells you which one!
+> **Myth:** «Це is always 'this.'»
+> **Fact:** **Це** has two jobs! It's the neuter form of «this» (це вікно = this window). But it also means «this is» in general statements (Це книга = This is a book). Context tells you which one!
 
 ### Gender Agreement Matters
 
@@ -97,7 +97,7 @@ You're cooking with a Ukrainian friend. They hand you items and you name them:
 — а ця? (A tsya?) — And this one? (feminine implied)
 — **Ця ложка.** (Tsya lozhka.) — This spoon.
 
-Notice how **"Це"** introduces objects (This is a...), but **"ця"** points to something specific (this one, feminine).
+Notice how **«Це»** introduces objects (This is a...), but **«ця»** points to something specific (this one, feminine).
 
 ### In the Living Room
 
@@ -111,7 +111,7 @@ You're describing furniture to someone on the phone:
 
 > 🎬 **Pop Culture Moment: The Witcher**
 >
-> In the Ukrainian dub of _The Witcher_, when Geralt points to objects, he uses perfect demonstrative agreement. "Цей меч" (this sword, m), "Та книга" (that book, f). Even fictional monster hunters follow Ukrainian grammar!
+> In the Ukrainian dub of _The Witcher_, when Geralt points to objects, he uses perfect demonstrative agreement. «Цей меч» (this sword, m), «Та книга» (that book, f). Even fictional monster hunters follow Ukrainian grammar!
 
 ### Everyday Scenarios
 
@@ -154,7 +154,7 @@ You're describing furniture to someone on the phone:
 
 ### The Ukrainian Home
 
-**Historical Context:** Ukrainian homes reflect a blend of Soviet-era apartment design and modern European styles. During the Soviet period (1922-1991), most urban Ukrainians were assigned apartments in large residential blocks called "хрущовки" (khrushchyovky, named after Soviet leader Khrushchev). These apartments were small, standardized, and built quickly to house the growing urban population. Many Ukrainians still live in these buildings, though they've been modernized over the decades.
+**Historical Context:** Ukrainian homes reflect a blend of Soviet-era apartment design and modern European styles. During the Soviet period (1922-1991), most urban Ukrainians were assigned apartments in large residential blocks called «хрущовки» (khrushchyovky, named after Soviet leader Khrushchev). These apartments were small, standardized, and built quickly to house the growing urban population. Many Ukrainians still live in these buildings, though they've been modernized over the decades.
 
 After Ukrainian independence in 1991, housing styles began to diversify. New construction follows European standards, with larger apartments, better layouts, and modern amenities. However, Soviet-era apartments remain the most common type of housing in Ukrainian cities.
 
@@ -171,7 +171,7 @@ In Ukrainian culture, it's customary to remove shoes when entering someone's hom
 
 > 🌍 **Real World**
 >
-> When you visit a Ukrainian friend's apartment, you'll hear: "Заходь! Це наша кухня. Ця мікрохвильовка нова. Той холодильник старий." (Come in! This is our kitchen. This microwave is new. That refrigerator is old.) Demonstratives are everywhere in daily conversation!
+> When you visit a Ukrainian friend's apartment, you'll hear: «Заходь! Це наша кухня. Ця мікрохвильовка нова. Той холодильник старий.» (Come in! This is our kitchen. This microwave is new. That refrigerator is old.) Demonstratives are everywhere in daily conversation!
 
 ### Household Technology
 
@@ -204,7 +204,7 @@ Now practice pointing to objects around you. Look at your room or workspace. Poi
 - Те... (that + neuter object)
 - Ті... (those + any plural objects)
 
-Try building full sentences: "Це моя чашка. Та чашка не моя." (This is my cup. That cup is not mine.)
+Try building full sentences: «Це моя чашка. Та чашка не моя.» (This is my cup. That cup is not mine.)
 
 ---
 
@@ -241,4 +241,7 @@ In this module, you learned:
 
 ## Need More Practice?
 
----
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

@@ -4,19 +4,19 @@ subtitle: Language Legos
 version: '1.0'
 phase: A2.4
 pedagogy: Inquiry
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - vocabulary
-  - roots
-  - word-formation
+- vocabulary
+- roots
+- word-formation
 grammar:
-  - root families (хід, пис, чит, бач)
-  - guessing meaning from context
+- root families (хід, пис, чит, бач)
+- guessing meaning from context
 objectives:
-  - Learner can recognize common roots (хід, пис)
-  - Learner can deduce meaning of new words (Вхід vs Вихід)
-  - Learner uses root logic to expand vocabulary rapidly
+- Learner can recognize common roots (хід, пис)
+- Learner can deduce meaning of new words (Вхід vs Вихід)
+- Learner uses root logic to expand vocabulary rapidly
 vocabulary_count: 30
-vocab_count: 54
 slug: 41-root-families-i
+focus: grammar

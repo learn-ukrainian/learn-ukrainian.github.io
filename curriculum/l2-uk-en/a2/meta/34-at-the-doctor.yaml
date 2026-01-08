@@ -4,21 +4,21 @@ subtitle: Health & Medicine
 version: '1.0'
 phase: A2.3
 pedagogy: Expressive
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - medicine
-  - health
-  - symptoms
-  - functional
+- medicine
+- health
+- symptoms
+- functional
 grammar:
-  - expression of pain (болить + Nom)
-  - medical imperative (приймайте, лежіть)
-  - symptoms description
+- expression of pain (болить + Nom)
+- medical imperative (приймайте, лежіть)
+- symptoms description
 objectives:
-  - Learner can describe symptoms
-  - Learner can understand doctor's instructions
-  - Learner can buy medicine
+- Learner can describe symptoms
+- Learner can understand doctor's instructions
+- Learner can buy medicine
 vocabulary_count: 30
-vocab_count: 39
 slug: 34-at-the-doctor
+focus: vocabulary

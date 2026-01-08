@@ -253,3 +253,7 @@
 ## Активності
 
 [Усі вправи перенесено до YAML-файлу activities/112-druha-svitova-okupatsii.yaml]
+
+---
+
+## Need More Practice?

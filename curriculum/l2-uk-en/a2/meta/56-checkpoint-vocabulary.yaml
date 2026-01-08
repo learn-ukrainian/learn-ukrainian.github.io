@@ -5,21 +5,20 @@ version: '2.0'
 phase: A2.5
 focus: checkpoint
 pedagogy: Review
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - review
-  - checkpoint
-  - vocabulary
-  - assessment
+- review
+- checkpoint
+- vocabulary
+- assessment
 grammar:
-  - case review
-  - reflexive verbs
-  - impersonal constructions
+- case review
+- reflexive verbs
+- impersonal constructions
 objectives:
-  - Learner can use daily life vocabulary fluently
-  - Learner can integrate health, shopping, and work vocabulary
-  - Learner can recall key verbs and nouns
+- Learner can use daily life vocabulary fluently
+- Learner can integrate health, shopping, and work vocabulary
+- Learner can recall key verbs and nouns
 vocabulary_count: 25
-vocab_count: 4
 slug: 56-checkpoint-vocabulary

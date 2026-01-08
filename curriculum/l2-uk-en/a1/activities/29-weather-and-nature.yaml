@@ -267,7 +267,7 @@
 - type: quiz
   title: What Season?
   items:
-  - question: Which season correctly matches "Йде сніг, холодно" here?
+  - question: Which season correctly matches «Йде сніг, холодно» here?
     options:
     - text: Літо
       correct: false
@@ -277,7 +277,7 @@
       correct: true
     - text: Осінь
       correct: false
-  - question: How is the phrase "Жарко, сонячно, море" categorized?
+  - question: How is the phrase «Жарко, сонячно, море» categorized?
     options:
     - text: Зима
       correct: false
@@ -287,7 +287,7 @@
       correct: true
     - text: Весна
       correct: false
-  - question: What season describes "Тепло, квіти, йде дощ"?
+  - question: What season describes «Тепло, квіти, йде дощ»?
     options:
     - text: Весна
       correct: true
@@ -297,7 +297,7 @@
       correct: false
     - text: Осінь
       correct: false
-  - question: Which category summarizes "Холодно, хмарно, вітряно"?
+  - question: Which category summarizes «Холодно, хмарно, вітряно»?
     options:
     - text: Літо
       correct: false
@@ -307,7 +307,7 @@
       correct: true
     - text: Зима
       correct: false
-  - question: What is the correct season when "Діти грають у сніг"?
+  - question: What is the correct season when «Діти грають у сніг»?
     options:
     - text: Літо
       correct: false
@@ -317,7 +317,7 @@
       correct: false
     - text: Осінь
       correct: false
-  - question: Which season does "Люди на пляжі" represent?
+  - question: Which season does «Люди на пляжі» represent?
     options:
     - text: Зима
       correct: false
@@ -327,7 +327,7 @@
       correct: false
     - text: Весна
       correct: false
-  - question: How is "Листя падає з дерев" translated into a season?
+  - question: How is «Листя падає з дерев» translated into a season?
     options:
     - text: Літо
       correct: false
@@ -337,7 +337,7 @@
       correct: true
     - text: Зима
       correct: false
-  - question: What is the season when "Птахи повертаються з півдня"?
+  - question: What is the season when «Птахи повертаються з півдня»?
     options:
     - text: Осінь
       correct: false
@@ -351,7 +351,7 @@
 - type: quiz
   title: Animal or Plant?
   items:
-  - question: Which category does the word "Собака" belong to?
+  - question: Which category does the word «Собака» belong to?
     options:
     - text: Рослина
       correct: false
@@ -361,7 +361,7 @@
       correct: false
     - text: Сезон
       correct: false
-  - question: What is the correct category for "Дерево"?
+  - question: What is the correct category for «Дерево»?
     options:
     - text: Тварина
       correct: false
@@ -371,7 +371,7 @@
       correct: false
     - text: Одяг
       correct: false
-  - question: Which classification accurately fits "Кіт"?
+  - question: Which classification accurately fits «Кіт»?
     options:
     - text: Рослина
       correct: false
@@ -381,7 +381,7 @@
       correct: false
     - text: Гроші
       correct: false
-  - question: What is the group for the word "Квітка"?
+  - question: What is the group for the word «Квітка»?
     options:
     - text: Тварина
       correct: false
@@ -391,7 +391,7 @@
       correct: true
     - text: Прислівник
       correct: false
-  - question: Which category accurately represents the word "Птах"?
+  - question: Which category accurately represents the word «Птах»?
     options:
     - text: Тварина
       correct: true
@@ -401,7 +401,7 @@
       correct: false
     - text: Сім'я
       correct: false
-  - question: How is the word "Ліс" categorized?
+  - question: How is the word «Ліс» categorized?
     options:
     - text: Тварина
       correct: false
@@ -411,7 +411,7 @@
       correct: false
     - text: Робота
       correct: false
-  - question: Which category matches the word "Риба"?
+  - question: Which category matches the word «Риба»?
     options:
     - text: Рослина
       correct: false
@@ -421,7 +421,7 @@
       correct: true
     - text: Фрукт
       correct: false
-  - question: What is the group for the word "Трава"?
+  - question: What is the group for the word «Трава»?
     options:
     - text: Напій
       correct: false
@@ -508,31 +508,31 @@
 - type: true-false
   title: Weather and Nature Facts
   items:
-  - statement: '"Йде дощ" means "It''s raining.".'
+  - statement: '«Йде дощ» means "It''s raining.".'
     correct: true
-  - statement: '"Йде сніг" means "It''s cold.".'
+  - statement: '«Йде сніг» means "It''s cold.".'
     correct: false
     explanation: Incorrect! it means "it's snowing"
   - statement: Ukrainian weather expressions don't need a subject.
     correct: true
-  - statement: '"Тепло" means "hot.".'
+  - statement: '«Тепло» means "hot.".'
     correct: false
     explanation: Incorrect! it means "warm"
-  - statement: '"Жарко" means "hot.".'
+  - statement: '«Жарко» means "hot.".'
     correct: true
   - statement: Ukraine has only steppes.
     correct: false
     explanation: Incorrect! it has mountains, forests, seas
   - statement: The Carpathians are mountains in Ukraine.
     correct: true
-  - statement: '"Собака" and "пес" both mean "dog.".'
+  - statement: '«Собака» and «пес» both mean "dog.".'
     correct: true
-  - statement: '"Кіт" means "a female cat.".'
+  - statement: '«Кіт» means "a female cat.".'
     correct: false
     explanation: Incorrect! it means "male cat"
-  - statement: '"Влітку" means "in summer.".'
+  - statement: '«Влітку» means "in summer.".'
     correct: true
-  - statement: '"Взимку" means "in autumn.".'
+  - statement: '«Взимку» means "in autumn.".'
     correct: false
     explanation: Incorrect! it means "in winter"
   - statement: The Dnipro is a river.

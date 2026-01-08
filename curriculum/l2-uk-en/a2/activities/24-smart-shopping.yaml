@@ -241,42 +241,42 @@
 - type: true-false
   title: Shopping Rules
   items:
-  - statement: '"Порекомендуєте" is a polite way to ask for advice.'
+  - statement: '«Порекомендуєте» is a polite way to ask for advice.'
     correct: true
     explanation: Correct!
   - statement: Negotiation is common at markets.
     correct: true
     explanation: Yes!
-  - statement: '"Знижка" means "quality."'
+  - statement: '«Знижка» means "quality."'
     correct: false
-    explanation: '"Знижка" means "discount."'
-  - statement: '"Я подумаю" is a polite way to decline.'
+    explanation: '«Знижка» means "discount."'
+  - statement: '«Я подумаю» is a polite way to decline.'
     correct: true
     explanation: Correct!
-  - statement: '"Візьму" means "I''ll take."'
+  - statement: '«Візьму» means "I''ll take."'
     correct: true
     explanation: Yes!
   - statement: Negotiation is expected in supermarkets.
     correct: false
     explanation: Supermarkets have fixed prices.
-  - statement: '"Занадто дорого" = too expensive.'
+  - statement: '«Занадто дорого» = too expensive.'
     correct: true
     explanation: Correct!
-  - statement: '"Краще" and "дешевше" are comparative adverbs.'
+  - statement: '«Краще» and «дешевше» are comparative adverbs.'
     correct: true
     explanation: Yes!
-  - statement: '"Акція" means "action."'
+  - statement: '«Акція» means "action."'
     correct: false
-    explanation: In shopping context, "акція" means "sale/promotion."
-  - statement: Asking "Чи є знижка?" is acceptable.
+    explanation: In shopping context, «акція» means "sale/promotion."
+  - statement: Asking «Чи є знижка?» is acceptable.
     correct: true
     explanation: Correct!
-  - statement: '"Ринок" means "market."'
+  - statement: '«Ринок» means "market."'
     correct: true
     explanation: Yes!
-  - statement: '"Вартість" means "discount."'
+  - statement: '«Вартість» means "discount."'
     correct: false
-    explanation: '"Вартість" means "cost/value."'
+    explanation: '«Вартість» means "cost/value."'
   id: shopping-rules
 - type: group-sort
   title: Positive vs Negative Shopping Responses

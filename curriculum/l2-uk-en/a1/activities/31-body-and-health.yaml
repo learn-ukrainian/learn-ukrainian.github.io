@@ -269,7 +269,7 @@
 - type: quiz
   title: Болить or Болять?
   items:
-  - question: Which verb form is correct for "Голова" in a sentence?
+  - question: Which verb form is correct for «Голова» in a sentence?
     options:
     - text: болить (singular)
       correct: true
@@ -279,7 +279,7 @@
       correct: false
     - text: болі
       correct: false
-  - question: How should you correctly describe if your "Зуби" are currently hurting?
+  - question: How should you correctly describe if your «Зуби» are currently hurting?
     options:
     - text: болять (plural)
       correct: true
@@ -289,7 +289,7 @@
       correct: false
     - text: болю
       correct: false
-  - question: What is the correct form to use for the word "Горло"?
+  - question: What is the correct form to use for the word «Горло»?
     options:
     - text: болить (singular)
       correct: true
@@ -299,7 +299,7 @@
       correct: false
     - text: болить-не
       correct: false
-  - question: Which word correctly matches the plural noun "Очі" in Ukrainian?
+  - question: Which word correctly matches the plural noun «Очі» in Ukrainian?
     options:
     - text: болять (plural)
       correct: true
@@ -309,7 +309,7 @@
       correct: false
     - text: болю
       correct: false
-  - question: How do you accurately say that your "Живіт" hurts today?
+  - question: How do you accurately say that your «Живіт» hurts today?
     options:
     - text: болить (singular)
       correct: true
@@ -319,7 +319,7 @@
       correct: false
     - text: болі
       correct: false
-  - question: What is the right form for describing if "Ноги" hurt?
+  - question: What is the right form for describing if «Ноги» hurt?
     options:
     - text: болять (plural)
       correct: true
@@ -329,7 +329,7 @@
       correct: false
     - text: болю
       correct: false
-  - question: Which verb should you choose for the singular noun "Спина"?
+  - question: Which verb should you choose for the singular noun «Спина»?
     options:
     - text: болить (singular)
       correct: true
@@ -339,7 +339,7 @@
       correct: false
     - text: болі
       correct: false
-  - question: How would you correctly say that your "Руки" are hurting?
+  - question: How would you correctly say that your «Руки» are hurting?
     options:
     - text: болять (plural)
       correct: true
@@ -423,7 +423,7 @@
       correct: false
     - text: У мене болить кашель.
       correct: false
-  - question: What does "швидка допомога" mean?
+  - question: What does «швидка допомога» mean?
     options:
     - text: Ambulance
       correct: true
@@ -466,7 +466,8 @@
   - words:
     - застуда
     - у мене
-    answer: У мене застуда
+    - сьогодні
+    answer: Сьогодні у мене застуда
   - words:
     - допомогу
     - швидку
@@ -503,40 +504,40 @@
 - type: true-false
   title: Health Facts
   items:
-  - statement: '"Болить" is used for singular body parts.'
+  - statement: '«Болить» is used for singular body parts.'
     correct: true
     explanation: Correct! Use болить for one body part.
-  - statement: '"Болять" is used for plural body parts.'
+  - statement: '«Болять» is used for plural body parts.'
     correct: true
     explanation: Correct! Use болять for multiple body parts.
-  - statement: '"Аптека" means "hospital."'
+  - statement: '«Аптека» means "hospital."'
     correct: false
-    explanation: Incorrect! Аптека means "pharmacy." Hospital is "лікарня."
-  - statement: '"Лікарня" means "hospital."'
+    explanation: Incorrect! Аптека means "pharmacy." Hospital is «лікарня.»
+  - statement: '«Лікарня» means "hospital."'
     correct: true
     explanation: Correct!
-  - statement: '"Швидка допомога" means "pharmacy."'
+  - statement: '«Швидка допомога» means "pharmacy."'
     correct: false
     explanation: Incorrect! It means "ambulance" (literally "fast help").
-  - statement: '"У мене температура" means "I have a fever."'
+  - statement: '«У мене температура» means "I have a fever."'
     correct: true
     explanation: Correct!
-  - statement: '"Головні болі" uses "болить."'
+  - statement: '«Головні болі» uses «болить.»'
     correct: false
-    explanation: Incorrect! It uses "болять" because болі is plural.
-  - statement: '"Я хворий" means "I''m sick."'
+    explanation: Incorrect! It uses «болять» because болі is plural.
+  - statement: '«Я хворий» means "I''m sick."'
     correct: true
     explanation: Correct!
   - statement: In Ukraine, you call 103 for an ambulance.
     correct: true
     explanation: Correct! 103 is the emergency number for medical help.
-  - statement: '"Хвора" is for men.'
+  - statement: '«Хвора» is for men.'
     correct: false
-    explanation: Incorrect! Хвора is feminine. Men use "хворий."
-  - statement: '"Ліки" is always plural.'
+    explanation: Incorrect! Хвора is feminine. Men use «хворий.»
+  - statement: '«Ліки» is always plural.'
     correct: true
     explanation: Correct! Ліки has no singular form.
-  - statement: '"Зуб" is singular, "зуби" is plural.'
+  - statement: '«Зуб» is singular, «зуби» is plural.'
     correct: true
     explanation: Correct!
   id: health-facts

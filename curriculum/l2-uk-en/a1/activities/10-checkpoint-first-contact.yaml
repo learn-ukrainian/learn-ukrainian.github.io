@@ -1,7 +1,7 @@
 - type: quiz
   title: Cyrillic Reading
   items:
-  - question: What is the English translation of "хліб"?
+  - question: What is the English translation of «хліб»?
     options:
     - text: bread
       correct: true
@@ -11,7 +11,7 @@
       correct: false
     - text: coffee
       correct: false
-  - question: How do you translate "вареники" to English?
+  - question: How do you translate «вареники» to English?
     options:
     - text: soup
       correct: false
@@ -21,7 +21,7 @@
       correct: false
     - text: milk
       correct: false
-  - question: What does the word "дякую" mean?
+  - question: What does the word «дякую» mean?
     options:
     - text: hello
       correct: false
@@ -31,7 +31,7 @@
       correct: true
     - text: please
       correct: false
-  - question: What is the meaning of "добрий день"?
+  - question: What is the meaning of «добрий день»?
     options:
     - text: good day
       correct: true
@@ -41,7 +41,7 @@
       correct: false
     - text: goodbye
       correct: false
-  - question: How do you translate "вікно" to English?
+  - question: How do you translate «вікно» to English?
     options:
     - text: table
       correct: false
@@ -51,7 +51,7 @@
       correct: true
     - text: door
       correct: false
-  - question: What is the English translation of "молоко"?
+  - question: What is the English translation of «молоко»?
     options:
     - text: water
       correct: false
@@ -61,7 +61,7 @@
       correct: false
     - text: coffee
       correct: false
-  - question: What does the word "книга" mean?
+  - question: What does the word «книга» mean?
     options:
     - text: newspaper
       correct: false
@@ -71,7 +71,7 @@
       correct: false
     - text: letter
       correct: false
-  - question: What is the meaning of "будь ласка"?
+  - question: What is the meaning of «будь ласка»?
     options:
     - text: thank you
       correct: false
@@ -81,7 +81,7 @@
       correct: false
     - text: goodbye
       correct: false
-  - question: How do you translate "кава" to English?
+  - question: How do you translate «кава» to English?
     options:
     - text: tea
       correct: false
@@ -91,7 +91,7 @@
       correct: true
     - text: juice
       correct: false
-  - question: What is the English translation of "місто"?
+  - question: What is the English translation of «місто»?
     options:
     - text: country
       correct: false
@@ -101,7 +101,7 @@
       correct: false
     - text: street
       correct: false
-  - question: What does the word "студент" mean?
+  - question: What does the word «студент» mean?
     options:
     - text: student
       correct: true
@@ -111,7 +111,7 @@
       correct: false
     - text: worker
       correct: false
-  - question: How do you translate "українська" to English?
+  - question: How do you translate «українська» to English?
     options:
     - text: English
       correct: false
@@ -594,7 +594,7 @@
   - statement: Ukrainian has 33 letters in its alphabet.
     correct: true
     explanation: Correct! 33 letters total.
-  - statement: The letter "Г" sounds like hard "g" in "go".
+  - statement: The letter «Г» sounds like hard "g" in "go".
     correct: false
     explanation: Incorrect! Г = /ɦ/. Hard /g/ is Ґ.
   - statement: Feminine nouns typically end in -а or -я.
@@ -602,8 +602,8 @@
     explanation: 'Correct! Examples: книга, земля, кава.'
   - statement: Ukrainian uses "to be" (є) in all present tense sentences.
     correct: false
-    explanation: 'Incorrect! Ukrainian has zero copula: "Я студент" (no є needed).'
-  - statement: '"Це" can mean both "this" (neuter) and "this is".'
+    explanation: 'Incorrect! Ukrainian has zero copula: «Я студент» (no є needed).'
+  - statement: '«Це» can mean both "this" (neuter) and "this is".'
     correct: true
     explanation: Correct! Це вікно, Це книга (This is a book).
   - statement: First Conjugation verbs end in -ати or -яти.
@@ -612,16 +612,16 @@
   - statement: Second Conjugation verbs use -ють in the 3rd person plural.
     correct: false
     explanation: 'Incorrect! Second Conjugation uses -ять: говорять, роблять.'
-  - statement: Questions can be formed by adding "чи" at the beginning.
+  - statement: Questions can be formed by adding «чи» at the beginning.
     correct: true
     explanation: Correct! Чи ти студент? (Are you a student?)
-  - statement: Negation in Ukrainian uses "ні" before the verb.
+  - statement: Negation in Ukrainian uses «ні» before the verb.
     correct: false
-    explanation: 'Incorrect! Negation uses "не": Я не читаю (I don''t read).'
-  - statement: '"Борщ" is a traditional Ukrainian soup.'
+    explanation: 'Incorrect! Negation uses «не»: Я не читаю (I don''t read).'
+  - statement: '«Борщ» is a traditional Ukrainian soup.'
     correct: true
     explanation: Correct! UNESCO recognized Ukrainian borsch culture!
-  - statement: '"Смачного!" means "Bon appétit!" in Ukrainian.'
+  - statement: '«Смачного!» means "Bon appétit!" in Ukrainian.'
     correct: true
     explanation: Correct! Used when someone starts eating.
   - statement: All Ukrainian verbs are regular.

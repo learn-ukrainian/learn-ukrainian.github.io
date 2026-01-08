@@ -123,7 +123,7 @@ activities:
     - text: Марія читає
       correct: false
     explanation: Марія — хто читає? — підмет.
-    question: У цьому простому реченні "Марія читає книгу" яке слово є підметом?
+    question: У цьому простому реченні «Марія читає книгу» яке слово є підметом?
   - options:
     - text: Марія
       correct: false
@@ -134,7 +134,7 @@ activities:
     - text: Марія читає
       correct: false
     explanation: Читає — що робить? — присудок.
-    question: У цьому простому реченні "Марія читає книгу" яке слово є присудком?
+    question: У цьому простому реченні «Марія читає книгу» яке слово є присудком?
   - options:
     - text: Марія
       correct: false
@@ -145,7 +145,7 @@ activities:
     - text: Марія читає
       correct: false
     explanation: Книгу — що читає? — додаток.
-    question: У цьому простому реченні "Марія читає книгу" яке слово є додатком?
+    question: У цьому простому реченні «Марія читає книгу» яке слово є додатком?
   - options:
     - text: гарна
       correct: true
@@ -156,7 +156,7 @@ activities:
     - text: дівчина читає
       correct: false
     explanation: Гарна — яка? — означення.
-    question: У цьому реченні "Гарна дівчина читає" яке слово виконує роль означення?
+    question: У цьому реченні «Гарна дівчина читає» яке слово виконує роль означення?
   instruction: Оберіть правильну відповідь про члени речення.
 - type: quiz
   id: sentence-types
@@ -194,7 +194,7 @@ activities:
     - text: підрядне
       correct: false
     explanation: Складносурядне — рівноправні частини.
-    question: Коли частини речення рівноправні та з'єднані "і", "а", "але" — яке це речення?
+    question: Коли частини речення рівноправні та з'єднані «і», «а», «але» — яке це речення?
   - options:
     - text: просте
       correct: false
@@ -271,7 +271,7 @@ activities:
     - text: частки
       correct: false
     explanation: Сурядності — з'єднують рівноправні частини.
-    question: До якого типу належать сполучники "і", "а", "але" в українській мові?
+    question: До якого типу належать сполучники «і», «а», «але» в українській мові?
   - options:
     - text: сполучники сурядності
       correct: false
@@ -282,7 +282,7 @@ activities:
     - text: частки
       correct: false
     explanation: Підрядності — з'єднують залежну частину.
-    question: До якого типу належать сполучники "що", "бо", "коли" в українській мові?
+    question: До якого типу належать сполучники «що», «бо», «коли» в українській мові?
   - options:
     - text: просте
       correct: true
@@ -293,7 +293,7 @@ activities:
     - text: складнопідрядне
       correct: false
     explanation: Одна пара підмет-присудок — просте.
-    question: Коли речення має лише дві слова "Я читаю" — яке воно?
+    question: Коли речення має лише дві слова «Я читаю» — яке воно?
   - options:
     - text: просте
       correct: false
@@ -303,8 +303,8 @@ activities:
       correct: true
     - text: підрядне
       correct: false
-    explanation: '"А" — сполучник сурядності.'
-    question: '"Я читаю, а сестра пише" — яке це речення?'
+    explanation: '«А» — сполучник сурядності.'
+    question: '«Я читаю, а сестра пише» — яке це речення?'
   - options:
     - text: просте
       correct: false
@@ -314,8 +314,8 @@ activities:
       correct: false
     - text: головне
       correct: false
-    explanation: '"Бо" — сполучник підрядності.'
-    question: '"Я читаю, бо люблю книги" — яке це речення?'
+    explanation: '«Бо» — сполучник підрядності.'
+    question: '«Я читаю, бо люблю книги» — яке це речення?'
   instruction: Оберіть правильну відповідь про види речень.
 - type: match-up
   id: sentence-parts-match
@@ -498,14 +498,14 @@ activities:
     - складнопідрядне
     - просте
     - підрядне
-    sentence: Рівноправні частини з "і", "а", "але" — ___.
+    sentence: Рівноправні частини з «і», «а», «але» — ___.
   - answer: складнопідрядне
     options:
     - складносурядне
     - складнопідрядне
     - просте
     - головне
-    sentence: Залежна частина з "що", "бо", "коли" — ___.
+    sentence: Залежна частина з «що», «бо», «коли» — ___.
   - answer: головне речення
     options:
     - головне речення
@@ -526,14 +526,14 @@ activities:
     - підрядності
     - прийменники
     - частки
-    sentence: '"І", "а", "але" — сполучники ___.'
+    sentence: '«І», «а», «але» — сполучники ___.'
   - answer: підрядності
     options:
     - сурядності
     - підрядності
     - прийменники
     - частки
-    sentence: '"Що", "бо", "коли" — сполучники ___.'
+    sentence: '«Що», «бо», «коли» — сполучники ___.'
   - answer: головне речення
     options:
     - головне речення
@@ -581,46 +581,46 @@ activities:
   id: syntax-terminology-tf
   title: Синтаксична термінологія
   items:
-  - statement: '"Підмет" означає "subject".'
+  - statement: '«Підмет» означає "subject".'
     correct: true
     explanation: Правильно!
-  - statement: '"Присудок" означає "object".'
+  - statement: '«Присудок» означає "object".'
     correct: false
-    explanation: Неправильно! "Присудок" = predicate, "додаток" = object.
+    explanation: Неправильно! «Присудок» = predicate, «додаток» = object.
   - statement: Підмет і присудок — головні члени речення.
     correct: true
     explanation: Правильно!
   - statement: Означення — головний член речення.
     correct: false
     explanation: Неправильно! Означення — другорядний член.
-  - statement: '"Складнопідрядне" має залежну частину.'
+  - statement: '«Складнопідрядне» має залежну частину.'
     correct: true
     explanation: Правильно! Підрядне речення залежить від головного.
-  - statement: '"Складносурядне" має залежну частину.'
+  - statement: '«Складносурядне» має залежну частину.'
     correct: false
     explanation: Неправильно! У складносурядному частини рівноправні.
-  - statement: Перед "що", "бо", "коли" ставимо кому.
+  - statement: Перед «що», «бо», «коли» ставимо кому.
     correct: true
     explanation: Правильно! Це правило української пунктуації.
-  - statement: '"Кома" означає "period".'
+  - statement: '«Кома» означає "period".'
     correct: false
-    explanation: Неправильно! "Кома" = comma, "крапка" = period.
-  - statement: '"Просте речення" має одну пару підмет-присудок.'
+    explanation: Неправильно! «Кома» = comma, «крапка» = period.
+  - statement: '«Просте речення» має одну пару підмет-присудок.'
     correct: true
     explanation: Правильно!
-  - statement: '"Головне речення" — залежна частина.'
+  - statement: '«Головне речення» — залежна частина.'
     correct: false
     explanation: Неправильно! Головне — незалежне, підрядне — залежне.
-  - statement: '"Додаток" означає "object".'
+  - statement: '«Додаток» означає "object".'
     correct: true
     explanation: Правильно!
-  - statement: '"Обставина" описує іменник.'
+  - statement: '«Обставина» описує іменник.'
     correct: false
     explanation: Неправильно! Обставина описує дію, означення — іменник.
-  - statement: '"Синтаксис" — це правила побудови речень.'
+  - statement: '«Синтаксис» — це правила побудови речень.'
     correct: true
     explanation: Правильно!
-  - statement: '"І", "а", "але" — сполучники підрядності.'
+  - statement: '«І», «а», «але» — сполучники підрядності.'
     correct: false
     explanation: Неправильно! Це сполучники сурядності.
   instruction: Визначте, чи правильне твердження.
@@ -862,7 +862,7 @@ activities:
   id: error-correction-1
   title: Виправлення помилок
   items:
-  - sentence: '"Підмет" означає "object".'
+  - sentence: '«Підмет» означає "object".'
     error: object
     answer: subject
     options:
@@ -870,8 +870,8 @@ activities:
     - subject
     - predicate
     - attribute
-    explanation: '"Підмет" = subject.'
-  - sentence: '"Присудок" означає "subject".'
+    explanation: '«Підмет» = subject.'
+  - sentence: '«Присудок» означає "subject".'
     error: subject
     answer: predicate
     options:
@@ -879,8 +879,8 @@ activities:
     - predicate
     - object
     - attribute
-    explanation: '"Присудок" = predicate.'
-  - sentence: '"Додаток" означає "subject".'
+    explanation: '«Присудок» = predicate.'
+  - sentence: '«Додаток» означає "subject".'
     error: subject
     answer: object
     options:
@@ -888,7 +888,7 @@ activities:
     - object
     - predicate
     - attribute
-    explanation: '"Додаток" = object.'
+    explanation: '«Додаток» = object.'
   - sentence: Означення — головний член речення.
     error: головний
     answer: другорядний
@@ -907,7 +907,7 @@ activities:
     - підрядна
     - головна
     explanation: У складносурядному частини рівноправні.
-  - sentence: '"Кома" означає "period".'
+  - sentence: '«Кома» означає "period".'
     error: period
     answer: comma
     options:
@@ -915,8 +915,8 @@ activities:
     - comma
     - colon
     - dash
-    explanation: '"Кома" = comma, "крапка" = period.'
-  - sentence: '"Крапка" означає "comma".'
+    explanation: '«Кома» = comma, «крапка» = period.'
+  - sentence: '«Крапка» означає "comma".'
     error: comma
     answer: period
     options:
@@ -924,8 +924,8 @@ activities:
     - period
     - colon
     - dash
-    explanation: '"Крапка" = period.'
-  - sentence: '"І", "а", "але" — сполучники підрядності.'
+    explanation: '«Крапка» = period.'
+  - sentence: '«І», «а», «але» — сполучники підрядності.'
     error: підрядності
     answer: сурядності
     options:
@@ -933,8 +933,8 @@ activities:
     - сурядності
     - прийменники
     - частки
-    explanation: '"І", "а", "але" — сурядності.'
-  - sentence: '"Що", "бо", "коли" — сполучники сурядності.'
+    explanation: '«І», «а», «але» — сурядності.'
+  - sentence: '«Що», «бо», «коли» — сполучники сурядності.'
     error: сурядності
     answer: підрядності
     options:
@@ -942,7 +942,7 @@ activities:
     - підрядності
     - прийменники
     - частки
-    explanation: '"Що", "бо", "коли" — підрядності.'
+    explanation: '«Що», «бо», «коли» — підрядності.'
   - sentence: Підрядне речення — незалежна частина.
     error: незалежна
     answer: залежна
@@ -961,7 +961,7 @@ activities:
     - підрядна
     - проста
     explanation: Головне — незалежна частина.
-  - sentence: '"Обставина" описує іменник.'
+  - sentence: '«Обставина» описує іменник.'
     error: іменник
     answer: дію
     options:
@@ -970,7 +970,7 @@ activities:
     - підмет
     - присудок
     explanation: Обставина — де, коли, як відбувається дія.
-  - sentence: '"Означення" описує дію.'
+  - sentence: '«Означення» описує дію.'
     error: дію
     answer: іменник
     options:
@@ -979,7 +979,7 @@ activities:
     - присудок
     - обставину
     explanation: Означення описує іменник.
-  - sentence: '"Просте речення" має кілька частин.'
+  - sentence: '«Просте речення» має кілька частин.'
     error: кілька частин
     answer: одну частину
     options:
@@ -1034,7 +1034,7 @@ activities:
       correct: true
     - text: бо
       correct: false
-    explanation: 'Сурядності: і, а, але. "Бо" — підрядності.'
+    explanation: 'Сурядності: і, а, але. «Бо» — підрядності.'
     question: Які сполучники є сполучниками сурядності?
   - options:
     - text: що
@@ -1045,7 +1045,7 @@ activities:
       correct: true
     - text: і
       correct: false
-    explanation: 'Підрядності: що, бо, коли. "І" — сурядності.'
+    explanation: 'Підрядності: що, бо, коли. «І» — сурядності.'
     question: Які сполучники є сполучниками підрядності?
   - options:
     - text: кома
@@ -1144,8 +1144,8 @@ activities:
       correct: false
     - text: книгу
       correct: false
-    explanation: 'Означення: гарна, цікаву. "Швидко" — обставина.'
-    question: У реченні "Гарна дівчина швидко читає цікаву книгу" які є означення?
+    explanation: 'Означення: гарна, цікаву. «Швидко» — обставина.'
+    question: У реченні «Гарна дівчина швидко читає цікаву книгу» які є означення?
   - options:
     - text: гарна
       correct: false
@@ -1156,7 +1156,7 @@ activities:
     - text: книгу
       correct: false
     explanation: Обставина швидко (як?).
-    question: У реченні "Гарна дівчина швидко читає цікаву книгу" яка є обставина?
+    question: У реченні «Гарна дівчина швидко читає цікаву книгу» яка є обставина?
   instruction: Оберіть ВСІ правильні відповіді.
 - type: translate
   id: term-translation

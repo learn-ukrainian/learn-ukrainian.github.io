@@ -56,8 +56,8 @@ def fix_markdown_file(file_path, dry_run=False):
     with open(file_path, 'r', encoding='utf-8') as f:
         original = f.read()
     
-    # Find all hints
-    hints_found = re.findall(r'\([a-z][a-z\s]+\)', original)
+    # Find all hints (case-insensitive, supports slashes)
+    hints_found = re.findall(r'\([a-zA-Z][a-zA-Z\s/]+\)', original)
     hints_to_remove = [h for h in hints_found if should_remove_hint(h)]
     
     if not hints_to_remove:
@@ -86,8 +86,8 @@ def fix_yaml_file(file_path, dry_run=False):
     with open(file_path, 'r', encoding='utf-8') as f:
         original = f.read()
     
-    # Find all hints
-    hints_found = re.findall(r'\([a-z][a-z\s]+\)', original)
+    # Find all hints (case-insensitive, supports slashes)
+    hints_found = re.findall(r'\([a-zA-Z][a-zA-Z\s/]+\)', original)
     hints_to_remove = [h for h in hints_found if should_remove_hint(h)]
     
     if not hints_to_remove:

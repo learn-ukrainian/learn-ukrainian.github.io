@@ -8,7 +8,7 @@ items:
   pos: other
 - lemma: веселенький
   ipa: veseˈlɛnʲkɪj
-  translation: merry (diminutive)
+  translation: merry
   pos: adj
   gender: m
 - lemma: вигукнути
@@ -18,7 +18,7 @@ items:
   gender: m
 - lemma: високесенький
   ipa: vɪsoˈkɛsenʲkɪj
-  translation: very high (diminutive)
+  translation: very high
   pos: adj
   gender: m
 - lemma: високотехнологічний
@@ -28,7 +28,7 @@ items:
   gender: m
 - lemma: гарненький
   ipa: hɐrˈnɛnʲkɪj
-  translation: pretty (diminutive)
+  translation: pretty
   pos: adj
   gender: m
 - lemma: дотик
@@ -65,7 +65,7 @@ items:
   gender: m
 - lemma: зелененький
   ipa: zeleˈnɛnʲkɪj
-  translation: green (diminutive)
+  translation: green
   pos: adj
   gender: n
 - lemma: кавун
@@ -123,12 +123,12 @@ items:
   gender: n
 - lemma: свіжесенький
   ipa: sʲvʲiˈʒɛsenʲkɪj
-  translation: fresh (diminutive)
+  translation: fresh
   pos: adj
   gender: n
 - lemma: синесенький
   ipa: sɪˈnɛsenʲkɪj
-  translation: blue (diminutive)
+  translation: blue
   pos: adj
   gender: m
 - lemma: солодкий
@@ -171,7 +171,7 @@ items:
   gender: m
 - lemma: тоненький
   ipa: toˈnɛnʲkɪj
-  translation: thin (diminutive)
+  translation: thin
   pos: adj
   gender: f
 - lemma: уважний
@@ -190,7 +190,7 @@ items:
   gender: f
 - lemma: чистесенький
   ipa: t͡ʃɪsˈtɛsenʲkɪj
-  translation: clean (diminutive)
+  translation: clean
   pos: adj
   gender: m
 - lemma: шкільний
@@ -200,7 +200,7 @@ items:
   gender: m
 - lemma: щасливенький
   ipa: ʃt͡ʃɐsˈlɪvɛnʲkɪj
-  translation: happy (diminutive)
+  translation: happy
   pos: adj
   gender: m
 - lemma: ягода

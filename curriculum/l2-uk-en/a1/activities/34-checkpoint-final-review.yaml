@@ -1,7 +1,7 @@
 - type: quiz
   title: Cyrillic Mastery
   items:
-  - question: What is the English meaning of "привіт"?
+  - question: What is the English meaning of «привіт»?
     options:
     - text: hello
       correct: true
@@ -11,7 +11,7 @@
       correct: false
     - text: thank you
       correct: false
-  - question: How do you translate "вибачте"?
+  - question: How do you translate «вибачте»?
     options:
     - text: hello
       correct: false
@@ -21,7 +21,7 @@
       correct: false
     - text: goodbye
       correct: false
-  - question: What is the meaning of "смачного" in English?
+  - question: What is the meaning of «смачного» in English?
     options:
     - text: thank you
       correct: false
@@ -31,7 +31,7 @@
       correct: true
     - text: please
       correct: false
-  - question: Which category summarizes the term "погода"?
+  - question: Which category summarizes the term «погода»?
     options:
     - text: food
       correct: false
@@ -41,7 +41,7 @@
       correct: false
     - text: city
       correct: false
-  - question: What is the meaning of "здоров'я"?
+  - question: What is the meaning of «здоров'я»?
     options:
     - text: health
       correct: true
@@ -51,7 +51,7 @@
       correct: false
     - text: family
       correct: false
-  - question: How is "завтра" described in Ukrainian?
+  - question: How is «завтра» described in Ukrainian?
     options:
     - text: yesterday
       correct: false
@@ -61,7 +61,7 @@
       correct: false
     - text: always
       correct: false
-  - question: Which category represents the word "вчора"?
+  - question: Which category represents the word «вчора»?
     options:
     - text: yesterday
       correct: true
@@ -71,7 +71,7 @@
       correct: false
     - text: never
       correct: false
-  - question: What is the translation for "дякую" into English?
+  - question: What is the translation for «дякую» into English?
     options:
     - text: please
       correct: false
@@ -81,7 +81,7 @@
       correct: true
     - text: goodbye
       correct: false
-  - question: Which phrase summarizes the meaning of "будь ласка"?
+  - question: Which phrase summarizes the meaning of «будь ласка»?
     options:
     - text: thank you
       correct: false
@@ -91,7 +91,7 @@
       correct: false
     - text: goodbye
       correct: false
-  - question: How would you describe the word "родина"?
+  - question: How would you describe the word «родина»?
     options:
     - text: work
       correct: false
@@ -101,7 +101,7 @@
       correct: true
     - text: city
       correct: false
-  - question: What is the description for "свято"?
+  - question: What is the description for «свято»?
     options:
     - text: family
       correct: false
@@ -111,7 +111,7 @@
       correct: false
     - text: holiday
       correct: true
-  - question: Which category describes the person called "лікар"?
+  - question: Which category describes the person called «лікар»?
     options:
     - text: teacher
       correct: false
@@ -545,7 +545,7 @@
 - type: quiz
   title: Daily Life Situations
   items:
-  - question: What is the correct response when someone asks you "Як справи?" today?
+  - question: What is the correct response when someone asks you «Як справи?» today?
     options:
     - text: Мене звати Олена.
       correct: false
@@ -645,7 +645,7 @@
       correct: false
     - text: Холодна.
       correct: false
-  - question: Someone says "Смачного!" to you — what is the correct response today?
+  - question: Someone says «Смачного!» to you — what is the correct response today?
     options:
     - text: Привіт!
       correct: false
@@ -675,19 +675,19 @@
   - statement: All nouns ending in -а are masculine.
     correct: false
     explanation: False! They're usually feminine (книга, мама).
-  - statement: '"Я читав" indicates a male speaker.'
+  - statement: '«Я читав» indicates a male speaker.'
     correct: true
     explanation: True! Past tense -в ending is masculine.
-  - statement: '"Немає" requires genitive case.'
+  - statement: '«Немає» requires genitive case.'
     correct: true
     explanation: 'True! Немає + genitive: немає часу.'
-  - statement: '"Йде дощ" means "It''s cold."'
+  - statement: '«Йде дощ» means "It''s cold."'
     correct: false
     explanation: False! It means "It's raining."
   - statement: Animate masculine accusative = genitive.
     correct: true
     explanation: True! студент → студента
-  - statement: '"Вдома" means "at home."'
+  - statement: '«Вдома» means "at home."'
     correct: true
     explanation: 'True! Compare: додому = "to home"'
   - statement: Numbers 2-4 use genitive plural.
@@ -696,13 +696,13 @@
   - statement: Ukrainian Christmas is now December 25.
     correct: true
     explanation: True! Since 2023, Ukraine celebrates on December 25.
-  - statement: '"Болить" is used for single body parts.'
+  - statement: '«Болить» is used for single body parts.'
     correct: true
-    explanation: True! For plural, use "болять" (Болять очі).
-  - statement: '"Його" changes form based on noun gender.'
+    explanation: True! For plural, use «болять» (Болять очі).
+  - statement: '«Його» changes form based on noun gender.'
     correct: false
-    explanation: False! "Його" NEVER changes.
-  - statement: '"З Новим роком!" means "Happy New Year!"'
+    explanation: False! «Його» NEVER changes.
+  - statement: '«З Новим роком!» means "Happy New Year!"'
     correct: true
     explanation: True! A common holiday greeting.
   id: a1-knowledge-check

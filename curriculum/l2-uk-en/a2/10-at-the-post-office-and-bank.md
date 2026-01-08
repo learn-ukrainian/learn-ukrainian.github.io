@@ -1,4 +1,4 @@
-## Warm-up
+## Introduction
 
 Welcome to the practical world of Ukrainian services! In this module, you'll learn vocabulary and phrases for two essential destinations: the post office (пошта) and the bank (банк). These real-world situations will help you practice the cases you've learned in authentic contexts.
 
@@ -11,20 +11,20 @@ Welcome to the practical world of Ukrainian services! In this module, you'll lea
 - Формули ввічливих прохань у сервісних центрах.
 - Як використовувати знахідний, родовий, давальний та орудний відмінки в контексті послуг.
 
-**Обслуговування в Україні (Service Interactions)**
+**Обслуговування в Україні**
 
 Культура обслуговування в Україні вимагає ввічливості. Використання слів «будь ласка», «дякую» та офіційних прохань (Я хочу..., Мені потрібно...) допоможе вам ефективно спілкуватися.
 
-**Огляд відмінків у сфері послуг (Case Usage Overview)**
+**Огляд відмінків у сфері послуг**
 
 Before we dive into specific vocabulary, here's how cases work in service contexts:
 
 | Відмінок  | Функція               | Приклад                                                      |
 | --------- | --------------------- | ------------------------------------------------------------ |
-| Знахідний | Прямий додаток дії    | відправити **листа** (send a letter)                         |
-| Родовий   | Походження, кількість | з **України** (from Ukraine), сто **гривень** (100 hryvnias) |
-| Давальний | Адресат дії           | дайте **мені** (give to me)                                  |
-| Орудний   | Засіб/метод оплати    | платити **карткою** (pay by card)                            |
+| Знахідний | Прямий додаток дії    | відправити **листа**                         |
+| Родовий   | Походження, кількість | з **України**, сто **гривень** (100 hryvnias) |
+| Давальний | Адресат дії           | дайте **мені**                                  |
+| Орудний   | Засіб/метод оплати    | платити **карткою**                            |
 
 Розуміння цих шаблонів допоможе вам автоматично будувати правильні речення.
 
@@ -33,23 +33,38 @@ Before we dive into specific vocabulary, here's how cases work in service contex
 
 ## Presentation
 
+## Practice
+
+Read these dialogues aloud and identify the cases used in each sentence. This exercise will help you recognize case patterns in natural conversation.
+
+**На пошті:**
+
+- Я хочу відправити посилку до Німеччини.
+- Що в посилці?
+- Книги і одяг.
+- Зважте, будь ласка. Три кілограми. Сто двадцять гривень.
+
+**Case analysis:** «посилку» is accusative (direct object of відправити), «Німеччини» is genitive (after до), «посилці» is locative (location after в), «гривень» is genitive.
+
+**У банку:**
+
+- Мені потрібно зробити переказ.
+- На який рахунок?
+- Ось номер рахунку.
+- Скільки переказати?
+- Тисячу гривень.
+
+**Case analysis:** «Мені» is dative, «переказ» is accusative, «рахунок» is accusative (after на for direction), «рахунку» is genitive, «гривень» is genitive (quantity).
+
+> 💡 **Practice Tip**
+>
+> When practicing service dialogues, focus on the verb-object patterns. Most service verbs like відправити, зняти, обміняти require accusative for the direct object. Quantity expressions like «сто гривень» require genitive. Master these patterns and you'll handle any service interaction!
+
 ## На пошті — At the Post Office
 
 Пошта — це місце, де ви відправляєте листи (листи), посилки (посилки) та купуєте марки (марки).
 
-### Essential Post Office Vocabulary
-
-| Слово     | Переклад    | Контекст відмінка            |
-| --------- | ----------- | ---------------------------- |
-| лист      | letter      | Відправити **листа** (Acc)   |
-| посилка   | package     | Отримати **посилку** (Acc)   |
-| марка     | stamp       | Купити **марку** (Acc)       |
-| конверт   | envelope    | Покласти в **конверт** (Acc) |
-| адреса    | address     | Написати **адресу** (Acc)    |
-| індекс    | postal code | Вказати **індекс** (Acc)     |
-| квитанція | receipt     | Дати **квитанцію** (Acc)     |
-
-### Common Phrases at the Post Office
+## Common Phrases at the Post Office
 
 **Sending mail:**
 
@@ -67,9 +82,9 @@ Before we dive into specific vocabulary, here's how cases work in service contex
 
 > 💡 **Grammar in Action**
 >
-> Notice how we use accusative case for the direct object: відправити **листа** (send a letter), отримати **посилку** (receive a package). The object of the action goes in accusative!
+> Notice how we use accusative case for the direct object: відправити **листа**, отримати **посилку**. The object of the action goes in accusative!
 
-### Dialogue: At the Post Office
+## Dialogue: At the Post Office
 
 > — Добрий день! Чим можу допомогти?
 > — Доброго дня! Я хочу відправити листа до Канади.
@@ -86,19 +101,7 @@ Before we dive into specific vocabulary, here's how cases work in service contex
 
 Банк — це місце для управління рахунками, обміну валют та переказів.
 
-### Essential Banking Vocabulary
-
-| Слово   | Переклад    | Контекст відмінка             |
-| ------- | ----------- | ----------------------------- |
-| рахунок | account     | Відкрити **рахунок** (Acc)    |
-| картка  | card        | Отримати **картку** (Acc)     |
-| гроші   | money       | Зняти **гроші** (Acc)         |
-| готівка | cash        | Обміняти на **готівку** (Acc) |
-| валюта  | currency    | Купити **валюту** (Acc)       |
-| переказ | transfer    | Зробити **переказ** (Acc)     |
-| кредит  | credit/loan | Взяти **кредит** (Acc)        |
-
-### Common Phrases at the Bank
+## Common Phrases at the Bank
 
 **Account operations:**
 
@@ -123,9 +126,9 @@ Before we dive into specific vocabulary, here's how cases work in service contex
 
 > 📜 **Cultural Note**
 >
-> In Ukraine, the national currency is the гривня — hryvnia. When exchanging money, you'll often hear "курс" — exchange rate. Many Ukrainians use mobile banking apps — banking terminology is commonly used in everyday conversation.
+> In Ukraine, the national currency is the гривня — hryvnia. When exchanging money, you'll often hear «курс» — exchange rate. Many Ukrainians use mobile banking apps — banking terminology is commonly used in everyday conversation.
 
-### Dialogue: At the Bank
+## Dialogue: At the Bank
 
 > — Добрий день! Що бажаєте?
 > — Добрий день. Я хочу обміняти долари на гривні.
@@ -165,7 +168,7 @@ When interacting at the post office or bank, you'll use multiple cases. Here's a
 - Йти з **документами**. (To go with documents.)
 
 > [!tip] Polite Requests Formula
-> Use **Я хочу** + infinitive + accusative object: "Я хочу відправити листа." Or **Мені потрібно** + infinitive + accusative: "Мені потрібно зняти гроші."
+> Use **Я хочу** + infinitive + accusative object: «Я хочу відправити листа.» Or **Мені потрібно** + infinitive + accusative: «Мені потрібно зняти гроші.»
 
 > 🔍 **Myth Buster**
 >
@@ -173,39 +176,39 @@ When interacting at the post office or bank, you'll use multiple cases. Here's a
 
 ---
 
-## Practice
-
-## Practice Dialogues
-
-Read these dialogues aloud and identify the cases used in each sentence. This exercise will help you recognize case patterns in natural conversation.
-
-**На пошті:**
-
-- Я хочу відправити посилку до Німеччини.
-- Що в посилці?
-- Книги і одяг.
-- Зважте, будь ласка. Три кілограми. Сто двадцять гривень.
-
-**Case analysis:** "посилку" is accusative (direct object of відправити), "Німеччини" is genitive (after до), "посилці" is locative (location after в), "гривень" is genitive (quantity after numbers).
-
-**У банку:**
-
-- Мені потрібно зробити переказ.
-- На який рахунок?
-- Ось номер рахунку.
-- Скільки переказати?
-- Тисячу гривень.
-
-**Case analysis:** "Мені" is dative (experiencer), "переказ" is accusative (direct object), "рахунок" is accusative (after на for direction), "рахунку" is genitive (possession), "гривень" is genitive (quantity).
-
-> 💡 **Practice Tip**
->
-> When practicing service dialogues, focus on the verb-object patterns. Most service verbs like відправити, зняти, обміняти require accusative for the direct object. Quantity expressions like "сто гривень" require genitive. Master these patterns and you'll handle any service interaction!
-
-# Summary
+# Підсумок
 
 У цьому модулі ви вивчили:
 - Основні поняття та правила
 - Практичне застосування
 - Вправи для закріплення
 
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!
+
+## Essential Post Office Vocabulary
+
+| Слово     | Переклад    | Контекст відмінка            |
+| --------- | ----------- | ---------------------------- |
+| лист      | letter      | Відправити **листа** (Acc)   |
+| посилка   | package     | Отримати **посилку** (Acc)   |
+| марка     | stamp       | Купити **марку** (Acc)       |
+| конверт   | envelope    | Покласти в **конверт** (Acc) |
+| адреса    | address     | Написати **адресу** (Acc)    |
+| індекс    | postal code | Вказати **індекс** (Acc)     |
+| квитанція | receipt     | Дати **квитанцію** (Acc)     |
+
+## Essential Banking Vocabulary
+
+| Слово   | Переклад    | Контекст відмінка             |
+| ------- | ----------- | ----------------------------- |
+| рахунок | account     | Відкрити **рахунок** (Acc)    |
+| картка  | card        | Отримати **картку** (Acc)     |
+| гроші   | money       | Зняти **гроші** (Acc)         |
+| готівка | cash        | Обміняти на **готівку** (Acc) |
+| валюта  | currency    | Купити **валюту** (Acc)       |
+| переказ | transfer    | Зробити **переказ** (Acc)     |
+| кредит  | credit/loan | Взяти **кредит** (Acc)        |

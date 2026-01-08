@@ -1,162 +1,136 @@
 - type: match-up
   title: Logic Pairs
   pairs:
-  - left: Я не пішов гуляти
-    right: тому що йшов дощ.
-  - left: Хоча він багатий,
-    right: він нещасливий.
-  - left: Вона вивчила мову,
-    right: бо багато вчилася.
-  - left: Кімната мала,
-    right: зате затишна.
-  - left: Оскільки ми спізнюємося,
-    right: візьмемо таксі.
-  - left: Ми не поїхали
-    right: через погоду.
-  - left: Я запізнився,
-    right: бо проспав.
-  - left: Вона сміється,
-    right: незважаючи на сльози.
   - left: тому що
-    right: because
+    right: because (neutral)
+  - left: бо
+    right: because (casual)
+  - left: оскільки
+    right: since (logical)
   - left: хоча
     right: although
+  - left: проте
+    right: however
+  - left: зате
+    right: but at least
+  - left: через
+    right: because of (neg/neu)
+  - left: завдяки
+    right: thanks to (pos)
+  - left: все-таки
+    right: still/nevertheless
+  - left: незважаючи на
+    right: in spite of
   id: logic-pairs
 - type: cloze
   title: Choose the Connector
-  passage: 'Я люблю літо, {тому що|хоча|проте|зате} тепло. (because - standard) {Хоча|Бо|Тому що|Через} я не голодний, я з''їм яблуко. (Although) Він не знає адреси, {проте|бо|оскільки|тому що} він знайде будинок. (however)
+  passage: 'Ми не пішли гуляти, {тому що|хоча|проте|зате} йшов сильний дощ. Вона купила
+    цей телефон, {хоча|бо|оскільки|через} він був дуже дорогий. {Оскільки|Хоча|Проте|Зате}
+    я не мав парасольки, я намок.
 
 
-    Робота важка, {зате|тому що|бо|через} цікава. {Оскільки|Хоча|Але|Проте} ти тут, допоможи мені. (Since) Чому ти сумуєш? — {Бо|Проте|Хоча|Зате}! (Colloquial "Just because")
+    Він вчить українську мову, {бо|хоча|проте|зате} хоче жити в Києві. Це було важко,
+    {проте|тому що|бо|оскільки} ми це зробили. Я запізнився {через|завдяки|про|для}
+    затори на дорогах.
 
 
-    Ми перемогли {завдяки|через|бо|тому що} тренеру. (thanks to - positive) Я не спав {через|бо|тому що|зате} шум. (because of - noun) Він все робить, {незважаючи на те що|тому що|бо|оскільки} втомлений.
+    Ми виграли матч {завдяки|через|про|для} тренеру. Він бідний, {зате|хоча|бо|оскільки}
+    чесний. Я не люблю суші, {проте|тому що|бо|оскільки} спробую сьогодні.
 
 
-    {Хоч і|Тому що|Бо|Зате} це правда, я не вірю. (Even if) Це було давно, {все ж таки|тому що|бо|оскільки} я пам''ятаю. (nevertheless/still) {Нехай|Хоча|Але|Проте} він прийде! (Let/May)'
+    Вона прийшла вчасно, {незважаючи на те що|тому що|бо|оскільки} прокинулася пізно.
+    Я візьму чай {замість|через|завдяки|для} кави. Сонце світило, {все-таки|тому що|бо|оскільки}
+    було холодно.'
   id: choose-the-connector
 - type: quiz
   title: Understand the Logic
   items:
-  - question: Що саме означає український сполучник "Хоча", коли ми вживаємо його в реченні?
+  - question: Який сполучник найкраще підходить для нейтрального пояснення причини
+      в реченні?
     options:
-    - text: Означає поступку або контраст
+    - text: тому що
       correct: true
-    - text: Означає пряму причину якихось подій
+    - text: проте
       correct: false
-    - text: Означає логічний наслідок певних дій
+    - text: зате
       correct: false
-    - text: Означає часову послідовність подій
+    - text: незважаючи на
       correct: false
-  - question: Який короткий розмовний сполучник є популярним синонімом до фрази "Тому що"?
+  - question: Яке слово ми використовуємо для вираження позитивної причини або щирої
+      вдячності?
     options:
-    - text: Сполучник "Бо"
+    - text: завдяки
       correct: true
-    - text: Сполучник "Але"
+    - text: через
       correct: false
-    - text: Сполучник "Або"
+    - text: бо
       correct: false
-    - text: Сполучник "Чи"
+    - text: оскільки
       correct: false
-  - question: Яке слово найкраще підходить для того, щоб підкреслити ПОЗИТИВНУ причину успіху?
+  - question: Що саме означає логічний сполучник «хоча» в контексті типового українського
+      речення?
     options:
-    - text: Ми виграли завдяки нашому тренеру
+    - text: поступку або контраст (although)
       correct: true
-    - text: Ми виграли через складну погоду
+    - text: причину (because)
       correct: false
-    - text: Ми виграли проте ми дуже втомилися
+    - text: час (when)
       correct: false
-    - text: Ми виграли оскільки мали великий час
+    - text: місце (where)
       correct: false
-  - question: Коли найкраще використовувати в українській мові специфічний сполучник "Зате"?
+  - question: Який вираз допомагає показати «світлу сторону» в певній негативній життєвій
+      ситуації?
     options:
-    - text: Для виділення позитивної сторони мінуса
+    - text: зате
       correct: true
-    - text: Для пояснення дуже сухої логічної причини
+    - text: бо
       correct: false
-    - text: Для зміни теми розмови на іншу
+    - text: тому що
       correct: false
-    - text: Для вираження вдячності іншій людині
+    - text: через
       correct: false
-  - question: Чи потрібно ставити кому перед сполучником "тому що" в середині речення?
+  - question: У яких саме ситуаціях ми зазвичай використовуємо книжний сполучник «оскільки»?
     options:
-    - text: Так, кома перед ним обов'язки завжди
+    - text: У логічних висновках або офіційній мові
       correct: true
-    - text: Ні, кома перед ним ніколи не ставиться
+    - text: Тільки в розмові з друзями
       correct: false
-    - text: Тільки якщо ми говоримо дуже голосно
+    - text: Ніколи не використовуємо
       correct: false
-    - text: Тільки в кінці розповіді для ефекту
+    - text: Тільки в кінці речення
       correct: false
-  - question: Де в реченні найчастіше можна побачити логічний сполучник "Оскільки"?
+  - question: Яке коротке слово є розмовною і часто вживаною версією сполучника «тому
+      що»?
     options:
-    - text: Найчастіше на самому початку речення
+    - text: бо
       correct: true
-    - text: Тільки в самому кінці наприкінці
+    - text: проте
       correct: false
-    - text: Завжди після головного дієслова
+    - text: зате
       correct: false
-    - text: Усередині будь-якого слова в реченні
+    - text: хоча
       correct: false
-  - question: Як правильно перекласти українською мовою англійський вираз "Still" або "Nevertheless"?
+  - question: Що саме виражає логічний сполучник «проте» в межах офіційної української
+      розповіді?
     options:
-    - text: Український вираз "Все-таки"
+    - text: Сильний контраст (however)
       correct: true
-    - text: Український вираз "Тому що"
+    - text: Додаткову інформацію
       correct: false
-    - text: Український вираз "Або ж"
+    - text: Час початку дії
       correct: false
-    - text: Український вираз "Коли"
+    - text: Питання до слухача
       correct: false
-  - question: Який із цих сполучників виражає сильніший контраст, ніж звичайне слово "Але"?
+  - question: Яке слово використовується для вказання на нейтральну або певну негативну
+      причину?
     options:
-    - text: Книжний сполучник "Проте"
+    - text: через
       correct: true
-    - text: Простий сполучник "І"
+    - text: завдяки
       correct: false
-    - text: Питальний сполучник "Чи"
+    - text: оскільки
       correct: false
-    - text: Прямий сполучник "Що"
-      correct: false
-  - question: Як правильно перекласти українською мовою фразу "Due to the fact that"?
-    options:
-    - text: Офіційний вираз "Через те що"
-      correct: true
-    - text: Умовний вираз "Якби не"
-      correct: false
-    - text: Питальний вираз "Чому саме"
-      correct: false
-    - text: Окличний вираз "Мабуть що"
-      correct: false
-  - question: Яку граматичну умову зазвичай починає українська конструкція "Якби не"?
-    options:
-    - text: Починає нереальну гіпотетичну умову
-      correct: true
-    - text: Починає реальний та строгий факт
-      correct: false
-    - text: Починає просте запитання до друга
-      correct: false
-    - text: Починає ввічливе привітання вдень
-      correct: false
-  - question: Яке слово в українській мові є рідкісним літературним синонімом для "Хоча"?
-    options:
-    - text: Літературна конструкція "Дарма що"
-      correct: true
-    - text: Звичайна конструкція "Тому що"
-      correct: false
-    - text: Майбутня конструкція "Коли буде"
-      correct: false
-    - text: Давня конструкція "Було колись"
-      correct: false
-  - question: Яке почуття або дію зазвичай виражає українська частка "Нехай" у реченні?
-    options:
-    - text: Дозвіл, побажання або наказ
-      correct: true
-    - text: Категоричне заперечення будь-чого
-      correct: false
-    - text: Пояснення складної причини подій
-      correct: false
-    - text: Питання про час початку події
+    - text: хоча
       correct: false
   id: understand-the-logic
 - type: unjumble
@@ -164,137 +138,157 @@
   items:
   - words:
     - я
-    - сьогодні
-    - сиджу
-    - вдома
-    - тому
-    - що
-    - я
+    - не
+    - пішов
+    - на
+    - роботу
+    - тому що
     - дуже
-    - хворий
-    answer: Я сьогодні сиджу вдома, тому що я дуже хворий
+    - сильно
+    - захворів
+    answer: Я не пішов на роботу тому що дуже сильно захворів
+  - words:
+    - ми
+    - виграли
+    - цей
+    - важливий
+    - матч
+    - тільки
+    - завдяки
+    - нашому
+    - новому
+    - тренеру
+    answer: Ми виграли цей важливий матч тільки завдяки нашому новому тренеру
   - words:
     - хоча
-    - на
-    - вулиці
-    - йшов
-    - дощ
+    - було
+    - дуже
+    - холодно
     - ми
-    - все
-    - одно
+    - все-таки
     - пішли
     - гуляти
-    answer: Хоча на вулиці йшов дощ, ми все одно пішли гуляти
+    - в
+    - парк
+    answer: Хоча було дуже холодно ми все-таки пішли гуляти в парк
   - words:
     - цей
-    - хлопець
+    - старий
+    - будинок
     - дуже
-    - розумний
-    - але
-    - водночас
-    - неймовірно
-    - лінивий
-    answer: Цей хлопець дуже розумний, але водночас неймовірно лінивий
-  - words:
-    - ця
-    - дорога
-    - була
-    - довга
+    - малий
     - зате
+    - він
     - надзвичайно
-    - красива
-    - для
-    - нас
-    answer: Ця дорога була довга, зате надзвичайно красива для нас
+    - дешевий
+    - зараз
+    answer: Цей старий будинок дуже малий зате він надзвичайно дешевий зараз
   - words:
     - оскільки
-    - ми
-    - вже
-    - всі
-    - тут
-    - давайте
-    - нарешті
-    - почнемо
-    - роботу
-    answer: Оскільки ми вже всі тут, давайте нарешті почнемо роботу
+    - він
+    - не
+    - знав
+    - дороги
+    - він
+    - зателефонував
+    - своєму
+    - старому
+    - другу
+    answer: Оскільки він не знав дороги він зателефонував своєму старому другу
   - words:
-    - я
-    - все-таки
-    - думаю
-    - що
-    - цей
-    - план
-    - є
-    - абсолютно
-    - правий
-    answer: Я все-таки думаю, що цей план є абсолютно правий
+    - вона
+    - була
+    - дуже
+    - втомлена
+    - проте
+    - продовжувала
+    - працювати
+    - над
+    - своєю
+    - статтею
+    answer: Вона була дуже втомлена проте продовжувала працювати над своєю статтею
   id: build-the-argument
 - type: group-sort
   title: Cause vs Contrast
   groups:
-  - name: Причини (Why?)
+  - name: Причина (Cause)
     items:
-    - Тому що
-    - Бо
-    - Оскільки
-    - Через те що
-    - Завдяки тому що
-    - Бо так
-  - name: Контрасти (But / Although)
+    - тому що
+    - бо
+    - оскільки
+    - через
+    - завдяки
+    - з цієї причини
+  - name: Контраст (Contrast)
     items:
-    - Хоча
-    - Але
-    - Проте
-    - Зате
-    - Однак
-    - Незважаючи на те що
+    - але
+    - проте
+    - зате
+    - хоча
+    - незважаючи на
+    - однак
   id: cause-vs-contrast
 - type: true-false
   title: Grammar Rules
   items:
-  - statement: You must use a comma before "тому що".
+  - statement: Кома перед «тому що» обов'язкова.
     correct: true
-    explanation: Always!
-  - statement: '"Бо" is very formal and academic.'
+    explanation: Так, це стандартне правило пунктуації.
+  - statement: «Завдяки» використовується для негативних причин.
     correct: false
-    explanation: It is conversational.
-  - statement: '"Завдяки" is used for bad things (like "Thanks to the rain, I got wet").'
+    explanation: «Завдяки» використовується тільки для позитивних причин.
+  - statement: «Бо» можна використовувати на початку речення.
     correct: false
-    explanation: No, "Завдяки" implies gratitude. Use "Через" for neutral/negative causes.
-  - statement: '"Оскільки" sets up a logical premise.'
+    explanation: «Бо» ніколи не починає речення в літературній мові.
+  - statement: «Оскільки» звучить більш офіційно, ніж «бо».
     correct: true
-    explanation: Since X is true, then Y.
-  - statement: '"Хоча" introduces a reason.'
-    correct: false
-    explanation: It introduces a concession (Although).
-  - statement: '"Проте" means "And then".'
-    correct: false
-    explanation: It means "However".
-  - statement: '"Все ж таки" emphasizes persistence of an opinion or fact.'
+    explanation: Так, це логічний сполучник для офіційного стилю.
+  - statement: «Зате» допомагає знайти позитив у негативі.
     correct: true
-    explanation: '"Still | Nevertheless".'
-  - statement: You can end a sentence with "Бо" in casual speech.
-    correct: true
-    explanation: '"Чому? Бо."'
-  - statement: '"Якби не" is used for real situations.'
+    explanation: Так, це сполучник допустовості з позитивним акцентом.
+  - statement: «Через» і «завдяки» вимагають однакових відмінків.
     correct: false
-    explanation: It's hypothetical ("If it weren't for...").
-  - statement: '"Але" and "Проте" are synonyms, but "Проте" is stronger.'
+    explanation: «Через» вимагає знахідного, а «завдяки» — давального.
+  - statement: «Проте» — це сильніший синонім до слова «але».
     correct: true
-    explanation: Yes.
+    explanation: Так, воно додає ваги контрасту.
+  - statement: «Хоча» вживається для вираження причини дії.
+    correct: false
+    explanation: «Хоча» вживається для вираження контрасту або поступки.
+  - statement: «Тому що» може бути відповіддю на питання «Чому?».
+    correct: true
+    explanation: Так, це повноцінна відповідь.
+  - statement: «Все ж таки» пишеться окремо.
+    correct: true
+    explanation: Так, це частка, яка пишеться саме так.
   id: grammar-rules
 - type: cloze
   title: The Job Interview Success
-  passage: Я дуже хочу отримати саме цю роботу, {тому що|хоча} мені зараз потрібні гроші. {Хоча|Тому що} я поки що не маю великого досвіду, я вчуся надзвичайно швидко. Менеджер відразу сказав, що я ще дуже молодий, {зате|бо} енергійний та амбітний. {Незважаючи на те що|Оскільки} я спочатку трохи хвилювався, я пройшов цю співбесіду добре. Я успішно отримав роботу {завдяки|через} тому, що мій найкращий друг там працює. Тепер я кожний день працюю багато, {проте|оскільки} я справді щасливий. Я вірю, що {оскільки|хоча} я маю цю нагоду, я досягну успіху. Це важко, {проте|бо} отриманий результат того вартий. {Хоча|Оскільки} я не знав нікого там, тепер ми друзі. {через|завдяки} я запізнився раз {через|завдяки} заторів, але {все-таки|бо} я на місці!
+  passage: Я дуже хочу отримати саме цю роботу, {тому що|хоча|проте|зате} мені зараз
+    потрібні гроші. {Хоча|Тому що|Бо|Оскільки} я поки що не маю великого досвіду,
+    я вчуся надзвичайно швидко. Менеджер відразу сказав, що я ще дуже молодий, {зате|бо|хоча|проте}
+    енергійний та амбітний. {Незважаючи на те що|Оскільки|Тому що|Бо} я спочатку трохи
+    хвилювався, я пройшов цю співбесіду добре. Я успішно отримав роботу {завдяки|через|про|для}
+    тому, що мій найкращий друг там працює. Тепер я кожний день працюю багато, {проте|оскільки|бо|тому
+    що} я справді щасливий. Я вірю, що {оскільки|хоча|проте|зате} я маю цю нагоду,
+    я досягну успіху. Це важко, {проте|бо|тому що|оскільки} отриманий результат того
+    вартий. {Хоча|Оскільки|Бо|Тому що} я не знав нікого там, тепер ми друзі. Я запізнився
+    раз {через|завдяки|про|для} затори на дорогах, але {все-таки|бо|хоча|проте} я
+    на місці! Тепер я планую відпустку, {оскільки|хоча|проте|бо} я вже багато працював.
   id: the-job-interview-success
 - type: mark-the-words
   title: Find the Logic
   id: find-the-logic
-  passage: '*Хоча* на вулиці дощ, ми йдемо гуляти. Ми взяли парасольки, *тому що* не хочемо змокнути. *Оскільки* парк близько, ми підемо пішки. Це важко, *проте* корисно. *Все-таки* свіже повітря потрібне.
+  passage: '*Хоча* на вулиці дощ, ми йдемо гуляти. Ми взяли парасольки, *тому що*
+    не хочемо змокнути. *Оскільки* парк близько, ми підемо пішки. Це важко, *проте*
+    корисно. *Все-таки* свіже повітря потрібне.
+
 
     ---
 
-    *Завдяки* тренуванням я став сильнішим. *Але* я все ще втомлююся, *через те що* мало сплю.'
+
+    *Завдяки* тренуванням я став сильнішим. *Але* я все ще втомлююся, *через те що*
+    мало сплю.'
   correct_words:
   - Хоча
   - тому що
@@ -304,125 +298,188 @@
   - Завдяки
   - Але
   - через те що
+  instruction: Натисніть на правильні слова в тексті.
 - type: error-correction
   title: Fix the Connector
   items:
-  - sentence: 'Я тут, **але** я хочу допомогти. (Logic error: I am here BECAUSE I want to help)'
+  - sentence: Я тут, але я хочу допомогти.
     error: але
     answer: тому що
     options:
     - тому що
     - але
+    - хоча
+    - проте
     explanation: This is a reason, not a contrast.
-  - sentence: '**Хоча** йде дощ, я не взяв парасольку. (Correct logic: Even though it rains, I didn''t take umbrella - wait, no. "Oskilky" - Since it rains, I TOOK. "Khocha" - Although it rains, I DIDN''T. Actually this sentence makes sense grammatically but let''s assume the user meant "Therefore". Let''s try a clearer error).'
+  - sentence: Він багатий, тому що нещасливий.
     error: тому що
     answer: але
     options:
     - але
     - тому що
-    explanation: Wealth usually doesn't cause unhappiness directly here; it's a contrast. "Rich BUT unhappy".
-  - sentence: Ми виграли **через** нашому тренеру. (Positive result requires Thanks To)
+    - бо
+    - оскільки
+    explanation: Wealth usually doesn't cause unhappiness directly here; it's a contrast.
+      «Rich BUT unhappy».
+  - sentence: Ми виграли через нашому тренеру.
     error: через
     answer: завдяки
     options:
     - завдяки
     - через
-    explanation: '"Завдяки" is for positive outcomes (Thanks to). "Через" is neutral/negative. Plus case agreement (Dat vs Acc/Gen), but focus on meaning.'
-  - sentence: '**Бо** ти не хочеш, не роби. (Start of sentence/Logical premise)'
+    - про
+    - для
+    explanation: «Завдяки» is for positive outcomes. «Через» is neutral/negative.
+  - sentence: Бо ти не хочеш, не роби.
     error: Бо
     answer: Оскільки
     options:
     - Оскільки
     - Бо
-    explanation: '"Бо" rarely starts a formal logical sentence. "Оскільки" (Since) is better.'
-  - sentence: Квартира мала, **тому що** дешева. (Constraint/Positive balance)
+    - Хоча
+    - Проте
+    explanation: «Бо» rarely starts a formal logical sentence. «Оскільки» (Since)
+      is better.
+  - sentence: Квартира мала, тому що дешева.
     error: тому що
     answer: зате
     options:
     - зате
     - тому що
-    explanation: 'Small is bad, cheap is good. This is a balance: "Small, BUT cheap".'
-  - sentence: Я запізнився **завдяки** заторам.
+    - бо
+    - оскільки
+    explanation: 'Small is bad, cheap is good. This is a balance: «Small, BUT cheap».'
+  - sentence: Я запізнився завдяки заторам.
     error: завдяки
     answer: через
     options:
     - через
     - завдяки
-    explanation: Traffic jams are bad. Use "через".
+    - про
+    - для
+    explanation: Traffic jams are bad. Use «через».
   id: fix-the-connector
 - type: translate
   title: English to Ukrainian
   items:
-  - source: I am happy because I am here.
+  - source: I am tired because I didn't sleep.
     options:
-    - text: Я щасливий, тому що я тут.
+    - text: Я втомлений, тому що я не спав.
       correct: true
-    - text: Я щасливий, хоча я тут.
+    - text: Я втомлений, хоча я не спав.
       correct: false
-  - source: Although it is late, I am working.
+    - text: Я втомлений, проте я не спав.
+      correct: false
+    - text: Я втомлений, оскільки я не спав.
+      correct: true
+  - source: He came although he was busy.
     options:
-    - text: Хоча пізно, я працюю.
+    - text: Він прийшов, хоча був зайнятий.
       correct: true
-    - text: Оскільки пізно, я працюю.
+    - text: Він прийшов, тому що був зайнятий.
       correct: false
-  - source: He is strong, but slow.
+    - text: Він прийшов, бо був зайнятий.
+      correct: false
+    - text: Він прийшов, зате був зайнятий.
+      correct: false
+  - source: We won thanks to you.
     options:
-    - text: Він сильний, але повільний.
+    - text: Ми виграли завдяки вам.
       correct: true
-    - text: Він сильний, тому що повільний.
+    - text: Ми виграли через вас.
       correct: false
-  - source: Since we are friends, I will help.
+    - text: Ми виграли для вас.
+      correct: false
+    - text: Ми виграли про вас.
+      correct: false
+  - source: I like coffee, but she likes tea.
     options:
-    - text: Оскільки ми друзі, я допоможу.
+    - text: Я люблю каву, а вона любить чай.
       correct: true
-    - text: Хоча ми друзі, я допоможу.
+    - text: Я люблю каву, бо вона любить чай.
       correct: false
-  - source: I did it just because.
+    - text: Я люблю каву, тому що вона любить чай.
+      correct: false
+    - text: Я люблю каву, зате вона любить чай.
+      correct: false
+  - source: Since it's raining, we'll stay home.
     options:
-    - text: Я зробив це просто так | бо так захотів.
+    - text: Оскільки йде дощ, ми залишимося вдома.
       correct: true
-    - text: Я зробив це проте.
+    - text: Хоча йде дощ, ми залишимося вдома.
       correct: false
-  - source: Thanks to you, we won.
+    - text: Проте йде дощ, ми залишимося вдома.
+      correct: false
+    - text: Зате йде дощ, ми залишимося вдома.
+      correct: false
+  - source: It's expensive but high quality.
     options:
-    - text: Завдяки тобі ми виграли.
+    - text: Це дорого, зате якісно.
       correct: true
-    - text: Через тебе ми виграли.
+    - text: Це дорого, бо якісно.
       correct: false
-  - source: However, I don't agree.
+    - text: Це дорого, оскільки якісно.
+      correct: false
+    - text: Це дорого, тому що якісно.
+      correct: false
+  - source: Because of the cold, we didn't go.
     options:
-    - text: Проте я не згоден.
+    - text: Через холод ми не пішли.
       correct: true
-    - text: Тому що я не згоден.
+    - text: Завдяки холоду ми не пішли.
       correct: false
-  - source: It is expensive, but tasty.
+    - text: Про холод ми не пішли.
+      correct: false
+    - text: Для холоду ми не пішли.
+      correct: false
+  - source: I am reading about Ukraine.
     options:
-    - text: Це дорого, зате смачно.
+    - text: Я читаю про Україну.
       correct: true
-    - text: Це дорого, бо смачно.
+    - text: Я читаю для України.
       correct: false
-  - source: Still, I love her.
+    - text: Я читаю через Україну.
+      correct: false
+    - text: Я читаю завдяки Україні.
+      correct: false
+  - source: She said that she would come.
     options:
-    - text: Все-таки я її люблю.
+    - text: Вона сказала, що прийде.
       correct: true
-    - text: Оскільки я її люблю.
+    - text: Вона сказала, бо прийде.
       correct: false
-  - source: Let him speak.
+    - text: Вона сказала, хоча прийде.
+      correct: false
+    - text: Вона сказала, оскільки прийде.
+      correct: false
+  - source: I'll take tea instead of coffee.
     options:
-    - text: Нехай він говорить.
+    - text: Я візьму чай замість кави.
       correct: true
-    - text: Хоча він говорить.
+    - text: Я візьму чай через каву.
       correct: false
-  - source: If it weren't for the rain...
-    options:
-    - text: Якби не дощ...
-      correct: true
-    - text: Оскільки дощ...
+    - text: Я візьму чай для кави.
       correct: false
-  - source: In spite of the fact that he is tired...
+    - text: Я візьму чай про каву.
+      correct: false
+  - source: Even though he is tired...
     options:
     - text: Незважаючи на те що він втомлений...
       correct: true
     - text: Тому що він втомлений...
+      correct: false
+    - text: Оскільки він втомлений...
+      correct: false
+    - text: Бо він втомлений...
+      correct: false
+  - source: We are waiting for the result.
+    options:
+    - text: Ми чекаємо на результат.
+      correct: true
+    - text: Ми чекаємо через результат.
+      correct: false
+    - text: Ми чекаємо для результату.
+      correct: false
+    - text: Ми чекаємо про результат.
       correct: false
   id: english-to-ukrainian

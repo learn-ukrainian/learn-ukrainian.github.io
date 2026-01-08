@@ -71,7 +71,7 @@ items:
   gender: f
 - lemma: побігти
   ipa: poˈbʲihte
-  translation: to run (perf start)
+  translation: to run
   pos: verb
   gender: f
 - lemma: подзвон

@@ -309,7 +309,7 @@
     - text: з
       correct: false
     explanation: 'у/в (in, inside) + locative: у магазині, в кімнаті'
-  - question: Which case do you use after "немає"?
+  - question: Which case do you use after «немає»?
     options:
     - text: Nominative
       correct: false
@@ -331,7 +331,7 @@
     - text: їхній
       correct: false
     explanation: його (his) and її (her) are frozen genitives and never change.
-  - question: What is the accusative form of "студент" (animate)?
+  - question: What is the accusative form of «студент» (animate)?
     options:
     - text: студент
       correct: false
@@ -342,7 +342,7 @@
     - text: студентом
       correct: false
     explanation: 'Animate masculine accusative = genitive: студента'
-  - question: Which preposition do you use with "на столі"?
+  - question: Which preposition do you use with «на столі»?
     options:
     - text: на
       correct: true
@@ -364,7 +364,7 @@
     - text: до цукру
       correct: false
     explanation: 'без + genitive: без цукру'
-  - question: What's the locative form of "Київ"?
+  - question: What's the locative form of «Київ»?
     options:
     - text: в Київ
       correct: false
@@ -386,7 +386,7 @@
     - text: All numbers
       correct: false
     explanation: 'Numbers 5+ use genitive plural: п''ять книг'
-  - question: What's the feminine form of "мій"?
+  - question: What's the feminine form of «мій»?
     options:
     - text: мій
       correct: false
@@ -426,10 +426,10 @@
   - statement: Accusative case is used for direct objects.
     correct: true
     explanation: True! Accusative shows what or whom the action affects directly.
-  - statement: Locative case is used with the preposition "до".
+  - statement: Locative case is used with the preposition «до».
     correct: false
-    explanation: False! "до" uses genitive. Locative uses "у/в" and "на".
-  - statement: Genitive case is used after "немає".
+    explanation: False! «до» uses genitive. Locative uses «у/в» and «на».
+  - statement: Genitive case is used after «немає».
     correct: true
     explanation: 'True! немає + genitive: немає часу, немає води.'
   - statement: Masculine animate accusative has no change from nominative.
@@ -438,22 +438,22 @@
   - statement: Feminine nouns ending in -а change to -у in accusative.
     correct: true
     explanation: True! книга → книгу, сумка → сумку.
-  - statement: '"його" changes to "його" for different genders.'
+  - statement: '«його» changes to «його» for different genders.'
     correct: false
-    explanation: False! "його" NEVER changes - it's a frozen form.
-  - statement: '"на" can mean both "on" and "at".'
+    explanation: False! «його» NEVER changes - it's a frozen form.
+  - statement: '«на» can mean both "on" and "at".'
     correct: true
     explanation: True! на столі, на роботі.
   - statement: Numbers 2-4 use genitive plural.
     correct: false
     explanation: False! Numbers 2-4 use nominative plural. 5+ use genitive plural.
-  - statement: '"у/в" and "на" both require locative case for location.'
+  - statement: '«у/в» and «на» both require locative case for location.'
     correct: true
     explanation: True! Both prepositions use locative to show where something is.
-  - statement: '"їхній" never changes form.'
+  - statement: '«їхній» never changes form.'
     correct: false
-    explanation: 'False! "їхній" DOES change: їхній/їхня/їхнє/їхні.'
-  - statement: '"без" + genitive means "without".'
+    explanation: 'False! «їхній» DOES change: їхній/їхня/їхнє/їхні.'
+  - statement: '«без» + genitive means "without".'
     correct: true
     explanation: True! без цукру, без молока.
   - statement: Neuter nouns don't change in accusative.
@@ -491,6 +491,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Я бачу студента у бібліотеці.'
   - question: 'Correct sentence order for: "The book is lying..."'
     options:
@@ -499,6 +501,8 @@
     - text: лежить Книга на столі.
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Книга лежить на столі.'
   - question: 'Correct sentence order for: "I don''t have time today."'
@@ -509,6 +513,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: У мене немає часу сьогодні.'
   - question: 'Correct sentence order for: "This is my bag,..."'
     options:
@@ -517,6 +523,8 @@
     - text: моя Це сумка, а це твоя.
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Це моя сумка, а це твоя.'
   - question: 'Correct sentence order for: "We live in the..."'
@@ -527,6 +535,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Ми живемо у центрі Львова.'
   - question: 'Correct sentence order for: "I want coffee without sugar."'
     options:
@@ -535,6 +545,8 @@
     - text: хочу Я каву без цукру.
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Я хочу каву без цукру.'
   - question: 'Correct sentence order for: "She''s at work now."'
@@ -545,6 +557,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Вона на роботі зараз.'
   - question: 'Correct sentence order for: "One ticket costs five hryvnias."'
     options:
@@ -553,6 +567,8 @@
     - text: квиток Один коштує п'ять гривень.
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Один квиток коштує п''ять гривень.'
   - question: 'Correct sentence order for: "I want to buy..."'
@@ -563,6 +579,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Я хочу купити хліб і молоко.'
   - question: 'Correct sentence order for: "Today there are no..."'
     options:
@@ -571,6 +589,8 @@
     - text: у Сьогодні магазині немає помідорів.
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Сьогодні у магазині немає помідорів.'
   - question: 'Correct sentence order for: "He reads a very..."'
@@ -581,6 +601,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Він читає дуже цікаву книгу.'
   - question: 'Correct sentence order for: "The metro station is..."'
     options:
@@ -589,6 +611,8 @@
     - text: метро Станція біля вокзалу.
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Станція метро біля вокзалу.'
   id: building-sentences-order
@@ -603,6 +627,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Як дістатися до станції метро?'
   - question: 'Correct sentence order for: "Go straight and then left."'
     options:
@@ -611,6 +637,8 @@
     - text: прямо Ідіть і потім наліво.
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Ідіть прямо і потім наліво.'
   - question: 'Correct sentence order for: "Is there a menu..."'
@@ -621,6 +649,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: У ресторані є меню українською?'
   - question: 'Correct sentence order for: "Yes, of course. Here..."'
     options:
@@ -629,6 +659,8 @@
     - text: звичайно. Так, Ось, будь ласка.
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Так, звичайно. Ось, будь ласка.'
   - question: 'Correct sentence order for: "I''ll take borsch and varenyky."'
@@ -639,6 +671,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Я візьму борщ і вареники.'
   - question: 'Correct sentence order for: "Can I have the..."'
     options:
@@ -647,6 +681,8 @@
     - text: рахунок, Можна будь ласка?
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Можна рахунок, будь ласка?'
   - question: 'Correct sentence order for: "How much does everything..."'
@@ -657,6 +693,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Скільки коштує все разом?'
   - question: 'Correct sentence order for: "Together eighty hryvnias."'
     options:
@@ -665,6 +703,8 @@
     - text: вісімдесят Разом гривень.
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Разом вісімдесят гривень.'
   - question: 'Correct sentence order for: "Can I pay by card?"'
@@ -675,6 +715,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Можна платити карткою?'
   - question: 'Correct sentence order for: "Yes, you can pay..."'
     options:
@@ -683,6 +725,8 @@
     - text: можна Так, готівкою або карткою.
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Так, можна готівкою або картою.'
   - question: 'Correct sentence order for: "Thank you very much..."'
@@ -693,6 +737,8 @@
       correct: false
     - text: Incorrect order for this sentence
       correct: false
+    - text: вони
+      correct: false
     explanation: 'Correct: Дякую дуже за допомогу!'
   - question: 'Correct sentence order for: "You''re welcome! Safe travels!"'
     options:
@@ -701,6 +747,8 @@
     - text: ласка! Будь Доброї дороги!
       correct: false
     - text: Incorrect order for this sentence
+      correct: false
+    - text: вони
       correct: false
     explanation: 'Correct: Будь ласка! Доброї дороги!'
   id: real-dialogues-order

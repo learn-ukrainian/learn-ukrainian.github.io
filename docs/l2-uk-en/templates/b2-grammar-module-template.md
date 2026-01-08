@@ -6,6 +6,21 @@
 
 **Related Issue:** [#305](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/305)
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Presentation|Grammar|Focus|Презентація|Граматика|Теорія
+  - Трансформації
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: TTT
+  min_word_count: 1800
+  required_callouts: []
+  description: B2 grammar uses TTT with register awareness and transformation activities
+-->
+
 ---
 
 ## Quick Reference Checklist
@@ -13,6 +28,7 @@
 Before submitting a B2 grammar module, verify all items from `b2-module-template.md` PLUS:
 
 ### Grammar-Specific Requirements
+
 - [ ] **TTT pedagogy:** Test-Teach-Test structure (NOT narrative arc)
 - [ ] **Authentic text:** 300-500+ word passage showing grammar in context (Тест section)
 - [ ] **Register awareness:** Show how grammar varies across registers
@@ -29,16 +45,16 @@ Before submitting a B2 grammar module, verify all items from `b2-module-template
 ```yaml
 ---
 module: b2-XX
-title: "Ukrainian Grammar Title"
-phase: "B2.1a [Grammar & Register]"  # or B2.1b [Grammar Completion]
-pedagogy: "TTT"  # ALWAYS TTT for grammar modules
-register: "науковий"  # Primary register for examples
+title: 'Ukrainian Grammar Title'
+phase: 'B2.1a [Grammar & Register]' # or B2.1b [Grammar Completion]
+pedagogy: 'TTT' # ALWAYS TTT for grammar modules
+register: 'науковий' # Primary register for examples
 tags:
   - grammar
   - [specific-topic: passive, participles, register, numerals, word-formation]
 grammar:
-  - "Main grammar concept with specifics"
-  - "Register variation notes"
+  - 'Main grammar concept with specifics'
+  - 'Register variation notes'
 ---
 ```
 
@@ -52,12 +68,14 @@ grammar:
 [300-500 word authentic Ukrainian text (journalism/academic) containing target grammar]
 
 **Аналіз:**
+
 - Знайдіть усі приклади [target structure] у тексті.
 - Яку функцію виконує [target structure] у кожному випадку?
 - Як [target structure] взаємодіє з регістром тексту?
 ```
 
 **Text source recommendations:**
+
 - Офіційно-діловий: Ukrainian government documents, laws
 - Науковий: Academic journal abstracts, Wikipedia Ukrainian
 - Публіцистичний: Ukrainska Pravda, Radio Svoboda
@@ -74,34 +92,36 @@ grammar:
 
 **Форми:**
 
-| Форма | Конструкція | Приклад | Регістр |
-|-------|-------------|---------|---------|
+| Форма    | Конструкція | Приклад   | Регістр                          |
+| -------- | ----------- | --------- | -------------------------------- |
 | [Form 1] | [Structure] | [Example] | [Style: офіційний/науковий/etc.] |
-| [Form 2] | [Structure] | [Example] | [Style] |
-| [Form 3] | [Structure] | [Example] | [Style] |
-| [Form 4] | [Structure] | [Example] | [Style] |
+| [Form 2] | [Structure] | [Example] | [Style]                          |
+| [Form 3] | [Structure] | [Example] | [Style]                          |
+| [Form 4] | [Structure] | [Example] | [Style]                          |
 
 ### Регістрова варіація
 
 [CRITICAL for B2: Show how the same meaning is expressed differently across registers]
 
-| Регістр | Форма | Приклад |
-|---------|-------|---------|
+| Регістр          | Форма            | Приклад   |
+| ---------------- | ---------------- | --------- |
 | Офіційно-діловий | [preferred form] | [example] |
-| Науковий | [preferred form] | [example] |
-| Публіцистичний | [preferred form] | [example] |
-| Художній | [preferred form] | [example] |
-| Розмовний | [preferred form] | [example] |
+| Науковий         | [preferred form] | [example] |
+| Публіцистичний   | [preferred form] | [example] |
+| Художній         | [preferred form] | [example] |
+| Розмовний        | [preferred form] | [example] |
 
 ### Як обрати? (Decision Framework)
 
 [Provide clear decision rules — B2 learners need explicit guidance]
 
 **Питання 1:** [Question about context]
+
 - Якщо [condition] → використовуйте [form]
 - Якщо [condition] → використовуйте [form]
 
 **Питання 2:** [Question about purpose]
+
 - [More decision rules]
 
 ### Типові помилки
@@ -130,11 +150,11 @@ grammar:
 
 Яку форму ви оберете для кожної ситуації?
 
-| Ситуація | Регістр | Ваша форма |
-|----------|---------|------------|
-| [Professional email] | офіційний | [answer] |
-| [Casual conversation] | розмовний | [answer] |
-| [News article] | публіцистичний | [answer] |
+| Ситуація              | Регістр        | Ваша форма |
+| --------------------- | -------------- | ---------- |
+| [Professional email]  | офіційний      | [answer]   |
+| [Casual conversation] | розмовний      | [answer]   |
+| [News article]        | публіцистичний | [answer]   |
 
 ### Завдання 3: Написання (з Model Answer)
 
@@ -160,8 +180,8 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ```yaml
 - type: essay-response
   title: Активний → Пасивний стан
-  prompt: "Трансформуйте в пасивний стан: Уряд прийняв закон."
-  model_answer: "Закон прийнято урядом."
+  prompt: 'Трансформуйте в пасивний стан: Уряд прийняв закон.'
+  model_answer: 'Закон прийнято урядом.'
 - type: group-sort
   title: Регістрова класифікація
   groups:
@@ -224,55 +244,53 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 > Пасивний стан — це базова граматична структура формальної української мови...
 
 ## Тест: Прочитайте текст
+
 [300+ word news article with passive constructions]
 
 ## Пояснення
+
 ### Чотири форми пасивного стану
+
 [Table: 4 forms with register distribution]
 
 ### Регістрова варіація
+
 [5-register comparison table]
 
 ### Як обрати?
+
 [Decision framework with 3-4 questions]
 
 ### Типові помилки
+
 [3-4 common errors with corrections]
 
 ## Практика
+
 ### Завдання 1: Трансформація
+
 ### Завдання 2: Вибір регістру
+
 ### Завдання 3: Написання (Model Answer)
 
 ## Діалоги
+
 [5-6 dialogues showing register variation]
 
 # Підсумок
+
 [Summary with self-assessment checklist]
 
-# Словник
+---
 
-**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
+## Content Structure Note
 
-**Example `vocabulary/b2-01-passive.yaml`:**
+### Vocabulary & Activities
 
-```yaml
-items:
-- lemma: прийняти
-  ipa: /prjɪjˈnʲɑtɪ/
-  translation: to adopt (law)
-  pos: дієсл.
-  note: офіційно-діловий
-- lemma: закон
-  ipa: /zɑˈkɔn/
-  translation: law
-  pos: ім.
-  note: прийняти закон
-```
+**CRITICAL:** Do NOT add `# Словник` or `# Активності` headers. These sections are injected automatically from:
 
-# Активності
-
-(See `activities/b2-01-passive.yaml`)
+- `vocabulary/b2-01-passive.yaml`
+- `activities/b2-01-passive.yaml`
 ```
 
 ---

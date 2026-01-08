@@ -1,0 +1,5540 @@
+{
+  "a1-01-the-cyrillic-code-i": [
+    {
+      "resource_id": "ulp-blog-000",
+      "resource_title": "Ukrainian Alphabet: Full Guide with Examples and Pronunciation",
+      "resource_url": "https://www.ukrainianlessons.com/ukrainian-alphabet/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'letters', 'alphabet', 'cyrillic'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: interactive_guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "a1-10-checkpoint-first-contact": [
+    {
+      "resource_id": "ulp-blog-000",
+      "resource_title": "Ukrainian Alphabet: Full Guide with Examples and Pronunciation",
+      "resource_url": "https://www.ukrainianlessons.com/ukrainian-alphabet/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'letters', 'alphabet', 'cyrillic'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: interactive_guide → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "a1-20-checkpoint-navigation": [
+    {
+      "resource_id": "ulp-blog-002",
+      "resource_title": "Accusative Case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/accusativecase/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-003",
+      "resource_title": "Genitive Case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/genitive-case/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-032",
+      "resource_title": "ULP 1-32 Shopping for clothes – Accusative case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/32/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-046",
+      "resource_title": "ULP 2-46 At the grocery store + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/46/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-047",
+      "resource_title": "ULP 2-47 Food festivals + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/47/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-048",
+      "resource_title": "ULP 2-48 Eating habits + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/48/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-049",
+      "resource_title": "ULP 2-49 Syrnyky recipe + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/49/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-033",
+      "resource_title": "ULP 1-33 Talking about books in Ukrainian – Accusative case of people",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/33/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-051",
+      "resource_title": "ULP 2-51 Electronics and technology + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/51/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-052",
+      "resource_title": "ULP 2-52 Buying a phone in Ukraine + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/52/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-053",
+      "resource_title": "ULP 2-53 Social Media in Ukrainian + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/53/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-056",
+      "resource_title": "ULP 2-56 Asking for an advice + Accusative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/56/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-057",
+      "resource_title": "ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/57/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-058",
+      "resource_title": "ULP 2-58 Inviting to a party + Accusative case of pronouns",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/58/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-061",
+      "resource_title": "ULP 2-61 Christmas dinner in Ukraine + Instrumental case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/61/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-066",
+      "resource_title": "ULP 2-66 Sharing memories + Locative case with places",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/66/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-069",
+      "resource_title": "ULP 2-69 Ukrainian Children's Poem + Vocative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/69/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-062",
+      "resource_title": "ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/62/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-067",
+      "resource_title": "ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/67/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-068",
+      "resource_title": "ULP 2-68 Making a hair appointment + Dates & Locative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/68/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → integration"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "a1-21-yesterday-past-tense": [
+    {
+      "resource_id": "ulp-blog-004",
+      "resource_title": "Past Tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/grammar-past-tense/",
+      "score": 95,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'past', 'present', 'future', 'tense'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 25,
+          "reason": "Perfect: Grammar guide → Grammar module"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-005",
+      "resource_title": "Future Tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/grammar-future/",
+      "score": 95,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'past', 'present', 'future', 'tense'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 25,
+          "reason": "Perfect: Grammar guide → Grammar module"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-026",
+      "resource_title": "ULP 1-26 Talking about traveling – Past tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/26/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-027",
+      "resource_title": "ULP 1-27 Traveling in Ukraine in winter – More Past tense",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/27/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-028",
+      "resource_title": "ULP 1-28 Making plans for the weekend – Future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/28/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-096",
+      "resource_title": "ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/96/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-097",
+      "resource_title": "ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/97/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'present', 'verbs', 'tense', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-098",
+      "resource_title": "ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/98/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-118",
+      "resource_title": "ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/118/",
+      "score": 65,
+      "priority": 3,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 10,
+          "reason": "±2 levels"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "a1-22-tomorrow-future-tense": [
+    {
+      "resource_id": "ulp-blog-004",
+      "resource_title": "Past Tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/grammar-past-tense/",
+      "score": 95,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'past', 'present', 'future', 'tense'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 25,
+          "reason": "Perfect: Grammar guide → Grammar module"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-005",
+      "resource_title": "Future Tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/grammar-future/",
+      "score": 95,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'past', 'present', 'future', 'tense'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 25,
+          "reason": "Perfect: Grammar guide → Grammar module"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-028",
+      "resource_title": "ULP 1-28 Making plans for the weekend – Future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/28/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'past', 'present', 'future', 'tense'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-026",
+      "resource_title": "ULP 1-26 Talking about traveling – Past tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/26/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-027",
+      "resource_title": "ULP 1-27 Traveling in Ukraine in winter – More Past tense",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/27/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-097",
+      "resource_title": "ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/97/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'past', 'present', 'future', 'tense'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-096",
+      "resource_title": "ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/96/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-098",
+      "resource_title": "ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/98/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-118",
+      "resource_title": "ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/118/",
+      "score": 65,
+      "priority": 3,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'present', 'with', 'tense', 'future'}"
+        },
+        "level_match": {
+          "score": 10,
+          "reason": "±2 levels"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "a1-32-my-family": [
+    {
+      "resource_id": "ulp-blog-002",
+      "resource_title": "Accusative Case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/accusativecase/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-003",
+      "resource_title": "Genitive Case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/genitive-case/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-033",
+      "resource_title": "ULP 1-33 Talking about books in Ukrainian – Accusative case of people",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/33/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-032",
+      "resource_title": "ULP 1-32 Shopping for clothes – Accusative case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/32/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-046",
+      "resource_title": "ULP 2-46 At the grocery store + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/46/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-047",
+      "resource_title": "ULP 2-47 Food festivals + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/47/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-048",
+      "resource_title": "ULP 2-48 Eating habits + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/48/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-049",
+      "resource_title": "ULP 2-49 Syrnyky recipe + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/49/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-051",
+      "resource_title": "ULP 2-51 Electronics and technology + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/51/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-052",
+      "resource_title": "ULP 2-52 Buying a phone in Ukraine + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/52/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-053",
+      "resource_title": "ULP 2-53 Social Media in Ukrainian + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/53/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-056",
+      "resource_title": "ULP 2-56 Asking for an advice + Accusative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/56/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-057",
+      "resource_title": "ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/57/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-058",
+      "resource_title": "ULP 2-58 Inviting to a party + Accusative case of pronouns",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/58/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-061",
+      "resource_title": "ULP 2-61 Christmas dinner in Ukraine + Instrumental case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/61/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-062",
+      "resource_title": "ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/62/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-066",
+      "resource_title": "ULP 2-66 Sharing memories + Locative case with places",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/66/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-067",
+      "resource_title": "ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/67/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-068",
+      "resource_title": "ULP 2-68 Making a hair appointment + Dates & Locative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/68/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-069",
+      "resource_title": "ULP 2-69 Ukrainian Children's Poem + Vocative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/69/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "a2-01-the-dative-i-pronouns": [
+    {
+      "resource_id": "ULP-051",
+      "resource_title": "ULP 2-51 Electronics and technology + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/51/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-052",
+      "resource_title": "ULP 2-52 Buying a phone in Ukraine + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/52/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-053",
+      "resource_title": "ULP 2-53 Social Media in Ukrainian + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/53/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-056",
+      "resource_title": "ULP 2-56 Asking for an advice + Accusative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/56/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-057",
+      "resource_title": "ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/57/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-058",
+      "resource_title": "ULP 2-58 Inviting to a party + Accusative case of pronouns",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/58/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-061",
+      "resource_title": "ULP 2-61 Christmas dinner in Ukraine + Instrumental case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/61/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-062",
+      "resource_title": "ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/62/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-066",
+      "resource_title": "ULP 2-66 Sharing memories + Locative case with places",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/66/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-067",
+      "resource_title": "ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/67/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-068",
+      "resource_title": "ULP 2-68 Making a hair appointment + Dates & Locative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/68/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-069",
+      "resource_title": "ULP 2-69 Ukrainian Children's Poem + Vocative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/69/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-002",
+      "resource_title": "Accusative Case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/accusativecase/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-003",
+      "resource_title": "Genitive Case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/genitive-case/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-032",
+      "resource_title": "ULP 1-32 Shopping for clothes – Accusative case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/32/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-033",
+      "resource_title": "ULP 1-33 Talking about books in Ukrainian – Accusative case of people",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/33/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-046",
+      "resource_title": "ULP 2-46 At the grocery store + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/46/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-047",
+      "resource_title": "ULP 2-47 Food festivals + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/47/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-048",
+      "resource_title": "ULP 2-48 Eating habits + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/48/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-049",
+      "resource_title": "ULP 2-49 Syrnyky recipe + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/49/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "a2-07-spatial-prepositions": [
+    {
+      "resource_id": "ULP-051",
+      "resource_title": "ULP 2-51 Electronics and technology + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/51/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-052",
+      "resource_title": "ULP 2-52 Buying a phone in Ukraine + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/52/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-053",
+      "resource_title": "ULP 2-53 Social Media in Ukrainian + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/53/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-056",
+      "resource_title": "ULP 2-56 Asking for an advice + Accusative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/56/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-057",
+      "resource_title": "ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/57/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-058",
+      "resource_title": "ULP 2-58 Inviting to a party + Accusative case of pronouns",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/58/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-061",
+      "resource_title": "ULP 2-61 Christmas dinner in Ukraine + Instrumental case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/61/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-062",
+      "resource_title": "ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/62/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-066",
+      "resource_title": "ULP 2-66 Sharing memories + Locative case with places",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/66/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-067",
+      "resource_title": "ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/67/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-068",
+      "resource_title": "ULP 2-68 Making a hair appointment + Dates & Locative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/68/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-069",
+      "resource_title": "ULP 2-69 Ukrainian Children's Poem + Vocative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/69/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-002",
+      "resource_title": "Accusative Case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/accusativecase/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-003",
+      "resource_title": "Genitive Case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/genitive-case/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-032",
+      "resource_title": "ULP 1-32 Shopping for clothes – Accusative case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/32/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-033",
+      "resource_title": "ULP 1-33 Talking about books in Ukrainian – Accusative case of people",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/33/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-046",
+      "resource_title": "ULP 2-46 At the grocery store + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/46/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-047",
+      "resource_title": "ULP 2-47 Food festivals + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/47/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-048",
+      "resource_title": "ULP 2-48 Eating habits + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/48/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-049",
+      "resource_title": "ULP 2-49 Syrnyky recipe + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/49/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "a2-09-all-cases-practice": [
+    {
+      "resource_id": "ULP-051",
+      "resource_title": "ULP 2-51 Electronics and technology + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/51/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-052",
+      "resource_title": "ULP 2-52 Buying a phone in Ukraine + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/52/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-053",
+      "resource_title": "ULP 2-53 Social Media in Ukrainian + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/53/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-056",
+      "resource_title": "ULP 2-56 Asking for an advice + Accusative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/56/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-057",
+      "resource_title": "ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/57/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-058",
+      "resource_title": "ULP 2-58 Inviting to a party + Accusative case of pronouns",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/58/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-061",
+      "resource_title": "ULP 2-61 Christmas dinner in Ukraine + Instrumental case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/61/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-062",
+      "resource_title": "ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/62/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-066",
+      "resource_title": "ULP 2-66 Sharing memories + Locative case with places",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/66/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-067",
+      "resource_title": "ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/67/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-068",
+      "resource_title": "ULP 2-68 Making a hair appointment + Dates & Locative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/68/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-069",
+      "resource_title": "ULP 2-69 Ukrainian Children's Poem + Vocative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/69/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-002",
+      "resource_title": "Accusative Case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/accusativecase/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-003",
+      "resource_title": "Genitive Case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/genitive-case/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-032",
+      "resource_title": "ULP 1-32 Shopping for clothes – Accusative case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/32/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-033",
+      "resource_title": "ULP 1-33 Talking about books in Ukrainian – Accusative case of people",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/33/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-046",
+      "resource_title": "ULP 2-46 At the grocery store + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/46/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-047",
+      "resource_title": "ULP 2-47 Food festivals + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/47/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-048",
+      "resource_title": "ULP 2-48 Eating habits + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/48/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-049",
+      "resource_title": "ULP 2-49 Syrnyky recipe + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/49/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "a2-11-checkpoint-cases": [
+    {
+      "resource_id": "ulp-blog-002",
+      "resource_title": "Accusative Case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/accusativecase/",
+      "score": 95,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 25,
+          "reason": "Perfect: Grammar guide → Grammar module"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-003",
+      "resource_title": "Genitive Case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/genitive-case/",
+      "score": 95,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 25,
+          "reason": "Perfect: Grammar guide → Grammar module"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-051",
+      "resource_title": "ULP 2-51 Electronics and technology + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/51/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-052",
+      "resource_title": "ULP 2-52 Buying a phone in Ukraine + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/52/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-053",
+      "resource_title": "ULP 2-53 Social Media in Ukrainian + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/53/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-056",
+      "resource_title": "ULP 2-56 Asking for an advice + Accusative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/56/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-057",
+      "resource_title": "ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/57/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-058",
+      "resource_title": "ULP 2-58 Inviting to a party + Accusative case of pronouns",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/58/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-061",
+      "resource_title": "ULP 2-61 Christmas dinner in Ukraine + Instrumental case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/61/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-066",
+      "resource_title": "ULP 2-66 Sharing memories + Locative case with places",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/66/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-067",
+      "resource_title": "ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/67/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-068",
+      "resource_title": "ULP 2-68 Making a hair appointment + Dates & Locative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/68/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-069",
+      "resource_title": "ULP 2-69 Ukrainian Children's Poem + Vocative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/69/",
+      "score": 90,
+      "priority": 1,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-032",
+      "resource_title": "ULP 1-32 Shopping for clothes – Accusative case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/32/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-033",
+      "resource_title": "ULP 1-33 Talking about books in Ukrainian – Accusative case of people",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/33/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-046",
+      "resource_title": "ULP 2-46 At the grocery store + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/46/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-047",
+      "resource_title": "ULP 2-47 Food festivals + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/47/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-048",
+      "resource_title": "ULP 2-48 Eating habits + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/48/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-049",
+      "resource_title": "ULP 2-49 Syrnyky recipe + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/49/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 25,
+          "reason": "Exact match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-062",
+      "resource_title": "ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/62/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → grammar"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "a2-12-aspect-introduction": [
+    {
+      "resource_id": "ulp-blog-007",
+      "resource_title": "Verb Aspect in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'verb', 'verbs', 'imperfective', 'perfective'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-092",
+      "resource_title": "ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/92/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'verb', 'verbs', 'imperfective', 'perfective'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-006",
+      "resource_title": "Ukrainian Verb Prefixes",
+      "resource_url": "https://www.ukrainianlessons.com/ukrainian-verb-prefixes/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'verb', 'verbs', 'imperfective', 'perfective'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: reference → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-091",
+      "resource_title": "ULP 3-91 Рекомендації – Asking for advice in Ukrainian + Using imperfective and perfective  verb aspects in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/91/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'verb', 'imperfective', 'perfective'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-094",
+      "resource_title": "ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/94/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'verbs', 'imperfective', 'perfective'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "a2-13-the-completed-past": [
+    {
+      "resource_id": "ULP-096",
+      "resource_title": "ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/96/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'present', 'tense', 'future', 'perfective'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-004",
+      "resource_title": "Past Tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/grammar-past-tense/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'tense', 'past', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-005",
+      "resource_title": "Future Tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/grammar-future/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'tense', 'past', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-026",
+      "resource_title": "ULP 1-26 Talking about traveling – Past tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/26/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-027",
+      "resource_title": "ULP 1-27 Traveling in Ukraine in winter – More Past tense",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/27/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-028",
+      "resource_title": "ULP 1-28 Making plans for the weekend – Future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/28/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-118",
+      "resource_title": "ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/118/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'present', 'with', 'tense', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "a2-14-future-plans-and-promises": [
+    {
+      "resource_id": "ulp-blog-004",
+      "resource_title": "Past Tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/grammar-past-tense/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'past', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-005",
+      "resource_title": "Future Tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/grammar-future/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'past', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-096",
+      "resource_title": "ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/96/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'present', 'tense', 'future', 'perfective'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-097",
+      "resource_title": "ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/97/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-098",
+      "resource_title": "ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/98/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-026",
+      "resource_title": "ULP 1-26 Talking about traveling – Past tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/26/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-027",
+      "resource_title": "ULP 1-27 Traveling in Ukraine in winter – More Past tense",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/27/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-028",
+      "resource_title": "ULP 1-28 Making plans for the weekend – Future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/28/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-118",
+      "resource_title": "ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/118/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'present', 'with', 'tense', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "a2-16-aspect-mastery-pairs": [
+    {
+      "resource_id": "ULP-096",
+      "resource_title": "ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/96/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-097",
+      "resource_title": "ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/97/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-098",
+      "resource_title": "ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/98/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-004",
+      "resource_title": "Past Tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/grammar-past-tense/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'tense', 'past', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-005",
+      "resource_title": "Future Tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/grammar-future/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'tense', 'past', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-026",
+      "resource_title": "ULP 1-26 Talking about traveling – Past tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/26/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-027",
+      "resource_title": "ULP 1-27 Traveling in Ukraine in winter – More Past tense",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/27/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-028",
+      "resource_title": "ULP 1-28 Making plans for the weekend – Future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/28/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-118",
+      "resource_title": "ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/118/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "a2-25-checkpoint-aspect-comparison": [
+    {
+      "resource_id": "ulp-blog-007",
+      "resource_title": "Verb Aspect in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'verb', 'verbs', 'imperfective', 'perfective'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-006",
+      "resource_title": "Ukrainian Verb Prefixes",
+      "resource_url": "https://www.ukrainianlessons.com/ukrainian-verb-prefixes/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'verb', 'verbs', 'imperfective', 'perfective'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: reference → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-092",
+      "resource_title": "ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/92/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'verb', 'verbs', 'imperfective', 'aspect', 'perfective'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "a2-28-she-said-that": [
+    {
+      "resource_id": "ulp-blog-004",
+      "resource_title": "Past Tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/grammar-past-tense/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'past', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-005",
+      "resource_title": "Future Tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/grammar-future/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'past', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-096",
+      "resource_title": "ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/96/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-097",
+      "resource_title": "ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/97/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'present', 'verbs', 'tense', 'future'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-098",
+      "resource_title": "ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/98/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-026",
+      "resource_title": "ULP 1-26 Talking about traveling – Past tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/26/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-027",
+      "resource_title": "ULP 1-27 Traveling in Ukraine in winter – More Past tense",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/27/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-028",
+      "resource_title": "ULP 1-28 Making plans for the weekend – Future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/28/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-118",
+      "resource_title": "ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/118/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "a2-32-which-one": [
+    {
+      "resource_id": "ULP-051",
+      "resource_title": "ULP 2-51 Electronics and technology + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/51/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-052",
+      "resource_title": "ULP 2-52 Buying a phone in Ukraine + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/52/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-053",
+      "resource_title": "ULP 2-53 Social Media in Ukrainian + Dative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/53/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-056",
+      "resource_title": "ULP 2-56 Asking for an advice + Accusative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/56/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-057",
+      "resource_title": "ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/57/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-058",
+      "resource_title": "ULP 2-58 Inviting to a party + Accusative case of pronouns",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/58/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-061",
+      "resource_title": "ULP 2-61 Christmas dinner in Ukraine + Instrumental case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/61/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-062",
+      "resource_title": "ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/62/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-066",
+      "resource_title": "ULP 2-66 Sharing memories + Locative case with places",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/66/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-067",
+      "resource_title": "ULP 2-67 Telling time in Ukrainian + Ordinal numbers & Locative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/67/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-068",
+      "resource_title": "ULP 2-68 Making a hair appointment + Dates & Locative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/68/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-069",
+      "resource_title": "ULP 2-69 Ukrainian Children's Poem + Vocative case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/69/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-002",
+      "resource_title": "Accusative Case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/accusativecase/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-003",
+      "resource_title": "Genitive Case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/genitive-case/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-032",
+      "resource_title": "ULP 1-32 Shopping for clothes – Accusative case in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/32/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-033",
+      "resource_title": "ULP 1-33 Talking about books in Ukrainian – Accusative case of people",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/33/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-046",
+      "resource_title": "ULP 2-46 At the grocery store + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/46/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-047",
+      "resource_title": "ULP 2-47 Food festivals + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/47/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-048",
+      "resource_title": "ULP 2-48 Eating habits + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/48/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-049",
+      "resource_title": "ULP 2-49 Syrnyky recipe + Genitive case",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/49/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'accusative', 'genitive', 'vocative', 'instrumental', 'locative', 'dative'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "b1-02-language-about-verbs": [
+    {
+      "resource_id": "ulp-blog-006",
+      "resource_title": "Ukrainian Verb Prefixes",
+      "resource_url": "https://www.ukrainianlessons.com/ukrainian-verb-prefixes/",
+      "score": 85,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'verb', 'verbs', 'imperfective', 'perfective'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: reference → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-007",
+      "resource_title": "Verb Aspect in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'verb', 'verbs', 'imperfective', 'perfective'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-118",
+      "resource_title": "ULP 3-118 Весілля в Україні – Wedding in Ukraine + Using “щоб” with the past tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/118/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-092",
+      "resource_title": "ULP 3-92 На блошиному ринку – At the flea market in Ukraine + Forming perfective aspect in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/92/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'verb', 'verbs', 'imperfective', 'aspect', 'perfective'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-096",
+      "resource_title": "ULP 3-96 Новорічні свята в школі – New Year's celebrations at school + Perfective future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/96/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'present', 'tense', 'future', 'perfective'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-097",
+      "resource_title": "ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/97/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'present', 'verbs', 'tense', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-098",
+      "resource_title": "ULP 3-98 Бронювання кімнати в Карпатах – Booking a room in the Carpathians –  One-word synthetic future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/98/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-004",
+      "resource_title": "Past Tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/grammar-past-tense/",
+      "score": 70,
+      "priority": 3,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'past', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 10,
+          "reason": "±2 levels"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ulp-blog-005",
+      "resource_title": "Future Tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/grammar-future/",
+      "score": 70,
+      "priority": 3,
+      "breakdown": {
+        "topic_match": {
+          "score": 20,
+          "reason": "Core match: {'past', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 10,
+          "reason": "±2 levels"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: guide → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-026",
+      "resource_title": "ULP 1-26 Talking about traveling – Past tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/26/",
+      "score": 65,
+      "priority": 3,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 10,
+          "reason": "±2 levels"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-027",
+      "resource_title": "ULP 1-27 Traveling in Ukraine in winter – More Past tense",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/27/",
+      "score": 65,
+      "priority": 3,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 10,
+          "reason": "±2 levels"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-028",
+      "resource_title": "ULP 1-28 Making plans for the weekend – Future tense in Ukrainian",
+      "resource_url": "https://www.ukrainianlessons.com/lesson/28/",
+      "score": 65,
+      "priority": 3,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'past', 'tense', 'present', 'future'}"
+        },
+        "level_match": {
+          "score": 10,
+          "reason": "±2 levels"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ],
+  "b1-81-running-in-ukraine": [
+    {
+      "resource_id": "ULP-138",
+      "resource_title": "ULP 4-138 Як пережити зиму в Україні",
+      "resource_url": "https://www.ukrainianlessons.com/lesson-138/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'в', 'україні'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-146",
+      "resource_title": "ULP 4-146 Масниця в Україні",
+      "resource_url": "https://www.ukrainianlessons.com/lesson-146/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'в', 'україні'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-150",
+      "resource_title": "ULP 4-150 Коронавірус в Україні",
+      "resource_url": "https://www.ukrainianlessons.com/lesson-150/",
+      "score": 80,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'в', 'україні'}"
+        },
+        "level_match": {
+          "score": 25,
+          "reason": "Same level"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-188",
+      "resource_title": "ULP 5-188 Шкільна освіта в Україні",
+      "resource_url": "https://www.ukrainianlessons.com/lesson-188/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'в', 'україні'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-204",
+      "resource_title": "ULP 6-204 Мовна ситуація в Україні",
+      "resource_url": "https://www.ukrainianlessons.com/season6/ULP-6-204-movna-sytuatsiia-v-ukraini/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'в', 'україні'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    },
+    {
+      "resource_id": "ULP-214",
+      "resource_title": "ULP 6-214 Символи Різдва в Україні",
+      "resource_url": "https://www.ukrainianlessons.com/season6/ULP-6-214-symvoly-rizdva-v-ukraini/",
+      "score": 75,
+      "priority": 2,
+      "breakdown": {
+        "topic_match": {
+          "score": 15,
+          "reason": "Partial match: {'в', 'україні'}"
+        },
+        "level_match": {
+          "score": 20,
+          "reason": "Adjacent level (±1)"
+        },
+        "content_alignment": {
+          "score": 15,
+          "reason": "Moderate: unknown → general"
+        },
+        "source_priority": {
+          "score": 25,
+          "reason": "Ukrainian Lessons (priority source)"
+        }
+      }
+    }
+  ]
+}

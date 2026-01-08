@@ -2,15 +2,15 @@
 
 ## Warm-up
 
-Imagine you're meeting a friend in Kyiv. They text you: "Де ти?" (Where are you?). You need to answer: "Я в кафе" (I'm in a café), "Я на роботі" (I'm at work), or "Я в центрі" (I'm downtown). In Ukrainian, when you say WHERE something is, the noun changes its ending - this is the **locative case** (місцевий відмінок).
+Imagine you're meeting a friend in Kyiv. They text you: «Де ти?» (Where are you?). You need to answer: «Я в кафе» (I'm in a café), «Я на роботі» (I'm at work), or «Я в центрі» (I'm downtown). In Ukrainian, when you say WHERE something is, the noun changes its ending - this is the **locative case** (місцевий відмінок).
 
 The locative case answers one key question: **Де?** (Where?)
 
-You've already learned how to say "This is X" (nominative) and "I see X" (accusative). Now you'll learn how to say "I'm IN/AT/ON X" - the grammar of location.
+You've already learned how to say «This is X» (nominative) and «I see X» (accusative). Now you'll learn how to say «I'm IN/AT/ON X» - the grammar of location.
 
 > 💡 **Did You Know?**
 >
-> Ukrainian has two words that both mean "in": **в** and **у**. They're the same preposition - **у** is used before consonant clusters to make pronunciation easier. Think of it like English "a" vs "an"!
+> Ukrainian has two words that both mean «in»: **в** and **у**. They're the same preposition - **у** is used before consonant clusters to make pronunciation easier. Think of it like English «a» vs «an»!
 >
 > - **в кімнаті** (in the room) - easy to say
 > - **у Львові** (in Lviv) - **у** makes the consonant cluster smoother
@@ -56,7 +56,7 @@ The locative case adds specific endings to nouns:
 
 > 🎯 **Key Pattern**
 >
-> Most nouns in locative end in **-і** or **-у** (for masculine). Think of locative as "the **-і** case" - it's the most common ending!
+> Most nouns in locative end in **-і** or **-у** (for masculine). Think of locative as «the **-і** case» - it's the most common ending!
 
 ### в/у vs на: Which Preposition?
 
@@ -78,8 +78,8 @@ This is one of the trickiest parts of Ukrainian - when to use **в/у** vs **н�
 
 > 🔍 **Myth Buster**
 >
-> **Myth:** "Ukrainians say 'в Україні' to oppose Russian 'на Украине'"
-> **Fact:** Ukrainian has ALWAYS been "в Україні" - it's grammatically correct because Ukraine is a country (enclosed territory). Russian propagandists use "на" to imply Ukraine is just a "borderland" region. The grammar itself is political resistance.
+> **Myth:** «Ukrainians say 'в Україні' to oppose Russian 'на Украине'»
+> **Fact:** Ukrainian has ALWAYS been «в Україні» - it's grammatically correct because Ukraine is a country (enclosed territory). Russian propagandists use «на» to imply Ukraine is just a «borderland» region. The grammar itself is political resistance.
 
 **Mini-Dialogue 1:**
 
@@ -90,7 +90,7 @@ This is one of the trickiest parts of Ukrainian - when to use **в/у** vs **н�
 — Ваша робота **в центрі**?
 — Так, **у великому** офісі біля парку.
 
-(Notice how **на** is used for "at work" - a fixed expression, but **в** is used for "in the center" - an enclosed area)
+(Notice how **на** is used for «at work» - a fixed expression, but **в** is used for «in the center» - an enclosed area)
 
 ### Practice Examples
 
@@ -113,9 +113,9 @@ Let's see locative in real sentences:
 >
 > In the legendary Ukrainian game S.T.A.L.K.E.R., you hear locative case constantly:
 >
-> - "Я **в Зоні**" (I'm in the Zone)
-> - "Артефакт **на складі**" (Artifact at the warehouse)
-> - "Сталкери **у барі**" (Stalkers in the bar)
+> - «Я **в Зоні**» (I'm in the Zone)
+> - «Артефакт **на складі**» (Artifact at the warehouse)
+> - «Сталкери **у барі**» (Stalkers in the bar)
 >
 > The game was made by GSC Game World in Kyiv - and yes, they use proper Ukrainian locative grammar!
 
@@ -153,14 +153,14 @@ Let's see locative in real sentences:
 — Ні, банк **на вулиці** Шевченка, **у центрі**.
 — Дякую!
 — Будь ласка! А ви **в готелі** чи **в квартирі**?
-— **В готелі** "Україна", **на третьому** поверсі.
+— **В готелі** «Україна», **на третьому** поверсі.
 
 > 🌍 **Real World: Ukrainian Addresses**
 >
 > When writing addresses in Ukrainian, you use locative:
 >
 > - вулиця Хрещатик, **будинок** 24, **квартира** 5
-> - But when STATING location: "Я живу **на вулиці** Хрещатик, **у будинку** 24."
+> - But when STATING location: «Я живу **на вулиці** Хрещатик, **у будинку** 24.»
 >
 > The preposition matters!
 
@@ -197,11 +197,11 @@ Let's see locative in real sentences:
 — А телефон?
 — Телефон **у кімнаті**, **на ліжку**.
 — Ти завжди все забуваєш!
-— Так, вибач. Моя голова **на місяці**! (My head is on the moon! - Ukrainian idiom for "spacing out")
+— Так, вибач. Моя голова **на місяці**! (My head is on the moon! - Ukrainian idiom for «spacing out»)
 
 ## Production
 
-Now it's your turn! Practice asking and answering "Where?" questions.
+Now it's your turn! Practice asking and answering «Where?» questions.
 
 **Scenario 1: Meeting a Friend**
 
@@ -233,9 +233,9 @@ Example: **У нашому місті є старий парк. Парк у це
 
 > 🎭 **Cultural Insight: Space in Ukrainian Life**
 >
-> Ukrainians have a special relationship with space. The phrase "своє місце" (one's own place) is sacred - whether it's your seat at the table, your corner in the office, or your homeland. The locative case isn't just grammar - it's how Ukrainians define belonging.
+> Ukrainians have a special relationship with space. The phrase «своє місце» (one's own place) is sacred - whether it's your seat at the table, your corner in the office, or your homeland. The locative case isn't just grammar - it's how Ukrainians define belonging.
 >
-> "Де твоє місце?" (Where is your place?) is both a literal question and an existential one.
+> «Де твоє місце?» (Where is your place?) is both a literal question and an existential one.
 
 ---
 
@@ -257,6 +257,13 @@ You've mastered the locative case! Here's what you learned:
 - Де ти живеш? — Я живу **в Києві**.
 - Де твоя робота? — Моя робота **в центрі**.
 
-Next up: You'll learn possessive pronouns (мій, твій, його...) so you can say "MY book is on the table" and "HIS work is in the center"!
+Next up: You'll learn possessive pronouns (мій, твій, його...) so you can say «MY book is on the table» and «HIS work is in the center»!
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

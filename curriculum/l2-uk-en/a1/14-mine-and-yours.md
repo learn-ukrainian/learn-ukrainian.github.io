@@ -4,7 +4,7 @@
 
 Уявіть: Ви в кімнаті з друзями. На столі — телефони, сумки, книги. Чий це телефон? Чия сумка? Чиє вікно? (Imagine: You're in a room with friends. On the table — phones, bags, books. Whose phone is this? Whose bag? Whose window?)
 
-Сьогодні ми вивчаємо, як українці кажуть "мій", "твій", "його" — how to show ownership in Ukrainian.
+Сьогодні ми вивчаємо, як українці кажуть «мій», «твій», «його» — how to show ownership in Ukrainian.
 
 > 💡 **Did You Know?**
 >
@@ -31,8 +31,8 @@ Ukrainian possessive pronouns fall into two categories:
 
 > 🔍 **Myth Buster**
 >
-> **Myth:** "Ukrainian possessives work like English adjectives."
-> **Fact:** Not quite! "His" and "her" in Ukrainian are frozen genitive forms (його = "of him", її = "of her"). That's why they never change. Meanwhile, мій/твій change like adjectives to match the noun's gender.
+> **Myth:** «Ukrainian possessives work like English adjectives.»
+> **Fact:** Not quite! «His» and «her» in Ukrainian are frozen genitive forms (його = «of him», її = «of her»). That's why they never change. Meanwhile, мій/твій change like adjectives to match the noun's gender.
 
 ### Gender Agreement (Змінні Possessives)
 
@@ -71,7 +71,7 @@ These never change. Ever. They always remain його and її regardless of the
 
 > 💡 **Pro Tip**
 >
-> Think of **його** and **її** as "frozen" words from ancient grammar. They come from the old genitive forms "of him" and "of her". That's why they never budge — they're historical fossils!
+> Think of **його** and **її** as «frozen» words from ancient grammar. They come from the old genitive forms «of him» and «of her». That's why they never budge — they're historical fossils!
 
 ### Мій vs Його: The Core Difference
 
@@ -93,7 +93,7 @@ See the pattern? Мій AGREES. Його DOESN't.
 
 ### Свій — The Reflexive Possessive
 
-Ukrainian has a special possessive **свій** that means "one's own" — referring back to the subject:
+Ukrainian has a special possessive **свій** that means «one's own» — referring back to the subject:
 
 |                      | Masculine | Feminine | Neuter | Plural |
 | -------------------- | --------- | -------- | ------ | ------ |
@@ -138,7 +138,7 @@ Ukrainian has a special possessive **свій** that means "one's own" — refer
 
 > 🎬 **Pop Culture Moment: The Lord of the Rings**
 >
-> In the Ukrainian dub of _The Lord of the Rings_, when Frodo says "It's mine!" about the Ring, he says: "Це моє!" (Neuter, because "Кільце" = ring is neuter). But when Gollum says "It's his!", it's "Це його!" — frozen form, no agreement. Even fantasy grammar follows real rules!
+> In the Ukrainian dub of _The Lord of the Rings_, when Frodo says «It's mine!» about the Ring, he says: «Це моє!» (Neuter, because «Кільце» = ring is neuter). But when Gollum says «It's his!», it's «Це його!» — frozen form, no agreement. Even fantasy grammar follows real rules!
 
 ## Practice
 
@@ -218,8 +218,8 @@ Now it's your turn! Use possessive pronouns to describe things around you:
 
 > 💡 **Memory Trick**
 >
-> - **Змінні** (мій, твій, наш, ваш, їхній) = "Chameleons" — they change color (form) to match the noun.
-> - **Інваріантні** (його, її) = "Frozen" — they never thaw, no matter how hot the noun!
+> - **Змінні** (мій, твій, наш, ваш, їхній) = «Chameleons» — they change color (form) to match the noun.
+> - **Інваріантні** (його, її) = «Frozen» — they never thaw, no matter how hot the noun!
 
 ### Quick Question Drill
 
@@ -256,9 +256,9 @@ In traditional Ukrainian culture, there's a strong distinction between **осо�
 >
 > In Ukrainian folk songs (коломийки), possessives carry deep emotional weight:
 >
-> - "**Моя** мила" (my beloved) — personal affection
-> - "**Наша** Україна" (our Ukraine) — national pride
-> - "**Твої** очі\*\* (your eyes) — poetic imagery
+> - «**Моя** мила» (my beloved) — personal affection
+> - «**Наша** Україна» (our Ukraine) — national pride
+> - «**Твої** очі\*\* (your eyes) — poetic imagery
 >
 > Possessives aren't just grammar — they're identity!
 
@@ -266,8 +266,8 @@ In traditional Ukrainian culture, there's a strong distinction between **осо�
 
 Remember from Module 04 that Ukrainian has **ти** (informal you) and **ви** (formal/plural you). The same distinction applies to possessives:
 
-- **твій/твоя/твоє/твої** — informal "your" (talking to ONE friend, child, peer)
-- **ваш/ваша/ваше/ваші** — formal "your" (talking to elder, boss, stranger) OR plural "your" (talking to multiple people)
+- **твій/твоя/твоє/твої** — informal »your« (talking to ONE friend, child, peer)
+- **ваш/ваша/ваше/ваші** — formal »your« (talking to elder, boss, stranger) OR plural »your« (talking to multiple people)
 
 **Context matters:**
 
@@ -291,9 +291,16 @@ You now know:
 
 - How to match possessive pronouns to masculine, feminine, neuter, and plural nouns
 - The difference between formal (ваш) and informal (твій) possession
-- How to ask "Whose?" using чий/чия/чиє/чиї
+- How to ask »Whose?« using чий/чия/чиє/чиї
 - Common cultural contexts where possessives matter
 
 **Next up:** We'll explore the city and learn directional vocabulary (Module 15)!
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

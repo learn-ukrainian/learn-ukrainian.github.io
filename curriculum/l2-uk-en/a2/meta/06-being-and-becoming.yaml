@@ -4,24 +4,24 @@ subtitle: Professions and States with Instrumental
 version: '1.0'
 phase: A2.1
 pedagogy: PPP
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - grammar
-  - cases
-  - instrumental
-  - professions
-  - бути
-  - стати
+- grammar
+- cases
+- instrumental
+- professions
+- бути
+- стати
 grammar:
-  - instrumental with бути
-  - instrumental with стати
-  - instrumental with працювати
+- instrumental with бути
+- instrumental with стати
+- instrumental with працювати
 objectives:
-  - Learner can use instrumental to express profession with бути
-  - Learner can use instrumental to describe becoming something with стати
-  - Learner can use instrumental to express working as with працювати
-  - Learner can distinguish present (no copula) from past/future (бути + Instr)
+- Learner can use instrumental to express profession with бути
+- Learner can use instrumental to describe becoming something with стати
+- Learner can use instrumental to express working as with працювати
+- Learner can distinguish present from past/future (бути + Instr)
 vocabulary_count: 27
-vocab_count: 41
 slug: 06-being-and-becoming
+focus: grammar

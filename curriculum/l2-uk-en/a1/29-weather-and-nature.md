@@ -5,9 +5,9 @@
 > 💡 **Яка сьогодні погода? (What's the Weather Like Today?)**
 >
 > Weather expressions in Ukrainian are special — they often don't have a subject!
-> — **Тепло.** (It's warm.) — No "it" needed!
+> — **Тепло.** (It's warm.) — No «it» needed!
 > — **Холодно.** (It's cold.)
-> — **Йде дощ.** (It's raining. — Literally: "Rain goes.")
+> — **Йде дощ.** (It's raining. — Literally: «Rain goes.»)
 >
 > These are called **impersonal expressions** — they describe conditions, not actions of a person.
 
@@ -26,7 +26,7 @@
 > - **Сонячно.** (It's sunny.)
 > - **Хмарно.** (It's cloudy.)
 >
-> No subject! No "it"! Ukrainian just states the condition directly.
+> No subject! No «it»! Ukrainian just states the condition directly.
 
 ### Weather Vocabulary
 
@@ -41,12 +41,12 @@
 
 ### Rain and Snow
 
-For rain and snow, Ukrainian uses "йде" (goes):
+For rain and snow, Ukrainian uses «йде» (goes):
 
 | Expression     | Meaning       | Notes                   |
 | -------------- | ------------- | ----------------------- |
-| **Йде дощ.**   | It's raining. | Literally: "Rain goes." |
-| **Йде сніг.**  | It's snowing. | Literally: "Snow goes." |
+| **Йде дощ.**   | It's raining. | Literally: «Rain goes.» |
+| **Йде сніг.**  | It's snowing. | Literally: «Snow goes.» |
 | **Був дощ.**   | It rained.    | Past tense              |
 | **Буде сніг.** | It will snow. | Future tense            |
 
@@ -165,7 +165,7 @@ For rain and snow, Ukrainian uses "йде" (goes):
 
 > 💡 **Дощ vs Сніг (Rain vs Snow)**
 >
-> Both use "йде" (goes): **Йде дощ** (it's raining), **Йде сніг** (it's snowing). Think of rain and snow as "going" or "falling"!
+> Both use «йде» (goes): **Йде дощ** (it's raining), **Йде сніг** (it's snowing). Think of rain and snow as «going» or «falling»!
 
 > 🌍 **Клімат України (Ukraine's Climate)**
 >
@@ -175,12 +175,12 @@ For rain and snow, Ukrainian uses "йде" (goes):
 
 > ⚡ **Myth vs Fact**
 >
-> **Myth:** "Ukrainian nature is just endless flat steppes"
+> **Myth:** «Ukrainian nature is just endless flat steppes»
 > **Fact:** Ukraine has incredible diversity! The Carpathian Mountains, ancient forests, the Dnipro River, the Black Sea coast, and countless lakes. From alpine meadows to sandy beaches — Ukraine's nature is stunning!
 
 > 🎭 **Природа в українських піснях (Nature in Ukrainian Songs)**
 >
-> Ukrainian folk songs often mention nature: "Ой у лузі червона калина" (Oh, the red viburnum in the meadow), "Місяць на небі" (The moon in the sky). Nature is central to Ukrainian culture and poetry!
+> Ukrainian folk songs often mention nature: «Ой у лузі червона калина» (Oh, the red viburnum in the meadow), «Місяць на небі» (The moon in the sky). Nature is central to Ukrainian culture and poetry!
 
 ---
 
@@ -189,3 +189,10 @@ For rain and snow, Ukrainian uses "йде" (goes):
 Ви вивчили погоду та природу! Тепер ви знаєте, як описати сонце або дощ. (You learned weather and nature! Now you know how to describe the sun or rain.) Ви знаєте пори року: весна, літо, осінь та зима. Ви можете говорити про тварин та рослини. Це була дуже цікава подорож! (This was a very interesting journey!)
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

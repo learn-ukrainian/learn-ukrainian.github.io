@@ -1,7 +1,7 @@
 # A2 Curriculum Plan: Ukrainian for English Speakers
 
 **Status:** ✅ COMPLETE (Aligned with Ukrainian State Standard 2024)
-**Modules:** 01-57 (57 modules)
+**Modules:** 01-58 (58 modules)
 **Vocabulary Target:** ~950 unique words (level), ~1,800 cumulative (A1+A2)
 
 ---
@@ -580,6 +580,7 @@ By module 50, learners can:
 в/у, на, під, над, перед, за, між, до, з/із, напроти, біля, коло, поруч, навколо, вздовж
 
 **Signature Activity Concepts:**
+
 1. Gap-fill: Motion vs Location cases
 2. Diagram labeling: Where is the cat?
 3. Command drill: Put it on/under/behind...
@@ -608,6 +609,7 @@ By module 50, learners can:
 для, без, через, про, від, з, о, після, крім, замість, завдяки, всупереч, незважаючи на, протягом, щодо, стосовно, заради, внаслідок, по, при
 
 **Signature Activity Concepts:**
+
 1. Match-up: Preposition → logical function
 2. Gap-fill: Abstract contexts
 3. Translation: "Because of", "Instead of", "About"
@@ -633,6 +635,7 @@ By module 50, learners can:
 хто, що, кого, чого, кому, чому, кого, що, ким, чим, на кому, на чому, відмінок, називний, родовий, давальний, знахідний, орудний, місцевий, кличний
 
 **Signature Activity Concepts:**
+
 1. Gap-fill: Choose correct case for context
 2. Transform: Decline nouns through all 7 cases
 3. Quiz: Identify case by ending
@@ -644,16 +647,19 @@ By module 50, learners can:
 **Grammar:** Functional application of cases in services
 
 **Post office vocabulary:**
+
 - лист (letter), посилка (package), марка (stamp)
 - відправляти (to send), отримувати (to receive)
 - адреса (address), індекс (postal code)
 
 **Bank vocabulary:**
+
 - гроші (money), рахунок (account), картка (card)
 - переказувати (to transfer), знімати (to withdraw)
 - вкладати (to deposit), обмінювати (to exchange)
 
 **Key phrases:**
+
 - Я хочу відправити листа друговІ. (Dat)
 - Де можна обміняти долари на гривнІ? (Acc)
 - Мені потрібно зняти грошІ з рахункУ. (Gen)
@@ -662,6 +668,7 @@ By module 50, learners can:
 пошта, банк, лист, посилка, бандероль, марка, конверт, адреса, індекс, відправляти, отримувати, надсилати, гроші, рахунок, картка, готівка, валюта, переказ, переказувати, знімати, вкладати, обмінювати, курс, відсоток, кредит, позика, квитанція, чек, касир, черга
 
 **Signature Activity Concepts:**
+
 1. Dialogue: Post office interaction
 2. Gap-fill: Banking sentences with correct cases
 3. Quiz: "I want to..." service phrases
@@ -673,6 +680,7 @@ By module 50, learners can:
 **Covers:** M01-10
 
 **Required Skill Groups:**
+
 1. Dative Case Pronouns (M01) - мені, тобі, йому, їй
 2. Dative Case Nouns (M02-03) - другові, сестрі + dative verbs
 3. Instrumental: Accompaniment (M04) - з другом, з сестрою
@@ -683,6 +691,7 @@ By module 50, learners can:
 **Vocabulary (10 words):** Review selection
 
 **Signature Activity Concepts:**
+
 1. Comprehensive case quiz
 2. Sentence transformation (change case)
 3. Dialogue completion with correct cases
@@ -703,21 +712,21 @@ By module 50, learners can:
 
 ### Grammar Progression
 
-| Module | Grammar Point          | Builds On     | Enables               |
-| ------ | ---------------------- | ------------- | --------------------- |
-| 12     | Aspect introduction    | A1 verbs      | Concept understanding |
-| 13     | Perfective in past     | M12           | "I did it"            |
-| 14     | Perfective in future   | M12           | "I will do it"        |
-| 15     | Aspect morphology      | M12-14        | Prefix meaning        |
-| 16     | Aspect pairs drill     | M12-15        | Fluency               |
-| 17     | Possessive 'свій'      | A1 possessives| "My own" vs "His"     |
-| 18     | Comparative adjectives | A1 adjectives | "bigger, better"      |
-| 19     | Superlative adjectives | M18           | "the biggest"         |
-| 20     | Comparison structures  | M18-19        | Preferences           |
-| 21     | Numerals & Nouns       | A1 numbers    | Counting things       |
-| 22     | Conditional mood       | A1 past tense | "If I were..."        |
-| 23     | Functional: Shopping   | M18-21        | Real comparison       |
-| 24     | Checkpoint             | M12-23        | Assessment            |
+| Module | Grammar Point          | Builds On      | Enables               |
+| ------ | ---------------------- | -------------- | --------------------- |
+| 12     | Aspect introduction    | A1 verbs       | Concept understanding |
+| 13     | Perfective in past     | M12            | "I did it"            |
+| 14     | Perfective in future   | M12            | "I will do it"        |
+| 15     | Aspect morphology      | M12-14         | Prefix meaning        |
+| 16     | Aspect pairs drill     | M12-15         | Fluency               |
+| 17     | Possessive 'свій'      | A1 possessives | "My own" vs "His"     |
+| 18     | Comparative adjectives | A1 adjectives  | "bigger, better"      |
+| 19     | Superlative adjectives | M18            | "the biggest"         |
+| 20     | Comparison structures  | M18-19         | Preferences           |
+| 21     | Numerals & Nouns       | A1 numbers     | Counting things       |
+| 22     | Conditional mood       | A1 past tense  | "If I were..."        |
+| 23     | Functional: Shopping   | M18-21         | Real comparison       |
+| 24     | Checkpoint             | M12-23         | Assessment            |
 
 ### Module Content Specifications
 
@@ -726,11 +735,13 @@ By module 50, learners can:
 **Grammar:** Perfective vs imperfective concept
 
 **Imperfective (недоконаний вид):**
+
 - Ongoing actions: Я читаю книгу. (I am reading.)
 - Repeated actions: Я читаю щодня. (I read every day.)
 - Process focus: Він писав три години. (He was writing for 3 hours.)
 
 **Perfective (доконаний вид):**
+
 - Completed actions: Я прочитав книгу. (I read/finished the book.)
 - Single events: Вона написала листа. (She wrote the letter.)
 - Result focus: Ми вже зробили це. (We already did this.)
@@ -751,6 +762,7 @@ By module 50, learners can:
 читати/прочитати, писати/написати, робити/зробити, говорити/сказати, бачити/побачити, брати/взяти, давати/дати, їсти/з'їсти, пити/випити, вчити/вивчити, вчитися/навчитися, купувати/купити, продавати/продати
 
 **Signature Activity Concepts:**
+
 1. Match-up: Imperfective → perfective pairs
 2. Gap-fill: Choose correct aspect
 3. Quiz: Process or result?
@@ -762,10 +774,12 @@ By module 50, learners can:
 **Grammar:** Perfective verbs in past tense
 
 **Key patterns:**
+
 - Imperfective past (process): Він читав книгу. (He was reading.)
 - Perfective past (result): Він прочитав книгу. (He read/finished it.)
 
 **Aspect choice in past:**
+
 - Duration → imperfective: Я писав дві години.
 - Completion → perfective: Я написав листа.
 - Repeated → imperfective: Я читав цю книгу багато разів.
@@ -775,6 +789,7 @@ By module 50, learners can:
 зробив, написав, прочитав, сказав, побачив, почув, взяв, дав, пішов, прийшов, приїхав, вийшов, увійшов, почав, закінчив, зрозумів, забув, запам'ятав, знайшов, загубив
 
 **Signature Activity Concepts:**
+
 1. Transform: Imperfective → perfective past
 2. Gap-fill: Choose aspect based on context
 3. Quiz: Did they finish or were they doing?
@@ -786,13 +801,16 @@ By module 50, learners can:
 **Grammar:** Perfective future tense
 
 **Formation:**
+
 - Imperfective future: буду + infinitive (буду читати)
 - Perfective future: conjugated perfective (прочитаю)
 
 **Conjugation pattern (perfective):**
+
 - прочитаю, прочитаєш, прочитає, прочитаємо, прочитаєте, прочитають
 
 **Usage:**
+
 - Process/ongoing: Я буду читати увечері. (I will be reading.)
 - Completion/result: Я прочитаю цю книгу. (I will read/finish this book.)
 
@@ -800,6 +818,7 @@ By module 50, learners can:
 зроблю, напишу, прочитаю, скажу, побачу, почую, візьму, дам, піду, прийду, приїду, вийду, увійду, почну, закінчу, зрозумію, забуду, запам'ятаю, знайду, загублю
 
 **Signature Activity Concepts:**
+
 1. Transform: Imperfective → perfective future
 2. Gap-fill: Plans vs promises
 3. Quiz: "I will do it" vs "I will be doing it"
@@ -827,6 +846,7 @@ By module 50, learners can:
 | відпочивати | відпочити | -ва- removal |
 
 **Suppletive pairs (different roots):**
+
 - говорити / сказати
 - брати / взяти
 - класти / покласти
@@ -835,6 +855,7 @@ By module 50, learners can:
 відпочивати/відпочити, вставати/встати, одягатися/одягнутися, сідати/сісти, лягати/лягти, відкривати/відкрити, закривати/закрити, вмикати/увімкнути, вимикати/вимкнути, починати/почати, закінчувати/закінчити, отримувати/отримати, посилати/послати, вибирати/вибрати, вирішувати/вирішити
 
 **Signature Activity Concepts:**
+
 1. Match-up: Extended aspect pairs
 2. Pattern recognition: Identify prefix/suffix
 3. Gap-fill: Use correct pair member
@@ -846,6 +867,7 @@ By module 50, learners can:
 **Grammar:** Drilling the 30 most common aspect pairs
 
 **Focus:** Automated recall of pairs.
+
 - бачити - побачити
 - чути - почути
 - їсти - з'їсти
@@ -853,6 +875,7 @@ By module 50, learners can:
 - готувати - приготувати
 
 **Key Drills:**
+
 - "Ти вже зробив?" (Have you done it?)
 - "Ні, я ще роблю." (No, I am still doing it.)
 - "Я зроблю завтра." (I will do it tomorrow.)
@@ -861,6 +884,7 @@ By module 50, learners can:
 готувати/приготувати, мити/помити, прибирати/прибрати, ремонтувати/відремонтувати, будувати/побудувати, малювати/намалювати, дзвонити/подзвонити, питати/запитати, відповідати/відповісти, платити/заплатити, купувати/купити, продавати/продати, знаходити/знайти, губити/загубити, пам'ятати/запам'ятати
 
 **Signature Activity Concepts:**
+
 1. Speed Match: Rapid pair matching
 2. Q&A Drill: "Did you?" -> "Yes, I did."
 3. Transform: Present -> Future Perfective
@@ -872,12 +896,14 @@ By module 50, learners can:
 **Grammar:** The reflexive possessive pronoun 'свій'
 
 **Rule:**
+
 - Use 'свій' when the possessor is the subject of the sentence.
 - Я люблю свою маму. (I love MY mom.)
 - Він любить свою маму. (He loves HIS OWN mom.)
 - Він любить його маму. (He loves HIS [someone else's] mom.)
 
 **Forms:**
+
 - свій (m), своя (f), своє (n), свої (pl)
 - Declines like 'мій'.
 
@@ -885,6 +911,7 @@ By module 50, learners can:
 свій, своя, своє, свої, власне, власний, особистий, чужий, спільний, ділитися
 
 **Signature Activity Concepts:**
+
 1. Choice: Свій or Його?
 2. Diagram: Whose car is it?
 3. Translation: Contrastive sentences
@@ -896,10 +923,12 @@ By module 50, learners can:
 **Grammar:** Comparative adjectives
 
 **Regular formation:**
+
 - Stem + -ший/-іший: великий → більший (bigger)
 - Synthetic: добрий → добріший (kinder)
 
 **Compound formation:**
+
 - більш + adjective: більш важливий (more important)
 - менш + adjective: менш цікавий (less interesting)
 
@@ -914,6 +943,7 @@ By module 50, learners can:
 | низький | нижчий | short → shorter |
 
 **Comparison structure:**
+
 - X + comparative + ніж + Y: Він старший ніж я.
 - X + comparative + за + Acc: Він старший за мене.
 
@@ -921,6 +951,7 @@ By module 50, learners can:
 більший, менший, кращий, гірший, вищий, нижчий, довший, коротший, ширший, вужчий, дорожчий, дешевший, старший, молодший, швидший, повільніший, сильніший, слабший, легший, важчий, ніж, за, набагато, трохи, значно
 
 **Signature Activity Concepts:**
+
 1. Transform: Positive → comparative
 2. Gap-fill: Comparison sentences
 3. Quiz: Which is bigger/better/etc.?
@@ -932,10 +963,12 @@ By module 50, learners can:
 **Grammar:** Superlative adjectives
 
 **Formation:**
+
 - най- + comparative: найбільший (biggest)
 - Regular: найкращий, найгірший, найвищий
 
 **Absolute superlative (intensification):**
+
 - дуже + adjective: дуже великий (very big)
 - надзвичайно + adj: надзвичайно цікавий (extremely interesting)
 
@@ -951,6 +984,7 @@ By module 50, learners can:
 найбільший, найменший, найкращий, найгірший, найвищий, найнижчий, найдовший, найкоротший, найдорожчий, найдешевший, найстарший, наймолодший, найшвидший, найповільніший, найсильніший, найслабший, найлегший, найважчий, найцікавіший, найважливіший
 
 **Signature Activity Concepts:**
+
 1. Transform: Comparative → superlative
 2. Gap-fill: "the most..." sentences
 3. Quiz: World records and "the best"
@@ -962,16 +996,19 @@ By module 50, learners can:
 **Grammar:** Comparison structures for expressing preferences
 
 **Expressing preference:**
+
 - Мені більше подобається X ніж Y.
 - Я віддаю перевагу X (Dat).
 - Краще X ніж Y.
 - Я волів би X (Acc).
 
 **Comparison of actions:**
+
 - Краще читати ніж дивитися телевізор.
 - Легше говорити ніж робити.
 
 **Choice expressions:**
+
 - Я б вибрав/вибрала...
 - Мені більше підходить...
 - Я віддаю перевагу...
@@ -980,6 +1017,7 @@ By module 50, learners can:
 віддавати перевагу, вибирати, волити, подобатися більше, краще, гірше, легше, важче, цікавіше, нудніше, корисніше, шкідливіше, дорожче, дешевше, швидше, повільніше, ефективніше, зручніше, комфортніше, практичніше
 
 **Signature Activity Concepts:**
+
 1. Express preference: "I prefer X to Y"
 2. Compare options: Which is better?
 3. Dialogue: Making choices
@@ -991,11 +1029,13 @@ By module 50, learners can:
 **Grammar:** Numeral-Noun Agreement (Subject Case)
 
 **The 1-4-5 Rule:**
+
 - **1 (один/одна/одне):** + Nominative Singular (один стіл, одна лампа)
 - **2, 3, 4 (два, три, чотири):** + Nominative Plural (два столи, три лампи)
 - **5-20+ (п'ять...):** + Genitive Plural (п'ять столів, шість ламп)
 
 **Compound numerals:**
+
 - Look at the last digit:
 - 21 (один): + Nom Sg (двадцять один стіл)
 - 22 (два): + Nom Pl (двадцять два столи)
@@ -1005,8 +1045,9 @@ By module 50, learners can:
 один, одна, одне, два, дві, три, чотири, п'ять, шість, сім, вісім, дев'ять, десять, одинадцять, дванадцять... двадцять, нуль, скільки, багато, мало
 
 **Signature Activity Concepts:**
+
 1. Sorting: Group words by required form (1, 2-4, 5+)
-2. Gap-fill: "3 ____ (book)" -> "3 книги"
+2. Gap-fill: "3 \_\_\_\_ (book)" -> "3 книги"
 3. Shopping count: Buying quantities of items
 
 ---
@@ -1016,14 +1057,17 @@ By module 50, learners can:
 **Grammar:** Conditional mood (якби + past)
 
 **Formation:**
+
 - якби + past tense + б/би (result clause)
 - Якби я мав час, я б прочитав цю книгу.
 
 **Real vs unreal conditions:**
+
 - Real (якщо): Якщо матиму час, прочитаю. (If I have time...)
 - Unreal (якби): Якби я мав час, прочитав би. (If I had time...)
 
 **Common patterns:**
+
 - Якби я був/була... (If I were...)
 - Якби я знав/знала... (If I knew...)
 - Я б хотів/хотіла... (I would like...)
@@ -1032,6 +1076,7 @@ By module 50, learners can:
 якби, якщо, б/би, мав би, був би, мала б, була б, знав би, міг би, хотів би, робив би, пішов би, поїхав би, купив би, сказав би, можливо, напевно, мабуть, певно, обов'язково
 
 **Signature Activity Concepts:**
+
 1. Transform: Real → unreal conditions
 2. Gap-fill: Complete conditional sentences
 3. Quiz: "What would you do if...?"
@@ -1043,12 +1088,14 @@ By module 50, learners can:
 **Grammar:** Functional application of comparison & quantities
 
 **Shopping comparisons:**
+
 - Цей дорожчий, але кращий.
 - Той дешевший за цей.
 - Який найдешевший?
 - Мені більше подобається червоний.
 
 **Negotiation phrases:**
+
 - Чи можна дешевше? (Can it be cheaper?)
 - Є щось краще? (Is there something better?)
 - Що ви порекомендуєте? (What do you recommend?)
@@ -1057,6 +1104,7 @@ By module 50, learners can:
 порівнювати, вибирати, шукати, знаходити, рекомендувати, радити, пропонувати, знижка, акція, розпродаж, якість, ціна, вартість, вигідний, невигідний, дорогий, дешевий, доступний, преміум, економ
 
 **Signature Activity Concepts:**
+
 1. Dialogue: Comparing products
 2. Gap-fill: Shopping dialogue
 3. Quiz: Best deal calculations
@@ -1068,6 +1116,7 @@ By module 50, learners can:
 **Covers:** M12-23
 
 **Required Skill Groups:**
+
 1. Aspect Concept & Pairs (M12) - imperfective vs perfective
 2. Perfective in Past (M13) - completed actions, result focus
 3. Perfective in Future (M14) - promises, plans
@@ -1080,6 +1129,7 @@ By module 50, learners can:
 **Vocabulary (10 words):** Review selection
 
 **Signature Activity Concepts:**
+
 1. Comprehensive Aspect Quiz
 2. Numeral Challenge: Count various items
 3. Shopping Dialogue: Integration of all skills
@@ -1117,12 +1167,14 @@ By module 50, learners can:
 **Grammar:** Sequence connectors
 
 **Sequence markers:**
+
 - спочатку (at first), потім (then), після цього (after this)
 - нарешті (finally), врешті-решт (in the end)
 - тоді (then), одного разу (once)
 - раптом (suddenly), несподівано (unexpectedly)
 
 **Key patterns:**
+
 - Спочатку я прокинувся, потім поснідав.
 - Нарешті ми прийшли додому.
 - Раптом пішов дощ.
@@ -1131,6 +1183,7 @@ By module 50, learners can:
 спочатку, потім, після цього, перед цим, нарешті, врешті-решт, тоді, одного разу, якось, колись, раптом, несподівано, відразу, негайно, згодом, пізніше, раніше, давно, недавно, щойно, ледве, ще, вже, тільки-но, саме тоді
 
 **Signature Activity Concepts:**
+
 1. Unjumble: Put story in order
 2. Gap-fill: Add sequence connectors
 3. Production: Use connectors in storytelling
@@ -1142,16 +1195,19 @@ By module 50, learners can:
 **Grammar:** Causal/concessive clauses
 
 **Causal connectors (cause):**
+
 - тому що (because): Я не прийшов, тому що був хворий.
 - бо (because - colloquial): Вона плаче, бо сумно.
 - оскільки (since): Оскільки пізно, я йду.
 
 **Concessive connectors (contrast):**
+
 - хоча (although): Хоча холодно, я вийду.
 - проте (however): Він старий, проте сильний.
 - але (but): Дорого, але якісно.
 
 **Key patterns:**
+
 - Clause + тому що + clause
 - Хоча + clause, clause
 
@@ -1159,6 +1215,7 @@ By module 50, learners can:
 тому що, бо, оскільки, через те що, завдяки тому що, хоча, незважаючи на те що, проте, однак, але, зате, все-таки, все ж таки, попри те що, хоч і, хай, нехай, хоч би, дарма що, якби не
 
 **Signature Activity Concepts:**
+
 1. Connect: Cause and effect sentences
 2. Transform: "because" → "although"
 3. Gap-fill: Choose correct connector
@@ -1170,14 +1227,17 @@ By module 50, learners can:
 **Grammar:** Basic reported speech
 
 **Direct → Indirect speech:**
+
 - Direct: Він сказав: "Я йду."
 - Indirect: Він сказав, що він іде.
 
 **Tense changes:**
+
 - Present → present or past: "йду" → що йде/що йшов
 - Future → future or would: "піду" → що піде
 
 **Speech verbs:**
+
 - сказати/казати (to say)
 - говорити (to speak)
 - розповідати (to tell)
@@ -1188,6 +1248,7 @@ By module 50, learners can:
 сказати, казати, говорити, розповідати, питати, запитати, відповідати, повідомити, пояснити, стверджувати, заперечувати, обіцяти, попередити, нагадати, переконувати, скаржитися, хвалити, критикувати, коментувати, що
 
 **Signature Activity Concepts:**
+
 1. Transform: Direct → indirect speech
 2. Gap-fill: Reported speech sentences
 3. Quiz: "What did they say?"
@@ -1199,12 +1260,14 @@ By module 50, learners can:
 **Grammar:** Opinion expressions
 
 **Opinion structures:**
+
 - Я думаю, що... (I think that...)
 - Я вважаю, що... (I believe that...)
 - На мою думку, ... (In my opinion,...)
 - Мені здається, що... (It seems to me that...)
 
 **Agreeing/Disagreeing:**
+
 - Я згоден/згодна (I agree)
 - Я не згоден/не згодна (I disagree)
 - Це правда (That's true)
@@ -1214,6 +1277,7 @@ By module 50, learners can:
 думати, вважати, гадати, здаватися, здається, на мою думку, на мій погляд, з моєї точки зору, згоден/згодна, не згоден, погоджуватися, не погоджуватися, правда, неправда, так, не так, можливо, напевно, безумовно, очевидно
 
 **Signature Activity Concepts:**
+
 1. Production: Express opinion
 2. Production: Agree/Disagree
 3. Dialogue: Exchange views
@@ -1225,12 +1289,14 @@ By module 50, learners can:
 **Grammar:** Emotion expressions
 
 **Emotion + що structures:**
+
 - Я радий/рада, що... (I'm happy that...)
 - Мені сумно, що... (I'm sad that...)
 - Шкода, що... (It's a pity that...)
 - Добре, що... (It's good that...)
 
 **Emotion vocabulary:**
+
 - радість (joy), сум (sadness), страх (fear)
 - здивування (surprise), гнів (anger)
 - полегшення (relief), розчарування (disappointment)
@@ -1239,6 +1305,7 @@ By module 50, learners can:
 радий/рада, щасливий, задоволений, сумний, засмучений, здивований, переляканий, розчарований, хвилюватися, турбуватися, радіти, сумувати, боятися, дивуватися, шкода, добре, погано, прикро, приємно, цікаво, нудно, страшно, радісно, сумно, щасливо
 
 **Signature Activity Concepts:**
+
 1. Production: Express emotion
 2. Match-up: Situation → emotion
 3. Gap-fill: Emotion sentences
@@ -1250,12 +1317,14 @@ By module 50, learners can:
 **Grammar:** Purpose clauses (щоб)
 
 **Purpose structures:**
+
 - щоб + infinitive (same subject): Я прийшов, щоб допомогти.
 - щоб + past form (different subjects): Я хочу, щоб ти прийшов.
 
 **Note:** Ukrainian uses past form, NOT subjunctive!
 
 **Key patterns:**
+
 - Я вчуся, щоб знати українську.
 - Вона працює, щоб заробляти гроші.
 - Я хочу, щоб він прийшов. (past form: прийшов)
@@ -1264,6 +1333,7 @@ By module 50, learners can:
 щоб, для того щоб, аби, задля того щоб, з метою, прийшов, пішов, зробив, сказав, написав, прочитав, вивчив, зрозумів, допоміг, дав, показав, пояснив, розповів, купив, принести
 
 **Signature Activity Concepts:**
+
 1. Complete: "I came to..."
 2. Transform: Two sentences → purpose clause
 3. Gap-fill: щоб + correct form
@@ -1275,10 +1345,12 @@ By module 50, learners can:
 **Grammar:** Relative clauses (який, яка, яке, які)
 
 **Agreement:**
+
 - який agrees with antecedent in gender/number
 - який declines for case within relative clause
 
 **Examples:**
+
 - Людина, яка говорить... (The person who speaks...)
 - Книга, яку я читаю... (The book that I'm reading...)
 - Хлопець, якому я допомагаю... (The boy whom I'm helping...)
@@ -1295,6 +1367,7 @@ By module 50, learners can:
 який, яка, яке, які, якого, якої, якому, якій, яким, якою, якими, котрий, що, де, куди, звідки, коли, чий, чия, чиє
 
 **Signature Activity Concepts:**
+
 1. Combine: Two sentences → relative clause
 2. Gap-fill: Correct form of який
 3. Quiz: "The person who..."
@@ -1306,6 +1379,7 @@ By module 50, learners can:
 **Grammar:** Time clauses
 
 **Time connectors:**
+
 - коли (when): Коли я прийшов, він спав.
 - поки (while): Поки я читав, вона готувала.
 - після того як (after): Після того як я поїв, я пішов.
@@ -1313,6 +1387,7 @@ By module 50, learners can:
 - як тільки (as soon as): Як тільки прийду, подзвоню.
 
 **Key patterns:**
+
 - Main clause + коли + subordinate clause
 - Subordinate clause + , + main clause
 
@@ -1320,6 +1395,7 @@ By module 50, learners can:
 коли, поки, доки, поки не, після того як, перед тим як, перш ніж, як тільки, щойно, ледве, з того часу як, до того як, під час того як, тим часом як, тоді коли, в той час як, того дня коли, кожного разу коли, завжди коли, раз у раз коли
 
 **Signature Activity Concepts:**
+
 1. Combine: Time clauses
 2. Gap-fill: Choose correct connector
 3. Unjumble: Before/after relationships
@@ -1331,12 +1407,14 @@ By module 50, learners can:
 **Grammar:** Functional integration for medical context
 
 **At the doctor:**
+
 - Що вас турбує? (What's bothering you?)
 - У мене болить голова. (I have a headache.)
 - Мені потрібен лікар. (I need a doctor.)
 - Де болить? (Where does it hurt?)
 
 **Symptoms vocabulary:**
+
 - болить (hurts): Болить голова/живіт/горло
 - температура (fever): У мене температура.
 - кашель (cough): У мене кашель.
@@ -1346,6 +1424,7 @@ By module 50, learners can:
 лікар, пацієнт, хворий, хвороба, симптом, біль, температура, кашель, нежить, горло, голова, живіт, спина, рука, нога, око, вухо, серце, ліки, таблетка, рецепт, аптека, лікарня, поліклініка, хворіти, одужувати, оглядати, лікувати, приймати, відчувати
 
 **Signature Activity Concepts:**
+
 1. Dialogue: Doctor-patient dialogue
 2. Gap-fill: Symptom descriptions
 3. Match-up: Symptom → remedy
@@ -1357,6 +1436,7 @@ By module 50, learners can:
 **Covers:** M25-33
 
 **Required Skill Groups:**
+
 1. Sequence & Storytelling (M25) - потім, тоді, нарешті
 2. Causal Clauses (M26) - тому що, бо, оскільки
 3. Concessive Clauses (M27) - хоча, проте
@@ -1370,6 +1450,7 @@ By module 50, learners can:
 **Vocabulary (10 words):** Review selection
 
 **Signature Activity Concepts:**
+
 1. Sequencing Challenge: Reorder events
 2. Debate Club: Express opinions
 3. Medical Roleplay: Describe symptoms
@@ -1387,17 +1468,17 @@ By module 50, learners can:
 
 ### Grammar Progression
 
-| Module | Grammar Point              | Builds On       | Enables                 |
-| ------ | -------------------------- | --------------- | ----------------------- |
-| 35     | Basic Motion Prefixes      | A1 motion verbs | Basic Directions        |
-| 36     | Advanced Motion Prefixes   | M35             | Complex Directions      |
-| 37     | Action verb prefixes       | All verbs       | Verbal precision        |
-| 38     | Noun suffixes              | A1 nouns        | Noun formation          |
-| 39     | Adjective suffixes         | A1 adjectives   | Adjective formation     |
-| 40     | Root families I            | All vocab       | Recognition             |
-| 41     | Root families II           | All vocab       | Expansion               |
-| 42     | WF Mastery                 | M35-41          | Deep dive               |
-| 43     | Checkpoint: Word Formation | M35-42          | Assessment              |
+| Module | Grammar Point              | Builds On       | Enables             |
+| ------ | -------------------------- | --------------- | ------------------- |
+| 35     | Basic Motion Prefixes      | A1 motion verbs | Basic Directions    |
+| 36     | Advanced Motion Prefixes   | M35             | Complex Directions  |
+| 37     | Action verb prefixes       | All verbs       | Verbal precision    |
+| 38     | Noun suffixes              | A1 nouns        | Noun formation      |
+| 39     | Adjective suffixes         | A1 adjectives   | Adjective formation |
+| 40     | Root families I            | All vocab       | Recognition         |
+| 41     | Root families II           | All vocab       | Expansion           |
+| 42     | WF Mastery                 | M35-41          | Deep dive           |
+| 43     | Checkpoint: Word Formation | M35-42          | Assessment          |
 
 ### Module Content Specifications
 
@@ -1414,6 +1495,7 @@ By module 50, learners can:
 | від- | departure | відійти (leave/move away) |
 
 **Key patterns:**
+
 - Він вийшов з дому. (He left the house.)
 - Вона увійшла в кімнату. (She entered the room.)
 
@@ -1421,6 +1503,7 @@ By module 50, learners can:
 прийти, вийти, увійти, відійти, приїхати, виїхати, в'їхати, від’їхати, принести, винести, внести, віднести, привезти, вивезти, ввезти, відвезти, вхід, вихід, прихід, відхід
 
 **Signature Activity Concepts:**
+
 1. Diagram labeling: In/Out/To/From
 2. Gap-fill: Choose correct prefix
 3. Translate: "He came in", "She went out"
@@ -1442,6 +1525,7 @@ By module 50, learners can:
 | до- | reach | дійти (reach/get to) |
 
 **Key patterns:**
+
 - Він перейшов вулицю. (He crossed the street.)
 - Я зайду до тебе. (I'll drop by you.)
 
@@ -1449,6 +1533,7 @@ By module 50, learners can:
 перейти, зайти, пройти, підійти, обійти, дійти, переїхати, заїхати, проїхати, під'їхати, об'їхати, доїхати, перехід, прохід, обхід, проїзд, переїзд, проходити, переходити, заходити
 
 **Signature Activity Concepts:**
+
 1. Map navigation: Follow instructions
 2. Match-up: Prefix → diagram
 3. Story: A complex route through the city
@@ -1471,6 +1556,7 @@ By module 50, learners can:
 | до- | completion | дочитати (finish reading) |
 
 **Key patterns:**
+
 - писати → написати, переписати, дописати, підписати
 - робити → зробити, переробити, доробити
 
@@ -1478,6 +1564,7 @@ By module 50, learners can:
 написати, переписати, дописати, підписати, записати, описати, виписати, зробити, переробити, доробити, відкрити, закрити, відчинити, зачинити, роздати, роздавати, подати, віддати, передати, здати, видати, надати, придати, роз'єднати, з'єднати, від'єднати, приєднати, під'єднати, перенести, донести
 
 **Signature Activity Concepts:**
+
 1. Pattern recognition: Identify prefix function
 2. Transform: Add prefixes to build words
 3. Gap-fill: Prefixed verbs in context
@@ -1489,19 +1576,23 @@ By module 50, learners can:
 **Grammar:** Noun-forming suffixes
 
 **Verbal nouns (-ння/-ття):**
+
 - читати → читання (reading)
 - жити → життя (life)
 - вчити → вчення (teaching)
 
 **Abstract nouns (-ість):**
+
 - важливий → важливість (importance)
 - можливий → можливість (possibility)
 
 **Agent nouns (-ач/-ець):**
+
 - читати → читач (reader)
 - співати → співець (singer)
 
 **Diminutives (-ок/-ик/-очок):**
+
 - дім → домик (little house)
 - кіт → котик (kitty)
 
@@ -1509,6 +1600,7 @@ By module 50, learners can:
 читання, писання, навчання, життя, питання, завдання, важливість, можливість, відповідальність, радість, молодість, старість, читач, письменник, вчитель, водій, продавець, співець, борець, глядач, домик, котик, синок, братик, сестричка, книжечка, ручечка, квіточка, сонечко, дівчинка
 
 **Signature Activity Concepts:**
+
 1. Transform: Verb → verbal noun
 2. Transform: Adjective → abstract noun
 3. Transform: Create diminutives from nouns
@@ -1520,15 +1612,18 @@ By module 50, learners can:
 **Grammar:** Adjective-forming suffixes
 
 **From nouns (-ний/-овий/-ський):**
+
 - музика → музичний (musical)
 - наука → науковий (scientific)
 - Україна → український (Ukrainian)
 
 **From verbs (-лий/-чий):**
+
 - зів'янути → зів'ялий (withered)
 - лежати → лежачий (lying)
 
 **Key patterns:**
+
 - -ний: загальний, особливий, важливий
 - -овий: кольоровий, смаковий
 - -ський: міський, людський
@@ -1537,6 +1632,7 @@ By module 50, learners can:
 музичний, науковий, український, російський, англійський, міський, сільський, людський, дитячий, жіночий, чоловічий, кольоровий, смаковий, матеріальний, духовний, фізичний, хімічний, історичний, географічний, математичний, робочий, лежачий, стоячий, біжучий, гарячий, холодний, теплий, свіжий, старий, молодий
 
 **Signature Activity Concepts:**
+
 1. Transform: Noun → adjective
 2. Match-up: Suffix → meaning
 3. Gap-fill: Adjective forms
@@ -1548,14 +1644,17 @@ By module 50, learners can:
 **Grammar:** Common roots and derivatives
 
 **ход- family (go/walk):**
+
 - ходити, хід, вхід, вихід, похід, прихід, відхід
 - пішохід, перехід, східний, західний
 
 **pis- family (write):**
+
 - писати, письмо, письменник, підпис, запис, опис
 - списати, переписати, дописати, надпис
 
 **Key patterns:**
+
 - Root + prefix/suffix = new word
 - Recognize roots to guess meaning
 
@@ -1563,6 +1662,7 @@ By module 50, learners can:
 ходити, хід, вхід, вихід, похід, прихід, відхід, перехід, пішохід, писати, письмо, письменник, підпис, запис, опис, напис, надпис, читати, читач, читання, прочитати, дочитати, перечитати, бачити, бачення, побачення, передбачення, огляд, погляд, вигляд
 
 **Signature Activity Concepts:**
+
 1. Group-sort: Words by root family
 2. Production: Guess meaning from root
 3. Production: Build words from roots
@@ -1574,14 +1674,17 @@ By module 50, learners can:
 **Grammar:** Motion and perception roots
 
 **бач- family (see):**
+
 - бачити, бачення, побачення, передбачення
 - видний, очевидний, явний
 
 **слух- family (hear):**
+
 - слухати, слух, послух, слухач
 - чути, почуття, відчуття
 
 **говор-/мов- family (speak):**
+
 - говорити, розмова, мова, мовлення
 - мовчати, мовчання, мовчазний
 
@@ -1589,6 +1692,7 @@ By module 50, learners can:
 бачити, бачення, побачення, передбачення, огляд, погляд, вигляд, слухати, слух, послух, слухач, чути, почуття, відчуття, говорити, розмова, мова, мовлення, мовець, мовчати, мовчання, думати, думка, обдумати, роздуми
 
 **Signature Activity Concepts:**
+
 1. Quiz: Root identification
 2. Match-up: Word family
 3. Production: Build derivatives from roots
@@ -1600,10 +1704,12 @@ By module 50, learners can:
 **Grammar:** Integrated word formation practice
 
 **Focus:** Mixing prefixes and suffixes
+
 - вчити (teach) -> вчитель (teacher) -> вчителька (female teacher) -> вчительський (teacher's)
 - писати (write) -> запис (record) -> записка (note) -> записник (notebook)
 
 **Deep Families:**
+
 - рід (kin/gender) -> родина, народ, рідний, народитися, природа
 - світ (world/light) -> світло, світити, освіта, всесвіт
 
@@ -1611,6 +1717,7 @@ By module 50, learners can:
 рід, родина, народ, рідний, народитися, природа, світ, світло, світити, освіта, всесвіт, земля, земляк, земний, підземний, іноземець, місто, міський, містянин, передмістя
 
 **Signature Activity Concepts:**
+
 1. Word Tree: Build as many words as possible from one root helps
 2. Deconstruction: Break simple words into parts
 3. Meaning Guess: Complex derivatives
@@ -1622,6 +1729,7 @@ By module 50, learners can:
 **Covers:** M35-42
 
 **Required Skill Groups:**
+
 1. Motion Verb Prefixes Basic (M35) - при-, ви-, в-/у-
 2. Motion Verb Prefixes Advanced (M36) - пере-, об-, про-
 3. Action Verb Prefixes (M37-38) - з-, на-, по-, ви-, пере-
@@ -1632,6 +1740,7 @@ By module 50, learners can:
 **Vocabulary (10 words):** Review selection
 
 **Signature Activity Concepts:**
+
 1. Root family identification quiz
 2. Word building: prefix + root + suffix
 3. Meaning deduction from word components
@@ -1747,6 +1856,7 @@ By module 50, learners can:
 **Covers:** M44-54
 
 **Required Skill Groups:**
+
 1. Food & Cooking (M44) - ingredients, cooking verbs
 2. Home & Furniture (M45) - rooms, items, descriptions
 3. Nature & Weather (M46) - seasons, weather, landscape
@@ -1760,6 +1870,7 @@ By module 50, learners can:
 11. Health & Body (M54) - body systems, symptoms, treatment
 
 **CEFR Can-Do Alignment:**
+
 - [ ] Can describe daily activities using domain-specific vocabulary
 - [ ] Can discuss personal interests, work, and leisure
 - [ ] Can handle practical situations (shopping, travel, health)
@@ -1767,13 +1878,14 @@ By module 50, learners can:
 **Vocabulary (10 words):** Review selection from M44-54
 
 **Signature Activity Concepts:**
+
 1. Domain vocabulary quiz across all topics
 2. Situational dialogue completion
 3. Cross-domain vocabulary integration
 
 ---
 
-## Phase A2.6: Review & Consolidation (Modules 56-57)
+## Phase A2.6: Review & Consolidation (Modules 56-58)
 
 ### Learning Goals
 
@@ -1784,10 +1896,11 @@ By module 50, learners can:
 
 ### Module Structure
 
-| #   | Title             | Focus                     | Type       |
-| --- | ----------------- | ------------------------- | ---------- |
-| 56  | A2 Grammar Review | All grammar consolidation | Review     |
-| 57  | A2 Capstone       | Comprehensive assessment  | Checkpoint |
+| #   | Title                  | Focus                           | Type       |
+| --- | ---------------------- | ------------------------------- | ---------- |
+| 56  | Checkpoint: Vocabulary | All vocabulary consolidation    | Checkpoint |
+| 57  | A2 Grammar Review      | All grammar consolidation       | Review     |
+| 58  | A2 Final Review        | Comprehensive skills assessment | Checkpoint |
 
 ### Module 56: A2 Grammar Review
 

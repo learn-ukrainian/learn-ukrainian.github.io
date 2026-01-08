@@ -6,6 +6,21 @@
 
 **Related Issue:** [#306](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/306)
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
+  - Текст
+  - Літературний аналіз
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: Immersion
+  min_word_count: 2500
+  required_callouts: []
+  description: C1 literature modules analyze Ukrainian literary works
+-->
+
 ---
 
 ## Quick Reference Checklist
@@ -544,10 +559,16 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ---
 
-## Vocabulary Section for Literature Modules
+---
 
-**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
+## Content Structure Note
 
+### Vocabulary & Activities
+**CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
+- `vocabulary/{slug}.yaml`
+- `activities/{slug}.yaml`
+
+The build system will inject these sections at build time.
 **Example `vocabulary/c1-146-shevchenko.yaml`:**
 
 ```yaml

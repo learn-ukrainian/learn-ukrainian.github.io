@@ -6,13 +6,13 @@
 >
 > Adjectives help us describe everything around us. In Ukrainian, adjectives must AGREE with the nouns they describe — they change their endings to match the noun's gender and number.
 >
-> Приклади: великий будинок, велика машина, велике місто, великі люди — усі форми слова "великий"!
+> Приклади: великий будинок, велика машина, велике місто, великі люди — усі форми слова «великий»!
 
 ---
 
 ## Grammar
 
-In English, adjectives don't change ("big house", "big houses"). In Ukrainian, they MUST agree with the noun's gender and number. This helps you predict what kind of noun is coming!
+In English, adjectives don't change («big house», «big houses»). In Ukrainian, they MUST agree with the noun's gender and number. This helps you predict what kind of noun is coming!
 
 ## Hard Stem Adjective Endings
 
@@ -45,7 +45,7 @@ Most Ukrainian adjectives use these endings:
 
 ## Soft Stem Adjective Endings
 
-Some adjectives have "soft" stems (those ending in soft consonants). They use slightly different endings.
+Some adjectives have «soft» stems (those ending in soft consonants). They use slightly different endings.
 
 > [!observe] Pattern Discovery
 >
@@ -191,17 +191,17 @@ Learning adjectives in pairs helps you remember them better:
 
 > 🌍 **Українська vs англійська**
 >
-> Англійська: "a beautiful woman, a beautiful man, beautiful people" — слово "beautiful" не змінюється.
+> Англійська: «a beautiful woman, a beautiful man, beautiful people» — слово «beautiful» не змінюється.
 >
-> Українська: "красива жінка, красивий чоловік, красиві люди" — закінчення завжди відповідає іменнику!
+> Українська: «красива жінка, красивий чоловік, красиві люди» — закінчення завжди відповідає іменнику!
 >
 > In English, adjectives never change. In Ukrainian, they always match the noun.
 
 > 💡 **Чому узгодження — це добре?**
 >
-> Коли ви чуєте "велика" — ви вже знаєте, що далі буде слово жіночого роду! "Велика... машина? Сумка? Книга?" Закінчення — це підказка! Це дуже корисно!
+> Коли ви чуєте «велика» — ви вже знаєте, що далі буде слово жіночого роду! «Велика... машина? Сумка? Книга?» Закінчення — це підказка! Це дуже корисно!
 >
-> Agreement is helpful! When you hear "велика," you know a feminine noun is coming. It's a grammar preview!
+> Agreement is helpful! When you hear «велика,» you know a feminine noun is coming. It's a grammar preview!
 
 ---
 
@@ -214,3 +214,10 @@ Learning adjectives in pairs helps you remember them better:
 **Наступний урок:** Кольори та одяг!
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

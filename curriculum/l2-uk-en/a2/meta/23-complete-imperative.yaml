@@ -4,24 +4,25 @@ subtitle: Наказовий спосіб
 version: '1.0'
 phase: A2.2
 pedagogy: PPP
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - grammar
-  - imperative
-  - mood
-  - verb-forms
+- grammar
+- imperative
+- mood
+- verb-forms
 grammar:
-  - 2nd person imperative formation (singular and plural)
-  - 1st person plural imperative (-мо forms)
-  - 3rd person imperative with хай/nехай
-  - irregular imperative forms (дай, будь, їж, візьми)
-  - register differences (хай vs нехай)
+- 2nd person imperative formation
+- 1st person plural imperative (-мо forms)
+- 3rd person imperative with хай/nехай
+- irregular imperative forms (дай, будь, їж, візьми)
+- register differences (хай vs нехай)
 objectives:
-  - Learner can form 2nd person imperatives from verb stems
-  - Learner can form 1st person plural imperatives (let's...)
-  - Learner can form 3rd person imperatives with хай/nехай
-  - Learner understands register differences between хай and nехай
-  - Learner can use common imperative expressions
-vocab_count: 20
+- Learner can form 2nd person imperatives from verb stems
+- Learner can form 1st person plural imperatives (let's...)
+- Learner can form 3rd person imperatives with хай/nехай
+- Learner understands register differences between хай and nехай
+- Learner can use common imperative expressions
 slug: 23-complete-imperative
+vocabulary_count: 20
+focus: grammar

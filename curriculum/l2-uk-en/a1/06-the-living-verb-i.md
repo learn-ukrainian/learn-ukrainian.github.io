@@ -34,7 +34,7 @@ The **First Conjugation** (sometimes called the **е-conjugation**) includes ver
 >
 > - **Я читаю** = I am reading (right now) OR I read (every day).
 >
-> In A2, you will learn "perfective" verbs for one-time completed actions (like "I finished reading"). For now, focus on these ongoing actions!
+> In A2, you will learn «perfective» verbs for one-time completed actions (like «I finished reading»). For now, focus on these ongoing actions!
 
 To conjugate them in the present tense, we:
 
@@ -56,7 +56,7 @@ Let's take **читати** (chytaty — to read) as our example:
 
 > 🎯 **Fun Fact**
 >
-> In Ukrainian, you often **drop the pronoun** because the verb ending already tells you who's doing the action! So instead of "Я читаю", Ukrainians often just say "Читаю" — the ending **-ю** makes it clear it's "I". This makes Ukrainian sound efficient and rhythmic.
+> In Ukrainian, you often **drop the pronoun** because the verb ending already tells you who's doing the action! So instead of «Я читаю», Ukrainians often just say «Читаю» — the ending **-ю** makes it clear it's «I». This makes Ukrainian sound efficient and rhythmic.
 
 ### More Examples: The First Conjugation Family
 
@@ -80,7 +80,7 @@ Many Ukrainian verbs end in **-ювати** or **-увати**. These are often 
 
 **The Rule:** In the present tense, the **-ва-** syllable drops out and is replaced by **-ю-** (or -у-).
 
-This is why **працювати** becomes **працюю** (not "працюваю").
+This is why **працювати** becomes **працюю** (not «працюваю»).
 
 **Memorize this pattern:**
 - Infinitive: ...-ювати
@@ -99,7 +99,7 @@ This is why **працювати** becomes **працюю** (not "працюва
 > But don't worry—it comes back in the past tense (as you'll see in M21).
 
 > [!important] **Consonant Mutation**
-> Some verbs like **писати** (to write) change their final consonant: **писати** → **пишу** (not "писаю"). Don't worry about the rules yet; just memorize the "я пишу" form for now!
+> Some verbs like **писати** (to write) change their final consonant: **писати** → **пишу** (not «писаю»). Don't worry about the rules yet; just memorize the «я пишу» form for now!
 
 **Let's see them in action:**
 
@@ -114,7 +114,7 @@ This is why **працювати** becomes **працюю** (not "працюва
 
 > 🎬 **Pop Culture Moment**
 >
-> In the Ukrainian dub of **Harry Potter**, when Hermione says "I'm reading!", she uses the verb **читаю** (chytayu). Just one word! In English, you need two words ("I'm reading"), but Ukrainian packs both the subject and the continuous action into a single conjugated verb. Economy and elegance combined.
+> In the Ukrainian dub of **Harry Potter**, when Hermione says «I'm reading!», she uses the verb **читаю** (chytayu). Just one word! In English, you need two words («I'm reading»), but Ukrainian packs both the subject and the continuous action into a single conjugated verb. Economy and elegance combined.
 
 ### Daily Life Verbs: -ати in Real Contexts
 
@@ -144,7 +144,7 @@ Here's how these verbs show up in real Ukrainian life:
 
 > 🌍 **Real World**
 >
-> Walk into any Ukrainian café in Lviv and you might hear: "Ти **працюєш** сьогодні?" (Are you working today?). The barista asks this to decide if they'll pour you a strong espresso or a relaxing cappuccino. One verb — працюєш — and they know your whole vibe.
+> Walk into any Ukrainian café in Lviv and you might hear: «Ти **працюєш** сьогодні?» (Are you working today?). The barista asks this to decide if they'll pour you a strong espresso or a relaxing cappuccino. One verb — працюєш — and they know your whole vibe.
 
 ---
 
@@ -192,7 +192,7 @@ Here's how these verbs show up in real Ukrainian life:
 
 ### Verbs and Ukrainian Soul
 
-Ukrainians love action verbs. They reflect the culture's emphasis on **doing**, not just being. People in Ukraine ask: "Ти робиш?" (Do you work?), "Ти читаєш?" (Do you read?).
+Ukrainians love action verbs. They reflect the culture's emphasis on **doing**, not just being. People in Ukraine ask: «Ти робиш?» (Do you work?), «Ти читаєш?» (Do you read?).
 
 Life is measured in verbs. What you **do** defines who you are.
 
@@ -204,7 +204,7 @@ The vowels (а, є, ю) flow like a melody. The consonants (т, в, л) give str
 
 > 🎭 **Folklore Corner**
 >
-> In Ukrainian folk songs (пісні), **First Conjugation** verbs appear constantly because they describe daily life: **співати** (to sing), **танцювати** (to dance), **гуляти** (to stroll). The famous folk song "Гуляла дівчина бережком" (A girl walked by the riverbank) uses the past tense of **гуляти** — but you now know the root! You're learning the verbs that built Ukrainian culture.
+> In Ukrainian folk songs (пісні), **First Conjugation** verbs appear constantly because they describe daily life: **співати** (to sing), **танцювати** (to dance), **гуляти** (to stroll). The famous folk song «Гуляла дівчина бережком» (A girl walked by the riverbank) uses the past tense of **гуляти** — but you now know the root! You're learning the verbs that built Ukrainian culture.
 
 ---
 
@@ -229,11 +229,18 @@ You've unlocked **First Conjugation verbs** (-ати/-яти)! You can now:
 
 - Conjugate verbs like **читати, писати, працювати, грати**
 - Describe daily routines and actions
-- Form basic sentences like "Я читаю книгу" (I read a book)
+- Form basic sentences like «Я читаю книгу» (I read a book)
 - Understand the **-аю, -аєш, -ає, -аємо, -аєте, -ають** pattern
 
-**Key Insight:** The verb ending tells you WHO is acting, so you can often drop the pronoun. "Читаю" = "I read." Elegant, efficient, Ukrainian.
+**Key Insight:** The verb ending tells you WHO is acting, so you can often drop the pronoun. «Читаю» = «I read.» Elegant, efficient, Ukrainian.
 
 **Next up:** Module 07 — Questions & Negation. You learn questions and negation!
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

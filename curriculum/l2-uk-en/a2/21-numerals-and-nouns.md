@@ -1,10 +1,10 @@
-# Summary
+# Numerals & Nouns | One, Two, Many: The Agreement Puzzle
 
-## Warm-up
+## Introduction
 
 You already know numbers in Ukrainian. But did you know that the form of the noun changes based on the number?
 
-In English, we say "one book, two books, five books." The number changes, but "book" only adds "-s" for plural.
+In English, we say «one book, two books, five books.» The number changes, but «book» only adds «-s» for plural.
 
 Ukrainian is more complex. The noun takes different forms depending on whether the number is 1, 2-4, or 5+. This system reflects an ancient grammatical structure that exists in most Slavic languages.
 
@@ -25,15 +25,15 @@ Ukrainian divides numbers into three zones with different noun agreement rules:
 | **Zone 3** | 5-20, 25-30... | Genitive Plural | п'ять книг |
 
 > [!tip] The Pattern
-> - **1** = singular (as expected)
-> - **2-4** = "special plural" (Genitive Singular - looks like possessive)
-> - **5+** = "true plural" (Genitive Plural)
+> - **1** = singular
+> - **2-4** = «special plural» (Genitive Singular - looks like possessive)
+> - **5+** = «true plural»
 
 ---
 
 ## Zone 1: One (Один, Одна, Одне)
 
-The number "one" agrees with the noun in gender:
+The number «one» agrees with the noun in gender:
 
 | Gender | Numeral | Noun Form | Example |
 |--------|---------|-----------|---------|
@@ -41,9 +41,9 @@ The number "one" agrees with the noun in gender:
 | Feminine | одна | Nom Sg | одна студентка |
 | Neuter | одне | Nom Sg | одне вікно |
 
-Nothing special here - the noun stays in nominative singular as in English. This is the simplest case and the one English speakers find most intuitive. Simply match the gender of "one" with your noun and you're set.
+Nothing special here - the noun stays in nominative singular as in English. This is the simplest case and the one English speakers find most intuitive. Simply match the gender of «one» with your noun and you're set.
 
-When you count "one" of something, you need to know the noun's gender to select the right form of "one." This is similar to English "a" vs "an" but based on gender rather than sound.
+When you count «one» of something, you need to know the noun's gender to select the right form of «one.» This is similar to English «a» vs «an» but based on gender rather than sound.
 
 ---
 
@@ -55,10 +55,10 @@ This is where Ukrainian differs from English. After 2, 3, and 4, the noun takes 
 
 Historically, this comes from the dual number - a grammatical form for exactly two things. Though the dual has mostly disappeared, its traces remain in the special agreement for 2-4.
 
-## Gender Agreement for "Two"
+## Gender Agreement for «Two»
 
-The number "two" has gender forms:
-- **два** (masculine/neuter): два студенти, два вікна
+The number «two» has gender forms:
+- **два**: два студенти, два вікна
 - **дві** (feminine): дві студентки
 
 ## Examples
@@ -70,8 +70,8 @@ The number "two" has gender forms:
 | 4 | чотири студенти | чотири студентки | чотири вікна |
 
 > [!tip] Memory Trick
-> After 2, 3, 4 - the noun looks like you're asking "of what?"
-> "Дві студентки" = "Two of student (singular)" - the genitive singular form.
+> After 2, 3, 4 - the noun looks like you're asking «of what?»
+> «Дві студентки» = «Two of student (singular)» - the genitive singular form.
 
 ---
 
@@ -112,7 +112,7 @@ Numbers 25-30, 35-40, etc. (ending in 5-0) follow Zone 3:
 
 ## Quick Reference Table
 
-Here is the complete pattern for the noun "книга" (book, f):
+Here is the complete pattern for the noun «книга» (book, f):
 
 | Number | Form | Example |
 |--------|------|---------|
@@ -144,8 +144,8 @@ Here is the complete pattern for the noun "книга" (book, f):
 
 Оля заплатила і пішла додому. У неї було багато смачних продуктів!
 
-Вона сказала продавцеві: "Дякую за все! До побачення!"
-Продавець відповів: "Будь ласка! Приходьте ще!"
+Вона сказала продавцеві: «Дякую за все! До побачення!»
+Продавець відповів: «Будь ласка! Приходьте ще!»
 
 > [!cultural] Cultural Note: Markets in Ukraine
 > Traditional markets (ринки) are still popular in Ukraine.
@@ -195,7 +195,7 @@ Here is the complete pattern for the noun "книга" (book, f):
 - **п'ять** склянок компоту
 
 Родина сіла за стіл. Бабуся сказала:
-"Смачного!"
+«Смачного!»
 
 Після обіду всі їли:
 - **дванадцять** вареників
@@ -221,7 +221,7 @@ Here is the complete pattern for the noun "книга" (book, f):
 
 Note: For masculine nouns, genitive singular often looks like nominative plural, but they are different grammatical forms.
 
-## Mistake 2: Forgetting Gender Agreement for "Two"
+## Mistake 2: Forgetting Gender Agreement for «Two»
 
 ❌ два книги
 ✅ дві книги (feminine → дві)
@@ -229,7 +229,7 @@ Note: For masculine nouns, genitive singular often looks like nominative plural,
 ## Mistake 3: Wrong Form After 5+
 
 ❌ п'ять книги
-✅ п'ять книг (genitive plural)
+✅ п'ять книг
 
 ## Mistake 4: Ignoring the Last Digit Rule
 
@@ -240,7 +240,7 @@ Note: For masculine nouns, genitive singular often looks like nominative plural,
 
 ## Language Learning Tip
 
-When counting, always ask: "What zone is this number in?"
+When counting, always ask: «What zone is this number in?»
 
 1. **Last digit is 1** → Zone 1 → Nominative Singular
 2. **Last digit is 2, 3, or 4** → Zone 2 → Genitive Singular
@@ -250,9 +250,7 @@ The numbers 11-19 are exceptions - they all use Zone 3 even though 11-14 contain
 
 Practice by counting objects around you. The more you practice, the more automatic this becomes.
 
----
-
-## Summary Table
+# Підсумок
 
 Today you learned numeral-noun agreement:
 
@@ -263,9 +261,9 @@ Today you learned numeral-noun agreement:
 | 3 | 5-20, 25-30... | Genitive Plural |
 
 **Ключові правила | Key Rules:**
-- "Two" has gender: **два** for masculine/neuter, **дві** for feminine.
+- «Two» has gender: **два** for masculine/neuter, **дві** for feminine.
 - Look at the last digit for compound numbers.
-- 11-19 always use Zone 3 (Genitive Plural).
+- 11-19 always use Zone 3.
 
 ---
 
@@ -273,7 +271,7 @@ Today you learned numeral-noun agreement:
 >
 > «Один за всіх, і всі за одного!» (Один — називний однини, всі — множина.)
 >
-> *Translation: "One for all, and all for one!"*
+> *Translation: «One for all, and all for one!»*
 
 > 🇺🇦 **Числівники змінюють все!**
 >
@@ -283,3 +281,9 @@ Today you learned numeral-noun agreement:
 > - **5-20**: п'ять студентів, десять книг, двадцять вікон
 >
 > Ці правила здаються складними, але вони логічні! Практикуйте з реальними предметами навколо вас.
+
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

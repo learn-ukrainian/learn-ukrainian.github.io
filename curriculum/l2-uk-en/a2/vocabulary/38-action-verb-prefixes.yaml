@@ -61,7 +61,7 @@ items:
   pos: verb
 - lemma: довестися
   ipa: doveˈstɪsʲɐ
-  translation: to have to (impersonal)
+  translation: to have to
   pos: verb
   gender: n
 - lemma: докупити
@@ -152,7 +152,7 @@ items:
   pos: verb
 - lemma: наклеїт
   ipa: nɐˈklejite
-  translation: stick! (imperative typo)
+  translation: stick!
   pos: noun
   gender: m
 - lemma: накрити

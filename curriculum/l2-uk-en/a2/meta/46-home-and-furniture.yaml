@@ -4,19 +4,19 @@ subtitle: Household Vocabulary and Descriptions
 version: '2.0'
 phase: A2.5
 pedagogy: PPP
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - vocabulary
-  - home
-  - furniture
+- vocabulary
+- home
+- furniture
 grammar:
-  - thematic vocabulary
-  - locative case for rooms
+- thematic vocabulary
+- locative case for rooms
 objectives:
-  - Learner knows home and furniture vocabulary
-  - Learner can describe rooms and furniture
-  - Learner can talk about where things are located
+- Learner knows home and furniture vocabulary
+- Learner can describe rooms and furniture
+- Learner can talk about where things are located
 vocabulary_count: 30
-vocab_count: 46
 slug: 46-home-and-furniture
+focus: grammar

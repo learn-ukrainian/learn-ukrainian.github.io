@@ -89,7 +89,7 @@
 - type: quiz
   title: Nature & Weather
   items:
-  - question: Can you identify the correct translation for the Ukrainian word "Гора"?
+  - question: Can you identify the correct translation for the Ukrainian word «Гора»?
     options:
     - text: Mountain
       correct: true
@@ -109,7 +109,7 @@
       correct: false
     - text: Ставок
       correct: false
-  - question: If the weather is described as "Сонячно", what does it mean?
+  - question: If the weather is described as «Сонячно», what does it mean?
     options:
     - text: Sunny
       correct: true
@@ -119,7 +119,7 @@
       correct: false
     - text: Windy
       correct: false
-  - question: What phenomenon is happening when Ukrainians say "Іде дощ"?
+  - question: What phenomenon is happening when Ukrainians say «Іде дощ»?
     options:
     - text: It is raining
       correct: true
@@ -159,7 +159,7 @@
       correct: false
     - text: Тепло
       correct: false
-  - question: If you see "Блискавка" and hear "Грім", what is happening?
+  - question: If you see «Блискавка» and hear «Грім», what is happening?
     options:
     - text: A thunderstorm
       correct: true
@@ -254,7 +254,9 @@
     options:
     - сонячно
     - сніг
-    explanation: Snow and warm don't go together. Use "сонячно" (sunny) with warm
+    - помилка
+    - правильно
+    explanation: Snow and warm don't go together. Use «сонячно» (sunny) with warm
       weather.
   - sentence: Ми плаваємо в **горі**.
     error: горі
@@ -262,6 +264,8 @@
     options:
     - озері
     - горі
+    - помилка
+    - правильно
     explanation: You swim in a lake (озеро) or sea, not a mountain.
   - sentence: '**Літо** — це холодна пора.'
     error: Літо
@@ -269,6 +273,8 @@
     options:
     - Зима
     - Літо
+    - помилка
+    - правильно
     explanation: Winter (зима) is the cold season, not summer.
   - sentence: Падає білий **дощ**.
     error: дощ
@@ -276,6 +282,8 @@
     options:
     - сніг
     - дощ
+    - помилка
+    - правильно
     explanation: Snow (сніг) is white, not rain.
   - sentence: Птахи співають на **морі**.
     error: морі
@@ -283,6 +291,8 @@
     options:
     - деревах
     - морі
+    - помилка
+    - правильно
     explanation: Birds sing in trees (дерева), not at sea.
   - sentence: Влітку дуже **холодно**.
     error: холодно
@@ -290,6 +300,8 @@
     options:
     - тепло
     - холодно
+    - помилка
+    - правильно
     explanation: Summer is warm (тепло), not cold.
   id: weather-mistakes
 - type: match-up
@@ -345,29 +357,29 @@
 - type: true-false
   title: Nature Facts
   items:
-  - statement: '"Гора" = mountain.'
+  - statement: «Гора» = mountain.
     correct: true
-  - statement: '"Озеро" = lake.'
+  - statement: «Озеро» = lake.
     correct: true
-  - statement: '"Ріка" = sea.'
+  - statement: «Ріка» = sea.
     correct: false
-  - statement: '"Море" = sea.'
+  - statement: «Море» = sea.
     correct: true
-  - statement: '"Сонячно" = sunny.'
+  - statement: «Сонячно» = sunny.
     correct: true
-  - statement: '"Хмарно" = sunny.'
+  - statement: «Хмарно» = sunny.
     correct: false
-  - statement: '"Дощ" = rain.'
+  - statement: «Дощ» = rain.
     correct: true
-  - statement: '"Весна" = spring.'
+  - statement: «Весна» = spring.
     correct: true
-  - statement: '"Літо" = winter.'
+  - statement: «Літо» = winter.
     correct: false
-  - statement: '"Зима" = winter.'
+  - statement: «Зима» = winter.
     correct: true
-  - statement: '"Ліс" = forest.'
+  - statement: «Ліс» = forest.
     correct: true
-  - statement: '"Долина" = mountain.'
+  - statement: «Долина» = mountain.
     correct: false
   id: nature-facts
 - type: translate

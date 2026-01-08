@@ -2,10 +2,10 @@
 
 ## Warm-up
 
-You've already learned **First Conjugation** verbs that end in **-ати** (читати, писати, працювати). But what about verbs like **говорити** (hovorýty) "to speak" and **робити** (róbyty) "to do"? These belong to the **Second Conjugation** — the **-ити** family. They're everywhere in Ukrainian, powering actions from speaking and seeing to loving and wanting. Let's unlock this essential verb group!
+You've already learned **First Conjugation** verbs that end in **-ати** (читати, писати, працювати). But what about verbs like **говорити** (hovorýty) «to speak» and **робити** (róbyty) «to do»? These belong to the **Second Conjugation** — the **-ити** family. They're everywhere in Ukrainian, powering actions from speaking and seeing to loving and wanting. Let's unlock this essential verb group!
 
 > [!tip] **Aspect Check**
-> Like the verbs from Module 06, these are **imperfective verbs** (недоконаний вид). They describe actions in progress or habits. You are building the foundation of "how" and "when" things happen in Ukrainian!
+> Like the verbs from Module 06, these are **imperfective verbs** (недоконаний вид). They describe actions in progress or habits. You are building the foundation of «how» and «when» things happen in Ukrainian!
 
 ## Presentation
 
@@ -106,7 +106,7 @@ Some common verbs don't follow the standard pattern. Here are three essentials:
 
 > [!example] **Pop Culture Moment**
 >
-> In the Ukrainian dub of _Harry Potter_, when Ron says "I want to eat," it's **"Я хочу їсти"** (Ja khochú jisty). Two irregular verbs in one sentence! Ukrainian kids learn these patterns from the movies they love.
+> In the Ukrainian dub of _Harry Potter_, when Ron says «I want to eat,» it's **«Я хочу їсти»** (Ja khochú jisty). Two irregular verbs in one sentence! Ukrainian kids learn these patterns from the movies they love.
 
 ## Practice
 
@@ -140,11 +140,11 @@ _Yes, she speaks Ukrainian._
 
 ### Pattern Recognition: Consonant Mutation
 
-Notice how some Second Conjugation verbs change their stem slightly in the **"я"** form:
+Notice how some Second Conjugation verbs change their stem slightly in the **«я»** form:
 
-- **робити** → роб**лю** (not "робю")
-- **ходити** → ход**жу** (not "ходю")
-- **любити** → люб**лю** (not "любю")
+- **робити** → роб**лю** (not «робю»)
+- **ходити** → ход**жу** (not «ходю»)
+- **любити** → люб**лю** (not «любю»)
 
 This is called **consonant mutation** — certain letters change before the **-ю** ending to make pronunciation smoother. Here are the most common patterns you'll see:
 
@@ -156,10 +156,10 @@ This is called **consonant mutation** — certain letters change before the **-�
 | **с → ш** | (sibilant) | просити → про**шу** |
 | **т → ч** | (dental) | хотіти → хо**чу**, платити → пла**чу** |
 
-You'll pick up these patterns naturally as you practice! Don't worry about memorizing the table; just notice the "extra" letters when you see them.
+You'll pick up these patterns naturally as you practice! Don't worry about memorizing the table; just notice the «extra» letters when you see them.
 
 > [!context] **Reflexive Verbs Preview**
-> Some verbs end in **-ся** or **-сь**. This usually means the action is directed back at the speaker (like "I wash *myself*"). You'll learn the full pattern in Module 25, but for now, just notice them when they appear!
+> Some verbs end in **-ся** or **-сь**. This usually means the action is directed back at the speaker (like «I wash *myself*»). You'll learn the full pattern in Module 25, but for now, just notice them when they appear!
 
 > [!warning] **Common Mistake**
 Don't confuse **First Conjugation** and **Second Conjugation** endings! First Conjugation uses **-аю/-ають**, Second Conjugation uses **-ю/-ять**. Compare:
@@ -188,7 +188,7 @@ Now it's your turn! Try forming sentences:
 
 ### The Beauty of Ukrainian Verb Logic
 
-Ukrainian verbs are incredibly precise. Notice how **ходити** (to walk/go on foot) and **їздити** (to ride/go by vehicle) are two different verbs? In English, we just say "go," but Ukrainian forces you to think: _How are you traveling?_
+Ukrainian verbs are incredibly precise. Notice how **ходити** (to walk/go on foot) and **їздити** (to ride/go by vehicle) are two different verbs? In English, we just say «go,» but Ukrainian forces you to think: _How are you traveling?_
 
 This precision extends to posture verbs too:
 
@@ -230,3 +230,10 @@ You've now mastered **Second Conjugation verbs (-ити)**! Here's what you can 
 With First and Second Conjugation verbs combined, you can now express hundreds of actions in Ukrainian. Вітаю! (Congratulations!)
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

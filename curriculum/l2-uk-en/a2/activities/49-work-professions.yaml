@@ -468,11 +468,13 @@
   id: fix-the-mistakes
 - type: cloze
   title: Career Ladder
-  passage: 'Максим почав свою {кар''єру|роботу|школу} в маленькій фірмі. Він працював {програмістом|лікарем|водієм}. Його {начальник|клієнт|син} був дуже розумним.
+  passage: 'Максим почав свою {кар''єру|роботу|школу} в маленькій фірмі. Він працював
+    {програмістом|лікарем|водієм}. Його {начальник|клієнт|син} був дуже розумним.
 
     Максим хотів {заробляти|витрачати|грати} багато грошей. Він працював старанно.
 
-    Через рік його {найняли|звільнили|забули} новим менеджером. Тепер у нього є своя {команда|фабрика|школа}.
+    Через рік його {найняли|звільнили|забули} новим менеджером. Тепер у нього є своя
+    {команда|фабрика|школа}.
 
     Він {керує|працює|хоче} великими проєктами. Його {зарплата|відпустка|робота} зросла.
 
@@ -483,7 +485,10 @@
 - type: mark-the-words
   title: Profession Search
   id: profession-search
-  passage: Мій брат — *програміст*. Він працює в *офісі*. Його дружина — *лікар*. Вона працює в *лікарні*. Мій батько був *водієм*. Він любив свій *автобус*. Моя мама — *вчитель*. *Школа* — це її другий дім. Я хочу бути *юристом*. Я буду працювати в *суді*. Всі професії важливі!
+  passage: Мій брат — *програміст*. Він працює в *офісі*. Його дружина — *лікар*.
+    Вона працює в *лікарні*. Мій батько був *водієм*. Він любив свій *автобус*. Моя
+    мама — *вчитель*. *Школа* — це її другий дім. Я хочу бути *юристом*. Я буду працювати
+    в *суді*. Всі професії важливі!
   correct_words:
   - програміст
   - офісі
@@ -495,6 +500,7 @@
   - Школа
   - юристом
   - суді
+  instruction: Натисніть на правильні слова в тексті.
 - type: select
   title: Choose the Correct Word
   items:
@@ -504,12 +510,20 @@
       correct: true
     - text: лікар
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Instrumental case for profession function.
   - question: Вона йде на ____.
     options:
     - text: роботу
       correct: true
     - text: робота
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Accusative with motion preposition 'на'.
   - question: Ми ____ проєктом.
@@ -518,12 +532,20 @@
       correct: true
     - text: керувати
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Conjugated verb 'we manage'.
   - question: Директор ____ його.
     options:
     - text: звільнив
       correct: true
     - text: звільнити
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Past tense 'fired'.
   - question: У мене висока ____.
@@ -532,12 +554,20 @@
       correct: true
     - text: зарплату
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Nominative subject 'salary is high'.
   - question: Це мій ____.
     options:
     - text: офіс
       correct: true
     - text: офісу
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Nominative identification.
   - question: Я хочу ____.
@@ -546,12 +576,20 @@
       correct: true
     - text: відпустка
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Accusative object 'want (what?) vacation'.
   - question: Інженер ____ міст.
     options:
     - text: будує
       correct: true
     - text: будувати
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Conjugated verb 'builds'.
   - question: Вчитель ____ дітей.
@@ -560,12 +598,20 @@
       correct: true
     - text: навчати
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Conjugated verb 'teaches'.
   - question: Клієнт ____ товар.
     options:
     - text: купує
       correct: true
     - text: купувати
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Conjugated verb 'buys'.
   - question: Юрист знає ____.
@@ -574,12 +620,20 @@
       correct: true
     - text: законом
       correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
+      correct: false
     explanation: Accusative object 'law'.
   - question: Ми ____ в компанії.
     options:
     - text: працюємо
       correct: true
     - text: працювати
+      correct: false
+    - text: Неправильно
+      correct: false
+    - text: Інший варіант
       correct: false
     explanation: Conjugated verb 'we work'.
   id: choose-the-correct-word

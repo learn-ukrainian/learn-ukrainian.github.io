@@ -1,4 +1,4 @@
-## Warm-up
+## Introduction
 
 Welcome to the kitchen! Food and cooking are central to Ukrainian culture. In this module, you will learn essential vocabulary for cooking, kitchen equipment, and describing food. After this lesson, you will be able to navigate a Ukrainian kitchen and follow basic recipes.
 
@@ -32,11 +32,11 @@ Every kitchen needs the right tools. Here's the essential vocabulary for kitchen
 > Notice the locative case forms!
 > **в каструлі**, **на сковороді**, **у духовці**, **в холодильнику**
 > These forms are needed when describing where food is located.
-> The locative case (called місцевий відмінок in Ukrainian) is used after the prepositions "в/у" and "на" when describing location. Masculine nouns typically take "-у" or "-і" endings, while feminine nouns take "-і" endings. For example, "холодильник" becomes "в холодильнику".
+> The locative case (called місцевий відмінок in Ukrainian) is used after the prepositions «в/у» and «на» when describing location. Masculine nouns typically take «-у» or «-і» endings, while feminine nouns take «-і» endings. For example, «холодильник» becomes «в холодильнику».
 
 ## Cooking Methods
 
-Ukrainian has specific verbs for different cooking methods. Each method requires a different verb, and using the correct verb shows your understanding of Ukrainian culinary vocabulary. In English, we might simply say "cook" for many situations, but Ukrainian differentiates more precisely:
+Ukrainian has specific verbs for different cooking methods. Each method requires a different verb, and using the correct verb shows your understanding of Ukrainian culinary vocabulary. In English, we might simply say «cook» for many situations, but Ukrainian differentiates more precisely:
 
 | Ukrainian | English | Example |
 |-----------|---------|---------|
@@ -165,9 +165,9 @@ Describing food requires knowing taste adjectives. These adjectives are essentia
 
 When following recipes in Ukrainian, you will encounter imperative forms. The imperative is used to give commands and instructions. Ukrainian has two imperative forms: one for informal situations and one for formal situations or when addressing multiple people.
 
-The informal imperative typically ends in a consonant or soft sign. The formal imperative adds the suffix "-те" to the informal form. Here are the most common cooking imperatives:
+The informal imperative typically ends in a consonant or soft sign. The formal imperative adds the suffix «-те» to the informal form. Here are the most common cooking imperatives:
 
-| Infinitive | Imperative (singular) | Imperative (plural/formal) |
+| Infinitive | Imperative (singular) | Imperative |
 |-----------|-----------------|-----------------|
 | варити | вари! | варіть! |
 | смажити | смаж! | смажте! |
@@ -179,15 +179,13 @@ The informal imperative typically ends in a consonant or soft sign. The formal i
 
 When eating with Ukrainian friends or family, these phrases will help you participate in the culinary culture:
 
-- **Смачного!** = Enjoy your meal! This is said before eating. It is the equivalent of the French "bon appétit" and is considered polite to say before starting a meal.
+- **Смачного!** = Enjoy your meal! This is said before eating. It is the equivalent of the French «bon appétit» and is considered polite to say before starting a meal.
 - **Дякую, дуже смачно!** = Thank you, very delicious! Say this to compliment the cook.
 - **Можна рецепт?** = Can I have the recipe? Ukrainians love sharing recipes, so do not be shy to ask.
 - **Як це готувати?** = How do you cook this? Use this when you want to learn a new dish.
 - **Це гаряче/холодне** = This is hot/cold. Useful for describing food temperature.
 
----
-
-# Summary
+# Підсумок
 
 **Обладнання:**
 - каструля
@@ -230,7 +228,7 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 >
 > «Борщ — це не просто їжа, це українська традиція!»
 >
-> *Translation: "Borscht is not just food, it's Ukrainian tradition!"*
+> *Translation: «Borscht is not just food, it's Ukrainian tradition!»*
 
 > 🇺🇦 **Українська кухня**
 >
@@ -241,3 +239,9 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 > - **сало** — традиційна українська закуска
 >
 > Українці кажуть: «Їж, пий, та нас не забувай!» Смачного!
+
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

@@ -9,7 +9,7 @@
 > — **Куди ти йдеш?** (Where are you going?) → Я йду **в парк**. (I'm going to the park.)
 > — **Звідки ти?** (Where are you from?) → Я **з України**. (I'm from Ukraine.)
 >
-> Same preposition "в" — but different CASE depending on the question!
+> Same preposition «в» — but different CASE depending on the question!
 
 ---
 
@@ -182,7 +182,7 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 >
 > **Вдома** = at home (location — where you ARE)
 > **Додому** = home (direction — where you're GOING)
-> "Я вдома" (I'm at home) vs "Я йду додому" (I'm going home)
+> «Я вдома» (I'm at home) vs «Я йду додому» (I'm going home)
 
 > 🌍 **Українські міста (Ukrainian Cities)**
 >
@@ -192,7 +192,7 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 > ⚡ **Myth vs Fact**
 >
-> **Myth:** "Cases are just random endings to memorize"
+> **Myth:** «Cases are just random endings to memorize»
 > **Fact:** Cases have LOGIC! Location (де?) → Locative. Direction (куди?) → Accusative/Genitive. Origin (звідки?) → Genitive. The question tells you the case!
 
 > 💡 **До vs В/На (To a Person vs To a Place)**
@@ -206,6 +206,13 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 # Summary
 
-Ви вивчили прийменники місця та напрямку! Тепер ви знаєте, як запитати "Де?" або "Куди?". (You learned prepositions of location and direction! Now you know how to ask "Where?" or "Where to?") Ви знаєте різницю між "вдома" та "додому". Ви також знаєте, як сказати "звідки" ви приїхали. Також ви вивчили прийменники: з, від, до. Це була чудова робота! Ви великі молодці! Гуляйте в парку та говоріть українською! Супер! (This was great work! You are great! Walk in the park and speak Ukrainian! Super!)
+Ви вивчили прийменники місця та напрямку! Тепер ви знаєте, як запитати «Де?» або «Куди?». (You learned prepositions of location and direction! Now you know how to ask «Where?» or «Where to?») Ви знаєте різницю між «вдома» та «додому». Ви також знаєте, як сказати «звідки» ви приїхали. Також ви вивчили прийменники: з, від, до. Це була чудова робота! Ви великі молодці! Гуляйте в парку та говоріть українською! Супер! (This was great work! You are great! Walk in the park and speak Ukrainian! Super!)
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

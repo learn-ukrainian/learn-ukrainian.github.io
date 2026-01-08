@@ -4,20 +4,20 @@ subtitle: Kitchen Vocabulary and Cooking Expressions
 version: '2.0'
 phase: A2.5
 pedagogy: PPP
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - vocabulary
-  - food
-  - cooking
-  - kitchen
+- vocabulary
+- food
+- cooking
+- kitchen
 grammar:
-  - thematic vocabulary
-  - imperative for recipes
+- thematic vocabulary
+- imperative for recipes
 objectives:
-  - Learner knows food and cooking vocabulary
-  - Learner can describe meals and cooking processes
-  - Learner can follow simple recipes in Ukrainian
+- Learner knows food and cooking vocabulary
+- Learner can describe meals and cooking processes
+- Learner can follow simple recipes in Ukrainian
 vocabulary_count: 35
-vocab_count: 72
 slug: 45-food-and-cooking
+focus: vocabulary

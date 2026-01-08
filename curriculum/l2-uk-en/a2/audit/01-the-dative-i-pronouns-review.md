@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1738/1000
+- **Words:** ✅ 1751/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -15,19 +15,25 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 39.4% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 39.0% (target 35-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Introduction** | ✅ | 160 | Included in Core |
-| **Вступ** | ⚪️ | 99 | Skipped |
-| **Presentation** | ✅ | 464 | Included in Core |
-| **Cultural Insight** | ✅ | 452 | Included in Core |
-| **Reading Practice: Листівка з Одеси** | ✅ | 244 | Included in Core |
-| **Practice** | ⚪️ | 116 | Skipped |
-| **Практика побудови речень** | ⚪️ | 133 | Skipped |
+| **Introduction** | ✅ | 253 | Included in Core |
+| **Presentation** | ✅ | 192 | Included in Core |
+| **Reading Practice: Листівка з Одеси** | ✅ | 398 | Included in Core |
+| **Why the Dative Case Matters** | ✅ | 65 | Included in Core |
+| **Чому давальний відмінок важливий** | ⚪️ | 139 | Skipped |
+| **The Dative Pronouns** | ⚪️ | 35 | Skipped |
+| **Pattern 1: Expressing Likes** | ✅ | 113 | Included in Core |
+| **Модель 2: Вираження потреб** | ⚪️ | 26 | Skipped |
+| **Модель 3: Фізичні та емоційні стани** | ⚪️ | 84 | Skipped |
+| **Cultural Insight** | ✅ | 0 | Included in Core |
+| **Mini-Dialogues** | ✅ | 254 | Included in Core |
+| **Найбільш вживані вирази** | ⚪️ | 61 | Skipped |
+| **Дієслова, що вимагають давальний відмінок** | ⚪️ | 31 | Skipped |
 | **Підсумок** | ✅ | 70 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Need More Practice?** | ⚪️ | 30 | Skipped |

@@ -82,6 +82,22 @@ items:
   translation: receipt
   pos: noun
   gender: m
+- lemma: родовий
+  translation: genitive
+  pos: adj
+- lemma: знахідний
+  translation: accusative
+  pos: adj
+- lemma: орудний
+  translation: instrumental
+  pos: adj
+- lemma: давальний
+  translation: dative
+  pos: adj
+- lemma: відмінок
+  translation: case
+  pos: noun
+  gender: m
 - lemma: шкіра
   ipa: ˈʃkʲirɐ
   translation: leather; skin

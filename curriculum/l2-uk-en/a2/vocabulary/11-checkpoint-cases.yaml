@@ -87,3 +87,28 @@ items:
     translation: number; date
     pos: noun
     gender: n
+  - lemma: відмінок
+    ipa: vidˈminok
+    translation: case (grammar)
+    pos: noun
+    gender: m
+  - lemma: знахідний
+    ipa: znɐˈxidnij
+    translation: accusative
+    pos: adj
+    gender: m
+  - lemma: родовий
+    ipa: rodoˈvɪj
+    translation: genitive
+    pos: adj
+    gender: m
+  - lemma: давальний
+    ipa: dɐˈvɑlʲnɪj
+    translation: dative
+    pos: adj
+    gender: m
+  - lemma: орудний
+    ipa: oˈrudnɪj
+    translation: instrumental
+    pos: adj
+    gender: m

@@ -4,20 +4,20 @@ subtitle: Checkpoint & New Roots
 version: '1.0'
 phase: A2.4
 pedagogy: Review/Inquiry
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - checkpoint
-  - roots
-  - vocabulary
-  - review
+- checkpoint
+- roots
+- vocabulary
+- review
 grammar:
-  - root families (мов, слух, дум, рід)
-  - review of prefixes and suffixes
+- root families (мов, слух, дум, рід)
+- review of prefixes and suffixes
 objectives:
-  - Learner can express thoughts (dum), speech (mov), and hearing (slukh)
-  - Learner can synthesize knowledge of prefixes, suffixes, and roots
-  - Learner completes the Word Formation phase
+- Learner can express thoughts (dum), speech (mov), and hearing (slukh)
+- Learner can synthesize knowledge of prefixes, suffixes, and roots
+- Learner completes the Word Formation phase
 vocabulary_count: 48
-vocab_count: 65
 slug: 43-wf-mastery
+focus: grammar

@@ -20,11 +20,13 @@
 
 ## Presentation
 
+## Практика
+
 ## Forming Comparative Adjectives
 
 Ukrainian has two ways to form comparatives:
 
-### 1. Synthetic Form (Single Word)
+## 1. Synthetic Form
 
 Add **-ший/-іший** to the adjective stem:
 
@@ -40,7 +42,7 @@ Add **-ший/-іший** to the adjective stem:
 >
 > After hard consonants, use **-ший** (but often -іший is possible too). After soft consonants, use **-іший**. In practice, **-іший** is very common and safe to use for most adjectives.
 
-### 2. Compound Form (більш/менш + adjective)
+## 2. Compound Form (більш/менш + adjective)
 
 For some adjectives or for emphasis, use **більш** (more) or **менш** (less) + positive adjective:
 
@@ -50,7 +52,7 @@ For some adjectives or for emphasis, use **більш** (more) or **менш** (
 
 **Use compound form when:**
 - The adjective is long or complex
-- You want to emphasize "MORE" or "LESS"
+- You want to emphasize «MORE» or «LESS»
 - No simple synthetic form exists
 
 > 📜 **Style Note**
@@ -85,13 +87,13 @@ Some very common adjectives have completely irregular comparatives:
 
 There are TWO ways to compare in Ukrainian:
 
-### 1. X + comparative + ніж + Y (than)
+## 1. X + comparative + ніж + Y (than)
 
 - Він **старший ніж** я. (He is older than I am.)
 - Ця книга **цікавіша ніж** та. (This book is more interesting than that one.)
 - Лев **більший ніж** кіт. (A lion is bigger than a cat.)
 
-### 2. X + comparative + за + Accusative
+## 2. X + comparative + за + Accusative
 
 - Він **старший за мене**. (He is older than me.)
 - Ця книга **цікавіша за ту**. (This book is more interesting than that one.)
@@ -103,8 +105,8 @@ There are TWO ways to compare in Ukrainian:
 
 > 🔍 **Important Grammar**
 >
-> With "ніж," the compared item stays in Nominative.
-> With "за," the compared item changes to Accusative.
+> With «ніж,» the compared item stays in Nominative.
+> With «за,» the compared item changes to Accusative.
 
 ---
 
@@ -112,7 +114,7 @@ There are TWO ways to compare in Ukrainian:
 
 ## Comparisons in Daily Life
 
-### Порівняння в повсякденному житті
+## Порівняння в повсякденному житті
 
 Comparatives are everywhere in Ukrainian conversations! Let's see how they're used in real-life situations.
 
@@ -162,7 +164,7 @@ Share your thoughts and judgments using comparatives:
 
 ## Compliments and Soft Expression
 
-### Компліменти та м'яке висловлювання
+## Компліменти та м'яке висловлювання
 
 Ukrainians often use comparatives to give compliments and soften criticism - it's more polite than direct statements!
 
@@ -181,9 +183,9 @@ Make someone's day with these comparative compliments:
 
 **Soft Criticism — М'яка критика:**
 
-Instead of saying "Це погано" (This is bad), use comparatives to be more diplomatic:
+Instead of saying «Це погано», use comparatives to be more diplomatic:
 
-Замість того, щоб казати "Це погано", використовуйте порівняльні форми, щоб бути більш дипломатичними:
+Замість того, щоб казати «Це погано», використовуйте порівняльні форми, щоб бути більш дипломатичними:
 
 - Це могло б бути **кращим**. — This could be better.
 - Я очікував чогось **більшого**. — I expected something bigger/more.
@@ -191,13 +193,11 @@ Instead of saying "Це погано" (This is bad), use comparatives to be more
 
 > 🌍 **In the Real World — У реальному світі**
 >
-> Ukrainians frequently use the comparative degree to be polite. Instead of saying "Це погано" (This is bad), they say "Є варіанти кращі" (There are better options) — it sounds softer and more professional!
+> Ukrainians frequently use the comparative degree to be polite. Instead of saying «Це погано», they say «Є варіанти кращі» — it sounds softer and more professional!
 >
-> Українці часто використовують порівняльний ступінь, щоб бути ввічливими. Замість "Це погано" кажуть "Є варіанти кращі" — це звучить м'якше і професійніше!
+> Українці часто використовують порівняльний ступінь, щоб бути ввічливими. Замість «Це погано» кажуть «Є варіанти кращі» — це звучить м'якше і професійніше!
 
 ---
-
-## Практика
 
 ## Вправа 1: Формуйте порівняльний ступінь
 
@@ -240,50 +240,10 @@ Instead of saying "Це погано" (This is bad), use comparatives to be more
 - ❌ за я → ✅ за мене (Accusative!)
 - ❌ більший за ніж → ✅ більший ніж OR більший за (choose one!)
 
+# Підсумок
+
 ---
-
-# Summary
-
-## What You Learned
-
-This module covered comparative adjectives in Ukrainian — a fundamental grammatical structure that you'll use constantly in everyday conversation for shopping, describing, and expressing preferences.
-
-**Key Formation Patterns:**
-
-| Pattern | Description | Example |
-|---------|-------------|---------|
-| Synthetic | stem + -ший/-іший | старий → старіший — older |
-| Compound | більш/менш + adj | більш важливий — more important |
-| Irregular | memorize! | добрий → кращий — better |
-
-**Formation:**
-- Synthetic forms are simpler and more natural in spoken Ukrainian
-- Compound forms using більш/менш are more formal or emphatic
-- For adjective stem + ending: generally -іший is safe for most adjectives
-
-**Irregular comparatives to memorize:**
-These are among the most common adjectives in Ukrainian — you'll use them every day:
-- добрий → кращий, поганий → гірший — quality
-- великий → більший, малий → менший — size
-- високий → вищий, низький → нижчий — height
-- дорогий → дорожчий, дешевий → дешевший — price
-
-**Comparison structures:**
-There are two ways to say "than" in Ukrainian:
-- X + comparative + **ніж** + Y — The compared item stays in Nominative case. More formal.
-- X + comparative + **за** + Y — The compared item changes to Accusative case. More colloquial.
-
-**Intensifying your comparisons:**
-- набагато + comparative = much ___ (набагато кращий = much better)
-- трохи + comparative = a little ___ (трохи старіший = a little older)
-- значно + comparative = significantly ___ (значно дорожчий = significantly more expensive)
-
-> 💡 **Пам'ятайте!**
->
-> Найчастіше вживані прикметники мають неправильні форми! Їх просто потрібно запам'ятати: кращий, гірший, більший, менший, вищий, нижчий.
-
-Тепер ви можете порівнювати що завгодно українською! 📊
 
 ## Need More Practice?
 
----
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

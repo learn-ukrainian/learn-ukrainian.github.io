@@ -5,49 +5,53 @@
 > **Focus:** All 7 cases, aspect introduction, comparison, complex sentences
 > **Immersion:** Graduated (M01-15: 40-50%, M16-35: 50-65%, M36-50: 65-80%)
 
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Introduction|Вступ
+  - Presentation|Grammar|Focus|Презентація|Граматика|Теорія
+  - Practice|Exercises|Activity|Практика|Вправи
+  - Summary|Підсумок
+  - Need More Practice?
+  optional_sections:
+  - Діалоги
+  - Культурна нотатка
+  forbidden_headers:
+  - Activities
+  - Vocabulary
+  - External Resources
+  - Вправи
+  - Словник
+  pedagogy: PPP
+  min_word_count: 1000
+  required_callouts: []
+  description: A2 uses PPP pedagogy with bilingual structure and focus on all 7 cases
+-->
+
 ---
 
 ## Template Checklist
 
 Before submitting, verify:
 
-- [ ] Frontmatter complete (module, title, phase, pedagogy, objectives)
+- [ ] Metadata sidecar complete in `meta/{slug}.yaml`
 - [ ] Word count meets target (1000+ words)
 - [ ] NO transliteration in body text
-- [ ] 10+ activities with 12+ items each
+- [ ] 10+ activities with 12+ items each in `activities/{slug}.yaml`
 - [ ] 4+ unique activity types including error-correction
 - [ ] 4+ engagement boxes
 - [ ] Bilingual structure (English intro + Ukrainian Вступ)
-- [ ] Vocabulary table with IPA pronunciation
+- [ ] Vocabulary items enriched with IPA in `vocabulary/{slug}.yaml`
+- [ ] Mandatory headers (Summary, External Resources, Activities, Vocabulary) present at end of MD
 - [ ] All activity answers are correct
 
 ---
 
-## Frontmatter
+## Metadata Sidecar
 
-```yaml
----
-module: a2-{NN}
-title: "{Title in English}"
-subtitle: "{Descriptive subtitle}"
-version: "1.0"
-phase: "A2.{1|2|3}"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - {topic1}
-  - {topic2}
-grammar:
-  - {grammar point 1}
-  - {grammar point 2}
-objectives:
-  - "Learner can {objective 1}"
-  - "Learner can {objective 2}"
-  - "Learner can {objective 3}"
-vocabulary_count: 25 # Must match count in vocabulary/{slug}.yaml
----
-```
+**CRITICAL:** Do NOT include frontmatter in the Markdown file. Use `curriculum/l2-uk-en/a2/meta/{slug}.yaml`.
+
+See [METADATA_YAML_SCHEMA.md](../../docs/dev/METADATA_YAML_SCHEMA.md) for details.
 
 ---
 
@@ -60,6 +64,7 @@ Main title in Ukrainian (matching topic).
 ### ## Introduction
 
 English introduction (100-150 words):
+
 - Context for what's being learned
 - Connection to previous knowledge
 - Overview of module content
@@ -68,6 +73,7 @@ English introduction (100-150 words):
 ### ## Вступ
 
 Ukrainian introduction (100-150 words):
+
 - Same content as English intro but in Ukrainian
 - Appropriate for A2 level complexity
 - Maximum 15 words per sentence
@@ -80,19 +86,21 @@ Core lesson content with bilingual approach:
 #### ### {English Section Title}
 
 Concept explanation in English:
+
 - Clear grammar rules
 - Comparison tables
 - 4-6 example sentences
 
 ```markdown
-| Називний | Давальний | Приклад |
-|----------|-----------|---------|
-| я | мені | Дай мені книгу. |
+| Називний | Давальний | Приклад         |
+| -------- | --------- | --------------- |
+| я        | мені      | Дай мені книгу. |
 ```
 
 #### ### {Ukrainian Section Title}
 
 Same concept reinforced in Ukrainian:
+
 - Simpler explanation
 - More examples
 - Pattern highlighting
@@ -104,6 +112,7 @@ Same concept reinforced in Ukrainian:
 ### ## Practice
 
 Guided practice section:
+
 - Transformation exercises
 - Pattern completion
 - Guided dialogues
@@ -117,86 +126,42 @@ Guided practice section:
 **Б:** Так, мені дуже подобається кава!
 ```
 
+---
+
+## Mandatory Sections (At End of File)
+
+Every A2 module MUST end with these four sections. The content is injected automatically from YAML sidecars during the build, but the headers MUST be present in the Markdown for structural validation.
+
 ### ## Summary
 
+(or `## Підсумок`)
+
 Brief recap in Ukrainian (75-100 words):
+
 - Key grammar points
 - Most important vocabulary
 - Encouragement
 
-### ## Activities
+---
 
-10+ activities from allowed types:
+## Content Structure Note
 
-**A2 Activity Types:**
-- `quiz` - Multiple choice
-- `match-up` - Pair matching
-- `fill-in` - Gap fill with options
-- `true-false` - Statement validation
-- `group-sort` - Category sorting
-- `unjumble` - Word reordering (10-12 words)
-- `error-correction` - Find and fix errors (NEW at A2)
-- `cloze` - Passage completion (NEW at A2)
-- `mark-the-words` - Click matching words (NEW at A2)
+### Vocabulary, Activities & External Resources
 
-**Activity Requirements:**
-- 12+ items per activity
-- 4+ unique activity types
-- Must include `error-correction`
-- All error-correction items need `[!explanation]`
+**CRITICAL:** Do NOT add `## Vocabulary`, `## Activities`, or `## External Resources` headers. These sections are injected automatically from:
 
-### Activity Format Quick Reference
+- `vocabulary/{slug}.yaml`
+- `activities/{slug}.yaml`
+- `docs/resources/external_resources.yaml`
 
-**CRITICAL:** Activities must be defined in `activities/{slug}.yaml`. Do NOT embed activities in Markdown.
-
-See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas and examples.
-
-**Example `activities/a2-XX-module.yaml`:**
-
-```yaml
-- type: quiz
-  title: Dative Pronouns
-  items:
-    - question: '"To me" in Ukrainian is:'
-      options:
-        - text: мене
-          correct: false
-        - text: мені
-          correct: true
-
-- type: error-correction
-  title: Fix the Case
-  items:
-    - sentence: Я кажу вона правду.
-      error: вона
-      answer: їй
-      options:
-        - вона
-        - їй
-      explanation: '"Tell to someone" requires dative: вона → їй'
-```
-
-### ## Vocabulary
-
-**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
-
-**Example `vocabulary/a2-XX-module.yaml`:**
-
-```yaml
-items:
-- lemma: мені
-  ipa: /meˈnʲi/
-  translation: to me
-  pos: pron
-  gender: —
-  note: dative
-```
+The build system (`generate_mdx.py`) will inject these sections at build time.
 
 ---
 
 ## A2 Constraints
 
 ### Grammar Allowed (Building on A1)
+
 - All 7 cases (Dative and Instrumental introduced)
 - Aspect pairs (introduction)
 - Comparison (вищий ступінь)
@@ -205,12 +170,14 @@ items:
 - Future tense (imperfective)
 
 ### Grammar Introduced at A2
+
 - Dative case (давальний)
 - Instrumental case (орудний)
 - Perfective aspect basics
 - Subordinate clauses with що, бо
 
 ### Sentence Complexity
+
 - Maximum 15 words per sentence
 - Up to 2 clauses
 - Simple coordination (і, а, але)
@@ -220,25 +187,25 @@ items:
 
 ## A2 Phases and Immersion
 
-| Phase | Modules | Immersion Target | Focus |
-|-------|---------|------------------|-------|
-| A2.1 | 01-15 | 40-50% | Dative, Instrumental introduction |
-| A2.2 | 16-35 | 50-65% | Aspect pairs, comparison |
-| A2.3 | 36-50 | 65-80% | Complex sentences, integration |
+| Phase | Modules | Immersion Target | Focus                             |
+| ----- | ------- | ---------------- | --------------------------------- |
+| A2.1  | 01-15   | 40-50%           | Dative, Instrumental introduction |
+| A2.2  | 16-35   | 50-65%           | Aspect pairs, comparison          |
+| A2.3  | 36-50   | 65-80%           | Complex sentences, integration    |
 
 ---
 
 ## Quality Targets
 
-| Metric | Target |
-|--------|--------|
-| Words | 1000+ |
-| Activities | 10+ |
-| Items/activity | 12+ |
-| Unique types | 4+ |
-| Engagement boxes | 4+ |
-| Vocabulary | 20+ |
-| Dialogues | 2+ |
+| Metric           | Target |
+| ---------------- | ------ |
+| Words            | 1000+  |
+| Activities       | 10+    |
+| Items/activity   | 12+    |
+| Unique types     | 4+     |
+| Engagement boxes | 4+     |
+| Vocabulary       | 20+    |
+| Dialogues        | 2+     |
 
 ---
 
@@ -261,70 +228,48 @@ A2 introduces error-correction. **All 4 callouts are required:**
 ## Example Module Skeleton
 
 ```markdown
----
-module: a2-01
-title: "The Dative I — Pronouns"
-subtitle: "To Whom Does This Belong?"
-version: "1.0"
-phase: "A2.1"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: none
-tags:
-  - grammar
-  - cases
-  - dative
-grammar:
-  - dative pronouns
-  - verbs with dative
-objectives:
-  - "Learner can use dative pronouns"
-  - "Learner can express likes using подобатися"
-  - "Learner can describe states with dative"
-vocabulary_count: 26
----
-
 # Давальний відмінок I — Займенники
 
 ## Introduction
 
-{English introduction explaining dative case context...}
+{English introduction...}
 
 ## Вступ
 
-{Ukrainian introduction at A2 level...}
+{Ukrainian introduction...}
 
 ## Presentation
 
 ### Why the Dative Case Matters
 
-{English explanation with table...}
+{...}
 
 ### Займенники в давальному відмінку
 
-{Ukrainian reinforcement...}
+{...}
 
 > 💡 **Did You Know?**
-> {Interesting fact about dative in Ukrainian culture}
+> {...}
 
 ## Practice
 
-{Guided exercises...}
+{...}
 
 ## Dialogues
 
 **А:** Тобі подобається ця книга?
 **Б:** Так, мені дуже подобається!
 
-## Summary
+# Підсумок
 
 {Ukrainian recap...}
 
-## Activities
+---
 
-(See `activities/a2-01-dative-pronouns.yaml`)
+## Самооцінка (Optional)
 
-## Vocabulary
-
-(See `vocabulary/a2-01-dative-pronouns.yaml`)
+Checklist for learners...
 ```
+
+> [!NOTE]
+> **Standardized Sections**: The headers for `Activities`, `External Resources`, and `Vocabulary` are **NOT** required in the Markdown source file for A2+. The build system injects them automatically from the corresponding sidecars.

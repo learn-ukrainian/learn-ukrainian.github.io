@@ -4,20 +4,20 @@ subtitle: Describing the World
 version: '1.0'
 phase: A2.4
 pedagogy: Inquiry
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - grammar
-  - adjectives
-  - suffixes
-  - word-formation
+- grammar
+- adjectives
+- suffixes
+- word-formation
 grammar:
-  - adjective suffixes (-ний, -овий, -ський, -чий)
-  - diminutive adjectives (-еньк-ий)
+- adjective suffixes (-ний, -овий, -ський, -чий)
+- diminutive adjectives (-еньк-ий)
 objectives:
-  - Learner can turn nouns into adjectives (Music -> Musical)
-  - Learner can express origin (Ukraine -> Ukrainian)
-  - Learner can use scientific/academic adjectives
+- Learner can turn nouns into adjectives (Music -> Musical)
+- Learner can express origin (Ukraine -> Ukrainian)
+- Learner can use scientific/academic adjectives
 vocabulary_count: 30
-vocab_count: 74
 slug: 40-adj-suffixes
+focus: grammar

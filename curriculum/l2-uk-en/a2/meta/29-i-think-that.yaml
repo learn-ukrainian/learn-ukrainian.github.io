@@ -4,20 +4,20 @@ subtitle: Expressing Opinions and Beliefs
 version: '1.0'
 phase: A2.3
 pedagogy: Communicative
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - opinions
-  - thoughts
-  - agreement
+- opinions
+- thoughts
+- agreement
 grammar:
-  - opinion verbs
-  - that-clauses
-  - agreement forms
+- opinion verbs
+- that-clauses
+- agreement forms
 objectives:
-  - Learner can express simple opinions
-  - Learner can agree and disagree politely
-  - Learner understands the contrast between думати and вважати
+- Learner can express simple opinions
+- Learner can agree and disagree politely
+- Learner understands the contrast between думати and вважати
 vocabulary_count: 25
-vocab_count: 34
 slug: 29-i-think-that
+focus: grammar

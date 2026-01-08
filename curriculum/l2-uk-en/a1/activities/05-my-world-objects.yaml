@@ -327,34 +327,34 @@
 - type: true-false
   title: Demonstrative Agreement
   items:
-  - statement: '"Цей" is used with masculine singular nouns.'
+  - statement: '«Цей» is used with masculine singular nouns.'
     correct: true
     explanation: Correct! Цей стілець.
-  - statement: '"Ця" is used with feminine singular nouns.'
+  - statement: '«Ця» is used with feminine singular nouns.'
     correct: true
     explanation: Correct! Ця чашка.
-  - statement: '"Це" is used with masculine singular nouns.'
+  - statement: '«Це» is used with masculine singular nouns.'
     correct: false
     explanation: Incorrect! Це is for neuter singular nouns (це вікно).
-  - statement: '"Ці" is used with all plural nouns regardless of gender.'
+  - statement: '«Ці» is used with all plural nouns regardless of gender.'
     correct: true
     explanation: Correct! Ці ключі, ці чашки, ці вікна.
-  - statement: '"Той" is used with feminine singular nouns.'
+  - statement: '«Той» is used with feminine singular nouns.'
     correct: false
-    explanation: Incorrect! Той is for masculine singular (той стілець). Use "та"
+    explanation: Incorrect! Той is for masculine singular (той стілець). Use «та»
       for feminine.
-  - statement: '"Та" is used with feminine singular nouns.'
+  - statement: '«Та» is used with feminine singular nouns.'
     correct: true
     explanation: Correct! Та сумка.
-  - statement: '"Те" is used with neuter singular nouns.'
+  - statement: '«Те» is used with neuter singular nouns.'
     correct: true
     explanation: Correct! Те вікно.
-  - statement: '"Ті" is used with all plural nouns.'
+  - statement: '«Ті» is used with all plural nouns.'
     correct: true
     explanation: Correct! Ті стільці, ті сумки, ті вікна.
-  - statement: '"Це" can only mean "this" (neuter).'
+  - statement: '«Це» can only mean "this" (neuter).'
     correct: false
-    explanation: Incorrect! "Це" also means "this is" in general (Це книга = This
+    explanation: Incorrect! «Це» also means "this is" in general (Це книга = This
       is a book).
   - statement: Demonstratives must agree with the gender of the noun.
     correct: true

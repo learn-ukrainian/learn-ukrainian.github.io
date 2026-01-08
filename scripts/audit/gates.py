@@ -94,14 +94,30 @@ def evaluate_vocab(count: int, target: int) -> GateResult:
     return GateResult('WARN', '⚠️', f"{count} < {target} (soft target)")
 
 
-def evaluate_structure(has_summary: bool, has_vocab: bool, has_vocab_table: bool) -> GateResult:
+def evaluate_structure(
+    has_summary: bool,
+    has_vocab: bool,
+    has_vocab_table: bool,
+    has_activities: bool = True,
+    has_resources: bool = True,
+    is_a2_plus: bool = False
+) -> GateResult:
     """Evaluate structure gate."""
     if not has_summary:
         return GateResult('FAIL', '❌', "Missing '## Summary'")
-    if not has_vocab:
-        return GateResult('FAIL', '❌', "Missing '## Vocabulary'")
-    if not has_vocab_table:
-        return GateResult('FAIL', '❌', "Missing Vocab Table")
+    
+    if is_a2_plus:
+        if not has_activities:
+            return GateResult('FAIL', '❌', "Missing '## Activities' header")
+        if not has_vocab:
+            return GateResult('FAIL', '❌', "Missing '## Vocabulary' header")
+    else:
+        # Legacy/A1 checks
+        if not has_vocab:
+            return GateResult('FAIL', '❌', "Missing '## Vocabulary'")
+        if not has_vocab_table:
+            return GateResult('FAIL', '❌', "Missing Vocab Table")
+            
     return GateResult('PASS', '✅', "Valid Structure")
 
 
@@ -264,30 +280,36 @@ def compute_recommendation(
     severity = 0
     reasons = []
 
-    # 1. Pedagogical violations
+    # 1. Pedagogical & Template violations
     ped_count = len(pedagogical_violations)
     if ped_count == 0:
         pass
     elif ped_count <= 3:
-        severity += 10
-        reasons.append(f"{ped_count} pedagogical violations (minor)")
+        severity += 5
+        reasons.append(f"{ped_count} violations (minor)")
     elif ped_count <= 6:
-        severity += 25
-        reasons.append(f"{ped_count} pedagogical violations (moderate)")
+        severity += 15
+        reasons.append(f"{ped_count} violations (moderate)")
     elif ped_count <= 10:
-        severity += 45
-        reasons.append(f"{ped_count} pedagogical violations (significant)")
+        severity += 30
+        reasons.append(f"{ped_count} violations (significant)")
     else:
-        severity += 60
-        reasons.append(f"{ped_count} pedagogical violations (severe - consider rewrite)")
+        severity += 50
+        reasons.append(f"{ped_count} violations (severe - consider revision)")
 
     # 2. Violation types (some are worse than others)
     violation_types = [v.get('type', '') for v in pedagogical_violations]
 
     grammar_viols = sum(1 for t in violation_types if t == 'GRAMMAR')
     if grammar_viols >= 3:
-        severity += 15
+        severity += 20
         reasons.append(f"{grammar_viols} grammar-level violations (fundamental)")
+
+    # Structural violations are weighted LESS if they are purely about flags/sections
+    struc_viols = sum(1 for t in violation_types if t in ('SECTION_OUT_OF_ORDER', 'DUPLICATE_SYNONYMOUS_HEADERS', 'EMPTY_REQUIRED_SECTION'))
+    if struc_viols >= 5:
+        severity += 10 # Cap the impact of many structural issues
+        reasons.append(f"Multiple structural inconsistencies ({struc_viols})")
 
     activity_viols = sum(
         1 for t in violation_types
@@ -307,13 +329,13 @@ def compute_recommendation(
             deviation = 0
 
         if deviation > 20:
-            severity += 30
+            severity += 40
             reasons.append(f"Immersion {deviation:.0f}% off target (major rebalancing needed)")
         elif deviation > 10:
-            severity += 15
+            severity += 20
             reasons.append(f"Immersion {deviation:.0f}% off target")
         elif deviation > 5:
-            severity += 5
+            severity += 10
             reasons.append(f"Immersion {deviation:.0f}% off target (minor)")
 
     # 4. Lint errors
@@ -321,22 +343,22 @@ def compute_recommendation(
     if lint_count == 0:
         pass
     elif lint_count <= 2:
-        severity += 5
+        severity += 2
     elif lint_count <= 5:
-        severity += 15
+        severity += 10
         reasons.append(f"{lint_count} format errors")
     else:
-        severity += 25
+        severity += 20
         reasons.append(f"{lint_count} format errors (many)")
 
-    # 5. Structure failures
+    # 5. Structure failures (Hard structural issues like missing Summary)
     structure_result = results.get('structure', {})
     if isinstance(structure_result, GateResult):
         if structure_result.status == 'FAIL':
-            severity += 40
+            severity += 20 # Reduced from 40
             reasons.append(f"Structure issue: {structure_result.msg}")
     elif isinstance(structure_result, dict) and structure_result.get('status') == 'FAIL':
-        severity += 40
+        severity += 20 # Reduced from 40
         reasons.append(f"Structure issue: {structure_result.get('msg', 'missing sections')}")
 
     # 6. Activity gates
@@ -373,10 +395,10 @@ def compute_recommendation(
     # Determine recommendation
     if severity == 0:
         return ('PASS', [], 0)
-    elif severity < 30:
+    elif severity < 40: # Increased threshold for PASS/UPDATE
         return ('UPDATE', reasons, severity)
-    elif severity < 60:
-        reasons.insert(0, f"Borderline case (severity {severity}/100)")
+    elif severity < 75: # Increased threshold for UPDATE/REWRITE
+        reasons.insert(0, f"Revision recommended (severity {severity}/100)")
         return ('UPDATE', reasons, severity)
     else:
         return ('REWRITE', reasons, severity)

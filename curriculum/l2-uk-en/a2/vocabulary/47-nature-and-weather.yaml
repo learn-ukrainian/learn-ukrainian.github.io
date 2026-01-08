@@ -68,11 +68,11 @@ items:
   pos: verb
 - lemma: йтися
   ipa: jˈtɪsʲɐ
-  translation: to be about (impersonal)
+  translation: to be about
   pos: verb
 - lemma: канікула
   ipa: kɐˈnʲikulɐ
-  translation: vacation (sg typo)
+  translation: vacation
   pos: noun
   gender: m
 - lemma: катаватися

@@ -99,7 +99,8 @@
 - type: quiz
   title: 'Logic of Reporting (Concept: Logical Deduction)'
   items:
-  - question: Чи змінюється зазвичай час дієслова в українській непрямій мові, якщо подія ще триває?
+  - question: Чи змінюється зазвичай час дієслова в українській непрямій мові, якщо
+      подія ще триває?
     options:
     - text: Ні, зазвичай ми повністю зберігаємо оригінальний час
       correct: true
@@ -109,17 +110,19 @@
       correct: false
     - text: Так, час змінюється тільки для дуже довгих речень
       correct: false
-  - question: Яке українське слово найкраще перекладає "if" у реченні "Він запитав, чи я це знаю"?
+  - question: Яке українське слово найкраще перекладає "if" у реченні «Він запитав,
+      чи я це знаю»?
     options:
-    - text: Українська частка "Чи"
+    - text: Українська частка «Чи»
       correct: true
-    - text: Українська частка "Якщо"
+    - text: Українська частка «Якщо»
       correct: false
-    - text: Українська частка "Якби"
+    - text: Українська частка «Якби»
       correct: false
-    - text: Українська частка "Що"
+    - text: Українська частка «Що»
       correct: false
-  - question: Який саме відтінок значень вносить у розповідь популярний початок історії "Кажуть, що..."?
+  - question: Який саме відтінок значень вносить у розповідь популярний початок історії
+      «Кажуть, що...»?
     options:
     - text: Це вказує на певні чутки або загальну думку
       correct: true
@@ -129,7 +132,8 @@
       correct: false
     - text: Це вказує на початок дуже веселої української пісні
       correct: false
-  - question: Що саме ви робите, коли використовуєте в розмові українське дієслово "Заперечувати"?
+  - question: Що саме ви робите, коли використовуєте в розмові українське дієслово
+      «Заперечувати»?
     options:
     - text: Ви офіційно кажете, що якась інформація є неправдою
       correct: true
@@ -139,7 +143,8 @@
       correct: false
     - text: Ви розпочинаєте нову цікаву розповідь про подорож
       correct: false
-  - question: 'Як правильно передати непрямою мовою фразу Максима, який сказав: "Я буду там завтра"?'
+  - question: 'Як правильно передати непрямою мовою фразу Максима, який сказав: «Я
+      буду там завтра»?'
     options:
     - text: Максим сказав, що він буде там завтра
       correct: true
@@ -149,7 +154,8 @@
       correct: false
     - text: Максим сказав, про те що він уже вдома був
       correct: false
-  - question: Про що саме ми сигналізуємо слухачеві, коли вживаємо дієслово "Нагадати" в непрямій мові?
+  - question: Про що саме ми сигналізуємо слухачеві, коли вживаємо дієслово «Нагадати»
+      в непрямій мові?
     options:
     - text: Що хтось інший міг випадково забути певну інформацію
       correct: true
@@ -159,7 +165,7 @@
       correct: false
     - text: Що хтось інший дуже сильно хоче піти спати зараз
       correct: false
-  - question: Який емоційний колір має українське дієслово "Критикувати" у вашій розповіді?
+  - question: Який емоційний колір має українське дієслово «Критикувати» у вашій розповіді?
     options:
     - text: Це дієслово має негативне забарвлення оцінки
       correct: true
@@ -169,7 +175,8 @@
       correct: false
     - text: Це дієслово вказує лише на голосне звучання голосу
       correct: false
-  - question: У якій саме ситуації найкраще використовувати українське дієслово "Пояснити" в діалозі?
+  - question: У якій саме ситуації найкраще використовувати українське дієслово «Пояснити»
+      в діалозі?
     options:
     - text: Коли ми наводимо вагомі причини або роз'яснюємо щось
       correct: true
@@ -179,7 +186,8 @@
       correct: false
     - text: Коли ми шукаємо правильний шлях до нового будинку
       correct: false
-  - question: Що саме ви відчуваєте або виражаєте, вживаючи дієслово "Скаржитися" у розмові?
+  - question: Що саме ви відчуваєте або виражаєте, вживаючи дієслово «Скаржитися»
+      у розмові?
     options:
     - text: Виражаєте своє незадоволення певною ситуацією або річчю
       correct: true
@@ -189,17 +197,19 @@
       correct: false
     - text: Виражаєте велике бажання почати працювати швидше
       correct: false
-  - question: Яке з цих трьох українських дієслів мовлення є найбільш офіційним та діловим?
+  - question: Яке з цих трьох українських дієслів мовлення є найбільш офіційним та
+      діловим?
     options:
-    - text: Це офіційне дієслово "Повідомити"
+    - text: Це офіційне дієслово «Повідомити»
       correct: true
-    - text: Це повсякденне дієслово "Казати"
+    - text: Це повсякденне дієслово «Казати»
       correct: false
-    - text: Це дуже неформальне дієслово "Балакати"
+    - text: Це дуже неформальне дієслово «Балакати»
       correct: false
-    - text: Це гучне емоційне дієслово "Кричати"
+    - text: Це гучне емоційне дієслово «Кричати»
       correct: false
-  - question: Що саме ми маємо на увазі, коли кажемо "Він намагається мене переконати" в дискусії?
+  - question: Що саме ми маємо на увазі, коли кажемо «Він намагається мене переконати»
+      в дискусії?
     options:
     - text: Він намагається змусити мене повірити в його думку
       correct: true
@@ -209,15 +219,16 @@
       correct: false
     - text: Він намагається згадати моє ім'я після довгої перерви
       correct: false
-  - question: Які українські дієслівні форми мовлення вважаються найбільш нейтральними для звіту?
+  - question: Які українські дієслівні форми мовлення вважаються найбільш нейтральними
+      для звіту?
     options:
-    - text: Нейтральні форми "Казати" або "Сказати"
+    - text: Нейтральні форми «Казати» або «Сказати»
       correct: true
-    - text: Емоційна та роздратована форма "Скаржитися"
+    - text: Емоційна та роздратована форма «Скаржитися»
       correct: false
-    - text: Дуже гучна та напружена форма "Кричати"
+    - text: Дуже гучна та напружена форма «Кричати»
       correct: false
-    - text: Тиха та таємнича форма "Шепотіти"
+    - text: Тиха та таємнича форма «Шепотіти»
       correct: false
   id: logic-of-reporting-(concept:-logical-deduction)
 - type: unjumble
@@ -290,20 +301,20 @@
   groups:
   - name: Information (Передача інформації)
     items:
-    - Казати (To say)
-    - Повідомити (To inform)
-    - Розповідати (To tell/narrate)
-    - Пояснити (To explain)
-    - Відповідати (To answer)
-    - Повторити (To repeat)
+    - Казати
+    - Повідомити
+    - Розповідати
+    - Пояснити
+    - Відповідати
+    - Повторити
   - name: Influence or Emotion (Вплив або емоція)
     items:
-    - Скаржитися (To complain)
-    - Критикувати (To criticize)
-    - Хвалити (To praise)
-    - Заперечувати (To deny)
-    - Переконувати (To convince)
-    - Обіцяти (To promise)
+    - Скаржитися
+    - Критикувати
+    - Хвалити
+    - Заперечувати
+    - Переконувати
+    - Обіцяти
   id: verb-intention-(concept:-semantic-categorization)
 - type: true-false
   title: 'True or False? (Concept: Concept Validation)'
@@ -311,22 +322,22 @@
   - statement: If Max says "I am eating", you report "Max said he ate".
     correct: false
     explanation: Max said he IS eating (їсть).
-  - statement: '"Чи" is used for Yes/No questions in reported speech.'
+  - statement: «Чи» is used for Yes/No questions in reported speech.
     correct: true
     explanation: '"Asked IF..."'
-  - statement: '"Стверджувати" is softer than "Казати".'
+  - statement: «Стверджувати» is softer than «Казати».
     correct: false
-    explanation: It's stronger (Assert/Claim).
-  - statement: '"Плітки" means official news.'
+    explanation: It's stronger.
+  - statement: «Плітки» means official news.
     correct: false
     explanation: It means gossip.
-  - statement: '"Обіцяти" means to promise.'
+  - statement: «Обіцяти» means to promise.
     correct: true
     explanation: Yes.
-  - statement: '"Коментувати" means to be silents.'
+  - statement: «Коментувати» means to be silents.
     correct: false
     explanation: To comment.
-  - statement: '"Хвалити" is the opposite of "Критикувати".'
+  - statement: «Хвалити» is the opposite of «Критикувати».
     correct: true
     explanation: Praise vs Criticize.
   - statement: When reporting "Where are you?", you keep the word "Where".
@@ -335,18 +346,28 @@
   - statement: You must always change the tense to Past in Ukrainian reports.
     correct: false
     explanation: Only pronouns change usually.
-  - statement: '"Вони кажуть" signifies a rumor.'
+  - statement: «Вони кажуть» signifies a rumor.
     correct: true
     explanation: '"They say..."'
   id: true-or-false?-(concept:-concept-validation)
 - type: cloze
   title: 'The Gossip Flow (Concept: Contextual Application)'
-  passage: Ти вже чула останні новини про нашу Олю? Марія {сказала|поїла}, що Оля скоро виходить заміж за Олега! Я відразу запитала Олю, {чи|що} це справді чиста правда. Але Оля {відповіла|запитала} мені сьогодні, що це зовсім ні. Вона твердо сказала, {що|де} це просто неправдиві чутки в офісі. Але Петро {стверджує|мовчить}, що бачив її вчора в магазині весільних суконь. Він навіть {похвалив|посварив}, що її нова сукня була дуже гарна. Хтось тут точно {бреше|спить} нам усім сьогодні! Я думаю, що треба {нагадати|забути} Олі ще раз про це. Може, вона {пояснить|замовкне} все нам пізніше? Я {обіцяю|заперечую}, що дізнаюся правду скоро. {Нехай|Хоча} вона сама розкаже. Адже всі {кажуть|мовчать}, що це цікаво!
+  passage: Ти вже чула останні новини про нашу Олю? Марія {сказала|поїла}, що Оля
+    скоро виходить заміж за Олега! Я відразу запитала Олю, {чи|що} це справді чиста
+    правда. Але Оля {відповіла|запитала} мені сьогодні, що це зовсім ні. Вона твердо
+    сказала, {що|де} це просто неправдиві чутки в офісі. Але Петро {стверджує|мовчить},
+    що бачив її вчора в магазині весільних суконь. Він навіть {похвалив|посварив},
+    що її нова сукня була дуже гарна. Хтось тут точно {бреше|спить} нам усім сьогодні!
+    Я думаю, що треба {нагадати|забути} Олі ще раз про це. Може, вона {пояснить|замовкне}
+    все нам пізніше? Я {обіцяю|заперечую}, що дізнаюся правду скоро. {Нехай|Хоча}
+    вона сама розкаже. Адже всі {кажуть|мовчать}, що це цікаво!
   id: the-gossip-flow-(concept:-contextual-application)
 - type: mark-the-words
   title: 'Find Reporting Verbs (Concept: Pattern Recognition)'
   id: find-reporting-verbs-(concept:-pattern-recognition)
-  passage: 'Він *сказав*, що прийде. Вона *запитала*, коли це буде. Ми *повідомили*, що вже готові. Директор *наказав* працювати. Клієнт *поскаржився* на сервіс. Ти *пообіцяв* допомогти!
+  passage: 'Він *сказав*, що прийде. Вона *запитала*, коли це буде. Ми *повідомили*,
+    що вже готові. Директор *наказав* працювати. Клієнт *поскаржився* на сервіс. Ти
+    *пообіцяв* допомогти!
 
     ---
 
@@ -361,6 +382,7 @@
   - заперечую
   - стверджує
   - пояснить
+  instruction: Натисніть на правильні слова в тексті.
 - type: error-correction
   title: 'Fix the Report (Concept: Critical Proofreading)'
   items:
@@ -370,6 +392,8 @@
     options:
     - голодний
     - був
+    - помилка
+    - правильно
     explanation: Don't backshift tenses. Keep present.
   - sentence: Вона запитала, **що** я прийду.
     error: що
@@ -377,6 +401,8 @@
     options:
     - чи
     - що
+    - помилка
+    - правильно
     explanation: For Yes/No questions, use чи.
   - sentence: Вони **говорили**, що це правда.
     error: говорили
@@ -384,6 +410,8 @@
     options:
     - сказали
     - говорили
+    - помилка
+    - правильно
     explanation: Говорити is to speak, сказати is to say.
   - sentence: Він **відповів** питання.
     error: відповів
@@ -392,6 +420,7 @@
     - запитав
     - відповів
     - поставив
+    - помилка
     explanation: Use поставити for asking questions.
   - sentence: Вона каже, **як** мене звати.
     error: як
@@ -399,6 +428,8 @@
     options:
     - що
     - як
+    - помилка
+    - правильно
     explanation: Use що for statements.
   - sentence: Я **обіцяю**, що я зробив це вчора.
     error: обіцяю
@@ -406,6 +437,8 @@
     options:
     - стверджую
     - обіцяю
+    - помилка
+    - правильно
     explanation: You cannot promise the past.
   id: fix-the-report-(concept:-critical-proofreading)
 - type: translate
@@ -417,11 +450,15 @@
       correct: true
     - text: Він сказав, що стомився був.
       correct: false
+    - text: Неправильно
+      correct: false
   - source: She asked if I know him.
     options:
     - text: Вона запитала, чи я знаю його.
       correct: true
     - text: Вона запитала, якщо я знаю його.
+      correct: false
+    - text: Неправильно
       correct: false
   - source: They promised to help.
     options:
@@ -429,11 +466,15 @@
       correct: true
     - text: Вони сказали допомогти.
       correct: false
+    - text: Неправильно
+      correct: false
   - source: The doctor informed (us)...
     options:
     - text: Лікар повідомив...
       correct: true
     - text: Лікар спитав...
+      correct: false
+    - text: Неправильно
       correct: false
   - source: He denies everything.
     options:
@@ -441,11 +482,15 @@
       correct: true
     - text: Він погоджується все.
       correct: false
+    - text: Неправильно
+      correct: false
   - source: She complained about the noise.
     options:
     - text: Вона поскаржилася на шум.
       correct: true
     - text: Вона похвалила шум.
+      correct: false
+    - text: Неправильно
       correct: false
   - source: Remind me to call.
     options:
@@ -453,11 +498,15 @@
       correct: true
     - text: Скажи мені подзвонити.
       correct: false
+    - text: Неправильно
+      correct: false
   - source: He claims he is rich.
     options:
     - text: Він стверджує, що багатий.
       correct: true
     - text: Він питає, що багатий.
+      correct: false
+    - text: Неправильно
       correct: false
   - source: They speak about films.
     options:
@@ -465,11 +514,15 @@
       correct: true
     - text: Вони кажуть про фільми.
       correct: false
+    - text: Неправильно
+      correct: false
   - source: What did she answer?
     options:
     - text: Що вона відповіла?
       correct: true
     - text: Що вона спитала?
+      correct: false
+    - text: Неправильно
       correct: false
   - source: Explain to me why.
     options:
@@ -477,10 +530,14 @@
       correct: true
     - text: Скажи мені чому.
       correct: false
+    - text: Неправильно
+      correct: false
   - source: He criticized the food.
     options:
     - text: Він розкритикував їжу.
       correct: true
     - text: Він поїв їжу.
+      correct: false
+    - text: Неправильно
       correct: false
   id: english-to-ukrainian-(concept:-cross-linguistic-transfer)

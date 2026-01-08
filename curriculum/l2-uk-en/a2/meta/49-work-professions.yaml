@@ -7,16 +7,17 @@ pedagogy: Narrative
 duration: 60
 transliteration: none
 tags:
-  - vocabulary
-  - work
-  - professions
-  - business
+- vocabulary
+- work
+- professions
+- business
 grammar:
-  - noun-gender-professions
+- noun-gender-professions
 objectives:
-  - Name common professions: лікар, вчитель, інженер
-  - Describe workplaces: офіс, школа, лікарня
-  - Discuss career and salary
-  - Use verbs for work activities
-vocab_count: 42
+- Name common professions: лікар, вчитель, інженер
+- Describe workplaces: офіс, школа, лікарня
+- Discuss career and salary
+- Use verbs for work activities
 slug: 49-work-professions
+vocabulary_count: 42
+focus: vocabulary

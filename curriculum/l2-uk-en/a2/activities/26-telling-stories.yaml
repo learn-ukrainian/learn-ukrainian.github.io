@@ -28,21 +28,24 @@
   id: connectors-and-meanings
 - type: cloze
   title: Complete the Story
-  passage: '{Раніше|Потім|Раптом|Нарешті} я не любив футбол, але тепер люблю. (Used to/Before) {Щойно|Давно|Колись|Завжди} йшов дощ, а тепер сонце. (Just now) Ми чекали три години і {нарешті|спочатку|раптом|згодом} автобус приїхав! (Finally)
+  passage: '{Раніше|Потім|Раптом|Нарешті} я не любив футбол, але тепер люблю. {Щойно|Давно|Колись|Завжди}
+    йшов дощ, а тепер сонце. Ми чекали три години і {нарешті|спочатку|раптом|згодом}
+    автобус приїхав!
 
+    {Спочатку|Врешті-решт|Раптом|Якось} ми пішли в кіно, а після цього в кафе. Я читав
+    книгу. {Раптом|Потім|Тоді|Тому}, хтось постукав у двері. Він зателефонував {відразу|ледве|ще|вже}.
 
-    {Спочатку|Врешті-решт|Раптом|Якось} ми пішли в кіно, а після цього в кафе. (First) Я читав книгу. {Раптом|Потім|Тоді|Тому}, хтось постукав у двері. (Suddenly) Він зателефонував {відразу|ледве|ще|вже}. (Immediately)
+    Це сталося {якось|вчора|тепер|завжди} влітку. Вона {вже|ще|тільки|ледве} зробила
+    це завдання. Ми не бачилися {давно|недавно|скоро|вчора}.
 
-
-    Це сталося {якось|вчора|тепер|завжди} влітку. (Once/Somehow) Вона {вже|ще|тільки|ледве} зробила це завдання. (Already) Ми не бачилися {давно|недавно|скоро|вчора}. (Long ago)
-
-
-    {Згодом|Спочатку|Раніше|Щойно} він став відомим актором. (Later/Subsequently) Я {ледве|дуже|так|як} тебе не впізнав! (Barely/Almost not) Ми {тільки-но|довго|раніше|потім} прийшли. (Just/Only just)'
+    {Згодом|Спочатку|Раніше|Щойно} він став відомим актором. Я {ледве|дуже|так|як}
+    тебе не впізнав! Ми {тільки-но|довго|раніше|потім} прийшли.'
   id: complete-the-story
 - type: quiz
   title: Understand the Sequence
   items:
-  - question: Яке перевірене часом слово найкраще підходить для того, щоб почати нову розповідь?
+  - question: Яке перевірене часом слово найкраще підходить для того, щоб почати нову
+      розповідь?
     options:
     - text: Спочатку ми вирішили піти в парк
       correct: true
@@ -52,7 +55,8 @@
       correct: false
     - text: Раптом у небі з'явилася яскрава зірка
       correct: false
-  - question: Коли в історії відбувається щось несподіване, яке слово ми зазвичай використовуємо?
+  - question: Коли в історії відбувається щось несподіване, яке слово ми зазвичай
+      використовуємо?
     options:
     - text: Несподівано двері відчинилися від вітру
       correct: true
@@ -62,7 +66,7 @@
       correct: false
     - text: Кожного дня я роблю цю саму справу
       correct: false
-  - question: Що саме означає речення "Я ще працюю", коли хтось запитує вас про справу?
+  - question: Що саме означає речення «Я ще працюю», коли хтось запитує вас про справу?
     options:
     - text: Я все ще продовжую процес роботи зараз
       correct: true
@@ -72,7 +76,8 @@
       correct: false
     - text: Я ніколи не буду працювати в цьому місці
       correct: false
-  - question: Як правильно перекласти українською мовою англійське речення "It was recently"?
+  - question: Як правильно перекласти українською мовою англійське речення "It was
+      recently"?
     options:
     - text: Це сталося зі мною зовсім недавно
       correct: true
@@ -92,7 +97,8 @@
       correct: false
     - text: Учора була дуже гарна й тепла погода
       correct: false
-  - question: В якій частині розповіді найчастіше вживають вираз "Врешті-решт" для результату?
+  - question: В якій частині розповіді найчастіше вживають вираз «Врешті-решт» для
+      результату?
     options:
     - text: У самому кінці розповіді для висновку
       correct: true
@@ -102,7 +108,8 @@
       correct: false
     - text: Завжди в середині для продовження історії
       correct: false
-  - question: Якому англійському виразу зазвичай відповідає українська фраза "Одного разу"?
+  - question: Якому англійському виразу зазвичай відповідає українська фраза «Одного
+      разу»?
     options:
     - text: Once upon a time or one day
       correct: true
@@ -112,7 +119,7 @@
       correct: false
     - text: Sometimes but not very often today
       correct: false
-  - question: Що ви маєте на увазі, коли кажете комусь "Зробіть це негайно" в розмові?
+  - question: Що ви маєте на увазі, коли кажете комусь «Зробіть це негайно» в розмові?
     options:
     - text: Зробіть це відразу і дуже швидко
       correct: true
@@ -122,7 +129,7 @@
       correct: false
     - text: Зробіть це, коли у вас буде час
       correct: false
-  - question: Як правильно розуміти українську часову конструкцію "Перед цим" у контексті?
+  - question: Як правильно розуміти українську часову конструкцію «Перед цим» у контексті?
     options:
     - text: Дія, яка відбулася раніше за іншу
       correct: true
@@ -132,7 +139,7 @@
       correct: false
     - text: Дія, яка ніколи в житті не відбувалася
       correct: false
-  - question: На що саме ми робимо акцент, вживаючи вираз "Саме тоді"?
+  - question: На що саме ми робимо акцент, вживаючи вираз «Саме тоді»?
     options:
     - text: На точному та конкретному моменті часу
       correct: true
@@ -142,7 +149,7 @@
       correct: false
     - text: На повторенні однієї й тієї ж дії
       correct: false
-  - question: Який часовий проміжок позначає українське слово "Згодом" у розповіді?
+  - question: Який часовий проміжок позначає українське слово «Згодом» у розповіді?
     options:
     - text: Через певний час після певної події
       correct: true
@@ -152,7 +159,7 @@
       correct: false
     - text: Завжди вранці перед важкою роботою
       correct: false
-  - question: Що допомагає нам виразити українське слово "Вже" у реченні про завершення?
+  - question: Що допомагає нам виразити українське слово «Вже» у реченні про завершення?
     options:
     - text: Завершеність певної дії або результат
       correct: true
@@ -196,37 +203,37 @@
 - type: true-false
   title: True or False?
   items:
-  - statement: '"Спочатку" means "Finally".'
+  - statement: «Спочатку» means "Finally".
     correct: false
-    explanation: '"Спочатку" means "At first".'
-  - statement: '"Раптом" is used for unexpected events.'
+    explanation: «Спочатку» means "At first".
+  - statement: «Раптом» is used for unexpected events.
     correct: true
     explanation: It means "Suddenly".
-  - statement: '"Вже" and "Ще" mean the same thing.'
+  - statement: «Вже» and «Ще» mean the same thing.
     correct: false
-    explanation: '"Вже" = already, "Ще" = still/yet.'
-  - statement: '"Пізніше" means "Later".'
+    explanation: «Вже» = already, «Ще» = still/yet.
+  - statement: «Пізніше» means "Later".
     correct: true
     explanation: Correct.
-  - statement: '"Ледве" means "Happily".'
+  - statement: «Ледве» means "Happily".
     correct: false
-    explanation: '"Ледве" means "barely" or "hardly".'
-  - statement: You can start a fairy tale with "Одного разу".
+    explanation: «Ледве» means "barely" or "hardly".
+  - statement: You can start a fairy tale with «Одного разу».
     correct: true
     explanation: It's the classic "Once upon a time".
-  - statement: '"Перед цим" happens *after* the main event.'
+  - statement: «Перед цим» happens *after* the main event.
     correct: false
     explanation: It means "Before this".
-  - statement: '"Негайно" implies urgency.'
+  - statement: «Негайно» implies urgency.
     correct: true
     explanation: It means "Immediately" or "Right now!".
-  - statement: '"Давно" refers to the near future.'
+  - statement: «Давно» refers to the near future.
     correct: false
     explanation: It refers to the distant past.
-  - statement: '"Щойно" describes something that happened a split second ago.'
+  - statement: «Щойно» describes something that happened a split second ago.
     correct: true
     explanation: '"Just now".'
-  - statement: '"Саме тоді" points to a specific moment.'
+  - statement: «Саме тоді» points to a specific moment.
     correct: true
     explanation: '"At that exact moment".'
   - statement: Storytelling in Ukrainian requires perfective/imperfective mastery.
@@ -235,12 +242,22 @@
   id: true-or-false?
 - type: cloze
   title: The Lost Keys in the City
-  passage: '{Спочатку|Нарешті} я прийшов додому після роботи. Я хотів відкрити двері, але {раптом|потім} зрозумів, що не маю ключів у кишені! Я шукав усюди, але марно. {Потім|Спочатку} я подумав: "Може, я залишив їх на роботі на столі?". Я {відразу|давно} зателефонував колезі. Він сказав, що на моєму робочому столі нічого немає. {Несподівано|Завжди} я згадав! Я був у маленькому кафе {перед цим|після цього} за кавою. Може, вони залишилися саме там? Я {негайно|повільно} побіг у те кафе. {Коли|Де} я прибіг, кафе {вже|ще} зачинялося. Я {ледве|дуже} встиг зайти всередину до офіціанта. Він усміхнувся і відразу віддав мені мої ключі. {Нарешті|Раптом}, я був удома і відпочивав. {Врешті-решт|Спочатку} я тепер завжди перевіряю ключі!'
+  passage: '{Спочатку|Нарешті} я прийшов додому після роботи. Я хотів відкрити двері,
+    але {раптом|потім} зрозумів, що не маю ключів у кишені! Я шукав усюди, але марно.
+    {Потім|Спочатку} я подумав: «Може, я залишив їх на роботі на столі?». Я {відразу|давно}
+    зателефонував колезі. Він сказав, що на моєму робочому столі нічого немає. {Несподівано|Завжди}
+    я згадав! Я був у маленькому кафе {перед цим|після цього} за кавою. Може, вони
+    залишилися саме там? Я {негайно|повільно} побіг у те кафе. {Коли|Де} я прибіг,
+    кафе {вже|ще} зачинялося. Я {ледве|дуже} встиг зайти всередину до офіціанта. Він
+    усміхнувся і відразу віддав мені мої ключі. {Нарешті|Раптом}, я був удома і відпочивав.
+    {Врешті-решт|Спочатку} я тепер завжди перевіряю ключі!'
   id: the-lost-keys-in-the-city
 - type: mark-the-words
   title: Identify Connectors
   id: identify-connectors
-  passage: '*Одного разу* ми пішли в ліс. *Спочатку* світило сонце. *Але* *раптом* почався дощ. Ми *відразу* побігли додому. *Нарешті* ми були в теплі. *Згодом* ми пили чай.
+  passage: '*Одного разу* ми пішли в ліс. *Спочатку* світило сонце. *Але* *раптом*
+    почався дощ. Ми *відразу* побігли додому. *Нарешті* ми були в теплі. *Згодом*
+    ми пили чай.
 
     ---
 
@@ -262,6 +279,7 @@
   - Врешті-решт
   - Щойно
   - несподівано
+  instruction: Натисніть на правильні слова в тексті.
 - type: error-correction
   title: Fix the Story Flow
   items:
@@ -271,42 +289,54 @@
     options:
     - Спочатку
     - Нарешті
-    explanation: Stories start with "First", not "Finally".
+    - Раптом
+    - Потім
+    explanation: Stories start with «First», not «Finally».
   - sentence: Він прийшов додому перед цим роботи.
     error: перед цим
     answer: після
     options:
     - після
     - перед цим
-    explanation: '"Після" = after. "Перед цим" = before this.'
+    - під час
+    - замість
+    explanation: «Після» = after. «Перед цим» = before this.
   - sentence: Я вже чекаю тебе!
     error: вже
     answer: ще
     options:
     - ще
     - вже
-    explanation: '"Ще" indicates process is still going.'
-  - sentence: Раптом я поснідав. (Routine action, not sudden)
+    - щойно
+    - скоро
+    explanation: «Ще» indicates process is still going.
+  - sentence: Раптом я поснідав.
     error: Раптом
     answer: Потім
     options:
     - Потім
     - Раптом
-    explanation: Breakfast is usually a sequence step "Then", not a shock "Suddenly".
-  - sentence: Це сталося скоро. (Long ago)
+    - Ледве
+    - Щойно
+    explanation: Breakfast is usually a sequence step «Then», not a shock «Suddenly».
+  - sentence: Це сталося скоро.
     error: скоро
     answer: давно
     options:
     - давно
     - скоро
-    explanation: '"Скоро" = soon. "Давно" = long ago.'
-  - sentence: Я зробив це несподівано. (Specifically meaning "immediately" as reaction)
+    - недавно
+    - вчора
+    explanation: «Скоро» = soon. «Давно» = long ago.
+  - sentence: Я зробив це несподівано.
     error: несподівано
     answer: відразу
     options:
     - відразу
     - несподівано
-    explanation: '"Відразу" means immediately/at once. "Несподівано" implies surprise.'
+    - ледве
+    - раніше
+    explanation: «Відразу» means immediately/at once. «Несподівано» implies surprise.
   id: fix-the-story-flow
 - type: translate
   title: English to Ukrainian
@@ -317,11 +347,19 @@
       correct: true
     - text: Потім я вмиваюся.
       correct: false
+    - text: Раптом я вмиваюся.
+      correct: false
+    - text: Нарешті я вмиваюся.
+      correct: false
   - source: Then I drink coffee.
     options:
     - text: Потім я п'ю каву.
       correct: true
     - text: Раптом я п'ю каву.
+      correct: false
+    - text: Спочатку я п'ю каву.
+      correct: false
+    - text: Вже я п'ю каву.
       correct: false
   - source: Suddenly, the phone rang.
     options:
@@ -329,11 +367,19 @@
       correct: true
     - text: Нарешті задзвонив телефон.
       correct: false
+    - text: Потім задзвонив телефон.
+      correct: false
+    - text: Вже задзвонив телефон.
+      correct: false
   - source: Eventually, we found the house.
     options:
     - text: Врешті-решт ми знайшли будинок.
       correct: true
     - text: Спочатку ми знайшли будинок.
+      correct: false
+    - text: Раптом ми знайшли будинок.
+      correct: false
+    - text: Недавно ми знайшли будинок.
       correct: false
   - source: I immediately answered.
     options:
@@ -341,11 +387,19 @@
       correct: true
     - text: Я вже відповів.
       correct: false
+    - text: Я ще відповів.
+      correct: false
+    - text: Я раніше відповів.
+      correct: false
   - source: It happened long ago.
     options:
     - text: Це сталося давно.
       correct: true
     - text: Це сталося недавно.
+      correct: false
+    - text: Це сталося вчора.
+      correct: false
+    - text: Це сталося сьогодні.
       correct: false
   - source: I haven't finished yet.
     options:
@@ -353,11 +407,19 @@
       correct: true
     - text: Я вже не закінчив.
       correct: false
+    - text: Я щойно не закінчив.
+      correct: false
+    - text: Я відразу не закінчив.
+      correct: false
   - source: One day I will go there.
     options:
     - text: Одного разу я поїду туди.
       correct: true
     - text: Раніше я поїду туди.
+      correct: false
+    - text: Недавно я поїду туди.
+      correct: false
+    - text: Вже я поїду туди.
       correct: false
   - source: We met recently.
     options:
@@ -365,11 +427,19 @@
       correct: true
     - text: Ми зустрілися давно.
       correct: false
+    - text: Ми зустрілися вчора.
+      correct: false
+    - text: Ми зустрілися сьогодні.
+      correct: false
   - source: Barely had I started...
     options:
     - text: Ледве я почав...
       correct: true
     - text: Вже я почав...
+      correct: false
+    - text: Ще я почав...
+      correct: false
+    - text: Раніше я почав...
       correct: false
   - source: Just then, he came in.
     options:
@@ -377,11 +447,19 @@
       correct: true
     - text: Потім він зайшов.
       correct: false
+    - text: Раптом він зайшов.
+      correct: false
+    - text: Нарешті він зайшов.
+      correct: false
   - source: Before this, I lived in Kyiv.
     options:
     - text: Перед цим я жив у Києві.
       correct: true
     - text: Після цього я жив у Києві.
+      correct: false
+    - text: Саме тоді я жив у Києві.
+      correct: false
+    - text: Згодом я жив у Києві.
       correct: false
   id: english-to-ukrainian
 - type: translate

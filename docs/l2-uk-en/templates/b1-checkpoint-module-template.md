@@ -6,6 +6,21 @@
 
 **Related Issue:** [#305](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/305)
 
+
+<!--
+TEMPLATE_METADATA:
+  required_sections:
+  - Огляд
+  - Діагностика
+  - Аналіз
+  - Summary|Підсумок
+  - Need More Practice?
+  pedagogy: TTT
+  min_word_count: 1500
+  required_callouts: []
+  description: B1 checkpoint uses TTT for comprehensive review and testing
+-->
+
 ---
 
 ## Quick Reference Checklist
@@ -13,6 +28,7 @@
 Before submitting a B1 checkpoint module, verify all items from `b1-grammar-module-template.md` PLUS:
 
 ### Checkpoint-Specific Requirements
+
 - [ ] **TTT pedagogy:** Test-Teach-Test structure (comprehensive review)
 - [ ] **Word count:** 1200+ words (review content, not new teaching)
 - [ ] **Vocabulary:** 30-40 items (review vocabulary from ALL modules in phase)
@@ -26,13 +42,13 @@ Before submitting a B1 checkpoint module, verify all items from `b1-grammar-modu
 
 ## B1 Checkpoint Modules (Grammar Phases Only)
 
-| Checkpoint | Phase | Modules Covered | Focus |
-|------------|-------|-----------------|-------|
-| M15 | B1.1 | M06-14 | Aspect Mastery |
-| M25 | B1.2 | M16-24 | Motion Verbs with Prefixes |
-| M34 | B1.3a | M26-33 | Complex Sentences Part 1 (Relatives, Purpose, Conditionals) |
-| M41 | B1.3b | M35-40 | Complex Sentences Part 2 (Concessive, Temporal, Reported) |
-| M51 | B1.4 | M42-50 | Advanced Grammar (Participles, Passive, Diminutives, Numerals) |
+| Checkpoint | Phase | Modules Covered | Focus                                                          |
+| ---------- | ----- | --------------- | -------------------------------------------------------------- |
+| M15        | B1.1  | M06-14          | Aspect Mastery                                                 |
+| M25        | B1.2  | M16-24          | Motion Verbs with Prefixes                                     |
+| M34        | B1.3a | M26-33          | Complex Sentences Part 1 (Relatives, Purpose, Conditionals)    |
+| M41        | B1.3b | M35-40          | Complex Sentences Part 2 (Concessive, Temporal, Reported)      |
+| M51        | B1.4  | M42-50          | Advanced Grammar (Participles, Passive, Diminutives, Numerals) |
 
 **Note:** B1.5-B1.8 (Vocabulary, Cultural, Integration phases) do NOT have checkpoints. They use content modules instead.
 
@@ -44,64 +60,64 @@ Each checkpoint tests specific **skill groups** — concrete abilities learners 
 
 ### M15: Aspect Mastery Checkpoint
 
-| Skill Group | Source | What Learner Can Do |
-|-------------|--------|---------------------|
-| Aspect in Past | M06-07 | Choose correct aspect for completed vs ongoing actions |
-| Aspect in Future | M08-09 | Distinguish буду + infinitive vs perfective future |
-| Aspect in Negation | M10 | Use imperfective for general negation, perfective for specific |
-| Aspect in Imperatives | M11 | Choose polite (impf) vs urgent (pf) commands |
-| Aspect in Infinitives | M12 | Match aspect to context (intention vs general) |
-| Verb Pair Formation | M13 | Form aspect pairs: читати/прочитати pattern |
-| Integrated Aspect | M14 | Apply all aspect rules in extended text |
+| Skill Group           | Source | What Learner Can Do                                            |
+| --------------------- | ------ | -------------------------------------------------------------- |
+| Aspect in Past        | M06-07 | Choose correct aspect for completed vs ongoing actions         |
+| Aspect in Future      | M08-09 | Distinguish буду + infinitive vs perfective future             |
+| Aspect in Negation    | M10    | Use imperfective for general negation, perfective for specific |
+| Aspect in Imperatives | M11    | Choose polite (impf) vs urgent (pf) commands                   |
+| Aspect in Infinitives | M12    | Match aspect to context (intention vs general)                 |
+| Verb Pair Formation   | M13    | Form aspect pairs: читати/прочитати pattern                    |
+| Integrated Aspect     | M14    | Apply all aspect rules in extended text                        |
 
 ### M25: Motion Verbs Checkpoint
 
-| Skill Group | Source | What Learner Can Do |
-|-------------|--------|---------------------|
-| Unprefixed Motion | M16-17 | Use йти/ходити, їхати/їздити correctly |
-| Directional Prefixes | M18-19 | Add в-/ви-, при-/від- for direction |
-| Path Prefixes | M20-21 | Use пере-, об-, до- for path type |
-| Abstract Motion | M22 | Understand figurative motion (час іде, думки летять) |
-| Motion + Aspect | M23 | Combine motion verbs with aspectual meaning |
-| Integrated Motion | M24 | Apply all motion patterns in narrative |
+| Skill Group          | Source | What Learner Can Do                                  |
+| -------------------- | ------ | ---------------------------------------------------- |
+| Unprefixed Motion    | M16-17 | Use йти/ходити, їхати/їздити correctly               |
+| Directional Prefixes | M18-19 | Add в-/ви-, при-/від- for direction                  |
+| Path Prefixes        | M20-21 | Use пере-, об-, до- for path type                    |
+| Abstract Motion      | M22    | Understand figurative motion (час іде, думки летять) |
+| Motion + Aspect      | M23    | Combine motion verbs with aspectual meaning          |
+| Integrated Motion    | M24    | Apply all motion patterns in narrative               |
 
 ### M34: Complex Sentences I Checkpoint
 
-| Skill Group | Source | What Learner Can Do |
-|-------------|--------|---------------------|
-| Relative який | M26 | Use який in all cases with correct agreement |
-| Relative де/куди/звідки | M27 | Form place-based relative clauses |
-| Relative коли/що | M28 | Form time and general relative clauses |
-| Purpose щоб + Infinitive | M29 | Express purpose with infinitive |
-| Purpose щоб + Past | M30 | Express purpose with different subjects |
-| Real Conditionals | M31 | Form якщо clauses with correct tense |
-| Unreal Conditionals | M32 | Form якби clauses with past tense |
-| Mixed Conditionals | M33 | Combine condition types in complex sentences |
+| Skill Group              | Source | What Learner Can Do                          |
+| ------------------------ | ------ | -------------------------------------------- |
+| Relative який            | M26    | Use який in all cases with correct agreement |
+| Relative де/куди/звідки  | M27    | Form place-based relative clauses            |
+| Relative коли/що         | M28    | Form time and general relative clauses       |
+| Purpose щоб + Infinitive | M29    | Express purpose with infinitive              |
+| Purpose щоб + Past       | M30    | Express purpose with different subjects      |
+| Real Conditionals        | M31    | Form якщо clauses with correct tense         |
+| Unreal Conditionals      | M32    | Form якби clauses with past tense            |
+| Mixed Conditionals       | M33    | Combine condition types in complex sentences |
 
 ### M41: Complex Sentences II Checkpoint
 
-| Skill Group | Source | What Learner Can Do |
-|-------------|--------|---------------------|
-| Concessive Clauses | M35 | Use хоча, незважаючи на те що |
-| Causal Clauses | M36 | Use тому що, оскільки, бо |
-| Temporal Clauses | M37 | Use коли, поки, після того як |
-| Integrated Clauses | M38 | Combine clause types in extended text |
-| Reported Statements | M39 | Transform direct speech to indirect |
-| Reported Questions | M40 | Transform questions to indirect form |
+| Skill Group         | Source | What Learner Can Do                   |
+| ------------------- | ------ | ------------------------------------- |
+| Concessive Clauses  | M35    | Use хоча, незважаючи на те що         |
+| Causal Clauses      | M36    | Use тому що, оскільки, бо             |
+| Temporal Clauses    | M37    | Use коли, поки, після того як         |
+| Integrated Clauses  | M38    | Combine clause types in extended text |
+| Reported Statements | M39    | Transform direct speech to indirect   |
+| Reported Questions  | M40    | Transform questions to indirect form  |
 
 ### M51: Advanced Grammar Checkpoint
 
-| Skill Group | Source | What Learner Can Do |
-|-------------|--------|---------------------|
-| Adverbial Participles Impf | M42 | Form and use -ючи/-ачи (simultaneous) |
-| Adverbial Participles Pf | M43 | Form and use -вши/-ши (prior action) |
-| Active Participles | M44 | Recognize and avoid bureaucratic forms |
-| Passive Participles Full | M45 | Form -ний/-тий with agreement |
-| Passive Participles Short | M46 | Form -но/-то impersonal passives |
-| Passive Constructions | M47 | Use all passive types appropriately |
-| Diminutives | M48 | Form and understand diminutive nuance |
-| Collective Numerals | M49 | Use двоє, троє; fractions |
-| Integrated Grammar | M50 | Apply all advanced forms in context |
+| Skill Group                | Source | What Learner Can Do                    |
+| -------------------------- | ------ | -------------------------------------- |
+| Adverbial Participles Impf | M42    | Form and use -ючи/-ачи (simultaneous)  |
+| Adverbial Participles Pf   | M43    | Form and use -вши/-ши (prior action)   |
+| Active Participles         | M44    | Recognize and avoid bureaucratic forms |
+| Passive Participles Full   | M45    | Form -ний/-тий with agreement          |
+| Passive Participles Short  | M46    | Form -но/-то impersonal passives       |
+| Passive Constructions      | M47    | Use all passive types appropriately    |
+| Diminutives                | M48    | Form and understand diminutive nuance  |
+| Collective Numerals        | M49    | Use двоє, троє; fractions              |
+| Integrated Grammar         | M50    | Apply all advanced forms in context    |
 
 ---
 
@@ -112,21 +128,21 @@ Each checkpoint tests specific **skill groups** — concrete abilities learners 
 ```yaml
 ---
 module: b1-XX
-title: "Контрольна точка: [Phase Title]"
-phase: "B1.X [Phase Name] Checkpoint"
-pedagogy: "TTT"  # ALWAYS TTT for checkpoints
+title: 'Контрольна точка: [Phase Title]'
+phase: 'B1.X [Phase Name] Checkpoint'
+pedagogy: 'TTT' # ALWAYS TTT for checkpoints
 tags:
   - checkpoint
   - integration
   - [phase-specific-tag]
 grammar:
-  - "Integration of M[start]-M[end]"
-  - "Comprehensive review and testing"
+  - 'Integration of M[start]-M[end]'
+  - 'Comprehensive review and testing'
 objectives:
-  - "Learner can demonstrate mastery of [phase topic]"
-  - "Learner can integrate knowledge from M[start]-M[end]"
-  - "Learner can self-assess readiness for next phase"
-vocabulary_count: 35  # Must match count in vocabulary/{slug}.yaml
+  - 'Learner can demonstrate mastery of [phase topic]'
+  - 'Learner can integrate knowledge from M[start]-M[end]'
+  - 'Learner can self-assess readiness for next phase'
+vocabulary_count: 35 # Must match count in vocabulary/{slug}.yaml
 ---
 ```
 
@@ -156,7 +172,7 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 - **Навичка 1:** [Skill description from skill table]
 - **Навичка 2:** [Skill description from skill table]
 - **Навичка 3:** [Skill description from skill table]
-[Continue for all skills in phase]
+  [Continue for all skills in phase]
 ```
 
 #### Skill Sections (Repeat for EACH skill group)
@@ -172,6 +188,7 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 > [Bold key forms: **прочитав**, **читав**]
 
 **Зверніть увагу:**
+
 - [Pattern 1 explanation]
 - [Pattern 2 explanation]
 
@@ -181,9 +198,10 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 
 1. [Practice item 1]
 2. [Practice item 2]
-[5-8 practice items]
+   [5-8 practice items]
 
 > [!solution] Перевірити
+>
 > 1. **[answer]** ([explanation])
 > 2. **[answer]** ([explanation])
 
@@ -207,7 +225,7 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 
 Прочитайте цей текст і дайте відповіді на запитання:
 
-> *[200+ word Ukrainian text using ALL skills from the phase]*
+> _[200+ word Ukrainian text using ALL skills from the phase]_
 
 **Запитання:**
 
@@ -216,6 +234,7 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 3. [Question testing integration of skills]
 
 > [!solution] Відповіді
+>
 > 1. [Answer with explanation]
 > 2. [Answer with explanation]
 > 3. [Answer with explanation]
@@ -230,11 +249,11 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 
 **Що ви навчилися:**
 
-| Навичка | Ключовий патерн | Приклад |
-|---------|-----------------|---------|
-| Skill 1 | [Pattern] | [Example] |
-| Skill 2 | [Pattern] | [Example] |
-| Skill 3 | [Pattern] | [Example] |
+| Навичка | Ключовий патерн | Приклад   |
+| ------- | --------------- | --------- |
+| Skill 1 | [Pattern]       | [Example] |
+| Skill 2 | [Pattern]       | [Example] |
+| Skill 3 | [Pattern]       | [Example] |
 
 **Далі:**
 
@@ -243,6 +262,7 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 > ✅ **Самоперевірка**
 >
 > Чи можете ви:
+>
 > - [ ] [Self-assessment criterion 1 — Skill 1]?
 > - [ ] [Self-assessment criterion 2 — Skill 2]?
 > - [ ] [Self-assessment criterion 3 — integration]?
@@ -285,6 +305,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ```markdown
 ## quiz: Аспект у минулому часі (M06-07)
+
 > Перевірте ваше розуміння аспекту в минулому часі.
 
 [10-14 questions ONLY testing past tense aspect choices]
@@ -292,6 +313,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ---
 
 ## quiz: Аспект у наказовому способі (M11)
+
 > Оберіть правильну форму наказу.
 
 [10-14 questions ONLY testing imperative aspect]
@@ -299,6 +321,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 ---
 
 ## fill-in: Інтегроване застосування аспекту (M06-14)
+
 > Заповніть пропуски, застосовуючи всі правила аспекту.
 
 [Extended passage testing ALL aspect skills in context]
@@ -309,18 +332,15 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 Checkpoints must test ALL skill groups from the phase:
 
 **Core Testing Activities (Skill-Targeted):**
+
 1. **quiz** (2-3 activities, 10-14 items each) — One quiz per skill group cluster
 2. **match-up** (2 activities, 14+ items) — Term-definition, concept-example
 3. **fill-in** (2 activities, 12-14 items) — Contextual application of specific skills
 4. **group-sort** (1-2 activities, 14-18 items) — Categorization by skill group
 
-**Integration Activities:**
-5. **error-correction** (2 activities, 10-12 items) — Common mistakes across phase
-6. **cloze** (1 activity, 16+ blanks) — Extended passage integrating all concepts
-7. **unjumble** (1 activity, 10+ items) — Sentence formation with phase structures
+**Integration Activities:** 5. **error-correction** (2 activities, 10-12 items) — Common mistakes across phase 6. **cloze** (1 activity, 16+ blanks) — Extended passage integrating all concepts 7. **unjumble** (1 activity, 10+ items) — Sentence formation with phase structures
 
-**Production Activities:**
-8. **Writing task with Model Answer** (1 activity, 100+ words)
+**Production Activities:** 8. **Writing task with Model Answer** (1 activity, 100+ words)
 
 ---
 
@@ -346,46 +366,50 @@ Checkpoints must test ALL skill groups from the phase:
 
 ---
 
-## Vocabulary Section for Checkpoints
+---
 
-**CRITICAL:** Vocabulary must be defined in `vocabulary/{slug}.yaml`. Do NOT embed a vocabulary table in Markdown.
+## Content Structure Note
 
-**Example `vocabulary/b1-15-checkpoint.yaml`:**
+### Vocabulary & Activities
 
-```yaml
-items:
-- lemma: читати
-  ipa: /t͡ʃɪˈtɑtɪ/
-  translation: to read
-  pos: дієсл.
-  note: з модуля 06
-```
+**CRITICAL:** Do NOT add `## Vocabulary` or `## Activities` headers. These sections are injected automatically from:
+
+- `vocabulary/{slug}.yaml`
+- `activities/{slug}.yaml`
+
+The build system will inject these sections at build time.
 
 ---
 
 ## Common Pitfalls to Avoid
 
 ### 1. **Introducing New Content**
+
 - ❌ Problem: Teaching new grammar or vocabulary in checkpoint
 - ✅ Solution: Checkpoints ONLY review and test. All content must come from prior modules.
 
 ### 2. **Insufficient Module Coverage**
+
 - ❌ Problem: Testing only 2-3 modules out of 8-module phase
 - ✅ Solution: Create dedicated quiz for EACH major concept + integration quiz
 
 ### 3. **English in Content**
+
 - ❌ Problem: English explanations or instructions
 - ✅ Solution: 100% Ukrainian immersion (English only in vocabulary translations)
 
 ### 4. **No Model Answers**
+
 - ❌ Problem: Writing tasks without examples
 - ✅ Solution: Every writing task includes complete model answer
 
 ### 5. **Too Few Activities**
+
 - ❌ Problem: 12 activities (same as regular modules)
 - ✅ Solution: 16+ activities for comprehensive testing
 
 ### 6. **Missing Self-Assessment**
+
 - ❌ Problem: No "Чи можете ви..." checklist
 - ✅ Solution: Include specific criteria tied to each module in the phase
 

@@ -2,7 +2,7 @@
 
 ## Warm-up
 
-In Module 11, you learned the accusative case for things: я бачу **книгу**, я читаю **газету**. But what about people? Can you say "я бачу студент"? Not quite! When the direct object is a person or animal (we call these **animate nouns**), Ukrainian has a special rule.
+In Module 11, you learned the accusative case for things: я бачу **книгу**, я читаю **газету**. But what about people? Can you say «я бачу студент»? Not quite! When the direct object is a person or animal (we call these **animate nouns**), Ukrainian has a special rule.
 
 Compare these two sentences:
 
@@ -37,7 +37,7 @@ This means:
 >
 > This animate-inanimate distinction exists in many Slavic languages, but Ukrainian keeps it especially clear. Russian has it too, but Polish extends it even to feminine nouns! In Ukrainian, only masculine nouns follow this rule — feminine animate nouns behave just like feminine inanimate ones.
 
-**Why does Ukrainian do this?** Historically, the genitive case was used to mark the **target** or **affected entity** of an action. When you "see someone," that person is affected by your gaze — so genitive made sense! Over centuries, this became the standard for all animate direct objects.
+**Why does Ukrainian do this?** Historically, the genitive case was used to mark the **target** or **affected entity** of an action. When you «see someone,» that person is affected by your gaze — so genitive made sense! Over centuries, this became the standard for all animate direct objects.
 
 ### Masculine Nouns Ending in -а
 
@@ -109,7 +109,7 @@ So you already know how to handle feminine animate nouns from Module 11!
 
 > ⚡ **Pro Tip**
 >
-> Can't remember if accusative = genitive? Ask yourself: **"Is it alive?"** If yes (person, animal), then masculine nouns get **-а/-я**. If no (object, thing), masculine nouns stay the same.
+> Can't remember if accusative = genitive? Ask yourself: **«Is it alive?»** If yes (person, animal), then masculine nouns get **-а/-я**. If no (object, thing), masculine nouns stay the same.
 
 ## Production
 
@@ -172,23 +172,23 @@ So you already know how to handle feminine animate nouns from Module 11!
 
 > 🎬 **Pop Culture Moment: The Witcher**
 >
-> In the Ukrainian dub of Netflix's "The Witcher," when Geralt says "I'm looking for someone" ("Я шукаю **когось**"), the accusative case is crucial. If he's looking for a person, it's **когось** (animate genitive-accusative). If he's looking for a thing, it's **щось** (neutral). The case system helps distinguish between searching for **people** vs **things** — very handy for a monster hunter!
+> In the Ukrainian dub of Netflix's «The Witcher,» when Geralt says «I'm looking for someone» («Я шукаю **когось**»), the accusative case is crucial. If he's looking for a person, it's **когось** (animate genitive-accusative). If he's looking for a thing, it's **щось** (neutral). The case system helps distinguish between searching for **people** vs **things** — very handy for a monster hunter!
 
 ## Cultural Insight
 
 ### Professions and Gender in Ukrainian
 
-Ukrainian is very precise about gender in professions. Unlike English, where "teacher" and "doctor" are gender-neutral, Ukrainian creates distinct feminine forms:
+Ukrainian is very precise about gender in professions. Unlike English, where «teacher» and «doctor» are gender-neutral, Ukrainian creates distinct feminine forms:
 
 - **лікар** (male doctor) vs **лікарка** (female doctor)
 - **вчитель** (male teacher) vs **вчителька** (female teacher)
 - **студент** (male student) vs **студентка** (female student)
 
-This precision extends to the accusative case. When you say "я бачу лікарку," everyone knows it's a female doctor without any ambiguity.
+This precision extends to the accusative case. When you say «я бачу лікарку,» everyone knows it's a female doctor without any ambiguity.
 
 > 🌍 **Real World Usage**
 >
-> In modern Ukraine, professions like **лікарка**, **вчителька**, and **директорка** are fully standard and widely used. The Soviet era tried to suppress feminine forms (calling all female doctors "лікар"), but independent Ukraine has revived and normalized them. Using the correct feminine form is both grammatically correct and culturally respectful.
+> In modern Ukraine, professions like **лікарка**, **вчителька**, and **директорка** are fully standard and widely used. The Soviet era tried to suppress feminine forms (calling all female doctors «лікар»), but independent Ukraine has revived and normalized them. Using the correct feminine form is both grammatically correct and culturally respectful.
 
 ### Common Verbs with Animate Objects
 
@@ -220,8 +220,15 @@ In this module, you learned the **animate accusative** — how Ukrainian marks p
 
 **You can now:**
 
-- Say "I see the doctor" — Я бачу **лікаря**.
-- Say "She knows my friend" — Вона знає **мою подругу**.
+- Say «I see the doctor» — Я бачу **лікаря**.
+- Say «She knows my friend» — Вона знає **мою подругу**.
 - Distinguish between people and things in the accusative case.
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

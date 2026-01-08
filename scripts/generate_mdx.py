@@ -141,7 +141,11 @@ class ComparativeStudyData:
 # =============================================================================
 
 def escape_jsx(text: str) -> str:
-    """Escape text for use in JSX strings (both template literals and double quotes)."""
+    """Escape text for use in JSX strings (both template literals and double quotes).
+    
+    Uses HTML entity &quot; for double quotes to avoid JSX parsing errors.
+    See issue #396 for details.
+    """
     if not text:
         return ''
     # Convert to string if not already (handles int/float from YAML)
@@ -150,7 +154,7 @@ def escape_jsx(text: str) -> str:
     # Escape backslashes first, then other special chars
     text = text.replace('\\', '\\\\')
     text = text.replace('`', '\\`')
-    text = text.replace('"', '\\"')
+    text = text.replace('"', '&quot;')  # HTML entity, not backslash escape
     text = text.replace('${', '\\${')
     return text
 
@@ -1134,39 +1138,38 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
 ---
 '''
 
-    # Inject Vocabulary Table if present
+    # 1. Clean up body: Remove existing Vocabulary, Activities, and Resources placeholders
+    # Remove Activities
+    body = re.sub(r'(^#{1,2}\s+(?:Activities|Вправи))[\s\S]*?(?=\n#{1,2}|\Z)', '', body, flags=re.MULTILINE)
+    # Remove Vocabulary
+    body = re.sub(r'(^#{1,2}\s+(?:Vocabulary|Словник))[\s\S]*?(?=\n#{1,2}|\Z)', '', body, flags=re.MULTILINE)
+    # Remove Resources callout
+    body = re.sub(r'>\s*\[!resources\].*?(\n>.*)*', '', body, flags=re.MULTILINE | re.IGNORECASE)
+
+    # 2. Append new Resources (appears after Summary)
+    if external_resources:
+        resources_md = format_resources_for_mdx(external_resources, is_ukrainian_forced)
+        if resources_md:
+            body = body.rstrip() + '\n\n' + resources_md
+
+    # 3. Append new Vocabulary (appears last)
     if vocab_items:
         vocab_header = "Словник" if is_ukrainian_forced else "Vocabulary"
-        if level.lower() == 'lit':
-            vocab_md = _lit_vocab_items_to_markdown(vocab_items, vocab_header)
-        else:
-            vocab_md = _vocab_items_to_markdown(vocab_items, vocab_header)
-            
-        # Append to end of body (Standard Layout: Content -> Activities -> Vocabulary)
-        body = body + '\n\n' + vocab_md
+        vocab_md = _vocab_items_to_markdown(vocab_items, vocab_header) if level.lower() != 'lit' else _lit_vocab_items_to_markdown(vocab_items, vocab_header)
+        body = body.rstrip() + '\n\n' + vocab_md
 
-    # Process activities
+    # 4. Process activities (Injected BEFORE Vocabulary)
     if yaml_activities:
-        # Use YAML activities - inject them into the body
         act_header = "Вправи" if is_ukrainian_forced else "Activities"
         activities_jsx = f'## 🎯 {act_header}\n\n' + yaml_activities_to_jsx(yaml_activities, is_ukrainian_forced)
-        # Remove any existing Activities section from body
-        body = re.sub(
-            r'(^#{1,2}\s+(?:Activities|Вправи(?:\s*\(Activities\))?))\n([\s\S]*?)(?=\n#{1,2}\s+(?:Vocabulary|Словник|Summary|Підсумок|Self-Assessment|Самооцінка|External|Зовнішні|Resources|Ресурси)|\Z)',
-            '',
-            body,
-            flags=re.MULTILINE
-        )
-        # Find where to inject activities (before Vocabulary/Словник or Self-Assessment/External)
-        # Avoid injecting before Summary (Intro)
-        inject_match = re.search(r'\n(#{1,2}\s+(?:Vocabulary|Словник|Self-Assessment|Самооцінка|External|Зовнішні))', body)
+        
+        # Injected before Vocabulary/Словник
+        inject_match = re.search(r'\n(#{1,2}\s+(?:Vocabulary|Словник))', body)
         if inject_match:
             processed = body[:inject_match.start()] + '\n\n' + activities_jsx + '\n' + body[inject_match.start():]
         else:
-            # Append at end if no Vocabulary/Summary section
             processed = body + '\n\n' + activities_jsx
     else:
-        # No YAML activities found
         processed = body
 
     # Convert callouts
@@ -1194,27 +1197,22 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
     }
 
     # Summary
-    sum_text = header_map['Summary'] if is_ukrainian_forced else r'\1'
+    sum_text = header_map['Summary'] if is_ukrainian_forced else r'\g<1>'
     processed = re.sub(r'^#{1,2} (Summary|Підсумок)', f'## 📋 {sum_text}', processed, flags=re.MULTILINE)
     
     # Vocabulary
-    vocab_text = header_map['Vocabulary'] if is_ukrainian_forced else r'\1'
+    vocab_text = header_map['Vocabulary'] if is_ukrainian_forced else r'\g<1>'
     processed = re.sub(r'^#{1,2} (Vocabulary|Словник)', f'## 📚 {vocab_text}', processed, flags=re.MULTILINE)
     
     # Self-Assessment
-    sa_text = header_map['Self-Assessment'] if is_ukrainian_forced else r'\1'
+    sa_text = header_map['Self-Assessment'] if is_ukrainian_forced else r'\g<1>'
     processed = re.sub(r'^#{1,2} (Self-Assessment|Самооцінка)', f'## ✅ {sa_text}', processed, flags=re.MULTILINE)
     
-    # External Resources
-    ext_text = header_map['External Resources'] if is_ukrainian_forced else r'\1'
+    # External Resources (Note: Resources from YAML are injected as callouts, but if converted to headers later, this catches them)
+    # Actually, resources from YAML use > [!resources] which converts to :::info. 
+    # But if there are manual H2 resources sections, this standardizes them.
+    ext_text = header_map['External Resources'] if is_ukrainian_forced else r'\g<1>'
     processed = re.sub(r'^#{1,2} (External Resources?|Зовнішні ресурси|Resources|Ресурси)', f'## 🔗 {ext_text}', processed, flags=re.MULTILINE)
-
-    # Inject external resources from YAML (if present)
-    if external_resources:
-        resources_md = format_resources_for_mdx(external_resources, is_ukrainian_forced)
-        if resources_md:
-            # Append at end of content
-            processed = processed.rstrip() + '\n\n' + resources_md
 
     # Build MDX
     parts = [frontmatter, imports, '', processed]

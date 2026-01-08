@@ -2,13 +2,13 @@
 
 ## Warm-up
 
-You've learned to make statements in Ukrainian: "Я читаю книгу" (I read a book). But conversations aren't just statements - they're questions and answers, agreements and disagreements!
+You've learned to make statements in Ukrainian: «Я читаю книгу» (I read a book). But conversations aren't just statements - they're questions and answers, agreements and disagreements!
 
-In English, asking "Do you read?" requires changing word order or adding "do/does". Ukrainian is simpler - you just add the little word **чи** at the beginning! And saying "no"? Just put **не** before the verb.
+In English, asking «Do you read?» requires changing word order or adding «do/does». Ukrainian is simpler - you just add the little word **чи** at the beginning! And saying «no»? Just put **не** before the verb.
 
 > 💡 **Did You Know?**
 >
-> Ukrainian is very flexible with questions. You can ask "Чи ти читаєш?" (formal) or just "Ти читаєш?" (casual, with rising intonation). Both work! Context and tone tell you it's a question.
+> Ukrainian is very flexible with questions. You can ask «Чи ти читаєш?» (formal) or just «Ти читаєш?» (casual, with rising intonation). Both work! Context and tone tell you it's a question.
 
 ## Presentation
 
@@ -38,7 +38,7 @@ In casual speech, Ukrainians often skip **чи** and just use rising intonation:
 
 > 🎬 **Pop Culture Moment**
 >
-> In the Ukrainian dub of Marvel's Avengers, when someone asks "Ти читаєш?" (Do you read this?), they skip **чи** because it's action-packed! But in formal meetings, they use "Чи ви читаєте?" (Do you [formal] read?). Same question, different register!
+> In the Ukrainian dub of Marvel's Avengers, when someone asks «Ти читаєш?» (Do you read this?), they skip **чи** because it's action-packed! But in formal meetings, they use «Чи ви читаєте?» (Do you [formal] read?). Same question, different register!
 
 **Mini-Dialogue 1: At a Café**
 
@@ -49,7 +49,7 @@ In casual speech, Ukrainians often skip **чи** and just use rising intonation:
 
 ### Question Words
 
-Ukrainian has question words (like English "what, who, where") that replace the unknown part of the sentence:
+Ukrainian has question words (like English «what, who, where») that replace the unknown part of the sentence:
 
 | Ukrainian            | IPA        | English          | Example                                |
 | -------------------- | ---------- | ---------------- | -------------------------------------- |
@@ -65,12 +65,12 @@ Ukrainian has question words (like English "what, who, where") that replace the 
 
 **Pattern:** Question word + verb + rest of sentence
 
-Notice: Unlike English, you don't need "do/does" - the question word itself signals it's a question!
+Notice: Unlike English, you don't need «do/does» - the question word itself signals it's a question!
 
 > 🔍 **Myth Buster**
 >
-> **Myth:** "Question words must come first in Ukrainian."
-> **Fact:** While they usually do, Ukrainians often move them for emphasis! "Ти куди йдеш?" (You where going? = Where exactly are you going?) feels more urgent than "Куди ти йдеш?"
+> **Myth:** «Question words must come first in Ukrainian.»
+> **Fact:** While they usually do, Ukrainians often move them for emphasis! «Ти куди йдеш?» (You where going? = Where exactly are you going?) feels more urgent than «Куди ти йдеш?»
 
 **Mini-Dialogue 2: Getting to Know Someone**
 
@@ -93,7 +93,7 @@ To make a verb negative, just put **не** (ne) before it. Simple!
 | Ми знаємо. (My znayemo)       | Ми **не** знаємо. (My **ne** znayemo)       |
 | We know.                      | We don't know.                              |
 
-**Key difference from English:** In Ukrainian, you don't need "don't/doesn't/didn't" - just **не + verb**!
+**Key difference from English:** In Ukrainian, you don't need «don't/doesn't/didn't» - just **не + verb**!
 
 **Common negative constructions:**
 
@@ -103,7 +103,7 @@ To make a verb negative, just put **не** (ne) before it. Simple!
 
 > 🌍 **Real World**
 >
-> Ukrainians are very direct with negation. If you ask "Чи ти знаєш?" (Do you know?), a simple "Ні, не знаю" (No, I don't know) is perfectly polite. No need to soften it with "I'm afraid I don't..." like in English!
+> Ukrainians are very direct with negation. If you ask «Чи ти знаєш?» (Do you know?), a simple «Ні, не знаю» (No, I don't know) is perfectly polite. No need to soften it with «I'm afraid I don't...» like in English!
 
 **Mini-Dialogue 3: Misunderstandings**
 
@@ -130,11 +130,11 @@ When talking about how often you do things, Ukrainian uses these adverbs:
 - я **ніколи не** п'ю каву. (I never drink coffee.) ✅
 - я ніколи п'ю каву. ❌ (Wrong - missing не!)
 
-This is called **double negation** and it's mandatory in Ukrainian (unlike English where "I never don't drink" would be wrong).
+This is called **double negation** and it's mandatory in Ukrainian (unlike English where «I never don't drink» would be wrong).
 
 > 💡 **Did You Know?**
 >
-> Ukrainian loves double negation! "Я нічого не знаю" (I nothing don't know = I don't know anything) feels natural to Ukrainians. This pattern comes from older Slavic languages and makes negation extra clear.
+> Ukrainian loves double negation! «Я нічого не знаю» (I nothing don't know = I don't know anything) feels natural to Ukrainians. This pattern comes from older Slavic languages and makes negation extra clear.
 
 ## Practice
 
@@ -187,7 +187,7 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 
 > 🎭 **Culture Corner**
 >
-> When Ukrainians ask "Як справи?" (How are things?), they actually want to know! Unlike the English "How are you?" (often just a greeting), Ukrainians expect a real answer. Feel free to say "Не дуже добре" (Not so great) - they'll ask why and genuinely care.
+> When Ukrainians ask «Як справи?» (How are things?), they actually want to know! Unlike the English «How are you?» (often just a greeting), Ukrainians expect a real answer. Feel free to say «Не дуже добре» (Not so great) - they'll ask why and genuinely care.
 
 ---
 
@@ -206,7 +206,7 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 **Negation:**
 
 - не + verb = negative
-- ніколи (never) STILL needs не: "Я ніколи не..."
+- ніколи (never) STILL needs не: «Я ніколи не...»
 
 **Frequency:**
 
@@ -214,3 +214,10 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 - іноді (sometimes), рідко (rarely), ніколи (never)
 
 ---
+
+## Need More Practice?
+
+> [!resources] External Review
+>
+> - 📺 [Ukrainian Language: A1 Level Practice](https://www.youtube.com/results?search_query=ukrainian+language+A1)
+> - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/)

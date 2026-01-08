@@ -102,7 +102,7 @@ items:
     gender: m
   - lemma: пролежати
     ipa: proleˈʒɑte
-    translation: to lie (for a while)
+    translation: to lie
     pos: verb
   - lemma: прослухати
     ipa: proˈsluxɐte
@@ -139,6 +139,18 @@ items:
     ipa: xɐoˈtɪt͡ʃno
     translation: chaotically
     pos: adv
+  - lemma: вид
+    translation: view; aspect (grammar)
+    pos: noun
+    gender: m
+  - lemma: недоконаний
+    translation: imperfective
+    pos: adj
+    gender: m
+  - lemma: доконаний
+    translation: perfective
+    pos: adj
+    gender: m
   - lemma: читання
     ipa: t͡ʃɪˈtɑnʲːɐ
     translation: reading

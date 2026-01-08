@@ -1,0 +1,99 @@
+
+> learn-ukrainian@1.0.0 pipeline
+> .venv/bin/python scripts/pipeline.py l2-uk-en a2
+
+🚀 Learn Ukrainian Pipeline
+
+============================================================
+🚀 Learn Ukrainian Pipeline
+============================================================
+  Language pair: l2-uk-en
+  Level: a2
+  Module: all
+  Steps: lint, generate, validate_mdx, validate_html
+
+============================================================
+📝 Step 1: Lint Markdown
+============================================================
+  ✅ 01-the-dative-i-pronouns
+  ✅ 02-the-dative-ii-nouns
+  ✅ 03-dative-verbs
+  ✅ 04-the-instrumental-i-accompaniment
+  ✅ 05-the-instrumental-ii-means-and-tools
+  ✅ 06-being-and-becoming
+  ✅ 07-spatial-prepositions
+  ❌ 08-logical-prepositions
+     ❌ AUDIT FAILED: Missing '## Summary'
+  ✅ 09-all-cases-practice
+  ✅ 10-at-the-post-office-and-bank
+  ✅ 11-checkpoint-cases
+  ❌ 12-aspect-introduction
+     Immersion    ❌ 24.8% LOW (target 35-50% (A2.1))
+  ❌ 13-the-completed-past
+     Words        ❌ 803/1000
+  ❌ 14-future-plans-and-promises
+     Words        ❌ 869/1000
+  ✅ 15-aspect-morphology
+  ✅ 16-aspect-mastery-pairs
+  ✅ 17-possessive-sviy
+  ✅ 18-bigger-better-stronger
+  ✅ 19-the-best-the-worst
+  ✅ 20-preferences-and-choices
+  ✅ 21-numerals-and-nouns
+  ❌ 22-if-i-were
+     Immersion    ❌ 28.8% LOW (target 40-55% (A2.2))
+  ✅ 23-complete-imperative
+  ✅ 24-smart-shopping
+  ✅ 25-checkpoint-aspect-comparison
+  ✅ 26-telling-stories
+  ❌ 27-because-and-although
+     ❌ AUDIT FAILED: Missing '## Summary'
+  ✅ 28-she-said-that
+  ❌ 29-i-think-that
+     ❌ AUDIT FAILED: Missing '## Summary'
+  ❌ 30-i-feel-like
+     ❌ AUDIT FAILED: Missing '## Summary'
+  ❌ 31-in-order-to
+     ❌ AUDIT FAILED: Missing '## Summary'
+  ✅ 32-which-one
+  ✅ 33-time-clauses
+  ✅ 34-at-the-doctor
+  ❌ 35-checkpoint
+     Lint         ❌ 3 Format Errors
+  ✅ 36-basic-motion-prefixes
+  ✅ 37-advanced-motion-prefixes
+  ✅ 38-action-verb-prefixes
+  ✅ 39-adjective-suffixes-qualities
+  ✅ 40-adj-suffixes
+  ✅ 41-root-families-i
+  ✅ 42-root-families-ii
+  ✅ 43-wf-mastery
+  ❌ 44-checkpoint-word-formation
+     ❌ CHECKPOINT FORMAT ERRORS:
+  ❌ 45-food-and-cooking
+     Immersion    ❌ 49.4% LOW (target 50-60% (A2.3))
+  ✅ 46-home-and-furniture
+  ✅ 47-nature-and-weather
+  ✅ 48-emotions-personality
+  ✅ 49-work-professions
+  ✅ 50-technology-media
+  ✅ 51-hobbies-leisure
+  ✅ 52-education-learning
+  ✅ 53-shopping-services
+  ✅ 54-sports-fitness
+  ✅ 55-health-body
+  ✅ 56-checkpoint-vocabulary
+  ❌ 57-grammar-review
+     ❌ AUDIT FAILED: Transliteration detected: 'Недоконаний (Process)'. Remove Latin in parentheses.
+  ❌ 58-final-review
+     ❌ CHECKPOINT FORMAT ERRORS:
+
+⛔ Pipeline stopped at lint: 14/58 modules failed
+   Details: 08-logical-prepositions, 12-aspect-introduction, 13-the-completed-past, 14-future-plans-and-promises, 22-if-i-were
+
+============================================================
+📊 Pipeline Summary
+============================================================
+  ❌ lint: 14/58 modules failed
+
+❌ PIPELINE FAILED

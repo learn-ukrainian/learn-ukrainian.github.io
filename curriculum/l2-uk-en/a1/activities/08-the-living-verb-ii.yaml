@@ -279,9 +279,9 @@
   - statement: Second Conjugation verbs end in -ити or -іти in the infinitive.
     correct: true
     explanation: Correct! This is the defining feature of Second Conjugation verbs.
-  - statement: The verb "читати" is Second Conjugation.
+  - statement: The verb «читати» is Second Conjugation.
     correct: false
-    explanation: Incorrect! "читати" ends in -ати, so it's First Conjugation.
+    explanation: Incorrect! «читати» ends in -ати, so it's First Conjugation.
   - statement: Irregular verbs like їсти and пити don't follow standard conjugation
       patterns.
     correct: true
@@ -289,26 +289,26 @@
   - statement: In Second Conjugation, the first person singular ending is -ю or -у.
     correct: true
     explanation: Correct! я говорю, я роблю.
-  - statement: The verb "говорити" conjugates as "я говорую."
+  - statement: The verb «говорити» conjugates as «я говорую.»
     correct: false
-    explanation: Incorrect! It's "я говорю" (not "говорую").
-  - statement: '"Дякувати" is a First Conjugation verb.'
+    explanation: Incorrect! It's «я говорю» (not «говорую»).
+  - statement: '«Дякувати» is a First Conjugation verb.'
     correct: true
     explanation: Correct! It ends in -увати, which is a First Conjugation pattern.
   - statement: All verbs ending in -ати are First Conjugation.
     correct: false
-    explanation: Incorrect! "спати" ends in -ати but behaves like Second Conjugation
+    explanation: Incorrect! «спати» ends in -ати but behaves like Second Conjugation
       in some forms.
   - statement: The third person plural ending for Second Conjugation is -ять or -ать.
     correct: true
     explanation: Correct! вони говорять, вони роблять.
-  - statement: '"Я хочу" is an irregular form.'
+  - statement: '«Я хочу» is an irregular form.'
     correct: true
     explanation: 'Correct! хотіти is irregular: хочу, хочеш, хоче.'
   - statement: Second Conjugation verbs don't have consonant mutations.
     correct: false
     explanation: 'Incorrect! Many do: робити → роблю, ходити → ходжу.'
-  - statement: '"П''ю" is the first person singular of "пити."'
+  - statement: '«П''ю» is the first person singular of «пити.»'
     correct: true
     explanation: Correct! я п'ю (I drink).
   - statement: Ukrainian distinguishes between ходити and їздити.

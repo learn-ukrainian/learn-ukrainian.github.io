@@ -7,17 +7,18 @@ pedagogy: Narrative
 duration: 60
 transliteration: none
 tags:
-  - vocabulary
-  - technology
-  - internet
-  - media
+- vocabulary
+- technology
+- internet
+- media
 grammar:
-  - accusative-inanimate
-  - locative-places
+- accusative-inanimate
+- locative-places
 objectives:
-  - Name common devices: комп'ютер, смартфон, планшет
-  - Discuss internet activities: шукати, завантажувати
-  - Talk about media: новини, блог, соціальні мережі
-  - Describe digital habits
-vocab_count: 57
+- Name common devices: комп'ютер, смартфон, планшет
+- Discuss internet activities: шукати, завантажувати
+- Talk about media: новини, блог, соціальні мережі
+- Describe digital habits
 slug: 50-technology-media
+vocabulary_count: 57
+focus: vocabulary

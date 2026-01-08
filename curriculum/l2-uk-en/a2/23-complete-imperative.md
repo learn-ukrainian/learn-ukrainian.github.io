@@ -1,19 +1,21 @@
 # Наказовий спосіб — The Complete Imperative
 
-## Warm-up
+## Introduction
 
-You already know some commands from A1: «Скажіть, будь ласка» or «Читайте!». But how do you form these imperatives yourself? How do you say "Let's go!" or "Let him decide"? This lesson teaches you the complete Ukrainian imperative system.
+You already know some commands from A1: «Скажіть, будь ласка» or «Читайте!». But how do you form these imperatives yourself? How do you say «Let's go!» or «Let him decide»? This lesson teaches you the complete Ukrainian imperative system.
 
 **What you'll learn:**
-- How to form 2nd person imperatives (commands to "you")
-- How to form 1st person plural imperatives (invitations like "let's...")
+- How to form 2nd person imperatives (commands to «you»)
+- How to form 1st person plural imperatives (invitations like «let's...»)
 - How to form 3rd person imperatives (wishes for others with хай/нехай)
 
 ---
 
 ## Presentation
 
-### The Complete Imperative System
+## Practice
+
+## The Complete Imperative System
 
 Ukrainian has imperative forms for different grammatical persons:
 
@@ -21,14 +23,14 @@ Ukrainian has imperative forms for different grammatical persons:
 |--------|-------|-----------|---------|
 | 2nd singular | commands to one person | stem + ending | Читай! (Read!) |
 | 2nd plural | commands to many / formal | stem + -те | Читайте! (Read!) |
-| 1st plural | invitations ("let's...") | stem + -мо | Читаймо! (Let's read!) |
+| 1st plural | invitations («let's...») | stem + -мо | Читаймо! (Let's read!) |
 | 3rd person | wishes for others | хай/nехай + present | Хай читає! (Let him read!) |
 
 ---
 
 ## Наказовий спосіб 2-ї особи — 2nd Person Imperative
 
-### Як утворити — How to Form
+## Як утворити — How to Form
 
 To form 2nd person imperatives, start with the **present tense stem** (1st person singular minus the ending):
 
@@ -39,7 +41,7 @@ To form 2nd person imperatives, start with the **present tense stem** (1st perso
 | говорити | говорю | говор- | Говори! / Говоріть! |
 | робити | роблю | робл- → роб- | Роби! / Робіть! |
 
-### Закінчення — Endings
+## Закінчення — Endings
 
 The ending depends on the stem:
 
@@ -50,7 +52,7 @@ The ending depends on the stem:
 | consonant cluster | -и | -іть | крикни → крикніть |
 | soft consonant | -ь | -ьте | сядь → сядьте |
 
-### Приклади з дієсловами — Verb Examples
+## Приклади з дієсловами — Verb Examples
 
 **First Conjugation (читати-type):**
 
@@ -85,9 +87,9 @@ The ending depends on the stem:
 
 ---
 
-## Наказовий спосіб 1-ї особи множини — 1st Person Plural ("Let's...")
+## Наказовий спосіб 1-ї особи множини — 1st Person Plural («Let's...»)
 
-### Як утворити — How to Form
+## Як утворити — How to Form
 
 Add **-мо** to the 2nd person singular form:
 
@@ -98,7 +100,7 @@ Add **-мо** to the 2nd person singular form:
 | говори | говорімо | let's speak |
 | йди | йдімо / ходімо | let's go |
 
-### Приклади — Examples
+## Приклади — Examples
 
 - **Ходімо до кафе!** — Let's go to the café!
 - **Почнімо!** — Let's begin!
@@ -113,7 +115,7 @@ Add **-мо** to the 2nd person singular form:
 
 ## Наказовий спосіб 3-ї особи — 3rd Person Imperative
 
-### Як утворити — How to Form
+## Як утворити — How to Form
 
 Use **хай** or **нехай** + 3rd person present tense:
 
@@ -122,14 +124,14 @@ Use **хай** or **нехай** + 3rd person present tense:
 | він/вона/воно | хай/nехай + 3sg present | Хай він читає. |
 | вони | хай/nехай + 3pl present | Хай вони читають. |
 
-### хай vs. нехай — Register Difference
+## хай vs. нехай — Register Difference
 
 | Particle | Register | Usage |
 |----------|----------|-------|
 | хай | conversational | everyday speech, with friends |
 | нехай | literary/formal | writing, official contexts, wishes |
 
-### Приклади — Examples
+## Приклади — Examples
 
 **З хай (розмовний стиль):**
 - Хай він сам вирішує. — Let him decide himself.
@@ -167,30 +169,28 @@ Here's how all imperative forms work together:
 | читати | Form | Translation |
 |--------|------|-------------|
 | Читай! | 2nd sg. | Read! (informal) |
-| Читайте! | 2nd pl. | Read! (formal/plural) |
+| Читайте! | 2nd pl. | Read! |
 | Читаймо! | 1st pl. | Let's read! |
 | Хай читає! | 3rd sg. | Let him/her read! |
 | Хай читають! | 3rd pl. | Let them read! |
 
-### Більше прикладів — More Examples
+## Більше прикладів — More Examples
 
-**робити (to do):**
+**робити:**
 - Роби! / Робіть! / Робімо! / Хай робить! / Хай роблять!
 
-**говорити (to speak):**
+**говорити:**
 - Говори! / Говоріть! / Говорімо! / Хай говорить! / Хай говорять!
 
-**писати (to write):**
+**писати:**
 - Пиши! / Пишіть! / Пишімо! / Хай пише! / Хай пишуть!
 
-**їсти (to eat):**
+**їсти:**
 - Їж! / Їжте! / Їжмо! / Хай їсть! / Хай їдять!
 
 ---
 
-## Practice
-
-### Dialogues
+## Dialogues
 
 > **На роботі**
 >
@@ -240,9 +240,7 @@ Here's how all imperative forms work together:
 
 ---
 
-## Більше практики — More Practice
-
-### Ситуації — Situations
+## Ситуації — Situations
 
 **У магазині:**
 - Продавець: «Дивіться, у нас є нові товари!» — Look, we have new products!
@@ -259,7 +257,7 @@ Here's how all imperative forms work together:
 - Тато: «Зроби домашнє завдання!» — Do your homework!
 - Дитина: «Ходімо гуляти!» — Let's go for a walk!
 
-### Формула ввічливості — Politeness Formula
+## Формула ввічливості — Politeness Formula
 
 To make imperatives more polite, add **будь ласка** (please):
 
@@ -269,15 +267,15 @@ To make imperatives more polite, add **будь ласка** (please):
 | Покажіть! | Покажіть, будь ласка! |
 | Зачекай! | Зачекай, будь ласка! |
 
-You can also use **прошу** (I ask/please) for formal requests:
+You can also use **прошу** for formal requests:
 - **Прошу сідати.** — Please sit down. (formal)
 - **Прошу вибачення.** — I beg your pardon. / Excuse me.
 
 > 🌍 **Порівняння з англійською**
 >
-> In English, you often use "Could you...?" or "Would you mind...?" for politeness. In Ukrainian, the imperative + будь ласка is perfectly polite and natural. Saying «Дай мені воду, будь ласка» is completely normal and not rude at all.
+> In English, you often use «Could you...?» or «Would you mind...?» for politeness. In Ukrainian, the imperative + будь ласка is perfectly polite and natural. Saying «Дай мені воду, будь ласка» is completely normal and not rude at all.
 
-### Заперечення — Negative Imperatives
+## Заперечення — Negative Imperatives
 
 To form negative commands, add **не** before the verb:
 
@@ -294,15 +292,15 @@ To form negative commands, add **не** before the verb:
 - Не бійся! — Don't be afraid!
 - Хай вона не хвилюється. — Let her not worry.
 
-### Повторення форм — Form Review
+## Повторення форм — Form Review
 
-Let's review all forms one more time with the verb **робити** (to do):
+Let's review all forms one more time with the verb **робити**:
 
 | Form | Ukrainian | Usage |
 |------|-----------|-------|
 | 2nd sg. | Роби! | Command to one person (informal) |
 | 2nd pl. | Робіть! | Command to many or formal |
-| 1st pl. | Робімо! | Invitation ("Let's do!") |
+| 1st pl. | Робімо! | Invitation («Let's do!») |
 | 3rd sg. | Хай робить! | Wish for him/her |
 | 3rd pl. | Хай роблять! | Wish for them |
 | Negative | Не роби! / Не робіть! | Prohibition |
@@ -320,9 +318,7 @@ Let's review all forms one more time with the verb **робити** (to do):
 >
 > The expression «Слава Україні! — Героям слава!» (Glory to Ukraine! — Glory to the heroes!) uses the dative case, not the imperative. But «Хай живе Україна!» (Long live Ukraine!) uses the 3rd person imperative with хай.
 
----
-
-# Summary
+# Підсумок
 
 You've learned the complete Ukrainian imperative system!
 
@@ -334,13 +330,8 @@ You've learned the complete Ukrainian imperative system!
 - **Register:** хай is conversational, нехай is literary
 - **Irregular forms:** дай, будь, їж, візьми
 
-### Quick Reference
+---
 
-| Person | Formation | Example |
-|--------|-----------|---------|
-| 2nd sg. | stem + -й/-и/-ь | Читай! Пиши! Сядь! |
-| 2nd pl. | stem + -йте/-іть/-ьте | Читайте! Пишіть! Сядьте! |
-| 1st pl. | 2nd sg + -мо | Читаймо! Ходімо! |
-| 3rd person | хай/nехай + present | Хай читає! Нехай буде! |
+## Need More Practice?
 
-**Next lesson:** Smart Shopping — applying grammar in practical situations!
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

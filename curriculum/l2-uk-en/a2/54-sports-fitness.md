@@ -1,6 +1,6 @@
 # Sports & Fitness
 
-## Warm-up
+## Introduction
 
 Ви любите спорт? Ви більше любите дивитися футбол чи грати в нього? Ви ходите в спортзал?
 
@@ -11,12 +11,16 @@ Sports unite people. In this module, you'll master three key areas:
 2. **Fitness vocabulary** — gyms, pools, and training
 3. **Key grammar** — *грати в* + Accusative vs. *займатися* + Instrumental
 
-> [!important] **Myth Buster** "Only Football?"
-> While football is #1, Ukraine is a powerhouse in many sports. Ukraine has world champions in **boxing** (Usyk, Klitschko), **high jump** (Mahuchikh), and **fencing** (Kharlan). We are also very strong in the Paralympics, often finishing in the top 10 medal table globally!
+> [!important] **Myth Buster** «Only Football?»
+> While football is #1, Ukraine is a powerhouse in many sports. Ukraine has world champions in **boxing** (Usyk, Klitschko), **high jump**, and **fencing** (Kharlan). We are also very strong in the Paralympics, often finishing in the top 10 medal table globally!
 
 ## Presentation
 
-### Sports (Види спорту)
+## Practice
+
+Now let's see these words in action through stories about Ukrainian sports life — from morning runs to championship matches.
+
+## Sports (Види спорту)
 
 Popular games and activities:
 
@@ -31,7 +35,7 @@ Popular games and activities:
 | **біг** | running | Ранковий біг. |
 | **гімнастика** | gymnastics | Художня гімнастика. |
 
-### Places & People
+## Places & People
 
 - **стадіон** — stadium: *Ми йдемо на стадіон.*
 - **спортзал** — gym: *Він качається в спортзалі.*
@@ -42,7 +46,7 @@ Popular games and activities:
 - **тренер** — coach/trainer: *Слухати тренера.*
 - **чемпіон** — champion: *Олімпійський чемпіон.*
 
-### Verbs & Action
+## Verbs & Action
 
 - **тренуватися** — to train/workout: *Я тренуюся щодня.*
 - **займатися** (спортом) — to do (sport): *Він займається боксом.*
@@ -54,34 +58,30 @@ Popular games and activities:
 - **матч** — match/game: *Дивитися матч.*
 - **рахунок** — score: *Який рахунок?*
 
-> [!note] Grammar Point: Instrumental with "Займатися"
-> When you say you "do" or "practice" a sport using **займатися**, you must use the **Instrumental case**:
-> - *Я займаюсь* **спортом**. (I do sport).
+> [!note] Grammar Point: Instrumental with «Займатися»
+> When you say you «do» or «practice» a sport using **займатися**, you must use the **Instrumental case**:
+> - *Я займаюсь* **спортом**..
 > - *Він займається* **футболом**.
 > - *Вона займається* **йогою**.
 >
 > Remember words ending in consonant add **-ом**, words in **-а** change to **-ою**.
 
 > [!cultural] **Cultural Insight** Dynamo Kyiv
-> **FC Dynamo Kyiv** is the most legendary club in Ukrainian history. Founded in 1927, they won countless trophies. Their historic rival is **Shakhtar Donetsk**. When these two play, it's called "The Ukrainian Classico" (*Українське Класичне*). The whole country watches!
+> **FC Dynamo Kyiv** is the most legendary club in Ukrainian history. Founded in 1927, they won countless trophies. Their historic rival is **Shakhtar Donetsk**. When these two play, it's called «The Ukrainian Classico» (*Українське Класичне*). The whole country watches!
 
 > [!tip] **Common Mistakes to Avoid**
-> ❌ *Я граю футбол.* — Wrong! (Missing preposition)
+> ❌ *Я граю футбол.* — Wrong!
 > ✅ *Я граю в футбол.* — Correct! (грати В + Accusative)
 >
-> ❌ *Він займається футбол.* — Wrong! (Case error)
+> ❌ *Він займається футбол.* — Wrong!
 > ✅ *Він займається футболом.* — Correct! (займатися + Instrumental)
 >
-> ❌ *Ми виграємо команду.* — Wrong! (Wrong meaning)
+> ❌ *Ми виграємо команду.* — Wrong!
 > ✅ *Ми виграємо матч.* — Correct! (You win a game, not a team)
 >
-> **Memory trick:** *грати В* = "playing INTO" a game; *займатися* = "occupied WITH" an activity.
+> **Memory trick:** *грати В* = «playing INTO» a game; *займатися* = «occupied WITH» an activity.
 
-## Practice
-
-Now let's see these words in action through stories about Ukrainian sports life — from morning runs to championship matches.
-
-### Story Time: The Morning Run
+## Story Time: The Morning Run
 
 Максим любить **бігати**. Щоранку о 6:00 він йде в парк.
 Сьогодні гарна погода. Світить сонце.
@@ -95,11 +95,11 @@ Now let's see these words in action through stories about Ukrainian sports life 
 Він хоче бути сильним і здоровим.
 Вдома він приймає душ і їсть сніданок. Тепер він готовий до роботи.
 
-### Story Time: The Big Match
+## Story Time: The Big Match
 
-Сьогодні важливий день. Грає **збірна** (national team) України з футболу.
+Сьогодні важливий день. Грає **збірна** України з футболу.
 Андрій і його тато — **вболівальники**.
-Вони йдуть на **стадіон** "Олімпійський".
+Вони йдуть на **стадіон** «Олімпійський».
 Там тисячі людей. Всі одягнені у жовте і синє.
 
 Гра починається. Наші хлопці грають добре.
@@ -110,7 +110,7 @@ Now let's see these words in action through stories about Ukrainian sports life 
 Після **матчу** всі святкують.
 — Це була чудова **гра**, — каже Андрій. — Наша **команда** найкраща.
 
-### Story Time: Gym Life
+## Story Time: Gym Life
 
 Олена **займається** фітнесом.
 Три рази на тиждень вона ходить у **спортзал**.
@@ -125,46 +125,46 @@ Now let's see these words in action through stories about Ukrainian sports life 
 — Ти виглядаєш супер! — каже подруга.
 — Дякую, — усміхається Олена. — Спорт змінює життя.
 
-### Hiking in Carpathians
+## Hiking in Carpathians
 
 Ukraine has beautiful mountains — the **Carpathians** (*Карпати*).
 Hiking (*походи в гори*) is a very popular sport here.
 People take backpacks and tents and go to mount Hoverla (the highest peak, 2061m).
 Підніматися нелегко, але краєвид чудовий. (It is not easy to climb, but the view is amazing).
-Ви дихаєте свіжим повітрям і п'єте чисту воду. (You breathe fresh air and drink pure water).
+Ви дихаєте свіжим повітрям і п'єте чисту воду..
 There are no stadiums or referees, only you and nature. This is the best fitness for the soul.
 
-### Cycling in the City
+## Cycling in the City
 
 More and more Ukrainians ride bicycles (*кататися на велосипеді*).
 Kyiv is very hilly (*пагорби*), so it is hard work for your legs!
 But cities like Lviv or Vinnytsia are more flat and have new bike lanes.
 On weekends, thousands of cyclists go to Trukhaniv Island in Kyiv. No cars are allowed there.
 It is a paradise for cyclists and runners.
-You can rent a bike using an app like "Bikenow". You scan the QR code and go!
+You can rent a bike using an app like «Bikenow». You scan the QR code and go!
 
-### Winter Sports: Bukovel
+## Winter Sports: Bukovel
 
 When snow falls, Ukrainians go to **Bukovel**.
 It is the biggest ski resort in the Carpathians.
 People go there to ski (*кататися на лижах*) or snowboard (*на сноуборді*).
 The season lasts from December to April.
-Even if you don't ski, you can drink hot "Hutsul tea" with honey and enjoy the snowy forest.
+Even if you don't ski, you can drink hot «Hutsul tea» with honey and enjoy the snowy forest.
 It is like a fairy tale.
 
-### Story Time: Morning Yoga
+## Story Time: Morning Yoga
 
 Оля не любить бігати. Вона любить **йогу**.
 Вона займається вдома.
 Оля вмикає спокійну музику.
 Вона робить глибокий вдих і видих.
 — Подякуй своєму тілу, — каже інструктор на відео.
-Оля стоїть у позі "дерево". Це важко, але вона тримає баланс.
+Оля стоїть у позі «дерево». Це важко, але вона тримає баланс.
 Після йоги вона п'є воду з лимоном.
 — Я спокійна і сильна, — каже Оля.
 Йога допомагає їй почати день правильно.
 
-### Kyiv Marathon
+## Kyiv Marathon
 
 Every autumn, the **Kyiv Marathon** takes place.
 Thousands of runners from all over the world come to run 42 kilometers.
@@ -172,10 +172,10 @@ The route goes through the historic center, across bridges, and past beautiful c
 Even if you don't run, you can come to support (*вболівати*) the runners.
 It is a celebration of willpower.
 
-### Story Time: Running Club
+## Story Time: Running Club
 
 Сергій не любив бігати. Йому було нудно.
-Але його друг сказав: "Приходь у наш біговий клуб".
+Але його друг сказав: «Приходь у наш біговий клуб».
 У суботу вранці Сергій прийшов у парк. Там було 30 людей.
 — Привіт! — сказали вони. — Ми біжимо 5 кілометрів, а потім п'ємо каву.
 
@@ -185,10 +185,10 @@ It is a celebration of willpower.
 — Це було супер, — сказав Сергій. — Ви класна **команда**.
 Тепер він чекає суботу, щоб знову побачити друзів.
 
-> [!tip] **Tip** "Sporty Diet"
-> Ukrainian athletes love **гречка** (buckwheat). It acts as a superfood full of iron and protein. If you want to be strong like Klitschko, eat buckwheat porridge with meat or salads!
+> [!tip] **Tip** «Sporty Diet»
+> Ukrainian athletes love **гречка**. It acts as a superfood full of iron and protein. If you want to be strong like Klitschko, eat buckwheat porridge with meat or salads!
 
-# Summary
+# Підсумок
 
 You learned to:
 - Name sports: **футбол**, **теніс**, **бокс**, **плавання**
@@ -202,7 +202,7 @@ A healthy mind in a healthy body!
 >
 > «Українці люблять футбол, бокс і художню гімнастику. Спорт об'єднує!»
 >
-> *Translation: "Ukrainians love football, boxing, and rhythmic gymnastics!"*
+> *Translation: «Ukrainians love football, boxing, and rhythmic gymnastics!»*
 
 > 🇺🇦 **Спорт в Україні**
 >
@@ -213,3 +213,9 @@ A healthy mind in a healthy body!
 > - **плавання** — багато українців люблять плавати
 >
 > Спорт — це здоров'я! Українці кажуть: «Рух — це життя!»
+
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

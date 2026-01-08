@@ -4,22 +4,22 @@ subtitle: Prefixation Patterns and Common Pairs
 version: '1.0'
 phase: A2.2
 pedagogy: PPP
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - grammar
-  - aspect
-  - word-formation
-  - prefixes
+- grammar
+- aspect
+- word-formation
+- prefixes
 grammar:
-  - prefixation patterns
-  - suffixation patterns
-  - suppletive pairs
+- prefixation patterns
+- suffixation patterns
+- suppletive pairs
 objectives:
-  - Learner knows common prefix patterns for aspect
-  - Learner recognizes suffix changes in aspect pairs
-  - Learner can predict aspect from verb form
-  - Learner knows suppletive pairs
+- Learner knows common prefix patterns for aspect
+- Learner recognizes suffix changes in aspect pairs
+- Learner can predict aspect from verb form
+- Learner knows suppletive pairs
 vocabulary_count: 30
-vocab_count: 35
 slug: 15-aspect-morphology
+focus: grammar

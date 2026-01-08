@@ -4,22 +4,22 @@ subtitle: Perfective Future Tense
 version: '1.0'
 phase: A2.2
 pedagogy: PPP
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - grammar
-  - aspect
-  - future-tense
-  - perfective
+- grammar
+- aspect
+- future-tense
+- perfective
 grammar:
-  - perfective future tense
-  - process vs completion in future
-  - promise and intention
+- perfective future tense
+- process vs completion in future
+- promise and intention
 objectives:
-  - Learner can form perfective future
-  - Learner can form imperfective future
-  - Learner understands when to use each
-  - Learner can make promises and express intentions
+- Learner can form perfective future
+- Learner can form imperfective future
+- Learner understands when to use each
+- Learner can make promises and express intentions
 vocabulary_count: 20
-vocab_count: 8
 slug: 14-future-plans-and-promises
+focus: grammar

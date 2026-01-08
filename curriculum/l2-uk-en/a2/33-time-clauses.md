@@ -1,4 +1,4 @@
-## Warm-up
+## Introduction
 
 Life is a sequence of events.
 - **When** I woke up, I drank coffee.
@@ -13,7 +13,7 @@ In Ukrainian, these structures control the flow of your story.
 - **The Sequence:** *Після того як* (After) vs *Перед тим як* (Before).
 
 > [!note] Pronunciation
-> **Поки** /ˈpɔkɪ/ means "while" or "until". It connects simultaneous actions.
+> **Поки** /ˈpɔkɪ/ means «while» or «until». It connects simultaneous actions.
 
 ---
 
@@ -25,47 +25,49 @@ When two things happen at the same time.
 Usually requires **Imperfective Aspect** (process).
 
 - **Поки** я читав, вона спала. (While I was reading, she was sleeping).
-- Ми говорили, **поки** йшли додому. (We talked while walking home).
+- Ми говорили, **поки** йшли додому..
 - Не дзвони мені, **поки** я працюю! (Don't call me while I'm working!).
 
 > [!tip] Comma Rule
-> Just like with "щоб" and "який", always put a comma before the connector if it's in the middle!
+> Just like with «щоб» and «який», always put a comma before the connector if it's in the middle!
 
 ## 2. Sequential Actions: Коли & Після того як
 
-### A. Simple "When" (Коли)
-Usually implies one thing happens after another (Perfective).
+## A. Simple «When» (Коли)
+
+Usually implies one thing happens after another.
 
 - **Коли** я прийшов, ми почали їсти. (When I arrived [point], we started eating).
-- Я подзвоню, **коли** закінчу. (I will call when I finish).
+- Я подзвоню, **коли** закінчу..
 
-### B. Explicit "After" (Після того як)
+## B. Explicit «After» (Після того як)
+
 Used when you want to emphasize the sequence.
 
 - **Після того як** я з'їв обід, я пішов гуляти. (After I ate lunch, I went for a walk).
 - Він заснув **після того як** прочитав книгу.
 
-## 3. Immediate Action: Як тільки (As soon as)
+## 3. Immediate Action: Як тільки
 
 Use this for instant reaction.
 
 - **Як тільки** я побачив його, я все зрозумів. (As soon as I saw him...).
-- Ми поїдемо, **як тільки** ти будеш готовий. (We will go as soon as you are ready).
+- Ми поїдемо, **як тільки** ти будеш готовий..
 - **Щойно** я зайшов, телефон задзвонив. (Just as I entered...).
 
 ---
 
 ## Deep Dive: Before vs After
 
-"Before" is tricky in Ukrainian because it forces you to think about "Before WHAT?". Unlike English, where you can say "before going," Ukrainian requires a full clause structure.
+«Before» is tricky in Ukrainian because it forces you to think about «Before WHAT?». Unlike English, where you can say «before going,» Ukrainian requires a full clause structure.
 
 **Understanding the Structure:**
 
-In English, we often use gerunds (verb + -ing) after "before": "before eating," "before leaving," "before speaking." Ukrainian doesn't work this way. Instead, you need to use a full clause with a conjugated verb.
+In English, we often use gerunds (verb + -ing) after «before»: «before eating,» «before leaving,» «before speaking.» Ukrainian doesn't work this way. Instead, you need to use a full clause with a conjugated verb.
 
-- **Перед тим як** (Before [doing something]) - Literally: "Before that, how..."
+- **Перед тим як** (Before [doing something]) - Literally: «Before that, how...»
 - *Перед тим як вийти, вимкни світло.* (Before going out, turn off the light).
-  - Analysis: "вийти" is the infinitive "to go out," used after "як"
+  - Analysis: «вийти» is the infinitive «to go out,» used after «як»
 
 - **Перш ніж** (Before | Prior to) - Synonym, slightly more literary and formal.
 - *Перш ніж сказати, подумай.* (Before speaking, think).
@@ -73,61 +75,61 @@ In English, we often use gerunds (verb + -ing) after "before": "before eating," 
 
 **Step-by-Step Translation:**
 
-English: "Call me before getting home."
+English: «Call me before getting home.»
 
 Breakdown:
-1. Identify the main action: "Call me" = "Подзвони мені"
-2. Identify the time reference: "before getting home"
-3. Convert to Ukrainian clause structure: "before that, how you arrive home"
+1. Identify the main action: «Call me» = «Подзвони мені»
+2. Identify the time reference: «before getting home»
+3. Convert to Ukrainian clause structure: «before that, how you arrive home»
 4. Result: *Подзвони мені **перед тим як** прийдеш додому.*
 
-It requires a full verb phrase - you can't just say *"перед прийти додому" without the "тим як" structure.
+It requires a full verb phrase - you can't just say *«перед прийти додому» without the «тим як» structure.
 
-> [!cultural] Myth: "Punctuality"
-> In Ukraine, usually "коли я прийду" (when I come) is flexible. But trains are very punctual.
-> If the train says 18:02, it leaves at 18:02. **Як тільки** (as soon as) the clock strikes, it moves. Don't be late!
+> [!cultural] Myth: «Punctuality»
+> In Ukraine, usually «коли я прийду» is flexible. But trains are very punctual.
+> If the train says 18:02, it leaves at 18:02. **Як тільки** the clock strikes, it moves. Don't be late!
 
 ---
 
 ## Deep Dive: Complex Time Connectors
 
-Sometimes simple "when" is not enough. You need precision to express nuanced time relationships. Ukrainian offers several sophisticated time connectors that allow you to be very specific about how events relate to each other temporally.
+Sometimes simple «when» is not enough. You need precision to express nuanced time relationships. Ukrainian offers several sophisticated time connectors that allow you to be very specific about how events relate to each other temporally.
 
 **Why Use Complex Connectors?**
 
-While basic connectors like "коли" and "поки" work for most situations, complex connectors add:
+While basic connectors like «коли» and «поки» work for most situations, complex connectors add:
 - **Emphasis**: Highlighting the frequency or uniqueness of an event
 - **Contrast**: Showing how two simultaneous actions differ in nature
 - **Specificity**: Pinpointing exact moments or dates
 
-### 1. The Loop: Кожного разу, коли...
+## 1. The Loop: Кожного разу, коли...
 
-"Every time when..." - Use this to emphasize repetition or patterns.
+«Every time when...» - Use this to emphasize repetition or patterns.
 
 - *Кожного разу, коли я бачу її, я радію.* (Every time I see her, I rejoice).
   - Analysis: This emphasizes the consistent pattern of the reaction
 - *Раз у раз, коли ми зустрічаємося...* (Time and again, when we meet...).
-  - Note: "Раз у раз" is more emphatic, suggesting "without fail"
+  - Note: «Раз у раз» is more emphatic, suggesting «without fail»
 
-### 2. The Parallel: Тим часом як...
+## 2. The Parallel: Тим часом як...
 
-"Meanwhile, as..." or "Whereas..." - Use this to contrast two simultaneous actions or to show background context.
+«Meanwhile, as...» or «Whereas...» - Use this to contrast two simultaneous actions or to show background context.
 
 - *Я працював, тим часом як він спав.* (I worked, meanwhile he slept).
   - Analysis: Emphasizes the contrast between the two activities
 - *В той час як усі святкували, я вчився.* (At that time as everyone celebrated, I studied).
-  - Note: "В той час як" is a synonym, slightly more formal
+  - Note: «В той час як» is a synonym, slightly more formal
 
-### 3. The Date: Того дня, коли...
+## 3. The Date: Того дня, коли...
 
-"On that day when..." - Use this to mark a specific, memorable moment in time.
+«On that day when...» - Use this to mark a specific, memorable moment in time.
 
 - *Того дня, коли народився син, йшов дощ.* (On the day the son was born, it rained).
   - Analysis: Creates a narrative anchor for the story
   - This construction is common in storytelling and reminiscences
 
 > [!tip] Logic Check
-> Unlike English "While X, Y", Ukrainian prefers "X, тим часом як Y" if you want to contrast the two actions heavily. But for simple background action ("I listened to music while cooking"), use **поки** instead. The choice depends on whether you want to emphasize the contrast or just show simultaneity.
+> Unlike English «While X, Y», Ukrainian prefers «X, тим часом як Y» if you want to contrast the two actions heavily. But for simple background action («I listened to music while cooking»), use **поки** instead. The choice depends on whether you want to emphasize the contrast or just show simultaneity.
 
 ---
 
@@ -154,8 +156,8 @@ While basic connectors like "коли" and "поки" work for most situations, 
 
 ## Cultural Insight
 
-> [!cultural] "Поспішай повільно"
-> This is a famous Latin phrase (Festina Lente) that Ukrainians love: "Hurry slowly".
+> [!cultural] «Поспішай повільно»
+> This is a famous Latin phrase that Ukrainians love: «Hurry slowly».
 > It means: Do things quickly but carefully. Don't rush into mistakes.
 > Think **перед тим як** діяти. Але дій **як тільки** маєш план!
 
@@ -178,7 +180,8 @@ While basic connectors like "коли" and "поки" work for most situations, 
 **Andriy:** Але **перед тим як** вийти, я зробив тобі каву.
 **Olya:** О, дякую! Ти найкращий.
 
-### Analysis
+## Analysis
+
 1. **Коли я прокинулася** - Single point in time trigger.
 2. **Поки я чекала** - Duration/Process.
 3. **Як тільки вода з'явилася** - Immediate reaction.
@@ -199,15 +202,15 @@ While basic connectors like "коли" and "поки" work for most situations, 
 
 ---
 
-## Pro-Tip: The "Until" Dual Meaning
+## Pro-Tip: The «Until» Dual Meaning
 
-The word **поки** means "while".
-But **поки не** means "until" (literally "while not").
+The word **поки** means «while».
+But **поки не** means «until» (literally «while not»).
 
 - *Я буду тут, **поки** ти працюєш.* (I will be here **while** you work).
 - *Я буду тут, **поки** ти **не** закінчиш.* (I will be here **while** you do **not** finish -> **Until** you finish).
 
-It's logical: I stay in the state of "waiting" during the time that "finishing" has NOT happened yet.
+It's logical: I stay in the state of «waiting» during the time that «finishing» has NOT happened yet.
 
 # Підсумок
 
@@ -233,3 +236,8 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 
 Тепер ви можете описувати часові відношення між діями українською мовою! Практикуйте щодня!
 
+---
+
+## Need More Practice?
+
+To solidify your knowledge, try writing five sentences using the grammar patterns from this module. Use the vocabulary items provided in the sidecar to practice your new words in context!

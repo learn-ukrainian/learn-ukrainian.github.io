@@ -4,21 +4,21 @@ subtitle: Superlative Adjectives
 version: '1.0'
 phase: A2.2
 pedagogy: PPP
-duration: 60 min
+duration: 60
 transliteration: none
 tags:
-  - grammar
-  - adjectives
-  - superlatives
+- grammar
+- adjectives
+- superlatives
 grammar:
-  - superlative formation
-  - irregular superlatives
-  - absolute superlative
+- superlative formation
+- irregular superlatives
+- absolute superlative
 objectives:
-  - Learner can form superlative adjectives
-  - Learner knows irregular superlatives
-  - Learner can express 'the most' and 'the best'
-  - Learner can use intensifiers
+- Learner can form superlative adjectives
+- Learner knows irregular superlatives
+- Learner can express 'the most' and 'the best'
+- Learner can use intensifiers
 vocabulary_count: 25
-vocab_count: 47
 slug: 19-the-best-the-worst
+focus: grammar
