@@ -1,0 +1,117 @@
+module: 133-irony-sarcasm
+level: C1
+version: '1.0'
+items:
+  - lemma: іронія
+    ipa: /irˈɔnʲijɑ/
+    translation: irony
+    pos: noun
+    gender: f
+  - lemma: сарказм
+    ipa: /sɑrˈkɑzm/
+    translation: sarcasm
+    pos: noun
+    gender: m
+  - lemma: насмішка
+    ipa: /nɑˈsmʲiʃkɑ/
+    translation: mockery / jeer
+    pos: noun
+    gender: f
+  - lemma: глузування
+    ipa: /hlʊzʊˈvɑnʲːɑ/
+    translation: mockery / ridicule
+    pos: noun
+    gender: n
+  - lemma: підтекст
+    ipa: /pidˈtɛkst/
+    translation: subtext
+    pos: noun
+    gender: m
+  - lemma: інтонація
+    ipa: /intɔˈnɑt͡sʲijɑ/
+    translation: intonation
+    pos: noun
+    gender: f
+  - lemma: контекст
+    ipa: /kɔnˈtɛkst/
+    translation: context
+    pos: noun
+    gender: m
+  - lemma: дотепність
+    ipa: /dɔˈtɛpnʲistʲ/
+    translation: wit / wittiness
+    pos: noun
+    gender: f
+  - lemma: парадокс
+    ipa: /pɑrɑˈdɔks/
+    translation: paradox
+    pos: noun
+    gender: m
+  - lemma: абсурд
+    ipa: /ɑbˈsʊrd/
+    translation: absurdity
+    pos: noun
+    gender: m
+  - lemma: перебільшення
+    ipa: /pɛrɛˈbʲilʲʃɛnʲːɑ/
+    translation: exaggeration
+    pos: noun
+    gender: n
+  - lemma: применшення
+    ipa: /prɪˈmɛnʃɛnʲːɑ/
+    translation: understatement
+    pos: noun
+    gender: n
+  - lemma: протиріччя
+    ipa: /prɔtɪˈrʲit͡ʃːɑ/
+    translation: contradiction
+    pos: noun
+    gender: n
+  - lemma: іронізувати
+    ipa: /irɔnʲizʊˈvɑtɪ/
+    translation: to ironize / to speak ironically
+    pos: verb
+  - lemma: глузувати
+    ipa: /hlʊzʊˈvɑtɪ/
+    translation: to mock / to make fun of
+    pos: verb
+  - lemma: висміювати
+    ipa: /vɪˈsmʲijʊvɑtɪ/
+    translation: to ridicule
+    pos: verb
+  - lemma: кепкувати
+    ipa: /kɛpkʊˈvɑtɪ/
+    translation: to joke / to mock
+    pos: verb
+  - lemma: жартувати
+    ipa: /ʒɑrtʊˈvɑtɪ/
+    translation: to joke
+    pos: verb
+  - lemma: дотепний
+    ipa: /dɔˈtɛpnɪj/
+    translation: witty
+    pos: adj
+  - lemma: влучний
+    ipa: /ˈvlut͡ʃnɪj/
+    translation: apt / sharp (remark)
+    pos: adj
+  - lemma: гострий
+    ipa: /ˈhɔstrɪj/
+    translation: sharp / biting
+    pos: adj
+  - lemma: уїдливий
+    ipa: /ʊˈjidlɪvɪj/
+    translation: caustic / biting
+    pos: adj
+  - lemma: саркастичний
+    ipa: /sɑrkɑˈstɪt͡ʃnɪj/
+    translation: sarcastic
+    pos: adj
+  - lemma: іронічний
+    ipa: /irɔˈnʲit͡ʃnɪj/
+    translation: ironic
+    pos: adj
+  - lemma: двозначний
+    ipa: /dvɔˈznɑt͡ʃnɪj/
+    translation: ambiguous
+    pos: adj
