@@ -1,5 +1,7 @@
 # CLAUDE.md - Project Instructions
 
+> **📋 CURRENT STATUS**: See `docs/CURRENT-STATUS.md` for recent completions, what's currently active, and next possible tasks. Updated after major work sessions.
+
 <critical>
 ## ALWAYS Work in `claude_extensions/` First
 
