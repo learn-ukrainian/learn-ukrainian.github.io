@@ -1,0 +1,127 @@
+module: 101-kateryna-bilokur
+level: C1
+version: '2.0'
+items:
+  - lemma: мисткиня
+    ipa: /mɪsˈtkɪnʲɐ/
+    translation: artist (female)
+    pos: noun
+    gender: f
+  - lemma: народний
+    ipa: /nɐˈrodnɪi̯/
+    translation: folk/national
+    pos: adj
+  - lemma: наївне мистецтво
+    ipa: /nɐˈjiu̯ne mɪsˈtet͡stʋo/
+    translation: naive art
+    pos: noun
+    gender: n
+  - lemma: полотно
+    ipa: /poˈlɔtno/
+    translation: canvas
+    pos: noun
+    gender: n
+  - lemma: пензель
+    ipa: /ˈpɛnzelʲ/
+    translation: brush
+    pos: noun
+    gender: m
+  - lemma: фарба
+    ipa: /ˈfɑrbɐ/
+    translation: paint/color
+    pos: noun
+    gender: f
+  - lemma: малювати
+    ipa: /mɐlʲuˈʋɑtɪ/
+    translation: to paint/draw
+    pos: verb
+    aspect: impf
+  - lemma: зображувати
+    ipa: /zoˈbrɑʒuʋɑtɪ/
+    translation: to depict/portray
+    pos: verb
+    aspect: impf
+  - lemma: квітка
+    ipa: /ˈkʋʲitkɐ/
+    translation: flower
+    pos: noun
+    gender: f
+  - lemma: натюрморт
+    ipa: /nɐtʲurˈmɔrt/
+    translation: still life
+    pos: noun
+    gender: m
+  - lemma: самородок
+    ipa: /sɐˈmɔrodok/
+    translation: self-taught talent
+    pos: noun
+    gender: m
+  - lemma: талант
+    ipa: /tɐˈlɑnt/
+    translation: talent
+    pos: noun
+    gender: m
+  - lemma: визнання
+    ipa: /wɪzˈnɑnʲːɐ/
+    translation: recognition
+    pos: noun
+    gender: n
+  - lemma: виставка
+    ipa: /ˈwɪstɐu̯kɐ/
+    translation: exhibition
+    pos: noun
+    gender: f
+  - lemma: шедевр
+    ipa: /ʃeˈdɛʋr/
+    translation: masterpiece
+    pos: noun
+    gender: m
+  - lemma: самотужки
+    ipa: /sɐmoˈtuʒkɪ/
+    translation: on one's own/independently
+    pos: adv
+  - lemma: перешкода
+    ipa: /pereʃˈkɔdɐ/
+    translation: obstacle
+    pos: noun
+    gender: f
+  - lemma: покликання
+    ipa: /pokˈlɪkɐnʲːɐ/
+    translation: calling/vocation
+    pos: noun
+    gender: n
+  - lemma: натхнення
+    ipa: /nɐtˈxnɛnʲːɐ/
+    translation: inspiration
+    pos: noun
+    gender: n
+  - lemma: барва
+    ipa: /ˈbɑrʋɐ/
+    translation: hue/color
+    pos: noun
+    gender: f
+  - lemma: відтінок
+    ipa: /wʲidˈtʲinɔk/
+    translation: shade/nuance
+    pos: noun
+    gender: m
+  - lemma: композиція
+    ipa: /kompoˈzɪt͡s⁽ʲ⁾ijɐ/
+    translation: composition
+    pos: noun
+    gender: f
+  - lemma: природа
+    ipa: /prɪˈrɔdɐ/
+    translation: nature
+    pos: noun
+    gender: f
+  - lemma: доля
+    ipa: /ˈdɔlʲɐ/
+    translation: fate/destiny
+    pos: noun
+    gender: f
+  - lemma: безсмертя
+    ipa: /bezˈsmɛrtʲɐ/
+    translation: immortality
+    pos: noun
+    gender: n

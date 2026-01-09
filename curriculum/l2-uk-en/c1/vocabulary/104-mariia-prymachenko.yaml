@@ -1,0 +1,125 @@
+module: 104-mariia-prymachenko
+level: C1
+version: '2.0'
+items:
+  - lemma: диво-звір
+    ipa: /ˈdɪʋo ˈzʋʲir/
+    translation: wonder beast
+    pos: noun
+    gender: m
+  - lemma: орнамент
+    ipa: /ornɐˈmɛnt/
+    translation: ornament/pattern
+    pos: noun
+    gender: m
+  - lemma: палітра
+    ipa: /pɐˈlʲitrɐ/
+    translation: palette
+    pos: noun
+    gender: f
+  - lemma: символізм
+    ipa: /sɪmʋoˈlʲizm/
+    translation: symbolism
+    pos: noun
+    gender: m
+  - lemma: фантазія
+    ipa: /fɐnˈtɑz⁽ʲ⁾ijɐ/
+    translation: fantasy/imagination
+    pos: noun
+    gender: f
+  - lemma: світовідчуття
+    ipa: /sʲʋʲitoʋʲidˈt͡ʃutʲːɐ/
+    translation: world perception
+    pos: noun
+    gender: n
+  - lemma: магічний реалізм
+    ipa: /mɐˈɦit͡ʃnɪi̯ reɐˈlʲizm/
+    translation: magical realism
+    pos: noun
+    gender: m
+  - lemma: мазок
+    ipa: /mɐˈzɔk/
+    translation: brushstroke
+    pos: noun
+    gender: m
+  - lemma: гуаш
+    ipa: /ɦuˈɑʃ/
+    translation: gouache
+    pos: noun
+    gender: f
+  - lemma: всесвіт
+    ipa: /ˈwsɛsʲʋʲit/
+    translation: universe
+    pos: noun
+    gender: m
+  - lemma: добро
+    ipa: /dobˈrɔ/
+    translation: good/goodness
+    pos: noun
+    gender: n
+  - lemma: зло
+    ipa: /zlɔ/
+    translation: evil
+    pos: noun
+    gender: n
+  - lemma: перемога
+    ipa: /pereˈmɔɦɐ/
+    translation: victory
+    pos: noun
+    gender: f
+  - lemma: легендарний
+    ipa: /leˈɦɛndɐrnɪi̯/
+    translation: legendary
+    pos: adj
+  - lemma: самобутній
+    ipa: /sɐmoˈbutʲnʲii̯/
+    translation: original/authentic
+    pos: adj
+  - lemma: розпис
+    ipa: /ˈrɔzpɪs/
+    translation: painting/mural
+    pos: noun
+    gender: m
+  - lemma: мисткиня
+    ipa: /mɪsˈtkɪnʲɐ/
+    translation: artist (female)
+    pos: noun
+    gender: f
+  - lemma: визнання
+    ipa: /wɪzˈnɑnʲːɐ/
+    translation: recognition
+    pos: noun
+    gender: n
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɐ/
+    translation: legacy/heritage
+    pos: noun
+    gender: f
+  - lemma: наївний
+    ipa: /nɐˈjiu̯nɪi̯/
+    translation: naive
+    pos: adj
+  - lemma: барвистий
+    ipa: /bɐrˈʋɪstɪi̯/
+    translation: colorful/bright
+    pos: adj
+  - lemma: композиція
+    ipa: /kompoˈzɪt͡s⁽ʲ⁾ijɐ/
+    translation: composition
+    pos: noun
+    gender: f
+  - lemma: природа
+    ipa: /prɪˈrɔdɐ/
+    translation: nature
+    pos: noun
+    gender: f
+  - lemma: мир
+    ipa: /mɪr/
+    translation: peace
+    pos: noun
+    gender: m
+  - lemma: вічність
+    ipa: /ˈʋʲit͡ʃnʲistʲ/
+    translation: eternity
+    pos: noun
+    gender: f
