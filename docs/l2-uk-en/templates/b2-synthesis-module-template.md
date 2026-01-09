@@ -318,7 +318,7 @@ The lesson content teaches cross-era analysis. Activities practice Ukrainian rea
 [Focus on GRAMMAR errors in analytical writing style]
 ```
 
-### Production Task with Model Answer
+### Продукція Task with Model Answer
 
 ```markdown
 ## Завдання: Письмовий аргумент
@@ -414,6 +414,20 @@ items:
 - **B2 Curriculum Plan:** `docs/l2-uk-en/B2-CURRICULUM-PLAN.md` (M71-131 history progression)
 - **Checkpoint design:** `docs/l2-uk-en/templates/b1-checkpoint-module-template.md` (contrast with grammar checkpoints)
 - **Decolonization guidelines:** Referenced in B2 curriculum plan
+
+---
+
+## Clean MD Architecture Note
+
+### Activities, Vocabulary, and External Resources
+
+**CRITICAL:** Do NOT add `## Activities`, `## Vocabulary`, or `## External Resources` headers to the Markdown file. These sections are automatically injected by the build system from the corresponding YAML sidecars:
+
+- `activities/{slug}.yaml` → `## Activities` section
+- `vocabulary/{slug}.yaml` → `## Vocabulary` section
+- `docs/resources/external_resources.yaml` (filtered by `module_id`) → `## External Resources` section
+
+The module structure follows **Clean MD architecture**: Markdown contains narrative content only, YAML sidecars contain structured data.
 
 ---
 

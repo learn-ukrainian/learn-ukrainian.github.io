@@ -10,14 +10,17 @@
 <!--
 TEMPLATE_METADATA:
   required_sections:
-  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
-  - Термінологія
+  - Presentation|Introduction|Вступ|Презентація|Діагностика
+  - Parts of Speech|Seven Cases|Термінологія|Частини мови|Відмінки|Basic Sentence Terms|Aspect Terms|Tense Terms|Aspect|Вид|Tense|Час|Verb Forms|Negation|Explanation Patterns|Instruction Patterns|Word Formation|Analytical Terms|Style|Пояснювальні|Інструкції|Словотвір|Аналітична|Стиль|Аналіз|Поглиблення
+  - Practice|Mini-Dialogues|Практика|Міні-діалоги
+  optional_sections:
+  - Warm-up|Розминка
   - Summary|Підсумок
   - Need More Practice?
-  pedagogy: TTT
+  pedagogy: PPP
   min_word_count: 1200
   required_callouts: []
-  description: B1 metalanguage teaches linguistic terminology
+  description: B1 metalanguage bridge modules teach grammar terminology bilingually (M01-M05 cover different terminology areas)
 -->
 
 ---
@@ -461,6 +464,20 @@ Both modules achieved ✅ PASS on all audit gates.
 - **B1 Grammar Template:** `docs/l2-uk-en/templates/b1-grammar-module-template.md`
 - **Module Richness Guidelines:** `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
 - **Activity Markdown Reference:** `docs/ACTIVITY-MARKDOWN-REFERENCE.md`
+
+---
+
+## Clean MD Architecture Note
+
+### Activities, Vocabulary, and External Resources
+
+**CRITICAL:** Do NOT add `## Activities`, `## Vocabulary`, or `## External Resources` headers to the Markdown file. These sections are automatically injected by the build system from the corresponding YAML sidecars:
+
+- `activities/{slug}.yaml` → `## Activities` section
+- `vocabulary/{slug}.yaml` → `## Vocabulary` section
+- `docs/resources/external_resources.yaml` (filtered by `module_id`) → `## External Resources` section
+
+The module structure follows **Clean MD architecture**: Markdown contains narrative content only, YAML sidecars contain structured data.
 
 ---
 

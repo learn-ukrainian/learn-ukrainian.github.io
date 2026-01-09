@@ -51,7 +51,7 @@ from .checks import (
     check_content_quality,
     check_activity_header_format,
 )
-from .checks.activities import check_mark_the_words_format, check_hints_in_activities, check_malformed_cloze_activities, check_cloze_syntax_errors, check_error_correction_format, check_yaml_activity_types, check_advanced_activities_presence
+from .checks.activities import check_mark_the_words_format, check_hints_in_activities, check_error_correction_hints, check_malformed_cloze_activities, check_cloze_syntax_errors, check_error_correction_format, check_yaml_activity_types, check_advanced_activities_presence
 from .checks.vocabulary_integration import check_vocabulary_integration
 from .checks.activity_validation import (
     check_morpheme_patterns,
@@ -245,19 +245,17 @@ def parse_sections(body: str) -> dict[str, str]:
 
 
 def check_typography(content: str) -> list[str]:
-    """Check for incorrect typography usage (ASCII quotes)."""
+    """
+    Check for incorrect typography usage (ASCII quotes).
+
+    NOTE: This check is disabled because angular quotes («») are not compatible
+    with YAML files. Since all modern modules use Clean MD architecture with
+    activities in YAML sidecars, we don't enforce angular quotes in markdown
+    to avoid compatibility issues when content is copied to YAML.
+    """
     errors = []
-    lines = content.split('\n')
-    for i, line in enumerate(lines):
-        # Skip frontmatter/code/HTML
-        stripped = line.strip()
-        if stripped.startswith('---') or stripped.startswith('```') or '<' in line or '>' in line:
-            continue
-            
-        # Match ASCII quote followed or preceded by Cyrillic letter
-        # This regex catches: (Cyrillic)" or "(Cyrillic)
-        if re.search(r'[а-яА-ЯіІїЇєЄґҐ]"|"[а-яА-ЯіІїЇєЄґҐ]', line):
-            errors.append(f"Line {i+1}: Use Ukrainian angular quotes («...») instead of ASCII quotes (\").")
+    # Typography check disabled - angular quotes incompatible with YAML
+    # See Issue #402 context
     return errors
 
 def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[str]:
@@ -621,7 +619,7 @@ def audit_module(file_path: str) -> bool:
     transliteration_allowed = config.get('transliteration_allowed', True)
 
     # Template Compliance (Issue #398, #389) - Gradual rollout level-by-level
-    TEMPLATE_COMPLIANCE_ENABLED_LEVELS = ['A1', 'A2']  # Expand to B1, etc. after testing
+    TEMPLATE_COMPLIANCE_ENABLED_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1']  # All Clean MD migrated levels
     
     template_structure = None
     template_violations = []
@@ -852,6 +850,16 @@ def audit_module(file_path: str) -> bool:
             print(f"  ⚠️  hint violations: {len(hint_violations)}")
             for v in hint_violations:
                 print(f"     → {v['issue']}")
+
+    # Check for error-correction activities with highlighted error words
+    error_correction_hint_violations = []
+    if yaml_activities:
+        error_correction_hint_violations = check_error_correction_hints(yaml_activities)
+        if error_correction_hint_violations:
+            print(f"  ❌  error-correction hint violations: {len(error_correction_hint_violations)}")
+            for v in error_correction_hint_violations:
+                print(f"     → {v['issue']}")
+                print(f"     Fix: {v['fix']}")
 
     # Check for malformed cloze activities (dialogue lines as blanks)
     malformed_cloze_violations = []
@@ -1172,17 +1180,22 @@ def audit_module(file_path: str) -> bool:
     else:
         vocab_words = extract_vocab_from_section(content)
 
-    plan_violations = check_vocab_matches_plan(
-        file_path, level_code, module_num, vocab_words
-    )
+    # Only check vocab plan for A1/A2 - B1+ uses separate vocabulary YAML files
+    if level_code.upper() in ('A1', 'A2'):
+        plan_violations = check_vocab_matches_plan(
+            file_path, level_code, module_num, vocab_words
+        )
 
-    # Separate blocking violations (missing core vocab) from warnings
-    vocab_blocking = [v for v in plan_violations if v.get('blocking', True)]
-    vocab_warnings = [v for v in plan_violations if not v.get('blocking', True)]
+        # Separate blocking violations (missing core vocab) from warnings
+        vocab_blocking = [v for v in plan_violations if v.get('blocking', True)]
+        vocab_warnings = [v for v in plan_violations if not v.get('blocking', True)]
 
-    # Missing core vocab is a blocking failure
-    if vocab_blocking:
-        has_critical_failure = True
+        # Missing core vocab is a blocking failure
+        if vocab_blocking:
+            has_critical_failure = True
+    else:
+        vocab_blocking = []
+        vocab_warnings = []
 
     # Run metalanguage scaffolding check
     cumulative_vocab = get_cumulative_vocab(level_code, module_num - 1)
@@ -1283,6 +1296,15 @@ def audit_module(file_path: str) -> bool:
 
     # 7. Check for hints in activities (all should be removed)
     for v in hint_violations:
+        pedagogical_violations.append({
+            'type': v['type'],
+            'severity': v['severity'],
+            'issue': v['issue'],
+            'fix': v['fix']
+        })
+
+    # 7b. Check for error-correction activities with highlighted error words
+    for v in error_correction_hint_violations:
         pedagogical_violations.append({
             'type': v['type'],
             'severity': v['severity'],

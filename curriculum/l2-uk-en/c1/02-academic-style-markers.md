@@ -290,4 +290,4 @@ graph TD
 
 ---
 
-## Need More Practice?
+## Потрібно більше практики?

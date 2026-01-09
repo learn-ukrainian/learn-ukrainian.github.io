@@ -267,7 +267,7 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 - [Pattern 2 explanation — nuance and precision]
 - [Stylistic mastery note]
 
-### Practice:
+### Практика:
 
 [Scaffolded activity - transformation, analysis, or production]
 
@@ -341,7 +341,7 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 | Інтеграція | Повне застосування фази | Часткове | Мінімальне |
 ```
 
-#### Summary Section
+#### Підсумок Section
 
 ```markdown
 ---

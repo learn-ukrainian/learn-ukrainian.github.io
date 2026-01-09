@@ -633,6 +633,20 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ---
 
+## Clean MD Architecture Note
+
+### Activities, Vocabulary, and External Resources
+
+**CRITICAL:** Do NOT add `## Activities`, `## Vocabulary`, or `## External Resources` headers to the Markdown file. These sections are automatically injected by the build system from the corresponding YAML sidecars:
+
+- `activities/{slug}.yaml` → `## Activities` section
+- `vocabulary/{slug}.yaml` → `## Vocabulary` section
+- `docs/resources/external_resources.yaml` (filtered by `module_id`) → `## External Resources` section
+
+The module structure follows **Clean MD architecture**: Markdown contains narrative content only, YAML sidecars contain structured data.
+
+---
+
 **Last Updated:** 2025-12-24
 **Template Version:** 1.0
 **Maintainer:** Claude (The Content Developer)

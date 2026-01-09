@@ -1047,6 +1047,81 @@ def check_hints_in_activities(activities: list) -> list[dict]:
     return violations
 
 
+def check_error_correction_hints(activities: list) -> list[dict]:
+    """
+    Check for error-correction activities where the error word is highlighted in the sentence.
+
+    This is a critical pedagogical issue: highlighting the error word (with bold, italics, or other
+    formatting) ruins the activity by giving away the answer. Students should find the error themselves.
+
+    Example of violation:
+      sentence: "Вона має дивне **почуття** у пальцях."
+      error: "почуття"
+
+    The error word is highlighted with ** which acts as a hint.
+    """
+    violations = []
+
+    if not activities or not isinstance(activities, list):
+        return violations
+
+    for activity in activities:
+        act_type = activity.type if hasattr(activity, 'type') else activity.get('type')
+        if act_type != 'error-correction':
+            continue
+
+        title = getattr(activity, 'title', 'Untitled')
+        if not title and isinstance(activity, dict):
+            title = activity.get('title', 'Untitled')
+
+        items = getattr(activity, 'items', [])
+        if not items and isinstance(activity, dict):
+            items = activity.get('items', [])
+
+        for idx, item in enumerate(items):
+            # Get sentence and error fields
+            sentence = None
+            error = None
+
+            if hasattr(item, 'sentence'):
+                sentence = item.sentence
+            elif isinstance(item, dict):
+                sentence = item.get('sentence', '')
+
+            if hasattr(item, 'error'):
+                error = item.error
+            elif isinstance(item, dict):
+                error = item.get('error', '')
+
+            if not sentence or not error:
+                continue
+
+            # Check if error word is highlighted in sentence
+            # Check for: **word**, *word*, __word__, _word_
+            error_str = str(error).strip()
+            sentence_str = str(sentence)
+
+            # Build regex patterns for different markdown formatting
+            patterns = [
+                rf'\*\*{re.escape(error_str)}\*\*',  # **word**
+                rf'\*{re.escape(error_str)}\*',      # *word*
+                rf'__{re.escape(error_str)}__',      # __word__
+                rf'_{re.escape(error_str)}_',        # _word_
+            ]
+
+            for pattern in patterns:
+                if re.search(pattern, sentence_str, re.IGNORECASE):
+                    violations.append({
+                        'type': 'ERROR_WORD_HIGHLIGHTED',
+                        'severity': 'critical',
+                        'issue': f"error-correction activity '{title}' item {idx + 1}: error word '{error_str}' is highlighted in sentence (ruins activity)",
+                        'fix': f"Remove formatting from '{error_str}' in sentence. Error-correction activities should NOT highlight the error word - students must find it themselves."
+                    })
+                    break  # Only report once per item
+
+    return violations
+
+
 def check_malformed_cloze_activities(activities: list) -> list[dict]:
     """Check for cloze activities with complete sentences as blanks."""
     violations = []

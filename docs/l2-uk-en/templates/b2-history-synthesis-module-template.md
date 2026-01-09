@@ -528,6 +528,20 @@ Each synthesis module must include ONE complete model essay (300-400 words) demo
 
 ---
 
+## Clean MD Architecture Note
+
+### Activities, Vocabulary, and External Resources
+
+**CRITICAL:** Do NOT add `## Activities`, `## Vocabulary`, or `## External Resources` headers to the Markdown file. These sections are automatically injected by the build system from the corresponding YAML sidecars:
+
+- `activities/{slug}.yaml` → `## Activities` section
+- `vocabulary/{slug}.yaml` → `## Vocabulary` section
+- `docs/resources/external_resources.yaml` (filtered by `module_id`) → `## External Resources` section
+
+The module structure follows **Clean MD architecture**: Markdown contains narrative content only, YAML sidecars contain structured data.
+
+---
+
 **Last Updated:** 2025-12-30
 **Template Version:** 1.0
 

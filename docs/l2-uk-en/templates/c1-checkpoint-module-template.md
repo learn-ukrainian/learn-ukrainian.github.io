@@ -248,7 +248,7 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 - [Pattern 2 explanation]
 - [Stylistic note if applicable]
 
-### Practice:
+### Практика:
 
 [Scaffolded activity - analysis, transformation, or comparison]
 
@@ -305,7 +305,7 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 > [Complete 200+ word model answer integrating phase knowledge]
 ```
 
-#### Summary Section
+#### Підсумок Section
 
 ```markdown
 ---

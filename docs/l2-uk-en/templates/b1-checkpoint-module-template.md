@@ -192,7 +192,7 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 - [Pattern 1 explanation]
 - [Pattern 2 explanation]
 
-### Practice:
+### Практика:
 
 [Scaffolded activity - fill-in, complete, or choose]
 
@@ -240,7 +240,7 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 > 3. [Answer with explanation]
 ```
 
-#### Summary Section
+#### Підсумок Section
 
 ```markdown
 ---

@@ -566,4 +566,4 @@ email: a.bondarenko@smartsolutions.ua
 
 ---
 
-## Need More Practice?
+## Потрібно більше практики?

@@ -261,4 +261,4 @@ vocab_count: 25
 
 ---
 
-## Need More Practice?
+## Потрібно більше практики?

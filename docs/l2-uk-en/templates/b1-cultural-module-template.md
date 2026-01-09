@@ -127,7 +127,7 @@ immersion_target: 90-95%
 
 **Engagement Box (1):**
 
-> 🌍 **Real World:** [Cultural fact or connection to learner's experience]
+> 🌍 **Реальний світ:** [Cultural fact or connection to learner's experience]
 
 ---
 
@@ -175,9 +175,9 @@ immersion_target: 90-95%
 
 **Engagement Boxes (2-3):**
 
-> 💡 **Did You Know:** [Interesting cultural fact]
-> 🎬 **Pop Culture Moment:** [Reference to Ukrainian films, music, games]
-> 🎯 **Fun Fact:** [Memorable trivia]
+> 💡 **Чи знали ви:** [Interesting cultural fact]
+> 🎬 **Момент поп-культури:** [Reference to Ukrainian films, music, games]
+> 🎯 **Цікавий факт:** [Memorable trivia]
 
 **WHY 3 passages:** Provides variety, builds comprehensive understanding, maintains engagement.
 
@@ -249,7 +249,7 @@ immersion_target: 90-95%
 
 **Engagement Box (1):**
 
-> 🌍 **Real World:** [How to use this knowledge when visiting Ukraine]
+> 🌍 **Реальний світ:** [How to use this knowledge when visiting Ukraine]
 
 ---
 
@@ -604,7 +604,7 @@ Before running the audit script, manually verify:
 
 ### Phase 5: Engagement
 
-- [ ] Add 5+ engagement boxes (💡 Did You Know, 🌍 Real World, 🎬 Pop Culture, 🎯 Fun Fact)
+- [ ] Add 5+ engagement boxes (💡 Чи знали ви, 🌍 Реальний світ, 🎬 Поп-культура, 🎯 Цікавий факт)
 - [ ] Verify cultural facts are accurate (cite sources mentally)
 - [ ] Ensure contemporary focus (post-2014 Ukraine prominent)
 
@@ -662,7 +662,7 @@ immersion_target: 90-95%
 
 "Чи знаєте ви українських музикантів? Україна має багату музичну традицію та яскраву сучасну музичну сцену..."
 
-> 🎬 **Pop Culture Moment:** Ukraine's Eurovision victories (Ruslana 2004, Jamala 2016, Kalush Orchestra 2022)
+> 🎬 **Момент поп-культури:** Ukraine's Eurovision victories (Ruslana 2004, Jamala 2016, Kalush Orchestra 2022)
 
 ### Section 2: Презентація (700 words)
 
@@ -681,8 +681,8 @@ immersion_target: 90-95%
 - Contemporary bands and artists (Kalush Orchestra, Go_A, Onuka, The Hardkiss)
 - Music festivals (Країна Мрій, Atlas Weekend, Фестиваль польської пісні)
 
-> 💡 **Did You Know:** Jamala's "1944" was the first song about Crimean Tatar deportation to win Eurovision.
-> 🌍 **Real World:** Ukrainian music festivals attract 50,000+ attendees annually.
+> 💡 **Чи знали ви:** Jamala's "1944" was the first song about Crimean Tatar deportation to win Eurovision.
+> 🌍 **Реальний світ:** Ukrainian music festivals attract 50,000+ attendees annually.
 
 ### Section 3: Практика (400 words)
 
@@ -756,6 +756,20 @@ _Added to `docs/resources/external_resources.yaml` with `module_id: b1-75`:_
 - ❌ Stereotyping (avoid "all Ukrainians..." statements)
 - ❌ Ignoring contemporary Ukraine (don't focus only on history/folklore)
 - ❌ Missing external resources (add to `docs/resources/external_resources.yaml`)
+
+---
+
+## Clean MD Architecture Note
+
+### Activities, Vocabulary, and External Resources
+
+**CRITICAL:** Do NOT add `## Activities`, `## Vocabulary`, or `## External Resources` headers to the Markdown file. These sections are automatically injected by the build system from the corresponding YAML sidecars:
+
+- `activities/{slug}.yaml` → `## Activities` section
+- `vocabulary/{slug}.yaml` → `## Vocabulary` section
+- `docs/resources/external_resources.yaml` (filtered by `module_id`) → `## External Resources` section
+
+The module structure follows **Clean MD architecture**: Markdown contains narrative content only, YAML sidecars contain structured data.
 
 ---
 

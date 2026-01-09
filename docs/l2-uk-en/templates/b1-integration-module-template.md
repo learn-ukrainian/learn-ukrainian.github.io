@@ -174,7 +174,7 @@ immersion_target: 90-95%
 
 **Engagement Box (1):**
 
-> 💡 **Did You Know:** [Strategy tip or learning hack]
+> 💡 **Чи знали ви:** [Strategy tip or learning hack]
 
 ---
 
@@ -236,8 +236,8 @@ immersion_target: 90-95%
 
 **Engagement Boxes (2-3):**
 
-> 🌍 **Real World:** [Where/how to practice this skill]
-> 🎯 **Fun Fact:** [Interesting fact about Ukrainian news/podcasts]
+> 🌍 **Реальний світ:** [Where/how to practice this skill]
+> 🎯 **Цікавий факт:** [Interesting fact about Ukrainian news/podcasts]
 
 ---
 
@@ -247,19 +247,19 @@ immersion_target: 90-95%
 
 **Structure:**
 
-##### Practice Text 1 (150-200 words)
+##### Практика Text 1 (150-200 words)
 
 - Authentic Ukrainian text
 - Strategy application tasks
 - Comprehension questions
 
-##### Practice Text 2 (150-200 words)
+##### Практика Text 2 (150-200 words)
 
 - Different authentic text
 - More complex strategy application
 - Comprehension questions
 
-##### Practice Text 3 (100-150 words)
+##### Практика Text 3 (100-150 words)
 
 - Most challenging text
 - Independent strategy application
@@ -275,7 +275,7 @@ immersion_target: 90-95%
 
 **Structure:**
 
-##### Production Task (100-150 words)
+##### Продукція Task (100-150 words)
 
 - Example (M81): "Write a news headline and lead for this event..."
 - Example (M82): "Record a 1-minute summary of the podcast..."
@@ -562,7 +562,7 @@ immersion_target: 90-95%
 
 **Structure:**
 
-##### Production Task (100-150 words)
+##### Продукція Task (100-150 words)
 
 - Example (M83): "Write a 200-word text using aspect, motion verbs, complex sentences, and participles."
 - Example (M84): "Write a 200-word text using vocabulary from all B1 domains."
@@ -1066,7 +1066,7 @@ immersion_target: 90-95%
 
 "Читання новин українською — це ключовий навик для B2 рівня. Ви навчитеся розуміти заголовки, знаходити головну думку, відрізняти факти від думок..."
 
-> 💡 **Did You Know:** Ukrainian news headlines often omit verbs for brevity.
+> 💡 **Чи знали ви:** Ukrainian news headlines often omit verbs for brevity.
 
 ### Section 2: Презентація (700 words)
 
@@ -1092,8 +1092,8 @@ immersion_target: 90-95%
 
 - Full news article with strategy markers
 
-> 🌍 **Real World:** Practice on Українська правда daily
-> 🎯 **Fun Fact:** Ukrainian journalism won European Press Prize in 2022
+> 🌍 **Реальний світ:** Practice on Українська правда daily
+> 🎯 **Цікавий факт:** Ukrainian journalism won European Press Prize in 2022
 
 ### Section 3: Практика (400 words)
 
@@ -1180,6 +1180,20 @@ _Added to `docs/resources/external_resources.yaml` with `module_id: b1-81`:_
 - ❌ No B2 preview
 - ❌ Too many traditional activities in capstone (tasks are the assessment)
 - ❌ Grammar-heavy skills modules (focus on strategies, not grammar)
+
+---
+
+## Clean MD Architecture Note
+
+### Activities, Vocabulary, and External Resources
+
+**CRITICAL:** Do NOT add `## Activities`, `## Vocabulary`, or `## External Resources` headers to the Markdown file. These sections are automatically injected by the build system from the corresponding YAML sidecars:
+
+- `activities/{slug}.yaml` → `## Activities` section
+- `vocabulary/{slug}.yaml` → `## Vocabulary` section
+- `docs/resources/external_resources.yaml` (filtered by `module_id`) → `## External Resources` section
+
+The module structure follows **Clean MD architecture**: Markdown contains narrative content only, YAML sidecars contain structured data.
 
 ---
 

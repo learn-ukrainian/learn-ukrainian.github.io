@@ -183,10 +183,10 @@ vocabulary_count: 25 # Must match count in vocabulary/{slug}.yaml
 Minimum 5+ engagement boxes with pedagogical value:
 
 ```markdown
-> 💡 **Did You Know** - Linguistic insight
-> 🎬 **Pop Culture Moment** - Cultural connection
-> 🌍 **Real World** - Practical application
-> 🎯 **Fun Fact** - Memorable trivia
+> 💡 **Чи знали ви** - Linguistic insight
+> 🎬 **Момент поп-культури** - Cultural connection
+> 🌍 **Реальний світ** - Practical application
+> 🎯 **Цікавий факт** - Memorable trivia
 ```
 
 **Example from M06:**
@@ -407,7 +407,7 @@ The build system will inject these sections at build time.
 ### 6. **Insufficient Engagement Boxes**
 
 - ❌ Problem: 3 boxes (need 5+)
-- ✅ Solution: Add 💡 Did You Know, 🎬 Pop Culture, 🌍 Real World, 🎯 Fun Fact
+- ✅ Solution: Add 💡 Чи знали ви, 🎬 Поп-культура, 🌍 Реальний світ, 🎯 Цікавий факт
 
 ### 7. **Low Immersion**
 
