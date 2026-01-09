@@ -2,6 +2,19 @@
 **Phase:** C1.1 | **Level:** C1 | **Pedagogy:** TTT | **Target:** 1750
 **Overall Status:** ✅ PASS
 
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Культурний контекст: Джерела української науки, Вступ до академічної доброчесності
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Аналіз' found: Мистецтво перефразування та аналізу тексту, Аналіз тексту: від простого переказу до глибокої інтерпретації
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
+  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 3 violations (minor)
+
 ## Gates
 - **Words:** ✅ 2373/1750
 - **Activities:** ✅ 16/12
@@ -38,6 +51,12 @@
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **100.0%** |
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (16 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -49,4 +68,4 @@
 | **Мистецтво перефразування та аналізу тексту** | ✅ | 230 | Included in Core |
 | **Етика та стандарти оформлення бібліографії** | ⚪️ | 308 | Skipped |
 | **Підсумок** | ✅ | 57 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |

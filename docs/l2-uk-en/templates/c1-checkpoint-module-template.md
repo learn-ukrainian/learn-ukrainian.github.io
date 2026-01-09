@@ -7,18 +7,13 @@
 **Related Issue:** [#306](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/306)
 
 
-<!--
 TEMPLATE_METADATA:
   required_sections:
-  - Огляд
-  - Навички
-  - Summary|Підсумок
-  - Need More Practice?
+  - Overview|Огляд
+  - Skills|Навички
+  - Need More Practice?|Потрібно більше практики?
   pedagogy: TBL
-  min_word_count: 2000
-  required_callouts: []
-  description: C1 checkpoints use task-based learning for assessment
--->
+  min_word_count: 1200
 
 ---
 

@@ -2,15 +2,6 @@
 **Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' per template 'a2-module-template'
-  - FIX: Add '## Presentation' section as specified in docs/l2-uk-en/templates/a2-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
 - **Words:** ✅ 1639/1000
 - **Activities:** ✅ 10/10
@@ -30,7 +21,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 156 | Included in Core |
+| **Intro/Narrative** | ✅ | 94 | Included in Core |
+| **Presentation** | ✅ | 62 | Included in Core |
 | **Practice** | ⚪️ | 269 | Skipped |
 | **Warm-up** | ✅ | 106 | Included in Core |
 | **The Dative Question: Кому? Чому?** | ⚪️ | 76 | Skipped |

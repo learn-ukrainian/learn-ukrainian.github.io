@@ -1,0 +1,22 @@
+module: c1-28
+title: 'Діалекти та наріччя'
+subtitle: 'Dialects of Ukrainian'
+version: '2.0'
+phase: 'C1.3 Linguistic Awareness'
+pedagogy: 'Immersion'
+duration: 120
+transliteration: none
+tags:
+  - dialects
+  - linguistics
+  - phonetics
+  - surzhyk
+grammar:
+  - 'Dialectal features'
+  - 'Phonetic variations'
+objectives:
+  - 'Identify 3 main dialect groups'
+  - 'Distinguish dialect from Surzhyk'
+  - 'Understand history of standardization'
+vocabulary_count: 25
+slug: 28-dialects-of-ukrainian

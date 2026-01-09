@@ -1,0 +1,137 @@
+module: 149-pysanky
+level: C1
+version: '2.0'
+items:
+  - lemma: писанка
+    ipa: /ˈpɪsɐnkɐ/
+    translation: pysanka (wax-resist decorated egg)
+    pos: noun
+    gender: f
+  - lemma: крашанка
+    ipa: /ˈkraʃɐnkɐ/
+    translation: krashanka (single-color dyed egg)
+    pos: noun
+    gender: f
+  - lemma: дряпанка
+    ipa: /ˈdrʲapɐnkɐ/
+    translation: driapanka (scratched-pattern egg)
+    pos: noun
+    gender: f
+  - lemma: віск
+    ipa: /wisk/
+    translation: wax
+    pos: noun
+    gender: m
+  - lemma: писачок
+    ipa: /pɪsɐˈt͡ʃɔk/
+    translation: pysachok (stylus tool for wax)
+    pos: noun
+    gender: m
+  - lemma: орнамент
+    ipa: /ɔrˈnamɛnt/
+    translation: ornament / pattern
+    pos: noun
+    gender: m
+  - lemma: символ
+    ipa: /ˈsɪmwɔɫ/
+    translation: symbol
+    pos: noun
+    gender: m
+  - lemma: сварга
+    ipa: /ˈswarɦɐ/
+    translation: svarga (swastika-like sun symbol)
+    pos: noun
+    gender: f
+  - lemma: трикветр
+    ipa: /trɪˈkwɛtr/
+    translation: triquetra (three-armed symbol)
+    pos: noun
+    gender: m
+  - lemma: ружа
+    ipa: /ˈruʒɐ/
+    translation: rose (star symbol)
+    pos: noun
+    gender: f
+  - lemma: безконечник
+    ipa: /bezkɔˈnɛt͡ʃnɪk/
+    translation: meander / infinite line symbol
+    pos: noun
+    gender: m
+  - lemma: дерево життя
+    ipa: /ˈdɛrewɔ ʒɪˈtʲːa/
+    translation: tree of life
+    pos: noun
+    gender: n
+  - lemma: космогонія
+    ipa: /kɔsmɔˈɦɔn⁽ʲ⁾ijɐ/
+    translation: cosmogony
+    pos: noun
+    gender: f
+  - lemma: оберіг
+    ipa: /ɔbeˈr⁽ʲ⁾iɦ/
+    translation: protective amulet / charm
+    pos: noun
+    gender: m
+  - lemma: Великдень
+    ipa: /weˈɫɪkdɛnʲ/
+    translation: Easter
+    pos: noun
+    gender: m
+  - lemma: відродження
+    ipa: /widˈrɔd͡ʒːeɲːɐ/
+    translation: rebirth / revival
+    pos: noun
+    gender: n
+  - lemma: барвник
+    ipa: /bɐrwˈnɪk/
+    translation: dye / colorant
+    pos: noun
+    gender: m
+  - lemma: лушпиння
+    ipa: /ɫʊʃˈpɪɲːɐ/
+    translation: onion skins / husks
+    pos: noun
+    gender: n
+  - lemma: зооморфний
+    ipa: /zɔɔˈmɔrfnɪj/
+    translation: zoomorphic
+    pos: adjective
+  - lemma: рослинний
+    ipa: /rɔsˈɫɪnːɪj/
+    translation: floral / botanical
+    pos: adjective
+  - lemma: геометричний
+    ipa: /ɦɛɔmeˈtrɪt͡ʃnɪj/
+    translation: geometric
+    pos: adjective
+  - lemma: сакральний
+    ipa: /sɐˈkraɫʲnɪj/
+    translation: sacral / sacred
+    pos: adjective
+  - lemma: магічний
+    ipa: /mɐˈɦit͡ʃnɪj/
+    translation: magical
+    pos: adjective
+  - lemma: архаїка
+    ipa: /ɐrxɐˈikɐ/
+    translation: archaics / ancient times
+    pos: noun
+    gender: f
+  - lemma: самобутність
+    ipa: /sɐmɔˈbutʲn⁽ʲ⁾isʲtʲ/
+    translation: originality / distinctiveness
+    pos: noun
+    gender: f
+  - lemma: візерунок
+    ipa: /wizɛˈrunɔk/
+    translation: pattern / design
+    pos: noun
+    gender: m
+  - lemma: розписувати
+    ipa: /rɔzˈpɪsʊwɐtɪ/
+    translation: to decorate / to paint
+    pos: verb
+  - lemma: занурювати
+    ipa: /zɐˈnurʲʊwɐtɪ/
+    translation: to submerge / to dip
+    pos: verb

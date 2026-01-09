@@ -1,0 +1,129 @@
+module: 27-global-context
+level: C1
+version: '1.0'
+items:
+  - lemma: інтеграція
+    ipa: /inteˈɦrat͡sija/
+    translation: integration
+    pos: noun
+    gender: f
+  - lemma: вступ
+    ipa: /vstup/
+    translation: accession / entry
+    pos: noun
+    gender: m
+  - lemma: альянс
+    ipa: /alʲˈjans/
+    translation: alliance
+    pos: noun
+    gender: m
+  - lemma: саміт
+    ipa: /saˈmit/
+    translation: summit
+    pos: noun
+    gender: m
+  - lemma: переговори
+    ipa: /pereɦoˈvɔrɪ/
+    translation: negotiations
+    pos: noun (pl)
+    gender: null
+  - lemma: посол
+    ipa: /poˈsɔl/
+    translation: ambassador
+    pos: noun
+    gender: m
+  - lemma: санкції
+    ipa: /sankˈt͡siji/
+    translation: sanctions
+    pos: noun (pl)
+    gender: null
+  - lemma: угода
+    ipa: /uˈɦɔda/
+    translation: agreement / treaty
+    pos: noun
+    gender: f
+  - lemma: членство
+    ipa: /tʃlɛnˈstvɔ/
+    translation: membership
+    pos: noun
+    gender: n
+  - lemma: кандидат
+    ipa: /kandɪˈdat/
+    translation: candidate
+    pos: noun
+    gender: m
+  - lemma: критерій
+    ipa: /krɪˈtɛrij/
+    translation: criterion
+    pos: noun
+    gender: m
+  - lemma: ратифікація
+    ipa: /ratyfiˈkat͡sija/
+    translation: ratification
+    pos: noun
+    gender: f
+  - lemma: дипломатія
+    ipa: /dɪploˈmatija/
+    translation: diplomacy
+    pos: noun
+    gender: f
+  - lemma: вето
+    ipa: /vɛˈtɔ/
+    translation: veto
+    pos: noun
+    gender: n
+  - lemma: резолюція
+    ipa: /rezolʲuˈt͡sija/
+    translation: resolution
+    pos: noun
+    gender: f
+  - lemma: співпраця
+    ipa: /spiwˈprat͡sʲa/
+    translation: cooperation
+    pos: noun
+    gender: f
+  - lemma: вимога
+    ipa: /vɪˈmɔɦa/
+    translation: requirement / demand
+    pos: noun
+    gender: f
+  - lemma: реформа
+    ipa: /reˈfɔrma/
+    translation: reform
+    pos: noun
+    gender: f
+  - lemma: розширення
+    ipa: /rozˈʃɪrenʲːa/
+    translation: enlargement / expansion
+    pos: noun
+    gender: n
+  - lemma: євроінтеграція
+    ipa: /jewrointeˈɦrat͡sija/
+    translation: European integration
+    pos: noun
+    gender: f
+  - lemma: безвіз
+    ipa: /bezˈviz/
+    translation: visa-free regime (slang)
+    pos: noun
+    gender: m
+  - lemma: агресор
+    ipa: /aˈɦrɛsor/
+    translation: aggressor
+    pos: noun
+    gender: m
+  - lemma: підтримка
+    ipa: /pidˈtrɪmka/
+    translation: support
+    pos: noun
+    gender: f
+  - lemma: постачання
+    ipa: /postatʃanʲːa/
+    translation: supply (of weapons etc.)
+    pos: noun
+    gender: n
+  - lemma: зобов'язання
+    ipa: /zoboˈvjazanʲːa/
+    translation: obligation / commitment
+    pos: noun
+    gender: n

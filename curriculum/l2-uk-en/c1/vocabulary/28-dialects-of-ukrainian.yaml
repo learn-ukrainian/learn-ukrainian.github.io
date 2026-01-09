@@ -1,0 +1,129 @@
+module: 28-dialects-of-ukrainian
+level: C1
+version: '1.0'
+items:
+  - lemma: наріччя
+    ipa: /naˈritʃːa/
+    translation: dialect group / adverb (grammar)
+    pos: noun
+    gender: n
+  - lemma: говірка
+    ipa: /ɦoˈvirka/
+    translation: sub-dialect / local speech
+    pos: noun
+    gender: f
+  - lemma: діалектизм
+    ipa: /dialekˈtɪzm/
+    translation: dialectism
+    pos: noun
+    gender: m
+  - lemma: суржик
+    ipa: /surʒɪk/
+    translation: Surzhyk (mixed language)
+    pos: noun
+    gender: m
+  - lemma: вимова
+    ipa: /vɪˈmɔva/
+    translation: pronunciation
+    pos: noun
+    gender: f
+  - lemma: архаїзм
+    ipa: /arxaˈjizm/
+    translation: archaism
+    pos: noun
+    gender: m
+  - lemma: фонетика
+    ipa: /foˈnɛtɪka/
+    translation: phonetics
+    pos: noun
+    gender: f
+  - lemma: лексика
+    ipa: /lekˈsɪka/
+    translation: vocabulary / lexis
+    pos: noun
+    gender: f
+  - lemma: ареал
+    ipa: /areˈal/
+    translation: area / range (of distribution)
+    pos: noun
+    gender: m
+  - lemma: карпатський
+    ipa: /karˈpatsʲkɪj/
+    translation: Carpathian
+    pos: adj
+    gender: m
+  - lemma: поліський
+    ipa: /poˈlisʲkɪj/
+    translation: Polissian
+    pos: adj
+    gender: m
+  - lemma: степовий
+    ipa: /stepoˈvɪj/
+    translation: steppe (adj)
+    pos: adj
+    gender: m
+  - lemma: гуцульський
+    ipa: /ɦuˈt͡sulʲsʲkɪj/
+    translation: Hutsul
+    pos: adj
+    gender: m
+  - lemma: бойківський
+    ipa: /bojˈkiwsʲkɪj/
+    translation: Boyko
+    pos: adj
+    gender: m
+  - lemma: лемківський
+    ipa: /lemˈkiwsʲkɪj/
+    translation: Lemko
+    pos: adj
+    gender: m
+  - lemma: русизм
+    ipa: /ruˈsɪzm/
+    translation: Russianism
+    pos: noun
+    gender: m
+  - lemma: полонізм
+    ipa: /poloˈnizzm/
+    translation: Polonism
+    pos: noun
+    gender: m
+  - lemma: запозичення
+    ipa: /zapozɪˈtʃeɲːa/
+    translation: borrowing / loanword
+    pos: noun
+    gender: n
+  - lemma: літературний
+    ipa: /literatˈurnɪj/
+    translation: literary / standard
+    pos: adj
+    gender: m
+  - lemma: норма
+    ipa: /nɔrma/
+    translation: norm / standard
+    pos: noun
+    gender: f
+  - lemma: акцент
+    ipa: /akˈt͡sɛnt/
+    translation: accent
+    pos: noun
+    gender: m
+  - lemma: колорит
+    ipa: /koloˈrɪt/
+    translation: local color / flavor
+    pos: noun
+    gender: m
+  - lemma: етнографічний
+    ipa: /etnoɦraˈfitʃnɪj/
+    translation: ethnographic
+    pos: adj
+    gender: m
+  - lemma: мовлення
+    ipa: /mɔwleɲːa/
+    translation: speech / parole
+    pos: noun
+    gender: n
+  - lemma: унормування
+    ipa: /unormuˈvaɲːa/
+    translation: standardization
+    pos: noun
+    gender: n

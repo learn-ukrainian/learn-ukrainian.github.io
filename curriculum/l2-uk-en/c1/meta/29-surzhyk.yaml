@@ -1,17 +1,22 @@
 module: c1-29
-title: Surzhyk
-subtitle: Professional & Social
+title: 'Суржик: Феномен змішування'
+subtitle: 'Surzhyk: The Phenomenon of Mixing'
 version: '2.0'
-phase: C1.2 Professional
-focus: sociolinguistics
-pedagogy: academic
+phase: 'C1.3 Linguistic Awareness'
+pedagogy: 'Immersion'
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- sociolinguistics
-- surzhyk
-- mixing
+  - surzhyk
+  - linguistics
+  - sociolinguistics
+  - mixing
+grammar:
+  - 'Code-switching patterns'
+  - 'Phonetic interference'
 objectives:
-- Master C1 concepts in Surzhyk
+  - 'Define Surzhyk and its origins'
+  - 'Identify phonetic and lexical interference'
+  - 'Transform Surzhyk into standard Ukrainian'
+vocabulary_count: 25
 slug: 29-surzhyk

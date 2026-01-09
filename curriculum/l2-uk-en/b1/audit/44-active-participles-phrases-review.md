@@ -33,13 +33,17 @@
   - FIX: Add 'correct_words' array with correct words
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [знайдіть-канцелярити-та-русизми-в-тексті] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): слідуючий, дорослий, існуючий, відсталий, зів'ялий...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест' per template 'b1-grammar-module-template'
+  - FIX: Add '## Warm-up' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
+- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
+  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 
 ## Recommendation
 **🔄 REWRITE** (severity 75/100)
 
-- 16 violations (severe - consider revision)
+- 17 violations (severe - consider revision)
 - Activity count below minimum
 - Activity density below minimum
 
@@ -68,7 +72,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | examples | 51 | 24 | 100% | 20% | 20.0% |
-| engagement | 6 | 5 | 100% | 15% | 15.0% |
+| engagement | 8 | 5 | 100% | 15% | 15.0% |
 | dialogues | 7 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
@@ -94,4 +98,4 @@
 | **Практика** | ⚪️ | 198 | Skipped |
 | **Приклади використання** | ⚪️ | 178 | Skipped |
 | **Підсумок** | ✅ | 57 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |

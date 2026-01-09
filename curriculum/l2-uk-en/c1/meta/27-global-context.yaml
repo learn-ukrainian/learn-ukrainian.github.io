@@ -1,18 +1,23 @@
 module: c1-27
-title: Global Context
-subtitle: Professional & Social
+title: 'Глобальний контекст: Україна, ЄС та НАТО'
+subtitle: 'Global Context: EU & NATO'
 version: '2.0'
-phase: C1.2 Professional
-focus: social
-pedagogy: academic
+phase: 'C1.2 Society & State'
+focus: society
+pedagogy: 'Immersion'
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- social
-- eu
-- nato
-- global
+  - geopolitics
+  - eu
+  - nato
+  - diplomacy
+grammar:
+  - 'Diplomatic register'
+  - 'Passive voice in official documents'
 objectives:
-- Master C1 concepts in Global Context
+  - 'Discuss Ukraine''s path to EU and NATO'
+  - 'Analyze geopolitical challenges'
+  - 'Understand the structure of international organizations'
+vocabulary_count: 25
 slug: 27-global-context

@@ -2,49 +2,37 @@
 **Phase:** B1.7 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1500
 **Overall Status:** ❌ FAIL
 
-## LINT ERRORS
-- ❌ Line 37: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 100: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння української кухні' Q4 prompt length 11 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння української кухні' Q5 prompt length 11 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння української кухні' Q7 prompt length 8 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння української кухні' Q8 prompt length 8 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння української кухні' Q9 prompt length 9 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 1 has 4 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 2 has 4 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 3 has 6 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 4 has 4 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 5 has 3 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 6 has 4 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 7 has 5 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 8 has 5 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 1 has 4 words (target: 10-14)
+  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 2 has 4 words (target: 10-14)
+  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 3 has 6 words (target: 10-14)
+  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 4 has 4 words (target: 10-14)
+  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 5 has 3 words (target: 10-14)
+  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 6 has 4 words (target: 10-14)
+  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 7 has 5 words (target: 10-14)
+  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українську кухню' item 8 has 5 words (target: 10-14)
+  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 85-ukrainian-cuisine.yaml: [складіть-речення-про-українську-кухню] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 85-ukrainian-cuisine.yaml: [знайдіть-кулінарну-лексику] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): пекти, крашанки, тост, сало, рецепт...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
+  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 
 ## Recommendation
-**📝 UPDATE** (severity 62/100)
+**📝 UPDATE** (severity 60/100)
 
-- Revision recommended (severity 62/100)
-- 16 violations (severe - consider revision)
+- Revision recommended (severity 60/100)
+- 11 violations (severe - consider revision)
 - Activity density below minimum
 
 ## Gates
@@ -57,10 +45,10 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 75/25
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 2 Format Errors
-- **Pedagogy:** ❌ 15 violations
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ❌ 10 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.6% (target 85-100% (B1.7-8 Ukraine))
+- **Immersion:** 🇺🇦 99.7% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 98% (cultural)
 - **Grammar:** ⏳ Pending validation
 
@@ -96,4 +84,4 @@
 | **Практика** | ⚪️ | 311 | Skipped |
 | **Продукція** | ⚪️ | 323 | Skipped |
 | **Підсумок** | ✅ | 143 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |

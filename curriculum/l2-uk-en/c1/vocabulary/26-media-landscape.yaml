@@ -2,122 +2,128 @@ module: 26-media-landscape
 level: C1
 version: '2.0'
 items:
-  - lemma: упередженість
-    ipa: /uperɛd͡ʒenʲːisʲtʲ/
-    translation: bias
-    pos: noun
-    gender: f
-  - lemma: цензура
-    ipa: /t͡sɛnˈzura/
-    translation: censorship
-    pos: noun
-    gender: f
   - lemma: джерело
-    ipa: /d͡ʒereˈlɔ/
+    ipa: /dʒeˈrɛlo/
     translation: source
     pos: noun
     gender: n
+  - lemma: упередженість
+    ipa: /upeˈrɛdʒenʲisʲtʲ/
+    translation: bias
+    pos: noun
+    gender: f
+  - lemma: спростування
+    ipa: /sprostuˈvanʲːa/
+    translation: refutation / rebuttal
+    pos: noun
+    gender: n
+  - lemma: фейк
+    ipa: /feik/
+    translation: fake (news)
+    pos: noun
+    gender: m
   - lemma: маніпуляція
-    ipa: /manʲipuˈlʲat͡sʲijɐ/
+    ipa: /manipulʲaˈt͡sija/
     translation: manipulation
     pos: noun
     gender: f
-  - lemma: фейк
-    ipa: /fɛik/
-    translation: fake news
-    pos: noun
-    gender: m
-  - lemma: пропаганда
-    ipa: /propaˈɦanda/
-    translation: propaganda
+  - lemma: цензура
+    ipa: /t͡senˈzura/
+    translation: censorship
     pos: noun
     gender: f
-  - lemma: редакційна політика
-    ipa: /redakˈt͡sʲijnɐ poˈlʲitɪkɐ/
-    translation: editorial policy
+  - lemma: свобода_слова
+    ipa: /svoˈboda ˈslova/
+    translation: freedom of speech
     pos: phrase
-  - lemma: замовний матеріал (джинса)
-    ipa: /zamoˈu̯nɪj mateˈrʲial/
-    translation: paid content (jeans / advertorial)
-    pos: phrase
-  - lemma: суспільний мовник
-    ipa: /susˈpilʲnɪj ˈmɔu̯nɪk/
-    translation: public broadcaster
-    pos: phrase
-  - lemma: спростування
-    ipa: /sprostuˈvanʲːɐ/
-    translation: refraction / denial / rebuttal
-    pos: noun
-    gender: n
+    gender: f
   - lemma: заголовок
-    ipa: /zaɦoˈlɔvok/
+    ipa: /zaˈɦɔlovok/
     translation: headline
     pos: noun
     gender: m
-  - lemma: клікбейт
-    ipa: /klʲikˈbɛit/
-    translation: clickbait
-    pos: noun
-    gender: m
-  - lemma: фактчекінг
-    ipa: /faktˈt͡ʃɛkɪnɦ/
-    translation: fact-checking
-    pos: noun
-    gender: m
   - lemma: першоджерело
-    ipa: /perʃod͡ʒereˈlɔ/
+    ipa: /perʃodʒeˈrɛlo/
     translation: primary source
     pos: noun
     gender: n
-  - lemma: медіаграмотність
-    ipa: /mediaˈɦramotnʲisʲtʲ/
-    translation: media literacy
+  - lemma: інфопривід
+    ipa: /infoˈprɪvid/
+    translation: news peg / occasion
+    pos: noun
+    gender: m
+  - lemma: поширювати
+    ipa: /poˈʃɪrjuwate/
+    translation: to spread / to share
+    pos: verb
+    gender: null
+  - lemma: замовний
+    ipa: /zaˈmɔwnɪi̯/
+    translation: commisioned / paid-for (adj)
+    pos: adj
+    gender: m
+  - lemma: джинса
+    ipa: /dʒɪnˈsa/
+    translation: jeansa (paid journalism)
     pos: noun
     gender: f
-  - lemma: власник
-    ipa: /vˈlasnɪk/
-    translation: owner
-    pos: noun
-    gender: m
-  - lemma: свобода слова
-    ipa: /svoˈboda ˈslɔvɐ/
-    translation: freedom of speech
-    pos: phrase
-  - lemma: журналістське розслідування
-    ipa: /ʒurnaˈlʲist͡sʲke rozsˈlʲiduvannʲɐ/
-    translation: investigative journalism
-    pos: phrase
-  - lemma: інформаційна війна
-    ipa: /informaxˈt͡sʲijnɐ vˈijnɐ/
-    translation: information war
-    pos: phrase
-  - lemma: наратив
-    ipa: /naraˈtɪu̯/
-    translation: narrative
-    pos: noun
-    gender: m
   - lemma: бот
     ipa: /bɔt/
     translation: bot
     pos: noun
     gender: m
-  - lemma: вплив
-    ipa: /vpˈlɪu̯/
-    translation: influence / impact
+  - lemma: наклейка
+    ipa: /naˈklɛi̯ka/
+    translation: label / sticker (metaphorical)
+    pos: noun
+    gender: f
+  - lemma: пропаганда
+    ipa: /propaˈɦanda/
+    translation: propaganda
+    pos: noun
+    gender: f
+  - lemma: наратив
+    ipa: /naraˈtɪw/
+    translation: narrative
     pos: noun
     gender: m
-  - lemma: об'єктивність
-    ipa: /objekˈtɪu̯nʲisʲtʲ/
-    translation: objectivity
+  - lemma: викривлення
+    ipa: /vɪkrɪwˈlɛnʲːa/
+    translation: distortion
     pos: noun
-    gender: f
-  - lemma: довіра
-    ipa: /doˈvʲirɐ/
-    translation: trust
+    gender: n
+  - lemma: суспільне
+    ipa: /susˈpilʲne/
+    translation: public (broadcasting)
+    pos: adj
+    gender: n
+  - lemma: охоплення
+    ipa: /oˈxɔplenʲːa/
+    translation: reach / coverage
     pos: noun
-    gender: f
-  - lemma: аудиторія
-    ipa: /audɪˈtɔrʲijɐ/
-    translation: audience
+    gender: n
+  - lemma: передплатник
+    ipa: /peredˈplatnɪk/
+    translation: subscriber
     pos: noun
-    gender: f
+    gender: m
+  - lemma: блогер
+    ipa: /bloˈɦer/
+    translation: blogger
+    pos: noun
+    gender: m
+  - lemma: клікбейт
+    ipa: /klikˈbɛi̯t/
+    translation: clickbait
+    pos: noun
+    gender: m
+  - lemma: спростовувати
+    ipa: /sprostɔˈvuwate/
+    translation: to refute
+    pos: verb
+    gender: null
+  - lemma: достовірний
+    ipa: /dostoˈvirnɪj/
+    translation: reliable / trustworthy
+    pos: adj
+    gender: m

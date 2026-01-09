@@ -2,41 +2,37 @@
 **Phase:** B1.7 | **Level:** B1 | **Pedagogy:** PPP | **Target:** 1500
 **Overall Status:** ❌ FAIL
 
-## LINT ERRORS
-- ❌ Line 87: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 105: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 198: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Центральну Україну' item 1 has 4 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Центральну Україну' item 2 has 4 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Центральну Україну' item 3 has 4 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Центральну Україну' item 4 has 7 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Центральну Україну' item 5 has 4 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Центральну Україну' item 6 has 5 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Центральну Україну' item 7 has 6 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Центральну Україну' item 8 has 5 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Центральну Україну' item 1 has 4 words (target: 10-14)
+  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Центральну Україну' item 2 has 4 words (target: 10-14)
+  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Центральну Україну' item 3 has 4 words (target: 10-14)
+  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Центральну Україну' item 4 has 7 words (target: 10-14)
+  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Центральну Україну' item 5 has 4 words (target: 10-14)
+  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Центральну Україну' item 6 has 5 words (target: 10-14)
+  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Центральну Україну' item 7 has 6 words (target: 10-14)
+  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про Центральну Україну' item 8 has 5 words (target: 10-14)
+  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 75-regions-center.yaml: [складіть-речення-про-центральну-україну] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 75-regions-center.yaml: [знайдіть-географічні-та-культурні-терміни] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): народний, писанка, історичний, калина, гетьман...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
+  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 
 ## Recommendation
-**📝 UPDATE** (severity 70/100)
+**📝 UPDATE** (severity 60/100)
 
-- Revision recommended (severity 70/100)
+- Revision recommended (severity 60/100)
 - 11 violations (severe - consider revision)
-- 3 format errors
 - Activity density below minimum
 
 ## Gates
@@ -49,7 +45,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 29/25
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 3 Format Errors
+- **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 10 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 100.0% (target 85-100% (B1.7-8 Ukraine))
@@ -89,4 +85,4 @@
 | **Продукція** | ⚪️ | 307 | Skipped |
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Що ви дізналися** | ⚪️ | 158 | Skipped |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |

@@ -1,0 +1,129 @@
+module: 31-diaspora-ukrainian
+level: C1
+version: '2.0'
+items:
+  - lemma: діаспора
+    ipa: /dʲiˈaspora/
+    translation: diaspora
+    pos: noun
+    gender: f
+  - lemma: громада
+    ipa: /ɦroˈmada/
+    translation: community
+    pos: noun
+    gender: f
+  - lemma: еміграція
+    ipa: /emiˈɦrat͡sʲija/
+    translation: emigration
+    pos: noun
+    gender: f
+  - lemma: асиміляція
+    ipa: /asymʲiˈlʲat͡sʲija/
+    translation: assimilation
+    pos: noun
+    gender: f
+  - lemma: осередок
+    ipa: /oseˈrɛdok/
+    translation: center/hub (of community)
+    pos: noun
+    gender: m
+  - lemma: спадок
+    ipa: /spaˈdok/
+    translation: heritage/legacy
+    pos: noun
+    gender: m
+  - lemma: літопис
+    ipa: /lʲiˈtopɪs/
+    translation: chronicle
+    pos: noun
+    gender: m
+  - lemma: шпиталь
+    ipa: /ʃpɪˈtalʲ/
+    translation: hospital (archaic/diaspora)
+    pos: noun
+    gender: m
+  - lemma: летовище
+    ipa: /leˈtɔwɪʃt͡ʃe/
+    translation: airport
+    pos: noun
+    gender: n
+  - lemma: світлина
+    ipa: /sʲwʲitˈlɪna/
+    translation: photograph
+    pos: noun
+    gender: f
+  - lemma: філіжанка
+    ipa: /fʲilʲiˈʒanka/
+    translation: cup (usually coffee)
+    pos: noun
+    gender: f
+  - lemma: канадієць
+    ipa: /kanaˈdʲijet͡sʲ/
+    translation: Canadian (Ukrainian descent)
+    pos: noun
+    gender: m
+  - lemma: пласт
+    ipa: /pɫast/
+    translation: Plast (Ukrainian scouting org)
+    pos: noun
+    gender: m
+  - lemma: церковнослов'янізм
+    ipa: /t͡sɛrˌkɔwnosɫowjaˈnʲizm/
+    translation: Church Slavonicism
+    pos: noun
+    gender: m
+  - lemma: наклад
+    ipa: /naˈkɫad/
+    translation: circulation (print)
+    pos: noun
+    gender: m
+  - lemma: часопис
+    ipa: /t͡ʃaˈsɔpɪs/
+    translation: periodical/journal
+    pos: noun
+    gender: m
+  - lemma: добродійність
+    ipa: /dɔˈbrɔdʲijnʲisʲtʲ/
+    translation: charity/philanthropy
+    pos: noun
+    gender: f
+  - lemma: меценат
+    ipa: /mɛt͡sɛˈnat/
+    translation: patron of arts
+    pos: noun
+    gender: m
+  - lemma: повернення
+    ipa: /poˈvɛrnɛnʲːa/
+    translation: return
+    pos: noun
+    gender: n
+  - lemma: ідентичність
+    ipa: /idɛnˈtɪt͡ʃnʲisʲtʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: ностальгія
+    ipa: /nɔstalʲˈɦʲija/
+    translation: nostalgia
+    pos: noun
+    gender: f
+  - lemma: туга
+    ipa: /tuˈɦa/
+    translation: longing/sorrow
+    pos: noun
+    gender: f
+  - lemma: спортовець
+    ipa: /sporˈtɔvɛt͡sʲ/
+    translation: athlete (diaspora)
+    pos: noun
+    gender: m
+  - lemma: кошиківка
+    ipa: /koʃɪˈkʲiwka/
+    translation: basketball (diaspora term)
+    pos: noun
+    gender: f
+  - lemma: відбиванка
+    ipa: /vʲidbɪˈvanka/
+    translation: volleyball (diaspora term)
+    pos: noun
+    gender: f

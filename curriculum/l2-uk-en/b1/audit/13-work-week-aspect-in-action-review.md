@@ -2,33 +2,22 @@
 **Phase:** B1.1 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ❌ FAIL
 
-## LINT ERRORS
-- ❌ Line 154: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 177: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 180: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 183: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 193: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 194: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 195: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 196: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 199: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 200: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 203: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 204: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 205: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-
 ## PEDAGOGICAL VIOLATIONS
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 13-work-week-aspect-in-action.yaml: [знайдіть-дієслова-дв] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (15 words): дедлайн, тиждень, команда, колега, обід...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 13 has 91.0% immersion (target: 98.0%+)
+  - FIX: Add more Ukrainian content to reach 98%+ immersion for full immersion modules
+
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест' found: Як обрати вид у робочому контексті?, Вид у робочому контексті: повний спектр застосування, Тест
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
+  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 
 ## Recommendation
-**📝 UPDATE** (severity 40/100)
+**📝 UPDATE** (severity 30/100)
 
-- Revision recommended (severity 40/100)
-- 2 violations (minor)
-- 13 format errors (many)
+- 4 violations (moderate)
 - Activity count below minimum
 
 ## Gates
@@ -41,7 +30,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 23 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 13 Format Errors
+- **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 91.0% (target 85-100% (B1.2 Motion))
@@ -76,4 +65,4 @@
 | **Практика** | ⚪️ | 183 | Skipped |
 | **Діалоги** | ✅ | 496 | Included in Core |
 | **Підсумок** | ✅ | 253 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |

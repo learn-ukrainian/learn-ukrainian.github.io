@@ -3,17 +3,13 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): чек, адреса, картка, конверт, лист...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): конверт, касир, вкладати, лист, адреса...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' per template 'a2-module-template'
-  - FIX: Add '## Presentation' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 968/1000 (32 short)
@@ -34,7 +30,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 189 | Included in Core |
+| **Intro/Narrative** | ✅ | 111 | Included in Core |
+| **Presentation** | ✅ | 78 | Included in Core |
 | **Practice** | ⚪️ | 159 | Skipped |
 | **На пошті — At the Post Office** | ⚪️ | 15 | Skipped |
 | **Common Phrases at the Post Office** | ⚪️ | 113 | Skipped |

@@ -1,0 +1,129 @@
+module: 30-history-of-language
+level: C1
+version: '2.0'
+items:
+  - lemma: праслов'янська
+    ipa: /prɑsɫoˈʋjɑnʲsʲkɑ/
+    translation: Proto-Slavic
+    pos: adj
+    gender: f
+  - lemma: кирилиця
+    ipa: /kɪˈrɪlɪt͡sʲɑ/
+    translation: Cyrillic script
+    pos: noun
+    gender: f
+  - lemma: глаголиця
+    ipa: /ɦɫɑˈɦɔlɪt͡sʲɑ/
+    translation: Glagolitic script
+    pos: noun
+    gender: f
+  - lemma: двомовність
+    ipa: /dʋoˈmɔʋnʲisʲtʲ/
+    translation: bilingualism (diglossia)
+    pos: noun
+    gender: f
+  - lemma: діловодство
+    ipa: /diloˈʋɔdstʋo/
+    translation: record keeping / clerical work
+    pos: noun
+    gender: n
+  - lemma: указ
+    ipa: /uˈkɑz/
+    translation: decree
+    pos: noun
+    gender: m
+  - lemma: циркуляр
+    ipa: /t͡sɪrkuˈlʲɑr/
+    translation: circular (official letter)
+    pos: noun
+    gender: m
+  - lemma: заборона
+    ipa: /zɑboˈrɔnɑ/
+    translation: prohibition / ban
+    pos: noun
+    gender: f
+  - lemma: відродження
+    ipa: /ʋidˈrɔdʒenʲːɑ/
+    translation: renaissance / revival
+    pos: noun
+    gender: n
+  - lemma: правопис
+    ipa: /prɑˈʋɔpɪs/
+    translation: orthography / spelling
+    pos: noun
+    gender: m
+  - lemma: лінгвоцид
+    ipa: /lʲinɡʋoˈt͡sɪd/
+    translation: linguicide
+    pos: noun
+    gender: m
+  - lemma: русифікація
+    ipa: /rusɪfiˈkɑt͡sʲijɑ/
+    translation: Russification
+    pos: noun
+    gender: f
+  - lemma: писемність
+    ipa: /pɪˈsɛmnʲisʲtʲ/
+    translation: writing system / literacy
+    pos: noun
+    gender: f
+  - lemma: асиміляція
+    ipa: /ɑsɪmiˈlʲɑt͡sʲijɑ/
+    translation: assimilation
+    pos: noun
+    gender: f
+  - lemma: спадщина
+    ipa: /spˈɑdʃt͡ʃɪnɑ/
+    translation: heritage / legacy
+    pos: noun
+    gender: f
+  - lemma: староукраїнська
+    ipa: /stɑroukrɑˈjinʲsʲkɑ/
+    translation: Old Ukrainian
+    pos: adj
+    gender: f
+  - lemma: розмовний
+    ipa: /rozˈmɔʋnɪj/
+    translation: colloquial / spoken
+    pos: adj
+    gender: m
+  - lemma: церковнослов'янська
+    ipa: /t͡sɛrkoʋnosɫoˈʋjɑnʲsʲkɑ/
+    translation: Church Slavonic
+    pos: adj
+    gender: f
+  - lemma: репресія
+    ipa: /reˈprɛsijɑ/
+    translation: repression
+    pos: noun
+    gender: f
+  - lemma: цензура
+    ipa: /t͡sɛnˈzurɑ/
+    translation: censorship
+    pos: noun
+    gender: f
+  - lemma: примусовий
+    ipa: /prɪmuˈsɔʋɪj/
+    translation: forced / compulsory
+    pos: adj
+    gender: m
+  - lemma: державний
+    ipa: /dɛrˈʒɑʋnɪj/
+    translation: state / official
+    pos: adj
+    gender: m
+  - lemma: становлення
+    ipa: /stɑˈnɔʋɫenʲːɑ/
+    translation: formation / establishment
+    pos: noun
+    gender: n
+  - lemma: етап
+    ipa: /eˈtɑp/
+    translation: stage / phase
+    pos: noun
+    gender: m
+  - lemma: носій
+    ipa: /noˈsij/
+    translation: speaker (native speaker) / carrier
+    pos: noun
+    gender: m

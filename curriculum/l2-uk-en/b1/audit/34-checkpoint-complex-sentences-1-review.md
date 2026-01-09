@@ -10,10 +10,21 @@
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 34-checkpoint-complex-sentences-1.yaml: [позначте-сполучники-й-відносні-слова] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## Recommendation
-**📝 UPDATE** (severity 15/100)
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест' per template 'b1-grammar-module-template'
+  - FIX: Add '## Warm-up' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
+  - FIX: Add '## Presentation' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Practice:, Практика
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
+  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 
-- 3 violations (minor)
+## Recommendation
+**📝 UPDATE** (severity 40/100)
+
+- Revision recommended (severity 40/100)
+- 7 violations (significant)
 - Activity density below minimum
 
 ## Gates
@@ -65,4 +76,4 @@
 | **Integration Challenge** | ⚪️ | 124 | Skipped |
 | **Практика** | ⚪️ | 230 | Skipped |
 | **Підсумок** | ✅ | 165 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |

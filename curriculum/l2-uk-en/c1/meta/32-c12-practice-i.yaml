@@ -1,17 +1,24 @@
 module: c1-32
-title: C1.2 Practice I
-subtitle: Professional & Social
+title: 'C1.2 Practice I: Professional Scenarios'
+subtitle: 'Professional & Social'
 version: '2.0'
-phase: C1.2 Professional
+phase: 'C1.2 Professional & Social Context'
 focus: practice
 pedagogy: academic
 duration: 120
+transliteration: none
+grammar:
+  - 'Formal register structures'
+  - 'Business correspondence formulas'
 vocabulary_count: 24
 tags:
-- c1
-- practice
-- professional
-- practice
+  - c1
+  - practice
+  - professional
+  - business
 objectives:
-- Master C1 concepts in C1.2 Practice I
+  - 'Master professional communication scenarios'
+  - 'Write a formal cover letter'
+  - 'Conduct a job interview in Ukrainian'
+  - 'Participate in a business meeting'
 slug: 32-c12-practice-i

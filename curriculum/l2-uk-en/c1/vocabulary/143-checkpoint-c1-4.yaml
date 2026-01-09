@@ -1,0 +1,91 @@
+module: 143-checkpoint-c1-4
+level: C1
+version: '1.0'
+items:
+  # Formal
+  - lemma: зобов'язання
+    ipa: /zɔbɔʋjɑzɑnʲːɑ/
+    translation: obligation
+    pos: ім. (с.р.)
+  - lemma: ухвала
+    ipa: /ʊxʋɑlɑ/
+    translation: ruling / resolution
+    pos: ім. (ж.р.)
+  - lemma: клопотання
+    ipa: /klɔpɔtɑnʲːɑ/
+    translation: petition
+    pos: ім. (с.р.)
+  - lemma: чинний
+    ipa: /t͡ʃɪnːɪj/
+    translation: valid
+    pos: прикм.
+  - lemma: скасувати
+    ipa: /skɑsʊʋɑtɪ/
+    translation: to repeal
+    pos: дієсл.
+
+  # Politeness
+  - lemma: вдячний
+    ipa: /ʋdʲɑt͡ʃnɪj/
+    translation: grateful
+    pos: прикм.
+  - lemma: перепрошую
+    ipa: /pɛrɛprɔʃʊjʊ/
+    translation: I apologize
+    pos: дієсл.
+  - lemma: шановний
+    ipa: /ʃɑnɔʋnɪj/
+    translation: respected
+    pos: прикм.
+  - lemma: ласка
+    ipa: /lɑskɑ/
+    translation: favor
+    pos: ім. (ж.р.)
+  - lemma: турбувати
+    ipa: /tʊrbʊʋɑtɪ/
+    translation: to bother
+    pos: дієсл.
+
+  # Intimate
+  - lemma: сонечко
+    ipa: /sɔnɛt͡ʃkɔ/
+    translation: sun (darling)
+    pos: ім. (с.р.)
+  - lemma: рідненький
+    ipa: /ridnɛnʲkɪj/
+    translation: dearest
+    pos: прикм.
+  - lemma: обіймати
+    ipa: /ɔbijmɑtɪ/
+    translation: to hug
+    pos: дієсл.
+  - lemma: сумувати
+    ipa: /sʊmʊʋɑtɪ/
+    translation: to miss
+    pos: дієсл.
+  - lemma: коханий
+    ipa: /kɔxɑnɪj/
+    translation: beloved
+    pos: ім. (ч.р.)
+
+  # Slang
+  - lemma: крінж
+    ipa: /krindʒ/
+    translation: cringe
+    pos: ім. (ч.р.)
+  - lemma: вайб
+    ipa: /ʋɑjb/
+    translation: vibe
+    pos: ім. (ч.р.)
+  - lemma: круто
+    ipa: /krutɔ/
+    translation: cool
+    pos: присл.
+  - lemma: шарити
+    ipa: /ʃɑrɪtɪ/
+    translation: to understand
+    pos: дієсл.
+  - lemma: жиза
+    ipa: /ʒɪzɑ/
+    translation: relatable
+    pos: ім. (ж.р.)

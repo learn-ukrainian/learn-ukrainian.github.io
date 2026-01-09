@@ -1,17 +1,22 @@
-module: c1-31
-title: Diaspora Ukrainian
-subtitle: Professional & Social
+module: 31-diaspora-ukrainian
+title: 'Українська діаспора'
+subtitle: 'Ukrainian Diaspora'
 version: '2.0'
-phase: C1.2 Professional
-focus: sociolinguistics
-pedagogy: academic
+phase: 'C1.2 Professional & Social'
+focus: vocabulary
+pedagogy: immersion
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- sociolinguistics
-- diaspora
-- global
+  - diaspora
+  - culture
+  - history
+grammar:
+  - 'Diaspora dialects'
+  - 'Archaic forms'
 objectives:
-- Master C1 concepts in Diaspora Ukrainian
+  - 'Understand the history and role of the Ukrainian diaspora.'
+  - 'Recognize diaspora specific vocabulary and grammar.'
+  - 'Discuss the preservation of national identity abroad.'
+vocabulary_count: 25
 slug: 31-diaspora-ukrainian

@@ -1,6 +1,6 @@
 module: c1-26
-title: 'Медіаландшафт'
-subtitle: 'Media Landscape'
+title: 'Медіаландшафт: Як не потонути в інформації'
+subtitle: 'Media Landscape: Information Hygiene'
 version: '2.0'
 phase: 'C1.2 Society & State'
 focus: society
@@ -10,14 +10,13 @@ transliteration: none
 tags:
   - media
   - journalism
-  - propaganda
+  - disinformation
 grammar:
-  - 'Critical analysis structures'
-  - 'Reporting verbs'
+  - 'Media literacy concepts'
+  - 'Identifying bias'
 objectives:
-  - 'Analyze the Ukrainian media market'
-  - 'Identify bias and manipulation techniques'
-  - 'Discuss the role of oligarchs in media'
-  - 'Understand the difference between facts and judgments'
+  - 'Analyze news sources for reliability'
+  - 'Identify propaganda techniques'
+  - 'Discuss the role of social media in Ukraine'
 vocabulary_count: 25
 slug: 26-media-landscape

@@ -1,0 +1,21 @@
+module: c1-30-history-of-language
+title: 'Історія мови: Від Русі до сьогодення'
+subtitle: 'History of the Language: From Rus to Present'
+version: '2.0'
+phase: 'C1.1 History & Culture'
+focus: history
+pedagogy: history
+duration: 120
+transliteration: none
+tags:
+  - history
+  - language
+  - politics
+grammar:
+  - 'Historical narrative register'
+objectives:
+  - 'Discuss the origins and evolution of the Ukrainian language.'
+  - 'Understand the impact of political repressions (Ems Ukaz, Valuev Circular).'
+  - 'Analyze the concept of linguicide and renaissance.'
+vocabulary_count: 25
+slug: 30-history-of-language

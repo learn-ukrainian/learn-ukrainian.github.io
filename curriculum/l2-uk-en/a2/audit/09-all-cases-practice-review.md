@@ -2,19 +2,8 @@
 **Phase:** A2.1 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' per template 'a2-module-template'
-  - FIX: Add '## Presentation' section as specified in docs/l2-uk-en/templates/a2-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
-  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1109/1000
+- **Words:** ✅ 1124/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -26,14 +15,14 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 46.2% (target 40-50% (A2.1))
+- **Immersion:** 🇺🇦 47.3% (target 40-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 160 | Included in Core |
-| **Understanding the Case System** | ⚪️ | 101 | Skipped |
+| **Presentation: Understanding the Case System** | ✅ | 101 | Included in Core |
 | **Case-by-Case Review** | ✅ | 28 | Included in Core |
 | **Nominative Case (Називний відмінок)** | ⚪️ | 69 | Skipped |
 | **Genitive Case (Родовий відмінок)** | ⚪️ | 72 | Skipped |
@@ -45,8 +34,6 @@
 | **Cultural Insight** | ✅ | 0 | Included in Core |
 | **Як відмінки формують речення** | ⚪️ | 46 | Skipped |
 | **Як обрати правильний відмінок** | ⚪️ | 79 | Skipped |
-| **Вправа 1: Визначте відмінок** | ⚪️ | 48 | Skipped |
-| **Вправа 2: Провідмінюйте слово** | ⚪️ | 6 | Skipped |
-| **Вправа 3: Оберіть правильну форму** | ⚪️ | 27 | Skipped |
+| **Практика** | ⚪️ | 96 | Skipped |
 | **Підсумок** | ✅ | 94 | Included in Core |
 | **Need More Practice?** | ⚪️ | 30 | Skipped |

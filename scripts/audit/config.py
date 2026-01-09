@@ -269,7 +269,7 @@ ACTIVITY_COMPLEXITY = {
     'group-sort': {
         'A1': {'groups_min': 2, 'groups_max': 4, 'items_min': 8, 'items_max': 999},
         'A2': {'groups_min': 2, 'groups_max': 4, 'items_min': 10, 'items_max': 999},
-        'B1': {'groups_min': 3, 'groups_max': 5, 'items_min': 12, 'items_max': 999},
+        'B1': {'groups_min': 2, 'groups_max': 5, 'items_min': 12, 'items_max': 999},
         'B2': {'groups_min': 3, 'groups_max': 5, 'items_min': 14, 'items_max': 999},
         'C1': {'groups_min': 2, 'groups_max': 6, 'items_min': 10, 'items_max': 999},
         'C2': {'groups_min': 3, 'groups_max': 6, 'items_min': 12, 'items_max': 999},

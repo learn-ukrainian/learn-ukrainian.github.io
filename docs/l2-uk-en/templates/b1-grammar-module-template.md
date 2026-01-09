@@ -6,15 +6,14 @@
 
 **Related Issue:** [#283](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/283)
 
-
 <!--
 TEMPLATE_METADATA:
   required_sections:
-  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
-  - Presentation|Grammar|Focus|Презентація|Граматика|Теорія
+  - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест
+  - Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення
   - Practice|Exercises|Activity|Практика|Вправи
   - Summary|Підсумок
-  - Need More Practice?
+  - Need More Practice?|Потрібно більше практики?
   pedagogy: TTT
   min_word_count: 1500
   required_callouts: []

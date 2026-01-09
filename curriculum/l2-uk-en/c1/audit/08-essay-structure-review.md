@@ -2,6 +2,19 @@
 **Phase:** C1.1 | **Level:** C1 | **Pedagogy:** TTT | **Target:** 1750
 **Overall Status:** ✅ PASS
 
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Культурний контекст: Українська vs Західна традиція, 1. Вступ: Мистецтво першого враження
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Аналіз' per template 'c1-module-template'
+  - FIX: Add '## Аналіз' section as specified in docs/l2-uk-en/templates/c1-module-template.md
+- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
+  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 3 violations (minor)
+
 ## Gates
 - **Words:** ✅ 1768/1750
 - **Activities:** ✅ 17/12
@@ -38,6 +51,12 @@
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.7%** |
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (17 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -50,4 +69,4 @@
 | **Ситуативні діалоги** | ✅ | 293 | Included in Core |
 | **Академічний стиль: Повага до читача** | ⚪️ | 71 | Skipped |
 | **Підсумок** | ✅ | 63 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |

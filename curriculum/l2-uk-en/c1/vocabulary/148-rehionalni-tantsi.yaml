@@ -1,0 +1,142 @@
+module: 148-rehionalni-tantsi
+level: C1
+version: '2.0'
+items:
+  - lemma: аркан
+    ipa: /ɐrˈkan/
+    translation: arkan (ritual Hutsul dance)
+    pos: noun
+    gender: m
+  - lemma: коломийка
+    ipa: /kɔɫɔˈmɪjkɐ/
+    translation: kolomyika (dance and short song)
+    pos: noun
+    gender: f
+  - lemma: метелиця
+    ipa: /meˈtɛɫɪt͡sʲɐ/
+    translation: metelytsia (snowstorm-style dance)
+    pos: noun
+    gender: f
+  - lemma: полька
+    ipa: /ˈpɔlʲkɐ/
+    translation: polka
+    pos: noun
+    gender: f
+  - lemma: ініціація
+    ipa: /in⁽ʲ⁾it͡s⁽ʲ⁾iˈat͡s⁽ʲ⁾ijɐ/
+    translation: initiation
+    pos: noun
+    gender: f
+  - lemma: топірець
+    ipa: /tɔˈpirɛt͡sʲ/
+    translation: small ritual axe (Hutsul)
+    pos: noun
+    gender: m
+  - lemma: бартка
+    ipa: /ˈbartkɐ/
+    translation: bartka (ritual axe)
+    pos: noun
+    gender: f
+  - lemma: полонина
+    ipa: /pɔɫɔˈnɪnɐ/
+    translation: high mountain pasture
+    pos: noun
+    gender: f
+  - lemma: побратимство
+    ipa: /pɔbrɐˈtɪmstwɔ/
+    translation: brotherhood / fraternity
+    pos: noun
+    gender: n
+  - lemma: приспівка
+    ipa: /prɪˈspiwkɐ/
+    translation: short humorous verse
+    pos: noun
+    gender: f
+  - lemma: прискорення
+    ipa: /prɪˈskɔreɲːɐ/
+    translation: acceleration
+    pos: noun
+    gender: n
+  - lemma: тупіт
+    ipa: /ˈtup⁽ʲ⁾it/
+    translation: stomping / thud
+    pos: noun
+    gender: m
+  - lemma: плече
+    ipa: /pɫɛˈt͡ʃɛ/
+    translation: shoulder
+    pos: noun
+    gender: n
+  - lemma: етнос
+    ipa: /ˈɛtnɔs/
+    translation: ethnos / ethnic group
+    pos: noun
+    gender: m
+  - lemma: автентичність
+    ipa: /ɐu̯tɛnˈtɪt͡ʃn⁽ʲ⁾isʲtʲ/
+    translation: authenticity
+    pos: noun
+    gender: f
+  - lemma: верховина
+    ipa: /wɛrxɔˈwɪnɐ/
+    translation: highland
+    pos: noun
+    gender: f
+  - lemma: гуцул
+    ipa: /ɦʊˈt͡suɫ/
+    translation: Hutsul (highlander)
+    pos: noun
+    gender: m
+  - lemma: чабан
+    ipa: /t͡ʃɐˈban/
+    translation: shepherd
+    pos: noun
+    gender: m
+  - lemma: коло
+    ipa: /ˈkɔɫɔ/
+    translation: circle
+    pos: noun
+    gender: n
+  - lemma: ланцюг
+    ipa: /ɫɐnˈt͡sʲuɦ/
+    translation: chain
+    pos: noun
+    gender: m
+  - lemma: запальний
+    ipa: /zɐpɐlʲˈnɪj/
+    translation: fiery / fiery / spirited
+    pos: adjective
+  - lemma: віртуозний
+    ipa: /wirtuˈɔznɪj/
+    translation: virtuoso / skillful
+    pos: adjective
+  - lemma: архаїчний
+    ipa: /ɐrxɐˈit͡ʃnɪj/
+    translation: archaic
+    pos: adjective
+  - lemma: обрядовий
+    ipa: /ɔbrʲɐˈdɔwɪj/
+    translation: ritual
+    pos: adjective
+  - lemma: самобутність
+    ipa: /sɐmɔˈbutʲn⁽ʲ⁾isʲtʲ/
+    translation: originality / distinctiveness
+    pos: noun
+    gender: f
+  - lemma: вихор
+    ipa: /ˈwɪxɔr/
+    translation: whirlwind
+    pos: noun
+    gender: m
+  - lemma: гартувати
+    ipa: /ɦɐrˈtʊwɐtɪ/
+    translation: to temper / to harden
+    pos: verb
+  - lemma: згуртовувати
+    ipa: /zɦʊrˈtɔwʊwɐtɪ/
+    translation: to unite / to consolidate
+    pos: verb
+  - lemma: символізувати
+    ipa: /sɪmbɔl⁽ʲ⁾izʊˈwatɪ/
+    translation: to symbolize
+    pos: verb
