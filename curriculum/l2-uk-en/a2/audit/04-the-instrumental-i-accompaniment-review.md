@@ -24,8 +24,11 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 43.7% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 43.7% (target 40-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

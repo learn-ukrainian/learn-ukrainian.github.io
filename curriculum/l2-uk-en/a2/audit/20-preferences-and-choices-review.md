@@ -3,12 +3,10 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): швидше, віддавати, краще, дешевше, вибирати...
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: давальний, відмінок, дієслово
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): повільніше, віддавати, подобатися, зручніше, вибирати...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
@@ -16,7 +14,7 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1231/1000
+- **Words:** ✅ 1519/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -28,14 +26,17 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 37.5% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 51.5% (target 50-65% (A2.1))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 62 | Included in Core |
-| **Presentation** | ✅ | 0 | Included in Core |
+| **Presentation** | ✅ | 288 | Included in Core |
 | **Practice** | ⚪️ | 77 | Skipped |
 | **Expressing Preferences** | ⚪️ | 12 | Skipped |
 | **1. Мені більше подобається X (ніж Y)** | ⚪️ | 145 | Skipped |

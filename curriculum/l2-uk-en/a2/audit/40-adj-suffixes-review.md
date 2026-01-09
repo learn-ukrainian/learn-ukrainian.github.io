@@ -3,16 +3,18 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): огляд, ходити, бачення, прихід, дочитати...
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: рід, прикметник, множина, час, середній
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): пішохід, погляд, хід, письменник, похід...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1821/1000
+- **Words:** ✅ 2918/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -24,21 +26,25 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 41.9% (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 65.6% (target 65-75% (A2.2))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 159 | Included in Core |
-| **Grammar Breakdown: 4 Rules to Remember** | ⚪️ | 188 | Skipped |
-| **Practice Tips for Mastery** | ✅ | 158 | Included in Core |
-| **The Big Three: -Н, -ОВ, -СЬК** | ⚪️ | 8 | Skipped |
+| **Presentation** | ✅ | 241 | Included in Core |
+| **Key Principles** | ⚪️ | 188 | Skipped |
+| **Study Tips** | ✅ | 204 | Included in Core |
+| **The Big Three: -Н, -ОВ, -СЬК** | ⚪️ | 94 | Skipped |
 | **Machine 1: The Generalist (-н-ий)** | ⚪️ | 10 | Skipped |
 | **Machine 2: The Relationship (-ов-ий)** | ⚪️ | 8 | Skipped |
-| **Machine 3: The Origin (-ськ-ий)** | ⚪️ | 58 | Skipped |
-| **Deep Dive: Living Adjectives** | ✅ | 85 | Included in Core |
-| **Deep Dive: The Diminutive (-еньк)** | ✅ | 47 | Included in Core |
+| **Machine 3: The Origin (-ськ-ий)** | ⚪️ | 103 | Skipped |
+| **Deep Dive: Living Adjectives** | ✅ | 142 | Included in Core |
+| **Deep Dive: The Diminutive (-еньк)** | ✅ | 94 | Included in Core |
 | **Story Time: The Professor** | ✅ | 108 | Included in Core |
 | **Story Time Part 2: The Map** | ✅ | 67 | Included in Core |
 | **Story Time Part 3: The Market** | ✅ | 94 | Included in Core |
@@ -47,9 +53,10 @@
 | **Monologue: The Artist** | ⚪️ | 52 | Skipped |
 | **Dialogue: At the Hotel** | ✅ | 58 | Included in Core |
 | **Dialogue: Describing People** | ✅ | 59 | Included in Core |
-| **English theory** | ⚪️ | 138 | Skipped |
-| **Learning Strategy: The Three-Step Method** | ⚪️ | 200 | Skipped |
-| **Common Mistakes to Avoid** | ⚪️ | 61 | Skipped |
+| **English theory** | ⚪️ | 219 | Skipped |
+| **Learning Strategy: The Three-Step Method** | ⚪️ | 314 | Skipped |
+| **Common Mistakes to Avoid** | ⚪️ | 159 | Skipped |
 | **Story Time: У Магазині Одягу** | ✅ | 135 | Included in Core |
-| **Підсумок** | ✅ | 40 | Included in Core |
+| **Практика** | ⚪️ | 268 | Skipped |
+| **Підсумок** | ✅ | 54 | Included in Core |
 | **Need More Practice?** | ⚪️ | 30 | Skipped |

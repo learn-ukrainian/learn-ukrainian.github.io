@@ -2,9 +2,9 @@
 **Phase:** A2.5 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
-  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид, час, відмінок, місцевий
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
@@ -12,7 +12,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1187/1000
+- **Words:** ✅ 1505/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
@@ -24,20 +24,19 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 52.2% (target 50-60% (A2.3))
+- **Immersion:** 🇺🇦 79.0% (target 75-85% (A2.3))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 76 | Included in Core |
-| **Presentation** | ✅ | 85 | Included in Core |
-| **Furniture** | ⚪️ | 111 | Skipped |
-| **Appliances and Decor** | ⚪️ | 62 | Skipped |
-| **Story Time: Нова Квартира** | ✅ | 193 | Included in Core |
-| **Story Time Part 2: Прибирання** | ✅ | 204 | Included in Core |
-| **Common Expressions** | ⚪️ | 0 | Skipped |
-| **Describing Location** | ⚪️ | 24 | Skipped |
-| **Useful Home Phrases** | ⚪️ | 161 | Skipped |
-| **Підсумок** | ✅ | 241 | Included in Core |
-| **Need More Practice?** | ⚪️ | 30 | Skipped |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Вступ** | ⚪️ | 130 | Skipped |
+| **Граматика** | ⚪️ | 331 | Skipped |
+| **Практика** | ⚪️ | 600 | Skipped |
+| **Корисні вирази** | ⚪️ | 241 | Skipped |
+| **Підсумок** | ✅ | 164 | Included in Core |
+| **Need More Practice?** | ⚪️ | 39 | Skipped |

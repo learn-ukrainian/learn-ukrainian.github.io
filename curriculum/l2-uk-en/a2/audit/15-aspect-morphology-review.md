@@ -2,9 +2,9 @@
 **Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Практика' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
@@ -12,7 +12,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1307/1000
+- **Words:** ✅ 1427/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -24,15 +24,17 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 40.0% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 44.7% (target 40-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 190 | Included in Core |
 | **Presentation** | ✅ | 66 | Included in Core |
-| **Практика** | ⚪️ | 0 | Skipped |
 | **Prefixation: The Most Common Pattern** | ✅ | 18 | Included in Core |
 | **Prefix: про- (through, completion)** | ⚪️ | 21 | Skipped |
 | **Prefix: на- (creating, accumulation)** | ⚪️ | 18 | Skipped |
@@ -45,5 +47,6 @@
 | **Вид та словотвір** | ⚪️ | 116 | Skipped |
 | **Логіка суфіксації** | ⚪️ | 113 | Skipped |
 | **Вправа: Визначте модель** | ⚪️ | 207 | Skipped |
+| **Практика** | ⚪️ | 120 | Skipped |
 | **Підсумок** | ✅ | 189 | Included in Core |
 | **Need More Practice?** | ⚪️ | 30 | Skipped |

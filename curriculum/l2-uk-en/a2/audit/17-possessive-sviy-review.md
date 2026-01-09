@@ -3,22 +3,18 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): своє, свій, спільний, ділитися, свої...
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: займенник
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): особистий, спільний, свої, своя, своє...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' per template 'a2-module-template'
-  - FIX: Add '## Presentation' section as specified in docs/l2-uk-en/templates/a2-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
-  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1061/1000
+- **Words:** ✅ 1622/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -30,13 +26,17 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.6% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 53.9% (target 50-65% (A2.1))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 69 | Included in Core |
+| **Presentation** | ✅ | 243 | Included in Core |
 | **The Problem: Ambiguity** | ⚪️ | 92 | Skipped |
 | **The Rule: Свій = Subject's Own** | ⚪️ | 0 | Skipped |
 | **When to Use Свій** | ⚪️ | 11 | Skipped |
@@ -62,5 +62,6 @@
 | **Mistake 2: Using Свій When Subject Differs** | ⚪️ | 18 | Skipped |
 | **Mistake 3: Forgetting to Decline Свій** | ⚪️ | 16 | Skipped |
 | **Language Learning Tip** | ✅ | 119 | Included in Core |
+| **Practice** | ⚪️ | 318 | Skipped |
 | **Підсумок** | ✅ | 17 | Included in Core |
 | **Need More Practice?** | ⚪️ | 30 | Skipped |

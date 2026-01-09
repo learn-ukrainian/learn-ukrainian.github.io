@@ -3,20 +3,16 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (10 words): би, попри, завдяки, оскільки, зате...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): хоч, зате, завдяки, дарма, таки...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
-  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1294/1000
+- **Words:** ✅ 1546/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
@@ -28,8 +24,11 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 43.5% (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 53.3% (target 50-65% (A2.2))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -37,6 +36,7 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Introduction** | ✅ | 130 | Included in Core |
 | **Presentation** | ✅ | 518 | Included in Core |
+| **Practice** | ⚪️ | 252 | Skipped |
 | **Cultural Insight** | ✅ | 0 | Included in Core |
 | **The Art of the «Anekdot»** | ⚪️ | 54 | Skipped |
 | **The «Kum» Stories** | ⚪️ | 133 | Skipped |

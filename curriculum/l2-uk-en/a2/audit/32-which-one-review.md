@@ -3,22 +3,18 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: середній, давальний, орудний, жіночий, чоловічий
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: відмінок, орудний, місцевий, чоловічий, знахідний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): щойно, тим, часом, тоді, разу...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): щойно, перш, разу, тоді, того...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
-  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1332/1000
+- **Words:** ✅ 1641/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -30,8 +26,11 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 41.6% (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 52.9% (target 50-65% (A2.2))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -41,6 +40,7 @@
 | **2. The Case Detective** | ⚪️ | 324 | Skipped |
 | **Deep Dive: «Who» vs «Which»** | ✅ | 74 | Included in Core |
 | **Deep Dive: The «Те, що» Connector** | ✅ | 144 | Included in Core |
+| **Practice** | ⚪️ | 309 | Skipped |
 | **Cultural Insight** | ✅ | 86 | Included in Core |
 | **Language in Action** | ⚪️ | 0 | Skipped |
 | **Dialogue: The Police Witness** | ✅ | 104 | Included in Core |

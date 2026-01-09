@@ -3,22 +3,18 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (30 words): котик, важливість, питання, сонечко, вчитель...
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: дієслово, час
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (30 words): питання, сестричка, читач, радість, молодість...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' per template 'a2-module-template'
-  - FIX: Add '## Presentation' section as specified in docs/l2-uk-en/templates/a2-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
-  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1082/1000
+- **Words:** ✅ 1727/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
@@ -30,14 +26,19 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 43.9% (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 66.5% (target 65-75% (A2.2))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 116 | Included in Core |
+| **Presentation** | ✅ | 253 | Included in Core |
 | **The Meaning Map** | ⚪️ | 7 | Skipped |
+| **Практика** | ⚪️ | 392 | Skipped |
 | **Story Time: The Writer's Deadline** | ✅ | 179 | Included in Core |
 | **Deep Dive - Open and Close (Відкрити | Закрити)** | ✅ | 87 | Included in Core |
 | **Deep Dive - To Give (The «Give» Family)** | ✅ | 87 | Included in Core |

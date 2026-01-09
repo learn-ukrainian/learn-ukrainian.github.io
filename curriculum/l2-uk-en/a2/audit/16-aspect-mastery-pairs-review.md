@@ -3,22 +3,18 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): знайти, намалювати, губити, купити, дзвонити...
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, дієслово
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): приготувати, малювати, запам'ятати, побудувати, відповісти...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' per template 'a2-module-template'
-  - FIX: Add '## Presentation' section as specified in docs/l2-uk-en/templates/a2-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
-  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1105/1000
+- **Words:** ✅ 1408/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -30,13 +26,17 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 40.8% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 54.8% (target 50-65% (A2.1))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 49 | Included in Core |
+| **Presentation** | ✅ | 209 | Included in Core |
 | **The Core 30 Pairs** | ✅ | 0 | Included in Core |
 | **Tier 1: Essential Everyday Pairs** | ⚪️ | 54 | Skipped |
 | **Tier 2: Learning & Communication** | ⚪️ | 48 | Skipped |
@@ -45,6 +45,7 @@
 | **Drill Patterns** | ✅ | 0 | Included in Core |
 | **Pattern A: Past Tense Drill** | ✅ | 65 | Included in Core |
 | **Pattern B: Future Tense Drill** | ✅ | 75 | Included in Core |
+| **Practice** | ⚪️ | 94 | Skipped |
 | **Rapid Fire Drills** | ⚪️ | 0 | Skipped |
 | **Drill 1: Instant Recall** | ⚪️ | 39 | Skipped |
 | **Drill 2: Reverse Recall** | ⚪️ | 22 | Skipped |

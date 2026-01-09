@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): курс, рахунок, посилка, картка, черга...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): надсилати, посилка, лист, черга, банк...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE
@@ -28,8 +28,11 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 48.0% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 48.0% (target 40-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

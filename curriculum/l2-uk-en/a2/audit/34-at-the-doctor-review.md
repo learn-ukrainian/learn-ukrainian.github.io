@@ -2,17 +2,8 @@
 **Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Expressive | **Target:** 1000
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
-  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 1201/1000
+- **Words:** ✅ 1436/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -24,14 +15,18 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 45.4% (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 50.6% (target 50-65% (A2.2))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 58 | Included in Core |
 | **Presentation** | ✅ | 267 | Included in Core |
+| **Practice** | ⚪️ | 235 | Skipped |
 | **Deep Dive: The Ukrainian Medical System** | ✅ | 82 | Included in Core |
 | **Deep Dive: Traditional Medicine** | ✅ | 127 | Included in Core |
 | **Story Time: The Pharmacy Mistake** | ✅ | 203 | Included in Core |

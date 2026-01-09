@@ -2,19 +2,17 @@
 **Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Практика' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: відмінок, знахідний, називний
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1128/1000
+- **Words:** ✅ 1490/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
@@ -26,15 +24,18 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 46.9% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 56.6% (target 50-65% (A2.1))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 97 | Included in Core |
-| **Presentation** | ✅ | 0 | Included in Core |
-| **Практика** | ⚪️ | 0 | Skipped |
+| **Presentation** | ✅ | 206 | Included in Core |
+| **Практика** | ⚪️ | 156 | Skipped |
 | **Forming Comparative Adjectives** | ⚪️ | 7 | Skipped |
 | **1. Synthetic Form** | ⚪️ | 45 | Skipped |
 | **2. Compound Form (більш/менш + adjective)** | ⚪️ | 80 | Skipped |

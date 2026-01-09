@@ -1,14 +1,14 @@
 # Audit Report: 35-checkpoint.md
-**Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Consolidation | **Target:** 1000
+**Phase:** A2.3 | **Level:** A2 | **Pedagogy:** Consolidation | **Target:** 800
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1214/1000
+- **Words:** ✅ 1214/800
 - **Activities:** ✅ 10/10
-- **Density:** ✅ All > 12
+- **Density:** ✅ All > 10
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/4
+- **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
@@ -17,6 +17,9 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 38.7% (checkpoint - no gate)
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

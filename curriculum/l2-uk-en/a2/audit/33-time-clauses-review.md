@@ -5,20 +5,16 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (30 words): пацієнт, лікар, живіт, нежить, біль...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (30 words): пацієнт, кашель, живіт, око, лікарня...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
-  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1377/1000
+- **Words:** ✅ 1733/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -30,8 +26,11 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 41.9% (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 53.7% (target 50-65% (A2.2))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -43,6 +42,7 @@
 | **1. The Loop: Кожного разу, коли...** | ⚪️ | 61 | Skipped |
 | **2. The Parallel: Тим часом як...** | ⚪️ | 68 | Skipped |
 | **3. The Date: Того дня, коли...** | ⚪️ | 105 | Skipped |
+| **Practice** | ⚪️ | 356 | Skipped |
 | **Story Time: The Late Traveller** | ✅ | 133 | Included in Core |
 | **Cultural Insight** | ✅ | 40 | Included in Core |
 | **Language in Action** | ⚪️ | 0 | Skipped |

@@ -3,22 +3,18 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): шість, вісім, дев'ять, двадцять, дванадцять...
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: відмінок, іменник, родовий
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): шість, нуль, двадцять, сім, одинадцять...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' per template 'a2-module-template'
-  - FIX: Add '## Presentation' section as specified in docs/l2-uk-en/templates/a2-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
-  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1144/1000
+- **Words:** ✅ 1603/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -30,14 +26,19 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 41.2% (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 59.0% (target 50-65% (A2.2))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Introduction** | ✅ | 120 | Included in Core |
+| **Presentation** | ✅ | 258 | Included in Core |
+| **Practice** | ⚪️ | 201 | Skipped |
 | **The Three Zones** | ⚪️ | 38 | Skipped |
 | **Zone 1: One (Один, Одна, Одне)** | ⚪️ | 82 | Skipped |
 | **Zone 2: Two Through Four (2-4)** | ⚪️ | 18 | Skipped |

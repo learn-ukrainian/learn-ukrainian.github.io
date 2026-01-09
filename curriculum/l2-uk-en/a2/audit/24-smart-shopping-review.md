@@ -2,9 +2,9 @@
 **Phase:** A2.2 | **Level:** A2 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: дієслово
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
@@ -12,7 +12,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1087/1000
+- **Words:** ✅ 1300/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -24,15 +24,18 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 44.0% (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 54.2% (target 50-65% (A2.2))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Introduction** | ✅ | 55 | Included in Core |
-| **Presentation** | ✅ | 0 | Included in Core |
+| **Presentation** | ✅ | 213 | Included in Core |
 | **Practice** | ⚪️ | 141 | Skipped |
 | **Basic Comparisons** | ⚪️ | 91 | Skipped |
 | **Asking About Options** | ⚪️ | 92 | Skipped |

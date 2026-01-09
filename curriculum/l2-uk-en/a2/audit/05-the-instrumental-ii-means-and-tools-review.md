@@ -3,20 +3,16 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): головою, ложкою, ручкою, голосом, ногами...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): руками, телефоном, голосом, автобусом, ложкою...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1803/1000
+- **Words:** ✅ 2010/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -28,14 +24,17 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 38.6% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 45.6% (target 40-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 136 | Included in Core |
-| **Presentation** | ✅ | 0 | Included in Core |
+| **Presentation** | ✅ | 207 | Included in Core |
 | **Practice** | ⚪️ | 238 | Skipped |
 | **Warm-up** | ✅ | 79 | Included in Core |
 | **Орудний відмінок без прийменника** | ⚪️ | 68 | Skipped |

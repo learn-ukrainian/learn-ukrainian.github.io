@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1067/1000
+- **Words:** ✅ 1122/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -15,14 +15,17 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 47.9% (target 40-55% (A2.2))
+- **Immersion:** 🇺🇦 50.9% (target 50-65% (A2.2))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 259 | Included in Core |
-| **Presentation** | ✅ | 242 | Included in Core |
+| **Presentation** | ✅ | 297 | Included in Core |
 | **Нюанси вживання сполучників (Nuances of Usage)** | ✅ | 136 | Included in Core |
 | **Практика** | ⚪️ | 100 | Skipped |
 | **Діалоги: Логіка в розмові** | ✅ | 173 | Included in Core |

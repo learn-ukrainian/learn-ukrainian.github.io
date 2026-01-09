@@ -1,9 +1,9 @@
 # Audit Report: 25-checkpoint-aspect-comparison.md
-**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** Review | **Target:** 1000
+**Phase:** A2.2 | **Level:** A2 | **Pedagogy:** Review | **Target:** 800
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): давно, негайно, тоді, колись, но...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (17 words): тоді, одного, колись, відразу, недавно...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,12 +12,12 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1417/1000
+- **Words:** ✅ 1417/800
 - **Activities:** ✅ 10/10
-- **Density:** ✅ All > 12
+- **Density:** ✅ All > 10
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/4
+- **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/1
 - **Structure:** ✅ Valid Structure
@@ -26,6 +26,9 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 41.6% (checkpoint - no gate)
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

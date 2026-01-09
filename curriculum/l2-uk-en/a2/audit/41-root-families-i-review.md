@@ -3,24 +3,18 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, доконаний, місцевий, вид
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, доконаний, місцевий, дієслово, вид
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): мовчати, слухач, погляд, послух, мовець...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): обдумати, побачення, огляд, мовчання, роздуми...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' per template 'a2-module-template'
-  - FIX: Add '## Presentation' section as specified in docs/l2-uk-en/templates/a2-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
-  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
-
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1218/1000
+- **Words:** ✅ 1633/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -32,13 +26,17 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 55.8% (target 50-60% (A2.3))
+- **Immersion:** 🇺🇦 66.4% (target 65-75% (A2.3))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 72 | Included in Core |
+| **Presentation** | ✅ | 175 | Included in Core |
 | **Родина 1: Мандрівники (-ХІД-)** | ⚪️ | 9 | Skipped |
 | **Родина 2: Письменники (-ПИС-)** | ⚪️ | 11 | Skipped |
 | **Родина 3: Сприйняття (-ЧИТ- | -БАЧ-)** | ⚪️ | 7 | Skipped |
@@ -54,5 +52,6 @@
 | **Діалог: Контракт** | ✅ | 38 | Included in Core |
 | **Діалог: Питаємо дорогу** | ✅ | 58 | Included in Core |
 | **Діалог: Відгук про фільм** | ✅ | 126 | Included in Core |
+| **Практика** | ⚪️ | 240 | Skipped |
 | **Підсумок** | ✅ | 49 | Included in Core |
 | **Need More Practice?** | ⚪️ | 30 | Skipped |

@@ -1,14 +1,14 @@
 # Audit Report: 11-checkpoint-cases.md
-**Phase:** A2.1 | **Level:** A2 | **Pedagogy:** Review | **Target:** 1000
+**Phase:** A2.1 | **Level:** A2 | **Pedagogy:** Review | **Target:** 800
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1127/1000
+- **Words:** ✅ 1127/800
 - **Activities:** ✅ 12/10
-- **Density:** ✅ All > 12
+- **Density:** ✅ All > 10
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/4
+- **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
@@ -17,6 +17,9 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 33.8% (checkpoint - no gate)
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

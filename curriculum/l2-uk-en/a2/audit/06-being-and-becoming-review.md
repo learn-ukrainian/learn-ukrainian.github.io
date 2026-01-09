@@ -3,20 +3,16 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): секретар, працювати, вважатися, ставати, здаватися...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): економіст, працювати, водій, ставати, менеджер...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
-
-## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1416/1000
+- **Words:** ✅ 1596/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -28,14 +24,17 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 38.8% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 45.0% (target 40-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 130 | Included in Core |
-| **Presentation** | ✅ | 0 | Included in Core |
+| **Presentation** | ✅ | 180 | Included in Core |
 | **Practice** | ⚪️ | 175 | Skipped |
 | **Бути + Орудний відмінок** | ⚪️ | 28 | Skipped |
 | **Минулий час: був/була/було/були + Орудний відмінок** | ⚪️ | 50 | Skipped |
