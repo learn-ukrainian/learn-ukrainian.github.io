@@ -2,6 +2,12 @@
 
 Cross-agent grammar validation for Ukrainian curriculum content.
 
+> **Complete workflow integration:** See **`docs/B1-PLUS-MODULE-WORKFLOW.md`** - Grammar Validation section for:
+> - When to use grammar validation (recommended for all B1+ modules)
+> - Integration with 4-stage module creation pipeline
+> - Automated vs manual validation options
+> - How to fix grammar violations
+
 ## Usage
 
 ```

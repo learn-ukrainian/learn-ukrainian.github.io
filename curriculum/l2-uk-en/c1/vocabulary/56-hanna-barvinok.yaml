@@ -102,3 +102,28 @@ items:
     translation: contribution
     pos: noun
     gender: m
+  - lemma: фемінізм
+    ipa: /fɛmiˈnizm/
+    translation: feminism
+    pos: noun
+    gender: m
+  - lemma: психологізм
+    ipa: /psɪxɔlɔˈɦizm/
+    translation: psychologism
+    pos: noun
+    gender: m
+  - lemma: жертовність
+    ipa: /ʒɛrˈtɔvnistʲ/
+    translation: self-sacrifice
+    pos: noun
+    gender: f
+  - lemma: муза
+    ipa: /ˈmuzɑ/
+    translation: muse
+    pos: noun
+    gender: f
+  - lemma: патріархат
+    ipa: /pɑtrijɑrˈxɑt/
+    translation: patriarchy
+    pos: noun
+    gender: m

@@ -29,9 +29,10 @@ A2 is the "Bridge" level where learners are no longer beginners but not yet inde
 
 | Phase | Modules | Immersion Target |
 | ----- | ------- | ---------------- |
-| A2.1  | 01-20   | 40-45%           |
-| A2.2  | 21-40   | 45-50%           |
-| A2.3  | 41-50   | 50%+ (Pre-B1)    |
+| A2.1  | 01-15   | 40-50%           |
+| A2.2  | 16-35   | 50-65%           |
+| A2.3  | 36-44   | 65-75%           |
+| A2.5  | 45-58   | 75-80% (Pre-B1)  |
 
 **Key Constraint:** A2 modules strictly target **~25 new words per module** (1,250 total for level) to prevent cognitive overload while grappling with the 7-case system.
 

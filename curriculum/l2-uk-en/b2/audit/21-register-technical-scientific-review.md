@@ -12,112 +12,104 @@
 - ❌ Line 271: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q1 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q2 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q3 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q4 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q5 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q6 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q7 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q8 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q9 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q10 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q11 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q12 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q13 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q14 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q15 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q16 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 1 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 2 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 3 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 4 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 5 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 6 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 7 has 6 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 8 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 9 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 10 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 11 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 12 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 13 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 14 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 15 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 16 has 6 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q1 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q2 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q3 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q4 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q5 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q6 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q7 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q8 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q9 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q10 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q11 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q12 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q13 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q14 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q15 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q16 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q1 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q2 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q3 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q4 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q5 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q6 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q7 prompt length 8 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q9 prompt length 5 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q10 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q11 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q12 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q13 prompt length 5 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q14 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q15 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 1 has 5 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 2 has 4 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 3 has 4 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 4 has 5 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 5 has 4 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 6 has 5 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 7 has 6 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 8 has 4 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 9 has 5 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 10 has 5 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 11 has 5 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 12 has 5 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 13 has 5 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 14 has 4 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 15 has 4 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть технічні інструкції' item 16 has 6 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q1 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q3 prompt length 8 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q4 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q5 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q6 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q7 prompt length 5 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q9 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q10 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q11 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q12 prompt length 8 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q13 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q14 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q15 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q16 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: grammar) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): обслуговування, захист, система, характеристика, ремонт...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): програма, пристрій, прилад, ремонт, помилка...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 70/100)
 
 - Revision recommended (severity 70/100)
-- 50 violations (severe - consider revision)
+- 46 violations (severe - consider revision)
 - 7 format errors (many)
 
 ## Gates
@@ -131,7 +123,7 @@
 - **Vocab:** ✅ 167/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ❌ 7 Format Errors
-- **Pedagogy:** ❌ 49 violations
+- **Pedagogy:** ❌ 45 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 98-100% (grammar))
 - **Richness:** ✅ 99% (grammar)

@@ -80,6 +80,11 @@ items:
   ipa: ˈmʲirʲɐte
   translation: to measure/try on (imp)
   pos: verb
+- lemma: місцевий
+  ipa: mʲisˈt͡sɛvɪj
+  translation: locative (case)/local
+  pos: adj
+  gender: m
 - lemma: одержувач
   ipa: oˈdɛrʒuʋɐt͡ʃ
   translation: recipient

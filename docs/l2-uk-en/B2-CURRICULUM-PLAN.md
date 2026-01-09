@@ -34,6 +34,24 @@
 
 ---
 
+## Vocabulary Approach (B1+)
+
+**From B1 onwards, vocabulary is not prescribed in this plan.** Instead, vocabulary emerges naturally from the module's thematic content and is validated against:
+
+- **Richness targets:** 30+ unique words per module (enforced by audit)
+- **Integration requirements:** 80% used in activities, 50% in lesson text (enforced by audit)
+- **Register appropriateness:** Vocabulary complexity matches B2 proficiency level
+
+The "Content Guidance" sections below provide **thematic direction** and **pop culture anchors** to guide vocabulary selection, but builders have flexibility to choose words that best serve the pedagogical goals.
+
+**Why this approach?**
+- Content-driven vocabulary is more authentic and contextual
+- Historical/cultural modules require domain-specific terminology
+- Pop culture references evolve and need flexibility
+- Quality is enforced through metrics, not prescriptive lists
+
+---
+
 ### Full Immersion Strategy (B2 Specific)
 
 **Target Immersion:** 100% Ukrainian
@@ -358,8 +376,12 @@ The B2 curriculum bridges "competence" and "fluency". It shifts focus from *lear
 - -ся: Process, scientific
 - 3rd pl: Colloquial, everyday
 
-**Vocabulary (25 words):**
-пасивний стан, активний стан, дійсний, пасивний, дієприкметник, форма, конструкція, агент, виконавець, дія, об'єкт, суб'єкт, трансформація, еквівалент, функція, стиль, реєстр, офіційний, розмовний, науковий, художній, книжний, усний, письмовий, нейтральний
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Match-up: Sentence → passive type
@@ -387,8 +409,12 @@ Participles agree with noun in gender, number, case:
 - Книга була написана. (The book was written.)
 - Лист буде написаний. (The letter will be written.)
 
-**Vocabulary (25 words):**
-написаний, прочитаний, зроблений, закритий, відкритий, побудований, створений, виконаний, завершений, розв'язаний, перекладений, опублікований, надрукований, виданий, підготовлений, організований, призначений, запланований, затверджений, прийнятий, підписаний, отриманий, відправлений, доставлений, встановлений
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Transform: Active → Past passive participle
@@ -417,8 +443,12 @@ Participles agree with noun in gender, number, case:
 - Рішення прийнято. (The decision has been made.)
 - Роботу завершено. (The work has been completed.)
 
-**Vocabulary (25 words):**
-оголошено, вирішено, прийнято, затверджено, підписано, опубліковано, встановлено, визначено, забезпечено, виконано, завершено, розпочато, продовжено, припинено, скасовано, змінено, доповнено, виправлено, схвалено, відхилено, направлено, передано, отримано, зареєстровано, зафіксовано
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Transform: Participle → -но/-то form
@@ -445,8 +475,12 @@ Participles agree with noun in gender, number, case:
 - Ця проблема вивчається науковцями. (This problem is being studied by scientists.)
 - Закон застосовується до всіх громадян. (The law applies to all citizens.)
 
-**Vocabulary (25 words):**
-будуватися, створюватися, виконуватися, проводитися, вивчатися, досліджуватися, розглядатися, обговорюватися, вирішуватися, застосовуватися, використовуватися, виробляться, продаватися, купуватися, публікуватися, видаватися, друкуватися, транслюватися, передаватися, зберігатися, змінюватися, розвиватися, покращуватися, погіршуватися, підтримуватися
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Transform: Active → -ся passive
@@ -473,8 +507,12 @@ Participles agree with noun in gender, number, case:
 - По телефону нам повідомили новину. (We were informed of the news by phone.)
 - Йому пообіцяли підвищення. (He was promised a promotion.)
 
-**Vocabulary (25 words):**
-сказали, запитали, відповіли, повідомили, пояснили, показали, дали, принесли, подзвонили, написали, порадили, запропонували, попросили, наказали, заборонили, дозволили, пообіцяли, надіслали, вручили, призначили, обрали, запросили, прийняли, відпустили, звільнили
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Transform: Formal passive → colloquial
@@ -500,8 +538,12 @@ Participles agree with noun in gender, number, case:
 3. Academic essay → -ний/-тий or -ся
 4. Official announcement → -но/-то
 
-**Vocabulary (20 words):**
-контекст, ситуація, доречність, відповідність, вибір, рішення, стиль, тон, адресат, мета, ефект, враження, формальність, неформальність, нейтральність, офіційність, книжність, розмовність, усність, письменність
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Rewrite: Same content in 4 passive forms
@@ -528,8 +570,12 @@ Participles agree with noun in gender, number, case:
 - працюючий чоловік = чоловік, який працює (a working man)
 - читаюча жінка = жінка, яка читає (a reading woman)
 
-**Vocabulary (25 words):**
-читаючий, пишучий, працюючий, говорячий, слухаючий, дивлячийся, йдучий, їдучий, сидячий, стоячий, лежачий, біжучий, летючий, пливучий, рухомий, діючий, існуючий, живучий, зростаючий, падаючий, зникаючий, з'являючийся, змінюючийся, наростаючий, спадаючий
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Transform: Participle → relative clause
@@ -567,8 +613,12 @@ Participles agree with noun in gender, number, case:
 
 > **Note:** More literary/formal than compound future. Common in written Ukrainian.
 
-**Vocabulary (20 words):**
-колишній, минулий, майбутній, теперішній, давній, недавній, попередній, наступний, останній, перший, новоприбулий, новопризначений, новообраний, новостворений, вищезгаданий, нижчепідписаний, так званий, добре відомий, широко вживаний, мало досліджений
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Identify: Spot participles in academic text
@@ -596,8 +646,12 @@ Participles agree with noun in gender, number, case:
 - Literary style
 - Fixed expressions: діюча особа, чинний закон
 
-**Vocabulary (20 words):**
-еквівалент, заміна, трансформація, стилістичний, нейтральний, книжний, розмовний, вибір, перевага, частотність, природність, штучність, архаїчність, сучасність, норма, відхилення, русизм, українізм, автентичність, правильність
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Rewrite: Participles → relative clauses (and vice versa)
@@ -642,8 +696,12 @@ Participles agree with noun in gender, number, case:
 - Він сказав, що книга, яку вона читала, була цікавою.
 - Якщо ви хочете, щоб я прийшов, скажіть мені заздалегідь.
 
-**Vocabulary (25 words):**
-речення, головне, підрядне, сурядне, зв'язок, сполучник, сполучне слово, кома, крапка з комою, двокрапка, розділовий знак, пунктуація, вставне, вставлене, означальне, з'ясувальне, обставинне, причинове, умовне, часове, допустове, наслідкове, цільове, порівняльне, місця
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Diagram: Parse complex sentence structure
@@ -687,8 +745,12 @@ Participles agree with noun in gender, number, case:
 - між іншим (incidentally)
 - власне кажучи (strictly speaking)
 
-**Vocabulary (30 words):**
-безумовно, безперечно, звичайно, справді, очевидно, зрозуміло, можливо, мабуть, здається, напевно, імовірно, на жаль, на щастя, на диво, як відомо, як кажуть, як правило, за даними, на думку, по-перше, по-друге, нарешті, отже, таким чином, до речі, між іншим, власне кажучи, іншими словами, одним словом, у будь-якому разі
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Insert: Add parentheticals to neutral text
@@ -715,8 +777,12 @@ Participles agree with noun in gender, number, case:
 - Fronting adverb: Завтра ми поїдемо. (TOMORROW we'll go.)
 - Verb-initial: Сказав він це голосно. (He said this loudly.)
 
-**Vocabulary (20 words):**
-порядок слів, інверсія, емфаза, наголос, акцент, тема, рема, відоме, нове, виділення, підкреслення, контраст, протиставлення, логічний, стилістичний, нейтральний, маркований, експресивний, емоційний, риторичний
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Reorder: Neutral → emphatic word order
@@ -752,8 +818,12 @@ Participles agree with noun in gender, number, case:
 - попри те що (in spite of the fact that)
 - дарма що (even though)
 
-**Vocabulary (30 words):**
-проте, втім, зате, однак, натомість, навпаки, причому, до того ж, крім того, тим більше, тим паче, тому, отже, відтак, таким чином, внаслідок, унаслідок, хоча, хоч, незважаючи, попри, дарма що, якщо, якби, щоб, аби, оскільки, позаяк, через те що, завдяки тому що
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Fill gaps: Insert appropriate connector
@@ -787,8 +857,12 @@ Participles agree with noun in gender, number, case:
    - Everyday speech
    - Informal, spontaneous
 
-**Vocabulary (25 words):**
-стиль, функціональний, офіційно-діловий, науковий, публіцистичний, художній, розмовний, формальний, неформальний, нейтральний, книжний, усний, письмовий, термін, кліше, штамп, експресія, образність, точність, лаконічність, емоційність, об'єктивність, суб'єктивність, стандартність, індивідуальність
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Match: Text excerpt → functional style
@@ -815,8 +889,12 @@ Participles agree with noun in gender, number, case:
 | фото | фотографія |
 | телек | телевізор |
 
-**Vocabulary (25 words):**
-звертання, ти, ви, пан, пані, шановний, вельмишановний, ввічливий, неввічливий, офіційний, неофіційний, дружній, формальний, етикет, норма, тон, регістр, субординація, рівність, повага, фамільярність, дистанція, близькість, ввічливість, чемність
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Transform: Informal dialogue → formal
@@ -840,8 +918,12 @@ Participles agree with noun in gender, number, case:
 - Заздалегідь вдячний... (Thank you in advance...)
 - З повагою... (Respectfully yours...)
 
-**Vocabulary (30 words):**
-компанія, підприємство, фірма, корпорація, директор, менеджер, керівник, колега, партнер, клієнт, замовник, контракт, угода, договір, переговори, нарада, презентація, звіт, пропозиція, умови, терміни, вимоги, зобов'язання, відповідальність, співпраця, прибуток, збиток, інвестиція, бюджет, стратегія
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Write: Business email with proper register
@@ -871,8 +953,12 @@ Participles agree with noun in gender, number, case:
 - На нашу думку... (In our opinion...)
 - Таким чином, можна зробити висновок... (Thus, we can conclude...)
 
-**Vocabulary (30 words):**
-дослідження, стаття, монографія, дисертація, теза, гіпотеза, теорія, концепція, методологія, аналіз, синтез, порівняння, класифікація, висновок, аргумент, доказ, приклад, посилання, цитата, джерело, бібліографія, анотація, резюме, ключові слова, актуальність, мета, завдання, об'єкт, предмет, результат
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Write: Academic paragraph with hedging
@@ -909,8 +995,12 @@ Participles agree with noun in gender, number, case:
 - Public address: Громадяни України! Шановне товариство!
 - Poetic/elevated: О зоре, прекрасна і неповторна
 
-**Vocabulary (30 words):**
-закон, постанова, указ, розпорядження, наказ, заява, скарга, клопотання, звернення, протокол, акт, довідка, виписка, доручення, довіреність, ліцензія, дозвіл, сертифікат, свідоцтво, посвідчення, підпис, печатка, штамп, реєстрація, затвердження, погодження, виконання, контроль, відповідальність, порушення
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Fill in: Official document templates
@@ -940,8 +1030,12 @@ Participles agree with noun in gender, number, case:
 - Вам потрібно здати аналізи. (You need to take tests.)
 - Приймайте по одній таблетці тричі на день. (Take one pill three times a day.)
 
-**Vocabulary (30 words):**
-лікар, пацієнт, медсестра, поліклініка, лікарня, діагноз, симптом, скарга, огляд, аналіз, рецепт, ліки, таблетка, укол, процедура, операція, лікування, одужання, біль, температура, тиск, кашель, нежить, алергія, інфекція, запалення, хронічний, гострий, профілактика, імунітет
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Role-play: Doctor-patient dialogue
@@ -965,8 +1059,12 @@ Participles agree with noun in gender, number, case:
 - Passive constructions
 - Numbered procedures
 
-**Vocabulary (30 words):**
-технологія, система, пристрій, механізм, прилад, обладнання, програма, алгоритм, функція, параметр, характеристика, специфікація, інструкція, керівництво, налаштування, встановлення, експлуатація, технічне обслуговування, ремонт, несправність, помилка, збій, відмова, безпека, захист, контроль, вимірювання, калібрування, тестування, сертифікація
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Read: Technical manual excerpt
@@ -999,8 +1097,12 @@ Participles agree with noun in gender, number, case:
 - Риторичні запитання: І хто б міг подумати?
 - Повтор: Сумно мені, сумно...
 
-**Vocabulary (30 words):**
-автор, письменник, поет, твір, роман, повість, оповідання, вірш, поема, драма, сюжет, герой, персонаж, образ, тема, ідея, стиль, метафора, порівняння, епітет, символ, алегорія, гіпербола, іронія, сатира, ліризм, драматизм, конфлікт, кульмінація, розв'язка
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Analyze: Literary devices in excerpt
@@ -1028,8 +1130,12 @@ Participles agree with noun in gender, number, case:
 - Президент підписав закон (President signs law)
 - Ціни зростають (Prices rising)
 
-**Vocabulary (30 words):**
-новина, подія, репортаж, інтерв'ю, коментар, редакція, кореспондент, журналіст, оглядач, експерт, джерело, факт, думка, позиція, заява, спростування, резонанс, скандал, сенсація, ексклюзив, прес-реліз, конференція, брифінг, трансляція, ефір, аудиторія, рейтинг, об'єктивність, упередженість, маніпуляція
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Write: News headline and lead
@@ -1052,8 +1158,12 @@ Participles agree with noun in gender, number, case:
 - бо - cause: Не йди, бо впадеш. (Don't go, you'll fall.)
 - таки - indeed: Я таки прийшов. (I did come.)
 
-**Vocabulary (25 words):**
-привіт, бувай, як справи, нормально, класно, круто, фігня, прикольно, кльово, жесть, капець, офігенно, зашибісь, чувак, тіпа, короче, типу, ну, от, та, ж, бо, таки, ой, ого
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Transform: Formal → colloquial
@@ -1077,8 +1187,12 @@ Participles agree with noun in gender, number, case:
    - Scientific report
    - Legal statement
 
-**Vocabulary (15 words):**
-адаптація, переформулювання, парафраз, варіант, версія, трансформація, переклад, стиль, регістр, контекст, аудиторія, мета, ефект, доречність, гнучкість
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Transform: Same information in 3 registers
@@ -1101,8 +1215,14 @@ Participles agree with noun in gender, number, case:
 - коаліція, опозиція, фракція
 - законопроект, ухвалення, вето
 
-**Vocabulary (35 words):**
-держава, уряд, парламент, Верховна Рада, президент, прем'єр-міністр, міністр, депутат, посол, дипломат, вибори, голосування, референдум, кандидат, партія, коаліція, опозиція, фракція, закон, конституція, указ, постанова, реформа, політика, демократія, права людини, свобода слова, корупція, санкції, дипломатія, переговори, угода, криза, конфлікт, війна
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
+**Key themes/places:** Верховна Рада
+
 
 **Signature Activity Concepts:**
 1. Read: Political news article
@@ -1124,8 +1244,12 @@ Participles agree with noun in gender, number, case:
 - слухання, засідання, вердикт
 - свідок, доказ, алібі
 
-**Vocabulary (35 words):**
-суд, суддя, адвокат, прокурор, підсудний, обвинувачений, потерпілий, свідок, присяжні, закон, право, обов'язок, злочин, правопорушення, покарання, вирок, вердикт, позов, скарга, апеляція, касація, слухання, засідання, доказ, алібі, презумпція невинуватості, конституційний, цивільний, кримінальний, адміністративний, штраф, ув'язнення, умовний термін, амністія, помилування
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Read: Court report
@@ -1147,8 +1271,14 @@ Participles agree with noun in gender, number, case:
 - дохід, витрати, прибуток
 - контракт, угода, партнерство
 
-**Vocabulary (35 words):**
-економіка, ринок, капітал, ВВП, інфляція, дефляція, безробіття, зайнятість, інвестиція, кредит, процент, борг, бюджет, дефіцит, профіцит, експорт, імпорт, торгівля, податок, мито, субсидія, дотація, банк, біржа, акція, облігація, валюта, курс, девальвація, приватизація, націоналізація, конкуренція, монополія, санкції, ембарго
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
+**Key themes/places:** ВВП
+
 
 **Signature Activity Concepts:**
 1. Read: Economic news
@@ -1172,8 +1302,12 @@ Participles agree with noun in gender, number, case:
 - Register-appropriate vocabulary
 - Complex sentence construction
 
-**Vocabulary (15 words):**
-інтеграція, застосування, практика, контекст, ситуація, вибір, рішення, стратегія, гнучкість, адаптація, компетентність, володіння, рівень, прогрес, оцінка
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Write: Academic paragraph with all B2.1 features
@@ -1255,8 +1389,12 @@ Participles agree with noun in gender, number, case:
 | лютий | лютого | у лютому |
 | березень | березня | у березні |
 
-**Vocabulary (25 words):**
-година, хвилина, секунда, день, тиждень, місяць, рік, дата, число, час, ранок, обід, вечір, ніч, опівночі, опівдні, розклад, календар, дедлайн, термін, свято, народження, річниця, ювілей, виникнення
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Quiz: Tell the time in Ukrainian
@@ -1285,8 +1423,12 @@ Participles agree with noun in gender, number, case:
 - За триста п'ятдесят гривень.
 - У двадцять п'ятому році.
 
-**Vocabulary (25 words):**
-число, цифра, кількість, сума, вартість, ціна, відсоток, мільйон, мільярд, половина, чверть, третина, статистика, дані, показник, рейтинг, позиція, місце, номер, порядковий, кількісний, складний, простий, парний, непарний
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Transform: Write numbers in words
@@ -1316,8 +1458,12 @@ Participles agree with noun in gender, number, case:
 - праця → працівник (employee)
 - учень → учeник → ученик (student)
 
-**Vocabulary (25 words):**
-бібліотекар, воротар, вівчар, каменяр, лікар, словник, довідник, викладач, читач, глядач, слухач, споживач, робітник, письменник, працівник, журналіст, спеціаліст, майстер, творець, митець, дослідник, науковець, мовець, носій, представник
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Match: Base word → person noun
@@ -1347,8 +1493,12 @@ Participles agree with noun in gender, number, case:
 - внести → внесок (contribution)
 - показати → показ (show)
 
-**Vocabulary (25 words):**
-публікування, забарвлення, готування, читання, писання, навчання, гордість, освіченість, гостинність, можливість, відповідальність, здатність, додаток, здобуток, внесок, показ, виріб, вимір, перекла́д, досягнення, утворення, походження, значення, пояснення, визначення
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Transform: Verb → abstract noun
@@ -1378,8 +1528,12 @@ Participles agree with noun in gender, number, case:
 - пекар → пекарня (bakery)
 - перукар → перукарня (hair salon)
 
-**Vocabulary (25 words):**
-читальня, спальня, їдальня, вітальня, пральня, кладовище, сховище, пасовище, звалище, городище, лікарня, друкарня, пекарня, перукарня, аптека, бібліотека, крамниця, майстерня, фабрика, завод, офіс, кабінет, кімната, приміщення, будівля
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Match: Activity → place name
@@ -1409,8 +1563,14 @@ Participles agree with noun in gender, number, case:
 - науково-публіцистичний (scientific-journalistic)
 - головнокомандувач → who is head commander
 
-**Vocabulary (25 words):**
-український, німецький, міський, сільський, національний, музикальний, центральний, професійний, синьо-жовтий, білолиций, темноволосий, добросердечний, різноманітний, самобутній, своєрідний, первісний, вторинний, основний, додатковий, головний, допоміжний, складний, простий, комплексний, системний
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
+**Key themes/places:** музикальний
+
 
 **Signature Activity Concepts:**
 1. Form: Create adjectives from nouns
@@ -1442,8 +1602,12 @@ Participles agree with noun in gender, number, case:
 - вітер → вітрище (strong wind)
 - великий → величезний (huge)
 
-**Vocabulary (25 words):**
-швидко, повільно, добре, погано, гарно, далеко, близько, тут, там, завжди, інколи, рідко, часто, по-українськи, по-новому, по-іншому, хлопчик, донечка, сонечко, ніженька, вітрище, холодище, морозище, словотвір, суфікс
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Form: Create adverbs from adjectives
@@ -1475,8 +1639,12 @@ Participles agree with noun in gender, number, case:
 - Ніч. Тиша. Зорі. (Night. Silence. Stars.)
 - Київ! Древня столиця! (Kyiv! Ancient capital!)
 
-**Vocabulary (25 words):**
-односкладний, двоскладний, означено, неозначено, безособовий, номінативний, підмет, присудок, головний, другорядний, члени, речення, структура, синтаксис, конструкція, вираз, форма, модель, зразок, вживання, стилістика, емоційність, лаконічність, імпресіонізм, мінімалізм
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Identify: Classify sentence types
@@ -1508,8 +1676,14 @@ Participles agree with noun in gender, number, case:
 - У вкладенні надсилаю... (I'm attaching...)
 - Заздалегідь вдячний/вдячна. (Thank you in advance.)
 
-**Vocabulary (25 words):**
-Господь, Бог, молитва, благословіння, воістину, амінь, храм, церква, священник, парафія, лист, звернення, адресат, відправник, привітання, прощання, підпис, конверт, марка, вкладення, повага, вдячність, побажання, щирість, формальність
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
+**Key themes/places:** Господь, Бог
+
 
 **Signature Activity Concepts:**
 1. Identify: Religious vs secular text
@@ -1544,8 +1718,12 @@ Participles agree with noun in gender, number, case:
 - Double negation: Ніхто нічого не знає. (Nobody knows anything.)
 - With prepositions: ні з ким (with nobody), ні до кого (to nobody)
 
-**Vocabulary (25 words):**
-хтось, щось, когось, чогось, хто-будь, що-небудь, якийсь, чийсь, ніхто, ніщо, нікого, нічого, ніякий, нічий, весь, все, всі, всього, кожний, кожен, сам, самого, інший, іншого, обидва
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Fill-in: Decline indefinite/negative pronouns
@@ -1600,8 +1778,12 @@ Participles agree with noun in gender, number, case:
 - "I used to do this repeatedly" (Iterative)
 - "I was in the middle of re-doing it" (Process)
 
-**Vocabulary (20 words):**
-перечитувати, дописувати, виходжувати, розрізати, допомагати, запізнюватися, вставати, засинати, згадувати, підписувати, відвідувати, заробляти, вигравати, програвати, пояснювати, змінювати, зупиняти, перевіряти, вибирати, починати
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Form: Derive Secondary Imperfective form
@@ -1623,8 +1805,12 @@ Participles agree with noun in gender, number, case:
 - Не можна + Imperfective (Forbidden by rule)
 - Не можна + Perfective (Impossible to do)
 
-**Vocabulary (20 words):**
-проходьте, сідайте, беріть, скажіть, зачекайте, не чіпайте, не забувайте, не хвилюйтеся, не спізніться, не впадіть, не розбийте, не запізніться, заборонено, дозволено, варто, треба, необхідно, доречно, неможливо, не можна
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Context: "You are a host" -> Choose Polite Imperfective
@@ -1650,8 +1836,12 @@ Participles agree with noun in gender, number, case:
 - Роби *так*, *як* знаєш.
 - Я куплю *те*, *що* мені подобається.
 
-**Vocabulary (20 words):**
-той, хто, те, що, такий, який, стільки, скільки, там, де, туди, куди, звідти, звідки, тоді, коли, доти, поки, тому, чому, настільки, як, так, ніби, неначе
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Combine: Join two sentences using correlatives
@@ -1673,8 +1863,12 @@ Participles agree with noun in gender, number, case:
 - Він пішов. Назавжди. (He left. Forever.)
 - Ми переможемо. Обов'язково. (We will win. Definitely.)
 
-**Vocabulary (15 words):**
-еліпсис, пропуск, парцеляція, пауза, наголос, інтонація, фрагмент, розрив, емоція, динаміка, лаконічність, підтекст, натяк, недомовленість, стиль
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Recover: Fill in the omitted words
@@ -1824,8 +2018,12 @@ Participles agree with noun in gender, number, case:
 7. Ламати голову. (Break head - think hard.)
 8. Втратити голову. (Lose head - lose composure.)
 
-**Vocabulary (25 words):**
-голова, оберт, язик, зуби, тримати, гудзик, набивати, ніс, клювати, довгий, гострий, ламати, втратити, обличчя, рот, губи, вуха, очі, брови, чоло, щоки, підборіддя, ідіома, значення, переносний
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Match: Head/face idiom → meaning
@@ -1847,8 +2045,12 @@ Participles agree with noun in gender, number, case:
 7. Легкий на ногу. (Light on foot - quick to go.)
 8. Підставити ногу. (Put leg under - trip someone up.)
 
-**Vocabulary (25 words):**
-рука, нога, майстер, плутатися, доходити, зв'язати, сісти, калюжа, стати, легкий, підставити, палець, долоня, лікоть, коліно, п'ята, крок, хода, дія, результат, здатність, перешкода, допомога, шкода
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Match: Hand/leg idiom → meaning
@@ -1870,8 +2072,12 @@ Participles agree with noun in gender, number, case:
 7. Споріднена душа. (Kindred soul - soulmate.)
 8. Всією душею. (With whole soul - wholeheartedly.)
 
-**Vocabulary (25 words):**
-камінь, душа, серце, крається, п'ята, брати, щирий, нараспашку, споріднений, весь, внутрішній, емоція, почуття, любов, страх, радість, біль, страждання, щирість, відкритість, глибина, інтимність, духовний, емоційний
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Match: Heart/soul idiom → emotion
@@ -1893,8 +2099,12 @@ Participles agree with noun in gender, number, case:
 7. Темна конячка. (Dark horse - unknown quantity.)
 8. Працювати як кінь. (Work like horse - work very hard.)
 
-**Vocabulary (25 words):**
-вовк, вити, промовка, собака, смерть, з'їсти, кінь, валятися, троянський, темний, конячка, працювати, тварина, символ, метафора, характер, поведінка, праця, небезпека, експерт, невідомий, приховуваний, сила, витривалість
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Match: Animal idiom → meaning
@@ -1916,8 +2126,12 @@ Participles agree with noun in gender, number, case:
 7. Муха не сідала. (Fly hasn't sat - brand new.)
 8. Робити з мухи слона. (Make elephant from fly - exaggerate.)
 
-**Vocabulary (25 words):**
-заєць, вбити, ворона, ловити, рахувати, риба, вода, м'ясо, мутний, муха, сідати, слон, робити, птах, комаха, літати, плавати, повзати, здобич, жертва, хижак, перебільшення, зменшення, порівняння
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Match: Bird/fish/insect idiom → meaning
@@ -1939,8 +2153,12 @@ Participles agree with noun in gender, number, case:
 7. Ґрунт іде з-під ніг. (Ground goes from under feet - lose foundation.)
 8. Вітер у голові. (Wind in head - frivolous.)
 
-**Vocabulary (25 words):**
-вода, чистий, вивести, лити, дивитися, вогонь, гратися, сухий, вийти, крізь, ґрунт, нога, вітер, голова, природа, стихія, елемент, символ, значення, небезпека, порятунок, випробування, легковажність, серйозність
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Match: Nature idiom → meaning
@@ -1968,8 +2186,12 @@ Participles agree with noun in gender, number, case:
 - горе (grief - intense)
 - туга (longing - nostalgic)
 
-**Vocabulary (30 words):**
-радість, щастя, задоволення, втіха, насолода, захоплення, ейфорія, екстаз, сум, журба, смуток, горе, туга, біль, страждання, депресія, меланхолія, розпач, гнів, лють, дратівливість, роздратування, злість, агресія, страх, жах, тривога, паніка, хвилювання, неспокій
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Nuance: Explain difference between synonyms
@@ -1997,8 +2219,12 @@ Participles agree with noun in gender, number, case:
 - мізерний (minuscule - negligible)
 - мініатюрний (miniature - cute small)
 
-**Vocabulary (30 words):**
-великий, здоровенний, велетенський, величезний, грандіозний, колосальний, гігантський, масивний, об'ємний, широкий, малий, маленький, крихітний, мізерний, мініатюрний, дрібний, невеликий, незначний, мікроскопічний, короткий, довгий, високий, низький, товстий, тонкий, широкий, вузький, глибокий, мілкий, порівняння
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Order: Rank synonyms by intensity
@@ -2026,8 +2252,12 @@ Participles agree with noun in gender, number, case:
 - нестися (dash - uncontrolled)
 - чимчикувати (scurry - quick small steps)
 
-**Vocabulary (30 words):**
-йти, ходити, крокувати, брести, тупати, шкутильгати, повзти, плисти, бігти, бігати, мчати, нестися, чимчикувати, летіти, стрибати, скакати, лізти, підніматися, спускатися, рухатися, пересуватися, швидко, повільно, обережно, впевнено, непевно, легко, важко, граціозно, незграбно
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Match: Movement verb → manner
@@ -2055,8 +2285,12 @@ Participles agree with noun in gender, number, case:
 - огидний (disgusting - strong)
 - жахливий (terrible - intense)
 
-**Vocabulary (30 words):**
-добрий, хороший, гарний, чудовий, прекрасний, відмінний, чудесний, розкішний, бездоганний, ідеальний, поганий, злий, кепський, огидний, жахливий, страшний, гіркий, негативний, шкідливий, небезпечний, якість, властивість, характеристика, оцінка, судження, критерій, стандарт, норма, виняток, ідеал
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Scale: Rank quality synonyms
@@ -2084,8 +2318,12 @@ Participles agree with noun in gender, number, case:
 - розпитувати (question - detailed)
 - допитувати (interrogate - intense)
 
-**Vocabulary (30 words):**
-казати, говорити, розповідати, повідомляти, заявляти, оголошувати, сповіщати, стверджувати, питати, запитувати, цікавитися, розпитувати, допитувати, випитувати, відповідати, реагувати, заперечувати, погоджуватися, сперечатися, обговорювати, пояснювати, уточнювати, комунікація, діалог, монолог, дискусія, дебати, переговори, бесіда, розмова
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Match: Communication verb → context
@@ -2113,8 +2351,12 @@ Participles agree with noun in gender, number, case:
 - чуйний (sensitive/responsive)
 - лагідний (gentle - soft)
 
-**Vocabulary (30 words):**
-розумний, мудрий, кмітливий, тямущий, геніальний, інтелектуальний, освічений, ерудований, добрий, щедрий, милосердний, чуйний, лагідний, ніжний, турботливий, уважний, злий, жорстокий, безсердечний, байдужий, егоїстичний, характер, особистість, риса, якість, чеснота, вада, темперамент, вдача, натура
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Profile: Describe person with character synonyms
@@ -2142,8 +2384,12 @@ Participles agree with noun in gender, number, case:
 - недавно (recently)
 - щойно (just now)
 
-**Vocabulary (30 words):**
-зараз, тепер, нині, сьогодні, наразі, нинішній, теперішній, сучасний, раніше, колись, давно, недавно, щойно, вчора, позавчора, завтра, післязавтра, потім, пізніше, згодом, час, період, епоха, ера, момент, мить, хвилина, година, доба, вічність
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Timeline: Place time synonyms on timeline
@@ -2169,8 +2415,12 @@ Participles agree with noun in gender, number, case:
 - туди (to there - direction)
 - звідти (from there - origin)
 
-**Vocabulary (25 words):**
-тут, тутечки, там, он там, туди, звідти, сюди, звідси, далеко, близько, поруч, поблизу, навколо, всюди, ніде, десь, кудись, звідкись, місце, простір, територія, район, зона, точка, локація
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Map: Use place synonyms to give directions
@@ -2198,8 +2448,12 @@ Participles agree with noun in gender, number, case:
 - кілька (several - countable)
 - декілька (a few - formal)
 
-**Vocabulary (25 words):**
-багато, чимало, безліч, купа, маса, сила-силенна, мало, небагато, трохи, кілька, декілька, жодний, ніякий, достатньо, недостатньо, занадто, надто, більше, менше, стільки, скільки, кількість, обсяг, міра, число
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Quantify: Express amounts with synonyms
@@ -2227,8 +2481,12 @@ Participles agree with noun in gender, number, case:
 - вихоплювати (snatch - sudden)
 - отримувати (receive - get given)
 
-**Vocabulary (30 words):**
-робити, чинити, діяти, виконувати, здійснювати, реалізовувати, втілювати, творити, брати, взяти, хапати, вихоплювати, отримувати, приймати, давати, віддавати, передавати, вручати, дія, вчинок, акція, активність, процес, результат, наслідок, ефект, вплив, зміна, перетворення, удосконалення
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Match: Action verb → context
@@ -2256,8 +2514,12 @@ Participles agree with noun in gender, number, case:
 - виявлятися (turn out to be)
 - справляти враження (make impression)
 
-**Vocabulary (25 words):**
-бути, існувати, перебувати, знаходитися, становити, являти собою, здаватися, виглядати, видаватися, виявлятися, справляти враження, стан, становище, ситуація, умови, обставини, контекст, середовище, оточення, буття, існування, присутність, наявність, відсутність, реальність
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Distinguish: State verbs nuances
@@ -2285,8 +2547,12 @@ Participles agree with noun in gender, number, case:
 - теорія (theory - systematic)
 - гіпотеза (hypothesis - tentative)
 
-**Vocabulary (30 words):**
-думка, ідея, погляд, точка зору, переконання, віра, позиція, ставлення, поняття, уявлення, концепція, теорія, гіпотеза, припущення, здогад, висновок, аргумент, доказ, підстава, причина, мотив, мета, ціль, намір, план, стратегія, тактика, підхід, метод, спосіб
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Distinguish: Abstract concept synonyms
@@ -2313,8 +2579,12 @@ Participles agree with noun in gender, number, case:
 - дарма що (even though)
 - хай (let/even if)
 
-**Vocabulary (25 words):**
-тому що, оскільки, бо, через те що, у зв'язку з тим що, завдяки тому що, внаслідок того що, з огляду на те що, хоча, хоч, незважаючи на, попри, дарма що, хай, нехай, причина, наслідок, зв'язок, відношення, залежність, умова, обставина, факт, аргумент, пояснення
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Connect: Join sentences with conjunctions
@@ -2343,8 +2613,12 @@ Participles agree with noun in gender, number, case:
 - за умови що (on condition that)
 - при умові що (provided that)
 
-**Vocabulary (25 words):**
-коли, щойно, після того як, перед тим як, поки, доки, відколи, відтоді як, в той час як, тим часом, якщо, якби, коли б, у випадку, за умови, при умові, раз, оскільки, аби, щоб, щоби, час, умова, можливість, ймовірність
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Combine: Sentences with temporal conjunctions
@@ -2362,8 +2636,12 @@ Participles agree with noun in gender, number, case:
 3. Select precise synonyms
 4. Build complex arguments with conjunctions
 
-**Vocabulary (15 words):**
-інтеграція, практика, застосування, комплексний, комбінований, різноманітний, багатий, виразний, природний, автентичний, рівень, прогрес, майстерність, вільне володіння, компетентність
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B2 level
+
 
 **Signature Activity Concepts:**
 1. Write: Essay using phraseology

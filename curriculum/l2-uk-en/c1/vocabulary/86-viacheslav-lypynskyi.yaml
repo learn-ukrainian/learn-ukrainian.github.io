@@ -1,0 +1,127 @@
+module: 86-viacheslav-lypynskyi
+level: C1
+version: '2.0'
+items:
+  - lemma: консерватизм
+    ipa: /kɔnsɛrvɑˈtɪzm/
+    translation: conservatism
+    pos: noun
+    gender: m
+  - lemma: монархізм
+    ipa: /mɔnɑrˈxʲizm/
+    translation: monarchism
+    pos: noun
+    gender: m
+  - lemma: державність
+    ipa: /dɛrˈʒɑwnʲistʲ/
+    translation: statehood
+    pos: noun
+    gender: f
+  - lemma: еліта
+    ipa: /ɛˈlʲitɑ/
+    translation: elite
+    pos: noun
+    gender: f
+  - lemma: патріотизм
+    ipa: /pɑtrʲiɔˈtɪzm/
+    translation: patriotism
+    pos: noun
+    gender: m
+  - lemma: хлібороб
+    ipa: /xlʲibɔˈrɔb/
+    translation: farmer/landowner
+    pos: noun
+    gender: m
+  - lemma: ідеолог
+    ipa: /idɛˈɔlɔɦ/
+    translation: ideologue
+    pos: noun
+    gender: m
+  - lemma: солідарність
+    ipa: /sɔlʲiˈdɑrnʲistʲ/
+    translation: solidarity
+    pos: noun
+    gender: f
+  - lemma: суверенітет
+    ipa: /suvɛrɛnʲiˈtɛt/
+    translation: sovereignty
+    pos: noun
+    gender: m
+  - lemma: спадковий
+    ipa: /spɑdˈkɔwɪj/
+    translation: hereditary
+    pos: adj
+  - lemma: шляхта
+    ipa: /ˈʃlʲɑxtɑ/
+    translation: nobility
+    pos: noun
+    gender: f
+  - lemma: класократія
+    ipa: /klɑsɔˈkrɑtʲijɑ/
+    translation: classocracy
+    pos: noun
+    gender: f
+  - lemma: легітимність
+    ipa: /lɛɦʲiˈtɪmnʲistʲ/
+    translation: legitimacy
+    pos: noun
+    gender: f
+  - lemma: тяглість
+    ipa: /ˈtʲɑɦlʲistʲ/
+    translation: continuity
+    pos: noun
+    gender: f
+  - lemma: самобутність
+    ipa: /sɑmɔˈbutʲnʲistʲ/
+    translation: originality/authenticity
+    pos: noun
+    gender: f
+  - lemma: ідентичність
+    ipa: /idɛnˈtɪt͡ʃnʲistʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: аристократія
+    ipa: /ɑrɪstɔˈkrɑtʲijɑ/
+    translation: aristocracy
+    pos: noun
+    gender: f
+  - lemma: занепад
+    ipa: /zɑˈnɛpɑd/
+    translation: decline/decay
+    pos: noun
+    gender: m
+  - lemma: відродження
+    ipa: /widˈrɔdʒenʲːɑ/
+    translation: revival/renaissance
+    pos: noun
+    gender: n
+  - lemma: націєтворення
+    ipa: /nɑt͡sʲijɛˈtwɔrɛnʲːɑ/
+    translation: nation-building
+    pos: noun
+    gender: n
+  - lemma: суспільство
+    ipa: /susˈpʲilʲstwɔ/
+    translation: society
+    pos: noun
+    gender: n
+  - lemma: верства
+    ipa: /ˈvɛrstwɑ/
+    translation: layer/stratum
+    pos: noun
+    gender: f
+  - lemma: органічний
+    ipa: /ɔrˈɦɑnʲit͡ʃnɪj/
+    translation: organic
+    pos: adj
+  - lemma: еміграція
+    ipa: /ɛmʲiˈɦrɑt͡sʲijɑ/
+    translation: emigration
+    pos: noun
+    gender: f
+  - lemma: трактат
+    ipa: /trɑkˈtɑt/
+    translation: treatise
+    pos: noun
+    gender: m

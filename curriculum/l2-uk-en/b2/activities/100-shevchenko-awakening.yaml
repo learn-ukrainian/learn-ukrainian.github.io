@@ -90,26 +90,26 @@ activities:
   title: Словниковий запас
   instruction: З'єднайте слово з його значенням.
   pairs:
-  - term: Кріпак
-    definition: Невільна людина, власність пана
-  - term: Викуп
-    definition: Плата за звільнення
-  - term: Заслання
-    definition: Примусове виселення як покарання
-  - term: Пророк
-    definition: Той, хто передбачає майбутнє нації
-  - term: Каземат
-    definition: Тюремна камера у фортеці
-  - term: Заповіт
-    definition: Остання воля людини
-  - term: Братство
-    definition: Таємна організація однодумців
-  - term: Академія
-    definition: Вищий навчальний заклад мистецтв
-  - term: Панщина
-    definition: Примусова праця селян
-  - term: Цензура
-    definition: Контроль влади над змістом книг
+  - left: Кріпак
+    right: Невільна людина, власність пана
+  - left: Викуп
+    right: Плата за звільнення
+  - left: Заслання
+    right: Примусове виселення як покарання
+  - left: Пророк
+    right: Той, хто передбачає майбутнє нації
+  - left: Каземат
+    right: Тюремна камера у фортеці
+  - left: Заповіт
+    right: Остання воля людини
+  - left: Братство
+    right: Таємна організація однодумців
+  - left: Академія
+    right: Вищий навчальний заклад мистецтв
+  - left: Панщина
+    right: Примусова праця селян
+  - left: Цензура
+    right: Контроль влади над змістом книг
 - type: cloze
   id: complete-sentences
   title: Заповніть пропуски
@@ -152,22 +152,22 @@ activities:
   title: Правда чи міф?
   instruction: Визначте, чи твердження правдиве.
   items:
-  - question: Шевченко все життя прожив в Україні.
-    answer: false
-  - question: Шевченко був професійним художником.
-    answer: true
-  - question: Шевченка викупили за гроші, зібрані з лотереї.
-    answer: true
-  - question: Шевченко був членом Кирило-Мефодіївського братства.
-    answer: true
-  - question: На засланні Шевченку дозволяли писати й малювати.
-    answer: false
-  - question: Шевченко помер у глибокій старості.
-    answer: false
-  - question: Шевченко писав вірші російською мовою.
-    answer: true
-  - question: Шевченко особисту знав Гоголя.
-    answer: true
+  - statement: Шевченко все життя прожив в Україні.
+    correct: false
+  - statement: Шевченко був професійним художником.
+    correct: true
+  - statement: Шевченка викупили за гроші, зібрані з лотереї.
+    correct: true
+  - statement: Шевченко був членом Кирило-Мефодіївського братства.
+    correct: true
+  - statement: На засланні Шевченку дозволяли писати й малювати.
+    correct: false
+  - statement: Шевченко помер у глибокій старості.
+    correct: false
+  - statement: Шевченко писав вірші російською мовою.
+    correct: true
+  - statement: Шевченко особисту знав Гоголя.
+    correct: true
 - type: cloze
   id: biography-cloze
   title: Біографія Шевченка
@@ -299,23 +299,77 @@ activities:
   instruction: Перекладіть слова англійською.
   items:
   - source: Кріпак
-    target: Serf
+    options:
+    - text: Serf
+      correct: true
+    - text: Slave
+      correct: false
+    - text: Servant
+      correct: false
   - source: Воля
-    target: Freedom
+    options:
+    - text: Freedom
+      correct: true
+    - text: Will
+      correct: false
+    - text: Liberty
+      correct: false
   - source: Заслання
-    target: Exile
+    options:
+    - text: Exile
+      correct: true
+    - text: Prison
+      correct: false
+    - text: Banishment
+      correct: false
   - source: Художник
-    target: Artist
+    options:
+    - text: Artist
+      correct: true
+    - text: Painter
+      correct: false
+    - text: Sculptor
+      correct: false
   - source: Спадщина
-    target: Legacy
+    options:
+    - text: Legacy
+      correct: true
+    - text: Heritage
+      correct: false
+    - text: Inheritance
+      correct: false
   - source: Боротьба
-    target: Struggle
+    options:
+    - text: Struggle
+      correct: true
+    - text: Fight
+      correct: false
+    - text: Battle
+      correct: false
   - source: Пророк
-    target: Prophet
+    options:
+    - text: Prophet
+      correct: true
+    - text: Preacher
+      correct: false
+    - text: Seer
+      correct: false
   - source: Геній
-    target: Genius
+    options:
+    - text: Genius
+      correct: true
+    - text: Talent
+      correct: false
+    - text: Prodigy
+      correct: false
   - source: Поет
-    target: Poet
+    options:
+    - text: Poet
+      correct: true
+    - text: Writer
+      correct: false
+    - text: Bard
+      correct: false
 - type: quiz
   id: zapovit-analysis
   title: Аналіз Заповіту
@@ -412,11 +466,19 @@ activities:
       correct: true
     - text: викупити
       correct: false
+    - text: викупом
+      correct: false
+    - text: викуповуючи
+      correct: false
   - question: Книга, _____ (написана/написав) поетом, стала відомою.
     options:
     - text: написана
       correct: true
     - text: написав
+      correct: false
+    - text: написання
+      correct: false
+    - text: пишучи
       correct: false
   - question: Він згадував Україну, _____ (перебуваючи/перебував) на засланні.
     options:
@@ -424,11 +486,19 @@ activities:
       correct: true
     - text: перебував
       correct: false
+    - text: перебування
+      correct: false
+    - text: перебуваний
+      correct: false
   - question: Вірші, _____ (створені/створив) у казематі, є шедеврами.
     options:
     - text: створені
       correct: true
     - text: створив
+      correct: false
+    - text: створення
+      correct: false
+    - text: творячи
       correct: false
   - question: Картина, _____ (намальована/намалював) олією, збереглася.
     options:
@@ -436,33 +506,41 @@ activities:
       correct: true
     - text: намалював
       correct: false
+    - text: малювання
+      correct: false
+    - text: малюючи
+      correct: false
   - question: Ми шануємо поета, _____ (читаючи/читав) його твори.
     options:
     - text: читаючи
       correct: true
     - text: читав
       correct: false
+    - text: прочитав
+      correct: false
+    - text: читаний
+      correct: false
 - type: match-up
   id: works-themes
   title: Твори і теми
   instruction: З'єднайте назву твору з його темою.
   pairs:
-  - term: Катерина
-    definition: Доля жінки-матері
-  - term: Кавказ
-    definition: Засудження імперської війни
-  - term: Сон
-    definition: Сатира на Російську імперію
-  - term: Заповіт
-    definition: Заклик до повстання
-  - term: І мертвим, і живим...
-    definition: Звернення до української еліти
-  - term: Наймичка
-    definition: Материнська самопожертва
-  - term: Гайдамаки
-    definition: Козацьке повстання
-  - term: Мені тринадцятий минало
-    definition: Спогади про дитинство
+  - left: Катерина
+    right: Доля жінки-матері
+  - left: Кавказ
+    right: Засудження імперської війни
+  - left: Сон
+    right: Сатира на Російську імперію
+  - left: Заповіт
+    right: Заклик до повстання
+  - left: І мертвим, і живим...
+    right: Звернення до української еліти
+  - left: Наймичка
+    right: Материнська самопожертва
+  - left: Гайдамаки
+    right: Козацьке повстання
+  - left: Мені тринадцятий минало
+    right: Спогади про дитинство
 - type: quiz
   id: final-reflection
   title: Рефлексія

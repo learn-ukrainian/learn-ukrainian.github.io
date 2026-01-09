@@ -1,0 +1,129 @@
+module: 85-oleksandr-bohomazov
+level: C1
+version: '1.0'
+items:
+  - lemma: спектралізм
+    ipa: /spɛktrɑˈlʲizm/
+    translation: spectralism
+    pos: noun
+    gender: m
+  - lemma: авангард
+    ipa: /ɑwɑnˈɦɑrd/
+    translation: avant-garde
+    pos: noun
+    gender: m
+  - lemma: кубофутуризм
+    ipa: /kubɔfutuˈrɪzm/
+    translation: cubo-futurism
+    pos: noun
+    gender: m
+  - lemma: живопис
+    ipa: /ˈʒɪwɔpɪs/
+    translation: painting (art)
+    pos: noun
+    gender: m
+  - lemma: теоретик
+    ipa: /tɛɔˈrɛtɪk/
+    translation: theorist
+    pos: noun
+    gender: m
+  - lemma: колір
+    ipa: /ˈkɔlʲir/
+    translation: color
+    pos: noun
+    gender: m
+  - lemma: ритм
+    ipa: /ˈrɪtm/
+    translation: rhythm
+    pos: noun
+    gender: m
+  - lemma: динаміка
+    ipa: /dɪˈnɑmʲikɑ/
+    translation: dynamics
+    pos: noun
+    gender: f
+  - lemma: полотно
+    ipa: /pɔlɔtˈnɔ/
+    translation: canvas
+    pos: noun
+    gender: n
+  - lemma: майстерність
+    ipa: /mɑjstɛrˈnʲistʲ/
+    translation: mastery
+    pos: noun
+    gender: f
+  - lemma: експеримент
+    ipa: /ɛkspɛrɪˈmɛnt/
+    translation: experiment
+    pos: noun
+    gender: m
+  - lemma: педагог
+    ipa: /pɛdɑˈɦɔɦ/
+    translation: pedagogue/teacher
+    pos: noun
+    gender: m
+  - lemma: інститут
+    ipa: /instɪˈtut/
+    translation: institute
+    pos: noun
+    gender: m
+  - lemma: геній
+    ipa: /ˈɦɛnʲij/
+    translation: genius
+    pos: noun
+    gender: m
+  - lemma: визнання
+    ipa: /vɪznɑˈnʲːɑ/
+    translation: recognition
+    pos: noun
+    gender: n
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɑ/
+    translation: legacy
+    pos: noun
+    gender: f
+  - lemma: пилярі
+    ipa: /pɪlʲɑˈrʲi/
+    translation: sawyers (painting)
+    pos: noun
+    gender: pl
+  - lemma: трактат
+    ipa: /trɑkˈtɑt/
+    translation: treatise
+    pos: noun
+    gender: m
+  - lemma: рух
+    ipa: /rux/
+    translation: movement
+    pos: noun
+    gender: m
+  - lemma: форма
+    ipa: /ˈfɔrmɑ/
+    translation: form/shape
+    pos: noun
+    gender: f
+  - lemma: аналіз
+    ipa: /ɑˈnɑlʲiz/
+    translation: analysis
+    pos: noun
+    gender: m
+  - lemma: мистецтво
+    ipa: /mɪsˈtɛt͡stwɔ/
+    translation: art
+    pos: noun
+    gender: n
+  - lemma: забуття
+    ipa: /zɑbʊˈtʲːɑ/
+    translation: oblivion
+    pos: noun
+    gender: n
+  - lemma: відродження
+    ipa: /vidˈrɔdʒenʲːɑ/
+    translation: revival/renaissance
+    pos: noun
+    gender: n
+  - lemma: пейзаж
+    ipa: /pɛjˈzɑʒ/
+    translation: landscape
+    pos: noun
+    gender: m

@@ -1,0 +1,24 @@
+module: c1-75
+title: 'Леся Українка: Дочка Прометея'
+subtitle: 'Lesya Ukrainka: Daughter of Prometheus'
+version: '1.0'
+phase: 'C1.3 Biographies'
+focus: biography
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - biography
+  - imperial
+  - literature
+  - drama
+  - feminism
+grammar:
+  - 'Historical narrative tenses'
+  - 'Quoted speech conventions'
+objectives:
+  - 'Learner understands Lesya Ukrainka’s contribution to Ukrainian literature and national identity'
+  - 'Learner can analyze literary and biographical narratives at C1 level'
+  - 'Learner masters literary and historical vocabulary'
+vocabulary_count: 25
+slug: 75-lesya-ukrainka

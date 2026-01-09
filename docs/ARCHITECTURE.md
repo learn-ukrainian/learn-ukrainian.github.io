@@ -345,12 +345,64 @@ See `docs/MARKDOWN-FORMAT.md` for the complete spec.
 | word | слово |
 ```
 
-## Content Validation
+## Quality Validation Systems
 
-Ukrainian language content is validated using LLM-based grammar checking with the Ukrainian Grammar Validator prompt.
+Learn Ukrainian uses a multi-layered quality validation approach with four complementary systems:
 
-### Trusted Ukrainian Sources
+### 1. Audit (Required)
 
+**Purpose**: Structural compliance, pedagogy, format, richness validation
+
+**Script**: `scripts/audit_module.py`
+
+**What it checks**:
+- Structure (required sections, headers, frontmatter)
+- Pedagogy (PPP/TTT compliance, activity sequencing)
+- Format (markdown syntax, activity YAML schemas)
+- Richness (examples count, engagement boxes, variety metrics)
+- Vocabulary (plan compliance, no duplicates across modules)
+- Immersion percentage (CEFR-appropriate UK/EN ratio)
+
+**Usage**:
+```bash
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/{level}/{num}-*.md
+```
+
+**Output**: Terminal report + optional markdown report in `audit/` directory
+
+**Gates**: Blocks pipeline generation if FAIL
+
+### 2. Grammar Validation (Recommended for B1+)
+
+**Purpose**: Ukrainian language correctness validation
+
+**Type**: LLM-based (Gemini API)
+
+**Skill**: `/grammar-validate` (Claude Code)
+
+**What it checks**:
+- **Russianisms**: кушать → їсти, кофе → кава, обязательно → обов'язково
+- **Calques**: робити сенс → мати сенс, мати місце → відбуватися
+- **Surzhyk**: Mixed Ukrainian-Russian forms
+- **Unnatural word order**: Influenced by English/Russian structure
+- **Case/gender/number agreement**: Morphological correctness
+- **CEFR appropriateness**: Complexity matches level
+
+**Usage**:
+```bash
+# Automated (requires GEMINI_API_KEY)
+.venv/bin/python scripts/audit_module.py {file} --validate-grammar
+
+# Manual (Claude Code)
+/grammar-validate
+[paste module content]
+```
+
+**Output**: JSON report with violations, severity, corrections
+
+**Gates**: Informational (doesn't block audit)
+
+**Trusted Sources**:
 | Source | Type | Use For |
 |--------|------|---------|
 | **Словник.UA** (slovnyk.ua) | Online dictionary | Standard spelling |
@@ -358,6 +410,109 @@ Ukrainian language content is validated using LLM-based grammar checking with th
 | **Антоненко-Давидович "Як ми говоримо"** | Style guide | Russianisms vs authentic |
 
 **NOT Trusted:** Google Translate, Russian-Ukrainian dictionaries
+
+### 3. Content Quality Review (Optional)
+
+**Purpose**: Pedagogical quality assessment
+
+**Type**: LLM-based (Gemini API)
+
+**Skill**: `/review-content` (Claude Code)
+
+**What it checks** (8 dimensions, 0-10 scale):
+1. **Pedagogical Coherence**: Objectives ↔ activities alignment, scaffolding
+2. **Example Quality**: Authenticity, cultural relevance, CEFR appropriateness
+3. **Engagement & Interest**: Boring vs interesting, repetitive vs varied
+4. **Cultural Context**: Ukrainian-specific vs generic, historical accuracy
+5. **Explanation Quality**: Clarity, visual aids, progressive disclosure
+6. **Narrative Flow**: Logical progression, transitions, cohesion
+7. **Vocabulary Usage**: Frequency, contextualization, reinforcement
+8. **Activity Quality**: Naturalness, difficulty, distractors, engagement, variety
+
+**Usage**:
+```bash
+# Automated (requires GEMINI_API_KEY + AUDIT_CONTENT_QUALITY=true)
+AUDIT_CONTENT_QUALITY=true .venv/bin/python scripts/audit_module.py {file}
+
+# Manual (Claude Code)
+/review-content
+[paste module content]
+```
+
+**Output**: Markdown report with scores (0-10) and recommendations
+
+**Gates**: Informational (doesn't block audit)
+
+**Documentation**: `docs/CONTENT-QUALITY-AUDIT.md`
+
+### 4. Activity Quality Validation (Optional)
+
+**Purpose**: Activity-specific quality assessment
+
+**Type**: Hybrid (deterministic + manual validation)
+
+**What it checks** (5 dimensions):
+- **Naturalness** (1-5): Robotic → Highly Natural
+- **Difficulty** (3-option): too_easy | appropriate | too_hard
+- **Distractor Quality** (1-5): Nonsense → Excellent
+- **Engagement** (1-5): Boring → Highly Engaging
+- **Variety** (0-100%): Mechanical pattern detection
+
+**CEFR Quality Gates**:
+| Level | Min Naturalness | Min Variety | Min Distractors | Max Inappropriate |
+|-------|-----------------|-------------|-----------------|-------------------|
+| B1 | 3.5 | 60% | 4.0 | ≤20% |
+| B2 | 4.0 | 65% | 4.2 | ≤15% |
+| C1 | 4.5 | 70% | 4.5 | ≤10% |
+| C2 | 4.8 | 75% | 5.0 | ≤5% |
+
+**Workflow**:
+```bash
+# 1. Generate queue with deterministic checks
+npm run quality:generate l2-uk-en b1 50
+
+# 2. Manual validation (fill in YAML fields)
+# Edit: curriculum/l2-uk-en/b1/audit/50-{slug}-quality-queue.yaml
+
+# 3. Finalize quality report
+npm run quality:finalize l2-uk-en b1 50
+```
+
+**Output**: Markdown report in `audit/` directory, shown in audit output
+
+**Gates**: Informational (doesn't block audit)
+
+**Documentation**: `docs/SCRIPTS.md` - Activity Quality Validation section
+
+### When to Use Which System
+
+| Stage | Audit | Grammar | Content Review | Activity Quality |
+|-------|-------|---------|----------------|------------------|
+| **After Stage 1 (Skeleton)** | ✅ Structure | ❌ No content | ❌ No content | ❌ No activities |
+| **After Stage 2 (Content)** | ✅ Full | ✅ Yes | ✅ Optional | ❌ No activities |
+| **After Stage 3 (Activities)** | ✅ Full | ✅ Yes | ✅ Optional | ✅ Optional |
+| **After Stage 4 (Review/Fix)** | ✅ Must PASS | ✅ Recommended | ✅ Recommended | ✅ High-stakes |
+| **Before Release** | ✅ Must PASS | ✅ Recommended | ✅ Recommended | ⚠️ C1/C2 only |
+
+### Complete B1+ Workflow
+
+For the complete end-to-end workflow including all validation systems:
+
+**👤 Human users:** **`docs/HUMAN-WORKFLOW-B1-PLUS.md`** - What commands YOU run
+
+**🤖 AI agents:** **`docs/B1-PLUS-MODULE-WORKFLOW.md`** - Comprehensive reference
+
+**Human guide** covers:
+- What commands you execute (copy-paste ready)
+- What Claude does automatically
+- Decision tree (when to run what)
+- Typical session workflow
+
+**AI guide** covers:
+- 4-stage module creation (skeleton → content → activities → review/fix)
+- All quality validation systems (audit, grammar, content, activity quality)
+- Pipeline generation (MDX + JSON)
+- Troubleshooting and checklists
 
 ## Generator Usage
 
@@ -507,6 +662,31 @@ CO outputs simple JSON. Vibe handles extraction:
 | `rawMarkdown` | Anything else needed |
 
 See `vibe/docs/CO-VIBE-INTEGRATION.md` for the full spec.
+
+## Related Documentation
+
+### Workflows & Guides
+- **`docs/B1-PLUS-MODULE-WORKFLOW.md`** - Complete B1+ module creation & validation workflow
+- **`docs/STAGED-MODULE-CREATION.md`** - 4-stage creation pipeline overview
+- **`docs/MODULE-AUDIT-GUIDE.md`** - Legacy audit guide (deprecated, use B1+ workflow)
+
+### Quality Validation
+- **`docs/CONTENT-QUALITY-AUDIT.md`** - Content quality review system (LLM-based)
+- **`docs/SCRIPTS.md`** - Complete scripts reference including activity quality validation
+- **`docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`** - Quality standards and targets
+
+### Markdown & Format
+- **`docs/MARKDOWN-FORMAT.md`** - Complete markdown syntax specification
+- **`docs/ACTIVITY-YAML-REFERENCE.md`** - Activity format reference for AI agents
+
+### Claude Code Extensions
+- **`claude_extensions/quick-ref/`** - Level-specific quick references (a1.md, b1.md, b2.md, c1.md, c2.md)
+- **`claude_extensions/stages/`** - Stage instruction documents
+- **`claude_extensions/commands/`** - Slash commands (/module, /module-stage-*, /review-content)
+- **`claude_extensions/skills/`** - Skills (grammar-check, vocab-enrichment, module architects)
+
+### Templates
+- **`docs/l2-uk-en/templates/`** - 26 authoritative module templates by level and type
 
 ## Version History
 

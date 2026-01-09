@@ -1,5 +1,5 @@
 # Audit Report: 129-pownomasshtabne-wtorhnessnia.md
-**Phase:** B2.3e | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Phase:** B2.3e | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
 **Overall Status:** ❌ FAIL
 
 ## LINT ERRORS
@@ -57,7 +57,7 @@
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1702/1400
+- **Words:** ❌ 1702/2000
 - **Activities:** ❌ 0/10
 - **Density:** ❌ 0 < 14
 - **Unique_types:** ❌ 0/4 types

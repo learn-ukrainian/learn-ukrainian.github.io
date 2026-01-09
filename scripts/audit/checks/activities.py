@@ -16,12 +16,13 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.append(str(SCRIPT_DIR))
 from yaml_activities import Activity
 
-def check_activity_complexity(content: str, level_code: str, module_num: int = 1, yaml_activities: list[Activity] | None = None) -> list[dict]:
+def check_activity_complexity(content: str, level_code: str, module_num: int = 1, yaml_activities: list[Activity] | None = None, module_focus: str | None = None) -> list[dict]:
     """
     Check if activities meet complexity requirements (word count, item count, structure).
     Strictly enforces rules from MODULE-RICHNESS-GUIDELINES-v2.md.
-    
+
     A1 M01-M05 Exception: Less strict rules for very early modules (alphabet phase).
+    Context-specific complexity: B2-history, B2-biography, B1-vocab, B1-cultural.
     """
     violations = []
 
@@ -54,9 +55,18 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
         # Skip checking unknown activity types
         if act_type not in ACTIVITY_COMPLEXITY:
             continue
-            
-        rules = ACTIVITY_COMPLEXITY[act_type].get(level_code).copy() if ACTIVITY_COMPLEXITY[act_type].get(level_code) else None
-        
+
+        # Context-specific complexity lookup (e.g., B2-history, B1-vocab)
+        context_key = f"{level_code}-{module_focus}" if module_focus else None
+        rules = None
+
+        # Try context-specific rules first (B2-history, B1-vocab, etc.)
+        if context_key and context_key in ACTIVITY_COMPLEXITY[act_type]:
+            rules = ACTIVITY_COMPLEXITY[act_type][context_key].copy()
+        # Fall back to standard level rules
+        elif level_code in ACTIVITY_COMPLEXITY[act_type]:
+            rules = ACTIVITY_COMPLEXITY[act_type][level_code].copy()
+
         # If no specific rules for this level (e.g. anagram in A2), restrictions check handles it
         if not rules:
             continue

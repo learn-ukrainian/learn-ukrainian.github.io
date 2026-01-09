@@ -1,5 +1,5 @@
 # Audit Report: 110-holodomor-mekhanizm.md
-**Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
@@ -18,7 +18,7 @@
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1792/1400
+- **Words:** ❌ 1792/2000
 - **Activities:** ❌ 0/10
 - **Density:** ❌ 0 < 14
 - **Unique_types:** ❌ 0/4 types

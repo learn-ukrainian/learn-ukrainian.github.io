@@ -1,0 +1,126 @@
+items:
+  - lemma: біохімія
+    ipa: /biɔˈximijɑ/
+    translation: biochemistry
+    pos: noun
+    gender: f
+  - lemma: науковець
+    ipa: /nɑˈukɔʋɛt͡sʲ/
+    translation: scientist
+    pos: noun
+    gender: m
+  - lemma: дослідження
+    ipa: /dɔˈslid͡ʒɛnʲːɑ/
+    translation: research/study
+    pos: noun
+    gender: n
+  - lemma: репресії
+    ipa: /rɛˈprɛsʲiji/
+    translation: repressions
+    pos: noun
+    gender: f-pl
+  - lemma: фізіологія
+    ipa: /fʲizʲiɔˈlɔɦijɑ/
+    translation: physiology
+    pos: noun
+    gender: f
+  - lemma: метаболізм
+    ipa: /mɛtɑbɔˈlʲizm/
+    translation: metabolism
+    pos: noun
+    gender: m
+  - lemma: вчена
+    ipa: /ˈwt͡ʃɛnɑ/
+    translation: female scientist
+    pos: noun
+    gender: f
+  - lemma: дисертація
+    ipa: /dɪsɛrˈtɑt͡sʲijɑ/
+    translation: dissertation/thesis
+    pos: noun
+    gender: f
+  - lemma: академія
+    ipa: /ɑkɑˈdɛmʲijɑ/
+    translation: academy
+    pos: noun
+    gender: f
+  - lemma: переслідування
+    ipa: /pɛrɛˈslʲidʊʋɑnʲːɑ/
+    translation: persecution
+    pos: noun
+    gender: n
+  - lemma: вигнання
+    ipa: /ʋɪˈɦnɑnʲːɑ/
+    translation: exile
+    pos: noun
+    gender: n
+  - lemma: спадщина
+    ipa: /spɑˈdʃt͡ʃɪnɑ/
+    translation: legacy/heritage
+    pos: noun
+    gender: f
+  - lemma: внесок
+    ipa: /ˈwnɛsɔk/
+    translation: contribution
+    pos: noun
+    gender: m
+  - lemma: лабораторія
+    ipa: /lɑbɔrɑˈtɔrijɑ/
+    translation: laboratory
+    pos: noun
+    gender: f
+  - lemma: клітина
+    ipa: /klʲiˈtɪnɑ/
+    translation: cell
+    pos: noun
+    gender: f
+  - lemma: організм
+    ipa: /ɔrɦɑˈnʲizm/
+    translation: organism
+    pos: noun
+    gender: m
+  - lemma: відкриття
+    ipa: /ʋʲidˈkrɪtʲːɑ/
+    translation: discovery
+    pos: noun
+    gender: n
+  - lemma: діяльність
+    ipa: /ˈdʲijɑlʲnʲisʲtʲ/
+    translation: activity/career
+    pos: noun
+    gender: f
+  - lemma: незламність
+    ipa: /nɛˈzlɑmnʲisʲtʲ/
+    translation: resilience/indomitability
+    pos: noun
+    gender: f
+  - lemma: доля
+    ipa: /ˈdɔlʲɑ/
+    translation: fate/destiny
+    pos: noun
+    gender: f
+  - lemma: публікація
+    ipa: /pʊblʲiˈkɑt͡sʲijɑ/
+    translation: publication
+    pos: noun
+    gender: f
+  - lemma: кафедра
+    ipa: /ˈkɑfɛdrɑ/
+    translation: department (university)
+    pos: noun
+    gender: f
+  - lemma: професорка
+    ipa: /prɔˈfɛsɔrkɑ/
+    translation: female professor
+    pos: noun
+    gender: f
+  - lemma: туберкульоз
+    ipa: /tʊbɛrkʊˈlʲɔz/
+    translation: tuberculosis
+    pos: noun
+    gender: m
+  - lemma: реабілітація
+    ipa: /rɛɑbʲilʲiˈtɑt͡sʲijɑ/
+    translation: rehabilitation
+    pos: noun
+    gender: f

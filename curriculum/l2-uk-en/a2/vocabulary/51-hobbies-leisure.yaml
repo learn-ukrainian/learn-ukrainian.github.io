@@ -36,6 +36,11 @@ items:
   translation: exhibition
   pos: noun
   gender: f
+- lemma: відмінок
+  ipa: vʲidˈmʲinok
+  translation: grammatical case
+  pos: noun
+  gender: m
 - lemma: відвідувати
   ipa: vidˈviduʋɐte
   translation: to visit (imp)
@@ -94,6 +99,11 @@ items:
   translation: stars (dat)
   pos: noun
   gender: f
+- lemma: знахідний
+  ipa: znɐˈxʲidnɪj
+  translation: accusative (case)
+  pos: adj
+  gender: m
 - lemma: караоке
   ipa: kɐrɐˈɔke
   translation: karaoke
@@ -113,6 +123,11 @@ items:
   translation: art
   pos: noun
   gender: n
+- lemma: місцевий
+  ipa: mʲisˈt͡sɛvɪj
+  translation: locative (case)/local
+  pos: adj
+  gender: m
 - lemma: монет
   ipa: moˈnɛt
   translation: coins (gen pl)

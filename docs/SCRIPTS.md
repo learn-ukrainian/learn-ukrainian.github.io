@@ -1,6 +1,13 @@
 # Scripts & Workflow Reference
 
-This document describes all scripts and the recommended workflow for module creation, review, and enrichment.
+This document describes all scripts and workflows for module creation, validation, and generation.
+
+> **🚀 For B1+ module creation (B1, B2, C1, C2):**
+>
+> - **👤 Human users:** See **`docs/HUMAN-WORKFLOW-B1-PLUS.md`** - Shows exactly what commands YOU run
+> - **🤖 AI agents:** See **`docs/B1-PLUS-MODULE-WORKFLOW.md`** - Comprehensive reference
+>
+> This document (SCRIPTS.md) is a **detailed reference** for individual scripts and commands.
 
 ---
 
@@ -75,9 +82,13 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 
 | Document | Purpose |
 |----------|---------|
-| `docs/l2-uk-en/claude-review-prompt.md` | **Review prompts for Claude** - Use these to fix audit issues |
+| **`docs/B1-PLUS-MODULE-WORKFLOW.md`** | **Complete B1+ workflow** - End-to-end guide for B1/B2/C1/C2 modules with all quality validation systems |
+| `docs/ARCHITECTURE.md` | System architecture and quality validation overview |
+| `docs/STAGED-MODULE-CREATION.md` | 4-stage creation pipeline overview |
+| `docs/l2-uk-en/claude-review-prompt.md` | Review prompts for Claude - Use these to fix audit issues |
 | `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` | Quality standards by level (consolidated) |
 | `docs/MARKDOWN-FORMAT.md` | Markdown syntax specification |
+| `docs/CONTENT-QUALITY-AUDIT.md` | Content quality review system (LLM-based) |
 
 ---
 
@@ -560,6 +571,159 @@ npx ts-node scripts/generate-exercises.ts 5            # Single module
 - **Type A (Easy):** match-up, true-false, group-sort
 - **Type B (Medium):** fill-in, quiz
 - **Type C (Hard):** unjumble, transform
+
+---
+
+## Activity Quality Validation
+
+**Purpose:** Optional manual validation workflow for B1+ activity quality using deterministic checks + human semantic assessment.
+
+> **For complete workflow integration**, see **`docs/B1-PLUS-MODULE-WORKFLOW.md`** - Activity Quality Validation section, which includes:
+> - When to use activity quality validation (recommended for high-stakes content: C1/C2, pre-publication)
+> - Step-by-step queue → validate → finalize workflow
+> - How to interpret CEFR gates and fix failed activities
+> - Integration with full module creation pipeline
+
+### Workflow Overview
+
+1. **Generate Queue:** Pre-populate deterministic quality checks for manual validation
+2. **Manual Validation:** Human reviewer fills in semantic quality scores
+3. **Finalize:** Evaluate CEFR-specific quality gates and generate report
+4. **Integrate:** Optional quality report shown in audit output (INFO gate)
+
+### Quality Dimensions (5-Dimension Model)
+
+| Dimension | Scale | Measures |
+|-----------|-------|----------|
+| **Naturalness** | 1-5 | Robotic → Unnatural → Acceptable → Natural → Highly Natural |
+| **Difficulty** | 3-option | too_easy \| appropriate \| too_hard |
+| **Distractor Quality** | 1-5 | Nonsense → Weak → Acceptable → Good → Excellent |
+| **Engagement** | 1-5 | Boring → Low → Neutral → Engaging → Highly Engaging |
+| **Variety** | 0-100% | Mechanical pattern detection score |
+
+### CEFR Quality Gates
+
+| Level | Min Naturalness | Max Difficulty Inappropriate | Min Engagement | Min Distractor Quality | Min Variety |
+|-------|----------------|------------------------------|----------------|------------------------|-------------|
+| A1, A2 | None | None | None | None | None |
+| B1 | 3.5 | ≤20% | 3.0 | 4.0 | 60% |
+| B2 | 4.0 | ≤15% | 3.5 | 4.2 | 65% |
+| C1 | 4.5 | ≤10% | 4.0 | 4.5 | 70% |
+| C2 | 4.8 | ≤5% | 4.5 | 5.0 | 75% |
+
+### Scripts
+
+#### generate_activity_quality_queue.py
+
+**Purpose:** Run deterministic quality checks and generate queue file for manual validation.
+
+```bash
+# Generate queue for specific module
+npm run quality:queue l2-uk-en b1 52
+
+# Or directly:
+.venv/bin/python scripts/audit/generate_activity_quality_queue.py l2-uk-en b1 52
+```
+
+**Output:** `curriculum/l2-uk-en/b1/queue/52-module-slug-quality.yaml`
+
+**Deterministic Checks Run:**
+- `analyze_sentence_variety()` - Pattern repetition detection
+- `estimate_vocabulary_difficulty()` - Word length heuristics per CEFR
+- `analyze_distractor_quality()` - Word class matching, plausibility
+- `check_natural_ukrainian_markers()` - Pronoun overuse, calques
+- `estimate_cognitive_load()` - Task complexity assessment
+
+**Queue File Structure:**
+```yaml
+module: 52-module-slug
+level: B1
+activities:
+  - activity_id: quiz-example
+    deterministic_checks:
+      variety_score: 85
+      vocabulary_difficulty: appropriate
+      cognitive_load: medium
+      naturalness_issues: []
+      distractor_quality_avg: 4.2
+    # Manual validation (empty, to be filled):
+    naturalness: null
+    difficulty: null
+    engagement: null
+    distractor_score: null
+    variety_score: null
+```
+
+#### finalize_activity_quality.py
+
+**Purpose:** Read completed queue file, evaluate quality gates, generate report.
+
+```bash
+# After manual validation completed
+npm run quality:finalize l2-uk-en b1 52
+
+# Or directly:
+.venv/bin/python scripts/audit/finalize_activity_quality.py l2-uk-en b1 52
+```
+
+**Output:** `curriculum/l2-uk-en/b1/audit/52-module-slug-quality.md`
+
+**Report Includes:**
+- Pass/Fail status against CEFR gates
+- Quality scores summary table
+- Difficulty breakdown (too easy/appropriate/too hard)
+- Failed gates details with recommendations
+- Incomplete validation warnings
+
+### Integration with Audit Pipeline
+
+Quality validation is **optional and informational** (does not block audit pass/fail).
+
+When quality report exists, audit output shows:
+```
+Activity_quality ⚠️ Quality gates: 1 failed (see report)
+Activity_quality ✅ Quality gates: All passed
+Activity_quality 📋 Quality validation available (optional)
+```
+
+### Manual Validation Workflow
+
+1. **Generate queue:**
+   ```bash
+   npm run quality:queue l2-uk-en b1 52
+   ```
+
+2. **Open queue file:**
+   ```bash
+   open curriculum/l2-uk-en/b1/queue/52-module-slug-quality.yaml
+   ```
+
+3. **Fill in manual scores for each activity:**
+   - `naturalness:` 1-5 (How natural does the Ukrainian sound?)
+   - `difficulty:` too_easy | appropriate | too_hard
+   - `engagement:` 1-5 (How engaging is the content?)
+   - `distractor_score:` 1-5 (How plausible are the wrong options?)
+   - `variety_score:` 1-5 (Manual assessment of variety)
+
+4. **Finalize and generate report:**
+   ```bash
+   npm run quality:finalize l2-uk-en b1 52
+   ```
+
+5. **Review report:**
+   ```bash
+   cat curriculum/l2-uk-en/b1/audit/52-module-slug-quality.md
+   ```
+
+6. **Fix issues if needed and regenerate activities**
+
+### Related Files
+
+- **`scripts/audit/checks/activity_quality.py`** - Deterministic quality check functions
+- **`scripts/audit/generate_activity_quality_queue.py`** - Queue generation
+- **`scripts/audit/finalize_activity_quality.py`** - Report generation
+- **`tests/test_activity_quality.py`** - Unit tests (36 tests, all passing)
+- **Issue #355** - Activity Quality Validation Expansion
 
 ---
 

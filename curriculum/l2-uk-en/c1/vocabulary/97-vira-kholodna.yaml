@@ -1,0 +1,125 @@
+module: 97-vira-kholodna
+level: C1
+version: '2.0'
+items:
+  - lemma: кінозірка
+    ipa: /k⁽ʲ⁾inɔˈz⁽ʲ⁾irkɐ/
+    translation: movie star
+    pos: noun
+    gender: f
+  - lemma: німе кіно
+    ipa: /n⁽ʲ⁾iˈmɛ k⁽ʲ⁾iˈnɔ/
+    translation: silent cinema
+    pos: noun
+    gender: n
+  - lemma: екран
+    ipa: /ɛˈkrɑn/
+    translation: screen
+    pos: noun
+    gender: m
+  - lemma: слава
+    ipa: /ˈslɑwɐ/
+    translation: fame/glory
+    pos: noun
+    gender: f
+  - lemma: трагедія
+    ipa: /trɐˈɦɛd⁽ʲ⁾ijɐ/
+    translation: tragedy
+    pos: noun
+    gender: f
+  - lemma: акторка
+    ipa: /ɐkˈtɔrkɐ/
+    translation: actress
+    pos: noun
+    gender: f
+  - lemma: роль
+    ipa: /rɔlʲ/
+    translation: role
+    pos: noun
+    gender: f
+  - lemma: зйомки
+    ipa: /ˈzjɔmkɪ/
+    translation: filming/shooting
+    pos: noun
+    gender: f
+    plural_only: true
+  - lemma: режисер
+    ipa: /rɛʒɪˈsɛr/
+    translation: director
+    pos: noun
+    gender: m
+  - lemma: похорон
+    ipa: /ˈpɔxɔrɔn/
+    translation: funeral
+    pos: noun
+    gender: m
+  - lemma: натовп
+    ipa: /ˈnɑtɔwp/
+    translation: crowd
+    pos: noun
+    gender: m
+  - lemma: шанувальник
+    ipa: /ʃɐnʊˈwɑlʲnɪk/
+    translation: fan/admirer
+    pos: noun
+    gender: m
+  - lemma: легенда
+    ipa: /lɛˈɦɛndɐ/
+    translation: legend
+    pos: noun
+    gender: f
+  - lemma: дебют
+    ipa: /dɛˈbʲut/
+    translation: debut
+    pos: noun
+    gender: m
+  - lemma: стиль
+    ipa: /stɪlʲ/
+    translation: style
+    pos: noun
+    gender: m
+  - lemma: емоція
+    ipa: /ɛˈmɔt͡sʲijɐ/
+    translation: emotion
+    pos: noun
+    gender: f
+  - lemma: жест
+    ipa: /ʒɛst/
+    translation: gesture
+    pos: noun
+    gender: m
+  - lemma: погляд
+    ipa: /ˈpɔɦlʲɐd/
+    translation: look/gaze/view
+    pos: noun
+    gender: m
+  - lemma: популярність
+    ipa: /pɔpʊˈlʲɑrnistʲ/
+    translation: popularity
+    pos: noun
+    gender: f
+  - lemma: контракт
+    ipa: /kɔnˈtrɑkt/
+    translation: contract
+    pos: noun
+    gender: m
+  - lemma: кінематограф
+    ipa: /k⁽ʲ⁾inɛmɐˈtɔɦrɐf/
+    translation: cinematography
+    pos: noun
+    gender: m
+  - lemma: Одеса
+    ipa: /ɔˈdɛsɐ/
+    translation: Odesa
+    pos: noun
+    gender: f
+  - lemma: загадка
+    ipa: /zɐˈɦɑdkɐ/
+    translation: riddle/mystery
+    pos: noun
+    gender: f
+  - lemma: пам'ять
+    ipa: /ˈpɑm⁽ʲ⁾jɐtʲ/
+    translation: memory
+    pos: noun
+    gender: f

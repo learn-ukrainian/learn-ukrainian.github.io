@@ -60,6 +60,11 @@ items:
   translation: exhale
   pos: noun
   gender: m
+- lemma: відмінок
+  ipa: vʲidˈmʲinok
+  translation: grammatical case
+  pos: noun
+  gender: m
 - lemma: гол
   ipa: hɔl
   translation: goal
@@ -104,6 +109,11 @@ items:
   translation: competition
   pos: noun
   gender: n
+- lemma: знахідний
+  ipa: znɐˈxʲidnɪj
+  translation: accusative (case)
+  pos: adj
+  gender: m
 - lemma: йога
   ipa: ˈjɔhɐ
   translation: yoga
@@ -157,6 +167,11 @@ items:
   ipa: mɑt͡ʃ
   translation: match
   pos: noun
+  gender: m
+- lemma: місцевий
+  ipa: mʲisˈt͡sɛvɪj
+  translation: locative (case)/local
+  pos: adj
   gender: m
 - lemma: нелегко
   ipa: neˈlɛhko

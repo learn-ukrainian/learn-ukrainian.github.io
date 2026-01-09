@@ -1,0 +1,129 @@
+module: 89-nataliia-polonska-vasylenko
+level: C1
+version: '2.0'
+items:
+  - lemma: історіографія
+    ipa: /istɔrʲiɔˈɦrɑfʲijɑ/
+    translation: historiography
+    pos: noun
+    gender: f
+  - lemma: археологія
+    ipa: /ɑrxɛɔˈlɔɦʲijɑ/
+    translation: archaeology
+    pos: noun
+    gender: f
+  - lemma: джерелознавство
+    ipa: /dʒɛrɛlɔˈznɑwstwɔ/
+    translation: source studies
+    pos: noun
+    gender: n
+  - lemma: монографія
+    ipa: /mɔnɔˈɦrɑfʲijɑ/
+    translation: monograph
+    pos: noun
+    gender: f
+  - lemma: дисертація
+    ipa: /dɪsɛrˈtɑt͡sʲijɑ/
+    translation: dissertation
+    pos: noun
+    gender: f
+  - lemma: докторантура
+    ipa: /dɔktɔrɑnˈturɑ/
+    translation: doctoral studies
+    pos: noun
+    gender: f
+  - lemma: академік
+    ipa: /ɑkɑˈdɛmʲik/
+    translation: academician
+    pos: noun
+    gender: m
+  - lemma: науковиця
+    ipa: /nɑuˈkɔwɪt͡sʲɑ/
+    translation: female scientist/scholar
+    pos: noun
+    gender: f
+  - lemma: архів
+    ipa: /ɑrˈxiw/
+    translation: archive
+    pos: noun
+    gender: m
+  - lemma: експедиція
+    ipa: /ɛkspɛˈdɪt͡sʲijɑ/
+    translation: expedition
+    pos: noun
+    gender: f
+  - lemma: дослідження
+    ipa: /dɔˈslʲidʒenʲːɑ/
+    translation: research
+    pos: noun
+    gender: n
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɑ/
+    translation: legacy
+    pos: noun
+    gender: f
+  - lemma: тяглість
+    ipa: /ˈtʲɑɦlʲistʲ/
+    translation: continuity
+    pos: noun
+    gender: f
+  - lemma: репресії
+    ipa: /rɛˈprɛsʲiji/
+    translation: repressions
+    pos: noun
+    gender: f-pl
+  - lemma: еміграція
+    ipa: /ɛmʲiˈɦrɑt͡sʲijɑ/
+    translation: emigration
+    pos: noun
+    gender: f
+  - lemma: університет
+    ipa: /unʲiwɛrsɪˈtɛt/
+    translation: university
+    pos: noun
+    gender: m
+  - lemma: факультет
+    ipa: /fɑkulʲˈtɛt/
+    translation: faculty
+    pos: noun
+    gender: m
+  - lemma: професорка
+    ipa: /prɔˈfɛsɔrkɑ/
+    translation: female professor
+    pos: noun
+    gender: f
+  - lemma: об'єктивність
+    ipa: /ɔbjɛkˈtɪwnʲistʲ/
+    translation: objectivity
+    pos: noun
+    gender: f
+  - lemma: верифікація
+    ipa: /vɛrɪfʲiˈkɑt͡sʲijɑ/
+    translation: verification
+    pos: noun
+    gender: f
+  - lemma: методологія
+    ipa: /mɛtɔdɔˈlɔɦʲijɑ/
+    translation: methodology
+    pos: noun
+    gender: f
+  - lemma: генеалогія
+    ipa: /ɦɛnɛɑˈlɔɦʲijɑ/
+    translation: genealogy
+    pos: noun
+    gender: f
+  - lemma: мемуари
+    ipa: /mɛmuˈɑrɪ/
+    translation: memoirs
+    pos: noun
+    gender: m-pl
+  - lemma: визнання
+    ipa: /vɪznɑˈnʲːɑ/
+    translation: recognition
+    pos: noun
+    gender: n
+  - lemma: внесок
+    ipa: /ˈwnɛsɔk/
+    translation: contribution
+    pos: noun
+    gender: m

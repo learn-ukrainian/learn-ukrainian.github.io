@@ -24,6 +24,8 @@
     "vocab:init:force": "python3 scripts/vocab_init.py l2-uk-en --force",
     "vocab:scan": "python3 scripts/populate_vocab_db.py",
     "vocab:rebuild": "npm run vocab:init:force && npm run vocab:scan",
+    "quality:queue": ".venv/bin/python scripts/audit/generate_activity_quality_queue.py",
+    "quality:finalize": ".venv/bin/python scripts/audit/finalize_activity_quality.py",
     "seo:generate": "python3 scripts/generate_seo.py",
     "sync:landing": ".venv/bin/python scripts/sync_landing_pages.py",
     "sync:landing:dry": ".venv/bin/python scripts/sync_landing_pages.py --dry-run",

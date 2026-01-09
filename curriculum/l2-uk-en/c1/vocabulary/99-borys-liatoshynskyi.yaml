@@ -1,0 +1,124 @@
+module: 99-borys-liatoshynskyi
+level: C1
+version: '2.0'
+items:
+  - lemma: композитор
+    ipa: /kɔmpɔˈzɪtɔr/
+    translation: composer
+    pos: noun
+    gender: m
+  - lemma: симфонія
+    ipa: /sɪmˈfɔn⁽ʲ⁾ijɐ/
+    translation: symphony
+    pos: noun
+    gender: f
+  - lemma: диригент
+    ipa: /dɪrɪˈɦɛnt/
+    translation: conductor
+    pos: noun
+    gender: m
+  - lemma: опера
+    ipa: /ˈɔpɛrɐ/
+    translation: opera
+    pos: noun
+    gender: f
+  - lemma: модернізм
+    ipa: /mɔdɛrˈn⁽ʲ⁾izm/
+    translation: modernism
+    pos: noun
+    gender: m
+  - lemma: цензура
+    ipa: /t͡sɛnˈzurɐ/
+    translation: censorship
+    pos: noun
+    gender: f
+  - lemma: партитура
+    ipa: /pɐrtɪˈturɐ/
+    translation: score (musical)
+    pos: noun
+    gender: f
+  - lemma: оркестр
+    ipa: /ɔrˈkɛstr/
+    translation: orchestra
+    pos: noun
+    gender: m
+  - lemma: мелодія
+    ipa: /mɛˈlɔd⁽ʲ⁾ijɐ/
+    translation: melody
+    pos: noun
+    gender: f
+  - lemma: дисонанс
+    ipa: /dɪsɔˈnɑns/
+    translation: dissonance
+    pos: noun
+    gender: m
+  - lemma: формалізм
+    ipa: /fɔrmɐˈl⁽ʲ⁾izm/
+    translation: formalism
+    pos: noun
+    gender: m
+  - lemma: прем'єра
+    ipa: /prɛmˈjɛrɐ/
+    translation: premiere
+    pos: noun
+    gender: f
+  - lemma: професор
+    ipa: /prɔˈfɛsɔr/
+    translation: professor
+    pos: noun
+    gender: m
+  - lemma: консерваторія
+    ipa: /kɔnsɛrwɐˈtɔr⁽ʲ⁾ijɐ/
+    translation: conservatory
+    pos: noun
+    gender: f
+  - lemma: твір
+    ipa: /twir/
+    translation: work/opus
+    pos: noun
+    gender: m
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɐ/
+    translation: legacy/heritage
+    pos: noun
+    gender: f
+  - lemma: фольклор
+    ipa: /fɔlʲˈklʲɔr/
+    translation: folklore
+    pos: noun
+    gender: m
+  - lemma: стиль
+    ipa: /stɪlʲ/
+    translation: style
+    pos: noun
+    gender: m
+  - lemma: жанр
+    ipa: /ʒɑnr/
+    translation: genre
+    pos: noun
+    gender: m
+  - lemma: критика
+    ipa: /ˈkrɪtɪkɐ/
+    translation: criticism
+    pos: noun
+    gender: f
+  - lemma: натхнення
+    ipa: /nɐtˈxnɛnʲːɐ/
+    translation: inspiration
+    pos: noun
+    gender: n
+  - lemma: звучання
+    ipa: /zwʊˈt͡ʃɑnʲːɐ/
+    translation: sound/sounding
+    pos: noun
+    gender: n
+  - lemma: інструмент
+    ipa: /instrʊˈmɛnt/
+    translation: instrument
+    pos: noun
+    gender: m
+  - lemma: талант
+    ipa: /tɐˈlɑnt/
+    translation: talent
+    pos: noun
+    gender: m

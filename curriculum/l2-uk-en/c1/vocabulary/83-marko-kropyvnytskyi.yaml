@@ -1,0 +1,129 @@
+module: 83-marko-kropyvnytskyi
+level: C1
+version: '1.0'
+items:
+  - lemma: корифей
+    ipa: /kɔrɪˈfɛj/
+    translation: coryphaeus (leader)
+    pos: noun
+    gender: m
+  - lemma: театр
+    ipa: /tɛˈɑtr/
+    translation: theater
+    pos: noun
+    gender: m
+  - lemma: трупа
+    ipa: /ˈtrupɑ/
+    translation: troupe (theater)
+    pos: noun
+    gender: f
+  - lemma: режисер
+    ipa: /rɛʒɪˈsɛr/
+    translation: director (theater/film)
+    pos: noun
+    gender: m
+  - lemma: драматург
+    ipa: /drɑmɑˈturɦ/
+    translation: playwright
+    pos: noun
+    gender: m
+  - lemma: актор
+    ipa: /ɑkˈtɔr/
+    translation: actor
+    pos: noun
+    gender: m
+  - lemma: сцена
+    ipa: /ˈst͡sɛnɑ/
+    translation: stage
+    pos: noun
+    gender: f
+  - lemma: гастролі
+    ipa: /ɦɑˈstrɔlʲi/
+    translation: tour (artistic)
+    pos: noun
+    gender: pl
+  - lemma: аншлаг
+    ipa: /ɑnˈʃlɑɦ/
+    translation: sold-out house
+    pos: noun
+    gender: m
+  - lemma: овація
+    ipa: /oˈwɑt͡sʲijɑ/
+    translation: ovation
+    pos: noun
+    gender: f
+  - lemma: заборона
+    ipa: /zɑbɔˈrɔnɑ/
+    translation: prohibition/ban
+    pos: noun
+    gender: f
+  - lemma: цензура
+    ipa: /t͡sɛnˈzurɑ/
+    translation: censorship
+    pos: noun
+    gender: f
+  - lemma: репертуар
+    ipa: /rɛpɛrtuˈɑr/
+    translation: repertoire
+    pos: noun
+    gender: m
+  - lemma: роль
+    ipa: /rɔlʲ/
+    translation: role
+    pos: noun
+    gender: f
+  - lemma: талант
+    ipa: /tɑˈlɑnt/
+    translation: talent
+    pos: noun
+    gender: m
+  - lemma: комедія
+    ipa: /kɔˈmɛdʲijɑ/
+    translation: comedy
+    pos: noun
+    gender: f
+  - lemma: драма
+    ipa: /ˈdrɑmɑ/
+    translation: drama
+    pos: noun
+    gender: f
+  - lemma: успіх
+    ipa: /uˈspix/
+    translation: success
+    pos: noun
+    gender: m
+  - lemma: визнання
+    ipa: /vɪznɑˈnʲːɑ/
+    translation: recognition
+    pos: noun
+    gender: n
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɑ/
+    translation: legacy
+    pos: noun
+    gender: f
+  - lemma: майстерність
+    ipa: /mɑjstɛrˈnʲistʲ/
+    translation: mastery/skill
+    pos: noun
+    gender: f
+  - lemma: перевтілення
+    ipa: /pɛrɛwˈtʲilɛnʲːɑ/
+    translation: transformation/impersonation
+    pos: noun
+    gender: n
+  - lemma: публіка
+    ipa: /ˈpublʲikɑ/
+    translation: audience/public
+    pos: noun
+    gender: f
+  - lemma: внесок
+    ipa: /ˈwnɛsɔk/
+    translation: contribution
+    pos: noun
+    gender: m
+  - lemma: епоха
+    ipa: /ɛˈpɔxɑ/
+    translation: epoch/era
+    pos: noun
+    gender: f

@@ -1,0 +1,127 @@
+module: 82-marko-vovchok
+level: C1
+version: '1.0'
+items:
+  - lemma: псевдонім
+    ipa: /psɛwdɔˈnʲim/
+    translation: pseudonym
+    pos: noun
+    gender: m
+  - lemma: реалізм
+    ipa: /rɛɑˈlʲizm/
+    translation: realism
+    pos: noun
+    gender: m
+  - lemma: повість
+    ipa: /pɔˈwistʲ/
+    translation: novella/tale
+    pos: noun
+    gender: f
+  - lemma: кріпацтво
+    ipa: /kripˈɑt͡stwɔ/
+    translation: serfdom
+    pos: noun
+    gender: n
+  - lemma: емансипація
+    ipa: /ɛmɑnsɪˈpɑt͡sʲijɑ/
+    translation: emancipation
+    pos: noun
+    gender: f
+  - lemma: фатальна
+    ipa: /fɑˈtɑlʲnɑ/
+    translation: fatal (fem)
+    pos: adj
+  - lemma: талант
+    ipa: /tɑˈlɑnt/
+    translation: talent
+    pos: noun
+    gender: m
+  - lemma: перекладачка
+    ipa: /pɛrɛklɑˈdɑt͡ʃkɑ/
+    translation: translator (fem)
+    pos: noun
+    gender: f
+  - lemma: народні
+    ipa: /nɑˈrɔdnʲi/
+    translation: folk/popular (pl)
+    pos: adj
+  - lemma: оповідання
+    ipa: /opɔwіˈdɑnʲːɑ/
+    translation: stories
+    pos: noun
+    gender: n
+  - lemma: слава
+    ipa: /ˈslɑwɑ/
+    translation: glory/fame
+    pos: noun
+    gender: f
+  - lemma: загадка
+    ipa: /zɑˈɦɑdkɑ/
+    translation: mystery/riddle
+    pos: noun
+    gender: f
+  - lemma: характер
+    ipa: /xɑˈrɑktɛr/
+    translation: character
+    pos: noun
+    gender: m
+  - lemma: незалежність
+    ipa: /nɛzɑˈlɛʒnʲistʲ/
+    translation: independence
+    pos: noun
+    gender: f
+  - lemma: вплив
+    ipa: /wplɪw/
+    translation: influence
+    pos: noun
+    gender: m
+  - lemma: доля
+    ipa: /ˈdɔlʲɑ/
+    translation: fate/destiny
+    pos: noun
+    gender: f
+  - lemma: фемінізм
+    ipa: /fɛmʲiˈnʲizm/
+    translation: feminism
+    pos: noun
+    gender: m
+  - lemma: суспільство
+    ipa: /suˈspilʲstwɔ/
+    translation: society
+    pos: noun
+    gender: n
+  - lemma: боротьба
+    ipa: /bɔrɔtʲˈbɑ/
+    translation: struggle
+    pos: noun
+    gender: f
+  - lemma: інститутка
+    ipa: /instɪˈtutkɑ/
+    translation: institute girl
+    pos: noun
+    gender: f
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɑ/
+    translation: legacy
+    pos: noun
+    gender: f
+  - lemma: визнання
+    ipa: /vɪznɑˈnʲːɑ/
+    translation: recognition
+    pos: noun
+    gender: n
+  - lemma: письменниця
+    ipa: /pɪsʲˈmɛnːɪt͡sʲɑ/
+    translation: writer (fem)
+    pos: noun
+    gender: f
+  - lemma: етнографія
+    ipa: /ɛtnɔˈɦrɑfʲijɑ/
+    translation: ethnography
+    pos: noun
+    gender: f
+  - lemma: легенда
+    ipa: /lɛˈɦɛndɑ/
+    translation: legend
+    pos: noun
+    gender: f

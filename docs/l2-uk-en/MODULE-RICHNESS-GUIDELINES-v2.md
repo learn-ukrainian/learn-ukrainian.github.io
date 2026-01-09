@@ -52,15 +52,15 @@
 
 ### Content Requirements by Level (Instructional Core Only\*)
 
-| Metric                | A1              | A2           | B1           | B2          | C1        | C2        |
-| :-------------------- | :-------------- | :----------- | :----------- | :---------- | :-------- | :-------- |
-| **Module Range**      | M01-34          | M01-50       | **M01-80**   | **M01-135** | M01-115   | M01-80    |
-| **Core Word Count**   | **Graduated\*** | **1000+**    | **1500+**    | **1750+**   | **2000+** | **2000+** |
-| **Immersion (% Ukr)** | **10-40%\***    | **40-55%\*** | **85-98%\*** | **100%**    | **100%**  | **100%**  |
-| **Min Vocab Words**   | 20+             | 25+          | 20+/30+      | 20+/30+     | 25+       | 25+       |
-| **Example Sentences** | 12+             | 18+          | 24+          | 24+         | 30+       | 32+       |
-| **Engagement Boxes**  | 3+              | 4+           | 5+           | 6+          | 7+        | 8+        |
-| **Mini-Dialogues**    | 2+              | 3+           | 4+           | 4+          | 5+        | 5+        |
+| Metric                | A1              | A2           | B1         | B2          | C1        | C2        |
+| :-------------------- | :-------------- | :----------- | :--------- | :---------- | :-------- | :-------- |
+| **Module Range**      | M01-34          | M01-50       | **M01-80** | **M01-135** | M01-115   | M01-80    |
+| **Core Word Count**   | **Graduated\*** | **1000+**    | **1500+**  | **1750+**   | **2000+** | **2000+** |
+| **Immersion (% Ukr)** | **10-40%\***    | **40-75%\*** | **100%**   | **100%**    | **100%**  | **100%**  |
+| **Min Vocab Words**   | 20+             | 25+          | 20+/30+    | 20+/30+     | 25+       | 25+       |
+| **Example Sentences** | 12+             | 18+          | 24+        | 24+         | 30+       | 32+       |
+| **Engagement Boxes**  | 3+              | 4+           | 5+         | 6+          | 7+        | 8+        |
+| **Mini-Dialogues**    | 2+              | 3+           | 4+         | 4+          | 5+        | 5+        |
 
 _\*Instructional Core Definition: Counts ONLY Warm-up/Presentation (PPP); Diagnostic/Analysis/Deep Dive (TTT); or Introduction/Narrative/Analysis/Grammar in Context (CLIL). Excludes tables, practice drills, and activity instructions._
 
@@ -85,14 +85,15 @@ _\*Instructional Core Definition: Counts ONLY Warm-up/Presentation (PPP); Diagno
 
 > **Graduated Immersion (A2 Detail) — Phase-Based Progression:**
 >
-> - **A2.1 (M01-20):** **40-45%** — Core case endings (dative, instrumental). Maximized scaffolding for complex grammar.
-> - **A2.2 (M21-40):** **45-50%** — Aspect basics, locative, more cases. Controlled comparison with increased Ukrainian.
-> - **A2.3 (M41-50):** **50-55%** — Pre-B1 runway. Narrative density increases, complex sentences introduced.
+> - **A2.1 (M01-15):** **40-50%** — Core case endings. Maximized scaffolding.
+> - **A2.2 (M16-35):** **50-65%** — Aspect basics, consolidation. Controlled comparison.
+> - **A2.3 (M36-44):** **65-75%** — Advanced integration. Narrative density increases.
+> - **A2.3 (M45-58):** **75-80%** — Pre-B1 runway. Almost full immersion for key sections.
 
 > **B1+ Immersion Philosophy — Ukrainian-First Approach:**
 > At B1, students learn grammar **IN Ukrainian** — the way native speakers learn in school.
 >
-> - **All B1 modules (M01-80):** **90-95%** Ukrainian
+> - **All B1 modules (M01-80):** **100%** Ukrainian (English only in vocab table)
 > - Grammar explanations in Ukrainian with metalanguage (grammar terms as vocabulary)
 > - No English translations except in vocabulary table
 > - Engagement boxes, tips, warnings all in Ukrainian
@@ -105,16 +106,16 @@ _\*Instructional Core Definition: Counts ONLY Warm-up/Presentation (PPP); Diagno
 
 > **Immersion Implementation Guide (A2-C2):**
 >
-> | Level                | Target      | Write IN UKRAINIAN                                                      | Write IN ENGLISH                              |
-> | -------------------- | ----------- | ----------------------------------------------------------------------- | --------------------------------------------- |
-> | **A2.1** (M01-20)    | **40-45%**  | Dialogues, examples, simple instructions                                | Grammar theory (cases), complex explanations  |
-> | **A2.2** (M21-40)    | **45-50%**  | Dialogues, examples, short narratives                                   | Grammar theory (aspect), complex explanations |
-> | **A2.3** (M41-50)    | **50-55%**  | Dialogues, narratives, simple explanations                              | Complex grammar only                          |
-> | **B1** (M01-80)      | **90-95%**  | Grammar explanations, narratives, dialogues, examples, engagement boxes | Vocabulary table translations only            |
-> | **B2** (M01-125)     | **95%**     | All grammar, all content, all cultural material                         | Vocabulary table translations only            |
-> | **C1.1** (M01-20)    | **90-100%** | All content except meta-analysis                                        | Limited contrastive linguistics               |
-> | **C1.2-6** (M21-115) | **95-100%** | Everything                                                              | `🔗 Language Link` boxes only                 |
-> | **C2** (M01-80)      | **98-100%** | EVERYTHING                                                              | Strict <2% allowence for contrastive analysis |
+> | Level                | Target      | Write IN UKRAINIAN                              | Write IN ENGLISH                              |
+> | -------------------- | ----------- | ----------------------------------------------- | --------------------------------------------- |
+> | **A2.1** (M01-15)    | **40-50%**  | Dialogues, examples, simple instructions        | Grammar theory (cases), complex explanations  |
+> | **A2.2** (M16-35)    | **50-65%**  | Dialogues, examples, short narratives           | Grammar theory (aspect), complex explanations |
+> | **A2.3** (M36-58)    | **65-80%**  | Dialogues, narratives, simple explanations      | Minimal English for complex grammar           |
+> | **B1** (M01-80)      | **100%**    | Everything including grammar explanations       | Vocabulary table translations only            |
+> | **B2** (M01-125)     | **95%**     | All grammar, all content, all cultural material | Vocabulary table translations only            |
+> | **C1.1** (M01-20)    | **90-100%** | All content except meta-analysis                | Limited contrastive linguistics               |
+> | **C1.2-6** (M21-115) | **95-100%** | Everything                                      | `🔗 Language Link` boxes only                 |
+> | **C2** (M01-80)      | **98-100%** | EVERYTHING                                      | Strict <2% allowence for contrastive analysis |
 >
 > **B1 (90-95%) — Full Ukrainian Grammar Instruction:**
 >
@@ -409,7 +410,7 @@ Each B1+ grammar module MUST include at least **2 production activities** to bal
 | Recognition           | 4-5     | quiz, match-up, true-false, mark-the-words               |
 | Controlled Production | 4-5     | fill-in, cloze, error-correction                         |
 | **Free Production**   | **2-4** | **translate, transform, micro-write, dialogue-complete** |
-| Integrated            | 2-3     | unjumble                               |
+| Integrated            | 2-3     | unjumble                                                 |
 
 **Audit check:** B1-grammar modules failing production balance will show warning in audit output.
 

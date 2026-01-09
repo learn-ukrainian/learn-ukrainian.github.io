@@ -1,0 +1,129 @@
+module: 75-lesya-ukrainka
+level: C1
+version: '1.0'
+items:
+  - lemma: незламність
+    ipa: /nezˈlɑmnʲistʲ/
+    translation: resilience/unbreakability
+    pos: noun
+    gender: f
+  - lemma: творчість
+    ipa: /ˈtwɔrt͡ʃistʲ/
+    translation: creativity/works
+    pos: noun
+    gender: f
+  - lemma: драма
+    ipa: /ˈdrɑmɑ/
+    translation: drama
+    pos: noun
+    gender: f
+  - lemma: поетеса
+    ipa: /poeˈtɛsɑ/
+    translation: poetess
+    pos: noun
+    gender: f
+  - lemma: драматург
+    ipa: /drɑmɑˈturɦ/
+    translation: playwright
+    pos: noun
+    gender: m
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɑ/
+    translation: legacy/heritage
+    pos: noun
+    gender: f
+  - lemma: переклад
+    ipa: /ˈpɛreklɑd/
+    translation: translation
+    pos: noun
+    gender: m
+  - lemma: фольклор
+    ipa: /folʲkˈlʲɔr/
+    translation: folklore
+    pos: noun
+    gender: m
+  - lemma: інтелігенція
+    ipa: /intelʲiˈɦɛnt͡sʲijɑ/
+    translation: intelligentsia
+    pos: noun
+    gender: f
+  - lemma: аристократизм
+    ipa: /ɑrɪstokrɑˈtɪzm/
+    translation: aristocratism/nobility
+    pos: noun
+    gender: m
+  - lemma: боротьба
+    ipa: /boroˈtʲbɑ/
+    translation: struggle/fight
+    pos: noun
+    gender: f
+  - lemma: хвороба
+    ipa: /xwoˈrɔbɑ/
+    translation: illness/disease
+    pos: noun
+    gender: f
+  - lemma: страждання
+    ipa: /strɑˈʒdɑnʲːɑ/
+    translation: suffering
+    pos: noun
+    gender: n
+  - lemma: символ
+    ipa: /ˈsɪmwɔl/
+    translation: symbol
+    pos: noun
+    gender: m
+  - lemma: метафора
+    ipa: /meˈtɑforɑ/
+    translation: metaphor
+    pos: noun
+    gender: f
+  - lemma: модернізм
+    ipa: /moderˈnʲizm/
+    translation: modernism
+    pos: noun
+    gender: m
+  - lemma: суб'єктність
+    ipa: /subˈjɛktnʲistʲ/
+    translation: agency/subjectivity
+    pos: noun
+    gender: f
+  - lemma: воля
+    ipa: /ˈwɔlʲɑ/
+    translation: will/freedom
+    pos: noun
+    gender: f
+  - lemma: неоромантизм
+    ipa: /neoromɑnˈtɪzm/
+    translation: neo-romanticism
+    pos: noun
+    gender: m
+  - lemma: легенда
+    ipa: /leˈɦɛndɑ/
+    translation: legend
+    pos: noun
+    gender: f
+  - lemma: постать
+    ipa: /ˈpɔstɑtʲ/
+    translation: figure/personality
+    pos: noun
+    gender: f
+  - lemma: внесок
+    ipa: /ˈwnɛsɔk/
+    translation: contribution
+    pos: noun
+    gender: m
+  - lemma: обдарованість
+    ipa: /obdɑˈrowɑnʲistʲ/
+    translation: talent/giftedness
+    pos: noun
+    gender: f
+  - lemma: переосмислення
+    ipa: /perekɔˈmɪslenʲːɑ/
+    translation: re-evaluation/rethinking
+    pos: noun
+    gender: n
+  - lemma: визнання
+    ipa: /vɪznɑˈnʲːɑ/
+    translation: recognition
+    pos: noun
+    gender: n

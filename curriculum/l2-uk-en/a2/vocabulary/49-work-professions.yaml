@@ -25,11 +25,21 @@ items:
   ipa: vnoˈt͡ʃi
   translation: at night
   pos: adv
+- lemma: відмінок
+  ipa: vʲidˈmʲinok
+  translation: grammatical case
+  pos: noun
+  gender: m
 - lemma: відповідальний
   ipa: vidpoʋiˈdɑlʲnɪj
   translation: responsible
   pos: adj
   gender: f
+- lemma: вид
+  ipa: vɪd
+  translation: aspect (grammar)/type
+  pos: noun
+  gender: m
 - lemma: гідно
   ipa: ˈhʲidno
   translation: dignified/worthily
@@ -58,6 +68,11 @@ items:
   translation: salary
   pos: noun
   gender: f
+- lemma: жіночий
+  ipa: ʒiˈnot͡ʃɪj
+  translation: feminine (gender)
+  pos: adj
+  gender: m
 - lemma: згадувати
   ipa: zhɐˈduʋɐte
   translation: to recall/mention
@@ -110,6 +125,11 @@ items:
   ipa: oplɐˈtɪte
   translation: to pay (perf)
   pos: verb
+- lemma: орудний
+  ipa: oˈrudnɪj
+  translation: instrumental (case)
+  pos: adj
+  gender: m
 - lemma: офісний
   ipa: ˈɔfʲisnɪj
   translation: office (adj)
@@ -187,6 +207,16 @@ items:
   translation: successful
   pos: adj
   gender: f
+- lemma: час
+  ipa: t͡ʃɑs
+  translation: time/tense (grammar)
+  pos: noun
+  gender: m
+- lemma: чоловічий
+  ipa: t͡ʃoloˈvʲit͡ʃɪj
+  translation: masculine (gender)/male
+  pos: adj
+  gender: m
 - lemma: ірин
   ipa: ˈirɪn
   translation: Iryna's?

@@ -5,10 +5,10 @@
 ## Gates
 - **Words:** ✅ 1148/500
 - **Activities:** ✅ 11/8
-- **Density:** ✅ All > 12
+- **Density:** ✅ All > 10
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/3
+- **Engagement:** ✅ 3/2
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 16/1
 - **Structure:** ✅ Valid Structure
@@ -17,6 +17,9 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 29.3% (checkpoint - no gate)
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

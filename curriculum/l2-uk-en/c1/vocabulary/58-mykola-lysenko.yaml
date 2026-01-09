@@ -102,3 +102,28 @@ items:
     translation: repertoire
     pos: noun
     gender: m
+  - lemma: лібрето
+    ipa: /liˈbrɛtɔ/
+    translation: libretto
+    pos: noun
+    gender: n
+  - lemma: увертюра
+    ipa: /uwɛrˈtʲurɑ/
+    translation: overture
+    pos: noun
+    gender: f
+  - lemma: меценат
+    ipa: /mɛt͡sɛˈnɑt/
+    translation: patron of arts
+    pos: noun
+    gender: m
+  - lemma: імпровізація
+    ipa: /imprɔwiˈzɑt͡sʲijɑ/
+    translation: improvisation
+    pos: noun
+    gender: f
+  - lemma: акомпанемент
+    ipa: /ɑkɔmpɑnɛˈmɛnt/
+    translation: accompaniment
+    pos: noun
+    gender: m

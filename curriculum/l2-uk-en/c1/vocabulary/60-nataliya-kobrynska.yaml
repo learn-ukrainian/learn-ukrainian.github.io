@@ -101,3 +101,28 @@ items:
     translation: leader
     pos: noun
     gender: m
+  - lemma: суфражизм
+    ipa: /sʊfrɑˈʒɪzm/
+    translation: suffragism
+    pos: noun
+    gender: m
+  - lemma: економіка
+    ipa: /ɛkɔˈnɔmikɑ/
+    translation: economics
+    pos: noun
+    gender: f
+  - lemma: самореалізація
+    ipa: /sɑmɔrɛɑliˈzɑt͡sʲijɑ/
+    translation: self-realization
+    pos: noun
+    gender: f
+  - lemma: дискурс
+    ipa: /dɪsˈkurs/
+    translation: discourse
+    pos: noun
+    gender: m
+  - lemma: поступ
+    ipa: /ˈpɔstʊp/
+    translation: progress/advance
+    pos: noun
+    gender: m

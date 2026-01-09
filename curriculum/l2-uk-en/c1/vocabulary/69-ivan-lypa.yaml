@@ -1,0 +1,124 @@
+module: 69-ivan-lypa
+level: C1
+version: '2.0'
+items:
+  - lemma: державність
+    ipa: /derˈʒɑwn⁽ʲ⁾is⁽ʲ⁾tʲ/
+    translation: statehood
+    pos: noun
+    gender: f
+  - lemma: соборність
+    ipa: /soˈbɔrn⁽ʲ⁾is⁽ʲ⁾tʲ/
+    translation: unity/sovereignty
+    pos: noun
+    gender: f
+  - lemma: підпілля
+    ipa: /p⁽ʲ⁾idˈp⁽ʲ⁾ilʲːɐ/
+    translation: underground movement
+    pos: noun
+    gender: n
+  - lemma: братство
+    ipa: /ˈbrɑtstwo/
+    translation: brotherhood
+    pos: noun
+    gender: n
+  - lemma: маніфест
+    ipa: /mɐn⁽ʲ⁾iˈfɛst/
+    translation: manifesto
+    pos: noun
+    gender: m
+  - lemma: ідеологія
+    ipa: /ideˈɔlɔɦ⁽ʲ⁾ijɐ/
+    translation: ideology
+    pos: noun
+    gender: f
+  - lemma: самостійність
+    ipa: /sɐmoˈst⁽ʲ⁾ijn⁽ʲ⁾is⁽ʲ⁾tʲ/
+    translation: independence
+    pos: noun
+    gender: f
+  - lemma: символізм
+    ipa: /sɪmwoˈl⁽ʲ⁾izm/
+    translation: symbolism
+    pos: noun
+    gender: m
+  - lemma: містика
+    ipa: /ˈm⁽ʲ⁾istɪkɐ/
+    translation: mysticism
+    pos: noun
+    gender: f
+  - lemma: притча
+    ipa: /ˈprɪtt͡ʃɐ/
+    translation: parable
+    pos: noun
+    gender: f
+  - lemma: міністр
+    ipa: /m⁽ʲ⁾iˈn⁽ʲ⁾istr/
+    translation: minister
+    pos: noun
+    gender: m
+  - lemma: уряд
+    ipa: /ˈʊrʲɐd/
+    translation: government
+    pos: noun
+    gender: m
+  - lemma: вигнання
+    ipa: /wɪɦˈnɑnʲːɐ/
+    translation: exile
+    pos: noun
+    gender: n
+  - lemma: патріот
+    ipa: /pɐtr⁽ʲ⁾iˈɔt/
+    translation: patriot
+    pos: noun
+    gender: m
+  - lemma: клятва
+    ipa: /ˈklʲɑtwɐ/
+    translation: oath/vow
+    pos: noun
+    gender: f
+  - lemma: громада
+    ipa: /ɦroˈmɑdɐ/
+    translation: community/society
+    pos: noun
+    gender: f
+  - lemma: просвіта
+    ipa: /proˈsw⁽ʲ⁾itɐ/
+    translation: enlightenment/education
+    pos: noun
+    gender: f
+  - lemma: літературна спадщина
+    ipa: /l⁽ʲ⁾iterɐˈturnɐ ˈspɑdt͡ʃɪnɐ/
+    translation: literary heritage
+    pos: noun
+    gender: f
+  - lemma: лікарська етика
+    ipa: /ˈlʲikɐrsʲkɐ ˈɛtɪkɐ/
+    translation: medical ethics
+    pos: noun
+    gender: f
+  - lemma: візіонер
+    ipa: /w⁽ʲ⁾iz⁽ʲ⁾ioˈnɛr/
+    translation: visionary
+    pos: noun
+    gender: m
+  - lemma: жертовність
+    ipa: /ʒerˈtɔwn⁽ʲ⁾is⁽ʲ⁾tʲ/
+    translation: self-sacrifice
+    pos: noun
+    gender: f
+  - lemma: консолідація
+    ipa: /konsoˈlʲidat͡s⁽ʲ⁾ijɐ/
+    translation: consolidation
+    pos: noun
+    gender: f
+  - lemma: спадкоємність
+    ipa: /spɐdkoˈjɛmn⁽ʲ⁾is⁽ʲ⁾tʲ/
+    translation: continuity/succession
+    pos: noun
+    gender: f
+  - lemma: ідеал
+    ipa: /ideˈɑl/
+    translation: ideal
+    pos: noun
+    gender: m

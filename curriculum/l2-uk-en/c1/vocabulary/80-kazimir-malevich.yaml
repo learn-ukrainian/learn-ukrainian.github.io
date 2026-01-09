@@ -1,0 +1,129 @@
+module: 80-kazimir-malevich
+level: C1
+version: '1.0'
+items:
+  - lemma: авангард
+    ipa: /ɑwɑnˈɦɑrd/
+    translation: avant-garde
+    pos: noun
+    gender: m
+  - lemma: супрематизм
+    ipa: /suprɛmɑˈtɪzm/
+    translation: suprematism
+    pos: noun
+    gender: m
+  - lemma: полотно
+    ipa: /pɔlɔtˈnɔ/
+    translation: canvas/cloth
+    pos: noun
+    gender: n
+  - lemma: митець
+    ipa: /mɪˈtɛt͡sʲ/
+    translation: artist
+    pos: noun
+    gender: m
+  - lemma: живопис
+    ipa: /ˈʒɪwɔpɪs/
+    translation: painting (art)
+    pos: noun
+    gender: m
+  - lemma: безпредметність
+    ipa: /bɛzprɛdˈmɛtnʲistʲ/
+    translation: objectlessness/abstraction
+    pos: noun
+    gender: f
+  - lemma: квадрат
+    ipa: /kwɑˈdrɑt/
+    translation: square
+    pos: noun
+    gender: m
+  - lemma: маніфест
+    ipa: /mɑnʲiˈfɛst/
+    translation: manifesto
+    pos: noun
+    gender: m
+  - lemma: тріумф
+    ipa: /trʲiˈumf/
+    translation: triumph
+    pos: noun
+    gender: m
+  - lemma: репресії
+    ipa: /reˈprɛsʲiji/
+    translation: repressions
+    pos: noun
+    gender: f
+  - lemma: виховання
+    ipa: /vɪxɔˈwɑnʲːɑ/
+    translation: upbringing/education
+    pos: noun
+    gender: n
+  - lemma: ідентичність
+    ipa: /identɪt͡ʃˈnʲistʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɑ/
+    translation: legacy/heritage
+    pos: noun
+    gender: f
+  - lemma: постать
+    ipa: /ˈpɔstɑtʲ/
+    translation: figure/personality
+    pos: noun
+    gender: f
+  - lemma: внесок
+    ipa: /ˈwnɛsɔk/
+    translation: contribution
+    pos: noun
+    gender: m
+  - lemma: визнання
+    ipa: /vɪznɑˈnʲːɑ/
+    translation: recognition
+    pos: noun
+    gender: n
+  - lemma: селянин
+    ipa: /sɛlʲɑˈnɪn/
+    translation: peasant
+    pos: noun
+    gender: m
+  - lemma: футуризм
+    ipa: /fuˈturɪzm/
+    translation: futurism
+    pos: noun
+    gender: m
+  - lemma: кубізм
+    ipa: /kuˈbʲizm/
+    translation: cubism
+    pos: noun
+    gender: m
+  - lemma: енергія
+    ipa: /ɛˈnɛrɦʲijɑ/
+    translation: energy
+    pos: noun
+    gender: f
+  - lemma: форма
+    ipa: /ˈfɔrmɑ/
+    translation: form/shape
+    pos: noun
+    gender: f
+  - lemma: колір
+    ipa: /ˈkɔlʲir/
+    translation: color
+    pos: noun
+    gender: m
+  - lemma: простір
+    ipa: /ˈprɔstʲir/
+    translation: space
+    pos: noun
+    gender: m
+  - lemma: концепція
+    ipa: /kont͡sɛpˈt͡sʲijɑ/
+    translation: concept/notion
+    pos: noun
+    gender: f
+  - lemma: переосмислення
+    ipa: /perekɔˈmɪslenʲːɑ/
+    translation: re-evaluation/rethinking
+    pos: noun
+    gender: n

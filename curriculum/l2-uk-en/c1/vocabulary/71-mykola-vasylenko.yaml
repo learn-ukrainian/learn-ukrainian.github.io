@@ -1,0 +1,124 @@
+module: 71-mykola-vasylenko
+level: C1
+version: '2.0'
+items:
+  - lemma: правознавство
+    ipa: /prɑwozˈnɑwstwo/
+    translation: jurisprudence
+    pos: noun
+    gender: n
+  - lemma: юрист
+    ipa: /jʊˈrɪst/
+    translation: jurist/lawyer
+    pos: noun
+    gender: m
+  - lemma: гетьманат
+    ipa: /ɦetʲmɐˈnɑt/
+    translation: Hetmanate
+    pos: noun
+    gender: m
+  - lemma: академія наук
+    ipa: /ɐkɐˈdɛm⁽ʲ⁾ijɐ nɐˈʊk/
+    translation: Academy of Sciences
+    pos: noun
+    gender: f
+  - lemma: репресії
+    ipa: /reˈprɛs⁽ʲ⁾iji/
+    translation: repressions
+    pos: noun
+    gender: f
+  - lemma: уряд
+    ipa: /ˈʊrʲɐd/
+    translation: government
+    pos: noun
+    gender: m
+  - lemma: міністр
+    ipa: /m⁽ʲ⁾iˈn⁽ʲ⁾istr/
+    translation: minister
+    pos: noun
+    gender: m
+  - lemma: освіта
+    ipa: /oˈs⁽ʲ⁾w⁽ʲ⁾itɐ/
+    translation: education
+    pos: noun
+    gender: f
+  - lemma: історик
+    ipa: /isˈtɔrɪk/
+    translation: historian
+    pos: noun
+    gender: m
+  - lemma: процес
+    ipa: /proˈt͡sɛs/
+    translation: process/trial
+    pos: noun
+    gender: m
+  - lemma: звинувачення
+    ipa: /zwɪnʊˈwɑt͡ʃenʲːɐ/
+    translation: accusation
+    pos: noun
+    gender: n
+  - lemma: реабілітація
+    ipa: /reɐb⁽ʲ⁾ilʲiˈtɑt͡s⁽ʲ⁾ijɐ/
+    translation: rehabilitation
+    pos: noun
+    gender: f
+  - lemma: науковець
+    ipa: /nɐʊˈkɔwet͡sʲ/
+    translation: scientist/scholar
+    pos: noun
+    gender: m
+  - lemma: громадський діяч
+    ipa: /ɦroˈmɑd͡sʲkɪj d⁽ʲ⁾iˈjɑt͡ʃ/
+    translation: public figure
+    pos: noun
+    gender: m
+  - lemma: державотворення
+    ipa: /derʒɐwoˈtwɔrenʲːɐ/
+    translation: state-building
+    pos: noun
+    gender: n
+  - lemma: закон
+    ipa: /zɐˈkɔn/
+    translation: law
+    pos: noun
+    gender: m
+  - lemma: кодекс
+    ipa: /koˈdɛks/
+    translation: code (of laws)
+    pos: noun
+    gender: m
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɐ/
+    translation: legacy
+    pos: noun
+    gender: f
+  - lemma: арешт
+    ipa: /ɐˈrɛʃt/
+    translation: arrest
+    pos: noun
+    gender: m
+  - lemma: в'язниця
+    ipa: /wjɐzˈnɪt͡sʲɐ/
+    translation: prison
+    pos: noun
+    gender: f
+  - lemma: заслання
+    ipa: /zɐsˈlɑnʲːɐ/
+    translation: exile
+    pos: noun
+    gender: n
+  - lemma: співпраця
+    ipa: /sp⁽ʲ⁾iwˈprɑt͡sʲɐ/
+    translation: cooperation
+    pos: noun
+    gender: f
+  - lemma: автономія
+    ipa: /ɐwtoˈnɔm⁽ʲ⁾ijɐ/
+    translation: autonomy
+    pos: noun
+    gender: f
+  - lemma: лібералізм
+    ipa: /l⁽ʲ⁾iberɐˈl⁽ʲ⁾izm/
+    translation: liberalism
+    pos: noun
+    gender: m

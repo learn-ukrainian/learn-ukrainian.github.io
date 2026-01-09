@@ -36,6 +36,24 @@ C2 modules require creative production and deep analysis. Use these specific typ
 
 ---
 
+## Vocabulary Approach (B1+)
+
+**From B1 onwards, vocabulary is not prescribed in this plan.** Instead, vocabulary emerges naturally from the module's thematic content and is validated against:
+
+- **Richness targets:** 30+ unique words per module (enforced by audit)
+- **Integration requirements:** 80% used in activities, 50% in lesson text (enforced by audit)
+- **Register appropriateness:** Vocabulary complexity matches C2 proficiency level
+
+The "Content Guidance" sections below provide **thematic direction** and **pop culture anchors** to guide vocabulary selection, but builders have flexibility to choose words that best serve the pedagogical goals.
+
+**Why this approach?**
+- Content-driven vocabulary is more authentic and contextual
+- Historical/cultural modules require domain-specific terminology
+- Pop culture references evolve and need flexibility
+- Quality is enforced through metrics, not prescriptive lists
+
+---
+
 ## Ukrainian State Standard 2024 Alignment
 
 > **Source:** Українська мова як іноземна: рівні загального володіння та діагностика (2024)
@@ -327,8 +345,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Literary analysis capability
 - Sociolinguistic awareness
 
-**Vocabulary (25 words):**
-досконалість, майстерність, володіння, опанування, вершина, зріст, прогрес, рівень, оцінювання, діагностика, прогалина, слабкість, підсилення, вдосконалення, поглиблення, розширення, уточнення, шліфування, полірування, відточування, витонченість, вишуканість, елегантність, бездоганність, незрівнянність
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Diagnostic writing assessment (all styles)
@@ -352,8 +374,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Stylistic vs. obligatory alternation
 - Regional preferences
 
-**Vocabulary (30 words):**
-милозвучність, благозвуччя, евфонія, чергування, варіант, позиція, контекст, приголосний, голосний, початок, кінець, збіг, уникнення, полегшення, вимова, плавність, ритм, мелодійність, гармонія, дисонанс, какофонія, різкість, м'якість, природність, штучність, вимушеність, автоматизм, інтуїція, чуття, слух
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Error correction: Fix euphonic violations
@@ -377,8 +403,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Ключові слова selection
 - Бібліографічний опис
 
-**Vocabulary (30 words):**
-дисертація, автореферат, захист, опонент, рецензент, наукове керівництво, апробація, новизна, актуальність, практичне значення, теоретичне значення, наукова гіпотеза, експериментальна база, методологічний апарат, понятійний апарат, термінологічний апарат, наукова школа, наукова традиція, наукова етика, плагіат, самоплагіат, цитування, посилання, бібліографія, індекс цитування, імпакт-фактор, наукометрія, рейтинг, публікаційна активність, відкритий доступ
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Write: Abstract for research paper
@@ -404,8 +434,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Conditional clauses: У разі...
 - Reference structures: Згідно з статтею...
 
-**Vocabulary (30 words):**
-договір, угода, контракт, акт, протокол, доручення, скарга, позов, позовна заява, відповідач, позивач, сторона, умови, зобов'язання, права, відповідальність, санкція, штраф, неустойка, розірвання, припинення, продовження, пролонгація, підпис, печатка, нотаріус, засвідчення, завірення, юридична сила, набуття чинності
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Draft: Simple contract
@@ -431,8 +465,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Цитування (Quoting)
 - Факт-чекінг (Fact-checking)
 
-**Vocabulary (30 words):**
-журналістика, медіа, репортаж, кореспондент, редактор, редакція, випуск, номер, стаття, колонка, рубрика, лід, заголовок, підзаголовок, цитата, джерело, факт-чекінг, верифікація, об'єктивність, збалансованість, упередженість, маніпуляція, інформаційний привід, новинна цінність, ексклюзив, сенсація, резонанс, віральність, охоплення, авдиторія
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Write: News report on current event
@@ -456,8 +494,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Character development (характеротворення)
 - Setting and atmosphere (хронотоп)
 
-**Vocabulary (30 words):**
-оповідач, персонаж, герой, антагоніст, протагоніст, сюжет, фабула, зав'язка, кульмінація, розв'язка, конфлікт, внутрішній конфлікт, діалог, монолог, внутрішній монолог, потік свідомості, хронотоп, час, простір, атмосфера, настрій, тон, ритм, темп, напруга, саспенс, інтрига, твіст, фінал, відкритий фінал
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Write: Flash fiction (500 words)
@@ -481,8 +523,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Intensifiers: аж, так, такий
 - Pragmatic particles
 
-**Vocabulary (25 words):**
-розмова, балачка, базікання, тріпання, перепитування, уточнення, згода, незгода, здивування, обурення, захоплення, розчарування, іронія, жарт, дотеп, гострослів'я, підколка, комплімент, лестощі, критика, зауваження, нарікання, скарга, вибачення, подяка
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Dialogue: Natural conversation simulation
@@ -505,8 +551,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Phonetics: врата, глава
 - Syntax: archaic constructions
 
-**Vocabulary (25 words):**
-молитва, богослужіння, літургія, проповідь, акафіст, псалом, євангеліє, апостол, пророк, святий, грішник, благословення, хрещення, причастя, сповідь, піст, святкування, храм, церква, ікона, хрест, свічка, кадило, дзвін, паломництво
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Reading: Biblical excerpt with analysis
@@ -531,8 +581,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Tone management
 - Format conventions
 
-**Vocabulary (25 words):**
-листування, кореспонденція, адресат, адресант, звертання, підпис, вітання, прощання, подяка, прохання, вибачення, запрошення, відмова, згода, підтвердження, нагадування, скарга, рекомендація, характеристика, резюме, мотиваційний лист, супровідний лист, вкладення, копія, відповідь
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Write: Formal complaint letter
@@ -556,8 +610,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Specialists in other fields
 - Children
 
-**Vocabulary (25 words):**
-популяризація, спрощення, адаптація, переклад, переказ, аналогія, приклад, ілюстрація, метафора, порівняння, доступність, зрозумілість, цікавість, захоплення, залучення, авдиторія, читач, рівень, складність, термін, жаргон, пояснення, визначення, контекст, застосування
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Transform: Research abstract → blog post
@@ -581,8 +639,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Статистичні звіти
 - Законодавчі акти
 
-**Vocabulary (25 words):**
-трансформація, переробка, переписування, адаптація, інтерпретація, кут зору, акцент, фокус, людський інтерес, емоція, історія, наратив, драма, конфлікт, герой, жертва, винуватець, наслідок, рішення, реакція, коментар, експерт, очевидець, свідок, учасник
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Transform: Press release → news story
@@ -606,8 +668,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Діалектизми для колориту
 - Жаргонізми для автентичності
 
-**Vocabulary (25 words):**
-вибір, точність, нюанс, відтінок, конотація, денотація, стилістичне забарвлення, нейтральність, книжність, розмовність, піднесеність, зниженість, вульгарність, грубість, ніжність, пестливість, офіційність, формальність, неформальність, жвавість, сухість, образність, абстрактність, конкретність, експресивність
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Exercise: Choose most appropriate synonym
@@ -631,8 +697,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Риторичні запитання
 - Градація
 
-**Vocabulary (25 words):**
-речення, конструкція, структура, порядок слів, інверсія, еліпсис, повтор, анафора, епіфора, паралелізм, градація, антитеза, риторичне запитання, оклик, звертання, вставлення, уточнення, пояснення, парцеляція, приєднання, перерахування, узагальнення, деталізація, згортання, розгортання
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Transform: Simple sentences → complex
@@ -655,8 +725,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Strengths and weaknesses
 - Developing signature elements
 
-**Vocabulary (25 words):**
-голос, стиль, індивідуальність, особистість, авторство, своєрідність, оригінальність, унікальність, впізнаваність, характерність, манера, почерк, підхід, погляд, світогляд, позиція, ставлення, тон, настрій, темперамент, характер, смак, уподобання, схильність, тенденція
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Analysis: Identify your voice in previous writing
@@ -680,8 +754,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Thematic obsessions
 - Stylistic tics (good and bad)
 
-**Vocabulary (25 words):**
-удосконалення, шліфування, відточування, полірування, вдосконалення, рафінування, витонченість, вишуканість, елегантність, граціозність, природність, органічність, цілісність, послідовність, гармонія, баланс, пропорція, міра, смак, стриманість, надмірність, перевантаженість, простота, лаконічність, багатослівність
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Edit: Refine previous writing for voice
@@ -705,8 +783,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Section bridges
 - Narrative momentum
 
-**Vocabulary (25 words):**
-зв'язність, цілісність, логічність, послідовність, плавність, перехід, містки, зв'язки, тема, рема, дане, нове, референція, анафора, катафора, еліпсис, субституція, конектор, маркер, сигнал, підказка, орієнтир, структура, організація, композиція
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Analyze: Coherence devices in professional text
@@ -816,8 +898,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Персоніфікація (personification): attribution of human qualities
 - Алегорія (allegory): symbolic narrative
 
-**Vocabulary (25 words):**
-троп, фігура, образність, переносне значення, пряме значення, метафора, метонімія, синекдоха, персоніфікація, алегорія, символ, порівняння, епітет, гіпербола, літота, оксюморон, антитеза, градація, паралелізм, повтор, анафора, епіфора, риторичне питання, риторичний оклик, інверсія
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Analysis: Identify devices in literary texts
@@ -836,8 +922,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Евфонія (euphony): pleasant sound combinations
 - Какофонія (cacophony): deliberate harshness
 
-**Vocabulary (25 words):**
-ритм, проза, інтонація, період, звукопис, алітерація, асонанс, евфонія, какофонія, благозвучність, милозвучність, наголос, пауза, темп, мелодика, каденція, клаузула, такт, фраза, коло, синтагма, інтонема, тон, модуляція, гармонія
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Analysis: Identify rhythm patterns
@@ -856,8 +946,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Пародія (parody): humorous imitation
 - Стилізація (stylization): imitation of style
 
-**Vocabulary (30 words):**
-інтертекстуальність, алюзія, цитата, ремінісценція, пародія, стилізація, наслідування, запозичення, відсилання, натяк, джерело, прототекст, метатекст, інтертекст, діалог, полілог, інтерпретація, рецепція, традиція, новаторство, епігонство, оригінальність, вторинність, трансформація, переосмислення, деконструкція, постмодернізм, центон, колаж, монтаж
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Identify: Trace allusions in texts
@@ -876,8 +970,12 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Розмовно-художній (colloquial literary)
 - Епістолярно-есеїстичний (epistolary essay)
 
-**Vocabulary (25 words):**
-гібрид, змішування, поєднання, синтез, злиття, перехід, градація, контраст, баланс, пропорція, домінанта, акцент, нюанс, відтінок, тональність, модальність, експресія, нейтральність, формальність, неформальність, офіційність, інтимність, публічність, приватність, універсальність
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 30+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to C2 level
+
 
 **Signature Activity Concepts:**
 1. Analysis: Identify style mixing in texts

@@ -67,6 +67,10 @@ Notice that **бо** is very popular in spoken Ukrainian. It's shorter and punch
 
 A common mistake for learners is confusing "but" and "although." In Ukrainian, notice how **хоча** often introduces the surprise condition, while **але** simply links two opposing facts. You can think of **хоча** as "even though" or "despite the fact." It sets up a scenario that would usually lead to a different result than what actually happened.
 
+**Як використовувати ці сполучники на практиці?**
+
+Коли ви розмовляєте українською, завжди думайте про логіку ваших речень. Якщо ви хочете пояснити причину — використовуйте **тому що** або **бо**. Якщо ви хочете показати контраст або протилежність — використовуйте **хоча**. Це робить ваше мовлення зрозумілим і логічним. Пам'ятайте ставити кому перед цими словами — це правило української пунктуації!
+
 ---
 
 ## Нюанси вживання сполучників (Nuances of Usage)

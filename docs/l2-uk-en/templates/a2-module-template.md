@@ -3,7 +3,7 @@
 > **Level:** A2 (Elementary)
 > **Pedagogy:** PPP (Presentation-Practice-Production)
 > **Focus:** All 7 cases, aspect introduction, comparison, complex sentences
-> **Immersion:** Graduated (M01-15: 40-50%, M16-35: 50-65%, M36-50: 65-80%)
+> **Immersion:** Graduated (M01-15: 40-50%, M16-35: 50-65%, M36-58: 65-80%)
 
 <!--
 TEMPLATE_METADATA:
@@ -190,8 +190,8 @@ The build system (`generate_mdx.py`) will inject these sections at build time.
 | Phase | Modules | Immersion Target | Focus                             |
 | ----- | ------- | ---------------- | --------------------------------- |
 | A2.1  | 01-15   | 40-50%           | Dative, Instrumental introduction |
-| A2.2  | 16-35   | 50-65%           | Aspect pairs, comparison          |
-| A2.3  | 36-50   | 65-80%           | Complex sentences, integration    |
+| A2.2  | 16-35   | 50-65%           | Aspect pairs, consolidation       |
+| A2.3  | 36-58   | 65-80%           | Pre-B1 Runway, integration        |
 
 ---
 

@@ -102,3 +102,28 @@ items:
     translation: defending/upholding
     pos: noun
     gender: n
+  - lemma: емансипація
+    ipa: /ɛmɑnsɪˈpɑt͡sʲijɑ/
+    translation: emancipation
+    pos: noun
+    gender: f
+  - lemma: полеміка
+    ipa: /pɔˈlɛmikɑ/
+    translation: polemics/debate
+    pos: noun
+    gender: f
+  - lemma: нація
+    ipa: /ˈnɑt͡sʲijɑ/
+    translation: nation
+    pos: noun
+    gender: f
+  - lemma: суверенітет
+    ipa: /suwɛrɛniˈtɛt/
+    translation: sovereignty
+    pos: noun
+    gender: m
+  - lemma: діаспора
+    ipa: /diˈɑspɔrɑ/
+    translation: diaspora
+    pos: noun
+    gender: f

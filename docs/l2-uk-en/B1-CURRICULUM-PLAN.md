@@ -23,6 +23,24 @@
 
 ---
 
+## Vocabulary Approach (B1+)
+
+**From B1 onwards, vocabulary is not prescribed in this plan.** Instead, vocabulary emerges naturally from the module's thematic content and is validated against:
+
+- **Richness targets:** 25+ unique words per module (enforced by audit)
+- **Integration requirements:** 80% used in activities, 50% in lesson text (enforced by audit)
+- **Register appropriateness:** Vocabulary complexity matches B1 proficiency level
+
+The "Content Guidance" sections below provide **thematic direction** and **pop culture anchors** to guide vocabulary selection, but builders have flexibility to choose words that best serve the pedagogical goals.
+
+**Why this approach?**
+- Content-driven vocabulary is more authentic and contextual
+- Historical/cultural modules require domain-specific terminology
+- Pop culture references evolve and need flexibility
+- Quality is enforced through metrics, not prescriptive lists
+
+---
+
 ## Quality Standards & Pedagogical Strategy
 
 **Reference:** `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
@@ -370,8 +388,12 @@ By module 90, learners can:
 - Case names: називний, родовий, давальний, знахідний, орудний, місцевий, кличний
 - Basic sentence terms: слово, речення, частина мови
 
-**Vocabulary (25 words):**
-граматика, дієслово, іменник, прикметник, прислівник, займенник, сполучник, прийменник, частка, вигук, частина мови, слово, речення, називний, родовий, давальний, знахідний, орудний, місцевий, кличний, відмінок, рід, число, особа, закінчення
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -393,8 +415,12 @@ By module 90, learners can:
 - **NEW:** Negation terminology: заперечення, загальне заперечення, очікувана дія, попередження, заборона
 - **NEW:** Verb form terminology: складна форма, синтетична форма, наказова форма, дієвідмінювання, парадигма
 
-**Vocabulary (35 words):**
-вид, доконаний вид, недоконаний вид, час, теперішній час, минулий час, майбутній час, дія, процес, результат, тривалість, повторення, завершення, початок, продовження, однократний, багаторазовий, дієвідміна, особові закінчення, інфінітив, наказовий спосіб, умовний спосіб, спосіб, стан, активний стан, **заперечення, загальне заперечення, очікувана дія, попередження, заборона, складна форма, синтетична форма, наказова форма, дієвідмінювання, парадигма**
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -421,8 +447,12 @@ By module 90, learners can:
 - **NEW:** Analytical terms: контекст, маркер, частота, аспектуальна пара
 - **NEW:** Style and register: стиль/регістр, розмовна мова, літературна мова, формальна мова
 
-**Vocabulary (39 words):**
-використовується, означає, показує, виражає, вказує на, порівняйте, зверніть увагу, наприклад, тобто, отже, таким чином, на відміну від, подібно до, правило, виняток, форма, основа, корінь, суфікс, префікс, **виберіть, оберіть, знайдіть, з'єднайте, розташуйте, доповніть, натисніть, перекладіть, складіть, контекст, маркер, частота, аспектуальна пара, стиль, регістр, розмовна мова, літературна мова, формальна мова, нейтральна мова**
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -445,8 +475,12 @@ By module 90, learners can:
 - Clause types: головне речення, підрядне речення
 - Sentence types: просте, складне, складносурядне, складнопідрядне
 
-**Vocabulary (25 words):**
-підмет, присудок, додаток, означення, обставина, член речення, головний член, другорядний член, головне речення, підрядне речення, просте речення, складне речення, складносурядне, складнопідрядне, сполучник сурядності, сполучник підрядності, розділові знаки, кома, крапка, двокрапка, тире, лапки, синтаксис, пунктуація, інверсія
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -523,8 +557,12 @@ Students must demonstrate they can:
 - Perfective = single completed, result-focused, bounded
 - Aspect choice depends on context and speaker intent
 
-**Vocabulary (20 words):**
-вид, доконаний, недоконаний, процес, результат, тривалість, повторюваність, завершеність, одноразовий, багаторазовий, звичка, дія, завдання, мета, початок, кінець, спроба, виконання, намір, рішення
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -545,8 +583,12 @@ Students must demonstrate they can:
 - Іноді вона готувала борщ. (Sometimes she made borscht. - impf)
 - Того разу вона приготувала борщ. (That time she made borscht. - pf)
 
-**Vocabulary (20 words):**
-одного разу, того разу, якось, нарешті, раптом, вперше, востаннє, нещодавно, давно, колись, завжди, часто, рідко, іноді, постійно, регулярно, періодично, щодня, щотижня, щомісяця
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -567,8 +609,12 @@ Students must demonstrate they can:
 - Вона написала статтю. (She wrote/finished the article. - pf)
 - Вона писала статтю годину. (She was writing the article for an hour. - impf)
 
-**Vocabulary (20 words):**
-весь день, цілий тиждень, протягом, годину, хвилину, довго, недовго, весь час, поступово, швидко, повільно, нарешті, вже, ще, тільки що, щойно, досі, поки, під час, у цей час
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -594,8 +640,12 @@ Students must demonstrate they can:
 - Я працюватиму завтра. (I will work tomorrow. - impf, synthetic)
 - Я зроблю це завтра. (I will do it tomorrow. - pf)
 
-**Vocabulary (20 words):**
-завтра, післязавтра, найближчим часом, скоро, згодом, потім, пізніше, у майбутньому, наступного разу, колись, обов'язково, напевно, мабуть, можливо, ймовірно, сподіваюся, планую, збираюся, маю намір, вирішив
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -616,8 +666,12 @@ Students must demonstrate they can:
 - Я ще не прочитав. (I haven't read yet. - pf: expected completion)
 - Я не читав цієї книги. (I didn't read this book. - impf: never/general)
 
-**Vocabulary (20 words):**
-не, ніколи, ніде, ніяк, ніхто, ніщо, жодний, зовсім, взагалі, абсолютно, ще не, вже не, більше не, поки не, майже не, навряд чи, заборонено, неможливо, недоцільно, марно
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -638,8 +692,12 @@ Students must demonstrate they can:
 - Заходьте! Сідайте! (Come in! Sit down! - invitations, impf)
 - Прийди о п'ятій! (Come at five! - specific action, pf)
 
-**Vocabulary (20 words):**
-прошу, будь ласка, будьте ласкаві, будьте люб'язні, обов'язково, негайно, швидше, швидко, повільно, уважно, обережно, старанно, ретельно, точно, правильно, чітко, голосно, тихо, спокійно, терпляче
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -728,8 +786,12 @@ Students must demonstrate they can:
 - Giving instructions to colleagues (imperative aspect)
 - Explaining what you haven't done yet (negation)
 
-**Vocabulary (20 words):**
-робочий день, завдання, зустріч, дедлайн, проєкт, команда, колега, начальник, звіт, презентація, перерва, обід, нарада, домовленість, відрядження, відпустка, понеділок, п'ятниця, вихідні, тиждень
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Narrative Structure:**
 
@@ -760,8 +822,12 @@ Students must demonstrate they can:
 - Using negation correctly
 - Mixing aspects in complex narratives
 
-**Vocabulary (15 words):**
-спочатку, тоді, після того, наступного дня, перед тим, під час того, у той час, нарешті, врешті-решт, як тільки, поки, доки, тим часом, водночас, зрештою
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -885,8 +951,12 @@ Students must demonstrate they can:
 | тягти | тягати | pull, drag |
 | гнати | ганяти | chase, drive |
 
-**Vocabulary (25 words):**
-іти, ходити, їхати, їздити, бігти, бігати, летіти, літати, плисти, плавати, нести, носити, везти, возити, вести, водити, лізти, лазити, повзти, повзати, котити, качати, тягти, тягати, гнати
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -912,8 +982,12 @@ Students must demonstrate they can:
 - Вона вийшла з кімнати. (She left the room.)
 - Ми увійшли до будинку. (We entered the building.)
 
-**Vocabulary (25 words):**
-прийти, приїхати, прибути, прилетіти, приплисти, принести, привезти, привести, вийти, виїхати, вилетіти, винести, вивезти, вивести, увійти, в'їхати, влетіти, внести, ввезти, ввести, прибуття, вихід, вхід, двері, ворота
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -939,8 +1013,12 @@ Students must demonstrate they can:
 - Я пройшов повз парк. (I passed by the park.)
 - Ми об'їхали місто. (We drove around the city.)
 
-**Vocabulary (25 words):**
-перейти, переїхати, перелетіти, перенести, перевезти, перевести, пройти, проїхати, пролетіти, пронести, провести, обійти, об'їхати, облетіти, обнести, обвести, через, повз, навколо, довкола, міст, перехід, обхід, переїзд, шлях
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -966,8 +1044,12 @@ Students must demonstrate they can:
 - Зайди до мене завтра! (Drop by tomorrow!)
 - Люди розійшлися після концерту. (People dispersed after the concert.)
 
-**Vocabulary (25 words):**
-піти, поїхати, полетіти, понести, повезти, повести, зайти, заїхати, залетіти, занести, завезти, завести, розійтися, роз'їхатися, розлетітися, рознести, розвезти, розвести, початок, від'їзд, заїзд, візит, зупинка, розпуск, розсіювання
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -993,8 +1075,12 @@ Students must demonstrate they can:
 - Він відійшов від вікна. (He stepped away from the window.)
 - Ми дійшли до центру за годину. (We reached the center in an hour.)
 
-**Vocabulary (25 words):**
-підійти, під'їхати, підлетіти, піднести, підвезти, підвести, відійти, від'їхати, відлетіти, віднести, відвезти, відвести, дійти, доїхати, долетіти, донести, довезти, довести, підхід, відхід, наближення, віддалення, досягнення, відстань, мета
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1019,8 +1105,12 @@ Students must demonstrate they can:
 - обійтися без (do without)
 - перейти до справи (get down to business)
 
-**Vocabulary (25 words):**
-виходить, входити в звичку, дійти висновку, зайти далеко, пройти випробування, відійти в минуле, підійти до справи, обійтися без, перейти межу, вийти з себе, прийти до ладу, зайти в глухий кут, пройти перевірку, вийти з моди, увійти в історію, підійти з розумом, дійти до суті, обійти увагою, перейти в наступ, вийти на контакт, прийти в себе, зайти за край, дійти рук, вийти з ситуації, підійти відповідально
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1052,8 +1142,12 @@ Students must demonstrate they can:
 | над- | over (rare) | надійти |
 | по- | start movement | піти |
 
-**Vocabulary (20 words):**
-зійти, з'їхати, злетіти, зійтися, з'їхатися, злетітися, надійти, надіслати, надходження, вступити, виступити, наступити, відступити, заступити, поступитися, переступити, обступити, підступити, доступитися, приступити
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1075,8 +1169,12 @@ Students must demonstrate they can:
 - за- (start): зайти → заговорити (start speaking)
 - від- (away): відійти → відмовитися (refuse - "move away from")
 
-**Vocabulary (20 words):**
-приготувати, прибрати, приєднатися, пристосуватися, привітати, виробляти, викладати, випускати, вимагати, виконувати, переробляти, перекладати, перетворювати, пересувати, переконувати, заговорити, засміятися, заплакати, замовкнути, затихнути
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1097,8 +1195,12 @@ Students must demonstrate they can:
 - Narrating movement in a story
 - Using figurative expressions
 
-**Vocabulary (15 words):**
-маршрут, напрямок, траєкторія, шлях, стежка, дорога, траса, автострада, провулок, поворот, розвилка, перехрестя, пункт призначення, вихідний пункт, проміжна зупинка
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1200,8 +1302,12 @@ Students must demonstrate they can:
 - Книга, яку я читаю... (The book that I'm reading...)
 - Студент, якому я допомагав... (The student whom I helped...)
 
-**Vocabulary (20 words):**
-який, яка, яке, які, якого, якої, яких, якому, якій, яким, якими, якою, про якого, з яким, до якої, через яких, для якого, від якої, біля якого, перед яким
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1221,8 +1327,12 @@ Students must demonstrate they can:
 - Місце, куди ми їдемо... (The place where we're going...)
 - Країна, звідки він приїхав... (The country he came from...)
 
-**Vocabulary (20 words):**
-де, куди, звідки, звідси, туди, сюди, там, тут, всюди, ніде, скрізь, деінде, кудись, нікуди, звідкись, десь, будь-де, де-небудь, куди-небудь, звідки-небудь
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1243,8 +1353,12 @@ Students must demonstrate they can:
 - Те, що він сказав... (What he said... / That which he said...)
 - Все, що я знаю... (Everything that I know...)
 
-**Vocabulary (20 words):**
-коли, тоді коли, у той час коли, щоразу коли, кожного разу коли, те що, все що, щось що, нічого що, багато чого що, мало що, те що треба, все що потрібно, щось нове що, факт що, правда що, думка що, ідея що, питання що, проблема що
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1264,8 +1378,12 @@ When the subject of both clauses is the same, use щоб + infinitive:
 - Я прийшов, щоб допомогти. (I came to help.)
 - Вона вчиться, щоб стати лікарем. (She studies to become a doctor.)
 
-**Vocabulary (20 words):**
-щоб, для того щоб, задля того щоб, з метою, з ціллю, заради, на те щоб, мета, ціль, намір, призначення, задум, план, бажання, прагнення, устремління, завдання, причина, підстава, мотивація
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1286,8 +1404,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Вона просила, щоб я допоміг. (She asked me to help.)
 - Він зачекав, щоб усі сіли. (He waited for everyone to sit down.)
 
-**Vocabulary (20 words):**
-хотіти щоб, просити щоб, наказати щоб, вимагати щоб, дозволити щоб, заборонити щоб, порадити щоб, запропонувати щоб, домогтися щоб, добитися щоб, переконати щоб, наполягати щоб, рекомендувати щоб, попросити щоб, побажати щоб, очікувати щоб, сподіватися щоб, мріяти щоб, планувати щоб, намагатися щоб
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1307,8 +1429,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Якщо він прийде, скажи мені. (If he comes, tell me.)
 - Якщо дощ, візьми парасольку. (If it rains, take an umbrella.)
 
-**Vocabulary (20 words):**
-якщо, коли, у випадку якщо, за умови що, при умові що, у разі якщо, за умов, тоді, в такому разі, отже, тому, через це, значить, виходить, можливо, ймовірно, певно, напевно, можливість, умова
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1328,8 +1454,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Якби вона прийшла, ми б поговорили. (If she came, we would talk.)
 - Якби я був багатий... (If I were rich...)
 
-**Vocabulary (20 words):**
-якби, якби не, було б, був би, була б, було б, були б, на жаль, шкода що, на щастя, мрія, бажання, уява, фантазія, припущення, гіпотеза, теоретично, ідеально, в ідеалі, в принципі
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1354,8 +1484,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Якби я вивчив тоді, зараз би знав. (If I had studied then, I would know now.)
 - Якщо він не прийде, і якщо погода буде погана... (If he doesn't come, and if the weather is bad...)
 
-**Vocabulary (20 words):**
-у такому разі, інакше, в іншому випадку, проте, однак, але, хоча, незважаючи на, попри, при цьому, до того ж, крім того, більше того, навіть якщо, тим більше, тим менше, все одно, в будь-якому разі, так чи інакше, як би там не було
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1454,8 +1588,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Незважаючи на те що було пізно, вони працювали. (Despite it being late, they worked.)
 - Попри те що холодно, я вийшов. (Despite the cold, I went out.)
 
-**Vocabulary (20 words):**
-хоча, хоч, хоча б, дарма що, попри, попри те що, незважаючи на, незважаючи на те що, всупереч, всупереч тому що, проте, однак, але все ж, тим не менш, все ж таки, все одно, навіть попри, навіть хоча, при всьому тому, при цьому
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1476,8 +1614,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Завдяки тому що він допоміг... (Thanks to his help...)
 - Він захворів, тому не прийшов. (He got sick, so he didn't come.)
 
-**Vocabulary (20 words):**
-тому що, через те що, бо, оскільки, позаяк, адже, завдяки тому що, внаслідок того що, з огляду на те що, у зв'язку з тим що, тому, через це, отже, таким чином, відтак, внаслідок, як наслідок, у результаті, ось чому, саме тому
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1499,8 +1641,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Перш ніж піти, він попрощався. (Before leaving, he said goodbye.)
 - Як тільки почувся дзвінок... (As soon as the bell rang...)
 
-**Vocabulary (20 words):**
-коли, після того як, перед тим як, до того як, поки, поки не, доки, доки не, як тільки, щойно, ледве, мало не, у той час як, в міру того як, у той момент коли, відтоді як, з тих пір як, до тих пір поки, весь час поки, кожного разу коли
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1536,8 +1682,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Тут можна/не можна курити. (Smoking is/isn't allowed here.)
 - Треба/потрібно/необхідно зробити. (It's necessary to do.)
 
-**Vocabulary (20 words):**
-при цьому, водночас, одночасно, паралельно, разом з тим, до всього, на додаток, тим паче, особливо, зокрема, можна, не можна, треба, потрібно, необхідно, варто, слід, годиться, доречно, доцільно
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1559,8 +1709,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Вона стверджувала, що знає. (She claimed that she knew.)
 - Повідомили, що лекція скасована. (They announced that the lecture was cancelled.)
 
-**Vocabulary (20 words):**
-сказати, говорити, стверджувати, заявляти, повідомляти, пояснювати, доповідати, розповідати, зазначати, підкреслювати, наголошувати, відзначати, вважати, думати, гадати, припускати, вірити, сподіватися, обіцяти, погрожувати
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1581,8 +1735,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Він попросив, щоб я зачекав. (He asked me to wait.)
 - Вона наказала, щоб ми замовкли. (She ordered us to be quiet.)
 
-**Vocabulary (20 words):**
-запитати, питати, цікавитися, дізнаватися, уточнювати, перепитувати, попросити, просити, вимагати, наказувати, забороняти, дозволяти, радити, рекомендувати, пропонувати, переконувати, умовляти, благати, наполягати, закликати
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1688,8 +1846,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Читаючи книгу, він пив каву. (While reading a book, he drank coffee.)
 - Йдучи вулицею, я зустрів друга. (Walking down the street, I met a friend.)
 
-**Vocabulary (20 words):**
-читаючи, пишучи, говорячи, слухаючи, дивлячись, думаючи, працюючи, йдучи, біжачи, стоячи, сидячи, лежачи, їдучи, летячи, несучи, ведучи, повертаючись, одягаючись, вмиваючись, готуючись
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1714,8 +1876,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Прочитавши книгу, він заснув. (Having read the book, he fell asleep.)
 - Прийшовши додому, вона зателефонувала. (Having come home, she called.)
 
-**Vocabulary (20 words):**
-прочитавши, написавши, сказавши, зробивши, взявши, давши, відкривши, закривши, почавши, закінчивши, прийшовши, пішовши, приїхавши, поїхавши, побачивши, почувши, дізнавшись, повернувшись, одягнувшись, приготувавши
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1742,8 +1908,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Читаючий студент... (Artificial/Bureaucratic)
 - Посивілий чоловік... (Greying man - Natural)
 
-**Vocabulary (20 words):**
-існуючий, діючий, працюючий, слідуючий (avoid!), наступний (correct!), посивілий, зів'ялий, загорілий, змоклий, замерзлий, пожовклий, опалий, прибулий, відсталий, дорослий, бувший (avoid!), колишній (correct!), оточуючий (avoid!), навколишній (correct!), бажаючий
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1770,8 +1940,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Agrees in gender/number with noun
 - написана книга, зроблене завдання, прочитані листи
 
-**Vocabulary (20 words):**
-написаний, зроблений, прочитаний, сказаний, відкритий, закритий, взятий, даний, куплений, проданий, отриманий, посланий, виконаний, закінчений, побудований, знищений, створений, відомий, улюблений, забутий
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1797,8 +1971,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Мені було сказано, що... (I was told that...)
 - Тут заборонено курити. (Smoking is forbidden here.)
 
-**Vocabulary (20 words):**
-написано, зроблено, сказано, вирішено, доведено, погоджено, встановлено, визначено, забезпечено, організовано, виконано, завершено, заплановано, передбачено, дозволено, заборонено, рекомендовано, необхідно, потрібно, важливо
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1824,8 +2002,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Рішення прийнято. (A decision has been made.)
 - Будинок будується. (The building is being built.)
 
-**Vocabulary (20 words):**
-автор, виконавець, творець, засновник, ініціатор, організатор, відповідальний, причетний, залучений, задіяний, уражений, вражений, зворушений, здивований, розчарований, задоволений, стурбований, переконаний, змушений, зобов'язаний
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1849,8 +2031,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Хлібчика, будь ласка (Politeness/Softening)
 - Проблемка! (Dismissive/Ironic)
 
-**Vocabulary (30 words):**
-хлопчик, дівчинка, котик, песик, столик, стілець, будиночок, матінка, татусь, бабуся, дідусь, донечка, синочок, братик, сестричка, серденько, сонечко, зірочка, квіточка, водичка, хлібчик, кавка, чайок, трошки, трішки, тихесенько, гарнесенький, малесенький, рідненький, близенько
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -1994,8 +2180,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Ideas, thoughts, problems, solutions
 
-**Vocabulary (30 words):**
-ідея, думка, концепція, теорія, гіпотеза, припущення, твердження, аргумент, доказ, висновок, проблема, питання, завдання, виклик, труднощі, рішення, вихід, розв'язання, підхід, метод, спосіб, стратегія, план, проєкт, пропозиція, рекомендація, порада, відповідь, результат, наслідок
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Key Patterns:**
 
@@ -2016,8 +2206,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Processes, changes, development
 
-**Vocabulary (30 words):**
-процес, розвиток, прогрес, зміна, перетворення, еволюція, революція, реформа, модернізація, оновлення, покращення, погіршення, зростання, спадання, підвищення, зниження, розширення, скорочення, збільшення, зменшення, прискорення, сповільнення, стабілізація, криза, підйом, занепад, відновлення, регрес, трансформація, адаптація
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Key Patterns:**
 
@@ -2037,8 +2231,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Opinion expression vocabulary
 
-**Vocabulary (25 words):**
-вважати, думати, гадати, припускати, переконаний, впевнений, сумніватися, погоджуватися, не погоджуватися, заперечувати, підтримувати, критикувати, оцінювати, схвалювати, засуджувати, на мою думку, з мого погляду, як на мене, я вважаю що, мені здається що, можна сказати що, безперечно, безсумнівно, очевидно, зрозуміло
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Key Patterns:**
 
@@ -2059,8 +2257,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Discussion and debate vocabulary
 
-**Vocabulary (25 words):**
-погоджуватися, згодний, так, звичайно, абсолютно, цілком, повністю, точно, справді, дійсно, не погоджуватися, не згодний, не думаю, навпаки, зовсім ні, аж ніяк, це не так, помилка, хибний, неправильний, сперечатися, дискутувати, обговорювати, компроміс, консенсус
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Key Patterns:**
 
@@ -2082,8 +2284,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Text cohesion connectors
 
-**Vocabulary (25 words):**
-і, а, але, проте, однак, хоча, хоч, тому, через це, отже, таким чином, значить, тобто, а саме, наприклад, зокрема, власне, взагалі, загалом, справді, дійсно, насправді, до речі, між іншим, до того ж
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Key Patterns:**
 
@@ -2104,8 +2310,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Complex text organization
 
-**Vocabulary (25 words):**
-по-перше, по-друге, по-третє, насамперед, передусім, крім того, додатково, більше того, не кажучи вже про, тим паче, тим більше, з іншого боку, натомість, водночас, попри це, незважаючи на, внаслідок, у результаті, підсумовуючи, загалом кажучи, у підсумку, нарешті, насамкінець, на завершення, врешті-решт
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Key Patterns:**
 
@@ -2125,8 +2335,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Verbs and expressions of change
 
-**Vocabulary (25 words):**
-змінювати, змінитися, покращувати, покращитися, погіршувати, погіршитися, зростати, збільшуватися, зменшуватися, падати, підніматися, розширюватися, звужуватися, прискорюватися, сповільнюватися, стабілізуватися, коливатися, поступово, різко, значно, незначно, швидко, повільно, стрімко, раптово
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Key Patterns:**
 
@@ -2146,8 +2360,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Media and journalism vocabulary
 
-**Vocabulary (30 words):**
-новини, стаття, репортаж, інтерв'ю, коментар, огляд, аналіз, журналіст, кореспондент, редактор, видавець, преса, газета, журнал, телебачення, радіо, інтернет, соціальні мережі, заголовок, рубрика, випуск, тираж, аудиторія, читач, глядач, слухач, джерело, інформація, факт, чутка
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Key Patterns:**
 
@@ -2167,8 +2385,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Civic and political vocabulary
 
-**Vocabulary (30 words):**
-суспільство, держава, країна, нація, народ, громадянин, уряд, парламент, президент, міністр, депутат, закон, право, обов'язок, свобода, демократія, вибори, голосування, партія, кандидат, політика, реформа, криза, протест, демонстрація, громадянське суспільство, права людини, верховенство права, корупція, прозорість
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Key Patterns:**
 
@@ -2188,8 +2410,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Workplace and professional vocabulary
 
-**Vocabulary (30 words):**
-колега, керівник, підлеглий, співробітник, команда, відділ, офіс, нарада, зустріч, звіт, презентація, дедлайн, проєкт, завдання, відповідальність, ефективність, продуктивність, кар'єра, підвищення, зарплата, премія, відпустка, лікарняний, резюме, співбесіда, кваліфікація, досвід, навички, компетенція, професіоналізм
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Key Patterns:**
 
@@ -2229,8 +2455,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Environmental vocabulary
 
-**Vocabulary (30 words):**
-довкілля, навколишнє середовище, природа, екологія, забруднення, викиди, відходи, сміття, переробка, утилізація, клімат, потепління, зміни клімату, захист, охорона, збереження, ресурси, енергія, відновлювальні джерела, екосистема, біорізноманіття, вимирання, деградація, стійкий розвиток, парникові гази, озоновий шар, ліс, вода, повітря, ґрунт
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -2244,8 +2474,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Health and well-being vocabulary
 
-**Vocabulary (30 words):**
-здоров'я, самопочуття, стан, хвороба, симптом, лікування, одужання, профілактика, імунітет, організм, стрес, тривога, депресія, психолог, терапія, дієта, харчування, вправи, режим, сон, відпочинок, фізична активність, ментальне здоров'я, звичка, залежність, шкідливий, корисний, здоровий, нездоровий, відновлення
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -2259,8 +2493,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Advanced emotional vocabulary
 
-**Vocabulary (30 words):**
-емоція, почуття, настрій, радість, щастя, задоволення, сум, горе, смуток, гнів, роздратування, страх, тривога, хвилювання, здивування, подив, відраза, огида, сором, провина, заздрість, ревнощі, гордість, надія, розчарування, полегшення, захоплення, ентузіазм, байдужість, розгубленість
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -2274,8 +2512,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Social relationship vocabulary
 
-**Vocabulary (25 words):**
-стосунки, відносини, зв'язок, дружба, кохання, романтика, сім'я, партнер, пара, шлюб, розлучення, конфлікт, суперечка, примирення, довіра, відданість, вірність, зрада, підтримка, турбота, повага, розуміння, спілкування, близькість, відстань
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -2289,8 +2531,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Professional and business vocabulary
 
-**Vocabulary (30 words):**
-бізнес, компанія, фірма, підприємство, корпорація, організація, установа, клієнт, партнер, постачальник, конкурент, ринок, продукт, послуга, продаж, купівля, контракт, угода, переговори, презентація, проєкт, бюджет, прибуток, збиток, інвестиції, капітал, стратегія, маркетинг, менеджмент, підприємництво
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -2304,8 +2550,14 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Travel and geographical vocabulary
 
-**Vocabulary (30 words):**
-подорож, мандрівка, поїздка, турист, турагентство, бронювання, резервація, готель, хостел, віза, паспорт, митниця, кордон, авіаквиток, посадковий талон, багаж, валіза, рюкзак, пам'ятка, екскурсія, гід, маршрут, карта, напрямок, північ, південь, схід, захід, континент, острів
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
+**Key themes/places:** паспорт
+
 
 **Signature Activity Concepts:**
 
@@ -2319,8 +2571,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Thinking verb distinctions
 
-**Vocabulary (20 words):**
-думати, гадати, вважати, припускати, міркувати, роздумувати, розмірковувати, обмірковувати, аналізувати, оцінювати, судити, рахувати, сприймати, розуміти, усвідомлювати, осмислювати, уявляти, припускати, передбачати, планувати
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Key Distinctions:**
 
@@ -2341,8 +2597,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Speaking verb distinctions
 
-**Vocabulary (20 words):**
-казати, говорити, розповідати, повідомляти, пояснювати, описувати, стверджувати, заявляти, оголошувати, констатувати, зауважувати, згадувати, нагадувати, додавати, уточнювати, наголошувати, підкреслювати, наполягати, переконувати, погоджуватися
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Key Distinctions:**
 
@@ -2363,8 +2623,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Common verb-noun and adj-noun patterns
 
-**Vocabulary (25 words):**
-приймати рішення, брати участь, мати значення, надавати перевагу, звертати увагу, робити висновки, ставити питання, грати роль, вести переговори, нести відповідальність, здобувати освіту, набувати досвіду, висувати вимоги, порушувати проблему, досягати успіху, зазнавати невдачі, вдаватися до заходів, відігравати роль, справляти враження, мати вплив, чинити опір, виконувати обов'язки, порушувати закон, дотримуватися правил, нехтувати обов'язками
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Signature Activity Concepts:**
 
@@ -2378,8 +2642,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Emotional and interpersonal vocabulary for mature communication
 
-**Vocabulary (30 words):**
-емпатія, співчуття, розуміння, терпіння, терпимість, толерантність, повага, ввічливість, тактовність, делікатність, щирість, відвертість, чесність, порядність, відповідальність, зобов'язання, обіцянка, вибачення, пробачення, примирення, компроміс, порозуміння, взаєморозуміння, підтримка, заохочення, похвала, критика, зауваження, порада, рекомендація
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Key Patterns:**
 
@@ -2418,8 +2686,14 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Western Ukraine
 
-**Vocabulary (25 words):**
-захід, західний, Львів, Львівщина, Галичина, Закарпаття, Волинь, Буковина, Івано-Франківщина, карпатський, гуцул, бойко, лемко, австро-угорський, польський, габсбурзький, традиція, спадщина, архітектура, собор, ратуша, площа, фестиваль, кава, п'ерник
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
+**Key themes/places:** Львів, Львівщина, Галичина, Закарпаття, Волинь, Буковина, Івано-Франківщина
+
 
 **Cultural Content:**
 
@@ -2439,8 +2713,14 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Eastern Ukraine
 
-**Vocabulary (25 words):**
-схід, східний, Харків, Харківщина, Слобожанщина, Донбас, промисловість, індустрія, наука, університет, технології, заводи, шахта, вугілля, металургія, машинобудування, російськомовний, суржик, кордон, ідентичність, культура, мистецтво, спорт, футбол, хокей
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
+**Key themes/places:** Харків, Харківщина, Слобожанщина, Донбас
+
 
 **Cultural Content:**
 
@@ -2460,8 +2740,14 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Southern Ukraine
 
-**Vocabulary (25 words):**
-південь, південний, Одеса, Одещина, Херсон, Миколаїв, Крим, Чорне море, Азовське море, порт, судноплавство, торгівля, курорт, туризм, пляж, степ, сільське господарство, зерно, пшениця, виноград, виноробство, багатонаціональний, грек, болгарин, татарин
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
+**Key themes/places:** Одеса, Одещина, Херсон, Миколаїв, Крим, Чорне море, Азовське море
+
 
 **Cultural Content:**
 
@@ -2481,8 +2767,14 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Central Ukraine
 
-**Vocabulary (25 words):**
-центр, центральний, Київ, Київщина, Полтава, Полтавщина, Черкаси, Черкащина, столиця, історичний, давній, Русь, козацький, гетьман, Шевченко, Гоголь, Дніпро, лісостеп, село, хутір, традиційний, народний, вишиванка, писанка, калина
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
+**Key themes/places:** Київ, Київщина, Полтава, Полтавщина, Черкаси, Черкащина, Русь, Шевченко
+
 
 **Cultural Content:**
 
@@ -2502,8 +2794,14 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Contemporary Ukrainian music
 
-**Vocabulary (25 words):**
-музика, пісня, хіт, альбом, концерт, фестиваль, виконавець, співак, співачка, гурт, група, поп, рок, реп, електронна музика, фолк, джаз, класика, Євробачення, конкурс, хіт-парад, кліп, відео, слухач, шанувальник
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
+**Key themes/places:** музика, фестиваль, електронна музика
+
 
 **Cultural Content:**
 
@@ -2524,8 +2822,14 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Ukrainian film and television
 
-**Vocabulary (25 words):**
-кіно, фільм, кінострічка, серіал, документальний, художній, комедія, драма, трилер, режисер, актор, акторка, продюсер, сценарій, зйомки, прем'єра, оскар, нагорода, критика, рецензія, кінофестиваль, екранізація, анімація, дубляж, субтитри
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
+**Key themes/places:** кіно, кінострічка
+
 
 **Cultural Content:**
 
@@ -2546,8 +2850,14 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Tech industry in Ukraine
 
-**Vocabulary (25 words):**
-технології, ІТ, програмування, розробник, інженер, стартап, компанія, інновація, додаток, платформа, веб-сайт, інтернет, штучний інтелект, кібербезпека, аутсорсинг, фріланс, венчурний капітал, інвестор, засновник, офіс, коворкінг, Кремнієва долина, цифровий, онлайн, хмарний
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
+**Key themes/places:** ІТ
+
 
 **Cultural Content:**
 
@@ -2570,8 +2880,14 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Spectator sports culture and history
 
-**Vocabulary (25 words):**
-спорт, футбол, бокс, теніс, біатлон, гімнастика, плавання, легка атлетика, команда, збірна, ліга, чемпіонат, матч, гра, тренер, гравець, спортсмен, олімпіада, медаль, рекорд, вболівальник, стадіон, арена, перемога, поразка
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
+**Key themes/places:** спорт
+
 
 **Cultural Content:**
 
@@ -2592,8 +2908,14 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Active lifestyle basics and urban recreation
 
-**Vocabulary (25 words):**
-активний відпочинок, тренування, бігати, ходити в похід, кататися на велосипеді, займатися спортом, спортзал, парк, свіже повітря, маршрут, дистанція, швидкість, витривалість, дихати, розминка, кросівки, рюкзак, пляшка води, здоровий спосіб життя, рух, користь, м'язи, втома, енергія, мета
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
+**Key themes/places:** займатися спортом, спортзал
+
 
 **Cultural Content:**
 
@@ -2613,8 +2935,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Running culture and events
 
-**Vocabulary (25 words):**
-біг, забіг, марафон, напівмарафон, старт, фініш, медаль, учасник, реєстрація, внесок, результат, особистий рекорд, темп, дистанція, біговий клуб, тренуватися, готуватися, брати участь, перемагати, вболівати, волонтер, благодійність, здоров'я, виклик, команда
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Cultural Content:**
 
@@ -2634,8 +2960,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Hiking and trail running in Carpathians
 
-**Vocabulary (25 words):**
-гора, вершина, похід, трейлраннінг, маршрут, стежка, маркування, намет, спальник, вогнище, підніматися, спускатися, краєвид, природа, погода, дощ, вітер, безпека, рятувальник, карта, компас, ліс, полонина, Говерла, Карпати
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Cultural Content:**
 
@@ -2655,8 +2985,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Cycling, swimming, kayaking
 
-**Vocabulary (25 words):**
-велосипед, шолом, колесо, їздити, велодоріжка, прокат, плавання, басейн, відкрита вода, байдарка, сплав, весло, рятувальний жилет, триатлон, змагання, швидкість, безпека, техніка, тренер, річка, озеро, море, пляж, засмагати, відпочивати
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Cultural Content:**
 
@@ -2676,8 +3010,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Skiing and snowboarding
 
-**Vocabulary (25 words):**
-зима, сніг, лижі, сноуборд, кататися, курорт, траса, підйомник, інструктор, шолом, окуляри, рукавиці, холод, мороз, лід, ковзани, падати, безпека, Буковель, Драгобрат, скі-пас, оренда, новачок, професіонал, глінтвейн
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Cultural Content:**
 
@@ -2697,8 +3035,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Regional cuisines
 
-**Vocabulary (25 words):**
-кухня, страва, рецепт, інгредієнт, готувати, варити, смажити, пекти, традиційний, регіональний, борщ, вареники, голубці, деруни, сало, галушки, холодець, узвар, пампушки, кутя, паска, крашанки, гостинність, застілля, тост
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Cultural Content:**
 
@@ -2719,8 +3061,14 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Festivals and celebrations throughout the year
 
-**Vocabulary (30 words):**
-свято, фестиваль, святкування, традиція, обряд, звичай, Різдво, Великдень, Івана Купала, День Незалежності, Масляна, вечір, застілля, гість, подарунок, побажання, привітання, колядка, щедрівка, вертеп, крашанка, пасхальний, різдвяний, народний, автентичний, відроджений, сучасний, масовий, міський, сільський
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
+**Key themes/places:** фестиваль, традиція, Різдво, Великдень, Івана Купала, День Незалежності, Масляна
+
 
 **Key Patterns:**
 
@@ -2762,8 +3110,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** News literacy and reading skills
 
-**Vocabulary (20 words):**
-заголовок, лід, підзаголовок, абзац, цитата, джерело, факт, думка, аналіз, коментар, редакція, колонка, репортаж, хроніка, зведення, огляд, дайджест, головна новина, термінове повідомлення, ексклюзив
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Skills:**
 
@@ -2784,8 +3136,12 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 **Focus:** Audio comprehension skills
 
-**Vocabulary (20 words):**
-інтерв'ю, подкаст, ведучий, гість, питання, відповідь, обговорення, дискусія, розмова, бесіда, слухати, чути, розуміти, перепитувати, уточнювати, нотатки, конспект, тези, резюме, висновок
+**Content Guidance:**
+Vocabulary will emerge naturally from thematic content and should meet:
+- Richness targets: 25+ words per module
+- Integration: 80% in activities, 50% in lesson text
+- Register and complexity appropriate to B1 level
+
 
 **Skills:**
 

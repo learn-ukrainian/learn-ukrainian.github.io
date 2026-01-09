@@ -1,0 +1,128 @@
+module: 108-dmytro-pavlychko
+level: C1
+version: '2.0'
+items:
+  - lemma: поет
+    ipa: /poˈɛt/
+    translation: poet
+    pos: noun
+    gender: m
+  - lemma: пісня
+    ipa: /ˈpʲisʲnʲɐ/
+    translation: song
+    pos: noun
+    gender: f
+  - lemma: колір
+    ipa: /ˈkɔlʲir/
+    translation: color
+    pos: noun
+    gender: m
+  - lemma: любов
+    ipa: /lʲuˈbɔʋ/
+    translation: love
+    pos: noun
+    gender: f
+  - lemma: журба
+    ipa: /ʒurˈbɑ/
+    translation: sorrow/sadness
+    pos: noun
+    gender: f
+  - lemma: нитка
+    ipa: /ˈnɪtkɐ/
+    translation: thread
+    pos: noun
+    gender: f
+  - lemma: доля
+    ipa: /ˈdɔlʲɐ/
+    translation: destiny/fate
+    pos: noun
+    gender: f
+  - lemma: сорочка
+    ipa: /soˈrɔt͡ʃkɐ/
+    translation: shirt (embroidered)
+    pos: noun
+    gender: f
+  - lemma: полотно
+    ipa: /poloˈtnɔ/
+    translation: canvas/cloth
+    pos: noun
+    gender: n
+  - lemma: боротьба
+    ipa: /boroˈdʲbɑ/
+    translation: struggle
+    pos: noun
+    gender: f
+  - lemma: політик
+    ipa: /poˈlʲitɪk/
+    translation: politician
+    pos: noun
+    gender: m
+  - lemma: дипломат
+    ipa: /dɪploˈmɑt/
+    translation: diplomat
+    pos: noun
+    gender: m
+  - lemma: незалежність
+    ipa: /nezɐˈlɛʒnʲistʲ/
+    translation: independence
+    pos: noun
+    gender: f
+  - lemma: декларація
+    ipa: /deklɐˈrat͡s⁽ʲ⁾ijɐ/
+    translation: declaration
+    pos: noun
+    gender: f
+  - lemma: класик
+    ipa: /ˈklɑsɪk/
+    translation: classic (author)
+    pos: noun
+    gender: m
+  - lemma: перекладач
+    ipa: /pereklɐˈdɑt͡ʃ/
+    translation: translator
+    pos: noun
+    gender: m
+  - lemma: сонет
+    ipa: /soˈnɛt/
+    translation: sonnet
+    pos: noun
+    gender: m
+  - lemma: збірка
+    ipa: /ˈzbʲirkɐ/
+    translation: collection (of poems)
+    pos: noun
+    gender: f
+  - lemma: повстанець
+    ipa: /poʋˈstɑnet͡sʲ/
+    translation: rebel/insurgent
+    pos: noun
+    gender: m
+  - lemma: компроміс
+    ipa: /komproˈmʲis/
+    translation: compromise
+    pos: noun
+    gender: m
+  - lemma: дорога
+    ipa: /doˈrɔɦɐ/
+    translation: road/path
+    pos: noun
+    gender: f
+  - lemma: поріг
+    ipa: /poˈrʲiɦ/
+    translation: threshold
+    pos: noun
+    gender: m
+  - lemma: скриня
+    ipa: /ˈskrɪnʲɐ/
+    translation: chest (box)
+    pos: noun
+    gender: f
+  - lemma: сивина
+    ipa: /sɪʋɪˈnɑ/
+    translation: gray hair
+    pos: noun
+    gender: f
+  - lemma: мамине
+    ipa: /ˈmɑmɪne/
+    translation: mother's
+    pos: adj

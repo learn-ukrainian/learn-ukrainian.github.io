@@ -19,6 +19,24 @@ All LIT modules are being recreated from scratch using the standardized template
 
 ---
 
+## Vocabulary Approach (B1+)
+
+**From B1 onwards, vocabulary is not prescribed in this plan.** Instead, vocabulary emerges naturally from the module's thematic content and is validated against:
+
+- **Richness targets:** 20+ unique words per module (enforced by audit)
+- **Integration requirements:** 80% used in activities, 50% in lesson text (enforced by audit)
+- **Register appropriateness:** Vocabulary complexity matches LIT proficiency level
+
+The "Content Guidance" sections below provide **thematic direction** and **pop culture anchors** to guide vocabulary selection, but builders have flexibility to choose words that best serve the pedagogical goals.
+
+**Why this approach?**
+- Content-driven vocabulary is more authentic and contextual
+- Historical/cultural modules require domain-specific terminology
+- Pop culture references evolve and need flexibility
+- Quality is enforced through metrics, not prescriptive lists
+
+---
+
 ## Track Overview
 
 This track is designed for **Advanced (C1)** learners who want to move from being a "reader" to a "scholar". It focuses on the "Golden Age" of Ukrainian literature (19th century) and the evolution of the modern standard language.

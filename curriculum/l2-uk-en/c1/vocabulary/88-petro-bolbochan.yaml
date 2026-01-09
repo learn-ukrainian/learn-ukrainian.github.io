@@ -1,0 +1,129 @@
+module: 88-petro-bolbochan
+level: C1
+version: '2.0'
+items:
+  - lemma: полководець
+    ipa: /pɔlkɔˈwɔdɛt͡sʲ/
+    translation: military commander
+    pos: noun
+    gender: m
+  - lemma: операція
+    ipa: /ɔpɛˈrɑt͡sʲijɑ/
+    translation: operation
+    pos: noun
+    gender: f
+  - lemma: контрнаступ
+    ipa: /kɔntrnɑˈstup/
+    translation: counter-offensive
+    pos: noun
+    gender: m
+  - lemma: визволення
+    ipa: /vɪˈzwɔlenʲːɑ/
+    translation: liberation
+    pos: noun
+    gender: n
+  - lemma: стратегія
+    ipa: /strɑˈtɛɦʲijɑ/
+    translation: strategy
+    pos: noun
+    gender: f
+  - lemma: тактика
+    ipa: /ˈtɑktɪkɑ/
+    translation: tactics
+    pos: noun
+    gender: f
+  - lemma: полк
+    ipa: /pɔlk/
+    translation: regiment
+    pos: noun
+    gender: m
+  - lemma: дивізія
+    ipa: /dɪˈwʲizʲijɑ/
+    translation: division
+    pos: noun
+    gender: f
+  - lemma: наступ
+    ipa: /ˈnɑstup/
+    translation: offensive
+    pos: noun
+    gender: m
+  - lemma: плацдарм
+    ipa: /plɑt͡sˈdɑrm/
+    translation: bridgehead
+    pos: noun
+    gender: m
+  - lemma: дисципліна
+    ipa: /dɪst͡sɪˈplʲinɑ/
+    translation: discipline
+    pos: noun
+    gender: f
+  - lemma: боєздатність
+    ipa: /bɔjɛˈzdɑtnʲistʲ/
+    translation: combat readiness
+    pos: noun
+    gender: f
+  - lemma: зрада
+    ipa: /ˈzrɑdɑ/
+    translation: treason/betrayal
+    pos: noun
+    gender: f
+  - lemma: трибунал
+    ipa: /trɪbuˈnɑl/
+    translation: tribunal
+    pos: noun
+    gender: m
+  - lemma: розстріл
+    ipa: /rɔzˈstrʲil/
+    translation: execution
+    pos: noun
+    gender: m
+  - lemma: патріот
+    ipa: /pɑtrʲiˈɔt/
+    translation: patriot
+    pos: noun
+    gender: m
+  - lemma: присяга
+    ipa: /prɪˈsʲɑɦɑ/
+    translation: oath
+    pos: noun
+    gender: f
+  - lemma: фронт
+    ipa: /frɔnt/
+    translation: front
+    pos: noun
+    gender: m
+  - lemma: розвідка
+    ipa: /ˈrɔzwʲidkɑ/
+    translation: intelligence/reconnaissance
+    pos: noun
+    gender: f
+  - lemma: штаб
+    ipa: /ʃtɑb/
+    translation: headquarters
+    pos: noun
+    gender: m
+  - lemma: армія
+    ipa: /ˈɑrmʲijɑ/
+    translation: army
+    pos: noun
+    gender: f
+  - lemma: незалежність
+    ipa: /nɛzɑˈlɛʒnʲistʲ/
+    translation: independence
+    pos: noun
+    gender: f
+  - lemma: суверенітет
+    ipa: /suvɛrɛnʲiˈtɛt/
+    translation: sovereignty
+    pos: noun
+    gender: m
+  - lemma: героїзм
+    ipa: /ɦɛrɔˈjizm/
+    translation: heroism
+    pos: noun
+    gender: m
+  - lemma: звитяга
+    ipa: /zvɪˈtʲɑɦɑ/
+    translation: victory/feat
+    pos: noun
+    gender: f

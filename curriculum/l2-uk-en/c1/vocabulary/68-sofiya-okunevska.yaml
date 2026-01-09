@@ -1,0 +1,124 @@
+module: 68-sofiya-okunevska
+level: C1
+version: '2.0'
+items:
+  - lemma: медицина
+    ipa: /medɪˈt͡sɪnɐ/
+    translation: medicine
+    pos: noun
+    gender: f
+  - lemma: лікарка
+    ipa: /ˈlʲikɐrkɐ/
+    translation: female doctor
+    pos: noun
+    gender: f
+  - lemma: диплом
+    ipa: /dɪˈplɔm/
+    translation: diploma
+    pos: noun
+    gender: m
+  - lemma: університет
+    ipa: /ʊn⁽ʲ⁾iwersɪˈtɛt/
+    translation: university
+    pos: noun
+    gender: m
+  - lemma: перешкода
+    ipa: /pereˈʃkɔdɐ/
+    translation: obstacle
+    pos: noun
+    gender: f
+  - lemma: рівноправність
+    ipa: /r⁽ʲ⁾iwnoˈprɑwn⁽ʲ⁾is⁽ʲ⁾tʲ/
+    translation: equality of rights
+    pos: noun
+    gender: f
+  - lemma: освіта
+    ipa: /oˈs⁽ʲ⁾w⁽ʲ⁾itɐ/
+    translation: education
+    pos: noun
+    gender: f
+  - lemma: фах
+    ipa: /fɑx/
+    translation: profession/specialty
+    pos: noun
+    gender: m
+  - lemma: практика
+    ipa: /ˈprɑktɪkɐ/
+    translation: practice
+    pos: noun
+    gender: f
+  - lemma: пацієнт
+    ipa: /pɐt͡s⁽ʲ⁾iˈɛnt/
+    translation: patient
+    pos: noun
+    gender: m
+  - lemma: громадська діячка
+    ipa: /ɦroˈmɑd͡sʲkɐ diˈjɐt͡ʃkɐ/
+    translation: public activist (female)
+    pos: noun
+    gender: f
+  - lemma: фемінізм
+    ipa: /femiˈn⁽ʲ⁾izm/
+    translation: feminism
+    pos: noun
+    gender: m
+  - lemma: досягнення
+    ipa: /doˈsʲɑɦnenʲːɐ/
+    translation: achievement
+    pos: noun
+    gender: n
+  - lemma: виклик
+    ipa: /ˈwɪklɪk/
+    translation: challenge
+    pos: noun
+    gender: m
+  - lemma: прогрес
+    ipa: /proˈɦrɛs/
+    translation: progress
+    pos: noun
+    gender: m
+  - lemma: просвітництво
+    ipa: /proˈsw⁽ʲ⁾itnɪt͡stwo/
+    translation: enlightenment/education
+    pos: noun
+    gender: n
+  - lemma: благодійність
+    ipa: /blɐɦoˈd⁽ʲ⁾ijn⁽ʲ⁾is⁽ʲ⁾tʲ/
+    translation: charity
+    pos: noun
+    gender: f
+  - lemma: інтелігенція
+    ipa: /intelʲiˈɦɛnt͡s⁽ʲ⁾ijɐ/
+    translation: intelligentsia
+    pos: noun
+    gender: f
+  - lemma: наполегливість
+    ipa: /nɐpoˈlɛɦlɪw⁽ʲ⁾is⁽ʲ⁾tʲ/
+    translation: persistence/perseverance
+    pos: noun
+    gender: f
+  - lemma: реформа
+    ipa: /reˈfɔrmɐ/
+    translation: reform
+    pos: noun
+    gender: f
+  - lemma: охорона здоров'я
+    ipa: /oxoˈrɔnɐ zdoˈrɔwjɐ/
+    translation: healthcare
+    pos: noun
+    gender: f
+  - lemma: самореалізація
+    ipa: /sɐmoreɐlʲiˈzat͡s⁽ʲ⁾ijɐ/
+    translation: self-realization
+    pos: noun
+    gender: f
+  - lemma: науковий ступінь
+    ipa: /nɐʊˈkɔwɪj ˈstup⁽ʲ⁾inʲ/
+    translation: academic degree
+    pos: noun
+    gender: m
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɐ/
+    translation: legacy/heritage
+    pos: noun
+    gender: f

@@ -1,0 +1,127 @@
+module: 81-ivan-kotliarevskyi
+level: C1
+version: '1.0'
+items:
+  - lemma: зачинатель
+    ipa: /zɑt͡ʃɪˈnɑtɛlʲ/
+    translation: initiator/founder
+    pos: noun
+    gender: m
+  - lemma: бурлеск
+    ipa: /burˈlɛsk/
+    translation: burlesque
+    pos: noun
+    gender: m
+  - lemma: гумор
+    ipa: /ˈɦumɔr/
+    translation: humor
+    pos: noun
+    gender: m
+  - lemma: еней
+    ipa: /ɛˈnɛj/
+    translation: Aeneas
+    pos: noun
+    gender: m
+  - lemma: поема
+    ipa: /poˈɛmɑ/
+    translation: poem (long)
+    pos: noun
+    gender: f
+  - lemma: побут
+    ipa: /ˈpɔbʊt/
+    translation: everyday life/customs
+    pos: noun
+    gender: m
+  - lemma: козацтво
+    ipa: /kɔˈzɑt͡stwɔ/
+    translation: cossackdom
+    pos: noun
+    gender: n
+  - lemma: мова
+    ipa: /ˈmɔwɑ/
+    translation: language
+    pos: noun
+    gender: f
+  - lemma: народний
+    ipa: /nɑˈrɔdnɪj/
+    translation: folk/national
+    pos: adj
+  - lemma: живий
+    ipa: /ˈʒɪwɪj/
+    translation: living/alive
+    pos: adj
+  - lemma: п'єса
+    ipa: /ˈpjɛsɑ/
+    translation: play (theater)
+    pos: noun
+    gender: f
+  - lemma: наталка
+    ipa: /nɑˈtɑlkɑ/
+    translation: Natalka (name)
+    pos: noun
+    gender: f
+  - lemma: полтавка
+    ipa: /polˈtɑwkɑ/
+    translation: Poltava girl
+    pos: noun
+    gender: f
+  - lemma: театр
+    ipa: /tɛˈɑtr/
+    translation: theater
+    pos: noun
+    gender: m
+  - lemma: директор
+    ipa: /dɪˈrɛktɔr/
+    translation: director
+    pos: noun
+    gender: m
+  - lemma: масон
+    ipa: /mɑˈsɔn/
+    translation: freemason
+    pos: noun
+    gender: m
+  - lemma: ложа
+    ipa: /ˈlɔʒɑ/
+    translation: lodge (masonic)
+    pos: noun
+    gender: f
+  - lemma: служба
+    ipa: /sluˈʒbɑ/
+    translation: service
+    pos: noun
+    gender: f
+  - lemma: полтава
+    ipa: /polˈtɑwɑ/
+    translation: Poltava
+    pos: noun
+    gender: f
+  - lemma: класицизм
+    ipa: /klɑsɪˈt͡sɪzm/
+    translation: classicism
+    pos: noun
+    gender: m
+  - lemma: травестія
+    ipa: /trɑwɛˈstʲijɑ/
+    translation: travesty (genre)
+    pos: noun
+    gender: f
+  - lemma: сміх
+    ipa: /smix/
+    translation: laughter
+    pos: noun
+    gender: m
+  - lemma: епоха
+    ipa: /ɛˈpɔxɑ/
+    translation: epoch/era
+    pos: noun
+    gender: f
+  - lemma: відродження
+    ipa: /vidˈrɔdʒenʲːɑ/
+    translation: renaissance/revival
+    pos: noun
+    gender: n
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɑ/
+    translation: legacy/heritage
+    pos: noun
+    gender: f

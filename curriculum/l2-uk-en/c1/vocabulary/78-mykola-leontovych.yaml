@@ -1,0 +1,129 @@
+module: 78-mykola-leontovych
+level: C1
+version: '1.0'
+items:
+  - lemma: хор
+    ipa: /xɔr/
+    translation: choir
+    pos: noun
+    gender: m
+  - lemma: диригент
+    ipa: /dɪrɪˈɦɛnt/
+    translation: conductor
+    pos: noun
+    gender: m
+  - lemma: композитор
+    ipa: /kɔmpɔˈzɪtɔr/
+    translation: composer
+    pos: noun
+    gender: m
+  - lemma: обробка
+    ipa: /ɔˈbrɔbkɑ/
+    translation: arrangement/processing
+    pos: noun
+    gender: f
+  - lemma: фольклор
+    ipa: /folʲkˈlʲɔr/
+    translation: folklore
+    pos: noun
+    gender: m
+  - lemma: багатоголосся
+    ipa: /bɑɦɑtɔɦɔˈlɔsʲːɑ/
+    translation: polyphony
+    pos: noun
+    gender: n
+  - lemma: мелодія
+    ipa: /mɛˈlɔdʲijɑ/
+    translation: melody
+    pos: noun
+    gender: f
+  - lemma: щедрик
+    ipa: /ˈʃt͡ʃɛdrɪk/
+    translation: shchedryk (carol)
+    pos: noun
+    gender: m
+  - lemma: тріумф
+    ipa: /trʲiˈumf/
+    translation: triumph
+    pos: noun
+    gender: m
+  - lemma: вбивство
+    ipa: /ˈwbɪwstwɔ/
+    translation: murder/assassination
+    pos: noun
+    gender: n
+  - lemma: чекіст
+    ipa: /t͡ʃɛˈkist/
+    translation: chekist (Soviet agent)
+    pos: noun
+    gender: m
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɑ/
+    translation: legacy/heritage
+    pos: noun
+    gender: f
+  - lemma: аранжування
+    ipa: /ɑrɑnʒuˈwɑnʲːɑ/
+    translation: arrangement (music)
+    pos: noun
+    gender: n
+  - lemma: майстерність
+    ipa: /mɑjstɛrˈnʲistʲ/
+    translation: mastery/skill
+    pos: noun
+    gender: f
+  - lemma: автентичність
+    ipa: /ɑwtɛnˈtɪt͡ʃnʲistʲ/
+    translation: authenticity
+    pos: noun
+    gender: f
+  - lemma: гармонія
+    ipa: /ɦɑrˈmɔnʲijɑ/
+    translation: harmony
+    pos: noun
+    gender: f
+  - lemma: ритм
+    ipa: /ˈrɪtm/
+    translation: rhythm
+    pos: noun
+    gender: m
+  - lemma: творчість
+    ipa: /ˈtwɔrt͡ʃistʲ/
+    translation: creativity/works
+    pos: noun
+    gender: f
+  - lemma: постать
+    ipa: /ˈpɔstɑtʲ/
+    translation: figure/personality
+    pos: noun
+    gender: f
+  - lemma: внесок
+    ipa: /ˈwnɛsɔk/
+    translation: contribution
+    pos: noun
+    gender: m
+  - lemma: визнання
+    ipa: /vɪznɑˈnʲːɑ/
+    translation: recognition
+    pos: noun
+    gender: n
+  - lemma: капела
+    ipa: /kɑˈpɛlɑ/
+    translation: chapel/choir
+    pos: noun
+    gender: f
+  - lemma: партитура
+    ipa: /pɛrtɪˈturɑ/
+    translation: score (music)
+    pos: noun
+    gender: f
+  - lemma: виконання
+    ipa: /wɪkɔˈnɑnʲːɑ/
+    translation: performance/execution
+    pos: noun
+    gender: n
+  - lemma: легенда
+    ipa: /leˈɦɛndɑ/
+    translation: legend
+    pos: noun
+    gender: f

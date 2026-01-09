@@ -1,0 +1,2003 @@
+module: 01-how-to-talk-about-grammar
+level: B1
+module_number: 1
+activity_file: b1/activities/01-how-to-talk-about-grammar.yaml
+activities:
+- activity_id: quiz-частини-мови
+  activity_type: quiz
+  activity_title: Частини мови
+  item_count: 14
+  deterministic_checks:
+    variety_score: 100
+    variety_issues: []
+    vocabulary_difficulty: appropriate
+    cognitive_load: medium
+    naturalness_issues: []
+    naturalness_suggestions: []
+    distractor_quality_avg: 3.7142857142857144
+    per_item_checks:
+    - item_index: 0
+      text_preview: Коли українська вчителька каже «поставте іменник у множині», який
+        термін вона використовує для позна...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'іменник' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 3
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 1
+      text_preview: Ви читаєте українську граматику й бачите речення «прислівник описує
+        дію або ознаку» — яке слово у ць...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'прислівник' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 3
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 2
+      text_preview: У підручнику написано «дієслово змінюється за часами й особами»
+        — яку частину мови означає слово «ді...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'дієслово' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 3
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 3
+      text_preview: Вчитель просить знайти всі прикметники в реченні «гарний хлопець
+        читає цікаву книгу» — скільки прикм...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'два прикметники' (e.g., different tenses, cases,
+            aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 1
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 4
+      text_preview: Коли граматика каже «прийменник вимагає певного відмінка», який
+        термін означає слова типу «в», «на»,...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'прийменник' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 3
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 5
+      text_preview: У реченні «я хочу поїхати, але не маю часу» слово «але» з'єднує
+        дві частини — якою частиною мови вон...
+      checks:
+        variety: null
+        vocabulary_difficulty: too_easy
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'сполучник' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 3
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 6
+      text_preview: Підручник пояснює, що займенники замінюють іменники в реченні
+        — яке слово є займенником у фразі «вон...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'вона' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 1
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 7
+      text_preview: Ви бачите в тексті емоційний вигук «ой, як боляче!» — якою частиною
+        мови є слово «ой» у цьому виразі...
+      checks:
+        variety: null
+        vocabulary_difficulty: too_easy
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'вигук' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 3
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 8
+      text_preview: Коли граматист каже «визначте частину мови кожного слова», що
+        саме він просить вас визначити для кож...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 3
+          issues:
+          - Option 'рід' length unusual (3 chars vs 7 avg)
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'частина мови' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 9
+      text_preview: У вправі написано «знайдіть числівники» — який тип слів ви шукатимете
+        серед варіантів «п'ять», «швид...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'числівник' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 4
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 10
+      text_preview: Граматика пояснює «частка 'не' заперечує значення дієслова» —
+        яким терміном позначають слова типу «н...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'частка' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 3
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 11
+      text_preview: Вчитель каже «займенники мають такі ж граматичні категорії, як
+        іменники» — яким словом у реченні «ві...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 3
+          issues:
+          - Option 'він' length unusual (3 chars vs 8 avg)
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'і «він», і «її»' (e.g., different tenses, cases,
+            aspects)
+          analysis:
+            verb_count: 1
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 12
+      text_preview: Підручник пояснює «сполучники поєднують слова або речення» — яке
+        слово є сполучником у фразі «мама і...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 3
+          issues:
+          - Option 'і' length unusual (1 chars vs 4 avg)
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'і' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 13
+      text_preview: Коли вчитель каже «прийменник керує відмінком іменника», яке слово
+        є прийменником у фразі «книга на ...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 3
+          issues:
+          - Option 'на' length unusual (2 chars vs 6 avg)
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'на' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+  naturalness: null
+  difficulty: null
+  engagement: null
+  distractor_score: null
+  variety_score: null
+  issues: []
+  suggestions: []
+- activity_id: quiz-відмінки
+  activity_type: quiz
+  activity_title: Відмінки
+  item_count: 14
+  deterministic_checks:
+    variety_score: 100
+    variety_issues: []
+    vocabulary_difficulty: appropriate
+    cognitive_load: medium
+    naturalness_issues: []
+    naturalness_suggestions: []
+    distractor_quality_avg: 4.0
+    per_item_checks:
+    - item_index: 0
+      text_preview: У мнемоніці «Н-Р-Д-З-О-М-К» літера «Н» означає який відмінок?
+      checks:
+        variety: null
+        vocabulary_difficulty: too_easy
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'називний' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 1
+      text_preview: Підручник каже «родовий відмінок відповідає на питання кого? чого?»
+        — яку форму слова «книга» ви нап...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'родовий' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 2
+      text_preview: Вчитель пояснює «давальний відмінок показує, кому адресована дія»
+        — яким відмінком є слово «сестрі» ...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'давальний відмінок' (e.g., different tenses, cases,
+            aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 3
+      text_preview: У реченні «студент читає книгу» граматика каже, що слово «книгу»
+        стоїть у відмінку для прямого додат...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'знахідний' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 4
+      text_preview: Коли мнемоніка каже «орішки» для п'ятого відмінка, на яку літеру
+        починається назва цього відмінка в ...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'орудний' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 5
+      text_preview: Підручник пояснює «після прийменника 'на' для позначення місця
+        вживається місцевий відмінок» — яка ф...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'місцевий' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 6
+      text_preview: Коли українець звертається до друга «Тарасе!», він використовує
+        спеціальний відмінок для звертання —...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'кличний' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 7
+      text_preview: Студент запитує «скільки відмінків потрібно вивчити в українській
+        мові?» — яка правильна відповідь н...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of '7' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 8
+      text_preview: Граматика пояснює «давальний відмінок відповідає на питання кому?
+        чому?» — яким відмінком стоїть сло...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'кому? чому?' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 9
+      text_preview: Коли граматика каже «орудний відмінок показує інструмент дії»,
+        яким відмінком є слово «ручкою» в реч...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'орудний відмінок' (e.g., different tenses, cases,
+            aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 10
+      text_preview: У мнемоніці «На Різдво Дід Загубив Орішки Між Ковбасками» яку
+        літеру «Д» означає третій відмінок?
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'давальний' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 11
+      text_preview: Підручник пояснює «відмінок — це граматична категорія, що показує
+        роль слова в реченні» — яким термі...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'відмінок' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 12
+      text_preview: Коли граматика каже «орудний відмінок відповідає на ким? чим?»,
+        яким відмінком стоїть слово «олівцем...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'ким? чим?' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 13
+      text_preview: У мнемоніці «На Різдво Дід Загубив Орішки Між Ковбасками» остання
+        літера «К» означає сьомий відмінок...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'кличний' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+  naturalness: 3
+  difficulty: appropriate
+  engagement: 3
+  distractor_score: 4
+  variety_score: 4
+  issues: []
+  suggestions: []
+- activity_id: match-up-частини-мови
+  activity_type: match-up
+  activity_title: Частини мови
+  item_count: 0
+  deterministic_checks:
+    variety_score: null
+    variety_issues: []
+    vocabulary_difficulty: appropriate
+    cognitive_load: low
+    naturalness_issues: []
+    naturalness_suggestions: []
+    distractor_quality_avg: null
+    per_item_checks: []
+  naturalness: null
+  difficulty: null
+  engagement: null
+  distractor_score: null
+  variety_score: null
+  issues: []
+  suggestions: []
+- activity_id: match-up-відмінки-та-категорії
+  activity_type: match-up
+  activity_title: Відмінки та категорії
+  item_count: 0
+  deterministic_checks:
+    variety_score: null
+    variety_issues: []
+    vocabulary_difficulty: appropriate
+    cognitive_load: low
+    naturalness_issues: []
+    naturalness_suggestions: []
+    distractor_quality_avg: null
+    per_item_checks: []
+  naturalness: null
+  difficulty: null
+  engagement: null
+  distractor_score: null
+  variety_score: null
+  issues: []
+  suggestions: []
+- activity_id: cloze-визначення-частин-мови
+  activity_type: cloze
+  activity_title: Визначення частин мови
+  item_count: 0
+  deterministic_checks:
+    variety_score: null
+    variety_issues: []
+    vocabulary_difficulty: appropriate
+    cognitive_load: medium
+    naturalness_issues: []
+    naturalness_suggestions: []
+    distractor_quality_avg: null
+    per_item_checks: []
+  naturalness: null
+  difficulty: null
+  engagement: null
+  distractor_score: null
+  variety_score: null
+  issues: []
+  suggestions: []
+- activity_id: fill-in-відмінки-за-порядком
+  activity_type: fill-in
+  activity_title: Відмінки за порядком
+  item_count: 14
+  deterministic_checks:
+    variety_score: 70
+    variety_issues:
+    - 10 sentences have identical length (4 words) - mechanical?
+    vocabulary_difficulty: appropriate
+    cognitive_load: low
+    naturalness_issues: []
+    naturalness_suggestions: []
+    distractor_quality_avg: null
+    per_item_checks:
+    - item_index: 0
+      text_preview: Перший відмінок — _____.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: null
+          issues: []
+          suggestions: []
+    - item_index: 1
+      text_preview: Другий відмінок — _____.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: null
+          issues: []
+          suggestions: []
+    - item_index: 2
+      text_preview: Третій відмінок — _____.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: null
+          issues: []
+          suggestions: []
+    - item_index: 3
+      text_preview: Четвертий відмінок — _____.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: null
+          issues: []
+          suggestions: []
+    - item_index: 4
+      text_preview: П'ятий відмінок — _____.
+      checks:
+        variety: null
+        vocabulary_difficulty: too_easy
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: null
+          issues: []
+          suggestions: []
+    - item_index: 5
+      text_preview: Шостий відмінок — _____.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: null
+          issues: []
+          suggestions: []
+    - item_index: 6
+      text_preview: Сьомий відмінок — _____.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: null
+          issues: []
+          suggestions: []
+    - item_index: 7
+      text_preview: Відмінок із питанням «кого? чого?» — _____.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: null
+          issues: []
+          suggestions: []
+    - item_index: 8
+      text_preview: Відмінок із питанням «кому? чому?» — _____.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: null
+          issues: []
+          suggestions: []
+    - item_index: 9
+      text_preview: Відмінок із питанням «ким? чим?» — _____.
+      checks:
+        variety: null
+        vocabulary_difficulty: too_easy
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: null
+          issues: []
+          suggestions: []
+    - item_index: 10
+      text_preview: Відмінок для прямого додатка — _____.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: null
+          issues: []
+          suggestions: []
+    - item_index: 11
+      text_preview: Відмінок для звертання — _____.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: null
+          issues: []
+          suggestions: []
+    - item_index: 12
+      text_preview: Відмінок після «на» для місця — _____.
+      checks:
+        variety: null
+        vocabulary_difficulty: too_easy
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: null
+          issues: []
+          suggestions: []
+    - item_index: 13
+      text_preview: Відмінок для підмета — _____.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: null
+          issues: []
+          suggestions: []
+  naturalness: null
+  difficulty: null
+  engagement: null
+  distractor_score: null
+  variety_score: null
+  issues: []
+  suggestions: []
+- activity_id: true-false-граматична-термінологія
+  activity_type: true-false
+  activity_title: Граматична термінологія
+  item_count: 14
+  deterministic_checks:
+    variety_score: 92
+    variety_issues:
+    - 6 sentences have identical length (3 words) - mechanical?
+    vocabulary_difficulty: appropriate
+    cognitive_load: low
+    naturalness_issues: []
+    naturalness_suggestions: []
+    distractor_quality_avg: null
+    per_item_checks:
+    - item_index: 0
+      text_preview: «Іменник» означає "noun".
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 1
+      text_preview: «Дієслово» означає "adjective".
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 2
+      text_preview: В українській мові сім відмінків.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 3
+      text_preview: «Прислівник» означає "pronoun".
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 4
+      text_preview: Родовий відмінок відповідає на «кого? чого?»
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 5
+      text_preview: «Сполучник» — це preposition.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 6
+      text_preview: Кличний відмінок використовують для звертання.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 7
+      text_preview: «Займенник» означає "numeral".
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 8
+      text_preview: Орудний відмінок — п'ятий за порядком.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 9
+      text_preview: «Частка» означає "conjunction".
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 10
+      text_preview: Місцевий відмінок вказує на місце.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 11
+      text_preview: В українській мові шість відмінків.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 12
+      text_preview: «Прикметник» означає "adjective".
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 13
+      text_preview: Давальний відмінок — четвертий.
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+  naturalness: null
+  difficulty: null
+  engagement: null
+  distractor_score: null
+  variety_score: null
+  issues: []
+  suggestions: []
+- activity_id: group-sort-граматичні-терміни-за-категорі
+  activity_type: group-sort
+  activity_title: Граматичні терміни за категоріями
+  item_count: 0
+  deterministic_checks:
+    variety_score: null
+    variety_issues: []
+    vocabulary_difficulty: appropriate
+    cognitive_load: low
+    naturalness_issues: []
+    naturalness_suggestions: []
+    distractor_quality_avg: null
+    per_item_checks: []
+  naturalness: null
+  difficulty: null
+  engagement: null
+  distractor_score: null
+  variety_score: null
+  issues: []
+  suggestions: []
+- activity_id: group-sort-відмінки-за-функцією
+  activity_type: group-sort
+  activity_title: Відмінки за функцією
+  item_count: 0
+  deterministic_checks:
+    variety_score: null
+    variety_issues: []
+    vocabulary_difficulty: appropriate
+    cognitive_load: low
+    naturalness_issues: []
+    naturalness_suggestions: []
+    distractor_quality_avg: null
+    per_item_checks: []
+  naturalness: null
+  difficulty: null
+  engagement: null
+  distractor_score: null
+  variety_score: null
+  issues: []
+  suggestions: []
+- activity_id: unjumble-граматичні-терміни
+  activity_type: unjumble
+  activity_title: Граматичні терміни
+  item_count: 14
+  deterministic_checks:
+    variety_score: 100
+    variety_issues:
+    - 6 sentences have identical length (18 words) - mechanical?
+    - 6 sentences have identical length (16 words) - mechanical?
+    vocabulary_difficulty: appropriate
+    cognitive_load: high
+    naturalness_issues: []
+    naturalness_suggestions: []
+    distractor_quality_avg: null
+    per_item_checks:
+    - item_index: 0
+      text_preview: Іменник — це частина мови що називає предмети та поняття Іменник
+        — це частина мови, що називає предм...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: medium
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 1
+      text_preview: Давальний — третій відмінок відповідає на питання кому чому Давальний
+        — третій відмінок, відповідає ...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 2
+      text_preview: В українській мові сім відмінків з різними функціями В українській
+        мові сім відмінків з різними функ...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 3
+      text_preview: Дієслово — частина мови що називає дію наприклад читати Дієслово
+        — частина мови, що називає дію, нап...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: medium
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 4
+      text_preview: Прийменник керує відмінком іменника який стоїть після нього Прийменник
+        керує відмінком іменника, яки...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: medium
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 5
+      text_preview: Називний — перший відмінок це основна форма іменника у словнику
+        Називний — перший відмінок, це основ...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 6
+      text_preview: Прислівник означає як відбувається дія наприклад швидко добре
+        Прислівник означає, як відбувається ді...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 7
+      text_preview: Кличний — сьомий відмінок для звертання до конкретної особи Кличний
+        — сьомий відмінок для звертання ...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 8
+      text_preview: Прикметник описує ознаку іменника наприклад гарний великий синій
+        Прикметник описує ознаку іменника, ...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 9
+      text_preview: Орудний — п'ятий відмінок відповідає на питання ким чим Орудний
+        — п'ятий відмінок, відповідає на пит...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 10
+      text_preview: Сполучник з'єднує слова або частини речення наприклад і Сполучник
+        з'єднує слова або частини речення,...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 11
+      text_preview: Займенник замінює іменник у реченні наприклад він вона Займенник
+        замінює іменник у реченні, наприкла...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 12
+      text_preview: Місцевий — шостий відмінок для позначення місця після прийменника
+        Місцевий — шостий відмінок для поз...
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+    - item_index: 13
+      text_preview: Частка — це невелике слово наприклад не ні хай Частка — це невелике
+        слово, наприклад не, ні, хай.
+      checks:
+        variety: null
+        vocabulary_difficulty: too_easy
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis: null
+  naturalness: null
+  difficulty: null
+  engagement: null
+  distractor_score: null
+  variety_score: null
+  issues: []
+  suggestions: []
+- activity_id: error-correction-виправлення-помилок
+  activity_type: error-correction
+  activity_title: Виправлення помилок
+  item_count: 14
+  deterministic_checks:
+    variety_score: 100
+    variety_issues:
+    - 13 sentences have identical length (2 words) - mechanical?
+    vocabulary_difficulty: appropriate
+    cognitive_load: medium
+    naturalness_issues: []
+    naturalness_suggestions:
+    - Consider adding discourse markers (ну, от, взагалі) for naturalness
+    distractor_quality_avg: 3.9285714285714284
+    per_item_checks:
+    - item_index: 0
+      text_preview: «Книга» — це дієслово. дієслово іменник
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'іменник' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 3
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 1
+      text_preview: Прислівник означає "noun". Прислівник Іменник
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'Іменник' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 3
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 2
+      text_preview: Називний — другий відмінок. другий перший
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'перший' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 3
+      text_preview: «Швидко» — це прикметник. прикметник прислівник
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'прислівник' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 3
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 4
+      text_preview: Сполучник — це preposition. preposition conjunction
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'conjunction' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 5
+      text_preview: В українській мові шість відмінків. шість сім
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 3
+          issues:
+          - 'Mixed word classes: 2 verbs, 1 nouns'
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use same word class for all options
+          - Use related forms of 'сім' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 2
+            noun_count: 1
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 6
+      text_preview: Орудний — шостий відмінок. шостий п'ятий
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'п'ятий' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 7
+      text_preview: «Він» — це числівник. числівник займенник
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'займенник' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 4
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 8
+      text_preview: Давальний відповідає на «кого?» кого кому
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'кому' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 9
+      text_preview: «І» — це прийменник. прийменник сполучник
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'сполучник' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 3
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 10
+      text_preview: Місцевий — сьомий відмінок. сьомий шостий
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'шостий' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 11
+      text_preview: «Гарний» — це прислівник. прислівник прикметник
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'прикметник' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 3
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 12
+      text_preview: Займенник означає "numeral". numeral pronoun
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'pronoun' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 13
+      text_preview: Кличний — шостий відмінок. шостий сьомий
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'сьомий' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+  naturalness: null
+  difficulty: null
+  engagement: null
+  distractor_score: null
+  variety_score: null
+  issues: []
+  suggestions: []
+- activity_id: cloze-граматичний-текст
+  activity_type: cloze
+  activity_title: Граматичний текст
+  item_count: 0
+  deterministic_checks:
+    variety_score: null
+    variety_issues: []
+    vocabulary_difficulty: appropriate
+    cognitive_load: medium
+    naturalness_issues: []
+    naturalness_suggestions: []
+    distractor_quality_avg: null
+    per_item_checks: []
+  naturalness: null
+  difficulty: null
+  engagement: null
+  distractor_score: null
+  variety_score: null
+  issues: []
+  suggestions: []
+- activity_id: mark-the-words-знайдіть-частини-мови
+  activity_type: mark-the-words
+  activity_title: Знайдіть частини мови
+  item_count: 0
+  deterministic_checks:
+    variety_score: null
+    variety_issues: []
+    vocabulary_difficulty: appropriate
+    cognitive_load: low
+    naturalness_issues: []
+    naturalness_suggestions: []
+    distractor_quality_avg: null
+    per_item_checks: []
+  naturalness: null
+  difficulty: null
+  engagement: null
+  distractor_score: null
+  variety_score: null
+  issues: []
+  suggestions: []
+- activity_id: select-множинний-вибір-термінів
+  activity_type: select
+  activity_title: Множинний вибір термінів
+  item_count: 14
+  deterministic_checks:
+    variety_score: 71
+    variety_issues: []
+    vocabulary_difficulty: appropriate
+    cognitive_load: medium
+    naturalness_issues: []
+    naturalness_suggestions: []
+    distractor_quality_avg: 3.857142857142857
+    per_item_checks:
+    - item_index: 0
+      text_preview: Які з цих слів — самостійні частини мови?
+      checks:
+        variety: null
+        vocabulary_difficulty: too_easy
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'прикметник' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 3
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 1
+      text_preview: Які з цих відмінків є першими чотирма?
+      checks:
+        variety: null
+        vocabulary_difficulty: too_easy
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'знахідний' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 2
+      text_preview: Які слова означають частини мови?
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 3
+          issues:
+          - Option 'рід' length unusual (3 chars vs 6 avg)
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'дієслово' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 1
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 3
+      text_preview: Які терміни пов'язані з іменниками?
+      checks:
+        variety: null
+        vocabulary_difficulty: too_easy
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'число' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 4
+      text_preview: Які з цих слів — службові частини мови?
+      checks:
+        variety: null
+        vocabulary_difficulty: too_easy
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'частка' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 4
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 5
+      text_preview: Які відмінки в останній трійці (5-6-7)?
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'кличний' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 6
+      text_preview: Які терміни означають граматичні категорії?
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'відмінок' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 7
+      text_preview: Які питання для родового відмінка?
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'чого?' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 8
+      text_preview: Які з цих слів — прислівники?
+      checks:
+        variety: null
+        vocabulary_difficulty: too_easy
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'тут' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 1
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 9
+      text_preview: Які відмінки відповідають на питання з «ким/чим»?
+      checks:
+        variety: null
+        vocabulary_difficulty: too_easy
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'орудний' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 10
+      text_preview: Які терміни означають "case" в граматиці?
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'відмінок' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 11
+      text_preview: Які з цих — правильні назви відмінків?
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'місцевий' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 4
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 12
+      text_preview: Які слова можуть бути іменниками?
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 3
+          issues:
+          - 'Mixed word classes: 1 verbs, 1 nouns'
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use same word class for all options
+          - Use related forms of 'граматика' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 1
+            noun_count: 1
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+    - item_index: 13
+      text_preview: Які терміни стосуються дієслів?
+      checks:
+        variety: null
+        vocabulary_difficulty: appropriate
+        cognitive_load: low
+        naturalness_markers:
+          issues: []
+          suggestions: []
+        distractor_analysis:
+          quality: 4
+          issues:
+          - No distractors share word root with answer - possibly random words
+          suggestions:
+          - Use related forms of 'час' (e.g., different tenses, cases, aspects)
+          analysis:
+            verb_count: 0
+            noun_count: 0
+            adj_count: 0
+            related_to_answer: 0
+            total_distractors: 3
+  naturalness: 4
+  difficulty: appropriate
+  engagement: 3
+  distractor_score: 4
+  variety_score: 4
+  issues: []
+  suggestions: []
+- activity_id: translate-переклад-граматичних-термінів
+  activity_type: translate
+  activity_title: Переклад граматичних термінів
+  item_count: 14
+  deterministic_checks:
+    variety_score: null
+    variety_issues: []
+    vocabulary_difficulty: appropriate
+    cognitive_load: medium
+    naturalness_issues: []
+    naturalness_suggestions: []
+    distractor_quality_avg: null
+    per_item_checks: []
+  naturalness: 4
+  difficulty: appropriate
+  engagement: 3
+  distractor_score: null
+  variety_score: 3
+  issues: []
+  suggestions: []

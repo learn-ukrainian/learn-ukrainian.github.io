@@ -25,8 +25,6 @@ However, you need to understand the patterns to make these predictions accuratel
 
 This approach to vocabulary learning is often called morphological analysis. Instead of treating every new verb as a completely separate challenge, you learn to see the internal structure of the language. This mindset is what separates advanced learners from perpetual beginners. By looking for the root and the prefix, you're not just guessing; you're using the built-in logic of the Ukrainian language to unlock its secrets.
 
-## Практика
-
 ## Prefixation: The Most Common Pattern
 
 Most perfective verbs are formed by adding a prefix to the imperfective base. Here are the main patterns:
@@ -187,6 +185,30 @@ When you see a new verb, follow this logic:
 1. Prefix? → Probably perfective.
 2. Suffix -ва-? → Probably imperfective.
 3. Neither? → Check if it's a suppletive pair.
+
+## Практика
+
+Тепер настав час попрактикуватися! Використовуйте аспектні пари, які ви вивчили, щоб створити речення.
+
+**Приклад:**
+- Я **читаю** книгу кожен день. (недоконаний — процес)
+- Вчора я **прочитав** цю книгу. (доконаний — завершення)
+
+**Ваше завдання:**
+Створіть речення з цими аспектними парами:
+
+1. писати / написати
+2. робити / зробити
+3. давати / дати
+4. вчити / вивчити
+5. показувати / показати
+
+**Зразки відповідей:**
+- Я **пишу** листа зараз. Я **написав** листа вчора.
+- Вона **робить** домашнє завдання щодня. Вона **зробила** домашнє завдання сьогодні вранці.
+- Ми **даємо** їм гроші кожного місяця. Ми **дали** їм гроші минулого тижня.
+- Студенти **вчать** нові слова постійно. Вони вже **вивчили** 500 слів!
+- Вчитель **показує** нам граматику на дошці. Вчитель **показав** нам відео про Україну.
 
 # Підсумок
 In this module, you have explored the fascinating morphology of the Ukrainian aspect system. You've learned how most perfective verbs are built from imperfective bases using a variety of logical prefixes. You've also seen how the suffixation pattern works in reverse, and why a few essential verbs remain as unique suppletive pairs that must be memorized individually.

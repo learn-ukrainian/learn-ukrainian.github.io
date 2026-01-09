@@ -1,0 +1,128 @@
+module: 77-mykola-mikhnovskyi
+level: C1
+version: '1.0'
+items:
+  - lemma: самостійність
+    ipa: /sɑmoˈstʲijnʲistʲ/
+    translation: independence/sovereignty
+    pos: noun
+    gender: f
+  - lemma: ідеолог
+    ipa: /ideˈɔlɔɦ/
+    translation: ideologue
+    pos: noun
+    gender: m
+  - lemma: маніфест
+    ipa: /mɑnʲiˈfɛst/
+    translation: manifesto
+    pos: noun
+    gender: m
+  - lemma: радикалізм
+    ipa: /rɑdɪkɑˈlʲizm/
+    translation: radicalism
+    pos: noun
+    gender: m
+  - lemma: націоналізм
+    ipa: /nɑt͡sʲioˈnɑlʲizm/
+    translation: nationalism
+    pos: noun
+    gender: m
+  - lemma: державність
+    ipa: /derˈʒɑwnʲistʲ/
+    translation: statehood
+    pos: noun
+    gender: f
+  - lemma: визвольний
+    ipa: /vɪzˈvɔlʲnɪj/
+    translation: liberation (adj)
+    pos: adj
+  - lemma: боротьба
+    ipa: /boroˈtʲbɑ/
+    translation: struggle/fight
+    pos: noun
+    gender: f
+  - lemma: гасло
+    ipa: /ˈɦɑslɔ/
+    translation: slogan/motto
+    pos: noun
+    gender: n
+  - lemma: адвокат
+    ipa: /ɑdwoˈkɑt/
+    translation: lawyer/advocate
+    pos: noun
+    gender: m
+  - lemma: оратор
+    ipa: /orˈɑtɔr/
+    translation: orator/speaker
+    pos: noun
+    gender: m
+  - lemma: суб'єктність
+    ipa: /subˈjɛktnʲistʲ/
+    translation: agency/subjectivity
+    pos: noun
+    gender: f
+  - lemma: соборність
+    ipa: /soˈbɔrnʲistʲ/
+    translation: unity/sobornist
+    pos: noun
+    gender: f
+  - lemma: переконання
+    ipa: /perekɔˈnɑnʲːɑ/
+    translation: conviction/belief
+    pos: noun
+    gender: n
+  - lemma: внесок
+    ipa: /ˈwnɛsɔk/
+    translation: contribution
+    pos: noun
+    gender: m
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɑ/
+    translation: legacy/heritage
+    pos: noun
+    gender: f
+  - lemma: постать
+    ipa: /ˈpɔstɑtʲ/
+    translation: figure/personality
+    pos: noun
+    gender: f
+  - lemma: діяч
+    ipa: /diˈjat͡ʃ/
+    translation: activist/figure
+    pos: noun
+    gender: m
+  - lemma: концепція
+    ipa: /kont͡sɛpˈt͡sʲijɑ/
+    translation: concept/notion
+    pos: noun
+    gender: f
+  - lemma: стратегія
+    ipa: /strɑˈtɛɦʲijɑ/
+    translation: strategy
+    pos: noun
+    gender: f
+  - lemma: ідентичність
+    ipa: /identɪt͡ʃˈnʲistʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: воля
+    ipa: /ˈwɔlʲɑ/
+    translation: will/freedom
+    pos: noun
+    gender: f
+  - lemma: розквіт
+    ipa: /rɔzˈkwʲit/
+    translation: prosperity/bloom
+    pos: noun
+    gender: m
+  - lemma: пам'ять
+    ipa: /ˈpɑm'jɑtʲ/
+    translation: memory
+    pos: noun
+    gender: f
+  - lemma: неминучість
+    ipa: /nemɪˈnut͡ʃʲistʲ/
+    translation: inevitability
+    pos: noun
+    gender: f

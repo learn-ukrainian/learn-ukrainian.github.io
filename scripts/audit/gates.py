@@ -208,6 +208,39 @@ def evaluate_grammar(grammar_file_exists: bool, summary: dict = None) -> GateRes
     return GateResult('PASS', '✅', "Validated")
 
 
+def evaluate_activity_quality(quality_file_exists: bool, result: str = None,
+                              failed_gates: int = 0, level: str = None) -> GateResult:
+    """Evaluate activity quality validation status (optional check).
+
+    Checks if the module has been quality-validated by looking for
+    the -quality.md file in the audit folder.
+
+    This is an OPTIONAL, INFORMATIONAL gate. Quality validation is not
+    required for audit pass/fail - it's a supplementary manual validation
+    workflow for B1+ modules.
+
+    Args:
+        quality_file_exists: Whether the quality validation report exists
+        result: Optional 'PASS' or 'FAIL' status from report
+        failed_gates: Number of failed quality gates
+        level: Module level (for context)
+
+    Returns:
+        GateResult with validation status (always INFO, never blocks audit)
+    """
+    if not quality_file_exists:
+        if level and level.upper() in ['B1', 'B2', 'C1', 'C2']:
+            return GateResult('INFO', '📋', "Quality validation available (optional)")
+        return GateResult('INFO', 'ℹ️', "Quality validation N/A (A1/A2)")
+
+    if result == 'FAIL':
+        return GateResult('INFO', '⚠️', f"Quality gates: {failed_gates} failed (see report)")
+    elif result == 'PASS':
+        return GateResult('INFO', '✅', "Quality gates: All passed")
+
+    return GateResult('INFO', '📋', "Quality report exists")
+
+
 def evaluate_content_heavy(
     is_content_heavy: bool,
     activity_count: int,

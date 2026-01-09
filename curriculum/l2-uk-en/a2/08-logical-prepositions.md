@@ -17,7 +17,9 @@ Today we unlock:
 
 ## Presentation
 
-## Practice
+Логічні прийменники виражають абстрактні відносини між словами: причину, мету, тему розмови. Вони відповідають на питання «Чому?» (Why?), «Для кого?» (For whom?), «Про що?» (About what?). Ці прийменники дуже важливі для побудови складних речень та вираження думок.
+
+In English, we rely heavily on prepositions like «for», «about», «without», and «because of» to connect ideas. Ukrainian uses similar logical prepositions, but they govern specific cases. Mastering these prepositions allows you to express complex relationships: причина та наслідок (cause and effect), присутність та відсутність (presence and absence), джерело та мета (source and purpose).
 
 ## Part 1: Benefit & Absence
 
@@ -196,6 +198,28 @@ Use **замість** for substitution.
 
 ---
 
+## Practice
+
+Тепер практикуйте! Заповніть пропуски правильним прийменником:
+
+1. Це подарунок ___ тебе. (This is a gift for you.) → **для**
+2. Я не можу жити ___ музики. (I can't live without music.) → **без**
+3. Ми говоримо ___ фільм. (We're talking about the film.) → **про**
+4. Він не прийшов ___ хвороби. (He didn't come because of illness.) → **через**
+5. Вона отримала листа ___ брата. (She received a letter from her brother.) → **від**
+6. Я йду в кіно ___ другом. (I'm going to the cinema with a friend.) → **з**
+7. ___ роботи ми підемо додому. (After work we'll go home.) → **Після**
+8. Усі прийшли, ___ Петра. (Everyone came except Peter.) → **крім**
+9. Я п'ю воду ___ соку. (I drink water instead of juice.) → **замість**
+10. Зустрінемося ___ п'ятій годині. (Let's meet at five o'clock.) → **о**
+
+**Створіть власні речення:**
+- Напишіть три речення з прийменником **для** (for).
+- Напишіть два речення з прийменником **про** (about).
+- Напишіть одне речення з прийменником **з** (with).
+
+---
+
 ## Story Time: The Letter
 
 Марія отримала **лист від мами**.
@@ -292,7 +316,7 @@ Use **замість** for substitution.
 > _Це для тебе._ (This is for you - informal.)
 > Always use the correct register based on your relationship!
 
-## Deep Dive: Case Summary
+## Таблиця прийменників та відмінків
 
 All logical prepositions require a specific case:
 

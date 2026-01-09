@@ -1,5 +1,5 @@
 # Audit Report: 122-pomarancheva-revoliutsiia.md
-**Phase:** B2.3d | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Phase:** B2.3d | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
 **Overall Status:** ❌ FAIL
 
 ## LINT ERRORS
@@ -70,7 +70,7 @@
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1948/1400
+- **Words:** ⚠️ 1948/2000 (52 short)
 - **Activities:** ❌ 0/10
 - **Density:** ❌ 0 < 14
 - **Unique_types:** ❌ 0/4 types

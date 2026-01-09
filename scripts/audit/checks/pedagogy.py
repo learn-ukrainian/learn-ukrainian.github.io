@@ -160,7 +160,8 @@ def run_pedagogical_checks(
     level_code: str,
     module_num: int,
     pedagogy: str,
-    yaml_activities: list[Activity] | None = None
+    yaml_activities: list[Activity] | None = None,
+    module_focus: str | None = None
 ) -> list[dict]:
     """Run all pedagogical checks and return violations."""
     all_violations = []
@@ -182,9 +183,11 @@ def run_pedagogical_checks(
     if vocab_items and level_code not in ('LIT',):
         sync_vocab_to_db(level_code, module_num, vocab_items)
 
-    # Vocabulary violations check DISABLED for parallel module creation
-    # Vocab is validated at the end when all modules are complete
-    # See: npm run vocab:rebuild (after all modules done)
+    # Vocabulary approach (as of Jan 2026):
+    # - A1-A2: Curriculum plans may contain reference vocabulary lists
+    # - B1+: Vocabulary emerges from content (no plan-matching)
+    # - Quality enforced via richness metrics (count, integration)
+    # - Plan-matching checks removed (Issue #395)
 
     # 4. Activity sequencing
     all_violations.extend(check_activity_sequencing(content, pedagogy))
@@ -227,7 +230,7 @@ def run_pedagogical_checks(
     # 16. Content quality (LLM-based evaluation - optional, enabled via env var)
     all_violations.extend(check_content_quality(content, level_code, module_num))
     
-    # 17. Activity Complexity (Strict)
-    all_violations.extend(check_activity_complexity(content, level_code, module_num, yaml_activities))
+    # 17. Activity Complexity (Strict - with context-specific targets)
+    all_violations.extend(check_activity_complexity(content, level_code, module_num, yaml_activities, module_focus))
 
     return all_violations

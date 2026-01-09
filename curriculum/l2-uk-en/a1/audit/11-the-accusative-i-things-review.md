@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' found: Presentation, The Grammar of Action
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' found: The Grammar of Action, Presentation
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 - ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Pattern Practice, Practice
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
@@ -28,6 +28,9 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 27.5% (target 25-40% (M11))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

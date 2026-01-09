@@ -1,0 +1,24 @@
+module: c1-84
+title: 'Олександр Греків: Генерал УНР'
+subtitle: 'Oleksandr Hrekiv: General of the UNR'
+version: '1.0'
+phase: 'C1.3 Biographies'
+focus: biography
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - biography
+  - revolutionary
+  - military
+  - politics
+  - history
+grammar:
+  - 'Historical narrative tenses'
+  - 'Quoted speech conventions'
+objectives:
+  - 'Learner understands Oleksandr Hrekiv’s role in the military history of the Ukrainian Revolution'
+  - 'Learner can analyze military and biographical narratives at C1 level'
+  - 'Learner masters military and historical vocabulary'
+vocabulary_count: 25
+slug: 84-oleksandr-hrekiv

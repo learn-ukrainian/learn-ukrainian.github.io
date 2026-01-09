@@ -1,17 +1,24 @@
 module: c1-78
-title: Микола Леонтович
-subtitle: Mykola Leontovych
-version: '2.0'
-phase: C1.3 Biographies
+title: 'Микола Леонтович: Маг українського хору'
+subtitle: 'Mykola Leontovych: Magician of Ukrainian Choir'
+version: '1.0'
+phase: 'C1.3 Biographies'
 focus: biography
-pedagogy: narrative
+pedagogy: 'CBI'
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- biography
-- history
-- culture
+  - biography
+  - revolutionary
+  - arts
+  - music
+  - composer
+grammar:
+  - 'Historical narrative tenses'
+  - 'Quoted speech conventions'
 objectives:
-- Master C1 concepts in Микола Леонтович
+  - 'Learner understands Mykola Leontovych’s contribution to world choral music and Ukrainian culture'
+  - 'Learner can analyze musical and biographical narratives at C1 level'
+  - 'Learner masters musical and historical vocabulary'
+vocabulary_count: 25
 slug: 78-mykola-leontovych

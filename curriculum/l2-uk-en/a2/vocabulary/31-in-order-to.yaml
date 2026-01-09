@@ -2,7 +2,185 @@ module: 31-in-order-to
 level: A2
 version: '2.0'
 items:
-- lemma: заробляти
-  ipa: zɐrobˈlʲɑte
-  translation: to earn
-  pos: verb
+  - lemma: щоб
+    ipa: ʃt͡ʃɔb
+    translation: in order to; that
+    pos: conjunction
+  - lemma: для того щоб
+    translation: for the purpose of
+    pos: other
+  - lemma: аби
+    translation: so that; only if
+    pos: other
+  - lemma: задля того щоб
+    translation: for the sake of
+    pos: other
+  - lemma: з метою
+    translation: with the aim
+    pos: other
+  - lemma: прийти
+    ipa: prɪˈjtɪ
+    translation: to come
+    pos: verb
+  - lemma: прийшов
+    translation: came (masc)
+    pos: verb
+  - lemma: піти
+    ipa: piˈti
+    translation: to go
+    pos: verb
+  - lemma: пішов
+    translation: went (masc)
+    pos: verb
+  - lemma: зробити
+    translation: to do/make
+    pos: verb
+  - lemma: зробив
+    translation: did/made (masc)
+    pos: verb
+  - lemma: сказати
+    translation: to say
+    pos: verb
+  - lemma: сказав
+    translation: said (masc)
+    pos: verb
+  - lemma: написати
+    translation: to write
+    pos: verb
+  - lemma: написав
+    translation: wrote (masc)
+    pos: verb
+  - lemma: прочитати
+    translation: to read
+    pos: verb
+  - lemma: прочитав
+    translation: read (masc)
+    pos: verb
+  - lemma: вивчити
+    translation: to learn
+    pos: verb
+  - lemma: вивчив
+    translation: learned (masc)
+    pos: verb
+  - lemma: зрозуміти
+    translation: to understand
+    pos: verb
+  - lemma: зрозумів
+    translation: understood (masc)
+    pos: verb
+  - lemma: допомогти
+    translation: to help
+    pos: verb
+  - lemma: допоміг
+    translation: helped (masc)
+    pos: verb
+  - lemma: дати
+    translation: to give
+    pos: verb
+  - lemma: дав
+    translation: gave (masc)
+    pos: verb
+  - lemma: показати
+    translation: to show
+    pos: verb
+  - lemma: показав
+    translation: showed (masc)
+    pos: verb
+  - lemma: пояснити
+    translation: to explain
+    pos: verb
+  - lemma: пояснив
+    translation: explained (masc)
+    pos: verb
+  - lemma: розповісти
+    translation: to tell
+    pos: verb
+  - lemma: розповів
+    translation: told (masc)
+    pos: verb
+  - lemma: купити
+    translation: to buy
+    pos: verb
+  - lemma: купив
+    translation: bought (masc)
+    pos: verb
+  - lemma: принести
+    translation: to bring
+    pos: verb
+  - lemma: скільки
+    translation: how much/many
+    pos: adv
+  - lemma: ціна
+    translation: price
+    pos: noun
+    gender: f
+  - lemma: коштувати
+    translation: to cost
+    pos: verb
+  - lemma: дорогий
+    translation: expensive
+    pos: adj
+  - lemma: дешевий
+    translation: cheap
+    pos: adj
+  - lemma: знижка
+    translation: discount
+    pos: noun
+    gender: f
+  - lemma: розпродаж
+    translation: sale
+    pos: noun
+    gender: m
+  - lemma: каса
+    translation: cash desk
+    pos: noun
+    gender: f
+  - lemma: чек
+    translation: receipt
+    pos: noun
+    gender: m
+  - lemma: платити
+    translation: to pay
+    pos: verb
+  - lemma: картка
+    translation: card
+    pos: noun
+    gender: f
+  - lemma: готівка
+    translation: cash
+    pos: noun
+    gender: f
+  - lemma: решта
+    translation: change
+    pos: noun
+    gender: f
+  - lemma: пакет
+    translation: bag; packet
+    pos: noun
+    gender: m
+  - lemma: дорого
+    translation: expensively
+    pos: adv
+  - lemma: дешево
+    translation: cheaply
+    pos: adv
+  - lemma: продати
+    translation: to sell
+    pos: verb
+  - lemma: шукати
+    translation: to search/look for
+    pos: verb
+  - lemma: знайти
+    translation: to find
+    pos: verb
+  - lemma: час
+    translation: time; tense
+    pos: noun
+    gender: m
+  - lemma: минулий
+    translation: past
+    pos: adj
+  - lemma: відмінок
+    translation: gram. case
+    pos: noun
+    gender: m

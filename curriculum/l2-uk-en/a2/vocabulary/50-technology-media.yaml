@@ -261,6 +261,11 @@ items:
   translation: chat
   pos: noun
   gender: m
+- lemma: час
+  ipa: t͡ʃɑs
+  translation: time/tense (grammar)
+  pos: noun
+  gender: m
 - lemma: шахрай
   ipa: ʃɐxˈrɑj
   translation: scammer

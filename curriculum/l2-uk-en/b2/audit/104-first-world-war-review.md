@@ -1,53 +1,40 @@
 # Audit Report: 104-first-world-war.md
-**Phase:** B2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Phase:** B2 | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
 **Overall Status:** ❌ FAIL
 
-## LINT ERRORS
-- ❌ Line 16: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 29: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 31: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 33: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 68: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 81: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 100: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 102: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [war-vocab] match-up: 'pairs.11' - 'left' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [ww1-myths] true-false: 'items.7' - 'statement' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [people-roles] match-up: 'pairs.7' - 'left' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [chronology] match-up: 'pairs.7' - 'left' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
-  - FIX: Add a comparative-study activity to meet advanced richness standards.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 1 has 6 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 2 has 5 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 3 has 6 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 4 has 8 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 5 has 6 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 6 has 6 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**📝 UPDATE** (severity 25/100)
 
-- Revision recommended (severity 60/100)
 - 6 violations (moderate)
-- 8 format errors (many)
-- Activity count below minimum
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1635/1400
-- **Activities:** ❌ 0/10
-- **Density:** ❌ 0 < 14
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
-- **Engagement:** ✅ 10/5
+- **Words:** ✅ 2108/2000
+- **Activities:** ✅ 14/10
+- **Density:** ❌ 1 < 14
+- **Unique_types:** ✅ 10/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 122/20
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 8 Format Errors
+- **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 6 violations
-- **Content_heavy:** ⚠️ Too few activities: 0 (target 10-14)
+- **Content_heavy:** ⚠️ 1 cloze with year blanks
 - **Immersion:** 🇺🇦 100.0% (target 98-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation
@@ -59,16 +46,22 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 7 | 3 | 100% | 24% | 23.8% |
-| engagement | 10 | 6 | 100% | 14% | 14.3% |
-| timeline_markers | 28 | 10 | 100% | 14% | 14.3% |
+| primary_sources | 8 | 3 | 100% | 24% | 23.8% |
+| engagement | 12 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
-| cultural | 8 | 4 | 100% | 10% | 9.5% |
-| visual | 9 | 4 | 100% | 10% | 9.5% |
+| cultural | 10 | 4 | 100% | 10% | 9.5% |
+| visual | 10 | 4 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 5 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **100.0%** |
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Дві імперії, два підходи | comparative-study | 1 | 14 | Add 13 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -83,5 +76,7 @@
 | **Життя на фронті** | ⚪️ | 248 | Skipped |
 | **Союз Визволення України (СВУ) і полонені** | ⚪️ | 248 | Skipped |
 | **Лист до мами: Голос з окопів** | ⚪️ | 258 | Skipped |
+| **Сірожупанники та Синьожупанники: Повернення з полону** | ⚪️ | 245 | Skipped |
+| **Культурна спадщина УСС: Від пісень до літератури** | ✅ | 228 | Included in Core |
 | **Підсумок** | ✅ | 68 | Included in Core |
 | **Need More Practice?** | ⚪️ | 0 | Skipped |

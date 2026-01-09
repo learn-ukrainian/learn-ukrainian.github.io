@@ -1,17 +1,23 @@
 module: c1-68
-title: Софія Окуневська
-subtitle: Sofiia Okunevska
+title: 'Софія Окуневська: Перша жінка-лікар'
+subtitle: 'Sofia Okunevska: The First Female Doctor'
 version: '2.0'
-phase: C1.3 Biographies
+phase: 'C1.3 Biographies'
 focus: biography
-pedagogy: narrative
+pedagogy: 'CBI'
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- biography
-- history
-- culture
+  - biography
+  - medicine
+  - feminism
+  - galicia
+grammar:
+  - 'Professional medical terminology'
+  - 'Academic discourse markers'
 objectives:
-- Master C1 concepts in Софія Окуневська
+  - 'Learner understands the historical significance of Sofia Okunevska in medical and feminist history.'
+  - 'Learner can use advanced medical and social-activism vocabulary.'
+  - 'Learner can analyze the impact of educational barriers for women in the 19th century.'
+vocabulary_count: 24
 slug: 68-sofiya-okunevska

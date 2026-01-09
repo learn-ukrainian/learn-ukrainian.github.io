@@ -6,6 +6,12 @@
 
 Evaluate module content for educational quality, coherence, and pedagogical soundness.
 
+> **Complete workflow integration:** See **`docs/B1-PLUS-MODULE-WORKFLOW.md`** - Content Quality Review section for:
+> - When to use content quality review (optional, recommended before release)
+> - Integration with 4-stage module creation pipeline
+> - How to interpret scores (0-10 scale, 8 dimensions)
+> - Fixing content quality issues
+
 ---
 
 ## 🎯 Critical Sections Index (DO NOT SKIP)
@@ -294,53 +300,390 @@ Flag if ANY true:
 ---
 
 > **⚠️ CHECKPOINT REMINDER #1:** You are now entering **Section 8: Activity Quality** - one of the most critical sections.
-> **AUTO-FAIL conditions:** Wrong answers, multiple valid answers treated as incorrect, duplicate items, broken format.
+> **AUTO-FAIL conditions:** Wrong answers, multiple valid answers treated as incorrect, duplicate items, broken format, poor quality activities.
 > **DO NOT SKIP THIS SECTION.** Activities are the primary learning tool.
 
 ---
 
-**8. Activity Quality** (Critical Check)
+**8. Activity Quality** (Critical Check - 5-Dimension Validation)
 
 Review ALL activities from the appropriate source:
 
 - **YAML file** (if `activities/{module-slug}.yaml` exists): Structured format, check YAML validity
 - **MD file** (legacy): Check embedded activity sections after `## Activities` or `## Вправи`
 
-For each activity, check:
+**Deterministic Quality Checks:**
 
-**8a. Structural Integrity**
+The system includes automated quality checks in `scripts/audit/checks/activity_quality.py`:
+- `analyze_sentence_variety()` - detects mechanical repetition patterns
+- `estimate_vocabulary_difficulty()` - flags vocabulary too easy/hard for level
+- `analyze_distractor_quality()` - checks if options are plausible
+- `check_natural_ukrainian_markers()` - detects pronoun overuse, calques, unnatural constructions
+- `estimate_cognitive_load()` - evaluates task complexity
+
+These checks provide instant feedback but don't replace human semantic validation below.
+
+---
+
+**8a. Structural Integrity** (Foundation - Auto-fail if violated)
 
 - No duplicate items (same question appears twice)
 - No mixed activity types (e.g., `[!error]` syntax inside a `fill-in` activity)
 - Correct callout format for activity type (see `docs/ACTIVITY-YAML-REFERENCE.md`)
-- Item count matches level requirements
+- Item count matches level requirements (see MODULE-RICHNESS-GUIDELINES-v2.md)
+- YAML syntax valid (if using YAML format)
 
-**8b. Answer Validity**
+**Auto-fail violations:**
+- ❌ Duplicate items in same activity
+- ❌ Wrong activity type syntax mixed in
+- ❌ Broken YAML format
+- ❌ Item count below minimum for level
 
+---
+
+**8b. Grammar & Linguistic Correctness + Naturalness** (Semantic Quality)
+
+**Correctness Checks:**
 - **Single-answer activities:** Only ONE correct answer exists linguistically
   - Flag: "читати → прочитати" when "почитати" is also valid perfective
   - Flag: Fill-in where multiple grammatical options work
 - **Multi-answer activities (`select`):** All valid answers are included
 - **Error-correction:** The "error" is genuinely wrong, not just stylistic
-
-**8c. Linguistic Accuracy**
-
 - Ukrainian spelling is correct
 - Grammar forms are correct (case endings, verb conjugations)
-- Distractors are plausible but genuinely wrong (not trick questions)
 - No Russisms in options or answers
 
-**8d. Pedagogical Alignment**
+**Naturalness Assessment (1-5 Scale):**
 
+Evaluate if Ukrainian content sounds authentic vs robotic/translated:
+
+**1 = Robotic/Translated**
+- Direct English syntax patterns
+- Calques ("робити сенс" instead of "мати сенс")
+- Unnatural formality ("Яка є ціна?" instead of "Скільки коштує?")
+- Example: "Яке слово є правильним для завершення речення?" (stiff, pedagogical)
+
+**2 = Unnatural**
+- Grammatically correct but stilted
+- Overuse of subject pronouns (я, він, вона when unnecessary)
+- Rigid SVO word order without variation
+- Lack of natural discourse markers (ну, от, взагалі)
+- Example: "Я маю книгу. Я маю машину. Я маю час." (repetitive, pronoun-heavy)
+
+**3 = Acceptable**
+- Functional Ukrainian, no major errors
+- Minor unnaturalness but comprehensible
+- Adequate for learning context
+- Example: "Виберіть правильний варіант" (correct but formulaic)
+
+**4 = Natural**
+- Sounds like native speaker wrote it
+- Natural word order variations
+- Appropriate discourse markers
+- Conversational tone when appropriate
+- Example: "Як правильно сказати?" (natural, conversational)
+
+**5 = Highly Natural**
+- Perfectly idiomatic Ukrainian
+- Stylistically appropriate for context
+- Cultural authenticity
+- Example: "Уявіть: ви на ринку..." (engaging, culturally grounded)
+
+**Deterministic Naturalness Markers (from activity_quality.py):**
+- Pronoun density >1.5 per sentence → unnatural
+- Missing discourse markers in 50+ word texts → check if too formal
+- Calques detected ("робити сенс", "в моїй думці") → flag
+- "Я маю" possessive → suggest "У мене є"
+
+**Rubric for Review:**
+
+For each activity with Ukrainian content, rate naturalness 1-5 and note issues:
+
+```yaml
+activity: "quiz-aspect-pairs"
+naturalness_score: 3
+issues:
+  - "Overuse of pronouns: 8 in 5 sentences"
+  - "Question feels stiff: 'Яке слово потрібне?' → suggest 'Що підходить?'"
+suggestions:
+  - "Remove unnecessary pronouns"
+  - "Use more conversational phrasing"
+```
+
+**Auto-fail violations:**
+- ❌ Grammatically incorrect "correct" answer
+- ❌ Multiple valid answers but only one accepted
+- ❌ Russianisms in Ukrainian content
+- ❌ Naturalness score 1 (robotic) for B2+ content
+
+---
+
+**8c. Difficulty Calibration** (CEFR-Appropriate Challenge)
+
+**Pedagogical Alignment:**
 - Activity tests what was TAUGHT in this module (not future content)
-- Difficulty matches level (A1 activities shouldn't require case knowledge untaught)
 - Activity type suits the learning goal:
   - Grammar → fill-in, error-correction, unjumble
   - Vocabulary → match-up, quiz, translate
   - Comprehension → true-false, select, cloze
 - Clear, unambiguous instructions
 
-**8e. External Resources**
+**Difficulty Assessment:**
+
+Evaluate if vocabulary and grammar complexity match CEFR level:
+
+**too_easy** - Content is 1+ level below target
+- A2 activity using only A1 vocabulary/grammar
+- B1 activity with obvious answers requiring no thought
+- Example: B1 fill-in: "Я ___ студент" (obvious "є", this is A2)
+
+**appropriate** - Matches level expectations
+- Vocabulary from module's taught words
+- Grammar from current or previous modules
+- Cognitive load matches level (not overwhelming, not trivial)
+- Example: B1 fill-in: "Я ___ цю книгу вчора" (require aspect knowledge: прочитав vs читав)
+
+**too_hard** - Content is 1+ level above target
+- A2 activity using B1+ grammar not taught
+- B1 activity using C1 abstract vocabulary
+- Example: B1 fill-in: "Якби я ___ багатим..." (requires subjunctive, that's B2+)
+
+**Deterministic Difficulty Markers (from activity_quality.py):**
+- Average word length too short/long for level → flag
+- Advanced vocabulary markers in lower levels → flag
+  - C1+ markers in A1-B2: геополітичн, суверенітет, колоніаліз, мовознавство
+- Cognitive load estimate: low/medium/high based on:
+  - Text length
+  - Sentence complexity (subordinate clauses)
+  - Activity type complexity
+
+**Rubric for Review:**
+
+For each activity, assess difficulty appropriateness:
+
+```yaml
+activity: "fill-in-aspect-practice"
+difficulty: "appropriate"
+reasoning: "Uses taught aspect pairs (читати/прочитати), vocabulary from module, sentences 8-12 words (B1 target)"
+vocab_difficulty_check: "appropriate"  # from deterministic check
+cognitive_load: "medium"               # from deterministic check
+```
+
+**Flag if:**
+- ⚠️ Difficulty mismatch: "too_easy" or "too_hard" for >20% of activities
+- ⚠️ Testing untaught material (grammar or vocabulary not in module or prior modules)
+- ⚠️ Cognitive load "high" for A1-A2 activities
+
+**Auto-fail violations:**
+- ❌ Testing untaught material (grammar not covered)
+- ❌ B2+ grammar in A1-A2 activities
+
+---
+
+**8d. Distractor Quality** (Multiple-Choice Plausibility)
+
+For activities with options (quiz, fill-in, error-correction, translate, select):
+
+**Distractor Requirements:**
+- Distractors are plausible but genuinely wrong
+- Same word class as correct answer (all verbs, all nouns, etc.)
+- Target common learner errors (not random words)
+- Appropriate difficulty (not obviously wrong without linguistic knowledge)
+
+**Distractor Quality Scale (1-5):**
+
+**1 = Nonsense**
+- Different word class from answer
+- Completely unrelated words
+- Example: Question needs verb, options include nouns/adjectives
+  - "Я ___ до Києва" → Options: їду (verb), стіл (noun), зелений (adj) ❌
+
+**2 = Weak**
+- Same word class but obviously wrong
+- No plausible connection to correct answer
+- Example: "Я ___ до Києва" → Options: їду, сплю, плаваю, кричу (all verbs but nonsense choices)
+
+**3 = Acceptable**
+- Plausible but not challenging
+- Basic error types
+- Example: "Я ___ до Києва" → Options: їду ✓, ходжу (walk, not ride), біжу (run), плаваю (swim)
+
+**4 = Good**
+- Targets common errors
+- Requires grammatical knowledge to eliminate
+- Example: "Я ___ до Києва" → Options: їду ✓, їжджу (habitual vs single trip), йду (on foot), піду (future)
+
+**5 = Excellent**
+- Pedagogically sound distractors
+- All options are plausible in different contexts
+- Tests fine-grained distinctions
+- Example: "Вчора я ___ книгу" → Options: прочитав ✓ (perfective), читав (imperfective), почитав (perfective but different meaning), дочитав (finished reading)
+
+**Deterministic Distractor Analysis (from activity_quality.py):**
+- Word class matching: checks if verbs/nouns/adjectives mixed → flags mismatches
+- Length plausibility: checks if distractors are similar length to answer
+- Root relation: checks if distractors share roots with answer (good for aspect pairs)
+
+**Rubric for Review:**
+
+For each multiple-choice activity, rate distractor quality 1-5:
+
+```yaml
+activity: "quiz-aspect-choice"
+distractor_quality: 4
+analysis:
+  - "All options are verbs (good)"
+  - "Targets perfective/imperfective confusion (pedagogically sound)"
+  - "One distractor (почитав) is plausible but wrong meaning (good challenge)"
+deterministic_check:
+  word_class_match: true
+  length_plausible: true
+  related_to_answer: 3/3 distractors share root
+issues: []
+```
+
+**Auto-fail violations:**
+- ❌ **Spoiler Hints:** The hint gives away the answer
+  - Example: `Answer: cat`, `Hint: It is a c_t` ❌
+- ❌ **Nonsense Options:** Distractors illogical or obviously wrong (quality score 1)
+  - Example: `Select: Apple`, Options: `Apple`, `Car`, `Moon`, `Sock` ❌
+
+**Exception: Gender Agreement Hints (ALLOWED)**
+
+English hints for possessives like `(my)`, `(his)`, `(her)`, `(our)`, `(their)`, `(your formal/plural)` are **allowed** when the activity tests **gender agreement**. These hints tell the student WHICH possessive to use, but they must still select the correct GENDER form.
+
+Example of allowed hint:
+- `Це ___ книга. (my)` → Options: `мій`, `моя`, `моє`, `мої`
+- The hint `(my)` is needed because without it, the sentence could use any possessive
+- The student must still know that `книга` is feminine → `моя`
+
+---
+
+**8e. Engagement Quality** (Cultural Relevance & Interest)
+
+**NEW DIMENSION:** Evaluate if activities are interesting and culturally relevant.
+
+**Engagement Scale (1-5):**
+
+**1 = Boring/Generic**
+- Disconnected from Ukrainian culture
+- Generic "textbook" examples with no context
+- Example: "The table is big." / "John eats an apple." (culturally neutral, no interest)
+
+**2 = Low Engagement**
+- Functional but uninspiring
+- No cultural context
+- Example: "Виберіть правильний варіант" without interesting sentence content
+
+**3 = Neutral**
+- Adequate content, some context
+- Minor cultural references
+- Example: "Я їду до Києва" (mentions Ukrainian city but no deeper context)
+
+**4 = Engaging**
+- Culturally relevant content
+- Interesting topics (history, culture, contemporary issues)
+- Relatable scenarios
+- Example: "Київське метро — одне з найглибших у світі" (cultural fact, interesting)
+
+**5 = Highly Engaging**
+- Deeply rooted in Ukrainian culture
+- Memorable topics (surprises, humor, contemporary relevance)
+- Age-appropriate for adult learners
+- Example: "Знаєте, чому українці кажуть 'на Україні' чи 'в Україні'? Це не просто граматика..." (cultural/political depth)
+
+**Engagement Evaluation:**
+
+For each activity, assess engagement level:
+
+```yaml
+activity: "translate-cultural-facts"
+engagement_score: 4
+reasoning: "Uses Ukrainian cultural references (борщ, вареники), mentions Carpathians, contemporary context"
+cultural_authenticity: true
+age_appropriate: true
+issues: []
+```
+
+**Boring Patterns to Flag:**
+- Generic English examples translated literally ("The book is on the table")
+- No cultural names (use Oksana, Taras, not John, Mary)
+- No cultural foods/places (use борщ, Київ, Карпати)
+- Abstract grammar drills without context
+
+**Engaging Patterns to Reward:**
+- Ukrainian cultural references
+- Contemporary topics relevant to learners
+- Humor or surprising facts
+- Real-world scenarios
+
+---
+
+**8f. Variety & Repetition** (Avoiding Mechanical Patterns)
+
+**NEW DIMENSION:** Detect mechanical, repetitive sentence patterns.
+
+**Variety Assessment:**
+
+**Variety Score: 0-100%**
+- **<40% = Mechanical** - Same structure repeated constantly
+- **40-60% = Low Variety** - Noticeable repetition
+- **60-80% = Good Variety** - Healthy mix of structures
+- **80-100% = Excellent Variety** - Diverse, natural patterns
+
+**Deterministic Variety Check (from activity_quality.py):**
+- Analyzes sentence structure diversity (first 2 words + length)
+- Flags if same pattern appears >30% of the time
+- Flags if multiple sentences have identical length (mechanical)
+
+**Example - MECHANICAL (Variety <40%):**
+```
+1. Я їду до Києва.
+2. Я їду до Львова.
+3. Я їду до Одеси.
+4. Я їду до Харкова.
+```
+- Pattern "я_їду__4w" appears 4/4 times (100%)
+- All sentences 4 words
+- Variety score: ~25%
+
+**Example - VARIED (Variety >70%):**
+```
+1. Я їду до Києва на потязі.
+2. Вона летить до Львова завтра.
+3. Ми приїхали до Одеси вчора.
+4. Вони подорожують до Харкова щомісяця.
+```
+- Different subjects (я, вона, ми, вони)
+- Different verbs (їду, летить, приїхали, подорожують)
+- Different sentence lengths (6, 6, 6, 5 words - acceptable variation)
+- Variety score: ~100%
+
+**Rubric for Review:**
+
+For each activity with 5+ sentences, assess variety:
+
+```yaml
+activity: "fill-in-motion-verbs"
+variety_score: 65
+patterns:
+  - "я_їду__6w: appears 2/8 times (25%)"
+  - "він_поїхав__5w: appears 2/8 times (25%)"
+issues:
+  - "Slight repetition of 'я їду' pattern"
+suggestions:
+  - "Vary subjects more (use ми, вони, вона)"
+overall: "Acceptable variety, minor repetition"
+```
+
+**Flag if:**
+- ⚠️ Variety score <40% (mechanical)
+- ⚠️ Same sentence starter used 5+ times in a row
+- ⚠️ All sentences identical length (indicates template generation)
+
+---
+
+**8g. External Resources**
 
 **NOTE:** Resources are stored in `docs/resources/external_resources.yaml` (NOT in markdown files).
 
@@ -354,26 +697,77 @@ When reviewing, check the YAML file for this module's resources:
 
 If you find `> [!resources]` in a markdown file, it's stale (remove it - will be regenerated from YAML at build time).
 
-**Activity Red Flags (Auto-fail):**
+---
 
-- ❌ **Spoiler Hints:** The hint gives away the answer (e.g., `Answer: cat`, `Hint: It is a c_t`).
-- ❌ **Nonsense Options:** Distractors are illogical or obviously wrong without linguistic knowledge (e.g., `Select: Apple`, Options: `Apple`, `Car`, `Moon`, `Sock` - too easy).
-- ❌ Multiple valid answers but only one accepted
-- ❌ Wrong activity type syntax mixed in
-- ❌ Grammatically incorrect "correct" answer
-- ❌ Testing untaught material
-- ❌ Duplicate items in same activity
-- ❌ Broken/unrelated external resources
+**CEFR-Specific Quality Gates**
 
-**Exception: Gender Agreement Hints (ALLOWED)**
+After evaluating all activities, check if module meets quality thresholds:
 
-English hints for possessives like `(my)`, `(his)`, `(her)`, `(our)`, `(their)`, `(your formal/plural)` are **allowed** when the activity tests **gender agreement**. These hints tell the student WHICH possessive to use, but they must still select the correct GENDER form (e.g., `мій` vs `моя` vs `моє`).
+**B1 Quality Gates:**
+- Minimum naturalness average: **3.5** (Acceptable+)
+- Maximum difficulty inappropriate: **20%** (≤20% of activities too_easy or too_hard)
+- Minimum engagement average: **3.0** (Neutral+)
+- Minimum distractor quality average: **4.0** (Good)
+- Minimum variety score average: **60%** (Good Variety)
 
-Example of allowed hint:
+**B2 Quality Gates:**
+- Minimum naturalness average: **4.0** (Natural)
+- Maximum difficulty inappropriate: **15%**
+- Minimum engagement average: **3.5** (Neutral to Engaging)
+- Minimum distractor quality average: **4.2** (Good+)
+- Minimum variety score average: **65%**
 
-- `Це ___ книга. (my)` → Options: `мій`, `моя`, `моє`, `мої`
-- The hint `(my)` is needed because without it, the sentence could use any possessive
-- The student must still know that `книга` is feminine → `моя`
+**C1 Quality Gates:**
+- Minimum naturalness average: **4.5** (Highly Natural)
+- Maximum difficulty inappropriate: **10%**
+- Minimum engagement average: **4.0** (Engaging)
+- Minimum distractor quality average: **4.5** (Good to Excellent)
+- Minimum variety score average: **70%**
+
+**C2 Quality Gates:**
+- Minimum naturalness average: **4.8** (Near-Native)
+- Maximum difficulty inappropriate: **5%**
+- Minimum engagement average: **4.5** (Highly Engaging)
+- Minimum distractor quality average: **5.0** (Excellent)
+- Minimum variety score average: **75%**
+
+**A1-A2 Quality Gates:**
+- No strict quality gates (scaffolding phase)
+- Focus on correctness over naturalness
+- Engagement/variety encouraged but not required
+
+**Gate Evaluation:**
+
+If module FAILS quality gates, note in report:
+
+```yaml
+quality_gate_evaluation:
+  level: B2
+  naturalness_avg: 3.8  # FAIL (need 4.0)
+  difficulty_appropriate: 78%  # PASS (need ≥85%)
+  engagement_avg: 3.6  # PASS (need 3.5)
+  distractor_quality_avg: 4.3  # PASS (need 4.2)
+  variety_avg: 68%  # PASS (need 65%)
+
+  result: FAIL
+  failed_gates: ["naturalness"]
+  recommendation: "Rewrite activities with robotic/translated phrasing (scores 1-2)"
+```
+
+---
+
+**Activity Red Flags (Auto-fail Summary):**
+
+- ❌ **Structural:** Duplicate items, wrong syntax, broken format
+- ❌ **Correctness:** Wrong answer, multiple valid answers not accepted
+- ❌ **Linguistic:** Russianisms, spelling errors, grammar errors in correct answer
+- ❌ **Difficulty:** Testing untaught material, B2+ grammar in A1-A2
+- ❌ **Distractors:** Nonsense options (quality score 1), spoiler hints
+- ❌ **Naturalness:** Score 1 (robotic) for B2+ content
+- ❌ **Variety:** Score <40% (mechanical repetition)
+- ❌ **Resources:** Broken URLs, irrelevant content
+
+---
 
 **9. Red Flags (Auto-fail)**
 Flag if:

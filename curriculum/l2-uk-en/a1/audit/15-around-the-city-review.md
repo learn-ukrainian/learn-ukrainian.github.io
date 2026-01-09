@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Task 2: Describe Your Commute (Writing Practice), Task 1: Give Directions (Oral Practice), Practice
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Practice, Task 1: Give Directions (Oral Practice), Task 2: Describe Your Commute (Writing Practice)
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
 
 ## Recommendation
@@ -26,6 +26,9 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 30.4% (target 25-40% (M15))
 - **Grammar:** ⏳ Pending validation
+
+## MDX VALIDATION
+✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

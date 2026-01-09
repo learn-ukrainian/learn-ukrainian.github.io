@@ -96,6 +96,12 @@ Now that you understand the theory, let's practice recognizing and using Dative 
 Мені подобається українська мова. (I like Ukrainian.)
 Мені потрібно більше практики. (I need more practice.)
 Мені цікаво вчити нові слова. (I find it interesting to learn new words.)
+Тобі подобається музика? (Do you like music?)
+Йому потрібна допомога з українською граматикою. (He needs help with Ukrainian grammar.)
+Їй холодно взимку, але влітку їй тепло. (She's cold in winter, but she's warm in summer.)
+Нам подобається вчитися разом. (We like learning together.)
+Вам потрібно більше спати та відпочивати. (You need to sleep and rest more.)
+Їм цікаво дізнаватися про українську культуру. (They find it interesting to learn about Ukrainian culture.)
 
 Try creating similar sentences about yourself before moving to the activities below.
 
@@ -236,8 +242,10 @@ This conversation uses подобається extensively to discuss what people
 — Так, нам дуже подобається! Нам тут цікаво.
 — А їм подобається?
 — Їм теж подобається. Їм подобається метро.
+— А тобі подобається українська кухня?
+— Звичайно! Мені дуже подобаються вареники та борщ.
 
-_(— Do you like Kyiv? — Yes, we like it very much! We find it interesting here. — And do they like it? — They like it too. They like the metro.)_
+_(— Do you like Kyiv? — Yes, we like it very much! We find it interesting here. — And do they like it? — They like it too. They like the metro. — And do you like Ukrainian cuisine? — Of course! I really like varenyky and borscht.)_
 
 ## Найбільш вживані вирази
 
@@ -249,6 +257,13 @@ _(— Do you like Kyiv? — Yes, we like it very much! We find it interesting he
 - **Нам весело** — We're having fun
 - **Вам зрозуміло?** — Is it clear to you?
 - **Їм цікаво** — They find it interesting
+- **Мені добре** — I feel good
+- **Тобі треба відпочити** — You need to rest
+- **Йому здається, що...** — It seems to him that...
+- **Їй сумно без друзів** — She's sad without friends
+- **Нам потрібна ваша допомога** — We need your help
+- **Вам подобається ця пісня?** — Do you like this song?
+- **Їм тепло в цьому будинку** — They're warm in this house
 
 ## Дієслова, що вимагають давальний відмінок
 
