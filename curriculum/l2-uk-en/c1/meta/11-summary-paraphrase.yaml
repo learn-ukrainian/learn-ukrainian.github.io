@@ -1,10 +1,10 @@
-module: 11-summary-paraphrase
-title: "Мистецтво переказу"
-subtitle: "Summary & Paraphrase"
-version: "2.0"
-phase: "C1.1 Academic Foundation"
+module: c1-11
+title: 'Мистецтво переказу: Резюме та парафраз'
+subtitle: 'Art of Retelling: Summary and Paraphrase'
+version: '1.0'
+phase: 'C1.1 Academic Foundation'
 focus: grammar
-pedagogy: "TTT"
+pedagogy: 'Immersion'
 duration: 90
 transliteration: none
 tags:
@@ -16,8 +16,9 @@ grammar:
   - "Summary techniques"
   - "Paraphrase markers"
 objectives:
-  - "Master summary techniques"
+  - "Master the art of academic summarizing in Ukrainian"
   - "Learn to paraphrase without plagiarism"
-  - "Use succinct language"
+  - "Understand the ethics of citation in Ukrainian academic context"
 vocabulary_count: 25
+focus: academic
 slug: 11-summary-paraphrase

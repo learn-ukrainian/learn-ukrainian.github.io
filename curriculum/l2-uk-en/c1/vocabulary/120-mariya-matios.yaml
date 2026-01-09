@@ -1,0 +1,132 @@
+module: 120-mariya-matios
+level: C1
+version: '1.0'
+items:
+  - lemma: буковина
+    ipa: /bukɔˈwɪna/
+    translation: Bukovina
+    pos: noun
+    gender: f
+  - lemma: незламність
+    ipa: /nɛˈzlamnistʲ/
+    translation: resilience, indomitability
+    pos: noun
+    gender: f
+  - lemma: трагедія
+    ipa: /traˈɦɛdʲija/
+    translation: tragedy
+    pos: noun
+    gender: f
+  - lemma: спокута
+    ipa: /spɔˈkuta/
+    translation: atonement, penance
+    pos: noun
+    gender: f
+  - lemma: родинний
+    ipa: /rɔˈdɪnnɪj/
+    translation: family (adj)
+    pos: adj
+  - lemma: сага
+    ipa: /ˈsaɦa/
+    translation: saga
+    pos: noun
+    gender: f
+  - lemma: діалектизм
+    ipa: /dialɛkˈtɪzm/
+    translation: dialectalism
+    pos: noun
+    gender: m
+  - lemma: колорит
+    ipa: /kɔlɔˈrɪt/
+    translation: coloring, flavor
+    pos: noun
+    gender: m
+  - lemma: катарсис
+    ipa: /kaˈtarsɪs/
+    translation: catharsis
+    pos: noun
+    gender: m
+  - lemma: прокляття
+    ipa: /prɔkˈlʲatʲːa/
+    translation: curse
+    pos: noun
+    gender: n
+  - lemma: запеклий
+    ipa: /zaˈpɛklɪj/
+    translation: fierce, bitter, relentless
+    pos: adj
+  - lemma: жертовність
+    ipa: /ʒɛrˈtɔwnistʲ/
+    translation: self-sacrifice
+    pos: noun
+    gender: f
+  - lemma: відплата
+    ipa: /widˈplata/
+    translation: retribution, repayment
+    pos: noun
+    gender: f
+  - lemma: безжальний
+    ipa: /bɛzˈʒalʲnɪj/
+    translation: ruthless, pitiless
+    pos: adj
+  - lemma: правдивість
+    ipa: /prawˈdɪwistʲ/
+    translation: truthfulness, veracity
+    pos: noun
+    gender: f
+  - lemma: напружений
+    ipa: /naˈpruʒɛnnɪj/
+    translation: tense, strained
+    pos: adj
+  - lemma: неминучість
+    ipa: /nɛmɪˈnut͡ʃnistʲ/
+    translation: inevitability
+    pos: noun
+    gender: f
+  - lemma: віросповідання
+    ipa: /wirɔspɔˈwidannʲa/
+    translation: denomination, faith
+    pos: noun
+    gender: n
+  - lemma: автентичний
+    ipa: /awtɛnˈtɪt͡ʃnɪj/
+    translation: authentic
+    pos: adj
+  - lemma: експресивний
+    ipa: /ɛksprɛˈsɪwnɪj/
+    translation: expressive
+    pos: adj
+  - lemma: підґрунтя
+    ipa: /pidˈɡrunʲtʲa/
+    translation: basis, foundation, ground
+    pos: noun
+    gender: n
+  - lemma: літописець
+    ipa: /lʲitɔˈpɪsɛt͡sʲ/
+    translation: chronicler
+    pos: noun
+    gender: m
+  - lemma: закономірність
+    ipa: /zakɔnɔˈmirnistʲ/
+    translation: regularity, consistency, law
+    pos: noun
+    gender: f
+  - lemma: проникливість
+    ipa: /prɔˈnɪklɪwistʲ/
+    translation: insight, penetrativeness
+    pos: noun
+    gender: f
+  - lemma: бунт
+    ipa: /bunt/
+    translation: rebellion, revolt
+    pos: noun
+    gender: m
+  - lemma: несамовитий
+    ipa: /nɛsamɔˈwɪtɪj/
+    translation: frantic, furious, mad
+    pos: adj
+  - lemma: чесність
+    ipa: /ˈt͡ʃɛsnistʲ/
+    translation: honesty, integrity
+    pos: noun
+    gender: f

@@ -1,0 +1,23 @@
+module: c1-123
+title: 'Віталій Портников: Публіцистика як інструмент державотворення'
+subtitle: 'Vitaly Portnikov: Publicism as a Tool of State-Building'
+version: '1.0'
+phase: 'C1.3 Biographies'
+focus: biography
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - biography
+  - journalism
+  - politics
+  - state-building
+grammar:
+  - 'Rhetorical devices in argumentation'
+  - 'Journalistic style markers'
+objectives:
+  - 'Learner understands the role of Vitaly Portnikov in Ukrainian political journalism'
+  - 'Learner can analyze his arguments regarding national identity and state sovereignty'
+  - 'Learner masters vocabulary related to geopolitics, civil society, and media literacy'
+vocabulary_count: 25
+slug: 123-vitaly-portnikov

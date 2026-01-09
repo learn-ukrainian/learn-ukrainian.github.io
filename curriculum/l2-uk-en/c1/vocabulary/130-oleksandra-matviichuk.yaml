@@ -1,0 +1,143 @@
+module: 130-oleksandra-matviichuk
+level: C1
+version: '1.0'
+items:
+  - lemma: правозахисниця
+    ipa: /prɑvɔzɑˈxɪsnɪt͡sʲɑ/
+    translation: human rights defender (female)
+    pos: noun
+    gender: f
+  - lemma: лауреатка
+    ipa: /lɑʊ̯rɛˈɑtkɑ/
+    translation: laureate (female)
+    pos: noun
+    gender: f
+  - lemma: громадянське суспільство
+    ipa: /hrɔmɑˈdʲɑnʲsʲkɛ sʊˈspʲilʲstvɔ/
+    translation: civil society
+    pos: phrase
+  - lemma: верховенство права
+    ipa: /vɛrxɔˈvɛnstvɔ ˈprɑvɑ/
+    translation: rule of law
+    pos: phrase
+  - lemma: документування
+    ipa: /dɔkʊmɛntʊˈvɑnʲːɑ/
+    translation: documentation
+    pos: noun
+    gender: n
+  - lemma: воєнні злочини
+    ipa: /vɔˈjɛnʲːi ˈzlɔt͡ʃɪnɪ/
+    translation: war crimes
+    pos: phrase
+  - lemma: адвокація
+    ipa: /ɑdvɔˈkɑt͡sʲijɑ/
+    translation: advocacy
+    pos: noun
+    gender: f
+  - lemma: ініціатива
+    ipa: /inʲit͡sʲiɑˈtɪvɑ/
+    translation: initiative
+    pos: noun
+    gender: f
+  - lemma: солідарність
+    ipa: /sɔlʲiˈdɑrnʲistʲ/
+    translation: solidarity
+    pos: noun
+    gender: f
+  - lemma: гідність
+    ipa: /ˈɦʲidnʲistʲ/
+    translation: dignity
+    pos: noun
+    gender: f
+  - lemma: протидія
+    ipa: /prɔtɪˈdʲijɑ/
+    translation: counteraction / opposition
+    pos: noun
+    gender: f
+  - lemma: безкарність
+    ipa: /bɛzˈkɑrnʲistʲ/
+    translation: impunity
+    pos: noun
+    gender: f
+  - lemma: правосуддя
+    ipa: /prɑvɔˈsʊdʲːɑ/
+    translation: justice
+    pos: noun
+    gender: n
+  - lemma: трибунал
+    ipa: /trɪbʊˈnɑl/
+    translation: tribunal
+    pos: noun
+    gender: m
+  - lemma: відповідальність
+    ipa: /vʲidpɔvʲidɑlʲˈnʲistʲ/
+    translation: responsibility / accountability
+    pos: noun
+    gender: f
+  - lemma: виклик
+    ipa: /ˈvɪklɪk/
+    translation: challenge
+    pos: noun
+    gender: m
+  - lemma: внесок
+    ipa: /ˈvnɛsɔk/
+    translation: contribution
+    pos: noun
+    gender: m
+  - lemma: спадщина
+    ipa: /ˈspɑdʃt͡ʃɪnɑ/
+    translation: legacy / heritage
+    pos: noun
+    gender: f
+  - lemma: постать
+    ipa: /ˈpɔstɑtʲ/
+    translation: figure / personality
+    pos: noun
+    gender: f
+  - lemma: нагорода
+    ipa: /nɑˈɦɔrɔdɑ/
+    translation: award
+    pos: noun
+    gender: f
+  - lemma: визнання
+    ipa: /vɪznɑˈnʲːɑ/
+    translation: recognition
+    pos: noun
+    gender: n
+  - lemma: переслідування
+    ipa: /pɛrɛˈslʲidʊvɑnʲːɑ/
+    translation: persecution
+    pos: noun
+    gender: n
+  - lemma: захищати
+    ipa: /zɑxɪˈʃt͡ʃɑtɪ/
+    translation: to protect / to defend
+    pos: verb
+  - lemma: сприяти
+    ipa: /sprɪˈjɑtɪ/
+    translation: to promote / to facilitate
+    pos: verb
+  - lemma: прагнути
+    ipa: /ˈprɑɦnʊtɪ/
+    translation: to strive / to aspire
+    pos: verb
+  - lemma: відігравати роль
+    ipa: /vʲidʲiɦrɑˈvɑtɪ rɔlʲ/
+    translation: to play a role
+    pos: phrase
+  - lemma: брати участь
+    ipa: /brɑˈtɪ ˈut͡ʃɑstʲ/
+    translation: to participate
+    pos: phrase
+  - lemma: привертати увагу
+    ipa: /prɪvɛrˈtɑtɪ ʊˈvɑɦʊ/
+    translation: to attract attention
+    pos: phrase
+  - lemma: відстоювати
+    ipa: /vʲidˈstɔjʊvɑtɪ/
+    translation: to stand up for / to uphold
+    pos: verb
+  - lemma: очолювати
+    ipa: /ɔˈt͡ʃɔlʲʊvɑtɪ/
+    translation: to head / to lead
+    pos: verb

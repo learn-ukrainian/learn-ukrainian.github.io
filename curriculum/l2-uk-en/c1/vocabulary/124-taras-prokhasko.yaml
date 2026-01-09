@@ -1,0 +1,123 @@
+module: 124-taras-prokhasko
+level: C1
+version: '1.0'
+items:
+  - lemma: феноменологія
+    ipa: /fɛnɔmɛnɔˈlɔɦija/
+    translation: phenomenology
+    pos: noun
+    gender: f
+  - lemma: буття
+    ipa: /buˈtːʲa/
+    translation: being, existence
+    pos: noun
+    gender: n
+  - lemma: непростий
+    ipa: /nɛprɔˈstɪj/
+    translation: unsimple, complex (noun in context)
+    pos: adj
+  - lemma: альтернативний
+    ipa: /alʲtɛrnaˈtɪwnɪj/
+    translation: alternative
+    pos: adj
+  - lemma: міфологія
+    ipa: /mifɔˈlɔɦija/
+    translation: mythology
+    pos: noun
+    gender: f
+  - lemma: ботаніка
+    ipa: /bɔˈtanika/
+    translation: botany
+    pos: noun
+    gender: f
+  - lemma: карпати
+    ipa: /karˈpatɪ/
+    translation: Carpathians
+    pos: noun
+    gender: f
+  - lemma: сповільнення
+    ipa: /spɔˈwilʲnɛnnʲa/
+    translation: slowing down
+    pos: noun
+    gender: n
+  - lemma: медитативний
+    ipa: /mɛdɪtaˈtɪwnɪj/
+    translation: meditative
+    pos: adj
+  - lemma: есеїст
+    ipa: /ɛsɛˈjist/
+    translation: essayist
+    pos: noun
+    gender: m
+  - lemma: плинність
+    ipa: /ˈplɪnnistʲ/
+    translation: fluidity
+    pos: noun
+    gender: f
+  - lemma: ландшафт
+    ipa: /landˈʃaft/
+    translation: landscape
+    pos: noun
+    gender: m
+  - lemma: відчуття
+    ipa: /widt͡ʃuˈtːʲa/
+    translation: sensation, feeling
+    pos: noun
+    gender: n
+  - lemma: пам'ять
+    ipa: /ˈpamjːatʲ/
+    translation: memory
+    pos: noun
+    gender: f
+  - lemma: екзистенційний
+    ipa: /ɛkzɪstɛnˈt͡sʲijnɪj/
+    translation: existential
+    pos: adj
+  - lemma: герметичний
+    ipa: /hɛrmɛˈtɪt͡ʃnɪj/
+    translation: hermetic
+    pos: adj
+  - lemma: станіславівський
+    ipa: /stanisˈlawiwskʲɪj/
+    translation: Stanislaviv (adj)
+    pos: adj
+  - lemma: феномен
+    ipa: /fɛnɔˈmɛn/
+    translation: phenomenon
+    pos: noun
+    gender: m
+  - lemma: спокій
+    ipa: /spɔˈkij/
+    translation: peace, calm
+    pos: noun
+    gender: m
+  - lemma: біолог
+    ipa: /biˈɔlɔh/
+    translation: biologist
+    pos: noun
+    gender: m
+  - lemma: деталізація
+    ipa: /dɛtalʲiˈzat͡sʲija/
+    translation: detailing
+    pos: noun
+    gender: f
+  - lemma: реальність
+    ipa: /rɛˈalʲnistʲ/
+    translation: reality
+    pos: noun
+    gender: f
+  - lemma: інтуїція
+    ipa: /intuˈit͡sʲija/
+    translation: intuition
+    pos: noun
+    gender: f
+  - lemma: досвід
+    ipa: /ˈdɔswid/
+    translation: experience
+    pos: noun
+    gender: m
+  - lemma: закоріненість
+    ipa: /zakɔˈrinɛnistʲ/
+    translation: rootedness
+    pos: noun
+    gender: f

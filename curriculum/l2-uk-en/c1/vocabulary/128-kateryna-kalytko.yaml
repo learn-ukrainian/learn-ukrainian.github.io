@@ -1,0 +1,126 @@
+module: 128-kateryna-kalytko
+level: C1
+version: '1.0'
+items:
+  - lemma: тілесність
+    ipa: /tʲilɛsˈnistʲ/
+    translation: physicality, corporeality
+    pos: noun
+    gender: f
+  - lemma: відчужений
+    ipa: /widˈt͡ʃuʒɛnɪj/
+    translation: estranged, alienated
+    pos: adj
+  - lemma: загубленість
+    ipa: /zaˈhublɛnistʲ/
+    translation: feeling of being lost
+    pos: noun
+    gender: f
+  - lemma: ізоляція
+    ipa: /izɔˈlʲat͡sʲija/
+    translation: isolation
+    pos: noun
+    gender: f
+  - lemma: кордон
+    ipa: /kɔrˈdɔn/
+    translation: border
+    pos: noun
+    gender: m
+  - lemma: жорстокість
+    ipa: /ʒɔrsˈtɔkistʲ/
+    translation: cruelty
+    pos: noun
+    gender: f
+  - lemma: вразливість
+    ipa: /wrazˈlɪwistʲ/
+    translation: vulnerability
+    pos: noun
+    gender: f
+  - lemma: метафора
+    ipa: /mɛˈtafɔra/
+    translation: metaphor
+    pos: noun
+    gender: f
+  - lemma: збірка
+    ipa: /ˈzbirka/
+    translation: collection (of poems/stories)
+    pos: noun
+    gender: f
+  - lemma: лауреат
+    ipa: /lauˈrɛat/
+    translation: laureate
+    pos: noun
+    gender: m
+  - lemma: перекладач
+    ipa: /pɛrɛklaˈdat͡ʃ/
+    translation: translator
+    pos: noun
+    gender: m
+  - lemma: балканський
+    ipa: /balˈkansʲkɪj/
+    translation: Balkan (adj)
+    pos: adj
+  - lemma: травма
+    ipa: /ˈtrawma/
+    translation: trauma
+    pos: noun
+    gender: f
+  - lemma: голос
+    ipa: /ˈhɔlɔs/
+    translation: voice
+    pos: noun
+    gender: m
+  - lemma: війна
+    ipa: /wijˈna/
+    translation: war
+    pos: noun
+    gender: f
+  - lemma: поетика
+    ipa: /pɔˈɛtɪka/
+    translation: poetics
+    pos: noun
+    gender: f
+  - lemma: проза
+    ipa: /ˈprɔza/
+    translation: prose
+    pos: noun
+    gender: f
+  - lemma: самотність
+    ipa: /samɔtˈnistʲ/
+    translation: loneliness
+    pos: noun
+    gender: f
+  - lemma: оголений
+    ipa: /ɔˈhɔlɛnɪj/
+    translation: naked, exposed
+    pos: adj
+  - lemma: нерв
+    ipa: /nɛrw/
+    translation: nerve
+    pos: noun
+    gender: m
+  - lemma: ритм
+    ipa: /rɪtm/
+    translation: rhythm
+    pos: noun
+    gender: m
+  - lemma: образ
+    ipa: /ˈɔbraz/
+    translation: image
+    pos: noun
+    gender: m
+  - lemma: емпатія
+    ipa: /ɛmˈpatʲija/
+    translation: empathy
+    pos: noun
+    gender: f
+  - lemma: переживання
+    ipa: /pɛrɛʒɪˈwannʲa/
+    translation: experience, feeling
+    pos: noun
+    gender: n
+  - lemma: деталь
+    ipa: /dɛˈtalʲ/
+    translation: detail
+    pos: noun
+    gender: f

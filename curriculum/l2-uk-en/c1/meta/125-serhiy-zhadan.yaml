@@ -1,0 +1,23 @@
+module: c1-125
+title: 'Сергій Жадан: Голос Сходу і поет війни'
+subtitle: 'Serhiy Zhadan: Voice of the East and Poet of War'
+version: '1.0'
+phase: 'C1.3 Biographies'
+focus: biography
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - biography
+  - literature
+  - war
+  - music
+grammar:
+  - 'Slang and colloquialisms in literature'
+  - 'Metaphors of urban decay'
+objectives:
+  - 'Learner understands the evolution of Serhiy Zhadan from a countercultural poet to a national symbol'
+  - 'Learner can analyze the depiction of Eastern Ukraine and the war in "Voroshilovgrad" and "The Orphanage"'
+  - 'Learner masters vocabulary related to military service, volunteering, and urban culture'
+vocabulary_count: 25
+slug: 125-serhiy-zhadan

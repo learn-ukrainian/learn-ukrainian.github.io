@@ -1,0 +1,22 @@
+module: c1-131
+title: 'Контрольна точка: Біографії'
+subtitle: 'Checkpoint: Biographies'
+version: '1.0'
+phase: 'C1.3 Biographies Checkpoint'
+focus: checkpoint
+pedagogy: 'TTT'
+duration: 180
+transliteration: none
+tags:
+  - checkpoint
+  - integration
+  - biography
+grammar:
+  - "Integration of M36-M130"
+  - "Comprehensive C1 review"
+objectives:
+  - "Продемонструвати володіння біографічною та історичною термінологією"
+  - "Інтегрувати знання про видатних постатей України від княжих часів до сьогодення"
+  - "Застосувати навички порівняльного аналізу історичних та сучасних контекстів"
+vocabulary_count: 55
+slug: 131-c1-3-checkpoint

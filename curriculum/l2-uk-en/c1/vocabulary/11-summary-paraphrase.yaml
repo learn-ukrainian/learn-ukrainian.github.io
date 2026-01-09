@@ -1,156 +1,119 @@
 module: 11-summary-paraphrase
 level: C1
-version: '2.0'
+version: '1.0'
 items:
-- lemma: резюме
-  ipa: /rɛzʲʊˈmɛ/
-  translation: summary
-  pos: noun
-  gender: n
-- lemma: анотація
-  ipa: /ɑnɔˈtɑt͡sʲijɑ/
-  translation: abstract/annotation
-  pos: noun
-  gender: f
-- lemma: конспект
-  ipa: /kɔnˈspɛkt/
-  translation: notes/outline
-  pos: noun
-  gender: m
-- lemma: виклад
-  ipa: /vˈɪklɑd/
-  translation: exposition/account
-  pos: noun
-  gender: m
-- lemma: переказ
-  ipa: /pɛˈrɛkɑz/
-  translation: retelling/paraphrase
-  pos: noun
-  gender: m
-- lemma: скорочення
-  ipa: /skɔˈrɔt͡ʃɛɲːɑ/
-  translation: shortening/abbreviation
-  pos: noun
-  gender: n
-- lemma: стислість
-  ipa: /stˈɪslʲistʲ/
-  translation: brevity
-  pos: noun
-  gender: f
-- lemma: лаконічність
-  ipa: /lɑkɔˈnʲit͡ʃnʲistʲ/
-  translation: conciseness
-  pos: noun
-  gender: f
-- lemma: синонім
-  ipa: /sɪˈnɔnʲim/
-  translation: synonym
-  pos: noun
-  gender: m
-- lemma: перифраз
-  ipa: /pɛrɪˈfrɑz/
-  translation: periphrasis
-  pos: noun
-  gender: m
-- lemma: парафраз
-  ipa: /pɑrɑˈfrɑz/
-  translation: paraphrase
-  pos: noun
-  gender: m
-- lemma: переформулювання
-  ipa: /pɛrɛfɔrmʊlʲʊˈvɑɲːɑ/
-  translation: reformulation
-  pos: noun
-  gender: n
-- lemma: перефразування
-  ipa: /pɛrɛfrɑzʊˈvɑɲːɑ/
-  translation: paraphrasing
-  pos: noun
-  gender: n
-- lemma: узагальнення
-  ipa: /ʊzɑˈɦɑlʲnɛɲːɑ/
-  translation: generalization
-  pos: noun
-  gender: n
-- lemma: іншими словами
-  ipa: /inʃɪmɪ slɔˈvɑmɪ/
-  translation: in other words
-  pos: phrase
-  gender: ''
-- lemma: тобто
-  ipa: /tɔbtɔ/
-  translation: that is (i.e.)
-  pos: conj
-  gender: ''
-- lemma: інакше кажучи
-  ipa: /inɑkʃɛ kɑˈʒʊt͡ʃɪ/
-  translation: putting it differently
-  pos: phrase
-  gender: ''
-- lemma: простіше кажучи
-  ipa: /prɔstіʃɛ kɑˈʒʊt͡ʃɪ/
-  translation: simply put
-  pos: phrase
-  gender: ''
-- lemma: коротко кажучи
-  ipa: /kɔrɔtkɔ kɑˈʒʊt͡ʃɪ/
-  translation: briefly speaking
-  pos: phrase
-  gender: ''
-- lemma: підсумовуючи
-  ipa: /pidsʊˈmɔvʊjʊt͡ʃɪ/
-  translation: summarizing
-  pos: adv
-  gender: ''
-- lemma: загалом
-  ipa: /zɑɦɑˈlɔm/
-  translation: in general
-  pos: adv
-  gender: ''
-- lemma: у цілому
-  ipa: /ʊ t͡sʲiˈlɔmʊ/
-  translation: on the whole
-  pos: phrase
-  gender: ''
-- lemma: по суті
-  ipa: /pɔ sʊtʲi/
-  translation: in essence
-  pos: phrase
-  gender: ''
-- lemma: головне
-  ipa: /ɦɔlɔvˈnɛ/
-  translation: the main thing
-  pos: noun
-  gender: n
-- lemma: основне
-  ipa: /ɔsnɔvˈnɛ/
-  translation: the basic thing
-  pos: noun
-  gender: n
-- lemma: кажучи
-  ipa: /kɑˈʒʊt͡ʃɪ/
-  translation: speaking
-  pos: verb
-  gender: impers
-- lemma: словами
-  ipa: /slɔˈvɑmɪ/
-  translation: words
-  pos: noun
-  gender: pl
-- lemma: цілому
-  ipa: /t͡sʲiˈlɔmʊ/
-  translation: whole
-  pos: noun
-  gender: m
-- lemma: суть
-  ipa: /sʊtʲ/
-  translation: essence/gist
-  pos: noun
-  gender: f
-- lemma: суті
-  ipa: /sʊtʲi/
-  translation: essence (genitive required by plan)
-  pos: noun
-  gender: f
-
-
+  - lemma: переказ
+    ipa: /pɛrɛˈkɑz/
+    translation: retelling / summary
+    pos: noun
+    gender: m
+  - lemma: резюмування
+    ipa: /rɛzʲʊmʊˈvɑnʲːɑ/
+    translation: summarizing
+    pos: noun
+    gender: n
+  - lemma: парафраз
+    ipa: /pɑrɑˈfrɑz/
+    translation: paraphrase
+    pos: noun
+    gender: m
+  - lemma: стислість
+    ipa: /ˈstɪslʲistʲ/
+    translation: conciseness / brevity
+    pos: noun
+    gender: f
+  - lemma: плагіат
+    ipa: /plɑɦiˈɑt/
+    translation: plagiarism
+    pos: noun
+    gender: m
+  - lemma: цитування
+    ipa: /t͡sɪtʊˈvɑnʲːɑ/
+    translation: citation
+    pos: noun
+    gender: n
+  - lemma: інтерпретація
+    ipa: /intɛrprɛˈtɑt͡sʲijɑ/
+    translation: interpretation
+    pos: noun
+    gender: f
+  - lemma: доброчесність
+    ipa: /dɔbrɔˈt͡ʃɛsnʲistʲ/
+    translation: integrity
+    pos: noun
+    gender: f
+  - lemma: інтелектуальна власність
+    ipa: /intɛlɛktʊˈɑlʲnɑ ˈvlɑsnʲistʲ/
+    translation: intellectual property
+    pos: phrase
+  - lemma: посилання
+    ipa: /pɔsɪˈlɑnʲːɑ/
+    translation: reference / link
+    pos: noun
+    gender: n
+  - lemma: переосмислення
+    ipa: /pɛrɛɔˈsmɪslɛnʲːɑ/
+    translation: reevaluation / rethinking
+    pos: noun
+    gender: n
+  - lemma: синтез
+    ipa: /ˈsɪntɛz/
+    translation: synthesis
+    pos: noun
+    gender: m
+  - lemma: лаконічність
+    ipa: /lɑkɔˈnʲit͡ʃnʲistʲ/
+    translation: laconicism
+    pos: noun
+    gender: f
+  - lemma: вичерпність
+    ipa: /vɪˈt͡ʃɛrpnʲistʲ/
+    translation: exhaustiveness / completeness
+    pos: noun
+    gender: f
+  - lemma: першоджерело
+    ipa: /pɛrʃɔd͡ʒɛˈrɛlɔ/
+    translation: primary source
+    pos: noun
+    gender: n
+  - lemma: першооснова
+    ipa: /pɛrʃɔɔˈsnɔvɑ/
+    translation: fundamental basis
+    pos: noun
+    gender: f
+  - lemma: виокремлювати
+    ipa: /vɪɔˈkrɛmlʲʊvɑtɪ/
+    translation: to separate / to single out
+    pos: verb
+  - lemma: узагальнювати
+    ipa: /ʊzɑˈɦɑlʲnʲʊvɑtɪ/
+    translation: to generalize / to summarize
+    pos: verb
+  - lemma: спрощувати
+    ipa: /sprɔˈʃt͡ʃʊvɑtɪ/
+    translation: to simplify
+    pos: verb
+  - lemma: спотворювати
+    ipa: /spɔˈtvɔrʲʊvɑtɪ/
+    translation: to distort / to pervert
+    pos: verb
+  - lemma: уникати
+    ipa: /ʊnɪˈkɑtɪ/
+    translation: to avoid
+    pos: verb
+  - lemma: розрізняти
+    ipa: /rɔzrʲizˈnʲɑtɪ/
+    translation: to distinguish
+    pos: verb
+  - lemma: іншими словами
+    ipa: /ˈinʃɪmɪ slɔˈvɑmɪ/
+    translation: in other words
+    pos: phrase
+  - lemma: інакше кажучи
+    ipa: /iˈnɑkʃɛ kɑˈʒʊt͡ʃɪ/
+    translation: to put it differently
+    pos: phrase
+  - lemma: тобто
+    ipa: /ˈtɔbtɔ/
+    translation: that is / i.e.
+    pos: particle

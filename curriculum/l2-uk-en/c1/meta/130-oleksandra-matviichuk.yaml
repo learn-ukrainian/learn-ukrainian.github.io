@@ -1,0 +1,24 @@
+module: c1-130
+title: 'Олександра Матвійчук: Захист прав людини'
+subtitle: 'Oleksandra Matviichuk: Protecting Human Rights'
+version: '1.0'
+phase: 'C1.3 Biographies'
+focus: biography
+pedagogy: 'CBI'
+duration: 120
+transliteration: none
+tags:
+  - biography
+  - independence
+  - politics
+  - law
+  - human-rights
+grammar:
+  - "Historical narrative tenses"
+  - "Quoted speech conventions"
+objectives:
+  - "Ознайомитися з життям та діяльністю Олександри Матвійчук"
+  - "Аналізувати правозахисну та юридичну термінологію"
+  - "Оцінити вплив громадянського суспільства на незалежність України"
+vocabulary_count: 30
+slug: 130-oleksandra-matviichuk

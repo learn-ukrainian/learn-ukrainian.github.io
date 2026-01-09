@@ -1,0 +1,120 @@
+module: 125-serhiy-zhadan
+level: C1
+version: '1.0'
+items:
+  - lemma: волонтер
+    ipa: /wɔlɔnˈtɛr/
+    translation: volunteer
+    pos: noun
+    gender: m
+  - lemma: фронт
+    ipa: /frɔnt/
+    translation: front (military)
+    pos: noun
+    gender: m
+  - lemma: схід
+    ipa: /sxid/
+    translation: east
+    pos: noun
+    gender: m
+  - lemma: інтернат
+    ipa: /intɛrˈnat/
+    translation: orphanage, boarding school
+    pos: noun
+    gender: m
+  - lemma: контркультура
+    ipa: /kɔntrkulʲˈtura/
+    translation: counterculture
+    pos: noun
+    gender: f
+  - lemma: урбаністичний
+    ipa: /urbanisˈtɪt͡ʃnɪj/
+    translation: urban
+    pos: adj
+  - lemma: рейв
+    ipa: /rɛjw/
+    translation: rave
+    pos: noun
+    gender: m
+  - lemma: покоління
+    ipa: /pɔkɔˈlʲinnʲa/
+    translation: generation
+    pos: noun
+    gender: n
+  - lemma: депресивний
+    ipa: /dɛprɛˈsɪwnɪj/
+    translation: depressive
+    pos: adj
+  - lemma: промисловий
+    ipa: /prɔmɪsˈlɔwɪj/
+    translation: industrial
+    pos: adj
+  - lemma: капелан
+    ipa: /kapɛˈlʲan/
+    translation: chaplain
+    pos: noun
+    gender: m
+  - lemma: мобілізація
+    ipa: /mɔbilʲiˈzat͡sʲija/
+    translation: mobilization
+    pos: noun
+    gender: f
+  - lemma: пронизливий
+    ipa: /prɔˈnɪzlɪwɪj/
+    translation: piercing, poignant
+    pos: adj
+  - lemma: жорсткий
+    ipa: /ʒɔrstˈkɪj/
+    translation: tough, harsh
+    pos: adj
+  - lemma: ритміка
+    ipa: /rɪtˈmika/
+    translation: rhythmics
+    pos: noun
+    gender: f
+  - lemma: метафорика
+    ipa: /mɛtaˈfɔrɪka/
+    translation: metaphorics
+    pos: noun
+    gender: f
+  - lemma: громадський
+    ipa: /hrɔˈmadsʲkɪj/
+    translation: civil, public
+    pos: adj
+  - lemma: фестиваль
+    ipa: /fɛstɪˈwalʲ/
+    translation: festival
+    pos: noun
+    gender: m
+  - lemma: благодійний
+    ipa: /blaɦɔˈdijnɪj/
+    translation: charitable
+    pos: adj
+  - lemma: блокпост
+    ipa: /blɔkˈpɔst/
+    translation: checkpoint
+    pos: noun
+    gender: m
+  - lemma: зона
+    ipa: /ˈzɔna/
+    translation: zone
+    pos: noun
+    gender: f
+  - lemma: сіра
+    ipa: /ˈsira/
+    translation: gray (adj) - as in gray zone
+    pos: adj
+  - lemma: апокаліптичний
+    ipa: /apɔkalʲipˈtɪt͡ʃnɪj/
+    translation: apocalyptic
+    pos: adj
+  - lemma: солідарність
+    ipa: /sɔlʲiˈdarnistʲ/
+    translation: solidarity
+    pos: noun
+    gender: f
+  - lemma: голос
+    ipa: /ˈhɔlɔs/
+    translation: voice
+    pos: noun
+    gender: m

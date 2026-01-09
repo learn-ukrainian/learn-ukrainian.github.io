@@ -1,0 +1,131 @@
+module: 117-yuriy-vynnychuk
+level: C1
+version: '1.0'
+items:
+  - lemma: містифікація
+    ipa: /mistɪfɪˈkat͡sʲija/
+    translation: mystification
+    pos: noun
+    gender: f
+  - lemma: постмодернізм
+    ipa: /pɔstmɔdɛrˈnizm/
+    translation: postmodernism
+    pos: noun
+    gender: m
+  - lemma: епатажний
+    ipa: /ɛpaˈtaʒnɪj/
+    translation: scandalous, shocking
+    pos: adj
+  - lemma: галицький
+    ipa: /ˈɦalɪt͡sʲkɪj/
+    translation: Galician
+    pos: adj
+  - lemma: ґвара
+    ipa: /ˈɡwara/
+    translation: Lviv dialect/slang
+    pos: noun
+    gender: f
+  - lemma: культовий
+    ipa: /ˈkulʲtɔwɪj/
+    translation: cult (adj), iconic
+    pos: adj
+  - lemma: еротизм
+    ipa: /ɛrɔˈtɪzm/
+    translation: eroticism
+    pos: noun
+    gender: m
+  - lemma: іронія
+    ipa: /iˈrɔnʲija/
+    translation: irony
+    pos: noun
+    gender: f
+  - lemma: сарказм
+    ipa: /sarˈkazm/
+    translation: sarcasm
+    pos: noun
+    gender: m
+  - lemma: бурлескний
+    ipa: /burˈlɛsknɪj/
+    translation: burlesque (adj)
+    pos: adj
+  - lemma: вигадка
+    ipa: /ˈwɪɦadka/
+    translation: invention, fiction, figment
+    pos: noun
+    gender: f
+  - lemma: провокація
+    ipa: /prɔwɔˈkat͡sʲija/
+    translation: provocation
+    pos: noun
+    gender: f
+  - lemma: антологія
+    ipa: /antɔˈlɔɦija/
+    translation: anthology
+    pos: noun
+    gender: f
+  - lemma: упорядник
+    ipa: /upɔˈrʲadnɪk/
+    translation: compiler, editor
+    pos: noun
+    gender: m
+  - lemma: краєзнавство
+    ipa: /krajɛˈznawst wɔ/
+    translation: local lore, regional studies
+    pos: noun
+    gender: n
+  - lemma: присмак
+    ipa: /ˈprɪsmak/
+    translation: aftertaste, flavor
+    pos: noun
+    gender: m
+  - lemma: міфологізація
+    ipa: /mifɔlɔɦiˈzat͡sʲija/
+    translation: mythologization
+    pos: noun
+    gender: f
+  - lemma: автентичність
+    ipa: /awtɛnˈtɪt͡ʃnistʲ/
+    translation: authenticity
+    pos: noun
+    gender: f
+  - lemma: інтелектуальний
+    ipa: /intɛlɛktuˈalʲnɪj/
+    translation: intellectual
+    pos: adj
+  - lemma: химерний
+    ipa: /xɪˈmɛrnɪj/
+    translation: whimsical, bizarre, chimerical
+    pos: adj
+  - lemma: гурман
+    ipa: /ɦurˈman/
+    translation: gourmet
+    pos: noun
+    gender: m
+  - lemma: кулінарія
+    ipa: /kulinaˈrʲija/
+    translation: culinary arts
+    pos: noun
+    gender: f
+  - lemma: екранізувати
+    ipa: /ɛkranizuˈwatɪ/
+    translation: to film, to adapt for screen
+    pos: verb
+    aspect: both
+  - lemma: лауреат
+    ipa: /lauˈrɛat/
+    translation: laureate, prize-winner
+    pos: noun
+    gender: m
+  - lemma: резонанс
+    ipa: /rɛzɔˈnans/
+    translation: resonance
+    pos: noun
+    gender: m
+  - lemma: блискучий
+    ipa: /blɪˈskut͡ʃɪj/
+    translation: brilliant, shining
+    pos: adj
+  - lemma: вишуканий
+    ipa: /ˈwɪʃukanɪj/
+    translation: exquisite, refined
+    pos: adj

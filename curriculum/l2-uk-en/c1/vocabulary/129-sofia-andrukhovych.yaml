@@ -1,0 +1,128 @@
+module: 129-sofia-andrukhovych
+level: C1
+version: '1.0'
+items:
+  - lemma: ілюзія
+    ipa: /ilʲuˈzʲija/
+    translation: illusion
+    pos: noun
+    gender: f
+  - lemma: залежність
+    ipa: /zaˈlɛʒnistʲ/
+    translation: dependence, addiction
+    pos: noun
+    gender: f
+  - lemma: амадока
+    ipa: /amaˈdɔka/
+    translation: Amadoka (legendary lake)
+    pos: noun
+    gender: f
+  - lemma: забуття
+    ipa: /zabutʲˈtʲa/
+    translation: oblivion
+    pos: noun
+    gender: n
+  - lemma: архів
+    ipa: /arˈxiw/
+    translation: archive
+    pos: noun
+    gender: m
+  - lemma: реконструкція
+    ipa: /rɛkɔnsˈtrut͡sʲija/
+    translation: reconstruction
+    pos: noun
+    gender: f
+  - lemma: травма
+    ipa: /ˈtrawma/
+    translation: trauma
+    pos: noun
+    gender: f
+  - lemma: станіславів
+    ipa: /staniˈslawiw/
+    translation: Stanislaviv (old Ivano-Frankivsk)
+    pos: noun
+    gender: m
+  - lemma: екранізація
+    ipa: /ɛkranizaˈt͡sʲija/
+    translation: screen adaptation
+    pos: noun
+    gender: f
+  - lemma: галичина
+    ipa: /halɪt͡ʃɪˈna/
+    translation: Galicia
+    pos: noun
+    gender: f
+  - lemma: австро-угорщина
+    ipa: /awstrɔ uˈhɔrʃt͡ʃɪna/
+    translation: Austro-Hungary
+    pos: noun
+    gender: f
+  - lemma: служниця
+    ipa: /sluʒˈnɪt͡sʲa/
+    translation: servant, maid
+    pos: noun
+    gender: f
+  - lemma: пані
+    ipa: /ˈpanʲi/
+    translation: lady, mistress
+    pos: noun
+    gender: f
+  - lemma: кулінарія
+    ipa: /kulinaˈrʲija/
+    translation: culinary arts
+    pos: noun
+    gender: f
+  - lemma: психологізм
+    ipa: /psɪxɔlɔˈhizm/
+    translation: psychologism
+    pos: noun
+    gender: m
+  - lemma: маніпуляція
+    ipa: /manipulʲaˈt͡sʲija/
+    translation: manipulation
+    pos: noun
+    gender: f
+  - lemma: пластичність
+    ipa: /plasˈtɪt͡ʃnistʲ/
+    translation: plasticity
+    pos: noun
+    gender: f
+  - lemma: монументальний
+    ipa: /mɔnumɛnˈtalʲnɪj/
+    translation: monumental
+    pos: adj
+  - lemma: пам'ять
+    ipa: /ˈpamjːatʲ/
+    translation: memory
+    pos: noun
+    gender: f
+  - lemma: холокост
+    ipa: /xɔlɔˈkɔst/
+    translation: Holocaust
+    pos: noun
+    gender: m
+  - lemma: сталінізм
+    ipa: /stalʲiˈnizm/
+    translation: Stalinism
+    pos: noun
+    gender: m
+  - lemma: війна
+    ipa: /wijˈna/
+    translation: war
+    pos: noun
+    gender: f
+  - lemma: зникнення
+    ipa: /znɪkˈnɛnnʲa/
+    translation: disappearance
+    pos: noun
+    gender: n
+  - lemma: міф
+    ipa: /mif/
+    translation: myth
+    pos: noun
+    gender: m
+  - lemma: спадок
+    ipa: /ˈspadɔk/
+    translation: inheritance, legacy
+    pos: noun
+    gender: m

@@ -1,0 +1,135 @@
+module: 118-kvitka-tsisyk
+level: C1
+version: '1.0'
+items:
+  - lemma: сопрано
+    ipa: /sɔˈpranɔ/
+    translation: soprano
+    pos: noun
+    gender: n
+  - lemma: колоратурний
+    ipa: /kɔlɔraˈturnɪj/
+    translation: coloratura (adj)
+    pos: adj
+  - lemma: тембр
+    ipa: /ˈtɛmbr/
+    translation: timbre, tone color
+    pos: noun
+    gender: m
+  - lemma: фольклор
+    ipa: /fɔlʲkˈlʲɔr/
+    translation: folklore
+    pos: noun
+    gender: m
+  - lemma: діаспора
+    ipa: /diˈaspɔra/
+    translation: diaspora
+    pos: noun
+    gender: f
+  - lemma: спадщина
+    ipa: /ˈspadt͡ʃɪna/
+    translation: heritage, legacy
+    pos: noun
+    gender: f
+  - lemma: туга
+    ipa: /ˈtuɦa/
+    translation: longing, yearning, sorrow
+    pos: noun
+    gender: f
+  - lemma: розголос
+    ipa: /ˈrɔzɦɔlɔs/
+    translation: publicity, notoriety
+    pos: noun
+    gender: m
+  - lemma: меценат
+    ipa: /mɛt͡sɛˈnat/
+    translation: patron of the arts, philanthropist
+    pos: noun
+    gender: m
+  - lemma: благодійність
+    ipa: /blaɦɔˈdijnistʲ/
+    translation: charity, philanthropy
+    pos: noun
+    gender: f
+  - lemma: вокал
+    ipa: /wɔˈkal/
+    translation: vocals, singing
+    pos: noun
+    gender: m
+  - lemma: аранжування
+    ipa: /aranʒuˈwannʲa/
+    translation: arrangement (musical)
+    pos: noun
+    gender: n
+  - lemma: платівка
+    ipa: /plaˈtʲiwka/
+    translation: record (vinyl), disc
+    pos: noun
+    gender: f
+  - lemma: ностальгія
+    ipa: /nɔstalʲˈɦija/
+    translation: nostalgia
+    pos: noun
+    gender: f
+  - lemma: тужливий
+    ipa: /tuʒˈlɪwɪj/
+    translation: mournful, plaintive
+    pos: adj
+  - lemma: проникливий
+    ipa: /prɔˈnɪklɪwɪj/
+    translation: insightful, penetrating, soulful
+    pos: adj
+  - lemma: неперевершений
+    ipa: /nɛpɛrɛˈwɛrʃɛnɪj/
+    translation: unsurpassed, matchless
+    pos: adj
+  - lemma: щирість
+    ipa: /ˈʃt͡ʃiristʲ/
+    translation: sincerity, candor
+    pos: noun
+    gender: f
+  - lemma: популяризація
+    ipa: /pɔpulʲarɪˈzat͡sʲija/
+    translation: popularization
+    pos: noun
+    gender: f
+  - lemma: ідентичність
+    ipa: /idɛnˈtɪt͡ʃnistʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: відлуння
+    ipa: /widˈlunnʲa/
+    translation: echo, resonance
+    pos: noun
+    gender: n
+  - lemma: заворожувати
+    ipa: /zawɔˈrɔʒuwatɪ/
+    translation: to fascinate, to bewitch, to enchant
+    pos: verb
+    aspect: impf
+  - lemma: шанувальник
+    ipa: /ʃanuˈwalʲnɪk/
+    translation: admirer, fan
+    pos: noun
+    gender: m
+  - lemma: самобутність
+    ipa: /samɔˈbutnistʲ/
+    translation: originality, distinctiveness
+    pos: noun
+    gender: f
+  - lemma: витонченість
+    ipa: /ˈwɪtɔnt͡ʃɛnistʲ/
+    translation: refinement, sophistication
+    pos: noun
+    gender: f
+  - lemma: пісенність
+    ipa: /piˈsɛnnistʲ/
+    translation: melodiousness, songfulness
+    pos: noun
+    gender: f
+  - lemma: відданість
+    ipa: /ˈwidːanistʲ/
+    translation: devotion, dedication
+    pos: noun
+    gender: f

@@ -1,0 +1,128 @@
+module: 122-yaroslav-hrytsak
+level: C1
+version: '1.0'
+items:
+  - lemma: модернізація
+    ipa: /mɔdɛrnizaˈt͡sʲija/
+    translation: modernization
+    pos: noun
+    gender: f
+  - lemma: ідентичність
+    ipa: /idɛnˈtɪt͡ʃnistʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: подолання
+    ipa: /pɔdɔˈlannʲa/
+    translation: overcoming
+    pos: noun
+    gender: n
+  - lemma: спадщина
+    ipa: /ˈspadt͡ʃɪna/
+    translation: heritage, legacy
+    pos: noun
+    gender: f
+  - lemma: інтеграція
+    ipa: /intɛˈɦrat͡sʲija/
+    translation: integration
+    pos: noun
+    gender: f
+  - lemma: глобальний
+    ipa: /ɦlɔˈbalʲnɪj/
+    translation: global
+    pos: adj
+  - lemma: контекст
+    ipa: /kɔnˈtɛkst/
+    translation: context
+    pos: noun
+    gender: m
+  - lemma: цінність
+    ipa: /ˈt͡sʲinnistʲ/
+    translation: value
+    pos: noun
+    gender: f
+  - lemma: суспільство
+    ipa: /suˈspilʲstwɔ/
+    translation: society
+    pos: noun
+    gender: n
+  - lemma: відповідальність
+    ipa: /widpɔwiˈdalʲnistʲ/
+    translation: responsibility
+    pos: noun
+    gender: f
+  - lemma: еліта
+    ipa: /ɛˈlita/
+    translation: elite
+    pos: noun
+    gender: f
+  - lemma: наратив
+    ipa: /naˈratɪw/
+    translation: narrative
+    pos: noun
+    gender: m
+  - lemma: імперія
+    ipa: /imˈpɛrʲija/
+    translation: empire
+    pos: noun
+    gender: f
+  - lemma: революція
+    ipa: /rɛwɔˈlʲut͡sʲija/
+    translation: revolution
+    pos: noun
+    gender: f
+  - lemma: трансформація
+    ipa: /transfɔrˈmat͡sʲija/
+    translation: transformation
+    pos: noun
+    gender: f
+  - lemma: виклик
+    ipa: /ˈwɪklɪk/
+    translation: challenge
+    pos: noun
+    gender: m
+  - lemma: компроміс
+    ipa: /kɔmprɔˈmis/
+    translation: compromise
+    pos: noun
+    gender: m
+  - lemma: амбіція
+    ipa: /amˈbit͡sʲija/
+    translation: ambition
+    pos: noun
+    gender: f
+  - lemma: перспектива
+    ipa: /pɛrspɛkˈtɪwa/
+    translation: perspective
+    pos: noun
+    gender: f
+  - lemma: коріння
+    ipa: /kɔˈrinnʲa/
+    translation: roots
+    pos: noun
+    gender: n
+  - lemma: незалежність
+    ipa: /nɛzaˈlɛʒnistʲ/
+    translation: independence
+    pos: noun
+    gender: f
+  - lemma: демократія
+    ipa: /dɛmɔˈkratʲija/
+    translation: democracy
+    pos: noun
+    gender: f
+  - lemma: майбутнє
+    ipa: /majˈbutnʲɛ/
+    translation: future
+    pos: noun
+    gender: n
+  - lemma: минуле
+    ipa: /mɪˈnulɛ/
+    translation: past
+    pos: noun
+    gender: n
+  - lemma: формування
+    ipa: /fɔrmuˈwannʲa/
+    translation: formation
+    pos: noun
+    gender: n
