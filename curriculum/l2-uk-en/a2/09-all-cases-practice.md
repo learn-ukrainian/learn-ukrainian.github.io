@@ -24,7 +24,7 @@ Congratulations — you've now learned all seven Ukrainian cases! This is a majo
 >
 > The key to success is always asking the right question for each word. For example: «Who or what receives the action?» or «To whom is something given?» (dative). The question determines the case. Practice this mental process until it becomes automatic.
 
-## Understanding the Case System
+## Presentation: Understanding the Case System
 
 Перш ніж повторювати кожен відмінок окремо, давайте згадаємо, навіщо вони потрібні. В українській мові відмінки виконують кілька критичних функцій:
 
