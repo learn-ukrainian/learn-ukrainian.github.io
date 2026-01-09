@@ -63,6 +63,9 @@ from .checks.activity_validation import (
 from .checks.yaml_schema_validation import (
     check_activity_yaml_schema,
 )
+from .checks.state_standard_compliance import (
+    check_state_standard_compliance,
+)
 from .checks.vocabulary import (
     count_vocab_rows,
     extract_vocab_items,
@@ -88,6 +91,7 @@ from .gates import (
     evaluate_immersion,
     evaluate_richness,
     evaluate_grammar,
+    evaluate_activity_quality,
     evaluate_content_heavy,
     compute_recommendation,
 )
@@ -1103,9 +1107,11 @@ def audit_module(file_path: str) -> bool:
         has_vocab = True
         has_vocab_table = True
     else:
-        has_summary, has_vocab, has_vocab_table = check_structure(content)
+        # Use flags already calculated above
+        has_vocab = has_vocab_header
+        has_vocab_table = has_vocab_table
 
-    results['structure'] = evaluate_structure(has_summary, has_vocab, has_vocab_table)
+    results['structure'] = structure_gate
     if results['structure'].status == 'FAIL':
         has_critical_failure = True
 
@@ -1115,10 +1121,24 @@ def audit_module(file_path: str) -> bool:
     if results['lint'].status == 'FAIL':
         has_critical_failure = True
 
-    # Run pedagogical checks
+    # Run pedagogical checks (with context-specific complexity)
     pedagogical_violations = run_pedagogical_checks(
-        content, core_content, level_code, module_num, pedagogy, yaml_activities
+        content, core_content, level_code, module_num, pedagogy, yaml_activities, module_focus
     )
+
+    # Run State Standard 2024 compliance checks
+    # Note: immersion_score calculated later in the audit, so pass None here
+    # Immersion compliance will be checked separately after immersion calculation
+    state_standard_violations = check_state_standard_compliance(
+        level_code, module_num, content, immersion_pct=None
+    )
+    for violation in state_standard_violations:
+        pedagogical_violations.append({
+            'type': violation.code,
+            'severity': 'blocking',
+            'issue': violation.message,
+            'fix': violation.fix
+        })
 
     # Run vocabulary integration checks (Issue #395)
     integration_data = check_vocabulary_integration(content, level_code, module_num, yaml_activities)
@@ -1377,6 +1397,19 @@ def audit_module(file_path: str) -> bool:
         has_critical_failure = True
         print_immersion_fix_hints(immersion_score, min_imm, max_imm, level_code, module_focus)
 
+    # Run State Standard 2024 immersion compliance (B1+)
+    if level_code in ['B1', 'B2', 'C1', 'C2']:
+        immersion_violations = check_state_standard_compliance(
+            level_code, module_num, content, immersion_pct=immersion_score
+        )
+        for violation in immersion_violations:
+            pedagogical_violations.append({
+                'type': violation.code,
+                'severity': 'warning',
+                'issue': violation.message,
+                'fix': violation.fix
+            })
+
     # Hard failure for very low immersion
     if immersion_score < 10.0 and module_num > 5:
         has_critical_failure = True
@@ -1419,6 +1452,36 @@ def audit_module(file_path: str) -> bool:
             pass
 
     results['grammar'] = evaluate_grammar(os.path.exists(grammar_file), grammar_summary)
+
+    # Activity quality validation check - look for -quality.md in audit folder
+    quality_file = os.path.join(audit_dir, f"{base_name}-quality.md")
+    quality_result = None
+    quality_failed_gates = 0
+
+    if os.path.exists(quality_file):
+        try:
+            with open(quality_file, 'r', encoding='utf-8') as f:
+                quality_content = f.read()
+                # Parse result from report (look for "**Result:** ✅ PASS" or "**Result:** ❌ FAIL")
+                if '**Result:** ✅ PASS' in quality_content:
+                    quality_result = 'PASS'
+                elif '**Result:** ❌ FAIL' in quality_content:
+                    quality_result = 'FAIL'
+                    # Count failed gates from "### Failed Gates" section
+                    # Each failed gate is listed as "- **dimension:**"
+                    failed_gates_section = re.search(r'### Failed Gates\n\n(.*?)\n\n', quality_content, re.DOTALL)
+                    if failed_gates_section:
+                        # Count bullet points in the failed gates section
+                        quality_failed_gates = len(re.findall(r'^- \*\*', failed_gates_section.group(1), re.MULTILINE))
+        except Exception:
+            pass
+
+    results['activity_quality'] = evaluate_activity_quality(
+        os.path.exists(quality_file),
+        quality_result,
+        quality_failed_gates,
+        level_code
+    )
 
     # Content-heavy module check (B2 history, C1 literature/biography/folk/arts)
     is_content_heavy = is_content_heavy_module(level_code, module_num, module_focus or "")

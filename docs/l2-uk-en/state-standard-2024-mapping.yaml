@@ -1,0 +1,144 @@
+# Ukrainian State Standard 2024 - Module Compliance Mapping
+# Reference: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt
+
+# This file maps State Standard 2024 requirements to specific modules
+# Used by scripts/audit/checks/state_standard_compliance.py
+
+a1:
+  # Reflexive verbs (§4.2.4.1, lines 704-709)
+  reflexive_verbs:
+    module: 9
+    title: "Reflexive Verbs (-ся)"
+    required_patterns:
+      - "називатися"
+      - "дивитися"
+      - "сміятися"
+    required_explanation: "-ся/-сь"
+    reference: "§4.2.4.1"
+    description: "Must teach reflexive verb formation and common reflexive verbs"
+
+  # Cases - required coverage
+  cases:
+    nominative:
+      first_module: 1
+      reference: "§4.2.3"
+      required: true
+    accusative:
+      first_module: 11
+      reference: "§4.2.3.2"
+      required: true
+    locative:
+      first_module: 13
+      reference: "§4.2.3.3"
+      required: true
+    genitive:
+      first_module: 16
+      reference: "§4.2.3.4"
+      required: true
+    dative:
+      allowed: false  # A2 topic
+      reference: "A2 requirement"
+    instrumental:
+      allowed: false  # A2 topic
+      reference: "A2 requirement"
+
+  # Imperative - 2nd person only at A1
+  imperative:
+    first_module: 8
+    allowed_forms: ["2nd_person"]
+    forbidden_forms: ["1st_person_plural", "3rd_person"]
+    reference: "§4.2.4.2"
+
+a2:
+  # Complete Imperative (§4.2.3.2 for 3rd person)
+  imperative_complete:
+    module: 23
+    title: "Complete Imperative"
+    required_patterns:
+      - "хай"
+      - "нехай"
+    required_forms:
+      - "1st_person_plural"  # читаймо, ходімо
+      - "3rd_person"  # хай читає, нехай буде
+    reference: "§4.2.3.2"
+    description: "Must teach 1st person plural and 3rd person imperative forms"
+
+  # Cases - complete coverage required
+  cases:
+    dative:
+      first_module: 1
+      reference: "§4.2.3"
+      required: true
+    instrumental:
+      first_module: 4
+      reference: "§4.2.3"
+      required: true
+
+  # Aspect system (§4.2.4.1)
+  aspect:
+    introduction_module: 12
+    mastery_module: 16
+    reference: "§4.2.4.1"
+    description: "Progressive introduction across A2.2 phase"
+
+b1:
+  # Full immersion required (except metalanguage modules M01-M05)
+  immersion:
+    metalanguage_bridge: [1, 2, 3, 4, 5]
+    full_immersion_start: 6
+    target_percentage: 98.0
+    reference: "Curriculum design decision"
+    description: "B1.1 metalanguage bridge, then 100% Ukrainian immersion"
+
+b2:
+  # Full immersion required
+  immersion:
+    target_percentage: 98.0
+    reference: "Curriculum design decision"
+    description: "100% Ukrainian immersion throughout B2"
+
+  # Passive voice required
+  passive_voice:
+    first_module: 1
+    reference: "§4.2.4 (advanced morphology)"
+    description: "Passive constructions and participles"
+
+c1:
+  # Full immersion required
+  immersion:
+    target_percentage: 98.0
+    reference: "Curriculum design decision"
+    description: "100% Ukrainian immersion throughout C1"
+
+c2:
+  # Full immersion required
+  immersion:
+    target_percentage: 98.0
+    reference: "Curriculum design decision"
+    description: "100% Ukrainian immersion throughout C2"
+
+# Vocabulary targets per level (from State Standard 2024)
+vocabulary_targets:
+  a1:
+    total: 750
+    reference: "State Standard 2024 vocabulary list"
+  a2:
+    cumulative: 1800
+    new: 1050
+    reference: "State Standard 2024 vocabulary list"
+  b1:
+    cumulative: 3300
+    new: 1500
+    reference: "State Standard 2024 vocabulary list"
+  b2:
+    cumulative: 5940
+    new: 2640
+    reference: "State Standard 2024 vocabulary list"
+  c1:
+    cumulative: 9780
+    new: 3840
+    reference: "State Standard 2024 vocabulary list"
+  c2:
+    cumulative: 12280
+    new: 2500
+    reference: "State Standard 2024 vocabulary list"
