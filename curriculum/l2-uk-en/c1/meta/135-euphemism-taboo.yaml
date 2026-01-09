@@ -1,0 +1,25 @@
+module: c1-135
+title: 'Евфемізми та табу: Мова делікатності'
+subtitle: 'Euphemisms & Taboo: The Language of Delicacy'
+version: '1.0'
+phase: 'C1.4 Advanced Stylistics & Rhetoric'
+focus: style
+pedagogy: 'Immersion'
+duration: 90
+transliteration: none
+tags:
+  - stylistics
+  - rhetoric
+  - euphemism
+  - taboo
+  - etiquette
+grammar:
+  - "Euphemisms for death, illness, and bodily functions"
+  - "Social and political euphemisms"
+  - "Taboo topics in Ukrainian culture"
+objectives:
+  - "Identify and understand common Ukrainian euphemisms"
+  - "Navigate sensitive topics with appropriate delicacy"
+  - "Recognize taboo language and avoid its inappropriate use"
+vocabulary_count: 25
+slug: 135-euphemism-taboo

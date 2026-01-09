@@ -1,0 +1,110 @@
+module: 135-euphemism-taboo
+level: C1
+version: '1.0'
+items:
+  - lemma: евфемізм
+    ipa: /ɛu̯fɛˈmʲizm/
+    translation: euphemism
+    pos: noun
+    gender: m
+  - lemma: табу
+    ipa: /tɑˈbu/
+    translation: taboo
+    pos: noun
+    gender: n
+  - lemma: делікатність
+    ipa: /dɛlʲiˈkɑtnʲistʲ/
+    translation: delicacy / tact
+    pos: noun
+    gender: f
+  - lemma: тактовність
+    ipa: /tɑkˈtɔvnʲistʲ/
+    translation: tactfulness
+    pos: noun
+    gender: f
+  - lemma: непристойний
+    ipa: /nɛprɪˈstɔjnɪj/
+    translation: indecent / obscene
+    pos: adj
+  - lemma: лайка
+    ipa: /ˈlɑjkɑ/
+    translation: swearing / abusive language
+    pos: noun
+    gender: f
+  - lemma: нецензурний
+    ipa: /nɛt͡sɛnˈzurnɪj/
+    translation: obscene / unprintable
+    pos: adj
+  - lemma: пом'якшувати
+    ipa: /pɔˈmjakʃʊvɑtɪ/
+    translation: to soften / to mitigate
+    pos: verb
+  - lemma: уникати
+    ipa: /ʊnɪˈkɑtɪ/
+    translation: to avoid
+    pos: verb
+  - lemma: замінювати
+    ipa: /zɑˈmʲinʲʊvɑtɪ/
+    translation: to replace
+    pos: verb
+  - lemma: піти з життя
+    ipa: /piˈtɪ z ʒɪˈtʲːɑ/
+    translation: to pass away (lit. to leave life)
+    pos: phrase
+  - lemma: спочити
+    ipa: /spɔˈt͡ʃɪtɪ/
+    translation: to rest (in peace)
+    pos: verb
+  - lemma: недуга
+    ipa: /nɛˈduɦɑ/
+    translation: ailment / illness (literary)
+    pos: noun
+    gender: f
+  - lemma: при надії
+    ipa: /prɪ nɑˈdʲiji/
+    translation: expecting / pregnant
+    pos: phrase
+  - lemma: поважний вік
+    ipa: /pɔˈvɑʒnɪj vʲik/
+    translation: respectable age (old age)
+    pos: phrase
+  - lemma: особливі потреби
+    ipa: /ɔsɔˈblɪvʲi pɔˈtrɛbɪ/
+    translation: special needs
+    pos: phrase
+  - lemma: малозабезпечений
+    ipa: /mɑlɔzɑbɛzˈpɛt͡ʃɛnɪj/
+    translation: low-income
+    pos: adj
+  - lemma: незручний
+    ipa: /nɛzruˈt͡ʃnɪj/
+    translation: awkward / uncomfortable
+    pos: adj
+  - lemma: вульгарний
+    ipa: /vʊlʲˈhɑrnɪj/
+    translation: vulgar
+    pos: adj
+  - lemma: приховувати
+    ipa: /prɪˈxɔvʊvɑtɪ/
+    translation: to hide / to conceal
+    pos: verb
+  - lemma: натякати
+    ipa: /nɑtʲɑˈkɑtɪ/
+    translation: to hint
+    pos: verb
+  - lemma: відвертий
+    ipa: /vidˈvɛrtɪj/
+    translation: frank / explicit
+    pos: adj
+  - lemma: заборонений
+    ipa: /zɑbɔˈrɔnɛnɪj/
+    translation: forbidden
+    pos: adj
+  - lemma: тілесні потреби
+    ipa: /tʲiˈlɛsnʲi pɔˈtrɛbɪ/
+    translation: bodily needs
+    pos: phrase
+  - lemma: вічна пам'ять
+    ipa: /ˈvʲit͡ʃnɑ ˈpɑmʲjɑtʲ/
+    translation: eternal memory
+    pos: phrase

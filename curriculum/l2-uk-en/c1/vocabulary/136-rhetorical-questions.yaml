@@ -1,0 +1,115 @@
+module: 136-rhetorical-questions
+level: C1
+version: '1.0'
+items:
+  - lemma: риторичне питання
+    ipa: /rɪtɔˈrɪt͡ʃnɛ pɪˈtɑnʲːɑ/
+    translation: rhetorical question
+    pos: phrase
+  - lemma: ствердження
+    ipa: /stvɛrˈd͡ʒɛnʲːɑ/
+    translation: affirmation / statement
+    pos: noun
+    gender: n
+  - lemma: заперечення
+    ipa: /zɑpɛˈrɛt͡ʃɛnʲːɑ/
+    translation: negation / denial
+    pos: noun
+    gender: n
+  - lemma: сумнів
+    ipa: /ˈsumnʲiw/
+    translation: doubt
+    pos: noun
+    gender: m
+  - lemma: обурення
+    ipa: /ɔˈburɛnʲːɑ/
+    translation: indignation / outrage
+    pos: noun
+    gender: n
+  - lemma: здивування
+    ipa: /zdɪvʊˈvɑnʲːɑ/
+    translation: surprise / astonishment
+    pos: noun
+    gender: n
+  - lemma: хіба
+    ipa: /xʲiˈbɑ/
+    translation: really? / is it possible that?
+    pos: particle
+  - lemma: невже
+    ipa: /nɛu̯ˈʒɛ/
+    translation: really? / can it be?
+    pos: particle
+  - lemma: чи ж
+    ipa: /t͡ʃɪ ʒ/
+    translation: is it really? (emphatic)
+    pos: particle
+  - lemma: докоряти
+    ipa: /dɔkɔˈrʲɑtɪ/
+    translation: to reproach / to rebuke
+    pos: verb
+  - lemma: спонукати
+    ipa: /spɔnʊˈkɑtɪ/
+    translation: to urge / to prompt
+    pos: verb
+  - lemma: акцентувати
+    ipa: /ɑkt͡sɛntʊˈvɑtɪ/
+    translation: to emphasize
+    pos: verb
+  - lemma: полеміка
+    ipa: /pɔˈlɛmʲikɑ/
+    translation: polemics / debate
+    pos: noun
+    gender: f
+  - lemma: аргумент
+    ipa: /ɑrɦʊˈmɛnt/
+    translation: argument
+    pos: noun
+    gender: m
+  - lemma: красномовство
+    ipa: /krɑsnɔˈmɔvstvɔ/
+    translation: eloquence
+    pos: noun
+    gender: n
+  - lemma: промова
+    ipa: /prɔˈmɔvɑ/
+    translation: speech
+    pos: noun
+    gender: f
+  - lemma: вигук
+    ipa: /ˈvɪɦʊk/
+    translation: exclamation / interjection
+    pos: noun
+    gender: m
+  - lemma: питальна інтонація
+    ipa: /pɪˈtɑlʲnɑ intɔˈnɑt͡sʲijɑ/
+    translation: interrogative intonation
+    pos: phrase
+  - lemma: привертати увагу
+    ipa: /prɪvɛrˈtɑtɪ ʊˈvɑɦʊ/
+    translation: to attract attention
+    pos: phrase
+  - lemma: емоційне забарвлення
+    ipa: /ɛmɔˈt͡sʲijnɛ zɑˈbɑrvlɛnʲːɑ/
+    translation: emotional coloring
+    pos: phrase
+  - lemma: очевидний
+    ipa: /ɔt͡ʃɛˈvɪdnɪj/
+    translation: obvious / evident
+    pos: adj
+  - lemma: беззаперечний
+    ipa: /bɛzːɑpɛˈrɛt͡ʃnɪj/
+    translation: indisputable
+    pos: adj
+  - lemma: доречний
+    ipa: /dɔˈrɛt͡ʃnɪj/
+    translation: appropriate / relevant
+    pos: adj
+  - lemma: переконливий
+    ipa: /pɛrɛˈkɔnlɪvɪj/
+    translation: persuasive / convincing
+    pos: adj
+  - lemma: маніпуляція
+    ipa: /mɑnʲipʊˈlʲɑt͡sʲijɑ/
+    translation: manipulation
+    pos: noun
+    gender: f
