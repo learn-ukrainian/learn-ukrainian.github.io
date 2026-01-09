@@ -1,0 +1,27 @@
+module: c1-137
+title: "Ступені впевненості: Модальність та хеджування"
+subtitle: "Degrees of Certainty: Modality & Hedging"
+version: "1.0"
+phase: "C1.4 Advanced Stylistics & Rhetoric"
+focus: style
+pedagogy: "Academic"
+duration: 120
+transliteration: none
+immersion: 100
+tags:
+  - stylistics
+  - rhetoric
+  - modality
+  - hedging
+  - academic-writing
+grammar:
+  - "Epistemic modality markers"
+  - "Hedging strategies in academic discourse"
+  - "Scale of certainty (probability)"
+  - "Subjective vs. objective modality"
+objectives:
+  - "Learner can express precise degrees of certainty using academic markers"
+  - "Learner can analyze authorial stance and hedging in authentic texts"
+  - "Learner can adjust the force of claims in academic production"
+vocabulary_count: 36
+slug: 137-degrees-of-certainty

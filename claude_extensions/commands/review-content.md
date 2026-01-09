@@ -1,10 +1,10 @@
-# Review Content Quality
+# Review Content Quality & Auto-Improve to 10/10
 
-> **CRITICAL:** Follow this checklist EXACTLY. Do not improvise. Do not invent new criteria. Do not skip steps. Your goal is strict compliance verification.
+> **CRITICAL:** Follow this checklist EXACTLY. Do not improvise. Do not invent new criteria. Do not skip steps. Your goal is **elevating content to 10/10** - not just reporting issues.
 
 > **⚠️ ALWAYS use `.venv/bin/python` - NEVER use `python3` or `python` directly!**
 
-Evaluate module content for educational quality, coherence, and pedagogical soundness.
+**MANDATE:** Evaluate module content for educational quality, coherence, and pedagogical soundness. **Then immediately fix all issues to achieve 10/10 scores.**
 
 > **Complete workflow integration:** See **`docs/B1-PLUS-MODULE-WORKFLOW.md`** - Content Quality Review section for:
 > - When to use content quality review (optional, recommended before release)
@@ -208,6 +208,9 @@ Validate ALL Ukrainian text against these sources:
 - ❌ **NOT TRUSTED:** Google Translate, Russian-Ukrainian dictionaries
 
 **Auto-fail Russianisms:**
+
+> **EXCEPTION:** If module explicitly teaches ABOUT Russianisms/Surzhyk (e.g., C1 metalanguage module), Russian forms are ALLOWED when marked as incorrect examples.
+
 | ❌ Wrong | ✅ Correct |
 |----------|-----------|
 | кушать | їсти |
@@ -220,6 +223,9 @@ Validate ALL Ukrainian text against these sources:
 | на протязі | протягом |
 
 **Auto-fail Calques:**
+
+> **EXCEPTION:** If module explicitly teaches ABOUT calques (e.g., C1 stylistics module), calques are ALLOWED when marked as incorrect examples.
+
 | ❌ Wrong | ✅ Correct |
 |----------|-----------|
 | робити сенс | мати сенс |
@@ -1522,84 +1528,225 @@ Ukrainians value hospitality.
 
 ---
 
-**Step 3: Generate Summary Report**
+**Step 3: Generate Initial Assessment**
 
-For each module, output:
+For each module, first evaluate current state:
 
 ```
 ## Module {num}: {title}
 
+**INITIAL SCORES (before fixes):**
+Coherence {X}/5 | Relevance {X}/5 | Educational {X}/5 | Language {X}/5 | Pedagogy {X}/5 | Immersion {X}/5 | Activities {X}/5 | Richness {X}/5 | Humanity {X}/5 | LLM Fingerprint {X}/5 | **Overall {X}/5**
+
 **Template:** {template_name} | **Compliance:** ✅ PASS / ❌ FAIL
-**Scores:** Coherence {X}/5 | Relevance {X}/5 | Educational {X}/5 | Language {X}/5 | Pedagogy {X}/5 | Immersion {X}/5 | Activities {X}/5 | Richness {X}/5 | **Humanity {X}/5** | **LLM Fingerprint {X}/5** | **Overall {X}/5**
-**Status:** ✅ PASS / ⚠️ NEEDS WORK / ❌ REWRITE
 
-**AI Detection Flags:** {list any triggered: LLM_CLICHE_OVERUSE, FALSE_SPECIFICITY, OVERCONFIDENCE, NO_NARRATIVE_VOICE, PREDICTABLE_PEDAGOGY, EMOTIONAL_FLATNESS, INCONSISTENT_VOICE, MISSING_WHY_LAYER, DECORATIVE_CULTURE, COLD_PEDAGOGY}
+**AI Detection Flags:** {list any triggered}
 
-{If not PASS, list 2-3 main issues}
+**Issues Identified:**
+1. {Category} - {specific issue with quote}
+2. {Category} - {specific issue with quote}
+3. {Category} - {specific issue with quote}
+
+**Planned Fixes:** {count} changes from Categories 1-7
 ```
 
-**Step 4: Apply Safe Fixes (Mandate: Aim for 5/5)**
+**Step 4: Apply ALL Fixes to Achieve 10/10**
 
-> **CRITICAL MANDATE:** Your goal is a perfect **5/5** score. Do not settle for "PASS" (4/5).
-> Humans detect even "minor" friction points (robotic transitions, slight repetition, lack of "glue").
-> **If you see a minor issue, FIX IT immediately.** Do not just report it.
+> **CRITICAL MANDATE:** Your goal is a perfect **10/10** score (5/5 on every criterion).
+> Do not settle for "PASS" (4/5) or "GOOD" - aim for **EXCELLENT**.
+> **Every identified issue MUST be fixed immediately.** Do not just report it.
 
-For each module, apply fixes to elevate quality:
+**NEW PHILOSOPHY:**
+- ❌ OLD: "Report issues, apply only safe fixes"
+- ✅ NEW: "Fix everything to 10/10, verify with audit"
 
-**Safe Fixes (Auto-apply NOW):**
+---
 
-- **Structure (Duplicate Activities):** If YAML activities file exists (Scenario A), **DELETE** the inline `## Activities` section from the Markdown file.
-- **Flow & Humanity:** Add transitional sentences between abrupt sections (the "Glue" test).
-- **Tone:** Rewrite robotic/dry sentences to be conversational.
-- **Euphony:** Fix vowel clashes (у/в, і/й) to ensure natural Ukrainian flow.
-- **Cleanliness:**
-  - Remove leftover editing notes/meta-commentary.
-  - Fix typos and repetition errors.
-  - Delete redundant paragraphs (exact duplicates).
-  - Clean up formatting artifacts.
-- **Accuracy:** Remove or correct factually incorrect statements.
+### Fix Categories
 
-**Risky Fixes (Report only):**
+**Category 1: Structure & Format (ALWAYS SAFE - Apply NOW)**
 
-- Major structural changes (moving entire sections).
-- Rewriting >50% of the module.
-- Changing the core pedagogical focus.
+- **Duplicate Activities:** If YAML activities file exists, **DELETE** inline `## Activities` section
+- **Cleanliness:** Remove editing notes, fix typos, delete exact duplicate paragraphs
+- **Formatting:** Fix markdown artifacts, broken tables, inconsistent headers
+- **Euphony:** Fix vowel clashes (у/в, і/й alternation)
+- **Activity Syntax:** Fix mixed activity types, add missing callouts
 
-For safe fixes:
+**Category 2: Language Quality (ALWAYS SAFE - Apply NOW)**
 
-1. Apply the fix to the module file.
-2. **If removing activities:** Verify YAML file exists and is valid first.
-3. Run `.venv/bin/python scripts/audit_module.py {file_path}` to verify still passes.
-4. If audit fails, revert the fix.
-5. Mark fix status in review: ✅ FIXED or ❌ SKIPPED
+> **EXCEPTION:** If module explicitly teaches ABOUT Russianisms/Surzhyk/Calques (e.g., C1 metalanguage), these forms are ALLOWED when clearly marked as incorrect examples.
 
-**Step 5: Save Review Files**
+- **Russianisms:** Replace all detected Russianisms with correct Ukrainian
+  - кушать → їсти, да → так, кто → хто, нету → немає
+  - Skip if module is teaching about Russianisms as pedagogical content
+- **Calques:** Replace English loan translations
+  - робити сенс → мати сенс, брати місце → відбуватися
+  - Skip if module is teaching about calques as pedagogical content
+- **Grammar Errors:** Fix case endings, verb conjugations, agreement
+- **Spelling:** Correct all Ukrainian/English spelling errors
+- **Precision:** Replace vague terms (thing, stuff) with specific vocabulary
+
+**Category 3: Pedagogy & Flow (SAFE IF <30% CHANGE - Apply NOW)**
+
+- **Transitions:** Add connecting phrases between abrupt section jumps
+- **Tone:** Rewrite robotic sentences to conversational (keep facts, change voice)
+- **Examples:** Replace generic examples with specific Ukrainian cultural references
+  - "магазин" → "Бесарабський ринок у Києві"
+  - "John" → "Тарас", "Mary" → "Оксана"
+- **Explanations:** Add "why" layer to surface-level definitions
+- **Emotional Hooks:** Add questions, metaphors, real-world scenarios
+- **Encouragement:** Add direct address, validation phrases (you can do this!)
+
+**Category 4: Content Enrichment (SAFE IF <40% CHANGE - Apply NOW)**
+
+- **Sensory Detail:** Replace vague descriptions with vivid imagery
+  - "готує їжу" → "Запах борщу наповнює кухню"
+- **Cultural Depth:** Add Ukrainian place names, traditions, historical context
+- **Storytelling:** Transform dry facts into narrative moments
+- **Proverbs/Idioms:** Weave in relevant Ukrainian sayings (natural, not forced)
+- **Surprise Moments:** Add counterintuitive insights, unexpected connections
+- **Engagement Boxes:** Replace filler boxes with valuable insights
+
+**Category 5: Activity Quality (SAFE IF FIXING ERRORS - Apply NOW)**
+
+- **Correct Answers:** Fix grammatically wrong "correct" answers
+- **Multiple Valid Options:** Rephrase questions or mark all valid answers correct
+- **Distractor Quality:** Replace nonsense options with plausible challenges
+- **Naturalness:** Rewrite robotic Ukrainian to idiomatic phrasing
+- **Variety:** Diversify sentence patterns (subjects, verbs, lengths)
+- **Engagement:** Replace generic examples with cultural content
+- **Duplicate Items:** Remove exact duplicates
+
+**Category 6: Human Warmth & Voice (SAFE - Apply NOW)**
+
+- Add direct address markers (you, ти/ви, давайте)
+- Add encouragement phrases (з практикою це стане природним)
+- Add confusion anticipation (студенти часто плутають...)
+- Add real-world validation (після цього модуля ви зможете...)
+- Fix certainty overload (завжди → часто, never → rarely + explanation)
+- Add hedging where appropriate (generally, typically, often)
+
+**Category 7: AI Slop Removal (SAFE - Apply NOW)**
+
+- Remove LLM clichés:
+  - "It's important to note that..." → direct statement
+  - "Let's dive into..." → conversational intro
+  - "In conclusion..." → natural transition
+- Remove ChatGPT scaffolding ("Welcome to Module X! In this lesson...")
+- Break up bullet point barrages (>5 in a row) with narrative prose
+- Rewrite encyclopedic definitions in teaching voice
+- Remove/replace useless engagement boxes
+
+---
+
+### Risky Fixes (REQUIRE USER APPROVAL - Flag Only)
+
+**Only report these for manual review:**
+
+- Rewriting >50% of module content
+- Changing core pedagogical approach (PPP → TBL)
+- Moving entire sections (structural reorganization)
+- Changing module focus/topic
+- Removing entire sections (>200 words)
+
+---
+
+### Fix Application Workflow
+
+**For EACH criterion scored <5/5:**
+
+1. **Identify specific issues** (quote problematic text)
+2. **Apply appropriate fix** from Categories 1-7 above
+3. **Verify fix doesn't break structure** (check markdown validity)
+4. **Continue to next issue**
+
+**After ALL fixes applied:**
+
+5. Run `.venv/bin/python scripts/audit_module.py {file_path}`
+6. If audit FAILS → Revert last batch of changes, debug
+7. If audit PASSES → Mark all fixes ✅ APPLIED
+8. Re-score module (should now be 10/10 or close)
+
+---
+
+### Fix Status Tracking
+
+For each fix applied, mark:
+
+- ✅ **APPLIED** - Fix successful, audit passes
+- ⚠️ **PARTIAL** - Fix applied but didn't fully resolve (needs iteration)
+- ❌ **REVERTED** - Fix broke audit, rolled back
+- ⏳ **FLAGGED** - Risky fix, needs user approval
+
+---
+
+**Step 5: Re-Score After Fixes & Generate Final Report**
+
+After applying all fixes, re-evaluate the module:
+
+```
+## Module {num}: {title} - FINAL REPORT
+
+**FINAL SCORES (after fixes):**
+Coherence {X}/5 (was {Y}) | Relevance {X}/5 (was {Y}) | Educational {X}/5 (was {Y}) | Language {X}/5 (was {Y}) | Pedagogy {X}/5 (was {Y}) | Immersion {X}/5 (was {Y}) | Activities {X}/5 (was {Y}) | Richness {X}/5 (was {Y}) | Humanity {X}/5 (was {Y}) | LLM Fingerprint {X}/5 (was {Y}) | **Overall {X}/5** ⬆️ from {Y}/5
+
+**Status:** ✅ 10/10 ACHIEVED / ⚠️ 9/10 (1 minor issue remains) / ⏳ 8/10 (needs manual review)
+
+**Fixes Applied:** {count} changes
+- ✅ {Category 1}: {brief description} (e.g., "Removed 8 LLM clichés, added conversational tone")
+- ✅ {Category 2}: {brief description} (e.g., "Fixed 3 Russianisms, corrected case endings")
+- ✅ {Category 3}: {brief description} (e.g., "Added transitions between 5 sections")
+- ✅ {Category 4}: {brief description} (e.g., "Enriched 7 generic examples with Ukrainian culture")
+- ✅ {Category 5}: {brief description} (e.g., "Fixed 2 wrong answers, improved distractor quality")
+- ✅ {Category 6}: {brief description} (e.g., "Added 12 direct address markers, 3 encouragement phrases")
+- ✅ {Category 7}: {brief description} (e.g., "Removed ChatGPT scaffolding, broke up bullet barrages")
+
+**Remaining Issues (if any):**
+- ⏳ {Risky fix description} - needs user approval
+- ⚠️ {Minor issue} - acceptable at current level
+
+**Audit Status:** ✅ PASSED (`.venv/bin/python scripts/audit_module.py {file_path}`)
+```
+
+**Step 6: Save Review Files**
 
 For each module, save detailed review to:
 `curriculum/l2-uk-en/{level}/review/{module_number}-{slug}-review.md`
 
 Example: `curriculum/l2-uk-en/a1/review/03-the-gender-code-review.md`
 
-**Step 6: Generate Final Summary**
+**Step 7: Generate Final Summary**
 
-After reviewing all modules in scope:
+After reviewing and fixing all modules in scope:
 
 ```
-# Content Quality Summary
+# Content Quality Summary - Auto-Improvement Report
 
 **Level:** {level}
-**Modules Reviewed:** {count}
+**Modules Processed:** {count}
 **Date:** {today}
 
 ---
 
-## Overview
+## Results
 
-| Status | Count | Modules |
-|--------|-------|---------|
-| ✅ PASS (≥4/5) | {count} | {list} |
-| ⚠️ NEEDS WORK (3/5) | {count} | {list} |
-| ❌ REWRITE (<3/5) | {count} | {list} |
+| Status | Before Fixes | After Fixes | Improvement |
+|--------|--------------|-------------|-------------|
+| ✅ 10/10 (5/5 all criteria) | {count} | {count} | +{delta} |
+| ⚠️ 9/10 (4.5+/5 avg) | {count} | {count} | +{delta} |
+| ⏳ 8/10 (needs manual review) | {count} | {count} | +{delta} |
+| ❌ <8/10 (incomplete) | {count} | {count} | -{delta} |
+
+**Average Score Improvement:** {before_avg}/5 → {after_avg}/5 (↑ {delta})
+
+**Total Fixes Applied:** {count}
+- Category 1 (Structure): {count} fixes
+- Category 2 (Language): {count} fixes
+- Category 3 (Pedagogy): {count} fixes
+- Category 4 (Enrichment): {count} fixes
+- Category 5 (Activities): {count} fixes
+- Category 6 (Warmth): {count} fixes
+- Category 7 (AI Slop): {count} fixes
 
 ---
 

@@ -7,30 +7,42 @@ activities:
     - text: іменник
       correct: true
     - text: дієслово
+      correct: false
     - text: прикметник
+      correct: false
     - text: прислівник
+      correct: false
     explanation: Іменник = noun.
   - question: Яка частина мови в українській граматиці називає дії?
     options:
     - text: іменник
+      correct: false
     - text: дієслово
       correct: true
     - text: прикметник
+      correct: false
     - text: прислівник
+      correct: false
     explanation: Дієслово = verb.
   - question: Яка частина мови в українській граматиці описує ознаку іменника?
     options:
     - text: іменник
+      correct: false
     - text: дієслово
+      correct: false
     - text: прикметник
       correct: true
     - text: прислівник
+      correct: false
     explanation: Прикметник = adjective.
   - question: Яка частина мови в українській граматиці описує дію або ознаку?
     options:
     - text: іменник
+      correct: false
     - text: дієслово
+      correct: false
     - text: прикметник
+      correct: false
     - text: прислівник
       correct: true
     explanation: Прислівник = adverb.
@@ -39,80 +51,112 @@ activities:
     - text: займенник
       correct: true
     - text: числівник
+      correct: false
     - text: прийменник
+      correct: false
     - text: сполучник
+      correct: false
     explanation: Займенник = pronoun.
   - question: Яка частина мови в українській граматиці позначає кількість або порядок?
     options:
     - text: займенник
+      correct: false
     - text: числівник
       correct: true
     - text: прийменник
+      correct: false
     - text: сполучник
+      correct: false
     explanation: Числівник = numeral.
   - question: Яка частина мови зв'язує слова і керує відмінком?
     options:
     - text: займенник
+      correct: false
     - text: числівник
+      correct: false
     - text: прийменник
       correct: true
     - text: сполучник
+      correct: false
     explanation: Прийменник = preposition.
   - question: Яка частина мови в українській граматиці з'єднує слова або речення?
     options:
     - text: займенник
+      correct: false
     - text: числівник
+      correct: false
     - text: прийменник
+      correct: false
     - text: сполучник
       correct: true
     explanation: Сполучник = conjunction.
   - question: Яка частина мови додає відтінок значення (не, ні, хай)?
     options:
     - text: прийменник
+      correct: false
     - text: сполучник
+      correct: false
     - text: частка
       correct: true
     - text: вигук
+      correct: false
     explanation: Частка = particle.
   - question: Яка частина мови в українській граматиці виражає емоції (ой, ах)?
     options:
     - text: прийменник
+      correct: false
     - text: сполучник
+      correct: false
     - text: частка
+      correct: false
     - text: вигук
       correct: true
     explanation: Вигук = interjection.
   - question: Скільки офіційних частин мови налічують в українській мові?
     options:
     - text: '8'
+      correct: false
     - text: '9'
+      correct: false
     - text: '10'
       correct: true
     - text: '12'
+      correct: false
     explanation: Десять частин мови.
-  - question: Іменник, дієслово, прикметник в українській граматиці — це які частини мови?
+  - question: Іменник, дієслово, прикметник в українській граматиці — це які частини
+      мови?
     options:
     - text: самостійні
       correct: true
     - text: службові
+      correct: false
     - text: допоміжні
+      correct: false
     - text: другорядні
+      correct: false
     explanation: Самостійні частини мови.
-  - question: Прийменник, сполучник, частка в українській граматиці — це які частини мови?
+  - question: Прийменник, сполучник, частка в українській граматиці — це які частини
+      мови?
     options:
     - text: самостійні
+      correct: false
     - text: службові
       correct: true
     - text: допоміжні
+      correct: false
     - text: другорядні
+      correct: false
     explanation: Службові частини мови.
   - question: Загальний термін для noun, verb, adjective — це що?
     options:
     - text: частина мови
       correct: true
     - text: член речення
+      correct: false
     - text: відмінок
+      correct: false
     - text: вид
+      correct: false
     explanation: Частина мови = part of speech.
   instruction: Оберіть правильну відповідь.
   id: комплексний-тест--частини-мови
@@ -122,231 +166,320 @@ activities:
   - question: Скільки граматичних відмінків має іменник в українській мові?
     options:
     - text: '5'
+      correct: false
     - text: '6'
+      correct: false
     - text: '7'
       correct: true
     - text: '8'
+      correct: false
     explanation: Сім відмінків.
   - question: Який граматичний відмінок в українській мові є першим?
     options:
     - text: називний
       correct: true
     - text: родовий
+      correct: false
     - text: давальний
+      correct: false
     - text: знахідний
+      correct: false
     explanation: Називний — перший.
   - question: Який відмінок в українській мові відповідає на питання «кого? чого?»?
     options:
     - text: називний
+      correct: false
     - text: родовий
       correct: true
     - text: давальний
+      correct: false
     - text: знахідний
+      correct: false
     explanation: Родовий — кого? чого?
   - question: Який відмінок в українській мові відповідає на питання «кому? чому?»?
     options:
     - text: родовий
+      correct: false
     - text: давальний
       correct: true
     - text: знахідний
+      correct: false
     - text: орудний
+      correct: false
     explanation: Давальний — кому? чому?
   - question: Який відмінок в українській мові вживається для прямого додатка?
     options:
     - text: родовий
+      correct: false
     - text: давальний
+      correct: false
     - text: знахідний
       correct: true
     - text: орудний
+      correct: false
     explanation: Знахідний — прямий додаток.
   - question: Який відмінок в українській мові відповідає на питання «ким? чим?»?
     options:
     - text: давальний
+      correct: false
     - text: знахідний
+      correct: false
     - text: орудний
       correct: true
     - text: місцевий
+      correct: false
     explanation: Орудний — ким? чим?
   - question: Який відмінок в українській мові вживається для позначення місця?
     options:
     - text: знахідний
+      correct: false
     - text: орудний
+      correct: false
     - text: місцевий
       correct: true
     - text: кличний
+      correct: false
     explanation: Місцевий — на чому? де?
   - question: Який відмінок в українській мові використовується для звертання?
     options:
     - text: орудний
+      correct: false
     - text: місцевий
+      correct: false
     - text: кличний
       correct: true
     - text: називний
+      correct: false
     explanation: Кличний — для звертання.
   - question: Яка мнемоніка в українській мові для запам'ятовування відмінків?
     options:
     - text: А-Б-В-Г-Д-Е-Ж
+      correct: false
     - text: Н-Р-Д-З-О-М-К
       correct: true
     - text: У-Ф-Х-Ц-Ч-Ш-Щ
+      correct: false
     - text: Я-Ю-Є-Ї-І-О-А
+      correct: false
     explanation: На Різдво Дід Загубив Орішки Між Ковбасками.
   - question: П'ятий відмінок у системі українських відмінків — це який?
     options:
     - text: знахідний
+      correct: false
     - text: орудний
       correct: true
     - text: місцевий
+      correct: false
     - text: кличний
+      correct: false
     explanation: Орудний — п'ятий.
   - question: Загальний граматичний термін «case» українською мовою — це що?
     options:
     - text: відмінок
       correct: true
     - text: рід
+      correct: false
     - text: число
+      correct: false
     - text: час
+      correct: false
     explanation: Відмінок = case.
-  - question: Англійський граматичний термін «Genitive» перекладається українською як що?
+  - question: Англійський граматичний термін «Genitive» перекладається українською
+      як що?
     options:
     - text: називний
+      correct: false
     - text: родовий
       correct: true
     - text: давальний
+      correct: false
     - text: знахідний
+      correct: false
     explanation: Genitive = родовий.
-  - question: Англійський граматичний термін «Dative» перекладається українською як що?
+  - question: Англійський граматичний термін «Dative» перекладається українською як
+      що?
     options:
     - text: родовий
+      correct: false
     - text: давальний
       correct: true
     - text: знахідний
+      correct: false
     - text: орудний
+      correct: false
     explanation: Dative = давальний.
-  - question: Англійський граматичний термін «Vocative» перекладається українською як що?
+  - question: Англійський граматичний термін «Vocative» перекладається українською
+      як що?
     options:
     - text: орудний
+      correct: false
     - text: місцевий
+      correct: false
     - text: кличний
       correct: true
     - text: називний
+      correct: false
     explanation: Vocative = кличний.
   instruction: Оберіть правильну відповідь.
   id: комплексний-тест--відмінки
 - type: quiz
   title: Комплексний тест — Вид і час
   items:
-  - question: Яка граматична категорія українського дієслова в мовознавстві означає «aspect»?
+  - question: Яка граматична категорія українського дієслова в мовознавстві означає
+      «aspect»?
     options:
     - text: вид
       correct: true
     - text: час
+      correct: false
     - text: спосіб
+      correct: false
     - text: стан
+      correct: false
     explanation: Вид = aspect.
-  - question: Яка граматична категорія українського дієслова в мовознавстві означає «tense»?
+  - question: Яка граматична категорія українського дієслова в мовознавстві означає
+      «tense»?
     options:
     - text: вид
+      correct: false
     - text: час
       correct: true
     - text: спосіб
+      correct: false
     - text: стан
+      correct: false
     explanation: Час = tense.
   - question: Який вид дієслова в українській мові виражає процес і тривалість?
     options:
     - text: доконаний
+      correct: false
     - text: недоконаний
       correct: true
     - text: теперішній
+      correct: false
     - text: минулий
+      correct: false
     explanation: Недоконаний — процес, тривалість.
   - question: Який вид дієслова в українській мові виражає результат і завершення?
     options:
     - text: доконаний
       correct: true
     - text: недоконаний
+      correct: false
     - text: теперішній
+      correct: false
     - text: майбутній
+      correct: false
     explanation: Доконаний — результат, завершення.
   - question: Дієслово «читати» в українській граматиці та мові — якого виду?
     options:
     - text: доконаного
+      correct: false
     - text: недоконаного
       correct: true
     - text: теперішнього
+      correct: false
     - text: минулого
+      correct: false
     explanation: Читати — НДВ.
   - question: Дієслово «прочитати» в українській граматиці та мові — якого виду?
     options:
     - text: доконаного
       correct: true
     - text: недоконаного
+      correct: false
     - text: теперішнього
+      correct: false
     - text: минулого
+      correct: false
     explanation: Прочитати — ДВ.
   - question: Скільки часів має українське дієслово в граматичній системі?
     options:
     - text: '2'
+      correct: false
     - text: '3'
       correct: true
     - text: '4'
+      correct: false
     - text: '5'
+      correct: false
     explanation: 'Три: теперішній, минулий, майбутній.'
   - question: Дієслівна форма «читаю» в українській мові — якого часу?
     options:
     - text: теперішнього
       correct: true
     - text: минулого
+      correct: false
     - text: майбутнього
+      correct: false
     - text: умовного
+      correct: false
     explanation: Читаю — теперішній.
   - question: Дієслівна форма «читав» в українській мові — якого часу?
     options:
     - text: теперішнього
+      correct: false
     - text: минулого
       correct: true
     - text: майбутнього
+      correct: false
     - text: умовного
+      correct: false
     explanation: Читав — минулий.
   - question: Дієслівна форма «читатиму» в українській мові — якого часу?
     options:
     - text: теперішнього
+      correct: false
     - text: минулого
+      correct: false
     - text: майбутнього
       correct: true
     - text: умовного
+      correct: false
     explanation: Читатиму — майбутній.
   - question: Дієслівна форма «Читай!» в українській мові — якого способу?
     options:
     - text: наказового
       correct: true
     - text: умовного
+      correct: false
     - text: дійсного
+      correct: false
     - text: інфінітива
+      correct: false
     explanation: Читай! — наказовий спосіб.
   - question: Дієслівна форма «читав би» в українській граматиці — якого способу?
     options:
     - text: наказового
+      correct: false
     - text: умовного
       correct: true
     - text: дійсного
+      correct: false
     - text: інфінітива
+      correct: false
     explanation: Читав би — умовний спосіб.
   - question: Граматична абревіатура НДВ в українській граматиці означає що?
     options:
     - text: доконаний вид
+      correct: false
     - text: недоконаний вид
       correct: true
     - text: називний відмінок
+      correct: false
     - text: наказовий спосіб
+      correct: false
     explanation: НДВ = недоконаний вид.
   - question: Граматична абревіатура ДВ в українській граматиці означає що?
     options:
     - text: доконаний вид
       correct: true
     - text: недоконаний вид
+      correct: false
     - text: давальний відмінок
+      correct: false
     - text: дійсний спосіб
+      correct: false
     explanation: ДВ = доконаний вид.
   instruction: Оберіть правильну відповідь.
   id: комплексний-тест--вид-і-час
@@ -358,38 +491,53 @@ activities:
     - text: підмет
       correct: true
     - text: присудок
+      correct: false
     - text: додаток
+      correct: false
     - text: обставина
+      correct: false
     explanation: Підмет — хто/що.
   - question: Що робить підмет у реченні — який це граматичний член речення?
     options:
     - text: підмет
+      correct: false
     - text: присудок
       correct: true
     - text: додаток
+      correct: false
     - text: обставина
+      correct: false
     explanation: Присудок — що робить.
   - question: На що спрямована дія — який це член речення?
     options:
     - text: підмет
+      correct: false
     - text: присудок
+      correct: false
     - text: додаток
       correct: true
     - text: обставина
+      correct: false
     explanation: Додаток — об'єкт дії.
   - question: Яка характеристика іменника в реченні — який це член речення?
     options:
     - text: підмет
+      correct: false
     - text: присудок
+      correct: false
     - text: додаток
+      correct: false
     - text: означення
       correct: true
     explanation: Означення — яка ознака.
   - question: Де, коли, як відбувається дія — який це член речення?
     options:
     - text: підмет
+      correct: false
     - text: присудок
+      correct: false
     - text: означення
+      correct: false
     - text: обставина
       correct: true
     explanation: Обставина — де, коли, як.
@@ -398,72 +546,100 @@ activities:
     - text: головні
       correct: true
     - text: другорядні
+      correct: false
     - text: допоміжні
+      correct: false
     - text: службові
+      correct: false
     explanation: Головні члени речення.
   - question: Речення з однією парою підмет-присудок — яке воно?
     options:
     - text: просте
       correct: true
     - text: складне
+      correct: false
     - text: складносурядне
+      correct: false
     - text: складнопідрядне
+      correct: false
     explanation: Просте речення.
   - question: Речення з кількома граматичними частинами — яке воно в граматиці?
     options:
     - text: просте
+      correct: false
     - text: складне
       correct: true
     - text: головне
+      correct: false
     - text: підрядне
+      correct: false
     explanation: Складне речення.
   - question: Рівноправні частини з «і», «а», «але» — яке речення?
     options:
     - text: просте
+      correct: false
     - text: складносурядне
       correct: true
     - text: складнопідрядне
+      correct: false
     - text: підрядне
+      correct: false
     explanation: Складносурядне — рівноправні.
   - question: Залежна частина з «що», «бо», «коли» — яке речення?
     options:
     - text: просте
+      correct: false
     - text: складносурядне
+      correct: false
     - text: складнопідрядне
       correct: true
     - text: головне
+      correct: false
     explanation: Складнопідрядне — залежна частина.
   - question: Незалежна частина складного речення в граматиці — як називається?
     options:
     - text: головне речення
       correct: true
     - text: підрядне речення
+      correct: false
     - text: просте речення
+      correct: false
     - text: складне речення
+      correct: false
     explanation: Головне речення.
   - question: Залежна частина складного речення в граматиці — як називається?
     options:
     - text: головне речення
+      correct: false
     - text: підрядне речення
       correct: true
     - text: просте речення
+      correct: false
     - text: складне речення
+      correct: false
     explanation: Підрядне речення.
   - question: Перед якими сполучниками в українській мові ставимо кому?
     options:
     - text: і, а, але
+      correct: false
     - text: що, бо, коли
       correct: true
     - text: або, чи
+      correct: false
     - text: і, та, й
+      correct: false
     explanation: 'Підрядності: що, бо, коли.'
-  - question: Символи «,», «.», «:» у письмовому українському правописі — як вони називаються?
+  - question: Символи «,», «.», «:» у письмовому українському правописі — як вони
+      називаються?
     options:
     - text: частини мови
+      correct: false
     - text: члени речення
+      correct: false
     - text: розділові знаки
       correct: true
     - text: відмінки
+      correct: false
     explanation: Розділові знаки = punctuation.
   instruction: Оберіть правильну відповідь.
   id: комплексний-тест--речення
@@ -475,64 +651,90 @@ activities:
     - text: заперечення
       correct: true
     - text: підтвердження
+      correct: false
     - text: твердження
+      correct: false
     - text: ствердження
+      correct: false
     explanation: Заперечення = negation.
   - question: Як називається загальна заборона дії («ніколи не робив»)?
     options:
     - text: загальне заперечення
       correct: true
     - text: очікувана дія
+      correct: false
     - text: попередження
+      correct: false
     - text: заборона
+      correct: false
     explanation: «Ніколи не читав» — загальне заперечення, НДВ.
   - question: Як називається дія, яку очікували, але не сталося («ще не зробив»)?
     options:
     - text: загальне заперечення
+      correct: false
     - text: очікувана дія
       correct: true
     - text: попередження
+      correct: false
     - text: заборона
+      correct: false
     explanation: «Ще не прочитав» — очікувана дія, ДВ.
   - question: Як називається в українській граматиці застереження від небажаної дії?
     options:
     - text: загальне заперечення
+      correct: false
     - text: очікувана дія
+      correct: false
     - text: попередження
       correct: true
     - text: наказ
+      correct: false
     explanation: «Не прочитай випадково!» — попередження.
   - question: Як називається категорична заборона дії («не роби цього!»)?
     options:
     - text: загальне заперечення
+      correct: false
     - text: очікувана дія
+      correct: false
     - text: попередження
+      correct: false
     - text: заборона
       correct: true
     explanation: «Не читай цю книгу!» — заборона.
-  - question: З яким граматичним видом вживається загальне заперечення в українській мові?
+  - question: З яким граматичним видом вживається загальне заперечення в українській
+      мові?
     options:
     - text: доконаним
+      correct: false
     - text: недоконаним
       correct: true
     - text: теперішнім
+      correct: false
     - text: минулим
+      correct: false
     explanation: «Ніколи не читав» — НДВ, загальне заперечення.
   - question: З яким видом вживається очікувана дія після «ще не»?
     options:
     - text: доконаним
       correct: true
     - text: недоконаним
+      correct: false
     - text: теперішнім
+      correct: false
     - text: умовним
+      correct: false
     explanation: «Ще не прочитав» — ДВ, очікувана дія.
-  - question: Яка граматична конструкція в українській мові показує попередження від випадкової дії?
+  - question: Яка граматична конструкція в українській мові показує попередження від
+      випадкової дії?
     options:
     - text: «ніколи не + НДВ»
+      correct: false
     - text: «ще не + ДВ»
+      correct: false
     - text: «не + ДВ випадково»
       correct: true
     - text: «не + НДВ взагалі»
+      correct: false
     explanation: «Не прочитай випадково!» — попередження, ДВ.
   instruction: Оберіть правильну відповідь.
   id: комплексний-тест--заперечення
@@ -544,30 +746,42 @@ activities:
     - text: складна форма
       correct: true
     - text: синтетична форма
+      correct: false
     - text: наказова форма
+      correct: false
     - text: умовна форма
+      correct: false
     explanation: «Буду + інфінітив» — складна форма.
   - question: Як називається дієслівна форма «читатиму» в українській граматиці?
     options:
     - text: складна форма
+      correct: false
     - text: синтетична форма
       correct: true
     - text: наказова форма
+      correct: false
     - text: умовна форма
+      correct: false
     explanation: «Читатиму» — одне слово, синтетична форма.
   - question: Як називається дієслівна форма «читай!» в українській граматиці?
     options:
     - text: складна форма
+      correct: false
     - text: синтетична форма
+      correct: false
     - text: наказова форма
       correct: true
     - text: умовна форма
+      correct: false
     explanation: «Читай!» — наказова форма.
   - question: Як називається повний набір форм дієслова в граматиці?
     options:
     - text: складна форма
+      correct: false
     - text: синтетична форма
+      correct: false
     - text: наказова форма
+      correct: false
     - text: парадигма
       correct: true
     explanation: Парадигма = paradigm, всі форми дієслова.
@@ -576,32 +790,45 @@ activities:
     - text: буду + інфінітив
       correct: true
     - text: інфінітив + -иму/-атиму
+      correct: false
     - text: основа + закінчення
+      correct: false
     - text: корінь + суфікс
+      correct: false
     explanation: «Буду читати» — складна форма майбутнього.
   - question: Яка дієслівна форма майбутнього часу є синтетичною в українській мові?
     options:
     - text: буду + інфінітив
+      correct: false
     - text: інфінітив + -иму/-атиму
       correct: true
     - text: основа без закінчення
+      correct: false
     - text: корінь без суфікса
+      correct: false
     explanation: «Читатиму» — синтетична форма майбутнього.
   - question: Дієслівна форма «пиши!», «говори!» в українській граматиці називається?
     options:
     - text: умовною формою
+      correct: false
     - text: дійсною формою
+      correct: false
     - text: наказовою формою
       correct: true
     - text: інфінітивом
+      correct: false
     explanation: Наказова форма = imperative.
-  - question: Граматичний термін «парадигма» в мовознавстві використовується для опису чого?
+  - question: Граматичний термін «парадигма» в мовознавстві використовується для опису
+      чого?
     options:
     - text: одного слова
+      correct: false
     - text: двох форм
+      correct: false
     - text: всіх форм слова
       correct: true
     - text: синонімів
+      correct: false
     explanation: Парадигма — всі форми відмінювання чи дієвідміни.
   instruction: Оберіть правильну відповідь.
   id: комплексний-тест--форми-дієслова
@@ -613,62 +840,87 @@ activities:
     - text: choose the correct answer
       correct: true
     - text: find the error
+      correct: false
     - text: match the pairs
+      correct: false
     - text: arrange in order
+      correct: false
     explanation: Виберіть / оберіть = choose, select.
   - question: Коли бачите інструкцію «знайдіть помилку», що треба робити?
     options:
     - text: вибрати відповідь
+      correct: false
     - text: знайти помилку в тексті
       correct: true
     - text: з'єднати пари
+      correct: false
     - text: розташувати слова
+      correct: false
     explanation: Знайдіть = find.
   - question: Інструкція «з'єднайте слова з перекладом» вимагає якої дії?
     options:
     - text: вибрати
+      correct: false
     - text: знайти
+      correct: false
     - text: поєднати пари
       correct: true
     - text: розташувати
+      correct: false
     explanation: З'єднайте = match, connect.
   - question: Що означає інструкція «розташуйте слова в правильному порядку»?
     options:
     - text: виберіть слова
+      correct: false
     - text: знайдіть слова
+      correct: false
     - text: з'єднайте слова
+      correct: false
     - text: впорядкуйте слова
       correct: true
     explanation: Розташуйте = arrange, put in order.
-  - question: Інструкція вправи «доповніть речення» в українській мові вимагає чого від учня?
+  - question: Інструкція вправи «доповніть речення» в українській мові вимагає чого
+      від учня?
     options:
     - text: заповнити пропуски
       correct: true
     - text: натиснути кнопку
+      correct: false
     - text: перекласти текст
+      correct: false
     - text: написати есе
+      correct: false
     explanation: Доповніть = complete, fill in.
   - question: Що означає інструкція вправи «натисніть на правильну відповідь» українською?
     options:
     - text: заповніть пропуск
+      correct: false
     - text: клацніть мишкою
       correct: true
     - text: перекладіть речення
+      correct: false
     - text: напишіть текст
+      correct: false
     explanation: Натисніть = click.
   - question: Інструкція вправи «перекладіть речення українською» означає що англійською?
     options:
     - text: заповніть пропуски
+      correct: false
     - text: натисніть кнопку
+      correct: false
     - text: зробіть переклад
       correct: true
     - text: напишіть есе
+      correct: false
     explanation: Перекладіть = translate.
   - question: Що вимагає інструкція «складіть діалог з наведених фраз»?
     options:
     - text: заповніть пропуски
+      correct: false
     - text: натисніть кнопку
+      correct: false
     - text: перекладіть текст
+      correct: false
     - text: створіть текст
       correct: true
     explanation: Складіть = compose, create.
@@ -682,64 +934,89 @@ activities:
     - text: контекст
       correct: true
     - text: маркер
+      correct: false
     - text: частота
+      correct: false
     - text: аспектуальна пара
+      correct: false
     explanation: Контекст = context.
   - question: Як називається в мовознавстві слово-сигнал граматичної категорії?
     options:
     - text: контекст
+      correct: false
     - text: маркер
       correct: true
     - text: частота
+      correct: false
     - text: аспектуальна пара
+      correct: false
     explanation: «Вже» — маркер результату.
   - question: Як називається показник того, як часто щось трапляється?
     options:
     - text: контекст
+      correct: false
     - text: маркер
+      correct: false
     - text: частота
       correct: true
     - text: аспектуальна пара
+      correct: false
     explanation: Частота = frequency.
   - question: Як називається пара ДВ/НДВ дієслів в українській граматиці?
     options:
     - text: контекст
+      correct: false
     - text: маркер
+      correct: false
     - text: частота
+      correct: false
     - text: аспектуальна пара
       correct: true
     explanation: «Читати/прочитати» — аспектуальна пара.
-  - question: Лінгвістичний термін «контекст» в мовознавстві використовується для позначення чого?
+  - question: Лінгвістичний термін «контекст» в мовознавстві використовується для
+      позначення чого?
     options:
     - text: оточення слова в реченні
       correct: true
     - text: граматичної форми
+      correct: false
     - text: часу дієслова
+      correct: false
     - text: виду дієслова
+      correct: false
     explanation: Контекст — це оточення, що визначає значення.
   - question: Що показує лінгвістичний термін «маркер» в українській граматиці?
     options:
     - text: всі форми слова
+      correct: false
     - text: кількість слів
+      correct: false
     - text: слово-сигнал граматичної категорії
       correct: true
     - text: порядок слів
+      correct: false
     explanation: Маркер — слово, що сигналізує про категорію (вид, час).
   - question: Лінгвістичний термін «частота» в граматиці означає що саме?
     options:
     - text: тривалість дії
+      correct: false
     - text: результат дії
+      correct: false
     - text: як часто щось трапляється
       correct: true
     - text: порядок слів
+      correct: false
     explanation: Частота = frequency вживання.
   - question: Пара «писати/написати» в українській граматиці є чим?
     options:
     - text: синонімами
+      correct: false
     - text: антонімами
+      correct: false
     - text: аспектуальною парою
       correct: true
     - text: омонімами
+      correct: false
     explanation: НДВ/ДВ пара = аспектуальна пара.
   instruction: Оберіть правильну відповідь.
   id: комплексний-тест--аналітичні-терміни
@@ -751,64 +1028,88 @@ activities:
     - text: стиль
       correct: true
     - text: регістр
+      correct: false
     - text: розмовна мова
+      correct: false
     - text: літературна мова
+      correct: false
     explanation: Стиль = style.
   - question: Як називається рівень формальності мовлення в мовознавстві і граматиці?
     options:
     - text: стиль
+      correct: false
     - text: регістр
       correct: true
     - text: розмовна мова
+      correct: false
     - text: літературна мова
+      correct: false
     explanation: Регістр = register.
   - question: Як називається неформальна повсякденна мова в українській граматиці?
     options:
     - text: стиль
+      correct: false
     - text: регістр
+      correct: false
     - text: розмовна мова
       correct: true
     - text: літературна мова
+      correct: false
     explanation: Розмовна мова = colloquial language.
   - question: Як називається стандартна писемна українська мова в мовознавстві?
     options:
     - text: стиль
+      correct: false
     - text: регістр
+      correct: false
     - text: розмовна мова
+      correct: false
     - text: літературна мова
       correct: true
     explanation: Літературна мова = literary/standard language.
   - question: Як називається офіційна, академічна мова в мовознавстві і граматиці?
     options:
     - text: розмовна мова
+      correct: false
     - text: літературна мова
+      correct: false
     - text: формальна мова
       correct: true
     - text: нейтральна мова
+      correct: false
     explanation: Формальна мова = formal language.
   - question: Як називається мова, що не є ні формальною, ні розмовною?
     options:
     - text: розмовна мова
+      correct: false
     - text: літературна мова
+      correct: false
     - text: формальна мова
+      correct: false
     - text: нейтральна мова
       correct: true
     explanation: Нейтральна мова = neutral language.
   - question: Яку мову використовують в офіційних документах та академічних текстах?
     options:
     - text: розмовну
+      correct: false
     - text: формальну
       correct: true
     - text: нейтральну
+      correct: false
     - text: побутову
+      correct: false
     explanation: Формальна мова — для документів і наукових праць.
   - question: Яка мова є стандартом для писемних текстів в Україні?
     options:
     - text: розмовна
+      correct: false
     - text: літературна
       correct: true
     - text: діалектна
+      correct: false
     - text: професійна
+      correct: false
     explanation: Літературна мова — писемний стандарт української.
   instruction: Оберіть правильну відповідь.
   id: комплексний-тест--стиль-і-регістр
@@ -1363,7 +1664,8 @@ activities:
     - і
     - розуміти
     - правила
-    answer: Граматична термінологія допомагає читати українські підручники і розуміти правила.
+    answer: Граматична термінологія допомагає читати українські підручники і розуміти
+      правила.
   - words:
     - вид
     - дієслова
@@ -1388,7 +1690,8 @@ activities:
     - від
     - моменту
     - дії
-    answer: Час дієслова буває теперішній, минулий і майбутній залежно від моменту дії.
+    answer: Час дієслова буває теперішній, минулий і майбутній залежно від моменту
+      дії.
   - words:
     - мнемоніка
     - на
@@ -1401,7 +1704,8 @@ activities:
     - допомагає
     - запам'ятати
     - відмінки
-    answer: Мнемоніка «На Різдво Дід Загубив Орішки Між Ковбасками» допомагає запам'ятати відмінки.
+    answer: Мнемоніка «На Різдво Дід Загубив Орішки Між Ковбасками» допомагає запам'ятати
+      відмінки.
   - words:
     - ви
     - пройшли
@@ -1697,14 +2001,34 @@ activities:
   id: виправлення-помилок
 - type: cloze
   title: Підсумковий текст
-  passage: Ви вивчили основи граматичної термінології. Тепер ви знаєте {1} частин мови і {2} відмінків. Ви розумієте різницю між {3} і {4} видом дієслова. Ви можете визначити {5} і {6} у реченні. Ви знаєте, що перед сполучниками {7} треба ставити {8}. Слово складається з {9}, {10} і {11}. Речення буває {12} або {13}. Ви готові до {14} — граматичних пояснень українською мовою.
+  passage: Ви вивчили основи граматичної термінології. Тепер ви знаєте {1} частин
+    мови і {2} відмінків. Ви розумієте різницю між {3} і {4} видом дієслова. Ви можете
+    визначити {5} і {6} у реченні. Ви знаєте, що перед сполучниками {7} треба ставити
+    {8}. Слово складається з {9}, {10} і {11}. Речення буває {12} або {13}. Ви готові
+    до {14} — граматичних пояснень українською мовою.
   instruction: Заповніть пропуски правильними термінами.
   id: підсумковий-текст
 - type: mark-the-words
   title: Фінальний тест
   instruction: Натисніть на ВСІ граматичні терміни в тексті.
   id: фінальний-тест
-  passage: '[Дієслово] «читати» — [недоконаного] [виду]. Воно [використовується], коли дія триває. У [реченні] «Студент читає книгу» [підмет] — «студент», [присудок] — «читає», [додаток] — «книгу». Це [просте] [речення]. [Сполучник] «бо» — [сполучник] [підрядності].'
+  passage: Дієслово «читати» — недоконаного виду. Воно використовується, коли дія
+    триває. У реченні «Студент читає книгу» підмет — «студент», присудок — «читає»,
+    додаток — «книгу». Це просте речення. Сполучник «бо» — сполучник підрядності.
+  correct_words:
+  - Дієслово
+  - недоконаного
+  - виду
+  - використовується
+  - реченні
+  - підмет
+  - присудок
+  - додаток
+  - просте
+  - речення
+  - Сполучник
+  - сполучник
+  - підрядності
 - type: select
   title: Фінальний множинний вибір
   items:
@@ -1872,112 +2196,154 @@ activities:
     - text: You are ready for immersion
       correct: true
     - text: You are ready for translation
+      correct: false
     - text: You are ready for grammar
+      correct: false
     - text: You are ready for vocabulary
+      correct: false
     explanation: Занурення = immersion.
   - source: «Граматична термінологія» англійською?
     options:
     - text: grammatical terminology
       correct: true
     - text: grammatical structure
+      correct: false
     - text: grammatical analysis
+      correct: false
     - text: grammatical exercise
+      correct: false
     explanation: Термінологія = terminology.
   - source: «Частини мови» англійською?
     options:
     - text: parts of speech
       correct: true
     - text: parts of sentence
+      correct: false
     - text: parts of word
+      correct: false
     - text: parts of text
+      correct: false
     explanation: Частини мови = parts of speech.
   - source: «Члени речення» англійською?
     options:
     - text: parts of speech
+      correct: false
     - text: parts of sentence
       correct: true
     - text: parts of word
+      correct: false
     - text: parts of text
+      correct: false
     explanation: Члени речення = parts/members of sentence.
   - source: «Повне занурення» англійською?
     options:
     - text: full immersion
       correct: true
     - text: full translation
+      correct: false
     - text: full grammar
+      correct: false
     - text: full vocabulary
+      correct: false
     explanation: Повне занурення = full immersion.
   - source: «Вид дієслова» англійською?
     options:
     - text: verb aspect
       correct: true
     - text: verb tense
+      correct: false
     - text: verb mood
+      correct: false
     - text: verb voice
+      correct: false
     explanation: Вид = aspect.
   - source: «Час дієслова» англійською?
     options:
     - text: verb aspect
+      correct: false
     - text: verb tense
       correct: true
     - text: verb mood
+      correct: false
     - text: verb voice
+      correct: false
     explanation: Час = tense.
   - source: «Головні члени» англійською?
     options:
     - text: main parts
       correct: true
     - text: secondary parts
+      correct: false
     - text: auxiliary parts
+      correct: false
     - text: service parts
+      correct: false
     explanation: Головні = main.
   - source: «Другорядні члени» англійською?
     options:
     - text: main parts
+      correct: false
     - text: secondary parts
       correct: true
     - text: auxiliary parts
+      correct: false
     - text: service parts
+      correct: false
     explanation: Другорядні = secondary.
   - source: «Складнопідрядне речення» англійською?
     options:
     - text: simple sentence
+      correct: false
     - text: compound sentence
+      correct: false
     - text: complex sentence with subordination
       correct: true
     - text: main clause
+      correct: false
     explanation: Складнопідрядне = complex with subordinate clause.
   - source: «Сполучник підрядності» англійською?
     options:
     - text: coordinating conjunction
+      correct: false
     - text: subordinating conjunction
       correct: true
     - text: preposition
+      correct: false
     - text: particle
+      correct: false
     explanation: Підрядності = subordinating.
   - source: «Розділові знаки» англійською?
     options:
     - text: punctuation marks
       correct: true
     - text: sentence parts
+      correct: false
     - text: word parts
+      correct: false
     - text: speech parts
+      correct: false
     explanation: Розділові знаки = punctuation marks.
   - source: «Українська граматика» англійською?
     options:
     - text: Ukrainian grammar
       correct: true
     - text: Ukrainian vocabulary
+      correct: false
     - text: Ukrainian phonetics
+      correct: false
     - text: Ukrainian syntax
+      correct: false
     explanation: Граматика = grammar.
   - source: «Вітаємо! Ви готові!» англійською?
     options:
     - text: Congratulations! You're ready!
       correct: true
     - text: Good luck! You need more!
+      correct: false
     - text: Sorry! Try again!
+      correct: false
     - text: Warning! Not ready!
+      correct: false
     explanation: Вітаємо = Congratulations!
   instruction: Оберіть правильний переклад.
   id: фінальний-переклад

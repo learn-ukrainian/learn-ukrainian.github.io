@@ -34,7 +34,7 @@ When you walk into a Ukrainian café, you'll use phrases you've already learned�
 >
 > In Ukraine, it's common to spend HOURS at a café—reading, working, chatting with friends. Unlike in some countries where cafés rush you out, Ukrainian cafés welcome you to stay. Order one coffee, enjoy the atmosphere, and relax. This is called «кавова культура» (coffee culture).
 
-### Grammar Integration
+### Putting It Together
 
 Notice how you're using multiple cases in one conversation:
 
@@ -161,7 +161,7 @@ Translation:
 
 ## Production
 
-### Your Turn: Practice Scenarios
+### Your Turn: Role-Play Scenarios
 
 **Scenario 1:** You're at a café. You want coffee and a croissant. Ask for a table, order politely, and ask for the check.
 

@@ -17,8 +17,6 @@ Every time you want to say you're doing something «with» someone or something,
 - **З ким?** — With whom?
 - **З чим?** — With what?
 
-## Presentation
-
 ## Practice
 
 Now let's practice forming Instrumental endings and using them with the preposition з. The key is to identify the noun's gender and choose the correct ending:

@@ -34,7 +34,7 @@ Every Ukrainian verb belongs to one of two aspects:
 | **доконаний вид** | perfective aspect | Views action as complete |
 | **недоконаний вид** | imperfective aspect | Views action as process |
 
-When a grammar book says "дієслово недоконаного виду," it means an imperfective verb. When it says "поставте у доконаному виді," it means "put in the perfective aspect."
+When a grammar book says «дієслово недоконаного виду», it means an imperfective verb. When it says «поставте у доконаному виді», it means «put in the perfective aspect».
 
 Here's the practical difference: **Я писав листа цілий вечір.** (I was writing the letter all evening — process, no endpoint) vs. **Я написав листа за годину.** (I wrote the letter in an hour — completed, done). The imperfective **писав** stretches across time; the perfective **написав** captures a finished result.
 
@@ -57,7 +57,7 @@ The imperfective and perfective aren't just grammar labels — they convey diffe
 | **початок** | beginning | Start of action |
 | **продовження** | continuation | Continuing action |
 
-When a textbook explains "недоконаний вид виражає тривалість дії," it means "the imperfective aspect expresses the duration of an action."
+When a textbook explains «недоконаний вид виражає тривалість дії», it means «the imperfective aspect expresses the duration of an action».
 
 Let's see these concepts in sentences:
 
@@ -88,7 +88,7 @@ Ukrainian has three tenses, and you need their Ukrainian names:
 | **минулий час** | past tense | читав, писав |
 | **майбутній час** | future tense | читатиму, напишу |
 
-When grammar says "поставте дієслово в минулому часі," you need to put the verb in past tense.
+When grammar says «поставте дієслово в минулому часі», you need to put the verb in past tense.
 
 Each tense tells a different story about when the action happens:
 
@@ -141,10 +141,10 @@ When discussing aspect with negation, Ukrainian grammar uses specific terms:
 | **заборона** | prohibition | Forbidding an action |
 
 **Examples in context:**
-- Загальне заперечення: "Я ніколи не **читав** цю книгу." (I never read this book. — general denial, imperfective)
-- Очікувана дія: "Я ще не **прочитав** цю книгу." (I haven't read this book yet. — expected completion, perfective)
-- Попередження: "Не **прочитай** випадково!" (Don't read it by accident! — warning)
-- Заборона: "Не **читай** цю книгу!" (Don't read this book! — general prohibition)
+- Загальне заперечення: «Я ніколи не **читав** цю книгу.» (I never read this book. — general denial, imperfective)
+- Очікувана дія: «Я ще не **прочитав** цю книгу.» (I haven't read this book yet. — expected completion, perfective)
+- Попередження: «Не **прочитай** випадково!» (Don't read it by accident! — warning)
+- Заборона: «Не **читай** цю книгу!» (Don't read this book! — general prohibition)
 
 > 💡 **Did You Know?**
 >
@@ -167,11 +167,11 @@ Ukrainian textbooks use these terms to describe different verb forms:
 - Складна форма майбутнього часу: **буду** читати, **буду** писати (auxiliary + infinitive)
 - Синтетична форма майбутнього часу: читати**му**, писати**му** (single word with ending)
 - Наказова форма: читай, пиши, говори
-- Парадигма дієслова "читати": я читаю, ти читаєш, він читає... (full conjugation pattern)
+- Парадигма дієслова «читати»: я читаю, ти читаєш, він читає... (full conjugation pattern)
 
 > 🌍 **Real World**
 >
-> When grammar books say "утворіть складну форму майбутнього часу," they want you to form the compound future (буду + infinitive). When they say "синтетична форма," they mean the single-word future (читатиму). Knowing these terms helps you follow instructions in any Ukrainian textbook.
+> When grammar books say «утворіть складну форму майбутнього часу», they want you to form the compound future (буду + infinitive). When they say «синтетична форма», they mean the single-word future (читатиму). Knowing these terms helps you follow instructions in any Ukrainian textbook.
 
 ---
 
@@ -195,7 +195,7 @@ One of the most important concepts in Ukrainian verb grammar is the **видов
 
 > 🎯 **Fun Fact**
 >
-> Some verbs exist only in one aspect. The verb "бути" (to be) is imperfective only — you can't "complete" existence! Similarly, "встигнути" (to manage in time) is perfective only — it inherently describes a completed achievement.
+> Some verbs exist only in one aspect. The verb «бути» (to be) is imperfective only — you can't «complete» existence! Similarly, «встигнути» (to manage in time) is perfective only — it inherently describes a completed achievement.
 
 ---
 
@@ -205,34 +205,34 @@ One of the most important concepts in Ukrainian verb grammar is the **видов
 
 Here's a real grammar explanation from a Ukrainian textbook. Can you understand the terminology now that you know the key terms?
 
-> *Дієслово "писати" — недоконаного виду. Воно змінюється за особами в теперішньому часі: я пишу, ти пишеш, він пише. У минулому часі: я писав, ти писав, він писав. Доконана пара — "написати". Це дієслово утворює майбутній час двома способами: "писатиму" (синтетична форма) або "буду писати" (аналітична форма).*
+> *Дієслово «писати» — недоконаного виду. Воно змінюється за особами в теперішньому часі: я пишу, ти пишеш, він пише. У минулому часі: я писав, ти писав, він писав. Доконана пара — «написати». Це дієслово утворює майбутній час двома способами: «писатиму» (синтетична форма) або «буду писати» (аналітична форма).*
 
-**Translation:** The verb "писати" is imperfective aspect. It conjugates by person in present tense: I write, you write, he writes. In past tense: I wrote, you wrote, he wrote. The perfective pair is "написати." This verb forms future tense in two ways: "писатиму" (synthetic form) or "буду писати" (analytic form).
+**Translation:** The verb «писати» is imperfective aspect. It conjugates by person in present tense: I write, you write, he writes. In past tense: I wrote, you wrote, he wrote. The perfective pair is «написати». This verb forms future tense in two ways: «писатиму» (synthetic form) or «буду писати» (analytic form).
 
 > 🎬 **Pop Culture Moment**
 >
-> When Ukrainian dubbers translate movies, aspect choice creates different vibes. In action films, perfective verbs create punchy, decisive moments: "Я вбив ворога!" (I killed the enemy — done!). In dramas, imperfective creates tension: "Він вмирав повільно..." (He was dying slowly — the process).
+> When Ukrainian dubbers translate movies, aspect choice creates different vibes. In action films, perfective verbs create punchy, decisive moments: «Я вбив ворога!» (I killed the enemy — done!). In dramas, imperfective creates tension: «Він вмирав повільно...» (He was dying slowly — the process).
 
 ### Pattern Recognition
 
 Match these grammar instructions to their meaning. These are the exact phrases you'll encounter in Ukrainian textbooks, grammar exercises, and language courses:
 
-1. *"Визначте вид дієслова."*
+1. *«Визначте вид дієслова.»*
    - Determine the **aspect** of the verb.
 
-2. *"Утворіть форму майбутнього часу."*
+2. *«Утворіть форму майбутнього часу.»*
    - Form the **future tense**.
 
-3. *"Поставте дієслово в наказовому способі."*
+3. *«Поставте дієслово в наказовому способі.»*
    - Put the verb in **imperative mood**.
 
-4. *"Знайдіть дієслово доконаного виду."*
+4. *«Знайдіть дієслово доконаного виду.»*
    - Find the **perfective** verb.
 
-5. *"Визначте час дієслова."*
+5. *«Визначте час дієслова.»*
    - Determine the **tense** of the verb.
 
-6. *"Утворіть видову пару."*
+6. *«Утворіть видову пару.»*
    - Form the **aspect pair**.
 
 > 🌍 **Real World**
@@ -245,13 +245,13 @@ Match these grammar instructions to their meaning. These are the exact phrases y
 
 ### Діалог 1: На уроці української
 
-**Вчитель:** Яким видом є дієслово "читати"?
+**Вчитель:** Яким видом є дієслово «читати»?
 
 **Студент:** Це дієслово недоконаного виду.
 
 **Вчитель:** Правильно! А яка доконана пара?
 
-**Студент:** "Прочитати."
+**Студент:** «Прочитати.»
 
 **Вчитель:** Молодець! А тепер поставте його в минулому часі.
 
@@ -259,13 +259,13 @@ Match these grammar instructions to their meaning. These are the exact phrases y
 
 ### Діалог 2: Розмова друзів
 
-**Андрій:** Я не розумію цю вправу. Тут написано "утворіть доконаний вид".
+**Андрій:** Я не розумію цю вправу. Тут написано «утворіть доконаний вид».
 
-**Марія:** Доконаний вид — це коли дія завершена. "Читати" → "прочитати".
+**Марія:** Доконаний вид — це коли дія завершена. «Читати» → «прочитати».
 
 **Андрій:** А, тобто додаємо префікс?
 
-**Марія:** Часто так, але не завжди. "Брати" → "взяти" — зовсім інше слово!
+**Марія:** Часто так, але не завжди. «Брати» → «взяти» — зовсім інше слово!
 
 ---
 
@@ -273,7 +273,7 @@ Match these grammar instructions to their meaning. These are the exact phrases y
 
 **Професор:** Сьогодні ми говоримо про вид дієслова.
 
-**Студентка:** А що означає "вид"?
+**Студентка:** А що означає «вид»?
 
 **Професор:** Вид — це категорія, що показує, як ми дивимося на дію: як процес чи як результат.
 
@@ -339,3 +339,10 @@ In this module, you learned the core terminology for discussing Ukrainian verbs:
 ---
 
 ## Need More Practice?
+
+Want to solidify your understanding of verb terminology? Here are your next steps:
+
+- **Module 03** takes you deeper into reading Ukrainian grammar explanations with confidence
+- Review the abbreviations: ДВ (доконаний вид), НДВ (недоконаний вид), ТЧ (теперішній час), МЧ (минулий час), МайЧ (майбутній час)
+- Try reading a Ukrainian grammar book entry — you now have the vocabulary to understand it!
+- Practice explaining aspect to yourself in Ukrainian: «Доконаний вид показує результат. Недоконаний вид показує процес.»

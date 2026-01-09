@@ -1,0 +1,172 @@
+items:
+  - lemma: резюме
+    ipa: /rɛzʲʊˈmɛ/
+    translation: resume/CV
+    pos: ім. (с.р.)
+    gender: n
+  - lemma: автобіографія
+    ipa: /ɑu̯tɔbʲiɔˈɦrɑfʲijɑ/
+    translation: autobiography/CV (narrative)
+    pos: ім. (ж.р.)
+    gender: f
+  - lemma: вакансія
+    ipa: /vɑˈkɑnsʲijɑ/
+    translation: vacancy/job opening
+    pos: ім. (ж.р.)
+    gender: f
+  - lemma: досвід
+    ipa: /dɔsvʲid/
+    translation: experience
+    pos: ім. (ч.р.)
+    gender: m
+  - lemma: навичка
+    ipa: /nɑvɪt͡ʃkɑ/
+    translation: skill
+    pos: ім. (ж.р.)
+    gender: f
+  - lemma: освіта
+    ipa: /ɔsʲvʲitɑ/
+    translation: education
+    pos: ім. (ж.р.)
+    gender: f
+  - lemma: роботодавець
+    ipa: /rɔbɔtɔˈdɑvɛt͡sʲ/
+    translation: employer
+    pos: ім. (ч.р.)
+    gender: m
+  - lemma: здобувач
+    ipa: /zdɔbʊˈvɑt͡ʃ/
+    translation: applicant/job seeker
+    pos: ім. (ч.р.)
+    gender: m
+  - lemma: посада
+    ipa: /pɔˈsɑdɑ/
+    translation: position/post
+    pos: ім. (ж.р.)
+    gender: f
+  - lemma: обов'язок
+    ipa: /ɔˈbɔvjɑzɔk/
+    translation: duty/responsibility
+    pos: ім. (ч.р.)
+    gender: m
+  - lemma: досягнення
+    ipa: /dɔˈsʲɑɦnɛnʲːɑ/
+    translation: achievement
+    pos: ім. (с.р.)
+    gender: n
+  - lemma: стажування
+    ipa: /stɑʒʊˈvɑnʲːɑ/
+    translation: internship
+    pos: ім. (с.р.)
+    gender: n
+  - lemma: волонтерство
+    ipa: /vɔlɔnˈtɛrstvɔ/
+    translation: volunteering
+    pos: ім. (с.р.)
+    gender: n
+  - lemma: рекомендація
+    ipa: /rɛkɔmɛnˈdɑt͡sʲijɑ/
+    translation: recommendation/reference
+    pos: ім. (ж.р.)
+    gender: f
+  - lemma: супровідний
+    ipa: /sʊprɔˈvʲidnɪi̯/
+    translation: accompanying/cover (letter)
+    pos: прикм.
+  - lemma: кваліфікація
+    ipa: /kvɑlʲifʲiˈkɑt͡sʲijɑ/
+    translation: qualification
+    pos: ім. (ж.р.)
+    gender: f
+  - lemma: компетентність
+    ipa: /kɔmpɛˈtɛntnʲistʲ/
+    translation: competence
+    pos: ім. (ж.р.)
+    gender: f
+  - lemma: працевлаштування
+    ipa: /prɑt͡sɛu̯lɑʃtʊˈvɑnʲːɑ/
+    translation: employment
+    pos: ім. (с.р.)
+    gender: n
+  - lemma: співбесіда
+    ipa: /spʲiu̯ˈbɛsʲidɑ/
+    translation: job interview
+    pos: ім. (ж.р.)
+    gender: f
+  - lemma: вимога
+    ipa: /vɪˈmɔhɑ/
+    translation: requirement
+    pos: ім. (ж.р.)
+    gender: f
+  - lemma: володіння
+    ipa: /vɔlɔˈdʲinʲːɑ/
+    translation: mastery/possession (of skills)
+    pos: ім. (с.р.)
+    gender: n
+  - lemma: звільнення
+    ipa: /zvʲilʲnɛnʲːɑ/
+    translation: dismissal/resignation
+    pos: ім. (с.р.)
+    gender: n
+  - lemma: кар'єра
+    ipa: /kɑrˈjɛrɑ/
+    translation: career
+    pos: ім. (ж.р.)
+    gender: f
+  - lemma: спеціальність
+    ipa: /spɛt͡sʲiˈɑlʲnʲistʲ/
+    translation: specialty/major
+    pos: ім. (ж.р.)
+    gender: f
+  - lemma: ступінь
+    ipa: /stʊˈpʲinʲ/
+    translation: degree
+    pos: ім. (ч.р.)
+    gender: m
+  - lemma: сертифікат
+    ipa: /sɛrtɪfʲiˈkɑt/
+    translation: certificate
+    pos: ім. (ч.р.)
+    gender: m
+  - lemma: портфоліо
+    ipa: /pɔrtˈfɔlʲiɔ/
+    translation: portfolio
+    pos: ім. (с.р.)
+    gender: n
+  - lemma: посилання
+    ipa: /pɔsɪˈlɑnʲːɑ/
+    translation: link/reference
+    pos: ім. (с.р.)
+    gender: n
+  - lemma: впевнений
+    ipa: /upˈvɛnɛnɪi̯/
+    translation: confident
+    pos: прикм.
+  - lemma: відповідальний
+    ipa: /vʲidpɔvʲiˈdɑlʲnɪi̯/
+    translation: responsible
+    pos: прикм.
+  - lemma: комунікабельний
+    ipa: /kɔmʊnʲiˈkɑbɛlʲnɪi̯/
+    translation: communicative
+    pos: прикм.
+  - lemma: стресостійкий
+    ipa: /strɛsɔsˈtʲii̯kɪi̯/
+    translation: stress-resistant
+    pos: прикм.
+  - lemma: пунктуальний
+    ipa: /pʊnktʊˈɑlʲnɪi̯/
+    translation: punctual
+    pos: прикм.
+  - lemma: креативний
+    ipa: /krɛɑˈtɪvnɪi̯/
+    translation: creative
+    pos: прикм.
+  - lemma: претендувати
+    ipa: /prɛtɛndʊˈvɑtɪ/
+    translation: to apply for/claim
+    pos: дієсл.
+  - lemma: опановувати
+    ipa: /ɔpɑˈnɔvʊvɑtɪ/
+    translation: to master
+    pos: дієсл.

@@ -219,7 +219,7 @@ Friend: No, close. Ten minutes.
 
 ## Production
 
-### Task 1: Give Directions (Oral Practice)
+### Task 1: Give Directions (Speaking)
 
 Imagine you're standing at the **Central Railway Station (Центральний вокзал)** in your city. A tourist asks you how to get to:
 
@@ -245,7 +245,7 @@ Imagine you're standing at the **Central Railway Station (Центральний
 **3. Оперний театр:**
 Їдьте на трамваї до центру. Вийдете на зупинці «Площа Театральна.» Театр буде там, прямо.
 
-### Task 2: Describe Your Commute (Writing Practice)
+### Task 2: Describe Your Commute (Writing)
 
 Write 4-5 sentences describing how you get to work or school. Use transportation vocabulary and directional phrases.
 

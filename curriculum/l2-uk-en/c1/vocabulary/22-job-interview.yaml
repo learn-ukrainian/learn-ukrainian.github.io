@@ -1,0 +1,164 @@
+module: 22-job-interview
+level: C1
+version: '2.0'
+items:
+  - lemma: співбесіда
+    ipa: /spʲiu̯ˈbɛsʲidɑ/
+    translation: job interview
+    pos: noun
+    gender: f
+  - lemma: вакансія
+    ipa: /vɑˈkɑnʲsʲijɑ/
+    translation: vacancy, job opening
+    pos: noun
+    gender: f
+  - lemma: рекрутер
+    ipa: /rɛkruˈtɛr/
+    translation: recruiter
+    pos: noun
+    gender: m
+  - lemma: роботодавець
+    ipa: /rɔbɔtɔˈdɑvɛt͡sʲ/
+    translation: employer
+    pos: noun
+    gender: m
+  - lemma: претендувати
+    ipa: /prɛtɛndʊˈvɑtɪ/
+    translation: to apply for, to claim
+    pos: verb
+    gender: avg
+  - lemma: компетентність
+    ipa: /kɔmpɛˈtɛntnʲisʲtʲ/
+    translation: competence
+    pos: noun
+    gender: f
+  - lemma: стресостійкість
+    ipa: /strɛsɔˈsʲtʲii̯kʲisʲtʲ/
+    translation: stress resistance
+    pos: noun
+    gender: f
+  - lemma: ініціативність
+    ipa: /inʲit͡sʲiɑˈtɪvnʲisʲtʲ/
+    translation: proactivity, initiative
+    pos: noun
+    gender: f
+  - lemma: гнучкість
+    ipa: /ɦnut͡ʃˈkʲisʲtʲ/
+    translation: flexibility
+    pos: noun
+    gender: f
+  - lemma: відповідальність
+    ipa: /vʲidpɔvʲiˈdɑlʲnʲisʲtʲ/
+    translation: responsibility
+    pos: noun
+    gender: f
+  - lemma: пунктуальність
+    ipa: /pʊnktuˈɑlʲnʲisʲtʲ/
+    translation: punctuality
+    pos: noun
+    gender: f
+  - lemma: опанувати
+    ipa: /ɔpɑnʊˈvɑtɪ/
+    translation: to master (a skill)
+    pos: verb
+    gender: avg
+  - lemma: впроваджувати
+    ipa: /vprɔˈvɑd͡ʒʊvɑtɪ/
+    translation: to implement
+    pos: verb
+    gender: avg
+  - lemma: працевлаштуватися
+    ipa: /prɑt͡sʲɛulɑʃtʊˈvɑtɪsʲɑ/
+    translation: to get employed
+    pos: verb
+    gender: avg
+  - lemma: звільнятися
+    ipa: /zʲvʲilʲˈnʲɑtɪsʲɑ/
+    translation: to quit, to resign
+    pos: verb
+    gender: avg
+  - lemma: оклад
+    ipa: /ɔˈklɑd/
+    translation: salary (base pay)
+    pos: noun
+    gender: m
+  - lemma: випробувальний термін
+    ipa: /vɪprɔbʊˈvɑlʲnɪi̯ ˈtɛrmʲin/
+    translation: probation period
+    pos: noun
+    gender: m
+  - lemma: соцпакет
+    ipa: /sɔt͡spɑˈkɛt/
+    translation: benefits package
+    pos: noun
+    gender: m
+  - lemma: кар'єрне зростання
+    ipa: /kɑrˈjɛrnɛ zrɔˈstɑnʲːɑ/
+    translation: career growth
+    pos: noun
+    gender: n
+  - lemma: штат
+    ipa: /ʃtɑt/
+    translation: staff, personnel
+    pos: noun
+    gender: m
+  - lemma: відгук
+    ipa: /vʲidˈɦuk/
+    translation: response (to a vacancy), feedback
+    pos: noun
+    gender: m
+  - lemma: рекомендація
+    ipa: /rɛkɔmɛnˈdɑt͡sʲijɑ/
+    translation: recommendation, reference
+    pos: noun
+    gender: f
+  - lemma: досягнення
+    ipa: /dɔˈsʲɑɦnɛnʲːɑ/
+    translation: achievement
+    pos: noun
+    gender: n
+  - lemma: недолік
+    ipa: /nɛˈdɔlʲik/
+    translation: disadvantage, weakness, shortcoming
+    pos: noun
+    gender: m
+  - lemma: перевага
+    ipa: /pɛrɛˈvɑɦɑ/
+    translation: advantage, strength
+    pos: noun
+    gender: f
+  - lemma: самопрезентація
+    ipa: /sɑmɔprɛzɛnˈtɑt͡sʲijɑ/
+    translation: self-presentation
+    pos: noun
+    gender: f
+  - lemma: співпраця
+    ipa: /spʲiu̯ˈprɑt͡sʲɑ/
+    translation: cooperation
+    pos: noun
+    gender: f
+  - lemma: посадові обов'язки
+    ipa: /pɔsɑˈdɔvʲi ɔˈbɔvjɑzkɪ/
+    translation: job duties
+    pos: noun
+    gender: p
+  - lemma: професійне вигорання
+    ipa: /prɔfɛˈsʲii̯nɛ vɪɦɔˈrɑnʲːɑ/
+    translation: professional burnout
+    pos: noun
+    gender: n
+  - lemma: офер
+    ipa: /ɔˈfɛr/
+    translation: job offer
+    pos: noun
+    gender: m
+  - lemma: переговори
+    ipa: /pɛrɛɦɔˈvɔrɪ/
+    translation: negotiations
+    pos: noun
+    gender: p
+  - lemma: вимоги
+    ipa: /vɪˈmɔɦɪ/
+    translation: requirements
+    pos: noun
+    gender: p

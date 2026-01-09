@@ -1,0 +1,148 @@
+module: 137-degrees-of-certainty
+level: C1
+version: "1.0"
+items:
+  - lemma: безперечно
+    ipa: "/bɛzˈpɛrɛt͡ʃnɔ/"
+    translation: undoubtedly
+    pos: прислівник
+  - lemma: безсумнівно
+    ipa: "/bɛzsumˈn⁽ʲ⁾iu̯nɔ/"
+    translation: certainly
+    pos: прислівник
+  - lemma: ймовірно
+    ipa: "/jmoˈv⁽ʲ⁾irnɔ/"
+    translation: probably
+    pos: прислівник
+  - lemma: вірогідність
+    ipa: "/v⁽ʲ⁾irɔˈɦ⁽ʲ⁾idʲn⁽ʲ⁾isʲtʲ/"
+    translation: probability
+    pos: ім. (ж.р.)
+  - lemma: припущення
+    ipa: "/prɪˈput͡ʃt͡ʃɛnʲnʲɑ/"
+    translation: assumption
+    pos: ім. (с.р.)
+  - lemma: твердження
+    ipa: "/ˈtʋɛrd͡ʒɛnʲnʲɑ/"
+    translation: statement/assertion
+    pos: ім. (с.р.)
+  - lemma: гіпотеза
+    ipa: "/ɦ⁽ʲ⁾iˈpɔtɛzɑ/"
+    translation: hypothesis
+    pos: ім. (ж.р.)
+  - lemma: переконання
+    ipa: "/pɛrɛkɔˈnɑnʲnʲɑ/"
+    translation: conviction/belief
+    pos: ім. (с.р.)
+  - lemma: сумнів
+    ipa: "/ˈsum⁽ʲ⁾n⁽ʲ⁾iu̯/"
+    translation: doubt
+    pos: ім. (ч.р.)
+  - lemma: очевидність
+    ipa: "/ɔt͡ʃɛˈʋ⁽ʲ⁾idʲn⁽ʲ⁾isʲtʲ/"
+    translation: obviousness
+    pos: ім. (ж.р.)
+  - lemma: аргументованість
+    ipa: "/ɑrɦumɛntɔˈʋɑn⁽ʲ⁾isʲtʲ/"
+    translation: reasonedness
+    pos: ім. (ж.р.)
+  - lemma: вірогідний
+    ipa: "/v⁽ʲ⁾irɔˈɦ⁽ʲ⁾idniɪ̯/"
+    translation: probable/plausible
+    pos: прикметник
+  - lemma: сумнівний
+    ipa: "/sumˈn⁽ʲ⁾iu̯niɪ̯/"
+    translation: doubtful
+    pos: прикметник
+  - lemma: очевидний
+    ipa: "/ɔt͡ʃɛˈʋ⁽ʲ⁾idniɪ̯/"
+    translation: obvious
+    pos: прикметник
+  - lemma: безперечний
+    ipa: "/bɛzˈpɛrɛt͡ʃniɪ̯/"
+    translation: incontestable
+    pos: прикметник
+  - lemma: істинний
+    ipa: "/ˈistɪnːiɪ̯/"
+    translation: true/veritable
+    pos: прикметник
+  - lemma: фальшивий
+    ipa: "/fɑlʲˈʃɪʋiɪ̯/"
+    translation: false
+    pos: прикметник
+  - lemma: виключено
+    ipa: "/vɪˈklʲut͡ʃɛnɔ/"
+    translation: excluded/impossible
+    pos: прислівник
+  - lemma: припускати
+    ipa: "/prɪpusˈkɑtɪ/"
+    translation: to assume
+    pos: дієслово
+  - lemma: стверджувати
+    ipa: "/ˈstʋɛrd͡ʒuvɑtɪ/"
+    translation: to assert
+    pos: дієслово
+  - lemma: сумніватися
+    ipa: "/sumˈn⁽ʲ⁾iʋɑtɪsʲɑ/"
+    translation: to doubt
+    pos: дієслово
+  - lemma: запевняти
+    ipa: "/zɑpɛu̯ˈnʲɑtɪ/"
+    translation: to assure
+    pos: дієслово
+  - lemma: спростовувати
+    ipa: "/sprɔˈstɔʋuvɑtɪ/"
+    translation: to refute
+    pos: дієслово
+  - lemma: підтверджувати
+    ipa: "/p⁽ʲ⁾idˈtʋɛrd͡ʒuvɑtɪ/"
+    translation: to confirm
+    pos: дієслово
+  - lemma: певний
+    ipa: "/ˈpɛu̯niɪ̯/"
+    translation: certain/definite
+    pos: прикметник
+  - lemma: впевненість
+    ipa: "/ˈʋpɛu̯nɛn⁽ʲ⁾isʲtʲ/"
+    translation: confidence/certainty
+    pos: ім. (ж.р.)
+  - lemma: невпевненість
+    ipa: "/nɛˈʋpɛu̯nɛn⁽ʲ⁾isʲtʲ/"
+    translation: uncertainty
+    pos: ім. (ж.р.)
+  - lemma: достовірність
+    ipa: "/dɔstɔˈʋ⁽ʲ⁾irn⁽ʲ⁾isʲtʲ/"
+    translation: reliability/authenticity
+    pos: ім. (ж.р.)
+  - lemma: недостовірний
+    ipa: "/nɛdɔstɔˈʋ⁽ʲ⁾irniɪ̯/"
+    translation: unreliable
+    pos: прикметник
+  - lemma: фактичний
+    ipa: "/fɑkˈtɪt͡ʃniɪ̯/"
+    translation: factual
+    pos: прикметник
+  - lemma: гіпотетичний
+    ipa: "/ɦ⁽ʲ⁾ipɔtɛˈtɪt͡ʃniɪ̯/"
+    translation: hypothetical
+    pos: прикметник
+  - lemma: ймовірнісний
+    ipa: "/jmoˈv⁽ʲ⁾irn⁽ʲ⁾isnɪɪ̯/"
+    translation: probabilistic
+    pos: прикметник
+  - lemma: теоретично
+    ipa: "/tɛɔrɛˈtɪt͡ʃnɔ/"
+    translation: theoretically
+    pos: прислівник
+  - lemma: мабуть
+    ipa: "/ˈmɑbutʲ/"
+    translation: probably/perhaps
+    pos: частка/прислівник
+  - lemma: навряд чи
+    ipa: "/nɑˈʋrʲɑd t͡ʃɪ/"
+    translation: unlikely
+    pos: частка
+  - lemma: малоймовірно
+    ipa: "/mɑlɔjmoˈv⁽ʲ⁾irnɔ/"
+    translation: improbable
+    pos: прислівник

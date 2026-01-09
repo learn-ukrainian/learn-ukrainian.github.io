@@ -52,18 +52,13 @@
   id: family-tree
 - type: cloze
   title: Logic Puzzle
-  passage: 'Людина, яка слухає. Це [{слухач|мовець|письменник}]. Процес обміну словами.
-    Це [{розмова|промова|замовлення}]. Те, що ми думаємо. Це [{думка|слух|мова}].
+  passage: 'Людина, яка слухає. Це [{слухач|мовець|письменник}]. Процес обміну словами. Це [{розмова|промова|замовлення}]. Те, що ми думаємо. Це [{думка|слух|мова}].
 
 
-    Офіційний виступ. Це [{промова|розмова|мовчання}]. Те, що ми робимо в ресторані.
-    Це [{замовлення|промова|слух}]. Перекласти текст іншою мовою. Це [{переклад|перехід|перерва}].
+    Офіційний виступ. Це [{промова|розмова|мовчання}]. Те, що ми робимо в ресторані. Це [{замовлення|промова|слух}]. Перекласти текст іншою мовою. Це [{переклад|перехід|перерва}].
 
 
-    Коли ти не говориш. Це [{мовчання|розмова|крик}]. Результат творчості. Це [{твір|двір|звір}].
-    Людина, яка читає. Це [{читач|слухач|глядач}]. Місце, куди входимо. Це [{вхід|вихід|прохід}].
-    Той, хто вивчає науку. Це [{науковець|наука|наукові}]. Людина, яка говорить. Це
-    [{мовець|слухач|мовчун}].'
+    Коли ти не говориш. Це [{мовчання|розмова|крик}]. Результат творчості. Це [{твір|двір|звір}]. Людина, яка читає. Це [{читач|слухач|глядач}]. Місце, куди входимо. Це [{вхід|вихід|прохід}]. Той, хто вивчає науку. Це [{науковець|наука|наукові}]. Людина, яка говорить. Це [{мовець|слухач|мовчун}].'
   id: logic-puzzle
 - type: unjumble
   title: High Sentences
@@ -142,8 +137,7 @@
       correct: false
     - text: To whisper
       correct: false
-  - question: The Ukrainian word «Замовлення» (Order) contains which specific root
-      component?
+  - question: The Ukrainian word «Замовлення» (Order) contains which specific root component?
     options:
     - text: МОВ
       correct: true
@@ -183,8 +177,7 @@
       correct: false
     - text: Наукський
       correct: false
-  - question: Can you explain why the words «Вхід» and «Вихід» are typically paired
-      together?
+  - question: Can you explain why the words «Вхід» and «Вихід» are typically paired together?
     options:
     - text: They are opposites
       correct: true
@@ -246,7 +239,7 @@
 - type: error-correction
   title: Wrong Logic
   items:
-  - sentence: 'Я **слухаю** книгу. (Intended: Read)'
+  - sentence: 'Я слухаю книгу. (Intended: Read)'
     error: слухаю
     answer: читаю
     options:
@@ -255,7 +248,7 @@
     - помилка
     - правильно
     explanation: You read books (ЧИТ). Though audiobooks exist, usually we read.
-  - sentence: 'Це моя **мова**. (Intended: Opinion/Thought)'
+  - sentence: 'Це моя мова. (Intended: Opinion/Thought)'
     error: мова
     answer: думка
     options:
@@ -264,7 +257,7 @@
     - помилка
     - правильно
     explanation: Opinion is 'Thought' (Думка), not 'Language' (Мова).
-  - sentence: 'Де тут **вхід**? (Intended: Exit)'
+  - sentence: 'Де тут вхід? (Intended: Exit)'
     error: вхід
     answer: вихід
     options:
@@ -273,7 +266,7 @@
     - помилка
     - правильно
     explanation: Exit is Out-go (Вихід).
-  - sentence: 'Він **читач** музику. (Intended: Listener)'
+  - sentence: 'Він читач музику. (Intended: Listener)'
     error: читач
     answer: слухач
     options:
@@ -282,7 +275,7 @@
     - помилка
     - правильно
     explanation: Music is for hearing (СЛУХ).
-  - sentence: 'Це **наука** журнал. (Intended: Scientific)'
+  - sentence: 'Це наука журнал. (Intended: Scientific)'
     error: наука
     answer: науковий
     options:
@@ -291,7 +284,7 @@
     - помилка
     - правильно
     explanation: 'Adjective form needed: -овий.'
-  - sentence: 'Гарна **розмова**. (Intended: Speech/Oration)'
+  - sentence: 'Гарна розмова. (Intended: Speech/Oration)'
     error: розмова
     answer: промова
     options:

@@ -97,7 +97,10 @@ def _check_required_sections(content: str, template: TemplateStructure) -> list[
             })
         else:
             # Check for duplicates (Issue mentioned by user)
-            if len(found_alts) > 1:
+            # Skip for metalanguage templates - they intentionally have multiple related sections
+            # (e.g., Parts of Speech, Seven Cases, Basic Sentence Terms are all valid in same module)
+            is_metalanguage = 'metalanguage' in template.template_name.lower()
+            if len(found_alts) > 1 and not is_metalanguage:
                 # Filter to unique header texts to avoid flagging same header twice if multi-line or something
                 unique_headers = list(set(s['header'] for s in found_alts))
                 if len(unique_headers) > 1:

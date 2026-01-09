@@ -311,7 +311,7 @@
 - type: error-correction
   title: Fix the Instrumental
   items:
-  - sentence: Я йду в кіно з *друг*.
+  - sentence: Я йду в кіно з друг.
     error: друг
     answer: другом
     options:
@@ -321,7 +321,7 @@
     - другові
     explanation: 'After the preposition «з», nouns take Instrumental case. Masculine
       hard-stem nouns take -ом: друг → другом.'
-  - sentence: Вона розмовляє з *сестра*.
+  - sentence: Вона розмовляє з сестра.
     error: сестра
     answer: сестрою
     options:
@@ -331,7 +331,7 @@
     - сестрі
     explanation: 'After the preposition «з», nouns take Instrumental case. Feminine
       hard-stem nouns take -ою: сестра → сестрою.'
-  - sentence: Він гуляє з *собака*.
+  - sentence: Він гуляє з собака.
     error: собака
     answer: собакою
     options:
@@ -341,7 +341,7 @@
     - собаці
     explanation: 'After the preposition «з», nouns take Instrumental case. Feminine
       hard-stem nouns take -ою: собака → собакою.'
-  - sentence: Ми живемо з *батьки*.
+  - sentence: Ми живемо з батьки.
     error: батьки
     answer: батьками
     options:
@@ -351,7 +351,7 @@
     - батькам
     explanation: 'After the preposition «з», nouns take Instrumental case. Plural
       nouns take -ами: батьки → батьками.'
-  - sentence: Я п'ю каву з *молоко*.
+  - sentence: Я п'ю каву з молоко.
     error: молоко
     answer: молоком
     options:
@@ -361,7 +361,7 @@
     - молоці
     explanation: 'After the preposition «з», nouns take Instrumental case. Neuter
       hard-stem nouns take -ом: молоко → молоком.'
-  - sentence: Вона познайомилася з *хлопець*.
+  - sentence: Вона познайомилася з хлопець.
     error: хлопець
     answer: хлопцем
     options:

@@ -2,35 +2,143 @@ module: 06-aspect-complete-system
 level: B1
 version: '2.0'
 items:
-- lemma: граматика
-  ipa: /ɦraˈmatɪka/
-  translation: grammar
+- lemma: вид
+  ipa: /wɪd/
+  translation: aspect (grammatical)
+  pos: noun
+  gender: m
+  note: вид дієслова = verb aspect
+- lemma: доконаний
+  ipa: /dɔˈkɔnanɪj/
+  translation: perfective
+  pos: adj
+  note: доконаний вид = ДВ
+- lemma: недоконаний
+  ipa: /nɛdɔˈkɔnanɪj/
+  translation: imperfective
+  pos: adj
+  note: недоконаний вид = НДВ
+- lemma: процес
+  ipa: /prɔˈtsɛs/
+  translation: process
+  pos: noun
+  gender: m
+- lemma: результат
+  ipa: /rɛzulʲˈtat/
+  translation: result
+  pos: noun
+  gender: m
+- lemma: тривалість
+  ipa: /trɪˈvalʲisʲtʲ/
+  translation: duration
   pos: noun
   gender: f
-- lemma: дослівно
-  ipa: /dɔˈslʲiu̯nɔ/
-  translation: literally
-  pos: adv
-- lemma: задати
-  ipa: /zaˈdatɪ/
-  translation: to ask
-  pos: verb
-- lemma: одноразово
-  ipa: /ɔdnɔraˈzɔvɔ/
-  translation: once
-  pos: adv
+- lemma: повторення
+  ipa: /pɔwtɔˈrɛnːa/
+  translation: repetition
+  pos: noun
+  gender: n
+- lemma: завершення
+  ipa: /zawɛrˈʃɛnːa/
+  translation: completion
+  pos: noun
+  gender: n
 - lemma: одноразовість
   ipa: /ɔdnɔraˈzɔvisʲtʲ/
   translation: singularity
   pos: noun
   gender: f
-- lemma: привітатися
-  ipa: /prɪviˈtatɪsʲa/
-  translation: to greet
-  pos: verb
+- lemma: темпоральний
+  ipa: /tɛmpɔˈralʲnɪj/
+  translation: temporal
+  pos: adj
+- lemma: маркер
+  ipa: /ˈmarkɛr/
+  translation: marker
+  pos: noun
   gender: m
-- lemma: упасти
-  ipa: /uˈpastɪ/
-  translation: to fall
+- lemma: читати
+  ipa: /tʃɪˈtatɪ/
+  translation: to read (impf)
   pos: verb
+  note: НДВ → ДВ прочитати
+- lemma: прочитати
+  ipa: /prɔtʃɪˈtatɪ/
+  translation: to read (perf)
+  pos: verb
+  note: ДВ від читати
+- lemma: писати
+  ipa: /pɪˈsatɪ/
+  translation: to write (impf)
+  pos: verb
+  note: НДВ → ДВ написати
+- lemma: написати
+  ipa: /napɪˈsatɪ/
+  translation: to write (perf)
+  pos: verb
+  note: ДВ від писати
+- lemma: робити
+  ipa: /rɔˈbɪtɪ/
+  translation: to do/make (impf)
+  pos: verb
+  note: НДВ → ДВ зробити
+- lemma: зробити
+  ipa: /zrɔˈbɪtɪ/
+  translation: to do/make (perf)
+  pos: verb
+  note: ДВ від робити
+- lemma: вчити
+  ipa: /ˈu̯tʃɪtɪ/
+  translation: to learn/teach (impf)
+  pos: verb
+  note: НДВ → ДВ вивчити
+- lemma: вивчити
+  ipa: /wɪˈu̯tʃɪtɪ/
+  translation: to learn/master (perf)
+  pos: verb
+  note: ДВ від вчити
+- lemma: готувати
+  ipa: /ɦɔtuˈwatɪ/
+  translation: to prepare/cook (impf)
+  pos: verb
+  note: НДВ → ДВ приготувати
+- lemma: приготувати
+  ipa: /prɪɦɔtuˈwatɪ/
+  translation: to prepare/cook (perf)
+  pos: verb
+  note: ДВ від готувати
+- lemma: пити
+  ipa: /ˈpɪtɪ/
+  translation: to drink (impf)
+  pos: verb
+  note: НДВ → ДВ випити
+- lemma: випити
+  ipa: /ˈwɪpɪtɪ/
+  translation: to drink (perf)
+  pos: verb
+  note: ДВ від пити
+- lemma: дивитися
+  ipa: /dɪˈwɪtɪsʲa/
+  translation: to watch (impf)
+  pos: verb
+  note: НДВ → ДВ подивитися
+- lemma: подивитися
+  ipa: /pɔdɪˈwɪtɪsʲa/
+  translation: to watch (perf)
+  pos: verb
+  note: ДВ від дивитися
+- lemma: звичка
+  ipa: /ˈzwɪtʃka/
+  translation: habit
+  pos: noun
+  gender: f
+- lemma: регулярність
+  ipa: /rɛɦuˈlʲarnisʲtʲ/
+  translation: regularity
+  pos: noun
+  gender: f
+- lemma: послідовність
+  ipa: /pɔslʲiˈdɔwnisʲtʲ/
+  translation: sequence
+  pos: noun
   gender: f

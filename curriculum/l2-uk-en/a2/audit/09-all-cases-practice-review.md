@@ -3,10 +3,10 @@
 **Overall Status:** ✅ PASS
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Презентація' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Practice' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' per template 'a2-module-template'
+  - FIX: Add '## Presentation' section as specified in docs/l2-uk-en/templates/a2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'a2-module-template'
+  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
@@ -19,7 +19,7 @@
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/4
+- **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 61/1
 - **Structure:** ✅ Valid Structure
@@ -29,15 +29,10 @@
 - **Immersion:** 🇺🇦 46.2% (target 40-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
-## MDX VALIDATION
-✅ No issues found
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 160 | Included in Core |
-| **Презентація** | ⚪️ | 0 | Skipped |
-| **Practice** | ⚪️ | 0 | Skipped |
 | **Understanding the Case System** | ⚪️ | 101 | Skipped |
 | **Case-by-Case Review** | ✅ | 28 | Included in Core |
 | **Nominative Case (Називний відмінок)** | ⚪️ | 69 | Skipped |

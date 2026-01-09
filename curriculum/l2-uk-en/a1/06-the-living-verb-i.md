@@ -208,7 +208,7 @@ The vowels (а, є, ю) flow like a melody. The consonants (т, в, л) give str
 
 ---
 
-## Reading Practice: Мій день (My Day)
+### Reading: Мій день (My Day)
 
 Я **снідаю**. (I have breakfast.)
 Потім я **працюю**. (Then I work.)

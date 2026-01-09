@@ -64,7 +64,7 @@ You learned these verbs in Module 08. Use them now!
 **The Magic Word:**
 When eating, always say **Смачного!** (Smachnoho!) — Bon appétit!
 
-### Part 3: Shopping Grammar (Accusative + Genitive)
+### Part 3: How Cases Work in Shopping (Accusative + Genitive)
 
 Now, let's go shopping. You need two cases here:
 

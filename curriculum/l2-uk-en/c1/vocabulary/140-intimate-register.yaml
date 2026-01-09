@@ -1,0 +1,179 @@
+module: 140-intimate-register
+level: C1
+version: '1.0'
+items:
+  - lemma: сонечко
+    ipa: /sɔnɛt͡ʃkɔ/
+    translation: sun / sunny / darling
+    pos: ім. (с.р.)
+    note: endearment
+  - lemma: коханий
+    ipa: /kɔxɑnɪj/
+    translation: beloved / sweetheart
+    pos: ім. (ч.р.)
+    note: romantic partner
+  - lemma: любий
+    ipa: /lʲubɪj/
+    translation: dear
+    pos: прикм.
+    note: affectionate address
+  - lemma: серденько
+    ipa: /sɛrdɛnʲkɔ/
+    translation: sweetheart / little heart
+    pos: ім. (с.р.)
+    note: endearment
+  - lemma: зайчик
+    ipa: /zɑjt͡ʃɪk/
+    translation: bunny
+    pos: ім. (ч.р.)
+    note: playful endearment
+  - lemma: киця
+    ipa: /kɪt͡sʲɑ/
+    translation: kitty
+    pos: ім. (ж.р.)
+    note: playful endearment
+  - lemma: мамуся
+    ipa: /mɑmusʲɑ/
+    translation: mommy
+    pos: ім. (ж.р.)
+    note: affectionate for mother
+  - lemma: татусь
+    ipa: /tɑtusʲ/
+    translation: daddy
+    pos: ім. (ч.р.)
+    note: affectionate for father
+  - lemma: рідненький
+    ipa: /ridnɛnʲkɪj/
+    translation: dearest / own
+    pos: прикм.
+    note: deeply affectionate
+  - lemma: ластівка
+    ipa: /lɑstiʋkɑ/
+    translation: swallow (bird)
+    pos: ім. (ж.р.)
+    note: traditional endearment
+  - lemma: золотце
+    ipa: /zɔlɔt͡t͡sɛ/
+    translation: gold / precious
+    pos: ім. (с.р.)
+    note: endearment
+  - lemma: щастячко
+    ipa: /ʃt͡ʃɑsʲtʲɑt͡ʃkɔ/
+    translation: happiness (diminutive)
+    pos: ім. (с.р.)
+    note: my joy
+  - lemma: обіймати
+    ipa: /ɔbijmɑtɪ/
+    translation: to hug
+    pos: дієсл.
+    note: physical affection
+  - lemma: цілувати
+    ipa: /t͡sʲilʊʋɑtɪ/
+    translation: to kiss
+    pos: дієсл.
+    note: physical affection
+  - lemma: сумувати
+    ipa: /sʊmʊʋɑtɪ/
+    translation: to miss / to be sad
+    pos: дієсл.
+    note: emotional longing
+  - lemma: чекати
+    ipa: /t͡ʃɛkɑtɪ/
+    translation: to wait
+    pos: дієсл.
+    note: longing
+  - lemma: кохання
+    ipa: /kɔxɑnʲːɑ/
+    translation: love (romantic)
+    pos: ім. (с.р.)
+    note: romantic love only
+  - lemma: любов
+    ipa: /lʲʊbɔʋ/
+    translation: love (general)
+    pos: ім. (ж.р.)
+    note: general or deep feeling
+  - lemma: ніжність
+    ipa: /niʒnʲisʲtʲ/
+    translation: tenderness
+    pos: ім. (ж.р.)
+    note: gentle affection
+  - lemma: турбота
+    ipa: /tʊrbɔtɑ/
+    translation: care / concern
+    pos: ім. (ж.р.)
+    note: taking care
+  - lemma: довіра
+    ipa: /dɔʋirɑ/
+    translation: trust
+    pos: ім. (ж.р.)
+    note: foundation of relationship
+  - lemma: відвертість
+    ipa: /ʋidʋɛrtisʲtʲ/
+    translation: openness / frankness
+    pos: ім. (ж.р.)
+    note: honesty
+  - lemma: таємниця
+    ipa: /tɑjɛmnɪt͡sʲɑ/
+    translation: secret / mystery
+    pos: ім. (ж.р.)
+    note: shared secret
+  - lemma: шепотіти
+    ipa: /ʃɛpɔtitɪ/
+    translation: to whisper
+    pos: дієсл.
+    note: intimate speech
+  - lemma: приголубити
+    ipa: /prɪɦɔlʊbɪtɪ/
+    translation: to caress / cuddle
+    pos: дієсл.
+    note: comforting action
+  - lemma: розрада
+    ipa: /rɔzrɑdɑ/
+    translation: solace / comfort
+    pos: ім. (ж.р.)
+    note: emotional relief
+  - lemma: близькість
+    ipa: /blɪzʲkisʲtʲ/
+    translation: intimacy / closeness
+    pos: ім. (ж.р.)
+    note: emotional or physical
+  - lemma: половинка
+    ipa: /pɔlɔʋɪnkɑ/
+    translation: half / soulmate
+    pos: ім. (ж.р.)
+    note: romantic partner
+  - lemma: побачення
+    ipa: /pɔbɑt͡ʃɛnʲːɑ/
+    translation: date
+    pos: ім. (с.р.)
+    note: romantic meeting
+  - lemma: пестити
+    ipa: /pɛstɪtɪ/
+    translation: to caress / pamper
+    pos: дієсл.
+    note: show affection
+  - lemma: жадати
+    ipa: /ʒɑdɑtɪ/
+    translation: to desire / crave
+    pos: дієсл.
+    note: strong passion
+  - lemma: милий
+    ipa: /mɪlɪj/
+    translation: sweet / nice / dear
+    pos: прикм.
+    note: affectionate address
+  - lemma: зіронька
+    ipa: /zirɔnʲkɑ/
+    translation: little star
+    pos: ім. (ж.р.)
+    note: endearment
+  - lemma: пташка
+    ipa: /ptɑʃkɑ/
+    translation: bird
+    pos: ім. (ж.р.)
+    note: endearment
+  - lemma: єдиний
+    ipa: /jɛdɪnɪj/
+    translation: only one
+    pos: прикм.
+    note: romantic exclusivity

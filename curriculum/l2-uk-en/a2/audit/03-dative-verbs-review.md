@@ -3,12 +3,12 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): захотітися, служити, вибачати, заважати, дякувати...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): вибачати, дякувати, сподобатися, заважати, подобатися...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Presentation' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія' per template 'a2-module-template'
+  - FIX: Add '## Presentation' section as specified in docs/l2-uk-en/templates/a2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
@@ -31,14 +31,10 @@
 - **Immersion:** 🇺🇦 40.6% (target 40-50% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
-## MDX VALIDATION
-✅ No issues found
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 140 | Included in Core |
-| **Presentation** | ✅ | 0 | Included in Core |
 | **Practice** | ⚪️ | 281 | Skipped |
 | **Warm-up** | ✅ | 83 | Included in Core |
 | **Дієслова, що вимагають лише давального відмінка (Dative-Only Verbs)** | ⚪️ | 155 | Skipped |

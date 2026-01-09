@@ -3,9 +3,9 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: відмінок, іменник, родовий
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: іменник, відмінок, родовий
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): шість, нуль, двадцять, сім, одинадцять...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (9 words): шість, одинадцять, сім, десять, вісім...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -31,6 +31,9 @@
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

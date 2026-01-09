@@ -2,15 +2,6 @@
 **Phase:** C1.1 | **Level:** C1 | **Pedagogy:** Academic | **Target:** 1750
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Need More Practice?' per template 'c1-module-template'
-  - FIX: Add '## Need More Practice?' section as specified in docs/l2-uk-en/templates/c1-module-template.md
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
 - **Words:** ✅ 2030/1750
 - **Activities:** ✅ 18/12
@@ -58,4 +49,4 @@
 | **Чек-лист автора** | ⚪️ | 83 | Skipped |
 | **Практичні поради з оформлення** | ⚪️ | 76 | Skipped |
 | **Підсумок** | ✅ | 60 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 14 | Skipped |
+| **Need More Practice?** | ⚪️ | 14 | Skipped |

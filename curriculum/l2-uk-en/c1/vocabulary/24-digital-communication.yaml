@@ -1,0 +1,118 @@
+module: 24-digital-communication
+level: C1
+version: '2.0'
+items:
+  - lemma: листування
+    ipa: /lɪstʊˈʋɑnʲːɑ/
+    translation: correspondence
+    pos: noun
+    gender: n
+  - lemma: вкладення
+    ipa: /u̯klɑˈdɛnʲːɑ/
+    translation: attachment
+    pos: noun
+    gender: n
+  - lemma: сповіщення
+    ipa: /spɔˈʋʲiʃt͡ʃɛnʲːɑ/
+    translation: notification
+    pos: noun
+    gender: n
+  - lemma: посилання
+    ipa: /pɔsɪˈlɑnʲːɑ/
+    translation: link / reference
+    pos: noun
+    gender: n
+  - lemma: нагадування
+    ipa: /nɑˈɦɑdʊʋɑnʲːɑ/
+    translation: reminder
+    pos: noun
+    gender: n
+  - lemma: розсилка
+    ipa: /rɔzˈsɪlkɑ/
+    translation: mailing list / newsletter
+    pos: noun
+    gender: f
+  - lemma: підпис
+    ipa: /pidˈpɪs/
+    translation: signature
+    pos: noun
+    gender: m
+  - lemma: тема (листа)
+    ipa: /ˈtɛmɑ/
+    translation: subject (line)
+    pos: noun
+    gender: f
+  - lemma: чернетка
+    ipa: /t͡ʃɛrˈnɛtkɑ/
+    translation: draft
+    pos: noun
+    gender: f
+  - lemma: скринька
+    ipa: /ˈskrɪnʲkɑ/
+    translation: inbox / mailbox
+    pos: noun
+    gender: f
+  - lemma: спам
+    ipa: /spɑm/
+    translation: spam
+    pos: noun
+    gender: m
+  - lemma: конфіденційність
+    ipa: /kɔnfʲidɛnʲˈt͡sʲijnistʲ/
+    translation: confidentiality
+    pos: noun
+    gender: f
+  - lemma: стислість
+    ipa: /ˈstɪslistʲ/
+    translation: brevity
+    pos: noun
+    gender: f
+  - lemma: доречність
+    ipa: /dɔˈrɛt͡ʃnistʲ/
+    translation: appropriateness / relevance
+    pos: noun
+    gender: f
+  - lemma: невідкладний
+    ipa: /nɛʋidˈklɑdnɪj/
+    translation: urgent
+    pos: adj
+  - lemma: шанобливий
+    ipa: /ʃɑnɔˈblɪʋɪj/
+    translation: respectful
+    pos: adj
+  - lemma: надсилати
+    ipa: /nɑdsɪˈlɑtɪ/
+    translation: to send
+    pos: verb
+  - lemma: пересилати
+    ipa: /pɛrɛsɪˈlɑtɪ/
+    translation: to forward
+    pos: verb
+  - lemma: копіювати
+    ipa: /kɔpijʊˈʋɑtɪ/
+    translation: to copy (cc)
+    pos: verb
+  - lemma: уточнювати
+    ipa: /ʊˈtɔt͡ʃnʲʊʋɑtɪ/
+    translation: to clarify
+    pos: verb
+  - lemma: ігнорувати
+    ipa: /iɦnɔrʊˈʋɑtɪ/
+    translation: to ignore
+    pos: verb
+  - lemma: зловживати
+    ipa: /zlɔʋʒɪˈʋɑtɪ/
+    translation: to abuse / overuse
+    pos: verb
+  - lemma: турбувати
+    ipa: /tʊrbʊˈʋɑtɪ/
+    translation: to disturb / bother
+    pos: verb
+  - lemma: налаштовувати
+    ipa: /nɑlɑʃˈtɔʋʊʋɑtɪ/
+    translation: to configure / set up
+    pos: verb
+  - lemma: відписувати
+    ipa: /ʋidˈpɪsʊʋɑtɪ/
+    translation: to reply / write back
+    pos: verb

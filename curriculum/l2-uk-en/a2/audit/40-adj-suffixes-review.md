@@ -3,9 +3,9 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: рід, прикметник, множина, час, середній
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: середній, час, іменник, прикметник, рід
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): пішохід, погляд, хід, письменник, похід...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (23 words): прочитати, прихід, погляд, письмо, огляд...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -31,6 +31,9 @@
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

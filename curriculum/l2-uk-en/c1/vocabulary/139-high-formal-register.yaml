@@ -1,0 +1,179 @@
+module: 139-high-formal-register
+level: C1
+version: '1.0'
+items:
+  - lemma: закон
+    ipa: /zɑˈkɔn/
+    translation: law
+    pos: ім. (ч.р.)
+    note: normative act
+  - lemma: указ
+    ipa: /ʊˈkɑz/
+    translation: decree
+    pos: ім. (ч.р.)
+    note: issued by president
+  - lemma: постанова
+    ipa: /pɔstɑˈnɔʋɑ/
+    translation: resolution
+    pos: ім. (ж.р.)
+    note: issued by government/court
+  - lemma: наказ
+    ipa: /nɑˈkɑz/
+    translation: order
+    pos: ім. (ч.р.)
+    note: administrative command
+  - lemma: угода
+    ipa: /ʊˈɦɔdɑ/
+    translation: agreement
+    pos: ім. (ж.р.)
+    note: contract
+  - lemma: засвідчувати
+    ipa: /zɑsˈʋid͡tʃʊʋɑtɪ/
+    translation: to certify
+    pos: дієсл.
+    note: official confirmation
+  - lemma: зобов'язання
+    ipa: /zɔbɔˈʋjɑzɑnʲːɑ/
+    translation: obligation
+    pos: ім. (с.р.)
+    note: legal duty
+  - lemma: здійснення
+    ipa: /zdʲijsnɛnʲːɑ/
+    translation: implementation
+    pos: ім. (с.р.)
+    note: nominalization of здійснювати
+  - lemma: чинний
+    ipa: /t͡ʃɪnːɪj/
+    translation: valid / current
+    pos: прикм.
+    note: in force (law)
+  - lemma: набувати
+    ipa: /nɑbʊˈʋɑtɪ/
+    translation: to acquire
+    pos: дієсл.
+    note: набувати чинності (take effect)
+  - lemma: сторони
+    ipa: /stɔrɔˈnɪ/
+    translation: parties
+    pos: ім. (мн.)
+    note: in a contract
+  - lemma: підпис
+    ipa: /pidpɪs/
+    translation: signature
+    pos: ім. (ч.р.)
+    note: authorization
+  - lemma: печатка
+    ipa: /pɛˈt͡ʃɑtkɑ/
+    translation: seal / stamp
+    pos: ім. (ж.р.)
+    note: official mark
+  - lemma: термін
+    ipa: /tɛrmin/
+    translation: term / deadline
+    pos: ім. (ч.р.)
+    note: термін дії (validity period)
+  - lemma: скасувати
+    ipa: /skɑsʊˈʋɑtɪ/
+    translation: to cancel / repeal
+    pos: дієсл.
+    note: annul a law
+  - lemma: затвердити
+    ipa: /zɑtˈʋɛrdɪtɪ/
+    translation: to approve
+    pos: дієсл.
+    note: ratify
+  - lemma: порядок
+    ipa: /pɔˈrʲɑdɔk/
+    translation: order / procedure
+    pos: ім. (ч.р.)
+    note: порядок денний (agenda)
+  - lemma: протокол
+    ipa: /prɔtɔˈkɔl/
+    translation: protocol / minutes
+    pos: ім. (ч.р.)
+    note: record of meeting
+  - lemma: резолюція
+    ipa: /rɛzɔˈlʲut͡sʲijɑ/
+    translation: resolution
+    pos: ім. (ж.р.)
+    note: decision
+  - lemma: уповноважений
+    ipa: /ʊpɔʋnɔˈʋɑʒɛnɪj/
+    translation: authorized
+    pos: прикм.
+    note: empowered person
+  - lemma: позов
+    ipa: /pɔzɔʋ/
+    translation: lawsuit / claim
+    pos: ім. (ч.р.)
+    note: legal action
+  - lemma: відповідач
+    ipa: /ʋidpɔˈʋidɑt͡ʃ/
+    translation: defendant
+    pos: ім. (ч.р.)
+    note: in court
+  - lemma: позивач
+    ipa: /pɔzɪˈʋɑt͡ʃ/
+    translation: plaintiff
+    pos: ім. (ч.р.)
+    note: in court
+  - lemma: судовий
+    ipa: /sʊdɔˈʋɪj/
+    translation: judicial
+    pos: прикм.
+    note: related to court
+  - lemma: юрисдикція
+    ipa: /jʊrɪsˈdɪkt͡sʲijɑ/
+    translation: jurisdiction
+    pos: ім. (ж.р.)
+    note: legal authority
+  - lemma: компетентний
+    ipa: /kɔmpɛˈtɛntnɪj/
+    translation: competent
+    pos: прикм.
+    note: having authority
+  - lemma: орган
+    ipa: /ɔrɦɑn/
+    translation: body / organ
+    pos: ім. (ч.р.)
+    note: орган влади (authority body)
+  - lemma: державний
+    ipa: /dɛrˈʒɑʋnɪj/
+    translation: state / national
+    pos: прикм.
+    note: related to government
+  - lemma: місцевий
+    ipa: /misˈt͡sɛʋɪj/
+    translation: local
+    pos: прикм.
+    note: regional
+  - lemma: самоврядування
+    ipa: /sɑmɔʋrʲɑdʊˈʋɑnʲːɑ/
+    translation: self-government
+    pos: ім. (с.р.)
+    note: local autonomy
+  - lemma: бюджет
+    ipa: /bʲʊdˈʒɛt/
+    translation: budget
+    pos: ім. (ч.р.)
+    note: financial plan
+  - lemma: кошти
+    ipa: /kɔʃtɪ/
+    translation: funds
+    pos: ім. (мн.)
+    note: money
+  - lemma: фінансування
+    ipa: /finɑnsʊˈʋɑnʲːɑ/
+    translation: financing
+    pos: ім. (с.р.)
+    note: funding process
+  - lemma: клопотання
+    ipa: /klɔpɔˈtɑnʲːɑ/
+    translation: petition / motion
+    pos: ім. (с.р.)
+    note: formal request
+  - lemma: ухвала
+    ipa: /ʊxˈʋɑlɑ/
+    translation: ruling
+    pos: ім. (ж.р.)
+    note: court decision

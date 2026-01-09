@@ -1,25 +1,23 @@
-module: 26
-title: "Медіаландшафт України"
-subtitle: "Media Landscape"
-version: "2.0"
-phase: "C1.2 Professional Communication"
-focus: professional
-pedagogy: immersion
+module: c1-26
+title: 'Медіаландшафт'
+subtitle: 'Media Landscape'
+version: '2.0'
+phase: 'C1.2 Society & State'
+focus: society
+pedagogy: 'Immersion'
 duration: 120
 transliteration: none
 tags:
   - media
   - journalism
-  - society
-  - politics
+  - propaganda
 grammar:
-  - "Media literacy terminology"
-  - "Passive constructions in news reports"
-  - "Stylistics of journalistic texts"
+  - 'Critical analysis structures'
+  - 'Reporting verbs'
 objectives:
-  - "Navigate the Ukrainian media landscape (TV, online, press)"
-  - "Distinguish between facts and opinions"
-  - "Identify bias, propaganda, and fake news"
-  - "Use critical analysis tools for information consumption"
-vocabulary_count: 35
+  - 'Analyze the Ukrainian media market'
+  - 'Identify bias and manipulation techniques'
+  - 'Discuss the role of oligarchs in media'
+  - 'Understand the difference between facts and judgments'
+vocabulary_count: 25
 slug: 26-media-landscape

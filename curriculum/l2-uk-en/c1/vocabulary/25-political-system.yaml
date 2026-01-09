@@ -1,0 +1,120 @@
+module: 25-political-system
+level: C1
+version: '2.0'
+items:
+  - lemma: Конституція
+    ipa: /konstɪˈtut͡sʲijɐ/
+    translation: Constitution
+    pos: noun
+    gender: f
+  - lemma: гілка влади
+    ipa: /kˈilka ˈvladɪ/
+    translation: branch of power
+    pos: phrase
+  - lemma: законодавчий
+    ipa: /zakonɔˈdaut͡ʃɪj/
+    translation: legislative
+    pos: adj
+  - lemma: виконавчий
+    ipa: /vɪkoˈnaut͡ʃɪj/
+    translation: executive
+    pos: adj
+  - lemma: судовий
+    ipa: /sudoˈvɪj/
+    translation: judicial
+    pos: adj
+  - lemma: Верховна Рада
+    ipa: /verˈxɔu̯nɐ ˈrada/
+    translation: Verkhovna Rada (Parliament)
+    pos: noun
+    gender: f
+  - lemma: Кабінет Міністрів (Уряд)
+    ipa: /kabiˈnɛt miˈnistriu̯/
+    translation: Cabinet of Ministers (Government)
+    pos: noun
+    gender: m
+  - lemma: депутат
+    ipa: /depuˈtat/
+    translation: MP (Member of Parliament)
+    pos: noun
+    gender: m
+  - lemma: коаліція
+    ipa: /koɐˈlʲit͡sʲijɐ/
+    translation: coalition
+    pos: noun
+    gender: f
+  - lemma: опозиція
+    ipa: /opoˈzɪt͡sʲijɐ/
+    translation: opposition
+    pos: noun
+    gender: f
+  - lemma: вибори
+    ipa: /vˈɪborɪ/
+    translation: election
+    pos: noun
+    gender: p
+  - lemma: балотуватися
+    ipa: /balotuˈvatɪsʲɐ/
+    translation: to run for office
+    pos: verb
+  - lemma: законопроєкт
+    ipa: /zakonoproˈjɛkt/
+    translation: bill (draft law)
+    pos: noun
+    gender: m
+  - lemma: ухвалювати
+    ipa: /uxˈvalʲuvatɪ/
+    translation: to adopt / to pass (a law)
+    pos: verb
+  - lemma: ветувати
+    ipa: /vetuˈvatɪ/
+    translation: to veto
+    pos: verb
+  - lemma: децентралізація
+    ipa: /det͡sɛntralʲiˈzat͡sʲijɐ/
+    translation: decentralization
+    pos: noun
+    gender: f
+  - lemma: громада
+    ipa: /ɦroˈmada/
+    translation: community (hromada - admin unit)
+    pos: noun
+    gender: f
+  - lemma: самоврядування
+    ipa: /samou̯rʲaduˈvanʲːɐ/
+    translation: self-government
+    pos: noun
+    gender: n
+  - lemma: політична партія
+    ipa: /polʲiˈtɪt͡ʃnɐ ˈpartʲijɐ/
+    translation: political party
+    pos: phrase
+  - lemma: виборець
+    ipa: /vˈɪboret͡sʲ/
+    translation: voter
+    pos: noun
+    gender: m
+  - lemma: бюлетень
+    ipa: /bʲuleˈtɛnʲ/
+    translation: ballot paper
+    pos: noun
+    gender: m
+  - lemma: недоторканність
+    ipa: /nɛdotorˈkanʲːisʲtʲ/
+    translation: immunity (legal)
+    pos: noun
+    gender: f
+  - lemma: імпічмент
+    ipa: /imˈpit͡ʃment/
+    translation: impeachment
+    pos: noun
+    gender: m
+  - lemma: громадянське суспільство
+    ipa: /hromɐˈdʲanʲsʲke susˈpilʲstvo/
+    translation: civil society
+    pos: phrase
+  - lemma: реформа
+    ipa: /reˈforma/
+    translation: reform
+    pos: noun
+    gender: f

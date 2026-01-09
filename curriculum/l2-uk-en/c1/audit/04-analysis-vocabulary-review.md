@@ -2,6 +2,19 @@
 **Phase:** C1.1 | **Level:** C1 | **Pedagogy:** Academic | **Target:** 1750
 **Overall Status:** ✅ PASS
 
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' per template 'c1-module-template'
+  - FIX: Add '## Warm-up' section as specified in docs/l2-uk-en/templates/c1-module-template.md
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Аналіз' found: Порівняльний аналіз абстрактів, Лексика критичного аналізу, Чек-лист: Чи готовий ваш аналіз?, Аналіз тексту: Глибинний розбір
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Need More Practice?' per template 'c1-module-template'
+  - FIX: Add '## Need More Practice?' section as specified in docs/l2-uk-en/templates/c1-module-template.md
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 3 violations (minor)
+
 ## Gates
 - **Words:** ✅ 2059/1750
 - **Activities:** ✅ 18/12

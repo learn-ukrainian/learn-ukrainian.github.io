@@ -3,9 +3,9 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, доконаний, місцевий, дієслово, вид
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, місцевий, вид, дієслово, доконаний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): обдумати, побачення, огляд, мовчання, роздуми...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (18 words): обдумати, слухати, побачення, роздуми, слухач...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -31,6 +31,9 @@
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -12,8 +12,6 @@ In this module, you'll discover which Ukrainian verbs require the Dative case �
 **Why this matters:**
 English uses the same direct object for «I help my mother» and «I see my mother.» But Ukrainian distinguishes them by case: Я допомагаю мамі (Dative — helping is directed TO someone) vs. Я бачу маму (Accusative — seeing affects someone directly).
 
-## Presentation
-
 ## Practice
 
 Now let's practice using Dative verbs in context. The key skill is identifying whether a verb takes Dative alone or needs both Dative and Accusative objects.

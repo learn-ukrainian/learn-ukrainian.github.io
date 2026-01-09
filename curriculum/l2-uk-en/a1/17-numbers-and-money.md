@@ -85,7 +85,7 @@ For numbers between tens, simply combine them:
 >
 > In the legendary Ukrainian game S.T.A.L.K.E.R., stalkers count their loot, but Ukrainian players know the real treasure: **артефакти** (artifacts). If a Bloodsucker drops три артефакти (three artifacts), you're rich! The game developers at GSC Game World in Kyiv put Ukrainian culture into every detail.
 
-### Numbers with Nouns: The Grammar of Counting
+### Numbers with Nouns: How Counting Works
 
 Ukrainian has elegant rules for how numbers agree with nouns. This uses the **genitive case** you learned in Module 16!
 
@@ -184,7 +184,7 @@ _Client: Can I pay by card?_
 **Баріста:** Так, звичайно. Ось ваша кава!
 _Barista: Yes, of course. Here's your coffee!_
 
-### Reading Practice: Shopping List
+### Reading Exercise: Shopping List
 
 Це Марія з Харкова. Ось її список.
 

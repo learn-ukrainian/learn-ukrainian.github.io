@@ -2,7 +2,6 @@ title: 'Практикум C1.1: Написання есе'
 activities:
 - title: 'Анатомія тексту: Структура'
   type: match-up
-  slug: text-anatomy-order
   instruction: Match the essay section to its correct function and order.
   pairs:
   - left: Вступ 1
@@ -24,7 +23,6 @@ activities:
   id: анатомія-тексту:-структура
 - title: Детектор тези
   type: group-sort
-  slug: thesis-detector
   instruction: Classify the thesis statements as Strong (C1) or Weak.
   groups:
   - name: Сильна теза (C1)
@@ -46,7 +44,6 @@ activities:
   id: детектор-тези
 - title: 'Академічний стиль: Трансформація'
   type: match-up
-  slug: academic-style-match
   instruction: Match the colloquial phrase to its academic equivalent.
   pairs:
   - left: Я думаю...
@@ -72,7 +69,6 @@ activities:
   id: академічний-стиль:-трансформація
 - title: Логічні зв'язки (Конектори)
   type: fill-in
-  slug: connectors-fill
   instruction: 'Choose the connector that fits the logic: Contrast, Addition, or Cause/Effect.'
   items:
   - sentence: Дистанційна робота дає гнучкість, [___] вона ускладнює командну взаємодію.
@@ -81,12 +77,14 @@ activities:
     - однак
     - тому що
     - наприклад
+    - тобто
   - sentence: '[___] глобальному потеплінню, рівень океану піднімається.'
     answer: завдяки
     options:
     - завдяки
     - всупереч
     - проте
+    - через
     explanation: 'Note: ''Завдяки'' implies cause (Thanks to / Due to), typically positive, but technically usable here, or ''внаслідок'' (used here as option if ''завдяки'' is sarcastic/neutral). Let''s stick to ''Завдяки'' if positive context, here it''s purely causal.'
   - sentence: Рівень океану піднімається [___] глобального потепління.
     answer: внаслідок
@@ -94,64 +92,73 @@ activities:
     - внаслідок
     - тому що
     - проте
+    - хоча
   - sentence: Економіка зростає, [___] інфляція залишається високою.
     answer: водночас
     options:
     - водночас
     - отже
     - оскільки
+    - тому
   - sentence: Цей метод дешевий. [___], він екологічно безпечний.
     answer: крім того
     options:
     - крім того
     - однак
     - тому
+    - або
   - sentence: Ми не отримали фінансування, [___] проект зупинили.
     answer: отже
     options:
     - отже
     - хоча
     - натомість
+    - тому
   - sentence: '[___] існуючі ризики, експеримент продовжили.'
     answer: попри
     options:
     - попри
     - завдяки
     - оскільки
+    - тому
   - sentence: Це не кінець, а, [___], новий початок.
     answer: навпаки
     options:
     - навпаки
     - також
     - тому
+    - або
   - sentence: Дослідження тривало рік, [___] результати вражають.
     answer: і
     options:
     - і
     - але
     - тому
+    - чи
   - sentence: Теорія цікава, [___] практично неперевірена.
     answer: втім
     options:
     - втім
     - отже
     - до того ж
+    - тому
   - sentence: '[___], варто згадати про етичний аспект.'
     answer: насамкінець
     options:
     - насамкінець
     - тому що
     - але
+    - або
   - sentence: Аргумент слабкий, [___] що базується на чутках.
     answer: через те
     options:
     - через те
     - тому
     - однак
+    - внаслідок
   id: логічні-зв'язки-(конектори)
 - title: 'Редагування: Емоційна лексика'
   type: error-correction
-  slug: emotional-vocab-edit
   instruction: Find and replace purely emotional words with neutral academic equivalents.
   items:
   - sentence: Цей письменник просто геніальний і неперевершений.
@@ -202,13 +209,11 @@ activities:
   id: редагування:-емоційна-лексика
 - title: Розробка аргументу
   type: cloze
-  slug: argument-cloze
   instruction: Complete the paragraph structure (Point -> Evidence -> Explanation).
   passage: Впровадження електронного документообігу є екологічно доцільним кроком {(Теза)|(Доказ)|(Пояснення)}. Дослідження показують, що перехід на цифрові носії скорочує споживання паперу на 40% {(Доказ)|(Теза)|(Пояснення)}. Це означає, що менше дерев буде вирубано, що сприятиме збереженню лісів {(Пояснення)|(Теза)|(Доказ)}. Окрім того, це значно зменшує кількість {відходів|грошей|ідей}, які потрапляють на звалища. Економічна вигода також є {очевидною|прихованою|сумнівною}, оскільки компанії витрачають менше на канцелярію. Цифровізація дозволяє {прискорити|зупинити|ускладнити} процеси обміну інформацією між відділами. Це призводить до підвищення загальної {ефективності|втоми|вартості} праці в організації. Варто також згадати про зручність {зберігання|знищення|ігнорування} та пошуку необхідних файлів. Отже, електронний документообіг є {оптимальним|найгіршим|випадковим} вибором для сучасного бізнесу. Ця технологія {дозволяє|забороняє|заважає} не лише економить ресурси, але й час працівників. Важливо {оцінити|забути|втратити} всі переваги переходу на безпаперовий офіс вже сьогодні. Це стане {важливим|зайвим|поганим} кроком до сталого розвитку вашої компанії.
   id: розробка-аргументу
 - title: 'Критерії оцінювання: Checklist'
   type: quiz
-  slug: checklist-quiz
   instruction: What is appropriate for a C1 academic essay?
   items:
   - question: Чи вважається прийнятним використання скорочень латинського походження типу 'etc.', 'i.e.' в українському академічному тексті?
@@ -264,7 +269,6 @@ activities:
   id: критерії-оцінювання:-checklist
 - title: Типи вступу
   type: match-up
-  slug: intro-types-match
   instruction: Match the type of 'Hook' (Start) to the example.
   pairs:
   - left: Риторичне запитання
@@ -286,7 +290,6 @@ activities:
   id: типи-вступу
 - title: Синтез висновку
   type: unjumble
-  slug: conclusion-unjumble
   instruction: Reconstruct the conclusion paragraph.
   items:
   - answer: Підсумовуючи, можна впевнено стверджувати, що сучасна дистанційна освіта має як свої незаперечні переваги, так і суттєві недоліки.
@@ -384,8 +387,6 @@ activities:
   id: синтез-висновку
 - title: 'Есе: Практичне завдання'
   type: essay-response
-  slug: final-essay-task
-  isUkrainian: true
   prompt: '**Тема:** «Чи повинен університетський диплом бути обов''язковою вимогою для успішної кар''єри у XXI столітті?»
 
 
@@ -447,8 +448,6 @@ activities:
   id: есе:-практичне-завдання
 - title: Перевірка розуміння
   type: quiz
-  slug: review-quiz
-  hint: Final check of essay concepts.
   instruction: Choose the best definition.
   items:
   - question: Що таке 'Topic Sentence' в контексті академічного есе і яку ключову роль воно відіграє у структурі абзацу?
@@ -504,7 +503,6 @@ activities:
   id: перевірка-розуміння
 - title: Тематична лексика
   type: fill-in
-  slug: vocab-review
   instruction: Fill in the correct vocabulary word from the module.
   items:
   - sentence: Кожен науковець повинен дотримуватися правил академічної [___] у своїх роботах.
@@ -513,34 +511,40 @@ activities:
     - доброчесності
     - швидкості
     - краси
+    - молоді
   - sentence: В кінці есе обов'язково має бути чіткий [___], що підсумовує аргументи.
     answer: висновок
     options:
     - висновок
     - вступ
     - список
+    - план
   - sentence: Для зв'язку абзаців ми використовуємо спеціальні слова-[___].
     answer: конектори
     options:
     - конектори
     - іменники
     - дієслова
+    - речення
   - sentence: Ваша [___] має бути чіткою, дискусійною та доказовою.
     answer: теза
     options:
     - теза
     - папка
     - ручка
+    - дошка
   - sentence: Щоб уникнути плагіату, завжди робіть [___] на джерело інформації.
     answer: посилання
     options:
     - посилання
     - копію
     - фото
+    - скан
   - sentence: '[___] стиль вимагає об''єктивності та відсутності емоцій.'
     answer: академічний
     options:
     - академічний
     - розмовний
     - художній
+    - офіційний
   id: тематична-лексика

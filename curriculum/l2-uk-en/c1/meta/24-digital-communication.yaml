@@ -1,17 +1,22 @@
-module: c1-24
-title: Digital Communication
-subtitle: Professional & Social
+module: 24-digital-communication
+title: 'Цифрова комунікація'
+subtitle: 'Digital Communication'
 version: '2.0'
-phase: C1.2 Professional
-focus: professional
-pedagogy: academic
+phase: 'C1.1 Professional Excellence'
+focus: skills
+pedagogy: 'Immersion'
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- professional
-- email
-- digital
+  - business
+  - communication
+  - email
+  - digital
+grammar:
+  - 'Register in digital communication'
 objectives:
-- Master C1 concepts in Digital Communication
+  - 'Distinguish between formal and informal digital registers'
+  - 'Write professional emails (requests, apologies, follow-ups)'
+  - 'Navigate chat etiquette in business contexts'
+vocabulary_count: 25
 slug: 24-digital-communication

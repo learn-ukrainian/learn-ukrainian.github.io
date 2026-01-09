@@ -1,0 +1,154 @@
+module: 23-business-etiquette
+level: C1
+version: '2.0'
+items:
+  - lemma: звертання
+    ipa: /zverˈtanʲːa/
+    translation: form of address
+    pos: noun
+    gender: n
+  - lemma: рукостискання
+    ipa: /rʊkɔstɪsˈkanʲːa/
+    translation: handshake
+    pos: noun
+    gender: n
+  - lemma: візитівка
+    ipa: /viziˈtivka/
+    translation: business card
+    pos: noun
+    gender: f
+  - lemma: пунктуальність
+    ipa: /pʊnktʊˈalʲnʲisʲtʲ/
+    translation: punctuality
+    pos: noun
+    gender: f
+  - lemma: дрес-код
+    ipa: /drɛs kɔd/
+    translation: dress code
+    pos: noun
+    gender: m
+  - lemma: субординація
+    ipa: /sʊbɔrdɪˈnat͡sʲija/
+    translation: subordination
+    pos: noun
+    gender: f
+  - lemma: протокол
+    ipa: /prɔtɔˈkɔl/
+    translation: protocol
+    pos: noun
+    gender: m
+  - lemma: етикет
+    ipa: /ɛtɪˈkɛt/
+    translation: etiquette
+    pos: noun
+    gender: m
+  - lemma: ввічливість
+    ipa: /vˈvit͡ʃlɪvisʲtʲ/
+    translation: politeness
+    pos: noun
+    gender: f
+  - lemma: доречність
+    ipa: /dɔˈrɛt͡ʃnisʲtʲ/
+    translation: appropriateness
+    pos: noun
+    gender: f
+  - lemma: подарунок
+    ipa: /pɔdaˈrʊnɔk/
+    translation: gift
+    pos: noun
+    gender: m
+  - lemma: хабар
+    ipa: /xaˈbar/
+    translation: bribe
+    pos: noun
+    gender: m
+  - lemma: гостинність
+    ipa: /ɦɔsˈtɪnʲːisʲtʲ/
+    translation: hospitality
+    pos: noun
+    gender: f
+  - lemma: частування
+    ipa: /t͡ʃastʊˈvanʲːa/
+    translation: treat/refreshments
+    pos: noun
+    gender: n
+  - lemma: запізнення
+    ipa: /zaˈpiznɛnʲːa/
+    translation: lateness
+    pos: noun
+    gender: n
+  - lemma: вибачення
+    ipa: /vɪˈbat͡ʃɛnʲːa/
+    translation: apology
+    pos: noun
+    gender: n
+  - lemma: домовленість
+    ipa: /dɔˈmɔvlɛnisʲtʲ/
+    translation: agreement/arrangement
+    pos: noun
+    gender: f
+  - lemma: нарада
+    ipa: /naˈrada/
+    translation: meeting
+    pos: noun
+    gender: f
+  - lemma: колега
+    ipa: /kɔˈlɛɦa/
+    translation: colleague
+    pos: noun
+    gender: m/f
+  - lemma: керівник
+    ipa: /kɛr⁽ʲ⁾iu̯ˈnɪk/
+    translation: manager/leader
+    pos: noun
+    gender: m
+  - lemma: підлеглий
+    ipa: /pidˈlɛɦlɪj/
+    translation: subordinate
+    pos: noun
+    gender: m
+  - lemma: замовник
+    ipa: /zaˈmɔu̯nɪk/
+    translation: client/customer
+    pos: noun
+    gender: m
+  - lemma: підрядник
+    ipa: /pidˈrʲadnɪk/
+    translation: contractor
+    pos: noun
+    gender: m
+  - lemma: угода
+    ipa: /uˈɦɔda/
+    translation: deal/agreement
+    pos: noun
+    gender: f
+  - lemma: репутація
+    ipa: /rɛpʊˈtat͡sʲija/
+    translation: reputation
+    pos: noun
+    gender: f
+  - lemma: нетворкінг
+    ipa: /nɛtˈvɔrkɪnɡ/
+    translation: networking
+    pos: noun
+    gender: m
+  - lemma: смол-ток
+    ipa: /smɔl tɔk/
+    translation: small talk
+    pos: noun
+    gender: m
+  - lemma: дистанція
+    ipa: /dɪsˈtant͡sʲija/
+    translation: distance
+    pos: noun
+    gender: f
+  - lemma: побажання
+    ipa: /pɔbaˈʒanʲːa/
+    translation: wish/request
+    pos: noun
+    gender: n
+  - lemma: прощання
+    ipa: /prɔʃˈt͡ʃanʲːa/
+    translation: farewell
+    pos: noun
+    gender: n

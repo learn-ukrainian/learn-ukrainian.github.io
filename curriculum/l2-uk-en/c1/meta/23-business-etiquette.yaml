@@ -1,17 +1,26 @@
 module: c1-23
-title: Business Etiquette
-subtitle: Professional & Social
+title: 'Діловий етикет в Україні'
+subtitle: 'Business Etiquette in Ukraine'
 version: '2.0'
-phase: C1.2 Professional
-focus: professional
-pedagogy: academic
+phase: 'C1.2 Professional & Social Context'
+focus: skills
+pedagogy: 'Immersion'
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- professional
-- etiquette
-- culture
+  - professional
+  - etiquette
+  - culture
+  - business
+grammar:
+  - 'Formal forms of address'
+  - 'Business greetings & introductions'
+  - 'Gift-giving culture'
+  - 'Punctuality & Time management'
 objectives:
-- Master C1 concepts in Business Etiquette
+  - 'Master Ukrainian business etiquette norms'
+  - 'Understand the subtle difference between bribery and gifts'
+  - 'Navigate formal introductions and forms of address'
+  - 'Adopt appropriate behavior in meetings and social business contexts'
+vocabulary_count: 30
 slug: 23-business-etiquette

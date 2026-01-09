@@ -1,17 +1,22 @@
 module: c1-25
-title: Political System
-subtitle: Professional & Social
+title: 'Політична система України'
+subtitle: 'Political System of Ukraine'
 version: '2.0'
-phase: C1.2 Professional
-focus: social
-pedagogy: academic
+phase: 'C1.2 Society & State'
+focus: history
+pedagogy: 'History'
 duration: 120
-vocabulary_count: 24
+transliteration: none
 tags:
-- c1
-- social
-- politics
-- government
+  - politics
+  - government
+  - constitution
+grammar:
+  - 'Official style (Official-Business style)'
+  - 'Abstract nouns in politics'
 objectives:
-- Master C1 concepts in Political System
+  - 'Explain the structure of the Ukrainian government'
+  - 'Understand the roles of the President, Parliament, and Cabinet'
+  - 'Discuss the electoral process and decentralization'
+vocabulary_count: 25
 slug: 25-political-system

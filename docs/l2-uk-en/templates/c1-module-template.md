@@ -13,7 +13,7 @@ TEMPLATE_METADATA:
   - Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка
   - Аналіз
   - Summary|Підсумок
-  - Need More Practice?
+  - Need More Practice?|Потрібно більше практики?
   pedagogy: Immersion
   min_word_count: 2000
   required_callouts: []

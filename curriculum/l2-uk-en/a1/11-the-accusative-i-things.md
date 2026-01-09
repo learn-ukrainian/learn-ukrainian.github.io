@@ -8,7 +8,7 @@ You've been using Ukrainian to talk about what things ARE (nominative case). Now
 
 Understanding the accusative case is essential for basic communication in Ukraine. It allows you to move beyond simply identifying objects to actually interacting with them. In this specific lesson, we will focus exclusively on how typical inanimate objects behave as direct objects.
 
-### The Grammar of Action
+### How It Works: Direct Objects
 
 In Ukrainian, when something RECEIVES the action (the direct object), it changes form. This is the **accusative case** (знахідний відмінок). It answers the question: **Що?** (What?)
 
@@ -118,7 +118,7 @@ _(What are you reading? — I'm reading a newspaper. — And I have an interesti
 > - **Це книга.** (Nominative — subject)
 > - **Я читаю книгу.** (Accusative — object)
 
-### Pattern Practice
+### Case Transformations
 
 Try forming accusative (Що?):
 

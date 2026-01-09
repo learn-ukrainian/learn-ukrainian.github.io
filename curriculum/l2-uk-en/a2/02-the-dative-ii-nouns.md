@@ -18,8 +18,6 @@ When you say «I give the book to my friend» in Ukrainian, the word «friend» 
 - **Кому?** — To whom?
 - **Чому?** — To what?
 
-## Presentation
-
 ## Practice
 
 Now let's practice forming Dative noun endings. The key is to identify the noun's gender first, then apply the correct ending pattern. Remember:

@@ -32,6 +32,12 @@ mappings:
   # =============================================================================
   # B1: Multi-template (by module number and type)
   # =============================================================================
+  # Metalanguage bridge modules (M01-M05) - teach grammar terminology
+  - pattern: '^b1-0[1-5]-'
+    level: b1
+    template: b1-metalanguage-module-template.md
+    description: 'B1 metalanguage bridge modules (M01-M05)'
+
   - pattern: '^b1-(15|25|34|41|51)$'
     level: b1
     template: b1-checkpoint-module-template.md

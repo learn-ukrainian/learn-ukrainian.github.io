@@ -2,15 +2,6 @@
 **Phase:** A1.1 | **Level:** A1 | **Pedagogy:** PPP | **Target:** 500
 **Overall Status:** ✅ PASS
 
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Practice, Reading Practice: Мій день (My Day)
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
 - **Words:** ✅ 1407/500
 - **Activities:** ✅ 8/8
@@ -27,9 +18,6 @@
 - **Immersion:** 🇺🇦 17.8% (target 15-35% (M06))
 - **Grammar:** ⏳ Pending validation
 
-## MDX VALIDATION
-✅ No issues found
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -37,7 +25,6 @@
 | **Warm-up** | ✅ | 44 | Included in Core |
 | **Presentation** | ✅ | 642 | Included in Core |
 | **Practice** | ⚪️ | 210 | Skipped |
-| **Cultural Insight** | ✅ | 155 | Included in Core |
-| **Reading Practice: Мій день (My Day)** | ✅ | 68 | Included in Core |
+| **Cultural Insight** | ✅ | 223 | Included in Core |
 | **Підсумок** | ✅ | 82 | Included in Core |
 | **Need More Practice?** | ⚪️ | 19 | Skipped |

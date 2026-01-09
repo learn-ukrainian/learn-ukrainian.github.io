@@ -18,9 +18,6 @@
 - **Immersion:** 🇺🇦 51.4% (target 50-65% (A2.1))
 - **Grammar:** ⏳ Pending validation
 
-## MDX VALIDATION
-✅ No issues found
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|

@@ -2,23 +2,23 @@
 
 > 🎯 **Why This Module Matters**
 >
-> To understand complex Ukrainian sentences, you need to know how they're built. Ukrainian grammar books analyze sentences using terms like "підмет" (subject), "присудок" (predicate), and "підрядне речення" (subordinate clause). This module gives you the vocabulary to understand sentence analysis.
+> To understand complex Ukrainian sentences, you need to know how they're built. Ukrainian grammar books analyze sentences using terms like «підмет» (subject), «присудок» (predicate), and «підрядне речення» (subordinate clause). This module gives you the vocabulary to understand sentence analysis.
 
 ## Presentation
 
 ### Why Sentence Structure Matters
 
-Ukrainians say **«Добре слово — половина справи.»** — "A good word is half the job done." But how do you build sentences with good words? That's where sentence structure comes in.
+Ukrainians say **«Добре слово — половина справи.»** — «A good word is half the job done.» But how do you build sentences with good words? That's where sentence structure comes in.
 
 When you read a complex Ukrainian sentence, understanding its structure helps you parse meaning. Consider:
 
-*"Книга, яку я читав учора, була цікавою."*
+*«Книга, яку я читав учора, була цікавою.»*
 
-A grammar book would analyze this as: main clause + subordinate clause. The **головне речення** is "Книга була цікавою." The **підрядне речення** is "яку я читав учора." Without this terminology, you can't follow the analysis.
+A grammar book would analyze this as: main clause + subordinate clause. The **головне речення** is «Книга була цікавою.» The **підрядне речення** is «яку я читав учора.» Without this terminology, you can't follow the analysis.
 
 > 💡 **Did You Know?**
 >
-> Ukrainian syntax terminology comes from Greek and Latin linguistic traditions. **Синтаксис** literally means "arrangement together" — how words are arranged to form sentences.
+> Ukrainian syntax terminology comes from Greek and Latin linguistic traditions. **Синтаксис** literally means «arrangement together» — how words are arranged to form sentences.
 
 Where is this taught? Київ is home to the Institute of Linguistics, which standardizes Ukrainian grammar terminology. Львів has the oldest university in Ukraine, where scholars refined these terms for centuries. Одеса universities train thousands of teachers who spread this knowledge across the country. From Харків to Чернівці, every school teaches the same sentence analysis method.
 
@@ -35,7 +35,7 @@ Every complete sentence has two essential parts:
 | **підмет** | subject | Who/what does the action |
 | **присудок** | predicate | What the subject does/is |
 
-In "Марія читає" — **Марія** is the підмет, **читає** is the присудок.
+In «Марія читає» — **Марія** is the підмет, **читає** is the присудок.
 
 **Підмет — це слово, що означає особу або предмет.** (The subject is a word that denotes a person or object.)
 
@@ -45,7 +45,7 @@ In "Марія читає" — **Марія** is the підмет, **читає*
 
 > 🌍 **Real World: Grammar Tests**
 >
-> In Ukrainian schools, students are asked "Визначте підмет і присудок у реченні" (Identify the subject and predicate in the sentence). This is a standard grammar exercise from elementary school through university.
+> In Ukrainian schools, students are asked «Визначте підмет і присудок у реченні» (Identify the subject and predicate in the sentence). This is a standard grammar exercise from elementary school through university.
 
 ### Secondary Parts (Другорядні члени)
 
@@ -59,11 +59,11 @@ These parts add information but aren't essential for a complete sentence:
 
 **Додаток — це слово, на яке спрямована дія.** (The object is a word at which the action is directed.)
 
-**Означення описує іменник і відповідає на питання "який?"** (An attribute describes a noun and answers "what kind of?")
+**Означення описує іменник і відповідає на питання «який?»** (An attribute describes a noun and answers «what kind of?»)
 
 **Обставина показує, як, де, коли або чому відбувається дія.** (An adverbial shows how, where, when, or why an action occurs.)
 
-In "Марія читає цікаву книгу в бібліотеці":
+In «Марія читає цікаву книгу в бібліотеці»:
 - **Марія** — підмет
 - **читає** — присудок
 - **книгу** — додаток (what she reads)
@@ -86,13 +86,13 @@ In "Марія читає цікаву книгу в бібліотеці":
 
 > 🌍 **Real World: School Grammar**
 >
-> Every Ukrainian student learns these terms in school. When you see "Визначте головні та другорядні члени речення" (Identify the main and secondary sentence parts), you now know exactly what is being asked. This terminology is universal in Ukrainian education.
+> Every Ukrainian student learns these terms in school. When you see «Визначте головні та другорядні члени речення» (Identify the main and secondary sentence parts), you now know exactly what is being asked. This terminology is universal in Ukrainian education.
 
 ### Connecting Parts Together
 
 Understanding how sentence parts relate is key to parsing complex Ukrainian sentences. The підмет and присудок form the core — everything else orbits around them.
 
-When you analyze a sentence like "Молода вчителька уважно перевіряє контрольні роботи студентів у класі" (The young teacher carefully checks the students' tests in the classroom), you identify each sentence part:
+When you analyze a sentence like «Молода вчителька уважно перевіряє контрольні роботи студентів у класі» (The young teacher carefully checks the students' tests in the classroom), you identify each sentence part:
 
 - **підмет:** вчителька — хто виконує дію?
 - **присудок:** перевіряє — що робить підмет?
@@ -113,8 +113,8 @@ This systematic approach works for any Ukrainian sentence, no matter how complex
 | **просте речення** | simple sentence | One subject-predicate pair |
 | **складне речення** | complex sentence | Multiple clauses |
 
-*"Я читаю"* — просте речення (one clause).
-*"Я читаю, бо люблю книги"* — складне речення (two clauses).
+*«Я читаю»* — просте речення (one clause).
+*«Я читаю, бо люблю книги»* — складне речення (two clauses).
 
 **Просте речення має один присудок.** (A simple sentence has one predicate.)
 
@@ -139,8 +139,8 @@ This systematic approach works for any Ukrainian sentence, no matter how complex
 
 > 💡 **Did You Know?**
 >
-> **Складносурядне** comes from "сурядний" (coordinate) — clauses are equal.
-> **Складнопідрядне** comes from "підрядний" (subordinate) — one clause depends on another.
+> **Складносурядне** comes from «сурядний» (coordinate) — clauses are equal.
+> **Складнопідрядне** comes from «підрядний» (subordinate) — one clause depends on another.
 
 ### Conjunctions
 
@@ -149,9 +149,9 @@ This systematic approach works for any Ukrainian sentence, no matter how complex
 | **сполучник сурядності** | coordinating conjunction | і, а, але, або |
 | **сполучник підрядності** | subordinating conjunction | що, бо, коли, якщо |
 
-**Сполучник "і" з'єднує рівноправні частини речення.** (The conjunction "i" connects equal sentence parts.)
+**Сполучник «і» з'єднує рівноправні частини речення.** (The conjunction «i» connects equal sentence parts.)
 
-**Сполучник "бо" вводить підрядне речення причини.** (The conjunction "bo" introduces a subordinate clause of reason.)
+**Сполучник «бо» вводить підрядне речення причини.** (The conjunction «bo» introduces a subordinate clause of reason.)
 
 **Він не прийшов, бо був хворий.** (He didn't come because he was sick.)
 
@@ -174,11 +174,11 @@ This systematic approach works for any Ukrainian sentence, no matter how complex
 
 **Двокрапка вживається перед перерахуванням.** (A colon is used before a list.)
 
-**Тире часто замінює дієслово-зв'язку "є".** (A dash often replaces the linking verb "is".)
+**Тире часто замінює дієслово-зв'язку «є».** (A dash often replaces the linking verb «is».)
 
 > 🎬 **Pop Culture Moment: Punctuation Rules**
 >
-> Ukrainian punctuation follows different rules than English. Commas are mandatory before "що", "бо", "який" — subordinating conjunctions. Missing these commas is a spelling error in Ukrainian schools!
+> Ukrainian punctuation follows different rules than English. Commas are mandatory before «що», «бо», «який» — subordinating conjunctions. Missing these commas is a spelling error in Ukrainian schools!
 
 ### Additional Syntax Terms
 
@@ -202,7 +202,7 @@ This systematic approach works for any Ukrainian sentence, no matter how complex
 
 Analyze this sentence:
 
-*"Студент, який вивчає українську мову, читає цікаву книгу в бібліотеці."*
+*«Студент, який вивчає українську мову, читає цікаву книгу в бібліотеці.»*
 
 **Analysis:**
 - **Головне речення:** Студент читає цікаву книгу в бібліотеці.
@@ -217,9 +217,9 @@ Analyze this sentence:
 
 Identify the sentence type:
 
-1. *"Я читаю."* — **просте речення**
-2. *"Я читаю, а сестра пише."* — **складносурядне** (coordinate: "а")
-3. *"Я читаю, бо люблю книги."* — **складнопідрядне** (subordinate: "бо")
+1. *«Я читаю.»* — **просте речення**
+2. *«Я читаю, а сестра пише.»* — **складносурядне** (coordinate: «а»)
+3. *«Я читаю, бо люблю книги.»* — **складнопідрядне** (subordinate: «бо»)
 
 ### Recognizing Sentence Parts
 
@@ -233,7 +233,7 @@ Practice identifying each sentence part:
 
 > 🎯 **Fun Fact: Word Order Freedom**
 >
-> Ukrainian has flexible word order thanks to its case system. "Марія читає книгу" and "Книгу читає Марія" both mean "Maria reads a book" — the accusative ending -у on "книгу" marks it as the object regardless of position. This freedom enables stylistic emphasis through інверсія.
+> Ukrainian has flexible word order thanks to its case system. «Марія читає книгу» and «Книгу читає Марія» both mean «Maria reads a book» — the accusative ending -у on «книгу» marks it as the object regardless of position. This freedom enables stylistic emphasis through інверсія.
 
 ### Understanding Punctuation Rules
 
@@ -241,10 +241,10 @@ Ukrainian punctuation has strict rules for subordinate clauses:
 
 | Rule | Example | Note |
 |------|---------|------|
-| Comma before "що" | Я знаю**,** що він прийде. | Always! |
-| Comma before "бо" | Я читаю**,** бо люблю книги. | Always! |
-| Comma before "коли" | Я прийду**,** коли буду вільний. | Always! |
-| Comma before "який" | Книга**,** яку я читав... | Always! |
+| Comma before «що» | Я знаю**,** що він прийде. | Always! |
+| Comma before «бо» | Я читаю**,** бо люблю книги. | Always! |
+| Comma before «коли» | Я прийду**,** коли буду вільний. | Always! |
+| Comma before «який» | Книга**,** яку я читав... | Always! |
 
 These commas are not optional in Ukrainian — they are part of the grammar.
 
@@ -254,11 +254,11 @@ These commas are not optional in Ukrainian — they are part of the grammar.
 
 ### Діалог 1: На уроці
 
-**Вчитель:** Визначте підмет і присудок у реченні "Марія читає книгу".
+**Вчитель:** Визначте підмет і присудок у реченні «Марія читає книгу».
 
-**Студент:** Підмет — "Марія", присудок — "читає".
+**Студент:** Підмет — «Марія», присудок — «читає».
 
-**Вчитель:** Правильно! А який член речення "книгу"?
+**Вчитель:** Правильно! А який член речення «книгу»?
 
 **Студент:** Це додаток.
 
@@ -270,21 +270,21 @@ These commas are not optional in Ukrainian — they are part of the grammar.
 
 **Оксана:** Яке це речення — просте чи складне?
 
-**Марко:** "Я читаю, бо люблю книги" — це складне речення.
+**Марко:** «Я читаю, бо люблю книги» — це складне речення.
 
 **Оксана:** Складносурядне чи складнопідрядне?
 
-**Марко:** Складнопідрядне, бо "бо" — сполучник підрядності.
+**Марко:** Складнопідрядне, бо «бо» — сполучник підрядності.
 
 ---
 
 ### Діалог 3: Про пунктуацію
 
-**Студент:** Чому тут кома перед "що"?
+**Студент:** Чому тут кома перед «що»?
 
 **Вчитель:** Перед сполучниками підрядності завжди ставимо кому.
 
-**Студент:** Тобто перед "що", "бо", "коли"?
+**Студент:** Тобто перед «що», «бо», «коли»?
 
 **Вчитель:** Саме так. Це правило української пунктуації.
 
@@ -294,11 +294,11 @@ These commas are not optional in Ukrainian — they are part of the grammar.
 
 **Ігор:** Яка різниця між означенням і обставиною?
 
-**Тетяна:** Означення описує іменник: "гарна книга". Обставина описує дію: "читає швидко".
+**Тетяна:** Означення описує іменник: «гарна книга». Обставина описує дію: «читає швидко».
 
 **Ігор:** А додаток?
 
-**Тетяна:** Додаток — це те, на що спрямована дія: "читає книгу".
+**Тетяна:** Додаток — це те, на що спрямована дія: «читає книгу».
 
 > 💡 **Did You Know?**
 >
@@ -308,27 +308,27 @@ These commas are not optional in Ukrainian — they are part of the grammar.
 
 ### Діалог 5: Складне речення
 
-**Викладач:** Проаналізуйте речення: "Коли я прийшов додому, мама готувала обід."
+**Викладач:** Проаналізуйте речення: «Коли я прийшов додому, мама готувала обід.»
 
 **Студентка:** Це складнопідрядне речення?
 
 **Викладач:** Правильно! Яка частина — головна, яка — підрядна?
 
-**Студентка:** "Мама готувала обід" — головне речення. "Коли я прийшов додому" — підрядне.
+**Студентка:** «Мама готувала обід» — головне речення. «Коли я прийшов додому» — підрядне.
 
-**Викладач:** Молодець! Сполучник "коли" — підрядності.
+**Викладач:** Молодець! Сполучник «коли» — підрядності.
 
 ---
 
 ### Діалог 6: Про інверсію
 
-**Олена:** Чому можна сказати і "Марія читає книгу", і "Книгу читає Марія"?
+**Олена:** Чому можна сказати і «Марія читає книгу», і «Книгу читає Марія»?
 
 **Професор:** Це інверсія — зміна звичайного порядку слів.
 
 **Олена:** І значення однакове?
 
-**Професор:** Так, але наголос різний. "Книгу читає Марія" підкреслює, що саме Марія, а не хтось інший.
+**Професор:** Так, але наголос різний. «Книгу читає Марія» підкреслює, що саме Марія, а не хтось інший.
 
 **Олена:** Українська мова дуже гнучка!
 
@@ -388,6 +388,11 @@ With these terms, you can now follow sentence analysis in Ukrainian grammar book
 
 ---
 
----
-
 ## Need More Practice?
+
+Для додаткової практики:
+
+- **Аналізуйте речення в українських текстах** — візьміть будь-яку статтю або книгу і визначте підмет, присудок та другорядні члени.
+- **Класифікуйте речення за типом** — знаходьте прості, складносурядні та складнопідрядні речення.
+- **Зверніть увагу на пунктуацію** — помічайте коми перед сполучниками підрядності.
+- **Використовуйте українські граматичні ресурси** — тепер ви можете читати пояснення українською!

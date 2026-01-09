@@ -1,0 +1,26 @@
+module: c1-22
+title: 'Співбесіда: стратегії успіху'
+subtitle: 'Job Interview Strategies'
+version: '2.0'
+phase: 'C1.2 Professional & Social Context'
+focus: skills # Focus on professional skills
+pedagogy: 'Immersion'
+duration: 120
+transliteration: none
+tags:
+  - professional
+  - interview
+  - career
+  - business
+grammar:
+  - 'Formal professional dialogue'
+  - 'STAR method (Situation, Task, Action, Result)'
+  - 'Self-presentation strategies'
+  - 'Negotiation of terms'
+objectives:
+  - 'Master the structure of a professional job interview in Ukrainian'
+  - 'Learn to answer common behavioral questions using the STAR method'
+  - 'Practice negotiating salary and working conditions'
+  - 'Develop strategies for handling difficult questions'
+vocabulary_count: 30
+slug: 22-job-interview

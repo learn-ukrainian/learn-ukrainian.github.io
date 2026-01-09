@@ -31,8 +31,6 @@ Before we dive into specific vocabulary, here's how cases work in service contex
 > [!important] Key Concept
 > Most service verbs (відправити, зняти, обміняти, відкрити) take accusative for the direct object. Learn this pattern once and apply it everywhere!
 
-## Presentation
-
 ## Practice
 
 Read these dialogues aloud and identify the cases used in each sentence. This exercise will help you recognize case patterns in natural conversation.
