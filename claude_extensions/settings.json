@@ -1,0 +1,492 @@
+{
+  "permissions": {
+    "bash": {
+      "rules": [
+        {
+          "pattern": "npm *",
+          "permission": "allow",
+          "description": "Allow all npm commands"
+        },
+        {
+          "pattern": "node *",
+          "permission": "allow",
+          "description": "Allow Node.js execution"
+        },
+        {
+          "pattern": "npx *",
+          "permission": "allow",
+          "description": "Allow npx package execution"
+        },
+        {
+          "pattern": ".venv/bin/python *",
+          "permission": "allow",
+          "description": "Allow Python venv scripts"
+        },
+        {
+          "pattern": "/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python *",
+          "permission": "allow",
+          "description": "Allow Python venv with absolute path"
+        },
+        {
+          "pattern": "python3 *",
+          "permission": "allow",
+          "description": "Allow Python 3 execution"
+        },
+        {
+          "pattern": "python *",
+          "permission": "allow",
+          "description": "Allow Python execution"
+        },
+        {
+          "pattern": "cd docusaurus && *",
+          "permission": "allow",
+          "description": "Allow Docusaurus operations"
+        },
+        {
+          "pattern": "git status *",
+          "permission": "allow",
+          "description": "Check git status"
+        },
+        {
+          "pattern": "git diff *",
+          "permission": "allow",
+          "description": "View git diffs"
+        },
+        {
+          "pattern": "git log *",
+          "permission": "allow",
+          "description": "View git logs"
+        },
+        {
+          "pattern": "git show *",
+          "permission": "allow",
+          "description": "Show git commits"
+        },
+        {
+          "pattern": "git ls-files *",
+          "permission": "allow",
+          "description": "List tracked files"
+        },
+        {
+          "pattern": "git ls-tree *",
+          "permission": "allow",
+          "description": "List tree objects"
+        },
+        {
+          "pattern": "git check-ignore *",
+          "permission": "allow",
+          "description": "Check gitignore rules"
+        },
+        {
+          "pattern": "git add *",
+          "permission": "allow",
+          "description": "Stage changes"
+        },
+        {
+          "pattern": "git commit *",
+          "permission": "allow",
+          "description": "Commit changes"
+        },
+        {
+          "pattern": "git -C /Users/krisztiankoos/projects/learn-ukrainian *",
+          "permission": "allow",
+          "description": "Git operations with -C flag"
+        },
+        {
+          "pattern": "git fetch *",
+          "permission": "allow",
+          "description": "Fetch from remote"
+        },
+        {
+          "pattern": "git checkout *",
+          "permission": "allow",
+          "description": "Checkout branches/files"
+        },
+        {
+          "pattern": "git branch *",
+          "permission": "allow",
+          "description": "Manage branches"
+        },
+        {
+          "pattern": "git merge *",
+          "permission": "allow",
+          "description": "Merge branches"
+        },
+        {
+          "pattern": "git cherry-pick *",
+          "permission": "allow",
+          "description": "Cherry-pick commits"
+        },
+        {
+          "pattern": "git revert *",
+          "permission": "allow",
+          "description": "Revert commits"
+        },
+        {
+          "pattern": "git reset *",
+          "permission": "allow",
+          "description": "Reset changes"
+        },
+        {
+          "pattern": "git rm *",
+          "permission": "allow",
+          "description": "Remove files"
+        },
+        {
+          "pattern": "git mv *",
+          "permission": "allow",
+          "description": "Move files"
+        },
+        {
+          "pattern": "git remote *",
+          "permission": "allow",
+          "description": "Manage remotes"
+        },
+        {
+          "pattern": "git push *",
+          "permission": "ask",
+          "description": "Require confirmation for push"
+        },
+        {
+          "pattern": "gh issue *",
+          "permission": "allow",
+          "description": "Manage GitHub issues"
+        },
+        {
+          "pattern": "gh api *",
+          "permission": "allow",
+          "description": "GitHub API calls"
+        },
+        {
+          "pattern": "gh run *",
+          "permission": "allow",
+          "description": "GitHub Actions workflows"
+        },
+        {
+          "pattern": "gh workflow *",
+          "permission": "allow",
+          "description": "GitHub workflows"
+        },
+        {
+          "pattern": "gh label *",
+          "permission": "allow",
+          "description": "Manage issue labels"
+        },
+        {
+          "pattern": "gh repo *",
+          "permission": "allow",
+          "description": "Repository operations"
+        },
+        {
+          "pattern": "gh * create *",
+          "permission": "ask",
+          "description": "Require confirmation for GitHub create operations"
+        },
+        {
+          "pattern": "rg *",
+          "permission": "allow",
+          "description": "Ripgrep search (modern grep)"
+        },
+        {
+          "pattern": "fd *",
+          "permission": "allow",
+          "description": "Fd find (modern find)"
+        },
+        {
+          "pattern": "sd *",
+          "permission": "allow",
+          "description": "Sd replace (modern sed)"
+        },
+        {
+          "pattern": "yq *",
+          "permission": "allow",
+          "description": "YAML query processor"
+        },
+        {
+          "pattern": "jq *",
+          "permission": "allow",
+          "description": "JSON query processor"
+        },
+        {
+          "pattern": "bat *",
+          "permission": "allow",
+          "description": "Bat (modern cat)"
+        },
+        {
+          "pattern": "eza *",
+          "permission": "allow",
+          "description": "Eza (modern ls)"
+        },
+        {
+          "pattern": "echo *",
+          "permission": "allow",
+          "description": "Echo output"
+        },
+        {
+          "pattern": "cat *",
+          "permission": "allow",
+          "description": "Concatenate files"
+        },
+        {
+          "pattern": "grep *",
+          "permission": "allow",
+          "description": "Search files"
+        },
+        {
+          "pattern": "/usr/bin/grep *",
+          "permission": "allow",
+          "description": "System grep"
+        },
+        {
+          "pattern": "head *",
+          "permission": "allow",
+          "description": "Show file head"
+        },
+        {
+          "pattern": "tail *",
+          "permission": "allow",
+          "description": "Show file tail"
+        },
+        {
+          "pattern": "wc *",
+          "permission": "allow",
+          "description": "Word count"
+        },
+        {
+          "pattern": "ls *",
+          "permission": "allow",
+          "description": "List files"
+        },
+        {
+          "pattern": "find *",
+          "permission": "allow",
+          "description": "Find files"
+        },
+        {
+          "pattern": "sort *",
+          "permission": "allow",
+          "description": "Sort lines"
+        },
+        {
+          "pattern": "cut *",
+          "permission": "allow",
+          "description": "Cut columns"
+        },
+        {
+          "pattern": "paste *",
+          "permission": "allow",
+          "description": "Paste columns"
+        },
+        {
+          "pattern": "bc *",
+          "permission": "allow",
+          "description": "Calculator"
+        },
+        {
+          "pattern": "tr *",
+          "permission": "allow",
+          "description": "Translate characters"
+        },
+        {
+          "pattern": "seq *",
+          "permission": "allow",
+          "description": "Generate sequences"
+        },
+        {
+          "pattern": "xargs *",
+          "permission": "allow",
+          "description": "Build command lines"
+        },
+        {
+          "pattern": "tee *",
+          "permission": "allow",
+          "description": "Tee output"
+        },
+        {
+          "pattern": "sed *",
+          "permission": "allow",
+          "description": "Stream editor"
+        },
+        {
+          "pattern": "awk *",
+          "permission": "allow",
+          "description": "Text processing"
+        },
+        {
+          "pattern": "for *",
+          "permission": "allow",
+          "description": "For loops"
+        },
+        {
+          "pattern": "do *",
+          "permission": "allow",
+          "description": "Loop body"
+        },
+        {
+          "pattern": "done *",
+          "permission": "allow",
+          "description": "Loop end"
+        },
+        {
+          "pattern": "if *",
+          "permission": "allow",
+          "description": "If conditions"
+        },
+        {
+          "pattern": "then *",
+          "permission": "allow",
+          "description": "Then branch"
+        },
+        {
+          "pattern": "else *",
+          "permission": "allow",
+          "description": "Else branch"
+        },
+        {
+          "pattern": "fi *",
+          "permission": "allow",
+          "description": "If end"
+        },
+        {
+          "pattern": "while *",
+          "permission": "allow",
+          "description": "While loops"
+        },
+        {
+          "pattern": "mkdir *",
+          "permission": "allow",
+          "description": "Create directories"
+        },
+        {
+          "pattern": "mv *",
+          "permission": "allow",
+          "description": "Move files"
+        },
+        {
+          "pattern": "cp *",
+          "permission": "allow",
+          "description": "Copy files"
+        },
+        {
+          "pattern": "/bin/cp *",
+          "permission": "allow",
+          "description": "System copy"
+        },
+        {
+          "pattern": "chmod *",
+          "permission": "allow",
+          "description": "Change permissions"
+        },
+        {
+          "pattern": "sqlite3 *",
+          "permission": "allow",
+          "description": "SQLite operations"
+        },
+        {
+          "pattern": "curl *",
+          "permission": "allow",
+          "description": "HTTP requests"
+        },
+        {
+          "pattern": "/usr/bin/curl *",
+          "permission": "allow",
+          "description": "System curl"
+        },
+        {
+          "pattern": "open *",
+          "permission": "allow",
+          "description": "Open files"
+        },
+        {
+          "pattern": "pbcopy *",
+          "permission": "allow",
+          "description": "Copy to clipboard"
+        },
+        {
+          "pattern": "bash *",
+          "permission": "allow",
+          "description": "Execute bash scripts"
+        },
+        {
+          "pattern": "source *",
+          "permission": "allow",
+          "description": "Source scripts"
+        },
+        {
+          "pattern": "pgrep *",
+          "permission": "allow",
+          "description": "Process grep"
+        },
+        {
+          "pattern": "pkill *",
+          "permission": "allow",
+          "description": "Process kill"
+        },
+        {
+          "pattern": "kill *",
+          "permission": "allow",
+          "description": "Kill processes"
+        },
+        {
+          "pattern": "lsof *",
+          "permission": "allow",
+          "description": "List open files"
+        },
+        {
+          "pattern": "md5 *",
+          "permission": "allow",
+          "description": "MD5 checksum"
+        },
+        {
+          "pattern": "mdfind *",
+          "permission": "allow",
+          "description": "Spotlight search"
+        },
+        {
+          "pattern": "brew *",
+          "permission": "allow",
+          "description": "Homebrew package manager"
+        },
+        {
+          "pattern": "pip install *",
+          "permission": "allow",
+          "description": "Python package installation"
+        },
+        {
+          "pattern": "playwright install *",
+          "permission": "allow",
+          "description": "Playwright browser installation"
+        },
+        {
+          "pattern": "[ * ]",
+          "permission": "allow",
+          "description": "Test conditions"
+        }
+      ]
+    },
+    "mcp": {
+      "mcp__ukrainian-validator__*": "allow"
+    },
+    "webfetch": {
+      "rules": [
+        {
+          "pattern": "*",
+          "permission": "allow",
+          "description": "Allow all web fetches"
+        }
+      ]
+    },
+    "websearch": {
+      "rules": [
+        {
+          "pattern": "*",
+          "permission": "allow",
+          "description": "Allow all web searches"
+        }
+      ]
+    }
+  },
+  "respectGitignore": true,
+  "language": "ukrainian",
+  "agent": "curriculum-maintainer"
+}
