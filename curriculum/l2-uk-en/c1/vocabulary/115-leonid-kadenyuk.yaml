@@ -1,0 +1,123 @@
+module: 115-leonid-kadenyuk
+level: C1
+version: '1.0'
+items:
+  - lemma: космонавт
+    ipa: /kosmoˈnɐwt/
+    translation: astronaut/cosmonaut
+    pos: noun
+    gender: m
+  - lemma: невагомість
+    ipa: /newɐˈɦɔmistʲ/
+    translation: weightlessness
+    pos: noun
+    gender: f
+  - lemma: шаттл
+    ipa: /ˈʃɐtːl/
+    translation: shuttle
+    pos: noun
+    gender: m
+  - lemma: екіпаж
+    ipa: /ekʲiˈpɐʒ/
+    translation: crew
+    pos: noun
+    gender: m
+  - lemma: орбітальний
+    ipa: /orbiˈtɐlʲnɪj/
+    translation: orbital
+    pos: adjective
+  - lemma: випробувач
+    ipa: /wɪˈprɔbʊwɐt͡ʃ/
+    translation: tester/test pilot
+    pos: noun
+    gender: m
+  - lemma: пілотування
+    ipa: /pʲilotʊˈwɐnʲnʲɑ/
+    translation: piloting
+    pos: noun
+    gender: n
+  - lemma: перевантаження
+    ipa: /perewɐnˈtɐʒenʲnʲɑ/
+    translation: overload/G-force
+    pos: noun
+    gender: n
+  - lemma: космічний
+    ipa: /kosˈmit͡ʃnɪj/
+    translation: cosmic/space (adj)
+    pos: adjective
+  - lemma: дослідник
+    ipa: /dosˈlʲidnɪk/
+    translation: researcher
+    pos: noun
+    gender: m
+  - lemma: біологічний
+    ipa: /bʲioloˈɦit͡ʃnɪj/
+    translation: biological
+    pos: adjective
+  - lemma: експеримент
+    ipa: /ɛksperɪˈmɛnt/
+    translation: experiment
+    pos: noun
+    gender: m
+  - lemma: гімн
+    ipa: /ɦʲimn/
+    translation: anthem
+    pos: noun
+    gender: m
+  - lemma: супутник
+    ipa: /sʊˈpʊtnɪk/
+    translation: satellite
+    pos: noun
+    gender: m
+  - lemma: ракета-носій
+    ipa: /rɐˈkɛtɐ noˈsʲij/
+    translation: launch vehicle
+    pos: noun
+    gender: f
+  - lemma: всесвіт
+    ipa: /ˈwsɛswʲit/
+    translation: universe
+    pos: noun
+    gender: m
+  - lemma: тріумфальний
+    ipa: /trʲiʊmˈfɐlʲnɪj/
+    translation: triumphal
+    pos: adjective
+  - lemma: підготовка
+    ipa: /pʲidˈɦɔtowkɑ/
+    translation: preparation/training
+    pos: noun
+    gender: f
+  - lemma: престиж
+    ipa: /presˈtɪʒ/
+    translation: prestige
+    pos: noun
+    gender: m
+  - lemma: патріот
+    ipa: /pɐtrʲiˈɔt/
+    translation: patriot
+    pos: noun
+    gender: m
+  - lemma: освоєння
+    ipa: /osˈwɔjenʲnʲɑ/
+    translation: exploration/mastering
+    pos: noun
+    gender: n
+  - lemma: висота
+    ipa: /wɪsoˈtɑ/
+    translation: altitude/height
+    pos: noun
+    gender: f
+  - lemma: літальний
+    ipa: /lʲiˈtɐlʲnɪj/
+    translation: flying (adj)
+    pos: adjective
+  - lemma: апарат
+    ipa: /ɐpɐˈrɐt/
+    translation: apparatus/device
+    pos: noun
+    gender: m
+  - lemma: пишатися
+    ipa: /pɪˈʃɐtɪsʲɑ/
+    translation: to be proud of
+    pos: verb

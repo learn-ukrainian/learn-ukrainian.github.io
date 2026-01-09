@@ -1,0 +1,121 @@
+module: 112-vasyl-stus
+level: C1
+version: '1.0'
+items:
+  - lemma: незламність
+    ipa: /nezˈlɑmnistʲ/
+    translation: resilience/indomitability
+    pos: noun
+    gender: f
+  - lemma: жертовність
+    ipa: /ʒertˈɔwnistʲ/
+    translation: self-sacrifice
+    pos: noun
+    gender: f
+  - lemma: екзистенціалізм
+    ipa: /ɛkzɪstɛnt͡sʲiɑˈlizm/
+    translation: existentialism
+    pos: noun
+    gender: m
+  - lemma: мислитель
+    ipa: /mɪˈslɪtɛlʲ/
+    translation: thinker
+    pos: noun
+    gender: m
+  - lemma: стоїцизм
+    ipa: /stɔjiˈt͡sɪzm/
+    translation: stoicism
+    pos: noun
+    gender: m
+  - lemma: розп'яття
+    ipa: /rɔzˈpjatʲtʲɑ/
+    translation: crucifixion
+    pos: noun
+    gender: n
+  - lemma: тернистий
+    ipa: /terˈnɪstɪj/
+    translation: thorny
+    pos: adjective
+  - lemma: упокорення
+    ipa: /ʊpoˈkɔrenʲnʲɑ/
+    translation: submission/subjugation
+    pos: noun
+    gender: n
+  - lemma: відчуження
+    ipa: /widˈt͡ʃʊʒenʲnʲɑ/
+    translation: alienation
+    pos: noun
+    gender: n
+  - lemma: карцер
+    ipa: /ˈkɐrt͡ser/
+    translation: solitary confinement/punishment cell
+    pos: noun
+    gender: m
+  - lemma: заслання
+    ipa: /zɐˈslɐnʲnʲɑ/
+    translation: exile
+    pos: noun
+    gender: n
+  - lemma: метафоричність
+    ipa: /metɐfoˈrɪt͡ʃnistʲ/
+    translation: metaphorical nature
+    pos: noun
+    gender: f
+  - lemma: пророцтво
+    ipa: /proˈrɔt͡stfwɔ/
+    translation: prophecy
+    pos: noun
+    gender: n
+  - lemma: світогляд
+    ipa: /swiˈtɔɦlʲɐd/
+    translation: worldview
+    pos: noun
+    gender: m
+  - lemma: сумління
+    ipa: /sʊmˈlʲinnʲɑ/
+    translation: conscience
+    pos: noun
+    gender: n
+  - lemma: бунт
+    ipa: /bunt/
+    translation: riot/rebellion
+    pos: noun
+    gender: m
+  - lemma: палімпсест
+    ipa: /pɐlʲimˈpsɛst/
+    translation: palimpsest
+    pos: noun
+    gender: m
+  - lemma: невороття
+    ipa: /neworoˈtʲtʲɑ/
+    translation: point of no return
+    pos: noun
+    gender: n
+  - lemma: витончений
+    ipa: /wɪˈtɔnt͡ʃenɪj/
+    translation: sophisticated/refined
+    pos: adjective
+  - lemma: приречений
+    ipa: /prɪˈret͡ʃenɪj/
+    translation: doomed
+    pos: adjective
+  - lemma: вертикальний
+    ipa: /wertɪˈkɑlʲnɪj/
+    translation: vertical
+    pos: adjective
+  - lemma: безкомпромісний
+    ipa: /bezkomproˈmʲisnɪj/
+    translation: uncompromising
+    pos: adjective
+  - lemma: спокутувати
+    ipa: /spoˈkʊtʊwɐtɪ/
+    translation: to atone
+    pos: verb
+  - lemma: гартувати
+    ipa: /ɦɐrˈtʊwɐtɪ/
+    translation: to temper/to harden
+    pos: verb
+  - lemma: вивищуватися
+    ipa: /wɪˈwɪʃt͡ʃʊwɐtɪsʲɑ/
+    translation: to rise above
+    pos: verb
