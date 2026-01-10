@@ -1,0 +1,154 @@
+module: 159-pomynalni-obriady
+level: C1
+version: '2.0'
+items:
+  - lemma: похорон
+    ipa: /pɔˈxrɔn/
+    translation: funeral
+    pos: noun
+    gender: m
+  - lemma: поминки
+    ipa: /pɔˈmɪnkɪ/
+    translation: memorial meal, wake
+    pos: noun
+    gender: pl
+  - lemma: провід
+    ipa: /ˈprɔwʲid/
+    translation: Provid (post-Easter memorial days)
+    pos: noun
+    gender: m
+  - lemma: гробки
+    ipa: /ɦrɔˈbkɪ/
+    translation: Hrobky (informal for Provid)
+    pos: noun
+    gender: pl
+  - lemma: кладовище
+    ipa: /klɑˈdɔwɪʃt͡ʃɛ/
+    translation: cemetery
+    pos: noun
+    gender: n
+  - lemma: цвинтар
+    ipa: /ˈt͡swɪntɑr/
+    translation: graveyard, cemetery
+    pos: noun
+    gender: m
+  - lemma: душа
+    ipa: /dʊˈʃɑ/
+    translation: soul
+    pos: noun
+    gender: f
+  - lemma: потойбіччя
+    ipa: /pɔtɔjˈbʲit͡ʃt͡ʃɑ/
+    translation: the hereafter, other world
+    pos: noun
+    gender: n
+  - lemma: пращур
+    ipa: /prɑˈʃt͡ʃʊr/
+    translation: ancestor
+    pos: noun
+    gender: m
+  - lemma: вшанування
+    ipa: /u̯ʃɑnʊˈwɑnʲnʲɑ/
+    translation: honoring, commemoration
+    pos: noun
+    gender: n
+  - lemma: молитва
+    ipa: /mɔˈlɪtwɑ/
+    translation: prayer
+    pos: noun
+    gender: f
+  - lemma: канон
+    ipa: /kɑˈnɔn/
+    translation: canon, rule
+    pos: noun
+    gender: m
+  - lemma: обрядовість
+    ipa: /ɔbrʲɑˈdɔwʲisʲtʲ/
+    translation: ritualism, system of rituals
+    pos: noun
+    gender: f
+  - lemma: панахида
+    ipa: /pɑnɑˈxɪdɑ/
+    translation: panakhyda (memorial service)
+    pos: noun
+    gender: f
+  - lemma: коливо
+    ipa: /kɔˈlɪwɔ/
+    translation: kolyvo (ritual memorial dish)
+    pos: noun
+    gender: n
+  - lemma: милостиня
+    ipa: /mɪˈlɔstɪnʲɑ/
+    translation: alms, charity
+    pos: noun
+    gender: f
+  - lemma: туга
+    ipa: /ˈtʊɦɑ/
+    translation: grief, longing, sorrow
+    pos: noun
+    gender: f
+  - lemma: розлука
+    ipa: /rɔzˈlukɑ/
+    translation: separation, parting
+    pos: noun
+    gender: f
+  - lemma: вічність
+    ipa: /ˈwʲit͡ʃnʲisʲtʲ/
+    translation: eternity
+    pos: noun
+    gender: f
+  - lemma: символ
+    ipa: /ˈsɪmwɔl/
+    translation: symbol
+    pos: noun
+    gender: m
+  - lemma: пам’ять
+    ipa: /ˈpɑmʲɑtʲ/
+    translation: memory
+    pos: noun
+    gender: f
+  - lemma: спокій
+    ipa: /ˈspɔkʲij/
+    translation: peace, rest
+    pos: noun
+    gender: m
+  - lemma: святиня
+    ipa: /swʲɑˈtɪnʲɑ/
+    translation: shrine, sacred object/place
+    pos: noun
+    gender: f
+  - lemma: сакралізація
+    ipa: /sɑkrɑlʲiˈzɑt͡sʲijɑ/
+    translation: sacralization
+    pos: noun
+    gender: f
+  - lemma: есхатологія
+    ipa: /ɛsxɑtɔˈlɔɦʲijɑ/
+    translation: eschatology
+    pos: noun
+    gender: f
+  - lemma: традиція
+    ipa: /trɑˈdɪt͡sʲijɑ/
+    translation: tradition
+    pos: noun
+    gender: f
+  - lemma: жертовність
+    ipa: /ʒɛrˈtɔu̯nʲisʲtʲ/
+    translation: self-sacrifice
+    pos: noun
+    gender: f
+  - lemma: злагода
+    ipa: /ˈzlɑɦɔdɑ/
+    translation: harmony
+    pos: noun
+    gender: f
+  - lemma: єднання
+    ipa: /jɛˈdnɑnʲnʲɑ/
+    translation: unity, union
+    pos: noun
+    gender: n
+  - lemma: тяглість
+    ipa: /ˈtʲɑɦlʲisʲtʲ/
+    translation: continuity
+    pos: noun
+    gender: f

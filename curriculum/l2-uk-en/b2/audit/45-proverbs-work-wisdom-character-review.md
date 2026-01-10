@@ -3,85 +3,89 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Значення прислів'їв' Q1 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Значення прислів'їв' Q2 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Значення прислів'їв' Q3 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Значення прислів'їв' Q4 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Значення прислів'їв' Q5 prompt length 14 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Значення прислів'їв' Q6 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Значення прислів'їв' Q7 prompt length 14 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Значення прислів'їв' Q9 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Значення прислів'їв' Q10 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 1 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 2 has 6 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 3 has 6 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 4 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 5 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 6 has 7 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 7 has 6 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 8 has 3 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 9 has 6 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 10 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть прислів'я для ситуації' Q2 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть прислів'я для ситуації' Q3 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть прислів'я для ситуації' Q5 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть прислів'я для ситуації' Q6 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть прислів'я для ситуації' Q7 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть прислів'я для ситуації' Q8 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть прислів'я для ситуації' Q9 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть прислів'я для ситуації' Q10 prompt length 13 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Значення прислів'їв' Q10 prompt length 8 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 1 has 4 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 2 has 6 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 3 has 6 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 4 has 5 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 5 has 5 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 6 has 7 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 7 has 6 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 8 has 3 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 9 has 6 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть прислів'я' item 10 has 4 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть прислів'я для ситуації' Q3 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Оберіть прислів'я для ситуації' Q7 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [значення-прислів'їв] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [прислів'я-та-їхнє-значення] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [закінчіть-прислів'я] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [правильне-вживання-прислів'їв] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [тематична-класифікація-прислів'їв] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [відновіть-прислів'я] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [прислів'я-у-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [виправте-помилки-в-прислів'ях] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [знайдіть-прислів'я-в-тексті] mark-the-words: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [оберіть-усі-правильні-відповіді] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [перекладіть-прислів'я-англійською] translate: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [оберіть-прислів'я-для-ситуації] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [англійські-еквіваленти-прислів'їв] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 45-proverbs-work-wisdom-character.yaml: [вставте-прислів'я-в-контекст] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (8 words): характер, мудрість, робота, плід, терпіння...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Історичний контекст українських прислів'їв, Вживання прислів'їв у контексті, Вступ
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
+  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 29 violations (severe - consider revision)
+- 30 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 1992/1750
-- **Activities:** ✅ 14/13
-- **Density:** ✅ All > 16
+- **Words:** ✅ 2102/1750
+- **Activities:** ✅ 14/10
+- **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/6
+- **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 89/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 28 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.2% (target 98-100% (vocab))
+- **Immersion:** 🇺🇦 98.5% (target 98-100% (vocab))
 - **Richness:** ✅ 95% (content)
 - **Grammar:** ⏳ Pending validation
 
@@ -92,13 +96,13 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 59 | 15 | 100% | 25% | 25.0% |
-| engagement | 6 | 5 | 100% | 19% | 18.7% |
-| variety | 0.76 | - | 76% | 12% | 9.5% |
+| examples | 60 | 15 | 100% | 25% | 25.0% |
+| engagement | 10 | 5 | 100% | 19% | 18.7% |
+| variety | 0.77 | - | 77% | 12% | 9.6% |
 | cultural | 4 | 4 | 100% | 12% | 12.5% |
 | realworld | 5 | 3 | 100% | 12% | 12.5% |
 | visual | 4 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.74 | - | 74% | 6% | 4.6% |
+| paragraph_var | 0.73 | - | 73% | 6% | 4.6% |
 | questions | 11 | 4 | 100% | 6% | 6.2% |
 | **TOTAL** | | | | | **95.4%** |
 
@@ -114,4 +118,4 @@
 | **Міні-діалоги для практики** | ✅ | 129 | Included in Core |
 | **Історичний контекст українських прислів'їв** | ✅ | 172 | Included in Core |
 | **Підсумок** | ✅ | 143 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

@@ -1,50 +1,73 @@
 # Audit Report: 146-kolyskovi-ta-dumy.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 1750
+**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Виправлення історичних та музичних термінів' uses placeholder syntax instead of real errors
-  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 1/6 items with placeholders/missing errors.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-01] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-02] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-03] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-04] critical-analysis: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-06] essay-response: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-08] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-09] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-10] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-11] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 146-kolyskovi-ta-dumy.yaml: [146-act-12] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'b2-history-module-template'
+  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 50/100)
 
-- 1 violations (minor)
+- Revision recommended (severity 50/100)
+- 11 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 1966/1750
+- **Words:** ✅ 2086/2000
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 5/7
+- **Engagement:** ✅ 7/7
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 28/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ❌ 10 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
-- **Immersion:** 🇺🇦 99.6% (target 98-100% (history))
-- **Richness:** ✅ 97% (history)
+- **Immersion:** 🇺🇦 99.5% (target 98-100% (history))
+- **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 97% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 6 | 3 | 100% | 24% | 23.8% |
-| engagement | 5 | 6 | 83% | 14% | 11.9% |
-| timeline_markers | 16 | 10 | 100% | 14% | 14.3% |
+| engagement | 7 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 17 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 7 | 4 | 100% | 10% | 9.5% |
-| visual | 6 | 4 | 100% | 10% | 9.5% |
-| variety | 0.98 | - | 98% | 5% | 4.7% |
+| visual | 8 | 4 | 100% | 10% | 9.5% |
+| variety | 0.96 | - | 96% | 5% | 4.6% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 5 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **97.5%** |
+| questions | 9 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **99.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -58,9 +81,9 @@
 | **Первинні джерела: Свідчення про кобзарів** | ⚪️ | 84 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 152 | Skipped |
 | **Регіональні особливості: Різноголосся України** | ⚪️ | 106 | Skipped |
-| **Сучасні інтерпретації: Від автентики до року** | ⚪️ | 86 | Skipped |
+| **Сучасні інтерпретації: Від автентики до року** | ⚪️ | 204 | Skipped |
 | **Аналіз образів: Козак-нетяга** | ✅ | 87 | Included in Core |
-| **Хронологія кобзарської долі** | ⚪️ | 134 | Skipped |
+| **Хронологія кобзарської долі** | ⚪️ | 135 | Skipped |
 | **Порівняльна стилістика: Інтимність vs Епічність** | ⚪️ | 0 | Skipped |
 | **Need More Practice?** | ⚪️ | 100 | Skipped |
-| **Підсумок** | ✅ | 120 | Included in Core |
+| **Підсумок** | ✅ | 121 | Included in Core |

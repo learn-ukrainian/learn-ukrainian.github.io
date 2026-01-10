@@ -1,0 +1,23 @@
+module: c1-154
+title: 'Козацькі легенди'
+subtitle: 'Cossack Legends and Myths'
+version: '2.0'
+phase: 'C1.5 Folk Culture & Fine Arts'
+focus: 'vocabulary'
+pedagogy: 'Immersion & Analysis'
+duration: 120
+transliteration: none
+tags:
+  - culture
+  - history
+  - legends
+  - cossacks
+grammar:
+  - 'Heroic narrative register'
+  - 'Epic stylistics'
+objectives:
+  - 'Learner can analyze Cossack mythological archetypes (e.g., kharakternyky)'
+  - 'Learner understands the role of Cossack myths in national identity construction'
+  - 'Learner can use epic and heroic vocabulary in analytical contexts'
+vocabulary_count: 30
+slug: 154-kozatski-lehendy

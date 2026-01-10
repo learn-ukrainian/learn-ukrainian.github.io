@@ -1,0 +1,24 @@
+module: c1-32
+title: "Професійні сценарії"
+subtitle: "Professional Scenarios"
+version: "1.0"
+phase: "C1.2 Professional & Social"
+pedagogy: "Simulation"
+duration: 120
+transliteration: none
+immersion: 100
+tags:
+  - professional
+  - business
+  - communication
+  - practice
+grammar:
+  - "Integrated professional communication"
+  - "Formal register"
+objectives:
+  - "Створити професійне резюме та супровідний лист"
+  - "Провести симуляцію співбесіди"
+  - "Взяти участь у діловій зустрічі та переговорах"
+  - "Написати офіційні електронні листи та звіти"
+vocabulary_count: 30
+slug: 32-professional-scenarios

@@ -1,129 +1,123 @@
 # Audit Report: 93-ivan-mazepa-ii-kultura.md
-**Phase:** B2.3b | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Phase:** B2.3b | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q1 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q2 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q3 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q4 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q5 prompt length 4 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q6 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q7 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q8 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q9 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q10 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q11 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q12 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q13 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q14 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q15 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q16 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 1 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 2 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 3 has 7 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 4 has 6 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 5 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 6 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 7 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 8 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 9 has 6 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 10 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 11 has 6 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 12 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 13 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 14 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 15 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 16 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q1 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q2 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q3 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q4 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q5 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q6 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q7 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q8 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q9 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q10 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q11 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q12 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q13 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q14 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q15 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q16 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q5 prompt length 4 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q7 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q9 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту про культурну спадщину Мазепи' Q15 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 1 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 2 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 4 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 5 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 6 has 4 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 7 has 4 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 8 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 9 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 10 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 11 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 12 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 13 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 14 has 4 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 15 has 4 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про культуру Мазепи' item 16 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q2 prompt length 6 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q3 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q4 prompt length 5 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q6 prompt length 6 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q10 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q11 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз первинних джерел' Q13 prompt length 6 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [розуміння-тексту-про-культурну-спадщину-мазепи] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [культурна-та-архітектурна-термінологія] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [культурна-лексика-в-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [факти-про-культурну-діяльність-мазепи] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [класифікація-культурних-понять] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [складіть-речення-про-культуру-мазепи] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [граматика-в-реченнях-про-культуру] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [заповніть-текст-про-культурну-спадщину-мазепи] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [знайдіть-культурну-термінологію] mark-the-words: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [оберіть-усі-правильні-твердження-згідно-з-текстом] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [переклад-культурної-термінології] translate: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [вибір-правильного-відмінка] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 93-ivan-mazepa-ii-kultura.yaml: [аналіз-первинних-джерел] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ, Літературний контекст
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template'
+  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Первинні джерела' per template 'b2-history-module-template'
+  - FIX: Add '## Первинні джерела' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
+
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 50 violations (severe - consider revision)
+- 46 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 2034/1400
+- **Words:** ✅ 2144/2000
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/5
+- **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 117/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 50 violations
+- **Pedagogy:** ❌ 41 violations
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
-- **Immersion:** 🇺🇦 99.8% (target 98-100% (history))
+- **Immersion:** 🇺🇦 99.2% (target 98-100% (history))
 - **Richness:** ✅ 98% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -135,15 +129,15 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 11 | 3 | 100% | 24% | 23.8% |
-| engagement | 8 | 6 | 100% | 14% | 14.3% |
+| engagement | 11 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 11 | 2 | 100% | 14% | 14.3% |
 | cultural | 5 | 4 | 100% | 10% | 9.5% |
 | visual | 6 | 4 | 100% | 10% | 9.5% |
 | variety | 0.94 | - | 94% | 5% | 4.5% |
-| paragraph_var | 0.71 | - | 71% | 5% | 3.4% |
+| paragraph_var | 0.72 | - | 72% | 5% | 3.4% |
 | questions | 5 | 3 | 100% | 5% | 4.8% |
-| **TOTAL** | | | | | **98.3%** |
+| **TOTAL** | | | | | **98.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -156,4 +150,4 @@
 | **Деколонізаційний погляд** | ⚪️ | 304 | Skipped |
 | **Мазепа-поет** | ⚪️ | 183 | Skipped |
 | **Підсумок** | ✅ | 207 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

@@ -3,45 +3,58 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Типи речень' Q7 prompt length 10 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Типи речень' Q14 prompt length 11 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
 - **[COMPLEXITY]** mark-the-words 'Позначте підрядні сполучники' has 0 items (minimum: 6)
   - FIX: Add more items. B1 mark-the-words requires at least 6 items.
 - **[MISSING_FIELD]** mark-the-words 'Позначте підрядні сполучники' is missing 'correct_words' array
   - FIX: Add 'correct_words' array with correct words
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 38-complex-sentence-integration.yaml: [quiz-clause-types] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 38-complex-sentence-integration.yaml: [match-clause-functions] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 38-complex-sentence-integration.yaml: [fill-conjunctions] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 38-complex-sentence-integration.yaml: [tf-sentence-structure] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 38-complex-sentence-integration.yaml: [sort-conjunctions] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 38-complex-sentence-integration.yaml: [unjumble-complex-sentences] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 38-complex-sentence-integration.yaml: [error-sentence-structure] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 38-complex-sentence-integration.yaml: [cloze-visit-friend] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 38-complex-sentence-integration.yaml: [mark-conjunctions] mark-the-words: 'correct_words' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 38-complex-sentence-integration.yaml: [select-correct-sentences] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 38-complex-sentence-integration.yaml: [translate-complex-sentences] translate: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' found: Пояснення, Діалог 1: Пояснення ситуації
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Пояснення|Граматика|Теорія' found: Діалог 1: Пояснення ситуації, Пояснення
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
 
 ## Recommendation
-**📝 UPDATE** (severity 55/100)
+**📝 UPDATE** (severity 60/100)
 
-- Revision recommended (severity 55/100)
-- 7 violations (significant)
-- Activity count below minimum
+- Revision recommended (severity 60/100)
+- 14 violations (severe - consider revision)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ⚠️ 1467/1500 (33 short)
-- **Activities:** ❌ 11/12
-- **Density:** ❌ 1 < 14
+- **Words:** ✅ 1577/1500
+- **Activities:** ✅ 11/8
+- **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 9 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 5 violations
+- **Pedagogy:** ❌ 13 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 100.0% (target 85-100% (B1.3-4 Complex))
+- **Immersion:** 🇺🇦 99.0% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -52,17 +65,17 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 39 | 24 | 100% | 20% | 20.0% |
-| engagement | 6 | 5 | 100% | 15% | 15.0% |
+| examples | 40 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
 | dialogues | 13 | 4 | 100% | 15% | 15.0% |
 | variety | 0.99 | - | 99% | 10% | 9.9% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
 | realworld | 2 | 3 | 67% | 10% | 6.7% |
 | visual | 3 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
+| paragraph_var | 0.91 | - | 91% | 5% | 4.6% |
 | questions | 28 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.3%** |
+| **TOTAL** | | | | | **96.2%** |
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
@@ -79,4 +92,4 @@
 | **Практика** | ⚪️ | 183 | Skipped |
 | **Діалоги** | ✅ | 240 | Included in Core |
 | **Підсумок** | ✅ | 157 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

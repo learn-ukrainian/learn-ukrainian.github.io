@@ -1,6 +1,25 @@
 # Audit Report: 120-mariya-matios.md
 **Phase:** C1.3 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз художнього методу' Q5 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Буковинська земля в літературі' Q4 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template'
+  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template'
+  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Спадщина' per template 'c1-biography-module-template'
+  - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 5 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 2056/2000
@@ -13,7 +32,7 @@
 - **Vocab:** ✅ 27/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 100.0% (target 98-100% (biography))
 - **Richness:** ✅ 97% (biography)
@@ -38,12 +57,6 @@
 | questions | 19 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **97.5%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -55,4 +68,4 @@
 | **Есе** | ⚪️ | 361 | Skipped |
 | **Підсумок** | ✅ | 46 | Included in Core |
 | **Практикум рефлексії** | ⚪️ | 188 | Skipped |
-| **Need More Practice?** | ⚪️ | 111 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 111 | Skipped |

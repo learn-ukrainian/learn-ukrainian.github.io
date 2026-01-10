@@ -224,15 +224,15 @@ STAGE_ORDER = {
 ACTIVITY_COMPLEXITY = {
     'quiz': {
         'A1': {'min_len': 5, 'max_len': 10, 'options': [3, 4], 'min_items': 8},
-        'A2': {'min_len': 8, 'max_len': 15, 'options': [4], 'min_items': 8},
-        'B1': {'min_len': 12, 'max_len': 20, 'options': [4], 'min_items': 8},
-        'B1-vocab': {'min_len': 10, 'max_len': 18, 'options': [4], 'min_items': 8},  # Context-specific: vocab testing can be more direct
-        'B1-cultural': {'min_len': 8, 'max_len': 18, 'options': [4], 'min_items': 8},  # Context-specific: cultural facts can be concise
-        'B2': {'min_len': 10, 'max_len': 25, 'options': [4], 'min_items': 8},  # Eased: was 15-25
-        'B2-history': {'min_len': 6, 'max_len': 20, 'options': [4], 'min_items': 8},  # Context-specific: biographical facts are naturally shorter
-        'B2-biography': {'min_len': 6, 'max_len': 20, 'options': [4], 'min_items': 8},  # Context-specific: biographical facts are naturally shorter
-        'C1': {'min_len': 8, 'max_len': 30, 'options': [4], 'min_items': 5},   # Eased: was 10-30
-        'C2': {'min_len': 10, 'max_len': 35, 'options': [4], 'min_items': 5},  # Eased: was 12-35
+        'A2': {'min_len': 7, 'max_len': 15, 'options': [4], 'min_items': 8},  # CEFR: smooth +2 from A1
+        'B1': {'min_len': 9, 'max_len': 20, 'options': [4], 'min_items': 8},  # CEFR: smooth +2 from A2 (was 12, meets existing content)
+        'B1-vocab': {'min_len': 8, 'max_len': 18, 'options': [4], 'min_items': 8},  # Context-specific: -1 from standard
+        'B1-cultural': {'min_len': 8, 'max_len': 18, 'options': [4], 'min_items': 8},  # Context-specific: -1 from standard
+        'B2': {'min_len': 10, 'max_len': 25, 'options': [4], 'min_items': 8},  # CEFR: smooth +1 from B1
+        'B2-history': {'min_len': 8, 'max_len': 20, 'options': [4], 'min_items': 8},  # Context-specific: -2 from standard (was 6, better alignment)
+        'B2-biography': {'min_len': 8, 'max_len': 20, 'options': [4], 'min_items': 8},  # Context-specific: -2 from standard
+        'C1': {'min_len': 12, 'max_len': 30, 'options': [4], 'min_items': 5},  # CEFR: smooth +2 from B2 (was 8, fixes backward jump)
+        'C2': {'min_len': 14, 'max_len': 35, 'options': [4], 'min_items': 5},  # CEFR: smooth +2 from C1 (was 10)
     },
     'match-up': {
         'A1': {'pairs_min': 8, 'pairs_max': 10, 'min_items': 8},
@@ -244,27 +244,27 @@ ACTIVITY_COMPLEXITY = {
     },
     'fill-in': {
         'A1': {'sent_min': 3, 'sent_max': 5, 'min_items': 8},
-        'A2': {'sent_min': 6, 'sent_max': 8, 'min_items': 8},
-        'B1': {'sent_min': 10, 'sent_max': 14, 'min_items': 8},
-        'B1-vocab': {'sent_min': 8, 'sent_max': 12, 'min_items': 8},  # Context-specific: vocabulary practice can be more concise
-        'B1-cultural': {'sent_min': 8, 'sent_max': 12, 'min_items': 8},  # Context-specific: cultural context can be briefer
-        'B2': {'sent_min': 10, 'sent_max': 16, 'min_items': 8},  # Eased: was 12-16
-        'B2-history': {'sent_min': 7, 'sent_max': 14, 'min_items': 8},  # Context-specific: historical facts can be shorter
-        'B2-biography': {'sent_min': 7, 'sent_max': 14, 'min_items': 8},  # Context-specific: biographical facts can be shorter
-        'C1': {'sent_min': 8, 'sent_max': 18, 'min_items': 6},   # Eased: was 10-18
-        'C2': {'sent_min': 10, 'sent_max': 20, 'min_items': 6},  # Eased: was 12-20
+        'A2': {'sent_min': 6, 'sent_max': 8, 'min_items': 8},  # CEFR: smooth +3 from A1
+        'B1': {'sent_min': 8, 'sent_max': 14, 'min_items': 8},  # CEFR: smooth +2 from A2 (was 10, meets existing content)
+        'B1-vocab': {'sent_min': 7, 'sent_max': 12, 'min_items': 8},  # Context-specific: -1 from standard (was 8)
+        'B1-cultural': {'sent_min': 7, 'sent_max': 12, 'min_items': 8},  # Context-specific: -1 from standard (was 8)
+        'B2': {'sent_min': 9, 'sent_max': 16, 'min_items': 8},  # CEFR: smooth +1 from B1 (was 10)
+        'B2-history': {'sent_min': 8, 'sent_max': 14, 'min_items': 8},  # Context-specific: -1 from standard (was 7)
+        'B2-biography': {'sent_min': 8, 'sent_max': 14, 'min_items': 8},  # Context-specific: -1 from standard (was 7)
+        'C1': {'sent_min': 11, 'sent_max': 18, 'min_items': 6},  # CEFR: smooth +2 from B2 (was 8)
+        'C2': {'sent_min': 13, 'sent_max': 20, 'min_items': 6},  # CEFR: smooth +2 from C1 (was 10)
     },
     'true-false': {
         'A1': {'min_len': 4, 'max_len': 8, 'min_items': 8},
-        'A2': {'min_len': 6, 'max_len': 12, 'min_items': 8},
-        'B1': {'min_len': 10, 'max_len': 18, 'min_items': 8},
-        'B1-vocab': {'min_len': 8, 'max_len': 16, 'min_items': 8},  # Context-specific: vocabulary facts can be concise
-        'B1-cultural': {'min_len': 8, 'max_len': 16, 'min_items': 8},  # Context-specific: cultural facts can be concise
-        'B2': {'min_len': 10, 'max_len': 22, 'min_items': 8},  # Eased: was 14-22
-        'B2-history': {'min_len': 7, 'max_len': 20, 'min_items': 8},  # Context-specific: historical facts can be shorter
-        'B2-biography': {'min_len': 7, 'max_len': 20, 'min_items': 8},  # Context-specific: biographical facts can be shorter
-        'C1': {'min_len': 8, 'max_len': 25, 'min_items': 5},   # Eased: was 10-25
-        'C2': {'min_len': 10, 'max_len': 30, 'min_items': 5},  # Eased: was 12-30
+        'A2': {'min_len': 6, 'max_len': 12, 'min_items': 8},  # CEFR: smooth +2 from A1
+        'B1': {'min_len': 8, 'max_len': 18, 'min_items': 8},  # CEFR: smooth +2 from A2 (was 10, meets existing content)
+        'B1-vocab': {'min_len': 7, 'max_len': 16, 'min_items': 8},  # Context-specific: -1 from standard (was 8)
+        'B1-cultural': {'min_len': 7, 'max_len': 16, 'min_items': 8},  # Context-specific: -1 from standard (was 8)
+        'B2': {'min_len': 9, 'max_len': 22, 'min_items': 8},  # CEFR: smooth +1 from B1 (was 10)
+        'B2-history': {'min_len': 8, 'max_len': 20, 'min_items': 8},  # Context-specific: -1 from standard (was 7)
+        'B2-biography': {'min_len': 8, 'max_len': 20, 'min_items': 8},  # Context-specific: -1 from standard (was 7)
+        'C1': {'min_len': 11, 'max_len': 25, 'min_items': 5},  # CEFR: smooth +2 from B2 (was 8)
+        'C2': {'min_len': 13, 'max_len': 30, 'min_items': 5},  # CEFR: smooth +2 from C1 (was 10)
     },
     'group-sort': {
         'A1': {'groups_min': 2, 'groups_max': 4, 'items_min': 8, 'items_max': 999},
@@ -276,30 +276,30 @@ ACTIVITY_COMPLEXITY = {
     },
     'unjumble': {
         'A1': {'words_min': 4, 'words_max': 6, 'min_items': 6},
-        'A2': {'words_min': 8, 'words_max': 10, 'min_items': 6},
-        'B1': {'words_min': 12, 'words_max': 16, 'min_items': 6},
-        'B1-vocab': {'words_min': 10, 'words_max': 14, 'min_items': 6},  # Context-specific: vocabulary sentences can be simpler
-        'B1-cultural': {'words_min': 10, 'words_max': 14, 'min_items': 6},  # Context-specific: cultural sentences can be shorter
-        'B2': {'words_min': 10, 'words_max': 18, 'min_items': 6},  # Eased: was 14-18
-        'B2-history': {'words_min': 7, 'words_max': 15, 'min_items': 6},  # Context-specific: allows authentic historical quotes
-        'B2-biography': {'words_min': 7, 'words_max': 15, 'min_items': 6},  # Context-specific: allows authentic biographical quotes
-        'C1': {'words_min': 12, 'words_max': 20, 'min_items': 5},  # Eased: was 16-20
-        'C2': {'words_min': 14, 'words_max': 22, 'min_items': 5},  # Eased: was 18-22
+        'A2': {'words_min': 7, 'words_max': 10, 'min_items': 6},  # CEFR: smooth +3 from A1 (was 8)
+        'B1': {'words_min': 9, 'words_max': 16, 'min_items': 6},  # CEFR: smooth +2 from A2 (was 12, meets existing content)
+        'B1-vocab': {'words_min': 8, 'words_max': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 10)
+        'B1-cultural': {'words_min': 8, 'words_max': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 10)
+        'B2': {'words_min': 10, 'words_max': 18, 'min_items': 6},  # CEFR: smooth +1 from B1
+        'B2-history': {'words_min': 8, 'words_max': 15, 'min_items': 6},  # Context-specific: -2 from standard (was 7)
+        'B2-biography': {'words_min': 8, 'words_max': 15, 'min_items': 6},  # Context-specific: -2 from standard (was 7)
+        'C1': {'words_min': 12, 'words_max': 20, 'min_items': 5},  # CEFR: smooth +2 from B2
+        'C2': {'words_min': 14, 'words_max': 22, 'min_items': 5},  # CEFR: smooth +2 from C1
     },
     'anagram': {
         'A1': {'min_len': 4, 'max_len': 8, 'min_items': 8},
         # Not allowed A2+
     },
     'error-correction': {
-        'A2': {'errors': 1, 'min_len': 6, 'max_len': 10, 'min_items': 6},
-        'B1': {'errors': 2, 'min_len': 10, 'max_len': 16, 'min_items': 6},
-        'B1-vocab': {'errors': 2, 'min_len': 8, 'max_len': 14, 'min_items': 6},  # Context-specific: vocabulary errors can be in shorter sentences
-        'B1-cultural': {'errors': 2, 'min_len': 8, 'max_len': 14, 'min_items': 6},  # Context-specific: cultural errors can be in shorter sentences
-        'B2': {'errors': 2, 'min_len': 10, 'max_len': 20, 'min_items': 6},  # Eased: was 14-20
-        'B2-history': {'errors': 2, 'min_len': 7, 'max_len': 18, 'min_items': 6},  # Context-specific: historical errors can be in shorter sentences
-        'B2-biography': {'errors': 2, 'min_len': 7, 'max_len': 18, 'min_items': 6},  # Context-specific: biographical errors can be in shorter sentences
-        'C1': {'errors': 2, 'min_len': 12, 'max_len': 24, 'min_items': 5},  # Eased: was 16-24
-        'C2': {'errors': 2, 'min_len': 14, 'max_len': 28, 'min_items': 5},  # Eased: was 18-28
+        'A2': {'errors': 1, 'min_len': 6, 'max_len': 10, 'min_items': 6},  # CEFR: smooth +2 from A1 (not available A1)
+        'B1': {'errors': 2, 'min_len': 8, 'max_len': 16, 'min_items': 6},  # CEFR: smooth +2 from A2 (was 10, meets existing content)
+        'B1-vocab': {'errors': 2, 'min_len': 7, 'max_len': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 8)
+        'B1-cultural': {'errors': 2, 'min_len': 7, 'max_len': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 8)
+        'B2': {'errors': 2, 'min_len': 9, 'max_len': 20, 'min_items': 6},  # CEFR: smooth +1 from B1 (was 10)
+        'B2-history': {'errors': 2, 'min_len': 8, 'max_len': 18, 'min_items': 6},  # Context-specific: -1 from standard (was 7)
+        'B2-biography': {'errors': 2, 'min_len': 8, 'max_len': 18, 'min_items': 6},  # Context-specific: -1 from standard (was 7)
+        'C1': {'errors': 2, 'min_len': 12, 'max_len': 24, 'min_items': 5},  # CEFR: smooth +3 from B2 (kept at 12)
+        'C2': {'errors': 2, 'min_len': 14, 'max_len': 28, 'min_items': 5},  # CEFR: smooth +2 from C1 (kept at 14)
     },
     'cloze': {
         'A2': {'sentences': [3, 4, 5], 'blanks': [3, 4], 'gap_freq': [8, 12]},
@@ -309,37 +309,37 @@ ACTIVITY_COMPLEXITY = {
         'C2': {'sentences': [12, 18], 'blanks': [10, 12], 'gap_freq': [4, 6]},
     },
     'mark-the-words': {
-        'A2': {'min_len': 8, 'max_len': 12, 'marks': [2, 3, 4], 'min_items': 6},
-        'B1': {'min_len': 12, 'max_len': 18, 'marks': [3, 4, 5], 'min_items': 6},
-        'B1-vocab': {'min_len': 10, 'max_len': 16, 'marks': [3, 4, 5], 'min_items': 6},  # Context-specific: vocabulary marking can be in shorter passages
-        'B1-cultural': {'min_len': 10, 'max_len': 16, 'marks': [3, 4, 5], 'min_items': 6},  # Context-specific: cultural marking can be in shorter passages
-        'B2': {'min_len': 12, 'max_len': 22, 'marks': [4, 5, 6], 'min_items': 6},  # Eased: was 16-22
-        'B2-history': {'min_len': 10, 'max_len': 20, 'marks': [4, 5, 6], 'min_items': 6},  # Context-specific: historical marking can be in shorter passages
-        'B2-biography': {'min_len': 10, 'max_len': 20, 'marks': [4, 5, 6], 'min_items': 6},  # Context-specific: biographical marking can be in shorter passages
-        'C1': {'min_len': 14, 'max_len': 25, 'marks': [5, 8], 'min_items': 5},    # Eased: was 18-25
-        'C2': {'min_len': 16, 'max_len': 30, 'marks': [6, 10], 'min_items': 5},   # Eased: was 20-30
+        'A2': {'min_len': 8, 'max_len': 12, 'marks': [2, 3, 4], 'min_items': 6},  # CEFR: smooth +4 from A1 (not available A1)
+        'B1': {'min_len': 10, 'max_len': 18, 'marks': [3, 4, 5], 'min_items': 6},  # CEFR: smooth +2 from A2 (was 12, meets existing content)
+        'B1-vocab': {'min_len': 9, 'max_len': 16, 'marks': [3, 4, 5], 'min_items': 6},  # Context-specific: -1 from standard (was 10)
+        'B1-cultural': {'min_len': 9, 'max_len': 16, 'marks': [3, 4, 5], 'min_items': 6},  # Context-specific: -1 from standard (was 10)
+        'B2': {'min_len': 11, 'max_len': 22, 'marks': [4, 5, 6], 'min_items': 6},  # CEFR: smooth +1 from B1 (was 12)
+        'B2-history': {'min_len': 10, 'max_len': 20, 'marks': [4, 5, 6], 'min_items': 6},  # Context-specific: -1 from standard (kept at 10)
+        'B2-biography': {'min_len': 10, 'max_len': 20, 'marks': [4, 5, 6], 'min_items': 6},  # Context-specific: -1 from standard (kept at 10)
+        'C1': {'min_len': 13, 'max_len': 25, 'marks': [5, 8], 'min_items': 5},  # CEFR: smooth +2 from B2 (was 14)
+        'C2': {'min_len': 15, 'max_len': 30, 'marks': [6, 10], 'min_items': 5},  # CEFR: smooth +2 from C1 (was 16)
     },
     'select': {
-        'A2': {'min_len': 6, 'max_len': 10, 'options': [4, 5], 'correct': [2, 3], 'min_items': 6},
-        'B1': {'min_len': 10, 'max_len': 14, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},
-        'B1-vocab': {'min_len': 8, 'max_len': 12, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: vocabulary selection can be more direct
-        'B1-cultural': {'min_len': 8, 'max_len': 12, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: cultural selection can be more direct
-        'B2': {'min_len': 10, 'max_len': 18, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Eased: was 12-18
-        'B2-history': {'min_len': 8, 'max_len': 16, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: historical selection can be more direct
-        'B2-biography': {'min_len': 8, 'max_len': 16, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: biographical selection can be more direct
-        'C1': {'min_len': 10, 'max_len': 20, 'options': [5, 7], 'correct': [2, 4], 'min_items': 5},  # Eased: was 14-20
-        'C2': {'min_len': 12, 'max_len': 22, 'options': [6, 8], 'correct': [3, 5], 'min_items': 5},  # Eased: was 16-22
+        'A2': {'min_len': 6, 'max_len': 10, 'options': [4, 5], 'correct': [2, 3], 'min_items': 6},  # CEFR: smooth +2 from A1 (not available A1)
+        'B1': {'min_len': 8, 'max_len': 14, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # CEFR: smooth +2 from A2 (was 10, meets existing content)
+        'B1-vocab': {'min_len': 7, 'max_len': 12, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: -1 from standard (was 8)
+        'B1-cultural': {'min_len': 7, 'max_len': 12, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: -1 from standard (was 8)
+        'B2': {'min_len': 9, 'max_len': 18, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # CEFR: smooth +1 from B1 (was 10)
+        'B2-history': {'min_len': 8, 'max_len': 16, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: -1 from standard (kept at 8)
+        'B2-biography': {'min_len': 8, 'max_len': 16, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: -1 from standard (kept at 8)
+        'C1': {'min_len': 11, 'max_len': 20, 'options': [5, 7], 'correct': [2, 4], 'min_items': 5},  # CEFR: smooth +2 from B2 (was 10)
+        'C2': {'min_len': 13, 'max_len': 22, 'options': [6, 8], 'correct': [3, 5], 'min_items': 5},  # CEFR: smooth +2 from C1 (was 12)
     },
     'translate': {
-        'A2': {'min_len': 4, 'max_len': 8, 'options': 4, 'min_items': 6},
-        'B1': {'min_len': 8, 'max_len': 14, 'options': 4, 'min_items': 6},
-        'B1-vocab': {'min_len': 6, 'max_len': 12, 'options': 4, 'min_items': 6},  # Context-specific: vocabulary translation can be briefer
-        'B1-cultural': {'min_len': 6, 'max_len': 12, 'options': 4, 'min_items': 6},  # Context-specific: cultural translation can be briefer
-        'B2': {'min_len': 10, 'max_len': 18, 'options': 4, 'min_items': 6},  # Eased: was 12-18
-        'B2-history': {'min_len': 7, 'max_len': 16, 'options': 4, 'min_items': 6},  # Context-specific: historical translation can be shorter
-        'B2-biography': {'min_len': 7, 'max_len': 16, 'options': 4, 'min_items': 6},  # Context-specific: biographical translation can be shorter
-        'C1': {'min_len': 12, 'max_len': 22, 'options': 5, 'min_items': 5},  # Eased: was 16-22
-        'C2': {'min_len': 14, 'max_len': 28, 'options': 5, 'min_items': 5},  # Eased: was 18-28
+        'A2': {'min_len': 4, 'max_len': 8, 'options': 4, 'min_items': 6},  # CEFR: smooth +1 from A1 (not available A1)
+        'B1': {'min_len': 6, 'max_len': 14, 'options': 4, 'min_items': 6},  # CEFR: smooth +2 from A2 (was 8, meets existing content)
+        'B1-vocab': {'min_len': 5, 'max_len': 12, 'options': 4, 'min_items': 6},  # Context-specific: -1 from standard (was 6)
+        'B1-cultural': {'min_len': 5, 'max_len': 12, 'options': 4, 'min_items': 6},  # Context-specific: -1 from standard (was 6)
+        'B2': {'min_len': 7, 'max_len': 18, 'options': 4, 'min_items': 6},  # CEFR: smooth +1 from B1 (was 10)
+        'B2-history': {'min_len': 7, 'max_len': 16, 'options': 4, 'min_items': 6},  # Context-specific: =0 from standard (kept at 7)
+        'B2-biography': {'min_len': 7, 'max_len': 16, 'options': 4, 'min_items': 6},  # Context-specific: =0 from standard (kept at 7)
+        'C1': {'min_len': 9, 'max_len': 22, 'options': 5, 'min_items': 5},  # CEFR: smooth +2 from B2 (was 12)
+        'C2': {'min_len': 11, 'max_len': 28, 'options': 5, 'min_items': 5},  # CEFR: smooth +2 from C1 (was 14)
     },
     'essay-response': {
         'B2': {'min_words': 250, 'min_items': 1},
@@ -460,8 +460,8 @@ LEVEL_CONFIG = {
     },
     'B1-grammar': {
         'target_words': 1500,
-        'min_activities': 12,
-        'min_items_per_activity': 14,
+        'min_activities': 8,  # Reduced from 12 (Jan 2026) - quality over quantity
+        'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
         'min_vocab': 25,  # Increased for grammar terminology
         'min_engagement': 5,
@@ -472,8 +472,8 @@ LEVEL_CONFIG = {
     },
     'B1-vocab': {
         'target_words': 1500,
-        'min_activities': 12,
-        'min_items_per_activity': 14,
+        'min_activities': 8,  # Reduced from 12 (Jan 2026) - quality over quantity
+        'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
         'min_vocab': 35,
         'min_engagement': 5,
@@ -484,8 +484,8 @@ LEVEL_CONFIG = {
     },
     'B1': {
         'target_words': 1500,
-        'min_activities': 12,
-        'min_items_per_activity': 14,
+        'min_activities': 8,  # Reduced from 12 (Jan 2026) - quality over quantity
+        'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 5,
@@ -495,7 +495,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
     },
     'B1-skills': {
-        'target_words': 1000,
+        'target_words': 1500,
         'min_activities': 10,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -507,7 +507,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'cloze', 'mark-the-words'}
     },
     'B1-checkpoint': {
-        'target_words': 800,
+        'target_words': 1200,
         'min_activities': 10,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -518,9 +518,9 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'error-correction'}
     },
     'B1-capstone': {
-        'target_words': 1000,
-        'min_activities': 12,
-        'min_items_per_activity': 14,
+        'target_words': 1500,
+        'min_activities': 5,  # Reduced from 12 (Jan 2026) - capstone has 5-8 traditional activities + 5 tasks
+        'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
         'min_vocab': 10,
         'min_engagement': 3,
@@ -531,8 +531,8 @@ LEVEL_CONFIG = {
     },
     'B2-grammar': {
         'target_words': 1750,
-        'min_activities': 13,
-        'min_items_per_activity': 16,
+        'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
+        'min_items_per_activity': 14,  # Reduced from 16 (Jan 2026)
         'min_types_unique': 4,
         'min_vocab': 25,  # Increased for advanced grammar terminology
         'min_engagement': 6,
@@ -543,8 +543,8 @@ LEVEL_CONFIG = {
     },
     'B2-vocab': {
         'target_words': 1750,
-        'min_activities': 13,
-        'min_items_per_activity': 16,
+        'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
+        'min_items_per_activity': 14,  # Reduced from 16 (Jan 2026)
         'min_types_unique': 4,
         'min_vocab': 35,
         'min_engagement': 6,
@@ -555,8 +555,8 @@ LEVEL_CONFIG = {
     },
     'B2': {
         'target_words': 1750,
-        'min_activities': 13,
-        'min_items_per_activity': 16,
+        'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
+        'min_items_per_activity': 14,  # Reduced from 16 (Jan 2026)
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 6,
@@ -590,7 +590,7 @@ LEVEL_CONFIG = {
         'priority_types': {'cloze', 'fill-in', 'true-false', 'quiz'}
     },
     'B2-checkpoint': {
-        'target_words': 1000,
+        'target_words': 1750,
         'min_activities': 15,
         'min_items_per_activity': 14,
         'min_types_unique': 4,
@@ -604,9 +604,9 @@ LEVEL_CONFIG = {
     'B2-synthesis': {
         # Synthesis modules replace checkpoints in B2.3 History (M83, M107, M119, M125, M131)
         # Focus on cross-era analysis and historical argumentation, not recall
-        'target_words': 1200,
-        'min_activities': 13,
-        'min_items_per_activity': 12,
+        'target_words': 1750,
+        'min_activities': 10,  # Reduced from 13 (Jan 2026) - quality over quantity
+        'min_items_per_activity': 14,  # Increased from 12 (Jan 2026) for consistency
         'min_types_unique': 4,
         'min_vocab': 20,  # Review vocabulary from covered modules
         'min_engagement': 4,
@@ -616,9 +616,9 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'select', 'cloze', 'true-false'}  # Analysis-focused
     },
     'B2-capstone': {
-        'target_words': 1200,
-        'min_activities': 12,
-        'min_items_per_activity': 14,
+        'target_words': 1750,
+        'min_activities': 10,  # Reduced from 12 (Jan 2026) - quality over quantity
+        'min_items_per_activity': 14,  # Kept at 14 (Jan 2026)
         'min_types_unique': 4,
         'min_vocab': 10,
         'min_engagement': 4,
@@ -628,7 +628,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'cloze', 'error-correction'}
     },
     'C1': {
-        'target_words': 1750,
+        'target_words': 2000,
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -640,7 +640,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
     },
     'C1-academic': {
-        'target_words': 1750,
+        'target_words': 2000,
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -652,7 +652,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'cloze', 'error-correction'}
     },
     'C1-professional': {
-        'target_words': 1600,
+        'target_words': 2000,
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -664,7 +664,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'cloze', 'translate'}
     },
     'C1-stylistics': {
-        'target_words': 1600,
+        'target_words': 2000,
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -676,7 +676,7 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'error-correction', 'cloze'}
     },
     'C1-folk': {
-        'target_words': 1500,
+        'target_words': 2000,
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -712,7 +712,7 @@ LEVEL_CONFIG = {
         'priority_types': {'cloze', 'fill-in', 'quiz'}
     },
     'C1-checkpoint': {
-        'target_words': 1200,
+        'target_words': 1750,
         'min_activities': 14,
         'min_items_per_activity': 14,
         'min_types_unique': 4,
@@ -724,7 +724,7 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'error-correction', 'cloze'}
     },
     'C1-capstone': {
-        'target_words': 1500,
+        'target_words': 1750,
         'min_activities': 12,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -737,8 +737,8 @@ LEVEL_CONFIG = {
     },
     'C2': {
         'target_words': 2000,
-        'min_activities': 14,
-        'min_items_per_activity': 14,
+        'min_activities': 16,  # Increased from 14 (Jan 2026) - C2 mastery level
+        'min_items_per_activity': 18,  # Increased from 14 (Jan 2026) - higher than C1
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 6,
@@ -748,9 +748,9 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'cloze', 'error-correction'}
     },
     'C2-stylistic': {
-        'target_words': 1800,
-        'min_activities': 14,
-        'min_items_per_activity': 14,
+        'target_words': 2000,
+        'min_activities': 16,  # Increased from 14 (Jan 2026) - C2 mastery level
+        'min_items_per_activity': 18,  # Increased from 14 (Jan 2026) - higher than C1
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 6,
@@ -760,9 +760,9 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'cloze', 'error-correction'}
     },
     'C2-literary': {
-        'target_words': 1600,
-        'min_activities': 12,
-        'min_items_per_activity': 12,
+        'target_words': 2000,
+        'min_activities': 16,  # Increased from 12 (Jan 2026) - C2 mastery level
+        'min_items_per_activity': 18,  # Increased from 12 (Jan 2026) - higher than C1
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 5,
@@ -772,9 +772,9 @@ LEVEL_CONFIG = {
         'priority_types': {'cloze', 'fill-in', 'quiz'}
     },
     'C2-professional': {
-        'target_words': 1600,
-        'min_activities': 12,
-        'min_items_per_activity': 12,
+        'target_words': 2000,
+        'min_activities': 16,  # Increased from 12 (Jan 2026) - C2 mastery level
+        'min_items_per_activity': 18,  # Increased from 12 (Jan 2026) - higher than C1
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 5,
@@ -784,9 +784,9 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'cloze', 'translate'}
     },
     'C2-checkpoint': {
-        'target_words': 1400,
-        'min_activities': 14,
-        'min_items_per_activity': 14,
+        'target_words': 2000,
+        'min_activities': 16,  # Increased from 14 (Jan 2026) - C2 mastery level
+        'min_items_per_activity': 18,  # Increased from 14 (Jan 2026) - higher than C1
         'min_types_unique': 4,
         'min_vocab': 15,
         'min_engagement': 4,
@@ -795,9 +795,9 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'error-correction', 'cloze'}
     },
     'C2-capstone': {
-        'target_words': 1400,
-        'min_activities': 10,
-        'min_items_per_activity': 12,
+        'target_words': 2000,
+        'min_activities': 16,  # Increased from 10 (Jan 2026) - C2 mastery level
+        'min_items_per_activity': 18,  # Increased from 12 (Jan 2026) - higher than C1
         'min_types_unique': 4,
         'min_vocab': 15,
         'min_engagement': 4,

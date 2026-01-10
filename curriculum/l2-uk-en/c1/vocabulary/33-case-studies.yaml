@@ -1,0 +1,154 @@
+module: 33-case-studies
+level: C1
+version: '1.0'
+items:
+  - lemma: криза
+    ipa: "/ˈkrɪzɑ/"
+    translation: "crisis"
+    pos: noun
+    gender: f
+  - lemma: рішення
+    ipa: "/ˈrʲiʃenʲːɑ/"
+    translation: "solution / decision"
+    pos: noun
+    gender: n
+  - lemma: наслідок
+    ipa: "/ˈnɑsʲlʲidok/"
+    translation: "consequence"
+    pos: noun
+    gender: m
+  - lemma: вплив
+    ipa: "/ˈwplɪu̯/"
+    translation: "impact / influence"
+    pos: noun
+    gender: m
+  - lemma: стратегія
+    ipa: "/strɑˈtɛɦijɑ/"
+    translation: "strategy"
+    pos: noun
+    gender: f
+  - lemma: тактика
+    ipa: "/ˈtɑktɪkɑ/"
+    translation: "tactics"
+    pos: noun
+    gender: f
+  - lemma: ризик
+    ipa: "/ˈrɪzɪk/"
+    translation: "risk"
+    pos: noun
+    gender: m
+  - lemma: можливість
+    ipa: "/mɔʒˈlɪvʲisʲtʲ/"
+    translation: "opportunity"
+    pos: noun
+    gender: f
+  - lemma: загроза
+    ipa: "/zɑˈɦrɔzɑ/"
+    translation: "threat"
+    pos: noun
+    gender: f
+  - lemma: компроміс
+    ipa: "/kɔmproˈmʲis/"
+    translation: "compromise"
+    pos: noun
+    gender: m
+  - lemma: конфлікт
+    ipa: "/kɔnˈflʲikt/"
+    translation: "conflict"
+    pos: noun
+    gender: m
+  - lemma: дилема
+    ipa: "/dɪˈlɛmɑ/"
+    translation: "dilemma"
+    pos: noun
+    gender: f
+  - lemma: репутація
+    ipa: "/rɛpʊˈtɑt͡sʲijɑ/"
+    translation: "reputation"
+    pos: noun
+    gender: f
+  - lemma: збитки
+    ipa: "/ˈzbɪtkɪ/"
+    translation: "losses"
+    pos: noun
+    gender: p
+  - lemma: прибуток
+    ipa: "/prɪˈbʊtok/"
+    translation: "profit"
+    pos: noun
+    gender: m
+  - lemma: інновація
+    ipa: "/inːoˈvɑt͡sʲijɑ/"
+    translation: "innovation"
+    pos: noun
+    gender: f
+  - lemma: конкуренція
+    ipa: "/kɔnkʊˈrɛnt͡sʲijɑ/"
+    translation: "competition"
+    pos: noun
+    gender: f
+  - lemma: монополія
+    ipa: "/mɔnoˈpɔlʲijɑ/"
+    translation: "monopoly"
+    pos: noun
+    gender: f
+  - lemma: законодавство
+    ipa: "/zɑkɔnoˈdɑu̯stvo/"
+    translation: "legislation"
+    pos: noun
+    gender: n
+  - lemma: регулювання
+    ipa: "/rɛhʊlʲʊˈvɑnʲːɑ/"
+    translation: "regulation"
+    pos: noun
+    gender: n
+  - lemma: податок
+    ipa: "/poˈdɑtok/"
+    translation: "tax"
+    pos: noun
+    gender: m
+  - lemma: корупція
+    ipa: "/kɔˈrupt͡sʲijɑ/"
+    translation: "corruption"
+    pos: noun
+    gender: f
+  - lemma: прозорість
+    ipa: "/proˈzɔrʲisʲtʲ/"
+    translation: "transparency"
+    pos: noun
+    gender: f
+  - lemma: відповідальність
+    ipa: "/vʲidpovʲiˈdɑlʲnʲisʲtʲ/"
+    translation: "responsibility"
+    pos: noun
+    gender: f
+  - lemma: підзвітність
+    ipa: "/pʲidˈzvʲitnʲisʲtʲ/"
+    translation: "accountability"
+    pos: noun
+    gender: f
+  - lemma: стейкхолдер
+    ipa: "/stɛi̯kˈxɔldɛr/"
+    translation: "stakeholder"
+    pos: noun
+    gender: m
+  - lemma: бенефіціар
+    ipa: "/bɛnɛfʲit͡sʲiˈɑr/"
+    translation: "beneficiary"
+    pos: noun
+    gender: m
+  - lemma: волонтерство
+    ipa: "/vɔlonˈtɛrstvo/"
+    translation: "volunteering"
+    pos: noun
+    gender: n
+  - lemma: аналіз
+    ipa: "/ɑˈnɑlʲiz/"
+    translation: "analysis"
+    pos: noun
+    gender: m
+  - lemma: прогноз
+    ipa: "/proɦˈnɔz/"
+    translation: "forecast"
+    pos: noun
+    gender: m

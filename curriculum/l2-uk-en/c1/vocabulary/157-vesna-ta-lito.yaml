@@ -1,0 +1,163 @@
+module: 157-vesna-ta-lito
+level: C1
+version: '2.0'
+items:
+  - lemma: веснянка
+    ipa: /wɛˈsʲnʲɑnkɑ/
+    translation: spring song
+    pos: noun
+    gender: f
+  - lemma: гаївка
+    ipa: /ɦɑˈjiu̯kɑ/
+    translation: Easter choral song (hayivka)
+    pos: noun
+    gender: f
+  - lemma: Великдень
+    ipa: /wɛˈlɪkdɛnʲ/
+    translation: Easter
+    pos: noun
+    gender: m
+  - lemma: писанка
+    ipa: /ˈpɪsɑnkɑ/
+    translation: pysanka (decorated Easter egg)
+    pos: noun
+    gender: f
+  - lemma: крашанка
+    ipa: /ˈkrɑʃɑnkɑ/
+    translation: dyed Easter egg
+    pos: noun
+    gender: f
+  - lemma: Весняне рівнодення
+    ipa: /wɛˈsʲnʲɑnɛ rʲiu̯nɔˈdɛnʲnʲɑ/
+    translation: Spring Equinox
+    pos: noun
+    gender: n
+  - lemma: Зелені свята
+    ipa: /zɛˈlɛnʲi ˈswʲɑtɑ/
+    translation: Green Holidays (Pentecost/Whitsun)
+    pos: noun
+    gender: pl
+  - lemma: Трійця
+    ipa: /ˈtrʲit͡sʲjɑ/
+    translation: Trinity Sunday
+    pos: noun
+    gender: f
+  - lemma: Івана Купала
+    ipa: /iˈwɑnɑ kʊˈpɑlɑ/
+    translation: Ivana Kupala (Midsummer)
+    pos: noun
+    gender: m
+  - lemma: вінок
+    ipa: /wʲiˈnɔk/
+    translation: wreath
+    pos: noun
+    gender: m
+  - lemma: багаття
+    ipa: /bɑˈɦɑtʲtʲɑ/
+    translation: bonfire
+    pos: noun
+    gender: n
+  - lemma: Купайло
+    ipa: /kʊˈpɑjlɔ/
+    translation: Kupaylo (ritual figure/deity)
+    pos: noun
+    gender: m
+  - lemma: Марена
+    ipa: /mɑˈrɛnɑ/
+    translation: Marena (ritual figure/spirit)
+    pos: noun
+    gender: f
+  - lemma: папороть
+    ipa: /ˈpɑpɔrɔtʲ/
+    translation: fern
+    pos: noun
+    gender: f
+  - lemma: обжинки
+    ipa: /ɔbˈʒɪnkɪ/
+    translation: harvest festival
+    pos: noun
+    gender: pl
+  - lemma: сніп
+    ipa: /snʲip/
+    translation: sheaf
+    pos: noun
+    gender: m
+  - lemma: вірування
+    ipa: /ˈwʲirʊwɑnʲnʲɑ/
+    translation: belief
+    pos: noun
+    gender: n
+  - lemma: магія
+    ipa: /ˈmɑɦʲijɑ/
+    translation: magic
+    pos: noun
+    gender: f
+  - lemma: пробудження
+    ipa: /prɔˈbʊdʒɛnʲnʲɑ/
+    translation: awakening
+    pos: noun
+    gender: n
+  - lemma: життєва сила
+    ipa: /ʒɪˈtʲːɛwɑ ˈsɪlɑ/
+    translation: life force, vital energy
+    pos: noun
+    gender: f
+  - lemma: очищення
+    ipa: /ɔˈt͡ʃɪʃt͡ʃɛnʲnʲɑ/
+    translation: purification, cleansing
+    pos: noun
+    gender: n
+  - lemma: ворожіння
+    ipa: /wɔrɔˈʒʲinʲnʲɑ/
+    translation: fortune-telling, divination
+    pos: noun
+    gender: n
+  - lemma: сонцестояння
+    ipa: /sɔnt͡sɛstɔˈjɑnʲnʲɑ/
+    translation: solstice
+    pos: noun
+    gender: n
+  - lemma: рослинність
+    ipa: /rɔˈslɪnʲnʲisʲtʲ/
+    translation: vegetation, flora
+    pos: noun
+    gender: f
+  - lemma: сакральний
+    ipa: /sɑˈkrɑlʲnɪj/
+    translation: sacred
+    pos: adj
+  - lemma: обряд
+    ipa: /ɔˈbrʲɑd/
+    translation: ritual, rite
+    pos: noun
+    gender: m
+  - lemma: символ
+    ipa: /ˈsɪmwɔl/
+    translation: symbol
+    pos: noun
+    gender: m
+  - lemma: традиція
+    ipa: /trɑˈdɪt͡sʲijɑ/
+    translation: tradition
+    pos: noun
+    gender: f
+  - lemma: благословення
+    ipa: /blɑɦɔslɔˈwɛnʲnʲɑ/
+    translation: blessing
+    pos: noun
+    gender: n
+  - lemma: врожай
+    ipa: /wrɔˈʒɑj/
+    translation: harvest, crop
+    pos: noun
+    gender: m
+  - lemma: духовність
+    ipa: /ˈduxɔu̯nʲisʲtʲ/
+    translation: spirituality
+    pos: noun
+    gender: f
+  - lemma: тяглість
+    ipa: /ˈtʲɑɦlʲisʲtʲ/
+    translation: continuity, lineage
+    pos: noun
+    gender: f

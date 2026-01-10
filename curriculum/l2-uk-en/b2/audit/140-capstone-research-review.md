@@ -1,87 +1,87 @@
 # Audit Report: 140-capstone-research.md
-**Phase:** B2.4 | **Level:** B2 | **Pedagogy:** integration | **Target:** 1000
+**Phase:** B2.4 | **Level:** B2 | **Pedagogy:** integration | **Target:** 1750
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Фази підготовчої роботи' Q1 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Фази підготовчої роботи' Q2 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Фази підготовчої роботи' Q3 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Фази підготовчої роботи' Q4 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Фази підготовчої роботи' Q5 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Фази підготовчої роботи' Q6 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Фази підготовчої роботи' Q7 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Фази підготовчої роботи' Q8 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Логіка планування' item 2 has 10 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Логіка планування' item 3 has 11 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Логіка планування' item 4 has 11 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Логіка планування' item 5 has 10 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Логіка планування' item 6 has 11 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Логіка планування' item 7 has 10 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Логіка планування' item 8 has 9 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Об'єкт та предмет дослідження' Q1 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Об'єкт та предмет дослідження' Q2 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Об'єкт та предмет дослідження' Q3 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Об'єкт та предмет дослідження' Q4 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Об'єкт та предмет дослідження' Q5 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Об'єкт та предмет дослідження' Q6 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Об'єкт та предмет дослідження' Q7 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Об'єкт та предмет дослідження' Q8 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-quiz-1] quiz: 'items.7.options.3' - 'correct' is a required property
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Фази підготовчої роботи' Q2 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Фази підготовчої роботи' Q6 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Фази підготовчої роботи' Q7 prompt length 8 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Фази підготовчої роботи' Q8 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Об'єкт та предмет дослідження' Q2 prompt length 8 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Об'єкт та предмет дослідження' Q3 prompt length 5 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Об'єкт та предмет дослідження' Q4 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Об'єкт та предмет дослідження' Q5 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Об'єкт та предмет дослідження' Q6 prompt length 8 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Об'єкт та предмет дослідження' Q7 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-quiz-1] quiz: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-ec-1] error-correction: 'items.7' - 'options' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-tf-1] true-false: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-tr-1] translate: 'items.7.options.2' - 'correct' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-fill-1] fill-in: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-trans-1] translate: 'items.7.options.2' - 'correct' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-unjumble-1] unjumble: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-ta-1] quiz: 'items.7.options.3' - 'correct' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-gs-1] group-sort: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-tr-2] translate: 'items.5.options.2' - 'correct' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-mtw-1] mark-the-words: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [консультація-щодо-теми-проєкту] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-ec-1] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-tr-1] translate: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-sel-1] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-cloze-1] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-trans-1] translate: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-ta-1] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-cp-1] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 140-capstone-research.yaml: [140-tr-2] translate: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-module-template'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
+  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Підсумок' per template 'b2-module-template'
+  - FIX: Add '## Підсумок' section as specified in docs/l2-uk-en/templates/b2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 29 violations (severe - consider revision)
+- 28 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ⚠️ 946/1000 (54 short)
+- **Words:** ❌ 1056/1750
 - **Activities:** ✅ 15/15
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/4
+- **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/10
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 29 violations
+- **Pedagogy:** ❌ 25 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.6% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 98.4% (checkpoint - no gate)
 - **Richness:** ✅ 98% (checkpoint)
 - **Grammar:** ⏳ Pending validation
 
@@ -93,9 +93,9 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | activity_types | 11 | 8 | 100% | 25% | 25.0% |
-| review_sections | 19 | 3 | 100% | 20% | 20.0% |
+| review_sections | 22 | 3 | 100% | 20% | 20.0% |
 | variety | 0.93 | - | 93% | 15% | 14.0% |
-| engagement | 4 | 3 | 100% | 10% | 10.0% |
+| engagement | 5 | 3 | 100% | 10% | 10.0% |
 | cultural | 1 | - | 100% | 10% | 10.0% |
 | visual | 11 | 3 | 100% | 10% | 10.0% |
 | paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
@@ -112,4 +112,4 @@
 | **Навичка 4: План-проспект та тези дослідження** | ⚪️ | 106 | Skipped |
 | **Integration Challenge** | ⚪️ | 332 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

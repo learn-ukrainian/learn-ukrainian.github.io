@@ -1,6 +1,23 @@
 # Audit Report: 95-berta-rapoport.md
 **Phase:** C1.3 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 95-berta-rapoport.yaml: [c1-95-essay] essay-response: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template'
+  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template'
+  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Спадщина' per template 'c1-biography-module-template'
+  - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 4 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 2060/2000
@@ -13,7 +30,7 @@
 - **Vocab:** ✅ 24/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 100.0% (target 98-100% (biography))
 - **Richness:** ✅ 97% (biography)
@@ -47,4 +64,4 @@
 | **Історичний контекст** | ✅ | 365 | Included in Core |
 | **Порівняльний аналіз** | ✅ | 173 | Included in Core |
 | **Підсумок** | ✅ | 120 | Included in Core |
-| **Need More Practice?** | ⚪️ | 115 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 115 | Skipped |

@@ -1,0 +1,160 @@
+module: 160-halychyna
+level: C1
+version: '2.0'
+items:
+  - lemma: Галичина
+    ipa: /ɦɑlɪˈt͡ʃɪnɑ/
+    translation: Halychyna (Galicia)
+    pos: noun
+    gender: f
+  - lemma: галичанин
+    ipa: /ɦɑlɪˈt͡ʃɑnɪn/
+    translation: Galician (person)
+    pos: noun
+    gender: m
+  - lemma: австро-угорський
+    ipa: /ˌɑu̯strɔ ʊˈɦɔrsʲkɪj/
+    translation: Austro-Hungarian
+    pos: adj
+  - lemma: греко-католицький
+    ipa: /ˌɦrɛkɔ kɑˈtɔlɪt͡sʲkɪj/
+    translation: Greek Catholic
+    pos: adj
+  - lemma: файний
+    ipa: /ˈfɑjnɪj/
+    translation: fine, nice, beautiful (Galician dialect)
+    pos: adj
+  - lemma: колега
+    ipa: /kɔˈlɛɦɑ/
+    translation: colleague, friend (often used as 'friend' in Galicia)
+    pos: noun
+    gender: m
+  - lemma: пательня
+    ipa: /pɑˈtɛlʲnʲɑ/
+    translation: frying pan
+    pos: noun
+    gender: f
+  - lemma: мешти
+    ipa: /ˈmɛʃtɪ/
+    translation: shoes (Galician dialect)
+    pos: noun
+    gender: pl
+  - lemma: коліжанка
+    ipa: /kɔlʲiˈʒɑnkɑ/
+    translation: female friend/colleague (Galician dialect)
+    pos: noun
+    gender: f
+  - lemma: філіжанка
+    ipa: /fʲilʲiˈʒɑnkɑ/
+    translation: cup (usually for coffee)
+    pos: noun
+    gender: f
+  - lemma: мармуляда
+    ipa: /mɑrmʊˈlʲɑdɑ/
+    translation: marmalade, jam
+    pos: noun
+    gender: f
+  - lemma: кептар
+    ipa: /kɛpˈtɑr/
+    translation: keptar (traditional embroidered sheepskin vest)
+    pos: noun
+    gender: m
+  - lemma: сердак
+    ipa: /sɛrˈdɑk/
+    translation: serdak (traditional woolen coat)
+    pos: noun
+    gender: m
+  - lemma: плебанія
+    ipa: /plɛˈbɑnʲijɑ/
+    translation: rectory, priest's house
+    pos: noun
+    gender: f
+  - lemma: інтелігенція
+    ipa: /intɛlʲiˈɦɛnt͡sʲijɑ/
+    translation: intelligentsia
+    pos: noun
+    gender: f
+  - lemma: ідентичність
+    ipa: /idɛnˈtɪt͡ʃnʲisʲtʲ/
+    translation: identity
+    pos: noun
+    gender: f
+  - lemma: самобутність
+    ipa: /sɑmɔˈbʊtnʲisʲtʲ/
+    translation: originality, authenticity
+    pos: noun
+    gender: f
+  - lemma: діалект
+    ipa: /dʲiɑˈlɛkt/
+    translation: dialect
+    pos: noun
+    gender: m
+  - lemma: говірка
+    ipa: /ɦɔˈwʲirkɑ/
+    translation: sub-dialect, local speech
+    pos: noun
+    gender: f
+  - lemma: полонізм
+    ipa: /pɔlɔˈnʲizm/
+    translation: polonism (loanword from Polish)
+    pos: noun
+    gender: m
+  - lemma: германізм
+    ipa: /ɦɛrmɑˈnʲizm/
+    translation: germanism (loanword from German)
+    pos: noun
+    gender: m
+  - lemma: сецесія
+    ipa: /sɛˈt͡sɛsʲijɑ/
+    translation: Secession (Art Nouveau style)
+    pos: noun
+    gender: f
+  - lemma: ґречність
+    ipa: /ˈɦrɛt͡ʃnʲisʲtʲ/
+    translation: politeness, courtesy
+    pos: noun
+    gender: f
+  - lemma: кнайпа
+    ipa: /knɑjˈpɑ/
+    translation: pub, small restaurant (Galician dialect)
+    pos: noun
+    gender: f
+  - lemma: зупа
+    ipa: /ˈzʊpɑ/
+    translation: soup (Galician dialect)
+    pos: noun
+    gender: f
+  - lemma: цьоця
+    ipa: /ˈt͡sʲɔt͡sʲɑ/
+    translation: auntie (informal/dialect)
+    pos: noun
+    gender: f
+  - lemma: вуйко
+    ipa: /ˈwʊjkɔ/
+    translation: uncle (informal/dialect)
+    pos: noun
+    gender: m
+  - lemma: батяр
+    ipa: /bɑˈtʲɑr/
+    translation: batyar (Lvivan subculture figure/rogue)
+    pos: noun
+    gender: m
+  - lemma: копанка
+    ipa: /kɔˈpɑnkɑ/
+    translation: football (historical/dialectal)
+    pos: noun
+    gender: f
+  - lemma: архітектура
+    ipa: /ɑrxʲitɛkˈturɑ/
+    translation: architecture
+    pos: noun
+    gender: f
+  - lemma: сакральний
+    ipa: /sɑˈkrɑlʲnɪj/
+    translation: sacred
+    pos: adj
+  - lemma: традиція
+    ipa: /trɑˈdɪt͡sʲijɑ/
+    translation: tradition
+    pos: noun
+    gender: f

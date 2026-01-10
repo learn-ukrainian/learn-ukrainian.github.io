@@ -1,8 +1,9 @@
 module: b2-01
 title: 'Пасивний стан: повна система'
-subtitle: Чотири форми пасивного стану в українській мові
+subtitle: Passive Voice System
 version: '1.0'
-phase: B2.1a [Grammar & Register]
+phase: B2.1a Grammar & Register
+focus: grammar
 pedagogy: TTT
 duration: 90
 transliteration: none

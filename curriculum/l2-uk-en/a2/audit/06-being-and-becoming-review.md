@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): виявитися, водій, працювати, секретар, художник...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): менеджер, художник, секретар, здаватися, водій...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

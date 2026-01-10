@@ -1,124 +1,59 @@
 # Audit Report: 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.md
-**Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
 **Overall Status:** ❌ FAIL
 
-## LINT ERRORS
-- ❌ Line 23: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 25: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 29: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 31: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 35: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 39: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 41: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 43: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 71: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 75: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 79: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 81: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 85: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 97: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 103: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 125: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q1 prompt length 14 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q2 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q3 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q4 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q5 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q7 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q8 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY]** match-up '' has 8 pairs (target: 12-16)
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірка розуміння' Q4 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY]** match-up 'Встановіть відповідності' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 1 has 8 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 2 has 10 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 3 has 9 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 4 has 9 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 5 has 10 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble '' item 6 has 10 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q1 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q2 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q3 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q4 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q5 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q6 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q7 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz '' Q8 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-0] quiz: 'title' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-1] fill-in: 'title' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-2] error-correction: 'title' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-3] match-up: 'title' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-4] select: 'title' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-5] mark-the-words: 'title' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-6] group-sort: 'title' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-7] unjumble: 'title' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-8] cloze: 'title' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-9] true-false: 'title' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-10] translate: 'title' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-11] quiz: 'title' is a required property
-  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-12] fill-in: 'title' is a required property
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірка розуміння' Q1 prompt length 6 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірка розуміння' Q2 prompt length 6 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірка розуміння' Q4 prompt length 6 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірка розуміння' Q6 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Перевірка розуміння' Q8 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-4] select: 'items.0.options' - [{'text': 'Було знищено або репресовано близько 80% творчої еліти', 'correct': True}, {'text': 'Культура почала розвиватися швидше завдяки державній підтримці', 'correct': False}, {'text': 'Відбувся розрив тяглості культурного розвитку поколінь', 'correct': True}, {'text': 'Митці опинилися под жорстким тиском цензури та соцреалізму', 'correct': True}, {'text': 'Російська мова стала єдиною дозволеною мовою в театрах', 'correct': False}, {'text': 'Багато творів було назавжди втрачено або заборонено', 'correct': True}, {'text': 'Культура була штучно загнана у рамки етнографізму', 'correct': True}] is too long
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
-## Recommendation
-**📝 UPDATE** (severity 70/100)
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Контекст: Від сподівань до розстрільних ям, Контекст: Велика чистка та Наказ № 00447, Вступ
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template'
+  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
 
-- Revision recommended (severity 70/100)
-- 38 violations (severe - consider revision)
-- 16 format errors (many)
+## Recommendation
+**📝 UPDATE** (severity 50/100)
+
+- Revision recommended (severity 50/100)
+- 14 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 1892/1400
+- **Words:** ✅ 2002/2000
 - **Activities:** ✅ 13/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 26/20
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 16 Format Errors
-- **Pedagogy:** ❌ 38 violations
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ❌ 10 violations
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
-- **Immersion:** 🇺🇦 100.0% (target 98-100% (history))
+- **Immersion:** 🇺🇦 99.4% (target 98-100% (history))
 - **Richness:** ✅ 95% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -130,7 +65,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 6 | 3 | 100% | 24% | 23.8% |
-| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 14 | 2 | 100% | 14% | 14.3% |
 | cultural | 2 | 4 | 50% | 10% | 4.8% |
@@ -149,4 +84,4 @@
 | **Первинні джерела** | ⚪️ | 108 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 151 | Skipped |
 | **Підсумок** | ✅ | 212 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

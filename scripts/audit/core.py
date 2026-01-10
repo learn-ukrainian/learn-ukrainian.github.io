@@ -63,6 +63,7 @@ from .checks.activity_validation import (
 from .checks.yaml_schema_validation import (
     check_activity_yaml_schema,
 )
+from .checks.yaml_lint import lint_yaml_file
 from .checks.state_standard_compliance import (
     check_state_standard_compliance,
 )
@@ -825,6 +826,20 @@ def audit_module(file_path: str) -> bool:
 
     # Check YAML schema compliance (Issue #397: validate all activity types)
     yaml_schema_violations = []
+    
+    # Pre-parse Linting (Issue #403)
+    if yaml_file.exists():
+        lint_errors = lint_yaml_file(str(yaml_file))
+        if lint_errors:
+            print(f"  ❌ YAML syntax violations: {len(lint_errors)}")
+            for v in lint_errors:
+                print(f"     ❌ [LINT] line {v['line']}: {v['message']}")
+                print(f"        Fix: {v['fix']}")
+            
+            # Critical lint errors stop audit to avoid parser explosions
+            if any(v['severity'] == 'critical' for v in lint_errors):
+                sys.exit(1)
+
     if yaml_file.exists():
         yaml_schema_violations = check_activity_yaml_schema(file_path, level_code, module_num)
         if yaml_schema_violations:

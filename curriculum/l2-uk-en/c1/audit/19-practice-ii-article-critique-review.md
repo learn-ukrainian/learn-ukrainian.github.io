@@ -1,9 +1,9 @@
 # Audit Report: 19-practice-ii-article-critique.md
-**Phase:** C1.1 | **Level:** C1 | **Pedagogy:** academic | **Target:** 1750
+**Phase:** C1.1 | **Level:** C1 | **Pedagogy:** academic | **Target:** 2000
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 2015/1750
+- **Words:** ✅ 2015/2000
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -52,4 +52,4 @@
 | **Діалог: Обговорення статті** | ✅ | 200 | Included in Core |
 | **Самостійна робота: Оцінка аргументу** | ⚪️ | 170 | Skipped |
 | **Підсумок** | ✅ | 39 | Included in Core |
-| **Need More Practice?** | ⚪️ | 36 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 36 | Skipped |

@@ -1,20 +1,45 @@
 # Audit Report: 08-aspect-past-result-process.md
 **Phase:** B1.1 | **Level:** B1 | **Pedagogy:** TTT | **Target:** 1500
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 08-aspect-past-result-process.yaml: [результат-чи-процес?] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 08-aspect-past-result-process.yaml: [маркери-результату-та-процесу] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 08-aspect-past-result-process.yaml: [вибір-виду--результат-чи-процес] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 08-aspect-past-result-process.yaml: [вибір-речення-за-контекстом] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 08-aspect-past-result-process.yaml: [правда-чи-неправда-про-вид] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 08-aspect-past-result-process.yaml: [результат-чи-процес?] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 08-aspect-past-result-process.yaml: [речення-про-результат-і-процес] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 08-aspect-past-result-process.yaml: [виправлення-помилок-виду] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 08-aspect-past-result-process.yaml: [вид-у-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 08-aspect-past-result-process.yaml: [маркери-результату] mark-the-words: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 08-aspect-past-result-process.yaml: [множинний-вибір--результат-і-процес] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 08-aspect-past-result-process.yaml: [переклад--результат-чи-процес] translate: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[STATE_STANDARD_LOW_IMMERSION]** Module 8 has 89.9% immersion (target: 98.0%+)
   - FIX: Add more Ukrainian content to reach 98%+ immersion for full immersion modules
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 50/100)
 
-- 1 violations (minor)
+- Revision recommended (severity 50/100)
+- 13 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 2234/1500
-- **Activities:** ✅ 12/12
-- **Density:** ✅ All > 14
+- **Activities:** ✅ 12/8
+- **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 13/5
@@ -22,7 +47,7 @@
 - **Vocab:** ✅ 34/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 12 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 89.9% (target 85-100% (B1.1 Aspect))
 - **Richness:** ✅ 98% (grammar)

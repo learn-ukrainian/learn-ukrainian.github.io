@@ -2,15 +2,6 @@
 **Phase:** B2.1c | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Overall Status:** ❌ FAIL
 
-## LINT ERRORS
-- ❌ Line 142: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 145: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 194: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 215: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 259: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 261: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 271: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-
 ## PEDAGOGICAL VIOLATIONS
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки науково-технічного стилю' Q1 prompt length 7 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
@@ -100,32 +91,59 @@
   - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY_WORD_COUNT]** quiz 'Комплексна перевірка знань' Q16 prompt length 7 (target: 10-25)
   - FIX: Adjust prompt length to 10-25 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-register-technical-scientific.yaml: [ознаки-науково-технічного-стилю] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-register-technical-scientific.yaml: [терміни-та-визначення] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-register-technical-scientific.yaml: [пасивні-конструкції-в-технічних-текстах] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-register-technical-scientific.yaml: [правила-технічного-стилю] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-register-technical-scientific.yaml: [класифікація-лексики-за-стилем] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-register-technical-scientific.yaml: [складіть-технічні-інструкції] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-register-technical-scientific.yaml: [виправте-помилки-в-технічних-текстах] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-register-technical-scientific.yaml: [заповніть-технічну-інструкцію] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-register-technical-scientific.yaml: [знайдіть-пасивні-конструкції-в-технічному-тексті] mark-the-words: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-register-technical-scientific.yaml: [оберіть-правильні-технічні-формулювання] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-register-technical-scientific.yaml: [оберіть-правильний-переклад-технічних-термінів] translate: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-register-technical-scientific.yaml: [трансформуйте-в-технічний-стиль] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-register-technical-scientific.yaml: [комплексна-перевірка-знань] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: grammar) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (19 words): програма, пристрій, прилад, ремонт, помилка...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-module-template'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 70/100)
+**📝 UPDATE** (severity 50/100)
 
-- Revision recommended (severity 70/100)
-- 46 violations (severe - consider revision)
-- 7 format errors (many)
+- Revision recommended (severity 50/100)
+- 59 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ⚠️ 1748/1750 (2 short)
-- **Activities:** ✅ 13/13
-- **Density:** ✅ All > 16
+- **Words:** ✅ 1858/1750
+- **Activities:** ✅ 13/10
+- **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/6
+- **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 167/25
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 7 Format Errors
-- **Pedagogy:** ❌ 45 violations
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ❌ 58 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.0% (target 98-100% (grammar))
+- **Immersion:** 🇺🇦 98.4% (target 98-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -136,17 +154,17 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 92 | 24 | 100% | 20% | 20.0% |
-| engagement | 6 | 5 | 100% | 15% | 15.0% |
+| examples | 93 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
 | dialogues | 19 | 4 | 100% | 15% | 15.0% |
 | variety | 0.97 | - | 97% | 10% | 9.7% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 6 | 3 | 100% | 10% | 10.0% |
 | visual | 6 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.93 | - | 93% | 5% | 4.7% |
+| paragraph_var | 0.91 | - | 91% | 5% | 4.6% |
 | questions | 29 | 5 | 100% | 5% | 5.0% |
 | proverbs | 2 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.4%** |
+| **TOTAL** | | | | | **99.2%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -159,4 +177,4 @@
 | **Підсумок** | ✅ | 0 | Included in Core |
 | **Ключові моменти** | ⚪️ | 62 | Skipped |
 | **Самооцінка** | ⚪️ | 68 | Skipped |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

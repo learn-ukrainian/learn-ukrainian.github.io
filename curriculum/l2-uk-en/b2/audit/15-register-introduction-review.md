@@ -2,142 +2,132 @@
 **Phase:** B2 | **Level:** B2 | **Pedagogy:** TTT | **Target:** 1750
 **Overall Status:** ❌ FAIL
 
-## LINT ERRORS
-- ❌ Line 14: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 390: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 393: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 396: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 399: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 402: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 409: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 417: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 423: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 427: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 468: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q1 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q2 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q3 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q4 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q5 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q6 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q7 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q8 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q9 prompt length 13 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q10 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q11 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q12 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q13 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q14 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q15 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q16 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 1 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 2 has 3 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 3 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 4 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 5 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 6 has 3 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 7 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 8 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 9 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 10 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 11 has 3 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 12 has 3 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 13 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 14 has 5 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 15 has 4 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 16 has 3 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q1 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q2 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q3 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q4 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q5 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q6 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q7 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q8 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q9 prompt length 13 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q10 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q11 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q12 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q13 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q14 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q15 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q16 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q1 prompt length 8 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q2 prompt length 8 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q3 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q4 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q5 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q6 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q7 prompt length 8 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q10 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q11 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q12 prompt length 5 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q13 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q14 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q15 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення функціонального стилю' Q16 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 1 has 4 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 2 has 3 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 3 has 4 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 4 has 5 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 5 has 5 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 6 has 3 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 7 has 4 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 8 has 4 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 9 has 5 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 10 has 5 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 11 has 3 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 12 has 3 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 13 has 4 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 14 has 5 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 15 has 4 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Речення різних стилів' item 16 has 3 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q2 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q6 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q11 prompt length 8 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q13 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q15 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Аналіз текстів за стилями' Q16 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [визначення-функціонального-стилю] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [стилі-та-їх-характеристики] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [визначення-стилю-за-контекстом] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [характеристики-стилів] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [класифікація-мовних-засобів-за-стилями] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [речення-різних-стилів] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [стильові-помилки] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [характеристики-функціональних-стилів] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [знайдіть-маркери-офіційно-ділового-стилю] mark-the-words: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [оберіть-усі-характеристики] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [трансформація-стилю] translate: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [аналіз-текстів-за-стилями] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-register-introduction.yaml: [стильові-маркери-в-контексті] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: grammar) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): книжний, письмовий, неформальний, розмовний, точність...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-module-template'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 70/100)
+**📝 UPDATE** (severity 50/100)
 
-- Revision recommended (severity 70/100)
-- 50 violations (severe - consider revision)
-- 11 format errors (many)
+- Revision recommended (severity 50/100)
+- 51 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 2291/1750
-- **Activities:** ✅ 13/13
-- **Density:** ✅ All > 16
+- **Words:** ✅ 2401/1750
+- **Activities:** ✅ 13/10
+- **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 10/6
+- **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 203/25
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 11 Format Errors
-- **Pedagogy:** ❌ 49 violations
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ❌ 50 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.9% (target 98-100% (grammar))
+- **Immersion:** 🇺🇦 99.3% (target 98-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -148,14 +138,14 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 76 | 24 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
+| examples | 77 | 24 | 100% | 20% | 20.0% |
+| engagement | 12 | 5 | 100% | 15% | 15.0% |
 | dialogues | 25 | 4 | 100% | 15% | 15.0% |
 | variety | 0.97 | - | 97% | 10% | 9.7% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
 | visual | 14 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| paragraph_var | 0.99 | - | 99% | 5% | 5.0% |
 | questions | 36 | 5 | 100% | 5% | 5.0% |
 | proverbs | 3 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.7%** |
@@ -174,4 +164,4 @@
 | **Що ми вивчили** | ⚪️ | 70 | Skipped |
 | **Самоперевірка** | ⚪️ | 58 | Skipped |
 | **Наступні кроки** | ⚪️ | 28 | Skipped |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

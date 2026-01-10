@@ -7119,3 +7119,13 @@ resources:
       url: https://zbruch.eu/ruska-triytsia
       relevance: high
       source: статті про засновників українського руху
+  151-honcharstvo-ta-rizbyarstvo:
+    websites:
+      - title: 'Національний музей-заповідник українського гончарства в Опішному'
+        url: 'http://www.opishne-museum.gov.ua/'
+        relevance: high
+        source: Official museum website
+      - title: 'UNESCO: Tradition of Kosiv painted ceramics'
+        url: 'https://ich.unesco.org/en/RL/tradition-of-kosiv-painted-ceramics-01456'
+        relevance: high
+        source: UNESCO Intangible Heritage

@@ -3,37 +3,51 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[MALFORMED_ERROR_CORRECTION]** Error-correction activity 'Виправлення помилок у виборі виду' uses placeholder syntax instead of real errors
-  - FIX: Convert to proper error-correction format with real error words in sentences, or change to fill-in activity. Found 1/8 items with placeholders/missing errors.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 12-aspect-pairs-essential-40.yaml: [позначте-доконані-дієслова] mark-the-words: 'correct_words' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 12-aspect-pairs-essential-40.yaml: [розпізнавання-виду] quiz: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-
-## TEMPLATE COMPLIANCE
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест' found: Контекстуальні підказки для вибору виду, Тест
-  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 12-aspect-pairs-essential-40.yaml: [видові-пари] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 12-aspect-pairs-essential-40.yaml: [вибір-виду-в-реченнях] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 12-aspect-pairs-essential-40.yaml: [твердження-про-видові-пари] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 12-aspect-pairs-essential-40.yaml: [класифікація-дієслів-за-типом-утворення] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 12-aspect-pairs-essential-40.yaml: [речення-про-видові-пари] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 12-aspect-pairs-essential-40.yaml: [виправлення-помилок-у-виборі-виду] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 12-aspect-pairs-essential-40.yaml: [текст-про-навчання-української-мови] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 12-aspect-pairs-essential-40.yaml: [позначте-доконані-дієслова] mark-the-words: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 12-aspect-pairs-essential-40.yaml: [множинний-вибір-контекстів] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 12-aspect-pairs-essential-40.yaml: [переклад-з-англійської] translate: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 12 has 97.2% immersion (target: 98.0%+)
+  - FIX: Add more Ukrainian content to reach 98%+ immersion for full immersion modules
 
 ## Recommendation
-**📝 UPDATE** (severity 30/100)
+**📝 UPDATE** (severity 50/100)
 
-- 4 violations (moderate)
-- Activity count below minimum
+- Revision recommended (severity 50/100)
+- 12 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ⚠️ 1492/1500 (8 short)
-- **Activities:** ❌ 11/12
-- **Density:** ✅ All > 14
+- **Words:** ✅ 1602/1500
+- **Activities:** ✅ 11/8
+- **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/5
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 18 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 11 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.0% (target 85-100% (B1.2 Motion))
+- **Immersion:** 🇺🇦 97.2% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -44,8 +58,8 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 29 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| examples | 30 | 24 | 100% | 20% | 20.0% |
+| engagement | 10 | 5 | 100% | 15% | 15.0% |
 | dialogues | 14 | 4 | 100% | 15% | 15.0% |
 | variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
@@ -65,4 +79,4 @@
 | **Практика** | ⚪️ | 345 | Skipped |
 | **Діалоги** | ✅ | 288 | Included in Core |
 | **Підсумок** | ✅ | 177 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

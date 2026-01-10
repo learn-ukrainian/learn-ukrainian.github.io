@@ -8,7 +8,7 @@
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/3
+- **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 102/1
 - **Structure:** ✅ Valid Structure

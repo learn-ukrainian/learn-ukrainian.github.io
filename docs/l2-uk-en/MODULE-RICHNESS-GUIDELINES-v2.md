@@ -307,29 +307,33 @@ See `docs/dev/CONTENT_MODULE_ENHANCEMENT.md` for complete strategy.
 | ----- | ---------- | -------------- | ----- | ------------------------------------------------------ |
 | A1    | 8+         | 12+            | 4+    | Recognition → Production (no stages needed)            |
 | A2    | 10+        | 12+            | 5+    | Recognition → Discrimination → Controlled → Production |
-| B1    | 12+        | 14+            | 5+    | Full stage sequence                                    |
-| B2    | 14+        | 16+            | 5+    | Full stage sequence, heavier on production             |
-| C1    | 16+        | 18+            | 5+    | Production-heavy, subtle discrimination                |
+| B1    | 8-10       | 12+            | 5+    | Full stage sequence                                    |
+| B2    | 10-12      | 14+            | 5+    | Full stage sequence, heavier on production             |
+| C1    | 10-12      | 12+            | 5+    | Production-heavy, subtle discrimination                |
 | C2    | 16+        | 18+            | 5+    | Production-heavy, native-level complexity              |
+
+**Note:** B1/B2/C1 reduced (Jan 2026) to 8-10/10-12/10-12 activities (was 12/14/16). Focus on quality over quantity. C2 maintains 16+ for mastery level.
 
 ### Mandatory Activity Mix by Level
 
 | Activity Type        | A1               | A2  | B1  | B2  | C1  | C2  |
 | -------------------- | ---------------- | --- | --- | --- | --- | --- |
-| **fill-in**          | 2+               | 2+  | 2+  | 3+  | 2+  | 2+  |
+| **fill-in**          | 2+               | 2+  | 1-2 | 2+  | 2+  | 2+  |
 | **match-up**         | 2+               | 1+  | 1+  | 1+  | 1+  | 1+  |
 | **quiz**             | 1+               | 1+  | 1+  | 1+  | 1+  | 1+  |
-| **true-false**       | 1+               | 1+  | 1+  | 1+  | —   | —   |
-| **group-sort**       | 1+               | 1+  | 1+  | 1+  | 1+  | 1+  |
+| **true-false**       | 1+               | 1+  | opt | opt | —   | —   |
+| **group-sort**       | 1+               | 1+  | opt | opt | 1+  | 1+  |
 | **anagram**          | 2+ (M01-10 only) | ❌  | ❌  | ❌  | ❌  | ❌  |
-| **unjumble**         | 2+ (M11+ only)   | 2+  | 2+  | 2+  | 2+  | 2+  |
-| **error-correction** | ❌               | 1+  | 2+  | 2+  | 3+  | 3+  |
+| **unjumble**         | 2+ (M11+ only)   | 2+  | 1-2 | 1-2 | 2+  | 2+  |
+| **error-correction** | ❌               | 1+  | 1-2 | 1-2 | 3+  | 3+  |
 | **cloze**            | ❌               | 1+  | 1+  | 1+  | 3+  | 3+  |
-| **mark-the-words**   | ❌               | 1+  | 1+  | 1+  | —   | —   |
-| **select**           | ❌               | opt | 1+  | 1+  | 1+  | 1+  |
+| **mark-the-words**   | ❌               | 1+  | opt | opt | —   | —   |
+| **select**           | ❌               | opt | opt | opt | 1+  | 1+  |
 | **translate**        | ❌               | opt | 1+  | 1+  | 2+  | 2+  |
 
 **Legend:** `2+` = minimum count, `opt` = optional, `❌` = not allowed, `—` = rarely used
+
+**B1/B2 Reduction Note:** Activity requirements reduced from 12+/14+ to 8-10/10-12 (Jan 2026). Focus on quality over quantity, matching C1 content module strategy. Core mandatory activities: fill-in, match-up, quiz, unjumble, error-correction, cloze, translate (7-8 types).
 
 **Note:** `observe-first` is a **pedagogical content pattern** (using `> [!observe]` callout inline), not an activity type. Use it before grammar explanations for inductive pattern discovery (recommended B1-B2).
 

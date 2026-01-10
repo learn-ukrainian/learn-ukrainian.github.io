@@ -2,6 +2,21 @@
 **Phase:** C1.3 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
 **Overall Status:** ❌ FAIL
 
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template'
+  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template'
+  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Спадщина' per template 'c1-biography-module-template'
+  - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  - FIX: Add '## Need More Practice?' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 4 violations (moderate)
+
 ## Gates
 - **Words:** ✅ 2443/2000
 - **Activities:** ✅ 12/12
@@ -52,4 +67,4 @@
 | **Зразок відповіді** | ⚪️ | 356 | Skipped |
 | **Підсумок** | ✅ | 53 | Included in Core |
 | **Практикум рефлексії** | ⚪️ | 173 | Skipped |
-| **Need More Practice?** | ⚪️ | 133 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 133 | Skipped |

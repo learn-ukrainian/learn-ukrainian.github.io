@@ -4,8 +4,8 @@
 
 ## Gates
 - **Words:** ✅ 1927/1500
-- **Activities:** ✅ 12/12
-- **Density:** ✅ All > 14
+- **Activities:** ✅ 12/8
+- **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5

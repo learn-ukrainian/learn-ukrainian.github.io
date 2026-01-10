@@ -1,0 +1,54 @@
+module: 35-speaking-practice
+level: C1
+version: '1.0'
+items:
+  - lemma: дискусія
+    ipa: /dɪsˈkusʲijɐ/
+    translation: discussion/debate
+    pos: noun
+    gender: f
+  - lemma: аргумент
+    ipa: /ɐrɦʊˈmɛnt/
+    translation: argument
+    pos: noun
+    gender: m
+  - lemma: контраргумент
+    ipa: /kɔntrɐrɦʊˈmɛnt/
+    translation: counterargument
+    pos: noun
+    gender: m
+  - lemma: переконувати
+    ipa: /pereˈkɔnʊvɐtɪ/
+    translation: to convince/persuade
+    pos: verb
+    gender: ""
+  - lemma: висловлюватися
+    ipa: /vɪˈslɔvlʲʊvɐtɪsʲɐ/
+    translation: to express oneself
+    pos: verb
+    gender: ""
+  - lemma: промова
+    ipa: /prɔˈmɔvɐ/
+    translation: speech
+    pos: noun
+    gender: f
+  - lemma: оратор
+    ipa: /ɔˈrɑtɔr/
+    translation: orator/speaker
+    pos: noun
+    gender: m
+  - lemma: інтонація
+    ipa: /intɔˈnɑt͡sʲijɐ/
+    translation: intonation
+    pos: noun
+    gender: f
+  - lemma: пауза
+    ipa: /pɑʊzɐ/
+    translation: pause
+    pos: noun
+    gender: f
+  - lemma: імпровізація
+    ipa: /imprɔviˈzɑt͡sʲijɐ/
+    translation: improvisation
+    pos: noun
+    gender: f

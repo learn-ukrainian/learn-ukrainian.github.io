@@ -1,0 +1,160 @@
+module: 156-zymovi-obriady
+level: C1
+version: '2.0'
+items:
+  - lemma: Святвечір
+    ipa: /swʲɑtˈwɛt͡ʃʲir/
+    translation: Christmas Eve
+    pos: noun
+    gender: m
+  - lemma: кутя
+    ipa: /kʊˈtʲɑ/
+    translation: kutia (ritual grain dish)
+    pos: noun
+    gender: f
+  - lemma: дідух
+    ipa: /dʲiˈdux/
+    translation: didukh (ritual wheat sheaf)
+    pos: noun
+    gender: m
+  - lemma: коляда
+    ipa: /kɔlʲɑˈdɑ/
+    translation: kolyada (caroling tradition/Christmas time)
+    pos: noun
+    gender: f
+  - lemma: колядка
+    ipa: /kɔˈlʲɑdkɑ/
+    translation: Christmas carol
+    pos: noun
+    gender: f
+  - lemma: щедрівка
+    ipa: /ʃt͡ʃɛˈdrʲiu̯kɑ/
+    translation: New Year's carol
+    pos: noun
+    gender: f
+  - lemma: Маланка
+    ipa: /mɑˈlɑnkɑ/
+    translation: Malanka (New Year's Eve festival)
+    pos: noun
+    gender: f
+  - lemma: вертеп
+    ipa: /werˈtɛp/
+    translation: vertep (nativity play/puppet theater)
+    pos: noun
+    gender: m
+  - lemma: Водохреща
+    ipa: /wɔdɔˈxrɛʃt͡ʃɑ/
+    translation: Epiphany (Water Blessing)
+    pos: noun
+    gender: n
+  - lemma: ополонка
+    ipa: /ɔpɔˈlɔnkɑ/
+    translation: ice hole (for swimming)
+    pos: noun
+    gender: f
+  - lemma: посівання
+    ipa: /pɔsʲiˈwɑnʲnʲɑ/
+    translation: ritual grain scattering
+    pos: noun
+    gender: n
+  - lemma: засівати
+    ipa: /zɑsʲiˈwɑtɪ/
+    translation: to sow/scatter grain ritually
+    pos: verb
+  - lemma: звізда
+    ipa: /zwʲizˈdɑ/
+    translation: star (ritual caroling star)
+    pos: noun
+    gender: f
+  - lemma: коза
+    ipa: /ˈkɔzɑ/
+    translation: goat (ritual masquerade character)
+    pos: noun
+    gender: f
+  - lemma: обрядовість
+    ipa: /ɔbrʲɑˈdɔwʲisʲtʲ/
+    translation: ritualism, system of rituals
+    pos: noun
+    gender: f
+  - lemma: символ
+    ipa: /ˈsɪmwɔl/
+    translation: symbol
+    pos: noun
+    gender: m
+  - lemma: добробут
+    ipa: /dɔˈbrɔbʊt/
+    translation: prosperity, well-being
+    pos: noun
+    gender: m
+  - lemma: родючість
+    ipa: /rɔˈdʲut͡ʃʲisʲtʲ/
+    translation: fertility, fecundity
+    pos: noun
+    gender: f
+  - lemma: пращур
+    ipa: /prɑˈʃt͡ʃʊr/
+    translation: ancestor, forefather
+    pos: noun
+    gender: m
+  - lemma: християнство
+    ipa: /xrɪstɪˈjɑnstwɔ/
+    translation: Christianity
+    pos: noun
+    gender: n
+  - lemma: язичництво
+    ipa: /jɑˈzɪt͡ʃnɪt͡stwɔ/
+    translation: paganism
+    pos: noun
+    gender: n
+  - lemma: святкування
+    ipa: /swʲɑtkʊˈwɑnʲnʲɑ/
+    translation: celebration
+    pos: noun
+    gender: n
+  - lemma: традиція
+    ipa: /trɑˈdɪt͡sʲijɑ/
+    translation: tradition
+    pos: noun
+    gender: f
+  - lemma: страва
+    ipa: /ˈstrɑwɑ/
+    translation: dish, course (food)
+    pos: noun
+    gender: f
+  - lemma: узвар
+    ipa: /ʊˈzwɑr/
+    translation: uzvar (dried fruit compote)
+    pos: noun
+    gender: m
+  - lemma: пісний
+    ipa: /ˈpʲisnɪj/
+    translation: Lenten, meatless
+    pos: adj
+  - lemma: канон
+    ipa: /kɑˈnɔn/
+    translation: canon, established rule
+    pos: noun
+    gender: m
+  - lemma: перевдягання
+    ipa: /pɛrɛwdʲɑˈɦɑnʲnʲɑ/
+    translation: dressing up, masquerade
+    pos: noun
+    gender: n
+  - lemma: міфологічний
+    ipa: /mʲifɔlɔˈɦʲit͡ʃnɪj/
+    translation: mythological
+    pos: adj
+  - lemma: аграрний
+    ipa: /ɑˈɦrɑrnɪj/
+    translation: agrarian
+    pos: adj
+  - lemma: цикл
+    ipa: /ˈt͡sɪkl/
+    translation: cycle
+    pos: noun
+    gender: m
+  - lemma: вшанування
+    ipa: /u̯ʃɑnʊˈwɑnʲnʲɑ/
+    translation: honoring, veneration
+    pos: noun
+    gender: n

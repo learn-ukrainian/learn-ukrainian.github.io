@@ -1,0 +1,153 @@
+module: 154-kozatski-lehendy
+level: C1
+version: '2.0'
+items:
+  - lemma: характерник
+    ipa: /xɑrɑktɛrˈnɪk/
+    translation: kharakternyk (Cossack sorcerer/warrior)
+    pos: noun
+    gender: m
+  - lemma: отаман
+    ipa: /ɔtɑˈmɑn/
+    translation: otaman (Cossack leader)
+    pos: noun
+    gender: m
+  - lemma: лицарство
+    ipa: /ˈlɪt͡sɑrstwɔ/
+    translation: knighthood, chivalry
+    pos: noun
+    gender: n
+  - lemma: незламність
+    ipa: /nɛzˈlɑmnʲisʲtʲ/
+    translation: indomitability, resilience
+    pos: noun
+    gender: f
+  - lemma: звитяга
+    ipa: /zwɪˈtʲɑɦɑ/
+    translation: victory, valor, feat
+    pos: noun
+    gender: f
+  - lemma: легенда
+    ipa: /lɛˈɦɛndɑ/
+    translation: legend
+    pos: noun
+    gender: f
+  - lemma: переказ
+    ipa: /pɛˈrɛkɑz/
+    translation: oral tradition, account, retelling
+    pos: noun
+    gender: m
+  - lemma: сакральний
+    ipa: /sɑˈkrɑlʲnɪj/
+    translation: sacred
+    pos: adj
+  - lemma: козаччина
+    ipa: /kɔˈzɑt͡ʃt͡ʃɪnɑ/
+    translation: Cossack era/culture
+    pos: noun
+    gender: f
+  - lemma: воля
+    ipa: /ˈwɔlʲɑ/
+    translation: freedom, will, liberty
+    pos: noun
+    gender: f
+  - lemma: побратим
+    ipa: /pɔbrɑˈtɪm/
+    translation: brother-in-arms
+    pos: noun
+    gender: m
+  - lemma: січ
+    ipa: /sʲit͡ʃ/
+    translation: Sich (Cossack fortress)
+    pos: noun
+    gender: f
+  - lemma: булава
+    ipa: /bʊlɑˈwɑ/
+    translation: bulava (mace, symbol of power)
+    pos: noun
+    gender: f
+  - lemma: клейноди
+    ipa: /ˈklɛjnɔdɪ/
+    translation: kleynody (Cossack regalia)
+    pos: noun
+    gender: pl
+  - lemma: міфологізація
+    ipa: /mʲifɔlɔɦʲizɑˈt͡sʲijɑ/
+    translation: mythologization
+    pos: noun
+    gender: f
+  - lemma: епос
+    ipa: /ˈɛpɔs/
+    translation: epic
+    pos: noun
+    gender: m
+  - lemma: звитяжець
+    ipa: /zwɪˈtʲɑʒɛt͡sʲ/
+    translation: victor, hero
+    pos: noun
+    gender: m
+  - lemma: покровитель
+    ipa: /pɔkrɔˈwɪtɛlʲ/
+    translation: patron, protector
+    pos: noun
+    gender: m
+  - lemma: відун
+    ipa: /wʲiˈdun/
+    translation: seer, wise man
+    pos: noun
+    gender: m
+  - lemma: замовляння
+    ipa: /zɑmɔu̯ˈlʲɑnʲnʲɑ/
+    translation: incantation
+    pos: noun
+    gender: n
+  - lemma: невидимість
+    ipa: /nɛˈwɪdɪmʲisʲtʲ/
+    translation: invisibility
+    pos: noun
+    gender: f
+  - lemma: невразливість
+    ipa: /nɛurɑzˈlɪwʲisʲtʲ/
+    translation: invulnerability
+    pos: noun
+    gender: f
+  - lemma: бувальщина
+    ipa: /bʊˈwɑlʲʃt͡ʃɪnɑ/
+    translation: true story, local lore
+    pos: noun
+    gender: f
+  - lemma: етос
+    ipa: /ˈɛtɔs/
+    translation: ethos
+    pos: noun
+    gender: m
+  - lemma: лицар
+    ipa: /ˈlɪt͡sɑr/
+    translation: knight
+    pos: noun
+    gender: m
+  - lemma: козацьке бароко
+    ipa: /kɔˈzɑt͡sʲkɛ bɑˈrɔkɔ/
+    translation: Cossack Baroque
+    pos: noun
+    gender: n
+  - lemma: самопожертва
+    ipa: /sɑmɔˈpɔʒɛrtwɑ/
+    translation: self-sacrifice
+    pos: noun
+    gender: f
+  - lemma: честь
+    ipa: /t͡ʃɛstʲ/
+    translation: honor
+    pos: noun
+    gender: f
+  - lemma: гідність
+    ipa: /hʲidˈnʲisʲtʲ/
+    translation: dignity
+    pos: noun
+    gender: f
+  - lemma: безсмертя
+    ipa: /bɛzˈsmɛrtʲɑ/
+    translation: immortality
+    pos: noun
+    gender: n

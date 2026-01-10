@@ -1,0 +1,168 @@
+module: 151-honcharstvo-ta-rizbyarstvo
+level: C1
+version: '2.0'
+items:
+  - lemma: глина
+    ipa: /ˈɦlɪnɑ/
+    translation: clay
+    pos: noun
+    gender: f
+  - lemma: гончарство
+    ipa: /ɦonˈt͡ʃɑrstwɔ/
+    translation: pottery, ceramics (craft)
+    pos: noun
+    gender: n
+  - lemma: різьбярство
+    ipa: /rʲizʲˈbʲɑrstwɔ/
+    translation: woodcarving, sculpture (craft)
+    pos: noun
+    gender: n
+  - lemma: ремесло
+    ipa: /reˈmɛslɔ/
+    translation: craft, trade
+    pos: noun
+    gender: n
+  - lemma: ужитковий
+    ipa: /ʊˈʒɪtkɔwɪj/
+    translation: applied, utilitarian
+    pos: adj
+  - lemma: мотив
+    ipa: /mɔˈtɪu̯/
+    translation: motif, theme
+    pos: noun
+    gender: m
+  - lemma: кераміка
+    ipa: /keˈrɑmʲikɑ/
+    translation: ceramics, pottery (objects)
+    pos: noun
+    gender: f
+  - lemma: філігранність
+    ipa: /fʲilʲiˈɦrɑnʲnʲisʲtʲ/
+    translation: filigree, exquisite detail
+    pos: noun
+    gender: f
+  - lemma: орнамент
+    ipa: /orˈnɑment/
+    translation: ornament, pattern
+    pos: noun
+    gender: m
+  - lemma: верстат
+    ipa: /werˈstɑt/
+    translation: machine tool, lathe, potter's wheel (here)
+    pos: noun
+    gender: m
+  - lemma: гончар
+    ipa: /ɦonˈt͡ʃɑr/
+    translation: potter
+    pos: noun
+    gender: m
+  - lemma: випалювання
+    ipa: /wɪˈpɑlʲʊwɑnʲnʲɑ/
+    translation: firing (of ceramics)
+    pos: noun
+    gender: n
+  - lemma: розпис
+    ipa: /ˈrɔzpɪs/
+    translation: painting, mural, decoration
+    pos: noun
+    gender: m
+  - lemma: ангоб
+    ipa: /ɑnˈɦɔb/
+    translation: engobe (liquid clay slip)
+    pos: noun
+    gender: m
+  - lemma: полива
+    ipa: /pɔˈlɪwɑ/
+    translation: glaze
+    pos: noun
+    gender: f
+  - lemma: глечик
+    ipa: /ˈɦlɛt͡ʃɪk/
+    translation: jug, pitcher
+    pos: noun
+    gender: m
+  - lemma: таріль
+    ipa: /tɑˈrʲilʲ/
+    translation: large plate, platter
+    pos: noun
+    gender: f
+  - lemma: куманець
+    ipa: /kʊmɑˈnɛt͡sʲ/
+    translation: kumanyets (traditional ring-shaped vessel)
+    pos: noun
+    gender: m
+  - lemma: спадщина
+    ipa: /ˈspɑdt͡ʃɪnɑ/
+    translation: heritage, legacy
+    pos: noun
+    gender: f
+  - lemma: техніка
+    ipa: /ˈtɛxnʲikɑ/
+    translation: technique, technology
+    pos: noun
+    gender: f
+  - lemma: ритування
+    ipa: /rɪˈtʊwɑnʲnʲɑ/
+    translation: engraving, sgraffito
+    pos: noun
+    gender: n
+  - lemma: кахель
+    ipa: /ˈkɑxɛlʲ/
+    translation: tile (decorative)
+    pos: noun
+    gender: m
+  - lemma: стилістика
+    ipa: /stɪˈlʲistɪkɑ/
+    translation: stylistics
+    pos: noun
+    gender: f
+  - lemma: долото
+    ipa: /dɔˈlɔtɔ/
+    translation: chisel
+    pos: noun
+    gender: n
+  - lemma: інкрустація
+    ipa: /inkrʊˈstɑt͡sʲijɑ/
+    translation: incrustation, inlay
+    pos: noun
+    gender: f
+  - lemma: бартка
+    ipa: /ˈbɑrtkɑ/
+    translation: bartka (traditional Hutsul axe)
+    pos: noun
+    gender: f
+  - lemma: сволок
+    ipa: /ˈswɔlɔk/
+    translation: ceiling beam (often decorated)
+    pos: noun
+    gender: m
+  - lemma: скриня
+    ipa: /ˈskrɪnʲɑ/
+    translation: chest, trunk
+    pos: noun
+    gender: f
+  - lemma: майстерність
+    ipa: /mɑjˈstɛrnʲisʲtʲ/
+    translation: mastery, skill
+    pos: noun
+    gender: f
+  - lemma: трійця
+    ipa: /ˈtrʲit͡sʲjɑ/
+    translation: 'trinity (here: traditional three-branched candle holder)'
+    pos: noun
+    gender: f
+  - lemma: оздоблення
+    ipa: /ɔˈzdɔblenʲnʲɑ/
+    translation: decoration, adornment
+    pos: noun
+    gender: n
+  - lemma: автентичність
+    ipa: /ɑu̯tenˈtɪt͡ʃnʲisʲtʲ/
+    translation: authenticity
+    pos: noun
+    gender: f
+  - lemma: промисел
+    ipa: /ˈprɔmɪsɛl/
+    translation: craft, industry (traditional)
+    pos: noun
+    gender: m

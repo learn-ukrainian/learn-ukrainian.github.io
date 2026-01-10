@@ -3,41 +3,55 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-motion-figurative-uses.yaml: [знайдіть-ідіоми-в-тексті] mark-the-words: 'correct_words' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-motion-figurative-uses.yaml: [розуміння-тексту] quiz: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-motion-figurative-uses.yaml: [множинний-вибір-значення] select: 'items.5.options' - [{'text': 'Підійти дуже близько', 'correct': False}, {'text': 'Діяти розсудливо, плановано і мудро', 'correct': True}, {'text': 'Використати мозок як транспорт', 'correct': False}] is too short
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-motion-figurative-uses.yaml: [буквальне-чи-переносне?] quiz: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 21 has 93.1% immersion (target: 98.0%+)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-motion-figurative-uses.yaml: [ідіоми-та-їх-англійські-відповідники] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-motion-figurative-uses.yaml: [вставте-правильне-слово] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-motion-figurative-uses.yaml: [позитивне-чи-негативне-значення] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-motion-figurative-uses.yaml: [складіть-речення-з-ідіомами] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-motion-figurative-uses.yaml: [виправте-помилки-у-виразах] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-motion-figurative-uses.yaml: [лист-колезі-про-роботу] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-motion-figurative-uses.yaml: [знайдіть-ідіоми-в-тексті] mark-the-words: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-motion-figurative-uses.yaml: [множинний-вибір-значення] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 21-motion-figurative-uses.yaml: [перекладіть-українською-мовою] translate: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 21 has 92.7% immersion (target: 98.0%+)
   - FIX: Add more Ukrainian content to reach 98%+ immersion for full immersion modules
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
-  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Практика|Вправи' per template 'b1-grammar-module-template'
+  - FIX: Add '## Практика' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 40/100)
+**📝 UPDATE** (severity 50/100)
 
-- Revision recommended (severity 40/100)
-- 5 violations (moderate)
-- Activity count below minimum
-- Activity density below minimum
+- Revision recommended (severity 50/100)
+- 13 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 1993/1500
-- **Activities:** ❌ 11/12
-- **Density:** ❌ 1 < 14
+- **Words:** ✅ 2103/1500
+- **Activities:** ✅ 11/8
+- **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 11/5
+- **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 2 violations
+- **Pedagogy:** ❌ 11 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 93.1% (target 85-100% (B1.3-4 Complex))
+- **Immersion:** 🇺🇦 92.7% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -48,8 +62,8 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 36 | 24 | 100% | 20% | 20.0% |
-| engagement | 11 | 5 | 100% | 15% | 15.0% |
+| examples | 37 | 24 | 100% | 20% | 20.0% |
+| engagement | 12 | 5 | 100% | 15% | 15.0% |
 | dialogues | 7 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 7 | 3 | 100% | 10% | 10.0% |
@@ -60,12 +74,6 @@
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.8%** |
 
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| Вставте правильне слово | cloze | 8 | 14 | Add 6 more items |
-
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -74,4 +82,4 @@
 | **Пояснення** | ⚪️ | 1169 | Skipped |
 | **Читання: Метафори в нашому житті** | ✅ | 431 | Included in Core |
 | **Підсумок** | ✅ | 80 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

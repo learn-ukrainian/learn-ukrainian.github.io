@@ -3,64 +3,58 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні знання про активні дієприкметники та їхню стилістику' Q3 prompt length 11 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні знання про активні дієприкметники та їхню стилістику' Q4 prompt length 11 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні знання про активні дієприкметники та їхню стилістику' Q5 prompt length 11 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні знання про активні дієприкметники та їхню стилістику' Q7 prompt length 11 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні знання про активні дієприкметники та їхню стилістику' Q12 prompt length 10 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні знання про активні дієприкметники та їхню стилістику' Q13 prompt length 11 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова правильних речень без канцеляритів' item 3 has 9 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова правильних речень без канцеляритів' item 4 has 10 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова правильних речень без канцеляритів' item 5 has 9 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова правильних речень без канцеляритів' item 6 has 10 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова правильних речень без канцеляритів' item 7 has 9 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова правильних речень без канцеляритів' item 8 has 10 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
 - **[COMPLEXITY]** mark-the-words 'Знайдіть канцелярити та русизми в тексті' has 0 items (minimum: 6)
   - FIX: Add more items. B1 mark-the-words requires at least 6 items.
 - **[MISSING_FIELD]** mark-the-words 'Знайдіть канцелярити та русизми в тексті' is missing 'correct_words' array
   - FIX: Add 'correct_words' array with correct words
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [теоретичні-знання-про-активні-дієприкметники-та-їхню-стилістику] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [канцеляризми-та-їхні-правильні-українські-відповідники] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [перефразування-дієприкметникових-конструкцій] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [стилістичний-статус-дієприкметникових-форм] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [класифікація-дієприкметникових-форм-за-стилістичним-статусом] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [побудова-правильних-речень-без-канцеляритів] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [виправлення-канцеляритів-та-русизмів-у-реченнях] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [стилістичне-редагування-тексту] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [знайдіть-канцелярити-та-русизми-в-тексті] mark-the-words: 'correct_words' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [вибір-правильної-форми-замість-канцелярита] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 44-active-participles-phrases.yaml: [переклад-речень-без-канцеляритів] translate: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест' per template 'b1-grammar-module-template'
-  - FIX: Add '## Warm-up' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка|Тест' per template 'b1-grammar-module-template'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**🔄 REWRITE** (severity 75/100)
+**📝 UPDATE** (severity 60/100)
 
-- 17 violations (severe - consider revision)
-- Activity count below minimum
+- Revision recommended (severity 60/100)
+- 14 violations (severe - consider revision)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1514/1500
-- **Activities:** ❌ 11/12
-- **Density:** ❌ 1 < 14
+- **Words:** ✅ 1624/1500
+- **Activities:** ✅ 11/8
+- **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/5
+- **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 40/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 15 violations
+- **Pedagogy:** ❌ 13 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 100.0% (target 85-100% (B1.3-4 Complex))
+- **Immersion:** 🇺🇦 99.2% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -71,8 +65,8 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 51 | 24 | 100% | 20% | 20.0% |
-| engagement | 8 | 5 | 100% | 15% | 15.0% |
+| examples | 52 | 24 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
 | dialogues | 7 | 4 | 100% | 15% | 15.0% |
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
@@ -98,4 +92,4 @@
 | **Практика** | ⚪️ | 198 | Skipped |
 | **Приклади використання** | ⚪️ | 178 | Skipped |
 | **Підсумок** | ✅ | 57 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

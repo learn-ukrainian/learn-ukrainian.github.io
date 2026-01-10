@@ -2,8 +2,17 @@
 **Phase:** C1.3 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
 **Overall Status:** ✅ PASS
 
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'c1-biography-module-template'
+  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ✅ 2081/2000
+- **Words:** ✅ 2121/2000
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
@@ -35,7 +44,7 @@
 | legacy | 15 | 2 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 5% | 4.7% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 10 | 3 | 100% | 5% | 4.8% |
+| questions | 12 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **97.6%** |
 
 ## Section Audit
@@ -43,8 +52,11 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 50 | Included in Core |
 | **Вступ** | ⚪️ | 138 | Skipped |
-| **Біографія** | ⚪️ | 798 | Skipped |
+| **Життєпис** | ⚪️ | 346 | Skipped |
+| **Внесок** | ⚪️ | 264 | Skipped |
+| **Спадщина** | ⚪️ | 181 | Skipped |
 | **Історичний контекст** | ✅ | 422 | Included in Core |
 | **Порівняльний аналіз** | ✅ | 167 | Included in Core |
 | **Підсумок** | ✅ | 82 | Included in Core |
-| **Есе** | ⚪️ | 424 | Skipped |
+| **Есе** | ⚪️ | 425 | Skipped |
+| **Need More Practice?** | ⚪️ | 46 | Skipped |

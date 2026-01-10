@@ -1,9 +1,53 @@
 # Audit Report: 29-surzhyk.md
-**Phase:** C1.3 | **Level:** C1 | **Pedagogy:** Immersion | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** C1.3 | **Level:** C1 | **Pedagogy:** Immersion | **Target:** 2000
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Що таке суржик?' Q5 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Культурний феномен' Q5 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Лінгвістична теорія' Q2 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Лінгвістична теорія' Q3 prompt length 8 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-surzhyk.yaml: [29-quiz-1] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-surzhyk.yaml: [29-group-sort-1] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-surzhyk.yaml: [29-match-1] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-surzhyk.yaml: [29-fill-in-1] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-surzhyk.yaml: [29-group-sort-2] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-surzhyk.yaml: [29-quiz-2] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-surzhyk.yaml: [29-match-2] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-surzhyk.yaml: [29-fill-in-2] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-surzhyk.yaml: [29-unjumble-1] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-surzhyk.yaml: [29-quiz-3] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-surzhyk.yaml: [29-essay-1] essay-response: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-surzhyk.yaml: [29-mark-1] mark-the-words: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'c1-module-template'
+  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/c1-module-template.md
+
+## Recommendation
+**📝 UPDATE** (severity 50/100)
+
+- Revision recommended (severity 50/100)
+- 17 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 1897/1750
+- **Words:** ❌ 1897/2000
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -13,7 +57,7 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 16 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 98-100%)
 - **Richness:** ✅ 99% (content)

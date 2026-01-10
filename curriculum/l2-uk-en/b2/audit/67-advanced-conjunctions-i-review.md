@@ -5,79 +5,95 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[COMPLEXITY]** match-up 'Знайдіть логічний зв'язок' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q1 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q2 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q3 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q4 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q5 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q6 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q7 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q8 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q1 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q2 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q3 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q4 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q5 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q6 prompt length 5 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q7 prompt length 5 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка речення' Q8 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY]** group-sort 'Причина чи Допуск?' has 2 groups (target: 3-5)
   - FIX: Adjust number of sorting categories to 3-5.
 - **[COMPLEXITY]** match-up 'Стилі та Сполучники' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
 - **[COMPLEXITY]** match-up 'Логічні ланцюжки' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q1 prompt length 3 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q2 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q3 prompt length 4 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q4 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q5 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q6 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q7 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q8 prompt length 4 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [логіка-речення] quiz: 'items.7.options.3' - 'correct' is a required property
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q1 prompt length 3 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q2 prompt length 5 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q3 prompt length 4 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q4 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q5 prompt length 5 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q6 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q7 prompt length 5 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Пунктуаційний квест' Q8 prompt length 4 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [знайдіть-логічний-зв'язок] match-up: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [переклад-сполучників] translate: 'items.7.options.3' - 'correct' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [логіка-речення] quiz: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [причинні-конструкції] select: 'items.0.options' - [{'text': 'тому що', 'correct': True}, {'text': 'бо', 'correct': True}, {'text': 'оскільки', 'correct': True}, {'text': 'через те що', 'correct': True}, {'text': 'завдяки тому що', 'correct': True}, {'text': 'внаслідок того що', 'correct': True}, {'text': 'адже', 'correct': True}, {'text': 'бо ж', 'correct': True}] is too long
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [причина-чи-допуск?] group-sort: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [пунктуаційний-квест] quiz: 'items.6.options.3' - 'correct' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [складіть-складне-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [допустові-конструкції] select: 'items.0.options' - [{'text': 'хоча', 'correct': True}, {'text': 'незважаючи на те що', 'correct': True}, {'text': 'попри те що', 'correct': True}, {'text': 'дарма що', 'correct': True}, {'text': 'хай', 'correct': True}, {'text': 'хоч', 'correct': True}, {'text': 'нехай', 'correct': True}, {'text': 'все ж', 'correct': True}] is too long
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [аналіз-стійкості] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [оберіть-сполучник] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [виправте-логіку] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [переклад-сполучників] translate: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [правила-вживання] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [причинні-конструкції] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [стилі-та-сполучники] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [логічні-ланцюжки] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [пунктуаційний-квест] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 67-advanced-conjunctions-i.yaml: [допустові-конструкції] select: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): залежність, незважаючи, причина, того, внаслідок...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 27 violations (severe - consider revision)
+- 35 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 1987/1750
-- **Activities:** ✅ 14/13
-- **Density:** ✅ All > 16
+- **Words:** ✅ 2097/1750
+- **Activities:** ✅ 14/10
+- **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/6
+- **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 42/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 26 violations
+- **Pedagogy:** ❌ 35 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 100.0% (target 98-100% (vocab))
+- **Immersion:** 🇺🇦 99.3% (target 98-100% (vocab))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -88,8 +104,8 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 44 | 24 | 100% | 20% | 20.0% |
-| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| examples | 45 | 24 | 100% | 20% | 20.0% |
+| engagement | 8 | 5 | 100% | 15% | 15.0% |
 | dialogues | 6 | 4 | 100% | 15% | 15.0% |
 | variety | 0.95 | - | 95% | 10% | 9.5% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
@@ -120,4 +136,4 @@
 | **Частина 13: Діалог про результати кварталу: Логіка успіху** | ✅ | 164 | Included in Core |
 | **Частина 14: Висновки про логічну структуру мови** | ✅ | 93 | Included in Core |
 | **Підсумок** | ✅ | 55 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

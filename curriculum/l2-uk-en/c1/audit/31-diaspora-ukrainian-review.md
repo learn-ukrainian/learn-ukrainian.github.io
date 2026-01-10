@@ -1,9 +1,59 @@
 # Audit Report: 31-diaspora-ukrainian.md
-**Phase:** C1.2 | **Level:** C1 | **Pedagogy:** immersion | **Target:** 1750
+**Phase:** C1.2 | **Level:** C1 | **Pedagogy:** immersion | **Target:** 2000
 **Overall Status:** ❌ FAIL
 
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Історія хвиль еміграції' Q1 prompt length 9 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Історія хвиль еміграції' Q2 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Історія хвиль еміграції' Q5 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Географія діаспори' Q1 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Географія діаспори' Q2 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Географія діаспори' Q3 prompt length 9 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Географія діаспори' Q4 prompt length 8 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Географія діаспори' Q5 prompt length 8 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 31-diaspora-ukrainian.yaml: [diaspora-history] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 31-diaspora-ukrainian.yaml: [diaspora-terms] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 31-diaspora-ukrainian.yaml: [diaspora-context] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 31-diaspora-ukrainian.yaml: [migration-waves] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 31-diaspora-ukrainian.yaml: [diaspora-facts] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 31-diaspora-ukrainian.yaml: [identify-diaspora-words] mark-the-words: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 31-diaspora-ukrainian.yaml: [geography-quiz] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 31-diaspora-ukrainian.yaml: [assimilation-essay] essay-response: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 31-diaspora-ukrainian.yaml: [famous-diaspora] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 31-diaspora-ukrainian.yaml: [organizations] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 31-diaspora-ukrainian.yaml: [fix-anglicisms] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'c1-module-template'
+  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/c1-module-template.md
+
+## Recommendation
+**📝 UPDATE** (severity 50/100)
+
+- Revision recommended (severity 50/100)
+- 20 violations (severe - consider revision)
+
 ## Gates
-- **Words:** ✅ 1757/1750
+- **Words:** ❌ 1757/2000
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 9/4 types
@@ -13,7 +63,7 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 19 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.6% (target 98-100% (vocab))
 - **Richness:** ❌ 58% < 95% min (vocabulary)

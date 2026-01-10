@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): конверт, касир, вкладати, лист, адреса...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (21 words): лист, надсилати, адреса, пошта, черга...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

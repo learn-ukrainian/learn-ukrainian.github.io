@@ -1,9 +1,41 @@
 # Audit Report: 147-hopak-i-kozachok.md
-**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-01] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-02] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-03] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-04] critical-analysis: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-06] essay-response: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-08] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-09] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-10] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-11] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 147-hopak-i-kozachok.yaml: [147-act-12] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'b2-history-module-template'
+  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+
+## Recommendation
+**📝 UPDATE** (severity 50/100)
+
+- Revision recommended (severity 50/100)
+- 11 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 1940/1750
+- **Words:** ⚠️ 1993/2000 (7 short)
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types
@@ -13,7 +45,7 @@
 - **Vocab:** ✅ 28/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 10 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.1% (target 98-100% (history))
 - **Richness:** ✅ 100% (history)
@@ -46,8 +78,8 @@
 | **Козачок: Швидкість та витонченість** | ⚪️ | 135 | Skipped |
 | **Деколонізаційний погляд: Подолання «шароварщини»** | ⚪️ | 108 | Skipped |
 | **Хореографічна спадщина Павла Вірського** | ⚪️ | 127 | Skipped |
-| **Аналіз руху: Від «повзунця» до «розніжки»** | ✅ | 106 | Included in Core |
-| **Хронологія танцювальної волі** | ⚪️ | 111 | Skipped |
+| **Аналіз руху: Від «повзунця» до «розніжки»** | ✅ | 157 | Included in Core |
+| **Хронологія танцювальної волі** | ⚪️ | 112 | Skipped |
 | **Читання: Опис танцю у світовій літературі** | ✅ | 184 | Included in Core |
 | **Первинні джерела: Спогади очевидців** | ⚪️ | 108 | Skipped |
 | **Регіональні варіації: Не гопаком єдиним** | ⚪️ | 118 | Skipped |
@@ -55,4 +87,4 @@
 | **Сценічний костюм: Глибока мова кольорів та функцій** | ⚪️ | 206 | Skipped |
 | **Вплив на світову поп-культуру та сучасне мистецтво** | ✅ | 111 | Included in Core |
 | **Need More Practice?** | ⚪️ | 88 | Skipped |
-| **Підсумок** | ✅ | 127 | Included in Core |
+| **Підсумок** | ✅ | 128 | Included in Core |

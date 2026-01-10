@@ -5,79 +5,99 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[COMPLEXITY]** match-up 'Знайдіть часову межу' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q1 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q2 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q3 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q4 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q5 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q6 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q7 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q8 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q1 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q2 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q3 prompt length 8 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q4 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q5 prompt length 7 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q6 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q7 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Умова чи Час?' Q8 prompt length 9 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
 - **[COMPLEXITY]** group-sort 'Часова лінія чи Умова?' has 2 groups (target: 3-5)
   - FIX: Adjust number of sorting categories to 3-5.
 - **[COMPLEXITY]** match-up 'Час та Події' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
 - **[COMPLEXITY]** match-up 'Реальне проти Нереального' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q1 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q2 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q3 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q4 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q5 prompt length 3 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q6 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q7 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q8 prompt length 3 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [умова-чи-час?] quiz: 'items.7.options.3' - 'correct' is a required property
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q1 prompt length 5 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q2 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q3 prompt length 5 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q4 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q5 prompt length 3 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q6 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q7 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Сценарії майбутнього' Q8 prompt length 3 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [знайдіть-часову-межу] match-up: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [переклад-зв'язків] translate: 'items.7.options.3' - 'correct' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [умова-чи-час?] quiz: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [умовні-конструкції] select: 'items.0.options' - [{'text': 'якщо', 'correct': True}, {'text': 'якби', 'correct': True}, {'text': 'коли б', 'correct': True}, {'text': 'у випадку якщо', 'correct': True}, {'text': 'за умови що', 'correct': True}, {'text': 'при умові що', 'correct': True}, {'text': 'аби (у значенні умови)', 'correct': True}, {'text': 'коли (у значенні умови)', 'correct': True}] is too long
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [часова-лінія-чи-умова?] group-sort: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [сценарії-майбутнього] quiz: 'items.7.options.3' - 'correct' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [складіть-ланцюжок] unjumble: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [часові-сполучники] select: 'items.0.options' - [{'text': 'щойно', 'correct': True}, {'text': 'поки', 'correct': True}, {'text': 'відколи', 'correct': True}, {'text': 'після того як', 'correct': True}, {'text': 'перед тим як', 'correct': True}, {'text': 'доки', 'correct': True}, {'text': 'тільки-но', 'correct': True}, {'text': 'відтоді як', 'correct': True}] is too long
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [сценарій-можливостей] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [точний-сполучник] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [виправте-сценарій] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [переклад-зв'язків] translate: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [граматичні-правила] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [умовні-конструкції] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [час-та-події] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [реальне-проти-нереального] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [сценарії-майбутнього] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-advanced-conjunctions-ii.yaml: [часові-сполучники] select: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (16 words): щоби, оскільки, аби, тим, щойно...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
+  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 27 violations (severe - consider revision)
+- 36 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 1917/1750
-- **Activities:** ✅ 14/13
-- **Density:** ✅ All > 16
+- **Words:** ✅ 2027/1750
+- **Activities:** ✅ 14/10
+- **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/6
+- **Engagement:** ✅ 7/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 51/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 26 violations
+- **Pedagogy:** ❌ 35 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 100.0% (target 98-100% (vocab))
+- **Immersion:** 🇺🇦 99.2% (target 98-100% (vocab))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -88,8 +108,8 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 25 | 24 | 100% | 20% | 20.0% |
-| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| examples | 26 | 24 | 100% | 20% | 20.0% |
+| engagement | 8 | 5 | 100% | 15% | 15.0% |
 | dialogues | 4 | 4 | 100% | 15% | 15.0% |
 | variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 7 | 3 | 100% | 10% | 10.0% |
@@ -120,4 +140,4 @@
 | **Частина 13: Діалог про майбутнє: Сценарії розвитку в Сумах** | ✅ | 154 | Included in Core |
 | **Частина 14: Мистецтво часової та умовної координації** | ✅ | 93 | Included in Core |
 | **Підсумок** | ✅ | 55 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

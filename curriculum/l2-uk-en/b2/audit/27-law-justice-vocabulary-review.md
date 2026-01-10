@@ -2,50 +2,65 @@
 **Phase:** B2 | **Level:** B2 | **Pedagogy:** CLIL | **Target:** 1750
 **Overall Status:** ❌ FAIL
 
-## LINT ERRORS
-- ❌ Line 89: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 105: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 157: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [цивільний-процес] fill-in: 'items.15' - 'answer' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [судова-система-україни] quiz: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [кримінальний-процес] fill-in: 'items.15' - 'answer' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [учасники-судового-процесу] quiz: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [юридичні-речення] unjumble: 'items.15' - 'words' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [юридичні-терміни] match-up: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [кримінальна-справа-про-шахрайство] cloze: Additional properties are not allowed ('text' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [цивільний-процес] fill-in: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [судова-система] true-false: 'items.15' - 'correct' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [кримінальний-процес] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [типи-справ] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [юридична-мова] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [юридичні-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [кримінальна-справа-про-шахрайство] cloze: Additional properties are not allowed ('id', 'text' were unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [судова-система] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [учасники-кримінального-процесу] mark-the-words: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [у-адвоката] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [права-підозрюваного] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 27-law-justice-vocabulary.yaml: [юридичні-колокації] translate: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: grammar) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (14 words): скарга, адвокат, конституційний, штраф, амністія...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ: Судова система України, Історичний контекст: Судова реформа в Україні
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
+  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 65/100)
+**🔄 REWRITE** (severity 75/100)
 
-- Revision recommended (severity 65/100)
-- 7 violations (significant)
-- 3 format errors
+- 17 violations (severe - consider revision)
 - Activity count below minimum
 - Activity density below minimum
 
 ## Gates
-- **Words:** ⚠️ 1738/1750 (12 short)
-- **Activities:** ❌ 0/13
-- **Density:** ❌ 0 < 16
+- **Words:** ✅ 1848/1750
+- **Activities:** ❌ 0/10
+- **Density:** ❌ 0 < 14
 - **Unique_types:** ❌ 0/4 types
 - **Priority:** ❌ No priority types
-- **Engagement:** ✅ 9/6
+- **Engagement:** ✅ 10/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 132/25
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 3 Format Errors
-- **Pedagogy:** ❌ 6 violations
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ❌ 15 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.9% (target 98-100% (grammar))
+- **Immersion:** 🇺🇦 99.1% (target 98-100% (grammar))
 - **Richness:** ✅ 95% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -56,14 +71,14 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 50 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| examples | 51 | 24 | 100% | 20% | 20.0% |
+| engagement | 13 | 5 | 100% | 15% | 15.0% |
 | dialogues | 23 | 4 | 100% | 15% | 15.0% |
 | variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 2 | 3 | 67% | 10% | 6.7% |
 | visual | 5 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.91 | - | 91% | 5% | 4.6% |
+| paragraph_var | 0.89 | - | 89% | 5% | 4.5% |
 | questions | 18 | 5 | 100% | 5% | 5.0% |
 | proverbs | 3 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.8%** |
@@ -81,4 +96,4 @@
 | **Що ми вивчили** | ⚪️ | 75 | Skipped |
 | **Самоперевірка** | ⚪️ | 50 | Skipped |
 | **Наступні кроки** | ⚪️ | 16 | Skipped |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

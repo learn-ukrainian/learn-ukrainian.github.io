@@ -1,9 +1,9 @@
 # Audit Report: 138-politeness-strategies.md
-**Phase:** C1.4 | **Level:** C1 | **Pedagogy:** Sociolinguistics | **Target:** 1750
+**Phase:** C1.4 | **Level:** C1 | **Pedagogy:** Sociolinguistics | **Target:** 2000
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 2370/1750
+- **Words:** ✅ 2370/2000
 - **Activities:** ✅ 14/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 12/4 types

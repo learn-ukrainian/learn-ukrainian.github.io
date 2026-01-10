@@ -3,39 +3,77 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 1 has 6 words (target: 10-18)
-  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 2 has 5 words (target: 10-18)
-  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 3 has 6 words (target: 10-18)
-  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 4 has 8 words (target: 10-18)
-  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 5 has 6 words (target: 10-18)
-  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 6 has 6 words (target: 10-18)
-  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 1 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 2 has 5 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 3 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 5 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть рядки пісні' item 6 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [ww1-facts] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [war-vocab] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [uss-history] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [ww1-myths] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [blocs-sort] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [synonyms] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [song-lyrics] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [people-roles] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [find-verbs] mark-the-words: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [grammar-cases] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [final-review] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [chronology] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 104-first-world-war.yaml: [uss-legacy] essay-response: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'b2-history-module-template'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template'
+  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Первинні джерела' per template 'b2-history-module-template'
+  - FIX: Add '## Первинні джерела' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template'
+  - FIX: Add '## Деколонізаційний погляд' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 50/100)
 
-- 6 violations (moderate)
-- Activity density below minimum
+- Revision recommended (severity 50/100)
+- 24 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 2108/2000
+- **Words:** ✅ 2218/2000
 - **Activities:** ✅ 14/10
-- **Density:** ❌ 1 < 14
+- **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 12/5
+- **Engagement:** ✅ 13/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 122/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 6 violations
+- **Pedagogy:** ❌ 18 violations
 - **Content_heavy:** ⚠️ 1 cloze with year blanks
-- **Immersion:** 🇺🇦 100.0% (target 98-100% (history))
+- **Immersion:** 🇺🇦 99.4% (target 98-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -47,7 +85,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 8 | 3 | 100% | 24% | 23.8% |
-| engagement | 12 | 6 | 100% | 14% | 14.3% |
+| engagement | 13 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 10 | 4 | 100% | 10% | 9.5% |
@@ -56,12 +94,6 @@
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 5 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **100.0%** |
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| Дві імперії, два підходи | comparative-study | 1 | 14 | Add 13 more items |
-
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -79,4 +111,4 @@
 | **Сірожупанники та Синьожупанники: Повернення з полону** | ⚪️ | 245 | Skipped |
 | **Культурна спадщина УСС: Від пісень до літератури** | ✅ | 228 | Included in Core |
 | **Підсумок** | ✅ | 68 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

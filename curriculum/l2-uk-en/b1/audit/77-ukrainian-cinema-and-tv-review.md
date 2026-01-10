@@ -3,45 +3,55 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українське кіно' item 3 has 7 words (target: 10-14)
-  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українське кіно' item 6 has 8 words (target: 10-14)
-  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українське кіно' item 7 has 8 words (target: 10-14)
-  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українське кіно' item 8 has 6 words (target: 10-14)
-  - FIX: Adjust sentence length to 10-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення про українське кіно' item 8 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [українське-кіно--розуміння-тексту] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [правда-чи-хибність-про-українське-кіно] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [кіно-лексика--терміни-та-визначення] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [заповніть-пропуски-кінолексикою] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [заповніть-текст-про-українське-кіно] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [розподіліть-за-категоріями] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [оберіть-усі-правильні-відповіді] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [знайдіть-слова,-пов'язані-з-кіно] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [складіть-речення-про-українське-кіно] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [складіть-речення-про-українське-кіно] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [виправте-помилки-у-реченнях-про-кіно] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 77-ukrainian-cinema-and-tv.yaml: [перекладіть-фрази-про-кіно] translate: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b1-grammar-module-template'
+  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 55/100)
+**📝 UPDATE** (severity 50/100)
 
-- Revision recommended (severity 55/100)
-- 7 violations (significant)
-- Activity count below minimum
-- Activity density below minimum
+- Revision recommended (severity 50/100)
+- 13 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 1592/1500
-- **Activities:** ❌ 11/12
-- **Density:** ❌ 1 < 14
+- **Words:** ✅ 1702/1500
+- **Activities:** ✅ 11/8
+- **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/5
+- **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 50/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 6 violations
+- **Pedagogy:** ❌ 12 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.8% (target 85-100% (B1.7-8 Ukraine))
+- **Immersion:** 🇺🇦 99.0% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ❌ 94% < 95% min (cultural)
 - **Grammar:** ⏳ Pending validation
 
@@ -53,20 +63,14 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | cultural | 5 | 5 | 100% | 33% | 33.3% |
-| engagement | 8 | 6 | 100% | 20% | 20.0% |
+| engagement | 9 | 6 | 100% | 20% | 20.0% |
 | visual | 3 | 4 | 75% | 13% | 10.0% |
 | variety | 0.97 | - | 97% | 7% | 6.5% |
-| paragraph_var | 0.74 | - | 74% | 7% | 4.9% |
-| examples | 22 | - | 100% | 7% | 6.7% |
+| paragraph_var | 0.72 | - | 72% | 7% | 4.8% |
+| examples | 23 | - | 100% | 7% | 6.7% |
 | realworld | 3 | - | 100% | 7% | 6.7% |
 | questions | 32 | 4 | 100% | 7% | 6.7% |
-| **TOTAL** | | | | | **94.7%** |
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| Заповніть пропуски кінолексикою | cloze | 12 | 14 | Add 2 more items |
-
+| **TOTAL** | | | | | **94.6%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -75,4 +79,4 @@
 | **Презентація** | ⚪️ | 819 | Skipped |
 | **Практика** | ⚪️ | 485 | Skipped |
 | **Підсумок** | ✅ | 157 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

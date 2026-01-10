@@ -1,9 +1,65 @@
 # Audit Report: 15-oral-presentations.md
-**Phase:** C1.1 | **Level:** C1 | **Pedagogy:** immersion | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** C1.1 | **Level:** C1 | **Pedagogy:** immersion | **Target:** 2000
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Етапи доповіді' Q1 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Етапи доповіді' Q2 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Етапи доповіді' Q3 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Етапи доповіді' Q4 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Етапи доповіді' Q6 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Етапи доповіді' Q7 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Етапи доповіді' Q8 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Вибір влучного слова' Q7 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: [етапи-доповіді] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: [фрази-покажчики] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: [словник-промовця] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: [етикет-звертань] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: [слайди:-так-чи-ні?] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: [регістр:-офіційно-vs-розмовно] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: [сигнали-переказу] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: [виправлення-помилок] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: [складання-речення:-перехід] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: [робота-з-q&a] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: [академічна-пунктуація] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: [складання-плану] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: [вибір-влучного-слова] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: [пошук-'води'] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: [синтаксис-презентації] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 15-oral-presentations.yaml: [письмове-завдання:-план-виступу] essay-response: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 50/100)
+
+- Revision recommended (severity 50/100)
+- 24 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 1814/1750
+- **Words:** ❌ 1814/2000
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
@@ -13,7 +69,7 @@
 - **Vocab:** ✅ 26/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 24 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 98-100%)
 - **Richness:** ✅ 99% (style)
@@ -53,4 +109,4 @@
 | **Розділ 10: Особливості онлайн-презентацій** | ⚪️ | 79 | Skipped |
 | **Розділ 11: Роль презентації у професійній кар'єрі** | ⚪️ | 92 | Skipped |
 | **Підсумок** | ✅ | 46 | Included in Core |
-| **Need More Practice?** | ⚪️ | 14 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 14 | Skipped |

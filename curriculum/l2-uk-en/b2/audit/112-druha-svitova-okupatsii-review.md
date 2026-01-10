@@ -1,133 +1,101 @@
 # Audit Report: 112-druha-svitova-okupatsii.md
-**Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 1400
+**Phase:** B2.3c | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q1 prompt length 13 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q2 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q3 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q4 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q5 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q6 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q7 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q8 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q9 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q10 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q11 prompt length 9 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q12 prompt length 13 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q13 prompt length 7 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q14 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q15 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q16 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 1 has 6 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 2 has 6 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 3 has 7 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 4 has 7 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 5 has 6 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 6 has 8 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 7 has 7 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 8 has 6 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 9 has 7 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 10 has 7 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 11 has 8 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 12 has 8 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 13 has 7 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 14 has 7 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 15 has 8 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 16 has 7 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення цитати свідка' item 1 has 8 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення цитати свідка' item 2 has 8 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення цитати свідка' item 3 has 10 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення цитати свідка' item 4 has 9 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення цитати свідка' item 5 has 10 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення цитати свідка' item 6 has 10 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення цитати свідка' item 7 has 9 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення цитати свідка' item 8 has 9 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення цитати свідка' item 9 has 8 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення цитати свідка' item 10 has 8 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення цитати свідка' item 11 has 9 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення цитати свідка' item 12 has 9 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення цитати свідка' item 13 has 9 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення цитати свідка' item 14 has 9 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення цитати свідка' item 15 has 9 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення цитати свідка' item 16 has 9 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння історичного тексту' Q13 prompt length 7 (target: 8-20)
+  - FIX: Adjust prompt length to 8-20 words.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 1 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 2 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 5 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновлення тексту' item 8 has 6 words (target: 8-15)
+  - FIX: Adjust sentence length to 8-15 words to match B2 complexity.
 - **[FORBIDDEN_HEADER]** Forbidden header '## Зовнішні ресурси' violates Clean MD standard (Issue #398)
   - FIX: Remove '## Зовнішні ресурси' header. This section is auto-injected from docs/resources/external_resources.yaml at build time. See docs/l2-uk-en/templates/ for correct pattern.
 - **[FORBIDDEN_HEADER]** Forbidden header '## Активності' violates Clean MD standard (Issue #398)
   - FIX: Remove '## Активності' header. This section is auto-injected from activities/{slug}.yaml at build time. See docs/l2-uk-en/templates/ for correct pattern.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [розуміння-історичного-тексту] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [історична-лексика] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [граматика-та-стиль] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [відновлення-тексту] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [історичні-відповідності] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [аналіз-дипломатії-1939-року] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [міфи-та-факти-про-війну] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [граматика-в-контексті] mark-the-words: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [переклад-історичних-понять] translate: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [класифікація-понять] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [трагедія-бабиного-яру] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [складні-речення-в-історії] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [стилістичне-редагування] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [відновлення-цитати-свідка] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [правда-чи-пропаганда?] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [історичні-сталі-вирази] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [поняття-та-терміни] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [граматика-результату] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 112-druha-svitova-okupatsii.yaml: [жертви-та-меморіали] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Вступ, Граматика в контексті, Контекст: Пакт Молотова — Ріббентропа та «Перші совіти»
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template'
+  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Первинні джерела' per template 'b2-history-module-template'
+  - FIX: Add '## Первинні джерела' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ❌ **[FORBIDDEN_HEADER]** Forbidden header '## Зовнішні ресурси' violates Clean MD standard (Issue #398)
+  - FIX: Remove '## Зовнішні ресурси' header. Template 'b2-history-module-template' specifies this section is auto-injected from YAML sidecars.
+- ❌ **[FORBIDDEN_HEADER]** Forbidden header '## Активності' violates Clean MD standard (Issue #398)
+  - FIX: Remove '## Активності' header. Template 'b2-history-module-template' specifies this section is auto-injected from YAML sidecars.
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!history-bite]` box as specified in the template. This enhances module quality.
+
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 52 violations (severe - consider revision)
+- 35 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 2558/1400
+- **Words:** ✅ 2668/2000
 - **Activities:** ✅ 19/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 17/5
+- **Engagement:** ✅ 18/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 27/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 52 violations
+- **Pedagogy:** ❌ 28 violations
 - **Content_heavy:** ⚠️ Too many activities: 19 (target 10-14)
-- **Immersion:** 🇺🇦 98.8% (target 98-100% (history))
+- **Immersion:** 🇺🇦 98.4% (target 98-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -139,7 +107,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 15 | 3 | 100% | 24% | 23.8% |
-| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| engagement | 11 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 3 | 4 | 75% | 10% | 7.1% |
@@ -164,4 +132,4 @@
 | **Підсумок** | ✅ | 112 | Included in Core |
 | **Зовнішні ресурси** | ⚪️ | 0 | Skipped |
 | **Активності** | ⚪️ | 6 | Skipped |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

@@ -5,81 +5,85 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[COMPLEXITY]** match-up 'Знайдіть точне поняття' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Світ ідей' Q1 prompt length 14 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Світ ідей' Q2 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Світ ідей' Q3 prompt length 13 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Світ ідей' Q4 prompt length 13 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Світ ідей' Q5 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Світ ідей' Q6 prompt length 10 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Світ ідей' Q7 prompt length 12 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Світ ідей' Q8 prompt length 11 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
 - **[COMPLEXITY]** group-sort 'Рівні абстракції' has 2 groups (target: 3-5)
   - FIX: Adjust number of sorting categories to 3-5.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть інтелектуальну фразу' item 4 has 21 words (target: 14-18)
-  - FIX: Adjust sentence length to 14-18 words to match B2 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть інтелектуальну фразу' item 4 has 21 words (target: 10-18)
+  - FIX: Adjust sentence length to 10-18 words to match B2 complexity.
 - **[COMPLEXITY]** match-up 'Регістри та Поняття' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
 - **[COMPLEXITY]** match-up 'Думка та Наслідок' has 8 pairs (target: 12-16)
   - FIX: Adjust number of pairs to 12-16.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q1 prompt length 6 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q2 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q3 prompt length 8 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q4 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q5 prompt length 4 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q6 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q7 prompt length 4 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q8 prompt length 5 (target: 15-25)
-  - FIX: Adjust prompt length to 15-25 words.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [світ-ідей] quiz: 'items.7.options.3' - 'correct' is a required property
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q1 prompt length 6 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q2 prompt length 5 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q3 prompt length 8 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q4 prompt length 5 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q5 prompt length 4 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q6 prompt length 5 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q7 prompt length 4 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Абстракції в культурі' Q8 prompt length 5 (target: 10-25)
+  - FIX: Adjust prompt length to 10-25 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [знайдіть-точне-поняття] match-up: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [переклад-абстракцій] translate: 'items.7.options.3' - 'correct' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [світ-ідей] quiz: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [всі-форми-інтелекту] select: 'items.0.options' - [{'text': 'концепція', 'correct': True}, {'text': 'теорія', 'correct': True}, {'text': 'гіпотеза', 'correct': True}, {'text': 'поняття', 'correct': True}, {'text': 'аксіома', 'correct': True}, {'text': 'принцип', 'correct': True}, {'text': 'теза', 'correct': True}, {'text': 'доктрина', 'correct': True}] is too long
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [рівні-абстракції] group-sort: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [абстракції-в-культурі] quiz: 'items.7.options.3' - 'correct' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [складіть-інтелектуальну-фразу] unjumble: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [стратегічні-поняття] select: 'items.0.options' - [{'text': 'свобода', 'correct': True}, {'text': 'справедливість', 'correct': True}, {'text': 'гідність', 'correct': True}, {'text': 'істина', 'correct': True}, {'text': 'честь', 'correct': True}, {'text': 'гуманізм', 'correct': True}, {'text': 'солідарність', 'correct': True}, {'text': 'толерантність', 'correct': True}] is too long
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [лабіринт-думок] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [відтінки-абстракції] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [виправте-думку] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [переклад-абстракцій] translate: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [правда-про-ідеї] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [всі-форми-інтелекту] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [регістри-та-поняття] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [думка-та-наслідок] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [абстракції-в-культурі] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 66-synonyms-abstract.yaml: [стратегічні-поняття] select: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: vocab) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (25 words): метод, ціль, припущення, підстава, підхід...
-  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b2-module-template'
+  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b2-module-template.md
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 28 violations (severe - consider revision)
+- 29 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 2414/1750
-- **Activities:** ✅ 14/13
-- **Density:** ✅ All > 16
+- **Words:** ✅ 2524/1750
+- **Activities:** ✅ 14/10
+- **Density:** ✅ All > 14
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/6
+- **Engagement:** ✅ 10/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 87/35
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 27 violations
+- **Pedagogy:** ❌ 28 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.9% (target 98-100% (vocab))
+- **Immersion:** 🇺🇦 99.4% (target 98-100% (vocab))
 - **Richness:** ✅ 95% (content)
 - **Grammar:** ⏳ Pending validation
 
@@ -90,15 +94,15 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 51 | 15 | 100% | 25% | 25.0% |
-| engagement | 10 | 5 | 100% | 19% | 18.7% |
+| examples | 52 | 15 | 100% | 25% | 25.0% |
+| engagement | 11 | 5 | 100% | 19% | 18.7% |
 | variety | 0.95 | - | 95% | 12% | 11.9% |
 | cultural | 3 | 4 | 75% | 12% | 9.4% |
 | realworld | 8 | 3 | 100% | 12% | 12.5% |
 | visual | 11 | 4 | 100% | 6% | 6.2% |
-| paragraph_var | 0.94 | - | 94% | 6% | 5.9% |
+| paragraph_var | 0.93 | - | 93% | 6% | 5.8% |
 | questions | 11 | 4 | 100% | 6% | 6.2% |
-| **TOTAL** | | | | | **95.9%** |
+| **TOTAL** | | | | | **95.8%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -122,4 +126,4 @@
 | **Частина 14: Інтелектуальна Стійкість у Світі Фейків** | ✅ | 161 | Included in Core |
 | **Частина 15: Філософія Серця та Сучасні Цінності** | ✅ | 144 | Included in Core |
 | **Підсумок** | ✅ | 53 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

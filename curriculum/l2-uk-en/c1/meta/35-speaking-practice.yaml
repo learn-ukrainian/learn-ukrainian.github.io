@@ -1,0 +1,23 @@
+module: c1-35
+title: 'Мовний практикум'
+subtitle: 'Speaking Practice'
+version: '1.0'
+phase: 'C1.2 Professional Mastery'
+focus: checkpoint
+pedagogy: 'Immersion'
+duration: 90
+transliteration: none
+tags:
+  - speaking
+  - debate
+  - rhetoric
+  - professional
+grammar:
+  - 'Spoken discourse markers'
+  - 'Debate structures'
+objectives:
+  - 'Demonstrate fluency in professional discussions'
+  - 'Use rhetorical devices in speech'
+  - 'Argue complex points spontaneously'
+vocabulary_count: 10
+slug: 35-speaking-practice

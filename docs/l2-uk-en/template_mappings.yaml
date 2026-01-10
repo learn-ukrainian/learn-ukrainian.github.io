@@ -68,7 +68,7 @@ mappings:
   # =============================================================================
 
   # Checkpoints (explicit module IDs)
-  - pattern: '^b2-(10|25|40|70|95|110)$'
+  - pattern: '^b2-(10|25|40|70|95|110)(-.*)?$'
     level: b2
     template: b2-checkpoint-module-template.md
     description: 'B2 checkpoints'

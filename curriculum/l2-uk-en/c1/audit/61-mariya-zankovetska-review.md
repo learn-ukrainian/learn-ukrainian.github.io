@@ -1,6 +1,31 @@
 # Audit Report: 61-mariya-zankovetska.md
 **Phase:** C1.3 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** quiz '«Розуміння біографії та внеску Марії Заньковецької»' Q3 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz '«Розуміння біографії та внеску Марії Заньковецької»' Q5 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz '«Розуміння біографії та внеску Марії Заньковецької»' Q6 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz '«Розуміння біографії та внеску Марії Заньковецької»' Q8 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz '«Розуміння біографії та внеску Марії Заньковецької»' Q9 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template'
+  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template'
+  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
+  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+
+## Recommendation
+**📝 UPDATE** (severity 30/100)
+
+- 8 violations (significant)
 
 ## Gates
 - **Words:** ✅ 2002/2000
@@ -13,7 +38,7 @@
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 5 violations
 - **Content_heavy:** ✅ Content-heavy OK (14 activities)
 - **Immersion:** 🇺🇦 100.0% (target 98-100% (biography))
 - **Richness:** ✅ 95% (biography)
@@ -51,4 +76,4 @@
 | **Зразок відповіді** | ⚪️ | 294 | Skipped |
 | **Підсумок** | ✅ | 67 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |

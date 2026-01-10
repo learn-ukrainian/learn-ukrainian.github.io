@@ -1,9 +1,24 @@
 # Audit Report: 26-media-landscape.md
-**Phase:** C1.2 | **Level:** C1 | **Pedagogy:** Immersion | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** C1.2 | **Level:** C1 | **Pedagogy:** Immersion | **Target:** 2000
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки фейку' Q4 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Ознаки фейку' Q5 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'c1-module-template'
+  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/c1-module-template.md
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 3 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1859/1750
+- **Words:** ❌ 1859/2000
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
@@ -13,7 +28,7 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 2 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 98-100%)
 - **Richness:** ✅ 95% (content)

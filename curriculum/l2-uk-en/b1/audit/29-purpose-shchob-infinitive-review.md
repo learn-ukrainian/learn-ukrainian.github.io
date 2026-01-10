@@ -3,47 +3,60 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-purpose-shchob-infinitive.yaml: [розставте-слова-в-правильному-порядку] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-purpose-shchob-infinitive.yaml: [конструкція-щоб-+-інфінітив] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-purpose-shchob-infinitive.yaml: [головне-речення-і-мета] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-purpose-shchob-infinitive.yaml: [оберіть-правильну-форму] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-purpose-shchob-infinitive.yaml: [правда-чи-неправда?] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-purpose-shchob-infinitive.yaml: [типи-виразів-мети] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-purpose-shchob-infinitive.yaml: [розставте-слова-в-правильному-порядку] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-purpose-shchob-infinitive.yaml: [виправте-помилки] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-purpose-shchob-infinitive.yaml: [щоб-плюс-інфінітив-у-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 29-purpose-shchob-infinitive.yaml: [знайдіть-інфінітиви-мети] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-purpose-shchob-infinitive.yaml: [перекладіть-речення] translate: 'items.7' - 'source' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-purpose-shchob-infinitive.yaml: [оберіть-усі-правильні-варіанти] select: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[STATE_STANDARD_LOW_IMMERSION]** Module 29 has 98.0% immersion (target: 98.0%+)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 29-purpose-shchob-infinitive.yaml: [перекладіть-речення] translate: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 29 has 97.2% immersion (target: 98.0%+)
   - FIX: Add more Ukrainian content to reach 98%+ immersion for full immersion modules
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест' per template 'b1-grammar-module-template'
-  - FIX: Add '## Warm-up' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
-  - FIX: Add '## Presentation' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
-  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка|Тест' per template 'b1-grammar-module-template'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b1-grammar-module-template'
+  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Практика|Вправи' per template 'b1-grammar-module-template'
+  - FIX: Add '## Практика' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 55/100)
+**🔄 REWRITE** (severity 75/100)
 
-- Revision recommended (severity 55/100)
-- 8 violations (significant)
+- 15 violations (severe - consider revision)
 - Activity count below minimum
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1530/1500
-- **Activities:** ❌ 0/12
-- **Density:** ❌ 0 < 14
+- **Words:** ✅ 1640/1500
+- **Activities:** ❌ 0/8
+- **Density:** ❌ 0 < 12
 - **Unique_types:** ❌ 0/4 types
 - **Priority:** ❌ No priority types
-- **Engagement:** ✅ 10/5
+- **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 17 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ❌ 11 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.0% (target 85-100% (B1.3-4 Complex))
+- **Immersion:** 🇺🇦 97.2% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 95% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -54,17 +67,17 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 57 | 24 | 100% | 20% | 20.0% |
-| engagement | 9 | 5 | 100% | 15% | 15.0% |
+| examples | 58 | 24 | 100% | 20% | 20.0% |
+| engagement | 10 | 5 | 100% | 15% | 15.0% |
 | dialogues | 11 | 4 | 100% | 15% | 15.0% |
 | variety | 0.92 | - | 92% | 10% | 9.2% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 3 | 3 | 100% | 10% | 10.0% |
 | visual | 4 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.85 | - | 85% | 5% | 4.2% |
+| paragraph_var | 0.83 | - | 83% | 5% | 4.2% |
 | questions | 20 | 5 | 100% | 5% | 5.0% |
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **95.2%** |
+| **TOTAL** | | | | | **95.1%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -75,4 +88,4 @@
 | **Поглиблення** | ⚪️ | 745 | Skipped |
 | **Діалоги** | ✅ | 190 | Included in Core |
 | **Підсумок** | ✅ | 217 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

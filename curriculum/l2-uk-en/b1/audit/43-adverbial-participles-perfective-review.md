@@ -3,47 +3,58 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні знання про дієприслівники доконаного виду' Q4 prompt length 10 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні знання про дієприслівники доконаного виду' Q5 prompt length 11 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Теоретичні знання про дієприслівники доконаного виду' Q6 prompt length 9 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
 - **[COMPLEXITY]** mark-the-words 'Знайдіть дієприслівники доконаного виду' has 0 items (minimum: 6)
   - FIX: Add more items. B1 mark-the-words requires at least 6 items.
 - **[MISSING_FIELD]** mark-the-words 'Знайдіть дієприслівники доконаного виду' is missing 'correct_words' array
   - FIX: Add 'correct_words' array with correct words
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 43-adverbial-participles-perfective.yaml: [теоретичні-знання-про-дієприслівники-доконаного-виду] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 43-adverbial-participles-perfective.yaml: [інфінітив-та-відповідний-дієприслівник-дв] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 43-adverbial-participles-perfective.yaml: [утворення-дієприслівників-доконаного-виду] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 43-adverbial-participles-perfective.yaml: [правила-вживання-дієприслівників-дв] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 43-adverbial-participles-perfective.yaml: [ндв-проти-дв-дієприслівників] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 43-adverbial-participles-perfective.yaml: [побудова-речень-з-дієприслівниками-дв] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 43-adverbial-participles-perfective.yaml: [виправлення-помилок-у-дієприслівникових-конструкціях-дв] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 43-adverbial-participles-perfective.yaml: [дієприслівники-дв-в-контексті] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 43-adverbial-participles-perfective.yaml: [знайдіть-дієприслівники-доконаного-виду] mark-the-words: 'correct_words' is a required property
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 43-adverbial-participles-perfective.yaml: [вибір-між-ндв-та-дв-дієприслівниками] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 43-adverbial-participles-perfective.yaml: [переклад-речень-з-дієприслівниками-дв] translate: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест' per template 'b1-grammar-module-template'
-  - FIX: Add '## Warm-up' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка|Тест' per template 'b1-grammar-module-template'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 55/100)
+**📝 UPDATE** (severity 60/100)
 
-- Revision recommended (severity 55/100)
-- 8 violations (significant)
-- Activity count below minimum
+- Revision recommended (severity 60/100)
+- 14 violations (severe - consider revision)
 - Activity density below minimum
 
 ## Gates
-- **Words:** ⚠️ 1474/1500 (26 short)
-- **Activities:** ❌ 11/12
-- **Density:** ❌ 1 < 14
+- **Words:** ✅ 1584/1500
+- **Activities:** ✅ 11/8
+- **Density:** ❌ 1 < 12
 - **Unique_types:** ✅ 11/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 17 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 6 violations
+- **Pedagogy:** ❌ 13 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 100.0% (target 85-100% (B1.3-4 Complex))
+- **Immersion:** 🇺🇦 99.2% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -54,17 +65,17 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 36 | 24 | 100% | 20% | 20.0% |
-| engagement | 6 | 5 | 100% | 15% | 15.0% |
+| examples | 37 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
 | dialogues | 9 | 4 | 100% | 15% | 15.0% |
-| variety | 0.91 | - | 91% | 10% | 9.1% |
+| variety | 0.92 | - | 92% | 10% | 9.2% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
 | realworld | 5 | 3 | 100% | 10% | 10.0% |
 | visual | 4 | 3 | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
 | questions | 33 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.1%** |
+| **TOTAL** | | | | | **99.2%** |
 
 ## Low Density Activities
 | Activity | Type | Items | Required | Fix |
@@ -81,4 +92,4 @@
 | **Практика** | ⚪️ | 374 | Skipped |
 | **Діалоги** | ✅ | 215 | Included in Core |
 | **Підсумок** | ✅ | 147 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

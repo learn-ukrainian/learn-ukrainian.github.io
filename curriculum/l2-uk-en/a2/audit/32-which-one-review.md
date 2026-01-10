@@ -3,9 +3,9 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: орудний, жіночий, родовий, займенник, чоловічий
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: жіночий, рід, родовий, середній, місцевий
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): доки, ледве, раз, тоді, щойно...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (12 words): раз, разу, того, часом, кожного...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -28,12 +28,6 @@
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 52.9% (target 50-65% (A2.2))
 - **Grammar:** ⏳ Pending validation
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

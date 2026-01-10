@@ -1,0 +1,154 @@
+module: 32-professional-scenarios
+level: C1
+version: "1.0"
+items:
+  - lemma: професійний
+    ipa: /prɔfɛˈsʲijnej/
+    translation: professional
+    pos: adj.
+    note: related to profession
+  - lemma: діловий
+    ipa: /dʲilɔˈvɪj/
+    translation: business (adj)
+    pos: adj.
+    note: e.g., ділова зустріч
+  - lemma: офіційний
+    ipa: /ɔfʲiˈt͡sʲijnɪj/
+    translation: official
+    pos: adj.
+    note: formal context
+  - lemma: формальний
+    ipa: /fɔrˈmɑlʲnɪj/
+    translation: formal
+    pos: adj.
+    note: adherence to rules
+  - lemma: етикет
+    ipa: /ɛtɪˈkɛt/
+    translation: etiquette
+    pos: noun (m)
+    note: code of behavior
+  - lemma: комунікація
+    ipa: /kɔmunʲiˈkɑt͡sʲijɑ/
+    translation: communication
+    pos: noun (f)
+    note: exchange of information
+  - lemma: співбесіда
+    ipa: /spivˈbɛsʲidɑ/
+    translation: job interview
+    pos: noun (f)
+    note: key hiring step
+  - lemma: переговори
+    ipa: /pɛrɛɦɔˈvɔrɪ/
+    translation: negotiations
+    pos: noun (pl)
+    note: discussion to reach agreement
+  - lemma: зустріч
+    ipa: /zuˈstrʲit͡ʃ/
+    translation: meeting
+    pos: noun (f)
+    note: gathering of people
+  - lemma: презентація
+    ipa: /prɛzɛnˈtɑt͡sʲijɑ/
+    translation: presentation
+    pos: noun (f)
+    note: formal display
+  - lemma: звіт
+    ipa: /zʲvʲit/
+    translation: report
+    pos: noun (m)
+    note: document usually
+  - lemma: лист
+    ipa: /lɪst/
+    translation: letter
+    pos: noun (m)
+    note: written message
+  - lemma: повідомлення
+    ipa: /pɔvʲiˈdɔmlɛnʲːɑ/
+    translation: message/notice
+    pos: noun (n)
+    note: information sent
+  - lemma: запит
+    ipa: /zɑˈpɪt/
+    translation: inquiry/request
+    pos: noun (m)
+    note: formal question
+  - lemma: відповідь
+    ipa: /vʲidˈpɔvʲidʲ/
+    translation: answer/response
+    pos: noun (f)
+    note: reply to inquiry
+  - lemma: резюме
+    ipa: /rɛzʲuˈmɛ/
+    translation: CV/resume
+    pos: noun (n)
+    note: indeclinable
+  - lemma: супровідний
+    ipa: /suprɔˈvʲidnij/
+    translation: accompanying
+    pos: adj.
+    note: e.g., супровідний лист
+  - lemma: вакансія
+    ipa: /vɑˈkɑnsʲijɑ/
+    translation: vacancy
+    pos: noun (f)
+    note: open position
+  - lemma: роботодавець
+    ipa: /rɔbɔtɔˈdɑvɛt͡sʲ/
+    translation: employer
+    pos: noun (m)
+    note: hires employees
+  - lemma: наймати
+    ipa: /nɑjˈmɑtɪ/
+    translation: to hire
+    pos: verb
+    note: to employ
+  - lemma: звільняти
+    ipa: /zvʲilʲˈnʲɑtɪ/
+    translation: to fire/dismiss
+    pos: verb
+    note: to let go
+  - lemma: кар'єра
+    ipa: /kɑrˈjɛrɑ/
+    translation: career
+    pos: noun (f)
+    note: professional path
+  - lemma: підвищення
+    ipa: /pidˈvɪʃːɛnʲːɑ/
+    translation: promotion
+    pos: noun (n)
+    note: move up in rank
+  - lemma: зарплата
+    ipa: /zɑrˈplɑtɑ/
+    translation: salary
+    pos: noun (f)
+    note: payment for work
+  - lemma: угода
+    ipa: /uˈɦɔdɑ/
+    translation: agreement/deal
+    pos: noun (f)
+    note: contract
+  - lemma: підпис
+    ipa: /pidˈpɪs/
+    translation: signature
+    pos: noun (m)
+    note: signing a document
+  - lemma: термін
+    ipa: /tɛrˈmʲin/
+    translation: deadline/term
+    pos: noun (m)
+    note: time limit
+  - lemma: порядок денний
+    ipa: /pɔˈrʲɑdɔk ˈdɛnːɪj/
+    translation: agenda
+    pos: phrase
+    note: list of items for meeting
+  - lemma: протокол
+    ipa: /prɔtɔˈkɔl/
+    translation: protocol/minutes
+    pos: noun (m)
+    note: record of meeting
+  - lemma: мережування
+    ipa: /mɛrɛʒuˈvɑnʲːɑ/
+    translation: networking
+    pos: noun (n)
+    note: building contacts

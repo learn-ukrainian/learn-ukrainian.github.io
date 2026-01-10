@@ -2,87 +2,71 @@
 **Phase:** B2.3d | **Level:** B2 | **Pedagogy:** CBI | **Target:** 2000
 **Overall Status:** ❌ FAIL
 
-## LINT ERRORS
-- ❌ Line 9: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 19: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 21: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 23: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 27: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 29: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 31: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 35: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 37: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 45: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 49: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 51: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 53: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 57: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 61: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 65: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 76: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 84: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 114: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 121: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 128: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 134: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 136: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [reading_comp_1] quiz: 'title' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [reading_comp_1] quiz: Additional properties are not allowed ('id', 'question' were unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [vocab_context_1] fill-in: 'title' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [vocab_context_1] fill-in: Additional properties are not allowed ('id', 'question' were unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [figures_matching] match-up: 'title' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [figures_matching] match-up: Additional properties are not allowed ('id', 'question' were unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [grammar_agreement_1] error-correction: 'title' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [grammar_agreement_1] error-correction: Additional properties are not allowed ('id', 'question' were unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [source_analysis_select] select: 'title' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [source_analysis_select] select: Additional properties are not allowed ('id', 'question', 'text' were unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [grammar_participles_1] mark-the-words: 'title' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [grammar_participles_1] mark-the-words: Additional properties are not allowed ('id', 'question' were unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [sentence_unjumble_1] unjumble: 'title' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [sentence_unjumble_1] unjumble: Additional properties are not allowed ('id', 'question' were unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [concepts_sorting_1] group-sort: 'title' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [concepts_sorting_1] group-sort: Additional properties are not allowed ('id', 'question' were unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [text_cloze_1] cloze: 'title' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [text_cloze_1] cloze: Additional properties are not allowed ('id', 'question' were unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [synonyms_matching_1] match-up: 'title' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [synonyms_matching_1] match-up: Additional properties are not allowed ('id', 'question' were unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [translation_1] translate: 'title' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [translation_1] translate: Additional properties are not allowed ('id', 'question' were unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [linguistic_features_1] select: 'title' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [linguistic_features_1] select: Additional properties are not allowed ('id', 'question' were unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [general_knowledge_1] quiz: 'title' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [general_knowledge_1] quiz: Additional properties are not allowed ('id', 'question' were unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [content_check_2] true-false: 'title' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 122-pomarancheva-revoliutsiia.yaml: [content_check_2] true-false: Additional properties are not allowed ('id', 'question' were unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
   - FIX: Add a essay-response activity to meet advanced richness standards.
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
-## Recommendation
-**🔄 REWRITE** (severity 95/100)
+## TEMPLATE COMPLIANCE
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Вступ|Контекст|Розминка' found: Контекст: Кінець епохи Кучми та передісторія конфлікту, Вступ
+  - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Читання' per template 'b2-history-module-template'
+  - FIX: Add '## Читання' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!myth-buster]` box as specified in the template. This enhances module quality.
+- ⚠️ **[MISSING_REQUIRED_CALLOUT]** Missing required callout '[!quote]' per template 'b2-history-module-template'
+  - FIX: Add a `> [!quote]` box as specified in the template. This enhances module quality.
 
-- 16 violations (severe - consider revision)
-- 23 format errors (many)
+## Recommendation
+**🔄 REWRITE** (severity 75/100)
+
+- 20 violations (severe - consider revision)
 - Activity count below minimum
 - Activity density below minimum
 
 ## Gates
-- **Words:** ⚠️ 1948/2000 (52 short)
+- **Words:** ✅ 2058/2000
 - **Activities:** ❌ 0/10
 - **Density:** ❌ 0 < 14
 - **Unique_types:** ❌ 0/4 types
 - **Priority:** ❌ No priority types
-- **Engagement:** ✅ 7/5
+- **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 35/20
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 23 Format Errors
+- **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 16 violations
 - **Content_heavy:** ⚠️ Too few activities: 0 (target 10-14)
-- **Immersion:** 🇺🇦 100.0% (target 98-100% (history))
+- **Immersion:** 🇺🇦 99.4% (target 98-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ⏳ Pending validation
 
@@ -94,7 +78,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | primary_sources | 5 | 3 | 100% | 24% | 23.8% |
-| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| engagement | 8 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 28 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 3 | 4 | 75% | 10% | 7.1% |
@@ -115,4 +99,4 @@
 | **Первинні джерела** | ⚪️ | 259 | Skipped |
 | **Деколонізаційний погляд** | ⚪️ | 109 | Skipped |
 | **Підсумок** | ✅ | 57 | Included in Core |
-| **Need More Practice?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

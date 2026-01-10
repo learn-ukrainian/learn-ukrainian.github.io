@@ -5,7 +5,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: займенник
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): особистий, своя, своє, свій, свої...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (7 words): своє, спільний, особистий, ділитися, своя...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

@@ -3,39 +3,50 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-passive-constructions.yaml: [побудуйте-пасивне-речення] unjumble: 'items.5' - Additional properties are not allowed ('scrambled' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-passive-constructions.yaml: [розуміння-пасивних-конструкцій] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-passive-constructions.yaml: [активний-і-пасивний-стан] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-passive-constructions.yaml: [виберіть-правильну-форму] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-passive-constructions.yaml: [правила-пасивних-конструкцій] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-passive-constructions.yaml: [тип-пасивної-конструкції] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-passive-constructions.yaml: [побудуйте-пасивне-речення] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-passive-constructions.yaml: [виправте-помилки] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-passive-constructions.yaml: [новинна-стаття] cloze: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 47-passive-constructions.yaml: [знайдіть-пасивні-конструкції] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-passive-constructions.yaml: [перекладіть-українською] translate: 'items.5' - 'source' is a required property
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-passive-constructions.yaml: [правильні-пасивні-конструкції] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 47-passive-constructions.yaml: [перекладіть-українською] translate: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
-## TEMPLATE COMPLIANCE
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
-
 ## Recommendation
-**📝 UPDATE** (severity 40/100)
+**🔄 REWRITE** (severity 75/100)
 
-- Revision recommended (severity 40/100)
-- 4 violations (moderate)
+- 11 violations (severe - consider revision)
 - Activity count below minimum
 - Activity density below minimum
 
 ## Gates
-- **Words:** ✅ 1563/1500
-- **Activities:** ❌ 0/12
-- **Density:** ❌ 0 < 14
+- **Words:** ✅ 1673/1500
+- **Activities:** ❌ 0/8
+- **Density:** ❌ 0 < 12
 - **Unique_types:** ❌ 0/4 types
 - **Priority:** ❌ No priority types
-- **Engagement:** ✅ 13/5
+- **Engagement:** ✅ 14/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
+- **Pedagogy:** ❌ 11 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.9% (target 85-100% (B1.5-6 Vocab))
+- **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.5-6 Vocab))
 - **Richness:** ✅ 95% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -46,8 +57,8 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 68 | 24 | 100% | 20% | 20.0% |
-| engagement | 10 | 5 | 100% | 15% | 15.0% |
+| examples | 69 | 24 | 100% | 20% | 20.0% |
+| engagement | 11 | 5 | 100% | 15% | 15.0% |
 | dialogues | 15 | 4 | 100% | 15% | 15.0% |
 | variety | 0.91 | - | 91% | 10% | 9.1% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
@@ -67,4 +78,4 @@
 | **Практика** | ⚪️ | 470 | Skipped |
 | **Діалоги** | ✅ | 269 | Included in Core |
 | **Підсумок** | ✅ | 162 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

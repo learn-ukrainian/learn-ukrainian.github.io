@@ -1,20 +1,47 @@
 # Audit Report: 88-petro-bolbochan.md
 **Phase:** C1.3 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 88-petro-bolbochan.yaml: YAML parse error: mapping values are not allowed here
+  in "curriculum/l2-uk-en/c1/activities/88-petro-bolbochan.yaml", line 277, column 34
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: essay-response
+  - FIX: Add a essay-response activity to meet advanced richness standards.
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: comparative-study
+  - FIX: Add a comparative-study activity to meet advanced richness standards.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template'
+  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template'
+  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Спадщина' per template 'c1-biography-module-template'
+  - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  - FIX: Add '## Need More Practice?' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+
+## Recommendation
+**📝 UPDATE** (severity 55/100)
+
+- Revision recommended (severity 55/100)
+- 7 violations (significant)
+- Activity count below minimum
+- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 2136/2000
-- **Activities:** ✅ 12/12
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 12/4 types
-- **Priority:** ✅ Priority types used
+- **Activities:** ❌ 0/12
+- **Density:** ❌ 0 < 12
+- **Unique_types:** ❌ 0/4 types
+- **Priority:** ❌ No priority types
 - **Engagement:** ✅ 9/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (12 activities)
+- **Pedagogy:** ❌ 3 violations
+- **Content_heavy:** ⚠️ Too few activities: 0 (target 12-16)
 - **Immersion:** 🇺🇦 100.0% (target 98-100% (biography))
 - **Richness:** ✅ 97% (biography)
 - **Grammar:** ⏳ Pending validation
@@ -38,12 +65,6 @@
 | questions | 11 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **97.5%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (14 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -53,4 +74,4 @@
 | **Історичний контекст** | ✅ | 468 | Included in Core |
 | **Порівняльний аналіз** | ✅ | 142 | Included in Core |
 | **Підсумок** | ✅ | 127 | Included in Core |
-| **Need More Practice?** | ⚪️ | 86 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 86 | Skipped |

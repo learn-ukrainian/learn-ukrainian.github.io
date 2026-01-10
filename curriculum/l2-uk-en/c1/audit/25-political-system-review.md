@@ -1,9 +1,28 @@
 # Audit Report: 25-political-system.md
-**Phase:** C1.2 | **Level:** C1 | **Pedagogy:** History | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** C1.2 | **Level:** C1 | **Pedagogy:** History | **Target:** 2000
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Політичний устрій' Q1 prompt length 9 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Політичний устрій' Q3 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Політичний устрій' Q5 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Підсумок' per template 'b2-history-module-template'
+  - FIX: Add '## Підсумок' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'b2-history-module-template'
+  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/b2-history-module-template.md
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 5 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 2070/1750
+- **Words:** ✅ 2070/2000
 - **Activities:** ✅ 13/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -13,7 +32,7 @@
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ✅ Content-heavy OK (13 activities)
 - **Immersion:** 🇺🇦 98.1% (target 98-100% (history))
 - **Richness:** ✅ 99% (history)

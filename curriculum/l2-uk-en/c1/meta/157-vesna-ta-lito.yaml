@@ -1,0 +1,23 @@
+module: c1-157
+title: 'Весна та літо'
+subtitle: 'Spring and Summer Calendar Rituals'
+version: '2.0'
+phase: 'C1.5 Folk Culture & Fine Arts'
+focus: 'folk-culture'
+pedagogy: 'Immersion & Analysis'
+duration: 120
+transliteration: none
+tags:
+  - culture
+  - folk-traditions
+  - spring
+  - summer
+grammar:
+  - 'Ethnographic terminology'
+  - 'Narrative and ritual registers'
+objectives:
+  - 'Learner can describe the cycle of spring and summer holidays in Ukraine'
+  - 'Learner understands the symbolism of fire, water, and vegetation in rituals'
+  - 'Learner can analyze the agrarian and solar motifs in Ukrainian folklore'
+vocabulary_count: 32
+slug: 157-vesna-ta-lito

@@ -5,6 +5,7 @@ version: '2.1'
 phase: B1.1 Aspect Mastery Checkpoint
 focus: checkpoint
 pedagogy: TTT
+template: b1-checkpoint-module-template.md
 duration: 75
 transliteration: none
 tags:

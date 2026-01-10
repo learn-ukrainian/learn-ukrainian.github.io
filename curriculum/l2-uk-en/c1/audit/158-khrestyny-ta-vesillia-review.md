@@ -1,0 +1,52 @@
+# Audit Report: 158-khrestyny-ta-vesillia.md
+**Phase:** C1.5 | **Level:** C1 | **Pedagogy:** Immersion & Analysis | **Target:** 2000
+**Overall Status:** ✅ PASS
+
+## Gates
+- **Words:** ✅ 2023/2000
+- **Activities:** ✅ 12/12
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 9/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 8/7
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 32/25
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ✅ Content-heavy OK (12 activities)
+- **Immersion:** 🇺🇦 99.9% (target 98-100% (folk-culture))
+- **Richness:** ✅ 96% (content)
+- **Grammar:** ⏳ Pending validation
+
+## Richness Details
+**Score:** 96% (minimum: 95%)
+**Module Type:** content
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 14 | 15 | 93% | 25% | 23.2% |
+| engagement | 8 | 5 | 100% | 19% | 18.7% |
+| variety | 0.99 | - | 99% | 12% | 12.4% |
+| cultural | 4 | 4 | 100% | 12% | 12.5% |
+| realworld | 4 | 3 | 100% | 12% | 12.5% |
+| visual | 3 | 4 | 75% | 6% | 4.7% |
+| paragraph_var | 1.00 | - | 100% | 6% | 6.2% |
+| questions | 11 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **96.6%** |
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 95 | Included in Core |
+| **Вступ: Життєві пороги та соціальне визнання** | ⚪️ | 97 | Skipped |
+| **Текст 1: Хрестини — духовне народження та кумівство** | ✅ | 170 | Included in Core |
+| **Текст 2: Весілля — драма створення нової сім’ї** | ✅ | 449 | Included in Core |
+| **Текст 3: Символіка Посагу, Рушника та Скрині** | ✅ | 255 | Included in Core |
+| **Текст 4: Магічні дії під час хрестин** | ✅ | 176 | Included in Core |
+| **Культурологічний аналіз: Обрядовість як Кодекс Гідності та Генетичної Пам'яті** | ✅ | 181 | Included in Core |
+| **Текст 5: Сучасні трансформації сімейних обрядів** | ✅ | 197 | Included in Core |
+| **Типові словосполучення та колокації** | ⚪️ | 133 | Skipped |
+| **Підсумок** | ✅ | 132 | Included in Core |
+| **Потрібно більше практики?** | ⚪️ | 138 | Skipped |

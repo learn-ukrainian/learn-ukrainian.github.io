@@ -1,6 +1,27 @@
 # Audit Report: 100-klavdiya-latysheva.md
 **Phase:** C1.3 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту: Життя Клавдії Латишевої' Q4 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння тексту: Життя Клавдії Латишевої' Q5 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 100-klavdiya-latysheva.yaml: [c1-100-essay] essay-response: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template'
+  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template'
+  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Спадщина' per template 'c1-biography-module-template'
+  - FIX: Add '## Спадщина' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 6 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 2047/2000
@@ -13,7 +34,7 @@
 - **Vocab:** ✅ 24/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.7% (target 98-100% (biography))
 - **Richness:** ✅ 97% (biography)
@@ -38,12 +59,6 @@
 | questions | 22 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **97.4%** |
 
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (13 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -55,4 +70,4 @@
 | **Порівняльний аналіз** | ✅ | 168 | Included in Core |
 | **Підсумок** | ✅ | 101 | Included in Core |
 | **Практикум рефлексії** | ⚪️ | 171 | Skipped |
-| **Need More Practice?** | ⚪️ | 123 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 123 | Skipped |

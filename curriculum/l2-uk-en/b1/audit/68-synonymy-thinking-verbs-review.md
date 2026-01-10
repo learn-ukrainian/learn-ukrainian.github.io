@@ -3,80 +3,89 @@
 **Overall Status:** ❌ FAIL
 
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння дієслів мислення' Q1 prompt length 8 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння дієслів мислення' Q2 prompt length 9 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння дієслів мислення' Q3 prompt length 9 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння дієслів мислення' Q4 prompt length 8 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння дієслів мислення' Q5 prompt length 9 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння дієслів мислення' Q6 prompt length 11 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння дієслів мислення' Q7 prompt length 7 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння дієслів мислення' Q8 prompt length 10 (target: 12-20)
-  - FIX: Adjust prompt length to 12-20 words.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 1 has 6 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 2 has 6 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 3 has 5 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 4 has 5 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 5 has 4 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 6 has 5 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 7 has 4 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 8 has 5 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 9 has 4 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
-- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 10 has 5 words (target: 12-16)
-  - FIX: Adjust sentence length to 12-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння дієслів мислення' Q1 prompt length 8 (target: 9-20)
+  - FIX: Adjust prompt length to 9-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння дієслів мислення' Q4 prompt length 8 (target: 9-20)
+  - FIX: Adjust prompt length to 9-20 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння дієслів мислення' Q7 prompt length 7 (target: 9-20)
+  - FIX: Adjust prompt length to 9-20 words.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 1 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 2 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 3 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 4 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 5 has 4 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 6 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 7 has 4 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 8 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 9 has 4 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення правильно' item 10 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
 - **[SECTION_ORDER]** '## Лексика' should come after 'summary' section
   - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
 - **[SECTION_ORDER]** Content section '## Діалоги' appears after end section '## Лексика'
   - FIX: Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [складіть-речення-правильно] unjumble: 'items.9' - Additional properties are not allowed ('scrambled' was unexpected)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [розуміння-дієслів-мислення] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [синоніми-та-переклад] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [колокації--дієслово-+-прийменник] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [групування-за-відтінком-значення] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [вибір-правильного-дієслова] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [правильне-вживання-дієслів] select: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [правила-використання-дієслів-мислення] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [заповніть-пропуски-в-тексті] cloze: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [складіть-речення-правильно] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [виправте-помилки-у-дієсловах-мислення] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [переклад-речень-з-дієсловами-мислення] translate: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 - **[YAML_SCHEMA_VIOLATION]** Schema error in 68-synonymy-thinking-verbs.yaml: [знайдіть-дієслова-мислення] mark-the-words: 'correct_words' is a required property
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[STATE_STANDARD_LOW_IMMERSION]** Module 68 has 97.9% immersion (target: 98.0%+)
+  - FIX: Add more Ukrainian content to reach 98%+ immersion for full immersion modules
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
-  - FIX: Add '## Presentation' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
-  - FIX: Add '## Practice' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
-- ❌ **[EMPTY_REQUIRED_SECTION]** Required section '## Потрібно більше практики?' is empty
-  - FIX: Populate the section with meaningful content or generate it if it's a mandatory placeholder.
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Пояснення|Граматика|Теорія' per template 'b1-grammar-module-template'
+  - FIX: Add '## Пояснення' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Практика|Вправи' per template 'b1-grammar-module-template'
+  - FIX: Add '## Практика' section as specified in docs/l2-uk-en/templates/b1-grammar-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**📝 UPDATE** (severity 50/100)
 
-- Revision recommended (severity 60/100)
-- 25 violations (severe - consider revision)
-- Activity density below minimum
+- Revision recommended (severity 50/100)
+- 30 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 1655/1500
-- **Activities:** ✅ 12/12
-- **Density:** ❌ 1 < 14
+- **Words:** ✅ 1765/1500
+- **Activities:** ✅ 12/8
+- **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 12/5
+- **Engagement:** ✅ 13/5
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 17 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 22 violations
+- **Pedagogy:** ❌ 27 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.6% (target 85-100% (B1.7-8 Ukraine))
+- **Immersion:** 🇺🇦 97.9% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ⏳ Pending validation
 
@@ -87,8 +96,8 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 30 | 24 | 100% | 20% | 20.0% |
-| engagement | 12 | 5 | 100% | 15% | 15.0% |
+| examples | 31 | 24 | 100% | 20% | 20.0% |
+| engagement | 13 | 5 | 100% | 15% | 15.0% |
 | dialogues | 12 | 4 | 100% | 15% | 15.0% |
 | variety | 0.96 | - | 96% | 10% | 9.6% |
 | cultural | 3 | 3 | 100% | 10% | 10.0% |
@@ -98,12 +107,6 @@
 | questions | 29 | 5 | 100% | 5% | 5.0% |
 | proverbs | 5 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.6%** |
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| Вибір правильного дієслова | cloze | 12 | 14 | Add 2 more items |
-
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -115,4 +118,4 @@
 | **Читання** | ✅ | 307 | Included in Core |
 | **Діалоги** | ✅ | 246 | Included in Core |
 | **Підсумок** | ✅ | 177 | Included in Core |
-| **Потрібно більше практики?** | ⚪️ | 0 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 110 | Skipped |

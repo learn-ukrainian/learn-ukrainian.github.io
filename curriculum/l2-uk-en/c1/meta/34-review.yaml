@@ -1,0 +1,22 @@
+module: c1-34
+title: 'Огляд і повторення: Професійна комунікація'
+subtitle: 'Review: Professional Communication'
+version: '2.0'
+phase: 'C1.2 Practice'
+focus: review
+pedagogy: 'Immersion'
+duration: 120
+transliteration: none
+tags:
+  - review
+  - professional
+  - business
+  - sociolinguistics
+grammar:
+  - 'Consolidation of C1.2 grammar points'
+objectives:
+  - 'Review professional vocabulary and etiquette'
+  - 'Consolidate sociolinguistic knowledge (dialects, surzhyk)'
+  - 'Practice advanced rhetorical devices'
+vocabulary_count: 10
+slug: 34-review

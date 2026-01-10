@@ -1,5 +1,142 @@
 {
   "permissions": {
+    "read": {
+      "rules": [
+        {
+          "pattern": "curriculum/l2-uk-en/**",
+          "permission": "allow",
+          "description": "Read all curriculum files"
+        },
+        {
+          "pattern": "scripts/**",
+          "permission": "allow",
+          "description": "Read all scripts"
+        },
+        {
+          "pattern": "docs/**",
+          "permission": "allow",
+          "description": "Read all documentation"
+        },
+        {
+          "pattern": "output/**",
+          "permission": "allow",
+          "description": "Read generated output"
+        },
+        {
+          "pattern": "docusaurus/**",
+          "permission": "allow",
+          "description": "Read Docusaurus files"
+        },
+        {
+          "pattern": ".claude/**",
+          "permission": "allow",
+          "description": "Read Claude config"
+        },
+        {
+          "pattern": "claude_extensions/**",
+          "permission": "allow",
+          "description": "Read Claude extensions"
+        },
+        {
+          "pattern": "*.md",
+          "permission": "allow",
+          "description": "Read all markdown files"
+        },
+        {
+          "pattern": "*.yaml",
+          "permission": "allow",
+          "description": "Read all YAML files"
+        },
+        {
+          "pattern": "*.yml",
+          "permission": "allow",
+          "description": "Read all YML files"
+        },
+        {
+          "pattern": "*.json",
+          "permission": "allow",
+          "description": "Read all JSON files"
+        },
+        {
+          "pattern": "*.py",
+          "permission": "allow",
+          "description": "Read all Python files"
+        }
+      ]
+    },
+    "write": {
+      "rules": [
+        {
+          "pattern": "curriculum/l2-uk-en/**/audit/*.md",
+          "permission": "allow",
+          "description": "Write audit reports"
+        },
+        {
+          "pattern": "curriculum/l2-uk-en/**/review/*.md",
+          "permission": "allow",
+          "description": "Write review reports"
+        },
+        {
+          "pattern": "curriculum/l2-uk-en/**/activities/*.yaml",
+          "permission": "allow",
+          "description": "Write activity files"
+        },
+        {
+          "pattern": "curriculum/l2-uk-en/**/vocabulary/*.yaml",
+          "permission": "allow",
+          "description": "Write vocabulary files"
+        },
+        {
+          "pattern": "output/**",
+          "permission": "allow",
+          "description": "Write generated output"
+        },
+        {
+          "pattern": "docs/issues/*.md",
+          "permission": "allow",
+          "description": "Write issue documentation"
+        },
+        {
+          "pattern": ".claude/**",
+          "permission": "ask",
+          "description": "Ask before modifying Claude config"
+        }
+      ]
+    },
+    "edit": {
+      "rules": [
+        {
+          "pattern": "curriculum/l2-uk-en/**/*.md",
+          "permission": "allow",
+          "description": "Edit curriculum modules"
+        },
+        {
+          "pattern": "curriculum/l2-uk-en/**/activities/*.yaml",
+          "permission": "allow",
+          "description": "Edit activity files"
+        },
+        {
+          "pattern": "curriculum/l2-uk-en/**/vocabulary/*.yaml",
+          "permission": "allow",
+          "description": "Edit vocabulary files"
+        },
+        {
+          "pattern": "scripts/**/*.py",
+          "permission": "allow",
+          "description": "Edit Python scripts"
+        },
+        {
+          "pattern": "docs/**/*.md",
+          "permission": "allow",
+          "description": "Edit documentation"
+        },
+        {
+          "pattern": ".claude/settings.json",
+          "permission": "ask",
+          "description": "Ask before modifying settings"
+        }
+      ]
+    },
     "bash": {
       "rules": [
         {
@@ -487,6 +624,8 @@
     }
   },
   "respectGitignore": true,
-  "language": "ukrainian",
-  "agent": "curriculum-maintainer"
+  "language": "auto",
+  "agent": "curriculum-maintainer",
+  "acceptEdits": true,
+  "yolo": true
 }

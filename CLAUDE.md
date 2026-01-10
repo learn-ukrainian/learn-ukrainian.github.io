@@ -109,6 +109,32 @@ When you find a problem:
 2. Fix the source (update script, add docs, clarify workflow)
 3. Manually validate the fix works on affected items
 4. Deploy the fix so future work is automated
+
+## Language Settings
+
+**Use English for all development work. Use Ukrainian only when directly working with curriculum content.**
+
+### When to Use English
+
+- All technical communication (code, errors, workflows, git, etc.)
+- Running scripts and debugging
+- Discussing architecture and system design
+- Pipeline and validation tasks
+- Documentation updates
+- Git commit messages
+- Error analysis
+- Project planning and task management
+
+### When to Use Ukrainian
+
+- Reviewing module content (lessons, examples, explanations)
+- Validating Ukrainian grammar and vocabulary
+- Proposing Ukrainian text for activities
+- Checking for Russianisms, calques, or surzhyk
+- Evaluating pedagogical effectiveness of Ukrainian content
+- Suggesting corrections to Ukrainian sentences
+
+**Why:** This makes technical communication more efficient while maintaining quality control where it matters most - the actual learning content.
    </critical>
 
 ---

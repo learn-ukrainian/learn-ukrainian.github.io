@@ -1,32 +1,65 @@
 # Audit Report: 04-analysis-vocabulary.md
-**Phase:** C1.1 | **Level:** C1 | **Pedagogy:** Academic | **Target:** 1750
-**Overall Status:** ✅ PASS
+**Phase:** C1.1 | **Level:** C1 | **Pedagogy:** Academic | **Target:** 2000
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння академічного тексту' Q1 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння академічного тексту' Q2 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння академічного тексту' Q3 prompt length 9 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння академічного тексту' Q4 prompt length 9 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Розуміння академічного тексту' Q5 prompt length 8 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення регістру' Q1 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення регістру' Q2 prompt length 8 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення регістру' Q3 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення регістру' Q4 prompt length 8 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Визначення регістру' Q5 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка та аргументація' Q1 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка та аргументація' Q2 prompt length 9 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка та аргументація' Q3 prompt length 8 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка та аргументація' Q4 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Логіка та аргументація' Q5 prompt length 8 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
 
 ## TEMPLATE COMPLIANCE
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' per template 'c1-module-template'
-  - FIX: Add '## Warm-up' section as specified in docs/l2-uk-en/templates/c1-module-template.md
-- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Аналіз' found: Порівняльний аналіз абстрактів, Лексика критичного аналізу, Чек-лист: Чи готовий ваш аналіз?, Аналіз тексту: Глибинний розбір
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Вступ|Контекст|Розминка' per template 'c1-module-template'
+  - FIX: Add '## Вступ' section as specified in docs/l2-uk-en/templates/c1-module-template.md
+- ❌ **[DUPLICATE_SYNONYMOUS_HEADERS]** Multiple aliases for 'Аналіз' found: Порівняльний аналіз абстрактів, Чек-лист: Чи готовий ваш аналіз?, Аналіз тексту: Глибинний розбір, Лексика критичного аналізу
   - FIX: Keep only one version of the header (preferably the primary one or the one with more content).
-- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Need More Practice?' per template 'c1-module-template'
-  - FIX: Add '## Need More Practice?' section as specified in docs/l2-uk-en/templates/c1-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Потрібно більше практики?' per template 'c1-module-template'
+  - FIX: Add '## Потрібно більше практики?' section as specified in docs/l2-uk-en/templates/c1-module-template.md
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 50/100)
 
-- 3 violations (minor)
+- Revision recommended (severity 50/100)
+- 18 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 2059/1750
+- **Words:** ✅ 2059/2000
 - **Activities:** ✅ 18/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/7
+- **Engagement:** ✅ 10/7
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 15 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.2% (target 98-100%)
 - **Richness:** ✅ 95% (academic)
@@ -43,7 +76,7 @@
 | data_refs | 5 | 3 | 100% | 19% | 19.0% |
 | visual | 9 | 5 | 100% | 14% | 14.3% |
 | questions | 17 | 4 | 100% | 14% | 14.3% |
-| engagement | 8 | 5 | 100% | 10% | 9.5% |
+| engagement | 10 | 5 | 100% | 10% | 9.5% |
 | variety | 0.99 | - | 99% | 10% | 9.4% |
 | cultural | 0 | - | 0% | 5% | 0.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |

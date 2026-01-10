@@ -1,0 +1,153 @@
+module: 153-narodna-medytsyna
+level: C1
+version: '2.0'
+items:
+  - lemma: знахар
+    ipa: /znɑˈxɑr/
+    translation: traditional healer
+    pos: noun
+    gender: m
+  - lemma: знахарство
+    ipa: /znɑˈxɑrstwɔ/
+    translation: traditional healing (craft)
+    pos: noun
+    gender: n
+  - lemma: лікарська рослина
+    ipa: /ˈlʲikɑrsʲkɑ rɔˈslɪnɑ/
+    translation: medicinal plant
+    pos: noun
+    gender: f
+  - lemma: цілющий
+    ipa: /t͡sʲiˈlʲut͡ʃɪj/
+    translation: healing, curative
+    pos: adj
+  - lemma: зілля
+    ipa: /ˈzʲilʲlʲɑ/
+    translation: herbs, potion
+    pos: noun
+    gender: n
+  - lemma: відвар
+    ipa: /wʲidˈwɑr/
+    translation: decoction, herbal tea
+    pos: noun
+    gender: m
+  - lemma: настоянка
+    ipa: /nɑˈstɔjɑnkɑ/
+    translation: tincture, infusion
+    pos: noun
+    gender: f
+  - lemma: мазь
+    ipa: /mɑzʲ/
+    translation: ointment, salve
+    pos: noun
+    gender: f
+  - lemma: припарка
+    ipa: /prɪˈpɑrkɑ/
+    translation: poultice
+    pos: noun
+    gender: f
+  - lemma: замовляння
+    ipa: /zɑmɔu̯ˈlʲɑnʲnʲɑ/
+    translation: incantation, spell
+    pos: noun
+    gender: n
+  - lemma: переляк
+    ipa: /perɛˈlʲɑk/
+    translation: fright, shock (often treated by healers)
+    pos: noun
+    gender: m
+  - lemma: пристріт
+    ipa: /prɪˈstrʲit/
+    translation: evil eye, hex
+    pos: noun
+    gender: m
+  - lemma: недуга
+    ipa: /nɛˈduɦɑ/
+    translation: illness, ailment
+    pos: noun
+    gender: f
+  - lemma: хвороба
+    ipa: /xwɔˈrɔbɑ/
+    translation: disease, sickness
+    pos: noun
+    gender: f
+  - lemma: зцілення
+    ipa: /t͡sʲˈt͡sʲilenʲnʲɑ/
+    translation: healing, recovery
+    pos: noun
+    gender: n
+  - lemma: шептуха
+    ipa: /ʃɛpˈtuxɑ/
+    translation: '"whisperer" (female healer using incantations)'
+    pos: noun
+    gender: f
+  - lemma: коріння
+    ipa: /kɔˈrʲinʲnʲɑ/
+    translation: roots
+    pos: noun
+    gender: n
+  - lemma: квіти
+    ipa: /ˈkwʲitɪ/
+    translation: flowers
+    pos: noun
+    gender: pl
+  - lemma: листя
+    ipa: /ˈlɪstʲɑ/
+    translation: leaves
+    pos: noun
+    gender: n
+  - lemma: кора
+    ipa: /ˈkɔrɑ/
+    translation: bark
+    pos: noun
+    gender: f
+  - lemma: чебрець
+    ipa: /t͡ʃɛˈbrɛt͡sʲ/
+    translation: thyme
+    pos: noun
+    gender: m
+  - lemma: полин
+    ipa: /pɔˈlɪn/
+    translation: wormwood
+    pos: noun
+    gender: m
+  - lemma: звіробій
+    ipa: /zwʲirɔˈbʲij/
+    translation: St. John's wort
+    pos: noun
+    gender: m
+  - lemma: ромашка
+    ipa: /rɔˈmɑʃkɑ/
+    translation: chamomile
+    pos: noun
+    gender: f
+  - lemma: бузина
+    ipa: /bʊzɪˈnɑ/
+    translation: elderberry
+    pos: noun
+    gender: f
+  - lemma: калина
+    ipa: /kɑˈlɪnɑ/
+    translation: viburnum, guelder rose
+    pos: noun
+    gender: f
+  - lemma: медунка
+    ipa: /mɛˈdunkɑ/
+    translation: lungwort
+    pos: noun
+    gender: f
+  - lemma: деревій
+    ipa: /dɛrɛˈwʲij/
+    translation: yarrow
+    pos: noun
+    gender: m
+  - lemma: симптоматика
+    ipa: /sɪmptɔˈmɑtɪkɑ/
+    translation: symptomatology
+    pos: noun
+    gender: f
+  - lemma: профілактика
+    ipa: /prɔfʲilˈlɑktɪkɑ/
+    translation: prevention, prophylaxis
+    pos: noun
+    gender: f

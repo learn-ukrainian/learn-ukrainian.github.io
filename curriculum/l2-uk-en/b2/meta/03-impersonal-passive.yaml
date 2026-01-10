@@ -1,8 +1,9 @@
 module: b2-03
-title: Безособові конструкції з -но/-то
-subtitle: The Impersonal Passive of Official Ukrainian
+title: 'Безособовий пасив: форми на -но/-то'
+subtitle: Impersonal Passive
 version: '1.0'
-phase: B2.1a [Grammar & Register]
+phase: B2.1a Grammar & Register
+focus: grammar
 pedagogy: TTT
 register: офіційно-діловий
 duration: 90

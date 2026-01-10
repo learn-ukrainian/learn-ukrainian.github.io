@@ -1,32 +1,65 @@
 # Audit Report: 14-literature-review.md
-**Phase:** C1.1 | **Level:** C1 | **Pedagogy:** immersion | **Target:** 1750
+**Phase:** C1.1 | **Level:** C1 | **Pedagogy:** immersion | **Target:** 2000
 **Overall Status:** ❌ FAIL
 
-## LINT ERRORS
-- ❌ Line 12: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 21: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 36: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 84: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 108: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 111: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 120: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 156: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-- ❌ Line 190: Use Ukrainian angular quotes («...») instead of ASCII quotes (").
-
 ## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [словник-дискусії] fill-in: 'items.7.options' - ['прислухатися', 'подивитися', 'прийти'] is too short
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Функції огляду' Q7 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Академічні дієслова' Q5 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Академічні дієслова' Q6 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Академічні дієслова' Q8 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Переклад фраз' Q1 prompt length 11 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Переклад фраз' Q3 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Переклад фраз' Q4 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Переклад фраз' Q7 prompt length 10 (target: 12-30)
+  - FIX: Adjust prompt length to 12-30 words.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [функції-огляду] quiz: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
-- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [стиль-огляду:-редагування] error-correction: 'items.5.options' - ['велика дірка', 'дірка в науці'] is too short
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [збігаються-чи-розходяться?] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [словник-дискусії] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [групування-джерел] group-sort: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [стиль-огляду:-редагування] error-correction: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [типи-прогалин] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [академічні-дієслова] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [складання-речень:-дискусія] unjumble: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [пунктуація-при-цитуванні] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [пошук-синонімів] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [правда-чи-міф?] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [логічні-конектори] fill-in: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [виявлення-плагіату] true-false: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [типи-статей] match-up: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [переклад-фраз] quiz: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 14-literature-review.yaml: [письмове-завдання:-синтез-думок] essay-response: Additional properties are not allowed ('id' was unexpected)
   - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 50/100)
 
-- 2 violations (minor)
-- 9 format errors (many)
+- Revision recommended (severity 50/100)
+- 24 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 1909/1750
+- **Words:** ⚠️ 1909/2000 (91 short)
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 8/4 types
@@ -35,8 +68,8 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/25
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 9 Format Errors
-- **Pedagogy:** ❌ 2 violations
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ❌ 24 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.6% (target 98-100%)
 - **Richness:** ❌ 57% < 95% min (style) - REWRITE needed
@@ -88,4 +121,4 @@
 | **Розділ 9: Робота з суперечливими даними** | ⚪️ | 93 | Skipped |
 | **Розділ 10: Етика та доброчесність** | ⚪️ | 170 | Skipped |
 | **Підсумок** | ✅ | 88 | Included in Core |
-| **Need More Practice?** | ⚪️ | 14 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 14 | Skipped |

@@ -1,6 +1,21 @@
 # Audit Report: 91-oleksandr-arkhypenko.md
 **Phase:** C1.3 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in 91-oleksandr-arkhypenko.yaml: [c1-91-essay] essay-response: Additional properties are not allowed ('id' was unexpected)
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template'
+  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template'
+  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 3 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2124/2000
@@ -13,7 +28,7 @@
 - **Vocab:** ✅ 24/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ✅ Content-heavy OK (12 activities)
 - **Immersion:** 🇺🇦 99.8% (target 98-100% (biography))
 - **Richness:** ✅ 99% (biography)
@@ -47,4 +62,4 @@
 | **Історичний контекст** | ✅ | 243 | Included in Core |
 | **Порівняльний аналіз** | ✅ | 200 | Included in Core |
 | **Підсумок** | ✅ | 136 | Included in Core |
-| **Need More Practice?** | ⚪️ | 107 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 107 | Skipped |

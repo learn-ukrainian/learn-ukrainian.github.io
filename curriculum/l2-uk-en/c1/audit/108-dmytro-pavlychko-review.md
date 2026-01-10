@@ -2,6 +2,19 @@
 **Phase:** C1.3 | **Level:** C1 | **Pedagogy:** CBI | **Target:** 2000
 **Overall Status:** ✅ PASS
 
+## TEMPLATE COMPLIANCE
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Життєпис' per template 'c1-biography-module-template'
+  - FIX: Add '## Життєпис' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Внесок' per template 'c1-biography-module-template'
+  - FIX: Add '## Внесок' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+- ❌ **[MISSING_REQUIRED_SECTION]** Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  - FIX: Add '## Need More Practice?' section as specified in docs/l2-uk-en/templates/c1-biography-module-template.md
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 3 violations (minor)
+
 ## Gates
 - **Words:** ✅ 2155/2000
 - **Activities:** ✅ 12/12
@@ -52,4 +65,4 @@
 | **Зразок відповіді** | ⚪️ | 349 | Skipped |
 | **Підсумок** | ✅ | 52 | Included in Core |
 | **Практикум рефлексії** | ⚪️ | 125 | Skipped |
-| **Need More Practice?** | ⚪️ | 140 | Skipped |
+| **Потрібно більше практики?** | ⚪️ | 140 | Skipped |
