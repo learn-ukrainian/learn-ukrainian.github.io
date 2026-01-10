@@ -156,6 +156,10 @@
           "type": "string",
           "minLength": 1
         },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
         "items": {
           "type": "array",
           "minItems": 6,
@@ -208,6 +212,10 @@
         "title": {
           "type": "string",
           "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
         },
         "groups": {
           "type": "array",
@@ -309,6 +317,10 @@
         "title": {
           "type": "string",
           "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
         },
         "items": {
           "type": "array",

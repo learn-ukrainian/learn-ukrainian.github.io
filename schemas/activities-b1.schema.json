@@ -183,6 +183,10 @@
           "type": "string",
           "minLength": 1
         },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
+        },
         "items": {
           "type": "array",
           "minItems": 8,
@@ -235,6 +239,10 @@
         "title": {
           "type": "string",
           "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
         },
         "groups": {
           "type": "array",
@@ -327,6 +335,10 @@
         "title": {
           "type": "string",
           "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
         },
         "items": {
           "type": "array",
@@ -427,6 +439,10 @@
         "title": {
           "type": "string",
           "minLength": 1
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
         },
         "items": {
           "type": "array",
@@ -870,6 +886,10 @@
         "id": {
           "type": "string",
           "description": "Unique identifier for the activity"
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
         },
         "title": {
           "type": "string",
