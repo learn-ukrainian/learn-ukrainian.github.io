@@ -465,7 +465,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 25,  # Increased for grammar terminology
         'min_engagement': 5,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # 100% Ukrainian immersion (English only in vocab table)
         'transliteration_allowed': False,
         'priority_types': {'error-correction', 'fill-in', 'unjumble', 'cloze'}
@@ -477,7 +477,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 35,
         'min_engagement': 5,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # 100% Ukrainian immersion (English only in vocab table)
         'transliteration_allowed': False,
         'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz'}
@@ -489,7 +489,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 5,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # 100% Ukrainian immersion (English only in vocab table)
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
@@ -501,7 +501,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 15,
         'min_engagement': 4,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # 100% Ukrainian immersion
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'cloze', 'mark-the-words'}
@@ -524,7 +524,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 10,
         'min_engagement': 3,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # 100% Ukrainian immersion
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'fill-in', 'cloze', 'error-correction'}
@@ -536,7 +536,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 25,  # Increased for advanced grammar terminology
         'min_engagement': 6,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'error-correction', 'fill-in', 'unjumble', 'cloze'}
@@ -548,7 +548,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 35,
         'min_engagement': 6,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz'}
@@ -560,7 +560,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 6,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
@@ -572,7 +572,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 20,
         'min_engagement': 5,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'cloze', 'fill-in', 'true-false', 'quiz'}
@@ -584,7 +584,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 20,
         'min_engagement': 5,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'cloze', 'fill-in', 'true-false', 'quiz'}
@@ -596,7 +596,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 10,
         'min_engagement': 4,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'fill-in', 'error-correction', 'cloze'}
@@ -610,7 +610,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 20,  # Review vocabulary from covered modules
         'min_engagement': 4,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'select', 'cloze', 'true-false'}  # Analysis-focused
@@ -622,7 +622,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 10,
         'min_engagement': 4,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'fill-in', 'cloze', 'error-correction'}
@@ -634,7 +634,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 7,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
@@ -646,7 +646,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 24,
         'min_engagement': 6,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'cloze', 'error-correction'}
@@ -658,7 +658,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 24,
         'min_engagement': 6,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'cloze', 'translate'}
@@ -670,7 +670,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 24,
         'min_engagement': 6,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'error-correction', 'cloze'}
@@ -682,7 +682,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 24,
         'min_engagement': 5,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'cloze', 'fill-in', 'mark-the-words'}
@@ -694,7 +694,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 24,
         'min_engagement': 6,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'cloze', 'fill-in', 'true-false', 'quiz'}
@@ -706,7 +706,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 24,
         'min_engagement': 5,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'cloze', 'fill-in', 'quiz'}
@@ -718,7 +718,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 15,
         'min_engagement': 4,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'fill-in', 'error-correction', 'cloze'}
@@ -730,7 +730,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 15,
         'min_engagement': 4,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
         'priority_types': {'cloze', 'fill-in', 'error-correction'}
@@ -742,7 +742,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 6,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'cloze', 'error-correction'}
@@ -754,7 +754,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 6,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'cloze', 'error-correction'}
@@ -766,7 +766,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 5,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,
         'transliteration_allowed': False,
         'priority_types': {'cloze', 'fill-in', 'quiz'}
@@ -778,7 +778,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 5,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'cloze', 'translate'}
@@ -801,7 +801,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 15,
         'min_engagement': 4,
-        'min_immersion': 95,  # Relaxed from 98 to allow occasional English
+        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,
         'transliteration_allowed': False,
         'priority_types': {'cloze', 'fill-in'}

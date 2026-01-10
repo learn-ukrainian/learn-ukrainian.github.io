@@ -114,7 +114,7 @@ def check_immersion_compliance(level: str, module_num: int, immersion_pct: float
                     code='STATE_STANDARD_LOW_IMMERSION',
                     message=f"Module {module_num} has {immersion_pct:.1f}% immersion (target: {target}%+)",
                     reference=immersion_req['reference'],
-                    fix="Add more Ukrainian content to reach 95%+ immersion for full immersion modules"
+                    fix="Add more Ukrainian content to reach 90%+ immersion for full immersion modules"
                 ))
 
     # B2, C1, C2: All modules should be 98%+
