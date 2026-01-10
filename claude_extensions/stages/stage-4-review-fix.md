@@ -259,8 +259,23 @@ Rebuild from Stage 1:
 ## Running the Audit
 
 ```bash
-.venv/bin/python scripts/audit_module.py {file_path}
+# Auto-fix YAML schema violations, then run audit
+.venv/bin/python scripts/audit_module.py {file_path} --fix
 ```
+
+**The `--fix` flag automatically fixes common YAML schema violations:**
+
+- Removes invalid `id` properties
+- Extracts `correct_words` from mark-the-words passage
+- Converts `scrambled` to `words` array in unjumble
+- Adds missing `source` in translate
+- Renames `prompt`/`text` to `question` in quiz/select
+
+**Workflow:**
+
+1. Auto-fix runs FIRST (if violations found)
+2. Audit runs AFTER fixes applied
+3. If audit still fails, manual fixes needed
 
 Audit output categories:
 
