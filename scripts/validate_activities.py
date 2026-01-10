@@ -25,7 +25,9 @@ import yaml
 ACTIVITY_TYPES = {
     'quiz', 'match-up', 'fill-in', 'true-false', 'group-sort', 'unjumble',
     'anagram', 'error-correction', 'cloze', 'mark-the-words',
-    'select', 'translate'
+    'select', 'translate',
+    # Advanced activity types (C1+)
+    'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'
 }
 
 REQUIRED_FIELDS = {
@@ -38,9 +40,15 @@ REQUIRED_FIELDS = {
     'anagram': ['title', 'items'],
     'error-correction': ['title', 'items'],
     'cloze': ['title', 'passage'],
-    'mark-the-words': ['title', 'text'],
+    'mark-the-words': ['title'],  # Accept both 'text' and 'passage' (checked separately)
     'select': ['title', 'items'],
     'translate': ['title', 'items'],
+    # Advanced activity types (C1+) - minimal validation (context optional)
+    'reading': ['title'],
+    'essay-response': ['title'],
+    'critical-analysis': ['title'],
+    'comparative-study': ['title'],
+    'authorial-intent': ['title'],
 }
 
 
@@ -146,7 +154,16 @@ class ActivityValidator:
 
     def _validate_mark_the_words(self, activity: dict, idx: int, results: dict):
         """Validate mark-the-words activity."""
-        text = activity.get('text', '')
+        # Support both 'text' and 'passage' fields (backwards compatibility)
+        text = activity.get('text') or activity.get('passage', '')
+
+        # Check that at least one field exists
+        if not text:
+            results['errors'].append(
+                f"Activity {idx}: Missing required field 'text' or 'passage'"
+            )
+            results['pass'] = False
+            return
 
         # Check for malformed markdown annotations
         if '(correct)' in text or '(wrong)' in text:
