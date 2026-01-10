@@ -3,132 +3,230 @@
   "$id": "https://learn-ukrainian.github.io/schemas/activities-a1.schema.json",
   "title": "A1 Module Activities",
   "description": "Activity schema for A1 level modules. Allows anagram (M01-10), no cloze/error-correction/mark-the-words.",
-
   "type": "array",
   "minItems": 8,
   "items": {
     "oneOf": [
-      { "$ref": "#/definitions/quiz-a1" },
-      { "$ref": "#/definitions/match-up-a1" },
-      { "$ref": "#/definitions/fill-in-a1" },
-      { "$ref": "#/definitions/group-sort-a1" },
-      { "$ref": "#/definitions/unjumble-a1" },
-      { "$ref": "#/definitions/true-false-a1" },
-      { "$ref": "#/definitions/anagram-a1" }
+      {
+        "$ref": "#/definitions/quiz-a1"
+      },
+      {
+        "$ref": "#/definitions/match-up-a1"
+      },
+      {
+        "$ref": "#/definitions/fill-in-a1"
+      },
+      {
+        "$ref": "#/definitions/group-sort-a1"
+      },
+      {
+        "$ref": "#/definitions/unjumble-a1"
+      },
+      {
+        "$ref": "#/definitions/true-false-a1"
+      },
+      {
+        "$ref": "#/definitions/anagram-a1"
+      }
     ]
   },
-
   "definitions": {
     "quiz-a1": {
       "type": "object",
-      "required": ["type", "title", "items"],
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "quiz" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "quiz"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "items": {
           "type": "array",
           "minItems": 6,
           "items": {
             "type": "object",
-            "required": ["question", "options"],
+            "required": [
+              "question",
+              "options"
+            ],
             "additionalProperties": false,
             "properties": {
-              "question": { "type": "string", "minLength": 1 },
+              "question": {
+                "type": "string",
+                "minLength": 1
+              },
               "options": {
                 "type": "array",
                 "minItems": 4,
                 "maxItems": 4,
                 "items": {
                   "type": "object",
-                  "required": ["text", "correct"],
+                  "required": [
+                    "text",
+                    "correct"
+                  ],
                   "additionalProperties": false,
                   "properties": {
-                    "text": { "type": "string", "minLength": 1 },
-                    "correct": { "type": "boolean" }
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "correct": {
+                      "type": "boolean"
+                    }
                   }
                 }
               },
-              "explanation": { "type": "string" }
+              "explanation": {
+                "type": "string"
+              }
             }
           }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
         }
       }
     },
-
     "match-up-a1": {
       "type": "object",
-      "required": ["type", "title", "pairs"],
+      "required": [
+        "type",
+        "title",
+        "pairs"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "match-up" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "match-up"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "pairs": {
           "type": "array",
           "minItems": 6,
           "items": {
             "type": "object",
-            "required": ["left", "right"],
+            "required": [
+              "left",
+              "right"
+            ],
             "additionalProperties": false,
             "properties": {
-              "left": { "type": "string", "minLength": 1 },
-              "right": { "type": "string", "minLength": 1 }
+              "left": {
+                "type": "string",
+                "minLength": 1
+              },
+              "right": {
+                "type": "string",
+                "minLength": 1
+              }
             }
           }
         }
       }
     },
-
     "fill-in-a1": {
       "type": "object",
-      "required": ["type", "title", "items"],
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "fill-in" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "fill-in"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "items": {
           "type": "array",
           "minItems": 6,
           "items": {
             "type": "object",
-            "required": ["sentence", "answer", "options"],
+            "required": [
+              "sentence",
+              "answer",
+              "options"
+            ],
             "additionalProperties": false,
             "properties": {
-              "sentence": { "type": "string", "minLength": 1 },
-              "answer": { "type": "string", "minLength": 1 },
+              "sentence": {
+                "type": "string",
+                "minLength": 1
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
               "options": {
                 "type": "array",
                 "minItems": 4,
                 "maxItems": 4,
-                "items": { "type": "string", "minLength": 1 }
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
               },
-              "explanation": { "type": "string" }
+              "explanation": {
+                "type": "string"
+              }
             }
           }
         }
       }
     },
-
     "group-sort-a1": {
       "type": "object",
-      "required": ["type", "title", "groups"],
+      "required": [
+        "type",
+        "title",
+        "groups"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "group-sort" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "group-sort"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "groups": {
           "type": "array",
           "minItems": 2,
           "items": {
             "type": "object",
-            "required": ["name", "items"],
+            "required": [
+              "name",
+              "items"
+            ],
             "additionalProperties": false,
             "properties": {
-              "name": { "type": "string", "minLength": 1 },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
               "items": {
                 "type": "array",
                 "minItems": 1,
-                "items": { "type": "string", "minLength": 1 }
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
               }
             }
           }
@@ -144,79 +242,141 @@
         }
       ]
     },
-
     "unjumble-a1": {
       "type": "object",
-      "required": ["type", "title", "items"],
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "unjumble" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "unjumble"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "items": {
           "type": "array",
           "minItems": 4,
           "items": {
             "type": "object",
-            "required": ["words", "answer"],
+            "required": [
+              "words",
+              "answer"
+            ],
             "additionalProperties": false,
             "properties": {
               "words": {
                 "type": "array",
                 "minItems": 3,
-                "items": { "type": "string", "minLength": 1 }
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
               },
-              "answer": { "type": "string", "minLength": 1 }
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              }
             }
           }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
         }
       }
     },
-
     "true-false-a1": {
       "type": "object",
-      "required": ["type", "title", "items"],
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "true-false" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "true-false"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "items": {
           "type": "array",
           "minItems": 6,
           "items": {
             "type": "object",
-            "required": ["statement", "correct"],
+            "required": [
+              "statement",
+              "correct"
+            ],
             "additionalProperties": false,
             "properties": {
-              "statement": { "type": "string", "minLength": 1 },
-              "correct": { "type": "boolean" },
-              "explanation": { "type": "string" }
+              "statement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "correct": {
+                "type": "boolean"
+              },
+              "explanation": {
+                "type": "string"
+              }
             }
           }
         }
       }
     },
-
     "anagram-a1": {
       "type": "object",
       "description": "A1 only - modules 01-10 for Cyrillic scaffolding",
-      "required": ["type", "title", "items"],
+      "required": [
+        "type",
+        "title",
+        "items"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type": { "const": "anagram" },
-        "title": { "type": "string", "minLength": 1 },
+        "type": {
+          "const": "anagram"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
         "items": {
           "type": "array",
           "minItems": 6,
           "items": {
             "type": "object",
-            "required": ["scrambled", "answer"],
+            "required": [
+              "scrambled",
+              "answer"
+            ],
             "additionalProperties": false,
             "properties": {
-              "scrambled": { "type": "string", "minLength": 1 },
-              "answer": { "type": "string", "minLength": 1 },
-              "hint": { "type": "string" }
+              "scrambled": {
+                "type": "string",
+                "minLength": 1
+              },
+              "answer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "hint": {
+                "type": "string"
+              }
             }
           }
+        },
+        "instruction": {
+          "type": "string",
+          "description": "Additional instructions for the learner"
         }
       }
     }
